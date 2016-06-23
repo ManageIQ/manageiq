@@ -3,7 +3,7 @@ module TextualMixins::TextualRefreshStatus
     last_refresh_status = @ems.last_refresh_status.titleize
     if @ems.last_refresh_date
       last_refresh_date = time_ago_in_words(@ems.last_refresh_date.in_time_zone(Time.zone)).titleize
-      last_refresh_status << " - #{last_refresh_date} Ago"
+      last_refresh_status << _(" -%{last_refresh_date} Ago") % {:last_refresh_date => last_refresh_date}
     end
     {
       :label => _("Last Refresh"),
