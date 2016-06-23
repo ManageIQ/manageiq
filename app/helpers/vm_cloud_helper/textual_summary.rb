@@ -1,4 +1,5 @@
 module VmCloudHelper::TextualSummary
+  include TextualMixins::TextualAdvancedSettings
   include TextualMixins::TextualDrift
   include TextualMixins::TextualFilesystems
   include TextualMixins::TextualInitProcesses
@@ -92,17 +93,6 @@ module VmCloudHelper::TextualSummary
     bitness = @record.hardware.try!(:bitness)
     return nil if bitness.blank?
     {:label => _("Architecture"), :value => "#{bitness} bit"}
-  end
-
-  def textual_advanced_settings
-    num = @record.number_of(:advanced_settings)
-    h = {:label => _("Advanced Settings"), :image => "advancedsetting", :value => num}
-    if num > 0
-      h[:title] = _("Show the advanced settings on this VM")
-      h[:explorer] = true
-      h[:link]  = url_for(:action => 'advanced_settings', :id => @record, :db => controller.controller_name)
-    end
-    h
   end
 
   def textual_resources
