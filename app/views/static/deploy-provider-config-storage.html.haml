@@ -1,0 +1,18 @@
+%div{"ng-controller" => "containers.deployProviderConfigStorageController"}
+  %div{"miq-wizard-substep" => "", "next-enabled" => "configStorageComplete", "on-show" => "onShow", "review-template" => "{{reviewTemplate}}", "step-id" => "config-storage", "step-priority" => "2", "step-title" => "Storage", "wz-disabled" => "false"}
+    .miq-form-heading Select persistent storage
+    %form.form-horizontal
+      .miq-radio-form
+        %label.radio
+          %input{"ng-change" => "validateForm()", "ng-model" => "data.storageType", :type => "radio", :value => "nfs"} NFS
+        .form-group.sub-group
+          %div{"pf-form-group" => "", "pf-input-class" => "miq-input-class", "pf-label" => "Server", "pf-label-class" => "miq-input-label-class", :required => ""}
+            %input#nfs-storage-server{:name => "server", "ng-change" => "validateForm()", "ng-disabled" => "data.storageType != 'nfs'", "ng-model" => "data.nfsStorageServer", :required => "", :type => "text"}/
+          %div{"pf-form-group" => "", "pf-input-class" => "miq-input-class", "pf-label" => "Path", "pf-label-class" => "miq-input-label-class", :required => ""}
+            %input{:name => "path", "ng-change" => "validateForm()", "ng-disabled" => "data.storageType != 'nfs'", "ng-model" => "data.nfsStoragePath", :required => "", :type => "text"}/
+        %label.radio
+          %input{"ng-change" => "validateForm()", "ng-model" => "data.storageType", :type => "radio", :value => "gluster"} Red Hat Gluster Storage
+        %label.radio
+          %input{"ng-change" => "validateForm()", "ng-model" => "data.storageType", :type => "radio", :value => "integratedNfs"} Integrated NFS (POCs only)
+        %label.radio
+          %input{"ng-change" => "validateForm()", "ng-model" => "data.storageType", :type => "radio", :value => "none"} None

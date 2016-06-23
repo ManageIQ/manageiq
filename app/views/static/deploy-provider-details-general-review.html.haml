@@ -1,0 +1,8 @@
+%div{"ng-controller" => "containers.deployProviderReviewController"}
+  %form.form
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Name:
+      %span.wizard-miq-review-item-value {{data.providerName}}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Type:
+      %span.wizard-miq-review-item-value {{getProviderType()}}

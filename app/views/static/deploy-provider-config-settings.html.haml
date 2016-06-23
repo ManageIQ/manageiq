@@ -1,0 +1,65 @@
+%div{"ng-controller" => "containers.deployProviderConfigSettingsController"}
+  %div{"miq-wizard-substep" => "", "next-enabled" => "configStorageComplete", "on-show" => "onShow", "review-template" => "{{reviewTemplate}}", "step-id" => "config-storage", "step-priority" => "3", "step-title" => "Settings", "wz-disabled" => "false"}
+    .miq-form-heading Select items to configure
+    %form{:role => "form-horizontal"}
+      .miq-radio-form
+        %label.radio
+          %input{"ng-change" => "validateForm()", "ng-model" => "data.serverConfigType", :type => "radio", :value => "standardNFS"}
+            Standard NFS Server
+        .form-group.sub-group{"ng-if" => "data.serverConfigType == 'standardNFS'"}
+          .checkbox
+            %label
+              %input{"ng-change" => "validateForm()", "ng-disabled" => "!validateInfraNode()", "ng-model" => "data.configureRouter", :type => "checkbox"}
+                Router
+          .checkbox
+            %label
+              %input{"ng-change" => "validateForm()", "ng-model" => "data.configureRegistry", :type => "checkbox"}
+                Registry
+          .form-horizontal
+            .form-group
+              %label.miq-input-label-class Server
+              .miq-input-class
+                %input.form-control{"ng-change" => "validateForm()", "ng-disabled" => "!data.configureRegistry", "ng-model" => "data.nfsRegistryServer", :required => "", :type => "text"}/
+          .form-horizontal
+            .form-group
+              %label.miq-input-label-class Path
+              .miq-input-class
+                %input.form-control{"ng-change" => "validateForm()", "ng-disabled" => "!data.configureRegistry", "ng-model" => "data.nfsRegistryPath", :required => "", :type => "text"}/
+          .checkbox
+            %label
+              %input{"ng-change" => "validateForm()", "ng-model" => "data.configureMetrics", :type => "checkbox"}
+                Metrics
+          .form-horizontal
+            .form-group
+              %label.miq-input-label-class Server
+              .miq-input-class
+                %input.form-control{"ng-change" => "validateForm()", "ng-disabled" => "!data.configureMetrics", "ng-model" => "data.nfsMetricsServer", :required => "", :type => "text"}/
+          .form-horizontal
+            .form-group
+              %label.miq-input-label-class Path
+              .miq-input-class
+                %input.form-control{"ng-change" => "validateForm()", "ng-disabled" => "!data.configureMetrics", "ng-model" => "data.nfsMetricsPath", :required => "", :type => "text"}/
+        %label.radio{"ng-if" => "validateStorageNode()"}
+          %input{"ng-change" => "validateForm()", "ng-model" => "data.serverConfigType", :type => "radio", :value => "integratedNFS"}
+            Integrated NFS Server (POC only)
+        .form-group.sub-group{"ng-if" => "data.serverConfigType == 'integratedNFS'"}
+          .checkbox
+            %label
+              %input{"ng-change" => "validateForm()", "ng-disabled" => "!validateInfraNode()", "ng-model" => "data.configureRouter", :type => "checkbox"}
+                Router
+          .checkbox
+            %label
+              %input{"ng-change" => "validateForm()", "ng-model" => "data.configureRegistry", :type => "checkbox"}
+                Registry
+          .checkbox
+            %label
+              %input{"ng-change" => "validateForm()", "ng-model" => "data.configureMetrics", :type => "checkbox"}
+                Metrics
+        %label.radio
+          %input{"ng-change" => "validateForm()", "ng-model" => "data.serverConfigType", :type => "radio", :value => "none"}
+            None
+        .form-group.sub-group{"ng-if" => "data.serverConfigType =='none'"}
+          .checkbox
+            %label
+              %input{"ng-change" => "validateForm()", "ng-disabled" => "!validateInfraNode()", "ng-model" => "data.configureRouter", :type => "checkbox"}
+                Router

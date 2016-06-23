@@ -1,0 +1,8 @@
+.wizard-miq-review-item
+  .wizard-miq-review-item-field {{data.masters.length}} {{data.masters.length === 1 ? 'Master' : 'Masters'}}
+  .wizard-miq-review-item-field {{data.nodes.length}} {{data.nodes.length === 1 ? 'Node' : 'Nodes'}}
+  .wizard-miq-review-item-field {{data.storageNodes.length}} Storage
+  .wizard-miq-review-item-field {{data.loadBalancerNodes.length}} {{data.loadBalancerNodes.length === 1 ? 'Load Balancer' : 'Load Balancers'}}
+  .wizard-miq-review-item-field {{data.dnsNodes.length}} DNS
+  .wizard-miq-review-item-field {{data.etcdNodes.length}} Etcd
+  .wizard-miq-review-item-field {{data.infrastructureNodes.length}} {{data.infrastructureNodes.length === 1 ? 'Infrastructure' : 'Infrastructure'}}

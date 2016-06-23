@@ -1,0 +1,17 @@
+.container-fluid.container-tiles-pf.containers-dashboard.miq-dashboard-view{"ng-app" => "miq.containers.providersModule", "ng-controller" => "containers.deployProviderController"}
+  .wizard-miq{"miq-modal" => "", "modal-size" => "large", "modal-title" => "Create Containers Provider", "on-cancel" => "cancelDeploymentWizard()", "on-hide" => "cancelDeploymentWizard()", :visible => "showDeploymentWizard"}
+    %div{"ng-if" => "showDeploymentWizard === true"}
+      / this is done to reset the wizard each time it is shown
+      .miq-deploy-provider-wizard{"back-callback" => "backCallback", "content-height" => "455px", "miq-wizard" => "", "next-callback" => "nextCallback", "next-title" => "nextButtonTitle", "on-cancel" => "cancelWizard()", "on-finish" => "finishedWizard()", "wizard-done" => "deployComplete || deployInProgress", "wizard-ready" => "deployProviderReady"}
+        %div{"miq-wizard-step" => "", "show-review" => "true", "show-review-details" => "true", "step-id" => "details", "step-priority" => "0", "step-title" => "Deployment Details", :substeps => "true"}
+          %div{"ng-include" => "'/static/deploy-provider-details-general.html.haml'"}
+          %div{"ng-include" => "'/static/deploy-provider-details-create-vms.html.haml'"}
+          %div{"ng-include" => "'/static/deploy-provider-masters-nodes.html.haml'"}
+          %div{"ng-include" => "'/static/deploy-provider-details-cdn-channel.html.haml'"}
+        %div{"miq-wizard-step" => "", "show-review" => "true", "step-id" => "configuration", "step-priority" => "1", "step-title" => "Configuration", :substeps => "true"}
+          %div{"ng-include" => "'/static/deploy-provider-config-auth-mode.html.haml'"}
+          %div{"ng-include" => "'/static/deploy-provider-config-auth-settings.html.haml'"}
+          %div{"ng-include" => "'/static/deploy-provider-config-settings.html.haml'"}
+        %div{"miq-wizard-step" => "", "step-id" => "review", "step-priority" => "2", "step-title" => "Review", :substeps => "true"}
+          %div{"ng-include" => "'/static/deploy-provider-review-summary.html.haml'"}
+          %div{"ng-include" => "'/static/deploy-provider-review-progress.html.haml'"}

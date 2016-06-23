@@ -1,0 +1,17 @@
+%div{"miq-wizard-substep" => "", "review-template" => "/static/deploy-provider-auth-mode-review.html", "step-id" => "config-auth-mode", "step-priority" => "0", "step-title" => "Authentication Type"}
+  .miq-form-heading Select authenticaton type
+  %form.form-horizontal
+    %label.radio
+      %input{"ng-model" => "data.authentication.mode", :type => "radio", :value => "all"} Allow All
+    %label.radio
+      %input{"ng-model" => "data.authentication.mode", :type => "radio", :value => "htPassword"} HTPassword
+    %label.radio
+      %input{"ng-model" => "data.authentication.mode", :type => "radio", :value => "ldap"} LDAP
+    %label.radio
+      %input{"ng-model" => "data.authentication.mode", :type => "radio", :value => "requestHeader"} Request Header
+    %label.radio
+      %input{"ng-model" => "data.authentication.mode", :type => "radio", :value => "openId"} OpenID Connect
+    %label.radio
+      %input{"ng-model" => "data.authentication.mode", :type => "radio", :value => "google"} Google
+    %label.radio
+      %input{"ng-model" => "data.authentication.mode", :type => "radio", :value => "github"} GitHub

@@ -1,0 +1,83 @@
+%div{"ng-controller" => "containers.deployProviderReviewController"}
+  %form.form-horizontal{"ng-if" => "data.authentication.mode == 'htPassword'"}
+    .wizard-miq-review-inline{"ng-repeat" => "user in data.authentication.htPassword.users track by $index"}
+      .wizard-miq-review-item
+        %span.wizard-miq-review-item-label Username:
+        %span.wizard-miq-review-item-value {{user.username}}
+      .wizard-miq-review-item
+        %span.wizard-miq-review-item-label Password:
+        %span.wizard-miq-review-item-value ******
+  %form.form-horizontal{"ng-if" => "data.authentication.mode == 'ldap'"}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label ID:
+      %span.wizard-miq-review-item-value {{data.authentication.ldap.id}}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Email:
+      %span.wizard-miq-review-item-value {{data.authentication.ldap.email}}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Name:
+      %span.wizard-miq-review-item-value {{data.authentication.ldap.name}}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Username:
+      %span.wizard-miq-review-item-value {{data.authentication.ldap.username}}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label BindDN:
+      %span.wizard-miq-review-item-value {{data.authentication.ldap.bindDN}}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Bind Password:
+      %span.wizard-miq-review-item-value ******
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label CA:
+      %span.wizard-miq-review-item-value {{data.authentication.ldap.ca}}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Insecure:
+      %span.wizard-miq-review-item-value {{data.authentication.ldap.insecure}}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label URL:
+      %span.wizard-miq-review-item-value {{data.authentication.ldap.url}}
+  %form.form-horizontal{"ng-if" => "data.authentication.mode == 'requestHeader'"}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Challenge URL:
+      %span.wizard-miq-review-item-value {{data.authentication.requestHeader.challengeUrl}}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Login URL:
+      %span.wizard-miq-review-item-value {{data.authentication.requestHeader.loginUrl}}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Client CA:
+      %span.wizard-miq-review-item-value {{data.authentication.requestHeader.clientCA}}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Headers:
+      %span.wizard-miq-review-item-value {{data.authentication.requestHeader.headers}}
+  %form.form-horizontal{"ng-if" => "data.authentication.mode == 'openId'"}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Client ID:
+      %span.wizard-miq-review-item-value {{data.authentication.openId.clientId}}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Client Secret:
+      %span.wizard-miq-review-item-value ******
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Sub-claim:
+      %span.wizard-miq-review-item-value {{data.authentication.openId.subClaim}}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Authorization-Endpoint:
+      %span.wizard-miq-review-item-value {{data.authentication.openId.authEndpoint}}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Token-Endpoint:
+      %span.wizard-miq-review-item-value {{data.authentication.openId.tokenEndpoint}}
+  %form.form-horizontal{"ng-if" => "data.authentication.mode == 'google'"}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Client ID:
+      %span.wizard-miq-review-item-value {{data.authentication.google.clientId}}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Client Secret:
+      %span.wizard-miq-review-item-value ******
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Hosted Domain:
+      %span.wizard-miq-review-item-value {{data.authentication.google.hostedDomain}}
+  %form.form-horizontal{"ng-if" => "data.authentication.mode == 'github'"}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Client ID:
+      %span.wizard-miq-review-item-value {{data.authentication.github.clientId}}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Client Secret:
+      %span.wizard-miq-review-item-value ******

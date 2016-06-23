@@ -1,9 +1,0 @@
-<div ng-controller="containers.deployProviderMasterNodesController">
-  <div miq-wizard-substep step-title="Masters & Nodes" next-enabled="deploymentDetailsMasterNodesComplete"
-       step-id="details-nodes" step-priority="2" on-show="onShow" review-template="{{reviewTemplate}}">
-    <div ng-if="data.provisionOn == 'existingVms' || data.provisionOn == 'newVms'"
-         ng-include="'/static/deploy-provider-details-existing-vms.html'"></div>
-    <div ng-if="data.provisionOn == 'noProvider'"
-         ng-include="'/static/deploy-provider-details-no-provider.html'"></div>
-  </div>
-</div>

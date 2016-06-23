@@ -3,7 +3,7 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
   function($rootScope, $scope) {
     'use strict';
 
-    $scope.reviewTemplate = "/static/deploy-provider-config-settings-review.html";
+    $scope.reviewTemplate = "/static/deploy-provider-config-settings-review.html.haml";
     var firstShow = true;
     $scope.onShow = function () {
       if (firstShow) {
