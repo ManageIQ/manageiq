@@ -167,6 +167,7 @@ module Mixins
 
       if @ems.has_authentication_type?(:ssh_keypair)
         ssh_keypair_userid = @ems.has_authentication_type?(:ssh_keypair) ? @ems.authentication_userid(:ssh_keypair).to_s : ""
+        ssh_keypair_auth_status = @ems.authentication_status_ok?(:ssh_keypair)
       end
 
       if @ems.connection_configurations.metrics.try(:endpoint)
@@ -273,7 +274,8 @@ module Mixins
                        :event_stream_selection      => retrieve_event_stream_selection,
                        :ems_controller              => controller_name,
                        :default_auth_status         => default_auth_status,
-                       :metrics_auth_status         => metrics_auth_status.nil? ? true : metrics_auth_status
+                       :metrics_auth_status         => metrics_auth_status.nil? ? true : metrics_auth_status,
+                       :ssh_keypair_auth_status     => ssh_keypair_auth_status.nil? ? true : ssh_keypair_auth_status
       } if controller_name == "ems_infra"
 
       render :json => {:name                      => @ems.name,
