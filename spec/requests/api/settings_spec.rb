@@ -2,8 +2,7 @@
 # REST API Request Tests - /api/settings
 #
 describe ApiController do
-  let(:api_settings_config_file) { Rails.root.join("config/api_settings.yml") }
-  let(:api_settings)             { YAML.load_file(api_settings_config_file)[:settings] }
+  let(:api_settings) { Api::Settings.collections[:settings][:categories] }
 
   context "Settings Queries" do
     it "tests queries of all exposed settings" do

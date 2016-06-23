@@ -17,7 +17,7 @@ class ApiController
     private
 
     def exposed_settings
-      @exposed_settings ||= YAML.load_file(Rails.root.join("config/api_settings.yml"))[:settings]
+      Api::Settings.collections[:settings][:categories]
     end
   end
 end

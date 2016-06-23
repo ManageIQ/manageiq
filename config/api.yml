@@ -1159,6 +1159,8 @@
     :options:
     - :collection
     :methods: *70174834086080
+    :categories:
+      - product
     :collection_actions:
       :get:
       - :name: read
