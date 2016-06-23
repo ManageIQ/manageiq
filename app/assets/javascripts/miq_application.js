@@ -1630,7 +1630,7 @@ function miqHideSearchClearButton() {
 }
 
 function toggle_expansion(link) {
-  var link = $(link);
+  link = $(link);
   link.find("i").toggleClass("fa-angle-right fa-angle-down");
   link.closest('td').children(0).toggleClass("expanded");
 }
