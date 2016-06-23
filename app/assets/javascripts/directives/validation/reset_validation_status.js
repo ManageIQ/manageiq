@@ -15,7 +15,9 @@ ManageIQ.angular.app.directive('resetValidationStatus', ['$rootScope', function(
 }]);
 
 var adjustValidationStatus = function(value, scope, ctrl, attrs, rootScope) {
-  if(scope.checkAuthentication === true && angular.isDefined(scope.postValidationModel)) {
+  if(scope.checkAuthentication === true &&
+     angular.isDefined(scope.postValidationModel) &&
+     angular.isDefined(scope.postValidationModel[attrs.prefix])) {
     var modelPostValidationObject = angular.copy(scope.postValidationModel[attrs.prefix]);
     delete modelPostValidationObject[ctrl.$name];
 
