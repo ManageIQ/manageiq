@@ -1,4 +1,5 @@
 module SecurityGroupHelper::TextualSummary
+  include TextualMixins::TextualDescription
   #
   # Groups
   #
@@ -32,11 +33,6 @@ module SecurityGroupHelper::TextualSummary
   #
   # Items
   #
-
-  def textual_description
-    @record.description
-  end
-
   def textual_type
     ui_lookup(:model => @record.type)
   end

@@ -1,5 +1,6 @@
 module VmCloudHelper::TextualSummary
   include TextualMixins::TextualAdvancedSettings
+  include TextualMixins::TextualDescription
   include TextualMixins::TextualDrift
   include TextualMixins::TextualFilesystems
   include TextualMixins::TextualInitProcesses
@@ -60,10 +61,6 @@ module VmCloudHelper::TextualSummary
   #
   def textual_server
     @record.miq_server && "#{@record.miq_server.name} [#{@record.miq_server.id}]"
-  end
-
-  def textual_description
-    @record.description
   end
 
   def textual_ipaddress
