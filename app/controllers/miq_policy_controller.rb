@@ -255,7 +255,6 @@ class MiqPolicyController < ApplicationController
     @explorer = true
     session[:export_data] = nil
 
-    @sb[:open_tree_nodes] ||= [] # Create array to keep open tree nodes (only for autoload trees)
     self.x_active_tree ||= 'policy_profile_tree'
     self.x_active_accord ||= 'policy_profile'
 

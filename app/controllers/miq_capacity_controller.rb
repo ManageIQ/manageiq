@@ -12,7 +12,6 @@ class MiqCapacityController < ApplicationController
     @explorer = true
     @trees = [] # TODO: TreeBuilder
     @breadcrumbs = []
-    @sb[:open_tree_nodes] ||= []
     self.x_active_tree = 'utilization_tree'
     util_build_tree(:utilization, :utilization_tree)
     @accords = [{
@@ -47,7 +46,6 @@ class MiqCapacityController < ApplicationController
     @explorer = true
     @trees = [] # TODO: TreeBuilder
     @breadcrumbs = []
-    @sb[:open_tree_nodes] ||= []
     @explorer = true
     @collapse_c_cell = true
     @layout = "miq_capacity_bottlenecks"
