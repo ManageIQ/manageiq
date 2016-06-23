@@ -99,29 +99,7 @@ class VmScan < Job
       #       or, make type-specific Job classes.
       if vm.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm) ||
          vm.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm)
-        if vm.ext_management_system
-          sn_description = snapshotDescription
-          _log.info("Creating snapshot, description: [#{sn_description}]")
-          user_event = start_user_event_message(vm, false)
-          options[:snapshot] = :server
-          begin
-            # TODO: should this be a vm method?
-            sn = vm.ext_management_system.vm_create_evm_snapshot(vm, :desc => sn_description, :user_event => user_event).to_s
-          rescue Exception => err
-            msg = "Failed to create evm snapshot with EMS. Error: [#{err.class.name}]: [#{err}]"
-            _log.error("#{msg}")
-            err.kind_of?(MiqException::MiqVimBrokerUnavailable) ? signal(:broker_unavailable) : signal(:abort, msg, "error")
-            return
-          end
-          context[:snapshot_mor] = sn
-          _log.info("Created snapshot, description: [#{sn_description}], reference: [#{context[:snapshot_mor]}]")
-          set_status("Snapshot created: reference: [#{context[:snapshot_mor]}]")
-          options[:snapshot] = :created
-          options[:use_existing_snapshot] = true
-        else
-          signal(:abort, "No #{ui_lookup(:table => "ext_management_systems")} available to create snapshot, skipping", "error")
-          return
-        end
+        return unless create_snapshot(vm)
       elsif vm.require_snapshot_for_scan?
         host  = Object.const_get(agent_class).find(agent_id)
         proxy = host.respond_to?("miq_proxy") ? host.miq_proxy : nil
@@ -141,29 +119,7 @@ class VmScan < Job
         else
           set_status("Creating VM snapshot")
 
-          if vm.ext_management_system
-            sn_description = snapshotDescription
-            _log.info("Creating snapshot, description: [#{sn_description}]")
-            user_event = start_user_event_message(vm, false)
-            options[:snapshot] = :server
-            begin
-              # TODO: should this be a vm method?
-              sn = vm.ext_management_system.vm_create_evm_snapshot(vm, :desc => sn_description, :user_event => user_event).to_s
-            rescue Exception => err
-              msg = "Failed to create evm snapshot with EMS. Error: [#{err.class.name}]: [#{err}]"
-              _log.error("#{msg}")
-              err.kind_of?(MiqException::MiqVimBrokerUnavailable) ? signal(:broker_unavailable) : signal(:abort, msg, "error")
-              return
-            end
-            context[:snapshot_mor] = sn
-            _log.info("Created snapshot, description: [#{sn_description}], reference: [#{context[:snapshot_mor]}]")
-            set_status("Snapshot created: reference: [#{context[:snapshot_mor]}]")
-            options[:snapshot] = :created
-            options[:use_existing_snapshot] = true
-          else
-            signal(:abort, "No #{ui_lookup(:table => "ext_management_systems")} available to create snapshot, skipping", "error")
-            return
-          end
+          return unless create_snapshot(vm)
         end
       else
         start_user_event_message(vm)
@@ -599,6 +555,33 @@ class VmScan < Job
   alias_method :error,              :process_error
 
   private
+
+  def create_snapshot(vm)
+    if vm.ext_management_system
+      sn_description = snapshotDescription
+      _log.info("Creating snapshot, description: [#{sn_description}]")
+      user_event = start_user_event_message(vm, false)
+      options[:snapshot] = :server
+      begin
+        # TODO: should this be a vm method?
+        sn = vm.ext_management_system.vm_create_evm_snapshot(vm, :desc => sn_description, :user_event => user_event).to_s
+      rescue Exception => err
+        msg = "Failed to create evm snapshot with EMS. Error: [#{err.class.name}]: [#{err}]"
+        _log.error("#{msg}")
+        err.kind_of?(MiqException::MiqVimBrokerUnavailable) ? signal(:broker_unavailable) : signal(:abort, msg, "error")
+        return false
+      end
+      context[:snapshot_mor] = sn
+      _log.info("Created snapshot, description: [#{sn_description}], reference: [#{context[:snapshot_mor]}]")
+      set_status("Snapshot created: reference: [#{context[:snapshot_mor]}]")
+      options[:snapshot] = :created
+      options[:use_existing_snapshot] = true
+      return true
+    else
+      signal(:abort, "No #{ui_lookup(:table => "ext_management_systems")} available to create snapshot, skipping", "error")
+      return false
+    end
+  end
 
   def log_user_event(user_event, vm)
     if vm.ext_management_system
