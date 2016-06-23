@@ -3,39 +3,11 @@ class ApiController
     extend ActiveSupport::Concern
 
     included do
-      @config = load_config
       init_env
       gen_attr_type_hash
     end
 
     module ClassMethods
-      #
-      # Load REST API Config, Versioning, Methods, Collections and Actions
-      # from the api.tmpl.yml file.
-      #
-      # For API Versioning - no ident in the version definitions means that
-      # version is not be advertised by the entrypoint.
-      #
-      # URLs without the v#.# versioning default to :version listed
-      # in the :base section which must also exist in the :version
-      # definition section.
-      #
-      def load_config
-        @config = YAML.load_file(Rails.root.join("config/api.yml"))
-      end
-
-      def base_config
-        @config[:base]
-      end
-
-      def version_config
-        @config[:version]
-      end
-
-      def collection_config
-        @config[:collections]
-      end
-
       #
       # Let's fetch encrypted attribute names of objects being rendered if not already done
       #
@@ -57,15 +29,15 @@ class ApiController
       # Initializing REST API environment, called once @ startup
       #
       def init_env
-        $api_log.info("Initializing Environment for #{base_config[:name]}")
-        @api_user_token_service ||= ApiUserTokenService.new(@config, :log_init => true)
+        $api_log.info("Initializing Environment for #{Api::Settings.base[:name]}")
+        @api_user_token_service ||= ApiUserTokenService.new(Api::Settings.data, :log_init => true)
         log_config
       end
 
       def log_config
         $api_log.info("")
         $api_log.info("Static Configuration")
-        base_config.each { |key, val| log_kv(key, val) }
+        Api::Settings.base.each { |key, val| log_kv(key, val) }
 
         $api_log.info("")
         $api_log.info("Dynamic Configuration")
@@ -94,7 +66,7 @@ class ApiController
       # Let's dynamically get the :date and :datetime attributes from the Classes we care about.
       #
       def gen_time_attr_type_hash
-        collection_config.values.each do |cspec|
+        Api::Settings.collections.each_value do |cspec|
           next if cspec[:klass].blank?
           klass = cspec[:klass].constantize
           klass.columns_hash.collect  do |name, typeobj|
