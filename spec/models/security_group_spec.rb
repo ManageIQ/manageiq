@@ -9,4 +9,16 @@ describe SecurityGroup do
   it ".non_cloud_network" do
     expect(SecurityGroup.non_cloud_network).to eq([@sg2])
   end
+
+  describe "#total_vms" do
+    it "counts vms" do
+      sg = FactoryGirl.create(:security_group)
+      2.times { sg.vms.create(FactoryGirl.attributes_for(:vm)) }
+      expect(sg.reload.total_vms).to eq(2)
+    end
+
+    it "doesnt support sql" do
+      expect(SecurityGroup.attribute_supported_by_sql?(:total_vms)).to be false
+    end
+  end
 end

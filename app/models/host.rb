@@ -14,6 +14,7 @@ require 'HostScanProfiles'
 
 class Host < ApplicationRecord
   include NewWithTypeStiMixin
+  include VirtualTotalMixin
 
   VENDOR_TYPES = {
     # DB            Displayed
@@ -112,9 +113,6 @@ class Host < ApplicationRecord
   virtual_column :v_owning_cluster,             :type => :string,      :uses => :ems_cluster
   virtual_column :v_owning_datacenter,          :type => :string,      :uses => :all_relationships
   virtual_column :v_owning_folder,              :type => :string,      :uses => :all_relationships
-  virtual_column :v_total_storages,             :type => :integer,     :uses => :storages
-  virtual_column :v_total_vms,                  :type => :integer,     :uses => :vms
-  virtual_column :v_total_miq_templates,        :type => :integer,     :uses => :miq_templates
   virtual_column :total_vcpus,                  :type => :integer,     :uses => :cpu_total_cores
   virtual_column :num_cpu,                      :type => :integer,     :uses => :hardware
   virtual_column :cpu_total_cores,              :type => :integer,     :uses => :hardware
@@ -152,6 +150,10 @@ class Host < ApplicationRecord
   virtual_has_many  :file_shares,          :class_name => 'SniaFileShare'
   virtual_has_many  :storage_volumes,      :class_name => 'CimStorageVolume'
   virtual_has_many  :logical_disks,        :class_name => 'CimLogicalDisk'
+
+  virtual_total :v_total_storages, :storages
+  virtual_total :v_total_vms, :vms
+  virtual_total :v_total_miq_templates, :miq_templates
 
   alias_method :datastores, :storages    # Used by web-services to return datastores as the property name
 
@@ -1523,19 +1525,6 @@ class Host < ApplicationRecord
   def v_owning_datacenter
     o = owning_datacenter
     o ? o.name : ""
-  end
-
-  # Virtual cols for relationship counts
-  def v_total_storages
-    storages.size
-  end
-
-  def v_total_vms
-    vms.size
-  end
-
-  def v_total_miq_templates
-    miq_templates.size
   end
 
   def miq_scsi_luns

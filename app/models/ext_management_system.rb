@@ -483,18 +483,6 @@ class ExtManagementSystem < ApplicationRecord
     ["#{events_table_name(assoc)}.ems_id = ?", id]
   end
 
-  def total_miq_templates
-    miq_templates.size
-  end
-
-  def total_hosts
-    hosts.size
-  end
-
-  def total_clusters
-    ems_clusters.size
-  end
-
   def total_storages
     HostStorage.where(:host_id => host_ids).count("DISTINCT storage_id")
   end
