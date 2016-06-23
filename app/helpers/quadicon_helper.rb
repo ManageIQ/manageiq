@@ -377,7 +377,7 @@ module QuadiconHelper
                      "100/#{item.class.to_s.underscore}.png"
                    end
                  elsif item.decorator_class?
-                   item.decorate.try(:fonticon) || item.decorate.try(:listicon_image)
+                   item.decorate.try(:listicon_image)
                  else
                    "100/#{item.class.base_class.to_s.underscore}.png"
                  end

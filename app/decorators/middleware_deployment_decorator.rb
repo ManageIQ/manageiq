@@ -3,7 +3,13 @@ class MiddlewareDeploymentDecorator < Draper::Decorator
   include MiddlewareDecoratorMixin
 
   def fonticon
-    nil
+    if name.end_with? '.ear'
+      'product-file-ear-o'
+    elsif name.end_with? '.war'
+      'product-file-war-o'
+    else
+      'product-report'
+    end
   end
 
   # Determine the icon
