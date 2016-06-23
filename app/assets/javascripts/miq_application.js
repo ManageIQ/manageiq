@@ -1,3 +1,5 @@
+/* global dialogFieldRefresh jqplot_bind_events miqBrowserDetect miqExpressionPrefill miqGridCheckAll miqGridGetCheckedRows miqLoadTL miqMenu miqValueStylePrefill performFiltering miq_after_onload */
+
 // MIQ specific JS functions
 
 // Things to be done on page loads
@@ -42,6 +44,7 @@ function miqOnLoad() {
   }
 
   // Run MIQ after onload code if present
+  // FIXME: miq_after_onload -> move under ManageIQ
   if (typeof miq_after_onload == "string") {
     eval(miq_after_onload);
   }
@@ -734,6 +737,7 @@ function miqRESTAjaxButton(url, button, data) {
       e.preventDefault();
       return false;
     });
+    var formData;
     if(data != undefined) {
       formData = data;
     }
@@ -1652,7 +1656,7 @@ function toggle_expansion(link) {
 function check_for_ellipsis(){
     var $element = $('.expand');
     $.each($element, function( i, value ) {
-        $val = $(value)
+        var $val = $(value)
         var $c = $val.clone().css('overflow', 'initial').appendTo('body');
         if( $c.width() > $val.width() && $val.parent().find('i.fa-angle-right').length == 0) {
             add_expanding_icon($val.parent())

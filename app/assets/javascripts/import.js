@@ -1,3 +1,5 @@
+/* global miqSparkleOff miqSparkleOn */
+
 var ImportSetup = {
   listenForPostMessages: function(getAndRenderJsonCallback) {
     window.addEventListener('message', function(event) {

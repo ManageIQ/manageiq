@@ -1,4 +1,4 @@
-angular.module('miq.util').factory('chartsMixin', function(pfUtils) {
+angular.module('miq.util').factory('chartsMixin', ['pfUtils', function(pfUtils) {
   'use strict';
 
   var hourlyTimeTooltip = function (data) {
@@ -26,25 +26,20 @@ angular.module('miq.util').factory('chartsMixin', function(pfUtils) {
   var lineChartTooltipPositionFactory = function(chartId) {
     var elementQuery = '#' + chartId + 'lineChart';
 
-    return function (data, width, height, element) {
-      var center;
-      var top;
-      var chartBox;
-      var graphOffsetX;
-      var x;
-
+    return function (_data, width, height, element) {
       try {
-        center = parseInt(element.getAttribute('x'));
-        top = parseInt(element.getAttribute('y'));
-        chartBox = document.querySelector(elementQuery).getBoundingClientRect();
-        graphOffsetX = document.querySelector(elementQuery + ' g.c3-axis-y').getBoundingClientRect().right;
-        x = Math.max(0, center + graphOffsetX - chartBox.left - Math.floor(width / 2));
+        var center = parseInt(element.getAttribute('x'), 10);
+        var top = parseInt(element.getAttribute('y'), 10);
+        var chartBox = document.querySelector(elementQuery).getBoundingClientRect();
+        var graphOffsetX = document.querySelector(elementQuery + ' g.c3-axis-y').getBoundingClientRect().right;
+
+        var x = Math.max(0, center + graphOffsetX - chartBox.left - Math.floor(width / 2));
 
         return {
           top: top - height,
-          left: Math.min(x, chartBox.width - width)
+          left: Math.min(x, chartBox.width - width),
         };
-      } catch (e) {
+      } catch (_e) {
       }
     };
   };
@@ -163,4 +158,4 @@ angular.module('miq.util').factory('chartsMixin', function(pfUtils) {
     processPodUtilizationData: processPodUtilizationData,
     dailyTimeTooltip: dailyTimeTooltip
   };
-});
+}]);

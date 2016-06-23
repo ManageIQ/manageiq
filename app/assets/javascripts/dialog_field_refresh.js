@@ -1,3 +1,5 @@
+/* global miqInitSelectPicker miqSelectPickerEvent miqSparkle miqSparkleOn */
+
 var dialogFieldRefresh = {
   listenForAutoRefreshMessages: function(fieldId, callbackFunction) {
     window.addEventListener('message', function(event) {

@@ -1,3 +1,5 @@
+/* global miqJqueryRequest miqPassFields */
+
 $.fn.resizableSidebar = function() {
   // Helper to increment the Y in the col-XX-YY by add
   var change_col = function(colstr, add) {

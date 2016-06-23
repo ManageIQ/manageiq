@@ -1,3 +1,5 @@
+/* global miqAjaxButton miqBuildCalendar miqButtons miqJqueryRequest miqRESTAjaxButton miqSparkleOff miqSparkleOn */
+
 ManageIQ.angular.app.service('miqService', function() {
 
   this.storedPasswordPlaceholder = "●●●●●●●●";
@@ -99,13 +101,14 @@ ManageIQ.angular.app.service('miqService', function() {
   };
 
   this.serializeModel = function(model) {
-    serializedObj = angular.copy( model );
-    for(var k in serializedObj){
+    var serializedObj = angular.copy(model);
 
-      if(serializedObj.hasOwnProperty(k) && !serializedObj[k]){
+    for (var k in serializedObj) {
+      if (serializedObj.hasOwnProperty(k) && !serializedObj[k]) {
         delete serializedObj[k];
       }
     }
+
     return serializedObj;
-  }
+  };
 });

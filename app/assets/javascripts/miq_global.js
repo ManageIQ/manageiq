@@ -1,6 +1,6 @@
 // global variables
-if (typeof(ManageIQ) === 'undefined') {
-  var ManageIQ = {
+if (! window.ManageIQ) {
+  window.ManageIQ = {
     actionUrl: null, // action URL used in JS function miqGridSort
     angular: {
       app: null, // angular application
@@ -45,7 +45,7 @@ if (typeof(ManageIQ) === 'undefined') {
     },
     grids: {}, // stored grids on the screen
     i18n: {
-      mark_translated_strings: false
+      mark_translated_strings: false,
     },
     mouse: {
       x: null, // mouse X coordinate for popup menu
@@ -72,5 +72,5 @@ if (typeof(ManageIQ) === 'undefined') {
       processing: false, // is a request currently being processed?
       queue: [], // a queue of pending requests
     },
-  }
-};
+  };
+}
