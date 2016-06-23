@@ -9,7 +9,7 @@
   :definitions:
   - :name: '2.3.0-pre'
     :ident: 'v2.3.0-pre'
-:method:
+:verb:
   :names:
   - :get
   - :put
@@ -40,18 +40,18 @@
     :description: Accounts
     :options:
     - :subcollection
-    :methods: *70174834086080
+    :verbs: *70174834086080
     :klass: Account
   :auth:
     :description: REST API Authentication
     :options:
     - :primary
-    :methods: *70174834086081
+    :verbs: *70174834086081
   :automation_requests:
     :description: Automation Requests
     :options:
     - :collection
-    :methods: *70174834085860
+    :verbs: *70174834085860
     :klass: AutomationRequest
     :subcollections:
     - :request_tasks
@@ -74,7 +74,7 @@
     :identifier: availability_zone
     :options:
     - :collection
-    :methods: *70174834086080
+    :verbs: *70174834086080
     :klass: AvailabilityZone
     :collection_actions:
       :get:
@@ -89,7 +89,7 @@
     :identifier: ops_settings
     :options:
     - :collection
-    :methods: *70174834085620
+    :verbs: *70174834085620
     :klass: Category
     :subcollections:
     - :tags
@@ -127,7 +127,7 @@
     :identifier: chargeback
     :options:
     - :collection
-    :methods: *70174834084700
+    :verbs: *70174834084700
     :klass: ChargebackRate
     :subcollections:
     - :rates
@@ -159,21 +159,21 @@
     :identifier: currency
     :options:
     - :collection
-    :methods: *70174834086080
+    :verbs: *70174834086080
     :klass: ChargebackRateDetailCurrency
   :measures:
     :description: Measures
     :identifier: measure
     :options:
     - :collection
-    :methods: *70174834086080
+    :verbs: *70174834086080
     :klass: ChargebackRateDetailMeasure
   :clusters:
     :description: Clusters
     :identifier: ems_cluster
     :options:
     - :collection
-    :methods: *70174834085860
+    :verbs: *70174834085860
     :klass: EmsCluster
     :subcollections:
     - :tags
@@ -218,7 +218,7 @@
     :options:
     - :collection
     - :subcollection
-    :methods: *70174834086080
+    :verbs: *70174834086080
     :klass: Condition
     :collection_actions:
       :get:
@@ -233,7 +233,7 @@
     :identifier: storage
     :options:
     - :collection
-    :methods: *70174834085860
+    :verbs: *70174834085860
     :klass: Storage
     :subcollections:
     - :tags
@@ -264,7 +264,7 @@
     :options:
     - :collection
     - :subcollection
-    :methods: *70174834086080
+    :verbs: *70174834086080
     :klass: MiqEventDefinition
     :collection_actions:
       :get:
@@ -280,7 +280,7 @@
     - :collection
     - :subcollection
     - :show
-    :methods: *70174834085860
+    :verbs: *70174834085860
     :klass: MiqProductFeature
     :subcollection_actions:
       :post:
@@ -291,7 +291,7 @@
     :identifier: flavor
     :options:
     - :collection
-    :methods: *70174834086080
+    :verbs: *70174834086080
     :klass: Flavor
     :collection_actions:
       :get:
@@ -306,7 +306,7 @@
     :identifier: rbac_group
     :options:
     - :collection
-    :methods: *70174834084700
+    :verbs: *70174834084700
     :klass: MiqGroup
     :subcollections:
     - :tags
@@ -344,7 +344,7 @@
     :identifier: host
     :options:
     - :collection
-    :methods: *70174834085860
+    :verbs: *70174834085860
     :klass: Host
     :subcollections:
     - :tags
@@ -437,7 +437,7 @@
     :description: Instances
     :identifier: instance
     :klass: ManageIQ::Providers::CloudManager::Vm
-    :methods: *70174834085860
+    :verbs: *70174834085860
     :options:
     - :collection
     :collection_actions:
@@ -486,7 +486,7 @@
     :description: Pictures
     :options:
     - :collection
-    :methods: *70174834086080
+    :verbs: *70174834086080
     :klass: Picture
   :policies:
     :description: Policies
@@ -494,7 +494,7 @@
     :options:
     - :collection
     - :subcollection
-    :methods: *70174834085860
+    :verbs: *70174834085860
     :klass: MiqPolicy
     :subcollections:
     - :conditions
@@ -542,7 +542,7 @@
     :options:
     - :collection
     - :subcollection
-    :methods: *70174834086080
+    :verbs: *70174834086080
     :klass: MiqAction
     :collection_actions:
       :get:
@@ -558,7 +558,7 @@
     :options:
     - :collection
     - :subcollection
-    :methods: *70174834085860
+    :verbs: *70174834085860
     :klass: MiqPolicySet
     :subcollections:
     - :policies
@@ -603,7 +603,7 @@
     :identifier: ems_infra
     :options:
     - :collection
-    :methods: *70174834085620
+    :verbs: *70174834085620
     :klass: ExtManagementSystem
     :subcollections:
     - :tags
@@ -659,7 +659,7 @@
     :identifier: miq_ae_customization_explorer
     :options:
     - :collection
-    :methods: *70174834086080
+    :verbs: *70174834086080
     :klass: MiqDialog
     :collection_actions:
       :get:
@@ -674,7 +674,7 @@
     :identifier: miq_request
     :options:
     - :collection
-    :methods: *70174834085860
+    :verbs: *70174834085860
     :klass: MiqProvisionRequest
     :subcollections:
     - :request_tasks
@@ -705,7 +705,7 @@
     :options:
     - :collection
     - :subcollection
-    :methods: *70174834084700
+    :verbs: *70174834084700
     :klass: ChargebackRateDetail
     :collection_actions:
       :get:
@@ -735,7 +735,7 @@
     :identifier: miq_report
     :options:
     - :collection
-    :methods: *70174834085860
+    :verbs: *70174834085860
     :klass: MiqReport
     :resource_actions:
       :get:
@@ -758,14 +758,14 @@
     :options:
     - :collection
     - :subcollection
-    :methods: *70174834086080
+    :verbs: *70174834086080
     :klass: MiqRequestTask
   :requests:
     :description: Requests
     :identifier: miq_request
     :options:
     - :collection
-    :methods: *70174834086080
+    :verbs: *70174834086080
     :klass: MiqRequest
     :collection_actions:
       :get:
@@ -779,14 +779,14 @@
     :description: Resource Actions
     :options:
     - :subcollection
-    :methods: *70174834086080
+    :verbs: *70174834086080
     :klass: ResourceAction
   :resource_pools:
     :description: Resource Pools
     :identifier: resource_pool
     :options:
     - :collection
-    :methods: *70174834085860
+    :verbs: *70174834085860
     :klass: ResourcePool
     :subcollections:
     - :tags
@@ -831,7 +831,7 @@
     :options:
     - :collection
     - :subcollection
-    :methods: *70174834086080
+    :verbs: *70174834086080
     :klass: MiqReportResult
     :collection_actions:
       :get:
@@ -846,7 +846,7 @@
     :identifier: rbac_role
     :options:
     - :collection
-    :methods: *70174834085620
+    :verbs: *70174834085620
     :klass: MiqUserRole
     :subcollections:
     - :features
@@ -880,7 +880,7 @@
     :identifier: security_group
     :options:
     - :collection
-    :methods: *70174834086080
+    :verbs: *70174834086080
     :klass: SecurityGroup
     :collection_actions:
       :get:
@@ -894,14 +894,14 @@
     :description: EVM Servers
     :options:
     - :collection
-    :methods: *70174834086080
+    :verbs: *70174834086080
     :klass: MiqServer
   :service_catalogs:
     :description: Service Catalogs
     :identifier: st_catalog_accord
     :options:
     - :collection
-    :methods: *70174834084700
+    :verbs: *70174834084700
     :klass: ServiceTemplateCatalog
     :subcollections:
     - :service_templates
@@ -936,7 +936,7 @@
     :options:
     - :collection
     - :subcollection
-    :methods: *70174834085860
+    :verbs: *70174834085860
     :klass: Dialog
     :collection_actions:
       :get:
@@ -957,7 +957,7 @@
     :identifier: svc_catalog_provision
     :options:
     - :collection
-    :methods: *70174834084700
+    :verbs: *70174834084700
     :klass: ServiceOrder
     :subcollections:
     - :service_requests
@@ -994,7 +994,7 @@
     :options:
     - :collection
     - :subcollection
-    :methods: *70174834085860
+    :verbs: *70174834085860
     :klass: ServiceTemplateProvisionRequest
     :subcollections:
     - :request_tasks
@@ -1041,7 +1041,7 @@
     - :subcollection
     - :show
     - :show_as_collection
-    :methods: *70174834084700
+    :verbs: *70174834084700
     :klass: ServiceTemplate
     :subcollections:
     - :resource_actions
@@ -1110,7 +1110,7 @@
     :options:
     - :collection
     - :custom_actions
-    :methods: *70174834084700
+    :verbs: *70174834084700
     :klass: Service
     :subcollections:
     - :tags
@@ -1158,7 +1158,7 @@
     :identifier: ops_settings
     :options:
     - :collection
-    :methods: *70174834086080
+    :verbs: *70174834086080
     :categories:
       - product
     :collection_actions:
@@ -1173,13 +1173,13 @@
     :description: Software
     :options:
     - :subcollection
-    :methods: *70174834086080
+    :verbs: *70174834086080
     :klass: GuestApplication
   :custom_attributes:
     :description: Custom Attributes
     :options:
     - :subcollection
-    :methods: *70174834085620
+    :verbs: *70174834085620
     :klass: CustomAttribute
     :subcollection_actions:
       :post:
@@ -1196,7 +1196,7 @@
     :options:
     - :collection
     - :subcollection
-    :methods: *70174834085620
+    :verbs: *70174834085620
     :klass: Tag
     :collection_actions:
       :get:
@@ -1239,7 +1239,7 @@
     :options:
     - :collection
     - :subcollection
-    :methods: *70174834086080
+    :verbs: *70174834086080
     :klass: MiqTask
     :collection_actions:
       :get:
@@ -1254,7 +1254,7 @@
     :identifier: miq_template
     :options:
     - :collection
-    :methods: *70174834085620
+    :verbs: *70174834085620
     :klass: MiqTemplate
     :subcollections:
     - :tags
@@ -1318,7 +1318,7 @@
     :identifier: rbac_tenant
     :options:
     - :collection
-    :methods: *70174834084700
+    :verbs: *70174834084700
     :klass: Tenant
     :subcollections:
     - :tags
@@ -1367,7 +1367,7 @@
     :description: TenantQuotas
     :options:
     - :subcollection
-    :methods: *70174834084700
+    :verbs: *70174834084700
     :klass: TenantQuota
     :subcollection_actions:
       :get:
@@ -1400,7 +1400,7 @@
     :identifier: rbac_user
     :options:
     - :collection
-    :methods: *70174834084700
+    :verbs: *70174834084700
     :klass: User
     :subcollections:
     - :tags
@@ -1438,7 +1438,7 @@
     :identifier: vm
     :options:
     - :collection
-    :methods: *70174834085620
+    :verbs: *70174834085620
     :klass: Vm
     :subcollections:
     - :tags
@@ -1576,7 +1576,7 @@
     :identifier: zone
     :options:
     - :collection
-    :methods: *70174834086080
+    :verbs: *70174834086080
     :klass: Zone
     :collection_actions:
       :get:

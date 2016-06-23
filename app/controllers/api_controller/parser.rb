@@ -44,7 +44,7 @@ class ApiController
       if cname && ctype
         mname = @req[:method]
         cent  = collection_config[cname.to_sym]  # For Sub-Collection
-        unless Array(cent[:methods]).include?(mname)
+        unless Array(cent[:verbs]).include?(mname)
           raise BadRequestError, "Unsupported HTTP Method #{mname} for the #{ctype} #{cname} specified"
         end
       end
