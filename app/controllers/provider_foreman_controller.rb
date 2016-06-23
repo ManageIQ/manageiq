@@ -437,7 +437,6 @@ class ProviderForemanController < ApplicationController
       @reselect_node = self.x_node = "#{nodetype}-#{to_cid(id)}"
     end
 
-    @sb[:open_tree_nodes] ||= []
     build_accordions_and_trees
 
     render :layout => "application"
@@ -521,8 +520,6 @@ class ProviderForemanController < ApplicationController
   end
 
   def build_configuration_manager_tree(type, name)
-    @sb[:open_tree_nodes] ||= []
-
     tree = case name
            when :configuration_manager_providers_tree
              TreeBuilderConfigurationManager.new(name, type, @sb)
