@@ -1,5 +1,6 @@
 module VmHelper::TextualSummary
   include TextualMixins::TextualDrift
+  include TextualMixins::TextualInitProcesses
   include TextualMixins::TextualOsInfo
   include TextualMixins::TextualPatches
   # TODO: Determine if DoNav + url_for + :title is the right way to do links, or should it be link_to with :title
@@ -537,20 +538,6 @@ module VmHelper::TextualSummary
       h[:title] = _("Show the %{label} installed on this VM") % {:label => label}
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'guest_applications', :id => @record)
-    end
-    h
-  end
-
-  def textual_init_processes
-    os = @record.os_image_name.downcase
-    return nil unless os =~ /linux/
-    num = @record.number_of(:linux_initprocesses)
-    # TODO: Why is this image different than graphical?
-    h = {:label => _("Init Processes"), :image => "gears", :value => num}
-    if num > 0
-      h[:title] = n_("Show the Init Process installed on this VM", "Show the Init Processes installed on this VM", num)
-      h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'linux_initprocesses', :id => @record)
     end
     h
   end
