@@ -1619,7 +1619,7 @@
         :identifier: zone_delete
   :virtual_templates:
     :description: Virtual Templates
-    :identifier: virtual_template
+    :identifier: miq_virtual_template
     :options:
     - :collection
     :methods: *70174834084700
