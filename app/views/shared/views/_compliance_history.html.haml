@@ -3,7 +3,7 @@
   - squash_state = session[:squash_open] ? "false" : "true"
   - squash_title = session[:squash_open] ? _("Collapse All") : _("Expand All")
   = link_to(image_tag(image_path("toolbars/squashed-all-#{squash_state}.png"), :id => 'squash_img', :border => "0", :alt => "#{squash_title}", :title => "#{squash_title}"),
-    {:action => 'squash_toggle', :id => @record.id},
+    {:action => 'squash_toggle', :id => @record.id, :name => @record.name},
     :remote       => true,
     "data-method" => :post,
     :id           => 'squash')

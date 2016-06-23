@@ -3,7 +3,7 @@ module ApplicationController::TreeSupport
 
   def squash_toggle
     @record = find_record
-    item = "h_#{@record.name}"
+    item = "h_#{params[:name]}"
     render :update do |page|
       page << javascript_prologue
       if session[:squash_open] == false
