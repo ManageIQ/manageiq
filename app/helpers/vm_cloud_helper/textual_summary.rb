@@ -1,4 +1,5 @@
 module VmCloudHelper::TextualSummary
+  include TextualMixins::TextualDrift
   include TextualMixins::TextualOsInfo
   include TextualMixins::TextualPatches
   # TODO: Determine if DoNav + url_for + :title is the right way to do links, or should it be link_to with :title
@@ -127,21 +128,6 @@ module VmCloudHelper::TextualSummary
 
   def textual_guid
     {:label => _("Management Engine GUID"), :value => @record.guid}
-  end
-
-  def textual_drift
-    return nil unless role_allows(:feature => "vm_drift")
-    h = {:label => _("Drift History"), :image => "drift"}
-    num = @record.number_of(:drift_states)
-    if num == 0
-      h[:value] = _("None")
-    else
-      h[:value] = num
-      h[:title] = _("Show virtual machine drift history")
-      h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'drift_history', :id => @record)
-    end
-    h
   end
 
   def textual_scan_history
