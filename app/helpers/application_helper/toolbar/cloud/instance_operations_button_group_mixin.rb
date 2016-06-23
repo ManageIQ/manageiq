@@ -1,7 +1,7 @@
 module ApplicationHelper::Toolbar::Cloud::InstanceOperationsButtonGroupMixin
-  def included(included_class)
-    button_group('instance_operations', [
-      select(
+  def self.included(included_class)
+    included_class.button_group('instance_operations', [
+      included_class.select(
         :instance_power_choice,
         'fa fa-power-off fa-lg',
         N_('Instance Power Functions'),
@@ -56,7 +56,7 @@ module ApplicationHelper::Toolbar::Cloud::InstanceOperationsButtonGroupMixin
             N_('Resume'),
             :image   => "power_resume",
             :confirm => N_("Resume this Instance?")),
-          separator,
+          included_class.separator,
           included_class.button(
             :instance_guest_restart,
             nil,
