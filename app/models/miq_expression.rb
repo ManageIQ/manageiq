@@ -1692,7 +1692,7 @@ class MiqExpression
         result << arel
       end
       first, *rest = operands
-      rest.inject(first) { |lhs, rhs| Arel::Nodes::Or.new(lhs, rhs) }
+      rest.inject(first) { |lhs, rhs| lhs.or(rhs) }
     when "not", "!"
       Arel::Nodes::Not.new(to_arel(exp[operator], tz))
     when "is null"
