@@ -5,6 +5,7 @@ module VmCloudHelper::TextualSummary
   include TextualMixins::TextualInitProcesses
   include TextualMixins::TextualOsInfo
   include TextualMixins::TextualPatches
+  include TextualMixins::TextualPowerState
   include TextualMixins::TextualRegion
   include TextualMixins::TextualScanHistory
   # TODO: Determine if DoNav + url_for + :title is the right way to do links, or should it be link_to with :title
@@ -288,14 +289,6 @@ module VmCloudHelper::TextualSummary
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => 'compliance_history')
     end
-    h
-  end
-
-  def textual_power_state
-    state = @record.current_state.downcase
-    state = "unknown" if state.blank?
-    h = {:label => _("Power State"), :value => state}
-    h[:image] = "currentstate-#{@record.template? ? (@record.host ? "template" : "template-no-host") : state}"
     h
   end
 
