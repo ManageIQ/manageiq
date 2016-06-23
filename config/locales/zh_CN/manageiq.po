@@ -7457,7 +7457,7 @@ msgstr "云"
 
 #: ../../app/presenters/menu/default_menu.rb:22
 msgid "Cloud Intel"
-msgstr "云 Intel"
+msgstr "云情报"
 
 #. TRANSLATORS: en.yml key: dictionary.table.cloud_network
 #: ../dictionary_strings.rb:1865
@@ -8385,11 +8385,11 @@ msgstr "压缩节省的百分比"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../../app/presenters/menu/default_menu.rb:5 ../../app/views/chargeback/_assignments_list.html.haml:22 ../yaml_strings.rb:445
 msgid "Compute"
-msgstr "Compute"
+msgstr "计算"
 
 #: ../../app/helpers/provider_foreman_helper.rb:84 ../../app/helpers/provider_foreman_helper.rb:165
 msgid "Compute Profile"
-msgstr "Compute 配置集"
+msgstr "计算配置集"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../yaml_strings.rb:447
@@ -22025,6 +22025,22 @@ msgstr "中间件部署"
 msgid "Middleware Deployments"
 msgstr "中间件部署"
 
+#. TRANSLATORS: en.yml key: dictionary.model.MiddlewareDatasource
+#. TRANSLATORS: en.yml key: dictionary.table.middleware_datasource
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../dictionary_strings.rb:1657 ../dictionary_strings.rb:2161 ../yaml_strings.rb:1812
+msgid "Middleware Datasource"
+msgstr "中间件数据源"
+
+#. TRANSLATORS: en.yml key: dictionary.model.MiddlewareDatasource (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.middleware_datasource (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.middleware_datasources
+#. TRANSLATORS: file: product/views/MiddlewareDatasource.yaml
+#: ../../app/views/configuration/_ui_2.html.haml:113 ../dictionary_strings.rb:1659 ../dictionary_strings.rb:2163 ../dictionary_strings.rb:2165 ../yaml_strin
+gs.rb:4059
+msgid "Middleware Datasources"
+msgstr "中间件数据源"
+
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::MiddlewareManager
 #. TRANSLATORS: en.yml key: dictionary.table.ems_middleware
 #: ../dictionary_strings.rb:1453 ../dictionary_strings.rb:2009
@@ -29594,7 +29610,7 @@ msgstr "%s 或 %s 上虚拟机位置的规划"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../../app/presenters/menu/default_menu.rb:188 ../yaml_strings.rb:1157
 msgid "Planning"
-msgstr "Planning"
+msgstr "计划"
 
 #: ../../app/controllers/miq_capacity_controller.rb:84
 msgid "Planning Options"
@@ -38357,11 +38373,11 @@ msgstr "TenantQuota|值"
 #. TRANSLATORS: file: product/views/Tenant.yaml
 #: ../../app/presenters/tree_builder_ops_rbac.rb:33 ../../app/presenters/menu/default_menu.rb:45 ../../app/helpers/ui_constants.rb:467 ../../app/helpers/ui_constants.rb:481 ../../app/controllers/ops_controller.rb:696 ../../app/controllers/ops_controller.rb:711 ../../app/views/configuration/_ui_2.html.haml:146 ../yaml_strings.rb:1340
 msgid "Tenants"
-msgstr "Tenants"
+msgstr "租户"
 
 #: ../../app/views/ops/_rbac_details_tab.html.haml:109
 msgid "Tenants (%s)"
-msgstr "Tenants (%s)"
+msgstr "租户 (%s)"
 
 #: ../model_attributes.rb:2151
 msgid "Tenant|Ancestry"
@@ -40826,7 +40842,7 @@ msgstr "User|Userid"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../../app/presenters/menu/default_menu.rb:187 ../../app/helpers/application_helper/toolbar/container_group_center.rb:43 ../../app/helpers/application_helper/toolbar/ontap_file_share_center.rb:43 ../../app/helpers/application_helper/toolbar/container_replicator_center.rb:43 ../../app/helpers/application_helper/toolbar/ontap_storage_system_center.rb:43 ../../app/helpers/application_helper/toolbar/miq_template_center.rb:100 ../../app/helpers/application_helper/toolbar/ems_container_center.rb:48 ../../app/helpers/application_helper/toolbar/vm_center.rb:144 ../../app/helpers/application_helper/toolbar/ontap_logical_disk_center.rb:28 ../../app/helpers/application_helper/toolbar/container_service_center.rb:36 ../../app/helpers/application_helper/toolbar/openstack_vm_cloud_center.rb:121 ../../app/helpers/application_helper/toolbar/x_miq_template_center.rb:99 ../../app/helpers/application_helper/toolbar/ontap_storage_volume_center.rb:28 ../../app/helpers/application_helper/toolbar/storage_center.rb:54 ../../app/helpers/application_helper/toolbar/availability_zone_center.rb:28 ../../app/helpers/application_helper/toolbar/container_node_center.rb:36 ../../app/helpers/application_helper/toolbar/container_center.rb:58 ../../app/helpers/application_helper/toolbar/x_vm_center.rb:142 ../../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:122 ../../app/helpers/application_helper/toolbar/container_project_center.rb:43 ../../app/helpers/application_helper/toolbar/ems_cluster_center.rb:56 ../../app/helpers/application_helper/toolbar/host_center.rb:103 ../../app/controllers/application_controller.rb:347 ../../app/controllers/miq_capacity_controller.rb:20 ../../app/controllers/miq_capacity_controller.rb:768 ../../app/views/ops/_all_tabs.html.haml:181 ../../app/views/ops/_all_tabs.html.haml:297 ../yaml_strings.rb:328
 msgid "Utilization"
-msgstr "Utilization"
+msgstr "利用率"
 
 #. TRANSLATORS: en.yml key: dictionary.column.utilization
 #: ../dictionary_strings.rb:1243
