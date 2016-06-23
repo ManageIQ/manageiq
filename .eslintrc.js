@@ -17,6 +17,35 @@ var plugins = [];
 var xtends = [];
 var ecmaVersion = 5;
 
+var globals = {
+  API: false, // local: miq_api.js
+  ManageIQ: false,  // local: mig_global.js
+  Promise: false, // bower: es6-shim
+  _: false, // bower: lodash
+  __: false,  // local: i18n.js
+  angular: false, // bower: angular
+  c3: false,  // bower: c3
+  d3: false,  // bower: d3
+  i18n: false,  // gem: gettext_i18n_rails_js
+  moment: false,  // bower: moment
+  numeral: false, // bower: numeral
+  sprintf: false, // bower: sprintf
+};
+
+var specGlobals = {
+  describe: false,
+  context: false,
+  it: false,
+  beforeEach: false,
+  afterEach: false,
+  inject: false,
+  spyOn: false,
+  expect: false,
+  jasmine: false,
+  setFixtures: false,
+};
+
+
 var rules = {
   'indent': [ 'error', 2, {
     SwitchCase: 1,
@@ -116,6 +145,7 @@ switch (mode) {
 
   case 'spec':
     xtends.push('airbnb-es5');
+    globals = Object.assign(globals, specGlobals);
     break;
 
   case 'es6':
@@ -149,20 +179,7 @@ module.exports = {
   plugins: plugins,
   extends: xtends,
 
-  globals: {
-    API: false, // local: miq_api.js
-    ManageIQ: false,  // local: mig_global.js
-    Promise: false, // bower: es6-shim
-    _: false, // bower: lodash
-    __: false,  // local: i18n.js
-    angular: false, // bower: angular
-    c3: false,  // bower: c3
-    d3: false,  // bower: d3
-    i18n: false,  // gem: gettext_i18n_rails_js
-    moment: false,  // bower: moment
-    numeral: false, // bower: numeral
-    sprintf: false, // bower: sprintf
-  },
+  globals: globals,
 
   rules: rules,
 };
