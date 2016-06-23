@@ -25,6 +25,7 @@ module Sandbox
   end
 
   def x_active_tree
+    @sb ||= {}
     @sb[:active_tree]
   end
 
@@ -147,6 +148,7 @@ module Sandbox
   ).each_with_object({}) { |value, acc| acc[value] = value.to_sym }.freeze
 
   def x_active_tree=(tree)
+    @sb ||= {}
     @sb[:active_tree] = nil
     return if tree.nil?
 
