@@ -19,6 +19,7 @@ class MiqAlert < ApplicationRecord
     EmsCluster
     ExtManagementSystem
     MiqServer
+    MiddlewareServer
   )
 
   def self.base_tables
