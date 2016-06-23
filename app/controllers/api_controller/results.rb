@@ -11,25 +11,25 @@ class ApiController
     end
 
     def add_href_to_result(hash, type, id)
-      hash[:href] = "#{@req[:api_prefix]}/#{type}/#{id}"
+      hash[:href] = "#{@req.api_prefix}/#{type}/#{id}"
       hash
     end
 
     def add_parent_href_to_result(hash)
-      hash[:href] = "#{@req[:api_prefix]}/#{@req[:collection]}/#{@req[:c_id]}"
+      hash[:href] = "#{@req.api_prefix}/#{@req.collection}/#{@req.c_id}"
       hash
     end
 
     def add_task_to_result(hash, task_id)
       hash[:task_id]   = task_id
-      hash[:task_href] = "#{@req[:api_prefix]}/tasks/#{task_id}"
+      hash[:task_href] = "#{@req.api_prefix}/tasks/#{task_id}"
       hash
     end
 
     def add_tag_to_result(hash, tag_spec)
       hash[:tag_category] = tag_spec[:category] if tag_spec[:category].present?
       hash[:tag_name]     = tag_spec[:name] if tag_spec[:name].present?
-      hash[:tag_href]     = "#{@req[:api_prefix]}/tags/#{tag_spec[:id]}" if tag_spec[:id].present?
+      hash[:tag_href]     = "#{@req.api_prefix}/tags/#{tag_spec[:id]}" if tag_spec[:id].present?
       hash
     end
 
@@ -37,13 +37,13 @@ class ApiController
       return hash if object.blank?
       ctype_pref = ctype.to_s.singularize
       hash["#{ctype_pref}_id".to_sym]   = object.id
-      hash["#{ctype_pref}_href".to_sym] = "#{@req[:api_prefix]}/#{ctype}/#{object.id}"
+      hash["#{ctype_pref}_href".to_sym] = "#{@req.api_prefix}/#{ctype}/#{object.id}"
       hash
     end
 
     def add_report_result_to_result(hash, result_id)
       hash[:result_id] = result_id
-      hash[:result_href] = "#{@req[:api_prefix]}/results/#{result_id}"
+      hash[:result_href] = "#{@req.api_prefix}/results/#{result_id}"
       hash
     end
 

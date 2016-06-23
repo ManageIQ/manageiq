@@ -22,7 +22,7 @@ class ApiController
       version_config[:definitions].select(&:ident).collect do |version_specification|
         {
           :name => version_specification[:name],
-          :href => "#{@req[:api_prefix]}/#{version_specification[:ident]}"
+          :href => "#{@req.api_prefix}/#{version_specification[:ident]}"
         }
       end
     end

@@ -9,7 +9,7 @@ class ApiController
     end
 
     def show_service_dialogs
-      @req[:additional_attributes] = %w(content) if attribute_selection == "all"
+      @additional_attributes = %w(content) if attribute_selection == "all"
       show_generic(:service_dialogs)
     end
 
@@ -28,7 +28,7 @@ class ApiController
     # Virtual attribute accessors
     #
     def fetch_service_dialogs_content(resource)
-      case @req[:collection]
+      case @req.collection
       when "service_templates"
         service_template = parent_resource_obj
       when "services"

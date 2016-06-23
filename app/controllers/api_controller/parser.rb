@@ -1,37 +1,15 @@
 class ApiController
   module Parser
     def parse_api_request
-      @req = {}
-      @req[:method]        = request.request_method.downcase.to_sym     # :get, :patch, ...
-      @req[:fullpath]      = request.original_fullpath     # /api/...&param=value...
-      @req[:url]           = request.original_url          # http://target/api/...
-      @req[:base]          = @req[:url].partition(@req[:fullpath])[0]   # http://target
-      @req[:path]          = URI.parse(@req[:url]).path.sub(/\/*$/, '') # /api/...
-
-      path_split = @req[:path].split('/')
-      @req[:prefix]        = "/#{path_split[1]}"           # /api
-      @req[:version]       = @version                      # Default API Version
-      if params[:version]
-        ver = params[:version]
-        if ver.match(version_config[:regex])               # v#.# version signature
-          @req[:version]   = ver[1..-1]                    # Switching API Version
-          @req[:prefix]    = "#{@req[:prefix]}/#{ver}"     # /api/v#.#
-        end
-      end
-      @req[:api_prefix]    = "#{@req[:base]}#{@req[:prefix]}"
-
-      @req[:collection]    = params[:collection]
-      @req[:c_id]          = params[:c_id]
-      @req[:subcollection] = params[:subcollection]
-      @req[:s_id]          = params[:s_id]
+      @req = RequestAdapter.new(request, params)
     end
 
     def validate_api_request
       validate_optional_collection_classes
 
       # API Version Validation
-      if @req[:version]
-        vname = @req[:version]
+      if @req.version
+        vname = @req.version
         unless version_config[:definitions].collect { |vent| vent[:name] }.include?(vname)
           raise BadRequestError, "Unsupported API Version #{vname} specified"
         end
@@ -42,7 +20,7 @@ class ApiController
 
       # Method Validation for the collection or sub-collection specified
       if cname && ctype
-        mname = @req[:method]
+        mname = @req.method
         cent  = collection_config[cname.to_sym]  # For Sub-Collection
         unless Array(cent[:verbs]).include?(mname)
           raise BadRequestError, "Unsupported HTTP Method #{mname} for the #{ctype} #{cname} specified"
@@ -59,7 +37,7 @@ class ApiController
 
       raise BadRequestError, "Unsupported provider_class #{param} specified" if param != "provider"
       %w(tags policies policy_profiles).each do |cname|
-        if @req[:subcollection] == cname || expand?(cname)
+        if @req.subcollection == cname || expand?(cname)
           raise BadRequestError, "Management of #{cname} is unsupported for the Provider class"
         end
       end
@@ -67,8 +45,8 @@ class ApiController
     end
 
     def validate_api_action
-      return unless @req[:collection]
-      send("validate_#{@req[:method]}_method")
+      return unless @req.collection
+      send("validate_#{@req.method}_method")
     end
 
     def validate_api_parameters
@@ -194,10 +172,10 @@ class ApiController
     # For Posts we need to support actions, let's validate those
     #
     def validate_post_method
-      cname = @req[:subcollection] || @req[:collection]
+      cname = @req.subcollection || @req.collection
       cspec = collection_config[cname.to_sym]
       type, target = request_type_target
-      validate_post_api_action(cname, @req[:method], cspec, type, target)
+      validate_post_api_action(cname, @req.method, cspec, type, target)
     end
 
     #
@@ -220,7 +198,7 @@ class ApiController
     end
 
     def validate_method_action(method_name, action_name)
-      cname = @req[:subcollection] || @req[:collection]
+      cname = @req.subcollection || @req.collection
       cspec = collection_config[cname.to_sym]
       target = request_type_target.last
       aspec = cspec["#{target}_actions".to_sym]
@@ -233,20 +211,15 @@ class ApiController
     end
 
     def request_type_target
-      if @req[:subcollection]
-        @req[:s_id] ? [:resource, :subresource] : [:collection, :subcollection]
+      if @req.subcollection
+        @req.s_id ? [:resource, :subresource] : [:collection, :subcollection]
       else
-        @req[:c_id] ? [:resource, :resource] : [:collection, :collection]
+        @req.c_id ? [:resource, :resource] : [:collection, :collection]
       end
     end
 
-    def parse_action_name
-      # for basic HTTP POST, default action is "create" with data being the POST body
-      @req[:action] = @req[:method] == :put ? "edit" : (json_body["action"] || "create")
-    end
-
     def validate_post_api_action(cname, mname, cspec, type, target)
-      aname = parse_action_name
+      aname = @req.action
 
       aspecnames = "#{target}_actions"
       raise BadRequestError, "No actions are supported for #{cname} #{type}" unless cspec[aspecnames.to_sym]
@@ -269,13 +242,13 @@ class ApiController
 
     def validate_api_request_collection
       # Collection Validation
-      if @req[:collection]
-        cname = @req[:collection]
+      if @req.collection
+        cname = @req.collection
         ctype = "Collection"
         raise BadRequestError, "Unsupported #{ctype} #{cname} specified" unless collection_config[cname.to_sym]
         cspec = collection_config[cname.to_sym]
         if cspec[:options].include?(:primary)
-          if "#{@req[:c_id]}#{@req[:subcollection]}#{@req[:s_id]}".present?
+          if "#{@req.c_id}#{@req.subcollection}#{@req.s_id}".present?
             raise BadRequestError, "Invalid request for #{ctype} #{cname} specified"
           end
         else
@@ -287,9 +260,9 @@ class ApiController
 
     def validate_api_request_subcollection(cname, ctype)
       # Sub-Collection Validation for the specified Collection
-      if cname && @req[:subcollection]
+      if cname && @req.subcollection
         cent  = collection_config[cname.to_sym]  # For Collection
-        cname = @req[:subcollection]
+        cname = @req.subcollection
         ctype = "Sub-Collection"
         unless Array(cent[:subcollections]).include?(cname.to_sym)
           raise BadRequestError, "Unsupported #{ctype} #{cname} specified"
@@ -299,9 +272,9 @@ class ApiController
     end
 
     def validate_post_api_action_as_subcollection(cname, mname, aname)
-      return if cname == @req[:collection]
+      return if cname == @req.collection
 
-      cspec = collection_config[@req[:collection].to_sym]
+      cspec = collection_config[@req.collection.to_sym]
       return if cspec[:subcollections] && !cspec[:subcollections].include?(cname.to_sym)
 
       aspec = cspec["#{cname}_subcollection_actions".to_sym]

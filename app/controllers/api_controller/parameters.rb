@@ -10,13 +10,6 @@ class ApiController
       [offset, limit]
     end
 
-    def json_body
-      @req[:body] ||= begin
-        body = request.body.read if request.body
-        body.blank? ? {} : JSON.parse(body)
-      end
-    end
-
     def hash_fetch(hash, element, default = {})
       hash[element] || default
     end
@@ -125,8 +118,8 @@ class ApiController
     end
 
     def attribute_selection
-      if params['attributes'] || @req[:additional_attributes]
-        params['attributes'].to_s.split(",") | Array(@req[:additional_attributes]) | ID_ATTRS
+      if params['attributes'] || @additional_attributes
+        params['attributes'].to_s.split(",") | Array(@additional_attributes) | ID_ATTRS
       else
         "all"
       end

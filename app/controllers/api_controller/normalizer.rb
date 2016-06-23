@@ -81,7 +81,7 @@ class ApiController
     #
     def normalize_url(value)
       svalue = value.to_s
-      pref   = @req[:api_prefix]
+      pref   = @req.api_prefix
       svalue.match(pref) ? svalue : "#{pref}/#{svalue}"
     end
 
@@ -96,7 +96,7 @@ class ApiController
     # Let's normalize href accessible resources
     #
     def normalize_resource(value)
-      value.to_s.starts_with?("/") ? "#{@req[:base]}#{value}" : value
+      value.to_s.starts_with?("/") ? "#{@req.base}#{value}" : value
     end
 
     #
