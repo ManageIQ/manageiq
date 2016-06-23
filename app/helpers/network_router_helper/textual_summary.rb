@@ -1,4 +1,5 @@
 module NetworkRouterHelper::TextualSummary
+  include TextualMixins::TextualName
   #
   # Groups
   #
@@ -18,11 +19,6 @@ module NetworkRouterHelper::TextualSummary
   #
   # Items
   #
-
-  def textual_name
-    @record.name
-  end
-
   def textual_type
     ui_lookup(:model => @record.type)
   end
