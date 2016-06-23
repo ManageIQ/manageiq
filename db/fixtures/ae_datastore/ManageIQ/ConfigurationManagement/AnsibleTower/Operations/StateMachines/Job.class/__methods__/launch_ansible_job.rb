@@ -35,13 +35,14 @@ class LaunchAnsibleJob
   end
 
   def object_vars(object, ext_vars)
-    object.attributes.each_with_object(ext_vars) do |(key, value), hash|
+    key_list = object.attributes.keys.select { |k| k.start_with?('param', 'dialog_param') }
+    key_list.each_with_object(ext_vars) do |key, hash|
       if key.start_with?('param')
-        match_data = ANSIBLE_VAR_REGEX.match(value)
+        match_data = ANSIBLE_VAR_REGEX.match(object[key])
         hash[match_data[1].strip] ||= match_data[2] if match_data
       else
         match_data = ANSIBLE_DIALOG_VAR_REGEX.match(key)
-        hash[match_data[1]] = value if match_data
+        hash[match_data[1]] = object[key] if match_data
       end
     end
   end
