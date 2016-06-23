@@ -60,7 +60,6 @@ class PxeController < ApplicationController
   def explorer
     @breadcrumbs = []
     @explorer = true
-    @sb[:open_tree_nodes] ||= []
 
     build_accordions_and_trees
 
