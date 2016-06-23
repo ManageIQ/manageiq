@@ -6,6 +6,8 @@ gem "rails",                           "~> 5.0.x", :git => "git://github.com/rai
 gem "rails-controller-testing",        :require => false
 gem "activemodel-serializers-xml",     :require => false # required by draper: https://github.com/drapergem/draper/issues/697
 gem "activerecord-session_store",      "~>0.1.2", :require => false
+gem "actioncable"
+gem "coffee-rails"
 gem "websocket-driver",                "~>0.6.3"
 
 gem "config",                          "~>1.1.0", :git => "git://github.com/ManageIQ/config.git", :branch => "overwrite_arrays"

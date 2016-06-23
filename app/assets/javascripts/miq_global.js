@@ -72,5 +72,6 @@ if (! window.ManageIQ) {
       processing: false, // is a request currently being processed?
       queue: [], // a queue of pending requests
     },
+    notifications: null, // asynchronous notifications endpoint
   };
 }

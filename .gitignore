@@ -53,6 +53,7 @@ bin/*
 
 # config/
 config/apache
+config/cable.yml
 config/database.yml*
 config/vmdb.yml.db
 
