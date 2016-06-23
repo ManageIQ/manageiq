@@ -3,7 +3,7 @@
   .row.toolbar-pf
     .col-md-12
       = render :partial => "shared/topology_header"
-  .legend
+  .legend.middleware
     %label#selected
     %div{'ng-if' => "kinds"}
       %kubernetes-topology-icon{tooltipOptions, :kind => "MiddlewareServer"}
@@ -20,6 +20,14 @@
             %image{:height => "18", :width => "18", :x => "-9", "xlink:href" => image_path('/assets/100/middleware_deployment.png'), :y => "-9"}
         %label
           = _("Middleware Deployments")
+      %kubernetes-topology-icon{tooltipOptions, :kind => "MiddlewareDatasource"}
+        %svg.kube-topology
+          %g.MiddlewareDatasource{:transform => "translate(21, 21)"}
+            %circle{:r => "17"}
+            -# fa-database
+            %text{:x => "0", :y => "6", :class => "fa fa-database glyph"} &#xF1C0;
+        %label
+          = _("Middleware Datasources")
 
   .alert.alert-info.alert-dismissable
     %button.close{"aria-hidden" => "true", "data-dismiss" => "alert", :type => "button"}
@@ -27,5 +35,5 @@
     %span.pficon.pficon-info
     %strong
       = _("Click on the legend to show/hide entities, and double click on the entities in the graph to navigate to their summary pages.")
-  %kubernetes-topology-graph{:items => "items", :relations => "relations", :kinds => "kinds"}
+  %kubernetes-topology-graph.middleware{:items => "items", :relations => "relations", :kinds => "kinds"}
 
