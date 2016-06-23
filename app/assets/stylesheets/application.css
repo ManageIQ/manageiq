@@ -22,6 +22,7 @@
  *= require template
  *= require topology
  *= require container_topology
+ *= require middleware_topology
  *= require service_dialogs
  *= require xml_display
 */
