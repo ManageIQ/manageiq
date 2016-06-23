@@ -567,7 +567,7 @@ class VmScan < Job
         sn = vm.ext_management_system.vm_create_evm_snapshot(vm, :desc => sn_description, :user_event => user_event).to_s
       rescue Exception => err
         msg = "Failed to create evm snapshot with EMS. Error: [#{err.class.name}]: [#{err}]"
-        _log.error("#{msg}")
+        _log.error(msg)
         err.kind_of?(MiqException::MiqVimBrokerUnavailable) ? signal(:broker_unavailable) : signal(:abort, msg, "error")
         return false
       end
