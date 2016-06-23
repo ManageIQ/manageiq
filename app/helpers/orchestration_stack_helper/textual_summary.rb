@@ -1,4 +1,5 @@
 module OrchestrationStackHelper::TextualSummary
+  include TextualMixins::TextualDescription
   include TextualMixins::TextualName
   #
   # Groups
@@ -23,10 +24,6 @@ module OrchestrationStackHelper::TextualSummary
   #
   # Items
   #
-  def textual_description
-    @record.description
-  end
-
   def textual_type
     ui_lookup(:model => @record.type)
   end
