@@ -136,6 +136,8 @@ class ApiController < ApplicationController
     Api::Settings.collections
   end
 
+  delegate :user_token_service, :to => self
+
   def initialize
     @config          = Api::Settings.data
     @module          = base_config[:module]
@@ -145,7 +147,6 @@ class ApiController < ApplicationController
     @prefix          = "/#{@module}"
     @req             = {}      # To store API request details by parse_api_request
     @api_config      = VMDB::Config.new("vmdb").config[@module.to_sym] || {}
-    @api_user_token_service = ApiUserTokenService.new(@config)
   end
 
   #
