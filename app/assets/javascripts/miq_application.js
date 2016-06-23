@@ -641,6 +641,7 @@ function miqChartLinkData(col, row, value, category, series, id, message) {
 }
 
 function miqBuildChartMenu(col, row, _value, category, series, id, _message) {
+  console.log('miqBuildChartMenuEx');
   var set = id.split('_')[1]; // Get the chart set
   var idx = id.split('_')[2]; // Get the chart index
   var chart_data = ManageIQ.charts.chartData[set];
@@ -661,6 +662,7 @@ function miqBuildChartMenu(col, row, _value, category, series, id, _message) {
       }
 
       var menu_title = chart_data[idx].menu[i].split(":")[1];
+      console.log(menu_title);
       menu_title = menu_title.replace("<series>", series);
       menu_title = menu_title.replace("<category>", category);
       $("#" + pid).append("<li><a id='" + menu_id +

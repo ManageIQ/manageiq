@@ -31,8 +31,9 @@ function load_c3_chart(data, chart_id, height) {
     var parts = chart_id.split('_'); //miq_chart_candu_2
     var chart_set   = parts[2];
     var chart_index = parts[3];
-
+    console.log('before miqBuildChartMenuEx');
     miqBuildChartMenuEx(pointIndex, seriesIndex, null, 'CAT', data.name, chart_set, chart_index);
+    console.log('after miqBuildChartMenuEx');
 
     // This is to allow the bootstrap pop-up to be manually fired from the chart's click event
     // and have it closed by clicking outside of the pop-up menu.
