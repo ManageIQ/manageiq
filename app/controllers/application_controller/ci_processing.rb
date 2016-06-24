@@ -448,7 +448,7 @@ module ApplicationController::CiProcessing
     recs = find_checked_items
     recs = [params[:id].to_i] if recs.blank?
     @record = find_by_id_filtered(VmOrTemplate, recs.first)
-    if @record.is_available?(:live_migrate) && !@record.ext_management_system.nil?
+    if @record.supports_live_migrate?
       if @explorer
         live_migrate
         @refresh_partial = "vm_common/live_migrate"
@@ -462,7 +462,7 @@ module ApplicationController::CiProcessing
       add_flash(_("Unable to live migrate %{instance} \"%{name}\": %{details}") % {
         :instance => ui_lookup(:table => 'vm_cloud'),
         :name     => @record.name,
-        :details  => @record.is_available_now_error_message(:live_migrate)}, :error)
+        :details  => @record.unsupported_reason(:live_migrate)}, :error)
     end
   end
   alias instance_live_migrate livemigratevms
@@ -514,7 +514,7 @@ module ApplicationController::CiProcessing
         :model => ui_lookup(:table => "vm_cloud"), :name => @record.name})
       @record = @sb[:action] = nil
     when "submit"
-      if @record.is_available?(:live_migrate)
+      if @record.supports_live_migrate?
         if params['auto_select_host'] == 'on'
           hostname = nil
         else
@@ -541,7 +541,7 @@ module ApplicationController::CiProcessing
         add_flash(_("Unable to live migrate %{instance} \"%{name}\": %{details}") % {
           :instance => ui_lookup(:table => 'vm_cloud'),
           :name     => @record.name,
-          :details  => @record.is_available_now_error_message(:live_migrate)}, :error)
+          :details  => @record.unsupported_reason(:live_migrate)}, :error)
       end
       params[:id] = @record.id.to_s # reset id in params for show
       @record = nil
