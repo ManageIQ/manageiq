@@ -54,14 +54,5 @@
               %br/
               %input#ds_toggle{:name => "ds_toggle", :onclick => "miqCheckCUAll(this,'#{session[:ds_tree_name]}');", :type => "checkbox"}/
               = _("Check All")
-              #cu_datastore_treebox{:style => "color:#000"}
-              = render(:partial => "layouts/dynatree",
-                  :locals => {:tree_id => "cu_datastore_treebox",
-                  :tree_name => "cu_datastore_tree",
-                  :json_tree => @cu_datastore_tree,
-                  :onselect => "miqOnCheckCUFilters",
-                  :check_url => "/ops/cu_collection_field_changed/",
-                  :exp_tree => false,
-                  :checkboxes => true})
               = render(:partial => 'shared/tree', :locals => {:tree => @datastore_tree, :name => @datastore_tree.name})
 

@@ -204,7 +204,6 @@ module OpsController::Settings::CapAndU
                                       :store_type => s.store_type,
                                       :location   => s.location) # fields we need
     end
-    build_ds_tree(@edit[:current][:storages])
     @datastore_tree  = TreeBuilderDatastores.new(:datastore, :datastore_tree, @sb, true, @edit[:current][:storages])
     @edit[:new] = copy_hash(@edit[:current])
     session[:edit] = @edit
@@ -282,52 +281,6 @@ module OpsController::Settings::CapAndU
         end
       end
     end
-  end
-
-  def build_ds_tree(storages)
-    # Build the Storages tree for the C&U data collection
-    ds = []                          # Array to hold all Storages
-    # ems_hash = ExtManagementSystem.in_my_region.inject({}) {|h,e| h[e.id] = e.name; h}
-    storages.each do |s|                    # Go thru all of the Storages
-      ds_node = {}                        # Build the storage node
-      ds_node[:key] = "Datastore_" + s[:id].to_s
-      ds_node[:title] = "<b>#{s[:name]}</b> [#{s[:location]}]"
-      ds_node[:tooltip] = "#{s[:name]} [#{s[:location]}]"
-      ds_node[:style] = "cursor:default"     # No cursor pointer
-      ds_node[:icon] = ActionController::Base.helpers.image_path("100/storage.png")
-      ds_node[:select] = s[:capture] == true
-
-      children = []
-      st = @st_recs[s[:id]]
-      st_hosts = []      # Array to hold host/datastore relationship that will be sorted and displayed under each storage node
-      st.hosts.each do |h|
-        # ems_name = ems_hash[h.ems_id]
-        #         cname = "#{ems_name != nil ? "#{ems_name} : " : ""}" +
-        #                 (h.parent_datacenter != nil ? "#{h.parent_datacenter.name} : " : "") +
-        #                 (h.ems_cluster != nil ? "#{h.ems_cluster.name} : " : "") +
-        #                 "#{h.name}"
-        cname = h.name
-        st_hosts.push(:name => cname)
-      end
-
-      st_hosts.sort_by { |h| h[:name].downcase }.each do |h|
-        temp = {}
-        temp[:key] = h[:name]
-        temp[:title] = h[:name]
-        temp[:tooltip] = h[:name]
-        temp[:style] = "cursor:default"      # No cursor pointer
-        temp[:hideCheckbox] = true
-        temp[:icon] = ActionController::Base.helpers.image_path("100/host.png")
-        children.push(temp)
-      end
-
-      ds_node[:children] = children unless children.empty?
-      ds.push(ds_node)
-    end
-
-    @cu_datastore_tree = ds.to_json # Add ems node array to root of tree
-    session[:tree] = "cu_datastore"
-    session[:ds_tree_name] = "cu_datastore_tree"
   end
 
   def process_form_vars_for_non_clustered(node_type)
