@@ -101,9 +101,9 @@ describe MiqRequestController do
       controller.send(:prov_condition, :applied_states => ["state", "state 2"])
     end
 
-    it "MiqRequest-resource_type" do
+    it "MiqRequest-type" do
       content = %w(MiqProvisionRequest MiqProvisionConfiguredSystemRequest VmReconfigureRequest VmMigrateRequest ServiceTemplateProvisionRequest ServiceReconfigureRequest).collect do |type|
-        {"=" => {"value" => type, "field" => "MiqRequest-resource_type"}}
+        {"=" => {"value" => type, "field" => "MiqRequest-type"}}
       end
 
       expect(MiqExpression).to receive(:new) do |h|
