@@ -35,6 +35,9 @@ class LaunchAnsibleJob
   end
 
   def object_vars(object, ext_vars)
+    # We are traversing the list twice because the object.attributes is a DrbObject
+    # and when we use each_with_object on a DrbObject, it doesn't seem to update the
+    # hash. We are investigating that
     key_list = object.attributes.keys.select { |k| k.start_with?('param', 'dialog_param') }
     key_list.each_with_object(ext_vars) do |key, hash|
       if key.start_with?('param')
