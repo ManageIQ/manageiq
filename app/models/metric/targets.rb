@@ -19,7 +19,7 @@ module Metric::Targets
     all_hosts = zone.ext_management_systems.flat_map(&:hosts)
     targets = hosts = only_enabled(all_hosts)
     targets += capture_storage_targets(all_hosts) unless options[:exclude_storages]
-    targets += capture_vm_targets(hosts, Host, options) unless options[:exclude_vms]
+    targets += capture_vm_targets(hosts) unless options[:exclude_vms]
 
     targets
   end
@@ -70,14 +70,10 @@ module Metric::Targets
     hosts.flat_map(&:storages).uniq.select { |s| Storage.supports?(s.store_type) & s.perf_capture_enabled? }
   end
 
-  def self.capture_vm_targets(targets, parent_class, options)
-    enabled_parents = targets.select do |t|
-      t.kind_of?(parent_class) &&
-        t.kind_of?(Metric::CiMixin) &&
-        t.perf_capture_enabled? &&
-        t.respond_to?(:vms)
-    end
-    enabled_parents.flat_map { |t| t.vms.select { |v| v.ext_management_system && v.state == 'on' } }
+  # @param [Host] hosts that are enabled or cluster enabled
+  def self.capture_vm_targets(hosts)
+    hosts.select(&:perf_capture_enabled?)
+         .flat_map { |t| t.vms.select { |v| v.ext_management_system && v.state == 'on' } }
   end
 
   # If a Cluster, standalone Host, or Storage is not enabled, skip it.
