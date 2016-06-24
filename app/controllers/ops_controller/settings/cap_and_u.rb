@@ -192,9 +192,7 @@ module OpsController::Settings::CapAndU
       end
     end
     @edit[:current][:clusters].sort_by! { |c| c[:name] }
-    build_cl_hosts_tree(@edit[:current][:clusters])
     @cluster_tree = TreeBuilderClusters.new(:cluster, :cluster_tree, @sb, true, @edit[:current][:clusters])
-    #self.x_active_tree = :cluster_tree
     @edit[:current][:storages] = []
     @st_recs = {}
     Storage.in_my_region.includes(:taggings, :tags, :hosts).select(:id, :name, :store_type, :location)
@@ -283,109 +281,6 @@ module OpsController::Settings::CapAndU
         end
       end
     end
-  end
-
-  def build_cl_hosts_tree(clusters)
-    # Build the Cluster & Hosts tree for the C&U data collection
-    cl_hosts = []                          # Array to hold all EMSs
-    clusters.each do |c|  # Go thru all of the EMSs
-      cl_node = {}                        # Build the ems node
-      cl_node[:key] = "Cluster_" + c[:id].to_s
-      cl_node[:title] = c[:name]
-      cl_node[:tooltip] = c[:name]
-      cl_node[:style] = "cursor:default"     # No cursor pointer
-      cl_node[:icon] = ActionController::Base.helpers.image_path("100/cluster.png")
-      cl_kids = []
-      cl_hash = @cl_hash[c[:id]]
-      cluster = cl_hash[:cl_rec]
-      enabled = cl_hash[:ho_enabled]
-      enabled_host_ids = []
-      enabled.each do |cls|
-        if cls.class != EmsCluster
-          enabled_host_ids.push(cls.id) unless enabled_host_ids.include?(cls.id)
-        end
-      end
-      hosts = cl_hash[:ho_enabled] + cl_hash[:ho_disabled]
-      # checking if any of the hosts in above list aren't enabled, show cluster partially checked
-      cl_enabled = enabled_host_ids.length == hosts.length
-      if cl_enabled && !enabled.empty?
-        cl_node[:select] = true
-      elsif enabled.empty?
-        cl_node[:select] = false
-      else
-        cl_node[:select] = -1
-      end
-      hosts.sort_by(&:name).each do |h|
-        temp = {}
-        temp[:key] = "Cluster_" + c[:id].to_s + ":Host_" + h.id.to_s
-        temp[:title] = h.name
-        temp[:tooltip] = _("Host: %{name}") % {:name => h.name}
-        temp[:style] = "cursor:default"      # No cursor pointer
-        temp[:icon] = ActionController::Base.helpers.image_path("100/host.png")
-        temp[:select] = enabled_host_ids.include?(h.id.to_i) ? true : false
-        cl_kids.push(temp)
-      end
-      cl_node[:children] = cl_kids unless cl_kids.empty?
-      cl_hosts.push(cl_node)
-    end
-
-    ##################### Adding Non-Clustered hosts node
-    @edit[:current][:non_cl_hosts] ||= []
-    ExtManagementSystem.in_my_region.each do |e|
-      all = e.non_clustered_hosts
-      all.each do |h|
-        @edit[:current][:non_cl_hosts] << {
-          :name    => h.name,
-          :id      => h.id,
-          :capture => h.perf_capture_enabled?,
-        }
-      end
-    end
-    unless @edit[:current][:non_cl_hosts].blank?
-      h_node = {}                       # Build the ems node
-      h_node[:key] = "NonCluster_0"
-      h_node[:title] = _("Non-clustered Hosts")
-      h_node[:tooltip] = _("Non-clustered Hosts")
-      h_node[:style] = "cursor:default"      # No cursor pointer
-      h_node[:icon] = ActionController::Base.helpers.image_path("100/host.png")
-      count = non_cl_host_capture_state
-      if count.to_i == @edit[:current][:non_cl_hosts].length
-        h_node[:select] = true
-      elsif count.to_i == 0
-        h_node[:select] = false
-      else
-        h_node[:select] = -1
-      end
-      h_kids = []
-      @edit[:current][:non_cl_hosts].each do |h|
-        temp = {}
-        temp[:key] = "NonCluster_0" + ":Host_" + h[:id].to_s
-        temp[:title] = h[:name]
-        temp[:tooltip] = _("Host: %{name}") % {:name => h[:name]}
-        temp[:style] = "cursor:default"      # No cursor pointer
-        temp[:icon] = ActionController::Base.helpers.image_path("100/host.png")
-        temp[:select] = h[:capture] ? true : false
-        h_kids.push(temp)
-      end
-      h_node[:children] = h_kids unless h_kids.empty?
-      cl_hosts.push(h_node)
-    end
-    ##################### Ending Non-Clustered hosts node
-
-    @clhosts_tree = cl_hosts.to_json  # Add ems node array to root of tree
-    session[:tree] = "clhosts"
-    session[:tree_name] = "clhosts_tree"
-  end
-
-  def non_cl_host_capture_state
-    @edit[:current][:non_cluster_host_enabled] = {}
-    i = 0
-    @edit[:current][:non_cl_hosts].each do |h|
-      enabled = h[:capture]
-      i += 1 if enabled
-      @edit[:current][:non_cluster_host_enabled][h[:id].to_s] = enabled unless @edit[:current][:non_cluster_host_enabled].key?(h[:id].to_s)
-    end
-    i
   end
 
   def build_ds_tree(storages)

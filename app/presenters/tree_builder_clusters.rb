@@ -30,7 +30,7 @@ class TreeBuilderClusters < TreeBuilder
 
   def x_get_tree_roots(count_only = false, _options)
     nodes = @root.map do |node|
-      { :id => "Cluster_#{node[:id]}",
+      { :id => "#{node[:id]}",
         :text => node[:name],
         :image => 'cluster',
         :tip => node[:name],
@@ -45,7 +45,7 @@ class TreeBuilderClusters < TreeBuilder
     hosts = parent[:children]
     #reject Clusters
     nodes = hosts.map do |node|
-      {:id => "Cluster_#{parent[:id].to_s}:Host_#{node.id.to_s}", :text => node.name, :tip => _("Host: %{name}") % {:name => node.name}, :image => 'host', :selected => true, :children => []}
+      {:id => "#{parent[:id].to_s}_#{node.id.to_s}", :text => node.name, :tip => _("Host: %{name}") % {:name => node.name}, :image => 'host', :selected => true, :children => []}
     end
     count_only_or_objects(count_only, nodes)
   end
