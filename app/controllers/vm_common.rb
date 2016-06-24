@@ -183,6 +183,11 @@ module VmCommon
     @lastaction = "show"
     @showtype = "config"
     @record = identify_record(id || params[:id], VmOrTemplate)
+    if @record.nil?
+      referrer = Rails.application.routes.recognize_path(request.referrer)
+      redirect_to :controller => referrer[:controller], :action => referrer[:action]
+      return
+    end
     return if record_no_longer_exists?(@record)
 
     @explorer = true if request.xml_http_request? # Ajax request means in explorer
