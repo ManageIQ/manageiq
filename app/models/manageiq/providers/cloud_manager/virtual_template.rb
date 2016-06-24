@@ -11,6 +11,6 @@ class ManageIQ::Providers::CloudManager::VirtualTemplate < ::MiqTemplate
   end
 
   def validate_single_template
-    errors.add(:virtual_template, 'may only have one per type') unless single_template?
+    errors.add(:virtual_template, _('may only have one per type')) unless single_template?
   end
 end

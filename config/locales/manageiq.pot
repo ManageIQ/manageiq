@@ -46743,3 +46743,7 @@ msgstr ""
 #: ../../app/models/zone.rb:233
 msgid "zone name '%{name}' is used by a server"
 msgstr ""
+
+#:../../app/models/manageiq/providers/cloud_manager/virtual_template.rb:14
+msgid "may only have one per type"
+msgstr ""
