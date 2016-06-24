@@ -33,15 +33,19 @@ RSpec.describe 'Virtual Template API' do
   end
 
   context 'virtual templates create' do
+    let(:subnet) { FactoryGirl.create(:cloud_subnet) }
+    let(:network) { FactoryGirl.create(:cloud_network) }
+    let(:availability_zone) { FactoryGirl.create(:availability_zone) }
+
     let(:template) do
       {
         :action               => 'create',
         :name                 => 'create_vt',
         :vendor               => 'amazon',
         :location             => 'us-west-2',
-        :cloud_network_id     => 0,
-        :cloud_subnet_id      => 1,
-        :availability_zone_id => 2,
+        :cloud_network_id     => network.id,
+        :cloud_subnet_id      => subnet.id,
+        :availability_zone_id => availability_zone.id,
         :ems_ref              => 'aref',
         :type                 => 'ManageIQ::Providers::Amazon::CloudManager::VirtualTemplate'
       }
