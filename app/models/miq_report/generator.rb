@@ -192,6 +192,7 @@ module MiqReport::Generator
     ext_options = {:tz => tz, :time_profile => time_profile}
     # TODO: these columns need to be converted to real SQL columns
     # only_cols = cols
+    ext_options[:only_cols] = cols
     self.extras ||= {}
 
     if custom_results_method
@@ -279,6 +280,7 @@ module MiqReport::Generator
           :include_for_find => includes,
           :where_clause     => where_clause,
           :results_format   => :objects,
+          :ext_options      => ext_options
         )
       )
       results = Metric::Helper.remove_duplicate_timestamps(results)
