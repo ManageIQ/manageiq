@@ -21,15 +21,12 @@ ManageIQ.angular.app.service('timerOptionService', function() {
     return timeData;
   };
 
-  var hourlyTimeOptions = [
+  var hourlyTimeOptions = _.flatten([
     timeDataBuilder("Hours", 4),
     timeObject("Hours", 6),
     timeObject("Hours", 8),
     timeObject("Hours", 12)
-  ];
-  hourlyTimeOptions = $.map(hourlyTimeOptions, function(n){
-    return n;
-  });
+  ]);
 
   this.timerOptions = {
     "Once": [],
