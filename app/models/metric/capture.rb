@@ -36,7 +36,8 @@ module Metric::Capture
 
     targets_by_rollup_parent = calc_targets_by_rollup_parent(targets)
     tasks_by_rollup_parent   = calc_tasks_by_rollup_parent(targets_by_rollup_parent)
-    queue_captures(zone, targets, targets_by_rollup_parent, tasks_by_rollup_parent)
+    target_options = calc_target_options(zone, targets, targets_by_rollup_parent, tasks_by_rollup_parent)
+    queue_captures(targets, target_options)
 
     # Purge tasks older than 4 hours
     MiqTask.delete_older(4.hours.ago.utc, "name LIKE 'Performance rollup for %'")
@@ -154,10 +155,8 @@ module Metric::Capture
     tasks_by_rollup_parent
   end
 
-  def self.queue_captures(zone, targets, targets_by_rollup_parent, tasks_by_rollup_parent)
-    # Queue the captures for each target
-    use_historical = historical_days != 0
-    targets.each do |target|
+  def self.calc_target_options(zone, targets, targets_by_rollup_parent, tasks_by_rollup_parent)
+    targets.each_with_object({}) do |target, all_options|
       interval_name = perf_target_to_interval_name(target)
 
       options = {:zone => zone}
@@ -172,6 +171,18 @@ module Metric::Capture
           end
         end
       end
+      all_options[target] = options
+    end
+  end
+
+  def self.queue_captures(targets, target_options)
+    # Queue the captures for each target
+    use_historical = historical_days != 0
+
+    targets.each do |target|
+      interval_name = perf_target_to_interval_name(target)
+
+      options = target_options[target]
       target.perf_capture_queue(interval_name, options)
 
       if !target.kind_of?(Storage) && use_historical && target.last_perf_capture_on.nil?
