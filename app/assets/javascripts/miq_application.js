@@ -1677,6 +1677,28 @@ function miqReportAfterOnload(node, active_tree, node_not_root, role_list, edito
   }
 }
 
+function miqOpsAfterOnload(allowed, utilization_url, hide_toolbar) {
+  if (allowed.ops_settings) {
+    miqDimDiv("#settings_tree_div", false);
+  }
+  if (allowed.ops_diagnostics) {
+    miqDimDiv("#diagnostics_tree_div", false);
+  }
+  if (allowed.ops_db) {
+    miqDimDiv("#vmdb_tree_div", false);
+  }
+  if (allowed.ops_rbac__any) {
+    miqDimDiv("#rbac_tree_div", false);
+  }
+
+  if (utilization_url) {
+    miqAsyncAjax(utilization_url);
+  }
+  if (hide_toolbar) {
+    $('#toolbar').hide();
+  }
+}
+
 function chartData(type, data, data2) {
   if (type == undefined) {
     return;
