@@ -1,6 +1,13 @@
 module VmCloudHelper::TextualSummary
+  include TextualMixins::TextualAdvancedSettings
+  include TextualMixins::TextualDrift
+  include TextualMixins::TextualFilesystems
+  include TextualMixins::TextualInitProcesses
   include TextualMixins::TextualOsInfo
   include TextualMixins::TextualPatches
+  include TextualMixins::TextualPowerState
+  include TextualMixins::TextualRegion
+  include TextualMixins::TextualScanHistory
   # TODO: Determine if DoNav + url_for + :title is the right way to do links, or should it be link_to with :title
 
   #
@@ -50,25 +57,6 @@ module VmCloudHelper::TextualSummary
   #
   # Items
   #
-
-  def textual_region
-    return nil if @record.region_number == MiqRegion.my_region_number
-    h = {:label => _("Region")}
-    reg = @record.miq_region
-    url = reg.remote_ui_url
-    h[:value] = if url
-                  # TODO: Why is this link different than the others?
-                  link_to(reg.description, url_for(:host   => url,
-                                                   :action => 'show',
-                                                   :id     => @record),
-                          :title   => _("Connect to this VM in its Region"),
-                          :onclick => "return miqClickAndPop(this);")
-                else
-                  reg.description
-                end
-    h
-  end
-
   def textual_name
     @record.name
   end
@@ -108,17 +96,6 @@ module VmCloudHelper::TextualSummary
     {:label => _("Architecture"), :value => "#{bitness} bit"}
   end
 
-  def textual_advanced_settings
-    num = @record.number_of(:advanced_settings)
-    h = {:label => _("Advanced Settings"), :image => "advancedsetting", :value => num}
-    if num > 0
-      h[:title] = _("Show the advanced settings on this VM")
-      h[:explorer] = true
-      h[:link]  = url_for(:action => 'advanced_settings', :id => @record, :db => controller.controller_name)
-    end
-    h
-  end
-
   def textual_resources
     return nil if @record.template?
     {:label => _("Resources"), :value => _("Available"), :title => _("Show resources of this VM"), :explorer => true,
@@ -127,35 +104,6 @@ module VmCloudHelper::TextualSummary
 
   def textual_guid
     {:label => _("Management Engine GUID"), :value => @record.guid}
-  end
-
-  def textual_drift
-    return nil unless role_allows(:feature => "vm_drift")
-    h = {:label => _("Drift History"), :image => "drift"}
-    num = @record.number_of(:drift_states)
-    if num == 0
-      h[:value] = _("None")
-    else
-      h[:value] = num
-      h[:title] = _("Show virtual machine drift history")
-      h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'drift_history', :id => @record)
-    end
-    h
-  end
-
-  def textual_scan_history
-    h = {:label => _("Analysis History"), :image => "scan"}
-    num = @record.number_of(:scan_histories)
-    if num == 0
-      h[:value] = _("None")
-    else
-      h[:value] = num
-      h[:title] = _("Show virtual machine analysis history")
-      h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'scan_histories', :id => @record)
-    end
-    h
   end
 
   def textual_users
@@ -202,21 +150,6 @@ module VmCloudHelper::TextualSummary
     h
   end
 
-  def textual_init_processes
-    os = @record.os_image_name.downcase
-    return nil unless os =~ /linux/
-    num = @record.number_of(:linux_initprocesses)
-    # TODO: Why is this image different than graphical?
-    h = {:label => _("Init Processes"), :image => "gears", :value => num}
-    if num > 0
-      h[:title] = n_("Show the Init Process installed on this VM",
-                     "Show the Init Processes installed on this VM", num)
-      h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'linux_initprocesses', :id => @record)
-    end
-    h
-  end
-
   def textual_win32_services
     os = @record.os_image_name.downcase
     return nil if os == "unknown" || os =~ /linux/
@@ -257,17 +190,6 @@ module VmCloudHelper::TextualSummary
                     "Show the File System Drivers installed on this VM", num)
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'filesystem_drivers', :id => @record)
-    end
-    h
-  end
-
-  def textual_filesystems
-    num = @record.number_of(:filesystems)
-    h = {:label => _("Files"), :image => "filesystems", :value => num}
-    if num > 0
-      h[:title] = n_("Show the File installed on this VM", "Show the Files installed on this VM", num)
-      h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'filesystems', :id => @record)
     end
     h
   end
@@ -367,14 +289,6 @@ module VmCloudHelper::TextualSummary
       h[:explorer] = true
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => 'compliance_history')
     end
-    h
-  end
-
-  def textual_power_state
-    state = @record.current_state.downcase
-    state = "unknown" if state.blank?
-    h = {:label => _("Power State"), :value => state}
-    h[:image] = "currentstate-#{@record.template? ? (@record.host ? "template" : "template-no-host") : state}"
     h
   end
 
