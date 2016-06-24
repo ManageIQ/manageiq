@@ -14,9 +14,7 @@ module Metric::Targets
     includes[:ext_management_systems][:hosts][:storages] = :tags unless options[:exclude_storages]
     includes[:ext_management_systems][:hosts][:vms] = :ext_management_system unless options[:exclude_vms]
     MiqPreloader.preload(zone, includes)
-
-    # keeping all_hosts around because capture storage targets runs off of all hosts not enabled ones
-    all_hosts = zone.ext_management_systems.flat_map(&:hosts)
+    all_hosts = capture_host_targets(zone)
     targets = hosts = only_enabled(all_hosts)
     targets += capture_storage_targets(all_hosts) unless options[:exclude_storages]
     targets += capture_vm_targets(hosts) unless options[:exclude_vms]
@@ -60,6 +58,12 @@ module Metric::Targets
     end
 
     targets
+  end
+
+  def self.capture_host_targets(zone)
+    # keeping all_hosts around because capture storage targets runs off of all hosts and
+    # not just enabled ones. if that changes, then move the filtering into here.
+    zone.ext_management_systems.flat_map(&:hosts)
   end
 
   # @param [Host] all hosts that have an ems
