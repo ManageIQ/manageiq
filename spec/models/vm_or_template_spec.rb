@@ -421,15 +421,15 @@ describe VmOrTemplate do
     end
   end
 
-  context "#is_available? for live_migrate" do
+  context "#supports_live_migrate?" do
     it "returns false for vmware VM" do
       vm = FactoryGirl.create(:vm_vmware)
-      expect(vm.is_available?(:live_migrate)).to eq(false)
+      expect(vm.supports_live_migrate?).to eq(false)
     end
 
     it "returns false for SCVMM VM" do
       vm = FactoryGirl.create(:vm_microsoft)
-      expect(vm.is_available?(:live_migrate)).to eq(false)
+      expect(vm.supports_live_migrate?).to eq(false)
     end
   end
 
