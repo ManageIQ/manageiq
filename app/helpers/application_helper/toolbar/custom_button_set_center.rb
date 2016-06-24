@@ -18,7 +18,7 @@ class ApplicationHelper::Toolbar::CustomButtonSetCenter < ApplicationHelper::Too
           t),
         button(
           :ab_group_reorder,
-          'pficon pficon-edit fa-lg-assign',
+          'pficon pficon-edit fa-lg',
           N_('Reorder #{x_active_tree == :ab_tree ? "Buttons Groups" : "Buttons and Groups"}'),
           N_('Reorder')),
       ]
