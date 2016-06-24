@@ -708,6 +708,7 @@ module VmCommon
     build_policy_tree(@polArr)
     @edit = session[:edit] if session[:edit]
     if @edit && @edit[:explorer]
+      render_flash(_("No policies were selected for Policy Simulation."), :error) if session[:policies].empty?
       @in_a_form = true
       replace_right_cell
     else

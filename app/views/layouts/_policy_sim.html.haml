@@ -1,6 +1,9 @@
 - url = url_for(:action => 'policy_sim_add')
 #main_div
-  = render :partial => "layouts/flash_msg"
+
+  #flash_msg_div
+    = render :partial => "layouts/flash_msg"
+
   %h3= _("Choose Policies")
   #tab_div
     %table.table.table-bordered.table-striped
