@@ -31,7 +31,7 @@ class ApplicationHelper::Toolbar::MiqGroupsCenter < ApplicationHelper::Toolbar::
         separator,
         button(
           :rbac_group_seq_edit,
-          'pficon pficon-edit fa-lg-assign',
+          'pficon pficon-edit fa-lg',
           t = N_('Edit Sequence of User Groups for LDAP Look Up'),
           t),
       ]
