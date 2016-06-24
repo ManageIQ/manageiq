@@ -37,7 +37,7 @@ module ManageIQ::Providers
             end
 
             @data[:middleware_servers] << server
-            @data_index.store_path(:middleware_servers, :by_nativeid, server[:nativeid], server)
+            @data_index.store_path(:middleware_servers, :by_ems_ref, server[:ems_ref], server)
           end
         end.flatten
       end
@@ -86,7 +86,7 @@ module ManageIQ::Providers
         @eaps.map do |eap|
           @ems.child_resources(eap.path).map do |child|
             next unless child.type_path.end_with?('Deployment', 'Datasource')
-            server = @data_index.fetch_path(:middleware_servers, :by_nativeid, eap.id)
+            server = @data_index.fetch_path(:middleware_servers, :by_ems_ref, eap.path)
             process_server_entity(server, child)
           end
         end

@@ -1,3 +1,5 @@
+/* global DoNav miqClearTreeState miqDomElementExists miqJqueryRequest miqSetButtons miqSparkle */
+
 // Functions used by CFME for the dynatree control
 
 // OnCheck handler for the checkboxes in tree
@@ -167,8 +169,8 @@ function miqOnCheckProvTags(node, treename) {
   }
 
   for (var i = 0; i < all_checked.length; i++) {
-    selected_node = $("#" + treename + "box").dynatree("getTree").getNodeByKey(all_checked[i]);
-    selected_node_parent_key = selected_node.data.cfme_parent_key;
+    var selected_node = $("#" + treename + "box").dynatree("getTree").getNodeByKey(all_checked[i]);
+    var selected_node_parent_key = selected_node.data.cfme_parent_key;
     if (typeof parent_key != "undefined") {
       // only keep the key that came in for a single value tag category
       // delete previously selected keys from the single value category before sending them up
@@ -192,6 +194,7 @@ function miqOnClickIncludeDomainPrefix() {
 }
 
 function miqOnClickSelectOptimizeTreeNode(id) {
+  var tree;
   if ($('#miq_capacity_utilization').length == 1) {
     tree = "utilization_tree";
   } else if ($('#miq_capacity_bottlenecks').length == 1) {
@@ -201,7 +204,7 @@ function miqOnClickSelectOptimizeTreeNode(id) {
     miqDynatreeActivateNodeSilently(tree, id);
     return;
   } else {
-    rep_id = id.split('__');
+    var rep_id = id.split('__');
     miqDynatreeActivateNodeSilently(tree, rep_id);
     var url = "/miq_capacity/optimize_tree_select/?id=" + rep_id[0];
     miqJqueryRequest(url, {beforeSend: true});
@@ -240,8 +243,9 @@ function miqOnMouseInHostNet(id) {
   if (nid) {
     // div id exists
     var node = $('#' + id); // Get html node
-    var top = getAbsoluteTop(node);
-    $("#" + nid).css({top: (top - 220) + "px"}); // Set quad top location
+    // FIXME: replace with a saner display method
+    var top  = node[0].getBoundingClientRect().top + node.scrollTop() - 220;
+    $("#" + nid).css({ top: top + "px" }); // Set quad top location
     $("#" + nid).show(); // Show the quad div
     return nid; // return current node id
   }
@@ -296,7 +300,7 @@ function miqOnClickHostNet(id) {
 // OnClick handler for Report Menu Tree
 function miqOnClickTimelineSelection(id) {
   if (id.split('__')[0] != 'p') {
-    rep_id = id.split('__');
+    var rep_id = id.split('__');
     miqJqueryRequest(ManageIQ.clickUrl + '?id=' + rep_id[0], {beforeSend: true, complete: true});
   }
 }

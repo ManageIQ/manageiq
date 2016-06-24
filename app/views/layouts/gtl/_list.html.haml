@@ -20,6 +20,8 @@
                                     :row_url_ajax    => ajax_url}})
   - else
     -# TODO: is this still even relevant? haven't seen it yet (--mhradil)
+    -# substracting leftcol 219 from @winW to calculate width of div
+    -# FYI: found a screen here: /auth_key_pair_cloud/show_list (--@hayesr)
     #list_grid
       = render(:partial => 'layouts/list_grid',
         :locals  => {:options    => grid_options,

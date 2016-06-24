@@ -173,14 +173,13 @@ module ApplicationHelper
 
   def url_for_record(record, action = "show") # Default action is show
     @id = to_cid(record.id)
-    db =
-      if record.kind_of?(VmOrTemplate)
-        controller_for_vm(model_for_vm(record))
-      elsif record.class.respond_to?(:db_name)
-        record.class.db_name
-      else
-        record.class.base_class.to_s
-      end
+    db  = if record.kind_of?(VmOrTemplate)
+            controller_for_vm(model_for_vm(record))
+          elsif record.class.respond_to?(:db_name)
+            record.class.db_name
+          else
+            record.class.base_class.to_s
+          end
     url_for_db(db, action, record)
   end
 
@@ -1057,7 +1056,8 @@ module ApplicationHelper
     "#{@options[:page_size] || "US-Legal"} #{@options[:page_layout]}"
   end
 
-  GTL_VIEW_LAYOUTS = %w(action availability_zone cim_base_storage_extent cloud_object_store_container
+  GTL_VIEW_LAYOUTS = %w(action availability_zone auth_key_pair_cloud
+                        cim_base_storage_extent cloud_object_store_container
                         cloud_object_store_object cloud_tenant cloud_volume cloud_volume_snapshot
                         condition container_group container_route container_project
                         container_replicator container_image container_image_registry

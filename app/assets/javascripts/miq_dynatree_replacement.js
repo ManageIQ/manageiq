@@ -1,3 +1,5 @@
+/* global miqAddNodeChildren miqBindHoverEvent miqCheckForChanges miqDeleteDynatreeCookies miqDynatreeActivateNodeSilently miqExpandParentNodes miqOnDblClickExpand miqOnDblClickNoBaseExpand miqOnLazyReadGetNodeChildren */
+
 ManageIQ.dynatreeReplacement = {
   replace: function (options) {
     var onDblClickFunction;
@@ -155,7 +157,7 @@ ManageIQ.dynatreeReplacement = {
     }
 
     if (options.add_nodes && options.add_nodes[options.x_active_tree] && options.tree_name === options.x_active_tree) {
-      cmfeAddNodeChildren(
+      miqAddNodeChildren(
         options.x_active_tree,
         options.add_nodes_x_active_tree_key,
         options.select_node,

@@ -156,48 +156,75 @@ describe ExtManagementSystem do
     end
   end
 
-  context "with virtual columns" do
+  context "with virtual totals" do
     before(:each) do
       @ems = FactoryGirl.create(:ems_vmware)
-      (1..5).each { |i| FactoryGirl.create(:vm_vmware, :ext_management_system => @ems, :name => "vm_#{i}") }
+      (1..2).each { |i| FactoryGirl.create(:vm_vmware, :ext_management_system => @ems, :name => "vm_#{i}") }
     end
 
     it "#total_vms_on" do
-      expect(@ems.total_vms_on).to eq(5)
+      expect(@ems.total_vms_on).to eq(2)
     end
 
     it "#total_vms_off" do
       expect(@ems.total_vms_off).to eq(0)
 
       @ems.vms.each { |v| v.update_attributes(:raw_power_state => "poweredOff") }
-      expect(@ems.total_vms_off).to eq(5)
+      expect(@ems.total_vms_off).to eq(2)
     end
 
     it "#total_vms_unknown" do
       expect(@ems.total_vms_unknown).to eq(0)
 
       @ems.vms.each { |v| v.update_attributes(:raw_power_state => "unknown") }
-      expect(@ems.total_vms_unknown).to eq(5)
+      expect(@ems.total_vms_unknown).to eq(2)
     end
 
     it "#total_vms_never" do
       expect(@ems.total_vms_never).to eq(0)
 
       @ems.vms.each { |v| v.update_attributes(:raw_power_state => "never") }
-      expect(@ems.total_vms_never).to eq(5)
+      expect(@ems.total_vms_never).to eq(2)
     end
 
     it "#total_vms_suspended" do
       expect(@ems.total_vms_suspended).to eq(0)
 
       @ems.vms.each { |v| v.update_attributes(:raw_power_state => "suspended") }
-      expect(@ems.total_vms_suspended).to eq(5)
+      expect(@ems.total_vms_suspended).to eq(2)
     end
 
     %w(total_vms_on total_vms_off total_vms_unknown total_vms_never total_vms_suspended).each do |vcol|
       it "should have virtual column #{vcol} " do
         expect(described_class).to have_virtual_column "#{vcol}", :integer
       end
+    end
+
+    it "#total_vms" do
+      expect(@ems.total_vms).to eq(2)
+    end
+
+    it "#total_vms_and_templates" do
+      FactoryGirl.create(:template_vmware, :ext_management_system => @ems)
+      expect(@ems.total_vms_and_templates).to eq(3)
+    end
+
+    it "#total_miq_templates" do
+      FactoryGirl.create(:template_vmware, :ext_management_system => @ems)
+      expect(@ems.total_miq_templates).to eq(1)
+    end
+  end
+
+  describe "#total_clusters" do
+    it "knows it has none" do
+      ems = FactoryGirl.create(:ems_vmware)
+      expect(ems.total_clusters).to eq(0)
+    end
+
+    it "knows it has one" do
+      ems = FactoryGirl.create(:ems_vmware)
+      FactoryGirl.create(:ems_cluster, :ext_management_system => ems)
+      expect(ems.total_clusters).to eq(1)
     end
   end
 

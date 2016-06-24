@@ -120,11 +120,6 @@ class ReportController < ApplicationController
     @timezone_abbr   = get_timezone_abbr
     @timezone_offset = get_timezone_offset
     @sb[:select_node] = false
-    @sb[:open_tree_nodes] ||= []
-    @trees = []
-    @accords = []
-    @lists = []
-    @sb[:open_tree_nodes] ||= []
     @trees = []
     @accords = []
     @lists = []

@@ -1,3 +1,5 @@
+/* global chartData miqBuildChartMenuEx miqSparkleOff */
+
 function load_c3_charts() {
   for (var set in ManageIQ.charts.chartData) {
     for (var i = 0; i < ManageIQ.charts.chartData[set].length; i++) {

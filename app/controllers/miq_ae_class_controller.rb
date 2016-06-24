@@ -78,7 +78,6 @@ class MiqAeClassController < ApplicationController
   def explorer
     @trees = []
     @sb[:action] = nil
-    @sb[:open_tree_nodes] ||= [] # Create array to keep open tree nodes (only for autoload trees)
     @explorer = true
     # don't need right bottom cell
     @collapse_c_cell = true

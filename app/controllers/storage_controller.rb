@@ -434,7 +434,6 @@ class StorageController < ApplicationController
       @reselect_node = self.x_node = "#{nodetype}-#{to_cid(id)}"
     end
 
-    @sb[:open_tree_nodes] ||= []
     build_accordions_and_trees
 
     render :layout => "application"

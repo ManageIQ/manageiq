@@ -1,3 +1,5 @@
+/* global miqHttpInject */
+
 miqHttpInject(angular.module('netTopologyApp', ['kubernetesUI', 'ui.bootstrap', 'ManageIQ']))
 .controller('networkTopologyController', NetworkTopologyCtrl);
 

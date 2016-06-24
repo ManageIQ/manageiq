@@ -16,8 +16,7 @@ module MiddlewareCommonMixin
   end
 
   def listicon_image(item, _view)
-    icon = item.decorate.try(:listicon_image)
-    "100/#{icon}.png"
+    item.decorate.try(:listicon_image)
   end
 
   def clear_topology_breadcrumb

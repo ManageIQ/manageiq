@@ -196,8 +196,6 @@ module UiConstants
       :drift                                    => "expanded",
       :drift_mode                               => "details",
       :emscluster                               => "grid",
-      :emscloud                                 => "grid",
-      :emsinfra                                 => "grid",
       :emscontainer                             => "grid",
       :filesystem                               => "list",
       :flavor                                   => "list",
@@ -246,10 +244,8 @@ module UiConstants
       :tagging                                  => "grid",
       :treesize                                 => "20",
       :vm                                       => "grid",
-      :vmcloud                                  => "grid",
       :vmortemplate                             => "grid",
-      :vmcompare                                => "compressed",
-      :vminfra                                  => "grid"
+      :vmcompare                                => "compressed"
     },
     :perpage   => { # Items per page, by view setting
       :grid    => 20,

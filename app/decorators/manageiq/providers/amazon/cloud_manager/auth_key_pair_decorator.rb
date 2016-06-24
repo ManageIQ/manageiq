@@ -6,13 +6,13 @@ class ManageIQ::Providers::Amazon::CloudManager::AuthKeyPairDecorator < Draper::
   end
 
   def listicon_image
-    item_image
+    "100/#{item_image}.png"
   end
 
   private
 
   # Determine the icon
   def item_image
-    '100/auth_key_pair'
+    'auth_key_pair'
   end
 end

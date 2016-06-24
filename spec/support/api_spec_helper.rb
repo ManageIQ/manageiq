@@ -145,16 +145,8 @@ module ApiSpecHelper
     @miq_server_guid ||= MiqUUID.new_guid
   end
 
-  def api_server_config
-    @api_server_config ||= YAML.load_file(Rails.root.join("config/api.yml"))
-  end
-
-  def collection_config
-    api_server_config[:collections]
-  end
-
   def action_identifier(type, action, selection = :resource_actions, method = :post)
-    collection_config.fetch_path(type, selection, method)
+    Api::Settings.collections.fetch_path(type, selection, method)
       .detect { |spec| spec[:name] == action.to_s }[:identifier]
   end
 
@@ -164,7 +156,7 @@ module ApiSpecHelper
 
   def subcollection_action_identifier(type, subtype, action, method = :post)
     subtype_actions = "#{subtype}_subcollection_actions".to_sym
-    if collection_config.fetch_path(type, subtype_actions).present?
+    if Api::Settings.collections.fetch_path(type, subtype_actions).present?
       action_identifier(type, action, subtype_actions, method)
     else
       action_identifier(subtype, action, :subcollection_actions, method)

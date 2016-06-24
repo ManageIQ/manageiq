@@ -124,10 +124,22 @@ class ApiController < ApplicationController
     skip_before_action :verify_authenticity_token, :only => [:show, :update, :destroy, :handle_options_request]
   end
 
-  delegate :base_config, :version_config, :collection_config, :to => self
+  def base_config
+    Api::Settings.base
+  end
+
+  def version_config
+    Api::Settings.version
+  end
+
+  def collection_config
+    Api::Settings.collections
+  end
+
+  delegate :user_token_service, :to => self
 
   def initialize
-    @config          = self.class.load_config
+    @config          = Api::Settings.data
     @module          = base_config[:module]
     @name            = base_config[:name]
     @description     = base_config[:description]
@@ -135,7 +147,6 @@ class ApiController < ApplicationController
     @prefix          = "/#{@module}"
     @req             = {}      # To store API request details by parse_api_request
     @api_config      = VMDB::Config.new("vmdb").config[@module.to_sym] || {}
-    @api_user_token_service = ApiUserTokenService.new(@config)
   end
 
   #
