@@ -49,37 +49,4 @@
     - draw_fields = !options[:"volume_name_#{counter}"].blank? && !options[:"volume_size_#{counter}"].blank?
 
 :javascript
-  (function(){
-      var button = $("#add-additional-volume-button");
-
-      button.click(function() {
-        var sourceNode = $("#add-volume-fieldset");
-        var node = duplicateNode(sourceNode, ["id", "name"]);
-
-        sourceNode.parent().append(node);
-      });
-
-      var counter = #{counter};
-      function duplicateNode(sourceNode, attributesToBump) {
-        var out = sourceNode.clone(true);
-        var nodes = out.find('*');
-
-        $.each(nodes, function (ix, node) {
-          $.each(attributesToBump, function (ix, attr) {
-            if (node.hasAttribute(attr)) {
-              $(node).prop(attr, increment_attr($(node).prop(attr)));
-            }
-          });
-          node.value = '';
-          node.checked = false;
-        });
-
-        function increment_attr(str) {
-          str_pieces = str.split("_")
-          str_pieces[str_pieces.length - 1] = counter;
-          return str_pieces.join("_")
-        }
-        counter++;
-        return out;
-      }
-  })();
+  provDialogVolumeFieldsetInit(#{counter});

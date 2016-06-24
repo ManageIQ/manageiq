@@ -1712,6 +1712,41 @@ function cbHoverRow(row, state) {
   $("tr[id^='" + prefix + "']").toggleClass('active', state);
 }
 
+function provDialogVolumeFieldsetInit(counter) {
+  var button = $("#add-additional-volume-button");
+
+  button.click(function() {
+    var sourceNode = $("#add-volume-fieldset");
+    var node = duplicateNode(sourceNode, ["id", "name"]);
+
+    sourceNode.parent().append(node);
+  });
+
+  function duplicateNode(sourceNode, attributesToBump) {
+    var out = sourceNode.clone(true);
+    var nodes = out.find('*');
+
+    $.each(nodes, function (ix, node) {
+      $.each(attributesToBump, function (ix, attr) {
+        if (node.hasAttribute(attr)) {
+          $(node).prop(attr, increment_attr($(node).prop(attr)));
+        }
+      });
+      node.value = '';
+      node.checked = false;
+    });
+
+    function increment_attr(str) {
+      var str_pieces = str.split("_")
+      str_pieces[str_pieces.length - 1] = counter;
+      return str_pieces.join("_")
+    }
+
+    counter++;
+    return out;
+  }
+}
+
 function chartData(type, data, data2) {
   if (type == undefined) {
     return;
