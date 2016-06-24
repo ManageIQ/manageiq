@@ -15,7 +15,7 @@ module Metric::Targets
     MiqPreloader.preload(zone, includes)
 
     targets = zone.hosts
-    targets += zone.storages.select { |s| Storage::SUPPORTED_STORAGE_TYPES.include?(s.store_type) } unless options[:exclude_storages]
+    targets += zone.storages.select { |s| Storage.supports?(s.store_type) } unless options[:exclude_storages]
 
     # If it can and does have a cluster, then ask that, otherwise, ask host itself.
     targets = targets.select do |t|
