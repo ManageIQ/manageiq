@@ -1,4 +1,4 @@
-describe('credentialsController', function() {
+describe('CredentialsController', function() {
   var $scope, $controller, $httpBackend, miqService;
 
   beforeEach(module('ManageIQ'));
@@ -8,7 +8,7 @@ describe('credentialsController', function() {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     $scope.model = "hostModel";
-    $controller = _$controller_('credentialsController',
+    $controller = _$controller_('CredentialsController',
       {$http: $httpBackend, $scope: $scope, miqService: miqService});
   }));
 
@@ -20,7 +20,7 @@ describe('credentialsController', function() {
   describe('when formId is new', function() {
     beforeEach(inject(function(_$httpBackend_, $rootScope, _$controller_) {
       $scope.formId = 'new';
-      $controller = _$controller_('credentialsController',
+      $controller = _$controller_('CredentialsController',
         {$http: $httpBackend, $scope: $scope, miqService: miqService});
     }));
     it('initializes stored password state flags for new records', function() {
@@ -33,7 +33,7 @@ describe('credentialsController', function() {
   describe('when formId is not new', function() {
     beforeEach(inject(function(_$httpBackend_, $rootScope, _$controller_) {
       $scope.formId = '12345';
-      $controller = _$controller_('credentialsController',
+      $controller = _$controller_('CredentialsController',
         {$http: $httpBackend, $scope: $scope, miqService: miqService});
     }));
     it('initializes stored password state flags for existing records', function() {
