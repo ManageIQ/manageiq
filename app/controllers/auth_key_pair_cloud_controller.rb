@@ -91,6 +91,18 @@ class AuthKeyPairCloudController < ApplicationController
     end
   end
 
+  # REST call for provider choices
+  def ems_form_choices
+    assert_privileges("auth_key_pair_cloud_new")
+    ems_choices = []
+    ems_choices = ManageIQ::Providers::CloudManager.select { |ems| ems.class::AuthKeyPair.is_available?(:create_key_pair, ems) }.map do |ems|
+      {:name => ems.name, :id => ems.id}
+    end
+    render :json => {
+      :ems_choices => ems_choices
+    }
+  end
+
   def new
     assert_privileges("auth_key_pair_cloud_new")
     @key_pair = ManageIQ::Providers::CloudManager::AuthKeyPair.new

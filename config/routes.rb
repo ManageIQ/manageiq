@@ -137,7 +137,8 @@ Vmdb::Application.routes.draw do
         show
         show_list
         tagging_edit
-        tag_edit_form_field_changed
+        tag_edit_form_field_changed,
+        ems_form_choices
       ) + compare_get,
       :post => %w(
         button
