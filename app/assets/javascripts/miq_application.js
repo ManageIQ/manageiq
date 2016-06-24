@@ -1216,20 +1216,6 @@ function miqSearchSpinner(status) {
   $('#searching_spinner_center').spin(status ? opts : false);
 }
 
-/*
- * Registers a callback which copies the csrf token into the
- * X-CSRF-Token header with each ajax request.  Necessary to
- * work with rails applications which have fixed
- * CVE-2011-0447
- */
-$(document).ajaxSend(function (event, request, settings) {
-  var csrf_meta_tag = $('#meta[name=csrf-token]')[0];
-  if (csrf_meta_tag) {
-    var header = 'X-CSRF-Token';
-    var token = csrf_meta_tag.readAttribute('content');
-  }
-});
-
 function miqProcessObserveQueue() {
   if (! ManageIQ.observe.queue.length) {
     return;
