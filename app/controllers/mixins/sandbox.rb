@@ -51,6 +51,7 @@ module Sandbox
     cs_filter_tree
     customization_templates_tree
     datacenter_tree
+    datastore_tree
     db_tree
     df_tree
     diagnostics_tree

@@ -205,6 +205,7 @@ module OpsController::Settings::CapAndU
                                       :location   => s.location) # fields we need
     end
     build_ds_tree(@edit[:current][:storages])
+    @datastore_tree  = TreeBuilderDatastores.new(:datastore, :datastore_tree, @sb, true, @edit[:current][:storages])
     @edit[:new] = copy_hash(@edit[:current])
     session[:edit] = @edit
   end

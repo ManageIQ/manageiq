@@ -63,3 +63,5 @@
                   :check_url => "/ops/cu_collection_field_changed/",
                   :exp_tree => false,
                   :checkboxes => true})
+              = render(:partial => 'shared/tree', :locals => {:tree => @datastore_tree, :name => @datastore_tree.name})
+
