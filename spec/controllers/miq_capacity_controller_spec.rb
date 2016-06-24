@@ -42,9 +42,7 @@ describe MiqCapacityController do
       end
     end
   end
-end
 
-describe MiqCapacityController do
   context "#find_filtered" do
     before do
       EvmSpecHelper.create_guid_miq_server_zone
@@ -80,6 +78,7 @@ describe MiqCapacityController do
       expect(sb[:planning][:vms]).to eq(@vm1.id.to_s => @vm1.name, @vm3.id.to_s => @vm3.name, @vm4.id.to_s => @vm4.name)
     end
   end
+
   context '#bottlenecks' do
     before do
       EvmSpecHelper.create_guid_miq_server_zone
@@ -94,6 +93,20 @@ describe MiqCapacityController do
       # render fails but it's not needed for this test
       expect(controller).to receive(:render)
       controller.bottlenecks
+    end
+  end
+
+  describe "#reload" do
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+      set_user_privileges
+      FactoryGirl.create(:miq_enterprise)
+    end
+    it 'reloads tree with active node' do
+      seed_session_trees('miq_capacity', :bottlenecks_tree, 'foobar')
+      expect(controller).to receive(:optimize_tree_select).once.and_call_original
+      expect(controller).to receive(:bottleneck_get_node_info).once
+      post :reload
     end
   end
 end
