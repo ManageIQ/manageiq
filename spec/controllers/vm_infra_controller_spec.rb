@@ -325,6 +325,11 @@ describe VmInfraController do
     expect(response.body).to include('Reset initiated for 1 VM and Instance from the CFME Database')
   end
 
+  it 'can run Utilization' do
+    post :x_button, :params => {:display => "performance",  :pressed => 'vm_perf', :id => vm_vmware.id}
+    expect(response.status).to eq(200)
+  end
+
   it 'the reconfigure tab for a vm with max_cpu_cores_per_socket <= 1 should not display the cpu_cores_per_socket dropdown' do
     vm = FactoryGirl.create(:vm_vmware,
                             :host     => host_1x1,
