@@ -1665,6 +1665,18 @@ function add_expanding_icon(element) {
   element.find('.pull-right').append("<a onclick='toggle_expansion(this)'> <i class='fa fa-angle-right'></i>");
 }
 
+function miqReportAfterOnload(node, active_tree, node_not_root, role_list, editor_allowed) {
+  if (role_list && !editor_allowed) {
+    return;
+  }
+
+  miqDynatreeActivateNode(role_list ? 'roles_tree' : active_tree, node);
+
+  if (role_list && node_not_root) {
+    $('#menu_div1, #menu_div3').hide();
+  }
+}
+
 function chartData(type, data, data2) {
   if (type == undefined) {
     return;

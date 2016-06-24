@@ -3,19 +3,8 @@
     = render :partial => list
     -# Include the center cell divs
 
-%script{:type => "text/javascript"}
-  function miqReportAfterOnload() {
-  - if @right_cell_div == "role_list"
-    - if role_allows(:feature => "miq_report_menu_editor")
-      miqDynatreeActivateNode('roles_tree','#{x_node}');
-      - if x_node.split('-').length > 1
-        = javascript_hide("menu_div1")
-        = javascript_show("menu_div3")
-  - else
-    miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}')
-  };
-  var miq_after_onload = "miqReportAfterOnload();"
-
--# Create from/to date JS vars to limit calendar starting from
 :javascript
+  var miq_after_onload = "miqReportAfterOnload('#{j_str x_node}', '#{j_str x_active_tree}', #{x_node.split('-').length > 1}, #{@right_cell_div == "role_list"}, #{!! role_allows(:feature => "miq_report_menu_editor")});"
+
+  // Create from/to date JS vars to limit calendar starting from
   ManageIQ.calendar.calDateFrom = miqCalendarDateConversion("#{@timezone_offset}").toDate();
