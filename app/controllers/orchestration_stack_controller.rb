@@ -21,7 +21,6 @@ class OrchestrationStackController < ApplicationController
                      :url  => "/orchestration_stack/show_list?page=#{@current_page}&refresh=y"}, true)
     case @display
     when "download_pdf", "main", "summary_only"
-      get_tagdata(@orchestration_stack)
       drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @orchestration_stack.name},
                       :url  => "/orchestration_stack/show/#{@orchestration_stack.id}")
       @showtype = "main"

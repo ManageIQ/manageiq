@@ -31,7 +31,7 @@ module TextualSummaryHelper
     when nil
       nil
     else
-      raise "Unexpected summary type: #{summary.class}"
+      raise _("Unexpected summary type: %{class}") % {:class => summary.class}
     end
   end
 
@@ -39,22 +39,34 @@ module TextualSummaryHelper
     Array.wrap(summaries).map { |summary| expand_textual_summary(summary, context) }.compact
   end
 
+  def tags_from_record(record)
+    record.tags.each_with_object([]) do |tag, tags|
+      values = tag.name.split('/')
+      # needs only tags
+      next unless values[1] == "managed"
+      p = tags.find { |x| x[:label] == values[2].humanize }
+      value = Classification.find_by(:tag_id => tag.id).description
+      if p.present?
+        p[:value].push(value)
+      else
+        name = Classification.find_by(:id => Classification.find_by(:tag_id => tag.id).parent_id).description
+        tags.push(:image => "smarttag", :label => name, :value => [value])
+      end
+    end
+  end
+
   def textual_tags
     label = _("%{name} Tags") % {:name => session[:customer_name]}
-    h = {:label => label}
-    tags = session[:assigned_filters]
-    if tags.blank?
-      h[:image] = "smarttag"
-      h[:value] = _("No %{label} have been assigned") % {:label => label}
+    tags = {:label => label}
+    if @record.tags.blank? || tags_from_record(@record).blank?
+      tags[:image] = "smarttag"
+      tags[:value] = _("No %{label} have been assigned") % {:label => label}
     else
-      h[:value] = tags.sort_by { |category, _assigned| category.downcase }
-                  .collect do |category, assigned|
-                    {:image => "smarttag",
-                     :label => category,
-                     :value => assigned}
-                  end
+      tags[:value] = tags_from_record(@record)
+      tags[:value].each { |value| value[:value].sort! }
+      tags[:value].sort_by! { |x| x[:label] }
     end
-    h
+    tags
   end
 
   private
@@ -94,7 +106,7 @@ module TextualSummaryHelper
   def textual_collection_link(collection, as: nil, controller_collection: nil, explorer: false, feature: nil, label: nil, link: nil)
     if collection.kind_of?(Array)
       unless as && link
-        raise ArgumentError, ":as and :link are both required when linking to an array",
+        raise ArgumentError, _(":as and :link are both required when linking to an array"),
               caller.reject { |x| x =~ /^#{__FILE__}:/ }
       end
     end

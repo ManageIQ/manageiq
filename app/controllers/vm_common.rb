@@ -227,7 +227,6 @@ module VmCommon
     end
     @gtl_url = "/show"
     if ["download_pdf", "main", "summary_only"].include?(@display)
-      get_tagdata(@record)
       drop_breadcrumb({:name => _("Virtual Machines"),
                        :url  => "/#{rec_cls}/show_list?page=#{@current_page}&refresh=y"}, true)
       drop_breadcrumb(:name => @record.name + _(" (Summary)"), :url => "/#{rec_cls}/show/#{@record.id}")
@@ -351,7 +350,6 @@ module VmCommon
     @button_group = "vm"
 
     @gtl_url = "/show"
-    get_tagdata(@record)
     drop_breadcrumb({:name => _("Virtual Machines"),
                      :url  => "/#{@button_group}/show_list?page=#{@current_page}&refresh=y"}, true)
     drop_breadcrumb(:name => @record.name + _(" (Summary)"), :url => "/#{@button_group}/show/#{@record.id}")

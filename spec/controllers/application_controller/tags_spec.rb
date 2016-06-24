@@ -1,38 +1,4 @@
 describe ApplicationController  do
-  describe "#get_tagdata" do
-    let(:record) { double("Host") }
-    let(:user) { FactoryGirl.create(:user, :userid => "testuser") }
-
-    before do
-      login_as user
-      allow(record).to receive(:tagged_with).with(:cat => user.userid).and_return("my tags")
-      allow(Classification).to receive(:find_assigned_entries).with(record).and_return(classifications)
-    end
-
-    context "when classifications exist" do
-      let(:parent) { double("Parent", :description => "Department") }
-      let(:child1) { double("Child1", :parent => parent, :description => "Automotive") }
-      let(:child2) { double("Child2", :parent => parent, :description => "Financial Services") }
-      let(:classifications) { [child1, child2] }
-
-      it "populates the assigned filters in the session" do
-        controller.send(:get_tagdata, record)
-        expect(session[:assigned_filters]['Department']).to eq(["Automotive", "Financial Services"])
-        expect(session[:mytags]).to eq("my tags")
-      end
-    end
-
-    context "when classifications do not exist" do
-      let(:classifications) { [] }
-
-      it "sets the assigned filters to an empty hash in the session" do
-        controller.send(:get_tagdata, record)
-        expect(session[:assigned_filters]).to eq({})
-        expect(session[:mytags]).to eq("my tags")
-      end
-    end
-  end
-
   context "tag_edit_build_screen" do
     def add_entry(cat, options)
       raise "entries can only be added to classifications" unless cat.category?
@@ -78,7 +44,6 @@ describe ApplicationController  do
       controller.instance_variable_set(:@edit, :new => {})
       controller.instance_variable_set(:@tagging, 'ServiceTemplate')
       controller.instance_variable_set(:@object_ids, [@st.id])
-      session[:assigned_filters] = {:Test => %w("Entry1 Entry2)}
 
       controller.send(:tag_edit_build_screen)
       expect(convert_to_region_id(assigns(:categories)['Clergy']))

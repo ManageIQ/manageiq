@@ -86,7 +86,9 @@
             = h(u.name)
             %br
     - unless @edit
-      = render :partial => "rbac_tag_box"
+      .form-group
+        .col-md-10
+          = render :partial => "shared/summary/textual_tags", :locals => {:title => _("Smart Management"), :items => textual_group_smart_management}
     - if @edit
       #group_lookup{:style => "display:none"}
         %hr

@@ -30,7 +30,6 @@ class HostController < ApplicationController
     set_config(@host)
     case @display
     when "download_pdf", "main", "summary_only"
-      get_tagdata(@host)
       drop_breadcrumb({:name => _("Hosts"), :url => "/host/show_list?page=#{@current_page}&refresh=y"}, true)
       drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @host.name }, :url => "/host/show/#{@host.id}")
       @showtype = "main"

@@ -19,7 +19,6 @@ class FlavorController < ApplicationController
 
     case @display
     when "download_pdf", "main", "summary_only"
-      get_tagdata(@flavor)
       drop_breadcrumb({:name => _("Flavors"), :url => "/flavor/show_list?page=#{@current_page}&refresh=y"}, true)
       drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @flavor.name}, :url => "/flavor/show/#{@flavor.id}")
       @showtype = "main"

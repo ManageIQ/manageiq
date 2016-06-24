@@ -873,7 +873,6 @@ class ProviderForemanController < ApplicationController
 
   def update_partials(record_showing, presenter, r)
     if record_showing && valid_configured_system_record?(@configured_system_record)
-      get_tagdata(@record)
       presenter.hide(:form_buttons_div)
       path_dir = "provider_foreman"
       presenter.update(:main_div, r[:partial => "#{path_dir}/main",

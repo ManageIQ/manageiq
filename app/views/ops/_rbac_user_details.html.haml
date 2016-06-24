@@ -129,4 +129,6 @@
               = h(@user.miq_user_role_name)
   %hr/
   - unless @edit
-    = render :partial => "rbac_tag_box"
+    .form-group
+      .col-md-10
+        = render :partial => "shared/summary/textual_tags", :locals => {:title => _("Smart Management"), :items => textual_group_smart_management}

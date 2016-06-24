@@ -27,7 +27,6 @@ class EmsClusterController < ApplicationController
 
     case @display
     when "download_pdf", "main", "summary_only"
-      get_tagdata(@ems_cluster)
       drop_breadcrumb({:name => _("Clusters"), :url => "/ems_cluster/show_list?page=#{@current_page}&refresh=y"}, true)
       drop_breadcrumb(:name => @ems_cluster.name + _(" (Summary)"), :url => "/ems_cluster/show/#{@ems_cluster.id}")
       @showtype = "main"

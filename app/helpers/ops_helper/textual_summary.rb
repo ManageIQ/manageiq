@@ -29,6 +29,10 @@ module OpsHelper::TextualSummary
     %i(tenant_quota_allocations)
   end
 
+  def textual_group_smart_management
+    %i(tags)
+  end
+
   #
   # Items
   #

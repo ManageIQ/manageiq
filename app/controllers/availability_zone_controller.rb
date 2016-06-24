@@ -22,7 +22,6 @@ class AvailabilityZoneController < ApplicationController
                      :url  => "/availability_zones/show_list?page=#{@current_page}&refresh=y"}, true)
     case @display
     when "download_pdf", "main", "summary_only"
-      get_tagdata(@availability_zone)
       drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @availability_zone.name},
                       :url  => "/availability_zone/show/#{@availability_zone.id}")
       @showtype = "main"

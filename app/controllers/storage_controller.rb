@@ -35,7 +35,6 @@ class StorageController < ApplicationController
     return if perfmenu_click?
     @display = params[:display] || "main" unless control_selected?
     @record = @storage = find_record( Storage, record || params[:id])
-    # @storage = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@storage)
 
     if !@explorer && @display == "main"
@@ -63,7 +62,6 @@ class StorageController < ApplicationController
     end
 
     @gtl_url = "/show"
-    #   drop_breadcrumb({:name=>ui_lookup(:tables=>"storages"), :url=>"/storage/show_list?page=#{@current_page}&refresh=y"}, true)
 
     case @display
     when "all_miq_templates", "all_vms"
@@ -80,7 +78,6 @@ class StorageController < ApplicationController
       @showtype = "hosts"
 
     when "download_pdf", "main", "summary_only"
-      get_tagdata(@storage)
       session[:vm_summary_cool] = (@settings[:views][:vm_summary_cool] == "summary")
       @summary_view = session[:vm_summary_cool]
       drop_breadcrumb({:name => ui_lookup(:tables => "storages"), :url => "/storage/show_list?page=#{@current_page}&refresh=y"}, true)
@@ -256,24 +253,6 @@ class StorageController < ApplicationController
     @items_per_page = @settings[:perpage][@gtl_type.to_sym]   # Get the per page setting for this gtl type
     @storage_pages, @storages = paginate(:storages, :per_page => @items_per_page, :order => @col_names[get_sort_col] + " " + @sortdir)
   end
-
-  # # Tag selected Storage Locations
-  # def tagstorage
-  #   storages = Array.new
-  #   storages = find_checked_items
-  #   if storages.length < 1
-  #     add_flash("One or more Storage Locations must be selected for tagging", :error)
-  #     @refresh_div = "flash_msg_div"
-  #     @refresh_partial = "layouts/flash_msg"
-  #   else
-  #     session[:tag_items] = storages  # Set the array of tag items
-  #     session[:tag_db] = Storage      # Remember the DB
-  #     session[:assigned_filters] = assigned_filters
-  #      render :update do |page|
-  #       page.redirect_to :controller => 'storage', :action => 'tagging'   # redirect to build the tagging screen
-  #     end
-  #   end
-  # end
 
   def accordion_select
     @lastaction = "explorer"
@@ -557,7 +536,6 @@ class StorageController < ApplicationController
 
   def update_partials(record_showing, presenter, r)
     if record_showing
-      get_tagdata(@record)
       presenter.hide(:form_buttons_div)
       path_dir = "storage"
       presenter.update(:main_div, r[:partial => "#{path_dir}/main",

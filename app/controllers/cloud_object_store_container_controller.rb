@@ -38,7 +38,6 @@ class CloudObjectStoreContainerController < ApplicationController
 
     case @display
     when "download_pdf", "main", "summary_only"
-      get_tagdata(@record)
       drop_breadcrumb(
         :name => _("%{name} (Summary)") % {:name => @record.key.to_s},
         :url  => "/cloud_object_store_container/show/#{@record.id}"

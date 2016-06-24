@@ -388,7 +388,6 @@ class ServiceController < ApplicationController
     identify_service(id)
     return if record_no_longer_exists?(@record)
 
-    get_tagdata(@record)
   end
 
   def tagging_explorer_controller?

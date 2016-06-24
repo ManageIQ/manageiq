@@ -11,7 +11,6 @@ module Mixins
       @gtl_url = "/show"
       case @display
       when "download_pdf", "main", "summary_only"
-        get_tagdata(@record)
         drop_breadcrumb({:name => "#{self.class.table_name}s",
                          :url  => "/#{self.class.table_name}/show_list?page=#{@current_page}&refresh=y"},
                         true)

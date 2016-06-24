@@ -90,7 +90,6 @@ class ConfigurationController < ApplicationController
     # ui1 edit form
     return unless load_edit("config_edit__ui1", "configuration")
     get_form_vars
-    @assigned_filters = []
     @changed = (@edit[:new] != @edit[:current])
     render :update do |page|
       page << javascript_prologue

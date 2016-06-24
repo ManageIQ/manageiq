@@ -112,8 +112,6 @@ module VmShowMixin
     case @display
     when "download_pdf", "main", "summary_only"
       @button_group = @record.kind_of?(MiqTemplate) ? "miq_template" : "vm"
-
-      get_tagdata(@record)
       @showtype = "main"
       set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
 

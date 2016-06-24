@@ -388,7 +388,6 @@ module ReportController::Reports::Editor
 
   # Get variables from edit form
   def get_form_vars
-    @assigned_filters = []
     gfv_report_fields             # Global report fields
     gfv_move_cols_buttons         # Move cols buttons
     gfv_model                     # Model changes

@@ -1,4 +1,5 @@
 describe CatalogHelper::TextualSummary do
+  include TextualSummaryHelper
   context '#textual_tags without tags' do
     before do
       @record = FactoryGirl.create(:orchestration_template)
