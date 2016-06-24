@@ -16,7 +16,7 @@ RSpec.describe 'Virtual Template API' do
     it 'can list all the virtual templates' do
       api_basic_authorize collection_action_identifier(:virtual_templates, :read, :get)
       FactoryGirl.create(:virtual_template)
-      FactoryGirl.create(:virtual_template, :generic)
+      FactoryGirl.create(:virtual_template, :amazon)
 
       run_get(virtual_templates_url)
       expect_query_result(:virtual_templates, 2, 2)
@@ -94,7 +94,7 @@ RSpec.describe 'Virtual Template API' do
     end
 
     it 'rejects virtual_template creation of a duplicate type' do
-      FactoryGirl.create(:virtual_template)
+      FactoryGirl.create(:virtual_template, :amazon)
       api_basic_authorize collection_action_identifier(:virtual_templates, :create)
       run_post(virtual_templates_url, template)
 
@@ -119,7 +119,7 @@ RSpec.describe 'Virtual Template API' do
 
   context 'virtual template edit' do
     let(:template) { FactoryGirl.create(:virtual_template) }
-    let(:template_2) { FactoryGirl.create(:virtual_template, :generic) }
+    let(:template_2) { FactoryGirl.create(:virtual_template, :amazon) }
 
     it 'supports single virtual_template edit' do
       api_basic_authorize collection_action_identifier(:virtual_templates, :edit)
@@ -151,7 +151,7 @@ RSpec.describe 'Virtual Template API' do
 
   context 'virtual template delete' do
     let(:template) { FactoryGirl.create(:virtual_template) }
-    let(:template_2) { FactoryGirl.create(:virtual_template, :generic) }
+    let(:template_2) { FactoryGirl.create(:virtual_template, :amazon) }
 
     it 'supports single virtual_template delete' do
       api_basic_authorize collection_action_identifier(:virtual_templates, :delete)
