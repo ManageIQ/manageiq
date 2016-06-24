@@ -337,6 +337,11 @@ class MiqCapacityController < ApplicationController
     end
   end
 
+  def reload
+    @_params[:id] = x_node
+    optimize_tree_select
+  end
+
   def optimize_tree_select
     if params[:id]                                            # First time thru async method, grab id parm info
       @refresh = (x_node == "")
