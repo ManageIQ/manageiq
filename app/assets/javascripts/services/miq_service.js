@@ -45,20 +45,10 @@ ManageIQ.angular.app.service('miqService', function() {
 
     if (type == "error") {
       var outerBox = $('<div class="alert alert-danger">');
-      var innerSpan = $('<span class="pficon-layered">');
-      var icon1 = $('<span class="pficon pficon-error-octagon">');
-      var icon2 = $('<span class="pficon pficon-warning-exclamation">');
-
-      $(innerSpan).append(icon1);
-      $(innerSpan).append(icon2);
+      var innerSpan = $('<span class="pficon pficon-error-circle-o">');
     } else if (type == "warn") {
       var outerBox = $('<div class="alert alert-warning">');
-      var innerSpan = $('<span class="pficon-layered">');
-      var icon1 = $('<span class="pficon pficon-warning-triangle">');
-      var icon2 = $('<span class="pficon pficon-warning-exclamation">');
-
-      $(innerSpan).append(icon1);
-      $(innerSpan).append(icon2);
+      var innerSpan = $('<span class="pficon pficon-warning-triangle-o">');
     } else if (type == "success") {
       var outerBox = $('<div class="alert alert-success">');
       var innerSpan = $('<span class="pficon pficon-ok">');
