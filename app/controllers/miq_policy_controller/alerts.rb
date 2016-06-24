@@ -155,6 +155,19 @@ module MiqPolicyController::Alerts
       end
     end
 
+    if params[:value_mw_greater_than]
+      @edit[:new][:expression][:options][:value_mw_greater_than] = params[:value_mw_greater_than]
+    end
+    if params[:value_mw_less_than]
+      @edit[:new][:expression][:options][:value_mw_less_than] = params[:value_mw_less_than]
+    end
+    if params[:value_mw_garbage_collector]
+      @edit[:new][:expression][:options][:value_mw_garbage_collector] = params[:value_mw_garbage_collector]
+    end
+    if params[:select_mw_operator]
+      @edit[:new][:expression][:options][:mw_operator] = params[:select_mw_operator]
+    end
+
     @edit[:new][:email][:from] = params[:from] if params.key?(:from)
     @edit[:email] = params[:email] if params.key?(:email)
     if params[:user_email]
@@ -405,6 +418,10 @@ module MiqPolicyController::Alerts
         @edit[:operators] = eo[:values]
         @edit[:new][:expression][:options][:operator] ||= eo[:values].first
 
+      when :mw_operator
+        @edit[:operators] = eo[:values]
+        @edit[:new][:expression][:options][:mw_operator] ||= eo[:values].first
+
       when :event_log_message_filter_type
         @edit[:event_log_message_filter_types] = eo[:values]
         @edit[:new][:expression][:options][:event_log_message_filter_type] ||= eo[:values].first
@@ -551,6 +568,32 @@ module MiqPolicyController::Alerts
         unless ts && is_integer?(ts)
           add_flash(_("Trend Steepness must be an integer"), :error)
         end
+      end
+    end
+    if %w(mw_heap_used, mw_non_heap_used).include?(@edit.fetch_path(:new, :expression, :eval_method))
+      value_greater_than = @edit.fetch_path(:new, :expression, :options, :value_mw_greater_than)
+      non = @edit.fetch_path(:new, :expression, :eval_method) == "mw_non_heap_used" ? "Non" : ""
+      an_integer = "an integer"
+      between = "between 0 and 100"
+      template_error = "%s %s Heap Max (%%) must be %s"
+      unless value_greater_than && is_integer?(value_greater_than)
+        add_flash(_(template_error % [">", non, an_integer]), :error)
+      end
+      unless value_greater_than.to_i.between?(0, 100)
+        add_flash(_(template_error % [">", non, between]), :error)
+      end
+      value_less_than = @edit.fetch_path(:new, :expression, :options, :value_mw_less_than)
+      unless value_less_than && is_integer?(value_less_than)
+        add_flash(_(template_error % ["<", non, an_integer]), :error)
+      end
+      unless value_less_than.to_i.between?(0, 100)
+        add_flash(_(template_error % ["<", non, between]), :error)
+      end
+    end
+    if @edit.fetch_path(:new, :expression, :eval_method) == "mw_accumulated_gc_duration"
+      value_mw_garbage_collector = @edit.fetch_path(:new, :expression, :options, :value_mw_garbage_collector)
+      unless value_mw_garbage_collector && is_integer?(value_mw_garbage_collector)
+        add_flash(_("Duration Per Minute must be an integer"), :error)
       end
     end
     unless alert.options[:notifications][:email] ||

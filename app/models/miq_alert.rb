@@ -432,6 +432,21 @@ class MiqAlert < ApplicationRecord
             :cpu_affinity => Dictionary.gettext("cpu_affinity", :type => "column")
           }},
           {:name => :operator, :description => _("Operator"), :values => ["Changed"]}
+        ]},
+      {:name => "mw_heap_used", :description => _("JVM Heap Used"), :db => ["MiddlewareServer"], :responds_to_events => "mw_event",
+        :options => [
+          {:name => :value_mw_greater_than, :description => _("> Heap Max (%)"), :numeric => true},
+          {:name => :value_mw_less_than, :description => _("< Heap Max (%)"), :numeric => true}
+        ]},
+      {:name => "mw_non_heap_used", :description => _("JVM Non Heap Used"), :db => ["MiddlewareServer"], :responds_to_events => "mw_event",
+        :options => [
+          {:name => :value_mw_greater_than, :description => _("> Non Heap Max (%)"), :numeric => true},
+          {:name => :value_mw_less_than, :description => _("< Non Heap Max (%)"), :numeric => true}
+        ]},
+      {:name => "mw_accumulated_gc_duration", :description => _("JVM Accumulated GC Duration"), :db => ["MiddlewareServer"], :responds_to_events => "mw_event",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<=", "="]},
+          {:name => :value_mw_garbage_collector, :description => _("Duration Per Minute (ms)"), :numeric => true}
         ]}
     ]
   end
