@@ -1699,6 +1699,19 @@ function miqOpsAfterOnload(allowed, utilization_url, hide_toolbar) {
   }
 }
 
+function cbHoverEnable(selector) {
+  $(selector).hover(function() {
+    cbHoverRow(this, true);
+  }, function() {
+    cbHoverRow(this, false);
+  });
+}
+
+function cbHoverRow(row, state) {
+  var prefix = row.id.substr(0, row.id.lastIndexOf("_"));
+  $("tr[id^='" + prefix + "']").toggleClass('active', state);
+}
+
 function chartData(type, data, data2) {
   if (type == undefined) {
     return;
