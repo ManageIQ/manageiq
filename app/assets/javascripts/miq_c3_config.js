@@ -7,7 +7,6 @@
  */
 
 (function (ManageIQ) {
-
   var pfColors = [$.pfPaletteColors.blue, $.pfPaletteColors.red, $.pfPaletteColors.green, $.pfPaletteColors.orange, $.pfPaletteColors.cyan,
     $.pfPaletteColors.gold, $.pfPaletteColors.purple, $.pfPaletteColors.lightBlue, $.pfPaletteColors.lightGreen, $.pfPaletteColors.black];
   var c3mixins = {};
@@ -51,7 +50,7 @@
 
   c3mixins.pfDataColorFunction = {
     data: {
-      color: function (color, d) {
+      color: function (_color, d) {
         return pfColors[d.index % pfColors.length];
       }
     }
@@ -98,10 +97,6 @@
     }
   };
 
-  function percentLabelFormat (value, ratio) {
-    return d3.format('%')(ratio);
-  }
-
 
   ManageIQ.charts.c3config = {
 
@@ -123,7 +118,7 @@
         data : {type: 'bar'},
         tooltip: {grouped: false},
         legend: { show: true, position: 'right'}
-      },c3mixins.pfColorPattern,
+      }, c3mixins.pfColorPattern,
       $().c3ChartDefaults().getDefaultBarConfig()
 
     ),
@@ -133,7 +128,7 @@
         axis : {x:{type: 'category'},
                        rotated: true},
         data : {type: 'bar'},
-      },c3mixins.pfColorPattern,
+      }, c3mixins.pfColorPattern,
       $().c3ChartDefaults().getDefaultGroupedBarConfig()
     ),
 
@@ -141,7 +136,7 @@
       {
         axis : {x:{type: 'category'}},
         data : {type: 'bar'},
-      },c3mixins.pfColorPattern,
+      }, c3mixins.pfColorPattern,
       $().c3ChartDefaults().getDefaultGroupedBarConfig()
     ),
 
@@ -150,7 +145,7 @@
         data: {type: 'pie'},
         tooltip: {show: true},
         legend: { show: true, position: 'right'}
-      },c3mixins.pfColorPattern,
+      }, c3mixins.pfColorPattern,
       $().c3ChartDefaults().getDefaultDonutConfig()
     ),
 
@@ -159,7 +154,7 @@
         data: {type: 'donut'},
         tooltip: {show: true},
         legend: { show: true, position: 'right'}
-      },c3mixins.pfColorPattern,
+      }, c3mixins.pfColorPattern,
       $().c3ChartDefaults().getDefaultDonutConfig()
     ),
 
@@ -167,21 +162,21 @@
       {
         axis : {x:{type: 'category'}},
         data : {type: 'line'},
-      },c3mixins.pfColorPattern,
+      }, c3mixins.pfColorPattern,
       $().c3ChartDefaults().getDefaultLineConfig()
     ),
     Area: _.defaultsDeep(
       {
         axis : {x:{type: 'category'}},
         data : {type: 'area'},
-      },c3mixins.pfColorPattern,
+      }, c3mixins.pfColorPattern,
       $().c3ChartDefaults().getDefaultAreaConfig()
     ),
     StackedArea: _.defaultsDeep(
      {
        axis : {x:{type: 'category'}},
        data : {type: 'area'},
-     },c3mixins.pfColorPattern,
+     }, c3mixins.pfColorPattern,
      $().c3ChartDefaults().getDefaultAreaConfig()
    ),
   };

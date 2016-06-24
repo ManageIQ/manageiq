@@ -14,14 +14,13 @@ ManageIQ.angular.app.directive('updateDropdownForTimer', ['$timeout', function($
             $timeout(function () {
               selectPickerShow(ctrl.$name);
             }, 0);
-          }
-          else {
+          } else {
             hideTimerValue(scope, ctrl);
           }
         });
 
         var selectPickerShow = function(name) {
-          if(scope.timer_items != undefined && scope.timer_items.length > 0) {
+          if (scope.timer_items != undefined && scope.timer_items.length > 0) {
             $(scope['form_' + ctrl.$name]).selectpicker({
               dropupAuto: false
             });
@@ -32,7 +31,7 @@ ManageIQ.angular.app.directive('updateDropdownForTimer', ['$timeout', function($
         };
 
         var hideTimerValue = function(scope, ctrl) {
-          if(scope.timer_items == undefined || scope.timer_items.length == 0) {
+          if (scope.timer_items == undefined || scope.timer_items.length == 0) {
             $(scope['form_' + ctrl.$name]).selectpicker('hide');
           }
         };

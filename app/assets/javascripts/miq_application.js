@@ -53,7 +53,7 @@ function miqOnLoad() {
   if ($('#search_text').length) {
     try {
       $('#search_text').focus();
-    } catch (er) {}
+    } catch (_e) {}
   }
 
   miqInitAccordions();
@@ -223,14 +223,14 @@ function miqGetBrowserInfo() {
 
 // Turn highlight on or off
 function miqHighlight(elem, status) {
+  if ($(elem).length) {
+    return;
+  }
+
   if (status) {
-    if ($(elem).length) {
-      $(elem).addClass('active');
-    }
+    $(elem).addClass('active');
   } else {
-    if ($(elem).length) {
-      $(elem).removeClass('active');
-    }
+    $(elem).removeClass('active');
   }
 }
 
@@ -301,13 +301,11 @@ function miqCheckForChanges() {
       }
       return answer;
     }
-  } else {
-    if ((($('#buttons_on').length &&
-          $('#buttons_on').is(":visible")) ||
-         ManageIQ.changes !== null) &&
-        !$('#ignore_form_changes').length) {
-      return confirm(__("Abandon changes?"));
-    }
+  } else if ((($('#buttons_on').length &&
+               $('#buttons_on').is(":visible")) ||
+              ManageIQ.changes !== null) &&
+             !$('#ignore_form_changes').length) {
+    return confirm(__("Abandon changes?"));
   }
   // use default browser reaction for onclick
   return true;
@@ -449,28 +447,26 @@ function miqButtonOnWhen(button, onwhen, count) {
 
 // Set the buttons in a div based on the count of checked items passed in
 function miqSetButtons(count, button_div) {
-
   if (button_div.match("_tb$")) {
     var toolbar = $('#' + button_div);
 
     // Non-dropdown master buttons
-    toolbar.find('button:not(.dropdown-toggle)').each(function (k, v) {
+    toolbar.find('button:not(.dropdown-toggle)').each(function (_k, v) {
       var button = $(v);
       miqButtonOnWhen(button, button.data('onwhen'), count);
     });
 
     // Dropdown master buttons
-    toolbar.find('button.dropdown-toggle').each(function (k, v) {
+    toolbar.find('button.dropdown-toggle').each(function (_k, v) {
       var button = $(v);
       miqButtonOnWhen(button, button.data('onwhen'), count);
     });
 
     // Dropdown button items
-    toolbar.find('ul.dropdown-menu > li > a').each(function (k, v) {
+    toolbar.find('ul.dropdown-menu > li > a').each(function (_k, v) {
       var button = $(v);
       miqButtonOnWhen(button.parent(), button.data('onwhen'), count);
     });
-
   } else if (button_div.match("_buttons$")) {
     // Handle newer divs with button elements
     if (count === 0) {
@@ -687,8 +683,8 @@ function miqChartBindEvents(chart_set, chart_index) {
 
 function miqBuildChartMenuEx(col, row, _value, category, series, chart_set, chart_index) {
   var chart_data = ManageIQ.charts.chartData[chart_set];
-  var chart_el   = $('#miq_chart_parent_'+chart_set+'_'+chart_index);
-  var chartmenu_el = $('#miq_chartmenu_'+chart_set+'_'+chart_index);
+  var chart_el = $('#miq_chart_parent_' + chart_set + '_' + chart_index);
+  var chartmenu_el = $('#miq_chartmenu_' + chart_set + '_' + chart_index);
   chartmenu_el.empty();
 
   if (chart_data[chart_index].menu != null && chart_data[chart_index].menu.length) {
@@ -740,8 +736,7 @@ function miqRESTAjaxButton(url, button, data) {
     var formData;
     if(data != undefined) {
       formData = data;
-    }
-    else {
+    } else {
       formData = $(form).serialize();
     }
     miqJqueryRequest(form.action, {
@@ -995,7 +990,7 @@ function miqInitDashboardCols() {
 }
 
 // Send the updated sortable order after jQuery drag/drop
-function miqDropComplete(event, ui) {
+function miqDropComplete(_event, _ui) {
   var el = $(this);
   var url = "/" + ManageIQ.widget.dashboardUrl + "?" + el.sortable(
               'serialize', {key: el.attr('id') + "[]"}
@@ -1011,7 +1006,7 @@ function miqDropComplete(event, ui) {
   miqJqueryRequest(url);
 }
 
-function miqUpdateElementsId(el){
+function miqUpdateElementsId(el) {
   $(el).children().each(function(idx, el) {
     var el_id = $(el).attr("id").split("|")[1];
     $(el).attr("id", "t_" + idx + "|" + el_id);
@@ -1100,19 +1095,19 @@ function miq_tabs_init(id, url) {
     if ($(e.target).parent().hasClass('disabled')) {
       e.preventDefault();
       return false;
-    } else {
+    } else if (typeof(url) != 'undefined') {
       // Load remote tab if an URL is specified
-      if (typeof(url) != 'undefined') {
-        var currTabTarget = $(e.target).attr('href').substring(1);
-        miqJqueryRequest(url + '/?tab_id=' + currTabTarget, {beforeSend: true});
-      }
+      var currTabTarget = $(e.target).attr('href').substring(1);
+      miqJqueryRequest(url + '/?tab_id=' + currTabTarget, {beforeSend: true});
     }
   });
+
   $(id + ' > ul.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     // Refresh CodeMirror when its tab is toggled
     if ($($(e.target).attr('href')).hasClass('cm-tab') && typeof(ManageIQ.editor) != 'undefined') {
       ManageIQ.editor.refresh();
     }
+
     // Show buttons according to the show/hide-buttons class
     if ($($(e.target).attr('href')).hasClass('show-buttons')) {
       $("#center_buttons_div").show();
@@ -1120,20 +1115,21 @@ function miq_tabs_init(id, url) {
       $("#center_buttons_div").hide();
     }
   });
+
   // If no active tab is present, set the first tab as active
   var active_tabs = $(id + ' > ul.nav-tabs li.active:not(.hidden)').length;
   if ( active_tabs > 1) {
     var tab = $(id + ' > ul.nav-tabs li:not(.hidden)').first().removeClass('active');
     $(tab.find('a').attr('href')).removeClass('active');
-  } else if( active_tabs != 1) {
+  } else if (active_tabs != 1) {
     var tab = $(id + ' > ul.nav-tabs li:not(.hidden)').first().addClass('active');
     $(tab.find('a').attr('href')).addClass('active');
   }
+
   // Hide the tab header when there is only one visible tab available
   if ($(id + ' > ul.nav-tabs > li:not(.hidden)').length == 1) {
     $(id + ' > ul.nav-tabs').hide();
-  }
-  else if ($(id + ' > ul.nav-tabs > li:not(.hidden)').length > 1) {
+  } else if ($(id + ' > ul.nav-tabs > li:not(.hidden)').length > 1) {
     $(id + ' > ul.nav-tabs').show();
   }
 }
@@ -1310,14 +1306,14 @@ function miqJqueryRequest(url, options) {
   ]));
 
   if (options.beforeSend) {
-    ajax_options.beforeSend = function (request) {
+    ajax_options.beforeSend = function (_request) {
       miqSparkle(true);
     };
   }
 
   var complete = [];
   if (options.complete) {
-    complete.push(function (request) {
+    complete.push(function (_request) {
       miqSparkle(false);
     });
   }
@@ -1389,17 +1385,17 @@ function miqAccordSelect(e) {
   }
   if (!miqCheckForChanges()) {
     return false;
-  } else {
-    var url = '/' + $('body').data('controller') + '/accordion_select?id=' + $(e.target).attr('id');
-    miqJqueryRequest(url, {beforeSend: true, complete: true});
-    return true;
   }
+
+  var url = '/' + $('body').data('controller') + '/accordion_select?id=' + $(e.target).attr('id');
+  miqJqueryRequest(url, {beforeSend: true, complete: true});
+  return true;
 }
 
 function miqInitBootstrapSwitch(element, url, options) {
-  $("[name="+element+"]").bootstrapSwitch();
+  $("[name=" + element + "]").bootstrapSwitch();
 
-  $('#' + element).on('switchChange.bootstrapSwitch', function(event, state){
+  $('#' + element).on('switchChange.bootstrapSwitch', function(_event, state) {
     options =  typeof options !== 'undefined' ? options : {}
     options['no_encoding'] = true;
 
@@ -1411,7 +1407,7 @@ function miqInitBootstrapSwitch(element, url, options) {
 }
 
 // Function to expand/collapse a pair of accordions
-function miqAccordionSwap(collapse, expand) {
+function miqAccordionSwap(_collapse, expand) {
   /*
    * Blocked by: https://github.com/twbs/bootstrap/issues/18418
    * TODO: uncomment this and delete below when the issue is fixed
@@ -1440,7 +1436,7 @@ function miqInitToolbars() {
 }
 
 // Function to run transactions when toolbar button is clicked
-function miqToolbarOnClick(e) {
+function miqToolbarOnClick(_e) {
   var tb_url;
   var button = $(this);
 
@@ -1589,7 +1585,7 @@ function miqSupportCasePrompt(tb_url) {
 }
 
 // Handle chart context menu clicks
-function miqWidgetToolbarClick(e) {
+function miqWidgetToolbarClick(_e) {
   var itemId = $(this).data('click');
   if (itemId == "reset") {
     if (confirm(__("Are you sure you want to reset this Dashboard's Widgets to the defaults?"))) {
@@ -1606,7 +1602,7 @@ function miqInitAccordions() {
   var height = $('#left_div').height() - $('#toolbar').outerHeight();
   var panel = $('.panel-heading').outerHeight();
   var count = $('#accordion:visible > .panel .panel-body').length;
-  $('#accordion:visible > .panel .panel-body').each(function (k, v) {
+  $('#accordion:visible > .panel .panel-body').each(function (_k, v) {
     $(v).css('max-height', (height - count * panel) + 'px');
     $(v).css('overflow-y', 'auto')
     $(v).css('overflow-x', 'hidden')
@@ -1648,35 +1644,36 @@ function miqHideSearchClearButton() {
 }
 
 function toggle_expansion(link) {
-    var link = $(link);
-    link.find("i").toggleClass("fa-angle-right fa-angle-down");
-    link.closest('td').children(0).toggleClass("expanded");
+  var link = $(link);
+  link.find("i").toggleClass("fa-angle-right fa-angle-down");
+  link.closest('td').children(0).toggleClass("expanded");
 }
 
-function check_for_ellipsis(){
-    var $element = $('.expand');
-    $.each($element, function( i, value ) {
-        var $val = $(value)
-        var $c = $val.clone().css('overflow', 'initial').appendTo('body');
-        if( $c.width() > $val.width() && $val.parent().find('i.fa-angle-right').length == 0) {
-            add_expanding_icon($val.parent())
-        }
-        $c.remove();
-    });
+function check_for_ellipsis() {
+  var $element = $('.expand');
+  $.each($element, function(_i, value) {
+    var $val = $(value)
+    var $c = $val.clone().css('overflow', 'initial').appendTo('body');
+    if ( $c.width() > $val.width() && $val.parent().find('i.fa-angle-right').length == 0) {
+      add_expanding_icon($val.parent())
+    }
+    $c.remove();
+  });
 };
 
-function add_expanding_icon(element){
-    element.find('.pull-right').append( "<a onclick='toggle_expansion(this)'> <i class='fa fa-angle-right'></i>" );
+function add_expanding_icon(element) {
+  element.find('.pull-right').append("<a onclick='toggle_expansion(this)'> <i class='fa fa-angle-right'></i>");
 }
 
 function chartData(type, data, data2) {
-  if(type == undefined){
+  if (type == undefined) {
     return;
   }
+
   // set maximum count of x axis tick labels
-  if(_.isObject(data.miq) && data.miq.performance){
+  if (_.isObject(data.miq) && data.miq.performance) {
     data.axis.x.tick.centered = true;
-    data.axis.x.tick.culling = {max: 5}
+    data.axis.x.tick.culling = { max: 5 };
   }
 
   // set formating function for tooltip and y tick labels
@@ -1684,14 +1681,14 @@ function chartData(type, data, data2) {
     var o = data.axis.y.tick.format;
     data.axis.y.tick.format = ManageIQ.charts.formatters[o.function].c3(o.options);
     data.tooltip = {format: {value: ManageIQ.charts.formatters[o.function].c3(o.options)}};
-    if(type == 'Donut' || type == 'Pie'){
+    if (type == 'Donut' || type == 'Pie') {
       data.tooltip = {format: {value: ManageIQ.charts.formatters[o.function].c3(o.options)}};
     }
   }
   var config = _.cloneDeep(ManageIQ.charts.c3config[type]);
 
   // some PatternFly default configs define contents function, but it breaks formatting
-  if(_.isObject(config.tooltip)) {
+  if (_.isObject(config.tooltip)) {
     config.tooltip.contents = undefined;
   }
 

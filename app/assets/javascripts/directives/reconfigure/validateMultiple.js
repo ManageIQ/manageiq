@@ -1,7 +1,7 @@
-ManageIQ.angular.app.directive('validateMultiple', function(){
+ManageIQ.angular.app.directive('validateMultiple', function() {
   return {
     require: 'ngModel',
-    link: function(scope, elm, attrs, ctrl) {
+    link: function(_scope, _elm, attrs, ctrl) {
       function multipleValidator(modelValue) {
         var memtype = attrs.memtype;
         var multiple = attrs.validateMultiple;
@@ -15,7 +15,7 @@ ManageIQ.angular.app.directive('validateMultiple', function(){
         } else {
           ctrl.$setValidity('inrange', false);
         }
-        if (x % parseInt(multiple, 10) == 0){
+        if (x % parseInt(multiple, 10) == 0) {
           ctrl.$setValidity('notmultiple', true);
         } else {
           ctrl.$setValidity('notmultiple', false);

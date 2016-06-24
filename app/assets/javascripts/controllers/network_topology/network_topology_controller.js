@@ -16,11 +16,11 @@ function NetworkTopologyCtrl($scope, $http, $interval, $location, topologyServic
     if ($location.absUrl().match("show/$") || $location.absUrl().match("show$")) {
       id = '';
     } else {
-      id = '/'+ (/network_topology\/show\/(\d+)/.exec($location.absUrl())[1]);
+      id = '/' + (/network_topology\/show\/(\d+)/.exec($location.absUrl())[1]);
     }
 
     var currentSelectedKinds = $scope.kinds;
-    var url = '/network_topology/data'+id;
+    var url = '/network_topology/data' + id;
 
     $http.get(url).success(function(data) {
       $scope.items = data.data.items;
@@ -73,7 +73,7 @@ function NetworkTopologyCtrl($scope, $http, $interval, $location, topologyServic
       contextMenuShowing = false;
   };
 
-  self.contextMenu = function contextMenu(that, data) {
+  self.contextMenu = function contextMenu(_that, data) {
     if(contextMenuShowing) {
       removeContextMenu();
     } else {
@@ -136,10 +136,10 @@ function NetworkTopologyCtrl($scope, $http, $interval, $location, topologyServic
       .attr("r", function(d) {
         return self.getDimensions(d).r;
       })
-      .attr('class' , function(d) {
+      .attr('class', function(d) {
         return topologyService.getItemStatusClass(d);
       })
-      .on("contextmenu", function(d){
+      .on("contextmenu", function(d) {
         self.contextMenu(this, d);
       });
 
@@ -179,7 +179,7 @@ function NetworkTopologyCtrl($scope, $http, $interval, $location, topologyServic
       .attr("x", function(d) {
         return self.getDimensions(d).x;
       })
-      .on("contextmenu", function(d){
+      .on("contextmenu", function(d) {
         self.contextMenu(this, d);
       });
 
@@ -190,8 +190,8 @@ function NetworkTopologyCtrl($scope, $http, $interval, $location, topologyServic
           return;
 
         $(this).text(iconInfo.icon)
-            .attr("class","glyph")
-            .attr('font-family', iconInfo.fontfamily);
+          .attr("class", "glyph")
+          .attr('font-family', iconInfo.fontfamily);
       })
 
       .attr("y", function(d) {
@@ -200,7 +200,7 @@ function NetworkTopologyCtrl($scope, $http, $interval, $location, topologyServic
       .attr("x", function(d) {
         return self.getDimensions(d).x;
       })
-      .on("contextmenu", function(d){
+      .on("contextmenu", function(d) {
         self.contextMenu(this, d);
       });
 
@@ -214,8 +214,7 @@ function NetworkTopologyCtrl($scope, $http, $interval, $location, topologyServic
          var class_name = "attached-label";
          if ($scope.checkboxModel.value) {
            return class_name + ' visible';
-         }
-         else {
+         } else {
            return class_name;
          }
       });
@@ -277,5 +276,4 @@ function NetworkTopologyCtrl($scope, $http, $interval, $location, topologyServic
     // Reset the search term in search input
     $scope.search.query = "";
   };
-
 }

@@ -1,31 +1,25 @@
-ManageIQ.angular.app.controller('credentialsController', ['$http', '$scope', 'miqService', function($http, $scope, miqService) {
+ManageIQ.angular.app.controller('credentialsController', ['$scope', function($scope) {
   var init = function() {
     $scope.bChangeStoredPassword = undefined;
     $scope.bCancelPasswordChange = undefined;
 
-    $scope.$on('resetClicked', function(e) {
+    $scope.$on('resetClicked', function(_e) {
       $scope.resetClicked();
     });
 
-    $scope.$on('setNewRecord', function(event, args) {
-      if(args != undefined) {
-        $scope.newRecord = args.newRecord;
-      }
-      else {
-        $scope.newRecord = true;
-      }
+    $scope.$on('setNewRecord', function(_event, args) {
+      $scope.newRecord = args ? args.newRecord : true;
     });
 
-    $scope.$on('setUserId', function(event, args) {
-      if(args != undefined) {
+    $scope.$on('setUserId', function(_event, args) {
+      if (args) {
         $scope.modelCopy[args.userIdName] = args.userIdValue;
       }
     });
 
     if ($scope.formId == 'new') {
       $scope.newRecord = true;
-    }
-    else {
+    } else {
       $scope.newRecord = false;
       $scope.bChangeStoredPassword = false;
       $scope.bCancelPasswordChange = false;
@@ -38,7 +32,7 @@ ManageIQ.angular.app.controller('credentialsController', ['$http', '$scope', 'mi
   };
 
   $scope.cancelPasswordChange = function() {
-    if($scope.bChangeStoredPassword) {
+    if ($scope.bChangeStoredPassword) {
       $scope.bCancelPasswordChange = true;
       $scope.bChangeStoredPassword = false;
     }

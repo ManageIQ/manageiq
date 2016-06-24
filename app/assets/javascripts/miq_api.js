@@ -131,6 +131,7 @@
 
     // fetch supports more types but we aren't using any of those yet..
     console.warning('Unknown type for request data - please provide a plain object or a string', o);
+    return null;
   }
 
   function process_response(response) {

@@ -143,7 +143,7 @@ $(document).ready(function () {
   });
 
   // Run this last to be sure all other UJS bindings have been run in case the focus field is observed
-  $('[data-miq_focus]').each(function (index) {
+  $('[data-miq_focus]').each(function(_index) {
     this.focus();
   });
 });

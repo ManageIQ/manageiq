@@ -20,14 +20,14 @@ $.fn.resizableSidebar = function() {
   if (columns.length == 2) { // only if there are 2 resizable columns
     var maindiv = columns.find('.resizer').parent();
     var sidebar = columns.not(maindiv);
-    maindiv.find('.resizer-box .btn').click(function (event) {
+    maindiv.find('.resizer-box .btn').click(function (_event) {
       if ($(this).hasClass('btn-disabled')) return false;
       var left = $(this).hasClass('resize-left');
       var button = left ? $(this).next() : $(this);
       var ajax = 2; // the width of the sidebar which will be sent with an ajax request
       var left_class = [];
       var right_class = [];
-      $.each(sidebar.attr('class').split(/\s+/), function (k, v) {
+      $.each(sidebar.attr('class').split(/\s+/), function (_k, v) {
         if (left) {
           switch(v) {
             case 'col-md-5':
@@ -44,6 +44,7 @@ $.fn.resizableSidebar = function() {
               break;
             case 'col-md-pull-7':
               button.removeClass('btn-disabled'); // re-enable the button when resizing to the left from max
+              // pass
             case 'col-md-pull-8':
             case 'col-md-pull-9':
               left_class.push(change_col(v, +1));
@@ -65,6 +66,7 @@ $.fn.resizableSidebar = function() {
               break;
             case 'col-md-4':
               button.addClass('btn-disabled'); // disable the right button if it reached it's limit
+              // pass
             case 'col-md-3':
             case 'col-md-2':
               ajax = get_col(v) + 1;
@@ -80,7 +82,7 @@ $.fn.resizableSidebar = function() {
           }
         }
       });
-      $.each(maindiv.attr('class').split(/\s+/), function (k, v) {
+      $.each(maindiv.attr('class').split(/\s+/), function (_k, v) {
         if (left) {
           switch(v) {
             case 'col-md-10':

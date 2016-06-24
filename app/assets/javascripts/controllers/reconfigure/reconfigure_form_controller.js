@@ -36,7 +36,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
         $scope.newRecord = false;
 
       miqService.sparkleOn();
-      $http.get('reconfigure_form_fields/'+ reconfigureFormId + ',' + $scope.objectIds).success(function(data) {
+      $http.get('reconfigure_form_fields/' + reconfigureFormId + ',' + $scope.objectIds).success(function(data) {
         $scope.reconfigureModel.memory                 = data.memory;
         $scope.reconfigureModel.memory_type            = data.memory_type;
         $scope.reconfigureModel.socket_count           = data.socket_count;
@@ -87,11 +87,11 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
       var cpuUnchanged = false;
       miqService.miqFlashClear();
 
-      if(!$scope.newRecord || $scope.cb_disks)
+      if (!$scope.newRecord || $scope.cb_disks)
         return;
       $scope.angularForm.$setValidity("unchanged", true);
 
-      if($scope.cb_memory) {
+      if ($scope.cb_memory) {
         var memorynow = $scope.reconfigureModel.memory;
         var memoryprev = $scope.modelCopy.memory;
         if ($scope.reconfigureModel.memory_type == 'GB')
@@ -102,20 +102,19 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
           memUnchanged = true;
       }
 
-      if($scope.cb_cpu && (($scope.reconfigureModel.socket_count == $scope.modelCopy.socket_count)) &&
+      if ($scope.cb_cpu && (($scope.reconfigureModel.socket_count == $scope.modelCopy.socket_count)) &&
         ($scope.reconfigureModel.cores_per_socket_count == $scope.modelCopy.cores_per_socket_count))
         cpuUnchanged = true;
 
-      if($scope.cb_memory && $scope.cb_cpu && memUnchanged && cpuUnchanged) {
+      if ($scope.cb_memory && $scope.cb_cpu && memUnchanged && cpuUnchanged) {
         miqService.miqFlash("warn", "Change Memory and Processor value to submit reconfigure request");
         $scope.angularForm.$setValidity("unchanged", false);
-      }
-      else {
-        if($scope.cb_memory && memUnchanged) {
+      } else {
+        if ($scope.cb_memory && memUnchanged) {
           miqService.miqFlash("warn", "Change Memory value to submit reconfigure request");
           $scope.angularForm.$setValidity("unchanged", false);
         }
-        if($scope.cb_cpu && cpuUnchanged){
+        if ($scope.cb_cpu && cpuUnchanged) {
           miqService.miqFlash("warn", "Change Processor Sockets or Cores Per Socket value to submit reconfigure request");
           $scope.angularForm.$setValidity("unchanged", false);
         }
@@ -123,7 +122,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
     };
 
     $scope.processorValueChanged = function() {
-      if($scope.reconfigureModel.socket_count != '' && $scope.reconfigureModel.cores_per_socket_count != '') {
+      if ($scope.reconfigureModel.socket_count != '' && $scope.reconfigureModel.cores_per_socket_count != '') {
         var vtotal_cpus = parseInt($scope.reconfigureModel.socket_count, 10) * parseInt($scope.reconfigureModel.cores_per_socket_count, 10);
         $scope.reconfigureModel.total_cpus = vtotal_cpus.toString();
       }
@@ -131,9 +130,9 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
     };
 
     $scope.memtypeChanged = function() {
-      if($scope.reconfigureModel.memory_type == "GB" && $scope.mem_type_prev == "MB")
+      if ($scope.reconfigureModel.memory_type == "GB" && $scope.mem_type_prev == "MB")
         $scope.reconfigureModel.memory = ~~(parseInt($scope.reconfigureModel.memory, 10) / 1024);
-      else if($scope.reconfigureModel.memory_type == "MB" && $scope.mem_type_prev == "GB")
+      else if ($scope.reconfigureModel.memory_type == "MB" && $scope.mem_type_prev == "GB")
         $scope.reconfigureModel.memory =  parseInt($scope.reconfigureModel.memory, 10) * 1024;
       $scope.mem_type_prev = $scope.reconfigureModel.memory_type;
       $scope.angularForm['memory'].$validate();
@@ -148,8 +147,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
         if ($scope.reconfigureModel.vmdisks[disk]['add_remove'] === 'remove') {
           $scope.reconfigureModel.vmRemoveDisks.push({disk_name: $scope.reconfigureModel.vmdisks[disk].hdFilename,
                                      delete_backing: $scope.reconfigureModel.vmdisks[disk].delete_backing});
-        }
-        else if ($scope.reconfigureModel.vmdisks[disk]['add_remove'] === 'add') {
+        } else if ($scope.reconfigureModel.vmdisks[disk]['add_remove'] === 'add') {
           var dsize = parseInt($scope.reconfigureModel.vmdisks[disk].hdSize, 10);
           if ($scope.reconfigureModel.vmdisks[disk].hdUnit == 'GB')
             dsize *= 1024;
@@ -190,11 +188,11 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
         $scope.cb_disks = false;
     };
 
-    $scope.enableDiskAdd = function(){
+    $scope.enableDiskAdd = function() {
       $scope.reconfigureModel.addEnabled = true;
     };
 
-    $scope.hideAddDisk = function(){
+    $scope.hideAddDisk = function() {
       $scope.reconfigureModel.addEnabled = false;
       $scope.resetAddValues();
     };
@@ -218,8 +216,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
           if ($scope.reconfigureModel.vmdisks[disk]['add_remove'] === 'remove') {
             $scope.reconfigureModel.vmdisks[disk]['add_remove'] = '';
             $scope.reconfigureModel.vmdisks[disk]['cb_deletebacking'] = false;
-          }
-          else if ($scope.reconfigureModel.vmdisks[disk]['add_remove'] === 'add') {
+          } else if ($scope.reconfigureModel.vmdisks[disk]['add_remove'] === 'add') {
             var index = $scope.reconfigureModel.vmdisks.indexOf(vmDisk);
             $scope.reconfigureModel.vmdisks.splice(index, 1);
             break;
@@ -228,7 +225,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
       }
       $scope.updateDisksAddRemove();
 
-      if(!angular.equals($scope.reconfigureModel.vmAddDisks,$scope.modelCopy.vmAddDisks) || !angular.equals($scope.reconfigureModel.vmRemoveDisks, $scope.modelCopy.vmRemoveDisks))
+      if (!angular.equals($scope.reconfigureModel.vmAddDisks, $scope.modelCopy.vmAddDisks) || !angular.equals($scope.reconfigureModel.vmRemoveDisks, $scope.modelCopy.vmRemoveDisks))
         $scope.cb_disks = true;
       else
         $scope.cb_disks = false;
@@ -266,7 +263,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
       $scope.mem_type_prev = $scope.reconfigureModel.memory_type;
       $scope.angularForm.$setPristine(true);
       $scope.updateDisksAddRemove();
-      if(!angular.equals($scope.reconfigureModel.vmAddDisks,$scope.modelCopy.vmAddDisks) || !angular.equals($scope.reconfigureModel.vmRemoveDisks, $scope.modelCopy.vmRemoveDisks))
+      if (!angular.equals($scope.reconfigureModel.vmAddDisks, $scope.modelCopy.vmAddDisks) || !angular.equals($scope.reconfigureModel.vmRemoveDisks, $scope.modelCopy.vmRemoveDisks))
         $scope.cb_disks = true;
       else
         $scope.cb_disks = false;

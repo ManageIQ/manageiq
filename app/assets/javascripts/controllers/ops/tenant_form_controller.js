@@ -1,6 +1,5 @@
 ManageIQ.angular.app.controller('tenantFormController', ['$http', '$scope', 'tenantFormId', 'tenantType', 'miqService', function($http, $scope, tenantFormId, tenantType, miqService) {
     var init = function() {
-
       $scope.tenantModel = {
         name: '',
         description: '',
@@ -41,7 +40,6 @@ ManageIQ.angular.app.controller('tenantFormController', ['$http', '$scope', 'ten
         });
       }
     };
-
 
     var tenantEditButtonClicked = function(buttonName, serializeFields) {
       miqService.sparkleOn();

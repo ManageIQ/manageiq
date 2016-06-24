@@ -1,12 +1,6 @@
 angular.module('miq.util').factory('chartsMixin', ['pfUtils', function(pfUtils) {
   'use strict';
 
-  var hourlyTimeTooltip = function (data) {
-    var theMoment = moment(data[0].x);
-    return _.template('<div class="tooltip-inner"><%- col1 %>: <%- col2 %></div>')
-      ({col1: theMoment.format('h:mm A'), col2: data[0].value + ' ' + data[0].name});
-  };
-
   var dailyTimeTooltip = function (data) {
     var theMoment = moment(data[0].x);
     return _.template('<div class="tooltip-inner"><%- col1 %>  <%- col2 %></div>')({
@@ -26,7 +20,7 @@ angular.module('miq.util').factory('chartsMixin', ['pfUtils', function(pfUtils) 
   var lineChartTooltipPositionFactory = function(chartId) {
     var elementQuery = '#' + chartId + 'lineChart';
 
-    return function (_data, width, height, element) {
+    return function(_data, width, height, element) {
       try {
         var center = parseInt(element.getAttribute('x'), 10);
         var top = parseInt(element.getAttribute('y'), 10);
@@ -40,6 +34,7 @@ angular.module('miq.util').factory('chartsMixin', ['pfUtils', function(pfUtils) 
           left: Math.min(x, chartBox.width - width),
         };
       } catch (_e) {
+        return null;
       }
     };
   };
@@ -129,29 +124,29 @@ angular.module('miq.util').factory('chartsMixin', ['pfUtils', function(pfUtils) 
   };
 
   var processUtilizationData = function(data, xDataLabel, yDataLabel) {
-    if (data) {
-      data.xData.unshift(xDataLabel)
-      data.yData.unshift(yDataLabel)
-      return data;
-    } else {
+    if (!data) {
       return { dataAvailable: false }
     }
+
+    data.xData.unshift(xDataLabel)
+    data.yData.unshift(yDataLabel)
+    return data;
   };
 
   var processPodUtilizationData = function(data, xDataLabel, yCreatedLabel, yDeletedLabel) {
-    if (data) {
-      data.xData.unshift(xDataLabel);
-      data.yCreated.unshift(yCreatedLabel);
-      data.yDeleted.unshift(yDeletedLabel);
-      return data;
-    } else {
+    if (! data) {
       return { dataAvailable: false }
     }
+
+    data.xData.unshift(xDataLabel);
+    data.yCreated.unshift(yCreatedLabel);
+    data.yDeleted.unshift(yDeletedLabel);
+    return data;
   };
 
   return {
-    dashboardHeatmapChartHeight:    90,
-    nodeHeatMapUsageLegendLabels:   ['< 70%', '70-80%' ,'80-90%', '> 90%'],
+    dashboardHeatmapChartHeight: 90,
+    nodeHeatMapUsageLegendLabels: ['< 70%', '70-80%', '80-90%', '> 90%'],
     chartConfig: chartConfig,
     processHeatmapData: processHeatmapData,
     processUtilizationData: processUtilizationData,

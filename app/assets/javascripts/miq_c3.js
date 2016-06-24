@@ -5,7 +5,7 @@ function load_c3_charts() {
     for (var i = 0; i < ManageIQ.charts.chartData[set].length; i++) {
       var chart_id = "miq_chart_" + set + "_" + i.toString();
       var data = ManageIQ.charts.chartData[set][i];
-      if(data != null){
+      if (data != null) {
         load_c3_chart(data.xml, chart_id);
 
 
@@ -24,8 +24,8 @@ function load_c3_chart(data, chart_id, height) {
 
   var generate_args = chartData(data.miqChart, data, { bindto: "#" + chart_id, size: {height: height}})
 
-  generate_args.data.onclick = function (data, i) {
-    var seriesIndex = data.id-1;
+  generate_args.data.onclick = function (data, _i) {
+    var seriesIndex = data.id - 1;
     var pointIndex = data.x;
 
     var parts = chart_id.split('_'); //miq_chart_candu_2
@@ -54,7 +54,7 @@ function load_c3_chart(data, chart_id, height) {
   ManageIQ.charts.c3[chart_id] = chart;
 };
 
- c3.chart.internal.fn.categoryName = function (i) {
-    var config = this.config, categoryIndex = Math.ceil(i);
-    return i < config.axis_x_categories.length ? config.axis_x_categories[categoryIndex] : i;
+c3.chart.internal.fn.categoryName = function (i) {
+  var config = this.config, categoryIndex = Math.ceil(i);
+  return i < config.axis_x_categories.length ? config.axis_x_categories[categoryIndex] : i;
 };

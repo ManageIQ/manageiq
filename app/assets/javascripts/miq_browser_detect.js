@@ -20,11 +20,12 @@ function miqBrowserDetect() {
           return data[i].identity;
         }
       }
+      return null;
     },
     searchVersion: function (dataString) {
       var index = dataString.indexOf(this.versionSearchString);
       if (index == -1) {
-        return;
+        return null;
       }
       return parseFloat(dataString.substring(index + this.versionSearchString.length + 1));
     },
