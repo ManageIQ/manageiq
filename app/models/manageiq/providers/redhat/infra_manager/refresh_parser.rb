@@ -372,6 +372,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
         :ems_ref           => vm_inv[:href],
         :ems_ref_obj       => vm_inv[:href],
         :uid_ems           => vm_inv[:id],
+        :memory_reserve    => vm_memory_reserve(vm_inv),
         :name              => URI.decode(vm_inv[:name]),
         :vendor            => "redhat",
         :raw_power_state   => raw_power_state,
@@ -658,4 +659,10 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
 
     result
   end
+
+  def self.vm_memory_reserve(vm_inv)
+    in_bytes = vm_inv.attributes.fetch_path(:memory_policy, :guaranteed)
+    in_bytes.nil? ? nil : in_bytes / Numeric::MEGABYTE
+  end
+  private_class_method :vm_memory_reserve
 end
