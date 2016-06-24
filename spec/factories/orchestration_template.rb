@@ -18,18 +18,18 @@ FactoryGirl.define do
   end
 
   factory :orchestration_template_cfn_with_content, :parent => :orchestration_template_cfn do
-    content File.read('spec/fixtures/orchestration_templates/cfn_parameters.json')
+    content File.read(Rails.root.join('spec/fixtures/orchestration_templates/cfn_parameters.json'))
   end
 
   factory :orchestration_template_hot_with_content,
           :parent => :orchestration_template,
           :class  => "OrchestrationTemplateHot" do
-    content File.read('spec/fixtures/orchestration_templates/hot_parameters.yml')
+    content File.read(Rails.root.join('spec/fixtures/orchestration_templates/hot_parameters.yml'))
   end
 
   factory :orchestration_template_azure_with_content,
           :parent => :orchestration_template,
           :class  => "OrchestrationTemplateAzure" do
-    content File.read('spec/fixtures/orchestration_templates/azure_parameters.json')
+    content File.read(Rails.root.join('spec/fixtures/orchestration_templates/azure_parameters.json'))
   end
 end

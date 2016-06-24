@@ -18,4 +18,6 @@ def seq_padded_for_sorting(n)
 end
 
 require 'factory_girl'
+# in case we are running as an engine, the factories are located in the dummy app
+FactoryGirl.definition_file_paths << 'spec/manageiq/spec/factories'
 FactoryGirl.find_definitions

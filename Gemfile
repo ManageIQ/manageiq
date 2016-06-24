@@ -14,8 +14,8 @@ gem "deep_merge",                      "~>1.0.1", :git => "git://github.com/Mana
 # Local gems
 path "gems/" do
   gem "manageiq_foreman", :require => false
-  gem "manageiq-providers-amazon"
 end
+gem "manageiq-providers-amazon", :git => "git://github.com/ManageIQ/manageiq-providers-amazon", :branch => "master"
 
 # Client-side dependencies
 gem "angular-ui-bootstrap-rails",     "~>0.13.0"
