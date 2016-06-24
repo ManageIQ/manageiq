@@ -41,6 +41,10 @@ module JsHelper
     "$('##{j_str(element)}').focus();".html_safe
   end
 
+  def javascript_prepend_span(element, cls)
+    "$('##{j_str(element)}').prepend('#{content_tag(:span, nil, :class => cls)}');".html_safe
+  end
+
   def javascript_focus_if_exists(element)
     "if ($('##{j_str(element)}').length) #{javascript_focus(element)}".html_safe
   end
