@@ -32,6 +32,11 @@ class EmsContainerController < ApplicationController
     ems_form_fields
   end
 
+  def new
+    super
+    @ems_types -= [["Atomic", "atomic"], ["Atomic Enterprise", "atomic_enterprise"]]
+  end
+
   private
 
   ############################
