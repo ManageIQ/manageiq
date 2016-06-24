@@ -13,6 +13,6 @@ class ApplicationHelper::Button::InstanceAssociateFloatingIp < ApplicationHelper
 
   def disabled?
     !@record.is_available?(:associate_floating_ip) ||
-      (@record.cloud_tenant.nil? || @record.cloud_tenant.number_of(:floating_ips) == 0)
+      (@record.cloud_tenant.nil? || Rbac.filtered(@record.cloud_tenant.floating_ips).empty?)
   end
 end
