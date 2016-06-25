@@ -1,16 +1,17 @@
 ManageIQ.angular.app.directive('validateTotal', function() {
   return {
     require: 'ngModel',
-    link: function(scope, elm, attrs, ctrl) {
+    link: function(_scope, _elm, attrs, ctrl) {
       var maxvalue = attrs.miqmax;
       ctrl.$validators.integer = function(modelValue, viewValue) {
         if (ctrl.$isEmpty(modelValue)) {
           return false;
-        } else{
-          var x = parseInt(viewValue, 10);
-          if (x <= parseInt(maxvalue, 10))
-            return true;
         }
+
+        var x = parseInt(viewValue, 10);
+        if (x <= parseInt(maxvalue, 10))
+          return true;
+
         return false;
       };
     }

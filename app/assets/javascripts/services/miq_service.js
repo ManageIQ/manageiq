@@ -1,7 +1,6 @@
 /* global miqAjaxButton miqBuildCalendar miqButtons miqJqueryRequest miqRESTAjaxButton miqSparkleOff miqSparkleOn */
 
 ManageIQ.angular.app.service('miqService', function() {
-
   this.storedPasswordPlaceholder = "●●●●●●●●";
 
   this.showButtons = function() {
@@ -37,13 +36,14 @@ ManageIQ.angular.app.service('miqService', function() {
     miqSparkleOff();
   };
 
+  // FIXME: merge with add_flash in miq_application.js
   this.miqFlash = function(type, msg) {
     $('#flash_msg_div').text("");
     $("#flash_msg_div").show();
     var outerMost = $("<div id='flash_text_div' onclick=$('#flash_msg_div').text(''); title='" + __("Click to remove messages") + "'>");
     var txt = $('<strong>' + msg + '</strong>');
 
-    if(type == "error") {
+    if (type == "error") {
       var outerBox = $('<div class="alert alert-danger">');
       var innerSpan = $('<span class="pficon-layered">');
       var icon1 = $('<span class="pficon pficon-error-octagon">');
@@ -51,8 +51,7 @@ ManageIQ.angular.app.service('miqService', function() {
 
       $(innerSpan).append(icon1);
       $(innerSpan).append(icon2);
-    } else if(type == "warn")
-    {
+    } else if (type == "warn") {
       var outerBox = $('<div class="alert alert-warning">');
       var innerSpan = $('<span class="pficon-layered">');
       var icon1 = $('<span class="pficon pficon-warning-triangle">');
@@ -60,11 +59,11 @@ ManageIQ.angular.app.service('miqService', function() {
 
       $(innerSpan).append(icon1);
       $(innerSpan).append(icon2);
-    } else if(type == "success")
-    {
+    } else if (type == "success") {
       var outerBox = $('<div class="alert alert-success">');
       var innerSpan = $('<span class="pficon pficon-ok">');
     }
+
     $(outerBox).append(innerSpan);
     $(outerBox).append(txt);
     $(outerMost).append(outerBox);
@@ -87,11 +86,10 @@ ManageIQ.angular.app.service('miqService', function() {
   this.validateWithREST = function($event, credType, url, formSubmit) {
     angular.element('#button_name').val('validate');
     angular.element('#cred_type').val(credType);
-    if(formSubmit) {
+    if (formSubmit) {
       miqSparkleOn();
       miqRESTAjaxButton(url, $event.target);
-    }
-    else {
+    } else {
       $event.preventDefault();
     }
   };

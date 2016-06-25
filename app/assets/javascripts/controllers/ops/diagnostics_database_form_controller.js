@@ -1,6 +1,5 @@
 ManageIQ.angular.app.controller('diagnosticsDatabaseFormController', ['$http', '$scope', '$attrs', 'miqService', 'miqDBBackupService', function($http, $scope, $attrs, miqService, miqDBBackupService) {
   var init = function() {
-
     $scope.diagnosticsDatabaseModel = {
       action_typ: 'db_backup',
       backup_schedule_type: '',

@@ -40,21 +40,21 @@ miqHttpInject(angular.module('containerDashboard', ['ui.bootstrap', 'patternfly'
       // Node Utilization
       $scope.cpuUsageConfig = chartsMixin.chartConfig.cpuUsageConfig;
       $scope.cpuUsageSparklineConfig = {
-        tooltipFn : chartsMixin.dailyTimeTooltip,
+        tooltipFn: chartsMixin.dailyTimeTooltip,
         chartId: 'cpuSparklineChart'
       };
       $scope.cpuUsageDonutConfig = {
         chartId: 'cpuDonutChart',
-        thresholds: {'warning':'60','error':'90'}
+        thresholds: { 'warning': '60', 'error': '90' },
       };
       $scope.memoryUsageConfig = chartsMixin.chartConfig.memoryUsageConfig;
       $scope.memoryUsageSparklineConfig = {
-        tooltipFn : chartsMixin.dailyTimeTooltip,
+        tooltipFn: chartsMixin.dailyTimeTooltip,
         chartId: 'memorySparklineChart'
       };
       $scope.memoryUsageDonutConfig = {
         chartId: 'memoryDonutChart',
-        thresholds: {'warning':'60','error':'90'}
+        thresholds: { 'warning': '60', 'error': '90' },
       };
 
       $scope.refresh = function() {
@@ -68,7 +68,7 @@ miqHttpInject(angular.module('containerDashboard', ['ui.bootstrap', 'patternfly'
           id = '/' + (/^\/[^\/]+\/(\d+)$/.exec(pathname)[1]);
         }
 
-        var url = '/container_dashboard/data'+id;
+        var url = '/container_dashboard/data' + id;
         $http.get(url).success(function(response) {
           'use strict';
 
@@ -78,10 +78,10 @@ miqHttpInject(angular.module('containerDashboard', ['ui.bootstrap', 'patternfly'
           var providers = data.providers;
           if (providers) {
             if (id) {
-              $scope.providerTypeIconImage = data.providers[0].iconImage
-              $scope.isSingleProvider = true
+              $scope.providerTypeIconImage = data.providers[0].iconImage;
+              $scope.isSingleProvider = true;
             } else {
-              $scope.isSingleProvider = false
+              $scope.isSingleProvider = false;
               $scope.objectStatus.providers.count = 0;
               $scope.objectStatus.providers.notifications = [];
               providers.forEach(function (item) {
@@ -94,7 +94,7 @@ miqHttpInject(angular.module('containerDashboard', ['ui.bootstrap', 'patternfly'
             }
 
             if ($scope.objectStatus.providers.count > 0) {
-              $scope.objectStatus.providers.href = data.providers_link
+              $scope.objectStatus.providers.href = data.providers_link;
             }
           }
 
@@ -153,7 +153,7 @@ miqHttpInject(angular.module('containerDashboard', ['ui.bootstrap', 'patternfly'
         });
       };
       $scope.refresh();
-      var promise = $interval($scope.refresh, 1000*60*3);
+      var promise = $interval($scope.refresh, 1000 * 60 * 3);
 
       $scope.$on('$destroy', function() {
         $interval.cancel(promise);

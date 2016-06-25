@@ -79,8 +79,7 @@ angular.module('miq.util').factory('dashboardUtilsFactory', function() {
           iconClass: "pficon pficon-error-circle-o",
           count: data.errorCount
         };
-      }
-      else if (data.warningCount > 0) {
+      } else if (data.warningCount > 0) {
         statusObject.notification = {
           iconClass: "pficon pficon-warning-triangle-o",
           count: data.warningCount

@@ -16,11 +16,11 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
     if ($location.absUrl().match("show/$") || $location.absUrl().match("show$")) {
       id = '';
     } else {
-      id = '/'+ (/container_topology\/show\/(\d+)/.exec($location.absUrl())[1]);
+      id = '/' + (/container_topology\/show\/(\d+)/.exec($location.absUrl())[1]);
     }
 
     var currentSelectedKinds = $scope.kinds;
-    var url = '/container_topology/data'+id;
+    var url = '/container_topology/data' + id;
 
     $http.get(url).success(function(data) {
       $scope.items = data.data.items;
@@ -73,8 +73,8 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
       contextMenuShowing = false;
   };
 
-  self.contextMenu = function contextMenu(that, data) {
-    if(contextMenuShowing) {
+  self.contextMenu = function contextMenu(_that, data) {
+    if (contextMenuShowing) {
       removeContextMenu();
     } else {
       d3.event.preventDefault();
@@ -132,12 +132,12 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
       .attr("r", function(d) {
         return self.getDimensions(d).r;
       })
-      .attr('class' , function(d) {
+      .attr('class', function(d) {
         return topologyService.getItemStatusClass(d);
       })
-    .on("contextmenu", function(d){
-          self.contextMenu(this, d);
-     });
+      .on("contextmenu", function(d) {
+        self.contextMenu(this, d);
+      });
 
     added.append("title");
 
@@ -175,7 +175,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
       .attr("x", function(d) {
         return self.getDimensions(d).x;
       })
-      .on("contextmenu", function(d){
+      .on("contextmenu", function(d) {
         self.contextMenu(this, d);
       });
 
@@ -186,7 +186,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
           return;
 
         $(this).text(iconInfo.icon)
-          .attr("class","glyph")
+          .attr("class", "glyph")
           .attr('font-family', iconInfo.fontfamily);
       })
 
@@ -196,7 +196,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
       .attr("x", function(d) {
         return self.getDimensions(d).x;
       })
-      .on("contextmenu", function(d){
+      .on("contextmenu", function(d) {
         self.contextMenu(this, d);
       });
 
@@ -211,8 +211,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
          var class_name = "attached-label";
          if ($scope.checkboxModel.value) {
            return class_name + ' visible';
-         }
-         else {
+         } else {
            return class_name;
          }
       });
@@ -275,5 +274,4 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
     // Reset the search term in search input
     $scope.search.query = "";
   };
-
 }

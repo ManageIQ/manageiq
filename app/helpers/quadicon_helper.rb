@@ -569,7 +569,7 @@ module QuadiconHelper
             )
           end
         else
-          if @policy_sim && !session[:policies].empty?
+          if @policy_sim
             if @edit && @edit[:explorer]
               link_to(
                 image_tag(ActionController::Base.helpers.image_path("#{size}/reflection.png"),

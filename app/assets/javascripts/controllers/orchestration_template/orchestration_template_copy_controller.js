@@ -1,4 +1,4 @@
-ManageIQ.angular.app.controller('orchestrationTemplateCopyController', ['$http', '$scope', '$timeout', 'stackId', 'miqService', function($http, $scope, $timeout, stackId, miqService) {
+ManageIQ.angular.app.controller('orchestrationTemplateCopyController', ['$http', '$scope', 'stackId', 'miqService', function($http, $scope, stackId, miqService) {
   $scope.stackId = stackId;
   $scope.templateInfo = {
     templateId: null,

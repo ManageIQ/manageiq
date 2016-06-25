@@ -1,7 +1,7 @@
 ManageIQ.angular.app.directive('miqrequired', function() {
   return {
     require: 'ngModel',
-      link: function (scope, elem, attrs, ctrl) {
+      link: function (scope, _elem, attrs, ctrl) {
         scope.$watch(attrs.ngModel, function() {
           if((ctrl.$modelValue != undefined)) {
             setValidity(scope, ctrl, ctrl.$modelValue);
@@ -12,8 +12,8 @@ ManageIQ.angular.app.directive('miqrequired', function() {
           return value;
         });
 
-        var setValidity = function(scope, ctrl, value) {
-          if(value != "") {
+        var setValidity = function(_scope, ctrl, value) {
+          if (value != "") {
             ctrl.$setValidity("miqrequired", true);
           } else {
             ctrl.$setValidity("miqrequired", false);

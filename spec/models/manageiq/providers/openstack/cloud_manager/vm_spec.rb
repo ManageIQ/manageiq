@@ -34,7 +34,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::Vm do
       end
 
       it "checks live migration is_available?" do
-        expect(vm.is_available?(:live_migrate)).to eq true
+        expect(vm.supports_live_migrate?).to eq true
       end
     end
 

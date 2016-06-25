@@ -5,7 +5,7 @@ ManageIQ.angular.app.directive('autoFocus', ['$timeout', function($timeout) {
       scope['form_focus_' + ctrl.$name] = elem[0];
 
       scope.$watch(function() { return elem.is(':visible') }, function() {
-        if(attr.autoFocus == "" || attr.autoFocus == "proactiveFocus") {
+        if (attr.autoFocus == "" || attr.autoFocus == "proactiveFocus") {
           angular.element(scope['form_focus_' + ctrl.$name]).focus();
           if (!angular.element(scope['form_focus_' + ctrl.$name]).is(":focus")) {
             $timeout(function () {
@@ -15,9 +15,9 @@ ManageIQ.angular.app.directive('autoFocus', ['$timeout', function($timeout) {
         }
       });
 
-      scope.$on('reactiveFocus', function(e) {;
+      scope.$on('reactiveFocus', function(_e) {
         if (!angular.element(scope['form_focus_' + ctrl.$name]).is(":focus")) {
-          $timeout(function(){
+          $timeout(function() {
             angular.element(scope['form_focus_' + ctrl.$name]).focus();
           }, 0);
         };

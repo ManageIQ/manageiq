@@ -12,13 +12,8 @@ ManageIQ.angular.app.directive('updateDropdownForFilter', ['$timeout', function(
         scope.$watch(scope['form_' + ctrl.$name + '_ngHide'], function () {
           if (scope[scope['form_' + ctrl.$name + '_ngHide']] === true) {
             angular.element(scope['form_' + ctrl.$name]).selectpicker('hide');
-          }
-          else {
-            if (scope[scope['form_' + ctrl.$name + '_ngHide']] == "NO-OP" ||
-                scope[scope['form_' + ctrl.$name + '_ngHide']] == false) {
-
-              selectListElement(scope, $timeout, ctrl, true);
-            }
+          } else if (scope[scope['form_' + ctrl.$name + '_ngHide']] == "NO-OP" || scope[scope['form_' + ctrl.$name + '_ngHide']] == false) {
+            selectListElement(scope, $timeout, ctrl, true);
           }
         });
       }
@@ -39,12 +34,11 @@ ManageIQ.angular.app.directive('updateDropdownForFilter', ['$timeout', function(
 }]);
 
 var selectListElement = function(scope, timeout, ctrl, refresh) {
-  timeout(function(){
-    if(refresh) {
+  timeout(function() {
+    if (refresh) {
       if (scope[scope['form_' + ctrl.$name + '_ngHide']] === true) {
         angular.element(scope['form_' + ctrl.$name]).selectpicker('hide');
-      }
-      else {
+      } else {
         angular.element(scope['form_' + ctrl.$name]).selectpicker({
           dropupAuto: false
         });
@@ -61,8 +55,7 @@ var selectListElement = function(scope, timeout, ctrl, refresh) {
       angular.element(scope['form_' + ctrl.$name]).selectpicker('setStyle', 'btn-red-border', 'remove');
       angular.element(scope['form_' + ctrl.$name]).selectpicker('setStyle', 'btn-default');
       scope.invalidStyleSet = false;
-    }
-    else {
+    } else {
       angular.element(scope['form_' + ctrl.$name]).selectpicker('setStyle', 'btn-default btn-red-border');
       scope.invalidStyleSet = true;
     }

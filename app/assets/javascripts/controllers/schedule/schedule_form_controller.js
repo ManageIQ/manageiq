@@ -1,6 +1,5 @@
 ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 'scheduleFormId', 'oneMonthAgo', 'miqService', 'timerOptionService', function($http, $scope, scheduleFormId, oneMonthAgo, miqService, timerOptionService) {
   var init = function() {
-
     $scope.scheduleModel = {
       action_typ: '',
       depot_name: '',
@@ -251,7 +250,7 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
 
       if(!$scope.dbBackup() && $scope.scheduleModel.filter_typ &&
           ($scope.form.action_typ.$untouched && $scope.form.filter_typ.$untouched)) {
-        //AJAX-less Reset
+        // AJAX-less Reset
         $scope.toggleValueForWatch('filterValuesEmpty', false);
       }
 
@@ -349,4 +348,3 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
 
   init();
 }]);
-

@@ -9,7 +9,7 @@ module TextualMixins::TextualOsInfo
       h[:value] = os
       h[:title] = _("Show OS container information")
       h[:explorer] = true
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'os_info')
+      h[:link] = url_for(:action => 'show', :id => @record, :display => 'os_info')
     end
     h
   end

@@ -8,7 +8,7 @@ class ApplicationHelper::Toolbar::MiqEventCenter < ApplicationHelper::Toolbar::B
       :items => [
         button(
           :event_edit,
-          'pficon pficon-edit fa-lg-action',
+          'pficon pficon-edit fa-lg',
           t = N_('Edit Actions for this Policy Event'),
           t,
           :url_parms => "main_div",

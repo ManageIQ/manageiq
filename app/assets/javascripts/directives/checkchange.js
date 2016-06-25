@@ -6,13 +6,12 @@ ManageIQ.angular.app.directive('checkchange', ['miqService', function(miqService
       scope['elemType_' + ctrl.$name] = attr.type;
 
       scope.$watch(attr.ngModel, function() {
-        if(scope['elemType_' + ctrl.$name] == "date" || _.isDate(ctrl.$modelValue)) {
+        if (scope['elemType_' + ctrl.$name] == "date" || _.isDate(ctrl.$modelValue)) {
           viewModelDateComparison(scope, ctrl);
-        }
-        else {
+        } else {
           viewModelComparison(scope, ctrl);
         }
-        if(scope.angularForm.$pristine )
+        if (scope.angularForm.$pristine)
           checkForOverallFormPristinity(scope, ctrl);
       });
 
@@ -22,7 +21,7 @@ ManageIQ.angular.app.directive('checkchange', ['miqService', function(miqService
         if (value == scope.modelCopy[ctrl.$name]) {
           scope.angularForm[scope['formchange_' + ctrl.$name]].$setPristine();
         }
-        if(scope.angularForm[scope['formchange_' + ctrl.$name]].$pristine) {
+        if (scope.angularForm[scope['formchange_' + ctrl.$name]].$pristine) {
           checkForOverallFormPristinity(scope, ctrl);
         }
         scope.angularForm[scope['formchange_' + ctrl.$name]].$setTouched();
@@ -40,8 +39,7 @@ var viewModelComparison = function(scope, ctrl) {
     scope.angularForm[scope['formchange_' + ctrl.$name]].$setPristine();
     scope.angularForm[scope['formchange_' + ctrl.$name]].$setUntouched();
     scope.angularForm.$pristine = true;
-  }
-  else {
+  } else {
     scope.angularForm[scope['formchange_' + ctrl.$name]].$setDirty();
     scope.angularForm.$pristine = false;
   }

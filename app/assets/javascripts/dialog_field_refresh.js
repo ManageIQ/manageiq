@@ -77,10 +77,8 @@ var dialogFieldRefresh = {
             option.prop('selected', true);
           }
         }
-      } else {
-        if (index === 0) {
-          option.prop('selected', true);
-        }
+      } else if (index === 0) {
+        option.prop('selected', true);
       }
 
       dropdownOptions.push(option);
@@ -101,7 +99,7 @@ var dialogFieldRefresh = {
     }, function(data) {
       var radioButtons = [];
 
-      $.each(data.values.refreshed_values, function(index, value) {
+      $.each(data.values.refreshed_values, function(_index, value) {
         var radio = $('<input>')
           .attr('id', fieldId)
           .attr('name', fieldName)

@@ -352,6 +352,7 @@ module ApplicationController::CiProcessing
     session[:edit] = @edit
     @in_a_form = true
     @resize = true
+    @sb[:explorer] = @explorer
     render :action => "show" unless @explorer
   end
 
@@ -405,7 +406,7 @@ module ApplicationController::CiProcessing
           add_flash(_("Unable to reconfigure %{instance} \"%{name}\": %{details}") % {
             :instance => ui_lookup(:table => 'vm_cloud'),
             :name     => @record.name,
-            :details  => ex}, :error)
+            :details  => get_error_message_from_fog(ex.to_s)}, :error)
         end
       else
         add_flash(_("Unable to reconfigure %{instance} \"%{name}\": %{details}") % {
@@ -448,7 +449,7 @@ module ApplicationController::CiProcessing
     recs = find_checked_items
     recs = [params[:id].to_i] if recs.blank?
     @record = find_by_id_filtered(VmOrTemplate, recs.first)
-    if @record.is_available?(:live_migrate) && !@record.ext_management_system.nil?
+    if @record.supports_live_migrate?
       if @explorer
         live_migrate
         @refresh_partial = "vm_common/live_migrate"
@@ -462,7 +463,7 @@ module ApplicationController::CiProcessing
       add_flash(_("Unable to live migrate %{instance} \"%{name}\": %{details}") % {
         :instance => ui_lookup(:table => 'vm_cloud'),
         :name     => @record.name,
-        :details  => @record.is_available_now_error_message(:live_migrate)}, :error)
+        :details  => @record.unsupported_reason(:live_migrate)}, :error)
     end
   end
   alias instance_live_migrate livemigratevms
@@ -514,7 +515,7 @@ module ApplicationController::CiProcessing
         :model => ui_lookup(:table => "vm_cloud"), :name => @record.name})
       @record = @sb[:action] = nil
     when "submit"
-      if @record.is_available?(:live_migrate)
+      if @record.supports_live_migrate?
         if params['auto_select_host'] == 'on'
           hostname = nil
         else
@@ -541,7 +542,7 @@ module ApplicationController::CiProcessing
         add_flash(_("Unable to live migrate %{instance} \"%{name}\": %{details}") % {
           :instance => ui_lookup(:table => 'vm_cloud'),
           :name     => @record.name,
-          :details  => @record.is_available_now_error_message(:live_migrate)}, :error)
+          :details  => @record.unsupported_reason(:live_migrate)}, :error)
       end
       params[:id] = @record.id.to_s # reset id in params for show
       @record = nil
@@ -1379,11 +1380,9 @@ module ApplicationController::CiProcessing
       record = find_by_id_filtered(klass, from_cid(id))
     rescue ActiveRecord::RecordNotFound
     rescue => @bang
-      if @explorer
-        self.x_node = "root"
-        add_flash(@bang.message, :error, true)
-        session[:flash_msgs] = @flash_array.dup
-      end
+      self.x_node = "root" if @explorer
+      add_flash(@bang.message, :error, true)
+      session[:flash_msgs] = @flash_array.dup
     end
     record
   end

@@ -10,9 +10,9 @@ ManageIQ.angular.app.service('timerOptionService', function() {
   var timeDataBuilder = function(timeType, iterations) {
     var timeData = [];
 
-    for(var value = 1; value <= iterations; value++) {
+    for (var value = 1; value <= iterations; value++) {
       if (value === 1) {
-        timeData.push({text: singularize(timeType), value: value});
+        timeData.push({ text: singularize(timeType), value: value });
       } else {
         timeData.push(timeObject(timeType, value));
       }
@@ -21,15 +21,12 @@ ManageIQ.angular.app.service('timerOptionService', function() {
     return timeData;
   };
 
-  var hourlyTimeOptions = [
+  var hourlyTimeOptions = _.flatten([
     timeDataBuilder("Hours", 4),
     timeObject("Hours", 6),
     timeObject("Hours", 8),
     timeObject("Hours", 12)
-  ];
-  hourlyTimeOptions = $.map(hourlyTimeOptions, function(n){
-    return n;
-  });
+  ]);
 
   this.timerOptions = {
     "Once": [],

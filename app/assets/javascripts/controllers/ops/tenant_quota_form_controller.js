@@ -1,8 +1,8 @@
-ManageIQ.angular.app.controller('tenantQuotaFormController',['$http', '$scope', 'tenantQuotaFormId', 'tenantType', 'miqService', function($http, $scope, tenantQuotaFormId, tenantType, miqService) {
+ManageIQ.angular.app.controller('tenantQuotaFormController', ['$http', '$scope', 'tenantQuotaFormId', 'tenantType', 'miqService', function($http, $scope, tenantQuotaFormId, tenantType, miqService) {
   var init = function() {
     $scope.tenantQuotaModel = {
-      name:'',
-      quotas:{}
+      name: '',
+      quotas: {},
     };
     $scope.formId = tenantQuotaFormId;
     $scope.afterGet = false;
@@ -16,20 +16,20 @@ ManageIQ.angular.app.controller('tenantQuotaFormController',['$http', '$scope', 
       $scope.tenantQuotaModel.name = data.name;
       $scope.tenantQuotaModel.quotas = angular.copy(data.quotas);
       var GIGABYTE = 1024 * 1024 * 1024;
-      for (var key in $scope.tenantQuotaModel.quotas ){
+      for (var key in $scope.tenantQuotaModel.quotas) {
         if($scope.tenantQuotaModel.quotas.hasOwnProperty(key)) {
           var quota =  $scope.tenantQuotaModel.quotas[key];
-          if(quota['value']){
-            if ( quota['unit'] === "bytes")
+          if (quota['value']) {
+            if (quota['unit'] === "bytes")
               quota['value'] = quota['value'] / GIGABYTE;
             quota['enforced'] = true;
-          }
-          else
+          } else
             quota['enforced'] = false;
-          if(quota['format'] === "general_number_precision_0")
+
+          if (quota['format'] === "general_number_precision_0")
             quota['valpattern'] = "^[1-9][0-9]*$";
           else
-            quota['valpattern'] =/^\s*(?=.*[1-9])\d*(?:\.\d{1,6})?\s*$/;
+            quota['valpattern'] = /^\s*(?=.*[1-9])\d*(?:\.\d{1,6})?\s*$/;
         }
       }
       $scope.afterGet = true;
@@ -63,8 +63,8 @@ ManageIQ.angular.app.controller('tenantQuotaFormController',['$http', '$scope', 
   $scope.saveClicked = function() {
     var data = {};
     var GIGABYTE = 1024 * 1024 * 1024;
-    for(var key in $scope.tenantQuotaModel.quotas){
-      if($scope.tenantQuotaModel.quotas.hasOwnProperty(key)) {
+    for (var key in $scope.tenantQuotaModel.quotas) {
+      if ($scope.tenantQuotaModel.quotas.hasOwnProperty(key)) {
         var quota =  $scope.tenantQuotaModel.quotas[key];
         if (quota['value']) {
           var q = {};
@@ -89,8 +89,8 @@ ManageIQ.angular.app.controller('tenantQuotaFormController',['$http', '$scope', 
 
   $scope.check_quotas_changed = function() {
     for (var key in $scope.tenantQuotaModel.quotas) {
-      if($scope.tenantQuotaModel.quotas.hasOwnProperty(key)){
-        if($scope.tenantQuotaModel.quotas[key]['value'] != $scope.modelCopy.quotas[key]['value'])
+      if ($scope.tenantQuotaModel.quotas.hasOwnProperty(key)) {
+        if ($scope.tenantQuotaModel.quotas[key]['value'] != $scope.modelCopy.quotas[key]['value'])
           return true;
       }
     }

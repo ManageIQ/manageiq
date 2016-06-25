@@ -13,7 +13,7 @@ function _jqplot_eval_option(data, option) {
         datum[key] = eval(datum[key]);
       }
     });
-  } catch (e) {}
+  } catch (_e) {}
 }
 
 function jqplot_process_options(data) {
@@ -25,7 +25,7 @@ function jqplot_process_options(data) {
            'axes.xaxis.tickOptions.formatter',
            'axes.yaxis.tickOptions.formatter',
            'legend.renderer',
-           'highlighter.tooltipContentEditor' ], function (index, key) {
+           'highlighter.tooltipContentEditor' ], function (_index, key) {
     _jqplot_eval_option(data, key);
   });
   return data;
@@ -67,20 +67,20 @@ function jqplot_redraw_charts() {
   }
   for (var chart in ManageIQ.charts.charts)
     if (ManageIQ.charts.charts.hasOwnProperty(chart)) {
-	    // We are passing in the foobar option to fool jqplot into doing full reInitialize()
-	    // instead of quickInit() to properly recalculate the bar charts.
+      // We are passing in the foobar option to fool jqplot into doing full reInitialize()
+      // instead of quickInit() to properly recalculate the bar charts.
       try {
         ManageIQ.charts.charts[chart].replot({resetAxes: true, foobar: true});
-      } catch (e) {};
+      } catch (_e) {};
     }
 }
 
-function jqplot_pie_highlight_values(str, seriesIndex, pointIndex, plot) {
+function jqplot_pie_highlight_values(_str, seriesIndex, pointIndex, plot) {
     return plot.series[seriesIndex].data[pointIndex][0] + ': ' +
            plot.series[seriesIndex].data[pointIndex][1];
 }
 
-function jqplot_pie_highlight(str, seriesIndex, pointIndex, plot) {
+function jqplot_pie_highlight(_str, seriesIndex, pointIndex, plot) {
     return plot.series[seriesIndex].data[pointIndex][0];
 }
 
@@ -99,7 +99,7 @@ function jqplot_yaxis_tick_highlight(str, seriesIndex, pointIndex, plot) {
 function jqplot_bind_events(chart_set, chart_index) {
   var el = $("#miq_chart_" + chart_set + "_" + chart_index);
 
-  el.bind('jqplotDataClick', function (event, seriesIndex, pointIndex, data) {
+  el.bind('jqplotDataClick', function (_event, seriesIndex, pointIndex, _data) {
     miqBuildChartMenuEx(pointIndex, seriesIndex, null, 'CAT', 'SER', chart_set, chart_index);
 
     setTimeout(function () {
@@ -117,9 +117,8 @@ function jqplot_bind_events(chart_set, chart_index) {
   });
 }
 
-$(document).ready(function(){
+$(document).ready(function() {
   $(window).resize(function() {
     if (ManageIQ.charts.provider == 'jqplot') setTimeout(jqplot_redraw_charts, 500);
   });
 });
-

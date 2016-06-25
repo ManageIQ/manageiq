@@ -1,4 +1,6 @@
 module VmOrTemplate::Operations
+  extend ActiveSupport::Concern
+
   include_concern 'Configuration'
   include_concern 'Power'
   include_concern 'Relocation'
@@ -91,6 +93,25 @@ module VmOrTemplate::Operations
     return [true,  'The VM does not have a valid connection state'] if !connection_state.nil? && !self.connected_to_ems?
     return [true,  "The VM is not connected to an active #{ui_lookup(:table => "ext_management_systems")}"] unless self.has_active_ems?
     nil
+  end
+
+  included do
+    supports :control do
+      msg = if retired?
+              _('The VM is retired')
+            elsif template?
+              _('The VM is a template')
+            elsif terminated?
+              _('The VM is terminated')
+            elsif !has_required_host?
+              _('The VM is not connected to a Host')
+            elsif !connection_state.nil? && !connected_to_ems?
+              _('The VM does not have a valid connection state')
+            elsif !has_active_ems?
+              _("The VM is not connected to an active #{ui_lookup(:table => "ext_management_systems")}")
+            end
+      unsupported_reason_add(:control, msg) if msg
+    end
   end
 
   def validate_terminate

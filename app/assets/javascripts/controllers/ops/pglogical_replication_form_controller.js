@@ -1,10 +1,10 @@
-ManageIQ.angular.app.controller('pglogicalReplicationFormController',['$http', '$scope', 'pglogicalReplicationFormId', 'miqService', function($http, $scope, pglogicalReplicationFormId, miqService) {
+ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', '$scope', 'pglogicalReplicationFormId', 'miqService', function($http, $scope, pglogicalReplicationFormId, miqService) {
   var init = function() {
     $scope.pglogicalReplicationModel = {
-      replication_type:'none',
-      subscriptions:[],
+      replication_type: 'none',
+      subscriptions: [],
       addEnabled: false,
-      updateEnabled: false
+      updateEnabled: false,
     };
     $scope.formId = pglogicalReplicationFormId;
     $scope.afterGet = false;
@@ -89,7 +89,7 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController',['$http', '
   };
 
   // add new subscription button pressed
-  $scope.enableSubscriptionAdd = function(){
+  $scope.enableSubscriptionAdd = function() {
     $scope.pglogicalReplicationModel.updateEnabled = false;
     $scope.pglogicalReplicationModel.addEnabled    = true;
     $scope.pglogicalReplicationModel.dbname        = '';
@@ -100,7 +100,7 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController',['$http', '
   };
 
   // update existing subscription button pressed
-  $scope.enableSubscriptionUpdate = function(idx){
+  $scope.enableSubscriptionUpdate = function(idx) {
     var subscription = $scope.pglogicalReplicationModel.subscriptions[idx];
     if (subscription.newRecord === true) {
       $scope.pglogicalReplicationModel.s_index       = idx;
@@ -110,8 +110,7 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController',['$http', '
       $scope.pglogicalReplicationModel.user          = subscription.user;
       $scope.pglogicalReplicationModel.password      = subscription.password;
       $scope.pglogicalReplicationModel.port          = subscription.port;
-    }
-    else if (confirm("An updated subscription must point to the same database with which it was originally created. Failure to do so will result in undefined behavior. Do you want to continue?")) {
+    } else if (confirm("An updated subscription must point to the same database with which it was originally created. Failure to do so will result in undefined behavior. Do you want to continue?")) {
       $scope.pglogicalReplicationModel.s_index       = idx;
       $scope.pglogicalReplicationModel.updateEnabled = true;
       $scope.pglogicalReplicationModel.dbname        = subscription.dbname;
@@ -197,7 +196,7 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController',['$http', '
         $scope.pglogicalReplicationModel.replication_type === "global" &&
         $scope.pglogicalReplicationModel.subscriptions.length >= 1)
       return true;
-    else  if (saveable &&
+    else if (saveable &&
       $scope.pglogicalReplicationModel.replication_type !== "global" &&
       $scope.pglogicalReplicationModel.subscriptions.length == 0)
       return true;
@@ -207,8 +206,10 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController',['$http', '
 
   // method to set flag to disable certain buttons when add of subscription in progress
   $scope.addInProgress = function() {
-    if ($scope.pglogicalReplicationModel.addEnabled === true) return true;
-    else return false;
+    if ($scope.pglogicalReplicationModel.addEnabled === true)
+      return true;
+    else
+      return false;
   }
 
   // validate new/existing subscription
@@ -265,10 +266,10 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController',['$http', '
     if (typeof original_values != 'undefined' && original_values[fieldName] != subscription[fieldName])
       return true;
     else
-     return false;
+      return false;
   }
 
-  $scope.subscriptionInValidMessage = function(){
+  $scope.subscriptionInValidMessage = function() {
     if ($scope.pglogicalReplicationModel.replication_type == 'global' &&
       ($scope.pglogicalReplicationModel.subscriptions.length === 0 ||
       ($scope.pglogicalReplicationModel.subscriptions.length == 1 && $scope.pglogicalReplicationModel.subscriptions[0].remove === true)))
