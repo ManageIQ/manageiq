@@ -14,8 +14,9 @@ module Metric::Targets
     includes[:ext_management_systems][:hosts][:storages] = :tags unless options[:exclude_storages]
     MiqPreloader.preload(zone, includes)
 
-    targets = zone.hosts
-    targets += zone.storages.select { |s| Storage.supports?(s.store_type) } unless options[:exclude_storages]
+    all_hosts = zone.ext_management_systems.flat_map(&:hosts)
+    targets = all_hosts
+    targets += all_hosts.flat_map(&:storages).uniq.select { |s| Storage.supports?(s.store_type) } unless options[:exclude_storages]
 
     targets = only_enabled(targets)
     targets += capture_vm_targets(targets, Host, options)
