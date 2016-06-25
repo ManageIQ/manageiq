@@ -98,6 +98,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     return result if ems.nil?
     ems.storages.each do |s|
       next unless s.store_type == "NFS"
+      s.ext_management_system = ems
       result << build_ci_hash_struct(s, [:name, :free_space, :total_space])
     end
     result
