@@ -8,8 +8,6 @@ module Metric::CiMixin::Capture
   def queue_name_for_metrics_collection
     ems = if self.kind_of?(ExtManagementSystem)
             self
-          elsif self.kind_of?(Storage)
-            ext_management_systems.first
           elsif self.respond_to?(:ext_management_system)
             ext_management_system
           end
