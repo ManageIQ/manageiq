@@ -17,14 +17,17 @@ module Metric::Targets
     targets = zone.hosts
     targets += zone.storages.select { |s| Storage.supports?(s.store_type) } unless options[:exclude_storages]
 
-    # If it can and does have a cluster, then ask that, otherwise, ask host itself.
-    targets = targets.select do |t|
-      t.respond_to?(:ems_cluster) && t.ems_cluster ? t.ems_cluster.perf_capture_enabled? : t.perf_capture_enabled?
-    end
-
+    targets = only_enabled(targets)
     targets += capture_vm_targets(targets, Host, options)
 
     targets
+  end
+
+  def self.only_enabled(targets)
+    # If it can and does have a cluster, then ask that, otherwise, ask host itself.
+    targets.select do |t|
+      t.respond_to?(:ems_cluster) && t.ems_cluster ? t.ems_cluster.perf_capture_enabled? : t.perf_capture_enabled?
+    end
   end
 
   # @return vms under all availability zones
