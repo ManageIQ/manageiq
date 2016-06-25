@@ -29,7 +29,6 @@
 //= require miq_browser_detect
 //= require miq_application
 //= require miq_change_stored_password
-//= require miq_dynatree_replacement
 //= require automate_import_export
 //= require dialog_field_refresh
 //= require excanvas
