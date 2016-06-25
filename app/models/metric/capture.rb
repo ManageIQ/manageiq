@@ -183,7 +183,16 @@ module Metric::Capture
       interval_name = perf_target_to_interval_name(target)
 
       options = target_options[target]
-      target.perf_capture_queue(interval_name, options)
+
+      if options[:force] || target.perf_capture_now?
+        target.perf_capture_queue(interval_name, options)
+      else
+        _log.debug do
+          log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
+          "Skipping capture of #{log_target} -" +
+            "Performance last captured on [#{target.last_perf_capture_on}] is within threshold"
+        end
+      end
 
       if !target.kind_of?(Storage) && use_historical && target.last_perf_capture_on.nil?
         target.perf_capture_queue('historical')

@@ -18,7 +18,6 @@ module Metric::CiMixin::Capture
   def perf_capture_queue(interval_name, options = {})
     start_time = options[:start_time]
     end_time   = options[:end_time]
-    force      = options[:force] # Force capture to run regardless of last capture time
     priority   = options[:priority] || Metric::Capture.const_get("#{interval_name.upcase}_PRIORITY")
     task_id    = options[:task_id]
     zone       = options[:zone] || my_zone
@@ -30,11 +29,6 @@ module Metric::CiMixin::Capture
     end_time = end_time.utc unless end_time.nil?
 
     log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
-
-    if interval_name != 'historical' && start_time.nil? && !force && !self.perf_capture_now?
-      _log.debug "Skipping capture of #{log_target} - Performance last captured on [#{last_perf_capture_on}] is within threshold"
-      return
-    end
 
     # Determine what items we should be queuing up
     items = []
@@ -228,7 +222,7 @@ module Metric::CiMixin::Capture
 
     _log.info "Realtime capture requested for #{log_target}"
 
-    perf_capture_queue('realtime', :force => true, :priority => MiqQueue::HIGH_PRIORITY)
+    perf_capture_queue('realtime', :priority => MiqQueue::HIGH_PRIORITY)
   end
 
   def perf_capture_now?
