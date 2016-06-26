@@ -12,14 +12,14 @@ module Metric::Targets
     # Preload all of the objects we are going to be inspecting.
     includes = {:ext_management_systems => {:hosts => {:ems_cluster => :tags, :tags => {}}}}
     includes[:ext_management_systems][:hosts][:storages] = :tags unless options[:exclude_storages]
+    includes[:ext_management_systems][:hosts][:vms] = :ext_management_system unless options[:exclude_vms]
     MiqPreloader.preload(zone, includes)
 
+    # keeping all_hosts around because capture storage targets runs off of all hosts not enabled ones
     all_hosts = zone.ext_management_systems.flat_map(&:hosts)
-    targets = all_hosts
+    targets = hosts = only_enabled(all_hosts)
     targets += capture_storage_targets(all_hosts) unless options[:exclude_storages]
-
-    targets = only_enabled(targets)
-    targets += capture_vm_targets(targets, Host, options)
+    targets += capture_vm_targets(hosts, Host, options) unless options[:exclude_vms]
 
     targets
   end
@@ -67,18 +67,16 @@ module Metric::Targets
   # @return [Array<Storage>] supported storages
   # hosts preloaded storages and tags
   def self.capture_storage_targets(hosts)
-    hosts.flat_map(&:storages).uniq.select { |s| Storage.supports?(s.store_type) }
+    hosts.flat_map(&:storages).uniq.select { |s| Storage.supports?(s.store_type) & s.perf_capture_enabled? }
   end
 
   def self.capture_vm_targets(targets, parent_class, options)
-    return Vm.none if options[:exclude_vms]
     enabled_parents = targets.select do |t|
       t.kind_of?(parent_class) &&
         t.kind_of?(Metric::CiMixin) &&
         t.perf_capture_enabled? &&
         t.respond_to?(:vms)
     end
-    MiqPreloader.preload(enabled_parents, :vms => :ext_management_system)
     enabled_parents.flat_map { |t| t.vms.select { |v| v.ext_management_system && v.state == 'on' } }
   end
 
