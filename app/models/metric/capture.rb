@@ -69,6 +69,10 @@ module Metric::Capture
     MiqQueue.put(item)
   end
 
+  def self.perf_capture_now?(target)
+    target.last_perf_capture_on.nil? || (target.last_perf_capture_on < capture_threshold(target))
+  end
+
   private
 
   def self.capture_threshold(target)
@@ -106,7 +110,7 @@ module Metric::Capture
   def self.calc_targets_by_rollup_parent(targets)
     # Collect realtime targets and group them by their rollup parent, e.g. {"EmsCluster:4"=>[Host:4], "EmsCluster:5"=>[Host:1, Host:2]}
     targets_by_rollup_parent = targets.inject({}) do |h, target|
-      next(h) unless target.kind_of?(Host) && target.perf_capture_now?
+      next(h) unless target.kind_of?(Host) && perf_capture_now?(target)
 
       interval_name = perf_target_to_interval_name(target)
       next unless interval_name == "realtime"
@@ -184,7 +188,7 @@ module Metric::Capture
 
       options = target_options[target]
 
-      if options[:force] || target.perf_capture_now?
+      if options[:force] || perf_capture_now?(target)
         target.perf_capture_queue(interval_name, options)
       else
         _log.debug do

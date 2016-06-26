@@ -224,8 +224,4 @@ module Metric::CiMixin::Capture
 
     perf_capture_queue('realtime', :priority => MiqQueue::HIGH_PRIORITY)
   end
-
-  def perf_capture_now?
-    last_perf_capture_on.nil? || (last_perf_capture_on < Metric::Capture.capture_threshold(self))
-  end
 end
