@@ -16,7 +16,7 @@ module Metric::Targets
 
     all_hosts = zone.ext_management_systems.flat_map(&:hosts)
     targets = all_hosts
-    targets += all_hosts.flat_map(&:storages).uniq.select { |s| Storage.supports?(s.store_type) } unless options[:exclude_storages]
+    targets += capture_storage_targets(all_hosts) unless options[:exclude_storages]
 
     targets = only_enabled(targets)
     targets += capture_vm_targets(targets, Host, options)
@@ -60,6 +60,14 @@ module Metric::Targets
     end
 
     targets
+  end
+
+  # @param [Host] all hosts that have an ems
+  # disabled hosts are passed in. this may change in the future
+  # @return [Array<Storage>] supported storages
+  # hosts preloaded storages and tags
+  def self.capture_storage_targets(hosts)
+    hosts.flat_map(&:storages).uniq.select { |s| Storage.supports?(s.store_type) }
   end
 
   def self.capture_vm_targets(targets, parent_class, options)
