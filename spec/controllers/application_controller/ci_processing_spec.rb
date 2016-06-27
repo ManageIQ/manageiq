@@ -171,7 +171,7 @@ describe ApplicationController do
     end
   end
 
-  describe "#ownership_build_screen" do
+  describe "#build_ownership_info" do
     let(:child_role)                     { FactoryGirl.create(:miq_user_role, :name => "Role_1") }
     let(:grand_child_tenant_role)        { FactoryGirl.create(:miq_user_role, :name => "Role_2") }
     let(:great_grand_child_tenant_role)  { FactoryGirl.create(:miq_user_role, :name => "Role_3") }
@@ -201,29 +201,38 @@ describe ApplicationController do
 
     before do
       @vm_or_template = FactoryGirl.create(:vm_or_template)
-      @edit = {:ownership_items => [@vm_or_template.id], :klass => VmOrTemplate, :new => {:user => nil}}
+      @ownership_items = [@vm_or_template.id]
+      @params = {:controller =>'vm_or_template'}
+      @user = nil
     end
 
     it "lists all groups when (admin user is logged)" do
       login_as(admin_user)
-      controller.instance_variable_set(:@edit, @edit)
-      controller.ownership_build_screen
+      controller.instance_variable_set(:@ownership_items, @ownership_items)
+      controller.instance_variable_set(:@_params, @params)
+      controller.instance_variable_set(:@user, @user)
+
+      controller.build_ownership_info
       groups = controller.instance_variable_get(:@groups)
       expect(groups.count).to eq(MiqGroup.count)
     end
 
     it "lists all users when (admin user is logged)" do
       login_as(admin_user)
-      controller.instance_variable_set(:@edit, @edit)
-      controller.ownership_build_screen
+      controller.instance_variable_set(:@ownership_items, @ownership_items)
+      controller.instance_variable_set(:@_params, @params)
+      controller.instance_variable_set(:@user, @user)
+      controller.build_ownership_info
       users = controller.instance_variable_get(:@users)
       expect(users.count).to eq(User.all.count)
     end
 
     it "lists users in the tenant that the user belongs to and the users in the tenants below" do
       login_as(grand_child_user)
-      controller.instance_variable_set(:@edit, @edit)
-      controller.ownership_build_screen
+      controller.instance_variable_set(:@ownership_items, @ownership_items)
+      controller.instance_variable_set(:@_params, @params)
+      controller.instance_variable_set(:@user, @user)
+      controller.build_ownership_info
       users = controller.instance_variable_get(:@users)
       expected_ids = [great_grand_child_tenant.user_ids, grand_child_tenant.user_ids].flatten
       expect(expected_ids).to match_array(users.values(&:id).map(&:to_i))
@@ -231,8 +240,10 @@ describe ApplicationController do
 
     it "lists all groups that are related to descendants tenats strategy" do
       login_as(grand_child_user)
-      controller.instance_variable_set(:@edit, @edit)
-      controller.ownership_build_screen
+      controller.instance_variable_set(:@ownership_items, @ownership_items)
+      controller.instance_variable_set(:@_params, @params)
+      controller.instance_variable_set(:@user, @user)
+      controller.build_ownership_info
       groups = controller.instance_variable_get(:@groups)
       expected_ids = [great_grand_child_tenant.miq_group_ids, grand_child_tenant.miq_group_ids].flatten
       expect(expected_ids).to match_array(groups.values(&:id).map(&:to_i))

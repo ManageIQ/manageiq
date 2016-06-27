@@ -330,12 +330,14 @@ class ServiceController < ApplicationController
           locals = {:action_url => action_url}
           locals[:multi_record] = true    # need save/cancel buttons on edit screen even tho @record.id is not there
           locals[:record_id]    = @sb[:rec_id] || @edit[:object_ids] && @edit[:object_ids][0]
+        elsif action == "ownership"
+          locals = {:action_url => action_url}
+          locals[:multi_record] = true
+          presenter.update(:form_buttons_div, r[:partial => "layouts/angular/paging_div_buttons"])
         else
           locals = {:record_id => @edit[:rec_id], :action_url => action_url}
-          # need save/cancel buttons on edit screen even tho @record.id is not there
-          locals[:multi_record] = true if action == "ownership"
         end
-        presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals])
+        presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals]) unless action == "ownership"
       end
     elsif (action != "retire") && (record_showing ||
         (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0)))

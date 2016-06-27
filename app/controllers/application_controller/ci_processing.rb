@@ -5,14 +5,17 @@ module ApplicationController::CiProcessing
     private(:process_elements)
   end
 
-  # Set Ownership selected db records
+  def ownership_form_fields
+    @ownership_items = params[:id].split(/\s*,\s*/)
+    request_hash = build_ownership_hash
+    render :json => request_hash
+  end
+
+   # Set Ownership selected db records
   def set_ownership(klass = "VmOrTemplate")
     assert_privileges(params[:pressed])
-    @edit = {}
-    @edit[:key] = "ownership_edit__new"
-    @edit[:current] = {}
-    @edit[:new] = {}
-    @edit[:klass] = klass.constantize
+
+    @klass = klass.constantize
     # check to see if coming from show_list or drilled into vms from another CI
     if request.parameters[:controller] == "vm" || ["all_vms", "vms", "instances", "images"].include?(params[:display])
       rec_cls = "vm"
@@ -37,15 +40,15 @@ module ApplicationController::CiProcessing
       @refresh_partial = "layouts/flash_msg"
       return
     else
-      @edit[:ownership_items] = recs.collect(&:to_i)
+      @ownership_items = recs.collect(&:to_i)
     end
 
     if @explorer
-      @edit[:explorer] = true
+      @sb[:explorer] = true
       ownership
     else
       if role_allows?(:feature => "vm_ownership")
-        javascript_redirect :controller => "#{rec_cls}", :action => 'ownership' # redirect to build the ownership screen
+        javascript_redirect :controller => "#{rec_cls}", :action => 'ownership', :recs =>@ownership_items # redirect to build the ownership screen
       else
         head :ok
       end
@@ -57,16 +60,24 @@ module ApplicationController::CiProcessing
   alias_method :miq_template_ownership, :set_ownership
   alias_method :service_ownership, :set_ownership
 
+  def get_class_from_controller_param (controller)
+    case controller
+    when "orchestration_stack"
+      OrchestrationStack
+    when "service"
+      Service
+    when "vm_or_template", "vm_infra", "vm_cloud", "vm"
+      VmOrTemplate
+    end
+  end
+
   # Assign/unassign ownership to a set of objects
   def ownership
-    @edit = session[:edit] unless @explorer  # only do this for non-explorer screen
-    ownership_build_screen
-    @edit[:current] = copy_hash(@edit[:new])
-    session[:edit] = @edit
+    build_ownership_info
     drop_breadcrumb(:name => _("Set Ownership"), :url => "/vm_common/ownership")
     @in_a_form = @ownershipedit = true
     build_targets_hash(@ownershipitems)
-    if @edit[:explorer]
+    if @sb[:explorer]
       @refresh_partial = "shared/views/ownership"
     else
       render :action => "show"
@@ -75,49 +86,52 @@ module ApplicationController::CiProcessing
 
   DONT_CHANGE_OWNER = "0"
 
-  # Build the ownership assignment screen
-  def ownership_build_screen
+  def build_ownership_info
     @users = {}   # Users array for first chooser
+    klass = get_class_from_controller_param(params[:controller])
     Rbac.filtered(User).each { |u| @users[u.name] = u.id.to_s }
-    record = @edit[:klass].find(@edit[:ownership_items][0])
-    user = record.evm_owner if @edit[:ownership_items].length == 1
-    @edit[:new][:user] = user ? user.id.to_s : nil            # Set to first category, if not already set
+    record = klass.find(@ownership_items[0])
+    @objType = klass.name
+    user = record.evm_owner if @ownership_items.length == 1
+    @user = user ? user.id.to_s : nil
 
     @groups = {}                    # Create new entries hash (2nd pulldown)
     # need to do this only if 1 vm is selected and miq_group has been set for it
-    group = record.miq_group if @edit[:ownership_items].length == 1
-    @edit[:new][:group] = group ? group.id.to_s : nil
+    group = record.miq_group if @ownership_items.length == 1
+    @group = group ? group.id.to_s : nil
     Rbac.filtered(MiqGroup).each { |g| @groups[g.description] = g.id.to_s }
 
-    @edit[:new][:user] = @edit[:new][:group] = DONT_CHANGE_OWNER if @edit[:ownership_items].length > 1
+    @user = @group = DONT_CHANGE_OWNER if @ownership_items.length > 1
 
-    @ownershipitems = @edit[:klass].find(@edit[:ownership_items]).sort_by(&:name) # Get the db records that are being tagged
-    @view = get_db_view(@edit[:klass] == VmOrTemplate ? Vm : @edit[:klass])       # Instantiate the MIQ Report view object
+    @ownershipitems = klass.find(@ownership_items).sort_by(&:name)
+    @view = get_db_view(klass == VmOrTemplate ? Vm : klass)       # Instantiate the MIQ Report view object
     @view.table = MiqFilter.records2table(@ownershipitems, @view.cols + ['id'])
   end
 
-  def ownership_field_changed
-    return unless load_edit("ownership_edit__new")
-    ownership_get_form_vars
-    changed = (@edit[:new] != @edit[:current])
-    render :update do |page|
-      page << javascript_prologue
-      page << javascript_for_miq_button_visibility(changed)
-    end
-  end
-
-  def ownership_get_form_vars
-    @edit[:new][:user] = params[:user_name] if params[:user_name]
-    @edit[:new][:group] = params[:group_name] if params[:group_name]
+  # Build the ownership assignment screen
+  def build_ownership_hash
+    @users = {}   # Users array for first chooser
+    rbac_filtered_objects(User).each { |u| @users[u.name] = u.id.to_s }
+    klass = get_class_from_controller_param(params[:controller])
+    record = klass.find(@ownership_items[0])
+    user = record.evm_owner if @ownership_items.length == 1
+    @user = user ? user.id.to_s : nil            # Set to first category, if not already set
+    @groups = {}                    # Create new entries hash (2nd pulldown)
+    # need to do this only if 1 vm is selected and miq_group has been set for it
+    group = record.miq_group if @ownership_items.length == 1
+    @group = group ? group.id.to_s : nil
+    rbac_filtered_objects(MiqGroup).each { |g| @groups[g.description] = g.id.to_s }
+    @user = @group = DONT_CHANGE_OWNER if @ownership_items.length > 1
+    @ownershipitems = klass.find(@ownership_items).sort_by(&:name)
+    {:user      => @user,
+     :group     => @group}
   end
 
   def ownership_update
-    return unless load_edit("ownership_edit__new")
-    ownership_get_form_vars
     case params[:button]
     when "cancel"
       add_flash(_("Set Ownership was cancelled by the user"))
-      if @edit[:explorer]
+      if @sb[:explorer]
         @edit = @sb[:action] = nil
         replace_right_cell
       else
@@ -126,34 +140,35 @@ module ApplicationController::CiProcessing
       end
     when "save"
       opts = {}
-      unless @edit[:new][:user] == DONT_CHANGE_OWNER
-        if owner_changed?(:user)
-          opts[:owner] = User.find(@edit[:new][:user])
-        elsif @edit[:new][:user].blank?     # to clear previously set user
+      unless params[:user] == DONT_CHANGE_OWNER
+        if params[:user].blank?     # to clear previously set user
           opts[:owner] = nil
+        elsif params[:user] != @user
+          opts[:owner] = User.find(params[:user])
         end
       end
 
-      unless @edit[:new][:group] == DONT_CHANGE_OWNER
-        if owner_changed?(:group)
-          opts[:group] = MiqGroup.find_by_id(@edit[:new][:group])
-        elsif @edit[:new][:group].blank?    # to clear previously set group
+      unless params[:group] == DONT_CHANGE_OWNER
+        if params[:group].blank?    # to clear previously set group
           opts[:group] = nil
+        elsif params[:group] != @group
+          opts[:group] = MiqGroup.find_by_id(params[:group])
         end
       end
 
-      result = @edit[:klass].set_ownership(@edit[:ownership_items], opts)
+      klass = get_class_from_controller_param(request.parameters[:controller])
+      result = klass.set_ownership(params[:objectIds].map(&:to_i), opts)
       unless result == true
         result["missing_ids"].each { |msg| add_flash(msg, :error) } if result["missing_ids"]
         result["error_updating"].each { |msg| add_flash(msg, :error) } if result["error_updating"]
         javascript_flash
       else
-        object_types = object_types_for_flash_message(@edit[:klass], @edit[:ownership_items])
+        object_types = object_types_for_flash_message(klass, params[:objectIds])
 
         flash = _("Ownership saved for selected %{object_types}") % {:object_types => object_types}
         add_flash(flash)
-        if @edit[:explorer]
-          @edit = @sb[:action] = nil
+        if @sb[:explorer]
+          @sb[:action] = nil
           replace_right_cell
         else
           session[:flash_msgs] = @flash_array

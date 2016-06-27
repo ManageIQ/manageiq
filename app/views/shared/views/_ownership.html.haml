@@ -1,44 +1,42 @@
-- url = url_for(:action => 'ownership_field_changed')
-#tab_div
+- @angular_form = true
+
+%form#form_div.form-horizontal{"name"          => "angularForm",
+                               "ng-controller" => "ownershipFormController",
+                               "ng-show"       => "afterGet"}
   = render :partial => "layouts/flash_msg"
   %h3
     = _('Changes')
   .form-horizontal
-    .form-group
+    .form-group{"ng-class" => "{'has-error': angularForm.user.$invalid}"}
       %label.col-md-2.control-label
         = _('Select an Owner:')
       .col-md-8
-        - if @edit[:ownership_items].length > 1
+        - if @ownershipitems.length > 1
           - opts = [["<#{_("Don't change")}>", ApplicationController::CiProcessing::DONT_CHANGE_OWNER], ["<#{_('No Owner')}>", nil]]
         - else
           - opts =  [["<#{_('No Owner')}>", nil]]
         - opts += @users.sort
-        = select_tag("user_name",
-                    options_for_select(opts, @edit[:new][:user]),
-                    "data-miq_sparkle_on"  => true,
-                    "data-miq_sparkle_off" => true,
-                    :class    => "selectpicker")
-        :javascript
-          miqInitSelectPicker();
-          miqSelectPickerEvent("user_name", "#{url}")
+        = select_tag("user",
+                    options_for_select(opts, @user),
+                      "ng-model"                    => "ownershipModel.user",
+                      "id"                          => "user_name",
+                      "checkchange"                 => "",
+                      "selectpicker-for-select-tag" => "")
       %td{:width => "100"}
-    .form-group
+    .form-group{"ng-class" => "{'has-error': angularForm.group.$invalid}"}
       %label.col-md-2.control-label
         = _('Select a Group:')
       .col-md-8
-        - if @edit[:ownership_items].length > 1
+        - if @ownershipitems.length > 1
           - opts = [["<#{_("Don't change")}>", ApplicationController::CiProcessing::DONT_CHANGE_OWNER]] + @groups.sort
         - else
           - opts = @groups.sort
-        = select_tag("group_name",
-                      options_for_select(opts, @edit[:new][:group]),
-                      "data-miq_sparkle_on"  => true,
-                      "data-miq_sparkle_off" => true,
-                    :class    => "selectpicker")
-        :javascript
-          miqSelectPickerEvent("group_name", "#{url}")
-  - unless @edit[:explorer]
-    = render :partial => '/layouts/edit_form_buttons', :locals => {:action_url => 'ownership_update', :ajax_buttons => true}
+        = select_tag("group",
+                      options_for_select(opts, @group),
+                      "ng-model"                    => "ownershipModel.group",
+                      "id"                          => "group_name",
+                      "checkchange"                 => "",
+                      "selectpicker-for-select-tag" => "")
 
   %hr
   %h3
@@ -51,3 +49,13 @@
             - @embedded = true
             - @gtl_type = settings(:views, :tagging)
             = render :partial => "layouts/gtl"
+
+  %div_for_paging{'ng-controller'           => "pagingDivButtonGroupController",
+                  'paging_div_buttons_id'   => "angular_paging_div_buttons",
+                  'paging_div_buttons_type' => "Save"}
+
+:javascript
+  ManageIQ.angular.app.value('ownershipFormId', '#{"ownership"}');
+  ManageIQ.angular.app.value('objectIds', #{ @ownershipitems.collect(&:id) });
+  ManageIQ.angular.app.value('objType', '#{ @objType }');
+  miq_bootstrap('#form_div');

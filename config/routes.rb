@@ -2189,6 +2189,7 @@ Vmdb::Application.routes.draw do
         retire
         service_form_fields
         show
+        ownership_form_fields
       ),
       :post => %w(
         button
@@ -2318,6 +2319,7 @@ Vmdb::Application.routes.draw do
         right_size
         show
         show_list
+        ownership_form_fields
       ),
       :post => %w(
         edit_vm
@@ -2339,6 +2341,8 @@ Vmdb::Application.routes.draw do
         show_list
         tree_autoload_dynatree
         vmtree_selected
+        ownership_form_fields
+        ownership_update
       ) +
                ownership_post +
                pre_prov_post
@@ -2367,6 +2371,7 @@ Vmdb::Application.routes.draw do
         detach
         evacuate
         evacuate_form_fields
+        ownership_form_fields
       ) +
                compare_get,
       :post => %w(
@@ -2425,6 +2430,7 @@ Vmdb::Application.routes.draw do
         attach_volume
         detach_volume
         evacuate_vm
+        ownership_update
       ) +
                adv_search_post +
                compare_post +
@@ -2455,6 +2461,7 @@ Vmdb::Application.routes.draw do
         retire
         show
         tagging_edit
+        ownership_form_fields
       ) +
                compare_get,
       :post => %w(
@@ -2513,6 +2520,7 @@ Vmdb::Application.routes.draw do
         html5_console
         wait_for_task
         win32_services
+        ownership_update
       ) +
                adv_search_post +
                compare_post +
@@ -2544,6 +2552,7 @@ Vmdb::Application.routes.draw do
         util_report_download
         utilization
         vm_show
+        ownership_form_fields
       ) +
                compare_get,
       :post => %w(
@@ -2614,6 +2623,7 @@ Vmdb::Application.routes.draw do
         x_history
         x_search_by_name
         x_show
+        ownership_update
       ) +
                adv_search_post +
                compare_post +
