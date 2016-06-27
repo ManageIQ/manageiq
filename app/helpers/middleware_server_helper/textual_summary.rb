@@ -1,4 +1,5 @@
 module MiddlewareServerHelper::TextualSummary
+  include TextualMixins::TextualName
   #
   # Groups
   #
@@ -19,11 +20,6 @@ module MiddlewareServerHelper::TextualSummary
   #
   # Items
   #
-
-  def textual_name
-    @record.name
-  end
-
   def textual_hostname
     @record.hostname
   end

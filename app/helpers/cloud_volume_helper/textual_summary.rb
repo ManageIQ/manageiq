@@ -1,4 +1,7 @@
 module CloudVolumeHelper::TextualSummary
+  include TextualMixins::TextualDescription
+  include TextualMixins::TextualName
+
   def textual_group_properties
     %i(name size bootable description)
   end
@@ -9,14 +12,6 @@ module CloudVolumeHelper::TextualSummary
 
   def textual_group_tags
     %i(tags)
-  end
-
-  def textual_name
-    @record.name
-  end
-
-  def textual_description
-    @record.description
   end
 
   def textual_size

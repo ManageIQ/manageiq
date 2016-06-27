@@ -1,4 +1,6 @@
 module ServiceHelper::TextualSummary
+  include TextualMixins::TextualDescription
+  include TextualMixins::TextualName
   #
   # Groups
   #
@@ -32,15 +34,6 @@ module ServiceHelper::TextualSummary
   #
   # Items
   #
-
-  def textual_name
-    @record.name
-  end
-
-  def textual_description
-    @record.description
-  end
-
   def textual_guid
     {:label => _("Management Engine GUID"), :value => @record.guid}
   end
