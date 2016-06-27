@@ -21,6 +21,10 @@ module CustomAttributeMixin
         miq_custom_set(custom_str, value)
       end
     end
+
+    def self.custom_keys
+      CustomAttribute.where(:resource_type => base_class).distinct.pluck(:name)
+    end
   end
 
   def miq_custom_keys
