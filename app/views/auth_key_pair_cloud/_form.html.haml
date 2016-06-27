@@ -9,7 +9,7 @@
                  'ng-show'       => "afterGet",
                  :novalidate     => true}
     = render :partial => "layouts/flash_msg"
-    .form-group{"ng-class" => "{'has-error': angularForm.description.$invalid}"}
+    .form-group{"ng-class" => "{'has-error': angularForm.name.$invalid}"}
       %label.col-md-2.control-label{"for" => "name"}
         = _('Name')
       .col-md-8
@@ -22,7 +22,7 @@
                             :checkchange     => "",
                             "auto-focus"     => true,
                             "start-form-div" => "start_form_div"}
-        %span.help-block{"ng-show" => "angularForm.description.$error.required"}
+        %span.help-block{"ng-show" => "angularForm.name.$error.required"}
           = _("Required")
     .form-group
       %label.col-md-2.control-label{"for" => "public_key"}
