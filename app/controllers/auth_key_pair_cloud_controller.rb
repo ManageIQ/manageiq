@@ -51,18 +51,6 @@ class AuthKeyPairCloudController < ApplicationController
     end
   end
 
-  # delete this
-  def get_form_vars
-    if !@edit[:auth_key_pair_cloud_id].nil?
-      @key_pair = ManageIQ::Providers::CloudManager::AuthKeyPair.find_by_id(@edit[:auth_key_pair_cloud_id])
-    else
-      @key_pair = ManageIQ::Providers::CloudManager::AuthKeyPair.new
-    end
-    @edit[:new][:name] = params[:name] if params[:name]
-    @edit[:new][:public_key] = params[:public_key] if params[:public_key]
-    @edit[:new][:ems_id] = params[:ems_id] if params[:ems_id]
-  end
-
   def set_form_vars
     @edit = {}
     @edit[:auth_key_pair_cloud_id] = @key_pair.id
@@ -78,19 +66,6 @@ class AuthKeyPairCloudController < ApplicationController
     @edit[:new][:name] = @key_pair.name
     @edit[:current] = @edit[:new].dup
     session[:edit] = @edit
-  end
-
-   # delete this
-  def form_field_changed
-    return unless load_edit("auth_key_pair_cloud_edit__#{params[:id] || 'new'}")
-    get_form_vars
-    enable_buttons = (!@edit[:new][:name].blank? && !@edit[:new][:ems_id].blank?)
-
-    render :update do |page|
-      page << javascript_prologue
-      page.replace(@refresh_div, :partial => @refresh_partial) if @refresh_div
-      page << javascript_for_miq_button_visibility(enable_buttons)
-    end
   end
 
   # REST call for provider choices
@@ -117,76 +92,6 @@ class AuthKeyPairCloudController < ApplicationController
     )
   end
 
-  # delete this
-  def create
-    assert_privileges("auth_key_pair_cloud_new")
-    kls = ManageIQ::Providers::CloudManager::AuthKeyPair
-    case params[:button]
-    when "cancel"
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action    => 'show_list',
-                         :flash_msg => _("Add of new %{model} was cancelled by the user") % {
-                           :model => ui_lookup(:table => 'auth_key_pair_cloud')
-                         }
-      end
-
-    when "add"
-      return unless load_edit("auth_key_pair_cloud_edit__new")
-      get_form_vars
-
-      options = @edit[:new]
-      ext_management_system = find_by_id_filtered(ManageIQ::Providers::CloudManager, options[:ems_id])
-      kls = kls.class_by_ems(ext_management_system)
-      if kls.is_available?(:create_key_pair, ext_management_system, options)
-        begin
-          kls.create_key_pair(ext_management_system, options)
-          add_flash(_("Creating %{model} %{name}") % {
-            :model => ui_lookup(:table => 'auth_key_pair_cloud'),
-            :name  => options[:name]})
-        rescue => ex
-          add_flash(_("Unable to create %{model} %{name}. %{error}") % {
-            :model => ui_lookup(:table => 'auth_key_pair_cloud'),
-            :name  => options[:name],
-            :error => get_error_message_from_fog(ex)}, :error)
-        end
-        @breadcrumbs.pop if @breadcrumbs
-        session[:edit] = nil
-        session[:flash_msgs] = @flash_array.dup if @flash_array
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => "show_list"
-        end
-      else
-        @in_a_form = true
-        add_flash(kls.is_available_now_error_message(:create_key_pair, ext_management_system, options))
-        drop_breadcrumb(
-          :name => _("Add New %{model}") % {:model => ui_lookup(:table => 'auth_key_pair_cloud')},
-          :url  => "/auth_key_pair_cloud/new"
-        )
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
-      end
-
-    when "validate"
-      @in_a_form = true
-      options = @edit[:new]
-      ext_management_system = find_by_id_filtered(ManageIQ::Providers::CloudManager, options[:ems_id])
-      kls = kls.class_by_ems(ext_management_system)
-      if kls.is_available?(:create_key_pair, ext_management_system, options)
-        add_flash(_("Validation successful"))
-      else
-        add_flash(kls.is_available_now_error_message(:create_key_pair, ext_management_system, options))
-      end
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
-    end
-  end
-
   def key_pair_save
     assert_privileges("auth_key_pair_cloud_new")
 
@@ -200,6 +105,7 @@ class AuthKeyPairCloudController < ApplicationController
                            :model => ui_lookup(:table => 'auth_key_pair_cloud')
                          }
       end
+
     when "save"
       options = {}
       options[:name] = params[:name]
@@ -239,6 +145,7 @@ class AuthKeyPairCloudController < ApplicationController
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
+        
     when "validate"
       @in_a_form = true
       options = {}
