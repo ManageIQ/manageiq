@@ -868,9 +868,11 @@ class Storage < ApplicationRecord
   end
 
   def validate_smartstate_analysis
-    return {:available => false, :message => "Smartstate Analysis cannot be performed on selected Datastore"} if ext_management_systems.blank? ||
-                                                     !ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
-    {:available => true,   :message => nil}
+    if ext_management_systems.blank? || !ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
+      {:available => false, :message => "Smartstate Analysis cannot be performed on selected Datastore"}
+    else
+      {:available => true, :message => nil}
+    end
   end
 
   def tenant_identity
