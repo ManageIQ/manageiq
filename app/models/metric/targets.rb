@@ -9,11 +9,7 @@ module Metric::Targets
   end
 
   def self.capture_infra_targets(zone, options)
-    # Preload all of the objects we are going to be inspecting.
-    includes = {:ext_management_systems => {:hosts => {:ems_cluster => :tags, :tags => {}}}}
-    includes[:ext_management_systems][:hosts][:storages] = :tags unless options[:exclude_storages]
-    includes[:ext_management_systems][:hosts][:vms] = :ext_management_system unless options[:exclude_vms]
-    MiqPreloader.preload(zone, includes)
+    preload_infra_targets_data(zone, options)
     all_hosts = capture_host_targets(zone)
     targets = hosts = only_enabled(all_hosts)
     targets += capture_storage_targets(all_hosts) unless options[:exclude_storages]
@@ -58,6 +54,14 @@ module Metric::Targets
     end
 
     targets
+  end
+
+  def self.preload_infra_targets_data(zone, options)
+    # Preload all of the objects we are going to be inspecting.
+    includes = {:ext_management_systems => {:hosts => {:ems_cluster => :tags, :tags => {}}}}
+    includes[:ext_management_systems][:hosts][:storages] = :tags unless options[:exclude_storages]
+    includes[:ext_management_systems][:hosts][:vms] = :ext_management_system unless options[:exclude_vms]
+    MiqPreloader.preload(zone, includes)
   end
 
   def self.capture_host_targets(zone)
