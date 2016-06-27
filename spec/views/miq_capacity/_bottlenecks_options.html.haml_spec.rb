@@ -1,5 +1,4 @@
 describe 'miq_capacity/_bottlenecks_options.html.haml' do
-  # %w( e-10r1).each do |node|
   before :each do
     set_controller_for_view('miq_capacity')
     assign(:sb, :bottlenecks => {:groups     => %w(Capacity Utilization),
