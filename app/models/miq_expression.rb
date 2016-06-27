@@ -1126,9 +1126,16 @@ class MiqExpression
     result = []
     unless opts[:typ] == "count" || opts[:typ] == "find"
       result = get_column_details(relats[:columns], model, model, opts).sort! { |a, b| a.to_s <=> b.to_s }
+      custom_details = _custom_details_for(model, opts)
+      result.concat(custom_details.sort_by!(&:to_s)) unless custom_details.empty?
       result.concat(tag_details(model, model, opts)) if opts[:include_tags] == true
     end
-    result.concat(_model_details(relats, opts).sort! { |a, b| a.to_s <=> b.to_s })
+
+    model_details = _model_details(relats, opts)
+
+    model_details.sort_by!(&:to_s)
+    result.concat(model_details)
+
     @classifications = nil
     result
   end
