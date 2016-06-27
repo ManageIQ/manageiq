@@ -26,6 +26,7 @@ module MiqPolicyController::Alerts
                                                 _("%{model} \"%{name}\" was added")
         add_flash(flash_key % {:model => ui_lookup(:model => "MiqAlert"), :name => @edit[:new][:description]})
         alert_get_info(MiqAlert.find(alert.id))
+        alert_sync_provider(@edit[:alert_id] ? :update : :new)
         @edit = nil
         @nodetype = "al"
         @new_alert_node = "al-#{to_cid(alert.id)}"
@@ -59,6 +60,8 @@ module MiqPolicyController::Alerts
     else
       alerts.push(params[:id])
     end
+    alert_get_info(MiqAlert.find(params[:id]))
+    alert_sync_provider(:delete)
 
     process_alerts(alerts, "destroy") unless alerts.empty?
     @new_alert_node = self.x_node = "root"
@@ -644,7 +647,7 @@ module MiqPolicyController::Alerts
       @alert_profiles = @alert.memberof.sort_by { |p| p.description.downcase }
     end
 
-    unless @alert.expression.kind_of?(MiqExpression) # Get the EMS if it's in the expression
+    if @alert.expression && !@alert.expression.kind_of?(MiqExpression) # Get the EMS if it's in the expression
       @ems = ExtManagementSystem.find_by_id(@alert.expression[:options][:ems_id].to_i)
     end
     if @alert.expression.kind_of?(Hash) && @alert.expression[:eval_method]
@@ -654,6 +657,16 @@ module MiqPolicyController::Alerts
           @perf_column_unit = alert_get_perf_column_unit(eo[:values][@alert.db][@alert.expression[:options][:perf_column]])
         end
       end
+    end
+  end
+
+  def alert_sync_provider(operation)
+    if @alert.db == "MiddlewareServer"
+      MiqQueue.put(
+        :class_name  => "ManageIQ::Providers::Hawkular::MiddlewareManager",
+        :method_name => "update_alert",
+        :args        => {:operation => operation, :alert => @alert}
+      )
     end
   end
 end
