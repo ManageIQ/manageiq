@@ -362,7 +362,7 @@ module ReportController::Reports::Editor
         ["#{req}_3", _("Filter")],
         ["#{req}_7", _("Preview")]
       ]
-    elsif @edit[:new][:model].to_s.starts_with?("Chargeback")
+    elsif chargeback_model?(@edit[:new][:model].to_s)
       @tabs = [
         ["#{req}_1", _("Columns")],
         ["#{req}_2", _("Formatting")],
@@ -544,7 +544,7 @@ module ReportController::Reports::Editor
         @edit[:new][:tz] = session[:user_tz]
         build_perf_interval_arrays(@edit[:new][:perf_interval]) # Build the start and end arrays for the performance interval chooser
       end
-      if model_report_type(@edit[:new][:model]).to_s.starts_with?("chargeback")
+      if chargeback_model?(@edit[:new][:model])
         @edit[:new][:cb_model] = Chargeback.report_cb_model(@edit[:new][:model])
         @edit[:new][:cb_interval] ||= "daily"                   # Default to Daily
         @edit[:new][:cb_interval_size] ||= 1
@@ -626,6 +626,10 @@ module ReportController::Reports::Editor
       @refresh_div = "filter_div"
       @refresh_partial = "form_filter"
     end
+  end
+
+  def chargeback_model?(model)
+    %w(ChargebackContainerProject ChargebackVm).include?(model)
   end
 
   def gfv_chargeback
@@ -1195,7 +1199,7 @@ module ReportController::Reports::Editor
       rpt.db_options[:target_pcts].push(@edit[:new][:perf_target_pct1])
       rpt.db_options[:target_pcts].push(@edit[:new][:perf_target_pct2]) if @edit[:new][:perf_target_pct2]
       rpt.db_options[:target_pcts].push(@edit[:new][:perf_target_pct3]) if @edit[:new][:perf_target_pct3]
-    elsif model_report_type(rpt.db).to_s.starts_with?("chargeback")
+    elsif chargeback_model?(rpt.db)
       rpt.db_options[:rpt_type]     = @edit[:new][:model]
       options                       = {}  # CB options go in db_options[:options] key
       options[:interval]            = @edit[:new][:cb_interval]
@@ -1265,7 +1269,7 @@ module ReportController::Reports::Editor
     rpt.sortby = @edit[:new][:sortby1] == NOTHING_STRING ? nil : []  # Clear sortby if sortby1 not present, else set up array
 
     # Add in the chargeback static fields
-    if rpt.db.starts_with?("Chargeback") # For chargeback, add in static fields
+    if chargeback_model?(rpt.db) # For chargeback, add in static fields
       rpt.cols = %w(start_date display_range)
       name_col = @edit[:new][:model].constantize.report_name_field
       rpt.cols += [name_col]
@@ -1486,7 +1490,7 @@ module ReportController::Reports::Editor
       @edit[:new][:perf_limit_col] = @rpt.db_options[:limit_col]
       @edit[:new][:perf_limit_val] = @rpt.db_options[:limit_val]
       @edit[:new][:perf_target_pct1], @edit[:new][:perf_target_pct2], @edit[:new][:perf_target_pct3] = @rpt.db_options[:target_pcts]
-    elsif model_report_type(@rpt.db).to_s.starts_with?("chargeback")
+    elsif chargeback_model?(@rpt.db)
       @edit[:new][:tz] = @rpt.tz ? @rpt.tz : session[:user_tz]    # Set the timezone, default to user's
       options = @rpt.db_options[:options]
       if options.key?(:owner) # Get the owner options
@@ -1769,7 +1773,7 @@ module ReportController::Reports::Editor
     end
 
     # Remove the non-cost and owner columns from the arrays for Chargeback
-    if rpt.db.starts_with?("Chargeback")
+    if chargeback_model?(rpt.db)
       f_len = fields.length
       for f_idx in 1..f_len # Go thru fields in reverse
         f_key = fields[f_len - f_idx].last
