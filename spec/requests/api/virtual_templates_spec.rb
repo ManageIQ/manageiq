@@ -105,14 +105,6 @@ RSpec.describe 'Virtual Template API' do
       expect_bad_request(/Virtual template may only have one per type/)
     end
 
-    it 'rejects unsupported virtual template vendors' do
-      api_basic_authorize collection_action_identifier(:virtual_templates, :create)
-      run_post(virtual_templates_url, template_2)
-
-      expect_bad_request(/Must specify a supported type/)
-      'Unsupported Action create for the virtual_templates resource specified'
-    end
-
     it 'rejects a request without a vendor' do
       api_basic_authorize collection_action_identifier(:virtual_templates, :create)
       run_post(virtual_templates_url, template.except(:vendor))
