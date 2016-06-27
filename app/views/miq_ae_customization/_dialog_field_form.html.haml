@@ -69,7 +69,6 @@
                           @edit[:field_trigger_auto_refresh],
                           'data-miq_observe_checkbox' => {:url => url}.to_json)
 
-    .form-horizontal
       - if @edit[:field_dynamic] == true
         = render :partial => 'dialog_field_form_dynamic_options'
       - else
