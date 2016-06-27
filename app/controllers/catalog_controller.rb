@@ -773,8 +773,7 @@ class CatalogController < ApplicationController
                       :type        => ot_type,
                       :draft       => false,
                       :manager_id  => ''}}
-    @edit[:new][:available_managers] =
-      ManageIQ::Providers::Openstack::CloudManager.all.collect { |t| [t.name, t.id] }.sort || []
+    @edit[:new][:available_managers] = available_orchestration_managers_for_template_type(ot_type)
     @edit[:current] = @edit[:new].dup
     @edit[:key] = "ot_add__new"
     @right_cell_text = _("Adding a new Orchestration Template")
@@ -799,8 +798,8 @@ class CatalogController < ApplicationController
     @edit[:new][:content] = params[:content] if params[:content]
     @edit[:new][:draft] = params[:draft] == "true" ? true : false if params[:draft]
     @edit[:new][:manager_id] = params[:manager_id] if params[:manager_id]
-    @edit[:new][:available_managers] =
-      ManageIQ::Providers::Openstack::CloudManager.all.collect { |t| [t.name, t.id] }.sort || []
+    @edit[:new][:available_managers] = available_orchestration_managers_for_template_type(params[:type])
+
     render :update do |page|
       page << javascript_prologue
       page << javascript_hide("buttons_off")
@@ -995,8 +994,8 @@ class CatalogController < ApplicationController
                           :type        => @record.type,
                           :manager_id  => @record.ems_id},
              :rec_id  => @record.id}
-    @edit[:current][:available_managers] =
-      ManageIQ::Providers::Openstack::CloudManager.all.collect { |t| [t.name, t.id] }.sort || []
+
+    @edit[:current][:available_managers] = available_orchestration_managers_for_template_type(@record.type)
     @edit[:new] = @edit[:current].dup
     @edit[:key] = "ot_edit__#{@record.id}"
     @right_cell_text = right_cell_text % @record.name
@@ -1498,6 +1497,14 @@ class CatalogController < ApplicationController
       end
     end
     @edit[:new][:template_id] = params[:template_id] if params[:template_id]
+  end
+
+  def available_orchestration_managers_for_template_type(template_type)
+    return [] unless OrchestrationTemplate.subclasses.collect(&:name).include?(template_type.to_s)
+
+    template_type = template_type.constantize if template_type.is_a?(String)
+
+    template_type.eligible_managers.collect { |m| [m.name, m.id] }.sort
   end
 
   def available_orchestration_managers(template_id)
