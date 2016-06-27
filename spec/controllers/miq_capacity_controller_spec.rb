@@ -78,7 +78,7 @@ describe MiqCapacityController do
       controller.send(:planning_option_changed)
       sb = controller.instance_variable_get(:@sb)
       expect(sb[:planning][:vms]).to eq(@vm1.id.to_s => @vm1.name,
-                                        vm5.id.to_s  => "#{vm5.name} under provider #{ems.name}",
+                                        vm5.id.to_s  => "#{ems.name}:#{vm5.name}",
                                         @vm2.id.to_s => @vm2.name,
                                         @vm3.id.to_s => @vm3.name,
                                         @vm4.id.to_s => @vm4.name)
