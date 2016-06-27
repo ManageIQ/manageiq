@@ -43,6 +43,7 @@ module ManageIQ::Providers
       end
 
       def alternate_machine_id(machine_id)
+        return if machine_id.nil?
         # See the BZ #1294461 [1] for a more complete background.
         # Here, we'll try to adjust the machine ID to the format from that bug. We expect to get a string like
         # this: 2f68d133a4bc4c4bb19ecb47d344746c . For such string, we should return
@@ -68,6 +69,7 @@ module ManageIQ::Providers
       end
 
       def find_host_by_bios_uuid(machine_id)
+        return if machine_id.nil?
         identity_system = machine_id.downcase
         Vm.find_by(:uid_ems => identity_system,
                    :type    => uuid_provider_types) if identity_system

@@ -95,4 +95,14 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
       expect(parser.swap_part(part)).to eq(expected)
     end
   end
+
+  describe 'handle_no_machine_id' do
+    it 'should_find_nil_for_nil' do
+      expect(parser.find_host_by_bios_uuid(nil)).to be_nil
+    end
+
+    it 'should_alternate_nil_for_nil' do
+      expect(parser.alternate_machine_id(nil)).to be_nil
+    end
+  end
 end
