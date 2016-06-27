@@ -167,8 +167,7 @@ class MiqCapacityController < ApplicationController
   def planning_wizard_get_vms(filter_type, filter_value)
     vms = planning_wizard_get_vms_records(filter_type, filter_value)
     vms.each_with_object({}) do |v, h|
-      description = v.name.to_s
-      description.concat(_(" under provider #{v.ext_management_system.name}")) unless v.ext_management_system.nil?
+      description = v.ext_management_system ? _("#{v.ext_management_system.name}:#{v.name}") : v.name
       h[v.id.to_s] = description
     end
   end
