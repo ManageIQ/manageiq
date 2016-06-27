@@ -61,6 +61,44 @@ describe ManageIQ::Providers::Openstack::CloudManager::Vm do
         expect(vm.supports_evacuate?).to eq true
       end
     end
+
+    context "associate floating ip" do
+      it "associates with floating ip" do
+        service = double
+        allow(ems).to receive(:connect).and_return(service)
+        expect(service).to receive(:associate_address).with(vm.ems_ref, '10.10.10.10')
+        vm.associate_floating_ip('10.10.10.10')
+      end
+
+      it "checks associate_floating_ip is_available? when floating ips are available" do
+        expect(Rbac).to receive(:filtered).and_return([1]) # fake a floating ip being available
+        expect(vm.is_available?(:associate_floating_ip)).to eq true
+      end
+
+      it "checks associate_floating_ip is_available? when floating ips are not available" do
+        expect(Rbac).to receive(:filtered).and_return([])
+        expect(vm.is_available?(:associate_floating_ip)).to eq false
+      end
+    end
+
+    context "disassociate floating ip" do
+      it "disassociates from floating ip" do
+        service = double
+        allow(ems).to receive(:connect).and_return(service)
+        expect(service).to receive(:disassociate_address).with(vm.ems_ref, '10.10.10.10')
+        vm.disassociate_floating_ip('10.10.10.10')
+      end
+
+      it "checks disassociate_floating_ip is_available? when floating ips are associated with the instance" do
+        expect(vm).to receive(:floating_ips).and_return([1]) # fake a floating ip being associated
+        expect(vm.is_available?(:disassociate_floating_ip)).to eq true
+      end
+
+      it "checks disassociate_floating_ip is_available? when no floating ips are associated with the instance" do
+        expect(vm).to receive(:floating_ips).and_return([])
+        expect(vm.is_available?(:disassociate_floating_ip)).to eq false
+      end
+    end
   end
 
   context "#is_available?" do

@@ -372,10 +372,10 @@
       :description: Refresh Cloud Providers
       :feature_type: control
       :identifier: ems_cloud_refresh
-    - :name: Re-check Authentication Status 
+    - :name: Re-check Authentication Status
       :description: Re-check Authentication Status of Cloud Providers
       :feature_type: control
-      :identifier: ems_cloud_recheck_auth_status 
+      :identifier: ems_cloud_recheck_auth_status
   - :name: Modify
     :description: Modify Cloud Providers
     :feature_type: admin
@@ -4634,6 +4634,14 @@
         :description: Evacuate Instance
         :feature_type: control
         :identifier: instance_evacuate
+      - :name: Associate Floating IP
+        :description: Associate Floating IP with Instance
+        :feature_type: control
+        :identifier: instance_associate_floating_ip
+      - :name: Disassociate Floating IP
+        :description: Disassociate Floating IP from Instance
+        :feature_type: control
+        :identifier: instance_disassociate_floating_ip
     - :name: Modify
       :description: Modify Instances
       :feature_type: admin

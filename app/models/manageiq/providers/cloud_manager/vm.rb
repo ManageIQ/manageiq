@@ -81,6 +81,30 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     super
   end
 
+  def validate_associate_floating_ip
+    validate_unsupported(_("Associate Floating IP Operation"))
+  end
+
+  def validate_disassociate_floating_ip
+    validate_unsupported(_("Disassociate Floating IP Operation"))
+  end
+
+  def raw_associate_floating_ip(_ip_address)
+    raise NotImplementedError, _("raw_associate_floating_ip must be implemented in a subclass")
+  end
+
+  def associate_floating_ip(ip_address)
+    raw_associate_floating_ip(ip_address)
+  end
+
+  def raw_disassociate_floating_ip(_ip_address)
+    raise NotImplementedError, _("raw_disassociate_floating_ip must be implemented in a subclass")
+  end
+
+  def disassociate_floating_ip(ip_address)
+    raw_disassociate_floating_ip(ip_address)
+  end
+
   private
 
   def raise_created_event
