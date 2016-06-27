@@ -145,6 +145,7 @@ Vmdb::Application.routes.draw do
         create
         dynamic_checkbox_refresh
         form_field_changed
+        key_pair_save
         listnav_search_selected
         panel_control
         quick_search

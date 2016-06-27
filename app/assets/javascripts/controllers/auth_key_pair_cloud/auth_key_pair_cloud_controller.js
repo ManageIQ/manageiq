@@ -33,7 +33,7 @@ ManageIQ.angular.app.controller('keyPairCloudFormController', ['$http', '$scope'
         miqService.sparkleOn();
 
         //todo - save values to server
-        var url = '/auth_key_pair_cloud/create/' + keyPairFormId + '?button=' + buttonName;
+        var url = '/auth_key_pair_cloud/key_pair_save/' + keyPairFormId + '?button=' + buttonName;
         $scope.keyPairModel.ems_id = $scope.keyPairModel.ems.id;
         var moreUrlParams = $.param(miqService.serializeModel($scope.keyPairModel));
         if(moreUrlParams)
