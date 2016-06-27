@@ -26,7 +26,7 @@ describe MiqReport::Generator do
       end
 
       it "returns one row for each host" do
-        used_mem_up = [700, 600, 500, 400]
+        used_mem_up = [400, 500, 600, 700]
         @host2 = FactoryGirl.create(:host)
         create_rollup(@host1, @time_profile_all, used_mem_up)
         create_rollup(@host2, @time_profile_all, used_mem_up)
@@ -35,7 +35,7 @@ describe MiqReport::Generator do
       end
 
       it "calculates 'UP' trend" do
-        used_mem_up = [700, 600, 500, 400]
+        used_mem_up = [400, 500, 600, 700]
         create_rollup(@host1, @time_profile_all, used_mem_up)
         @miq_report_profile_all.generate_table(:userid => @user.userid)
         trend_direction = @miq_report_profile_all.table.data[0].data['direction_of_trend']
@@ -43,7 +43,7 @@ describe MiqReport::Generator do
       end
 
       it "calculates 'Down' trend" do
-        used_mem_down = [300, 400, 500, 600]
+        used_mem_down = [600, 500, 400, 300]
         create_rollup(@host1, @time_profile_all, used_mem_down)
         @miq_report_profile_all.generate_table(:userid => @user.userid)
         trend_direction = @miq_report_profile_all.table.data[0].data['direction_of_trend']
@@ -59,7 +59,7 @@ describe MiqReport::Generator do
       end
 
       it "calculates max and min trend values" do
-        used_mem_up = [700, 600, 500, 400]
+        used_mem_up = [400, 500, 600, 700]
         create_rollup(@host1, @time_profile_all, used_mem_up)
         @miq_report_profile_all.generate_table(:userid => @user.userid)
         report_min = @miq_report_profile_all.table.data[0].data['min_trend_value']
@@ -70,10 +70,10 @@ describe MiqReport::Generator do
     end
 
     def create_rollup(host, profile, used_mem)
-      day_midnight = Time.zone.yesterday.beginning_of_day
+      day_midnight = Time.zone.yesterday.beginning_of_day - used_mem.size.days
       used_mem.size.times do |i|
         host.metric_rollups << FactoryGirl.create(:metric_rollup_host_daily,
-                                                  :timestamp                => day_midnight - i.day,
+                                                  :timestamp                => day_midnight + i.day,
                                                   :time_profile_id          => profile.id,
                                                   :derived_memory_used      => used_mem[i],
                                                   :derived_memory_available => 1400)
