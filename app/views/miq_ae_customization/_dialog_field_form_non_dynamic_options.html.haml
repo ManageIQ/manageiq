@@ -58,13 +58,7 @@
       = check_box_tag('field_required', 'true',
                       @edit[:field_required],
                       "data-miq_observe_checkbox" => {:url => url}.to_json)
-  .form-group
-    %label.col-md-2.control-label
-      = _('Auto Refresh other fields when modified')
-    .col-md-8
-      = check_box_tag('field_trigger_auto_refresh', '1',
-                      @edit[:field_trigger_auto_refresh],
-                      'data-miq_observe_checkbox' => {:url => url}.to_json)
+
   - if %w(DialogFieldTextBox DialogFieldTextAreaBox).include?(@edit[:field_typ])
     .form-group
       %label.col-md-2.control-label
@@ -93,14 +87,6 @@
 - elsif %w(DialogFieldDateControl DialogFieldDateTimeControl).include?(@edit[:field_typ])
   .form-group
     %label.col-md-2.control-label
-      = _('Auto Refresh other fields when modified')
-    .col-md-8
-      = check_box_tag('field_trigger_auto_refresh', '1',
-                      @edit[:field_trigger_auto_refresh],
-                      'data-miq_observe_checkbox' => {:url => url}.to_json)
-
-  .form-group
-    %label.col-md-2.control-label
       = _('Show Past Dates')
     .col-md-8
       = check_box_tag("field_past_dates", "1",
@@ -118,14 +104,6 @@
                   :class    => "selectpicker")
       :javascript
         miqSelectPickerEvent('field_required', "#{url}")
-
-  .form-group
-    %label.col-md-2.control-label
-      = _('Auto Refresh other fields when modified')
-    .col-md-8
-      = check_box_tag('field_trigger_auto_refresh', '1',
-                      @edit[:field_trigger_auto_refresh],
-                      'data-miq_observe_checkbox' => {:url => url}.to_json)
 
   .form-group
     %label.col-md-2.control-label
@@ -226,12 +204,4 @@
       = check_box_tag('field_required', 'true',
                       @edit[:field_required],
                       "data-miq_observe_checkbox" => {:url => url}.to_json)
-
-  .form-group
-    %label.col-md-2.control-label
-      = _('Auto Refresh other fields when modified')
-    .col-md-8
-      = check_box_tag('field_trigger_auto_refresh', '1',
-                      @edit[:field_trigger_auto_refresh],
-                      'data-miq_observe_checkbox' => {:url => url}.to_json)
 

@@ -48,30 +48,6 @@
           &nbsp;
           = _('Only 1 Date or Date/Time element can be present in a Dialog')
 
-    .form-group
-      %label.col-md-2.control-label
-        = _('Auto refresh')
-      .col-md-8
-        = check_box_tag('field_auto_refresh', '1',
-                        @edit[:field_auto_refresh],
-                        'data-miq_observe_checkbox' => {:url => url}.to_json)
-
-    .form-group
-      %label.col-md-2.control-label
-        = _('Auto Refresh other fields when modified')
-      .col-md-8
-        = check_box_tag('field_trigger_auto_refresh', '1',
-                        @edit[:field_trigger_auto_refresh],
-                        'data-miq_observe_checkbox' => {:url => url}.to_json)
-
-    .form-group
-      %label.col-md-2.control-label
-        = _('Show Refresh Button')
-      .col-md-8
-        = check_box_tag('field_show_refresh_button', '1',
-                      @edit[:field_show_refresh_button],
-                      'data-miq_observe_checkbox' => {:url => url}.to_json)                        
-
     - if DialogField::DIALOG_FIELD_DYNAMIC_CLASSES.include?(@edit[:field_typ])
       .form-group
         %label.col-md-2.control-label
@@ -83,11 +59,21 @@
   - unless @edit[:field_typ].nil?
     %h3
       = _('Options')
+
+    .form-horizontal
+      .form-group
+        %label.col-md-2.control-label
+          = _('Auto Refresh other fields when modified')
+        .col-md-8
+          = check_box_tag('field_trigger_auto_refresh', '1',
+                          @edit[:field_trigger_auto_refresh],
+                          'data-miq_observe_checkbox' => {:url => url}.to_json)
+
     .form-horizontal
       - if @edit[:field_dynamic] == true
         = render :partial => 'dialog_field_form_dynamic_options'
-      - else 
-        = render :partial => 'dialog_field_form_non_dynamic_options' 
+      - else
+        = render :partial => 'dialog_field_form_non_dynamic_options'
 
   - if @edit[:field_typ] =~ /Drop|Radio/ && !@edit[:field_dynamic]
     = render :partial => 'field_values', :locals => {:entry => nil}
