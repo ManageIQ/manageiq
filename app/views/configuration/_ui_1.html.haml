@@ -52,7 +52,8 @@
             .col-md-8
               = select_tag("start_page",
                            options_for_select(session[:start_pages], @edit[:new][:display][:startpage]),
-                           :class    => "selectpicker")
+                           "data-live-search" => "true",
+                           :class             => "selectpicker")
 
             :javascript
               miqSelectPickerEvent("start_page", "#{url}")
