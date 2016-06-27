@@ -202,7 +202,7 @@ module Menu
           Menu::Item.new('my_tasks',      N_('Tasks'),         'tasks',        {:feature => 'tasks', :any => true},        '/miq_task/index?jobs_tab=tasks'),
           Menu::Item.new('ops',           N_('Configuration'), 'ops_explorer', {:feature => 'ops_explorer', :any => true}, '/ops/explorer'),
           Menu::Item.new('about',         N_('About'),         'about',        {:feature => 'about'},                      '/support/index?support_tab=about')
-        ])
+        ], :top_right)
       end
 
       def default_menu
