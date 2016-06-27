@@ -32,7 +32,7 @@ ManageIQ.angular.app.controller('keyPairCloudFormController', ['$http', '$scope'
     var keyPairEditButtonClicked = function(buttonName, serializeFields) {
         miqService.sparkleOn();
 
-        var url = '/auth_key_pair_cloud/key_pair_save/' + keyPairFormId + '?button=' + buttonName;
+        var url = '/auth_key_pair_cloud/create/' + keyPairFormId + '?button=' + buttonName;
         $scope.keyPairModel.ems_id = $scope.keyPairModel.ems.id;
         if(serializeFields) {
             miqService.miqAjaxButton(url, miqService.serializeModel($scope.keyPairModel));

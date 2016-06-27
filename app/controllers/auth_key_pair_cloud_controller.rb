@@ -92,7 +92,7 @@ class AuthKeyPairCloudController < ApplicationController
     )
   end
 
-  def key_pair_save
+  def create
     assert_privileges("auth_key_pair_cloud_new")
 
     kls = ManageIQ::Providers::CloudManager::AuthKeyPair
