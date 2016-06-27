@@ -44,6 +44,10 @@ class OrchestrationTemplateVnfd < OrchestrationTemplate
     [ManageIQ::Providers::Openstack::CloudManager]
   end
 
+  def self.stack_type
+    "Vnf"
+  end
+
   # return the parsing error message if not valid YAML; otherwise nil
   def validate_format
     YAML.parse(content) && nil if content

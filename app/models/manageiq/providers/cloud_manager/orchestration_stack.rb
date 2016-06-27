@@ -21,11 +21,6 @@ class ManageIQ::Providers::CloudManager::OrchestrationStack < ::OrchestrationSta
   end
 
   def self.orchestration_stack_class_factory(orchestration_manager, template)
-    case template
-    when OrchestrationTemplateVnfd
-      orchestration_manager.class::Vnf
-    else
-      orchestration_manager.class::OrchestrationStack
-    end
+    "#{orchestration_manager.class.name}::#{template.stack_type}".constantize
   end
 end

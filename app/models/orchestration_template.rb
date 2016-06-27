@@ -104,6 +104,12 @@ class OrchestrationTemplate < ApplicationRecord
 
   delegate :eligible_managers, :to => :class
 
+  def self.stack_type
+    "OrchestrationStack"
+  end
+
+  delegate :stack_type, :to => :class
+
   # return the validation error message; otherwise nil
   def validate_content(manager = nil)
     test_managers = manager.nil? ? eligible_managers : [manager]
