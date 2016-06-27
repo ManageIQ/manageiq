@@ -25,15 +25,15 @@ function load_c3_chart(data, chart_id, height) {
   var generate_args = chartData(data.miqChart, data, { bindto: "#" + chart_id, size: {height: height}})
 
   generate_args.data.onclick = function (data, _i) {
-    var seriesIndex = data.id - 1;
-    var pointIndex = data.x;
+    var seriesIndex = _.isObject(data.id) ? data.id - 1 : _.findIndex(generate_args.data.columns, {0 : data.name})
+    var pointIndex = _.isObject(data.x) ? data.x.getHours() : _.findIndex(generate_args.data.columns, {0 : data.name})
+    var value = data.value;
 
     var parts = chart_id.split('_'); //miq_chart_candu_2
     var chart_set   = parts[2];
     var chart_index = parts[3];
-    console.log('before miqBuildChartMenuEx');
-    miqBuildChartMenuEx(pointIndex, seriesIndex, null, 'CAT', data.name, chart_set, chart_index);
-    console.log('after miqBuildChartMenuEx');
+
+    miqBuildChartMenuEx(pointIndex, seriesIndex, value, data.id, data.name, chart_set, chart_index);
 
     // This is to allow the bootstrap pop-up to be manually fired from the chart's click event
     // and have it closed by clicking outside of the pop-up menu.
