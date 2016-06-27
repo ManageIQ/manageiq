@@ -1371,6 +1371,17 @@ hardwares:
 - computer_system_id
 - disk_size_minimum
 - memory_mb_minimum
+host_aggregate_hosts:
+- id
+- host_id
+- host_aggregate_id
+host_aggregates:
+- id
+- ems_id
+- name
+- ems_ref
+- type
+- metadata
 host_service_groups:
 - id
 - name

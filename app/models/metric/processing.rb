@@ -30,6 +30,7 @@ module Metric::Processing
     ContainerService,
     Host,
     AvailabilityZone,
+    HostAggregate,
     EmsCluster,
     ExtManagementSystem,
     MiqRegion,

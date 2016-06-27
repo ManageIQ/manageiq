@@ -9,6 +9,7 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
   require_nested :EventCatcher
   require_nested :EventParser
   require_nested :Flavor
+  require_nested :HostAggregate
   require_nested :MetricsCapture
   require_nested :MetricsCollectorWorker
   require_nested :OrchestrationServiceOptionConverter

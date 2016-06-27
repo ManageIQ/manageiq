@@ -26,6 +26,7 @@ module ManageIQ::Providers
     has_many :cloud_services,                :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_databases,               :foreign_key => :ems_id, :dependent => :destroy
     has_many :key_pairs,                     :class_name  => "AuthPrivateKey", :as => :resource, :dependent => :destroy
+    has_many :host_aggregates,               :foreign_key => :ems_id, :dependent => :destroy
 
     validates_presence_of :zone
 

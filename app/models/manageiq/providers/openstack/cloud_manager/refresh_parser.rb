@@ -56,6 +56,7 @@ module ManageIQ::Providers
       # The order of the below methods does matter, because there are inner dependencies of the data!
       get_flavors
       get_availability_zones
+      get_host_aggregates
       get_tenants
       get_quotas
       get_key_pairs
@@ -129,6 +130,11 @@ module ManageIQ::Providers
       compute_azs << nil # force the null availability zone for openstack
       process_collection(compute_azs, :availability_zones) { |az| parse_availability_zone(az, :compute) }
       process_collection(volume_azs, :availability_zones) { |az| parse_availability_zone(az, :volume) }
+    end
+
+    def get_host_aggregates
+      host_aggregates = safe_list { @connection.aggregates }
+      process_collection(host_aggregates, :host_aggregates) { |ha| parse_host_aggregate(ha) }
     end
 
     def get_tenants
@@ -240,6 +246,25 @@ module ManageIQ::Providers
           :name    => name
         }
       end
+      return uid, new_result
+    end
+
+    def parse_host_aggregate(ha)
+      uid = ha.id
+      infra_ems = @ems.provider.try(:infra_ems)
+      ems_hosts = infra_ems.try(:hosts)
+      hosts = ha.hosts.map do |fog_host|
+        ems_hosts.try(:find) { |h| h.hypervisor_hostname == fog_host.split('.').first }
+      end
+
+      new_result = {
+        :type     => "ManageIQ::Providers::Openstack::CloudManager::HostAggregate",
+        :ems_ref  => uid.to_s,
+        :name     => ha.name,
+        :metadata => ha.metadata,
+        :hosts    => hosts.compact
+      }
+
       return uid, new_result
     end
 

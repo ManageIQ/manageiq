@@ -20,6 +20,8 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
                                       :association_foreign_key => :authentication_id,
                                       :class_name              => "ManageIQ::Providers::CloudManager::AuthKeyPair"
 
+  has_many   :host_aggregates,        :through => :host
+
   default_value_for :cloud, true
 
   virtual_column :ipaddresses,   :type => :string_set, :uses => {:network_ports => :ipaddresses}
@@ -44,7 +46,7 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   end
 
   def perf_rollup_parents(interval_name = nil)
-    [availability_zone].compact unless interval_name == 'realtime'
+    [availability_zone, host_aggregates].compact.flatten unless interval_name == 'realtime'
   end
 
   #
