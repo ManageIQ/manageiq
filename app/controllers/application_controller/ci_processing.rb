@@ -651,6 +651,214 @@ module ApplicationController::CiProcessing
     }
   end
 
+  def associate_floating_ip_vms
+    assert_privileges("instance_associate_floating_ip")
+    recs = find_checked_items
+    recs = [params[:id].to_i] if recs.blank?
+    @record = find_by_id_filtered(VmCloud, recs.first)
+    if @record.supports_associate_floating_ip? && @record.ext_management_system.present?
+      if @explorer
+        associate_floating_ip
+        @refresh_partial = "vm_common/associate_floating_ip"
+      else
+        render :update do |page|
+          page << javascript_prologue
+          page.redirect_to :controller => 'vm',
+                           :action     => 'associate_floating_ip',
+                           :rec_id     => @record.id,
+                           :escape     => false
+        end
+      end
+    else
+      add_flash(_("Unable to associate %{floating_ip} with %{instance} \"%{name}\": %{details}") % {
+        :floating_ip => ui_lookup(:table => 'floating_ip'),
+        :instance    => ui_lookup(:table => 'vm_cloud'),
+        :name        => @record.name,
+        :details     => @record.unsupported_reason(:associate_floating_ip)}, :error)
+    end
+  end
+  alias instance_associate_floating_ip associate_floating_ip_vms
+
+  def associate_floating_ip
+    assert_privileges("instance_associate_floating_ip")
+    @record ||= find_by_id_filtered(VmCloud, params[:rec_id])
+    drop_breadcrumb(
+      :name => _("Associate Floating IP with Instance '%{name}'") % {:name => @record.name},
+      :url  => "/vm_cloud/associate_floating_ip"
+    ) unless @explorer
+    @sb[:explorer] = @explorer
+    @in_a_form = true
+    @associate_floating_ip = true
+    render :action => "show" unless @explorer
+  end
+
+  def associate_floating_ip_form_fields
+    assert_privileges("instance_associate_floating_ip")
+    @record = find_by_id_filtered(VmCloud, params[:id])
+    floating_ips = []
+    unless @record.cloud_tenant.nil?
+      floating_ips = @record.cloud_tenant.floating_ips
+    end
+    render :json => {
+      :floating_ips => floating_ips
+    }
+  end
+
+  def associate_floating_ip_vm
+    assert_privileges("instance_associate_floating_ip")
+    @record = find_by_id_filtered(VmCloud, params[:id])
+    case params[:button]
+    when "cancel"
+      add_flash(_("Association of %{floating_ip} with %{instance} \"%{name}\" was cancelled by the user") % {
+        :floating_ip => ui_lookup(:table => "floating_ip"),
+        :instance    => ui_lookup(:table => "vm_cloud"),
+        :name        => @record.name})
+      @record = @sb[:action] = nil
+    when "submit"
+      if @record.supports_associate_floating_ip?
+        floating_ip = params[:floating_ip]
+        begin
+          @record.associate_floating_ip(floating_ip)
+          add_flash(_("Associating %{floating_ip} %{address} with %{instance} \"%{name}\"") % {
+            :floating_ip => ui_lookup(:table => "floating_ip"),
+            :address     => floating_ip,
+            :instance    => ui_lookup(:table => 'vm_cloud'),
+            :name        => @record.name})
+        rescue => ex
+          add_flash(_("Unable to associate %{floating_ip} %{address} with %{instance} \"%{name}\": %{details}") % {
+            :floating_ip => ui_lookup(:table => "floating_ip"),
+            :address     => floating_ip,
+            :instance    => ui_lookup(:table => 'vm_cloud'),
+            :name        => @record.name,
+            :details     => get_error_message_from_fog(ex.to_s)}, :error)
+        end
+      else
+        add_flash(_("Unable to associate %{floating_ip} with %{instance} \"%{name}\": %{details}") % {
+          :floating_ip => ui_lookup(:table => "floating_ip"),
+          :instance    => ui_lookup(:table => 'vm_cloud'),
+          :name        => @record.name,
+          :details     => @record.unsupported_reason(:associate_floating_ip)}, :error)
+      end
+      params[:id] = @record.id.to_s # reset id in params for show
+      @record = nil
+      @sb[:action] = nil
+    end
+    if @sb[:explorer]
+      replace_right_cell
+    else
+      session[:flash_msgs] = @flash_array.dup
+      render :update do |page|
+        page << javascript_prologue
+        page.redirect_to previous_breadcrumb_url
+      end
+    end
+  end
+
+  def disassociate_floating_ip_vms
+    assert_privileges("instance_disassociate_floating_ip")
+    recs = find_checked_items
+    recs = [params[:id].to_i] if recs.blank?
+    @record = find_by_id_filtered(VmCloud, recs.first)
+    if @record.supports_disassociate_floating_ip? && @record.ext_management_system.present?
+      if @explorer
+        disassociate_floating_ip
+        @refresh_partial = "vm_common/disassociate_floating_ip"
+      else
+        render :update do |page|
+          page << javascript_prologue
+          page.redirect_to :controller => 'vm',
+                           :action     => 'disassociate_floating_ip',
+                           :rec_id     => @record.id,
+                           :escape     => false
+        end
+      end
+    else
+      add_flash(_("Unable to disassociate %{floating_ip} from %{instance} \"%{name}\": %{details}") % {
+        :floating_ip => ui_lookup(:table => 'floating_ip'),
+        :instance    => ui_lookup(:table => 'vm_cloud'),
+        :name        => @record.name,
+        :details     => @record.unsupported_reason(:disassociate_floating_ip)}, :error)
+    end
+  end
+  alias instance_disassociate_floating_ip disassociate_floating_ip_vms
+
+  def disassociate_floating_ip
+    assert_privileges("instance_disassociate_floating_ip")
+    @record ||= VmCloud.find_by_id(params[:rec_id])
+    drop_breadcrumb(
+      :name => _("Disssociate Floating IP from Instance '%{name}'") % {:name => @record.name},
+      :url  => "/vm_cloud/disassociate_floating_ip"
+    ) unless @explorer
+    @sb[:explorer] = @explorer
+    @in_a_form = true
+    @live_migrate = true
+    render :action => "show" unless @explorer
+  end
+
+  def disassociate_floating_ip_form_fields
+    assert_privileges("instance_disassociate_floating_ip")
+    @record = find_by_id_filtered(VmCloud, params[:id])
+    floating_ips = []
+    unless @record.ext_management_system.nil?
+      @record.floating_ips.each do |floating_ip|
+        floating_ips << floating_ip
+      end
+    end
+    render :json => {
+      :floating_ips => floating_ips
+    }
+  end
+
+  def disassociate_floating_ip_vm
+    assert_privileges("instance_disassociate_floating_ip")
+    @record = find_by_id_filtered(VmCloud, params[:id])
+    case params[:button]
+    when "cancel"
+      add_flash(_("Disassociation of %{floating_ip} from %{instance} \"%{name}\" was cancelled by the user") % {
+        :floating_ip => ui_lookup(:table => "floating_ip"),
+        :instance    => ui_lookup(:table => "vm_cloud"),
+        :name        => @record.name})
+      @record = @sb[:action] = nil
+    when "submit"
+      if @record.supports_disassociate_floating_ip?
+        floating_ip = params[:floating_ip]
+        begin
+          @record.disassociate_floating_ip(floating_ip)
+          add_flash(_("Disassociating %{floating_ip} %{address} from %{instance} \"%{name}\"") % {
+            :floating_ip => ui_lookup(:table => "floating_ip"),
+            :address     => floating_ip,
+            :instance    => ui_lookup(:table => 'vm_cloud'),
+            :name        => @record.name})
+        rescue => ex
+          add_flash(_("Unable to disassociate %{floating_ip} %{address} from %{instance} \"%{name}\": %{details}") % {
+            :floating_ip => ui_lookup(:table => "floating_ip"),
+            :address     => floating_ip,
+            :instance    => ui_lookup(:table => 'vm_cloud'),
+            :name        => @record.name,
+            :details     => get_error_message_from_fog(ex.to_s)}, :error)
+        end
+      else
+        add_flash(_("Unable to disassociate %{floating_ip} from %{instance} \"%{name}\": %{details}") % {
+          :floating_ip => ui_lookup(:table => "floating_ip"),
+          :instance    => ui_lookup(:table => 'vm_cloud'),
+          :name        => @record.name,
+          :details     => @record.unsupported_reason(:disassociate_floating_ip)}, :error)
+      end
+      params[:id] = @record.id.to_s # reset id in params for show
+      @record = nil
+      @sb[:action] = nil
+    end
+    if @sb[:explorer]
+      replace_right_cell
+    else
+      session[:flash_msgs] = @flash_array.dup
+      render :update do |page|
+        page << javascript_prologue
+        page.redirect_to previous_breadcrumb_url
+      end
+    end
+  end
+
   def vm_right_size
     assert_privileges(params[:pressed])
     # check to see if coming from show_list or drilled into vms from another CI
@@ -2529,6 +2737,8 @@ module ApplicationController::CiProcessing
     when "#{pfx}_resize"                    then resizevms
     when "#{pfx}_evacuate"                  then evacuatevms
     when "#{pfx}_live_migrate"              then livemigratevms
+    when "#{pfx}_associate_floating_ip"     then associate_floating_ip_vms
+    when "#{pfx}_disassociate_floating_ip"  then disassociate_floating_ip_vms
     when "#{pfx}_retire"                    then retirevms
     when "#{pfx}_retire_now"                then retirevms_now
     when "#{pfx}_right_size"                then vm_right_size
