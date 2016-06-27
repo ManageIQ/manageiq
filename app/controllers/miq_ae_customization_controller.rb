@@ -52,7 +52,7 @@ class MiqAeCustomizationController < ApplicationController
         import_file = dialog_import_service.store_for_import(params[:upload][:file].read)
         @import_file_upload_id = import_file.id
         @import = import_file.service_dialog_list
-        add_flash(_("Import file was uploaded successfully"), :success)
+        add_flash(_("Select Dialogs to import"), :info)
       rescue DialogImportValidator::ImportNonYamlError
         add_flash(_("Error: the file uploaded is not of the supported format"), :error)
       rescue DialogImportValidator::ParsedNonDialogYamlError
