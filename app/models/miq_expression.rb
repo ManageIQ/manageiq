@@ -1133,6 +1133,25 @@ class MiqExpression
     result
   end
 
+  def self._custom_details_for(model, options)
+    klass = model.safe_constantize
+    return [] unless klass < CustomAttributeMixin
+
+    custom_attributes_details = []
+
+    klass.custom_keys.each do |custom_key|
+      custom_detail_column = [model, CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX + custom_key].join("-")
+      custom_detail_name = custom_key
+      if options[:include_model]
+        model_name = Dictionary.gettext(model, :type => :model, :notfound => :titleize)
+        custom_detail_name = [model_name, custom_key].join(" : ")
+      end
+      custom_attributes_details.push([custom_detail_name, custom_detail_column])
+    end
+
+    custom_attributes_details
+  end
+
   def self._model_details(relats, opts)
     result = []
     relats[:reflections].each do|_assoc, ref|

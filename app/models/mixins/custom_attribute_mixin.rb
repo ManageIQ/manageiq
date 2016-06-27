@@ -1,6 +1,8 @@
 module CustomAttributeMixin
   extend ActiveSupport::Concern
 
+  CUSTOM_ATTRIBUTES_PREFIX = "virtual_custom_attribute_".freeze
+
   included do
     has_many   :custom_attributes,     :as => :resource, :dependent => :destroy
     has_many   :miq_custom_attributes, -> { where(:source => 'EVM') }, :as => :resource, :dependent => :destroy, :class_name => "CustomAttribute"
