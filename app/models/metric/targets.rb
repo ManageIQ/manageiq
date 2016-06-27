@@ -60,8 +60,22 @@ module Metric::Targets
     # Preload all of the objects we are going to be inspecting.
     includes = {:ext_management_systems => {:hosts => {:ems_cluster => :tags, :tags => {}}}}
     includes[:ext_management_systems][:hosts][:storages] = :tags unless options[:exclude_storages]
-    includes[:ext_management_systems][:hosts][:vms] = :ext_management_system unless options[:exclude_vms]
+    includes[:ext_management_systems][:hosts][:vms] = {} unless options[:exclude_vms]
+
     MiqPreloader.preload(zone, includes)
+
+    # populate ems (with tags / clusters)
+    zone.ext_management_systems.each do |ems|
+      ems.hosts.each do |host|
+        host.ems_cluster.association(:ext_management_system).target = ems if host.ems_cluster_id
+        unless options[:exclude_vms]
+          host.vms.each do |vm|
+            vm.association(:ext_management_system).target = ems if vm.ems_id
+            vm.association(:ems_cluster).target = host.ems_cluster if vm.ems_cluster_id
+          end
+        end
+      end
+    end
   end
 
   def self.capture_host_targets(zone)
