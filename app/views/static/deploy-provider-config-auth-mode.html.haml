@@ -1,17 +1,25 @@
-%div{"miq-wizard-substep" => "", "review-template" => "/static/deploy-provider-auth-mode-review.html", "step-id" => "config-auth-mode", "step-priority" => "0", "step-title" => "Authentication Type"}
-  .miq-form-heading Select authenticaton type
+%div{"miq-wizard-substep" => "", "review-template" => "/static/deploy-provider-auth-mode-review.html", "step-id" => "config-auth-mode", "step-priority" => "0", "step-title" => _("Authentication Type")}
+  .miq-form-heading
+    =_("Select authenticaton type")
   %form.form-horizontal
     %label.radio
-      %input{"ng-model" => "data.authentication.mode", :type => "radio", :value => "all"} Allow All
+      %input{"ng-model" => "data.authentication.mode", :type => "radio", :value => "all"}
+        =_("Allow All")
     %label.radio
-      %input{"ng-model" => "data.authentication.mode", :type => "radio", :value => "htPassword"} HTPassword
+      %input{"ng-model" => "data.authentication.mode", :type => "radio", :value => "htPassword"}
+        =_("HTPassword")
     %label.radio
-      %input{"ng-model" => "data.authentication.mode", :type => "radio", :value => "ldap"} LDAP
+      %input{"ng-model" => "data.authentication.mode", :type => "radio", :value => "ldap"}
+        =_("LDAP")
     %label.radio
-      %input{"ng-model" => "data.authentication.mode", :type => "radio", :value => "requestHeader"} Request Header
+      %input{"ng-model" => "data.authentication.mode", :type => "radio", :value => "requestHeader"}
+        =_("Request Header")
     %label.radio
-      %input{"ng-model" => "data.authentication.mode", :type => "radio", :value => "openId"} OpenID Connect
+      %input{"ng-model" => "data.authentication.mode", :type => "radio", :value => "openId"}
+        =_("OpenID Connect")
     %label.radio
-      %input{"ng-model" => "data.authentication.mode", :type => "radio", :value => "google"} Google
+      %input{"ng-model" => "data.authentication.mode", :type => "radio", :value => "google"}
+        =_("Google")
     %label.radio
-      %input{"ng-model" => "data.authentication.mode", :type => "radio", :value => "github"} GitHub
+      %input{"ng-model" => "data.authentication.mode", :type => "radio", :value => "github"}
+        =_("GitHub")

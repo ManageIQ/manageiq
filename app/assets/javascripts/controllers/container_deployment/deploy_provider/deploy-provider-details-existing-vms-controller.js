@@ -17,27 +17,27 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
       fields: [
         {
           id: 'name',
-          title: 'Name',
+          title: __('Name'),
           sortType: 'alpha'
         },
         {
           id: 'role',
-          title: 'Role',
+          title: __('Role'),
           sortType: 'alpha'
         },
         {
           id: 'cpus',
-          title: '# CPUS',
+          title: __('# CPUS'),
           sortType: 'numeric'
         },
         {
           id: 'memory',
-          title: 'Memory',
+          title: __('Memory'),
           sortType: 'numeric'
         },
         {
           id: 'diskSize',
-          title: 'Disk Size',
+          title: __('Disk Size'),
           sortType: 'numeric'
         }
       ],

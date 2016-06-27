@@ -20,12 +20,6 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
       // $scope.data.review_inventory = true;
       $scope.showWaitDialog = true;
       $timeout(function() {
-        //var url = '/api/container_deployments';
-        //$http.post(url, {"action" : "start", "resource" :  $scope.data}).success(function (response) {
-          //'use strict';
-          //$scope.data.playbookText = response.results[0].data.inventory;
-        //});
-        //$scope.data.editedPlaybookText = $scope.data.playbookText;
         $scope.data.inventoryText = "Text of the Inventory goes here";
         $scope.data.editedInventoryText = $scope.data.inventoryText;
         //$scope.onInventoryTextChange();

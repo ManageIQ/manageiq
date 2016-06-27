@@ -27,16 +27,16 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
         var provider = $scope.data.providers.find(function(provider) {
           return provider.id == $scope.data.existingProviderId;
         });
-        return 'Use existing VMs from an existing provider: ' + (provider ? provider.name : "None");
+        return __('Use existing VMs from an existing provider: ') + (provider ? provider.name : __("None"));
       }
       else if ($scope.data.provisionOn == 'newVms') {
         var provider = $scope.data.providers.find(function(provider) {
           return provider.id == $scope.data.newVmProviderId;
         });
-        return 'Use existing VMs from an existing provider: ' + (provider ? provider.name : "None");
+        return __('Use existing VMs from an existing provider: ') + (provider ? provider.name : __("None"));
       }
       else if ($scope.data.provisionOn == 'noProvider') {
-        return 'Specify a list of machines to deploy on (No existing provider';
+        return __('Specify a list of machines to deploy on (No existing provider)');
       }
     };
 
@@ -44,14 +44,14 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
       var selectedTemplate = $scope.data.nodeCreationTemplates.find(function(nextTemplate) {
         return nextTemplate.id == $scope.data.masterCreationTemplateId;
       });
-      return selectedTemplate ? selectedTemplate.name : "None";
+      return selectedTemplate ? selectedTemplate.name : __("None");
     };
 
     $scope.getNodeCreationTemplate = function () {
       var selectedTemplate = $scope.data.nodeCreationTemplates.find(function(nextTemplate) {
         return nextTemplate.id === $scope.data.masterCreationTemplateId;
       });
-      return selectedTemplate ? selectedTemplate.name : "None";
+      return selectedTemplate ? selectedTemplate.name : __("None");
     };
 
     $scope.getAuthenticationType = function () {
@@ -70,7 +70,7 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
       } else if ($scope.data.authentication.mode == 'github') {
         return "GitHub";
       } else {
-        return "None";
+        return __("None");
       }
     };
 
@@ -82,7 +82,7 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
         return "Integrated NFS Server";
       }
       else if ($scope.data.serverConfigType == 'none') {
-        return "None";
+        return __("None");
       }
     };
   }

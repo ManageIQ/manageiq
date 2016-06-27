@@ -64,11 +64,11 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
       actionsInclude: true,
       moreActions: [
         {
-          name: 'Remove Roles',
+          name: __('Remove Roles'),
           actionFn: $scope.removeRoles
         },
         {
-          name: 'Remove VM(s)',
+          name: __('Remove VM(s)'),
           title: 'Clear the selected items.',
           actionFn: removeItems
         }
@@ -86,12 +86,12 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
       fields: [
         {
           id: 'name',
-          title: 'Name',
+          title: __('Name'),
           sortType: 'alpha'
         },
         {
           id: 'role',
-          title: 'Role',
+          title: __('Role'),
           sortType: 'alpha'
         }
       ],

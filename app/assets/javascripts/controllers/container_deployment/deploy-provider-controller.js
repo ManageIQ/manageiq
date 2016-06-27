@@ -43,7 +43,7 @@ miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 
       $scope.deploymentDetailsGeneralComplete = false;
       $scope.deployComplete = false;
       $scope.deployInProgress = false;
-      $scope.nextButtonTitle = "Next >";
+      $scope.nextButtonTitle = __("Next >");
     };
 
     var create_auth_object = function () {
@@ -201,7 +201,7 @@ miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 
           $scope.deployComplete = false;
           $scope.deploySuccess = false;
           $scope.deployFailed = false;
-          $scope.deployFailureMessage = "An unknown error has occurred.";
+          $scope.deployFailureMessage = __("An unknown error has occurred.");
         }
       }, 5000);
     };
@@ -218,11 +218,11 @@ miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 
 
     $scope.$on("wizard:stepChanged", function(e, parameters) {
       if (parameters.step.stepId == 'review-summary') {
-        $scope.nextButtonTitle = "Deploy";
+        $scope.nextButtonTitle = __("Deploy");
       } else if (parameters.step.stepId == 'review-progress') {
-        $scope.nextButtonTitle = "Close";
+        $scope.nextButtonTitle = __("Close");
       } else {
-        $scope.nextButtonTitle = "Next >";
+        $scope.nextButtonTitle = __("Next >");
       }
     });
 

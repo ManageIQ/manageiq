@@ -15,7 +15,7 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
             name: provider.provider.name
           })
         });
-        if (typeof $scope.existingProviders !== 'undefined' && $scope.existingProviders.length > 0) {
+        if (angular.isDefined($scope.existingProviders) && $scope.existingProviders.length > 0) {
           $scope.data.existingProviderId = $scope.existingProviders[0].id;
           $scope.data.existingProvider = $scope.existingProviders[0];
         }

@@ -82,7 +82,7 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
 
     $scope.masterCountValid = function(count) {
       if (count !== 1 && count !== 3 && count !== 5) {
-        $scope.mastersWarning = "The number of Masters must be 1, 3, or 5";
+        $scope.mastersWarning = __("The number of Masters must be 1, 3, or 5");
         return false;
       } else {
         return true;
@@ -91,7 +91,7 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
 
     $scope.nodeCountValid = function(count) {
       if (count < 1) {
-        $scope.nodesWarning = "You must select at least one Node";
+        $scope.nodesWarning = __("You must select at least one Node");
         return false;
       } else {
         return true;
@@ -100,10 +100,10 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
 
     $scope.storageNodeCountValid = function(count) {
       if ($scope.data.serverConfigType == 'integratedNFS' &&  count != 1) {
-        $scope.storageNodeWarning = "You must select one Storage Node when using Integrated NFS storage";
+        $scope.storageNodeWarning = __("You must select one Storage Node when using Integrated NFS storage");
         return false;
       } else if (count > 1) {
-        $scope.storageNodeWarning = "You can only specify one Storage Node";
+        $scope.storageNodeWarning = __("You can only specify one Storage Node");
         return false;
       } else {
         return true;
@@ -112,7 +112,7 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
 
     $scope.dnsNodeCountValid = function(count) {
       if (count > 1) {
-        $scope.dnsNodeWarning = "You can specify at most one DNS Node";
+        $scope.dnsNodeWarning = __("You can specify at most one DNS Node");
         return false;
       } else {
         return true;
@@ -126,7 +126,7 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
         $scope.data.loadBalancerNodes.forEach(function (item) {
           if (!item.node && !item.master) {
             valid = false;
-            $scope.loadBalancerWarning = "Load balancers can only be assigned to Masters or Nodes";
+            $scope.loadBalancerWarning = __("Load balancers can only be assigned to Masters or Nodes");
           }
         });
       }
@@ -134,7 +134,7 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
         $scope.data.dnsNodes.forEach(function (item) {
           if (!item.node && !item.master) {
             valid = false;
-            $scope.dnsNodeWarning = "DNS can only be assigned to Masters or Nodes";
+            $scope.dnsNodeWarning = __("DNS can only be assigned to Masters or Nodes");
           }
         });
       }
@@ -142,7 +142,7 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
         $scope.data.etcdNodes.forEach(function (item) {
           if (!item.node && !item.master) {
             valid = false;
-            $scope.etcdNodeWarning = "Etcd can only be assigned to Masters or Nodes";
+            $scope.etcdNodeWarning = __("Etcd can only be assigned to Masters or Nodes");
           }
         });
       }
@@ -150,7 +150,7 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
         $scope.data.infrastructureNodes.forEach(function (item) {
           if (!item.node) {
             valid = false;
-            $scope.infrastructureWarning = "Infrastructure can only be assigned to Nodes";
+            $scope.infrastructureWarning = __("Infrastructure can only be assigned to Nodes");
           }
         });
       }
@@ -244,13 +244,13 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
       fields: [
         {
           id: 'name',
-          title: 'Name',
+          title: __('Name'),
           placeholder: 'Filter by Name...',
           filterType: 'text'
         },
         {
           id: 'role',
-          title: 'Role',
+          title: __('Role'),
           placeholder: 'Filter by Role...',
           filterType: 'select',
           filterValues: ['Unset', 'Master', 'Node', 'Storage', 'Load Balancer', 'DNS', 'Etcd', 'Infrastructure']

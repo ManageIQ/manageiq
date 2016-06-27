@@ -36,13 +36,13 @@ angular.module('miq.wizard').directive('miqWizard', function () {
       $scope.prevEnabled = false;
 
       if (!$scope.cancelTitle) {
-        $scope.cancelTitle = "Cancel";
+        $scope.cancelTitle = __("Cancel");
       }
       if (!$scope.backTitle) {
-        $scope.backTitle = "< Back";
+        $scope.backTitle = __("< Back");
       }
       if (!$scope.nextTitle) {
-        $scope.nextTitle = "Next >";
+        $scope.nextTitle = __("Next >");
       }
 
       if (!$scope.contentHeight) {
