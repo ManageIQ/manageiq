@@ -196,4 +196,10 @@ class MiqReport < ApplicationRecord
   def page_size
     rpt_options.try(:fetch_path, :pdf, :page_size) || "a4"
   end
+
+  def load_custom_attributes
+    klass = db.safe_constantize
+    return unless klass < CustomAttributeMixin
+    klass.load_custom_attributes_for(cols)
+  end
 end

@@ -188,6 +188,8 @@ module MiqReport::Generator
 
     includes = get_include_for_find(include)
 
+    load_custom_attributes
+
     time_profile.tz ||= tz if time_profile # Default time zone in profile to report time zone
     ext_options = {:tz => tz, :time_profile => time_profile}
     # TODO: these columns need to be converted to real SQL columns
