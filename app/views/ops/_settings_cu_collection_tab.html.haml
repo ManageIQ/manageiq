@@ -29,7 +29,7 @@
               %br/
               %b= _("Enable Collection by %s") % cluster_title
               %br/
-              %input#cl_toggle{:name => "cl_toggle", :onclick => "miqCheckCUAll(this,'#{session[:tree_name]}');", :type => "checkbox"}/
+              %input#cl_toggle{:name => "cl_toggle", :onclick => "miqCheckCUAll(this,'#{@cluster_tree.name}');", :type => "checkbox"}/
               = _("Check All")
               = render(:partial => 'shared/tree', :locals => {:tree => @cluster_tree, :name => @cluster_tree.name})
               %br/
@@ -52,7 +52,7 @@
               %br/
               %b= _("Enable Collection by Datastore")
               %br/
-              %input#ds_toggle{:name => "ds_toggle", :onclick => "miqCheckCUAll(this,'#{session[:ds_tree_name]}');", :type => "checkbox"}/
+              %input#ds_toggle{:name => "ds_toggle", :onclick => "miqCheckCUAll(this,'#{@datastore_tree.name}');", :type => "checkbox"}/
               = _("Check All")
               = render(:partial => 'shared/tree', :locals => {:tree => @datastore_tree, :name => @datastore_tree.name})
 

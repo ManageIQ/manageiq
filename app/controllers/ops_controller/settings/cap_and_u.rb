@@ -211,75 +211,81 @@ module OpsController::Settings::CapAndU
 
   def cu_collection_get_form_vars
     if params[:id]
-      nodetype = params[:id].split(':')
-      node_type = nodetype.length >= 2 ? nodetype[1].split('_') : nodetype[0].split('_')
+      nodetype = params[:id].split('_')
+      node_type = if params[:tree_name].equal?('cluster')
+                    nodetype.length >= 2 ? ["Host", nodetype[1]] : ["Cluster", nodetype[0].split('-')[1]]
+                  else
+                    ["Datastore", nodetype[0].split('-')[1]]
+                  end
     end
     @edit[:new][:all_clusters] = params[:all_clusters] == 'true' if params[:all_clusters]
     @edit[:new][:all_storages] = params[:all_storages] == 'true' if params[:all_storages]
-    if params[:tree_name] == "clhosts_tree"     # User checked/unchecked a cluster tree node
-      if params[:check_all]                         # to handle check/uncheck cluster all checkbox
-        @edit[:new][:clusters].each do |c|                                  # Check each clustered host
-          c[:capture] = params[:check_all] == "true" # if cluster checked/unchecked Set C&U flag for all hosts under it as well
-          @edit[:new][c[:name].to_sym].each do |h|
-            h[:capture] = params[:check_all] == "true" # Set C&U flag depending on if checkbox parm is present
-          end
-        end
-        @edit[:new][:non_cl_hosts].each do |h|                                  # Check each non clustered host
-          @edit[:new][:non_cluster_host_enabled][h[:id].to_s] = params[:check_all] == "true" # Set C&U flag depending on if checkbox parm is present
-        end
-      else
-        @edit[:new][:clusters].each do |c|                                  # Check each cluster
-          if node_type[0] == "Cluster" && node_type[1].to_s == c[:id].to_s
-            c[:capture] = params[:check] == "true" # if cluster checked/unchecked Set C&U flag for all hosts under it as well
-            @edit[:new][c[:name].to_sym].each do |h|
-              h[:capture] = params[:check] == "true" # Set C&U flag depending on if checkbox parm is present
-            end
-          elsif nodetype[0] == "NonCluster_0"
-            process_form_vars_for_non_clustered(node_type)
-          elsif node_type[0] == "Host"
-            @edit[:new][c[:name].to_sym].each do |h|
-              if node_type[1].to_i == h[:id].to_i
-                h[:capture] = params[:check] == "true" # Set C&U flag depending on if checkbox parm is present
-                c[:capture] = false if params[:check] == "0"
-              end
-            end
-          end
+    if params[:tree_name] == "datastore"
+      datastore_tree_settings(node_type)
+    else
+      cluster_tree_settings(node_type)
+    end
+  end
 
-          if node_type[0] == "Host"
-            flg = true
-            count = 0
-            @edit[:new][c[:name].to_sym].each do |h|
-              unless h[:capture]
-                count += 1          # checking if all hosts are unchecked then cluster capture will be false else unsure
-                flg = (count == @edit[:new][c[:name].to_sym].length) ? false : "unsure"
-              end
-              c[:capture] = flg
+  def cluster_tree_settings(node_type)
+    if params[:check_all]                         # to handle check/uncheck cluster all checkbox
+      @edit[:new][:clusters].each do |c|                                  # Check each clustered host
+        c[:capture] = params[:check_all] == "true" # if cluster checked/unchecked Set C&U flag for all hosts under it as well
+        @edit[:new][c[:name].to_sym].each do |h|
+          h[:capture] = params[:check_all] == "true" # Set C&U flag depending on if checkbox parm is present
+        end
+      end
+      @edit[:new][:non_cl_hosts].each do |h|                                  # Check each non clustered host
+        @edit[:new][:non_cluster_host_enabled][h[:id].to_s] = params[:check_all] == "true" # Set C&U flag depending on if checkbox parm is present
+      end
+    else
+      @edit[:new][:clusters].each do |c|                                  # Check each cluster
+        if node_type[0] == "Cluster" && node_type[1].to_s == c[:id].to_s
+          c[:capture] = params[:check] == "true" # if cluster checked/unchecked Set C&U flag for all hosts under it as well
+          @edit[:new][c[:name].to_sym].each do |h|
+            h[:capture] = params[:check] == "true" # Set C&U flag depending on if checkbox parm is present
+          end
+        elsif nodetype[0] == "NonCluster_0"
+          process_form_vars_for_non_clustered(node_type)
+        elsif node_type[0] == "Host"
+          @edit[:new][c[:name].to_sym].each do |h|
+            if node_type[1].to_i == h[:id].to_i
+              h[:capture] = params[:check] == "true" # Set C&U flag depending on if checkbox parm is present
+              c[:capture] = false if params[:check] == "0"
             end
           end
         end
-        # if there are no clusters, handle non-clustered hosts here
-        if @edit[:new][:clusters].blank?
-          @edit[:new][:non_cluster_host_enabled].each do |_h|
-            if nodetype[0] == "NonCluster_0"
-              process_form_vars_for_non_clustered(node_type)
+
+        if node_type[0] == "Host"
+          flg = true
+          count = 0
+          @edit[:new][c[:name].to_sym].each do |h|
+            unless h[:capture]
+              count += 1          # checking if all hosts are unchecked then cluster capture will be false else unsure
+              flg = (count == @edit[:new][c[:name].to_sym].length) ? false : "unsure"
             end
+            c[:capture] = flg
+          end
+        end
+      end
+      # if there are no clusters, handle non-clustered hosts here
+      if @edit[:new][:clusters].blank?
+        @edit[:new][:non_cluster_host_enabled].each do |_h|
+          if nodetype[0] == "NonCluster_0"
+            process_form_vars_for_non_clustered(node_type)
           end
         end
       end
     end
+  end
 
-    if params[:tree_name] == "cu_datastore_tree" # User checked/unchecked a storage tree node
-      if params[:check_all]          # to handle check/uncheck storage all checkbox
-        @edit[:new][:storages].each do |s|                                        # Check each storage
-          s[:capture] = params[:check_all] == "true" # Set C&U flag depending on if checkbox parm is present
-        end
-      else
-        @edit[:new][:storages].each do |s|                                  # Check each storage
-          if node_type[0] == "Datastore" && node_type[1].to_s == s[:id].to_s
-            s[:capture] = params[:check] == "true" # Set C&U flag depending on if checkbox parm is present
-          end
-        end
+  def datastore_tree_settings(node_type)
+    if params[:check_all]          # to handle check/uncheck storage all checkbox
+      @edit[:new][:storages].each do |s|                                        # Check each storage
+        s[:capture] = params[:check_all] == "true" # Set C&U flag depending on if checkbox parm is present
       end
+    else
+      @edit[:new][:storages].find{ |x| x[:id] == params[:id]}[:capture] = params[:check] == "true"
     end
   end
 
