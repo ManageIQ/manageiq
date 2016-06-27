@@ -305,10 +305,10 @@ describe MiqAeCustomizationController do
           allow(dialog_import_service).to receive(:store_for_import).with("the yaml data\n").and_return(import_file_upload)
         end
 
-        it "redirects to review_import with an import file upload id" do
+        it "redirects to review_import with a message to select a Dialog" do
           post :upload_import_file, :params => params, :xhr => true
           expect(controller.instance_variable_get(:@flash_array))
-            .to include(:message => "Import file was uploaded successfully", :level => :success)
+            .to include(:message => "Select Dialogs to import", :level => :info)
         end
 
         it "imports the dialogs" do
