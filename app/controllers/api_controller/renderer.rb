@@ -425,7 +425,7 @@ class ApiController
       target = is_subcollection ? :subcollection_actions : :collection_actions
       return [] unless cspec.key?(target)
       cspec[target].each.collect do |method, action_definitions|
-        next unless render_actions_for_method(cspec[:methods], method)
+        next unless render_actions_for_method(cspec[:verbs], method)
         typed_action_definitions = fetch_typed_subcollection_actions(method, is_subcollection) || action_definitions
         typed_action_definitions.each.collect do |action|
           if !action[:disabled] && api_user_role_allows?(action[:identifier])
@@ -439,7 +439,7 @@ class ApiController
       target = is_subcollection ? :subresource_actions : :resource_actions
       return [] unless cspec.key?(target)
       cspec[target].each.collect do |method, action_definitions|
-        next unless render_actions_for_method(cspec[:methods], method)
+        next unless render_actions_for_method(cspec[:verbs], method)
         typed_action_definitions = fetch_typed_subcollection_actions(method, is_subcollection) || action_definitions
         typed_action_definitions.each.collect do |action|
           if !action[:disabled] && api_user_role_allows?(action[:identifier]) && action_validated?(resource, action)
