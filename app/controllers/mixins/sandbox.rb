@@ -3,15 +3,19 @@ module Sandbox
   # Explorer shortcuts to the current tree and tree node
   #
 
+  def sandbox
+    @sb ||= {}
+  end
+
   # Return the current tree history array
   def x_tree_history
-    @sb[:history] ||= {}
-    @sb[:history][x_active_tree] ||= []
-    @sb[:history][x_active_tree]
+    sandbox[:history] ||= {}
+    sandbox[:history][x_active_tree] ||= []
+    sandbox[:history][x_active_tree]
   end
 
   def x_tree_init(name, type, leaf)
-    return if @sb.has_key_path?(:trees, name)
+    return if sandbox.has_key_path?(:trees, name)
 
     values = {
       :tree       => name,
@@ -21,12 +25,11 @@ module Sandbox
       :open_nodes => []
     }
 
-    @sb.store_path(:trees, name, values)
+    sandbox.store_path(:trees, name, values)
   end
 
   def x_active_tree
-    @sb ||= {}
-    @sb[:active_tree]
+    sandbox[:active_tree]
   end
 
   TREE_WHITELIST = %w(
@@ -148,33 +151,32 @@ module Sandbox
   ).each_with_object({}) { |value, acc| acc[value] = value.to_sym }.freeze
 
   def x_active_tree=(tree)
-    @sb ||= {}
-    @sb[:active_tree] = nil
+    sandbox[:active_tree] = nil
     return if tree.nil?
 
     raise ActionController::RoutingError, 'invalid tree' unless TREE_WHITELIST.key?(tree.to_s)
-    @sb[:active_tree] = TREE_WHITELIST[tree.to_s]
+    sandbox[:active_tree] = TREE_WHITELIST[tree.to_s]
   end
 
   def x_active_accord=(tree)
-    @sb[:active_accord] = nil
+    sandbox[:active_accord] = nil
 
     raise ActionController::RoutingError, 'invalid accordion' unless ACCORD_WHITELIST.key?(tree)
-    @sb[:active_accord] = ACCORD_WHITELIST[tree]
+    sandbox[:active_accord] = ACCORD_WHITELIST[tree]
   end
 
   def x_active_accord
-    @sb[:active_accord]
+    sandbox[:active_accord]
   end
 
   def x_tree(tree = nil)
     tree ||= x_active_tree
-    @sb.fetch_path(:trees, tree)
+    sandbox.fetch_path(:trees, tree)
   end
 
   def x_node(tree = nil)
     tree ||= x_active_tree
-    @sb.fetch_path(:trees, tree, :active_node)
+    sandbox.fetch_path(:trees, tree, :active_node)
   end
 
   def x_node=(node)
@@ -182,6 +184,6 @@ module Sandbox
   end
 
   def x_node_set(node, tree)
-    @sb.store_path(:trees, tree, :active_node, node)
+    sandbox.store_path(:trees, tree, :active_node, node)
   end
 end
