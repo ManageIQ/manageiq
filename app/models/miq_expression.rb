@@ -1568,13 +1568,15 @@ class MiqExpression
 
   # Is an expression hash a quick search?
   def self._quick_search?(e)
-    if e.kind_of?(Array)
-      e.each { |e_exp| return true if self._quick_search?(e_exp) }
-    elsif e.kind_of?(Hash)
+    case e
+    when Array
+      e.any? { |e_exp| _quick_search?(e_exp) }
+    when Hash
       return true if e["value"] == :user_input
-      e.each_value { |e_exp| return true if self._quick_search?(e_exp) }
+      e.values.any? { |e_exp| _quick_search?(e_exp) }
+    else
+      false
     end
-    false
   end
 
   private
