@@ -997,37 +997,36 @@ class MiqExpression
     ret
   end
 
-  def self.quote(val, typ, mode = :ruby)
+  def self.quote(val, typ)
     case typ.to_s
     when "string", "text", "boolean", nil
-      val = "" if val.nil? # treat nil value as empty string
       # escape any embedded single quotes, etc. - needs to be able to handle even values with trailing backslash
-      return mode == :sql ? ActiveRecord::Base.connection.quote(val) : val.to_s.inspect
+      val.to_s.inspect
     when "date"
       return "nil" if val.blank? # treat nil value as empty string
-      return mode == :sql ? ActiveRecord::Base.connection.quote(val) : "\'#{val}\'.to_date"
+      "\'#{val}\'.to_date"
     when "datetime"
       return "nil" if val.blank? # treat nil value as empty string
-      return mode == :sql ? ActiveRecord::Base.connection.quote(val.iso8601) : "\'#{val.iso8601}\'.to_time(:utc)"
+      "\'#{val.iso8601}\'.to_time(:utc)"
     when "integer", "decimal", "fixnum"
-      return val.to_s.to_i_with_method
+      val.to_s.to_i_with_method
     when "float"
-      return val.to_s.to_f_with_method
+      val.to_s.to_f_with_method
     when "numeric_set"
       val = val.split(",") if val.kind_of?(String)
-      v_arr = val.to_miq_a.collect do |v|
+      v_arr = val.to_miq_a.flat_map do |v|
         v = eval(v) rescue nil if v.kind_of?(String)
         v.kind_of?(Range) ? v.to_a : v
-      end.flatten.compact.uniq.sort
-      return "[#{v_arr.join(",")}]"
+      end.compact.uniq.sort
+      "[#{v_arr.join(",")}]"
     when "string_set"
       val = val.split(",") if val.kind_of?(String)
-      v_arr = val.to_miq_a.collect { |v| "'#{v.to_s.strip}'" }.flatten.uniq.sort
-      return "[#{v_arr.join(",")}]"
+      v_arr = val.to_miq_a.flat_map { |v| "'#{v.to_s.strip}'" }.uniq.sort
+      "[#{v_arr.join(",")}]"
     when "raw"
-      return val
+      val
     else
-      return val
+      val
     end
   end
 
