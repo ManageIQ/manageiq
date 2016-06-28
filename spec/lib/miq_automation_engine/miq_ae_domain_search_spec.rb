@@ -54,7 +54,7 @@ module MiqAeDomainSearchSpec
     it "#get_alternate_domain with vendor" do
       create_vendor_ae_instances
       search.ae_user = user
-      search.prepend_namespace = "AMAZON"
+      search.prepend_namespace = "/AMAZON/"
       ns = search.get_alternate_domain('miqaedb', '/TEST/PROV/ONE', 'TEST', 'PROV', 'ONE')
       expect(ns).to eq('AMAZON/AMAZON/TEST')
     end
@@ -62,7 +62,7 @@ module MiqAeDomainSearchSpec
     it "#get_alternate_domain_method with vendor" do
       create_vendor_ae_methods
       search.ae_user = user
-      search.prepend_namespace = "OPENSTACK"
+      search.prepend_namespace = "/OPENSTACK/"
       ns = search.get_alternate_domain_method('miqaedb', '/TEST/WILMA/OBELIX', 'TEST', 'WILMA', 'OBELIX')
       expect(ns).to eq('OPENSTACK/OPENSTACK/TEST')
     end

@@ -1,11 +1,15 @@
 module MiqAeEngine
   class MiqAeDomainSearch
-    attr_accessor :prepend_namespace
     def initialize
       @fqns_id_cache       = {}
       @fqns_id_class_cache = {}
       @partial_ns          = []
       @prepend_namespace   = nil
+    end
+
+    def prepend_namespace=(ns)
+      @prepend_namespace = ns.chomp('/').sub(/^\//, '')
+      $miq_ae_logger.info("Prepend namespace [#{@prepend_namespace} during domain search")
     end
 
     def ae_user=(obj)
