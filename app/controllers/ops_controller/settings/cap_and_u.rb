@@ -69,14 +69,14 @@ module OpsController::Settings::CapAndU
       page.replace_html(@refresh_div, :partial => @refresh_partial) if @refresh_div
       page << "$('#clusters_div').#{params[:all_clusters] == 'true' ? "hide" : "show"}()" if params[:all_clusters]
       page << "$('#storages_div').#{params[:all_storages] == 'true' ? "hide" : "show"}()" if params[:all_storages]
-      if params[:id] || params[:check_all] # || (params[:tree_name] == "cu_datastore_tree" && params[:check_all])
-        if (params[:id] && params[:id].split('_')[0] == "Datastore") || (params[:tree_name] == "cu_datastore_tree" && params[:check_all])
+      if params[:id] || params[:check_all]
+        if params[:tree_name] == "datastore"
           # change nodes to blue if they were changed during current edit session
           @changed_id_list   = []
           # change ids back to black if change during current session is reverted back
           @unchanged_id_list = []
           @edit[:new][:storages].each_with_index do |s, i|
-            datastore_id = "Datastore_#{s[:id]}"
+            datastore_id = "xx-#{s[:id]}"
             if @edit[:new][:storages][i][:capture] != @edit[:current][:storages][i][:capture]
               @changed_id_list.push(datastore_id)
             elsif datastore_id == params[:id] || params[:check_all]
@@ -98,45 +98,34 @@ module OpsController::Settings::CapAndU
           @unchanged_id_list = []
           @edit[:new][:clusters].each_with_index do |c, i|
             cname = c[:name]
-            cluster_id = "Cluster_#{c[:id]}"
+            cluster_id = "xx-#{c[:id]}"
             if @edit[:new][:clusters][i][:capture] != @edit[:current][:clusters][i][:capture]
-              @changed_id_list.push(cluster_id)
+              @changed_id_list.push([cluster_id, @edit[:new][:clusters][i][:capture]])
             else
               @unchanged_id_list.push(cluster_id)
             end
             @edit[:new][cname.to_sym].each_with_index do |host, j|
-              host_id = "#{cluster_id}:Host_#{host[:id]}"
+              host_id = "#{cluster_id}_#{host[:id]}"
               if @edit[:new][cname.to_sym][j][:capture] != @edit[:current][cname.to_sym][j][:capture]
-                @changed_id_list.push(host_id)
+                @changed_id_list.push([host_id, @edit[:new][cname.to_sym][j][:capture]])
               elsif cluster_id == params[:id] || host_id == params[:id] || params[:check_all]
                 @unchanged_id_list.push(host_id)
               end
             end
           end
-          unless @edit[:current][:non_cl_hosts].blank?   # if there are any hosts without clusters
-            if @edit[:new][:non_cluster_host_enabled] == @edit[:current][:non_cluster_host_enabled]
-              @unchanged_id_list.push('NonCluster_0')
-            else
-              @changed_id_list.push('NonCluster_0')
-            end
-            @edit[:new][:non_cluster_host_enabled].each do |h|
-              non_clustered_host_id = "NonCluster_0:Host_#{h[0]}"
-              if @edit[:current][:non_cluster_host_enabled][h[0]] != @edit[:new][:non_cluster_host_enabled][h[0]]
-                @changed_id_list.push(non_clustered_host_id)
-              elsif non_clustered_host_id == params[:id] || params[:check_all]
-                @unchanged_id_list.push(non_clustered_host_id)
-              end
-            end
-          end
           @changed_id_list.each do |item|
             page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}',
-                                                  '#{j_str(item)}',
+                                                  '#{j_str(item[0])}',
                                                   'cfme-blue-bold-node');"
+            if params.key?('check')
+              page << "miqDynatreeSelectNode('#{j_str(params[:tree_name])}', '#{j_str(item[0])}', '#{j_str(item[1])}')"
+            end
           end
           @unchanged_id_list.each do |item|
             page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}',
                                                   '#{j_str(item)}',
                                                   'dynatree-title');"
+
           end
         end
       end
@@ -212,7 +201,7 @@ module OpsController::Settings::CapAndU
   def cu_collection_get_form_vars
     if params[:id]
       nodetype = params[:id].split('_')
-      node_type = if params[:tree_name].equal?('cluster')
+      node_type = if params[:tree_name] == 'cluster'
                     nodetype.length >= 2 ? ["Host", nodetype[1]] : ["Cluster", nodetype[0].split('-')[1]]
                   else
                     ["Datastore", nodetype[0].split('-')[1]]
@@ -235,9 +224,6 @@ module OpsController::Settings::CapAndU
           h[:capture] = params[:check_all] == "true" # Set C&U flag depending on if checkbox parm is present
         end
       end
-      @edit[:new][:non_cl_hosts].each do |h|                                  # Check each non clustered host
-        @edit[:new][:non_cluster_host_enabled][h[:id].to_s] = params[:check_all] == "true" # Set C&U flag depending on if checkbox parm is present
-      end
     else
       @edit[:new][:clusters].each do |c|                                  # Check each cluster
         if node_type[0] == "Cluster" && node_type[1].to_s == c[:id].to_s
@@ -245,8 +231,6 @@ module OpsController::Settings::CapAndU
           @edit[:new][c[:name].to_sym].each do |h|
             h[:capture] = params[:check] == "true" # Set C&U flag depending on if checkbox parm is present
           end
-        elsif nodetype[0] == "NonCluster_0"
-          process_form_vars_for_non_clustered(node_type)
         elsif node_type[0] == "Host"
           @edit[:new][c[:name].to_sym].each do |h|
             if node_type[1].to_i == h[:id].to_i
@@ -285,7 +269,7 @@ module OpsController::Settings::CapAndU
         s[:capture] = params[:check_all] == "true" # Set C&U flag depending on if checkbox parm is present
       end
     else
-      @edit[:new][:storages].find{ |x| x[:id] == params[:id]}[:capture] = params[:check] == "true"
+      @edit[:new][:storages].find{ |x| x[:id].to_s == params[:id].split('-').last}[:capture] = params[:check] == "true"
     end
   end
 

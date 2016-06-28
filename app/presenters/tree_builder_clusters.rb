@@ -45,7 +45,7 @@ class TreeBuilderClusters < TreeBuilder
     hosts = parent[:children]
     #reject Clusters
     nodes = hosts.map do |node|
-      {:id => "#{parent[:id].to_s}_#{node.id.to_s}", :text => node.name, :tip => _("Host: %{name}") % {:name => node.name}, :image => 'host', :selected => true, :children => []}
+      {:id => "#{parent[:id].to_s}_#{node.id.to_s}", :text => node.name, :tip => _("Host: %{name}") % {:name => node.name}, :image => 'host', :select => parent[:select], :children => []}
     end
     count_only_or_objects(count_only, nodes)
   end

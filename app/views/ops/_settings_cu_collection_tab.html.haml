@@ -31,6 +31,8 @@
               %br/
               %input#cl_toggle{:name => "cl_toggle", :onclick => "miqCheckCUAll(this,'#{@cluster_tree.name}');", :type => "checkbox"}/
               = _("Check All")
+              :javascript
+                miqDynatreeResetState('#{j_str @cluster_tree.name}');
               = render(:partial => 'shared/tree', :locals => {:tree => @cluster_tree, :name => @cluster_tree.name})
               %br/
               .note= _("VM data will be collected for VMs under selected %s only. Data is collected for a %s and all of its %s when at least one %s is selected.") % [title_for_hosts, cluster_title, title_for_hosts, title_for_host]
@@ -54,5 +56,7 @@
               %br/
               %input#ds_toggle{:name => "ds_toggle", :onclick => "miqCheckCUAll(this,'#{@datastore_tree.name}');", :type => "checkbox"}/
               = _("Check All")
+              :javascript
+                miqDynatreeResetState('#{j_str @datastore_tree.name}');
               = render(:partial => 'shared/tree', :locals => {:tree => @datastore_tree, :name => @datastore_tree.name})
 
