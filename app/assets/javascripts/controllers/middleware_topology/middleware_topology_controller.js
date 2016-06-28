@@ -77,16 +77,21 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location, topologySer
             return self.dblclick(d);
         });
         added.append('image')
-             .each(function(d) {
+             .attr('xlink:href', function (d) {
                  var iconInfo = self.getIcon(d);
-                 if (iconInfo.type != 'image') {
-                     return;
-                 }
-                 $(this).attr('href', iconInfo.icon)
-                        .attr('y', self.getCircleDimensions(d).y)
-                        .attr('x', self.getCircleDimensions(d).x)
-                        .attr('height', self.getCircleDimensions(d).height)
-                        .attr('width', self.getCircleDimensions(d).width)
+                 return (iconInfo.type == 'glyph' ? "" : iconInfo.icon);
+             })
+             .attr('y', function (d) {
+                 return self.getCircleDimensions(d).y;
+             })
+             .attr('x', function (d) {
+                 return self.getCircleDimensions(d).x;
+             })
+             .attr('height', function (d) {
+                 return self.getCircleDimensions(d).height;
+             })
+             .attr('width', function(d) {
+                 return self.getCircleDimensions(d).width;
              });
 
         // attached labels
@@ -129,7 +134,7 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location, topologySer
                 'icon': '/assets/svg/' + d.item.icon + '.svg'
             }
         }
-        return icons[d.item.kind]
+        return icons[d.item.display_kind]
     };
 
     this.dblclick = function dblclick(d) {
