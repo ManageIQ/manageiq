@@ -72,7 +72,7 @@ module AzureBlobDisk
     ret = @storage_acct.get_blob_raw(@container, @blob, key, options)
 
     content_md5  = ret.headers[:content_md5].unpack("m0").first.unpack("H*").first
-    returned_md5 = Digest::MD5.hexdigest(ret.body)
+    returned_md5 = Rails.application.config.digest_class.hexdigest(ret.body)
     raise "Checksum error: #{range_str}, blob: #{@container}/#{@blob}" unless content_md5 == returned_md5
 
     ret.body

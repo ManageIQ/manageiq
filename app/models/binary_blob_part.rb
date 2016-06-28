@@ -19,7 +19,7 @@ class BinaryBlobPart < ApplicationRecord
     unless size.nil? || size == val.bytesize
       raise _("size of %{name} id [%{number}] is incorrect") % {:name => self.class.name, :number => id}
     end
-    unless md5.nil? || md5 == Digest::MD5.hexdigest(val)
+    unless md5.nil? || md5 == Rails.application.config.digest_class.hexdigest(val)
       raise _("md5 of %{name} id [%{number}] is incorrect") % {:name => self.class.name, :number => id}
     end
     val
@@ -28,7 +28,7 @@ class BinaryBlobPart < ApplicationRecord
   def data=(val)
     raise ArgumentError, "data cannot be set to nil" if val.nil?
     write_attribute(:data, val)
-    self.md5 = Digest::MD5.hexdigest(val)
+    self.md5 = Rails.application.config.digest_class.hexdigest(val)
     self.size = val.bytesize
     self
   end

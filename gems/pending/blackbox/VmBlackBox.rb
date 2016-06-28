@@ -25,9 +25,9 @@ module Manageiq
 
       # Get path to local data directory
       if ost.config && ost.config.dataDir
-        @localDataDir = File.join(ost.config.dataDir, Digest::MD5.hexdigest(@config_name))
+        @localDataDir = File.join(ost.config.dataDir, Rails.application.config.digest_class.hexdigest(@config_name))
       elsif $miqHostCfg && $miqHostCfg.dataDir
-        @localDataDir = File.join($miqHostCfg.dataDir, Digest::MD5.hexdigest(@config_name))
+        @localDataDir = File.join($miqHostCfg.dataDir, Rails.application.config.digest_class.hexdigest(@config_name))
       else
         @localDataDir = "/tmp"
       end

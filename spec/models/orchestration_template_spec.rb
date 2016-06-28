@@ -148,7 +148,7 @@ describe OrchestrationTemplate do
   describe ".find_with_content" do
     it "avoids content comparison but through content hash value comparison" do
       existing_template = FactoryGirl.create(:orchestration_template)
-      allow(Digest::MD5).to receive(:hexdigest).and_return(existing_template.md5)
+      allow(Rails.application.config.digest_class).to receive(:hexdigest).and_return(existing_template.md5)
 
       result = OrchestrationTemplate.find_with_content("#{existing_template.content} content changed")
       expect(result).to eq(existing_template)

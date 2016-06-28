@@ -159,7 +159,7 @@ class FleeceHives
           end
 
         #     if peData.icons.length > 0
-        #     ie = e1.add_element("image",{"file"=>fileName, "count"=>peData.icons.length.to_s, "md5"=>Digest::MD5.hexdigest(peData.icons[0])})
+        #     ie = e1.add_element("image",{"file"=>fileName, "count"=>peData.icons.length.to_s, "md5"=>Rails.application.config.digest_class.hexdigest(peData.icons[0])})
         #     addIconData(ie, peData, iconNode)
         #     end
         rescue Exception => e
