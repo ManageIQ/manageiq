@@ -34,26 +34,38 @@ describe MiqReport::Generator do
         expect(@miq_report_profile_all.table.data.size).to eq(2)
       end
 
-      it "calculates 'UP' trend" do
+      it "calculates positive slope which is 'UP' trend" do
         used_mem_up = [400, 500, 600, 700]
         create_rollup(@host1, @time_profile_all, used_mem_up)
         @miq_report_profile_all.generate_table(:userid => @user.userid)
+
+        slope = @miq_report_profile_all.table.data[0].data['slope']
+        expect(slope).to eq(100)
+
         trend_direction = @miq_report_profile_all.table.data[0].data['direction_of_trend']
         expect(trend_direction).to eq("Up")
       end
 
-      it "calculates 'Down' trend" do
-        used_mem_down = [600, 500, 400, 300]
+      it "calculates negative slope which is 'Down' trend" do
+        used_mem_down = [120, 90, 60, 30]
         create_rollup(@host1, @time_profile_all, used_mem_down)
         @miq_report_profile_all.generate_table(:userid => @user.userid)
+
+        slope = @miq_report_profile_all.table.data[0].data['slope']
+        expect(slope).to eq(-30)
+
         trend_direction = @miq_report_profile_all.table.data[0].data['direction_of_trend']
         expect(trend_direction).to eq("Down")
       end
 
-      it "calculates 'Flat' trend" do
+      it "calculates 0 slope which is 'Flat' trend" do
         used_mem_flat = [302, 300, 300, 302]
         create_rollup(@host1, @time_profile_all, used_mem_flat)
         @miq_report_profile_all.generate_table(:userid => @user.userid)
+
+        slope = @miq_report_profile_all.table.data[0].data['slope']
+        expect(slope).to eq(0)
+
         trend_direction = @miq_report_profile_all.table.data[0].data['direction_of_trend']
         expect(trend_direction).to eq("Flat")
       end
