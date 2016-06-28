@@ -19,7 +19,36 @@ require 'faraday'
 require 'faraday_middleware'
 
 class RestApi
+  VERSION = "2.3.0-pre".freeze
+  API_CMD = File.basename($PROGRAM_NAME)
+
   class Cli
+    METHODS = {
+      "get"    => "get",
+      "put"    => "put",
+      "post"   => "post",
+      "patch"  => "patch",
+      "edit"   => "post",
+      "create" => "post",
+      "update" => "post",
+      "delete" => "delete",
+    }.freeze
+
+    SEP       = ("_" * 60).freeze
+    PREFIX    = "/api".freeze
+    CTYPE     = "application/json".freeze
+    SCRIPTDIR = ENV['API_SCRIPTDIR'] ? ENV['API_SCRIPTDIR'] : ENV['HOME'] + "/bin".freeze
+
+    ACTIONS              = METHODS.keys
+    METHODS_NEEDING_DATA = %w(put post patch).freeze
+    SCRIPTDIR_ACTIONS    = %w(ls run).freeze
+    SUB_COMMANDS         = ACTIONS + %w(edit vi) + SCRIPTDIR_ACTIONS
+    API_PARAMETERS       = %w(expand attributes decorators limit offset
+                              sort_by sort_order sort_options
+                              filter by_tag provider_class requester_type).freeze
+
+    MULTI_PARAMS         = %w(filter).freeze
+
     def msg_exit(msg, exit_code = 1)
       puts msg
       exit exit_code
@@ -35,80 +64,47 @@ class RestApi
       data = ""
       puts "Enter data to send with request:"
       puts "Terminate with \"\" or \".\""
-      s = gets
-      loop do
-        break if s.nil?
+      while (s = gets)
         s = s.strip
         break if s == "." || s == ""
-        data << s.strip
-        s = gets
+        data << s
       end
       data
     end
 
     def run
-      api_cmd   = File.basename($PROGRAM_NAME)
-      api_ver   = "2.3.0-pre"
-      cmd_title = "ManageIQ REST API Access Script"
-
-      sep       = "_" * 60
-      prefix    = "/api"
-      ctype     = "application/json"
-      scriptdir = ENV['API_SCRIPTDIR'] ? ENV['API_SCRIPTDIR'] : ENV['HOME'] + "/bin"
       data      = ""
-
       path      = ""
       params    = {}
 
-      methods   = {
-        "get"    => "get",
-        "put"    => "put",
-        "post"   => "post",
-        "patch"  => "patch",
-        "edit"   => "post",
-        "create" => "post",
-        "update" => "post",
-        "delete" => "delete",
-      }
-
-      actions              = methods.keys
-      methods_needing_data = %w(put post patch)
-      scriptdir_actions    = %w(ls run)
-      sub_commands         = actions + %w(edit vi) + scriptdir_actions
-      api_parameters       = %w(expand attributes decorators limit offset
-                                sort_by sort_order sort_options
-                                filter by_tag provider_class requester_type)
-
-      multi_params         = %w(filter)
-
       opts = Trollop.options do
-        version "#{api_cmd} #{api_ver} - #{cmd_title}"
+        version "#{API_CMD} #{VERSION} - ManageIQ REST API Access Script"
         banner <<-EOS
-      #{api_cmd} #{api_ver} - #{cmd_title}
+      #{version}
 
-      Usage: #{api_cmd} [options] <action> [parameters] [resource]
+      Usage: #{API_CMD} [options] <action> [parameters] [resource]
 
                   action - is the action to use for the request, i.e. get, post, patch, edit ...
 
-                  [parameters] include: #{api_parameters.join(", ")}
+                  [parameters] include: #{API_PARAMETERS.join(", ")}
                                specify --help for additional help
 
                   [resource] - is the optional resource i.e. services
 
-             #{api_cmd} [options] vi|edit [script]
+             #{API_CMD} [options] vi|edit [script]
 
                   Edit optional api_* scripts. script names must be specified without the
                   api_ prefix or .rb suffix. Edits this script if not specified.
 
-             #{api_cmd} [options] run script [method]
+             #{API_CMD} [options] run script [method]
 
                   Run optional api_* scripts
 
-             #{api_cmd} [options] ls
+             #{API_CMD} [options] ls
 
                   List optional api_* scripts (without the api_ prefix)
 
-      #{api_cmd} options are:
+      #{API_CMD} options are:
       EOS
         opt :verbose,    "Verbose mode, show details of the communication",
             :default => false,                    :short => '-v'
@@ -129,8 +125,8 @@ class RestApi
         opt :inputfile,  "File to use as input to the POST/PUT/PATCH methods",
             :default => "",                       :short => '-i'
         opt :scriptdir,  "Directory where optional api_* scripts live",
-            :default => scriptdir,                :short => '-s'
-        stop_on sub_commands
+            :default => SCRIPTDIR,                :short => '-s'
+        stop_on SUB_COMMANDS
       end
 
       unless opts[:inputfile].empty?
@@ -146,7 +142,7 @@ class RestApi
       action = ARGV.shift
       Trollop.die "Must specify an action" if action.nil?
 
-      if scriptdir_actions.include?(action)
+      if SCRIPTDIR_ACTIONS.include?(action)
         msg_exit("Script directory #{opts[:scriptdir]} does not exist") unless File.directory?(opts[:scriptdir])
       end
 
@@ -184,21 +180,21 @@ class RestApi
         api_params = Trollop.options do
           norm_options  = {:default => ""}
           multi_options = {:default => "", :multi => true}
-          api_parameters.each { |p| opt p.intern, p, (multi_params.include?(p) ? multi_options.dup : norm_options.dup) }
+          API_PARAMETERS.each { |p| opt p.intern, p, (MULTI_PARAMS.include?(p) ? multi_options.dup : norm_options.dup) }
         end
-        api_parameters.each { |param| params[param] = api_params[param.intern] unless api_params[param.intern].empty? }
+        API_PARAMETERS.each { |param| params[param] = api_params[param.intern] unless api_params[param.intern].empty? }
       end
 
       if action != "run"
         resource = ARGV.shift
 
         resource = "/" + resource             if resource && resource[0] != "/"
-        resource = resource.gsub(prefix, '')  unless resource.nil?
+        resource = resource.gsub(PREFIX, '')  unless resource.nil?
 
-        method = methods[action]
+        method = METHODS[action]
         msg_exit("Unsupported action #{action} specified") if method.nil?
 
-        if methods_needing_data.include?(method)
+        if METHODS_NEEDING_DATA.include?(method)
           data = opts[:inputfile].empty? ? prompt_get_data : File.read(opts[:inputfile])
 
           msg_exit("Action #{action} requires data to be specified") if data.empty?
@@ -216,13 +212,13 @@ class RestApi
       if action == "run"
         puts "Loading #{api_script}"
         require api_script
-        as = ApiScript.new(ctype, conn)
+        as = ApiScript.new(CTYPE, conn)
         puts "Running #{api_script} with method #{method} ..."
         method.nil? ? as.run : as.run(method)
         exit
       end
 
-      path = prefix
+      path = PREFIX
       path << "/v#{opts[:apiversion]}" unless opts[:apiversion].empty?
 
       collection = ""
@@ -234,7 +230,7 @@ class RestApi
       end
 
       if opts[:verbose]
-        puts sep
+        puts SEP
         puts "Connection Endpoint: #{opts[:url]}"
         puts "Action:              #{action}"
         puts "HTTP Method:         #{method}"
@@ -250,23 +246,23 @@ class RestApi
       begin
         response = conn.send(method) do |req|
           req.url path
-          req.headers[:content_type]  = ctype
-          req.headers[:accept]        = ctype
+          req.headers[:content_type]  = CTYPE
+          req.headers[:accept]        = CTYPE
           req.headers['X-MIQ-Group']  = opts[:group] unless opts[:group].empty?
           req.headers['X-Auth-Token'] = opts[:token] unless opts[:token].empty?
           req.params.merge!(params)
-          req.body = data if methods_needing_data.include?(method)
+          req.body = data if METHODS_NEEDING_DATA.include?(method)
         end
       rescue => e
         msg_exit("\nFailed to connect to #{opts[:url]} - #{e}")
       end
 
       if opts[:verbose]
-        puts sep
+        puts SEP
         puts "Response Headers:"
         puts response.headers
 
-        puts sep
+        puts SEP
         puts "Response Body:"
       end
 
