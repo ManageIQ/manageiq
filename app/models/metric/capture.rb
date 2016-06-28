@@ -36,7 +36,8 @@ module Metric::Capture
 
     targets_by_rollup_parent = calc_targets_by_rollup_parent(targets)
     tasks_by_rollup_parent   = calc_tasks_by_rollup_parent(targets_by_rollup_parent)
-    queue_captures(zone, targets, targets_by_rollup_parent, tasks_by_rollup_parent)
+    target_options = calc_target_options(zone, targets, targets_by_rollup_parent, tasks_by_rollup_parent)
+    queue_captures(targets, target_options)
 
     # Purge tasks older than 4 hours
     MiqTask.delete_older(4.hours.ago.utc, "name LIKE 'Performance rollup for %'")
@@ -66,6 +67,10 @@ module Metric::Capture
     item[:zone] = zone.name if zone.kind_of?(Zone)
 
     MiqQueue.put(item)
+  end
+
+  def self.perf_capture_now?(target)
+    target.last_perf_capture_on.nil? || (target.last_perf_capture_on < capture_threshold(target))
   end
 
   private
@@ -105,7 +110,7 @@ module Metric::Capture
   def self.calc_targets_by_rollup_parent(targets)
     # Collect realtime targets and group them by their rollup parent, e.g. {"EmsCluster:4"=>[Host:4], "EmsCluster:5"=>[Host:1, Host:2]}
     targets_by_rollup_parent = targets.inject({}) do |h, target|
-      next(h) unless target.kind_of?(Host) && target.perf_capture_now?
+      next(h) unless target.kind_of?(Host) && perf_capture_now?(target)
 
       interval_name = perf_target_to_interval_name(target)
       next unless interval_name == "realtime"
@@ -154,10 +159,8 @@ module Metric::Capture
     tasks_by_rollup_parent
   end
 
-  def self.queue_captures(zone, targets, targets_by_rollup_parent, tasks_by_rollup_parent)
-    # Queue the captures for each target
-    use_historical = historical_days != 0
-    targets.each do |target|
+  def self.calc_target_options(zone, targets, targets_by_rollup_parent, tasks_by_rollup_parent)
+    targets.each_with_object({}) do |target, all_options|
       interval_name = perf_target_to_interval_name(target)
 
       options = {:zone => zone}
@@ -172,7 +175,28 @@ module Metric::Capture
           end
         end
       end
-      target.perf_capture_queue(interval_name, options)
+      all_options[target] = options
+    end
+  end
+
+  def self.queue_captures(targets, target_options)
+    # Queue the captures for each target
+    use_historical = historical_days != 0
+
+    targets.each do |target|
+      interval_name = perf_target_to_interval_name(target)
+
+      options = target_options[target]
+
+      if options[:force] || perf_capture_now?(target)
+        target.perf_capture_queue(interval_name, options)
+      else
+        _log.debug do
+          log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
+          "Skipping capture of #{log_target} -" +
+            "Performance last captured on [#{target.last_perf_capture_on}] is within threshold"
+        end
+      end
 
       if !target.kind_of?(Storage) && use_historical && target.last_perf_capture_on.nil?
         target.perf_capture_queue('historical')
