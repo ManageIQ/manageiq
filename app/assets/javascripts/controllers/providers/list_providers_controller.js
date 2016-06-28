@@ -116,7 +116,14 @@
   * @param $http provider for gets and posts.
   * @param MiQNotificationService service for accessing alerts messages.
   */
-  var ListProvidersController = function(MiQDataTableService, $state, $http, MiQNotificationService, MiQToolbarSettingsService, MiQProvidersSettingsService, $scope) {
+  var ListProvidersController = function(
+    MiQDataTableService,
+    $state, $http, MiQNotificationService,
+    MiQToolbarSettingsService,
+    MiQProvidersSettingsService,
+    $scope,
+    MiQEndpointsService
+  ) {
     this.$scope = $scope;
     this.MiQToolbarSettingsService = MiQToolbarSettingsService;
     this.MiQNotificationService = MiQNotificationService;
@@ -124,6 +131,10 @@
     this.$state = $state;
     this.$http = $http;
     this.MiQProvidersSettingsService = MiQProvidersSettingsService;
+    this.MiQEndpointsService = MiQEndpointsService;
+
+    this.initEndpoints();
+
     this.isList = true;
     this.data = [];
     this.columnsToShow = [];
@@ -202,7 +213,7 @@
             __('Remove of providers with IDs ') + responseData.removedIds.join(', ') + __(' was successful'), '', loadingItem
           )
         );
-        this.data = this.MiQDataTableService.dataTableService.rows;
+        this.data = this.MiQDataTableService.rows;
       }.bind(this));
   }
 
@@ -282,6 +293,15 @@
     }.bind(this));
   };
 
+  ListProvidersController.prototype.initEndpoints = function() {
+    var urlPrefix = '/' + location.pathname.split('/')[1];
+    if (urlPrefix) {
+      this.MiQEndpointsService.rootPoint = urlPrefix;
+    }
+    this.MiQEndpointsService.endpoints.listDataTable = '/list_providers';
+    this.MiQEndpointsService.endpoints.deleteItemDataTable = '/delete_provider';
+  }
+
   /**
   * Method for assigning data which are recieved from server.
   * @param rowsCols object with rows and columns from server.
@@ -292,7 +312,8 @@
   };
 
   ListProvidersController.$inject = ['MiQDataTableService', '$state', '$http',
-  'MiQNotificationService', 'MiQToolbarSettingsService', 'MiQProvidersSettingsService', '$scope'];
+  'MiQNotificationService', 'MiQToolbarSettingsService',
+  'MiQProvidersSettingsService', '$scope', 'MiQEndpointsService'];
   miqHttpInject(angular.module('miq.provider'))
   .controller('miqListProvidersController', ListProvidersController);
 })();

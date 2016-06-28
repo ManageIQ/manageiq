@@ -40,14 +40,24 @@
   * @param MiQNotificationService notification service.
   * @param $timeout service for setTimeout over angular.
   */
-  var NewProviderController = function(MiQFormValidatorService, MiQNotificationService, $timeout, $state, MiQNewProviderStateService, MiQDataAccessService, MiQProvidersSettingsService) {
+  var NewProviderController = function(
+    MiQFormValidatorService,
+    MiQNotificationService,
+    $timeout,
+    $state,
+    MiQNewProviderStateService,
+    MiQProvidersSettingsService,
+    MiQEndpointsService
+  ) {
     this.$state = $state;
-    this.MiQDataAccessService = MiQDataAccessService;
     this.MiQFormValidatorService = MiQFormValidatorService;
     this.MiQNotificationService = MiQNotificationService;
     this.MiQProvidersSettingsService = MiQProvidersSettingsService;
     this.$timeout = $timeout;
     this.MiQNewProviderStateService = MiQNewProviderStateService;
+    this.MiQEndpointsService = MiQEndpointsService;
+
+    this.initEndpoints();
 
     this.formActions = defaultActions.bind(this)();
     this.credentialsTabs = setCredentialsTab.bind(this)();
@@ -178,7 +188,7 @@
         .chain(oneType.templates)
         .zipObject(oneType.templates)
         .mapValues(function (item) {
-          return '/static' + this.MiQDataAccessService.getUrlPrefix() + '/new_provider/' + item + '.html';
+          return '/static' + this.MiQEndpointsService.rootPoint + '/new_provider/' + item + '.html';
         }.bind(this))
         .value();
     }.bind(this));
@@ -201,9 +211,18 @@
       }.bind(this))
   };
 
+  NewProviderController.prototype.initEndpoints = function() {
+    var urlPrefix = '/' + location.pathname.split('/')[1];
+    if (urlPrefix) {
+      this.MiQEndpointsService.rootPoint = urlPrefix;  
+    }
+    this.MiQEndpointsService.endpoints.validateItem = '/validate_provider';
+    this.MiQEndpointsService.endpoints.createItem = '/new_provider';
+  }
+
   NewProviderController.$inject = ['MiQFormValidatorService', 'MiQNotificationService',
   '$timeout', '$state', 'MiQNewProviderStateService',
-  'MiQDataAccessService', 'MiQProvidersSettingsService'];
+  'MiQProvidersSettingsService', 'MiQEndpointsService'];
   miqHttpInject(angular.module('miq.provider'))
   .controller('miqNewProviderController', NewProviderController);
 })()

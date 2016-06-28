@@ -1,21 +1,9 @@
-miqHttpInject(angular.module('miq.provider', ['miQStaticAssets', 'ui.bootstrap', 'ui.router', 'patternfly.select', 'ui.bootstrap.tabs', 'patternfly.views', 'ngAnimate']))
-.config(function(MiQDataAccessServiceProvider, MiQFormValidatorServiceProvider, MiQDataTableServiceProvider) {
-
-  var prefixLocation = location.pathname.split('/')[1];
-  MiQDataAccessServiceProvider.setUrlPrefix('/' + prefixLocation);
-  MiQDataTableServiceProvider.endpoints = {
-    list: '/list_providers',
-    deleteItems: '/delete_provider'
-  };
-  MiQFormValidatorServiceProvider.endpoints = {
-    validate: '/validate_provider',
-    create: '/new_provider'
-  }
-})
-.config(function($stateProvider, $locationProvider, $urlRouterProvider, MiQDataAccessServiceProvider, MiQNewProviderStateServiceProvider) {
+miqHttpInject(angular.module('miq.provider', ['miqStaticAssets', 'ui.bootstrap', 'ui.router', 'patternfly.select', 'ui.bootstrap.tabs', 'patternfly.views', 'ngAnimate']))
+.config(function($stateProvider, $locationProvider, $urlRouterProvider, MiQNewProviderStateServiceProvider) {
   MiQNewProviderStateServiceProvider.$stateProvider = $stateProvider;
+  var urlPrefix = '/' + location.pathname.split('/')[1];
   $stateProvider.state('list_providers', {
-    url: MiQDataAccessServiceProvider.urlPrefix + '/show_list',
+    url: urlPrefix + '/show_list',
     views: {
       'toolbar': {
         templateUrl: '/static/providers/toolbar.html'
@@ -41,7 +29,7 @@ miqHttpInject(angular.module('miq.provider', ['miQStaticAssets', 'ui.bootstrap',
     hasTree: true
   })
   .state('new_provider', {
-    url: MiQDataAccessServiceProvider.urlPrefix + '/new',
+    url: urlPrefix + '/new',
     views: {
       'content': {
         templateUrl: '/static/providers/new_provider/new.html',
@@ -54,14 +42,14 @@ miqHttpInject(angular.module('miq.provider', ['miQStaticAssets', 'ui.bootstrap',
     enabled: true,
     requireBase: false
   });
-  $urlRouterProvider.otherwise(MiQDataAccessServiceProvider.urlPrefix + '/show_list/list');
+  $urlRouterProvider.otherwise(urlPrefix + '/show_list/list');
   $urlRouterProvider.otherwise(function ($injector, $location) {
     if ($location.hash().length != 0) {
       var rootUrl = $location.path().substring(0, $location.path().lastIndexOf('/'));
       return rootUrl +
         ($location.hash().indexOf('/') !== 0 ? '/' + $location.hash() : $location.hash());
     } else {
-      return MiQDataAccessServiceProvider.urlPrefix + '/show_list/list';
+      return urlPrefix + '/show_list/list';
     }
   });
 });
