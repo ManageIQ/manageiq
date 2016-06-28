@@ -38,36 +38,21 @@ describe MiqReport::Generator do
         used_mem_up = [400, 500, 600, 700]
         create_rollup(@host1, @time_profile_all, used_mem_up)
         @miq_report_profile_all.generate_table(:userid => @user.userid)
-
-        slope = @miq_report_profile_all.table.data[0].data['slope']
-        expect(slope).to eq(100)
-
-        trend_direction = @miq_report_profile_all.table.data[0].data['direction_of_trend']
-        expect(trend_direction).to eq("Up")
+        expect(@miq_report_profile_all.table.data[0].data).to include("slope" => 100, "direction_of_trend" => "Up")
       end
 
       it "calculates negative slope which is 'Down' trend" do
         used_mem_down = [120, 90, 60, 30]
         create_rollup(@host1, @time_profile_all, used_mem_down)
         @miq_report_profile_all.generate_table(:userid => @user.userid)
-
-        slope = @miq_report_profile_all.table.data[0].data['slope']
-        expect(slope).to eq(-30)
-
-        trend_direction = @miq_report_profile_all.table.data[0].data['direction_of_trend']
-        expect(trend_direction).to eq("Down")
+        expect(@miq_report_profile_all.table.data[0].data).to include("slope" => -30, "direction_of_trend" => "Down")
       end
 
       it "calculates 0 slope which is 'Flat' trend" do
         used_mem_flat = [302, 300, 300, 302]
         create_rollup(@host1, @time_profile_all, used_mem_flat)
         @miq_report_profile_all.generate_table(:userid => @user.userid)
-
-        slope = @miq_report_profile_all.table.data[0].data['slope']
-        expect(slope).to eq(0)
-
-        trend_direction = @miq_report_profile_all.table.data[0].data['direction_of_trend']
-        expect(trend_direction).to eq("Flat")
+        expect(@miq_report_profile_all.table.data[0].data).to include("slope" => 0, "direction_of_trend" => "Flat")
       end
 
       it "calculates max and min trend values" do
@@ -76,8 +61,8 @@ describe MiqReport::Generator do
         @miq_report_profile_all.generate_table(:userid => @user.userid)
         report_min = @miq_report_profile_all.table.data[0].data['min_trend_value']
         report_max = @miq_report_profile_all.table.data[0].data['max_trend_value']
-        expect(report_min).to eq(used_mem_up.min)
-        expect(report_max).to eq(used_mem_up.max)
+        expect(@miq_report_profile_all.table.data[0].data).to include("min_trend_value" => used_mem_up.min,
+                                                                      "max_trend_value" => used_mem_up.max)
       end
     end
 
