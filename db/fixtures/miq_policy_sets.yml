@@ -105,7 +105,24 @@
           description: Initiate SmartState Analysis for Container Image
           action_type: default
           options: {}
-      Condition: []
+      Condition:
+        - name: "Do not scan image-inspector's image"
+          description: "Don't scan image-inspector's image"
+          modifier: deny
+          expression: !ruby/object:MiqExpression
+            exp:
+              ENDS WITH:
+                field: ContainerImage-name
+                value: "/image-inspector"
+            context_type:
+          towhat: ContainerImage
+          file_mtime:
+          guid: e744245a-3d08-11e6-8d39-02422087d789
+          filename:
+          applies_to_exp:
+          miq_policy_id:
+          notes:
+          read_only: true
     - name: schedule compliance after smart state analysis
       description: Schedule compliance after smart state analysis
       expression:
