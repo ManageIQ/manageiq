@@ -293,7 +293,8 @@ module Mixins
                        :default_userid            => @ems.authentication_userid ? @ems.authentication_userid : "",
                        :service_account           => service_account ? service_account : "",
                        :bearer_token_exists       => @ems.authentication_token(:bearer).nil? ? false : true,
-                       :ems_controller            => controller_name
+                       :ems_controller            => controller_name,
+                       :default_auth_status       => default_auth_status
       } if controller_name == "ems_container"
     end
 
