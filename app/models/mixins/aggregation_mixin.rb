@@ -33,8 +33,13 @@ module AggregationMixin
   def aggregate_cpu_total_cores(targets = nil)
     aggregate_hardware(:hosts, :cpu_total_cores, targets)
   end
-  alias_method :aggregate_logical_cpus, :aggregate_cpu_total_cores
-  Vmdb::Deprecation.deprecate_methods(self, :aggregate_logical_cpus => :aggregate_cpu_total_cores)
+  #alias_method :aggregate_logical_cpus, :aggregate_cpu_total_cores
+  #Vmdb::Deprecation.deprecate_methods(self, :aggregate_logical_cpus => :aggregate_cpu_total_cores)
+
+  def aggregate_logical_cpus
+    puts caller
+    raise "find out who is calling aggregate_logical_cpus"
+  end
 
   def aggregate_physical_cpus(targets = nil)
     aggregate_hardware(:hosts, :cpu_sockets, targets)
