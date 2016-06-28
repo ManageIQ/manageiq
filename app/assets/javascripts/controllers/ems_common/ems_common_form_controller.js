@@ -33,9 +33,6 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       metrics_verify: '',
       ssh_keypair_userid: '',
       ssh_keypair_password: '',
-      bearer_userid: '',
-      bearer_password: '',
-      bearer_verify: '',
       service_account: '',
       emstype_vm: false,
       ems_common: true,
@@ -156,8 +153,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
           $scope.emsCommonModel.ssh_keypair_password = miqService.storedPasswordPlaceholder;
         }
         if ($scope.emsCommonModel.bearer_token_exists) {
-          $scope.emsCommonModel.bearer_userid = "_";
-          $scope.emsCommonModel.bearer_password = $scope.emsCommonModel.bearer_verify = miqService.storedPasswordPlaceholder;
+          $scope.emsCommonModel.default_userid = "_";
+          $scope.emsCommonModel.default_password = $scope.emsCommonModel.default_verify = miqService.storedPasswordPlaceholder;
         }
 
         $scope.afterGet  = true;
@@ -216,8 +213,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
     } else if(($scope.currentTab == "default" && $scope.emsCommonModel.ems_controller == "ems_container") &&
       ($scope.emsCommonModel.emstype) &&
       ($scope.emsCommonModel.default_hostname != '' && $scope.emsCommonModel.default_api_port) &&
-      ($scope.emsCommonModel.bearer_password != '' && $scope.angularForm.bearer_password.$valid) &&
-      ($scope.emsCommonModel.bearer_verify != '' && $scope.angularForm.bearer_verify.$valid)) {
+      ($scope.emsCommonModel.default_password != '' && $scope.angularForm.default_password.$valid) &&
+      ($scope.emsCommonModel.default_verify != '' && $scope.angularForm.default_verify.$valid)) {
       return true;
     } else if(($scope.currentTab == "hawkular" && $scope.emsCommonModel.ems_controller == "ems_container") &&
       ($scope.emsCommonModel.emstype) &&
@@ -403,19 +400,6 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       $scope.postValidationModel['ssh_keypair'] = {
         ssh_keypair_userid:        $scope.emsCommonModel.ssh_keypair_userid,
         ssh_keypair_password:      ssh_keypair_password,
-      }
-    } else if (prefix === "bearer") {
-      if ($scope.newRecord) {
-        var bearer_password = $scope.emsCommonModel.bearer_password;
-        var bearer_verify = $scope.emsCommonModel.bearer_verify;
-      } else {
-        var bearer_password = $scope.emsCommonModel.bearer_password === "" ? "" : miqService.storedPasswordPlaceholder;
-        var bearer_verify = $scope.emsCommonModel.bearer_verify === "" ? "" : miqService.storedPasswordPlaceholder;
-      }
-      $scope.postValidationModel['bearer'] = {
-        bearer_userid:             $scope.emsCommonModel.bearer_userid,
-        bearer_password:           bearer_password,
-        bearer_verify:             bearer_verify,
       }
     } else if (prefix === "service_account") {
       $scope.postValidationModel['service_account'] = {
