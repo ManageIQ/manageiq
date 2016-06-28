@@ -4,8 +4,6 @@ require 'enumerator'
 require 'VMwareWebService/MiqVimClientBase'
 require 'VMwareWebService/MiqVimDump'
 require 'VMwareWebService/VimPropMaps'
-require 'VMwareWebService/PbmPropMaps'
-require 'VMwareWebService/PbmService'
 
 class MiqVimInventory < MiqVimClientBase
   attr_reader :cacheLock, :configLock
@@ -67,15 +65,6 @@ class MiqVimInventory < MiqVimClientBase
         deleteProperty(:VirtualMachine, "config.hardware.numCoresPerSocket")
       end
       @propMap = @propMap.merge(PropMap4)
-    end
-
-    if @apiVersion >= '5.5'
-      begin
-        @pbm = PbmService.new(server, username, password)
-        @pbmPropMap = PbmPropMaps::FullPropMap
-      rescue
-        @pbm = nil
-      end
     end
 
     @propCol    = @sic.propertyCollector
@@ -394,10 +383,7 @@ class MiqVimInventory < MiqVimClientBase
     @cacheLock.synchronize(:EX) do
       @inventoryHash = nil
 
-      propMaps = @propMap
-      propMaps.merge!(@pbmPropMap) if @pbmPropMap
-
-      propMaps.each_value do |pm|
+      @propMap.each_value do |pm|
         instance_variable_set("#{pm[:baseName]}ByMor", nil)
         instance_variable_set(pm[:baseName], nil)
       end
@@ -1903,55 +1889,6 @@ class MiqVimInventory < MiqVimClientBase
 
   def addStoragePodObj(spObj)
     addObjHash(:StoragePod, spObj)
-  end
-
-  def pbmProfiles_locked
-    log_header = "MiqVimInventory.pbmProfiles_locked:"
-    raise "pbmProfiles_locked: cache lock not held" unless @cacheLock.sync_locked?
-    return @pbmProfiles if @pbmProfiles
-
-    $vim_log.info "#{log_header} loading pbmProfile cache for #{@connId}"
-    begin
-      @pbmProfiles = {}
-
-      @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
-
-      if @pbm
-        profile_ids = @pbm.queryProfile
-
-        @pbm.retrieveContent(profile_ids).to_a.each do |pbm_profile|
-          uid = pbm_profile.profileId.uniqueId
-
-          @pbmProfiles[uid] = pbm_profile
-        end
-      end
-    rescue RbVmomi::Fault => err
-      $vim_log.info "#{log_header} cannot retrieve pbmProfiles: #{err}"
-    ensure
-      @cacheLock.sync_unlock if unlock
-    end
-    $vim_log.info "#{log_header} loaded pbmProfile cache for #{@connId}"
-
-    @pbmProfiles
-  end
-  protected :pbmProfiles_locked
-
-  def pbmProfiles(_unused = nil)
-    pbm = nil
-    @cacheLock.synchronize(:SH) do
-      pbm = dupObj(pbmProfiles_locked)
-    end
-    assert_no_locks
-    pbm
-  end
-  alias_method :pbmProfilesByMor, :pbmProfiles
-
-  def pbmProfileByMor(pbmMor, _unused = nil)
-    pbm = nil
-    @cacheLock.synchronize(:SH) do
-      pbm = dupObj(pbmProfiles_locked[pbmMor])
-    end
-    pbm
   end
 
   #

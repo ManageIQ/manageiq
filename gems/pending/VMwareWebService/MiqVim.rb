@@ -1,6 +1,7 @@
 require 'sync'
 
 require 'VMwareWebService/MiqVimInventory'
+require 'VMwareWebService/MiqPbmInventory'
 require 'VMwareWebService/MiqVimVm'
 require 'VMwareWebService/MiqVimVdlMod'
 require 'VMwareWebService/MiqVimFolder'
@@ -15,9 +16,12 @@ require 'VMwareWebService/MiqVimCustomizationSpecManager'
 
 class MiqVim < MiqVimInventory
   include MiqVimVdlConnectionMod
+  include MiqPbmInventory
 
   def initialize(server, username, password, cacheScope = nil)
     super
+
+    pbm_initialize(server, username, password)
   end
 
   def getVimVm(path)

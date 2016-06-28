@@ -2,7 +2,6 @@ require 'rbvmomi'
 require 'rbvmomi/pbm'
 
 class PbmService
-
   def initialize(server, username, password)
     vim = RbVmomi::VIM.connect(
       :host     => server,
@@ -13,10 +12,6 @@ class PbmService
 
     @pbm = RbVmomi::PBM.connect(vim, :insecure => true)
     @sic = @pbm.serviceContent
-
-    @storageResourceType = RbVmomi::PBM::PbmProfileResourceType(
-      :resourceType => "STORAGE"
-    )
 
     @pbm
   end
@@ -35,7 +30,8 @@ class PbmService
 
   def queryProfile
     @sic.profileManager.PbmQueryProfile(
-      :resourceType => @storageResourceType)
+      :resourceType => RbVmomi::PBM::PbmProfileResourceType(:resourceType => "STORAGE")
+    )
   end
 
   def retrieveContent(profileIds)
