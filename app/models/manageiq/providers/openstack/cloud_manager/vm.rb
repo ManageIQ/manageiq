@@ -2,6 +2,7 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
   include_concern 'Operations'
   include_concern 'RemoteConsole'
   include_concern 'Resize'
+  include_concern 'AssociateIp'
 
   POWER_STATES = {
     "ACTIVE"            => "on",

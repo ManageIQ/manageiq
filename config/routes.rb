@@ -2300,6 +2300,10 @@ Vmdb::Application.routes.draw do
         evacuate_form_fields
         live_migrate
         live_migrate_form_fields
+        associate_floating_ip
+        associate_floating_ip_form_fields
+        disassociate_floating_ip
+        disassociate_floating_ip_form_fields
         retire
         right_size
         show
@@ -2319,6 +2323,8 @@ Vmdb::Application.routes.draw do
         resize_vm
         evacuate_vm
         live_migrate_vm
+        associate_floating_ip_vm
+        disassociate_floating_ip_vm
         retire
         right_size
         set_checked_items
@@ -2352,6 +2358,10 @@ Vmdb::Application.routes.draw do
         detach
         evacuate
         evacuate_form_fields
+        associate_floating_ip
+        associate_floating_ip_form_fields
+        disassociate_floating_ip
+        disassociate_floating_ip_form_fields
       ) +
                compare_get,
       :post => %w(
@@ -2411,6 +2421,8 @@ Vmdb::Application.routes.draw do
         attach_volume
         detach_volume
         evacuate_vm
+        associate_floating_ip_vm
+        disassociate_floating_ip_vm
       ) +
                adv_search_post +
                compare_post +
