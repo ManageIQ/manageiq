@@ -19,4 +19,14 @@ module MiqPbmInventory
 
     profiles
   end
+
+  def pbmQueryMatchingHub(profile_id)
+    hubs = []
+
+    if @pbm_svc
+      hubs = @pbm_svc.queryMatchingHub(profile_id)
+    end
+
+    hubs
+  end
 end
