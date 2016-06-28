@@ -93,7 +93,8 @@ module ApiSpecHelper
                      policy_profiles providers provision_dialogs provision_requests rates
                      reports request_tasks requests resource_pools results roles security_groups
                      servers service_dialogs service_catalogs service_orders service_requests
-                     service_templates services settings tags tasks templates tenants users vms zones)
+                     service_templates services settings tags tasks templates tenants users vms zones
+                     container_deployments)
 
     define_entrypoint_url_methods
     define_url_methods(collections)
