@@ -1367,16 +1367,16 @@ describe Metric do
   def assert_perf_capture_now(target, mode)
     Timecop.freeze(Time.now) do
       target.update_attribute(:last_perf_capture_on, nil)
-      expect(target.perf_capture_now?).to be_truthy
+      expect(Metric::Capture.perf_capture_now?(target)).to be_truthy
 
       target.update_attribute(:last_perf_capture_on, Time.now.utc - 15.minutes)
-      expect(target.perf_capture_now?).to be_truthy
+      expect(Metric::Capture.perf_capture_now?(target)).to be_truthy
 
       target.update_attribute(:last_perf_capture_on, Time.now.utc - 7.minutes)
-      expect(mode == :with_alerts ? target.perf_capture_now? : !target.perf_capture_now?).to be_truthy
+      expect(mode == :with_alerts ? Metric::Capture.perf_capture_now?(target) : !Metric::Capture.perf_capture_now?(target)).to be_truthy
 
       target.update_attribute(:last_perf_capture_on, Time.now.utc - 1.minutes)
-      expect(target.perf_capture_now?).not_to be_truthy
+      expect(Metric::Capture.perf_capture_now?(target)).not_to be_truthy
     end
   end
 
