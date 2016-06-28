@@ -19,14 +19,12 @@ class ApiController
     end
 
     def entrypoint_versions
-      version_config[:definitions].collect do |version_specification|
-        if version_specification[:ident]
-          {
-            :name => version_specification[:name],
-            :href => "#{@req[:api_prefix]}/#{version_specification[:ident]}"
-          }
-        end
-      end.compact
+      version_config[:definitions].select(&:ident).collect do |version_specification|
+        {
+          :name => version_specification[:name],
+          :href => "#{@req[:api_prefix]}/#{version_specification[:ident]}"
+        }
+      end
     end
 
     def entrypoint_collections
