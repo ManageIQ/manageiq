@@ -213,4 +213,25 @@ describe MiqProvisionVirtWorkflow do
       expect(workflow.allowed_template_condition).to eq(["vms.template = ? AND vms.ems_id in (?)", true, [ems.id]])
     end
   end
+
+  context "#ws_find_template_or_vm" do
+    let(:server) { double("MiqServer", :logon_status => :ready, :server_timezone => 'East') }
+    let(:sdn) { 'SysprepDomainName' }
+
+    before do
+      allow(MiqServer).to receive(:my_server).with(no_args).and_return(server)
+      allow(workflow).to receive_messages(:validate => true)
+      allow(workflow).to receive_messages(:get_dialogs => {})
+      workflow.instance_variable_set(:@values, :vm_tags => [], :src_vm_id => 123, :sysprep_enabled => 'fields',
+                                     :sysprep_domain_name => sdn)
+    end
+
+    it "does a lookup when src_name is blank" do
+      expect(workflow.ws_find_template_or_vm("", "", "asdf-adsf", "asdfadfasdf")).to be_nil
+    end
+
+    it "does a lookup when src_name is not blank" do
+      expect(workflow.ws_find_template_or_vm("", "VMWARE", "asdf-adsf", "asdfadfasdf")).to be_nil
+    end
+  end
 end

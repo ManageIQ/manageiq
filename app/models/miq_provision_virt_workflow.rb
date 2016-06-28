@@ -916,11 +916,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def ws_find_template_or_vm(_values, src_name, src_guid, ems_guid)
-    conditions = {}
-    conditions[:guid] = src_guid unless src_guid.blank?
-    conditions[:uid_ems] = ems_guid unless ems_guid.blank?
-    conditions['lower(name)'] = src_name unless src_name.blank?
-    source_vm_rbac_filter(VmOrTemplate.where(conditions)).first
+    scope = VmOrTemplate
+    scope = scope.where(:guid => src_guid) unless src_guid.blank?
+    scope = scope.where(:uid_ems => ems_guid) unless ems_guid.blank?
+    scope = scope.where(VmOrTemplate.arel_attribute("name").lower.eq(src_name)) unless src_name.blank?
+    source_vm_rbac_filter(scope).first
   end
 
   def ws_vm_fields(values, fields)
