@@ -12,32 +12,37 @@
             %label.control-label.col-md-2{"for" => "name"}
               Name
             .col-md-8
-              %input#name.form-control{:checkchange => "",
-              :maxlength => "255",
-              :name => "name",
-              "ng-model" => "mwNew.newProvider.name",
-              "ng-required" => "true",
-              :type => "text"}/
+              %input#name.form-control{:checkchange   => "",
+                                       :maxlength     => "255",
+                                       :name          => "name",
+                                       "ng-model"     => "mwNew.newProvider.name",
+                                       "ng-required"  => "true",
+                                       :type          => "text"}/
           .form-group
             %label.control-label.col-md-2
-              Type
+              = _("Type:")
             .col-md-8
-              %select{:name => "server_emstype",
-              "ng-model" => "mwNew.server_emstype",
-              "ng-required" => "true",
-              "pf-select" => "",
-              "id" => "123",
-              "ng-options" => "item as item.title for item in mwNew.types",
-              "ng-change" => "mwNew.typeSelected()"}
+              %select{:name         => "server_emstype",
+                      "ng-model"    => "mwNew.server_emstype",
+                      "ng-required" => "true",
+                      "pf-select"   => "",
+                      "id"          => "123",
+                      "ng-options"  => "item as item.title for item in mwNew.types",
+                      "ng-change"   => "mwNew.typeSelected()"}
                 %option{:value => ""} No Type selected
-          %div{"ng-if" => "mwNew.newProvider.server_emstype", "ng-switch" => "mwNew.newProvider.server_emstype"}
+          %div{"ng-if"      => "mwNew.newProvider.server_emstype",
+               "ng-switch"  => "mwNew.newProvider.server_emstype"}
             %div{"ui-view" => "basic_information"}
           .form-group
             %label.control-label.col-md-2
-              Zone
+              = _("Zone:")
             .col-md-8
-              %select{"ng-model" => "mwNew.newProvider.zone", "ng-options" => "o as o for o in mwNew.zones", "pf-select" => ""}
-                %option{:value => ""} No Zone selected
+              %select{"ng-model"    => "mwNew.newProvider.zone",
+                      "ng-options"  => "o as o for o in mwNew.zones",
+                      "pf-select"   => ""}
+                %option{:value => ""}
+                  = _("No Zone selected:")
         %hr/
         %div{"ui-view" => "detail_info"}
-      %miq-action-buttons.form-actions.pull-right{:actions => "mwNew.formActions", "is-valid" => "form.$valid"}
+      %miq-action-buttons.form-actions.pull-right{:actions    => "mwNew.formActions",
+                                                  "is-valid"  => "form.$valid"}
