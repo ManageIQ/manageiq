@@ -15,6 +15,18 @@ describe VirtualTotalMixin do
       expect(model_with_children(2).total_vms).to eq(2)
     end
 
+    it "can bring back totals in primary query" do
+      m3 = model_with_children(3)
+      m1 = model_with_children(1)
+      m2 = model_with_children(2)
+      mc = m1.class
+      expect {
+        ms = mc.select(:id, mc.arel_attribute(:total_vms).as("total_vms"))
+        expect(ms).to match_array([m3, m2, m1])
+        expect(ms.map(&:total_vms)).to match_array([3, 2, 1])
+      }.to match_query_limit_of(1)
+    end
+
     def model_with_children(count)
       FactoryGirl.create(:ext_management_system).tap do |ems|
         FactoryGirl.create_list(:vm, count, :ext_management_system => ems) if count > 0
