@@ -45,7 +45,7 @@ class ExplorerPresenter
   #
 
   def initialize(options = {})
-    @options = HashWithIndifferentAccess.new(
+    @options = {
       :lock_unlock_trees    => {},
       :set_visible_elements => {},
       :update_partials      => {},
@@ -57,7 +57,7 @@ class ExplorerPresenter
       :osf_node             => '',
       :show_miq_buttons     => false,
       :load_chart           => nil
-    ).update(options)
+    }.update(options)
   end
 
   def reset_changes
