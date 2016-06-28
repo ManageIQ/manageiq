@@ -8,7 +8,7 @@ module MiqAeEngine
     end
 
     def prepend_namespace=(ns)
-      @prepend_namespace = ns.chomp('/').sub(/^\//, '')
+      @prepend_namespace = ns.chomp('/').sub(%r{^/}, '')
       $miq_ae_logger.info("Prepend namespace [#{@prepend_namespace} during domain search")
     end
 
