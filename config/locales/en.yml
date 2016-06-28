@@ -736,6 +736,7 @@ en:
       ManageIQ::Providers::Azure::CloudManager::Vm:                         Instance (Microsoft Azure)
       ManageIQ::Providers::Amazon::CloudManager::Vm:                        Instance (Amazon)
       ManageIQ::Providers::CloudManager::Template:                          Image
+      ManageIQ::Providers::CloudManager::VirtualTemplate:                   Resourceless Server Template
       ManageIQ::Providers::ContainerManager:                                Containers Provider
       ManageIQ::Providers::InfraManager:                                    Infrastructure Provider
       ManageIQ::Providers::InfraManager::Vm:                                Virtual Machine
