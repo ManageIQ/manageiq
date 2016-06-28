@@ -115,15 +115,7 @@ class MiqServer < ApplicationRecord
   end
 
   def start
-    begin
-      MiqEvent.raise_evm_event(self, "evm_server_start")
-    rescue MiqException::PolicyPreventAction => err
-      _log.warn "#{err}"
-      # TODO: Need to decide what to do here. Should the cluster be stopped?
-      return
-    rescue Exception => err
-      _log.error "#{err}"
-    end
+    MiqEvent.raise_evm_event(self, "evm_server_start")
 
     msg = "Server starting in #{self.class.startup_mode} mode."
     _log.info("#{msg}")
@@ -358,6 +350,8 @@ class MiqServer < ApplicationRecord
     Benchmark.realtime_block(:worker_monitor)          { monitor_workers }                  if threshold_exceeded?(:worker_monitor_frequency, now)
     Benchmark.realtime_block(:worker_dequeue)          { populate_queue_messages }          if threshold_exceeded?(:worker_dequeue_frequency, now)
   rescue SystemExit
+    # TODO: We're rescuing Exception below. WHY? :bomb:
+    # A SystemExit would be caught below, so we need to explicitly rescue/raise.
     raise
   rescue Exception => err
     _log.error("#{err.message}")
@@ -386,8 +380,6 @@ class MiqServer < ApplicationRecord
 
     shutdown_and_exit_queue
     wait_for_stopped if sync
-  rescue Exception => err
-    _log.error "#{err}"
   end
 
   def wait_for_stopped
@@ -412,10 +404,6 @@ class MiqServer < ApplicationRecord
     _log.info("initiated for #{format_full_log_msg}")
     update_attributes(:stopped_on => Time.now.utc, :status => "killed", :is_master => false)
     (pid == Process.pid) ? shutdown_and_exit : Process.kill(9, pid)
-  rescue SystemExit
-    raise
-  rescue Exception => err
-    _log.error "#{err}"
   end
 
   def self.kill
@@ -426,14 +414,7 @@ class MiqServer < ApplicationRecord
 
   def shutdown
     _log.info("initiated for #{format_full_log_msg}")
-    begin
-      MiqEvent.raise_evm_event(self, "evm_server_stop")
-    rescue MiqException::PolicyPreventAction => err
-      _log.warn "#{err}"
-      return
-    rescue Exception => err
-      _log.error "#{err}"
-    end
+    MiqEvent.raise_evm_event(self, "evm_server_stop")
 
     quiesce
   end
@@ -445,14 +426,9 @@ class MiqServer < ApplicationRecord
 
   def quiesce
     update_attribute(:status, 'quiesce')
-    begin
-      deactivate_all_roles
-      quiesce_all_workers
-      update_attributes(:stopped_on => Time.now.utc, :status => "stopped", :is_master => false)
-    rescue => err
-      puts "#{err}"
-      puts "#{err.backtrace.join("\n")}"
-    end
+    deactivate_all_roles
+    quiesce_all_workers
+    update_attributes(:stopped_on => Time.now.utc, :status => "stopped", :is_master => false)
   end
 
   # Restart the local server

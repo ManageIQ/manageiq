@@ -1,5 +1,4 @@
 ManageIQ.angular.app.service('topologyService', function() {
-
   this.tooltip = function tooltip(d) {
     var status = [
       __("Name: ") + d.item.name,
@@ -16,7 +15,7 @@ ManageIQ.angular.app.service('topologyService', function() {
 
   this.addContextMenuOption = function(popup, text, data, callback) {
     popup.append("p").text(text)
-      .on('click' , function() {callback(data);});
+      .on('click', function() { callback(data); });
   };
 
   this.searchNode = function(svg, query) {
@@ -94,6 +93,4 @@ ManageIQ.angular.app.service('topologyService', function() {
         return "unknown";
     }
   };
-
-
 });

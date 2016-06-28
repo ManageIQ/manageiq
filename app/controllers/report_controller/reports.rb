@@ -237,7 +237,7 @@ module ReportController::Reports
       end
     end
 
-    if @edit[:new][:model].to_s.starts_with?("Chargeback")
+    if Chargeback.db_is_chargeback?(@edit[:new][:model])
       unless @edit[:new][:cb_show_typ]
         add_flash(_("Show Costs by must be selected"), :error)
         active_tab = "edit_3"

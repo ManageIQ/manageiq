@@ -9,7 +9,7 @@ describe ApiController do
   end
 
   def test_collection_query(collection, collection_url, klass, attr = :id)
-    if collection_config.fetch_path(collection, :collection_actions, :get)
+    if Api::Settings.collections.fetch_path(collection, :collection_actions, :get)
       api_basic_authorize collection_action_identifier(collection, :read, :get)
     else
       api_basic_authorize
@@ -231,6 +231,11 @@ describe ApiController do
     it "query Zones" do
       FactoryGirl.create(:zone, :name => "api zone")
       test_collection_query(:zones, zones_url, Zone)
+    end
+
+    it "query ContainerDeployments" do
+      FactoryGirl.create(:container_deployment)
+      test_collection_query(:container_deployments, container_deployments_url, ContainerDeployment)
     end
   end
 end

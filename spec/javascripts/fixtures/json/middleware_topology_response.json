@@ -1,512 +1,527 @@
 {
-  "data": {
-    "items": {
-      "1": {
-        "name": "Hawkular",
-        "kind": "MiddlewareManager",
-        "miq_id": 1,
-        "status": "Unknown",
-        "display_kind": "Hawkular",
-        "icon": "vendor-hawkular",
-        "id": "1"
+  "data":{
+    "items":{
+      "MiddlewareManager1":{
+        "name":"livingontheedge.hawkular.org",
+        "kind":"MiddlewareManager",
+        "miq_id":1,
+        "status":"Unknown",
+        "display_kind":"Hawkular",
+        "icon":"vendor-hawkular"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~": {
-        "name": "Local",
-        "kind": "MiddlewareServer",
-        "miq_id": 4,
-        "status": "Unknown",
-        "display_kind": "MiddlewareServer",
-        "icon": "vendor-hawkular",
-        "id": "Local~~"
+      "MiddlewareServer1":{
+        "name":"Local",
+        "kind":"MiddlewareServer",
+        "miq_id":1,
+        "status":"Unknown",
+        "display_kind":"MiddlewareServer",
+        "icon":"vendor-hawkular"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-command-gateway-war.war": {
-        "name": "hawkular-command-gateway-war.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 49,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-command-gateway-war.war"
+      "MiddlewareDeployment1":{
+        "name":"hawkular-command-gateway-war.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":1,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-actions-email.war": {
-        "name": "hawkular-alerts-actions-email.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 50,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-alerts-actions-email.war"
+      "MiddlewareDeployment2":{
+        "name":"hawkular-alerts-actions-email.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":2,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-avail-creator.war": {
-        "name": "hawkular-avail-creator.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 51,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-avail-creator.war"
+      "MiddlewareDeployment3":{
+        "name":"hawkular-avail-creator.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":3,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-wildfly-agent-download.war": {
-        "name": "hawkular-wildfly-agent-download.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 52,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-wildfly-agent-download.war"
+      "MiddlewareDeployment4":{
+        "name":"hawkular-wildfly-agent-download.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":4,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dsecret-store.war": {
-        "name": "secret-store.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 53,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=secret-store.war"
+      "MiddlewareDeployment5":{
+        "name":"secret-store.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":5,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war": {
-        "name": "hawkular-alerts-rest.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 54,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-alerts-rest.war"
+      "MiddlewareDeployment6":{
+        "name":"hawkular-alerts-rest.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":6,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-inventory-dist.war": {
-        "name": "hawkular-inventory-dist.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 55,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-inventory-dist.war"
+      "MiddlewareDeployment7":{
+        "name":"hawkular-inventory-dist.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":7,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-accounts-events-backend.war": {
-        "name": "hawkular-accounts-events-backend.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 56,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-accounts-events-backend.war"
+      "MiddlewareDeployment8":{
+        "name":"hawkular-accounts-events-backend.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":8,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-pinger.war": {
-        "name": "hawkular-pinger.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 57,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-pinger.war"
+      "MiddlewareDeployment9":{
+        "name":"hawkular-pinger.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":9,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-rest-api.war": {
-        "name": "hawkular-rest-api.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 58,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-rest-api.war"
+      "MiddlewareDeployment10":{
+        "name":"hawkular-rest-api.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":10,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-metrics-component.war": {
-        "name": "hawkular-metrics-component.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 59,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-metrics-component.war"
+      "MiddlewareDeployment11":{
+        "name":"hawkular-metrics-component.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":11,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-commons-embedded-cassandra-ear.ear": {
-        "name": "hawkular-commons-embedded-cassandra-ear.ear",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 60,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_ear",
-        "id": "Local~/deployment=hawkular-commons-embedded-cassandra-ear.ear"
+      "MiddlewareDeployment12":{
+        "name":"hawkular-commons-embedded-cassandra-ear.ear",
+        "kind":"MiddlewareDeployment",
+        "miq_id":12,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_ear"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-accounts.war": {
-        "name": "hawkular-accounts.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 61,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-accounts.war"
+      "MiddlewareDeployment13":{
+        "name":"hawkular-accounts.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":13,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-btm-server.war": {
-        "name": "hawkular-btm-server.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 62,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-btm-server.war"
+      "MiddlewareDeployment14":{
+        "name":"hawkular-btm-server.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":14,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dkeycloak-server.war": {
-        "name": "keycloak-server.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 63,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=keycloak-server.war"
+      "MiddlewareDeployment15":{
+        "name":"keycloak-server.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":15,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-console.war": {
-        "name": "hawkular-console.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 64,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-console.war"
+      "MiddlewareDeployment16":{
+        "name":"hawkular-console.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":16,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "2": {
-        "name": "LivingOnTheEdge",
-        "kind": "MiddlewareManager",
-        "miq_id": 2,
-        "status": "Unknown",
-        "display_kind": "Hawkular",
-        "icon": "vendor-hawkular",
-        "id": "2"
+      "MiddlewareManager2":{
+        "name":"localhost",
+        "kind":"MiddlewareManager",
+        "miq_id":2,
+        "status":"Unknown",
+        "display_kind":"Hawkular",
+        "icon":"vendor-hawkular"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~": {
-        "name": "Local",
-        "kind": "MiddlewareServer",
-        "miq_id": 3,
-        "status": "Unknown",
-        "display_kind": "MiddlewareServer",
-        "icon": "vendor-hawkular",
-        "id": "Local~~"
+      "MiddlewareServer2":{
+        "name":"Local",
+        "kind":"MiddlewareServer",
+        "miq_id":2,
+        "status":"Unknown",
+        "display_kind":"MiddlewareServer",
+        "icon":"vendor-hawkular"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;80e265ffdc23/r;Local~~": {
-        "name": "Local",
-        "kind": "MiddlewareServer",
-        "miq_id": 5,
-        "status": "Unknown",
-        "display_kind": "MiddlewareServer",
-        "icon": "vendor-wildfly",
-        "id": "Local~~"
+      "MiddlewareDeployment17":{
+        "name":"hawkular-command-gateway-war.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":17,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;709634b7ac17/r;Local~~": {
-        "name": "Local",
-        "kind": "MiddlewareServer",
-        "miq_id": 6,
-        "status": "Unknown",
-        "display_kind": "MiddlewareServer",
-        "icon": "vendor-wildfly",
-        "id": "Local~~"
+      "MiddlewareDeployment18":{
+        "name":"hawkular-alerts-actions-email.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":18,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;6849976c44e6/r;Local~~": {
-        "name": "Local",
-        "kind": "MiddlewareServer",
-        "miq_id": 7,
-        "status": "Unknown",
-        "display_kind": "MiddlewareServer",
-        "icon": "vendor-wildfly",
-        "id": "Local~~"
+      "MiddlewareDeployment19":{
+        "name":"hawkular-wildfly-agent-download.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":19,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-command-gateway-war.war": {
-        "name": "hawkular-command-gateway-war.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 33,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-command-gateway-war.war"
+      "MiddlewareDeployment20":{
+        "name":"hawkular-avail-creator.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":20,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-actions-email.war": {
-        "name": "hawkular-alerts-actions-email.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 34,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-alerts-actions-email.war"
+      "MiddlewareDeployment21":{
+        "name":"secret-store.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":21,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-avail-creator.war": {
-        "name": "hawkular-avail-creator.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 35,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-avail-creator.war"
+      "MiddlewareDeployment22":{
+        "name":"hawkular-inventory-dist.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":22,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-wildfly-agent-download.war": {
-        "name": "hawkular-wildfly-agent-download.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 36,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-wildfly-agent-download.war"
+      "MiddlewareDeployment23":{
+        "name":"hawkular-alerts-rest.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":23,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dsecret-store.war": {
-        "name": "secret-store.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 37,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=secret-store.war"
+      "MiddlewareDeployment24":{
+        "name":"hawkular-accounts-events-backend.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":24,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war": {
-        "name": "hawkular-alerts-rest.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 38,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-alerts-rest.war"
+      "MiddlewareDeployment25":{
+        "name":"hawkular-pinger.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":25,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-inventory-dist.war": {
-        "name": "hawkular-inventory-dist.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 39,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-inventory-dist.war"
+      "MiddlewareDeployment26":{
+        "name":"hawkular-rest-api.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":26,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-accounts-events-backend.war": {
-        "name": "hawkular-accounts-events-backend.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 40,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-accounts-events-backend.war"
+      "MiddlewareDeployment27":{
+        "name":"hawkular-metrics-component.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":27,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-pinger.war": {
-        "name": "hawkular-pinger.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 41,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-pinger.war"
+      "MiddlewareDeployment28":{
+        "name":"hawkular-commons-embedded-cassandra-ear.ear",
+        "kind":"MiddlewareDeployment",
+        "miq_id":28,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_ear"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-rest-api.war": {
-        "name": "hawkular-rest-api.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 42,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-rest-api.war"
+      "MiddlewareDeployment29":{
+        "name":"hawkular-accounts.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":29,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-metrics-component.war": {
-        "name": "hawkular-metrics-component.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 43,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-metrics-component.war"
+      "MiddlewareDeployment30":{
+        "name":"hawkular-btm-server.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":30,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-commons-embedded-cassandra-ear.ear": {
-        "name": "hawkular-commons-embedded-cassandra-ear.ear",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 44,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_ear",
-        "id": "Local~/deployment=hawkular-commons-embedded-cassandra-ear.ear"
+      "MiddlewareDeployment31":{
+        "name":"keycloak-server.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":31,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-accounts.war": {
-        "name": "hawkular-accounts.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 45,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-accounts.war"
+      "MiddlewareDeployment32":{
+        "name":"hawkular-console.war",
+        "kind":"MiddlewareDeployment",
+        "miq_id":32,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDeployment",
+        "icon":"middleware_deployment_war"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-btm-server.war": {
-        "name": "hawkular-btm-server.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 46,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-btm-server.war"
+      "MiddlewareDatasource1":{
+        "name":"ExampleDS",
+        "kind":"MiddlewareDatasource",
+        "miq_id":1,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDatasource"
       },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dkeycloak-server.war": {
-        "name": "keycloak-server.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 47,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=keycloak-server.war"
-      },
-      "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-console.war": {
-        "name": "hawkular-console.war",
-        "kind": "MiddlewareDeployment",
-        "miq_id": 48,
-        "status": "Unknown",
-        "display_kind": "MiddlewareDeployment",
-        "icon": "middleware_deployment_war",
-        "id": "Local~/deployment=hawkular-console.war"
+      "MiddlewareDatasource2":{
+        "name":"KeycloakDS",
+        "kind":"MiddlewareDatasource",
+        "miq_id":2,
+        "status":"Unknown",
+        "display_kind":"MiddlewareDatasource"
       }
     },
-    "relations": [
+    "relations":[
       {
-        "source": "1",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~"
+        "source":"MiddlewareManager1",
+        "target":"MiddlewareServer1"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-command-gateway-war.war"
+        "source":"MiddlewareServer1",
+        "target":"MiddlewareDeployment1"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-actions-email.war"
+        "source":"MiddlewareServer1",
+        "target":"MiddlewareDeployment2"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-avail-creator.war"
+        "source":"MiddlewareServer1",
+        "target":"MiddlewareDeployment3"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-wildfly-agent-download.war"
+        "source":"MiddlewareServer1",
+        "target":"MiddlewareDeployment4"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dsecret-store.war"
+        "source":"MiddlewareServer1",
+        "target":"MiddlewareDeployment5"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war"
+        "source":"MiddlewareServer1",
+        "target":"MiddlewareDeployment6"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-inventory-dist.war"
+        "source":"MiddlewareServer1",
+        "target":"MiddlewareDeployment7"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-accounts-events-backend.war"
+        "source":"MiddlewareServer1",
+        "target":"MiddlewareDeployment8"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-pinger.war"
+        "source":"MiddlewareServer1",
+        "target":"MiddlewareDeployment9"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-rest-api.war"
+        "source":"MiddlewareServer1",
+        "target":"MiddlewareDeployment10"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-metrics-component.war"
+        "source":"MiddlewareServer1",
+        "target":"MiddlewareDeployment11"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-commons-embedded-cassandra-ear.ear"
+        "source":"MiddlewareServer1",
+        "target":"MiddlewareDeployment12"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-accounts.war"
+        "source":"MiddlewareServer1",
+        "target":"MiddlewareDeployment13"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-btm-server.war"
+        "source":"MiddlewareServer1",
+        "target":"MiddlewareDeployment14"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dkeycloak-server.war"
+        "source":"MiddlewareServer1",
+        "target":"MiddlewareDeployment15"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;91044f79-156e-4076-8056-ac3ac44ffff9/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-console.war"
+        "source":"MiddlewareServer1",
+        "target":"MiddlewareDeployment16"
       },
       {
-        "source": "2",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~"
+        "source":"MiddlewareManager2",
+        "target":"MiddlewareServer2"
       },
       {
-        "source": "2",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;80e265ffdc23/r;Local~~"
+        "source":"MiddlewareServer2",
+        "target":"MiddlewareDeployment17"
       },
       {
-        "source": "2",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;709634b7ac17/r;Local~~"
+        "source":"MiddlewareServer2",
+        "target":"MiddlewareDeployment18"
       },
       {
-        "source": "2",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;6849976c44e6/r;Local~~"
+        "source":"MiddlewareServer2",
+        "target":"MiddlewareDeployment19"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;6849976c44e6/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-command-gateway-war.war"
+        "source":"MiddlewareServer2",
+        "target":"MiddlewareDeployment20"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;6849976c44e6/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-actions-email.war"
+        "source":"MiddlewareServer2",
+        "target":"MiddlewareDeployment21"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;6849976c44e6/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-avail-creator.war"
+        "source":"MiddlewareServer2",
+        "target":"MiddlewareDeployment22"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;6849976c44e6/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-wildfly-agent-download.war"
+        "source":"MiddlewareServer2",
+        "target":"MiddlewareDeployment23"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;6849976c44e6/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dsecret-store.war"
+        "source":"MiddlewareServer2",
+        "target":"MiddlewareDeployment24"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;6849976c44e6/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war"
+        "source":"MiddlewareServer2",
+        "target":"MiddlewareDeployment25"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;6849976c44e6/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-inventory-dist.war"
+        "source":"MiddlewareServer2",
+        "target":"MiddlewareDeployment26"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;6849976c44e6/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-accounts-events-backend.war"
+        "source":"MiddlewareServer2",
+        "target":"MiddlewareDeployment27"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;6849976c44e6/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-pinger.war"
+        "source":"MiddlewareServer2",
+        "target":"MiddlewareDeployment28"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;6849976c44e6/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-rest-api.war"
+        "source":"MiddlewareServer2",
+        "target":"MiddlewareDeployment29"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;6849976c44e6/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-metrics-component.war"
+        "source":"MiddlewareServer2",
+        "target":"MiddlewareDeployment30"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;6849976c44e6/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-commons-embedded-cassandra-ear.ear"
+        "source":"MiddlewareServer2",
+        "target":"MiddlewareDeployment31"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;6849976c44e6/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-accounts.war"
+        "source":"MiddlewareServer2",
+        "target":"MiddlewareDeployment32"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;6849976c44e6/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-btm-server.war"
+        "source":"MiddlewareServer2",
+        "target":"MiddlewareDatasource1"
       },
       {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;6849976c44e6/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dkeycloak-server.war"
-      },
-      {
-        "source": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;6849976c44e6/r;Local~~",
-        "target": "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;66276c8e-35f6-4a17-9d54-3f8d08cf9802/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-console.war"
+        "source":"MiddlewareServer2",
+        "target":"MiddlewareDatasource2"
       }
     ],
-    "kinds": {
-      "MiddlewareServer": true,
-      "MiddlewareDeployment": true,
-      "MiddlewareManager": true
+    "kinds":{
+      "MiddlewareServer":true,
+      "MiddlewareDeployment":true,
+      "MiddlewareDatasource":true,
+      "MiddlewareManager":true
+    },
+    "icons":{
+      "ContainerReplicator":{
+        "type":"glyph",
+        "icon":"",
+        "fontfamily":"PatternFlyIcons-webfont"
+      },
+      "ContainerGroup":{
+        "type":"glyph",
+        "icon":"",
+        "fontfamily":"FontAwesome"
+      },
+      "ContainerNode":{
+        "type":"glyph",
+        "icon":"",
+        "fontfamily":"PatternFlyIcons-webfont"
+      },
+      "ContainerService":{
+        "type":"glyph",
+        "icon":"",
+        "fontfamily":"PatternFlyIcons-webfont"
+      },
+      "ContainerRoute":{
+        "type":"glyph",
+        "icon":"",
+        "fontfamily":"PatternFlyIcons-webfont"
+      },
+      "Container":{
+        "type":"glyph",
+        "icon":"",
+        "fontfamily":"FontAwesome"
+      },
+      "Host":{
+        "type":"glyph",
+        "icon":"",
+        "fontfamily":"PatternFlyIcons-webfont"
+      },
+      "Vm":{
+        "type":"glyph",
+        "icon":"",
+        "fontfamily":"PatternFlyIcons-webfont"
+      },
+      "MiddlewareDatasource":{
+        "type":"glyph",
+        "icon":"",
+        "fontfamily":"FontAwesome"
+      },
+      "Kubernetes":{
+        "type":"image",
+        "icon":"/assets/svg/vendor-kubernetes-72d5f7ebb2b7162e35b2ff33e0d7e094a7d2c23d662e99835735d3350401f088.svg"
+      },
+      "Openshift":{
+        "type":"image",
+        "icon":"/assets/svg/vendor-openshift-1d618a8a9b84a545ce01bf41e996f2614b8cf433e1845fcf953af8ff43788707.svg"
+      },
+      "OpenshiftEnterprise":{
+        "type":"image",
+        "icon":"/assets/svg/vendor-openshift_enterprise-1d618a8a9b84a545ce01bf41e996f2614b8cf433e1845fcf953af8ff43788707.svg"
+      },
+      "Atomic":{
+        "type":"image",
+        "icon":"/assets/svg/vendor-atomic-95bd9f968d89cf797db7c62abfd49d60c2cbfaf925653c9e763d153a0bf00ef8.svg"
+      },
+      "AtomicEnterprise":{
+        "type":"image",
+        "icon":"/assets/svg/vendor-atomic_enterprise-17db41265b1c7e2722e63241c9762d391e9ed9384113ddf48642e777c8c0b6c7.svg"
+      }
     }
   }
 }

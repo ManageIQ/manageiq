@@ -1219,7 +1219,7 @@ class MiqExpression
     elsif model.ends_with?("Performance")
       @reporting_available_fields[model.to_s] ||= {}
       @reporting_available_fields[model.to_s][interval.to_s] ||= MiqExpression.model_details(model, :include_model => false, :include_tags => true, :interval => interval)
-    elsif model.to_s.start_with?("Chargeback")
+    elsif Chargeback.db_is_chargeback?(model)
       @reporting_available_fields[model.to_s] ||=
         MiqExpression.model_details(model, :include_model => false, :include_tags => true).select { |c| c.last.ends_with?(*ReportController::Reports::Editor::CHARGEBACK_ALLOWED_FIELD_SUFFIXES) }
     else
@@ -1692,7 +1692,7 @@ class MiqExpression
         result << arel
       end
       first, *rest = operands
-      rest.inject(first) { |lhs, rhs| Arel::Nodes::Or.new(lhs, rhs) }
+      rest.inject(first) { |lhs, rhs| lhs.or(rhs) }
     when "not", "!"
       Arel::Nodes::Not.new(to_arel(exp[operator], tz))
     when "is null"

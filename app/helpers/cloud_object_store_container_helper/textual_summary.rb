@@ -1,4 +1,6 @@
 module CloudObjectStoreContainerHelper::TextualSummary
+  include TextualMixins::TextualDescription
+
   def textual_group_properties
     %i(key size)
   end
@@ -13,10 +15,6 @@ module CloudObjectStoreContainerHelper::TextualSummary
 
   def textual_key
     @record.key
-  end
-
-  def textual_description
-    @record.description
   end
 
   def textual_size

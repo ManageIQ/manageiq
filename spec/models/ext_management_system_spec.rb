@@ -19,6 +19,8 @@ describe ExtManagementSystem do
   let(:all_types_and_descriptions) do
     {
       "ansible_tower_configuration" => "Ansible Tower Configuration",
+      "atomic"                      => "Atomic",
+      "atomic_enterprise"           => "Atomic Enterprise",
       "azure"                       => "Azure",
       "azure_network"               => "Azure Network",
       "ec2"                         => "Amazon EC2",
@@ -40,8 +42,7 @@ describe ExtManagementSystem do
   end
 
   it ".types" do
-    # ['atomic', 'atomic_enterprise'] is a hack until atomic providers will be migrated to openshift
-    expect(described_class.types).to match_array(all_types_and_descriptions.keys + ['atomic', 'atomic_enterprise'])
+    expect(described_class.types).to match_array(all_types_and_descriptions.keys)
   end
 
   it ".supported_types" do
@@ -61,6 +62,10 @@ describe ExtManagementSystem do
 
     it "permissions.tmpl.yml should contain all EMS types" do
       types = YAML.load_file(Rails.root.join("config/permissions.tmpl.yml"))
+      # atomic is no longer in the list of permissions, because they should be faded out
+      # and new container managers should be openshift. Until they are fully removed from the
+      # codebase: https://github.com/ManageIQ/manageiq/issues/8612
+      types += %w(ems-type:atomic ems-type:atomic_enterprise)
       stub_vmdb_permission_store_with_types(types) do
         expect(described_class.supported_types_and_descriptions_hash).to eq(all_types_and_descriptions)
       end
@@ -156,48 +161,75 @@ describe ExtManagementSystem do
     end
   end
 
-  context "with virtual columns" do
+  context "with virtual totals" do
     before(:each) do
       @ems = FactoryGirl.create(:ems_vmware)
-      (1..5).each { |i| FactoryGirl.create(:vm_vmware, :ext_management_system => @ems, :name => "vm_#{i}") }
+      (1..2).each { |i| FactoryGirl.create(:vm_vmware, :ext_management_system => @ems, :name => "vm_#{i}") }
     end
 
     it "#total_vms_on" do
-      expect(@ems.total_vms_on).to eq(5)
+      expect(@ems.total_vms_on).to eq(2)
     end
 
     it "#total_vms_off" do
       expect(@ems.total_vms_off).to eq(0)
 
       @ems.vms.each { |v| v.update_attributes(:raw_power_state => "poweredOff") }
-      expect(@ems.total_vms_off).to eq(5)
+      expect(@ems.total_vms_off).to eq(2)
     end
 
     it "#total_vms_unknown" do
       expect(@ems.total_vms_unknown).to eq(0)
 
       @ems.vms.each { |v| v.update_attributes(:raw_power_state => "unknown") }
-      expect(@ems.total_vms_unknown).to eq(5)
+      expect(@ems.total_vms_unknown).to eq(2)
     end
 
     it "#total_vms_never" do
       expect(@ems.total_vms_never).to eq(0)
 
       @ems.vms.each { |v| v.update_attributes(:raw_power_state => "never") }
-      expect(@ems.total_vms_never).to eq(5)
+      expect(@ems.total_vms_never).to eq(2)
     end
 
     it "#total_vms_suspended" do
       expect(@ems.total_vms_suspended).to eq(0)
 
       @ems.vms.each { |v| v.update_attributes(:raw_power_state => "suspended") }
-      expect(@ems.total_vms_suspended).to eq(5)
+      expect(@ems.total_vms_suspended).to eq(2)
     end
 
     %w(total_vms_on total_vms_off total_vms_unknown total_vms_never total_vms_suspended).each do |vcol|
       it "should have virtual column #{vcol} " do
         expect(described_class).to have_virtual_column "#{vcol}", :integer
       end
+    end
+
+    it "#total_vms" do
+      expect(@ems.total_vms).to eq(2)
+    end
+
+    it "#total_vms_and_templates" do
+      FactoryGirl.create(:template_vmware, :ext_management_system => @ems)
+      expect(@ems.total_vms_and_templates).to eq(3)
+    end
+
+    it "#total_miq_templates" do
+      FactoryGirl.create(:template_vmware, :ext_management_system => @ems)
+      expect(@ems.total_miq_templates).to eq(1)
+    end
+  end
+
+  describe "#total_clusters" do
+    it "knows it has none" do
+      ems = FactoryGirl.create(:ems_vmware)
+      expect(ems.total_clusters).to eq(0)
+    end
+
+    it "knows it has one" do
+      ems = FactoryGirl.create(:ems_vmware)
+      FactoryGirl.create(:ems_cluster, :ext_management_system => ems)
+      expect(ems.total_clusters).to eq(1)
     end
   end
 

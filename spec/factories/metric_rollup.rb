@@ -28,6 +28,11 @@ FactoryGirl.define do
     resource_type         "Host"
   end
 
+  factory :metric_rollup_host_daily, :parent => :metric_rollup, :class => :MetricRollup do
+    capture_interval_name "daily"
+    resource_type         "Host"
+  end
+
   factory :metric_rollup_cm_hr, :parent => :metric_rollup, :class => :MetricRollup do
     capture_interval_name "hourly"
     resource_type         "ExtManagementSystem"

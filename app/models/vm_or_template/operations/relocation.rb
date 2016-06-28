@@ -1,4 +1,10 @@
 module VmOrTemplate::Operations::Relocation
+  extend ActiveSupport::Concern
+
+  included do
+    supports_not :live_migrate, _("Live Migrate VM Operation is not available for VM or Template.")
+  end
+
   def raw_live_migrate(_options = nil)
     raise NotImplementedError, _("raw_live_migrate must be implemented in a subclass")
   end
@@ -7,9 +13,6 @@ module VmOrTemplate::Operations::Relocation
     raw_live_migrate(options)
   end
 
-  def validate_live_migrate
-    validate_unsupported("Live Migrate VM Operation")
-  end
 
   def raw_evacuate(_options = nil)
     raise NotImplementedError, _("raw_evacuate must be implemented in a subclass")

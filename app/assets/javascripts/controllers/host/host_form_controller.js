@@ -56,7 +56,6 @@ ManageIQ.angular.app.controller('hostFormController', ['$http', '$scope', '$attr
       $scope.hostModel.ipmi_verify = "";
       $scope.hostModel.validate_id = "";
       $scope.afterGet = true;
-
     } else if (hostFormId.split(",").length == 1) {
         miqService.sparkleOn();
         $http.get($scope.formFieldsUrl + hostFormId).success(function (data) {
@@ -112,11 +111,9 @@ ManageIQ.angular.app.controller('hostFormController', ['$http', '$scope', '$attr
     miqService.sparkleOn();
     if (hostFormId == 'new') {
       var url = $scope.createUrl + 'new?button=cancel';
-    }
-    else if (hostFormId.split(",").length == 1) {
+    } else if (hostFormId.split(",").length == 1) {
       var url = $scope.updateUrl + hostFormId + '?button=cancel';
-    }
-    else if (hostFormId.split(",").length > 1) {
+    } else if (hostFormId.split(",").length > 1) {
       var url = $scope.updateUrl + '?button=cancel';
     }
     miqService.miqAjaxButton(url);
@@ -126,8 +123,7 @@ ManageIQ.angular.app.controller('hostFormController', ['$http', '$scope', '$attr
     miqService.sparkleOn();
     if (hostFormId.split(",").length > 1) {
       var url = $scope.updateUrl + '?button=save';
-    }
-    else {
+    } else {
       var url = $scope.updateUrl + hostFormId + '?button=save';
     }
     miqService.miqAjaxButton(url, true);
@@ -140,13 +136,6 @@ ManageIQ.angular.app.controller('hostFormController', ['$http', '$scope', '$attr
     $scope.angularForm.$setPristine(true);
     miqService.miqFlash("warn", __("All changes have been reset"));
   };
-
-  var setFormToValid = function() {
-    for (var name in $scope.angularForm) {
-      if($scope.angularForm[name].$name == name)
-        $scope.angularForm[name].$setValidity('miqrequired', true);
-      }
-    }
 
   $scope.isBasicInfoValid = function() {
     if(($scope.currentTab == "default") &&

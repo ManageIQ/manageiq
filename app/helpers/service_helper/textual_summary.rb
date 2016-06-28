@@ -1,4 +1,6 @@
 module ServiceHelper::TextualSummary
+  include TextualMixins::TextualDescription
+  include TextualMixins::TextualName
   #
   # Groups
   #
@@ -18,7 +20,7 @@ module ServiceHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(catalog_item parent_service)
+    %i(catalog_item parent_service orchestration_stack job)
   end
 
   def textual_group_tags
@@ -32,15 +34,6 @@ module ServiceHelper::TextualSummary
   #
   # Items
   #
-
-  def textual_name
-    @record.name
-  end
-
-  def textual_description
-    @record.description
-  end
-
   def textual_guid
     {:label => _("Management Engine GUID"), :value => @record.guid}
   end
@@ -102,6 +95,14 @@ module ServiceHelper::TextualSummary
       :title => _("Show this Service's Parent Service"),
       :link  => url_for(:controller => 'service', :action => 'show', :id => parent)
     } if parent
+  end
+
+  def textual_orchestration_stack
+    @record.try(:orchestration_stack)
+  end
+
+  def textual_job
+    @record.try(:job)
   end
 
   def textual_owner

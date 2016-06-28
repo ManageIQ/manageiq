@@ -1138,6 +1138,7 @@ Vmdb::Application.routes.draw do
         edit
         index
         new
+        perf_chart_chooser
         show
         show_list
         tagging_edit
@@ -1153,6 +1154,7 @@ Vmdb::Application.routes.draw do
         panel_control
         quick_search
         sections_field_changed
+        perf_chart_chooser
         show
         show_list
         tl_chooser
@@ -1579,6 +1581,7 @@ Vmdb::Application.routes.draw do
         optimize_tree_select
         planning
         planning_option_changed
+        reload
         tree_autoload_dynatree
         util_chart_chooser
         wait_for_task

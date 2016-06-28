@@ -92,7 +92,7 @@ describe MiqExpression do
       exp1 = {"STARTS WITH" => {"field" => "Vm-name", "value" => "foo"}}
       exp2 = {"ENDS WITH" => {"field" => "Vm-name", "value" => "bar"}}
       sql, * = MiqExpression.new("OR" => [exp1, exp2]).to_sql
-      expect(sql).to eq("\"vms\".\"name\" LIKE 'foo%' OR \"vms\".\"name\" LIKE '%bar'")
+      expect(sql).to eq(%q(("vms"."name" LIKE 'foo%' OR "vms"."name" LIKE '%bar')))
     end
 
     it "returns nil for an OR expression where one is not supported by SQL" do
@@ -107,6 +107,14 @@ describe MiqExpression do
       exp2 = {"ENDS WITH" => {"field" => "Vm-platform", "value" => "bar"}}
       sql, * = MiqExpression.new("OR" => [exp1, exp2]).to_sql
       expect(sql).to be_nil
+    end
+
+    it "properly groups the items in an AND/OR expression" do
+      exp = {"AND" => [{"EQUAL" => {"field" => "Vm-power_state", "value" => "on"}},
+                       {"OR" => [{"EQUAL" => {"field" => "Vm-name", "value" => "foo"}},
+                                 {"EQUAL" => {"field" => "Vm-name", "value" => "bar"}}]}]}
+      sql, * = described_class.new(exp).to_sql
+      expect(sql).to eq(%q("vms"."power_state" = 'on' AND ("vms"."name" = 'foo' OR "vms"."name" = 'bar')))
     end
 
     it "generates the SQL for a NOT expression" do

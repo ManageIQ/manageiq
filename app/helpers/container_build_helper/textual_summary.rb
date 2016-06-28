@@ -1,4 +1,5 @@
 module ContainerBuildHelper::TextualSummary
+  include TextualMixins::TextualName
   #
   # Groups
   #
@@ -50,11 +51,6 @@ module ContainerBuildHelper::TextualSummary
   #
   # Items
   #
-
-  def textual_name
-    @record.name
-  end
-
   def textual_creation_timestamp
     format_timezone(@record.ems_created_on)
   end

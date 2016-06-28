@@ -333,7 +333,13 @@ Static Network Configuration
         if ask_yn?("\nStart #{I18n.t("product.name")}")
           say("\nStarting #{I18n.t("product.name")} Server...")
           Logging.logger.info("EVM server start initiated by appliance console.")
-          LinuxAdmin::Service.new("evmserverd").start
+          begin
+            LinuxAdmin::Service.new("evmserverd").start
+          rescue AwesomeSpawn::CommandResultError => e
+            say e.result.output
+            say e.result.error
+            say ""
+          end
           press_any_key
         end
 

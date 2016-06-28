@@ -415,4 +415,17 @@ describe MiqGroup do
       expect(MiqGroup.where("description like 'want%'").next_sequence).to eq(1001)
     end
   end
+
+  describe "#user_count" do
+    it "counts none" do
+      group = FactoryGirl.create(:miq_group)
+      expect(group.user_count).to eq(0)
+    end
+
+    it "counts some" do
+      group = FactoryGirl.create(:miq_group)
+      FactoryGirl.create_list(:user, 2, :miq_groups =>[group])
+      expect(group.user_count).to eq(2)
+    end
+  end
 end

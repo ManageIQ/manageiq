@@ -14,7 +14,7 @@ class ApplicationHelper::Toolbar::MiqAlertProfileCenter < ApplicationHelper::Too
           :url_parms => "main_div"),
         button(
           :alert_profile_assign,
-          'pficon pficon-edit fa-lg-assign',
+          'pficon pficon-edit fa-lg',
           t = N_('Edit assignments for this Alert Profile'),
           t,
           :url_parms => "main_div"),

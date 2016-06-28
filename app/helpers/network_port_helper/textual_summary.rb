@@ -1,4 +1,5 @@
 module NetworkPortHelper::TextualSummary
+  include TextualMixins::TextualName
   #
   # Groups
   #
@@ -18,10 +19,6 @@ module NetworkPortHelper::TextualSummary
   #
   # Items
   #
-  def textual_name
-    @record.name
-  end
-
   def textual_mac_address
     @record.mac_address
   end

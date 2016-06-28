@@ -11,3 +11,5 @@
     = render :partial => "vm_common/live_migrate"
   - elsif @evacuate
     = render :partial => "vm_common/evacuate"
+  - else
+    = render :partial => "vm_common/#{@showtype}", :locals => {:controller => "vm"}

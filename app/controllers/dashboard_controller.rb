@@ -52,7 +52,6 @@ class DashboardController < ApplicationController
   # Accept window sizes from the client
   def window_sizes
     session[:winH] = params[:height] if params[:height]
-    session[:winW] = params[:width] if params[:width]
     if params[:exp_left] && params[:exp_controller]
       # Set the left divider position in the controller's sandbox
       session[:sandboxes][params[:exp_controller]][:exp_left] = params[:exp_left]
@@ -235,18 +234,16 @@ class DashboardController < ApplicationController
     render :update do |page|
       page << javascript_prologue
       if @sb[:dashboards][@sb[:active_db]][:minimized].include?(w)
-        page << javascript_del_class("w_#{w}_minmax", "fa fa-caret-square-o-down fa-fw")
-        page << javascript_add_class("w_#{w}_minmax", "fa fa-caret-square-o-up fa-fw")
         page << javascript_show("dd_w#{w}_box")
         page << "$('#w_#{w}_minmax').prop('title', ' Minimize');"
         page << "$('#w_#{w}_minmax').text(' Minimize');"
+        page << javascript_prepend_span("w_#{w}_minmax", "fa fa-caret-square-o-up fa-fw")
         @sb[:dashboards][@sb[:active_db]][:minimized].delete(w)
       else
-        page << javascript_del_class("w_#{w}_minmax", "fa-caret-square-o-up fa-fw")
-        page << javascript_add_class("w_#{w}_minmax", "fa fa-caret-square-o-down fa-fw")
         page << javascript_hide("dd_w#{w}_box")
         page << "$('#w_#{w}_minmax').prop('title', ' Maximize');"
         page << "$('#w_#{w}_minmax').text(' Maximize');"
+        page << javascript_prepend_span("w_#{w}_minmax", "fa fa-caret-square-o-down fa-fw")
         @sb[:dashboards][@sb[:active_db]][:minimized].push(w)
       end
     end
@@ -640,7 +637,7 @@ class DashboardController < ApplicationController
 
   def session_reset
     # save some fields to recover back into session hash after session is cleared
-    keys_to_restore = [:winH, :winW, :browser, :user_TZO]
+    keys_to_restore = [:winH, :browser, :user_TZO]
     data_to_restore = keys_to_restore.each_with_object({}) { |k, v| v[k] = session[k] }
 
     session.clear

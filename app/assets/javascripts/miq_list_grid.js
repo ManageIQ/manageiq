@@ -1,3 +1,5 @@
+/* global DoNav miqDomElementExists miqJqueryRequest miqSetButtons miqUpdateButtons */
+
 // Handle row click (ajax or normal html trans)
 function miqRowClick(row_id, row_url, row_url_ajax) {
   if (! row_url)
@@ -96,6 +98,6 @@ function miqGetSortUrl(col_id) {
 }
 
 function miqGridSort(col_id) {
-  url = miqGetSortUrl(col_id);
+  var url = miqGetSortUrl(col_id);
   miqJqueryRequest(url, {beforeSend: true, complete: true});
 }

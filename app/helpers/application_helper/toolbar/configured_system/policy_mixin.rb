@@ -1,7 +1,7 @@
 module ApplicationHelper::Toolbar::ConfiguredSystem::PolicyMixin
-  def included(included_class)
-    button_group('provider_foreman_policy', [
-      select(
+  def self.included(included_class)
+    included_class.button_group('provider_foreman_policy', [
+      included_class.select(
         :provider_foreman_policy_choice,
         'fa fa-shield fa-lg',
         t = N_('Policy'),

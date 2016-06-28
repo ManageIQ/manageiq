@@ -1,3 +1,5 @@
+/* global miqJqueryRequest */
+
 function changeStoredPassword(pfx, url) {
   var prefix = "";
   if(pfx.length > 1) {

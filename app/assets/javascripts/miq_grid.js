@@ -1,3 +1,5 @@
+/* global miqJqueryRequest miqSetButtons miqSparkleOn */
+
 (function($) {
   $.fn.miqGrid = function() {
     var table = $(this);
@@ -7,7 +9,7 @@
     // table-selectable
     if (table.hasClass('table-clickable')) {
       var url = table.find('tbody').data('click-url');
-      table.find('tbody > tr > td:not(.noclick)').click(function (e) {
+      table.find('tbody > tr > td:not(.noclick)').click(function (_e) {
         miqSparkleOn();
         var cid = $(this).parent().data('click-id');
         miqJqueryRequest(url + '?id=' + cid);
@@ -16,7 +18,7 @@
 
     // table-checkable
     if (table.hasClass('table-checkable')) {
-      checkboxes.click(function (e) {
+      checkboxes.click(function (_e) {
         var checked = $.map(checkboxes.filter(':checked'), function (cb) {
           return cb.value;
         });
@@ -30,7 +32,7 @@
       });
 
       // Handle the click on the "Check all" checkbox
-      checkall.click(function (e) {
+      checkall.click(function (_e) {
         var unchecked = checkboxes.filter(':not(:checked)');
         if (unchecked.length > 0) {
           unchecked.trigger('click');

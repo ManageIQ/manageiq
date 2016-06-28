@@ -1,7 +1,7 @@
 module ApplicationHelper::Toolbar::ConfiguredSystem::LifecycleMixin
-  def included(included_class)
-    button_group('provider_foreman_lifecycle', [
-      select(
+  def self.included(included_class)
+    included_class.button_group('provider_foreman_lifecycle', [
+      included_class.select(
         :provider_foreman_lifecycle_choice,
         'fa fa-recycle fa-lg',
         t = N_('Lifecycle'),

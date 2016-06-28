@@ -197,7 +197,6 @@
                                 :json_tree          => @ldap_ous_tree,
                                 :onclick            => "miqOnClickProvLdapOus",
                                 :click_url          => "/miq_request/prov_field_changed/#{click}",
-                                :cfme_changes_check => true,
                                 :cookie_id_prefix   => "prov_trees",
                                 :tree_state         => true})
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?

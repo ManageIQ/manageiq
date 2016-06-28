@@ -16,7 +16,7 @@ class SecurityGroup < ApplicationRecord
   has_and_belongs_to_many :vms
   has_and_belongs_to_many :network_ports
 
-  virtual_total :total_vms, :vms
+  virtual_total :total_vms, :vms, :arel => nil
 
   def self.non_cloud_network
     where(:cloud_network_id => nil)

@@ -12,7 +12,6 @@ class MiqCapacityController < ApplicationController
     @explorer = true
     @trees = [] # TODO: TreeBuilder
     @breadcrumbs = []
-    @sb[:open_tree_nodes] ||= []
     self.x_active_tree = 'utilization_tree'
     util_build_tree(:utilization, :utilization_tree)
     @accords = [{
@@ -47,7 +46,6 @@ class MiqCapacityController < ApplicationController
     @explorer = true
     @trees = [] # TODO: TreeBuilder
     @breadcrumbs = []
-    @sb[:open_tree_nodes] ||= []
     @explorer = true
     @collapse_c_cell = true
     @layout = "miq_capacity_bottlenecks"
@@ -168,7 +166,10 @@ class MiqCapacityController < ApplicationController
 
   def planning_wizard_get_vms(filter_type, filter_value)
     vms = planning_wizard_get_vms_records(filter_type, filter_value)
-    vms.each_with_object({}) { |v, h| h[v.id.to_s] = v.name }
+    vms.each_with_object({}) do |v, h|
+      description = v.ext_management_system ? _("#{v.ext_management_system.name}:#{v.name}") : v.name
+      h[v.id.to_s] = description
+    end
   end
   private :planning_wizard_get_vms
 
@@ -335,6 +336,11 @@ class MiqCapacityController < ApplicationController
     when "pdf"
       render_pdf(report)
     end
+  end
+
+  def reload
+    @_params[:id] = x_node
+    optimize_tree_select
   end
 
   def optimize_tree_select

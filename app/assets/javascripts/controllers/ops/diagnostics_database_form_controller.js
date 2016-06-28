@@ -1,6 +1,5 @@
 ManageIQ.angular.app.controller('diagnosticsDatabaseFormController', ['$http', '$scope', '$attrs', 'miqService', 'miqDBBackupService', function($http, $scope, $attrs, miqService, miqDBBackupService) {
   var init = function() {
-
     $scope.diagnosticsDatabaseModel = {
       action_typ: 'db_backup',
       backup_schedule_type: '',
@@ -36,7 +35,7 @@ ManageIQ.angular.app.controller('diagnosticsDatabaseFormController', ['$http', '
 
     miqService.sparkleOn();
 
-    url = $scope.dbBackupFormFieldChangedUrl;
+    var url = $scope.dbBackupFormFieldChangedUrl;
     $http.post(url + $scope.diagnosticsDatabaseModel.backup_schedule_type).success(function(data) {
       $scope.$broadcast('resetClicked');
       $scope.diagnosticsDatabaseModel.depot_name = data.depot_name;
@@ -81,7 +80,7 @@ ManageIQ.angular.app.controller('diagnosticsDatabaseFormController', ['$http', '
   $scope.submitButtonClicked = function(confirm_msg) {
     if (confirm(confirm_msg)) {
       miqService.sparkleOn();
-      url = $scope.submitUrl;
+      var url = $scope.submitUrl;
       miqService.miqAjaxButton(url, true);
     }
   };

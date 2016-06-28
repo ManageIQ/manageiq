@@ -4419,6 +4419,8 @@ middleware_servers:
 - ems_id
 - created_at
 - updated_at
+- lives_on_type
+- lives_on_id
 miq_actions:
 - id
 - name

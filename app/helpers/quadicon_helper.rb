@@ -113,6 +113,9 @@ module QuadiconHelper
       elsif db == "FloatingIp"
         link_to(truncate_for_quad(item.address),
                 url_for_db(db, "show"), :title => h(item.address))
+      elsif db == "Authentication"
+        link_to(truncate_for_quad(row['name']),
+                url_for_db("auth_key_pair_cloud", "show"), :title => h(row['name']))
       else
         if @explorer
           column = case db
@@ -377,7 +380,7 @@ module QuadiconHelper
                      "100/#{item.class.to_s.underscore}.png"
                    end
                  elsif item.decorator_class?
-                   item.decorate.try(:fonticon) || item.decorate.try(:listicon_image)
+                   item.decorate.try(:listicon_image)
                  else
                    "100/#{item.class.base_class.to_s.underscore}.png"
                  end
@@ -566,7 +569,7 @@ module QuadiconHelper
             )
           end
         else
-          if @policy_sim && !session[:policies].empty?
+          if @policy_sim
             if @edit && @edit[:explorer]
               link_to(
                 image_tag(ActionController::Base.helpers.image_path("#{size}/reflection.png"),

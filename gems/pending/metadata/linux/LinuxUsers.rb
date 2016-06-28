@@ -192,7 +192,7 @@ module MiqLinux
       @contents = nil
       @records  = nil
       begin
-        fs.fileOpen(path) { |fo| @contents = fo.read }
+        fs.fileOpen(path, "rb") { |fo| @contents = fo.read }
       rescue
       end
     end

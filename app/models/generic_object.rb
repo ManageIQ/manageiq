@@ -1,17 +1,18 @@
 class GenericObject < ApplicationRecord
   belongs_to :generic_object_definition
-  has_many   :custom_attributes, :as => :resource, :dependent => :destroy, :autosave => true
 
-  validates :name, :presence => true, :uniqueness => true
-  validate  :must_be_defined_attributes
+  validates :name, :presence => true
 
-  def must_be_defined_attributes
-    return errors.add(:base, "must specify a GenericObjectDefinition.") unless generic_object_definition
+  has_many :custom_attributes, :as => :resource, :dependent => :destroy, :autosave => true
+  private  :custom_attributes, :custom_attributes=
 
-    found = custom_attributes.detect { |ca| !generic_object_definition.defined_attributes.include?(ca.name) }
-    if found
-      errors.add(:base, "#{found.name} is not defined in GenericObjectDefinition: #{generic_object_definition.defined_attributes.keys.join(", ")}.")
-    end
+  delegate :property_attribute_defined?, :to => :generic_object_definition, :allow_nil => true
+
+  def initialize(attributes = {})
+    # generic_object_definition will be set first since hash iteration is based on the order of key insertion
+    attributes = (attributes || {}).symbolize_keys
+    attributes = attributes.slice(:generic_object_definition).merge(attributes.except(:generic_object_definition))
+    super
   end
 
   def inspect
@@ -26,30 +27,35 @@ class GenericObject < ApplicationRecord
     "#<#{self.class} #{attributes_as_string.join(", ")}>"
   end
 
-  def method_missing(method_name, *args)
-    m = method_name.to_s.chomp("=")
-    super if generic_object_definition && !generic_object_definition.defined_attributes.include?(m)
-    method_name.to_s.end_with?('=') ? custom_attribute_setter(m, args.first) : custom_attribute_getter(m)
-  end
-
-  def respond_to_missing?(method_name, *args)
-    return true unless generic_object_definition
-    generic_object_definition.defined_attributes.include?(method_name.to_s.chomp!("=")) || super
-  end
-
   def property_attributes
-    custom_attributes.each_with_object({}) { |ca, h| h[ca.name] = custom_attribute_getter(ca.name) if ca.id }
+    custom_attributes.each_with_object({}) { |ca, h| h[ca.name] = custom_attribute_getter(ca.name) }
   end
 
   def property_attributes=(options)
-    options.each { |k, v| custom_attribute_setter(k, v) }
+    raise "generic_object_definition is nil" unless generic_object_definition
+    options.keys.each do |k|
+      unless property_attribute_defined?(k)
+        raise ActiveModel::UnknownAttributeError.new(self, k)
+      end
+    end
+    options.each { |k, v| custom_attribute_setter(k.to_s, v) }
   end
 
   private
 
+  def method_missing(method_name, *args)
+    m = method_name.to_s.chomp("=")
+    super unless property_attribute_defined?(m)
+    method_name.to_s.end_with?('=') ? custom_attribute_setter(m, args.first) : custom_attribute_getter(m)
+  end
+
+  def respond_to_missing?(method_name, _include_private = false)
+    return true if property_attribute_defined?(method_name.to_s.chomp('='))
+    super
+  end
+
   def custom_attribute_getter(name)
-    @custom_attributes ||= custom_attributes
-    found = @custom_attributes.detect { |ca| ca.name == name }
+    found = custom_attributes.detect { |ca| ca.name == name }
     found ? generic_object_definition.type_cast(name, found.value) : nil
   end
 

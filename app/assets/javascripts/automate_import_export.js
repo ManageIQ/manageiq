@@ -1,39 +1,40 @@
 //= require import
 
+/* global miqSparkleOn miqSparkleOff showSuccessMessage showErrorMessage showWarningMessage clearMessages */
+
 var Automate = {
   getAndRenderAutomateJson: function(importFileUploadId, message) {
     $('.hidden-import-file-upload-id').val(importFileUploadId);
 
     $.getJSON("automate_json?import_file_upload_id=" + importFileUploadId)
       .done(function(rows_json) {
-      Automate.addDomainOptions(rows_json.children);
-      Automate.setupInitialDynatree(rows_json.children);
+        Automate.addDomainOptions(rows_json.children);
+        Automate.setupInitialDynatree(rows_json.children);
 
-      $('select.importing-domains').change(function() {
-        Automate.importingDomainsChangeHandler(rows_json.children);
+        $('select.importing-domains').change(function() {
+          Automate.importingDomainsChangeHandler(rows_json.children);
+        });
+
+        $('#import_file_upload_id').val(importFileUploadId);
+        $('.import-data').show();
+        $('.import-or-export').hide();
+        showSuccessMessage(JSON.parse(message).message);
+      })
+      .fail(function(failedMessage) {
+        var messageData = JSON.parse(failedMessage.responseText);
+
+        if (messageData.level == 'warning') {
+          showWarningMessage(messageData.message);
+        } else {
+          showErrorMessage(messageData.message);
+        }
       });
-
-      $('#import_file_upload_id').val(importFileUploadId);
-      $('.import-data').show();
-      $('.import-or-export').hide();
-      showSuccessMessage(JSON.parse(message).message);
-    })
-    .fail(function(failedMessage) {
-      var messageData = JSON.parse(failedMessage.responseText);
-
-      if (messageData.level == 'warning') {
-        showWarningMessage(messageData.message);
-      } else {
-        showErrorMessage(messageData.message);
-      }
-    });
-
   },
 
   addDomainOptions: function(domains) {
     $('select.importing-domains').empty();
 
-    $.each(domains, function(index, child) {
+    $.each(domains, function(_index, child) {
       $('select.importing-domains').append(
         $('<option>', {
           value: child.title,
@@ -54,7 +55,7 @@ var Automate = {
   },
 
   importingDomainsChangeHandler: function(domains) {
-    $.each(domains, function(index, child) {
+    $.each(domains, function(_index, child) {
       if ($('select.importing-domains').val() === child.title) {
         $('.domain-tree').dynatree({
           checkbox: true,
