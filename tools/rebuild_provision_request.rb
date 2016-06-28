@@ -1,4 +1,5 @@
 require 'trollop'
+require 'rest-client'
 #
 # Helper Script to show the json / hash output of an
 # existing Automate request
