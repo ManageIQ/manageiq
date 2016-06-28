@@ -1,5 +1,6 @@
 module EmsCommon
   extend ActiveSupport::Concern
+  include EmsCredentialsValidator
 
   def gtl_url
     restful? ? '/' : '/show'
@@ -316,30 +317,6 @@ module EmsCommon
     validate_credentials verify_ems
   end
   private :update_button_validate
-
-  def get_validation_object(verify_ems)
-    set_record_vars(verify_ems, :validate)
-    @in_a_form = true
-    @changed = session[:changed]
-
-    # validate button should say "revalidate" if the form is unchanged
-    revalidating = !edit_changed?
-    result, details = verify_ems.authentication_check(params[:type], :save => revalidating)
-    {:details => details, :result => result}
-  end
-
-  def validate_credentials(verify_ems)
-    result_object = get_validation_object verify_ems
-    if result_object[:result]
-      add_flash(_("Credential validation was successful"))
-    else
-      add_flash(_("Credential validation was not successful: %{details}") %
-      {:details => result_object[:details]}, :error)
-    end
-
-    render_flash
-  end
-  private :validate_credentials
 
   # handle buttons pressed on the button bar
   def button

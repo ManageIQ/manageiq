@@ -53,7 +53,7 @@ class EmsMiddlewareController < ApplicationController
   def new_provider
     result_object = provider_validator
     if result_object[:result]
-      store_provier result_object
+      store_provider result_object
     end
     render :json => result_object
   end
@@ -77,7 +77,7 @@ class EmsMiddlewareController < ApplicationController
 
   private
 
-  def store_provier(result_object)
+  def store_provider(result_object)
     set_record_vars(result_object[:ems_object])
     if valid_record?(result_object[:ems_object]) && result_object[:ems_object].save
       AuditEvent.success(build_created_audit(result_object[:ems_object], @edit))
@@ -92,7 +92,7 @@ class EmsMiddlewareController < ApplicationController
   def provider_validator
     create_or_edit
     middleware_provider = model.model_from_emstype(@edit[:new][:emstype]).new
-    result_object = get_validation_object middleware_provider
+    result_object = create_validation_object middleware_provider
     result_object[:ems_object] = middleware_provider
     result_object
   end

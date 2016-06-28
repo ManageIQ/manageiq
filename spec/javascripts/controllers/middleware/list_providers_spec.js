@@ -83,11 +83,11 @@ describe('middleware.providers.miqListProvidersController', function() {
   it('set 5 records per page and check number of visible items', function() {
     $controller.onPerPage({title: '5', value: 5});
     expect($controller.perPage.title === '5').toBeTruthy();
-    expect($controller.MiQDataTableService.dataTableService.visibleItems.length).toBe(5);
+    expect($controller.MiQDataTableService.visibleItems.length).toBe(5);
   });
 
   it('load more items and check number of visible items', function() {
     $controller.MiQDataTableService.loadMore();
-    expect($controller.MiQDataTableService.dataTableService.visibleItems.length > 5).toBeTruthy();
+    expect($controller.MiQDataTableService.visibleItems.length > 5).toBeTruthy();
   });
 });
