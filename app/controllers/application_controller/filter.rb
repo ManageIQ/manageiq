@@ -866,9 +866,9 @@ module ApplicationController::Filter
             adv_search_build(vm_model_from_active_tree(x_active_tree))
           end
           session[:edit] = @edit              # Set because next method will restore @edit from session
-          listnav_search_selected(search_id)  # Clear or set the adv search filter
-          self.x_node = "root"
         end
+        listnav_search_selected(search_id)  # Clear or set the adv search filter
+        self.x_node = "root"
         replace_right_cell
       end
       format.html do
