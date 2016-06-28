@@ -109,7 +109,7 @@ module ToolbarHelper
                            'data-toggle' => "dropdown",
                          )) do
         (toolbar_image(props) +
-          _(props[:text].to_s) + "&nbsp;".html_safe +
+          props.localized(:text) + "&nbsp;".html_safe +
           content_tag(:span, '', :class => "caret")).html_safe
       end
       out << content_tag(:ul, :class => 'dropdown-menu') do
@@ -131,7 +131,7 @@ module ToolbarHelper
                            :type  => "button",
                            :class => "#{cls}btn btn-default")) do
       (toolbar_image(props) +
-        _(props[:text].to_s) + "&nbsp;".html_safe).html_safe
+        props.localized(:text) + "&nbsp;".html_safe).html_safe
     end
   end
 
@@ -164,7 +164,7 @@ module ToolbarHelper
       content_tag(:a, prepare_data_keys(props)
                   .update(:href => '#')
                   .update(prepare_tag_keys(props))) do
-        (toolbar_image(props) + _(props[:text].to_s).html_safe)
+        (toolbar_image(props) + props.localized(:text).html_safe)
       end
     end
   end
@@ -182,7 +182,7 @@ module ToolbarHelper
       content_tag(:a, prepare_data_keys(props)
                       .update(:href => '#')
                       .update(prepare_tag_keys(props))) do
-        (toolbar_image(props) + _(props[:text].to_s).html_safe)
+        (toolbar_image(props) + props.localized(:text).html_safe)
       end
     end
   end
@@ -200,10 +200,10 @@ module ToolbarHelper
   #
   def prepare_tag_keys(props)
     h = data_hash_keys(props)
-    h.update('title'      => _(props[:title]),
+    h.update('title'      => props.localized(:title),
              'data-click' => props[:id])
     h['name'] = props[:name] if props.key?(:name)
-    h['data-confirm-tb'] = _(props[:confirm]) if props.key?(:confirm)
+    h['data-confirm-tb'] = props.localized(:confirm) if props.key?(:confirm)
     h
   end
 
