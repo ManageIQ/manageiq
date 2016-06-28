@@ -33,12 +33,12 @@
                   %span#clear_search{:style => "display:none"}
                     - if route_exists?(:action => 'adv_search_clear')
                       (
-                      = link_to("clear",
+                      = link_to(_("clear"),
                                 {:action              => "adv_search_clear"},
                                 "data-miq_sparkle_on" => true,
                                 :remote               => true,
                                 "data-method"         => :post,
-                                :title                => "Remove the current filter",
+                                :title                => _("Remove the current filter"),
                                 :style                => "text-decoration: underline;")
                       )
               .col-md-5
