@@ -265,7 +265,7 @@ class AutomateHash
 
   def provision_options
     find_request_options
-    @provision_options.options.dup
+    @provision_options.options.dup.merge!(:request_type => @provision_options.request_type)
   end
 
   def dialog
