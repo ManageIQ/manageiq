@@ -72,6 +72,14 @@ class Storage < ApplicationRecord
     name
   end
 
+  def ext_management_system=(ems)
+    @ext_management_system = ems
+  end
+
+  def ext_management_system
+    @ext_management_system ||= ext_management_systems.first
+  end
+
   def ext_management_systems
     @ext_management_systems ||= ExtManagementSystem.joins(:hosts => :storages).where(
       :host_storages => {:storage_id => id}).distinct.to_a
@@ -104,7 +112,7 @@ class Storage < ApplicationRecord
   def my_zone
     return MiqServer.my_zone if     ext_management_systems.empty?
     return MiqServer.my_zone unless ext_management_systems_in_zone(MiqServer.my_zone).empty?
-    ext_management_systems.first.my_zone
+    ext_management_system.my_zone
   end
 
   def scan_starting(miq_task_id, host)
@@ -860,12 +868,14 @@ class Storage < ApplicationRecord
   end
 
   def validate_smartstate_analysis
-    return {:available => false, :message => "Smartstate Analysis cannot be performed on selected Datastore"} if ext_management_systems.blank? ||
-                                                     !ext_management_systems.first.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
-    {:available => true,   :message => nil}
+    if ext_management_systems.blank? || !ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
+      {:available => false, :message => "Smartstate Analysis cannot be performed on selected Datastore"}
+    else
+      {:available => true, :message => nil}
+    end
   end
 
   def tenant_identity
-    ext_management_systems.first.tenant_identity
+    ext_management_system.tenant_identity
   end
 end
