@@ -73,10 +73,11 @@ class AuthKeyPairCloudController < ApplicationController
     assert_privileges("auth_key_pair_cloud_new")
     ems_choices = ManageIQ::Providers::CloudManager.select do |ems|
       ems.class::AuthKeyPair.is_available?(:create_key_pair, ems)
-    end.map do |ems|
+    end
+    ems_choices.each do |ems|
       {:name => ems.name, :id => ems.id}
     end
-    render json: { ems_choices: ems_choices  }
+    render :json => {:ems_choices => ems_choices}
   end
 
   def new
@@ -96,21 +97,20 @@ class AuthKeyPairCloudController < ApplicationController
 
     kls = ManageIQ::Providers::CloudManager::AuthKeyPair
     options = {
-        :name => params[:name],
-        :public_key => !!params[:public_key] ? params[:public_key] : nil,
-        :ems_id => !!params[:ems_id] ? params[:ems_id] : nil
+      :name       => params[:name],
+      :public_key => params[:public_key],
+      :ems_id     => params[:ems_id]
     }
 
     case params[:button]
     when "cancel"
       render :update do |page|
         page << javascript_prologue
-        page.redirect_to :action => 'show_list',
+        page.redirect_to :action    => 'show_list',
                          :flash_msg => _("Add of new %{model} was cancelled by the user") % {
                            :model => ui_lookup(:table => 'auth_key_pair_cloud')
                          }
       end
-
     when "save"
       ext_management_system = find_by_id_filtered(ManageIQ::Providers::CloudManager, options[:ems_id])
       kls = kls.class_by_ems(ext_management_system)
@@ -145,7 +145,6 @@ class AuthKeyPairCloudController < ApplicationController
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
-
     when "validate"
       @in_a_form = true
       ext_management_system = find_by_id_filtered(ManageIQ::Providers::CloudManager, options[:ems_id])
