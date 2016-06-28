@@ -319,6 +319,17 @@
       :get:
       - :name: read
         :identifier: flavor_show
+  :git_repositories:
+    :description: Git Repositories
+    :identifier: git_repository
+    :options:
+    - :collection
+    :verbs: *70174834086080
+    :klass: GitRepository
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: git_repository_show_list
   :groups:
     :description: Groups
     :identifier: rbac_group

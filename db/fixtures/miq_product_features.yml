@@ -2005,6 +2005,22 @@
   :description: Automate Import/Export
   :feature_type: node
   :identifier: miq_ae_class_import_export
+  :children:
+  - :name: GitRepository
+    :description: Git Repository
+    :feature_type: node
+    :identifier: git_repository
+    :hidden: true
+    :children:
+    - :name: View
+      :description: View Git Repositories
+      :feature_type: view
+      :identifier: git_repository_view
+      :children:
+      - :name: List
+        :description: Display List of Git Repositories
+        :feature_type: view
+        :identifier: git_repository_show_list
 
 # Automate Log
 - :name: Log
