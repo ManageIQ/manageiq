@@ -1,17 +1,6 @@
-class Api::Settings
-  def self.data
-    @data ||= YAML.load_file(Rails.root.join("config/api.yml"))
-  end
-
-  def self.base
-    data[:base]
-  end
-
-  def self.version
-    data[:version]
-  end
-
-  def self.collections
-    data[:collections]
+module Api
+  Settings = ::Config::Options.new.tap do |o|
+    o.add_source!(Rails.root.join("config/api.yml").to_s)
+    o.load!
   end
 end

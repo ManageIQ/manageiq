@@ -20,7 +20,7 @@ class ApiController
 
     def entrypoint_versions
       version_config[:definitions].collect do |version_specification|
-        if version_specification.key?(:ident)
+        if version_specification[:ident]
           {
             :name => version_specification[:name],
             :href => "#{@req[:api_prefix]}/#{version_specification[:ident]}"

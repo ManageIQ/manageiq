@@ -9,7 +9,8 @@ describe ApiController do
   end
 
   def test_collection_query(collection, collection_url, klass, attr = :id)
-    if Api::Settings.collections.fetch_path(collection, :collection_actions, :get)
+    collection_actions = Api::Settings.collections[collection][:collection_actions]
+    if collection_actions && collection_actions[:get]
       api_basic_authorize collection_action_identifier(collection, :read, :get)
     else
       api_basic_authorize

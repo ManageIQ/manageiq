@@ -411,8 +411,8 @@ class ApiController
     # href is the optional href for the action specs, required for resources
     #
     def gen_action_specs(collection, type, is_subcollection, href = nil, resource = nil)
-      if collection_config.key?(collection)
-        cspec = collection_config[collection]
+      cspec = collection_config[collection]
+      if cspec
         if type == :collection
           gen_action_spec_for_collections(collection, cspec, is_subcollection, href)
         else
@@ -423,7 +423,7 @@ class ApiController
 
     def gen_action_spec_for_collections(collection, cspec, is_subcollection, href)
       target = is_subcollection ? :subcollection_actions : :collection_actions
-      return [] unless cspec.key?(target)
+      return [] unless cspec[target]
       cspec[target].each.collect do |method, action_definitions|
         next unless render_actions_for_method(cspec[:verbs], method)
         typed_action_definitions = fetch_typed_subcollection_actions(method, is_subcollection) || action_definitions
@@ -437,7 +437,7 @@ class ApiController
 
     def gen_action_spec_for_resources(cspec, is_subcollection, href, resource)
       target = is_subcollection ? :subresource_actions : :resource_actions
-      return [] unless cspec.key?(target)
+      return [] unless cspec[target]
       cspec[target].each.collect do |method, action_definitions|
         next unless render_actions_for_method(cspec[:verbs], method)
         typed_action_definitions = fetch_typed_subcollection_actions(method, is_subcollection) || action_definitions
@@ -457,7 +457,7 @@ class ApiController
       return unless is_subcollection
       ctype = @req[:collection].to_sym
       sakey = "#{@req[:subcollection]}_subcollection_actions".to_sym
-      collection_config.fetch_path(ctype, sakey, method.to_sym)
+      collection_config[ctype][sakey] && collection_config[ctype][sakey][method.to_sym]
     end
 
     def api_user_role_allows?(action_identifier)
