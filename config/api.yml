@@ -1622,7 +1622,7 @@
     :identifier: miq_virtual_template
     :options:
     - :collection
-    :methods: *70174834084700
+    :verbs: *70174834084700
     :klass: ManageIQ::Providers::CloudManager::VirtualTemplate
     :collection_actions:
       :get:

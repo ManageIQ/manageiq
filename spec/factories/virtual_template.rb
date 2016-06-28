@@ -4,13 +4,12 @@ FactoryGirl.define do
     name                    'vt'
     location                'us-west-1'
     ems_ref                 'i-12345'
-    availability_zone_id     0
-    cloud_subnet_id          1
-    cloud_network_id         2
-    type                     'ManageIQ::Providers::CloudManager::VirtualTemplate'
+  end
 
-    trait :amazon do
-      type 'ManageIQ::Providers::Amazon::CloudManager::VirtualTemplate'
-    end
+  factory :virtual_template_amazon, :class => 'ManageIQ::Providers::Amazon::CloudManager::VirtualTemplate' do
+    vendor                  'amazon'
+    name                    'virtual template amazon'
+    location                'us-west-1'
+    ems_ref                 'i-12345'
   end
 end

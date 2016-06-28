@@ -13,10 +13,15 @@
 
 RSpec.describe 'Virtual Template API' do
   context 'virtual templates index' do
+    let(:cloud_subnet_amazon) { FactoryGirl.create(:cloud_subnet_amazon) }
+    let(:availability_zone_amazon) { FactoryGirl.create(:availability_zone_amazon) }
+
     it 'can list all the virtual templates' do
       api_basic_authorize collection_action_identifier(:virtual_templates, :read, :get)
       FactoryGirl.create(:virtual_template)
-      FactoryGirl.create(:virtual_template, :amazon)
+      FactoryGirl.create(:virtual_template_amazon,
+                         :cloud_subnet_id      => cloud_subnet_amazon.id,
+                         :availability_zone_id => availability_zone_amazon.id)
 
       run_get(virtual_templates_url)
       expect_query_result(:virtual_templates, 2, 2)
@@ -33,20 +38,20 @@ RSpec.describe 'Virtual Template API' do
   end
 
   context 'virtual templates create' do
-    let(:subnet) { FactoryGirl.create(:cloud_subnet) }
-    let(:network) { FactoryGirl.create(:cloud_network) }
-    let(:availability_zone) { FactoryGirl.create(:availability_zone) }
+    let(:cloud_network_amazon) { FactoryGirl.create(:cloud_network_amazon) }
+    let(:cloud_subnet_amazon) { FactoryGirl.create(:cloud_subnet_amazon) }
+    let(:availability_zone_amazon) { FactoryGirl.create(:availability_zone_amazon) }
 
     let(:template) do
       {
         :action               => 'create',
-        :name                 => 'create_vt',
+        :name                 => 'create_amazon_template',
         :vendor               => 'amazon',
         :location             => 'us-west-2',
-        :cloud_network_id     => network.id,
-        :cloud_subnet_id      => subnet.id,
-        :availability_zone_id => availability_zone.id,
-        :ems_ref              => 'aref',
+        :cloud_network_id     => cloud_network_amazon.id,
+        :cloud_subnet_id      => cloud_subnet_amazon.id,
+        :availability_zone_id => availability_zone_amazon.id,
+        :ems_ref              => 'i-12345',
         :type                 => 'ManageIQ::Providers::Amazon::CloudManager::VirtualTemplate'
       }
     end
@@ -98,7 +103,9 @@ RSpec.describe 'Virtual Template API' do
     end
 
     it 'rejects virtual_template creation of a duplicate type' do
-      FactoryGirl.create(:virtual_template, :amazon)
+      FactoryGirl.create(:virtual_template_amazon,
+                         :cloud_subnet_id      => cloud_subnet_amazon.id,
+                         :availability_zone_id => availability_zone_amazon.id)
       api_basic_authorize collection_action_identifier(:virtual_templates, :create)
       run_post(virtual_templates_url, template)
 
@@ -114,8 +121,14 @@ RSpec.describe 'Virtual Template API' do
   end
 
   context 'virtual template edit' do
+    let(:cloud_subnet_amazon) { FactoryGirl.create(:cloud_subnet_amazon) }
+    let(:availability_zone_amazon) { FactoryGirl.create(:availability_zone_amazon) }
     let(:template) { FactoryGirl.create(:virtual_template) }
-    let(:template_2) { FactoryGirl.create(:virtual_template, :amazon) }
+    let(:template_amazon) do
+      FactoryGirl.create(:virtual_template_amazon,
+                         :cloud_subnet_id      => cloud_subnet_amazon.id,
+                         :availability_zone_id => availability_zone_amazon.id)
+    end
 
     it 'supports single virtual_template edit' do
       api_basic_authorize collection_action_identifier(:virtual_templates, :edit)
@@ -126,7 +139,7 @@ RSpec.describe 'Virtual Template API' do
 
     it 'supports multiple virtual_template edit' do
       api_basic_authorize collection_action_identifier(:virtual_templates, :edit)
-      template_id_1, template_id_2 = template.id, template_2.id
+      template_id_1, template_id_2 = template.id, template_amazon.id
 
       resource_request = [
         {:href => virtual_templates_url(template_id_1), :name => 'firstEdit'},
@@ -141,13 +154,19 @@ RSpec.describe 'Virtual Template API' do
 
       expect_results_to_match_hash('results', resource_results)
       expect(template.reload.name).to eq('firstEdit')
-      expect(template_2.reload.name).to eq('secondEdit')
+      expect(template_amazon.reload.name).to eq('secondEdit')
     end
   end
 
   context 'virtual template delete' do
+    let(:cloud_subnet_amazon) { FactoryGirl.create(:cloud_subnet_amazon) }
+    let(:availability_zone_amazon) { FactoryGirl.create(:availability_zone_amazon) }
     let(:template) { FactoryGirl.create(:virtual_template) }
-    let(:template_2) { FactoryGirl.create(:virtual_template, :amazon) }
+    let(:template_amazon) do
+      FactoryGirl.create(:virtual_template_amazon,
+                         :cloud_subnet_id      => cloud_subnet_amazon.id,
+                         :availability_zone_id => availability_zone_amazon.id)
+    end
 
     it 'supports single virtual_template delete' do
       api_basic_authorize collection_action_identifier(:virtual_templates, :delete)
@@ -158,7 +177,7 @@ RSpec.describe 'Virtual Template API' do
 
     it 'supports multiple virtual_template delete' do
       api_basic_authorize collection_action_identifier(:virtual_templates, :delete)
-      template_id_1, template_id_2 = template.id, template_2.id
+      template_id_1, template_id_2 = template.id, template_amazon.id
       template_url_1, template_url_2 = virtual_templates_url(template_id_1), virtual_templates_url(template_id_2)
 
       run_post(virtual_templates_url, gen_request(:delete, [{'href' => template_url_1}, {'href' => template_url_2}]))
