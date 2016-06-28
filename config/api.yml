@@ -158,7 +158,7 @@
     :description: Container Provider Deployment
     :identifier: container_deployment
     :klass: ContainerDeployment
-    :methods: *70174834084700
+    :verbs: *70174834084700
     :options:
     - :collection
     :collection_actions:
