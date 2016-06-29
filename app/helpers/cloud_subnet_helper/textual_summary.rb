@@ -1,4 +1,5 @@
 module CloudSubnetHelper::TextualSummary
+  include TextualMixins::TextualGroupTags
   include TextualMixins::TextualName
   #
   # Groups
@@ -10,10 +11,6 @@ module CloudSubnetHelper::TextualSummary
 
   def textual_group_relationships
     %i(parent_ems_cloud ems_network cloud_tenant availability_zone instances cloud_network network_router)
-  end
-
-  def textual_group_tags
-    %i(tags)
   end
 
   #

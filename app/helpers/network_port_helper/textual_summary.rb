@@ -1,4 +1,5 @@
 module NetworkPortHelper::TextualSummary
+  include TextualMixins::TextualGroupTags
   include TextualMixins::TextualName
   #
   # Groups
@@ -10,10 +11,6 @@ module NetworkPortHelper::TextualSummary
 
   def textual_group_relationships
     %i(parent_ems_cloud ems_network cloud_tenant instance cloud_subnets floating_ips)
-  end
-
-  def textual_group_tags
-    %i(tags)
   end
 
   #

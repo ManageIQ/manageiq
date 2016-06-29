@@ -1,14 +1,11 @@
 module AvailabilityZoneHelper::TextualSummary
+  include TextualMixins::TextualGroupTags
   #
   # Groups
   #
 
   def textual_group_relationships
     %i(ems_cloud instances cloud_volumes)
-  end
-
-  def textual_group_tags
-    %i(tags)
   end
 
   def textual_group_availability_zone_totals

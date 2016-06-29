@@ -1,4 +1,5 @@
 module FlavorHelper::TextualSummary
+  include TextualMixins::TextualGroupTags
   #
   # Groups
   #
@@ -19,10 +20,6 @@ module FlavorHelper::TextualSummary
 
   def textual_group_relationships
     %i(ems_cloud instances)
-  end
-
-  def textual_group_tags
-    %i(tags)
   end
 
   #

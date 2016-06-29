@@ -1,4 +1,5 @@
 module NetworkRouterHelper::TextualSummary
+  include TextualMixins::TextualGroupTags
   include TextualMixins::TextualName
   #
   # Groups
@@ -10,10 +11,6 @@ module NetworkRouterHelper::TextualSummary
 
   def textual_group_relationships
     %i(parent_ems_cloud ems_network cloud_tenant instances cloud_subnets external_gateway)
-  end
-
-  def textual_group_tags
-    %i(tags)
   end
 
   #

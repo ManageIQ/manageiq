@@ -1,4 +1,5 @@
 module FloatingIpHelper::TextualSummary
+  include TextualMixins::TextualGroupTags
   #
   # Groups
   #
@@ -9,10 +10,6 @@ module FloatingIpHelper::TextualSummary
 
   def textual_group_relationships
     %i(parent_ems_cloud ems_network cloud_tenant instance network_port)
-  end
-
-  def textual_group_tags
-    %i(tags)
   end
 
   #

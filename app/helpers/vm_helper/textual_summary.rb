@@ -3,6 +3,7 @@ module VmHelper::TextualSummary
   include TextualMixins::TextualDescription
   include TextualMixins::TextualDrift
   include TextualMixins::TextualFilesystems
+  include TextualMixins::TextualGroupTags
   include TextualMixins::TextualInitProcesses
   include TextualMixins::TextualName
   include TextualMixins::TextualOsInfo
@@ -84,10 +85,6 @@ module VmHelper::TextualSummary
 
   def textual_group_normal_operating_ranges
     %i(normal_operating_ranges_cpu normal_operating_ranges_cpu_usage normal_operating_ranges_memory normal_operating_ranges_memory_usage)
-  end
-
-  def textual_group_tags
-    %i(tags)
   end
 
   #

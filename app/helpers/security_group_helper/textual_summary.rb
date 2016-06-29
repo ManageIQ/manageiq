@@ -1,5 +1,6 @@
 module SecurityGroupHelper::TextualSummary
   include TextualMixins::TextualDescription
+  include TextualMixins::TextualGroupTags
   #
   # Groups
   #
@@ -24,10 +25,6 @@ module SecurityGroupHelper::TextualSummary
         (rule.source_ip_range || rule.source_security_group.try(:name) || "<None>")
       ]
     end.sort
-  end
-
-  def textual_group_tags
-    %i(tags)
   end
 
   #

@@ -1,5 +1,6 @@
 module OrchestrationStackHelper::TextualSummary
   include TextualMixins::TextualDescription
+  include TextualMixins::TextualGroupTags
   include TextualMixins::TextualName
   #
   # Groups
@@ -15,10 +16,6 @@ module OrchestrationStackHelper::TextualSummary
 
   def textual_group_relationships
     %i(ems_cloud service orchestration_template instances security_groups cloud_networks parameters outputs resources)
-  end
-
-  def textual_group_tags
-    %i(tags)
   end
 
   #

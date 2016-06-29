@@ -1,14 +1,12 @@
 module CloudObjectStoreObjectHelper::TextualSummary
+  include TextualMixins::TextualGroupTags
+
   def textual_group_properties
     %i(key content_length last_modified etag)
   end
 
   def textual_group_relationships
     %i(ems cloud_tenant cloud_object_store_container)
-  end
-
-  def textual_group_tags
-    %i(tags)
   end
 
   def textual_key
