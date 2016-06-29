@@ -265,7 +265,7 @@ describe EmsCloudController do
                                        :button    => "validate",
                                        :id        => mocked_ems.id,
                                        :cred_type => "default")
-      expect(mocked_ems).to receive(:authentication_check).with("default", :save => false)
+      expect(mocked_ems).to receive(:authentication_check).with("default", hash_including(:save => false))
       controller.send(:update_ems_button_validate, mocked_ems)
     end
 
@@ -276,7 +276,7 @@ describe EmsCloudController do
                                        :button           => "validate",
                                        :default_password => "[FILTERED]",
                                        :cred_type        => "default")
-      expect(mocked_ems).to receive(:authentication_check).with("default", :save => false)
+      expect(mocked_ems).to receive(:authentication_check).with("default", hash_including(:save => false))
       controller.send(:update_ems_button_validate, mocked_ems)
     end
   end
