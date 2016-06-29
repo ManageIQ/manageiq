@@ -1,4 +1,6 @@
 class FixServiceOrderPlacedAt < ActiveRecord::Migration[5.0]
+  class ServiceOrder < ActiveRecord::Base; end
+
   def up
     update <<-SQL
       UPDATE "service_orders"
