@@ -6,7 +6,10 @@ module EvmTestHelper
   AUTOMATION_SPECS       = FileList['spec/automation/**/*_spec.rb']
 
   def self.init_rspec_task(t, rspec_opts = [])
-    rspec_opts = ['--options', "\"#{Rails.root.join(".rspec_ci")}\""] + rspec_opts if ENV['CI']
+    if ENV['CI']
+      rspec_ci = defined?(ENGINE_ROOT) ? File.join(ENGINE_ROOT, ".rspec_ci") : Rails.root.join(".rspec_ci")
+      rspec_opts.unshift('--options', rspec_ci)
+    end
     t.rspec_opts = rspec_opts
     t.verbose = false
   end
