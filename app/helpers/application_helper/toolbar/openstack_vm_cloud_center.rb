@@ -17,7 +17,8 @@ class ApplicationHelper::Toolbar::OpenstackVmCloudCenter < ApplicationHelper::To
           'fa fa-search fa-lg',
           N_('Perform SmartState Analysis on this Instance'),
           N_('Perform SmartState Analysis'),
-          :confirm => N_("Perform SmartState Analysis on this Instance?")),
+          :confirm => N_("Perform SmartState Analysis on this Instance?"),
+          :klass   => ApplicationHelper::Button::VmInstanceScan),
         separator,
         button(
           :instance_edit,

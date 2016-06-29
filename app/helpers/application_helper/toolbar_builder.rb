@@ -644,8 +644,6 @@ class ApplicationHelper::ToolbarBuilder
     when "ontap_storage_system_statistics", "ontap_logical_disk_statistics", "ontap_storage_volume_statistics",
         "ontap_file_share_statistics"
       return true unless get_vmdb_config[:product][:smis]
-    when 'vm_publish'
-      return true if @is_redhat
     end
 
     # Scale is only supported by OpenStack Infrastructure Provider
@@ -828,8 +826,6 @@ class ApplicationHelper::ToolbarBuilder
       end
     when "Vm"
       case id
-      when "vm_clone"
-        return true unless @record.is_available?(:clone)
       when "vm_collect_running_processes"
         return true if (@record.retired || @record.current_state == "never") && !@record.is_available?(:collect_running_processes)
       when "vm_guest_startup", "vm_start", "instance_start", "instance_resume"
@@ -842,15 +838,13 @@ class ApplicationHelper::ToolbarBuilder
         return true unless @record.is_available?(:reboot_guest)
       when "vm_migrate"
         return true unless @record.is_available?(:migrate)
-      when "vm_publish"
-        return true unless @record.is_available?(:publish)
       when "vm_reconfigure"
         return true unless @record.reconfigurable?
       when "vm_retire"
         return true unless @record.supports_retire?
       when "vm_retire_now"
         return true unless @record.supports_retire?
-      when "vm_stop", "instance_stop"
+      when "instance_stop"
         return true unless @record.is_available?(:stop)
       when "vm_reset", "instance_reset"
         return true unless @record.is_available?(:reset)
@@ -866,11 +860,6 @@ class ApplicationHelper::ToolbarBuilder
         return true unless @record.is_available?(:terminate)
       when "vm_policy_sim", "vm_protect"
         return true if @record.host && @record.host.vmm_product.to_s.downcase == "workstation"
-      when "vm_refresh"
-        return true if @record && !@record.ext_management_system && !(@record.host && @record.host.vmm_product.downcase == "workstation")
-      when "vm_scan", "instance_scan"
-        return true unless @record.is_available?(:smartstate_analysis) || @record.is_available_now_error_message(:smartstate_analysis)
-        return true unless @record.has_proxy?
       when "perf_refresh", "perf_reload", "vm_perf_refresh", "vm_perf_reload"
         return true unless @perf_options[:typ] == "realtime"
       end
@@ -917,7 +906,7 @@ class ApplicationHelper::ToolbarBuilder
         return true unless @report
       when "timeline_txt"
         return true unless @report
-      when "vm_clone", "vm_publish", "vm_migrate", "vm_retire", "vm_retire_now"
+      when "vm_migrate", "vm_retire", "vm_retire_now"
         if @sb[:trees][:vandt_tree].present? &&
            (@sb[:trees][:vandt_tree][:active_node] == "xx-arch" ||
             @sb[:trees][:vandt_tree][:active_node] == "xx-orph")
@@ -1304,8 +1293,6 @@ class ApplicationHelper::ToolbarBuilder
         return @record.is_available_now_error_message(:shutdown_guest) if @record.is_available_now_error_message(:shutdown_guest)
       when "vm_guest_restart"
         return @record.is_available_now_error_message(:reboot_guest) if @record.is_available_now_error_message(:reboot_guest)
-      when "vm_stop"
-        return @record.is_available_now_error_message(:stop) if @record.is_available_now_error_message(:stop)
       when "vm_reset"
         return @record.is_available_now_error_message(:reset) if @record.is_available_now_error_message(:reset)
       when "vm_suspend"
@@ -1319,9 +1306,6 @@ class ApplicationHelper::ToolbarBuilder
             return N_("VM is already retired")
           end
         end
-      when "vm_scan", "instance_scan"
-        return @record.is_available_now_error_message(:smartstate_analysis) unless @record.is_available?(:smartstate_analysis)
-        return @record.active_proxy_error_message unless @record.has_active_proxy?
       when "vm_timeline"
         unless @record.has_events? || @record.has_events?(:policy_events)
           return N_("No Timeline data has been collected for this VM")
