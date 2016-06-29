@@ -9,7 +9,7 @@ class ApplicationHelper::Toolbar::OntapStorageSystemCenter < ApplicationHelper::
         button(
           :ontap_storage_system_create_logical_disk,
           'pficon pficon-add-circle-o fa-lg',
-          N_('Create a Logical Disk (NetApp Flexible Volume) on this #{ui_lookup(:model=>"OntapStorageSystem").split(" - ").last}'),
+          N_('Create a Logical Disk (NetApp Flexible Volume) on this Filer'),
           N_('Create Logical Disk')),
       ]
     ),
@@ -24,7 +24,7 @@ class ApplicationHelper::Toolbar::OntapStorageSystemCenter < ApplicationHelper::
         button(
           :ontap_storage_system_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this #{ui_lookup(:model=>"OntapStorageSystem").split(" - ").last}'),
+          N_('Edit Tags for this Filer'),
           N_('Edit Tags')),
       ]
     ),
@@ -39,7 +39,7 @@ class ApplicationHelper::Toolbar::OntapStorageSystemCenter < ApplicationHelper::
         button(
           :ontap_storage_system_statistics,
           'product product-monitoring fa-lg',
-          N_('Show Utilization for this #{ui_lookup(:model=>"OntapStorageSystem").split(" - ").last}'),
+          N_('Show Utilization for this Filer'),
           N_('Utilization'),
           :url => "/show_statistics"),
       ]

@@ -9,23 +9,23 @@ class ApplicationHelper::Toolbar::ContainerReplicatorsCenter < ApplicationHelper
         button(
           :container_replicator_new,
           'pficon pficon-add-circle-o fa-lg',
-          t = N_('Add a New #{ui_lookup(:table=>"container_replicator")}'),
+          t = N_('Add a New Replicator'),
           t,
           :url => "/new"),
         button(
           :container_replicator_edit,
           'pficon pficon-edit fa-lg',
-          N_('Select a single #{ui_lookup(:table=>"container_replicator")} to edit'),
-          N_('Edit Selected #{ui_lookup(:table=>"container_replicator")}'),
+          N_('Select a single Replicator to edit'),
+          N_('Edit Selected Replicator'),
           :url_parms => "main_div",
           :onwhen    => "1"),
         button(
           :container_replicator_delete,
           'pficon pficon-delete fa-lg',
-          N_('Remove selected #{ui_lookup(:tables=>"container_replicators")} from the VMDB'),
-          N_('Remove #{ui_lookup(:tables=>"container_replicators")} from the VMDB'),
+          N_('Remove selected Replicators from the VMDB'),
+          N_('Remove Replicators from the VMDB'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected \#{ui_lookup(:tables=>\"container_replicators\")} and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected \#{ui_lookup(:tables=>\"container_replicators\")}?"),
+          :confirm   => N_("Warning: The selected Replicators and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Replicators?"),
           :onwhen    => "1+"),
       ]
     ),
@@ -42,7 +42,7 @@ class ApplicationHelper::Toolbar::ContainerReplicatorsCenter < ApplicationHelper
         button(
           :container_replicator_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this #{ui_lookup(:table=>"container_replicators")}'),
+          N_('Edit Tags for these Replicators'),
           N_('Edit Tags'),
           :url_parms => "main_div",
           :enabled   => false,
