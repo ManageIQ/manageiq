@@ -10,6 +10,8 @@ class Provider < ApplicationRecord
   has_many :managers, :class_name => "ExtManagementSystem"
 
   has_many :endpoints, :through => :managers, :autosave => true
+  has_many :connection_definitions, :through => :managers, :autosave => true
+  has_many :connection_configurations, :through => :managers, :autosave => true
 
   delegate :verify_ssl,
            :verify_ssl?,
