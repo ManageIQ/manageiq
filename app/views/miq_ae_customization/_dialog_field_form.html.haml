@@ -60,6 +60,13 @@
     %h3
       = _('Options')
     .form-horizontal
+      .form-group
+        %label.col-md-2.control-label
+          = _('Visible')
+        .col-md-8
+          = check_box_tag('field_visible', '1',
+                          @edit[:field_visible],
+                          'data-miq_observe_checkbox' => {:url => url}.to_json)
       - if @edit[:field_dynamic] == true
         .form-group
           %label.col-md-2.control-label
