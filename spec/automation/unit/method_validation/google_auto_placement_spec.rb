@@ -1,7 +1,7 @@
 describe "GOOGLE best fit" do
   let(:availability_zone) { FactoryGirl.create(:availability_zone_google) }
-  let(:cloud_network)     { FactoryGirl.create(:cloud_network, :ems_id => ems.id, :enabled => true) }
-  let(:cloud_subnet)      { FactoryGirl.create(:cloud_subnet, :cloud_network_id => cloud_network.id) }
+  let(:cloud_network)     { FactoryGirl.create(:cloud_network_google, :ems_id => ems.network_manager.id, :enabled => true) }
+  let(:cloud_subnet)      { FactoryGirl.create(:cloud_subnet_google, :cloud_network_id => cloud_network.id) }
   let(:ems)               do
     FactoryGirl.create(:ems_google_with_authentication,
                        :availability_zones => [availability_zone])
