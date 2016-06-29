@@ -19,30 +19,13 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
     "MIGRATING"         => "migrating",
   }.freeze
 
-  belongs_to :cloud_tenant
-
-  has_many :cloud_networks, :through => :cloud_subnets
   alias_method :private_networks, :cloud_networks
-  has_many :cloud_subnets, :through    => :network_ports,
-                           :class_name => "ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet"
   has_many :public_networks, :through => :cloud_subnets
 
   def floating_ip
     # TODO(lsmola) NetworkProvider Backwards compatibility layer with simplified architecture where VM has only one
     # network. Put this into ManageIQ::Providers::CloudManager::Vm when NetworkProvider is done in all providers
     floating_ips.first
-  end
-
-  def cloud_network
-    # TODO(lsmola) NetworkProvider Backwards compatibility layer with simplified architecture where VM has only one
-    # network. Put this into ManageIQ::Providers::CloudManager::Vm when NetworkProvider is done in all providers
-    cloud_networks.first
-  end
-
-  def cloud_subnet
-    # TODO(lsmola) NetworkProvider Backwards compatibility layer with simplified architecture where VM has only one
-    # network. Put this into ManageIQ::Providers::CloudManager::Vm when NetworkProvider is done in all providers
-    cloud_subnets.first
   end
 
   def provider_object(connection = nil)
