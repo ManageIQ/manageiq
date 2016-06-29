@@ -118,8 +118,8 @@ FactoryGirl.define do
   factory :ems_openstack_infra_with_authentication,
           :parent => :ems_openstack_infra do
     after :create do |x|
-      x.authentications << FactoryGirl.create(:authentication, :userid => "admin", :password => "123456789")
-      x.authentications << FactoryGirl.create(:authentication, :userid => "user", :password => "abcdefgh", :authtype => "amqp")
+      x.authentications << FactoryGirl.create(:authentication)
+      x.authentications << FactoryGirl.create(:authentication, :authtype => "amqp")
     end
   end
 
@@ -142,7 +142,7 @@ FactoryGirl.define do
   factory :ems_amazon_with_authentication,
           :parent => :ems_amazon do
     after(:create) do |x|
-      x.authentications << FactoryGirl.create(:authentication, :userid => "0123456789ABCDEFGHIJ", :password => "ABCDEFGHIJKLMNO1234567890abcdefghijklmno")
+      x.authentications << FactoryGirl.create(:authentication)
     end
   end
 
@@ -162,8 +162,8 @@ FactoryGirl.define do
   factory :ems_openstack_with_authentication,
           :parent => :ems_openstack do
     after :create do |x|
-      x.authentications << FactoryGirl.create(:authentication, :userid => "admin", :password => "123456789")
-      x.authentications << FactoryGirl.create(:authentication, :userid => "user", :password => "abcdefgh", :authtype => "amqp")
+      x.authentications << FactoryGirl.create(:authentication)
+      x.authentications << FactoryGirl.create(:authentication, :authtype => "amqp")
     end
   end
 
@@ -183,7 +183,7 @@ FactoryGirl.define do
   factory :ems_google_with_authentication,
           :parent => :ems_google do
     after(:create) do |x|
-      x.authentications << FactoryGirl.create(:authentication, :userid => "0123456789ABCDEFGHIJ", :password => "ABCDEFGHIJKLMNO1234567890abcdefghijklmno")
+      x.authentications << FactoryGirl.create(:authentication)
     end
   end
 
