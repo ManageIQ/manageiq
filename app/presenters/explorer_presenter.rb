@@ -216,7 +216,7 @@ class ExplorerPresenter
     end
 
     # reset miq_record_id, else it remembers prev id and sends it when add is pressed from list view
-    [:record_id, :parent_id, :parent_class].each { |variable| @out << set_or_undef(variable.to_s) }
+    [:record_id, :parent_id, :parent_class].each { |variable| @out << set_or_undef(variable) }
 
     # Open, select, and focus node in current tree
     @out << "miqDynatreeActivateNodeSilently('#{@options[:active_tree]}', '#{@options[:osf_node]}');" unless @options[:osf_node].blank?
@@ -266,9 +266,9 @@ class ExplorerPresenter
   # Set a JS variable to value from options or 'undefined'
   def set_or_undef(variable)
     if @options[variable]
-      "ManageIQ.record.#{variable.camelize(:lower)} = '#{@options[variable]}';"
+      "ManageIQ.record.#{variable.to_s.camelize(:lower)} = '#{@options[variable]}';"
     else
-      "ManageIQ.record.#{variable.camelize(:lower)} = null;"
+      "ManageIQ.record.#{variable.to_s.camelize(:lower)} = null;"
     end
   end
 
