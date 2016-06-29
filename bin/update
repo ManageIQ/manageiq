@@ -10,7 +10,11 @@ Dir.chdir APP_ROOT do
   system "bower update --allow-root -F --config.analytics=false"
 
   puts "\n== Migrating database =="
-  system "bin/rake db:migrate db:seed"
+  system "bin/rake db:migrate"
+
+  puts "\n== Seeding database =="
+  system "bin/rake db:seed GOOD_MIGRATIONS=skip"
+
 
   puts "\n== Resetting tests =="
   system "bin/rake test:vmdb:setup"

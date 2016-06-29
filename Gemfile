@@ -123,6 +123,7 @@ unless ENV['APPLIANCE']
   group :development, :test do
     gem "rspec-rails",      "~>3.5.x"
     gem "parallel_tests"
+    gem "good_migrations"
   end
 end
 
