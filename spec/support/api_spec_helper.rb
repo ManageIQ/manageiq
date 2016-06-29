@@ -189,32 +189,12 @@ module ApiSpecHelper
 
   # Rest API Expects
 
-  def expect_request_success
-    expect(response).to have_http_status(:ok)
-  end
-
-  def expect_request_success_with_no_content
-    expect(response).to have_http_status(:no_content)
-  end
-
   def expect_bad_request(error_message = nil)
     expect(response).to have_http_status(:bad_request)
     return if error_message.blank?
 
     expect(response_hash).to have_key("error")
     expect(response_hash["error"]["message"]).to match(error_message)
-  end
-
-  def expect_user_unauthorized
-    expect(response).to have_http_status(:unauthorized)
-  end
-
-  def expect_request_forbidden
-    expect(response).to have_http_status(:forbidden)
-  end
-
-  def expect_resource_not_found
-    expect(response).to have_http_status(:not_found)
   end
 
   def expect_result_resources_to_include_data(collection, data)
@@ -318,24 +298,24 @@ module ApiSpecHelper
   # Primary result construct methods
 
   def expect_empty_query_result(collection)
-    expect_request_success
+    expect(response).to have_http_status(:ok)
     expect(response_hash).to include("name" => collection.to_s, "resources" => [])
   end
 
   def expect_query_result(collection, subcount, count = nil)
-    expect_request_success
+    expect(response).to have_http_status(:ok)
     expect(response_hash).to include("name" => collection.to_s, "subcount" => fetch_value(subcount))
     expect(response_hash["resources"].size).to eq(fetch_value(subcount))
     expect(response_hash["count"]).to eq(fetch_value(count)) if count.present?
   end
 
   def expect_single_resource_query(attr_hash = {})
-    expect_request_success
+    expect(response).to have_http_status(:ok)
     expect_result_to_match_hash(response_hash, fetch_value(attr_hash))
   end
 
   def expect_single_action_result(options = {})
-    expect_request_success
+    expect(response).to have_http_status(:ok)
     expect(response_hash).to include("success" => options[:success]) if options.key?(:success)
     expect(response_hash).to include("message" => a_string_matching(options[:message])) if options[:message]
     expect(response_hash).to include("href" => a_string_matching(fetch_value(options[:href]))) if options[:href]
@@ -343,7 +323,7 @@ module ApiSpecHelper
   end
 
   def expect_multiple_action_result(count, options = {})
-    expect_request_success
+    expect(response).to have_http_status(:ok)
     expect(response_hash).to have_key("results")
     results = response_hash["results"]
     expect(results.size).to eq(count)
@@ -353,7 +333,7 @@ module ApiSpecHelper
   end
 
   def expect_tagging_result(tagging_results)
-    expect_request_success
+    expect(response).to have_http_status(:ok)
     tag_results = fetch_value(tagging_results)
     expect(response_hash).to have_key("results")
     results = response_hash["results"]

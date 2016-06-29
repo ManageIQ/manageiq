@@ -9,7 +9,7 @@ RSpec.describe "chargebacks API" do
       "resources", [chargebacks_url(chargeback_rate.id)]
     )
     expect_result_to_match_hash(response_hash, "count" => 1)
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   it "can show an individual chargeback rate" do
@@ -25,7 +25,7 @@ RSpec.describe "chargebacks API" do
       "id"          => chargeback_rate.id,
       "href"        => chargebacks_url(chargeback_rate.id)
     )
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   it "can fetch chargeback rate details" do
@@ -66,7 +66,7 @@ RSpec.describe "chargebacks API" do
       "id"                 => chargeback_rate_detail.id,
       "description"        => "rate_1"
     )
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   it "can list of all currencies" do
@@ -79,7 +79,7 @@ RSpec.describe "chargebacks API" do
       "resources", ["/api/currencies/#{currency.id}"]
     )
     expect_result_to_match_hash(response_hash, "count" => 1)
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   it "can show an individual currency" do
@@ -94,7 +94,7 @@ RSpec.describe "chargebacks API" do
       "id"   => currency.id,
       "href" => "/api/currencies/#{currency.id}"
     )
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   it "can list of all measures" do
@@ -107,7 +107,7 @@ RSpec.describe "chargebacks API" do
       "resources", ["/api/measures/#{measure.id}"]
     )
     expect_result_to_match_hash(response_hash, "count" => 1)
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   it "can show an individual measure" do
@@ -122,7 +122,7 @@ RSpec.describe "chargebacks API" do
       "id"   => measure.id,
       "href" => "/api/measures/#{measure.id}",
     )
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   context "with an appropriate role" do
@@ -137,7 +137,7 @@ RSpec.describe "chargebacks API" do
       expect_result_to_match_hash(response_hash["results"].first, "description" => "chargeback_0",
                                                                   "rate_type"   => "Storage",
                                                                   "default"     => false)
-      expect_request_success
+      expect(response).to have_http_status(:ok)
     end
 
     it "returns bad request for incomplete chargeback rate" do
@@ -157,7 +157,7 @@ RSpec.describe "chargebacks API" do
       run_post chargebacks_url(chargeback_rate.id), gen_request(:edit, :description => "chargeback_1")
 
       expect(response_hash["description"]).to eq("chargeback_1")
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect(chargeback_rate.reload.description).to eq("chargeback_1")
     end
 
@@ -170,7 +170,7 @@ RSpec.describe "chargebacks API" do
                                                        :value  => "chargeback_1"}]
 
       expect(response_hash["description"]).to eq("chargeback_1")
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect(chargeback_rate.reload.description).to eq("chargeback_1")
     end
 
@@ -182,7 +182,7 @@ RSpec.describe "chargebacks API" do
       expect do
         run_delete chargebacks_url(chargeback_rate.id)
       end.to change(ChargebackRate, :count).by(-1)
-      expect_request_success_with_no_content
+      expect(response).to have_http_status(:no_content)
     end
 
     it "can delete a chargeback rate through POST" do
@@ -193,7 +193,7 @@ RSpec.describe "chargebacks API" do
       expect do
         run_post chargebacks_url(chargeback_rate.id), :action => "delete"
       end.to change(ChargebackRate, :count).by(-1)
-      expect_request_success
+      expect(response).to have_http_status(:ok)
     end
 
     it "can create a new chargeback rate detail" do
@@ -209,7 +209,7 @@ RSpec.describe "chargebacks API" do
                  :enabled            => true
       end.to change(ChargebackRateDetail, :count).by(1)
       expect_result_to_match_hash(response_hash["results"].first, "description" => "rate_0", "enabled" => true)
-      expect_request_success
+      expect(response).to have_http_status(:ok)
     end
 
     it "returns bad request for incomplete chargeback rate detail" do
@@ -236,7 +236,7 @@ RSpec.describe "chargebacks API" do
       run_post rates_url(chargeback_rate_detail.id), gen_request(:edit, :description => "rate_1")
 
       expect(response_hash["description"]).to eq("rate_1")
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect(chargeback_rate_detail.reload.description).to eq("rate_1")
     end
 
@@ -252,7 +252,7 @@ RSpec.describe "chargebacks API" do
       run_patch rates_url(chargeback_rate_detail.id), [{:action => "edit", :path => "description", :value => "rate_1"}]
 
       expect(response_hash["description"]).to eq("rate_1")
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect(chargeback_rate_detail.reload.description).to eq("rate_1")
     end
 
@@ -269,7 +269,7 @@ RSpec.describe "chargebacks API" do
       expect do
         run_delete rates_url(chargeback_rate_detail.id)
       end.to change(ChargebackRateDetail, :count).by(-1)
-      expect_request_success_with_no_content
+      expect(response).to have_http_status(:no_content)
     end
 
     it "can delete a chargeback rate detail through POST" do
@@ -285,7 +285,7 @@ RSpec.describe "chargebacks API" do
       expect do
         run_post rates_url(chargeback_rate_detail.id), :action => "delete"
       end.to change(ChargebackRateDetail, :count).by(-1)
-      expect_request_success
+      expect(response).to have_http_status(:ok)
     end
   end
 
@@ -295,7 +295,7 @@ RSpec.describe "chargebacks API" do
 
       expect { run_post chargebacks_url, :description => "chargeback_0" }.not_to change(ChargebackRate,
                                                                                         :count)
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "cannot edit a chargeback rate" do
@@ -306,7 +306,7 @@ RSpec.describe "chargebacks API" do
       expect do
         run_post chargebacks_url(chargeback_rate.id), gen_request(:edit, :description => "chargeback_1")
       end.not_to change { chargeback_rate.reload.description }
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "cannot delete a chargeback rate" do
@@ -317,7 +317,7 @@ RSpec.describe "chargebacks API" do
       expect do
         run_delete chargebacks_url(chargeback_rate.id)
       end.not_to change(ChargebackRate, :count)
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "cannot create a chargeback rate detail" do
@@ -325,7 +325,7 @@ RSpec.describe "chargebacks API" do
 
       expect { run_post rates_url, :description => "rate_0", :enabled => true }.not_to change(ChargebackRateDetail,
                                                                                               :count)
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "cannot edit a chargeback rate detail" do
@@ -341,7 +341,7 @@ RSpec.describe "chargebacks API" do
       expect do
         run_post rates_url(chargeback_rate_detail.id), gen_request(:edit, :description => "rate_2")
       end.not_to change { chargeback_rate_detail.reload.description }
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "cannot delete a chargeback rate detail" do
@@ -357,7 +357,7 @@ RSpec.describe "chargebacks API" do
       expect do
         run_delete rates_url(chargeback_rate_detail.id)
       end.not_to change(ChargebackRateDetail, :count)
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
   end
 end

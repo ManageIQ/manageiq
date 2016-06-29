@@ -20,7 +20,7 @@ describe ApiController do
 
       run_get events_url(999_999)
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "query events with no events defined" do

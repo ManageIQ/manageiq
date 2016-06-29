@@ -116,7 +116,7 @@ describe ApiController do
 
       run_get(providers_url(provider.id), :attributes => "authentications")
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_to_match_hash(response_hash, "name" => "sample")
       expect_result_to_have_keys(%w(authentications))
       authentication = response_hash["authentications"].first
@@ -139,7 +139,7 @@ describe ApiController do
 
       run_get provision_requests_url(request.id)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_to_match_hash(response_hash, "description" => "sample provision")
       provision_attrs = response_hash.fetch_path("options", "attrs")
       expect(provision_attrs).to_not be_nil

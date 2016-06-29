@@ -31,7 +31,7 @@ describe ApiController do
 
       run_post(services_url(svc.id), gen_request(:edit, "name" => "sample service"))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "supports edits of single resource" do
@@ -72,7 +72,7 @@ describe ApiController do
                                          [{"href" => services_url(svc1.id), "name" => "updated svc1"},
                                           {"href" => services_url(svc2.id), "name" => "updated svc2"}]))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_results_to_match_hash("results",
                                    [{"id" => svc1.id, "name" => "updated svc1"},
                                     {"id" => svc2.id, "name" => "updated svc2"}])
@@ -87,7 +87,7 @@ describe ApiController do
 
       run_post(services_url, gen_request(:delete, "href" => services_url(100)))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects DELETE requests without appropriate role" do
@@ -95,7 +95,7 @@ describe ApiController do
 
       run_delete(services_url(100))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects requests for invalid resources" do
@@ -103,7 +103,7 @@ describe ApiController do
 
       run_delete(services_url(999_999))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "supports single resource deletes" do
@@ -111,7 +111,7 @@ describe ApiController do
 
       run_delete(services_url(svc.id))
 
-      expect_request_success_with_no_content
+      expect(response).to have_http_status(:no_content)
       expect { svc.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
@@ -139,7 +139,7 @@ describe ApiController do
 
       run_post(services_url(100), gen_request(:retire))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects multiple requests without appropriate role" do
@@ -147,7 +147,7 @@ describe ApiController do
 
       run_post(services_url, gen_request(:retire, [{"href" => services_url(1)}, {"href" => services_url(2)}]))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "supports single service retirement now" do
@@ -219,7 +219,7 @@ describe ApiController do
 
       run_post(services_url(100), gen_request(:reconfigure))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "does not return reconfigure action for non-reconfigurable services" do
@@ -229,7 +229,7 @@ describe ApiController do
 
       run_get services_url(svc1.id)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect(response_hash).to declare_actions("retire")
     end
 
@@ -244,7 +244,7 @@ describe ApiController do
 
       run_get services_url(svc1.id)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect(response_hash).to declare_actions("retire", "reconfigure")
     end
 

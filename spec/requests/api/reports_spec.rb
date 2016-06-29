@@ -14,7 +14,7 @@ RSpec.describe "reports API" do
       ]
     )
     expect_result_to_match_hash(response_hash, "count" => 2, "name" => "reports")
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   it "can fetch a report" do
@@ -30,7 +30,7 @@ RSpec.describe "reports API" do
       "name"  => report.name,
       "title" => report.title
     )
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   it "can fetch a report's results" do
@@ -47,7 +47,7 @@ RSpec.describe "reports API" do
       ]
     )
     expect(response_hash["resources"]).not_to be_any { |resource| resource.key?("result_set") }
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   it "can fetch a report's result" do
@@ -64,7 +64,7 @@ RSpec.describe "reports API" do
     run_get "#{reports_url(report.id)}/results/#{report_result.to_param}"
 
     expect_result_to_match_hash(response_hash, "result_set" => [{"foo" => "bar"}, {"foo" => "baz"}])
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   it "can fetch all the results" do
@@ -80,7 +80,7 @@ RSpec.describe "reports API" do
         "#{results_url(result.id)}"
       ]
     )
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   it "can fetch a specific result as a primary collection" do
@@ -97,7 +97,7 @@ RSpec.describe "reports API" do
     run_get results_url(report_result.id)
 
     expect_result_to_match_hash(response_hash, "result_set" => [{"foo" => "bar"}, {"foo" => "baz"}])
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   it "returns an empty result set if none has been run" do
@@ -108,7 +108,7 @@ RSpec.describe "reports API" do
     run_get "#{reports_url(report.id)}/results/#{report_result.id}"
 
     expect_result_to_match_hash(response_hash, "result_set" => [])
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   context "with an appropriate role" do
@@ -158,7 +158,7 @@ RSpec.describe "reports API" do
         "message" => "Imported Report: [Test Report]",
         "success" => true
       )
-      expect_request_success
+      expect(response).to have_http_status(:ok)
     end
 
     it "can import multiple reports in a single call" do
@@ -205,7 +205,7 @@ RSpec.describe "reports API" do
         api_basic_authorize
         run_post "#{reports_url(report.id)}", :action => "run"
       end.not_to change(MiqReportResult, :count)
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "cannot import a report" do
@@ -225,7 +225,7 @@ RSpec.describe "reports API" do
       expect do
         run_post reports_url, gen_request(:import, :report => serialized_report, :options => options)
       end.not_to change(MiqReport, :count)
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
   end
 end

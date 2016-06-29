@@ -70,14 +70,14 @@ RSpec.describe 'Virtual Template API' do
 
       run_post(virtual_templates_url, template)
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it 'supports single virtual_template creation' do
       api_basic_authorize collection_action_identifier(:virtual_templates, :create)
       run_post(virtual_templates_url, template)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys('results', expected_attributes)
 
       id = response_hash['results'].first['id']
@@ -88,7 +88,7 @@ RSpec.describe 'Virtual Template API' do
       api_basic_authorize collection_action_identifier(:virtual_templates, :create)
       run_post(virtual_templates_url, gen_request(:create, template.except(:action)))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys('results', expected_attributes)
 
       id = response_hash['results'].first['id']
@@ -172,7 +172,7 @@ RSpec.describe 'Virtual Template API' do
       api_basic_authorize collection_action_identifier(:virtual_templates, :delete)
 
       run_delete(virtual_templates_url(template.id))
-      expect_request_success_with_no_content
+      expect(response).to have_http_status(:no_content)
     end
 
     it 'supports multiple virtual_template delete' do
@@ -192,7 +192,7 @@ RSpec.describe 'Virtual Template API' do
       api_basic_authorize collection_action_identifier(:virtual_templates, :delete)
 
       run_delete(virtual_templates_url(99))
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
   end
 end
