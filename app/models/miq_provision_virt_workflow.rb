@@ -911,7 +911,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     if src.nil?
       raise _("No source template was found from input data:<%{data}>") % {:data => data.inspect}
     end
-    _log.info "VM Found: <#{src.name}> <#{src.guid}> <#{src.uid_ems}>  Datacenter:<#{src.datacenter_name}>"
+
+    msg = "VM Found: <#{src.name}> <#{src.guid}> <#{src.uid_ems}>  "
+    msg += "Datacenter:<#{src.datacenter_name}>" if src.respond_to? :datacenter_name
+    _log.info msg
+
     src
   end
 
