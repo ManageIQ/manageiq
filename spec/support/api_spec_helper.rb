@@ -88,16 +88,8 @@ module ApiSpecHelper
     Vmdb::Application.config.secret_token = MiqDatabase.first.session_secret_token
     @guid, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
-    collections = %w(automation_requests availability_zones categories chargebacks clusters conditions
-                     data_stores events features flavors groups hosts instances pictures policies policy_actions
-                     policy_profiles providers provision_dialogs provision_requests rates
-                     reports request_tasks requests resource_pools results roles security_groups
-                     servers service_dialogs service_catalogs service_orders service_requests
-                     service_templates services settings tags tasks templates tenants users virtual_templates vms zones
-                     container_deployments)
-
     define_entrypoint_url_methods
-    define_url_methods(collections)
+    define_url_methods(Api::Settings.collections.keys)
     define_user
 
     ApplicationController.handle_exceptions = true
