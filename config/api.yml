@@ -867,7 +867,7 @@
     :identifier: miq_report_reports
     :options:
     - :subcollection
-    :methods: *70174834086080
+    :verbs: *70174834086080
     :klass: MiqSchedule
     :collection_actions:
       :get:
