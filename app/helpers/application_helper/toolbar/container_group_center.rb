@@ -9,16 +9,16 @@ class ApplicationHelper::Toolbar::ContainerGroupCenter < ApplicationHelper::Tool
         button(
           :container_group_edit,
           'pficon pficon-edit fa-lg',
-          t = N_('Edit this #{ui_lookup(:table=>"container_group")}'),
+          t = N_('Edit this Pod'),
           t,
           :url => "/edit"),
         button(
           :container_group_delete,
           'pficon pficon-delete fa-lg',
-          t = N_('Remove this #{ui_lookup(:table=>"container_group")} from the VMDB'),
+          t = N_('Remove this Pod from the VMDB'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This \#{ui_lookup(:table=>\"container_group\")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this \#{ui_lookup(:table=>\"container_group\")}?")),
+          :confirm   => N_("Warning: This Pod and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Pod?")),
       ]
     ),
   ])
@@ -56,7 +56,7 @@ class ApplicationHelper::Toolbar::ContainerGroupCenter < ApplicationHelper::Tool
         button(
           :container_group_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this #{ui_lookup(:table=>"container_group")}'),
+          N_('Edit Tags for this Pod'),
           N_('Edit Tags')),
       ]
     ),

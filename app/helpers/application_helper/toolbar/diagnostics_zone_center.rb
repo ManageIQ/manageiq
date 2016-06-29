@@ -54,14 +54,14 @@ class ApplicationHelper::Toolbar::DiagnosticsZoneCenter < ApplicationHelper::Too
         button(
           :zone_collect_current_logs,
           'fa fa-filter fa-lg',
-          N_('Collect the current logs from the selected #{ui_lookup(:table=>"zone")}'),
+          N_('Collect the current logs from the selected Zone'),
           N_('Collect current logs'),
           :klass => ApplicationHelper::Button::CollectLogs
         ),
         button(
           :zone_collect_logs,
           'fa fa-filter fa-lg',
-          N_('Collect all logs from the selected #{ui_lookup(:table=>"zone")}'),
+          N_('Collect all logs from the selected Zone'),
           N_('Collect all logs'),
           :klass => ApplicationHelper::Button::CollectLogs
         ),
@@ -70,7 +70,7 @@ class ApplicationHelper::Toolbar::DiagnosticsZoneCenter < ApplicationHelper::Too
     button(
       :zone_log_depot_edit,
       'pficon pficon-edit fa-lg',
-      N_('Edit the Log Depot settings for the selected #{ui_lookup(:table=>"zone")}'),
+      N_('Edit the Log Depot settings for the selected Zone'),
       N_('Edit')),
   ])
 end

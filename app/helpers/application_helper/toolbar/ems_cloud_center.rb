@@ -14,23 +14,23 @@ class ApplicationHelper::Toolbar::EmsCloudCenter < ApplicationHelper::Toolbar::B
         button(
           :ems_cloud_refresh,
           'fa fa-refresh fa-lg',
-          N_('Refresh relationships and power states for all items related to this #{ui_lookup(:table=>"ems_cloud")}'),
+          N_('Refresh relationships and power states for all items related to this Cloud Provider'),
           N_('Refresh Relationships and Power States'),
-          :confirm => N_("Refresh relationships and power states for all items related to this \#{ui_lookup(:table=>\"ems_cloud\")}?")),
+          :confirm => N_("Refresh relationships and power states for all items related to this Cloud Provider?")),
         separator,
         button(
           :ems_cloud_edit,
           'pficon pficon-edit fa-lg',
-          t = N_('Edit this #{ui_lookup(:table=>"ems_cloud")}'),
+          t = N_('Edit this Cloud Provider'),
           t,
           :full_path => "<%= edit_ems_cloud_path(@ems) %>"),
         button(
           :ems_cloud_delete,
           'pficon pficon-delete fa-lg',
-          t = N_('Remove this #{ui_lookup(:table=>"ems_cloud")} from the VMDB'),
+          t = N_('Remove this Cloud Provider from the VMDB'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This \#{ui_lookup(:table=>\"ems_cloud\")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this \#{ui_lookup(:table=>\"ems_cloud\")}?")),
+          :confirm   => N_("Warning: This Cloud Provider and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Cloud Provider?")),
       ]
     ),
   ])
@@ -44,12 +44,12 @@ class ApplicationHelper::Toolbar::EmsCloudCenter < ApplicationHelper::Toolbar::B
         button(
           :ems_cloud_protect,
           'pficon pficon-edit fa-lg',
-          N_('Manage Policies for this #{ui_lookup(:table=>"ems_cloud")}'),
+          N_('Manage Policies for this Cloud Provider'),
           N_('Manage Policies')),
         button(
           :ems_cloud_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this #{ui_lookup(:table=>"ems_cloud")}'),
+          N_('Edit Tags for this Cloud Provider'),
           N_('Edit Tags')),
       ]
     ),
@@ -64,7 +64,7 @@ class ApplicationHelper::Toolbar::EmsCloudCenter < ApplicationHelper::Toolbar::B
         button(
           :ems_cloud_timeline,
           'product product-timeline fa-lg',
-          N_('Show Timelines for this #{ui_lookup(:table=>"ems_cloud")}'),
+          N_('Show Timelines for this Cloud Provider'),
           N_('Timelines'),
           :klass     => ApplicationHelper::Button::EmsTimeline,
           :url_parms => "?display=timeline"),
@@ -81,7 +81,7 @@ class ApplicationHelper::Toolbar::EmsCloudCenter < ApplicationHelper::Toolbar::B
         button(
           :ems_cloud_recheck_auth_status,
           'fa fa-search fa-lg',
-          N_('Re-check Authentication Status for this #{ui_lookup(:table=>"ems_cloud")}'),
+          N_('Re-check Authentication Status for this Cloud Provider'),
           N_('Re-check Authentication Status'),
           :klass => ApplicationHelper::Button::EmsCloudRecheckAuthStatus),
       ]
