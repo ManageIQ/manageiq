@@ -5,7 +5,7 @@ module LiveMetricsMixin
 
   class MetricValidationError < RuntimeError; end
 
-  delegate :metrics_available, :to => :metrics_capture
+  delegate :fetch_metrics_available, :to => :metrics_capture
   delegate :collect_live_metric, :to => :metrics_capture
 
   included do
@@ -18,8 +18,12 @@ module LiveMetricsMixin
       processed
     end
 
+    def metrics_available
+      @metrics_available ||= fetch_metrics_available
+    end
+
     def first_and_last_capture(interval_name = "realtime")
-      firsts, lasts = metrics_capture.metrics_available.collect do |metric| #
+      firsts, lasts = metrics_available.collect do |metric|
         metrics_capture.first_and_last_capture(metric)
       end.transpose
       adjust_timestamps(firsts, lasts, interval_name)
@@ -40,13 +44,23 @@ module LiveMetricsMixin
   end
 
   module ClassMethods
-    def supported_metrics
-      @supported_metrics ||= load_supported_metrics
+    def included_children
+      @live_metrics_config ||= load_live_metrics_config
+      @live_metrics_config['included_children']
     end
 
-    def load_supported_metrics
+    def supported_metrics
+      @live_metrics_config ||= load_live_metrics_config
+      @live_metrics_config['supported_metrics']
+    end
+
+    def load_live_metrics_config
       live_metrics_file = File.join(LIVE_METRICS_DIR, "#{name.demodulize.underscore}.yaml")
-      File.exist?(live_metrics_file) ? YAML.load_file(live_metrics_file).reduce({}, :merge) : {}
+      live_metrics_config = File.exist?(live_metrics_file) ? YAML.load_file(live_metrics_file) : {}
+      if live_metrics_config['supported_metrics']
+        live_metrics_config['supported_metrics'] = live_metrics_config['supported_metrics'].reduce({}, :merge)
+      end
+      live_metrics_config
     end
   end
 end
