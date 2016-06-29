@@ -1,14 +1,12 @@
 module CloudTenantHelper::TextualSummary
+  include TextualMixins::TextualEmsCloud
+  include TextualMixins::TextualGroupTags
   #
   # Groups
   #
   def textual_group_relationships
     %i(ems_cloud security_groups instances images cloud_object_store_containers cloud_volumes cloud_volume_snapshots
        cloud_networks cloud_subnets network_routers security_groups floating_ips network_ports)
-  end
-
-  def textual_group_tags
-    %i(tags)
   end
 
   def textual_group_quotas
@@ -19,10 +17,6 @@ module CloudTenantHelper::TextualSummary
   #
   # Items
   #
-  def textual_ems_cloud
-    textual_link(@record.ext_management_system)
-  end
-
   def textual_instances
     label = ui_lookup(:tables => "vm_cloud")
     num   = @record.number_of(:vms)

@@ -1,4 +1,6 @@
 module ProviderConfigurationManagerHelper
+  include TextualMixins::TextualGroupTags
+
   def textual_group_properties
     %i(hostname
        ipmi_present
@@ -37,9 +39,5 @@ module ProviderConfigurationManagerHelper
 
   def textual_zone
     {:label => _("Zone"), :value => @record.configuration_manager.my_zone}
-  end
-
-  def textual_group_tags
-    %i(tags)
   end
 end
