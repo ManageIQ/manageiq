@@ -2021,6 +2021,10 @@
         :description: Display List of Git Repositories
         :feature_type: view
         :identifier: git_repository_show_list
+      - :name: Show
+        :description: Display Individual Git Repositories
+        :feature_type: view
+        :identifier: git_repository_show
 
 # Automate Log
 - :name: Log

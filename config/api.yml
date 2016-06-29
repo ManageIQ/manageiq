@@ -330,6 +330,10 @@
       :get:
       - :name: read
         :identifier: git_repository_show_list
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: git_repository_show
   :groups:
     :description: Groups
     :identifier: rbac_group
