@@ -132,14 +132,7 @@ module AssignmentMixin
         tags = parents.collect { |p| p.tags.select { |t| t.name.starts_with?("/managed/") } }.flatten.uniq
       else
         # Collect tags from all parent objects in a single query if they were NOT already preloaded by the caller
-        tcond = []; targs = []
-        parents.each do |p|
-          tcond << "(taggings.taggable_type=? AND taggings.taggable_id=?)"
-          # TODO: we may need to change taggings-related code to use base_model too
-          targs << p.class.base_class.name << p.id
-        end
-        cond = ["(#{tcond.join(" OR ")}) AND (name like '/managed/%')", *targs]
-        tags = Tag.where(cond).joins(:taggings)
+        tags = Tag.joins(:taggings).where("name like '/managed/%'").where(:taggings => {:taggable => parents})
       end
       individually_assigned_alerts = alist.select { |a| tlist.include?(a[:assigned_to]) }.map { |a| a[:assigned] }
 
