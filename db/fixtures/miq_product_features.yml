@@ -3604,6 +3604,56 @@
       :feature_type: control
       :identifier: middleware_server_group_tag
 
+# Middleware Jms
+- :name: Middleware Jms
+  :description: Everything under Middleware Jms
+  :feature_type: node
+  :identifier: middleware_jms
+  :children:
+  - :name: View
+    :description: View Middleware Jms
+    :feature_type: view
+    :identifier: middleware_jms_view
+    :children:
+    - :name: List
+      :description: Display Lists of Middleware Jms
+      :feature_type: view
+      :identifier: middleware_jms_show_list
+    - :name: Show
+      :description: Display Individual Middleware Jms
+      :feature_type: view
+      :identifier: middleware_jms_show
+    - :name: Utilization
+      :description: Show Capacity & Utilization data of Middleware Jms
+      :feature_type: view
+      :identifier: middleware_jms_perf
+  - :name: Modify
+    :description: Modify Middleware Jms
+    :feature_type: admin
+    :identifier: middleware_jms_admin
+    :children:
+    - :name: Remove
+      :description: Remove Middleware Jms from the VMDB
+      :feature_type: admin
+      :identifier: middleware_jms_delete
+    - :name: Edit
+      :description: Edit a Middleware Jms
+      :feature_type: admin
+      :identifier: middleware_jms_edit
+    - :name: Add
+      :description: Add a Middleware Jms
+      :feature_type: admin
+      :identifier: middleware_jms_new
+  - :name: Operate
+    :description: Perform Operations on Middleware Jms
+    :feature_type: control
+    :identifier: middleware_jms_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Middleware Jms
+      :feature_type: control
+      :identifier: middleware_jms_tag
+
 # EmsNetwork
 - :name: Network Providers
   :description: Everything under Network Providers

@@ -136,9 +136,10 @@ module ManageIQ::Providers
       def fetch_server_entities
         @data[:middleware_deployments] = []
         @data[:middleware_datasources] = []
+        @data[:middleware_jms] = []
         @eaps.map do |eap|
-          @ems.child_resources(eap.path).map do |child|
-            next unless child.type_path.end_with?('Deployment', 'Datasource')
+          @ems.child_resources(eap.path, true).map do |child|
+            next unless child.type_path.end_with?('Deployment', 'Datasource', 'JMS%20Topic', 'JMS%20Queue')
             server = @data_index.fetch_path(:middleware_servers, :by_ems_ref, eap.path)
             process_server_entity(server, child)
           end
@@ -166,11 +167,22 @@ module ManageIQ::Providers
         parse_datasource(server, datasource, config)
       end
 
+      def process_jms(server, jms)
+        wildfly_res_id = hawk_escape_id server[:nativeid]
+        jms_res_id = hawk_escape_id jms.id
+        resource_path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id      => server[:feed],
+                                                                 :resource_ids => [wildfly_res_id, jms_res_id])
+        config = @ems.inventory_client.get_config_data_for_resource(resource_path.to_s)
+        parse_jms(server, jms, config)
+      end
+
       def process_server_entity(server, entity)
         if entity.type_path.end_with?('Deployment')
           @data[:middleware_deployments] << parse_deployment(server, entity)
-        else
+        elsif entity.type_path.end_with?('Datasource')
           @data[:middleware_datasources] << process_datasource(server, entity)
+        else
+          @data[:middleware_jms] << process_jms(server, entity)
         end
       end
 
@@ -193,6 +205,19 @@ module ManageIQ::Providers
           :middleware_server => server,
         }
         parse_base_item(deployment).merge(specific)
+      end
+
+      def parse_jms(server, jms, config)
+        data = {
+          :name              => jms.name,
+          :middleware_server => server,
+          :nativeid          => jms.id,
+          :ems_ref           => jms.path
+        }
+        if !config.empty? && !config['value'].empty? && config['value'].respond_to?(:except)
+          data[:properties] = config['value'].except('Username', 'Password')
+        end
+        data
       end
 
       def parse_datasource(server, datasource, config)
