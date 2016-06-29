@@ -32,6 +32,9 @@ Dir.chdir APP_ROOT do
   unless File.exist?("config/database.yml")
     system "cp config/database.pg.yml config/database.yml"
   end
+  unless File.exist?("config/cable.yml")
+    system "cp config/cable.yml.sample config/cable.yml"
+  end
   unless File.exist?("certs/v2_key")
     system "cp certs/v2_key.dev certs/v2_key"
   end
