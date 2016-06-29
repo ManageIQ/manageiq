@@ -28,6 +28,7 @@ describe ExtManagementSystem do
       "foreman_configuration"       => "Foreman Configuration",
       "foreman_provisioning"        => "Foreman Provisioning",
       "gce"                         => "Google Compute Engine",
+      "gce_network"                 => "Google Network",
       "hawkular"                    => "Hawkular",
       "kubernetes"                  => "Kubernetes",
       "openshift"                   => "OpenShift Origin",
@@ -244,7 +245,8 @@ describe ExtManagementSystem do
         # TODO(lsmola) NetworkManager, test this if NetworkManager becomes not dependent on cloud manager
         next if [ManageIQ::Providers::Openstack::NetworkManager,
                  ManageIQ::Providers::Amazon::NetworkManager,
-                 ManageIQ::Providers::Azure::NetworkManager].include? ems
+                 ManageIQ::Providers::Azure::NetworkManager,
+                 ManageIQ::Providers::Google::NetworkManager].include? ems
         t = ems.name.underscore
 
         context t do
@@ -282,7 +284,8 @@ describe ExtManagementSystem do
         # TODO(lsmola) NetworkManager, test this when we have a standalone NetworkManager
         next if [ManageIQ::Providers::Openstack::NetworkManager,
                  ManageIQ::Providers::Amazon::NetworkManager,
-                 ManageIQ::Providers::Azure::NetworkManager].include? ems
+                 ManageIQ::Providers::Azure::NetworkManager,
+                 ManageIQ::Providers::Google::NetworkManager].include? ems
 
         context t do
           it "duplicate name" do
