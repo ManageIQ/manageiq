@@ -218,7 +218,7 @@ class RestApi
         exit
       end
 
-      path = PREFIX
+      path = PREFIX.dup
       path << "/v#{opts[:apiversion]}" unless opts[:apiversion].empty?
 
       collection = ""
