@@ -3,51 +3,53 @@ describe ToolbarHelper do
     subject { buttons_to_html(buttons) }
 
     let(:buttons) do
-      [
-        {
-          :id       => "history_choice",
-          :type     => :buttonSelect,
-          :img      => "history.png",
-          :imgdis   => "history.png",
-          :icon     => nil,
-          :title    => "History",
-          :enabled  => false,
-          :items    => [
-            {
-              :id      => "history_choice__history_1",
-              :type    => :button,
-              :img     => "history.png",
-              :imgdis  => "history.png",
-              :icon    => nil,
-              :enabled => "false",
-              :title   => "Go to this item",
-              :name    => "history_choice__history_1",
-              :hidden  => false,
-              :pressed => nil,
-              :onwhen  => nil,
-              :url     => "x_history?item=1"
-            }
-          ],
-          :hidden   => false,
-          :name     => "history_choice",
-          :pressed  => nil,
-          :onwhen   => nil,
-          :explorer => true
-        },
-        {
-          :id      => "summary_reload",
-          :type    => :button,
-          :img     => "reload.png",
-          :imgdis  => "reload.png",
-          :icon    => nil,
-          :title   => "Reload current display",
-          :name    => "summary_reload",
-          :hidden  => false,
-          :pressed => nil,
-          :onwhen  => nil,
-          :url     => "reload"
-        }
-      ]
+      b1 = {
+        :id       => "history_choice",
+        :type     => :buttonSelect,
+        :img      => "history.png",
+        :imgdis   => "history.png",
+        :icon     => nil,
+        :title    => "History",
+        :enabled  => false,
+        :items    => [
+          b3 = {
+            :id      => "history_choice__history_1",
+            :type    => :button,
+            :img     => "history.png",
+            :imgdis  => "history.png",
+            :icon    => nil,
+            :enabled => "false",
+            :title   => "Go to this item",
+            :name    => "history_choice__history_1",
+            :hidden  => false,
+            :pressed => nil,
+            :onwhen  => nil,
+            :url     => "x_history?item=1"
+          }
+        ],
+        :hidden   => false,
+        :name     => "history_choice",
+        :pressed  => nil,
+        :onwhen   => nil,
+        :explorer => true
+      }
+      b2 = {
+        :id      => "summary_reload",
+        :type    => :button,
+        :img     => "reload.png",
+        :imgdis  => "reload.png",
+        :icon    => nil,
+        :title   => "Reload current display",
+        :name    => "summary_reload",
+        :hidden  => false,
+        :pressed => nil,
+        :onwhen  => nil,
+        :url     => "reload"
+      }
+      allow(b1).to receive(:localized).and_return('text')
+      allow(b2).to receive(:localized).and_return('text')
+      allow(b3).to receive(:localized).and_return('text')
+      [b1, b2]
     end
 
     it "renders normal toolbar buttons as <button>" do
@@ -68,27 +70,27 @@ describe ToolbarHelper do
 
     context 'with separator' do
       let(:buttons) do
-        [
-          {
-            :id    => "view_grid",
-            :type  => :buttonTwoState,
-            :img   => "view_grid.png",
-            :icon  => "fa fa-th",
-            :title => "Grid View",
-            :name  => "view_grid",
-          },
-          {
-            :type => :separator
-          },
-          {
-            :id    => "view_tile",
-            :type  => :buttonTwoState,
-            :img   => "view_tile.png",
-            :icon  => "fa fa-th-large",
-            :title => "Tile View",
-            :name  => "view_tile",
-          }
-        ]
+        b1 = {
+          :id    => "view_grid",
+          :type  => :buttonTwoState,
+          :img   => "view_grid.png",
+          :icon  => "fa fa-th",
+          :title => "Grid View",
+          :name  => "view_grid",
+        }
+        b2 = {:type => :separator}
+        b3 = {
+          :id    => "view_tile",
+          :type  => :buttonTwoState,
+          :img   => "view_tile.png",
+          :icon  => "fa fa-th-large",
+          :title => "Tile View",
+          :name  => "view_tile",
+        }
+        allow(b1).to receive(:localized).and_return('text')
+        allow(b2).to receive(:localized).and_return('text')
+        allow(b3).to receive(:localized).and_return('text')
+        [b1, b2, b3]
       end
       it "splits top buttons into groups on separator" do
         expect(subject).to have_selector('div.form-group', :count => 2)
@@ -97,24 +99,25 @@ describe ToolbarHelper do
 
     context 'with icon' do
       let(:buttons) do
-        [
-          {
-            :id    => "view_grid",
-            :type  => :buttonTwoState,
-            :img   => "view_grid.png",
-            :icon  => "fa fa-th",
-            :title => "Grid View",
-            :name  => "view_grid",
-          },
-          {
-            :id    => "view_tile",
-            :type  => :buttonTwoState,
-            :img   => "view_tile.png",
-            :icon  => "fa fa-th-large",
-            :title => "Tile View",
-            :name  => "view_tile",
-          }
-        ]
+        b1 = {
+          :id    => "view_grid",
+          :type  => :buttonTwoState,
+          :img   => "view_grid.png",
+          :icon  => "fa fa-th",
+          :title => "Grid View",
+          :name  => "view_grid",
+        }
+        b2 = {
+          :id    => "view_tile",
+          :type  => :buttonTwoState,
+          :img   => "view_tile.png",
+          :icon  => "fa fa-th-large",
+          :title => "Tile View",
+          :name  => "view_tile",
+        }
+        allow(b1).to receive(:localized).and_return('text')
+        allow(b2).to receive(:localized).and_return('text')
+        [b1, b2]
       end
 
       it 'renders icons instead of images' do
@@ -128,24 +131,23 @@ describe ToolbarHelper do
     subject { view_mode_buttons(buttons) }
 
     let(:buttons) do
-      [
-        {
-          :id        => "view_grid",
-          :type      => :buttonTwoState,
-          :img       => "view_grid.png",
-          :imgdis    => "view_grid.png",
-          :icon      => "fa fa-th",
-          :title     => "Grid View",
-          :enabled   => "false",
-          :selected  => "true",
-          :name      => "view_grid",
-          :hidden    => false,
-          :pressed   => nil,
-          :onwhen    => nil,
-          :url       => "explorer",
-          :url_parms => "?type=grid"
-        },
-        {
+      b1 = {
+        :id        => "view_grid",
+        :type      => :buttonTwoState,
+        :img       => "view_grid.png",
+        :imgdis    => "view_grid.png",
+        :icon      => "fa fa-th",
+        :title     => "Grid View",
+        :enabled   => "false",
+        :selected  => "true",
+        :name      => "view_grid",
+        :hidden    => false,
+        :pressed   => nil,
+        :onwhen    => nil,
+        :url       => "explorer",
+        :url_parms => "?type=grid"
+      }
+      b2 = {
           :id        => "view_tile",
           :type      => :buttonTwoState,
           :img       => "view_tile.png",
@@ -158,8 +160,10 @@ describe ToolbarHelper do
           :onwhen    => nil,
           :url       => "explorer",
           :url_parms => "?type=tile"
-        }
-      ]
+      }
+      allow(b1).to receive(:localized).and_return('text')
+      allow(b2).to receive(:localized).and_return('text')
+      [b1, b2]
     end
 
     it 'renders ul with items, links and icons' do
