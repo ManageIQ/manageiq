@@ -939,6 +939,7 @@ dialog_fields:
 - read_only
 - auto_refresh
 - trigger_auto_refresh
+- visible
 dialog_groups:
 - id
 - description
