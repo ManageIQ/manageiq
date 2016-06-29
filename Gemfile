@@ -95,6 +95,9 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
   gem "patternfly-sass",                                              :git => "git://github.com/ManageIQ/patternfly-sass", :branch => "tertiary-3.7.0"
 end
 
+# Required by the oVirt 4 provider:
+gem "ovirt-engine-sdk", "=4.0.0.alpha16", :require => false
+
 ### Start of gems excluded from the appliances.
 # The gems listed below do not need to be packaged until we find it necessary or useful.
 # Only add gems here that we do not need on an appliance.
