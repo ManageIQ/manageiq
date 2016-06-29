@@ -1,5 +1,6 @@
 module OrchestrationStackHelper::TextualSummary
   include TextualMixins::TextualDescription
+  include TextualMixins::TextualEmsCloud
   include TextualMixins::TextualGroupTags
   include TextualMixins::TextualName
   #
@@ -37,10 +38,6 @@ module OrchestrationStackHelper::TextualSummary
     {:label => _("Retirement Date"),
      :image => "retirement",
      :value => (@record.retires_on.nil? ? _("Never") : @record.retires_on.to_time.strftime("%x"))}
-  end
-
-  def textual_ems_cloud
-    textual_link(@record.ext_management_system)
   end
 
   def textual_service

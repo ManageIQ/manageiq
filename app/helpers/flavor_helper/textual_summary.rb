@@ -1,4 +1,5 @@
 module FlavorHelper::TextualSummary
+  include TextualMixins::TextualEmsCloud
   include TextualMixins::TextualGroupTags
   #
   # Groups
@@ -65,10 +66,6 @@ module FlavorHelper::TextualSummary
 
   def textual_cloud_subnet_required
     @record.cloud_subnet_required?
-  end
-
-  def textual_ems_cloud
-    textual_link(@record.ext_management_system)
   end
 
   def textual_instances
