@@ -2025,6 +2025,17 @@
         :description: Display Individual Git Repositories
         :feature_type: view
         :identifier: git_repository_show
+    - :name: Modify
+      :description: Modify Git Repositories
+      :feature_type: admin
+      :identifier: git_repository_admin
+      :hidden: false
+      :children:
+      - :name: Add
+        :description: Add a Git Repository
+        :feature_type: admin
+        :hidden: false
+        :identifier: git_repository_add
 
 # Automate Log
 - :name: Log
