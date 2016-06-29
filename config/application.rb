@@ -136,6 +136,7 @@ module Vmdb
         inflect.singular(/Quota$/, "Quota")
         inflect.plural(/quota$/, "quotas")
         inflect.irregular("container_quota", "container_quotas")
+        inflect.irregular("MiddlewareJms", "MiddlewareJms")
 
         inflect.acronym 'ManageIQ'
       end

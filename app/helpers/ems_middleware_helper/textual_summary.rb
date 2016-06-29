@@ -11,7 +11,7 @@ module EmsMiddlewareHelper::TextualSummary
   def textual_group_relationships
     # Order of items should be from parent to child
     items = []
-    items.concat(%i(middleware_domains middleware_servers middleware_deployments middleware_datasources))
+    items.concat(%i(middleware_domains middleware_servers middleware_deployments middleware_datasources middleware_jms))
   end
 
   def textual_group_status

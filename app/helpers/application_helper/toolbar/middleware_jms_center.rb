@@ -1,0 +1,35 @@
+class ApplicationHelper::Toolbar::MiddlewareJmsCenter < ApplicationHelper::Toolbar::Basic
+  button_group('middleware_jms_monitoring', [
+    select(
+      :middleware_jms_monitoring_choice,
+      'product product-monitoring fa-lg',
+      t = N_('Monitoring'),
+      t,
+      :items => [
+        button(
+          :middleware_jms_perf,
+          'product product-monitoring fa-lg',
+          N_('Show Capacity & Utilization data for this JMS'),
+          N_('Utilization'),
+          :url       => "/show",
+          :url_parms => "?display=performance")
+      ]
+    ),
+  ])
+  button_group('middleware_jms_policy', [
+    select(
+      :middleware_jms_policy_choice,
+      'fa fa-shield fa-lg',
+      t = N_('Policy'),
+      t,
+      :enabled => "false",
+      :items   => [
+        button(
+          :middleware_jms_tag,
+          'pficon pficon-edit fa-lg',
+          N_('Edit Tags for this Middleware JMS'),
+          N_('Edit Tags')),
+      ]
+    ),
+  ])
+end

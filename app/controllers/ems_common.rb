@@ -91,6 +91,7 @@ module EmsCommon
       'middleware_datasources'        => [MiddlewareDatasource,   _('Middleware Datasources')],
       'middleware_domains'            => [MiddlewareDomain,       _('Middleware Domains')],
       'middleware_server_groups'      => [MiddlewareServerGroup,  _('Middleware Server Groups')],
+      'middleware_messagings'         => [MiddlewareMessaging,    _('Middleware Messagings')],
       'cloud_tenants'                 => [CloudTenant,            _('Cloud Tenants')],
       'cloud_volumes'                 => [CloudVolume,            _('Cloud Volumes')],
       'flavors'                       => [Flavor,                 _('Flavors')],

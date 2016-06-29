@@ -343,6 +343,12 @@ module ApplicationController::Tags
     @view.table = MiqFilter.records2table(@tagitems, @view.cols + ['id'])
 
     # Start with the first items assignments
+    puts 'ffffff'
+    puts 'ffffff'
+    puts @object_ids
+    puts 'ffffff'
+    puts 'ffffff'
+    puts 'ffffff'
     @edit[:new][:assignments] =
       Classification.find_assigned_entries(@tagitems[0]).collect { |e| e.id unless e.parent.read_only? }
     @tagitems.each do |item|

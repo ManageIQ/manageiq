@@ -478,11 +478,15 @@ class ApplicationHelper::ToolbarChooser
               ems_network security_group floating_ip cloud_subnet network_router network_topology network_port cloud_network load_balancer
               container_image_registry ems_infra flavor host container_build
               ontap_file_share ontap_logical_disk container_topology middleware_topology middleware_server
-              middleware_deployment middleware_datasource middleware_domain middleware_server_group
+              middleware_deployment middleware_datasource middleware_domain middleware_server_group middleware_jms
               ontap_storage_system orchestration_stack resource_pool storage_manager
               timeline usage).include?(@layout)
           if ["show_list"].include?(@lastaction)
-            return "#{@layout.pluralize}_center_tb"
+            if %w(middleware_jms).include?(@layout)
+              return "#{@layout.pluralize}_list_center_tb"
+            else
+              return "#{@layout.pluralize}_center_tb"
+            end
           else
             return "#{@layout}_center_tb"
           end

@@ -44,4 +44,8 @@ module MiddlewareSummaryHelper
   def textual_middleware_server_groups
     textual_link(@record.middleware_server_groups)
   end
+  
+  def textual_middleware_jms
+    textual_link(@record.middleware_jms)
+  end
 end

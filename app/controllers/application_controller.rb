@@ -1920,7 +1920,7 @@ class ApplicationController < ActionController::Base
     when "ems_network", "cloud_network", "cloud_subnet", "network_router", "security_group", "floating_ip", "load_balancer"
       session[:tab_url][:net] = inbound_url if %w(show show_list).include?(action_name)
     when "ems_middleware", "middleware_server", "middleware_deployment", "middleware_datasource",
-         "middleware_topology", "middleware_domain", "middleware_server_group"
+         "middleware_topology", "middleware_domain", "middleware_server_group", "middleware_jms"
       session[:tab_url][:mdl] = inbound_url if %w(show show_list).include?(action_name)
     when "miq_request"
       session[:tab_url][:svc] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "vm"

@@ -796,6 +796,7 @@ en:
       ManageIQ::Providers::Openstack::NetworkManager::NetworkPort:          Network Port (OpenStack)
       MiddlewareDatasource:     Middleware Datasource
       MiddlewareDomain:         Middleware Domain
+      MiddlewareJms:            Middleware Jms
       MiddlewareDeployment:     Middleware Deployment
       MiddlewareServer:         Middleware Server
       MiddlewareServerGroup:    Middleware Server Group
@@ -941,8 +942,12 @@ en:
       middleware_servers:          Middleware Servers
       middleware_datasource:       Middleware Datasource
       middleware_datasources:      Middleware Datasources
+<<<<<<< 15ab5023bea02b6e1324bc357542ddfb62d3c160
       middleware_domain:           Middleware Domain
       middleware_domains:          Middleware Domains
+=======
+      middleware_jms:              Middleware Jms
+>>>>>>> Add middleware jms to application
       middleware_deployment:       Middleware Deployment
       middleware_deployments:      Middleware Deployments
       middleware_server_group:     Middleware Server Group

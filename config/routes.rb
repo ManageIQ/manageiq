@@ -1268,6 +1268,29 @@ Vmdb::Application.routes.draw do
         save_post
     },
 
+    :middleware_messaging => {
+      :get  => %w(
+        download_data
+        index
+        perf_chart_chooser
+        show
+        show_list
+        tagging_edit
+        tag_edit_form_field_changed
+      ) +
+      compare_get,
+      :post => %w(
+        button
+        show
+        show_list
+        tl_chooser
+        update
+        wait_for_task
+        tagging_edit
+        tag_edit_form_field_changed
+      )
+    },
+
     :ems_network              => {
       :get  => %w(
         dialog_load
