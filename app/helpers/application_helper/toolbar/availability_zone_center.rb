@@ -31,7 +31,7 @@ class ApplicationHelper::Toolbar::AvailabilityZoneCenter < ApplicationHelper::To
         button(
           :availability_zone_timeline,
           'product product-timeline fa-lg',
-          N_('Show Timelines for this #{ui_lookup(:table=>"availability_zone")}'),
+          N_('Show Timelines for this Availability Zone'),
           N_('Timelines'),
           :url       => "/show",
           :url_parms => "?display=timeline"),

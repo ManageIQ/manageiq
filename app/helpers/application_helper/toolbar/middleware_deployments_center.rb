@@ -12,7 +12,7 @@ class ApplicationHelper::Toolbar::MiddlewareDeploymentsCenter < ApplicationHelpe
         button(
           :middleware_deployment_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for these #{ui_lookup(:table=>"middleware_deployments")}'),
+          N_('Edit Tags for these Middleware Deployments'),
           N_('Edit Tags'),
           :url_parms => "main_div",
           :enabled   => false,
@@ -32,7 +32,7 @@ class ApplicationHelper::Toolbar::MiddlewareDeploymentsCenter < ApplicationHelpe
         button(
           :middleware_deployment_redeploy,
           'pficon pficon-restart fa-lg',
-          N_('Redeploy these #{ui_lookup(:table=>"middleware_deployments")}'),
+          N_('Redeploy these Middleware Deployments'),
           N_('Redeploy'),
           :url_parms => "main_div",
           :enabled   => false,
@@ -41,7 +41,7 @@ class ApplicationHelper::Toolbar::MiddlewareDeploymentsCenter < ApplicationHelpe
         button(
           :middleware_deployment_undeploy,
           'fa fa-eject fa-lg',
-          N_('Undeploy these #{ui_lookup(:table=>"middleware_deployments")}'),
+          N_('Undeploy these Middleware Deployments'),
           N_('Undeploy'),
           :url_parms => "main_div",
           :enabled   => false,

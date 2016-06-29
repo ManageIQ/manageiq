@@ -30,7 +30,7 @@ class ApplicationHelper::Toolbar::ContainerBuildsCenter < ApplicationHelper::Too
         button(
           :container_build_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this #{ui_lookup(:table=>"container_builds")}'),
+          N_('Edit Tags for these Container Builds'),
           N_('Edit Tags'),
           :url_parms => "main_div",
           :enabled   => false,
