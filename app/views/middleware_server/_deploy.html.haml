@@ -10,7 +10,7 @@
                           "data-keyboard"   => "false",
                           "data-backdrop"   => "static",
                           :style            => "display: none"}
-    .modal-dialog.modal-lg
+    .modal-dialog.modal-md
       .modal-content#deploy_div
         .modal-header
           %button.close{"data-dismiss" => "modal"}
@@ -22,14 +22,27 @@
             = _("Add Middleware Deployment")
         .modal-body
           %input#server_id{:type => "hidden", :value => params[:id]}
-          Select the file to deploy:
-          = file_field("upload", "file",
-                       :class             => "lifestyle",
-                       "data-buttonName"  => "btn-default",
-                       "ng-model"         => "filePath",
-                       "require-file"     => "handle")
+          .form-group
+            %label.col-md-4.control-label{:for => "enable_deployment_cb"}
+              = _("Select the file to deploy")
+            .col-md-8
+              = file_field("upload", "file",
+                           :class             => "lifestyle",
+                           "data-buttonName"  => "btn-default",
+                           "ng-model"         => "filePath",
+                           "require-file"     => "handle")
+          .form-group
+            %label.col-md-4.control-label{:for => "enable_deployment_cb"}
+              = _("Enable Deployment")
+            .col-md-8
+              %input#enable_deployment_cb{:type => "checkbox", "ng-model" => "enableDeployment"}
+          .form-group
+            %label.col-md-4.control-label{:for => "runtime_name_input"}
+              = _("Runtime Name")
+            .col-md-8
+              %input.form-control#runtime_name_input{:type => "text", "ng-model" => "runtimeName"}
           :javascript
-            $(":file").filestyle({icon: false, placeholder: "No file chosen"});
+            $(":file").filestyle({icon: false, placeholder: _("No file chosen")});
         .modal-footer
           %button.btn.btn-primary{"ng-disabled" => "!filePath", "ng-click" => "addDeployment()", :type => "button"}
             = _("Deploy")

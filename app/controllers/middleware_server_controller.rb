@@ -52,6 +52,11 @@ class MiddlewareServerController < ApplicationController
   def add_deployment
     selected_servers = identify_selected_servers
 
+    params[:file] = {
+      :file         => params["file"],
+      :enabled      => params["enabled"],
+      :runtime_name => params["runtimeName"]
+    }
     run_server_operation(OPERATIONS.fetch(:middleware_add_deployment), selected_servers)
 
     render :update do |page|
@@ -85,6 +90,7 @@ class MiddlewareServerController < ApplicationController
 
     if OPERATIONS.key?(selected_operation)
       selected_servers = identify_selected_servers
+
       run_server_operation(OPERATIONS.fetch(selected_operation), selected_servers)
 
       render :update do |page|

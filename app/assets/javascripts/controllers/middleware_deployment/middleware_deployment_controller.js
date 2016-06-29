@@ -9,6 +9,14 @@ function MiddlewareDeploymentCtrl($scope, $http, miqService) {
     $scope.showDeployModal = true;
   };
 
+  $scope.enableDeployment = true;
+
+  $scope.$watch('filePath', function(newValue) {
+    if (newValue) {
+      $scope.runtimeName = newValue.name;
+    }
+  });
+
   $scope.addDeployment = function () {
     miqService.sparkleOn();
     var url = '/middleware_server/add_deployment';
@@ -19,6 +27,8 @@ function MiddlewareDeploymentCtrl($scope, $http, miqService) {
     var fd = new FormData();
     fd.append('file', file);
     fd.append('id', angular.element('#server_id').val());
+    fd.append('enabled', $scope.enableDeployment);
+    fd.append('runtimeName', $scope.runtimeName);
     $http.post(uploadUrl, fd, {
       transformRequest: angular.identity,
       headers: {'Content-Type': undefined}

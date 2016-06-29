@@ -178,8 +178,9 @@ module ManageIQ::Providers
     def add_middleware_deployment(ems_ref, hash)
       with_provider_connection do |connection|
         deployment_data = {
-          :destination_file_name => hash[:file].original_filename,
-          :binary_content        => hash[:file].read,
+          :enabled               => hash[:file]["enabled"],
+          :destination_file_name => hash[:file]["runtime_name"] || hash[:file]["file"].original_filename,
+          :binary_content        => hash[:file]["file"].read,
           :resource_path         => ems_ref.to_s
         }
 
