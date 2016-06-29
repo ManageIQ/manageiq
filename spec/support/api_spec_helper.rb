@@ -147,7 +147,7 @@ module ApiSpecHelper
   end
 
   def action_identifier(type, action, selection = :resource_actions, method = :post)
-    Api::Settings.collections.fetch_path(type, selection, method)
+    Api::Settings.collections[type][selection][method]
       .detect { |spec| spec[:name] == action.to_s }[:identifier]
   end
 
@@ -157,7 +157,7 @@ module ApiSpecHelper
 
   def subcollection_action_identifier(type, subtype, action, method = :post)
     subtype_actions = "#{subtype}_subcollection_actions".to_sym
-    if Api::Settings.collections.fetch_path(type, subtype_actions).present?
+    if Api::Settings.collections[type][subtype_actions]
       action_identifier(type, action, subtype_actions, method)
     else
       action_identifier(subtype, action, :subcollection_actions, method)

@@ -123,7 +123,7 @@ class ApiController
     end
 
     def resource_can_have_custom_actions(type, cspec = nil)
-      cspec ||= collection_config[type.to_sym] if collection_config.key?(type.to_sym)
+      cspec ||= collection_config[type.to_sym] if collection_config[type.to_sym]
       cspec && cspec[:options].include?(:custom_actions)
     end
 
@@ -249,7 +249,7 @@ class ApiController
       aname = parse_action_name
 
       aspecnames = "#{target}_actions"
-      raise BadRequestError, "No actions are supported for #{cname} #{type}" unless cspec.key?(aspecnames.to_sym)
+      raise BadRequestError, "No actions are supported for #{cname} #{type}" unless cspec[aspecnames.to_sym]
 
       aspec = cspec[aspecnames.to_sym]
       action_hash = fetch_action_hash(aspec, mname, aname)
@@ -272,7 +272,7 @@ class ApiController
       if @req[:collection]
         cname = @req[:collection]
         ctype = "Collection"
-        raise BadRequestError, "Unsupported #{ctype} #{cname} specified" unless collection_config.key?(cname.to_sym)
+        raise BadRequestError, "Unsupported #{ctype} #{cname} specified" unless collection_config[cname.to_sym]
         cspec = collection_config[cname.to_sym]
         if cspec[:options].include?(:primary)
           if "#{@req[:c_id]}#{@req[:subcollection]}#{@req[:s_id]}".present?
