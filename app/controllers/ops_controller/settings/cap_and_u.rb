@@ -209,9 +209,9 @@ module OpsController::Settings::CapAndU
     end
     @edit[:new][:all_clusters] = params[:all_clusters] == 'true' if params[:all_clusters]
     @edit[:new][:all_storages] = params[:all_storages] == 'true' if params[:all_storages]
-    if params[:tree_name] == "datastore"
+    if params[:tree_name] == 'datastore'
       datastore_tree_settings(node_type)
-    else
+    elsif params[:tree_name] == 'cluster'
       cluster_tree_settings(node_type)
     end
   end
