@@ -35,7 +35,7 @@ describe ApiController do
   end
 
   def expect_result_to_have_user_email(email)
-    expect_request_success
+    expect(response).to have_http_status(:ok)
     expect_result_to_have_keys(%w(id href user))
     expect(response_hash["user"]["email"]).to eq(email)
   end

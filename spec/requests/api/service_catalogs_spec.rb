@@ -30,7 +30,7 @@ describe ApiController do
 
       run_post(service_catalogs_url, gen_request(:add, "name" => "sample service catalog"))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects resource creation via create action without appropriate role" do
@@ -38,7 +38,7 @@ describe ApiController do
 
       run_post(service_catalogs_url, "name" => "sample service catalog")
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects resource creation with id specified" do
@@ -54,7 +54,7 @@ describe ApiController do
 
       run_post(service_catalogs_url, gen_request(:add, "name" => "sample service catalog"))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
       expect_results_to_match_hash("results", [{"name" => "sample service catalog"}])
 
@@ -68,7 +68,7 @@ describe ApiController do
 
       run_post(service_catalogs_url, "name" => "sample service catalog")
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
       expect_results_to_match_hash("results", [{"name" => "sample service catalog"}])
 
@@ -82,7 +82,7 @@ describe ApiController do
 
       run_post(service_catalogs_url, gen_request(:add, [{"name" => "sc1"}, {"name" => "sc2"}]))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
       expect_results_to_match_hash("results", [{"name" => "sc1"}, {"name" => "sc2"}])
 
@@ -106,7 +106,7 @@ describe ApiController do
                                                    {"href" => service_templates_url(st2.id)}
                                                  ]))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_results_to_match_hash("results", [{"name" => "sc", "description" => "sc description"}])
 
       sc_id = response_hash["results"].first["id"]
@@ -122,7 +122,7 @@ describe ApiController do
 
       run_post(service_catalogs_url, gen_request(:edit, "name" => "sc1", "href" => service_catalogs_url(999_999)))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects edits for invalid resources" do
@@ -130,7 +130,7 @@ describe ApiController do
 
       run_post(service_catalogs_url(999_999), gen_request(:edit, "description" => "updated sc description"))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "supports single resource edit" do
@@ -169,7 +169,7 @@ describe ApiController do
 
       run_post(service_catalogs_url, gen_request(:delete, "name" => "sc1", "href" => service_catalogs_url(100)))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects resource deletion without appropriate role" do
@@ -177,7 +177,7 @@ describe ApiController do
 
       run_delete(service_catalogs_url(100))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects resource deletes for invalid resources" do
@@ -185,7 +185,7 @@ describe ApiController do
 
       run_delete(service_catalogs_url(999_999))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "supports single resource deletes" do
@@ -195,7 +195,7 @@ describe ApiController do
 
       run_delete(service_catalogs_url(sc.id))
 
-      expect_request_success_with_no_content
+      expect(response).to have_http_status(:no_content)
       expect { sc.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
@@ -233,7 +233,7 @@ describe ApiController do
 
       run_post(sc_templates_url(100), gen_request(:assign, "href" => service_templates_url(1)))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects unassign requests without appropriate role" do
@@ -241,7 +241,7 @@ describe ApiController do
 
       run_post(sc_templates_url(100), gen_request(:unassign, "href" => service_templates_url(1)))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects assign requests with invalid service template" do
@@ -251,7 +251,7 @@ describe ApiController do
 
       run_post(sc_templates_url(sc.id), gen_request(:assign, "href" => service_templates_url(999_999)))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_results_to_match_hash("results", [{"success" => false, "href" => service_catalogs_url(sc.id)}])
     end
 
@@ -263,7 +263,7 @@ describe ApiController do
 
       run_post(sc_templates_url(sc.id), gen_request(:assign, "href" => service_templates_url(st.id)))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_results_to_match_hash("results", [{"success"               => true,
                                                 "href"                  => service_catalogs_url(sc.id),
                                                 "service_template_id"   => st.id,
@@ -282,7 +282,7 @@ describe ApiController do
 
       run_post(sc_templates_url(sc.id), gen_request(:unassign, "href" => service_templates_url(st1.id)))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_results_to_match_hash("results", [{"success"               => true,
                                                 "href"                  => service_catalogs_url(sc.id),
                                                 "service_template_id"   => st1.id,
@@ -329,7 +329,7 @@ describe ApiController do
 
       run_get sc_templates_url(sc.id, st1.id)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect(response_hash).to_not include_actions("order")
     end
 
@@ -342,7 +342,7 @@ describe ApiController do
 
       run_get sc_templates_url(sc.id, st1.id)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect(response_hash).to include_actions("order")
     end
 
@@ -351,7 +351,7 @@ describe ApiController do
 
       run_post(sc_templates_url(100), gen_request(:order, "href" => service_templates_url(1)))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "supports single order request" do
@@ -398,7 +398,7 @@ describe ApiController do
 
       run_post(sc_templates_url(sc.id), gen_request(:order, [{"href" => service_templates_url(st1.id)},
                                                              {"href" => service_templates_url(st2.id)}]))
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_results_to_match_hash("results", [order_request, order_request])
     end
   end
@@ -429,7 +429,7 @@ describe ApiController do
 
       run_post(sc_templates_url(sc.id, st1.id), gen_request(:refresh_dialog_fields, "fields" => %w(test1)))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects refresh dialog fields with unspecified fields" do
