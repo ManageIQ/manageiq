@@ -20,6 +20,7 @@ class TreeBuilderClusters < TreeBuilder
     locals.merge!(:id_prefix => 'cluster_',
                   :checkboxes                  => true,
                   :onselect => "miqOnCheckCUFilters",
+                  :onclick                     => false,
                   :check_url => "/ops/cu_collection_field_changed/",
                   :open_close_all_on_dbl_click => true)
   end
