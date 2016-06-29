@@ -318,6 +318,40 @@ module MiqAeMethodService
       aec.ae_instances.detect { |i| instance.casecmp(i.name) == 0 }
     end
 
+    def with_acquired_lock(lock_name, max_retry_time = 60, retries = 10)
+      give_up_at = Time.zone.now + max_retry_time
+      retry_interval = max_retry_time / retries
+
+      while Time.zone.now < give_up_at
+        if MiqConcurrency::PGMutex.try_advisory_lock(lock_name)
+          begin
+            return yield
+          ensure
+            MiqConcurrency::PGMutex.release_advisory_lock(lock_name)
+          end
+          return
+        end
+        sleep(retry_interval)
+      end
+
+      raise MiqAeException::LockAcquisitionFailed, "Failed on lock_name=#{lock_name}"
+    end
+
+    def acquire_lock(lock_name)
+      MiqConcurrency::PGMutex.try_advisory_lock(lock_name)
+    end
+
+    def release_lock(lock_name)
+      until locks_acquired(lock_name) == 0
+        MiqConcurrency::PGMutex.release_advisory_lock(lock_name)
+      end
+      true
+    end
+
+    def locked?(lock_name)
+      locks_acquired(lock_name) > 0
+    end
+
     private
 
     def editable_instance?(path)
@@ -341,6 +375,10 @@ module MiqAeMethodService
       return true if domains.include?(dom.upcase)
       $log.warn "domain=#{dom} : is not viewable"
       false
+    end
+
+    def locks_acquired(lock_name)
+      MiqConcurrency::PGMutex.count_advisory_lock(lock_name)
     end
   end
 

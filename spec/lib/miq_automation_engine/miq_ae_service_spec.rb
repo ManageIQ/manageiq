@@ -95,6 +95,87 @@ module MiqAeServiceSpec
         end
       end
     end
+
+    context "#acquire_lock" do
+      let(:miq_ae_service) { MiqAeService.new(double('ws', :persist_state_hash => {})) }
+      let(:lock_name) { 'conch' }
+      let(:lock_hash) { Zlib.crc32(lock_name) }
+
+      before do
+        miq_ae_service.release_lock(lock_name)
+      end
+
+      it "succeeds in acquiring a free lock" do
+        expect(miq_ae_service.acquire_lock(lock_name)).to be true
+      end
+
+      it "succeeds in locking" do
+        expect(miq_ae_service.locked?(lock_name)).to be false
+        miq_ae_service.acquire_lock(lock_name)
+        expect(miq_ae_service.locked?(lock_name)).to be true
+      end
+    end
+
+    context "#release_lock" do
+      let(:miq_ae_service) { MiqAeService.new(double('ws', :persist_state_hash => {})) }
+      let(:lock_name) { 'conch' }
+
+      before do
+        miq_ae_service.release_lock(lock_name)
+      end
+
+      it "succeeds in releasing single lock" do
+        miq_ae_service.acquire_lock(lock_name)
+        expect(miq_ae_service.locked?(lock_name)).to be true
+        expect(miq_ae_service.release_lock(lock_name)).to be true
+        expect(miq_ae_service.locked?(lock_name)).to be false
+      end
+
+      it "succeeds in releasing multiple locks" do
+        miq_ae_service.acquire_lock(lock_name)
+        miq_ae_service.acquire_lock(lock_name)
+        miq_ae_service.acquire_lock(lock_name)
+        expect(miq_ae_service.locked?(lock_name)).to be true
+        expect(miq_ae_service.release_lock(lock_name)).to be true
+        expect(miq_ae_service.locked?(lock_name)).to be false
+      end
+    end
+
+    context "#locked?" do
+      let(:miq_ae_service) { MiqAeService.new(double('ws', :persist_state_hash => {})) }
+      let(:lock_name) { 'conch' }
+
+      before do
+        miq_ae_service.release_lock(lock_name)
+      end
+
+      it "verifies locks" do
+        expect(miq_ae_service.locked?(lock_name)).to be false
+        miq_ae_service.acquire_lock(lock_name)
+        expect(miq_ae_service.locked?(lock_name)).to be true
+        miq_ae_service.release_lock(lock_name)
+        expect(miq_ae_service.locked?(lock_name)).to be false
+      end
+    end
+
+    context "#with_acquired_lock" do
+      let(:miq_ae_service) { MiqAeService.new(double('ws', :persist_state_hash => {})) }
+      let(:lock_name) { 'conch' }
+      let(:lock_hash) { Zlib.crc32(lock_name) }
+
+      before do
+        miq_ae_service.release_lock(lock_name)
+      end
+
+      it "succeeds in acquiring lock and enters codeblock" do
+        expect(miq_ae_service.locked?(lock_name)).to be false
+        miq_ae_service.with_acquired_lock(lock_name) do
+          # Enters this codeblock
+          expect(miq_ae_service.locked?(lock_name)).to be true
+        end
+        expect(miq_ae_service.locked?(lock_name)).to be false
+      end
+    end
   end
 
   describe MiqAeService do
