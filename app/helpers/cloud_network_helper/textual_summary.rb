@@ -1,4 +1,5 @@
 module CloudNetworkHelper::TextualSummary
+  include TextualMixins::TextualEmsNetwork
   include TextualMixins::TextualGroupTags
   include TextualMixins::TextualName
   #
@@ -26,10 +27,6 @@ module CloudNetworkHelper::TextualSummary
 
   def textual_parent_ems_cloud
     @record.ext_management_system.try(:parent_manager)
-  end
-
-  def textual_ems_network
-    @record.ext_management_system
   end
 
   def textual_instances

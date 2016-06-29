@@ -1,4 +1,5 @@
 module FloatingIpHelper::TextualSummary
+  include TextualMixins::TextualEmsNetwork
   include TextualMixins::TextualGroupTags
   #
   # Groups
@@ -34,10 +35,6 @@ module FloatingIpHelper::TextualSummary
 
   def textual_parent_ems_cloud
     @record.ext_management_system.try(:parent_manager)
-  end
-
-  def textual_ems_network
-    @record.ext_management_system
   end
 
   def textual_instance
