@@ -81,17 +81,25 @@ module AssignmentMixin
   delegate :namespace, :to => :class
 
   module ClassMethods
+    # get a mapping of alert_sets and the tags they are assigned
+    #
+    # the namespace is removed from the front of the objects tag. e.g.:
+    #   If alert_set will have:
+    #     alert_set.tag.name == "/miq_alert_set/assigned_to/vm/tag/managed/environment/test"
+    #   assignments will return
+    #     {assigned: alert_set, assigned_to: "vm/tag/managed/environment/test"}
+    #   and will match:
+    #     vm.tag.name = "/managed/environment/test"
     def assignments
       # Get all assigned, enabled instances for type klass
       records = kind_of?(Class) ? all : self
       assignment_map = records.each_with_object({}) { |a, h| h[a.id] = a }
       Tag
+        .includes(:taggings).references(:taggings)
         .where("taggings.taggable_type = ? and tags.name like ?", name, "#{namespace}/%")
-        .joins(:taggings)
-        .each_with_object([]) do |tag, arr|
-          tag.taggings.each do |tagging|
-            next unless assignment_map[tagging.taggable_id]
-            arr << {
+        .flat_map do |tag|
+          tag.taggings.map do |tagging|
+            {
               :assigned    => assignment_map[tagging.taggable_id],
               :assigned_to => Tag.filter_ns([tag], namespace).first
             }
