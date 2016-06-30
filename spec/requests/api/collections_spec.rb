@@ -231,7 +231,8 @@ describe ApiController do
 
     it 'query Virtual Templates' do
       FactoryGirl.create(:virtual_template)
-      test_collection_query(:virtual_templates, virtual_templates_url, ManageIQ::Providers::CloudManager::VirtualTemplate)
+      test_collection_query(:virtual_templates,
+                            virtual_templates_url, ManageIQ::Providers::CloudManager::VirtualTemplate)
     end
 
     it "query Zones" do
