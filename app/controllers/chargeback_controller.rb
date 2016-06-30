@@ -53,7 +53,7 @@ class ChargebackController < ApplicationController
     build_accordions_and_trees
 
     @right_cell_text = case x_active_tree
-                       when :cb_rates_tree       then _("All %{models}") % {:models => ui_lookup(:models => "ChargebackRate")}
+                       when :cb_rates_tree       then _("All Chargeback Rates")
                        when :cb_assignments_tree then _("All Assignments")
                        when :cb_reports_tree     then _("All Saved Chargeback Reports")
                        end
@@ -432,7 +432,10 @@ class ChargebackController < ApplicationController
         @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "ChargebackRate")}
       elsif ["xx-Compute", "xx-Storage"].include?(node)
         @record = nil
-        @right_cell_text = _("%{typ} %{model}") % {:typ => x_node.split('-').last, :model => ui_lookup(:models => "ChargebackRate")}
+        @right_cell_text = case node
+                           when "xx-Compute" then _("Compute Chargeback Rates")
+                           when "xx-Storage" then _("Storage Chargeback Rates")
+                           end
         cb_rates_list
       else
         @record = ChargebackRate.find(from_cid(node.split('_').last.split('-').last))
@@ -443,7 +446,10 @@ class ChargebackController < ApplicationController
     elsif x_active_tree == :cb_assignments_tree
       if ["xx-Compute", "xx-Storage"].include?(node)
         cb_assign_set_form_vars
-        @right_cell_text = _("%{typ} %{model}") % {:typ => node.split('-').last, :model => "Rate Assignments"}
+        @right_cell_text = case node
+                           when "xx-Compute" then _("Compute Rate Assignments")
+                           when "xx-Storage" then _("Storage Rate Assignments")
+                           end
       else
         @right_cell_text = _("All Assignments")
       end
@@ -456,14 +462,14 @@ class ChargebackController < ApplicationController
       if x_node == "root"
         cb_rpt_build_folder_nodes
         @right_cell_div = "reports_list_div"
-        @right_cell_text = _("All %s") % "Saved Chargeback Reports"
+        @right_cell_text = _("All Saved Chargeback Reports")
       elsif nodes_len == 2
         # On a saved report node
         cb_rpts_show_saved_report
         if @report
           s = MiqReportResult.find_by_id(from_cid(nodes.last.split('-').last))
           @right_cell_div = "reports_list_div"
-          @right_cell_text = _("%{model} \"%{name}\"") % {:model => "Saved Chargeback Report", :name => format_timezone(s.last_run_on, Time.zone, "gtl")}
+          @right_cell_text = _("Saved Chargeback Report \"%{last_run_on}\"") % {:last_run_on => format_timezone(s.last_run_on, Time.zone, "gtl")}
         else
           add_flash(_("Selected Saved Chargeback Report no longer exists"), :warning)
           self.x_node = nodes[0..1].join("_")
@@ -477,7 +483,7 @@ class ChargebackController < ApplicationController
           @sb[:sel_saved_rep_id] = nodes[1]
           @right_cell_div = "reports_list_div"
           miq_report = MiqReport.find(@sb[:miq_report_id])
-          @right_cell_text = _("%{model} \"%{name}\"") % {:model => "Saved Chargeback Reports", :name => miq_report.name}
+          @right_cell_text = _("Saved Chargeback Reports \"%{report_name}\"") % {:report_name => miq_report.name}
           @sb[:parent_reports] = nil  unless @sb[:saved_reports].blank?    # setting it to nil so saved reports can be displayed, unless all saved reports were deleted
         else
           add_flash(_("Selected Chargeback Report no longer exists"), :warning)
@@ -506,7 +512,7 @@ class ChargebackController < ApplicationController
                               .order(:last_run_on)
 
     @sb[:tree_typ] = "reports"
-    @right_cell_text = _("%{model} \"%{name}\"") % {:model => "Reports", :name => miq_report.name}
+    @right_cell_text = _("Report \"%{report_name}\"") % {:report_name => miq_report.name}
     saved_reports
   end
 
