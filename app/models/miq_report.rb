@@ -202,4 +202,11 @@ class MiqReport < ApplicationRecord
     return unless klass < CustomAttributeMixin
     klass.load_custom_attributes_for(cols)
   end
+
+  # this method adds :custom_attributes => {} to MiqReport#include
+  # when report with virtual custom attributes is stored
+  # we need preload custom_attributes table to main query for building report for elimination of superfluous queries
+  def add_includes_for_virtual_custom_attributes
+    include[:custom_attributes] ||= {} if CustomAttributeMixin.select_virtual_custom_attributes(cols).present?
+  end
 end

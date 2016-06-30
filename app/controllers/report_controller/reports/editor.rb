@@ -1343,6 +1343,8 @@ module ReportController::Reports::Editor
     user = current_user
     rpt.user = user
     rpt.miq_group = user.current_group
+
+    rpt.add_includes_for_virtual_custom_attributes
   end
 
   def add_field_to_col_order(rpt, field)
