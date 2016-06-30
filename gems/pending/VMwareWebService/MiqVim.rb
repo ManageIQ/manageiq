@@ -21,7 +21,7 @@ class MiqVim < MiqVimInventory
   def initialize(server, username, password, cacheScope = nil)
     super
 
-    pbm_initialize(server, username, password)
+    pbm_initialize(self, server, username, password)
   end
 
   def getVimVm(path)

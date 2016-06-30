@@ -9,6 +9,7 @@ class MiqVimClientBase < VimService
   @@receiveTimeout = 120
 
   attr_reader :server, :username, :password, :connId
+  alias :host :server  # Used for RbVmomi::PBM
 
   def initialize(server, username, password)
     @server   = server
