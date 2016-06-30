@@ -148,7 +148,6 @@ class ApiController < ApplicationController
     @description     = base_config[:description]
     @version         = base_config[:version]
     @prefix          = "/#{@module}"
-    @req             = {}      # To store API request details by parse_api_request
     @api_config      = VMDB::Config.new("vmdb").config[@module.to_sym] || {}
   end
 
@@ -162,7 +161,7 @@ class ApiController < ApplicationController
   end
 
   def redirect_api_request(method)
-    collection    = @req[:collection] || "entrypoint"
+    collection    = @req.collection || "entrypoint"
     target_method = "#{method}_#{collection}"
     if respond_to?(target_method)
       send(target_method)

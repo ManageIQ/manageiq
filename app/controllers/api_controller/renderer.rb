@@ -45,7 +45,7 @@ class ApiController
     # We want reftype to reflect subcollection if targeting as such.
     #
     def gen_reftype(type, opts)
-      opts[:is_subcollection] ? "#{@req[:collection]}/#{@req[:c_id]}/#{type}" : type
+      opts[:is_subcollection] ? "#{@req.collection}/#{@req.c_id}/#{type}" : type
     end
 
     # Methods for Serialization as Jbuilder Objects.
@@ -455,8 +455,8 @@ class ApiController
 
     def fetch_typed_subcollection_actions(method, is_subcollection)
       return unless is_subcollection
-      ctype = @req[:collection].to_sym
-      sakey = "#{@req[:subcollection]}_subcollection_actions".to_sym
+      ctype = @req.collection.to_sym
+      sakey = "#{@req.subcollection}_subcollection_actions".to_sym
       collection_config[ctype][sakey] && collection_config[ctype][sakey][method.to_sym]
     end
 

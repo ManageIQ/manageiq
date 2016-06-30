@@ -6,28 +6,28 @@ class ApiController
 
     def show_generic(type)
       validate_api_action
-      if @req[:subcollection]
-        render_collection_type @req[:subcollection].to_sym, @req[:s_id], true
+      if @req.subcollection
+        render_collection_type @req.subcollection.to_sym, @req.s_id, true
       else
-        render_collection_type type, @req[:c_id]
+        render_collection_type type, @req.c_id
       end
     end
 
     def update_generic(type)
       validate_api_action
-      if @req[:subcollection]
-        render_normal_update type, update_collection(@req[:subcollection].to_sym, @req[:s_id], true)
+      if @req.subcollection
+        render_normal_update type, update_collection(@req.subcollection.to_sym, @req.s_id, true)
       else
-        render_normal_update type, update_collection(type, @req[:c_id])
+        render_normal_update type, update_collection(type, @req.c_id)
       end
     end
 
     def destroy_generic(type)
       validate_api_action
-      if @req[:subcollection]
-        delete_subcollection_resource @req[:subcollection].to_sym, @req[:s_id]
+      if @req.subcollection
+        delete_subcollection_resource @req.subcollection.to_sym, @req.s_id
       else
-        send(target_resource_method(false, type, :delete), type, @req[:c_id])
+        send(target_resource_method(false, type, :delete), type, @req.c_id)
       end
       render_normal_destroy
     end
@@ -75,7 +75,7 @@ class ApiController
 
     def delete_resource(type, id = nil, _data = nil)
       klass = collection_class(type)
-      id ||= @req[:c_id]
+      id ||= @req.c_id
       raise BadRequestError, "Must specify an id for deleting a #{type} resource" unless id
       api_log_info("Deleting #{type} id #{id}")
       resource_search(id, type, klass)
@@ -106,8 +106,8 @@ class ApiController
     end
 
     def custom_action_resource(type, id, data = nil)
-      action = @req[:action].downcase
-      id ||= @req[:c_id]
+      action = @req.action.downcase
+      id ||= @req.c_id
       if id.blank?
         raise BadRequestError, "Must specify an id for invoking the custom action #{action} on a #{type} resource"
       end

@@ -2,7 +2,7 @@ class ApiController
   module ContainerDeployments
     def show_container_deployments
       validate_api_action
-      if @req[:c_id] == "container_deployment_data"
+      if @req.c_id == "container_deployment_data"
         render_resource :container_deployments, :data => ContainerDeploymentService.new.all_data
       else
         show_generic(:container_deployments)
