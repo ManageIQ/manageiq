@@ -92,6 +92,7 @@ module ManageIQ::Providers
       new_member.group_id = group_trigger.id
       new_member.member_id = "#{group_trigger.id}-#{member_id}"
       new_member.member_name = "#{group_trigger.name} for #{server.name}"
+      new_member.member_context = {'resource_path' => server.ems_ref.to_s}
       new_member.data_id_map = calculate_member_data_id_map(server, group_trigger)
       @alerts_client.create_member_trigger(new_member)
     end

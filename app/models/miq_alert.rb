@@ -424,17 +424,17 @@ class MiqAlert < ApplicationRecord
           }},
           {:name => :operator, :description => _("Operator"), :values => ["Changed"]}
         ]},
-      {:name => "mw_heap_used", :description => _("JVM Heap Used"), :db => ["MiddlewareServer"], :responds_to_events => "mw_event",
+      {:name => "mw_heap_used", :description => _("JVM Heap Used"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_event",
         :options => [
           {:name => :value_mw_greater_than, :description => _("> Heap Max (%)"), :numeric => true},
           {:name => :value_mw_less_than, :description => _("< Heap Max (%)"), :numeric => true}
         ]},
-      {:name => "mw_non_heap_used", :description => _("JVM Non Heap Used"), :db => ["MiddlewareServer"], :responds_to_events => "mw_event",
+      {:name => "mw_non_heap_used", :description => _("JVM Non Heap Used"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_event",
         :options => [
           {:name => :value_mw_greater_than, :description => _("> Non Heap Max (%)"), :numeric => true},
           {:name => :value_mw_less_than, :description => _("< Non Heap Max (%)"), :numeric => true}
         ]},
-      {:name => "mw_accumulated_gc_duration", :description => _("JVM Accumulated GC Duration"), :db => ["MiddlewareServer"], :responds_to_events => "mw_event",
+      {:name => "mw_accumulated_gc_duration", :description => _("JVM Accumulated GC Duration"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_event",
         :options => [
           {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<=", "="]},
           {:name => :value_mw_garbage_collector, :description => _("Duration Per Minute (ms)"), :numeric => true}
@@ -499,7 +499,8 @@ class MiqAlert < ApplicationRecord
   end
 
   def self.raw_events
-    @raw_events ||= expression_by_name("event_threshold")[:options].find { |h| h[:name] == :event_types }[:values]
+    @raw_events ||= expression_by_name("event_threshold")[:options].find { |h| h[:name] == :event_types }[:values] +
+                    ['hawkular_event']
   end
 
   def self.event_alertable?(event)
@@ -545,15 +546,25 @@ class MiqAlert < ApplicationRecord
   end
 
   def evaluate_internal(target, _inputs = {})
-    method = "evaluate_method_#{expression[:eval_method]}"
+    if target.class.name == 'MiddlewareServer'
+      method = "evaluate_middleware"
+      options = _inputs[:ems_event]
+    else
+      method = "evaluate_method_#{expression[:eval_method]}"
+      options = expression[:options] || {}
+    end
     raise "Evaluation method '#{expression[:eval_method]}' does not exist" unless self.respond_to?(method)
 
-    send(method, target, expression[:options] || {})
+    send(method, target, options)
   end
 
   def evaluate_script
     # TODO
     true
+  end
+
+  def evaluate_middleware(target, options)
+    target.evaluate_alert(id, options)
   end
 
   # Evaluation methods
