@@ -9,7 +9,7 @@ class MiqAeField < ApplicationRecord
   validates_uniqueness_of :name, :case_sensitive => false, :scope => [:class_id, :method_id]
   validates_presence_of   :name
   validates_format_of     :name, :with    => /\A[A-Za-z0-9_]+\z/i,
-                                 :message => "Only alpha numeric and _ charachters are allowed"
+                                 :message => N_("Only alpha numeric and _ characters are allowed")
 
   validates_inclusion_of  :substitute, :in => [true, false]
   AVAILABLE_SCOPES    = ["class", "instance", "local"]
