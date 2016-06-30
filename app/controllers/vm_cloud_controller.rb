@@ -212,9 +212,4 @@ class VmCloudController < ApplicationController
   def skip_breadcrumb?
     breadcrumb_prohibited_for_action?
   end
-
-  def get_error_message_from_fog(ex)
-    matched_message = ex.match(/message\\\": \\\"(.*)\\\", /)
-    matched_message ? matched_message[1] : ex
-  end
 end
