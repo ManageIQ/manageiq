@@ -47,6 +47,7 @@ module Sandbox
     customization_templates_tree
     datacenter_tree
     db_tree
+    df_tree
     diagnostics_tree
     dialog_edit_tree
     dialog_import_export_tree

@@ -433,6 +433,7 @@ Vmdb::Application.routes.draw do
         timeprofile_delete
         timeprofile_field_changed
         timeprofile_update
+        tree_autoload_dynatree
         update
         view_selected
       )

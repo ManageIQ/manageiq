@@ -92,6 +92,7 @@ class TreeBuilder
     when :vat                     then TreeBuilderVat
 
     when :network                 then TreeBuilderNetwork
+    when :df                      then TreeBuilderDefaultFilters
     end
   end
 
@@ -229,7 +230,8 @@ class TreeBuilder
       :exp_tree     => false,
       :highlighting => true,
       :tree_state   => true,
-      :multi_lines  => true
+      :multi_lines  => true,
+      :checkboxes   => false,
     }
   end
 
@@ -252,7 +254,6 @@ class TreeBuilder
         x_build_node_dynatree(child, nil, options)
       end
     end
-
     return child_nodes unless options[:add_root]
     [{:key => 'root', :children => child_nodes, :expand => true}]
   end
