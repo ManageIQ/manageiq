@@ -24,7 +24,7 @@ module ManageIQ::Providers::Azure::RefreshHelperMethods
   def gather_data_for_this_region(arm_service, method_name = 'list_all')
     if method_name.to_s == 'list_all'
       arm_service.send(method_name).select do |resource|
-        resource.location == @ems.provider_region
+        resource.try(:location) == @ems.provider_region
       end.flatten
     else
       resource_groups.collect do |resource_group|
