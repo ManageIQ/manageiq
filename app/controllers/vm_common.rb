@@ -342,45 +342,6 @@ module VmCommon
     end
   end
 
-  def summary_pdf
-    return if perfmenu_click?
-    @display = params[:display] || "main" unless control_selected?
-    @display = params[:vm_tree] if params[:vm_tree]
-
-    @lastaction = "show"
-    @showtype   = "config"
-
-    @vm = @record = identify_record(params[:id], VmOrTemplate)
-    return if record_no_longer_exists?(@vm)
-
-    @button_group = "vm"
-
-    @gtl_url = "/show"
-    get_tagdata(@record)
-    drop_breadcrumb({:name => _("Virtual Machines"),
-                     :url  => "/#{@button_group}/show_list?page=#{@current_page}&refresh=y"}, true)
-    drop_breadcrumb(:name => @record.name + _(" (Summary)"), :url => "/#{@button_group}/show/#{@record.id}")
-    @showtype = "main"
-    @report_only = true
-    @showtype = "summary_only"
-    @title = @record.name + _(" (Summary)")
-    unless @record.hardware.nil?
-      @record_notes = if @record.hardware.annotation.nil?
-                        _("<No notes have been entered for this VM>")
-                      else
-                        @record.hardware.annotation
-                      end
-    end
-    set_config(@record)
-    get_host_for_vm(@record)
-    session[:tl_record_id] = @record.id
-    html_string = render_to_string(:template => '/layouts/show_pdf', :layout => false)
-    pdf_data = PdfGenerator.pdf_from_string(html_string, 'pdf_summary')
-    disable_client_cache
-    fname = "#{@record.name}_summary_#{format_timezone(Time.now, Time.zone, "fname")}"
-    send_data(pdf_data, :filename => "#{fname}.pdf", :type => "application/pdf")
-  end
-
   def vmtree(vm)
     session[:base_vm] = "_h-" + vm.id.to_s
     if vm.parents.length > 0
