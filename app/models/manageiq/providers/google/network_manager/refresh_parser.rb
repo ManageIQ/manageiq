@@ -158,11 +158,12 @@ module ManageIQ::Providers
         name ||= uid
 
         new_result = {
-          :type              => self.class.cloud_subnet_type,
-          :ems_ref           => uid,
-          :name              => name,
-          :cidr              => subnet.ip_cidr_range,
-          :gateway           => subnet.gateway_address,
+          :type    => self.class.cloud_subnet_type,
+          :ems_ref => uid,
+          :name    => name,
+          :status  => "active",
+          :cidr    => subnet.ip_cidr_range,
+          :gateway => subnet.gateway_address,
         }
 
         return uid, new_result
