@@ -9,13 +9,13 @@ module MiqDiskCache
 
   attr_reader :d_size, :blockSize, :lru_hash_entries, :min_sectors_per_entry, :cache_hits, :cache_misses
 
-  def self.new(down_stream, lru_hash_entries = DEF_LRU_HASH_ENTRIES, min_sectors_per_entry = MIN_SECTORS_PER_ENTRY)
-    raise "MiqDiskCache: Downstream Disk Module is nil" if down_stream.nil?
+  def self.new(up_stream, lru_hash_entries = DEF_LRU_HASH_ENTRIES, min_sectors_per_entry = MIN_SECTORS_PER_ENTRY)
+    raise "MiqDiskCache: Downstream Disk Module is nil" if up_stream.nil?
     @dInfo                       = OpenStruct.new
     @dInfo.lru_hash_entries      = lru_hash_entries
     @dInfo.min_sectors_per_entry = min_sectors_per_entry
-    @dInfo.block_size            = down_stream.blockSize
-    @dInfo.down_stream           = down_stream
+    @dInfo.block_size            = up_stream.blockSize
+    @dInfo.up_stream             = up_stream
 
     MiqDisk.new(self, @dInfo, 0)
   end
@@ -25,12 +25,16 @@ module MiqDiskCache
     @cache_hits            = Hash.new(0)
     @cache_misses          = Hash.new(0)
     @blockSize             = @dInfo.block_size
-    @down_stream           = @dInfo.down_stream
+    @up_stream             = @dInfo.up_stream
     @min_sectors_per_entry = @dInfo.min_sectors_per_entry
   end
 
   def d_size
-    @d_size ||= @down_stream.d_size
+    @d_size ||= @up_stream.d_size
+  end
+
+  def dInfo
+    @up_stream.dInfo
   end
 
   def d_read(pos, len)
@@ -68,7 +72,7 @@ module MiqDiskCache
     end
     block_range               = entry_range(start_sector, number_sectors)
     range_length              = (block_range.last - block_range.first + 1) * @blockSize
-    @block_cache[block_range] = @down_stream.d_read(block_range.first * @blockSize, range_length)
+    @block_cache[block_range] = @up_stream.d_read(block_range.first * @blockSize, range_length)
     @cache_misses[start_sector] += 1
 
     sector_offset = start_sector - block_range.first
@@ -80,11 +84,11 @@ module MiqDiskCache
 
   def d_close
     hit_or_miss if DEBUG_CACHE_STATS
-    @down_stream.d_close
+    @up_stream.d_close
   end
 
   def method_missing(m, *args)
-    @down_stream.send(m, *args)
+    @up_stream.send(m, *args)
   end
 
   def respond_to_missing(_method_name, _include_private = false)

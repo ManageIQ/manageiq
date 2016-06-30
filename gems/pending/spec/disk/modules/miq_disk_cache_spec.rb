@@ -5,15 +5,17 @@ require 'disk/modules/miq_dummy_disk'
 describe MiqDiskCache do
   DUMMY_BLOCKS    = 1000
   DUMMY_BLOCKSIZE = 4096
+  DUMMY_DATA      = "dummyinfo".freeze
   before do
     dummy_info            = OpenStruct.new
     dummy_info.d_size     = DUMMY_BLOCKS
     dummy_info.block_size = DUMMY_BLOCKSIZE
+    dummy_info.dummy_data = DUMMY_DATA
     @dummy_disk           = MiqDummyDisk.new(dummy_info)
   end
 
   context ".new" do
-    it "should raise an error, given a bad downstream module" do
+    it "should raise an error, given a bad upstream module" do
       expect do
         MiqDiskCache.new(nil)
       end.to raise_error(RuntimeError)
@@ -43,7 +45,7 @@ describe MiqDiskCache do
     end
 
     describe "#size" do
-      it "should return the size of the downstream disk in bytes" do
+      it "should return the size of the upstream disk in bytes" do
         expect(@miq_cache.size).to eq(DUMMY_BLOCKS * DUMMY_BLOCKSIZE)
       end
     end
@@ -63,6 +65,12 @@ describe MiqDiskCache do
     describe "#startByteAddr" do
       it "should return the expected start byte address" do
         expect(@miq_cache.startByteAddr).to eq(0)
+      end
+    end
+
+    describe "#dInfo" do
+      it "should return the upstream module dInfo data" do
+        expect(@miq_cache.dInfo.dummy_data).to eq(DUMMY_DATA)
       end
     end
 
