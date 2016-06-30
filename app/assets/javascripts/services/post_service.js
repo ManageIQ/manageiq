@@ -2,18 +2,11 @@ ManageIQ.angular.app.service('postService', function(miqService, $timeout, $wind
 
   this.saveRecord = function(apiURL, redirectURL, object, successMsg, newRecord) {
     miqService.sparkleOn();
-    if (newRecord) {
-      return API.post(apiURL,
-        angular.toJson({
-          resource: object
-        })).then(handleSuccess, handleFailure);
-    } else {
-      return API.post(apiURL,
-        angular.toJson({
-          action: "edit",
-          resource: object
-        })).then(handleSuccess, handleFailure);
-    }
+    return API.post(apiURL,
+      angular.toJson({
+        action: newRecord ? null : "edit",
+        resource: object
+      })).then(handleSuccess, handleFailure);
 
     function handleSuccess(response) {
       $timeout(function () {
