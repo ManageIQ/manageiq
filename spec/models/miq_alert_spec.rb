@@ -209,68 +209,77 @@ describe MiqAlert do
   end
 
   context ".target_needs_realtime_capture?" do
-    it "detects true with a VM assigned to a realtime C&U alert" do
+    before do
       allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
-      @vm         = FactoryGirl.create(:vm_vmware)
-      @alert      = FactoryGirl.create(:miq_alert, :enabled => true, :db => "Vm", :responds_to_events => "xxx|vm_perf_complete|zzz")
-      @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Profile for Alert Id: #{@alert.id}", :mode => @vm.class.base_model.name)
-      @alert_prof.add_member(@alert)
-      @alert_prof.assign_to_objects(@vm)
+    end
 
-      expect(MiqAlert.target_needs_realtime_capture?(@vm)).to be_truthy
+    let(:vm_alert_set) do
+      alert = FactoryGirl.create(:miq_alert,
+                                 :enabled            => true,
+                                 :db                 => "Vm",
+                                 :responds_to_events => "xxx|vm_perf_complete|zzz")
+      alert_prof = FactoryGirl.create(:miq_alert_set,
+                                      :description => "Alert Profile for Alert Id: #{alert.id}",
+                                      :mode        => VmOrTemplate.base_model.name)
+      alert_prof.add_member(alert)
+      alert_prof
+    end
+
+    let(:host_alert_set) do
+      alert = FactoryGirl.create(:miq_alert,
+                                 :enabled            => true,
+                                 :db                 => "Host",
+                                 :responds_to_events => "xxx|host_perf_complete|zzz")
+      alert_prof = FactoryGirl.create(:miq_alert_set,
+                                      :description => "Alert Profile for Alert Id: #{alert.id}",
+                                      :mode        => Host.base_model.name)
+      alert_prof.add_member(alert)
+      alert_prof
+    end
+    it "detects true with a VM assigned to a realtime C&U alert" do
+      vm = FactoryGirl.create(:vm_vmware)
+      vm_alert_set.assign_to_objects(vm)
+
+      expect(MiqAlert.target_needs_realtime_capture?(vm)).to be_truthy
     end
 
     it "detects false with a VM NOT assigned to a realtime C&U alert" do
-      allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
-      @vm     = FactoryGirl.create(:vm_vmware)
+      vm = FactoryGirl.create(:vm_vmware)
 
-      expect(MiqAlert.target_needs_realtime_capture?(@vm)).to be_falsey
+      expect(MiqAlert.target_needs_realtime_capture?(vm)).to be_falsey
     end
 
     it "detects true with a Host assigned to a realtime C&U alert" do
-      allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
-      @host     = FactoryGirl.create(:host)
-      @alert    = FactoryGirl.create(:miq_alert, :enabled => true, :db => "Host", :responds_to_events => "xxx|host_perf_complete|zzz")
-      @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Profile for Alert Id: #{@alert.id}", :mode => @host.class.base_model.name)
-      @alert_prof.add_member(@alert)
-      @alert_prof.assign_to_objects(@host)
+      host = FactoryGirl.create(:host)
+      host_alert_set.assign_to_objects(host)
 
-      expect(MiqAlert.target_needs_realtime_capture?(@host)).to be_truthy
+      expect(MiqAlert.target_needs_realtime_capture?(host)).to be_truthy
     end
 
     it "detects false with a Host NOT assigned to a realtime C&U alert" do
-      allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
-      @host     = FactoryGirl.create(:host)
+      host = FactoryGirl.create(:host)
 
-      expect(MiqAlert.target_needs_realtime_capture?(@host)).to be_falsey
+      expect(MiqAlert.target_needs_realtime_capture?(host)).to be_falsey
     end
 
     it "detects true with a VM assigned to a v4-style realtime C&U alert" do
-      allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
-      @vm         = FactoryGirl.create(:vm_vmware)
-      @alert      = FactoryGirl.create(:miq_alert, :enabled => true, :db => "Vm", :responds_to_events => "xxx|vm_perf_complete|zzz")
-      @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Profile for Alert Id: #{@alert.id}", :mode => @vm.class.base_model.name)
-      @alert_prof.add_member(@alert)
+      vm = FactoryGirl.create(:vm_vmware)
       # V4 code is actually the same here -- assign_to_objects -- but
       # this forces the namespace to use actual model class name
       # rather than base_class
-      @alert_prof.assign_to_objects(@vm.id, "Vm")
+      vm_alert_set.assign_to_objects(vm.id, "Vm")
 
-      expect(MiqAlert.target_needs_realtime_capture?(@vm)).to be_truthy
+      expect(MiqAlert.target_needs_realtime_capture?(vm)).to be_truthy
     end
 
     it "detects true with a Host assigned to a v4-style realtime C&U alert" do
-      allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
-      @host     = FactoryGirl.create(:host)
-      @alert    = FactoryGirl.create(:miq_alert, :enabled => true, :db => "Host", :responds_to_events => "xxx|host_perf_complete|zzz")
-      @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Profile for Alert Id: #{@alert.id}", :mode => @host.class.base_model.name)
-      @alert_prof.add_member(@alert)
+      host = FactoryGirl.create(:host)
       # V4 code is actually the same here -- assign_to_objects -- but
       # this forces the namespace to use actual model class name
       # rather than base_class
-      @alert_prof.assign_to_objects(@host.id, "Host")
+      host_alert_set.assign_to_objects(host.id, "Host")
 
-      expect(MiqAlert.target_needs_realtime_capture?(@host)).to be_truthy
+      expect(MiqAlert.target_needs_realtime_capture?(host)).to be_truthy
     end
   end
 
