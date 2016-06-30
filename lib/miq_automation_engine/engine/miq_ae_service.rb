@@ -137,7 +137,7 @@ module MiqAeMethodService
     end
 
     def prepend_namespace=(ns)
-      @workspace.prepend_namespace=(ns)
+      @workspace.prepend_namespace = ns
     end
 
     def instantiate(uri)
