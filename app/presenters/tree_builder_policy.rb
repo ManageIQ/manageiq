@@ -41,7 +41,7 @@ class TreeBuilderPolicy < TreeBuilder
 
   # level 0 - root
   def root_options
-    [t = N_("All Policies"), t]
+    [t = _("All Policies"), t]
   end
 
   # level 1 - compliance & control
