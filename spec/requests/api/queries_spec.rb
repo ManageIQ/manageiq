@@ -24,8 +24,8 @@ describe ApiController do
       run_get vms_url
 
       expect_query_result(:vms, 3, 3)
-      expect_result_resources_to_have_only_keys("resources", %w(href))
-      expect(response_hash).to include("resources" => all(a_hash_including("href" => a_string_matching(fetch_value(:vm_href_pattern)))))
+      expected = {"resources" => all(match("href" => a_string_matching(fetch_value(:vm_href_pattern))))}
+      expect(response_hash).to include(expected)
     end
 
     it "returns seperate ids and href when expanded" do
@@ -35,9 +35,12 @@ describe ApiController do
       run_get vms_url, :expand => "resources"
 
       expect_query_result(:vms, 3, 3)
-      expect(response_hash).to include("resources" => all(a_hash_including("href" => a_string_matching(fetch_value(:vm_href_pattern)))))
-      expect_result_resource_keys_to_be_like_klass("resources", "id", Integer)
-      expect_result_resources_to_include_keys("resources", %w(guid))
+      expected = {
+        "resources" => all(a_hash_including("href" => a_string_matching(fetch_value(:vm_href_pattern)),
+                                            "id"   => a_kind_of(Integer),
+                                            "guid" => anything))
+      }
+      expect(response_hash).to include(expected)
     end
 
     it "always return ids and href when asking for specific attributes" do
