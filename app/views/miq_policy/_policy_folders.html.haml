@@ -1,4 +1,12 @@
 - if @folders
+  - folders_i18n = { "Compliance"                 => _("Compliance Policies"),
+                     "Control"                    => _("Control Policies"),
+                     "Host Compliance"            => _("Host Compliance Policies"),
+                     "Vm Compliance"              => _("Vm Compliance Policies"),
+                     "Container Image Compliance" => _("Container Image Compliance Policies"),
+                     "Host Control"               => _("Host Control Policies"),
+                     "Vm Control"                 => _("Vm Control Policies"),
+                     "Container Image Control"    => _("Container Image Control Policies")}
   = render :partial => "layouts/flash_msg"
   %table.table.table-striped.table-bordered.table-hover
     %tbody
@@ -14,4 +22,4 @@
           %td.narrow
             %img{:src => image_path("100/#{model_name.underscore}.png")}
           %td
-            = _("%s Policies") % h(f == "Vm" ? ui_lookup(:model => f) : f)
+            = folders_i18n[f]
