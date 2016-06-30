@@ -1193,6 +1193,7 @@
     :description: Settings
     :identifier: ops_settings
     :options:
+    - :arbitrary_resource_path
     - :collection
     :verbs: *70174834086080
     :categories:

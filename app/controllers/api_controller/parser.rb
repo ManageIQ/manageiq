@@ -198,9 +198,12 @@ class ApiController
     end
 
     def validate_method_action(method_name, action_name)
-      cname = @req.subcollection || @req.collection
+      cname, target = if collection_option?(:arbitrary_resource_path)
+                        [@req.collection, (@req.c_id ? :resource : :collection)]
+                      else
+                        [@req.subcollection || @req.collection, request_type_target.last]
+                      end
       cspec = collection_config[cname.to_sym]
-      target = request_type_target.last
       aspec = cspec["#{target}_actions".to_sym]
       return if method_name == :get && aspec.nil?
       action_hash = fetch_action_hash(aspec, method_name, action_name)
@@ -261,6 +264,7 @@ class ApiController
     def validate_api_request_subcollection(cname, ctype)
       # Sub-Collection Validation for the specified Collection
       if cname && @req.subcollection
+        return [cname, ctype] if collection_option?(:arbitrary_resource_path)
         cent  = collection_config[cname.to_sym]  # For Collection
         cname = @req.subcollection
         ctype = "Sub-Collection"
@@ -291,6 +295,13 @@ class ApiController
 
     def fetch_action_hash(aspec, method_name, action_name)
       Array(aspec[method_name]).detect { |h| h[:name] == action_name } || {}
+    end
+
+    def collection_option?(option)
+      if @req.collection
+        cname = @req.collection.to_sym
+        collection_config[cname][:options].include?(option) if collection_config[cname]
+      end
     end
   end
 end
