@@ -36,7 +36,10 @@ class TreeBuilderReportSavedReports < TreeBuilderReportReportsClass
   end
 
   def x_get_tree_custom_kids(object, count_only, _options)
-    scope = MiqReportResult.with_current_user_groups_and_report(from_cid(object[:id].split('-').last))
+    report_id = from_cid(object[:id].split('-').last)
+    scope = MiqReportResult.with_current_user_groups_and_report(report_id)
+                           .select('miq_report_results.*', 'miq_tasks.status AS task_status')
+                           .joins(:miq_task)
     count_only ? scope.size : scope.order("last_run_on DESC").to_a
   end
 end
