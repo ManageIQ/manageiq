@@ -49,7 +49,7 @@ module ManageIQ::Providers
           @subnetworks = @connection.subnetworks.all
           # For a backwards compatibility, old GCE networks were created without subnet. It's not possible now, but
           # GCE haven't migrated to new format. We will create a fake subnet for each network without subnets.
-          @subnetworks += @connection.networks.select{ |x| x.ipv4_range.present? }.map do |x|
+          @subnetworks += @connection.networks.select { |x| x.ipv4_range.present? }.map do |x|
             Fog::Compute::Google::Subnetwork.new(
               :name               => x.name,
               :gateway_address    => x.gateway_ipv4,
@@ -77,7 +77,7 @@ module ManageIQ::Providers
 
       def subnets_by_network_link(network_link)
         unless @subnets_by_network_link
-          @subnets_by_network_link = subnetworks.each_with_object({}) { |x, subnets| (subnets[x.network] ||= [] ) << x }
+          @subnets_by_network_link = subnetworks.each_with_object({}) { |x, subnets| (subnets[x.network] ||= []) << x }
         end
 
         @subnets_by_network_link[network_link]
@@ -139,12 +139,12 @@ module ManageIQ::Providers
         cloud_subnets = subnets.collect { |s| @data_index.fetch_path(:cloud_subnets, s.id) }
 
         new_result = {
-          :ems_ref => uid,
-          :type    => self.class.cloud_network_type,
-          :name    => network.name,
-          :cidr    => network.ipv4_range,
-          :status  => "active",
-          :enabled => true,
+          :ems_ref       => uid,
+          :type          => self.class.cloud_network_type,
+          :name          => network.name,
+          :cidr          => network.ipv4_range,
+          :status        => "active",
+          :enabled       => true,
           :cloud_subnets => cloud_subnets,
         }
 
@@ -221,12 +221,12 @@ module ManageIQ::Providers
         address = uid = ip.address
 
         new_result = {
-          :type               => self.class.floating_ip_type,
-          :ems_ref            => uid,
-          :address            => address,
-          :fixed_ip_address   => nil,
-          :network_port       => nil,
-          :vm                 => nil
+          :type             => self.class.floating_ip_type,
+          :ems_ref          => uid,
+          :address          => address,
+          :fixed_ip_address => nil,
+          :network_port     => nil,
+          :vm               => nil
         }
 
         return uid, new_result
@@ -236,12 +236,12 @@ module ManageIQ::Providers
         address = uid = ip[:external_ip]
 
         new_result = {
-          :type               => self.class.floating_ip_type,
-          :ems_ref            => uid,
-          :address            => address,
-          :fixed_ip_address   => ip[:fixed_ip],
-          :network_port       => @data_index.fetch_path(:network_ports, ip[:fixed_ip]),
-          :vm                 => @data_index.fetch_path(:network_ports, ip[:fixed_ip], :device)
+          :type             => self.class.floating_ip_type,
+          :ems_ref          => uid,
+          :address          => address,
+          :fixed_ip_address => ip[:fixed_ip],
+          :network_port     => @data_index.fetch_path(:network_ports, ip[:fixed_ip]),
+          :vm               => @data_index.fetch_path(:network_ports, ip[:fixed_ip], :device)
         }
 
         return uid, new_result

@@ -102,7 +102,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :floating_ip                   => FloatingIp.count,
       :network_router                => NetworkRouter.count,
       :cloud_subnet                  => CloudSubnet.count,
-      :key_pair                       => AuthPrivateKey.count,
+      :key_pair                      => AuthPrivateKey.count,
     }
 
     expect(actual).to eq expected_table_counts
@@ -163,13 +163,13 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
   def assert_specific_cloud_subnet
     @cs = CloudSubnet.where(:name => "default").first
     expect(@cs).to have_attributes(
-                     :name             => "default",
-                     :ems_ref          => "183954628405178359",
-                     :cidr             => "10.240.0.0/16",
-                     :gateway          => "10.240.0.1",
-                     :status           => "active",
-                     :cloud_network_id => @cn.id
-                   )
+      :name             => "default",
+      :ems_ref          => "183954628405178359",
+      :cidr             => "10.240.0.0/16",
+      :gateway          => "10.240.0.1",
+      :status           => "active",
+      :cloud_network_id => @cn.id
+    )
   end
 
   def assert_specific_floating_ips

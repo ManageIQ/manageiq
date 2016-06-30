@@ -11,5 +11,5 @@ FactoryGirl.define do
   factory :network_router_azure, :class  => "ManageIQ::Providers::Azure::NetworkManager::NetworkRouter",
                                  :parent => :network_router
   factory :network_router_google, :class  => "ManageIQ::Providers::Google::NetworkManager::NetworkRouter",
-                                 :parent => :network_router
+                                  :parent => :network_router
 end

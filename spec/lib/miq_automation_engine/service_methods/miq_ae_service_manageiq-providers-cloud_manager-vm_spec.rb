@@ -34,31 +34,31 @@ module MiqAeServiceVmOpenstackSpec
         end
 
         it "#flavor" do
-          expect(@vm.flavor).to be_kind_of(service_class_for :flavor)
+          expect(@vm.flavor).to be_kind_of(service_class_for(:flavor))
         end
 
         it "#availability_zone" do
-          expect(@vm.availability_zone).to be_kind_of(service_class_for :availability_zone)
+          expect(@vm.availability_zone).to be_kind_of(service_class_for(:availability_zone))
         end
 
         it "#cloud_network" do
-          expect(@vm.cloud_network).to be_kind_of(service_class_for :cloud_network)
+          expect(@vm.cloud_network).to be_kind_of(service_class_for(:cloud_network))
         end
 
         it "#cloud_subnet" do
-          expect(@vm.cloud_subnet).to be_kind_of(service_class_for :cloud_subnet)
+          expect(@vm.cloud_subnet).to be_kind_of(service_class_for(:cloud_subnet))
         end
 
         it "#floating_ip" do
-          expect(@vm.floating_ip).to be_kind_of(service_class_for :floating_ip)
+          expect(@vm.floating_ip).to be_kind_of(service_class_for(:floating_ip))
         end
 
         it "#security_groups" do
-          expect(@vm.security_groups.first).to be_kind_of(service_class_for :security_group)
+          expect(@vm.security_groups.first).to be_kind_of(service_class_for(:security_group))
         end
 
         it "#key_pairs" do
-          expect(@vm.key_pairs.first).to be_kind_of(service_class_for :auth_key_pair) if t != "google"
+          expect(@vm.key_pairs.first).to be_kind_of(service_class_for(:auth_key_pair)) if t != "google"
         end
       end
     end
