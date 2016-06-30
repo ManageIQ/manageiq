@@ -15,7 +15,11 @@ gem "deep_merge",                      "~>1.0.1", :git => "git://github.com/Mana
 path "gems/" do
   gem "manageiq_foreman", :require => false
 end
-gem "manageiq-providers-amazon", :git => "git://github.com/ManageIQ/manageiq-providers-amazon", :branch => "master"
+
+# when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
+unless dependencies.detect { |d| d.name == 'manageiq-providers-amazon' }
+  gem "manageiq-providers-amazon", :git => "git://github.com/ManageIQ/manageiq-providers-amazon", :branch => "master"
+end
 
 # Client-side dependencies
 gem "angular-ui-bootstrap-rails",     "~>0.13.0"
