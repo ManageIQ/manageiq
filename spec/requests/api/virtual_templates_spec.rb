@@ -12,14 +12,20 @@
 # - Get a virtual template                    /api/virtual_templates/:id            GET
 
 RSpec.describe 'Virtual Template API' do
-  context 'virtual templates index' do
-    let(:cloud_subnet_amazon) { FactoryGirl.create(:cloud_subnet_amazon) }
-    let(:availability_zone_amazon) { FactoryGirl.create(:availability_zone_amazon) }
+  let(:cloud_subnet_amazon) { FactoryGirl.create(:cloud_subnet_amazon) }
+  let(:cloud_network_amazon) { FactoryGirl.create(:cloud_network_amazon) }
+  let(:availability_zone_amazon) { FactoryGirl.create(:availability_zone_amazon) }
+  let(:ems) { FactoryGirl.create(:ext_management_system) }
+  let(:flavor_amazon) { FactoryGirl.create(:flavor_amazon) }
 
+  context 'virtual templates index' do
     it 'can list all the virtual templates' do
       api_basic_authorize collection_action_identifier(:virtual_templates, :read, :get)
       FactoryGirl.create(:virtual_template)
       FactoryGirl.create(:virtual_template_amazon,
+                         :ems_id               => ems.id,
+                         :flavor_id            => flavor_amazon.id,
+                         :cloud_network_id     => cloud_network_amazon.id,
                          :cloud_subnet_id      => cloud_subnet_amazon.id,
                          :availability_zone_id => availability_zone_amazon.id)
 
@@ -38,29 +44,28 @@ RSpec.describe 'Virtual Template API' do
   end
 
   context 'virtual templates create' do
-    let(:cloud_network_amazon) { FactoryGirl.create(:cloud_network_amazon) }
-    let(:cloud_subnet_amazon) { FactoryGirl.create(:cloud_subnet_amazon) }
-    let(:availability_zone_amazon) { FactoryGirl.create(:availability_zone_amazon) }
-
-    let(:template) do
+    let(:amazon_template) do
       {
         :action               => 'create',
         :name                 => 'create_amazon_template',
         :vendor               => 'amazon',
         :location             => 'us-west-2',
         :cloud_network_id     => cloud_network_amazon.id,
+        :ems_id               => ems.id,
+        :flavor_id            => flavor_amazon.id,
         :cloud_subnet_id      => cloud_subnet_amazon.id,
         :availability_zone_id => availability_zone_amazon.id,
         :ems_ref              => 'i-12345',
         :type                 => 'ManageIQ::Providers::Amazon::CloudManager::VirtualTemplate'
       }
     end
-    let(:template_2) do
+    let(:template) do
       {
-        :action   => 'create',
-        :name     => 'create_vt2',
-        :vendor   => 'google',
-        :location => 'us-west-2'
+        :action           => 'create',
+        :name             => 'create_vt2',
+        :vendor           => 'google',
+        :location         => 'us-west-2',
+        :cloud_network_id => 'cloud'
       }
     end
     let(:expected_attributes) { %w(name vendor location cloud_network_id cloud_subnet_id ems_ref availability_zone_id) }
@@ -68,14 +73,14 @@ RSpec.describe 'Virtual Template API' do
     it 'rejects creation without appropriate role' do
       api_basic_authorize
 
-      run_post(virtual_templates_url, template)
+      run_post(virtual_templates_url, amazon_template)
 
       expect(response).to have_http_status(:forbidden)
     end
 
     it 'supports single virtual_template creation' do
       api_basic_authorize collection_action_identifier(:virtual_templates, :create)
-      run_post(virtual_templates_url, template)
+      run_post(virtual_templates_url, amazon_template)
 
       expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys('results', expected_attributes)
@@ -86,7 +91,7 @@ RSpec.describe 'Virtual Template API' do
 
     it 'supports virtual_template creation via action' do
       api_basic_authorize collection_action_identifier(:virtual_templates, :create)
-      run_post(virtual_templates_url, gen_request(:create, template.except(:action)))
+      run_post(virtual_templates_url, gen_request(:create, amazon_template.except(:action)))
 
       expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys('results', expected_attributes)
@@ -104,10 +109,13 @@ RSpec.describe 'Virtual Template API' do
 
     it 'rejects virtual_template creation of a duplicate type' do
       FactoryGirl.create(:virtual_template_amazon,
+                         :ems_id               => ems.id,
+                         :flavor_id            => flavor_amazon.id,
+                         :cloud_network_id     => cloud_network_amazon.id,
                          :cloud_subnet_id      => cloud_subnet_amazon.id,
                          :availability_zone_id => availability_zone_amazon.id)
       api_basic_authorize collection_action_identifier(:virtual_templates, :create)
-      run_post(virtual_templates_url, template)
+      run_post(virtual_templates_url, amazon_template)
 
       expect_bad_request(/Virtual template may only have one per type/)
     end
@@ -118,14 +126,29 @@ RSpec.describe 'Virtual Template API' do
 
       expect_bad_request(/Must specify a vendor for creating a Virtual Template/)
     end
+
+    it 'rejects a request with an href' do
+      api_basic_authorize collection_action_identifier(:virtual_templates, :create)
+      run_post(virtual_templates_url, template.merge(:href => virtual_templates_url))
+
+      expect_bad_request(/Resource id or href should not be specified/)
+    end
+
+    it 'rejects a request with an id' do
+      api_basic_authorize collection_action_identifier(:virtual_templates, :create)
+      run_post(virtual_templates_url, template.merge(:id => 1))
+
+      expect_bad_request(/Resource id or href should not be specified/)
+    end
   end
 
   context 'virtual template edit' do
-    let(:cloud_subnet_amazon) { FactoryGirl.create(:cloud_subnet_amazon) }
-    let(:availability_zone_amazon) { FactoryGirl.create(:availability_zone_amazon) }
     let(:template) { FactoryGirl.create(:virtual_template) }
     let(:template_amazon) do
       FactoryGirl.create(:virtual_template_amazon,
+                         :ems_id               => ems.id,
+                         :flavor_id            => flavor_amazon.id,
+                         :cloud_network_id     => cloud_network_amazon.id,
                          :cloud_subnet_id      => cloud_subnet_amazon.id,
                          :availability_zone_id => availability_zone_amazon.id)
     end
@@ -159,11 +182,12 @@ RSpec.describe 'Virtual Template API' do
   end
 
   context 'virtual template delete' do
-    let(:cloud_subnet_amazon) { FactoryGirl.create(:cloud_subnet_amazon) }
-    let(:availability_zone_amazon) { FactoryGirl.create(:availability_zone_amazon) }
     let(:template) { FactoryGirl.create(:virtual_template) }
     let(:template_amazon) do
       FactoryGirl.create(:virtual_template_amazon,
+                         :ems_id               => ems.id,
+                         :flavor_id            => flavor_amazon.id,
+                         :cloud_network_id     => cloud_network_amazon.id,
                          :cloud_subnet_id      => cloud_subnet_amazon.id,
                          :availability_zone_id => availability_zone_amazon.id)
     end
