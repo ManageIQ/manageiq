@@ -13,7 +13,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
   });
 
   // Override breadcrumb height. Space is expensive in this page.
-  breadcrumb = document.getElementsByClassName("breadcrumb")[0]
+  breadcrumb = document.getElementsByClassName("breadcrumb")[0];
   if (breadcrumb != null) breadcrumb.style.marginBottom = '0px';
 
   ManageIQ.angular.scope = $scope;

@@ -10,6 +10,11 @@ class ContainerDashboardController < ApplicationController
     if params[:id].nil?
       @breadcrumbs.clear
     end
+
+    @display = params[:display]
+    @lastaction = "show"
+    @display = "dashboard" if @display.nil?
+    @showtype = @display
   end
 
   def index

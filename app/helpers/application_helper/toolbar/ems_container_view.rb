@@ -1,4 +1,4 @@
-class ApplicationHelper::Toolbar::DashboardSummaryToggleView < ApplicationHelper::Toolbar::Basic
+class ApplicationHelper::Toolbar::EmsContainerView < ApplicationHelper::Toolbar::Basic
   button_group('ems_container_dashboard', [
     twostate(
       :view_topology,
