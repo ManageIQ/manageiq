@@ -208,10 +208,6 @@ module ApiSpecHelper
     end
   end
 
-  def expect_result_resource_keys_to_match_pattern(collection, key, pattern)
-    expect(response_hash).to include(collection => all(a_hash_including(key => a_string_matching(fetch_value(pattern)))))
-  end
-
   def expect_result_to_have_keys(keys)
     expect_hash_to_have_keys(response_hash, keys)
   end
