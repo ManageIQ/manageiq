@@ -1,3 +1,5 @@
+require "config"
+
 module Api
   Settings = ::Config::Options.new.tap do |o|
     o.add_source!(Rails.root.join("config/api.yml").to_s)
