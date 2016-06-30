@@ -324,7 +324,7 @@ module ReportController::Widgets
     @edit[:new][:roles] = []   # initializing incase of new widget since visibility is not set yet.
     @edit[:new][:groups] = []  # initializing incase of new widget since visibility is not set yet.
 
-    @edit[:visibility_types] = [["<To All Users>", "all"], ["<By Role>", "role"], ["<By Group>", "group"]]
+    @edit[:visibility_types] = [[_("<To All Users>"), "all"], [_("<By Role>"), "role"], [_("<By Group>"), "group"]]
     # Visibility Box
     if @widget.visibility
       if @widget.visibility[:roles]
