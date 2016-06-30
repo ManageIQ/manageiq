@@ -88,32 +88,23 @@ module ApiSpecHelper
     Vmdb::Application.config.secret_token = MiqDatabase.first.session_secret_token
     @guid, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
-    define_entrypoint_url_methods
-    define_url_methods(Api::Settings.collections.keys)
     define_user
 
     ApplicationController.handle_exceptions = true
   end
 
-  def define_entrypoint_url_methods
-    self.class.class_eval do
-      define_method(:entrypoint_url) do
-        api_config(:entrypoint)
-      end
-      define_method(:auth_url) do
-        "#{api_config(:entrypoint)}/auth"
-      end
-    end
+  def entrypoint_url
+    api_config(:entrypoint)
   end
 
-  def define_url_methods(collections)
-    collections.each do |collection|
-      self.class.class_eval do
-        define_method("#{collection}_url".to_sym) do |id = nil|
-          path = "#{api_config(:entrypoint)}/#{collection}"
-          id.nil? ? path : "#{path}/#{id}"
-        end
-      end
+  def auth_url
+    "#{api_config(:entrypoint)}/auth"
+  end
+
+  (Api::Settings.collections.keys - [:auth]).each do |collection|
+    define_method("#{collection}_url".to_sym) do |id = nil|
+      path = "#{api_config(:entrypoint)}/#{collection}"
+      id.nil? ? path : "#{path}/#{id}"
     end
   end
 
