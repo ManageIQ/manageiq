@@ -103,8 +103,9 @@ RSpec.describe "reports API" do
   it "can fetch all the schedule" do
     report = FactoryGirl.create(:miq_report)
 
-    exp = MiqExpression.new("=" => {"field" => "MiqReport.id",
-                                    "value" => report.id})
+    exp = {}
+    exp["="] = {"field" => "MiqReport.id", "value" => report.id}
+    exp = MiqExpression.new(exp)
 
     schedule_1 = FactoryGirl.create(:miq_schedule, :filter => exp)
     schedule_2 = FactoryGirl.create(:miq_schedule, :filter => exp)
@@ -119,14 +120,15 @@ RSpec.describe "reports API" do
         "/api/reports/#{report.id}/schedules/#{schedule_2.id}",
       ]
     )
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   it "can show a single schedule" do
     report = FactoryGirl.create(:miq_report)
 
-    exp = MiqExpression.new("=" => {"field" => "MiqReport.id",
-                                    "value" => report.id})
+    exp = {}
+    exp["="] = {"field" => "MiqReport.id", "value" => report.id}
+    exp = MiqExpression.new(exp)
 
     schedule = FactoryGirl.create(:miq_schedule, :name => 'unit_test', :filter => exp)
 
@@ -139,7 +141,7 @@ RSpec.describe "reports API" do
       "id"   => schedule.id,
       "name" => 'unit_test'
     )
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   it "returns an empty result set if none has been run" do
