@@ -4,12 +4,6 @@ class ChargebackController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
-  PER_TIME_TYPES = %w(hourly).freeze
-
-  def per_time_types_from
-    PER_TIME_TYPES.map { |time_type| {time_type => time_type.capitalize} }.reduce(:merge)
-  end
-
   # FIXME: -- is INDEX needed ?
   def index
     redirect_to :action => 'explorer'
@@ -580,7 +574,7 @@ class ChargebackController < ApplicationController
       @edit[:new][:details].push(temp)
     end
 
-    @edit[:new][:per_time_types] = per_time_types_from
+    @edit[:new][:per_time_types] = {"hourly" => _("Hourly")}
 
     if params[:typ] == "copy"
       @rate.id = nil

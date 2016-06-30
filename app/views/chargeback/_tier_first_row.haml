@@ -9,7 +9,7 @@
   %td{:rowspan => n.to_s}
     = r[:description]
   %td{:rowspan => n.to_s}
-    - per_time_types = {"hourly"  => "Hourly"}
+    - per_time_types = {"hourly" => _("Hourly")}
     = select_tag("per_time_#{i}",
       options_for_select(per_time_types.invert, @edit[:new][:details][i.to_i][:per_time]),
       "data-miq_observe" => {:url => url}.to_json)
