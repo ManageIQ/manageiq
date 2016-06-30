@@ -102,14 +102,14 @@ module OpsController::Settings::CapAndU
             if @edit[:new][:clusters][i][:capture] != @edit[:current][:clusters][i][:capture]
               @changed_id_list.push([cluster_id, @edit[:new][:clusters][i][:capture]])
             else
-              @unchanged_id_list.push(cluster_id)
+              @unchanged_id_list.push([cluster_id, @edit[:current][:clusters][i][:capture]])
             end
             @edit[:new][cname.to_sym].each_with_index do |host, j|
               host_id = "#{cluster_id}_#{host[:id]}"
               if @edit[:new][cname.to_sym][j][:capture] != @edit[:current][cname.to_sym][j][:capture]
                 @changed_id_list.push([host_id, @edit[:new][cname.to_sym][j][:capture]])
-              elsif cluster_id == params[:id] || host_id == params[:id] || params[:check_all]
-                @unchanged_id_list.push(host_id)
+              else
+                @unchanged_id_list.push([host_id, @edit[:current][cname.to_sym][j][:capture]])
               end
             end
           end
@@ -118,14 +118,15 @@ module OpsController::Settings::CapAndU
                                                   '#{j_str(item[0])}',
                                                   'cfme-blue-bold-node');"
             if params.key?('check')
-              page << "miqDynatreeSelectNode('#{j_str(params[:tree_name])}', '#{j_str(item[0])}', '#{j_str(item[1])}')"
+              page << "miqDynatreeSelectNode('#{j_str(params[:tree_name])}', '#{j_str(item[0])}', #{j_str(!!item[1])})"
             end
           end
           @unchanged_id_list.each do |item|
+            item
             page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}',
-                                                  '#{j_str(item)}',
+                                                  '#{j_str(item[0])}',
                                                   'dynatree-title');"
-
+            page << "miqDynatreeSelectNode('#{j_str(params[:tree_name])}', '#{j_str(item[0])}', #{j_str(!!item[1])})"
           end
         end
       end
@@ -156,9 +157,6 @@ module OpsController::Settings::CapAndU
       else
         en_flg = false
       end
-      # cname = "#{c.ext_management_system.name} : " +
-      #         (c.parent_datacenter != nil ? "#{c.parent_datacenter.name} : " : "") +
-      #         "#{c.name}"
       cname = c.name
       @edit[:current][:clusters].push(:name    => cname,
                                       :id      => c.id,
@@ -235,7 +233,7 @@ module OpsController::Settings::CapAndU
           @edit[:new][c[:name].to_sym].each do |h|
             if node_type[1].to_i == h[:id].to_i
               h[:capture] = params[:check] == "true" # Set C&U flag depending on if checkbox parm is present
-              c[:capture] = false if params[:check] == "0"
+              c[:capture] = params[:check] == "true"
             end
           end
         end
@@ -252,15 +250,8 @@ module OpsController::Settings::CapAndU
           end
         end
       end
-      # if there are no clusters, handle non-clustered hosts here
-      if @edit[:new][:clusters].blank?
-        @edit[:new][:non_cluster_host_enabled].each do |_h|
-          if nodetype[0] == "NonCluster_0"
-            process_form_vars_for_non_clustered(node_type)
-          end
-        end
-      end
     end
+    @edit
   end
 
   def datastore_tree_settings(node_type)
@@ -270,30 +261,6 @@ module OpsController::Settings::CapAndU
       end
     else
       @edit[:new][:storages].find{ |x| x[:id].to_s == params[:id].split('-').last}[:capture] = params[:check] == "true"
-    end
-  end
-
-  def process_form_vars_for_non_clustered(node_type)
-    if node_type[1].to_i == 0     # dont add if non-clustered node was checked/unchecked
-      if params[:check] == "1"
-        @edit[:new][:non_cluster_host_enabled].each do |h|
-          @edit[:new][:non_cluster_host_enabled][h[0]] = true
-        end
-      else
-        @edit[:new][:non_cluster_host_enabled].each do |h|
-          @edit[:new][:non_cluster_host_enabled][h[0]] = false
-        end
-      end
-    else
-      if params[:check] == "1"
-        @edit[:new][:non_cluster_host_enabled][node_type[1].to_s] = true
-      else
-        @edit[:new][:non_cluster_host_enabled].each do |h|
-          if h[0].to_s == node_type[1].to_s
-            @edit[:new][:non_cluster_host_enabled][node_type[1].to_s] = false
-          end
-        end
-      end
     end
   end
 end
