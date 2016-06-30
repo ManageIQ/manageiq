@@ -353,6 +353,8 @@ module MiqReport::Generator
     data = data.to_a
     objs = data[0] && data[0].kind_of?(Integer) ? klass.where(:id => data) : data.compact
 
+    remove_loading_relations_for_virtual_custom_attributes
+
     # Add resource columns to performance reports cols and col_order arrays for widget click thru support
     if klass.to_s.ends_with?("Performance")
       res_cols = ['resource_name', 'resource_type', 'resource_id']
