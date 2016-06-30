@@ -24,8 +24,7 @@ describe ApiController do
       run_get vms_url
 
       expect_query_result(:vms, 3, 3)
-      expected = {"resources" => all(match("href" => a_string_matching(fetch_value(:vm_href_pattern))))}
-      expect(response_hash).to include(expected)
+      expect(response_hash).to include("resources" => all(match("href" => a_string_matching(vm_href_pattern))))
     end
 
     it "returns seperate ids and href when expanded" do
@@ -36,7 +35,7 @@ describe ApiController do
 
       expect_query_result(:vms, 3, 3)
       expected = {
-        "resources" => all(a_hash_including("href" => a_string_matching(fetch_value(:vm_href_pattern)),
+        "resources" => all(a_hash_including("href" => a_string_matching(vm_href_pattern),
                                             "id"   => a_kind_of(Integer),
                                             "guid" => anything))
       }
