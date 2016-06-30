@@ -56,7 +56,7 @@ module MiqAeEngine
       @ae_user = nil
     end
 
-    delegate :prepend_namespace, :to =>  :@dom_search
+    delegate :prepend_namespace=, :to =>  :@dom_search
 
     def readonly?
       @readonly

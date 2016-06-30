@@ -136,8 +136,8 @@ module MiqAeMethodService
       @persist_state_hash[name]
     end
 
-    def prepend_namespace(ns)
-      @workspace.prepend_namespace(ns)
+    def prepend_namespace=(ns)
+      @workspace.prepend_namespace=(ns)
     end
 
     def instantiate(uri)
