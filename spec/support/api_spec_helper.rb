@@ -267,12 +267,6 @@ module ApiSpecHelper
     expect(response_hash[collection].all? { |result| result.keys.sort == key_list }).to be_truthy
   end
 
-  def expect_results_match_key_pattern(collection, key, value)
-    pattern = fetch_value(value)
-    expect(response_hash).to have_key(collection)
-    expect(response_hash[collection].all? { |result| result[key].match(pattern) }).to be_truthy
-  end
-
   def expect_result_to_represent_task(result)
     expect(result).to have_key("task_id")
     expect(result).to have_key("task_href")
