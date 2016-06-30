@@ -4,7 +4,7 @@ describe AssignmentMixin do
 
   describe '#assignments' do
     it "finds no assignments" do
-      expect(test_class.assignments).to eq([])
+      expect(test_class.assignments).to eq({})
     end
 
     it "detects tags on alert_set" do
@@ -18,11 +18,9 @@ describe AssignmentMixin do
       alert_set2.assign_to_tags([ct2], "vm")
       alert_set2.reload # reload ensures the tag is set
 
-      expect(test_class.assignments).to match_array(
-        [
-          {:assigned => alert_set, :assigned_to => "vm/tag/managed/environment/test"},
-          {:assigned => alert_set2, :assigned_to => "vm/tag/managed/environment/staging"},
-        ]
+      expect(test_class.assignments).to eq(
+        "vm/tag/managed/environment/test"    => [alert_set],
+        "vm/tag/managed/environment/staging" => [alert_set2],
       )
     end
   end
