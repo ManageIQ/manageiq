@@ -189,8 +189,8 @@ describe MiqAlert do
     end
   end
 
-  context ".assigned_to_target" do
-    before do
+  describe ".assigned_to_target" do
+    it "gets assignment by tagged VM" do
       cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment",  :single_value => true,  :parent_id => 0)
       FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
 
@@ -203,67 +203,49 @@ describe MiqAlert do
       @ap    = FactoryGirl.create(:miq_alert_set, :description => "Alert Profile for #{@alert.id}", :mode => @mode)
       @ap.add_member(@alert)
       @ap.assign_to_tags([@c.id], @mode)
-    end
 
-    it "should get assignment by tagged VM" do
       expect(MiqAlert.assigned_to_target(@vm)).to eq([@alert])
     end
   end
 
-  context "With a VM assigned to a realtime C&U alert" do
-    before(:each) do
+  context ".target_needs_realtime_capture?" do
+    it "detects true with a VM assigned to a realtime C&U alert" do
       allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
       @vm         = FactoryGirl.create(:vm_vmware)
       @alert      = FactoryGirl.create(:miq_alert, :enabled => true, :db => "Vm", :responds_to_events => "xxx|vm_perf_complete|zzz")
       @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Profile for Alert Id: #{@alert.id}", :mode => @vm.class.base_model.name)
       @alert_prof.add_member(@alert)
       @alert_prof.assign_to_objects(@vm)
-    end
 
-    it "should return true when calling target_needs_realtime_capture?" do
       expect(MiqAlert.target_needs_realtime_capture?(@vm)).to be_truthy
     end
-  end
 
-  context "With a VM NOT assigned to a realtime C&U alert" do
-    before(:each) do
+    it "detects false with a VM NOT assigned to a realtime C&U alert" do
       allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
       @vm     = FactoryGirl.create(:vm_vmware)
-    end
 
-    it "should return false when calling target_needs_realtime_capture?" do
       expect(MiqAlert.target_needs_realtime_capture?(@vm)).to be_falsey
     end
-  end
 
-  context "With a Host assigned to a realtime C&U alert" do
-    before(:each) do
+    it "detects true with a Host assigned to a realtime C&U alert" do
       allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
       @host     = FactoryGirl.create(:host)
       @alert    = FactoryGirl.create(:miq_alert, :enabled => true, :db => "Host", :responds_to_events => "xxx|host_perf_complete|zzz")
       @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Profile for Alert Id: #{@alert.id}", :mode => @host.class.base_model.name)
       @alert_prof.add_member(@alert)
       @alert_prof.assign_to_objects(@host)
-    end
 
-    it "should return true when calling target_needs_realtime_capture?" do
       expect(MiqAlert.target_needs_realtime_capture?(@host)).to be_truthy
     end
-  end
 
-  context "With a Host NOT assigned to a realtime C&U alert" do
-    before(:each) do
+    it "detects false with a Host NOT assigned to a realtime C&U alert" do
       allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
       @host     = FactoryGirl.create(:host)
-    end
 
-    it "should return false when calling target_needs_realtime_capture?" do
       expect(MiqAlert.target_needs_realtime_capture?(@host)).to be_falsey
     end
-  end
 
-  context "With a VM assigned to a v4-style realtime C&U alert" do
-    before(:each) do
+    it "detects true with a VM assigned to a v4-style realtime C&U alert" do
       allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
       @vm         = FactoryGirl.create(:vm_vmware)
       @alert      = FactoryGirl.create(:miq_alert, :enabled => true, :db => "Vm", :responds_to_events => "xxx|vm_perf_complete|zzz")
@@ -273,15 +255,11 @@ describe MiqAlert do
       # this forces the namespace to use actual model class name
       # rather than base_class
       @alert_prof.assign_to_objects(@vm.id, "Vm")
-    end
 
-    it "should return true when calling target_needs_realtime_capture?" do
       expect(MiqAlert.target_needs_realtime_capture?(@vm)).to be_truthy
     end
-  end
 
-  context "With a Host assigned to a v4-style realtime C&U alert" do
-    before(:each) do
+    it "detects true with a Host assigned to a v4-style realtime C&U alert" do
       allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
       @host     = FactoryGirl.create(:host)
       @alert    = FactoryGirl.create(:miq_alert, :enabled => true, :db => "Host", :responds_to_events => "xxx|host_perf_complete|zzz")
@@ -291,9 +269,7 @@ describe MiqAlert do
       # this forces the namespace to use actual model class name
       # rather than base_class
       @alert_prof.assign_to_objects(@host.id, "Host")
-    end
 
-    it "should return true when calling target_needs_realtime_capture?" do
       expect(MiqAlert.target_needs_realtime_capture?(@host)).to be_truthy
     end
   end
