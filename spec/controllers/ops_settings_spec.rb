@@ -159,7 +159,7 @@ describe OpsController do
                          :ntp => {}}}
         controller.instance_variable_set(:@edit, edit)
         controller.instance_variable_set(:@_params, @params)
-        controller.instance_variable_set(:@sb, {:x_active_tree => :settings_tree, :active_tab =>"settings_evm_servers"})
+        seed_session_trees('ops', :settings_tree)
         allow(controller).to receive(:load_edit).and_return(true)
         controller.send(:zone_edit)
 
