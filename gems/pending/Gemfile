@@ -89,7 +89,7 @@ unless ENV['APPLIANCE']
     gem "camcorder",                    :require => false
     gem "jasmine",       "~>2.4.0",     :require => false
     gem "phantomjs",     "=1.9.8.0",    :require => false
-    gem "rspec",         "~>3.5.x",     :require => false
+    gem "rspec",         "~>3.5.0",     :require => false
     gem "timecop",       "~>0.7.3",     :require => false
     gem "vcr",           "~>2.6",       :require => false
     gem "webmock",       "~>1.12",      :require => false
