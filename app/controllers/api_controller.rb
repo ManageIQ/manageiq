@@ -165,23 +165,17 @@ class ApiController < ApplicationController
 
   def redirect_api_request(method)
     target_method = "#{method}_#{@req.collection || "entrypoint"}"
-    if respond_to?(target_method)
-      send(target_method)
-      return true
-    end
+    return send(target_method) if respond_to?(target_method)
     target_method = "#{method}_generic"
-    if respond_to?(target_method)
-      send(target_method)
-      return true
-    end
-    false
+    return send(target_method) if respond_to?(target_method)
+    api_error_type(:not_found, "Unknown resource specified")
   end
 
   #
   # REST APIs Handler and API Entrypoints
   #
   def api_request_handler(expected_method)
-    api_error_type(:not_found, "Unknown resource specified") unless redirect_api_request(expected_method)
+    redirect_api_request(expected_method)
   end
 
   def show    # GET
