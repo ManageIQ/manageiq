@@ -16,11 +16,19 @@ class ApplicationHelper::Toolbar::MiqPolicyCenter < ApplicationHelper::Toolbar::
         button(
           :policy_copy,
           'fa fa-files-o fa-lg',
-          N_('Copy this Policy to new Policy [#{truncate("Copy of #{@policy.description}", :length => 255, :omission => "")}]'),
+          proc do
+            _('Copy this Policy to new Policy [%{new_policy_description}]') % {
+              :new_policy_name => truncate("Copy of #{@policy.description}", :length => 255, :omission => "")
+            }
+          end,
           proc do
             _('Copy this %{policy_type} Policy') % {:policy_type => ui_lookup(:model => @policy.towhat)}
           end,
-          :confirm   => N_("Are you sure you want to create Policy [\#{truncate(\"Copy of \#{@policy.description}\", :length => 255, :omission => \"\")}] from this Policy?"),
+          :confirm   => proc do
+                          _("Are you sure you want to create Policy [%{new_policy_description}] from this Policy?") % {
+                            :new_policy_description => truncate("Copy of \#{@policy.description}\", :length => 255, :omission => \"")
+                          }
+                        end,
           :url_parms => "main_div"),
         button(
           :policy_delete,
