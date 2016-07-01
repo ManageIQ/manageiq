@@ -1,8 +1,7 @@
-ManageIQ.angular.app.factory('serviceDataFactory', ['API', function(API) {
+ManageIQ.angular.app.service('serviceDataFactory', ['API', function(API) {
   var urlBase = '/api/services';
-  var serviceDataFactory = {};
 
-  serviceDataFactory.getServiceData = function (id) {
+  this.getServiceData = function (id) {
     if(angular.isDefined(id)) {
       return API.get(urlBase + '/' + id).then(handleSuccess);
 
@@ -11,5 +10,5 @@ ManageIQ.angular.app.factory('serviceDataFactory', ['API', function(API) {
       }
     }
   };
-  return serviceDataFactory;
+  return this;
 }]);

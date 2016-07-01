@@ -25,7 +25,6 @@
 //= require_tree ./components/
 //= require_tree ./controllers/
 //= require_tree ./directives/
-//= require_tree ./factories/
 //= require_tree ./services/
 //= require d3
 //= require c3
