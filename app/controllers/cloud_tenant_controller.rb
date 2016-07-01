@@ -34,6 +34,10 @@ class CloudTenantController < ApplicationController
         @refresh_partial = "layouts/gtl"
         show
       end
+    elsif params[:pressed] == "custom_button"
+      custom_buttons
+      # custom button screen, so return, let custom_buttons method handle everything
+      return
     end
     render_button_partial(pfx)
   end
