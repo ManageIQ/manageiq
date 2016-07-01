@@ -49,7 +49,9 @@ class ApplicationHelper::Toolbar::MiqGroupsCenter < ApplicationHelper::Toolbar::
         button(
           :rbac_group_tags_edit,
           'pficon pficon-edit fa-lg',
-          t = N_('Edit \'#{session[:customer_name]}\' Tags for the selected Groups'),
+          t = proc do
+            _('Edit \'%{customer_name}\' Tags for the selected Groups') % {:customer_name => @view_context.session[:customer_name]}
+          end,
           t,
           :url_parms => "main_div",
           :enabled   => false,

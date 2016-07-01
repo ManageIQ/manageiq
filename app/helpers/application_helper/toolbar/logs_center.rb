@@ -3,12 +3,16 @@ class ApplicationHelper::Toolbar::LogsCenter < ApplicationHelper::Toolbar::Basic
     button(
       :refresh_log,
       'fa fa-repeat fa-lg',
-      N_('Reload the #{@msg_title} Log Display'),
+      proc do
+        _('Reload the %{log_type} Log Display') % {:log_type => @msg_title}
+      end,
       nil),
     button(
       :fetch_log,
       'fa fa-download fa-lg',
-      N_('Download the Entire #{@msg_title} Log File'),
+      proc do
+        _('Download the Entire %{log_type} Log File') % {:log_type => @msg_title}
+      end,
       nil,
       :url => "/fetch_log"),
   ])
