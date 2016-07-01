@@ -12,4 +12,11 @@ FactoryGirl.define do
     location                'us-west-1'
     ems_ref                 'i-12345'
   end
+
+  factory :virtual_template_google, :class => 'ManageIQ::Providers::Google::CloudManager::VirtualTemplate' do
+    vendor                  'google'
+    name                    'virtual template google'
+    location                'us-west-1'
+    ems_ref                 'i-12345'
+  end
 end

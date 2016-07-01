@@ -9,6 +9,7 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
   require_nested :RefreshWorker
   require_nested :Refresher
   require_nested :Template
+  require_nested :VirtualTemplate
   require_nested :Vm
 
   include ManageIQ::Providers::Google::ManagerMixin
