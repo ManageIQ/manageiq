@@ -121,7 +121,7 @@ unless ENV['APPLIANCE']
   end
 
   group :development, :test do
-    gem "rspec-rails",      "~>3.5.x"
+    gem "rspec-rails",      "~>3.5.0"
   end
 end
 
