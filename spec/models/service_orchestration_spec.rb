@@ -170,7 +170,7 @@ describe ServiceOrchestration do
       child_stack.direct_vms << vm2
 
       expect(service_with_deployed_stack.all_vms.map(&:id)).to match_array([vm1, vm2].map(&:id))
-      expect(service_with_deployed_stack.direct_vms.map(&:id)).to match_array([vm1].map(&:id))
+      expect(service_with_deployed_stack.direct_vms.map(&:id)).to match_array([vm1, vm2].map(&:id))
       expect(service_with_deployed_stack.indirect_vms.map(&:id)).to match_array([vm2].map(&:id))
       expect(service_with_deployed_stack.vms.map(&:id)).to match_array([vm1, vm2].map(&:id))
     end
