@@ -53,12 +53,17 @@ class File
 
   def self.path_to_uri(file, hostname = nil)
     hostname ||= MiqSockUtil.getFullyQualifiedDomainName
+    file = Addressable::URI.encode(file.tr('\\', '/'))
 
-    URI::Generic.build(
-      :scheme => 'file',
-      :host   => hostname,
-      :path   => "/#{Addressable::URI.encode(file.tr('\\', '/'))}"
-    ).to_s
+    begin
+      URI::Generic.build(
+        :scheme => 'file',
+        :host   => hostname,
+        :path   => "/#{file}"
+      ).to_s
+    rescue URI::InvalidComponentError # Punt on Windows volume names, etc
+      "file://#{hostname}/#{file}"
+    end
   end
 
   def self.uri_to_local_path(uri_path)
