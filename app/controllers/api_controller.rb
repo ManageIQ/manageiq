@@ -156,6 +156,8 @@ class ApiController < ApplicationController
   #
   include_concern 'Initializer'
 
+  before_action :parse_api_request, :log_api_request, :validate_api_request
+
   def self.attr_type_hash(type)
     instance_variable_get("@attr_#{type}") || {}
   end
@@ -178,9 +180,6 @@ class ApiController < ApplicationController
   # REST APIs Handler and API Entrypoints
   #
   def api_request_handler(expected_method)
-    parse_api_request
-    log_api_request
-    validate_api_request
     api_error_type(:not_found, "Unknown resource specified") unless redirect_api_request(expected_method)
     log_api_response
   end
