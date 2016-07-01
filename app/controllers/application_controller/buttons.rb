@@ -248,7 +248,7 @@ module ApplicationController::Buttons
   private ###########
 
   BASE_MODEL_EXPLORER_CLASSES = [Vm, MiqTemplate, Service].freeze
-  APPLIES_TO_CLASS_BASE_MODELS = %w(EmsCluster ExtManagementSystem Host MiqTemplate Service ServiceTemplate Storage Vm).freeze
+  APPLIES_TO_CLASS_BASE_MODELS = %w(CloudTenant EmsCluster ExtManagementSystem Host MiqTemplate Service ServiceTemplate Storage Vm).freeze
   def applies_to_class_model(applies_to_class)
     # TODO: Give a better name for this concept, including ServiceTemplate using Service
     # This should probably live in the model once this concept is defined.

@@ -19,7 +19,8 @@ class CustomButton < ApplicationRecord
     Storage,
     EmsCluster,
     MiqTemplate,
-    Service
+    Service,
+    CloudTenant
   ]
 
   def self.buttons_for(other, applies_to_id = nil)
