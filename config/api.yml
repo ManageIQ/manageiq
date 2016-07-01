@@ -337,6 +337,9 @@
       :get:
       - :name: read
         :identifier: git_repository_show
+      :post:
+      - :name: refresh
+        :identifier: git_repository_refresh
   :groups:
     :description: Groups
     :identifier: rbac_group

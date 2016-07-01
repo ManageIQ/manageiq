@@ -6,6 +6,7 @@
 #
 describe ApiController do
   CREDENTIALS_ATTR = ApiController::GitRepositories::CREDENTIALS_ATTR
+  let(:dummy_url) { 'https://its.my/little/pony' }
   let(:expected_attributes) { %w(id name verify_ssl url) }
   let(:credentials) do
     {
@@ -17,10 +18,12 @@ describe ApiController do
   let(:sample_git) do
     {
       'name' => 'Qilin',
-      'url'  => 'https://its.my/little/pony'
+      'url'  => dummy_url
     }
   end
   let(:sample_git_credentials) { sample_git.merge(CREDENTIALS_ATTR => credentials) }
+  let(:git_repository) { FactoryGirl.create(:git_repository, :url => dummy_url) }
+  let(:git_repository_url) { git_repositories_url(git_repository.id) }
 
   describe 'Git repository creation' do
     it 'rejects creation without appropriate role' do
@@ -74,6 +77,28 @@ describe ApiController do
       expect(GitRepository.exists?(git_id)).to be_truthy
       git = GitRepository.find(git_id)
       expect(git.authentications.size).to eq(0)
+    end
+  end
+
+  describe 'Git Repository Refresh' do
+    it 'fails to refresh on invalid git repository' do
+      api_basic_authorize action_identifier(:git_repositories, :refresh)
+      run_post(git_repositories_url(999_999), gen_request(:refresh))
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it 'fails when user lacks appropriate role' do
+      api_basic_authorize
+      run_post(git_repository_url, gen_request(:refresh))
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'pushes a refresh task to queue' do
+      api_basic_authorize action_identifier(:git_repositories, :refresh)
+      run_post(git_repository_url, gen_request(:refresh))
+      expect_single_action_result(:success => true,
+                                  :task    => true,
+                                  :message => "Refreshing Git: #{dummy_url}")
     end
   end
 end

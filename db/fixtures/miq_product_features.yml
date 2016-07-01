@@ -2036,6 +2036,11 @@
         :feature_type: admin
         :hidden: false
         :identifier: git_repository_add
+      - :name: Refresh
+        :description: Refresh (Fetch) a Git Repository
+        :feature_type: admin
+        :hidden: false
+        :identifier: git_repository_refresh
 
 # Automate Log
 - :name: Log
