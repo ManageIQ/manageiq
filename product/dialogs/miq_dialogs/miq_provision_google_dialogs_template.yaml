@@ -289,6 +289,15 @@
           :required: true
           :display: :edit
           :data_type: :integer
+        :is_preemptible:
+          :values:
+            false: 0
+            true: 1
+          :description: Provision VM(s) as Preemptible
+          :required: false
+          :display: :edit
+          :default: false
+          :data_type: :boolean
       :display: :show
   :dialog_order:
   - :requester

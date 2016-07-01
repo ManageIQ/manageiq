@@ -460,7 +460,7 @@
             -# Description is in the second, last, array element
             = options[field].last
       - elsif [:linked_clone, :placement_auto, :stateless, :sysprep_auto_logon, :sysprep_change_sid,
-               :sysprep_delete_accounts, :sysprep_spec_override, :vm_auto_start, :vm_dynamic_memory].include?(field)
+               :sysprep_delete_accounts, :sysprep_spec_override, :vm_auto_start, :vm_dynamic_memory, :is_preemptible].include?(field)
         -# ### Checkbox fields
         .col-md-8{:style => "vertical-align: top;"}
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
