@@ -10,4 +10,6 @@ FactoryGirl.define do
                                  :parent => :cloud_network
   factory :cloud_network_azure, :class  => "ManageIQ::Providers::Azure::NetworkManager::CloudNetwork",
                                 :parent => :cloud_network
+  factory :cloud_network_google, :class  => "ManageIQ::Providers::Google::NetworkManager::CloudNetwork",
+                                 :parent => :cloud_network
 end

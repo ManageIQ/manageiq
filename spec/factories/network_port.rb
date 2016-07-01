@@ -10,4 +10,6 @@ FactoryGirl.define do
                                 :parent => :network_port
   factory :network_port_azure, :class  => "ManageIQ::Providers::Azure::NetworkManager::NetworkPort",
                                :parent => :network_port
+  factory :network_port_google, :class  => "ManageIQ::Providers::Google::NetworkManager::NetworkPort",
+                                :parent => :network_port
 end

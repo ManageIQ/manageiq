@@ -187,6 +187,13 @@ FactoryGirl.define do
     end
   end
 
+  factory :ems_google_network,
+          :aliases => ["manageiq/providers/google/network_manager"],
+          :class   => "ManageIQ::Providers::Google::NetworkManager",
+          :parent  => :ems_network do
+    provider_region "us-central1"
+  end
+
   # Leaf classes for ems_container
 
   factory :ems_kubernetes,

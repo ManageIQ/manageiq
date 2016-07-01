@@ -1,19 +1,6 @@
 class ManageIQ::Providers::Google::CloudManager::Vm < ManageIQ::Providers::CloudManager::Vm
   include_concern 'Operations'
 
-  has_and_belongs_to_many :security_groups, :join_table => :security_groups_vms, :foreign_key => :vm_id
-
-  # TODO(NetworkManager) ipaddresses and mac_addresses will go away when we will rewrite google to have NetworkManager
-  virtual_column :ipaddresses,   :type => :string_set, :uses => {:hardware => :ipaddresses}
-  virtual_column :mac_addresses, :type => :string_set, :uses => {:hardware => :mac_addresses}
-  def ipaddresses
-    hardware.nil? ? [] : hardware.ipaddresses
-  end
-
-  def mac_addresses
-    hardware.nil? ? [] : hardware.mac_addresses
-  end
-
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
     connection.servers.get(name, availability_zone.name)
