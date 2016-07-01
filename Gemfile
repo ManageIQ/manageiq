@@ -37,7 +37,7 @@ gem "ruport",                         "=1.7.0",                       :git => "g
 gem "net-ldap",                       "~>0.7.0",   :require => false
 gem "rubyrep",                        "=1.2.0",    :require => false, :git => "git://github.com/ManageIQ/rubyrep.git", :tag => "v1.2.0-8"
 gem "simple-rss",                     "~>1.3.1",   :require => false
-gem "ziya",                           "=2.3.0",    :require => false, :git => "git://github.com/ManageIQ/ziya.git", :tag => "v2.3.0-2"
+gem "ziya",                           "=2.3.0",    :require => false, :git => "git://github.com/ManageIQ/ziya.git", :tag => "v2.3.0-3"
 
 # Not vendored, but required
 gem "mime-types",                     "~>2.6.1",   :require => "mime/types/columnar"
