@@ -50,13 +50,13 @@ describe ManageIQ::Providers::Azure::CloudManager do
     context "#validation" do
       it "handles unknown error" do
         allow(ManageIQ::Providers::Azure::CloudManager).to receive(:raw_connect).and_raise(StandardError)
-        expect { @e.verify_credentials }.to raise_error(MiqException::MiqHostError, /Unexpected response returned*/)
+        expect { @e.verify_credentials }.to raise_error(MiqException::MiqInvalidCredentialsError, /Unexpected response returned*/)
       end
 
       it "handles incorrect password" do
         allow(ManageIQ::Providers::Azure::CloudManager).to receive(:raw_connect).and_raise(
           Azure::Armrest::UnauthorizedException.new(nil, nil, nil))
-        expect { @e.verify_credentials }.to raise_error(MiqException::MiqHostError, /Incorrect credentials*/)
+        expect { @e.verify_credentials }.to raise_error(MiqException::MiqInvalidCredentialsError, /Incorrect credentials*/)
       end
     end
   end
@@ -67,14 +67,14 @@ describe ManageIQ::Providers::Azure::CloudManager do
     before do
       EvmSpecHelper.local_miq_server(:zone => Zone.seed)
 
-      @client_id  = Rails.application.secrets.azure.try(:[], 'client_id') || 'AZURE_CLIENT_ID'
-      @client_key = Rails.application.secrets.azure.try(:[], 'client_secret') || 'AZURE_CLIENT_SECRET'
-      @tenant_id  = Rails.application.secrets.azure.try(:[], 'tenant_id') || 'AZURE_TENANT_ID'
+      @client_id    = Rails.application.secrets.azure.try(:[], 'client_id') || 'AZURE_CLIENT_ID'
+      @client_key   = Rails.application.secrets.azure.try(:[], 'client_secret') || 'AZURE_CLIENT_SECRET'
+      @tenant_id    = Rails.application.secrets.azure.try(:[], 'tenant_id') || 'AZURE_TENANT_ID'
       @subscription = Rails.application.secrets.azure.try(:[], 'subscription_id') || 'AZURE_SUBSCRIPTION_ID'
 
-      @alt_client_id       = 'testuser'
-      @alt_client_key      = 'secret'
-      @alt_tenant_id       = 'ABCDEFGHIJABCDEFGHIJ0123456789AB'
+      @alt_client_id    = 'testuser'
+      @alt_client_key   = 'secret'
+      @alt_tenant_id    = 'ABCDEFGHIJABCDEFGHIJ0123456789AB'
       @alt_subscription = '0123456789ABCDEFGHIJABCDEFGHIJKL'
 
       # A true thread may fail the test with VCR
