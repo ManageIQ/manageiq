@@ -136,8 +136,7 @@ module Rbac
     d_filtered_ids = pluck_ids(matches_via_descendants(rbac_class(klass), user_filters['match_via_descendants'],
                                                        :user => user, :miq_group => miq_group))
 
-    filtered_ids = combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids)
-    [filtered_ids, u_filtered_ids]
+    combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids)
   end
 
   #
@@ -178,7 +177,7 @@ module Rbac
 
   def self.find_targets_with_indirect_rbac(scope, rbac_filters, find_options, user, miq_group)
     parent_class = rbac_class(scope)
-    filtered_ids, _ = calc_filtered_ids(parent_class, rbac_filters, user, miq_group)
+    filtered_ids = calc_filtered_ids(parent_class, rbac_filters, user, miq_group)
 
     find_targets_filtered_by_parent_ids(parent_class, scope, find_options, filtered_ids)
   end
@@ -232,7 +231,7 @@ module Rbac
   end
 
   def self.find_targets_with_direct_rbac(scope, rbac_filters, find_options, user, miq_group)
-    filtered_ids, u_filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group)
+    filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group)
     find_targets_filtered_by_ids(scope, find_options, filtered_ids)
   end
 
