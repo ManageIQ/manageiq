@@ -30,7 +30,7 @@ FactoryGirl.define do
   factory :orchestration_template_vnfd_with_content,
           :parent => :orchestration_template,
           :class  => "OrchestrationTemplateVnfd" do
-    content File.read('spec/fixtures/orchestration_templates/vnfd_parameters.yml')
+    content File.read(Rails.root.join('spec/fixtures/orchestration_templates/vnfd_parameters.yml'))
   end
 
   factory :orchestration_template_azure_with_content,
