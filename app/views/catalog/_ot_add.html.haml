@@ -34,13 +34,25 @@
           = select_tag("type",
                        options_for_select({"Amazon CloudFormation" => "OrchestrationTemplateCfn",
                                            "OpenStack Heat" => "OrchestrationTemplateHot",
-                                           "Microsoft Azure" => "OrchestrationTemplateAzure",},
+                                           "Microsoft Azure" => "OrchestrationTemplateAzure",
+                                           "VNF" => "OrchestrationTemplateVnfd",},
                                           @edit[:new][:type]),
                        :class => "selectpicker")
           :javascript
             miqInitSelectPicker();
             miqSelectPickerEvent('type', '#{url}', {beforeSend: true})
-
+      - if @edit[:new][:type] == "OrchestrationTemplateVnfd"
+        - opts = [["<#{_('Choose')}>", nil]] + @edit[:new][:available_managers]
+        .form-group
+          %label.col-md-2.control-label
+            = _('Provider')
+          .col-md-8
+            = select_tag('manager_id',
+                         options_for_select(opts, @edit[:new][:manager_id]),
+                         "data-miq_sparkle_on" => true,
+                         :class                => "selectpicker")
+            :javascript
+              miqSelectPickerEvent('manager_id', '#{url}')
       .form-group
         %label.col-md-2.control-label
           = _('Draft')

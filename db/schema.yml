@@ -5716,6 +5716,8 @@ orchestration_templates:
 - updated_at
 - draft
 - orderable
+- ems_ref
+- ems_id
 os_processes:
 - id
 - name

@@ -27,6 +27,12 @@ FactoryGirl.define do
     content File.read(Rails.root.join('spec/fixtures/orchestration_templates/hot_parameters.yml'))
   end
 
+  factory :orchestration_template_vnfd_with_content,
+          :parent => :orchestration_template,
+          :class  => "OrchestrationTemplateVnfd" do
+    content File.read('spec/fixtures/orchestration_templates/vnfd_parameters.yml')
+  end
+
   factory :orchestration_template_azure_with_content,
           :parent => :orchestration_template,
           :class  => "OrchestrationTemplateAzure" do

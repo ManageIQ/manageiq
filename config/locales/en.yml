@@ -826,6 +826,7 @@ en:
       OrchestrationTemplateCfn: CloudFormation Template
       OrchestrationTemplateHot: Heat Template
       OrchestrationTemplateAzure: Azure Template
+      OrchestrationTemplateVnfd: VNF Template
       PersistentVolume:         Persistent Volume
       ProductUpdate:            Product Update
       PxeCustomizationTemplate: Customization Template

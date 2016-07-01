@@ -24,6 +24,8 @@ class OrchestrationTemplateDialogService
 
       if template.kind_of?(OrchestrationTemplateAzure)
         add_azure_stack_options(dialog_group, 2)
+      elsif template.kind_of?(OrchestrationTemplateVnfd)
+        # TODO(lsmola) add Vnfd specific options
       else
         add_aws_openstack_stack_options(dialog_group, 2)
       end

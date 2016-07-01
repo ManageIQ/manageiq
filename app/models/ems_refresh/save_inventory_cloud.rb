@@ -6,6 +6,7 @@
 #   - cloud_tenants
 #   - key_pairs
 #   - orchestration_templates
+#   - orchestration_templates_catalog
 #   - orchestration_stacks
 #   - security_groups
 #     - firewall_rules
@@ -48,6 +49,7 @@ module EmsRefresh::SaveInventoryCloud
       :cloud_tenants,
       :key_pairs,
       :orchestration_templates,
+      :orchestration_templates_catalog,
       :orchestration_stacks,
       # TODO(lsmola) NetworkManager, once all providers are converted :cloud_networks and :security_groups will go away
       :cloud_networks,
