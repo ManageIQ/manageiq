@@ -10,7 +10,7 @@ class ApiController
         end
         render_normal_update :users, update_collection(:users, @req.c_id)
       else
-        update_generic(:users)
+        update_generic
       end
     end
 

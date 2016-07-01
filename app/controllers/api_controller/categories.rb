@@ -6,7 +6,7 @@ class ApiController
     #
     def show_categories
       request_additional_attributes
-      show_generic(:categories)
+      show_generic
     end
 
     def edit_resource_categories(type, id, data = {})

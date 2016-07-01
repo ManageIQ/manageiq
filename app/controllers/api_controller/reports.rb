@@ -11,12 +11,12 @@ class ApiController
       if @req.subcollection == "results" && (@req.s_id || expand?(:resources)) && attribute_selection == "all"
         @additional_attributes = %w(result_set)
       end
-      show_generic(:reports)
+      show_generic
     end
 
     def show_results
       @additional_attributes = %w(result_set)
-      show_generic(:results)
+      show_generic
     end
 
     def run_resource_reports(_type, id, _data)

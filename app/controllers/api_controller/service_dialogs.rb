@@ -10,7 +10,7 @@ class ApiController
 
     def show_service_dialogs
       @additional_attributes = %w(content) if attribute_selection == "all"
-      show_generic(:service_dialogs)
+      show_generic
     end
 
     def refresh_dialog_fields_resource_service_dialogs(type, id = nil, data = nil)
