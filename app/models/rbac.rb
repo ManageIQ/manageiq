@@ -208,7 +208,7 @@ module Rbac
     return targets, auth_count
   end
 
-  def self.find_targets_filtered_by_ids(scope, find_options, u_filtered_ids, filtered_ids)
+  def self.find_targets_filtered_by_ids(scope, find_options, filtered_ids)
     if filtered_ids
       ids_clause  = ["#{scope.table_name}.id IN (?)", filtered_ids]
       find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], ids_clause)
@@ -233,7 +233,7 @@ module Rbac
 
   def self.find_targets_with_direct_rbac(scope, rbac_filters, find_options, user, miq_group)
     filtered_ids, u_filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group)
-    find_targets_filtered_by_ids(scope, find_options, u_filtered_ids, filtered_ids)
+    find_targets_filtered_by_ids(scope, find_options, filtered_ids)
   end
 
   def self.find_targets_with_user_group_rbac(scope, _rbac_filters, find_options, user, miq_group)
