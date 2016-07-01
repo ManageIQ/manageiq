@@ -2,7 +2,7 @@
 # VMDB specific gems
 #
 
-gem "rails",                           "=5.0.0.rc2"
+gem "rails",                           "~>5.0.0"
 gem "rails-controller-testing",        :require => false
 gem "activemodel-serializers-xml",     :require => false # required by draper: https://github.com/drapergem/draper/issues/697
 gem "activerecord-session_store",      "~>1.0.0"
