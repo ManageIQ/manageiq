@@ -608,4 +608,8 @@ class MiqServer < ApplicationRecord
   def tenant_identity
     User.super_admin
   end
+
+  def miq_region
+    MiqRegion.my_region
+  end
 end # class MiqServer

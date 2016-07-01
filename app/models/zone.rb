@@ -14,6 +14,7 @@ class Zone < ApplicationRecord
   has_many :storage_managers
   has_many :ldap_regions
   has_many :providers
+  has_many :settings_changes, :as => :resource, :dependent => :destroy
 
   virtual_has_many :hosts,              :uses => {:ext_management_systems => :hosts}
   virtual_has_many :active_miq_servers, :class_name => "MiqServer"
