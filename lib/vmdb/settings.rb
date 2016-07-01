@@ -50,14 +50,14 @@ module Vmdb
       validate.first
     end
 
-    def self.save!(miq_server, hash)
-      new_settings = for_resource(miq_server).merge!(hash).to_hash
+    def self.save!(resource, hash)
+      new_settings = build_without_local(resource).load!.merge!(hash).to_hash
       raise "configuration invalid" unless VMDB::Config::Validator.new(new_settings).valid?
-
-      diff = HashDiffer.diff(template_settings.to_hash, new_settings)
+      hash_for_parent = parent_settings_without_local(resource).load!.to_hash
+      diff = HashDiffer.diff(hash_for_parent, new_settings)
       encrypt_passwords!(diff)
       deltas = HashDiffer.diff_to_deltas(diff)
-      apply_settings_changes(miq_server, deltas)
+      apply_settings_changes(resource, deltas)
     end
 
     def self.for_resource(resource)
@@ -88,12 +88,29 @@ module Vmdb
     private_class_method :build_template
 
     def self.build(resource)
-      build_template.tap do |settings|
-        settings.add_source!(DatabaseSource.new(resource))
+      build_without_local(resource).tap do |settings|
         local_sources.each { |s| settings.add_source!(s) } if resource.try(:is_local?)
       end
     end
     private_class_method :build
+
+    def self.parent_settings_without_local(resource)
+      build_template.tap do |settings|
+        DatabaseSource.parent_sources_for(resource).each do |db_source|
+          settings.add_source!(db_source)
+        end
+      end
+    end
+    private_class_method :parent_settings_without_local
+
+    def self.build_without_local(resource)
+      build_template.tap do |settings|
+        DatabaseSource.sources_for(resource).each do |db_source|
+          settings.add_source!(db_source)
+        end
+      end
+    end
+    private_class_method :build_without_local
 
     def self.template_sources
       [
