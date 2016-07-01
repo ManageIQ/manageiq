@@ -707,7 +707,8 @@ class MiqCapacityController < ApplicationController
 
       # Don't include Host resource types based on option - exclude host and storage nodes
       unless @sb[:bottlenecks][:tl_options][:hosts] ||
-             ["h", "s"].include?(x_node.split("-").last.split("_").first)
+             %w(h s).include?(x_node.split("-").last.split("_").first) ||
+             'ds'.include?(x_node.split('-').first)
         @sb[:bottlenecks][:report].where_clause = "(#{@sb[:bottlenecks][:report].where_clause}) AND resource_type != 'Host'"
       end
 
