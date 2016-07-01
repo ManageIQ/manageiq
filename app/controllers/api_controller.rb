@@ -171,22 +171,15 @@ class ApiController < ApplicationController
     api_error_type(:not_found, "Unknown resource specified")
   end
 
-  #
-  # REST APIs Handler and API Entrypoints
-  #
-  def api_request_handler(expected_method)
-    redirect_api_request(expected_method)
-  end
-
   def show    # GET
-    api_request_handler(:show)
+    redirect_api_request(:show)
   end
 
   def update  # POST, PUT, PATCH
-    api_request_handler(:update)
+    redirect_api_request(:update)
   end
 
   def destroy # DELETE
-    api_request_handler(:destroy)
+    redirect_api_request(:destroy)
   end
 end
