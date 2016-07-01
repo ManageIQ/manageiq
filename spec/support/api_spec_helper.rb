@@ -262,8 +262,7 @@ module ApiSpecHelper
   end
 
   def expect_result_to_represent_task(result)
-    expect(result).to have_key("task_id")
-    expect(result).to have_key("task_href")
+    expect(result).to include("task_id", "task_href")
   end
 
   # Primary result construct methods
