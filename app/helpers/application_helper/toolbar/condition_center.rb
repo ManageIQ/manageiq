@@ -28,11 +28,13 @@ class ApplicationHelper::Toolbar::ConditionCenter < ApplicationHelper::Toolbar::
         button(
           :condition_delete,
           'pficon pficon-delete fa-lg',
-          t = N_('Delete this #{ui_lookup(:model=>@condition.towhat)} Condition'),
+          t = proc do
+            _('Delete this %{condition_type} Condition') % {:condition_type => ui_lookup(:model => @condition.towhat)}
+          end,
           t,
           :url_parms => "main_div",
           :klass     => ApplicationHelper::Button::ReadOnly,
-          :confirm   => N_("Are you sure you want to delete this \#{ui_lookup(:model=>@condition.towhat)} Condition?")),
+          :confirm   => proc { _("Are you sure you want to delete this %{condition_type} Condition?") % {:condition_type => ui_lookup(:model => @condition.towhat)}}),
         button(
           :condition_remove,
           'pficon pficon-delete fa-lg',
