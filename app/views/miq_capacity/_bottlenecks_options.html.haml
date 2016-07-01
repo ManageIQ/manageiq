@@ -31,6 +31,7 @@
         = select_tag("tl_#{typ}_tz",
           options_for_select(ALL_TIMEZONES,
           @sb[:bottlenecks][:tl_options][:tz]),
+          "data-live-search" => "true",
           "class" => "selectpicker",
           "data-miq_sparkle_on"  => true,
           "data-miq_sparkle_off" => true)
