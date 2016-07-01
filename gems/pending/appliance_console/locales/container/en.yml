@@ -7,6 +7,7 @@ en:
     - timezone
     - dbrestore
     - db_config
+    - db_replication
     - key_gen
     - evmstop
     - evmstart
@@ -16,6 +17,7 @@ en:
     timezone: Set Timezone
     dbrestore: Restore Database From Backup
     db_config: Configure Database
+    db_replication: Configure Database Replication
     evmstop: Stop EVM Server Processes
     key_gen: Generate Custom Encryption Key
     evmstart: Start EVM Server Processes
