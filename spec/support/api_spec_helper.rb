@@ -261,10 +261,6 @@ module ApiSpecHelper
     expect(response_hash[collection].all? { |result| result.keys.sort == key_list }).to be_truthy
   end
 
-  def expect_result_to_represent_task(result)
-    expect(result).to include("task_id", "task_href")
-  end
-
   # Primary result construct methods
 
   def expect_empty_query_result(collection)
@@ -289,7 +285,7 @@ module ApiSpecHelper
     expect(response_hash).to include("success" => options[:success]) if options.key?(:success)
     expect(response_hash).to include("message" => a_string_matching(options[:message])) if options[:message]
     expect(response_hash).to include("href" => a_string_matching(fetch_value(options[:href]))) if options[:href]
-    expect_result_to_represent_task(response_hash) if options[:task]
+    expect(response_hash).to include("task_id", "task_href") if options[:task]
   end
 
   def expect_multiple_action_result(count, options = {})
@@ -299,7 +295,7 @@ module ApiSpecHelper
     expect(results.size).to eq(count)
     expect(results.all? { |r| r["success"] }).to be_truthy
 
-    results.each { |r| expect_result_to_represent_task(r) } if options[:task]
+    results.each { |r| expect(r).to include("task_id", "task_href") } if options[:task]
   end
 
   def expect_tagging_result(tagging_results)
