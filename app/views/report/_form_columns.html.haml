@@ -13,6 +13,7 @@
         = select_tag('chosen_model',
           options_for_select(@edit[:models].sort, @edit[:new][:model]),
           :multiple              => false,
+          "data-live-search"     => "true",
           :class                 => "selectpicker")
         :javascript
           miqInitSelectPicker();

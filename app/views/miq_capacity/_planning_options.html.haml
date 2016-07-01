@@ -27,6 +27,7 @@
         = select_tag("filter_value",
                       options_for_select(options, @sb[:planning][:options][:filter_value]),
                       :disabled              => @sb[:planning][:options][:vm_mode] == :manual,
+                      "data-live-search"     => "true",
                       "class"                => "selectpicker",
                       "data-miq_sparkle_on"  => true,
                       "data-miq_sparkle_off" => true,
@@ -69,6 +70,7 @@
           = select_tag("chosen_vm",
                         options_for_select(options, @sb[:planning][:options][:chosen_vm]),
                         :disabled              => @sb[:planning][:options][:vm_mode] == :manual,
+                        "data-live-search"     => "true",
                         "class"                => "selectpicker",
                         "data-miq_sparkle_on"  => true,
                         "data-miq_sparkle_off" => true)

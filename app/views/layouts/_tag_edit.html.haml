@@ -14,6 +14,7 @@
           = select_tag("tag_cat",
             options_for_select(@categories.sort_by{|key, _| key.downcase}, @edit[:cat].name),
             "data-miq_observe"     => {:url => url}.to_json,
+            "data-live-search"     => "true",
             "class"                => "selectpicker")
           :javascript
             miqInitSelectPicker();

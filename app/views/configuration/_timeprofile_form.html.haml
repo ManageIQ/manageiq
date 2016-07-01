@@ -44,6 +44,7 @@
                      options_for_select([["<#{_('Determine at Run Time')}>", nil]] + ALL_TIMEZONES,
                                         @edit[:new][:profile][:tz]),
                      :disabled              => disabled,
+                     "data-live-search"     => "true",
                      "data-miq_sparkle_on"  => true,
                      "data-miq_sparkle_off" => true,
                      :class    => "selectpicker")
