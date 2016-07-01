@@ -7,6 +7,7 @@ function MiddlewareDeploymentCtrl($scope, $http, miqService) {
 
   $scope.showListener = function () {
     $scope.showDeployModal = true;
+    $scope.resetDeployForm();
   };
 
   $scope.enableDeployment = true;
@@ -22,7 +23,15 @@ function MiddlewareDeploymentCtrl($scope, $http, miqService) {
     var url = '/middleware_server/add_deployment';
     $scope.uploadFile($scope.filePath, url);
   };
-    
+
+  $scope.resetDeployForm = function () {
+    $scope.enableDeployment = true;
+    $scope.runtimeName = undefined;
+    $scope.filePath = undefined;
+    angular.element('#deploy_div :file#upload_file').val('');
+    angular.element('#deploy_div input[type="text"]:disabled').val('');
+  };
+
   $scope.uploadFile = function (file, uploadUrl) {
     var fd = new FormData();
     fd.append('file', file);
@@ -35,10 +44,10 @@ function MiddlewareDeploymentCtrl($scope, $http, miqService) {
     })
     .then(
       function() { // success
-        miqService.miqFlash('success', 'Deployment "' + file.name + '" has been initiated on this server.');
+        miqService.miqFlash('success', 'Deployment "' + $scope.runtimeName + '" has been initiated on this server.');
       },
       function() { // error
-        miqService.miqFlash('error', 'Unable to deploy "' + file.name + '" on this server.');
+        miqService.miqFlash('error', 'Unable to deploy "' + $scope.runtimeName + '" on this server.');
       })
     .finally(function() {
       angular.element("#modal_d_div").modal('hide');

@@ -35,12 +35,17 @@
             %label.col-md-4.control-label{:for => "enable_deployment_cb"}
               = _("Enable Deployment")
             .col-md-8
-              %input#enable_deployment_cb{:type => "checkbox", "ng-model" => "enableDeployment"}
+              %input#enable_deployment_cb{:type         => "checkbox",
+                                          "ng-model"    => "enableDeployment",
+                                          "ng-disabled" => "!filePath"}
           .form-group
             %label.col-md-4.control-label{:for => "runtime_name_input"}
               = _("Runtime Name")
             .col-md-8
-              %input.form-control#runtime_name_input{:type => "text", "ng-model" => "runtimeName"}
+              %input.form-control#runtime_name_input{:type         => "text",
+                                                     "placeholder" => _("No file chosen"),
+                                                     "ng-model"    => "runtimeName",
+                                                     "ng-disabled" => "!filePath"}
           :javascript
             $(":file").filestyle({icon: false, placeholder: _("No file chosen")});
         .modal-footer
