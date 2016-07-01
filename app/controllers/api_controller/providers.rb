@@ -5,7 +5,7 @@ class ApiController
     CREDENTIALS_ATTR  = "credentials"
     AUTH_TYPE_ATTR    = "auth_type"
     DEFAULT_AUTH_TYPE = "default"
-    ENDPOINT_ATTRS    = %w(hostname ipaddress port)
+    ENDPOINT_ATTRS    = %w(hostname ipaddress port security_protocol).freeze
     RESTRICTED_ATTRS  = [TYPE_ATTR, CREDENTIALS_ATTR, ZONE_ATTR, "zone_id"]
 
     def create_resource_providers(type, _id, data = {})
