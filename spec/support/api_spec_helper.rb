@@ -282,10 +282,15 @@ module ApiSpecHelper
 
   def expect_single_action_result(options = {})
     expect(response).to have_http_status(:ok)
-    expect(response_hash).to include("success" => options[:success]) if options.key?(:success)
-    expect(response_hash).to include("message" => a_string_matching(options[:message])) if options[:message]
-    expect(response_hash).to include("href" => a_string_matching(fetch_value(options[:href]))) if options[:href]
-    expect(response_hash).to include("task_id", "task_href") if options[:task]
+    expected = {}
+    expected["success"] = options[:success] if options.key?(:success)
+    expected["message"] = a_string_matching(options[:message]) if options[:message]
+    expected["href"] = a_string_matching(fetch_value(options[:href])) if options[:href]
+    if options[:task]
+      expected["task_id"] = anything
+      expected["task_href"] = anything
+    end
+    expect(response_hash).to include(expected)
   end
 
   def expect_multiple_action_result(count, options = {})
