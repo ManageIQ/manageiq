@@ -1,9 +1,11 @@
 describe ManageIQ::Providers::CloudManager::VirtualTemplate do
+  let(:ext_management_system) { FactoryGirl.create(:ext_management_system) }
   let(:vt_properties) do
     {
       :vendor   => 'amazon',
       :name     => 'virtualtemplate',
       :location => 'here',
+      :ems_id   => ext_management_system.id
     }
   end
 
