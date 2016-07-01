@@ -4,6 +4,7 @@
 describe ApiController do
   let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
   let(:miq_server) { FactoryGirl.create(:miq_server, :zone => zone) }
+  let(:ems) { FactoryGirl.create(:ext_management_system) }
   let(:template) do
     FactoryGirl.create(:miq_template, :name => "template 1", :vendor => "vmware", :location => "template1.vmtx")
   end
@@ -229,7 +230,7 @@ describe ApiController do
     end
 
     it 'query Virtual Templates' do
-      FactoryGirl.create(:virtual_template)
+      FactoryGirl.create(:virtual_template, :ems_id => ems.id)
       test_collection_query(:virtual_templates,
                             virtual_templates_url, ManageIQ::Providers::CloudManager::VirtualTemplate)
     end
