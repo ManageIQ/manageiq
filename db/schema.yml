@@ -1338,6 +1338,7 @@ host_storages:
 - host_id
 - read_only
 - id
+- ems_ref
 host_switches:
 - id
 - host_id
