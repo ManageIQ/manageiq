@@ -236,6 +236,7 @@ describe MiqAlert do
       alert_prof.add_member(alert)
       alert_prof
     end
+
     it "detects true with a VM assigned to a realtime C&U alert" do
       vm = FactoryGirl.create(:vm_vmware)
       vm_alert_set.assign_to_objects(vm)
@@ -247,6 +248,16 @@ describe MiqAlert do
       vm = FactoryGirl.create(:vm_vmware)
 
       expect(MiqAlert.target_needs_realtime_capture?(vm)).to be_falsey
+    end
+
+    it "detects true with a VM's ems assigned to a realtime C&U alert" do
+      allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
+
+      ems = FactoryGirl.create(:ems_vmware)
+      vm = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
+      vm_alert_set.assign_to_objects(ems)
+
+      expect(MiqAlert.target_needs_realtime_capture?(vm)).to be_truthy
     end
 
     it "detects true with a Host assigned to a realtime C&U alert" do
@@ -280,6 +291,36 @@ describe MiqAlert do
       host_alert_set.assign_to_objects(host.id, "Host")
 
       expect(MiqAlert.target_needs_realtime_capture?(host)).to be_truthy
+    end
+
+    let(:classification) do
+      env = FactoryGirl.create(:classification, :name => "env", :single_value => 1)
+      FactoryGirl.create(:classification_tag, :name => "good", :parent => env)
+    end
+
+    let(:tag) { classification.tag }
+
+    it "detects with a shared tag on a Vm" do
+      vm = FactoryGirl.create(:vm_vmware)
+      vm.tag_add(tag.name, :ns => "")
+      vm.reload # reload ensures the tag is set
+
+      vm_alert_set.assign_to_tags([classification.id], "vm")
+      vm_alert_set.reload # reload ensures the tag is set
+
+      expect(MiqAlert.target_needs_realtime_capture?(vm)).to be_truthy
+    end
+
+    it "doesnt detects with a shared tag assigned to a Vm's ems" do
+      ems = FactoryGirl.create(:ems_vmware)
+      vm = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
+      ems.tag_add(tag.name, :ns => "")
+      ems.reload # reload ensures the tag is set
+
+      vm_alert_set.assign_to_tags([classification.id], "ext_management_system")
+      vm_alert_set.reload # reload ensures the tag is set
+
+      expect(MiqAlert.target_needs_realtime_capture?(vm)).to be_truthy
     end
   end
 
