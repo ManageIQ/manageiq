@@ -71,7 +71,8 @@ require 'appliance_console/scap'
 require 'appliance_console/certificate_authority'
 require 'appliance_console/timezone_configuration'
 require 'appliance_console/date_time_configuration'
-
+require 'appliance_console/database_replication_primary'
+require 'appliance_console/database_replication_standby'
 require 'appliance_console/prompts'
 include ApplianceConsole::Prompts
 
@@ -460,6 +461,36 @@ Static Network Configuration
         end
         dbhost, database, region = ApplianceConsole::Utilities.db_host_database_region
         press_any_key
+
+      when I18n.t("advanced_settings.db_replication")
+        say("#{selection}\n\n")
+
+        options = {
+          "Configure Server as Primary" => "primary",
+          "Configure Server as Standby" => "standby"
+        }
+
+        action = ask_with_menu("Database replication Operation", options)
+
+        case action
+        when "primary"
+          db_replication = ApplianceConsole::DatabaseReplicationPrimary.new
+          Logging.logger.info("Configuring Server as Primary")
+        when "standby"
+          db_replication = ApplianceConsole::DatabaseReplicationStandby.new
+          Logging.logger.info("Configuring Server as Standby")
+        end
+
+        if db_replication.ask_questions && db_replication.activate
+          say("Database Replication configured")
+          Logging.logger.info("Database Replication configured")
+          press_any_key
+        else
+          say("Database Replication not configured")
+          Logging.logger.info("Database Replication not configured")
+          press_any_key
+          raise MiqSignalError
+        end
 
       when I18n.t("advanced_settings.tmp_config")
         say("#{selection}\n\n")
