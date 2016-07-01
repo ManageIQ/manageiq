@@ -295,12 +295,13 @@ module ApiSpecHelper
 
   def expect_multiple_action_result(count, options = {})
     expect(response).to have_http_status(:ok)
-    expect(response_hash).to have_key("results")
-    results = response_hash["results"]
-    expect(results.size).to eq(count)
-    expect(results.all? { |r| r["success"] }).to be_truthy
-
-    results.each { |r| expect(r).to include("task_id", "task_href") } if options[:task]
+    expected_result = {"success" => true}
+    if options[:task]
+      expected_result["task_id"] = anything
+      expected_result["task_href"] = anything
+    end
+    expected = {"results" => Array.new(count) { a_hash_including(expected_result) }}
+    expect(response_hash).to include(expected)
   end
 
   def expect_tagging_result(tagging_results)
