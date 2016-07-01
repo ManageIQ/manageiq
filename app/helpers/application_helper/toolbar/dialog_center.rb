@@ -61,7 +61,9 @@ class ApplicationHelper::Toolbar::DialogCenter < ApplicationHelper::Toolbar::Bas
     button(
       :dialog_res_discard,
       'pficon pficon-close fa-lg',
-      N_('Discard this new #{@sb[:node_typ].titleize}'),
+      proc do
+        _('Discard this new %{dialog_type}') % {:dialog_type => @sb[:node_typ].titleize}
+      end,
       nil,
       :url_parms => "?id=\#{@edit[:rec_id]}"),
   ])
@@ -69,7 +71,9 @@ class ApplicationHelper::Toolbar::DialogCenter < ApplicationHelper::Toolbar::Bas
     button(
       :dialog_resource_remove,
       'pficon pficon-delete fa-lg',
-      N_('Delete selected #{@sb[:txt]}'),
+      proc do
+        _('Delete selected %{dialog_resource}') % {:dialog_resource => @sb[:txt]}
+      end,
       nil,
       :url_parms => "?id=\#{@edit[:rec_id]}"),
   ])

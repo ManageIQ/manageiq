@@ -36,7 +36,9 @@ class ApplicationHelper::Toolbar::UserCenter < ApplicationHelper::Toolbar::Basic
         button(
           :rbac_user_tags_edit,
           'pficon pficon-edit fa-lg',
-          t = N_('Edit \'#{session[:customer_name]}\' Tags for this User'),
+          t = proc do
+            _('Edit \'%{customer_name}\' Tags for this User') % {:customer_name => @view_context.session[:customer_name]}
+          end,
           t),
       ]
     ),
