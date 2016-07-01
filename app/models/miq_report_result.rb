@@ -286,6 +286,31 @@ class MiqReportResult < ApplicationRecord
     result_type.to_sym == :html ? html_rows : report_results
   end
 
+  # Get the status for the MiqReportResult via two methods:
+  #
+  # * First:  try the task_status column.  This is set when queried using the
+  #   with_task_status class method
+  # * Second: fallback to using the status method, which will do a lookup on
+  #   the MiqTask if it isn't already associated with the current instance
+  def get_status
+    try(:task_status) || status
+  end
+
+  # Attempt to get the associated MiqTask status as an aliased column of
+  # task_status
+  def self.with_task_status
+    tasks_table = MiqTask.arel_table
+
+    select(
+      arel_table[Arel.star],
+      tasks_table[:status].as('task_status')
+    ).joins(
+      arel_table.join(tasks_table, Arel::Nodes::OuterJoin)
+                .on(arel_table[:miq_task_id].eq(tasks_table[:id]))
+                .join_sources
+    )
+  end
+
   def self.counts_by_userid
     where("userid NOT LIKE 'widget%'").select("userid, COUNT(id) as count").group("userid")
       .collect { |rr| {:userid => rr.userid, :count => rr.count.to_i} }
