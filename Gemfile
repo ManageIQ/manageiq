@@ -2,10 +2,10 @@
 # VMDB specific gems
 #
 
-gem "rails",                           "~> 5.0.x", :git => "git://github.com/rails/rails.git", :branch => "5-0-stable"
+gem "rails",                           "~> 5.0.0"
 gem "rails-controller-testing",        :require => false
 gem "activemodel-serializers-xml",     :require => false # required by draper: https://github.com/drapergem/draper/issues/697
-gem "activerecord-session_store",      "~>0.1.2", :require => false
+gem "activerecord-session_store",      "~>1.0.0", :require => false
 gem "websocket-driver",                "~>0.6.3"
 
 gem "config",                          "~>1.1.0", :git => "git://github.com/ManageIQ/config.git", :branch => "overwrite_arrays"
@@ -19,7 +19,7 @@ gem "manageiq-providers-amazon", :git => "git://github.com/ManageIQ/manageiq-pro
 
 # Client-side dependencies
 gem "angular-ui-bootstrap-rails",     "~>0.13.0"
-gem "codemirror-rails",               "=4.2"
+gem "codemirror-rails",                           :git => "git://github.com/NickLaMuro/codemirror-rails.git", :branch => "rails-5.0"
 gem "jquery-hotkeys-rails"
 gem "jquery-rails",                   "~>4.1.1"
 gem "jquery-rjs",                     "=0.1.1",                       :git => "git://github.com/amatsuda/jquery-rjs.git", :ref => "1288c09"
@@ -66,7 +66,7 @@ gem "secure_headers",                 "~>3.0.0"
 gem "gettext_i18n_rails",             "~>1.4.0"
 gem "gettext_i18n_rails_js",          "~>1.0.3"
 gem "fast_gettext",                   "~>1.1.0"
-gem "jbuilder",                       "~>2.3.1"
+gem "jbuilder",                       "~>2.5.0"
 gem "paperclip",                      "~>4.3.0"
 gem "rails-i18n",                     "~>5.x"
 
@@ -83,7 +83,7 @@ gem "google-api-client",              "~>0.8.6",   :require => false
 gem "fog-google",                     "~>0.3.0",   :require => false
 gem "hamlit",                         "~>2.0.0",   :require => false
 gem "inifile",                        "~>3.0",     :require => false
-gem "logging",                        "~>1.8",     :require => false  # Ziya depends on this
+gem "logging",                        "~>2.0",     :require => false  # Ziya depends on this
 gem "net_app_manageability",          ">=0.1.0",   :require => false
 gem "net-ping",                       "~>1.7.4",   :require => false
 gem "net-ssh",                        "=3.2.0",    :require => false
@@ -121,7 +121,10 @@ unless ENV['APPLIANCE']
   end
 
   group :development, :test do
-    gem "rspec-rails",      "~>3.5.x"
+    # Per the rspec README:  https://github.com/rspec/rspec-rails#installation
+    %w[rspec-core rspec-expectations rspec-mocks rspec-rails rspec-support].each do |lib|
+      gem lib, :git => "https://github.com/rspec/#{lib}.git", :branch => 'master'
+    end
     gem "parallel_tests"
     gem "good_migrations"
   end
