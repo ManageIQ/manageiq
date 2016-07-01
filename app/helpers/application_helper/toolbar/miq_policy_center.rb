@@ -17,17 +17,21 @@ class ApplicationHelper::Toolbar::MiqPolicyCenter < ApplicationHelper::Toolbar::
           :policy_copy,
           'fa fa-files-o fa-lg',
           N_('Copy this Policy to new Policy [#{truncate("Copy of #{@policy.description}", :length => 255, :omission => "")}]'),
-          N_('Copy this #{ui_lookup(:model=>@policy.towhat)} Policy'),
+          proc do
+            _('Copy this %{policy_type} Policy') % {:policy_type => ui_lookup(:model => @policy.towhat)}
+          end,
           :confirm   => N_("Are you sure you want to create Policy [\#{truncate(\"Copy of \#{@policy.description}\", :length => 255, :omission => \"\")}] from this Policy?"),
           :url_parms => "main_div"),
         button(
           :policy_delete,
           'pficon pficon-delete fa-lg',
-          t = N_('Delete this #{ui_lookup(:model=>@policy.towhat)} Policy'),
+          t = proc do
+            _('Delete this %{policy_type} Policy') % {:policy_type => ui_lookup(:model => @policy.towhat)}
+          end,
           t,
           :url_parms => "main_div",
           :klass     => ApplicationHelper::Button::ReadOnly,
-          :confirm   => N_("Are you sure you want to delete this \#{ui_lookup(:model=>@policy.towhat)} Policy?")),
+          :confirm   => proc { _("Are you sure you want to delete this %{policy_type} Policy?") % {:policy_type => ui_lookup(:model => @policy.towhat)} }),
         button(
           :condition_edit,
           'pficon pficon-add-circle-o fa-lg',

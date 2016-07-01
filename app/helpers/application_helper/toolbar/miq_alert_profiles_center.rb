@@ -9,7 +9,9 @@ class ApplicationHelper::Toolbar::MiqAlertProfilesCenter < ApplicationHelper::To
         button(
           :alert_profile_new,
           'pficon pficon-add-circle-o fa-lg',
-          t = N_('Add a New #{ui_lookup(:model=>@sb[:folder])} Alert Profile'),
+          t = proc do
+            _('Add a New %{alert_profile_type} Alert Profile') % {:alert_profile_type => ui_lookup(:model => @sb[:folder])}
+          end,
           t),
       ]
     ),
