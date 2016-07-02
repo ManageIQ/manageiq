@@ -146,17 +146,16 @@ module AssignmentMixin
       # look for alert_set running off of tags (not individual tags)
       # TODO: we may need to change taggings-related code to use base_model too
       parent_ids_by_type = parents.inject({}) { |h, p|  h[p.class.base_class.name] ||= []; h[p.class.base_class.name] << p.id; h }
-      tlist = tags.inject([]) do |arr, tag|
-        tag.taggings.each do |t|
+      tlist = tags.flat_map do |tag|
+        tag.taggings
+           .select { |t| klass = t.taggable_type ; parent_ids_by_type[klass] && parent_ids_by_type[klass].include?(t.taggable_id) }
+           .map do |t|
           # Only collect taggings for parent objects
           klass = t.taggable_type
           # right now NO support for tagged templates
           lower_klass = klass == "VmOrTemplate" ? "vm" : klass.underscore
-          if parent_ids_by_type[klass] && parent_ids_by_type[klass].include?(t.taggable_id)
-            arr << "#{lower_klass}/tag#{tag.name}"
-          end
+          "#{lower_klass}/tag#{tag.name}"
         end
-        arr
       end
       tagged_alerts = alist.select { |a| tlist.include?(a[:assigned_to]) }.map { |a| a[:assigned] }
 
