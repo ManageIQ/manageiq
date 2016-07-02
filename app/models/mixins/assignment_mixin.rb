@@ -150,12 +150,10 @@ module AssignmentMixin
         tag.taggings.each do |t|
           # Only collect taggings for parent objects
           klass = t.taggable_type
+          # right now NO support for tagged templates
+          lower_klass = klass == "VmOrTemplate" ? "vm" : klass.underscore
           if parent_ids_by_type[klass] && parent_ids_by_type[klass].include?(t.taggable_id)
-            if klass == "VmOrTemplate"       # right now NO support for tagged templates
-              arr << "vm/tag#{tag.name}"
-            else
-              arr << "#{klass.underscore}/tag#{tag.name}"
-            end
+            arr << "#{lower_klass}/tag#{tag.name}"
           end
         end
         arr
