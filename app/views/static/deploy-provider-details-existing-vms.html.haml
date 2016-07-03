@@ -2,25 +2,27 @@
   %form.form-horizontal{"ng-if" => "data.provisionOn == 'existingVms'"}
     .form-group
       %label.miq-input-label-class.miq-input-label-class-lg
-        =_("Private SSH Key")
+        = _("Private SSH Key")
       .miq-input-class
         %input#deploy-key.form-control{"ng-change" => "validateForm()", "ng-model" => "data.deploymentKey", :required => "", :type => "password"}/
       %a.miq-clear-input-button{"ng-click" => "clearDeploymentKey()"}
         %span.fa.fa-close{"aria-hidden" => "true"}
       %button{"ng-click" => "browseKeyFile()", :type => "button"}
-        =_("Browse")
+        = _("Browse")
       %div{:style => "display: none;"}
         %input#browse-key-input{:type => "file"}
-    %div{"pf-form-group" => "", "pf-input-class" => "miq-input-class", "pf-label" => _("Username"), "pf-label-class" => "miq-input-label-class miq-input-label-class-lg", :required => ""}
+    %div{"pf-form-group" => "", "pf-input-class" => "miq-input-class", "pf-label" => _("Username"),
+    "pf-label-class" => "miq-input-label-class miq-input-label-class-lg", :required => ""}
       %input#deploy-username{"ng-change" => "validateForm()", "ng-model" => "data.deploymentUsername", :required => "", :type => "text"}/
   .miq-page-text
-    =_("Add tags individually for each VM or select multiple rows and edit tags as a group.")
+    = _("Add tags individually for each VM or select multiple rows and edit tags as a group.")
   .nodes-table-container.add-nodes-table
     %div{:config => "toolbarConfig", "pf-toolbar" => ""}
       .include-actions
         %span.dropdown.primary-action{"auto-close" => "outsideClick", :dropdown => "", "is-open" => "editRolesStatus.open"}
-          %button.btn.btn-default.dropdown-toggle{"dropdown-toggle" => "", "ng-click" => "onToolbarMenuShow()", "ng-disabled" => "disableMasterNodeActions", :type => "button"}
-            =_("Edit Roles")
+          %button.btn.btn-default.dropdown-toggle{"dropdown-toggle" => "", "ng-click" => "onToolbarMenuShow()",
+          "ng-disabled" => "disableMasterNodeActions", :type => "button"}
+            = _("Edit Roles")
             %span.caret
           .dropdown-menu{:role => "menu"}
             .dropdown-container
@@ -47,24 +49,27 @@
                 %input{"ng-model" => "toolbarMenu.infrastructure", :role => "presentation", :type => "checkbox"}
                   Infrastructure
               %button.btn.btn-primary.btn-sm{"ng-click" => "updateSelectedRoles()", :type => "button"} Submit
-        %button.btn.btn-default.primary-action{"ng-click" => "removeRoles()", "ng-disabled" => "disableMasterNodeActions", :title => "Remove all roles from the selected items", :type => "button"}
-          =_("Remove Roles")
+        %button.btn.btn-default.primary-action{"ng-click" => "removeRoles()",
+        "ng-disabled" => "disableMasterNodeActions", :title => "Remove all roles from the selected items", :type => "button"}
+          = _("Remove Roles")
     .table-responsive
       %table#DataTables_Table_0.datatable.table.table-striped.table-bordered.dataTable.no-footer{"aria-describedby" => "DataTables_Table_0_info", :role => "grid"}
         %thead
           %tr{:role => "row"}
             %th.checkbox-col{:colspan => "1", :rowspan => "1", :tabindex => "0"}
-              %input{"ng-checked" => "nodeData.allFilterdNodesSelected", "ng-click" => "toggleAllFilteredNodesSelected()", "ng-disabled" => "!nodeData.filteredNodes || nodeData.filteredNodes.length < 1", :type => "checkbox"}/
+              %input{"ng-checked" => "nodeData.allFilterdNodesSelected",
+              "ng-click" => "toggleAllFilteredNodesSelected()",
+              "ng-disabled" => "!nodeData.filteredNodes || nodeData.filteredNodes.length < 1", :type => "checkbox"}/
             %th{:colspan => "1", :rowspan => "1", :tabindex => "0"}
-              =_("VM/Instance Name")
+              = _("VM/Instance Name")
             %th{:colspan => "1", :rowspan => "1", :tabindex => "0"}
-              =_("Roles")
+              = _("Roles")
             %th{:colspan => "1", :rowspan => "1", :tabindex => "0"}
-              =_("# CPUS")
+              = _("# CPUS")
             %th{:colspan => "1", :rowspan => "1", :tabindex => "0"}
-              =_("Memory")
+              = _("Memory")
             %th{:colspan => "1", :rowspan => "1", :tabindex => "0"}
-              =_("Disk Size")
+              = _("Disk Size")
         %tbody
           %tr{"ng-class" => "{odd: ($index / 2 == 0), even: ($index / 2 != 0)}", "ng-repeat" => "node in nodeData.filteredNodes track by $index"}
             %td.checkbox-col

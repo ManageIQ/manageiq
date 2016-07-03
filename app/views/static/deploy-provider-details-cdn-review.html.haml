@@ -2,7 +2,7 @@
   %form.form-horizontal
     .wizard-miq-review-item
       %span.wizard-miq-review-item-label
-        =_("CDN Channel:")
+        = _("CDN Channel:")
       %span.wizard-miq-review-item-value {{data.cdnEnabled ? "Enabled" : "Disabled"}}
     .wizard-miq-review-item{"ng-if" => "data.cdnEnabled"}
       %span.wizard-miq-review-item-label Username:

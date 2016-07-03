@@ -2,28 +2,30 @@
   %form.form-horizontal
     .form-group
       %label.miq-input-label-class.miq-input-label-class-lg
-        =_("Private SSH Key")
+        = _("Private SSH Key")
       .miq-input-class
         %input#deploy-key.form-control{"ng-change" => "validateForm()", "ng-model" => "data.deploymentKey", :required => "", :type => "password"}/
       %a.miq-clear-input-button{"ng-click" => "clearDeploymentKey()"}
         %span.fa.fa-close{"aria-hidden" => "true"}
       %button{"ng-click" => "browseKeyFile()", :type => "button"}
-        =_("Browse")
+        = _("Browse")
       %div{:style => "display: none;"}
         %input#browse-key-input{:type => "file"}
-    %div{"pf-form-group" => "", "pf-input-class" => "miq-input-class", "pf-label" => _("Username"), "pf-label-class" => "miq-input-label-class miq-input-label-class-lg", :required => ""}
+    %div{"pf-form-group" => "", "pf-input-class" => "miq-input-class", "pf-label" => _("Username"),
+    "pf-label-class" => "miq-input-label-class miq-input-label-class-lg", :required => ""}
       %input#deploy-username{"ng-change" => "validateForm()", "ng-model" => "data.deploymentUsername", :required => "", :type => "text"}/
   .miq-page-text
-    =_("Add tags individually for each VM or select multiple rows and edit tags as a group.")
+    = _("Add tags individually for each VM or select multiple rows and edit tags as a group.")
   .nodes-table-container.add-nodes-table
     %div{:config => "toolbarConfig", "pf-toolbar" => ""}
       .include-actions
         %button.btn.btn-default.primary-action.btn-left{"ng-click" => "addVM()", :title => "Add a VM/Instance", :type => "button"}
           %span.fa.fa-plus
-            =_("Add VM")
+            = _("Add VM")
         %span.dropdown.primary-action{"auto-close" => "outsideClick", :dropdown => "", "is-open" => "editRolesStatus.open"}
-          %button.btn.btn-default.dropdown-toggle{"dropdown-toggle" => "", "ng-click" => "onToolbarMenuShow()", "ng-disabled" => "disableMasterNodeActions", :type => "button"}
-            =_("Edit Roles")
+          %button.btn.btn-default.dropdown-toggle{"dropdown-toggle" => "", "ng-click" => "onToolbarMenuShow()",
+          "ng-disabled" => "disableMasterNodeActions", :type => "button"}
+            = _("Edit Roles")
             %span.caret
           .dropdown-menu{:role => "menu"}
             .dropdown-container
@@ -55,11 +57,12 @@
         %thead
           %tr{:role => "row"}
             %th.checkbox-col{:colspan => "1", :rowspan => "1", :tabindex => "0"}
-              %input{"ng-checked" => "nodeData.allNodesSelected", "ng-click" => "toggleAllNodesSelected()", "ng-disabled" => "!nodeData.allNodes || nodeData.allNodes.length < 1", :type => "checkbox"}/
+              %input{"ng-checked" => "nodeData.allNodesSelected", "ng-click" => "toggleAllNodesSelected()",
+              "ng-disabled" => "!nodeData.allNodes || nodeData.allNodes.length < 1", :type => "checkbox"}/
             %th{:colspan => "1", :rowspan => "1", :tabindex => "0"}
-              =_("VM/Instance Name")
+              = _("VM/Instance Name")
             %th{:colspan => "1", :rowspan => "1", :tabindex => "0"}
-              =_("Roles")
+              = _("Roles")
         %tbody
           %tr{"ng-class" => "{odd: ($index / 2 == 0), even: ($index / 2 != 0)}", "ng-repeat" => "node in nodeData.allNodes track by $index"}
             %td.checkbox-col
@@ -125,19 +128,21 @@
     .wizard-miq.miq-add-host-dialog{"miq-modal" => "", "modal-title" => _("Add Host"), "on-cancel" => "cancelAddDialog()", :visible => "showAddDialog"}
       .miq-add-dialog-content
         .miq-page-text
-          =_("Enter a name or IP address")
+          = _("Enter a name or IP address")
         %form.form-horizontal
-          %div{"pf-form-group" => "", "pf-input-class" => "miq-input-class", "pf-label" => _("Private Host Name"), "pf-label-class" => "miq-input-label-class miq-input-label-class-lg", :required => ""}
+          %div{"pf-form-group" => "", "pf-input-class" => "miq-input-class", "pf-label" => _("Private Host Name"),
+          "pf-label-class" => "miq-input-label-class miq-input-label-class-lg", :required => ""}
             %input#add-private-name{"ng-change" => "updateNewVMName()", "ng-model" => "newHost.vmName", :required => "", :type => "text"}/
-          %div{"pf-form-group" => "", "pf-input-class" => "miq-input-class", "pf-label" => _("Public Host Name"), "pf-label-class" => "miq-input-label-class miq-input-label-class-lg", :required => ""}
+          %div{"pf-form-group" => "", "pf-input-class" => "miq-input-class", "pf-label" => _("Public Host Name"),
+          "pf-label-class" => "miq-input-label-class miq-input-label-class-lg", :required => ""}
             %input#add-public-name{"ng-change" => "updateNewVMPublicName()", "ng-model" => "newHost.publicName", :type => "text"}/
         .miq-page-text
-          =_("Specify role(s) for this host")
+          = _("Specify role(s) for this host")
         .container-fluid
           .row
             .col-sm-6
               %a.btn-link{"ng-click" => "newVmSelectAll()"}
-                =_("Select All")
+                = _("Select All")
             .col-sm-6
               %label.checkbox-inline
                 %input{"ng-model" => "newHost.loadBalancer", :role => "presentation", :type => "checkbox"}
@@ -171,4 +176,5 @@
                   Infrastructure
       .modal-footer
         %button.btn.btn-default{"ng-click" => "cancelAddDialog()", :type => "button"} Cancel
-        %button.btn.btn-primary{"ng-class" => "{disabled: !newHost.vmName || newHost.vmName.length === 0} ", "ng-click" => "saveAddDialog()", :type => "button"} Add
+        %button.btn.btn-primary{"ng-class" => "{disabled: !newHost.vmName || newHost.vmName.length === 0} ",
+        "ng-click" => "saveAddDialog()", :type => "button"} Add

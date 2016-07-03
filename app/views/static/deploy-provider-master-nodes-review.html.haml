@@ -2,10 +2,10 @@
   %form.form
     .wizard-miq-review-item{"ng-if" => "data.provisionOn == 'noProvider'"}
       %span.wizard-miq-review-item-label
-        =_("Key:")
+        = _("Key:")
       %span.wizard-miq-review-item-value ******
     .wizard-miq-review-item{"ng-if" => "data.provisionOn == 'noProvider'"}
       %span.wizard-miq-review-item-label
-        =_("Username:")
+        = _("Username:")
       %span.wizard-miq-review-item-value {{data.deploymentUsername}}
     %div{"ng-include" => "'/static/deploy-provider-master-nodes-review-tables.html.haml'"}
