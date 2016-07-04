@@ -1,7 +1,7 @@
 class ChargebackRate < ApplicationRecord
   include UuidMixin
 
-  ASSIGNMENT_PARENT_ASSOCIATIONS = [:host, :ems_cluster, :storage, :ext_management_system, :my_enterprise]
+  ASSIGNMENT_PARENT_ASSOCIATIONS = %i(host ems_cluster storage ext_management_system my_enterprise).freeze
 
   ################################################################################
   # NOTE:                                                                        #
@@ -23,7 +23,7 @@ class ChargebackRate < ApplicationRecord
   validates_uniqueness_of   :guid
   validates_uniqueness_of   :description, :scope => :rate_type
 
-  VALID_CB_RATE_TYPES = ["Compute", "Storage"]
+  VALID_CB_RATE_TYPES = %w(Compute Storage).freeze
 
   def self.validate_rate_type(type)
     unless VALID_CB_RATE_TYPES.include?(type.to_s.capitalize)
