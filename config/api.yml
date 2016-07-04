@@ -131,6 +131,7 @@
     :klass: ChargebackRate
     :subcollections:
     - :rates
+    - :tags
     :collection_actions:
       :get:
       - :name: read
@@ -154,6 +155,15 @@
       :delete:
       - :name: delete
         :identifier: chargeback_rates_delete
+    :tags_subcollection_actions:
+      :get:
+      - :name: read_tags
+        :identifier: chargeback
+      :post:
+      - :name: assign
+        :identifier: chargeback_rates_edit
+      - :name: unassign
+        :identifier: chargeback_rates_edit
   :container_deployments:
     :description: Container Provider Deployment
     :identifier: container_deployment
