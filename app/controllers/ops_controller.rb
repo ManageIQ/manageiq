@@ -496,8 +496,8 @@ class OpsController < ApplicationController
     handle_bottom_cell(nodetype, presenter, r, locals)
     x_active_tree_replace_cell(nodetype, presenter, r)
     extra_js_commands(presenter)
-    # Render the JS responses to update the explorer screen
-    render :js => presenter.to_html
+
+    render :json => presenter.to_json
   end
 
   def x_active_tree_replace_cell(nodetype, presenter, r)

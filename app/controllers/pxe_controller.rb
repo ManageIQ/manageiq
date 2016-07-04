@@ -259,8 +259,8 @@ class PxeController < ApplicationController
     # Save open nodes, if any were added
     presenter[:osf_node] = x_node
     presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
-    # Render the JS responses to update the explorer screen
-    render :js => presenter.to_html
+
+    render :json => presenter.to_json
   end
 
   def get_session_data

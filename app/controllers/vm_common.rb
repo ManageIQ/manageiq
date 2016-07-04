@@ -1491,8 +1491,8 @@ module VmCommon
     presenter.hide(:blocker_div) unless @edit && @edit[:adv_search_open]
     presenter[:hide_modal] = true
     presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
-    # Render the JS responses to update the explorer screen
-    render :js => presenter.to_html
+
+    render :json => presenter.to_json
   end
 
   # get the host that this vm belongs to

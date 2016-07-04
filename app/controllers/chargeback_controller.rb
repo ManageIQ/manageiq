@@ -875,7 +875,8 @@ class ChargebackController < ApplicationController
     unless x_active_tree == :cb_assignments_tree
       presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
     end
-    render :js => presenter.to_html
+
+    render :json => presenter.to_json
   end
 
   def get_session_data

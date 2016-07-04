@@ -1986,7 +1986,7 @@ class CatalogController < ApplicationController
     presenter.reset_changes
     presenter.reset_one_trans
 
-    render :js => presenter.to_html
+    render :json => presenter.to_json
   end
 
   # Build a Catalog Items explorer tree
