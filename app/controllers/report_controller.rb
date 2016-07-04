@@ -883,8 +883,7 @@ class ReportController < ApplicationController
       end
     end
 
-    # Render the JS responses to update the explorer screen
-    render :js => presenter.to_html
+    render :json => presenter.to_json
   end
 
   def get_session_data

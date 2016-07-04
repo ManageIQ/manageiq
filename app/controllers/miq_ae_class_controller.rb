@@ -375,8 +375,7 @@ class MiqAeClassController < ApplicationController
     presenter[:osf_node] = x_node
     presenter.show_miq_buttons if @changed
 
-    # Render the JS responses to update the explorer screen
-    render :js => presenter.to_html
+    render :json => presenter.to_json
   end
 
   def build_type_options

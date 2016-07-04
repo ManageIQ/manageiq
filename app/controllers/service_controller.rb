@@ -369,8 +369,7 @@ class ServiceController < ApplicationController
     # unset variable that was set in form_field_changed to prompt for changes when leaving the screen
     presenter.reset_changes
 
-    # Render the JS responses to update the explorer screen
-    render :js => presenter.to_html
+    render :json => presenter.to_json
   end
 
   # Build a Services explorer tree
