@@ -83,7 +83,7 @@
           - opts = (@edit[@expkey][:val1][:type] == :datetime ? FROM_HOURS : [])
           - opts += FROM_DAYS + FROM_WEEKS + FROM_MONTHS + FROM_QUARTERS + FROM_YEARS
           = select_tag('chosen_from_1',
-            options_for_select(HASH[opts.map {|x| [_(x), x]}], @edit[@expkey][:exp_value][0]),
+            options_for_select(Hash[opts.map {|x| [_(x), x]}], @edit[@expkey][:exp_value][0]),
             :multiple              => false,
             "data-miq_sparkle_on"  => true,
             "data-miq_sparkle_off" => true,
