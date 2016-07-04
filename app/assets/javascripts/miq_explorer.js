@@ -1,7 +1,7 @@
 ManageIQ.explorer = {}
 
 ManageIQ.explorer.updateElement = function(element, options) {
-  if ( _.isString(options.legend) ) 
+  if ( _.isString(options.legend) )
     $('#' + element).html(options.legend);
   else if ( _.isString(options.title) )
     $('#' + element).attr( {'title': options.title});
@@ -20,6 +20,13 @@ ManageIQ.explorer.buildCalendar = function(options) {
 ManageIQ.explorer.lock_tree = function(tree, lock) {
   $('#' + tree + 'box').dynatree(lock ? 'disable' : 'enable');
   miqDimDiv('#' + tree + '_div', lock);
+}
+
+ManageIQ.exlorer.clear_search_show_or_hide(show) {
+  if ( show )
+    $('#clear_search').show();
+  else
+    $('#clear_search').hide();
 }
 
 ManageIQ.explorer.process = function(data) {
@@ -112,7 +119,7 @@ ManageIQ.explorer.process = function(data) {
   if ( _.isString(data.rightCellText) )
     $('h1#explorer_title > span#explorer_title_text').
       html(data.rightCellText);
-  
+
   if ( _.isObject(data.reloadToolbars) ) {
     _.forEach(data.replacePartials, function (content, element) {
       $('#' + element).html(content);
@@ -146,12 +153,8 @@ ManageIQ.explorer.process = function(data) {
     if ( element.length ) element.focus();
   }
 
-  // FIXME: change 'clear_search_show_or_hide' to bool
-  if ( _.isString(data.clearSearch) )
-    if ( 'show' == data.clearSearch )
-      $('#clear_search').show();
-    else
-      $('#clear_search').hide();
+  if ( !_.isUndefined(data.clearSearch) )
+    ManageIQ.explorer.clear_search_show_or_hide('show' == data.clearSearch);
 
   miqInitMainContent();
 

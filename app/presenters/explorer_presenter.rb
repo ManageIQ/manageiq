@@ -187,7 +187,6 @@ class ExplorerPresenter
     data[:oneTransIE] = !!@options[:one_trans_ie]
     data[:focus] = @options[:focus]
 
-    # FIXME: change to bool + nil
     data[:clearSearch] = @options[:clear_search_show_or_hide] if @options[:clear_search_show_or_hide]
 
     data[:hideModal] if @options[:hide_modal]
