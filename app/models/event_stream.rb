@@ -18,4 +18,8 @@ class EventStream < ApplicationRecord
   belongs_to :dest_host,           :class_name => "Host"
 
   belongs_to :service
+
+  belongs_to :container_replicator
+  belongs_to :container_group
+  belongs_to :container_node
 end
