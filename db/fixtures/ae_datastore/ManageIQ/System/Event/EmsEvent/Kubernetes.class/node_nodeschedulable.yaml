@@ -10,3 +10,5 @@ object:
   fields:
   - rel4:
       value: "/System/event_handlers/event_action_refresh?target=ems"
+  - rel5:
+      value: "/System/event_handlers/event_action_policy?target=container_node&policy_event=containernode_nodeschedulable&param="
