@@ -1,5 +1,4 @@
 class ExplorerPresenter
-  # FIXME: temporary solution, until we clean up more...
   include ApplicationHelper
   include JsHelper
   include ActionView::Helpers::JavaScriptHelper
@@ -7,8 +6,6 @@ class ExplorerPresenter
   include ToolbarHelper
   include ActionView::Helpers::TagHelper
   include ActionView::Context
-
-  attr_reader :options
 
   # Returns hash for ManageIQ.explorer that contains data needed to replace the
   # contents of an explorer view as directed by the (server side) controller.
