@@ -32,7 +32,6 @@ class ExplorerPresenter
   #   osf_node                         -- node to open, select and focus
   #   open_accord                      -- accordion to open
   #
-  #   object_tree_json            --
   #   exp                         --
   #
   #   active_tree                 -- x_active_tree view state from controller
@@ -54,7 +53,6 @@ class ExplorerPresenter
       :element_updates      => {},
       :replace_partials     => {},
       :reload_toolbars      => {},
-      :object_tree_json     => '',
       :exp                  => {},
       :osf_node             => '',
       :show_miq_buttons     => false,

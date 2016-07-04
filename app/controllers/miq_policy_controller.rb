@@ -552,10 +552,6 @@ class MiqPolicyController < ApplicationController
         self.x_node = @new_action_node if @new_action_node
       when :alert_profile
         self.x_node = @new_alert_profile_node if @new_alert_profile_node
-        # Send down extra alert_profile tree if present
-        if @assign && @assign[:object_tree]
-          presenter[:object_tree_json] = @assign[:object_tree]
-        end
       when :alert
         self.x_node = @new_alert_node if @new_alert_node
       else
