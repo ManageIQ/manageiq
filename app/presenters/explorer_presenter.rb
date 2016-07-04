@@ -25,9 +25,9 @@ class ExplorerPresenter
   #   clear_gtl_list_grid              -- Clear ManageIQ.grids.gtl_list_grid
   #   right_cell_text
   #
-  #   ManageIQ.record.recordId         -- record being displayed or edited
-  #   ManageIQ.record.parentId         -- it's parent
-  #   ManageIQ.record.parentClass      -- and it's (parent's) class
+  #   :record_id    sets ManageIQ.record.recordId     -- record being displayed or edited
+  #   :parent_id    sets ManageIQ.record.parentId     -- it's parent
+  #   :parent_class sets ManageIQ.record.parentClass  -- and it's (parent's) class
   #
   #   osf_node                         -- node to open, select and focus
   #   open_accord                      -- accordion to open
@@ -38,7 +38,8 @@ class ExplorerPresenter
   #   lock_unlock_trees         -- trees to lock/unlock
   #   update_partials           -- partials to update contents
   #   replace_partials          -- partials to replace (also wrapping tag)
-  #   element_updates           -- do we need all 3 of the above?
+  #   element_updates           -- update DOM element content or title FIXME: content can be
+  #                                replaced with update_partials
   #   set_visible_elements      -- elements to cal 'set_visible' on
   #   reload_toolbars           -- toolbars to reload and their content
   #
