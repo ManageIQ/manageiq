@@ -45,6 +45,7 @@ if (! window.ManageIQ) {
       c3: {}, // C3 charts by id
       c3config: null, // C3 chart configuration
     },
+    explorer: {}, // methods to manipulate explorer screens through ExplorerPresenter
     grids: {}, // stored grids on the screen
     i18n: {
       mark_translated_strings: false,
