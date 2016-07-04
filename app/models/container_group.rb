@@ -1,5 +1,6 @@
 class ContainerGroup < ApplicationRecord
   include CustomAttributeMixin
+  include MiqPolicyMixin
   include NewWithTypeStiMixin
 
   # :name, :uid, :creation_timestamp, :resource_version, :namespace
@@ -65,6 +66,14 @@ class ContainerGroup < ApplicationRecord
     when :policy_events
       # TODO: implement policy events and its relationship
       ["#{events_table_name(assoc)}.ems_id = ?", ems_id]
+    end
+  end
+
+  def tenant_identity
+    if ext_management_system
+      ext_management_system.tenant_identity
+    else
+      User.super_admin.tap { |u| u.current_group = Tenant.root_tenant.default_miq_group }
     end
   end
 
