@@ -10,31 +10,32 @@ class ExplorerPresenter
 
   attr_reader :options
 
-  # Renders JS to replace the contents of an explorer view as directed by the controller
+  # Returns hash for ManageIQ.explorer that contains data needed to replace the
+  # contents of an explorer view as directed by the (server side) controller.
 
   # This presenter supports these options:
-  #   FIXME: fill in missing doc
   #
   #   add_nodes                        -- JSON string of nodes to add to the active tree
   #   delete_node                      -- key of node to be deleted from the active tree
   #   build_calendar                   -- call miqBuildCalendar, true/false or Hash (:date_from, :date_to, :skip_days)
-  #   init_dashboard
+  #
+  #   init_dashboard                   -- call miqInitDashboardCols
+  #   miq_widget_dd_url                -- url to be used in url in miqDropComplete method
+  #                                       (ManageIQ.widget.dashboardUrl)
+  #
   #   init_accords                     -- initialize accordion autoresize
   #   ajax_action                      -- Hash of options for AJAX action to fire
   #   clear_gtl_list_grid              -- Clear ManageIQ.grids.gtl_list_grid
   #   right_cell_text
   #
   #   ManageIQ.record.recordId         -- record being displayed or edited
-  #   ManageIQ.record.parentId
-  #   ManageIQ.record.parentClass
+  #   ManageIQ.record.parentId         -- it's parent
+  #   ManageIQ.record.parentClass      -- and it's (parent's) class
   #
-  #   ManageIQ.widget.dashboardUrl     -- set dashboard widget drag drop url
   #   osf_node                         -- node to open, select and focus
   #   open_accord                      -- accordion to open
-  #
-  #   exp                         --
-  #
-  #   active_tree                 -- x_active_tree view state from controller
+  #   exp                              -- data for the expression editor
+  #   active_tree                      -- x_active_tree view state from controller
   #
   # Following options are hashes:
   #   lock_unlock_trees         -- trees to lock/unlock
@@ -42,7 +43,7 @@ class ExplorerPresenter
   #   replace_partials          -- partials to replace (also wrapping tag)
   #   element_updates           -- do we need all 3 of the above?
   #   set_visible_elements      -- elements to cal 'set_visible' on
-  #   reload_toolbars
+  #   reload_toolbars           -- toolbars to reload and their content
   #
 
   def initialize(options = {})
