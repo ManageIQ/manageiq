@@ -123,6 +123,19 @@ describe ChargebackContainerProject do
       expect(subject.net_io_used_metric).to eq(@net_usage_rate * @metric_size)
       expect(subject.net_io_used_cost).to eq(@net_usage_rate * @hourly_rate * @metric_size)
     end
+
+    let(:cbt) { FactoryGirl.create(:chargeback_tier,
+                                   :start                     => 0,
+                                   :finish                    => Float::INFINITY,
+                                   :fixed_rate                => 0.0,
+                                   :variable_rate             => @hourly_rate.to_s) }
+    let!(:cbrd) {FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
+                                   :chargeback_rate_id => @cbr.id,
+                                   :per_time           => "hourly",
+                                   :chargeback_tiers   => [cbt]) }
+    it "fixed_compute" do
+      expect(subject.fixed_compute_1_cost).to eq(@hourly_rate * @metric_size)
+    end
   end
 
   context "Monthly" do
@@ -209,6 +222,20 @@ describe ChargebackContainerProject do
       cbrd.save
       expect(subject.net_io_used_metric).to eq(@net_usage_rate * @metric_size)
       expect(subject.net_io_used_cost).to eq(@net_usage_rate * @hourly_rate * @metric_size)
+    end
+
+    let(:cbt) { FactoryGirl.create(:chargeback_tier,
+                                   :start                     => 0,
+                                   :finish                    => Float::INFINITY,
+                                   :fixed_rate                => 0.0,
+                                   :variable_rate             => @hourly_rate.to_s) }
+    let!(:cbrd) {FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
+                                    :chargeback_rate_id => @cbr.id,
+                                    :per_time           => "hourly",
+                                    :chargeback_tiers   => [cbt]) }
+    it "fixed_compute" do
+      # .to be_within(0.01) is used since theres a float error here
+      expect(subject.fixed_compute_1_cost).to be_within(0.01).of(@hourly_rate * @metric_size)
     end
   end
 end
