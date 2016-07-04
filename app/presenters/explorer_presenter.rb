@@ -151,11 +151,6 @@ class ExplorerPresenter
     } if @options[:delete_node]
 
     data[:dashboardUrl] = @options[:miq_widget_dd_url] if @options[:miq_widget_dd_url]
-
-    # FIXME: remove show_clear_search
-    # # Always set 'def' view in left cell as active in case it was changed to show compare/drift sections
-    # @out << "var show_clear_search = undefined;"
-
     data[:updatePartials] = @options[:update_partials] # Update elements in the DOM with rendered partials
     data[:updateElements] = @options[:element_updates] # Update element in the DOM with given options
     data[:replacePartials] = @options[:replace_partials] # Replace elements in the DOM with rendered partials
