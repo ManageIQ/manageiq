@@ -134,7 +134,7 @@ ManageIQ.explorer.process = function(data) {
   }
 
   if ( _.isObject(data.reloadToolbars) ) {
-    _.forEach(data.replacePartials, function (content, element) {
+    _.forEach(data.reloadToolbars, function (content, element) {
       $('#' + element).html(content);
     });
     miqInitToolbars();
