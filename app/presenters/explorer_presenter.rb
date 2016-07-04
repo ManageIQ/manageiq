@@ -166,9 +166,9 @@ class ExplorerPresenter
     end
 
     data[:record] = {
-      :parentId    => @options[:parentId],
-      :parentClass => @options[:parentClass],
-      :recordId    => @options[:parentId],
+      :parentId    => @options[:parent_id],
+      :parentClass => @options[:parent_class],
+      :recordId    => @options[:record_id],
     }
 
     unless @options[:osf_node].blank?
