@@ -117,8 +117,11 @@ module QuadiconHelper
         content_tag(:a, truncate_for_quad(row['v_qualified_desc']),
                     :href => url_for_db("ems_cluster", "show"), :title => h(row['v_qualified_desc']))
       elsif db == "StorageManager"
-        content_tag(:a, truncate_for_quad(row['name']),
-                    :href => url_for_db("storage_manager", "show"), :title => h(row['name']))
+        link_to(truncate_for_quad(row['name']),
+                url_for_db("storage_manager", "show"), :title => h(row['name']))
+      elsif db == "FloatingIp"
+        link_to(truncate_for_quad(item.address),
+                url_for_db(db, "show"), :title => h(item.address))
       else
         if @explorer
           column = case db
