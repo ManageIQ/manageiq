@@ -6,11 +6,11 @@ source 'https://rubygems.org'
 gem "bundler",       ">= 1.8.4"
 gem "rake",          "~>10.1"
 
-gem "activesupport",           "~> 5.0.0.rc2"
-gem "actionpack",              "~> 5.0.0.rc2"
+gem "activesupport",           "~> 5.0.0"
+gem "actionpack",              "~> 5.0.0"
 
 # ActiveRecord is used by appliance_console
-gem "activerecord",            "~> 5.0.0.rc2"
+gem "activerecord",            "~> 5.0.0"
 
 # Not locally modified and not required
 gem "addressable",             "~> 2.4",            :require => false
