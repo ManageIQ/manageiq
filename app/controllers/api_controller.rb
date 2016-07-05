@@ -161,15 +161,14 @@ class ApiController < ApplicationController
   end
 
   def redirect_api_request(method)
-    collection    = @req.collection || "entrypoint"
-    target_method = "#{method}_#{collection}"
+    target_method = "#{method}_#{@req.collection || "entrypoint"}"
     if respond_to?(target_method)
       send(target_method)
       return true
     end
     target_method = "#{method}_generic"
     if respond_to?(target_method)
-      send(target_method, collection.to_sym)
+      send(target_method)
       return true
     end
     false

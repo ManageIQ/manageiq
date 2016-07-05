@@ -4,30 +4,30 @@ class ApiController
     # Primary Methods
     #
 
-    def show_generic(type)
+    def show_generic
       validate_api_action
       if @req.subcollection
         render_collection_type @req.subcollection.to_sym, @req.s_id, true
       else
-        render_collection_type type, @req.c_id
+        render_collection_type @req.collection.to_sym, @req.c_id
       end
     end
 
-    def update_generic(type)
+    def update_generic
       validate_api_action
       if @req.subcollection
-        render_normal_update type, update_collection(@req.subcollection.to_sym, @req.s_id, true)
+        render_normal_update @req.collection.to_sym, update_collection(@req.subcollection.to_sym, @req.s_id, true)
       else
-        render_normal_update type, update_collection(type, @req.c_id)
+        render_normal_update @req.collection.to_sym, update_collection(@req.collection.to_sym, @req.c_id)
       end
     end
 
-    def destroy_generic(type)
+    def destroy_generic
       validate_api_action
       if @req.subcollection
         delete_subcollection_resource @req.subcollection.to_sym, @req.s_id
       else
-        send(target_resource_method(false, type, :delete), type, @req.c_id)
+        send(target_resource_method(false, @req.collection.to_sym, :delete), @req.collection.to_sym, @req.c_id)
       end
       render_normal_destroy
     end
