@@ -19,7 +19,7 @@ describe MiddlewareTopologyService do
     let(:middleware_server) do
       FactoryGirl.create(:hawkular_middleware_server,
                          :name                  => 'Local',
-                         :feed                  => 'cda13e2a-e206-4e87-8bca-8cfdd5aea484',
+                         :feed                  => '70c798a0-6985-4f8a-a525-012d8d28e8a3',
                          :ems_ref               => long_id_0,
                          :nativeid              => 'Local~~',
                          :ext_management_system => ems_hawkular)
