@@ -34,6 +34,11 @@ class Authentication < ApplicationRecord
     "invalid"     => 3,
   ).freeze
 
+  # To address problem with url resolution when displayed as a quadicon
+  def self.db_name
+    "auth_key_pair_cloud"
+  end
+
   def status_severity
     STATUS_SEVERITY[status.to_s.downcase]
   end
