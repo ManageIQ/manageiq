@@ -151,8 +151,8 @@ describe ReportController do
       end
 
       def row_count_html(row_count_value)
-        "<label class=\\'control-label col-md-2\\'>Row Count<\\/label>\\n" \
-        "<div class=\\'col-md-10\\'>\\n<p class=\\'form-control-static\\'>#{row_count_value}<\\/p>\\n<\\/div>"
+        "<label class='control-label col-md-2'>Row Count</label>\n" \
+        "<div class='col-md-10'>\n<p class='form-control-static'>#{row_count_value}</p>\n</div>"
       end
 
       it "renders show of Dashboard Widget in Widgets tree with default row_count value" do
@@ -160,7 +160,9 @@ describe ReportController do
 
         expect(response).to render_template('report/_widget_show')
         expect(response.status).to eq(200)
-        expect(response.body).to include(row_count_html(default_row_count_value))
+
+        main_content = JSON.parse(response.body)['updatePartials']['main_div']
+        expect(main_content).to include(row_count_html(default_row_count_value))
       end
 
       it "renders show of Dashboard Widget in Widgets tree with row_count value from widget" do
@@ -168,7 +170,9 @@ describe ReportController do
 
         expect(response).to render_template('report/_widget_show')
         expect(response.status).to eq(200)
-        expect(response.body).to include(row_count_html(other_row_count_value))
+
+        main_content = JSON.parse(response.body)['updatePartials']['main_div']
+        expect(main_content).to include(row_count_html(other_row_count_value))
       end
     end
 

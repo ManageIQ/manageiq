@@ -157,8 +157,10 @@ describe StorageController do
         allow(Classification).to receive(:find_assigned_entries).and_return([@tag1, @tag2])
         post :x_button, :params => {:miq_grid_checks => to_cid(datastore.id), :pressed => "storage_tag", :format => :js}
         expect(response.status).to eq(200)
-        expect(response.body).to include('<h3>\n1 Datastore Being Tagged\n<\/h3>')
-        expect(response.body).to include("Name: #{datastore.name} | Datastores Type: ")
+
+        main_content = JSON.parse(response.body)['updatePartials']['main_div']
+        expect(main_content).to include("<h3>\n1 Datastore Being Tagged\n<\/h3>")
+        expect(main_content).to include("Name: #{datastore.name} | Datastores Type: ")
       end
 
       it 'can Perform a datastore Smart State Analysis from the datastore summary page' do
