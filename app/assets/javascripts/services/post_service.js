@@ -1,4 +1,4 @@
-ManageIQ.angular.app.service('postService', function(miqService, $timeout, $window) {
+ManageIQ.angular.app.service('postService', ['miqService', '$timeout', '$window', function(miqService, $timeout, $window) {
 
   this.saveRecord = function(apiURL, redirectURL, object, successMsg, newRecord) {
     miqService.sparkleOn();
@@ -33,4 +33,4 @@ ManageIQ.angular.app.service('postService', function(miqService, $timeout, $wind
       miqService.miqFlash("success", msg);
     });
   };
-});
+}]);

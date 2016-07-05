@@ -45,7 +45,6 @@
 
     - id = %w(configuration policy).include?(@layout) ? @config_tab : @layout
     - body = {:id               => id,
-              :onresize         => "miqOnResize();",
               :onload           => is_browser_ie? ? '' : 'miqOnLoad();',
               'data-controller' => controller_name}
     - body['ng-app'] = "ManageIQ" if controller.send(:angular_app?) && @in_a_form
