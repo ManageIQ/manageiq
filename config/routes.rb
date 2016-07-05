@@ -2643,35 +2643,26 @@ Vmdb::Application.routes.draw do
     "api##{API_ACTIONS[verb]}"
   end
 
+  def create_api_route(verb, url, action)
+    public_send(verb, url, :to => action, :format => "json", :version => API_VERSION_REGEX)
+  end
+
   Api::Settings.collections.each do |collection_name, collection|
     collection.verbs.each do |verb|
       if collection.options.include?(:primary)
-        public_send(
-          verb,
-          "/api(/:version)/#{collection_name}" => action_for(verb),
-          :format => "json",
-          :version => API_VERSION_REGEX
-        )
+        create_api_route(verb, "/api(/:version)/#{collection_name}", action_for(verb))
       end
 
       if collection.options.include?(:collection)
-        public_send(
-          verb,
-          "/api(/:version)/#{collection_name}(/:c_id)" => action_for(verb),
-          :format => "json",
-          :version => API_VERSION_REGEX
-        )
+        create_api_route(verb, "/api(/:version)/#{collection_name}(/:c_id)", action_for(verb))
       end
     end
 
     Array(collection.subcollections).each do |subcollection_name|
       Api::Settings.collections[subcollection_name].verbs.each do |verb|
-        public_send(
-          verb,
-          "/api(/:version)/#{collection_name}/:c_id/#{subcollection_name}(/:s_id)" => action_for(verb),
-          :format => "json",
-          :version => API_VERSION_REGEX
-        )
+        create_api_route(verb,
+                         "/api(/:version)/#{collection_name}/:c_id/#{subcollection_name}(/:s_id)",
+                         action_for(verb))
       end
     end
   end
