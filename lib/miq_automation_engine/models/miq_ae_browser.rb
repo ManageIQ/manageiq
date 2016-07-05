@@ -5,7 +5,10 @@ class MiqAeBrowser
 
   # Searches directory ala LDAP style
   #   Starting point of searches using fqname  (dn)
-  #   Supporing scope base, one and sub
+  #   Supporing scopes base - return object itself
+  #                    one  - return object and its first level children
+  #                    sub  - return object and tree below it
+  #
   # Returns array of objects
   #
   # Supporting options:
@@ -56,37 +59,37 @@ class MiqAeBrowser
         raise "Invalid Automate object path #{object_ref} specified to search" if object.blank?
       end
     end
-    options[:serialize] ? _search_serialize(object, options) : _search(object, options)
+    options[:serialize] ? search_ae_model_serialize(object, options) : search_ae_model(object, options)
   end
 
   private
 
-  def _search_serialize(object = nil, options = {})
-    _search(object, options).collect { |obj| serialize(obj) }
+  def search_ae_model_serialize(object = nil, options = {})
+    search_ae_model(object, options).collect { |obj| serialize(obj) }
   end
 
-  def _search(object = nil, options = {})
+  def search_ae_model(object = nil, options = {})
     validate_options(options)
     if object
-      _search_object(object, options)
+      search_object(object, options)
     else
-      _search_domains(options)
+      search_domains(options)
     end.flatten
   end
 
-  def _search_object(object, options)
+  def search_object(object, options)
     case options[:scope]
     when SCOPE_BASE then Array(object)
     when SCOPE_ONE  then Array(object) + children(object, options)
-    else Array(object) + children(object, options).collect { |child| _search(child, options) }
+    else Array(object) + children(object, options).collect { |child| search_ae_model(child, options) }
     end
   end
 
-  def _search_domains(options)
+  def search_domains(options)
     case options[:scope]
     when SCOPE_BASE then []
     when SCOPE_ONE  then Array(domains(options))
-    else domains(options).collect { |domain| _search(domain, options) }
+    else domains(options).collect { |domain| search_ae_model(domain, options) }
     end
   end
 
