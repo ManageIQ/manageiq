@@ -2,7 +2,7 @@
 # VMDB specific gems
 #
 
-gem "rails",                           "=5.0.0.rc2"
+gem "rails",                           "~>5.0.0"
 gem "rails-controller-testing",        :require => false
 gem "activemodel-serializers-xml",     :require => false # required by draper: https://github.com/drapergem/draper/issues/697
 gem "activerecord-session_store",      "~>1.0.0"
@@ -19,7 +19,7 @@ end
 
 # Client-side dependencies
 gem "angular-ui-bootstrap-rails",     "~>0.13.0"
-gem "codemirror-rails",               "=4.2"
+gem "codemirror-rails",               "~>5.11.1"
 gem "jquery-hotkeys-rails"
 gem "jquery-rails",                   "~>4.1.1"
 gem "jquery-rjs",                     "=0.1.1",                       :git => "git://github.com/amatsuda/jquery-rjs.git", :ref => "1288c09"
@@ -66,7 +66,7 @@ gem "secure_headers",                 "~>3.0.0"
 gem "gettext_i18n_rails",             "~>1.4.0"
 gem "gettext_i18n_rails_js",          "~>1.0.3"
 gem "fast_gettext",                   "~>1.1.0"
-gem "jbuilder",                       "~>2.3.1"
+gem "jbuilder",                       "~>2.5.0"
 gem "paperclip",                      "~>4.3.0"
 gem "rails-i18n",                     "~>5.x"
 
