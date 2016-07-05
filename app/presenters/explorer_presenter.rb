@@ -88,6 +88,11 @@ class ExplorerPresenter
     self
   end
 
+  def lock_tree(tree, lock = true)
+    @options[:lock_unlock_trees][tree] = !!lock
+    self
+  end
+
   def hide(*elements)
     set_visibility(false, *elements)
   end

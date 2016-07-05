@@ -364,7 +364,7 @@ class ServiceController < ApplicationController
 
     presenter[:record_id] = determine_record_id_for_presenter
 
-    presenter[:lock_unlock_trees][x_active_tree] = @edit && @edit[:current]
+    presenter.lock_tree(x_active_tree, @edit && @edit[:current])
     presenter[:osf_node] = x_node
     # unset variable that was set in form_field_changed to prompt for changes when leaving the screen
     presenter.reset_changes

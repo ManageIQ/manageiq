@@ -354,7 +354,7 @@ class MiqAeClassController < ApplicationController
       presenter.hide(:paging_div, :form_buttons_div)
     end
 
-    presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
+    presenter.lock_tree(x_active_tree, @in_a_form && @edit)
 
     if @record.kind_of?(MiqAeMethod) && !@in_a_form
       presenter.set_visibility(!@record.inputs.blank?, :params_div)
