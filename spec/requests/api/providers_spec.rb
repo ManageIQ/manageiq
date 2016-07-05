@@ -220,6 +220,18 @@ describe ApiController do
       expect(provider.port).to eq(8080)
     end
 
+    it "only returns real attributes" do
+      api_basic_authorize collection_action_identifier(:providers, :edit)
+
+      provider = FactoryGirl.create(:ext_management_system, sample_rhevm)
+
+      run_post(providers_url(provider.id), gen_request(:edit, "name" => "updated provider", "port" => "8080"))
+
+      response_keys = response_hash.keys
+      expect(response_keys).to include("tenant_id")
+      expect(response_keys).not_to include("total_vms")
+    end
+
     it "supports updates of credentials" do
       api_basic_authorize collection_action_identifier(:providers, :edit)
 
