@@ -23,24 +23,38 @@ module Vmdb
     end
 
     def self.apply_config(config)
-      apply_config_value(config, $log,       :level)
-      apply_config_value(config, $rails_log, :level_rails)
-      apply_config_value(config, $vim_log,   :level_vim,   :level_vim_in_evm)
-      apply_config_value(config, $rhevm_log, :level_rhevm, :level_rhevm_in_evm)
-      apply_config_value(config, $aws_log,   :level_aws,   :level_aws_in_evm)
-      apply_config_value(config, $kube_log,  :level_kube,  :level_kube_in_evm)
-      apply_config_value(config, $mw_log,    :level_mw,    :level_mw_in_evm)
-      apply_config_value(config, $scvmm_log, :level_scvmm, :level_scvmm_in_evm)
-      apply_config_value(config, $api_log,   :level_api,   :level_api_in_evm)
-      apply_config_value(config, $fog_log,   :level_fog,   :level_fog_in_evm)
+      apply_config_value(config, $log,        :level)
+      apply_config_value(config, $rails_log,  :level_rails)
+      apply_config_value(config, $vim_log,    :level_vim,    :level_vim_in_evm)
+      apply_config_value(config, $rhevm_log,  :level_rhevm,  :level_rhevm_in_evm)
+      apply_config_value(config, $ovirt4_log, :level_ovirt4, :level_ovirt4_in_evm)
+      apply_config_value(config, $aws_log,    :level_aws,    :level_aws_in_evm)
+      apply_config_value(config, $kube_log,   :level_kube,   :level_kube_in_evm)
+      apply_config_value(config, $mw_log,     :level_mw,     :level_mw_in_evm)
+      apply_config_value(config, $scvmm_log,  :level_scvmm,  :level_scvmm_in_evm)
+      apply_config_value(config, $api_log,    :level_api,    :level_api_in_evm)
+      apply_config_value(config, $fog_log,    :level_fog,    :level_fog_in_evm)
     end
 
     private
 
     def self.create_loggers
       if ENV.key?("CI")
-        $log     = $rails_log = $audit_log = $fog_log = $policy_log = $vim_log = $rhevm_log = Vmdb.null_logger
-        $aws_log = $kube_log = $mw_log = $scvmm_log = $api_log = $miq_ae_logger = $websocket_log = Vmdb.null_logger
+        $log           = Vmdb.null_logger
+        $rails_log     = Vmdb.null_logger
+        $audit_log     = Vmdb.null_logger
+        $fog_log       = Vmdb.null_logger
+        $policy_log    = Vmdb.null_logger
+        $vim_log       = Vmdb.null_logger
+        $rhevm_log     = Vmdb.null_logger
+        $ovirt4_log    = Vmdb.null_logger
+        $aws_log       = Vmdb.null_logger
+        $kube_log      = Vmdb.null_logger
+        $mw_log        = Vmdb.null_logger
+        $scvmm_log     = Vmdb.null_logger
+        $api_log       = Vmdb.null_logger
+        $miq_ae_logger = Vmdb.null_logger
+        $websocket_log = Vmdb.null_logger
       else
         path_dir = Rails.root.join("log")
 
@@ -51,6 +65,7 @@ module Vmdb
         $policy_log    = MirroredLogger.new(path_dir.join("policy.log"),     "<PolicyEngine> ")
         $vim_log       = MirroredLogger.new(path_dir.join("vim.log"),        "<VIM> ")
         $rhevm_log     = MirroredLogger.new(path_dir.join("rhevm.log"),      "<RHEVM> ")
+        $ovirt4_log    = MirroredLogger.new(path_dir.join("ovirt4.log"),     "<OVIRT4> ")
         $aws_log       = MirroredLogger.new(path_dir.join("aws.log"),        "<AWS> ")
         $kube_log      = MirroredLogger.new(path_dir.join("kubernetes.log"), "<KUBERNETES> ")
         $mw_log        = MirroredLogger.new(path_dir.join("middleware.log"), "<MIDDLEWARE> ")

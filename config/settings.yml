@@ -935,6 +935,8 @@
   :level_fog_in_evm: error
   :level_rhevm: info
   :level_rhevm_in_evm: error
+  :level_ovirt4: info
+  :level_ovirt4_in_evm: error
   :level_scvmm: info
   :level_scvmm_in_evm: error
   :level_vim: warn
