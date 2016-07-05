@@ -649,7 +649,7 @@ class StorageController < ApplicationController
     presenter.hide(:quicksearchbox)
     presenter[:hide_modal] = true
 
-    presenter[:lock_unlock_trees][x_active_tree] = @in_a_form
+    presenter.lock_tree(x_active_tree, @in_a_form)
   end
 
   def display_adv_searchbox

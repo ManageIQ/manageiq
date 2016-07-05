@@ -1490,7 +1490,7 @@ module VmCommon
 
     presenter.hide(:blocker_div) unless @edit && @edit[:adv_search_open]
     presenter[:hide_modal] = true
-    presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
+    presenter.lock_tree(x_active_tree, @in_a_form && @edit)
 
     render :json => presenter.to_json
   end

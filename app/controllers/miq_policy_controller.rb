@@ -727,11 +727,11 @@ class MiqPolicyController < ApplicationController
 
     # Lock current tree if in edit or assign, else unlock all trees
     if (@edit || @assign) && params[:action] != "x_search_by_name"
-      presenter[:lock_unlock_trees][x_active_tree] = true
+      presenter.lock_tree(x_active_tree)
     else
       [:policy_profile_tree, :policy_tree, :condition_tree,
        :action_tree, :alert_profile_tree, :alert_tree].each do |tree|
-        presenter[:lock_unlock_trees][tree] = false
+        presenter.lock_tree(tree, false)
       end
     end
 
