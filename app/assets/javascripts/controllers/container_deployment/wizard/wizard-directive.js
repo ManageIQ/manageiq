@@ -22,7 +22,7 @@ angular.module('miq.wizard').directive('miqWizard', function () {
       wizardDone: '=?'
     },
     templateUrl: '/static/wizard.html',
-    controller: function ($scope, $timeout) {
+    controller: ['$scope', '$timeout', function($scope, $timeout) {
       var firstRun = true;
       $scope.steps = [];
       $scope.context = {};
@@ -377,7 +377,7 @@ angular.module('miq.wizard').directive('miqWizard', function () {
         //go to first step
         this.goTo(0);
       };
-    },
+    }],
     link: function($scope, $element, $attrs) {
       $scope.$watch('wizardReady', function () {
         if ($scope.wizardReady) {

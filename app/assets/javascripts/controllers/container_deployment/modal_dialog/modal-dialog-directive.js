@@ -15,7 +15,7 @@ angular.module('miq.dialogs').directive('miqModal', function () {
       onCancel: '&'
     },
     templateUrl: '/static/modal-dialog.html',
-    controller: function ($scope) {
+    controller: ['$scope', function($scope) {
       $scope.settings = {};
 
       if (angular.isUndefined($scope.showHeader)) {
@@ -28,7 +28,7 @@ angular.module('miq.dialogs').directive('miqModal', function () {
       } else {
         $scope.settings.showClose = $scope.showClose !== 'false';
       }
-    },
+    }],
     link: function (scope, element) {
       scope.$watch('visible', function(value) {
         if (value == true) {
@@ -57,7 +57,7 @@ angular.module('miq.dialogs').directive('miqModal', function () {
     }
   };
 });
-angular.module('miq.dialogs').directive('autoFocus', function ($timeout) {
+angular.module('miq.dialogs').directive('autoFocus', ['$timeout', function ($timeout) {
   return {
     restrict: 'AC',
     link: function(scope, element, attrs) {
@@ -73,7 +73,7 @@ angular.module('miq.dialogs').directive('autoFocus', function ($timeout) {
       });
     }
   };
-});
+}]);
 angular.module('miq.dialogs').directive('ngEnter', function() {
   return function(scope, element, attrs) {
     element.bind("keydown keypress", function(event) {

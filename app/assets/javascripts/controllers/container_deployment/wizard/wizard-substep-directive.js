@@ -22,7 +22,7 @@ angular.module('miq.wizard').directive('miqWizardSubstep', function() {
     },
     require: '^miq-wizard-step',
     templateUrl: '/static/wizard-substep.html',
-    controller: function($scope) {
+    controller: ['$scope', function($scope) {
       if (angular.isUndefined($scope.nextEnabled)) {
         $scope.nextEnabled = true;
       }
@@ -60,7 +60,7 @@ angular.module('miq.wizard').directive('miqWizardSubstep', function() {
         return enabled;
       };
 
-    },
+    }],
     link: function($scope, $element, $attrs, step) {
       $scope.title = $scope.stepTitle;
       step.addStep($scope);

@@ -8,7 +8,7 @@ angular.module('miq.wizard').directive('miqWizardReviewPage', function() {
     },
     require: '^miq-wizard',
     templateUrl: '/static/wizard-review-page.html',
-    controller: function ($scope) {
+    controller: ['$scope', function($scope) {
       $scope.toggleShowReviewDetails = function (step) {
         if (step.showReviewDetails === true) {
           step.showReviewDetails = false;
@@ -28,7 +28,7 @@ angular.module('miq.wizard').directive('miqWizardReviewPage', function() {
       $scope.updateReviewSteps = function (wizard) {
         $scope.reviewSteps = wizard.getReviewSteps();
       };
-    },
+    }],
     link: function($scope, $element, $attrs, wizard) {
       $scope.$watch('shown', function (value) {
         if (value) {

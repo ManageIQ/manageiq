@@ -24,7 +24,7 @@ angular.module('miq.wizard').directive('miqWizardStep', function() {
     },
     require: '^miq-wizard',
     templateUrl: '/static/wizard-step.html',
-    controller: function ($scope, $timeout) {
+    controller: ['$scope', '$timeout', function($scope, $timeout) {
       var firstRun = true;
       $scope.steps = [];
       $scope.context = {};
@@ -376,7 +376,7 @@ angular.module('miq.wizard').directive('miqWizardStep', function() {
           }, 10);
         }
       }
-    },
+    }],
     link: function($scope, $element, $attrs, wizard) {
       $scope.$watch($attrs.ngShow, function(value) {
         $scope.pageNumber = wizard.getStepNumber($scope);
