@@ -1,4 +1,5 @@
 // Product overrides of Boostrap & Patternfly variables
+$screen-lg:                                 1400px;  // add 200px to account for vertical nav
 $navbar-pf-navbar-navbar-brand-min-width:   270px;
 $navbar-pf-navbar-navbar-brand-padding:     8px 0 2px;
 $dropdown-link-hover-bg:                    #d4edfa;  // sets dropdown link hover
