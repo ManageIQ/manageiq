@@ -714,6 +714,8 @@ class ApplicationHelper::ToolbarBuilder
         return true unless editable_domain?(@record)
       when "miq_ae_domain_unlock"
         return true if editable_domain?(@record) || @record.priority.to_i == 0
+      when "miq_ae_domain_edit", "miq_ae_namespace_edit", "miq_ae_instance_copy", "miq_ae_method_copy"
+        return false unless editable_domain?(@record)
       else
         return true unless editable_domain?(@record)
       end
@@ -1126,10 +1128,16 @@ class ApplicationHelper::ToolbarBuilder
         return N_("Read Only Domain cannot be deleted.") unless editable_domain
       when "miq_ae_domain_edit"
         return N_("Read Only Domain cannot be edited") unless editable_domain
-      when "miq_ae_domain_lock"
+      when "miq_ae_domain_lock", "miq_ae_namespace_edit"
         return N_("Domain is Locked.") unless editable_domain
       when "miq_ae_domain_unlock"
         return N_("Domain is Unlocked.") if editable_domain
+      end
+    when "MiqAeNamespace", "MiqAeClass", "MiqAeInstance", "MiqAeMethod"
+      if %w(miq_ae_namespace_copy miq_ae_instance_copy miq_ae_class_copy miq_ae_method_copy).include?(id) &&
+        !editable_domain?(@record) && !domains_available_for_copy?
+
+        return N_("At least one domain should be enabled & unlocked")
       end
     when "MiqAlert"
       case id
@@ -1510,5 +1518,11 @@ class ApplicationHelper::ToolbarBuilder
     url_parm = parse_ampersand.post_match if parse_ampersand.present?
     encoded_url = URI.encode(url_parm)
     Rack::Utils.parse_query URI("?#{encoded_url}").query
+  end
+
+  def domains_available_for_copy?
+    User.current_tenant.any_editable_domains? &&
+    MiqAeDomain.any_unlocked? &&
+    MiqAeDomain.any_enabled?
   end
 end

@@ -2653,6 +2653,49 @@ describe ApplicationHelper do
         expect(build_toolbar_disable_button("miq_request_delete")).to include("Users are only allowed to delete their own requests")
       end
     end
+
+    context "Automate without editable domains" do
+      before(:each) do
+        user = FactoryGirl.create(:user_with_group)
+        login_as user
+      end
+
+      let(:builder) do
+        builder = _toolbar_builder
+        allow(builder).to receive(:editable_domain?) { false }
+        builder
+      end
+
+      let(:tooltip) { "At least one domain should be enabled & unlocked" }
+
+      it 'disables the configure button for MiqAeNamespace' do
+        @record = FactoryGirl.build(:miq_ae_namespace)
+        result = builder.send(:build_toolbar_disable_button, 'miq_ae_namespace_edit')
+
+        expect(result).to include("Domain is Locked.")
+      end
+
+      it 'disables the configure button for MiqAeClass' do
+        @record = FactoryGirl.build(:miq_ae_class)
+        result = builder.send(:build_toolbar_disable_button, 'miq_ae_class_copy')
+
+        expect(result).to include(tooltip)
+      end
+
+      it 'disables the configure button for MiqAeInstance' do
+        @record = FactoryGirl.build(:miq_ae_instance)
+        result = builder.send(:build_toolbar_disable_button, 'miq_ae_instance_copy')
+
+        expect(result).to include(tooltip)
+      end
+
+      it 'disables the configure button for MiqAeMethod' do
+        @record = FactoryGirl.build(:miq_ae_method)
+        result = builder.send(:build_toolbar_disable_button, 'miq_ae_method_copy')
+
+        expect(result).to include(tooltip)
+      end
+    end
   end # end of disable button
 
   describe "#build_toolbar_hide_button_ops" do
@@ -2964,7 +3007,8 @@ describe ApplicationHelper do
 
     context "when the request query string has a few specific params to be retained" do
       before do
-        get "/vm/show_list/100", :params => "bc=VMs+running+on+2014-08-25&menu_click=Display-VMs-on_2-6-5&sb_controller=host" 
+        get "/vm/show_list/100",
+            :params => "bc=VMs+running+on+2014-08-25&menu_click=Display-VMs-on_2-6-5&sb_controller=host"
         allow_any_instance_of(Object).to receive(:query_string).and_return(@request.query_string)
         allow_any_instance_of(Object).to receive(:path_info).and_return(@request.path_info)
         allow_message_expectations_on_nil
@@ -3018,6 +3062,48 @@ describe ApplicationHelper do
       @domain.update_attributes(:system => true)
       @domain.reload
       expect(build_toolbar_hide_button('miq_ae_class_copy')).to be_truthy
+    end
+
+    it "Shows the button for domains even if locked" do
+      @domain.update(:system => true)
+      @domain.reload
+      @record = @domain
+
+      expect(build_toolbar_hide_button('miq_ae_domain_edit')).to be_falsey
+    end
+
+    it 'Shows the button for classes when locked' do
+      @domain.update(:system => true)
+      @domain.reload
+
+      expect(build_toolbar_hide_button('miq_ae_instance_copy')).to be_falsey
+    end
+
+    it 'Shows the button for instances when locked' do
+      @domain.update(:system => true)
+      @domain.reload
+      miq_class = @record
+      @record = FactoryGirl.build(
+        :miq_ae_instance,
+        :ae_class => miq_class
+      )
+
+      expect(build_toolbar_hide_button('miq_ae_instance_copy')).to be_falsey
+    end
+
+    it 'Shows the button for methods when locked' do
+      @domain.update(:system => true)
+      @domain.reload
+      miq_class = @record
+      @record = FactoryGirl.build(
+        :miq_ae_method,
+        :scope    => 'class',
+        :language => 'ruby',
+        :location => 'builtin',
+        :ae_class => miq_class
+      )
+
+      expect(build_toolbar_hide_button('miq_ae_method_copy')).to be_falsey
     end
 
     def role_allows(_)
