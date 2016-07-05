@@ -35,7 +35,8 @@ class ManageIQ::Providers::Redhat::InfraManager
               :cluster     => target.parent_cluster.ems_ref,
               :data_center => target.parent_datacenter.ems_ref,
               :vm          => vm,
-              :template    => "/api/templates?search=vm.id=#{vm_id}"
+              :template    => "/api/templates?search=vm.id=#{vm_id}",
+              :storage     => target.storages.map(&:ems_ref)
             },
             :secondary => {
               :vm         => [:disks, :snapshots, :nics],
