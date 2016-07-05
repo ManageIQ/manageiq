@@ -146,13 +146,6 @@ FactoryGirl.define do
     end
   end
 
-  factory :ems_amazon_with_authentication_on_other_account,
-          :parent => :ems_amazon do
-    after(:create) do |x|
-      x.authentications << FactoryGirl.create(:authentication)
-    end
-  end
-
   factory :ems_openstack,
           :aliases => ["manageiq/providers/openstack/cloud_manager"],
           :class   => "ManageIQ::Providers::Openstack::CloudManager",
