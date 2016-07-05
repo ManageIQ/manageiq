@@ -218,17 +218,17 @@ describe ChargebackController do
 
     it "renders edit form with correct values" do
       post :x_button, :params => {:pressed => "chargeback_rates_edit", :id => chargeback_rate.id}
-      response_body = response.body.delete('\\')
       expect(response).to render_template(:partial => 'chargeback/_cb_rate_edit')
       expect(response).to render_template(:partial => 'chargeback/_cb_rate_edit_table')
 
-      expect_input(response_body, "description", "foo")
+      main_content = JSON.parse(response.body)['updatePartials']['main_div']
+      expect_input(main_content, "description", "foo")
 
-      expect_rendered_tiers(response_body, [{:start => "0.0", :finish => "20.0"},
+      expect_rendered_tiers(main_content, [{:start => "0.0", :finish => "20.0"},
                                             {:start => "20.0", :finish => "40.0"},
                                             {:start => "40.0", :finish => Float::INFINITY}])
 
-      expect_rendered_tiers(response_body, [{:start => "0.0", :finish => Float::INFINITY}], 1)
+      expect_rendered_tiers(main_content, [{:start => "0.0", :finish => Float::INFINITY}], 1)
     end
 
     it "removes requested tier line from edit from" do
