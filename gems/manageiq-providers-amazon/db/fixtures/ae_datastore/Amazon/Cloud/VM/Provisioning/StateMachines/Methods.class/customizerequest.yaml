@@ -4,9 +4,9 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: PreProvision
+    name: CustomizeRequest
     inherits: 
     description: 
   fields:
-  - openstack_meth1:
-      value: openstack_PreProvision
+  - amazon_meth1:
+      value: amazon_CustomizeRequest

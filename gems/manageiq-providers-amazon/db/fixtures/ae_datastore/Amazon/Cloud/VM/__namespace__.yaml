@@ -1,0 +1,11 @@
+---
+object_type: namespace
+version: 1.0
+object:
+  attributes:
+    name: VM
+    description: 
+    display_name: 
+    system: 
+    priority: 
+    enabled: 

@@ -153,26 +153,6 @@ object:
       max_time: 
   - field:
       aetype: method
-      name: amazon
-      display_name: 
-      datatype: string
-      priority: 8
-      owner: 
-      default_value: 
-      substitute: true
-      message: amazon
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
-  - field:
-      aetype: method
       name: google
       display_name: 
       datatype: string
