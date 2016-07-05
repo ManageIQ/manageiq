@@ -103,6 +103,10 @@ class MiqAeDomain < MiqAeNamespace
     MiqAeDomain.reset_priority_by_ordered_ids(ids)
   end
 
+  def self.any_enabled?
+    MiqAeDomain.enabled.count > 0
+  end
+
   def self.any_unlocked?
     MiqAeDomain.where('system is null OR system = ?', [false]).count > 0
   end
