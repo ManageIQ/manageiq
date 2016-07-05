@@ -105,11 +105,13 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
 
     [:transform, :config, :customization, :linked_clone].each { |key| vim_clone_options[key] = clone_options[key] }
 
-    [:folder, :host, :datastore, :pool, :snapshot].each do |key|
+    [:folder, :host, :pool, :snapshot].each do |key|
       ci = clone_options[key]
       next if ci.nil?
       vim_clone_options[key] = ci.ems_ref_obj
     end
+
+    vim_clone_options[:datastore] = clone_options[:host].host_storages.find_by(:storage_id => clone_options[:datastore].id).ems_ref
 
     task_mor = clone_vm(vim_clone_options)
     _log.info("Provisioning completed for [#{vim_clone_options[:name]}] from source [#{source.name}]") if MiqProvision::CLONE_SYNCHRONOUS
