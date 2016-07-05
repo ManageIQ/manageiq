@@ -14,6 +14,7 @@ class ExplorerPresenter
   #
   #   add_nodes                        -- JSON string of nodes to add to the active tree
   #   delete_node                      -- key of node to be deleted from the active tree
+  #   clear_search_toggle              -- show or hide 'clear search' button
   #   build_calendar                   -- call miqBuildCalendar, true/false or Hash (:date_from, :date_to, :skip_days)
   #
   #   init_dashboard                   -- call miqInitDashboardCols
@@ -193,7 +194,7 @@ class ExplorerPresenter
     data[:oneTransIE] = !!@options[:one_trans_ie]
     data[:focus] = @options[:focus]
 
-    data[:clearSearch] = @options[:clear_search_show_or_hide] if @options[:clear_search_show_or_hide]
+    data[:clearSearch] = @options[:clear_search_toggle] if @options[:clear_search_toggle]
 
     data[:hideModal] if @options[:hide_modal]
     data[:initAccords] if @options[:init_accords]

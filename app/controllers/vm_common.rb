@@ -1484,7 +1484,7 @@ module VmCommon
 
     # Hide/show searchbox depending on if a list is showing
     presenter.set_visibility(!(@record || @in_a_form), :adv_searchbox_div)
-    presenter[:clear_search_show_or_hide] = clear_search_show_or_hide
+    presenter[:clear_search_toggle] = clear_search_status
 
     presenter[:osf_node] = x_node  # Open, select, and focus on this node
 

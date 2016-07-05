@@ -23,7 +23,7 @@ ManageIQ.explorer.lock_tree = function(tree, lock) {
   miqDimDiv('#' + tree + '_div', lock);
 }
 
-ManageIQ.explorer.clear_search_show_or_hide = function(show) {
+ManageIQ.explorer.clear_search_toggle = function(show) {
   if ( show ) {
     $('#clear_search').show();
   } else {
@@ -167,7 +167,7 @@ ManageIQ.explorer.process = function(data) {
   }
 
   if ( !_.isUndefined(data.clearSearch) ) {
-    ManageIQ.explorer.clear_search_show_or_hide('show' == data.clearSearch);
+    ManageIQ.explorer.clear_search_toggle(data.clearSearch);
   }
 
   miqInitMainContent();

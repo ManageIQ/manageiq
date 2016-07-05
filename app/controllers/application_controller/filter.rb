@@ -466,7 +466,7 @@ module ApplicationController::Filter
         page << javascript_hide("blocker_div")
       else
         @edit[:adv_search_open] = true
-        page << "ManageIQ.explorer.clear_search_show_or_hide(#{clear_search_show_or_hide});"
+        page << "ManageIQ.explorer.clear_search_toggle(#{clear_search_status});"
         page.replace("adv_search_body", :partial => "layouts/adv_search_body")
         page.replace("adv_search_footer", :partial => "layouts/adv_search_footer")
         page << "$('#adv_search_img').prop('src', '#{ActionController::Base.helpers.image_path('toolbars/squashed-false.png')}')"
