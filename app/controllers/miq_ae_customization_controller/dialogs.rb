@@ -940,7 +940,7 @@ module MiqAeCustomizationController::Dialogs
 
     # element type was NOT changed and is present
     elsif !@edit[:field_typ].blank?
-      @edit[:field_visible] = key[:field_visible]
+      @edit[:field_visible] = key[:visible]
       # set default_value - checkbox
       if @edit[:field_typ] =~ /Check/
         if params[:field_default_value]
