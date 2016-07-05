@@ -142,7 +142,6 @@ class ApiController < ApplicationController
   delegate :user_token_service, :to => self
 
   def initialize
-    @config          = Api::Settings.data
     @module          = base_config[:module]
     @name            = base_config[:name]
     @description     = base_config[:description]
