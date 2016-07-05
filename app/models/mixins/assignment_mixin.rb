@@ -127,28 +127,16 @@ module AssignmentMixin
       tlist =  parents.collect { |p| "#{p.class.base_model.name.underscore}/id/#{p.id}" } # Assigned directly to parents
       tlist += options[:tag_list] if options[:tag_list]                        # Assigned to target (passed in)
 
-      if options[:associations_preloaded]
-        # Collect tags directly from association from parent objects if they were already preloaded by the caller
-        tags = parents.collect { |p| p.tags.select { |t| t.name.starts_with?("/managed/") } }.flatten.uniq
-      else
-        # Collect tags from all parent objects in a single query if they were NOT already preloaded by the caller
-        tags = Tag.joins(:taggings).where("name like '/managed/%'").where(:taggings => {:taggable => parents})
-      end
       individually_assigned_alerts = alist.select { |a| tlist.include?(a[:assigned_to]) }.map { |a| a[:assigned] }
 
       # look for alert_set running off of tags (not individual tags)
       # TODO: we may need to change taggings-related code to use base_model too
-      parent_ids_by_type = parents.inject({}) { |h, p|  h[p.class.base_class.name] ||= []; h[p.class.base_class.name] << p.id; h }
-      tlist = tags.flat_map do |tag|
-        tag.taggings
-           .select { |t| klass = t.taggable_type ; parent_ids_by_type[klass] && parent_ids_by_type[klass].include?(t.taggable_id) }
-           .map do |t|
-          # Only collect taggings for parent objects
-          klass = t.taggable_type
-          # right now NO support for tagged templates
-          lower_klass = klass == "VmOrTemplate" ? "vm" : klass.underscore
-          "#{lower_klass}/tag#{tag.name}"
-        end
+      tlist = Tagging.where("tags.name like '/managed/%'")
+                     .where(:taggable => parents)
+                     .references(:tag).includes(:tag).map do |t|
+        klass = t.taggable_type
+        lower_klass = klass == "VmOrTemplate" ? "vm" : klass.underscore
+        "#{lower_klass}/tag#{t.tag.name}"
       end
       tagged_alerts = alist.select { |a| tlist.include?(a[:assigned_to]) }.map { |a| a[:assigned] }
 

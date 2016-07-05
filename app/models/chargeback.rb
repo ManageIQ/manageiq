@@ -80,7 +80,7 @@ class Chargeback < ActsAsArModel
     parents = [perf.parent_host, perf.parent_ems_cluster, perf.parent_storage, perf.parent_ems, @enterprise].compact
     parents.push(tenant_resource) unless tenant_resource.nil?
 
-    @rates[key] = ChargebackRate.get_assigned_for_target(perf.resource, :tag_list => tag_list, :parents => parents, :associations_preloaded => true)
+    @rates[key] = ChargebackRate.get_assigned_for_target(perf.resource, :tag_list => tag_list, :parents => parents)
   end
 
   def self.calculate_costs(perf, h, rates)
