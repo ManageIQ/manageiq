@@ -167,7 +167,7 @@ module ApplicationController::ReportDownloads
     if @display == "download_pdf"
       @display = "main"
       case @record
-      when Vm
+      when VmOrTemplate
         if @record.hardware.present?
           @record_notes = @record.hardware.annotation || "<No notes have been entered for this VM>"
         end
