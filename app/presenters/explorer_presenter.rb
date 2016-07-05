@@ -127,7 +127,7 @@ class ExplorerPresenter
   end
 
   def to_json
-    data = { :explorer => true }
+    data = {:explorer => true}
 
     # see if any miq expression vars need to be set
     unless @options[:exp].empty?
