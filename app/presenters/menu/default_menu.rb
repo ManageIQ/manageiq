@@ -135,7 +135,7 @@ module Menu
       end
 
       def middleware_menu_section
-        Menu::Section.new(:mdl, N_("Middleware"), 'fa pficon-enterprise fa-2x', [
+        Menu::Section.new(:mdl, N_("Middleware"), 'fa product-middleware fa-2x', [
           Menu::Item.new('ems_middleware', N_('Providers'), 'ems_middleware', {:feature => 'ems_middleware_show_list'}, '/ems_middleware'),
           Menu::Item.new('middleware_server', deferred_ui_lookup(:tables => 'middleware_server'), 'middleware_server', {:feature => 'middleware_server_show_list'}, '/middleware_server'),
           Menu::Item.new('middleware_deployment', deferred_ui_lookup(:tables => 'middleware_deployment'), 'middleware_deployment', {:feature => 'middleware_deployment_show_list'}, '/middleware_deployment'),
