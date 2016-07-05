@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/resources/Local~~/metrics?sort=id
+    uri: http://jdoe:password@localhost:8080/hawkular/inventory/status
     body:
       encoding: US-ASCII
       string: ''
@@ -12,7 +12,52 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '234'
+      Date:
+      - Tue, 05 Jul 2016 15:05:39 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "Implementation-Version" : "0.17.2.Final",
+          "Built-From-Git-SHA1" : "3c8ac6648aa0ec33643ae1b98faadc475d2c6f02",
+          "Inventory-Implementation" : "org.hawkular.inventory.impl.tinkerpop.TinkerpopInventory",
+          "Initialized" : "true"
+        }
+    http_version: 
+  recorded_at: Tue, 05 Jul 2016 15:05:39 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/inventory/deprecated/feeds/70c798a0-6985-4f8a-a525-012d8d28e8a3/resources/Local~~/metrics?sort=id
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -33,7 +78,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
+      - Tue, 05 Jul 2016 15:05:39 GMT
       X-Total-Count:
       - '14'
       Connection:
@@ -41,187 +86,257 @@ http_interactions:
       Content-Type:
       - application/json
       Content-Length:
-      - '10061'
+      - '13054'
       Link:
-      - <http://localhost:8080/hawkular/inventory/feeds/27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/resources/Local~~/metrics?sort=id>;
+      - <http://localhost:8080/hawkular/inventory/deprecated/feeds/70c798a0-6985-4f8a-a525-012d8d28e8a3/resources/Local~~/metrics?sort=id>;
         rel="current"
     body:
       encoding: ASCII-8BIT
       string: |-
         [ {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;AI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~AT~Server%20Availability~Server%20Availability",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;AI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~AT~Server%20Availability~Server%20Availability",
+          "properties" : {
+            "__identityHash" : "7025758379b59564746ba46c9635a845eb0c989"
+          },
           "name" : "Server Availability~Server Availability",
+          "identityHash" : "7025758379b59564746ba46c9635a845eb0c989",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;Server%20Availability~Server%20Availability",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;Server%20Availability~Server%20Availability",
             "name" : "Server Availability~Server Availability",
+            "identityHash" : "69beedc2b0c5cf2f3d0484b9c1aa9e4cdcf93",
             "unit" : "NONE",
             "type" : "AVAILABILITY",
             "collectionInterval" : 30,
             "id" : "Server Availability~Server Availability"
           },
-          "id" : "AI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~~]~AT~Server Availability~Server Availability"
+          "id" : "AI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~~]~AT~Server Availability~Server Availability"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions",
+          "properties" : {
+            "__identityHash" : "d31ea16143b37d9637ab90c5ae287b34991d6d"
+          },
           "name" : "WildFly Aggregated Web Metrics~Aggregated Active Web Sessions",
+          "identityHash" : "d31ea16143b37d9637ab90c5ae287b34991d6d",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions",
             "name" : "WildFly Aggregated Web Metrics~Aggregated Active Web Sessions",
+            "identityHash" : "a82dc495957628db4b96ca5c44213ce023c792b9",
             "unit" : "NONE",
             "type" : "GAUGE",
             "collectionInterval" : 60,
             "id" : "WildFly Aggregated Web Metrics~Aggregated Active Web Sessions"
           },
-          "id" : "MI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Active Web Sessions"
+          "id" : "MI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Active Web Sessions"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions",
+          "properties" : {
+            "__identityHash" : "8d93457bc1244b93a19b71d920136e775caab8"
+          },
           "name" : "WildFly Aggregated Web Metrics~Aggregated Expired Web Sessions",
+          "identityHash" : "8d93457bc1244b93a19b71d920136e775caab8",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions",
             "name" : "WildFly Aggregated Web Metrics~Aggregated Expired Web Sessions",
+            "identityHash" : "3c806e8b625362b37f972a3594448c4aa8b3",
             "unit" : "NONE",
             "type" : "COUNTER",
             "collectionInterval" : 60,
             "id" : "WildFly Aggregated Web Metrics~Aggregated Expired Web Sessions"
           },
-          "id" : "MI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Expired Web Sessions"
+          "id" : "MI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Expired Web Sessions"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions",
+          "properties" : {
+            "__identityHash" : "4ec3b5136677bdd8efaf89a61b9bfbc46982f26"
+          },
           "name" : "WildFly Aggregated Web Metrics~Aggregated Max Active Web Sessions",
+          "identityHash" : "4ec3b5136677bdd8efaf89a61b9bfbc46982f26",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions",
             "name" : "WildFly Aggregated Web Metrics~Aggregated Max Active Web Sessions",
+            "identityHash" : "a677b62ab5ec7632a32af8b6ef08aef813fd1f",
             "unit" : "NONE",
             "type" : "GAUGE",
             "collectionInterval" : 60,
             "id" : "WildFly Aggregated Web Metrics~Aggregated Max Active Web Sessions"
           },
-          "id" : "MI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Max Active Web Sessions"
+          "id" : "MI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Max Active Web Sessions"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions",
+          "properties" : {
+            "__identityHash" : "e1c88ee17162116d4222a10c4a486b9c6c127a"
+          },
           "name" : "WildFly Aggregated Web Metrics~Aggregated Rejected Web Sessions",
+          "identityHash" : "e1c88ee17162116d4222a10c4a486b9c6c127a",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions",
             "name" : "WildFly Aggregated Web Metrics~Aggregated Rejected Web Sessions",
+            "identityHash" : "6af37a7acb8c6eab4818313a281748152896534",
             "unit" : "NONE",
             "type" : "COUNTER",
             "collectionInterval" : 60,
             "id" : "WildFly Aggregated Web Metrics~Aggregated Rejected Web Sessions"
           },
-          "id" : "MI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Rejected Web Sessions"
+          "id" : "MI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Rejected Web Sessions"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count",
+          "properties" : {
+            "__identityHash" : "e6b948271cbf27f658a26d1772dbfd59574e9c"
+          },
           "name" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Count",
+          "identityHash" : "e6b948271cbf27f658a26d1772dbfd59574e9c",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count",
             "name" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Count",
+            "identityHash" : "95556b3b6367d481ebfd12997646e08fef9291e0",
             "unit" : "NONE",
             "type" : "COUNTER",
             "collectionInterval" : 60,
             "id" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Count"
           },
-          "id" : "MI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Servlet Request Count"
+          "id" : "MI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Servlet Request Count"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time",
+          "properties" : {
+            "__identityHash" : "b9bb7ac9ba7ea0bdd4f19bc1fa8ec2e699f188"
+          },
           "name" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Time",
+          "identityHash" : "b9bb7ac9ba7ea0bdd4f19bc1fa8ec2e699f188",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time",
             "name" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Time",
+            "identityHash" : "f949025e0087974acae8cffab1598344932f6c",
             "unit" : "NONE",
             "type" : "COUNTER",
             "collectionInterval" : 60,
             "id" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Time"
           },
-          "id" : "MI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Servlet Request Time"
+          "id" : "MI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Servlet Request Time"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration",
+          "properties" : {
+            "__identityHash" : "6fbaa9e9d331f97d4427043b882e1c67d246526"
+          },
           "name" : "WildFly Memory Metrics~Accumulated GC Duration",
+          "identityHash" : "6fbaa9e9d331f97d4427043b882e1c67d246526",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration",
             "name" : "WildFly Memory Metrics~Accumulated GC Duration",
+            "identityHash" : "44916cf1eae6344af4cd0b2a562c5328562c3",
             "unit" : "MILLISECONDS",
             "type" : "COUNTER",
             "collectionInterval" : 60,
             "id" : "WildFly Memory Metrics~Accumulated GC Duration"
           },
-          "id" : "MI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~~]~MT~WildFly Memory Metrics~Accumulated GC Duration"
+          "id" : "MI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~~]~MT~WildFly Memory Metrics~Accumulated GC Duration"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed",
+          "properties" : {
+            "__identityHash" : "6172237d03bb7f73c7e1847f528ca2efdfaf8d6"
+          },
           "name" : "WildFly Memory Metrics~Heap Committed",
+          "identityHash" : "6172237d03bb7f73c7e1847f528ca2efdfaf8d6",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;WildFly%20Memory%20Metrics~Heap%20Committed",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;WildFly%20Memory%20Metrics~Heap%20Committed",
             "name" : "WildFly Memory Metrics~Heap Committed",
+            "identityHash" : "405253f87a6e98aabe2d7a4a524f5796d9d97e",
             "unit" : "BYTES",
             "type" : "GAUGE",
             "collectionInterval" : 60,
             "id" : "WildFly Memory Metrics~Heap Committed"
           },
-          "id" : "MI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~~]~MT~WildFly Memory Metrics~Heap Committed"
+          "id" : "MI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~~]~MT~WildFly Memory Metrics~Heap Committed"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max",
+          "properties" : {
+            "__identityHash" : "d9ee316166a326ed8d60c12494c98fcf7bd0d798"
+          },
           "name" : "WildFly Memory Metrics~Heap Max",
+          "identityHash" : "d9ee316166a326ed8d60c12494c98fcf7bd0d798",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;WildFly%20Memory%20Metrics~Heap%20Max",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;WildFly%20Memory%20Metrics~Heap%20Max",
             "name" : "WildFly Memory Metrics~Heap Max",
+            "identityHash" : "a84cf574232510897e26b98fd9ea5702a95dfc7",
             "unit" : "BYTES",
             "type" : "GAUGE",
             "collectionInterval" : 60,
             "id" : "WildFly Memory Metrics~Heap Max"
           },
-          "id" : "MI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~~]~MT~WildFly Memory Metrics~Heap Max"
+          "id" : "MI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~~]~MT~WildFly Memory Metrics~Heap Max"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used",
+          "properties" : {
+            "__identityHash" : "147d79aa3ff35bbd19ceaa79c24c4c0e4af7fa4"
+          },
           "name" : "WildFly Memory Metrics~Heap Used",
+          "identityHash" : "147d79aa3ff35bbd19ceaa79c24c4c0e4af7fa4",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;WildFly%20Memory%20Metrics~Heap%20Used",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;WildFly%20Memory%20Metrics~Heap%20Used",
             "name" : "WildFly Memory Metrics~Heap Used",
+            "identityHash" : "3be5b5fdabed925ac46fdc6d8295e34bbd3147a",
             "unit" : "BYTES",
             "type" : "GAUGE",
             "collectionInterval" : 30,
             "id" : "WildFly Memory Metrics~Heap Used"
           },
-          "id" : "MI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~~]~MT~WildFly Memory Metrics~Heap Used"
+          "id" : "MI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~~]~MT~WildFly Memory Metrics~Heap Used"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed",
+          "properties" : {
+            "__identityHash" : "492b29c357d1522a0a83a6c85481f66aadc4b"
+          },
           "name" : "WildFly Memory Metrics~NonHeap Committed",
+          "identityHash" : "492b29c357d1522a0a83a6c85481f66aadc4b",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;WildFly%20Memory%20Metrics~NonHeap%20Committed",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;WildFly%20Memory%20Metrics~NonHeap%20Committed",
             "name" : "WildFly Memory Metrics~NonHeap Committed",
+            "identityHash" : "55d9f8e5b0a3b5d0af3fd3bac67b08b186c68b5",
             "unit" : "BYTES",
             "type" : "GAUGE",
             "collectionInterval" : 60,
             "id" : "WildFly Memory Metrics~NonHeap Committed"
           },
-          "id" : "MI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~~]~MT~WildFly Memory Metrics~NonHeap Committed"
+          "id" : "MI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~~]~MT~WildFly Memory Metrics~NonHeap Committed"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used",
+          "properties" : {
+            "__identityHash" : "c1d0f2edab6fdacdf33928bd88c7356acd2037b6"
+          },
           "name" : "WildFly Memory Metrics~NonHeap Used",
+          "identityHash" : "c1d0f2edab6fdacdf33928bd88c7356acd2037b6",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;WildFly%20Memory%20Metrics~NonHeap%20Used",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;WildFly%20Memory%20Metrics~NonHeap%20Used",
             "name" : "WildFly Memory Metrics~NonHeap Used",
+            "identityHash" : "c785eddfb0f0baa1e832fc38485d686e2297497",
             "unit" : "BYTES",
             "type" : "GAUGE",
             "collectionInterval" : 30,
             "id" : "WildFly Memory Metrics~NonHeap Used"
           },
-          "id" : "MI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~~]~MT~WildFly Memory Metrics~NonHeap Used"
+          "id" : "MI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~~]~MT~WildFly Memory Metrics~NonHeap Used"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count",
+          "properties" : {
+            "__identityHash" : "9f2d4d473215684d697c5e7dace78c163586c96f"
+          },
           "name" : "WildFly Threading Metrics~Thread Count",
+          "identityHash" : "9f2d4d473215684d697c5e7dace78c163586c96f",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;WildFly%20Threading%20Metrics~Thread%20Count",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;WildFly%20Threading%20Metrics~Thread%20Count",
             "name" : "WildFly Threading Metrics~Thread Count",
+            "identityHash" : "1e41cf1c2b3c07e23983a3789c91bdc6f1cc88",
             "unit" : "NONE",
             "type" : "GAUGE",
             "collectionInterval" : 120,
             "id" : "WildFly Threading Metrics~Thread Count"
           },
-          "id" : "MI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~~]~MT~WildFly Threading Metrics~Thread Count"
+          "id" : "MI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~~]~MT~WildFly Threading Metrics~Thread Count"
         } ]
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:39 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/resources/Local~~/children
+    uri: http://jdoe:password@localhost:8080/hawkular/inventory/deprecated/feeds/70c798a0-6985-4f8a-a525-012d8d28e8a3/resources/Local~~/children
     body:
       encoding: US-ASCII
       string: ''
@@ -231,7 +346,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -252,144 +367,111 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
+      - Tue, 05 Jul 2016 15:05:39 GMT
       X-Total-Count:
-      - '13'
+      - '6'
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '5059'
+      - '3578'
       Link:
-      - <http://localhost:8080/hawkular/inventory/feeds/27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/resources/Local~~/children>;
+      - <http://localhost:8080/hawkular/inventory/deprecated/feeds/70c798a0-6985-4f8a-a525-012d8d28e8a3/resources/Local~~/children>;
         rel="current"
     body:
       encoding: ASCII-8BIT
       string: |-
         [ {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS",
-          "name" : "ExampleDS",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS",
+          "properties" : {
+            "__identityHash" : "e5bba7c6c22ec4591bff4532ca14e989d1498c4"
+          },
+          "name" : "Datasource [ExampleDS]",
+          "identityHash" : "e5bba7c6c22ec4591bff4532ca14e989d1498c4",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/rt;Datasource",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/rt;Datasource",
             "name" : "Datasource",
+            "identityHash" : "b3291af08b396960f425871b493b6d9ee97e339f",
             "id" : "Datasource"
           },
           "id" : "Local~/subsystem=datasources/data-source=ExampleDS"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fjdbc-driver%3Dh2",
-          "name" : "h2",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fjdbc-driver%3Dh2",
+          "properties" : {
+            "__identityHash" : "8552bea1e08fc66573fff8b1a3645fb845a107d"
+          },
+          "name" : "JDBC Driver [h2]",
+          "identityHash" : "8552bea1e08fc66573fff8b1a3645fb845a107d",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/rt;JDBC%20Driver",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/rt;JDBC%20Driver",
             "name" : "JDBC Driver",
+            "identityHash" : "f9eaf22c8dff1416a34eb4d26a4bc6a99c46af2",
             "id" : "JDBC Driver"
           },
           "id" : "Local~/subsystem=datasources/jdbc-driver=h2"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-command-gateway-war.war",
-          "name" : "hawkular-command-gateway-war.war",
-          "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/rt;Deployment",
-            "name" : "Deployment",
-            "id" : "Deployment"
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/r;Local~~/r;Local~%2Fsubsystem%3Dtransactions",
+          "properties" : {
+            "__identityHash" : "a3c9e6acf121df96fea6e5fcca9e846d8c9622"
           },
-          "id" : "Local~/deployment=hawkular-command-gateway-war.war"
-        }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-metrics-component.war",
-          "name" : "hawkular-metrics-component.war",
-          "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/rt;Deployment",
-            "name" : "Deployment",
-            "id" : "Deployment"
-          },
-          "id" : "Local~/deployment=hawkular-metrics-component.war"
-        }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-actions-email.war",
-          "name" : "hawkular-alerts-actions-email.war",
-          "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/rt;Deployment",
-            "name" : "Deployment",
-            "id" : "Deployment"
-          },
-          "id" : "Local~/deployment=hawkular-alerts-actions-email.war"
-        }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-wildfly-agent-download.war",
-          "name" : "hawkular-wildfly-agent-download.war",
-          "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/rt;Deployment",
-            "name" : "Deployment",
-            "id" : "Deployment"
-          },
-          "id" : "Local~/deployment=hawkular-wildfly-agent-download.war"
-        }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-inventory-dist.war",
-          "name" : "hawkular-inventory-dist.war",
-          "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/rt;Deployment",
-            "name" : "Deployment",
-            "id" : "Deployment"
-          },
-          "id" : "Local~/deployment=hawkular-inventory-dist.war"
-        }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war",
-          "name" : "hawkular-alerts-rest.war",
-          "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/rt;Deployment",
-            "name" : "Deployment",
-            "id" : "Deployment"
-          },
-          "id" : "Local~/deployment=hawkular-alerts-rest.war"
-        }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-rest-api.war",
-          "name" : "hawkular-rest-api.war",
-          "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/rt;Deployment",
-            "name" : "Deployment",
-            "id" : "Deployment"
-          },
-          "id" : "Local~/deployment=hawkular-rest-api.war"
-        }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/r;Local~~/r;Local~%2Fsubsystem%3Dtransactions",
           "name" : "Transaction Manager",
+          "identityHash" : "a3c9e6acf121df96fea6e5fcca9e846d8c9622",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/rt;Transaction%20Manager",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/rt;Transaction%20Manager",
             "name" : "Transaction Manager",
+            "identityHash" : "2c82df7330b7ae48c43ae5413f9b8857f24a85f",
             "id" : "Transaction Manager"
           },
           "id" : "Local~/subsystem=transactions"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault",
-          "name" : "Messaging Server [default]",
-          "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/rt;Messaging%20Server",
-            "name" : "Messaging Server",
-            "id" : "Messaging Server"
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/r;Local~~/r;Local~%2Fsubsystem%3Dhawkular-wildfly-agent",
+          "properties" : {
+            "__identityHash" : "d9c07665258f43c5b0204259d342c8cb16f3ac"
           },
-          "id" : "Local~/subsystem=messaging-activemq/server=default"
-        }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/r;Local~~/r;Local~%2Fsubsystem%3Dhawkular-wildfly-agent",
           "name" : "Hawkular WildFly Agent",
+          "identityHash" : "d9c07665258f43c5b0204259d342c8cb16f3ac",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/rt;Hawkular%20WildFly%20Agent",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/rt;Hawkular%20WildFly%20Agent",
             "name" : "Hawkular WildFly Agent",
+            "identityHash" : "1d7fbc312f708afc4643812f2772e7aabf283328",
             "id" : "Hawkular WildFly Agent"
           },
           "id" : "Local~/subsystem=hawkular-wildfly-agent"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/r;Local~~/r;Local~%2Fsocket-binding-group%3Dstandard-sockets",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/r;Local~~/r;Local~%2Fsocket-binding-group%3Dstandard-sockets",
+          "properties" : {
+            "__identityHash" : "8fbb7cddec55ee31209f8e892739da39b29cc"
+          },
           "name" : "Socket Binding Group [standard-sockets]",
+          "identityHash" : "8fbb7cddec55ee31209f8e892739da39b29cc",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/rt;Socket%20Binding%20Group",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/rt;Socket%20Binding%20Group",
             "name" : "Socket Binding Group",
+            "identityHash" : "689259496c606a774ff8d4288893cf656230642d",
             "id" : "Socket Binding Group"
           },
           "id" : "Local~/socket-binding-group=standard-sockets"
+        }, {
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/r;Local~~/r;Local~%2Fsubsystem%3Dinfinispan",
+          "properties" : {
+            "__identityHash" : "df72fd6d4a11a45a4a1eef5ea9ead53e9e3eb95"
+          },
+          "name" : "Infinispan",
+          "identityHash" : "df72fd6d4a11a45a4a1eef5ea9ead53e9e3eb95",
+          "type" : {
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/rt;Infinispan",
+            "name" : "Infinispan",
+            "identityHash" : "a02a9a0121b9fe564ef869e72765e7f1c56b2a",
+            "id" : "Infinispan"
+          },
+          "id" : "Local~/subsystem=infinispan"
         } ]
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:39 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/resources/Local~~/Local~%2Fsubsystem=transactions/metrics?sort=id
+    uri: http://jdoe:password@localhost:8080/hawkular/inventory/deprecated/feeds/70c798a0-6985-4f8a-a525-012d8d28e8a3/resources/Local~~/Local~%2Fsubsystem=transactions/metrics?sort=id
     body:
       encoding: US-ASCII
       string: ''
@@ -399,7 +481,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -420,7 +502,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
+      - Tue, 05 Jul 2016 15:05:39 GMT
       X-Total-Count:
       - '9'
       Connection:
@@ -428,127 +510,172 @@ http_interactions:
       Content-Type:
       - application/json
       Content-Length:
-      - '6950'
+      - '8881'
       Link:
-      - <http://localhost:8080/hawkular/inventory/feeds/27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/resources/Local~~/Local~%2Fsubsystem%3Dtransactions/metrics?sort=id>;
+      - <http://localhost:8080/hawkular/inventory/deprecated/feeds/70c798a0-6985-4f8a-a525-012d8d28e8a3/resources/Local~~/Local~%2Fsubsystem%3Dtransactions/metrics?sort=id>;
         rel="current"
     body:
       encoding: ASCII-8BIT
       string: |-
         [ {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Aborted%20Transactions",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Aborted%20Transactions",
+          "properties" : {
+            "__identityHash" : "1ef26b92d482345f15496b9a591f3b9458d60a8"
+          },
           "name" : "Transactions Metrics~Number of Aborted Transactions",
+          "identityHash" : "1ef26b92d482345f15496b9a591f3b9458d60a8",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;Transactions%20Metrics~Number%20of%20Aborted%20Transactions",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;Transactions%20Metrics~Number%20of%20Aborted%20Transactions",
             "name" : "Transactions Metrics~Number of Aborted Transactions",
+            "identityHash" : "25b4b8fa5058306e80e0295168425d6fb75f6a3",
             "unit" : "NONE",
             "type" : "COUNTER",
             "collectionInterval" : 30,
             "id" : "Transactions Metrics~Number of Aborted Transactions"
           },
-          "id" : "MI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Aborted Transactions"
+          "id" : "MI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Aborted Transactions"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Application%20Rollbacks",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Application%20Rollbacks",
+          "properties" : {
+            "__identityHash" : "4589a5113dbe1e9bff5eb79e2d48a6bd1b048"
+          },
           "name" : "Transactions Metrics~Number of Application Rollbacks",
+          "identityHash" : "4589a5113dbe1e9bff5eb79e2d48a6bd1b048",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;Transactions%20Metrics~Number%20of%20Application%20Rollbacks",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;Transactions%20Metrics~Number%20of%20Application%20Rollbacks",
             "name" : "Transactions Metrics~Number of Application Rollbacks",
+            "identityHash" : "fc99f879312f15bc555d30d12ddd4cf3b81b2285",
             "unit" : "NONE",
             "type" : "COUNTER",
             "collectionInterval" : 30,
             "id" : "Transactions Metrics~Number of Application Rollbacks"
           },
-          "id" : "MI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Application Rollbacks"
+          "id" : "MI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Application Rollbacks"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Committed%20Transactions",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Committed%20Transactions",
+          "properties" : {
+            "__identityHash" : "6414b7911aabcca7103a3b73838b7f69b71546"
+          },
           "name" : "Transactions Metrics~Number of Committed Transactions",
+          "identityHash" : "6414b7911aabcca7103a3b73838b7f69b71546",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;Transactions%20Metrics~Number%20of%20Committed%20Transactions",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;Transactions%20Metrics~Number%20of%20Committed%20Transactions",
             "name" : "Transactions Metrics~Number of Committed Transactions",
+            "identityHash" : "fe60974feaf3aa227d639192b114f116274ae4b2",
             "unit" : "NONE",
             "type" : "COUNTER",
             "collectionInterval" : 30,
             "id" : "Transactions Metrics~Number of Committed Transactions"
           },
-          "id" : "MI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Committed Transactions"
+          "id" : "MI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Committed Transactions"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Heuristics",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Heuristics",
+          "properties" : {
+            "__identityHash" : "f5efe14139366c4528a4a982223bfdb6e3609276"
+          },
           "name" : "Transactions Metrics~Number of Heuristics",
+          "identityHash" : "f5efe14139366c4528a4a982223bfdb6e3609276",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;Transactions%20Metrics~Number%20of%20Heuristics",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;Transactions%20Metrics~Number%20of%20Heuristics",
             "name" : "Transactions Metrics~Number of Heuristics",
+            "identityHash" : "e9dc6c8454d533e67b609a8a411ce24c7a4a2b69",
             "unit" : "NONE",
             "type" : "COUNTER",
             "collectionInterval" : 30,
             "id" : "Transactions Metrics~Number of Heuristics"
           },
-          "id" : "MI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Heuristics"
+          "id" : "MI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Heuristics"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20In-Flight%20Transactions",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20In-Flight%20Transactions",
+          "properties" : {
+            "__identityHash" : "b528ae57cadf61ac5de4952f626ebadb5c33a89"
+          },
           "name" : "Transactions Metrics~Number of In-Flight Transactions",
+          "identityHash" : "b528ae57cadf61ac5de4952f626ebadb5c33a89",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;Transactions%20Metrics~Number%20of%20In-Flight%20Transactions",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;Transactions%20Metrics~Number%20of%20In-Flight%20Transactions",
             "name" : "Transactions Metrics~Number of In-Flight Transactions",
+            "identityHash" : "deb940deaf6f7c6db1bd23c1673ca4f19394b4d",
             "unit" : "NONE",
             "type" : "GAUGE",
             "collectionInterval" : 30,
             "id" : "Transactions Metrics~Number of In-Flight Transactions"
           },
-          "id" : "MI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of In-Flight Transactions"
+          "id" : "MI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of In-Flight Transactions"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Nested%20Transactions",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Nested%20Transactions",
+          "properties" : {
+            "__identityHash" : "38c1b74994a64501e312535bec8643127c0484f"
+          },
           "name" : "Transactions Metrics~Number of Nested Transactions",
+          "identityHash" : "38c1b74994a64501e312535bec8643127c0484f",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;Transactions%20Metrics~Number%20of%20Nested%20Transactions",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;Transactions%20Metrics~Number%20of%20Nested%20Transactions",
             "name" : "Transactions Metrics~Number of Nested Transactions",
+            "identityHash" : "6a43c18b6984c4a5b6642f6e38d25d9ce66e2",
             "unit" : "NONE",
             "type" : "COUNTER",
             "collectionInterval" : 30,
             "id" : "Transactions Metrics~Number of Nested Transactions"
           },
-          "id" : "MI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Nested Transactions"
+          "id" : "MI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Nested Transactions"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Resource%20Rollbacks",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Resource%20Rollbacks",
+          "properties" : {
+            "__identityHash" : "91e59cb696550604ece282483fa1b1942f5f9a5"
+          },
           "name" : "Transactions Metrics~Number of Resource Rollbacks",
+          "identityHash" : "91e59cb696550604ece282483fa1b1942f5f9a5",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;Transactions%20Metrics~Number%20of%20Resource%20Rollbacks",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;Transactions%20Metrics~Number%20of%20Resource%20Rollbacks",
             "name" : "Transactions Metrics~Number of Resource Rollbacks",
+            "identityHash" : "2a1e4fb6d47babebfd5e92b377d5b15e8bcce54",
             "unit" : "NONE",
             "type" : "COUNTER",
             "collectionInterval" : 30,
             "id" : "Transactions Metrics~Number of Resource Rollbacks"
           },
-          "id" : "MI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Resource Rollbacks"
+          "id" : "MI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Resource Rollbacks"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Timed%20Out%20Transactions",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Timed%20Out%20Transactions",
+          "properties" : {
+            "__identityHash" : "10f71d3ff21f5bb8eef944e51be7aeadb247e76d"
+          },
           "name" : "Transactions Metrics~Number of Timed Out Transactions",
+          "identityHash" : "10f71d3ff21f5bb8eef944e51be7aeadb247e76d",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;Transactions%20Metrics~Number%20of%20Timed%20Out%20Transactions",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;Transactions%20Metrics~Number%20of%20Timed%20Out%20Transactions",
             "name" : "Transactions Metrics~Number of Timed Out Transactions",
+            "identityHash" : "489a7f12f69723b83099d4111f8fea767a0",
             "unit" : "NONE",
             "type" : "COUNTER",
             "collectionInterval" : 30,
             "id" : "Transactions Metrics~Number of Timed Out Transactions"
           },
-          "id" : "MI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Timed Out Transactions"
+          "id" : "MI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Timed Out Transactions"
         }, {
-          "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/m;MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Transactions",
+          "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/m;MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Transactions",
+          "properties" : {
+            "__identityHash" : "2594c9f1fa9d6dbb781442314291a4c38884371"
+          },
           "name" : "Transactions Metrics~Number of Transactions",
+          "identityHash" : "2594c9f1fa9d6dbb781442314291a4c38884371",
           "type" : {
-            "path" : "/t;hawkular/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/mt;Transactions%20Metrics~Number%20of%20Transactions",
+            "path" : "/t;hawkular/f;70c798a0-6985-4f8a-a525-012d8d28e8a3/mt;Transactions%20Metrics~Number%20of%20Transactions",
             "name" : "Transactions Metrics~Number of Transactions",
+            "identityHash" : "affa229994b569b825e763d3b4194a613520dbb3",
             "unit" : "NONE",
             "type" : "COUNTER",
             "collectionInterval" : 30,
             "id" : "Transactions Metrics~Number of Transactions"
           },
-          "id" : "MI~R~[27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Transactions"
+          "id" : "MI~R~[70c798a0-6985-4f8a-a525-012d8d28e8a3/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Transactions"
         } ]
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:39 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions/data/?limit=1&order=ASC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions/data/?limit=1&order=ASC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -558,7 +685,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -579,7 +706,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
+      - Tue, 05 Jul 2016 15:05:39 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -588,12 +715,12 @@ http_interactions:
       - '41'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466587073008,"value":0.0}]'
+      string: '[{"timestamp":1467725969002,"value":0.0}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:39 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions/data/?limit=1&order=DESC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions/data/?limit=1&order=DESC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -603,7 +730,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -624,7 +751,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
+      - Tue, 05 Jul 2016 15:05:39 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -633,12 +760,12 @@ http_interactions:
       - '41'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466675971001,"value":0.0}]'
+      string: '[{"timestamp":1467731123002,"value":0.0}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:39 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions/data/?limit=1&order=ASC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions/data/?limit=1&order=ASC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -648,7 +775,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -669,7 +796,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
+      - Tue, 05 Jul 2016 15:05:39 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -678,12 +805,12 @@ http_interactions:
       - '39'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466587073034,"value":0}]'
+      string: '[{"timestamp":1467725969006,"value":0}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:39 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions/data/?limit=1&order=DESC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions/data/?limit=1&order=DESC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -693,7 +820,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -714,7 +841,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
+      - Tue, 05 Jul 2016 15:05:39 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -723,12 +850,12 @@ http_interactions:
       - '39'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466675971006,"value":0}]'
+      string: '[{"timestamp":1467731123002,"value":0}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:39 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions/data/?limit=1&order=ASC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions/data/?limit=1&order=ASC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -738,7 +865,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -759,7 +886,367 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
+      - Tue, 05 Jul 2016 15:05:39 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1467725969005,"value":0.0}]'
+    http_version: 
+  recorded_at: Tue, 05 Jul 2016 15:05:39 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 05 Jul 2016 15:05:39 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1467731123002,"value":0.0}]'
+    http_version: 
+  recorded_at: Tue, 05 Jul 2016 15:05:39 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 05 Jul 2016 15:05:40 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '39'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1467725969004,"value":0}]'
+    http_version: 
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 05 Jul 2016 15:05:40 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '39'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1467731123002,"value":0}]'
+    http_version: 
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 05 Jul 2016 15:05:40 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '39'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1467725969007,"value":0}]'
+    http_version: 
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 05 Jul 2016 15:05:40 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '39'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1467731123002,"value":0}]'
+    http_version: 
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 05 Jul 2016 15:05:40 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '39'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1467725969035,"value":0}]'
+    http_version: 
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 05 Jul 2016 15:05:40 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '39'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1467731123002,"value":0}]'
+    http_version: 
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 05 Jul 2016 15:05:40 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -768,12 +1255,12 @@ http_interactions:
       - '42'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466587073002,"value":-7.0}]'
+      string: '[{"timestamp":1467725969004,"value":1533}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions/data/?limit=1&order=DESC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration/data/?limit=1&order=DESC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -783,7 +1270,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -804,7 +1291,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
+      - Tue, 05 Jul 2016 15:05:40 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -813,12 +1300,12 @@ http_interactions:
       - '42'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466675971003,"value":-7.0}]'
+      string: '[{"timestamp":1467731123002,"value":1637}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions/data/?limit=1&order=ASC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed/data/?limit=1&order=ASC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -828,7 +1315,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -849,682 +1336,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1466587073007,"value":0}]'
-    http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions/data/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Pragma:
-      - no-cache
-      Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1466675971002,"value":0}]'
-    http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count/data/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Pragma:
-      - no-cache
-      Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1466587073014,"value":0}]'
-    http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count/data/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Pragma:
-      - no-cache
-      Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1466675971007,"value":0}]'
-    http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time/data/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Pragma:
-      - no-cache
-      Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1466587073030,"value":0}]'
-    http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time/data/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Pragma:
-      - no-cache
-      Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1466675971005,"value":0}]'
-    http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration/data/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Pragma:
-      - no-cache
-      Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '42'
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1466587073017,"value":2877}]'
-    http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration/data/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Pragma:
-      - no-cache
-      Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '42'
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1466675971003,"value":8320}]'
-    http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed/data/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Pragma:
-      - no-cache
-      Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '50'
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1466587073008,"value":4.51411968E8}]'
-    http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed/data/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Pragma:
-      - no-cache
-      Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '50'
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1466675971001,"value":3.47078656E8}]'
-    http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max/data/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Pragma:
-      - no-cache
-      Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '50'
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1466587073018,"value":4.77626368E8}]'
-    http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max/data/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Pragma:
-      - no-cache
-      Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '50'
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1466675971002,"value":4.77626368E8}]'
-    http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used/data/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Pragma:
-      - no-cache
-      Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '50'
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1466587043010,"value":2.91170712E8}]'
-    http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used/data/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Pragma:
-      - no-cache
-      Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '50'
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1466675967012,"value":2.77421952E8}]'
-    http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed/data/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Pragma:
-      - no-cache
-      Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '50'
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1466587073013,"value":2.78986752E8}]'
-    http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed/data/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Pragma:
-      - no-cache
-      Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
+      - Tue, 05 Jul 2016 15:05:40 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -1533,12 +1345,12 @@ http_interactions:
       - '49'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466675974000,"value":2.9229056E8}]'
+      string: '[{"timestamp":1467725969030,"value":2.3330816E8}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used/data/?limit=1&order=ASC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed/data/?limit=1&order=DESC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -1548,7 +1360,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -1569,7 +1381,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
+      - Tue, 05 Jul 2016 15:05:40 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -1578,12 +1390,12 @@ http_interactions:
       - '50'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466587043023,"value":2.60806648E8}]'
+      string: '[{"timestamp":1467731123001,"value":2.21249536E8}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used/data/?limit=1&order=DESC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max/data/?limit=1&order=ASC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -1593,7 +1405,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -1614,7 +1426,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
+      - Tue, 05 Jul 2016 15:05:40 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -1623,12 +1435,12 @@ http_interactions:
       - '50'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466675967015,"value":2.74720936E8}]'
+      string: '[{"timestamp":1467725969002,"value":4.77626368E8}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count/data/?limit=1&order=ASC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max/data/?limit=1&order=DESC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -1638,7 +1450,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -1659,21 +1471,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:35 GMT
+      - Tue, 05 Jul 2016 15:05:40 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '43'
+      - '50'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466587133016,"value":854.0}]'
+      string: '[{"timestamp":1467731123002,"value":4.77626368E8}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:35 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count/data/?limit=1&order=DESC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used/data/?limit=1&order=ASC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -1683,7 +1495,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -1704,21 +1516,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:40 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '43'
+      - '50'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466675965004,"value":849.0}]'
+      string: '[{"timestamp":1467725939013,"value":1.05089848E8}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Aborted%20Transactions/data/?limit=1&order=ASC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used/data/?limit=1&order=DESC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -1728,7 +1540,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -1749,7 +1561,322 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:40 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '47'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1467731115002,"value":8.23386E7}]'
+    http_version: 
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 05 Jul 2016 15:05:40 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '49'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1467725969004,"value":8.1788928E7}]'
+    http_version: 
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 05 Jul 2016 15:05:40 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '49'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1467731123002,"value":9.0308608E7}]'
+    http_version: 
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 05 Jul 2016 15:05:40 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '48'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1467725939002,"value":7.307408E7}]'
+    http_version: 
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 05 Jul 2016 15:05:40 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '49'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1467731115001,"value":8.2019928E7}]'
+    http_version: 
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 05 Jul 2016 15:05:40 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '42'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1467726029003,"value":52.0}]'
+    http_version: 
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 05 Jul 2016 15:05:40 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '42'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1467731096001,"value":52.0}]'
+    http_version: 
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Aborted%20Transactions/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 05 Jul 2016 15:05:40 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -1758,12 +1885,12 @@ http_interactions:
       - '39'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466587043017,"value":0}]'
+      string: '[{"timestamp":1467725939010,"value":0}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Aborted%20Transactions/data/?limit=1&order=DESC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Aborted%20Transactions/data/?limit=1&order=DESC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -1773,7 +1900,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -1794,7 +1921,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:40 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -1803,12 +1930,12 @@ http_interactions:
       - '39'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466675967001,"value":0}]'
+      string: '[{"timestamp":1467731115002,"value":0}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Application%20Rollbacks/data/?limit=1&order=ASC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Application%20Rollbacks/data/?limit=1&order=ASC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -1818,7 +1945,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -1839,7 +1966,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:40 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -1848,12 +1975,12 @@ http_interactions:
       - '39'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466587043017,"value":0}]'
+      string: '[{"timestamp":1467725939011,"value":0}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:40 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Application%20Rollbacks/data/?limit=1&order=DESC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Application%20Rollbacks/data/?limit=1&order=DESC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -1863,7 +1990,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -1884,7 +2011,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:41 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -1893,12 +2020,12 @@ http_interactions:
       - '39'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466675967001,"value":0}]'
+      string: '[{"timestamp":1467731115002,"value":0}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:41 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Committed%20Transactions/data/?limit=1&order=ASC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Committed%20Transactions/data/?limit=1&order=ASC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -1908,7 +2035,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -1929,7 +2056,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:41 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -1938,12 +2065,12 @@ http_interactions:
       - '39'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466587043011,"value":0}]'
+      string: '[{"timestamp":1467725939010,"value":0}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:41 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Committed%20Transactions/data/?limit=1&order=DESC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Committed%20Transactions/data/?limit=1&order=DESC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -1953,7 +2080,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -1974,7 +2101,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:41 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -1983,12 +2110,12 @@ http_interactions:
       - '39'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466675967012,"value":0}]'
+      string: '[{"timestamp":1467731115002,"value":0}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:41 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Heuristics/data/?limit=1&order=ASC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Heuristics/data/?limit=1&order=ASC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -1998,7 +2125,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -2019,7 +2146,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:41 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -2028,12 +2155,12 @@ http_interactions:
       - '39'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466587043014,"value":0}]'
+      string: '[{"timestamp":1467725939009,"value":0}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:41 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Heuristics/data/?limit=1&order=DESC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Heuristics/data/?limit=1&order=DESC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -2043,7 +2170,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -2064,7 +2191,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:41 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -2073,12 +2200,12 @@ http_interactions:
       - '39'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466675967014,"value":0}]'
+      string: '[{"timestamp":1467731115002,"value":0}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:41 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20In-Flight%20Transactions/data/?limit=1&order=ASC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20In-Flight%20Transactions/data/?limit=1&order=ASC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -2088,7 +2215,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -2109,7 +2236,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:41 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -2118,12 +2245,12 @@ http_interactions:
       - '41'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466587043022,"value":0.0}]'
+      string: '[{"timestamp":1467725939004,"value":0.0}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:41 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20In-Flight%20Transactions/data/?limit=1&order=DESC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20In-Flight%20Transactions/data/?limit=1&order=DESC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -2133,7 +2260,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -2154,7 +2281,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:41 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -2163,12 +2290,12 @@ http_interactions:
       - '41'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466675967014,"value":0.0}]'
+      string: '[{"timestamp":1467731115001,"value":0.0}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:41 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Nested%20Transactions/data/?limit=1&order=ASC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Nested%20Transactions/data/?limit=1&order=ASC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -2178,7 +2305,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -2199,7 +2326,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:41 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -2208,12 +2335,12 @@ http_interactions:
       - '39'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466587043015,"value":0}]'
+      string: '[{"timestamp":1467725939008,"value":0}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:41 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Nested%20Transactions/data/?limit=1&order=DESC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Nested%20Transactions/data/?limit=1&order=DESC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -2223,7 +2350,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -2244,7 +2371,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:41 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -2253,12 +2380,12 @@ http_interactions:
       - '39'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466675967014,"value":0}]'
+      string: '[{"timestamp":1467731115001,"value":0}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:41 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Resource%20Rollbacks/data/?limit=1&order=ASC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Resource%20Rollbacks/data/?limit=1&order=ASC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -2268,7 +2395,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -2289,7 +2416,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:41 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -2298,12 +2425,12 @@ http_interactions:
       - '39'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466587043009,"value":0}]'
+      string: '[{"timestamp":1467725939013,"value":0}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:41 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Resource%20Rollbacks/data/?limit=1&order=DESC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Resource%20Rollbacks/data/?limit=1&order=DESC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -2313,7 +2440,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -2334,7 +2461,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:41 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -2343,12 +2470,12 @@ http_interactions:
       - '39'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466675967012,"value":0}]'
+      string: '[{"timestamp":1467731115002,"value":0}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:41 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Timed%20Out%20Transactions/data/?limit=1&order=ASC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Timed%20Out%20Transactions/data/?limit=1&order=ASC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -2358,7 +2485,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -2379,7 +2506,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:41 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -2388,12 +2515,12 @@ http_interactions:
       - '39'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466587043026,"value":0}]'
+      string: '[{"timestamp":1467725939004,"value":0}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:41 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Timed%20Out%20Transactions/data/?limit=1&order=DESC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Timed%20Out%20Transactions/data/?limit=1&order=DESC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -2403,7 +2530,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -2424,7 +2551,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:41 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -2433,12 +2560,12 @@ http_interactions:
       - '39'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466675967015,"value":0}]'
+      string: '[{"timestamp":1467731115001,"value":0}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:41 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Transactions/data/?limit=1&order=ASC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Transactions/data/?limit=1&order=ASC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -2448,7 +2575,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -2469,7 +2596,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:41 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -2478,12 +2605,12 @@ http_interactions:
       - '39'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466587043007,"value":0}]'
+      string: '[{"timestamp":1467725939012,"value":0}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:41 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Transactions/data/?limit=1&order=DESC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Transactions/data/?limit=1&order=DESC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -2493,7 +2620,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -2514,7 +2641,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:41 GMT
       Connection:
       - keep-alive
       Content-Type:
@@ -2523,12 +2650,12 @@ http_interactions:
       - '39'
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1466675967011,"value":0}]'
+      string: '[{"timestamp":1467731115002,"value":0}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:41 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions/data/?bucketDuration=3600s&end=1466668800001&start=1466661600000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions/data/?bucketDuration=3600s&end=1467734400001&start=1467727200000
     body:
       encoding: US-ASCII
       string: ''
@@ -2538,7 +2665,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -2559,21 +2686,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:41 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '239'
+      - '305'
     body:
       encoding: UTF-8
-      string: '[{"start":1466661600000,"end":1466665200000,"empty":true},{"start":1466665200000,"end":1466668800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":32,"empty":false},{"start":1466668800000,"end":1466672400000,"empty":true}]'
+      string: '[{"start":1467727200000,"end":1467730800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":59,"empty":false},{"start":1467730800000,"end":1467734400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":6,"empty":false},{"start":1467734400000,"end":1467738000000,"empty":true}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:41 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions/rate?bucketDuration=3600s&end=1466668800001&start=1466661600000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions/rate?bucketDuration=3600s&end=1467734400001&start=1467727200000
     body:
       encoding: US-ASCII
       string: ''
@@ -2583,7 +2710,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -2604,21 +2731,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:41 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '239'
+      - '305'
     body:
       encoding: UTF-8
-      string: '[{"start":1466661600000,"end":1466665200000,"empty":true},{"start":1466665200000,"end":1466668800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":31,"empty":false},{"start":1466668800000,"end":1466672400000,"empty":true}]'
+      string: '[{"start":1467727200000,"end":1467730800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":58,"empty":false},{"start":1467730800000,"end":1467734400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":6,"empty":false},{"start":1467734400000,"end":1467738000000,"empty":true}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:41 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions/data/?bucketDuration=3600s&end=1466668800001&start=1466661600000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions/data/?bucketDuration=3600s&end=1467734400001&start=1467727200000
     body:
       encoding: US-ASCII
       string: ''
@@ -2628,7 +2755,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -2649,21 +2776,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:42 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '246'
+      - '305'
     body:
       encoding: UTF-8
-      string: '[{"start":1466661600000,"end":1466665200000,"empty":true},{"start":1466665200000,"end":1466668800000,"min":-7.0,"avg":-7.0,"median":-7.0,"max":-7.0,"sum":-224.0,"samples":32,"empty":false},{"start":1466668800000,"end":1466672400000,"empty":true}]'
+      string: '[{"start":1467727200000,"end":1467730800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":59,"empty":false},{"start":1467730800000,"end":1467734400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":6,"empty":false},{"start":1467734400000,"end":1467738000000,"empty":true}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:42 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions/rate?bucketDuration=3600s&end=1466668800001&start=1466661600000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions/rate?bucketDuration=3600s&end=1467734400001&start=1467727200000
     body:
       encoding: US-ASCII
       string: ''
@@ -2673,7 +2800,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -2694,21 +2821,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:42 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '239'
+      - '305'
     body:
       encoding: UTF-8
-      string: '[{"start":1466661600000,"end":1466665200000,"empty":true},{"start":1466665200000,"end":1466668800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":31,"empty":false},{"start":1466668800000,"end":1466672400000,"empty":true}]'
+      string: '[{"start":1467727200000,"end":1467730800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":58,"empty":false},{"start":1467730800000,"end":1467734400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":6,"empty":false},{"start":1467734400000,"end":1467738000000,"empty":true}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:42 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count/rate?bucketDuration=3600s&end=1466668800001&start=1466661600000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count/rate?bucketDuration=3600s&end=1467734400001&start=1467727200000
     body:
       encoding: US-ASCII
       string: ''
@@ -2718,7 +2845,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -2739,21 +2866,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:42 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '239'
+      - '305'
     body:
       encoding: UTF-8
-      string: '[{"start":1466661600000,"end":1466665200000,"empty":true},{"start":1466665200000,"end":1466668800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":31,"empty":false},{"start":1466668800000,"end":1466672400000,"empty":true}]'
+      string: '[{"start":1467727200000,"end":1467730800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":58,"empty":false},{"start":1467730800000,"end":1467734400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":6,"empty":false},{"start":1467734400000,"end":1467738000000,"empty":true}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:42 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time/rate?bucketDuration=3600s&end=1466668800001&start=1466661600000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time/rate?bucketDuration=3600s&end=1467734400001&start=1467727200000
     body:
       encoding: US-ASCII
       string: ''
@@ -2763,7 +2890,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -2784,21 +2911,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:42 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '239'
+      - '305'
     body:
       encoding: UTF-8
-      string: '[{"start":1466661600000,"end":1466665200000,"empty":true},{"start":1466665200000,"end":1466668800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":31,"empty":false},{"start":1466668800000,"end":1466672400000,"empty":true}]'
+      string: '[{"start":1467727200000,"end":1467730800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":58,"empty":false},{"start":1467730800000,"end":1467734400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":6,"empty":false},{"start":1467734400000,"end":1467738000000,"empty":true}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:42 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration/rate?bucketDuration=3600s&end=1466668800001&start=1466661600000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration/rate?bucketDuration=3600s&end=1467734400001&start=1467727200000
     body:
       encoding: US-ASCII
       string: ''
@@ -2808,7 +2935,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -2829,21 +2956,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:42 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '285'
+      - '365'
     body:
       encoding: UTF-8
-      string: '[{"start":1466661600000,"end":1466665200000,"empty":true},{"start":1466665200000,"end":1466668800000,"min":15.0,"avg":30.621003804460255,"median":26.770489404701543,"max":80.0,"sum":949.2511179382681,"samples":31,"empty":false},{"start":1466668800000,"end":1466672400000,"empty":true}]'
+      string: '[{"start":1467727200000,"end":1467730800000,"min":0.0,"avg":1.2300860010554708,"median":0.012022398512408772,"max":25.57377049180328,"sum":71.34498806121726,"samples":58,"empty":false},{"start":1467730800000,"end":1467734400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":6,"empty":false},{"start":1467734400000,"end":1467738000000,"empty":true}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:42 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed/data/?bucketDuration=3600s&end=1466668800001&start=1466661600000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed/data/?bucketDuration=3600s&end=1467734400001&start=1467727200000
     body:
       encoding: US-ASCII
       string: ''
@@ -2853,7 +2980,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -2874,21 +3001,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:42 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '302'
+      - '413'
     body:
       encoding: UTF-8
-      string: '[{"start":1466661600000,"end":1466665200000,"empty":true},{"start":1466665200000,"end":1466668800000,"min":3.38690048E8,"avg":3.6197171200000006E8,"median":3.578944918551577E8,"max":4.12614656E8,"sum":1.1583094784E10,"samples":32,"empty":false},{"start":1466668800000,"end":1466672400000,"empty":true}]'
+      string: '[{"start":1467727200000,"end":1467730800000,"min":2.2020096E8,"avg":2.3379690305084753E8,"median":2.3516978792404816E8,"max":2.39075328E8,"sum":1.379401728E10,"samples":59,"empty":false},{"start":1467730800000,"end":1467734400000,"min":2.21249536E8,"avg":2.21249536E8,"median":2.21249536E8,"max":2.21249536E8,"sum":1.327497216E9,"samples":6,"empty":false},{"start":1467734400000,"end":1467738000000,"empty":true}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:42 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max/data/?bucketDuration=3600s&end=1466668800001&start=1466661600000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max/data/?bucketDuration=3600s&end=1467734400001&start=1467727200000
     body:
       encoding: US-ASCII
       string: ''
@@ -2898,7 +3025,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -2919,21 +3046,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:42 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '287'
+      - '399'
     body:
       encoding: UTF-8
-      string: '[{"start":1466661600000,"end":1466665200000,"empty":true},{"start":1466665200000,"end":1466668800000,"min":4.77626368E8,"avg":4.77626368E8,"median":4.77626368E8,"max":4.77626368E8,"sum":1.5284043776E10,"samples":32,"empty":false},{"start":1466668800000,"end":1466672400000,"empty":true}]'
+      string: '[{"start":1467727200000,"end":1467730800000,"min":4.77626368E8,"avg":4.77626368E8,"median":4.77626368E8,"max":4.77626368E8,"sum":2.8179955712E10,"samples":59,"empty":false},{"start":1467730800000,"end":1467734400000,"min":4.77626368E8,"avg":4.77626368E8,"median":4.77626368E8,"max":4.77626368E8,"sum":2.865758208E9,"samples":6,"empty":false},{"start":1467734400000,"end":1467738000000,"empty":true}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:42 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used/data/?bucketDuration=3600s&end=1466668800001&start=1466661600000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used/data/?bucketDuration=3600s&end=1467734400001&start=1467727200000
     body:
       encoding: US-ASCII
       string: ''
@@ -2943,7 +3070,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -2964,21 +3091,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:42 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '294'
+      - '417'
     body:
       encoding: UTF-8
-      string: '[{"start":1466661600000,"end":1466665200000,"empty":true},{"start":1466665200000,"end":1466668800000,"min":2.17532352E8,"avg":2.48390008E8,"median":2.4639471284073105E8,"max":2.82220992E8,"sum":1.614535052E10,"samples":65,"empty":false},{"start":1466668800000,"end":1466672400000,"empty":true}]'
+      string: '[{"start":1467727200000,"end":1467730800000,"min":5.3694048E7,"avg":1.2296928923076926E8,"median":1.17327631422772E8,"max":1.84128E8,"sum":1.438740684E10,"samples":117,"empty":false},{"start":1467730800000,"end":1467734400000,"min":6.340384E7,"avg":7.294701163636364E7,"median":7.34352648785185E7,"max":8.23386E7,"sum":8.02417128E8,"samples":11,"empty":false},{"start":1467734400000,"end":1467738000000,"empty":true}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:42 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed/data/?bucketDuration=3600s&end=1466668800001&start=1466661600000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed/data/?bucketDuration=3600s&end=1467734400001&start=1467727200000
     body:
       encoding: US-ASCII
       string: ''
@@ -2988,7 +3115,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -3009,21 +3136,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:42 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '292'
+      - '404'
     body:
       encoding: UTF-8
-      string: '[{"start":1466661600000,"end":1466665200000,"empty":true},{"start":1466665200000,"end":1466668800000,"min":2.6017792E8,"avg":2.81786368E8,"median":2.8377350722703856E8,"max":2.86588928E8,"sum":9.017163776E9,"samples":32,"empty":false},{"start":1466668800000,"end":1466672400000,"empty":true}]'
+      string: '[{"start":1467727200000,"end":1467730800000,"min":8.7752704E7,"avg":8.934111891525425E7,"median":8.963851660629241E7,"max":9.0308608E7,"sum":5.271126016E9,"samples":59,"empty":false},{"start":1467730800000,"end":1467734400000,"min":9.0308608E7,"avg":9.0308608E7,"median":9.0308608E7,"max":9.0308608E7,"sum":5.41851648E8,"samples":6,"empty":false},{"start":1467734400000,"end":1467738000000,"empty":true}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:42 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used/data/?bucketDuration=3600s&end=1466668800001&start=1466661600000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used/data/?bucketDuration=3600s&end=1467734400001&start=1467727200000
     body:
       encoding: US-ASCII
       string: ''
@@ -3033,7 +3160,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -3054,21 +3181,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:42 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '303'
+      - '413'
     body:
       encoding: UTF-8
-      string: '[{"start":1466661600000,"end":1466665200000,"empty":true},{"start":1466665200000,"end":1466668800000,"min":2.42853744E8,"avg":2.6605683778461537E8,"median":2.6748501020246232E8,"max":2.70352656E8,"sum":1.7293694456E10,"samples":65,"empty":false},{"start":1466668800000,"end":1466672400000,"empty":true}]'
+      string: '[{"start":1467727200000,"end":1467730800000,"min":7.9358968E7,"avg":8.1065226940171E7,"median":8.130356051672074E7,"max":8.2027768E7,"sum":9.484631552E9,"samples":117,"empty":false},{"start":1467730800000,"end":1467734400000,"min":8.194296E7,"avg":8.198579563636364E7,"median":8.198103425E7,"max":8.2019928E7,"sum":9.01843752E8,"samples":11,"empty":false},{"start":1467734400000,"end":1467738000000,"empty":true}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:42 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count/data/?bucketDuration=3600s&end=1466668800001&start=1466661600000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count/data/?bucketDuration=3600s&end=1467734400001&start=1467727200000
     body:
       encoding: US-ASCII
       string: ''
@@ -3078,7 +3205,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -3099,21 +3226,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:42 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '275'
+      - '345'
     body:
       encoding: UTF-8
-      string: '[{"start":1466661600000,"end":1466665200000,"empty":true},{"start":1466665200000,"end":1466668800000,"min":847.0,"avg":850.4374999999999,"median":850.8492063492064,"max":855.0,"sum":13607.0,"samples":16,"empty":false},{"start":1466668800000,"end":1466672400000,"empty":true}]'
+      string: '[{"start":1467727200000,"end":1467730800000,"min":48.0,"avg":51.400000000000006,"median":51.98685706962966,"max":53.0,"sum":1542.0,"samples":30,"empty":false},{"start":1467730800000,"end":1467734400000,"min":50.0,"avg":51.0,"median":51.0,"max":52.0,"sum":153.0,"samples":3,"empty":false},{"start":1467734400000,"end":1467738000000,"empty":true}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:42 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Aborted%20Transactions/rate?bucketDuration=3600s&end=1466668800001&start=1466661600000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Aborted%20Transactions/rate?bucketDuration=3600s&end=1467734400001&start=1467727200000
     body:
       encoding: US-ASCII
       string: ''
@@ -3123,7 +3250,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -3144,21 +3271,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:42 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '239'
+      - '307'
     body:
       encoding: UTF-8
-      string: '[{"start":1466661600000,"end":1466665200000,"empty":true},{"start":1466665200000,"end":1466668800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":64,"empty":false},{"start":1466668800000,"end":1466672400000,"empty":true}]'
+      string: '[{"start":1467727200000,"end":1467730800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":116,"empty":false},{"start":1467730800000,"end":1467734400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":11,"empty":false},{"start":1467734400000,"end":1467738000000,"empty":true}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:42 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Application%20Rollbacks/rate?bucketDuration=3600s&end=1466668800001&start=1466661600000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Application%20Rollbacks/rate?bucketDuration=3600s&end=1467734400001&start=1467727200000
     body:
       encoding: US-ASCII
       string: ''
@@ -3168,7 +3295,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -3189,21 +3316,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:42 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '239'
+      - '307'
     body:
       encoding: UTF-8
-      string: '[{"start":1466661600000,"end":1466665200000,"empty":true},{"start":1466665200000,"end":1466668800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":64,"empty":false},{"start":1466668800000,"end":1466672400000,"empty":true}]'
+      string: '[{"start":1467727200000,"end":1467730800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":116,"empty":false},{"start":1467730800000,"end":1467734400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":11,"empty":false},{"start":1467734400000,"end":1467738000000,"empty":true}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:42 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Committed%20Transactions/rate?bucketDuration=3600s&end=1466668800001&start=1466661600000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Committed%20Transactions/rate?bucketDuration=3600s&end=1467734400001&start=1467727200000
     body:
       encoding: US-ASCII
       string: ''
@@ -3213,7 +3340,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -3234,21 +3361,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:42 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '239'
+      - '307'
     body:
       encoding: UTF-8
-      string: '[{"start":1466661600000,"end":1466665200000,"empty":true},{"start":1466665200000,"end":1466668800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":64,"empty":false},{"start":1466668800000,"end":1466672400000,"empty":true}]'
+      string: '[{"start":1467727200000,"end":1467730800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":116,"empty":false},{"start":1467730800000,"end":1467734400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":11,"empty":false},{"start":1467734400000,"end":1467738000000,"empty":true}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:42 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Heuristics/rate?bucketDuration=3600s&end=1466668800001&start=1466661600000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Heuristics/rate?bucketDuration=3600s&end=1467734400001&start=1467727200000
     body:
       encoding: US-ASCII
       string: ''
@@ -3258,7 +3385,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -3279,21 +3406,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:42 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '239'
+      - '307'
     body:
       encoding: UTF-8
-      string: '[{"start":1466661600000,"end":1466665200000,"empty":true},{"start":1466665200000,"end":1466668800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":64,"empty":false},{"start":1466668800000,"end":1466672400000,"empty":true}]'
+      string: '[{"start":1467727200000,"end":1467730800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":116,"empty":false},{"start":1467730800000,"end":1467734400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":11,"empty":false},{"start":1467734400000,"end":1467738000000,"empty":true}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:42 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20In-Flight%20Transactions/data/?bucketDuration=3600s&end=1466668800001&start=1466661600000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20In-Flight%20Transactions/data/?bucketDuration=3600s&end=1467734400001&start=1467727200000
     body:
       encoding: US-ASCII
       string: ''
@@ -3303,7 +3430,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -3324,21 +3451,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:36 GMT
+      - Tue, 05 Jul 2016 15:05:42 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '239'
+      - '307'
     body:
       encoding: UTF-8
-      string: '[{"start":1466661600000,"end":1466665200000,"empty":true},{"start":1466665200000,"end":1466668800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":65,"empty":false},{"start":1466668800000,"end":1466672400000,"empty":true}]'
+      string: '[{"start":1467727200000,"end":1467730800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":117,"empty":false},{"start":1467730800000,"end":1467734400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":11,"empty":false},{"start":1467734400000,"end":1467738000000,"empty":true}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:36 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:42 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Nested%20Transactions/rate?bucketDuration=3600s&end=1466668800001&start=1466661600000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Nested%20Transactions/rate?bucketDuration=3600s&end=1467734400001&start=1467727200000
     body:
       encoding: US-ASCII
       string: ''
@@ -3348,7 +3475,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -3369,21 +3496,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:37 GMT
+      - Tue, 05 Jul 2016 15:05:42 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '239'
+      - '307'
     body:
       encoding: UTF-8
-      string: '[{"start":1466661600000,"end":1466665200000,"empty":true},{"start":1466665200000,"end":1466668800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":64,"empty":false},{"start":1466668800000,"end":1466672400000,"empty":true}]'
+      string: '[{"start":1467727200000,"end":1467730800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":116,"empty":false},{"start":1467730800000,"end":1467734400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":11,"empty":false},{"start":1467734400000,"end":1467738000000,"empty":true}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:37 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:42 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Resource%20Rollbacks/rate?bucketDuration=3600s&end=1466668800001&start=1466661600000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Resource%20Rollbacks/rate?bucketDuration=3600s&end=1467734400001&start=1467727200000
     body:
       encoding: US-ASCII
       string: ''
@@ -3393,7 +3520,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -3414,21 +3541,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:37 GMT
+      - Tue, 05 Jul 2016 15:05:43 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '239'
+      - '307'
     body:
       encoding: UTF-8
-      string: '[{"start":1466661600000,"end":1466665200000,"empty":true},{"start":1466665200000,"end":1466668800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":64,"empty":false},{"start":1466668800000,"end":1466672400000,"empty":true}]'
+      string: '[{"start":1467727200000,"end":1467730800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":116,"empty":false},{"start":1467730800000,"end":1467734400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":11,"empty":false},{"start":1467734400000,"end":1467738000000,"empty":true}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:37 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:43 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Timed%20Out%20Transactions/rate?bucketDuration=3600s&end=1466668800001&start=1466661600000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Timed%20Out%20Transactions/rate?bucketDuration=3600s&end=1467734400001&start=1467727200000
     body:
       encoding: US-ASCII
       string: ''
@@ -3438,7 +3565,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -3459,21 +3586,21 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:37 GMT
+      - Tue, 05 Jul 2016 15:05:43 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '239'
+      - '307'
     body:
       encoding: UTF-8
-      string: '[{"start":1466661600000,"end":1466665200000,"empty":true},{"start":1466665200000,"end":1466668800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":64,"empty":false},{"start":1466668800000,"end":1466672400000,"empty":true}]'
+      string: '[{"start":1467727200000,"end":1467730800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":116,"empty":false},{"start":1467730800000,"end":1467734400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":11,"empty":false},{"start":1467734400000,"end":1467738000000,"empty":true}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:37 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:43 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B27e06e8f-6e5d-45cd-8353-c1f9d4dfe991%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Transactions/rate?bucketDuration=3600s&end=1466668800001&start=1466661600000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B70c798a0-6985-4f8a-a525-012d8d28e8a3%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Transactions/rate?bucketDuration=3600s&end=1467734400001&start=1467727200000
     body:
       encoding: US-ASCII
       string: ''
@@ -3483,7 +3610,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - hawkular
       Content-Type:
@@ -3504,16 +3631,16 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Thu, 23 Jun 2016 09:59:37 GMT
+      - Tue, 05 Jul 2016 15:05:43 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '239'
+      - '307'
     body:
       encoding: UTF-8
-      string: '[{"start":1466661600000,"end":1466665200000,"empty":true},{"start":1466665200000,"end":1466668800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":64,"empty":false},{"start":1466668800000,"end":1466672400000,"empty":true}]'
+      string: '[{"start":1467727200000,"end":1467730800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":116,"empty":false},{"start":1467730800000,"end":1467734400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":11,"empty":false},{"start":1467734400000,"end":1467738000000,"empty":true}]'
     http_version: 
-  recorded_at: Thu, 23 Jun 2016 09:59:37 GMT
+  recorded_at: Tue, 05 Jul 2016 15:05:43 GMT
 recorded_with: VCR 2.9.3
