@@ -411,6 +411,11 @@ describe MiqAeCustomizationController do
         expect(controller.instance_variable_get(:@flash_array))
           .to include(:message => "Service dialogs imported successfully", :level => :success)
       end
+
+      it "updates the dialogs tree" do
+        expect(controller).to receive(:replace_right_cell).with(nil, [:dialogs])
+        post :import_service_dialogs, :params => params, :xhr => true
+      end
     end
 
     context "when the import file upload does not exist" do
