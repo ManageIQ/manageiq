@@ -2626,10 +2626,10 @@ Vmdb::Application.routes.draw do
   # OPTIONS requests for REST API pre-flight checks
 
   # Semantic Versioning Regex for API, i.e. vMajor.minor.patch[-pre]
-  apiver_regex = /v[\d]+(\.[\da-zA-Z]+)*(\-[\da-zA-Z]+)?/
+  API_VERSION_REGEX = /v[\d]+(\.[\da-zA-Z]+)*(\-[\da-zA-Z]+)?/
 
   match '/api/*path'   => 'api#handle_options_request', :via => [:options]
-  get '/api(/:version)'           => 'api#show_entrypoint',    :format => 'json', :version => apiver_regex
+  get '/api(/:version)' => 'api#show_entrypoint', :format => 'json', :version => API_VERSION_REGEX
 
   API_ACTIONS = {
     :get    => "show",
@@ -2650,7 +2650,7 @@ Vmdb::Application.routes.draw do
           verb,
           "/api(/:version)/#{collection_name}" => action_for(verb),
           :format => "json",
-          :version => apiver_regex
+          :version => API_VERSION_REGEX
         )
       end
 
@@ -2659,7 +2659,7 @@ Vmdb::Application.routes.draw do
           verb,
           "/api(/:version)/#{collection_name}(/:c_id)" => action_for(verb),
           :format => "json",
-          :version => apiver_regex
+          :version => API_VERSION_REGEX
         )
       end
     end
@@ -2670,7 +2670,7 @@ Vmdb::Application.routes.draw do
           verb,
           "/api(/:version)/#{collection_name}/:c_id/#{subcollection_name}(/:s_id)" => action_for(verb),
           :format => "json",
-          :version => apiver_regex
+          :version => API_VERSION_REGEX
         )
       end
     end
