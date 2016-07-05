@@ -391,7 +391,7 @@ describe Host do
   describe "#v_total_miq_templates" do
     it "counts" do
       host = FactoryGirl.create(:host)
-      FactoryGirl.create(:template, :host => host)
+      FactoryGirl.create(:template_vmware, :host => host)
       expect(host.v_total_miq_templates).to eq(1)
       expect(Host.attribute_supported_by_sql?(:v_total_miq_templates)).to be true
     end
