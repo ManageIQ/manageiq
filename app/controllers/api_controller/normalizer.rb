@@ -119,8 +119,12 @@ class ApiController
     def normalize_select_attributes(obj, opts)
       if opts[:render_attributes].present?
         opts[:render_attributes]
+      elsif obj.respond_to?(:attributes) && obj.class.respond_to?(:virtual_attribute_names)
+        obj.attributes.keys - obj.class.virtual_attribute_names
+      elsif obj.respond_to?(:attributes)
+        obj.attributes.keys
       else
-        obj.respond_to?(:attributes) ? obj.attributes.keys : obj.keys
+        obj.keys
       end
     end
 
