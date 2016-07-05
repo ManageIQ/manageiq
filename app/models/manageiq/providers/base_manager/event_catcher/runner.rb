@@ -84,8 +84,22 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
     raise NotImplementedError, _("must be implemented in subclass")
   end
 
-  def process_event(_event)
+  # This method has been refactored to go through two steps, namely filetered? and queue_event.
+  # Therefore every subclass should override filtered? and queue_event
+  #
+  # For historical reason existing providers still directly implement process_event
+  # They should be eventually refactored following the example of VMWare provider.
+  def process_event(event)
+    queue_event(event) unless filtered?(event)
+  end
+
+  def queue_event(_event)
     raise NotImplementedError, _("must be implemented in subclass")
+  end
+
+  # default implementation: none event is skipped
+  def filtered?(_event)
+    false
   end
 
   def event_monitor_running
