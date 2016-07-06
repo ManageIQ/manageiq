@@ -286,22 +286,20 @@ module ApiSpecHelper
     expected["success"] = options[:success] if options.key?(:success)
     expected["message"] = a_string_matching(options[:message]) if options[:message]
     expected["href"] = a_string_matching(fetch_value(options[:href])) if options[:href]
-    if options[:task]
-      expected["task_id"] = anything
-      expected["task_href"] = anything
-    end
+    expected.merge!(expected_task_response) if options[:task]
     expect(response_hash).to include(expected)
   end
 
   def expect_multiple_action_result(count, options = {})
     expect(response).to have_http_status(:ok)
     expected_result = {"success" => true}
-    if options[:task]
-      expected_result["task_id"] = anything
-      expected_result["task_href"] = anything
-    end
+    expected_result.merge!(expected_task_response) if options[:task]
     expected = {"results" => Array.new(count) { a_hash_including(expected_result) }}
     expect(response_hash).to include(expected)
+  end
+
+  def expected_task_response
+    {"task_id" => anything, "task_href" => anything}
   end
 
   def expect_tagging_result(tagging_results)
