@@ -249,9 +249,9 @@ module ApiSpecHelper
   end
 
   def expect_result_resources_to_have_only_keys(collection, keys)
-    key_list = fetch_value(keys).sort
-    expect(response.parsed_body).to have_key(collection)
-    expect(response.parsed_body[collection].all? { |result| result.keys.sort == key_list }).to be_truthy
+    key_list = fetch_value(keys)
+    expect(response.parsed_body).to include(collection => all(match(Hash[key_list.map { |k| [k, anything] }
+])))
   end
 
   # Primary result construct methods
