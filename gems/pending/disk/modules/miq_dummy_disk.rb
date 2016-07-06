@@ -25,8 +25,8 @@ module MiqDummyDisk
     @d_size ||= @dInfo.d_size
   end
 
-  def d_write(_pos, _buf, _len)
-    "MiqDummyDisk.d_write"
+  def d_write(_pos, _buf, len)
+    len
   end
 
   def d_read(pos, len)

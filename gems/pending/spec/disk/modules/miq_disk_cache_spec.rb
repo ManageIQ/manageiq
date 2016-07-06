@@ -75,8 +75,12 @@ describe MiqDiskCache do
     end
 
     describe "#d_write" do
-      it "should return a dummy string" do
-        expect(@miq_cache.d_write(0, "12345", 5)).to eq("MiqDummyDisk.d_write")
+      before do
+        @dummy_string = "12345"
+      end
+
+      it "should return the length of the dummy string" do
+        expect(@miq_cache.d_write(0, "12345", @dummy_string.length)).to eq(@dummy_string.length)
       end
     end
 
