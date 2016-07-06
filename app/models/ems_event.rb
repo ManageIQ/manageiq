@@ -68,6 +68,10 @@ class EmsEvent < EventStream
     add(ems_id, ManageIQ::Providers::Redhat::InfraManager::EventParser.event_to_hash(event, ems_id))
   end
 
+  def self.add_ovirt4(ems_id, event)
+    add(ems_id, ManageIQ::Providers::Ovirt4::InfraManager::EventParser.event_to_hash(event, ems_id))
+  end
+
   def self.add_openstack(ems_id, event)
     add(ems_id, ManageIQ::Providers::Openstack::CloudManager::EventParser.event_to_hash(event, ems_id))
   end

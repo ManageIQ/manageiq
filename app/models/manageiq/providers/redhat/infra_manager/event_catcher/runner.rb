@@ -19,6 +19,14 @@ class ManageIQ::Providers::Redhat::InfraManager::EventCatcher::Runner < ManageIQ
   end
 
   def stop_event_monitor
+    if @ems.api_version == '4'
+      super
+    else
+      stop_event_monitor_legacy
+    end
+  end
+
+  def stop_event_monitor_legacy
     @event_monitor_handle.stop unless @event_monitor_handle.nil?
   rescue Exception => err
     _log.warn("#{log_prefix} Event Monitor Stop errored because [#{err.message}]")
@@ -29,6 +37,14 @@ class ManageIQ::Providers::Redhat::InfraManager::EventCatcher::Runner < ManageIQ
   end
 
   def monitor_events
+    if @ems.api_version == '4'
+      super
+    else
+      monitor_events_legacy
+    end
+  end
+
+  def monitor_events_legacy
     event_monitor_handle.start
     event_monitor_handle.each_batch do |events|
       event_monitor_running
@@ -40,6 +56,14 @@ class ManageIQ::Providers::Redhat::InfraManager::EventCatcher::Runner < ManageIQ
   end
 
   def process_event(event)
+    if @ems.api_version == '4'
+      super
+    else
+      process_event_legacy(event)
+    end
+  end
+
+  def process_event_legacy(event)
     if filtered_events.include?(event[:name])
       _log.info "#{log_prefix} Skipping caught event [#{event[:name]}]"
     else
