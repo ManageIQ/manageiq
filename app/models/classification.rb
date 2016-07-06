@@ -209,13 +209,6 @@ class Classification < ApplicationRecord
     nil
   end
 
-  def self.all_cat_entries(name, obj)
-    cat = find_by_name(name, obj.region_id)
-    return [] unless cat
-
-    find_assigned_entries(obj).collect { |e| e if e.parent_id == cat.id }.compact
-  end
-
   # Splits a fully qualified tag into the namespace, category, and entry
   def self.tag_name_split(tag_name)
     parts = tag_name.split("/")
