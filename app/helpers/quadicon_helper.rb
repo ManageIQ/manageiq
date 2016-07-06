@@ -281,7 +281,7 @@ module QuadiconHelper
       output << flobj_img_simple(size, "#{size}/base.png")
 
       output << flobj_p_simple("a#{size}", item.vms.size)
-      output << flobj_img_simple(size, "72/currentstate-#{h(item.state.downcase)}.png", "b#{size}") unless item.state.blank?
+      output << flobj_img_simple(size, "72/currentstate-#{h(item.normalized_state.downcase)}.png", "b#{size}")
       output << flobj_img_simple(size, img_for_host_vendor(item), "c#{size}")
       output << flobj_img_simple(size, img_for_auth_status(item), "d#{size}")
       output << flobj_img_simple(size, '100/shield.png', "g#{size}") unless item.get_policies.empty?
