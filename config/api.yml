@@ -1635,6 +1635,17 @@
       :delete:
       - :name: delete
         :identifier: zone_delete
+  :virtual_template_provision:
+    :description: Virtual Template Provision
+    :identifier: miq_virtual_template_provision
+    :options:
+    - :collection
+    :verbs: *70174834084700
+    :klass: ManageIQ::Providers::CloudManager::VirtualTemplate
+    :collection_actions:
+      :post:
+      - :name: create
+        :identifier: create_virtual_template_provision
   :virtual_templates:
     :description: Virtual Templates
     :identifier: miq_virtual_template
