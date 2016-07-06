@@ -29,4 +29,10 @@ class DialogTab < ApplicationRecord
       end
     end
   end
+
+  def deep_copy
+    dup.tap do |new_tab|
+      new_tab.dialog_groups = dialog_groups.collect(&:deep_copy)
+    end
+  end
 end

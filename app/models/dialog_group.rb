@@ -26,4 +26,10 @@ class DialogGroup < ApplicationRecord
       end
     end
   end
+
+  def deep_copy
+    dup.tap do |new_group|
+      new_group.dialog_fields = dialog_fields.collect(&:deep_copy)
+    end
+  end
 end
