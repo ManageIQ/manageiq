@@ -321,7 +321,12 @@ module OpsController::Settings::Schedules
     when "container_image"
       filtered_item_list = find_filtered(ContainerImage).sort_by { |ci| ci.name.downcase }.collect(&:name).uniq
     when "ems"
-      filtered_item_list = find_filtered(ExtManagementSystem).sort_by { |vm| vm.name.downcase }.collect(&:name).uniq
+      if action_type == "host" || "host_check_compliance"
+        filtered_item_list = find_filtered(ExtManagementSystem).collect{|ems| ems.name if ems.number_of(:hosts) > 0}
+                                 .delete_if {|ems| ems.blank? }.sort_by { |ems| ems.downcase }
+      else
+        filtered_item_list = find_filtered(ExtManagementSystem).sort_by { |vm| vm.name.downcase }.collect(&:name).uniq
+      end
     when "cluster"
       filtered_item_list = find_filtered(EmsCluster).collect do |cluster|
         [cluster.name + "__" + cluster.v_parent_datacenter, cluster.v_qualified_desc]
@@ -600,7 +605,7 @@ module OpsController::Settings::Schedules
 
     @host_options_for_select = [
       [_("All Hosts"), "all"],
-      [_("All Hosts for %{table}") % {:table => ui_lookup(:table => "ext_management_systems")}, "ems"],
+      [_("All Hosts for %{table}") % {:table => ui_lookup(:table => "ems_infra")}, "ems"],
       [_("All Hosts for %{table}") % {:table => ui_lookup(:table => "ems_clusters")}, "cluster"],
       [_("A single Host"), "host"]
     ] +
