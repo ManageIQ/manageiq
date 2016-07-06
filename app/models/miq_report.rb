@@ -144,6 +144,25 @@ class MiqReport < ApplicationRecord
     end
   end
 
+  def list_schedules
+    exp = MiqExpression.new("=" => {"field" => "MiqReport.id",
+                                    "value" => id})
+    MiqSchedule.filter_matches_with exp
+  end
+
+  def add_schedule(data)
+    params = data
+    params['name'] ||= name
+    params['description'] ||= title
+
+    params['filter'] = MiqExpression.new("=" => {"field" => "MiqReport.id",
+                                                 "value" => id})
+    params['towhat'] = "MiqReport"
+    params['prod_default'] = "system"
+
+    MiqSchedule.create! params
+  end
+
   def db_class
     db.kind_of?(Class) ? db : Object.const_get(db)
   end

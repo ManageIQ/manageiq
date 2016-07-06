@@ -21,6 +21,8 @@ class MiqSchedule < ApplicationRecord
     where("updated_at > ?", time)
   }
 
+  scope :filter_matches_with, -> (exp) { where(:filter => exp) }
+
   serialize :sched_action
   serialize :filter
   serialize :run_at

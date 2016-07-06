@@ -47,6 +47,12 @@ class ApiController
       hash
     end
 
+    def add_report_schedule_to_result(hash, schedule_id, report_id)
+      hash[:schedule_id] = schedule_id
+      hash[:schedule_href] = "#{@req.api_prefix}/reports/#{report_id}/schedules/#{schedule_id}"
+      hash
+    end
+
     def log_result(hash)
       hash.each { |k, v| api_log_info("Result: #{k}=#{v}") }
     end
