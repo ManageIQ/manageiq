@@ -9,7 +9,7 @@ module Metric::Targets
   end
 
   def self.capture_infra_targets(zone, options)
-    preload_infra_targets_data(zone, options)
+    load_infra_targets_data(zone, options)
     all_hosts = capture_host_targets(zone)
     targets = hosts = only_enabled(all_hosts)
     targets += capture_storage_targets(all_hosts) unless options[:exclude_storages]
@@ -56,14 +56,29 @@ module Metric::Targets
     targets
   end
 
-  def self.preload_infra_targets_data(zone, options)
+  # preload zone with relations that will be used in cap&u
+  #
+  # tags are needed for determining if it is enabled.
+  # ems is needed for determining queue name
+  # cluster is used for hierarchies
+  def self.load_infra_targets_data(zone, options)
+    MiqPreloader.preload(zone, preload_hash_infra_targets_data(options))
+    post_load_infra_targets_data(zone, options)
+  end
+
+  def self.preload_hash_infra_targets_data(options)
     # Preload all of the objects we are going to be inspecting.
     includes = {:ext_management_systems => {:hosts => {:ems_cluster => :tags, :tags => {}}}}
     includes[:ext_management_systems][:hosts][:storages] = :tags unless options[:exclude_storages]
     includes[:ext_management_systems][:hosts][:vms] = {} unless options[:exclude_vms]
+    includes
+  end
 
-    MiqPreloader.preload(zone, includes)
-
+  # populate parts of the hierarchy that are not properly preloaded
+  #
+  # preload will load new objects at every level. which is probably fine
+  # but since we are also loading tags and other data, this just plain downloads too much
+  def self.post_load_infra_targets_data(zone, options)
     # populate ems (with tags / clusters)
     zone.ext_management_systems.each do |ems|
       ems.hosts.each do |host|
