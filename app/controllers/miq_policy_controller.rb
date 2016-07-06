@@ -13,6 +13,8 @@ class MiqPolicyController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
+  UI_FOLDERS = [Host, Vm, ContainerImage].freeze
+
   def index
     redirect_to :action => 'explorer'
   end
@@ -936,11 +938,14 @@ class MiqPolicyController < ApplicationController
     @sb[:folder] = nodeid.nil? ? nodetype.split("-").last : nodeid
     if x_active_tree == :policy_tree
       if nodeid.nil? && ["compliance", "control"].include?(nodetype.split('-').last)
-        @folders = MiqPolicy::UI_FOLDERS.collect do |model|
-          "#{model.name.titleize} #{nodetype.split('-').last.titleize}"
+        # level 1 - compliance & control
+        _, mode = nodetype.split('-')
+        @folders = UI_FOLDERS.collect do |model|
+          "#{model.name.titleize} #{mode.titleize}"
         end
-        @right_cell_text = _("%{typ} %{model}") % {:typ => nodetype.split('-').last.titleize, :model => ui_lookup(:models => "MiqPolicy")}
+        @right_cell_text = _("%{typ} %{model}") % {:typ => mode.titleize, :model => ui_lookup(:models => "MiqPolicy")}
       else
+        # level 2 - host, vm, etc. under compliance/control - OR deeper levels
         @sb[:mode] = nodeid.split("-")[1]
         @sb[:nodeid] = nodeid.split("-").last
         @sb[:folder] = "#{nodeid.split("-")[1]}-#{nodeid.split("-")[2]}"
