@@ -49,7 +49,7 @@ class ApiController
 
     def add_report_schedule_to_result(hash, schedule_id, report_id)
       hash[:schedule_id] = schedule_id
-      hash[:schedule_href] = "#{@req[:api_prefix]}/reports/#{report_id}/schedules/#{schedule_id}"
+      hash[:schedule_href] = "#{@req.api_prefix}/reports/#{report_id}/schedules/#{schedule_id}"
       hash
     end
 
