@@ -107,20 +107,20 @@ class ConfigurationController < ApplicationController
       @edit[:show_ids] = params[:all_checked].split(',')
       if !@edit[:show_ids].blank?
         @edit[:new].each_with_index do |arr, i|
-          if @edit[:show_ids].include?(arr.id.to_s)
-            @edit[:new][i].search_key = nil
+          if @edit[:show_ids].include?(arr[:id].to_s)
+            @edit[:new][i][:search_key] = nil
           else
-            @edit[:new][i].search_key = "_hidden_"
+            @edit[:new][i][:search_key] = "_hidden_"
           end
         end
       else      # if everything was unchecked
         @edit[:new].each_with_index do |_search, i|
-          @edit[:new][i].search_key = nil
+          @edit[:new][i][:search_key] = nil
         end
       end
     end
     @edit[:current].each_with_index do |arr, i|          # needed to compare each array element's attributes to find out if something has changed
-      if @edit[:new][i].search_key != arr.search_key
+      if @edit[:new][i][:search_key] != arr[:search_key]
         @changed = true
         break
       end
@@ -129,8 +129,8 @@ class ConfigurationController < ApplicationController
       page << javascript_prologue
       # needed to compare each array element's attributes to find out if something has changed
       @edit[:current].each_with_index do |_arr, i|
-        id = @edit[:new][i].id
-        if @edit[:new][i].search_key != @edit[:current][i].search_key
+        id = @edit[:new][i][:id]
+        if @edit[:new][i][:search_key] != @edit[:current][i][:search_key]
           style_class = 'cfme-blue-bold-node'
         else
           style_class = 'dynatree-title'
@@ -234,8 +234,8 @@ class ConfigurationController < ApplicationController
         return                                                      # No config file for Visuals yet, just return
       when "ui_3"                                                   # User Filters tab
         @edit = session[:edit]
-        @edit[:current].each do |arr|
-          s = MiqSearch.find(arr.id.to_i)
+        @edit[:current].each do |filter|
+          s = MiqSearch.find(filter[:id])
           if @edit[:show_ids]
             if @edit[:show_ids].include?(s.id.to_s)
               s.search_key = nil
@@ -698,14 +698,17 @@ class ConfigurationController < ApplicationController
         :key     => 'config_edit__ui2',
       }
     when 'ui_3'
-      current = MiqSearch.where(:search_type => "default")
-                .sort_by { |s| [NAV_TAB_PATH[s.db.downcase.to_sym], s.description.downcase] }
+      filters = MiqSearch.where(:search_type => "default")
+        .sort_by { |s| [NAV_TAB_PATH[s.db.downcase.to_sym], s.description.downcase] }
+      current = filters.map do |filter|
+        {:id => filter.id, :search_key => filter.search_key}
+      end
       @edit = {
         :key         => 'config_edit__ui3',
         :set_filters => true,
         :current     => current,
       }
-      build_default_filters_tree(@edit[:current])
+      build_default_filters_tree(filters)
     when 'ui_4'
       @edit = {
         :current     => {},
