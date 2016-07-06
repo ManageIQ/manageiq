@@ -18,7 +18,7 @@ class ApplicationHelper::Toolbar::MiqPolicyCenter < ApplicationHelper::Toolbar::
           'fa fa-files-o fa-lg',
           proc do
             _('Copy this Policy to new Policy [%{new_policy_description}]') % {
-              :new_policy_name => truncate("Copy of #{@policy.description}", :length => 255, :omission => "")
+              :new_policy_description => truncate("Copy of #{@policy.description}", :length => 255, :omission => "")
             }
           end,
           proc do
@@ -26,7 +26,7 @@ class ApplicationHelper::Toolbar::MiqPolicyCenter < ApplicationHelper::Toolbar::
           end,
           :confirm   => proc do
                           _("Are you sure you want to create Policy [%{new_policy_description}] from this Policy?") % {
-                            :new_policy_description => truncate("Copy of \#{@policy.description}\", :length => 255, :omission => \"")
+                            :new_policy_description => truncate("Copy of #{@policy.description}", :length => 255, :omission => "")
                           }
                         end,
           :url_parms => "main_div"),
