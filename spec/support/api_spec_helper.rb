@@ -172,10 +172,8 @@ module ApiSpecHelper
 
   # Rest API Expects
 
-  def expect_bad_request(error_message = nil)
+  def expect_bad_request(error_message)
     expect(response).to have_http_status(:bad_request)
-    return if error_message.blank?
-
     expect(response_hash).to have_key("error")
     expect(response_hash["error"]["message"]).to match(error_message)
   end
