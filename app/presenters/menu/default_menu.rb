@@ -128,9 +128,7 @@ module Menu
                          N_('Container Images'),
                          'container_image',
                          {:feature => 'container_image_show_list'},
-                         '/container_image'),
-          Menu::Item.new('container_topology', N_('Topology'), 'container_topology',
-                         {:feature => 'container_topology', :any => true}, '/container_topology')
+                         '/container_image')
         ])
       end
 

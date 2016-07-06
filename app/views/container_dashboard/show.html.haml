@@ -1,1 +1,4 @@
-= render :partial => "shared/views/show_containers_dashboard"
+- if @display == "topology"
+  = render :partial => "shared/views/show_topology"
+- else
+  = render :partial => "shared/views/show_containers_dashboard"

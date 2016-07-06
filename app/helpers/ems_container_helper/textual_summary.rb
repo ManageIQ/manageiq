@@ -58,10 +58,6 @@ module EmsContainerHelper::TextualSummary
     %i(zone tags)
   end
 
-  def textual_group_topology
-    items = %w(topology)
-    items.collect { |m| send("textual_#{m}") }.flatten.compact
-  end
   #
   # Items
   #
