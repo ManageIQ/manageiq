@@ -6,6 +6,10 @@ module MiqRequestTask::StateMachine
     "#{self.class.base_model.name.underscore}_#{id}"
   end
 
+  def signal_abort
+    signal(:abort)
+  end
+
   def signal(phase)
     return signal(:finish) if ![:finish, :provision_error].include?(phase.to_sym) && prematurely_finished?
 
@@ -44,11 +48,12 @@ module MiqRequestTask::StateMachine
   end
 
   def signal_queue(phase)
+    method_name, args = phase == :abort ? [:signal_abort, []] : [:signal, [phase]]
     MiqQueue.put(
       :class_name  => self.class.name,
       :instance_id => id,
-      :method_name => 'signal',
-      :args        => [phase],
+      :method_name => method_name,
+      :args        => args,
       :zone        => my_zone,
       :role        => my_role,
       :task_id     => my_task_id,
