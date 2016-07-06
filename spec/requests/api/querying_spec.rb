@@ -324,7 +324,7 @@ describe ApiController do
       run_get vms_url, :expand => "resources", :attributes => "name,vendor"
 
       expect_query_result(:vms, 1, 1)
-      expect_result_resources_to_have_only_keys("resources", %w(id href name vendor))
+      expect(response.parsed_body).to include("resources" => all(match("id" => anything, "href" => anything, "name" => anything, "vendor" => anything)))
       expect_result_resources_to_match_hash([{"name" => "aa", "id" => vm.id, "href" => vms_url(vm.id)}])
     end
 
@@ -376,7 +376,7 @@ describe ApiController do
       run_get vms_url
 
       expect_query_result(:vms, 2, 2)
-      expect_result_resources_to_have_only_keys("resources", %w(href))
+      expect(response.parsed_body).to include("resources" => all(match("href" => anything)))
     end
 
     it "supports expanding resources" do

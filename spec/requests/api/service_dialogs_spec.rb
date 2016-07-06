@@ -26,7 +26,7 @@ describe ApiController do
       run_get service_dialogs_url
 
       expect_query_result(:service_dialogs, Dialog.count, Dialog.count)
-      expect_result_resources_to_have_only_keys("resources", %w(href))
+      expect(response.parsed_body).to include("resources" => all(match("href" => anything)))
     end
 
     it "query with expanded resources to include content" do

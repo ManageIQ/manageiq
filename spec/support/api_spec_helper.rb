@@ -231,12 +231,6 @@ module ApiSpecHelper
     expect(response.parsed_body).to include(collection => all(a_hash_including(*fetch_value(keys))))
   end
 
-  def expect_result_resources_to_have_only_keys(collection, keys)
-    key_list = fetch_value(keys)
-    expect(response.parsed_body).to include(collection => all(match(Hash[key_list.map { |k| [k, anything] }
-])))
-  end
-
   # Primary result construct methods
 
   def expect_empty_query_result(collection)
