@@ -321,7 +321,7 @@ module OpsController::Settings::Schedules
     when "container_image"
       filtered_item_list = find_filtered(ContainerImage).sort_by { |ci| ci.name.downcase }.collect(&:name).uniq
     when "ems"
-      if action_type == "host" || "host_check_compliance"
+      if %w(emscluster host host_check_compliance storage).include?(action_type)
         filtered_item_list = find_filtered(ExtManagementSystem).collect{|ems| ems.name if ems.number_of(:hosts) > 0}
                                  .delete_if {|ems| ems.blank? }.sort_by { |ems| ems.downcase }
       else
@@ -621,7 +621,7 @@ module OpsController::Settings::Schedules
 
     @cluster_options_for_select = [
       [_("All Clusters"), "all"],
-      [_("All Clusters for %{table}") % {:table => ui_lookup(:table => "ext_management_systems")}, "ems"],
+      [_("All Clusters for %{table}") % {:table => ui_lookup(:table => "ems_infra")}, "ems"],
       [_("A single Cluster"), "cluster"]
     ] +
                                   (@cluster_global_filters.empty? ? [] : [[_("Global Filters"), "global"]]) +
@@ -630,7 +630,7 @@ module OpsController::Settings::Schedules
     @storage_options_for_select = [
       [_("All Datastores"), "all"],
       [_("All Datastores for Host"), "host"],
-      [_("All Datastores for %{table}") % {:table => ui_lookup(:table => "ext_management_systems")}, "ems"],
+      [_("All Datastores for %{table}") % {:table => ui_lookup(:table => "ems_infra")}, "ems"],
       [_("A single Datastore"), "storage"]
     ] +
                                   (@storage_global_filters.empty? ? [] : [[_("Global Filters"), "global"]]) +
