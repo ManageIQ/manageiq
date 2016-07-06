@@ -763,7 +763,7 @@
       - :name: run
         :identifier: miq_report_run
       - :name: schedule
-        :identifier: miq_report_run
+        :identifier: miq_report_schedule_add
     :subcollections:
     - :results
     - :schedules
