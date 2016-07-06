@@ -261,11 +261,6 @@ module ApiSpecHelper
     expect(response_hash[collection].all? { |result| result.keys.sort == key_list }).to be_truthy
   end
 
-  def expect_result_to_represent_task(result)
-    expect(result).to have_key("task_id")
-    expect(result).to have_key("task_href")
-  end
-
   # Primary result construct methods
 
   def expect_empty_query_result(collection)
@@ -287,20 +282,24 @@ module ApiSpecHelper
 
   def expect_single_action_result(options = {})
     expect(response).to have_http_status(:ok)
-    expect(response_hash).to include("success" => options[:success]) if options.key?(:success)
-    expect(response_hash).to include("message" => a_string_matching(options[:message])) if options[:message]
-    expect(response_hash).to include("href" => a_string_matching(fetch_value(options[:href]))) if options[:href]
-    expect_result_to_represent_task(response_hash) if options[:task]
+    expected = {}
+    expected["success"] = options[:success] if options.key?(:success)
+    expected["message"] = a_string_matching(options[:message]) if options[:message]
+    expected["href"] = a_string_matching(fetch_value(options[:href])) if options[:href]
+    expected.merge!(expected_task_response) if options[:task]
+    expect(response_hash).to include(expected)
   end
 
   def expect_multiple_action_result(count, options = {})
     expect(response).to have_http_status(:ok)
-    expect(response_hash).to have_key("results")
-    results = response_hash["results"]
-    expect(results.size).to eq(count)
-    expect(results.all? { |r| r["success"] }).to be_truthy
+    expected_result = {"success" => true}
+    expected_result.merge!(expected_task_response) if options[:task]
+    expected = {"results" => Array.new(count) { a_hash_including(expected_result) }}
+    expect(response_hash).to include(expected)
+  end
 
-    results.each { |r| expect_result_to_represent_task(r) } if options[:task]
+  def expected_task_response
+    {"task_id" => anything, "task_href" => anything}
   end
 
   def expect_tagging_result(tagging_results)
