@@ -74,7 +74,7 @@ module SupportsFeatureMixin
       send(:define_supports_methods, feature, true, &block)
     end
 
-    def supports_not(feature, reason)
+    def supports_not(feature, reason = nil)
       send(:define_supports_methods, feature, false, reason)
     end
 
