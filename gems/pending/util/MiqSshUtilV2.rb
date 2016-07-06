@@ -1,17 +1,5 @@
 require 'util/extensions/miq-string.rb'
 
-module Net
-  module SSH
-    module Authentication
-      class KeyManager
-        def use_agent?
-          false
-        end
-      end
-    end
-  end
-end
-
 class MiqSshUtil
   attr_reader :status, :host
 
@@ -34,6 +22,9 @@ class MiqSshUtil
 
     # Obsolete, delete if passed in
     @options.delete(:authentication_prompt_delay)
+
+    # don't use the ssh-agent
+    @options[:use_agent] = false
 
     # Set logging to use our default handle if it exists and one was not passed in
     unless @options.key?(:logger)
