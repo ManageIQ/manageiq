@@ -3807,6 +3807,10 @@
       :description: Edit Tags of Pods
       :feature_type: control
       :identifier: container_group_tag
+    - :name: Manage Policies
+      :description: Manage Policies of Pods
+      :feature_type: control
+      :identifier: container_group_protect
 
 # ContainerNode
 - :name: Nodes
@@ -3861,6 +3865,10 @@
       :description: Edit Tags of Container Nodes
       :feature_type: control
       :identifier: container_node_tag
+    - :name: Manage Policies
+      :description: Manage Policies of Container Nodes
+      :feature_type: control
+      :identifier: container_node_protect
 
 # ContainerReplicator
 - :name: Replicators
@@ -3915,6 +3923,10 @@
       :description: Edit Tags of Container Replicators
       :feature_type: control
       :identifier: container_replicator_tag
+    - :name: Manage Policies
+      :description: Manage Policies of Container Replicators
+      :feature_type: control
+      :identifier: container_replicator_protect
 
 
 # ContainerImage
