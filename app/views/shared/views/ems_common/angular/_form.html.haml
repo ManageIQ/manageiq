@@ -88,11 +88,13 @@
       %label.col-md-2.control-label{"for" => "ems_subscription"}
         = _('Subscription ID')
       .col-md-8
-        %input.form-control{"type"        => "text",
-                            "id"          => "ems_subscription",
-                            "name"        => "subscription",
-                            "ng-model"    => "emsCommonModel.subscription",
-                            "checkchange" => ""}
+        %input.form-control{"type"                    => "text",
+                            "id"                      => "ems_subscription",
+                            "name"                    => "subscription",
+                            "ng-model"                => "emsCommonModel.subscription",
+                            "checkchange"             => "",
+                            "prefix"                  => "default",
+                            "reset-validation-status" => "default_auth_status"}
 
     .form-group{"ng-class" => "{'has-error': angularForm.api_version.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra'"}
       %label.col-md-2.control-label{"for" => "ems_api_version"}
