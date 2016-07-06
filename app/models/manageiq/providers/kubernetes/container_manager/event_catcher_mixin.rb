@@ -47,28 +47,17 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
     reset_event_monitor_handle
   end
 
-  def process_event(event)
-    event_data = {
-      :timestamp => event.object.lastTimestamp,
-      :kind      => event.object.involvedObject.kind,
-      :name      => event.object.involvedObject.name,
-      :namespace => event.object.involvedObject['table'][:namespace],
-      :reason    => event.object.reason,
-      :message   => event.object.message,
-      :uid       => event.object.involvedObject.uid
-    }
-
-    unless event.object.involvedObject.fieldPath.nil?
-      event_data[:fieldpath] = event.object.involvedObject.fieldPath
-    end
-
+  def filtered?(event)
+    event_data = event_to_hash(event)
     supported_reasons = ENABLED_EVENTS[event_data[:kind]] || []
 
-    unless supported_reasons.include?(event_data[:reason])
-      _log.debug "#{log_prefix} Discarding event [#{event_data}]"
-      return
-    end
+    return false if supported_reasons.include?(event_data[:reason])
 
+    _log.debug "#{log_prefix} Discarding event [#{event_data}]"
+    true
+  end
+
+  def queue_event(event)
     event_type_prefix = event_data[:kind].upcase
 
     # Handle event data for specific entities
@@ -93,5 +82,17 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
 
     _log.info "#{log_prefix} Queuing event [#{event_data}]"
     EmsEvent.add_queue('add_kubernetes', @cfg[:ems_id], event_data)
+  end
+
+  def event_to_hash(event)
+    {
+      :timestamp => event.object.lastTimestamp,
+      :kind      => event.object.involvedObject.kind,
+      :name      => event.object.involvedObject.name,
+      :namespace => event.object.involvedObject['table'][:namespace],
+      :reason    => event.object.reason,
+      :message   => event.object.message,
+      :uid       => event.object.involvedObject.uid
+    }.tap { |h| h[:fieldpath] = event.object.involvedObject.fieldPath if event.object.involvedObject.fieldPath }
   end
 end

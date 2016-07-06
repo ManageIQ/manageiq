@@ -45,16 +45,11 @@ class ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Runner <
     reset_event_monitor_handle
   end
 
-  def process_event(event)
-    $mw_log.debug "Processing Event #{event}"
+  def queue_event(event)
     event_hash = event_to_hash(event, @cfg[:ems_id])
 
-    if blacklist?(event_hash[:event_type])
-      $mw_log.debug "#{log_prefix} Filtering blacklisted event [#{event}]"
-    else
-      $mw_log.debug "#{log_prefix} Adding ems event [#{event_hash}]"
-      EmsEvent.add_queue('add', @cfg[:ems_id], event_hash)
-    end
+    $mw_log.debug "#{log_prefix} Adding ems event [#{event_hash}]"
+    EmsEvent.add_queue('add', @cfg[:ems_id], event_hash)
   end
 
   private
@@ -92,5 +87,14 @@ class ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Runner <
       :middleware_type => event.middleware_type,
       :full_data       => event.to_s
     }
+  end
+
+  def filtered?(event)
+    $mw_log.debug "Processing Event #{event}"
+    event_hash = event_to_hash(event, @cfg[:ems_id])
+
+    blacklist?(event_hash[:event_type]).tap do |result|
+      $mw_log.debug "#{log_prefix} Filtering blacklisted event [#{event}]" if result
+    end
   end
 end

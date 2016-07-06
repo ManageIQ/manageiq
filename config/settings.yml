@@ -1109,6 +1109,11 @@
       :thread_shutdown_timeout: 10.seconds
     :event_catcher:
       :defaults:
+        :flooding_monitor_enabled: false
+        :flooding_monitor_window: 5.minutes
+        :flooding_monitor_slot_size: 5.seconds
+        :flooding_monitor_threshold: 20
+        :flooded_log_count: 20
         :ems_event_page_size: 100
         :ems_event_thread_shutdown_timeout: 10.seconds
         :memory_threshold: 2.gigabytes
