@@ -322,8 +322,8 @@ module OpsController::Settings::Schedules
       filtered_item_list = find_filtered(ContainerImage).sort_by { |ci| ci.name.downcase }.collect(&:name).uniq
     when "ems"
       if %w(emscluster host host_check_compliance storage).include?(action_type)
-        filtered_item_list = find_filtered(ExtManagementSystem).collect{|ems| ems.name if ems.number_of(:hosts) > 0}
-                                 .delete_if {|ems| ems.blank? }.sort_by { |ems| ems.downcase }
+        filtered_item_list = find_filtered(ExtManagementSystem).collect { |ems| ems.name if ems.number_of(:hosts) > 0 }
+                                                               .delete_if(&:blank?).sort_by(&:downcase)
       else
         filtered_item_list = find_filtered(ExtManagementSystem).sort_by { |vm| vm.name.downcase }.collect(&:name).uniq
       end
