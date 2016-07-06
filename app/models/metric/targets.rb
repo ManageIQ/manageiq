@@ -89,6 +89,11 @@ module Metric::Targets
             vm.association(:ems_cluster).target = host.ems_cluster if vm.ems_cluster_id
           end
         end
+        unless options[:exclude_storages]
+          host.storages.each do |storage|
+            storage.ext_management_system = ems
+          end
+        end
       end
     end
   end
