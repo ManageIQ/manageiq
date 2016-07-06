@@ -201,10 +201,8 @@ class ExplorerPresenter
 
   def format_calendar_dates(options)
     return {} unless @options[:build_calendar].kind_of?(Hash)
-    {}.tap do |h|
-      %i(date_from date_to).each do |key|
-        h[key] = options[key].iso8601 if options[key].present?
-      end
+    %i(date_from date_to).each_with_object({}) do |key, h|
+      h[key] = options[key].iso8601 if options[key].present?
     end
   end
 
