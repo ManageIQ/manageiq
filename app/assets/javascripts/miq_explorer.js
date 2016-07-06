@@ -9,11 +9,9 @@ ManageIQ.explorer.updateElement = function(element, options) {
 };
 
 ManageIQ.explorer.buildCalendar = function(options) {
-  var skip_days = _.isObject(options.skipDays) ? options.skipDays : undefined;
-
-  ManageIQ.calendar.calDateFrom = options.dateFrom; //# FIXME js_format_date
-  ManageIQ.calendar.calDateTo   = options.dateTo;
-  ManageIQ.calendar.calSkipDays = skip_days;
+  ManageIQ.calendar.calDateFrom = _.isString(options.dateFrom) ? new Date(options.dateFrom) : undefined;
+  ManageIQ.calendar.calDateTo = _.isString(options.dateTo) ? new Date(options.dateTo) : undefined;
+  ManageIQ.calendar.calSkipDays = _.isObject(options.skipDays) ? options.skipDays : undefined;
 
   miqBuildCalendar();
 }

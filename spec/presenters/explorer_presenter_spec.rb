@@ -45,8 +45,8 @@ describe ExplorerPresenter do
 
     context "#build_calendar" do
       it 'passes data to :buildCalendar' do
-        @presenter[:build_calendar] = {:foo => 'bar'}
-        expect(subject[:buildCalendar]).to include(:foo => 'bar')
+        @presenter[:build_calendar] = {:date_from => t = Time.now.utc}
+        expect(subject[:buildCalendar]).to include(:date_from => t.iso8601)
       end
     end
   end
