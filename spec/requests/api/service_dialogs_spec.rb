@@ -25,8 +25,14 @@ describe ApiController do
       api_basic_authorize collection_action_identifier(:service_dialogs, :read, :get)
       run_get service_dialogs_url
 
-      expect_query_result(:service_dialogs, Dialog.count, Dialog.count)
-      expect(response.parsed_body).to include("resources" => all(match("href" => anything)))
+      expected = {
+        "name"      => "service_dialogs",
+        "count"     => Dialog.count,
+        "subcount"  => Dialog.count,
+        "resources" => Array.new(Dialog.count) { {"href" => anything} }
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
     end
 
     it "query with expanded resources to include content" do
