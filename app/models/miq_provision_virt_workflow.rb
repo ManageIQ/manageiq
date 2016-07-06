@@ -920,7 +920,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     scope = scope.where(:guid => src_guid) unless src_guid.blank?
     scope = scope.where(:uid_ems => ems_guid) unless ems_guid.blank?
     scope = scope.where(VmOrTemplate.arel_attribute("name").lower.eq(src_name)) unless src_name.blank?
-    source_vm_rbac_filter(scope).first
+
+    rbac_object = source_vm_rbac_filter(scope).first
+    create_hash_struct_from_vm_or_template(rbac_object, :include_datacenter => true) if rbac_object
   end
 
   def ws_vm_fields(values, fields)
@@ -1051,7 +1053,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     options = MiqHashStruct.new if options.nil?
     _log.warn "Web-service provisioning starting with interface version <#{version}> by requester <#{user.userid}>"
 
-    init_options = {:use_pre_dialog => false, :request_type => request_type(parse_ws_string(template_fields)[:request_type])}
+    init_options = {:use_pre_dialog => false, :request_type => request_type(parse_ws_string(template_fields)[:request_type]), :initial_pass => true}
     data = parse_ws_string(requester)
 
     user = update_requester_from_parameters(data, user)
@@ -1062,11 +1064,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     # Allow new workflow class to determine dialog name instead of using the stored value from the first call.
     values.delete(:miq_request_dialog_name)
     values[:placement_auto] = [true, 1]
+    values[:src_vm_id]      = [src.id, src.name]
     p = class_for_source(src.id).new(values, user, init_options)
 
     # Populate required fields
     p.init_from_dialog(values)
-    values[:src_vm_id] = [src.id, src.name]
     p.refresh_field_values(values)
 
     p.ws_vm_fields(values, vm_fields)
