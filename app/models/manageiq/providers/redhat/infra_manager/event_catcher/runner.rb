@@ -1,4 +1,4 @@
-class ManageIQ::Providers::Redhat::InfraManager::EventCatcher::Runner < ManageIQ::Providers::BaseManager::EventCatcher::Runner
+class ManageIQ::Providers::Redhat::InfraManager::EventCatcher::Runner < ManageIQ::Providers::Ovirt4::InfraManager::EventCatcher::Runner
   def event_monitor_handle
     require 'ovirt_provider/events/ovirt_event_monitor'
     @event_monitor_handle ||= OvirtEventMonitor.new(event_monitor_options)
