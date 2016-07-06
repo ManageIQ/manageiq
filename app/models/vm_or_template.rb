@@ -30,6 +30,9 @@ class VmOrTemplate < ApplicationRecord
   include TenancyMixin
 
   include AvailabilityMixin
+  include SupportsFeatureMixin
+
+  supports_not :retirement, ""
 
   has_many :ems_custom_attributes, -> { where(:source => 'VC') }, :as => :resource, :dependent => :destroy,
            :class_name => "CustomAttribute"
@@ -1938,10 +1941,6 @@ class VmOrTemplate < ApplicationRecord
   # this is verbose, helper for generating arel
   def self.arel_coalesce(values)
     Arel::Nodes::NamedFunction.new('COALESCE', values)
-  end
-
-  def self.supports_operation?(operation, ids)
-    VmOrTemplate.where(:id => ids).all? { |v| v.public_send("supports_#{operation}?") }
   end
 
   include DeprecatedCpuMethodsMixin

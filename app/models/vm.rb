@@ -88,8 +88,4 @@ class Vm < VmOrTemplate
     end
     pl
   end
-
-  def supports_retirement?
-    true
-  end
 end
