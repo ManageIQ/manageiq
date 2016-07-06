@@ -13,7 +13,7 @@ class DialogField < ApplicationRecord
                                   :message => "Field Name %{value} is reserved."}
 
   default_value_for :required, false
-  default_value_for :visible, true
+  default_value_for(:visible, :allows_nil => false) { true }
 
   serialize :values
   serialize :values_method_options,   Hash
