@@ -58,6 +58,11 @@ class ApplicationHelper::Toolbar::ContainerReplicatorCenter < ApplicationHelper:
           'pficon pficon-edit fa-lg',
           N_('Edit Tags for this Replicator'),
           N_('Edit Tags')),
+        button(
+          :container_replicator_protect,
+          'pficon pficon-edit fa-lg',
+          N_('Manage Policies for this #{ui_lookup(:table=>"container_replicator")}'),
+          N_('Manage Policies')),
       ]
     ),
   ])

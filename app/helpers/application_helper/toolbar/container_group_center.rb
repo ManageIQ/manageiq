@@ -58,6 +58,11 @@ class ApplicationHelper::Toolbar::ContainerGroupCenter < ApplicationHelper::Tool
           'pficon pficon-edit fa-lg',
           N_('Edit Tags for this Pod'),
           N_('Edit Tags')),
+        button(
+          :container_group_protect,
+          'pficon pficon-edit fa-lg',
+          N_('Manage Policies for this #{ui_lookup(:table=>"container_group")}'),
+          N_('Manage Policies')),
       ]
     ),
   ])

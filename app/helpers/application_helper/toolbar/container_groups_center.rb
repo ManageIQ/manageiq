@@ -47,6 +47,14 @@ class ApplicationHelper::Toolbar::ContainerGroupsCenter < ApplicationHelper::Too
           :url_parms => "main_div",
           :enabled   => false,
           :onwhen    => "1+"),
+        button(
+          :container_group_protect,
+          'pficon pficon-edit fa-lg',
+          N_('Manage Policies for this #{ui_lookup(:table=>"container_groups")}'),
+          N_('Manage Policies'),
+          :url_parms => "main_div",
+          :enabled   => "false",
+          :onwhen    => "1+"),
       ]
     ),
   ])

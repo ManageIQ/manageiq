@@ -22,11 +22,13 @@ module ApplicationController::TreeSupport
   end
 
   def find_record
-    if %w(container_image host).include? controller_name
-      identify_record(params[:id], controller_name.classify)
-    else
-      identify_record(params[:id], VmOrTemplate)
-    end
+    klass = case controller_name
+            when 'host', 'container_replicator', 'container_group', 'container_node', 'container_image'
+              controller_name.classify
+            else
+              VmOrTemplate
+            end
+    identify_record(params[:id], klass)
   end
 
   def tree_autoload_dynatree

@@ -15,11 +15,12 @@ class MiqPolicyController < ApplicationController
 
   # These all should typically be the same but the separation is useful when landing support in parts.
   POLICY_FOLDERS = HashWithIndifferentAccess.new(
+    # TODO: implement compliance for container entities
     :compliance => [Host, Vm, ContainerImage],
-    :control    => [Host, Vm, ContainerImage]
+    :control    => [Host, Vm, ContainerReplicator, ContainerGroup, ContainerNode, ContainerImage]
   ).freeze
 
-  CONDITION_FOLDERS = [Host, Vm, ContainerImage].freeze
+  CONDITION_FOLDERS = [Host, Vm, ContainerReplicator, ContainerGroup, ContainerNode, ContainerImage].freeze
 
   def index
     redirect_to :action => 'explorer'
