@@ -12,7 +12,7 @@ gem "config",                          "~>1.1.0", :git => "git://github.com/Mana
 gem "deep_merge",                      "~>1.0.1", :git => "git://github.com/ManageIQ/deep_merge.git", :branch => "overwrite_arrays"
 
 # Local gems
-path "gems/" do
+path File.expand_path("gems/", __dir__) do
   gem "manageiq_foreman", :require => false
 end
 
