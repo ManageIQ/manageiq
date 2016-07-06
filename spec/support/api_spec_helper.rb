@@ -174,8 +174,7 @@ module ApiSpecHelper
 
   def expect_bad_request(error_message)
     expect(response).to have_http_status(:bad_request)
-    expect(response_hash).to have_key("error")
-    expect(response_hash["error"]["message"]).to match(error_message)
+    expect(response_hash).to include("error" => hash_including("message" => a_string_matching(error_message)))
   end
 
   def expect_result_resources_to_include_data(collection, data)
