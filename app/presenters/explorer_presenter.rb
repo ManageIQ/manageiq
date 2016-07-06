@@ -130,15 +130,14 @@ class ExplorerPresenter
   def to_json
     data = {:explorer => true}
 
-    # see if any miq expression vars need to be set
-    unless @options[:exp].empty?
+    if @options[:exp].present?
       data.store_path(:expEditor, :first, :type,   @options[:exp][:val1_type]) if @options[:exp][:val1_type]
       data.store_path(:expEditor, :first, :title,  @options[:exp][:val1_title]) if @options[:exp][:val1_title]
       data.store_path(:expEditor, :second, :type,  @options[:exp][:val2_type]) if @options[:exp][:val2_type]
       data.store_path(:expEditor, :second, :title, @options[:exp][:val2_title]) if @options[:exp][:val2_title]
     end
 
-    data[:showMiqButtons]   = @options[:show_miq_buttons]
+    data[:showMiqButtons] = @options[:show_miq_buttons]
     data[:clearTreeCookies] = @options[:clear_tree_cookies]
 
     # Open an accordion inside an other AJAX call
@@ -161,7 +160,7 @@ class ExplorerPresenter
     data[:updatePartials] = @options[:update_partials] # Update elements in the DOM with rendered partials
     data[:updateElements] = @options[:element_updates] # Update element in the DOM with given options
     data[:replacePartials] = @options[:replace_partials] # Replace elements in the DOM with rendered partials
-    data[:buildCalendar] = @options[:build_calendar].kind_of?(Hash) ? @options[:build_calendar] : {}
+    data[:buildCalendar] = format_calendar_dates(@options[:build_calendar])
     data[:initDashboard] = !! @options[:init_dashboard]
     data[:ajaxUrl] = ajax_action_url(@options[:ajax_action]) if @options[:ajax_action]
     data[:clearGtlListGrid] = !!@options[:clear_gtl_list_grid]
@@ -187,15 +186,11 @@ class ExplorerPresenter
 
     data[:lockTrees] = @options[:lock_unlock_trees]
     data[:chartData] = @options[:load_chart]
-
-    # FIXME: remove !! if all are bool
     data[:resetChanges] = !!@options[:reset_changes]
     data[:resetOneTrans] = !!@options[:reset_one_trans]
     data[:oneTransIE] = !!@options[:one_trans_ie]
     data[:focus] = @options[:focus]
-
     data[:clearSearch] = @options[:clear_search_toggle] if @options[:clear_search_toggle]
-
     data[:hideModal] if @options[:hide_modal]
     data[:initAccords] if @options[:init_accords]
 
@@ -203,6 +198,15 @@ class ExplorerPresenter
   end
 
   private
+
+  def format_calendar_dates(options)
+    return {} unless @options[:build_calendar].kind_of?(Hash)
+    {}.tap do |h|
+      %i(date_from date_to).each do |key|
+        h[key] = options[key].iso8601 if options[key].present?
+      end
+    end
+  end
 
   def ajax_action_url(options)
     ['', options[:controller], options[:action], options[:record_id]].join('/')
