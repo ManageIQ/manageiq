@@ -323,9 +323,21 @@ describe ApiController do
 
       run_get vms_url, :expand => "resources", :attributes => "name,vendor"
 
-      expect_query_result(:vms, 1, 1)
-      expect(response.parsed_body).to include("resources" => all(match("id" => anything, "href" => anything, "name" => anything, "vendor" => anything)))
-      expect_result_resources_to_match_hash([{"name" => "aa", "id" => vm.id, "href" => vms_url(vm.id)}])
+      expected = {
+        "name"      => "vms",
+        "count"     => 1,
+        "subcount"  => 1,
+        "resources" => [
+          {
+            "id"     => vm.id,
+            "href"   => a_string_matching(vms_url(vm.id)),
+            "name"   => "aa",
+            "vendor" => anything
+          }
+        ]
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
     end
 
     it "skips requests of invalid attributes" do
@@ -375,8 +387,14 @@ describe ApiController do
 
       run_get vms_url
 
-      expect_query_result(:vms, 2, 2)
-      expect(response.parsed_body).to include("resources" => all(match("href" => anything)))
+      expected = {
+        "name"      => "vms",
+        "count"     => 2,
+        "subcount"  => 2,
+        "resources" => Array.new(2) { {"href" => anything} }
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
     end
 
     it "supports expanding resources" do
