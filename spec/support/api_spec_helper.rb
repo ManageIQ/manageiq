@@ -170,10 +170,14 @@ module ApiSpecHelper
     include("actions" => a_collection_including(*names.map { |name| a_hash_including("name" => name) }))
   end
 
+  def include_error_with_message(error_message)
+    include("error" => hash_including("message" => a_string_matching(error_message)))
+  end
+
   # Rest API Expects
 
   def expect_bad_request(error_message)
-    expect(response_hash).to include("error" => hash_including("message" => a_string_matching(error_message)))
+    expect(response_hash).to include_error_with_message(error_message)
     expect(response).to have_http_status(:bad_request)
   end
 
