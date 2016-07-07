@@ -41,14 +41,14 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
 
   before_validation :ensure_managers
 
+  supports :discovery
+
   def ensure_managers
     build_network_manager unless network_manager
     network_manager.name            = "#{name} Network Manager"
     network_manager.zone_id         = zone_id
     network_manager.provider_region = provider_region
   end
-
-  ExtManagementSystem.register_cloud_discovery_type('azure' => 'azure')
 
   def self.ems_type
     @ems_type ||= "azure".freeze

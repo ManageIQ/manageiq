@@ -389,12 +389,8 @@ class ExtManagementSystem < ApplicationRecord
     @ems_infra_discovery_types ||= %w(virtualcenter scvmm rhevm)
   end
 
-  def self.register_cloud_discovery_type(type_hash)
-    ems_cloud_discovery_types.merge!(type_hash)
-  end
-
-  def self.ems_cloud_discovery_types
-    @ems_cloud_discovery_types ||= {}
+  def self.cloud_discovery_managers
+    ManageIQ::Providers::CloudManager.subclasses.find_all(&:supports_discovery?)
   end
 
   def disconnect_inv

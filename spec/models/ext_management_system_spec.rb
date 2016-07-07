@@ -79,10 +79,15 @@ describe ExtManagementSystem do
     expect(described_class.ems_infra_discovery_types).to match_array(expected_types)
   end
 
-  it ".ems_cloud_discovery_types" do
-    discovery_type = {'amazon' => 'ec2'}
-    described_class.register_cloud_discovery_type(discovery_type)
-    expect(described_class.ems_cloud_discovery_types).to include(discovery_type)
+  it ".cloud_discovery_managers" do
+    module ManageIQ::Providers::Example
+      class CloudManager < ManageIQ::Providers::CloudManager
+        def self.supports_discovery?
+          true
+        end
+      end
+    end
+    expect(described_class.cloud_discovery_managers).to include(ManageIQ::Providers::Example::CloudManager)
   end
 
   context "#ipaddress / #ipaddress=" do
