@@ -45,43 +45,27 @@
           %font{:color => "black"}
             = _('NOT')
         - else
-          - if exp_model == "Vm"
-            = select_tag('chosen_typ',
-              options_for_select(["<#{_('Choose')}>"] + exptypes + VM_EXP_TYPES.map { |x| [_(x[0]), x[1]] }, @edit[@expkey][:exp_typ]),
-              :multiple              => false,
-              :class                 => "widthed",
-              "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true,
-              "data-miq_observe"     => {:url => url}.to_json)
-          - elsif exp_model == "AuditEvent"
-            = select_tag('chosen_typ',
-              options_for_select(["<#{_('Choose')}>", ["#{_('Field')}", "field"]], @edit[@expkey][:exp_typ]),
-              :multiple              => false,
-              :class                 => "widthed",
-              "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true,
-              "data-miq_observe"     => {:url => url}.to_json)
-          - elsif exp_model == "_display_filter_"
-            - sel_opts = ["<Choose>"]
+          - opts = ["<#{_('Choose')}>"]
+          - case exp_model
+          - when 'Vm'
+            - opts += exptypes + VM_EXP_TYPES.map { |x| [_(x[0]), x[1]] }
+          - when 'AuditEvent'
+            - opts += [[_('Field'), 'field']]
+          - when '_display_filter_'
             - unless @edit[@expkey][:exp_available_fields].empty?
-              - sel_opts.push([_("Field"), "field"])
+              - opts.push([_('Field'), 'field'])
             - unless @edit[@expkey][:exp_available_tags] && @edit[@expkey][:exp_available_tags].empty? || exp_available_tags(exp_model, @edit[@expkey][:use_mytags]).empty?
-              - sel_opts.push(["#{_('Tag')}", "tag"])
-            = select_tag('chosen_typ',
-              options_for_select(sel_opts, @edit[@expkey][:exp_typ]),
-              :multiple              => false,
-              :class                 => "widthed",
-              "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true,
-              "data-miq_observe"     => {:url => url}.to_json)
+              - opts.push([_('Tag'), 'tag'])
           - else
-            = select_tag('chosen_typ',
-              options_for_select(["<#{_('Choose')}>"] + exptypes, @edit[@expkey][:exp_typ]),
-              :multiple              => false,
-              :class                 => "widthed",
-              "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true,
-              "data-miq_observe"     => {:url => url}.to_json)
+            - opts += exptypes
+
+          = select_tag('chosen_typ', options_for_select(opts, @edit[@expkey][:exp_typ]),
+            :multiple              => false,
+            :class                 => 'selectpicker',
+            'data-miq_sparkle_on'  => true,
+            'data-miq_sparkle_off' => true,
+            'data-miq_observe'     => {:url => url}.to_json)
+
         %br
         - if @edit[@expkey][:exp_typ]
           = render :partial => "layouts/exp_atom/edit_#{@edit[@expkey][:exp_typ]}", :locals => {:exp_model => exp_model}
@@ -98,4 +82,5 @@
     -# Clear the date from and to selection limiters
     ManageIQ.calendar.calDateFrom = null;
     ManageIQ.calendar.calDateTo = null;
-
+    miqInitSelectPicker();
+    miqSelectPickerEvent('chosen_typ', '#{url}');

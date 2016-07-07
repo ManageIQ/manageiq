@@ -10,8 +10,8 @@
     = text_field_tag("chosen_regval", @edit[@expkey][:exp_regval], input_attrs)
 
 - options = options_for_select(MiqExpression.get_col_operators(:regkey), @edit[@expkey][:exp_key])
-- select_attrs = {:multiple => false, :class => "widthed", "data-miq_sparkle_on" => true,
-  "data-miq_sparkle_off" => true, "data-miq_observe" => {:url => url}.to_json}
+- select_attrs = {:multiple => false, :class => 'selectpicker', "data-miq_sparkle_on" => true,
+  "data-miq_sparkle_off" => true, "data-live-search" => true}
 = select_tag('chosen_key', options, select_attrs)
 
 -# IS NULL, IS NOT NULL, IS EMPTY, IS NOT EMPTY, KEY EXISTS, VALUE EXISTS
@@ -19,3 +19,7 @@
   %span#chosen_value_span
     = _("Data:")
     = text_field_tag("chosen_value", @edit[@expkey][:exp_value], input_attrs)
+
+:javascript
+  miqInitSelectPicker();
+  miqSelectPickerEvent('chosen_key, '#{url}');
