@@ -120,9 +120,14 @@ describe ApplicationController do
                                         :controller             => "ems_cloud"
                                       )
       allow(controller).to receive(:drop_breadcrumb)
+      cloud_manager_stub = double('CloudManager',
+                                  :supports_discovery? => true,
+                                  :ems_type            => 'example',
+                                  :description         => 'Example Manager')
+      allow(ManageIQ::Providers::CloudManager).to receive(:subclasses).and_return([cloud_manager_stub])
       controller.send(:discover)
       expect(response.status).to eq(200)
-      expect(controller.instance_variable_get(:@discover_type)).to include(["Azure", "azure"], ["Amazon", "amazon"])
+      expect(controller.instance_variable_get(:@discover_type)).to include(["Example Manager", "example"])
     end
   end
 
