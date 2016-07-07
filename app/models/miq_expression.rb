@@ -686,31 +686,6 @@ class MiqExpression
     col_details.values.each_with_object({}) { |v, result| result.deep_merge!(v[:include]) }
   end
 
-  def columns_for_sql(exp = nil, result = nil)
-    exp ||= self.exp
-    result ||= []
-    return result unless exp.kind_of?(Hash)
-
-    operator = exp.keys.first
-    if exp[operator].kind_of?(Hash) && exp[operator].key?("field")
-      if exp[operator]["field"] != "<count>" &&
-         !field_from_virtual_reflection?(exp[operator]["field"]) && !field_has_arel?(exp[operator]["field"])
-        col = exp[operator]["field"]
-        if col.include?(".")
-          col = col.split(".").last
-          col = col.sub("-", ".")
-        else
-          col = col.split("-").last
-        end
-        result << col
-      end
-    else
-      exp[operator].dup.to_miq_a.each { |atom| columns_for_sql(atom, result) }
-    end
-
-    result.compact.uniq
-  end
-
   def self.expand_conditional_clause(klass, cond)
     return klass.send(:sanitize_sql_for_conditions, cond) unless cond.is_a?(Hash)
 
@@ -997,37 +972,36 @@ class MiqExpression
     ret
   end
 
-  def self.quote(val, typ, mode = :ruby)
+  def self.quote(val, typ)
     case typ.to_s
     when "string", "text", "boolean", nil
-      val = "" if val.nil? # treat nil value as empty string
       # escape any embedded single quotes, etc. - needs to be able to handle even values with trailing backslash
-      return mode == :sql ? ActiveRecord::Base.connection.quote(val) : val.to_s.inspect
+      val.to_s.inspect
     when "date"
       return "nil" if val.blank? # treat nil value as empty string
-      return mode == :sql ? ActiveRecord::Base.connection.quote(val) : "\'#{val}\'.to_date"
+      "\'#{val}\'.to_date"
     when "datetime"
       return "nil" if val.blank? # treat nil value as empty string
-      return mode == :sql ? ActiveRecord::Base.connection.quote(val.iso8601) : "\'#{val.iso8601}\'.to_time(:utc)"
+      "\'#{val.iso8601}\'.to_time(:utc)"
     when "integer", "decimal", "fixnum"
-      return val.to_s.to_i_with_method
+      val.to_s.to_i_with_method
     when "float"
-      return val.to_s.to_f_with_method
+      val.to_s.to_f_with_method
     when "numeric_set"
       val = val.split(",") if val.kind_of?(String)
-      v_arr = val.to_miq_a.collect do |v|
+      v_arr = val.to_miq_a.flat_map do |v|
         v = eval(v) rescue nil if v.kind_of?(String)
         v.kind_of?(Range) ? v.to_a : v
-      end.flatten.compact.uniq.sort
-      return "[#{v_arr.join(",")}]"
+      end.compact.uniq.sort
+      "[#{v_arr.join(",")}]"
     when "string_set"
       val = val.split(",") if val.kind_of?(String)
-      v_arr = val.to_miq_a.collect { |v| "'#{v.to_s.strip}'" }.flatten.uniq.sort
-      return "[#{v_arr.join(",")}]"
+      v_arr = val.to_miq_a.flat_map { |v| "'#{v.to_s.strip}'" }.uniq.sort
+      "[#{v_arr.join(",")}]"
     when "raw"
-      return val
+      val
     else
-      return val
+      val
     end
   end
 
@@ -1219,7 +1193,7 @@ class MiqExpression
     elsif model.ends_with?("Performance")
       @reporting_available_fields[model.to_s] ||= {}
       @reporting_available_fields[model.to_s][interval.to_s] ||= MiqExpression.model_details(model, :include_model => false, :include_tags => true, :interval => interval)
-    elsif model.to_s.start_with?("Chargeback")
+    elsif Chargeback.db_is_chargeback?(model)
       @reporting_available_fields[model.to_s] ||=
         MiqExpression.model_details(model, :include_model => false, :include_tags => true).select { |c| c.last.ends_with?(*ReportController::Reports::Editor::CHARGEBACK_ALLOWED_FIELD_SUFFIXES) }
     else
@@ -1432,20 +1406,6 @@ class MiqExpression
     end
   end
 
-  def self.is_plural?(field)
-    parts = field.split("-").first.split(".")
-    macro = nil
-    model = model_class(parts.shift)
-    parts.each do |assoc|
-      ref = model.reflection_with_virtual(assoc.to_sym)
-      return false if ref.nil?
-
-      macro = ref.macro
-      model = ref.klass
-    end
-    [:has_many, :has_and_belongs_to_many].include?(macro)
-  end
-
   def self.atom_error(field, operator, value)
     return false if operator == "DEFAULT" # No validation needed for style DEFAULT operator
 
@@ -1583,13 +1543,15 @@ class MiqExpression
 
   # Is an expression hash a quick search?
   def self._quick_search?(e)
-    if e.kind_of?(Array)
-      e.each { |e_exp| return true if self._quick_search?(e_exp) }
-    elsif e.kind_of?(Hash)
+    case e
+    when Array
+      e.any? { |e_exp| _quick_search?(e_exp) }
+    when Hash
       return true if e["value"] == :user_input
-      e.each_value { |e_exp| return true if self._quick_search?(e_exp) }
+      e.values.any? { |e_exp| _quick_search?(e_exp) }
+    else
+      false
     end
-    false
   end
 
   private
@@ -1602,9 +1564,9 @@ class MiqExpression
       field = Field.parse(exp[operator]["field"])
       value = case
               when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = nil)
+                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = nil).to_date
               when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = nil)
+                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = nil).utc
               else
                 exp[operator]["value"]
               end
@@ -1613,9 +1575,9 @@ class MiqExpression
       field = Field.parse(exp[operator]["field"])
       value = case
               when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "end")
+                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "end").to_date
               when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "end")
+                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "end").utc
               else
                 exp[operator]["value"]
               end
@@ -1624,9 +1586,9 @@ class MiqExpression
       field = Field.parse(exp[operator]["field"])
       value = case
               when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "beginning")
+                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "beginning").to_date
               when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "beginning")
+                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "beginning").utc
               else
                 exp[operator]["value"]
               end
@@ -1635,9 +1597,9 @@ class MiqExpression
       field = Field.parse(exp[operator]["field"])
       value = case
               when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "beginning")
+                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "beginning").to_date
               when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "beginning")
+                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "beginning").utc
               else
                 exp[operator]["value"]
               end
@@ -1646,9 +1608,9 @@ class MiqExpression
       field = Field.parse(exp[operator]["field"])
       value = case
               when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "end")
+                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "end").to_date
               when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "end")
+                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "end").utc
               else
                 exp[operator]["value"]
               end
@@ -1657,9 +1619,9 @@ class MiqExpression
       field = Field.parse(exp[operator]["field"])
       value = case
               when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = nil)
+                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = nil).to_date
               when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = nil)
+                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = nil).utc
               else
                 exp[operator]["value"]
               end

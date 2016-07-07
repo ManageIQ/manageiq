@@ -1,14 +1,12 @@
 module AvailabilityZoneHelper::TextualSummary
+  include TextualMixins::TextualEmsCloud
+  include TextualMixins::TextualGroupTags
   #
   # Groups
   #
 
   def textual_group_relationships
     %i(ems_cloud instances cloud_volumes)
-  end
-
-  def textual_group_tags
-    %i(tags)
   end
 
   def textual_group_availability_zone_totals
@@ -28,10 +26,6 @@ module AvailabilityZoneHelper::TextualSummary
       h[:title] = _("Show all %{label}") % {:label => label}
     end
     h
-  end
-
-  def textual_ems_cloud
-    textual_link(@record.ext_management_system)
   end
 
   def textual_instances

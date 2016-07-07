@@ -1,4 +1,6 @@
 describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource do
+  THE_FEED_ID = '70c798a0-6985-4f8a-a525-012d8d28e8a3'.freeze
+
   let(:ems_hawkular) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     auth = AuthToken.new(:name => "test", :auth_key => "valid-token", :userid => "jdoe", :password => "password")
@@ -13,9 +15,9 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
     FactoryGirl.create(:hawkular_middleware_server,
                        :id                    => 1,
                        :name                  => 'Local',
-                       :feed                  => '27e06e8f-6e5d-45cd-8353-c1f9d4dfe991',
+                       :feed                  => THE_FEED_ID,
                        :ems_ref               => '/t;hawkular'\
-                                                 '/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/r;Local~~',
+                                                 "/f;#{THE_FEED_ID}/r;Local~~",
                        :nativeid              => 'Local~~',
                        :ext_management_system => ems_hawkular)
   end
@@ -24,7 +26,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
     FactoryGirl.create(:hawkular_middleware_datasource,
                        :name                  => 'KeycloakDS',
                        :ems_ref               => '/t;hawkular'\
-                                                 '/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/r;Local~~'\
+                                                 "/f;#{THE_FEED_ID}/r;Local~~"\
                                                  '/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS',
                        :ext_management_system => ems_hawkular,
                        :middleware_server     => eap,

@@ -52,11 +52,6 @@ describe VmdbDatabaseSetting do
     expect(setting.short_desc).to eq(short_desc)
   end
 
-  it 'defaults unit to a blank string' do
-    setting = VmdbDatabaseSetting.where(:unit => nil).first
-    expect(setting.unit).to eq("")
-  end
-
   [
     :name,
     :description,
@@ -67,8 +62,8 @@ describe VmdbDatabaseSetting do
     :vmdb_database_id
   ].each do |field|
     it "has a #{field}" do
-      setting = VmdbDatabaseSetting.all.first
-      expect(setting.send(field)).to be_truthy
+      setting = VmdbDatabaseSetting.first
+      expect(setting).to respond_to(field)
     end
   end
 end

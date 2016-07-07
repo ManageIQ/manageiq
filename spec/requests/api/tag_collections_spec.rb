@@ -52,7 +52,7 @@ describe ApiController do
 
       run_post(provider_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "assigns a tag to a Provider" do
@@ -68,7 +68,7 @@ describe ApiController do
 
       run_post(provider_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "unassigns a tag from a Provider" do
@@ -101,7 +101,7 @@ describe ApiController do
 
       run_post(host_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "assigns a tag to a Host" do
@@ -117,7 +117,7 @@ describe ApiController do
 
       run_post(host_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "unassigns a tag from a Host" do
@@ -151,7 +151,7 @@ describe ApiController do
 
       run_post(ds_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "assigns a tag to a Data Store" do
@@ -167,7 +167,7 @@ describe ApiController do
 
       run_post(ds_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "unassigns a tag from a Data Store" do
@@ -201,7 +201,7 @@ describe ApiController do
 
       run_post(rp_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "assigns a tag to a Resource Pool" do
@@ -217,7 +217,7 @@ describe ApiController do
 
       run_post(rp_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "unassigns a tag from a Resource Pool" do
@@ -258,7 +258,7 @@ describe ApiController do
 
       run_post(cluster_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "assigns a tag to a Cluster" do
@@ -274,7 +274,7 @@ describe ApiController do
 
       run_post(cluster_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "unassigns a tag from a Cluster" do
@@ -308,7 +308,7 @@ describe ApiController do
 
       run_post(service_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "assigns a tag to a Service" do
@@ -324,7 +324,7 @@ describe ApiController do
 
       run_post(service_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "unassigns a tag from a Service" do
@@ -358,7 +358,7 @@ describe ApiController do
 
       run_post(service_template_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "assigns a tag to a Service Template" do
@@ -374,7 +374,7 @@ describe ApiController do
 
       run_post(service_template_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "unassigns a tag from a Service Template" do
@@ -408,7 +408,7 @@ describe ApiController do
 
       run_post(tenant_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "assigns a tag to a Tenant" do
@@ -424,7 +424,7 @@ describe ApiController do
 
       run_post(tenant_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "unassigns a tag from a Tenant" do

@@ -9,7 +9,10 @@ if (! window.ManageIQ) {
     browser: null, // browser name
     controller: null, // stored controller, used to build URL
     changes: null, // indicate if there are unsaved changes
-    clickUrl: null,
+    dynatree: {
+      clickUrl: null,
+      checkUrl: null,
+    },
     editor: null, // instance of CodeMirror editor
     timelineFilter: null, //
     toolbars: null, // toolbars

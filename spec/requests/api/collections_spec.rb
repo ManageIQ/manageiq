@@ -4,12 +4,13 @@
 describe ApiController do
   let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
   let(:miq_server) { FactoryGirl.create(:miq_server, :zone => zone) }
+  let(:ems) { FactoryGirl.create(:ext_management_system) }
   let(:template) do
     FactoryGirl.create(:miq_template, :name => "template 1", :vendor => "vmware", :location => "template1.vmtx")
   end
 
   def test_collection_query(collection, collection_url, klass, attr = :id)
-    if Api::Settings.collections.fetch_path(collection, :collection_actions, :get)
+    if Api::Settings.fetch_path(:collections, collection, :collection_actions, :get)
       api_basic_authorize collection_action_identifier(collection, :read, :get)
     else
       api_basic_authorize
@@ -228,9 +229,20 @@ describe ApiController do
       test_collection_query(:vms, vms_url, Vm, :guid)
     end
 
+    it 'query Virtual Templates' do
+      FactoryGirl.create(:virtual_template, :ems_id => ems.id)
+      test_collection_query(:virtual_templates,
+                            virtual_templates_url, ManageIQ::Providers::CloudManager::VirtualTemplate)
+    end
+
     it "query Zones" do
       FactoryGirl.create(:zone, :name => "api zone")
       test_collection_query(:zones, zones_url, Zone)
+    end
+
+    it "query ContainerDeployments" do
+      FactoryGirl.create(:container_deployment)
+      test_collection_query(:container_deployments, container_deployments_url, ContainerDeployment)
     end
   end
 end

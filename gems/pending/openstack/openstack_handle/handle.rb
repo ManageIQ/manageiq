@@ -18,6 +18,7 @@ module OpenstackHandle
     SERVICE_NAME_MAP = {
       "Compute"       => :nova,
       "Network"       => :neutron,
+      "NFV"           => :nfv,
       "Image"         => :glance,
       "Volume"        => :cinder,
       "Storage"       => :swift,
@@ -65,6 +66,7 @@ module OpenstackHandle
       # Ensure the that if the Storage service is not available, it will not
       # throw an error trying to build an connection error message.
       opts[:openstack_service_type] = ["object-store"] if service == "Storage"
+      opts[:openstack_service_type] = ["nfv-orchestration"] if service == "NFV"
 
       if service == "Planning"
         # Special behaviour for Planning service Tuskar, since it is OpenStack specific service, there is no
@@ -74,6 +76,10 @@ module OpenstackHandle
         Fog.const_get(service).new(opts)
       end
     rescue Fog::Errors::NotFound => err
+      $fog_log.warn("MIQ(#{self.class.name}##{__method__}) "\
+                    "Service #{service} not available for openstack provider #{auth_url}")
+      $fog_log.warn(err.message)
+      $fog_log.warn(err.backtrace.join("\n"))
       raise MiqException::ServiceNotAvailable if err.message.include?("Could not find service")
       raise
     end
@@ -155,7 +161,7 @@ module OpenstackHandle
         # For identity ,there is only domain scope, with project_name nil
         opts[:openstack_project_name] = @project_name = tenant
       end
-      
+
       opts[:openstack_domain_id] = domain
 
       svc_cache = (@connection_cache[service] ||= {})
@@ -217,6 +223,15 @@ module OpenstackHandle
 
     def detect_network_service(tenant_name = nil)
       detect_service("Network", tenant_name)
+    end
+
+    def nfv_service(tenant_name = nil)
+      connect(:service => "NFV", :tenant_name => tenant_name)
+    end
+    alias_method :connect_nfv, :nfv_service
+
+    def detect_nfv_service(tenant_name = nil)
+      detect_service("NFV", tenant_name)
     end
 
     def image_service(tenant_name = nil)

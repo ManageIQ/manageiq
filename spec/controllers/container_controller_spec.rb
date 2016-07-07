@@ -16,11 +16,8 @@ describe ContainerController do
       set_user_privileges user
       allow(@ct).to receive(:tagged_with).with(:cat => user.userid).and_return("my tags")
       classification = FactoryGirl.create(:classification, :name => "department", :description => "Department")
-      sandbox = {:active_tree => :containers_tree, :trees => {:containers_tree => {:active_node => "cnt_#{controller.to_cid(@ct.id)}"}}}
-      controller.instance_variable_set(:@sb, sandbox)
 
-      controller.x_active_tree = 'containers_tree'
-      allow(controller).to receive(:x_node).and_return("cnt_#{controller.to_cid(@ct.id)}")
+      seed_session_trees('container', :containers_tree, "cnt_#{controller.to_cid(@ct.id)}")
       @tag1 = FactoryGirl.create(:classification_tag,
                                  :name   => "tag1",
                                  :parent => classification)
@@ -28,10 +25,6 @@ describe ContainerController do
                                  :name   => "tag2",
                                  :parent => classification)
       allow(Classification).to receive(:find_assigned_entries).with(@ct).and_return([@tag1, @tag2])
-      controller.instance_variable_set(:@sb,
-                                       :trees       => {:containers_tree => {:active_node => "root"}},
-                                       :active_tree => :containers_tree)
-      allow(controller).to receive(:get_node_info)
       session[:tag_db] = "Container"
       edit = {
         :key        => "Container_edit_tags__#{@ct.id}",

@@ -38,7 +38,7 @@ RSpec.configure do |config|
 
   unless ENV['CI']
     # File store for --only-failures option
-    config.example_status_persistence_file_path = "./tmp/rspec_example_store.txt"
+    config.example_status_persistence_file_path = Rails.root.join("tmp/rspec_example_store.txt")
   end
 
   config.define_derived_metadata(:file_path => /spec\/lib\/miq_automation_engine\/models/) do |metadata|
@@ -114,7 +114,7 @@ RSpec.configure do |config|
 end
 
 VCR.configure do |c|
-  c.cassette_library_dir = 'spec/vcr_cassettes'
+  c.cassette_library_dir = Rails.root.join('spec/vcr_cassettes')
   c.hook_into :webmock
 
   c.allow_http_connections_when_no_cassette = false

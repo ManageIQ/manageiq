@@ -137,7 +137,8 @@ Vmdb::Application.routes.draw do
         show
         show_list
         tagging_edit
-        tag_edit_form_field_changed
+        tag_edit_form_field_changed,
+        ems_form_choices
       ) + compare_get,
       :post => %w(
         button
@@ -433,6 +434,7 @@ Vmdb::Application.routes.draw do
         timeprofile_delete
         timeprofile_field_changed
         timeprofile_update
+        tree_autoload_dynatree
         update
         view_selected
       )

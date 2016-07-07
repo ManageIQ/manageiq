@@ -51,7 +51,7 @@ describe ApiController do
         tag_category = Category.find(tag.category.id)
         expect(tag_category).to eq(category)
 
-        expect_request_success
+        expect(response).to have_http_status(:ok)
       end
 
       it "can create a tag with a category by id" do
@@ -66,7 +66,7 @@ describe ApiController do
         tag_category = Category.find(tag.category.id)
         expect(tag_category).to eq(category)
 
-        expect_request_success
+        expect(response).to have_http_status(:ok)
       end
 
       it "can create a tag with a category by name" do
@@ -81,7 +81,7 @@ describe ApiController do
         tag_category = Category.find(tag.category.id)
         expect(tag_category).to eq(category)
 
-        expect_request_success
+        expect(response).to have_http_status(:ok)
       end
 
       it "can create a tag as a subresource of a category" do
@@ -95,7 +95,7 @@ describe ApiController do
         tag_category = Category.find(tag.category.id)
         expect(tag_category).to eq(category)
 
-        expect_request_success
+        expect(response).to have_http_status(:ok)
       end
 
       it "returns bad request when the category doesn't exist" do
@@ -103,7 +103,7 @@ describe ApiController do
 
         run_post tags_url, :name => "test_tag", :description => "Test Tag"
 
-        expect_bad_request
+        expect(response).to have_http_status(:bad_request)
       end
 
       it "can update a tag's name" do
@@ -116,7 +116,7 @@ describe ApiController do
           run_post tags_url(tag.id), gen_request(:edit, :name => "new_name")
         end.to change { classification.reload.tag.name }.to("#{category.tag.name}/new_name")
         expect(response_hash["name"]).to eq("#{category.tag.name}/new_name")
-        expect_request_success
+        expect(response).to have_http_status(:ok)
       end
 
       it "can update a tag's description" do
@@ -129,7 +129,7 @@ describe ApiController do
           run_post tags_url(tag.id), gen_request(:edit, :description => "New Description")
         end.to change { tag.reload.classification.description }.to("New Description")
 
-        expect_request_success
+        expect(response).to have_http_status(:ok)
       end
 
       it "can delete a tag through POST" do
@@ -139,7 +139,7 @@ describe ApiController do
 
         expect { run_post tags_url(tag.id), :action => :delete }.to change(Tag, :count).by(-1)
         expect { classification.reload }.to raise_error(ActiveRecord::RecordNotFound)
-        expect_request_success
+        expect(response).to have_http_status(:ok)
       end
 
       it "can delete a tag through DELETE" do
@@ -149,7 +149,7 @@ describe ApiController do
 
         expect { run_delete tags_url(tag.id) }.to change(Tag, :count).by(-1)
         expect { classification.reload }.to raise_error(ActiveRecord::RecordNotFound)
-        expect_request_success_with_no_content
+        expect(response).to have_http_status(:no_content)
       end
 
       it "will respond with 404 not found when deleting a non-existent tag through DELETE" do
@@ -160,7 +160,7 @@ describe ApiController do
 
         run_delete tags_url(tag_id)
 
-        expect_resource_not_found
+        expect(response).to have_http_status(:not_found)
       end
 
       it "will respond with 404 not found when deleting a non-existent tag through POST" do
@@ -171,7 +171,7 @@ describe ApiController do
 
         run_post tags_url(tag_id), :action => :delete
 
-        expect_resource_not_found
+        expect(response).to have_http_status(:not_found)
       end
 
       it "can delete multiple tags within a category by id" do
@@ -194,7 +194,7 @@ describe ApiController do
             {"success" => true, "message" => "tags id: #{tag2.id} deleting"}
           ]
         )
-        expect_request_success
+        expect(response).to have_http_status(:ok)
       end
 
       it "can delete multiple tags within a category by name" do
@@ -218,7 +218,7 @@ describe ApiController do
             {"success" => true, "message" => "tags id: #{tag2.id} deleting"}
           ]
         )
-        expect_request_success
+        expect(response).to have_http_status(:ok)
       end
     end
 
@@ -230,7 +230,7 @@ describe ApiController do
           run_post tags_url, :name => "test_tag", :description => "Test Tag"
         end.not_to change(Tag, :count)
 
-        expect_request_forbidden
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "cannot update a tag" do
@@ -241,7 +241,7 @@ describe ApiController do
           run_post tags_url(tag.id), gen_request(:edit, :name => "New name")
         end.not_to change { tag.reload.name }
 
-        expect_request_forbidden
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "cannot delete a tag through POST" do
@@ -250,7 +250,7 @@ describe ApiController do
 
         expect { run_post tags_url(tag.id), :action => :delete }.not_to change(Tag, :count)
 
-        expect_request_forbidden
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "cannot delete a tag through DELETE" do
@@ -259,7 +259,7 @@ describe ApiController do
 
         expect { run_delete tags_url(tag.id) }.not_to change(Tag, :count)
 
-        expect_request_forbidden
+        expect(response).to have_http_status(:forbidden)
       end
     end
 
@@ -268,7 +268,7 @@ describe ApiController do
 
       run_get invalid_tag_url
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "query tags with expanded resources" do
@@ -356,7 +356,7 @@ describe ApiController do
 
       run_post(vm1_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "assigns a tag to a Vm" do
@@ -394,7 +394,7 @@ describe ApiController do
 
       run_post(vm1_tags_url, gen_request(:assign, :href => invalid_tag_url))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "assigns an invalid tag to a Vm" do
@@ -435,7 +435,7 @@ describe ApiController do
 
       run_post(vm1_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "unassigns a tag from a Vm" do

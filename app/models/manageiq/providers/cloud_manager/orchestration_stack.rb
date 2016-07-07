@@ -4,8 +4,11 @@ class ManageIQ::Providers::CloudManager::OrchestrationStack < ::OrchestrationSta
   belongs_to :cloud_tenant
 
   def self.create_stack(orchestration_manager, stack_name, template, options = {})
-    klass = orchestration_manager.class::OrchestrationStack
-    ems_ref = klass.raw_create_stack(orchestration_manager, stack_name, template, options)
+    klass = orchestration_stack_class_factory(orchestration_manager, template)
+    ems_ref = klass.raw_create_stack(orchestration_manager,
+                                     stack_name,
+                                     template,
+                                     options)
     tenant = CloudTenant.find_by(:name => options[:tenant_name], :ems_id => orchestration_manager.id)
 
     klass.create(:name                   => stack_name,
@@ -15,5 +18,9 @@ class ManageIQ::Providers::CloudManager::OrchestrationStack < ::OrchestrationSta
                  :ext_management_system  => orchestration_manager,
                  :cloud_tenant           => tenant,
                  :orchestration_template => template)
+  end
+
+  def self.orchestration_stack_class_factory(orchestration_manager, template)
+    "#{orchestration_manager.class.name}::#{template.stack_type}".constantize
   end
 end

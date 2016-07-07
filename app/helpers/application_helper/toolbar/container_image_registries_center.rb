@@ -9,23 +9,23 @@ class ApplicationHelper::Toolbar::ContainerImageRegistriesCenter < ApplicationHe
         button(
           :container_image_registry_new,
           'pficon pficon-add-circle-o fa-lg',
-          t = N_('Add a New #{ui_lookup(:table=>"container_image_registry")}'),
+          t = N_('Add a New Image Registry'),
           t,
           :url => "/new"),
         button(
           :container_image_registry_edit,
           'pficon pficon-edit fa-lg',
-          N_('Select a single #{ui_lookup(:table=>"container_image_registry")} to edit'),
-          N_('Edit Selected #{ui_lookup(:table=>"container_image_registry")}'),
+          N_('Select a single Image Registry to edit'),
+          N_('Edit Selected Image Registry'),
           :url_parms => "main_div",
           :onwhen    => "1"),
         button(
           :container_image_registry_delete,
           'pficon pficon-delete fa-lg',
-          N_('Remove selected #{ui_lookup(:tables=>"container_image_registries")} from the VMDB'),
-          N_('Remove #{ui_lookup(:tables=>"container_image_registries")} from the VMDB'),
+          N_('Remove selected Image Registries from the VMDB'),
+          N_('Remove Image Registries from the VMDB'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected \#{ui_lookup(:tables=>\"container_image_registries\")} and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected \#{ui_lookup(:tables=>\"container_image_registries\")}?"),
+          :confirm   => N_("Warning: The selected Image Registries and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Image Registries?"),
           :onwhen    => "1+"),
       ]
     ),
@@ -42,7 +42,7 @@ class ApplicationHelper::Toolbar::ContainerImageRegistriesCenter < ApplicationHe
         button(
           :container_image_registry_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this #{ui_lookup(:table=>"container_image_registries")}'),
+          N_('Edit Tags for these Image Registries'),
           N_('Edit Tags'),
           :url_parms => "main_div",
           :enabled   => false,

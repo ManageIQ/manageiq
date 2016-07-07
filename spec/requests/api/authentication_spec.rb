@@ -10,7 +10,7 @@ describe ApiController do
 
       run_get entrypoint_url
 
-      expect_user_unauthorized
+      expect(response).to have_http_status(:unauthorized)
     end
 
     it "test basic authentication with correct credentials" do
@@ -30,7 +30,7 @@ describe ApiController do
 
       run_get entrypoint_url
 
-      expect_user_unauthorized
+      expect(response).to have_http_status(:unauthorized)
     end
 
     it "test basic authentication with a user without a group" do
@@ -41,7 +41,7 @@ describe ApiController do
 
       run_get entrypoint_url
 
-      expect_user_unauthorized
+      expect(response).to have_http_status(:unauthorized)
     end
   end
 
@@ -59,7 +59,7 @@ describe ApiController do
 
       run_get entrypoint_url, :headers => {"miq_group" => "bogus_group"}
 
-      expect_user_unauthorized
+      expect(response).to have_http_status(:unauthorized)
     end
 
     it "test basic authentication with a primary group" do
@@ -133,7 +133,7 @@ describe ApiController do
     it "authentication using a bad token" do
       run_get entrypoint_url, :headers => {"auth_token" => "badtoken"}
 
-      expect_user_unauthorized
+      expect(response).to have_http_status(:unauthorized)
     end
 
     it "authentication using a valid token" do

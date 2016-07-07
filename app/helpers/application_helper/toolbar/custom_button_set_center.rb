@@ -19,7 +19,13 @@ class ApplicationHelper::Toolbar::CustomButtonSetCenter < ApplicationHelper::Too
         button(
           :ab_group_reorder,
           'pficon pficon-edit fa-lg',
-          N_('Reorder #{x_active_tree == :ab_tree ? "Buttons Groups" : "Buttons and Groups"}'),
+          proc do
+            if x_active_tree == :ab_tree
+              _('Reorder Buttons Groups')
+            else
+              _('Reorder Buttons and Groups')
+            end
+          end,
           N_('Reorder')),
       ]
     ),

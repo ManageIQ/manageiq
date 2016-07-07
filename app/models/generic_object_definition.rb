@@ -1,11 +1,11 @@
 class GenericObjectDefinition < ApplicationRecord
   TYPE_MAP = {
-    :boolean  => ActiveRecord::Type::Boolean.new,
-    :datetime => ActiveRecord::Type::DateTime.new,
-    :time     => ActiveRecord::Type::Time.new,
-    :float    => ActiveRecord::Type::Float.new,
-    :integer  => ActiveRecord::Type::Integer.new,
-    :string   => ActiveRecord::Type::String.new,
+    :boolean  => ActiveModel::Type::Boolean.new,
+    :datetime => ActiveModel::Type::DateTime.new,
+    :float    => ActiveModel::Type::Float.new,
+    :integer  => ActiveModel::Type::Integer.new,
+    :string   => ActiveModel::Type::String.new,
+    :time     => ActiveModel::Type::Time.new
   }.freeze
 
   validates :name, :presence => true, :uniqueness => true

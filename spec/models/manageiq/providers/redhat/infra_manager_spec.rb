@@ -53,4 +53,14 @@ describe ManageIQ::Providers::Redhat::InfraManager do
       @ems.vm_reconfigure(@vm, :spec => @spec)
     end
   end
+
+  context ".make_ems_ref" do
+    it "removes the /ovirt-engine prefix" do
+      expect(described_class.make_ems_ref("/ovirt-engine/api/vms/123")).to eq("/api/vms/123")
+    end
+
+    it "does not remove the /api prefix" do
+      expect(described_class.make_ems_ref("/api/vms/123")).to eq("/api/vms/123")
+    end
+  end
 end

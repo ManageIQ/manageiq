@@ -109,6 +109,12 @@ class DialogField < ApplicationRecord
     DialogFieldSerializer.serialize(self)
   end
 
+  def deep_copy
+    dup.tap do |new_field|
+      new_field.resource_action = resource_action.dup
+    end
+  end
+
   private
 
   def default_resource_action

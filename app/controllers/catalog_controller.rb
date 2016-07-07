@@ -46,7 +46,8 @@ class CatalogController < ApplicationController
   ORCHESTRATION_TEMPLATES_NODES = {
     'OrchestrationTemplateCfn'   => "otcfn",
     'OrchestrationTemplateHot'   => "othot",
-    'OrchestrationTemplateAzure' => "otazu"
+    'OrchestrationTemplateAzure' => "otazu",
+    'OrchestrationTemplateVnfd'  => "otvnf"
   }.freeze
 
   def x_button
@@ -721,6 +722,7 @@ class CatalogController < ApplicationController
       page << javascript_prologue
       page << javascript_hide("buttons_off")
       page << javascript_show("buttons_on")
+      page << "miqSparkle(false);"
     end
   end
 
@@ -744,7 +746,8 @@ class CatalogController < ApplicationController
           {:name => ot.name}, :error)
       else
         begin
-          ot.delete
+          ot.remote_proxy = true
+          ot.destroy
         rescue StandardError => bang
           add_flash(_("Error during 'Orchestration Template Deletion': %{error_message}") %
             {:error_message => bang.message}, :error)
@@ -768,7 +771,9 @@ class CatalogController < ApplicationController
                       :description => "",
                       :content     => "",
                       :type        => ot_type,
-                      :draft       => false}}
+                      :draft       => false,
+                      :manager_id  => ''}}
+    @edit[:new][:available_managers] = available_orchestration_managers_for_template_type(ot_type)
     @edit[:current] = @edit[:new].dup
     @edit[:key] = "ot_add__new"
     @right_cell_text = _("Adding a new Orchestration Template")
@@ -792,11 +797,15 @@ class CatalogController < ApplicationController
     @edit[:new][:type] = params[:type] if params[:type]
     @edit[:new][:content] = params[:content] if params[:content]
     @edit[:new][:draft] = params[:draft] == "true" ? true : false if params[:draft]
+    @edit[:new][:manager_id] = params[:manager_id] if params[:manager_id]
+    @edit[:new][:available_managers] = available_orchestration_managers_for_template_type(params[:type])
+
     render :update do |page|
       page << javascript_prologue
       page << javascript_hide("buttons_off")
       page << javascript_show("buttons_on")
       page << "miqSparkle(false);"
+      page.replace("form_div", :partial => "ot_add") if params[:type]
     end
   end
 
@@ -971,6 +980,7 @@ class CatalogController < ApplicationController
     @edit[:new][:description] = params[:description] if params[:description]
     @edit[:new][:draft] = params[:draft] == "true" ? true : false if params[:draft]
     @edit[:new][:dialog_name] = params[:dialog_name] if params[:dialog_name]
+    @edit[:new][:manager_id] = params[:manager_id] if params[:manager_id]
   end
 
   def ot_edit_set_form_vars(right_cell_text)
@@ -980,8 +990,12 @@ class CatalogController < ApplicationController
     @edit = {:current => {:name        => @record.name,
                           :description => @record.description,
                           :content     => @record.content,
-                          :draft       => @record.draft},
+                          :draft       => @record.draft,
+                          :type        => @record.type,
+                          :manager_id  => @record.ems_id},
              :rec_id  => @record.id}
+
+    @edit[:current][:available_managers] = available_orchestration_managers_for_template_type(@record.type)
     @edit[:new] = @edit[:current].dup
     @edit[:key] = "ot_edit__#{@record.id}"
     @right_cell_text = right_cell_text % @record.name
@@ -1006,6 +1020,8 @@ class CatalogController < ApplicationController
       ot = OrchestrationTemplate.find_by_id(@edit[:rec_id])
       ot.name = @edit[:new][:name]
       ot.description = @edit[:new][:description]
+      ot.ems_id = @edit[:new][:manager_id]
+      ot.remote_proxy = true
       unless ot.in_use?
         ot.content = params[:template_content]
         ot.draft = @edit[:new][:draft]
@@ -1056,11 +1072,13 @@ class CatalogController < ApplicationController
         {:name => @edit[:new][:name]}, :error)
     else
       ot = OrchestrationTemplate.new(
-        :name        => @edit[:new][:name],
-        :description => @edit[:new][:description],
-        :type        => old_ot.type,
-        :content     => params[:template_content],
-        :draft       => @edit[:new][:draft] == true || @edit[:new][:draft] == "true")
+        :name         => @edit[:new][:name],
+        :description  => @edit[:new][:description],
+        :type         => old_ot.type,
+        :content      => params[:template_content],
+        :draft        => @edit[:new][:draft] == true || @edit[:new][:draft] == "true",
+        :ems_id       => @edit[:new][:manager_id],
+        :remote_proxy => true)
       begin
         ot.save_as_orderable!
       rescue StandardError => bang
@@ -1094,17 +1112,19 @@ class CatalogController < ApplicationController
   def ot_add_submit_save
     assert_privileges("orchestration_template_add")
     load_edit("ot_add__new", "replace_cell__explorer")
-    if !%w(OrchestrationTemplateHot OrchestrationTemplateCfn OrchestrationTemplateAzure).include?(@edit[:new][:type])
+    if !%w(OrchestrationTemplateHot OrchestrationTemplateCfn OrchestrationTemplateAzure OrchestrationTemplateVnfd).include?(@edit[:new][:type])
       render_flash(_("\"%{type}\" is not a valid Orchestration Template type") % {:type => @edit[:new][:type]}, :error)
     elsif params[:content].nil? || params[:content].strip == ""
       render_flash(_("Error during Orchestration Template creation: new template content cannot be empty"), :error)
     else
       ot = OrchestrationTemplate.new(
-        :name        => @edit[:new][:name],
-        :description => @edit[:new][:description],
-        :type        => @edit[:new][:type],
-        :content     => params[:content],
-        :draft       => @edit[:new][:draft])
+        :name         => @edit[:new][:name],
+        :description  => @edit[:new][:description],
+        :type         => @edit[:new][:type],
+        :content      => params[:content],
+        :draft        => @edit[:new][:draft],
+        :ems_id       => @edit[:new][:manager_id],
+        :remote_proxy => true)
       begin
         ot.save_as_orderable!
       rescue StandardError => bang
@@ -1479,6 +1499,14 @@ class CatalogController < ApplicationController
     @edit[:new][:template_id] = params[:template_id] if params[:template_id]
   end
 
+  def available_orchestration_managers_for_template_type(template_type)
+    return [] unless OrchestrationTemplate.subclasses.collect(&:name).include?(template_type.to_s)
+
+    template_type = template_type.constantize if template_type.is_a?(String)
+
+    template_type.eligible_managers.collect { |m| [m.name, m.id] }.sort
+  end
+
   def available_orchestration_managers(template_id)
     @edit[:new][:available_managers] = OrchestrationTemplate.find_by_id(template_id)
                                        .eligible_managers
@@ -1684,7 +1712,7 @@ class CatalogController < ApplicationController
             process_show_list(options)
           end
           @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => typ)}
-        elsif ["xx-otcfn", "xx-othot", "xx-otazu"].include?(x_node)
+        elsif ["xx-otcfn", "xx-othot", "xx-otazu", "xx-otvnf"].include?(x_node)
           typ = node_name_to_template_name(x_node)
           @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => typ)}
           options = {:model        => typ.constantize,

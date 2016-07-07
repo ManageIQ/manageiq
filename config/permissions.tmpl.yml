@@ -21,6 +21,7 @@
 - ems-type:foreman_configuration
 - ems-type:foreman_provisioning
 - ems-type:gce
+- ems-type:gce_network
 - ems-type:hawkular
 - ems-type:kubernetes
 - ems-type:openshift

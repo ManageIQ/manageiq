@@ -367,6 +367,7 @@ module ApplicationHelper
       :button_group          => @button_group,
       :changed               => @changed,
       :condition             => @condition,
+      :condition_policy      => @condition_policy,
       :db                    => @db,
       :display               => @display,
       :edit                  => @edit,
@@ -379,6 +380,7 @@ module ApplicationHelper
       :lastaction            => @lastaction,
       :layout                => @layout,
       :miq_request           => @miq_request,
+      :msg_title             => @msg_title,
       :perf_options          => @perf_options,
       :policy                => @policy,
       :pxe_image_types_count => @pxe_image_types_count,
@@ -693,6 +695,7 @@ module ApplicationHelper
   end
 
   CUSTOM_TOOLBAR_CONTROLLERS = [
+    "cloud_tenant",
     "service",
     "vm_cloud",
     "vm_infra",
@@ -700,7 +703,7 @@ module ApplicationHelper
   ]
   # Return a blank tb if a placeholder is needed for AJAX explorer screens, return nil if no custom toolbar to be shown
   def custom_toolbar_filename
-    if %w(ems_cloud ems_cluster ems_infra host miq_template storage ems_network).include?(@layout) # Classic CIs
+    if %w(ems_cloud ems_cluster ems_infra host miq_template storage ems_network cloud_tenant).include?(@layout) # Classic CIs
       return "custom_buttons_tb" if @record && @lastaction == "show" && @display == "main"
     end
 

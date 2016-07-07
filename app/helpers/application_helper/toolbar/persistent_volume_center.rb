@@ -10,18 +10,18 @@ class ApplicationHelper::Toolbar::PersistentVolumeCenter < ApplicationHelper::To
         button(
           :persistent_volume_edit,
           nil,
-          t = N_('Edit this #{ui_lookup(:table=>"persistent_volume")}'),
+          t = N_('Edit this Volume'),
           t,
           :image => "edit",
           :url   => "/edit"),
         button(
           :persistent_volume_delete,
           nil,
-          t = N_('Remove this #{ui_lookup(:table=>"persistent_volume")} from the VMDB'),
+          t = N_('Remove this Volume from the VMDB'),
           t,
           :image     => "delete",
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This \#{ui_lookup(:table=>\"persistent_volume\")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this \#{ui_lookup(:table=>\"persistent_volume\")}?")),
+          :confirm   => N_("Warning: This Volume and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Volume?")),
       ]
     ),
   ])
@@ -36,7 +36,7 @@ class ApplicationHelper::Toolbar::PersistentVolumeCenter < ApplicationHelper::To
         button(
           :persistent_volume_tag,
           nil,
-          N_('Edit Tags for this #{ui_lookup(:table=>"persistent_volume")}'),
+          N_('Edit Tags for this Volume'),
           N_('Edit Tags'),
           :image => "tag"),
       ]

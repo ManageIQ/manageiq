@@ -33,7 +33,7 @@ RSpec.describe "users API" do
         run_post users_url(@user.id), gen_request(:edit, :password => "new_password")
       end.to change { @user.reload.password_digest }
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
     end
 
     it "can change another user's password" do
@@ -44,7 +44,7 @@ RSpec.describe "users API" do
         run_post users_url(user.id), gen_request(:edit, :password => "new_password")
       end.to change { user.reload.password_digest }
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
     end
   end
 
@@ -56,7 +56,7 @@ RSpec.describe "users API" do
         run_post users_url(@user.id), gen_request(:edit, :password => "new_password")
       end.to change { @user.reload.password_digest }
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
     end
 
     it "will not allow the changing of attributes other than the password" do
@@ -66,7 +66,7 @@ RSpec.describe "users API" do
         run_post users_url(@user.id), gen_request(:edit, :email => "new.email@example.com")
       end.not_to change { @user.reload.email }
 
-      expect_bad_request
+      expect(response).to have_http_status(:bad_request)
     end
 
     it "cannot change another user's password" do
@@ -77,7 +77,7 @@ RSpec.describe "users API" do
         run_post users_url(user.id), gen_request(:edit, :password => "new_password")
       end.not_to change { user.reload.password_digest }
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
   end
 
@@ -87,7 +87,7 @@ RSpec.describe "users API" do
 
       run_post(users_url, sample_user1)
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects user creation with id specified" do
@@ -103,7 +103,7 @@ RSpec.describe "users API" do
 
       run_post(users_url, sample_user2.merge("group" => {"id" => 999_999}))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "rejects user creation with missing attribute" do
@@ -119,7 +119,7 @@ RSpec.describe "users API" do
 
       run_post(users_url, sample_user1)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       user_id = response_hash["results"].first["id"]
@@ -131,7 +131,7 @@ RSpec.describe "users API" do
 
       run_post(users_url, gen_request(:create, sample_user1))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       user_id = response_hash["results"].first["id"]
@@ -143,7 +143,7 @@ RSpec.describe "users API" do
 
       run_post(users_url, gen_request(:create, [sample_user1, sample_user2]))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       results = response_hash["results"]
@@ -161,7 +161,7 @@ RSpec.describe "users API" do
 
       run_post(users_url, gen_request(:edit, "name" => "updated name", "href" => users_url(user1.id)))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects user edits for invalid resources" do
@@ -169,7 +169,7 @@ RSpec.describe "users API" do
 
       run_post(users_url(999_999), gen_request(:edit, "name" => "updated name"))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "supports single user edit" do
@@ -215,7 +215,7 @@ RSpec.describe "users API" do
 
       run_post(users_url, gen_request(:delete, "href" => users_url(100)))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects user deletion without appropriate role" do
@@ -223,7 +223,7 @@ RSpec.describe "users API" do
 
       run_delete(users_url(100))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects user deletes for invalid users" do
@@ -231,7 +231,7 @@ RSpec.describe "users API" do
 
       run_delete(users_url(999_999))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "rejects user delete of requesting user via action" do
@@ -256,7 +256,7 @@ RSpec.describe "users API" do
       user1_id = user1.id
       run_delete(users_url(user1_id))
 
-      expect_request_success_with_no_content
+      expect(response).to have_http_status(:no_content)
       expect(User.exists?(user1_id)).to be_falsey
     end
 

@@ -70,7 +70,7 @@ describe ApiController do
 
       run_get "#{vm_accounts_url}/999999"
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "query VM accounts subcollection with two related accounts using expand directive" do
@@ -127,7 +127,7 @@ describe ApiController do
 
       run_get "#{vm_software_url}/999999"
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "query VM software subcollection with two related software using expand directive" do
@@ -149,7 +149,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:start))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "starts an invalid vm without appropriate role" do
@@ -157,7 +157,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:start))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "starts a powered on vm" do
@@ -207,7 +207,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:stop))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "stops an invalid vm without appropriate role" do
@@ -215,7 +215,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:stop))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "stops a powered off vm" do
@@ -251,7 +251,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:suspend))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "suspends an invalid vm without appropriate role" do
@@ -259,7 +259,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:suspend))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "suspends a powered off vm" do
@@ -304,7 +304,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:pause))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "pauses an invalid vm without appropriate role" do
@@ -312,7 +312,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:pause))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "pauses a powered off vm" do
@@ -357,7 +357,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:shelve))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "shelves an invalid vm without appropriate role" do
@@ -365,7 +365,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:shelve))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "shelves a powered off vm" do
@@ -441,7 +441,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:shelve_offload))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "shelve_offloads an invalid vm without appropriate role" do
@@ -449,7 +449,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:shelve_offload))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "shelve_offloads a active vm" do
@@ -547,7 +547,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:delete))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "deletes a vm via a resource POST without appropriate role" do
@@ -555,7 +555,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:delete))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "deletes a vm via a resource DELETE without appropriate role" do
@@ -563,7 +563,7 @@ describe ApiController do
 
       run_delete(invalid_vm_url)
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "deletes a vm via a resource POST" do
@@ -579,7 +579,7 @@ describe ApiController do
 
       run_delete(vm_url)
 
-      expect_request_success_with_no_content
+      expect(response).to have_http_status(:no_content)
     end
 
     it "deletes multiple vms" do
@@ -597,7 +597,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:set_owner, "owner" => "admin"))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "set_owner without appropriate action role" do
@@ -605,7 +605,7 @@ describe ApiController do
 
       run_post(vm_url, gen_request(:set_owner, "owner" => "admin"))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "set_owner with missing owner" do
@@ -697,7 +697,7 @@ describe ApiController do
 
       run_post(vm_ca_url, gen_request(:delete, nil, vm_url))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "delete a custom_attribute from a vm via the delete action" do
@@ -706,7 +706,7 @@ describe ApiController do
 
       run_post(vm_ca_url, gen_request(:delete, nil, ca1_url))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect(vm.reload.custom_attributes).to be_empty
     end
 
@@ -724,7 +724,7 @@ describe ApiController do
       run_post(vm_ca_url, gen_request(:add, [{"name" => "name1", "value" => "value1"},
                                              {"name" => "name2", "value" => "value2"}]))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_data("results", "name" => %w(name1 name2))
       expect(vm.custom_attributes.size).to eq(2)
       expect(vm.custom_attributes.pluck(:value).sort).to eq(%w(value1 value2))
@@ -736,7 +736,7 @@ describe ApiController do
 
       run_post(vm_ca_url, gen_request(:edit, "name" => "name1", "value" => "value one"))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_data("results", "value" => ["value one"])
       expect(vm.reload.custom_attributes.first.value).to eq("value one")
     end
@@ -747,7 +747,7 @@ describe ApiController do
 
       run_post(vm_ca_url, gen_request(:edit, "href" => ca1_url, "value" => "new value1"))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_data("results", "value" => ["new value1"])
       expect(vm.reload.custom_attributes.first.value).to eq("new value1")
     end
@@ -759,7 +759,7 @@ describe ApiController do
       run_post(vm_ca_url, gen_request(:edit, [{"name" => "name1", "value" => "new value1"},
                                               {"name" => "name2", "value" => "new value2"}]))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_data("results", "value" => ["new value1", "new value2"])
       expect(vm.reload.custom_attributes.pluck(:value).sort).to eq(["new value1", "new value2"])
     end
@@ -777,7 +777,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:add_lifecycle_event, :event => "event 1"))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "add_lifecycle_event without appropriate action role" do
@@ -785,7 +785,7 @@ describe ApiController do
 
       run_post(vm_url, gen_request(:add_lifecycle_event, :event => "event 1"))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "add_lifecycle_event to a vm" do
@@ -816,7 +816,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:scan))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "scans an invalid Vm without appropriate role" do
@@ -824,7 +824,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:scan))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "scan a Vm" do
@@ -851,7 +851,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:add_event))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "to an invalid vm without appropriate role" do
@@ -859,7 +859,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:add_event))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "to a single Vm" do
@@ -891,7 +891,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:retire))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "to an invalid vm without appropriate role" do
@@ -899,7 +899,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:retire))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "to a single Vm" do
@@ -939,7 +939,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:reset))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "to an invalid vm without appropriate role" do
@@ -947,7 +947,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:reset))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "to a single Vm" do
@@ -979,7 +979,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:shutdown_guest))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "to an invalid vm without appropriate role" do
@@ -987,7 +987,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:shutdown_guest))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "to a single Vm" do
@@ -1019,7 +1019,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:refresh))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "to an invalid vm without appropriate role" do
@@ -1027,7 +1027,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:refresh))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "to a single Vm" do
@@ -1059,7 +1059,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:reboot_guest))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "to an invalid vm without appropriate role" do
@@ -1067,7 +1067,7 @@ describe ApiController do
 
       run_post(invalid_vm_url, gen_request(:reboot_guest))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "to a single Vm" do

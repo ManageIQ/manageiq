@@ -5,7 +5,7 @@ RSpec.describe "service orders API" do
 
     run_get service_orders_url
 
-    expect_request_success
+    expect(response).to have_http_status(:ok)
     expect_result_resources_to_include_hrefs("resources", [service_orders_url(service_order.id)])
   end
 
@@ -32,7 +32,7 @@ RSpec.describe "service orders API" do
       run_post service_orders_url, :name => "service order", :state => "wish"
     end.to change(ServiceOrder, :count).by(1)
 
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   it "can create multiple service orders" do
@@ -43,7 +43,7 @@ RSpec.describe "service orders API" do
                :action => "create", :resources => [{:name => "service order 1", :state => "wish"},
                                                    {:name => "service order 2", :state => "wish"}])
     end.to change(ServiceOrder, :count).by(2)
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   specify "the default state for a service order is 'cart'" do
@@ -72,7 +72,7 @@ RSpec.describe "service orders API" do
     run_get service_orders_url(service_order.id)
 
     expect_result_to_match_hash(response_hash, "name" => service_order.name, "state" => service_order.state)
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   it "can show the shopping cart" do
@@ -103,7 +103,7 @@ RSpec.describe "service orders API" do
     run_post service_orders_url(service_order.id), :action => "edit", :resource => {:name => "new name"}
 
     expect_result_to_match_hash(response_hash, "name" => "new name")
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   it "can update multiple service orders" do
@@ -116,7 +116,7 @@ RSpec.describe "service orders API" do
                                                {:id => service_order_2.id, :name => "new name 2"}])
 
     expect_results_to_match_hash("results", [{"name" => "new name 1"}, {"name" => "new name 2"}])
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   it "can delete a service order" do
@@ -126,7 +126,7 @@ RSpec.describe "service orders API" do
     expect do
       run_delete service_orders_url(service_order.id)
     end.to change(ServiceOrder, :count).by(-1)
-    expect_request_success_with_no_content
+    expect(response).to have_http_status(:no_content)
   end
 
   it "can delete a service order through POST" do
@@ -136,7 +136,7 @@ RSpec.describe "service orders API" do
     expect do
       run_post service_orders_url(service_order.id), :action => "delete"
     end.to change(ServiceOrder, :count).by(-1)
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   it "can delete multiple service orders" do
@@ -149,7 +149,7 @@ RSpec.describe "service orders API" do
                :action => "delete", :resources => [{:id => service_order_1.id},
                                                    {:id => service_order_2.id}])
     end.to change(ServiceOrder, :count).by(-2)
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   context "service requests subcollection" do

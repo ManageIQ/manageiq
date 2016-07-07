@@ -22,9 +22,9 @@
 
 %script{:type => "text/javascript"}
   - if check_url
-    check_url = "#{check_url}"
+    ManageIQ.dynatree.checkUrl = "#{j_str check_url}";
   - if click_url
-    ManageIQ.clickUrl = "#{click_url}";
+    ManageIQ.dynatree.clickUrl = "#{j_str click_url}";
   - if session[:group_changed]
     miqDeleteDynatreeCookies();
     - session[:group_changed] = false

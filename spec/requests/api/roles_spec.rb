@@ -63,7 +63,7 @@ describe ApiController do
     api_basic_authorize action_identifier(:roles, :read, :resource_actions, :get)
 
     run_get role_url, :expand => "features"
-    expect_request_success
+    expect(response).to have_http_status(:ok)
 
     expect(response_hash).to have_key("name")
     expect(response_hash["name"]).to eq(role.name)
@@ -88,7 +88,7 @@ describe ApiController do
 
       run_post(roles_url, sample_role1)
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects role creation with id specified" do
@@ -104,7 +104,7 @@ describe ApiController do
 
       run_post(roles_url, sample_role1)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       role_id = response_hash["results"].first["id"]
@@ -124,7 +124,7 @@ describe ApiController do
 
       run_post(roles_url, gen_request(:create, sample_role1))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       role_id = response_hash["results"].first["id"]
@@ -140,7 +140,7 @@ describe ApiController do
 
       run_post(roles_url, gen_request(:create, [sample_role1, sample_role2]))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       results = response_hash["results"]
@@ -167,7 +167,7 @@ describe ApiController do
       api_basic_authorize
       run_post(roles_url, gen_request(:edit, "name" => "role name", "href" => roles_url(role.id)))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects role edits for invalid resources" do
@@ -175,7 +175,7 @@ describe ApiController do
 
       run_post(roles_url(999_999), gen_request(:edit, "name" => "updated role name"))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "supports single role edit" do
@@ -221,7 +221,7 @@ describe ApiController do
       url = "#{roles_url}/#{role.id}/features"
       run_post(url, gen_request(:assign, new_feature))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", %w(id name read_only))
 
       # Refresh the role object
@@ -241,7 +241,7 @@ describe ApiController do
       url = "#{roles_url}/#{role.id}/features"
       run_post(url, gen_request(:assign, features_list))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", %w(id name read_only))
 
       # Refresh the role object
@@ -264,7 +264,7 @@ describe ApiController do
       url = "#{roles_url}/#{role.id}/features"
       run_post(url, gen_request(:unassign, removed_feature))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       # Confirm that we've only removed ems_infra_tag
       expect_result_resources_to_include_keys("results", %w(id name read_only))
 
@@ -284,7 +284,7 @@ describe ApiController do
       url = "#{roles_url}/#{role.id}/features"
       run_post(url, gen_request(:unassign, features_list))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", %w(id name read_only))
 
       # Refresh the role object
@@ -308,7 +308,7 @@ describe ApiController do
 
       run_post(roles_url, gen_request(:delete, "name" => "role name", "href" => roles_url(100)))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects role deletion without appropriate role" do
@@ -316,7 +316,7 @@ describe ApiController do
 
       run_delete(roles_url(100))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects role deletes for invalid roles" do
@@ -324,7 +324,7 @@ describe ApiController do
 
       run_delete(roles_url(999_999))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "supports single role delete" do
@@ -334,7 +334,7 @@ describe ApiController do
 
       run_delete(roles_url(role.id))
 
-      expect_request_success_with_no_content
+      expect(response).to have_http_status(:no_content)
       expect(MiqUserRole.exists?(role.id)).to be_falsey
     end
 
@@ -345,7 +345,7 @@ describe ApiController do
 
       run_post(roles_url(role.id), gen_request(:delete))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect(MiqUserRole.exists?(role.id)).to be_falsey
     end
 
@@ -359,7 +359,7 @@ describe ApiController do
                                       [{"href" => roles_url(r1.id)},
                                        {"href" => roles_url(r2.id)}]))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect(MiqUserRole.exists?(r1.id)).to be_falsey
       expect(MiqUserRole.exists?(r2.id)).to be_falsey
     end

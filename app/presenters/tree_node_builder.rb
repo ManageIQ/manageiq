@@ -131,6 +131,7 @@ class TreeNodeBuilder
     when OrchestrationTemplateCfn then generic_node(object.name, "orchestration_template_cfn.png")
     when OrchestrationTemplateHot then generic_node(object.name, "orchestration_template_hot.png")
     when OrchestrationTemplateAzure then generic_node(object.name, "orchestration_template_azure.png")
+    when OrchestrationTemplateVnfd then generic_node(object.name, "orchestration_template_vnfd.png")
     when PxeImage             then generic_node(object.name, object.default_for_windows ? "win32service.png" : "pxeimage.png")
     when WindowsImage         then generic_node(object.name, "os-windows_generic.png")
     when PxeImageType         then generic_node(object.name, "pxeimagetype.png")
@@ -226,6 +227,8 @@ class TreeNodeBuilder
     # Start with all nodes open unless expand is explicitly set to false
     @node[:expand] = true if options[:open_all] && options[:expand] != false
     @node[:cfmeNoClick] = object[:cfmeNoClick] if object.key?(:cfmeNoClick)
+    @node[:hideCheckbox] = true if object.key?(:hideCheckbox)
+    @node[:select] = object[:select] if object.key?(:select)
 
     # FIXME: check the following
     # TODO: With dynatree, unless folders are open, we can't jump to a child node until it has been visible once

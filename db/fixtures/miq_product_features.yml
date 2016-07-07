@@ -3234,6 +3234,30 @@
       :description: Re-check Authentication Status of Containers Providers
       :feature_type: control
       :identifier: ems_container_recheck_auth_status
+    - :name: Container Deployments
+      :description: Container Deployments
+      :feature_type: node
+      :identifier: container_deployment
+      :hidden: true
+      :children:
+      - :name: View
+        :description: View Container Deployments
+        :feature_type: view
+        :identifier: container_deployment_view
+        :children:
+        - :name: Container Deployment Show
+          :description:  Container Deployment Show
+          :feature_type: view
+          :identifier: container_deployment_show
+      - :name: Operate
+        :description: Perform Operations on Container Deployment
+        :feature_type: control
+        :identifier: container_deployment_control
+        :children:
+        - :name: Container Deployment Create
+          :description: Container Deployment Create
+          :feature_type: control
+          :identifier: container_deployment_create
   - :name: Modify
     :description: Modify Containers Providers
     :feature_type: admin
@@ -3361,6 +3385,23 @@
       :description: Stop Middleware Server
       :feature_type: admin
       :identifier: middleware_server_stop
+    - :name: Shut down middleware server
+      :description: Shut Middleware Server down
+      :feature_type: admin
+      :identifier: middleware_server_shutdown
+    - :name: Suspend middleware server
+      :description: Suspend Middleware Server
+      :feature_type: admin
+      :identifier: middleware_server_suspend
+    - :name: Resume middleware server
+      :description: Resume a suspended Middleware Server
+      :feature_type: admin
+      :identifier: middleware_server_resume
+    - :name: Restart middleware server
+      :description: Restart a Middleware Server
+      :feature_type: admin
+      :identifier: middleware_server_restart
+
 
 # MiddlewareDeployment
 - :name: Middleware Deployment
@@ -4887,6 +4928,27 @@
         :description: Edit EVM Server Relationship
         :feature_type: admin
         :identifier: miq_template_evm_relationship
+    - :name: Virtual Templates
+      :description: Everything for Virtual Templates
+      :feature_type: admin
+      :identifier: miq_virtual_template
+      :children:
+      - :name: Create Virtual Template
+        :description: Create Virtual Template
+        :feature_type: admin
+        :identifier: create_virtual_template
+      - :name: Show Virtual Templates
+        :description: Show Virtual Templates
+        :feature_type: admin
+        :identifier: virtual_template_show
+      - :name: Edit Virtual Templates
+        :description: Edit Virtual Template
+        :feature_type: admin
+        :identifier: edit_virtual_template
+      - :name: Delete Virtual Template
+        :description: Delete Virtual Template
+        :feature_type: admin
+        :identifier: delete_virtual_template
     - :name: Snapshots
       :description: Everything for Template Snapshots
       :feature_type: node

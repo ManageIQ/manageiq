@@ -44,7 +44,7 @@ describe ApiController do
 
       run_get "#{entrypoint_url}/v9999.9999"
 
-      expect_bad_request
+      expect(response).to have_http_status(:bad_request)
     end
   end
 end

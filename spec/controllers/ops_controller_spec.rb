@@ -280,10 +280,8 @@ describe OpsController do
       _guid, @miq_server, @zone = EvmSpecHelper.remote_guid_miq_server_zone
       allow(controller).to receive(:check_privileges).and_return(true)
       allow(controller).to receive(:assert_privileges).and_return(true)
-      allow(controller).to receive(:x_active_tree).and_return(:diagnostics_tree)
-      allow(controller).to receive(:x_node).and_return("z-#{ApplicationRecord.compress_id(@zone.id)}")
+      seed_session_trees('ops', :diagnostics_tree, "z-#{ApplicationRecord.compress_id(@zone.id)}")
       post :change_tab, :params => { :tab_id => "diagnostics_collect_logs" }
-      allow(controller).to receive(:x_node).and_return("svr-#{ApplicationRecord.compress_id(@miq_server.id)}")
     end
     it "does not render toolbar buttons when edit is clicked" do
       post :x_button, :params => { :id => @miq_server.id, :pressed => 'log_depot_edit', :format => :js }
@@ -314,10 +312,7 @@ describe OpsController do
         _guid, @miq_server, @zone = EvmSpecHelper.remote_guid_miq_server_zone
         allow(controller).to receive(:check_privileges).and_return(true)
         allow(controller).to receive(:assert_privileges).and_return(true)
-        controller.instance_variable_set(:@sb, {})
-        allow(controller).to receive(:x_active_tree).and_return(:settings_tree)
-        allow(controller).to receive(:x_node).and_return("root")
-        controller.x_active_tree = 'settings_tree'
+        seed_session_trees('ops', :settings_tree, 'root')
         expect(controller).to receive(:render_to_string).with(any_args).twice
         post :change_tab, :params => {:tab_id => tab}
       end

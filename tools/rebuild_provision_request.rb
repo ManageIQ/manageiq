@@ -1,4 +1,5 @@
 require 'trollop'
+require 'rest-client'
 #
 # Helper Script to show the json / hash output of an
 # existing Automate request
@@ -106,8 +107,9 @@ class Tab
 
   def parse_source
     src_id = @provision_options.delete(:src_vm_id)
+    request_type = @provision_options.delete(:request_type)
     source = VmOrTemplate.find_by(:id => src_id)
-    @output["template_fields"] = {'guid' => source.guid, 'name' => source.name}
+    @output["template_fields"] = {'guid' => source.guid, 'name' => source.name, 'request_type' => request_type.to_s}
   end
 
   def ws_only_files
@@ -264,7 +266,7 @@ class AutomateHash
 
   def provision_options
     find_request_options
-    @provision_options.options.dup
+    @provision_options.options.dup.merge!(:request_type => @provision_options.request_type)
   end
 
   def dialog

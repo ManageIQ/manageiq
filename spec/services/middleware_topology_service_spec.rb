@@ -19,7 +19,7 @@ describe MiddlewareTopologyService do
     let(:middleware_server) do
       FactoryGirl.create(:hawkular_middleware_server,
                          :name                  => 'Local',
-                         :feed                  => 'cda13e2a-e206-4e87-8bca-8cfdd5aea484',
+                         :feed                  => '70c798a0-6985-4f8a-a525-012d8d28e8a3',
                          :ems_ref               => long_id_0,
                          :nativeid              => 'Local~~',
                          :ext_management_system => ems_hawkular)
@@ -62,16 +62,14 @@ describe MiddlewareTopologyService do
         "MiddlewareDeployment" + middleware_deployment1.compressed_id.to_s => {:name         => middleware_deployment1.name,
                                                                                :status       => "Unknown",
                                                                                :kind         => "MiddlewareDeployment",
-                                                                               :display_kind => "MiddlewareDeployment",
-                                                                               :miq_id       => middleware_deployment1.id,
-                                                                               :icon         => "middleware_deployment_war"},
+                                                                               :display_kind => "MiddlewareDeploymentWar",
+                                                                               :miq_id       => middleware_deployment1.id},
 
         "MiddlewareDeployment" + middleware_deployment2.compressed_id.to_s => {:name         => middleware_deployment2.name,
                                                                                :status       => "Unknown",
                                                                                :kind         => "MiddlewareDeployment",
-                                                                               :display_kind => "MiddlewareDeployment",
-                                                                               :miq_id       => middleware_deployment2.id,
-                                                                               :icon         => "middleware_deployment_war"},
+                                                                               :display_kind => "MiddlewareDeploymentWar",
+                                                                               :miq_id       => middleware_deployment2.id},
 
         "MiddlewareDatasource" + mddlwr_datasource.compressed_id.to_s      => {:name         => mddlwr_datasource.name,
                                                                                :status       => "Unknown",

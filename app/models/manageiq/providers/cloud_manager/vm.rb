@@ -2,10 +2,6 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   belongs_to :availability_zone
   belongs_to :flavor
   belongs_to :orchestration_stack
-  # TODO(lsmola) NetworkProvider, need to go away, but relation needs to be fixed in AWS and Azure first, then we can
-  # delete the foreign keys and model these as methods returning cloud_networks.first, cloud_subnets.first
-  belongs_to :cloud_network
-  belongs_to :cloud_subnet
   belongs_to :cloud_tenant
 
   has_many :network_ports, :as => :device
@@ -31,6 +27,16 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
 
   def ipaddresses
     @ipaddresses ||= network_ports.collect(&:ipaddresses).flatten.compact.uniq
+  end
+
+  def cloud_network
+    # NetworkProvider Backwards compatibility layer with simplified architecture where VM has only one network.
+    cloud_networks.first
+  end
+
+  def cloud_subnet
+    # NetworkProvider Backwards compatibility layer with simplified architecture where VM has only one network.
+    cloud_subnets.first
   end
 
   def mac_addresses

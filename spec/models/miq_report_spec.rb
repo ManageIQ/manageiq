@@ -1,19 +1,8 @@
 shared_examples "custom_report_with_custom_attributes" do |base_report, custom_attribute_field|
   let(:options) { {:targets_hash => true, :userid => "admin"} }
-  let(:base_report_downcase) { base_report.downcase }
-  let(:miq_ae_uri) { "/EVM/AUTOMATE/test1?#{base_report}::#{base_report_downcase}=#{@resource.id}" }
   let(:custom_attributes_field) { custom_attribute_field.to_s.pluralize }
 
-  def invoke_ae
-    MiqAeEngine.instantiate(miq_ae_uri, @user)
-  end
-
   before do
-    EvmSpecHelper.local_miq_server
-    MiqAutomateHelper.create_service_model_method('SPEC_DOMAIN', 'EVM',
-                                                  'AUTOMATE', 'test1', 'test')
-    @ae_method = ::MiqAeMethod.first
-    ae_result_key = 'foo'
     @user = FactoryGirl.create(:user_with_group)
 
     # create custom attributes
@@ -22,16 +11,6 @@ shared_examples "custom_report_with_custom_attributes" do |base_report, custom_a
 
     @resource = base_report == "Host" ? FactoryGirl.create(:host) : FactoryGirl.create(:vm_vmware)
     FactoryGirl.create(custom_attribute_field, :resource => @resource, :name => @key, :value => @value)
-
-    if custom_attribute_field == :ems_custom_attribute
-      custom_get_method = "ems_custom_get"
-    else
-      custom_get_method = "custom_get"
-    end
-
-    method = "$evm.root['#{ae_result_key}'] = $evm.root['#{base_report_downcase}'].#{custom_get_method}('#{@key}')"
-    @ae_method.update_attributes(:data => method)
-    @ae_object = invoke_ae.root(ae_result_key)
   end
 
   let(:report) do

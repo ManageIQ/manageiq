@@ -105,7 +105,7 @@ describe ApiController do
 
       run_get policies_url(999_999)
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "query policies" do
@@ -137,7 +137,7 @@ describe ApiController do
 
       run_get policy_profiles_url(999_999)
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "query Policy Profiles" do
