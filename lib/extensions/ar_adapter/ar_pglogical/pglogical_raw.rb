@@ -21,8 +21,8 @@ class PgLogicalRaw
 
   # Enables pglogical postgres extensions
   def enable
-    connection.enable_extension("pglogical")
     connection.enable_extension("pglogical_origin") if connection.postgresql_version < 90_500
+    connection.enable_extension("pglogical")
   end
 
   def disable
