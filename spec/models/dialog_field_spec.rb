@@ -6,6 +6,7 @@ describe DialogField do
 
     it "sets default value for required attribute" do
       expect(@df.required).to eq(false)
+      expect(@df.visible).to eq(true)
     end
 
     it "fields named 'action' or 'controller' are invalid" do

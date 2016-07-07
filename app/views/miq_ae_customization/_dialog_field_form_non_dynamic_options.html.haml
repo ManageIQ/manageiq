@@ -1,5 +1,11 @@
 - url = url_for(:action => 'dialog_form_field_changed', :id => @record.id.to_s || 'new')
-
+.form-group
+  %label.col-md-2.control-label
+    = _('Visible')
+  .col-md-8
+    = check_box_tag('field_visible', '1',
+                    @edit[:field_visible],
+                    'data-miq_observe_checkbox' => {:url => url}.to_json)
 .form-group
   %label.col-md-2.control-label
     = _('Read only')
