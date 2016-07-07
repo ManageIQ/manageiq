@@ -878,4 +878,9 @@ class Storage < ApplicationRecord
   def tenant_identity
     ext_management_system.tenant_identity
   end
+
+  # @param [String, Storage] store_type upcased version of the storage type
+  def self.supports?(store_type)
+    Storage::SUPPORTED_STORAGE_TYPES.include?(store_type)
+  end
 end
