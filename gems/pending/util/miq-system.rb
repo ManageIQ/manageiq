@@ -1,4 +1,4 @@
-require 'util/extensions/miq-blank'
+require 'more_core_extensions/core_ext/object/blank'
 require 'awesome_spawn'
 require 'sys-uname'
 if Sys::Platform::OS == :windows
