@@ -16,7 +16,7 @@
               %h3{:title => group.description}
                 = group.label
               .form-horizontal.static
-                - group.ordered_dialog_resources.each do |g|
+                - group.ordered_dialog_resources.select(&:visible).each do |g|
                   - field = g.resource
                   .form-group
                     %label.col-md-2.control-label{:title => field.description}

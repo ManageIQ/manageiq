@@ -898,6 +898,7 @@ module MiqAeCustomizationController::Dialogs
     copy_checkbox_field_param.call(:past_dates)
     copy_checkbox_field_param.call(:reconfigurable)
     copy_checkbox_field_param.call(:dynamic)
+    copy_checkbox_field_param.call(:visible)
     copy_checkbox_field_param.call(:read_only)
     copy_checkbox_field_param.call(:auto_refresh)
     copy_checkbox_field_param.call(:trigger_auto_refresh)
@@ -939,6 +940,7 @@ module MiqAeCustomizationController::Dialogs
 
     # element type was NOT changed and is present
     elsif !@edit[:field_typ].blank?
+      @edit[:field_visible] = key[:visible]
       # set default_value - checkbox
       if @edit[:field_typ] =~ /Check/
         if params[:field_default_value]
@@ -1054,6 +1056,7 @@ module MiqAeCustomizationController::Dialogs
         :field_dynamic              => field[:dynamic],
         :field_default_value        => field[:default_value],
         :field_read_only            => field[:read_only],
+        :field_visible              => field[:visible],
         :field_reconfigurable       => field[:reconfigurable],
         :field_required             => field[:required],
         :field_trigger_auto_refresh => field[:trigger_auto_refresh]
@@ -1064,10 +1067,12 @@ module MiqAeCustomizationController::Dialogs
         @edit[:field_validator_type] = field[:validator_type]
         @edit[:field_validator_rule] = field[:validator_rule]
         @edit[:field_data_typ]       = field[:data_typ]
+        @edit[:field_visible]        = field[:visible]
       end
 
       if field[:typ].include?('Text')
         @edit[:field_required]             = field[:required]
+        @edit[:field_visible]              = field[:visible]
       end
 
       if field[:typ].include?("TagControl")
@@ -1175,6 +1180,7 @@ module MiqAeCustomizationController::Dialogs
               :name                 => f.name,
               :reconfigurable       => f.reconfigurable,
               :dynamic              => f.dynamic,
+              :visible              => f.visible,
               :read_only            => f.read_only,
               :trigger_auto_refresh => f.trigger_auto_refresh
             }
@@ -1276,6 +1282,7 @@ module MiqAeCustomizationController::Dialogs
                     :name                 => field[:name],
                     :reconfigurable       => field[:reconfigurable],
                     :dynamic              => field[:dynamic],
+                    :visible              => field[:visible],
                     :read_only            => field[:read_only],
                     :trigger_auto_refresh => field[:trigger_auto_refresh],
                     :display              => :edit
