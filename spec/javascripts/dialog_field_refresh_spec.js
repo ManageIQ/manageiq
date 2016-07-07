@@ -76,6 +76,29 @@ describe('dialogFieldRefresh', function() {
   describe('#refreshCheckbox', function() {
     var loadedDoneFunction;
 
+  describe('#setVisible', function() {
+    beforeEach(function() {
+      var html = "";
+      html += '<input id="text-test" title="bogus title" type="text" />';
+      setFixtures(html);
+    });
+
+    context('when visible is true', function() {
+      it('shows the element', function() {
+        dialogFieldRefresh.setVisible($('#text-test'), true);
+        expect($('#text-test').is(":visible")).toBe(true);
+      });
+    });
+
+    context('when visible is false', function() {
+      it('hides the element', function() {
+        dialogFieldRefresh.setVisible($('#text-test'), false);
+        expect($('#text-test').is(":visible")).toBe(false);
+      });
+    });
+  });
+
+  describe('#refreshDropDownList', function() {
     beforeEach(function() {
       spyOn(dialogFieldRefresh, 'setReadOnly');
       spyOn($.fn, 'prop');
