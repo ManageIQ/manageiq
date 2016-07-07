@@ -118,8 +118,8 @@ class ApiController
     end
 
     def attribute_selection
-      if params['attributes'] || @additional_attributes
-        params['attributes'].to_s.split(",") | Array(@additional_attributes) | ID_ATTRS
+      if !@req.attributes.empty? || @additional_attributes
+        @req.attributes | Array(@additional_attributes) | ID_ATTRS
       else
         "all"
       end
