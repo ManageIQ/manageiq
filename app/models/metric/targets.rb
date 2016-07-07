@@ -11,17 +11,20 @@ module Metric::Targets
   def self.capture_infra_targets(zone, options)
     load_infra_targets_data(zone, options)
     all_hosts = capture_host_targets(zone)
-    targets = hosts = only_enabled(all_hosts)
+    targets = enabled_hosts = only_enabled(all_hosts)
     targets += capture_storage_targets(all_hosts) unless options[:exclude_storages]
-    targets += capture_vm_targets(hosts) unless options[:exclude_vms]
+    targets += capture_vm_targets(enabled_hosts) unless options[:exclude_vms]
 
     targets
   end
 
-  def self.only_enabled(targets)
-    # If it can and does have a cluster, then ask that, otherwise, ask host itself.
-    targets.select do |t|
-      t.respond_to?(:ems_cluster) && t.ems_cluster ? t.ems_cluster.perf_capture_enabled? : t.perf_capture_enabled?
+  # Filter to enabled hosts. If it has a cluster consult that, otherwise consult the host itself.
+  # 
+  # NOTE: if capture_storage takes only enabled, then move
+  # this logic into capture_host_targets
+  def self.only_enabled(hosts)
+    hosts.select do |host|
+      host.ems_cluster ? host.ems_cluster.perf_capture_enabled? : host.perf_capture_enabled?
     end
   end
 
@@ -63,7 +66,7 @@ module Metric::Targets
   # cluster is used for hierarchies
   def self.load_infra_targets_data(zone, options)
     MiqPreloader.preload(zone, preload_hash_infra_targets_data(options))
-    post_load_infra_targets_data(zone, options)
+    postload_infra_targets_data(zone, options)
   end
 
   def self.preload_hash_infra_targets_data(options)
@@ -76,9 +79,14 @@ module Metric::Targets
 
   # populate parts of the hierarchy that are not properly preloaded
   #
-  # preload will load new objects at every level. which is probably fine
-  # but since we are also loading tags and other data, this just plain downloads too much
-  def self.post_load_infra_targets_data(zone, options)
+  # inverse_of does not work with :through.
+  # e.g.: :ems => :hosts => vms will not preload vms.ems
+  #
+  # adding in a preload for vms => :ems will fix, but different objects get assigned
+  # and since we also rely upon tags and clusters, this causes unnecessary data to be downloaded
+  #
+  # so we have introduced this to work around preload not working (and inverse_of)
+  def self.postload_infra_targets_data(zone, options)
     # populate ems (with tags / clusters)
     zone.ext_management_systems.each do |ems|
       ems.hosts.each do |host|
@@ -99,13 +107,13 @@ module Metric::Targets
   end
 
   def self.capture_host_targets(zone)
-    # keeping all_hosts around because capture storage targets runs off of all hosts and
-    # not just enabled ones. if that changes, then move the filtering into here.
+    # NOTE: if capture_storage_targets takes only enabled hosts
+    # merge only_enabled into this method
     zone.ext_management_systems.flat_map(&:hosts)
   end
 
   # @param [Host] all hosts that have an ems
-  # disabled hosts are passed in. this may change in the future
+  # NOTE: disabled hosts are passed in.
   # @return [Array<Storage>] supported storages
   # hosts preloaded storages and tags
   def self.capture_storage_targets(hosts)
