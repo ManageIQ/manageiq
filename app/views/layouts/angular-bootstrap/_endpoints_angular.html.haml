@@ -1,5 +1,6 @@
 - return unless %w(ems_cloud ems_infra ems_container).include?(controller_name)
 - prefix ||= "default"
+- ng_reqd_hostname ||= true
 
 %div{"ng-if" => defined?(hostname_hide) ? false : true}
   .form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_hostname.$invalid}"}
@@ -11,7 +12,7 @@
                           "name"                    => "#{prefix}_hostname",
                           "ng-model"                => "#{ng_model}.#{prefix}_hostname",
                           "maxlength"               => "#{MAX_NAME_LEN}",
-                          "required"                => defined?(hostname_not_required) ? false : true,
+                          "ng-required"             => "#{ng_reqd_hostname}",
                           "ng-trim"                 => false,
                           "detect-spaces"           => "",
                           "checkchange"             => "",
@@ -58,7 +59,7 @@
                        options_for_select([["<#{_('Choose')}>", nil]] + security_protocols, disabled: ["<#{_('Choose')}>", nil]),
                        "ng-model"                    => "#{ng_model}.#{prefix}_security_protocol",
                        "checkchange"                 => "",
-                       "required"                    => defined?(security_protocol_not_required) ? false : true,
+                       "ng-required"                 => true,
                        "ng-change"                   => "openstackSecurityProtocolChanged()",
                        "selectpicker-for-select-tag" => "",
                        "prefix"                      => "#{prefix}",
