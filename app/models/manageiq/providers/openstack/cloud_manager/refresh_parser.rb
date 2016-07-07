@@ -96,11 +96,11 @@ module ManageIQ::Providers
     end
 
     def availability_zones_compute
-      @availability_zones_compute ||= safe_list { @connection.availability_zones }
+      @availability_zones_compute ||= safe_list { @connection.availability_zones.summary }
     end
 
     def availability_zones_volume
-      @availability_zones_volume ||= safe_list { @volume_service.availability_zones }
+      @availability_zones_volume ||= safe_list { @volume_service.availability_zones.summary }
     end
 
     def availability_zones
