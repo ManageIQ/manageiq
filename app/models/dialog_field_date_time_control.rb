@@ -1,5 +1,5 @@
 class DialogFieldDateTimeControl < DialogFieldDateControl
-  AUTOMATE_VALUE_FIELDS = %w(show_past_dates read_only)
+  AUTOMATE_VALUE_FIELDS = %w(show_past_dates read_only visible)
 
   def automate_output_value
     return nil if @value.blank?
