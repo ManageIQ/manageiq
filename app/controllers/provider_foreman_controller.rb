@@ -25,6 +25,14 @@ class ProviderForemanController < ApplicationController
     end
   end
 
+  def self.model_to_type_name(provmodel)
+    if provmodel.include?("ManageIQ::Providers::AnsibleTower")
+      'ansible_tower'
+    elsif provmodel.include?("ManageIQ::Providers::Foreman")
+      'foreman'
+    end
+  end
+
   def self.model_to_cs_name(provmodel)
     if provmodel.include?("ManageIQ::Providers::AnsibleTower")
       ui_lookup(:ui_title => 'Ansible Tower Job Template')
@@ -37,6 +45,10 @@ class ProviderForemanController < ApplicationController
 
   def model_to_cs_name(provmodel)
     ProviderForemanController.model_to_cs_name(provmodel)
+  end
+
+  def model_to_type_name(provmodel)
+    ProviderForemanController.model_to_type_name(provmodel)
   end
 
   def index
@@ -396,7 +408,7 @@ class ProviderForemanController < ApplicationController
     end
 
     if @record.kind_of?(ConfiguredSystem)
-      rec_cls = "#{model_to_name(@record.class.to_s).downcase.tr(' ', '_')}_configured_system"
+      rec_cls = "#{model_to_type_name(@record.ext_management_system.class.to_s)}_configured_system"
     end
     return unless %w(download_pdf main).include?(@display)
     @showtype     = "main"
