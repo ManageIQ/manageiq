@@ -1,6 +1,8 @@
 class ApiController
   module VirtualTemplateProvision
     def provision_create_resource(parent, _type, _id, data)
+      validate_provision_request(data)
+
       version_str             = data['version'] || '1.1'.freeze
       template_fields         = template_fields(parent)
       vm_fields               = vm_fields(parent).merge('vm_name' => data['vm_name'], 'number_of_vms' => data['number_of_vms'])
@@ -12,6 +14,11 @@ class ApiController
     end
 
     private
+
+    def validate_provision_request(data)
+      raise BadRequestError, 'Requester required' unless data['requester']
+      raise BadRequestError, 'VM name required' unless data['vm_name']
+    end
 
     def vm_fields(template)
       {
