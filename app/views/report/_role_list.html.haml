@@ -2,36 +2,30 @@
   - if @sb[:active_accord] == :roles
     - if @menu_roles_tree
       = render :partial => "layouts/flash_msg", :locals => {:div_num => "_menu_list"}
-      %table
-        %tr
-          %td{:valign => "top", :width => "315"}
-            %fieldset.role_list
-              %h3
-                = _("Reports")
-              .role_list.flobj
-              #menu_roles_treebox.flobj{:style => "width: 280px; height: 370px; margin-right: 30px;"}
-              #treeStatus.flobj{:style => "display: none;"}
-                %div{:style => "background-color: rgba(255, 255, 255, 0.5); height: 370px; width:270px"}
-            = render(:partial => "layouts/dynatree",
-              :locals         => {:tree_id => 'menu_roles_treebox',
-                :tree_name                 => 'menu_roles_tree',
-                :json_tree                 => @menu_roles_tree,
-                :id_prefix                 => 'menu_roles_',
-                :click_url                 => '/report/menu_editor/',
-                :onclick                   => 'miqMenuEditor',
-                :div_width                 => '216px',
-                :div_height                => '328px',
-                :div_cursor                => 'hand',
-                :exp_tree                  => false,
-                :no_base_exp               => false,
-                :base_id                   => "b__Report Menus for #{session[:role_choice]}",
-                :highlighting              => true,
-                :cookie_id_prefix          => "edit_treeOpenStatex",
-                :tree_state                => true,
-                :multi_lines               => true})
-          %td{:valign => "top"}
-            = render :partial => "report/menu_form1", :locals => {:folders => @grid_folders}
-            = render :partial => "report/menu_form2"
+      .col-sm-5
+        %h3
+          = _("Reports")
+        #menu_roles_treebox{:style => "overflow-y: hidden !important;"}
+      = render(:partial => "layouts/dynatree",
+        :locals         => {:tree_id => 'menu_roles_treebox',
+          :tree_name                 => 'menu_roles_tree',
+          :json_tree                 => @menu_roles_tree,
+          :id_prefix                 => 'menu_roles_',
+          :click_url                 => '/report/menu_editor/',
+          :onclick                   => 'miqMenuEditor',
+          :div_width                 => '216px',
+          :div_height                => '328px',
+          :div_cursor                => 'hand',
+          :exp_tree                  => false,
+          :no_base_exp               => false,
+          :base_id                   => "b__Report Menus for #{session[:role_choice]}",
+          :highlighting              => true,
+          :cookie_id_prefix          => "edit_treeOpenStatex",
+          :tree_state                => true,
+          :multi_lines               => true})
+
+      = render :partial => "report/menu_form1", :locals => {:folders => @grid_folders}
+      = render :partial => "report/menu_form2"
     - elsif @sb[:menu]
       = render :partial => "layouts/flash_msg", :locals => {:div_num => "_menu_list"}
       - if @sb[:menu].empty?
