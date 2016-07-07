@@ -287,6 +287,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
 
   $scope.providerTypeChanged = function() {
     $scope.emsCommonModel.default_api_port = "";
+    $scope.emsCommonModel.provider_region = "";
     $scope.emsCommonModel.default_security_protocol = "";
     $scope.note = "";
     if ($scope.emsCommonModel.emstype === 'openstack' || $scope.emsCommonModel.emstype === 'openstack_infra') {
