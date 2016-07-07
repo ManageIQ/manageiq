@@ -570,12 +570,13 @@ module MiqPolicyController::Alerts
         end
       end
     end
-    if %w(mw_heap_used, mw_non_heap_used).include?(@edit.fetch_path(:new, :expression, :eval_method))
+    if %w(mw_heap_used mw_non_heap_used).include?(@edit.fetch_path(:new, :expression, :eval_method))
       value_greater_than = @edit.fetch_path(:new, :expression, :options, :value_mw_greater_than)
       non = @edit.fetch_path(:new, :expression, :eval_method) == "mw_non_heap_used" ? "Non" : ""
       an_integer = "an integer"
       between = "between 0 and 100"
       template_error = "%s %s Heap Max (%%) must be %s"
+      min_max_error = "> %s Heap Max (%%) must be greater than < %s Heap Max (%%)"
       unless value_greater_than && is_integer?(value_greater_than)
         add_flash(_(template_error % [">", non, an_integer]), :error)
       end
@@ -588,6 +589,9 @@ module MiqPolicyController::Alerts
       end
       unless value_less_than.to_i.between?(0, 100)
         add_flash(_(template_error % ["<", non, between]), :error)
+      end
+      if value_less_than && value_greater_than && (value_less_than >= value_greater_than)
+        add_flash(_(min_max_error % [non, non]), :error)
       end
     end
     if @edit.fetch_path(:new, :expression, :eval_method) == "mw_accumulated_gc_duration"
