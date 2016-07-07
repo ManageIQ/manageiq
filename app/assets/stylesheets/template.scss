@@ -8,7 +8,12 @@ textarea { width: 98.5%; border: 1px solid #d1d1d1; padding: 7px; line-height: 1
   opacity:0.4 !important;
   filter:alpha(opacity=40);
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);
-  cursor: default;
+}
+
+/* disables mouse events on disabled/blocked DIVS */
+
+div.disabled {
+  pointer-events: none;
 }
 
 /* end modified Patternfly code */
@@ -154,9 +159,6 @@ img.timeline-event-bubble-image { width: 64px; height: 64px;}
   border: 1px solid #999;
   background:#f0f0f0;
 }
-
-fieldset.role_list{ width:400px; height: 450px;}
-div.role_list { margin: 0 0 0 44px;width:400px; height:400px;}
 
 /*Lightbox background */
 
