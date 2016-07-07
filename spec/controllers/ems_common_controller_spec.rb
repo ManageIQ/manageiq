@@ -148,7 +148,7 @@ describe EmsCloudController do
         vm = FactoryGirl.create(:vm_vmware,
                                 :ext_management_system => ems,
                                 :storage               => FactoryGirl.create(:storage)
-        )
+                               )
         post :button, :params => { :pressed => "instance_retire", "check_#{vm.id}" => "1", :format => :js, :id => ems.id, :display => 'instances' }
         expect(response.status).to eq 200
         expect(response.body).to include('vm/retire')

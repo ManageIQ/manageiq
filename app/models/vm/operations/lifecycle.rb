@@ -3,7 +3,7 @@ module Vm::Operations::Lifecycle
 
   included do
     supports :retirement do
-      if (self.orphaned? || self.archived?)
+      if orphaned? || archived?
         unsupported_reason_add :retirement, "VM orphaned or archived already"
       end
     end

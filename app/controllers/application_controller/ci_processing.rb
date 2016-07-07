@@ -193,7 +193,7 @@ module ApplicationController::CiProcessing
     assert_privileges(params[:pressed])
     vms = find_checked_items
     if !%w(orchestration_template service).include?(request.parameters["controller"]) &&
-      VmOrTemplate.find(vms).any? { |vm| !vm.supports_retirement? }
+       VmOrTemplate.find(vms).any? { |vm| !vm.supports_retirement? }
       add_flash(_("Set Retirement Date does not apply to selected %{model}") %
         {:model => ui_lookup(:table => "miq_template")}, :error)
       render_flash_and_scroll
@@ -1621,8 +1621,8 @@ module ApplicationController::CiProcessing
 
       vms = find_checked_items
       if method == 'retire_now' &&
-          !%w(orchestration_template service).include?(request.parameters["controller"]) &&
-          VmOrTemplate.find(vms).any? { |vm| !vm.supports_retirement? }
+         !%w(orchestration_template service).include?(request.parameters["controller"]) &&
+         VmOrTemplate.find(vms).any? { |vm| !vm.supports_retirement? }
         add_flash(_("Retire does not apply to selected %{model}") %
           {:model => ui_lookup(:table => "miq_template")}, :error)
         render_flash_and_scroll

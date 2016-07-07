@@ -366,11 +366,12 @@ describe ServiceController do
                               :storage               => FactoryGirl.create(:storage)
                              )
 
-      controller.instance_variable_set(:@_params, :miq_grid_checks => "#{vm.id}")
+      controller.instance_variable_set(:@_params, :miq_grid_checks => vm.id.to_s)
       expect(controller).to receive(:show_list)
       controller.send(:vm_button_operation, 'retire_now', "Retirement")
       expect(response.status).to eq(200)
-      expect(assigns(:flash_array).first[:message]).to include("Retirement initiated for 1 VM and Instance from the CFME Database")
+      expect(assigns(:flash_array).first[:message]).to \
+        include("Retirement initiated for 1 VM and Instance from the CFME Database")
     end
 
     it "should continue to retire a service and does not render flash message 'xxx does not apply xxx' " do
@@ -382,11 +383,12 @@ describe ServiceController do
                                    )
       service.update_attribute(:id, template.id)
       service.reload
-      controller.instance_variable_set(:@_params, :miq_grid_checks => "#{service.id}")
+      controller.instance_variable_set(:@_params, :miq_grid_checks => service.id.to_s)
       expect(controller).to receive(:show_list)
       controller.send(:vm_button_operation, 'retire_now', "Retirement")
       expect(response.status).to eq(200)
-      expect(assigns(:flash_array).first[:message]).to include("Retirement initiated for 1 Service from the CFME Database")
+      expect(assigns(:flash_array).first[:message]).to \
+        include("Retirement initiated for 1 Service from the CFME Database")
     end
   end
 end

@@ -30,9 +30,8 @@ class VmOrTemplate < ApplicationRecord
   include TenancyMixin
 
   include AvailabilityMixin
-  include SupportsFeatureMixin
 
-  supports_not :retirement, ""
+  supports_not :retirement
 
   has_many :ems_custom_attributes, -> { where(:source => 'VC') }, :as => :resource, :dependent => :destroy,
            :class_name => "CustomAttribute"
