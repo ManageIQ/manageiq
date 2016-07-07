@@ -71,7 +71,7 @@ group :appliance do
 end
 
 # Locally modified but not required
-gem "handsoap", "~>0.2.5", :require => false, :git => "git://github.com/ManageIQ/handsoap.git", :tag => "v0.2.5-3"
+gem "handsoap", "~>0.2.5", :require => false, :git => "git://github.com/ManageIQ/handsoap.git", :tag => "v0.2.5-4"
 gem "rubywbem",            :require => false, :git => "git://github.com/ManageIQ/rubywbem.git", :branch => "rubywbem_0_1_0"
 
 # Windows only. Do not put in Gemfile.lock on other platforms.
