@@ -81,7 +81,7 @@ ManageIQ.explorer.process = function(data) {
     del_node.remove();
   }
 
-  if ( !_.isString(data.dashboardUrl) ) {
+  if ( _.isString(data.dashboardUrl) ) {
     ManageIQ.widget.dashboardUrl = data.dashboardUrl;
   }
 
