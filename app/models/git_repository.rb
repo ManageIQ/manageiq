@@ -13,7 +13,7 @@ class GitRepository < ApplicationRecord
   INFO_KEYS = %w(commit_sha commit_message commit_time).freeze
 
   def refresh
-    @repo = Dir.exist?(directory_name) ? update_repo : init_repo
+    @repo = was_cloned? ? update_repo : init_repo
     refresh_branches
     refresh_tags
     self.last_refresh_on = Time.now.utc
@@ -41,6 +41,12 @@ class GitRepository < ApplicationRecord
   end
 
   private
+
+  def was_cloned?
+    Dir.exist?(directory_name)
+  rescue
+    return false # it was not cloned if we failed to parse url
+  end
 
   def refresh_branches
     current_branches = git_branches.to_a
@@ -93,7 +99,7 @@ class GitRepository < ApplicationRecord
   end
 
   def rm_repo
-    return true unless Dir.exist?(directory_name)
+    return true unless was_cloned?
     repo_block do
       GitWorktree.new(:path => directory_name).delete_repo
     end
