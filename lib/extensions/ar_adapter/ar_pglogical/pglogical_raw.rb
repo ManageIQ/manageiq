@@ -295,7 +295,7 @@ class PgLogicalRaw
   def tables_in_replication_set(set_name)
     typed_exec(<<-SQL, set_name).values.flatten
       SELECT set_reloid
-      FROM pglogical.replication_set_table
+      FROM pglogical.replication_set_relation
       JOIN pglogical.replication_set
         USING (set_id)
       WHERE set_name = $1
