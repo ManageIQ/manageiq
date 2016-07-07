@@ -2041,6 +2041,11 @@
         :feature_type: admin
         :hidden: false
         :identifier: git_repository_refresh
+      - :name: Delete
+        :description: Delete Git Repository
+        :feature_type: admin
+        :hidden: false
+        :identifier: git_repository_delete
 
 # Automate Log
 - :name: Log

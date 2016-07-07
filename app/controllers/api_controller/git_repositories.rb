@@ -29,6 +29,17 @@ class ApiController
       end
     end
 
+    def delete_resource_git_repositories(type, id = nil, _data = nil)
+      raise BadRequestError, "Must specify an id for deleting a #{type} resource" unless id
+
+      api_action(type, id) do |klass|
+        git = resource_search(id, type, klass)
+        desc = "Destroying Git: #{git.url}"
+        task_id = queue_object_action(git, desc, :method_name => "destroy")
+        action_result(true, desc, :task_id => task_id)
+      end
+    end
+
     private
 
     def update_git_repository_authentication(git_repository, data)

@@ -8,6 +8,7 @@ class GitRepository < ApplicationRecord
 
   has_many :git_branches, :dependent => :destroy
   has_many :git_tags, :dependent => :destroy
+  before_destroy :rm_repo
 
   INFO_KEYS = %w(commit_sha commit_message commit_time).freeze
 
@@ -88,6 +89,13 @@ class GitRepository < ApplicationRecord
       GitWorktree.new(:path => directory_name).tap do |repo|
         repo.send(:fetch_and_merge)
       end
+    end
+  end
+
+  def rm_repo
+    return true unless Dir.exist?(directory_name)
+    repo_block do
+      GitWorktree.new(:path => directory_name).delete_repo
     end
   end
 

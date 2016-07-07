@@ -324,7 +324,7 @@
     :identifier: git_repository
     :options:
     - :collection
-    :verbs: *70174834085860
+    :verbs: *70174834085620
     :klass: GitRepository
     :collection_actions:
       :get:
@@ -340,6 +340,11 @@
       :post:
       - :name: refresh
         :identifier: git_repository_refresh
+      - :name: delete
+        :identifier: git_repository_delete
+      :delete:
+      - :name: delete
+        :identifier: git_repository_delete
   :groups:
     :description: Groups
     :identifier: rbac_group

@@ -101,4 +101,42 @@ describe ApiController do
                                   :message => "Refreshing Git: #{dummy_url}")
     end
   end
+
+  describe 'Git Repository deletion' do
+    it 'rejects deletion without appropriate role' do
+      api_basic_authorize
+      run_delete(git_repository_url)
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'rejects deletion without appropriate role' do
+      api_basic_authorize
+      run_post(git_repository_url, gen_request(:delete))
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'rejects deletion of invalid git repository' do
+      api_basic_authorize action_identifier(:git_repositories, :delete)
+      run_post(git_repositories_url(999_999), gen_request(:delete))
+      expect(response).to have_http_status(:not_found)
+    end
+
+    context 'successful deletion of single git repository' do
+      before(:each) { @git = FactoryGirl.create(:git_repository, :url => dummy_url) }
+
+      it 'supports http post' do
+        api_basic_authorize action_identifier(:git_repositories, :delete)
+        run_post(git_repositories_url(@git.id), gen_request(:delete))
+        expect_single_action_result(:success => true,
+                                    :message => "Destroying Git: #{dummy_url}",
+                                    :task    => true)
+      end
+
+      it 'supports http delete' do
+        api_basic_authorize action_identifier(:git_repositories, :delete)
+        run_delete(git_repositories_url(@git.id))
+        expect(response).to have_http_status(:no_content)
+      end
+    end
+  end
 end
