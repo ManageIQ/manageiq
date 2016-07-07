@@ -5,15 +5,15 @@ module SupportsFeatureMixin
   #   class Post
   #     include SupportsFeatureMixin
   #     supports :publish
-  #     supports_not :fake, "We keep it real"
+  #     supports_not :fake, :reason => 'We keep it real'
   #     supports :archive do
-  #       unsupported_reason_add(:archive) = "Its too good" if featured?
+  #       unsupported_reason_add(:archive, 'Its too good') if featured?
   #     end
   #   end
   #
   # To make a feature conditionally supported, pass a block to the +supports+ method.
   # The block is evaluated in the context of the instance.
-  # If you call the private method +unsupported_reason_add+ whith the feature
+  # If you call the private method +unsupported_reason_add+ with the feature
   # and a reason, then the feature will be unsupported and the reason will be
   # accessible through
   #
@@ -28,6 +28,9 @@ module SupportsFeatureMixin
   #   Post.new(featured: true).supports_archive?   # => false
   #
   # To get a reason why a feature is unsupported use the +unsupported+ method
+  # Note: Because providing a reason for an unsupported feature is optional, you should
+  #       not rely on checking the reason to be nil for a feature to be unsupported.
+  #       You have to use +supports_feature?+
   #
   #   Post.unsupported_reason(:publish)                     # => nil
   #   Post.unsupported_reason(:fake)                        # => "We keep it real"
@@ -74,7 +77,7 @@ module SupportsFeatureMixin
       send(:define_supports_methods, feature, true, &block)
     end
 
-    def supports_not(feature, reason = nil)
+    def supports_not(feature, reason: nil)
       send(:define_supports_methods, feature, false, reason)
     end
 
