@@ -1337,7 +1337,7 @@ module VmCommon
   # Task complete, show error or launch console using VNC/MKS/VMRC task info
   def console_after_task(console_type)
     miq_task = MiqTask.find(params[:task_id])
-    if miq_task.status == "Error" || miq_task.task_results.blank?
+    unless miq_task.results_ready?
       add_flash(_("Console access failed: %{message}") % {:message => miq_task.message}, :error)
     end
     render :update do |page|

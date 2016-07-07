@@ -762,7 +762,7 @@ module MiqReport::Generator
 
       # Reload the task after the _async_generate_table has updated it
       task.reload
-      if task.status != "Ok"
+      if !task.results_ready?
         _log.warn("Generating report table with taskid [#{taskid}]... Failed to complete, '#{task.message}'")
         return
       else

@@ -28,7 +28,7 @@ module MiqPolicyController::Rsop
         end
       else
         miq_task = MiqTask.find(params[:task_id])     # Not first time, read the task record
-        if miq_task.task_results.blank?               # Check to see if any results came back
+        if !miq_task.results_ready?
           add_flash(_("Policy Simulation generation returned: %{error_message}") % {:error_message => miq_task.message}, :error)
         else
           @sb[:rsop][:results] = miq_task.task_results

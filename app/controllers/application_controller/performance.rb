@@ -1144,7 +1144,7 @@ module ApplicationController::Performance
     if params[:task_id]                             # Came in after async report generation
       miq_task = MiqTask.find(params[:task_id])     # Not first time, read the task record
       begin
-        if miq_task.status == 'Error' || miq_task.miq_report_result.nil?
+        unless miq_task.results_ready?
           add_flash(_("Error while generating report: #{miq_task.message}"), :error)
           return
         end
