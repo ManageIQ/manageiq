@@ -37,7 +37,7 @@ module ApplicationController::Performance
 
     case @perf_options[:chart_type]
     when :performance
-      perf_set_or_fix_dates(@perf_options)  unless params[:task_id] # Set dates if first time thru
+      perf_set_or_fix_dates(@perf_options, !params[:perf_typ]) unless params[:task_id] # Set dates if first time thru
       unless @no_util_data
         perf_gen_data # Go generate the task
         return unless @charts # Return if no charts got created (first time thru async rpt gen)
@@ -178,7 +178,7 @@ module ApplicationController::Performance
   end
 
   # Correct any date that is out of the date/range or not allowed in a profile
-  def perf_set_or_fix_dates(options)
+  def perf_set_or_fix_dates(options, allow_interval_override = true)
     # Get start/end dates in selected timezone
     tz = options[:time_profile_tz] || options[:tz]  # Use time profile tz or chosen tz, if no profile tz
     s, e = @perf_record.first_and_last_capture('hourly')
@@ -197,13 +197,15 @@ module ApplicationController::Performance
     options[:sdate] = sdate
     options[:edate] = edate
 
-    # Eliminate partial start or end days
     sdate_daily = sdate.hour == 00 ? sdate : sdate + 1.day
     options[:sdate_daily] = sdate_daily
     edate_daily = edate.hour < 23 ? edate - 1.day : edate
     options[:edate_daily] = edate_daily
+    # check if Daily report was manualy chosen in UI
+    if allow_interval_override
+      options[:typ] = "Hourly" if options[:typ] == "Daily" && edate_daily < sdate_daily
+    end
 
-    options[:typ] = "Hourly" if options[:typ] == "Daily" && edate_daily < sdate_daily
     if options[:hourly_date] && # Need to clear hourly date if not nil so it will be reset below if
        (options[:hourly_date].to_date < sdate.to_date || options[:hourly_date].to_date > edate.to_date || # it is out of range
          (options[:typ] == "Hourly" && options[:time_profile] && !options[:time_profile_days].include?(options[:hourly_date].to_date.wday))) # or not in profile
