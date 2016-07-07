@@ -8,7 +8,7 @@ describe "amazon_check_pre_retirement Method Validation" do
                                                   :root_device_type    => 'ebs')
     @is_hardware  = FactoryGirl.create(:hardware, :bitness             => 64,
                                                   :virtualization_type => 'paravirtual',
-                                                  :root_device_type    => 'instance_store')
+                                                  :root_device_type    => 'instance-store')
     @vm   = FactoryGirl.create(:vm_amazon,
                                :name => "AMZN",    :raw_power_state => "running",
                                :ems_id => @ems.id, :registered => true)
