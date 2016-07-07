@@ -26,12 +26,17 @@ var adjustValidationStatus = function(value, scope, ctrl, attrs, rootScope) {
       delete modelObject[ctrl.$name];
     }
 
-    if (value == scope.postValidationModel[attrs.prefix][ctrl.$name] && _.isMatch(modelObject, modelPostValidationObject)) {
+    if (scope[scope.model][attrs.resetValidationDependsOn] === '' ||
+        (value == scope.postValidationModel[attrs.prefix][ctrl.$name] && _.isMatch(modelObject, modelPostValidationObject))) {
       scope[scope.model][attrs.resetValidationStatus] = true;
       rootScope.$broadcast('clearErrorOnTab', {tab: attrs.prefix});
     } else {
       scope[scope.model][attrs.resetValidationStatus] = false;
       rootScope.$broadcast('setErrorOnTab', {tab: attrs.prefix});
+    }
+
+    if (scope[scope.model][attrs.resetValidationDependsOn] === '') {
+      scope.postValidationModelRegistry(attrs.prefix);
     }
   }
 };
