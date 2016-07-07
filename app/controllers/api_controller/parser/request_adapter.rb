@@ -15,6 +15,10 @@ class ApiController
         @api_prefix ||= "#{base}#{prefix}"
       end
 
+      def attributes
+        @attributes ||= @params['attributes'].to_s.split(',')
+      end
+
       def base
         url.partition(fullpath)[0] # http://target
       end

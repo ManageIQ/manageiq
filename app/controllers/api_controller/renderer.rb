@@ -373,9 +373,7 @@ class ApiController
     end
 
     def physical_attribute_selection(resource)
-      return [] unless params['attributes']
-
-      physical_attributes = params['attributes'].split(",").select { |attr| attr_physical?(resource, attr) }
+      physical_attributes = @req.attributes.select { |attr| attr_physical?(resource, attr) }
       physical_attributes.present? ? ID_ATTRS | physical_attributes : []
     end
 
