@@ -4407,6 +4407,7 @@ middleware_deployments:
 - ems_id
 - created_at
 - updated_at
+- status
 middleware_servers:
 - id
 - name

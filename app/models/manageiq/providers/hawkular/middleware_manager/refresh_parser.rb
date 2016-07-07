@@ -17,6 +17,7 @@ module ManageIQ::Providers
       def ems_inv_to_hashes
         @data[:middleware_servers] = get_middleware_servers
         fetch_server_entities
+        fetch_availability
         @data
       end
 
@@ -94,6 +95,18 @@ module ManageIQ::Providers
         end
       end
 
+      def fetch_availability
+        metric_ids = {}
+        @data[:middleware_deployments].each do |deployment|
+          metric_id = @ems.build_metric_id('A', deployment, 'Deployment Status~Deployment Status')
+          metric_ids[metric_id] = deployment
+        end
+        availabilities = @ems.metrics_client.avail.raw_data(metric_ids.keys, :limit => 1, :order => 'DESC')
+        availabilities.each do |availability|
+          metric_ids[availability['id']][:status] = process_availability(availability['data'].first)
+        end
+      end
+
       def process_datasource(server, datasource)
         wildfly_res_id = hawk_escape_id server[:nativeid]
         datasource_res_id = hawk_escape_id datasource.id
@@ -108,6 +121,19 @@ module ManageIQ::Providers
           @data[:middleware_deployments] << parse_deployment(server, entity)
         else
           @data[:middleware_datasources] << process_datasource(server, entity)
+        end
+      end
+
+      def process_availability(availability)
+        case
+        when availability.blank?, availability['value'].casecmp('unknown').zero?
+          'Unknown'
+        when availability['value'].casecmp('up').zero?
+          'Enabled'
+        when availability['value'].casecmp('down').zero?
+          'Disabled'
+        else
+          'Unknown'
         end
       end
 
