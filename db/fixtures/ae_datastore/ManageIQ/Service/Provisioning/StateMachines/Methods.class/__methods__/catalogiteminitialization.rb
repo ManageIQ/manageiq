@@ -40,11 +40,29 @@ end
 def override_service_name(dialog_options_hash)
   log_and_update_message(:info, "Processing override_service_name...", true)
   new_service_name = dialog_options_hash.fetch(:service_name, nil)
-  new_service_name = "#{@service.name}-#{Time.now.strftime('%Y%m%d-%H%M%S')}" if new_service_name.blank?
+  new_service_name = "#{@service.name}-#{Time.zone.now.strftime('%Y%m%d-%H%M%S')}" if new_service_name.blank?
 
   log_and_update_message(:info, "Service name: #{new_service_name}")
   @service.name = new_service_name
   log_and_update_message(:info, "Processing override_service_name...Complete", true)
+end
+
+def override_service_retirement_days(dialog_options_hash)
+  new_service_retirement_days = dialog_options_hash.fetch(:service_retirement_days, nil)
+  return if new_service_retirement_days.blank?
+
+  log_and_update_message(:info, "Processing service_retirement_days: #{new_service_retirement_days}", true)
+  @service.extend_retires_on(new_service_retirement_days.to_i)
+  log_and_update_message(:info, "Processing override_service_retirement_days...Complete", true)
+end
+
+def override_service_retirement_warn_days(dialog_options_hash)
+  new_service_retirement_warn_days = dialog_options_hash.fetch(:service_retirement_warn_days, nil)
+  return if new_service_retirement_warn_days.blank?
+
+  log_and_update_message(:info, "Processing service_retirement_warn_days: #{new_service_retirement_warn_days}", true)
+  @service.retirement_warn = new_service_retirement_warn_days.to_i
+  log_and_update_message(:info, "Processing override_service_retirement_warn_days...Complete", true)
 end
 
 def override_service_description(dialog_options_hash)
@@ -247,6 +265,8 @@ begin
   unless dialog_options_hash.blank?
     override_service_name(dialog_options_hash)
     override_service_description(dialog_options_hash)
+    override_service_retirement_days(dialog_options_hash)
+    override_service_retirement_warn_days(dialog_options_hash)
   end
 
   unless dialog_tags_hash.blank?
