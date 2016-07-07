@@ -1,15 +1,12 @@
 module ApplicationHelper::AutomateImportExport
-  def git_import_submit_options
-    options = {
-      :id    => "git-url-import",
-      :class => "btn btn-default"
-    }
-
+  def git_import_submit_help
     if (!MiqRegion.my_region.role_active?("git_owner"))
-      options[:disabled] = true
-      options[:title] = "Git Owner role not enabled, enable it in Settings -> Configuration"
+      content_tag(
+        :i,
+        "",
+        :class => ["fa", "fa-lg", "fa-question-circle"],
+        :title => "Git Owner role is not enabled, enable it in Settings -> Configuration"
+      )
     end
-
-    options
   end
 end

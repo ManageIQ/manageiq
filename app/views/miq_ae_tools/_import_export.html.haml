@@ -49,7 +49,8 @@
       .form-group
         .col-sm-2
         .col-md-8
-          = submit_tag(_("Submit"), git_import_submit_options)
+          = submit_tag(_("Submit"), :id => "git-url-import", :class => "btn btn-default")
+          = git_import_submit_help
 
   %hr
   %h3
