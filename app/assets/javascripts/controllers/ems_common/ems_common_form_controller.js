@@ -263,6 +263,11 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
     if ($scope.emsCommonModel.event_stream_selection === "ceilometer") {
       $scope.$broadcast('clearErrorOnTab', {tab: "amqp"});
     }
+
+    var authStatus = $scope.currentTab + "_auth_status";
+    if ($scope.emsCommonModel[authStatus] === true) {
+      $scope.postValidationModelRegistry($scope.currentTab);
+    }
   };
 
   $scope.saveClicked = function($event, formSubmit) {
