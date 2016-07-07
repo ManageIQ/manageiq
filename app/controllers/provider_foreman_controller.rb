@@ -229,7 +229,7 @@ class ProviderForemanController < ApplicationController
     @record = if configuration_profile_record?
                 find_record(ConfigurationProfile, id || params[:id])
               elsif inventory_group_record?
-                find_record(InventoryRootGroup, id || params[:id])
+                find_record(ManageIQ::Providers::ConfigurationManager::InventoryGroup, id || params[:id])
               else
                 find_record(ConfiguredSystem, id || params[:id])
               end
