@@ -268,10 +268,10 @@ Methods updated/added: 10
       it "redirects with a flash error" do
         post :retrieve_git_datastore, :params => params
         expect(response).to redirect_to(
-          :action       => :review_git_import,
-          :message      => {
+          :action  => :review_git_import,
+          :message => {
             :message => "Please provide a valid git URL",
-            :level => :error
+            :level   => :error
           }.to_json
         )
       end
@@ -292,10 +292,10 @@ Methods updated/added: 10
         it "redirects with a flash error" do
           post :retrieve_git_datastore, :params => params
           expect(response).to redirect_to(
-            :action       => :review_git_import,
-            :message      => {
+            :action  => :review_git_import,
+            :message => {
               :message => "Git Owner role not enabled, enable it in Settings -> Configuration",
-              :level => :error
+              :level   => :error
             }.to_json
           )
         end
@@ -329,7 +329,7 @@ Methods updated/added: 10
               :git_repo_id  => 321,
               :message      => {
                 :message => "This repository has been used previously for imports; If you use the same domain it will get deleted and recreated",
-                :level => :warning
+                :level   => :warning
               }.to_json
             )
           end
@@ -349,7 +349,7 @@ Methods updated/added: 10
               :git_repo_id  => 321,
               :message      => {
                 :message => "Successfully found git repository, please choose a branch or tag",
-                :level => :success
+                :level   => :success
               }.to_json
             )
           end

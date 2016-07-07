@@ -2568,10 +2568,10 @@ class MiqAeClassController < ApplicationController
     presenter.update(:form_buttons_div, r[
       :partial => "layouts/x_edit_buttons",
       :locals  => {
-        :record_id    => git_repo.id,
-        :action_url   => action_url,
-        :serialize    => true,
-        :no_reset     => true
+        :record_id  => git_repo.id,
+        :action_url => action_url,
+        :serialize  => true,
+        :no_reset   => true
       }
     ])
 

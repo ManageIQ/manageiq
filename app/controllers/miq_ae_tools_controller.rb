@@ -133,10 +133,10 @@ class MiqAeToolsController < ApplicationController
   def import_via_git
     git_repo = GitRepository.find_by(:id => params[:git_repo_id])
 
-    if git_repo.git_branches.any? { |git_branch| git_branch.name == params[:git_branch_or_tag] }
-      ref_type = "branch"
+    ref_type = if git_repo.git_branches.any? { |git_branch| git_branch.name == params[:git_branch_or_tag] }
+      "branch"
     else
-      ref_type = "tag"
+      "tag"
     end
 
     options = {

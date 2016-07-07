@@ -2,10 +2,10 @@ class GitBasedDomainImportService
   def import(git_repo_id, branch_or_tag)
     git_repo = GitRepository.find_by(:id => git_repo_id)
 
-    if git_repo.git_branches.any? { |git_branch| git_branch.name == branch_or_tag }
-      ref_type = "branch"
+    ref_type = if git_repo.git_branches.any? { |git_branch| git_branch.name == branch_or_tag }
+      "branch"
     else
-      ref_type = "tag"
+      "tag"
     end
 
     options = {

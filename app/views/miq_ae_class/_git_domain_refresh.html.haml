@@ -10,7 +10,7 @@
         = _("Branch/Tag")
       .col-md-8
         = select_tag("branch_or_tag_select",
-                     options_for_select(["Branch", "Tag"]),
+                     options_for_select(%w(Branch Tag)),
                      :class => "git-branch-or-tag-select selectpicker")
 
     .form-group.git-branch-group
