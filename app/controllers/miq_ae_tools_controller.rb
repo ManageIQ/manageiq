@@ -222,11 +222,10 @@ Methods updated/added: %{method_stats}") % stat_options, :success)
         flash_message = <<FLASH
 This repository has been used previously for imports; If you use the same domain it will get deleted and recreated
 FLASH
+        flash_message.chomp!
         status = :warning
       else
-        flash_message = <<FLASH
-Successfully found git repository, please choose a branch or tag
-FLASH
+        flash_message = "Successfully found git repository, please choose a branch or tag"
         status = :success
       end
 
@@ -236,7 +235,8 @@ FLASH
       add_flash(_(flash_message), status)
       branch_names = git_repo.git_branches.collect(&:name)
       tag_names = git_repo.git_tags.collect(&:name)
-      redirect_options[:git_branches_and_tags] = (branch_names + tag_names).to_json
+      redirect_options[:git_branches] = branch_names.to_json
+      redirect_options[:git_tags] = tag_names.to_json
       redirect_options[:git_repo_id] = git_repo.id
     end
 
@@ -247,7 +247,8 @@ FLASH
 
   def review_git_import
     @message = params[:message]
-    @git_branches_and_tags = params[:git_branches_and_tags]
+    @git_branches = params[:git_branches]
+    @git_tags = params[:git_tags]
     @git_repo_id = params[:git_repo_id]
   end
 

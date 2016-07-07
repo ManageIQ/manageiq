@@ -81,11 +81,24 @@
     .form-horizontal
       .form-group
         %label.col-md-2.control-label
-          = _('Branches/Tags')
+          = _('Branch/Tag')
         .col-md-8
-          %select.selectpicker.git-branches-and-tags{:name => "git_branch_or_tag"}
+          = select_tag("branch_or_tag",
+                       options_for_select(["Please select 'Branch' or 'Tag'", "Branch", "Tag"]),
+                       :class => "git-branch-or-tag-select selectpicker")
+      .form-group.git-branch-group{:style => "display: none;"}
+        %label.col-md-2.control-label
+          = _('Branches')
+        .col-md-8
+          %select.selectpicker.git-branches
+      .form-group.git-tag-group{:style => "display: none;"}
+        %label.col-md-2.control-label
+          = _('Tags')
+        .col-md-8
+          %select.selectpicker.git-tags
       .form-group
         .col-md-2
+          %input{:type => "hidden", :class => "git-branch-or-tag", :name => "git_branch_or_tag"}
         .col-md-8
           = button_tag(_("Submit"), :class => "git-import-submit btn btn-primary")
           = button_tag(_("Cancel"), :class => "git-import-cancel btn btn-default")

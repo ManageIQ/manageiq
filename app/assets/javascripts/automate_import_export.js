@@ -31,7 +31,8 @@ var Automate = {
       });
   },
 
-  renderGitImport: function(branchesAndTags, gitRepoId, messages) {
+  renderGitImport: function(branches, tags, gitRepoId, messages) {
+    clearMessages();
     message = JSON.parse(messages).message;
     messageLevel = JSON.parse(messages).level;
 
@@ -47,16 +48,24 @@ var Automate = {
         showSuccessMessage(message);
       }
 
-      $.each(JSON.parse(branchesAndTags), function(index, child) {
-        $('select.git-branches-and-tags').append(
+      var addToDropDown = function(identifier, child) {
+        $('select.git-' + identifier).append(
           $('<option>', {
-          value: child,
-          text: child
-        })
+            value: child,
+            text: child
+          })
         );
+      };
+
+      $.each(JSON.parse(branches), function(index, child) {
+        addToDropDown('branches', child);
+      });
+      $.each(JSON.parse(tags), function(index, child) {
+        addToDropDown('tags', child);
       });
 
-      $('select.git-branches-and-tags').selectpicker('refresh');
+      $('select.git-branches').selectpicker('refresh');
+      $('select.git-tags').selectpicker('refresh');
     }
   },
 
@@ -99,6 +108,17 @@ var Automate = {
   },
 
   setUpAutomateImportClickHandlers: function() {
+    var tearDownGitImportOptions = function() {
+      $('.git-branches').find('option').remove().end();
+      $('.git-tags').find('option').remove().end();
+      $('.git-branches').selectpicker('refresh');
+      $('.git-tags').selectpicker('refresh');
+
+      $('.import-or-export').show();
+      $('.git-import-data').hide();
+      $('#git-url-import').prop('disabled', null);
+    };
+
     $('.import-commit').click(function(event) {
       event.preventDefault();
       miqSparkleOn();
@@ -133,9 +153,7 @@ var Automate = {
           showSuccessMessage(flashMessage.message);
         }
 
-        $('.import-or-export').show();
-        $('.git-import-data').hide();
-        $('#git-url-import').prop('disabled', null);
+        tearDownGitImportOptions();
 
         miqSparkleOff();
       }, 'json');
@@ -161,9 +179,7 @@ var Automate = {
     $('.git-import-cancel').click(function(event) {
       event.preventDefault();
       clearMessages();
-      $('.import-or-export').show();
-      $('.git-import-data').hide();
-      $('#git-url-import').prop('disabled', null);
+      tearDownGitImportOptions();
       showSuccessMessage('Import cancelled');
     });
 

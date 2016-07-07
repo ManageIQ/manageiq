@@ -19,9 +19,10 @@ var ImportSetup = {
         $('#git-url-import').prop('disabled', null);
       }
 
-      if (event.data.git_branches_and_tags) {
+      if (event.data.git_branches || event.data.git_tags) {
         Automate.renderGitImport(
-          event.data.git_branches_and_tags,
+          event.data.git_branches,
+          event.data.git_tags,
           event.data.git_repo_id,
           event.data.message
         );

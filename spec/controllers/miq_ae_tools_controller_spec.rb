@@ -223,6 +223,141 @@ Methods updated/added: 10
     end
   end
 
+  describe "#review_git_import" do
+    include_context "valid session"
+
+    let(:params) do
+      {:git_branches => "git_branches", :git_tags => "git_tags", :git_repo_id => "123", :message => "the message"}
+    end
+
+    before do
+      bypass_rescue
+    end
+
+    it "assigns the git repo id" do
+      get :review_git_import, :params => params
+      expect(assigns(:git_repo_id)).to eq("123")
+    end
+
+    it "assigns the git branches" do
+      get :review_git_import, :params => params
+      expect(assigns(:git_branches)).to eq("git_branches")
+    end
+
+    it "assigns the git tags" do
+      get :review_git_import, :params => params
+      expect(assigns(:git_tags)).to eq("git_tags")
+    end
+
+    it "assigns the message" do
+      get :review_git_import, :params => params
+      expect(assigns(:message)).to eq("the message")
+    end
+  end
+
+  describe "#retrieve_git_datastore" do
+    include_context "valid session"
+
+    let(:params) do
+      {:git_url => git_url, :git_username => nil, :git_password => nil}
+    end
+
+    context "when the git url is blank" do
+      let(:git_url) { "" }
+
+      it "redirects with a flash error" do
+        post :retrieve_git_datastore, :params => params
+        expect(response).to redirect_to(
+          :action       => :review_git_import,
+          :message      => {
+            :message => "Please provide a valid git URL",
+            :level => :error
+          }.to_json
+        )
+      end
+    end
+
+    context "when the git url is not blank" do
+      let(:git_url) { "git_url" }
+      let(:my_region) { double("MiqRegion") }
+
+      before do
+        allow(MiqRegion).to receive(:my_region).and_return(my_region)
+        allow(my_region).to receive(:role_active?).with("git_owner").and_return(git_owner_active)
+      end
+
+      context "when the MiqRegion does not have an active git_owner role" do
+        let(:git_owner_active) { false }
+
+        it "redirects with a flash error" do
+          post :retrieve_git_datastore, :params => params
+          expect(response).to redirect_to(
+            :action       => :review_git_import,
+            :message      => {
+              :message => "Git Owner role not enabled, enable it in Settings -> Configuration",
+              :level => :error
+            }.to_json
+          )
+        end
+      end
+
+      context "when the MiqRegion has an active git_owner role" do
+        let(:git_owner_active) { true }
+        let(:git_repo) { double("GitRepository", :id => 321) }
+        let(:git_branches) { [double("GitBranch", :name => "git_branch1")] }
+        let(:git_tags) { [double("GitTag", :name => "git_tag1")] }
+
+        before do
+          allow(GitRepository).to receive(:create).with(:url => git_url).and_return(git_repo)
+          allow(git_repo).to receive(:update_authentication).with(:values => {:userid => "", :password => ""})
+          allow(git_repo).to receive(:refresh)
+          allow(git_repo).to receive(:git_branches).and_return(git_branches)
+          allow(git_repo).to receive(:git_tags).and_return(git_tags)
+        end
+
+        context "when the git repository exists with the given url" do
+          before do
+            allow(GitRepository).to receive(:exists?).with(:url => git_url).and_return(true)
+          end
+
+          it "adds a warning flash message with the other redirect options" do
+            post :retrieve_git_datastore, :params => params
+            expect(response).to redirect_to(
+              :action       => :review_git_import,
+              :git_branches => ["git_branch1"].to_json,
+              :git_tags     => ["git_tag1"].to_json,
+              :git_repo_id  => 321,
+              :message      => {
+                :message => "This repository has been used previously for imports; If you use the same domain it will get deleted and recreated",
+                :level => :warning
+              }.to_json
+            )
+          end
+        end
+
+        context "when the git repository does not exist with the given url" do
+          before do
+            allow(GitRepository).to receive(:exists?).with(:url => git_url).and_return(false)
+          end
+
+          it "adds a success flash message with the other redirect options" do
+            post :retrieve_git_datastore, :params => params
+            expect(response).to redirect_to(
+              :action       => :review_git_import,
+              :git_branches => ["git_branch1"].to_json,
+              :git_tags     => ["git_tag1"].to_json,
+              :git_repo_id  => 321,
+              :message      => {
+                :message => "Successfully found git repository, please choose a branch or tag",
+                :level => :success
+              }.to_json
+            )
+          end
+        end
+      end
+    end
+  end
+
   describe "#upload_import_file" do
     include_context "valid session"
 
