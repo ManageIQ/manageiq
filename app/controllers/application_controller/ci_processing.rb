@@ -1129,8 +1129,8 @@ module ApplicationController::CiProcessing
       if request.parameters[:controller] == 'ems_infra'
         @discover_type = ExtManagementSystem.ems_infra_discovery_types
       else
-        @discover_type = ExtManagementSystem.ems_cloud_discovery_types.invert.collect do |type|
-          [discover_type(type[0]), type[1]]
+        @discover_type = ManageIQ::Providers::CloudManager.subclasses.select(&:supports_discovery?).map do |cloud_manager|
+          [cloud_manager.description, cloud_manager.ems_type]
         end
         @discover_type_selected = @discover_type.first.try!(:last)
       end
@@ -1175,7 +1175,7 @@ module ApplicationController::CiProcessing
       drop_breadcrumb(:name => _("%{title} Discovery") % {:title => title}, :url => "/host/discover")
       @discover_type_selected = params[:discover_type_selected]
 
-      if request.parameters[:controller] == "ems_cloud" && params[:discover_type_selected] == ExtManagementSystem.ems_cloud_discovery_types['azure']
+      if request.parameters[:controller] == "ems_cloud" && params[:discover_type_selected] == 'azure'
         @client_id = params[:client_id] if params[:client_id]
         @client_key = params[:client_key] if params[:client_key]
         @azure_tenant_id = params[:azure_tenant_id] if params[:azure_tenant_id]
@@ -1219,10 +1219,13 @@ module ApplicationController::CiProcessing
             end
             Host.discoverByIpRange(from_ip, to_ip, options)
           else
-            if params[:discover_type_selected] == ExtManagementSystem.ems_cloud_discovery_types['azure']
-              ManageIQ::Providers::Azure::CloudManager.discover_queue(@client_id, @client_key, @azure_tenant_id)
+            cloud_manager = ManageIQ::Providers::CloudManager.subclasses.detect do |ems|
+              ems.supports_discovery? && ems.ems_type == params[:discover_type_selected]
+            end
+            if cloud_manager.ems_type == 'azure'
+              cloud_manager.discover_queue(@client_id, @client_key, @azure_tenant_id)
             else
-              ManageIQ::Providers::Amazon::CloudManager.discover_queue(@userid, @password)
+              cloud_manager.discover_queue(@userid, @password)
             end
           end
         rescue => err
@@ -1297,7 +1300,7 @@ module ApplicationController::CiProcessing
         if params[:discover_type_selected] && params[:discover_type_selected] == 'azure'
           page << javascript_hide("discover_credentials")
           page << javascript_show("discover_azure_credentials")
-        elsif params[:discover_type_selected] && params[:discover_type_selected] == 'amazon'
+        elsif params[:discover_type_selected] && params[:discover_type_selected] == 'ec2'
           page << javascript_hide("discover_azure_credentials")
           page << javascript_show("discover_credentials")
         else

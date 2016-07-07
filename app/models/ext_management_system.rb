@@ -389,14 +389,6 @@ class ExtManagementSystem < ApplicationRecord
     @ems_infra_discovery_types ||= %w(virtualcenter scvmm rhevm)
   end
 
-  def self.register_cloud_discovery_type(type_hash)
-    ems_cloud_discovery_types.merge!(type_hash)
-  end
-
-  def self.ems_cloud_discovery_types
-    @ems_cloud_discovery_types ||= {}
-  end
-
   def disconnect_inv
     hosts.each { |h| h.disconnect_ems(self) }
     vms.each   { |v| v.disconnect_ems(self) }

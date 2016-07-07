@@ -79,12 +79,6 @@ describe ExtManagementSystem do
     expect(described_class.ems_infra_discovery_types).to match_array(expected_types)
   end
 
-  it ".ems_cloud_discovery_types" do
-    discovery_type = {'amazon' => 'ec2'}
-    described_class.register_cloud_discovery_type(discovery_type)
-    expect(described_class.ems_cloud_discovery_types).to include(discovery_type)
-  end
-
   context "#ipaddress / #ipaddress=" do
     it "will delegate to the default endpoint" do
       ems = FactoryGirl.build(:ems_vmware, :ipaddress => "1.2.3.4")
