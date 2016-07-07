@@ -78,17 +78,17 @@
         %fieldset
           %h3
             = _('Display Settings')
-          - [[_("Chart Theme"), "display_reporttheme", Charting.chart_themes_for_select, :reporttheme],
-             [_("Time Zone"),   "display_timezone",    ALL_TIMEZONES,                    :timezone],
-             [_("Locale"), "display_locale",      [[_("Global Default"), "default"]] + FastGettext.human_available_locales,
-              :locale]].each do |display_settings|
+          - [[_("Chart Theme"), "display_reporttheme", Charting.chart_themes_for_select, :reporttheme, false],
+             [_("Time Zone"),   "display_timezone",    ALL_TIMEZONES,                    :timezone, true],
+             [_("Locale"), "display_locale",      [[_("Global Default"), "default"]] + FastGettext.human_available_locales, :locale, false]].each do |display_settings|
             .form-group
               %label.col-md-3.control-label
                 = display_settings[0]
               .col-md-8
                 = select_tag(display_settings[1],
                              options_for_select(display_settings[2], @edit[:new][:display][display_settings[3]]),
-                             :class    => "selectpicker")
+                             'data-live-search' => display_settings[4],
+                             :class             => "selectpicker")
 
               :javascript
                 miqInitSelectPicker();
