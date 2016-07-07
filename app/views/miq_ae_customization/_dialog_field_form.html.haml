@@ -62,13 +62,6 @@
     .form-horizontal
       .form-group
         %label.col-md-2.control-label
-          = _('Visible')
-        .col-md-8
-          = check_box_tag('field_visible', '1',
-                          @edit[:field_visible],
-                          'data-miq_observe_checkbox' => {:url => url}.to_json)
-      .form-group
-        %label.col-md-2.control-label
           = _('Auto Refresh other fields when modified')
         .col-md-8
           = check_box_tag('field_trigger_auto_refresh', '1',
