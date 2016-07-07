@@ -14,7 +14,8 @@ describe SupportsFeatureMixin do
 
       included do
         supports :archive
-        supports_not :fake, "We keep it real!"
+        supports_not :delete
+        supports_not :fake, :reason => 'We keep it real!'
       end
     end)
 
@@ -28,7 +29,7 @@ describe SupportsFeatureMixin do
 
       included do
         supports :fake do
-          unsupported_reason_add(:fake, "Need more money") unless bribe
+          unsupported_reason_add(:fake, 'Need more money') unless bribe
         end
       end
     end)
@@ -86,7 +87,7 @@ describe SupportsFeatureMixin do
       expect(Post.supports_fake?).to be false
     end
 
-    it "#supports_feature? is true" do
+    it "#supports_feature? is false" do
       expect(Post.new.supports_fake?).to be false
     end
 
@@ -96,6 +97,24 @@ describe SupportsFeatureMixin do
 
     it ".unsupported_reason(:feature) returns a reason" do
       expect(Post.unsupported_reason(:fake)).to eq "We keep it real!"
+    end
+  end
+
+  context "for an unsupported feature without a reason" do
+    it ".supports_feature? is false" do
+      expect(Post.supports_delete?).to be false
+    end
+
+    it "#supports_feature? is false" do
+      expect(Post.new.supports_delete?).to be false
+    end
+
+    it "#unsupported_reason(:feature) returns no reason" do
+      expect(Post.new.unsupported_reason(:delete)).to be_nil
+    end
+
+    it ".unsupported_reason(:feature) returns no reason" do
+      expect(Post.unsupported_reason(:delete)).to be_nil
     end
   end
 
