@@ -281,6 +281,16 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
     }
   };
 
+  $scope.openstackSecurityProtocolChanged = function() {
+    if ($scope.emsCommonModel.emstype === 'openstack' || $scope.emsCommonModel.emstype === 'openstack_infra') {
+      if ($scope.emsCommonModel.default_security_protocol === 'non-ssl') {
+        $scope.emsCommonModel.default_api_port = "5000";
+      } else {
+        $scope.emsCommonModel.default_api_port = "13000";
+      }
+    }
+  };
+
   $scope.scvmmSecurityProtocolChanged = function() {
     $scope.note = "";
     if ($scope.emsCommonModel.emstype === 'scvmm' && $scope.emsCommonModel.default_security_protocol === 'kerberos') {

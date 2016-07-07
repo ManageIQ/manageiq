@@ -55,6 +55,7 @@
                        "ng-model"                    => "#{ng_model}.#{prefix}_security_protocol",
                        "checkchange"                 => "",
                        "required"                    => defined?(security_protocol_not_required) ? false : true,
+                       "ng-change"                   => "openstackSecurityProtocolChanged()",
                        "selectpicker-for-select-tag" => "")
     .col-md-8{"ng-if" => "emsCommonModel.emstype == 'scvmm'"}
       = select_tag("#{prefix}_security_protocol",
@@ -83,4 +84,3 @@
       = _("Required")
     %span.help-block{"ng-show" => "angularForm.realm.$error.detectedSpaces"}
       = _("Spaces are prohibited")
-
