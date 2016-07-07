@@ -1509,6 +1509,7 @@ Vmdb::Application.routes.draw do
         form_method_field_changed
         form_ns_field_changed
         priority_form_field_changed
+        refresh_git_domain
         reload
         tree_select
         tree_autoload_dynatree

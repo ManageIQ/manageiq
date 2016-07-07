@@ -140,6 +140,8 @@ var Automate = {
       });
     });
 
+    Automate.setUpGitRefreshClickHandlers();
+
     $('.git-import-submit').click(function(event) {
       event.preventDefault();
       miqSparkleOn();
@@ -187,6 +189,29 @@ var Automate = {
       $('.domain-tree').dynatree('getRoot').visit(function(node) {
         node.select($('#toggle-all').prop('checked'));
       });
+    });
+  },
+
+  setUpGitRefreshClickHandlers: function() {
+    $('.git-branch-or-tag-select').on('change', function(event) {
+      event.preventDefault();
+      if ($(event.currentTarget).val() === "Branch") {
+        $('.git-branch-group').show();
+        $('.git-tag-group').hide();
+        $('.git-branch-or-tag').val($('.git-branches').val());
+      } else {
+        $('.git-branch-group').hide();
+        $('.git-tag-group').show();
+        $('.git-branch-or-tag').val($('.git-tags').val());
+      }
+    });
+
+    $('.git-branches').on('change', function(event) {
+      $('.git-branch-or-tag').val($(event.currentTarget).val());
+    });
+
+    $('.git-tags').on('change', function(event) {
+      $('.git-branch-or-tag').val($(event.currentTarget).val());
     });
   }
 };

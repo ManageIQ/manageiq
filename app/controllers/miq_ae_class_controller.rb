@@ -50,6 +50,7 @@ class MiqAeClassController < ApplicationController
     'miq_ae_domain_edit'          => :edit_domain,
     'miq_ae_domain_lock'          => :domain_lock,
     'miq_ae_domain_unlock'        => :domain_unlock,
+    'miq_ae_git_refresh'          => :git_refresh,
     'miq_ae_domain_new'           => :new_domain,
     'miq_ae_domain_priority_edit' => :domains_priority_edit,
     'miq_ae_field_edit'           => :edit_fields,
@@ -1656,6 +1657,20 @@ class MiqAeClassController < ApplicationController
     tree_select
   end
 
+  def refresh_git_domain
+    if params[:button] == "save"
+      git_based_domain_import_service.import(params[:git_repo_id], params[:git_branch_or_tag])
+
+      add_flash(_("Successfully refreshed!"), :info)
+    else
+      add_flash(_("Git based refresh canceled"), :info)
+    end
+
+    session[:edit] = nil
+    @in_a_form = false
+    replace_right_cell([:ae])
+  end
+
   private
 
   def features
@@ -2521,6 +2536,53 @@ class MiqAeClassController < ApplicationController
   def domain_toggle_lock(domain_id, lock)
     domain = MiqAeDomain.find(domain_id)
     lock ? domain.lock_contents! : domain.unlock_contents!
+  end
+
+  def git_refresh
+    @in_a_form = true
+    @explorer = true
+
+    git_repo = MiqAeDomain.find(params[:id]).git_repository
+    @branch_names = git_repo.git_branches.collect(&:name)
+    @tag_names = git_repo.git_tags.collect(&:name)
+    @git_repo_id = git_repo.id
+    @right_cell_text = _("Refreshing branch/tag for Git-based Domain")
+
+    h_tb = build_toolbar("x_history_tb")
+
+    presenter = ExplorerPresenter.new(
+      :active_tree     => x_active_tree,
+      :right_cell_text => @right_cell_text,
+      :remove_nodes    => nil,
+      :add_nodes       => nil,
+    )
+    r = proc { |opts| render_to_string(opts) }
+
+    update_partial_div = :main_div
+    update_partial = "git_domain_refresh"
+
+    presenter.update(update_partial_div, r[:partial => update_partial])
+
+    action_url = "refresh_git_domain"
+    presenter.show(:paging_div, :form_buttons_div)
+    presenter.update(:form_buttons_div, r[
+      :partial => "layouts/x_edit_buttons",
+      :locals  => {
+        :record_id    => git_repo.id,
+        :action_url   => action_url,
+        :serialize    => true,
+        :no_reset     => true
+      }
+    ])
+
+    presenter.reload_toolbars(:history => h_tb)
+    presenter.show(:toolbar)
+
+    render :js => presenter.to_html
+  end
+
+  def git_based_domain_import_service
+    @git_based_domain_import_service ||= GitBasedDomainImportService.new
   end
 
   def get_instance_node_info(id)

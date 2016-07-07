@@ -715,6 +715,8 @@ class ApplicationHelper::ToolbarBuilder
         return true unless @record.editable_contents?
       when "miq_ae_instance_copy", "miq_ae_method_copy"
         return false unless editable_domain?(@record)
+      when "miq_ae_git_refresh"
+        return true unless @record.git_enabled? && MiqRegion.my_region.role_active?("git_owner")
       else
         return true unless editable_domain?(@record)
       end
