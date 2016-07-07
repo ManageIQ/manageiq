@@ -135,6 +135,7 @@ describe ApiController do
 
     it "query Requests" do
       FactoryGirl.create(:vm_migrate_request, :requester => @user)
+      api_basic_authorize collection_action_identifier(:requests, :read, :get)
       test_collection_query(:requests, requests_url, MiqRequest)
     end
 
