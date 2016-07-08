@@ -100,8 +100,8 @@ class ApiController
       href.match(%r{^.*/#{collection}/([0-9]+)$}) && Regexp.last_match(1) if href.present?
     end
 
-    def resource_can_have_custom_actions(type, cspec = nil)
-      cspec ||= collection_config[type.to_sym] if collection_config[type.to_sym]
+    def resource_can_have_custom_actions(type)
+      cspec = collection_config[type.to_sym]
       cspec && cspec[:options].include?(:custom_actions)
     end
 
@@ -230,7 +230,7 @@ class ApiController
       aspec = cspec[aspecnames.to_sym]
       action_hash = fetch_action_hash(aspec, mname, aname)
       if action_hash.blank?
-        unless type == :resource && resource_can_have_custom_actions(cname, cspec)
+        unless type == :resource && resource_can_have_custom_actions(cname)
           raise BadRequestError, "Unsupported Action #{aname} for the #{cname} #{type} specified"
         end
       end
