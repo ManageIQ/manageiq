@@ -17,6 +17,18 @@ class ApiController
       c(collection_name)[:subcollections] && !c(collection_name)[:subcollections].include?(subcollection_name.to_sym)
     end
 
+    def typed_collection_actions(collection_name, target)
+      c(collection_name)["#{target}_actions".to_sym]
+    end
+
+    def typed_subcollection_actions(collection_name, subcollection_name)
+      c(collection_name)["#{subcollection_name}_subcollection_actions".to_sym]
+    end
+
+    def typed_subcollection_action(collection_name, subcollection_name, method)
+      c(collection_name).fetch_path("#{subcollection_name}_subcollection_actions".to_sym, method.to_sym)
+    end
+
     def names_for_feature(product_feature_name)
       names_for_features[product_feature_name]
     end
