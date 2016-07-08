@@ -11,11 +11,6 @@ gem "websocket-driver",                "~>0.6.3"
 gem "config",                          "~>1.1.0", :git => "git://github.com/ManageIQ/config.git", :branch => "overwrite_arrays"
 gem "deep_merge",                      "~>1.0.1", :git => "git://github.com/ManageIQ/deep_merge.git", :branch => "overwrite_arrays"
 
-# Local gems
-path File.expand_path("gems/", __dir__) do
-  gem "manageiq_foreman", :require => false
-end
-
 # when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
 unless dependencies.detect { |d| d.name == 'manageiq-providers-amazon' }
   gem "manageiq-providers-amazon", :git => "git://github.com/ManageIQ/manageiq-providers-amazon", :branch => "master"
@@ -85,6 +80,7 @@ gem "dalli",                          "~>2.7.4",   :require => false
 gem "elif",                           "=0.1.0",    :require => false
 gem "google-api-client",              "~>0.8.6",   :require => false
 gem "fog-google",                     "~>0.3.0",   :require => false
+gem "foreman_api_client",             ">=0.1.0",   :require => false, :git => "git://github.com/ManageIQ/foreman_api_client.git", :branch => "master"
 gem "hamlit",                         "~>2.0.0",   :require => false
 gem "inifile",                        "~>3.0",     :require => false
 gem "net_app_manageability",          ">=0.1.0",   :require => false

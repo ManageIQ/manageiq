@@ -1,4 +1,4 @@
-require "manageiq_foreman"
+require "foreman_api_client"
 
 describe ManageIQ::Providers::Foreman::Provider do
   let(:provider) { FactoryGirl.build(:provider_foreman) }
@@ -8,7 +8,7 @@ describe ManageIQ::Providers::Foreman::Provider do
 
   describe "#connect" do
     it "with no port" do
-      expect(ManageiqForeman::Connection).to receive(:new).with(attrs)
+      expect(ForemanApiClient::Connection).to receive(:new).with(attrs)
       provider.connect
     end
 
@@ -16,7 +16,7 @@ describe ManageIQ::Providers::Foreman::Provider do
       provider.url = "example.com:555"
       attrs[:base_url] = "example.com:555"
 
-      expect(ManageiqForeman::Connection).to receive(:new).with(attrs)
+      expect(ForemanApiClient::Connection).to receive(:new).with(attrs)
       provider.connect
     end
   end
