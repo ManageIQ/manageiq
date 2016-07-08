@@ -1,6 +1,5 @@
 class FixReplicationOnUpgradeFromVersionFour < ActiveRecord::Migration
   include MigrationHelper
-  include MigrationHelper::SharedStubs
 
   class Configuration < ActiveRecord::Base
     serialize :settings
@@ -131,39 +130,6 @@ class FixReplicationOnUpgradeFromVersionFour < ActiveRecord::Migration
         c.settings.store_path(settings_path, V5_DEFAULT_EXCLUDE_TABLES)
 
         c.save!
-      end
-    end
-
-    if RrSyncState.table_exists?
-      prefix = "rr#{ApplicationRecord.my_region_number}"
-      RENAMED_TABLES.each do |old_name, new_name|
-        drop_trigger(new_name, "#{prefix}_#{old_name}")
-      end
-
-      say_with_time("Updating #{RrPendingChange.table_name} for renamed tables") do
-        RENAMED_TABLES.each do |old_name, new_name|
-          RrPendingChange.where(:change_table => old_name).update_all(:change_table => new_name)
-        end
-      end
-
-      say_with_time("Updating #{RrSyncState.table_name} for renamed tables") do
-        RENAMED_TABLES.each do |old_name, new_name|
-          RrSyncState.where(:table_name => old_name).update_all(:table_name => new_name)
-        end
-      end
-
-      say_with_time("Updating #{RrSyncState.table_name} for removed tables") do
-        RrSyncState.where(:table_name => REMOVED_TABLES).delete_all
-      end
-
-      require 'awesome_spawn'
-
-      say_with_time("Preparing rubyrep") do
-        AwesomeSpawn.run!("bin/rake evm:db:environmentlegacykey evm:dbsync:prepare_replication_without_sync")
-      end
-
-      say_with_time("Uninstalling rubyrep for renamed tables") do
-        AwesomeSpawn.run!("bin/rake evm:db:environmentlegacykey evm:dbsync:uninstall #{RENAMED_TABLES.values.join(" ")}")
       end
     end
   end
