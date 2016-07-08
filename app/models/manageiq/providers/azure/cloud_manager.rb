@@ -105,4 +105,10 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
   rescue => err
     _log.error "vm=[#{vm.name}], error: #{err}"
   end
+
+  def vm_reboot_guest(vm, _options = {})
+    vm.reboot_guest
+  rescue => err
+    _log.error "vm=[#{vm.name}], error: #{err}"
+  end
 end
