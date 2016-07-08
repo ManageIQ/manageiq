@@ -2,6 +2,7 @@ raise "Ruby versions less than 2.2.2 are unsupported!" if RUBY_VERSION < "2.2.2"
 
 source 'https://rubygems.org'
 
+# Unmodified gems
 gem "actionpack",              "~> 5.0.0"
 gem "activerecord",            "~> 5.0.0" # used by appliance_console
 gem "activesupport",           "~> 5.0.0"
@@ -48,6 +49,16 @@ gem "winrm",                   "~>1.7.2",           :require => false
 gem "winrm-elevated",          "~>0.4.0",           :require => false
 gem "zip-zip",                 "~>0.3.0",           :require => false
 
+# Modified gems (forked on github)
+gem "handsoap", "~>0.2.5", :require => false, :git => "git://github.com/ManageIQ/handsoap.git", :tag => "v0.2.5-4"
+gem "rubywbem",            :require => false, :git => "git://github.com/ManageIQ/rubywbem.git", :branch => "rubywbem_0_1_0"
+
+group :appliance do
+  gem "highline", "~> 1.6.21", :require => false  # Needed for the appliance_console
+  #gem "minitest", "<  5",      :require => false  # HACK to run test suite on SCL ruby
+  gem "rdoc",                  :require => false  # HACK to run test suite on SCL ruby
+end
+
 # Linux-only section
 if RbConfig::CONFIG["host_os"].include?("linux")
   gem "linux_block_device", ">=0.1.0", :require => false
@@ -56,16 +67,6 @@ if RbConfig::CONFIG["host_os"].include?("linux")
     gem "large_file_linux", "~>0.1.0", :require => false
   end
 end
-
-group :appliance do
-  gem "highline", "~> 1.6.21", :require => false  # Needed for the appliance_console
-  #gem "minitest", "<  5",      :require => false  # HACK to run test suite on SCL ruby
-  gem "rdoc",                  :require => false  # HACK to run test suite on SCL ruby
-end
-
-# Locally modified but not required
-gem "handsoap", "~>0.2.5", :require => false, :git => "git://github.com/ManageIQ/handsoap.git", :tag => "v0.2.5-4"
-gem "rubywbem",            :require => false, :git => "git://github.com/ManageIQ/rubywbem.git", :branch => "rubywbem_0_1_0"
 
 # Windows only. Do not put in Gemfile.lock on other platforms.
 if Gem.win_platform?
