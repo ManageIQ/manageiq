@@ -128,6 +128,7 @@
         axis : {x:{type: 'category'},
                        rotated: true},
         data : {type: 'bar'},
+        legend: { show: true, position: 'right'}
       }, c3mixins.pfColorPattern,
       $().c3ChartDefaults().getDefaultGroupedBarConfig()
     ),
@@ -136,6 +137,7 @@
       {
         axis : {x:{type: 'category'}},
         data : {type: 'bar'},
+        legend: { show: true, position: 'right'}
       }, c3mixins.pfColorPattern,
       $().c3ChartDefaults().getDefaultGroupedBarConfig()
     ),
@@ -162,6 +164,7 @@
       {
         axis : {x:{type: 'category'}},
         data : {type: 'line'},
+        legend: { show: true, position: 'right'}
       }, c3mixins.pfColorPattern,
       $().c3ChartDefaults().getDefaultLineConfig()
     ),
@@ -169,6 +172,7 @@
       {
         axis : {x:{type: 'category'}},
         data : {type: 'area'},
+        legend: { show: true, position: 'right'}
       }, c3mixins.pfColorPattern,
       $().c3ChartDefaults().getDefaultAreaConfig()
     ),
@@ -176,6 +180,7 @@
      {
        axis : {x:{type: 'category'}},
        data : {type: 'area'},
+       legend: { show: true, position: 'right'}
      }, c3mixins.pfColorPattern,
      $().c3ChartDefaults().getDefaultAreaConfig()
    ),
