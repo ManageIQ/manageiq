@@ -260,22 +260,20 @@ class ApiController
       # Sub-Collection Validation for the specified Collection
       if cname && @req.subcollection
         return [cname, ctype] if collection_option?(:arbitrary_resource_path)
-        cent  = collection_config[cname.to_sym]  # For Collection
-        cname = @req.subcollection
         ctype = "Sub-Collection"
-        unless Array(cent[:subcollections]).include?(cname.to_sym)
-          raise BadRequestError, "Unsupported #{ctype} #{cname} specified"
+        unless collection_config.subcollection?(cname, @req.subcollection)
+          raise BadRequestError, "Unsupported #{ctype} #{@req.subcollection} specified"
         end
+        cname = @req.subcollection
       end
       [cname, ctype]
     end
 
     def validate_post_api_action_as_subcollection(cname, mname, aname)
       return if cname == @req.collection
+      return if collection_config.subcollection_denied?(@req.collection, cname)
 
       cspec = collection_config[@req.collection.to_sym]
-      return if cspec[:subcollections] && !cspec[:subcollections].include?(cname.to_sym)
-
       aspec = cspec["#{cname}_subcollection_actions".to_sym]
       return unless aspec
 

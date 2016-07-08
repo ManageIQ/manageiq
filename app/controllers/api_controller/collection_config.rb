@@ -9,6 +9,14 @@ class ApiController
       self[collection_name.to_sym][:options].include?(:show_as_collection)
     end
 
+    def subcollection?(collection_name, subcollection_name)
+      Array(self[collection_name.to_sym][:subcollections]).include?(subcollection_name.to_sym)
+    end
+
+    def subcollection_denied?(collection_name, subcollection_name)
+      self[collection_name.to_sym][:subcollections] && !self[collection_name.to_sym][:subcollections].include?(subcollection_name.to_sym)
+    end
+
     def names_for_feature(product_feature_name)
       names_for_features[product_feature_name]
     end
