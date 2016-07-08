@@ -119,4 +119,11 @@ namespace :locale do
       store['human_locale_names'] = locale_hash
     end
   end
+
+  desc "Extract model attribute names and virtual column names"
+  task "store_model_attributes" do
+    require 'gettext_i18n_rails/model_attributes_finder'
+    require_relative 'attribute_monkey.rb'
+    Rake::Task['gettext:store_model_attributes'].invoke
+  end
 end
