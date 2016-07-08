@@ -35,20 +35,22 @@ describe ApiController do
   end
   let(:sample_rhevm) do
     {
-      "type"      => "ManageIQ::Providers::Redhat::InfraManager",
-      "name"      => "sample rhevm",
-      "port"      => 5000,
-      "hostname"  => "sample_rhevm.provider.com",
-      "ipaddress" => "100.200.300.2"
+      "type"              => "ManageIQ::Providers::Redhat::InfraManager",
+      "name"              => "sample rhevm",
+      "port"              => 5000,
+      "hostname"          => "sample_rhevm.provider.com",
+      "ipaddress"         => "100.200.300.2",
+      'security_protocol' => 'kerberos',
     }
   end
   let(:sample_openshift) do
     {
-      "type"      => "ManageIQ::Providers::Openshift::ContainerManager",
-      "name"      => "sample openshift",
-      "port"      => "8443",
-      "hostname"  => "sample_openshift.provider.com",
-      "ipaddress" => "100.200.300.3",
+      "type"              => "ManageIQ::Providers::Openshift::ContainerManager",
+      "name"              => "sample openshift",
+      "port"              => 8443,
+      "hostname"          => "sample_openshift.provider.com",
+      "ipaddress"         => "100.200.300.3",
+      'security_protocol' => 'kerberos',
     }
   end
 
@@ -124,7 +126,11 @@ describe ApiController do
 
       provider_id = response_hash["results"].first["id"]
       expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
-      expect(ExtManagementSystem.find(provider_id).authentications.size).to eq(1)
+      ems = ExtManagementSystem.find(provider_id)
+      expect(ems.authentications.size).to eq(1)
+      ENDPOINT_ATTRS.each do |attr|
+        expect(ems.send(attr)).to eq(sample_openshift[attr])
+      end
     end
 
     it "supports single provider creation via action" do
