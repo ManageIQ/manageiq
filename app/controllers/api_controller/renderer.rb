@@ -100,9 +100,7 @@ class ApiController
 
       rclass = resource.class
       if collection_class(type) != rclass
-        matched_type, = collection_config.detect do |_collection, spec|
-          spec[:klass] && spec[:klass].constantize == rclass
-        end
+        matched_type = collection_config.name_for_klass(rclass)
       end
       matched_type || reftype
     end

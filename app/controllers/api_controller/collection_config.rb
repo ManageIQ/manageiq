@@ -13,6 +13,16 @@ class ApiController
       names_for_features[product_feature_name]
     end
 
+    def klass(collection_name)
+      c(collection_name)[:klass].constantize
+    end
+
+    def name_for_klass(resource_klass)
+      detect do |_, spec|
+        spec[:klass] && spec[:klass].constantize == resource_klass
+      end.try(:first)
+    end
+
     private
 
     def names_for_features
