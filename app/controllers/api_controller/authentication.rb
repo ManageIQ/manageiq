@@ -142,7 +142,7 @@ class ApiController
         "name"        => details[:name],
         "description" => details[:description]
       }
-      collection, method, action = referenced_identifiers[ident_str]
+      collection, method, action = collection_config.what_refers_to_feature(ident_str)
       collections = collection_config.names_for_feature(ident_str)
       res["href"] = "#{@req.api_prefix}/#{collections.first}" if collections.one?
       res["action"] = api_action_details(collection, method, action) if collection.present?
@@ -156,24 +156,6 @@ class ApiController
         "method" => method,
         "href"   => "#{@req.api_prefix}/#{collection}"
       }
-    end
-
-    def referenced_identifiers
-      @referenced_identifiers ||= begin
-        identifiers = {}
-        collection_config.each do |collection, cspec|
-          next unless cspec[:collection_actions].present?
-          cspec[:collection_actions].each do |method, action_definitions|
-            next unless action_definitions.present?
-            action_definitions.each do |action|
-              identifier = action[:identifier]
-              next if action[:disabled] || identifiers.key?(identifier)
-              identifiers[identifier] = [collection, method, action]
-            end
-          end
-        end
-        identifiers
-      end
     end
 
     def api_token_mgr

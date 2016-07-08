@@ -23,6 +23,10 @@ class ApiController
       end.try(:first)
     end
 
+    def what_refers_to_feature(product_feature_name)
+      referenced_identifiers[product_feature_name]
+    end
+
     private
 
     def names_for_features
@@ -30,6 +34,20 @@ class ApiController
         ident = cspec[:identifier]
         next unless ident
         result[ident] << collection
+      end
+    end
+
+    def referenced_identifiers
+      @referenced_identifiers ||= each_with_object({}) do |(collection, cspec), result|
+        next unless cspec[:collection_actions].present?
+        cspec[:collection_actions].each do |method, action_definitions|
+          next unless action_definitions.present?
+          action_definitions.each do |action|
+            identifier = action[:identifier]
+            next if action[:disabled] || result.key?(identifier)
+            result[identifier] = [collection, method, action]
+          end
+        end
       end
     end
   end
