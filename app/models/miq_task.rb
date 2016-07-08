@@ -1,15 +1,7 @@
 class MiqTask < ApplicationRecord
-  serialize :context_data
-  STATE_INITIALIZED = 'Initialized'.freeze
-  STATE_QUEUED      = 'Queued'.freeze
-  STATE_ACTIVE      = 'Active'.freeze
-  STATE_FINISHED    = 'Finished'.freeze
+  include HumanStatus
 
-  STATUS_OK         = 'Ok'.freeze
-  STATUS_WARNING    = 'Warn'.freeze
-  STATUS_ERROR      = 'Error'.freeze
-  STATUS_TIMEOUT    = 'Timeout'.freeze
-  STATUS_EXPIRED    = 'Expired'.freeze
+  serialize :context_data
   validates_inclusion_of :state,  :in => [STATE_INITIALIZED, STATE_QUEUED, STATE_ACTIVE, STATE_FINISHED]
   validates_inclusion_of :status, :in => [STATUS_OK, STATUS_WARNING, STATUS_ERROR, STATUS_TIMEOUT]
 
@@ -136,23 +128,6 @@ class MiqTask < ApplicationRecord
 
   def state_finished
     update_attributes(:state => STATE_FINISHED)
-  end
-
-  def human_status
-    case state
-    when STATE_INITIALIZED then "Initialized"
-    when STATE_QUEUED      then "Queued"
-    when STATE_ACTIVE      then "Running"
-    when STATE_FINISHED
-      case status
-      when STATUS_OK      then "Complete"
-      when STATUS_WARNING then "Finished with Warnings"
-      when STATUS_ERROR   then "Error"
-      when STATUS_TIMEOUT then "Timed Out"
-      else raise _("Unknown status of: %{task_status}") % {:task_status => status.inspect}
-      end
-    else raise _("Unknown state of: %{task_status}") % {:task_status => state.inspect}
-    end
   end
 
   def results_ready?
