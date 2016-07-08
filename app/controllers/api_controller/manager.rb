@@ -25,7 +25,7 @@ class ApiController
     end
 
     def collection_class(type)
-      (@collection_klasses[type.to_sym] || collection_config[type.to_sym][:klass]).constantize
+      @collection_klasses[type.to_sym] || collection_config.klass(type)
     end
 
     def put_resource(type, id)

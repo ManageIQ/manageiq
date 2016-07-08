@@ -41,7 +41,7 @@ class ApiController
           raise BadRequestError, "Management of #{cname} is unsupported for the Provider class"
         end
       end
-      @collection_klasses[:providers] = "Provider"
+      @collection_klasses[:providers] = Provider
     end
 
     def validate_api_action
