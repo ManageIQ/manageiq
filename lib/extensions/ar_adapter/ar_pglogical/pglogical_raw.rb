@@ -14,13 +14,15 @@ class PgLogicalRaw
   #
   # @return [Boolean]
   def enabled?
-    installed? && connection.extension_enabled?("pglogical") && connection.extension_enabled?("pglogical_origin")
+    return false unless installed? && connection.extension_enabled?("pglogical")
+    return true if connection.postgresql_version >= 90_500
+    connection.extension_enabled?("pglogical_origin")
   end
 
   # Enables pglogical postgres extensions
   def enable
     connection.enable_extension("pglogical")
-    connection.enable_extension("pglogical_origin")
+    connection.enable_extension("pglogical_origin") if connection.postgresql_version < 90_500
   end
 
   # Monitoring
