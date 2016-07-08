@@ -56,7 +56,6 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqGenericWorker
     MiqNetappRefreshWorker
     MiqPriorityWorker
-    MiqReplicationWorker
     MiqReportingWorker
     MiqScheduleWorker
     MiqSmartProxyWorker
@@ -86,7 +85,6 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Openstack::InfraManager::MetricsCollectorWorker
     MiqReportingWorker
     MiqSmartProxyWorker
-    MiqReplicationWorker
     MiqGenericWorker
     MiqEventHandler
     MiqSmisRefreshWorker
