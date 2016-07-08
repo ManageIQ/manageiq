@@ -89,7 +89,7 @@ class ApiController
         typed_target = "#{target}_#{type}"
         return typed_target if respond_to?(typed_target)
         return target if respond_to?(target)
-        resource_can_have_custom_actions(type) ? "custom_action_resource" : "undefined_api_method"
+        collection_config.custom_actions?(type) ? "custom_action_resource" : "undefined_api_method"
       end
     end
 
