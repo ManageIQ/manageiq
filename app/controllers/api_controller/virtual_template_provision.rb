@@ -3,15 +3,11 @@ class ApiController
     def provision_create_resource(parent, _type, _id, data)
       validate_provision_request(data)
 
-      vm_fields = {
-        'vm_name'       => data['vm_name'],
-        'number_of_vms' => data['number_of_vms']
-      }.merge(vm_fields(parent))
-
       version_str             = data['version'] || '1.1'.freeze
       template_fields         = template_fields(parent)
       requester               = data['requester']
       tags                    = parent.tags
+      vm_fields               = vm_fields(parent, data)
 
       MiqProvisionVirtWorkflow.from_ws(version_str, @auth_user_obj, template_fields, vm_fields, requester, tags)
     end
@@ -23,12 +19,14 @@ class ApiController
       raise BadRequestError, 'VM name required' unless data['vm_name']
     end
 
-    def vm_fields(template)
+    def vm_fields(template, data)
       {
         'placement_availability_zone' => template.availability_zone_id,
         'cloud_network'               => template.cloud_network_id,
         'cloud_subnet'                => template.cloud_subnet_id,
-        'instance_type'               => template.flavor_id
+        'instance_type'               => template.flavor_id,
+        'vm_name'                     => data['vm_name'],
+        'number_of_vms'               => data['number_of_vms']
       }
     end
 
