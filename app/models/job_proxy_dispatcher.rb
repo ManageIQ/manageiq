@@ -152,8 +152,13 @@ class JobProxyDispatcher
 
       default_opts[:zone] = job.zone if job.zone
       options = default_opts.merge(options)
+      # special case signal(:abort) - so we can easily pull off the queue
+      if (sig = options[:args].first) == :abort
+        options[:args].shift # remove :abort from args
+        options[:method_name] = "signal_abort"
+      end
       MiqQueue.put_unless_exists(options) do |msg|
-        _log.warn("Previous Job signal [#{options[:args].first}] for Job: [#{job.guid}] is still running, skipping...") unless msg.nil?
+        _log.warn("Previous Job signal [#{sig}] for Job: [#{job.guid}] is still running, skipping...") unless msg.nil?
       end
     end
   end
