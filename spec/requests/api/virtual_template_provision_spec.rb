@@ -1,18 +1,24 @@
 describe ApiController do
   let(:ems) { FactoryGirl.create(:ext_management_system) }
-  let(:availability_zone) { FactoryGirl.create(:availability_zone_google)}
+  let(:availability_zone) { FactoryGirl.create(:availability_zone_google) }
   let(:cloud_network) { FactoryGirl.create(:cloud_network) }
   let(:flavor) { FactoryGirl.create(:flavor_google) }
-  let(:virtual_template) { FactoryGirl.create(:virtual_template_google, :ems_id => ems.id, :availability_zone_id => availability_zone.id, :cloud_network_id => cloud_network.id, :flavor_id => flavor.id) }
-  let(:dialog)     { FactoryGirl.create(:miq_dialog_provision) }
+  let(:virtual_template) do
+    FactoryGirl.create(:virtual_template_google,
+                       :ems_id               => ems.id,
+                       :availability_zone_id => availability_zone.id,
+                       :cloud_network_id     => cloud_network.id,
+                       :flavor_id            => flavor.id)
+  end
+  let(:dialog) { FactoryGirl.create(:miq_dialog_provision) }
   let(:request) do
     {
-      'vm_name' => 'VirtualTemplate',
+      'vm_name'   => 'VirtualTemplate',
       'requester' => {
         'owner_first_name' => 'First',
-        'owner_last_name' => 'Last',
-        'owner_email' => 'email@email.com',
-        'request_notes' => 'A Test Provision'
+        'owner_last_name'  => 'Last',
+        'owner_email'      => 'email@email.com',
+        'request_notes'    => 'A Test Provision'
       }
     }
   end
