@@ -1640,7 +1640,7 @@
     :identifier: miq_virtual_template_provision
     :options:
     - :subcollection
-    :verbs: *70174834084700
+    :verbs: *70174834085860
     :klass: VirtualTemplateProvision
     :subcollection_actions:
       :post:
