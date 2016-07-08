@@ -8,8 +8,8 @@ class MiqAeInstance < ApplicationRecord
 
   validates_uniqueness_of :name, :case_sensitive => false, :scope => :class_id
   validates_presence_of   :name
-  validates_format_of     :name, :with    => /\A[A-Za-z0-9_.-]+\z/i,
-                                 :message => N_("Only alpha numeric and _ . - characters are allowed")
+  validates_format_of     :name, :with    => /\A[\w.-]+\z/i,
+                                 :message => N_("only alpha numeric and _ . - characters are allowed")
 
   def self.find_by_name(name)
     where("lower(name) = ?", name.downcase).first
