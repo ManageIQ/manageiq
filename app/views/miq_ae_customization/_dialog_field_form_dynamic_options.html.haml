@@ -2,6 +2,14 @@
 
 .form-group
   %label.col-md-2.control-label
+    = _('Entry Point (NS/Cls/Inst)')
+  .col-md-8
+    = text_field_tag('field_entry_point',
+                      @edit[:field_entry_point],
+                      :class => "form-control",
+                      :onFocus => 'miqShowAE_Tree("field_entry_point");')
+.form-group
+  %label.col-md-2.control-label
     = _('Auto refresh')
   .col-md-8
     = check_box_tag('field_auto_refresh', '1',
@@ -24,12 +32,3 @@
       = check_box_tag('field_load_on_init', '1',
                       @edit[:field_load_on_init],
                       'data-miq_observe_checkbox' => {:url => url}.to_json)
-
-.form-group
-  %label.col-md-2.control-label
-    = _('Entry Point (NS/Cls/Inst)')
-  .col-md-8
-    = text_field_tag('field_entry_point',
-                      @edit[:field_entry_point],
-                      :class => "form-control",
-                      :onFocus => 'miqShowAE_Tree("field_entry_point");')
