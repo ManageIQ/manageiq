@@ -168,9 +168,8 @@ class ApiController
     #
     def validate_post_method
       cname = @req.subcollection || @req.collection
-      cspec = collection_config[cname.to_sym]
       type, target = request_type_target
-      validate_post_api_action(cname, @req.method, cspec, type, target)
+      validate_post_api_action(cname, @req.method, type, target)
     end
 
     #
@@ -198,8 +197,7 @@ class ApiController
                       else
                         [@req.subcollection || @req.collection, request_type_target.last]
                       end
-      cspec = collection_config[cname.to_sym]
-      aspec = cspec["#{target}_actions".to_sym]
+      aspec = collection_config.typed_collection_actions(cname, target)
       return if method_name == :get && aspec.nil?
       action_hash = fetch_action_hash(aspec, method_name, action_name)
       raise BadRequestError, "Disabled action #{action_name}" if action_hash[:disabled]
@@ -216,13 +214,12 @@ class ApiController
       end
     end
 
-    def validate_post_api_action(cname, mname, cspec, type, target)
+    def validate_post_api_action(cname, mname, type, target)
       aname = @req.action
 
-      aspecnames = "#{target}_actions"
-      raise BadRequestError, "No actions are supported for #{cname} #{type}" unless cspec[aspecnames.to_sym]
+      aspec = collection_config.typed_collection_actions(cname, target)
+      raise BadRequestError, "No actions are supported for #{cname} #{type}" unless aspec
 
-      aspec = cspec[aspecnames.to_sym]
       action_hash = fetch_action_hash(aspec, mname, aname)
       if action_hash.blank?
         unless type == :resource && collection_config.custom_actions?(cname)
@@ -273,8 +270,7 @@ class ApiController
       return if cname == @req.collection
       return if collection_config.subcollection_denied?(@req.collection, cname)
 
-      cspec = collection_config[@req.collection.to_sym]
-      aspec = cspec["#{cname}_subcollection_actions".to_sym]
+      aspec = collection_config.typed_subcollection_actions(@req.collection, cname)
       return unless aspec
 
       action_hash = fetch_action_hash(aspec, mname, aname)

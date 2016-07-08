@@ -451,9 +451,7 @@ class ApiController
 
     def fetch_typed_subcollection_actions(method, is_subcollection)
       return unless is_subcollection
-      ctype = @req.collection.to_sym
-      sakey = "#{@req.subcollection}_subcollection_actions".to_sym
-      collection_config.fetch_path(ctype, sakey, method.to_sym)
+      collection_config.typed_subcollection_action(@req.collection, @req.subcollection, method)
     end
 
     def api_user_role_allows?(action_identifier)
