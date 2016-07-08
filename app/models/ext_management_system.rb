@@ -128,6 +128,9 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :total_vms_suspended,     :type => :integer
   virtual_total  :total_subnets,           :cloud_subnets
 
+  virtual_total  :connection_definitions, :type => :array
+  virtual_total  :connection_configurations, :type => :open_struct
+
   alias_method :clusters, :ems_clusters # Used by web-services to return clusters as the property name
   alias_attribute :to_s, :name
 
@@ -271,6 +274,7 @@ class ExtManagementSystem < ApplicationRecord
 
     delete_unused_connection_configurations(options)
   end
+  alias connection_definitions= connection_configurations=
 
   def delete_unused_connection_configurations(options)
     chosen_endpoints   = options.map { |x| x.fetch_path(:endpoint, :role).try(:to_sym) }.compact.uniq
@@ -293,6 +297,10 @@ class ExtManagementSystem < ApplicationRecord
     connections = OpenStruct.new(options)
     connections.roles = roles
     connections
+  end
+
+  def connection_definitions
+    endpoints.map { |endpoint| connection_configuration_by_role_as_hash(endpoint[:role].to_sym) }
   end
 
   # Takes a hash of connection data
@@ -322,6 +330,15 @@ class ExtManagementSystem < ApplicationRecord
       options = {:endpoint => endpoint, :authentication => auth}
       OpenStruct.new(options)
     end
+  end
+
+  def connection_configuration_by_role_as_hash(role)
+    configuration = {:endpoint       => endpoints.find_by(:role => role).as_json || {},
+                     :authentication => authentications.find_by(:authtype => authtype_by_role(role)).as_json || {}}
+
+    configuration[:authentication][:role] = authtype_by_role(role)
+
+    configuration.deep_symbolize_keys
   end
 
   def hostnames
@@ -618,6 +635,10 @@ class ExtManagementSystem < ApplicationRecord
     creds = {}
     creds[role] = options
     update_authentication(creds,options)
+  end
+
+  def authtype_by_role(role)
+    role == :default ? :bearer : role
   end
 
   def clear_association_cache

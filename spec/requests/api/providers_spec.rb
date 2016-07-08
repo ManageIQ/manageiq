@@ -51,6 +51,36 @@ describe ApiController do
       "ipaddress" => "100.200.300.3",
     }
   end
+  let(:sample_openshift_mep) do
+    {
+      "type"                   => "ManageIQ::Providers::Openshift::ContainerManager",
+      "name"                   => "sample openshift with multiple endpoints",
+      "connection_definitions" => [
+        {
+          "endpoint"       => {
+            "role"     => "default",
+            "hostname" => "sample_openshift_mep.provider.com",
+            "port"     => "8443"
+          },
+          "authentication" => {
+            "role"     => "bearer",
+            "auth_key" => SecureRandom.hex
+          }
+        },
+        {
+          "endpoint"       => {
+            "role"     => "hawkular",
+            "hostname" => "sample_openshift_mep.provider.com",
+            "port"     => "443"
+          },
+          "authentication" => {
+            "role"     => "hawkular",
+            "auth_key" => SecureRandom.hex
+          }
+        }
+      ]
+    }
+  end
 
   describe "Providers actions on Provider class" do
     it "rejects requests with invalid provider_class" do
@@ -189,6 +219,29 @@ describe ApiController do
       expect(ExtManagementSystem.exists?(p1_id)).to be_truthy
       expect(ExtManagementSystem.exists?(p2_id)).to be_truthy
     end
+
+    it "supports provider with multiple endpoints creation" do
+      api_basic_authorize collection_action_identifier(:providers, :create)
+
+      run_post(providers_url, gen_request(:create, sample_openshift_mep))
+
+      expect(response).to have_http_status(:ok)
+      expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
+      expect_results_to_match_hash("results", [sample_openshift_mep.except(*ENDPOINT_ATTRS)])
+
+      provider_id = response_hash["results"].first["id"]
+      expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
+      provider = ExtManagementSystem.find(provider_id)
+
+      default_hostname = sample_openshift_mep["connection_definitions"][0]["endpoint"]["hostname"]
+      default_auth_key = sample_openshift_mep["connection_definitions"][0]["authentication"]["auth_key"]
+      hawkular_hostname = sample_openshift_mep["connection_definitions"][1]["endpoint"]["hostname"]
+      hawkular_auth_key = sample_openshift_mep["connection_definitions"][1]["authentication"]["auth_key"]
+      expect(provider.connection_configurations.default.endpoint.hostname).to eq(default_hostname)
+      expect(provider.authentication_token).to eq(default_auth_key)
+      expect(provider.connection_configurations.hawkular.endpoint.hostname).to eq(hawkular_hostname)
+      expect(provider.connection_configurations.hawkular.authentication.auth_key).to eq(hawkular_auth_key)
+    end
   end
 
   describe "Providers edit" do
@@ -279,6 +332,26 @@ describe ApiController do
 
       expect(p1.reload.name).to eq("updated name1")
       expect(p2.reload.name).to eq("updated name2")
+    end
+
+    it "supports resource with multiple endpoints edits" do
+      api_basic_authorize collection_action_identifier(:providers, :edit)
+
+      provider = FactoryGirl.create(:ext_management_system, sample_openshift_mep.deep_symbolize_keys)
+      update_data = {
+        "connection_definitions" => [
+          {
+            "endpoint" => {
+              "role"     => "hawkular",
+              "hostname" => "updated.hostname.com"
+            }
+          }
+        ]
+      }
+
+      run_post(providers_url(provider.id), gen_request(:edit, update_data))
+
+      expect(provider.reload.connection_configurations.hawkular.endpoint.hostname).to eq("updated.hostname.com")
     end
   end
 

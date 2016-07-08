@@ -5,7 +5,7 @@ class ApiController
     CREDENTIALS_ATTR  = "credentials"
     AUTH_TYPE_ATTR    = "auth_type"
     DEFAULT_AUTH_TYPE = "default"
-    ENDPOINT_ATTRS    = %w(hostname ipaddress port)
+    ENDPOINT_ATTRS    = %w(hostname ipaddress port connection_definitions).freeze
     RESTRICTED_ATTRS  = [TYPE_ATTR, CREDENTIALS_ATTR, ZONE_ATTR, "zone_id"]
 
     def create_resource_providers(type, _id, data = {})
@@ -68,6 +68,7 @@ class ApiController
     end
 
     def create_provider(data)
+      check_connection_configurations(data)
       provider_klass = fetch_provider_klass(collection_class(:providers), data)
       create_data    = fetch_provider_data(provider_klass, data, :requires_zone => true)
       provider       = provider_klass.create!(create_data)
@@ -79,6 +80,8 @@ class ApiController
     end
 
     def edit_provider(provider, data)
+      check_connection_configurations(data)
+      merge_connection_configurations(provider, data)
       update_data = fetch_provider_data(provider.class, data)
       provider.update_attributes(update_data) if update_data.present?
       update_provider_authentication(provider, data)
@@ -132,13 +135,38 @@ class ApiController
                                     invalid_attrs.join(', '), provider.class.name, auth_attrs.join(", "))
     end
 
+    def check_connection_configurations(data)
+      return unless data["connection_definitions"]
+      raise BadRequestError, "Attribute connection_definitions must be an Array" unless
+        data["connection_definitions"].kind_of?(Array)
+    end
+
+    def merge_connection_configurations(provider, data)
+      return unless data["connection_definitions"]
+      provider_configurations = provider_connection_configurations(provider)
+      data_configurations = data_connection_configurations(data).deep_symbolize_keys
+
+      data["connection_definitions"] =
+        provider_configurations.deep_merge(data_configurations).values
+    end
+
+    def provider_connection_configurations(provider)
+      return {} unless provider.respond_to?(:connection_definitions)
+      Hash[provider.connection_definitions.map { |h| [h[:endpoint][:role].to_sym, h] }]
+    end
+
+    def data_connection_configurations(data)
+      return {} unless data["connection_definitions"]
+      Hash[data["connection_definitions"].map { |h| [role_by_configuration(h), h] }]
+    end
+
     def fetch_provider_data(provider_klass, data, options = {})
       provider_data = data.except(*RESTRICTED_ATTRS)
       invalid_keys  = provider_data.keys - provider_klass.columns_hash.keys - ENDPOINT_ATTRS
       raise BadRequestError, "Invalid Provider attributes #{invalid_keys.join(', ')} specified" if invalid_keys.present?
 
       specify_zone(provider_data, data, options)
-      provider_data
+      provider_data.deep_symbolize_keys
     end
 
     def specify_zone(provider_data, data, options)
@@ -155,6 +183,13 @@ class ApiController
       zone_id = parse_id(data[ZONE_ATTR], :zone)
       raise BadRequestError, "Missing zone href or id" if zone_id.nil?
       resource_search(zone_id, :zone, Zone) # Only support Rbac allowed zone
+    end
+
+    def role_by_configuration(configuration)
+      role = configuration.fetch_path("endpoint", "role")       ||
+             configuration.fetch_path("authentication", "role") ||
+             "default"
+      role == "bearer" ? "default" : role
     end
   end
 end
