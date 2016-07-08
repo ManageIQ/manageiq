@@ -343,7 +343,7 @@ module ApplicationController::CiProcessing
     recs = find_checked_items
     recs = [params[:id].to_i] if recs.blank?
     @record = find_by_id_filtered(VmOrTemplate, recs.first) # Set the VM object
-    if @record.is_available?(:resize)
+    if @record.supports_resize?
       if @explorer
         resize
         @refresh_partial = "vm_common/resize"
@@ -354,7 +354,7 @@ module ApplicationController::CiProcessing
       add_flash(_("Unable to reconfigure %{instance} \"%{name}\": %{details}") % {
         :instance => ui_lookup(:table => 'vm_cloud'),
         :name     => @record.name,
-        :details  => @record.is_available_now_error_message(:resize)}, :error)
+        :details  => @record.unsupported_reason(:resize)}, :error)
     end
   end
   alias instance_resize resizevms
@@ -372,7 +372,7 @@ module ApplicationController::CiProcessing
         :model => ui_lookup(:table => "vm_cloud"), :name => @record.name})
       @record = @sb[:action] = nil
     when "submit"
-      if @record.is_available?(:resize)
+      if @record.supports_resize?
         begin
           old_flavor = @record.flavor
           @record.resize(flavor)
@@ -391,7 +391,7 @@ module ApplicationController::CiProcessing
         add_flash(_("Unable to reconfigure %{instance} \"%{name}\": %{details}") % {
           :instance => ui_lookup(:table => 'vm_cloud'),
           :name     => @record.name,
-          :details  => @record.is_avaiable_now_error_message(:resize)}, :error)
+          :details  => @record.unsupported_reason(:resize)}, :error)
       end
       params[:id] = @record.id.to_s # reset id in params for show
       @record = nil

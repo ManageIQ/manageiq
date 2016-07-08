@@ -134,7 +134,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::Vm do
     it "initiate resize process" do
       service = double
       allow(ems).to receive(:connect).and_return(service)
-      expect(vm.validate_resize[:available]).to be_truthy
+      expect(vm.supports_resize?).to be_truthy
       expect(vm.validate_resize_confirm).to be false
       expect(service).to receive(:resize_server).with(vm.ems_ref, flavor.ems_ref)
       expect(MiqQueue).to receive(:put)
@@ -145,7 +145,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::Vm do
       vm.raw_power_state = 'VERIFY_RESIZE'
       service = double
       allow(ems).to receive(:connect).and_return(service)
-      expect(vm.validate_resize[:available]).to be_falsey
+      expect(vm.supports_resize?).to be_falsey
       expect(vm.validate_resize_confirm).to be true
       expect(service).to receive(:confirm_resize_server).with(vm.ems_ref)
       vm.resize_confirm
@@ -155,7 +155,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::Vm do
       vm.raw_power_state = 'VERIFY_RESIZE'
       service = double
       allow(ems).to receive(:connect).and_return(service)
-      expect(vm.validate_resize[:available]).to be_falsey
+      expect(vm.supports_resize?).to be_falsey
       expect(vm.validate_resize_revert).to be true
       expect(service).to receive(:revert_resize_server).with(vm.ems_ref)
       vm.resize_revert
