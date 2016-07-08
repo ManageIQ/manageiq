@@ -14,6 +14,7 @@ module MiqRequestMixin
   end
 
   def user_message=(msg)
+    msg = msg.truncate(255)
     options[:user_message] = msg
     update_attribute(:options, options)
     update_attributes(:message => msg) unless msg.blank?

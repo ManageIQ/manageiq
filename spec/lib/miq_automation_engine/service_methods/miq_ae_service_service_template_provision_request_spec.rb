@@ -42,5 +42,12 @@ module MiqAeServiceServiceTemplateProvisionRequestSpec
       expect(@service_template_provision_request.reload.message).to eq("fred")
       expect(@service_template_provision_request.reload.options[:user_message]).to be_blank
     end
+
+    it "#truncated user_message" do
+      msg = "ReallyLongString" * 20
+      expect(msg.length).to be > 255
+      service_service_template_provision_request.user_message = msg
+      expect(@service_template_provision_request.reload.message.length).to eq(255)
+    end
   end
 end
