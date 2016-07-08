@@ -19,7 +19,7 @@ describe "MiqAlert Evaluation Internal" do
             :event_types    => ["MigrateVM_Task_Complete"],
             :freq_threshold => 3,
             :time_threshold => 3.days}}
-        @alert      = FactoryGirl.create(:miq_alert_vm, :description => "Alert Internal Event Threshold", :expression => expression)
+        @alert      = FactoryGirl.create(:miq_alert_vm, :expression => expression)
         @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Internal Event Threshold Profile", :mode => @vm.class.name)
         @alert_prof.add_member(@alert)
         @alert_prof.assign_to_objects(@vm)
@@ -49,7 +49,7 @@ describe "MiqAlert Evaluation Internal" do
             :rt_time_threshold => 60,
             :trend_direction   => 'none',
             :debug_trace       => 'false'}}
-        @alert      = FactoryGirl.create(:miq_alert_vm, :description => "Alert Internal RT Perf", :expression => expression)
+        @alert      = FactoryGirl.create(:miq_alert_vm, :expression => expression)
         @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Internal RT Perf Profile", :mode => @vm.class.name)
         @alert_prof.add_member(@alert)
         @alert_prof.assign_to_objects(@vm)
@@ -70,7 +70,7 @@ describe "MiqAlert Evaluation Internal" do
           :options     => {
             :operator => "Changed",
             :hdw_attr => :cpu_affinity}}
-        @alert      = FactoryGirl.create(:miq_alert_vm, :description => "Alert Internal Changed VM Value", :expression => expression)
+        @alert      = FactoryGirl.create(:miq_alert_vm, :expression => expression)
         @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Internal Changed VM Value Profile", :mode => @vm.class.name)
         @alert_prof.add_member(@alert)
         @alert_prof.assign_to_objects(@vm)
@@ -91,7 +91,7 @@ describe "MiqAlert Evaluation Internal" do
           :options     => {
             :operator => "Decreased",
             :hdw_attr => "memory_mb"}}
-        @alert      = FactoryGirl.create(:miq_alert_vm, :description => "Alert Internal Reconfigured Hardware Value", :expression => expression)
+        @alert      = FactoryGirl.create(:miq_alert_vm, :expression => expression)
         @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Internal Reconfigured Hardware Value Profile", :mode => @vm.class.name)
         @alert_prof.add_member(@alert)
         @alert_prof.assign_to_objects(@vm)
@@ -118,7 +118,7 @@ describe "MiqAlert Evaluation Internal" do
             :event_log_event_id             => "12345",
             :time_threshold                 => 86400,
             :event_log_level                => "fatal"}}
-        @alert      = FactoryGirl.create(:miq_alert_vm, :description => "Alert Internal VM Event Log Threshold", :expression => expression)
+        @alert      = FactoryGirl.create(:miq_alert_vm, :expression => expression)
         @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Internal VM Event Log Threshold Profile", :mode => @vm.class.name)
         @alert_prof.add_member(@alert)
         @alert_prof.assign_to_objects(@vm)
@@ -140,7 +140,7 @@ describe "MiqAlert Evaluation Internal" do
             :ems_alarm_name => "GT VM CPU Usage",
             :ems_alarm_mor  => "alarm-7"
           }}
-        @alert      = FactoryGirl.create(:miq_alert_vm, :description => "Alert Internal VM Alarm Threshold", :expression => expression)
+        @alert      = FactoryGirl.create(:miq_alert_vm, :expression => expression)
         @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Internal VM Alarm Threshold Profile", :mode => @vm.class.name)
         @alert_prof.add_member(@alert)
         @alert_prof.assign_to_objects(@vm)
@@ -171,7 +171,7 @@ describe "MiqAlert Evaluation Internal" do
             :event_log_message_filter_value => "exceeds soft limit",
             :time_threshold                 => 86400,
             :event_log_level                => "warn"}}
-        @alert = FactoryGirl.create(:miq_alert_vm, :description => "Alert Internal Hostd Log Threshold", :expression => expression)
+        @alert = FactoryGirl.create(:miq_alert_vm, :expression => expression)
         @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Internal VM Alarm Threshold Profile", :mode => @host.class.name)
         @alert_prof.add_member(@alert)
         @alert_prof.assign_to_objects(@host)
@@ -192,7 +192,7 @@ describe "MiqAlert Evaluation Internal" do
     context "evaluating an alert with no expression" do
       before(:each) do
         expression = {:eval_method => "nothing"}
-        @alert = FactoryGirl.create(:miq_alert_vm, :description => "Alert Internal MiqServer with no Expression", :expression => expression)
+        @alert = FactoryGirl.create(:miq_alert_vm, :expression => expression)
         @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Internal MiqServer with no Expression Profile", :mode => @server.class.name)
         @alert_prof.add_member(@alert)
         @alert_prof.assign_to_objects(@server)
