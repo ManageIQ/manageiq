@@ -12,8 +12,8 @@ class MiqAeClass < ApplicationRecord
 
   validates_presence_of   :name, :namespace_id
   validates_uniqueness_of :name, :case_sensitive => false, :scope => :namespace_id
-  validates_format_of     :name, :with    => /\A[A-Za-z0-9_.-]+\z/i,
-                                 :message => N_("Only alpha numeric and _ . - characters are allowed")
+  validates_format_of     :name, :with    => /\A[\w.-]+\z/i,
+                                 :message => N_("only alpha numeric and _ . - characters are allowed")
 
   def self.find_by_fqname(fqname, args = {})
     ns, name = parse_fqname(fqname)
