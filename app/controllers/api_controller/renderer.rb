@@ -217,9 +217,7 @@ class ApiController
     # Let's expand subcollections for objects if asked for
     #
     def expand_subcollections(json, type, resource)
-      scs = collection_config[type.to_sym][:subcollections]
-      return unless scs
-      scs.each do |sc|
+      collection_config.subcollections(type).each do |sc|
         target = "#{sc}_query_resource"
         next unless expand_subcollection?(sc, target)
         if Array(attribute_selection).include?(sc.to_s)

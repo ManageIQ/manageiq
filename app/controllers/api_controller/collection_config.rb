@@ -9,8 +9,12 @@ class ApiController
       c(collection_name)[:options].include?(:show_as_collection)
     end
 
+    def subcollections(collection_name)
+      Array(c(collection_name)[:subcollections])
+    end
+
     def subcollection?(collection_name, subcollection_name)
-      Array(c(collection_name)[:subcollections]).include?(subcollection_name.to_sym)
+      subcollections(collection_name).include?(subcollection_name.to_sym)
     end
 
     def subcollection_denied?(collection_name, subcollection_name)
@@ -26,7 +30,7 @@ class ApiController
     end
 
     def typed_subcollection_action(collection_name, subcollection_name, method)
-      c(collection_name).fetch_path("#{subcollection_name}_subcollection_actions".to_sym, method.to_sym)
+      typed_subcollection_actions(collection_name, subcollection_name).try(:fetch_path, method.to_sym)
     end
 
     def names_for_feature(product_feature_name)

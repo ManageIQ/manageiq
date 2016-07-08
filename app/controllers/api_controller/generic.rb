@@ -42,14 +42,12 @@ class ApiController
     # Same signature.
     #
     def add_resource(type, _id, data)
-      cspec = collection_config[type]
       klass = collection_class(type)
       if data.key?("id") || data.key?("href")
         raise BadRequestError,
               "Resource id or href should not be specified for creating a new #{type} resource"
       end
-      subcollections     = cspec[:subcollections]
-      subcollection_data = Array(subcollections).each_with_object({}) do |sc, hash|
+      subcollection_data = collection_config.subcollections(type).each_with_object({}) do |sc, hash|
         if data.key?(sc.to_s)
           hash[sc] = data[sc.to_s]
           data.delete(sc.to_s)
