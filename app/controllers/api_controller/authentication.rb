@@ -144,7 +144,7 @@ class ApiController
       }
       collection, method, action = referenced_identifiers[ident_str]
       hrefs = get_hrefs_for_identifier(ident_str)
-      res["href"] = hrefs.first if hrefs.one?
+      res["href"] = "#{@req.api_prefix}/#{hrefs.first}" if hrefs.one?
       res["action"] = api_action_details(collection, method, action) if collection.present?
       res["children"] = children if children.present?
       pf_result[ident_str] = res
@@ -185,8 +185,7 @@ class ApiController
       collection_config.each_with_object(Hash.new { |hash, key| hash[key] = [] }) do |(collection, cspec), result|
         ident = cspec[:identifier]
         next unless ident
-        href = "#{@req.api_prefix}/#{collection}"
-        result[ident] << href
+        result[ident] << collection
       end
     end
 
