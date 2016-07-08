@@ -389,4 +389,36 @@ describe MiqAeDomain do
     attrs[:enabled] = true unless attrs.key?(:enabled)
     attrs
   end
+
+  describe "#display_name" do
+    context "when the domain is git enabled" do
+      let(:domain) do
+        described_class.new(
+          :name           => "Domain name",
+          :git_repository => git_repository,
+          :ref            => "not nil",
+          :ref_type       => "branch"
+        )
+      end
+
+      let(:git_repository) { GitRepository.new }
+
+      before do
+        allow(git_repository).to receive(:branch_info).with("not nil").and_return("name" => "branch_name")
+      end
+
+      it "returns the domain name with the latest ref name info" do
+        expect(domain.display_name).to eq("Domain name (branch_name)")
+      end
+    end
+
+    context "when the domain is not git enabled" do
+      let(:domain) { described_class.new(:display_name => "potato", :git_repository => git_repository) }
+      let(:git_repository) { nil }
+
+      it "returns the display name" do
+        expect(domain.display_name).to eq("potato")
+      end
+    end
+  end
 end

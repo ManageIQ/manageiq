@@ -137,8 +137,8 @@ class MiqAeDomain < MiqAeNamespace
   end
 
   def display_name
-    domain_name = name || @display_name
-    git_enabled? ? "#{domain_name} (#{latest_ref_info['name']})" : domain_name
+    return self[:display_name] unless git_enabled?
+    "#{domain_name} (#{latest_ref_info['name']})"
   end
 
   private

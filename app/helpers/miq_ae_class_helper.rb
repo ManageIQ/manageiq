@@ -3,6 +3,10 @@ module MiqAeClassHelper
     record.editable?
   end
 
+  def git_enabled?(record)
+    record.class == MiqAeDomain && record.git_enabled?
+  end
+
   def add_read_only_suffix(node_string, editable, enabled)
     if enabled && !editable
       suffix = "Locked"
