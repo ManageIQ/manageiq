@@ -2584,7 +2584,7 @@ Vmdb::Application.routes.draw do
   # OPTIONS requests for REST API pre-flight checks
   match '/api/*path' => 'api#handle_options_request', :via => [:options]
 
-  get '/api(/:version)' => 'api#show_entrypoint', :format => 'json', :version => API_VERSION_REGEX
+  get '/api(/:version)' => 'api/base#show_entrypoint', :format => 'json', :version => API_VERSION_REGEX
 
   API_ACTIONS = {
     :get    => "show",
@@ -2595,7 +2595,7 @@ Vmdb::Application.routes.draw do
   }.freeze
 
   def action_for(verb)
-    "api##{API_ACTIONS[verb]}"
+    "api/base##{API_ACTIONS[verb]}"
   end
 
   def create_api_route(verb, url, action)

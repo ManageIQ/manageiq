@@ -7,7 +7,7 @@
 # - Query provision_dialog from services
 #     GET /api/services/:id?attributes=provision_dialog
 #
-describe ApiController do
+describe Api::BaseController do
   let(:provision_dialog1)    { FactoryGirl.create(:dialog, :label => "ProvisionDialog1") }
   let(:retirement_dialog2)   { FactoryGirl.create(:dialog, :label => "RetirementDialog2") }
 

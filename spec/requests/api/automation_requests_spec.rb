@@ -10,7 +10,7 @@
 # - Deny single automation request         /api/automation_requests/:id    action "deny"
 # - Deny multiple automation requests      /api/automation_requests        action "deny"
 #
-describe ApiController do
+describe Api::BaseController do
   describe "Automation Requests" do
     let(:approver) { FactoryGirl.create(:user_miq_request_approver) }
     let(:single_automation_request) do

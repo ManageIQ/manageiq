@@ -1,7 +1,7 @@
 #
 # REST API Request Tests - /api/settings
 #
-describe ApiController do
+describe Api::BaseController do
   let(:api_settings) { Api::Settings.collections[:settings][:categories] }
 
   context "Settings Queries" do

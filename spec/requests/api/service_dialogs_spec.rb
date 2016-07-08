@@ -3,7 +3,7 @@
 #
 # - Refresh dialog fields       /api/service_dialogs/:id "refresh_dialog_fields"
 #
-describe ApiController do
+describe Api::BaseController do
   let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
   let(:miq_server) { FactoryGirl.create(:miq_server, :guid => miq_server_guid, :zone => zone) }
   let(:ems)        { FactoryGirl.create(:ems_vmware, :zone => zone) }

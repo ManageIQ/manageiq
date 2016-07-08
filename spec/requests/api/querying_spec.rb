@@ -8,7 +8,7 @@
 #   - Expanding Results     - expand=resources,:subcollection
 #   - Resource actions
 #
-describe ApiController do
+describe Api::BaseController do
   def create_vms_by_name(names)
     names.each.collect { |name| FactoryGirl.create(:vm_vmware, :name => name) }
   end
