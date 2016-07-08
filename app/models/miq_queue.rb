@@ -116,6 +116,11 @@ class MiqQueue < ApplicationRecord
 
     options[:args] = [options[:args]] if options[:args] && !options[:args].kind_of?(Array)
 
+    if !Rails.env.production? && options[:args] &&
+       (arg = options[:args].detect { |a| a.kind_of?(ActiveRecord::Base) && !a.new_record? })
+      raise ArgumentError, "MiqQueue.put(:class_name => #{options[:class_name]}, :method => #{options[:method_name]}) does not support args with #{arg.class.name} objects"
+    end
+
     msg = MiqQueue.create!(options)
     _log.info("#{MiqQueue.format_full_log_msg(msg)}")
     msg

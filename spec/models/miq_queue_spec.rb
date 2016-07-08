@@ -460,6 +460,12 @@ describe MiqQueue do
       expect(MiqQueue.get).to have_attributes(:args => [3, 4], :task_id => 'fun_task')
       expect(MiqQueue.get).to eq(nil)
     end
+
+    it "does not allow objects on the queue" do
+      expect do
+        MiqQueue.put(:class_name => 'MyClass', :method_name => 'method1', :args => [MiqServer.first])
+      end.to raise_error(ArgumentError)
+    end
   end
 
   describe ".unqueue" do
