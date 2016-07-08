@@ -80,7 +80,7 @@ class Tag < ApplicationRecord
     ns = options.fetch(:ns, '/user')
     ns = "" if [:none, "none", "*", nil].include?(ns)
     ns += "/" + options[:cat] if options[:cat]
-    ns.downcase
+    ns.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX) ? ns : ns.downcase
   end
 
   def self.filter_ns(tags, ns)
