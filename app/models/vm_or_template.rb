@@ -128,6 +128,8 @@ class VmOrTemplate < ApplicationRecord
 
   acts_as_miq_taggable
 
+  supports_not :resize
+
   virtual_column :is_evm_appliance,                     :type => :boolean,    :uses => :miq_server
   virtual_column :os_image_name,                        :type => :string,     :uses => [:operating_system, :hardware]
   virtual_column :platform,                             :type => :string,     :uses => [:operating_system, :hardware]
