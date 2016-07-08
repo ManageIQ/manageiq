@@ -98,15 +98,7 @@ class MiqAlert < ApplicationRecord
   end
 
   def self.target_needs_realtime_capture?(target)
-    result = !assigned_to_target(target, "#{target.class.base_model.name.underscore}_perf_complete").empty?
-    return result if result
-
-    # Need to special case Host to look for alerts assigned to parent cluster
-    if target.kind_of?(Host) && target.ems_cluster
-      result = !assigned_to_target(target.ems_cluster, "#{target.ems_cluster.class.name.underscore}_perf_complete").empty?
-    end
-
-    result
+    !assigned_to_target(target, "#{target.class.base_model.name.underscore}_perf_complete").empty?
   end
 
   def self.evaluate_alerts(target, event, inputs = {})

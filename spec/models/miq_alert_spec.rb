@@ -267,6 +267,14 @@ describe MiqAlert do
       expect(MiqAlert.target_needs_realtime_capture?(host)).to be_truthy
     end
 
+    it "detects true with a Host's cluster assigned to a realtime C&U alert" do
+      cluster = FactoryGirl.create(:ems_cluster)
+      host = FactoryGirl.create(:host, :ems_cluster => cluster)
+      host_alert_set.assign_to_objects(cluster)
+
+      expect(MiqAlert.target_needs_realtime_capture?(host)).to be_truthy
+    end
+
     it "detects false with a Host NOT assigned to a realtime C&U alert" do
       host = FactoryGirl.create(:host)
 
