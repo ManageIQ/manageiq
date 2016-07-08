@@ -1,20 +1,20 @@
 class ApiController
   class CollectionConfig < Config::Options
     def custom_actions?(collection_name)
-      cspec = self[collection_name.to_sym]
+      cspec = c(collection_name)
       cspec && cspec[:options].include?(:custom_actions)
     end
 
     def show_as_collection?(collection_name)
-      self[collection_name.to_sym][:options].include?(:show_as_collection)
+      c(collection_name)[:options].include?(:show_as_collection)
     end
 
     def subcollection?(collection_name, subcollection_name)
-      Array(self[collection_name.to_sym][:subcollections]).include?(subcollection_name.to_sym)
+      Array(c(collection_name)[:subcollections]).include?(subcollection_name.to_sym)
     end
 
     def subcollection_denied?(collection_name, subcollection_name)
-      self[collection_name.to_sym][:subcollections] && !self[collection_name.to_sym][:subcollections].include?(subcollection_name.to_sym)
+      c(collection_name)[:subcollections] && !c(collection_name)[:subcollections].include?(subcollection_name.to_sym)
     end
 
     def names_for_feature(product_feature_name)
@@ -57,6 +57,10 @@ class ApiController
           end
         end
       end
+    end
+
+    def c(collection_name)
+      self[collection_name.to_sym]
     end
   end
 end
