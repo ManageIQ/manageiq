@@ -918,7 +918,7 @@ class MiqExpression
       [fld, quote(description, "string")]
     elsif ops["field"]
       if ops["field"] == "<count>"
-        ["<count>", ops["value"]]
+        ["<count>", quote(ops["value"], "integer")]
       else
         case context_type
         when "hash"
@@ -938,7 +938,7 @@ class MiqExpression
     elsif ops["count"]
       ref, count = value2tag(ops["count"])
       field = ref ? "<count ref=#{ref}>#{count}</count>" : "<count>#{count}</count>"
-      [field, ops["value"]]
+      [field, quote(ops["value"], "integer")]
     elsif ops["regkey"]
       if operator == "key exists"
         "<registry key_exists=1, type=boolean>#{ops["regkey"].strip}</registry>  == 'true'"
