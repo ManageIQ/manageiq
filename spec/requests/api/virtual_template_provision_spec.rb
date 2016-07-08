@@ -10,6 +10,7 @@ describe ApiController do
                        :cloud_network_id     => cloud_network.id,
                        :flavor_id            => flavor.id)
   end
+  let(:request_url) { "#{virtual_templates_url(virtual_template.id)}/provision" }
   let(:dialog) { FactoryGirl.create(:miq_dialog_provision) }
   let(:request) do
     {
@@ -29,8 +30,6 @@ describe ApiController do
     it 'provisions a virtual template' do
       api_basic_authorize subcollection_action_identifier(:virtual_templates, :provision, :create)
 
-      request_url = "#{virtual_templates_url(virtual_template.id)}/provision"
-
       dialog
       run_post(request_url, request)
       expect(response).to have_http_status(:ok)
@@ -43,10 +42,24 @@ describe ApiController do
     it 'rejects requests without appropriate role' do
       api_basic_authorize
 
-      request_url = "#{virtual_templates_url(virtual_template.id)}/provision"
-
       run_post(request_url, request)
       expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'requires a requester' do
+      api_basic_authorize subcollection_action_identifier(:virtual_templates, :provision, :create)
+
+      dialog
+      run_post(request_url, request.except('requester'))
+      expect_bad_request(/Requester required/)
+    end
+
+    it 'requires a VM name' do
+      api_basic_authorize subcollection_action_identifier(:virtual_templates, :provision, :create)
+
+      dialog
+      run_post(request_url, request.except('vm_name'))
+      expect_bad_request(/VM name required/)
     end
   end
 end
