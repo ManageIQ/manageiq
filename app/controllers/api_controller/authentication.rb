@@ -143,8 +143,8 @@ class ApiController
         "description" => details[:description]
       }
       collection, method, action = referenced_identifiers[ident_str]
-      hrefs = get_hrefs_for_identifier(ident_str)
-      res["href"] = "#{@req.api_prefix}/#{hrefs.first}" if hrefs.one?
+      collections = collection_config.names_for_feature(ident_str)
+      res["href"] = "#{@req.api_prefix}/#{collections.first}" if collections.one?
       res["action"] = api_action_details(collection, method, action) if collection.present?
       res["children"] = children if children.present?
       pf_result[ident_str] = res
@@ -173,19 +173,6 @@ class ApiController
           end
         end
         identifiers
-      end
-    end
-
-    def get_hrefs_for_identifier(identifier)
-      @collection_hrefs ||= generate_collection_hrefs
-      @collection_hrefs[identifier]
-    end
-
-    def generate_collection_hrefs
-      collection_config.each_with_object(Hash.new { |hash, key| hash[key] = [] }) do |(collection, cspec), result|
-        ident = cspec[:identifier]
-        next unless ident
-        result[ident] << collection
       end
     end
 
