@@ -128,6 +128,15 @@ blacklisted_events:
 - enabled
 - created_at
 - updated_at
+blueprints:
+- id
+- name
+- description
+- status
+- version
+- ui_properties
+- created_at
+- updated_at
 bottleneck_events:
 - id
 - timestamp
@@ -6047,6 +6056,7 @@ service_templates:
 - service_template_catalog_id
 - long_description
 - tenant_id
+- blueprint_id
 services:
 - id
 - name
