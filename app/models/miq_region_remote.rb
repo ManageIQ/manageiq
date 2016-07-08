@@ -6,16 +6,6 @@ class MiqRegionRemote < ApplicationRecord
     end
   end
 
-  def self.destroy_entire_region(region, host, port, username, password, database = nil, adapter = nil, tables = nil)
-    database, adapter = prepare_default_fields(database, adapter)
-
-    with_remote_connection(host, port, username, password, database, adapter) do |conn|
-      _log.info "Clearing region [#{region}] from remote host [#{host}]..."
-      MiqRegion.destroy_region(conn, region, tables)
-      _log.info "Clearing region [#{region}] from remote host [#{host}]...Complete"
-    end
-  end
-
   def self.validate_connection_settings(host, port, username, password, database = nil, adapter = nil)
     database, adapter = prepare_default_fields(database, adapter)
 
