@@ -46,7 +46,7 @@ class ApplicationHelper::Toolbar::CloudVolumesCenter < ApplicationHelper::Toolba
                        t = N_('Delete selected Cloud Volumes'),
                        t,
                        :url_parms => 'main_div',
-                       :confirm   => 'Warning: The selected Cloud Volume and ALL of their components will be removed. Are you sure you want to remove these Cloud Volumes?',
+                       :confirm   => N_('Warning: The selected Cloud Volume and ALL of their components will be removed. Are you sure you want to remove these Cloud Volumes?'),
                        :enabled   => false,
                        :onwhen    => '1+'
                      ),
