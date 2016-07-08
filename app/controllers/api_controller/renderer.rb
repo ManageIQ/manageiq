@@ -381,7 +381,7 @@ class ApiController
     # Let's expand a subcollection
     #
     def expand_subcollection(json, sc, sctype, subresources)
-      if collection_config[sc.to_sym][:options].include?(:show_as_collection)
+      if collection_config.show_as_collection?(sc)
         copts = {
           :count            => subresources.length,
           :is_subcollection => true,
