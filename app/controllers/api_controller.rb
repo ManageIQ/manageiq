@@ -87,7 +87,6 @@ class ApiController < ApplicationController
   include_concern 'TenantQuotas'
   include_concern 'Tenants'
   include_concern 'Users'
-  include_concern 'VirtualTemplateProvision'
   include_concern 'VirtualTemplates'
   include_concern 'Vms'
 

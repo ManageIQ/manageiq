@@ -4949,15 +4949,10 @@
         :description: Delete Virtual Template
         :feature_type: admin
         :identifier: delete_virtual_template
-    - :name: Virtual Template Provision Request
-      :description: Create Virtual Template Provision Request
-      :feature_type: admin
-      :identifier: miq_virtual_template_provision
-      :children:
-      - :name: Create Virtual Template Provision
-        :description: Create Virtual Template Provision
+      - :name: Provision Virtual Template
+        :description: Provision Virtual Template
         :feature_type: admin
-        :identifier: create_virtual_template_provision
+        :identifier: provision_virtual_template
     - :name: Snapshots
       :description: Everything for Template Snapshots
       :feature_type: node
