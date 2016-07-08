@@ -10,8 +10,7 @@ describe MiqAlert do
         next(arr) if a.responds_to_events.nil?
         next(arr) unless a.db == "Vm"
 
-        ap = FactoryGirl.create(:miq_alert_set, :description => "Alert Profile for #{a.id}", :mode => @vm.class.base_model.name)
-        ap.add_member(a)
+        ap = FactoryGirl.create(:miq_alert_set_vm, :alerts => [a])
         ap.assign_to_objects(@vm)
 
         events = a.responds_to_events.split(",")
@@ -199,8 +198,7 @@ describe MiqAlert do
       @c.assign_entry_to(@vm)
 
       @alert = FactoryGirl.create(:miq_alert_vm)
-      @ap    = FactoryGirl.create(:miq_alert_set, :description => "Alert Profile for #{@alert.id}", :mode => @mode)
-      @ap.add_member(@alert)
+      @ap    = FactoryGirl.create(:miq_alert_set_vm, :alerts =>[@alert])
       @ap.assign_to_tags([@c.id], @mode)
 
       expect(MiqAlert.assigned_to_target(@vm)).to eq([@alert])
@@ -214,20 +212,12 @@ describe MiqAlert do
 
     let(:vm_alert_set) do
       alert = FactoryGirl.create(:miq_alert_vm, :responds_to_events => "xxx|vm_perf_complete|zzz")
-      alert_prof = FactoryGirl.create(:miq_alert_set,
-                                      :description => "Alert Profile for Alert Id: #{alert.id}",
-                                      :mode        => VmOrTemplate.base_model.name)
-      alert_prof.add_member(alert)
-      alert_prof
+      FactoryGirl.create(:miq_alert_set_vm, :alerts => [alert])
     end
 
     let(:host_alert_set) do
       alert = FactoryGirl.create(:miq_alert_host, :responds_to_events => "xxx|host_perf_complete|zzz")
-      alert_prof = FactoryGirl.create(:miq_alert_set,
-                                      :description => "Alert Profile for Alert Id: #{alert.id}",
-                                      :mode        => Host.base_model.name)
-      alert_prof.add_member(alert)
-      alert_prof
+      FactoryGirl.create(:miq_alert_set_host, :alerts => [alert])
     end
 
     it "detects true with a VM assigned to a realtime C&U alert" do
@@ -324,8 +314,7 @@ describe MiqAlert do
       @ems        = FactoryGirl.create(:ems_vmware, :zone => @miq_server.zone)
       @ems_other  = FactoryGirl.create(:ems_vmware, :zone => FactoryGirl.create(:zone, :name => 'other'))
       @alert      = FactoryGirl.create(:miq_alert, :responds_to_events => "_hourly_timer_")
-      @alert_prof = FactoryGirl.create(:miq_alert_set, :description => "Alert Profile for Alert Id: #{@alert.id}")
-      @alert_prof.add_member(@alert)
+      @alert_prof = FactoryGirl.create(:miq_alert_set, :alerts => [@alert])
     end
 
     it "evaluates for ext_management_system" do
@@ -385,13 +374,8 @@ describe MiqAlert do
         :expression         => {:eval_method => "nothing", :mode => "internal", :options => {}},
         :responds_to_events => "request_vm_poweroff"
       )
-      @alert_prof = FactoryGirl.create(
-        :miq_alert_set,
-        :description => "Alert Profile for Alert Id: #{@alert.id}",
-        :mode        => @vm.class.base_model.name
-      )
-      @alert_prof.add_member(@alert)
-      @alert_prof.assign_to_objects(@vm.id, "Vm")
+      @alert_prof = FactoryGirl.create(:miq_alert_set_vm, :alerts => [@alert])
+      @alert_prof.assign_to_objects(@vm)
     end
 
     it 'queues evaluation of alert' do

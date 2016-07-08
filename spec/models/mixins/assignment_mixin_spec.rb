@@ -9,12 +9,12 @@ describe AssignmentMixin do
 
     it "detects tags on alert_set" do
       ct1 = ctag("environment", "test")
-      alert_set = FactoryGirl.create(:miq_alert_set, :mode => "VmOrTemplate")
+      alert_set = FactoryGirl.create(:miq_alert_set_vm)
       alert_set.assign_to_tags([ct1], "vm")
       alert_set.reload # reload ensures the tag is set
 
       ct2 = ctag("environment", "staging")
-      alert_set2 = FactoryGirl.create(:miq_alert_set, :mode => "VmOrTemplate")
+      alert_set2 = FactoryGirl.create(:miq_alert_set_vm)
       alert_set2.assign_to_tags([ct2], "vm")
       alert_set2.reload # reload ensures the tag is set
 
