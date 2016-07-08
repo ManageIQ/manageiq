@@ -24,6 +24,8 @@ class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
   include ManageIQ::Providers::Openstack::ManagerMixin
   include HasManyCloudNetworksMixin
 
+  supports :provisioning
+
   def self.ems_type
     @ems_type ||= "openstack".freeze
   end

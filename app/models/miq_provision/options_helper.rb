@@ -36,7 +36,7 @@ module MiqProvision::OptionsHelper
             _("%{class_name} [%{name}] is not attached to a Management System") % {:class_name => source.class.name,
                                                                                    :name       => source.name}
     end
-    unless MiqProvision::SUPPORTED_EMS_CLASSES.include?(ems.class.name)
+    unless ems.supports_provisioning?
       raise MiqException::MiqProvisionError,
             _("%{class_name} [%{name}] is attached to <%{ems_class_name}: %{ems_name}> that does not support Provisioning") %
               {:class_name     => source.class.name,

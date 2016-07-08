@@ -14,6 +14,8 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   require_nested :Template
   require_nested :Vm
 
+  supports :provisioning
+
   def self.ems_type
     @ems_type ||= "rhevm".freeze
   end
