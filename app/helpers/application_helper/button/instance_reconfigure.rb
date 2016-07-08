@@ -1,10 +1,10 @@
 class ApplicationHelper::Button::InstanceReconfigure < ApplicationHelper::Button::Basic
   def calculate_properties
     super
-    self[:title] = @record.is_available_now_error_message(:resize) if disabled?
+    self[:title] = @record.unsupported_reason(:resize) if disabled?
   end
 
   def disabled?
-    !@record.is_available?(:resize)
+    !@record.supports_resize?
   end
 end
