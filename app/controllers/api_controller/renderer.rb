@@ -15,7 +15,7 @@ class ApiController
         render_resource type, resource_search(id, type, klass), opts
       else
         opts[:count]            = klass.count
-        opts[:expand_resources] = expand?(:resources)
+        opts[:expand_resources] = @req.expand?(:resources)
 
         res = collection_search(is_subcollection, type, klass)
 
@@ -232,7 +232,7 @@ class ApiController
     end
 
     def expand_subcollection?(sc, target)
-      respond_to?(target) && (expand?(sc) || collection_config[sc.to_sym][:options].include?(:show))
+      respond_to?(target) && (@req.expand?(sc) || collection_config[sc.to_sym][:options].include?(:show))
     end
 
     #
@@ -385,13 +385,13 @@ class ApiController
         copts = {
           :count            => subresources.length,
           :is_subcollection => true,
-          :expand_resources => expand?(sc.to_s)
+          :expand_resources => @req.expand?(sc)
         }
         json.set! sc.to_s, collection_to_jbuilder(sc.to_sym, sctype, subresources, copts)
       else
         json.set! sc.to_s do |js|
           subresources.each do |scr|
-            if expand?(sc) || scr["id"].nil?
+            if @req.expand?(sc) || scr["id"].nil?
               add_child js, normalize_hash(sctype, scr, :add_href => true)
             else
               js.child! { |jsc| jsc.href normalize_href(sctype, scr["id"]) }

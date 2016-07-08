@@ -31,6 +31,10 @@ class ApiController
         @params[:c_id]
       end
 
+      def expand?(what)
+        expand_requested.include?(what.to_s)
+      end
+
       def json_body
         @json_body ||= begin
                          body = @request.body.read if @request.body
@@ -63,6 +67,10 @@ class ApiController
       end
 
       private
+
+      def expand_requested
+        @expand ||= @params['expand'].to_s.split(',')
+      end
 
       def version_override?
         @params[:version] && @params[:version].match(Api::Settings.version[:regex]) # v#.# version signature

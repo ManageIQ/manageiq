@@ -37,7 +37,7 @@ class ApiController
 
       raise BadRequestError, "Unsupported provider_class #{param} specified" if param != "provider"
       %w(tags policies policy_profiles).each do |cname|
-        if @req.subcollection == cname || expand?(cname)
+        if @req.subcollection == cname || @req.expand?(cname)
           raise BadRequestError, "Management of #{cname} is unsupported for the Provider class"
         end
       end

@@ -99,14 +99,6 @@ class ApiController
       params['by_tag']
     end
 
-    def expand_param
-      params['expand'] && params['expand'].split(",")
-    end
-
-    def expand?(what)
-      expand_param ? expand_param.include?(what.to_s) : false
-    end
-
     def decorator_selection
       params['decorators'].to_s.split(",")
     end
