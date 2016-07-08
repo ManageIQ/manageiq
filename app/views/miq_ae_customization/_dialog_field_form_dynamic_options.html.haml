@@ -2,19 +2,12 @@
 
 .form-group
   %label.col-md-2.control-label
-    = _('Auto refresh')
+    = _('Entry Point (NS/Cls/Inst)')
   .col-md-8
-    = check_box_tag('field_auto_refresh', '1',
-                    @edit[:field_auto_refresh],
-                    'data-miq_observe_checkbox' => {:url => url}.to_json)
-
-.form-group
-  %label.col-md-2.control-label
-    = _('Show Refresh Button')
-  .col-md-8
-    = check_box_tag('field_show_refresh_button', '1',
-                  @edit[:field_show_refresh_button],
-                  'data-miq_observe_checkbox' => {:url => url}.to_json)
+    = text_field_tag('field_entry_point',
+                      @edit[:field_entry_point],
+                      :class => "form-control",
+                      :onFocus => 'miqShowAE_Tree("field_entry_point");')
 
 - if @edit[:field_show_refresh_button] # show only if field_show_refresh_button is on
   .form-group
@@ -24,12 +17,18 @@
       = check_box_tag('field_load_on_init', '1',
                       @edit[:field_load_on_init],
                       'data-miq_observe_checkbox' => {:url => url}.to_json)
-
 .form-group
   %label.col-md-2.control-label
-    = _('Entry Point (NS/Cls/Inst)')
+    = _('Show Refresh Button')
   .col-md-8
-    = text_field_tag('field_entry_point',
-                      @edit[:field_entry_point],
-                      :class => "form-control",
-                      :onFocus => 'miqShowAE_Tree("field_entry_point");')
+    = check_box_tag('field_show_refresh_button', '1',
+                  @edit[:field_show_refresh_button],
+                  'data-miq_observe_checkbox' => {:url => url}.to_json)
+.form-group
+  %label.col-md-2.control-label
+    = _('Auto refresh')
+  .col-md-8
+    = check_box_tag('field_auto_refresh', '1',
+                    @edit[:field_auto_refresh],
+                    'data-miq_observe_checkbox' => {:url => url}.to_json)
+
