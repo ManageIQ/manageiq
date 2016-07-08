@@ -131,21 +131,7 @@ class MiqAeToolsController < ApplicationController
   end
 
   def import_via_git
-    git_repo = GitRepository.find_by(:id => params[:git_repo_id])
-
-    ref_type = if git_repo.git_branches.any? { |git_branch| git_branch.name == params[:git_branch_or_tag] }
-      "branch"
-    else
-      "tag"
-    end
-
-    options = {
-      "git_repository_id" => git_repo.id,
-      "ref"               => params[:git_branch_or_tag],
-      "ref_type"          => ref_type
-    }
-    domain = MiqAeDomain.import_git_repo(options)
-    domain.update_attribute(:enabled, true)
+    git_based_domain_import_service.import(params[:git_repo_id], params[:git_branch_or_tag])
 
     add_flash(_("Imported from git"), :info)
 
@@ -314,6 +300,10 @@ Methods updated/added: %{method_stats}") % stat_options)
 
   def automate_import_service
     @automate_import_service ||= AutomateImportService.new
+  end
+
+  def git_based_domain_import_service
+    @git_based_domain_import_service ||= GitBasedDomainImportService.new
   end
 
   def add_stats(stats_hash)

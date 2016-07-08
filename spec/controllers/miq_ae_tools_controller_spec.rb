@@ -412,4 +412,18 @@ Methods updated/added: 10
       it_behaves_like "MiqAeToolsController#upload_import_file that does not upload a file"
     end
   end
+
+  describe "#import_via_git" do
+    let(:params) { {:git_repo_id => "123", :git_branch_or_tag => "branch_or_tag"} }
+    let(:git_based_domain_import_service) { double("GitBasedDomainImportService") }
+
+    before do
+      allow(GitBasedDomainImportService).to receive(:new).and_return(git_based_domain_import_service)
+    end
+
+    it "delegates to the git based domain import service" do
+      expect(git_based_domain_import_service).to receive(:import).with("123", "branch_or_tag")
+      post :import_via_git, :params => params, :xhr => true
+    end
+  end
 end
