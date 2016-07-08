@@ -131,22 +131,6 @@ module OpsController::Settings
     end
   end
 
-  def validate_replcation_worker
-    settings_load_edit
-    return unless @edit
-    wb = @edit[:new].config[:workers][:worker_base]
-    w = wb[:replication_worker][:replication][:destination]
-    valid = MiqRegionRemote.validate_connection_settings(w[:host], w[:port], w[:username], w[:password], w[:database])
-    if valid.nil?
-      add_flash(_("Replication Worker Credentials validated successfully"))
-    else
-      valid.each do |v|
-        add_flash(v, :error)
-      end
-    end
-    javascript_flash
-  end
-
   def region_edit
     settings_set_view_vars
     @right_cell_text = _("Settings %{model} \"%{name}\"") %

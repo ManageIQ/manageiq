@@ -157,9 +157,6 @@
             = _("Servers by Roles")
         = miq_tab_header("diagnostics_server_list", @sb[:active_tab]) do
           = _("Servers")
-        - if !MiqEnterprise.is_enterprise? && super_admin_user?
-          = miq_tab_header("diagnostics_replication", @sb[:active_tab]) do
-            = _("Replication")
         - if super_admin_user?
           = miq_tab_header("diagnostics_database", @sb[:active_tab]) do
             = _("Database")
@@ -175,9 +172,6 @@
             = render :partial => "diagnostics_servers_roles_tab"
         = miq_tab_content("diagnostics_server_list", @sb[:active_tab]) do
           = render :partial => "diagnostics_server_list_tab"
-        - if !MiqEnterprise.is_enterprise? && super_admin_user?
-          = miq_tab_content("diagnostics_replication", @sb[:active_tab]) do
-            = render :partial => "diagnostics_replication_tab"
         - if super_admin_user?
           = miq_tab_content("diagnostics_database", @sb[:active_tab]) do
             - if @sb[:active_tab] == "diagnostics_database"

@@ -379,9 +379,6 @@ module OpsController::Settings::Common
       w = wb[:vim_broker_worker]
       @edit[:new].set_worker_setting!(:MiqVimBrokerWorker, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
 
-      wb[:replication_worker][:replication][:destination].delete(:verify)
-      @edit[:new].set_worker_setting!(:MiqReplicationWorker, :replication, wb[:replication_worker][:replication])
-
       w = qwb[:smart_proxy_worker]
       @edit[:new].set_worker_setting!(:MiqSmartProxyWorker, :count, w[:count].to_i)
       @edit[:new].set_worker_setting!(:MiqSmartProxyWorker, :memory_threshold, human_size_to_rails_method(w[:memory_threshold]))
@@ -788,14 +785,6 @@ module OpsController::Settings::Common
       w = wb[:vim_broker_worker]
       w[:memory_threshold] = params[:vim_broker_worker_threshold] if params[:vim_broker_worker_threshold]
 
-      w = wb[:replication_worker][:replication][:destination]
-      w[:database] = params[:replication_worker_dbname] if params[:replication_worker_dbname]
-      w[:port] = params[:replication_worker_port] if params[:replication_worker_port]
-      w[:username] = params[:replication_worker_username] if params[:replication_worker_username]
-      w[:password] = params[:replication_worker_password] if params[:replication_worker_password]
-      w[:verify] = params[:replication_worker_verify] if params[:replication_worker_verify]
-      w[:host] = params[:replication_worker_host] if params[:replication_worker_host]
-
       w = qwb[:smart_proxy_worker]
       w[:count] = params[:proxy_worker_count].to_i if params[:proxy_worker_count]
       w[:memory_threshold] = params[:proxy_worker_threshold] if params[:proxy_worker_threshold]
@@ -813,9 +802,6 @@ module OpsController::Settings::Common
 
       w = wb[:websocket_worker]
       w[:count] = params[:websocket_worker_count].to_i if params[:websocket_worker_count]
-
-      restore_password if params[:restore_password]
-      set_workers_verify_status
     when "settings_custom_logos"                                            # Custom Logo tab
       new[:server][:custom_logo] = (params[:server_uselogo] == "1") if params[:server_uselogo]
       new[:server][:custom_login_logo] = (params[:server_useloginlogo] == "1") if params[:server_useloginlogo]
@@ -1015,11 +1001,6 @@ module OpsController::Settings::Common
       w = (wb[:ui_worker] ||= {})
       w[:count] = @edit[:current].get_raw_worker_setting(:MiqUiWorker, :count) || 2
 
-      rw = (wb[:replication_worker] ||= {})
-      r = (rw[:replication] ||= {})
-      d = (r[:destination] ||= {})
-      d[:verify] = d[:password]
-
       w = (qwb[:reporting_worker] ||= {})
       w[:count] = @edit[:current].get_raw_worker_setting(:MiqReportingWorker, :count) || 2
       w[:memory_threshold] = rails_method_to_human_size(@edit[:current].get_raw_worker_setting(:MiqReportingWorker, :memory_threshold)) || rails_method_to_human_size(400.megabytes)
@@ -1037,7 +1018,6 @@ module OpsController::Settings::Common
 
       @edit[:new].config = copy_hash(@edit[:current].config)
       session[:log_depot_default_verify_status] = true
-      set_workers_verify_status
       @in_a_form = true
     when "settings_custom_logos"                                  # Custom Logo tab
       @edit = {}
@@ -1202,11 +1182,6 @@ module OpsController::Settings::Common
     end
   end
 
-  def set_workers_verify_status
-    w = @edit[:new].config[:workers][:worker_base][:replication_worker][:replication][:destination]
-    @edit[:default_verify_status] = (w[:password] == w[:verify])
-  end
-
   def build_smartproxy_affinity_node(zone, server, node_type)
     affinities = server.send("vm_scan_#{node_type}_affinity").collect(&:id)
     {
@@ -1239,14 +1214,6 @@ module OpsController::Settings::Common
         :children => [build_smartproxy_affinity_node(zone, s, 'host'),
                       build_smartproxy_affinity_node(zone, s, 'storage')]
       }
-    end
-  end
-
-  def restore_password
-    if params[:replication_worker_password]
-      @edit[:new].config[:workers][:worker_base][:replication_worker][:replication][:destination][:password] =
-        @edit[:new].config[:workers][:worker_base][:replication_worker][:replication][:destination][:verify] =
-        MiqServer.find(@sb[:selected_server_id]).get_config.config[:workers][:worker_base][:replication_worker][:replication][:destination][:password]
     end
   end
 end
