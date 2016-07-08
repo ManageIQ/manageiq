@@ -5,6 +5,10 @@ class ApiController
       cspec && cspec[:options].include?(:custom_actions)
     end
 
+    def show_as_collection?(collection_name)
+      self[collection_name.to_sym][:options].include?(:show_as_collection)
+    end
+
     def names_for_feature(product_feature_name)
       names_for_features[product_feature_name]
     end
