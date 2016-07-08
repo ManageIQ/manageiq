@@ -352,7 +352,7 @@ class ApiController
     end
 
     def expand_resource_custom_actions(resource, json, type)
-      return unless render_actions(resource) && resource_can_have_custom_actions(type)
+      return unless render_actions(resource) && collection_config.custom_actions?(type)
 
       href = json.attributes!["href"]
       json.actions do |js|
