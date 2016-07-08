@@ -55,8 +55,6 @@ gem "rubywbem",            :require => false, :git => "git://github.com/ManageIQ
 
 group :appliance do
   gem "highline", "~> 1.6.21", :require => false  # Needed for the appliance_console
-  #gem "minitest", "<  5",      :require => false  # HACK to run test suite on SCL ruby
-  gem "rdoc",                  :require => false  # HACK to run test suite on SCL ruby
 end
 
 # Linux-only section
