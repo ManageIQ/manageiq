@@ -12,6 +12,10 @@ gem "websocket-driver",                "~>0.6.3"
 gem "config",                          "~>1.1.0", :git => "git://github.com/ManageIQ/config.git", :branch => "overwrite_arrays"
 gem "deep_merge",                      "~>1.0.1", :git => "git://github.com/ManageIQ/deep_merge.git", :branch => "overwrite_arrays"
 
+group :automate do
+  gem "savon",                          "~>2.2.0",   :require => false  # Automate uses this for simple SOAP Integration
+end
+
 group :ui_dependencies do
   # Unmodified gems
   gem "angular-ui-bootstrap-rails",    "~>0.13.0"
@@ -98,7 +102,6 @@ gem "ruby_parser",                    "~>3.7",     :require => false
 gem "ruby-progressbar",               "~>1.7.0",   :require => false
 gem "rufus-scheduler",                "~>3.1.3",   :require => false
 gem "rugged",                         "~>0.23.0",  :require => false
-gem "savon",                          "~>2.2.0",   :require => false  # Automate uses this for simple SOAP Integration
 gem "snmp",                           "~>1.2.0",   :require => false
 gem "uglifier",                       "~>2.7.1",   :require => false
 gem "sshkey",                         "~>1.8.0",   :require => false
