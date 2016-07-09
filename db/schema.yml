@@ -6046,6 +6046,7 @@ service_templates:
 - service_template_catalog_id
 - long_description
 - tenant_id
+- blueprint
 services:
 - id
 - name
