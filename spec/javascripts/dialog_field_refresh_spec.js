@@ -73,6 +73,28 @@ describe('dialogFieldRefresh', function() {
     });
   });
 
+  describe('#setVisible', function() {
+    beforeEach(function() {
+      var html = "";
+      html += '<input id="test" title="bogus title" type="text" />';
+      setFixtures(html);
+    });
+
+    context('when visible is false', function() {
+      it('hides the element', function() {
+        dialogFieldRefresh.setVisible($('#test'), false);
+        expect($('#test').is(":visible")).toBe(false);
+      });
+    });
+
+    context('when visible is true', function() {
+      it('shows the element', function() {
+        dialogFieldRefresh.setVisible($('#test'), true);
+        expect($('#test').is(":visible")).toBe(true);
+      });
+    });
+  });
+
   describe('#refreshDropDownList', function() {
     beforeEach(function() {
       spyOn(dialogFieldRefresh, 'addOptionsToDropDownList');

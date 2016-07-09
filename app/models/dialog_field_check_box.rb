@@ -1,5 +1,5 @@
 class DialogFieldCheckBox < DialogField
-  AUTOMATE_VALUE_FIELDS = %w(required read_only)
+  AUTOMATE_VALUE_FIELDS = %w(required read_only visible)
 
   def checked?
     value == "t"
@@ -29,7 +29,7 @@ class DialogFieldCheckBox < DialogField
 
   def refresh_json_value
     @value = values_from_automate
-
+    {:checked => checked?, :visible => visible?}
     {:checked => checked?, :read_only => read_only?}
   end
 

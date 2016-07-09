@@ -26,6 +26,7 @@ var dialogFieldRefresh = {
     $.post('dynamic_checkbox_refresh', {name: fieldName}, function(data) {
       $('.dynamic-checkbox-' + fieldId).prop('checked', data.values.checked);
       dialogFieldRefresh.setReadOnly($('.dynamic-checkbox-' + fieldId), data.values.read_only);
+      dialogFieldRefresh.setVisible($('.dynamic-checkbox-' + fieldId), data.values.visible);
       miqSparkle(false);
     });
   },
@@ -42,6 +43,7 @@ var dialogFieldRefresh = {
       }
 
       dialogFieldRefresh.setReadOnly($('.dynamic-date-' + fieldId), data.values.read_only);
+      dialogFieldRefresh.setVisible($('.dynamic-date-' + fieldId), data.values.visible);
 
       miqSparkle(false);
     });
@@ -57,6 +59,7 @@ var dialogFieldRefresh = {
     .done(function(data) {
       dialogFieldRefresh.addOptionsToDropDownList(data, fieldId);
       dialogFieldRefresh.setReadOnly($('#' + fieldName), data.values.read_only);
+      dialogFieldRefresh.setVisible($('#' + fieldName), data.values.visible);
       $('#' + fieldName).selectpicker('refresh');
       $('#' + fieldName).selectpicker('val', data.values.checked_value);
     });
@@ -139,6 +142,7 @@ var dialogFieldRefresh = {
     $.post('dynamic_text_box_refresh', {name: fieldName}, function(data) {
       $('.dynamic-text-area-' + fieldId).val(data.values.text);
       dialogFieldRefresh.setReadOnly($('.dynamic-text-area-' + fieldId), data.values.read_only);
+      dialogFieldRefresh.setVisible($('.dynamic-text-area-' + fieldId), data.values.visible);
       miqSparkle(false);
     });
   },
@@ -149,6 +153,7 @@ var dialogFieldRefresh = {
     $.post('dynamic_text_box_refresh', {name: fieldName}, function(data) {
       $('.dynamic-text-box-' + fieldId).val(data.values.text);
       dialogFieldRefresh.setReadOnly($('.dynamic-text-box-' + fieldId), data.values.read_only);
+      dialogFieldRefresh.setVisible($('.dynamic-text-box-' + fieldId), data.values.visible);
       miqSparkle(false);
     });
   },
@@ -166,6 +171,14 @@ var dialogFieldRefresh = {
     } else {
       field.prop('disabled', false);
       field.attr('title', '');
+    }
+  },
+
+  setVisible: function(field, visible) {
+    if (visible === true) {
+      field.show();
+    } else {
+      field.hide();
     }
   }
 };
