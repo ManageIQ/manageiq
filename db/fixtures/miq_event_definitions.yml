@@ -188,6 +188,7 @@
       - :EmsCluster
       - :ExtManagementSystem
       - :MiqEnterprise
+      - :Storage
       :event: 
         :event_type: DiskUsage
         :severity: 1
@@ -210,6 +211,7 @@
       - :EmsCluster
       - :ExtManagementSystem
       - :MiqEnterprise
+      - :Storage
       :event: 
         :event_type: DiskUsage
         :severity: 1
@@ -232,6 +234,7 @@
       - :EmsCluster
       - :ExtManagementSystem
       - :MiqEnterprise
+      - :Storage
       :event: 
         :event_type: DiskUsage
         :severity: 2
@@ -254,6 +257,7 @@
       - :EmsCluster
       - :ExtManagementSystem
       - :MiqEnterprise
+      - :Storage
       :event: 
         :event_type: DiskUsage
         :severity: 3
