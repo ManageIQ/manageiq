@@ -49,11 +49,16 @@ module ApplicationHelper
     name = ui_lookup(:table => table_name.to_s)
     if role_allows(:feature => "#{table_name}_show") && !ent.nil?
       out = content_tag(:li) do
+        link_params = if restful_routed?(ent)
+                        polymorphic_path(ent)
+                      else
+                        {:controller => table_name, :action => 'show', :id => ent.id.to_s}
+                      end
         link_to("#{name}: #{ent.name}",
-                {:controller => table_name, :action => 'show', :id => ent.id.to_s},
-                :title       => _("Show this %{entity_name}'s parent %{linked_entity_name}") %
-                                {:entity_name        => record.class.name.demodulize.titleize,
-                                 :linked_entity_name => name})
+                link_params,
+                :title => _("Show this %{entity_name}'s parent %{linked_entity_name}") %
+                          {:entity_name        => record.class.name.demodulize.titleize,
+                           :linked_entity_name => name})
       end
     end
     out
