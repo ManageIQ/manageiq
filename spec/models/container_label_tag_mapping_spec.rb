@@ -18,7 +18,7 @@ describe ContainerLabelTagMapping do
   after :each do
     ContainerLabelTagMapping.drop_cache
   end
-  # If the mapping was called from *elsewhere* the might already be a stale cache.
+  # If the mapping was called from *elsewhere* there might already be a stale cache.
   # TODO: This assumes all other tests only use an empty mapping.
   before :all do
     ContainerLabelTagMapping.drop_cache
@@ -80,6 +80,12 @@ describe ContainerLabelTagMapping do
       expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(tags[0])
 
       expect(ContainerLabelTagMapping.mappable_tags).to contain_exactly(tag1, tag_under_cat, tags[0])
+    end
+
+    it "does not crash with empty value" do
+      pending "fix"
+      label(node, 'name', '')
+      ContainerLabelTagMapping.tags_for_entity(node)
     end
   end
 
