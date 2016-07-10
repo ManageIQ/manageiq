@@ -11,6 +11,23 @@ class ApplicationHelper::Toolbar::ConfigurationScriptCenter < ApplicationHelper:
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Create Service Dialog from this Job Template'),
           t),
+                ]
+    ),
+    select(
+      :provider_foreman_policy_choice,
+      'fa fa-shield fa-lg',
+      t = N_('Policy'),
+      t,
+      :enabled => true,
+      :items   => [
+        button(
+          :configuration_script_tag,
+          'pficon pficon-edit fa-lg',
+          N_('Edit Tags for this Job Template'),
+          N_('Edit Tags'),
+          :url       => "tagging",
+          :url_parms => "main_div",
+          :enabled   => true),
       ]
     ),
   ])
