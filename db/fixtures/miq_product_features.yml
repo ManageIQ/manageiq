@@ -4287,7 +4287,10 @@
           :description: Create Service Dialog
           :feature_type: admin
           :identifier: configscript_service_dialog
-
+        - :name: Edit Tags
+          :description: Edit Job Templates Tags
+          :feature_type: control
+          :identifier: configuration_script_tag
 - :name: All VM and Instance Access Rules
   :description: All VM and Instance Access Rules
   :feature_type: node
