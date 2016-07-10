@@ -105,9 +105,9 @@ class ApplicationHelper::ToolbarBuilder
     )
 
     button[:enabled]   = input[:enabled]
-    button[:title]     = safer_eval(input[:title])   unless input[:title].blank?
-    button[:text]      = safer_eval(input[:text])    unless input[:text].blank?
-    button[:confirm]   = safer_eval(input[:confirm]) unless input[:confirm].blank?
+    button[:title]     = input[:title]   unless input[:title].blank?
+    button[:text]      = input[:text]    unless input[:text].blank?
+    button[:confirm]   = input[:confirm] unless input[:confirm].blank?
     button[:url_parms] = update_url_parms(safer_eval(input[:url_parms])) unless input[:url_parms].blank?
 
     if input[:popup] # special behavior: button opens window_url in a new window
