@@ -16,8 +16,8 @@ class ApplicationHelper::Toolbar::ServicetemplatecatalogCenter < ApplicationHelp
         button(
           :st_catalog_delete,
           'pficon pficon-delete fa-lg',
-          N_('Remove this Item from the VMDB'),
-          N_('Remove Item from the VMDB'),
+          N_('Remove this Catalog'),
+          N_('Remove Catalog'),
           :url_parms => "main_div",
           :confirm   => N_("Warning: This Catalog will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Catalog?")),
       ]
