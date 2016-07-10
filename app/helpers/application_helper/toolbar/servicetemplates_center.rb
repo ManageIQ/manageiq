@@ -27,8 +27,8 @@ class ApplicationHelper::Toolbar::ServicetemplatesCenter < ApplicationHelper::To
         button(
           :catalogitem_delete,
           'pficon pficon-delete fa-lg',
-          N_('Remove selected Items from the VMDB'),
-          N_('Remove Items from the VMDB'),
+          N_('Remove selected Catalog Items'),
+          N_('Remove Catalog Items'),
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected Items and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Items?"),
           :enabled   => false,
