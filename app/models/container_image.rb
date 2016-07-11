@@ -96,5 +96,9 @@ class ContainerImage < ApplicationRecord
     )
   end
 
+  def openscap_failed_rules_summary
+    openscap_rule_results.where(:result => "fail").group(:severity).count.symbolize_keys
+  end
+
   alias_method :perform_metadata_sync, :sync_stashed_metadata
 end

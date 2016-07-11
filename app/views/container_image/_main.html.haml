@@ -12,3 +12,5 @@
                                                                   :items => textual_group_smart_management}
   = render :partial => "shared/summary/textual", :locals => {:title => _("Configuration"),
                                                              :items => textual_group_configuration}
+  = render :partial => "shared/summary/textual", :locals => {:title => _("OpenSCAP Failed Rules Summary"),
+                                                             :items => textual_openscap_failed_rules}
