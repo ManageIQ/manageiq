@@ -2598,6 +2598,10 @@ Vmdb::Application.routes.draw do
     "api/base##{API_ACTIONS[verb]}"
   end
 
+  def new_action_for(verb, collection)
+    "api/#{collection}##{API_ACTIONS[verb]}"
+  end
+
   def create_api_route(verb, url, action)
     public_send(verb, url, :to => action, :format => "json", :version => API_VERSION_REGEX)
   end
@@ -2605,7 +2609,7 @@ Vmdb::Application.routes.draw do
   Api::Settings.collections.each do |collection_name, collection|
     collection.verbs.each do |verb|
       if collection.options.include?(:primary)
-        create_api_route(verb, "/api(/:version)/#{collection_name}", action_for(verb))
+        create_api_route(verb, "/api(/:version)/#{collection_name}", new_action_for(verb, collection_name))
       end
 
       next unless collection.options.include?(:collection)
