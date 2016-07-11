@@ -1133,8 +1133,12 @@ class MiqExpression
     result = []
     unless opts[:typ] == "count" || opts[:typ] == "find"
       result = get_column_details(relats[:columns], model, model, opts).sort! { |a, b| a.to_s <=> b.to_s }
-      custom_details = _custom_details_for(model, opts)
-      result.concat(custom_details.sort_by!(&:to_s)) unless custom_details.empty?
+
+      unless opts[:disallow_loading_virtual_custom_attributes]
+        custom_details = _custom_details_for(model, opts)
+        result.concat(custom_details.sort_by(&:to_s)) unless custom_details.empty?
+      end
+
       result.concat(tag_details(model, model, opts)) if opts[:include_tags] == true
     end
 
@@ -1212,7 +1216,9 @@ class MiqExpression
     @miq_adv_search_lists[model.to_s] ||= {}
 
     case what.to_sym
-    when :exp_available_fields then @miq_adv_search_lists[model.to_s][:exp_available_fields] ||= MiqExpression.model_details(model, :typ => "field", :include_model => true)
+    when :exp_available_fields then
+      options = {:typ => "field", :include_model => true, :disallow_loading_virtual_custom_attributes => false}
+      @miq_adv_search_lists[model.to_s][:exp_available_fields] ||= MiqExpression.model_details(model, options)
     when :exp_available_counts then @miq_adv_search_lists[model.to_s][:exp_available_counts] ||= MiqExpression.model_details(model, :typ => "count", :include_model => true)
     when :exp_available_finds  then @miq_adv_search_lists[model.to_s][:exp_available_finds]  ||= MiqExpression.model_details(model, :typ => "find",  :include_model => true)
     end
