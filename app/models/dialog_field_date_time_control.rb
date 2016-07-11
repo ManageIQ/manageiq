@@ -21,7 +21,8 @@ class DialogFieldDateTimeControl < DialogFieldDateControl
       :date      => date_time_value.strftime("%m/%d/%Y"),
       :hour      => date_time_value.strftime("%H"),
       :min       => date_time_value.strftime("%M"),
-      :read_only => read_only?
+      :read_only => read_only?,
+      :visible   => visible?
     }
   end
 

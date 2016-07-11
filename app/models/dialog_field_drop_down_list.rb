@@ -27,7 +27,7 @@ class DialogFieldDropDownList < DialogFieldSortedItem
       @value = @default_value
     end
 
-    {:refreshed_values => refreshed_values, :checked_value => @value, :read_only => read_only?}
+    {:refreshed_values => refreshed_values, :checked_value => @value, :read_only => read_only?, :visible => visible?}
   end
 
   private
@@ -39,7 +39,7 @@ class DialogFieldDropDownList < DialogFieldSortedItem
 
   def raw_values
     @raw_values ||= dynamic ? values_from_automate : super
-    @default_value ||= sort_data(@raw_values).first.first
+    @default_value ||= sort_data(@raw_values).first.first if@raw_values
     self.value ||= @default_value
 
     @raw_values

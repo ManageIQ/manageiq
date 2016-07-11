@@ -27,7 +27,7 @@ class DialogFieldRadioButton < DialogFieldSortedItem
       @value = default_value
     end
 
-    {:refreshed_values => refreshed_values, :checked_value => @value, :read_only => read_only?}
+    {:refreshed_values => refreshed_values, :checked_value => @value, :read_only => read_only?, :visible => visible?}
   end
 
   private

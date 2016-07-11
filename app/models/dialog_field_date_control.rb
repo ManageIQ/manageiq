@@ -42,7 +42,7 @@ class DialogFieldDateControl < DialogField
   def refresh_json_value
     @value = values_from_automate
 
-    {:date => Date.parse(@value).strftime("%m/%d/%Y"), :read_only => read_only?}
+    {:date => Date.parse(@value).strftime("%m/%d/%Y"), :read_only => read_only?, :visible => visible?}
   end
 
   def trigger_automate_value_updates
