@@ -2,7 +2,7 @@ require 'forwardable'
 # allow active record dsl to call legacy find
 class ActsAsArQuery
   extend Forwardable
-  attr_accessor :model, :mode, :options
+  attr_accessor :klass, :mode, :options
 
   # - [ ] bind
   # - [ ] create_with
@@ -53,8 +53,8 @@ class ActsAsArQuery
 
   # public api
 
-  def initialize(klass, opts = {})
-    @model   = klass
+  def initialize(model, opts = {})
+    @klass   = model
     @options = opts || {}
   end
 
@@ -148,7 +148,7 @@ class ActsAsArQuery
   # these methods execue the query
 
   def to_a
-    @results ||= model.find(:all, legacy_options)
+    @results ||= klass.find(:all, legacy_options)
   end
 
   def all
@@ -156,29 +156,29 @@ class ActsAsArQuery
   end
 
   def find(mode, options)
-    @results ||= model.find(mode, legacy_options.merge(options))
+    @results ||= klass.find(mode, legacy_options.merge(options))
   end
 
   # find_by()
 
   def count
-    # model.find(:count, legacy_options)
+    # klass.find(:count, legacy_options)
     to_a.size
   end
   def_delegators :to_a, :size, :take
 
   def first # (number)
-    model.find(:first, legacy_options)
+    klass.find(:first, legacy_options)
   end
 
   def last
-    model.find(:last, legacy_options)
+    klass.find(:last, legacy_options)
   end
 
   # benind the scenes
 
   def dup
-    self.class.new(model, options.dup)
+    self.class.new(klass, options.dup)
   end
 
   def legacy_options
