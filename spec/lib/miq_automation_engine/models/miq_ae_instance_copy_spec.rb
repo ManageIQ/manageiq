@@ -98,7 +98,7 @@ describe MiqAeInstanceCopy do
       fqname = 'test1'
       ids    = [1, 2, 3]
       ins_copy = double(MiqAeInstanceCopy)
-      ins = double(MiqAeInstance, id: 1)
+      ins = double(MiqAeInstance, :id => 1)
       expect(ins_copy).to receive(:to_domain).with(domain, nil, false).exactly(ids.length).times { ins }
       new_ids = [ins.id] * ids.length
       expect(ins).to receive(:fqname).with(no_args).exactly(ids.length).times { fqname }
