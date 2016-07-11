@@ -1,6 +1,33 @@
 class TreeBuilderReportSavedReports < TreeBuilderReportReportsClass
   private
 
+  # Overwrites the x_build_node_dynatree method (which is just a wrapper around
+  # `x_build_node`) to call `x_build_node` with a block for grabbing the kids
+  # that will return a simple array if over 1000 kids exists.
+  def x_build_node_dynatree(object, pid, options)
+    x_build_node(object, pid, options) do |parents, id|
+      tree_objects = x_get_tree_objects(object, options, false, parents)
+      x_build_tree_with_limit(tree_objects, id, options)
+    end
+  end
+
+  def x_build_tree_with_limit(tree_objects, id, tree_state)
+    if tree_objects.count > 1000
+      # Display a subtree with a single node saying the tree is too big to
+      # load.  This is a cheaper solution than instanciating a dummy
+      # TreeNodeBuilder just to use the generic_node method.
+      [{ :key   => nil,
+         :title => 'Tree to large to load!',
+         :icon  => ActionController::Base.helpers.image_path('100/x.png'),
+         :tooltip => 'Use table to the right to view reports'
+      }]
+    else
+      tree_objects.map do |o|
+        x_build_node(o, id, tree_state)
+      end
+    end
+  end
+
   def tree_init_options(tree_name)
     {
       :full_ids => true,
