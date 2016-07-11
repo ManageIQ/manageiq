@@ -21,8 +21,7 @@ class ApiController
       # Method Validation for the collection or sub-collection specified
       if cname && ctype
         mname = @req.method
-        cent  = collection_config[cname.to_sym]  # For Sub-Collection
-        unless Array(cent[:verbs]).include?(mname)
+        unless collection_config.supports_http_method?(cname, mname)
           raise BadRequestError, "Unsupported HTTP Method #{mname} for the #{ctype} #{cname} specified"
         end
       end
@@ -241,13 +240,12 @@ class ApiController
         cname = @req.collection
         ctype = "Collection"
         raise BadRequestError, "Unsupported #{ctype} #{cname} specified" unless collection_config[cname.to_sym]
-        cspec = collection_config[cname.to_sym]
-        if cspec[:options].include?(:primary)
+        if collection_config.primary?(cname)
           if "#{@req.c_id}#{@req.subcollection}#{@req.s_id}".present?
             raise BadRequestError, "Invalid request for #{ctype} #{cname} specified"
           end
         else
-          raise BadRequestError, "Unsupported #{ctype} #{cname} specified" unless cspec[:options].include?(:collection)
+          raise BadRequestError, "Unsupported #{ctype} #{cname} specified" unless collection_config.collection?(cname)
         end
         [cname, ctype]
       end

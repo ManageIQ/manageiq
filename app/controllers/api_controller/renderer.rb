@@ -228,7 +228,7 @@ class ApiController
     end
 
     def expand_subcollection?(sc, target)
-      respond_to?(target) && (@req.expand?(sc) || collection_config[sc.to_sym][:options].include?(:show))
+      respond_to?(target) && (@req.expand?(sc) || collection_config.show?(sc))
     end
 
     #
