@@ -1,12 +1,28 @@
 class ApiController
   class CollectionConfig < Config::Options
+    def collection?(collection_name)
+      c(collection_name)[:options].include?(:collection)
+    end
+
     def custom_actions?(collection_name)
       cspec = c(collection_name)
       cspec && cspec[:options].include?(:custom_actions)
     end
 
+    def primary?(collection_name)
+      c(collection_name)[:options].include?(:primary)
+    end
+
+    def show?(collection_name)
+      c(collection_name)[:options].include?(:show)
+    end
+
     def show_as_collection?(collection_name)
       c(collection_name)[:options].include?(:show_as_collection)
+    end
+
+    def supports_http_method?(collection_name, method)
+      Array(c(collection_name)[:verbs]).include?(method)
     end
 
     def subcollections(collection_name)
