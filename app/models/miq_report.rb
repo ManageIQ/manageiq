@@ -209,4 +209,12 @@ class MiqReport < ApplicationRecord
   def add_includes_for_virtual_custom_attributes
     include[:custom_attributes] ||= {} if CustomAttributeMixin.select_virtual_custom_attributes(cols).present?
   end
+
+  # this method removes loading (:custom_attributes => {}) relations for custom_attributes before report is built
+  # :custom_attributes => {} was added in method add_includes_for_virtual_custom_attributes in MiqReport#include
+  # vc_attributes == Virtual Custom Attributes
+  def remove_loading_relations_for_virtual_custom_attributes
+    vc_attributes = CustomAttributeMixin.select_virtual_custom_attributes(cols).present?
+    include.delete(:custom_attributes) if vc_attributes.present? && include && include[:custom_attributes].blank?
+  end
 end

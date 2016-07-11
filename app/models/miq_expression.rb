@@ -901,7 +901,14 @@ class MiqExpression
     else
       model = tables.blank? ? nil : tables.split(".").last.singularize.camelize
       dict_col = model.nil? ? col : [model, col].join(".")
-      ret << Dictionary.gettext(dict_col, :type => :column, :notfound => :titleize) if col
+      column_human = if col
+                       if col.starts_with?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
+                         col.gsub(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX, "")
+                       else
+                         Dictionary.gettext(dict_col, :type => :column, :notfound => :titleize)
+                       end
+                     end
+      ret << column_human if col
     end
     ret = " #{ret}" unless ret.include?(":")
     ret
