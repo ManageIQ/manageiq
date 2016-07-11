@@ -1058,15 +1058,15 @@ class MiqRequestWorkflow
     get_source_and_targets
   end
 
-  def allowed_hosts_obj(_options = {})
+  def allowed_hosts_obj(options = {})
     return [] if (src = resources_for_ui).blank? || src[:ems].nil?
-
+    datacenter = src[:datacenter] || options[:datacenter]
     rails_logger('allowed_hosts_obj', 0)
     st = Time.now
     hosts_ids = find_all_ems_of_type(Host).collect(&:id)
     hosts_ids &= load_ar_obj(src[:storage]).hosts.collect(&:id) unless src[:storage].nil?
-    unless src[:datacenter].nil?
-      dc_node = load_ems_node(src[:datacenter], _log.prefix)
+    if datacenter
+      dc_node = load_ems_node(datacenter, _log.prefix)
       hosts_ids &= find_hosts_under_ci(dc_node.attributes[:object]).collect(&:id)
     end
     return [] if hosts_ids.blank?
