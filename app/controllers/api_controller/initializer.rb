@@ -15,16 +15,12 @@ class ApiController
         @encrypted_objects_checked ||= {}
         return [] unless klass.respond_to?(:encrypted_columns)
         @encrypted_objects_checked[klass.name] ||= klass.encrypted_columns.each do |attr|
-          normalized_attributes[:encrypted][attr] = true
+          Api.normalized_attributes[:encrypted][attr] = true
         end
       end
 
       def user_token_service
         @api_user_token_service
-      end
-
-      def normalized_attributes
-        @normalized_attributes ||= {:time => {}, :url => {}, :resource => {}, :encrypted => {}}
       end
 
       private
@@ -57,7 +53,7 @@ class ApiController
       # Accessed as normalized_attributes[<name>], much faster than array include?
       #
       def gen_attr_type_hash
-        ATTR_TYPES.each { |type, attrs| attrs.each { |a| normalized_attributes[type][a] = true } }
+        ATTR_TYPES.each { |type, attrs| attrs.each { |a| Api.normalized_attributes[type][a] = true } }
         gen_time_attr_type_hash
       end
 
@@ -69,7 +65,7 @@ class ApiController
           next if cspec[:klass].blank?
           klass = cspec[:klass].constantize
           klass.columns_hash.collect  do |name, typeobj|
-            normalized_attributes[:time][name] = true if %w(date datetime).include?(typeobj.type.to_s)
+            Api.normalized_attributes[:time][name] = true if %w(date datetime).include?(typeobj.type.to_s)
           end
         end
       end
