@@ -8,7 +8,7 @@ class ApiController
     # virtual subcollections is added.
 
     def normalize_hash(type, obj, opts = {})
-      ApiController.fetch_encrypted_attribute_names(obj.class)
+      Api.fetch_encrypted_attribute_names(obj.class)
       attrs = normalize_select_attributes(obj, opts)
       result = {}
 
@@ -36,7 +36,7 @@ class ApiController
     end
 
     def normalize_virtual_hash(vtype, obj, options)
-      ApiController.fetch_encrypted_attribute_names(obj.class)
+      Api.fetch_encrypted_attribute_names(obj.class)
       attrs = (obj.respond_to?(:attributes) ? obj.attributes.keys : obj.keys)
       attrs.each_with_object({}) do |k, res|
         value = normalize_virtual(vtype, k, obj[k], options)

@@ -8,20 +8,6 @@ class ApiController
     end
 
     module ClassMethods
-      #
-      # Let's fetch encrypted attribute names of objects being rendered if not already done
-      #
-      def fetch_encrypted_attribute_names(klass)
-        return [] unless klass.respond_to?(:encrypted_columns)
-        encrypted_objects_checked[klass.name] ||= klass.encrypted_columns.each do |attr|
-          Api.normalized_attributes[:encrypted][attr] = true
-        end
-      end
-
-      def encrypted_objects_checked
-        @encrypted_objects_checked ||= {}
-      end
-
       private
 
       def log_kv(key, val, pref = "")
