@@ -83,18 +83,18 @@ describe ManageIQ::Providers::Azure::CloudManager::Provision do
       end
 
       context "nic settings" do
-        it "with floating_ip" do
+        it "use existing floating_ip and assign to network profile" do
           allow(subject).to receive(:floating_ip).and_return(floating_ip)
           floating_ip.network_port = network_port
           expect(subject.prepare_for_clone_task[:properties][:networkProfile][:networkInterfaces][0][:id]).to eq(network_port.ems_ref)
         end
 
-        it "without floating_ip" do
+        it "without floating_ip create new nic and assign to network profile" do
           allow(floating_ip).to receive(:floating_ip).and_return(nil)
           expect(subject.prepare_for_clone_task[:properties][:networkProfile][:networkInterfaces][0][:id]).to eq(nic_id)
         end
 
-        it "with floating_ip without network_port" do
+        it "with floating_ip without network_port create new nic and assign to network profile" do
           allow(subject).to receive(:floating_ip).and_return(floating_ip)
           floating_ip.network_port = nil
           expect(subject.prepare_for_clone_task[:properties][:networkProfile][:networkInterfaces][0][:id]).to eq(nic_id)

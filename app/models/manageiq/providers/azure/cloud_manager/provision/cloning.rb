@@ -47,7 +47,8 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
   end
 
   def prepare_for_clone_task
-    nic_id = invalid_or_nil_floating_ip? ? create_nic : associated_nic
+    nic_id = associated_nic || create_nic
+
     target_uri, source_uri, os = gather_storage_account_properties
 
     cloud_options =
@@ -100,12 +101,8 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
     source.description.split("\\")[1]
   end
 
-  def invalid_or_nil_floating_ip?
-    floating_ip.nil? || floating_ip.network_port.nil?
-  end
-
   def associated_nic
-    floating_ip.network_port.ems_ref
+    floating_ip.try(:network_port).try(:ems_ref)
   end
 
   def create_nic
