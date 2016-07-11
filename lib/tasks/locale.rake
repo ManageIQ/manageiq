@@ -129,5 +129,7 @@ namespace :locale do
     File.unlink(attributes_file) if File.exist?(attributes_file)
 
     Rake::Task['gettext:store_model_attributes'].invoke
+
+    FileUtils.mv(attributes_file, 'config/model_attributes.rb')
   end
 end
