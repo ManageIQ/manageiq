@@ -202,7 +202,7 @@ module Rbac
       _log.debug("New Find options: #{find_options.inspect}")
     end
     targets     = method_with_scope(scope, find_options)
-    auth_count  = scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count
+    auth_count  = targets.except(:offset, :limit, :order).count
 
     return targets, auth_count
   end
@@ -246,9 +246,10 @@ module Rbac
     targets = klass.where(cond).where(find_options[:condition])
                 .includes(find_options[:include]).references(find_options[:include])
                 .group(find_options[:group]).order(find_options[:order])
-                .offset(find_options[:offset]).limit(find_options[:limit]).to_a
+                .offset(find_options[:offset]).limit(find_options[:limit])
+    auth_count = targets.except(:offset, :limit, :order).count(:all)
 
-    [targets, targets.length, targets.length]
+    return targets, auth_count
   end
 
   def self.find_options_for_tenant(scope, user, miq_group, find_options)
@@ -282,7 +283,7 @@ module Rbac
 
   def self.find_targets_without_rbac(scope, find_options)
     targets    = method_with_scope(scope, find_options)
-    auth_count = find_options[:limit] ? scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count : targets.length
+    auth_count = find_options[:limit] ? targets.except(:offset, :limit, :order).count : targets.length
 
     return targets, auth_count
   end
