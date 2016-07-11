@@ -40,6 +40,83 @@ shared_examples "custom_report_with_custom_attributes" do |base_report, custom_a
 end
 
 describe MiqReport do
+  context "report with virtual dynamic custom attributes" do
+    let(:options) { {:targets_hash => true, :userid => "admin"} }
+    let(:custom_column_key_1)   { 'ATTR_Name_1' }
+    let(:custom_column_key_2)   { 'ATTR_Name_2' }
+    let(:custom_column_value) { 'value1' }
+    let(:user) { FactoryGirl.create(:user_with_group) }
+    let!(:vm_1) { FactoryGirl.create(:vm_vmware) }
+    let!(:vm_2) { FactoryGirl.create(:vm_vmware) }
+    let(:virtual_column_key_1) { "#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}ATTR_Name_1" }
+    let(:virtual_column_key_2) { "#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}ATTR_Name_2" }
+    let(:miq_task)             { FactoryGirl.create(:miq_task) }
+
+    subject! do
+      FactoryGirl.create(:miq_custom_attribute, :resource => vm_1, :name => custom_column_key_1,
+                         :value => custom_column_value)
+      FactoryGirl.create(:miq_custom_attribute, :resource => vm_2, :name => custom_column_key_2,
+                         :value => custom_column_value)
+    end
+
+    before do
+      EvmSpecHelper.local_miq_server
+    end
+
+    let(:report) do
+      MiqReport.new(
+        :name => "Custom VM report", :title => "Custom VM report", :rpt_group => "Custom", :rpt_type => "Custom",
+        :db        => "ManageIQ::Providers::InfraManager::Vm",
+        :cols      => %w(name virtual_custom_attribute_ATTR_Name_1 virtual_custom_attribute_ATTR_Name_2),
+        :include   => {:custom_attributes => {}},
+        :col_order => %w(name virtual_custom_attribute_ATTR_Name_1 virtual_custom_attribute_ATTR_Name_2),
+        :headers   => ["Name", custom_column_key_1, custom_column_key_1],
+        :order     => "Ascending"
+      )
+    end
+
+    it "generates report with dynamic custom attributes" do
+      report.queue_generate_table(:userid => user.userid)
+      report._async_generate_table(miq_task.id, :userid => user.userid, :mode => "async",
+                                                :report_source => "Requested by user")
+
+      report_result = report.table.data.map do |x|
+        x.data.delete("id")
+        x.data
+      end
+
+      expected_results = []
+      expected_results.push("name" => vm_1.name, virtual_column_key_1 => custom_column_value,
+                            virtual_column_key_2 => nil)
+
+      expected_results.push("name" => vm_2.name, virtual_column_key_1 => nil,
+                            virtual_column_key_2 => custom_column_value)
+
+      expect(report_result).to match_array(expected_results)
+    end
+
+    let(:exp) { MiqExpression.new("IS NOT EMPTY" => {"field" => "#{vm_1.type}-#{virtual_column_key_1}"}) }
+
+    it "generates report with dynamic custom attributes with MiqExpression filtering" do
+      report.conditions = exp
+
+      report.queue_generate_table(:userid => user.userid)
+      report._async_generate_table(miq_task.id, :userid => user.userid, :mode => "async",
+                                                :report_source => "Requested by user")
+
+      report_result = report.table.data.map do |x|
+        x.data.delete("id")
+        x.data
+      end
+
+      expected_results = []
+      expected_results.push("name" => vm_1.name, virtual_column_key_1 => custom_column_value,
+                            virtual_column_key_2 => nil)
+
+      expect(report_result).to match_array(expected_results)
+    end
+  end
+
   context "Host and MiqCustomAttributes" do
     include_examples "custom_report_with_custom_attributes", "Host", :miq_custom_attribute
   end
