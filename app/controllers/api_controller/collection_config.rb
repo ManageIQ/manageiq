@@ -51,6 +51,12 @@ class ApiController
       referenced_identifiers[product_feature_name]
     end
 
+    def collections_with_description
+      each_with_object({}) do |(collection, cspec), result|
+        result[collection] = cspec[:description] if cspec[:options].include?(:collection)
+      end
+    end
+
     private
 
     def names_for_features
