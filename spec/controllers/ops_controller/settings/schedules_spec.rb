@@ -144,5 +144,16 @@ describe OpsController do
       filtered_list = controller.send(:build_filtered_item_list, "storage", "storage")
       expect(filtered_list.first).to include(storage.name)
     end
+
+    it "returns a filtered item list for ems providers that have hosts" do
+      controller.instance_variable_set(:@settings, settings)
+      ems_cloud = FactoryGirl.create(:ems_cloud)
+      ems_infra_no_hosts = FactoryGirl.create(:ems_openstack_infra)
+      ems_infra_with_hosts = FactoryGirl.create(:ems_openstack_infra_with_stack)
+      filtered_list = controller.send(:build_filtered_item_list, "host", "ems")
+      expect(filtered_list).not_to include(ems_cloud.name)
+      expect(filtered_list).not_to include(ems_infra_no_hosts.name)
+      expect(filtered_list.first).to include(ems_infra_with_hosts.name)
+    end
   end
 end
