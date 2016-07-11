@@ -198,8 +198,8 @@ describe OpsController do
 
           expect(assigns(:flash_array)).to eq [
             {
-              :message  => 'EVM Server no longer exists',
-              :level    => :error
+              :message => 'EVM Server no longer exists',
+              :level   => :error
             }
           ]
         end
@@ -207,15 +207,15 @@ describe OpsController do
 
       context "server doesn't exist" do
         it 'should set the flash saying that server no longer exists' do
-          controller.instance_variable_set(:@sb, { :diag_selected_id => -100500 })
+          controller.instance_variable_set(:@sb, :diag_selected_id => -100500)
           expect(controller).to receive :refresh_screen
 
           controller.send(:delete_server)
 
           expect(assigns(:flash_array)).to eq [
             {
-              :message  => 'The selected EVM Server was deleted',
-              :level    => :success
+              :message => 'The selected EVM Server was deleted',
+              :level   => :success
             }
           ]
         end
