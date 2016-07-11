@@ -408,7 +408,8 @@ module Rbac
       ids_clause = ["#{klass.table_name}.id IN (?)", target_ids] if klass.respond_to?(:table_name)
     else # targets is a scope, class, or AASM class (VimPerformanceDaily in particular)
       targets = to_class(targets)
-      targets = targets.all if targets < ActiveRecord::Base
+      # could just call all on everything, but that will display deprecation warnings
+      targets = targets.all if targets < ActiveRecord::Base || targets.kind_of?(ActsAsArModel)
 
       scope = apply_scope(targets, scope)
 
@@ -459,12 +460,7 @@ module Rbac
   end
 
   def self.method_with_scope(ar_scope, options)
-    # for the most part, it is just asking if it extends ActsAsArModel
-    if ar_scope.try(:instances_are_derived?)
-      ar_scope.all(options)
-    else
-      ar_scope.apply_legacy_finder_options(options)
-    end
+    ar_scope.apply_legacy_finder_options(options)
   end
 
   def self.apply_scope(klass, scope)
