@@ -382,7 +382,7 @@ module MiqAeEngine
       invoke_method(ns, klass, method_name, MiqAeUri.query2hash(query))
     end
 
-    def uri2value(uri)
+    def uri2value(uri, required = false)
       scheme, userinfo, host, port, registry, path, opaque, query, fragment = MiqAeUri.split(uri)
 
       if scheme == 'miqaedb'
@@ -405,6 +405,11 @@ module MiqAeEngine
         frags          = fragment.split('.')
         attribute_name = frags.shift
         methods        = frags
+
+        if required && !o.attributes.key?(attribute_name.downcase)
+          raise MiqAeException::AttributeNotFound, "Attribute #{attribute_name} not found for object [#{path}]"
+        end
+
         value          = o.attributes[attribute_name.downcase]
         begin
           methods.each { |meth| value = call_method(value, meth) }
@@ -475,10 +480,10 @@ module MiqAeEngine
       aem
     end
 
-    def get_value(f, type = nil)
+    def get_value(f, type = nil, required = false)
       value = f['value']
       value = f['default_value'] if value.blank?
-      value = substitute_value(value, type) if f['substitute'] == true
+      value = substitute_value(value, type, required) if f['substitute'] == true
       value
     end
 
@@ -531,11 +536,11 @@ module MiqAeEngine
       value
     end
 
-    def substitute_value(value, _type = nil)
+    def substitute_value(value, _type = nil, required = false)
       Benchmark.current_realtime[:substitution_count] += 1
       Benchmark.realtime_block(:substitution_time) do
         value = value.gsub(RE_SUBST) do |_s|
-          subst   = uri2value($1)
+          subst   = uri2value($1, required)
           subst &&= subst.to_s
           # This encoding of relationship is not needed, until we can get a valid use case
           # Based on RFC 3986 Section 2.4 "When to Encode or Decode"
@@ -551,7 +556,7 @@ module MiqAeEngine
     def process_assertion(f, message, args)
       Benchmark.current_realtime[:assertion_count] += 1
       Benchmark.realtime_block(:assertion_time) do
-        assertion = get_value(f)
+        assertion = get_value(f, :aetype_assertion, true)
         return if assertion.blank?
 
         $miq_ae_logger.info("Evaluating substituted assertion [#{assertion}]")
