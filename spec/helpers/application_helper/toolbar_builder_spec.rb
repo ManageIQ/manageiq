@@ -577,7 +577,7 @@ describe ApplicationHelper do
       end
     end
 
-    ["host_miq_request_new", "vm_miq_request_new", "vm_clone", "vm_publish", "vm_pre_prov"].each do |id|
+    ["host_miq_request_new", "vm_miq_request_new", "vm_clone", "vm_pre_prov"].each do |id|
       it "when with #{id}" do
         @id = id
         allow(user).to receive(:role_allows?).and_return(true)
@@ -1150,7 +1150,7 @@ describe ApplicationHelper do
         allow(user).to receive(:role_allows?).and_return(true)
       end
 
-      %w(vm_migrate vm_publish).each do |id|
+      %w(vm_migrate).each do |id|
         context "and id = #{id}" do
           before { @id = id }
 
@@ -1785,7 +1785,7 @@ describe ApplicationHelper do
     it "hides Lifecycle options in archived VMs list" do
       allow(ApplicationHelper).to receive(:get_record_cls).and_return(nil)
       @sb = {:trees => {:vandt_tree => {:active_node => "xx-arch"}}}
-      %w(vm_clone vm_publish vm_migrate).each do |tb_button|
+      %w(vm_clone vm_migrate).each do |tb_button|
         expect(build_toolbar_hide_button(tb_button)).to be_truthy
       end
     end
@@ -1793,7 +1793,7 @@ describe ApplicationHelper do
     it "hides Lifecycle options in orphaned VMs list" do
       allow(ApplicationHelper).to receive(:get_record_cls).and_return(nil)
       @sb = {:trees => {:vandt_tree => {:active_node => "xx-orph"}}}
-      %w(vm_clone vm_publish vm_migrate).each do |tb_button|
+      %w(vm_clone vm_migrate).each do |tb_button|
         expect(build_toolbar_hide_button(tb_button)).to be_truthy
       end
     end
@@ -1801,7 +1801,7 @@ describe ApplicationHelper do
     it "hides Lifecycle options for archived VMs" do
       @record = FactoryGirl.create(:vm_microsoft)
       allow(@record).to receive(:archived?).and_return(true)
-      %w(vm_clone vm_publish vm_migrate).each do |tb_button|
+      %w(vm_clone vm_migrate).each do |tb_button|
         expect(build_toolbar_hide_button(tb_button)).to be_truthy
       end
     end
@@ -1809,7 +1809,7 @@ describe ApplicationHelper do
     it "hides Lifecycle options for orphaned VMs" do
       @record = FactoryGirl.create(:vm_microsoft)
       allow(@record).to receive(:orphaned?).and_return(true)
-      %w(vm_clone vm_publish vm_migrate).each do |tb_button|
+      %w(vm_clone vm_migrate).each do |tb_button|
         expect(build_toolbar_hide_button(tb_button)).to be_truthy
       end
     end
