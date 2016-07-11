@@ -177,6 +177,12 @@ describe ActsAsArQuery do
   # - [X] size
   # - [X] take
 
+  describe "klass" do
+    it "is the model" do
+      expect(query.klass).to eq(model)
+    end
+  end
+
   describe "#instances_are_derived?" do
     it "is derived" do
       expect(query).to be_instances_are_derived
