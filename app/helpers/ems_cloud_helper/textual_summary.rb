@@ -122,7 +122,14 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_security_groups
-    @record.security_groups
+    label = ui_lookup(:tables => "security_groups")
+    num = @ems.number_of(:security_groups)
+    h = {:label => label, :image => "security_group", :value => num}
+    if num > 0 && role_allows(:feature => "security_group_show_list")
+      h[:link] = ems_cloud_path(@ems.id, :display => 'security_groups')
+      h[:title] = _("Show all %{label}") % {:label => label}
+    end
+    h
   end
 
   def textual_zone
