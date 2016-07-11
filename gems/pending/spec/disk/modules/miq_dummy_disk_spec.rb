@@ -85,7 +85,7 @@ describe MiqDummyDisk do
       end
 
       it "should return a dummy string" do
-        expect(@dummy_disk.d_write(0, "12345", @dummy_string.length)).to eq(@dummy_string.length)
+        expect(@dummy_disk.d_write(0, @dummy_string, @dummy_string.length)).to eq(@dummy_string.length)
       end
     end
 
