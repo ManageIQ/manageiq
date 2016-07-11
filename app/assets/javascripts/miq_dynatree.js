@@ -429,9 +429,9 @@ function miqOnDblClickNoBaseExpand(node, _event) {
 
 // OnClick handler for Server Roles Tree
 function miqOnClickServerRoles(id) {
-  var typ = id.split('_')[0]; // Break apart the node ids
+  var typ = id.split('-')[0]; // Break apart the node ids
   switch (typ) {
-    case 'server':
+    case 'svr':
     case 'role':
     case 'asr':
       miqJqueryRequest(ManageIQ.dynatree.clickUrl + '?id=' + id, {beforeSend: true, complete: true});

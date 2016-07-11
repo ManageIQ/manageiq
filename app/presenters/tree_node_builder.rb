@@ -24,18 +24,18 @@ class TreeNodeBuilder
   #   :open_nodes -- Tree node ids of currently open nodes
   #   FIXME: fill in missing docs
   #
-  def self.build(object, parent_id, options)
-    builder = new(object, parent_id, options)
+  def self.build(object, parent_id, options, sandbox)
+    builder = new(object, parent_id, options, sandbox)
     builder.build
   end
 
-  def self.build_id(object, parent_id, options)
-    builder = new(object, parent_id, options)
+  def self.build_id(object, parent_id, options, sandbox)
+    builder = new(object, parent_id, options, sandbox)
     builder.build_id
   end
 
-  def initialize(object, parent_id, options)
-    @object, @parent_id, @options = object, parent_id, options
+  def initialize(object, parent_id, options, sandbox)
+    @object, @parent_id, @options, @sb = object, parent_id, options, sandbox
   end
 
   attr_reader :object, :parent_id, :options
@@ -46,6 +46,7 @@ class TreeNodeBuilder
 
   def build
     case object
+    when AssignedServerRole   then assigned_server_role_node(object)
     when AvailabilityZone     then generic_node(object.name,
                                                 "availability_zone.png",
                                                 _("Availability Zone: %{name}") % {:name => object.name})
@@ -139,6 +140,7 @@ class TreeNodeBuilder
     when ScanItemSet          then generic_node(object.name, "scan_item_set.png")
     when Service              then generic_node(object.name, object.picture ? "../../../pictures/#{object.picture.basename}" : "service.png")
     when ServiceResource      then generic_node(object.resource_name, object.resource_type == "VmOrTemplate" ? "vm.png" : "service_template.png")
+    when ServerRole           then server_role_node(object)
     when ServiceTemplate      then service_template_node
     when ServiceTemplateCatalog then service_template_catalog_node
     when Snapshot             then snapshot_node
@@ -459,5 +461,65 @@ class TreeNodeBuilder
     else
       generic_node(text, image)
     end
+  end
+
+  def assigned_server_role_node(object)
+    @node = {
+      :key      => build_object_id,
+      :addClass => "dynatree-title",
+      :title    => options[:tree] == :servers_by_role_tree ?
+        "#{Dictionary.gettext('MiqServer', :type => :model, :notfound => :titleize)}: #{object.name} [#{object.id}]" :
+        "Role: #{object.server_role.description}"
+    }
+
+    if object.master_supported?
+      priority = case object.priority
+      when 1
+        "primary, "
+      when 2
+        "secondary, "
+      else
+        ""
+      end
+    end
+    if object.active? && object.miq_server.started?
+      @node[:icon] = ActionController::Base.helpers.image_path("100/on.png")
+      @node[:title] += _(" (%{priority}active, PID=%{number})") % {:priority => priority, :number => object.miq_server.pid}
+    else
+      if object.miq_server.started?
+        @node[:icon] = ActionController::Base.helpers.image_path("100/suspended.png")
+        @node[:title] += _(" (%{priority}available, PID=%{number})") % {:priority => priority,
+                                                                        :number   => object.miq_server.pid}
+      else
+        @node[:icon] = ActionController::Base.helpers.image_path("100/off.png")
+        @node[:title] += _(" (%{priority}unavailable)") % {:priority => priority}
+      end
+    end
+    if object.server_role.regional_role?
+      @node[:addClass] = "cfme-opacity-node"
+    end
+    @node
+  end
+
+
+  def server_role_node(object)
+    status = "stopped"
+    object.assigned_server_roles.where(:active => true).each do |asr|            # Go thru all active assigned server roles
+      if asr.miq_server.started?        # Find a started server
+        if @sb[:parent_kls] == "MiqRegion" || # it's in the region
+          (@sb[:parent_kls] == "Zone" && asr.miq_server.my_zone == @sb[:parent_name]) # it's in the zone
+          status = "active"
+          break
+        end
+      end
+    end
+    @node = {
+      :key    => build_object_id,
+      :title  => _("Role: %{description} (%{status})") % {:description => object.description, :status => status},
+      :icon   => ActionController::Base.helpers.image_path("100/role-#{object.name}.png"),
+      :expand => true
+    }
+    @node
+    tooltip(_("Role: %{description} (%{status})") % {:description => object.description, :status => status})
   end
 end

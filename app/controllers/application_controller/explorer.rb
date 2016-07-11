@@ -194,7 +194,7 @@ module ApplicationController::Explorer
   end
 
   def x_build_node_id(object, options = {})
-    TreeNodeBuilder.build_id(object, nil, options)
+    TreeNodeBuilder.build_id(object, nil, options, @sb)
   end
 
   # Add the children of a node that is being expanded (autoloaded), called by generic tree_autoload method

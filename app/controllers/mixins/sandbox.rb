@@ -78,12 +78,14 @@ module Sandbox
     configuration_manager_providers_tree
     rbac_tree
     reports_tree
+    roles_by_server_tree
     roles_tree
     rsop_tree
     sa_tree
     sandt_tree
     savedreports_tree
     schedules_tree
+    servers_by_role_tree
     settings_tree
     snapshot_tree
     stcat_tree
