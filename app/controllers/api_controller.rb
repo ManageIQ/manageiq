@@ -1,3 +1,8 @@
+#
+# Initializing REST API environment, called once @ startup
+#
+Api::Initializer.new.go
+
 class ApiController < ApplicationController
   skip_before_action :get_global_session_data
   skip_after_action :set_global_session_data
@@ -135,11 +140,6 @@ class ApiController < ApplicationController
     @prefix          = "/#{@module}"
     @api_config      = VMDB::Config.new("vmdb").config[@module.to_sym] || {}
   end
-
-  #
-  # Initializing REST API environment, called once @ startup
-  #
-  include_concern 'Initializer'
 
   before_action :parse_api_request, :log_api_request, :validate_api_request
   after_action :log_api_response
