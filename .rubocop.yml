@@ -28,6 +28,9 @@ GlobalVars:
 AllCops:
   Exclude:
     - gems/pending/VMwareWebService/wsdl41/vimws25MappingRegistry.rb
+    - db/schema.rb
+    - db/migrate/*.rb
+    - vendor/**/*
 ClassAndModuleCamelCase:
   Exclude:
     - lib/miq_automation_engine/service_models/*.rb
