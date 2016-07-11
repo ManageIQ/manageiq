@@ -28,7 +28,7 @@ group :ui_dependencies do
 
   # Modified gems (forked on Github)
   gem "jquery-rjs",                    "=0.1.1",                       :git => "git://github.com/amatsuda/jquery-rjs.git", :ref => "1288c09"
-  gem 'patternfly-sass', :github => 'manageiq/patternfly-sass', :branch => 'tertiary-3.5.1'
+  gem 'patternfly-sass', :git => "git://github.com/ManageIQ/patternfly-sass", :branch => "tertiary-3.5.1"
 end
 
 # when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
