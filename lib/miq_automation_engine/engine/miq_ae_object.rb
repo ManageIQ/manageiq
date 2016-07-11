@@ -30,10 +30,6 @@ module MiqAeEngine
     # Default conversion for Service Models
     SM_LOOKUP         = Hash.new { |_, k| k.classify }.merge(
       'ems'                    => 'ExtManagementSystem',
-      'vm'                     => 'Vm',
-      'user'                   => 'User',
-      'storage'                => 'Storage',
-      'host'                   => 'Host',
       'host_provision'         => 'MiqHostProvision',
       'host_provision_request' => 'MiqHostProvisionRequest',
       'policy'                 => 'MiqPolicy',
