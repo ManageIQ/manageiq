@@ -39,6 +39,20 @@ class ActsAsArQuery
   # - [X] size
   # - [X] take
 
+  # private api
+  def append_hash_arg(*val)
+    symbol = __callee__
+    val = val.flatten
+    if val.first.kind_of?(Hash)
+      raise ArgumentError, "Need to support #{symbol}(#{val.class.name})"
+    end
+    dup.tap do |r|
+      r.options[symbol] = r.options[symbol] ? (r.options[symbol] + val) : val
+    end
+  end
+
+  # public api
+
   def initialize(klass, opts = {})
     @model   = klass
     @options = opts || {}
@@ -72,35 +86,10 @@ class ActsAsArQuery
 
   # @param val [Array] for includes
   # TODO: support hash
-  def includes(*val)
-    if val.first.kind_of?(Hash)
-      raise ArgumentError, "Need to support #{__method__}(#{val.class.name})"
-    end
-    val = val.flatten
-    dup.tap do |r|
-      if r.options[:includes]
-        r.options[:includes] += val
-      else
-        r.options[:includes] = val
-      end
-    end
-  end
+  alias includes append_hash_arg
 
   # @param val Array for includes
-  def references(*val)
-    if val.first.kind_of?(Hash)
-      raise ArgumentError, "Need to support #{__method__}(#{val.class.name})"
-    end
-
-    val = val.flatten
-    dup.tap do |r|
-      if r.options[:references]
-        r.options[:references] += val
-      else
-        r.options[:references] = val
-      end
-    end
-  end
+  alias references append_hash_arg
 
   # @param [Integer] val
   def limit(val)
@@ -112,27 +101,14 @@ class ActsAsArQuery
   # @param [String, Symbol, Arel] val
   # TODO: support Hash
   # TODO: support mixing?
-  def order(*val)
-    if val.first.kind_of?(Hash)
-      raise ArgumentError, "Need to support #{__method__}(#{val.class.name})"
-    end
-
-    val = val.flatten
-    dup.tap do |r|
-      if r.options[:order]
-        r.options[:order] += val
-      else
-        r.options[:order] = val
-      end
-    end
-  end
+  alias order append_hash_arg
 
   def reorder(*val)
+    val = val.flatten
     if val.first.kind_of?(Hash)
-      raise ArgumentError, "Need to support #{__method__}(#{val.class.name})"
+      raise ArgumentError, "Need to support #{__callee__}(#{val.class.name})"
     end
 
-    val = val.flatten
     dup.tap do |r|
       r.options[:order] = val
     end
@@ -166,20 +142,7 @@ class ActsAsArQuery
 
   # complete
   # @param val [Array<Sting,Symbol>,String, Symbol]
-  def select(*val)
-    if val.first.kind_of?(Hash)
-      raise ArgumentError, "Need to support #{__method__}(#{val.class.name})"
-    end
-
-    val = val.flatten
-    dup.tap do |r|
-      if r.options[:select]
-        r.options[:select] += val
-      else
-        r.options[:select] = val
-      end
-    end
-  end
+  alias select append_hash_arg
 
   # execution methods
   # these methods execue the query
