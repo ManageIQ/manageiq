@@ -1369,30 +1369,6 @@ describe ApplicationHelper do
         end
       end
 
-      context "and id = vm_scan" do
-        before do
-          @id = "vm_scan"
-          @record = FactoryGirl.create(:vm_vmware)
-          allow(@record).to receive(:has_proxy?).and_return(true)
-          allow(@record).to receive_messages(:archived? => false)
-          allow(@record).to receive_messages(:orphaned? => false)
-        end
-
-        it "and !@record.has_proxy?" do
-          allow(@record).to receive(:has_proxy?).and_return(false)
-          expect(subject).to be_truthy
-        end
-
-        it "and @record.has_proxy?" do
-          expect(subject).to be_falsey
-        end
-
-        it "and @record.has_proxy? and is archived" do
-          allow(@record).to receive_messages(:archived? => true)
-          expect(subject).to eq(true)
-        end
-      end
-
       ["perf_refresh", "perf_reload", "vm_perf_refresh", "vm_perf_reload"].each do |id|
         context "and id = #{id}" do
           before do
@@ -1658,24 +1634,6 @@ describe ApplicationHelper do
           allow(user).to receive(:role_allows?).and_return(false)
           expect(subject).to be_truthy
         end
-      end
-    end
-
-    context "when id == vm_scan" do
-      before do
-        @id = "vm_scan"
-      end
-
-      it "vm_scan button should be hidden when user does not have access to vm_rules feature" do
-        feature = EvmSpecHelper.specific_product_features("vm_infra_explorer")
-        login_as FactoryGirl.create(:user, :features => feature)
-        expect(subject).to be_truthy
-      end
-
-      it "vm_scan button should be displayed when user does has access to vm_scan feature" do
-        feature = EvmSpecHelper.specific_product_features("vm_infra_explorer", "vm_scan")
-        login_as FactoryGirl.create(:user, :features => feature)
-        expect(subject).to be_falsey
       end
     end
 
@@ -2406,21 +2364,6 @@ describe ApplicationHelper do
         end
       end
 
-      context "and id = vm_scan" do
-        before do
-          @id = "vm_scan"
-          @record = FactoryGirl.create(:vm_vmware, :vendor => "vmware")
-          allow(@record).to receive_messages(:archived? => false)
-          allow(@record).to receive_messages(:orphaned? => false)
-          allow(@record).to receive_messages(:has_active_proxy? => true)
-        end
-        it "when no active proxy" do
-          allow(@record).to receive_messages(:has_active_proxy? => false)
-          expect(subject).to eq("No active SmartProxies found to analyze this VM")
-        end
-        it_behaves_like 'default case'
-      end
-
       context "and id = instance_scan" do
         before do
           @id = "instance_scan"
@@ -2861,19 +2804,6 @@ describe ApplicationHelper do
       it "when input[:onwhen] exists" do
         @input[:onwhen] = '1+'
         expect(subject).to have_key(:onwhen)
-      end
-    end
-
-    context "parameters correctness" do
-      it "Ensures that build_toolbar_disable_button method is called with correct parameters" do
-        button = {:child_id => "vm_scan",
-                  :id       => "vm_vmdb_choice__vm_scan",
-                  :type     => :button}
-        input = {:button    => "vm_scan",
-                 :url_parms => "main_div"}
-        b = _toolbar_builder
-        expect(b).to receive(:build_toolbar_disable_button).with("vm_scan")
-        b.send(:apply_common_props, button, input)
       end
     end
   end
