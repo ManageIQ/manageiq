@@ -24,7 +24,7 @@ class ApiController
       end
 
       def collection
-        @params[:collection]
+        @collection ||= path.split("/")[version_override? ? 3 : 2]
       end
 
       def c_id
@@ -51,7 +51,7 @@ class ApiController
       end
 
       def subcollection
-        @params[:subcollection]
+        @subcollection ||= path.split("/")[version_override? ? 5 : 4]
       end
 
       def s_id
