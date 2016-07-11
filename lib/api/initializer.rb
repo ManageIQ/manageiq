@@ -1,18 +1,5 @@
 module Api
   class Initializer
-    #
-    # Custom normalization on these attribute types.
-    # Converted to normalized_attributes hash at init, much faster access.
-    #
-    ATTR_TYPES = {
-      :time      => %w(expires_on),
-      :url       => %w(href),
-      :resource  => %w(image_href),
-      :encrypted => %w(password) |
-                    ::MiqRequestWorkflow.all_encrypted_options_fields.map(&:to_s) |
-                    ::Vmdb::Settings::PASSWORD_FIELDS.map(&:to_s)
-    }
-
     def go
       init_env
       gen_attr_type_hash
@@ -45,7 +32,7 @@ module Api
     # Accessed as normalized_attributes[<name>], much faster than array include?
     #
     def gen_attr_type_hash
-      ATTR_TYPES.each { |type, attrs| attrs.each { |a| Api.normalized_attributes[type][a] = true } }
+      attr_types.each { |type, attrs| attrs.each { |a| Api.normalized_attributes[type][a] = true } }
       gen_time_attr_type_hash
     end
 
@@ -60,6 +47,23 @@ module Api
           Api.normalized_attributes[:time][name] = true if %w(date datetime).include?(typeobj.type.to_s)
         end
       end
+    end
+
+    private
+
+    #
+    # Custom normalization on these attribute types.
+    # Converted to normalized_attributes hash at init, much faster access.
+    #
+    def attr_types
+      @attr_types ||= {
+        :time      => %w(expires_on),
+        :url       => %w(href),
+        :resource  => %w(image_href),
+        :encrypted => %w(password) |
+                      ::MiqRequestWorkflow.all_encrypted_options_fields.map(&:to_s) |
+                      ::Vmdb::Settings::PASSWORD_FIELDS.map(&:to_s)
+      }
     end
   end
 end
