@@ -129,9 +129,17 @@ class ProviderForemanController < ApplicationController
   end
 
   def tagging
-    assert_privileges("provider_foreman_configured_system_tag") if x_active_accord == :configuration_manager_providers
-    assert_privileges("configured_system_tag") if x_active_accord == :cs_filter
-    tagging_edit('ConfiguredSystem', false)
+    case x_active_accord
+    when :configuration_manager_providers
+      assert_privileges("provider_foreman_configured_system_tag") if x_active_accord == :configuration_manager_providers
+      tagging_edit('ConfiguredSystem', false)
+    when :cs_filter
+      assert_privileges("configured_system_tag") if x_active_accord == :cs_filter
+      tagging_edit('ConfiguredSystem', false)
+    when :configuration_scripts
+      assert_privileges("configuration_script_tag") if x_active_accord == :configuration_scripts
+      tagging_edit('ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript', false)
+    end
     render_tagging_form
   end
 
@@ -480,7 +488,7 @@ class ProviderForemanController < ApplicationController
       get_node_info("root")
     else
       show_record(from_cid(id))
-      model_string = ui_lookup(:model => (model || TreeBuilder.get_model_for_prefix(@nodetype))).to_s
+      model_string = ui_lookup(:model => @record.class.to_s)
       @right_cell_text = _("%{model} \"%{name}\"") % {:name => @record.name, :model => model_string}
     end
   end
@@ -741,7 +749,7 @@ class ProviderForemanController < ApplicationController
   def render_tagging_form
     return if %w(cancel save).include?(params[:button])
     @in_a_form = true
-    @right_cell_text = _("Edit Tags for Configured Systems")
+    @right_cell_text = _("Edit Tags")
     clear_flash_msg
     presenter, r = rendering_objects
     update_tagging_partials(presenter, r)
