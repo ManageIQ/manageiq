@@ -172,4 +172,58 @@ module MiqAeObjectSpec
       end
     end
   end
+
+  describe MiqAeObject do
+    context "resolve vmdb objects" do
+      let(:user) { FactoryGirl.create(:user_with_group) }
+      let(:ems) { FactoryGirl.create(:ems_vmware_with_authentication) }
+      let(:vm) { FactoryGirl.create(:vm_vmware, :ext_management_system => ems) }
+      let(:instance_name) { 'FRED' }
+      let(:ae_instances) do
+        {instance_name => {'vm'   => {:value => vm.id},
+                           'user' => {:value => user.id},
+                           'ems'  => {:value => ems.id}}}
+      end
+
+      let(:ae_fields) do
+        {'vm'   => {:aetype => 'attribute', :datatype => 'vm'},
+         'user' => {:aetype => 'attribute', :datatype => 'user'},
+         'ems'  => {:aetype => 'attribute', :datatype => 'ems'}}
+      end
+
+      let(:ae_model) do
+        create_ae_model(:name => 'LUIGI', :ae_class => 'BARNEY',
+                        :ae_namespace => 'A/C',
+                        :ae_fields => ae_fields, :ae_instances => ae_instances)
+      end
+
+      it "instantiate" do
+        ae_model
+        workspace = MiqAeEngine.instantiate('/A/C/BARNEY/FRED', user)
+
+        expect(workspace.root['vm'].name).to eq(vm.name)
+        expect(workspace.root['user'].name).to eq(user.name)
+        expect(workspace.root['ems'].name).to eq(ems.name)
+      end
+
+      it "instantiate raises exception for invalid object ids" do
+        ae_instances[instance_name]['ems'][:value] = 'nada'
+        ae_model
+
+        expect do
+          MiqAeEngine.instantiate('/A/C/BARNEY/FRED', user)
+        end.to raise_exception(MiqAeException::ServiceNotFound)
+      end
+
+      it "instantiate doesn't raise exception for nil values" do
+        ae_instances[instance_name]['ems'][:value] = nil
+        ae_model
+        workspace = MiqAeEngine.instantiate('/A/C/BARNEY/FRED', user)
+
+        expect(workspace.root['vm'].name).to eq(vm.name)
+        expect(workspace.root['user'].name).to eq(user.name)
+        expect(workspace.root['ems']).to be_nil
+      end
+    end
+  end
 end
