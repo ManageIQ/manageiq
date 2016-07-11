@@ -28,15 +28,13 @@ class ApiController
     end
 
     def entrypoint_collections
-      collection_config.sort.collect do |collection_name, collection_specification|
-        if collection_specification[:options].include?(:collection)
-          {
-            :name        => collection_name,
-            :href        => collection_name,
-            :description => collection_specification[:description]
-          }
-        end
-      end.compact
+      collection_config.collections_with_description.sort.collect do |collection_name, description|
+        {
+          :name        => collection_name,
+          :href        => collection_name,
+          :description => description
+        }
+      end
     end
   end
 end
