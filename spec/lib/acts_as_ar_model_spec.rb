@@ -54,4 +54,37 @@ describe ActsAsArModel do
 
     it { expect(sub_class.attribute_names).to be_empty }
   end
+
+  describe ".all" do
+    it "chains through active query" do
+      expect(base_class).to receive(:find).with(:all, {}).and_return([])
+      expect(base_class.all.to_a).to eq([])
+    end
+
+    it "supports where (as an example)" do
+      expect(base_class).to receive(:find).with(:all, :conditions => {:id => 5}).and_return([])
+      expect(base_class.all.where(:id => 5).to_a).to eq([])
+    end
+  end
+
+  describe ".first" do
+    it "chains through active query" do
+      expect(base_class).to receive(:find).with(:first).and_return(nil)
+      expect(base_class.first).to eq(nil)
+    end
+  end
+
+  describe ".last" do
+    it "chains through active query" do
+      expect(base_class).to receive(:find).with(:last).and_return(nil)
+      expect(base_class.last).to eq(nil)
+    end
+  end
+
+  describe ".count" do
+    it "chains through active query" do
+      expect(base_class).to receive(:find).with(:all, {}).and_return([])
+      expect(base_class.count).to eq(0)
+    end
+  end
 end

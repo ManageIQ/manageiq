@@ -143,7 +143,7 @@ class ActsAsArModel
   #
 
   def self.all(*args)
-    find(:all, *args)
+    ActsAsArQuery.new(self, *args)
   end
 
   def self.first(*args)
@@ -155,7 +155,7 @@ class ActsAsArModel
   end
 
   def self.count(*args)
-    all(*args).size
+    all(*args).count
   end
 
   def self.find_by_id(*id)
