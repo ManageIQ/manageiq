@@ -2349,16 +2349,6 @@ describe ApplicationHelper do
         end
       end
 
-      context "and id = instance_scan" do
-        before do
-          @id = "instance_scan"
-          @record = FactoryGirl.create(:vm_amazon, :vendor => "amazon")
-          allow(@record).to receive_messages(:has_active_proxy? => true)
-        end
-        before { allow(@record).to receive(:is_available?).with(:smartstate_analysis).and_return(false) }
-        it_behaves_like 'record with error message', 'smartstate_analysis'
-      end
-
       context "and id = storage_scan" do
         before do
           @id = "storage_scan"
