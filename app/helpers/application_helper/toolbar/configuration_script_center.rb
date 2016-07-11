@@ -11,7 +11,7 @@ class ApplicationHelper::Toolbar::ConfigurationScriptCenter < ApplicationHelper:
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Create Service Dialog from this Job Template'),
           t),
-                ]
+      ]
     ),
     select(
       :provider_foreman_policy_choice,
