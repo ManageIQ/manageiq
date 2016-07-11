@@ -8,5 +8,11 @@ module MiqAeMethodService
 
       ar_method { MiqAeServiceOrchestrationTemplateVnfd.wrap_results(OrchestrationTemplateVnfd.create!(attributes)) }
     end
+
+    def self.destroy(id)
+      vnfd = OrchestrationTemplateVnfd.find(id)
+      vnfd.remote_proxy = true
+      vnfd.destroy
+    end
   end
 end
