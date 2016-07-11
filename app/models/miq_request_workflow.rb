@@ -933,6 +933,7 @@ class MiqRequestWorkflow
   end
 
   def get_ems_respool(node, dh = {}, full_path = "")
+    return if node.nil?
     if node.kind_of?(XmlHash::Element)
       folder = node.attributes[:object]
       if node.name == :ResourcePool
@@ -999,6 +1000,7 @@ class MiqRequestWorkflow
 
   def get_ems_metadata_tree(src)
     @ems_metadata_tree ||= begin
+      return if src[:ems].nil?
       st = Time.zone.now
       result = load_ar_obj(src[:ems]).fulltree_arranged(:except_type => "VmOrTemplate")
       ems_metadata_tree_add_hosts_under_clusters!(result)
@@ -1085,7 +1087,7 @@ class MiqRequestWorkflow
   end
 
   def allowed_hosts_obj(_options = {})
-    return [] if (src = resources_for_ui).blank?
+    return [] if (src = resources_for_ui).blank? || src[:ems].nil?
 
     rails_logger('allowed_hosts_obj', 0)
     st = Time.now
@@ -1106,7 +1108,7 @@ class MiqRequestWorkflow
   end
 
   def allowed_storages(_options = {})
-    return [] if (src = resources_for_ui).blank?
+    return [] if (src = resources_for_ui).blank? || src[:ems].nil?
     hosts = src[:host].nil? ? allowed_hosts_obj({}) : [load_ar_obj(src[:host])]
     return [] if hosts.blank?
 
