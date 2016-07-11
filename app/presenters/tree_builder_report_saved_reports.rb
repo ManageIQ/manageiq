@@ -1,4 +1,24 @@
 class TreeBuilderReportSavedReports < TreeBuilderReportReportsClass
+
+  # Get the children of a dynatree node that is being expanded (autoloaded)
+  #
+  # This overwrites the method defined in app/presters/tree_builder.rb to not
+  # map the SQL query with the records before doing a `count`.  This allows us
+  # to check the size of the tree with a single quick query with out loading
+  # all of the records into memory.
+  def x_get_child_nodes(id)
+    parents = [] # FIXME: parent ids should be provided on autoload as well
+
+    object = node_by_tree_id(id)
+
+    # Save node as open
+    open_node(id)
+
+    tree_state = @tree_state.x_tree(@name)
+    tree_objects = x_get_tree_objects(object, tree_state, false, parents)
+    x_build_tree_with_limit(tree_objects, id, tree_state)
+  end
+
   private
 
   # Overwrites the x_build_node_dynatree method (which is just a wrapper around
