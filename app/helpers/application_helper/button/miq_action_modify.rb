@@ -10,13 +10,10 @@ class ApplicationHelper::Button::MiqActionModify < ApplicationHelper::Button::Ba
     super
 
     if disabled?
-      self[:title] = N_("This %{entity} belongs to a read only %{policy} and cannot be modified") % {
-        :entity => case @view_context.x_node.split("_").last.split('-')[0]
-                   when 'a'  then ui_lookup(:model => "MiqAction")
-                   when 'ev' then ui_lookup(:table => "event")
-                   end,
-        :policy => ui_lookup(:model => "MiqPolicy")
-      }
+      self[:title] = case @view_context.x_node.split("_").last.split('-')[0]
+                     when 'a'  then N_("This Action belongs to a read only Policy and cannot be modified")
+                     when 'ev' then N_("This Event belongs to a read only Policy and cannot be modified")
+                     end
     end
   end
 end
