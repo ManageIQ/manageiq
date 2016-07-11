@@ -42,3 +42,23 @@ shared_examples_for 'vm not powered on' do |message|
     expect(subject).to eq(message)
   end
 end
+
+shared_examples_for 'when record is archived' do |message|
+  it "#{message} will be skipped" do
+    view_context = setup_view_context_with_sandbox({})
+    record = FactoryGirl.create(:vm_microsoft)
+    allow(record).to receive(:archived?).and_return(true)
+    button = described_class.new(view_context, {}, {'record' => record}, {})
+    expect(button.skip?).to be_truthy
+  end
+end
+
+shared_examples_for 'when record is orphaned' do |message|
+  it "#{message} will be skipped" do
+    view_context = setup_view_context_with_sandbox({})
+    record = FactoryGirl.create(:vm_microsoft)
+    allow(record).to receive(:orphaned?).and_return(true)
+    button = described_class.new(view_context, {}, {'record' => record}, {})
+    expect(button.skip?).to be_truthy
+  end
+end
