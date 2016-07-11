@@ -140,8 +140,6 @@ class ApiController < ApplicationController
     @collection_config ||= CollectionConfig.new
   end
 
-  delegate :user_token_service, :to => self
-
   def initialize
     @module          = base_config[:module]
     @name            = base_config[:name]

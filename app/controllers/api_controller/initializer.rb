@@ -19,10 +19,6 @@ class ApiController
         end
       end
 
-      def user_token_service
-        @user_token_service ||= ApiUserTokenService.new(Api::Settings, :log_init => true)
-      end
-
       private
 
       def log_kv(key, val, pref = "")
@@ -44,7 +40,7 @@ class ApiController
 
         $api_log.info("")
         $api_log.info("Dynamic Configuration")
-        user_token_service.api_config.each { |key, val| log_kv(key, val) }
+        Api.user_token_service.api_config.each { |key, val| log_kv(key, val) }
       end
 
       #
