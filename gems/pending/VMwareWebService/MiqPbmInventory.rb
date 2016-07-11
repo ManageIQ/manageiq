@@ -14,7 +14,7 @@ module MiqPbmInventory
     end
   end
 
-  def pbmProfilesByUid
+  def pbmProfilesByUid(_selspec = nil)
     profiles = {}
     return profiles if @pbm_svc.nil?
 
