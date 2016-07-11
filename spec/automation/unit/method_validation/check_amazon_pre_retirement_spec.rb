@@ -23,6 +23,7 @@ describe "amazon_check_pre_retirement Method Validation" do
   end
 
   it "returns 'retry' for running ebs instances" do
+    expect_any_instance_of(Vm).to receive(:refresh_ems).and_return({})
     @vm.hardware = @ebs_hardware
     ws = MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}#amazon", @user)
     expect(ws.root['ae_result']).to eq('retry')
