@@ -687,7 +687,7 @@ class MiqExpression
   end
 
   def self.expand_conditional_clause(klass, cond)
-    return klass.send(:sanitize_sql_for_conditions, cond) unless cond.is_a?(Hash)
+    return klass.send(:sanitize_sql_for_conditions, cond) unless cond.kind_of?(Hash)
 
     cond = klass.predicate_builder.resolve_column_aliases(cond)
     cond = klass.send(:expand_hash_conditions_for_aggregates, cond)

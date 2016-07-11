@@ -753,7 +753,7 @@ class ChargebackController < ApplicationController
       if klass == "enterprise"
         MiqEnterprise.all
       elsif klass == "ext_management_system"
-        ExtManagementSystem.all.reject { |prov| prov.is_a? ManageIQ::Providers::ContainerManager }
+        ExtManagementSystem.all.reject { |prov| prov.kind_of? ManageIQ::Providers::ContainerManager }
       elsif klass == "ems_container"
         ManageIQ::Providers::ContainerManager.all
       else
