@@ -12,22 +12,25 @@ gem "websocket-driver",                "~>0.6.3"
 gem "config",                          "~>1.1.0", :git => "git://github.com/ManageIQ/config.git", :branch => "overwrite_arrays"
 gem "deep_merge",                      "~>1.0.1", :git => "git://github.com/ManageIQ/deep_merge.git", :branch => "overwrite_arrays"
 
+group :ui_dependencies do
+  # Unmodified gems
+  gem "angular-ui-bootstrap-rails",    "~>0.13.0"
+  gem "codemirror-rails",              "~>5.11.1"
+  gem "jquery-hotkeys-rails"
+  gem "jquery-rails",                  "~>4.1.1"
+  gem "lodash-rails",                  "~>3.10.0"
+  gem "sass-rails"
+  gem "sprockets-es6",                 "~>0.9.0",  :require => "sprockets/es6"
+
+  # Modified gems (forked on Github)
+  gem "jquery-rjs",                    "=0.1.1",                       :git => "git://github.com/amatsuda/jquery-rjs.git", :ref => "1288c09"
+  gem 'patternfly-sass', :github => 'manageiq/patternfly-sass', :branch => 'tertiary-3.5.1'
+end
+
 # when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
 unless dependencies.detect { |d| d.name == 'manageiq-providers-amazon' }
   gem "manageiq-providers-amazon", :git => "git://github.com/ManageIQ/manageiq-providers-amazon", :branch => "master"
 end
-
-# Client-side dependencies
-gem "angular-ui-bootstrap-rails",     "~>0.13.0"
-gem "codemirror-rails",               "~>5.11.1"
-gem "jquery-hotkeys-rails"
-gem "jquery-rails",                   "~>4.1.1"
-gem "jquery-rjs",                     "=0.1.1",                       :git => "git://github.com/amatsuda/jquery-rjs.git", :ref => "1288c09"
-gem "lodash-rails",                   "~>3.10.0"
-# gem "patternfly-sass",                "~>3.5.1"
-gem 'patternfly-sass', :github => 'manageiq/patternfly-sass', :branch => 'tertiary-3.5.1'
-gem "sass-rails"
-gem "sprockets-es6",                  "~>0.9.0",  :require => "sprockets/es6"
 
 # Vendored and required
 gem "ruport",                         "=1.7.0",                       :git => "git://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-3"
