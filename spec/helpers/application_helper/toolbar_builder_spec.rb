@@ -1369,26 +1369,6 @@ describe ApplicationHelper do
         end
       end
 
-      context "and id = vm_refresh" do
-        before do
-          @id = "vm_refresh"
-          allow(@record).to receive_messages(:host => double(:vmm_product => "Workstation"), :ext_management_system => true)
-        end
-
-        it "and !@record.ext_management_system & @record.host.vmm_product.downcase != workstation" do
-          allow(@record).to receive_messages(:host => double(:vmm_product => "Server"), :ext_management_system => false)
-          expect(subject).to be_truthy
-        end
-
-        it "and @record.ext_management_system" do
-          expect(subject).to be_falsey
-        end
-
-        it "and @record.host.vmm_product.downcase = workstation" do
-          expect(subject).to be_falsey
-        end
-      end
-
       context "and id = vm_scan" do
         before do
           @id = "vm_scan"
