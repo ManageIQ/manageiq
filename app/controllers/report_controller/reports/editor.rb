@@ -1343,6 +1343,8 @@ module ReportController::Reports::Editor
     user = current_user
     rpt.user = user
     rpt.miq_group = user.current_group
+
+    rpt.add_includes_for_virtual_custom_attributes
   end
 
   def add_field_to_col_order(rpt, field)
@@ -1699,7 +1701,10 @@ module ReportController::Reports::Editor
     pivot_cols = {}
     rpt.col_formats ||= Array.new(rpt.col_order.length)   # Create array of nils if col_formats not present (backward compat)
     rpt.col_order.each_with_index do |col, idx|
-      if !col.include?(".")  # Main table field
+      if col.starts_with?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
+        field_key = rpt.db + "-" + col
+        field_value = col.gsub(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX, "")
+      elsif !col.include?(".")  # Main table field
         field_key = rpt.db + "-" + col
         field_value = friendly_model_name(rpt.db) +
                       Dictionary.gettext(rpt.db + "." + col.split("__").first, :type => :column, :notfound => :titleize)

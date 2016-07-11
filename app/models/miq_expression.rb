@@ -901,7 +901,14 @@ class MiqExpression
     else
       model = tables.blank? ? nil : tables.split(".").last.singularize.camelize
       dict_col = model.nil? ? col : [model, col].join(".")
-      ret << Dictionary.gettext(dict_col, :type => :column, :notfound => :titleize) if col
+      column_human = if col
+                       if col.starts_with?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
+                         col.gsub(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX, "")
+                       else
+                         Dictionary.gettext(dict_col, :type => :column, :notfound => :titleize)
+                       end
+                     end
+      ret << column_human if col
     end
     ret = " #{ret}" unless ret.include?(":")
     ret
@@ -1126,11 +1133,41 @@ class MiqExpression
     result = []
     unless opts[:typ] == "count" || opts[:typ] == "find"
       result = get_column_details(relats[:columns], model, model, opts).sort! { |a, b| a.to_s <=> b.to_s }
+
+      unless opts[:disallow_loading_virtual_custom_attributes]
+        custom_details = _custom_details_for(model, opts)
+        result.concat(custom_details.sort_by(&:to_s)) unless custom_details.empty?
+      end
+
       result.concat(tag_details(model, model, opts)) if opts[:include_tags] == true
     end
-    result.concat(_model_details(relats, opts).sort! { |a, b| a.to_s <=> b.to_s })
+
+    model_details = _model_details(relats, opts)
+
+    model_details.sort_by!(&:to_s)
+    result.concat(model_details)
+
     @classifications = nil
     result
+  end
+
+  def self._custom_details_for(model, options)
+    klass = model.safe_constantize
+    return [] unless klass < CustomAttributeMixin
+
+    custom_attributes_details = []
+
+    klass.custom_keys.each do |custom_key|
+      custom_detail_column = [model, CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX + custom_key].join("-")
+      custom_detail_name = custom_key
+      if options[:include_model]
+        model_name = Dictionary.gettext(model, :type => :model, :notfound => :titleize)
+        custom_detail_name = [model_name, custom_key].join(" : ")
+      end
+      custom_attributes_details.push([custom_detail_name, custom_detail_column])
+    end
+
+    custom_attributes_details
   end
 
   def self._model_details(relats, opts)
@@ -1179,7 +1216,9 @@ class MiqExpression
     @miq_adv_search_lists[model.to_s] ||= {}
 
     case what.to_sym
-    when :exp_available_fields then @miq_adv_search_lists[model.to_s][:exp_available_fields] ||= MiqExpression.model_details(model, :typ => "field", :include_model => true)
+    when :exp_available_fields then
+      options = {:typ => "field", :include_model => true, :disallow_loading_virtual_custom_attributes => false}
+      @miq_adv_search_lists[model.to_s][:exp_available_fields] ||= MiqExpression.model_details(model, options)
     when :exp_available_counts then @miq_adv_search_lists[model.to_s][:exp_available_counts] ||= MiqExpression.model_details(model, :typ => "count", :include_model => true)
     when :exp_available_finds  then @miq_adv_search_lists[model.to_s][:exp_available_finds]  ||= MiqExpression.model_details(model, :typ => "find",  :include_model => true)
     end
