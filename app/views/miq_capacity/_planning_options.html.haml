@@ -16,6 +16,7 @@
                     options_for_select(options, @sb[:planning][:options][:filter_typ]),
                     :disabled              => @sb[:planning][:options][:vm_mode] == :manual,
                     "class"                => "selectpicker",
+                    'data-live-search'     => true,
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true)
       :javascript
@@ -29,6 +30,7 @@
                       :disabled              => @sb[:planning][:options][:vm_mode] == :manual,
                       "data-live-search"     => "true",
                       "class"                => "selectpicker",
+                      'data-live-search'     => true,
                       "data-miq_sparkle_on"  => true,
                       "data-miq_sparkle_off" => true,
                       "data-miq_observe"     => {:url => url}.to_json)
@@ -38,6 +40,7 @@
                       options_for_select(options, @sb[:planning][:options][:filter_value]),
                       :disabled              => @sb[:planning][:options][:vm_mode] == :manual,
                       "class"                => "selectpicker",
+                      'data-live-search'     => true,
                       "data-miq_sparkle_on"  => true,
                       "data-miq_sparkle_off" => true,
                       "data-miq_observe"     => {:url => url}.to_json)
@@ -47,6 +50,7 @@
                       options_for_select(options, @sb[:planning][:options][:filter_value]),
                       :disabled              => @sb[:planning][:options][:vm_mode] == :manual,
                       "class"                => "selectpicker",
+                      'data-live-search'     => true,
                       "data-miq_sparkle_on"  => true,
                       "data-miq_sparkle_off" => true,
                       "data-miq_observe"     => {:url => url}.to_json)
@@ -56,6 +60,7 @@
                       options_for_select(options, @sb[:planning][:options][:filter_value]),
                       :disabled              => @sb[:planning][:options][:vm_mode] == :manual,
                       "class"                => "selectpicker",
+                      'data-live-search'     => true,
                       "data-miq_sparkle_on"  => true,
                       "data-miq_sparkle_off" => true)
       :javascript
@@ -72,6 +77,7 @@
                         :disabled              => @sb[:planning][:options][:vm_mode] == :manual,
                         "data-live-search"     => "true",
                         "class"                => "selectpicker",
+                        'data-live-search'     => true,
                         "data-miq_sparkle_on"  => true,
                         "data-miq_sparkle_off" => true)
           :javascript
