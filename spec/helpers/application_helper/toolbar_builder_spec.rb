@@ -2229,7 +2229,7 @@ describe ApplicationHelper do
         it_behaves_like 'default case'
       end
 
-      context "id = vm_collect_running_processes" do
+      context "and id = vm_collect_running_processes" do
         before do
           @id = "vm_collect_running_processes"
           allow(@record).to receive(:is_available_now_error_message).and_return(false)
