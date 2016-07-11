@@ -2,7 +2,7 @@ module GettextI18nRails
   class ModelAttributesFinder
     def model_attributes(model, ignored_tables, ignored_cols)
       return [] if model.abstract_class? && Rails::VERSION::MAJOR < 3
-      
+
       if model.abstract_class?
         model.direct_descendants.reject {|m| ignored?(m.table_name, ignored_tables)}.inject([]) do |attrs, m|
           attrs.push(model_attributes(m, ignored_tables, ignored_cols)).flatten.uniq
