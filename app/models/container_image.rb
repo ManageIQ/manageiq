@@ -16,6 +16,8 @@ class ContainerImage < ApplicationRecord
   has_one :operating_system, :through => :computer_system
   has_one :openscap_result, :dependent => :destroy
   has_many :openscap_rule_results, :through => :openscap_result
+  has_many :compliances, :as => :resource, :dependent => :destroy
+  virtual_has_one :last_compliance, :class_name => "Compliance"
 
   # Needed for scanning & tagging action
   delegate :my_zone, :to => :ext_management_system
