@@ -10,7 +10,7 @@ describe Metric::Capture do
                      :capture_threshold_with_alerts => {:vm => capture_rt, :host => capture_rt}
                     }
                   }
-      stub_server_configuration(settings)
+      stub_settings(settings)
     end
 
     it "realtime vm uses capture_threshold_with_alerts minutes ago" do

@@ -13,7 +13,7 @@ module Metric::Capture
   end
 
   def self.historical_days
-    (VMDB::Config.new("vmdb").config.fetch_path(:performance, :history, :initial_capture_days) || 7).to_i
+    (Settings.performance.history.initial_capture_days || 7).to_i
   end
 
   def self.historical_start_time
@@ -21,7 +21,7 @@ module Metric::Capture
   end
 
   def self.concurrent_requests(interval_name)
-    requests = VMDB::Config.new("vmdb").config.fetch_path(:performance, :concurrent_requests, interval_name.to_sym)
+    requests = Settings.performance.concurrent_requests[interval_name]
     requests ||= interval_name == 'realtime' ? 20 : 1
     requests = 20 if requests < 20 && interval_name == 'realtime'
     requests
@@ -78,7 +78,7 @@ module Metric::Capture
   def self.capture_threshold(target)
     key, default = MiqAlert.target_needs_realtime_capture?(target) ? [:capture_threshold_with_alerts, 1] : [:capture_threshold, 10]
 
-    value = VMDB::Config.new("vmdb").config.fetch_path(:performance, key, target.class.base_model.to_s.underscore.to_sym) || default
+    value = Settings.performance[key][target.class.base_model.to_s.underscore.to_sym] || default
     value = if value.kind_of?(Fixnum) # Default unit is minutes
               value.minutes.ago.utc
             else
