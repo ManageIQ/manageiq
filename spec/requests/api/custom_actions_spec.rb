@@ -187,15 +187,18 @@ describe ApiController do
 
       run_get services_url(svc2.id), :attributes => "custom_actions"
 
-      expect_result_to_have_keys(%w(custom_actions))
-      custom_actions = response_hash["custom_actions"]
-      expect_hash_to_have_only_keys(custom_actions, %w(buttons button_groups))
-      expect(custom_actions["buttons"].size).to eq(1)
-      button = response_hash["custom_actions"]["buttons"].first
-      expect(response_hash).to include("custom_actions" => hash_including("buttons" => [hash_including("id", "resource_action")]))
-      ra = button["resource_action"]
-      expect(response_hash).to include("custom_actions" => hash_including("buttons" => [hash_including("resource_action" => hash_including("id", "dialog_id"))]))
-      expect_result_to_match_hash(ra, "id" => ra2.id, "dialog_id" => ra2.dialog_id)
+      expected = {
+        "custom_actions" => {
+          "button_groups" => anything,
+          "buttons"       => [
+            hash_including(
+              "id"              => anything,
+              "resource_action" => hash_including("id" => ra2.id, "dialog_id" => ra2.dialog_id)
+            )
+          ]
+        }
+      }
+      expect(response_hash).to include(expected)
     end
   end
 end
