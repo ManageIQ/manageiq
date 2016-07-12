@@ -22,6 +22,7 @@ cols:
 - name
 - mac_address
 - ipaddresses
+- cloud_subnets_names
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -42,6 +43,7 @@ col_order:
 - name
 - mac_address
 - ipaddresses
+- cloud_subnets_names
 #- device.name
 - ext_management_system.name
 
@@ -50,6 +52,7 @@ headers:
 - Name
 - Mac Address
 - IP Addresses
+- Subnets
 #- Instance name
 - Network Provider
 
