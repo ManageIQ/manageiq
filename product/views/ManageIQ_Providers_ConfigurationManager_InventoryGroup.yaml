@@ -15,7 +15,7 @@ title: InventoryGroup
 name: InventoryGroup
 
 # Main DB table report is based on
-db: EmsFolder
+db: ManageIQ::Providers::ConfigurationManager::InventoryGroup
 
 # Columns to fetch from the main table
 cols:
