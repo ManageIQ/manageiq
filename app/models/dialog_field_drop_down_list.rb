@@ -1,4 +1,6 @@
 class DialogFieldDropDownList < DialogFieldSortedItem
+  AUTOMATE_VALUE_FIELDS = %w(required read_only visible).freeze
+
   def initialize_with_values(dialog_values)
     if load_values_on_init?
       raw_values
@@ -39,7 +41,7 @@ class DialogFieldDropDownList < DialogFieldSortedItem
 
   def raw_values
     @raw_values ||= dynamic ? values_from_automate : super
-    @default_value ||= sort_data(@raw_values).first.first if@raw_values
+    @default_value ||= sort_data(@raw_values).first.first if @raw_values
     self.value ||= @default_value
 
     @raw_values
