@@ -82,7 +82,6 @@ module Vmdb
 
     # config.eager_load_paths accepts an array of paths from which Rails will eager load on boot if cache classes is enabled.
     # Defaults to every folder in the app directory of the application.
-    config.eager_load_paths = []
 
     # This must be done outside of initialization blocks
     #   as the Vmdb::Logging constant is needed very early

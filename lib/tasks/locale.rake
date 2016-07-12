@@ -121,4 +121,17 @@ namespace :locale do
       store['human_locale_names'] = locale_hash
     end
   end
+
+  desc "Extract model attribute names and virtual column names"
+  task "store_model_attributes" do
+    require 'gettext_i18n_rails/model_attributes_finder'
+    require_relative 'model_attribute_override.rb'
+
+    attributes_file = 'config/locales/model_attributes.rb'
+    File.unlink(attributes_file) if File.exist?(attributes_file)
+
+    Rake::Task['gettext:store_model_attributes'].invoke
+
+    FileUtils.mv(attributes_file, 'config/model_attributes.rb')
+  end
 end
