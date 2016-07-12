@@ -4962,7 +4962,7 @@
     - :name: Arbitration Defaults
       :description: Everything for Arbitration Defaults
       :feature_type: admin
-      :identifier: miq_virtual_template
+      :identifier: miq_arbitration_default
       :children:
       - :name: Create Arbitration Default
         :description: Create Arbitration Default

@@ -1668,7 +1668,7 @@
         :identifier: delete_virtual_template
   :arbitration_defaults:
     :description: Arbitration Defaults
-    :description: Arbitration Defaults
+    :identifier: miq_arbitration_default
     :options:
     - :collection
     :verbs: *70174834084700
