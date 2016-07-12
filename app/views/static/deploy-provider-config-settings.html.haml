@@ -6,7 +6,7 @@
     %form{:role => "form-horizontal"}
       .miq-radio-form
         %label.radio
-          %input{"ng-change" => "validateForm()", "ng-model" => "data.serverConfigType", :type => "radio", :value => "standardNFS"}
+          %input{"ng-change" => "nfsChange()", "ng-model" => "data.serverConfigType", :type => "radio", :value => "standardNFS"}
             = _("Standard NFS Server")
         .form-group.sub-group{"ng-if" => "data.serverConfigType == 'standardNFS'"}
           .checkbox
@@ -22,7 +22,7 @@
               %label.miq-input-label-class
                 = _("Server")
               .miq-input-class
-                %input.form-control{"ng-change" => "validateForm()", "ng-disabled" => "!data.configureRegistry",
+                %input#nfs-registry-server.form-control{"ng-change" => "validateForm()", "ng-disabled" => "!data.configureRegistry",
                 "ng-model" => "data.nfsRegistryServer", :required => "", :type => "text"}/
           .form-horizontal
             .form-group
@@ -40,7 +40,7 @@
               %label.miq-input-label-class
                 = _("Server")
               .miq-input-class
-                %input.form-control{"ng-change" => "validateForm()", "ng-disabled" => "!data.configureMetrics",
+                %input#nfs-metrics-server.form-control{"ng-change" => "validateForm()", "ng-disabled" => "!data.configureMetrics",
                 "ng-model" => "data.nfsMetricsServer", :required => "", :type => "text"}/
           .form-horizontal
             .form-group

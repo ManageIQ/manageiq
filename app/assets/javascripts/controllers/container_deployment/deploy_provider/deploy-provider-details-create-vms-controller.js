@@ -1,6 +1,6 @@
 miqHttpInject(angular.module('miq.containers.providersModule')).controller('containers.deployProviderDetailsCreateVMsController',
-  ['$rootScope', '$scope', '$timeout', '$document',
-  function($rootScope, $scope, $timeout, $document) {
+  ['$rootScope', '$scope', 'miqService',
+  function($rootScope, $scope, miqService) {
     'use strict';
 
     $scope.reviewTemplate = "/static/deploy-provider-master-nodes-review-create-vms.html.haml";
@@ -22,13 +22,7 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
         $scope.data.createNodesLikeMasters = true;
       }
 
-      $timeout(function() {
-        var queryResult = $document[0].getElementById('create-master-base-name');
-        if (queryResult) {
-          queryResult.focus();
-        }
-      }, 200);
-
+      miqService.dynamicAutoFocus('create-master-base-name');
       $scope.validateForm();
     };
 

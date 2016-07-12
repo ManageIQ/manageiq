@@ -1,6 +1,6 @@
-miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 'patternfly', 'miq.dialogs', 'miq.wizard'])).controller('containers.deployProviderController',
-  ['$rootScope', '$scope', '$timeout',
-  function($rootScope, $scope, $timeout) {
+miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 'patternfly', 'miq.dialogs', 'miq.wizard', 'ManageIQ'])).controller('containers.deployProviderController',
+  ['$rootScope', '$scope', '$timeout', 'miqService',
+  function($rootScope, $scope, $timeout, miqService) {
     'use strict';
 
     $scope.showDeploymentWizard = false;

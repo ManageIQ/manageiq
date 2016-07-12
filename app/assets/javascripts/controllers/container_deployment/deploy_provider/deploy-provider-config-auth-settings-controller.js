@@ -1,6 +1,6 @@
 miqHttpInject(angular.module('miq.containers.providersModule')).controller('containers.deployProviderAuthSettingsController',
-  ['$rootScope', '$scope', '$timeout', '$document',
-  function($rootScope, $scope, $timeout, $document) {
+  ['$rootScope', '$scope', '$timeout', '$document', 'miqService',
+  function($rootScope, $scope, $timeout, $document, miqService) {
     'use strict';
     $scope.deploymentDetailsAuthSettingsComplete = false;
     $scope.reviewTemplate = "/static/deploy-provider-auth-settings-review.html.haml";
@@ -20,12 +20,8 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
         firstShow = false;
       }
       $scope.validateForm();
-      $timeout(function() {
-        var queryResult = $document[0].getElementById('initial-setting-input');
-        if (queryResult) {
-          queryResult.focus();
-        }
-      }, 200);
+      miqService.dynamicAutoFocus('htpasswordUser' + ($scope.data.authentication.htPassword.users.length - 1));
+      miqService.dynamicAutoFocus('initial-setting-input');
 
       switch ($scope.data.authentication.mode) {
         case 'htPassword':
@@ -179,12 +175,7 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
 
     $scope.addHtpasswordUser = function () {
       $scope.data.authentication.htPassword.users.push({username: '', password: ''});
-      $timeout(function() {
-        var queryResult = $document[0].getElementById('htpasswordUser' + ($scope.data.authentication.htPassword.users.length - 1));
-        if (queryResult) {
-          queryResult.focus();
-        }
-      }, 200);
+      miqService.dynamicAutoFocus('htpasswordUser' + ($scope.data.authentication.htPassword.users.length - 1));
       $scope.validateForm();
     };
 

@@ -1,6 +1,6 @@
 miqHttpInject(angular.module('miq.containers.providersModule')).controller('containers.deployProviderCDNChannelController',
-  ['$rootScope', '$scope', '$timeout', '$document',
-  function($rootScope, $scope, $timeout, $document) {
+  ['$rootScope', '$scope', 'miqService',
+  function($rootScope, $scope, miqService) {
     'use strict';
 
     $scope.reviewTemplate = "/static/deploy-provider-details-cdn-review.html.haml";
@@ -16,12 +16,6 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
         firstShow = false;
         $scope.validateForm();
       }
-      $timeout(function() {
-        if ($scope.data.cdnEnabled) {
-          var queryResult = $document[0].getElementById('rhn-user-name');
-          queryResult.focus();
-        }
-      }, 200);
     };
 
     var validString = function(value) {
@@ -34,5 +28,12 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
         validString($scope.data.rhnSKU) &&
         (!$scope.data.specifySatelliteUrl || validString($scope.data.rhnSatelliteUrl));
     };
+
+    $scope.cdnChange = function() {
+      if ($scope.data.cdnEnabled) {
+        miqService.dynamicAutoFocus('rhn-user-name');
+      }
+      $scope.validateForm();
+    }
   }
 ]);

@@ -1,6 +1,6 @@
 miqHttpInject(angular.module('miq.containers.providersModule')).controller('containers.deployProviderConfigSettingsController',
-  ['$rootScope', '$scope',
-  function($rootScope, $scope) {
+  ['$rootScope', '$scope', 'miqService',
+  function($rootScope, $scope, miqService) {
     'use strict';
 
     $scope.reviewTemplate = "/static/deploy-provider-config-settings-review.html.haml";
@@ -17,7 +17,7 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
         $scope.data.nfsMetricsPath = '';
         firstShow = false;
       }
-      $scope.validateForm();
+      $scope.nfsChange();
     };
 
     var validString = function(value) {
@@ -43,6 +43,19 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
         $scope.data.configureRouter = true;
         return true;
       }
+    };
+
+    $scope.nfsChange = function() {
+      if ($scope.data.serverConfigType == 'standardNFS'){
+        var elementId;
+        if ($scope.data.configureRegistry == true) {
+          elementId = 'nfs-registry-server';
+        } else if ($scope.data.configureMetrics == true) {
+          elementId = 'nfs-metrics-server';
+        }
+        miqService.dynamicAutoFocus(elementId);
+      }
+      $scope.validateForm();
     };
 
     $scope.validateForm = function() {

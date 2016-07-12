@@ -1,6 +1,6 @@
 miqHttpInject(angular.module('miq.containers.providersModule')).controller('containers.deployProviderDetailsGeneralController',
-  ['$rootScope', '$scope', '$document', '$timeout',
-  function($rootScope, $scope, $document, $timeout) {
+  ['$rootScope', '$scope', 'miqService',
+  function($rootScope, $scope, miqService) {
     'use strict';
 
     $scope.reviewTemplate = "/static/deploy-provider-details-general-review.html.haml";
@@ -34,11 +34,7 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
 
         $scope.deploymentDetailsGeneralComplete = false;
         firstShow = false;
-
-        $timeout(function() {
-          var queryResult = $document[0].getElementById('new-provider-name');
-          queryResult.focus();
-        }, 200);
+        miqService.dynamicAutoFocus('new-provider-name');
       }
     };
     $scope.updateProviderName = function() {

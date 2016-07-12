@@ -6,7 +6,7 @@
     %div
       .checkbox-inline
         %label.miq-checkbox-input-label
-          %input{"ng-change" => "validateForm()", "ng-model" => "data.cdnEnabled", :type => "checkbox"}
+          %input{"ng-change" => "cdnChange()", "ng-model" => "data.cdnEnabled", :type => "checkbox"}
             = _("Enable CDN Channel")
         %form.form-horizontal.sub-group
           %div{"pf-form-group" => "", "pf-input-class" => "miq-input-class", "pf-label" => _("Username"),

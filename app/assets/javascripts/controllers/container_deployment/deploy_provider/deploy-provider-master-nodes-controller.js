@@ -1,6 +1,6 @@
 miqHttpInject(angular.module('miq.containers.providersModule')).controller('containers.deployProviderMasterNodesController',
-  ['$rootScope', '$scope', '$timeout', '$document',
-  function($rootScope, $scope, $timeout, $document) {
+  ['$rootScope', '$scope', 'miqService',
+  function($rootScope, $scope, miqService) {
     'use strict';
 
     $scope.deploymentDetailsMasterNodesComplete = false;
@@ -67,17 +67,8 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
       currentProvisionOn = $scope.data.provisionOn;
       currentProviderId = $scope.data.existingProviderId;
 
-      $timeout(function() {
-        var queryResult;
-        if ($scope.data.provisionOn == 'noProvider') {
-          queryResult = $document[0].getElementById('deploy-key');
-        } else if ($scope.data.provisionOn == 'newVms') {
-          queryResult = $document[0].getElementById('create-master-base-name');
-        }
-        if (queryResult) {
-          queryResult.focus();
-        }
-      }, 200);
+      var elementId = $scope.data.provisionOn == 'newVms' ? 'create-master-base-name' : 'deploy-key';
+      miqService.dynamicAutoFocus(elementId);
     };
 
     $scope.masterCountValid = function(count) {
