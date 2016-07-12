@@ -115,8 +115,9 @@ describe ApiController do
       run_get entrypoint_url, :attributes => "authorization"
 
       expect(response).to have_http_status(:ok)
-      expect_result_to_have_keys(ENTRYPOINT_KEYS + %w(authorization))
-      expect(response_hash).to include("authorization" => {"product_features" => anything})
+      expected = {"authorization" => hash_including("product_features")}
+      ENTRYPOINT_KEYS.each { |k| expected[k] = anything }
+      expect(response_hash).to include(expected)
     end
   end
 
