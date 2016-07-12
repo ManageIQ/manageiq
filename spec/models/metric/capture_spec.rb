@@ -77,4 +77,69 @@ describe Metric::Capture do
       described_class.perf_capture_health_check(miq_server.zone)
     end
   end
+
+  describe ".perf_capture_now?" do
+    let(:target) { FactoryGirl.build(:host_vmware) }
+
+    before do
+      stub_settings(
+        :performance => {
+          :capture_threshold_with_alerts => {:host => 2},
+          :capture_threshold             => {:host => 10},
+        }
+      )
+    end
+
+    context "realtime host" do
+      before { enable_realtime(true) }
+
+      it "always runs a host not run yet" do
+        target.last_perf_capture_on = nil
+        expect(described_class.perf_capture_now?(target)).to eq(true)
+      end
+
+      it "detects too short" do
+        target.last_perf_capture_on = 1.minute.ago
+        expect(described_class.perf_capture_now?(target)).to eq(false)
+      end
+
+      it "detects realtime" do
+        target.last_perf_capture_on = 5.minutes.ago
+        expect(described_class.perf_capture_now?(target)).to eq(true)
+      end
+
+      it "detects too long" do
+        target.last_perf_capture_on = 15.minutes.ago
+        expect(described_class.perf_capture_now?(target)).to eq(true)
+      end
+    end
+
+    context "standard host" do
+      before { enable_realtime(false) }
+
+      it "always runs a host not run yet" do
+        target.last_perf_capture_on = nil
+        expect(described_class.perf_capture_now?(target)).to eq(true)
+      end
+
+      it "detects too short" do
+        target.last_perf_capture_on = 1.minute.ago
+        expect(described_class.perf_capture_now?(target)).to eq(false)
+      end
+
+      it "detects realtime" do
+        target.last_perf_capture_on = 5.minutes.ago
+        expect(described_class.perf_capture_now?(target)).to eq(false)
+      end
+
+      it "detects too long" do
+        target.last_perf_capture_on = 15.minutes.ago
+        expect(described_class.perf_capture_now?(target)).to eq(true)
+      end
+    end
+
+    def enable_realtime(value)
+      allow(MiqAlert).to receive(:target_needs_realtime_capture?).with(target).and_return(value)
+    end
+  end
 end
