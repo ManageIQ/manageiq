@@ -36,13 +36,13 @@ ar_internal_metadata:
 arbitration_defaults:
 - id
 - uid_ems
-- auth_key_pair_id
 - cloud_network_id
 - flavor_id
 - availability_zone_id
 - cloud_subnet_id
 - security_group_id
 - ems_id
+- authentication_id
 assigned_server_roles:
 - id
 - miq_server_id
