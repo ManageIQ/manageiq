@@ -81,7 +81,11 @@
               .toolbar-pf-actions
                 - if @layout == "dashboard"
                   = render :partial => "/layouts/tabs"
-                = render_toolbars(calculate_toolbars)
+                - if @angular_toolbar_name
+                  = render :partial => "layouts/angular/toolbar"
+                  = render_toolbars(calculate_toolbars.slice('view_tb'))
+                - else
+                  = render_toolbars(calculate_toolbars)
         .row.max-height
           .col-sm-9.col-md-10.col-sm-push-3.col-md-push-2.max-height
             #main-content.row

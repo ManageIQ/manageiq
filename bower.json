@@ -46,6 +46,7 @@
     "codemirror": "^5.16.0",
     "array-includes": "^1.0.0",
     "qs": "^0.3.10",
-    "rxjs": "^4.1.0"
+    "rxjs": "^4.1.0",
+    "rx-angular": "rx.angular#^1.1.3"
   }
 }

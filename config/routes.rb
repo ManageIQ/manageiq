@@ -116,6 +116,12 @@ Vmdb::Application.routes.draw do
     x_show
   )
 
+  # GET settings method for provider
+  providers_settings = %w(
+    toolbar_settings
+    list_providers_settings
+  )
+
   controller_routes = {
     :alert                    => {
       :get  => %w(

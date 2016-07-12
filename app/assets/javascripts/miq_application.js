@@ -406,6 +406,8 @@ function miqUpdateAllCheckboxes(button_div) {
 // parms: obj=<checkbox element>, button_div=<id of div with buttons to update>
 function miqUpdateButtons(obj, button_div) {
   var count = 0;
+  
+  sendDataWithRx({rowSelect: obj});
 
   if (typeof obj.id != "undefined") {
     $("input[id^='check_']").each(function () {

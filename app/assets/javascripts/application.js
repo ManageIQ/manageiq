@@ -24,6 +24,8 @@
 //= require_tree ./controllers/
 //= require_tree ./directives/
 //= require_tree ./services/
+//= require_tree ./angular_modules/
+//= require_tree ./controllers/
 //= require d3
 //= require c3
 //= require lodash
@@ -78,3 +80,6 @@
 //= require miq_c3
 //= require miq_explorer
 //= require qs
+// Bower packages
+//= require hawkular-ui-components/dist/js/hawkular-ui-components
+//= require rx-angular/dist/rx.angular
