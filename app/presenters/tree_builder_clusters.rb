@@ -29,24 +29,45 @@ class TreeBuilderClusters < TreeBuilder
     []
   end
 
+  def non_cluster_selected
+    i = 0
+    @root[:non_cl_hosts].each do |h|
+      i += 1 if h[:capture]
+    end
+    @root[:non_cl_hosts].size == i
+  end
+
   def x_get_tree_roots(count_only = false, _options)
-    nodes = @root.map do |node|
-      { :id => "#{node[:id]}",
-        :text => node[:name],
-        :image => 'cluster',
-        :tip => node[:name],
-        :select => node[:capture],
-        :children =>  @data[node[:id]][:ho_enabled].concat(@data[node[:id]][:ho_disabled])
+    nodes = @root[:clusters].map do |node|
+      { :id       => "#{node[:id]}",
+        :text     => node[:name],
+        :image    => 'cluster',
+        :tip      => node[:name],
+        :select   => node[:capture],
+        :children => @data[node[:id]][:ho_enabled].concat(@data[node[:id]][:ho_disabled])
       }
+    end
+    if @root[:non_cl_hosts].present?
+      nodes.push({:id       => "NonCluster_0",
+                 :text     => _("Non-clustered Hosts"),
+                 :image    => 'host',
+                 :tip      => _("Non-clustered Hosts"),
+                 :select   => non_cluster_selected,
+                 :children => @root[:non_cl_hosts]
+                })
     end
     count_only_or_objects(count_only, nodes)
   end
 
   def x_get_tree_hash_kids(parent, count_only)
     hosts = parent[:children]
-    #reject Clusters
     nodes = hosts.map do |node|
-      {:id => "#{parent[:id].to_s}_#{node.id.to_s}", :text => node.name, :tip => _("Host: %{name}") % {:name => node.name}, :image => 'host', :select => parent[:select], :children => []}
+      {:id       => "#{parent[:id]}_#{node[:id]}",
+       :text     => node[:name],
+       :tip      => _("Host: %{name}") % {:name => node[:name]},
+       :image    => 'host',
+       :select   => node.kind_of?(Hash) ? node[:capture] : parent[:select],
+       :children => []}
     end
     count_only_or_objects(count_only, nodes)
   end

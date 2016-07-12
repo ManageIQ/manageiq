@@ -179,7 +179,21 @@ module OpsController::Settings::CapAndU
       end
     end
     @edit[:current][:clusters].sort_by! { |c| c[:name] }
-    @cluster_tree = TreeBuilderClusters.new(:cluster, :cluster_tree, @sb, true, @edit[:current][:clusters])
+
+    ##################### Adding Non-Clustered hosts node
+    @edit[:current][:non_cl_hosts] ||= []
+    ExtManagementSystem.in_my_region.each do |e|
+      all = e.non_clustered_hosts
+      all.each do |h|
+        @edit[:current][:non_cl_hosts] << {
+            :name    => h.name,
+            :id      => h.id,
+            :capture => h.perf_capture_enabled?,
+        }
+      end
+    end
+
+    @cluster_tree = TreeBuilderClusters.new(:cluster, :cluster_tree, @sb, true, @edit[:current])
     @edit[:current][:storages] = []
     @st_recs = {}
     Storage.in_my_region.includes(:taggings, :tags, :hosts).select(:id, :name, :store_type, :location)
