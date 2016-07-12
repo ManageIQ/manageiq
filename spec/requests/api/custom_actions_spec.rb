@@ -192,9 +192,9 @@ describe ApiController do
       expect_hash_to_have_only_keys(custom_actions, %w(buttons button_groups))
       expect(custom_actions["buttons"].size).to eq(1)
       button = response_hash["custom_actions"]["buttons"].first
-      expect_hash_to_have_keys(button, %w(id resource_action))
+      expect(response_hash).to include("custom_actions" => hash_including("buttons" => [hash_including("id", "resource_action")]))
       ra = button["resource_action"]
-      expect_hash_to_have_keys(ra, %w(id dialog_id))
+      expect(response_hash).to include("custom_actions" => hash_including("buttons" => [hash_including("resource_action" => hash_including("id", "dialog_id"))]))
       expect_result_to_match_hash(ra, "id" => ra2.id, "dialog_id" => ra2.dialog_id)
     end
   end
