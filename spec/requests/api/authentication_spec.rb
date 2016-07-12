@@ -116,7 +116,7 @@ describe ApiController do
 
       expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(ENTRYPOINT_KEYS + %w(authorization))
-      expect_hash_to_have_keys(response_hash["authorization"], %w(product_features))
+      expect(response_hash).to include("authorization" => {"product_features" => anything})
     end
   end
 
