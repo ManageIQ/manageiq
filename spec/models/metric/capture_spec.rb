@@ -13,6 +13,40 @@ describe Metric::Capture do
       stub_settings(settings)
     end
 
+    it "knows realtime vm capture value" do
+      target = FactoryGirl.build(:vm_vmware)
+      Timecop.freeze(time) do
+        expect(described_class.realtime_capture_threshold(target)).to eq capture_rt.minutes.ago.utc
+      end
+    end
+
+    it "knows realtime host capture value" do
+      target = FactoryGirl.build(:host_vmware)
+      Timecop.freeze(time) do
+        expect(described_class.realtime_capture_threshold(target)).to eq capture_rt.minutes.ago.utc
+      end
+    end
+
+    it "knows non-realtime vm capture_threshold" do
+      target = FactoryGirl.build(:vm_vmware)
+
+      Timecop.freeze(time) do
+        result = threshold_default.minutes.ago.utc
+        result = capture_fixnum.minutes.ago.utc unless capture_fixnum.nil?
+        expect(described_class.standard_capture_threshold(target)).to eq result
+      end
+    end
+
+    it "non-realtime host uses capture_threshold minutes ago" do
+      target = FactoryGirl.build(:host_vmware)
+
+      Timecop.freeze(time) do
+        result = threshold_default.minutes.ago.utc
+        result = capture_fixnum.minutes.ago.utc unless capture_fixnum.nil?
+        expect(described_class.standard_capture_threshold(target)).to eq result
+      end
+    end
+
     it "realtime vm uses capture_threshold_with_alerts minutes ago" do
       target = FactoryGirl.build(:vm_vmware)
       allow(MiqAlert).to receive(:target_needs_realtime_capture?).with(target).and_return(true)
