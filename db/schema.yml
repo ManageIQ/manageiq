@@ -41,7 +41,7 @@ arbitration_defaults:
 - flavor_id
 - availability_zone_id
 - cloud_subnet_id
-- cloud_security_group_id
+- security_group_id
 - ems_id
 assigned_server_roles:
 - id
