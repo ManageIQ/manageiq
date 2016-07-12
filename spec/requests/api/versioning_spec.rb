@@ -8,7 +8,7 @@ describe ApiController do
 
       run_get entrypoint_url
 
-      expect_single_resource_query
+      expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(%w(name description version versions collections))
     end
 
@@ -18,7 +18,7 @@ describe ApiController do
       # Let's get the versions
       run_get entrypoint_url
 
-      expect_single_resource_query
+      expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(%w(versions))
 
       versions = response_hash["versions"]
@@ -35,7 +35,7 @@ describe ApiController do
       # Let's try to access that version API URL
       run_get "#{entrypoint_url}/#{ident}"
 
-      expect_single_resource_query
+      expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(%w(name description version versions collections))
     end
 

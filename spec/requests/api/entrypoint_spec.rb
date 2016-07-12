@@ -4,7 +4,7 @@ RSpec.describe "API entrypoint" do
 
     run_get entrypoint_url
 
-    expect_single_resource_query
+    expect(response).to have_http_status(:ok)
     expect_result_to_have_keys(%w(settings))
     expect(response_hash['settings']).to be_kind_of(Hash)
   end
