@@ -1,9 +1,30 @@
-conf = MiqReplicationWorker.worker_settings.fetch_path(:replication, :destination)
-conf = conf.values_at(:host, :port, :username, :password, :database, :adapter)
+require 'io/console'
+
+def usage
+  <<-USAGE
+    Usage:
+      `bin/rails r tools/db_ping_remote.rb <host> <port> <username> [database] [adapter]`
+      Must be executed from the rails root directory
+
+      host, port, username, and password are required
+      database and adapter will be defaulted to the local configuration if not provided
+  USAGE
+end
+
+host, port, username, database, adapter = ARGV
+unless host && port && username
+  puts usage
+  exit 1
+end
+
+puts "Enter the password for database user #{username} on host #{host}"
+print "Password: "
+password = STDIN.noecho(&:gets).chomp
+puts ""
 
 total = 0
 5.times do
-  ping = MiqRegionRemote.db_ping(*conf)
+  ping = MiqRegionRemote.db_ping(host, port, username, password, database, adapter)
   puts "%.6f ms" % ping
   total += ping
   sleep 1
