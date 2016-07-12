@@ -84,6 +84,23 @@
       :get:
       - :name: read
         :identifier: availability_zone_show
+  :blueprints:
+    :description: Blueprints
+    :verbs: *70174834085860
+    :options:
+    - :collection
+    :klass: Blueprint
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: blueprint_show_list
+      :post:
+      - :name: create
+        :identifier: blueprint_new
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: blueprint_show
   :categories:
     :description: Categories
     :identifier: ops_settings
@@ -1737,4 +1754,3 @@
       :delete:
       - :name: delete
         :identifier: delete_arbitration_setting
-
