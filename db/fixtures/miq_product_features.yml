@@ -4959,6 +4959,27 @@
         :description: Provision Virtual Template
         :feature_type: admin
         :identifier: provision_virtual_template
+    - :name: Arbitration Defaults
+      :description: Everything for Arbitration Defaults
+      :feature_type: admin
+      :identifier: miq_virtual_template
+      :children:
+      - :name: Create Arbitration Default
+        :description: Create Arbitration Default
+        :feature_type: admin
+        :identifier: create_arbitration_default
+      - :name: Show Arbitration Defaults
+        :description: Show Arbitration Defaults
+        :feature_type: admin
+        :identifier: show_arbitration_default
+      - :name: Edit Arbitration Defaults
+        :description: Edit Arbitration Defaults
+        :feature_type: admin
+        :identifier: edit_arbitration_default
+      - :name: Delete Arbitration Default
+        :description: Delete Arbitration Defaults
+        :feature_type: admin
+        :identifier: delete_arbitration_default
     - :name: Snapshots
       :description: Everything for Template Snapshots
       :feature_type: node
