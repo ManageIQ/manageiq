@@ -239,7 +239,7 @@ class ApiController
       if @req.collection
         cname = @req.collection
         ctype = "Collection"
-        raise BadRequestError, "Unsupported #{ctype} #{cname} specified" unless collection_config[cname.to_sym]
+        raise BadRequestError, "Unsupported #{ctype} #{cname} specified" unless collection_config[cname]
         if collection_config.primary?(cname)
           if "#{@req.c_id}#{@req.subcollection}#{@req.s_id}".present?
             raise BadRequestError, "Invalid request for #{ctype} #{cname} specified"
