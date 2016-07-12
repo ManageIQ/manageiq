@@ -27,6 +27,16 @@ module Metric::Capture
     requests
   end
 
+  def self.standard_capture_threshold(target)
+    target_key = target.class.base_model.to_s.underscore.to_sym
+    minutes_ago(Settings.performance.capture_threshold[target_key] || 10)
+  end
+
+  def self.realtime_capture_threshold(target)
+    target_key = target.class.base_model.to_s.underscore.to_sym
+    minutes_ago(Settings.performance.capture_threshold_with_alerts[target_key] || 1)
+  end
+
   def self.perf_capture_timer(zone = nil)
     _log.info "Queueing performance capture..."
 
@@ -76,15 +86,11 @@ module Metric::Capture
   private
 
   def self.capture_threshold(target)
-    key, default = MiqAlert.target_needs_realtime_capture?(target) ? [:capture_threshold_with_alerts, 1] : [:capture_threshold, 10]
-
-    value = Settings.performance[key][target.class.base_model.to_s.underscore.to_sym] || default
-    value = if value.kind_of?(Fixnum) # Default unit is minutes
-              value.minutes.ago.utc
-            else
-              value.to_i_with_method.seconds.ago.utc unless value.nil?
-            end
-    value
+    if MiqAlert.target_needs_realtime_capture?(target)
+      realtime_capture_threshold(target)
+    else
+      standard_capture_threshold(target)
+    end
   end
 
   #
@@ -209,6 +215,16 @@ module Metric::Capture
     when Host, VmOrTemplate then                       "realtime"
     when ContainerNode, Container, ContainerGroup then "realtime"
     when Storage then                                  "hourly"
+    end
+  end
+
+  def self.minutes_ago(value)
+    if value.kind_of?(Fixnum) # Default unit is minutes
+      value.minutes.ago.utc
+    elsif value.nil?
+      nil
+    else
+      value.to_i_with_method.seconds.ago.utc
     end
   end
 end
