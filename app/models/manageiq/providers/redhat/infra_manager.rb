@@ -39,6 +39,10 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     true
   end
 
+  def supports_api_version?
+    true
+  end
+
   def supported_auth_types
     %w(default metrics)
   end
