@@ -33,6 +33,16 @@ ar_internal_metadata:
 - value
 - created_at
 - updated_at
+arbitration_defaults:
+- id
+- uid_ems
+- cloud_network_id
+- flavor_id
+- availability_zone_id
+- cloud_subnet_id
+- security_group_id
+- ems_id
+- authentication_id
 assigned_server_roles:
 - id
 - miq_server_id
