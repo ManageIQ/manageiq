@@ -1666,3 +1666,30 @@
       :delete:
       - :name: delete
         :identifier: delete_virtual_template
+  :arbitration_defaults:
+    :description: Arbitration Defaults
+    :description: Arbitration Defaults
+    :options:
+    - :collection
+    :verbs: *70174834084700
+    :klass: ArbitrationDefault
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: show_arbitration_default
+      :post:
+      - :name: create
+        :identifier: create_arbitration_default
+      - :name: edit
+        :identifier: edit_arbitration_default
+      - :name: delete
+        :identifier: delete_arbitration_default
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: edit_arbitration_default
+      - :name: delete
+        :identifier: delete_arbitration_default
+      :delete:
+      - :name: delete
+        :identifier: delete_arbitration_default
