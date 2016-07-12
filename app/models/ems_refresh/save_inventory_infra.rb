@@ -58,6 +58,7 @@ module EmsRefresh::SaveInventoryInfra
       :vms,
       :folders,
       :resource_pools,
+      :storage_profiles,
       :customization_specs,
       :orchestration_templates,
       :orchestration_stacks
@@ -282,6 +283,10 @@ module EmsRefresh::SaveInventoryInfra
 
     save_inventory_multi(ems.resource_pools, hashes, deletes, [:uid_ems], nil, :ems_children)
     store_ids_for_new_records(ems.resource_pools, hashes, :uid_ems)
+  end
+
+  def save_storage_profiles_inventory(ems, hashes, _target = nil)
+    save_inventory_multi(ems.storage_profiles, hashes, :use_association, [:ems_ref])
   end
 
   def save_customization_specs_inventory(ems, hashes, _target = nil)
