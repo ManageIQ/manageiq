@@ -136,7 +136,7 @@ class ApiController < ApplicationController
   end
 
   def collection_config
-    @collection_config ||= CollectionConfig.new(Api::Settings.collections)
+    @collection_config ||= CollectionConfig.new
   end
 
   delegate :user_token_service, :to => self
