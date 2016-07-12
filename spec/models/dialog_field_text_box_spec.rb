@@ -339,7 +339,7 @@ describe DialogFieldTextBox do
     end
 
     it "returns the values from the value processor" do
-      expect(dialog_field.refresh_json_value).to eq(:text => "processor", :read_only => true)
+      expect(dialog_field.refresh_json_value).to eq(:text => "processor", :read_only => true, :visible => true)
     end
 
     it "assigns the processed value to value" do

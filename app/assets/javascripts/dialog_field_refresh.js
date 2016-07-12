@@ -73,7 +73,15 @@ var dialogFieldRefresh = {
     .done(function(data) {
       dialogFieldRefresh.addOptionsToDropDownList(data, fieldId);
       dialogFieldRefresh.setReadOnly($('#' + fieldName), data.values.read_only);
+<<<<<<< 36a2a7ef2d40bb274b1e2c63352f722c57706804
       dialogFieldRefresh.setVisible($('#' + fieldName), data.values.visible);
+=======
+      dialogFieldRefresh.setVisible($('#field_' + fieldId + "_tr"), data.values.visible, fieldId);
+      $('#' + fieldName).selectpicker('refresh');
+      $('#' + fieldName).selectpicker('val', data.values.checked_value);
+    });
+  },
+>>>>>>> Add visible to all dialog field automate methods
 
       $('#' + fieldName).selectpicker('refresh');
       $('#' + fieldName).selectpicker('val', responseData.values.checked_value);

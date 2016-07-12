@@ -148,7 +148,8 @@ describe DialogFieldDateTimeControl do
         :date      => "02/03/2015",
         :hour      => "18",
         :min       => "50",
-        :read_only => true
+        :read_only => true,
+        :visible => true
       )
     end
 

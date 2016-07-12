@@ -134,7 +134,7 @@ describe DialogFieldDateControl do
     end
 
     it "returns the values from the value processor" do
-      expect(dialog_field.refresh_json_value).to eq(:date => "01/02/2015", :read_only => true)
+      expect(dialog_field.refresh_json_value).to eq(:date => "01/02/2015", :read_only => true, :visible => true)
     end
 
     it "assigns the processed value to value" do
