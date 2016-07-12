@@ -80,10 +80,6 @@ class VmOrTemplate < ApplicationRecord
   has_many                  :users, -> { where(:accttype => 'user') }, :class_name => "Account"
   has_many                  :groups, -> { where(:accttype => 'group') }, :class_name => "Account"
 
-  # Compliance
-  has_many                  :compliances, :as => :resource, :dependent => :destroy
-  virtual_has_one           :last_compliance, :class_name => "Compliance"
-
   # System Services - Win32_Services, Kernel drivers, Filesystem drivers
   has_many                  :system_services, :dependent => :destroy
   has_many                  :win32_services, -> { where "typename = 'win32_service'" }, :class_name => "SystemService"

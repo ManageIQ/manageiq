@@ -93,9 +93,6 @@ class Host < ApplicationRecord
   has_many                  :host_cloud_services, :class_name => "CloudService", :foreign_key => "host_id",
                             :inverse_of => :host
 
-  # Compliance
-  has_many                  :compliances, :as => :resource, :dependent => :destroy
-  virtual_has_one           :last_compliance, :class_name => "Compliance"
 
   serialize :settings, Hash
 
