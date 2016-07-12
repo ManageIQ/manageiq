@@ -89,7 +89,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       :orchestration_stack           => 10,
       :orchestration_stack_parameter => 138,
       :orchestration_stack_output    => 7,
-      :orchestration_stack_resource  => 42,
+      :orchestration_stack_resource  => 54,
       :security_group                => 8,
       :network_port                  => 10,
       :cloud_network                 => 6,

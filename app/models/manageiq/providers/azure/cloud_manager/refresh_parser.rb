@@ -100,10 +100,8 @@ module ManageIQ::Providers
         resources = @tds.list_deployment_operations(name, group)
         # relying on deployment operations to collect resources; but each resource may appear multiple times
         # consolidate multiple appearances into only one
-        pos = -1
         resources.reject! do |resource|
-          pos += 1
-          resource.properties.try(:target_resource).nil? || resource_already_collected?(resources, resource, pos)
+          resource.properties.try(:target_resource).nil? || resource_already_collected?(resources, resource)
         end
 
         process_collection(resources, :orchestration_stack_resources) do |resource|
@@ -111,9 +109,9 @@ module ManageIQ::Providers
         end
       end
 
-      def resource_already_collected?(all, resource, position)
-        all.each_with_index do |old_resource, index|
-          return false if index == position
+      def resource_already_collected?(all, resource)
+        all.each do |old_resource|
+          return false if old_resource.equal?(resource)
           old_id = old_resource.properties.target_resource.id
           search_id = resource.properties.target_resource.id
           if old_id == search_id
