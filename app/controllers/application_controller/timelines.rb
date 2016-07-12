@@ -87,7 +87,7 @@ module ApplicationController::Timelines
                   rec,
                   "folder.png",
                   _("Group: %{name}") % {:name => rec},
-                  :style_class   => "cfme-no-cursor-node",
+                  :cfme_no_click => true
                 )
               else
                 rec.each_with_index do |r, i|
@@ -113,7 +113,7 @@ module ApplicationController::Timelines
             @branch.push(temp) unless temp.nil? || temp.empty?
           end
         end
-        @rep_tree[menu] = @branch.to_json unless @branch.nil? || @branch.empty?
+        @rep_tree[menu] = TreeBuilder.convert_bs_tree(@branch).to_json unless @branch.nil? || @branch.empty?
         @branch = []
       end
     end
@@ -127,9 +127,7 @@ module ApplicationController::Timelines
         "#{rpt.id}__#{rpt.name}",
         rpt.name,
         "link_internal.gif",
-        _("Report: %{name}") % {:name => rpt.name},
-        :style_class => "cfme-no-cursor-node ws-wrap",
-        :style       => "background-color:#{node_color};padding-left: 0px;"     # No cursor pointer
+        _("Report: %{name}") % {:name => rpt.name}
       )
     end
     @tag_node

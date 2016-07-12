@@ -30,7 +30,6 @@ describe TreeBuilderProtect do
       expect(locals[:oncheck]).to eq("miqOnCheckProtect")
       expect(locals[:checkboxes]).to eq(true)
       expect(locals[:check_url]).to eq("/name/protect/")
-      expect(locals[:onclick]).to eq(false)
     end
     it 'sets roots correctly' do
       roots = @protect_tree.send(:x_get_tree_roots, false)

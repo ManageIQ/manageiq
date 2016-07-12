@@ -24,13 +24,8 @@
         = render(:partial => "layouts/dynatree",
                  :locals => {:tree_id             => "automate_treebox",
                              :tree_name           => "automate_tree",
-                             :json_tree           => @automate_tree,
+                             :bs_tree             => @automate_tree,
                              :onclick             => "miqOnClickSelectAETreeNode",
-                             :tree_root           => "#{x_node(:automate_tree)}",
-                             :base_id             => "root",
-                             :no_base_exp         => true,
-                             :exp_tree            => false,
-                             :highlighting        => true,
                              :autoload            => true})
       .modal-footer
         %div{:id => "include_domain_prefix_div"}

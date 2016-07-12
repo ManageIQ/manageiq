@@ -15,7 +15,6 @@ class TreeBuilderInstances < TreeBuilder
     locals.merge!(
       :tree_id   => "instances_treebox",
       :tree_name => "instances_tree",
-      :id_prefix => "instances_",
       :autoload  => true
     )
   end

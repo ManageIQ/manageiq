@@ -5,13 +5,6 @@ class TreeBuilderEvent < TreeBuilder
     {:full_ids => true}
   end
 
-  def set_locals_for_render
-    locals = super
-    locals.merge!(
-      :id_prefix => "ev_",
-    )
-  end
-
   # level 0 - root
   def root_options
     [t = N_("All Events"), t]

@@ -46,7 +46,7 @@ describe TreeBuilderPolicySimulation do
 
     it 'sets root correctly' do
       root = @policy_simulation_tree.send(:root_options)
-      expect(root).to eq(["<b>Policy Simulation</b>".html_safe, 'Policy Simulation', 'vm'])
+      expect(root).to eq(["<b>Policy Simulation</b>".html_safe, 'Policy Simulation', 'vm', { :cfmeNoClick => true }])
     end
 
     it 'sets icon correctly' do

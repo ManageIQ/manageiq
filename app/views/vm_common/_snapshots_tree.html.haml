@@ -4,4 +4,4 @@
       %h3= _('Available Snapshots')
       = render(:partial => 'shared/tree', :locals => {:tree => @snapshot_tree, :name => @snapshot_tree.name})
     :javascript
-      miqDynatreeNodeAddClass("#{j_str @snapshot_tree.name}", "#{j_str @snapshot_tree.selected_node}", "dynatree-cfme-active");
+      miqDynatreeActivateNodeSilently("#{j_str @snapshot_tree.name}", "#{j_str @snapshot_tree.selected_node}");

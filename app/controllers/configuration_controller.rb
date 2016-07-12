@@ -110,14 +110,6 @@ class ConfigurationController < ApplicationController
     @changed = false unless @changed
     render :update do |page|
       page << javascript_prologue
-      @edit[:current].each_with_index do |filter, i|
-        style_class = if filter[:search_key] != @edit[:new][i][:search_key]
-                        'cfme-blue-bold-node'
-                      else
-                        'dynatree-title'
-        end
-        page << "miqDynatreeNodeAddClass('df_tree', $('[id$=\"-#{filter[:id]}\"]'), '#{style_class}')"
-      end
       page << javascript_for_miq_button_visibility(@changed)
     end
   end

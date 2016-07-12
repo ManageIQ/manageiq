@@ -979,9 +979,7 @@ module ApplicationController::MiqRequestMethods
         if ldap_ous == ou[1][:ou]
           # expand selected nodes parents when editing existing record
           @expand_parent_nodes = id
-          temp[:addClass] = "cfme-blue-bold-node"
-        else
-          temp[:addClass] = "cfme-no-cursor-node"
+          temp[:highlighted] = true
         end
         @ou_kids = []
         ou[1].each do |lvl1|
@@ -999,7 +997,7 @@ module ApplicationController::MiqRequestMethods
       end
     end
     unless all_dcs.blank?
-      @ldap_ous_tree = all_dcs.to_json  # Add ci node array to root of tree
+      @ldap_ous_tree = TreeBuilder.convert_bs_tree(all_dcs).to_json # Add ci node array to root of tree
     else
       @ldap_ous_tree = nil
     end
@@ -1017,10 +1015,8 @@ module ApplicationController::MiqRequestMethods
     }
 
     if ldap_ous == node[1][:ou]
-      kids[:addClass] = "cfme-blue-bold-node"
+      temp[:highlighted] = true
       @expand_parent_nodes = id
-    else
-      kids[:addClass] = "cfme-no-cursor-node"
     end
 
     ou_kids = []
@@ -1067,7 +1063,7 @@ module ApplicationController::MiqRequestMethods
           temp = {}
           temp[:key] = c[0].to_s
           # only add cfme_parent_key for single value tags, need to use in JS onclick handler
-          temp[:cfme_parent_key] = t[:id].to_s if t[:single_value]
+          temp[:selectable] = false
           temp[:title] = temp[:tooltip] = c[1][:description]
           temp[:addClass] = "cfme-no-cursor-node"
           temp[:icon] = child_icon
@@ -1099,7 +1095,7 @@ module ApplicationController::MiqRequestMethods
         all_tags.push(@ci_node) unless @ci_kids.blank?
       end
     end
-    @all_tags_tree = all_tags.to_json # Add ci node array to root of tree
+    @all_tags_tree = TreeBuilder.convert_bs_tree(all_tags).to_json # Add ci node array to root of tree
     session[:tree] = "all_tags"
     session[:tree_name] = "all_tags_tree"
   end

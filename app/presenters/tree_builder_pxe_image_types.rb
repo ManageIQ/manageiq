@@ -7,10 +7,7 @@ class TreeBuilderPxeImageTypes < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(
-      :id_prefix => "pit_",
-      :autoload  => true
-    )
+    locals.merge!(:autoload => true)
   end
 
   def root_options

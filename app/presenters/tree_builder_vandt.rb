@@ -7,11 +7,7 @@ class TreeBuilderVandt < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(
-      :id_prefix         => "vt_",
-      :no_getitem_alerts => true,
-      :autoload          => true
-    )
+    locals.merge!(:autoload => true)
   end
 
   def root_options

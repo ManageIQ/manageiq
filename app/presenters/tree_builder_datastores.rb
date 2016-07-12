@@ -17,12 +17,10 @@ class TreeBuilderDatastores < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix                   => 'datastore_',
-                  :checkboxes                  => true,
-                  :onclick                     => false,
-                  :onselect                    => "miqOnCheckCUFilters",
-                  :check_url                   => "/ops/cu_collection_field_changed/",
-                  :open_close_all_on_dbl_click => true)
+    locals.merge!(:checkboxes        => true,
+                  :onselect          => "miqOnCheckCUFilters",
+                  :highlight_changes => true,
+                  :check_url         => "/ops/cu_collection_field_changed/")
   end
 
   def root_options
@@ -37,14 +35,13 @@ class TreeBuilderDatastores < TreeBuilder
           {:name => kid.name}
         end
       end
-      { :id       => node[:id].to_s,
-        :text     => "<b>#{node[:name]}</b> [#{node[:location]}]".html_safe,
-        :image    => 'storage',
-        :tip      => "#{node[:name]} [#{node[:location]}]",
-        :select   => node[:capture] == true,
-        :addClass => "cfme-no-cursor-node",
-        :children => children
-      }
+      { :id          => node[:id].to_s,
+        :text        => "<b>#{node[:name]}</b> [#{node[:location]}]".html_safe,
+        :image       => 'storage',
+        :tip         => "#{node[:name]} [#{node[:location]}]",
+        :select      => node[:capture] == true,
+        :cfmeNoClick => true,
+        :children    => children }
     end
     count_only_or_objects(count_only, nodes)
   end
@@ -56,9 +53,8 @@ class TreeBuilderDatastores < TreeBuilder
         :image        => 'host',
         :tip          => node[:name],
         :hideCheckbox => true,
-        :addClass     => "cfme-no-cursor-node",
-        :children     => []
-      }
+        :cfmeNoClick  => true,
+        :children     => [] }
     end
     count_only_or_objects(count_only, nodes)
   end

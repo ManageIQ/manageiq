@@ -7,7 +7,7 @@ describe TreeBuilderOpsRbac do
   describe ".new" do
     def assert_tree_nodes(expected)
       tree_json  = TreeBuilderOpsRbac.new("rbac_tree", "rbac", {}).tree_nodes
-      tree_nodes = JSON.parse(tree_json).first['children'].collect { |h| h['title'] }
+      tree_nodes = JSON.parse(tree_json).first['nodes'].collect { |h| h['text'] }
       expect(tree_nodes).to match_array expected
     end
 

@@ -807,7 +807,6 @@ module OpsController::OpsRbac
 
           # Only update description field value if ldap group user field was selected
           page << "$('#description').val('#{j_str(@edit[:new][:description])}');" if params[:ldap_groups_user]
-          page << javascript_for_tree_checkbox_clicked(tree_name) if params[:check] && tree_name
 
           # don't do anything to lookup box when checkboxes on the right side are checked
           page << set_element_visible('group_lookup', @edit[:new][:lookup]) unless params[:check]
@@ -925,7 +924,7 @@ module OpsController::OpsRbac
 
   def rbac_build_features_tree
     @role = @sb[:typ] == "copy" ? @record.dup : @record if @role.nil?     # if on edit screen use @record
-    OpsController::RbacTree.build(@role, @role_features).to_json
+    TreeBuilder.convert_bs_tree(OpsController::RbacTree.build(@role, @role_features, !@edit.nil?)).to_json
   end
 
   # Set form variables for role edit
@@ -1091,20 +1090,18 @@ module OpsController::OpsRbac
       cat_node[:key] = category.name
       cat_node[:title] = category.description
       cat_node[:tooltip] =  _("Category: %{description}") % {:description => category.description}
-      cat_node[:addClass] = "cfme-no-cursor-node"      # No cursor pointer
       cat_node[:icon] = ActionController::Base.helpers.image_path('100/folder.png')
       cat_node[:hideCheckbox] = true
+      cat_node[:cfmeNoClick] = true
       cat_kids = []
       category.entries.sort_by { |e| e.description.downcase }.each do |tag|
         tag_node = {}
         tag_node[:key] = [category.name, tag.name].join("-")
         tag_node[:title] = tag.description
+        # tag_node[:checkable] = @edit.nil?
+        tag_node[:cfmeNoClick] = true
+        tag_node[:checkable] = !@edit.nil?
         tag_node[:tooltip] =  _("Tag: %{description}") % {:description => tag.description}
-        if (@edit && @edit[:new][:filters][tag_node[:key]] == @edit[:current][:filters][tag_node[:key]]) || ![tag_node[:key]].include?(@filters) # Check new vs current
-          tag_node[:addClass] = "cfme-no-cursor-node"       # No cursor pointer
-        else
-          tag_node[:addClass] = "cfme-blue-node"            # Show node as different
-        end
         tag_node[:icon] = ActionController::Base.helpers.image_path('100/tag.png')
         tag_node[:select] = true if (@edit && @edit[:new][:filters].key?(tag_node[:key])) || (@filters && @filters.key?(tag_node[:key])) # Check if tag is assigned
         kids_checked = true if tag_node[:select] == true
@@ -1114,7 +1111,7 @@ module OpsController::OpsRbac
       cat_node[:expand] = true if kids_checked
       cats.push(cat_node) unless cat_kids.empty?
     end
-    @myco_tree = cats.to_json.html_safe # Add cats node array to root of tree
+    @myco_tree = TreeBuilder.convert_bs_tree(cats).to_json # Add cats node array to root of tree
   end
 
   # Set group record variables to new values

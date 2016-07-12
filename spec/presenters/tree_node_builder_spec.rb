@@ -406,7 +406,7 @@ describe TreeNodeBuilder do
     it 'Node for AssignedServerRole' do
       node = TreeNodeBuilder.build(@assigned_server_role, nil, {})
       expect(node[:key]).to eq("asr-#{MiqRegion.compress_id(@assigned_server_role.id)}")
-      expect(node[:title]).to eq("Role: SmartProxy (primary, active, PID=)")
+      expect(node[:title]).to eq("<strong>Role: SmartProxy</strong> (primary, active, PID=)")
     end
 
     it 'Node for MiqServer' do

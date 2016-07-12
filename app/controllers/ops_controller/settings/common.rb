@@ -626,7 +626,6 @@ module OpsController::Settings::Common
                                                                     true,
                                                                     @selected_zone)
     end
-
     @edit[:new] = copy_hash(@edit[:current])
     session[:edit] = @edit
     @in_a_form = true

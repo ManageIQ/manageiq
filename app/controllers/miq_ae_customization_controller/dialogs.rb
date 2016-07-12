@@ -793,7 +793,7 @@ module MiqAeCustomizationController::Dialogs
 
     base_node[:children] = tab_nodes unless tab_nodes.empty?
 
-    @dialog_edit_tree = base_node.to_json # JSON object for tree loading
+    @dialog_edit_tree = TreeBuilder.convert_bs_tree(base_node).to_json # JSON object for tree loading
 
     x_node_set("root", :dialog_edit_tree) unless x_node(:dialog_edit_tree)
   end

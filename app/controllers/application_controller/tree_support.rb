@@ -34,23 +34,11 @@ module ApplicationController::TreeSupport
   def tree_autoload_dynatree
     @edit ||= session[:edit] # Remember any previous @edit
     nodes = tree_add_child_nodes(params[:id])
-    render :json => nodes
+    render :json => TreeBuilder.convert_bs_tree(nodes)
   end
 
   def tree_add_child_nodes(id)
-    TreeBuilder.tree_add_child_nodes(@sb, x_tree[:klass_name], id)
-  end
-
-  def tree_autoload_quads
-    # set temp list of hosts/vms to be shown on DC tree on mousein event
-    build_vm_host_array if !@sb[:tree_hosts_hash].blank? || !@sb[:tree_vms_hash].blank?
-    render :update do |page|
-      page << javascript_prologue
-      if !@sb[:tree_hosts_hash].blank? || !@sb[:tree_vms_hash].blank?
-        page.replace("dc_tree_quads_div", :partial => "layouts/dc_tree_quads")
-      end
-      page << "miqSparkle(false);"
-    end
+    TreeBuilder.tree_add_child_nodes(@sb, x_tree[:klass_name], id, controller_name)
   end
 
   private ############################
@@ -65,19 +53,15 @@ module ApplicationController::TreeSupport
     ExtManagementSystem.all.each do |ems| # Go thru all of the providers
       if !@rp_only || (@rp_only && ems.resource_pools.count > 0)
         ems_node = {
-          :key      => "#{ems.class.name}_#{ems.id}",
-          :title    => ems.name,
-          :tooltip  => "#{ui_lookup(:table => "ems_infras")}: #{ems.name}",
-          :addClass => "cfme-no-cursor-node",      # No cursor pointer
-          :icon     => ActionController::Base.helpers.image_path("svg/vendor-#{ems.image_name}.svg")
+          :key         => "#{ems.class.name}_#{ems.id}",
+          :title       => ems.name,
+          :checkable   => !@edit.nil?,
+          :tooltip     => "#{ui_lookup(:table => "ems_infras")}: #{ems.name}",
+          :cfmeNoClick => true,
+          :icon        => ActionController::Base.helpers.image_path("svg/vendor-#{ems.image_name}.svg")
         }
         if @vat || @rp_only
           ems_node[:hideCheckbox] = true
-        else
-          if @edit &&
-             @edit[:new][:belongsto][ems_node[:key]] != @edit[:current][:belongsto][ems_node[:key]]
-            ems_node[:addClass] = "cfme-blue-bold-node"  # Show node as different
-          end
         end
         ems_node[:select] = true if selected_ids.include?(ems_node[:key])  # Check if tag is assigned
         ems_kids = []
@@ -95,9 +79,9 @@ module ApplicationController::TreeSupport
 
     if save_tree_in_session
       session[:tree] = vat ? "vat" : "hac"
-      session["#{session[:tree]}_tree".to_sym] = providers.to_json  # Add ems node array to root of tree
+      session["#{session[:tree]}_tree".to_sym] = TreeBuilder.convert_bs_tree(providers).to_json # Add ems node array to root of tree
     else
-      providers.to_json  # Return tree nodes to the caller
+      TreeBuilder.convert_bs_tree(providers).to_json # Return tree nodes to the caller
     end
   end
 
@@ -106,8 +90,10 @@ module ApplicationController::TreeSupport
     kids          = []                            # Return node(s) as an array
     kids_checked  = false
     node = {
-      :key   => "#{folder.class.name}_#{folder.id}",
-      :title => folder.name
+      :key         => "#{folder.class.name}_#{folder.id}",
+      :title       => folder.name,
+      :checkable   => !@edit.nil?,
+      :cfmeNoClick => true
     }
     node[:select] = true if @selected_ids.include?(node[:key]) # Check if tag is assigned
 
@@ -128,16 +114,9 @@ module ApplicationController::TreeSupport
     # Handle Datacenter folders
     elsif folder.kind_of?(Datacenter)
       node[:tooltip] = _("Datacenter: %{name}") % {:name => folder.name}
-      node[:addClass] = "cfme-no-cursor-node"          # No cursor pointer
       node[:icon] = ActionController::Base.helpers.image_path("100/datacenter.png")
       if @vat || @rp_only
         node[:hideCheckbox] = true
-      else
-        # Check for @edit as alert profile assignment uses this method, but uses @assign object
-        if @edit &&
-           @edit[:new][:belongsto][node[:key]] != @edit[:current][:belongsto][node[:key]]
-          node[:addClass] = "cfme-blue-bold-node"  # Show node as different
-        end
       end
       dc_kids = []
       folder.folders.each do |f|                # Get folders
@@ -193,20 +172,12 @@ module ApplicationController::TreeSupport
     # Handle normal Folders
     elsif folder.kind_of?(EmsFolder)
       node[:tooltip] = _("Folder: %{name}") % {:name => folder.name}
-      node[:addClass] = "cfme-no-cursor-node"          # No cursor pointer
       if vat
         node[:icon] = ActionController::Base.helpers.image_path("100/blue_folder.png")
-        if @edit && @edit[:new][:belongsto][node[:key]] != @edit[:current][:belongsto][node[:key]]  # Check new vs current
-          node[:addClass] = "cfme-blue-bold-node"  # Show node as different
-        end
       else
         node[:icon] = ActionController::Base.helpers.image_path("100/folder.png")
         if @vat || @rp_only
           node[:hideCheckbox] = true
-        else
-          if @edit && @edit[:new][:belongsto][node[:key]] != @edit[:current][:belongsto][node[:key]]  # Check new vs current
-            node[:addClass] = "cfme-blue-bold-node"  # Show node as different
-          end
         end
       end
       f_kids = []
@@ -238,10 +209,6 @@ module ApplicationController::TreeSupport
     elsif folder.kind_of?(Host) && folder.authorized_for_user?(session[:userid])
       if !@rp_only || (@rp_only && folder.resource_pools.count > 0)
         node[:tooltip] = _("Host: %{name}") % {:name => folder.name}
-        node[:addClass] = "cfme-no-cursor-node"          # No cursor pointer
-        if @edit && @edit[:new][:belongsto][node[:key]] != @edit[:current][:belongsto][node[:key]]  # Check new vs current
-          node[:addClass] = "cfme-blue-bold-node"  # Show node as different
-        end
         if folder.parent_cluster || @rp_only                  # Host is under a cluster, no checkbox
           node[:hideCheckbox] = true
         end
@@ -264,11 +231,8 @@ module ApplicationController::TreeSupport
     elsif folder.class == EmsCluster
       if !@rp_only || (@rp_only && folder.resource_pools.count > 0)
         node[:tooltip] = _("Cluster: %{name}") % {:name => folder.name}
-        node[:addClass] = "cfme-no-cursor-node"          # No cursor pointer
         node[:icon] = ActionController::Base.helpers.image_path("100/cluster.png")
         node[:hideCheckbox] = true if @vat || @rp_only
-        node[:addClass] = "cfme-blue-bold-node" if @edit &&
-                                                   @edit[:new][:belongsto][node[:key]] != @edit[:current][:belongsto][node[:key]]
         cl_kids = []
         folder.hosts.each do |h|                  # Get hosts
           kid_node, kid_checked = user_get_tree_node(h, node[:key])
@@ -297,10 +261,6 @@ module ApplicationController::TreeSupport
     # Handle non-default Resource Pools
     elsif folder.kind_of?(ResourcePool)         # Resource Pool
       node[:tooltip] = _("Resource Pool: #%{name}") % {:name => folder.name}
-      node[:addClass] = "cfme-no-cursor-node"          # No cursor pointer
-      if @edit && @edit[:new][:belongsto][node[:key]] != @edit[:current][:belongsto][node[:key]]  # Check new vs current
-        node[:addClass] = "cfme-blue-bold-node"  # Show node as different
-      end
       node[:icon] = ActionController::Base.helpers.image_path(folder.vapp ? "100/vapp.png" : "100/resource_pool.png")
       rp_kids = []
       folder.resource_pools.each do |rp|        # Get the resource pool nodes

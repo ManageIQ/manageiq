@@ -192,13 +192,13 @@
           - else
             - click = 'new'
           = render(:partial => "layouts/dynatree",
-                   :locals  => {:tree_id            => "ldap_ous_treebox",
-                                :tree_name          => session[:tree_name],
-                                :json_tree          => @ldap_ous_tree,
-                                :onclick            => "miqOnClickProvLdapOus",
-                                :click_url          => "/miq_request/prov_field_changed/#{click}",
-                                :cookie_id_prefix   => "prov_trees",
-                                :tree_state         => true})
+                   :locals  => {:tree_id       => "ldap_ous_treebox",
+                                :tree_name     => session[:tree_name],
+                                :bs_tree       => @ldap_ous_tree,
+                                :onclick       => "miqOnClickProvLdapOus",
+                                :click_url     => "/miq_request/prov_field_changed/#{click}",
+                                :cookie_prefix => "prov_",
+                                :tree_state    => true})
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
             -# Display notes if available
             = field_hash[:notes]
@@ -301,18 +301,14 @@
           - else
             - check = 'new'
           = render(:partial => "layouts/dynatree",
-                   :locals => {:tree_id                     => "all_tags_treebox",
-                               :tree_name                   => "all_tags_tree",
-                               :json_tree                   => @all_tags_tree,
-                               :oncheck                     => "miqOnCheckProvTags",
-                               :check_url                   => "/miq_request/prov_field_changed/#{check}",
-                               :exp_tree                    => @edit ? false : true,
-                               :no_tree_lines               => true,
-                               :multi_lines                 => true,
-                               :checkboxes                  => true,
-                               :open_close_all_on_dbl_click => true,
-                               :cookie_id_prefix            => "prov_trees",
-                               :tree_state                  => true})
+                   :locals => {:tree_id       => "all_tags_treebox",
+                               :tree_name     => "all_tags_tree",
+                               :bs_tree       => @all_tags_tree,
+                               :oncheck       => "miqOnCheckProvTags",
+                               :check_url     => "/miq_request/prov_field_changed/#{check}",
+                               :checkboxes    => true,
+                               :cookie_prefix => "prov_trees",
+                               :tree_state    => true})
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
             -# Display notes if available
             = field_hash[:notes]

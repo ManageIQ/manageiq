@@ -28,53 +28,53 @@ describe TreeBuilderClusters do
     end
     it 'set cluster nodes correctly' do
       cluster_nodes = @cluster_tree.send(:x_get_tree_roots, false)
-      expect(cluster_nodes.first).to eq(:id       => "1",
-                                        :text     => "Name",
-                                        :image    => "cluster",
-                                        :tip      => "Name",
-                                        :select   => false,
-                                        :addClass => "cfme-no-cursor-node dynatree-partsel",
-                                        :children => @ho_enabled + @ho_disabled)
+      expect(cluster_nodes.first).to eq(:id          => "1",
+                                        :text        => "Name",
+                                        :image       => "cluster",
+                                        :tip         => "Name",
+                                        :select      => 'unsure',
+                                        :cfmeNoClick => true,
+                                        :children    => @ho_enabled + @ho_disabled)
       # non-cluster-node
-      expect(cluster_nodes.last).to eq(:id       => "NonCluster",
-                                       :text     => _("Non-clustered Hosts"),
-                                       :image    => 'host',
-                                       :tip      => _("Non-clustered Hosts"),
-                                       :select   => true,
-                                       :addClass => "cfme-no-cursor-node",
-                                       :children => @non_cluster_hosts)
+      expect(cluster_nodes.last).to eq(:id          => "NonCluster",
+                                       :text        => _("Non-clustered Hosts"),
+                                       :image       => 'host',
+                                       :tip         => _("Non-clustered Hosts"),
+                                       :select      => true,
+                                       :cfmeNoClick => true,
+                                       :children    => @non_cluster_hosts)
     end
     it 'sets non-cluster host nodes correctly' do
       cluster_nodes = @cluster_tree.send(:x_get_tree_roots, false)
       non_cluster_host = @cluster_tree.send(:x_get_tree_hash_kids, cluster_nodes.last, false)
-      expect(non_cluster_host).to eq([{:id       => "NonCluster_2",
-                                       :text     => "Non Cluster Host",
-                                       :tip      => "Host: Non Cluster Host",
-                                       :image    => "host",
-                                       :addClass => "cfme-no-cursor-node",
-                                       :select   => true,
-                                       :children => []}])
+      expect(non_cluster_host).to eq([{:id          => "NonCluster_2",
+                                       :text        => "Non Cluster Host",
+                                       :tip         => "Host: Non Cluster Host",
+                                       :image       => "host",
+                                       :select      => true,
+                                       :cfmeNoClick => true,
+                                       :children    => []}])
     end
     it 'sets cluster hosts nodes correctly' do
       cluster_nodes = @cluster_tree.send(:x_get_tree_roots, false)
       cluster_hosts = @cluster_tree.send(:x_get_tree_hash_kids, cluster_nodes.first, false)
       cluster_hosts_expected = @ho_enabled.map do |node|
-        {:id       => "#{cluster_nodes.first[:id]}_#{node[:id]}",
-         :text     => node[:name],
-         :tip      => _("Host: %{name}") % {:name => node[:name]},
-         :image    => 'host',
-         :addClass => "cfme-no-cursor-node",
-         :select   => true,
-         :children => []}
+        {:id          => "#{cluster_nodes.first[:id]}_#{node[:id]}",
+         :text        => node[:name],
+         :tip         => _("Host: %{name}") % {:name => node[:name]},
+         :image       => 'host',
+         :select      => true,
+         :cfmeNoClick => true,
+         :children    => []}
       end
       cluster_hosts_expected += @ho_disabled.map do |node|
-        {:id       => "#{cluster_nodes.first[:id]}_#{node[:id]}",
-         :text     => node[:name],
-         :tip      => _("Host: %{name}") % {:name => node[:name]},
-         :image    => 'host',
-         :addClass => "cfme-no-cursor-node",
-         :select   => false,
-         :children => []}
+        {:id          => "#{cluster_nodes.first[:id]}_#{node[:id]}",
+         :text        => node[:name],
+         :tip         => _("Host: %{name}") % {:name => node[:name]},
+         :image       => 'host',
+         :select      => false,
+         :cfmeNoClick => true,
+         :children    => []}
       end
       expect(cluster_hosts).to eq(cluster_hosts_expected)
     end

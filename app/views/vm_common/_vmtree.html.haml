@@ -6,16 +6,13 @@
 
   #genealogy_treebox{:style => "width:100%"}
   = render(:partial => "layouts/dynatree",
-    :locals  => {:tree_id => "genealogy_treebox",
-    :tree_name => @tree_name,
-    :json_tree => @vm_tree,
-    :icon_size => settings(:views, :treesize).to_i,
-    :click_url => "/vm/vmtree_selected/",
-    :onmousein => "miqOnMouseInHostNet",
-    :onmouseout => "miqOnMouseOutHostNet",
-    :onclick => "miqOnClickGenealogyTree",
-    :exp_tree => true,
-    :checkboxes => true,
-    :oncheck => "miqGetChecked",
-    :check_url => "/vm/set_checked_items/",
-    :open_close_all_on_dbl_click => true})
+    :locals         => {:tree_id => "genealogy_treebox",
+      :tree_name                 => @tree_name,
+      :bs_tree                   => @vm_tree,
+      :icon_size                 => settings(:views, :treesize).to_i,
+      :click_url                 => "/vm/vmtree_selected/",
+      :onclick                   => "miqOnClickGenealogyTree",
+      :checkboxes                => true,
+      :oncheck                   => "miqGetChecked",
+      :reselect_node             => session[:base_vm],
+      :check_url                 => "/vm/set_checked_items/"})

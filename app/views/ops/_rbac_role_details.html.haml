@@ -64,12 +64,10 @@
       = render(:partial => "layouts/dynatree",
                :locals  => {:tree_id        => "features_treebox",
                             :tree_name      => "features_tree",
-                            :json_tree      => @features_tree,
+                            :bs_tree        => @features_tree,
                             :checkboxes     => true,
                             :three_checks   => true,
                             :check_url      => "/ops/rbac_role_field_changed/",
-                            :disable_checks => @edit.nil?,
-                            :oncheck        => @edit.nil? ? nil : "miqOnCheckHandler",
-                            :open_close_all_on_dbl_click => true})
+                            :oncheck        => @edit.nil? ? nil : "miqOnCheckHandler"})
       &nbsp;&nbsp;*
       = _("Double click a feature to open/close all children.")

@@ -5,14 +5,6 @@ class TreeBuilderChargebackRates < TreeBuilder
     {:open_all => true, :full_ids => true, :leaf => "MiqReportResult"}
   end
 
-  def set_locals_for_render
-    locals = super
-    temp = {
-      :id_prefix      => "cbr_",
-    }
-    locals.merge!(temp)
-  end
-
   def root_options
     [t = _("Rates"), t]
   end

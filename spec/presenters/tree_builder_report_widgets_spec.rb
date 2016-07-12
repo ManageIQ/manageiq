@@ -2,7 +2,7 @@ describe TreeBuilderReportWidgets do
   subject { described_class.new("cb_rates_tree", "cb_rates", {}) }
 
   it "#set_locals_for_render (private)" do
-    expect(subject.send(:set_locals_for_render)).to have_attributes(:id_prefix => 'widgets_', :autoload => true)
+    expect(subject.send(:set_locals_for_render)).to have_attributes(:autoload => true)
   end
 
   it "#x_get_tree_roots (private)" do

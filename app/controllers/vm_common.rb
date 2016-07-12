@@ -273,7 +273,7 @@ module VmCommon
                       :url  => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
       # session[:base_id] = @record.id
       vmtree_nodes = vmtree(@record)
-      @vm_tree = vmtree_nodes.to_json
+      @vm_tree = TreeBuilder.convert_bs_tree(vmtree_nodes).to_json
       @tree_name = "genealogy_tree"
       @button_group = "vmtree"
     elsif @display == "compliance_history"
@@ -397,36 +397,23 @@ module VmCommon
 
   # Recursive method to build a snapshot tree node
   def vm_kidstree(vm)
-    branch = {}
     key = "_v-#{vm.id}"
     title = vm.name
-    style = ""
     tooltip = _("VM: %{name} (Click to view)") % {:name => vm.name}
     if session[:base_vm] == "_h-#{vm.id}"
       title << _(" (Selected)")
       key = session[:base_vm]
-      style = "dynatree-cfme-active cfme-no-cursor-node"
       tooltip = ""
     end
     image = ""
     if vm.template?
-      if vm.host
-        image = "template.png"
-      else
-        image = "template-no-host.png"
-      end
+      image = vm.host ? "template.png" : "template-no-host.png"
     else
       image = "#{vm.current_state.downcase}.png"
     end
-    branch = TreeNodeBuilder.generic_tree_node(
-      key,
-      title,
-      image,
-      tooltip,
-      :style_class => style
-    )
+    branch = TreeNodeBuilder.generic_tree_node(key, title, image, tooltip)
     @tree_vms.push(vm) unless @tree_vms.include?(vm)
-    if vm.children.length > 0
+    if vm.children.any?
       kids = []
       vm.children.each do |kid|
         kids.push(vm_kidstree(kid)) unless @tree_vms.include?(kid)

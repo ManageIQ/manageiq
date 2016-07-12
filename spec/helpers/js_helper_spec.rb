@@ -18,14 +18,14 @@ describe JsHelper do
   context '#tree_lock' do
     it 'returns js to lock tree' do
       expect(tree_lock('bar', true).gsub(/^\s+/, '')).to eq(<<-JS.strip_heredoc)
-        $('#barbox').dynatree('disable');
+        miqTreeObject('bar').disableAll({silent: true, keepState: true});
         miqDimDiv('\#bar_div', true);
       JS
     end
 
     it 'returns js to unlock tree' do
       expect(tree_lock('bar', false).gsub(/^\s+/, '')).to eq(<<-JS.strip_heredoc)
-        $('#barbox').dynatree('enable');
+        miqTreeObject('bar').enableAll({silent: true, keepState: true});
         miqDimDiv('\#bar_div', false);
       JS
     end

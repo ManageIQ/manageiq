@@ -17,14 +17,10 @@ class TreeBuilderSections < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix                   => 'all_sections_',
-                  :checkboxes                  => true,
-                  :onclick                     => false,
-                  :three_checks                => true,
-                  :onselect                    => "miqOnCheckSections",
-                  :enable_tree_images          => false,
-                  :check_url                   => "/#{@controller_name}/sections_field_changed/",
-                  :open_close_all_on_dbl_click => true)
+    locals.merge!(:checkboxes   => true,
+                  :three_checks => true,
+                  :onselect     => "miqOnCheckSections",
+                  :check_url    => "/#{@controller_name}/sections_field_changed/")
   end
 
   def root_options
@@ -37,23 +33,25 @@ class TreeBuilderSections < TreeBuilder
     @data.master_list.each_slice(3) do |section, _records, _fields|
       if group.blank? || section[:group] != group
         group = section[:group]
-        nodes.push(:id       => "group_#{section[:group]}",
-                   :text     => section[:group] == "Categories" ? "#{@current_tenant} Tags" : section[:group],
-                   :tip      => section[:group],
-                   :image    => false,
-                   :select   => true,
-                   :children => [section])
+        nodes.push(:id          => "group_#{section[:group]}",
+                   :text        => section[:group] == "Categories" ? "#{@current_tenant} Tags" : section[:group],
+                   :tip         => section[:group],
+                   :image       => false,
+                   :select      => true,
+                   :cfmeNoClick => true,
+                   :children    => [section])
       else
         nodes.last[:children].push(section)
       end
     end
     nodes.each do |node|
-      i = node[:children].count { |kid| @data.include[kid[:name]][:checked] } # number of checked kids
-      if i == 0
+      checked = node[:children].count { |kid| @data.include[kid[:name]][:checked] } # number of checked kids
+      if checked == 0
         node[:select] = false
-      elsif i < node[:children].size
-        node[:select] = false
-        node[:addClass] = 'dynatree-partsel'
+      elsif checked < node[:children].size
+        node[:select] = 'undefined'
+      else
+        node[:select] = true
       end
     end
     count_only_or_objects(count_only, nodes)
@@ -61,12 +59,13 @@ class TreeBuilderSections < TreeBuilder
 
   def x_get_tree_hash_kids(parent, count_only)
     nodes = parent[:children].map do |kid|
-      {:id       => "group_#{kid[:group]}:#{kid[:name]}",
-       :text     => kid[:header],
-       :tip      => kid[:header],
-       :image    => false,
-       :select   => @data.include[kid[:name]][:checked],
-       :children => []
+      {:id          => "group_#{kid[:group]}:#{kid[:name]}",
+       :text        => kid[:header],
+       :tip         => kid[:header],
+       :image       => false,
+       :select      => @data.include[kid[:name]][:checked],
+       :cfmeNoClick => true,
+       :children    => []
       }
     end
     count_only_or_objects(count_only, nodes)

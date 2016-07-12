@@ -14,7 +14,6 @@ class TreeBuilderImages < TreeBuilder
     locals.merge!(
       :tree_id   => "images_treebox",
       :tree_name => "images_tree",
-      :id_prefix => "images_",
       :autoload  => true
     )
   end

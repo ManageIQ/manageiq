@@ -9,7 +9,7 @@ class TreeBuilderConfigurationManagerConfiguredSystems < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:autoload => true, :id_prefix => 'cs_')
+    locals.merge!(:autoload => true)
   end
 
   def root_options

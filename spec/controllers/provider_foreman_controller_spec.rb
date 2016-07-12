@@ -692,7 +692,7 @@ describe ProviderForemanController do
   def find_treenode_for_foreman_provider(provider)
     key = ems_key_for_provider(provider)
     tree = JSON.parse(controller.instance_variable_get(:@configuration_manager_providers_tree))
-    tree[0]['children'][0]['children'].find { |c| c['key'] == key } unless tree[0]['children'][0]['children'].nil?
+    tree[0]['nodes'][0]['nodes'].find { |c| c['key'] == key } unless tree[0]['nodes'][0]['nodes'].nil?
   end
 
   def ems_key_for_provider(provider)

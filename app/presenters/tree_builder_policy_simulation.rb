@@ -20,16 +20,11 @@ class TreeBuilderPolicySimulation < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix                   => 'ps_',
-                  :autoload                    => true,
-                  :cfme_no_click               => true,
-                  :cookie_id_prefix            => "edit_treeOpenStatex",
-                  :onclick                     => false,
-                  :open_close_all_on_dbl_click => true)
+    locals.merge!(:autoload => true, :cookie_prefix => 'edit_')
   end
 
   def root_options
-    ["<b>#{@root_name}</b>".html_safe, @root_name, 'vm']
+    ["<b>#{@root_name}</b>".html_safe, @root_name, 'vm', {:cfmeNoClick => true}]
   end
 
   def node_icon(result)
@@ -50,11 +45,12 @@ class TreeBuilderPolicySimulation < TreeBuilder
     if @data.present?
       nodes = reject_na_nodes(@data).map do |node|
         name = "<b>" + _("Policy Profile:") + "</b> #{node['description']}"
-        {:id       => node['id'],
-         :text     => name.html_safe,
-         :image    => node_icon(node["result"]),
-         :tip      => node['description'],
-         :policies => node['policies']}
+        {:id          => node['id'],
+         :text        => name.html_safe,
+         :image       => node_icon(node["result"]),
+         :tip         => node['description'],
+         :cfmeNoClick => true,
+         :policies    => node['policies']}
       end
     else
       nodes = [{:id => nil, :text => _("Items out of scope"), :image => 'blank', :cfmeNoClick => true}]
@@ -87,11 +83,12 @@ class TreeBuilderPolicySimulation < TreeBuilder
       active_caption = get_active_caption(node)
       name = "<b>" + _("Policy%{caption}: ") % {:caption => active_caption} + "</b> #{node['description']}"
       {:id         => node['id'],
-       :text       => name.html_safe,
-       :image      => node_icon(node["result"]),
-       :tip        => node['description'],
-       :scope      => node['scope'],
-       :conditions => node['conditions']}
+       :text        => name.html_safe,
+       :image       => node_icon(node["result"]),
+       :tip         => node['description'],
+       :scope       => node['scope'],
+       :conditions  => node['conditions'],
+       :cfmeNoClick => true}
     end
   end
 
@@ -100,12 +97,13 @@ class TreeBuilderPolicySimulation < TreeBuilder
     nodes = nodes.sort_by { |a| a["description"] }.map do |node|
       icon = node_icon(node["result"])
       name = "<b>" + _("Condition: ") + "</b> #{node['description']}"
-      {:id         => node['id'],
-       :text       => name.html_safe,
-       :image      => icon,
-       :tip        => node['description'],
-       :scope      => node['scope'],
-       :expression => node["expression"]}
+      {:id          => node['id'],
+       :text        => name.html_safe,
+       :image       => icon,
+       :tip         => node['description'],
+       :scope       => node['scope'],
+       :expression  => node["expression"],
+       :cfmeNoClick => true}
     end
     nodes.compact
   end
@@ -114,14 +112,14 @@ class TreeBuilderPolicySimulation < TreeBuilder
     icon = parent[:scope]["result"] ? "checkmark" : "na"
     name, tip = exp_build_string(parent[:scope])
     name = "<b>" + _("Scope: ") + "</b> " + name
-    {:id => nil, :text => name.html_safe, :image => icon, :tip => tip.html_safe}
+    {:id => nil, :text => name.html_safe, :image => icon, :tip => tip.html_safe, :cfmeNoClick => true}
   end
 
   def expression_node(parent)
     icon = parent[:expression]["result"] ? "checkmark" : "na"
     name, tip = exp_build_string(parent[:expression])
     name = "<b>" + _("Expression: ") + "</b> " +  name
-    {:id => nil, :text => name.html_safe, :image => icon, :tip => tip.html_safe}
+    {:id => nil, :text => name.html_safe, :image => icon, :tip => tip.html_safe, :cfmeNoClick => true}
   end
 
   def get_correct_node(parent, node_name)

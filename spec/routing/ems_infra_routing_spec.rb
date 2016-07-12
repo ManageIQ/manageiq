@@ -37,7 +37,6 @@ describe EmsInfraController do
     tagging_edit
     tl_chooser
     tree_autoload_dynatree
-    tree_autoload_quads
     update
     wait_for_task
     scaling

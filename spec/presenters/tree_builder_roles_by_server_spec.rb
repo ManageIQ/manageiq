@@ -52,26 +52,27 @@ describe TreeBuilderRolesByServer do
     end
 
     it 'returns Roles by Servers' do
-      nodes = [{:key      => "svr-#{MiqRegion.compress_id(@miq_server.id)}",
-                :title    => "<b class='dynatree-title'>Server: #{@miq_server.name} [#{@miq_server.id}] (current) (started)</b>",
-                :icon     => ActionController::Base.helpers.image_path('100/miq_server.png'),
-                :expand   => true,
-                :tooltip  => "Server: #{@miq_server.name} [#{@miq_server.id}] (current) (started)",
-                :children => [{:key      => "asr-#{MiqRegion.compress_id(@assigned_server_role1.id)}",
-                               :addClass => "dynatree-title",
-                               :title    => "Role: SmartProxy (primary, active, PID=)",
-                               :icon     => ActionController::Base.helpers.image_path('100/on.png'),
-                               :expand   => true,
+      nodes = [{'key'     => "svr-#{MiqRegion.compress_id(@miq_server.id)}",
+                'tooltip' => "Server: #{@miq_server.name} [#{@miq_server.id}] (current) (started)",
+                'image'   => ActionController::Base.helpers.image_path('100/miq_server.png'),
+                'text'    => "<strong>Server: #{@miq_server.name} [#{@miq_server.id}] (current) (started)</strong>",
+                'nodes'   => [{'key'   => "asr-#{MiqRegion.compress_id(@assigned_server_role1.id)}",
+                               'image' => ActionController::Base.helpers.image_path('100/on.png'),
+                               'text'  => "<strong>Role: SmartProxy</strong> (primary, active, PID=)",
+                               'state' => {'expanded' => true},
+                               'class' => ''
                                },
-                              {:key      => "asr-#{MiqRegion.compress_id(@assigned_server_role2.id)}",
-                               :addClass => "dynatree-title",
-                               :title    => "Role: SmartProxy (secondary, active, PID=)",
-                               :icon     => ActionController::Base.helpers.image_path('100/on.png'),
-                               :expand   => true,
+                              {'key'   => "asr-#{MiqRegion.compress_id(@assigned_server_role2.id)}",
+                               'image' => ActionController::Base.helpers.image_path('100/on.png'),
+                               'text'  => "<strong>Role: SmartProxy</strong> (secondary, active, PID=)",
+                               'state' => {'expanded' => true},
+                               'class' => ''
                               },
                 ],
+                'state'   => {'expanded' => true},
+                'class' => ''
                }]
-      expect(@server_tree.locals_for_render[:json_tree]).to eq(nodes.to_json)
+      expect(JSON.parse(@server_tree.locals_for_render[:bs_tree])).to eq(nodes)
     end
   end
 end

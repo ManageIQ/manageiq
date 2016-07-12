@@ -11,11 +11,6 @@ class TreeBuilderVat < TreeBuilderDatacenter
 
   private
 
-  def set_locals_for_render
-    locals = super
-    locals.merge!(:id_prefix => "vat_")
-  end
-
   def root_options
     image = "vendor-#{@root.image_name}".to_sym
     [@root.name, @root.name, image]

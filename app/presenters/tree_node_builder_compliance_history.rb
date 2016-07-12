@@ -5,12 +5,19 @@ class TreeNodeBuilderComplianceHistory < TreeNodeBuilder
 
   def hash_node
     text = object[:text].html_safe
-    @node = {:key   => build_hash_id,
-             :icon  => node_icon("#{object[:image]}.png"),
-             :title => text}
+    @node = {:key         => build_hash_id,
+             :icon        => node_icon("#{object[:image]}.png"),
+             :cfmeNoClick => true,
+             :title       => text}
     # Start with all nodes open unless expand is explicitly set to false
     @node[:expand] = true if expand_node?
     @node[:cfmeNoClick] = object[:cfmeNoClick]
     tooltip(object[:tip])
+  end
+
+  def generic_node(text, image, tip = nil)
+    ret = super(text, image, tip)
+    @node[:cfmeNoClick] = true
+    ret
   end
 end

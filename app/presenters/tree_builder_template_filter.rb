@@ -8,7 +8,6 @@ class TreeBuilderTemplateFilter < TreeBuilderVmsFilter
     locals.merge!(
       :tree_id   => "templates_filter_treebox",
       :tree_name => "templates_filter_tree",
-      :id_prefix => "tf_",
       :autoload  => false
     )
   end

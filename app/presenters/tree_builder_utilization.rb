@@ -13,11 +13,9 @@ class TreeBuilderUtilization < TreeBuilderRegion
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix                   => @name == :utilization_tree ? 'utilization_' : 'bottlenecks_',
-                  :onclick                     => "miqOnClickSelectOptimizeTreeNode",
-                  :select_node                 => @selected_node.to_s,
-                  :open_close_all_on_dbl_click => true,
-                  :tree_state                  => true)
+    locals.merge!(:onclick     => "miqOnClickSelectOptimizeTreeNode",
+                  :select_node => @selected_node.to_s,
+                  :tree_state  => true)
   end
 
   def root_options
