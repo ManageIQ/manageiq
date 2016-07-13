@@ -69,6 +69,12 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
     self.class.raw_connect(options[:hostname], options[:port], options)
   end
 
+  def authentications_to_validate
+    at = [:bearer]
+    at << :hawkular if has_authentication_type?(:hawkular)
+    at
+  end
+
   def verify_credentials(auth_type = nil, options = {})
     options = options.merge(:auth_type => auth_type)
     if options[:auth_type] == "hawkular"

@@ -1177,6 +1177,9 @@ ext_management_systems:
 - project
 - parent_ems_id
 - subscription
+- last_metrics_error
+- last_metrics_update_date
+- last_metrics_success_date
 file_depots:
 - id
 - name
