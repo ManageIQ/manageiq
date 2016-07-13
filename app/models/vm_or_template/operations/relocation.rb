@@ -3,6 +3,7 @@ module VmOrTemplate::Operations::Relocation
 
   included do
     supports_not :live_migrate, :reason => _("Live Migrate VM Operation is not available for VM or Template.")
+    supports_not :evacuate, :reason => _("Evacuate VM Operation is not available for VM or Template.")
   end
 
   def raw_live_migrate(_options = nil)
@@ -20,10 +21,6 @@ module VmOrTemplate::Operations::Relocation
 
   def evacuate(options = {})
     raw_evacuate(options)
-  end
-
-  def validate_evacuate
-    validate_unsupported("Evacuate VM Operation")
   end
 
   def raw_migrate(host, pool = nil, priority = "defaultPriority", state = nil)
