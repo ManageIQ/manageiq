@@ -1,5 +1,4 @@
 class ManageIQ::Providers::CloudManager::Vm < ::Vm
-  include SupportsFeatureMixin
   belongs_to :availability_zone
   belongs_to :flavor
   belongs_to :orchestration_stack
@@ -25,8 +24,6 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
 
   virtual_column :ipaddresses,   :type => :string_set, :uses => {:network_ports => :ipaddresses}
   virtual_column :mac_addresses, :type => :string_set, :uses => :network_ports
-
-  supports_not :resize, :reason => _("Resize Operation is not available for VM.")
 
   def ipaddresses
     @ipaddresses ||= network_ports.collect(&:ipaddresses).flatten.compact.uniq

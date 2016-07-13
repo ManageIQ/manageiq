@@ -414,17 +414,17 @@ describe VmOrTemplate do
       vm = FactoryGirl.create(:vm_vmware)
       allow(vm).to receive_messages(:archived? => false)
       allow(vm).to receive_messages(:orphaned? => false)
-      expect(vm.is_available?(:migrate)).to eq(true)
+      expect(vm.supports_migrate?).to eq(true)
     end
 
     it "returns true for SCVMM VM" do
       vm = FactoryGirl.create(:vm_microsoft)
-      expect(vm.is_available?(:migrate)).to_not eq(true)
+      expect(vm.supports_migrate?).to_not eq(true)
     end
 
     it "returns false for openstack VM" do
       vm = FactoryGirl.create(:vm_openstack)
-      expect(vm.is_available?(:migrate)).to eq(false)
+      expect(vm.supports_migrate?).to eq(false)
     end
   end
 
@@ -440,15 +440,15 @@ describe VmOrTemplate do
     end
   end
 
-  context "#is_available? for evacuate" do
+  context "#supports_evacuate?" do
     it "returns false for vmware VM" do
       vm =  FactoryGirl.create(:vm_vmware)
-      expect(vm.is_available?(:evacuate)).to eq(false)
+      expect(vm.supports_evacuate?).to eq(false)
     end
 
     it "returns false for SCVMM VM" do
       vm =  FactoryGirl.create(:vm_microsoft)
-      expect(vm.is_available?(:evacuate)).to eq(false)
+      expect(vm.supports_evacuate?).to eq(false)
     end
   end
 

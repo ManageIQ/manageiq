@@ -1,25 +1,26 @@
 module Vm::Operations::Power
-  def validate_start
-    validate_vm_control_not_powered_on
-  end
 
-  def validate_stop
-    validate_vm_control_powered_on
-  end
+  include SupportsFeatureMixin
+  extend ActiveSupport::Concern
 
-  def validate_suspend
-    validate_vm_control_powered_on
-  end
+  included do
+    supports :start do
+      unsupported_reason_add(:start, unsupported_reason(:vm_control_power_state)) unless supports_vm_control_power_state?(false)
+    end
 
-  def validate_pause
-    validate_vm_control_powered_on
-  end
+    supports :stop do
+      unsupported_reason_add(:stop, unsupported_reason(:vm_control_power_state)) unless supports_vm_control_power_state?(true)
+    end
 
-  def validate_shelve
-    validate_unsupported("Shelve Operation")
-  end
+    supports :suspend do
+      unsupported_reason_add(:suspend, unsupported_reason(:vm_control_power_state)) unless supports_vm_control_power_state?(true)
+    end
 
-  def validate_shelve_offload
-    validate_unsupported("Shelve Offload Operation")
+    supports :pause do
+      unsupported_reason_add(:pause, unsupported_reason(:vm_control_power_state)) unless supports_vm_control_power_state?(true)
+    end
+
+    supports_not :shelve, :reason => _("shelve operation is not available for VM or Template.")
+    supports_not :shelve_offload, :reason => _("Shelve Offload operation is not available for VM or Template.")
   end
 end
