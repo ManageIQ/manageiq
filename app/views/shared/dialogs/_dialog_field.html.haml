@@ -9,7 +9,7 @@
 - else
   - edit = !@edit.nil?
 
-.form-group{:id => "field_#{field.id}_tr"}
+.form-group{:id => "field_#{field.id}_tr", :style => field.visible ? 'display:block' : 'display:none'}
   %label.control-label.col-md-2{:title => field.description}
     = field.label
   .col-md-8{:title => field.description}
