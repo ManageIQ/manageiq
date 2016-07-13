@@ -13,9 +13,10 @@ class ApiController
       #
       def fetch_encrypted_attribute_names(obj)
         @encrypted_objects_checked ||= {}
+        return [] unless obj.class.respond_to?(:encrypted_columns)
         klass = obj.class.name
         return unless @encrypted_objects_checked[klass].nil?
-        @encrypted_objects_checked[klass] = obj.class.respond_to?(:encrypted_columns) ? obj.class.encrypted_columns : []
+        @encrypted_objects_checked[klass] = obj.class.encrypted_columns
         @encrypted_objects_checked[klass].each { |attr| normalized_attributes[:encrypted][attr] = true }
       end
 
