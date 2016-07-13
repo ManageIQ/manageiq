@@ -158,10 +158,6 @@ class ApiController < ApplicationController
   before_action :parse_api_request, :log_api_request, :validate_api_request
   after_action :log_api_response
 
-  def self.attr_type_hash(type)
-    normalized_attributes[type]
-  end
-
   def redirect_api_request(method)
     target_method = "#{method}_#{@req.collection || "entrypoint"}"
     return send(target_method) if respond_to?(target_method)
