@@ -286,9 +286,16 @@ class TreeBuilder
        @options[:lazy] == false
       node[:expand] = true if options[:type] == :automate &&
                               Array(@tree_state.x_tree(@name)[:open_nodes]).include?(node[:key])
-      kids = x_get_tree_objects(object, options, false, parents).map do |o|
-        x_build_node(o, node[:key], options)
-      end
+
+      # If a block is provided, load the kids via that block, otherwise use the
+      # default method of loading the children
+      kids = if block_given?
+               yield parents, node[:key]
+             else
+               x_get_tree_objects(object, options, false, parents).map do |o|
+                 x_build_node(o, node[:key], options)
+               end
+             end
       node[:children] = kids unless kids.empty?
     else
       if x_get_tree_objects(object, options, true, parents) > 0

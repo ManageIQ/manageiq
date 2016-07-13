@@ -1,5 +1,52 @@
 class TreeBuilderReportSavedReports < TreeBuilderReportReportsClass
+
+  # Get the children of a dynatree node that is being expanded (autoloaded)
+  #
+  # This overwrites the method defined in app/presters/tree_builder.rb to not
+  # map the SQL query with the records before doing a `count`.  This allows us
+  # to check the size of the tree with a single quick query with out loading
+  # all of the records into memory.
+  def x_get_child_nodes(id)
+    parents = [] # FIXME: parent ids should be provided on autoload as well
+
+    object = node_by_tree_id(id)
+
+    # Save node as open
+    open_node(id)
+
+    tree_state = @tree_state.x_tree(@name)
+    tree_objects = x_get_tree_objects(object, tree_state, false, parents)
+    x_build_tree_with_limit(tree_objects, id, tree_state)
+  end
+
   private
+
+  # Overwrites the x_build_node_dynatree method (which is just a wrapper around
+  # `x_build_node`) to call `x_build_node` with a block for grabbing the kids
+  # that will return a simple array if over 1000 kids exists.
+  def x_build_node_dynatree(object, pid, options)
+    x_build_node(object, pid, options) do |parents, id|
+      tree_objects = x_get_tree_objects(object, options, false, parents)
+      x_build_tree_with_limit(tree_objects, id, options)
+    end
+  end
+
+  def x_build_tree_with_limit(tree_objects, id, tree_state)
+    if tree_objects.count > 1000
+      # Display a subtree with a single node saying the tree is too big to
+      # load.  This is a cheaper solution than instanciating a dummy
+      # TreeNodeBuilder just to use the generic_node method.
+      [{ :key   => nil,
+         :title => 'Tree to large to load!',
+         :icon  => ActionController::Base.helpers.image_path('100/x.png'),
+         :tooltip => 'Use table to the right to view reports'
+      }]
+    else
+      tree_objects.map do |o|
+        x_build_node(o, id, tree_state)
+      end
+    end
+  end
 
   def tree_init_options(tree_name)
     {
