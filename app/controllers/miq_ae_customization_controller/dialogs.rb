@@ -890,6 +890,11 @@ module MiqAeCustomizationController::Dialogs
       @edit[:field_default_value] = key[:default_value] = nil
     end
 
+    # initialize data type for textbox
+    if params[:field_typ] == 'TextBox'
+      @edit[:field_data_typ] = key[:data_typ] = "string"
+    end
+
     @edit[:field_values] ||= key[:values] = []
 
     copy_field_param.call(:entry_point)
