@@ -25,8 +25,16 @@ module ApplicationHelper
               :class => 'documentation-link', :target => '_blank')
     end
   end
+
+  def valid_html_id(id)
+    id = id.to_s.gsub("::", "__")
+    raise "HTML ID is not valid" if /[^\w_]/.match(id)
+    id
+  end
+
   # Create a collapsed panel based on a condition
   def miq_accordion_panel(title, condition, id, &block)
+    id = valid_html_id(id)
     content_tag(:div, :class => "panel panel-default") do
       out = content_tag(:div, :class => "panel-heading") do
         content_tag(:h4, :class => "panel-title") do
