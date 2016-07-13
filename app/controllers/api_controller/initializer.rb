@@ -54,7 +54,7 @@ class ApiController
 
       #
       # Let's create our attribute type hashes.
-      # Accessed as @attr_<type>[<name>], much faster than array include?
+      # Accessed as normalized_attributes[<name>], much faster than array include?
       #
       def gen_attr_type_hash
         ATTR_TYPES.each { |type, attrs| attrs.each { |a| normalized_attributes[type][a] = true } }
