@@ -32,7 +32,7 @@ module Metric::Capture
     minutes_ago(Settings.performance.capture_threshold[target_key] || 10)
   end
 
-  def self.realtime_capture_threshold(target)
+  def self.alert_capture_threshold(target)
     target_key = target.class.base_model.to_s.underscore.to_sym
     minutes_ago(Settings.performance.capture_threshold_with_alerts[target_key] || 1)
   end
@@ -82,11 +82,11 @@ module Metric::Capture
   # if it has not been run, or it was a very long time ago, just run it
   # if it has been run very recently (even too recently for realtime) then skip it
   # otherwise, it needs to be run if it is realtime, but not if it is standard threshold
-  # assumes realtime <= standard capture threshold
+  # assumes alert capture threshold <= standard capture threshold
   def self.perf_capture_now?(target)
     return true  if target.last_perf_capture_on.nil?
     return true  if target.last_perf_capture_on < standard_capture_threshold(target)
-    return false if target.last_perf_capture_on >= realtime_capture_threshold(target)
+    return false if target.last_perf_capture_on >= alert_capture_threshold(target)
     MiqAlert.target_needs_realtime_capture?(target)
   end
 
