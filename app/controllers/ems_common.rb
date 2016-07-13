@@ -86,6 +86,9 @@ module EmsCommon
     elsif @display == "orchestration_stacks" || session[:display] == "orchestration_stacks" && params[:display].nil?
       title = _("Stacks")
       view_setup_helper(OrchestrationStack, title, title.singularize)
+    elsif @display == "configuration_jobs" || session[:display] == "configuration_jobs" && params[:display].nil?
+      title = _("Configuration Jobs")
+      view_setup_helper(ConfigurationJob, title, title.singularize)
     elsif @display == "persistent_volumes" || session[:display] == "persistent_volumes" && params[:display].nil?
       title = ui_lookup(:tables => "persistent_volumes")
       view_setup_helper(PersistentVolume, title, title.singularize, :persistent_volumes)

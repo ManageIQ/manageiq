@@ -271,6 +271,39 @@ Vmdb::Application.routes.draw do
       )
     },
 
+    :configuration_job      => {
+      :get  => %w(
+        download_data
+        index
+        outputs
+        parameters
+        resources
+        show
+        show_list
+        tagging_edit
+        protect
+      ),
+      :post => %w(
+        button
+        outputs
+        listnav_search_selected
+        panel_control
+        parameters
+        quick_search
+        resources
+        sections_field_changed
+        show
+        show_list
+        protect
+        tagging_edit
+        tag_edit_form_field_changed
+      ) +
+        adv_search_post +
+        exp_post +
+        save_post
+    },
+
+
     :consumption                  => {
       :get => %w(
         show
@@ -2662,6 +2695,7 @@ Vmdb::Application.routes.draw do
   resources :ems_cloud, :as => :ems_clouds
   resources :ems_infra, :as => :ems_infras
   resources :ems_container, :as => :ems_containers
+
   match "/auth/:provider/callback" => "sessions#create", :via => :get
 
   if Rails.env.development? && defined?(Rails::Server)

@@ -33,6 +33,7 @@
   - ems_infra
   - container_dashboard
   - ems_container
+  - configuration_job
   - container_project
   - container_route
   - container_service
