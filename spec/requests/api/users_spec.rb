@@ -59,12 +59,12 @@ RSpec.describe "users API" do
       expect(response).to have_http_status(:ok)
     end
 
-    it "will not allow the changing of attributes other than the password" do
+    it "will not allow the changing of attributes other than the password, email or settings" do
       api_basic_authorize
 
       expect do
-        run_post users_url(@user.id), gen_request(:edit, :email => "new.email@example.com")
-      end.not_to change { @user.reload.email }
+        run_post users_url(@user.id), gen_request(:edit, :name => "updated_name")
+      end.not_to change { @user.reload.name }
 
       expect(response).to have_http_status(:bad_request)
     end
