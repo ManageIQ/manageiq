@@ -698,7 +698,7 @@ module VmCommon
                                                               @polArr,
                                                               @record.name,
                                                               @policy_options)
-    replace_main_div({:partial => "vm_common/policies"}, :flash => true)
+    replace_main_div({:partial => "vm_common/policies"}, {:flash => true})
   end
 
   # Show/Unshow out of scope items
@@ -713,7 +713,7 @@ module VmCommon
                                                               @polArr,
                                                               @record.name,
                                                               @policy_options)
-    replace_main_div({:partial => "vm_common/policies"}, :flash => true)
+    replace_main_div({:partial => "vm_common/policies"}, {:flash => true})
   end
 
   # Set right_size selected db records
