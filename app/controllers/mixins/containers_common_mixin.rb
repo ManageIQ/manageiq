@@ -36,10 +36,7 @@ module ContainersCommonMixin
       if @lastaction == "show"
         javascript_flash
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.replace_html("main_div", :partial => "layouts/gtl")
-        end
+        replace_main_div :partial => "layouts/gtl"
       end
     end
   end

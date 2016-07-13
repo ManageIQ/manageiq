@@ -1058,6 +1058,16 @@ module ApplicationHelper
     end
   end
 
+  def replace_main_div(args, options = {})
+    render :update do |page|
+      page << javascript_prologue
+      page.replace_html('main_div', args)
+
+      page << "miqSparkle(false);" if options[:spinner_off]
+      page.replace_html("flash_msg_div", :partial => "layouts/flash_msg") if options[:flash]
+    end
+  end
+
   def record_no_longer_exists?(what, model = nil)
     return false unless what.nil?
     add_flash(@bang || model.present? ?
