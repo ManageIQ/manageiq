@@ -2326,6 +2326,7 @@ Vmdb::Application.routes.draw do
         right_size
         set_checked_items
         show_list
+        tree_autoload_dynatree
         vmtree_selected
       ) +
                ownership_post +
