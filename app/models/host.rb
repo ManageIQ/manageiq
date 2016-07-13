@@ -15,6 +15,7 @@ require 'HostScanProfiles'
 class Host < ApplicationRecord
   include NewWithTypeStiMixin
   include VirtualTotalMixin
+  include SupportsFeatureMixin
 
   VENDOR_TYPES = {
     # DB            Displayed
@@ -182,6 +183,36 @@ class Host < ApplicationRecord
   before_create :make_smart
   after_save    :process_events
 
+  supports :reset do
+    msg = validate_ipmi
+    unsupported_reason_add(:reset, msg[:message]) unless msg[:available]
+  end
+
+  supports :reboot do
+    msg = validate_esx_host_connected_to_vc_with_power_state('on')
+    unsupported_reason_add(:reboot, msg[:message]) unless msg[:available]
+  end
+
+  supports :shutdown do
+    msg = validate_esx_host_connected_to_vc_with_power_state('on')
+    unsupported_reason_add(:shutdown, msg[:message]) unless msg[:available]
+  end
+
+  supports :standby do
+    msg = validate_esx_host_connected_to_vc_with_power_state('on')
+    unsupported_reason_add(:standby, msg[:message]) unless msg[:available]
+  end
+
+  supports :start do
+    msg = validate_ipmi('off')
+    unsupported_reason_add(:start, msg[:message]) unless msg[:available]
+  end
+
+  supports :stop do
+    msg = validate_ipmi('on')
+    unsupported_reason_add(:stop, msg[:message]) unless msg[:available]
+  end
+
   def self.include_descendant_classes_in_expressions?
     true
   end
@@ -231,18 +262,6 @@ class Host < ApplicationRecord
   end
   private :raise_cluster_event
 
-  def validate_reboot
-    validate_esx_host_connected_to_vc_with_power_state('on')
-  end
-
-  def validate_shutdown
-    validate_esx_host_connected_to_vc_with_power_state('on')
-  end
-
-  def validate_standby
-    validate_esx_host_connected_to_vc_with_power_state('on')
-  end
-
   def validate_enter_maint_mode
     validate_esx_host_connected_to_vc_with_power_state('on')
   end
@@ -261,18 +280,6 @@ class Host < ApplicationRecord
 
   def validate_vmotion_enabled?
     validate_esx_host_connected_to_vc_with_power_state('on')
-  end
-
-  def validate_start
-    validate_ipmi('off')
-  end
-
-  def validate_stop
-    validate_ipmi('on')
-  end
-
-  def validate_reset
-    validate_ipmi
   end
 
   def validate_ipmi(pstate = nil)
@@ -376,16 +383,15 @@ class Host < ApplicationRecord
   end
 
   def reset
-    msg = validate_reset
-    if msg[:available]
+    if supports_reset?
       check_policy_prevent("request_host_reset", "ipmi_power_reset")
     else
-      _log.warn("Cannot stop because <#{msg[:message]}>")
+      _log.warn("Cannot stop because <#{unsupported_reason(:reset)}>")
     end
   end
 
   def start
-    if validate_start[:available] && power_state == 'standby' && respond_to?(:vim_power_up_from_standby)
+    if supports_start? && power_state == 'standby' && respond_to?(:vim_power_up_from_standby)
       check_policy_prevent("request_host_start", "vim_power_up_from_standby")
     else
       msg = validate_ipmi
@@ -404,7 +410,7 @@ class Host < ApplicationRecord
 
   def stop
     msg = validate_stop
-    if msg[:available]
+    if supports_stop?
       check_policy_prevent("request_host_stop", "ipmi_power_off")
     else
       _log.warn("Cannot stop because <#{msg[:message]}>")
@@ -412,8 +418,7 @@ class Host < ApplicationRecord
   end
 
   def standby
-    msg = validate_standby
-    if msg[:available]
+    if supports_standby?
       if power_state == 'on' && respond_to?(:vim_power_down_to_standby)
         check_policy_prevent("request_host_standby", "vim_power_down_to_standby")
       else
@@ -447,8 +452,7 @@ class Host < ApplicationRecord
   end
 
   def shutdown
-    msg = validate_shutdown
-    if msg[:available] && respond_to?(:vim_shutdown)
+    if supports_shutdown? && respond_to?(:vim_shutdown)
       check_policy_prevent("request_host_shutdown", "vim_shutdown")
     else
       _log.warn("Cannot shutdown because <#{msg[:message]}>")
@@ -456,8 +460,7 @@ class Host < ApplicationRecord
   end
 
   def reboot
-    msg = validate_reboot
-    if msg[:available] && respond_to?(:vim_reboot)
+    if supports_reboot? && respond_to?(:vim_reboot)
       check_policy_prevent("request_host_reboot", "vim_reboot")
     else
       _log.warn("Cannot reboot because <#{msg[:message]}>")
