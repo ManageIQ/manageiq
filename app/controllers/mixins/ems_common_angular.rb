@@ -22,16 +22,13 @@ module Mixins
                   {:model => ui_lookup(:model => model_name),
                    :name  => update_ems.name}
       ems_path = ems_path(update_ems, :flash_msg => flash_msg)
-      render :update do |page|
-        page << javascript_prologue
-        if @lastaction == "show"
-          page.redirect_to ems_path
-        else
-          page.redirect_to(:action    => @lastaction,
-                           :id        => update_ems.id,
-                           :display   => session[:ems_display],
-                           :flash_msg => flash_msg)
-        end
+      if @lastaction == "show"
+        javascript_redirect ems_path
+      else
+        javascript_redirect :action    => @lastaction,
+                            :id        => update_ems.id,
+                            :display   => session[:ems_display],
+                            :flash_msg => flash_msg
       end
     end
 
@@ -46,10 +43,7 @@ module Mixins
         construct_edit_for_audit(update_ems)
         AuditEvent.success(build_saved_audit(update_ems, @edit))
         ems_path = ems_path(update_ems, :flash_msg => flash)
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to ems_path
-        end
+        javascript_redirect ems_path
       else
         update_ems.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
@@ -96,11 +90,8 @@ module Mixins
         AuditEvent.success(build_created_audit(ems, @edit))
         flash_msg = _("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:tables => @table_name),
                                                            :name  => ems.name}
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action    => 'show_list',
-                           :flash_msg => flash_msg
-        end
+        javascript_redirect :action    => 'show_list',
+                            :flash_msg => flash_msg
       else
         @in_a_form = true
         ems.errors.each do |field, msg|
@@ -123,13 +114,10 @@ module Mixins
 
     def create_ems_button_cancel
       model_name = model.to_s
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to(:action    => @lastaction,
-                         :display   => session[:ems_display],
-                         :flash_msg => _("Add of %{model} was cancelled by the user") %
-                             {:model => ui_lookup(:model => model_name)})
-      end
+      javascript_redirect :action    => @lastaction,
+                          :display   => session[:ems_display],
+                          :flash_msg => _("Add of %{model} was cancelled by the user") %
+                          {:model => ui_lookup(:model => model_name)}
     end
 
     def ems_form_fields

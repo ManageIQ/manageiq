@@ -114,14 +114,11 @@ class ProviderForemanController < ApplicationController
     end
 
     if ConfiguredSystem.common_configuration_profiles_for_selected_configured_systems(provisioning_ids)
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :controller     => "miq_request",
-                         :action         => "prov_edit",
-                         :prov_id        => provisioning_ids,
-                         :org_controller => "configured_system",
-                         :escape         => false
-      end
+      javascript_redirect :controller     => "miq_request",
+                          :action         => "prov_edit",
+                          :prov_id        => provisioning_ids,
+                          :org_controller => "configured_system",
+                          :escape         => false
     else
       add_flash(_("No common configuration profiles available for the selected configured %s") % n_('system', 'systems', provisioning_ids.size), :error)
       replace_right_cell

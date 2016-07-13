@@ -44,11 +44,10 @@ module ApplicationController::CiProcessing
       @edit[:explorer] = true
       ownership
     else
-      render :update do |page|
-        page << javascript_prologue
-        if role_allows(:feature => "vm_ownership")
-          page.redirect_to :controller => "#{rec_cls}", :action => 'ownership'              # redirect to build the ownership screen
-        end
+      if role_allows(:feature => "vm_ownership")
+        javascript_redirect :controller => "#{rec_cls}", :action => 'ownership' # redirect to build the ownership screen
+      else
+        render :nothing
       end
     end
   end
@@ -123,10 +122,7 @@ module ApplicationController::CiProcessing
         replace_right_cell
       else
         session[:flash_msgs] = @flash_array
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to(previous_breadcrumb_url)
-        end
+        javascript_redirect previous_breadcrumb_url
       end
     when "save"
       opts = {}
@@ -164,10 +160,7 @@ module ApplicationController::CiProcessing
           replace_right_cell
         else
           session[:flash_msgs] = @flash_array
-          render :update do |page|
-            page << javascript_prologue
-            page.redirect_to(previous_breadcrumb_url)
-          end
+          javascript_redirect previous_breadcrumb_url
         end
       end
     when "reset"
@@ -177,13 +170,10 @@ module ApplicationController::CiProcessing
         add_flash(_("All changes have been reset"), :warning)
         request.parameters[:controller] == "service" ? replace_right_cell("ownership") : replace_right_cell
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action        => 'ownership',
-                           :flash_msg     => _("All changes have been reset"),
-                           :flash_warning => true,
-                           :escape        => true
-        end
+        javascript_redirect :action        => 'ownership',
+                            :flash_msg     => _("All changes have been reset"),
+                            :flash_warning => true,
+                            :escape        => true
       end
     end
   end
@@ -226,10 +216,7 @@ module ApplicationController::CiProcessing
     else
       drop_breadcrumb(:name => _("Retire %{name}") % {:name => rec_cls.to_s.pluralize},
                       :url  => "/#{session[:controller]}/retire")
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :controller => rec_cls, :action => 'retire'      # redirect to build the retire screen
-      end
+      javascript_redirect :controller => rec_cls, :action => 'retire' # redirect to build the retire screen
     end
   end
   alias_method :instance_retire, :retirevms
@@ -300,10 +287,7 @@ module ApplicationController::CiProcessing
         replace_right_cell
       else
         session[:flash_msgs] = @flash_array.dup
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to previous_breadcrumb_url
-        end
+        javascript_redirect previous_breadcrumb_url
       end
       return
     end
@@ -367,10 +351,7 @@ module ApplicationController::CiProcessing
         resize
         @refresh_partial = "vm_common/resize"
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :controller => 'vm', :action => 'resize', :rec_id => @record.id, :escape => false     # redirect to build the retire screen
-        end
+        javascript_redirect :controller => 'vm', :action => 'resize', :rec_id => @record.id, :escape => false # redirect to build the retire screen
       end
     else
       add_flash(_("Unable to reconfigure %{instance} \"%{name}\": %{details}") % {
@@ -423,10 +404,7 @@ module ApplicationController::CiProcessing
       replace_right_cell
     else
       session[:flash_msgs] = @flash_array.dup
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to previous_breadcrumb_url
-      end
+      javascript_redirect previous_breadcrumb_url
     end
     return
   end
@@ -455,10 +433,7 @@ module ApplicationController::CiProcessing
         live_migrate
         @refresh_partial = "vm_common/live_migrate"
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :controller => 'vm', :action => 'live_migrate', :rec_id => @record.id, :escape => false
-        end
+        javascript_redirect :controller => 'vm', :action => 'live_migrate', :rec_id => @record.id, :escape => false
       end
     else
       add_flash(_("Unable to live migrate %{instance} \"%{name}\": %{details}") % {
@@ -553,10 +528,7 @@ module ApplicationController::CiProcessing
       replace_right_cell
     else
       session[:flash_msgs] = @flash_array.dup
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to previous_breadcrumb_url
-      end
+      javascript_redirect previous_breadcrumb_url
     end
     return
   end
@@ -584,10 +556,7 @@ module ApplicationController::CiProcessing
         evacuate
         @refresh_partial = "vm_common/evacuate"
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :controller => 'vm', :action => 'evacuate', :rec_id => @record.id, :escape => false
-        end
+        javascript_redirect :controller => 'vm', :action => 'evacuate', :rec_id => @record.id, :escape => false
       end
     else
       add_flash(_("Unable to evacuate %{instance} \"%{name}\": %{details}") % {
@@ -645,10 +614,7 @@ module ApplicationController::CiProcessing
       replace_right_cell
     else
       session[:flash_msgs] = @flash_array.dup
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to previous_breadcrumb_url
-      end
+      javascript_redirect previous_breadcrumb_url
     end
   end
 
@@ -698,11 +664,10 @@ module ApplicationController::CiProcessing
       right_size
       replace_right_cell if @orig_action == "x_history"
     else
-      render :update do |page|
-        page << javascript_prologue
-        if role_allows(:feature => "vm_right_size")
-          page.redirect_to :controller => "#{rec_cls}", :action => 'right_size', :id => recs[0], :escape => false           # redirect to build the ownership screen
-        end
+      if role_allows(:feature => "vm_right_size")
+        javascript_redirect :controller => "#{rec_cls}", :action => 'right_size', :id => recs[0], :escape => false # redirect to build the ownership screen
+      else
+        render :nothing
       end
     end
   end
@@ -739,10 +704,7 @@ module ApplicationController::CiProcessing
         replace_right_cell
       else
         session[:flash_msgs] = @flash_array
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to(previous_breadcrumb_url)
-        end
+        javascript_redirect previous_breadcrumb_url
       end
     when "submit"
       options = {:src_ids => params[:objectIds]}
@@ -793,16 +755,10 @@ module ApplicationController::CiProcessing
       if VmReconfigureRequest.make_request(@request_id, options, current_user)
         flash = _("VM Reconfigure Request was saved")
         if role_allows(:feature => "miq_request_show_list", :any => true)
-          render :update do |page|
-            page << javascript_prologue
-            page.redirect_to :controller => 'miq_request', :action => 'show_list', :flash_msg => flash
-          end
+          javascript_redirect :controller => 'miq_request', :action => 'show_list', :flash_msg => flash
         else
           url = previous_breadcrumb_url.split('/')
-          render :update do |page|
-            page << javascript_prologue
-            page.redirect_to :controller => url[1], :action => url[2], :flash_msg => flash
-          end
+          javascript_redirect :controller => url[1], :action => url[2], :flash_msg => flash
         end
       else
         # TODO - is request ever nil? ??
@@ -844,7 +800,6 @@ module ApplicationController::CiProcessing
     @redirect_id = obj[0] if obj.length == 1      # not redirecting to an id if multi host are selected for credential edit
 
     if !["ScanItemSet", "Condition", "Schedule", "MiqAeInstance"].include?(db)
-      #       page.redirect_to :controller=>params[:rec], :action=>link   # redirect to build the compare screen
       @refresh_partial = "edit"
       @refresh_partial = "edit_set" if params[:db] == "policyprofile"
     else
@@ -1473,11 +1428,10 @@ module ApplicationController::CiProcessing
       session[:changed] = true  # need to enable submit button when screen loads
       @refresh_partial = "vm_common/reconfigure"
     else
-      render :update do |page|
-        page << javascript_prologue
-        if role_allows(:feature => "vm_reconfigure")
-          page.redirect_to :controller => "#{rec_cls}", :action => 'reconfigure', :req_id => @request_id, :rec_ids => @reconfigure_items, :escape => false         # redirect to build the ownership screen
-        end
+      if role_allows(:feature => "vm_reconfigure")
+        javascript_redirect :controller => "#{rec_cls}", :action => 'reconfigure', :req_id => @request_id, :rec_ids => @reconfigure_items, :escape => false # redirect to build the ownership screen
+      else
+        render :nothing
       end
     end
   end
@@ -1945,10 +1899,7 @@ module ApplicationController::CiProcessing
         policy_sim
         @refresh_partial = "layouts/policy_sim"
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :controller => 'vm', :action => 'policy_sim'   # redirect to build the policy simulation screen
-        end
+        javascript_redirect :controller => 'vm', :action => 'policy_sim' # redirect to build the policy simulation screen
       end
     end
   end

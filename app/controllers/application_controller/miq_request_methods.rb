@@ -79,15 +79,12 @@ module ApplicationController::MiqRequestMethods
         @sb[:action] = nil
         replace_right_cell
       else
-        render :update do |page|
-          page << javascript_prologue
-          if @breadcrumbs && (@breadcrumbs.empty? || @breadcrumbs.last[:url] == "/vm/show_list")
-            page.redirect_to :action => "show_list", :controller => "vm"
-          else
-            # had to get id from breadcrumbs url, because there is no params[:id] when cancel is pressed on copy Request screen.
-            url = @breadcrumbs.last[:url].split('/')
-            page.redirect_to :controller => url[1], :action => url[2], :id => url[3]
-          end
+        if @breadcrumbs && (@breadcrumbs.empty? || @breadcrumbs.last[:url] == "/vm/show_list")
+          javascript_redirect :action => "show_list", :controller => "vm"
+        else
+          # had to get id from breadcrumbs url, because there is no params[:id] when cancel is pressed on copy Request screen.
+          url = @breadcrumbs.last[:url].split('/')
+          javascript_redirect :controller => url[1], :action => url[2], :id => url[3]
         end
       end
     elsif params[:button] == "continue"       # Template chosen, start vm provisioning
@@ -117,14 +114,10 @@ module ApplicationController::MiqRequestMethods
           @sb[:action] = "pre_prov"
           replace_right_cell
         else
-          render :update do |page|
-            page << javascript_prologue
-            page.redirect_to :controller     => @redirect_controller,
-                             :action         => "prov_edit",
-                             :src_vm_id      => @src_vm_id,
-                             :org_controller => "vm"
-            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-          end
+          javascript_redirect :controller     => @redirect_controller,
+                              :action         => "prov_edit",
+                              :src_vm_id      => @src_vm_id,
+                              :org_controller => "vm"
         end
       end
     elsif params[:sort_choice]
@@ -576,13 +569,10 @@ module ApplicationController::MiqRequestMethods
       @sb[:action] = nil
       replace_right_cell
     else
-      render :update do |page|
-        page << javascript_prologue
-        if @breadcrumbs && (@breadcrumbs.empty? || @breadcrumbs.last[:url] == "/vm/show_list")
-          page.redirect_to :action => "show_list", :controller => "vm"
-        else
-          page.redirect_to @breadcrumbs.last[:url]
-        end
+      if @breadcrumbs && (@breadcrumbs.empty? || @breadcrumbs.last[:url] == "/vm/show_list")
+        javascript_redirect :action => "show_list", :controller => "vm"
+      else
+        javascript_redirect @breadcrumbs.last[:url]
       end
     end
   end
@@ -606,13 +596,10 @@ module ApplicationController::MiqRequestMethods
       @explorer = @edit[:explorer] ? @edit[:explorer] : false
       @sb[:action] = @edit = session[:edit] =  nil                                                # Clear out session[:edit]
       if role_allows(:feature => "miq_request_show_list", :any => true)
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :controller => 'miq_request',
-                           :action     => 'show_list',
-                           :flash_msg  => flash,
-                           :typ        => typ
-        end
+        javascript_redirect :controller => 'miq_request',
+                            :action     => 'show_list',
+                            :flash_msg  => flash,
+                            :typ        => typ
       else
         add_flash(flash)
         prov_request_cancel_submit_response

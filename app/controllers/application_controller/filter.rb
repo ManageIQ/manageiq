@@ -504,10 +504,7 @@ module ApplicationController::Filter
           if @quick_search_active
             quick_search_show
           else
-            render :update do |page|
-              page << javascript_prologue
-              page.redirect_to :action => 'show_list' # Redirect to build the list screen
-            end
+            javascript_redirect :action => 'show_list' # Redirect to build the list screen
           end
         end
         format.html do
@@ -744,10 +741,7 @@ module ApplicationController::Filter
         self.x_node = "root"                                      # Position on root node
         replace_right_cell
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => 'show_list'                 # redirect to build the list screen
-        end
+        javascript_redirect :action => 'show_list' # redirect to build the list screen
       end
       return
 
@@ -952,10 +946,7 @@ module ApplicationController::Filter
     if @edit[:in_explorer]
       replace_right_cell
     else
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to(:action => 'show_list')
-      end
+      javascript_redirect :action => 'show_list'
     end
   end
   private :quick_search_apply_click
