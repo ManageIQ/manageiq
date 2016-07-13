@@ -60,6 +60,12 @@ class ActsAsArQuery
     end
   end
 
+  def assign_arg(val)
+    dup.tap do |r|
+      r.options[__callee__] = val
+    end
+  end
+
   # public api
 
   def initialize(model, opts = {})
@@ -88,7 +94,7 @@ class ActsAsArQuery
         end
       else
         raise ArgumentError,
-              "Need to support #{__method__}(#{val.class.name}) with existing #{old_where.class.name}"
+              "Need to support #{__callee__}(#{val.class.name}) with existing #{old_where.class.name}"
       end
     end
   end
@@ -101,11 +107,7 @@ class ActsAsArQuery
   alias references append_hash_arg
 
   # @param [Integer] val
-  def limit(val)
-    dup.tap do |r|
-      r.options[:limit] = val
-    end
-  end
+  alias limit assign_arg
 
   # @param [String, Symbol, Arel] val
   # TODO: support Hash
@@ -144,11 +146,7 @@ class ActsAsArQuery
   end
 
   # @param [Integer] val
-  def offset(val)
-    dup.tap do |r|
-      r.options[:offset] = val
-    end
-  end
+  alias offset assign_arg
 
   # complete
   # @param val [Array<Sting,Symbol>,String, Symbol]
@@ -198,7 +196,7 @@ class ActsAsArQuery
       :offset     => options[:offset],
       :select     => options[:select],
       :group      => options[:group],
-    }.delete_if { |_name, value| value.blank? }
+    }.delete_blanks
   end
 
   def instances_are_derived?
