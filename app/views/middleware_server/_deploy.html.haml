@@ -35,9 +35,13 @@
             %label.col-md-4.control-label{:for => "enable_deployment_cb"}
               = _("Enable Deployment")
             .col-md-8
-              %input#enable_deployment_cb{:type         => "checkbox",
-                                          "ng-model"    => "enableDeployment",
-                                          "ng-disabled" => "!filePath"}
+              %input#enable_deployment_cb{:type             => "checkbox",
+                                          "bs-switch"       => "",
+                                          "switch-on-text"  => "Yes",
+                                          "switch-off-text" => "No",
+                                          "switch-active"   => "{{!!filePath}}",
+                                          "ng-model"        => "enableDeployment",
+                                          "ng-disabled"     => "!filePath"}
           .form-group
             %label.col-md-4.control-label{:for => "runtime_name_input"}
               = _("Runtime Name")
