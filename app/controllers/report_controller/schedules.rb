@@ -101,10 +101,7 @@ module ReportController::Schedules
     scheds = find_checked_items
     if scheds.empty? && params[:id].nil?
       add_flash(_("No Report Schedules were selected to be Run now"), :error)
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     elsif params[:id]
       if MiqSchedule.exists?(from_cid(params[:id]))
         scheds.push(from_cid(params[:id]))
@@ -148,10 +145,7 @@ module ReportController::Schedules
     if scheds.empty?
       add_flash(msg1 % {:schedules => "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}"},
                 :error)
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
     schedule_enable_disable(scheds, enable) unless scheds.empty?
     add_flash(msg2 % {:schedules => "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}"},
@@ -261,10 +255,7 @@ module ReportController::Schedules
         end
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
         drop_breadcrumb(:name => "Edit Schedule", :url => "/miq_schedule/edit")
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
     when "reset", nil # Reset or first time in
       add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"

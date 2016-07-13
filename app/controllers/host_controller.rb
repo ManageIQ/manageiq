@@ -286,10 +286,7 @@ class HostController < ApplicationController
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
         drop_breadcrumb(:name => _("Add New Host"), :url => "/host/new")
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
     when "validate"
       verify_host = Host.new
@@ -302,10 +299,7 @@ class HostController < ApplicationController
       else
         add_flash(_("Credential validation was successful"))
       end
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
   end
 
@@ -377,10 +371,7 @@ class HostController < ApplicationController
           end
           drop_breadcrumb(:name => _("Edit Host '%{name}'") % {:name => @host.name}, :url => "/host/edit/#{@host.id}")
           @in_a_form = true
-          render :update do |page|
-            page << javascript_prologue
-            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-          end
+          javascript_flash
         end
       else
         valid_host = find_by_id_filtered(Host, !params[:validate_id].blank? ?
@@ -398,10 +389,7 @@ class HostController < ApplicationController
           drop_breadcrumb(:name => _("Edit Host '%{name}'") % {:name => @host.name}, :url => "/host/edit/#{@host.id}")
           @in_a_form = true
           # redirect_to :action => 'edit', :flash_msg=>@error, :flash_error =>true
-          render :update do |page|
-            page << javascript_prologue
-            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-          end
+          javascript_flash
         end
       end
     when "reset"
@@ -434,10 +422,7 @@ class HostController < ApplicationController
       else
         add_flash(_("Credential validation was successful"))
       end
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
   end
 
@@ -558,10 +543,7 @@ class HostController < ApplicationController
         if @redirect_controller
           if ["host_miq_request_new", "#{pfx}_clone", "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
             if flash_errors?
-              render :update do |page|
-                page << javascript_prologue
-                page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-              end
+              javascript_flash
             else
               javascript_redirect :controller     => @redirect_controller,
                                   :action         => @refresh_partial,

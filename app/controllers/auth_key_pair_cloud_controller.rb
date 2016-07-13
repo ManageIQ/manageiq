@@ -126,10 +126,7 @@ class AuthKeyPairCloudController < ApplicationController
           :name => _("Add New %{model}") % {:model => ui_lookup(:table => 'auth_key_pair_cloud')},
           :url  => "/auth_key_pair_cloud/new"
         )
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
     when "validate"
       @in_a_form = true
@@ -140,10 +137,7 @@ class AuthKeyPairCloudController < ApplicationController
       else
         add_flash(kls.is_available_now_error_message(:create_key_pair, ext_management_system, options))
       end
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
   end
 

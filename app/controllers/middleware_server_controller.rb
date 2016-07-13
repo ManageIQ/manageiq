@@ -71,10 +71,7 @@ class MiddlewareServerController < ApplicationController
 
       run_server_operation(OPERATIONS.fetch(selected_operation), selected_servers)
 
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     else
       super
     end

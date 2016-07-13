@@ -101,10 +101,7 @@ module ApplicationController::MiqRequestMethods
         validate_preprov
       end
       if @flash_array
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         @redirect_controller = "miq_request"
         @refresh_partial = "miq_request/prov_edit"

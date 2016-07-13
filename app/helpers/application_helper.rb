@@ -1051,6 +1051,13 @@ module ApplicationHelper
     end
   end
 
+  def javascript_flash
+    render :update do |page|
+      page << javascript_prologue
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+    end
+  end
+
   def record_no_longer_exists?(what, model = nil)
     return false unless what.nil?
     add_flash(@bang || model.present? ?

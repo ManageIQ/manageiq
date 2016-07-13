@@ -75,10 +75,7 @@ class StorageManagerController < ApplicationController
     when "add"
       if @edit[:new][:sm_type].nil?
         add_flash(_("Type is required"), :error)
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
       if @edit[:new][:sm_type].nil? || @edit[:new][:sm_type] == ""
@@ -102,19 +99,13 @@ class StorageManagerController < ApplicationController
           end
         end
         drop_breadcrumb(:name => _("Add New Storage Manager"), :url => "/storage_manager/new")
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
     when "validate"
       # Need to pass in smtype so the proper mixins are loaded.
       if @edit[:new][:sm_type].blank?
         add_flash(_("Type is required"), :error)
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
       verify_sm = StorageManager.new_of_type(@edit[:new][:sm_type])
@@ -127,10 +118,7 @@ class StorageManagerController < ApplicationController
       else
         add_flash(_("Credential validation was successful"))
       end
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
   end
 
@@ -196,10 +184,7 @@ class StorageManagerController < ApplicationController
         @in_a_form = true
         session[:changed] = changed
         @changed = true
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
     when "reset"
       params[:edittype] = @edit[:edittype]    # remember the edit type
@@ -220,10 +205,7 @@ class StorageManagerController < ApplicationController
       else
         add_flash(_("Credential validation was successful"))
       end
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
   end
 

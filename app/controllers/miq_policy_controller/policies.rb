@@ -96,10 +96,7 @@ module MiqPolicyController::Policies
     new_desc = truncate("Copy of #{policy.description}", :length => 255, :omission => "")
     if MiqPolicy.find_by_description(new_desc)
       add_flash(_("%{model} \"%{name}\" already exists") % {:model => ui_lookup(:model => "MiqPolicy"), :name => new_desc}, :error)
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     else
       new_pol = policy.copy(:description => new_desc, :created_by => session[:userid], :read_only => nil)
       AuditEvent.success(:event        => "miqpolicy_copy",

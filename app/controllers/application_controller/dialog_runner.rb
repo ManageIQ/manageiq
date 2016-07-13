@@ -25,20 +25,14 @@ module ApplicationController::DialogRunner
         result = @edit[:wf].submit_request
       rescue StandardError => bang
         add_flash(_("Error during 'Provisioning': %{error_message}") % {:error_message => bang.message}, :error)
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         unless result[:errors].blank?
           # show validation errors
           result[:errors].each do |err|
             add_flash(err, :error)
           end
-          render :update do |page|
-            page << javascript_prologue
-            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-          end
+          javascript_flash
         else
           flash = _("Order Request was Submitted")
           if role_allows(:feature => "miq_request_show_list", :any => true)
@@ -76,10 +70,7 @@ module ApplicationController::DialogRunner
     else
       return unless load_edit("dialog_edit__#{params[:id]}", "replace_cell__explorer")
       add_flash(_("%{button_name} Button not yet implemented") % {:button_name => params[:button].capitalize}, :error)
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
   end
 

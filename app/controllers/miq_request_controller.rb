@@ -330,10 +330,7 @@ class MiqRequestController < ApplicationController
       @edit[:wf].send(method, @edit[:new]) unless method.nil?
     rescue StandardError => bang
       add_flash(_("Error retrieving LDAP info: %{error_message}") % {:error_message => bang.message}, :error)
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     else
       render :update do |page|
         page << javascript_prologue

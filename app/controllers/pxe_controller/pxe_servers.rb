@@ -53,10 +53,7 @@ module PxeController::PxeServers
       pxe = params[:id] ? find_by_id_filtered(PxeServer, params[:id]) : PxeServer.new
       pxe_server_validate_fields
       if @flash_array
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
 
@@ -80,10 +77,7 @@ module PxeController::PxeServers
         pxe.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
     elsif params[:button] == "reset"
       add_flash(_("All changes have been reset"), :warning)
@@ -215,10 +209,7 @@ module PxeController::PxeServers
         end
         @in_a_form = true
         @changed = true
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
     when "reset", nil
@@ -268,10 +259,7 @@ module PxeController::PxeServers
         end
         @in_a_form = true
         @changed = true
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
     when "reset", nil
