@@ -128,13 +128,13 @@ class ProviderForemanController < ApplicationController
   def tagging
     case x_active_accord
     when :configuration_manager_providers
-      assert_privileges("provider_foreman_configured_system_tag") if x_active_accord == :configuration_manager_providers
+      assert_privileges("provider_foreman_configured_system_tag")
       tagging_edit('ConfiguredSystem', false)
     when :cs_filter
-      assert_privileges("configured_system_tag") if x_active_accord == :cs_filter
+      assert_privileges("configured_system_tag")
       tagging_edit('ConfiguredSystem', false)
     when :configuration_scripts
-      assert_privileges("configuration_script_tag") if x_active_accord == :configuration_scripts
+      assert_privileges("configuration_script_tag") 
       tagging_edit('ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript', false)
     end
     render_tagging_form
