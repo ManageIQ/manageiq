@@ -15,7 +15,11 @@ Dir.chdir APP_ROOT do
   puts "\n== Seeding database =="
   system "bin/rake db:seed GOOD_MIGRATIONS=skip"
 
-
   puts "\n== Resetting tests =="
   system "bin/rake test:vmdb:setup"
+
+  unless ENV["SKIP_AUTOMATE_RESET"]
+    puts "\n== Resetting Automate Domains =="
+    system "bin/rake evm:automate:reset"
+  end
 end
