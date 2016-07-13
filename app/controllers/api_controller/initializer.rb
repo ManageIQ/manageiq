@@ -11,10 +11,10 @@ class ApiController
       #
       # Let's fetch encrypted attribute names of objects being rendered if not already done
       #
-      def fetch_encrypted_attribute_names(obj)
+      def fetch_encrypted_attribute_names(klass)
         @encrypted_objects_checked ||= {}
-        return [] unless obj.class.respond_to?(:encrypted_columns)
-        @encrypted_objects_checked[obj.class.name] ||= obj.class.encrypted_columns.each do |attr|
+        return [] unless klass.respond_to?(:encrypted_columns)
+        @encrypted_objects_checked[klass.name] ||= klass.encrypted_columns.each do |attr|
           normalized_attributes[:encrypted][attr] = true
         end
       end
