@@ -47,7 +47,7 @@ module ApplicationController::CiProcessing
       if role_allows(:feature => "vm_ownership")
         javascript_redirect :controller => "#{rec_cls}", :action => 'ownership' # redirect to build the ownership screen
       else
-        render :nothing
+        head :ok
       end
     end
   end
@@ -664,7 +664,7 @@ module ApplicationController::CiProcessing
       if role_allows(:feature => "vm_right_size")
         javascript_redirect :controller => "#{rec_cls}", :action => 'right_size', :id => recs[0], :escape => false # redirect to build the ownership screen
       else
-        render :nothing
+        head :ok
       end
     end
   end
@@ -1425,7 +1425,7 @@ module ApplicationController::CiProcessing
       if role_allows(:feature => "vm_reconfigure")
         javascript_redirect :controller => "#{rec_cls}", :action => 'reconfigure', :req_id => @request_id, :rec_ids => @reconfigure_items, :escape => false # redirect to build the ownership screen
       else
-        render :nothing
+        head :ok
       end
     end
   end
