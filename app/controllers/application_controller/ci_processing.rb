@@ -2169,6 +2169,26 @@ module ApplicationController::CiProcessing
     end
   end
 
+  # Common Stacks button handler routines
+  def process_configuration_jobs(stacks, task, _ = nil)
+    stacks, = filter_ids_in_region(stacks, "ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job")
+    return if stacks.empty?
+
+    if task == "destroy"
+      ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job.where(:id => stacks).order("lower(name)").each do |stack|
+        id = stack.id
+        stack_name = stack.name
+        audit = {:event        => "stack_record_delete_initiated",
+                 :message      => "[#{stack_name}] Record delete initiated",
+                 :target_id    => id,
+                 :target_class => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job",
+                 :userid       => session[:userid]}
+        AuditEvent.success(audit)
+      end
+      ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job.destroy_queue(stacks)
+    end
+  end
+
   # Refresh all selected or single displayed host(s)
   def refreshhosts
     assert_privileges("host_refresh")
@@ -2360,6 +2380,11 @@ module ApplicationController::CiProcessing
     delete_elements(OrchestrationStack, :process_orchestration_stacks)
   end
 
+  def configuration_job_delete
+    assert_privileges("configuration_job_delete")
+    delete_elements(ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job, :process_configuration_jobs, 'configuration_job')
+  end
+
   # Delete all selected or single displayed datastore(s)
   def deletestorages
     assert_privileges("storage_delete")
@@ -2397,27 +2422,28 @@ module ApplicationController::CiProcessing
     end
   end
 
-  def delete_elements(model_class, destroy_method)
+  def delete_elements(model_class, destroy_method, model_name = nil)
     elements = []
-    if @lastaction == "show_list" || (@lastaction == "show" && @layout != model_class.table_name.singularize)  # showing a list
+    model_name ||= model_class.table_name
+    if @lastaction == "show_list" || (@lastaction == "show" && @layout != model_name.singularize)  # showing a list
       elements = find_checked_items
       if elements.empty?
         add_flash(_("No %{model} were selected for deletion") %
-          {:model => ui_lookup(:tables => model_class.table_name)}, :error)
+          {:model => ui_lookup(:tables => model_name)}, :error)
       end
       send(destroy_method, elements, "destroy") unless elements.empty?
       add_flash(_("Delete initiated for %{count_model} from the CFME Database") %
         {:count_model => pluralize(elements.length, ui_lookup(:table => model_class.table_name))}) unless flash_errors?
     else # showing 1 element, delete it
       if params[:id].nil? || model_class.find_by_id(params[:id]).nil?
-        add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => model_class.table_name)}, :error)
+        add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => model_name)}, :error)
       else
         elements.push(params[:id])
       end
       send(destroy_method, elements, "destroy") unless elements.empty?
       @single_delete = true unless flash_errors?
       add_flash(_("The selected %{record} was deleted") %
-        {:record => ui_lookup(:table => model_class.table_name)}) if @flash_array.nil?
+        {:record => ui_lookup(:table => model_name)}) if @flash_array.nil?
     end
     if @lastaction == "show_list"
       show_list
