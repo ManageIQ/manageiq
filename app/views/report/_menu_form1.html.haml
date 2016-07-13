@@ -1,6 +1,6 @@
 #menu_div1
   - url = url_for(:action => 'menu_field_changed')
-  %fieldset
+  .col-sm-7
     %h3
       %span#menu1_legend
         = _('Manage Accordions')
@@ -74,11 +74,11 @@
                 = _('Discard')
 
 #menu_div3{:style => "display: none;"}
-  %fieldset{:style => "width: 300px; height: 450px;"}
+  .col-sm-7
     %h3
       = _('Manage Accordions & Folders')
     %table{:cellspacing => "1"}
       %tr
         %td{:align => "left"}
           %span{:style => "color: #4b4b4b; font-size: 14px; font-weight: bold; line-height: 22px;"}
-            = _("Please select a node at left to edit.")
+            = _("Please select a node from the tree to edit.")
