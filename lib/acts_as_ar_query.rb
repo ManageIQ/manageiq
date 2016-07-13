@@ -25,7 +25,7 @@ class ActsAsArQuery
   # - [X] except ? - is this not defined in the interface?
   # - [ ] extending
   # - [ ] from
-  # - [ ] ~~group~~ - NO
+  # - [X] group
   # - [ ] ~~having~~ - NO
   # - [X] includes (partial)
   # - [ ] joins
@@ -111,6 +111,7 @@ class ActsAsArQuery
   # TODO: support Hash
   # TODO: support mixing?
   alias order append_hash_arg
+  alias group append_hash_arg
 
   def reorder(*val)
     val = val.flatten
@@ -164,24 +165,21 @@ class ActsAsArQuery
     self
   end
 
-  def find(mode, options)
-    @results ||= klass.find(mode, legacy_options.merge(options))
+  def find(mode, options = {})
+    klass.find(mode, legacy_options.merge(options))
   end
 
-  # find_by()
-
   def count
-    # klass.find(:count, legacy_options)
     to_a.size
   end
   def_delegators :to_a, :size, :take
 
   def first # (number)
-    klass.find(:first, legacy_options)
+    defined?(@results) ? @results.first : klass.find(:first, legacy_options)
   end
 
   def last
-    klass.find(:last, legacy_options)
+    defined?(@results) ? @results.first : klass.find(:last, legacy_options)
   end
 
   # benind the scenes
@@ -199,6 +197,7 @@ class ActsAsArQuery
       :order      => options[:order],
       :offset     => options[:offset],
       :select     => options[:select],
+      :group      => options[:group],
     }.delete_if { |_name, value| value.blank? }
   end
 
