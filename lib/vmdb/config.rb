@@ -52,8 +52,8 @@ module VMDB
       config.store_path(keys, value)
     end
 
-    def save
-      MiqServer.my_server.set_config(config)
+    def save(resource = MiqServer.my_server)
+      resource.set_config(config)
     end
 
     # NOTE: Used by Configuration -> Advanced
@@ -62,7 +62,7 @@ module VMDB
     end
 
     # NOTE: Used by Configuration -> Advanced
-    def self.save_file(contents)
+    def self.save_file(contents, resource = MiqServer.my_server)
       config = new("vmdb")
 
       begin
@@ -73,7 +73,7 @@ module VMDB
       end
 
       return config.errors unless config.errors.blank?
-      config.save
+      config.save(resource)
       true
     end
 
