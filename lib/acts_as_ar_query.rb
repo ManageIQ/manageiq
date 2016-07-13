@@ -4,6 +4,20 @@ class ActsAsArQuery
   extend Forwardable
   attr_accessor :klass, :mode, :options
 
+  # methods that execute actual query
+
+  # - [X] all
+  # - [X] count
+  # - [X] find
+  # - [ ] find_by
+  # - [X] first
+  # - [X] last
+  # - [X] size
+  # - [X] take
+
+  # methods that enhance / chain the query
+  # list is from ActiveRecord relation interface
+
   # - [ ] bind
   # - [ ] create_with
   # - [ ] distinct
@@ -31,15 +45,10 @@ class ActsAsArQuery
   # - [X] where (partial)
   # - [ ] where.not
 
-  # - [X] all
-  # - [X] count
-  # - [ ] find
-  # - [X] first
-  # - [X] last
-  # - [X] size
-  # - [X] take
-
   # private api
+  # the common pattern is to allow this method to be called frequently
+  # and add the values into the hash
+  # this is used by methods like includes, references, order, select and others
   def append_hash_arg(*val)
     symbol = __callee__
     val = val.flatten
