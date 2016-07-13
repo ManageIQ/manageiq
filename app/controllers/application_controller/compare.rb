@@ -57,7 +57,7 @@ module ApplicationController::Compare
     build_sections_tree
     compare_to_json(@compare)
     if params[:ppsetting] # Came in from per page setting
-      replace_main_div({:partial => "layouts/compare"}, :spinner_off => true)
+      replace_main_div({:partial => "layouts/compare"}, {:spinner_off => true})
     else
       if @explorer
         @refresh_partial = "layouts/compare"
@@ -148,7 +148,7 @@ module ApplicationController::Compare
     @exists_mode = session[:miq_exists_mode]
     @compare.set_base_record(params[:id].to_i) if @lastaction == "compare_miq"                      # Remove the VM from the vm compare
     compare_to_json(@compare)
-    replace_main_div({:partial => "layouts/compare"}, :spinner_off => true)
+    replace_main_div({:partial => "layouts/compare"}, {:spinner_off => true})
   end
 
   # Toggle compressed/expanded view
@@ -228,7 +228,7 @@ module ApplicationController::Compare
     @exists_mode = session[:miq_exists_mode]
     @compare.remove_record(params[:id].to_i) if @lastaction == "compare_miq"                      # Remove the VM from the vm compare
     compare_to_json(@compare)
-    replace_main_div({:partial => "layouts/compare"}, :spinner_off => true)
+    replace_main_div({:partial => "layouts/compare"}, {:spinner_off => true})
   end
 
   # Send the current compare data in text format
