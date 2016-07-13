@@ -1211,10 +1211,7 @@ class ProviderForemanController < ApplicationController
     rescue => bang
       add_flash(_("Error when creating Service Dialog: %{error_message}") %
                   {:error_message => bang.message}, :error)
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     else
       add_flash(_("Service Dialog \"%{name}\" was successfully created") %
                   {:name => @edit[:new][:dialog_name]}, :success)

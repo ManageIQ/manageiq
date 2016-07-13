@@ -33,10 +33,7 @@ class MiddlewareDeploymentController < ApplicationController
     if OPERATIONS.key?(selected_operation)
       selected_archives = identify_selected_deployments
       run_deployment_operation(OPERATIONS.fetch(selected_operation), selected_archives)
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     else
       super
     end

@@ -1520,10 +1520,7 @@ class MiqAeClassController < ApplicationController
       else
         @in_a_form = true
         @changed = true
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
     when "reset", nil # Reset or first time in
       id = params[:id] ? params[:id] : from_cid(@edit[:ae_class_id])
@@ -2506,10 +2503,7 @@ class MiqAeClassController < ApplicationController
     if params[:id].nil?
       add_flash(_("No %{model} were selected to be marked as %{action}") % {:model  => ui_lookup(:model => "MiqAeDomain"), :action => action},
                 :error)
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
     domain_toggle_lock(params[:id], locked)
     add_flash(_("The selected %{model} were marked as %{action}") % {:model  => ui_lookup(:model => "MiqAeDomain"), :action => action},

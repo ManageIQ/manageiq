@@ -265,10 +265,7 @@ module MiqAeCustomizationController::OldDialogs
         end
       end
       if @flash_array
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
 
@@ -280,10 +277,7 @@ module MiqAeCustomizationController::OldDialogs
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
         @changed = true
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         if params[:button] == "add"
           add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "MiqDialog"), :name => dialog.name})

@@ -170,10 +170,7 @@ module EmsCommon
         end
         drop_breadcrumb(:name => _("Add New %{table}") % {:table => ui_lookup(:table => @table_name)},
                         :url  => "/#{@table_name}/new")
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
     when "validate"
       verify_ems = model.model_from_emstype(@edit[:new][:emstype]).new
