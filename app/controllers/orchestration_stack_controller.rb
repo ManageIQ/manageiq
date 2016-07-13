@@ -4,6 +4,10 @@ class OrchestrationStackController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
+  def self.model
+    ManageIQ::Providers::CloudManager::OrchestrationStack
+  end
+
   def index
     redirect_to :action => 'show_list'
   end

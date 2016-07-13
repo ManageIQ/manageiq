@@ -353,7 +353,9 @@ module ApplicationHelper
     when "MiqWorker"
       controller = request.parameters[:controller]
       action = "diagnostics_worker_selected"
-    when "OrchestrationStackOutput", "OrchestrationStackParameter", "OrchestrationStackResource"
+    when "OrchestrationStackOutput", "OrchestrationStackParameter", "OrchestrationStackResource",
+        "ManageIQ::Providers::CloudManager::OrchestrationStack",
+        "ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job"
       controller = request.parameters[:controller]
     when "ContainerVolume"
       controller = "persistent_volume"
@@ -822,7 +824,7 @@ module ApplicationHelper
        ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
        resource_pool ems_infra ontap_storage_system ontap_storage_volume
        ontap_file_share snia_local_file_system ontap_logical_disk
-       orchestration_stack cim_base_storage_extent storage storage_manager).include?(@layout)
+       orchestration_stack cim_base_storage_extent storage storage_manager configuration_job).include?(@layout)
   end
 
   # Do we show or hide the clear_search link in the list view title
@@ -892,6 +894,15 @@ module ApplicationHelper
       "vm_infra"
     else
       "vm_or_template"
+    end
+  end
+
+  def controller_for_stack(model)
+    case model.to_s
+      when "ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job"
+        "configuration_job"
+      else
+        model.name.underscore
     end
   end
 
@@ -1101,7 +1112,7 @@ module ApplicationHelper
   GTL_VIEW_LAYOUTS = %w(action availability_zone auth_key_pair_cloud
                         cim_base_storage_extent cloud_object_store_container
                         cloud_object_store_object cloud_tenant cloud_volume cloud_volume_snapshot
-                        condition container_group container_route container_project
+                        configuration_job condition container_group container_route container_project
                         container_replicator container_image container_image_registry
                         container_topology container_dashboard middleware_topology persistent_volume container_build
                         container_node container_service ems_cloud ems_cluster ems_container ems_infra event
@@ -1150,7 +1161,7 @@ module ApplicationHelper
          ems_infra host miq_template offline orchestration_stack persistent_volume ems_middleware
          middleware_server middleware_deployment middleware_datasource
          ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
-         resource_pool retired service templates vm).include?(@layout) && !@in_a_form
+         resource_pool retired service templates vm configuration_job).include?(@layout) && !@in_a_form
       "show_list"
     elsif @compare
       "compare_sections"
@@ -1165,7 +1176,7 @@ module ApplicationHelper
              ems_middleware middleware_server middleware_deployment middleware_datasource flavor
              ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
              host miq_schedule miq_template policy ontap_file_share ontap_logical_disk
-             ontap_storage_system ontap_storage_volume orchestration_stack resource_pool
+             ontap_storage_system ontap_storage_volume orchestration_stack resource_pool configuration_job
              scan_profile service snia_local_file_system storage_manager timeline).include?(@layout)
       @layout
     end
@@ -1178,7 +1189,7 @@ module ApplicationHelper
                      ems_cloud ems_cluster ems_container ems_infra flavor host miq_template offline
                      ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
                      ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
-                     orchestration_stack resource_pool retired service
+                     orchestration_stack resource_pool retired service configuration_job
                      snia_local_file_system storage_manager templates vm)
     (@lastaction == "show_list" && !session[:menu_click] && show_search.include?(@layout) && !@in_a_form) ||
       (@explorer && x_tree && tree_with_advanced_search? && !@record)

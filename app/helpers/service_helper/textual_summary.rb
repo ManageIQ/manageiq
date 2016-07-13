@@ -99,7 +99,14 @@ module ServiceHelper::TextualSummary
   end
 
   def textual_job
-    @record.try(:job)
+    job = @record.try(:job)
+    {
+      :label => _("Job"),
+      :image => "orchestration_stack",
+      :value => job.name,
+      :title => _("Show this Service's Job"),
+      :link  => url_for(:controller => 'configuration_job', :action => 'show', :id => job.id)
+    } if job
   end
 
   def textual_owner
