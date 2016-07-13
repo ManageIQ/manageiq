@@ -154,19 +154,19 @@ describe Host do
     context "with shutdown invalid" do
       it("#shutdown")          { expect { @host.shutdown }.not_to raise_error }
       it("#does not support shutdown") { expect(@host.supports_shutdown?).to eq(validation_response[:available]) }
-      it("#does not support shutdown with reason") { expect(@host.unsupported_reason(:shutdown).to eq(validation_response[:message]) }
+      it("#does not support shutdown with reason") { expect(@host.unsupported_reason(:shutdown)).to eq(validation_response[:message]) }
     end
 
     context "with reboot invalid" do
       it("#reboot")          { expect { @host.reboot }.not_to raise_error }
       it("#does not support reboot") { expect(@host.supports_reboot?).to eq(validation_response[:available]) }
-      it("#does not support reboot with reason") { expect(@host.unsupported_reason(:reboot).to eq(validation_response[:message]) 
+      it("#does not support reboot with reason") { expect(@host.unsupported_reason(:reboot)).to eq(validation_response[:message])  }
     end
 
     context "with standby invalid" do
       it("#standby")          { expect { @host.standby }.not_to raise_error }
       it("#does not support standby") { expect(@host.supports_standby?).to eq(validation_response[:available]) }
-      it("#does not support standby with reason") { expect(@host.unsupported_reason(:standby).to eq(validation_response[:message]) 
+      it("#does not support standby with reason") { expect(@host.unsupported_reason(:standby)).to eq(validation_response[:message]) }
     end
 
     context "with enter_maint_mode invalid" do
