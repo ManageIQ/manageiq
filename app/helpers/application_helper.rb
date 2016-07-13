@@ -1044,6 +1044,13 @@ module ApplicationHelper
     true
   end
 
+  def javascript_redirect(args)
+    render :update do |page|
+      page << javascript_prologue
+      page.redirect_to args
+    end
+  end
+
   def record_no_longer_exists?(what, model = nil)
     return false unless what.nil?
     add_flash(@bang || model.present? ?

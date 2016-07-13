@@ -187,10 +187,7 @@ module ApplicationController::Tags
     else
       @edit = nil                               # clean out the saved info
       session[:flash_msgs] = @flash_array.dup   # Put msg in session for next transaction to display
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to(previous_breadcrumb_url)
-      end
+      javascript_redirect previous_breadcrumb_url
     end
   end
 
@@ -207,10 +204,7 @@ module ApplicationController::Tags
     else
       @edit = nil
       session[:flash_msgs] = @flash_array.dup   # Put msg in session for next transaction to display
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to(previous_breadcrumb_url)
-      end
+      javascript_redirect previous_breadcrumb_url
     end
   end
 
@@ -382,13 +376,10 @@ module ApplicationController::Tags
     @tagging = session[:tag_db] = db        # Remember the DB
     get_tag_items
     drop_breadcrumb(:name => _("Tag Assignment"), :url => "/#{session[:controller]}/tagging_edit")
-    render :update do |page|
-      page << javascript_prologue
-      page.redirect_to :action => 'tagging_edit',
-                       :id     => params[:id],
-                       :db     => db,
-                       :escape => false
-    end
+    javascript_redirect :action => 'tagging_edit',
+                         :id     => params[:id],
+                         :db     => db,
+                         :escape => false
   end
 
   # Getting my company tags and my tags to display on summary screen

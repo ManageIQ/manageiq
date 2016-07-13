@@ -47,10 +47,7 @@ class CloudVolumeController < ApplicationController
       replace_gtl_main_div
     elsif params[:pressed] == "cloud_volume_attach"
       checked_volume_id = get_checked_volume_id(params)
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => "attach", :id => checked_volume_id
-      end
+      javascript_redirect :action => "attach", :id => checked_volume_id
     elsif params[:pressed] == "cloud_volume_detach"
       checked_volume_id = get_checked_volume_id(params)
       @volume = find_by_id_filtered(CloudVolume, checked_volume_id)
@@ -61,22 +58,13 @@ class CloudVolumeController < ApplicationController
           :instances   => ui_lookup(:tables => 'vm_cloud')}, :error)
         render_flash
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => "detach", :id => checked_volume_id
-        end
+        javascript_redirect :action => "detach", :id => checked_volume_id
       end
     elsif params[:pressed] == "cloud_volume_edit"
       checked_volume_id = get_checked_volume_id(params)
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => "edit", :id => checked_volume_id
-      end
+      javascript_redirect :action => "edit", :id => checked_volume_id
     elsif params[:pressed] == "cloud_volume_new"
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => "new"
-      end
+      javascript_redirect :action => "new"
     elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
                                                    "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
       render_or_redirect_partial(pfx)
@@ -178,13 +166,10 @@ class CloudVolumeController < ApplicationController
   def cancel_action(message)
     session[:edit] = nil
     @breadcrumbs.pop if @breadcrumbs
-    render :update do |page|
-      page << javascript_prologue
-      page.redirect_to :action    => @lastaction,
-                       :id        => @volume.id,
-                       :display   => session[:cloud_volume_display],
-                       :flash_msg => message
-    end
+    javascript_redirect :action    => @lastaction,
+                        :id        => @volume.id,
+                        :display   => session[:cloud_volume_display],
+                        :flash_msg => message
   end
 
   def attach_volume
@@ -220,10 +205,7 @@ class CloudVolumeController < ApplicationController
       @breadcrumbs.pop if @breadcrumbs
       session[:edit] = nil
       session[:flash_msgs] = @flash_array.dup if @flash_array
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => "show", :id => @volume.id.to_s
-      end
+      javascript_redirect :action => "show", :id => @volume.id.to_s
     end
   end
 
@@ -261,10 +243,7 @@ class CloudVolumeController < ApplicationController
       @breadcrumbs.pop if @breadcrumbs
       session[:edit] = nil
       session[:flash_msgs] = @flash_array.dup if @flash_array
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => "show", :id => @volume.id.to_s
-      end
+      javascript_redirect :action => "show", :id => @volume.id.to_s
     end
   end
 
@@ -284,12 +263,8 @@ class CloudVolumeController < ApplicationController
     assert_privileges("cloud_volume_new")
     case params[:button]
     when "cancel"
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to(:action => 'show_list', :flash_msg => _("Add of new %{model} was cancelled by the user") % {
-          :model => ui_lookup(:table => 'cloud_volume')
-        })
-      end
+      javascript_redirect :action => 'show_list',
+                          :flash_msg => _("Add of new %{model} was cancelled by the user") % {:model => ui_lookup(:table => 'cloud_volume')}
 
     when "add"
       @volume = CloudVolume.new
@@ -310,10 +285,7 @@ class CloudVolumeController < ApplicationController
         end
         @breadcrumbs.pop if @breadcrumbs
         session[:flash_msgs] = @flash_array.dup if @flash_array
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => "show_list"
-        end
+        javascript_redirect :action => "show_list"
       else
         @in_a_form = true
         add_flash(_(action_details), :error) unless action_details.nil?
@@ -388,10 +360,7 @@ class CloudVolumeController < ApplicationController
       @breadcrumbs.pop if @breadcrumbs
       session[:edit] = nil
       session[:flash_msgs] = @flash_array.dup if @flash_array
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => "show", :id => @volume.id
-      end
+      javascript_redirect :action => "show", :id => @volume.id
 
     when "validate"
       @in_a_form = true

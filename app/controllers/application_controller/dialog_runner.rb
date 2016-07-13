@@ -8,12 +8,9 @@ module ApplicationController::DialogRunner
       add_flash(flash)
       replace_right_cell
     else
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action    => 'show',
-                         :id        => session[:edit][:target_id],
-                         :flash_msg => flash  # redirect to miq_request show_list screen
-      end
+      javascript_redirect :action    => 'show',
+                          :id        => session[:edit][:target_id],
+                          :flash_msg => flash # redirect to miq_request show_list screen
     end
   end
 
@@ -49,26 +46,18 @@ module ApplicationController::DialogRunner
             @in_a_form = false
             if session[:edit][:explorer]
               add_flash(flash)
-              # redirect to miq_request show_list screen
-              render :update do |page|
-                page << javascript_prologue
-                page.redirect_to :controller => 'miq_request',
-                                 :action     => 'show_list',
-                                 :flash_msg  => flash
-              end
+              javascript_redirect :controller => 'miq_request',
+                                  :action     => 'show_list',
+                                  :flash_msg  => flash
             else
               model = ("#{controller_name.camelize}Controller").constantize.model
-              render :update do |page|
-                page << javascript_prologue
+              javascript_redirect(
                 if restful_routed?(model)
-                  page.redirect_to polymorphic_path(model.where(:id => session[:edit][:target_id]).first,
-                                                    :flash_msg => flash)
+                  polymorphic_path(model.where(:id => session[:edit][:target_id]).first, :flash_msg => flash)
                 else
-                  page.redirect_to :action    => 'show',
-                                   :id        => session[:edit][:target_id],
-                                   :flash_msg => flash
+                  {:action => 'show', :id => session[:edit][:target_id], :flash_msg => flash}
                 end
-              end
+              )
             end
           else
             dialog_cancel_form(flash)
@@ -82,10 +71,7 @@ module ApplicationController::DialogRunner
         add_flash(flash, :warning)
         replace_right_cell("dialog_provision")
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => 'dialog_load', :flash_msg => flash, :flash_warning => true, :escape => false  # redirect to miq_request show_list screen
-        end
+        javascript_redirect :action => 'dialog_load', :flash_msg => flash, :flash_warning => true, :escape => false # redirect to miq_request show_list screen
       end
     else
       return unless load_edit("dialog_edit__#{params[:id]}", "replace_cell__explorer")
@@ -181,10 +167,7 @@ module ApplicationController::DialogRunner
     if @edit[:explorer]
       replace_right_cell("dialog_provision")
     else
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'dialog_load'
-      end
+      javascript_redirect :action => 'dialog_load'
     end
   end
 

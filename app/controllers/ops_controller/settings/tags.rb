@@ -3,13 +3,10 @@ module OpsController::Settings::Tags
 
   # AJAX routine for user selected
   def category_select
-    render :update do |page|
-      page << javascript_prologue
-      if params[:id] == "new"
-        page.redirect_to :action => 'category_new'    # redirect to new
-      else
-        page.redirect_to :action => 'category_edit', :id => params[:id], :field => params[:field]   # redirect to edit
-      end
+    if params[:id] == "new"
+      javascript_redirect :action => 'category_new' # redirect to new
+    else
+      javascript_redirect :action => 'category_edit', :id => params[:id], :field => params[:field] # redirect to edit
     end
   end
 

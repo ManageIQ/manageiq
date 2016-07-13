@@ -899,10 +899,7 @@ module ApplicationController::Compare
       if @explorer
         compare_miq(@sb[:compare_db])
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => 'compare_miq'    # redirect to build the compare screen
-        end
+        javascript_redirect :action => 'compare_miq' # redirect to build the compare screen
       end
     end
   end
@@ -947,10 +944,7 @@ module ApplicationController::Compare
       if @explorer
         drift
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :controller => controller_name, :action => 'drift', :id => @drift_obj.id
-        end
+        javascript_redirect :controller => controller_name, :action => 'drift', :id => @drift_obj.id
       end
     end
   end

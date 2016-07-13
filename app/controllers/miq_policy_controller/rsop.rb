@@ -45,10 +45,7 @@ module MiqPolicyController::Rsop
     elsif params[:button] == "reset"
       @sb[:rsop] = {}     # Reset all RSOP stored values
       session[:changed] = session[:rsop_tree] = nil
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'rsop'
-      end
+      javascript_redirect :action => 'rsop'
     else  # No params, first time in
       @breadcrumbs = []
       @accords = [{:name => "rsop", :title => "Options", :container => "rsop_options_div"}]

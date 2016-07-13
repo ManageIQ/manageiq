@@ -187,10 +187,7 @@ class StorageController < ApplicationController
     end
 
     if !@flash_array.nil? && params[:pressed] == "storage_delete" && @single_delete
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]  # redirect to build the retire screen
-      end
+      javascript_redirect :action => 'show_list', :flash_msg => @flash_array[0][:message] # redirect to build the retire screen
     elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
                                                    "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
       render_or_redirect_partial(pfx)
@@ -256,24 +253,6 @@ class StorageController < ApplicationController
     @items_per_page = @settings[:perpage][@gtl_type.to_sym]   # Get the per page setting for this gtl type
     @storage_pages, @storages = paginate(:storages, :per_page => @items_per_page, :order => @col_names[get_sort_col] + " " + @sortdir)
   end
-
-  # # Tag selected Storage Locations
-  # def tagstorage
-  #   storages = Array.new
-  #   storages = find_checked_items
-  #   if storages.length < 1
-  #     add_flash("One or more Storage Locations must be selected for tagging", :error)
-  #     @refresh_div = "flash_msg_div"
-  #     @refresh_partial = "layouts/flash_msg"
-  #   else
-  #     session[:tag_items] = storages  # Set the array of tag items
-  #     session[:tag_db] = Storage      # Remember the DB
-  #     session[:assigned_filters] = assigned_filters
-  #      render :update do |page|
-  #       page.redirect_to :controller => 'storage', :action => 'tagging'   # redirect to build the tagging screen
-  #     end
-  #   end
-  # end
 
   def accordion_select
     @lastaction = "explorer"

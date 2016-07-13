@@ -36,21 +36,12 @@ module VmCommon
     @vm = @record = identify_record(params[:id], VmOrTemplate) unless @lastaction == "show_list"
 
     if !@flash_array.nil? && @single_delete
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]  # redirect to build the retire screen
-      end
+      javascript_redirect :action => 'show_list', :flash_msg => @flash_array[0][:message] # redirect to build the retire screen
     elsif params[:pressed].ends_with?("_edit")
       if @redirect_controller
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :controller => @redirect_controller, :action => @refresh_partial, :id => @redirect_id, :org_controller => @org_controller
-        end
+        javascript_redirect :controller => @redirect_controller, :action => @refresh_partial, :id => @redirect_id, :org_controller => @org_controller
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => @refresh_partial, :id => @redirect_id
-        end
+        javascript_redirect :action => @refresh_partial, :id => @redirect_id
       end
     else
       if @refresh_div == "main_div" && @lastaction == "show_list"
@@ -485,10 +476,7 @@ module VmCommon
     base = params[:id].split('-')
     session[:base_vm] = "_h-#{base[1]}"
     @display = "vmtree_info"
-    render :update do |page|
-      page << javascript_prologue
-      page.redirect_to :action => "show", :id => base[1], :vm_tree => "vmtree_info"
-    end
+    javascript_redirect :action => "show", :id => base[1], :vm_tree => "vmtree_info"
   end
 
   def snap_pressed
@@ -876,10 +864,7 @@ module VmCommon
     @rightsize = true
     @in_a_form = true
     if params[:button] == "back"
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to(previous_breadcrumb_url)
-      end
+      javascript_prologue( previous_breadcrumb_url)
     end
     if !@explorer && params[:button] != "back"
       drop_breadcrumb(:name => _("Right Size VM '%{name}''") % {:name => @record.name}, :url => "/vm/right_size")
@@ -942,10 +927,7 @@ module VmCommon
         @sb[:action] = nil
         replace_right_cell
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => 'show', :id => @record.id, :flash_msg => msg
-        end
+        javascript_redirect :action => 'show', :id => @record.id, :flash_msg => msg
       end
     when "save"
       svr = @edit[:new][:server] && @edit[:new][:server] != "" ? MiqServer.find(@edit[:new][:server]) : nil
@@ -957,10 +939,7 @@ module VmCommon
         @sb[:action] = nil
         replace_right_cell
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => 'show', :id => @record.id, :flash_msg => msg
-        end
+        javascript_redirect :action => 'show', :id => @record.id, :flash_msg => msg
       end
     when "reset"
       @in_a_form = true
@@ -970,10 +949,7 @@ module VmCommon
         add_flash(_("All changes have been reset"), :warning)
         replace_right_cell
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => 'evm_relationship', :id => @record.id, :flash_msg => _("All changes have been reset"), :flash_warning => true, :escape => true
-        end
+        javascript_redirect :action => 'evm_relationship', :id => @record.id, :flash_msg => _("All changes have been reset"), :flash_warning => true, :escape => true
       end
     end
   end
@@ -1105,10 +1081,7 @@ module VmCommon
       else
         add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "Vm"), :name => @record.name})
         session[:flash_msgs] = @flash_array.dup
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to(previous_breadcrumb_url)
-        end
+        javascript_redirect previous_breadcrumb_url
       end
     when "save"
       if @edit[:new][:parent] != -1 && @edit[:new][:kids].invert.include?(@edit[:new][:parent]) # Check if parent is a kid, if selected
@@ -1152,10 +1125,7 @@ module VmCommon
           replace_right_cell
         else
           session[:flash_msgs] = @flash_array.dup
-          render :update do |page|
-            page << javascript_prologue
-            page.redirect_to(previous_breadcrumb_url)
-          end
+          javascript_redirect previous_breadcrumb_url
         end
       end
     when "reset"
@@ -1168,10 +1138,7 @@ module VmCommon
       if @edit[:explorer]
         replace_right_cell
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to(:action => "edit", :controller => "vm", :id => params[:id])
-        end
+        javascript_redirect :action => "edit", :controller => "vm", :id => params[:id]
       end
     else
       @changed = session[:changed] = (@edit[:new] != @edit[:current])
