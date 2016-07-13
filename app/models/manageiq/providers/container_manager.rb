@@ -56,5 +56,9 @@ module ManageIQ::Providers
     def validate_authentication_status
       {:available => true, :message => nil}
     end
+
+    def port_show
+      port.to_s
+    end
   end
 end
