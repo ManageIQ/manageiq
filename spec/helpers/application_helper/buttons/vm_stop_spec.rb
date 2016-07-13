@@ -8,11 +8,7 @@ describe ApplicationHelper::Button::VmStop do
         allow(@record).to receive(:is_available?).with(:stop).and_return(true)
       end
 
-      it "will not be skipped" do
-        view_context = setup_view_context_with_sandbox({})
-        button = described_class.new(view_context, {}, {'record' => @record}, {})
-        expect(button.skip?).to be_falsey
-      end
+      it_behaves_like "will not be skipped for this record"
     end
 
     context "when record is not stopable" do
@@ -21,11 +17,7 @@ describe ApplicationHelper::Button::VmStop do
         allow(@record).to receive(:is_available?).with(:stop).and_return(false)
       end
 
-      it "will be skipped" do
-        view_context = setup_view_context_with_sandbox({})
-        button = described_class.new(view_context, {}, {'record' => @record}, {})
-        expect(button.skip?).to be_truthy
-      end
+      it_behaves_like "will be skipped for this record"
     end
 
     context "when record has no error message" do
@@ -34,11 +26,7 @@ describe ApplicationHelper::Button::VmStop do
         allow(@record).to receive(:is_available_now_error_message).and_return(false)
       end
 
-      it "will not be skipped" do
-        view_context = setup_view_context_with_sandbox({})
-        button = described_class.new(view_context, {}, {'record' => @record}, {})
-        expect(button.skip?).to be_falsey
-      end
+      it_behaves_like "will not be skipped for this record"
     end
   end
 
