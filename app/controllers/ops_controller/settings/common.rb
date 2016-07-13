@@ -481,10 +481,7 @@ module OpsController::Settings::Common
         if @sb[:active_tab] == "settings_server"
           replace_right_cell(@nodetype, [:diagnostics, :settings])
         elsif @sb[:active_tab] == "settings_custom_logos"
-          render :update do |page|
-            page << javascript_prologue
-            page.redirect_to :action => 'explorer', :flash_msg => @flash_array[0][:message], :flash_error => @flash_array[0][:level] == :error, :escape => false  # redirect to build the server screen
-          end
+          javascript_redirect :action => 'explorer', :flash_msg => @flash_array[0][:message], :flash_error => @flash_array[0][:level] == :error, :escape => false # redirect to build the server screen
           return
         else
           replace_right_cell(@nodetype)

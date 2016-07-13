@@ -203,10 +203,7 @@ class EmsClusterController < ApplicationController
     end
 
     if !@flash_array.nil? && params[:pressed] == "ems_cluster_delete" && @single_delete
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]  # redirect to build the retire screen
-      end
+      javascript_redirect :action => 'show_list', :flash_msg => @flash_array[0][:message] # redirect to build the retire screen
     elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
                                                    "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
       render_or_redirect_partial(pfx)

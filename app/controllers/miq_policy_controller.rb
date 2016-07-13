@@ -27,10 +27,7 @@ class MiqPolicyController < ApplicationController
       if @lastaction != "fetch_yaml"
         add_flash(_("Export cancelled by user"))
       end
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => "explorer"
-      end
+      javascript_redirect :action => "explorer"
     when "export"
       if params[:choices_chosen]
         @sb[:new][:choices_chosen] = params[:choices_chosen]
@@ -58,10 +55,7 @@ class MiqPolicyController < ApplicationController
             filename = "Alerts"
           end
           session[:export_data] = MiqPolicy.export_to_yaml(@sb[:new][:choices_chosen], db)
-          render :update do |page|
-            page << javascript_prologue
-            page.redirect_to :action => 'fetch_yaml', :fname => filename, :escape => false
-          end
+          javascript_redirect :action => 'fetch_yaml', :fname => filename, :escape => false
         rescue StandardError => bang
           add_flash(_("Error during export: %{error_message}") % {:error_message => bang.message}, :error)
           render :update do |page|
@@ -203,10 +197,7 @@ class MiqPolicyController < ApplicationController
     elsif params[:commit] == "cancel"
       miq_policy_import_service.cancel_import(@import_file_upload_id)
 
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'export', :flash_msg => _("Import cancelled by user")
-      end
+      javascript_redirect :action => 'export', :flash_msg => _("Import cancelled by user")
 
     # init import
     else
@@ -231,7 +222,6 @@ class MiqPolicyController < ApplicationController
     render :update do |page|
       page << javascript_prologue
       if prev_dbtype != @sb[:dbtype]    # If any export db type has changed
-        # page.redirect_to :action=>"export", :dbtype=>params[:dbtype], :typ=>"export"
         page.replace_html("profile_export_div", :partial => "export")
       end
     end

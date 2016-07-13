@@ -259,13 +259,10 @@ module ApplicationController::Performance
 
     if cmd == "Display" && model == "Current" && typ == "Top"                   # Display the CI selected from a Top chart
       return unless perf_menu_record_valid(data_row["resource_type"], data_row["resource_id"], data_row["resource_name"])
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to(:controller => data_row["resource_type"].underscore,
-                         :action     => "show",
-                         :id         => data_row["resource_id"],
-                         :escape     => false)
-      end
+      javascript_redirect :controller => data_row["resource_type"].underscore,
+                          :action     => "show",
+                          :id         => data_row["resource_id"],
+                          :escape     => false
       return
 
     elsif cmd == "Display" && typ == "bytag"  # Display selected resources from a tag chart
@@ -281,15 +278,12 @@ module ApplicationController::Performance
              else
                _("%{model} (%{tag} running %{time})") % {:tag => bc_tag, :model => bc_model, :time => dt}
              end
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to(:controller    => model.downcase.singularize,
-                           :action        => "show_list",
-                           :menu_click    => params[:menu_click],
-                           :sb_controller => request.parameters["controller"],
-                           :bc            => bc,
-                           :escape        => false)
-        end
+        javascript_redirect :controller    => model.downcase.singularize,
+                            :action        => "show_list",
+                            :menu_click    => params[:menu_click],
+                            :sb_controller => request.parameters["controller"],
+                            :bc            => bc,
+                            :escape        => false
         return
       end
 
@@ -300,15 +294,12 @@ module ApplicationController::Performance
         msg = _("No %{model} were %{state} %{time}") % {:model => model, :state => state, :time => dt}
       else
         bc = request.parameters["controller"] == "storage" ? "#{bc_model} #{dt}" : "#{bc_model} #{state} #{dt}"
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to(:controller    => model.downcase.singularize,
-                           :action        => "show_list",
-                           :menu_click    => params[:menu_click],
-                           :sb_controller => request.parameters["controller"],
-                           :bc            => bc,
-                           :escape        => false)
-        end
+        javascript_redirect :controller    => model.downcase.singularize,
+                            :action        => "show_list",
+                            :menu_click    => params[:menu_click],
+                            :sb_controller => request.parameters["controller"],
+                            :bc            => bc,
+                            :escape        => false
         return
       end
 
@@ -340,15 +331,12 @@ module ApplicationController::Performance
           @_params[:refresh] = "n"
           show_timeline
         else
-          render :update do |page|
-            page << javascript_prologue
-            page.redirect_to(:id         => @perf_record.id,
-                             :action     => "show",
-                             :display    => "timeline",
-                             :controller => model_to_controller(@perf_record),
-                             :refresh    => "n",
-                             :escape     => false)
-          end
+          javascript_redirect :id         => @perf_record.id,
+                              :action     => "show",
+                              :display    => "timeline",
+                              :controller => model_to_controller(@perf_record),
+                              :refresh    => "n",
+                              :escape     => false
         end
         return
       end
@@ -380,21 +368,18 @@ module ApplicationController::Performance
           @_params[:refresh] = "n"
           show_timeline
         else
-          render :update do |page|
-            page << javascript_prologue
-            if data_row["resource_type"] == "VmOrTemplate"
-              tree_node_id = TreeBuilder.build_node_id(@record.class.base_model, @record.id)
-              session[:exp_parms] = {:display => "timeline", :refresh => "n", :id => tree_node_id}
-              page.redirect_to(:controller => data_row["resource_type"].underscore.downcase.singularize,
-                               :action     => "explorer")
-            else
-              page.redirect_to(:controller => data_row["resource_type"].underscore.downcase.singularize,
-                               :action     => "show",
-                               :display    => "timeline",
-                               :id         => data_row["resource_id"],
-                               :refresh    => "n",
-                               :escape     => false)
-            end
+          if data_row["resource_type"] == "VmOrTemplate"
+            tree_node_id = TreeBuilder.build_node_id(@record.class.base_model, @record.id)
+            session[:exp_parms] = {:display => "timeline", :refresh => "n", :id => tree_node_id}
+            javascript_redirect :controller => data_row["resource_type"].underscore.downcase.singularize,
+                                :action     => "explorer"
+          else
+            javascript_redirect :controller => data_row["resource_type"].underscore.downcase.singularize,
+                                :action     => "show",
+                                :display    => "timeline",
+                                :id         => data_row["resource_id"],
+                                :refresh    => "n",
+                                :escape     => false
           end
         end
         return
@@ -489,22 +474,19 @@ module ApplicationController::Performance
       session[:sandboxes][cont][:perf_options] ||= {}
       session[:sandboxes][cont][:perf_options].merge!(new_opts)
 
-      render :update do |page|
-        page << javascript_prologue
-        if data_row["resource_type"] == "VmOrTemplate"
-          prefix = TreeBuilder.get_prefix_for_model(@record.class.base_model)
-          tree_node_id = "#{prefix}-#{@record.id}"  # Build the tree node id
-          session[:exp_parms] = {:display => "performance", :refresh => "n", :id => tree_node_id}
-          page.redirect_to(:controller => data_row["resource_type"].underscore.downcase.singularize,
-                           :action     => "explorer")
-        else
-          page.redirect_to(:controller => data_row["resource_type"].underscore.downcase.singularize,
-                           :action     => "show",
-                           :id         => data_row["resource_id"],
-                           :display    => "performance",
-                           :refresh    => "n",
-                           :escape     => false)
-        end
+      if data_row["resource_type"] == "VmOrTemplate"
+        prefix = TreeBuilder.get_prefix_for_model(@record.class.base_model)
+        tree_node_id = "#{prefix}-#{@record.id}"  # Build the tree node id
+        session[:exp_parms] = {:display => "performance", :refresh => "n", :id => tree_node_id}
+        javascript_redirect :controller => data_row["resource_type"].underscore.downcase.singularize,
+                            :action     => "explorer"
+      else
+        javascript_redirect :controller => data_row["resource_type"].underscore.downcase.singularize,
+                            :action     => "show",
+                            :id         => data_row["resource_id"],
+                            :display    => "performance",
+                            :refresh    => "n",
+                            :escape     => false
       end
       return
 
@@ -517,14 +499,11 @@ module ApplicationController::Performance
       if top_ids.blank?
         msg = "No #{bc_tag} #{bc_model} were running #{dt}"
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to(:id          => @perf_record.id,
-                           :action      => "perf_top_chart",
-                           :menu_choice => params[:menu_click],
-                           :bc          => "#{@perf_record.name} top #{bc_model} (#{bc_tag} #{dt})",
-                           :escape      => false)
-        end
+        javascript_redirect :id          => @perf_record.id,
+                            :action      => "perf_top_chart",
+                            :menu_choice => params[:menu_click],
+                            :bc          => "#{@perf_record.name} top #{bc_model} (#{bc_tag} #{dt})",
+                            :escape      => false
         return
       end
 
@@ -536,14 +515,11 @@ module ApplicationController::Performance
       if top_ids.blank?
         msg = _("No %{model} were running %{time}") % {:model => model, :time => dt}
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to(:id          => @perf_record.id,
-                           :action      => "perf_top_chart",
-                           :menu_choice => params[:menu_click],
-                           :bc          => "#{@perf_record.name} top #{bc_model} (#{dt})",
-                           :escape      => false)
-        end
+        javascript_redirect :id          => @perf_record.id,
+                            :action      => "perf_top_chart",
+                            :menu_choice => params[:menu_click],
+                            :bc          => "#{@perf_record.name} top #{bc_model} (#{dt})",
+                            :escape      => false
         return
       end
 

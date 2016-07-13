@@ -217,10 +217,7 @@ class DashboardController < ApplicationController
     ws.destroy unless ws.nil?
     ws = create_user_dashboard(@sb[:active_db_id])
     @sb[:dashboards] = nil  # Reset dashboards hash so it gets recreated
-    render :update do |page|
-      page << javascript_prologue
-      page.redirect_to :action => 'show'
-    end
+    javascript_redirect :action => 'show'
   end
 
   # Toggle dashboard item size
@@ -302,10 +299,7 @@ class DashboardController < ApplicationController
       w = MiqWidget.find_by_id(w)
       ws.remove_member(w) if w
       save_user_dashboards
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'show'
-      end
+      javascript_redirect :action => 'show'
     else
       head :ok
     end
@@ -329,10 +323,7 @@ class DashboardController < ApplicationController
       if ws.add_member(w).present?
         save_user_dashboards
         w.create_initial_content_for_user(session[:userid])
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => 'show'
-        end
+        javascript_redirect :action => 'show'
       else
         render_flash(_("The widget \"%{widget_name}\" is already part of the edited dashboard") %
          {:widget_name => w.name}, :error)
@@ -371,26 +362,23 @@ class DashboardController < ApplicationController
 
   # AJAX login retry method
   def login_retry
-    render :update do |page|
-      page << javascript_prologue
-      #     if MiqServer.my_server(true).logon_status == :starting
-      logon_details = MiqServer.my_server(true).logon_status_details
-      if logon_details[:status] == :starting
+    #     if MiqServer.my_server(true).logon_status == :starting
+    logon_details = MiqServer.my_server(true).logon_status_details
+    if logon_details[:status] == :starting
+      render :update do |page|
+        page << javascript_prologue
         @login_message = logon_details[:message] if logon_details[:message]
         page.replace("login_message_div", :partial => "login_message")
         page << "setTimeout(\"#{remote_function(:url => {:action => 'login_retry'})}\", 10000);"
-      else
-        page.redirect_to :action => 'login'
       end
+    else
+      javascript_redirect :action => 'login'
     end
   end
 
   # Initiate a SAML Login from the main login page
   def initiate_saml_login
-    render :update do |page|
-      page << javascript_prologue
-      page.redirect_to(saml_protected_page)
-    end
+    javascript_redirect saml_protected_page
   end
 
   # Login support for SAML - GET /saml_login
@@ -465,15 +453,12 @@ class DashboardController < ApplicationController
     }
 
     if params[:user_name].blank? && params[:user_password].blank? &&
-       request.headers["X-Remote-User"].blank? &&
-       get_vmdb_config[:authentication][:mode] == "httpd" &&
-       get_vmdb_config[:authentication][:sso_enabled] &&
-       params[:action] == "authenticate"
+      request.headers["X-Remote-User"].blank? &&
+      get_vmdb_config[:authentication][:mode] == "httpd" &&
+      get_vmdb_config[:authentication][:sso_enabled] &&
+      params[:action] == "authenticate"
 
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to(root_path)
-      end
+      javascript_redirect root_path
       return
     end
 
@@ -606,10 +591,7 @@ class DashboardController < ApplicationController
     session_init(db_user)
     session[:group_changed] = true
     url = start_url_for_user(nil) || url_for(:controller => params[:controller], :action => 'show')
-    render :update do |page|
-      page << javascript_prologue
-      page.redirect_to(url)
-    end
+    javascript_redirect url
   end
 
   # Put out error msg if user's role is not authorized for an action

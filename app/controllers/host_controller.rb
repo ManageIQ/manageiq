@@ -265,12 +265,9 @@ class HostController < ApplicationController
     assert_privileges("host_new")
     case params[:button]
     when "cancel"
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action    => 'show_list',
-                         :flash_msg => _("Add of new %{model} was cancelled by the user") %
-                           {:model => ui_lookup(:model => "Host")}
-      end
+      javascript_redirect :action    => 'show_list',
+                          :flash_msg => _("Add of new %{model} was cancelled by the user") %
+                          {:model => ui_lookup(:model => "Host")}
     when "add"
       @host = Host.new
       old_host_attributes = @host.attributes.clone
@@ -280,11 +277,8 @@ class HostController < ApplicationController
         set_record_vars(@host)                                 # Save the authentication records for this host
         AuditEvent.success(build_saved_audit_hash_angular(old_host_attributes, @host, params[:button] == "add"))
         message = _("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "Host"), :name => @host.name}
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action    => 'show_list',
-                           :flash_msg => message
-        end
+        javascript_redirect :action    => 'show_list',
+                            :flash_msg => message
       else
         @in_a_form = true
         @errors.each { |msg| add_flash(msg, :error) }
@@ -356,17 +350,11 @@ class HostController < ApplicationController
         flash = _("Edit of credentials for selected %{models} was cancelled by the user") %
           {:models => ui_lookup(:models => "Host")}
         # redirect_to :action => @lastaction, :display=>session[:host_display], :flash_msg=>flash
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => @lastaction, :display => session[:host_display], :flash_msg => flash
-        end
+        javascript_redirect :action => @lastaction, :display => session[:host_display], :flash_msg => flash
       else
         @host = find_by_id_filtered(Host, params[:id])
         flash = _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "Host"), :name => @host.name}
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => @lastaction, :id => @host.id, :display => session[:host_display], :flash_msg => flash
-        end
+        javascript_redirect :action => @lastaction, :id => @host.id, :display => session[:host_display], :flash_msg => flash
       end
 
     when "save"
@@ -380,10 +368,7 @@ class HostController < ApplicationController
           @breadcrumbs.pop if @breadcrumbs
           AuditEvent.success(build_saved_audit_hash_angular(old_host_attributes, @host, false))
           session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
-          render :update do |page|
-            page << javascript_prologue
-            page.redirect_to :action => "show", :id => @host.id.to_s
-          end
+          javascript_redirect :action => "show", :id => @host.id.to_s
           return
         else
           @errors.each { |msg| add_flash(msg, :error) }
@@ -408,10 +393,7 @@ class HostController < ApplicationController
         end
         if @error || @error.blank?
           # redirect_to :action => 'show_list', :flash_msg=>_("Credentials/Settings saved successfully")
-          render :update do |page|
-            page << javascript_prologue
-            page.redirect_to :action => 'show_list', :flash_msg => _("Credentials/Settings saved successfully")
-          end
+          javascript_redirect :action => 'show_list', :flash_msg => _("Credentials/Settings saved successfully")
         else
           drop_breadcrumb(:name => _("Edit Host '%{name}'") % {:name => @host.name}, :url => "/host/edit/#{@host.id}")
           @in_a_form = true
@@ -427,10 +409,7 @@ class HostController < ApplicationController
       add_flash(_("All changes have been reset"), :warning)
       @in_a_form = true
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'edit', :id => @host.id.to_s
-      end
+      javascript_redirect :action => 'edit', :id => @host.id.to_s
     when "validate"
       verify_host = find_by_id_filtered(Host, params[:validate_id] ? params[:validate_id].to_i : params[:id])
       if session[:host_items].nil?
@@ -568,10 +547,7 @@ class HostController < ApplicationController
     end
 
     if !@flash_array.nil? && params[:pressed] == "host_delete" && @single_delete
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]  # redirect to build the retire screen
-      end
+      javascript_redirect :action => 'show_list', :flash_msg => @flash_array[0][:message] # redirect to build the retire screen
     elsif params[:pressed].ends_with?("_edit") || ["host_miq_request_new", "#{pfx}_miq_request_new",
                                                    "#{pfx}_clone", "#{pfx}_migrate",
                                                    "#{pfx}_publish"].include?(params[:pressed])
@@ -581,31 +557,25 @@ class HostController < ApplicationController
       else
         if @redirect_controller
           if ["host_miq_request_new", "#{pfx}_clone", "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
-            render :update do |page|
-              page << javascript_prologue
-              if flash_errors?
+            if flash_errors?
+              render :update do |page|
+                page << javascript_prologue
                 page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-              else
-                page.redirect_to :controller     => @redirect_controller,
-                                 :action         => @refresh_partial,
-                                 :id             => @redirect_id,
-                                 :prov_type      => @prov_type,
-                                 :prov_id        => @prov_id,
-                                 :org_controller => @org_controller,
-                                 :escape         => false
               end
+            else
+              javascript_redirect :controller     => @redirect_controller,
+                                  :action         => @refresh_partial,
+                                  :id             => @redirect_id,
+                                  :prov_type      => @prov_type,
+                                  :prov_id        => @prov_id,
+                                  :org_controller => @org_controller,
+                                  :escape         => false
             end
           else
-            render :update do |page|
-              page << javascript_prologue
-              page.redirect_to :controller => @redirect_controller, :action => @refresh_partial, :id => @redirect_id, :org_controller => @org_controller
-            end
+            javascript_redirect :controller => @redirect_controller, :action => @refresh_partial, :id => @redirect_id, :org_controller => @org_controller
           end
         else
-          render :update do |page|
-            page << javascript_prologue
-            page.redirect_to :action => @refresh_partial, :id => @redirect_id
-          end
+          javascript_redirect :action => @refresh_partial, :id => @redirect_id
         end
       end
     else

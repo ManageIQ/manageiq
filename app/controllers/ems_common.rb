@@ -159,10 +159,7 @@ module EmsCommon
       if !@flash_array && valid_record?(add_ems) && add_ems.save
         AuditEvent.success(build_created_audit(add_ems, @edit))
         session[:edit] = nil  # Clear the edit object from the session object
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => 'show_list', :flash_msg => _("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:tables => @table_name), :name => add_ems.name}
-        end
+        javascript_redirect :action => 'show_list', :flash_msg => _("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:tables => @table_name), :name => add_ems.name}
       else
         @in_a_form = true
         unless @flash_array
@@ -254,12 +251,9 @@ module EmsCommon
   def update_button_cancel
     session[:edit] = nil  # clean out the saved info
     _model = model
-    render :update do |page|
-      page << javascript_prologue
-      page.redirect_to(:action => @lastaction, :id => @ems.id, :display => session[:ems_display],
-                       :flash_msg => _("Edit of %{model} \"%{name}\" was cancelled by the user") %
-                       {:model => ui_lookup(:model => _model.to_s), :name => @ems.name})
-    end
+    javascript_redirect :action => @lastaction, :id => @ems.id, :display => session[:ems_display],
+                        :flash_msg => _("Edit of %{model} \"%{name}\" was cancelled by the user") %
+                        {:model => ui_lookup(:model => _model.to_s), :name => @ems.name}
   end
   private :update_button_cancel
 
@@ -277,10 +271,7 @@ module EmsCommon
               {:model => ui_lookup(:model => model.to_s), :name => update_ems.name}
       AuditEvent.success(build_saved_audit(update_ems, @edit))
       session[:edit] = nil  # clean out the saved info
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'show', :id => @ems.id.to_s, :flash_msg => flash
-      end
+      javascript_redirect :action => 'show', :id => @ems.id.to_s, :flash_msg => flash
       return
     else
       @edit[:errors].each { |msg| add_flash(msg, :error) }
@@ -304,10 +295,7 @@ module EmsCommon
     @in_a_form = true
     set_verify_status
     session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
-    render :update do |page|
-      page << javascript_prologue
-      page.redirect_to :action => 'edit', :id => @ems.id.to_s
-    end
+    javascript_redirect :action => 'edit', :id => @ems.id.to_s
   end
   private :update_button_reset
 
@@ -411,10 +399,7 @@ module EmsCommon
         tl_build_timeline                       # Create the timeline report
         drop_breadcrumb(:name => _("Timelines"), :url => show_link(@record, :refresh => "n", :display => "timeline"))
         session[:tl_record_id] = @record.id
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to  polymorphic_path(@record, :display => 'timeline')
-        end
+        javascript_redirect polymorphic_path(@record, :display => 'timeline')
         return
       end
       if params[:pressed] == "#{@table_name}_perf"
@@ -423,17 +408,11 @@ module EmsCommon
         drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @record.name},
                         :url  => show_link(@record, :refresh => "n", :display => "performance"))
         perf_gen_init_options # Intialize options, charts are generated async
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to polymorphic_path(@record, :display => "performance")
-        end
+        javascript_redirect polymorphic_path(@record, :display => "performance")
         return
       end
       if params[:pressed] == "refresh_server_summary"
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to  :back
-        end
+        javascript_redirect :back
         return
       end
       if params[:pressed] == "ems_cloud_recheck_auth_status" ||
@@ -460,10 +439,7 @@ module EmsCommon
     end
 
     if !@flash_array.nil? && params[:pressed] == "#{@table_name}_delete" && @single_delete
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]  # redirect to build the retire screen
-      end
+      javascript_redirect :action => 'show_list', :flash_msg => @flash_array[0][:message] # redirect to build the retire screen
     elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
                                                    "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
       render_or_redirect_partial(pfx)

@@ -30,21 +30,12 @@ class StorageManagerController < ApplicationController
     end
 
     if !@flash_array.nil? && params[:pressed] == "storage_manager_delete" && @single_delete
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]  # redirect to build the retire screen
-      end
+      javascript_redirect :action => 'show_list', :flash_msg => @flash_array[0][:message]  # redirect to build the retire screen
     elsif params[:pressed].ends_with?("_edit")
       if @redirect_controller
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :controller => @redirect_controller, :action => @refresh_partial, :id => @redirect_id
-        end
+        javascript_redirect :controller => @redirect_controller, :action => @refresh_partial, :id => @redirect_id
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => @refresh_partial, :id => @redirect_id
-        end
+        javascript_redirect :action => @refresh_partial, :id => @redirect_id
       end
     else
       if @refresh_div == "main_div" && @lastaction == "show_list"
@@ -79,11 +70,8 @@ class StorageManagerController < ApplicationController
     get_form_vars
     case params[:button]
     when "cancel"
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'show_list', :flash_msg => _("Add of new %{model} was cancelled by the user") %
-          {:model => ui_lookup(:table => "StorageManager")}
-      end
+      javascript_redirect :action => 'show_list', :flash_msg => _("Add of new %{model} was cancelled by the user") %
+                          {:model => ui_lookup(:table => "StorageManager")}
     when "add"
       if @edit[:new][:sm_type].nil?
         add_flash(_("Type is required"), :error)
@@ -104,10 +92,7 @@ class StorageManagerController < ApplicationController
       if !@flash_array && valid_record?(add_sm) && add_sm.save
         AuditEvent.success(build_created_audit(add_sm, @edit))
         session[:edit] = nil  # Clear the edit object from the session object
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => 'show_list', :flash_msg => _("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "StorageManager"), :name => add_sm.name}
-        end
+        javascript_redirect :action => 'show_list', :flash_msg => _("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "StorageManager"), :name => add_sm.name}
       else
         @in_a_form = true
         unless @flash_array
@@ -191,10 +176,7 @@ class StorageManagerController < ApplicationController
     when "cancel"
       session[:edit] = nil  # clean out the saved info
       flash = _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "StorageManager"), :name => @sm.name}
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => @lastaction, :id => @sm.id, :display => session[:sm_display], :flash_msg => flash
-      end
+      javascript_redirect :action => @lastaction, :id => @sm.id, :display => session[:sm_display], :flash_msg => flash
     when "save"
       update_sm = find_by_id_filtered(StorageManager, params[:id])
       set_record_vars(update_sm)
@@ -202,10 +184,7 @@ class StorageManagerController < ApplicationController
         # update_sm.reload
         AuditEvent.success(build_saved_audit(update_sm, @edit))
         session[:edit] = nil  # clean out the saved info
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => 'show', :id => @sm.id.to_s, :flash_msg => _("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "StorageManager"), :name => update_sm.name}
-        end
+        javascript_redirect :action => 'show', :id => @sm.id.to_s, :flash_msg => _("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "StorageManager"), :name => update_sm.name}
         return
       else
         @edit[:errors].each { |msg| add_flash(msg, :error) }
@@ -228,10 +207,7 @@ class StorageManagerController < ApplicationController
       @in_a_form = true
       set_verify_status
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'edit', :id => @sm.id.to_s
-      end
+      javascript_redirect :action => 'edit', :id => @sm.id.to_s
     when "validate"
       verify_sm = find_by_id_filtered(StorageManager, params[:id])
       set_record_vars(verify_sm, :validate)

@@ -57,10 +57,7 @@ class ConfigurationController < ApplicationController
     end
 
     if params[:pressed].ends_with?("_edit", "_copy")
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => @refresh_partial, :id => @redirect_id
-      end
+      javascript_redirect :action => @refresh_partial, :id => @redirect_id
     else
       c_tb = build_toolbar(center_toolbar_filename)
       render :update do |page|
@@ -437,10 +434,7 @@ class ConfigurationController < ApplicationController
     when "cancel"
       add_flash(_("Add of new %{record} was cancelled by the user") % {:record => ui_lookup(:model => "TimeProfile")})
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'change_tab', :typ => "timeprofiles", :tab => 4
-      end
+      javascript_redirect :action => 'change_tab', :typ => "timeprofiles", :tab => 4
     when "add"
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
         add_flash(_("Description is required"), :error)
@@ -475,10 +469,7 @@ class ConfigurationController < ApplicationController
         AuditEvent.success(build_created_audit(@timeprofile, @edit))
         add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "TimeProfile"), :name => @timeprofile.description})
         session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => 'change_tab', :typ => "timeprofiles", :tab => 4
-        end
+        javascript_redirect :action => 'change_tab', :typ => "timeprofiles", :tab => 4
       end
     end
   end
@@ -490,10 +481,7 @@ class ConfigurationController < ApplicationController
       add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "TimeProfile"), :name => @timeprofile.description})
       params[:id] = @timeprofile.id.to_s
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'change_tab', :typ => "timeprofiles", :tab => 4, :id => @timeprofile.id.to_s
-      end
+      javascript_redirect :action => 'change_tab', :typ => "timeprofiles", :tab => 4, :id => @timeprofile.id.to_s
     elsif params[:button] == "reset"
       @edit[:new] = copy_hash(@edit[:current])
       params[:id] = @timeprofile.id
@@ -502,10 +490,7 @@ class ConfigurationController < ApplicationController
       drop_breadcrumb(:name => _("Edit '%{description}'") % {:description => @timeprofile.description},
                       :url  => "/configuration/timeprofile_edit")
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'timeprofile_edit', :id => @timeprofile.id.to_s
-      end
+      javascript_redirect :action => 'timeprofile_edit', :id => @timeprofile.id.to_s
     elsif params[:button] == "save"
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
         add_flash(_("Description is required"), :error)
@@ -544,10 +529,7 @@ class ConfigurationController < ApplicationController
         add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "TimeProfile"),
                                                          :name  => @timeprofile.description})
         session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => 'change_tab', :typ => "timeprofiles", :tab => 4, :id => @timeprofile.id.to_s
-        end
+        javascript_redirect :action => 'change_tab', :typ => "timeprofiles", :tab => 4, :id => @timeprofile.id.to_s
       end
     end
   end
