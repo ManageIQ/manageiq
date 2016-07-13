@@ -1115,27 +1115,6 @@
     search_type: default
     db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
-    name: default_Type / Template
-    description: Type / Template
-    filter: !ruby/object:MiqExpression
-      exp:
-        "=":
-          field: VmInfra-template
-          value: "true"
-    search_type: default
-    db: ManageIQ::Providers::InfraManager::Vm
-- attributes:
-    name: default_Type / VM
-    description: Type / VM
-    filter: !ruby/object:MiqExpression
-      exp:
-        not:
-          ENDS WITH:
-            field: VmInfra-location
-            value: .vmtx
-    search_type: default
-    db: ManageIQ::Providers::InfraManager::Vm
-- attributes:
     name: default_Status / Retired
     description: Status / Retired
     filter: !ruby/object:MiqExpression
