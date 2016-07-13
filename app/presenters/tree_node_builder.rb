@@ -141,6 +141,7 @@ class TreeNodeBuilder
     when ServiceResource      then generic_node(object.resource_name, object.resource_type == "VmOrTemplate" ? "vm.png" : "service_template.png")
     when ServiceTemplate      then service_template_node
     when ServiceTemplateCatalog then service_template_catalog_node
+    when Snapshot             then snapshot_node
     when Storage              then generic_node(object.name, "storage.png")
     when Switch               then generic_node(object.name,
                                                 "switch.png",
@@ -382,6 +383,11 @@ class TreeNodeBuilder
   def service_template_catalog_node
     generic_node(object.name, "service_template_catalog.png")
     @node[:title] += " (%s)" % object.tenant.name if object.tenant.present? && object.tenant.ancestors.present?
+  end
+
+  def snapshot_node
+    generic_node(object.name, 'snapshot.png', object.name)
+    @node[:title] += _(' (Active)') if object.current?
   end
 
   def zone_node
