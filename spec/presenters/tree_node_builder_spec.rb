@@ -375,6 +375,47 @@ describe TreeNodeBuilder do
     end
   end
 
+  context "Nodes for Server By Roles/Roles By Servers trees" do
+    before(:each) do
+      @miq_server = EvmSpecHelper.local_miq_server
+      @server_role = FactoryGirl.create(
+        :server_role,
+        :name              => "smartproxy",
+        :description       => "SmartProxy",
+        :max_concurrent    => 1,
+        :external_failover => false,
+        :role_scope        => "zone"
+      )
+
+      @priority = AssignedServerRole::DEFAULT_PRIORITY
+      @assigned_server_role = FactoryGirl.create(
+        :assigned_server_role,
+        :miq_server_id  => @miq_server.id,
+        :server_role_id => @server_role.id,
+        :active         => true,
+        :priority       => 1
+      )
+    end
+
+    it 'Node for ServerRole' do
+      node = TreeNodeBuilder.build(@server_role, nil, {}, {})
+      expect(node[:key]).to eq("role-#{MiqRegion.compress_id(@server_role.id)}")
+      expect(node[:title]).to eq("Role: SmartProxy (stopped)")
+    end
+
+    it 'Node for AssignedServerRole' do
+      node = TreeNodeBuilder.build(@assigned_server_role, nil, {}, {})
+      expect(node[:key]).to eq("asr-#{MiqRegion.compress_id(@assigned_server_role.id)}")
+      expect(node[:title]).to eq("Role: SmartProxy (primary, active, PID=)")
+    end
+
+    it 'Node for MiqServer' do
+      node = TreeNodeBuilder.build(@miq_server, nil, {}, {})
+      expect(node[:key]).to eq("svr-#{MiqRegion.compress_id(@miq_server.id)}")
+      expect(node[:title]).to eq("Server: #{@miq_server.name} [#{@miq_server.id}]")
+    end
+  end
+
   context "#node_with_display_name" do
     before do
       login_as FactoryGirl.create(:user_with_group)
