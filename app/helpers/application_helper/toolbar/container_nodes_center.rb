@@ -47,6 +47,14 @@ class ApplicationHelper::Toolbar::ContainerNodesCenter < ApplicationHelper::Tool
           :url_parms => "main_div",
           :enabled   => false,
           :onwhen    => "1+"),
+        button(
+          :container_node_protect,
+          'pficon pficon-edit fa-lg',
+          N_('Manage Policies for this #{ui_lookup(:table=>"container_nodes")}'),
+          N_('Manage Policies'),
+          :url_parms => "main_div",
+          :enabled   => "false",
+          :onwhen    => "1+"),
       ]
     ),
   ])

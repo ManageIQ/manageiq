@@ -47,6 +47,14 @@ class ApplicationHelper::Toolbar::ContainerReplicatorsCenter < ApplicationHelper
           :url_parms => "main_div",
           :enabled   => false,
           :onwhen    => "1+"),
+        button(
+          :container_replicator_protect,
+          'pficon pficon-edit fa-lg',
+          N_('Manage Policies for this #{ui_lookup(:table=>"container_replicators")}'),
+          N_('Manage Policies'),
+          :url_parms => "main_div",
+          :enabled   => "false",
+          :onwhen    => "1+"),
       ]
     ),
   ])

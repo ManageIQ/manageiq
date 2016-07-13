@@ -58,6 +58,11 @@ class ApplicationHelper::Toolbar::ContainerNodeCenter < ApplicationHelper::Toolb
           'pficon pficon-edit fa-lg',
           N_('Edit Tags for this Node'),
           N_('Edit Tags')),
+        button(
+          :container_node_protect,
+          'pficon pficon-edit fa-lg',
+          N_('Manage Policies for this #{ui_lookup(:table=>"container_node")}'),
+          N_('Manage Policies')),
       ]
     ),
   ])
