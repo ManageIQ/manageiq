@@ -20,9 +20,9 @@ module OpsController::Settings::CapAndU
       set_perf_collection_for_clusters if @edit[:new] != @edit[:current]
 
       unless @edit[:current][:non_cl_hosts].blank?   # if there are any hosts without clusters
-        @edit[:current][:non_cl_hosts].each do |h_id|
+        @edit[:current][:non_cl_hosts].each_with_index do |h_id, i|
           h = Host.find_by_id(h_id[:id])
-          h.perf_capture_enabled = @edit[:new][:non_cluster_host_enabled][h.id.to_s] == true
+          h.perf_capture_enabled = @edit[:new][:non_cl_hosts][i][:capture]
         end
       end
 
@@ -96,6 +96,23 @@ module OpsController::Settings::CapAndU
         else
           @changed_id_list   = []
           @unchanged_id_list = []
+          if @edit[:current][:non_cl_hosts].present?
+            positive = 0
+            @edit[:new][:non_cl_hosts].each_with_index do |h, i|
+              positive += 1 if h[:capture]
+              if  @edit[:new][:non_cl_hosts][i] != @edit[:current][:non_cl_hosts][i]
+                @changed_id_list.push(["xx-NonCluster_#{@edit[:new][:non_cl_hosts][i][:id]}", @edit[:new][:non_cl_hosts][i][:capture]])
+              else
+                @unchanged_id_list.push(["xx-NonCluster_#{@edit[:new][:non_cl_hosts][i][:id]}", @edit[:new][:non_cl_hosts][i][:capture]])
+              end
+            end
+            value = positive == @edit[:new][:non_cl_hosts].size
+            if @edit[:new][:non_cl_hosts] != @edit[:current][:non_cl_hosts]
+              @changed_id_list.push(['xx-NonCluster', value])
+            else
+              @unchanged_id_list.push(['xx-NonCluster', value])
+            end
+          end
           @edit[:new][:clusters].each_with_index do |c, i|
             cname = c[:name]
             cluster_id = "xx-#{c[:id]}"
@@ -214,9 +231,11 @@ module OpsController::Settings::CapAndU
     if params[:id]
       nodetype = params[:id].split('_')
       node_type = if params[:tree_name] == 'cluster'
-                    nodetype.length >= 2 ? ["Host", nodetype[1]] : ["Cluster", nodetype[0].split('-')[1]]
-                  else
-                    ["Datastore", nodetype[0].split('-')[1]]
+                    if nodetype[0] == 'xx-NonCluster'
+                      nodetype.size == 2 ? ['NonCluster', nodetype[1]] : ['NonCluster']
+                    else
+                      nodetype.size == 2 ? ["Host", nodetype[1]] : ["Cluster", nodetype[0].split('-')[1]]
+                    end
                   end
     end
     @edit[:new][:all_clusters] = params[:all_clusters] == 'true' if params[:all_clusters]
@@ -236,7 +255,19 @@ module OpsController::Settings::CapAndU
           h[:capture] = params[:check_all] == "true" # Set C&U flag depending on if checkbox parm is present
         end
       end
+      @edit[:new][:non_cl_hosts].each do |c|
+        c[:capture] = params[:check_all] == 'true'
+      end
     else
+      if node_type[0] == "NonCluster"
+        if node_type.size == 1
+          @edit[:new][:non_cl_hosts].each do |c|
+            c[:capture] = params[:check] == "true"
+          end
+        else
+          @edit[:new][:non_cl_hosts].find(node_type[1].to_i).first[:capture] = params[:check] == "true"
+        end
+      end
       @edit[:new][:clusters].each do |c|                                  # Check each cluster
         if node_type[0] == "Cluster" && node_type[1].to_s == c[:id].to_s
           c[:capture] = params[:check] == "true" # if cluster checked/unchecked Set C&U flag for all hosts under it as well
@@ -251,7 +282,6 @@ module OpsController::Settings::CapAndU
             end
           end
         end
-
         if node_type[0] == "Host"
           flg = true
           count = 0

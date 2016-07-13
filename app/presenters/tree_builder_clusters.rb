@@ -48,7 +48,7 @@ class TreeBuilderClusters < TreeBuilder
       }
     end
     if @root[:non_cl_hosts].present?
-      nodes.push({:id       => "NonCluster_0",
+      nodes.push({:id       => "NonCluster",
                  :text     => _("Non-clustered Hosts"),
                  :image    => 'host',
                  :tip      => _("Non-clustered Hosts"),
