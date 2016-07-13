@@ -23,7 +23,7 @@ cols:
 - hostname
 - ipaddress
 - emstype_description
-- port
+- port_show
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -41,7 +41,7 @@ col_order:
 - name
 - hostname
 - ipaddress
-- port
+- port_show
 - emstype_description
 
 # Column titles, in order
