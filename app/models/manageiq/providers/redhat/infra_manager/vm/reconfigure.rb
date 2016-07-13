@@ -24,9 +24,10 @@ module ManageIQ::Providers::Redhat::InfraManager::Vm::Reconfigure
   end
 
   def build_config_spec(task_options)
-    {"numCoresPerSocket" => task_options[:cores_per_socket].to_i,
-      "memoryMB"         => task_options[:vm_memory].to_i,
-      "numCPUs"          => task_options[:number_of_cpus].to_i
+    {
+      "numCoresPerSocket" => (task_options[:cores_per_socket].to_i if task_options[:cores_per_socket]),
+      "memoryMB"          => (task_options[:vm_memory].to_i if task_options[:vm_memory]),
+      "numCPUs"           => (task_options[:number_of_cpus].to_i if task_options[:number_of_cpus])
     }
   end
 end
