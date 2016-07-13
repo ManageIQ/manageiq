@@ -10,6 +10,15 @@
 #  - Timeline-Current-Hourly:Hourly events on this Availability Zone
   - Display-VMs-bytag:Instances for <cat> that were running
 
+- :title: Memory(MB)
+  :type: Line
+  :columns:
+  - derived_memory_used
+  :menu:
+  - Chart-Vms-tophour:Top Instances for <cat> during this hour
+  - Chart-Current-Daily:Back to daily
+  - Display-VMs-bytag:Instances for <cat> that were running
+
 - :title: Disk I/O (KBps)
   :type: Line
   :columns:
