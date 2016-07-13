@@ -293,10 +293,7 @@ class CloudVolumeController < ApplicationController
           :name => _("Add New %{model}") % {:model => ui_lookup(:table => 'cloud_volume')},
           :url  => "/cloud_volume/new"
         )
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
 
     when "validate"
@@ -309,10 +306,7 @@ class CloudVolumeController < ApplicationController
       else
         add_flash(_(action_details), :error) unless details.nil?
       end
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
   end
 
@@ -372,10 +366,7 @@ class CloudVolumeController < ApplicationController
       else
         add_flash(_(action_details), :error) unless details.nil?
       end
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
   end
 

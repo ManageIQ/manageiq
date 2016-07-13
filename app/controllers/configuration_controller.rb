@@ -447,10 +447,7 @@ class ConfigurationController < ApplicationController
       end
       unless @flash_array.nil?
         drop_breadcrumb(:name => _("Add New Time Profile"), :url => "/configuration/timeprofile_edit")
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
       @timeprofile = TimeProfile.new unless @timeprofile
@@ -461,10 +458,7 @@ class ConfigurationController < ApplicationController
         add_flash(_("Error during 'add': %{error_message}") % {:error_message => bang.message}, :error)
         @in_a_form = true
         drop_breadcrumb(:name => _("Add New Time Profile"), :url => "/configuration/timeprofile_edit")
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         AuditEvent.success(build_created_audit(@timeprofile, @edit))
         add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "TimeProfile"), :name => @timeprofile.description})
@@ -505,10 +499,7 @@ class ConfigurationController < ApplicationController
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
         drop_breadcrumb(:name => _("Edit '%{description}'") % {:description => @timeprofile.description},
                         :url  => "/configuration/timeprofile_edit")
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
       timeprofile_set_record_vars(@timeprofile)
@@ -520,10 +511,7 @@ class ConfigurationController < ApplicationController
         @in_a_form = true
         drop_breadcrumb(:name => _("Edit '%{description}'") % {:description => @timeprofile.description},
                         :url  => "/configuration/timeprofile_edit")
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         AuditEvent.success(build_created_audit(@timeprofile, @edit))
         add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "TimeProfile"),

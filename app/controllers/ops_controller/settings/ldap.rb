@@ -51,10 +51,7 @@ module OpsController::Settings::Ldap
       end
 
       if @flash_array
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
 
@@ -77,10 +74,7 @@ module OpsController::Settings::Ldap
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
     when "reset", nil # Reset or first time in
       obj = find_checked_items
@@ -115,19 +109,13 @@ module OpsController::Settings::Ldap
       ldap_regions = find_checked_items
       if ldap_regions.empty?
         add_flash(_("No %{model} were selected for deletion") % {:model => ui_lookup(:tables => "ldap_region")}, :error)
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
       process_ldap_regions(ldap_regions, "destroy") unless ldap_regions.empty?
     else # showing 1 ldap_region, delete it
       if params[:id].nil? || LdapRegion.find_by_id(params[:id]).nil?
         add_flash(_("%{table} no longer exists") % {:table => ui_lookup(:table => "ldap_region")}, :error)
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         ldap_regions.push(params[:id])
       end
@@ -187,10 +175,7 @@ module OpsController::Settings::Ldap
       end
 
       if @flash_array
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
 
@@ -211,10 +196,7 @@ module OpsController::Settings::Ldap
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
     elsif params[:accept]
       id = params[:id] ? params[:id] : "new"
@@ -308,10 +290,7 @@ module OpsController::Settings::Ldap
     ldap_domains = []
     if params[:id].nil? || LdapDomain.find_by_id(params[:id]).nil?
       add_flash(_("%{table} no longer exists") % {:table => ui_lookup(:table => "ldap_domain")}, :error)
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     else
       ldap_domains.push(params[:id])
     end

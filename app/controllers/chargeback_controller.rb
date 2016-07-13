@@ -158,10 +158,7 @@ class ChargebackController < ApplicationController
           end
         end
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
 
     when "reset", nil # displaying edit from for actions: new, edit or copy
@@ -233,10 +230,7 @@ class ChargebackController < ApplicationController
       end
       process_cb_rates(rates, "destroy")  unless rates.empty?
       if flash_errors? && @flash_array.count == 1
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         cb_rates_list
         @right_cell_text = _("%{typ} %{model}") % {:typ => x_node.split('-').last,
@@ -253,10 +247,7 @@ class ChargebackController < ApplicationController
       process_cb_rates(rates, "destroy")  unless rates.empty?
       self.x_node = "xx-#{cb_rate.rate_type}"
       if flash_errors?
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         cb_rates_list
         @right_cell_text = _("%{typ} %{model}") % {:typ => x_node.split('-').last,

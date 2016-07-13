@@ -146,10 +146,7 @@ module ApplicationController::CiProcessing
       unless result == true
         result["missing_ids"].each { |msg| add_flash(msg, :error) } if result["missing_ids"]
         result["error_updating"].each { |msg| add_flash(msg, :error) } if result["error_updating"]
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         object_types = object_types_for_flash_message(@edit[:klass], @edit[:ownership_items])
 
@@ -765,10 +762,7 @@ module ApplicationController::CiProcessing
         add_flash(_("Error adding VM Reconfigure Request"))
       end
       if @flash_array
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
     end

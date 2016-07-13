@@ -68,10 +68,7 @@ module OpsController::Settings::Schedules
         schedule.save!
       rescue StandardError => bang
         add_flash(_("Error when adding a new schedule: %{message}") % {:message => bang.message}, :error)
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         AuditEvent.success(build_saved_audit_hash(old_schedule_attributes, schedule, params[:button] == "add"))
         add_flash(_("%{model} \"%{name}\" was saved") %
@@ -173,10 +170,7 @@ module OpsController::Settings::Schedules
       if schedules.empty?
         add_flash(_("No %{model} were selected for deletion") % {:model => ui_lookup(:tables => "miq_schedule")},
                   :error)
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
       process_schedules(schedules, "destroy") unless schedules.empty?
       schedule_build_list
@@ -185,10 +179,7 @@ module OpsController::Settings::Schedules
     else # showing 1 schedule, delete it
       if params[:id].nil? || MiqSchedule.find_by_id(params[:id]).nil?
         add_flash(_("%{table} no longer exists") % {:table => ui_lookup(:table => "miq_schedule")}, :error)
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         schedules.push(params[:id])
       end
@@ -209,10 +200,7 @@ module OpsController::Settings::Schedules
     schedules = find_checked_items
     if schedules.empty?
       add_flash(msg, :error)
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
     schedule_enable_disable(schedules, enable)  unless schedules.empty?
     add_flash(msg, :info, true) unless flash_errors?
@@ -246,10 +234,7 @@ module OpsController::Settings::Schedules
     else
       add_flash(_('Depot Settings successfuly validated'))
     end
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-    end
+    javascript_flash
   end
 
   private

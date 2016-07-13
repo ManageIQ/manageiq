@@ -47,10 +47,7 @@ class ServiceController < ApplicationController
     else
       add_flash(_("Button not yet implemented %{model_name}:%{action_name}") %
         {:model_name => model, :action_name => action}, :error) unless @flash_array
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
   end
 

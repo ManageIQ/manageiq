@@ -248,10 +248,7 @@ module OpsController::Settings::AnalysisProfiles
           @changed = session[:changed] = (@edit[:new] != @edit[:current])
           # ap_build_edit_screen
           # replace_right_cell("root",[:settings])
-          render :update do |page|
-            page << javascript_prologue
-            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-          end
+          javascript_flash
         else
           scanitemset = params[:button] == "add" ? ScanItemSet.new : ScanItemSet.find_by_id(@edit[:scan_id])    # get the current record
           ap_set_record_vars_set(scanitemset)
@@ -288,10 +285,7 @@ module OpsController::Settings::AnalysisProfiles
             @edit[:current] = ap_sort_array(@edit[:current])
             @changed = session[:changed] = (@edit[:new] != @edit[:current])
             # ap_build_edit_screen
-            render :update do |page|
-              page << javascript_prologue
-              page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-            end
+            javascript_flash
           end
         end
       when "reset", nil

@@ -1673,10 +1673,7 @@ class ApplicationController < ActionController::Base
     if @redirect_controller
       if ["#{pfx}_clone", "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
         if flash_errors?
-          render :update do |page|
-            page << javascript_prologue
-            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-          end
+          javascript_flash
         else
           javascript_redirect :controller => @redirect_controller,
                               :action     => @refresh_partial,

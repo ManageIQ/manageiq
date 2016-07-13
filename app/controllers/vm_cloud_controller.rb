@@ -41,9 +41,7 @@ class VmCloudController < ApplicationController
         :volumes        => ui_lookup(:tables => 'cloud_volumes'),
         :instance_model => ui_lookup(:table => 'vm_cloud'),
         :instance_name  => @vm.name})
-      render :update do |page|
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
 
     @in_a_form = true

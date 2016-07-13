@@ -33,11 +33,11 @@ module ContainersCommonMixin
     if params[:pressed] == "container_image_scan"
       scan_images
 
-      render :update do |page|
-        page << javascript_prologue
-        if @lastaction == "show"
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        else
+      if @lastaction == "show"
+        javascript_flash
+      else
+        render :update do |page|
+          page << javascript_prologue
           page.replace_html("main_div", :partial => "layouts/gtl")
         end
       end

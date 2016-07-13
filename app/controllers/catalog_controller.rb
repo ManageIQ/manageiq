@@ -341,10 +341,7 @@ class CatalogController < ApplicationController
       dialog_catalog_check
 
       if @flash_array
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
       @st = @edit[:rec_id] ? ServiceTemplate.find_by_id(@edit[:rec_id]) : ServiceTemplate.new
@@ -367,16 +364,10 @@ class CatalogController < ApplicationController
             add_flash("#{field.to_s.capitalize} #{msg}", :error)
           end
           @changed = session[:changed] = (@edit[:new] != @edit[:current])
-          render :update do |page|
-            page << javascript_prologue
-            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-          end
+          javascript_flash
         end
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
     when "reset", nil  # Reset or first time in
@@ -611,10 +602,7 @@ class CatalogController < ApplicationController
           @stc.errors.each do |field, msg|
             add_flash("#{field.to_s.capitalize} #{msg}", :error)
           end
-          render :update do |page|
-            page << javascript_prologue
-            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-          end
+          javascript_flash
           return
         end
       end
@@ -919,10 +907,7 @@ class CatalogController < ApplicationController
     end
 
     if @flash_array
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
       return
     end
     get_form_vars   # need to get long_description
@@ -952,10 +937,7 @@ class CatalogController < ApplicationController
         add_flash("#{field.to_s.capitalize} #{msg}", :error)
       end
       @changed = session[:changed] = (@edit[:new] != @edit[:current])
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
   end
 
@@ -1164,10 +1146,7 @@ class CatalogController < ApplicationController
     rescue => bang
       add_flash(_("Error when creating a Service Dialog from Orchestration Template: %{error_message}") %
         {:error_message => bang.message}, :error)
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     else
       add_flash(_("Service Dialog \"%{name}\" was successfully created") %
         {:name => @edit[:new][:dialog_name]}, :success)

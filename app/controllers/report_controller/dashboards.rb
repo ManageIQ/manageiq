@@ -34,10 +34,7 @@ module ReportController::Dashboards
       else
         @in_a_form = true
         @changed = true
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
     when "reset", nil # Reset or first time in
       db_seq_edit_screen
@@ -96,10 +93,7 @@ module ReportController::Dashboards
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
     else
       add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"

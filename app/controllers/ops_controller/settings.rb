@@ -144,10 +144,7 @@ module OpsController::Settings
         add_flash(v, :error)
       end
     end
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-    end
+    javascript_flash
   end
 
   def region_edit
@@ -166,10 +163,7 @@ module OpsController::Settings
       end
       unless @flash_array.nil?
         session[:changed] = @changed = true
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
       @edit[:region].description = @edit[:new][:description]
@@ -180,10 +174,7 @@ module OpsController::Settings
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
         @changed = true
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "MiqRegion"), :name => @edit[:region].description})
         AuditEvent.success(build_saved_audit(@edit[:region], params[:button] == "edit"))

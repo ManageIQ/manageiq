@@ -40,10 +40,7 @@ module PxeController::PxeImageTypes
       add_pxe = params[:id] ? find_by_id_filtered(PxeImageType, params[:id]) : PxeImageType.new
       pxe_image_type_validate_fields
       if @flash_array
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
 
@@ -60,10 +57,7 @@ module PxeController::PxeImageTypes
         add_pxe.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
     else
       # first time in or reset
