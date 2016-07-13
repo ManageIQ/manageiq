@@ -71,15 +71,13 @@ module VmOrTemplate::Operations
   #
 
   def validate_vm_control_shelve_action
-    msg = validate_vm_control
-    return {:available => msg[0], :message => msg[1]} unless msg.nil?
+    return {:available => false, :message => unsupported_reason(:control)} unless supports_control?
     return {:available => true,   :message => nil}  if %w(on off suspended paused).include?(current_state)
     {:available => false,  :message => "The VM can't be shelved, current state has to be powered on, off, suspended or paused"}
   end
 
   def validate_vm_control_shelve_offload_action
-    msg = validate_vm_control
-    return {:available => msg[0], :message => msg[1]} unless msg.nil?
+    return {:available => false, :message => unsupported_reason(:control)} unless supports_control?
     return {:available => true,   :message => nil}  if %w(shelved).include?(current_state)
     {:available => false,  :message => "The VM can't be shelved offload, current state has to be shelved"}
   end
