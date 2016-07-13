@@ -548,7 +548,7 @@ module ApplicationController::CiProcessing
     recs = find_checked_items
     recs = [params[:id].to_i] if recs.blank?
     @record = find_by_id_filtered(VmOrTemplate, recs.first)
-    if @record.is_available?(:evacuate) && !@record.ext_management_system.nil?
+    if @record.supports_evacuate? && !@record.ext_management_system.nil?
       if @explorer
         evacuate
         @refresh_partial = "vm_common/evacuate"
@@ -559,7 +559,7 @@ module ApplicationController::CiProcessing
       add_flash(_("Unable to evacuate %{instance} \"%{name}\": %{details}") % {
         :instance => ui_lookup(:table => 'vm_cloud'),
         :name     => @record.name,
-        :details  => @record.is_available_now_error_message(:evacuate)}, :error)
+        :details  => @record.unsupported_reason(:evacuate)}, :error)
     end
   end
   alias instance_evacuate evacuatevms
@@ -574,7 +574,7 @@ module ApplicationController::CiProcessing
         :model => ui_lookup(:table => "vm_cloud"), :name => @record.name})
       @record = @sb[:action] = nil
     when "submit"
-      if @record.is_available?(:evacuate)
+      if @record.supports_evacuate?
         if params['auto_select_host'] == 'on'
           hostname = nil
         else
@@ -601,7 +601,7 @@ module ApplicationController::CiProcessing
         add_flash(_("Unable to evacuate %{instance} \"%{name}\": %{details}") % {
           :instance => ui_lookup(:table => 'vm_cloud'),
           :name     => @record.name,
-          :details  => @record.is_available_now_error_message(:evacuate)}, :error)
+          :details  => @record.unsupported_reason(:evacuate)}, :error)
       end
       params[:id] = @record.id.to_s # reset id in params for show
       @record = nil

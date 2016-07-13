@@ -58,7 +58,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::Vm do
       end
 
       it "checks evacuation is_available?" do
-        expect(vm.is_available?(:evacuate)).to eq true
+        expect(vm.supports_evacuate?).to eq true
       end
     end
   end

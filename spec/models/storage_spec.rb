@@ -419,11 +419,11 @@ describe Storage do
       FactoryGirl.create(:host_vmware,
                          :ext_management_system => FactoryGirl.create(:ems_vmware),
                          :storages              => [@storage])
-      expect(@storage.is_available?(:smartstate_analysis)).to eq(true)
+      expect(@storage.supports_smartstate_analysis?).to eq(true)
     end
 
     it "returns false for non-vmware Storage" do
-      expect(@storage.is_available?(:smartstate_analysis)).to_not eq(true)
+      expect(@storage.supports_smartstate_analysis?).to_not eq(true)
     end
   end
 
@@ -485,11 +485,11 @@ describe Storage do
       FactoryGirl.create(:host_vmware,
                          :ext_management_system => FactoryGirl.create(:ems_vmware),
                          :storages              => [@storage])
-      expect(@storage.is_available?(:smartstate_analysis)).to eq(true)
+      expect(@storage.supports_smartstate_analysis?).to eq(true)
     end
 
     it "returns false for non-vmware Storage" do
-      expect(@storage.is_available?(:smartstate_analysis)).to_not eq(true)
+      expect(@storage.supports_smartstate_analysis?).to_not eq(true)
     end
   end
   describe "#smartstate_analysis_count_for_host_id" do

@@ -1,4 +1,4 @@
-module SupportsFeatureMixin
+module  SupportsFeatureMixin
   #
   # Including this in a model gives you a DSL to make features supported or not
   #
@@ -6,8 +6,10 @@ module SupportsFeatureMixin
   #     include SupportsFeatureMixin
   #     supports :publish
   #     supports_not :fake, :reason => 'We keep it real'
-  #     supports :archive do
-  #       unsupported_reason_add(:archive, 'Its too good') if featured?
+  #     supports :archive do |*args|
+  #       if args[0]
+  #         unsupported_reason_add(:archive, 'Its too good') if featured?
+  #       end
   #     end
   #   end
   #
@@ -67,14 +69,22 @@ module SupportsFeatureMixin
     @unsupported ||= {}
   end
 
+  def method_missing(method, *args, &block)
+    if method.to_s =~ /^supports_(.*)$/
+      return false
+    else
+      raise NoMethodError.new("Undefined method #{method} for #{self.class}")
+    end
+  end
+
   class_methods do
     def unsupported_reason(feature)
       public_send("supports_#{feature}?") unless unsupported.key?(feature)
       unsupported[feature]
     end
 
-    def supports(feature, &block)
-      send(:define_supports_methods, feature, true, &block)
+    def supports(feature, *args, &block)
+      send(:define_supports_methods, feature, true, *args, &block)
     end
 
     def supports_not(feature, reason: nil)
@@ -93,13 +103,12 @@ module SupportsFeatureMixin
       unsupported[feature] = reason
     end
 
-    def define_supports_methods(feature, is_supported, reason = nil, &block)
+    def define_supports_methods(feature, is_supported, reason = nil, *args, &block)
       method_name = "supports_#{feature}?"
-
-      define_method(method_name) do
+      define_method(method_name) do |*args|
         unsupported.delete(feature)
         if block_given?
-          instance_eval(&block)
+          instance_exec(*args, &block)
         else
           unsupported[feature] = reason unless is_supported
         end

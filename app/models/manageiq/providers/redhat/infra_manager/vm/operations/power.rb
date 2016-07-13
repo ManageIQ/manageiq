@@ -1,6 +1,10 @@
 module ManageIQ::Providers::Redhat::InfraManager::Vm::Operations::Power
-  def validate_pause
-    validate_unsupported("Pause Operation")
+
+  extend ActiveSupport::Concern
+  include SupportsFeatureMixin
+
+  included do
+    supports_not :pause, :reason => _("Pause operation is not available for VM or Template.")
   end
 
   def raw_start
