@@ -77,7 +77,7 @@ class ApplicationHelper::ToolbarBuilder
         props.calculate_properties
       end
       build_toolbar_save_button(bsi, props) unless bsi.key?(:separator)
-      current_item[:items] << props unless props.skip?
+      current_item[:items] << props unless props.skipped?
 
       any_visible ||= !props[:hidden] && props[:type] != :separator
     end
@@ -188,7 +188,7 @@ class ApplicationHelper::ToolbarBuilder
 
     unless props.nil?
       props.calculate_properties
-      @toolbar << build_toolbar_save_button(bgi, props) unless props.skip?
+      @toolbar << build_toolbar_save_button(bgi, props) unless props.skipped?
     end
   end
 
