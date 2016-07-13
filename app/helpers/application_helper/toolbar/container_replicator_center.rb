@@ -9,16 +9,16 @@ class ApplicationHelper::Toolbar::ContainerReplicatorCenter < ApplicationHelper:
         button(
           :container_replicator_edit,
           'pficon pficon-edit fa-lg',
-          t = N_('Edit this #{ui_lookup(:table=>"container_replicator")}'),
+          t = N_('Edit this Replicator'),
           t,
           :url => "/edit"),
         button(
           :container_replicator_delete,
           'pficon pficon-delete fa-lg',
-          t = N_('Remove this #{ui_lookup(:table=>"container_replicator")} from the VMDB'),
+          t = N_('Remove this Replicator from the VMDB'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This \#{ui_lookup(:table=>\"container_replicator\")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this \#{ui_lookup(:table=>\"container_replicator\")}?")),
+          :confirm   => N_("Warning: This Replicator and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Replicator?")),
       ]
     ),
   ])
@@ -56,7 +56,7 @@ class ApplicationHelper::Toolbar::ContainerReplicatorCenter < ApplicationHelper:
         button(
           :container_replicator_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this #{ui_lookup(:table=>"container_replicator")}'),
+          N_('Edit Tags for this Replicator'),
           N_('Edit Tags')),
       ]
     ),

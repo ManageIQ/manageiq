@@ -14,34 +14,34 @@ class ApplicationHelper::Toolbar::EmsInfraCenter < ApplicationHelper::Toolbar::B
         button(
           :ems_infra_refresh,
           'fa fa-refresh fa-lg',
-          N_('Refresh relationships and power states for all items related to this #{ui_lookup(:table=>"ems_infra")}'),
+          N_('Refresh relationships and power states for all items related to this Infrastructure Provider'),
           N_('Refresh Relationships and Power States'),
-          :confirm => N_("Refresh relationships and power states for all items related to this \#{ui_lookup(:table=>\"ems_infra\")}?")),
+          :confirm => N_("Refresh relationships and power states for all items related to this Infrastructure Provider?")),
         separator,
         button(
           :ems_infra_edit,
           'pficon pficon-edit fa-lg',
-          t = N_('Edit this #{ui_lookup(:table=>"ems_infra")}'),
+          t = N_('Edit this Infrastructure Provider'),
           t),
         button(
           :ems_infra_scale,
           'pficon pficon-edit fa-lg',
-          t = N_('Scale this #{ui_lookup(:table=>"ems_infra")}'),
+          t = N_('Scale this Infrastructure Provider'),
           t,
           :url => "/scaling"),
         button(
           :ems_infra_scaledown,
           'pficon pficon-edit fa-lg',
-          t = N_('Scale this #{ui_lookup(:table=>"ems_infra")} down'),
+          t = N_('Scale this Infrastructure Provider down'),
           t,
           :url => "/scaledown"),
         button(
           :ems_infra_delete,
           'pficon pficon-delete fa-lg',
-          t = N_('Remove this #{ui_lookup(:table=>"ems_infra")} from the VMDB'),
+          t = N_('Remove this Infrastructure Provider from the VMDB'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This \#{ui_lookup(:table=>\"ems_infra\")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this \#{ui_lookup(:table=>\"ems_infra\")}?")),
+          :confirm   => N_("Warning: This Infrastructure Provider and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Infrastructure Provider?")),
       ]
     ),
   ])
@@ -55,12 +55,12 @@ class ApplicationHelper::Toolbar::EmsInfraCenter < ApplicationHelper::Toolbar::B
         button(
           :ems_infra_protect,
           'pficon pficon-edit fa-lg',
-          N_('Manage Policies for this #{ui_lookup(:table=>"ems_infra")}'),
+          N_('Manage Policies for this Infrastructure Provider'),
           N_('Manage Policies')),
         button(
           :ems_infra_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this #{ui_lookup(:table=>"ems_infra")}'),
+          N_('Edit Tags for this Infrastructure Provider'),
           N_('Edit Tags')),
       ]
     ),
@@ -75,7 +75,7 @@ class ApplicationHelper::Toolbar::EmsInfraCenter < ApplicationHelper::Toolbar::B
         button(
           :ems_infra_timeline,
           'product product-timeline fa-lg',
-          N_('Show Timelines for this #{ui_lookup(:table=>"ems_infra")}'),
+          N_('Show Timelines for this Infrastructure Provider'),
           N_('Timelines'),
           :klass     => ApplicationHelper::Button::EmsTimeline,
           :url_parms => "?display=timeline"),
@@ -92,7 +92,7 @@ class ApplicationHelper::Toolbar::EmsInfraCenter < ApplicationHelper::Toolbar::B
         button(
           :ems_infra_recheck_auth_status,
           'fa fa-search fa-lg',
-          N_('Re-check Authentication Status for this #{ui_lookup(:table=>"ems_infra")}'),
+          N_('Re-check Authentication Status for this Infrastructure Provider'),
           N_('Re-check Authentication Status'),
           :klass => ApplicationHelper::Button::EmsInfraRecheckAuthStatus),
       ]

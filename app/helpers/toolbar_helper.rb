@@ -62,7 +62,7 @@ module ToolbarHelper
   #
   def split_to_groups(buttons)
     buttons.slice_before do |props|
-      props[:type] == 'separator' ||
+      props[:type] == :separator ||
         props[:name] == 'download_choice' # exceptional behavior for view toolbar download drop down
     end.to_a
   end
@@ -71,15 +71,11 @@ module ToolbarHelper
   #
   def toolbar_top_button(props)
     case props[:type]
-    when 'buttonSelect'
-      toolbar_top_button_select(props)
-    when 'button'
-      toolbar_top_button_normal(props)
-    when 'buttonTwoState'
-      toolbar_top_button_normal(props)
-    when 'separator'
-    else
-      raise 'Invalid top button type.'
+    when :buttonSelect   then toolbar_top_button_select(props)
+    when :button         then toolbar_top_button_normal(props)
+    when :buttonTwoState then toolbar_top_button_normal(props)
+    when :separator
+    else                      raise 'Invalid top button type.'
     end
   end
 
@@ -109,7 +105,7 @@ module ToolbarHelper
                            'data-toggle' => "dropdown",
                          )) do
         (toolbar_image(props) +
-          _(props[:text].to_s) + "&nbsp;".html_safe +
+          props.localized(:text) + "&nbsp;".html_safe +
           content_tag(:span, '', :class => "caret")).html_safe
       end
       out << content_tag(:ul, :class => 'dropdown-menu') do
@@ -131,7 +127,7 @@ module ToolbarHelper
                            :type  => "button",
                            :class => "#{cls}btn btn-default")) do
       (toolbar_image(props) +
-        _(props[:text].to_s) + "&nbsp;".html_safe).html_safe
+        props.localized(:text) + "&nbsp;".html_safe).html_safe
     end
   end
 
@@ -139,12 +135,9 @@ module ToolbarHelper
   #
   def toolbar_button(props)
     case props[:type]
-    when 'button'
-      toolbar_button_normal(props)
-    when 'separator'
-      toolbar_button_separator(props)
-    else
-      raise 'Invalid button type.'
+    when :button    then toolbar_button_normal(props)
+    when :separator then toolbar_button_separator(props)
+    else                 raise 'Invalid button type.'
     end
   end
 
@@ -164,7 +157,7 @@ module ToolbarHelper
       content_tag(:a, prepare_data_keys(props)
                   .update(:href => '#')
                   .update(prepare_tag_keys(props))) do
-        (toolbar_image(props) + _(props[:text].to_s).html_safe)
+        (toolbar_image(props) + props.localized(:text).html_safe)
       end
     end
   end
@@ -173,7 +166,7 @@ module ToolbarHelper
   #
   def toolbar_button_view(props)
     hidden = props[:hidden]
-    cls = if props[:type] == 'buttonTwoState'
+    cls = if props[:type] == :buttonTwoState
             props[:selected] ? 'active' : ''
           else
             props[:enabled] ? '' : 'disabled '
@@ -182,7 +175,7 @@ module ToolbarHelper
       content_tag(:a, prepare_data_keys(props)
                       .update(:href => '#')
                       .update(prepare_tag_keys(props))) do
-        (toolbar_image(props) + _(props[:text].to_s).html_safe)
+        (toolbar_image(props) + props.localized(:text).html_safe)
       end
     end
   end
@@ -200,10 +193,10 @@ module ToolbarHelper
   #
   def prepare_tag_keys(props)
     h = data_hash_keys(props)
-    h.update('title'      => _(props[:title]),
+    h.update('title'      => props.localized(:title),
              'data-click' => props[:id])
     h['name'] = props[:name] if props.key?(:name)
-    h['data-confirm-tb'] = _(props[:confirm]) if props.key?(:confirm)
+    h['data-confirm-tb'] = props.localized(:confirm) if props.key?(:confirm)
     h
   end
 

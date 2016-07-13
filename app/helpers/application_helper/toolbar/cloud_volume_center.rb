@@ -9,7 +9,7 @@ class ApplicationHelper::Toolbar::CloudVolumeCenter < ApplicationHelper::Toolbar
                      button(
                        :cloud_volume_tag,
                        'pficon pficon-edit fa-lg',
-                       N_('Edit tags for this #{ui_lookup(:table=>"cloud_volumes")}'),
+                       N_('Edit tags for this Cloud Volume'),
                        N_('Edit Tags')),
                    ]
                  ),

@@ -14,22 +14,22 @@ class ApplicationHelper::Toolbar::EmsContainerCenter < ApplicationHelper::Toolba
         button(
           :ems_container_refresh,
           'fa fa-refresh fa-lg',
-          N_('Refresh items and relationships related to this #{ui_lookup(:table=>"ems_container")}'),
+          N_('Refresh items and relationships related to this Containers Provider'),
           N_('Refresh items and relationships'),
-          :confirm => N_("Refresh items and relationships related to this \#{ui_lookup(:table=>\"ems_container\")}?")),
+          :confirm => N_("Refresh items and relationships related to this Containers Provider?")),
         separator,
         button(
           :ems_container_edit,
           'pficon pficon-edit fa-lg',
-          t = N_('Edit this #{ui_lookup(:table=>"ems_container")}'),
+          t = N_('Edit this Containers Provider'),
           t,),
         button(
           :ems_container_delete,
           'pficon pficon-delete fa-lg',
-          t = N_('Remove this #{ui_lookup(:table=>"ems_container")} from the VMDB'),
+          t = N_('Remove this Containers Provider from the VMDB'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This \#{ui_lookup(:table=>\"ems_container\")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this \#{ui_lookup(:table=>\"ems_container\")}?")),
+          :confirm   => N_("Warning: This Containers Provider and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Containers Provider?")),
       ]
     ),
   ])
@@ -43,7 +43,7 @@ class ApplicationHelper::Toolbar::EmsContainerCenter < ApplicationHelper::Toolba
         button(
           :ems_container_timeline,
           'product product-timeline fa-lg',
-          N_('Show Timelines for this #{ui_lookup(:table=>"ems_container")}'),
+          N_('Show Timelines for this Containers Provider'),
           N_('Timelines'),
           :klass     => ApplicationHelper::Button::EmsContainerTimeline,
           :url_parms => "?display=timeline"),
@@ -67,12 +67,12 @@ class ApplicationHelper::Toolbar::EmsContainerCenter < ApplicationHelper::Toolba
         button(
           :ems_container_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this #{ui_lookup(:table=>"ems_container")}'),
+          N_('Edit Tags for this Containers Provider'),
           N_('Edit Tags')),
         button(
           :ems_container_protect,
           'pficon pficon-edit fa-lg',
-          N_('Manage Policies for this #{ui_lookup(:table=>"ems_container")}'),
+          N_('Manage Policies for this Containers Provider'),
           N_('Manage Policies')),
       ]
     ),
@@ -87,7 +87,7 @@ class ApplicationHelper::Toolbar::EmsContainerCenter < ApplicationHelper::Toolba
         button(
           :ems_container_recheck_auth_status,
           'fa fa-search fa-lg',
-          N_('Re-check Authentication Status for this #{ui_lookup(:table=>"ems_container")}'),
+          N_('Re-check Authentication Status for this Containers Provider'),
           N_('Re-check Authentication Status'),
           :klass => ApplicationHelper::Button::EmsContainerRecheckAuthStatus),
       ]
