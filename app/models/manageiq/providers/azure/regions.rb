@@ -36,11 +36,11 @@ module ManageIQ
         },
         "eastus" => {
           :name        => "eastus",
-          :description => _("US East"),
+          :description => _("East US"),
         },
         "eastus2" => {
           :name        => "eastus2",
-          :description => _("East US2"),
+          :description => _("East US 2"),
         },
         "japaneast" => {
           :name        => "japaneast",
@@ -86,9 +86,17 @@ module ManageIQ
           :name        => "westindia",
           :description => _("West India"),
         },
+        "westcentralus" => {
+          :name        => "westcentralus",
+          :description => _("West Central US"),
+        },
         "westus" => {
           :name        => "westus",
-          :description => _("US West"),
+          :description => _("West US"),
+        },
+        "westus2" => {
+          :name        => "westus2",
+          :description => _("West US 2"),
         },
       }
 
