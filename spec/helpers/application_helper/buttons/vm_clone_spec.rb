@@ -13,11 +13,7 @@ describe ApplicationHelper::Button::VmClone do
                                      :vendor => "microsoft")
       end
 
-      it "will be skipped" do
-        view_context = setup_view_context_with_sandbox({})
-        button = described_class.new(view_context, {}, {'record' => @record}, {})
-        expect(button.skip?).to be_truthy
-      end
+      it_behaves_like "will be skipped for this record"
     end
 
     context "when record is cloneable" do
@@ -26,14 +22,10 @@ describe ApplicationHelper::Button::VmClone do
                                      :name => "rh",
                                      :location => "l1",
                                      :vendor => "redhat")
+        allow(@record).to receive(:archived?).and_return(false)
       end
 
-      it "will not be skipped" do
-        view_context = setup_view_context_with_sandbox({})
-        allow(@record).to receive(:archived?).and_return(false)
-        button = described_class.new(view_context, {}, {'record' => @record}, {})
-        expect(button.skip?).to be_falsey
-      end
+      it_behaves_like "will not be skipped for this record"
     end
   end
 end

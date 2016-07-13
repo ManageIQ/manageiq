@@ -8,11 +8,7 @@ describe ApplicationHelper::Button::VmRefresh do
         allow(@record).to receive_messages(:host => double(:vmm_product => "Workstation"), :ext_management_system => true)
       end
 
-      it "will not be skipped" do
-        view_context = setup_view_context_with_sandbox({})
-        button = described_class.new(view_context, {}, {'record' => @record}, {})
-        expect(button.skip?).to be_falsey
-      end
+      it_behaves_like "will not be skipped for this record"
     end
 
     context "when record has no ext_management_system and host vmm_product is server" do
@@ -21,11 +17,7 @@ describe ApplicationHelper::Button::VmRefresh do
         allow(@record).to receive_messages(:host => double(:vmm_product => "Server"), :ext_management_system => false)
       end
 
-      it "will be skipped" do
-        view_context = setup_view_context_with_sandbox({})
-        button = described_class.new(view_context, {}, {'record' => @record}, {})
-        expect(button.skip?).to be_truthy
-      end
+      it_behaves_like "will be skipped for this record"
     end
   end
 end

@@ -10,11 +10,7 @@ describe ApplicationHelper::Button::VmInstanceScan do
         allow(@record).to receive(:orphaned?).and_return(false)
       end
 
-      it "will not be skipped" do
-        view_context = setup_view_context_with_sandbox({})
-        button = described_class.new(view_context, {}, {'record' => @record}, {})
-        expect(button.skip?).to be_falsey
-      end
+      it_behaves_like "will not be skipped for this record"
     end
 
     context "when record has no proxy and is not orphaned nor archived" do
@@ -25,11 +21,7 @@ describe ApplicationHelper::Button::VmInstanceScan do
         allow(@record).to receive(:orphaned?).and_return(false)
       end
 
-      it "will be skipped" do
-        view_context = setup_view_context_with_sandbox({})
-        button = described_class.new(view_context, {}, {'record' => @record}, {})
-        expect(button.skip?).to be_truthy
-      end
+      it_behaves_like "will be skipped for this record"
     end
 
     context "when record has proxy and is not orphaned but archived" do
@@ -40,11 +32,7 @@ describe ApplicationHelper::Button::VmInstanceScan do
         allow(@record).to receive(:orphaned?).and_return(false)
       end
 
-      it "will be skipped" do
-        view_context = setup_view_context_with_sandbox({})
-        button = described_class.new(view_context, {}, {'record' => @record}, {})
-        expect(button.skip?).to be_truthy
-      end
+      it_behaves_like "will be skipped for this record"
     end
   end
 
@@ -72,7 +60,7 @@ describe ApplicationHelper::Button::VmInstanceScan do
         allow(@record).to receive(:orphaned?).and_return(false)
       end
 
-      it "will not be skipped" do
+      it "will not be disabled" do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'record' => @record}, {})
         expect(button.disable?).to be_falsey
