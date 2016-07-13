@@ -127,7 +127,7 @@ module AssignmentMixin
       tlist =  parents.collect { |p| "#{p.class.base_model.name.underscore}/id/#{p.id}" } # Assigned directly to parents
       tlist += options[:tag_list] if options[:tag_list]                        # Assigned to target (passed in)
 
-      individually_assigned_alerts = alist.select { |a| tlist.include?(a[:assigned_to]) }.map { |a| a[:assigned] }
+      individually_assigned_resources = alist.select { |a| tlist.include?(a[:assigned_to]) }.map { |a| a[:assigned] }
 
       # look for alert_set running off of tags (not individual tags)
       # TODO: we may need to change taggings-related code to use base_model too
@@ -138,9 +138,9 @@ module AssignmentMixin
         lower_klass = klass == "VmOrTemplate" ? "vm" : klass.underscore
         "#{lower_klass}/tag#{t.tag.name}"
       end
-      tagged_alerts = alist.select { |a| tlist.include?(a[:assigned_to]) }.map { |a| a[:assigned] }
+      tagged_resources = alist.select { |a| tlist.include?(a[:assigned_to]) }.map { |a| a[:assigned] }
 
-      (individually_assigned_alerts + tagged_alerts).uniq
+      (individually_assigned_resources + tagged_resources).uniq
     end
 
     def namespace
