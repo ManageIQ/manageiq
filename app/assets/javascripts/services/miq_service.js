@@ -19,8 +19,8 @@ ManageIQ.angular.app.service('miqService', function() {
     miqAjaxButton(url, serializeFields);
   };
 
-  this.restAjaxButton = function(url, button, data) {
-    miqRESTAjaxButton(url, button, data);
+  this.restAjaxButton = function(url, button, dataType, data) {
+    miqRESTAjaxButton(url, button, dataType, data);
   };
 
   this.jqueryRequest = function(url, options) {
@@ -67,7 +67,7 @@ ManageIQ.angular.app.service('miqService', function() {
     $(outerBox).append(txt);
     $(outerMost).append(outerBox);
     $(outerMost).appendTo($("#flash_msg_div"));
-  }
+  };
 
   this.miqFlashClear = function() {
     $('#flash_msg_div').text("");
@@ -87,7 +87,7 @@ ManageIQ.angular.app.service('miqService', function() {
     angular.element('#cred_type').val(credType);
     if(formSubmit) {
       miqSparkleOn();
-      miqRESTAjaxButton(url, $event.target);
+      return miqRESTAjaxButton(url, $event.target, 'json');
     }
     else {
       $event.preventDefault();

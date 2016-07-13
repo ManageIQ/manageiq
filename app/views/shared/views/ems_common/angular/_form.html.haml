@@ -93,12 +93,14 @@
       %label.col-md-2.control-label{"for" => "ems_tenant_id"}
         = _('Tenant ID')
       .col-md-8
-        %input.form-control{"type"        => "text",
-                            "id"          => "ems_tenant_id",
-                            "name"        => "azure_tenant_id",
-                            "ng-model"    => "emsCommonModel.azure_tenant_id",
-                            "required"    => "",
-                            "checkchange" => ""}
+        %input.form-control{"type"                    => "text",
+                            "id"                      => "ems_tenant_id",
+                            "name"                    => "azure_tenant_id",
+                            "ng-model"                => "emsCommonModel.azure_tenant_id",
+                            "required"                => "",
+                            "checkchange"             => "",
+                            "prefix"                  => "default",
+                            "reset-validation-status" => "default_auth_status"}
         %span.help-block{"ng-show" => "angularForm.azure_tenant_id.$error.required"}
           = _("Required")
 
@@ -106,11 +108,13 @@
       %label.col-md-2.control-label{"for" => "ems_subscription"}
         = _('Subscription ID')
       .col-md-8
-        %input.form-control{"type"        => "text",
-                            "id"          => "ems_subscription",
-                            "name"        => "subscription",
-                            "ng-model"    => "emsCommonModel.subscription",
-                            "checkchange" => ""}
+        %input.form-control{"type"                    => "text",
+                            "id"                      => "ems_subscription",
+                            "name"                    => "subscription",
+                            "ng-model"                => "emsCommonModel.subscription",
+                            "checkchange"             => "",
+                            "prefix"                  => "default",
+                            "reset-validation-status" => "default_auth_status"}
 
     .form-group{"ng-class" => "{'has-error': angularForm.api_version.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra'"}
       %label.col-md-2.control-label{"for" => "ems_api_version"}
@@ -198,14 +202,15 @@
     - if controller_name == "ems_container"
       = render :partial => "/layouts/container_auth", :locals  => {:record => @ems}
     - else
-      %div{"ng-show" => "emsCommonModel.emstype != '' && emsCommonModel.emstype == 'azure'"}
+      %div{"ng-if" => "emsCommonModel.emstype != '' && emsCommonModel.emstype == 'azure'"}
         %h3
           = _("Credentials")
         = render :partial => "/layouts/angular-bootstrap/auth_credentials_angular_bootstrap",
                  :locals  => {:record                 => @ems,
                               :ng_model               => "emsCommonModel",
-                              :ng_reqd_password       => "emsCommonModel.default_userid != ''",
-                              :ng_reqd_verify         => "emsCommonModel.default_userid != ''",
+                              :ng_reqd_userid         => true,
+                              :ng_reqd_password       => true,
+                              :ng_reqd_verify         => true,
                               :prefix                 => "default",
                               :validate_url           => @ems.id ? "update" : "create",
                               :id                     => @ems.id || "new",
@@ -217,7 +222,7 @@
                               :change_stored_password => _("Change stored client key"),
                               :cancel_password_change => _("Cancel client key change"),
                               :verify_title_off       => _("Tenant ID, Client ID and matching Client Key fields are needed to perform verification of credentials")}
-      %div{"ng-show" => "emsCommonModel.emstype != 'azure'"}
+      %div{"ng-if" => "emsCommonModel.emstype != '' && emsCommonModel.emstype != 'azure'"}
         = render :partial => "/layouts/angular/multi_auth_credentials", :locals  => {:record => @ems, :ng_model => "emsCommonModel"}
 
     = render :partial => "layouts/angular/x_edit_buttons_angular", :locals => {:record => @ems, :restful => true}

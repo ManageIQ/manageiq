@@ -75,7 +75,7 @@ module Mixins
         add_flash(_("Credential validation was not successful: %{details}") % {:details => details}, :error)
       end
 
-      render_flash
+      render :json => {:message => @flash_array.last(1)[0][:message], :level => @flash_array.last(1)[0][:level]}
     end
 
     def create
@@ -162,10 +162,12 @@ module Mixins
       end
       if @ems.has_authentication_type?(:amqp)
         amqp_userid = @ems.has_authentication_type?(:amqp) ? @ems.authentication_userid(:amqp).to_s : ""
+        amqp_auth_status = @ems.authentication_status_ok?(:amqp)
       end
 
       if @ems.has_authentication_type?(:ssh_keypair)
         ssh_keypair_userid = @ems.has_authentication_type?(:ssh_keypair) ? @ems.authentication_userid(:ssh_keypair).to_s : ""
+        ssh_keypair_auth_status = @ems.authentication_status_ok?(:ssh_keypair)
       end
 
       if @ems.connection_configurations.metrics.try(:endpoint)
@@ -174,6 +176,7 @@ module Mixins
       end
       if @ems.has_authentication_type?(:metrics)
         metrics_userid = @ems.has_authentication_type?(:metrics) ? @ems.authentication_userid(:metrics).to_s : ""
+        metrics_auth_status = @ems.authentication_status_ok?(:metrics)
       end
 
       if @ems.respond_to?(:keystone_v3_domain_id)
@@ -183,6 +186,7 @@ module Mixins
       if @ems.connection_configurations.hawkular.try(:endpoint)
         hawkular_hostname = @ems.connection_configurations.hawkular.endpoint.hostname
         hawkular_api_port = @ems.connection_configurations.hawkular.endpoint.port
+        hawkular_auth_status = @ems.authentication_status_ok?(:hawkular)
       end
 
       if @ems.connection_configurations.default.try(:endpoint)
@@ -210,7 +214,10 @@ module Mixins
       if @ems.kind_of?(ManageIQ::Providers::Google::CloudManager)
         project         = @ems.project
         service_account = @ems.authentication_token
+        service_account_auth_status = @ems.authentication_status_ok?
       end
+
+      default_auth_status = @ems.authentication_status_ok? unless @ems.kind_of?(ManageIQ::Providers::Google::CloudManager)
 
       render :json => {:name                            => @ems.name,
                        :emstype                         => @ems.emstype,
@@ -219,7 +226,7 @@ module Mixins
                        :hostname                        => @ems.hostname,
                        :default_hostname                => default_hostname,
                        :amqp_hostname                   => amqp_hostname,
-                       :default_api_port                => default_api_port,
+                       :default_api_port                => default_api_port ? default_api_port : "",
                        :amqp_api_port                   => amqp_port ? amqp_port : "",
                        :api_version                     => @ems.api_version ? @ems.api_version : "v2",
                        :default_security_protocol       => default_security_protocol,
@@ -237,7 +244,10 @@ module Mixins
                        :project                         => project ? project : "",
                        :emstype_vm                      => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager),
                        :event_stream_selection          => retrieve_event_stream_selection,
-                       :ems_controller                  => controller_name
+                       :ems_controller                  => controller_name,
+                       :default_auth_status             => default_auth_status,
+                       :amqp_auth_status                => amqp_auth_status,
+                       :service_account_auth_status     => service_account_auth_status
       } if controller_name == "ems_cloud" || controller_name == "ems_network"
 
       render :json => {:name                        => @ems.name,
@@ -247,7 +257,7 @@ module Mixins
                        :default_hostname            => @ems.connection_configurations.default.endpoint.hostname,
                        :amqp_hostname               => amqp_hostname,
                        :metrics_hostname            => metrics_hostname,
-                       :default_api_port            => @ems.connection_configurations.default.endpoint.port,
+                       :default_api_port            => default_api_port ? default_api_port : "",
                        :amqp_api_port               => amqp_port ? amqp_port : "",
                        :metrics_api_port            => metrics_port ? metrics_port : "",
                        :default_security_protocol   => default_security_protocol,
@@ -263,7 +273,10 @@ module Mixins
                        :host_default_vnc_port_start => host_default_vnc_port_start ? host_default_vnc_port_start : "",
                        :host_default_vnc_port_end   => host_default_vnc_port_end ? host_default_vnc_port_end : "",
                        :event_stream_selection      => retrieve_event_stream_selection,
-                       :ems_controller              => controller_name
+                       :ems_controller              => controller_name,
+                       :default_auth_status         => default_auth_status,
+                       :metrics_auth_status         => metrics_auth_status.nil? ? true : metrics_auth_status,
+                       :ssh_keypair_auth_status     => ssh_keypair_auth_status.nil? ? true : ssh_keypair_auth_status
       } if controller_name == "ems_infra"
 
       render :json => {:name                      => @ems.name,
@@ -281,7 +294,9 @@ module Mixins
                        :default_userid            => @ems.authentication_userid ? @ems.authentication_userid : "",
                        :service_account           => service_account ? service_account : "",
                        :bearer_token_exists       => @ems.authentication_token(:bearer).nil? ? false : true,
-                       :ems_controller            => controller_name
+                       :ems_controller            => controller_name,
+                       :default_auth_status       => default_auth_status,
+                       :hawkular_auth_status      => hawkular_auth_status.nil? ? true : hawkular_auth_status,
       } if controller_name == "ems_container"
     end
 
