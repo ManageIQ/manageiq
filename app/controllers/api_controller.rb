@@ -102,7 +102,7 @@ class ApiController < ApplicationController
 
   #
   # Custom normalization on these attribute types.
-  # Converted to @attr_<type> hashes at init, much faster access.
+  # Converted to normalized_attributes hash at init, much faster access.
   #
   ATTR_TYPES = {
     :time      => %w(expires_on),
