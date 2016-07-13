@@ -15,7 +15,7 @@ class ApiController
         @encrypted_objects_checked ||= {}
         klass = obj.class.name
         return unless @encrypted_objects_checked[klass].nil?
-        @encrypted_objects_checked[klass] = object_encrypted_attributes(obj)
+        @encrypted_objects_checked[klass] = obj.class.respond_to?(:encrypted_columns) ? obj.class.encrypted_columns : []
         @encrypted_objects_checked[klass].each { |attr| normalized_attributes[:encrypted][attr] = true }
       end
 
@@ -72,10 +72,6 @@ class ApiController
             normalized_attributes[:time][name] = true if %w(date datetime).include?(typeobj.type.to_s)
           end
         end
-      end
-
-      def object_encrypted_attributes(obj)
-        obj.class.respond_to?(:encrypted_columns) ? obj.class.encrypted_columns : []
       end
     end
   end
