@@ -159,7 +159,7 @@ class ApiController < ApplicationController
   after_action :log_api_response
 
   def self.attr_type_hash(type)
-    instance_variable_get("@attr_#{type}") || {}
+    normalized_attributes[type]
   end
 
   def redirect_api_request(method)
