@@ -357,6 +357,7 @@ module Mixins
       end
 
       if ems.kind_of?(ManageIQ::Providers::ContainerManager)
+        params[:cred_type] = ems.default_authentication_type if params[:cred_type] == "default"
         ems.hostname = hostname
         hawkular_hostname = hostname if hawkular_hostname.blank?
 
@@ -427,9 +428,9 @@ module Mixins
         session[:oauth_response] = nil
       end
       if ems.kind_of?(ManageIQ::Providers::ContainerManager) &&
-         ems.supports_authentication?(:bearer) && params[:bearer_password]
-        creds[:hawkular] = {:auth_key => params[:bearer_password], :userid => "_"}
-        creds[:bearer] = {:auth_key => params[:bearer_password]}
+         ems.supports_authentication?(:bearer) && !params[:default_password].blank?
+        creds[:hawkular] = {:auth_key => params[:default_password], :userid => "_"}
+        creds[:bearer] = {:auth_key => params[:default_password]}
         ems.update_authentication(creds, :save => (mode != :validate))
       end
       creds
