@@ -44,10 +44,10 @@ class TreeBuilderRolesByServer < TreeBuilder
     objects
   end
 
-  def x_get_tree_miq_server_kids(parent, count_only)
+  def x_get_tree_miq_server_kids(parent, _count_only)
     objects = []
     parent.assigned_server_roles.sort_by { |asr| asr.server_role.description }.each do |asr|
-      next if parent.kind_of?(MiqRegion) && !asr.server_role.regional_role?  # Only regional roles under Region
+      next if parent.kind_of?(MiqRegion) && !asr.server_role.regional_role? # Only regional roles under Region
       next if asr.server_role.name == "database_owner"
       objects.push(asr)
     end

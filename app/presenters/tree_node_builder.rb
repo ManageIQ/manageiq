@@ -474,43 +474,40 @@ class TreeNodeBuilder
 
     if object.master_supported?
       priority = case object.priority
-      when 1
-        "primary, "
-      when 2
-        "secondary, "
-      else
-        ""
-      end
+                 when 1
+                   "primary, "
+                 when 2
+                   "secondary, "
+                 else
+                   ""
+                 end
     end
     if object.active? && object.miq_server.started?
       @node[:icon] = ActionController::Base.helpers.image_path("100/on.png")
       @node[:title] += _(" (%{priority}active, PID=%{number})") % {:priority => priority, :number => object.miq_server.pid}
-    else
-      if object.miq_server.started?
+    elsif object.miq_server.started?
         @node[:icon] = ActionController::Base.helpers.image_path("100/suspended.png")
         @node[:title] += _(" (%{priority}available, PID=%{number})") % {:priority => priority,
                                                                         :number   => object.miq_server.pid}
-      else
-        @node[:icon] = ActionController::Base.helpers.image_path("100/off.png")
-        @node[:title] += _(" (%{priority}unavailable)") % {:priority => priority}
-      end
+    else
+      @node[:icon] = ActionController::Base.helpers.image_path("100/off.png")
+      @node[:title] += _(" (%{priority}unavailable)") % {:priority => priority}
     end
+
     if object.server_role.regional_role?
       @node[:addClass] = "cfme-opacity-node"
     end
     @node
   end
 
-
   def server_role_node(object)
     status = "stopped"
-    object.assigned_server_roles.where(:active => true).each do |asr|            # Go thru all active assigned server roles
-      if asr.miq_server.started?        # Find a started server
-        if @sb[:parent_kls] == "MiqRegion" || # it's in the region
-          (@sb[:parent_kls] == "Zone" && asr.miq_server.my_zone == @sb[:parent_name]) # it's in the zone
-          status = "active"
-          break
-        end
+    object.assigned_server_roles.where(:active => true).each do |asr| # Go thru all active assigned server roles
+      next unless asr.miq_server.started? # Find a started server
+      if @sb[:parent_kls] == "MiqRegion" || # it's in the region
+         (@sb[:parent_kls] == "Zone" && asr.miq_server.my_zone == @sb[:parent_name]) # it's in the zone
+        status = "active"
+        break
       end
     end
     @node = {
