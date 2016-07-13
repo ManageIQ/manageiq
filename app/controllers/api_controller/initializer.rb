@@ -57,11 +57,7 @@ class ApiController
       # Accessed as @attr_<type>[<name>], much faster than array include?
       #
       def gen_attr_type_hash
-        ATTR_TYPES[:time].each { |attr| normalized_attributes[:time][attr] = true }
-        ATTR_TYPES[:url].each  { |attr| normalized_attributes[:url][attr]  = true }
-        ATTR_TYPES[:resource].each  { |attr| normalized_attributes[:resource][attr]  = true }
-        ATTR_TYPES[:encrypted].each { |attr| normalized_attributes[:encrypted][attr] = true }
-
+        ATTR_TYPES.each { |type, attrs| attrs.each { |a| normalized_attributes[type][a] = true } }
         gen_time_attr_type_hash
       end
 
