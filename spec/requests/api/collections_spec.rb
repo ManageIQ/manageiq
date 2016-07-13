@@ -244,5 +244,11 @@ describe ApiController do
       FactoryGirl.create(:container_deployment)
       test_collection_query(:container_deployments, container_deployments_url, ContainerDeployment)
     end
+
+    it 'queries ArbitrationDefauls' do
+      ems = FactoryGirl.create(:ext_management_system)
+      FactoryGirl.create(:arbitration_default, :ems_id => ems.id)
+      test_collection_query(:arbitration_defaults, arbitration_defaults_url, ArbitrationDefault)
+    end
   end
 end

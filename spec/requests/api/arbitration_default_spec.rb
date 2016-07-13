@@ -51,6 +51,20 @@ RSpec.describe 'Arbitration Default API' do
 
       expect_bad_request(/Ext management system has already been taken/)
     end
+
+    it 'rejects a request with an href' do
+      api_basic_authorize collection_action_identifier(:arbitration_defaults, :create)
+      run_post(arbitration_defaults_url, request.merge(:href => arbitration_defaults_url))
+
+      expect_bad_request(/Resource id or href should not be specified/)
+    end
+
+    it 'rejects a request with an id' do
+      api_basic_authorize collection_action_identifier(:arbitration_defaults, :create)
+      run_post(arbitration_defaults_url, request.merge(:id => 1))
+
+      expect_bad_request(/Resource id or href should not be specified/)
+    end
   end
 
   context 'arbitration defaults edit' do
