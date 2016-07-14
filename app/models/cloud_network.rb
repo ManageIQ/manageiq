@@ -10,14 +10,12 @@ class CloudNetwork < ApplicationRecord
   belongs_to :cloud_tenant
   belongs_to :orchestration_stack
 
-  has_many   :cloud_subnets, :dependent => :destroy
-  has_many   :network_ports, :through => :cloud_subnets
-  has_many   :floating_ips,  :dependent => :destroy
-
-  # TODO(lsmola) Defaulting CloudNetwork for Private network behaviour, otherwise I am unable to model
-  # vm.public_networks. Not specifying it here causes missing method, ans specifying CloudNetwork::Private
-  # causes filtering networks by Private, while I want to filter Public.
-  include CloudNetworkPrivateMixin
+  has_many :cloud_subnets, :dependent => :destroy
+  has_many :network_routers, -> { distinct }, :through => :cloud_subnets
+  has_many :public_networks, -> { distinct }, :through => :cloud_subnets
+  has_many :network_ports, :through => :cloud_subnets
+  has_many :floating_ips,  :dependent => :destroy
+  has_many :vms, :through => :network_ports, :source => :device, :source_type => 'VmOrTemplate'
 
   # TODO(lsmola) figure out what this means, like security groups used by VMs in the network? It's not being
   # refreshed, so we can probably delete this association
@@ -40,7 +38,7 @@ class CloudNetwork < ApplicationRecord
     end
   end
 
-  virtual_total :total_vms, :vms
+  virtual_total :total_vms, :vms, :uses => :vms
 
   private
 

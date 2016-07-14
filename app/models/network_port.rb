@@ -17,6 +17,7 @@ class NetworkPort < ApplicationRecord
   has_many :cloud_subnet_network_ports
   has_many :cloud_subnets, :through => :cloud_subnet_network_ports
   has_many :network_routers, -> { distinct }, :through => :cloud_subnets
+  has_many :public_networks, :through => :cloud_subnets
 
   # Use for virtual columns, mainly for modeling array and hash types, we get from the API
   serialize :extra_attributes
