@@ -55,7 +55,7 @@ describe ApiController do
       run_post(service_catalogs_url, gen_request(:add, "name" => "sample service catalog"))
 
       expect(response).to have_http_status(:ok)
-      expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
+      expect(response.parsed_body).to include("results" => [a_hash_including("id" => kind_of(Integer))])
       expect_results_to_match_hash("results", [{"name" => "sample service catalog"}])
 
       sc_id = response.parsed_body["results"].first["id"]
@@ -69,7 +69,7 @@ describe ApiController do
       run_post(service_catalogs_url, "name" => "sample service catalog")
 
       expect(response).to have_http_status(:ok)
-      expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
+      expect(response.parsed_body).to include("results" => [a_hash_including("id" => kind_of(Integer))])
       expect_results_to_match_hash("results", [{"name" => "sample service catalog"}])
 
       sc_id = response.parsed_body["results"].first["id"]
@@ -83,7 +83,7 @@ describe ApiController do
       run_post(service_catalogs_url, gen_request(:add, [{"name" => "sc1"}, {"name" => "sc2"}]))
 
       expect(response).to have_http_status(:ok)
-      expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
+      expect(response.parsed_body).to include("results" => all(a_hash_including("id" => kind_of(Integer))))
       expect_results_to_match_hash("results", [{"name" => "sc1"}, {"name" => "sc2"}])
 
       results = response.parsed_body["results"]
