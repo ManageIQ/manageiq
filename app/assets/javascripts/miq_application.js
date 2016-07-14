@@ -1339,6 +1339,42 @@ function miqInitSelectPicker() {
   $('.bootstrap-select > button[title]').not('.selectpicker').tooltip({container: 'none'});
 }
 
+function miqInitCodemirror(options) {
+  if (! miqDomElementExists(options.text_area_id)) {
+    return;
+  }
+
+  var textarea = $('#' + options.text_area_id)[0];
+
+  ManageIQ.editor = CodeMirror.fromTextArea(textarea, {
+    mode: options.mode,
+    lineNumbers: options.line_numbers,
+    matchBrackets: true,
+    theme: 'eclipse',
+    readOnly: options.read_only ? 'nocursor' : false,
+  });
+
+  ManageIQ.editor.on('change', function (cm, change) {
+    if (options.angular) {
+      ManageIQ.editor.save();
+      $(textarea).trigger("change");
+    } else {
+      miqSendOneTrans(options.url);
+    }
+  });
+
+  ManageIQ.editor.on('blur', function (cm, change) {
+    ManageIQ.editor.save();
+  });
+
+  $('.CodeMirror').css('height', options.height);
+  $('.CodeMirror').css('width', options.width);
+
+  if (! options.no_focus) {
+    ManageIQ.editor.focus();
+  }
+}
+
 function miqSelectPickerEvent(element, url, options) {
   options = options || {};
   options.no_encoding = true;
