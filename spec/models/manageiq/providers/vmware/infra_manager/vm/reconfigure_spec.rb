@@ -53,6 +53,11 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure do
     it "big host logical cpus" do
       expect(subject).to eq(8)
     end
+
+    it 'when no host' do
+      vm.update_attributes(:host_id => nil)
+      expect(subject).to eq(vm.max_total_vcpus_by_version)
+    end
   end
 
   context "#build_config_spec" do
