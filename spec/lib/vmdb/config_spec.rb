@@ -32,12 +32,12 @@ describe VMDB::Config do
   end
 
   it "#save" do
-    resource = FactoryGirl.create(:miq_server)
+    server = FactoryGirl.create(:miq_server)
     MiqRegion.seed
-    
-    config = VMDB::Config.new("vmdb")
+
+    config = server.get_config
     config.config.store_path(:api, :token_ttl, "1.day")
-    config.save(resource)
+    config.save(server)
 
     expect(SettingsChange.count).to eq(1)
     expect(SettingsChange.first).to have_attributes(:key => '/api/token_ttl', :value => "1.day")
