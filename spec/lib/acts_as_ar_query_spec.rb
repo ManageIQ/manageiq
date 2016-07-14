@@ -239,4 +239,12 @@ describe ActsAsArQuery do
       expect(query.instances_are_derived?).to be_truthy
     end
   end
+
+  describe "#enumerable" do
+    it "maps" do
+      expect(model).to receive(:find).with(:all, :limit => 5).and_return([1, 2, 3, 4, 5])
+      result = query.limit(5).map { |row| row }
+      expect(result).to eq([1, 2, 3, 4, 5])
+    end
+  end
 end
