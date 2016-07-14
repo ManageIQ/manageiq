@@ -44,11 +44,7 @@ module Vmdb
       SETTINGS_HIERARCHY = %i(MiqRegion Zone MiqServer).freeze
 
       def settings_holder
-        direct_call = true
-        if resource
-          direct_call = resource.class.name.to_sym == settings_change_holder
-        end
-        return resource if direct_call
+        return resource.reload if resource.class.name.to_sym == settings_change_holder
         ind = SETTINGS_HIERARCHY.index(settings_change_holder)
         resource.reload.send(METHODS_FOR_SETTINGS[ind])
       end
