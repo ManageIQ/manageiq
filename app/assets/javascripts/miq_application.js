@@ -1652,6 +1652,88 @@ function add_expanding_icon(element) {
   element.find('.pull-right').append("<a onclick='toggle_expansion(this)'> <i class='fa fa-angle-right'></i>");
 }
 
+function miqReportAfterOnload(node, active_tree, node_not_root, role_list, editor_allowed) {
+  if (role_list && !editor_allowed) {
+    return;
+  }
+
+  miqDynatreeActivateNode(role_list ? 'roles_tree' : active_tree, node);
+
+  if (role_list && node_not_root) {
+    $('#menu_div1, #menu_div3').hide();
+  }
+}
+
+function miqOpsAfterOnload(allowed, utilization_url, hide_toolbar) {
+  if (allowed.ops_settings) {
+    miqDimDiv("#settings_tree_div", false);
+  }
+  if (allowed.ops_diagnostics) {
+    miqDimDiv("#diagnostics_tree_div", false);
+  }
+  if (allowed.ops_db) {
+    miqDimDiv("#vmdb_tree_div", false);
+  }
+  if (allowed.ops_rbac__any) {
+    miqDimDiv("#rbac_tree_div", false);
+  }
+
+  if (utilization_url) {
+    miqAsyncAjax(utilization_url);
+  }
+  if (hide_toolbar) {
+    $('#toolbar').hide();
+  }
+}
+
+function cbHoverEnable(selector) {
+  $(selector).hover(function() {
+    cbHoverRow(this, true);
+  }, function() {
+    cbHoverRow(this, false);
+  });
+}
+
+function cbHoverRow(row, state) {
+  var prefix = row.id.substr(0, row.id.lastIndexOf("_"));
+  $("tr[id^='" + prefix + "']").toggleClass('active', state);
+}
+
+function provDialogVolumeFieldsetInit(counter) {
+  var button = $("#add-additional-volume-button");
+
+  button.click(function() {
+    var sourceNode = $("#add-volume-fieldset");
+    var node = duplicateNode(sourceNode, ["id", "name"]);
+
+    sourceNode.parent().append(node);
+  });
+
+  function duplicateNode(sourceNode, attributesToBump) {
+    var out = sourceNode.clone(true);
+    var nodes = out.find('*');
+
+    $.each(nodes, function (ix, node) {
+      $.each(attributesToBump, function (ix, attr) {
+        if (node.hasAttribute(attr)) {
+          $(node).prop(attr, increment_attr($(node).prop(attr)));
+        }
+      });
+      node.value = '';
+      node.checked = false;
+    });
+
+    function increment_attr(str) {
+      var str_pieces = str.split("_")
+      str_pieces[str_pieces.length - 1] = counter;
+      return str_pieces.join("_")
+    }
+
+    counter++;
+    return out;
+  }
+}
+
 function chartData(type, data, data2) {
   if (type == undefined) {
     return;

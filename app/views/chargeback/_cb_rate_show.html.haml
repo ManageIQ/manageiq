@@ -67,6 +67,7 @@
           %td{:colspan => "9"}
 
     :javascript
+      // FIXME unify with cbHoverEnable
       $('tbody tr.rdetail').hover(
         function () {
           $("tr[id = '"+this.id+"']").addClass("active");

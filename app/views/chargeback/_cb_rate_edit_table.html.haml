@@ -90,10 +90,4 @@
                                                                             :button => "remove")}');")
 
     :javascript
-      $('tbody tr.rdetail').hover( function(){hoverRowIn(this)}, function(row){hoverRowOut(this)});
-      function hoverRowIn(row) {
-        $("tr[id ^= '"+row.id.substr(0, row.id.lastIndexOf("_"))+"']").addClass("active");
-      }
-      function hoverRowOut(row) {
-        $("tr[id ^= '"+row.id.substr(0, row.id.lastIndexOf("_"))+"']").removeClass("active");
-      }
+      cbHoverEnable('tbody tr.rdetail');

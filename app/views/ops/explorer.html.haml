@@ -10,20 +10,12 @@
                        :line_numbers => true,
                        :url          => url}
 
-%script{:type => "text/javascript"}
-  -# Create from/to date JS vars to limit calendar starting from
+:javascript
+  // Create from/to date JS vars to limit calendar starting from
   ManageIQ.calendar.calDateFrom = miqCalendarDateConversion("#{@timezone_offset}");
-  ManageIQ.calendar.calDateTo = null
+  ManageIQ.calendar.calDateTo = null;
 
-  function miqOpsAfterOnload() {
-  = javascript_dim("settings_tree_div", false) if role_allows(:feature => "ops_settings")
-  = javascript_dim("diagnostics_tree_div", false) if role_allows(:feature => "ops_diagnostics")
-  = javascript_dim("vmdb_tree_div", false) if role_allows(:feature => "ops_db")
-  = javascript_dim("rbac_tree_div", false) if role_allows(:feature => "ops_rbac", :any => true)
-  - if @sb[:active_tab] == "db_utilization"
-    miqAsyncAjax('#{url_for(:action => @ajax_action, :id => @record)}');
-  - if @sb[:center_tb_filename].nil? || @sb[:center_tb_filename] == "blank_view_tb"
-    $('#toolbar').hide();
-  };
-  var miq_after_onload = "miqOpsAfterOnload();"
-
+  var miq_after_onload = "miqOpsAfterOnload(#{{:ops_settings    => role_allows(:feature => "ops_settings"),
+                                               :ops_diagnostics => role_allows(:feature => "ops_diagnostics"),
+                                               :ops_db          => role_allows(:feature => "ops_db"),
+                                               :ops_rbac__any   => role_allows(:feature => "ops_rbac", :any => true)}.to_json, #{@sb[:active_tab] == "db_utilization" ? "'" + j_str(url_for(:action => @ajax_action, :id => @record)) + "'" : 'null'}, #{@sb[:center_tb_filename].nil? || @sb[:center_tb_filename] == "blank_view_tb"});";
