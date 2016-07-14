@@ -36,10 +36,10 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
                    nodejs                  \
                    openssl-devel           \
                    patch                   \
-                   rh-postgresql94-postgresql-server \
-                   rh-postgresql94-postgresql-devel  \
-                   rh-postgresql94-postgresql-pglogical-output \
-                   rh-postgresql94-postgresql-pglogical \
+                   rh-postgresql95-postgresql-server \
+                   rh-postgresql95-postgresql-devel  \
+                   rh-postgresql95-postgresql-pglogical-output \
+                   rh-postgresql95-postgresql-pglogical \
                    readline-devel          \
                    sqlite-devel            \
                    sysvinit-tools          \
@@ -61,7 +61,7 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
     yum clean all
 
 # Add persistent data volume for postgres
-VOLUME [ "/var/opt/rh/rh-postgresql94/lib/pgsql/data" ]
+VOLUME [ "/var/opt/rh/rh-postgresql95/lib/pgsql/data" ]
 
 # Download chruby and chruby-install, install, setup environment, clean all
 RUN curl -sL https://github.com/postmodern/chruby/archive/v0.3.9.tar.gz | tar xz && \
