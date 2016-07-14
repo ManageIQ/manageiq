@@ -53,6 +53,18 @@ class ManageIQ::Providers::Redhat::InfraManager
         [target, data]
       end
 
+      # Need to get some extra information about virtual machines that is only available using
+      # version 4 of the API, for that we need to explicitly connect using the Ruby SDK.
+      begin
+        connection = ems.connect(:version => 4)
+        vms_service = connection.system_service.vms_service
+        vms_service.list.each do |vm|
+          _log.info("vm.id: #{vm.id}")
+          _log.info("vm.name: #{vm.name}")
+        end
+        connection.close
+      end
+
       ems.api_version = inventory.service.version_string
       ems.save
 
