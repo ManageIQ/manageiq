@@ -13,7 +13,7 @@ module ManageIQ::Providers
 
         result[:storages], uids[:storages] = storage_inv_to_hashes(inv[:storage])
         result[:clusters], uids[:clusters] = cluster_inv_to_hashes(inv[:cluster])
-        result[:storage_profiles], uids[:storage_profiles] = storage_profile_inv_to_hashes(inv[:storage_profile])
+        result[:storage_profiles], uids[:storage_profiles] = storage_profile_inv_to_hashes(inv[:storage_profile], uids[:storages], inv[:storage_profile_datastore])
 
         result[:hosts], uids[:hosts], uids[:clusters_by_host], uids[:lans], uids[:switches], uids[:guest_devices], uids[:scsi_luns] = host_inv_to_hashes(inv[:host], inv, uids[:storages], uids[:clusters])
         result[:vms], uids[:vms] = vm_inv_to_hashes(inv[:vm], inv[:storage], uids[:storages], uids[:hosts], uids[:clusters_by_host], uids[:lans])
@@ -73,16 +73,21 @@ module ManageIQ::Providers
         return result, result_uids
       end
 
-      def self.storage_profile_inv_to_hashes(profile_inv)
+      def self.storage_profile_inv_to_hashes(profile_inv, storage_uids, placement_inv)
         result = []
         result_uids = {}
 
         profile_inv.each do |uid, profile|
           new_result = {
-            :ems_ref      => uid,
-            :name         => profile.name,
-            :profile_type => profile.profileCategory
+            :ems_ref                  => uid,
+            :name                     => profile.name,
+            :profile_type             => profile.profileCategory,
+            :storage_profile_storages => []
           }
+
+          placement_inv[uid].to_miq_a.each do |placement_hub|
+            new_result[:storage_profile_storages] << storage_uids[placement_hub.hubId] if placement_hub.hubType == "Datastore"
+          end
 
           result << new_result
           result_uids[uid] = new_result
