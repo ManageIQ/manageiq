@@ -9,7 +9,7 @@ require 'active_job/railtie'
 require 'sprockets/railtie'
 
 if defined?(Bundler)
-  Bundler.require *Rails.groups(:assets => %w(development test))
+  Bundler.require(*Rails.groups(:assets => %w(development test)), :ui_dependencies)
 end
 
 module Vmdb
