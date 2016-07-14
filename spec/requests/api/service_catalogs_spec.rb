@@ -55,8 +55,15 @@ describe ApiController do
       run_post(service_catalogs_url, gen_request(:add, "name" => "sample service catalog"))
 
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to include("results" => [a_hash_including("id" => kind_of(Integer))])
-      expect_results_to_match_hash("results", [{"name" => "sample service catalog"}])
+      expected = {
+        "results" => [
+          a_hash_including(
+            "id"   => kind_of(Integer),
+            "name" => "sample service catalog"
+          )
+        ]
+      }
+      expect(response.parsed_body).to include(expected)
 
       sc_id = response.parsed_body["results"].first["id"]
 
@@ -69,8 +76,15 @@ describe ApiController do
       run_post(service_catalogs_url, "name" => "sample service catalog")
 
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to include("results" => [a_hash_including("id" => kind_of(Integer))])
-      expect_results_to_match_hash("results", [{"name" => "sample service catalog"}])
+      expected = {
+        "results" => [
+          a_hash_including(
+            "id"   => kind_of(Integer),
+            "name" => "sample service catalog"
+          )
+        ]
+      }
+      expect(response.parsed_body).to include(expected)
 
       sc_id = response.parsed_body["results"].first["id"]
 
@@ -83,8 +97,13 @@ describe ApiController do
       run_post(service_catalogs_url, gen_request(:add, [{"name" => "sc1"}, {"name" => "sc2"}]))
 
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to include("results" => all(a_hash_including("id" => kind_of(Integer))))
-      expect_results_to_match_hash("results", [{"name" => "sc1"}, {"name" => "sc2"}])
+      expected = {
+        "results" => a_collection_containing_exactly(
+          a_hash_including("id" => kind_of(Integer), "name" => "sc1"),
+          a_hash_including("id" => kind_of(Integer), "name" => "sc2")
+        )
+      }
+      expect(response.parsed_body).to include(expected)
 
       results = response.parsed_body["results"]
       sc_id1, sc_id2 = results.first["id"], results.second["id"]
