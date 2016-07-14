@@ -18,7 +18,7 @@ describe TreeBuilderServersByRole do
         :assigned_server_role,
         :miq_server_id  => @miq_server.id,
         :server_role_id => @server_role.id,
-        :active         => true,
+        :active         => false,
         :priority       => 1
       )
 
@@ -61,14 +61,16 @@ describe TreeBuilderServersByRole do
                 :expand   => true,
                 :tooltip  => "Role: SmartProxy (stopped)",
                 :children => [{:key      => "asr-#{MiqRegion.compress_id(@assigned_server_role1.id)}",
-                               :addClass => "dynatree-title",
-                               :title    => "Server: smartproxy [#{@assigned_server_role1.id}] (primary, active, PID=)",
-                               :icon     => ActionController::Base.helpers.image_path('100/on.png')
+                               :addClass => "cfme-red-node",
+                               :title    => "Server: smartproxy [#{@assigned_server_role1.id}] (primary, available, PID=)",
+                               :icon     => ActionController::Base.helpers.image_path('100/suspended.png'),
+                               :expand   => true,
                               },
                               {:key      => "asr-#{MiqRegion.compress_id(@assigned_server_role2.id)}",
                                :addClass => "dynatree-title",
                                :title    => "Server: smartproxy [#{@assigned_server_role2.id}] (secondary, active, PID=)",
-                               :icon     => ActionController::Base.helpers.image_path('100/on.png')
+                               :icon     => ActionController::Base.helpers.image_path('100/on.png'),
+                               :expand   => true,
                               },
                 ],
                }]

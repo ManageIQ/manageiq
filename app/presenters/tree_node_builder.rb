@@ -346,9 +346,11 @@ class TreeNodeBuilder
     if options[:is_current]
       tip  = _("%{server}: %{server_name} [%{server_id}] (current)") %
              {:server => ui_lookup(:model => object.class.to_s), :server_name => object.name, :server_id => object.id}
+      tip += " (#{object.status})" if options[:tree] == :roles_by_server_tree
       text = "<b class='dynatree-title'>#{ERB::Util.html_escape(tip)}</b>".html_safe
     else
       tip  = "#{ui_lookup(:model => object.class.to_s)}: #{object.name} [#{object.id}]"
+      tip += " (#{object.status})" if options[:tree] == :roles_by_server_tree
       text = tip
     end
     generic_node(text, 'miq_server.png', tip)
@@ -485,16 +487,18 @@ class TreeNodeBuilder
     if object.active? && object.miq_server.started?
       @node[:icon] = ActionController::Base.helpers.image_path("100/on.png")
       @node[:title] += _(" (%{priority}active, PID=%{number})") % {:priority => priority, :number => object.miq_server.pid}
-    elsif object.miq_server.started?
+    else
+      if object.miq_server.started?
         @node[:icon] = ActionController::Base.helpers.image_path("100/suspended.png")
         @node[:title] += _(" (%{priority}available, PID=%{number})") % {:priority => priority,
                                                                         :number   => object.miq_server.pid}
-    else
-      @node[:icon] = ActionController::Base.helpers.image_path("100/off.png")
-      @node[:title] += _(" (%{priority}unavailable)") % {:priority => priority}
+      else
+        @node[:icon] = ActionController::Base.helpers.image_path("100/off.png")
+        @node[:title] += _(" (%{priority}unavailable)") % {:priority => priority}
+      end
+      @node[:addClass] = "cfme-red-node" if object.priority == 1
     end
-
-    if object.server_role.regional_role?
+    if @sb[:parent_kls] == "Zone" && object.server_role.regional_role?
       @node[:addClass] = "cfme-opacity-node"
     end
     @node
