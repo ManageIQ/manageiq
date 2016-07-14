@@ -80,21 +80,26 @@ describe MiqReport do
   end
 
   context "report with virtual dynamic custom attributes" do
-    let(:options) { {:targets_hash => true, :userid => "admin"} }
-    let(:custom_column_key_1)   { 'ATTR_Name_1' }
-    let(:custom_column_key_2)   { 'ATTR_Name_2' }
-    let(:custom_column_value) { 'value1' }
-    let(:user) { FactoryGirl.create(:user_with_group) }
-    let!(:vm_1) { FactoryGirl.create(:vm_vmware) }
-    let!(:vm_2) { FactoryGirl.create(:vm_vmware) }
+    let(:options)              { {:targets_hash => true, :userid => "admin"} }
+    let(:custom_column_key_1)  { 'ATTR_Name_1' }
+    let(:custom_column_key_2)  { 'ATTR_Name_2' }
+    let(:custom_column_key_3)  { 'ATTR_Name_3' }
+    let(:custom_column_value)  { 'value1' }
+    let(:user)                 { FactoryGirl.create(:user_with_group) }
+    let(:ems)                  { FactoryGirl.create(:ems_vmware) }
+    let!(:vm_1)                { FactoryGirl.create(:vm_vmware) }
+    let!(:vm_2)                { FactoryGirl.create(:vm_vmware, :retired => false, :ext_management_system => ems) }
     let(:virtual_column_key_1) { "#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}ATTR_Name_1" }
     let(:virtual_column_key_2) { "#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}ATTR_Name_2" }
+    let(:virtual_column_key_3) { "#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}ATTR_Name_3" }
     let(:miq_task)             { FactoryGirl.create(:miq_task) }
 
     subject! do
       FactoryGirl.create(:miq_custom_attribute, :resource => vm_1, :name => custom_column_key_1,
                          :value => custom_column_value)
       FactoryGirl.create(:miq_custom_attribute, :resource => vm_2, :name => custom_column_key_2,
+                         :value => custom_column_value)
+      FactoryGirl.create(:miq_custom_attribute, :resource => vm_2, :name => custom_column_key_3,
                          :value => custom_column_value)
     end
 
@@ -123,13 +128,10 @@ describe MiqReport do
         x.data.delete("id")
         x.data
       end
-
-      expected_results = []
-      expected_results.push("name" => vm_1.name, virtual_column_key_1 => custom_column_value,
-                            virtual_column_key_2 => nil)
-
-      expected_results.push("name" => vm_2.name, virtual_column_key_1 => nil,
-                            virtual_column_key_2 => custom_column_value)
+      expected_results = [{"name" => vm_1.name, virtual_column_key_1 => custom_column_value,
+                           virtual_column_key_2 => nil},
+                          {"name" => vm_2.name, virtual_column_key_1 => nil,
+                           virtual_column_key_2 => custom_column_value}]
 
       expect(report_result).to match_array(expected_results)
     end
@@ -148,9 +150,29 @@ describe MiqReport do
         x.data
       end
 
-      expected_results = []
-      expected_results.push("name" => vm_1.name, virtual_column_key_1 => custom_column_value,
-                            virtual_column_key_2 => nil)
+      expected_results = ["name" => vm_1.name, virtual_column_key_1 => custom_column_value, virtual_column_key_2 => nil]
+      expect(report_result).to match_array(expected_results)
+    end
+
+    let(:exp_3) do
+      MiqExpression.new("and" => [{"=" => { "field" => "#{vm_2.type}-active", "value" => "true"}},
+                                  {"or" => [{"IS NOT EMPTY" => { "field" => "#{vm_2.type}-name", "value" => ""}},
+                                            {"IS NOT EMPTY" => { "field" => "#{vm_2.type}-#{virtual_column_key_3}"}}]}])
+    end
+
+    it "generates report with dynamic custom attributes with filtering with field which is not listed in cols" do
+      report.conditions = exp_3
+      report.queue_generate_table(:userid => user.userid)
+      report._async_generate_table(miq_task.id, :userid => user.userid, :mode => "async",
+                                   :report_source => "Requested by user")
+
+      report_result = report.table.data.map do |x|
+        x.data.delete("id")
+        x.data
+      end
+
+      expected_results = ["name" => vm_2.name, virtual_column_key_1 => nil, virtual_column_key_2 => custom_column_value,
+                          virtual_column_key_3 => custom_column_value]
 
       expect(report_result).to match_array(expected_results)
     end
