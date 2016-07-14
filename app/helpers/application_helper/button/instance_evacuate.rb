@@ -1,10 +1,10 @@
 class ApplicationHelper::Button::InstanceEvacuate < ApplicationHelper::Button::Basic
   def calculate_properties
     super
-    self[:title] = @record.is_available_now_error_message(:evacuate) if disabled?
+    self[:title] = @record.unsupported_reason(:evacuate) if disabled?
   end
 
   def disabled?
-    !@record.is_available?(:evacuate)
+    !@record.supports_evacuate?
   end
 end
