@@ -12,7 +12,8 @@ describe VMDB::Config do
 
   context ".save_file" do
     it "normal" do
-      resource = EvmSpecHelper.local_miq_server
+      resource = FactoryGirl.create(:miq_server)
+      MiqRegion.seed
       data = Settings.to_hash
       data.store_path(:api, :token_ttl, "1.day")
       data = data.to_yaml
@@ -31,8 +32,9 @@ describe VMDB::Config do
   end
 
   it "#save" do
-    resource = EvmSpecHelper.local_miq_server
-
+    resource = FactoryGirl.create(:miq_server)
+    MiqRegion.seed
+    
     config = VMDB::Config.new("vmdb")
     config.config.store_path(:api, :token_ttl, "1.day")
     config.save(resource)
