@@ -238,8 +238,7 @@ module ApiSpecHelper
   end
 
   def expect_result_resource_keys_to_be_like_klass(collection, key, klass)
-    expect(response.parsed_body).to have_key(collection)
-    expect(response.parsed_body[collection].all? { |result| result[key].kind_of?(klass) }).to be_truthy
+    expect(response.parsed_body).to include(collection => all(a_hash_including(key => kind_of(klass))))
   end
 
   def expect_result_resources_to_include_keys(collection, keys)
