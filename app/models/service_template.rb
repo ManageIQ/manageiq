@@ -7,6 +7,7 @@ class ServiceTemplate < ApplicationRecord
   include_concern 'Filter'
 
   belongs_to :tenant
+  belongs_to :blueprint
   # # These relationships are used to specify children spawned from a parent service
   # has_many   :child_services, :class_name => "ServiceTemplate", :foreign_key => :service_template_id
   # belongs_to :parent_service, :class_name => "ServiceTemplate", :foreign_key => :service_template_id
