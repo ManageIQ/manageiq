@@ -34,16 +34,18 @@ class Session < ApplicationRecord
   def self.log_off_user_sessions(sessions)
     # Log off the users associated with the sessions that are eligible for deletion
     userids = sessions.each_with_object([]) do |s, a|
-      a << Marshal.load(Base64.decode64(s.data.split("\n").join))[:userid]
+      begin
+        a << Marshal.load(Base64.decode64(s.data.split("\n").join))[:userid]
+      rescue => err
+        _log.warn("Error '#{err.message}', attempting to load session with id [#{s.id}]")
+      end
     end
 
     User.where(:userid => userids).each do |user|
-      if ((user.lastlogoff && user.lastlogon && user.lastlogoff < user.lastlogon) || (user.lastlogon && user.lastlogoff.nil?))
+      if (user.lastlogoff && user.lastlogon && user.lastlogoff < user.lastlogon) || (user.lastlogon && user.lastlogoff.nil?)
         user.logoff
       end
     end
-  rescue => err
-    _log.warn("Error '#{err.message}', attempting to delete session with id [#{sessions.id}]")
   end
 
   def self.timeout(ttl = nil)
