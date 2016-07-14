@@ -20,7 +20,6 @@ end
 
 # Client-side dependencies
 gem "angular-ui-bootstrap-rails",     "~>0.13.0"
-gem "codemirror-rails",               "~>5.11.1"
 gem "jquery-hotkeys-rails"
 gem "jquery-rails",                   "~>4.1.1"
 gem "jquery-rjs",                     "=0.1.1",                       :git => "git://github.com/amatsuda/jquery-rjs.git", :ref => "1288c09"
