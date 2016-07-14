@@ -210,11 +210,7 @@ module ApiSpecHelper
   end
 
   def expect_result_to_have_keys(keys)
-    expect_hash_to_have_keys(response_hash, keys)
-  end
-
-  def expect_hash_to_have_keys(hash, keys)
-    fetch_value(keys).each { |key| expect(hash).to have_key(key) }
+    expect(response_hash).to include(*keys)
   end
 
   def expect_result_to_have_only_keys(keys)

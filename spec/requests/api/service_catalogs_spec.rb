@@ -456,9 +456,16 @@ describe ApiController do
 
       run_post(sc_templates_url(sc.id, st1.id), gen_request(:refresh_dialog_fields, "fields" => %w(text1)))
 
-      expect_single_action_result(:success => true, :message => /refreshing dialog fields/i)
-      expect_hash_to_have_keys(response_hash, %w(success href service_template_id service_template_href result))
-      expect_hash_to_have_keys(response_hash["result"], %w(text1))
+      expected = {
+        "success"               => true,
+        "message"               => a_string_matching(/refreshing dialog fields/i),
+        "href"                  => anything,
+        "service_template_id"   => anything,
+        "service_template_href" => anything,
+        "result"                => hash_including("text1")
+      }
+      expect(response_hash).to include(expected)
+      expect(response).to have_http_status(:ok)
     end
   end
 end
