@@ -255,21 +255,8 @@ class PostgresAdmin
 
   def self.runcmd_with_logging(cmd_str, opts, params = {})
     $log.info("MIQ(#{name}.#{__method__}) Running command... #{AwesomeSpawn.build_command_line(cmd_str, params)}")
-    with_pgpass_file(opts) do
-      AwesomeSpawn.run!(cmd_str, :params => params).output
-    end
-  end
-
-  # NOTE: keeping .pgpass for external databases. typically will not create/use
-  PGPASS_FILE = '/root/.pgpass'
-  def self.with_pgpass_file(opts)
-    pass = <<-PGPASS
-*:*:#{opts[:dbname]}:#{opts[:username]}:#{opts[:password]}
-*:*:postgres:#{opts[:username]}:#{opts[:password]}
-    PGPASS
-    File.open(PGPASS_FILE, 0600, "w") { |f| f.write pass } if opts[:password]
-    yield
-  ensure
-    File.delete(PGPASS_FILE) if opts[:password]
+    AwesomeSpawn.run!(cmd_str, :params => params, :env => {
+                        "PGUSER"     => opts[:username],
+                        "PGPASSWORD" => opts[:password]}).output
   end
 end
