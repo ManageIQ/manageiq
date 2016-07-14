@@ -56,12 +56,8 @@ module ApplicationController::Compare
     @compare = create_compare_view
     build_sections_tree
     compare_to_json(@compare)
-    if params[:ppsetting]                     # Came in from per page setting
-      render :update do |page|
-        page << javascript_prologue
-        page.replace_html("main_div", :partial => "layouts/compare")  # Replace the main div area contents
-        page << "miqSparkle(false);"
-      end
+    if params[:ppsetting] # Came in from per page setting
+      replace_main_div({:partial => "layouts/compare"}, {:spinner_off => true})
     else
       if @explorer
         @refresh_partial = "layouts/compare"
@@ -152,12 +148,7 @@ module ApplicationController::Compare
     @exists_mode = session[:miq_exists_mode]
     @compare.set_base_record(params[:id].to_i) if @lastaction == "compare_miq"                      # Remove the VM from the vm compare
     compare_to_json(@compare)
-    render :update do |page|
-      page << javascript_prologue
-      # page.replace("view_buttons_div", :partial=>"layouts/view_buttons")   # Replace the view buttons
-      page.replace_html("main_div", :partial => "layouts/compare")  # Replace the main div area contents
-      page << "miqSparkle(false);"
-    end
+    replace_main_div({:partial => "layouts/compare"}, {:spinner_off => true})
   end
 
   # Toggle compressed/expanded view
@@ -237,11 +228,7 @@ module ApplicationController::Compare
     @exists_mode = session[:miq_exists_mode]
     @compare.remove_record(params[:id].to_i) if @lastaction == "compare_miq"                      # Remove the VM from the vm compare
     compare_to_json(@compare)
-    render :update do |page|
-      page << javascript_prologue
-      page.replace_html("main_div", :partial => "layouts/compare")  # Replace the main div area contents
-      page << "miqSparkle(false);"
-    end
+    replace_main_div({:partial => "layouts/compare"}, {:spinner_off => true})
   end
 
   # Send the current compare data in text format
@@ -566,11 +553,7 @@ module ApplicationController::Compare
                     :url  => "/#{@sb[:compare_db].downcase}/drift")
     @sb[:miq_vm_name] = @drift_obj.name
     if params[:ppsetting] # Came in from per page setting
-      render :update do |page| # Use RJS to update the display
-        # Replace the main div area contents
-        page << javascript_prologue
-        page.replace_html("main_div", :partial => "layouts/compare", :id => @drift_obj.id)
-      end
+      replace_main_div :partial => "layouts/compare", :id => @drift_obj.id
     else
       @showtype = "drift"
       if @explorer

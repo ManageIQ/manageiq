@@ -645,11 +645,7 @@ module VmCommon
                                                               @polArr,
                                                               @record.name,
                                                               @policy_options)
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page.replace("main_div", :partial => "vm_common/policies")
-    end
+    replace_main_div({:partial => "vm_common/policies"}, {:flash => true})
   end
 
   # Show/Unshow out of scope items
@@ -664,11 +660,7 @@ module VmCommon
                                                               @polArr,
                                                               @record.name,
                                                               @policy_options)
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page.replace("main_div", :partial => "vm_common/policies")
-    end
+    replace_main_div({:partial => "vm_common/policies"}, {:flash => true})
   end
 
   # Set right_size selected db records

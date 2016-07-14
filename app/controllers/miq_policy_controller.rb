@@ -336,10 +336,7 @@ class MiqPolicyController < ApplicationController
     @log = $policy_log.contents(nil, 1000)
     @server = MiqServer.my_server
     add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
-    render :update do |page|
-      page << javascript_prologue
-      page.replace_html("main_div", :partial => "layouts/log_viewer")
-    end
+    replace_main_div :partial => "layouts/log_viewer"
   end
 
   # Send the log in text format
