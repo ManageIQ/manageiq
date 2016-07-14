@@ -6,7 +6,7 @@ ARG REF=master
 # Set ENV, LANG only needed if building with docker-1.8
 ENV LANG en_US.UTF-8
 ENV TERM xterm
-ENV RUBY_GEMS_ROOT /opt/rubies/ruby-2.2.5/lib/ruby/gems/2.2.0
+ENV RUBY_GEMS_ROOT /opt/rubies/ruby-2.3.1/lib/ruby/gems/2.3.0
 ENV APP_ROOT /var/www/miq/vmdb
 ENV APPLIANCE_ROOT /opt/manageiq/manageiq-appliance
 ENV SSUI_ROOT /opt/manageiq/manageiq-ui-self_service
@@ -74,8 +74,8 @@ RUN curl -sL https://github.com/postmodern/chruby/archive/v0.3.9.tar.gz | tar xz
     curl -sL https://github.com/postmodern/ruby-install/archive/v0.6.0.tar.gz | tar xz && \
     cd ruby-install-0.6.0 && \
     make install && \
-    ruby-install ruby 2.2.5 -- --disable-install-doc && \
-    echo "chruby ruby-2.2.5" >> ~/.bash_profile && \
+    ruby-install ruby 2.3.1 -- --disable-install-doc && \
+    echo "chruby ruby-2.3.1" >> ~/.bash_profile && \
     rm -rf /chruby-* && \
     rm -rf /usr/local/src/* && \
     yum clean all
@@ -94,7 +94,7 @@ ADD . ${APP_ROOT}
 
 ## Setup environment
 RUN ${APPLIANCE_ROOT}/setup && \
-    echo "export PATH=\$PATH:/opt/rubies/ruby-2.2.5/bin" >> /etc/default/evm && \
+    echo "export PATH=\$PATH:/opt/rubies/ruby-2.3.1/bin" >> /etc/default/evm && \
     mkdir ${APP_ROOT}/log/apache && \
     mv /etc/httpd/conf.d/ssl.conf{,.orig} && \
     echo "# This file intentionally left blank. ManageIQ maintains its own SSL configuration" > /etc/httpd/conf.d/ssl.conf && \
