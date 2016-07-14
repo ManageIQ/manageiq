@@ -11,14 +11,13 @@ ENV APP_ROOT /var/www/miq/vmdb
 ENV APPLIANCE_ROOT /opt/manageiq/manageiq-appliance
 ENV SSUI_ROOT /opt/manageiq/manageiq-ui-self_service
 
-# Fetch postgresql 9.4 COPR and pglogical repos
-RUN curl -sSLko /etc/yum.repos.d/rhscl-rh-postgresql94-epel-7.repo \
-      https://copr-fe.cloud.fedoraproject.org/coprs/rhscl/rh-postgresql94/repo/epel-7/rhscl-rh-postgresql94-epel-7.repo && \
-    curl -sSLko /etc/yum.repos.d/ncarboni-pglogical-SCL-epel-7.repo \
+# Fetch pglogical repo
+RUN curl -sSLko /etc/yum.repos.d/ncarboni-pglogical-SCL-epel-7.repo \
       https://copr.fedorainfracloud.org/coprs/ncarboni/pglogical-SCL/repo/epel-7/ncarboni-pglogical-SCL-epel-7.repo
 
 ## Install EPEL repo, yum necessary packages for the build without docs, clean all caches
 RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
+    yum -y install centos-release-scl-rh && \
     yum -y install --setopt=tsflags=nodocs \
                    bison                   \
                    bzip2                   \
