@@ -18,7 +18,7 @@ describe ApiController do
 
       run_get entrypoint_url
 
-      expect_single_resource_query
+      expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(ENTRYPOINT_KEYS)
     end
 
@@ -67,7 +67,7 @@ describe ApiController do
 
       run_get entrypoint_url, :headers => {"miq_group" => group1.description}
 
-      expect_single_resource_query
+      expect(response).to have_http_status(:ok)
     end
 
     it "test basic authentication with a secondary group" do
@@ -75,7 +75,7 @@ describe ApiController do
 
       run_get entrypoint_url, :headers => {"miq_group" => group2.description}
 
-      expect_single_resource_query
+      expect(response).to have_http_status(:ok)
     end
   end
 
@@ -93,7 +93,7 @@ describe ApiController do
 
       run_get entrypoint_url, :headers => {"miq_group" => group2.description}
 
-      expect_single_resource_query
+      expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(ENTRYPOINT_KEYS)
       expect_result_to_match_hash(
         response_hash["identity"],
@@ -114,7 +114,7 @@ describe ApiController do
 
       run_get entrypoint_url, :attributes => "authorization"
 
-      expect_single_resource_query
+      expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(ENTRYPOINT_KEYS + %w(authorization))
       expect_hash_to_have_keys(response_hash["authorization"], %w(product_features))
     end
@@ -126,7 +126,7 @@ describe ApiController do
 
       run_get auth_url
 
-      expect_single_resource_query
+      expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(%w(auth_token token_ttl expires_on))
     end
 
@@ -141,14 +141,14 @@ describe ApiController do
 
       run_get auth_url
 
-      expect_single_resource_query
+      expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(%w(auth_token))
 
       auth_token = response_hash["auth_token"]
 
       run_get entrypoint_url, :headers => {"auth_token" => auth_token}
 
-      expect_single_resource_query
+      expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(ENTRYPOINT_KEYS)
     end
 
@@ -157,7 +157,7 @@ describe ApiController do
 
       run_get auth_url
 
-      expect_single_resource_query
+      expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(%w(auth_token token_ttl expires_on))
 
       auth_token = response_hash["auth_token"]
@@ -170,7 +170,7 @@ describe ApiController do
       expect_any_instance_of(TokenManager).to receive(:reset_token).with("api", auth_token)
       run_get entrypoint_url, :headers => {"auth_token" => auth_token}
 
-      expect_single_resource_query
+      expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(ENTRYPOINT_KEYS)
     end
 
@@ -180,7 +180,7 @@ describe ApiController do
       api_token_ttl = VMDB::Config.new("vmdb").config[:api][:token_ttl].to_i_with_method
       run_get auth_url
 
-      expect_single_resource_query
+      expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(%w(auth_token token_ttl expires_on))
       expect(response_hash["token_ttl"]).to eq(api_token_ttl)
     end
@@ -199,7 +199,7 @@ describe ApiController do
       ui_token_ttl = VMDB::Config.new("vmdb").config[:session][:timeout].to_i_with_method
       run_get auth_url, :requester_type => "ui"
 
-      expect_single_resource_query
+      expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(%w(auth_token token_ttl expires_on))
       expect(response_hash["token_ttl"]).to eq(ui_token_ttl)
     end

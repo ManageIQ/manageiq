@@ -276,7 +276,7 @@ module ApiSpecHelper
     expect(response_hash["count"]).to eq(fetch_value(count)) if count.present?
   end
 
-  def expect_single_resource_query(attr_hash = {})
+  def expect_single_resource_query(attr_hash)
     expect(response).to have_http_status(:ok)
     expect_result_to_match_hash(response_hash, fetch_value(attr_hash))
   end
