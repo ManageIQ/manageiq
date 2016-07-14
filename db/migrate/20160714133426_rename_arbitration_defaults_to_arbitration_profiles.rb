@@ -3,7 +3,7 @@ class RenameArbitrationDefaultsToArbitrationProfiles < ActiveRecord::Migration[5
     rename_table :arbitration_defaults, :arbitration_profiles
     add_column :arbitration_profiles, :name, :string
     add_column :arbitration_profiles, :description, :text
-    add_column :arbitration_profiles, :default_profile, :boolean, :default => false
+    add_column :arbitration_profiles, :default_profile, :boolean
   end
 
   def down
