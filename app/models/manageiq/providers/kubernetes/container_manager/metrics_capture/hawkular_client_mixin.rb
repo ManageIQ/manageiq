@@ -25,7 +25,13 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::Hawkul
      :verify_ssl => @ext_management_system.verify_ssl_mode}
   end
 
-  def status
-    @client.http_get('/status')
+  def hawkular_try_connect
+    # check the connection and the credentials by trying
+    # to access hawkular's availability private data, and fetch one line of data.
+    # this will check the connection and the credentials
+    # because only if the connection is ok, and the token is valid,
+    # we will get an OK response, with an array of data, or an empty array
+    # if no data availabel.
+    @client.avail.get_data('all', :limit => 1).kind_of?(Array)
   end
 end
