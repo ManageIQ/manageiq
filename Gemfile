@@ -63,7 +63,7 @@ gem "secure_headers",                 "~>3.0.0"
 #gem "thin",                           "~>1.6.0"  # Used by rails server through rack
 
 # Needed by the REST API
-gem "gettext_i18n_rails",             "~>1.4.0"
+gem "gettext_i18n_rails",             "~>1.7.2"
 gem "gettext_i18n_rails_js",          "~>1.0.3"
 gem "fast_gettext",                   "~>1.1.0"
 gem "jbuilder",                       "~>2.5.0"
