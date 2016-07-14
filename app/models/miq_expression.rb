@@ -1560,6 +1560,26 @@ class MiqExpression
     end
   end
 
+  def custom_attribute_columns(expression = nil)
+    return custom_attribute_columns(exp).uniq if expression.nil?
+
+    case expression
+    when Array
+      expression.flat_map { |x| custom_attribute_columns(x) }
+    when Hash
+      expression_values = expression.values
+
+      if expression.keys.first == "field"
+        field = Field.parse(expression_values.first)
+        field.custom_attribute_column? ? [field.column] : []
+      else
+        expression.keys.first.casecmp('find').zero? ? [] : custom_attribute_columns(expression_values)
+      end
+    else
+      []
+    end
+  end
+
   private
 
   def to_arel(exp, tz)

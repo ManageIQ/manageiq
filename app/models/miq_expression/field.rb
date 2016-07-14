@@ -39,7 +39,7 @@ class MiqExpression::Field
   end
 
   def custom_attribute_column?
-    @column.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
+    column.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
   end
 
   def reflections
