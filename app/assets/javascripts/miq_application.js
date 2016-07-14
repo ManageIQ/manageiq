@@ -1352,6 +1352,7 @@ function miqInitCodemirror(options) {
     matchBrackets: true,
     theme: 'eclipse',
     readOnly: options.read_only ? 'nocursor' : false,
+    viewportMargin: Infinity,
   });
 
   ManageIQ.editor.on('change', function (cm, change) {
