@@ -16,7 +16,7 @@ class ManageIQ::Providers::Ovirt4::InfraManager < ManageIQ::Providers::InfraMana
 
     # Create the connection:
     connection = OvirtSDK4::Connection.new(
-      :url      => "https://#{host}:#{port}#{path}",
+      :url => 'https://stoff:8443/ovirt-engine/api',
       :username => username,
       :password => password,
       :insecure => true,
