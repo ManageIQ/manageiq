@@ -57,8 +57,8 @@ describe ManageIQ::Providers::Openstack::CloudManager::Vm do
         expect(vm.power_state).to eq 'migrating'
       end
 
-      it "checks evacuation is_available?" do
-        expect(vm.is_available?(:evacuate)).to eq true
+      it "returns true for querying vm if the evacuate operation is supported" do
+        expect(vm.supports_evacuate?).to eq true
       end
     end
   end
