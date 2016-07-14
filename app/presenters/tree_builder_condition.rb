@@ -20,9 +20,12 @@ class TreeBuilderCondition < TreeBuilder
 
   # level 1 - host / vm
   def x_get_tree_roots(count_only, _options)
-    text_i18n = {:Host           => N_("Host Conditions"),
-                 :Vm             => N_("VM and Instance Conditions"),
-                 :ContainerImage => N_("Container Image Conditions")}
+    text_i18n = {:Host                => N_("Host Conditions"),
+                 :Vm                  => N_("VM and Instance Conditions"),
+                 :ContainerReplicator => N_("Replicator Conditions"),
+                 :ContainerGroup      => N_("Pod Conditions"),
+                 :ContainerNode       => N_("Container Node Conditions"),
+                 :ContainerImage      => N_("Container Image Conditions")}
 
     objects = MiqPolicyController::UI_FOLDERS.collect do |model|
       text = text_i18n[model.name.to_sym]

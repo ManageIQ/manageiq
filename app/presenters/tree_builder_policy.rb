@@ -17,12 +17,18 @@ class TreeBuilderPolicy < TreeBuilder
   end
 
   def compliance_control_kids(mode)
-    text_i18n = {:compliance => {:Host           => N_("Host Compliance Policies"),
-                                 :Vm             => N_("Vm Compliance Policies"),
-                                 :ContainerImage => N_("Container Image Compliance Policies")},
-                 :control    => {:Host           => N_("Host Control Policies"),
-                                 :Vm             => N_("Vm Control Policies"),
-                                 :ContainerImage => N_("Container Image Control Policies")}}
+    text_i18n = {:compliance => {:Host                => N_("Host Compliance Policies"),
+                                 :Vm                  => N_("Vm Compliance Policies"),
+                                 :ContainerReplicator => N_("Replicator Compliance Policies"),
+                                 :ContainerGroup      => N_("Pod Compliance Policies"),
+                                 :ContainerNode       => N_("Container Node Compliance Policies"),
+                                 :ContainerImage      => N_("Container Image Compliance Policies")},
+                 :control    => {:Host                => N_("Host Control Policies"),
+                                 :Vm                  => N_("Vm Control Policies"),
+                                 :ContainerReplicator => N_("Replicator Control Policies"),
+                                 :ContainerGroup      => N_("Pod Control Policies"),
+                                 :ContainerNode       => N_("Container Node Control Policies"),
+                                 :ContainerImage      => N_("Container Image Control Policies")}}
 
     MiqPolicyController::UI_FOLDERS.collect do |model|
       text = text_i18n[mode.to_sym][model.name.to_sym]
