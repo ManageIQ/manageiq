@@ -79,8 +79,9 @@ module ManageIQ::Providers
 
         profile_inv.each do |uid, profile|
           new_result = {
-            :ems_ref => uid,
-            :name    => profile.name
+            :ems_ref      => uid,
+            :name         => profile.name,
+            :profile_type => profile.profileCategory
           }
 
           result << new_result
