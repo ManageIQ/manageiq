@@ -10,7 +10,7 @@ function get_vms($vms){
 
     $vm_hash["Properties"] = $_
     $vm_hash["Networks"] = $_.VirtualNetworkAdapters.IPv4Addresses
-    $vm_hash["DVDs"] = $_.VirtualDVDDrives | Select -Expand ISO
+    $vm_hash["DVDs"] = @($_.VirtualDVDDrives | Select -Expand ISO | Select -Property ID, Name, SharePath, Size)
     $vm_hash["vmnet"] = $_.VirtualNetworkAdapters | Select VMNetwork
     $results[$id]= $vm_hash
   }
@@ -25,7 +25,7 @@ function get_images($ims){
     $i_hash = @{}
     $id = $_.ID
     $i_hash["Properties"] = $_
-    $i_hash["DVDs"] = $_.VirtualDVDDrives | Select -Expand ISO
+    $i_hash["DVDs"] = @($_.VirtualDVDDrives | Select -Expand ISO | Select -Property ID, Name, SharePath, Size)
     $i_hash["vmnet"] = $_.VirtualNetworkAdapters | Select VMNetwork
     $results[$id]= $i_hash
   }
