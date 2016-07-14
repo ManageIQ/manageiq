@@ -70,7 +70,7 @@ class ApiController
       # Let's dynamically get the :date and :datetime attributes from the Classes we care about.
       #
       def gen_time_attr_type_hash
-        Api::Settings.collections.each_value do |cspec|
+        Api::Settings.collections.each do |_, cspec|
           next if cspec[:klass].blank?
           klass = cspec[:klass].constantize
           klass.columns_hash.collect  do |name, typeobj|
