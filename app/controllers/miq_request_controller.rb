@@ -226,19 +226,10 @@ class MiqRequestController < ApplicationController
   # AJAX driven routine to check for changes in ANY field on the form
   def stamp_field_changed
     return unless load_edit("stamp_edit__#{params[:id]}", "show")
+    @edit[:reason] = params[:reason] if params[:reason]
     render :update do |page|
       page << javascript_prologue
-      if @edit[:reason].blank?
-        @edit[:reason] = params[:reason] if params[:reason]
-        unless @edit[:reason].blank?
-          page << "miqButtons('show');"
-        end
-      else
-        @edit[:reason] = params[:reason] if params[:reason]
-        if @edit[:reason].blank?
-          page << "miqButtons('hide');"
-        end
-      end
+      page << javascript_for_miq_button_visibility(!@edit[:reason].blank?)
     end
   end
 
