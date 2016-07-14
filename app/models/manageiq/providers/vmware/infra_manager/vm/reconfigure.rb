@@ -5,7 +5,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure
   end
 
   def max_total_vcpus
-    [host.hardware.cpu_total_cores, max_total_vcpus_by_version].min
+    host ? [host.hardware.cpu_total_cores, max_total_vcpus_by_version].min : max_total_vcpus_by_version
   end
 
   def max_total_vcpus_by_version
