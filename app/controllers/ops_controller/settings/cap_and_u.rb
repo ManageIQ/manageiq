@@ -52,7 +52,7 @@ module OpsController::Settings::CapAndU
     clusters = EmsCluster.where(:id => cluster_ids).includes(:hosts)
 
     clusters.each do |cl|
-      enabled_hosts = @edit[:new][cl.name.to_sym].select { |h| h[:capture] }
+      enabled_hosts = @edit[:new][cl.id].select { |h| h[:capture] }
       enabled_host_ids = enabled_hosts.collect { |h| h[:id] }.uniq
       cl.perf_capture_enabled_host_ids = enabled_host_ids
     end
@@ -114,19 +114,18 @@ module OpsController::Settings::CapAndU
             end
           end
           @edit[:new][:clusters].each_with_index do |c, i|
-            cname = c[:name]
             cluster_id = "xx-#{c[:id]}"
             if @edit[:new][:clusters][i][:capture] != @edit[:current][:clusters][i][:capture]
               @changed_id_list.push([cluster_id, @edit[:new][:clusters][i][:capture]])
             else
               @unchanged_id_list.push([cluster_id, @edit[:current][:clusters][i][:capture]])
             end
-            @edit[:new][cname.to_sym].each_with_index do |host, j|
+            @edit[:new][c[:id]].each_with_index do |host, j|
               host_id = "#{cluster_id}_#{host[:id]}"
-              if @edit[:new][cname.to_sym][j][:capture] != @edit[:current][cname.to_sym][j][:capture]
-                @changed_id_list.push([host_id, @edit[:new][cname.to_sym][j][:capture]])
+              if @edit[:new][c[:id]][j][:capture] != @edit[:current][c[:id]][j][:capture]
+                @changed_id_list.push([host_id, @edit[:new][c[:id]][j][:capture]])
               else
-                @unchanged_id_list.push([host_id, @edit[:current][cname.to_sym][j][:capture]])
+                @unchanged_id_list.push([host_id, @edit[:current][c[:id]][j][:capture]])
               end
             end
           end
@@ -178,19 +177,19 @@ module OpsController::Settings::CapAndU
       @edit[:current][:clusters].push(:name    => cname,
                                       :id      => c.id,
                                       :capture => en_flg) # grab name, id, and capture setting
-      @edit[:current][cname.to_sym] = []
+      @edit[:current][c.id] = []
       hosts.each do |h|
         host_capture = enabled_host_ids.include?(h.id.to_i)
-        @edit[:current][cname.to_sym].push(:name    => h.name,
+        @edit[:current][c.id].push(:name    => h.name,
                                            :id      => h.id,
                                            :capture => host_capture)
       end
       flg = true
       count = 0
-      @edit[:current][cname.to_sym].each do |h|
+      @edit[:current][c.id].each do |h|
         unless h[:capture]
           count += 1          # checking if all hosts are unchecked then cluster capture will be false else unsure
-          flg = (count == @edit[:current][cname.to_sym].length) ? false : "unsure"
+          flg = (count == @edit[:current][c.id].length) ? false : "unsure"
         end
         @edit[:current][:clusters][j][:capture] = flg
       end
@@ -251,7 +250,7 @@ module OpsController::Settings::CapAndU
     if params[:check_all]                         # to handle check/uncheck cluster all checkbox
       @edit[:new][:clusters].each do |c|                                  # Check each clustered host
         c[:capture] = params[:check_all] == "true" # if cluster checked/unchecked Set C&U flag for all hosts under it as well
-        @edit[:new][c[:name].to_sym].each do |h|
+        @edit[:new][c[:id]].each do |h|
           h[:capture] = params[:check_all] == "true" # Set C&U flag depending on if checkbox parm is present
         end
       end
@@ -271,11 +270,11 @@ module OpsController::Settings::CapAndU
       @edit[:new][:clusters].each do |c|                                  # Check each cluster
         if node_type[0] == "Cluster" && node_type[1].to_s == c[:id].to_s
           c[:capture] = params[:check] == "true" # if cluster checked/unchecked Set C&U flag for all hosts under it as well
-          @edit[:new][c[:name].to_sym].each do |h|
+          @edit[:new][c[:id]].each do |h|
             h[:capture] = params[:check] == "true" # Set C&U flag depending on if checkbox parm is present
           end
         elsif node_type[0] == "Host"
-          @edit[:new][c[:name].to_sym].each do |h|
+          @edit[:new][c[:id]].each do |h|
             if node_type[1].to_i == h[:id].to_i
               h[:capture] = params[:check] == "true" # Set C&U flag depending on if checkbox parm is present
               c[:capture] = params[:check] == "true"
@@ -285,10 +284,10 @@ module OpsController::Settings::CapAndU
         if node_type[0] == "Host"
           flg = true
           count = 0
-          @edit[:new][c[:name].to_sym].each do |h|
+          @edit[:new][c[:id]].each do |h|
             unless h[:capture]
               count += 1          # checking if all hosts are unchecked then cluster capture will be false else unsure
-              flg = (count == @edit[:new][c[:name].to_sym].length) ? false : "unsure"
+              flg = (count == @edit[:new][c[:id]].length) ? false : "unsure"
             end
             c[:capture] = flg
           end
