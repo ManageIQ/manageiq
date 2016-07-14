@@ -1027,6 +1027,7 @@ disks:
 - storage_id
 - backing_id
 - backing_type
+- storage_profile_id
 drift_states:
 - id
 - timestamp
@@ -6462,6 +6463,7 @@ vms:
 - tenant_id
 - resource_group_id
 - deprecated
+- storage_profile_id
 volumes:
 - id
 - name

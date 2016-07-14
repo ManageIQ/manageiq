@@ -67,6 +67,8 @@ class VmOrTemplate < ApplicationRecord
   belongs_to                :storage
   has_and_belongs_to_many   :storages, :join_table => 'storages_vms_and_templates'
 
+  belongs_to                :storage_profile
+
   belongs_to                :ext_management_system, :foreign_key => "ems_id"
 
   has_one                   :miq_provision, :dependent => :nullify, :as => :destination
