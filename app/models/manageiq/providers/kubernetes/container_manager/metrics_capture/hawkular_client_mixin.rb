@@ -13,7 +13,7 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::Hawkul
     URI::HTTPS.build(
       :host => hawkular_endpoint_empty ? @ext_management_system.hostname : hawkular_endpoint.hostname,
       :port => hawkular_endpoint_empty ? worker_class.worker_settings[:metrics_port] : hawkular_endpoint.port,
-      :path => worker_class.worker_settings[:metrics_path])
+      :path => worker_class.worker_settings[:metrics_path] || '/hawkular/metrics')
   end
 
   def hawkular_credentials
