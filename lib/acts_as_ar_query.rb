@@ -2,6 +2,7 @@ require 'forwardable'
 # allow active record dsl to call legacy find
 class ActsAsArQuery
   extend Forwardable
+  include Enumerable
   attr_accessor :klass, :mode, :options
 
   # - [ ] bind
@@ -131,11 +132,11 @@ class ActsAsArQuery
 
   # count(:all) is very common
   # but [1, 2, 3].count(:all) == 0
-  def count(*args)
+  def count(*_args)
     to_a.size
   end
 
-  def_delegators :to_a, :size, :take
+  def_delegators :to_a, :size, :take, :each
 
   # TODO: support arguments
   def first
