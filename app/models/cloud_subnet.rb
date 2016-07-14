@@ -19,6 +19,8 @@ class CloudSubnet < ApplicationRecord
   has_many :vms, :through => :network_ports, :source => :device, :source_type => 'VmOrTemplate'
   has_many :cloud_subnets, :foreign_key => :parent_cloud_subnet_id
 
+  has_one :public_network, :through => :network_router, :source => :cloud_network
+
   # Use for virtual columns, mainly for modeling array and hash types, we get from the API
   serialize :extra_attributes
   serialize :dns_nameservers
@@ -44,7 +46,7 @@ class CloudSubnet < ApplicationRecord
   end
   virtual_column :dns_nameservers_show, :type => :string, :uses => :dns_nameservers
 
-  virtual_total :total_vms, :vms
+  virtual_total :total_vms, :vms, :uses => :vms
 
   private
 
