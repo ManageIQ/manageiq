@@ -351,6 +351,10 @@ module Mixins
         ems.host_default_vnc_port_end = params[:host_default_vnc_port_end].blank? ? nil : params[:host_default_vnc_port_end].to_i
       end
 
+      if ems.kind_of?(ManageIQ::Providers::Vmware::CloudManager)
+        default_endpoint = {:role => :default, :hostname => hostname, :port => port}
+      end
+
       if ems.kind_of?(ManageIQ::Providers::Azure::CloudManager)
         ems.azure_tenant_id = params[:azure_tenant_id]
         ems.subscription    = params[:subscription] unless params[:subscription].blank?

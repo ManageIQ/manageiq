@@ -98,6 +98,7 @@ gem "savon",                          "~>2.2.0",   :require => false  # Automate
 gem "snmp",                           "~>1.2.0",   :require => false
 gem "uglifier",                       "~>2.7.1",   :require => false
 gem "sshkey",                         "~>1.8.0",   :require => false
+gem "fog-vcloud-director",            "~>0.1.0",   :require => false
 
 
 ### Start of gems excluded from the appliances.
