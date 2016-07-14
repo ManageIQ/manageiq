@@ -26,7 +26,7 @@ class MiqPolicyContent < ApplicationRecord
     h = attributes
     ["id", "created_on", "updated_on", "miq_policy_id", "miq_event_definition_id", "miq_action_id"].each { |k| h.delete(k) }
     h.delete_if { |_k, v| v.nil? }
-    h["MiqEventDefinition"]  = miq_event_definition.export_to_array.first["MiqEventDefinition"]
+    h["MiqEventDefinition"] = miq_event_definition.export_to_array.first["MiqEventDefinition"] if miq_event_definition
     h["MiqAction"] = miq_action.export_to_array.first["MiqAction"] if miq_action
     [self.class.to_s => h]
   end
