@@ -221,7 +221,7 @@ module ReportController::Schedules
       @schedule = nil
       @edit = session[:edit] = nil  # clean out the saved info
       @in_a_form = false
-      @sb[:active_accord] = :schedules
+
       replace_right_cell
     when "save", "add"
       id = params[:id] ? params[:id] : "new"
@@ -243,11 +243,11 @@ module ReportController::Schedules
         # ensure we land in the right accordion with the right tree and
         # with the listing opened even when entering 'add' from the reports
         # menu
-        @sb[:active_tree]   = :schedules_tree
-        @sb[:active_accord] = :schedules
-        # FIXME: change to x_active_node after 5.2
-        @sb[:trees][@sb[:active_tree]][:active_node] = 'root'
+
+        self.x_active_tree   = "schedules_tree"
+        self.x_active_accord = "schedules"
         self.x_node = "msc-#{to_cid(schedule.id)}"
+        @_params[:accord] = "schedules"
         replace_right_cell(:replace_trees => [:schedules])
       else
         schedule.errors.each do |field, msg|
