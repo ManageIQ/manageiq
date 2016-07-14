@@ -3,6 +3,8 @@ class ArbitrationProfile < ApplicationRecord
   validates :name, :presence => true
   validate :falsify_all_others, :if => :default_profile_changed?
 
+  default_value_for :default_profile, false
+
   belongs_to :ext_management_system, :foreign_key => :ems_id
   belongs_to :cloud_subnet
   belongs_to :cloud_network
