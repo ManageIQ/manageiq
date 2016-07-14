@@ -47,6 +47,7 @@
     "array-includes": "^1.0.0",
     "qs": "^0.3.10",
     "rxjs": "^4.1.0",
-    "rx-angular": "rx.angular#^1.1.3"
+    "rx-angular": "rx.angular#^1.1.3",
+    "hawkular-ui-components": "karelhala/hawkular-ui-components#toolbarEnhancment"
   }
 }

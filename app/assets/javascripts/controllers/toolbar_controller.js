@@ -1,15 +1,6 @@
 (function(){
 
-  var ToolbarController = function(MiQToolbarSettingsService, MiQEndpointsService, $scope) {
-    this.MiQToolbarSettingsService = MiQToolbarSettingsService;
-    this.MiQEndpointsService = MiQEndpointsService;
-    this.$scope = $scope;
-    this.isList = _.contains(location.pathname, 'show_list');
-    this.initEndpoints();
-    this.subscribeToSubject();
-  }
-
-  ToolbarController.prototype.subscribeToSubject = function() {
+  function subscribeToSubject() {
     ManageIQ.angular.rxSubject.subscribe(function(event) {
       if (event.rowSelect) {
         this.onRowSelect(event.rowSelect);
@@ -23,22 +14,34 @@
     });
   }
 
+  function initEndpoints(MiQEndpointsService) {
+    var urlPrefix = '/' + location.pathname.split('/')[1];
+    if (urlPrefix) {
+      MiQEndpointsService.rootPoint = urlPrefix;
+    }
+  }
+
+  var ToolbarController = function(MiQToolbarSettingsService, MiQEndpointsService, $scope) {
+    this.MiQToolbarSettingsService = MiQToolbarSettingsService;
+    this.MiQEndpointsService = MiQEndpointsService;
+    this.$scope = $scope;
+    initEndpoints(this.MiQEndpointsService);
+    this.isList = _.contains(location.pathname, 'show_list');
+    subscribeToSubject.bind(this)();
+  }
+
   ToolbarController.prototype.onRowSelect = function(data) {
     this.MiQToolbarSettingsService.checkboxClicked(data.checked);
-    this.$scope.$digest();
+    if(!this.$scope.$$phase) {
+      this.$scope.$digest();
+    }
   }
 
   ToolbarController.prototype.init = function() {
-    this.MiQToolbarSettingsService.getSettings(this.isList).then(function(toolbarItems) {
+    return this.MiQToolbarSettingsService.getSettings(this.isList).then(function(toolbarItems) {
       this.toolbarItems = toolbarItems;
+      return toolbarItems;
     }.bind(this));
-  }
-
-  ToolbarController.prototype.initEndpoints = function() {
-    var urlPrefix = '/' + location.pathname.split('/')[1];
-    if (urlPrefix) {
-      this.MiQEndpointsService.rootPoint = urlPrefix;
-    }
   }
 
   ToolbarController.$inject = ['MiQToolbarSettingsService', 'MiQEndpointsService', '$scope'];
