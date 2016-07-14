@@ -36,6 +36,7 @@ describe ServiceOrder do
     service_order.miq_requests << [request, request2, request3]
     service_order.checkout
     expect(service_order).to be_ordered
+    expect(service_order.placed_at).not_to be_nil
   end
 
   it "should raise an error on checkout for ordered service order" do

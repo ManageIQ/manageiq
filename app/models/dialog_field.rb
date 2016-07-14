@@ -13,6 +13,7 @@ class DialogField < ApplicationRecord
                                   :message => "Field Name %{value} is reserved."}
 
   default_value_for :required, false
+  default_value_for(:visible, :allows_nil => false) { true }
 
   serialize :values
   serialize :values_method_options,   Hash
@@ -106,6 +107,12 @@ class DialogField < ApplicationRecord
 
   def update_and_serialize_values
     DialogFieldSerializer.serialize(self)
+  end
+
+  def deep_copy
+    dup.tap do |new_field|
+      new_field.resource_action = resource_action.dup
+    end
   end
 
   private

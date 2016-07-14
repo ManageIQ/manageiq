@@ -14,17 +14,17 @@ class ApplicationHelper::Toolbar::EmsNetworkCenter < ApplicationHelper::Toolbar:
         button(
           :ems_network_refresh,
           'fa fa-refresh fa-lg',
-          N_('Refresh relationships and power states for all items related to this #{ui_lookup(:table=>"ems_network")}'),
+          N_('Refresh relationships and power states for all items related to this Network Provider'),
           N_('Refresh Relationships and Power States'),
-          :confirm => N_("Refresh relationships and power states for all items related to this \#{ui_lookup(:table=>\"ems_network\")}?")),
+          :confirm => N_("Refresh relationships and power states for all items related to this Network Provider?")),
         separator,
         button(
           :ems_network_delete,
           'pficon pficon-delete fa-lg',
-          t = N_('Remove this #{ui_lookup(:table=>"ems_network")} from the VMDB'),
+          t = N_('Remove this Network Provider from the VMDB'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This \#{ui_lookup(:table=>\"ems_network\")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this \#{ui_lookup(:table=>\"ems_network\")}?")),
+          :confirm   => N_("Warning: This Network Provider and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Network Provider?")),
       ]
     ),
   ])
@@ -38,12 +38,12 @@ class ApplicationHelper::Toolbar::EmsNetworkCenter < ApplicationHelper::Toolbar:
         button(
           :ems_network_protect,
           'pficon pficon-edit fa-lg',
-          N_('Manage Policies for this #{ui_lookup(:table=>"ems_network")}'),
+          N_('Manage Policies for this Network Provider'),
           N_('Manage Policies')),
         button(
           :ems_network_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this #{ui_lookup(:table=>"ems_network")}'),
+          N_('Edit Tags for this Network Provider'),
           N_('Edit Tags')),
       ]
     ),
@@ -58,7 +58,7 @@ class ApplicationHelper::Toolbar::EmsNetworkCenter < ApplicationHelper::Toolbar:
         button(
           :ems_network_timeline,
           'product product-timeline fa-lg',
-          N_('Show Timelines for this #{ui_lookup(:table=>"ems_network")}'),
+          N_('Show Timelines for this Network Provider'),
           N_('Timelines'),
           :url       => "/show",
           :url_parms => "?display=timeline"),

@@ -22,6 +22,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       @ems.reload
       VCR.use_cassette(described_class.name.underscore, :allow_unused_http_interactions => true) do
         EmsRefresh.refresh(@ems)
+        EmsRefresh.refresh(@ems.network_manager)
       end
       @ems.reload
 
@@ -30,10 +31,13 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       assert_specific_zone
       assert_specific_key_pair
       assert_specific_cloud_network
+      assert_specific_cloud_subnet
+      assert_specific_floating_ips
       assert_specific_security_group
       assert_specific_flavor
       assert_specific_custom_flavor
       assert_specific_vm_powered_on
+      assert_specific_vm_with_proper_subnets
       assert_specific_vm_powered_off
       assert_specific_image_template
       assert_specific_snapshot_template
@@ -42,43 +46,89 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     end
   end
 
+  def expected_table_counts
+    {
+      :ext_management_system         => 2,
+      :flavor                        => 19,
+      :availability_zone             => 13,
+      :vm_or_template                => 547,
+      :vm                            => 4,
+      :miq_template                  => 543,
+      :disk                          => 4,
+      :guest_device                  => 0,
+      :hardware                      => 4,
+      :network                       => 0,
+      :operating_system              => 547,
+      :relationship                  => 8,
+      :miq_queue                     => 548,
+      :orchestration_template        => 0,
+      :orchestration_stack           => 0,
+      :orchestration_stack_parameter => 0,
+      :orchestration_stack_output    => 0,
+      :orchestration_stack_resource  => 0,
+      :security_group                => 3,
+      :network_port                  => 4,
+      :cloud_network                 => 3,
+      :floating_ip                   => 4,
+      :network_router                => 0,
+      :cloud_subnet                  => 5,
+      :key_pair                      => 4,
+    }
+  end
+
   def assert_table_counts
-    expect(ExtManagementSystem.count).to eql(1)
-    expect(Flavor.count).to              eql(19)
-    expect(AvailabilityZone.count).to    eql(13)
-    expect(AuthPrivateKey.count).to      eq(4)
-    expect(CloudNetwork.count).to        eql(1)
-    expect(SecurityGroup.count).to       eql(1)
-    expect(FirewallRule.count).to        eql(6)
-    expect(VmOrTemplate.count).to        eql(511)
-    expect(Vm.count).to                  eql(3)
-    expect(MiqTemplate.count).to         eql(508)
-    expect(Disk.count).to                eql(3)
-    expect(GuestDevice.count).to         eql(0)
-    expect(Hardware.count).to            eql(3)
-    expect(Network.count).to             eql(6)
-    expect(OperatingSystem.count).to     eql(511)
-    expect(Relationship.count).to        eql(6)
-    expect(MiqQueue.count).to            eql(511)
-    expect(CloudVolume.count).to         eql(5)
-    expect(CloudVolumeSnapshot.count).to eql(1)
+    actual = {
+      :ext_management_system         => ExtManagementSystem.count,
+      :flavor                        => Flavor.count,
+      :availability_zone             => AvailabilityZone.count,
+      :vm_or_template                => VmOrTemplate.count,
+      :vm                            => Vm.count,
+      :miq_template                  => MiqTemplate.count,
+      :disk                          => Disk.count,
+      :guest_device                  => GuestDevice.count,
+      :hardware                      => Hardware.count,
+      :network                       => Network.count,
+      :operating_system              => OperatingSystem.count,
+      :relationship                  => Relationship.count,
+      :miq_queue                     => MiqQueue.count,
+      :orchestration_template        => OrchestrationTemplate.count,
+      :orchestration_stack           => OrchestrationStack.count,
+      :orchestration_stack_parameter => OrchestrationStackParameter.count,
+      :orchestration_stack_output    => OrchestrationStackOutput.count,
+      :orchestration_stack_resource  => OrchestrationStackResource.count,
+      :security_group                => SecurityGroup.count,
+      :network_port                  => NetworkPort.count,
+      :cloud_network                 => CloudNetwork.count,
+      :floating_ip                   => FloatingIp.count,
+      :network_router                => NetworkRouter.count,
+      :cloud_subnet                  => CloudSubnet.count,
+      :key_pair                      => AuthPrivateKey.count,
+    }
+
+    expect(actual).to eq expected_table_counts
   end
 
   def assert_ems
-    expect(@ems.flavors.size).to            eql(19)
-    expect(@ems.key_pairs.size).to          eql(4)
-    expect(@ems.availability_zones.size).to eql(13)
-    expect(@ems.vms_and_templates.size).to  eql(511)
-    expect(@ems.cloud_networks.size).to     eql(1)
-    expect(@ems.security_groups.size).to    eql(1)
-    expect(@ems.vms.size).to                eql(3)
-    expect(@ems.miq_templates.size).to      eq(508)
+    expect(@ems.flavors.size).to            eql(expected_table_counts[:flavor])
+    expect(@ems.key_pairs.size).to          eql(expected_table_counts[:key_pair])
+    expect(@ems.availability_zones.size).to eql(expected_table_counts[:availability_zone])
+    expect(@ems.vms_and_templates.size).to  eql(expected_table_counts[:vm_or_template])
+    expect(@ems.cloud_networks.size).to     eql(expected_table_counts[:cloud_network])
+    expect(@ems.security_groups.size).to    eql(expected_table_counts[:security_group])
+    expect(@ems.vms.size).to                eql(expected_table_counts[:vm])
+    expect(@ems.miq_templates.size).to      eql(expected_table_counts[:miq_template])
   end
 
   def assert_specific_zone
     @zone = ManageIQ::Providers::Google::CloudManager::AvailabilityZone.find_by_ems_ref("us-east1-b")
     expect(@zone).to have_attributes(
       :name   => "us-east1-b",
+      :ems_id => @ems.id
+    )
+
+    @zone_central = ManageIQ::Providers::Google::CloudManager::AvailabilityZone.find_by_ems_ref("us-central1-b")
+    expect(@zone_central).to have_attributes(
+      :name   => "us-central1-b",
       :ems_id => @ems.id
     )
   end
@@ -108,6 +158,28 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :status  => "active",
       :enabled => true
     )
+  end
+
+  def assert_specific_cloud_subnet
+    @cs = CloudSubnet.where(:name => "default").first
+    expect(@cs).to have_attributes(
+      :name             => "default",
+      :ems_ref          => "183954628405178359",
+      :cidr             => "10.240.0.0/16",
+      :gateway          => "10.240.0.1",
+      :status           => "active",
+      :cloud_network_id => @cn.id
+    )
+  end
+
+  def assert_specific_floating_ips
+    @assigned_floating_ip = FloatingIp.where(:address => "104.197.50.240").first
+    expect(@assigned_floating_ip.vm).not_to eql(nil)
+    expect(@assigned_floating_ip.network_port.device).not_to eql(nil)
+
+    unassigned_floating_ip = FloatingIp.where(:address => "104.196.55.145").first
+    expect(unassigned_floating_ip.vm).to eql(nil)
+    expect(unassigned_floating_ip.network_port).to eql(nil)
   end
 
   def assert_specific_security_group
@@ -262,25 +334,29 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(v.hardware.guest_devices.size).to eql(0)
     expect(v.hardware.nics.size).to          eql(0)
 
-    assert_specific_vm_powered_on_hardware_networks(v)
+    assert_specific_vm_powered_on_networks(v)
     assert_specific_vm_powered_on_hardware_disks(v)
   end
 
-  def assert_specific_vm_powered_on_hardware_networks(v)
-    expect(v.hardware.networks.size).to eql(2)
+  def assert_specific_vm_powered_on_networks(v)
+    expect(v.cloud_networks.size).to eql(1)
+    expect(v.cloud_subnets.size).to  eql(1)
+    expect(v.floating_ips.size).to   eql(1)
+    expect(v.network_ports.size).to  eql(1)
+    expect(v.ipaddresses.size).to    eql(2)
 
-    network = v.hardware.networks.where(:description => "default private").first
+    expect(v.network_ports.first.ipaddresses.first).to eq('10.240.0.2')
+
+    network = v.cloud_networks.where(:name => 'default').first
     expect(network).to have_attributes(
-      :description => "default private",
-      :ipaddress   => "10.240.0.2",
-      :hostname    => nil
+      :cidr     => "10.240.0.0/16",
     )
 
-    network = v.hardware.networks.where(:description => "default External NAT").first
-    expect(network).to have_attributes(
-      :description => "default External NAT",
-      :ipaddress   => "104.196.139.77",
-      :hostname    => nil
+    subnet = v.cloud_subnets.where(:name => "default").first
+    expect(subnet).to have_attributes(
+      :cidr             => "10.240.0.0/16",
+      :gateway          => "10.240.0.1",
+      :cloud_network_id => network.id
     )
   end
 
@@ -297,6 +373,43 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :backing_type    => "CloudVolume"
     )
     expect(disk.backing).to eql(CloudVolume.where(:name => "rhel7").first)
+  end
+
+  def assert_specific_vm_with_proper_subnets
+    v = ManageIQ::Providers::Google::CloudManager::Vm.where(:name => "subnet-test", :raw_power_state => "RUNNING").first
+    expect(v).to have_attributes(
+      :template              => false,
+      :ems_ref               => "6019338445080368070",
+      :ems_ref_obj           => nil,
+      :uid_ems               => "6019338445080368070",
+      :vendor                => "google",
+      :power_state           => "on",
+      :location              => "unknown",
+      :tools_status          => nil,
+      :boot_time             => nil,
+      :standby_action        => nil,
+      :connection_state      => nil,
+      :cpu_affinity          => nil,
+      :memory_reserve        => nil,
+      :memory_reserve_expand => nil,
+      :memory_limit          => nil,
+      :memory_shares         => nil,
+      :memory_shares_level   => nil,
+      :cpu_reserve           => nil,
+      :cpu_reserve_expand    => nil,
+      :cpu_limit             => nil,
+      :cpu_shares            => nil,
+      :cpu_shares_level      => nil
+    )
+
+    expect(v.ext_management_system).to                  eql(@ems)
+    expect(v.availability_zone).to                      eql(@zone_central)
+    expect(v.flavor).to                                 eql(@flavor)
+    expect(v.operating_system.product_name).to          eql("linux_debian")
+    expect(v.floating_ip).to                            eql(@assigned_floating_ip)
+    expect(v.floating_ips.first).to                     eql(@assigned_floating_ip)
+    expect(v.network_ports.first.floating_ip).to        eql(@assigned_floating_ip)
+    expect(v.network_ports.first.floating_ips.first).to eql(@assigned_floating_ip)
   end
 
   def assert_specific_cloud_volume
@@ -337,7 +450,9 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(v.availability_zone).to             eql(zone1)
     expect(v.floating_ip).to                   be_nil
     expect(v.cloud_network).to                 eql(@cn)
-    expect(v.cloud_subnet).to                  be_nil
+    expect(v.cloud_networks.first).to          eql(@cn)
+    expect(v.cloud_subnet).to                  eql(@cs)
+    expect(v.cloud_subnets.first).to           eql(@cs)
     expect(v.operating_system.product_name).to eql("linux_debian")
     # This should have keys added on just this vm (@kp) as well as
     # on the whole project (@project_kp)
@@ -388,8 +503,9 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
 
     expect(v.hardware.disks.size).to         eql(1)
     expect(v.hardware.guest_devices.size).to eql(0)
-    expect(v.hardware.nics.size).to          eql(0)
-    expect(v.hardware.networks.size).to      eql(2)
+    expect(v.network_ports.size).to          eql(1)
+    expect(v.cloud_networks.size).to         eql(1)
+    expect(v.floating_ips.size).to           eql(0)
   end
 
   def assert_specific_image_template

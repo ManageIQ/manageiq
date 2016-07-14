@@ -9,7 +9,7 @@ RSpec.describe "categories API" do
       "resources",
       categories.map { |category| categories_url(category.id) }
     )
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   it "can filter the list of categories by name" do
@@ -43,7 +43,7 @@ RSpec.describe "categories API" do
       "href"        => categories_url(category.id),
       "id"          => category.id
     )
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   it "can list all the tags under a category" do
@@ -59,7 +59,7 @@ RSpec.describe "categories API" do
       "resources",
       ["#{categories_url(category.id)}/tags/#{tag.id}"]
     )
-    expect_request_success
+    expect(response).to have_http_status(:ok)
   end
 
   context "with an appropriate role" do
@@ -70,7 +70,7 @@ RSpec.describe "categories API" do
         run_post categories_url, :name => "test", :description => "Test"
       end.to change(Category, :count).by(1)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
     end
 
     it "can set read_only/show/single_value when creating a category" do
@@ -110,7 +110,7 @@ RSpec.describe "categories API" do
         run_post categories_url(category.id), gen_request(:edit, :description => "New description")
       end.to change { category.reload.description }.to("New description")
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(%w(id description name))
     end
 
@@ -122,7 +122,7 @@ RSpec.describe "categories API" do
         run_post categories_url(category.id), gen_request(:delete)
       end.to change(Category, :count).by(-1)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
     end
 
     it "can delete a category through DELETE" do
@@ -133,7 +133,7 @@ RSpec.describe "categories API" do
         run_delete categories_url(category.id)
       end.to change(Category, :count).by(-1)
 
-      expect_request_success_with_no_content
+      expect(response).to have_http_status(:no_content)
     end
 
     context "read-only categories" do
@@ -145,7 +145,7 @@ RSpec.describe "categories API" do
           run_post categories_url(category.id), gen_request(:delete)
         end.not_to change(Category, :count)
 
-        expect_request_forbidden
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "can't update a read-only category" do
@@ -156,7 +156,7 @@ RSpec.describe "categories API" do
           run_post categories_url(category.id), gen_request(:edit, :description => "new description")
         end.not_to change { category.reload.description }
 
-        expect_request_forbidden
+        expect(response).to have_http_status(:forbidden)
       end
     end
 
@@ -168,7 +168,7 @@ RSpec.describe "categories API" do
           run_post categories_url, :name => "test", :description => "Test"
         end.not_to change(Category, :count)
 
-        expect_request_forbidden
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "cannot update a category" do
@@ -179,7 +179,7 @@ RSpec.describe "categories API" do
           run_post categories_url(category.id), gen_request(:edit, :description => "New description")
         end.not_to change { category.reload.description }
 
-        expect_request_forbidden
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "cannot delete a category through POST" do
@@ -190,7 +190,7 @@ RSpec.describe "categories API" do
           run_post categories_url(category.id), gen_request(:delete)
         end.not_to change(Category, :count)
 
-        expect_request_forbidden
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "cannot delete a category through DELETE" do
@@ -201,7 +201,7 @@ RSpec.describe "categories API" do
           run_delete categories_url(category.id)
         end.not_to change(Category, :count)
 
-        expect_request_forbidden
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end

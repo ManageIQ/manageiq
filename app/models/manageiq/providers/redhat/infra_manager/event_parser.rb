@@ -56,6 +56,6 @@ module ManageIQ::Providers::Redhat::InfraManager::EventParser
 
   def self.ems_ref_from_object_in_event(data)
     return nil unless data.respond_to?(:[])
-    data[:href]
+    ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(data[:href])
   end
 end

@@ -139,8 +139,64 @@ module ManageIQ::Providers
       run_generic_operation(:Undeploy, ems_ref)
     end
 
+    def restart_middleware_server(ems_ref)
+      run_generic_operation(:Shutdown, ems_ref, :restart => true)
+    end
+
+    def shutdown_middleware_server(ems_ref, _params)
+      timeout = 10 # we default to 10s until we get the UI params. params.fetch ':timeout'
+      run_generic_operation(:Shutdown, ems_ref, :restart => false, :timeout => timeout)
+    end
+
+    def suspend_middleware_server(ems_ref, params)
+      timeout = params.fetch ':timeout' || 0
+      run_generic_operation(:Suspend, ems_ref, :timeout => timeout)
+    end
+
+    def resume_middleware_server(ems_ref)
+      run_generic_operation(:Resume, ems_ref)
+    end
+
+    def create_jdr_report(ems_ref)
+      run_generic_operation(:JDR, ems_ref)
+    end
+
+    def self.raw_alerts_connect(hostname, port, username, password)
+      require 'hawkular_all'
+      url         = URI::HTTP.build(:host => hostname, :port => port.to_i, :path => '/hawkular/alerts').to_s
+      credentials = {
+        :username => username,
+        :password => password
+      }
+      ::Hawkular::Alerts::AlertsClient.new(url, credentials)
+    end
+
     def redeploy_middleware_deployment(ems_ref)
       run_generic_operation(:Redeploy, ems_ref)
+    end
+
+    def add_middleware_deployment(ems_ref, hash)
+      with_provider_connection do |connection|
+        deployment_data = {
+          :enabled               => hash[:file]["enabled"],
+          :destination_file_name => hash[:file]["runtime_name"] || hash[:file]["file"].original_filename,
+          :binary_content        => hash[:file]["file"].read,
+          :resource_path         => ems_ref.to_s
+        }
+
+        actual_data = {}
+        connection.operations(true).add_deployment(deployment_data) do |on|
+          on.success do |data|
+            _log.debug "Success on websocket-operation #{data}"
+            actual_data[:data] = data
+          end
+          on.failure do |error|
+            actual_data[:data]  = {}
+            actual_data[:error] = error
+            _log.error 'error callback was called, reason: ' + error.to_s
+          end
+        end
+      end
     end
 
     # UI methods for determining availability of fields
@@ -166,17 +222,22 @@ module ManageIQ::Providers
       )
     end
 
+    def build_metric_id(type, resource, metric_id)
+      "#{type}I~R~[#{resource[:middleware_server][:feed]}/#{resource[:nativeid]}]~#{type}T~#{metric_id}"
+    end
+
     private
 
     # Trigger running a (Hawkular) operation on the
     # selected target server. This server is identified
     # by ems_ref, which in Hawkular terms is the
     # fully qualified resource path from Hawkular inventory
-    def run_generic_operation(operation, ems_ref)
+    def run_generic_operation(operation, ems_ref, parameters = {})
       with_provider_connection do |connection|
         the_operation = {
           :operationName => operation,
-          :resourcePath  => ems_ref.to_s
+          :resourcePath  => ems_ref.to_s,
+          :parameters    => parameters
         }
 
         actual_data = {}

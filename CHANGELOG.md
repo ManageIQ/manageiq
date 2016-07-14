@@ -2,6 +2,54 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - as of Sprint 42 end 2016-06-20
+   
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+42+Ending+June+20%2C+2016%22+label%3Aenhancement)
+
+- Providers
+  - Ansible Tower
+      - Collect Job parameters during Provider Refresh
+      - Log Ansible Tower Job output when deployment fails
+  - Containers: Limit number of concurrent SmartState Analyses
+  - OpenStack
+      - Cleanup of Nova services after scale down
+      - Prevent retired instances from starting
+  - Hawkular
+      - Added missing fields in UI to improve user experience
+      - Middleware as top level menu item
+      - Default view for Middleware is datasource
+- Platform: Appliance Console
+  - Limited menu when running inside a container
+  - Removed menu items that are not applicable when running inside a container
+- Automate
+  - Engine: Allow arguments in method calls during substitution 
+  - Policy: Built-in policy to prevent retired VM from starting on a resume power operation
+  - Service Model: Expose provision_priority value
+  - Retirement: Restored retirement logic to verify that VM was provisioned or contains Lifecycle tag before processing
+  - Added lifecycle tag as a default tag
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+42+Ending+June+20%2C+2016%22+label%3Aenhancement)
+
+- Providers: Pluggability
+  - Ask, Don't Assume
+      - Remove provider specific constants
+      - Ask whether provider supports VM architecture instead of assuming support by provider type
+- Platform
+  - Performance: Lazy load message catalogs for faster startup and reduced memory
+  - Replication: Added "deprecated" in replication worker screen (Rubyrep replication will be removed in Euwe release)
+  - Testing: Support for running tests in parallel
+- REST API
+  - Documentation version is 2.2 for Darga
+  - Updated /api entrypoint so collection list is sorted
+
+### [Fixes](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+42+Ending+June+20%2C+2016%22+label%3A"bug")
+ 
+Notable fixes include:
+
+- Providers
+  - Hawkular: Fixes for LiveMetrics
+  - VMware: Fix for adding multiple disks
+  
 ## Unreleased - as of Sprint 41 end 2016-05-30
    
 ### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+41+Ending+May+30%2C+2016%22+label%3Aenhancement)

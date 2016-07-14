@@ -1,4 +1,5 @@
 module EmsCloudHelper::TextualSummary
+  include TextualMixins::TextualRefreshStatus
   #
   # Groups
   #
@@ -121,21 +122,14 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_security_groups
-    @record.security_groups
-  end
-
-  def textual_refresh_status
-    last_refresh_status = @ems.last_refresh_status.titleize
-    if @ems.last_refresh_date
-      last_refresh_date = time_ago_in_words(@ems.last_refresh_date.in_time_zone(Time.zone)).titleize
-      last_refresh_status << " - #{last_refresh_date} Ago"
+    label = ui_lookup(:tables => "security_groups")
+    num = @ems.number_of(:security_groups)
+    h = {:label => label, :image => "security_group", :value => num}
+    if num > 0 && role_allows(:feature => "security_group_show_list")
+      h[:link] = ems_cloud_path(@ems.id, :display => 'security_groups')
+      h[:title] = _("Show all %{label}") % {:label => label}
     end
-    {
-      :label => _("Last Refresh"),
-      :value => [{:value => last_refresh_status},
-                 {:value => @ems.last_refresh_error.try(:truncate, 120)}],
-      :title => @ems.last_refresh_error
-    }
+    h
   end
 
   def textual_zone

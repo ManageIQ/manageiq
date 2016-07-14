@@ -18,7 +18,7 @@ describe "tenant quotas API" do
         ]
       )
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
     end
 
     it "can show a single quota from a tenant" do
@@ -37,7 +37,7 @@ describe "tenant quotas API" do
         "unit"      => "fixnum",
         "value"     => 1.0
       )
-      expect_request_success
+      expect(response).to have_http_status(:ok)
     end
 
     it "can create a quota from a tenant" do
@@ -47,7 +47,7 @@ describe "tenant quotas API" do
         run_post "/api/tenants/#{tenant.id}/quotas/", :name => :cpu_allocated, :value => 1
       end.to change(TenantQuota, :count).by(1)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
     end
 
     it "can update a quota from a tenant with POST" do
@@ -59,7 +59,7 @@ describe "tenant quotas API" do
 
       run_post "/api/tenants/#{tenant.id}/quotas/#{quota.id}", gen_request(:edit, options)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       quota.reload
       expect(quota.value).to eq(5)
     end
@@ -73,7 +73,7 @@ describe "tenant quotas API" do
 
       run_put "/api/tenants/#{tenant.id}/quotas/#{quota.id}", options
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       quota.reload
       expect(quota.value).to eq(5)
     end
@@ -91,7 +91,7 @@ describe "tenant quotas API" do
 
       run_post "/api/tenants/#{tenant.id}/quotas/", gen_request(:edit, options)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_results_to_match_hash(
         "results",
         [{"id" => quota_1.id, "value" => 3},
@@ -110,7 +110,7 @@ describe "tenant quotas API" do
         run_post "/api/tenants/#{tenant.id}/quotas/#{quota.id}", gen_request(:delete)
       end.to change(TenantQuota, :count).by(-1)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
     end
 
     it "can delete a quota from a tenant with DELETE" do
@@ -122,7 +122,7 @@ describe "tenant quotas API" do
         run_delete "/api/tenants/#{tenant.id}/quotas/#{quota.id}"
       end.to change(TenantQuota, :count).by(-1)
 
-      expect_request_success_with_no_content
+      expect(response).to have_http_status(:no_content)
     end
 
     it "can delete multiple quotas from a tenant with POST" do
@@ -140,7 +140,7 @@ describe "tenant quotas API" do
         run_post "/api/tenants/#{tenant.id}/quotas/", gen_request(:delete, options)
       end.to change(TenantQuota, :count).by(-2)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
     end
   end
 
@@ -152,7 +152,7 @@ describe "tenant quotas API" do
         run_post "/api/tenants/#{tenant.id}/quotas/", :name => :cpu_allocated, :value => 1
       end.not_to change(TenantQuota, :count)
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "will not update a tenant quota with POST" do
@@ -164,7 +164,7 @@ describe "tenant quotas API" do
 
       run_post "/api/tenants/#{tenant.id}/quotas/#{quota.id}", gen_request(:edit, options)
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
       quota.reload
       expect(quota.value).to eq(1)
     end
@@ -178,7 +178,7 @@ describe "tenant quotas API" do
 
       run_put "/api/tenants/#{tenant.id}/quotas/#{quota.id}", options
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
       quota.reload
       expect(quota.value).to eq(1)
     end
@@ -196,7 +196,7 @@ describe "tenant quotas API" do
 
       run_post "/api/tenants/#{tenant.id}/quotas/", gen_request(:edit, options)
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
       expect(quota_1.reload.value).to eq(1)
       expect(quota_2.reload.value).to eq(2)
     end
@@ -210,7 +210,7 @@ describe "tenant quotas API" do
         run_post "/api/tenants/#{tenant.id}/quotas/#{quota.id}", gen_request(:delete)
       end.not_to change(TenantQuota, :count)
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "will not delete a tenant quota with DELETE" do
@@ -222,7 +222,7 @@ describe "tenant quotas API" do
         run_delete "/api/tenants/#{tenant.id}/quotas/#{quota.id}"
       end.not_to change(TenantQuota, :count)
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "will not update multiple tenants with POST" do
@@ -240,7 +240,7 @@ describe "tenant quotas API" do
         run_post "/api/tenants/#{tenant.id}/quotas/", gen_request(:delete, options)
       end.not_to change(TenantQuota, :count)
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
   end
 end

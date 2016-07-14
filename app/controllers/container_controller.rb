@@ -49,10 +49,7 @@ class ContainerController < ApplicationController
       unless @flash_array
         add_flash(_("Button not yet implemented %{model}: %{action}") % {:model => model, :action => action}, :error)
       end
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
   end
 
@@ -119,6 +116,7 @@ class ContainerController < ApplicationController
     session.delete(:exp_parms)
     @in_a_form = false
     render :layout => "application"
+    process_show_list
   end
 
   def identify_container(id = nil)

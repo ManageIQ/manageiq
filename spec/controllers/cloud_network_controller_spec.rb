@@ -7,7 +7,7 @@ describe CloudNetworkController do
     setup_zone
   end
 
-  %w(openstack amazon).each do |t|
+  %w(openstack amazon azure google).each do |t|
     context "for #{t}" do
       before :each do
         @cloud_network = FactoryGirl.create("cloud_network_#{t}".to_sym, :name => "Cloud Network")

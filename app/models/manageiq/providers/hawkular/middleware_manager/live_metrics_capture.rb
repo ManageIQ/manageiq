@@ -2,30 +2,37 @@ module ManageIQ::Providers
   class Hawkular::MiddlewareManager::LiveMetricsCapture
     class MetricValidationError < RuntimeError; end
 
-    MetricsResource = Struct.new(:id, :feed, :path)
-
     def initialize(target)
       @target = target
       @ems = @target.ext_management_system
       @gauges = @ems.metrics_client.gauges
       @counters = @ems.metrics_client.counters
       @avail = @ems.metrics_client.avail
+      @included_children = @target.class.included_children
+      @supported_metrics = @target.class.supported_metrics
     end
 
-    def metrics_available
-      resource = MetricsResource.new
-      resource.id = @target.nativeid
-      resource.feed = extract_feed(@target.ems_ref)
-      resource.path = @target.ems_ref
-      @ems.metrics_resource(resource.path).collect do |metric|
-        next unless @target.class.supported_metrics[metric.name]
-        {
-          :id   => metric.id,
-          :name => @target.class.supported_metrics[metric.name],
-          :type => metric.type,
-          :unit => metric.unit
-        }
+    def fetch_metrics_available
+      metrics_available = @ems.metrics_resource(@target.ems_ref).collect do |metric|
+        next unless @supported_metrics[metric.name]
+        parse_metric(metric)
       end.compact
+      fetch_child_metrics(@target.ems_ref, metrics_available) if @included_children
+      metrics_available
+    end
+
+    def fetch_child_metrics(resource_path, metrics_available)
+      children = @ems.child_resources(resource_path)
+      children.select { |child| @included_children.include?(child.name) }.each do |child|
+        @ems.metrics_resource(child.path).select { |metric| @supported_metrics[metric.name] }.each do |metric|
+          metrics_available << parse_metric(metric)
+        end
+      end
+      metrics_available
+    end
+
+    def parse_metric(metric)
+      {:id => metric.id, :name => @supported_metrics[metric.name], :type => metric.type, :unit => metric.unit}
     end
 
     def collect_live_metric(metric, start_time, end_time, interval)
@@ -35,6 +42,14 @@ module ManageIQ::Providers
       bucket_duration = "#{interval}s"
       metrics = fetch_metrics(metric[:id], metric[:type], starts, ends, bucket_duration)
       process_data(metric, metrics)
+    end
+
+    def collect_stats_metric(metric, start_time, end_time, interval)
+      validate_metric(metric)
+      starts = start_time.to_i.in_milliseconds
+      ends = end_time.to_i.in_milliseconds
+      bucket_duration = "#{interval}s"
+      fetch_raw_metrics(metric[:id], metric[:type], starts, ends, bucket_duration)
     end
 
     def first_and_last_capture(metric)
@@ -60,27 +75,21 @@ module ManageIQ::Providers
     end
 
     def fetch_metrics(metric_id, metric_type, starts, ends, bucket_duration)
-      case metric_type
-      when "GAUGE"        then gauges(metric_id, starts, ends, bucket_duration)
-      when "COUNTER"      then counters(metric_id, starts, ends, bucket_duration)
-      when "AVAILABILITY" then availabilities(metric_id, starts, ends, bucket_duration)
-      else raise MetricValidationError, "Validation error: unknown type #{metric_type}"
-      end
+      sort_and_normalize(fetch_raw_metrics(metric_id, metric_type, starts, ends, bucket_duration))
     end
 
-    def gauges(metric_id, starts, ends, bucket_duration)
-      sort_and_normalize(@gauges.get_data(metric_id, :starts => starts, :ends => ends,
-                                          :bucketDuration => bucket_duration))
-    end
-
-    def counters(metric_id, starts, ends, bucket_duration)
-      sort_and_normalize(@counters.get_rate(metric_id, :starts => starts, :ends => ends,
-                                          :bucket_duration => bucket_duration))
-    end
-
-    def availabilities(metric_id, starts, ends, bucket_duration)
-      sort_and_normalize(@avail.get_data(metric_id, :starts => starts, :ends => ends,
-                                         :bucketDuration => bucket_duration))
+    def fetch_raw_metrics(metric_id, metric_type, starts, ends, bucket_duration)
+      data = case metric_type
+             when "GAUGE"
+               @gauges.get_data(metric_id, :starts => starts, :ends => ends, :bucketDuration => bucket_duration)
+             when "COUNTER"
+               @counters.get_rate(metric_id, :starts => starts, :ends => ends, :bucket_duration => bucket_duration)
+             when "AVAILABILITY"
+               @avail.get_data(metric_id, :starts => starts, :ends => ends, :bucketDuration => bucket_duration)
+             else
+               raise MetricValidationError, "Validation error: unknown type #{metric_type}"
+             end
+      data
     end
 
     def sort_and_normalize(data)

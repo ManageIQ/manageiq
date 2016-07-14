@@ -1,14 +1,11 @@
 module AuthKeyPairCloudHelper::TextualSummary
+  include TextualMixins::TextualGroupTags
   include TextualMixins::TextualName
   #
   # Groups
   #
   def textual_group_relationships
     %i(vms)
-  end
-
-  def textual_group_tags
-    %i(tags)
   end
 
   def textual_group_properties

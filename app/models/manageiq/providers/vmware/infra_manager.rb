@@ -20,6 +20,8 @@ module ManageIQ::Providers
     before_save :stop_event_monitor_queue_on_change
     before_destroy :stop_event_monitor
 
+    supports :provisioning
+
     def self.ems_type
       @ems_type ||= "vmwarews".freeze
     end

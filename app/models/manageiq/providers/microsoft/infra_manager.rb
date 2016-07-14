@@ -10,6 +10,8 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
 
   include_concern "Powershell"
 
+  supports :provisioning
+
   def self.ems_type
     @ems_type ||= "scvmm".freeze
   end

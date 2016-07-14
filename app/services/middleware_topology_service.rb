@@ -29,6 +29,15 @@ class MiddlewareTopologyService < TopologyService
   def entity_display_type(entity)
     if entity.kind_of?(ManageIQ::Providers::MiddlewareManager)
       entity.class.short_token
+    elsif entity.kind_of?(MiddlewareDeployment)
+      suffix = if entity.name.end_with? '.ear'
+                 'Ear'
+               elsif entity.name.end_with? '.war'
+                 'War'
+               else
+                 ''
+               end
+      entity.class.name.demodulize + suffix
     else
       entity.class.name.demodulize
     end
@@ -38,8 +47,12 @@ class MiddlewareTopologyService < TopologyService
     data = build_base_entity_data(entity)
     data[:status] = 'Unknown'
     data[:display_kind] = entity_display_type(entity)
-    data[:icon] = entity.decorate.try(:item_image) unless entity.kind_of?(MiddlewareDatasource)
+    data[:icon] = entity.decorate.try(:item_image) unless glyph? entity
     data
+  end
+
+  def glyph?(entity)
+    [MiddlewareDatasource, MiddlewareDeployment].any? { |klass| entity.kind_of? klass }
   end
 
   def build_kinds

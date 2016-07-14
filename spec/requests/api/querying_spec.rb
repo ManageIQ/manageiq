@@ -333,7 +333,7 @@ describe ApiController do
 
       run_get vms_url(vm1.id), :attributes => "bogus"
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(%w(id href name vendor))
     end
   end
@@ -405,7 +405,7 @@ describe ApiController do
 
       run_get vms_url(vm1.id)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect(response_hash).to_not have_key("actions")
     end
 
@@ -414,7 +414,7 @@ describe ApiController do
 
       run_get vms_url(vm1.id)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(%w(id href name vendor actions))
     end
 
@@ -423,7 +423,7 @@ describe ApiController do
 
       run_get vms_url(vm1.id)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(%w(id href name vendor actions))
       actions = response_hash["actions"]
       expect(actions.size).to eq(1)
@@ -437,7 +437,7 @@ describe ApiController do
 
       run_get vms_url(vm1.id)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(%w(id href name vendor actions))
       expect(response_hash["actions"].collect { |a| a["name"] }).to match_array(%w(start stop))
     end
@@ -447,7 +447,7 @@ describe ApiController do
 
       run_get vms_url(vm1.id), :attributes => "name,vendor,actions"
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_to_have_only_keys(%w(id href name vendor actions))
     end
 
@@ -456,7 +456,7 @@ describe ApiController do
 
       run_get vms_url(vm1.id), :attributes => "name"
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_to_have_only_keys(%w(id href name))
     end
 
@@ -465,7 +465,7 @@ describe ApiController do
 
       run_get vms_url(vm1.id), :attributes => "disconnected"
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(%w(id href name vendor disconnected actions))
     end
 
@@ -474,7 +474,7 @@ describe ApiController do
 
       run_get vms_url(vm1.id), :attributes => "name,disconnected"
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_to_have_only_keys(%w(id href name disconnected))
     end
   end

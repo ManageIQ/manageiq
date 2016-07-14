@@ -9,23 +9,23 @@ class ApplicationHelper::Toolbar::EmsMiddlewareCenter < ApplicationHelper::Toolb
         button(
           :ems_middleware_refresh,
           'fa fa-refresh fa-lg',
-          N_('Refresh items and relationships related to this #{ui_lookup(:table=>"ems_middleware")}'),
+          N_('Refresh items and relationships related to this Middleware Provider'),
           N_('Refresh items and relationships'),
-          :confirm => N_("Refresh items and relationships related to this \#{ui_lookup(:table=>\"ems_middleware\")}?")),
+          :confirm => N_("Refresh items and relationships related to this Middleware Provider?")),
         separator,
         button(
           :ems_middleware_edit,
           'pficon pficon-edit fa-lg',
-          t = N_('Edit this #{ui_lookup(:table=>"ems_middleware")}'),
+          t = N_('Edit this Middleware Provider'),
           t,
           :url => "/edit"),
         button(
           :ems_middleware_delete,
           'pficon pficon-delete fa-lg',
-          t = N_('Remove this #{ui_lookup(:table=>"ems_middleware")} from the VMDB'),
+          t = N_('Remove this Middleware Provider from the VMDB'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This \#{ui_lookup(:table=>\"ems_middleware\")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this \#{ui_lookup(:table=>\"ems_middleware\")}?")),
+          :confirm   => N_("Warning: This Middleware Provider and ALL of its components will be permanently removed from the Virtual Management Database. Are you sure you want to remove this Middleware Provider?")),
       ]
     ),
   ])
@@ -39,7 +39,7 @@ class ApplicationHelper::Toolbar::EmsMiddlewareCenter < ApplicationHelper::Toolb
         button(
           :ems_middleware_timeline,
           'product product-timeline fa-lg',
-          N_('Show Timelines for this #{ui_lookup(:table=>"ems_middleware")}'),
+          N_('Show Timelines for this Middleware Provider'),
           N_('Timelines'),
           :url       => "/show",
           :url_parms => "?display=timeline"),
@@ -56,7 +56,7 @@ class ApplicationHelper::Toolbar::EmsMiddlewareCenter < ApplicationHelper::Toolb
         button(
           :ems_middleware_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this #{ui_lookup(:table=>"ems_middleware")}'),
+          N_('Edit Tags for this Middleware Provider'),
           N_('Edit Tags')),
       ]
     ),

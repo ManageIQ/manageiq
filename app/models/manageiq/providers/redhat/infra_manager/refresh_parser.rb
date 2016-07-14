@@ -43,9 +43,11 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       committed   = storage_inv[:committed].to_i
       uncommitted = total - committed
 
+      ems_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(storage_inv[:href])
+
       new_result = {
-        :ems_ref             => storage_inv[:href],
-        :ems_ref_obj         => storage_inv[:href],
+        :ems_ref             => ems_ref,
+        :ems_ref_obj         => ems_ref,
         :name                => storage_inv[:name],
         :store_type          => storage_type,
         :storage_domain_type => storage_inv[:type].try(:downcase),
@@ -109,10 +111,12 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
         ipmi_address = host_inv.attributes.fetch_path(:power_management, :address)
       end
 
+      ems_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(host_inv[:href])
+
       new_result = {
         :type             => 'ManageIQ::Providers::Redhat::InfraManager::Host',
-        :ems_ref          => host_inv[:href],
-        :ems_ref_obj      => host_inv[:href],
+        :ems_ref          => ems_ref,
+        :ems_ref_obj      => ems_ref,
         :name             => host_inv[:name] || hostname,
         :hostname         => hostname,
         :ipaddress        => ipaddress,
@@ -367,10 +371,12 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       hardware[:guest_devices], guest_device_uids[mor] = vm_inv_to_guest_device_hashes(vm_inv, lan_uids[host_mor])
       hardware[:networks] = vm_inv_to_network_hashes(vm_inv, guest_device_uids[mor])
 
+      ems_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(vm_inv[:href])
+
       new_result = {
         :type              => template ? "ManageIQ::Providers::Redhat::InfraManager::Template" : "ManageIQ::Providers::Redhat::InfraManager::Vm",
-        :ems_ref           => vm_inv[:href],
-        :ems_ref_obj       => vm_inv[:href],
+        :ems_ref           => ems_ref,
+        :ems_ref_obj       => ems_ref,
         :uid_ems           => vm_inv[:id],
         :memory_reserve    => vm_memory_reserve(vm_inv),
         :name              => URI.decode(vm_inv[:name]),
@@ -591,9 +597,11 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       }
       result_res_pools << default_res_pool
 
+      ems_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(data[:href])
+
       new_result = {
-        :ems_ref       => data[:href],
-        :ems_ref_obj   => data[:href],
+        :ems_ref       => ems_ref,
+        :ems_ref_obj   => ems_ref,
         :uid_ems       => data[:id],
         :name          => data[:name],
 
@@ -636,11 +644,13 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       vms = vm_uids.values.select { |v| v.fetch_path(:ems_cluster, :datacenter_id) == uid }
       vm_folder[:ems_children] = {:vms => vms}
 
+      ems_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(data[:href])
+
       new_result = {
         :name         => data[:name],
         :type         => 'Datacenter',
-        :ems_ref      => data[:href],
-        :ems_ref_obj  => data[:href],
+        :ems_ref      => ems_ref,
+        :ems_ref_obj  => ems_ref,
         :uid_ems      => uid,
 
         :ems_children => {:folders => [host_folder, vm_folder]}

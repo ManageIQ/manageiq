@@ -19,6 +19,7 @@ class MiqAlert < ApplicationRecord
     EmsCluster
     ExtManagementSystem
     MiqServer
+    MiddlewareServer
   )
 
   def self.base_tables
@@ -97,15 +98,7 @@ class MiqAlert < ApplicationRecord
   end
 
   def self.target_needs_realtime_capture?(target)
-    result = !assigned_to_target(target, "#{target.class.base_model.name.underscore}_perf_complete").empty?
-    return result if result
-
-    # Need to special case Host to look for alerts assigned to parent cluster
-    if target.kind_of?(Host) && target.ems_cluster
-      result = !assigned_to_target(target.ems_cluster, "#{target.ems_cluster.class.name.underscore}_perf_complete").empty?
-    end
-
-    result
+    !assigned_to_target(target, "#{target.class.base_model.name.underscore}_perf_complete").empty?
   end
 
   def self.evaluate_alerts(target, event, inputs = {})
@@ -431,6 +424,21 @@ class MiqAlert < ApplicationRecord
             :cpu_affinity => Dictionary.gettext("cpu_affinity", :type => "column")
           }},
           {:name => :operator, :description => _("Operator"), :values => ["Changed"]}
+        ]},
+      {:name => "mw_heap_used", :description => _("JVM Heap Used"), :db => ["MiddlewareServer"], :responds_to_events => "mw_event",
+        :options => [
+          {:name => :value_mw_greater_than, :description => _("> Heap Max (%)"), :numeric => true},
+          {:name => :value_mw_less_than, :description => _("< Heap Max (%)"), :numeric => true}
+        ]},
+      {:name => "mw_non_heap_used", :description => _("JVM Non Heap Used"), :db => ["MiddlewareServer"], :responds_to_events => "mw_event",
+        :options => [
+          {:name => :value_mw_greater_than, :description => _("> Non Heap Max (%)"), :numeric => true},
+          {:name => :value_mw_less_than, :description => _("< Non Heap Max (%)"), :numeric => true}
+        ]},
+      {:name => "mw_accumulated_gc_duration", :description => _("JVM Accumulated GC Duration"), :db => ["MiddlewareServer"], :responds_to_events => "mw_event",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<=", "="]},
+          {:name => :value_mw_garbage_collector, :description => _("Duration Per Minute (ms)"), :numeric => true}
         ]}
     ]
   end

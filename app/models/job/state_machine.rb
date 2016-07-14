@@ -22,6 +22,10 @@ class Job
       !!next_state
     end
 
+    def signal_abort(*args)
+      signal(:abort, *args)
+    end
+
     def signal(signal, *args)
       signal = :abort_job if signal == :abort
       if transit_state(signal)

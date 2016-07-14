@@ -1,6 +1,8 @@
 module CustomAttributeMixin
   extend ActiveSupport::Concern
 
+  CUSTOM_ATTRIBUTES_PREFIX = "virtual_custom_attribute_".freeze
+
   included do
     has_many   :custom_attributes,     :as => :resource, :dependent => :destroy
     has_many   :miq_custom_attributes, -> { where(:source => 'EVM') }, :as => :resource, :dependent => :destroy, :class_name => "CustomAttribute"
@@ -21,6 +23,28 @@ module CustomAttributeMixin
         miq_custom_set(custom_str, value)
       end
     end
+
+    def self.custom_keys
+      CustomAttribute.where(:resource_type => base_class).distinct.pluck(:name)
+    end
+
+    def self.load_custom_attributes_for(cols)
+      custom_attributes = CustomAttributeMixin.select_virtual_custom_attributes(cols)
+      custom_attributes.each { |custom_attribute| add_custom_attribute(custom_attribute) }
+    end
+
+    def self.add_custom_attribute(custom_attribute)
+      virtual_column(custom_attribute.to_sym, :type => :string, :uses => :custom_attributes)
+
+      define_method(custom_attribute.to_sym) do
+        custom_attribute_without_prefix = custom_attribute.sub(CUSTOM_ATTRIBUTES_PREFIX, "")
+        custom_attributes.detect { |x| custom_attribute_without_prefix == x.name }.try(:value)
+      end
+    end
+  end
+
+  def self.select_virtual_custom_attributes(cols)
+    cols.nil? ? [] : cols.select { |x| x.start_with?(CUSTOM_ATTRIBUTES_PREFIX) }
   end
 
   def miq_custom_keys

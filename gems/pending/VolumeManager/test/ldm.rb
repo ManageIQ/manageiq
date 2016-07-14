@@ -1,7 +1,7 @@
 require_relative '../../bundler_setup'
 require 'log4r'
 require 'ostruct'
-require "util/extensions/miq-blank"
+require 'more_core_extensions/core_ext/object/blank'
 require 'metadata/VmConfig/VmConfig'
 require "VolumeManager/MiqVolumeManager"
 require "fs/MiqFS/MiqFS"

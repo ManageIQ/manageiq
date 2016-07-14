@@ -185,6 +185,7 @@ describe MiqRequestWorkflow do
     let(:cluster)       { FactoryGirl.create(:ems_cluster, :ems_id => ems.id) }
     let(:ems)           { FactoryGirl.create(:ext_management_system) }
     let(:resource_pool) { FactoryGirl.create(:resource_pool, :ems_id => ems.id) }
+    let(:host)          { FactoryGirl.create(:host, :ems_id => ems.id) }
 
     before { allow_any_instance_of(User).to receive(:get_timezone).and_return("UTC") }
 
@@ -225,6 +226,24 @@ describe MiqRequestWorkflow do
         expect(workflow).to receive(:allowed_ci).with(:respool, [:cluster, :host, :folder], [resource_pool.id])
 
         workflow.allowed_resource_pools
+      end
+    end
+
+    context "#allowed_hosts does not fail for a deleted provider" do
+      it "allowed_hosts with a missing provider" do
+        host
+        allow(workflow).to receive(:get_source_and_targets).and_return(:ems => nil)
+        expect(workflow).to receive(:allowed_ci).with(:host, [:cluster, :respool, :folder], [])
+        workflow.allowed_hosts
+      end
+    end
+
+    context "#allowed_clusters does not fail for a deleted provider" do
+      it "with deleted provider" do
+        cluster
+        allow(workflow).to receive(:get_source_and_targets).and_return(:ems => nil)
+        expect(workflow).to receive(:allowed_ci).with(:cluster, [:respool, :host, :folder], [])
+        workflow.allowed_clusters
       end
     end
   end

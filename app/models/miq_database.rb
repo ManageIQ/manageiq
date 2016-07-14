@@ -32,7 +32,7 @@ class MiqDatabase < ApplicationRecord
   end
 
   def self.registration_default_value_for_update_repo_name
-    "cf-me-5.5-for-rhel-7-rpms rhel-server-rhscl-7-rpms"
+    "cf-me-5.6-for-rhel-7-rpms rhel-server-rhscl-7-rpms"
   end
 
   def update_repo_names

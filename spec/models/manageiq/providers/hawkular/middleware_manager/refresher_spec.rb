@@ -3,8 +3,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
     allow(MiqServer).to receive(:my_zone).and_return("default")
     auth = AuthToken.new(:name => "test", :auth_key => "valid-token", :userid => "jdoe", :password => "password")
     @ems_hawkular = FactoryGirl.create(:ems_hawkular,
-                                       :hostname        => 'hservices.torii.gva.redhat.com',
-                                       :port            => 80,
+                                       :hostname        => 'localhost',
+                                       :port            => 8080,
                                        :authentications => [auth])
   end
 
@@ -20,13 +20,14 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
     expect(@ems_hawkular.middleware_servers.count).to be > 0
     expect(@ems_hawkular.middleware_deployments.count).to be > 0
     expect(@ems_hawkular.middleware_datasources.count).to be > 0
+    expect(@ems_hawkular.middleware_deployments.first).to have_attributes(:status => 'Enabled')
     assert_specific_datasource
   end
 
   def assert_specific_datasource
-    datasource = @ems_hawkular.middleware_datasources.find_by_name('ExampleDS')
+    datasource = @ems_hawkular.middleware_datasources.find_by_name('Datasource [ExampleDS]')
     expect(datasource).to have_attributes(
-      :name     => 'ExampleDS',
+      :name     => 'Datasource [ExampleDS]',
       :nativeid => 'Local~/subsystem=datasources/data-source=ExampleDS'
     )
     expect(datasource.properties).not_to be_nil

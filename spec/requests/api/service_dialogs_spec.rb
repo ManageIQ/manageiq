@@ -100,7 +100,7 @@ describe ApiController do
 
       run_post(service_dialogs_url(dialog1.id), gen_request(:refresh_dialog_fields, "fields" => %w(test1)))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects refresh dialog fields with unspecified fields" do

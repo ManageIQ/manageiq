@@ -9,7 +9,7 @@ RSpec.describe "hosts API" do
         expect do
           run_post hosts_url(host.id), gen_request(:edit, options)
         end.to change { host.reload.authentication_password(:default) }.to("abc123")
-        expect_request_success
+        expect(response).to have_http_status(:ok)
       end
 
       it "will update the default authentication if no type is given" do
@@ -20,7 +20,7 @@ RSpec.describe "hosts API" do
         expect do
           run_post hosts_url(host.id), gen_request(:edit, options)
         end.to change { host.reload.authentication_password(:default) }.to("abc123")
-        expect_request_success
+        expect(response).to have_http_status(:ok)
       end
 
       it "sending non-credentials attributes will result in a bad request error" do
@@ -31,7 +31,7 @@ RSpec.describe "hosts API" do
         expect do
           run_post hosts_url(host.id), gen_request(:edit, options)
         end.not_to change { host.reload.name }
-        expect_bad_request
+        expect(response).to have_http_status(:bad_request)
       end
 
       it "can update passwords on multiple hosts by href" do
@@ -44,7 +44,7 @@ RSpec.describe "hosts API" do
         ]
 
         run_post hosts_url, gen_request(:edit, options)
-        expect_request_success
+        expect(response).to have_http_status(:ok)
         expect(host1.reload.authentication_password(:default)).to eq("abc123")
         expect(host2.reload.authentication_password(:default)).to eq("def456")
       end
@@ -59,7 +59,7 @@ RSpec.describe "hosts API" do
         ]
 
         run_post hosts_url, gen_request(:edit, options)
-        expect_request_success
+        expect(response).to have_http_status(:ok)
         expect(host1.reload.authentication_password(:default)).to eq("abc123")
         expect(host2.reload.authentication_password(:default)).to eq("def456")
       end
@@ -74,7 +74,7 @@ RSpec.describe "hosts API" do
         expect do
           run_post hosts_url(host.id), gen_request(:edit, options)
         end.not_to change { host.reload.authentication_password(:default) }
-        expect_request_forbidden
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end

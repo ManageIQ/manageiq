@@ -18,5 +18,10 @@ describe EmsCloudHelper::TextualSummary do
 
       expect(textual_images[:link]).to eq("/ems_cloud/#{@ems.id}?display=images")
     end
+
+    it "sets correct path for security_groups on summary screen" do
+      FactoryGirl.create(:security_group, :name => "sq_1", :ext_management_system => @ems.network_manager)
+      expect(textual_security_groups[:link]).to eq("/ems_cloud/#{@ems.id}?display=security_groups")
+    end
   end
 end

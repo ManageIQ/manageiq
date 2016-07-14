@@ -22,12 +22,12 @@ module ApplicationController::Automate
       end
     end
     c_tb = build_toolbar(center_toolbar_filename)
-    render :update do |page|
-      page << javascript_prologue
-      # IE7 doesn't redraw the tree until the screen is clicked, so redirect back to this method for a refresh
-      if is_browser_ie? && browser_info(:version) == "7"
-        page.redirect_to :action => 'resolve'
-      else
+    # IE7 doesn't redraw the tree until the screen is clicked, so redirect back to this method for a refresh
+    if is_browser_ie? && browser_info(:version) == "7"
+      javascript_redirect :action => 'resolve'
+    else
+      render :update do |page|
+        page << javascript_prologue
         page.replace("left_cell_bottom", :partial => "resolve_form_buttons")
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page.replace_html("main_div", :partial => "results_tabs")
@@ -84,7 +84,7 @@ module ApplicationController::Automate
     end
     if @edit[:new][:target_class]
       @resolve[:new][:target_class] = Hash[*@resolve[:target_classes].flatten][@edit[:new][:target_class]]
-      target_class = @resolve[:target_classes].detect { |ui_name, _| @edit[:new][:target_class] == ui_name }.first
+      target_class = @resolve[:target_classes].detect { |ui_name, _| @edit[:new][:target_class] == ui_name }.last
       targets = target_class.constantize.all
       @resolve[:targets] = targets.sort_by { |t| t.name.downcase }.collect { |t| [t.name, t.id.to_s] }
       @resolve[:new][:target_id] = nil
@@ -94,10 +94,7 @@ module ApplicationController::Automate
     end
 
     # workaround to get "Simulate button" work from customization explorer
-    render :update do |page|
-      page << javascript_prologue
-      page.redirect_to :action => 'resolve', :controller => "miq_ae_tools", :simulate => "simulate", :escape => false
-    end
+    javascript_redirect :action => 'resolve', :controller => "miq_ae_tools", :simulate => "simulate", :escape => false
   end
   private :resolve_button_simulate
 

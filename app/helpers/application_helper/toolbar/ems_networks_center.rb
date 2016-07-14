@@ -9,20 +9,20 @@ class ApplicationHelper::Toolbar::EmsNetworksCenter < ApplicationHelper::Toolbar
         button(
           :ems_network_refresh,
           'fa fa-refresh fa-lg',
-          N_('Refresh relationships and power states for all items related to the selected #{ui_lookup(:tables=>"ems_network")}'),
+          N_('Refresh relationships and power states for all items related to the selected Network Providers'),
           N_('Refresh Relationships and Power States'),
           :url_parms => "main_div",
-          :confirm   => N_("Refresh relationships and power states for all items related to the selected \#{ui_lookup(:tables=>\"ems_network\")}?"),
+          :confirm   => N_("Refresh relationships and power states for all items related to the selected Network Providers?"),
           :enabled   => false,
           :onwhen    => "1+"),
         separator,
         button(
           :ems_network_delete,
           'pficon pficon-delete fa-lg',
-          N_('Remove selected #{ui_lookup(:tables=>"ems_network")} from the VMDB'),
-          N_('Remove #{ui_lookup(:tables=>"ems_network")} from the VMDB'),
+          N_('Remove selected Network Providers from the VMDB'),
+          N_('Remove Network Providers from the VMDB'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected \#{ui_lookup(:tables=>\"ems_network\")} and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected \#{ui_lookup(:tables=>\"ems_network\")}?"),
+          :confirm   => N_("Warning: The selected Network Providers and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Network Providers?"),
           :enabled   => false,
           :onwhen    => "1+"),
       ]
@@ -40,7 +40,7 @@ class ApplicationHelper::Toolbar::EmsNetworksCenter < ApplicationHelper::Toolbar
         button(
           :ems_network_protect,
           'pficon pficon-edit fa-lg',
-          N_('Manage Policies for the selected #{ui_lookup(:tables=>"ems_network")}'),
+          N_('Manage Policies for the selected Network Providers'),
           N_('Manage Policies'),
           :url_parms => "main_div",
           :enabled   => false,
@@ -48,7 +48,7 @@ class ApplicationHelper::Toolbar::EmsNetworksCenter < ApplicationHelper::Toolbar
         button(
           :ems_network_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for the selected #{ui_lookup(:tables=>"ems_network")}'),
+          N_('Edit Tags for the selected Network Providers'),
           N_('Edit Tags'),
           :url_parms => "main_div",
           :enabled   => false,

@@ -26,9 +26,9 @@ class ManageIQ::Providers::Foreman::Provider < ::Provider
   validates :url,  :presence => true
 
   def self.raw_connect(base_url, username, password, verify_ssl)
-    require 'manageiq_foreman'
-    ManageiqForeman.logger ||= $log
-    ManageiqForeman::Connection.new(
+    require 'foreman_api_client'
+    ForemanApiClient.logger ||= $log
+    ForemanApiClient::Connection.new(
       :base_url   => base_url,
       :username   => username,
       :password   => password,

@@ -246,10 +246,7 @@ module OpsController::Settings::Common
         add_flash(v, :error)
       end
     end
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-    end
+    javascript_flash
   end
 
   private
@@ -287,10 +284,7 @@ module OpsController::Settings::Common
       end
     end
 
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-    end
+    javascript_flash
   end
 
   def settings_update_amazon_verify
@@ -309,11 +303,7 @@ module OpsController::Settings::Common
         add_flash("#{field.titleize}: #{msg}", :error)
       end
     end
-
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-    end
+    javascript_flash
   end
 
   def settings_update_email_verify
@@ -328,10 +318,7 @@ module OpsController::Settings::Common
       add_flash(_("The test email is being delivered, check \"%{email}\" to verify it was successful") %
                   {:email => @sb[:new_to]})
     end
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-    end
+    javascript_flash
   end
 
   def settings_update_save
@@ -450,10 +437,7 @@ module OpsController::Settings::Common
               server.save!
             rescue StandardError => bang
               add_flash(_("Error when saving new server name: %{message}") % {:message => bang.message}, :error)
-              render :update do |page|
-                page << javascript_prologue
-                page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-              end
+              javascript_flash
               return
             end
           end
@@ -481,10 +465,7 @@ module OpsController::Settings::Common
         if @sb[:active_tab] == "settings_server"
           replace_right_cell(@nodetype, [:diagnostics, :settings])
         elsif @sb[:active_tab] == "settings_custom_logos"
-          render :update do |page|
-            page << javascript_prologue
-            page.redirect_to :action => 'explorer', :flash_msg => @flash_array[0][:message], :flash_error => @flash_array[0][:level] == :error, :escape => false  # redirect to build the server screen
-          end
+          javascript_redirect :action => 'explorer', :flash_msg => @flash_array[0][:message], :flash_error => @flash_array[0][:level] == :error, :escape => false # redirect to build the server screen
           return
         else
           replace_right_cell(@nodetype)
@@ -505,10 +486,7 @@ module OpsController::Settings::Common
       end
       unless @flash_array.nil?
         session[:changed] = @changed = true
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
       @update.config.each_key do |category|

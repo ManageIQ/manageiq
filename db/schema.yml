@@ -33,6 +33,16 @@ ar_internal_metadata:
 - value
 - created_at
 - updated_at
+arbitration_defaults:
+- id
+- uid_ems
+- cloud_network_id
+- flavor_id
+- availability_zone_id
+- cloud_subnet_id
+- security_group_id
+- ems_id
+- authentication_id
 assigned_server_roles:
 - id
 - miq_server_id
@@ -939,6 +949,7 @@ dialog_fields:
 - read_only
 - auto_refresh
 - trigger_auto_refresh
+- visible
 dialog_groups:
 - id
 - description
@@ -1232,6 +1243,7 @@ generic_objects:
 - generic_object_definition_id
 - created_at
 - updated_at
+- properties
 git_references:
 - id
 - name
@@ -1336,6 +1348,7 @@ host_storages:
 - host_id
 - read_only
 - id
+- ems_ref
 host_switches:
 - id
 - host_id
@@ -4406,6 +4419,7 @@ middleware_deployments:
 - ems_id
 - created_at
 - updated_at
+- status
 middleware_servers:
 - id
 - name
@@ -5716,6 +5730,8 @@ orchestration_templates:
 - updated_at
 - draft
 - orderable
+- ems_ref
+- ems_id
 os_processes:
 - id
 - name

@@ -2,7 +2,7 @@ class ApiController
   module Settings
     def show_settings
       validate_api_action
-      category = @req[:c_id]
+      category = @req.c_id
       selected_sections =
         if category
           raise NotFound, "Settings category #{category} not found" unless exposed_settings.include?(category)

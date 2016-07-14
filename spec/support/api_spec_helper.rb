@@ -88,40 +88,23 @@ module ApiSpecHelper
     Vmdb::Application.config.secret_token = MiqDatabase.first.session_secret_token
     @guid, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
-    collections = %w(automation_requests availability_zones categories chargebacks clusters conditions
-                     data_stores events features flavors groups hosts instances pictures policies policy_actions
-                     policy_profiles providers provision_dialogs provision_requests rates
-                     reports request_tasks requests resource_pools results roles security_groups
-                     servers service_dialogs service_catalogs service_orders service_requests
-                     service_templates services settings tags tasks templates tenants users vms zones
-                     container_deployments)
-
-    define_entrypoint_url_methods
-    define_url_methods(collections)
     define_user
 
     ApplicationController.handle_exceptions = true
   end
 
-  def define_entrypoint_url_methods
-    self.class.class_eval do
-      define_method(:entrypoint_url) do
-        api_config(:entrypoint)
-      end
-      define_method(:auth_url) do
-        "#{api_config(:entrypoint)}/auth"
-      end
-    end
+  def entrypoint_url
+    api_config(:entrypoint)
   end
 
-  def define_url_methods(collections)
-    collections.each do |collection|
-      self.class.class_eval do
-        define_method("#{collection}_url".to_sym) do |id = nil|
-          path = "#{api_config(:entrypoint)}/#{collection}"
-          id.nil? ? path : "#{path}/#{id}"
-        end
-      end
+  def auth_url
+    "#{api_config(:entrypoint)}/auth"
+  end
+
+  (Api::Settings.collections.keys - [:auth]).each do |collection|
+    define_method("#{collection}_url".to_sym) do |id = nil|
+      path = "#{api_config(:entrypoint)}/#{collection}"
+      id.nil? ? path : "#{path}/#{id}"
     end
   end
 
@@ -147,7 +130,7 @@ module ApiSpecHelper
   end
 
   def action_identifier(type, action, selection = :resource_actions, method = :post)
-    Api::Settings.collections.fetch_path(type, selection, method)
+    Api::Settings.collections[type][selection][method]
       .detect { |spec| spec[:name] == action.to_s }[:identifier]
   end
 
@@ -157,7 +140,7 @@ module ApiSpecHelper
 
   def subcollection_action_identifier(type, subtype, action, method = :post)
     subtype_actions = "#{subtype}_subcollection_actions".to_sym
-    if Api::Settings.collections.fetch_path(type, subtype_actions).present?
+    if Api::Settings.collections[type][subtype_actions]
       action_identifier(type, action, subtype_actions, method)
     else
       action_identifier(subtype, action, :subcollection_actions, method)
@@ -187,34 +170,15 @@ module ApiSpecHelper
     include("actions" => a_collection_including(*names.map { |name| a_hash_including("name" => name) }))
   end
 
+  def include_error_with_message(error_message)
+    include("error" => hash_including("message" => a_string_matching(error_message)))
+  end
+
   # Rest API Expects
 
-  def expect_request_success
-    expect(response).to have_http_status(:ok)
-  end
-
-  def expect_request_success_with_no_content
-    expect(response).to have_http_status(:no_content)
-  end
-
-  def expect_bad_request(error_message = nil)
+  def expect_bad_request(error_message)
+    expect(response_hash).to include_error_with_message(error_message)
     expect(response).to have_http_status(:bad_request)
-    return if error_message.blank?
-
-    expect(response_hash).to have_key("error")
-    expect(response_hash["error"]["message"]).to match(error_message)
-  end
-
-  def expect_user_unauthorized
-    expect(response).to have_http_status(:unauthorized)
-  end
-
-  def expect_request_forbidden
-    expect(response).to have_http_status(:forbidden)
-  end
-
-  def expect_resource_not_found
-    expect(response).to have_http_status(:not_found)
   end
 
   def expect_result_resources_to_include_data(collection, data)
@@ -243,12 +207,6 @@ module ApiSpecHelper
       expect(hash).to have_key(key)
       expect(hash[key]).to match(value)
     end
-  end
-
-  def expect_result_resource_keys_to_match_pattern(collection, key, pattern)
-    pattern = fetch_value(pattern)
-    expect(response_hash).to have_key(collection)
-    expect(response_hash[collection].all? { |result| result[key].match(pattern) }).to be_truthy
   end
 
   def expect_result_to_have_keys(keys)
@@ -304,56 +262,49 @@ module ApiSpecHelper
     expect(response_hash[collection].all? { |result| result.keys.sort == key_list }).to be_truthy
   end
 
-  def expect_results_match_key_pattern(collection, key, value)
-    pattern = fetch_value(value)
-    expect(response_hash).to have_key(collection)
-    expect(response_hash[collection].all? { |result| result[key].match(pattern) }).to be_truthy
-  end
-
-  def expect_result_to_represent_task(result)
-    expect(result).to have_key("task_id")
-    expect(result).to have_key("task_href")
-  end
-
   # Primary result construct methods
 
   def expect_empty_query_result(collection)
-    expect_request_success
+    expect(response).to have_http_status(:ok)
     expect(response_hash).to include("name" => collection.to_s, "resources" => [])
   end
 
   def expect_query_result(collection, subcount, count = nil)
-    expect_request_success
+    expect(response).to have_http_status(:ok)
     expect(response_hash).to include("name" => collection.to_s, "subcount" => fetch_value(subcount))
     expect(response_hash["resources"].size).to eq(fetch_value(subcount))
     expect(response_hash["count"]).to eq(fetch_value(count)) if count.present?
   end
 
-  def expect_single_resource_query(attr_hash = {})
-    expect_request_success
+  def expect_single_resource_query(attr_hash)
+    expect(response).to have_http_status(:ok)
     expect_result_to_match_hash(response_hash, fetch_value(attr_hash))
   end
 
   def expect_single_action_result(options = {})
-    expect_request_success
-    expect(response_hash).to include("success" => options[:success]) if options.key?(:success)
-    expect(response_hash).to include("message" => a_string_matching(options[:message])) if options[:message]
-    expect(response_hash).to include("href" => a_string_matching(fetch_value(options[:href]))) if options[:href]
-    expect_result_to_represent_task(response_hash) if options[:task]
+    expect(response).to have_http_status(:ok)
+    expected = {}
+    expected["success"] = options[:success] if options.key?(:success)
+    expected["message"] = a_string_matching(options[:message]) if options[:message]
+    expected["href"] = a_string_matching(fetch_value(options[:href])) if options[:href]
+    expected.merge!(expected_task_response) if options[:task]
+    expect(response_hash).to include(expected)
   end
 
   def expect_multiple_action_result(count, options = {})
-    expect_request_success
-    expect(response_hash).to have_key("results")
-    results = response_hash["results"]
-    expect(results.size).to eq(count)
-    expect(results.all? { |r| r["success"] }).to be_truthy
+    expect(response).to have_http_status(:ok)
+    expected_result = {"success" => true}
+    expected_result.merge!(expected_task_response) if options[:task]
+    expected = {"results" => Array.new(count) { a_hash_including(expected_result) }}
+    expect(response_hash).to include(expected)
+  end
 
-    results.each { |r| expect_result_to_represent_task(r) } if options[:task]
+  def expected_task_response
+    {"task_id" => anything, "task_href" => anything}
   end
 
   def expect_tagging_result(tagging_results)
-    expect_request_success
+    expect(response).to have_http_status(:ok)
     tag_results = fetch_value(tagging_results)
     expect(response_hash).to have_key("results")
     results = response_hash["results"]

@@ -652,10 +652,7 @@ class ApplicationController < ActionController::Base
       else
         redirect_to_action = lastaction
       end
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => redirect_to_action, :id => params[:id], :escape => false, :load_edit_err => true
-      end
+      javascript_redirect :action => redirect_to_action, :id => params[:id], :escape => false, :load_edit_err => true
     else
       redirect_to :action => lastaction, :id => params[:id], :escape => false
     end
@@ -1060,10 +1057,7 @@ class ApplicationController < ActionController::Base
       end
 
       format.js do
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :controller => 'dashboard', :action => 'login', :timeout => timed_out
-        end
+        javascript_redirect :controller => 'dashboard', :action => 'login', :timeout => timed_out
       end
     end
   end
@@ -1102,10 +1096,7 @@ class ApplicationController < ActionController::Base
     pass = check_generic_rbac
     unless pass
       if request.xml_http_request?
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to(:controller => 'dashboard', :action => 'auth_error')
-        end
+        javascript_redirect :controller => 'dashboard', :action => 'auth_error'
       else
         redirect_to(:controller => 'dashboard', :action => 'auth_error')
       end
@@ -1681,45 +1672,27 @@ class ApplicationController < ActionController::Base
   def render_or_redirect_partial(pfx)
     if @redirect_controller
       if ["#{pfx}_clone", "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
-        render :update do |page|
-          page << javascript_prologue
-          if flash_errors?
-            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-          else
-            page.redirect_to :controller => @redirect_controller,
-                             :action     => @refresh_partial,
-                             :id         => @redirect_id,
-                             :prov_type  => @prov_type,
-                             :prov_id    => @prov_id
-          end
+        if flash_errors?
+          javascript_flash
+        else
+          javascript_redirect :controller => @redirect_controller,
+                              :action     => @refresh_partial,
+                              :id         => @redirect_id,
+                              :prov_type  => @prov_type,
+                              :prov_id    => @prov_id
         end
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :controller => @redirect_controller, :action => @refresh_partial, :id => @redirect_id
-        end
+        javascript_redirect :controller => @redirect_controller, :action => @refresh_partial, :id => @redirect_id
       end
     else
       if params[:pressed] == "ems_cloud_edit" && params[:id]
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to edit_ems_cloud_path(params[:id])
-        end
+        javascript_redirect edit_ems_cloud_path(params[:id])
       elsif params[:pressed] == "ems_infra_edit" && params[:id]
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to edit_ems_infra_path(params[:id])
-        end
+        javascript_redirect edit_ems_infra_path(params[:id])
       elsif params[:pressed] == "ems_container_edit" && params[:id]
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to edit_ems_container_path(params[:id])
-        end
+        javascript_redirect edit_ems_container_path(params[:id])
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => @refresh_partial, :id => @redirect_id
-        end
+        javascript_redirect :action => @refresh_partial, :id => @redirect_id
       end
     end
   end
@@ -2456,11 +2429,6 @@ class ApplicationController < ActionController::Base
     @trees = allowed_features.collect { |feature| feature.build_tree(@sb) }
     @accords = allowed_features.map(&:accord_hash)
     set_active_elements(allowed_features.first)
-  end
-
-  def get_error_message_from_fog(ex)
-    matched_message = ex.match(/message\\\": \\\"(.*)\\\", /)
-    matched_message ? matched_message[1] : ex
   end
 
   def start_url_for_user(start_url)

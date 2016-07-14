@@ -21,7 +21,7 @@ describe ApiController do
 
       run_post(services_url(999_999), gen_request(:set_ownership, "owner" => {"id" => 1}))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "without appropriate action role" do
@@ -29,7 +29,7 @@ describe ApiController do
 
       run_post(services_url(svc.id), gen_request(:set_ownership, "owner" => {"id" => 1}))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "with missing owner or group" do
@@ -128,7 +128,7 @@ describe ApiController do
 
       run_post(vms_url(999_999), gen_request(:set_ownership, "owner" => {"id" => 1}))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "without appropriate action role" do
@@ -136,7 +136,7 @@ describe ApiController do
 
       run_post(vms_url(vm.id), gen_request(:set_ownership, "owner" => {"id" => 1}))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "with missing owner or group" do
@@ -235,7 +235,7 @@ describe ApiController do
 
       run_post(templates_url(999_999), gen_request(:set_ownership, "owner" => {"id" => 1}))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "without appropriate action role" do
@@ -243,7 +243,7 @@ describe ApiController do
 
       run_post(templates_url(template.id), gen_request(:set_ownership, "owner" => {"id" => 1}))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "with missing owner or group" do

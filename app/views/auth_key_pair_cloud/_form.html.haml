@@ -1,44 +1,53 @@
-#main_div
-  - url = url_for(:action => 'form_field_changed', :id => @key_pair.id || "new")
+%h3
+  = _('Basic Information')
+  %br
+  %br
 
-  = render :partial => "layouts/flash_msg"
-
-  %h3
-    = _('Basic Information')
-  .form-horizontal
-    .form-group
-      %label.col-md-2.control-label
+.form-horizontal{:id => 'start_form_div', :style => 'display:none'}
+  %form#form_div{:name           => 'angularForm',
+                 'ng-controller' => 'keyPairCloudFormController',
+                 'ng-show'       => 'afterGet',
+                 :novalidate     => true}
+    = render :partial => 'layouts/flash_msg'
+    .form-group{"ng-class" => "{'has-error': angularForm.name.$invalid}"}
+      %label.col-md-2.control-label{:for => 'name'}
         = _('Name')
       .col-md-8
-        = text_field_tag("name",
-                          @edit[:new][:name],
-                          :maxlength => 50,
-                          :class => "form-control",
-                          "data-miq_focus" => true,
-                          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+        %input.form-control{:type            => 'text',
+                            :name            => 'name',
+                            :id              => 'name',
+                            'ng-model'       => 'keyPairModel.name',
+                            :maxlength       => MAX_NAME_LEN,
+                            :required        => true,
+                            :checkchange     => '',
+                            'auto-focus'     => true,
+                            'start-form-div' => 'start_form_div'}
+        %span.help-block{"ng-show" => "angularForm.name.$error.required"}
+          = _("Required")
     .form-group
-      %label.col-md-2.control-label
+      %label.col-md-2.control-label{"for" => 'public_key'}
         = _('Public Key (optional)')
       .col-md-8
-        = text_area_tag("public_key",
-                          @edit[:new][:public_key],
-                          :size => "50x10",
-                          :class => "form-control",
-                          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-  .form-horizontal
-    .form-group
-      %label.col-md-2.control-label
-        = _('Provider')
-      .col-md-8
-        = select_tag("ems_id",
-                      options_for_select(@edit[:ems_choices].sort, @edit[:new][:ems_id]),
-                      :multiple => false,
-                      "data-miq_sparkle_on" => true,
-                      "data-miq_sparkle_off" => true,
-                      :class    => "selectpicker",
-                      "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-    :javascript
-       miqInitSelectPicker();
-       miqSelectPickerEvent("ems_id", "#{url}")
+        %textarea.form-control{:name           => 'public_key',
+                               :id             => 'public_key',
+                               'ng-model'      => 'keyPairModel.public_key',
+                               :rows           => 10}
+    .form-horizontal
+      .form-group
+        %label.col-md-2.control-label
+          = _('Provider')
+        .col-md-8
+          = select_tag('ems_id',
+                  '',
+                  'ng-model'                   => 'keyPairModel.ems',
+                  'ng-options'                 => 'ems.name for ems in ems_choices',
+                  :id                          => 'ems_id',
+                  :required                    => '',
+                  'pf-select'                  => true)
+          :javascript
+            miqInitSelectPicker();
+    = render :partial => 'layouts/angular/x_edit_buttons_angular'
 
-  = render(:partial => '/layouts/edit_buttons', :locals  => {:ajax_buttons => true, :record_id => @key_pair.id || "", :action_url => "#{@key_pair.id ? 'update' : 'create'}"})
+:javascript
+  ManageIQ.angular.app.value('keyPairFormId', '#{@key_pair.id || "new"}');
+  miq_bootstrap('#form_div');

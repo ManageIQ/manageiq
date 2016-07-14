@@ -25,6 +25,14 @@ class ProviderForemanController < ApplicationController
     end
   end
 
+  def self.model_to_type_name(provmodel)
+    if provmodel.include?("ManageIQ::Providers::AnsibleTower")
+      'ansible_tower'
+    elsif provmodel.include?("ManageIQ::Providers::Foreman")
+      'foreman'
+    end
+  end
+
   def self.model_to_cs_name(provmodel)
     if provmodel.include?("ManageIQ::Providers::AnsibleTower")
       ui_lookup(:ui_title => 'Ansible Tower Job Template')
@@ -37,6 +45,10 @@ class ProviderForemanController < ApplicationController
 
   def model_to_cs_name(provmodel)
     ProviderForemanController.model_to_cs_name(provmodel)
+  end
+
+  def model_to_type_name(provmodel)
+    ProviderForemanController.model_to_type_name(provmodel)
   end
 
   def index
@@ -114,14 +126,11 @@ class ProviderForemanController < ApplicationController
     end
 
     if ConfiguredSystem.common_configuration_profiles_for_selected_configured_systems(provisioning_ids)
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :controller     => "miq_request",
-                         :action         => "prov_edit",
-                         :prov_id        => provisioning_ids,
-                         :org_controller => "configured_system",
-                         :escape         => false
-      end
+      javascript_redirect :controller     => "miq_request",
+                          :action         => "prov_edit",
+                          :prov_id        => provisioning_ids,
+                          :org_controller => "configured_system",
+                          :escape         => false
     else
       add_flash(_("No common configuration profiles available for the selected configured %s") % n_('system', 'systems', provisioning_ids.size), :error)
       replace_right_cell
@@ -129,9 +138,17 @@ class ProviderForemanController < ApplicationController
   end
 
   def tagging
-    assert_privileges("provider_foreman_configured_system_tag") if x_active_accord == :configuration_manager_providers
-    assert_privileges("configured_system_tag") if x_active_accord == :cs_filter
-    tagging_edit('ConfiguredSystem', false)
+    case x_active_accord
+    when :configuration_manager_providers
+      assert_privileges("provider_foreman_configured_system_tag")
+      tagging_edit('ConfiguredSystem', false)
+    when :cs_filter
+      assert_privileges("configured_system_tag")
+      tagging_edit('ConfiguredSystem', false)
+    when :configuration_scripts
+      assert_privileges("configuration_script_tag") 
+      tagging_edit('ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript', false)
+    end
     render_tagging_form
   end
 
@@ -229,7 +246,7 @@ class ProviderForemanController < ApplicationController
     @record = if configuration_profile_record?
                 find_record(ConfigurationProfile, id || params[:id])
               elsif inventory_group_record?
-                find_record(InventoryRootGroup, id || params[:id])
+                find_record(ManageIQ::Providers::ConfigurationManager::InventoryGroup, id || params[:id])
               else
                 find_record(ConfiguredSystem, id || params[:id])
               end
@@ -396,7 +413,7 @@ class ProviderForemanController < ApplicationController
     end
 
     if @record.kind_of?(ConfiguredSystem)
-      rec_cls = "#{model_to_name(@record.class.to_s).downcase.tr(' ', '_')}_configured_system"
+      rec_cls = "#{model_to_type_name(@record.ext_management_system.class.to_s)}_configured_system"
     end
     return unless %w(download_pdf main).include?(@display)
     @showtype     = "main"
@@ -480,7 +497,7 @@ class ProviderForemanController < ApplicationController
       get_node_info("root")
     else
       show_record(from_cid(id))
-      model_string = ui_lookup(:model => (model || TreeBuilder.get_model_for_prefix(@nodetype))).to_s
+      model_string = ui_lookup(:model => @record.class.to_s)
       @right_cell_text = _("%{model} \"%{name}\"") % {:name => @record.name, :model => model_string}
     end
   end
@@ -741,7 +758,7 @@ class ProviderForemanController < ApplicationController
   def render_tagging_form
     return if %w(cancel save).include?(params[:button])
     @in_a_form = true
-    @right_cell_text = _("Edit Tags for Configured Systems")
+    @right_cell_text = _("Edit Tags")
     clear_flash_msg
     presenter, r = rendering_objects
     update_tagging_partials(presenter, r)
@@ -1206,10 +1223,7 @@ class ProviderForemanController < ApplicationController
     rescue => bang
       add_flash(_("Error when creating Service Dialog: %{error_message}") %
                   {:error_message => bang.message}, :error)
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     else
       add_flash(_("Service Dialog \"%{name}\" was successfully created") %
                   {:name => @edit[:new][:dialog_name]}, :success)

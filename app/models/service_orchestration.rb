@@ -59,7 +59,11 @@ class ServiceOrchestration < Service
   end
 
   def direct_vms
-    orchestration_stack.try(:direct_vms) || []
+    # Loading all VMs, to make listing of the VMs under Service work, when we deal with nested stacks. A proper fix
+    # would be to use something like closure_tree, where we can build tree from the multiple classes. Then Service level
+    # MiqPreloader.preload_and_map(subtree, :direct_vms) will work also for nested stacks. Because in that case, nested
+    # stacks will be a part of the subtree.
+    orchestration_stack.try(:vms) || []
   end
 
   def all_vms

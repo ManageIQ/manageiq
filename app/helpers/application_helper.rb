@@ -25,8 +25,16 @@ module ApplicationHelper
               :class => 'documentation-link', :target => '_blank')
     end
   end
+
+  def valid_html_id(id)
+    id = id.to_s.gsub("::", "__")
+    raise "HTML ID is not valid" if /[^\w_]/.match(id)
+    id
+  end
+
   # Create a collapsed panel based on a condition
   def miq_accordion_panel(title, condition, id, &block)
+    id = valid_html_id(id)
     content_tag(:div, :class => "panel panel-default") do
       out = content_tag(:div, :class => "panel-heading") do
         content_tag(:h4, :class => "panel-title") do
@@ -49,11 +57,16 @@ module ApplicationHelper
     name = ui_lookup(:table => table_name.to_s)
     if role_allows(:feature => "#{table_name}_show") && !ent.nil?
       out = content_tag(:li) do
+        link_params = if restful_routed?(ent)
+                        polymorphic_path(ent)
+                      else
+                        {:controller => table_name, :action => 'show', :id => ent.id.to_s}
+                      end
         link_to("#{name}: #{ent.name}",
-                {:controller => table_name, :action => 'show', :id => ent.id.to_s},
-                :title       => _("Show this %{entity_name}'s parent %{linked_entity_name}") %
-                                {:entity_name        => record.class.name.demodulize.titleize,
-                                 :linked_entity_name => name})
+                link_params,
+                :title => _("Show this %{entity_name}'s parent %{linked_entity_name}") %
+                          {:entity_name        => record.class.name.demodulize.titleize,
+                           :linked_entity_name => name})
       end
     end
     out
@@ -367,6 +380,7 @@ module ApplicationHelper
       :button_group          => @button_group,
       :changed               => @changed,
       :condition             => @condition,
+      :condition_policy      => @condition_policy,
       :db                    => @db,
       :display               => @display,
       :edit                  => @edit,
@@ -379,6 +393,7 @@ module ApplicationHelper
       :lastaction            => @lastaction,
       :layout                => @layout,
       :miq_request           => @miq_request,
+      :msg_title             => @msg_title,
       :perf_options          => @perf_options,
       :policy                => @policy,
       :pxe_image_types_count => @pxe_image_types_count,
@@ -693,6 +708,7 @@ module ApplicationHelper
   end
 
   CUSTOM_TOOLBAR_CONTROLLERS = [
+    "cloud_tenant",
     "service",
     "vm_cloud",
     "vm_infra",
@@ -700,7 +716,7 @@ module ApplicationHelper
   ]
   # Return a blank tb if a placeholder is needed for AJAX explorer screens, return nil if no custom toolbar to be shown
   def custom_toolbar_filename
-    if %w(ems_cloud ems_cluster ems_infra host miq_template storage ems_network).include?(@layout) # Classic CIs
+    if %w(ems_cloud ems_cluster ems_infra host miq_template storage ems_network cloud_tenant).include?(@layout) # Classic CIs
       return "custom_buttons_tb" if @record && @lastaction == "show" && @display == "main"
     end
 
@@ -1039,6 +1055,30 @@ module ApplicationHelper
     return false unless params[:menu_click]
     perf_menu_click
     true
+  end
+
+  def javascript_redirect(args)
+    render :update do |page|
+      page << javascript_prologue
+      page.redirect_to args
+    end
+  end
+
+  def javascript_flash
+    render :update do |page|
+      page << javascript_prologue
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+    end
+  end
+
+  def replace_main_div(args, options = {})
+    render :update do |page|
+      page << javascript_prologue
+      page.replace_html('main_div', args)
+
+      page << "miqSparkle(false);" if options[:spinner_off]
+      page.replace_html("flash_msg_div", :partial => "layouts/flash_msg") if options[:flash]
+    end
   end
 
   def record_no_longer_exists?(what, model = nil)

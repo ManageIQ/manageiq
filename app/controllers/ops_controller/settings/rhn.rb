@@ -135,10 +135,7 @@ module OpsController::Settings::RHN
     rescue StandardError => bang
       add_flash(_(bang.message), :error)
       @in_a_form = true
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     else
       add_flash(_("Customer Information successfully saved"))
       @in_a_form = false
@@ -172,7 +169,7 @@ module OpsController::Settings::RHN
   def rhn_fire_available_organizations
     if params[:task_id] # wait_for_task is done --> read the task record
       miq_task = MiqTask.find(params[:task_id])
-      if miq_task.status != 'Ok'
+      if !miq_task.results_ready?
         add_flash(_("Credential validation returned: %{message}") % {:message => miq_task.message}, :error)
       else
         # task succeeded, we have the hash of org names to org keys in miq_task.task_results

@@ -21,7 +21,7 @@
   #discover_azure_credentials{:style => display}
     = render :partial => "layouts/discover_azure_credentials",
           :locals  => {:label => _("Credentials")}
-  - display = (@discover_type_selected && @discover_type_selected == 'amazon') ? "" : "display:none;"
+  - display = (@discover_type_selected && @discover_type_selected == 'ec2') ? "" : "display:none;"
   #discover_credentials{:style => display}
     = render :partial => "layouts/discover_credentials",
           :locals  => {:label => _("Credentials")}

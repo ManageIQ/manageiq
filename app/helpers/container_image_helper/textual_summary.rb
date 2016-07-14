@@ -25,6 +25,10 @@ module ContainerImageHelper
       items.collect { |m| send("textual_#{m}") }.flatten.compact
     end
 
+    def textual_openscap_failed_rules
+      %i(openscap_failed_rules_low openscap_failed_rules_medium openscap_failed_rules_high)
+    end
+
     #
     # Items
     #
@@ -72,6 +76,25 @@ module ContainerImageHelper
           :display    => 'compliance_history')
       end
       h
+    end
+
+    def failed_rules_summary
+      @failed_rules_summary ||= @record.openscap_failed_rules_summary
+    end
+
+    def textual_openscap_failed_rules_low
+      low = failed_rules_summary[:Low]
+      {:label => _("Low"), :value => low} if low
+    end
+
+    def textual_openscap_failed_rules_medium
+      medium = failed_rules_summary[:Medium]
+      {:label => _("Medium"), :value => medium} if medium
+    end
+
+    def textual_openscap_failed_rules_high
+      high = failed_rules_summary[:High]
+      {:label => _("High"), :value => high} if high
     end
   end
 end

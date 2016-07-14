@@ -10,9 +10,10 @@
         .col-md-8
           = select_tag('filter_typ',
                         options_for_select(["<#{_('Choose')}>"] + @folders, @edit[:new][:filter]),
-                        :multiple => false,
-                        :disabled => true,
-                        :class    => "selectpicker")
+                        :multiple          => false,
+                        'data-live-search' => true,
+                        :disabled          => true,
+                        :class             => "selectpicker")
           :javascript
             miqInitSelectPicker();
             miqSelectPickerEvent('filter_typ', '#{url}', {beforeSend: true, complete: true});
@@ -22,9 +23,10 @@
           .col-md-8
             = select_tag('subfilter_typ',
                           options_for_select(["<#{_('Choose')}>"] + @sub_folders, @edit[:new][:subfilter]),
-                          :multiple => false,
-                          :disabled => true,
-                          :class    => "selectpicker")
+                          :multiple          => false,
+                          'data-live-search' => true,
+                          :disabled          => true,
+                          :class             => "selectpicker")
             :javascript
               miqSelectPickerEvent('subfilter_typ', '#{url}', {beforeSend: true, complete: true});
       - if @reps && !@reps.empty?
@@ -33,9 +35,10 @@
           .col-md-8
             = select_tag('repfilter_typ',
                           options_for_select(["<#{_('Choose')}>"] + @reps, @edit[:new][:repfilter]),
-                          :multiple => false,
-                          :disabled => true,
-                          :class    => "selectpicker")
+                          :multiple          => false,
+                          'data-live-search' => true,
+                          :disabled          => true,
+                          :class             => "selectpicker")
             :javascript
               miqSelectPickerEvent('repfilter_typ', '#{url}', {beforeSend: true, complete: true});
 
@@ -46,8 +49,9 @@
         .col-md-8
           = select_tag("filter_typ",
                         options_for_select(["<#{_('Choose')}>"] + @folders, @edit[:new][:filter]),
-                        :multiple              => false,
-                        :class                 => "selectpicker")
+                        :multiple          => false,
+                        'data-live-search' => true,
+                        :class             => "selectpicker")
           :javascript
             miqInitSelectPicker();
             miqSelectPickerEvent('filter_typ', '#{url}', {beforeSend: true, complete: true});
@@ -57,8 +61,9 @@
           .col-md-8
             = select_tag("subfilter_typ",
                           options_for_select(["<#{_('Choose')}>"] + @sub_folders, @edit[:new][:subfilter]),
-                          :multiple              => false,
-                          :class                 => "selectpicker")
+                          :multiple          => false,
+                          'data-live-search' => true,
+                          :class             => "selectpicker")
             :javascript
               miqSelectPickerEvent('subfilter_typ', '#{url}', {beforeSend: true, complete: true});
       - if @reps && !@reps.empty?
@@ -67,8 +72,9 @@
           .col-md-8
             = select_tag("repfilter_typ",
                           options_for_select(["<#{_('Choose')}>"] + @reps, @edit[:new][:repfilter]),
-                          :multiple              => false,
-                          :class                 => "selectpicker")
+                          :multiple          => false,
+                          'data-live-search' => true,
+                          :class             => "selectpicker")
             :javascript
               miqSelectPickerEvent('repfilter_typ', '#{url}', {beforeSend: true, complete: true});
   %hr

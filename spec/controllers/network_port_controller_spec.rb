@@ -7,7 +7,7 @@ describe NetworkPortController do
     setup_zone
   end
 
-  %w(openstack amazon).each do |t|
+  %w(openstack amazon azure google).each do |t|
     context "for #{t}" do
       before :each do
         @network_port = FactoryGirl.create("network_port_#{t}".to_sym, :name => "Network Port")

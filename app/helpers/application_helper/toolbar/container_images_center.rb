@@ -38,7 +38,7 @@ class ApplicationHelper::Toolbar::ContainerImagesCenter < ApplicationHelper::Too
         button(
           :container_image_protect,
           'pficon pficon-edit fa-lg',
-          N_('Manage Policies for this #{ui_lookup(:table=>"container_images")}'),
+          N_('Manage Policies for this Container Image'),
           N_('Manage Policies'),
           :url_parms => "main_div",
           :enabled   => "false",

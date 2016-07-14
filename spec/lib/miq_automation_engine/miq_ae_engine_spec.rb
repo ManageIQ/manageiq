@@ -1,3 +1,4 @@
+include AutomationSpecHelper
 module MiqAeEngineSpec
   include MiqAeEngine
   describe MiqAeEngine do
@@ -788,6 +789,50 @@ module MiqAeEngineSpec
         allow(MiqAeEngine).to receive(:create_automation_attribute_key).with(any_args).and_return("abc")
         expect(test_class).to receive(:before_ae_starts).once.with(options)
         MiqAeEngine.deliver(options)
+      end
+    end
+  end
+
+  describe MiqAeEngine do
+    before do
+      @user = FactoryGirl.create(:user_with_group)
+      nco_value = '${/#var1} || ${XY/ABC#var2} || Pebbles'
+      default_value = '${/#var2} || ${XY/ABC#var2} || Bamm Bamm Rubble'
+      instance_name = 'FRED'
+      ae_instances = {instance_name => {'field1' => {:value => nco_value},
+                                        'field2' => {:value => nil},
+                                        'field3' => {:value => nil}}}
+
+      ae_fields = {'field1' => {:aetype => 'attribute', :default_value => default_value,
+                                :datatype => MiqAeField::NULL_COALESCING_DATATYPE},
+                   'field2' => {:aetype => 'attribute', :default_value => default_value,
+                                :datatype => MiqAeField::NULL_COALESCING_DATATYPE},
+                   'field3' => {:aetype   => 'attribute',
+                                :datatype => MiqAeField::NULL_COALESCING_DATATYPE}}
+      create_ae_model(:name => 'LUIGI', :ae_class => 'BARNEY',
+                      :ae_namespace => 'A/C',
+                      :ae_fields => ae_fields, :ae_instances => ae_instances)
+    end
+
+    context "null colaescing" do
+      it "uses default when variable missing" do
+        workspace = MiqAeEngine.instantiate("/A/C/BARNEY/FRED", @user)
+
+        expect(workspace.root['field1']).to eq('Pebbles')
+        expect(workspace.root['field2']).to eq('Bamm Bamm Rubble')
+      end
+
+      it "first non nil value" do
+        workspace = MiqAeEngine.instantiate("/A/C/BARNEY/FRED?var1=wilma", @user)
+
+        expect(workspace.root['field1']).to eq('wilma')
+        expect(workspace.root['field2']).to eq('Bamm Bamm Rubble')
+      end
+
+      it "undefined variable" do
+        workspace = MiqAeEngine.instantiate("/A/C/BARNEY/FRED", @user)
+        expect(workspace.root['field2']).to eq('Bamm Bamm Rubble')
+        expect(workspace.root.attributes.keys.exclude?('field3')).to be_truthy
       end
     end
   end

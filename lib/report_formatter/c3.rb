@@ -77,6 +77,9 @@ module ReportFormatter
 
       # C&U chart
       if graph_options[:chart_type] == :performance
+        unless mri.graph[:type] == 'Donut' || mri.graph[:type] == 'Pie'
+          mri.chart[:legend] = {:position => 'bottom'}
+        end
         format, options = javascript_format(mri.graph[:columns][0], nil)
         return unless format
 

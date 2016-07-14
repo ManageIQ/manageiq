@@ -11,17 +11,6 @@
   %nav.collapse.navbar-collapse
     %ul.nav.navbar-nav.navbar-right.navbar-iconic
       %li{:class => "dropdown brand-white-label #{current_tenant.logo? ? "whitelabeled" : ""}"}
-      - Menu::Manager.menu(:top_right) do |menu_section|
-        - if menu_section.visible?
-          %li.dropdown
-            %a{:href => "#", :id => "dropdownMenu2", :class => "dropdown-toggle nav-item-iconic", "data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false"}
-              = _(menu_section.name)
-              %b.caret
-            %ul.dropdown-menu#custom_menu_div
-              - menu_section.items.each do |menu_item|
-                - if menu_item.visible?
-                  %li
-                    %a{:href => menu_item.url, :onclick => 'return miqCheckForChanges()'}= _(menu_item.name)
 
       = render :partial => "layouts/user_options"
   = render :partial => "layouts/spinner"

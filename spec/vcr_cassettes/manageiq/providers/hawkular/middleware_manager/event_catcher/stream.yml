@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/alerts/events?startTime=1462564369000&tags=miq.event_type%7C*&thin=true
+    uri: http://jdoe:password@localhost:8080/hawkular/inventory/status
     body:
       encoding: US-ASCII
       string: ''
@@ -12,7 +12,9 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.4p230
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -20,8 +22,51 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Content-Encoding:
-      - gzip
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '234'
+      Date:
+      - Tue, 05 Jul 2016 15:40:04 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "Implementation-Version" : "0.17.2.Final",
+          "Built-From-Git-SHA1" : "3c8ac6648aa0ec33643ae1b98faadc475d2c6f02",
+          "Inventory-Implementation" : "org.hawkular.inventory.impl.tinkerpop.TinkerpopInventory",
+          "Initialized" : "true"
+        }
+    http_version: 
+  recorded_at: Tue, 05 Jul 2016 15:40:04 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/alerts/events?startTime=1467733144000&tags=miq.event_type%7C*&thin=true
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
       Expires:
       - '0'
       Cache-Control:
@@ -33,7 +78,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Fri, 06 May 2016 19:53:49 GMT
+      - Tue, 05 Jul 2016 15:40:04 GMT
       X-Total-Count:
       - '1'
       Connection:
@@ -41,22 +86,16 @@ http_interactions:
       Content-Type:
       - application/json
       Content-Length:
-      - '339'
+      - '273'
       Link:
-      - <http://localhost:8080/hawkular/alerts/events?startTime=1462564369000&tags=miq.event_type%7c*&thin=true>;
-        rel="current", <http://localhost:8080/hawkular/alerts/events?startTime=1462564369000&tags=miq.event_type%7c*&thin=true&page=0>;
+      - <http://localhost:8080/hawkular/alerts/events?startTime=1467733144000&tags=miq.event_type%7c*&thin=true>;
+        rel="current", <http://localhost:8080/hawkular/alerts/events?startTime=1467733144000&tags=miq.event_type%7c*&thin=true&page=0>;
         rel="last"
     body:
-      encoding: ASCII-8BIT
-      string: !binary |-
-        H4sIAAAAAAAAAI1RXU/CMBT9K7MJbxRG99Ehr0Bior5IfDFmuWsvo7p12BVh
-        IfjbbYcuPvrQpDk9595zTl/OBD9R2023R3JLVs+rxw0ZE4satL2TDmJZyNIi
-        Smm2xZjGUcRoFouMJizGGY8gzYqtUyjPxbqlOzi+HyowtJ9Lk8Q9CqtqN34W
-        pyxJOU/TMAzHRIKFp+ZghN+c60Zj7rlgsWxM592cLBoNVW/oZB2ywdYGa1DV
-        jWc2+gqfSY1tCyX+0VRdoPQbCosyWHknQZJ4kcG2X5nvwe4cf2oX/0k43S44
-        FKzgICmbFwWN43lCIcuAcpSCFzyUgDg1i/tGQPX1NdxGbC1xXzVd7UyMouXQ
-        j2jqGrSkpQt8hI4ewUzcIReXFsq2j6U+Jn2Nub3+z68479GJMMoq0RfkqUO2
-        H/aDkrJysw0uBwfkcnn9BpoXKT31AQAA
+      encoding: UTF-8
+      string: '[{"eventType":"EVENT","tenantId":"hawkular","id":"ems-hawkular-event-4","ctime":1467733170000,"dataSource":"_none_","category":"Hawkular
+        Deployment","text":"Error","context":{"message":"This is a mock deployment
+        event"},"tags":{"miq.event_type":"hawkular_event.critical"}}]'
     http_version: 
-  recorded_at: Fri, 06 May 2016 19:53:49 GMT
+  recorded_at: Tue, 05 Jul 2016 15:40:04 GMT
 recorded_with: VCR 2.9.3

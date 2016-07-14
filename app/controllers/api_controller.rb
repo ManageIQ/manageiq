@@ -72,6 +72,7 @@ class ApiController < ApplicationController
   include_concern 'ProvisionRequests'
   include_concern "Rates"
   include_concern "Reports"
+  include_concern 'Requests'
   include_concern 'RequestTasks'
   include_concern 'ResourceActions'
   include_concern 'Roles'
@@ -86,6 +87,7 @@ class ApiController < ApplicationController
   include_concern 'TenantQuotas'
   include_concern 'Tenants'
   include_concern 'Users'
+  include_concern 'VirtualTemplates'
   include_concern 'Vms'
 
   #
@@ -140,13 +142,11 @@ class ApiController < ApplicationController
   delegate :user_token_service, :to => self
 
   def initialize
-    @config          = Api::Settings.data
     @module          = base_config[:module]
     @name            = base_config[:name]
     @description     = base_config[:description]
     @version         = base_config[:version]
     @prefix          = "/#{@module}"
-    @req             = {}      # To store API request details by parse_api_request
     @api_config      = VMDB::Config.new("vmdb").config[@module.to_sym] || {}
   end
 
@@ -155,45 +155,30 @@ class ApiController < ApplicationController
   #
   include_concern 'Initializer'
 
+  before_action :parse_api_request, :log_api_request, :validate_api_request
+  after_action :log_api_response
+
   def self.attr_type_hash(type)
     instance_variable_get("@attr_#{type}") || {}
   end
 
   def redirect_api_request(method)
-    collection    = @req[:collection] || "entrypoint"
-    target_method = "#{method}_#{collection}"
-    if respond_to?(target_method)
-      send(target_method)
-      return true
-    end
+    target_method = "#{method}_#{@req.collection || "entrypoint"}"
+    return send(target_method) if respond_to?(target_method)
     target_method = "#{method}_generic"
-    if respond_to?(target_method)
-      send(target_method, collection.to_sym)
-      return true
-    end
-    false
-  end
-
-  #
-  # REST APIs Handler and API Entrypoints
-  #
-  def api_request_handler(expected_method)
-    parse_api_request
-    log_api_request
-    validate_api_request
-    api_error_type(:not_found, "Unknown resource specified") unless redirect_api_request(expected_method)
-    log_api_response
+    return send(target_method) if respond_to?(target_method)
+    api_error_type(:not_found, "Unknown resource specified")
   end
 
   def show    # GET
-    api_request_handler(:show)
+    redirect_api_request(:show)
   end
 
   def update  # POST, PUT, PATCH
-    api_request_handler(:update)
+    redirect_api_request(:update)
   end
 
   def destroy # DELETE
-    api_request_handler(:destroy)
+    redirect_api_request(:destroy)
   end
 end

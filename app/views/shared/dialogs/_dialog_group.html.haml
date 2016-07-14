@@ -3,7 +3,7 @@
     = group.label
   - unless group.dialog_fields.empty?
     .form-horizontal
-      - group.dialog_fields.each do |field|
+      - group.dialog_fields.select(&:visible).each do |field|
         = render :partial => "shared/dialogs/dialog_field",
                  :locals  => {:wf => wf, :field => field}
   %hr

@@ -2,7 +2,7 @@ require "handsoap"
 require 'VMwareWebService/VimTypes'
 
 class VimService < Handsoap::Service
-  attr_reader :sic, :about, :apiVersion, :isVirtualCenter, :v20, :v2, :v4, :serviceInstanceMor
+  attr_reader :sic, :about, :apiVersion, :isVirtualCenter, :v20, :v2, :v4, :serviceInstanceMor, :session_cookie
 
   Handsoap.http_driver = :HTTPClient
 
@@ -26,6 +26,7 @@ class VimService < Handsoap::Service
     @v2         = @apiVersion =~ /2\..*/
     @v4         = @apiVersion =~ /4\..*/
     @isVirtualCenter    = @about.apiType == "VirtualCenter"
+    @session_cookie     = nil
 
     setNameSpace('urn:vim25') unless @v20
   end
@@ -452,6 +453,7 @@ class VimService < Handsoap::Service
       message.add "n1:userName", username
       message.add "n1:password", password
     end
+    @session_cookie = response.cookie
     (parse_response(response, 'LoginResponse')['returnval'])
   end
 

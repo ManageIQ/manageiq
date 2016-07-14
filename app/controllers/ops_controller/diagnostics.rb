@@ -300,10 +300,7 @@ module OpsController::Diagnostics
     else
       add_flash(_("Reset/synchronization process successfully initiated"))
     end
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-    end
+    javascript_flash
   end
 
   def replication_reload

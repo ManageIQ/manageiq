@@ -6,6 +6,10 @@ module HasManyOrchestrationStackMixin
              :foreign_key => :ems_id,
              :dependent   => :destroy
 
+    has_many :orchestration_templates,
+             :foreign_key => :ems_id,
+             :dependent   => :destroy
+
     has_many :orchestration_stacks_resources,
              :through => :orchestration_stacks,
              :source  => :resources

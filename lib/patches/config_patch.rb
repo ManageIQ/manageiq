@@ -11,3 +11,4 @@ module ConfigDecryptPasswords
 end
 
 Config::Options.prepend(ConfigDecryptPasswords)
+Config::Options.include(MoreCoreExtensions::Shared::Nested)

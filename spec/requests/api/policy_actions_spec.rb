@@ -22,7 +22,7 @@ describe ApiController do
 
       run_get policy_actions_url(999_999)
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "query policy actions with no actions defined" do

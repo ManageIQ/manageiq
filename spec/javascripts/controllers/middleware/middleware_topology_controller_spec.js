@@ -4,7 +4,7 @@ describe('middlewareTopologyController', function () {
 
   var mw_manager = {
     id: "MiddlewareManager1", item: {
-      "name": "livingontheedge.hawkular.org",
+      "name": "localhost",
       "kind": "MiddlewareManager",
       "miq_id": 1,
       "status": "Unknown",
@@ -20,7 +20,7 @@ describe('middlewareTopologyController', function () {
       "miq_id": 1,
       "status": "Unknown",
       "display_kind": "MiddlewareServer",
-      "icon": "vendor-hawkular"
+      "icon": "vendor-wildfly"
     }
   };
 
@@ -31,15 +31,14 @@ describe('middlewareTopologyController', function () {
       "kind": "MiddlewareDeployment",
       "miq_id": 1,
       "status": "Unknown",
-      "display_kind": "MiddlewareDeployment",
-      "icon": "middleware_deployment_war"
+      "display_kind": "MiddlewareDeploymentWar"
     }
   };
 
   var mw_datasource = {
     id: "MiddlewareDatasource1",
     item: {
-      "name": "ExampleDS",
+      "name": "Datasource [ExampleDS]",
       "kind": "MiddlewareDatasource",
       "miq_id": 1,
       "status": "Unknown",
@@ -88,8 +87,8 @@ describe('middlewareTopologyController', function () {
   describe('the mw topology gets correct icons', function () {
     it('in graph elements', function () {
       expect($controller.getIcon(mw_manager).icon).toContain("vendor-hawkular");
-      expect($controller.getIcon(mw_server).icon).toContain("vendor-hawkular");
-      expect($controller.getIcon(mw_deployment).icon).toContain("middleware_deployment_war");
+      expect($controller.getIcon(mw_server).icon).toContain("vendor-wildfly");
+      expect($controller.getIcon(mw_deployment).fontfamily).toEqual("icomoon")
       expect($controller.getIcon(mw_datasource).fontfamily).toEqual("FontAwesome")
     });
   });
@@ -107,7 +106,7 @@ describe('middlewareTopologyController', function () {
     it('for all objects', function () {
       expect($controller.getIcon(mw_manager).type).toEqual("image");
       expect($controller.getIcon(mw_server).type).toEqual("image");
-      expect($controller.getIcon(mw_deployment).type).toEqual("image");
+      expect($controller.getIcon(mw_deployment).type).toEqual("glyph");
       expect($controller.getIcon(mw_datasource).type).toEqual("glyph");
     });
   });

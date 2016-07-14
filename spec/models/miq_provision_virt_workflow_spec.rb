@@ -14,8 +14,19 @@ describe MiqProvisionVirtWorkflow do
     end
 
     it "calls password_helper once when a block is not passed in" do
-      expect_any_instance_of(MiqProvisionVirtWorkflow).to receive(:password_helper).with({:allowed_hosts => [host], :skip_dialog_load => true}, false).once
-      MiqProvisionVirtWorkflow.new({:allowed_hosts => [host]}, user, {:skip_dialog_load => true})
+      expect_any_instance_of(MiqProvisionVirtWorkflow).to receive(:password_helper).with({:allowed_hosts    => [host],
+                                                                                          :skip_dialog_load => true}, false).once
+      MiqProvisionVirtWorkflow.new({:allowed_hosts => [host]}, user, :skip_dialog_load => true)
+    end
+
+    it "sets initial_pass equal to true when values are empty and initial_pass => true is passed in as an option" do
+      expect_any_instance_of(MiqProvisionVirtWorkflow).to receive(:get_value).once
+
+      init_options = {:use_pre_dialog => false, :skip_dialog_load => true, :request_type => :clone_to_vm, :initial_pass => true}
+      p = MiqProvisionVirtWorkflow.new({}, user, init_options)
+
+      expect(p.instance_variable_get(:@values)[:initial_pass]).to be_truthy
+      expect(p.instance_variable_get(:@values)[:request_type]).to eq :clone_to_vm
     end
   end
 
@@ -211,6 +222,35 @@ describe MiqProvisionVirtWorkflow do
       expect(workflow.class).to receive(:provider_model).once.and_return(ems.class)
 
       expect(workflow.allowed_template_condition).to eq(["vms.template = ? AND vms.ems_id in (?)", true, [ems.id]])
+    end
+  end
+
+  context "#ws_find_template_or_vm" do
+    let(:server) { double("MiqServer", :logon_status => :ready, :server_timezone => 'East') }
+    let(:sdn) { 'SysprepDomainName' }
+
+    before do
+      allow(MiqServer).to receive(:my_server).with(no_args).and_return(server)
+      allow(workflow).to receive_messages(:validate => true)
+      allow(workflow).to receive_messages(:get_dialogs => {})
+      workflow.instance_variable_set(:@values, :vm_tags => [], :src_vm_id => 123, :sysprep_enabled => 'fields',
+                                     :sysprep_domain_name => sdn)
+    end
+
+    it "does a lookup when src_name is blank" do
+      expect(workflow.ws_find_template_or_vm("", "", "asdf-adsf", "asdfadfasdf")).to be_nil
+    end
+
+    it "does a lookup when src_name is not blank" do
+      expect(workflow.ws_find_template_or_vm("", "VMWARE", "asdf-adsf", "asdfadfasdf")).to be_nil
+    end
+
+    it "returns a hash struct if a vm or template is found" do
+      ems    = FactoryGirl.create(:ems_vmware)
+      host1  = FactoryGirl.create(:host_vmware, :ems_id => ems.id)
+      src_vm = FactoryGirl.create(:vm_vmware, :host => host1, :ems_id => ems.id)
+      allow(workflow).to receive(:source_vm_rbac_filter).and_return([src_vm])
+      expect(workflow.ws_find_template_or_vm("", "VMWARE", "asdf-adsf", "asdfadfasdf")).to be_a(MiqHashStruct)
     end
   end
 end

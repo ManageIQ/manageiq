@@ -437,9 +437,10 @@ describe ProviderForemanController do
     expect(controller.send(:breadcrumb_name, nil)).to eq("#{ui_lookup(:ui_title => "foreman")} Provider")
   end
 
-  it "renders tagging editor" do
+  it "renders tagging editor for a configured system" do
     session[:tag_items] = [@configured_system.id]
     session[:assigned_filters] = []
+    allow(controller).to receive(:x_active_accord).and_return(:cs_filter)
     parent = FactoryGirl.create(:classification, :name => "test_category")
     FactoryGirl.create(:classification_tag,      :name => "test_entry",         :parent => parent)
     FactoryGirl.create(:classification_tag,      :name => "another_test_entry", :parent => parent)
@@ -585,7 +586,6 @@ describe ProviderForemanController do
 
     after(:each) do
       expect(controller.send(:flash_errors?)).not_to be_truthy
-      expect(assigns(:edit)).to be_nil
       expect(response.status).to eq(200)
     end
 
@@ -595,6 +595,20 @@ describe ProviderForemanController do
       controller.send(:configscript_service_dialog_submit)
       expect(assigns(:flash_array).first[:message]).to include("was successfully created")
       expect(Dialog.where(:label => @dialog_label).first).not_to be_nil
+      expect(assigns(:edit)).to be_nil
+    end
+
+    it "renders tagging editor for a job template system" do
+      session[:tag_items] = [@cs.id]
+      session[:assigned_filters] = []
+      allow(controller).to receive(:x_active_accord).and_return(:configuration_scripts)
+      allow(controller).to receive(:tagging_explorer_controller?).and_return(true)
+      parent = FactoryGirl.create(:classification, :name => "test_category")
+      FactoryGirl.create(:classification_tag,      :name => "test_entry",         :parent => parent)
+      FactoryGirl.create(:classification_tag,      :name => "another_test_entry", :parent => parent)
+      post :tagging, :params => {:id => @cs.id, :format => :js}
+      expect(response.status).to eq(200)
+      expect(response.body).to include('Job Template (Ansible Tower) Being Tagged')
     end
   end
 

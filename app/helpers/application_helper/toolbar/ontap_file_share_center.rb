@@ -9,7 +9,7 @@ class ApplicationHelper::Toolbar::OntapFileShareCenter < ApplicationHelper::Tool
         button(
           :ontap_file_share_create_datastore,
           'pficon pficon-add-circle-o fa-lg',
-          N_('Create a Datastore based on this #{ui_lookup(:model=>"OntapFileShare").split(" - ").last}'),
+          N_('Create a Datastore based on this File Share'),
           N_('Create Datastore')),
       ]
     ),
@@ -24,7 +24,7 @@ class ApplicationHelper::Toolbar::OntapFileShareCenter < ApplicationHelper::Tool
         button(
           :ontap_file_share_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this #{ui_lookup(:model=>"OntapFileShare").split(" - ").last}'),
+          N_('Edit Tags for this File Share'),
           N_('Edit Tags')),
       ]
     ),
@@ -39,7 +39,7 @@ class ApplicationHelper::Toolbar::OntapFileShareCenter < ApplicationHelper::Tool
         button(
           :ontap_file_share_statistics,
           'product product-monitoring fa-lg',
-          N_('Show Utilization for this #{ui_lookup(:model=>"OntapFileShare").split(" - ").last}'),
+          N_('Show Utilization for this File Share'),
           N_('Utilization'),
           :url => "/show_statistics"),
       ]

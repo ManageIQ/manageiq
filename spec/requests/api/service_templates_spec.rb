@@ -72,7 +72,7 @@ describe ApiController do
       st = FactoryGirl.create(:service_template, :name => "st")
       run_post(service_templates_url(st.id), gen_request(:edit, "name" => "sample service template"))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "supports edits of single resource" do
@@ -95,7 +95,7 @@ describe ApiController do
                                                   [{"href" => service_templates_url(st1.id), "name" => "updated st1"},
                                                    {"href" => service_templates_url(st2.id), "name" => "updated st2"}]))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_results_to_match_hash("results",
                                    [{"id" => st1.id, "name" => "updated st1"},
                                     {"id" => st2.id, "name" => "updated st2"}])
@@ -111,7 +111,7 @@ describe ApiController do
 
       run_post(service_templates_url, gen_request(:delete, "href" => service_templates_url(100)))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects resource deletion without appropriate role" do
@@ -119,7 +119,7 @@ describe ApiController do
 
       run_delete(service_templates_url(100))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects resource deletes for invalid resources" do
@@ -127,7 +127,7 @@ describe ApiController do
 
       run_delete(service_templates_url(999_999))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "supports single resource deletes" do
@@ -137,7 +137,7 @@ describe ApiController do
 
       run_delete(service_templates_url(st.id))
 
-      expect_request_success_with_no_content
+      expect(response).to have_http_status(:no_content)
       expect { st.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 

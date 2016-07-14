@@ -80,7 +80,7 @@ class MiqAeCustomizationController < ApplicationController
       add_flash(_("Service dialog import cancelled"), :success)
     end
     get_node_info
-    replace_right_cell(x_node)
+    replace_right_cell(x_node, [:dialogs])
   end
 
   def export_service_dialogs

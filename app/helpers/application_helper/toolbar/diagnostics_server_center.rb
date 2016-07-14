@@ -35,12 +35,16 @@ class ApplicationHelper::Toolbar::DiagnosticsServerCenter < ApplicationHelper::T
     button(
       :refresh_production_log,
       'fa fa-repeat fa-lg',
-      N_('Reload the #{@sb[:rails_log]} Log Display'),
+      proc do
+        _('Reload the %{log_type} Log Display') % {:log_type => @sb[:rails_log]}
+      end,
       nil),
     button(
       :fetch_production_log,
       'fa fa-download fa-lg',
-      N_('Download the Entire #{@sb[:rails_log]} Log File'),
+      proc do
+        _('Download the Entire %{log_type} Log File') % {:log_type => @sb[:rails_log]}
+      end,
       nil,
       :url => "/fetch_production_log"),
   ])
@@ -54,14 +58,14 @@ class ApplicationHelper::Toolbar::DiagnosticsServerCenter < ApplicationHelper::T
         button(
           :collect_current_logs,
           'fa fa-filter fa-lg',
-          N_('Collect the current logs from the selected #{ui_lookup(:table=>"miq_servers")}'),
+          N_('Collect the current logs from the selected Server'),
           N_('Collect current logs'),
           :klass => ApplicationHelper::Button::CollectLogs
         ),
         button(
           :collect_logs,
           'fa fa-filter fa-lg',
-          N_('Collect all logs from the selected #{ui_lookup(:table=>"miq_servers")}'),
+          N_('Collect all logs from the selected Server'),
           N_('Collect all logs'),
           :klass => ApplicationHelper::Button::CollectLogs
         ),
@@ -70,7 +74,7 @@ class ApplicationHelper::Toolbar::DiagnosticsServerCenter < ApplicationHelper::T
     button(
       :log_depot_edit,
       'pficon pficon-edit fa-lg',
-      N_('Edit the Log Depot settings for the selected #{ui_lookup(:table=>"miq_servers")}'),
+      N_('Edit the Log Depot settings for the selected Server'),
       N_('Edit')),
     select(
       :support_vmdb_choice,

@@ -15,7 +15,7 @@
         :javascript
           miqInitSelectPicker();
           miqSelectPickerEvent("tl_#{typ}_fl_grp1", "#{url}");
-    - unless %w(s h).include?(x_node.split("-").last.split("_").first)
+    - unless %w(s h).include?(x_node.split("-").last.split("_").first) || x_node.starts_with?('ds')
       .form-group
         %label.control-label.col-md-2
           = _('Show Host Events')
@@ -31,6 +31,7 @@
         = select_tag("tl_#{typ}_tz",
           options_for_select(ALL_TIMEZONES,
           @sb[:bottlenecks][:tl_options][:tz]),
+          "data-live-search" => "true",
           "class" => "selectpicker",
           "data-miq_sparkle_on"  => true,
           "data-miq_sparkle_off" => true)

@@ -31,6 +31,12 @@ cols:
 - mw_aggregated_active_web_sessions
 - mw_aggregated_expired_web_sessions
 - mw_aggregated_rejected_web_sessions
+- mw_tx_committed
+- mw_tx_timeout
+- mw_tx_heuristics
+- mw_tx_application_rollbacks
+- mw_tx_aborted
+- mw_tx_resource_rollbacks
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -47,6 +53,12 @@ col_order:
 - mw_aggregated_active_web_sessions
 - mw_aggregated_expired_web_sessions
 - mw_aggregated_rejected_web_sessions
+- mw_tx_committed
+- mw_tx_timeout
+- mw_tx_heuristics
+- mw_tx_application_rollbacks
+- mw_tx_aborted
+- mw_tx_resource_rollbacks
 
 # Column titles, in order
 headers:
@@ -60,6 +72,12 @@ headers:
 - Active
 - Expired
 - Rejected
+- Committed
+- Timed-out
+- Heuristic
+- Application Failure
+- Aborted
+- Resource Failure
 
 # Condition expression for search filtering
 conditions:
@@ -96,6 +114,12 @@ graph:
     - mw_aggregated_active_web_sessions
     - mw_aggregated_expired_web_sessions
     - mw_aggregated_rejected_web_sessions
+    - mw_tx_committed
+    - mw_tx_timeout
+    - mw_tx_heuristics
+    - mw_tx_application_rollbacks
+    - mw_tx_aborted
+    - mw_tx_resource_rollbacks
 
 # Dimensions of graph (1 or 2)
 #   Note: specifying 2 for a single dimension graph may not return expected results

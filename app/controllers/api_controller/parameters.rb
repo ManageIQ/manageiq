@@ -10,13 +10,6 @@ class ApiController
       [offset, limit]
     end
 
-    def json_body
-      @req[:body] ||= begin
-        body = request.body.read if request.body
-        body.blank? ? {} : JSON.parse(body)
-      end
-    end
-
     def hash_fetch(hash, element, default = {})
       hash[element] || default
     end
@@ -106,14 +99,6 @@ class ApiController
       params['by_tag']
     end
 
-    def expand_param
-      params['expand'] && params['expand'].split(",")
-    end
-
-    def expand?(what)
-      expand_param ? expand_param.include?(what.to_s) : false
-    end
-
     def decorator_selection
       params['decorators'].to_s.split(",")
     end
@@ -125,8 +110,8 @@ class ApiController
     end
 
     def attribute_selection
-      if params['attributes'] || @req[:additional_attributes]
-        params['attributes'].to_s.split(",") | Array(@req[:additional_attributes]) | ID_ATTRS
+      if !@req.attributes.empty? || @additional_attributes
+        @req.attributes | Array(@additional_attributes) | ID_ATTRS
       else
         "all"
       end

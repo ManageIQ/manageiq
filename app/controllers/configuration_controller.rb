@@ -57,10 +57,7 @@ class ConfigurationController < ApplicationController
     end
 
     if params[:pressed].ends_with?("_edit", "_copy")
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => @refresh_partial, :id => @redirect_id
-      end
+      javascript_redirect :action => @refresh_partial, :id => @redirect_id
     else
       c_tb = build_toolbar(center_toolbar_filename)
       render :update do |page|
@@ -101,43 +98,27 @@ class ConfigurationController < ApplicationController
 
   # AJAX driven routine to check for changes in ANY field on the user form
   def filters_field_changed
-    # ui3 form
     return unless load_edit("config_edit__ui3", "configuration")
-    if params[:all_checked]                         # User checked/unchecked a tree node
-      @edit[:show_ids] = params[:all_checked].split(',')
-      if !@edit[:show_ids].blank?
-        @edit[:new].each_with_index do |arr, i|
-          if @edit[:show_ids].include?(arr.id.to_s)
-            @edit[:new][i].search_key = nil
-          else
-            @edit[:new][i].search_key = "_hidden_"
-          end
-        end
-      else      # if everything was unchecked
-        @edit[:new].each_with_index do |_search, i|
-          @edit[:new][i].search_key = nil
-        end
-      end
-    end
+    id = params[:id].split('-').last.to_i
+    @edit[:new].find { |x| x[:id] == id }[:search_key] = params[:check] == 'true' ? nil : '_hidden_'
     @edit[:current].each_with_index do |arr, i|          # needed to compare each array element's attributes to find out if something has changed
-      if @edit[:new][i].search_key != arr.search_key
+      if @edit[:new][i][:search_key] != arr[:search_key]
         @changed = true
         break
       end
     end
+    @changed = false unless @changed
     render :update do |page|
       page << javascript_prologue
-      # needed to compare each array element's attributes to find out if something has changed
-      @edit[:current].each_with_index do |_arr, i|
-        id = @edit[:new][i].id
-        if @edit[:new][i].search_key != @edit[:current][i].search_key
-          style_class = 'cfme-blue-bold-node'
-        else
-          style_class = 'dynatree-title'
+      @edit[:current].each_with_index do |filter, i|
+        style_class = if filter[:search_key] != @edit[:new][i][:search_key]
+                        'cfme-blue-bold-node'
+                      else
+                        'dynatree-title'
         end
-        page << "miqDynatreeNodeAddClass('#{session[:tree_name]}', '#{id}', '#{style_class}')"
+        page << "miqDynatreeNodeAddClass('df_tree', $('[id$=\"-#{filter[:id]}\"]'), '#{style_class}')"
       end
-      page << javascript_for_miq_button_visibility(@changed) if @changed
+      page << javascript_for_miq_button_visibility(@changed)
     end
   end
 
@@ -234,39 +215,14 @@ class ConfigurationController < ApplicationController
         return                                                      # No config file for Visuals yet, just return
       when "ui_3"                                                   # User Filters tab
         @edit = session[:edit]
-        @edit[:current].each do |arr|
-          s = MiqSearch.find(arr.id.to_i)
-          if @edit[:show_ids]
-            if @edit[:show_ids].include?(s.id.to_s)
-              s.search_key = nil
-            else
-              s.search_key = "_hidden_"
-            end
-            s.save
-          end
+        @edit[:new].each do |filter|
+          search = MiqSearch.find(filter[:id])
+          search.update(:search_key => filter[:search_key]) unless search.search_key == filter[:search_key]
         end
         add_flash(_("Default Filters saved successfully"))
         edit
         render :action => "show"
-        return                                                      # No config file for Visuals yet, just return
-      end
-      @update.config.each_key do |category|
-        @update.config[category] = @edit[:new][category].dup
-      end
-      if @update.validate                                           # Have VMDB class validate the settings
-        @update.save                                              # Save other settings for current server
-        AuditEvent.success(build_config_audit(@edit[:new], @edit[:current].config))
-        add_flash(_("Configuration settings saved"))
-        edit
-        render :action => "show"
-      else
-        @update.errors.each do |field, msg|
-          add_flash("#{field.titleize}: #{msg}", :error)
-        end
-        @changed = true
-        session[:changed] = @changed
-        build_tabs
-        render :action => "show"
+        return # No config file for Visuals yet, just return
       end
     elsif params["reset"]
       edit
@@ -478,10 +434,7 @@ class ConfigurationController < ApplicationController
     when "cancel"
       add_flash(_("Add of new %{record} was cancelled by the user") % {:record => ui_lookup(:model => "TimeProfile")})
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'change_tab', :typ => "timeprofiles", :tab => 4
-      end
+      javascript_redirect :action => 'change_tab', :typ => "timeprofiles", :tab => 4
     when "add"
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
         add_flash(_("Description is required"), :error)
@@ -494,10 +447,7 @@ class ConfigurationController < ApplicationController
       end
       unless @flash_array.nil?
         drop_breadcrumb(:name => _("Add New Time Profile"), :url => "/configuration/timeprofile_edit")
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
       @timeprofile = TimeProfile.new unless @timeprofile
@@ -508,18 +458,12 @@ class ConfigurationController < ApplicationController
         add_flash(_("Error during 'add': %{error_message}") % {:error_message => bang.message}, :error)
         @in_a_form = true
         drop_breadcrumb(:name => _("Add New Time Profile"), :url => "/configuration/timeprofile_edit")
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         AuditEvent.success(build_created_audit(@timeprofile, @edit))
         add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "TimeProfile"), :name => @timeprofile.description})
         session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => 'change_tab', :typ => "timeprofiles", :tab => 4
-        end
+        javascript_redirect :action => 'change_tab', :typ => "timeprofiles", :tab => 4
       end
     end
   end
@@ -531,10 +475,7 @@ class ConfigurationController < ApplicationController
       add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "TimeProfile"), :name => @timeprofile.description})
       params[:id] = @timeprofile.id.to_s
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'change_tab', :typ => "timeprofiles", :tab => 4, :id => @timeprofile.id.to_s
-      end
+      javascript_redirect :action => 'change_tab', :typ => "timeprofiles", :tab => 4, :id => @timeprofile.id.to_s
     elsif params[:button] == "reset"
       @edit[:new] = copy_hash(@edit[:current])
       params[:id] = @timeprofile.id
@@ -543,10 +484,7 @@ class ConfigurationController < ApplicationController
       drop_breadcrumb(:name => _("Edit '%{description}'") % {:description => @timeprofile.description},
                       :url  => "/configuration/timeprofile_edit")
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'timeprofile_edit', :id => @timeprofile.id.to_s
-      end
+      javascript_redirect :action => 'timeprofile_edit', :id => @timeprofile.id.to_s
     elsif params[:button] == "save"
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
         add_flash(_("Description is required"), :error)
@@ -561,10 +499,7 @@ class ConfigurationController < ApplicationController
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
         drop_breadcrumb(:name => _("Edit '%{description}'") % {:description => @timeprofile.description},
                         :url  => "/configuration/timeprofile_edit")
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
       timeprofile_set_record_vars(@timeprofile)
@@ -576,19 +511,13 @@ class ConfigurationController < ApplicationController
         @in_a_form = true
         drop_breadcrumb(:name => _("Edit '%{description}'") % {:description => @timeprofile.description},
                         :url  => "/configuration/timeprofile_edit")
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         AuditEvent.success(build_created_audit(@timeprofile, @edit))
         add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "TimeProfile"),
                                                          :name  => @timeprofile.description})
         session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => 'change_tab', :typ => "timeprofiles", :tab => 4, :id => @timeprofile.id.to_s
-        end
+        javascript_redirect :action => 'change_tab', :typ => "timeprofiles", :tab => 4, :id => @timeprofile.id.to_s
       end
     end
   end
@@ -643,20 +572,6 @@ class ConfigurationController < ApplicationController
     end
   end
 
-  NAV_TAB_PATH =  {
-    :container        => %w(Containers Containers),
-    :containergroup   => %w(Containers Containers\ Groups),
-    :containerservice => %w(Containers Services),
-    :host             => %w(Infrastructure Hosts),
-    :miqtemplate      => %w(Services Workloads Templates\ &\ Images),
-    :storage          => %w(Infrastructure Datastores),
-    :vm               => %w(Services Workloads VMs\ &\ Instances),
-    :"manageiq::providers::cloudmanager::template" => %w(Cloud Instances Images),
-    :"manageiq::providers::inframanager::template" => %w(Infrastructure Virtual\ Machines Templates),
-    :"manageiq::providers::cloudmanager::vm"       => %w(Cloud Instances Instances),
-    :"manageiq::providers::inframanager::vm"       => %w(Infrastructure Virtual\ Machines VMs)
-  }
-
   def merge_in_user_settings(settings)
     if user_settings = current_user.try(:settings)
       settings.each do |key, value|
@@ -698,14 +613,17 @@ class ConfigurationController < ApplicationController
         :key     => 'config_edit__ui2',
       }
     when 'ui_3'
-      current = MiqSearch.where(:search_type => "default")
-                .sort_by { |s| [NAV_TAB_PATH[s.db.downcase.to_sym], s.description.downcase] }
+      filters = MiqSearch.where(:search_type => "default")
+      current = filters.map do |filter|
+        {:id => filter.id, :search_key => filter.search_key}
+      end
       @edit = {
         :key         => 'config_edit__ui3',
         :set_filters => true,
         :current     => current,
       }
-      build_default_filters_tree(@edit[:current])
+      @df_tree = TreeBuilderDefaultFilters.new(:df_tree, :df, @sb, true, filters)
+      self.x_active_tree = :df_tree
     when 'ui_4'
       @edit = {
         :current     => {},
@@ -769,79 +687,6 @@ class ConfigurationController < ApplicationController
       @edit[:new][:display][:compare] = params[:display][:compare] if !params[:display].nil? && !params[:display][:compare].nil?
       @edit[:new][:display][:drift] = params[:display][:drift] if !params[:display].nil? && !params[:display][:drift].nil?
     end
-  end
-
-  # Build the default filters tree for the search views
-  def build_default_filters_tree(all_def_searches)
-    all_views = []                                   # Array to hold all CIs
-    all_def_searches.collect do |search|  # Go thru all of the Searches
-      folder_nodes = NAV_TAB_PATH[search[:db].downcase.to_sym]
-      add_main_tab_node(folder_nodes, search.id) if @main_tab.nil? || @main_tab != folder_nodes[0]
-      add_sub_tab_node(folder_nodes, search.id)  if @sub_tab.blank? || @sub_tab != folder_nodes[1]
-      add_ci_tab_node(folder_nodes, search.id)   if folder_nodes.length == 3 &&
-                                                    (@ci_tab.blank? || @ci_tab != folder_nodes[2])
-      # check if this is last folder node, add filters
-      if folder_nodes.length == 2 && (!@sub_tab.blank? || @sub_tab == folder_nodes[1])
-        node = build_filter_node(search)
-        @sub_tab_children.push(node) unless @sub_tab_children.include?(node)
-      elsif folder_nodes.length == 3 && (!@ci_tab.blank? || @ci_tab == folder_nodes[2])
-        node = build_filter_node(search)
-        @search_filter_nodes.push(node) unless @search_filter_nodes.include?(node)
-      end
-      @ci_tab_node[:children]   = @search_filter_nodes unless @search_filter_nodes.blank?
-      @sub_tab_node[:children]  = @sub_tab_children    unless @sub_tab_children.blank?
-      @main_tab_node[:children] = @main_tab_children   unless @main_tab_children.blank?
-      all_views.push(@main_tab_node).uniq!
-    end
-    @all_views_tree = all_views.to_json
-    session[:tree_name]    = "all_views_tree"
-  end
-
-  def add_main_tab_node(folder_nodes, search_id)
-    @main_tab          = folder_nodes.first
-    @main_tab_node     = build_folder_node(@main_tab, search_id, true)
-    @main_tab_children = []
-  end
-
-  def add_sub_tab_node(folder_nodes, search_id)
-    @sub_tab      = folder_nodes[1]
-    @sub_tab_node = build_folder_node(@sub_tab, search_id, folder_nodes.length > 2)
-    @main_tab_children.push(@sub_tab_node)
-    @sub_tab_children = []
-  end
-
-  def add_ci_tab_node(folder_nodes, search_id)
-    @ci_tab      = folder_nodes[2]
-    @ci_tab_node = build_folder_node(@ci_tab, search_id)
-    @sub_tab_children.push(@ci_tab_node)
-    @search_filter_nodes = []
-  end
-
-  def build_folder_node(title, id, expanded = false)
-    TreeNodeBuilder.generic_tree_node(
-      "#{title}_#{id}",
-      title,
-      "folder.png",
-      title,
-      :style_class  => "cfme-no-cursor-node",
-      :hideCheckbox => true,
-      :expand       => expanded
-    )
-  end
-
-  def build_filter_node(rec)
-    TreeNodeBuilder.generic_tree_node(
-      rec[:id].to_s,
-      rec[:description],
-      "filter.png",
-      rec[:description],
-      :style_class => "cfme-no-cursor-node",
-      :select      => rec[:search_key] != "_hidden_"
-    )
-  end
-
-  def get_tree_image(db)
-    db.constantize.base_model.name.underscore
   end
 
   def get_session_data

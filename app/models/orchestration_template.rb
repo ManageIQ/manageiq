@@ -13,10 +13,13 @@ class OrchestrationTemplate < ApplicationRecord
 
   validates :md5,
             :uniqueness => {:scope => :draft, :message => "of content already exists (content must be unique)"},
-            :unless     => :draft?
+            :if         => :unique_md5?
   validates_presence_of :name
 
   before_destroy :check_not_in_use
+
+  attr_accessor :remote_proxy
+  alias remote_proxy? remote_proxy
 
   # Try to create the template if the name is not found in table
   def self.seed
@@ -69,6 +72,11 @@ class OrchestrationTemplate < ApplicationRecord
     self.md5 = calc_md5(content)
   end
 
+  # Determines if validation for md5 uniqueness is done
+  def unique_md5?
+    !draft?
+  end
+
   # Check whether a template has been referenced by any stack. A template that is in use should be
   # considered read only
   def in_use?
@@ -95,6 +103,12 @@ class OrchestrationTemplate < ApplicationRecord
   end
 
   delegate :eligible_managers, :to => :class
+
+  def self.stack_type
+    "OrchestrationStack"
+  end
+
+  delegate :stack_type, :to => :class
 
   # return the validation error message; otherwise nil
   def validate_content(manager = nil)

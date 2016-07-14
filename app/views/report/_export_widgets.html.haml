@@ -45,8 +45,18 @@
             placeholder: "No file chosen"
           });
       .col-md-6
-        = submit_tag(_("Upload"), :class => "btn btn-default import-upload")
-
+        = submit_tag(_("Upload"), :class => "btn btn-default", :id => "upload_widget", :disabled => true)
+        :javascript
+          $("#upload_file").on("change",
+             function(){
+               if ($(this).val()){
+                 $('#upload_widget').prop('disabled', false);
+               }
+               else {
+                 $('#upload_widget').prop('disabled', true);
+               }
+             }
+           );
   %hr
 
   %h3
@@ -64,7 +74,7 @@
             :multiple => true)
 
     .pull-right
-      = submit_tag("Export", :class => "btn btn-primary export-widgets btn-disabled")
+      = submit_tag(_("Export"), :class => "btn btn-primary export-widgets btn-disabled")
 
 :javascript
   $(function() {
@@ -83,7 +93,7 @@
     });
 
     $('#check-all').click(function (e) {
-      $("#import-form table tbody input[type='checkbox']").prop('checked', $(this).prop('checked'));
+      $("#import-widgets-form table tbody input[type='checkbox']").prop('checked', $(this).prop('checked'));
     });
 
 

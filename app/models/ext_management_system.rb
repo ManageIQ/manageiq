@@ -75,6 +75,7 @@ class ExtManagementSystem < ApplicationRecord
   include EmsRefresh::Manager
   include TenancyMixin
   include AvailabilityMixin
+  include SupportsFeatureMixin
 
   after_destroy { |record| $log.info "MIQ(ExtManagementSystem.after_destroy) Removed EMS [#{record.name}] id [#{record.id}]" }
 
@@ -387,14 +388,6 @@ class ExtManagementSystem < ApplicationRecord
 
   def self.ems_infra_discovery_types
     @ems_infra_discovery_types ||= %w(virtualcenter scvmm rhevm)
-  end
-
-  def self.register_cloud_discovery_type(type_hash)
-    ems_cloud_discovery_types.merge!(type_hash)
-  end
-
-  def self.ems_cloud_discovery_types
-    @ems_cloud_discovery_types ||= {}
   end
 
   def disconnect_inv

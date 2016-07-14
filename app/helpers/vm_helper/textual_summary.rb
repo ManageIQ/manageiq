@@ -3,6 +3,7 @@ module VmHelper::TextualSummary
   include TextualMixins::TextualDescription
   include TextualMixins::TextualDrift
   include TextualMixins::TextualFilesystems
+  include TextualMixins::TextualGroupTags
   include TextualMixins::TextualInitProcesses
   include TextualMixins::TextualName
   include TextualMixins::TextualOsInfo
@@ -84,10 +85,6 @@ module VmHelper::TextualSummary
 
   def textual_group_normal_operating_ranges
     %i(normal_operating_ranges_cpu normal_operating_ranges_cpu_usage normal_operating_ranges_memory normal_operating_ranges_memory_usage)
-  end
-
-  def textual_group_tags
-    %i(tags)
   end
 
   #
@@ -337,7 +334,7 @@ module VmHelper::TextualSummary
 
   def textual_service
     h = {:label => _("Service"), :image => "service"}
-    service = @record.service || @record.try(:orchestration_stack).try(:service)
+    service = @record.service || @record.try(:orchestration_stack).try(:service) || @record.try(:orchestration_stack).try(:root).try(:service)
     if service.nil?
       h[:value] = _("None")
     else
@@ -774,16 +771,16 @@ module VmHelper::TextualSummary
 
   def textual_normal_operating_ranges_cpu
     h = {:label => _("CPU"), :value => []}
-    [:high, _("High"), :avg, _("Average"), :low, _("Low")].each_slice(2) do |key, label|
+    [:max, _("Max"), :high, _("High"), :avg, _("Average"), :low, _("Low")].each_slice(2) do |key, label|
       value = @record.send("cpu_usagemhz_rate_average_#{key}_over_time_period")
-      h[:value] << {:label => label, :value => (value.nil? ? _("Not Available") : mhz_to_human_size(value))}
+      h[:value] << {:label => label, :value => (value.nil? ? _("Not Available") : mhz_to_human_size(value, 2))}
     end
     h
   end
 
   def textual_normal_operating_ranges_cpu_usage
     h = {:label => _("CPU Usage"), :value => []}
-    [:high, _("High"), :avg, _("Average"), :low, _("Low")].each_slice(2) do |key, label|
+    [:max, _("Max"), :high, _("High"), :avg, _("Average"), :low, _("Low")].each_slice(2) do |key, label|
       value = @record.send("max_cpu_usage_rate_average_#{key}_over_time_period")
       h[:value] << {:label => label,
                     :value => (value.nil? ? _("Not Available") : number_to_percentage(value, :precision => 2))}
@@ -793,7 +790,7 @@ module VmHelper::TextualSummary
 
   def textual_normal_operating_ranges_memory
     h = {:label => _("Memory"), :value => []}
-    [:high, _("High"), :avg, _("Average"), :low, _("Low")].each_slice(2) do |key, label|
+    [:max, _("Max"), :high, _("High"), :avg, _("Average"), :low, _("Low")].each_slice(2) do |key, label|
       value = @record.send("derived_memory_used_#{key}_over_time_period")
       h[:value] << {:label => label,
                     :value => (value.nil? ? _("Not Available") : number_to_human_size(value.megabytes,
@@ -804,7 +801,7 @@ module VmHelper::TextualSummary
 
   def textual_normal_operating_ranges_memory_usage
     h = {:label => _("Memory Usage"), :value => []}
-    [:high, _("High"), :avg, _("Average"), :low, _("Low")].each_slice(2) do |key, label|
+    [:max, _("Max"), :high, _("High"), :avg, _("Average"), :low, _("Low")].each_slice(2) do |key, label|
       value = @record.send("max_mem_usage_absolute_average_#{key}_over_time_period")
       h[:value] << {:label => label,
                     :value => (value.nil? ? _("Not Available") : number_to_percentage(value, :precision => 2))}

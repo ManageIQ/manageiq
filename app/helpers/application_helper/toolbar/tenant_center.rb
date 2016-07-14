@@ -48,7 +48,9 @@ class ApplicationHelper::Toolbar::TenantCenter < ApplicationHelper::Toolbar::Bas
         button(
           :rbac_tenant_tags_edit,
           'pficon pficon-edit fa-lg',
-          t = N_('Edit \'#{session[:customer_name]}\' Tags for this Tenant'),
+          t = proc do
+            _('Edit \'%{customer_name}\' Tags for this Tenant') % {:customer_name => @view_context.session[:customer_name]}
+          end,
           t),
       ]
     ),

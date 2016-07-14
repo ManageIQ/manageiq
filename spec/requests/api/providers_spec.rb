@@ -35,20 +35,22 @@ describe ApiController do
   end
   let(:sample_rhevm) do
     {
-      "type"      => "ManageIQ::Providers::Redhat::InfraManager",
-      "name"      => "sample rhevm",
-      "port"      => 5000,
-      "hostname"  => "sample_rhevm.provider.com",
-      "ipaddress" => "100.200.300.2"
+      "type"              => "ManageIQ::Providers::Redhat::InfraManager",
+      "name"              => "sample rhevm",
+      "port"              => 5000,
+      "hostname"          => "sample_rhevm.provider.com",
+      "ipaddress"         => "100.200.300.2",
+      'security_protocol' => 'kerberos',
     }
   end
   let(:sample_openshift) do
     {
-      "type"      => "ManageIQ::Providers::Openshift::ContainerManager",
-      "name"      => "sample openshift",
-      "port"      => "8443",
-      "hostname"  => "sample_openshift.provider.com",
-      "ipaddress" => "100.200.300.3",
+      "type"              => "ManageIQ::Providers::Openshift::ContainerManager",
+      "name"              => "sample openshift",
+      "port"              => 8443,
+      "hostname"          => "sample_openshift.provider.com",
+      "ipaddress"         => "100.200.300.3",
+      'security_protocol' => 'kerberos',
     }
   end
 
@@ -79,7 +81,7 @@ describe ApiController do
 
       run_post(providers_url, sample_rhevm)
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects provider creation with id specified" do
@@ -103,7 +105,7 @@ describe ApiController do
 
       run_post(providers_url, sample_rhevm)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
       expect_results_to_match_hash("results", [sample_rhevm.except(*ENDPOINT_ATTRS)])
 
@@ -118,13 +120,17 @@ describe ApiController do
 
       run_post(providers_url, sample_openshift.merge("credentials" => [openshift_credentials]))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
       expect_results_to_match_hash("results", [sample_openshift.except(*ENDPOINT_ATTRS)])
 
       provider_id = response_hash["results"].first["id"]
       expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
-      expect(ExtManagementSystem.find(provider_id).authentications.size).to eq(1)
+      ems = ExtManagementSystem.find(provider_id)
+      expect(ems.authentications.size).to eq(1)
+      ENDPOINT_ATTRS.each do |attr|
+        expect(ems.send(attr)).to eq(sample_openshift[attr])
+      end
     end
 
     it "supports single provider creation via action" do
@@ -132,7 +138,7 @@ describe ApiController do
 
       run_post(providers_url, gen_request(:create, sample_rhevm))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
       expect_results_to_match_hash("results", [sample_rhevm.except(*ENDPOINT_ATTRS)])
 
@@ -145,7 +151,7 @@ describe ApiController do
 
       run_post(providers_url, sample_vmware.merge("credentials" => default_credentials))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
       expect_results_to_match_hash("results", [sample_vmware.except(*ENDPOINT_ATTRS)])
 
@@ -161,7 +167,7 @@ describe ApiController do
 
       run_post(providers_url, sample_rhevm.merge("credentials" => compound_credentials))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
       expect_results_to_match_hash("results", [sample_rhevm.except(*ENDPOINT_ATTRS)])
 
@@ -179,7 +185,7 @@ describe ApiController do
 
       run_post(providers_url, gen_request(:create, [sample_vmware, sample_rhevm]))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
       expect_results_to_match_hash("results",
                                    [sample_vmware.except(*ENDPOINT_ATTRS), sample_rhevm.except(*ENDPOINT_ATTRS)])
@@ -197,7 +203,7 @@ describe ApiController do
 
       run_post(providers_url, gen_request(:edit, "name" => "provider name", "href" => providers_url(999_999)))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects edits for invalid resources" do
@@ -205,7 +211,7 @@ describe ApiController do
 
       run_post(providers_url(999_999), gen_request(:edit, "name" => "updated provider name"))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "supports single resource edit" do
@@ -218,6 +224,18 @@ describe ApiController do
       expect_single_resource_query("id" => provider.id, "name" => "updated provider")
       expect(provider.reload.name).to eq("updated provider")
       expect(provider.port).to eq(8080)
+    end
+
+    it "only returns real attributes" do
+      api_basic_authorize collection_action_identifier(:providers, :edit)
+
+      provider = FactoryGirl.create(:ext_management_system, sample_rhevm)
+
+      run_post(providers_url(provider.id), gen_request(:edit, "name" => "updated provider", "port" => "8080"))
+
+      response_keys = response_hash.keys
+      expect(response_keys).to include("tenant_id")
+      expect(response_keys).not_to include("total_vms")
     end
 
     it "supports updates of credentials" do
@@ -276,7 +294,7 @@ describe ApiController do
 
       run_post(providers_url, gen_request(:delete, "name" => "provider name", "href" => providers_url(100)))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects deletion without appropriate role" do
@@ -284,7 +302,7 @@ describe ApiController do
 
       run_delete(providers_url(100))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects deletes for invalid providers" do
@@ -292,7 +310,7 @@ describe ApiController do
 
       run_delete(providers_url(999_999))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "supports single provider delete" do
@@ -302,7 +320,7 @@ describe ApiController do
 
       run_delete(providers_url(provider.id))
 
-      expect_request_success_with_no_content
+      expect(response).to have_http_status(:no_content)
     end
 
     it "supports single provider delete action" do
@@ -343,7 +361,7 @@ describe ApiController do
 
       run_post(providers_url(100), gen_request(:refresh))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "supports single provider refresh" do
@@ -368,7 +386,7 @@ describe ApiController do
 
       run_post(providers_url, gen_request(:refresh, [{"href" => providers_url(p1.id)},
                                                      {"href" => providers_url(p2.id)}]))
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_results_to_match_hash("results", [failed_auth_action(p1.id), failed_auth_action(p2.id)])
     end
   end

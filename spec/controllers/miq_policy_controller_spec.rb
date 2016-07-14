@@ -207,7 +207,7 @@ describe MiqPolicyController do
       presenter = ExplorerPresenter.new(:active_tree => :policy_tree)
 
       controller.send(:replace_right_cell, 'root', [:policy], presenter)
-      expect(presenter[:replace_partials]).to have_key(:policy_tree_div)
+      expect(presenter[:replace_partials]).to have_key('policy_tree_div')
     end
 
     it 'should not hide center toolbar while doing searches' do

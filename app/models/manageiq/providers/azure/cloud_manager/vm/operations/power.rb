@@ -22,4 +22,9 @@ module ManageIQ::Providers::Azure::CloudManager::Vm::Operations::Power
     provider_service.restart(name, resource_group)
     update_attributes!(:raw_power_state => "VM starting")
   end
+
+  def reboot_guest
+    provider_service.restart(name, resource_group)
+    update_attributes!(:raw_power_state => "VM starting")
+  end
 end

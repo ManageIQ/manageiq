@@ -25,7 +25,7 @@ class ApplicationHelper::Toolbar::ContainerBuildCenter < ApplicationHelper::Tool
         button(
           :container_build_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this #{ui_lookup(:table=>"container_build")}'),
+          N_('Edit Tags for this Container Build'),
           N_('Edit Tags')),
       ]
     ),

@@ -48,12 +48,8 @@ class MiqAeToolsController < ApplicationController
     assert_privileges("refresh_log")
     @log = $miq_ae_logger.contents if $miq_ae_logger
     add_flash(_("Logs for this CFME Server are not available for viewing"), :warning) if @log.blank?
-    render :update do |page|
-      page << javascript_prologue
-      page.replace_html("main_div",
-                        :partial => "layouts/log_viewer",
-                        :locals  => {:legend_text => _("Last 1000 lines from the Automation log")})
-    end
+    replace_main_div :partial => "layouts/log_viewer",
+                     :locals  => {:legend_text => _("Last 1000 lines from the Automation log")}
   end
 
   # Send the log in text format

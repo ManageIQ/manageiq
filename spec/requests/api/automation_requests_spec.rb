@@ -31,7 +31,7 @@ describe ApiController do
 
       run_post(automation_requests_url, single_automation_request)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", %w(id approval_state type request_type status options))
       expect_results_to_match_hash("results", [expected_hash])
 
@@ -44,7 +44,7 @@ describe ApiController do
 
       run_post(automation_requests_url, gen_request(:create, single_automation_request))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", %w(id approval_state type request_type status options))
       expect_results_to_match_hash("results", [expected_hash])
 
@@ -57,7 +57,7 @@ describe ApiController do
 
       run_post(automation_requests_url, gen_request(:create, [single_automation_request, single_automation_request]))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", %w(id approval_state type request_type status options))
       expect_results_to_match_hash("results", [expected_hash, expected_hash])
 

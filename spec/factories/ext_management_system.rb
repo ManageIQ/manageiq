@@ -118,8 +118,8 @@ FactoryGirl.define do
   factory :ems_openstack_infra_with_authentication,
           :parent => :ems_openstack_infra do
     after :create do |x|
-      x.authentications << FactoryGirl.create(:authentication, :userid => "admin", :password => "123456789")
-      x.authentications << FactoryGirl.create(:authentication, :userid => "user", :password => "abcdefgh", :authtype => "amqp")
+      x.authentications << FactoryGirl.create(:authentication)
+      x.authentications << FactoryGirl.create(:authentication, :authtype => "amqp")
     end
   end
 
@@ -142,13 +142,6 @@ FactoryGirl.define do
   factory :ems_amazon_with_authentication,
           :parent => :ems_amazon do
     after(:create) do |x|
-      x.authentications << FactoryGirl.create(:authentication, :userid => "0123456789ABCDEFGHIJ", :password => "ABCDEFGHIJKLMNO1234567890abcdefghijklmno")
-    end
-  end
-
-  factory :ems_amazon_with_authentication_on_other_account,
-          :parent => :ems_amazon do
-    after(:create) do |x|
       x.authentications << FactoryGirl.create(:authentication)
     end
   end
@@ -162,8 +155,8 @@ FactoryGirl.define do
   factory :ems_openstack_with_authentication,
           :parent => :ems_openstack do
     after :create do |x|
-      x.authentications << FactoryGirl.create(:authentication, :userid => "admin", :password => "123456789")
-      x.authentications << FactoryGirl.create(:authentication, :userid => "user", :password => "abcdefgh", :authtype => "amqp")
+      x.authentications << FactoryGirl.create(:authentication)
+      x.authentications << FactoryGirl.create(:authentication, :authtype => "amqp")
     end
   end
 
@@ -183,8 +176,15 @@ FactoryGirl.define do
   factory :ems_google_with_authentication,
           :parent => :ems_google do
     after(:create) do |x|
-      x.authentications << FactoryGirl.create(:authentication, :userid => "0123456789ABCDEFGHIJ", :password => "ABCDEFGHIJKLMNO1234567890abcdefghijklmno")
+      x.authentications << FactoryGirl.create(:authentication)
     end
+  end
+
+  factory :ems_google_network,
+          :aliases => ["manageiq/providers/google/network_manager"],
+          :class   => "ManageIQ::Providers::Google::NetworkManager",
+          :parent  => :ems_network do
+    provider_region "us-central1"
   end
 
   # Leaf classes for ems_container

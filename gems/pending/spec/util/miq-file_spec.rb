@@ -1,3 +1,4 @@
+require 'uri'
 require 'util/extensions/miq-file'
 
 describe 'MIQFile' do
@@ -29,6 +30,17 @@ describe 'MIQFile' do
     it 'handles an IPv6 hostname as expected' do
       hostname = '::1'
       expect(File.path_to_uri('foo', hostname)).to eql("file://[#{hostname}]/foo")
+    end
+
+    it 'handles a UNC path as expected' do
+      file = "//foo/bar/baz"
+      expect(File.path_to_uri(file, hostname)).to eql("file://#{hostname}/#{file}")
+    end
+
+    it 'handles a volume name as expected' do
+      file = "///?/Volume{xxx-yyy-42zzz-1111-222233334444}/"
+      encoded_file = URI.encode(file)
+      expect(File.path_to_uri(file, hostname)).to eql("file://#{hostname}/#{encoded_file}")
     end
 
     it 'requires at least one argument' do

@@ -33,10 +33,15 @@ class MiqExpression::Field
     column_type == :string
   end
 
+  def plural?
+    return false if reflections.empty?
+    [:has_many, :has_and_belongs_to_many].include?(reflections.last.macro)
+  end
+
   def reflections
     klass = model
     associations.collect do |association|
-      klass.reflect_on_association(association).tap do |reflection|
+      klass.reflection_with_virtual(association).tap do |reflection|
         raise ArgumentError, "One or more associations are invalid: #{associations.join(", ")}" unless reflection
         klass = reflection.klass
       end

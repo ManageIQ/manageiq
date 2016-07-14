@@ -11,7 +11,7 @@ class ApplicationHelper::Toolbar::MiddlewareDatasourcesCenter < ApplicationHelpe
         button(
           :middleware_datasource_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for these #{ui_lookup(:table=>"middleware_datasources")}'),
+          N_('Edit Tags for these Middleware Datasources'),
           N_('Edit Tags'),
           :url_parms => "main_div",
           :enabled   => false,

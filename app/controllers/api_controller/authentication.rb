@@ -68,11 +68,11 @@ class ApiController
       {
         :userid     => user.userid,
         :name       => user.name,
-        :user_href  => "#{@req[:api_prefix]}/users/#{user.id}",
+        :user_href  => "#{@req.api_prefix}/users/#{user.id}",
         :group      => group.description,
-        :group_href => "#{@req[:api_prefix]}/groups/#{group.id}",
+        :group_href => "#{@req.api_prefix}/groups/#{group.id}",
         :role       => group.miq_user_role_name,
-        :role_href  => "#{@req[:api_prefix]}/roles/#{group.miq_user_role.id}",
+        :role_href  => "#{@req.api_prefix}/roles/#{group.miq_user_role.id}",
         :tenant     => group.tenant.name,
         :groups     => user.miq_groups.pluck(:description),
       }
@@ -154,7 +154,7 @@ class ApiController
       {
         "name"   => action[:name],
         "method" => method,
-        "href"   => "#{@req[:api_prefix]}/#{collection}"
+        "href"   => "#{@req.api_prefix}/#{collection}"
       }
     end
 
@@ -185,7 +185,7 @@ class ApiController
       collection_config.each_with_object(Hash.new { |hash, key| hash[key] = [] }) do |(collection, cspec), result|
         ident = cspec[:identifier]
         next unless ident
-        href = "#{@req[:api_prefix]}/#{collection}"
+        href = "#{@req.api_prefix}/#{collection}"
         result[ident] << href
       end
     end

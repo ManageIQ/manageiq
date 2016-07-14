@@ -8,7 +8,7 @@
       :group: cpu
       :source: used
       :metric: cpu_usagemhz_rate_average
-      :per_time: daily
+      :per_time: hourly
       :per_unit: megahertz
       :measure: Hz Units
       :type_currency: Dollars
@@ -21,7 +21,7 @@
       :group: cpu_cores
       :source: used
       :metric: v_derived_cpu_total_cores_used
-      :per_time: daily
+      :per_time: hourly
       :per_unit: cpu core
       :type_currency: Dollars
       :tiers:
@@ -33,7 +33,7 @@
       :group: cpu
       :source: allocated
       :metric: derived_vm_numvcpus
-      :per_time: daily
+      :per_time: hourly
       :per_unit: cpu
       :type_currency: Dollars
       :tiers:
@@ -45,7 +45,7 @@
       :group: memory
       :source: used
       :metric: derived_memory_used
-      :per_time: daily
+      :per_time: hourly
       :per_unit: megabytes
       :measure: Bytes Units
       :type_currency: Dollars
@@ -58,7 +58,7 @@
       :group: memory
       :source: allocated
       :metric: derived_memory_available
-      :per_time: daily
+      :per_time: hourly
       :per_unit: megabytes
       :measure: Bytes Units
       :type_currency: Dollars
@@ -100,7 +100,7 @@
     - :description: Fixed Compute Cost 1
       :group: fixed
       :source: compute_1
-      :per_time: daily
+      :per_time: hourly
       :type_currency: Dollars
       :tiers:
         - :start: 0
@@ -110,7 +110,7 @@
     - :description: Fixed Compute Cost 2
       :group: fixed
       :source: compute_2
-      :per_time: monthly
+      :per_time: hourly
       :type_currency: Dollars
       :tiers:
         - :start: 0
@@ -126,7 +126,7 @@
       :group: storage
       :source: allocated
       :metric: derived_vm_allocated_disk_storage
-      :per_time: monthly
+      :per_time: hourly
       :per_unit: gigabytes
       :measure: Bytes Units
       :type_currency: Dollars
@@ -139,7 +139,7 @@
       :group: storage
       :source: used
       :metric: derived_vm_used_disk_storage
-      :per_time: monthly
+      :per_time: hourly
       :per_unit: gigabytes
       :measure: Bytes Units
       :type_currency: Dollars
@@ -151,7 +151,7 @@
     - :description: Fixed Storage Cost 1
       :group: fixed
       :source: storage_1
-      :per_time: daily
+      :per_time: hourly
       :type_currency: Dollars
       :tiers:
         - :start: 0
@@ -161,7 +161,7 @@
     - :description: Fixed Storage Cost 2
       :group: fixed
       :source: storage_2
-      :per_time: monthly
+      :per_time: hourly
       :type_currency: Dollars
       :tiers:
         - :start: 0

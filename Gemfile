@@ -1,31 +1,31 @@
+raise "Ruby versions less than 2.2.2 are unsupported!" if RUBY_VERSION < "2.2.2"
 #
 # VMDB specific gems
 #
 
-gem "rails",                           "~> 5.0.x", :git => "git://github.com/rails/rails.git", :branch => "5-0-stable"
+gem "rails",                           "~>5.0.0"
 gem "rails-controller-testing",        :require => false
 gem "activemodel-serializers-xml",     :require => false # required by draper: https://github.com/drapergem/draper/issues/697
-gem "activerecord-session_store",      "~>0.1.2", :require => false
+gem "activerecord-session_store",      "~>1.0.0"
 gem "websocket-driver",                "~>0.6.3"
 
 gem "config",                          "~>1.1.0", :git => "git://github.com/ManageIQ/config.git", :branch => "overwrite_arrays"
 gem "deep_merge",                      "~>1.0.1", :git => "git://github.com/ManageIQ/deep_merge.git", :branch => "overwrite_arrays"
 
-# Local gems
-path "gems/" do
-  gem "manageiq_foreman", :require => false
-  gem "manageiq-providers-amazon"
+# when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
+unless dependencies.detect { |d| d.name == 'manageiq-providers-amazon' }
+  gem "manageiq-providers-amazon", :git => "git://github.com/ManageIQ/manageiq-providers-amazon", :branch => "master"
 end
 
 # Client-side dependencies
 gem "angular-ui-bootstrap-rails",     "~>0.13.0"
-gem "codemirror-rails",               "=4.2"
+gem "codemirror-rails",               "~>5.11.1"
 gem "jquery-hotkeys-rails"
 gem "jquery-rails",                   "~>4.1.1"
 gem "jquery-rjs",                     "=0.1.1",                       :git => "git://github.com/amatsuda/jquery-rjs.git", :ref => "1288c09"
 gem "lodash-rails",                   "~>3.10.0"
-# gem "patternfly-sass",                "~>3.4.0"
-gem 'patternfly-sass', :github => 'manageiq/patternfly-sass', :branch => 'tertiary-nav'
+# gem "patternfly-sass",                "~>3.5.1"
+gem 'patternfly-sass', :github => 'manageiq/patternfly-sass', :branch => 'tertiary-3.5.1'
 gem "sass-rails"
 gem "sprockets-es6",                  "~>0.9.0",  :require => "sprockets/es6"
 
@@ -35,9 +35,9 @@ gem "ruport",                         "=1.7.0",                       :git => "g
 
 # Vendored but not required
 gem "net-ldap",                       "~>0.7.0",   :require => false
-gem "rubyrep",                        "=1.2.0",    :require => false, :git => "git://github.com/ManageIQ/rubyrep.git", :tag => "v1.2.0-8"
+gem "rubyrep",                        "=1.2.0",    :require => false, :git => "git://github.com/ManageIQ/rubyrep.git", :tag => "v1.2.0-9"
 gem "simple-rss",                     "~>1.3.1",   :require => false
-gem "ziya",                           "=2.3.0",    :require => false, :git => "git://github.com/ManageIQ/ziya.git", :tag => "v2.3.0-2"
+gem "ziya",                           "=2.3.0",    :require => false, :git => "git://github.com/ManageIQ/ziya.git", :tag => "v2.3.0-3"
 
 # Not vendored, but required
 gem "mime-types",                     "~>2.6.1",   :require => "mime/types/columnar"
@@ -66,7 +66,7 @@ gem "secure_headers",                 "~>3.0.0"
 gem "gettext_i18n_rails",             "~>1.4.0"
 gem "gettext_i18n_rails_js",          "~>1.0.3"
 gem "fast_gettext",                   "~>1.1.0"
-gem "jbuilder",                       "~>2.3.1"
+gem "jbuilder",                       "~>2.5.0"
 gem "paperclip",                      "~>4.3.0"
 gem "rails-i18n",                     "~>5.x"
 
@@ -81,9 +81,9 @@ gem "dalli",                          "~>2.7.4",   :require => false
 gem "elif",                           "=0.1.0",    :require => false
 gem "google-api-client",              "~>0.8.6",   :require => false
 gem "fog-google",                     "~>0.3.0",   :require => false
+gem "foreman_api_client",             ">=0.1.0",   :require => false, :git => "git://github.com/ManageIQ/foreman_api_client.git", :branch => "master"
 gem "hamlit",                         "~>2.0.0",   :require => false
 gem "inifile",                        "~>3.0",     :require => false
-gem "logging",                        "~>1.8",     :require => false  # Ziya depends on this
 gem "net_app_manageability",          ">=0.1.0",   :require => false
 gem "net-ping",                       "~>1.7.4",   :require => false
 gem "net-ssh",                        "=3.2.0",    :require => false
@@ -121,8 +121,9 @@ unless ENV['APPLIANCE']
   end
 
   group :development, :test do
-    gem "rspec-rails",      "~>3.5.x"
+    gem "rspec-rails",      "~>3.5.0"
     gem "parallel_tests"
+    gem "good_migrations"
   end
 end
 

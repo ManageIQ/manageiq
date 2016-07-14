@@ -38,6 +38,7 @@ module MiqAeEngine
       'request'                => 'MiqRequest',
       'server'                 => 'MiqServer'
     )
+    NULL_COALESCING_OPERATOR = '||'.freeze
     attr_accessor :attributes, :namespace, :klass, :instance, :object_name, :instance_methods, :workspace, :current_field, :current_message
     attr_accessor :node_parent
     attr_reader :node_children
@@ -381,7 +382,7 @@ module MiqAeEngine
       invoke_method(ns, klass, method_name, MiqAeUri.query2hash(query))
     end
 
-    def uri2value(uri)
+    def uri2value(uri, required = false)
       scheme, userinfo, host, port, registry, path, opaque, query, fragment = MiqAeUri.split(uri)
 
       if scheme == 'miqaedb'
@@ -404,6 +405,11 @@ module MiqAeEngine
         frags          = fragment.split('.')
         attribute_name = frags.shift
         methods        = frags
+
+        if required && !o.attributes.key?(attribute_name.downcase)
+          raise MiqAeException::AttributeNotFound, "Attribute #{attribute_name} not found for object [#{path}]"
+        end
+
         value          = o.attributes[attribute_name.downcase]
         begin
           methods.each { |meth| value = call_method(value, meth) }
@@ -474,11 +480,31 @@ module MiqAeEngine
       aem
     end
 
-    def get_value(f, type = nil)
+    def get_value(f, type = nil, required = false)
       value = f['value']
       value = f['default_value'] if value.blank?
-      value = substitute_value(value, type) if f['substitute'] == true
+      value = substitute_value(value, type, required) if f['substitute'] == true
       value
+    end
+
+    def get_null_coalesced_value(f, type = nil)
+      initial_value = f['value'] || f['default_value']
+      return nil unless initial_value
+
+      result = nil
+      initial_value.split(NULL_COALESCING_OPERATOR).each do |value|
+        result = resolve_value(value, type)
+        break unless result.blank?
+      end
+      result
+    end
+
+    def resolve_value(value, type)
+      current_value = value.strip
+      substitute_value(current_value, type)
+    rescue => err
+      $miq_ae_logger.warn("#{err.message}, while evaluating :#{current_value} null coalecing attribute")
+      nil
     end
 
     def self.convert_boolean_value(value)
@@ -510,11 +536,11 @@ module MiqAeEngine
       value
     end
 
-    def substitute_value(value, _type = nil)
+    def substitute_value(value, _type = nil, required = false)
       Benchmark.current_realtime[:substitution_count] += 1
       Benchmark.realtime_block(:substitution_time) do
         value = value.gsub(RE_SUBST) do |_s|
-          subst   = uri2value($1)
+          subst   = uri2value($1, required)
           subst &&= subst.to_s
           # This encoding of relationship is not needed, until we can get a valid use case
           # Based on RFC 3986 Section 2.4 "When to Encode or Decode"
@@ -530,7 +556,7 @@ module MiqAeEngine
     def process_assertion(f, message, args)
       Benchmark.current_realtime[:assertion_count] += 1
       Benchmark.realtime_block(:assertion_time) do
-        assertion = get_value(f)
+        assertion = get_value(f, :aetype_assertion, true)
         return if assertion.blank?
 
         $miq_ae_logger.info("Evaluating substituted assertion [#{assertion}]")
@@ -553,7 +579,13 @@ module MiqAeEngine
     def process_attribute(f, _message, _args, value = nil)
       Benchmark.current_realtime[:attribute_count] += 1
       Benchmark.realtime_block(:attribute_time) do
-        value = get_value(f) if value.nil?
+        if value.nil?
+          value = if f['datatype'] == MiqAeField::NULL_COALESCING_DATATYPE
+                    get_null_coalesced_value(f)
+                  else
+                    get_value(f)
+                  end
+        end
         value = MiqAeObject.convert_value_based_on_datatype(value, f['datatype'])
         @attributes[f['name'].downcase] = value unless value.nil?
         process_collect(f['collect'], nil) unless f['collect'].blank?

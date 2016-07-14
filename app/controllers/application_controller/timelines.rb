@@ -277,7 +277,7 @@ module ApplicationController::Timelines
       miq_task = MiqTask.find(params[:task_id])     # Not first time, read the task record
       @report = miq_task.task_results
 
-      if miq_task.task_results.blank? || miq_task.status != "Ok"  # Check to see if any results came back or status not Ok
+      if !miq_task.results_ready?
         add_flash(_("Error building timeline %{error_message}") % {:error_message => miq_task.message}, :error)
       else
         @timeline = @timeline_filter = true

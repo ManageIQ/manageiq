@@ -28,7 +28,7 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
         button(
           :middleware_server_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this #{ui_lookup(:table=>"middleware_server")}'),
+          N_('Edit Tags for this Middleware Server'),
           N_('Edit Tags')),
       ]
     ),
@@ -41,18 +41,66 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
       t,
       :items => [
         button(
-          :middleware_server_reload,
-          'pficon pficon-restart fa-lg',
-          N_('Reload this #{ui_lookup(:table=>"middleware_server")}'),
-          N_('Reload Server'),
-          :confirm => N_("Do you want to trigger a reload of this server?")),
+          :middleware_server_shutdown,
+          nil,
+          N_('Gracefully shut this server down'),
+          N_('Gracefully shutdown Server'),
+          :image   => "guest_shutdown",
+          :confirm => N_("Do you want to shutdown this server?")),
+        button(
+          :middleware_server_restart,
+          nil,
+          N_('Restart this server'),
+          N_('Restart Server'),
+          :image   => 'restart',
+          :confirm => N_("Do you want to restart this server?")),
+        separator,
         button(
           :middleware_server_stop,
           nil,
-          N_('Stop this #{ui_lookup(:table=>"middleware_server")}'),
+          N_('Stop this Middleware Server'),
           N_('Stop Server'),
-          :image   => "guest_shutdown",
+          :image   => "power_off",
           :confirm => N_("Do you want to stop this server?")),
+        button(
+          :middleware_server_suspend,
+          nil,
+          N_('Suspend this server'),
+          N_('Suspend Server'),
+          :image   => "suspend",
+          :confirm => N_("Do you want to suspend this server?")),
+        button(
+          :middleware_server_resume,
+          nil,
+          N_('Resume this server'),
+          N_('Resume Server'),
+          :image   => "resume",
+          :confirm => N_("Do you want to resume this server?")),
+        button(
+          :middleware_server_reload,
+          'pficon pficon-restart fa-lg',
+          N_('Reload this server'),
+          N_('Reload Server'),
+          :confirm => N_("Do you want to trigger a reload of this server?"))
+      ]
+    ),
+  ])
+  button_group('middleware_server_deployments', [
+    select(
+      :middleware_server_deployments_choice,
+      'pficon pficon-save fa-lg',
+      t = N_('Deployments'),
+      t,
+      :items => [
+        button(
+          :middleware_deployment_add,
+          'pficon pficon-add-circle-o fa-lg',
+          N_('Add a new #{ui_lookup(:table=>"middleware_deployment")}'),
+          N_('Add Deployment'),
+          :data => {'toggle'        => 'modal',
+                    'target'        => '#modal_d_div',
+                    'function'      => 'miqCallAngular',
+                    'function-data' => '{"name": "showListener", "args": []}'})
       ]
     ),
   ])

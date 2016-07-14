@@ -100,6 +100,16 @@ class Dialog < ApplicationRecord
     DialogSerializer.new.serialize(Array[workflow.dialog])
   end
 
+  def deep_copy(new_attributes = {})
+    new_dialog = dup
+    new_dialog.dialog_tabs = dialog_tabs.collect(&:deep_copy)
+
+    new_attributes.each do |attr, value|
+      new_dialog.send("#{attr}=", value)
+    end
+    new_dialog
+  end
+
   private
 
   def dialog_field_hash

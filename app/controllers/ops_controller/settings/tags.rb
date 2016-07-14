@@ -3,13 +3,10 @@ module OpsController::Settings::Tags
 
   # AJAX routine for user selected
   def category_select
-    render :update do |page|
-      page << javascript_prologue
-      if params[:id] == "new"
-        page.redirect_to :action => 'category_new'    # redirect to new
-      else
-        page.redirect_to :action => 'category_edit', :id => params[:id], :field => params[:field]   # redirect to edit
-      end
+    if params[:id] == "new"
+      javascript_redirect :action => 'category_new' # redirect to new
+    else
+      javascript_redirect :action => 'category_edit', :id => params[:id], :field => params[:field] # redirect to edit
     end
   end
 
@@ -32,10 +29,7 @@ module OpsController::Settings::Tags
       end
     else
       category.errors.each { |field, msg| add_flash("#{field.to_s.capitalize} #{msg}", :error) }
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
   end
 
@@ -67,10 +61,7 @@ module OpsController::Settings::Tags
         add_flash(_("Long Description is required"), :error)
       end
       unless @flash_array.nil?
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
       if params[:button] == "add"
@@ -83,10 +74,7 @@ module OpsController::Settings::Tags
                                           :show         => @edit[:new][:show])
         rescue StandardError => bang
           add_flash(_("Error during 'add': %{message}") % {:message => bang.message}, :error)
-          render :update do |page|
-            page << javascript_prologue
-            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-          end
+          javascript_flash
         else
           @category = Classification.find_by_description(@edit[:new][:description])
           AuditEvent.success(build_created_audit(@category, @edit))
@@ -107,10 +95,7 @@ module OpsController::Settings::Tags
           @in_a_form = true
           session[:changed] = @changed
           @changed = true
-          render :update do |page|
-            page << javascript_prologue
-            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-          end
+          javascript_flash
         else
           add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "Classification"), :name => update_category.name})
           AuditEvent.success(build_saved_audit(update_category, params[:button] == "add"))

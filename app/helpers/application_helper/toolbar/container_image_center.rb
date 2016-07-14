@@ -25,12 +25,12 @@ class ApplicationHelper::Toolbar::ContainerImageCenter < ApplicationHelper::Tool
         button(
           :container_image_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this #{ui_lookup(:table=>"container_image")}'),
+          N_('Edit Tags for this Image'),
           N_('Edit Tags')),
         button(
           :container_image_protect,
           'pficon pficon-edit fa-lg',
-          N_('Manage Policies for this #{ui_lookup(:table=>"container_image")}'),
+          N_('Manage Policies for this Image'),
           N_('Manage Policies')),
         button(
           :container_image_check_compliance,

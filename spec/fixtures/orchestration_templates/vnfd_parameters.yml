@@ -1,0 +1,31 @@
+template_name: sample-vnfd
+description: demo-example
+
+service_properties:
+  Id: sample-vnfd
+  vendor: tacker
+  version: 1
+
+vdus:
+  vdu1:
+    id: vdu1
+    vm_image: centos7-image
+    instance_type: m1.medium
+
+    network_interfaces:
+      management:
+        network: net_mgmt
+        management: true
+      pkt_in:
+        network: net0
+      pkt_out:
+        network: net1
+
+    placement_policy:
+      availability_zone: nova
+
+    auto-scaling: noop
+
+    config:
+      param0: key0
+      param1: key1

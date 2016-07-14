@@ -37,13 +37,14 @@ class TreeBuilder
     when :vms_instances_filter    then TreeBuilderVmsInstancesFilter
     when :templates_images_filter then TreeBuilderTemplatesImagesFilter
 
-    when :policy_profile   then TreeBuilderPolicyProfile
-    when :policy           then TreeBuilderPolicy
-    when :event            then TreeBuilderEvent
-    when :condition        then TreeBuilderCondition
-    when :action           then TreeBuilderAction
-    when :alert_profile    then TreeBuilderAlertProfile
-    when :alert            then TreeBuilderAlert
+    when :policy_simulation then TreeBuilderPolicySimulation
+    when :policy_profile    then TreeBuilderPolicyProfile
+    when :policy            then TreeBuilderPolicy
+    when :event             then TreeBuilderEvent
+    when :condition         then TreeBuilderCondition
+    when :action            then TreeBuilderAction
+    when :alert_profile     then TreeBuilderAlertProfile
+    when :alert             then TreeBuilderAlert
 
     # reports explorer trees
     when :db               then TreeBuilderReportDashboards
@@ -92,6 +93,7 @@ class TreeBuilder
     when :vat                     then TreeBuilderVat
 
     when :network                 then TreeBuilderNetwork
+    when :df                      then TreeBuilderDefaultFilters
     end
   end
 
@@ -213,8 +215,9 @@ class TreeBuilder
 
   def add_root_node(nodes)
     root = nodes.first
-    root[:title], root[:tooltip], icon = root_options
+    root[:title], root[:tooltip], icon, options = root_options
     root[:icon] = ActionController::Base.helpers.image_path("100/#{icon || 'folder'}.png")
+    root[:cfmeNoClick] = options[:cfmeNoClick] if options.present? && options.key?(:cfmeNoClick)
   end
 
   def set_locals_for_render
@@ -229,7 +232,8 @@ class TreeBuilder
       :exp_tree     => false,
       :highlighting => true,
       :tree_state   => true,
-      :multi_lines  => true
+      :multi_lines  => true,
+      :checkboxes   => false,
     }
   end
 
@@ -252,7 +256,6 @@ class TreeBuilder
         x_build_node_dynatree(child, nil, options)
       end
     end
-
     return child_nodes unless options[:add_root]
     [{:key => 'root', :children => child_nodes, :expand => true}]
   end
@@ -277,13 +280,11 @@ class TreeBuilder
     end
 
     # Process the node's children
-    if Array(@tree_state.x_tree(@name)[:open_nodes]).include?(node[:key]) ||
-       options[:open_all] ||
-       object[:load_children] ||
+    node[:expand] = Array(@tree_state.x_tree(@name)[:open_nodes]).include?(node[:key]) || !!options[:open_all]
+    if object[:load_children] ||
        node[:expand] ||
        @options[:lazy] == false
-      node[:expand] = true if options[:type] == :automate &&
-                              Array(@tree_state.x_tree(@name)[:open_nodes]).include?(node[:key])
+
       kids = x_get_tree_objects(object, options, false, parents).map do |o|
         x_build_node(o, node[:key], options)
       end
@@ -419,6 +420,7 @@ class TreeBuilder
     "r"   => "ResourcePool",
     "s"   => "Service",
     "sa"  => "StorageAdapter",
+    'sn'  => 'Snapshot',
     "sl"  => "MiqScsiLun",
     "sg"  => "MiqScsiTarget",
     "sis" => "ScanItemSet",
@@ -432,6 +434,7 @@ class TreeBuilder
     "tn"  => "Tenant",
     "u"   => "User",
     "v"   => "Vm",
+    "vnf" => "OrchestrationTemplateVnfd",
     "wi"  => "WindowsImage",
     "xx"  => "Hash",  # For custom (non-CI) nodes, specific to each tree
     "z"   => "Zone"

@@ -10,3 +10,5 @@ object:
   fields:
   - rel4:
       value: "/System/event_handlers/change_event_target_state?target=src_vm&param=suspended"
+  - rel5:
+      value: "/System/event_handlers/event_action_refresh?target=src_vm"

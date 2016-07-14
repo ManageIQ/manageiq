@@ -1,4 +1,5 @@
 module EmsClusterHelper::TextualSummary
+  include TextualMixins::TextualGroupTags
   #
   # Groups
   #
@@ -23,10 +24,6 @@ module EmsClusterHelper::TextualSummary
     return nil if @record.ha_enabled.nil? && @record.ha_admit_control.nil? && @record.drs_enabled.nil? &&
                   @record.drs_automation_level.nil? && @record.drs_migration_threshold.nil?
     %i(ha_enabled ha_admit_control drs_enabled drs_automation_level drs_migration_threshold)
-  end
-
-  def textual_group_tags
-    %i(tags)
   end
 
   def textual_group_openstack_status

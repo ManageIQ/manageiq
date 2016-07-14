@@ -12,7 +12,7 @@ class ApplicationHelper::Toolbar::MiddlewareServersCenter < ApplicationHelper::T
         button(
           :middleware_server_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this #{ui_lookup(:table=>"middleware_servers")}'),
+          N_('Edit Tags for this Middleware Servers'),
           N_('Edit Tags'),
           :url_parms => "main_div",
           :enabled   => false,
@@ -32,7 +32,7 @@ class ApplicationHelper::Toolbar::MiddlewareServersCenter < ApplicationHelper::T
         button(
           :middleware_server_reload,
           'pficon pficon-restart fa-lg',
-          N_('Reload these #{ui_lookup(:table=>"middleware_servers")}'),
+          N_('Reload these Middleware Servers'),
           N_('Reload Server'),
           :url_parms => "main_div",
           :confirm   => N_("Do you want to reload selected servers?"),
@@ -41,7 +41,7 @@ class ApplicationHelper::Toolbar::MiddlewareServersCenter < ApplicationHelper::T
         button(
           :middleware_server_stop,
           nil,
-          N_('Stop these #{ui_lookup(:table=>"middleware_servers")}'),
+          N_('Stop these Middleware Servers'),
           N_('Stop Server'),
           :url_parms => "main_div",
           :image     => "guest_shutdown",

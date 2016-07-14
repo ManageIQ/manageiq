@@ -50,7 +50,7 @@ describe ApiController do
 
     run_post(object_policies_url, gen_request(:assign))
 
-    expect_request_forbidden
+    expect(response).to have_http_status(:forbidden)
   end
 
   def test_policy_assign_invalid_policy(object_policies_url, collection, subcollection)
@@ -58,7 +58,7 @@ describe ApiController do
 
     run_post(object_policies_url, gen_request(:assign, :href => "/api/#{subcollection}/999999"))
 
-    expect_resource_not_found
+    expect(response).to have_http_status(:not_found)
   end
 
   def test_policy_assign_invalid_policy_guid(object_url, object_policies_url, collection, subcollection)
@@ -66,7 +66,7 @@ describe ApiController do
 
     run_post(object_policies_url, gen_request(:assign, :guid => "xyzzy"))
 
-    expect_request_success
+    expect(response).to have_http_status(:ok)
     results_hash = [{"success" => false, "href" => object_url, "message" => /must specify a valid/i}]
     expect_results_to_match_hash("results", results_hash)
   end
@@ -94,7 +94,7 @@ describe ApiController do
 
     run_post(object_policies_url, gen_request(:unassign))
 
-    expect_request_forbidden
+    expect(response).to have_http_status(:forbidden)
   end
 
   def test_policy_unassign_invalid_policy(object_policies_url, collection, subcollection)
@@ -102,7 +102,7 @@ describe ApiController do
 
     run_post(object_policies_url, gen_request(:unassign, :href => "/api/#{subcollection}/999999"))
 
-    expect_resource_not_found
+    expect(response).to have_http_status(:not_found)
   end
 
   def test_policy_unassign_invalid_policy_guid(object_url, object_policies_url, collection, subcollection)
@@ -110,7 +110,7 @@ describe ApiController do
 
     run_post(object_policies_url, gen_request(:unassign, :guid => "xyzzy"))
 
-    expect_request_success
+    expect(response).to have_http_status(:ok)
     results_hash = [{"success" => false, "href" => object_url, "message" => /must specify a valid/i}]
     expect_results_to_match_hash("results", results_hash)
   end

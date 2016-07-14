@@ -24,6 +24,8 @@ module MiqAeMethodService
     expose :set_node_maintenance
     expose :unset_node_maintenance
     expose :external_get_node_maintenance
+    expose :compliances,           :association => true
+    expose :last_compliance,       :association => true
 
     METHODS_WITH_NO_ARGS = %w(scan)
     METHODS_WITH_NO_ARGS.each do |m|

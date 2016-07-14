@@ -68,10 +68,7 @@ module OpsController::Settings::Schedules
         schedule.save!
       rescue StandardError => bang
         add_flash(_("Error when adding a new schedule: %{message}") % {:message => bang.message}, :error)
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         AuditEvent.success(build_saved_audit_hash(old_schedule_attributes, schedule, params[:button] == "add"))
         add_flash(_("%{model} \"%{name}\" was saved") %
@@ -173,10 +170,7 @@ module OpsController::Settings::Schedules
       if schedules.empty?
         add_flash(_("No %{model} were selected for deletion") % {:model => ui_lookup(:tables => "miq_schedule")},
                   :error)
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
       process_schedules(schedules, "destroy") unless schedules.empty?
       schedule_build_list
@@ -185,10 +179,7 @@ module OpsController::Settings::Schedules
     else # showing 1 schedule, delete it
       if params[:id].nil? || MiqSchedule.find_by_id(params[:id]).nil?
         add_flash(_("%{table} no longer exists") % {:table => ui_lookup(:table => "miq_schedule")}, :error)
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         schedules.push(params[:id])
       end
@@ -209,10 +200,7 @@ module OpsController::Settings::Schedules
     schedules = find_checked_items
     if schedules.empty?
       add_flash(msg, :error)
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
     schedule_enable_disable(schedules, enable)  unless schedules.empty?
     add_flash(msg, :info, true) unless flash_errors?
@@ -246,10 +234,7 @@ module OpsController::Settings::Schedules
     else
       add_flash(_('Depot Settings successfuly validated'))
     end
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-    end
+    javascript_flash
   end
 
   private
@@ -321,7 +306,12 @@ module OpsController::Settings::Schedules
     when "container_image"
       filtered_item_list = find_filtered(ContainerImage).sort_by { |ci| ci.name.downcase }.collect(&:name).uniq
     when "ems"
-      filtered_item_list = find_filtered(ExtManagementSystem).sort_by { |vm| vm.name.downcase }.collect(&:name).uniq
+      if %w(emscluster host host_check_compliance storage).include?(action_type)
+        filtered_item_list = find_filtered(ExtManagementSystem).collect { |ems| ems.name if ems.number_of(:hosts) > 0 }
+                                                               .delete_if(&:blank?).sort_by(&:downcase)
+      else
+        filtered_item_list = find_filtered(ExtManagementSystem).sort_by { |vm| vm.name.downcase }.collect(&:name).uniq
+      end
     when "cluster"
       filtered_item_list = find_filtered(EmsCluster).collect do |cluster|
         [cluster.name + "__" + cluster.v_parent_datacenter, cluster.v_qualified_desc]
@@ -600,7 +590,7 @@ module OpsController::Settings::Schedules
 
     @host_options_for_select = [
       [_("All Hosts"), "all"],
-      [_("All Hosts for %{table}") % {:table => ui_lookup(:table => "ext_management_systems")}, "ems"],
+      [_("All Hosts for %{table}") % {:table => ui_lookup(:table => "ems_infra")}, "ems"],
       [_("All Hosts for %{table}") % {:table => ui_lookup(:table => "ems_clusters")}, "cluster"],
       [_("A single Host"), "host"]
     ] +
@@ -616,7 +606,7 @@ module OpsController::Settings::Schedules
 
     @cluster_options_for_select = [
       [_("All Clusters"), "all"],
-      [_("All Clusters for %{table}") % {:table => ui_lookup(:table => "ext_management_systems")}, "ems"],
+      [_("All Clusters for %{table}") % {:table => ui_lookup(:table => "ems_infra")}, "ems"],
       [_("A single Cluster"), "cluster"]
     ] +
                                   (@cluster_global_filters.empty? ? [] : [[_("Global Filters"), "global"]]) +
@@ -625,7 +615,7 @@ module OpsController::Settings::Schedules
     @storage_options_for_select = [
       [_("All Datastores"), "all"],
       [_("All Datastores for Host"), "host"],
-      [_("All Datastores for %{table}") % {:table => ui_lookup(:table => "ext_management_systems")}, "ems"],
+      [_("All Datastores for %{table}") % {:table => ui_lookup(:table => "ems_infra")}, "ems"],
       [_("A single Datastore"), "storage"]
     ] +
                                   (@storage_global_filters.empty? ? [] : [[_("Global Filters"), "global"]]) +

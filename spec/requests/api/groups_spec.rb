@@ -27,7 +27,7 @@ describe ApiController do
 
       run_post(groups_url, sample_group1)
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects group creation with id specified" do
@@ -43,7 +43,7 @@ describe ApiController do
 
       run_post(groups_url, "description" => "sample group", "role" => {"id" => 999_999})
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "rejects group creation with invalid tenant specified" do
@@ -51,7 +51,7 @@ describe ApiController do
 
       run_post(groups_url, "description" => "sample group", "tenant" => {"id" => 999_999})
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "rejects group creation with invalid filters specified" do
@@ -67,7 +67,7 @@ describe ApiController do
 
       run_post(groups_url, sample_group1)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       group_id = response_hash["results"].first["id"]
@@ -79,7 +79,7 @@ describe ApiController do
 
       run_post(groups_url, gen_request(:create, sample_group1))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       group_id = response_hash["results"].first["id"]
@@ -94,7 +94,7 @@ describe ApiController do
                                        "role"        => {"name" => role3.name},
                                        "tenant"      => {"href" => tenants_url(tenant3.id)}))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       result = response_hash["results"].first
@@ -119,7 +119,7 @@ describe ApiController do
       }
       run_post(groups_url, gen_request(:create, sample_group))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       group_id = response_hash["results"][0]["id"]
@@ -135,7 +135,7 @@ describe ApiController do
 
       run_post(groups_url, gen_request(:create, [sample_group1, sample_group2]))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       results = response_hash["results"]
@@ -153,7 +153,7 @@ describe ApiController do
                                        "description" => "updated_group",
                                        "href"        => groups_url(group1.id)))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects group edits for invalid resources" do
@@ -161,7 +161,7 @@ describe ApiController do
 
       run_post(groups_url(999_999), gen_request(:edit, "description" => "updated_group"))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "supports single group edit" do
@@ -196,7 +196,7 @@ describe ApiController do
 
       run_post(groups_url, gen_request(:delete, "description" => "group_description", "href" => groups_url(100)))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects group deletion without appropriate role" do
@@ -204,7 +204,7 @@ describe ApiController do
 
       run_delete(groups_url(100))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "rejects group deletes for invalid groups" do
@@ -212,7 +212,7 @@ describe ApiController do
 
       run_delete(groups_url(999_999))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "supports single group delete" do
@@ -221,7 +221,7 @@ describe ApiController do
       g1_id = group1.id
       run_delete(groups_url(g1_id))
 
-      expect_request_success_with_no_content
+      expect(response).to have_http_status(:no_content)
       expect(MiqGroup.exists?(g1_id)).to be_falsey
     end
 

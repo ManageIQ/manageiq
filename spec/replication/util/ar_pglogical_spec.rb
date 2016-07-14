@@ -10,11 +10,6 @@ describe "ar_pglogical extension" do
       connection.pglogical.enable
       expect(connection.extensions).to include("pglogical")
     end
-
-    it "enables the pglogical_origin extension" do
-      connection.pglogical.enable
-      expect(connection.extensions).to include("pglogical_origin")
-    end
   end
 
   context "with the extensions enabled" do

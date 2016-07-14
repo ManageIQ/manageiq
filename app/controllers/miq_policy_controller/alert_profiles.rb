@@ -200,7 +200,7 @@ module MiqPolicyController::AlertProfiles
           :hideCheckbox => true
         )
         root_node[:children] = []
-        @objects.sort_by { |o| (o[:name] || o[:description]).downcase }.each do |o|
+        @objects.sort_by { |o| (o.name.presence || o.description).downcase }.each do |o|
           if @assign[:new][:assign_to].ends_with?("-tags")
             icon = "tag.png"
           else
@@ -214,7 +214,7 @@ module MiqPolicyController::AlertProfiles
           end
           node = TreeNodeBuilder.generic_tree_node(
             o.id,
-            o[:name] || o[:description],
+            (o.name.presence || o.description),
             icon,
             "",
             :select => @assign[:new][:objects].include?(o.id) # Check if tag is assigned

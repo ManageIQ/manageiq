@@ -2,7 +2,7 @@ module VmOrTemplate::Operations::Relocation
   extend ActiveSupport::Concern
 
   included do
-    supports_not :live_migrate, _("Live Migrate VM Operation is not available for VM or Template.")
+    supports_not :live_migrate, :reason => _("Live Migrate VM Operation is not available for VM or Template.")
   end
 
   def raw_live_migrate(_options = nil)

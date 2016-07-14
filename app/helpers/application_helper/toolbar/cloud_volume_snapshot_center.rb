@@ -9,7 +9,7 @@ class ApplicationHelper::Toolbar::CloudVolumeSnapshotCenter < ApplicationHelper:
         button(
           :cloud_volume_snapshot_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit tags for this #{ui_lookup(:table=>"cloud_volume_snapshots")}'),
+          N_('Edit tags for this Cloud Volume Snapshot'),
           N_('Edit Tags')),
       ]
     ),

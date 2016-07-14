@@ -6,6 +6,7 @@ module ApplicationController::Filter
   end
 
   include MiqExpression::FilterSubstMixin
+  include ApplicationController::ExpressionHtml
 
   # Handle buttons pressed in the expression editor
   def exp_button
@@ -190,7 +191,7 @@ module ApplicationController::Filter
           @edit[@expkey][:exp_value] = nil                          # Clear the value
           @edit[:suffix] = nil                                      # Clear the suffix
           unless params[:chosen_field] == "<Choose>"
-            if @edit[@expkey][:exp_model] != "_display_filter_" && MiqExpression.is_plural?(@edit[@expkey][:exp_field])
+            if @edit[@expkey][:exp_model] != "_display_filter_" && MiqExpression::Field.parse(@edit[@expkey][:exp_field]).plural?
               @edit[@expkey][:exp_key] = "CONTAINS"                 # CONTAINS only valid for plural tables
             else
               @edit[@expkey][:exp_key] = nil unless MiqExpression.get_col_operators(@edit[@expkey][:exp_field]).include?(@edit[@expkey][:exp_key])  # Remove if not in list
@@ -504,10 +505,7 @@ module ApplicationController::Filter
           if @quick_search_active
             quick_search_show
           else
-            render :update do |page|
-              page << javascript_prologue
-              page.redirect_to :action => 'show_list' # Redirect to build the list screen
-            end
+            javascript_redirect :action => 'show_list' # Redirect to build the list screen
           end
         end
         format.html do
@@ -744,10 +742,7 @@ module ApplicationController::Filter
         self.x_node = "root"                                      # Position on root node
         replace_right_cell
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => 'show_list'                 # redirect to build the list screen
-        end
+        javascript_redirect :action => 'show_list' # redirect to build the list screen
       end
       return
 
@@ -866,9 +861,9 @@ module ApplicationController::Filter
             adv_search_build(vm_model_from_active_tree(x_active_tree))
           end
           session[:edit] = @edit              # Set because next method will restore @edit from session
-          listnav_search_selected(search_id)  # Clear or set the adv search filter
-          self.x_node = "root"
         end
+        listnav_search_selected(search_id)  # Clear or set the adv search filter
+        self.x_node = "root"
         replace_right_cell
       end
       format.html do
@@ -952,10 +947,7 @@ module ApplicationController::Filter
     if @edit[:in_explorer]
       replace_right_cell
     else
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to(:action => 'show_list')
-      end
+      javascript_redirect :action => 'show_list'
     end
   end
   private :quick_search_apply_click
@@ -1541,84 +1533,6 @@ module ApplicationController::Filter
     global_expressions = Array(global_expressions).sort
     global_expressions.each { |ge| ge[0] = "Global - #{ge[0]}" }
     @edit[@expkey][:exp_search_expressions] = global_expressions + user_expressions
-  end
-
-  # Build a string from an array of expression symbols by recursively traversing the MiqExpression object
-  #   and inserting sequential tokens for each expression part
-  def exp_build_string(exp)
-    exp_string = ""
-    exp_tooltip = ""      # string for tooltip without fonts tags
-    if exp["and"]
-      fcolor = calculate_font_color(exp["result"])
-      exp_string << "<font color=#{fcolor}><b>(</b></font>"
-      exp_tooltip << "("
-      exp["and"].each do |e|
-        fcolor = calculate_font_color(e["result"])
-        exp_str, exp_tip = exp_build_string(e)
-        if exp["result"] && !e["result"]
-          exp_string << "<font color=#{fcolor}><i>" << exp_str << "</i></font>"
-        else
-          exp_string << "<font color=#{fcolor}>" << exp_str << "</font>"
-        end
-        exp_tooltip << exp_tip
-        fcolor = calculate_font_color(exp["result"])
-        exp_string << "<font color=#{fcolor}> <b>AND</b> </font>" unless e == exp["and"].last
-        exp_tooltip << " AND " unless e == exp["and"].last
-      end
-      exp_string << "<font color=#{fcolor}><b>)</b></font>"
-      exp_tooltip << ")"
-    elsif exp["or"]
-      fcolor = calculate_font_color(exp["result"])
-      exp_string << "<font color=#{fcolor}><b>(</b></font>"
-      exp["or"].each do |e|
-        fcolor = calculate_font_color(e["result"])
-        exp_str, exp_tip = exp_build_string(e)
-        if exp["result"] && !e["result"]
-          exp_string << "<font color=#{fcolor}><i>" << exp_str << "</i></font>"
-        else
-          exp_string << "<font color=#{fcolor}>" << exp_str << "</font>"
-        end
-        exp_tooltip << exp_tip
-        fcolor = calculate_font_color(exp["result"])
-        exp_string << "<font color=#{fcolor}> <b>OR</b> </font>" unless e == exp["or"].last
-        exp_tooltip << " OR " unless e == exp["or"].last
-      end
-      exp_string << "<font color=#{fcolor}><b>)</b></font>"
-      exp_tooltip << ")"
-    elsif exp["not"]
-      fcolor = calculate_font_color(exp["result"])
-      exp_string << "<font color=#{fcolor}> <b>NOT</b> </font>"
-      exp_tooltip << " NOT "
-      exp_string << "<font color=#{fcolor}><b>(</b></font>" unless ["and", "or"].include?(exp["not"].keys.first)  # No parens if and/or under me
-      exp_tooltip << "(" unless ["and", "or"].include?(exp["not"].keys.first) # No parens if and/or under me
-      exp_str, exp_tip = exp_build_string(exp["not"])
-      if exp["result"] && !exp["not"]["result"]
-        exp_string << "<font color=#{fcolor}><i>" << exp_str << "</i></font>"
-      else
-        exp_string << "<font color=#{fcolor}>" << exp_str << "</font>"
-      end
-
-      exp_tooltip << exp_tip
-      exp_string << "<font color=#{fcolor}><b>)</b></font>" unless ["and", "or"].include?(exp["not"].keys.first)  # No parens if and/or under me
-      exp_tooltip << ")" unless ["and", "or"].include?(exp["not"].keys.first) # No parens if and/or under me
-    else
-      fcolor = calculate_font_color(exp["result"])
-      temp_exp = copy_hash(exp)
-      temp_exp.delete("result")
-      exp_string << "<font color=#{fcolor}>" << MiqExpression.to_human(temp_exp) << "</font>"
-      exp_tooltip << MiqExpression.to_human(temp_exp)
-    end
-    return exp_string, exp_tooltip
-  end
-
-  def calculate_font_color(result)
-    fcolor = "black"
-    if result == true
-      fcolor = "green"
-    elsif result == false
-      fcolor = "red"
-    end
-    fcolor
   end
 
   def build_listnav_search_list(db)

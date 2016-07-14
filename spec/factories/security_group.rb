@@ -10,5 +10,5 @@ FactoryGirl.define do
   factory :security_group_azure, :parent => :security_group,
                                  :class  => "ManageIQ::Providers::Azure::NetworkManager::SecurityGroup"
   factory :security_group_google, :parent => :security_group,
-                                  :class  => "ManageIQ::Providers::Google::CloudManager::SecurityGroup"
+                                  :class  => "ManageIQ::Providers::Google::NetworkManager::SecurityGroup"
 end

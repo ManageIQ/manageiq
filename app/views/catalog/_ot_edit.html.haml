@@ -27,6 +27,19 @@
                           :class => "form-control",
                           "data-miq_observe" => {:interval => '.5',
                                                  :url      => url}.to_json)
+      - if @edit[:current][:type] == "OrchestrationTemplateVnfd"
+        - opts = [["<#{_('Choose')}>", nil]] + @edit[:current][:available_managers]
+        .form-group
+          %label.col-md-2.control-label
+            = _('Provider')
+          .col-md-8
+            = select_tag('manager_id',
+                         options_for_select(opts, @edit[:current][:manager_id]),
+                         "data-miq_sparkle_on" => true,
+                         :class                => "selectpicker")
+            :javascript
+              miqInitSelectPicker();
+              miqSelectPickerEvent('manager_id', '#{url}')
       - unless @record.in_use?
         .form-group
           %label.col-md-2.control-label

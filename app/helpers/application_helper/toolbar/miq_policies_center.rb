@@ -9,7 +9,12 @@ class ApplicationHelper::Toolbar::MiqPoliciesCenter < ApplicationHelper::Toolbar
         button(
           :policy_new,
           'pficon pficon-add-circle-o fa-lg',
-          t = N_('Add a New #{ui_lookup(:model=>@sb[:nodeid])} #{@sb[:mode].capitalize} Policy'),
+          t = proc do
+              _('Add a New %{model} %{mode} Policy') % {
+                :model => ui_lookup(:model => @sb[:nodeid]),
+                :mode  => @sb[:mode].capitalize
+              }
+          end,
           t,
           :url_parms => "?typ=basic"),
       ]

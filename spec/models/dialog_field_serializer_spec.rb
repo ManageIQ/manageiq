@@ -34,6 +34,7 @@ describe DialogFieldSerializer do
         "read_only"               => false,
         "auto_refresh"            => false,
         "trigger_auto_refresh"    => false,
+        "visible"                 => true,
         "validator_type"          => "validator_type",
         "validator_rule"          => "validator_rule",
         "reconfigurable"          => nil

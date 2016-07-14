@@ -73,7 +73,7 @@ class ApiController
     private
 
     def log_request_body
-      log_request("Body", JSON.pretty_generate(json_body)) if api_log_debug? && json_body.present?
+      log_request("Body", JSON.pretty_generate(@req.json_body)) if api_log_debug? && @req.json_body.present?
     end
 
     def log_request(header, data)

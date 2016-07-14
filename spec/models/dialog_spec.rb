@@ -306,4 +306,26 @@ describe Dialog do
       dialog.validate_children
     end
   end
+
+  describe "#deep_copy" do
+    let(:dialog_service) { OrchestrationTemplateDialogService.new }
+    let(:template_hot)   { FactoryGirl.create(:orchestration_template_hot_with_content) }
+    let(:dialog) { dialog_service.create_dialog('test', template_hot) }
+
+    it "clones the dialog and all containing components" do
+      dialog_new = dialog.deep_copy(:name => 'test_cloned')
+      num_dialogs = Dialog.count
+      num_tabs = DialogTab.count
+      num_groups = DialogGroup.count
+      num_fields = DialogField.count
+      num_actions = ResourceAction.count
+
+      dialog_new.save!
+      expect(Dialog.count).to eq(num_dialogs * 2)
+      expect(DialogTab.count).to eq(num_tabs * 2)
+      expect(DialogGroup.count).to eq(num_groups * 2)
+      expect(DialogField.count).to eq(num_fields * 2)
+      expect(ResourceAction.count).to eq(num_actions * 2)
+    end
+  end
 end

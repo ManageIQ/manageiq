@@ -1,5 +1,6 @@
 module CloudVolumeHelper::TextualSummary
   include TextualMixins::TextualDescription
+  include TextualMixins::TextualGroupTags
   include TextualMixins::TextualName
 
   def textual_group_properties
@@ -8,10 +9,6 @@ module CloudVolumeHelper::TextualSummary
 
   def textual_group_relationships
     %i(ems availability_zone cloud_tenant base_snapshot cloud_volume_snapshots attachments)
-  end
-
-  def textual_group_tags
-    %i(tags)
   end
 
   def textual_size

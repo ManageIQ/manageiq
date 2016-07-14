@@ -36,7 +36,7 @@ describe ApiController do
 
       run_get settings_url("invalid_setting")
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
   end
 end

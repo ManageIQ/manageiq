@@ -1,13 +1,13 @@
 class ApiController
   module Manager
     def update_collection(type, id, is_subcollection = false)
-      if @req[:method] == :put || @req[:method] == :patch
+      if @req.method == :put || @req.method == :patch
         raise BadRequestError,
-              "Must specify a resource id for the #{@req[:method]} HTTP method" if id.blank?
-        return send("#{@req[:method]}_resource", type, id)
+              "Must specify a resource id for the #{@req.method} HTTP method" if id.blank?
+        return send("#{@req.method}_resource", type, id)
       end
 
-      action = @req[:action]
+      action = @req.action
       target = target_resource_method(is_subcollection, type, action)
       raise BadRequestError,
             "Unimplemented Action #{action} for #{type} resources" unless respond_to?(target)
@@ -20,8 +20,8 @@ class ApiController
     end
 
     def parent_resource_obj
-      type  = @req[:collection].to_sym
-      resource_search(@req[:c_id], type, collection_class(type))
+      type = @req.collection.to_sym
+      resource_search(@req.c_id, type, collection_class(type))
     end
 
     def collection_class(type)
@@ -29,7 +29,7 @@ class ApiController
     end
 
     def put_resource(type, id)
-      send(target_resource_method(false, type, "edit"), type, id, json_body)
+      send(target_resource_method(false, type, "edit"), type, id, @req.json_body)
     end
 
     #
@@ -46,7 +46,7 @@ class ApiController
     #
     def patch_resource(type, id)
       patched_attrs = {}
-      json_body.each do |patch_cmd|
+      @req.json_body.each do |patch_cmd|
         action = patch_cmd["action"]
         path   = patch_cmd["path"]
         value  = patch_cmd["value"]
@@ -74,8 +74,8 @@ class ApiController
       raise BadRequestError,
             "Cannot delete subcollection resources of type #{type}" unless respond_to?(typed_target)
 
-      resource = json_body["resource"]
-      resource = {"href" => "#{@req[:base]}#{@req[:path]}"} if !resource || resource.empty?
+      resource = @req.json_body["resource"]
+      resource = {"href" => "#{@req.base}#{@req.path}"} if !resource || resource.empty?
       send(typed_target, parent_resource, type, id.to_i, resource)
     end
 
@@ -100,8 +100,8 @@ class ApiController
 
     def get_and_update_multiple_collections(is_subcollection, target, type)
       resources = []
-      if json_body.key?("resources")
-        resources += json_body["resources"]
+      if @req.json_body.key?("resources")
+        resources += @req.json_body["resources"]
       else
         resources << json_body_resource
       end
@@ -109,9 +109,9 @@ class ApiController
     end
 
     def json_body_resource
-      resource = json_body["resource"]
+      resource = @req.json_body["resource"]
       unless resource
-        resource = json_body.dup
+        resource = @req.json_body.dup
         resource.delete("action")
       end
       resource
@@ -128,7 +128,7 @@ class ApiController
     end
 
     def update_multiple_collections(is_subcollection, target, type, resources)
-      action = @req[:action]
+      action = @req.action
 
       processed = 0
       results = resources.each.collect do |r|

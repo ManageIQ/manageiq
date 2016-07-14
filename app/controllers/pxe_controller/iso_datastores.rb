@@ -49,10 +49,7 @@ module PxeController::IsoDatastores
         add_flash(_("Provider is required"), :error)
       end
       if @flash_array
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
       iso_datastore_set_record_vars(isd)
@@ -70,10 +67,7 @@ module PxeController::IsoDatastores
         isd.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
     elsif params[:button] == "reset"
       add_flash(_("All changes have been reset"), :warning)
@@ -195,10 +189,7 @@ module PxeController::IsoDatastores
         end
         @in_a_form = true
         @changed = true
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
     when "reset", nil

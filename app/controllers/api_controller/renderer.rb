@@ -15,7 +15,7 @@ class ApiController
         render_resource type, resource_search(id, type, klass), opts
       else
         opts[:count]            = klass.count
-        opts[:expand_resources] = expand?(:resources)
+        opts[:expand_resources] = @req.expand?(:resources)
 
         res = collection_search(is_subcollection, type, klass)
 
@@ -45,7 +45,7 @@ class ApiController
     # We want reftype to reflect subcollection if targeting as such.
     #
     def gen_reftype(type, opts)
-      opts[:is_subcollection] ? "#{@req[:collection]}/#{@req[:c_id]}/#{type}" : type
+      opts[:is_subcollection] ? "#{@req.collection}/#{@req.c_id}/#{type}" : type
     end
 
     # Methods for Serialization as Jbuilder Objects.
@@ -232,7 +232,7 @@ class ApiController
     end
 
     def expand_subcollection?(sc, target)
-      respond_to?(target) && (expand?(sc) || collection_config[sc.to_sym][:options].include?(:show))
+      respond_to?(target) && (@req.expand?(sc) || collection_config[sc.to_sym][:options].include?(:show))
     end
 
     #
@@ -373,9 +373,7 @@ class ApiController
     end
 
     def physical_attribute_selection(resource)
-      return [] unless params['attributes']
-
-      physical_attributes = params['attributes'].split(",").select { |attr| attr_physical?(resource, attr) }
+      physical_attributes = @req.attributes.select { |attr| attr_physical?(resource, attr) }
       physical_attributes.present? ? ID_ATTRS | physical_attributes : []
     end
 
@@ -387,13 +385,13 @@ class ApiController
         copts = {
           :count            => subresources.length,
           :is_subcollection => true,
-          :expand_resources => expand?(sc.to_s)
+          :expand_resources => @req.expand?(sc)
         }
         json.set! sc.to_s, collection_to_jbuilder(sc.to_sym, sctype, subresources, copts)
       else
         json.set! sc.to_s do |js|
           subresources.each do |scr|
-            if expand?(sc) || scr["id"].nil?
+            if @req.expand?(sc) || scr["id"].nil?
               add_child js, normalize_hash(sctype, scr, :add_href => true)
             else
               js.child! { |jsc| jsc.href normalize_href(sctype, scr["id"]) }
@@ -411,8 +409,8 @@ class ApiController
     # href is the optional href for the action specs, required for resources
     #
     def gen_action_specs(collection, type, is_subcollection, href = nil, resource = nil)
-      if collection_config.key?(collection)
-        cspec = collection_config[collection]
+      cspec = collection_config[collection]
+      if cspec
         if type == :collection
           gen_action_spec_for_collections(collection, cspec, is_subcollection, href)
         else
@@ -423,7 +421,7 @@ class ApiController
 
     def gen_action_spec_for_collections(collection, cspec, is_subcollection, href)
       target = is_subcollection ? :subcollection_actions : :collection_actions
-      return [] unless cspec.key?(target)
+      return [] unless cspec[target]
       cspec[target].each.collect do |method, action_definitions|
         next unless render_actions_for_method(cspec[:verbs], method)
         typed_action_definitions = fetch_typed_subcollection_actions(method, is_subcollection) || action_definitions
@@ -437,7 +435,7 @@ class ApiController
 
     def gen_action_spec_for_resources(cspec, is_subcollection, href, resource)
       target = is_subcollection ? :subresource_actions : :resource_actions
-      return [] unless cspec.key?(target)
+      return [] unless cspec[target]
       cspec[target].each.collect do |method, action_definitions|
         next unless render_actions_for_method(cspec[:verbs], method)
         typed_action_definitions = fetch_typed_subcollection_actions(method, is_subcollection) || action_definitions
@@ -455,8 +453,8 @@ class ApiController
 
     def fetch_typed_subcollection_actions(method, is_subcollection)
       return unless is_subcollection
-      ctype = @req[:collection].to_sym
-      sakey = "#{@req[:subcollection]}_subcollection_actions".to_sym
+      ctype = @req.collection.to_sym
+      sakey = "#{@req.subcollection}_subcollection_actions".to_sym
       collection_config.fetch_path(ctype, sakey, method.to_sym)
     end
 

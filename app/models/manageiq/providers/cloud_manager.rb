@@ -40,6 +40,8 @@ module ManageIQ::Providers
 
     alias_method :all_cloud_networks, :cloud_networks
 
+    supports_not :discovery
+
     # Development helper method for Rails console for opening a browser to the EMS.
     #
     # This method is NOT meant to be called from production code.

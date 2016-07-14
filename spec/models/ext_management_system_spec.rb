@@ -28,6 +28,7 @@ describe ExtManagementSystem do
       "foreman_configuration"       => "Foreman Configuration",
       "foreman_provisioning"        => "Foreman Provisioning",
       "gce"                         => "Google Compute Engine",
+      "gce_network"                 => "Google Network",
       "hawkular"                    => "Hawkular",
       "kubernetes"                  => "Kubernetes",
       "openshift"                   => "OpenShift Origin",
@@ -76,12 +77,6 @@ describe ExtManagementSystem do
     expected_types = %w(scvmm rhevm virtualcenter)
 
     expect(described_class.ems_infra_discovery_types).to match_array(expected_types)
-  end
-
-  it ".ems_cloud_discovery_types" do
-    discovery_type = {'amazon' => 'ec2'}
-    described_class.register_cloud_discovery_type(discovery_type)
-    expect(described_class.ems_cloud_discovery_types).to include(discovery_type)
   end
 
   context "#ipaddress / #ipaddress=" do
@@ -244,7 +239,8 @@ describe ExtManagementSystem do
         # TODO(lsmola) NetworkManager, test this if NetworkManager becomes not dependent on cloud manager
         next if [ManageIQ::Providers::Openstack::NetworkManager,
                  ManageIQ::Providers::Amazon::NetworkManager,
-                 ManageIQ::Providers::Azure::NetworkManager].include? ems
+                 ManageIQ::Providers::Azure::NetworkManager,
+                 ManageIQ::Providers::Google::NetworkManager].include? ems
         t = ems.name.underscore
 
         context t do
@@ -282,7 +278,8 @@ describe ExtManagementSystem do
         # TODO(lsmola) NetworkManager, test this when we have a standalone NetworkManager
         next if [ManageIQ::Providers::Openstack::NetworkManager,
                  ManageIQ::Providers::Amazon::NetworkManager,
-                 ManageIQ::Providers::Azure::NetworkManager].include? ems
+                 ManageIQ::Providers::Azure::NetworkManager,
+                 ManageIQ::Providers::Google::NetworkManager].include? ems
 
         context t do
           it "duplicate name" do

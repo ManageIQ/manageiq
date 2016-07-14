@@ -110,10 +110,7 @@ module ApplicationController::PolicySupport
       session[:policies][prof.id] = prof.description            # Add it to the list
     end
     policy_sim_build_screen
-    render :update do |page|
-      page << javascript_prologue
-      page.replace_html("main_div", :partial => "layouts/policy_sim")
-    end
+    replace_main_div :partial => "layouts/policy_sim"
   end
 
   # Remove selected policy from the simulation
@@ -121,10 +118,7 @@ module ApplicationController::PolicySupport
     @edit = session[:edit]
     session[:policies].delete(params[:del_pol].to_i)
     policy_sim_build_screen
-    render :update do |page|
-      page << javascript_prologue
-      page.replace_html("main_div", :partial => "layouts/policy_sim")
-    end
+    replace_main_div :partial => "layouts/policy_sim"
   end
 
   def profile_build
@@ -186,10 +180,7 @@ module ApplicationController::PolicySupport
       protect
       @refresh_partial = "layouts/protect"
     else
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'protect'   # redirect to build policy screen
-      end
+      javascript_redirect :action => 'protect' # redirect to build policy screen
     end
   end
   %w(image instance vm miq_template container_image ems_container).each do |old_name|

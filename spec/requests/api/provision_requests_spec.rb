@@ -48,7 +48,7 @@ describe ApiController do
 
       run_post(provision_requests_url, single_provision_request)
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "supports single request with normal post" do
@@ -57,7 +57,7 @@ describe ApiController do
       dialog  # Create the Provisioning dialog
       run_post(provision_requests_url, single_provision_request)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
       expect_results_to_match_hash("results", [expected_hash])
 
@@ -71,7 +71,7 @@ describe ApiController do
       dialog  # Create the Provisioning dialog
       run_post(provision_requests_url, gen_request(:create, single_provision_request))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
       expect_results_to_match_hash("results", [expected_hash])
 
@@ -85,7 +85,7 @@ describe ApiController do
       dialog  # Create the Provisioning dialog
       run_post(provision_requests_url, gen_request(:create, [single_provision_request, single_provision_request]))
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
       expect_results_to_match_hash("results", [expected_hash, expected_hash])
 
@@ -167,7 +167,7 @@ describe ApiController do
 
       run_post(provision_requests_url, body)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_provreq_attributes)
       expect_results_to_match_hash("results", [expected_provreq_hash])
 
@@ -199,7 +199,7 @@ describe ApiController do
 
       run_post(provision_requests_url, body)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_provreq_attributes)
       expect_results_to_match_hash("results", [expected_provreq_hash])
 
@@ -228,7 +228,7 @@ describe ApiController do
 
       run_post(provision_requests_url, body)
 
-      expect_request_success
+      expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_provreq_attributes)
       expect_results_to_match_hash("results", [expected_provreq_hash])
 

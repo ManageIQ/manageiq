@@ -137,7 +137,8 @@ Vmdb::Application.routes.draw do
         show
         show_list
         tagging_edit
-        tag_edit_form_field_changed
+        tag_edit_form_field_changed,
+        ems_form_choices
       ) + compare_get,
       :post => %w(
         button
@@ -433,6 +434,7 @@ Vmdb::Application.routes.draw do
         timeprofile_delete
         timeprofile_field_changed
         timeprofile_update
+        tree_autoload_dynatree
         update
         view_selected
       )
@@ -1074,6 +1076,7 @@ Vmdb::Application.routes.draw do
       ) +
                compare_get,
       :post => %w(
+        add_deployment
         button
         create
         dynamic_checkbox_refresh
@@ -2323,6 +2326,7 @@ Vmdb::Application.routes.draw do
         right_size
         set_checked_items
         show_list
+        tree_autoload_dynatree
         vmtree_selected
       ) +
                ownership_post +
@@ -2624,14 +2628,46 @@ Vmdb::Application.routes.draw do
   # OPTIONS requests for REST API pre-flight checks
 
   # Semantic Versioning Regex for API, i.e. vMajor.minor.patch[-pre]
-  apiver_regex = /v[\d]+(\.[\da-zA-Z]+)*(\-[\da-zA-Z]+)?/
+  API_VERSION_REGEX = /v[\d]+(\.[\da-zA-Z]+)*(\-[\da-zA-Z]+)?/
 
   match '/api/*path'   => 'api#handle_options_request', :via => [:options]
-  get '/api(/:version)'           => 'api#show',    :format => 'json', :version => apiver_regex
+  get '/api(/:version)' => 'api#show_entrypoint', :format => 'json', :version => API_VERSION_REGEX
 
-  get    '/api(/:version)/:collection(/:c_id(/:subcollection(/:s_id)))' => 'api#show',    :format => 'json', :version => apiver_regex
-  match  '/api(/:version)/:collection(/:c_id(/:subcollection(/:s_id)))' => 'api#update',  :format => 'json', :via => [:post, :put, :patch], :version => apiver_regex
-  delete '/api(/:version)/:collection(/:c_id(/:subcollection(/:s_id)))' => 'api#destroy', :format => 'json', :version => apiver_regex
+  API_ACTIONS = {
+    :get    => "show",
+    :post   => "update",
+    :put    => "update",
+    :patch  => "update",
+    :delete => "destroy"
+  }.freeze
+
+  def action_for(verb)
+    "api##{API_ACTIONS[verb]}"
+  end
+
+  def create_api_route(verb, url, action)
+    public_send(verb, url, :to => action, :format => "json", :version => API_VERSION_REGEX)
+  end
+
+  Api::Settings.collections.each do |collection_name, collection|
+    collection.verbs.each do |verb|
+      if collection.options.include?(:primary)
+        create_api_route(verb, "/api(/:version)/#{collection_name}", action_for(verb))
+      end
+
+      if collection.options.include?(:collection)
+        create_api_route(verb, "/api(/:version)/#{collection_name}(/:c_id)", action_for(verb))
+      end
+    end
+
+    Array(collection.subcollections).each do |subcollection_name|
+      Api::Settings.collections[subcollection_name].verbs.each do |verb|
+        create_api_route(verb,
+                         "/api(/:version)/#{collection_name}/:c_id/#{subcollection_name}(/:s_id)",
+                         action_for(verb))
+      end
+    end
+  end
 
   controller_routes.each do |controller_name, controller_actions|
     # Default route with no action to controller's index action

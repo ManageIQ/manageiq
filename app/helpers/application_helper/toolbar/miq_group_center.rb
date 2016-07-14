@@ -31,7 +31,9 @@ class ApplicationHelper::Toolbar::MiqGroupCenter < ApplicationHelper::Toolbar::B
         button(
           :rbac_group_tags_edit,
           'pficon pficon-edit fa-lg',
-          t = N_('Edit \'#{session[:customer_name]}\' Tags for this Group'),
+          t = proc do
+            _('Edit \'%{:customer_name}\' Tags for this Group') % {:customer_name => @view_context.session[:customer_name]}
+          end,
           t),
       ]
     ),

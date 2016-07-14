@@ -101,7 +101,7 @@ describe MiqAeClassCopy do
       fqname = 'test1'
       ids    = [1, 2, 3]
       miq_ae_class_copy = double(MiqAeClassCopy)
-      miq_ae_class = double(MiqAeClass, id: 1)
+      miq_ae_class = double(MiqAeClass, :id => 1)
       new_ids = [miq_ae_class.id] * ids.length
       expect(miq_ae_class_copy).to receive(:to_domain).with(domain, nil, false).exactly(ids.length).times { miq_ae_class }
       expect(miq_ae_class).to receive(:fqname).with(no_args).exactly(ids.length).times { fqname }

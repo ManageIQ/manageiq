@@ -14,6 +14,8 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   require_nested :Template
   require_nested :Vm
 
+  supports :provisioning
+
   def self.ems_type
     @ems_type ||= "rhevm".freeze
   end
@@ -219,5 +221,12 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
       rhevm_vm.cpu_topology = cpu_options if cpu_options.present?
     end
     _log.info("#{log_header} Completed.")
+  end
+
+  # Calculates an "ems_ref" from the "href" attribute provided by the oVirt REST API, removing the
+  # "/ovirt-engine/" prefix, as for historic reasons the "ems_ref" stored in the database does not
+  # contain it, it only contains the "/api" prefix which was used by older versions of the engine.
+  def self.make_ems_ref(href)
+    href && href.sub(%r{^/ovirt-engine/}, '/')
   end
 end

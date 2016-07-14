@@ -4,5 +4,7 @@
   = render_quadicon(@record, :mode => :icon, :size => 72)
 - if @record.kind_of?(ConfigurationProfile)
   = render :partial => "#{controller}/main_configuration_profile"
+- elsif @record.kind_of?(ManageIQ::Providers::ConfigurationManager::InventoryGroup)
+  = render :partial => "#{controller}/main_inventory_group"
 - else
   = render :partial => "#{controller}/main"

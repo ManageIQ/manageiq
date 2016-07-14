@@ -148,6 +148,10 @@ class Zone < ApplicationRecord
     ext_management_systems.select { |e| e.kind_of? ManageIQ::Providers::MiddlewareManager }
   end
 
+  def middleware_servers
+    ems_middlewares.flat_map(&:middleware_servers)
+  end
+
   def ems_clouds
     ext_management_systems.select { |e| e.kind_of? EmsCloud }
   end

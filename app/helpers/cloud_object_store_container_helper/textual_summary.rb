@@ -1,5 +1,6 @@
 module CloudObjectStoreContainerHelper::TextualSummary
   include TextualMixins::TextualDescription
+  include TextualMixins::TextualGroupTags
 
   def textual_group_properties
     %i(key size)
@@ -7,10 +8,6 @@ module CloudObjectStoreContainerHelper::TextualSummary
 
   def textual_group_relationships
     %i(ems cloud_tenant cloud_object_store_objects)
-  end
-
-  def textual_group_tags
-    %i(tags)
   end
 
   def textual_key

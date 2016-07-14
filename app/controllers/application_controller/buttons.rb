@@ -73,10 +73,7 @@ module ApplicationController::Buttons
       end
     else
       add_flash(_("No Button Group was selected!"), :error)
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
   end
 
@@ -158,10 +155,7 @@ module ApplicationController::Buttons
       replace_right_cell(x_node, x_active_tree == :ab_tree ? [:ab] : [:sandt])
     else
       custom_button.errors.each { |field, msg| add_flash("#{field.to_s.capitalize} #{msg}", :error) }
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
   end
 
@@ -238,17 +232,14 @@ module ApplicationController::Buttons
       replace_right_cell(x_node, x_active_tree == :ab_tree ? [:ab] : [:sandt])
     else
       custom_button_set.errors.each { |field, msg| add_flash("#{field.to_s.capitalize} #{msg}", :error) }
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
   end
 
   private ###########
 
   BASE_MODEL_EXPLORER_CLASSES = [Vm, MiqTemplate, Service].freeze
-  APPLIES_TO_CLASS_BASE_MODELS = %w(EmsCluster ExtManagementSystem Host MiqTemplate Service ServiceTemplate Storage Vm).freeze
+  APPLIES_TO_CLASS_BASE_MODELS = %w(CloudTenant EmsCluster ExtManagementSystem Host MiqTemplate Service ServiceTemplate Storage Vm).freeze
   def applies_to_class_model(applies_to_class)
     # TODO: Give a better name for this concept, including ServiceTemplate using Service
     # This should probably live in the model once this concept is defined.
@@ -282,10 +273,7 @@ module ApplicationController::Buttons
       else
         add_flash(_("\"%{task_description}\" was executed") % {:task_description => params[:desc]})
       end
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
   end
 
@@ -437,10 +425,7 @@ module ApplicationController::Buttons
         drop_breadcrumb(:name => _("Edit of Button"), :url => "/miq_ae_customization/button_edit")
         @lastaction = "automate_button"
         @layout = "miq_ae_automate_button"
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       else
         attrs = {}
@@ -491,10 +476,7 @@ module ApplicationController::Buttons
           end
           @lastaction = "automate_button"
           @layout = "miq_ae_automate_button"
-          render :update do |page|
-            page << javascript_prologue
-            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-          end
+          javascript_flash
         end
       end
     elsif params[:button] == "save"
@@ -513,10 +495,7 @@ module ApplicationController::Buttons
         drop_breadcrumb(:name => _("Edit of Button"), :url => "/miq_ae_customization/button_edit")
         @lastaction = "automate_button"
         @layout = "miq_ae_automate_button"
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       else
         if @custom_button.save
@@ -533,10 +512,7 @@ module ApplicationController::Buttons
           drop_breadcrumb(:name => "Edit of Button", :url => "/miq_ae_customization/button_edit")
           @lastaction = "automate_button"
           @layout = "miq_ae_automate_button"
-          render :update do |page|
-            page << javascript_prologue
-            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-          end
+          javascript_flash
         end
       end
     elsif params[:button] == "reset"

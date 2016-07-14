@@ -71,7 +71,8 @@
       .col-md-8
         = select_tag('server_timezone',
                       options_for_select(ALL_TIMEZONES, @edit[:new][:server][:timezone]),
-                      :class    => "selectpicker")
+                      "data-live-search" => "true",
+                      :class             => "selectpicker")
     :javascript
       miqSelectPickerEvent('server_timezone', "#{url}")
 

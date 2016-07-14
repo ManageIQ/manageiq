@@ -9,16 +9,16 @@ class ApplicationHelper::Toolbar::ContainerProjectCenter < ApplicationHelper::To
         button(
           :container_project_edit,
           'pficon pficon-edit fa-lg',
-          t = N_('Edit this #{ui_lookup(:table=>"container_project")}'),
+          t = N_('Edit this Project'),
           t,
           :url => "/edit"),
         button(
           :container_project_delete,
           'pficon pficon-delete fa-lg',
-          t = N_('Remove this #{ui_lookup(:table=>"container_project")} from the VMDB'),
+          t = N_('Remove this Project from the VMDB'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This \#{ui_lookup(:table=>\"container_project\")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this \#{ui_lookup(:table=>\"container_project\")}?")),
+          :confirm   => N_("Warning: This Project and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Project?")),
       ]
     ),
   ])
@@ -56,7 +56,7 @@ class ApplicationHelper::Toolbar::ContainerProjectCenter < ApplicationHelper::To
         button(
           :container_project_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this #{ui_lookup(:table=>"container_project")}'),
+          N_('Edit Tags for this Node'),
           N_('Edit Tags')),
       ]
     ),

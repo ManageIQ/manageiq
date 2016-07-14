@@ -44,11 +44,10 @@ module ApplicationController::CiProcessing
       @edit[:explorer] = true
       ownership
     else
-      render :update do |page|
-        page << javascript_prologue
-        if role_allows(:feature => "vm_ownership")
-          page.redirect_to :controller => "#{rec_cls}", :action => 'ownership'              # redirect to build the ownership screen
-        end
+      if role_allows(:feature => "vm_ownership")
+        javascript_redirect :controller => "#{rec_cls}", :action => 'ownership' # redirect to build the ownership screen
+      else
+        head :ok
       end
     end
   end
@@ -123,10 +122,7 @@ module ApplicationController::CiProcessing
         replace_right_cell
       else
         session[:flash_msgs] = @flash_array
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to(previous_breadcrumb_url)
-        end
+        javascript_redirect previous_breadcrumb_url
       end
     when "save"
       opts = {}
@@ -150,10 +146,7 @@ module ApplicationController::CiProcessing
       unless result == true
         result["missing_ids"].each { |msg| add_flash(msg, :error) } if result["missing_ids"]
         result["error_updating"].each { |msg| add_flash(msg, :error) } if result["error_updating"]
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         object_types = object_types_for_flash_message(@edit[:klass], @edit[:ownership_items])
 
@@ -164,10 +157,7 @@ module ApplicationController::CiProcessing
           replace_right_cell
         else
           session[:flash_msgs] = @flash_array
-          render :update do |page|
-            page << javascript_prologue
-            page.redirect_to(previous_breadcrumb_url)
-          end
+          javascript_redirect previous_breadcrumb_url
         end
       end
     when "reset"
@@ -177,13 +167,10 @@ module ApplicationController::CiProcessing
         add_flash(_("All changes have been reset"), :warning)
         request.parameters[:controller] == "service" ? replace_right_cell("ownership") : replace_right_cell
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action        => 'ownership',
-                           :flash_msg     => _("All changes have been reset"),
-                           :flash_warning => true,
-                           :escape        => true
-        end
+        javascript_redirect :action        => 'ownership',
+                            :flash_msg     => _("All changes have been reset"),
+                            :flash_warning => true,
+                            :escape        => true
       end
     end
   end
@@ -192,7 +179,8 @@ module ApplicationController::CiProcessing
   def retirevms
     assert_privileges(params[:pressed])
     vms = find_checked_items
-    if VmOrTemplate.includes_template?(vms.map(&:to_i).uniq)
+    if !%w(orchestration_template service).include?(request.parameters["controller"]) &&
+       VmOrTemplate.find(vms).any? { |vm| !vm.supports_retirement? }
       add_flash(_("Set Retirement Date does not apply to selected %{model}") %
         {:model => ui_lookup(:table => "miq_template")}, :error)
       render_flash_and_scroll
@@ -225,10 +213,7 @@ module ApplicationController::CiProcessing
     else
       drop_breadcrumb(:name => _("Retire %{name}") % {:name => rec_cls.to_s.pluralize},
                       :url  => "/#{session[:controller]}/retire")
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :controller => rec_cls, :action => 'retire'      # redirect to build the retire screen
-      end
+      javascript_redirect :controller => rec_cls, :action => 'retire' # redirect to build the retire screen
     end
   end
   alias_method :instance_retire, :retirevms
@@ -299,10 +284,7 @@ module ApplicationController::CiProcessing
         replace_right_cell
       else
         session[:flash_msgs] = @flash_array.dup
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to previous_breadcrumb_url
-        end
+        javascript_redirect previous_breadcrumb_url
       end
       return
     end
@@ -366,10 +348,7 @@ module ApplicationController::CiProcessing
         resize
         @refresh_partial = "vm_common/resize"
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :controller => 'vm', :action => 'resize', :rec_id => @record.id, :escape => false     # redirect to build the retire screen
-        end
+        javascript_redirect :controller => 'vm', :action => 'resize', :rec_id => @record.id, :escape => false # redirect to build the retire screen
       end
     else
       add_flash(_("Unable to reconfigure %{instance} \"%{name}\": %{details}") % {
@@ -422,10 +401,7 @@ module ApplicationController::CiProcessing
       replace_right_cell
     else
       session[:flash_msgs] = @flash_array.dup
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to previous_breadcrumb_url
-      end
+      javascript_redirect previous_breadcrumb_url
     end
     return
   end
@@ -454,10 +430,7 @@ module ApplicationController::CiProcessing
         live_migrate
         @refresh_partial = "vm_common/live_migrate"
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :controller => 'vm', :action => 'live_migrate', :rec_id => @record.id, :escape => false
-        end
+        javascript_redirect :controller => 'vm', :action => 'live_migrate', :rec_id => @record.id, :escape => false
       end
     else
       add_flash(_("Unable to live migrate %{instance} \"%{name}\": %{details}") % {
@@ -536,7 +509,7 @@ module ApplicationController::CiProcessing
           add_flash(_("Unable to live migrate %{instance} \"%{name}\": %{details}") % {
             :instance => ui_lookup(:table => 'vm_cloud'),
             :name     => @record.name,
-            :details  => get_error_message_from_fog(ex.to_s)}, :error)
+            :details  => get_error_message_from_fog(ex)}, :error)
         end
       else
         add_flash(_("Unable to live migrate %{instance} \"%{name}\": %{details}") % {
@@ -552,10 +525,7 @@ module ApplicationController::CiProcessing
       replace_right_cell
     else
       session[:flash_msgs] = @flash_array.dup
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to previous_breadcrumb_url
-      end
+      javascript_redirect previous_breadcrumb_url
     end
     return
   end
@@ -583,10 +553,7 @@ module ApplicationController::CiProcessing
         evacuate
         @refresh_partial = "vm_common/evacuate"
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :controller => 'vm', :action => 'evacuate', :rec_id => @record.id, :escape => false
-        end
+        javascript_redirect :controller => 'vm', :action => 'evacuate', :rec_id => @record.id, :escape => false
       end
     else
       add_flash(_("Unable to evacuate %{instance} \"%{name}\": %{details}") % {
@@ -628,7 +595,7 @@ module ApplicationController::CiProcessing
           add_flash(_("Unable to evacuate %{instance} \"%{name}\": %{details}") % {
             :instance => ui_lookup(:table => 'vm_cloud'),
             :name     => @record.name,
-            :details  => get_error_message_from_fog(ex.to_s)}, :error)
+            :details  => get_error_message_from_fog(ex)}, :error)
         end
       else
         add_flash(_("Unable to evacuate %{instance} \"%{name}\": %{details}") % {
@@ -644,10 +611,7 @@ module ApplicationController::CiProcessing
       replace_right_cell
     else
       session[:flash_msgs] = @flash_array.dup
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to previous_breadcrumb_url
-      end
+      javascript_redirect previous_breadcrumb_url
     end
   end
 
@@ -697,11 +661,10 @@ module ApplicationController::CiProcessing
       right_size
       replace_right_cell if @orig_action == "x_history"
     else
-      render :update do |page|
-        page << javascript_prologue
-        if role_allows(:feature => "vm_right_size")
-          page.redirect_to :controller => "#{rec_cls}", :action => 'right_size', :id => recs[0], :escape => false           # redirect to build the ownership screen
-        end
+      if role_allows(:feature => "vm_right_size")
+        javascript_redirect :controller => "#{rec_cls}", :action => 'right_size', :id => recs[0], :escape => false # redirect to build the ownership screen
+      else
+        head :ok
       end
     end
   end
@@ -738,10 +701,7 @@ module ApplicationController::CiProcessing
         replace_right_cell
       else
         session[:flash_msgs] = @flash_array
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to(previous_breadcrumb_url)
-        end
+        javascript_redirect previous_breadcrumb_url
       end
     when "submit"
       options = {:src_ids => params[:objectIds]}
@@ -792,26 +752,17 @@ module ApplicationController::CiProcessing
       if VmReconfigureRequest.make_request(@request_id, options, current_user)
         flash = _("VM Reconfigure Request was saved")
         if role_allows(:feature => "miq_request_show_list", :any => true)
-          render :update do |page|
-            page << javascript_prologue
-            page.redirect_to :controller => 'miq_request', :action => 'show_list', :flash_msg => flash
-          end
+          javascript_redirect :controller => 'miq_request', :action => 'show_list', :flash_msg => flash
         else
           url = previous_breadcrumb_url.split('/')
-          render :update do |page|
-            page << javascript_prologue
-            page.redirect_to :controller => url[1], :action => url[2], :flash_msg => flash
-          end
+          javascript_redirect :controller => url[1], :action => url[2], :flash_msg => flash
         end
       else
         # TODO - is request ever nil? ??
         add_flash(_("Error adding VM Reconfigure Request"))
       end
       if @flash_array
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
     end
@@ -843,7 +794,6 @@ module ApplicationController::CiProcessing
     @redirect_id = obj[0] if obj.length == 1      # not redirecting to an id if multi host are selected for credential edit
 
     if !["ScanItemSet", "Condition", "Schedule", "MiqAeInstance"].include?(db)
-      #       page.redirect_to :controller=>params[:rec], :action=>link   # redirect to build the compare screen
       @refresh_partial = "edit"
       @refresh_partial = "edit_set" if params[:db] == "policyprofile"
     else
@@ -1129,8 +1079,8 @@ module ApplicationController::CiProcessing
       if request.parameters[:controller] == 'ems_infra'
         @discover_type = ExtManagementSystem.ems_infra_discovery_types
       else
-        @discover_type = ExtManagementSystem.ems_cloud_discovery_types.invert.collect do |type|
-          [discover_type(type[0]), type[1]]
+        @discover_type = ManageIQ::Providers::CloudManager.subclasses.select(&:supports_discovery?).map do |cloud_manager|
+          [cloud_manager.description, cloud_manager.ems_type]
         end
         @discover_type_selected = @discover_type.first.try!(:last)
       end
@@ -1175,7 +1125,7 @@ module ApplicationController::CiProcessing
       drop_breadcrumb(:name => _("%{title} Discovery") % {:title => title}, :url => "/host/discover")
       @discover_type_selected = params[:discover_type_selected]
 
-      if request.parameters[:controller] == "ems_cloud" && params[:discover_type_selected] == ExtManagementSystem.ems_cloud_discovery_types['azure']
+      if request.parameters[:controller] == "ems_cloud" && params[:discover_type_selected] == 'azure'
         @client_id = params[:client_id] if params[:client_id]
         @client_key = params[:client_key] if params[:client_key]
         @azure_tenant_id = params[:azure_tenant_id] if params[:azure_tenant_id]
@@ -1219,10 +1169,13 @@ module ApplicationController::CiProcessing
             end
             Host.discoverByIpRange(from_ip, to_ip, options)
           else
-            if params[:discover_type_selected] == ExtManagementSystem.ems_cloud_discovery_types['azure']
-              ManageIQ::Providers::Azure::CloudManager.discover_queue(@client_id, @client_key, @azure_tenant_id)
+            cloud_manager = ManageIQ::Providers::CloudManager.subclasses.detect do |ems|
+              ems.supports_discovery? && ems.ems_type == params[:discover_type_selected]
+            end
+            if cloud_manager.ems_type == 'azure'
+              cloud_manager.discover_queue(@client_id, @client_key, @azure_tenant_id)
             else
-              ManageIQ::Providers::Amazon::CloudManager.discover_queue(@userid, @password)
+              cloud_manager.discover_queue(@userid, @password)
             end
           end
         rescue => err
@@ -1297,7 +1250,7 @@ module ApplicationController::CiProcessing
         if params[:discover_type_selected] && params[:discover_type_selected] == 'azure'
           page << javascript_hide("discover_credentials")
           page << javascript_show("discover_azure_credentials")
-        elsif params[:discover_type_selected] && params[:discover_type_selected] == 'amazon'
+        elsif params[:discover_type_selected] && params[:discover_type_selected] == 'ec2'
           page << javascript_hide("discover_azure_credentials")
           page << javascript_show("discover_credentials")
         else
@@ -1338,9 +1291,10 @@ module ApplicationController::CiProcessing
     end
   end
 
-  def get_error_message_from_fog(ex)
-    matched_message = ex.match(/message\\\": \\\"(.*)\\\", /)
-    matched_message ? matched_message[1] : ex
+  def get_error_message_from_fog(exception)
+    exception_string = exception.to_s
+    matched_message = exception_string.match(/message\\\": \\\"(.*)\\\", /)
+    matched_message ? matched_message[1] : exception_string
   end
 
   private ############################
@@ -1468,11 +1422,10 @@ module ApplicationController::CiProcessing
       session[:changed] = true  # need to enable submit button when screen loads
       @refresh_partial = "vm_common/reconfigure"
     else
-      render :update do |page|
-        page << javascript_prologue
-        if role_allows(:feature => "vm_reconfigure")
-          page.redirect_to :controller => "#{rec_cls}", :action => 'reconfigure', :req_id => @request_id, :rec_ids => @reconfigure_items, :escape => false         # redirect to build the ownership screen
-        end
+      if role_allows(:feature => "vm_reconfigure")
+        javascript_redirect :controller => "#{rec_cls}", :action => 'reconfigure', :req_id => @request_id, :rec_ids => @reconfigure_items, :escape => false # redirect to build the ownership screen
+      else
+        head :ok
       end
     end
   end
@@ -1615,7 +1568,9 @@ module ApplicationController::CiProcessing
          request.parameters["controller"]) # showing a list
 
       vms = find_checked_items
-      if method == 'retire_now' && VmOrTemplate.includes_template?(vms)
+      if method == 'retire_now' &&
+         !%w(orchestration_template service).include?(request.parameters["controller"]) &&
+         VmOrTemplate.find(vms).any? { |vm| !vm.supports_retirement? }
         add_flash(_("Retire does not apply to selected %{model}") %
           {:model => ui_lookup(:table => "miq_template")}, :error)
         render_flash_and_scroll
@@ -1662,7 +1617,6 @@ module ApplicationController::CiProcessing
         end
       end
     end
-
     vms.count
   end
 
@@ -1939,10 +1893,7 @@ module ApplicationController::CiProcessing
         policy_sim
         @refresh_partial = "layouts/policy_sim"
       else
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :controller => 'vm', :action => 'policy_sim'   # redirect to build the policy simulation screen
-        end
+        javascript_redirect :controller => 'vm', :action => 'policy_sim' # redirect to build the policy simulation screen
       end
     end
   end

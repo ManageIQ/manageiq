@@ -2,6 +2,8 @@ require 'spec_helper'
 require 'recursive-open-struct'
 
 describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
+  THE_FEED_ID = '70c798a0-6985-4f8a-a525-012d8d28e8a3'.freeze
+
   let(:ems_hawkular) do
     # allow(MiqServer).to receive(:my_zone).and_return("default")
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
@@ -16,9 +18,9 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
   let(:server) do
     FactoryGirl.create(:hawkular_middleware_server,
                        :name                  => 'Local',
-                       :feed                  => 'cda13e2a-e206-4e87-8bca-8cfdd5aea484',
-                       :ems_ref               => '/t;28026b36-8fe4-4332-84c8-524e173a68bf'\
-                                                 '/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/r;Local~~',
+                       :feed                  => THE_FEED_ID,
+                       :ems_ref               => '/t;Hawkular'\
+                                                 "/f;#{THE_FEED_ID}/r;Local~~",
                        :nativeid              => 'Local~~',
                        :ext_management_system => ems_hawkular)
   end
@@ -28,8 +30,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
       # parse_datasource(server, datasource, config)
       datasource = RecursiveOpenStruct.new(:name => 'ruby-sample-build',
                                            :id   => 'Local~/subsystem=datasources/data-source=ExampleDS',
-                                           :path => '/t;28026b36-8fe4-4332-84c8-524e173a68bf'\
-                                                    '/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/r;Local~~'\
+                                           :path => '/t;Hawkular'\
+                                                    "/f;#{THE_FEED_ID}/r;Local~~"\
                                                     '/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS'
                                           )
       config = {
@@ -44,8 +46,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
         :name              => 'ruby-sample-build',
         :middleware_server => server,
         :nativeid          => 'Local~/subsystem=datasources/data-source=ExampleDS',
-        :ems_ref           => '/t;28026b36-8fe4-4332-84c8-524e173a68bf'\
-                                                 '/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/r;Local~~'\
+        :ems_ref           => '/t;Hawkular'\
+                                                 "/f;#{THE_FEED_ID}/r;Local~~"\
                                                  '/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS',
         :properties        => {
           'Driver Name'    => 'h2',

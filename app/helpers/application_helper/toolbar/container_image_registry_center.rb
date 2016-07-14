@@ -9,16 +9,16 @@ class ApplicationHelper::Toolbar::ContainerImageRegistryCenter < ApplicationHelp
         button(
           :container_image_registry_edit,
           'pficon pficon-edit fa-lg',
-          t = N_('Edit this #{ui_lookup(:table=>"container_image_registry")}'),
+          t = N_('Edit this Image Registry'),
           t,
           :url => "/edit"),
         button(
           :container_image_registry_delete,
           'pficon pficon-delete fa-lg',
-          t = N_('Remove this #{ui_lookup(:table=>"container_image_registry")} from the VMDB'),
+          t = N_('Remove this Image Registry from the VMDB'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This \#{ui_lookup(:table=>\"container_image_registry\")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this \#{ui_lookup(:table=>\"container_image_registry\")}?")),
+          :confirm   => N_("Warning: This Image Registry and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Image Registry")),
       ]
     ),
   ])
@@ -32,7 +32,7 @@ class ApplicationHelper::Toolbar::ContainerImageRegistryCenter < ApplicationHelp
         button(
           :container_image_registry_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this #{ui_lookup(:table=>"container_image_registry")}'),
+          N_('Edit Tags for this Image Registry'),
           N_('Edit Tags')),
       ]
     ),

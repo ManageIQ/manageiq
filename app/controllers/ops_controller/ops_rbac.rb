@@ -125,10 +125,7 @@ module OpsController::OpsRbac
         tenant.save!
       rescue StandardError => bang
         add_flash(_("Error when adding a new tenant: %{message}") % {:message => bang.message}, :error)
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         AuditEvent.success(build_saved_audit_hash(old_tenant_attributes, tenant, params[:button] == "add"))
         add_flash(_("%{model} \"%{name}\" was saved") %
@@ -203,10 +200,7 @@ module OpsController::OpsRbac
         end
       rescue StandardError => bang
         add_flash(_("Error when saving tenant quota: %{message}") % {:message => bang.message}, :error)
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         add_flash(_("Quotas for %{model} \"%{name}\" were saved") %
                       {:model => tenant_type_title_string(tenant.divisible), :name => tenant.name})
@@ -272,10 +266,7 @@ module OpsController::OpsRbac
       users = User.where(:id => ids).compact
       if users.empty?
         add_flash(_("Default %{model} \"%{name}\" cannot be deleted") % {:model => ui_lookup(:model => "User"), :name => "Administrator"}, :error)
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       else
         restricted_users = []
@@ -302,10 +293,7 @@ module OpsController::OpsRbac
         end
       end
       if @flash_array
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
       process_users(users, "destroy") unless users.empty?
@@ -542,10 +530,7 @@ module OpsController::OpsRbac
       end
     end
     if !@flash_array.nil?
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     else
       @record = MiqGroup.find_by_id(@edit[:group_id])
       @sb[:roles] = @edit[:roles]
@@ -675,10 +660,7 @@ module OpsController::OpsRbac
 
     if [:group, :role].include?(key) && record && record.read_only && params[:typ] != "copy"
       add_flash(_("Read Only %{model} \"%{name}\" can not be edited") % {:model => key == :role ? ui_lookup(:model => "MiqUserRole") : ui_lookup(:model => "MiqGroup"), :name => key == :role ? record.name : record.description}, :warning)
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
       return
     end
 

@@ -101,10 +101,7 @@ module ReportController::Schedules
     scheds = find_checked_items
     if scheds.empty? && params[:id].nil?
       add_flash(_("No Report Schedules were selected to be Run now"), :error)
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     elsif params[:id]
       if MiqSchedule.exists?(from_cid(params[:id]))
         scheds.push(from_cid(params[:id]))
@@ -148,10 +145,7 @@ module ReportController::Schedules
     if scheds.empty?
       add_flash(msg1 % {:schedules => "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}"},
                 :error)
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
     schedule_enable_disable(scheds, enable) unless scheds.empty?
     add_flash(msg2 % {:schedules => "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}"},
@@ -227,7 +221,7 @@ module ReportController::Schedules
       @schedule = nil
       @edit = session[:edit] = nil  # clean out the saved info
       @in_a_form = false
-      @sb[:active_accord] = :schedules
+
       replace_right_cell
     when "save", "add"
       id = params[:id] ? params[:id] : "new"
@@ -249,11 +243,11 @@ module ReportController::Schedules
         # ensure we land in the right accordion with the right tree and
         # with the listing opened even when entering 'add' from the reports
         # menu
-        @sb[:active_tree]   = :schedules_tree
-        @sb[:active_accord] = :schedules
-        # FIXME: change to x_active_node after 5.2
-        @sb[:trees][@sb[:active_tree]][:active_node] = 'root'
+
+        self.x_active_tree   = "schedules_tree"
+        self.x_active_accord = "schedules"
         self.x_node = "msc-#{to_cid(schedule.id)}"
+        @_params[:accord] = "schedules"
         replace_right_cell(:replace_trees => [:schedules])
       else
         schedule.errors.each do |field, msg|
@@ -261,10 +255,7 @@ module ReportController::Schedules
         end
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
         drop_breadcrumb(:name => "Edit Schedule", :url => "/miq_schedule/edit")
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
     when "reset", nil # Reset or first time in
       add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"

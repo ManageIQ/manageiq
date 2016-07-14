@@ -196,6 +196,58 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
           expect(@vm_prov.dest_resource_pool).to eq(dest_host.default_resource_pool)
         end
       end
+
+      context "#start_clone" do
+        before(:each) do
+          ds_mor = "datastore-0"
+          storage = FactoryGirl.create(:storage_nfs, :ems_ref => ds_mor, :ems_ref_obj => ds_mor)
+
+          Array.new(2) do |i|
+            host_mor = "host-#{i}"
+            host_props = {
+              :ext_management_system => @ems,
+              :ems_ref               => host_mor,
+              :ems_ref_obj           => host_mor
+            }
+
+            FactoryGirl.create(:host_vmware, host_props).tap do |host|
+              host.storages = [storage]
+              hs = host.host_storages.first
+              hs.ems_ref = "datastore-#{i}"
+              hs.save
+            end
+          end
+        end
+
+        it "uses the ems_ref for the correct host" do
+          dest_host_mor      = "host-1"
+          dest_datastore_mor = "datastore-1"
+          task_mor           = "task-1"
+
+          clone_opts = {
+            :name      => @target_vm_name,
+            :host      => Host.find_by(:ems_ref => dest_host_mor),
+            :datastore => Storage.first
+          }
+
+          expected_vim_clone_opts = {
+            :name          => @target_vm_name,
+            :wait          => false,
+            :template      => false,
+            :transform     => nil,
+            :config        => nil,
+            :customization => nil,
+            :linked_clone  => nil,
+            :host          => dest_host_mor,
+            :datastore     => dest_datastore_mor
+          }
+
+          allow(@vm_prov).to receive(:clone_vm).with(expected_vim_clone_opts).and_return(task_mor)
+
+          result = @vm_prov.start_clone clone_opts
+          expect(result).to eq(task_mor)
+        end
+      end
     end
   end
 end

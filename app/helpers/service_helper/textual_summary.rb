@@ -1,5 +1,6 @@
 module ServiceHelper::TextualSummary
   include TextualMixins::TextualDescription
+  include TextualMixins::TextualGroupTags
   include TextualMixins::TextualName
   #
   # Groups
@@ -21,10 +22,6 @@ module ServiceHelper::TextualSummary
 
   def textual_group_relationships
     %i(catalog_item parent_service orchestration_stack job)
-  end
-
-  def textual_group_tags
-    %i(tags)
   end
 
   def textual_group_miq_custom_attributes

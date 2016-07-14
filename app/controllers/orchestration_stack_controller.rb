@@ -131,10 +131,7 @@ class OrchestrationStackController < ApplicationController
     end
 
     if !@flash_array.nil? && params[:pressed] == "orchestration_stack_delete" && @single_delete
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]
-      end
+      javascript_redirect :action => 'show_list', :flash_msg => @flash_array[0][:message]
     elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
                                                    "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
       render_or_redirect_partial(pfx)
@@ -248,23 +245,17 @@ class OrchestrationStackController < ApplicationController
       else
         flash_message = _("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => 'OrchestrationTemplate'),
                                                                :name  => ot.name}
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to(:controller    => 'catalog',
-                           :action        => 'ot_show',
-                           :id            => ot.id,
-                           :flash_message => flash_message)
-        end
+        javascript_redirect :controller    => 'catalog',
+                            :action        => 'ot_show',
+                            :id            => ot.id,
+                            :flash_message => flash_message
       end
     end
   end
 
   def orchestration_templates_view
     template = find_by_id_filtered(OrchestrationStack, params[:id]).orchestration_template
-    render :update do |page|
-      page << javascript_prologue
-      page.redirect_to(:controller => 'catalog', :action => 'ot_show', :id => template.id)
-    end
+    javascript_redirect :controller => 'catalog', :action => 'ot_show', :id => template.id
   end
 
   def get_session_data

@@ -44,7 +44,7 @@ describe "host/show.html.haml" do
       assign(:lastaction, "host_services")
       assign(:view, OpenStruct.new(:table => OpenStruct.new(:data => [])))
       render
-      expect(view).to render_template(partial: 'layouts/gtl', :locals => {:action_url => 'host_services'})
+      expect(view).to render_template(:partial => 'layouts/gtl', :locals => {:action_url => 'host_services'})
     end
   end
 end

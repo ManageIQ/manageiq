@@ -27,13 +27,7 @@ class MiqEnterprise < ApplicationRecord
     end
   end
 
-  def self.my_enterprise
-    # Cache the enterprise instance, but clear the association
-    #   cache to support keeping the associations fresh
-    @my_enterprise ||= in_my_region.first
-    @my_enterprise.send(:clear_association_cache) unless @my_enterprise.nil?
-    @my_enterprise
-  end
+  cache_with_timeout(:my_enterprise) { in_my_region.first }
 
   def self.is_enterprise?
     # TODO: Need to implement a way to determine whether we're running on an "enterprise" server or a "regional" server.

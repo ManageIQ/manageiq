@@ -1,8 +1,8 @@
 describe ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Runner do
   subject do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
-    auth                 = AuthToken.new(:name     => "test",
-                                         :auth_key => "valid-token",
+    auth                 = AuthToken.new(:name     => "jdoe",
+                                         :auth_key => "password",
                                          :userid   => "jdoe",
                                          :password => "password")
     ems                  = FactoryGirl.create(:ems_hawkular,

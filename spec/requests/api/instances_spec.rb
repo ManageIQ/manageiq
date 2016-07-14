@@ -34,7 +34,7 @@ RSpec.describe "Instances API" do
 
       run_post(invalid_instance_url, gen_request(:terminate))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "responds forbidden for an invalid instance without appropriate role" do
@@ -42,7 +42,7 @@ RSpec.describe "Instances API" do
 
       run_post(invalid_instance_url, gen_request(:terminate))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "terminates a single valid Instance" do
@@ -78,7 +78,7 @@ RSpec.describe "Instances API" do
 
       run_post(invalid_instance_url, gen_request(:stop))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "stopping an invalid instance without appropriate role is forbidden" do
@@ -86,7 +86,7 @@ RSpec.describe "Instances API" do
 
       run_post(invalid_instance_url, gen_request(:stop))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "fails to stop a powered off instance" do
@@ -122,7 +122,7 @@ RSpec.describe "Instances API" do
 
       run_post(invalid_instance_url, gen_request(:start))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "starting an invalid instance without appropriate role is forbidden" do
@@ -130,7 +130,7 @@ RSpec.describe "Instances API" do
 
       run_post(invalid_instance_url, gen_request(:start))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "fails to start a powered on instance" do
@@ -167,7 +167,7 @@ RSpec.describe "Instances API" do
 
       run_post(invalid_instance_url, gen_request(:pause))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "pausing an invalid instance without appropriate role is forbidden" do
@@ -175,7 +175,7 @@ RSpec.describe "Instances API" do
 
       run_post(invalid_instance_url, gen_request(:pause))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "fails to pause a powered off instance" do
@@ -220,7 +220,7 @@ RSpec.describe "Instances API" do
 
       run_post(invalid_instance_url, gen_request(:suspend))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "responds forbidden for an invalid instance without appropriate role" do
@@ -228,7 +228,7 @@ RSpec.describe "Instances API" do
 
       run_post(invalid_instance_url, gen_request(:suspend))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "cannot suspend a powered off instance" do
@@ -273,7 +273,7 @@ RSpec.describe "Instances API" do
 
       run_post(invalid_instance_url, gen_request(:shelve))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "responds forbidden for an invalid instance without appropriate role" do
@@ -281,7 +281,7 @@ RSpec.describe "Instances API" do
 
       run_post(invalid_instance_url, gen_request(:shelve))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "shelves a powered off instance" do
@@ -351,7 +351,7 @@ RSpec.describe "Instances API" do
 
       run_post(invalid_instance_url, gen_request(:reboot_guest))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "responds forbidden for an invalid instance without appropriate role" do
@@ -359,7 +359,7 @@ RSpec.describe "Instances API" do
 
       run_post(invalid_instance_url, gen_request(:reboot_guest))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "fails to reboot a powered off instance" do
@@ -395,7 +395,7 @@ RSpec.describe "Instances API" do
 
       run_post(invalid_instance_url, gen_request(:reset))
 
-      expect_resource_not_found
+      expect(response).to have_http_status(:not_found)
     end
 
     it "responds forbidden for an invalid instance without appropriate role" do
@@ -403,7 +403,7 @@ RSpec.describe "Instances API" do
 
       run_post(invalid_instance_url, gen_request(:reset))
 
-      expect_request_forbidden
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "fails to reset a powered off instance" do

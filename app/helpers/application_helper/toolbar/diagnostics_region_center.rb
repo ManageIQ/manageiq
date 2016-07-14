@@ -16,31 +16,68 @@ class ApplicationHelper::Toolbar::DiagnosticsRegionCenter < ApplicationHelper::T
         button(
           :delete_server,
           'pficon pficon-delete fa-lg',
-          t = N_('Delete Server #{@record.name} [#{@record.id}]'),
+          t = proc do
+            _('Delete Server %{server_name} [%{server_id}]') % {:server_name => @record.name, :server_id => @record.id}
+          end,
           t,
-          :confirm => N_("Do you want to delete Server \#{@record.name} [\#{@record.id}]?")),
+          :confirm => proc do
+                        _("Do you want to delete Server %{server_name} [%{server_id}]?") %
+                          {:server_name => @record.name, :server_id => @record.id}
+                      end
+        ),
         button(
           :role_start,
           'fa fa-play-circle-o fa-lg',
-          N_('Start the #{@record.server_role.description} Role on Server #{@record.miq_server.name} [#{@record.miq_server.id}]'),
+          proc do
+            _('Start the %{server_role_description} Role on Server %{server.name} [%{server.id}]') % {
+              :server_role_description => @record.server_role.description,
+              :server_name             => @record.miq_server.name,
+              :server_id               => @record.miq_server.id}
+          end,
           N_('Start Role'),
-          :confirm => N_("Start the \#{@record.server_role.description} Role on Server \#{@record.miq_server.name} [\#{@record.miq_server.id}]?")),
+          :confirm => proc do
+                        _("Start the %{server_role_description} Role on Server %{server_name} [%{server_id}]?") % {
+                          :server_role_description => @record.server_role.description,
+                          :server_name             => @record.miq_server.name,
+                          :server_id               => @record.miq_server.id}
+                      end),
         button(
           :role_suspend,
           'fa fa-pause-circle-o fa-lg',
-          N_('Suspend the #{@record.server_role.description} Role on Server #{@record.miq_server.name} [#{@record.miq_server.id}]'),
+          proc do
+            _('Suspend the %{server_role_description} Role on Server %{server_name} [%{server_id}]') % {
+              :server_role_description => @record.server_role.description,
+              :server_name             => @record.miq_server.name,
+              :server_id               => @record.miq_server.id}
+          end,
           N_('Suspend Role'),
-          :confirm => N_("Suspend the \#{@record.server_role.description} Role on Server \#{@record.miq_server.name} [\#{@record.miq_server.id}]?")),
+          :confirm => proc do
+                        _("Suspend the %{server_role_description} Role on Server %{server_name} [%{server_id}]?") % {
+                          :server_role_description => @record.server_role.description,
+                          :server_name             => @record.miq_server.name,
+                          :server_id               => @record.miq_server.id}
+                      end
+        ),
         button(
           :demote_server,
           'pficon pficon-delete fa-lg_master',
-          N_('Demote Server #{@record.miq_server.name} [#{@record.miq_server.id}] to secondary for the #{@record.server_role.description} Role'),
+          proc do
+            _('Demote Server %{server_name} [%{server_id}] to secondary for the %{server_role_description} Role') % {
+              :server_role_description => @record.server_role.description,
+              :server_name             => @record.miq_server.name,
+              :server_id               => @record.miq_server.id}
+          end,
           N_('Demote Server'),
           :confirm => N_("Do you want to demote this Server to secondary?  This will leave no primary Server for this Role.")),
         button(
           :promote_server,
           'product product-migrate fa-lg',
-          N_('Promote Server #{@record.miq_server.name} [#{@record.miq_server.id}] to primary for the #{@record.server_role.description} Role'),
+          proc do
+            _('Promote Server %{server_name} [%{server_id}] to primary for the %{server_role_description} Role') % {
+              :server_role_description => @record.server_role.description,
+              :server_name             => @record.miq_server.name,
+              :server_id               => @record.miq_server.id}
+          end,
           N_('Promote Server'),
           :confirm => N_("Do you want to promote this Server to primary?  This will replace any existing primary Server for this Role.")),
       ]

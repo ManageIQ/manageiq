@@ -3,6 +3,7 @@ module VmCloudHelper::TextualSummary
   include TextualMixins::TextualDescription
   include TextualMixins::TextualDrift
   include TextualMixins::TextualFilesystems
+  include TextualMixins::TextualGroupTags
   include TextualMixins::TextualInitProcesses
   include TextualMixins::TextualName
   include TextualMixins::TextualOsInfo
@@ -50,10 +51,6 @@ module VmCloudHelper::TextualSummary
 
   def textual_group_power_management
     %i(power_state boot_time state_changed_on)
-  end
-
-  def textual_group_tags
-    %i(tags)
   end
 
   #

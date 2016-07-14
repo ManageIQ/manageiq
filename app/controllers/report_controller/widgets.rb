@@ -76,10 +76,7 @@ module ReportController::Widgets
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
     else
       add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
@@ -324,7 +321,7 @@ module ReportController::Widgets
     @edit[:new][:roles] = []   # initializing incase of new widget since visibility is not set yet.
     @edit[:new][:groups] = []  # initializing incase of new widget since visibility is not set yet.
 
-    @edit[:visibility_types] = [["<To All Users>", "all"], ["<By Role>", "role"], ["<By Group>", "group"]]
+    @edit[:visibility_types] = [[_("<To All Users>"), "all"], [_("<By Role>"), "role"], [_("<By Group>"), "group"]]
     # Visibility Box
     if @widget.visibility
       if @widget.visibility[:roles]

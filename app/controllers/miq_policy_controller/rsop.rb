@@ -28,7 +28,7 @@ module MiqPolicyController::Rsop
         end
       else
         miq_task = MiqTask.find(params[:task_id])     # Not first time, read the task record
-        if miq_task.task_results.blank?               # Check to see if any results came back
+        if !miq_task.results_ready?
           add_flash(_("Policy Simulation generation returned: %{error_message}") % {:error_message => miq_task.message}, :error)
         else
           @sb[:rsop][:results] = miq_task.task_results
@@ -45,10 +45,7 @@ module MiqPolicyController::Rsop
     elsif params[:button] == "reset"
       @sb[:rsop] = {}     # Reset all RSOP stored values
       session[:changed] = session[:rsop_tree] = nil
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'rsop'
-      end
+      javascript_redirect :action => 'rsop'
     else  # No params, first time in
       @breadcrumbs = []
       @accords = [{:name => "rsop", :title => "Options", :container => "rsop_options_div"}]

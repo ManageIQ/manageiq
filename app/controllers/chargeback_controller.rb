@@ -4,12 +4,6 @@ class ChargebackController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
-  PER_TIME_TYPES = %w(hourly).freeze
-
-  def per_time_types_from
-    PER_TIME_TYPES.map { |time_type| {time_type => time_type.capitalize} }.reduce(:merge)
-  end
-
   # FIXME: -- is INDEX needed ?
   def index
     redirect_to :action => 'explorer'
@@ -53,7 +47,7 @@ class ChargebackController < ApplicationController
     build_accordions_and_trees
 
     @right_cell_text = case x_active_tree
-                       when :cb_rates_tree       then _("All %{models}") % {:models => ui_lookup(:models => "ChargebackRate")}
+                       when :cb_rates_tree       then _("All Chargeback Rates")
                        when :cb_assignments_tree then _("All Assignments")
                        when :cb_reports_tree     then _("All Saved Chargeback Reports")
                        end
@@ -164,10 +158,7 @@ class ChargebackController < ApplicationController
           end
         end
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
 
     when "reset", nil # displaying edit from for actions: new, edit or copy
@@ -239,10 +230,7 @@ class ChargebackController < ApplicationController
       end
       process_cb_rates(rates, "destroy")  unless rates.empty?
       if flash_errors? && @flash_array.count == 1
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         cb_rates_list
         @right_cell_text = _("%{typ} %{model}") % {:typ => x_node.split('-').last,
@@ -259,10 +247,7 @@ class ChargebackController < ApplicationController
       process_cb_rates(rates, "destroy")  unless rates.empty?
       self.x_node = "xx-#{cb_rate.rate_type}"
       if flash_errors?
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         cb_rates_list
         @right_cell_text = _("%{typ} %{model}") % {:typ => x_node.split('-').last,
@@ -432,7 +417,10 @@ class ChargebackController < ApplicationController
         @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "ChargebackRate")}
       elsif ["xx-Compute", "xx-Storage"].include?(node)
         @record = nil
-        @right_cell_text = _("%{typ} %{model}") % {:typ => x_node.split('-').last, :model => ui_lookup(:models => "ChargebackRate")}
+        @right_cell_text = case node
+                           when "xx-Compute" then _("Compute Chargeback Rates")
+                           when "xx-Storage" then _("Storage Chargeback Rates")
+                           end
         cb_rates_list
       else
         @record = ChargebackRate.find(from_cid(node.split('_').last.split('-').last))
@@ -443,7 +431,10 @@ class ChargebackController < ApplicationController
     elsif x_active_tree == :cb_assignments_tree
       if ["xx-Compute", "xx-Storage"].include?(node)
         cb_assign_set_form_vars
-        @right_cell_text = _("%{typ} %{model}") % {:typ => node.split('-').last, :model => "Rate Assignments"}
+        @right_cell_text = case node
+                           when "xx-Compute" then _("Compute Rate Assignments")
+                           when "xx-Storage" then _("Storage Rate Assignments")
+                           end
       else
         @right_cell_text = _("All Assignments")
       end
@@ -456,14 +447,14 @@ class ChargebackController < ApplicationController
       if x_node == "root"
         cb_rpt_build_folder_nodes
         @right_cell_div = "reports_list_div"
-        @right_cell_text = _("All %s") % "Saved Chargeback Reports"
+        @right_cell_text = _("All Saved Chargeback Reports")
       elsif nodes_len == 2
         # On a saved report node
         cb_rpts_show_saved_report
         if @report
           s = MiqReportResult.find_by_id(from_cid(nodes.last.split('-').last))
           @right_cell_div = "reports_list_div"
-          @right_cell_text = _("%{model} \"%{name}\"") % {:model => "Saved Chargeback Report", :name => format_timezone(s.last_run_on, Time.zone, "gtl")}
+          @right_cell_text = _("Saved Chargeback Report \"%{last_run_on}\"") % {:last_run_on => format_timezone(s.last_run_on, Time.zone, "gtl")}
         else
           add_flash(_("Selected Saved Chargeback Report no longer exists"), :warning)
           self.x_node = nodes[0..1].join("_")
@@ -477,7 +468,7 @@ class ChargebackController < ApplicationController
           @sb[:sel_saved_rep_id] = nodes[1]
           @right_cell_div = "reports_list_div"
           miq_report = MiqReport.find(@sb[:miq_report_id])
-          @right_cell_text = _("%{model} \"%{name}\"") % {:model => "Saved Chargeback Reports", :name => miq_report.name}
+          @right_cell_text = _("Saved Chargeback Reports \"%{report_name}\"") % {:report_name => miq_report.name}
           @sb[:parent_reports] = nil  unless @sb[:saved_reports].blank?    # setting it to nil so saved reports can be displayed, unless all saved reports were deleted
         else
           add_flash(_("Selected Chargeback Report no longer exists"), :warning)
@@ -506,7 +497,7 @@ class ChargebackController < ApplicationController
                               .order(:last_run_on)
 
     @sb[:tree_typ] = "reports"
-    @right_cell_text = _("%{model} \"%{name}\"") % {:model => "Reports", :name => miq_report.name}
+    @right_cell_text = _("Report \"%{report_name}\"") % {:report_name => miq_report.name}
     saved_reports
   end
 
@@ -574,7 +565,7 @@ class ChargebackController < ApplicationController
       @edit[:new][:details].push(temp)
     end
 
-    @edit[:new][:per_time_types] = per_time_types_from
+    @edit[:new][:per_time_types] = {"hourly" => _("Hourly")}
 
     if params[:typ] == "copy"
       @rate.id = nil
@@ -753,7 +744,7 @@ class ChargebackController < ApplicationController
       if klass == "enterprise"
         MiqEnterprise.all
       elsif klass == "ext_management_system"
-        ExtManagementSystem.all.reject { |prov| prov.is_a? ManageIQ::Providers::ContainerManager }
+        ExtManagementSystem.all.reject { |prov| prov.kind_of? ManageIQ::Providers::ContainerManager }
       elsif klass == "ems_container"
         ManageIQ::Providers::ContainerManager.all
       else

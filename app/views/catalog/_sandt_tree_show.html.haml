@@ -104,7 +104,7 @@
                 $(":file").filestyle({icon: false, placeholder: "No file chosen"});
             .col-md-6
               = submit_tag(_("Upload"), :id => "upload", :class => "upload btn btn-default")
-              = _('* Requirements: File-type - PNG; Dimensions - 350x70.')
+              = _('* Requires image file in .png or .jpg format')
     - if @record.display && !@record.prov_type.try(:start_with?, "generic_")
       = miq_tab_content('details') do
         %h3
