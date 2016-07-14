@@ -33,7 +33,7 @@ ar_internal_metadata:
 - value
 - created_at
 - updated_at
-arbitration_defaults:
+arbitration_profiles:
 - id
 - uid_ems
 - cloud_network_id
@@ -43,6 +43,9 @@ arbitration_defaults:
 - security_group_id
 - ems_id
 - authentication_id
+- name
+- description
+- default_profile
 assigned_server_roles:
 - id
 - miq_server_id
