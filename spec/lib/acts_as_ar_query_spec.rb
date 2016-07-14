@@ -4,8 +4,8 @@ describe ActsAsArQuery do
 
   describe "#except" do
     it "removes an expression" do
-      expect(model).to receive(:find).with(:all, :limit => 5)
-      query.where(:a => 1).order(:a).limit(5).except(:where, :order).to_a
+      expect(model).to receive(:find).with(:all, :limit => 5).and_return([1, 2, 3, 4, 5])
+      expect(query.where(:a => 1).order(:a).limit(5).except(:where, :order).to_a).to eq([1, 2, 3, 4, 5])
     end
   end
 
@@ -167,15 +167,66 @@ describe ActsAsArQuery do
       expect(model).to receive(:find).with(:all, :include => [:a]).and_return([1, 2, 3, 4, 5])
       expect(query.includes(:a).count).to eq(5)
     end
-  end
-  # executing
 
-  # - [X] count
-  # - [ ] find
-  # - [X] first
-  # - [X] last
-  # - [X] size
-  # - [X] take
+    it "works around count(:all)" do
+      expect(model).to receive(:find).with(:all, :include => [:a]).and_return([1, 2, 3, 4, 5])
+      expect(query.includes(:a).count(:all)).to eq(5)
+    end
+  end
+
+  describe "#find" do
+    it "calls find" do
+      expect(model).to receive(:find).with(:first, :include => [:a], :select => [:b]).and_return(1)
+      expect(query.includes(:a).find(:first, :select => [:b])).to eq(1)
+    end
+  end
+
+  describe "#first" do
+    it "calls model if not cached" do
+      expect(model).to receive(:find).with(:first, :include => [:a]).and_return(5)
+      expect(query.includes(:a).first).to eq(5)
+    end
+
+    it "uses cached results" do
+      expect(model).to receive(:find).with(:all, :include => [:a]).and_return([1, 2, 3])
+      expect(model).not_to receive(:find).with(:first, :include => [:a])
+      my_query = query.includes(:a)
+      my_query.to_a # executes/caches the results
+      expect(my_query.first).to eq(1)
+    end
+  end
+
+  describe "#last" do
+    it "calls model if not cached" do
+      expect(model).to receive(:find).with(:last, :include => [:a]).and_return(5)
+      expect(query.includes(:a).last).to eq(5)
+    end
+
+    it "uses cached results" do
+      expect(model).to receive(:find).with(:all, :include => [:a]).and_return([1, 2, 3])
+      expect(model).not_to receive(:find).with(:last, :include => [:a])
+      my_query = query.includes(:a)
+      my_query.to_a # executes/caches the results
+      expect(my_query.last).to eq(3)
+    end
+  end
+
+  describe "#size" do
+    it "accepts a single table" do
+      expect(model).to receive(:find).with(:all, :include => [:a]).and_return([1, 2, 3, 4, 5])
+      expect(query.includes(:a).size).to eq(5)
+    end
+  end
+
+  describe "#take" do
+    it "calls to_a" do
+      results = double("results")
+      expect(results).to receive(:take).and_return([1, 2])
+      expect(model).to receive(:find).with(:all, :include => [:a]).and_return(results)
+
+      expect(query.includes(:a).take).to eq([1, 2])
+    end
+  end
 
   describe "klass" do
     it "is the model" do
@@ -185,7 +236,7 @@ describe ActsAsArQuery do
 
   describe "#instances_are_derived?" do
     it "is derived" do
-      expect(query).to be_instances_are_derived
+      expect(query.instances_are_derived?).to be_truthy
     end
   end
 end

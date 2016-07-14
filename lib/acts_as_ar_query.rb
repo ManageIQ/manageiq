@@ -4,20 +4,6 @@ class ActsAsArQuery
   extend Forwardable
   attr_accessor :klass, :mode, :options
 
-  # methods that execute actual query
-
-  # - [X] all
-  # - [X] count
-  # - [X] find
-  # - [ ] find_by
-  # - [X] first
-  # - [X] last
-  # - [X] size
-  # - [X] take
-
-  # methods that enhance / chain the query
-  # list is from ActiveRecord relation interface
-
   # - [ ] bind
   # - [ ] create_with
   # - [ ] distinct
@@ -45,39 +31,14 @@ class ActsAsArQuery
   # - [X] where (partial)
   # - [ ] where.not
 
-  # private api
-  # the common pattern is to allow this method to be called frequently
-  # and add the values into the hash
-  # this is used by methods like includes, references, order, select and others
-  def append_hash_arg(*val)
-    symbol = __callee__
-    val = val.flatten
-    if val.first.kind_of?(Hash)
-      raise ArgumentError, "Need to support #{symbol}(#{val.class.name})"
-    end
-    dup.tap do |r|
-      r.options[symbol] = r.options[symbol] ? (r.options[symbol] + val) : val
-    end
-  end
-
-  def assign_arg(val)
-    dup.tap do |r|
-      r.options[__callee__] = val
-    end
-  end
-
-  # public api
-
   def initialize(model, opts = {})
     @klass   = model
     @options = opts || {}
   end
 
-  # @param val [Hash]
-  # TODO [Array, Hash, String]
   def where(*val)
     val = val.flatten
-    val = val.first if val.size == 1 && val[0].kind_of?(Hash)
+    val = val.first if val.size == 1 && val.first.kind_of?(Hash)
     dup.tap do |r|
       old_where = r.options[:where]
       if val.empty?
@@ -99,21 +60,25 @@ class ActsAsArQuery
     end
   end
 
-  # @param val [Array] for includes
-  # TODO: support hash
-  alias includes append_hash_arg
+  def includes(*args)
+    append_hash_arg :includes, *args
+  end
 
-  # @param val Array for includes
-  alias references append_hash_arg
+  def references(*args)
+    append_hash_arg :references, *args
+  end
 
-  # @param [Integer] val
-  alias limit assign_arg
+  def limit(val)
+    assign_arg :limit, val
+  end
 
-  # @param [String, Symbol, Arel] val
-  # TODO: support Hash
-  # TODO: support mixing?
-  alias order append_hash_arg
-  alias group append_hash_arg
+  def order(*args)
+    append_hash_arg :order, *args
+  end
+
+  def group(*args)
+    append_hash_arg :group, *args
+  end
 
   def reorder(*val)
     val = val.flatten
@@ -127,9 +92,8 @@ class ActsAsArQuery
   end
 
   def except(*val)
-    val = val.flatten
     dup.tap do |r|
-      val.each do |key|
+      val.flatten.each do |key|
         r.options.delete(key)
       end
     end
@@ -137,23 +101,21 @@ class ActsAsArQuery
 
   # similar to except. difference being this persists across merges
   def unscope(*val)
-    val = val.flatten
     dup.tap do |r|
-      val.each do |key|
+      val.flatten.each do |key|
         r.options[key] = nil
       end
     end
   end
 
-  # @param [Integer] val
-  alias offset assign_arg
+  def offset(val)
+    assign_arg :offset, val
+  end
 
-  # complete
   # @param val [Array<Sting,Symbol>,String, Symbol]
-  alias select append_hash_arg
-
-  # execution methods
-  # these methods execue the query
+  def select(*args)
+    append_hash_arg :select, *args
+  end
 
   def to_a
     @results ||= klass.find(:all, legacy_options)
@@ -167,30 +129,40 @@ class ActsAsArQuery
     klass.find(mode, legacy_options.merge(options))
   end
 
-  def count
+  # count(:all) is very common
+  # but [1, 2, 3].count(:all) == 0
+  def count(*args)
     to_a.size
   end
+
   def_delegators :to_a, :size, :take
 
-  def first # (number)
+  # TODO: support arguments
+  def first
     defined?(@results) ? @results.first : klass.find(:first, legacy_options)
   end
 
+  # TODO: support arguments
   def last
-    defined?(@results) ? @results.first : klass.find(:last, legacy_options)
+    defined?(@results) ? @results.last : klass.find(:last, legacy_options)
   end
 
-  # benind the scenes
+  def instances_are_derived?
+    true
+  end
+
+  private
 
   def dup
     self.class.new(klass, options.dup)
   end
 
+  # NOTE: :references is not a legacy option
+  # but it is not used in our aaarm either
   def legacy_options
     {
       :conditions => options[:where],
       :include    => options[:includes],
-      # :include  => options[:references],
       :limit      => options[:limit],
       :order      => options[:order],
       :offset     => options[:offset],
@@ -199,7 +171,19 @@ class ActsAsArQuery
     }.delete_blanks
   end
 
-  def instances_are_derived?
-    true
+  def append_hash_arg(symbol, *val)
+    val = val.flatten
+    if val.first.kind_of?(Hash)
+      raise ArgumentError, "Need to support #{symbol}(#{val.class.name})"
+    end
+    dup.tap do |r|
+      r.options[symbol] = r.options[symbol] ? (r.options[symbol] + val) : val
+    end
+  end
+
+  def assign_arg(symbol, val)
+    dup.tap do |r|
+      r.options[symbol] = val
+    end
   end
 end
