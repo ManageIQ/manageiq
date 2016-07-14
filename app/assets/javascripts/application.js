@@ -74,3 +74,9 @@
 //= require resizable_sidebar
 //= require xml_display
 //= require miq_c3
+// Bower packages
+//= require hawkular-ui-components/dist/js/hawkular-ui-components
+//= require angular-ui-router/release/angular-ui-router
+//= require rxjs/dist/rx.all
+//= require rx-angular/dist/rx.angular
+//= require angular-animate/angular-animate

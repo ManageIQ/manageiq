@@ -1,0 +1,11 @@
+.form-horizontal
+  %h3
+    = _("Credentials:")
+  .form-group{:style => "margin-left: 0px;"}
+    %tabset
+      %tab{:heading => "{{oneTab.title}}", "ng-repeat" => "oneTab in mwNew.credentialsTabs"}
+        %miq-validate-credentials{"model-holder"    => "mwNew.newProvider",
+                                  "model-name"      => "{{oneTab.modelKey}}",
+                                  "validate-action" => "mwNew.validateAction(validateData)"}
+        {{oneTab.description}}
+  %hr/

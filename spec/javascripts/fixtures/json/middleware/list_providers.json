@@ -1,0 +1,187 @@
+{"head": [
+    {
+      "is_narrow": true
+    },
+    {
+      "text": "Name",
+      "sort": "str",
+      "col_idx": 0,
+      "align": "left"
+    },
+    {
+      "text": "Hostname",
+      "sort": "str",
+      "col_idx": 1,
+      "align": "left"
+    },
+    {
+      "text": "IP Address",
+      "sort": "str",
+      "col_idx": 2,
+      "align": "left"
+    },
+    {
+      "text": "Port",
+      "sort": "str",
+      "align": "right"
+    },
+    {
+      "text": "Type",
+      "sort": "str",
+      "col_idx": 4,
+      "align": "left"
+    }
+  ],
+  "rows": [
+    {
+      "id": "1r12",
+      "cells": [
+        {
+          "title": "View this item",
+          "image": "100/vendor-hawkular.png",
+          "icon": null
+        },
+        {
+          "text": "hk"
+        },
+        {
+          "text": "10.40.0.248"
+        },
+        {
+          "text": ""
+        },
+        {
+          "text": "8080"
+        },
+        {
+          "text": "Hawkular"
+        }
+      ]
+    },
+    {
+      "id": "1r13",
+      "cells": [
+        {
+          "title": "View this item",
+          "image": "100/vendor-hawkular.png",
+          "icon": null
+        },
+        {
+          "text": "aa"
+        },
+        {
+          "text": "10.40.0.248"
+        },
+        {
+          "text": ""
+        },
+        {
+          "text": "a8080"
+        },
+        {
+          "text": "aHawkular"
+        }
+      ]
+    },
+    {
+      "id": "1r14",
+      "cells": [
+        {
+          "title": "View this item",
+          "image": "100/vendor-hawkular.png",
+          "icon": null
+        },
+        {
+          "text": "aa"
+        },
+        {
+          "text": "10.40.0.248"
+        },
+        {
+          "text": ""
+        },
+        {
+          "text": "a8080"
+        },
+        {
+          "text": "aHawkular"
+        }
+      ]
+    },
+    {
+      "id": "1r15",
+      "cells": [
+        {
+          "title": "View this item",
+          "image": "100/vendor-hawkular.png",
+          "icon": null
+        },
+        {
+          "text": "aa"
+        },
+        {
+          "text": "10.40.0.248"
+        },
+        {
+          "text": ""
+        },
+        {
+          "text": "a8080"
+        },
+        {
+          "text": "aHawkular"
+        }
+      ]
+    },
+    {
+      "id": "1r16",
+      "cells": [
+        {
+          "title": "View this item",
+          "image": "100/vendor-hawkular.png",
+          "icon": null
+        },
+        {
+          "text": "aa"
+        },
+        {
+          "text": "10.40.0.248"
+        },
+        {
+          "text": ""
+        },
+        {
+          "text": "a8080"
+        },
+        {
+          "text": "aHawkular"
+        }
+      ]
+    },
+    {
+      "id": "1r17",
+      "cells": [
+        {
+          "title": "View this item",
+          "image": "100/vendor-hawkular.png",
+          "icon": null
+        },
+        {
+          "text": "aa"
+        },
+        {
+          "text": "10.40.0.248"
+        },
+        {
+          "text": ""
+        },
+        {
+          "text": "a8080"
+        },
+        {
+          "text": "aHawkular"
+        }
+      ]
+    }
+  ]
+}

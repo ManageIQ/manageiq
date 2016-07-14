@@ -49,3 +49,11 @@ body.whitelabel {
   background: url($img-bg-login-whitelabel);
   background-size: 100% auto;
 }
+
+.miq-no-x-overflow {
+  overflow-x: hidden;
+}
+
+.ng-invalid + .btn-group button {
+  color: #a94442;
+}

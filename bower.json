@@ -17,13 +17,15 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "^1.5.3",
-    "angular-animate": "^1.5.3",
+    "angular": "1.5.5",
+    "angular-animate": "^1.5.5",
     "angular-mocks": "^1.5.3",
     "angular-patternfly-sass": "3.5.1",
     "angular-sanitize": "^1.5.3",
+    "angular-ui-router": "ui-router#^0.2.18",
     "bootstrap-filestyle": "^1.2.1",
     "bootstrap-hover-dropdown": "^2.0.11",
+    "hawkular-ui-components": "karelhala/hawkular-ui-components#providersToServices",
     "jquery.observe_field": "himdel/jquery.observe_field#^0.1.0",
     "jasmine-jquery": "^2.1.1",
     "jquery-1.8": "^1.8.3",
@@ -42,6 +44,8 @@
     "spice-html5-bower": "himdel/spice-html5-bower#^0.1.5",
     "es6-shim": "^0.35.0",
     "phantomjs-polyfill": "^0.0.2",
-    "fetch": "^1.0.0"
+    "fetch": "^1.0.0",
+    "rxjs": "^4.1.0",
+    "rx-angular": "rx.angular#^1.1.3"
   }
 }

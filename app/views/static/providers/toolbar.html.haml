@@ -1,0 +1,15 @@
+.row.toolbar-pf
+  .col-md-12
+    .toolbar-pf-actions
+      %miq-toolbar-menu{"toolbar-items" => "vm.toolbarItems"}
+      .toolbar-pf-view-selector.form-group
+        %ul.list-inline
+          %li{"ng-class" => "vm.getClassByLocation('grid')"}
+            %a{"ng-click" => "vm.activeView = 'grid'", :title => _("Grid View"), "ui-sref" => "list_providers.grid"}
+              %i.fa.fa-th{:style => ""}
+          %li{"ng-class" => "vm.getClassByLocation('tile')"}
+            %a{"ng-click" => "vm.activeView = 'tile'", :title =>  _("Tile View"), "ui-sref" => "list_providers.tile"}
+              %i.fa.fa-th-large{:style => ""}
+          %li{"ng-class" => "vm.getClassByLocation('list')"}
+            %a{"ng-click" => "vm.activeView = 'list'", :title => _("List View"), "ui-sref" => "list_providers.list"}
+              %i.fa.fa-th-list{:style => ""}

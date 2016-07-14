@@ -129,3 +129,7 @@ node_modules/
 
 # ignore included plugins in bundler.d
 bundler.d/*
+
+#ignore bower dependencies
+.bower/*
+bower_components

@@ -787,7 +787,6 @@ module ApplicationHelper
     elsif display_back_button? # taskbar branch
       toolbars['summary_center_tb'] = controller.restful? ? "summary_center_restful_tb" : "summary_center_tb"
     end
-
     toolbars['center_tb'] = center_toolbar_filename
     if fname = custom_toolbar_filename
       toolbars['custom_tb'] = fname

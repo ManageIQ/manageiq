@@ -1,5 +1,6 @@
 module EmsCommon
   extend ActiveSupport::Concern
+  include EmsCredentialsValidator
 
   def gtl_url
     restful? ? '/' : '/show'
@@ -302,24 +303,6 @@ module EmsCommon
   end
   private :update_button_validate
 
-  def validate_credentials(verify_ems)
-    set_record_vars(verify_ems, :validate)
-    @in_a_form = true
-    @changed = session[:changed]
-
-    # validate button should say "revalidate" if the form is unchanged
-    revalidating = !edit_changed?
-    result, details = verify_ems.authentication_check(params[:type], :save => revalidating)
-    if result
-      add_flash(_("Credential validation was successful"))
-    else
-      add_flash(_("Credential validation was not successful: %{details}") % {:details => details}, :error)
-    end
-
-    render_flash
-  end
-  private :validate_credentials
-
   # handle buttons pressed on the button bar
   def button
     @edit = session[:edit]                                  # Restore @edit for adv search box
@@ -616,7 +599,14 @@ module EmsCommon
     session[:edit] = @edit
   end
 
-  def form_instance_vars
+  def form_instances
+    form_ems_instances
+    form_open_stack_instaces
+    @scvmm_security_protocols = [[_('Basic (SSL)'), 'ssl'], ['Kerberos', 'kerberos']]
+    @openstack_api_versions = retrieve_openstack_api_versions
+  end
+
+  def form_ems_instances
     @server_zones = []
     zones = Zone.order('lower(description)')
     zones.each do |zone|
@@ -625,11 +615,16 @@ module EmsCommon
     @ems_types = Array(model.supported_types_and_descriptions_hash.invert).sort_by(&:first)
 
     @provider_regions = retrieve_provider_regions
+  end
+
+  def form_open_stack_instaces
     @openstack_infra_providers = retrieve_openstack_infra_providers
     @openstack_security_protocols = retrieve_openstack_security_protocols
     @openstack_amqp_security_protocols = retrieve_openstack_amqp_security_protocols
-    @scvmm_security_protocols = [[_('Basic (SSL)'), 'ssl'], ['Kerberos', 'kerberos']]
-    @openstack_api_versions = retrieve_openstack_api_versions
+  end
+
+  def form_instance_vars
+    form_instances
     @emstype_display = model.supported_types_and_descriptions_hash[@ems.emstype]
   end
 

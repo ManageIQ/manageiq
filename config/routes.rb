@@ -116,6 +116,27 @@ Vmdb::Application.routes.draw do
     x_show
   )
 
+  # GET settings method for provider
+  providers_settings = %w(
+    toolbar_settings
+    list_providers_settings
+  )
+
+  # POST methods on provider, which does not have API
+  provider_post = %w(
+    new_provider
+    validate_provider
+    edit_tags
+    delete_provider
+  )
+
+  provider_get = %w(
+    new
+    show_list
+    list_providers
+    types
+  )
+
   controller_routes = {
     :alert                    => {
       :get  => %w(
@@ -1032,13 +1053,13 @@ Vmdb::Application.routes.draw do
         download_data
         edit
         index
-        new
         show
-        show_list
         tagging_edit
         tag_edit_form_field_changed
       ) +
-               compare_get,
+               compare_get +
+               provider_get +
+               providers_settings,
       :post => %w(
         button
         create
@@ -1057,6 +1078,7 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
       ) +
                adv_search_post +
+               provider_post +
                compare_post +
                exp_post +
                save_post

@@ -1,0 +1,21 @@
+.form-group
+  %label.control-label.col-md-2{"for" => "hostname"}
+    = _("Hostname or IP address:")
+  .col-md-8
+    %input#hostname.form-control{:maxlength     => "255",
+                                 :name          => "hostname",
+                                 "ng-model"     => "mwNew.newProvider.hostname",
+                                 "ng-required"  => "true",
+                                 :title         => "Hostname or IPv4/IPv6 address",
+                                 :type          => "text",
+                                 :value         => ""}/
+.form-group
+  %label.control-label.col-md-2{"for" => "port"}
+    = _("Port:")
+  .col-md-8
+    %input#port.form-control{:maxlength     => "5",
+                             :name          => "port",
+                             "ng-model"     => "mwNew.newProvider.port",
+                             "ng-required"  => "true",
+                             :type          => "text",
+                             :value         => ""}/

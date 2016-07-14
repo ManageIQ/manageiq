@@ -1,0 +1,13 @@
+%miq-data-table{:columns            => "vm.columnsToShow",
+                :data               => "vm.data",
+                "default-action"    => "vm.defaultAction",
+                "no-footer"         => "vm.noFooter",
+                "on-item-selected"  => "vm.onRowSelected()",
+                "on-row-click"      => "vm.onRowClick($event, rowData)",
+                "on-sort"           => "vm.MiQDataTableService.sortItemsBy(sortId, isAscending)",
+                "per-page"          => "vm.MiQDataTableService.perPage",
+                :selectable         => "vm.isSelectable",
+                "show-header"       => "vm.hasHeader"}
+  %miq-toolbar-list#per-page{"ng-if"          => "vm.data",
+                             "on-item-click"  => "vm.onPerPage(item)",
+                             "toolbar-list"   => "vm.perPage"}

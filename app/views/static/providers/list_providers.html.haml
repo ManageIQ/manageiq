@@ -1,0 +1,10 @@
+%miq-notification-section.col-md-12{:limit => "2", "show-info" => "{{true}}", "ng-init" => "vm.loadData()"}
+.row{:style => ""}
+  .col-md-12
+    .row
+      .col-md-7
+        %h1
+          {{vm.title}}
+    .row
+      .col-md-12
+        %div{"ui-view" => ""}
