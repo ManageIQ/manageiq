@@ -65,7 +65,6 @@ module VimPerformanceAnalysis
         includes = topts[:compute_type].to_sym == :Host ? {:hardware => {}, :vms => {:hardware => {}}} : nil
         search_options = {
           :class            => topts[:compute_type].to_s,
-          :results_format   => :objects,
           :include_for_find => includes,
           :userid           => @options[:userid],
           :miq_group_id     => @options[:miq_group_id],
