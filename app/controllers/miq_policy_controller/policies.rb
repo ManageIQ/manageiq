@@ -223,7 +223,8 @@ module MiqPolicyController::Policies
 
   def policy_get_all_folders(parent = nil)
     if !parent.nil?
-      @folders = MiqPolicy::UI_FOLDERS.collect(&:name)
+      # TODO: this is dead code, the one caller passes no arguments
+      @folders = MiqPolicyController::POLICY_FOLDERS[parent.downcase].collect(&:name)
       @right_cell_text = _("%{typ} %{model}") % {:typ => parent, :model => ui_lookup(:models => "MiqPolicy")}
       @right_cell_div = "policy_folders"
     else
