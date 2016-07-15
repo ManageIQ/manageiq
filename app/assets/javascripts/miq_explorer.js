@@ -56,7 +56,7 @@ ManageIQ.explorer.process = function(data) {
   if ( _.isString(data.clearTreeCookies) ) { miqDeleteDynatreeCookies(data.clearTreeCookies); }
 
   if ( _.isString(data.accordionSwap) ) {
-    miqAccordionSwap('#accordion .panel-collapse.collapse.in', '#' + data.accordionSwap);
+    miqAccordionSwap('#accordion .panel-collapse.collapse.in', '#' + data.accordionSwap + '_accord');
   }
 
   /* dealing with tree nodes */
