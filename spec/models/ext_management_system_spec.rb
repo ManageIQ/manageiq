@@ -194,6 +194,20 @@ describe ExtManagementSystem do
     end
   end
 
+  context "with multiple endpoints using default authtype" do
+    let(:ems) do
+      FactoryGirl.build(:ems_openshift,
+                        :connection_configurations => [{:endpoint       => {:role     => "default",
+                                                                            :hostname => "openshift.example.org"},
+                                                        :authentication => {:role     => "bearer",
+                                                                            :auth_key => "SomeSecret"}}])
+    end
+
+    it "will contain the bearer authentication as default" do
+      expect(ems.connection_configuration_by_role("default").authentication.authtype).to eq("bearer")
+    end
+  end
+
   context "with two small envs" do
     before(:each) do
       @zone1 = FactoryGirl.create(:small_environment)
