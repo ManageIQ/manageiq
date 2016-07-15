@@ -20,11 +20,11 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
     @description ||= "Microsoft System Center VMM".freeze
   end
 
-  def self.raw_connect(auth_url, security_protocol, connect_params)
+  def self.raw_connect(connect_params)
     require 'winrm'
 
-    winrm = WinRM::WinRMWebService.new(auth_url, security_protocol.to_sym, connect_params)
-    winrm.set_timeout(1800)
+    connect_params[:operation_timeout] = 1800
+    winrm = WinRM::Connection.new(connect_params)
     winrm
   end
 
@@ -35,11 +35,11 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
   def connect(options = {})
     raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
 
-    hostname       = options[:hostname] || self.hostname
-    auth_url       = self.class.auth_url(hostname, port)
-    connect_params = build_connect_params(options)
+    hostname           = options[:hostname] || self.hostname
+    options[:endpoint] = self.class.auth_url(hostname, port)
+    connect_params     = build_connect_params(options)
 
-    self.class.raw_connect(auth_url, security_protocol, connect_params)
+    self.class.raw_connect(connect_params)
   end
 
   def verify_credentials(_auth_type = nil, options = {})
@@ -138,7 +138,8 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
   def build_connect_params(options)
     connect_params  = {
       :user         => options[:user] || authentication_userid(options[:auth_type]),
-      :pass         => options[:pass] || authentication_password(options[:auth_type]),
+      :password     => options[:pass] || authentication_password(options[:auth_type]),
+      :endpoint     => options[:endpoint],
       :disable_sspi => true
     }
 

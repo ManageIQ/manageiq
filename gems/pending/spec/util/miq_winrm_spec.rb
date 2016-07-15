@@ -16,17 +16,17 @@ describe MiqWinRM do
 
   context "New Connection" do
     it "creates a network connection" do
-      expect { @winrm.connect(:user => @user, :pass => @password, :hostname => @host) }.to_not raise_error
+      expect { @winrm.connect(:user => @user, :password => @password, :hostname => @host) }.to_not raise_error
     end
   end
 
   context "Existing Connection Attributes" do
     before(:each) do
-      @connection = @winrm.connect(:user => @user, :pass => @password, :hostname => @host)
+      @connection = @winrm.connect(:user => @user, :password => @password, :hostname => @host)
     end
 
     it "is the correct WinRM class" do
-      expect(@connection).to be_a(WinRM::WinRMWebService)
+      expect(@connection).to be_a(WinRM::Connection)
     end
 
     it "still has a nil executor" do
