@@ -1,5 +1,7 @@
 class VmXen < ManageIQ::Providers::InfraManager::Vm
-  def validate_migrate
-    validate_supported
+  extend ActiveSupport::Concern
+
+  included do
+    supports :migrate
   end
 end

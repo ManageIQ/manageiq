@@ -7,6 +7,16 @@ class ManageIQ::Providers::Openstack::CloudManager::Template < ManageIQ::Provide
                           :association_foreign_key => "cloud_tenant_id",
                           :class_name              => "ManageIQ::Providers::Openstack::CloudManager::CloudTenant"
 
+  include SupportsFeatureMixin
+
+  supports :smartstate_analysis do
+    if self.archived?
+      unsupported_reason_add(:smartstate_analysis, nil)
+    elsif self.orphaned?
+      unsupported_reason_add(:smartstate_analysis, _("Smartstate Analysis cannot be performed on orphaned #{self.class.model_suffix} VM."))
+    end
+  end
+
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
     connection.images.get(ems_ref)
@@ -56,9 +66,5 @@ class ManageIQ::Providers::Openstack::CloudManager::Template < ManageIQ::Provide
 
   def requires_storage_for_scan?
     false
-  end
-
-  def validate_smartstate_analysis
-    validate_supported_check("Smartstate Analysis")
   end
 end

@@ -6,7 +6,7 @@ module MiqAeMethodService
     expose :resize_confirm, :override_return => nil
     expose :resize_revert,  :override_return => nil
 
-    expose :validate_resize
+    expose :supports_resize?
     expose :validate_resize_confirm
     expose :validate_resize_revert
 

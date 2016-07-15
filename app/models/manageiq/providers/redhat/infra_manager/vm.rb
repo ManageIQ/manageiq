@@ -1,8 +1,12 @@
 class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::InfraManager::Vm
+  include SupportsFeatureMixin
   include_concern 'Operations'
   include_concern 'RemoteConsole'
   include_concern 'Reconfigure'
   include_concern 'ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared'
+
+  supports_not :migrate, :reason => _("Migrate operation is not available for VM or Template")
+  supports_not :clone, :reason => _("Clone operation is not available for VM or Template")
 
   POWER_STATES = {
     'up'        => 'on',
@@ -42,15 +46,7 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
     POWER_STATES[raw_power_state] || super
   end
 
-  def validate_migrate
-    validate_unsupported("Migrate")
-  end
-
   def validate_publish
     validate_unsupported("Publish VM")
-  end
-
-  def validate_clone
-    validate_unsupported("Clone")
   end
 end

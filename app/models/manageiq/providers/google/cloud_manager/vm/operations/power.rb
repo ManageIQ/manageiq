@@ -1,10 +1,11 @@
 module ManageIQ::Providers::Google::CloudManager::Vm::Operations::Power
-  def validate_suspend
-    validate_unsupported(_("Suspend Operation"))
-  end
 
-  def validate_pause
-    validate_unsupported(_("Pause Operation"))
+  extend ActiveSupport::Concern
+  include SupportsFeatureMixin
+
+  included do
+    supports_not :pause, :reason => _("Pause Operation is not available for VM or Template")
+    supports_not :suspend, :reason => _("Suspend Operation is not available for VM or Template")
   end
 
   def raw_suspend

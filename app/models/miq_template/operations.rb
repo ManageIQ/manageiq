@@ -1,48 +1,17 @@
 module MiqTemplate::Operations
-  def validate_collect_running_processes
-    validate_invalid_for_template(_("VM Process collection"))
-  end
 
-  def validate_start
-    validate_invalid_for_template(_("Start Operation"))
-  end
+  extend ActiveSupport::Concern
 
-  def validate_stop
-    validate_invalid_for_template(_("Stop Operation"))
-  end
-
-  def validate_suspend
-    validate_invalid_for_template(_("Suspend Operation"))
-  end
-
-  def validate_pause
-    validate_invalid_for_template(_("Pause Operation"))
-  end
-
-  def validate_shutdown_guest
-    validate_invalid_for_template(_("Shutdown Guest Operation"))
-  end
-
-  def validate_standby_guest
-    validate_invalid_for_template(_("Standby Guest Operation"))
-  end
-
-  def validate_reboot_guest
-    validate_invalid_for_template(_("Reboot Guest Operation"))
-  end
-
-  def validate_reset
-    validate_invalid_for_template(_("Reset Operation"))
-  end
-
-  def validate_clone
-    {:available => true, :message => nil}
-  end
-
-  private
-
-  def validate_invalid_for_template(message_prefix)
-    {:available => false,
-     :message   => _("%{message} is not available for Images/Templates.") % {:message => message_prefix}}
+  included do
+    supports_not :shutdown_guest, :reason => _("Shutdown guest operation is not available for Images/Templates.")
+    supports_not :collect_running_processes, :reason => _("VM Process collection is not available for Images/Templates.")
+    supports_not :start, :reason => _("Start Operation is not available for Images/Templates.")
+    supports_not :stop, :reason => _("Stop Operation is not available for Images/Templates.")
+    supports_not :suspend, :reason => _("Suspend operation is not available for Images/Templates.")
+    supports_not :pause, :reason => _("Pause operation is not available for Images/Templates.")
+    supports_not :standby_guest, :reason => _("Standby Guest operation is not available for Images/Templates.")
+    supports_not :reboot_guest, :reason => _("Reboot Guest operation is not available for Images/Templates.")
+    supports_not :reset, :reason => _("Reset operation is not available for Images/Templates.")
+    supports :clone
   end
 end

@@ -1,4 +1,5 @@
 module Vm::Operations::Lifecycle
+
   extend ActiveSupport::Concern
 
   included do
@@ -7,17 +8,19 @@ module Vm::Operations::Lifecycle
         unsupported_reason_add :retirement, "VM orphaned or archived already"
       end
     end
-  end
 
-  def validate_clone
-    {:available => self.cloneable? && !(self.blank? || self.orphaned? || self.archived?), :message => nil}
+    supports :clone do
+      unsupported_reason_add(:clone, _("Clone operation is not available for Vm or Template.")) unless
+          self.cloneable? && !(self.blank? || self.orphaned? || self.archived?)
+    end
+
+    supports :migrate do
+      unsupported_reason_add(:migrate, _("Migrate operation is not available for Vm or Template.")) unless
+          !(self.blank? || self.orphaned? || self.archived?)
+    end
   end
 
   def validate_publish
-    {:available => !(self.blank? || self.orphaned? || self.archived?), :message   => nil}
-  end
-
-  def validate_migrate
     {:available => !(self.blank? || self.orphaned? || self.archived?), :message   => nil}
   end
 

@@ -792,13 +792,13 @@ class ApplicationHelper::ToolbarBuilder
     when "MiqTemplate"
       case id
       when "miq_template_clone"
-        return true unless @record.is_available?(:clone)
+        return true unless @record.supports_clone?
       when "miq_template_policy_sim", "miq_template_protect"
         return true if @record.host && @record.host.vmm_product.downcase == "workstation"
       when "miq_template_refresh"
         return true if @record && !@record.ext_management_system && !(@record.host && @record.host.vmm_product.downcase == "workstation")
       when "miq_template_scan", "image_scan"
-        return true unless @record.is_available?(:smartstate_analysis) || @record.is_available_now_error_message(:smartstate_analysis)
+        return true unless @record.supports_smartstate_analysis? || @record.unsupported_reason(:smartstate_analysis)
         return true unless @record.has_proxy?
       when "miq_template_refresh", "miq_template_reload"
         return true unless @perf_options[:typ] == "realtime"
@@ -829,19 +829,19 @@ class ApplicationHelper::ToolbarBuilder
     when "Vm"
       case id
       when "vm_clone"
-        return true unless @record.is_available?(:clone)
+        return true unless @record.supports_clone?
       when "vm_collect_running_processes"
-        return true if (@record.retired || @record.current_state == "never") && !@record.is_available?(:collect_running_processes)
+        return true if (@record.retired || @record.current_state == "never") && !@record.supports_collect_running_processes?
       when "vm_guest_startup", "vm_start", "instance_start", "instance_resume"
-        return true unless @record.is_available?(:start)
+        return true unless @record.supports_start?
       when "vm_guest_standby"
-        return true unless @record.is_available?(:standby_guest)
+        return true unless @record.supports_standby_guest?
       when "vm_guest_shutdown", "instance_guest_shutdown"
-        return true unless @record.is_available?(:shutdown_guest)
+        return true unless @record.supports_shutdown_guest?
       when "vm_guest_restart", "instance_guest_restart"
-        return true unless @record.is_available?(:reboot_guest)
+        return true unless @record.supports_reboot_guest?
       when "vm_migrate"
-        return true unless @record.is_available?(:migrate)
+        return true unless @record.supports_migrate?
       when "vm_publish"
         return true unless @record.is_available?(:publish)
       when "vm_reconfigure"
@@ -851,25 +851,25 @@ class ApplicationHelper::ToolbarBuilder
       when "vm_retire_now"
         return true unless @record.is_available?(:retire_now)
       when "vm_stop", "instance_stop"
-        return true unless @record.is_available?(:stop)
+        return true unless @record.supports_stop?
       when "vm_reset", "instance_reset"
-        return true unless @record.is_available?(:reset)
+        return true unless @record.supports_reset?
       when "vm_suspend", "instance_suspend"
-        return true unless @record.is_available?(:suspend)
+        return true unless @record.supports_suspend?
       when "instance_shelve"
-        return true unless @record.is_available?(:shelve)
+        return true unless @record.supports_shelve?
       when "instance_shelve_offload"
-        return true unless @record.is_available?(:shelve_offload)
+        return true unless @record.supports_shelve_offload?
       when "instance_pause"
-        return true unless @record.is_available?(:pause)
+        return true unless @record.supports_pause?
       when "instance_terminate"
-        return true unless @record.is_available?(:terminate)
+        return true unless @record.supports_terminate?
       when "vm_policy_sim", "vm_protect"
         return true if @record.host && @record.host.vmm_product.to_s.downcase == "workstation"
       when "vm_refresh"
         return true if @record && !@record.ext_management_system && !(@record.host && @record.host.vmm_product.downcase == "workstation")
       when "vm_scan", "instance_scan"
-        return true unless @record.is_available?(:smartstate_analysis) || @record.is_available_now_error_message(:smartstate_analysis)
+        return true unless @record.supports_smartstate_analysis? || @record.unsupported_reason(:smartstate_analysis)
         return true unless @record.has_proxy?
       when "perf_refresh", "perf_reload", "vm_perf_refresh", "vm_perf_reload"
         return true unless @perf_options[:typ] == "realtime"
@@ -1074,9 +1074,9 @@ class ApplicationHelper::ToolbarBuilder
           return N_("No Timeline data has been collected for this Host")
         end
       when "host_shutdown"
-        return @record.is_available_now_error_message(:shutdown) if @record.is_available_now_error_message(:shutdown)
+        return @record.unsupported_reason(:shutdown) if @record.unsupported_reason(:shutdown)
       when "host_restart"
-        return @record.is_available_now_error_message(:reboot) if @record.is_available_now_error_message(:reboot)
+        return @record.unsupported_reason(:reboot) if @record.unsupported_reason(:reboot)
       end
     when "Container"
       case id
@@ -1245,7 +1245,7 @@ class ApplicationHelper::ToolbarBuilder
             {:storage => ui_lookup(:table => "storage")}
         end
       when "storage_scan"
-        return @record.is_available_now_error_message(:smartstate_analysis) unless @record.is_available?(:smartstate_analysis)
+        return @record.unsupported_reason(:smartstate_analysis) unless @record.supports_smartstate_analysis?
       end
     when "Tenant"
       return N_("Default Tenant can not be deleted") if @record.parent.nil? && id == "rbac_tenant_delete"
@@ -1274,7 +1274,7 @@ class ApplicationHelper::ToolbarBuilder
           return N_("No Compliance Policies assigned to this virtual machine")
         end
       when "vm_collect_running_processes"
-        return @record.is_available_now_error_message(:collect_running_processes) if @record.is_available_now_error_message(:collect_running_processes)
+        return @record.unsupported_reason(:collect_running_processes) if @record.unsupported_reason(:collect_running_processes)
       when "vm_console", "vm_vmrc_console"
         if !is_browser?(%w(explorer firefox mozilla chrome)) ||
            !is_browser_os?(%w(windows linux))
@@ -1297,19 +1297,19 @@ class ApplicationHelper::ToolbarBuilder
           return N_("The web-based VNC console is not available because the VM is not powered on")
         end
       when "vm_guest_startup", "vm_start"
-        return @record.is_available_now_error_message(:start) if @record.is_available_now_error_message(:start)
+        return @record.unsupported_reason(:start) if @record.unsupported_reason(:start)
       when "vm_guest_standby"
-        return @record.is_available_now_error_message(:standby_guest) if @record.is_available_now_error_message(:standby_guest)
+        return @record.unsupported_reason(:standby_guest) if @record.unsupported_reason(:standby_guest)
       when "vm_guest_shutdown"
-        return @record.is_available_now_error_message(:shutdown_guest) if @record.is_available_now_error_message(:shutdown_guest)
+        return @record.unsupported_reason(:shutdown_guest) if @record.unsupported_reason(:shutdown_guest)
       when "vm_guest_restart"
-        return @record.is_available_now_error_message(:reboot_guest) if @record.is_available_now_error_message(:reboot_guest)
+        return @record.unsupported_reason(:reboot_guest) if @record.unsupported_reason(:reboot_guest)
       when "vm_stop"
-        return @record.is_available_now_error_message(:stop) if @record.is_available_now_error_message(:stop)
+        return @record.unsupported_reason(:stop) if @record.unsupported_reason(:stop)
       when "vm_reset"
-        return @record.is_available_now_error_message(:reset) if @record.is_available_now_error_message(:reset)
+        return @record.unsupported_reason(:reset) if @record.unsupported_reason(:reset)
       when "vm_suspend"
-        return @record.is_available_now_error_message(:suspend) if @record.is_available_now_error_message(:suspend)
+        return @record.unsupported_reason(:suspend) if @record.unsupported_reason(:suspend)
       when "instance_retire", "instance_retire_now",
               "vm_retire", "vm_retire_now"
         if @record.retired == true
@@ -1320,7 +1320,7 @@ class ApplicationHelper::ToolbarBuilder
           end
         end
       when "vm_scan", "instance_scan"
-        return @record.is_available_now_error_message(:smartstate_analysis) unless @record.is_available?(:smartstate_analysis)
+        return @record.unsupported_reason(:smartstate_analysis) unless @record.supports_smartstate_analysis?
         return @record.active_proxy_error_message unless @record.has_active_proxy?
       when "vm_timeline"
         unless @record.has_events? || @record.has_events?(:policy_events)
@@ -1353,7 +1353,7 @@ class ApplicationHelper::ToolbarBuilder
       when "miq_template_perf"
         return N_("No Capacity & Utilization data has been collected for this Template") unless @record.has_perf_data?
       when "miq_template_scan", "image_scan"
-        return @record.is_available_now_error_message(:smartstate_analysis) unless @record.is_available?(:smartstate_analysis)
+        return @record.unsupported_reason(:smartstate_analysis) unless @record.supports_smartstate_analysis?
         return @record.active_proxy_error_message unless @record.has_active_proxy?
       when "miq_template_timeline"
         unless @record.has_events? || @record.has_events?(:policy_events)

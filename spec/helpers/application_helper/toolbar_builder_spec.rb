@@ -1213,22 +1213,22 @@ describe ApplicationHelper do
         before do
           @id = "vm_collect_running_processes"
           allow(@record).to receive_messages(:retired => false, :current_state => "new")
-          allow(@record).to receive(:is_available?).with(:collect_running_processes).and_return(true)
+          allow(@record).to receive(:supports_collect_running_processes?).and_return(true)
         end
 
-        it "and @record.retired & !@record.is_available?(:collect_running_processes)" do
+        it "and @record.retired & !@record.supports_collect_running_processes?)" do
           allow(@record).to receive_messages(:retired => true)
-          allow(@record).to receive(:is_available?).with(:collect_running_processes).and_return(false)
+          allow(@record).to receive(:supports_collect_running_processes?).and_return(false)
           expect(subject).to be_truthy
         end
 
-        it "and @record.current_state = never & !@record.is_available?(:collect_running_processes)" do
-          allow(@record).to receive(:is_available?).with(:collect_running_processes).and_return(false)
+        it "and @record.current_state = never & !@record.supports_collect_running_processes?)" do
+          allow(@record).to receive(:supports_collect_running_processes?).and_return(false)
           allow(@record).to receive_messages(:current_state => "never")
           expect(subject).to be_truthy
         end
 
-        it "and @record.is_available?(:collect_running_processes)" do
+        it "and @record.supports_collect_running_processes?)" do
           expect(subject).to be_falsey
         end
 
@@ -1253,15 +1253,15 @@ describe ApplicationHelper do
         context "and id = #{id}" do
           before do
             @id = id
-            allow(@record).to receive(:is_available?).with(:start).and_return(true)
+            allow(@record).to receive(:supports_start?).and_return(true)
           end
 
-          it "and !@record.is_available?(:start)" do
-            allow(@record).to receive(:is_available?).with(:start).and_return(false)
+          it "and !@record.supports_start?" do
+            allow(@record).to receive(:supports_start?).and_return(false)
             expect(subject).to be_truthy
           end
 
-          it "and @record.is_available?(:start)" do
+          it "and @record.supports_start?" do
             expect(subject).to be_falsey
           end
         end
@@ -1270,15 +1270,15 @@ describe ApplicationHelper do
       context "and id = vm_guest_standby" do
         before do
           @id = "vm_guest_standby"
-          allow(@record).to receive(:is_available?).with(:standby_guest).and_return(true)
+          allow(@record).to receive(:supports_standby_guest?).and_return(true)
         end
 
-        it "and !@record.is_available?(:standby_guest)" do
-          allow(@record).to receive(:is_available?).with(:standby_guest).and_return(false)
+        it "and !@record.supports_standby_guest?" do
+          allow(@record).to receive(:supports_standby_guest?).and_return(false)
           expect(subject).to be_truthy
         end
 
-        it "and @record.is_available?(:standby_guest)" do
+        it "and @record.supports_standby_guest?" do
           expect(subject).to be_falsey
         end
       end
@@ -1286,15 +1286,15 @@ describe ApplicationHelper do
       context "and id = vm_guest_shutdown" do
         before do
           @id = "vm_guest_shutdown"
-          allow(@record).to receive(:is_available?).with(:shutdown_guest).and_return(true)
+          allow(@record).to receive(:supports_shutdown_guest?).and_return(true)
         end
 
-        it "and !@record.is_available?(:shutdown_guest)" do
-          allow(@record).to receive(:is_available?).with(:shutdown_guest).and_return(false)
+        it "and !@record.supports_shutdown_guest?" do
+          allow(@record).to receive(:supports_shutdown_guest?).and_return(false)
           expect(subject).to be_truthy
         end
 
-        it "and @record.is_available?(:shutdown_guest)" do
+        it "and @record.supports_shutdown_guest?)" do
           expect(subject).to be_falsey
         end
       end
@@ -1302,15 +1302,15 @@ describe ApplicationHelper do
       context "and id = vm_guest_restart" do
         before do
           @id = "vm_guest_restart"
-          allow(@record).to receive(:is_available?).with(:reboot_guest).and_return(true)
+          allow(@record).to receive(:supports_reboot_guest?).and_return(true)
         end
 
-        it "and !@record.is_available?(:reboot_guest)" do
-          allow(@record).to receive(:is_available?).with(:reboot_guest).and_return(false)
+        it "and !@record.supports_reboot_guest?)" do
+          allow(@record).to receive(:supports_reboot_guest?).and_return(false)
           expect(subject).to be_truthy
         end
 
-        it "and @record.is_available?(:reboot_guest)" do
+        it "and @record.supports_reboot_guest?)" do
           expect(subject).to be_falsey
         end
       end
@@ -1318,15 +1318,15 @@ describe ApplicationHelper do
       context "and id = vm_stop" do
         before do
           @id = "vm_stop"
-          allow(@record).to receive(:is_available?).with(:stop).and_return(true)
+          allow(@record).to receive(:supports_stop?).and_return(true)
         end
 
-        it "and !@record.is_available?(:stop)" do
-          allow(@record).to receive(:is_available?).with(:stop).and_return(false)
+        it "and !@record.supports_stop?" do
+          allow(@record).to receive(:supports_stop?).and_return(false)
           expect(subject).to be_truthy
         end
 
-        it "and @record.is_available?(:stop)" do
+        it "and @record.supports_stop?" do
           expect(subject).to be_falsey
         end
       end
@@ -1334,15 +1334,15 @@ describe ApplicationHelper do
       context "and id = vm_reset" do
         before do
           @id = "vm_reset"
-          allow(@record).to receive(:is_available?).with(:reset).and_return(true)
+          allow(@record).to receive(:supports_reset?).and_return(true)
         end
 
-        it "and !@record.is_available?(:reset)" do
-          allow(@record).to receive(:is_available?).with(:reset).and_return(false)
+        it "and !@record.supports_reset?" do
+          allow(@record).to receive(:supports_reset?).and_return(false)
           expect(subject).to be_truthy
         end
 
-        it "and @record.is_available?(:reset)" do
+        it "and @record.supports_reset?" do
           expect(subject).to be_falsey
         end
       end
@@ -1350,15 +1350,15 @@ describe ApplicationHelper do
       context "and id = vm_suspend" do
         before do
           @id = "vm_suspend"
-          allow(@record).to receive(:is_available?).with(:suspend).and_return(true)
+          allow(@record).to receive(:supports_suspend?).and_return(true)
         end
 
-        it "and !@record.is_available?(:suspend)" do
-          allow(@record).to receive(:is_available?).with(:suspend).and_return(false)
+        it "and !@record.supports_suspend?" do
+          allow(@record).to receive(:supports_suspend?).and_return(false)
           expect(subject).to be_truthy
         end
 
-        it "and @record.is_available?(:suspend)" do
+        it "and @record.supports_suspend?" do
           expect(subject).to be_falsey
         end
       end

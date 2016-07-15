@@ -1,18 +1,13 @@
 module Vm::Operations::Guest
-  def validate_shutdown_guest
-    validate_unsupported("Shutdown Guest Operation")
-  end
 
-  def validate_standby_guest
-    validate_unsupported("Standby Guest Operation")
-  end
+  extend ActiveSupport::Concern
+  include SupportsFeatureMixin
 
-  def validate_reboot_guest
-    validate_unsupported("Reboot Guest Operation")
-  end
-
-  def validate_reset
-    validate_unsupported("Reset Guest Operation")
+  included do
+    supports_not :shutdown_guest, :reason => _("Shutdown guest operation is not available for VM or Template.")
+    supports_not :standby_guest, :reason => _("Standby Guest Operation is not available for VM or Template.")
+    supports_not :reboot_guest, :reason => _("Reboot Guest Operation is not available for VM or Template.")
+    supports_not :reset, :reason => _("Reset Guest Operation is not available for VM or Template.")
   end
 
   def raw_shutdown_guest

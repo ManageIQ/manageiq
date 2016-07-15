@@ -1,5 +1,8 @@
 class ManageIQ::Providers::Google::CloudManager::Vm < ManageIQ::Providers::CloudManager::Vm
   include_concern 'Operations'
+  include SupportsFeatureMixin
+
+  supports_not :smartstate_analysis, :reason => _("Smartstate Analysis is not available for VM or Template")
 
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
@@ -35,9 +38,5 @@ class ManageIQ::Providers::Google::CloudManager::Vm < ManageIQ::Providers::Cloud
     else
       "unknown"
     end
-  end
-
-  def validate_smartstate_analysis
-    validate_unsupported("Smartstate Analysis")
   end
 end

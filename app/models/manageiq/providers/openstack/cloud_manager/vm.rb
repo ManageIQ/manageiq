@@ -3,6 +3,16 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
   include_concern 'RemoteConsole'
   include_concern 'Resize'
 
+  include SupportsFeatureMixin
+
+  supports :smartstate_analysis do
+    if self.archived?
+      unsupported_reason_add(:smartstate_analysis, nil)
+    elsif self.orphaned?
+      unsupported_reason_add(:smartstate_analysis, _("Smartstate Analysis cannot be performed on orphaned #{self.class.model_suffix} VM."))
+    end
+  end
+
   POWER_STATES = {
     "ACTIVE"            => "on",
     "SHUTOFF"           => "off",
@@ -108,9 +118,5 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
 
   def memory_mb_available?
     true
-  end
-
-  def validate_smartstate_analysis
-    validate_supported_check("Smartstate Analysis")
   end
 end

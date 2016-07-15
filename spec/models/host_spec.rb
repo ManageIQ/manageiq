@@ -124,7 +124,7 @@ describe Host do
 
     context "#start" do
       before do
-        allow_any_instance_of(described_class).to receive_messages(:validate_start   => {})
+        allow_any_instance_of(described_class).to receive_messages(:supports_control?   => {})
         allow_any_instance_of(described_class).to receive_messages(:validate_ipmi    => {:available => true, :message => nil})
         allow_any_instance_of(described_class).to receive_messages(:run_ipmi_command => "off")
         FactoryGirl.create(:miq_event_definition, :name => :request_host_start)
@@ -153,17 +153,20 @@ describe Host do
 
     context "with shutdown invalid" do
       it("#shutdown")          { expect { @host.shutdown }.not_to raise_error }
-      it("#validate_shutdown") { expect(@host.validate_shutdown).to eq(validation_response) }
+      it("#does not support shutdown") { expect(@host.supports_shutdown?).to eq(validation_response[:available]) }
+      it("#does not support shutdown with reason") { expect(@host.unsupported_reason(:shutdown)).to eq(validation_response[:message]) }
     end
 
     context "with reboot invalid" do
       it("#reboot")          { expect { @host.reboot }.not_to raise_error }
-      it("#validate_reboot") { expect(@host.validate_reboot).to eq(validation_response) }
+      it("#does not support reboot") { expect(@host.supports_reboot?).to eq(validation_response[:available]) }
+      it("#does not support reboot with reason") { expect(@host.unsupported_reason(:reboot)).to eq(validation_response[:message])  }
     end
 
     context "with standby invalid" do
       it("#standby")          { expect { @host.standby }.not_to raise_error }
-      it("#validate_standby") { expect(@host.validate_standby).to eq(validation_response) }
+      it("#does not support standby") { expect(@host.supports_standby?).to eq(validation_response[:available]) }
+      it("#does not support standby with reason") { expect(@host.unsupported_reason(:standby)).to eq(validation_response[:message]) }
     end
 
     context "with enter_maint_mode invalid" do

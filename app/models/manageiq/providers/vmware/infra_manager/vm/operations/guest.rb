@@ -1,21 +1,25 @@
 module ManageIQ::Providers::Vmware::InfraManager::Vm::Operations::Guest
-  def validate_shutdown_guest
-    msg = validate_vm_control
-    return {:available => msg[0], :message => msg[1]} unless msg.nil?
-    return {:available => true,   :message => ''}     if tools_status && tools_status == 'toolsNotInstalled'
-    return {:available => true,   :message => nil}    if current_state == 'on'
-    {:available => false,  :message => 'The VM is not powered on'}
-  end
 
-  def validate_standby_guest
-    validate_vm_control_powered_on
-  end
+  include SupportsFeatureMixin
+  extend ActiveSupport::Concern
 
-  def validate_reboot_guest
-    validate_vm_control_powered_on
-  end
+  included do
+    supports :shutdown_guest do
+      unsupported_reason_add(:shutdown_guest, unsupported_reason(:control)) unless supports_control?
+      unsupported_reason_add(:shutdown_guest, "Tools not installed") if tools_status == 'toolsNotInstalled'
+      unsupported_reason_add(:shutdown_guest, "The VM is not powered on") if current_state != 'on'
+    end
 
-  def validate_reset
-    validate_vm_control_powered_on
+    supports :standby_guest do
+      unsupported_reason_add(:standby_guest, unsupported_reason(:vm_control_power_state)) unless supports_vm_control_power_state?(true)
+    end
+
+    supports :reboot_guest do
+      unsupported_reason_add(:reboot_guest, unsupported_reason(:vm_control_power_state)) unless supports_vm_control_power_state?(true)
+    end
+
+    supports :reset do
+      unsupported_reason_add(:reset, unsupported_reason(:vm_control_power_state)) unless supports_vm_control_power_state?(true)
+    end
   end
 end

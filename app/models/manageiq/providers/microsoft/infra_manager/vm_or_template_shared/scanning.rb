@@ -1,4 +1,16 @@
 module ManageIQ::Providers::Microsoft::InfraManager::VmOrTemplateShared::Scanning
+  extend ActiveSupport::Concern
+
+  included do
+    supports :smartstate_analysis do
+      if self.archived?
+        unsupported_reason_add(:smartstate_analysis, nil)
+      elsif self.orphaned?
+        unsupported_reason_add(:smartstate_analysis, _("Smartstate Analysis cannot be performed on orphaned #{self.class.model_suffix} VM."))
+      end
+    end
+  end
+
   def perform_metadata_scan(ost)
     require 'MiqVm/miq_scvmm_vm'
 
@@ -20,10 +32,6 @@ module ManageIQ::Providers::Microsoft::InfraManager::VmOrTemplateShared::Scannin
 
   def perform_metadata_sync(ost)
     sync_stashed_metadata(ost)
-  end
-
-  def validate_smartstate_analysis
-    validate_supported_check("Smartstate Analysis")
   end
 
   def requires_storage_for_scan?
