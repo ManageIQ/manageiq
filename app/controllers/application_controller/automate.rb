@@ -157,7 +157,7 @@ module ApplicationController::Automate
     @resolve[:uri] = options[:uri]
     @resolve[:ae_result] = ws.root['ae_result']
     @resolve[:state_attributes] = ws.root['ae_result'] == 'retry' ? state_attributes(ws) : {}
-    @json_tree = ws_tree_from_xml(@results)
+    @ae_simulation_tree = TreeBuilderAutomateSimulationResults.new(:ae_simulation_tree, :ae_simulation, @sb, true, @results)
   end
 
   def state_attributes(ws)

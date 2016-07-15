@@ -2,13 +2,7 @@
   - if @results
     %br
     #treebox{:style => "width: auto;"}
-    = render(:partial => "layouts/dynatree",
-      :locals         => {:tree_id   => "treebox",
-        :json_tree                   => @json_tree,
-        :multi_lines                 => true,
-        :exp_tree                    => true,
-        :open_close_all_on_dbl_click => true})
-
+    = render(:partial => 'shared/tree', :locals => {:tree => @ae_simulation_tree, :name => @ae_simulation_tree.name})
   - else
     = render :partial => 'layouts/info_msg',
       :locals => {:message => _("Enter Automation Simulation options on the left and press Submit.")}

@@ -310,52 +310,6 @@ Methods updated/added: %{method_stats}") % stat_options)
     txt
   end
 
-  def ws_tree_from_xml(xml_string)
-    xml = MiqXml.load(xml_string)
-    top_nodes = []
-    @idx = 0
-    xml.root.each_element do |e|
-      top_nodes.push(ws_tree_add_node(e))
-    end
-    top_nodes.to_json
-  end
-
-  def ws_tree_add_node(el)
-    e_node = {}
-    e_node[:key] = "e_#{@idx}"
-    @idx += 1
-    #   e_node['tooltip'] = "Host: #{@host.name}"
-    e_node[:style] = "cursor:default"          # No cursor pointer
-    e_node[:addClass] = "cfme-no-cursor-node"
-    e_kids = []
-    if el.name == "MiqAeObject"
-      e_node[:title] = "#{el.attributes["namespace"]} <b>/</b> #{el.attributes["class"]} <b>/</b> #{el.attributes["instance"]}"
-      e_node[:icon] = ActionController::Base.helpers.image_path("100/q.png")
-    elsif el.name == "MiqAeAttribute"
-      e_node[:title] = el.attributes["name"]
-      e_node[:icon] = ActionController::Base.helpers.image_path("100/attribute.png")
-    elsif !el.text.blank?
-      e_node[:title] = el.text
-      e_node[:icon] = ActionController::Base.helpers.image_path("100/#{el.name.underscore}.png")
-    else
-      e_node[:title] = el.name
-      e_node[:icon] = ActionController::Base.helpers.image_path("100/#{e_node[:title].underscore.sub(/^miq_ae_service_/, '')}.png")
-      el.attributes.each_pair do |k, v|
-        a_node = {}
-        a_node[:key] = "a_#{@idx}"
-        @idx += 1
-        a_node[:title] = "#{k} <b>=</b> #{v}"
-        a_node[:icon] = ActionController::Base.helpers.image_path("100/attribute.png")
-        e_kids.push(a_node)
-      end
-    end
-    el.each_element do |e|
-      e_kids.push(ws_tree_add_node(e))
-    end
-    e_node[:children] = e_kids unless e_kids.empty?
-    e_node
-  end
-
   def valid_resolve_object?
     add_flash(_("Starting Class must be selected"), :error) if @resolve[:new][:starting_object].blank?
     if @resolve[:new][:instance_name].blank? && @resolve[:new][:other_name].blank?
