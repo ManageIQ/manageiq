@@ -956,11 +956,7 @@ module ApplicationController::Compare
       end
     end
     send("#{mode}_to_json", @compare)
-    render :update do |page|
-      page << javascript_prologue
-      page.replace_html("main_div", :partial => "layouts/compare") # Replace the main div area contents
-      page << "miqSparkle(false);"
-    end
+    replace_main_div({:partial => "layouts/compare"}, {:spinner_off => true})
   end
 
   def build_sections_tree
