@@ -31,9 +31,9 @@ sortby:
 - resource_name
 headers:
 - Activity Sample - Month (YYYY/MM)
+- Region
 - Asset Name
 - VM Count Total (Max)
-- Region
 where_clause:
 db_options:
   :interval: daily
