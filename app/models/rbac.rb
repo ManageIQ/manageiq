@@ -305,7 +305,7 @@ module Rbac
   end
 
   def self.filtered(objects, options = {})
-    Rbac.search(options.reverse_merge(:targets => objects, :results_format => :objects)).first
+    Rbac.search(options.reverse_merge(:targets => objects)).first
   end
 
   # @param klass [Class] base_class found in CLASSES_THAT_PARTICIPATE_IN_RBAC
@@ -344,7 +344,6 @@ module Rbac
   # @option options :sub_filter
   # @option options :include_for_find [Array<Symbol>]
   # @option options :filter
-  # @option options :results_format [:ids, :objects] (default: for object targets, :object, otherwise :ids)
 
   # @option options :user         [User]     (default: current_user)
   # @option options :userid       [String]   User#userid (not user_id)
@@ -356,8 +355,8 @@ module Rbac
   # @option options :offset       [Numeric] (default: no offset)
   # @option options :apply_limit_in_sql [Boolean]
   # @option options :ext_options
-  # @return [Array<Array<Numeric|Object>,Hash>] list of object and the associated search options
-  #   Array<Numeric|Object> list of object in the same order as input targets if possible
+  # @return [Array<Array<Object>,Hash>] list of object and the associated search options
+  #   Array<Object> list of object in the same order as input targets if possible
   # @option attrs :auth_count [Numeric]
   # @option attrs :user_filters
   # @option attrs apply_limit_in_sql
@@ -384,7 +383,6 @@ module Rbac
     sub_filter        = options[:sub_filter]
     include_for_find  = options[:include_for_find]
     search_filter     = options[:filter]
-    results_format    = options[:results_format]
 
     user, miq_group, user_filters = get_user_info(options[:user],
                                                   options[:userid],
@@ -397,15 +395,13 @@ module Rbac
 
     if targets.nil?
       scope = apply_scope(klass, scope)
-      results_format ||= :id
     elsif targets.kind_of?(Array)
       if targets.first.kind_of?(Numeric)
         target_ids = targets
-        results_format ||= :id
+        # assume klass is passed in
       else
         target_ids       = targets.collect(&:id)
         klass            = targets.first.class.base_class unless klass.respond_to?(:find)
-        results_format ||= :objects
       end
       scope = apply_scope(klass, scope)
 
@@ -414,7 +410,6 @@ module Rbac
       targets = to_class(targets)
       targets = targets.all if targets < ActiveRecord::Base
 
-      results_format ||= :objects
       scope = apply_scope(targets, scope)
 
       unless klass.respond_to?(:find)
@@ -459,14 +454,6 @@ module Rbac
     end
 
     attrs[:auth_count] = auth_count
-
-    results_format   = :objects if klass.respond_to?(:instances_are_derived?) && klass.instances_are_derived? # can't return ids if instances are derived from another source
-
-    targets = case results_format
-              when :objects then targets
-              when :ids     then targets.collect(&:id)
-              else raise _("unknown results format of '%{format_type}") % {:format_type => results_format.inspect}
-              end
 
     return targets, attrs
   end
