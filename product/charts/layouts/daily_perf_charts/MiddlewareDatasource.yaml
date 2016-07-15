@@ -12,4 +12,4 @@
   :columns:
   - mw_ds_average_get_time
   - mw_ds_average_creation_time
-
+  - mw_ds_max_wait_time
