@@ -42,6 +42,9 @@
     "spice-html5-bower": "himdel/spice-html5-bower#^0.1.5",
     "es6-shim": "^0.35.0",
     "phantomjs-polyfill": "^0.0.2",
-    "fetch": "^1.0.0"
+    "fetch": "^1.0.0",
+    "rxjs": "^4.1.0",
+    "d3-tip": "^0.6.7",
+    "hawkular-charts": "karelhala/hawkular-charts#442d8bd2c4389cd74e9f5ac7651b4edca467d0c9"
   }
 }

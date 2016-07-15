@@ -18,11 +18,13 @@
 //= require sprintf
 //= require numeral
 //= require miq_api
+//= require rxjs/dist/rx.all
 //= require miq_angular_application
 //= require_tree ./directives/
 //= require_tree ./services/
 //= require_tree ./controllers/
 //= require d3
+//= require d3-tip/index
 //= require c3
 //= require lodash
 //= require kubernetes-topology-graph/dist/topology-graph
@@ -74,3 +76,4 @@
 //= require resizable_sidebar
 //= require xml_display
 //= require miq_c3
+//= require hawkular-charts/dist/hawkular-charts

@@ -1,0 +1,9 @@
+%div{"data-ng-app" => @show_timeline_ng_app.to_s, "ng-controller" => "miqTimlineController as timelineCtrl"}
+  %hk-timeline-chart{"events" => "timelineCtrl.timelineData",
+    "start-timestamp" => "{{timelineCtrl.timelineSettings.startTimestamp}}",
+    "end-timestamp" => "{{timelineCtrl.timelineSettings.endTimestamp}}"}
+  .miq-overview-timeline
+    %hk-context-chart{"data" => "timelineCtrl.overviewData",
+      "show-y-axis-values" => "false",
+      "start-timestamp" => "{{timelineCtrl.timelineSettings.startTimestamp}}",
+      "end-timestamp" => "{{timelineCtrl.timelineSettings.endTimestamp}}"}

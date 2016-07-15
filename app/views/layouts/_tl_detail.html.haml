@@ -1,12 +1,16 @@
 #tl_div
   - if @report && @report.table && @report.table.data.blank?
   - elsif @report
-    %fieldset
-      #miq_timeline{:style => "height: 450px; overflow: hidden; border: 1px solid #aaa;"}
-      = render(:partial => "layouts/timeline",
-        :locals         => {:bands => @report.timeline[:bands],
-          :tl_json                 => @tl_json.to_s.html_safe,
-          :data_action             => "timeline_data",
-          :position_time           => session[:tl_position]})
-      - if @report.filter_summary
-        = @report.filter_summary
+    - if @show_timeline_ng_app
+      %script{:type => "text/javascript"}
+        sendDataWithRx({data: #{@tl_json.to_s.html_safe}, settings: #{@report.timeline[:bands].to_json.html_safe}});
+    - else
+      %fieldset
+        #miq_timeline{:style => "height: 450px; overflow: hidden; border: 1px solid #aaa;"}
+        = render(:partial => "layouts/timeline",
+          :locals         => {:bands => @report.timeline[:bands],
+            :tl_json                 => @tl_json.to_s.html_safe,
+            :data_action             => "timeline_data",
+            :position_time           => session[:tl_position]})
+        - if @report.filter_summary
+          = @report.filter_summary
