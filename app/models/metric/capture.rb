@@ -62,9 +62,7 @@ module Metric::Capture
       :priority    => MiqQueue::HIGH_PRIORITY,
       :args        => [start_time, end_time, zone]
     }
-
-    zone = Zone.find(zone) if zone.kind_of?(Integer)
-    item[:zone] = zone.name if zone.kind_of?(Zone)
+    item[:zone] = zone.name if zone
 
     MiqQueue.put(item)
   end
