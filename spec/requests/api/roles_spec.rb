@@ -65,10 +65,10 @@ describe ApiController do
     run_get role_url, :expand => "features"
     expect(response).to have_http_status(:ok)
 
-    expect(response_hash).to have_key("name")
-    expect(response_hash["name"]).to eq(role.name)
-    expect(response_hash).to have_key("features")
-    expect(response_hash["features"].size).to eq(fetch_value(role.miq_product_features.count))
+    expect(response.parsed_body).to have_key("name")
+    expect(response.parsed_body["name"]).to eq(role.name)
+    expect(response.parsed_body).to have_key("features")
+    expect(response.parsed_body["features"].size).to eq(fetch_value(role.miq_product_features.count))
 
     expect_result_resources_to_include_data("features", attr.to_s => klass.pluck(attr))
   end
@@ -107,7 +107,7 @@ describe ApiController do
       expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      role_id = response_hash["results"].first["id"]
+      role_id = response.parsed_body["results"].first["id"]
 
       run_get "#{roles_url}/#{role_id}/", :expand => "features"
 
@@ -127,7 +127,7 @@ describe ApiController do
       expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      role_id = response_hash["results"].first["id"]
+      role_id = response.parsed_body["results"].first["id"]
       expect(MiqUserRole.exists?(role_id)).to be_truthy
       role = MiqUserRole.find(role_id)
       sample_role1['features'].each do |feature|
@@ -143,7 +143,7 @@ describe ApiController do
       expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      results = response_hash["results"]
+      results = response.parsed_body["results"]
       r1_id = results.first["id"]
       r2_id = results.second["id"]
       expect(MiqUserRole.exists?(r1_id)).to be_truthy

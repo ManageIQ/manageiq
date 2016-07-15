@@ -8,7 +8,7 @@ RSpec.describe "chargebacks API" do
     expect_result_resources_to_include_hrefs(
       "resources", [chargebacks_url(chargeback_rate.id)]
     )
-    expect_result_to_match_hash(response_hash, "count" => 1)
+    expect_result_to_match_hash(response.parsed_body, "count" => 1)
     expect(response).to have_http_status(:ok)
   end
 
@@ -19,7 +19,7 @@ RSpec.describe "chargebacks API" do
     run_get chargebacks_url(chargeback_rate.id)
 
     expect_result_to_match_hash(
-      response_hash,
+      response.parsed_body,
       "description" => chargeback_rate.description,
       "guid"        => chargeback_rate.guid,
       "id"          => chargeback_rate.id,
@@ -60,7 +60,7 @@ RSpec.describe "chargebacks API" do
     run_get "#{chargebacks_url(chargeback_rate.id)}/rates/#{chargeback_rate_detail.to_param}"
 
     expect_result_to_match_hash(
-      response_hash,
+      response.parsed_body,
       "chargeback_rate_id" => chargeback_rate.id,
       "href"               => "#{chargebacks_url(chargeback_rate.id)}/rates/#{chargeback_rate_detail.to_param}",
       "id"                 => chargeback_rate_detail.id,
@@ -78,7 +78,7 @@ RSpec.describe "chargebacks API" do
     expect_result_resources_to_include_hrefs(
       "resources", ["/api/currencies/#{currency.id}"]
     )
-    expect_result_to_match_hash(response_hash, "count" => 1)
+    expect_result_to_match_hash(response.parsed_body, "count" => 1)
     expect(response).to have_http_status(:ok)
   end
 
@@ -89,7 +89,7 @@ RSpec.describe "chargebacks API" do
     run_get "/api/currencies/#{currency.id}"
 
     expect_result_to_match_hash(
-      response_hash,
+      response.parsed_body,
       "name" => currency.name,
       "id"   => currency.id,
       "href" => "/api/currencies/#{currency.id}"
@@ -106,7 +106,7 @@ RSpec.describe "chargebacks API" do
     expect_result_resources_to_include_hrefs(
       "resources", ["/api/measures/#{measure.id}"]
     )
-    expect_result_to_match_hash(response_hash, "count" => 1)
+    expect_result_to_match_hash(response.parsed_body, "count" => 1)
     expect(response).to have_http_status(:ok)
   end
 
@@ -117,7 +117,7 @@ RSpec.describe "chargebacks API" do
     run_get "/api/measures/#{measure.id}"
 
     expect_result_to_match_hash(
-      response_hash,
+      response.parsed_body,
       "name" => measure.name,
       "id"   => measure.id,
       "href" => "/api/measures/#{measure.id}",
@@ -134,9 +134,9 @@ RSpec.describe "chargebacks API" do
                  :description => "chargeback_0",
                  :rate_type   => "Storage"
       end.to change(ChargebackRate, :count).by(1)
-      expect_result_to_match_hash(response_hash["results"].first, "description" => "chargeback_0",
-                                                                  "rate_type"   => "Storage",
-                                                                  "default"     => false)
+      expect_result_to_match_hash(response.parsed_body["results"].first, "description" => "chargeback_0",
+                                                                         "rate_type"   => "Storage",
+                                                                         "default"     => false)
       expect(response).to have_http_status(:ok)
     end
 
@@ -156,7 +156,7 @@ RSpec.describe "chargebacks API" do
       api_basic_authorize action_identifier(:chargebacks, :edit)
       run_post chargebacks_url(chargeback_rate.id), gen_request(:edit, :description => "chargeback_1")
 
-      expect(response_hash["description"]).to eq("chargeback_1")
+      expect(response.parsed_body["description"]).to eq("chargeback_1")
       expect(response).to have_http_status(:ok)
       expect(chargeback_rate.reload.description).to eq("chargeback_1")
     end
@@ -169,7 +169,7 @@ RSpec.describe "chargebacks API" do
                                                        :path   => "description",
                                                        :value  => "chargeback_1"}]
 
-      expect(response_hash["description"]).to eq("chargeback_1")
+      expect(response.parsed_body["description"]).to eq("chargeback_1")
       expect(response).to have_http_status(:ok)
       expect(chargeback_rate.reload.description).to eq("chargeback_1")
     end
@@ -208,7 +208,7 @@ RSpec.describe "chargebacks API" do
                  :source             => "used",
                  :enabled            => true
       end.to change(ChargebackRateDetail, :count).by(1)
-      expect_result_to_match_hash(response_hash["results"].first, "description" => "rate_0", "enabled" => true)
+      expect_result_to_match_hash(response.parsed_body["results"].first, "description" => "rate_0", "enabled" => true)
       expect(response).to have_http_status(:ok)
     end
 
@@ -235,7 +235,7 @@ RSpec.describe "chargebacks API" do
       api_basic_authorize action_identifier(:rates, :edit)
       run_post rates_url(chargeback_rate_detail.id), gen_request(:edit, :description => "rate_1")
 
-      expect(response_hash["description"]).to eq("rate_1")
+      expect(response.parsed_body["description"]).to eq("rate_1")
       expect(response).to have_http_status(:ok)
       expect(chargeback_rate_detail.reload.description).to eq("rate_1")
     end
@@ -251,7 +251,7 @@ RSpec.describe "chargebacks API" do
       api_basic_authorize action_identifier(:rates, :edit)
       run_patch rates_url(chargeback_rate_detail.id), [{:action => "edit", :path => "description", :value => "rate_1"}]
 
-      expect(response_hash["description"]).to eq("rate_1")
+      expect(response.parsed_body["description"]).to eq("rate_1")
       expect(response).to have_http_status(:ok)
       expect(chargeback_rate_detail.reload.description).to eq("rate_1")
     end

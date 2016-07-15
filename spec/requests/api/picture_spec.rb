@@ -24,9 +24,9 @@ describe ApiController do
   end
 
   def expect_result_to_include_picture_href(source_id)
-    expect_result_to_match_hash(response_hash, "id" => source_id)
+    expect_result_to_match_hash(response.parsed_body, "id" => source_id)
     expect_result_to_have_keys(%w(id href picture))
-    expect_result_to_match_hash(response_hash["picture"],
+    expect_result_to_match_hash(response.parsed_body["picture"],
                                 "id"          => picture.id,
                                 "resource_id" => template.id,
                                 "image_href"  => /^http:.*#{picture.image_href}$/)

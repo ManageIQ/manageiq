@@ -29,7 +29,7 @@ describe "tenant quotas API" do
       run_get "/api/tenants/#{tenant.id}/quotas/#{quota.id}"
 
       expect_result_to_match_hash(
-        response_hash,
+        response.parsed_body,
         "href"      => "/api/tenants/#{tenant.id}/quotas/#{quota.id}",
         "id"        => quota.id,
         "tenant_id" => tenant.id,

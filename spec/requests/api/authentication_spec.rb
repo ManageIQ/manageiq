@@ -96,7 +96,7 @@ describe ApiController do
       expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(ENTRYPOINT_KEYS)
       expect_result_to_match_hash(
-        response_hash["identity"],
+        response.parsed_body["identity"],
         "userid"     => @user.userid,
         "name"       => @user.name,
         "user_href"  => "/api/users/#{@user.id}",
@@ -106,7 +106,7 @@ describe ApiController do
         "role_href"  => "/api/roles/#{group2.miq_user_role.id}",
         "tenant"     => @group.tenant.name
       )
-      expect(response_hash["identity"]["groups"]).to match_array(@user.miq_groups.pluck(:description))
+      expect(response.parsed_body["identity"]["groups"]).to match_array(@user.miq_groups.pluck(:description))
     end
 
     it "querying user's authorization" do
@@ -117,7 +117,7 @@ describe ApiController do
       expect(response).to have_http_status(:ok)
       expected = {"authorization" => hash_including("product_features")}
       ENTRYPOINT_KEYS.each { |k| expected[k] = anything }
-      expect(response_hash).to include(expected)
+      expect(response.parsed_body).to include(expected)
     end
   end
 
@@ -145,7 +145,7 @@ describe ApiController do
       expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(%w(auth_token))
 
-      auth_token = response_hash["auth_token"]
+      auth_token = response.parsed_body["auth_token"]
 
       run_get entrypoint_url, :headers => {"auth_token" => auth_token}
 
@@ -161,8 +161,8 @@ describe ApiController do
       expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(%w(auth_token token_ttl expires_on))
 
-      auth_token = response_hash["auth_token"]
-      token_expires_on = response_hash["expires_on"]
+      auth_token = response.parsed_body["auth_token"]
+      token_expires_on = response.parsed_body["expires_on"]
 
       tm = TokenManager.new("api")
       token_info = tm.token_get_info("api", auth_token)
@@ -183,7 +183,7 @@ describe ApiController do
 
       expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(%w(auth_token token_ttl expires_on))
-      expect(response_hash["token_ttl"]).to eq(api_token_ttl)
+      expect(response.parsed_body["token_ttl"]).to eq(api_token_ttl)
     end
 
     it "gets a token based identifier with an invalid requester_type" do
@@ -202,7 +202,7 @@ describe ApiController do
 
       expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(%w(auth_token token_ttl expires_on))
-      expect(response_hash["token_ttl"]).to eq(ui_token_ttl)
+      expect(response.parsed_body["token_ttl"]).to eq(ui_token_ttl)
     end
 
     it "forgets the current token when asked to" do
@@ -210,7 +210,7 @@ describe ApiController do
 
       run_get auth_url
 
-      auth_token = response_hash["auth_token"]
+      auth_token = response.parsed_body["auth_token"]
 
       expect_any_instance_of(TokenManager).to receive(:invalidate_token).with("api", auth_token)
       run_delete auth_url, "auth_token" => auth_token

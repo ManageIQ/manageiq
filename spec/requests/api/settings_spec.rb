@@ -28,7 +28,7 @@ describe ApiController do
       category = api_settings.first
       run_get settings_url(category)
 
-      expect(response_hash[category]).to eq(Settings[category].to_hash.stringify_keys)
+      expect(response.parsed_body[category]).to eq(Settings[category].to_hash.stringify_keys)
     end
 
     it "rejects query for an invalid setting category " do
