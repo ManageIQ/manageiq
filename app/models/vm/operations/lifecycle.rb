@@ -2,10 +2,8 @@ module Vm::Operations::Lifecycle
   extend ActiveSupport::Concern
 
   included do
-    supports :retirement do
-      if orphaned? || archived?
-        unsupported_reason_add :retirement, "VM orphaned or archived already"
-      end
+    supports :retire do
+      unsupported_reason_add(:retire, "VM orphaned or archived already") if orphaned? || archived?
     end
   end
 
