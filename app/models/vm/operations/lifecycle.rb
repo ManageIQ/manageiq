@@ -19,11 +19,4 @@ module Vm::Operations::Lifecycle
     {:available => !(self.blank? || self.orphaned? || self.archived?), :message   => nil}
   end
 
-  def validate_retire
-    {:available => !(self.orphaned? || self.archived?), :message   => nil}
-  end
-
-  def validate_retire_now
-    {:available => !(self.orphaned? || self.archived?), :message   => nil}
-  end
 end
