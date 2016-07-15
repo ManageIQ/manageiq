@@ -15,11 +15,6 @@ class ManageIQ::Providers::Openstack::NetworkManager < ManageIQ::Providers::Netw
 
   include ManageIQ::Providers::Openstack::ManagerMixin
 
-  belongs_to :parent_manager,
-             :foreign_key => :parent_ems_id,
-             :class_name  => "ManageIQ::Providers::BaseManager",
-             :autosave    => true
-
   has_many :public_networks,  :foreign_key => :ems_id, :dependent => :destroy,
            :class_name => "ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Public"
   has_many :private_networks, :foreign_key => :ems_id, :dependent => :destroy,
@@ -41,23 +36,6 @@ class ManageIQ::Providers::Openstack::NetworkManager < ManageIQ::Providers::Netw
            :hostname,
            :default_endpoint,
            :endpoints,
-           :to        => :parent_manager,
-           :allow_nil => true
-
-  # Relationships delegated to parent manager
-  delegate :availability_zones,
-           :cloud_tenants,
-           :flavors,
-           :cloud_resource_quotas,
-           :cloud_volumes,
-           :cloud_volume_snapshots,
-           :cloud_object_store_containers,
-           :cloud_object_store_objects,
-           :key_pairs,
-           :orchestration_stacks,
-           :direct_orchestration_stacks,
-           :vms,
-           :hosts,
            :to        => :parent_manager,
            :allow_nil => true
 

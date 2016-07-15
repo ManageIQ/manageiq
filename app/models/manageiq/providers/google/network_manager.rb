@@ -11,15 +11,6 @@ class ManageIQ::Providers::Google::NetworkManager < ManageIQ::Providers::Network
 
   include ManageIQ::Providers::Google::ManagerMixin
 
-  alias_attribute :google_tenant_id, :uid_ems
-
-  has_many :resource_groups, :foreign_key => :ems_id, :dependent => :destroy
-
-  belongs_to :parent_manager,
-             :foreign_key => :parent_ems_id,
-             :class_name  => "ManageIQ::Providers::BaseManager",
-             :autosave    => true
-
   # Auth and endpoints delegations, editing of this type of manager must be disabled
   delegate :authentication_check,
            :authentication_status,
@@ -35,25 +26,7 @@ class ManageIQ::Providers::Google::NetworkManager < ManageIQ::Providers::Network
            :hostname,
            :default_endpoint,
            :endpoints,
-           :provider_region,
-           :to        => :parent_manager,
-           :allow_nil => true
-
-  # Relationships delegated to parent manager
-  delegate :availability_zones,
-           :cloud_tenants,
-           :flavors,
-           :cloud_resource_quotas,
-           :cloud_volumes,
-           :cloud_volume_snapshots,
-           :cloud_object_store_containers,
-           :cloud_object_store_objects,
-           :key_pairs,
-           :orchestration_stacks,
-           :orchestration_stacks_resources,
-           :direct_orchestration_stacks,
-           :vms,
-           :hosts,
+           :google_tenant_id,
            :to        => :parent_manager,
            :allow_nil => true
 
