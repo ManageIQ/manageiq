@@ -1287,6 +1287,7 @@ function miqJqueryRequest(url, options) {
   // copy selected options over
   _.extend(ajax_options, _.pick(options, [
     'data',
+    'dataType',
     'contentType',
     'processData',
     'cache',
