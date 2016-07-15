@@ -2005,6 +2005,47 @@
   :description: Automate Import/Export
   :feature_type: node
   :identifier: miq_ae_class_import_export
+  :children:
+  - :name: GitRepository
+    :description: Git Repository
+    :feature_type: node
+    :identifier: git_repository
+    :hidden: true
+    :children:
+    - :name: View
+      :description: View Git Repositories
+      :feature_type: view
+      :identifier: git_repository_view
+      :children:
+      - :name: List
+        :description: Display List of Git Repositories
+        :feature_type: view
+        :identifier: git_repository_show_list
+      - :name: Show
+        :description: Display Individual Git Repositories
+        :feature_type: view
+        :identifier: git_repository_show
+    - :name: Modify
+      :description: Modify Git Repositories
+      :feature_type: admin
+      :identifier: git_repository_admin
+      :hidden: false
+      :children:
+      - :name: Add
+        :description: Add a Git Repository
+        :feature_type: admin
+        :hidden: false
+        :identifier: git_repository_add
+      - :name: Refresh
+        :description: Refresh (Fetch) a Git Repository
+        :feature_type: admin
+        :hidden: false
+        :identifier: git_repository_refresh
+      - :name: Delete
+        :description: Delete Git Repository
+        :feature_type: admin
+        :hidden: false
+        :identifier: git_repository_delete
 
 # Automate Log
 - :name: Log

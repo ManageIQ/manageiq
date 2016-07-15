@@ -319,6 +319,32 @@
       :get:
       - :name: read
         :identifier: flavor_show
+  :git_repositories:
+    :description: Git Repositories
+    :identifier: git_repository
+    :options:
+    - :collection
+    :verbs: *70174834085620
+    :klass: GitRepository
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: git_repository_show_list
+      :post:
+      - :name: create
+        :identifier: git_repository_add
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: git_repository_show
+      :post:
+      - :name: refresh
+        :identifier: git_repository_refresh
+      - :name: delete
+        :identifier: git_repository_delete
+      :delete:
+      - :name: delete
+        :identifier: git_repository_delete
   :groups:
     :description: Groups
     :identifier: rbac_group

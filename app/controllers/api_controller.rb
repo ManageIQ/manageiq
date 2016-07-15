@@ -63,6 +63,7 @@ class ApiController < ApplicationController
   include_concern 'CustomAttributes'
   include_concern 'Events'
   include_concern 'Features'
+  include_concern 'GitRepositories'
   include_concern 'Groups'
   include_concern 'Hosts'
   include_concern 'Instances'
