@@ -274,7 +274,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def delete_unused_connection_configurations(options)
-    chosen_endpoints   = options.map { |x| x.fetch_path(:endpoint, :role).try(:to_sym) }.compact.uniq
+    chosen_endpoints = options.map { |x| x.deep_symbolize_keys.fetch_path(:endpoint, :role).try(:to_sym) }.compact.uniq
     existing_endpoints = endpoints.pluck(:role).map(&:to_sym)
     # Delete endpoint that were not picked
     roles_for_deletion = existing_endpoints - chosen_endpoints
@@ -299,19 +299,20 @@ class ExtManagementSystem < ApplicationRecord
   # Takes a hash of connection data
   # hostname, port, and authentication
   # if no role is passed in assume is default role
-  def add_connection_configuration_by_role(options)
-    unless options[:endpoint].key?(:role)
-      options[:endpoint][:role] ||= "default"
+  def add_connection_configuration_by_role(connection)
+    connection.deep_symbolize_keys!
+    unless connection[:endpoint].key?(:role)
+      connection[:endpoint][:role] ||= "default"
     end
-    if options[:authentication].blank?
-      options.delete(:authentication)
+    if connection[:authentication].blank?
+      connection.delete(:authentication)
     else
-      unless options[:authentication].key?(:role)
-        options[:authentication][:role] ||= "default"
+      unless connection[:authentication].key?(:role)
+        connection[:authentication][:role] ||= "default"
       end
     end
 
-    build_connection(options)
+    build_connection(connection)
   end
 
   def connection_configuration_by_role(role = "default")
