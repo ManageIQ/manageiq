@@ -229,7 +229,7 @@ class MiqAeCustomizationController < ApplicationController
     setup_dialog_sample_buttons(nodetype, presenter)
     set_miq_record_id(presenter)
 
-    render :js => presenter.to_html
+    render :json => presenter.to_json
   end
 
   def dialog_edit_tree_active?
@@ -395,7 +395,7 @@ class MiqAeCustomizationController < ApplicationController
 
     # Replace right side with based on selected tree node type
     presenter.update(:main_div, render_proc[:partial => "shared/buttons/ab_list"])
-    presenter[:lock_unlock_trees][:ab_tree] = !!@edit
+    presenter.lock_tree(:ab_tree, @edit)
   end
 
   def setup_presenter_for_dialog_edit_tree(presenter)

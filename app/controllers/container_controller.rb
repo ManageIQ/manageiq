@@ -320,15 +320,15 @@ class ContainerController < ApplicationController
 
     # Hide/show searchbox depending on if a list is showing
     presenter.set_visibility(!(@record || @in_a_form), :adv_searchbox_div)
-    presenter[:clear_search_show_or_hide] = clear_search_show_or_hide
+    presenter[:clear_search_toggle] = clear_search_status
 
     presenter[:osf_node] = x_node  # Open, select, and focus on this node
 
     presenter.hide(:blocker_div) unless @edit && @edit[:adv_search_open]
     presenter.hide(:quicksearchbox)
-    presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
-    # Render the JS responses to update the explorer screen
-    render :js => presenter.to_html
+    presenter.lock_tree(x_active_tree, @in_a_form && @edit)
+
+    render :json => presenter.to_json
   end
 
   # Build a Containers explorer tree

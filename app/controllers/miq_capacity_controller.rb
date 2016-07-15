@@ -509,7 +509,7 @@ class MiqCapacityController < ApplicationController
       :skip_days => @sb[:util][:options][:skip_days],
     }
 
-    render :js => presenter.to_html
+    render :json => presenter.to_json
   end
 
   def planning_build_options
@@ -615,7 +615,7 @@ class MiqCapacityController < ApplicationController
                                       _("Best Fit Clusters")
                                     end
 
-    render :js => presenter.to_html
+    render :json => presenter.to_json
   end
 
   def bottleneck_replace_right_cell
@@ -627,7 +627,7 @@ class MiqCapacityController < ApplicationController
     presenter[:build_calendar] = true
     presenter[:right_cell_text] = @right_cell_text
 
-    render :js => presenter.to_html
+    render :json => presenter.to_json
   end
 
   def bottleneck_get_node_info(treenodeid, refresh = nil)

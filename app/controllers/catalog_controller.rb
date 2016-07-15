@@ -1981,12 +1981,12 @@ class CatalogController < ApplicationController
     presenter.set_visibility(h_tb.present? || c_tb.present? || v_tb.present?, :toolbar)
 
     presenter[:record_id] = determine_record_id_for_presenter
-    presenter[:lock_unlock_trees][x_active_tree] = @edit && @edit[:current]
+    presenter.lock_tree(x_active_tree, @edit && @edit[:current])
     presenter[:osf_node] = x_node
     presenter.reset_changes
     presenter.reset_one_trans
 
-    render :js => presenter.to_html
+    render :json => presenter.to_json
   end
 
   # Build a Catalog Items explorer tree

@@ -508,8 +508,7 @@ class StorageController < ApplicationController
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
     presenter[:osf_node] = x_node # Open, select, and focus on this node
 
-    # Render the JS responses to update the explorer screen
-    render :js => presenter.to_html
+    render :json => presenter.to_json
   end
 
   def search_text_type(node)
@@ -616,7 +615,8 @@ class StorageController < ApplicationController
     # update_title(presenter)
     rebuild_toolbars(false, presenter)
     handle_bottom_cell(presenter, r)
-    render :js => presenter.to_html
+
+    render :json => presenter.to_json
   end
 
   def update_tree_and_render_list(replace_trees)
@@ -628,7 +628,8 @@ class StorageController < ApplicationController
     presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
     rebuild_toolbars(false, presenter)
     handle_bottom_cell(presenter, r)
-    render :js => presenter.to_html
+
+    render :json => presenter.to_json
   end
 
   def rebuild_toolbars(record_showing, presenter)
@@ -642,13 +643,13 @@ class StorageController < ApplicationController
 
     # Hide/show searchbox depending on if a list is showing
     presenter.set_visibility(display_adv_searchbox, :adv_searchbox_div)
-    presenter[:clear_search_show_or_hide] = clear_search_show_or_hide
+    presenter[:clear_search_toggle] = clear_search_status
 
     presenter.hide(:blocker_div) unless @edit && @edit[:adv_search_open]
     presenter.hide(:quicksearchbox)
     presenter[:hide_modal] = true
 
-    presenter[:lock_unlock_trees][x_active_tree] = @in_a_form
+    presenter.lock_tree(x_active_tree, @in_a_form)
   end
 
   def display_adv_searchbox

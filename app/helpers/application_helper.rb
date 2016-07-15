@@ -824,8 +824,8 @@ module ApplicationHelper
   end
 
   # Do we show or hide the clear_search link in the list view title
-  def clear_search_show_or_hide
-    @edit && @edit.fetch_path(:adv_search_applied, :text) ? "show" : "hide"
+  def clear_search_status
+    !!(@edit && @edit.fetch_path(:adv_search_applied, :text))
   end
 
   # Should we allow the user input checkbox be shown for an atom in the expression editor

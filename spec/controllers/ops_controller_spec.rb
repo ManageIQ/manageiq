@@ -286,21 +286,21 @@ describe OpsController do
     it "does not render toolbar buttons when edit is clicked" do
       post :x_button, :params => { :id => @miq_server.id, :pressed => 'log_depot_edit', :format => :js }
       expect(response.status).to eq(200)
-      expect(response.body).to include("if (miqDomElementExists('toolbar')) $('#toolbar').hide();")
+      expect(JSON.parse(response.body)['setVisibility']['toolbar']).to be false
     end
 
     it "renders toolbar buttons when cancel is clicked" do
       allow(controller).to receive(:diagnostics_set_form_vars)
       post :x_button, :params => { :id => @miq_server.id, :pressed => 'log_depot_edit', :button => "cancel", :format => :js }
       expect(response.status).to eq(200)
-      expect(response.body).to include("if (miqDomElementExists('toolbar')) $('#toolbar').show();")
+      expect(JSON.parse(response.body)['setVisibility']['toolbar']).to be
     end
 
     it "renders toolbar buttons when save is clicked" do
       allow(controller).to receive(:diagnostics_set_form_vars)
       post :x_button, :params => { :id => @miq_server.id, :pressed => 'log_depot_edit', :button => "save", :format => :js }
       expect(response.status).to eq(200)
-      expect(response.body).to include("if (miqDomElementExists('toolbar')) $('#toolbar').show();")
+      expect(JSON.parse(response.body)['setVisibility']['toolbar']).to be
     end
   end
 

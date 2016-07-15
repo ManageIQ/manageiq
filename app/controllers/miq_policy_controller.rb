@@ -552,10 +552,6 @@ class MiqPolicyController < ApplicationController
         self.x_node = @new_action_node if @new_action_node
       when :alert_profile
         self.x_node = @new_alert_profile_node if @new_alert_profile_node
-        # Send down extra alert_profile tree if present
-        if @assign && @assign[:object_tree]
-          presenter[:object_tree_json] = @assign[:object_tree]
-        end
       when :alert
         self.x_node = @new_alert_node if @new_alert_node
       else
@@ -731,16 +727,15 @@ class MiqPolicyController < ApplicationController
 
     # Lock current tree if in edit or assign, else unlock all trees
     if (@edit || @assign) && params[:action] != "x_search_by_name"
-      presenter[:lock_unlock_trees][x_active_tree] = true
+      presenter.lock_tree(x_active_tree)
     else
       [:policy_profile_tree, :policy_tree, :condition_tree,
        :action_tree, :alert_profile_tree, :alert_tree].each do |tree|
-        presenter[:lock_unlock_trees][tree] = false
+        presenter.lock_tree(tree, false)
       end
     end
 
-    # Render the JS responses to update the explorer screen
-    render :js => presenter.to_html
+    render :json => presenter.to_json
   end
 
   def send_button_changes

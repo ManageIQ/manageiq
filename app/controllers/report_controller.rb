@@ -873,18 +873,17 @@ class ReportController < ApplicationController
 
     # Lock current tree if in edit or assign, else unlock all trees
     if @edit && @edit[:current]
-      presenter[:lock_unlock_trees][x_active_tree] = true
+      presenter.lock_tree(x_active_tree)
       # lock schedules tree when jumping from reports to add a schedule for a report
-      presenter[:lock_unlock_trees][:schedules_tree] = true if params[:pressed] == 'miq_report_schedules'
+      presenter.lock_tree(:schedules_tree) if params[:pressed] == 'miq_report_schedules'
     else
-      presenter[:lock_unlock_trees][x_active_tree] = false
+      presenter.lock_tree(x_active_tree, false)
       [:db_tree, :reports_tree, :savedreports_tree, :schedules_tree, :widgets_tree, :roles_tree].each do |tree|
-        presenter[:lock_unlock_trees][tree] = false
+        presenter.lock_tree(tree, false)
       end
     end
 
-    # Render the JS responses to update the explorer screen
-    render :js => presenter.to_html
+    render :json => presenter.to_json
   end
 
   def get_session_data

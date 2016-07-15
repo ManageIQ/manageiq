@@ -1,5 +1,4 @@
 class ExplorerPresenter
-  # FIXME: temporary solution, until we clean up more...
   include ApplicationHelper
   include JsHelper
   include ActionView::Helpers::JavaScriptHelper
@@ -8,40 +7,42 @@ class ExplorerPresenter
   include ActionView::Helpers::TagHelper
   include ActionView::Context
 
-  attr_reader :options
-
-  # Renders JS to replace the contents of an explorer view as directed by the controller
+  # Returns hash for ManageIQ.explorer that contains data needed to replace the
+  # contents of an explorer view as directed by the (server side) controller.
 
   # This presenter supports these options:
-  #   FIXME: fill in missing doc
   #
   #   add_nodes                        -- JSON string of nodes to add to the active tree
   #   delete_node                      -- key of node to be deleted from the active tree
+  #   clear_search_toggle              -- show or hide 'clear search' button
   #   build_calendar                   -- call miqBuildCalendar, true/false or Hash (:date_from, :date_to, :skip_days)
-  #   init_dashboard
+  #
+  #   init_dashboard                   -- call miqInitDashboardCols
+  #   miq_widget_dd_url                -- url to be used in url in miqDropComplete method
+  #                                       (ManageIQ.widget.dashboardUrl)
+  #
   #   init_accords                     -- initialize accordion autoresize
   #   ajax_action                      -- Hash of options for AJAX action to fire
   #   clear_gtl_list_grid              -- Clear ManageIQ.grids.gtl_list_grid
   #   right_cell_text
-  #   ManageIQ.record.parentId
-  #   ManageIQ.record.parentClass
-  #   ManageIQ.record.recordId         -- record being displayed or edited
-  #   ManageIQ.widget.dashboardUrl     -- set dashboard widget drag drop url
+  #
+  #   :record_id    sets ManageIQ.record.recordId     -- record being displayed or edited
+  #   :parent_id    sets ManageIQ.record.parentId     -- it's parent
+  #   :parent_class sets ManageIQ.record.parentClass  -- and it's (parent's) class
+  #
   #   osf_node                         -- node to open, select and focus
   #   open_accord                      -- accordion to open
-  #
-  #   object_tree_json            --
-  #   exp                         --
-  #
-  #   active_tree                 -- x_active_tree view state from controller
+  #   exp                              -- data for the expression editor
+  #   active_tree                      -- x_active_tree view state from controller
   #
   # Following options are hashes:
   #   lock_unlock_trees         -- trees to lock/unlock
   #   update_partials           -- partials to update contents
   #   replace_partials          -- partials to replace (also wrapping tag)
-  #   element_updates           -- do we need all 3 of the above?
+  #   element_updates           -- update DOM element content or title FIXME: content can be
+  #                                replaced with update_partials
   #   set_visible_elements      -- elements to cal 'set_visible' on
-  #   reload_toolbars
+  #   reload_toolbars           -- toolbars to reload and their content
   #
 
   def initialize(options = {})
@@ -52,7 +53,6 @@ class ExplorerPresenter
       :element_updates      => {},
       :replace_partials     => {},
       :reload_toolbars      => {},
-      :object_tree_json     => '',
       :exp                  => {},
       :osf_node             => '',
       :show_miq_buttons     => false,
@@ -89,6 +89,11 @@ class ExplorerPresenter
     self
   end
 
+  def lock_tree(tree, lock = true)
+    @options[:lock_unlock_trees][tree] = !!lock
+    self
+  end
+
   def hide(*elements)
     set_visibility(false, *elements)
   end
@@ -122,166 +127,86 @@ class ExplorerPresenter
     @options[key]
   end
 
-  def to_html
-    @out = []
-    process
-    @out.join("\n")
+  def to_json
+    data = {:explorer => true}
+
+    if @options[:exp].present?
+      data.store_path(:expEditor, :first, :type,   @options[:exp][:val1_type]) if @options[:exp][:val1_type]
+      data.store_path(:expEditor, :first, :title,  @options[:exp][:val1_title]) if @options[:exp][:val1_title]
+      data.store_path(:expEditor, :second, :type,  @options[:exp][:val2_type]) if @options[:exp][:val2_type]
+      data.store_path(:expEditor, :second, :title, @options[:exp][:val2_title]) if @options[:exp][:val2_title]
+    end
+
+    data[:showMiqButtons] = @options[:show_miq_buttons]
+    data[:clearTreeCookies] = @options[:clear_tree_cookies]
+
+    # Open an accordion inside an other AJAX call
+    data[:accordionSwap] = @options[:open_accord] unless @options[:open_accord].to_s.empty?
+
+    data[:addNodes] = {
+      :activeTree => @options[:active_tree],
+      :key        => @options[:add_nodes][:key],
+      :osf        => @options[:osf_node],
+      :children   => @options[:add_nodes][:children],
+      :remove     => !!@options[:remove_nodes],
+    } if @options[:add_nodes]
+
+    data[:deleteNode] = {
+      :node       => @options[:delete_node],
+      :activeTree => @options[:active_tree],
+    } if @options[:delete_node]
+
+    data[:dashboardUrl] = @options[:miq_widget_dd_url] if @options[:miq_widget_dd_url]
+    data[:updatePartials] = @options[:update_partials] # Update elements in the DOM with rendered partials
+    data[:updateElements] = @options[:element_updates] # Update element in the DOM with given options
+    data[:replacePartials] = @options[:replace_partials] # Replace elements in the DOM with rendered partials
+    data[:buildCalendar] = format_calendar_dates(@options[:build_calendar])
+    data[:initDashboard] = !! @options[:init_dashboard]
+    data[:ajaxUrl] = ajax_action_url(@options[:ajax_action]) if @options[:ajax_action]
+    data[:clearGtlListGrid] = !!@options[:clear_gtl_list_grid]
+    data[:setVisibility] = @options[:set_visible_elements]
+    data[:rightCellText] = @options[:right_cell_text] if @options[:right_cell_text]
+
+    data[:reloadToolbars] = @options[:reload_toolbars].each_with_object({}) do | (div_name, toolbar), h|
+      h["#{div_name}_tb"] = buttons_to_html(Array(toolbar))
+    end
+
+    data[:record] = {
+      :parentId    => @options[:parent_id],
+      :parentClass => @options[:parent_class],
+      :recordId    => @options[:record_id],
+    }
+
+    unless @options[:osf_node].blank?
+      data[:activateNode] = {
+        :activeTree => @options[:active_tree],
+        :osf        => @options[:osf_node]
+      }
+    end
+
+    data[:lockTrees] = @options[:lock_unlock_trees]
+    data[:chartData] = @options[:load_chart]
+    data[:resetChanges] = !!@options[:reset_changes]
+    data[:resetOneTrans] = !!@options[:reset_one_trans]
+    data[:oneTransIE] = !!@options[:one_trans_ie]
+    data[:focus] = @options[:focus]
+    data[:clearSearch] = @options[:clear_search_toggle] if @options[:clear_search_toggle]
+    data[:hideModal] if @options[:hide_modal]
+    data[:initAccords] if @options[:init_accords]
+
+    data
   end
 
   private
 
-  def process
-    @out << javascript_prologue
-
-    # see if any miq expression vars need to be set
-    unless @options[:exp].empty?
-      @out << "ManageIQ.expEditor.first.type = '#{@options[:exp][:val1_type]}';"  if @options[:exp][:val1_type]
-      @out << "ManageIQ.expEditor.first.title = '#{@options[:exp][:val1_title]}';" if @options[:exp][:val1_title]
-      @out << "ManageIQ.expEditor.second.type  = '#{@options[:exp][:val2_type]};"   if @options[:exp][:val2_type]
-      @out << "ManageIQ.expEditor.second.title = '#{@options[:exp][:val2_title]}';" if @options[:exp][:val2_title]
-    end
-
-    # Turn off form buttons when replacing explorer right cell
-    @out << javascript_for_miq_button_visibility(@options[:show_miq_buttons]).html_safe
-
-    @out << "miqDeleteDynatreeCookies('#{@options[:clear_tree_cookies]}')" if @options[:clear_tree_cookies]
-
-    # Open an accordion inside an other AJAX call
-    unless @options[:open_accord].to_s.empty?
-      @out << "miqAccordionSwap('#accordion .panel-collapse.collapse.in', '##{j(@options[:open_accord])}_accord');"
-    end
-
-    if @options[:remove_nodes]
-      @out << "miqRemoveNodeChildren('#{@options[:active_tree]}',
-                                     '#{@options[:add_nodes][:key]}'
-      );\n"
-    end
-
-    if @options[:add_nodes]
-      @out << "
-        miqAddNodeChildren('#{@options[:active_tree]}',
-                           '#{@options[:add_nodes][:key]}',
-                           '#{@options[:osf_node]}',
-                            #{@options[:add_nodes][:children].to_json.html_safe}
-        );
-      \n"
-    end
-
-    if @options[:delete_node]
-      @out << "
-        var del_node = $('##{@options[:active_tree]}box').dynatree('getTree').getNodeByKey('#{@options[:delete_node]}');
-        del_node.remove();
-        \n"
-    end
-
-    @out << "ManageIQ.widget.dashboardUrl = '#{@options[:miq_widget_dd_url]}';" if @options[:miq_widget_dd_url]
-
-    # Always set 'def' view in left cell as active in case it was changed to show compare/drift sections
-    @out << "var show_clear_search = undefined"
-    @out << "
-      if ($('#advsearchModal').hasClass('modal fade in')){
-        $('#advsearchModal').modal('hide');}"
-
-    # Update elements in the DOM with rendered partials
-    @options[:update_partials].each { |element, content| @out << update_partial(element, content) }
-
-    # Update element in the DOM with given options
-    @options[:element_updates].each { |element, options| @out << update_element(element, options) }
-
-    # Replace elements in the DOM with rendered partials
-    @options[:replace_partials].each { |element, content| @out << replace_partial(element, content) }
-
-    @out << build_calendar if @options[:build_calendar]
-
-    @out << 'miqInitDashboardCols();' if @options[:init_dashboard]
-
-    @out << ajax_action(@options[:ajax_action]) if @options[:ajax_action]
-
-    @out << "ManageIQ.grids.gtl_list_grid = undefined;" if @options[:clear_gtl_list_grid]
-
-    @options[:set_visible_elements].each do |el, visible|
-      @out << set_element_visible(el, visible)
-    end
-
-    # Scroll to top of main div
-    @out << "$('#main_div').scrollTop(0);"
-
-    @out << "$('h1#explorer_title > span#explorer_title_text').html('#{j ERB::Util.h(URI.unescape(@options[:right_cell_text]))}');" if @options[:right_cell_text]
-
-    # Reload toolbars
-    @options[:reload_toolbars].each_pair do |div_name, toolbar|
-      # we need to render even empty toolbar to actually remove the buttons
-      # that might be there
-      @out << javascript_pf_toolbar_reload("#{div_name}_tb", Array(toolbar)).html_safe
-    end
-
-    # reset miq_record_id, else it remembers prev id and sends it when add is pressed from list view
-    [:record_id, :parent_id, :parent_class].each { |variable| @out << set_or_undef(variable) }
-
-    # Open, select, and focus node in current tree
-    @out << "miqDynatreeActivateNodeSilently('#{@options[:active_tree]}', '#{@options[:osf_node]}');" unless @options[:osf_node].blank?
-
-    @options[:lock_unlock_trees].each { |tree, lock| @out << tree_lock(tree, lock) }
-
-    if @options[:load_chart]
-      @out << 'ManageIQ.charts.chartData = ' + @options[:load_chart].to_json + ';'
-      @out << Charting.js_load_statement(true)
-    end
-
-    @out << 'ManageIQ.changes = null;'                       if @options[:reset_changes]
-    @out << 'ManageIQ.oneTransition.oneTrans = 0;'           if @options[:reset_one_trans]
-    @out << 'ManageIQ.oneTransition.IEButtonPressed = true;' if @options[:one_trans_ie]
-
-    if @options[:focus]
-      @out << "if ($('##{@options[:focus]}').length) $('##{@options[:focus]}').focus();"
-    end
-
-    @out << "$('#clear_search').#{@options[:clear_search_show_or_hide]}();" if @options[:clear_search_show_or_hide]
-    # always replace content partial to adjust height of content div
-    @out << "miqInitMainContent();"
-    @out << "$('#quicksearchbox').modal('hide');" if @options[:hide_modal]
-
-    @out << "miqInitAccordions();" if @options[:init_accords]
-
-    # Don't turn off spinner for charts/timelines
-    @out << set_spinner_off unless @options[:ajax_action]
-  end
-
-  def build_calendar
-    if @options[:build_calendar].kind_of? Hash
-      calendar_options = @options[:build_calendar]
-    else
-      calendar_options = {}
-    end
-
-    js_build_calendar(calendar_options)
-  end
-
-  # Fire an AJAX action
-  def ajax_action(options)
-    url = [options[:controller], options[:action], options[:record_id]].join('/')
-    "miqAsyncAjax('/#{url}');"
-  end
-
-  # Set a JS variable to value from options or 'undefined'
-  def set_or_undef(variable)
-    if @options[variable]
-      "ManageIQ.record.#{variable.to_s.camelize(:lower)} = '#{@options[variable]}';"
-    else
-      "ManageIQ.record.#{variable.to_s.camelize(:lower)} = null;"
+  def format_calendar_dates(options)
+    return {} unless @options[:build_calendar].kind_of?(Hash)
+    %i(date_from date_to).each_with_object({}) do |key, h|
+      h[key] = options[key].iso8601 if options[key].present?
     end
   end
 
-  # Replaces an element (div) using options :partial and :locals
-  # options
-  #     :locals   --- FIXME
-  #     :partial  --- FIXME
-  def replace_partial(element, content)
-    "$('##{element}').replaceWith('#{escape_javascript(content)}');"
-  end
-
-  def update_partial(element, content)
-    # FIXME: replace with javascript_update_element
-    "$('##{element}').html('#{escape_javascript(content)}');"
+  def ajax_action_url(options)
+    ['', options[:controller], options[:action], options[:record_id]].join('/')
   end
 end
