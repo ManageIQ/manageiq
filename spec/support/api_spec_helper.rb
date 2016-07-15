@@ -17,7 +17,7 @@ module ApiSpecHelper
   }
 
   def response_hash
-    JSON.parse(response.body)
+    response.parsed_body
   end
 
   def update_headers(headers)
