@@ -202,7 +202,7 @@ describe Vmdb::Settings do
 
       expect(miq_server.miq_region.settings_changes.count).to eq 1
       expect(miq_server.miq_region.settings_changes.first).to have_attributes(:key   => "/api/token_ttl",
-                                                                                   :value => "3.hour")
+                                                                              :value => "3.hour")
       miq_server.reload
       expect(miq_server.settings_changes.count).to eq 0
 
