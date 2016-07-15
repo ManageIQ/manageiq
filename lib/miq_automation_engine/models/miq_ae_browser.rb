@@ -1,42 +1,37 @@
 class MiqAeBrowser
   attr_accessor :user
 
-  # Automate Datastore Browser starting at MiqAeDomain, down to the MiqAeInstances and MiqAeMethods.
-
-  # Searches directory ala LDAP style
-  #   Starting point of searches using fqname  (dn)
-  #   Supporing scopes base - return object itself
-  #                    one  - return object and its first level children
-  #                    sub  - return object and tree below it
-  #
-  # Returns array of objects
+  # Automate Datastore Browser starting at MiqAeDomain
+  #   - Starting point of searches using fqname
+  #   - Searches down to the MiqAeInstances and MiqAeMethods
+  #   - Returns array of objects
   #
   # Supporting options:
+  #   :depth
+  #          0 - starting object only
+  #          1 - object + first level children
+  #          2 - object + first and second level children
+  #          ...
+  #        nil - object + whole subtree
   #   :serialize
+  #       when true, return the Hash serialized objects including fqname, domain_fqname and klass
+  #       i.e.
+  #         {
+  #           "fqname": "/ManageIQ/System/Request",
+  #           "domain_fqname": "/System/Request",       # fqname relative to /domain
+  #           "klass": "MiqAeClass",
+  #           "id": 75,
+  #           "description": "Automation Requests",
+  #           "name": "Request",
+  #           "created_on": "2015-12-09T20:56:44Z",
+  #           "updated_on": "2015-12-09T20:56:44Z",
+  #           "namespace_id": 41,
+  #           "updated_by": "system"
+  #         }
   #   :state_machines
+  #       when true, only objects belonging to a sub-tree that includes
+  #       state machine entrypoints are returned.
   #
-  # :serialize returns the Hash serialized objects including fqname, domain_fqname and klass
-  # i.e.
-  #   {
-  #     "fqname": "/ManageIQ/System/Request",
-  #     "domain_fqname": "/System/Request",       # fqname relative to /domain
-  #     "klass": "MiqAeClass",
-  #     "id": 75,
-  #     "description": "Automation Requests",
-  #     "name": "Request",
-  #     "created_on": "2015-12-09T20:56:44Z",
-  #     "updated_on": "2015-12-09T20:56:44Z",
-  #     "namespace_id": 41,
-  #     "updated_by": "system"
-  #   }
-  #
-  # with :state_machines true, only the objects belonging to a sub-tree that
-  # includes state machine entrypoints are returned.
-
-  SCOPE_BASE = "base".freeze
-  SCOPE_ONE  = "one".freeze
-  SCOPE_SUB  = "sub".freeze
-  SCOPES = [SCOPE_BASE, SCOPE_ONE, SCOPE_SUB].freeze
 
   def initialize(user = User.current_user)
     raise "Must be authenticated before using #{self.class.name}" unless user
@@ -49,7 +44,6 @@ class MiqAeBrowser
   end
 
   def search(object_ref = nil, options = {})
-    validate_options(options)
     object = object_ref
     if object_ref.kind_of?(String)
       if object_ref.blank? || object_ref == "/"
@@ -59,37 +53,40 @@ class MiqAeBrowser
         raise "Invalid Automate object path #{object_ref} specified to search" if object.blank?
       end
     end
-    options[:serialize] ? search_ae_model_serialize(object, options) : search_ae_model(object, options)
+    depth = options[:depth]
+    options[:serialize] ? search_ae_model_serialize(object, depth, options) : search_ae_model(object, depth, options)
   end
 
   private
 
-  def search_ae_model_serialize(object = nil, options = {})
-    search_ae_model(object, options).collect { |obj| serialize(obj) }
+  def search_ae_model_serialize(object, depth, options = {})
+    search_ae_model(object, depth, options).collect { |obj| serialize(obj) }
   end
 
-  def search_ae_model(object = nil, options = {})
-    validate_options(options)
+  def search_ae_model(object, depth, options = {})
     if object
-      search_object(object, options)
+      search_object(object, depth, options)
     else
-      search_domains(options)
+      search_domains(depth, options)
     end.flatten
   end
 
-  def search_object(object, options)
-    case options[:scope]
-    when SCOPE_BASE then Array(object)
-    when SCOPE_ONE  then Array(object) + children(object, options)
-    else Array(object) + children(object, options).collect { |child| search_ae_model(child, options) }
+  def search_object(object, depth, options)
+    case depth
+    when -1 then []
+    when 0 then Array(object)
+    else
+      Array(object) + children(object, options).collect do |child|
+                        search_ae_model(child, depth.nil? ? nil : depth - 1, options)
+                      end
     end
   end
 
-  def search_domains(options)
-    case options[:scope]
-    when SCOPE_BASE then []
-    when SCOPE_ONE  then Array(domains(options))
-    else domains(options).collect { |domain| search_ae_model(domain, options) }
+  def search_domains(depth, options)
+    case depth
+    when -1 then []
+    when 0 then []
+    else domains(options).collect { |domain| search_ae_model(domain, depth.nil? ? nil : depth - 1, options) }
     end
   end
 
@@ -98,12 +95,6 @@ class MiqAeBrowser
     domain_fqname = fqname[1..-1].sub(%r{^[^/]+}, '')
     domain_fqname = "/" if domain_fqname.blank?
     object.attributes.reverse_merge("fqname" => fqname, "domain_fqname" => domain_fqname, "klass" => object.class.name)
-  end
-
-  def validate_options(options)
-    if options[:scope] && !SCOPES.include?(options[:scope])
-      raise "Invalid scope #{options[:scope]} specified, valid scopes are #{SCOPES.join(', ')}"
-    end
   end
 
   def find_base_object(path, options)
