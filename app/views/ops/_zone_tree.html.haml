@@ -1,14 +1,13 @@
 #zone_tree_div
-  %fieldset
-    %h3
-      - params = {:kind => ui_lookup(:model => @selected_server.class.to_s), :description => @selected_server.description}
-      - if @selected_server.kind_of?(MiqRegion)
-        = _("Status of Regional Roles for Servers in %{kind} %{description}") % params
-      - else
-        = _("Status of Roles for Servers in %{kind} %{description}") % params
+  %h3
+    - params = {:kind => ui_lookup(:model => @selected_server.class.to_s), :description => @selected_server.description}
+    - if @selected_server.kind_of?(MiqRegion)
+      = _("Status of Regional Roles for Servers in %{kind} %{description}") % params
+    - else
+      = _("Status of Roles for Servers in %{kind} %{description}") % params
 
-    - treebox = "#{session[:tree_name]}box"
-    %div{:id => treebox}
+  - treebox = "#{session[:tree_name]}box"
+  %div{:id => treebox}
 
   = render(:partial => "layouts/dynatree", :locals => |
     {:tree_id     => treebox,                         |
