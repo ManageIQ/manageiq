@@ -3,31 +3,38 @@ module Vmdb
     class DatabaseSource
       include Vmdb::Logging
 
-      attr_reader :resource, :settings_change_holder
-
-      def initialize(resource_to_get_settings_about, class_to_call_settings_changes_on)
-        @resource = resource_to_get_settings_about
-        @settings_change_holder = class_to_call_settings_changes_on
+      attr_reader :resource_instance, :settings_holder_class
+      
+      # NOTE: resource - instance of MiqRegion, Zone or MiqServer
+      #       klass    - class name of object which provides access to SettingsChange for resource
+      #                  possible values of klass are in SETTINGS_HIERARCHY
+      #                  Example: 1. resource is instance of MiqServer and klass is 'Zone',
+      #                              than settings will be loaded from resource.zone.settings_changes
+      #                           2. resource is instance of MiqServer and klass is 'MiqRegion'
+      #                              than settings will be loaded from resource.miq_region.settings_changes                
+      def initialize(resource, klass)
+        @resource_instance = resource
+        @settings_holder_class = klass
       end
 
-      def self.sources_for(resource_to_get_settings_about)
-        return [] if resource_to_get_settings_about.nil?
-        hierarchy_index = SETTINGS_HIERARCHY.index(resource_to_get_settings_about.class.name.to_sym)
-        SETTINGS_HIERARCHY[0..hierarchy_index].collect do |class_to_call_settings_changes_on|
-          new(resource_to_get_settings_about, class_to_call_settings_changes_on)
+      def self.sources_for(resource)
+        return [] if resource.nil?
+        hierarchy_index = SETTINGS_HIERARCHY.index(resource.class.name.to_sym)
+        SETTINGS_HIERARCHY[0..hierarchy_index].collect do |klass|
+          new(resource, klass)
         end
       end
 
-      def self.parent_sources_for(resource_to_get_settings_about)
-        return [] if resource_to_get_settings_about.nil?
-        hierarchy_index = SETTINGS_HIERARCHY.index(resource_to_get_settings_about.class.name.to_sym)
-        SETTINGS_HIERARCHY[0..hierarchy_index][0...-1].collect do |class_to_call_settings_changes_on|
-          new(resource_to_get_settings_about, class_to_call_settings_changes_on)
+      def self.parent_sources_for(resource)
+        return [] if resource.nil?
+        hierarchy_index = SETTINGS_HIERARCHY.index(resource.class.name.to_sym)
+        SETTINGS_HIERARCHY[0..hierarchy_index][0...-1].collect do |klass|
+          new(resource, klass)
         end
       end
 
       def load
-        return if resource.nil?
+        return if resource_instance.nil?
         obj_with_settings = settings_holder
         obj_with_settings.settings_changes.reload.each_with_object({}) do |c, h|
           h.store_path(c.key_path, c.value)
@@ -44,9 +51,9 @@ module Vmdb
       SETTINGS_HIERARCHY = %i(MiqRegion Zone MiqServer).freeze
 
       def settings_holder
-        return resource.reload if resource.class.name.to_sym == settings_change_holder
-        ind = SETTINGS_HIERARCHY.index(settings_change_holder)
-        resource.reload.send(METHODS_FOR_SETTINGS[ind])
+        return resource_instance.reload if resource_instance.class.name.to_sym == settings_holder_class
+        index = SETTINGS_HIERARCHY.index(settings_holder_class)
+        resource_instance.reload.send(METHODS_FOR_SETTINGS[index])
       end
     end
   end
