@@ -109,7 +109,7 @@ describe ApiController do
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
       expect_results_to_match_hash("results", [sample_rhevm.except(*ENDPOINT_ATTRS)])
 
-      provider_id = response_hash["results"].first["id"]
+      provider_id = response.parsed_body["results"].first["id"]
       expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
       endpoint = ExtManagementSystem.find(provider_id).default_endpoint
       expect_result_to_match_hash(endpoint.attributes, sample_rhevm.slice(*ENDPOINT_ATTRS))
@@ -124,7 +124,7 @@ describe ApiController do
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
       expect_results_to_match_hash("results", [sample_openshift.except(*ENDPOINT_ATTRS)])
 
-      provider_id = response_hash["results"].first["id"]
+      provider_id = response.parsed_body["results"].first["id"]
       expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
       ems = ExtManagementSystem.find(provider_id)
       expect(ems.authentications.size).to eq(1)
@@ -142,7 +142,7 @@ describe ApiController do
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
       expect_results_to_match_hash("results", [sample_rhevm.except(*ENDPOINT_ATTRS)])
 
-      provider_id = response_hash["results"].first["id"]
+      provider_id = response.parsed_body["results"].first["id"]
       expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
     end
 
@@ -155,7 +155,7 @@ describe ApiController do
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
       expect_results_to_match_hash("results", [sample_vmware.except(*ENDPOINT_ATTRS)])
 
-      provider_id = response_hash["results"].first["id"]
+      provider_id = response.parsed_body["results"].first["id"]
       expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
       provider = ExtManagementSystem.find(provider_id)
       expect(provider.authentication_userid).to eq(default_credentials["userid"])
@@ -171,7 +171,7 @@ describe ApiController do
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
       expect_results_to_match_hash("results", [sample_rhevm.except(*ENDPOINT_ATTRS)])
 
-      provider_id = response_hash["results"].first["id"]
+      provider_id = response.parsed_body["results"].first["id"]
       expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
       provider = ExtManagementSystem.find(provider_id)
       expect(provider.authentication_userid(:default)).to eq(default_credentials["userid"])
@@ -190,7 +190,7 @@ describe ApiController do
       expect_results_to_match_hash("results",
                                    [sample_vmware.except(*ENDPOINT_ATTRS), sample_rhevm.except(*ENDPOINT_ATTRS)])
 
-      results = response_hash["results"]
+      results = response.parsed_body["results"]
       p1_id, p2_id = results.first["id"], results.second["id"]
       expect(ExtManagementSystem.exists?(p1_id)).to be_truthy
       expect(ExtManagementSystem.exists?(p2_id)).to be_truthy
@@ -233,7 +233,7 @@ describe ApiController do
 
       run_post(providers_url(provider.id), gen_request(:edit, "name" => "updated provider", "port" => "8080"))
 
-      response_keys = response_hash.keys
+      response_keys = response.parsed_body.keys
       expect(response_keys).to include("tenant_id")
       expect(response_keys).not_to include("total_vms")
     end

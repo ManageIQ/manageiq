@@ -58,7 +58,7 @@ describe ApiController do
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
       expect_results_to_match_hash("results", [{"name" => "sample service catalog"}])
 
-      sc_id = response_hash["results"].first["id"]
+      sc_id = response.parsed_body["results"].first["id"]
 
       expect(ServiceTemplateCatalog.find(sc_id)).to be_truthy
     end
@@ -72,7 +72,7 @@ describe ApiController do
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
       expect_results_to_match_hash("results", [{"name" => "sample service catalog"}])
 
-      sc_id = response_hash["results"].first["id"]
+      sc_id = response.parsed_body["results"].first["id"]
 
       expect(ServiceTemplateCatalog.find(sc_id)).to be_truthy
     end
@@ -86,7 +86,7 @@ describe ApiController do
       expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
       expect_results_to_match_hash("results", [{"name" => "sc1"}, {"name" => "sc2"}])
 
-      results = response_hash["results"]
+      results = response.parsed_body["results"]
       sc_id1, sc_id2 = results.first["id"], results.second["id"]
       expect(ServiceTemplateCatalog.find(sc_id1)).to be_truthy
       expect(ServiceTemplateCatalog.find(sc_id2)).to be_truthy
@@ -109,7 +109,7 @@ describe ApiController do
       expect(response).to have_http_status(:ok)
       expect_results_to_match_hash("results", [{"name" => "sc", "description" => "sc description"}])
 
-      sc_id = response_hash["results"].first["id"]
+      sc_id = response.parsed_body["results"].first["id"]
 
       expect(ServiceTemplateCatalog.find(sc_id)).to be_truthy
       expect(ServiceTemplateCatalog.find(sc_id).service_templates.pluck(:id)).to match_array([st1.id, st2.id])
@@ -330,7 +330,7 @@ describe ApiController do
       run_get sc_templates_url(sc.id, st1.id)
 
       expect(response).to have_http_status(:ok)
-      expect(response_hash).to_not include_actions("order")
+      expect(response.parsed_body).to_not include_actions("order")
     end
 
     it "returns order action for orderable service templates" do
@@ -343,7 +343,7 @@ describe ApiController do
       run_get sc_templates_url(sc.id, st1.id)
 
       expect(response).to have_http_status(:ok)
-      expect(response_hash).to include_actions("order")
+      expect(response.parsed_body).to include_actions("order")
     end
 
     it "rejects order requests without appropriate role" do
@@ -464,7 +464,7 @@ describe ApiController do
         "service_template_href" => anything,
         "result"                => hash_including("text1")
       }
-      expect(response_hash).to include(expected)
+      expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
     end
   end

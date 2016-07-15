@@ -32,7 +32,7 @@ RSpec.describe "tenants API" do
     run_get tenants_url(tenant.id)
 
     expect_result_to_match_hash(
-      response_hash,
+      response.parsed_body,
       "href"        => tenants_url(tenant.id),
       "id"          => tenant.id,
       "name"        => "Test Tenant",
@@ -112,7 +112,7 @@ RSpec.describe "tenants API" do
         api_basic_authorize action_identifier(:tenants, :read, :resource_actions, :get)
         run_get tenants_url(root_tenant.id)
 
-        expect_result_to_match_hash(response_hash,
+        expect_result_to_match_hash(response.parsed_body,
                                     "href" => tenants_url(root_tenant.id),
                                     "id"   => root_tenant.id,
                                     "name" => config_attributes[:company],

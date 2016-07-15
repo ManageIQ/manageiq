@@ -89,7 +89,7 @@ RSpec.describe 'Virtual Template API' do
       expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys('results', expected_attributes)
 
-      id = response_hash['results'].first['id']
+      id = response.parsed_body['results'].first['id']
       expect(MiqTemplate.exists?(id)).to be_truthy
     end
 
@@ -100,7 +100,7 @@ RSpec.describe 'Virtual Template API' do
       expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys('results', expected_attributes)
 
-      id = response_hash['results'].first['id']
+      id = response.parsed_body['results'].first['id']
       expect(MiqTemplate.exists?(id)).to be_truthy
     end
 
@@ -253,7 +253,7 @@ RSpec.describe 'Virtual Template API' do
       run_post(request_url, request)
 
       expect(response).to have_http_status(:ok)
-      task_id = response_hash['id']
+      task_id = response.parsed_body['id']
       expect(MiqProvisionRequest.exists?(task_id)).to be_truthy
     end
 

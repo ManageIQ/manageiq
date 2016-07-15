@@ -27,7 +27,7 @@ describe ApiController do
 
   def expect_result_to_have_provision_dialog
     expect_result_to_have_keys(%w(id href provision_dialog))
-    provision_dialog = response_hash["provision_dialog"]
+    provision_dialog = response.parsed_body["provision_dialog"]
     expect(provision_dialog).to be_kind_of(Hash)
     expect(provision_dialog).to have_key("label")
     expect(provision_dialog).to have_key("dialog_tabs")
@@ -37,7 +37,7 @@ describe ApiController do
   def expect_result_to_have_user_email(email)
     expect(response).to have_http_status(:ok)
     expect_result_to_have_keys(%w(id href user))
-    expect(response_hash["user"]["email"]).to eq(email)
+    expect(response.parsed_body["user"]["email"]).to eq(email)
   end
 
   describe "Service Requests query" do
@@ -166,7 +166,7 @@ describe ApiController do
       run_get service_requests_url
 
       expect(response).to have_http_status(:ok)
-      expect(response_hash).to include("name" => "service_requests", "count" => 1, "subcount" => 0)
+      expect(response.parsed_body).to include("name" => "service_requests", "count" => 1, "subcount" => 0)
     end
 
     it "does not show another user's request" do
@@ -185,7 +185,7 @@ describe ApiController do
         )
       }
       expect(response).to have_http_status(:not_found)
-      expect(response_hash).to include(expected)
+      expect(response.parsed_body).to include(expected)
     end
 
     it "a user can list their own requests" do
@@ -198,7 +198,7 @@ describe ApiController do
       run_get service_requests_url
 
       expect(response).to have_http_status(:ok)
-      expect(response_hash).to include("name" => "service_requests", "count" => 1, "subcount" => 1)
+      expect(response.parsed_body).to include("name" => "service_requests", "count" => 1, "subcount" => 1)
     end
 
     it "a user can show their own request" do
@@ -211,7 +211,7 @@ describe ApiController do
       run_get service_requests_url(service_request.id)
 
       expect(response).to have_http_status(:ok)
-      expect(response_hash).to include("id"   => service_request.id,
+      expect(response.parsed_body).to include("id"   => service_request.id,
                                        "href" => a_string_matching(service_requests_url(service_request.id)))
     end
 
@@ -239,7 +239,7 @@ describe ApiController do
         )
       }
       expect(response).to have_http_status(:ok)
-      expect(response_hash).to include(expected)
+      expect(response.parsed_body).to include(expected)
     end
 
     it "an admin can see another user's request" do
@@ -258,7 +258,7 @@ describe ApiController do
         "href" => a_string_matching(service_requests_url(service_request.id))
       }
       expect(response).to have_http_status(:ok)
-      expect(response_hash).to include(expected)
+      expect(response.parsed_body).to include(expected)
     end
   end
 end

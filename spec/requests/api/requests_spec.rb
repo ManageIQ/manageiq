@@ -21,7 +21,7 @@ RSpec.describe "Requests API" do
       run_get requests_url
 
       expect(response).to have_http_status(:ok)
-      expect(response_hash).to include("name" => "requests", "count" => 1, "subcount" => 0)
+      expect(response.parsed_body).to include("name" => "requests", "count" => 1, "subcount" => 0)
     end
 
     it "does not show another user's request" do
@@ -40,7 +40,7 @@ RSpec.describe "Requests API" do
         )
       }
       expect(response).to have_http_status(:not_found)
-      expect(response_hash).to include(expected)
+      expect(response.parsed_body).to include(expected)
     end
 
     it "a user can list their own requests" do
@@ -53,7 +53,7 @@ RSpec.describe "Requests API" do
       run_get requests_url
 
       expect(response).to have_http_status(:ok)
-      expect(response_hash).to include("name" => "requests", "count" => 1, "subcount" => 1)
+      expect(response.parsed_body).to include("name" => "requests", "count" => 1, "subcount" => 1)
     end
 
     it "a user can show their own request" do
@@ -66,7 +66,7 @@ RSpec.describe "Requests API" do
       run_get requests_url(service_request.id)
 
       expect(response).to have_http_status(:ok)
-      expect(response_hash).to include("id"   => service_request.id,
+      expect(response.parsed_body).to include("id"   => service_request.id,
                                        "href" => a_string_matching(service_requests_url(service_request.id)))
     end
 
@@ -94,7 +94,7 @@ RSpec.describe "Requests API" do
         )
       }
       expect(response).to have_http_status(:ok)
-      expect(response_hash).to include(expected)
+      expect(response.parsed_body).to include(expected)
     end
 
     it "an admin can see another user's request" do
@@ -113,7 +113,7 @@ RSpec.describe "Requests API" do
         "href" => a_string_matching(service_requests_url(service_request.id))
       }
       expect(response).to have_http_status(:ok)
-      expect(response_hash).to include(expected)
+      expect(response.parsed_body).to include(expected)
     end
   end
 end

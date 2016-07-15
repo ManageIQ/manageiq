@@ -4,7 +4,7 @@ describe ApiController do
     api_basic_authorize collection_action_identifier(:container_deployments, :read, :get)
     run_get container_deployments_url + "/container_deployment_data"
     expect(response).to have_http_status(:ok)
-    expect_hash_to_have_only_keys(response_hash["data"], %w(providers provision))
+    expect_hash_to_have_only_keys(response.parsed_body["data"], %w(providers provision))
   end
 
   it "creates container deployment with POST" do

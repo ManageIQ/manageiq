@@ -21,7 +21,7 @@ describe ApiController do
       expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(%w(versions))
 
-      versions = response_hash["versions"]
+      versions = response.parsed_body["versions"]
 
       # Let's get the first version identifier
       expect(versions).to_not be_nil

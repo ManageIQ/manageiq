@@ -60,7 +60,7 @@ describe ApiController do
 
   def expect_result_to_have_custom_actions_hash
     expect_result_to_have_keys(%w(custom_actions))
-    custom_actions = response_hash["custom_actions"]
+    custom_actions = response.parsed_body["custom_actions"]
     expect_hash_to_have_only_keys(custom_actions, %w(buttons button_groups))
     expect(custom_actions["buttons"].size).to eq(1)
     expect(custom_actions["button_groups"].size).to eq(1)
@@ -75,7 +75,7 @@ describe ApiController do
       run_get services_url(svc1.id)
 
       expect_result_to_have_keys(%w(id href actions))
-      expect(response_hash["actions"].collect { |a| a["name"] }).to match_array(%w(edit))
+      expect(response.parsed_body["actions"].collect { |a| a["name"] }).to match_array(%w(edit))
     end
   end
 
@@ -91,7 +91,7 @@ describe ApiController do
       run_get services_url(svc1.id)
 
       expect_result_to_have_keys(%w(id href actions))
-      expect(response_hash["actions"].collect { |a| a["name"] }).to match_array(%w(edit button1 button2 button3))
+      expect(response.parsed_body["actions"].collect { |a| a["name"] }).to match_array(%w(edit button1 button2 button3))
     end
 
     it "supports the custom_actions attribute" do
@@ -111,7 +111,7 @@ describe ApiController do
       run_get services_url(svc1.id), :attributes => "custom_action_buttons"
 
       expect_result_to_have_keys(%w(id href custom_action_buttons))
-      expect(response_hash["custom_action_buttons"].size).to eq(3)
+      expect(response.parsed_body["custom_action_buttons"].size).to eq(3)
     end
   end
 
@@ -127,7 +127,7 @@ describe ApiController do
       run_get service_templates_url(template1.id)
 
       expect_result_to_have_keys(%w(id href actions))
-      action_specs = response_hash["actions"]
+      action_specs = response.parsed_body["actions"]
       expect(action_specs.size).to eq(1)
       expect(action_specs.first["name"]).to eq("edit")
     end
@@ -147,7 +147,7 @@ describe ApiController do
       run_get service_templates_url(template1.id), :attributes => "custom_action_buttons"
 
       expect_result_to_have_keys(%w(id href custom_action_buttons))
-      expect(response_hash["custom_action_buttons"].size).to eq(3)
+      expect(response.parsed_body["custom_action_buttons"].size).to eq(3)
     end
   end
 
@@ -198,7 +198,7 @@ describe ApiController do
           ]
         }
       }
-      expect(response_hash).to include(expected)
+      expect(response.parsed_body).to include(expected)
     end
   end
 end

@@ -127,7 +127,7 @@ describe ApiController do
 
       run_post(service_dialogs_url(dialog1.id), gen_request(:refresh_dialog_fields, "fields" => %w(text1)))
 
-      expect(response_hash).to include(
+      expect(response.parsed_body).to include(
         "success" => true,
         "message" => a_string_matching(/refreshing dialog fields/i),
         "href"    => a_string_matching(service_dialogs_url(dialog1.id)),

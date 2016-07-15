@@ -22,7 +22,7 @@ RSpec.describe "service orders API" do
       "resources" => [{"href" => a_string_matching(service_orders_url(shopping_cart_for_user.id))}]
     }
     expect(response).to have_http_status(:ok)
-    expect(response_hash).to include(expected)
+    expect(response.parsed_body).to include(expected)
   end
 
   it "can create a service order" do
@@ -51,7 +51,7 @@ RSpec.describe "service orders API" do
 
     run_post(service_orders_url, :name => "shopping cart")
 
-    expect(response_hash).to include("results" => [a_hash_including("state" => ServiceOrder::STATE_CART)])
+    expect(response.parsed_body).to include("results" => [a_hash_including("state" => ServiceOrder::STATE_CART)])
   end
 
   specify "a service order cannot be created in the 'ordered' state" do
@@ -62,7 +62,8 @@ RSpec.describe "service orders API" do
     end.not_to change(ServiceOrder, :count)
 
     expect(response).to have_http_status(:bad_request)
-    expect(response_hash).to include("error" => a_hash_including("message" => /can't create an ordered service order/i))
+    expected = {"error" => a_hash_including("message" => /can't create an ordered service order/i)}
+    expect(response.parsed_body).to include(expected)
   end
 
   it "can read a service order" do
@@ -71,7 +72,7 @@ RSpec.describe "service orders API" do
 
     run_get service_orders_url(service_order.id)
 
-    expect_result_to_match_hash(response_hash, "name" => service_order.name, "state" => service_order.state)
+    expect_result_to_match_hash(response.parsed_body, "name" => service_order.name, "state" => service_order.state)
     expect(response).to have_http_status(:ok)
   end
 
@@ -82,7 +83,7 @@ RSpec.describe "service orders API" do
     run_get service_orders_url("cart")
 
     expect(response).to have_http_status(:ok)
-    expect(response_hash).to include("id"   => shopping_cart.id,
+    expect(response.parsed_body).to include("id"   => shopping_cart.id,
                                      "href" => a_string_matching(service_orders_url(shopping_cart.id)))
   end
 
@@ -92,7 +93,7 @@ RSpec.describe "service orders API" do
     run_get service_orders_url("cart")
 
     expect(response).to have_http_status(:not_found)
-    expect(response_hash).to include("error" => a_hash_including("kind"    => "not_found",
+    expect(response.parsed_body).to include("error" => a_hash_including("kind"    => "not_found",
                                                                  "message" => /Couldn't find ServiceOrder/))
   end
 
@@ -102,7 +103,7 @@ RSpec.describe "service orders API" do
 
     run_post service_orders_url(service_order.id), :action => "edit", :resource => {:name => "new name"}
 
-    expect_result_to_match_hash(response_hash, "name" => "new name")
+    expect_result_to_match_hash(response.parsed_body, "name" => "new name")
     expect(response).to have_http_status(:ok)
   end
 
@@ -164,7 +165,7 @@ RSpec.describe "service orders API" do
 
         expected_href = a_string_matching("#{url}/#{service_request.id}")
         expect(response).to have_http_status(:ok)
-        expect(response_hash).to include("count"     => 1,
+        expect(response.parsed_body).to include("count"     => 1,
                                          "name"      => "service_requests",
                                          "resources" => [a_hash_including("href" => expected_href)],
                                          "subcount"  => 1)
@@ -179,7 +180,7 @@ RSpec.describe "service orders API" do
         run_get url
 
         expect(response).to have_http_status(:ok)
-        expect(response_hash).to include("id" => service_request.id, "href" => a_string_matching(url))
+        expect(response.parsed_body).to include("id" => service_request.id, "href" => a_string_matching(url))
       end
 
       it "can add a service request to a shopping cart" do
@@ -222,7 +223,7 @@ RSpec.describe "service orders API" do
           ]
         }
         expect(response).to have_http_status(:ok)
-        expect(response_hash).to include(expected)
+        expect(response.parsed_body).to include(expected)
       end
 
       it "can add muliple service requests to a shopping cart by href" do
@@ -281,7 +282,7 @@ RSpec.describe "service orders API" do
           )
         }
         expect(response).to have_http_status(:ok)
-        expect(response_hash).to include(expected)
+        expect(response.parsed_body).to include(expected)
       end
 
       it "can remove a service request from a shopping cart" do
@@ -298,7 +299,7 @@ RSpec.describe "service orders API" do
           "service_request_id"   => service_request.id
         }
         expect(response).to have_http_status(:ok)
-        expect(response_hash).to include(expected)
+        expect(response.parsed_body).to include(expected)
         expect(shopping_cart.reload.miq_requests).not_to include(service_request)
       end
 
@@ -337,7 +338,7 @@ RSpec.describe "service orders API" do
           )
         }
         expect(response).to have_http_status(:ok)
-        expect(response_hash).to include(expected)
+        expect(response.parsed_body).to include(expected)
         expect(shopping_cart.reload.miq_requests).not_to include(service_request_1, service_request_2)
       end
 
@@ -376,7 +377,7 @@ RSpec.describe "service orders API" do
           )
         }
         expect(response).to have_http_status(:ok)
-        expect(response_hash).to include(expected)
+        expect(response.parsed_body).to include(expected)
         expect(shopping_cart.reload.miq_requests).not_to include(service_request_1, service_request_2)
       end
 
@@ -396,7 +397,7 @@ RSpec.describe "service orders API" do
           "id"   => shopping_cart.id
         }
         expect(response).to have_http_status(:ok)
-        expect(response_hash).to include(expected)
+        expect(response.parsed_body).to include(expected)
         expect(shopping_cart.reload.miq_requests).to be_empty
       end
 
@@ -415,7 +416,7 @@ RSpec.describe "service orders API" do
           )
         }
         expect(response).to have_http_status(:bad_request)
-        expect(response_hash).to include(expected)
+        expect(response.parsed_body).to include(expected)
       end
 
       it "can checkout a shopping cart" do
@@ -433,7 +434,7 @@ RSpec.describe "service orders API" do
           "state" => ServiceOrder::STATE_ORDERED
         }
         expect(response).to have_http_status(:ok)
-        expect(response_hash).to include(expected)
+        expect(response.parsed_body).to include(expected)
         expect(shopping_cart.reload.state).to eq(ServiceOrder::STATE_ORDERED)
       end
     end
