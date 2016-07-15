@@ -27,18 +27,14 @@
           = _('Report Preview (up to 50 rows)')
         = @html.html_safe
   - else
-    %fieldset
-      %h3
-        = _('Generate Report Preview')
-      %table{:width => "100%"}
-        %tr
-          %td{:align => "right"}
-            - t = _("Generate Report preview")
-            = link_to(_("Load"),
-              {:action => "show_preview",  :id => "#{@edit[:rpt_id] || 'new'}"},
-              :class                => "btn btn-primary",
-              :alt                  => t,
-              "data-miq_sparkle_on" => true,
-              :remote               => true,
-              "data-method"         => :post,
-              :title                => t)
+    %h3
+      = _('Generate Report Preview')
+      - t = _("Generate Report preview")
+      &nbsp;
+      = link_to({:action => "show_preview",  :id => "#{@edit[:rpt_id] || 'new'}"},
+        :alt                  => t,
+        "data-miq_sparkle_on" => true,
+        :remote               => true,
+        "data-method"         => :post,
+        :title                => t) do
+        %i.fa.fa-refresh
