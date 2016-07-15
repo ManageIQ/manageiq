@@ -46,6 +46,13 @@ arbitration_profiles:
 - name
 - description
 - default_profile
+arbitration_settings:
+- id
+- name
+- display_name
+- value
+- created_on
+- updated_on
 assigned_server_roles:
 - id
 - miq_server_id
