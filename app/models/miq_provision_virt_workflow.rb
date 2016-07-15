@@ -1089,18 +1089,18 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   private
 
   def create_hash_struct_from_vm_or_template(vm_or_template, options)
-    hash_struct = MiqHashStruct.new(
-      :id                     => vm_or_template.id,
-      :name                   => vm_or_template.name,
-      :guid                   => vm_or_template.guid,
-      :uid_ems                => vm_or_template.uid_ems,
-      :platform               => vm_or_template.platform,
-      :logical_cpus           => vm_or_template.cpu_total_cores,
-      :mem_cpu                => vm_or_template.mem_cpu,
-      :allocated_disk_storage => vm_or_template.allocated_disk_storage,
-      :v_total_snapshots      => vm_or_template.v_total_snapshots,
-      :evm_object_class       => :Vm
-    )
+    data_hash = {:id                     => vm_or_template.id,
+                 :name                   => vm_or_template.name,
+                 :guid                   => vm_or_template.guid,
+                 :uid_ems                => vm_or_template.uid_ems,
+                 :platform               => vm_or_template.platform,
+                 :logical_cpus           => vm_or_template.cpu_total_cores,
+                 :mem_cpu                => vm_or_template.mem_cpu,
+                 :allocated_disk_storage => vm_or_template.allocated_disk_storage,
+                 :v_total_snapshots      => vm_or_template.v_total_snapshots,
+                 :evm_object_class       => :Vm}
+    data_hash[:cloud_tenant] = vm_or_template.cloud_tenant if vm_or_template.respond_to?(:cloud_tenant)
+    hash_struct = MiqHashStruct.new(data_hash)
     hash_struct.operating_system = MiqHashStruct.new(
       :product_name => vm_or_template.operating_system.product_name
     ) if vm_or_template.operating_system
