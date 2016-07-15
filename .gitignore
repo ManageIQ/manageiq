@@ -17,6 +17,7 @@
 .tags
 /data/
 /productization
+/providers
 /vmdb/
 BUILD
 ca/root
