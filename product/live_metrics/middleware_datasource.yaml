@@ -14,4 +14,4 @@ supported_metrics:
   - Datasource Pool Metrics~Timed Out: mw_ds_timed_out
   - Datasource Pool Metrics~Average Get Time: mw_ds_average_get_time
   - Datasource Pool Metrics~Average Creation Time: mw_ds_average_creation_time
-
+  - Datasource Pool Metrics~Max Wait Time: mw_ds_max_wait_time
