@@ -85,7 +85,7 @@ module FixAuth
     end
 
     def run
-      set_passwords
+      set_passwords unless options[:key]
 
       generate_password if options[:key]
       fix_database_yml if options[:databaseyml]
