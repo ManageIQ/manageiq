@@ -4959,6 +4959,27 @@
         :description: Provision Virtual Template
         :feature_type: admin
         :identifier: provision_virtual_template
+    - :name: Arbitration Profiles
+      :description: Everything for Arbitration Profile
+      :feature_type: admin
+      :identifier: miq_arbitration_profile
+      :children:
+      - :name: Create Arbitration Profile
+        :description: Create Arbitratio Profile
+        :feature_type: admin
+        :identifier: create_arbitration_profile
+      - :name: Show Arbitration Profile
+        :description: Show Arbitration Profile
+        :feature_type: admin
+        :identifier: show_arbitration_profile
+      - :name: Edit Arbitration Profile
+        :description: Edit Arbitration Profile
+        :feature_type: admin
+        :identifier: edit_arbitration_profile
+      - :name: Delete Arbitration Profile
+        :description: Delete Arbitration Profile
+        :feature_type: admin
+        :identifier: delete_arbitration_profile
     - :name: Snapshots
       :description: Everything for Template Snapshots
       :feature_type: node

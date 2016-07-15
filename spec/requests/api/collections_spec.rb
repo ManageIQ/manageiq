@@ -244,5 +244,11 @@ describe ApiController do
       FactoryGirl.create(:container_deployment)
       test_collection_query(:container_deployments, container_deployments_url, ContainerDeployment)
     end
+
+    it 'queries ArbitrationProfiles' do
+      ems = FactoryGirl.create(:ext_management_system)
+      FactoryGirl.create(:arbitration_profile, :ems_id => ems.id)
+      test_collection_query(:arbitration_profiles, arbitration_profiles_url, ArbitrationProfile)
+    end
   end
 end

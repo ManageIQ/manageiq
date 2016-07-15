@@ -1666,3 +1666,30 @@
       :delete:
       - :name: delete
         :identifier: delete_virtual_template
+  :arbitration_profiles:
+    :description: Arbitration Profiles
+    :identifier: miq_arbitration_profile
+    :options:
+    - :collection
+    :verbs: *70174834084700
+    :klass: ArbitrationProfile
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: show_arbitration_profile
+      :post:
+      - :name: create
+        :identifier: create_arbitration_profile
+      - :name: edit
+        :identifier: edit_arbitration_profile
+      - :name: delete
+        :identifier: delete_arbitration_profile
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: edit_arbitration_profile
+      - :name: delete
+        :identifier: delete_arbitration_profile
+      :delete:
+      - :name: delete
+        :identifier: delete_arbitration_profile
