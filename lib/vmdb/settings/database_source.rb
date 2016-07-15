@@ -26,19 +26,15 @@ module Vmdb
       end
 
       def self.parent_sources_for(resource)
-        return [] if resource.nil?
-        hierarchy_index = SETTINGS_HIERARCHY.index(resource.class.name.to_sym)
-        SETTINGS_HIERARCHY[0..hierarchy_index][0...-1].collect do |klass|
-          new(resource, klass)
-        end
+        sources_for(resource)[0...-1]
       end
 
       def load
-        return if resource_instance.nil?
-        obj_with_settings = settings_holder
-        obj_with_settings.settings_changes.reload.each_with_object({}) do |c, h|
-          h.store_path(c.key_path, c.value)
-        end unless obj_with_settings.nil?
+        if settings_holder_ = settings_holder
+          settings_holder_.settings_changes.reload.each_with_object({}) do |c, h|
+            h.store_path(c.key_path, c.value)
+          end
+        end
       rescue => err
         _log.error("#{err.class}: #{err}")
         _log.error(err.backtrace.join("\n"))
@@ -51,9 +47,10 @@ module Vmdb
       SETTINGS_HIERARCHY = %i(MiqRegion Zone MiqServer).freeze
 
       def settings_holder
+        return nill if resource_instance.nil?
         return resource_instance.reload if resource_instance.class.name.to_sym == settings_holder_class
         index = SETTINGS_HIERARCHY.index(settings_holder_class)
-        resource_instance.reload.send(METHODS_FOR_SETTINGS[index])
+        return resource_instance.reload.send(METHODS_FOR_SETTINGS[index])
       end
     end
   end
