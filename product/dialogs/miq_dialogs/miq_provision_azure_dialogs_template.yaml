@@ -175,6 +175,15 @@
           :required: false
           :display: :edit
           :data_type: :integer
+        :floating_ip_address:
+          :values_from:
+            :method: :allowed_floating_ip_addresses
+          :description: Public IP Address
+          :auto_select_single: false
+          :default: nil
+          :required: false
+          :display: :edit
+          :data_type: :integer
       :display: :show
     :service:
       :description: Catalog

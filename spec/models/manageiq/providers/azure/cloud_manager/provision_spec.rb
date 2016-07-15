@@ -1,12 +1,15 @@
 require "spec_helper"
 
 describe ManageIQ::Providers::Azure::CloudManager::Provision do
-  let(:provider)  { FactoryGirl.create(:ems_azure_with_authentication) }
-  let(:template)  { FactoryGirl.create(:template_azure, :ext_management_system => provider) }
-  let(:flavor)    { FactoryGirl.create(:flavor_azure) }
-  let(:vm)        { FactoryGirl.create(:vm_azure, :ext_management_system => provider) }
-  let(:sec_group) { FactoryGirl.create(:security_group_azure) }
-  let(:subnet)    { FactoryGirl.create(:cloud_subnet_azure) }
+  let(:provider)     { FactoryGirl.create(:ems_azure_with_authentication) }
+  let(:template)     { FactoryGirl.create(:template_azure, :ext_management_system => provider) }
+  let(:flavor)       { FactoryGirl.create(:flavor_azure) }
+  let(:vm)           { FactoryGirl.create(:vm_azure, :ext_management_system => provider) }
+  let(:sec_group)    { FactoryGirl.create(:security_group_azure) }
+  let(:subnet)       { FactoryGirl.create(:cloud_subnet_azure) }
+  let(:network_port) { FactoryGirl.create(:network_port_azure) }
+  let(:floating_ip)  { FactoryGirl.create(:floating_ip_azure) }
+
 
   context "#create vm" do
     subscription_id = "01234567890"
@@ -80,8 +83,20 @@ describe ManageIQ::Providers::Azure::CloudManager::Provision do
       end
 
       context "nic settings" do
-        it "with nic" do
-          subject.options[:vm_target_name] = name
+        it "use existing floating_ip and assign to network profile" do
+          allow(subject).to receive(:floating_ip).and_return(floating_ip)
+          floating_ip.network_port = network_port
+          expect(subject.prepare_for_clone_task[:properties][:networkProfile][:networkInterfaces][0][:id]).to eq(network_port.ems_ref)
+        end
+
+        it "without floating_ip create new nic and assign to network profile" do
+          allow(floating_ip).to receive(:floating_ip).and_return(nil)
+          expect(subject.prepare_for_clone_task[:properties][:networkProfile][:networkInterfaces][0][:id]).to eq(nic_id)
+        end
+
+        it "with floating_ip without network_port create new nic and assign to network profile" do
+          allow(subject).to receive(:floating_ip).and_return(floating_ip)
+          floating_ip.network_port = nil
           expect(subject.prepare_for_clone_task[:properties][:networkProfile][:networkInterfaces][0][:id]).to eq(nic_id)
         end
       end
