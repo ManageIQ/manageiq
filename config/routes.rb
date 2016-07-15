@@ -2625,12 +2625,13 @@ Vmdb::Application.routes.draw do
   get '/pictures/:basename' => 'picture#show', :basename => /[\da-zA-Z]+\.[\da-zA-Z]+/
 
   # Enablement for the REST API
-  # OPTIONS requests for REST API pre-flight checks
 
   # Semantic Versioning Regex for API, i.e. vMajor.minor.patch[-pre]
   API_VERSION_REGEX = /v[\d]+(\.[\da-zA-Z]+)*(\-[\da-zA-Z]+)?/
 
-  match '/api/*path'   => 'api#handle_options_request', :via => [:options]
+  # OPTIONS requests for REST API pre-flight checks
+  match '/api/*path' => 'api#handle_options_request', :via => [:options]
+
   get '/api(/:version)' => 'api#show_entrypoint', :format => 'json', :version => API_VERSION_REGEX
 
   API_ACTIONS = {
@@ -2655,7 +2656,11 @@ Vmdb::Application.routes.draw do
         create_api_route(verb, "/api(/:version)/#{collection_name}", action_for(verb))
       end
 
-      if collection.options.include?(:collection)
+      next unless collection.options.include?(:collection)
+
+      if collection.options.include?(:arbitrary_resource_path)
+        create_api_route(verb, "/api(/:version)/#{collection_name}(/*c_suffix)", action_for(verb))
+      else
         create_api_route(verb, "/api(/:version)/#{collection_name}(/:c_id)", action_for(verb))
       end
     end

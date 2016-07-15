@@ -23,12 +23,31 @@ class ApiController
         url.partition(fullpath)[0] # http://target
       end
 
+      #
+      # c_path_parts returns: [collection, c_id, subcollection, s_id, ...]
+      #
+      def c_path_parts
+        @c_path_parts ||= version_override? ? path.split('/')[3..-1] : path.split('/')[2..-1]
+      end
+
       def collection
-        @collection ||= path.split("/")[version_override? ? 3 : 2]
+        @collection ||= c_path_parts[0]
+      end
+
+      def c_suffix
+        @params[:c_suffix] || c_path_parts[1..-1].join('/')
       end
 
       def c_id
-        @params[:c_id]
+        @params[:c_id] || c_path_parts[1]
+      end
+
+      def subcollection
+        @subcollection ||= c_path_parts[2]
+      end
+
+      def s_id
+        @params[:s_id] || c_path_parts[3]
       end
 
       def expand?(what)
@@ -47,15 +66,7 @@ class ApiController
       end
 
       def path
-        URI.parse(url).path.sub(/\/*$/, '') # /api/...
-      end
-
-      def subcollection
-        @subcollection ||= path.split("/")[version_override? ? 5 : 4]
-      end
-
-      def s_id
-        @params[:s_id]
+        URI.parse(url).path.sub(%r{/*$}, '') # /api/...
       end
 
       def version
