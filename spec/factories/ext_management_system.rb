@@ -123,6 +123,12 @@ FactoryGirl.define do
     end
   end
 
+  factory :ems_vmware_cloud,
+          :aliases => ["manageiq/providers/vmware/cloud_manager"],
+          :class   => "ManageIQ::Providers::Vmware::CloudManager",
+          :parent  => :ems_cloud do
+  end
+
   # Leaf classes for ems_cloud
 
   factory :ems_amazon,
