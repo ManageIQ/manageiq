@@ -13,7 +13,13 @@ describe SecurityGroup do
   describe "#total_vms" do
     it "counts vms" do
       sg = FactoryGirl.create(:security_group)
-      2.times { sg.vms.create(FactoryGirl.attributes_for(:vm)) }
+
+      2.times do
+        vm = FactoryGirl.create(:vm_amazon)
+        FactoryGirl.create(:network_port_openstack,
+                           :device          => vm,
+                           :security_groups => [sg])
+      end
       expect(sg.reload.total_vms).to eq(2)
     end
 
