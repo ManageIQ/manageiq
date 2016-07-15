@@ -45,9 +45,10 @@ module Metric::Capture
     _log.info "Queueing performance capture...Complete"
   end
 
-  def self.perf_capture_gap(start_time, end_time, zone = nil)
+  def self.perf_capture_gap(start_time, end_time, zone_id = nil)
     _log.info "Queueing performance capture for range: [#{start_time} - #{end_time}]..."
 
+    zone = Zone.find(zone_id) if zone_id
     targets = Metric::Targets.capture_targets(zone, :exclude_storages => true)
     targets.each { |target| target.perf_capture_queue('historical', :start_time => start_time, :end_time => end_time, :zone => zone) }
 
@@ -60,7 +61,7 @@ module Metric::Capture
       :method_name => "perf_capture_gap",
       :role        => "ems_metrics_coordinator",
       :priority    => MiqQueue::HIGH_PRIORITY,
-      :args        => [start_time, end_time, zone]
+      :args        => [start_time, end_time, zone.try(:id)]
     }
     item[:zone] = zone.name if zone
 
