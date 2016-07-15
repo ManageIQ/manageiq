@@ -46,6 +46,8 @@ class ManageIQ::Providers::Vmware::CloudManager::RefreshParser < ManageIQ::Provi
     @inv[:vdcs].each do |vdc|
       @inv[:vapps] += vdc.vapps.all
     end
+
+    process_collection(@inv[:vapps], :orchestration_stacks) { |vapp| parse_stack(vapp) }
   end
 
   def get_vms
@@ -64,6 +66,8 @@ class ManageIQ::Providers::Vmware::CloudManager::RefreshParser < ManageIQ::Provi
     bitness       = vm.operating_system =~ /64-bit/ ? 64 : 32
     cpus          = vm.cpu
     memory_mb     = vm.memory
+    vapp_uid      = vm.vapp_id
+    stack         = @data_index.fetch_path(:orchestration_stacks, vapp_uid)
     disk_capacity = vm.hard_disks.inject(0) { |sum, x| sum + x.values[0] } * 1.megabyte
 
     vm_disks = vm.disks.all
@@ -82,14 +86,14 @@ class ManageIQ::Providers::Vmware::CloudManager::RefreshParser < ManageIQ::Provi
     end
 
     new_result = {
-      :type             => ManageIQ::Providers::Vmware::CloudManager::Vm.name,
-      :uid_ems          => uid,
-      :ems_ref          => uid,
-      :name             => name,
-      :vendor           => "vmware",
-      :raw_power_state  => status,
+      :type                => ManageIQ::Providers::Vmware::CloudManager::Vm.name,
+      :uid_ems             => uid,
+      :ems_ref             => uid,
+      :name                => name,
+      :vendor              => "vmware",
+      :raw_power_state     => status,
 
-      :hardware         => {
+      :hardware            => {
         :guest_os             => guest_os,
         :guest_os_full_name   => guest_os,
         :bitness              => bitness,
@@ -101,11 +105,28 @@ class ManageIQ::Providers::Vmware::CloudManager::RefreshParser < ManageIQ::Provi
         :disks                => disks,
       },
 
-      :operating_system => {
+      :operating_system    => {
         :product_name => guest_os,
       },
+
+      :orchestration_stack => stack,
     }
 
+    return uid, new_result
+  end
+
+  def parse_stack(vapp)
+    status   = vapp.human_status
+    uid      = vapp.id
+    name     = vapp.name
+
+    new_result = {
+      :type        => ManageIQ::Providers::Vmware::CloudManager::OrchestrationStack.name,
+      :ems_ref     => uid,
+      :name        => name,
+      :description => name,
+      :status      => status,
+    }
     return uid, new_result
   end
 end
