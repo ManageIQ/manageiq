@@ -190,8 +190,8 @@ describe Vmdb::Settings do
       miq_server.reload
       expect(miq_server.settings_changes.count).to eq 0
 
-      miq_server.zone.miq_region.reload
-      expect(miq_server.zone.miq_region.settings_changes.count).to eq 0
+      miq_server.miq_region.reload
+      expect(miq_server.miq_region.settings_changes.count).to eq 0
     end
 
     it "saving settings for Region does not change saved Zone or Server settings" do
@@ -200,8 +200,8 @@ describe Vmdb::Settings do
       described_class.save!(miq_server.zone.miq_region, :api => {:token_ttl => "3.hour"})
       miq_server.zone.miq_region.reload
 
-      expect(miq_server.zone.miq_region.settings_changes.count).to eq 1
-      expect(miq_server.zone.miq_region.settings_changes.first).to have_attributes(:key   => "/api/token_ttl",
+      expect(miq_server.miq_region.settings_changes.count).to eq 1
+      expect(miq_server.miq_region.settings_changes.first).to have_attributes(:key   => "/api/token_ttl",
                                                                                    :value => "3.hour")
       miq_server.reload
       expect(miq_server.settings_changes.count).to eq 0
