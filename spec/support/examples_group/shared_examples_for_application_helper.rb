@@ -23,7 +23,11 @@ end
 shared_examples_for 'record with error message' do |name|
   it "returns the #{name} error message" do
     message = "xx #{name} message"
-    allow(@record).to receive(:is_available_now_error_message).with(name.to_sym).and_return(message)
+    if @record.respond_to?("supports_#{name.to_sym}?")
+      allow(@record).to receive(:unsupported_reason).with(name.to_sym).and_return(message)
+    else
+      allow(@record).to receive(:is_available_now_error_message).with(name.to_sym).and_return(message)
+    end
     expect(subject).to eq(message)
   end
 end

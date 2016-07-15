@@ -8,6 +8,12 @@ require 'blackbox/VmBlackBox'
 module VmOrTemplate::Scanning
   extend ActiveSupport::Concern
 
+  # Smartstate Analysis is unsupported by default.
+  # Subclasses need to override this method if they support SSA.
+  included do
+    supports_not :smartstate_analysis, :reason => _("Smartstate Analysis is not available for VM or Template.")
+  end
+
   # Call the VmScan Job and raise a "request" event
   def scan(userid = "system", options = {})
     # Check if there are any current scan jobs already waiting to run
@@ -49,14 +55,6 @@ module VmOrTemplate::Scanning
       _log.log_backtrace(err)
       raise
     end
-  end
-
-  #
-  # Smartstate Analysis is unsupported by default.
-  # Subclasses need to override this method if they support SSA.
-  #
-  def validate_smartstate_analysis
-    validate_unsupported("Smartstate Analysis")
   end
 
   #

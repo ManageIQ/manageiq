@@ -1,6 +1,13 @@
 class ManageIQ::Providers::Openstack::CloudManager::Template < ManageIQ::Providers::CloudManager::Template
   belongs_to :cloud_tenant
 
+  supports :smartstate_analysis do
+    feature_supported, reason = check_feature_support('smartstate_analysis')
+    unless feature_supported
+      unsupported_reason_add(:smartstate_analysis, reason)
+    end
+  end
+
   has_and_belongs_to_many :cloud_tenants,
                           :foreign_key             => "vm_id",
                           :join_table              => "cloud_tenants_vms",
@@ -56,9 +63,5 @@ class ManageIQ::Providers::Openstack::CloudManager::Template < ManageIQ::Provide
 
   def requires_storage_for_scan?
     false
-  end
-
-  def validate_smartstate_analysis
-    validate_supported_check("Smartstate Analysis")
   end
 end

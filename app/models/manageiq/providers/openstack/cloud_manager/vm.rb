@@ -3,6 +3,13 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
   include_concern 'RemoteConsole'
   include_concern 'Resize'
 
+  supports :smartstate_analysis do
+    feature_supported, reason = check_feature_support('smartstate_analysis')
+    unless feature_supported
+      unsupported_reason_add(:smartstate_analysis, reason)
+    end
+  end
+
   POWER_STATES = {
     "ACTIVE"            => "on",
     "SHUTOFF"           => "off",
@@ -108,9 +115,5 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
 
   def memory_mb_available?
     true
-  end
-
-  def validate_smartstate_analysis
-    validate_supported_check("Smartstate Analysis")
   end
 end

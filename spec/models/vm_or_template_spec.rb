@@ -452,17 +452,17 @@ describe VmOrTemplate do
     end
   end
 
-  context "#is_available? for Smartstate Analysis" do
+  context "#supports_smartstate_analysis?" do
     it "returns true for VMware VM" do
       vm =  FactoryGirl.create(:vm_vmware)
       allow(vm).to receive_messages(:archived? => false)
       allow(vm).to receive_messages(:orphaned? => false)
-      expect(vm.is_available?(:smartstate_analysis)).to eq(true)
+      expect(vm.supports_smartstate_analysis?).to eq(true)
     end
 
     it "returns false for Amazon VM" do
       vm =  FactoryGirl.create(:vm_amazon)
-      expect(vm.is_available?(:smartstate_analysis)).to_not eq(true)
+      expect(vm.supports_smartstate_analysis?).to_not eq(true)
     end
   end
 

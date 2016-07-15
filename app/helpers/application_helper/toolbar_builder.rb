@@ -796,7 +796,8 @@ class ApplicationHelper::ToolbarBuilder
       when "miq_template_refresh"
         return true if @record && !@record.ext_management_system && !(@record.host && @record.host.vmm_product.downcase == "workstation")
       when "miq_template_scan", "image_scan"
-        return true unless @record.is_available?(:smartstate_analysis) || @record.is_available_now_error_message(:smartstate_analysis)
+        return true unless (@record.supports_smartstate_analysis? ||
+            @record.unsupported_reason(:smartstate_analysis))
         return true unless @record.has_proxy?
       when "miq_template_refresh", "miq_template_reload"
         return true unless @perf_options[:typ] == "realtime"
@@ -1233,7 +1234,7 @@ class ApplicationHelper::ToolbarBuilder
             {:storage => ui_lookup(:table => "storage")}
         end
       when "storage_scan"
-        return @record.is_available_now_error_message(:smartstate_analysis) unless @record.is_available?(:smartstate_analysis)
+        return @record.unsupported_reason(:smartstate_analysis) unless @record.supports_smartstate_analysis?
       end
     when "Tenant"
       return N_("Default Tenant can not be deleted") if @record.parent.nil? && id == "rbac_tenant_delete"
@@ -1336,7 +1337,7 @@ class ApplicationHelper::ToolbarBuilder
       when "miq_template_perf"
         return N_("No Capacity & Utilization data has been collected for this Template") unless @record.has_perf_data?
       when "miq_template_scan", "image_scan"
-        return @record.is_available_now_error_message(:smartstate_analysis) unless @record.is_available?(:smartstate_analysis)
+        return @record.unsupported_reason(:smartstate_analysis) unless @record.supports_smartstate_analysis?
         return @record.active_proxy_error_message unless @record.has_active_proxy?
       when "miq_template_timeline"
         unless @record.has_events? || @record.has_events?(:policy_events)

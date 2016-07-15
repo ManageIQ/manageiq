@@ -21,6 +21,7 @@ module ManageIQ::Providers
     before_destroy :stop_event_monitor
 
     supports :provisioning
+    supports :smartstate_analysis
 
     def self.ems_type
       @ems_type ||= "vmwarews".freeze

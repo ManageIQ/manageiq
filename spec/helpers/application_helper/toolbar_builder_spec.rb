@@ -1447,12 +1447,23 @@ describe ApplicationHelper do
       context "and id = miq_template_scan" do
         before { @id = "miq_template_scan" }
 
-        it "and !@record.has_proxy?" do
+        it "returns true for hiding the button when @record neither has proxy nor supports smartstate analysis" do
+          allow(@record).to receive_messages(:supports_smartstate_analysis? => false, :has_proxy? => false)
           expect(subject).to be_truthy
         end
 
-        it "and @record.has_proxy?" do
-          allow(@record).to receive_messages(:has_proxy? => true)
+        it "returns true for hiding the button when @record does not have proxy but it supports smartstate analysis" do
+          allow(@record).to receive_messages(:supports_smartstate_analysis? => true, :has_proxy? => false)
+          expect(subject).to be_truthy
+        end
+
+        it "returns true for hiding the button when @record has proxy but it does not support smartstate analysis" do
+          allow(@record).to receive_messages(:supports_smartstate_analysis? => false, :has_proxy? => true)
+          expect(subject).to be_truthy
+        end
+
+        it "returns false for hiding the button when @record has proxy and it supports smartstate analysis" do
+          allow(@record).to receive_messages(:supports_smartstate_analysis? => true, :has_proxy? => true)
           expect(subject).to be_falsey
         end
       end

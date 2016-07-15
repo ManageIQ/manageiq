@@ -20,5 +20,4 @@ module Vm::Operations::Lifecycle
   def validate_publish
     {:available => !(self.blank? || self.orphaned? || self.archived?), :message   => nil}
   end
-
 end
