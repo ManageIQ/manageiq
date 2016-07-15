@@ -217,7 +217,20 @@ FLASH
 
       git_repo = GitRepository.create(:url => git_url)
       git_repo.update_authentication(:values => {:userid => params[:git_username], :password => params[:git_password]})
-      git_repo.refresh
+      task_options = {
+        :action => "Retrieve git repository",
+        :userid => current_user.id
+      }
+      queue_options = {
+        :class_name  => "GitRepository",
+        :method_name => "refresh",
+        :instance_id => git_repo.id,
+        :role        => "git_owner"
+      }
+
+      task_id = MiqTask.generic_action_with_callback(task_options, queue_options)
+      MiqTask.wait_for_taskid(task_id)
+
       add_flash(_(flash_message), status)
       branch_names = git_repo.git_branches.collect(&:name)
       tag_names = git_repo.git_tags.collect(&:name)

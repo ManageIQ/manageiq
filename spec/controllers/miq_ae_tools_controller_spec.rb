@@ -306,11 +306,21 @@ Methods updated/added: 10
         let(:git_repo) { double("GitRepository", :id => 321) }
         let(:git_branches) { [double("GitBranch", :name => "git_branch1")] }
         let(:git_tags) { [double("GitTag", :name => "git_tag1")] }
+        let(:task_options) { {:action => "Retrieve git repository", :userid => controller.current_user.id} }
+        let(:queue_options) do
+          {
+            :class_name  => "GitRepository",
+            :method_name => "refresh",
+            :instance_id => 321,
+            :role        => "git_owner"
+          }
+        end
 
         before do
           allow(GitRepository).to receive(:create).with(:url => git_url).and_return(git_repo)
           allow(git_repo).to receive(:update_authentication).with(:values => {:userid => "", :password => ""})
-          allow(git_repo).to receive(:refresh)
+          allow(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(1234)
+          allow(MiqTask).to receive(:wait_for_taskid).with(1234)
           allow(git_repo).to receive(:git_branches).and_return(git_branches)
           allow(git_repo).to receive(:git_tags).and_return(git_tags)
         end
@@ -318,6 +328,16 @@ Methods updated/added: 10
         context "when the git repository exists with the given url" do
           before do
             allow(GitRepository).to receive(:exists?).with(:url => git_url).and_return(true)
+          end
+
+          it "queues the refresh action" do
+            expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options)
+            post :retrieve_git_datastore, :params => params
+          end
+
+          it "waits for the refresh action" do
+            expect(MiqTask).to receive(:wait_for_taskid).with(1234)
+            post :retrieve_git_datastore, :params => params
           end
 
           it "adds a warning flash message with the other redirect options" do
@@ -338,6 +358,16 @@ Methods updated/added: 10
         context "when the git repository does not exist with the given url" do
           before do
             allow(GitRepository).to receive(:exists?).with(:url => git_url).and_return(false)
+          end
+
+          it "queues the refresh action" do
+            expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options)
+            post :retrieve_git_datastore, :params => params
+          end
+
+          it "waits for the refresh action" do
+            expect(MiqTask).to receive(:wait_for_taskid).with(1234)
+            post :retrieve_git_datastore, :params => params
           end
 
           it "adds a success flash message with the other redirect options" do
