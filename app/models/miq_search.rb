@@ -16,11 +16,6 @@ class MiqSearch < ApplicationRecord
     read_attribute(:search_type) || "default"
   end
 
-  def search(opts = {})
-    self.options ||= {}
-    Rbac.search(options.merge(:class => db, :filter => filter).merge(opts))
-  end
-
   def filtered(targets, opts = {})
     self.options ||= {}
     Rbac.filtered(targets, options.merge(:class => db, :filter => filter).merge(opts))

@@ -88,7 +88,7 @@ module MiqReport::Search
 
     order = get_order_info
 
-    search_options = options.merge(:class => db, :conditions => conditions, :results_format => :objects, :include_for_find => includes)
+    search_options = options.merge(:class => db, :conditions => conditions, :include_for_find => includes)
     search_options.merge!(:limit => limit, :offset => offset, :order => order) if order
 
     if options[:parent]

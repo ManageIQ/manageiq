@@ -54,19 +54,6 @@ describe MiqSearch do
     end
   end
 
-  # general use cases around rbac
-  describe "#search" do
-    it "brings back filtered targets" do
-      all_vms
-      expect(vm_location_search.search.first).to match_array(matched_vms.map(&:id))
-    end
-
-    it "resects search options" do
-      all_vms
-      expect(vm_location_search.search(:results_format => :objects).first).to match_array(matched_vms)
-    end
-  end
-
   describe "#results" do
     it "respects filter" do
       all_vms
