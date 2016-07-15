@@ -5,14 +5,15 @@ module Vmdb
 
       attr_reader :resource_instance, :settings_holder_class
 
-      # NOTE: resource - instance of MiqRegion, Zone or MiqServer
-      #       klass    - class name of object which provides access to SettingsChange for resource
-      #                  possible values of klass are in SETTINGS_HIERARCHY
-      # EXAMPLE: 1. resource is instance of MiqServer and klass is 'Zone',
-      #             than settings will be loaded from resource.zone.settings_changes
-      #          2. resource is instance of MiqServer and klass is 'MiqRegion'
-      #             than settings will be loaded from resource.miq_region.settings_changes
-      
+      # @param resource [MiqRegion, Zone, MiqServer] the resource
+      # @param klass [Symbol] class name of object which provides access to SettingsChange for resource
+      #   possible values of klass are {DatabaseSource::SETTINGS_HIERARCHY the setting hierarchy}
+      #
+      #   Example:
+      #   1. resource is instance of MiqServer and klass is 'Zone', than settings will be loaded
+      #      from resource.zone.settings_changes
+      #   2. resource is instance of MiqServer and klass is 'MiqRegion' than settings will be loaded
+      #      from resource.miq_region.settings_changes
       def initialize(resource, klass)
         @resource_instance = resource
         @settings_holder_class = klass
@@ -31,9 +32,9 @@ module Vmdb
       end
 
       def load
-        settings_holder_ = settings_holder
-        if settings_holder_
-          settings_holder_.settings_changes.reload.each_with_object({}) do |c, h|
+        holder = settings_holder
+        if holder
+          holder.settings_changes.reload.each_with_object({}) do |c, h|
             h.store_path(c.key_path, c.value)
           end
         end
@@ -49,7 +50,7 @@ module Vmdb
       SETTINGS_HIERARCHY = %i(MiqRegion Zone MiqServer).freeze
 
       def settings_holder
-        return nill if resource_instance.nil?
+        return nil if resource_instance.nil?
         return resource_instance.reload if resource_instance.class.name.to_sym == settings_holder_class
         index = SETTINGS_HIERARCHY.index(settings_holder_class)
         resource_instance.reload.send(METHODS_FOR_SETTINGS[index])
