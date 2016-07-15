@@ -55,6 +55,7 @@ class ApiController < ApplicationController
   include_concern 'Generic'
 
   include_concern 'Accounts'
+  include_concern 'ArbitrationProfiles'
   include_concern 'Authentication'
   include_concern 'AutomationRequests'
   include_concern 'Categories'
