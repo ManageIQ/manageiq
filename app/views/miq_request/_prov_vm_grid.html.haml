@@ -58,7 +58,7 @@
               = h(row.v_total_snapshots)
             - if @edit[:vm_headers].key? 'cloud_tenant'
               %td
-                = h(row.cloud_tenant)
+                = h(row.cloud_tenant ? row.cloud_tenant.name : _('None'))
   - elsif @vm
     -# grid with only one record for Redhat provisioning
     %table.table.table-striped.table-bordered.table-selectable
