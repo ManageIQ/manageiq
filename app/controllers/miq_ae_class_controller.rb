@@ -1659,7 +1659,7 @@ class MiqAeClassController < ApplicationController
 
   def refresh_git_domain
     if params[:button] == "save"
-      git_based_domain_import_service.import(params[:git_repo_id], params[:git_branch_or_tag])
+      git_based_domain_import_service.import(params[:git_repo_id], params[:git_branch_or_tag], current_tenant.id)
 
       add_flash(_("Successfully refreshed!"), :info)
     else

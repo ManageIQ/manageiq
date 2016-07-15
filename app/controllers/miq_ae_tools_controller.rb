@@ -131,7 +131,7 @@ class MiqAeToolsController < ApplicationController
   end
 
   def import_via_git
-    git_based_domain_import_service.import(params[:git_repo_id], params[:git_branch_or_tag])
+    git_based_domain_import_service.import(params[:git_repo_id], params[:git_branch_or_tag], current_tenant.id)
 
     add_flash(_("Imported from git"), :info)
 

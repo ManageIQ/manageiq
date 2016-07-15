@@ -452,7 +452,8 @@ Methods updated/added: 10
     end
 
     it "delegates to the git based domain import service" do
-      expect(git_based_domain_import_service).to receive(:import).with("123", "branch_or_tag")
+      tenant_id = controller.current_tenant.id
+      expect(git_based_domain_import_service).to receive(:import).with("123", "branch_or_tag", tenant_id)
       post :import_via_git, :params => params, :xhr => true
     end
   end

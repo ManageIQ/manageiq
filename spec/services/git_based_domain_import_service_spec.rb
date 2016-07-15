@@ -15,7 +15,8 @@ describe GitBasedDomainImportService do
         allow(MiqAeDomain).to receive(:import_git_repo).with(
           "git_repository_id" => 123,
           "ref"               => "the_branch_name",
-          "ref_type"          => "branch"
+          "ref_type"          => "branch",
+          "tenant_id"         => 321
         ).and_return(domain)
       end
 
@@ -23,14 +24,15 @@ describe GitBasedDomainImportService do
         expect(MiqAeDomain).to receive(:import_git_repo).with(
           "git_repository_id" => 123,
           "ref"               => "the_branch_name",
-          "ref_type"          => "branch"
+          "ref_type"          => "branch",
+          "tenant_id"         => 321
         )
-        subject.import(123, "the_branch_name")
+        subject.import(123, "the_branch_name", 321)
       end
 
       it "updates the enabled attribute on the domain to true" do
         expect(domain).to receive(:update_attribute).with(:enabled, true)
-        subject.import(123, "the_branch_name")
+        subject.import(123, "the_branch_name", 321)
       end
     end
 
@@ -41,7 +43,8 @@ describe GitBasedDomainImportService do
         allow(MiqAeDomain).to receive(:import_git_repo).with(
           "git_repository_id" => 123,
           "ref"               => "the_branch_name",
-          "ref_type"          => "tag"
+          "ref_type"          => "tag",
+          "tenant_id"         => 321
         ).and_return(domain)
       end
 
@@ -49,14 +52,15 @@ describe GitBasedDomainImportService do
         expect(MiqAeDomain).to receive(:import_git_repo).with(
           "git_repository_id" => 123,
           "ref"               => "the_branch_name",
-          "ref_type"          => "tag"
+          "ref_type"          => "tag",
+          "tenant_id"         => 321
         )
-        subject.import(123, "the_branch_name")
+        subject.import(123, "the_branch_name", 321)
       end
 
       it "updates the enabled attribute on the domain to true" do
         expect(domain).to receive(:update_attribute).with(:enabled, true)
-        subject.import(123, "the_branch_name")
+        subject.import(123, "the_branch_name", 321)
       end
     end
   end
