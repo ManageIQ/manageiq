@@ -16,10 +16,6 @@ module ApiSpecHelper
     "Accept"       => "application/json"
   }
 
-  def response_hash
-    JSON.parse(response.body)
-  end
-
   def update_headers(headers)
     HEADER_ALIASES.keys.each do |k|
       if headers.key?(k)
@@ -177,44 +173,44 @@ module ApiSpecHelper
   # Rest API Expects
 
   def expect_bad_request(error_message)
-    expect(response_hash).to include_error_with_message(error_message)
+    expect(response.parsed_body).to include_error_with_message(error_message)
     expect(response).to have_http_status(:bad_request)
   end
 
   def expect_result_resources_to_include_data(collection, data)
-    expect(response_hash).to have_key(collection)
+    expect(response.parsed_body).to have_key(collection)
     fetch_value(data).each do |key, value|
       value_list = fetch_value(value)
-      expect(response_hash[collection].size).to eq(value_list.size)
-      expect(response_hash[collection].collect { |r| r[key] }).to match_array(value_list)
+      expect(response.parsed_body[collection].size).to eq(value_list.size)
+      expect(response.parsed_body[collection].collect { |r| r[key] }).to match_array(value_list)
     end
   end
 
   def expect_result_resources_to_include_hrefs(collection, hrefs)
-    expect(response_hash).to have_key(collection)
+    expect(response.parsed_body).to have_key(collection)
     href_list = fetch_value(hrefs)
-    expect(response_hash[collection].size).to eq(href_list.size)
+    expect(response.parsed_body[collection].size).to eq(href_list.size)
     href_list.each do |href|
-      expect(resources_include_suffix?(response_hash[collection], "href", href)).to be_truthy
+      expect(resources_include_suffix?(response.parsed_body[collection], "href", href)).to be_truthy
     end
   end
 
   def expect_result_resources_to_match_key_data(collection, key, values)
     value_list = fetch_value(values)
-    expect(response_hash).to have_key(collection)
-    expect(response_hash[collection].size).to eq(value_list.size)
-    value_list.zip(response_hash[collection]) do |value, hash|
+    expect(response.parsed_body).to have_key(collection)
+    expect(response.parsed_body[collection].size).to eq(value_list.size)
+    value_list.zip(response.parsed_body[collection]) do |value, hash|
       expect(hash).to have_key(key)
       expect(hash[key]).to match(value)
     end
   end
 
   def expect_result_to_have_keys(keys)
-    expect(response_hash).to include(*keys)
+    expect(response.parsed_body).to include(*keys)
   end
 
   def expect_result_to_have_only_keys(keys)
-    expect_hash_to_have_only_keys(response_hash, keys)
+    expect_hash_to_have_only_keys(response.parsed_body, keys)
   end
 
   def expect_hash_to_have_only_keys(hash, keys)
@@ -231,8 +227,8 @@ module ApiSpecHelper
   end
 
   def expect_results_to_match_hash(collection, result_hash)
-    expect(response_hash).to have_key(collection)
-    fetch_value(result_hash).zip(response_hash[collection]) do |expected, actual|
+    expect(response.parsed_body).to have_key(collection)
+    fetch_value(result_hash).zip(response.parsed_body[collection]) do |expected, actual|
       expect_result_to_match_hash(actual, expected)
     end
   end
@@ -242,39 +238,39 @@ module ApiSpecHelper
   end
 
   def expect_result_resource_keys_to_be_like_klass(collection, key, klass)
-    expect(response_hash).to have_key(collection)
-    expect(response_hash[collection].all? { |result| result[key].kind_of?(klass) }).to be_truthy
+    expect(response.parsed_body).to have_key(collection)
+    expect(response.parsed_body[collection].all? { |result| result[key].kind_of?(klass) }).to be_truthy
   end
 
   def expect_result_resources_to_include_keys(collection, keys)
-    expect(response_hash).to have_key(collection)
-    results = response_hash[collection]
+    expect(response.parsed_body).to have_key(collection)
+    results = response.parsed_body[collection]
     fetch_value(keys).each { |key| expect(results.all? { |r| r.key?(key) }).to be_truthy, "resource missing: #{key}" }
   end
 
   def expect_result_resources_to_have_only_keys(collection, keys)
     key_list = fetch_value(keys).sort
-    expect(response_hash).to have_key(collection)
-    expect(response_hash[collection].all? { |result| result.keys.sort == key_list }).to be_truthy
+    expect(response.parsed_body).to have_key(collection)
+    expect(response.parsed_body[collection].all? { |result| result.keys.sort == key_list }).to be_truthy
   end
 
   # Primary result construct methods
 
   def expect_empty_query_result(collection)
     expect(response).to have_http_status(:ok)
-    expect(response_hash).to include("name" => collection.to_s, "resources" => [])
+    expect(response.parsed_body).to include("name" => collection.to_s, "resources" => [])
   end
 
   def expect_query_result(collection, subcount, count = nil)
     expect(response).to have_http_status(:ok)
-    expect(response_hash).to include("name" => collection.to_s, "subcount" => fetch_value(subcount))
-    expect(response_hash["resources"].size).to eq(fetch_value(subcount))
-    expect(response_hash["count"]).to eq(fetch_value(count)) if count.present?
+    expect(response.parsed_body).to include("name" => collection.to_s, "subcount" => fetch_value(subcount))
+    expect(response.parsed_body["resources"].size).to eq(fetch_value(subcount))
+    expect(response.parsed_body["count"]).to eq(fetch_value(count)) if count.present?
   end
 
   def expect_single_resource_query(attr_hash)
     expect(response).to have_http_status(:ok)
-    expect_result_to_match_hash(response_hash, fetch_value(attr_hash))
+    expect_result_to_match_hash(response.parsed_body, fetch_value(attr_hash))
   end
 
   def expect_single_action_result(options = {})
@@ -284,7 +280,7 @@ module ApiSpecHelper
     expected["message"] = a_string_matching(options[:message]) if options[:message]
     expected["href"] = a_string_matching(fetch_value(options[:href])) if options[:href]
     expected.merge!(expected_task_response) if options[:task]
-    expect(response_hash).to include(expected)
+    expect(response.parsed_body).to include(expected)
   end
 
   def expect_multiple_action_result(count, options = {})
@@ -292,7 +288,7 @@ module ApiSpecHelper
     expected_result = {"success" => true}
     expected_result.merge!(expected_task_response) if options[:task]
     expected = {"results" => Array.new(count) { a_hash_including(expected_result) }}
-    expect(response_hash).to include(expected)
+    expect(response.parsed_body).to include(expected)
   end
 
   def expected_task_response
@@ -302,8 +298,8 @@ module ApiSpecHelper
   def expect_tagging_result(tagging_results)
     expect(response).to have_http_status(:ok)
     tag_results = fetch_value(tagging_results)
-    expect(response_hash).to have_key("results")
-    results = response_hash["results"]
+    expect(response.parsed_body).to have_key("results")
+    results = response.parsed_body["results"]
     expect(results.size).to eq(tag_results.size)
     tag_results.zip(results) do |tag_result, result|
       expect(result).to include(

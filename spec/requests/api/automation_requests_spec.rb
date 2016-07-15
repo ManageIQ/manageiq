@@ -35,7 +35,7 @@ describe ApiController do
       expect_result_resources_to_include_keys("results", %w(id approval_state type request_type status options))
       expect_results_to_match_hash("results", [expected_hash])
 
-      task_id = response_hash["results"].first["id"]
+      task_id = response.parsed_body["results"].first["id"]
       expect(AutomationRequest.exists?(task_id)).to be_truthy
     end
 
@@ -48,7 +48,7 @@ describe ApiController do
       expect_result_resources_to_include_keys("results", %w(id approval_state type request_type status options))
       expect_results_to_match_hash("results", [expected_hash])
 
-      task_id = response_hash["results"].first["id"]
+      task_id = response.parsed_body["results"].first["id"]
       expect(AutomationRequest.exists?(task_id)).to be_truthy
     end
 
@@ -61,7 +61,7 @@ describe ApiController do
       expect_result_resources_to_include_keys("results", %w(id approval_state type request_type status options))
       expect_results_to_match_hash("results", [expected_hash, expected_hash])
 
-      task_id1, task_id2 = response_hash["results"].collect { |r| r["id"] }
+      task_id1, task_id2 = response.parsed_body["results"].collect { |r| r["id"] }
       expect(AutomationRequest.exists?(task_id1)).to be_truthy
       expect(AutomationRequest.exists?(task_id2)).to be_truthy
     end

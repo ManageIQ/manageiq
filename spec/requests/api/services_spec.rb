@@ -230,7 +230,7 @@ describe ApiController do
       run_get services_url(svc1.id)
 
       expect(response).to have_http_status(:ok)
-      expect(response_hash).to declare_actions("retire")
+      expect(response.parsed_body).to declare_actions("retire")
     end
 
     it "returns reconfigure action for reconfigurable services" do
@@ -245,7 +245,7 @@ describe ApiController do
       run_get services_url(svc1.id)
 
       expect(response).to have_http_status(:ok)
-      expect(response_hash).to declare_actions("retire", "reconfigure")
+      expect(response.parsed_body).to declare_actions("retire", "reconfigure")
     end
 
     it "accepts action when service is reconfigurable" do

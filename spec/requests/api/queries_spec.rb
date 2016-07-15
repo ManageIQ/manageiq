@@ -24,7 +24,7 @@ describe ApiController do
       run_get vms_url
 
       expect_query_result(:vms, 3, 3)
-      expect(response_hash).to include("resources" => all(match("href" => a_string_matching(vm_href_pattern))))
+      expect(response.parsed_body).to include("resources" => all(match("href" => a_string_matching(vm_href_pattern))))
     end
 
     it "returns seperate ids and href when expanded" do
@@ -39,7 +39,7 @@ describe ApiController do
                                             "id"   => a_kind_of(Integer),
                                             "guid" => anything))
       }
-      expect(response_hash).to include(expected)
+      expect(response.parsed_body).to include(expected)
     end
 
     it "always return ids and href when asking for specific attributes" do
@@ -119,9 +119,9 @@ describe ApiController do
       run_get(providers_url(provider.id), :attributes => "authentications")
 
       expect(response).to have_http_status(:ok)
-      expect_result_to_match_hash(response_hash, "name" => "sample")
+      expect_result_to_match_hash(response.parsed_body, "name" => "sample")
       expect_result_to_have_keys(%w(authentications))
-      authentication = response_hash["authentications"].first
+      authentication = response.parsed_body["authentications"].first
       expect(authentication["userid"]).to eq("admin")
       expect(authentication.key?("password")).to be_falsey
     end
@@ -142,8 +142,8 @@ describe ApiController do
       run_get provision_requests_url(request.id)
 
       expect(response).to have_http_status(:ok)
-      expect_result_to_match_hash(response_hash, "description" => "sample provision")
-      provision_attrs = response_hash.fetch_path("options", "attrs")
+      expect_result_to_match_hash(response.parsed_body, "description" => "sample provision")
+      provision_attrs = response.parsed_body.fetch_path("options", "attrs")
       expect(provision_attrs).to_not be_nil
       expect(provision_attrs["userid"]).to eq("admin")
       expect(provision_attrs.key?(password_field)).to be_falsey

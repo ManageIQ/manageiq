@@ -6,7 +6,7 @@ RSpec.describe "API entrypoint" do
 
     expect(response).to have_http_status(:ok)
     expect_result_to_have_keys(%w(settings))
-    expect(response_hash['settings']).to be_kind_of(Hash)
+    expect(response.parsed_body['settings']).to be_kind_of(Hash)
   end
 
   it "returns a locale" do
@@ -14,7 +14,7 @@ RSpec.describe "API entrypoint" do
 
     run_get entrypoint_url
 
-    expect(%w(en en_US)).to include(response_hash['settings']['locale'])
+    expect(%w(en en_US)).to include(response.parsed_body['settings']['locale'])
   end
 
   it "collection query is sorted" do
@@ -22,7 +22,7 @@ RSpec.describe "API entrypoint" do
 
     run_get entrypoint_url
 
-    collection_names = response_hash['collections'].map { |c| c['name'] }
+    collection_names = response.parsed_body['collections'].map { |c| c['name'] }
     expect(collection_names).to eq(collection_names.sort)
   end
 end

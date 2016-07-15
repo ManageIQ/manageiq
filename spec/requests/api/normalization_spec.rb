@@ -5,6 +5,6 @@ RSpec.describe "Normalization of objects API" do
 
     run_get(hosts_url(host.id))
 
-    expect(response_hash).to include("created_on" => host.created_on.iso8601)
+    expect(response.parsed_body).to include("created_on" => host.created_on.iso8601)
   end
 end

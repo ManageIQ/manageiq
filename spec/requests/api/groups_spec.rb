@@ -70,7 +70,7 @@ describe ApiController do
       expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      group_id = response_hash["results"].first["id"]
+      group_id = response.parsed_body["results"].first["id"]
       expect(MiqGroup.exists?(group_id)).to be_truthy
     end
 
@@ -82,7 +82,7 @@ describe ApiController do
       expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      group_id = response_hash["results"].first["id"]
+      group_id = response.parsed_body["results"].first["id"]
       expect(MiqGroup.exists?(group_id)).to be_truthy
     end
 
@@ -97,7 +97,7 @@ describe ApiController do
       expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      result = response_hash["results"].first
+      result = response.parsed_body["results"].first
       created_group = MiqGroup.find_by_id(result["id"])
 
       expect(created_group).to be_present
@@ -122,7 +122,7 @@ describe ApiController do
       expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      group_id = response_hash["results"][0]["id"]
+      group_id = response.parsed_body["results"][0]["id"]
       expected_group = MiqGroup.find_by(:id => group_id)
       expect(expected_group).to be_present
       expect(expected_group.description).to eq(sample_group["description"])
@@ -138,7 +138,7 @@ describe ApiController do
       expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      results = response_hash["results"]
+      results = response.parsed_body["results"]
       group1_id = results.first["id"]
       group2_id = results.second["id"]
       expect(MiqGroup.exists?(group1_id)).to be_truthy
