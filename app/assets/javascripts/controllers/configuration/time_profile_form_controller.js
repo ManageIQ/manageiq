@@ -136,23 +136,27 @@ ManageIQ.angular.app.controller('timeProfileFormController', ['$http', '$scope',
 
   $scope.allDaysClicked = function() {
     if ($scope.timeProfileModel.all_days) {
-      $scope.timeProfileModel.dayValues = _.times(7, true);
+      $scope.timeProfileModel.dayValues = _.times(7, _.constant(true));
+      $scope.timeProfileModel.days = _.times(7, _.constant(true));
     } else {
-      $scope.timeProfileModel.dayValues = _.times(7, false);
+      $scope.timeProfileModel.dayValues = _.times(7, _.constant(false));
+      $scope.timeProfileModel.days = [];
     }
   };
 
   $scope.allHoursClicked = function() {
     if ($scope.timeProfileModel.all_hours) {
-      $scope.timeProfileModel.hourValuesAMFirstHalf = _.times(6, true);
-      $scope.timeProfileModel.hourValuesAMSecondHalf = _.times(6, true);
-      $scope.timeProfileModel.hourValuesPMFirstHalf = _.times(6, true);
-      $scope.timeProfileModel.hourValuesPMSecondHalf = _.times(6, true);
+      $scope.timeProfileModel.hourValuesAMFirstHalf = _.times(6, _.constant(true));
+      $scope.timeProfileModel.hourValuesAMSecondHalf = _.times(6, _.constant(true));
+      $scope.timeProfileModel.hourValuesPMFirstHalf = _.times(6, _.constant(true));
+      $scope.timeProfileModel.hourValuesPMSecondHalf = _.times(6, _.constant(true));
+      $scope.timeProfileModel.hours = _.times(24, _.constant(true));
     } else {
-      $scope.timeProfileModel.hourValuesAMFirstHalf = _.times(6, false);
-      $scope.timeProfileModel.hourValuesAMSecondHalf = _.times(6, false);
-      $scope.timeProfileModel.hourValuesPMFirstHalf = _.times(6, false);
-      $scope.timeProfileModel.hourValuesPMSecondHalf = _.times(6, false);
+      $scope.timeProfileModel.hourValuesAMFirstHalf = _.times(6, _.constant(false));
+      $scope.timeProfileModel.hourValuesAMSecondHalf = _.times(6, _.constant(false));
+      $scope.timeProfileModel.hourValuesPMFirstHalf = _.times(6, _.constant(false));
+      $scope.timeProfileModel.hourValuesPMSecondHalf = _.times(6, _.constant(false));
+      $scope.timeProfileModel.hours = [];
     }
   };
 
