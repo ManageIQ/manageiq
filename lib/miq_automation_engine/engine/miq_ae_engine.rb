@@ -49,6 +49,44 @@ module MiqAeEngine
     end
   end
 
+  def self.deliver_synchronous(args)
+    log_header = "MIQ(#{name}.deliver_synchronous)"
+    options       = {:action => "Automate Request", :userid => 'system'}
+    attrs = args[:attrs]
+    request = "#{attrs['request']}##{attrs['message']}" if attrs
+    options[:action] = options[:action] + " " + request.to_s
+    zone = MiqServer.my_server.has_active_role?('automate') ? MiqServer.my_zone : nil
+    queue_options = {:class_name  => name,
+                     :method_name => 'deliver_from_queue',
+                     :args        => [args],
+                     :zone        => zone,
+                     :priority    => MiqQueue::HIGH_PRIORITY,
+                     :role        => 'automate',
+                     :msg_timeout => 60,
+                     :task_id     => 'automate'
+                    }
+    $log.info("#{log_header} Queuing MiqAeEngine deliver_from_queue with options: <#{options}>  Queue Options: #{queue_options}")
+    task = MiqTask.wait_for_taskid(MiqTask.generic_action_with_callback(options, queue_options))
+    raise "#{log_header} Error while processing deliver_from_queue." if task.nil?
+    task_results = task.task_results.duplicable? ? task.task_results.dup : task.task_results
+    task.task_results = nil
+    task.save
+    return task_results if task.status == "Ok"
+    raise task_results
+  end
+
+  def self.deliver_from_queue(args)
+    $log.info("Starting deliver_from_queue with args:  <#{args}>  ")
+    begin
+      task = MiqTask.find_by_id(args.delete(:task_id))
+      task.update_status(MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, "Running task")
+      MiqAeEngine.deliver(args)
+    rescue => err
+      task.task_results = err
+      $log.log_backtrace(err)
+    end
+  end
+
   def self.deliver(*args)
     options = {}
 

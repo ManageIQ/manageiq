@@ -61,6 +61,6 @@ class ResourceAction < ApplicationRecord
   def deliver_to_automate_from_dialog_field(dialog_hash_values, target, user)
     _log.info("Running <#{self.class.name}:#{id}> for <#{resource_type}:#{resource_id}>")
 
-    MiqAeEngine.deliver(automate_queue_hash(target, dialog_hash_values[:dialog], user))
+    MiqAeEngine.deliver_synchronous(automate_queue_hash(target, dialog_hash_values[:dialog], user))
   end
 end
