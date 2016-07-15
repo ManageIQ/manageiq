@@ -51,9 +51,11 @@ module Vmdb
 
       def settings_holder
         return nil if resource_instance.nil?
-        return resource_instance.reload if resource_instance.class.name.to_sym == settings_holder_class
+        resource_instance.reload
+        return resource_instance if resource_instance.class.name.to_sym == settings_holder_class
+
         index = SETTINGS_HIERARCHY.index(settings_holder_class)
-        resource_instance.reload.send(METHODS_FOR_SETTINGS[index])
+        resource_instance.send(METHODS_FOR_SETTINGS[index])
       end
     end
   end
