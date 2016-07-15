@@ -1237,6 +1237,7 @@
         :ems_refresh_worker_openstack_network: {}
         :ems_refresh_worker_redhat: {}
         :ems_refresh_worker_vmware: {}
+        :ems_refresh_worker_vmware_cloud: {}
       :event_handler:
         :cpu_usage_threshold: 0.percent
         :nice_delta: 7

@@ -735,6 +735,7 @@ en:
       ManageIQ::Providers::Openstack::CloudManager::Vm:                     Instance (OpenStack)
       ManageIQ::Providers::Azure::CloudManager::Vm:                         Instance (Microsoft Azure)
       ManageIQ::Providers::Amazon::CloudManager::Vm:                        Instance (Amazon)
+      ManageIQ::Providers::Vmware::CloudManager::Vm:                        Instance (VMware vCloud Director)
       ManageIQ::Providers::CloudManager::Template:                          Image
       ManageIQ::Providers::CloudManager::VirtualTemplate:                   Resourceless Server Template
       ManageIQ::Providers::ContainerManager:                                Containers Provider
@@ -756,6 +757,7 @@ en:
       ManageIQ::Providers::Amazon::CloudManager:                            Cloud Provider (Amazon)
       ManageIQ::Providers::Azure::CloudManager:                             Cloud Provider (Microsoft Azure)
       ManageIQ::Providers::Azure::NetworkManager::CloudNetwork:             Cloud Network (Microsoft Azure)
+      ManageIQ::Providers::Vmware::CloudManager:                            Cloud Provider (VMware vCloud Director)
       ManageIQ::Providers::Atomic::ContainerManager:                        Container Provider (Atomic)
       ManageIQ::Providers::Kubernetes::ContainerManager:                    Container Provider (Kubernetes)
       ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup:    Pod (Kubernetes)

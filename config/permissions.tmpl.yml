@@ -32,3 +32,4 @@
 - ems-type:rhevm
 - ems-type:scvmm
 - ems-type:vmwarews
+- ems-type:vmware_cloud
