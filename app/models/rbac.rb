@@ -397,9 +397,11 @@ module Rbac
 
     if targets.nil?
       scope = apply_scope(klass, scope)
+      results_format ||= :id
     elsif targets.kind_of?(Array)
       if targets.first.kind_of?(Numeric)
         target_ids = targets
+        results_format ||= :id
       else
         target_ids       = targets.collect(&:id)
         klass            = targets.first.class.base_class unless klass.respond_to?(:find)
@@ -459,7 +461,6 @@ module Rbac
     attrs[:auth_count] = auth_count
 
     results_format   = :objects if klass.respond_to?(:instances_are_derived?) && klass.instances_are_derived? # can't return ids if instances are derived from another source
-    results_format ||= :ids
 
     targets = case results_format
               when :objects then targets
