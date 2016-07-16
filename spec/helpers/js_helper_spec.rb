@@ -37,12 +37,6 @@ describe JsHelper do
     end
   end
 
-  context '#javascript_focus_if_exists' do
-    it 'returns js to check for the existence of an element and focus on the element if it exists' do
-      expect(javascript_focus_if_exists('foo')).to eq("if ($('#foo').length) $('#foo').focus();")
-    end
-  end
-
   context '#javascript_highlight' do
     it 'returns js to to add or remove the active class on the element' do
       expect(javascript_highlight('foo', true)).to eq("miqHighlight('\#foo', true);")
@@ -54,18 +48,6 @@ describe JsHelper do
     it 'returns js to to add or remove the dimmed class on the element' do
       expect(javascript_dim('foo', true)).to eq("miqDimDiv('\#foo', true);")
       expect(javascript_dim('foo', false)).to eq("miqDimDiv('\#foo', false);")
-    end
-  end
-
-  context '#javascript_add_class' do
-    it 'returns js to add a class on the element' do
-      expect(javascript_add_class('foo', 'bar')).to eq("$('\#foo').addClass('bar');")
-    end
-  end
-
-  context '#javascript_del_class' do
-    it 'returns js to remove a class on the element' do
-      expect(javascript_del_class('foo', 'bar')).to eq("$('\#foo').removeClass('bar');")
     end
   end
 
