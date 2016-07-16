@@ -162,25 +162,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # Control blinds effects on nav panel divs
-  def panel_control
-    @keep_compare = true
-    panel = params[:panel]
-    render :update do |page|
-      page << javascript_prologue
-      if @panels[panel] == 'down'
-        @panels[panel] = 'up'
-        page << "$('##{j_str(panel)}').slideUp('medium');"
-      else
-        @panels[panel] = 'down'
-        page << "$('##{j_str(panel)}').slideDown('medium');"
-      end
-    end
-    # FIXME: the @panels end up in the session eventually
-    #        so there's a issue with the possibility of inserting arbitrary
-    #        keys to the hash
-  end
-
   # Send chart data to the client
   def render_chart
     if params[:report]
