@@ -26,13 +26,6 @@ module OpsController::OpsRbac
     end
   end
 
-  def rbac_change_tab
-    render :update do |page|
-      page << javascript_prologue
-      page << "miqSparkle(false);"
-    end
-  end
-
   def rbac_user_add
     assert_privileges("rbac_user_add")
     @_params[:typ] = "new"
