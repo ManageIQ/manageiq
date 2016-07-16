@@ -146,7 +146,6 @@ Vmdb::Application.routes.draw do
         dynamic_checkbox_refresh
         form_field_changed
         listnav_search_selected
-        panel_control
         quick_search
         show
         show_list
@@ -167,7 +166,6 @@ Vmdb::Application.routes.draw do
                compare_get,
       :post => %w(
         button
-        panel_control
         quick_search
         sections_field_changed
         show
@@ -293,7 +291,6 @@ Vmdb::Application.routes.draw do
         dynamic_checkbox_refresh
         form_field_changed
         listnav_search_selected
-        panel_control
         quick_search
         show
         show_list
@@ -322,7 +319,6 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
         update
-        panel_control
       ) +
                compare_post
     },
@@ -344,7 +340,6 @@ Vmdb::Application.routes.draw do
         dynamic_checkbox_refresh
         form_field_changed
         listnav_search_selected
-        panel_control
         quick_search
         show
         show_list
@@ -377,7 +372,6 @@ Vmdb::Application.routes.draw do
         dynamic_checkbox_refresh
         form_field_changed
         listnav_search_selected
-        panel_control
         quick_search
         show
         show_list
@@ -404,7 +398,6 @@ Vmdb::Application.routes.draw do
         dynamic_checkbox_refresh
         form_field_changed
         listnav_search_selected
-        panel_control
         quick_search
         show
         show_list
@@ -492,7 +485,6 @@ Vmdb::Application.routes.draw do
         dynamic_checkbox_refresh
         form_field_changed
         listnav_search_selected
-        panel_control
         quick_search
         sections_field_changed
         show
@@ -527,7 +519,6 @@ Vmdb::Application.routes.draw do
         dynamic_checkbox_refresh
         form_field_changed
         listnav_search_selected
-        panel_control
         quick_search
         sections_field_changed
         show
@@ -562,7 +553,6 @@ Vmdb::Application.routes.draw do
         dynamic_checkbox_refresh
         form_field_changed
         listnav_search_selected
-        panel_control
         quick_search
         sections_field_changed
         show
@@ -601,7 +591,6 @@ Vmdb::Application.routes.draw do
         dynamic_checkbox_refresh
         form_field_changed
         listnav_search_selected
-        panel_control
         quick_search
         sections_field_changed
         show
@@ -633,7 +622,6 @@ Vmdb::Application.routes.draw do
         dynamic_checkbox_refresh
         form_field_changed
         listnav_search_selected
-        panel_control
         quick_search
         sections_field_changed
         show
@@ -662,7 +650,6 @@ Vmdb::Application.routes.draw do
         dynamic_checkbox_refresh
         form_field_changed
         listnav_search_selected
-        panel_control
         quick_search
         sections_field_changed
         show
@@ -696,7 +683,6 @@ Vmdb::Application.routes.draw do
         dynamic_checkbox_refresh
         form_field_changed
         listnav_search_selected
-        panel_control
         quick_search
         sections_field_changed
         show
@@ -730,7 +716,6 @@ Vmdb::Application.routes.draw do
         dynamic_checkbox_refresh
         form_field_changed
         listnav_search_selected
-        panel_control
         quick_search
         sections_field_changed
         show
@@ -758,7 +743,6 @@ Vmdb::Application.routes.draw do
         dynamic_checkbox_refresh
         form_field_changed
         listnav_search_selected
-        panel_control
         quick_search
         sections_field_changed
         show
@@ -786,7 +770,6 @@ Vmdb::Application.routes.draw do
         dynamic_checkbox_refresh
         form_field_changed
         listnav_search_selected
-        panel_control
         quick_search
         sections_field_changed
         show
@@ -852,7 +835,6 @@ Vmdb::Application.routes.draw do
         csp_report
         timeline_data
         login_retry
-        panel_control
         reset_widgets
         resize_layout
         show_timeline
@@ -887,7 +869,6 @@ Vmdb::Application.routes.draw do
         dynamic_text_box_refresh
         form_field_changed
         listnav_search_selected
-        panel_control
         protect
         provider_type_field_changed
         quick_search
@@ -926,7 +907,6 @@ Vmdb::Application.routes.draw do
       :post => %w(
         button
         listnav_search_selected
-        panel_control
         protect
         quick_search
         sections_field_changed
@@ -966,7 +946,6 @@ Vmdb::Application.routes.draw do
         create
         form_field_changed
         listnav_search_selected
-        panel_control
         protect
         quick_search
         sections_field_changed
@@ -1008,7 +987,6 @@ Vmdb::Application.routes.draw do
         dynamic_checkbox_refresh
         form_field_changed
         listnav_search_selected
-        panel_control
         protect
         quick_search
         sections_field_changed
@@ -1045,7 +1023,6 @@ Vmdb::Application.routes.draw do
         dynamic_checkbox_refresh
         form_field_changed
         listnav_search_selected
-        panel_control
         quick_search
         sections_field_changed
         show
@@ -1082,7 +1059,6 @@ Vmdb::Application.routes.draw do
         dynamic_checkbox_refresh
         form_field_changed
         listnav_search_selected
-        panel_control
         perf_chart_chooser
         quick_search
         sections_field_changed
@@ -1118,7 +1094,6 @@ Vmdb::Application.routes.draw do
         dynamic_checkbox_refresh
         form_field_changed
         listnav_search_selected
-        panel_control
         quick_search
         sections_field_changed
         show
@@ -1154,7 +1129,6 @@ Vmdb::Application.routes.draw do
         dynamic_checkbox_refresh
         form_field_changed
         listnav_search_selected
-        panel_control
         quick_search
         sections_field_changed
         perf_chart_chooser
@@ -1196,7 +1170,6 @@ Vmdb::Application.routes.draw do
         dynamic_text_box_refresh
         form_field_changed
         listnav_search_selected
-        panel_control
         protect
         provider_type_field_changed
         quick_search
@@ -1228,7 +1201,6 @@ Vmdb::Application.routes.draw do
       :post => %w(
         button
         quick_search
-        panel_control
         show
         show_list
         tag_edit_form_field_changed
@@ -1251,7 +1223,6 @@ Vmdb::Application.routes.draw do
       :post => %w(
         button
         quick_search
-        panel_control
         show
         show_list
         tag_edit_form_field_changed
@@ -1274,7 +1245,6 @@ Vmdb::Application.routes.draw do
       :post => %w(
         button
         quick_search
-        panel_control
         show
         show_list
         tag_edit_form_field_changed
@@ -1297,7 +1267,6 @@ Vmdb::Application.routes.draw do
       :post => %w(
         button
         quick_search
-        panel_control
         show
         show_list
         tag_edit_form_field_changed
@@ -1320,7 +1289,6 @@ Vmdb::Application.routes.draw do
       :post => %w(
         button
         quick_search
-        panel_control
         show
         show_list
         tag_edit_form_field_changed
@@ -1343,7 +1311,6 @@ Vmdb::Application.routes.draw do
       :post => %w(
         button
         quick_search
-        panel_control
         show
         show_list
         tag_edit_form_field_changed
@@ -1370,7 +1337,6 @@ Vmdb::Application.routes.draw do
       :post => %w(
         button
         quick_search
-        panel_control
         sections_field_changed
         show
         show_list
@@ -1433,7 +1399,6 @@ Vmdb::Application.routes.draw do
         host_cloud_services
         listnav_search_selected
         quick_search
-        panel_control
         patches
         protect
         sections_field_changed
@@ -1625,7 +1590,6 @@ Vmdb::Application.routes.draw do
         export
         export_field_changed
         import
-        panel_control
         policy_edit
         policy_get_all
         policy_field_changed
@@ -1738,7 +1702,6 @@ Vmdb::Application.routes.draw do
         button
         create_ds
         create_ds_field_changed
-        panel_control
         protect
         quick_search
         sections_field_changed
@@ -1766,7 +1729,6 @@ Vmdb::Application.routes.draw do
                compare_get,
       :post => %w(
         button
-        panel_control
         perf_chart_chooser
         protect
         quick_search
@@ -1799,7 +1761,6 @@ Vmdb::Application.routes.draw do
         button
         create_ld
         create_ld_field_changed
-        panel_control
         protect
         quick_search
         sections_field_changed
@@ -1826,7 +1787,6 @@ Vmdb::Application.routes.draw do
                compare_get,
       :post => %w(
         button
-        panel_control
         protect
         quick_search
         sections_field_changed
@@ -1980,7 +1940,6 @@ Vmdb::Application.routes.draw do
         cloud_networks
         outputs
         listnav_search_selected
-        panel_control
         parameters
         quick_search
         resources
@@ -2020,7 +1979,6 @@ Vmdb::Application.routes.draw do
         exp_token_pressed
         form_field_changed
         new
-        panel_control
         provision
         quick_search
         refresh
@@ -2151,7 +2109,6 @@ Vmdb::Application.routes.draw do
       :post => %w(
         button
         listnav_search_selected
-        panel_control
         protect
         sections_field_changed
         show
@@ -2230,7 +2187,6 @@ Vmdb::Application.routes.draw do
         explorer
         files
         listnav_search_selected
-        panel_control
         disk_files
         perf_chart_chooser
         protect
@@ -2275,7 +2231,6 @@ Vmdb::Application.routes.draw do
         button
         create
         form_field_changed
-        panel_control
         quick_search
         show
         show_list
@@ -2378,7 +2333,6 @@ Vmdb::Application.routes.draw do
         linux_initprocesses
         ownership_field_changed
         ownership_update
-        panel_control
         patches
         perf_chart_chooser
         policies
@@ -2467,7 +2421,6 @@ Vmdb::Application.routes.draw do
         ontap_storage_volume
         ownership_field_changed
         ownership_update
-        panel_control
         patches
         perf_chart_chooser
         policies
@@ -2562,7 +2515,6 @@ Vmdb::Application.routes.draw do
         ontap_storage_systems
         ownership_field_changed
         ownership_update
-        panel_control
         patches
         perf_chart_chooser
         policies
