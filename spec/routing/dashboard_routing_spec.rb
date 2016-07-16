@@ -123,12 +123,6 @@ describe 'routes for DashboardController' do
     end
   end
 
-  describe "#panel_control" do
-    it "routes with POST" do
-      expect(post("/dashboard/panel_control")).to route_to("dashboard#panel_control")
-    end
-  end
-
   describe "#reset_widgets" do
     it "routes with POST" do
       expect(post("/dashboard/reset_widgets")).to route_to("dashboard#reset_widgets")

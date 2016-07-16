@@ -78,10 +78,4 @@ shared_examples_for "A controller that has advanced search routes" do |restful|
       expect(post("/#{controller_name}/exp_token_pressed")).to route_to("#{controller_name}#exp_token_pressed")
     end
   end
-
-  describe "#panel_control" do
-    it "routes with POST" do
-      expect(post("/#{controller_name}/panel_control")).to route_to("#{controller_name}#panel_control")
-    end
-  end
 end

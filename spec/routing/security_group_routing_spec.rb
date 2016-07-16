@@ -24,7 +24,6 @@ describe "routing for SecurityGroupController" do
   %w(
     button
     quick_search
-    panel_control
     show
     show_list
     tag_edit_form_field_changed
