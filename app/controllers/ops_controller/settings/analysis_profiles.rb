@@ -368,10 +368,7 @@ module OpsController::Settings::AnalysisProfiles
 
     render :update do |page|
       page << javascript_prologue
-      if changed != session[:changed]
-        session[:changed] = changed
-        page << javascript_for_miq_button_visibility(changed)
-      end
+      page << javascript_for_miq_button_visibility_changed(changed)
     end
   end
 
