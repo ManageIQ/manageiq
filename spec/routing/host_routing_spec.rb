@@ -175,12 +175,6 @@ describe "routes for HostController" do
     end
   end
 
-  describe "#panel_control" do
-    it "routes with POST" do
-      expect(post("/host/panel_control")).to route_to("host#panel_control")
-    end
-  end
-
   describe "#patches" do
     it "routes with GET" do
       expect(get("/host/patches")).to route_to("host#patches")

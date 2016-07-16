@@ -28,7 +28,6 @@ describe EmsInfraController do
     create
     form_field_changed
     listnav_search_selected
-    panel_control
     protect
     quick_search
     sections_field_changed
