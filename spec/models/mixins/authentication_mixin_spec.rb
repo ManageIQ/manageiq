@@ -340,7 +340,9 @@ describe AuthenticationMixin do
         conditions = {:class_name => @ems.class.base_class.name, :instance_id => @ems.id, :method_name => 'authentication_check_types', :role => @ems.authentication_check_role}
         queued_auth_checks = MiqQueue.where(conditions)
         expect(queued_auth_checks.length).to eq(1)
-        expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive(:verify_credentials).with(:default)
+        expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to(
+          receive(:verify_credentials).with(:default, :remember_host => true)
+        )
         queued_auth_checks.first.deliver
       end
 
