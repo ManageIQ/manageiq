@@ -926,8 +926,18 @@ describe QuadiconHelper do
       end
 
       context "when item is decorated" do
-        it 'includes a vendor listicon img' do
-          expect(single_quad).to have_selector("img[src*='vendor-#{item.image_name}']")
+        context "when item is a config manager foreman" do
+          it 'includes a vendor listicon img' do
+            expect(single_quad).to have_selector("img[src*='vendor-#{item.image_name}']")
+          end
+        end
+
+        context "when item is a middleware deployment" do
+          let(:item) { FactoryGirl.create(:middleware_deployment) }
+
+          it 'includes a vendor listicon img' do
+            expect(single_quad).to have_selector("img[src*='middleware_deployment']")
+          end
         end
       end
 
