@@ -576,7 +576,7 @@ describe ApplicationHelper do
       end
     end
 
-    ["host_miq_request_new", "vm_miq_request_new", "vm_pre_prov"].each do |id|
+    %w(host_miq_request_new vm_miq_request_new vm_pre_prov).each do |id|
       it "when with #{id}" do
         @id = id
         allow(user).to receive(:role_allows?).and_return(true)
