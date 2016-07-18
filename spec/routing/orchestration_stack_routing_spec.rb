@@ -31,7 +31,6 @@ describe OrchestrationStackController do
     cloud_networks
     outputs
     listnav_search_selected
-    panel_control
     parameters
     quick_search
     resources

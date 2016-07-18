@@ -48,12 +48,6 @@ describe "routes for AvailabilityZoneController" do
     end
   end
 
-  describe "#panel_control" do
-    it "routes with POST" do
-      expect(post("/#{controller_name}/panel_control")).to route_to("#{controller_name}#panel_control")
-    end
-  end
-
   describe "#perf_top_chart" do
     it "routes with POST" do
       expect(post("/#{controller_name}/perf_top_chart")).to route_to("#{controller_name}#perf_top_chart")

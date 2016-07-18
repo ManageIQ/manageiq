@@ -34,7 +34,6 @@ describe 'routes for ProviderForeman' do
     exp_token_pressed
     form_field_changed
     new
-    panel_control
     provision
     quick_search
     refresh
