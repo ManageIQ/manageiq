@@ -34,7 +34,6 @@ module ApplicationHelper::Dialogs
     }
 
     extra_options = {"data-miq_observe" => {
-      :interval => '.5',
       :url      => url,
     }.merge(auto_refresh_options(field)).to_json}
 
@@ -49,7 +48,6 @@ module ApplicationHelper::Dialogs
     }
 
     extra_options = {"data-miq_observe" => {
-      :interval => '.5',
       :url      => url,
     }.merge(auto_refresh_options(field)).to_json}
 
