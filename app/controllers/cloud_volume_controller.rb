@@ -44,9 +44,7 @@ class CloudVolumeController < ApplicationController
       delete_volumes if params[:pressed] == 'cloud_volume_delete'
     end
 
-    if !flash_errors? && @refresh_div == "main_div" && @lastaction == "show_list"
-      replace_gtl_main_div
-    elsif params[:pressed] == "cloud_volume_attach"
+    if params[:pressed] == "cloud_volume_attach"
       checked_volume_id = get_checked_volume_id(params)
       render :update do |page|
         page << javascript_prologue
@@ -78,6 +76,8 @@ class CloudVolumeController < ApplicationController
         page << javascript_prologue
         page.redirect_to :action => "new"
       end
+    elsif !flash_errors? && @refresh_div == "main_div" && @lastaction == "show_list"
+      replace_gtl_main_div
     elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
                                                    "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
       render_or_redirect_partial(pfx)
