@@ -238,15 +238,12 @@ module Rbac
   def self.find_targets_with_user_group_rbac(scope, _rbac_filters, find_options, user, miq_group)
     klass = scope.respond_to?(:klass) ? scope.klass : scope
     if klass == User && user
-      cond = {:id => user.id}
+      scope = scope.where(:id => user.id)
     elsif klass == MiqGroup
-      cond = {:id => miq_group.id}
+      scope = scope.where(:id => miq_group.id)
     end
 
-    targets = klass.where(cond).where(find_options[:condition])
-                .includes(find_options[:include]).references(find_options[:include])
-                .group(find_options[:group]).order(find_options[:order])
-                .offset(find_options[:offset]).limit(find_options[:limit])
+    targets     = method_with_scope(scope, find_options)
     auth_count = targets.except(:offset, :limit, :order).count(:all)
 
     return targets, auth_count
