@@ -1,0 +1,58 @@
+---
+f4e5bade-15a2-4805-bf8e-52318c4ce443: []
+aa6d5a82-1c88-45da-85d3-3d74b91a5bad:
+- !ruby/object:RbVmomi::PBM::PbmPlacementHub
+  props:
+    :dynamicProperty: []
+    :hubType: Datastore
+    :hubId: datastore-33
+6fe1c7b4-7f7e-4db1-a545-c756e392de62:
+- !ruby/object:RbVmomi::PBM::PbmPlacementHub
+  props:
+    :dynamicProperty: []
+    :hubType: Datastore
+    :hubId: datastore-30
+- !ruby/object:RbVmomi::PBM::PbmPlacementHub
+  props:
+    :dynamicProperty: []
+    :hubType: Datastore
+    :hubId: datastore-35
+- !ruby/object:RbVmomi::PBM::PbmPlacementHub
+  props:
+    :dynamicProperty: []
+    :hubType: Datastore
+    :hubId: datastore-38
+63502904-c546-4d17-b70b-3aa82d8f2897:
+- !ruby/object:RbVmomi::PBM::PbmPlacementHub
+  props:
+    :dynamicProperty: []
+    :hubType: Datastore
+    :hubId: datastore-30
+- !ruby/object:RbVmomi::PBM::PbmPlacementHub
+  props:
+    :dynamicProperty: []
+    :hubType: Datastore
+    :hubId: datastore-33
+- !ruby/object:RbVmomi::PBM::PbmPlacementHub
+  props:
+    :dynamicProperty: []
+    :hubType: Datastore
+    :hubId: datastore-35
+- !ruby/object:RbVmomi::PBM::PbmPlacementHub
+  props:
+    :dynamicProperty: []
+    :hubType: Datastore
+    :hubId: datastore-38
+Default-VM-Home521041ccef13f2d1-3d43b46f398ab14c:
+- !ruby/object:RbVmomi::PBM::PbmPlacementHub
+  props:
+    :dynamicProperty: []
+    :hubType: Datastore
+    :hubId: datastore-33
+Default-VirtualDisk521041ccef13f2d1-3d43b46f398ab14c:
+- !ruby/object:RbVmomi::PBM::PbmPlacementHub
+  props:
+    :dynamicProperty: []
+    :hubType: Datastore
+    :hubId: datastore-33
+521041ccef13f2d1-3d43b46f398ab14c: []
