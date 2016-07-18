@@ -13,6 +13,7 @@ module ManageIQ::Providers
 
         result[:storages], uids[:storages] = storage_inv_to_hashes(inv[:storage])
         result[:clusters], uids[:clusters] = cluster_inv_to_hashes(inv[:cluster])
+        result[:storage_profiles], uids[:storage_profiles] = storage_profile_inv_to_hashes(inv[:storage_profile])
 
         result[:hosts], uids[:hosts], uids[:clusters_by_host], uids[:lans], uids[:switches], uids[:guest_devices], uids[:scsi_luns] = host_inv_to_hashes(inv[:host], inv, uids[:storages], uids[:clusters])
         result[:vms], uids[:vms] = vm_inv_to_hashes(inv[:vm], inv[:storage], uids[:storages], uids[:hosts], uids[:clusters_by_host], uids[:lans])
@@ -69,6 +70,24 @@ module ManageIQ::Providers
           result_uids[mor] = new_result
           result_uids[:storage_id][uid] = new_result
         end
+        return result, result_uids
+      end
+
+      def self.storage_profile_inv_to_hashes(profile_inv)
+        result = []
+        result_uids = {}
+
+        profile_inv.each do |uid, profile|
+          new_result = {
+            :ems_ref      => uid,
+            :name         => profile.name,
+            :profile_type => profile.profileCategory
+          }
+
+          result << new_result
+          result_uids[uid] = new_result
+        end unless profile_inv.nil?
+
         return result, result_uids
       end
 

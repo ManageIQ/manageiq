@@ -77,6 +77,7 @@ module ManageIQ::Providers
       VC_ACCESSORS = [
         [:dataStoresByMor,              :storage],
         [:storagePodsByMor,             :storage_pod],
+        [:pbmProfilesByUid,             :storage_profile],
         [:dvPortgroupsByMor,            :dvportgroup],
         [:dvSwitchesByMor,              :dvswitch],
         [:hostSystemsByMor,             :host],
