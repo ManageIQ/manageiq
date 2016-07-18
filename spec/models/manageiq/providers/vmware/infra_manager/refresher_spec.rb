@@ -31,6 +31,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     assert_specific_cluster
     assert_specific_storage
     assert_specific_storage_cluster
+    assert_specific_storage_profile
     assert_specific_host
     assert_specific_vm
     assert_cpu_layout
@@ -184,6 +185,32 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     expect(vm.host).to eq(vm2.host)
   end
 
+  it 'handles storage profile deletion' do
+    storage_profile_ref = 'aa6d5a82-1c88-45da-85d3-3d74b91a5bad'
+    storage_location    = '4d3f9f09-38b9b7dc-365d-0010187f00da'
+
+    EmsRefresh.refresh(@ems)
+
+    storage_profile     = StorageProfile.find_by(:ems_ref => storage_profile_ref)
+    profile_assoc_count = StorageProfileStorage.count
+    storage             = Storage.find_by(:ems_ref => 'datastore-953')
+
+    expect(storage.storage_profiles).to include(storage_profile)
+    expect(storage_profile.storages).to include(storage)
+
+    refresher         = @ems.refresher.new([@ems])
+    target, inventory = refresher.collect_inventory_for_targets(@ems, [@ems])[0]
+
+    inventory[:storage_profile].delete(storage_profile_ref)
+
+    hashes = refresher.parse_targeted_inventory(@ems, target, inventory)
+    refresher.save_inventory(@ems, target, hashes)
+
+    storage = Storage.find_by(:location => storage_location)
+    expect(storage.storage_profiles).not_to include(storage_profile)
+    expect(StorageProfileStorage.count).to eql(profile_assoc_count - 1)
+  end
+
   def assert_table_counts
     expect(ExtManagementSystem.count).to eq(1)
     expect(Datacenter.count).to eq(3)
@@ -195,6 +222,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     expect(Vm.count).to eq(92)
     expect(MiqTemplate.count).to eq(9)
     expect(Storage.count).to eq(50)
+    expect(StorageProfile.count).to eq(6)
 
     expect(CustomAttribute.count).to eq(3)
     expect(CustomizationSpec.count).to eq(2)
@@ -228,6 +256,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     expect(@ems.vms_and_templates.size).to eq(101)
     expect(@ems.vms.size).to eq(92)
     expect(@ems.miq_templates.size).to eq(9)
+    expect(@ems.storage_profiles.size).to eq(6)
 
     expect(@ems.customization_specs.size).to eq(2)
     cspec = @ems.customization_specs.find_by_name("Win2k8Template")
@@ -333,6 +362,19 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
 
     @child_storage = Storage.find_by_ems_ref("datastore-12281")
     expect(@storage_cluster.children).to include(@child_storage)
+  end
+
+  def assert_specific_storage_profile
+    @storage_profile = StorageProfile.find_by(:name => "Virtual SAN Default Storage Policy")
+    expect(@storage_profile).to have_attributes(
+      :ems_id       => @ems.id,
+      :ems_ref      => "aa6d5a82-1c88-45da-85d3-3d74b91a5bad",
+      :name         => "Virtual SAN Default Storage Policy",
+      :profile_type => "REQUIREMENT"
+    )
+
+    expect(@storage_profile.storages).to include(@storage)
+    expect(@storage.storage_profiles).to include(@storage_profile)
   end
 
   def assert_specific_host
