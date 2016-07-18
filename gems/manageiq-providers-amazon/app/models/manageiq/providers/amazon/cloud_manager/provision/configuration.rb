@@ -4,4 +4,9 @@ module ManageIQ::Providers::Amazon::CloudManager::Provision::Configuration
       instance.client.associate_address(:instance_id => instance.instance_id, :public_ip => ip_address)
     end
   end
+
+  def userdata_payload
+    return unless raw_script = super
+    Base64.encode64(raw_script)
+  end
 end
