@@ -93,7 +93,7 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
 
   # Modified gems (forked on Github)
   gem "jquery-rjs",                   "=0.1.1",                       :git => "git://github.com/amatsuda/jquery-rjs.git", :ref => "1288c09"
-  gem "patternfly-sass",                                              :git => "git://github.com/ManageIQ/patternfly-sass", :branch => "tertiary-3.5.1"
+  gem "patternfly-sass",                                              :git => "git://github.com/ManageIQ/patternfly-sass", :branch => "tertiary-3.6.0"
 end
 
 ### Start of gems excluded from the appliances.
