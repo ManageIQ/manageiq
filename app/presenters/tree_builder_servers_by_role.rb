@@ -28,8 +28,8 @@ class TreeBuilderServersByRole < TreeBuilder
     []
   end
 
-  def x_get_tree_roots(count_only = false, _options)
-    count_only_or_objects(count_only, x_get_tree_server_roles)
+  def x_get_tree_roots(_count_only, _options)
+    x_get_tree_server_roles
   end
 
   def x_get_tree_server_roles
@@ -46,7 +46,7 @@ class TreeBuilderServersByRole < TreeBuilder
     end
   end
 
-  def x_get_tree_server_role_kids(parent, count_only)
+  def x_get_tree_server_role_kids(parent, _count_only)
     parent.assigned_server_roles.sort_by { |asr| asr.miq_server.name }.each_with_object([]) do |asr, kids|
       next if parent.kind_of?(Zone) && asr.miq_server.my_zone != parent.name
       kids.push(asr)

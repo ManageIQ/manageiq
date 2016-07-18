@@ -36,7 +36,6 @@ describe TreeBuilderServersByRole do
       @server_tree = TreeBuilderServersByRole.new(:servers_by_role_tree, :servers_by_role, @sb, true, parent)
     end
 
-
     it "is not lazy" do
       tree_options = @server_tree.send(:tree_init_options, :servers_by_role)
       expect(tree_options[:lazy]).to eq(false)
@@ -50,7 +49,7 @@ describe TreeBuilderServersByRole do
     end
 
     it 'returns server nodes as root kids' do
-      server_nodes = @server_tree.send(:x_get_tree_roots, false)
+      server_nodes = @server_tree.send(:x_get_tree_roots, false, {})
       expect(server_nodes).to eq([@server_role])
     end
 

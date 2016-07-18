@@ -28,8 +28,8 @@ class TreeBuilderRolesByServer < TreeBuilder
     []
   end
 
-  def x_get_tree_roots(count_only = false, _options)
-    count_only_or_objects(count_only, x_get_tree_miq_servers)
+  def x_get_tree_roots(_count_only, _options)
+    x_get_tree_miq_servers
   end
 
   def x_get_tree_miq_servers

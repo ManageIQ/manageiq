@@ -477,9 +477,9 @@ class TreeNodeBuilder
     if object.master_supported?
       priority = case object.priority
                  when 1
-                   "primary, "
+                   _("primary, ")
                  when 2
-                   "secondary, "
+                   _("secondary, ")
                  else
                    ""
                  end
@@ -520,7 +520,7 @@ class TreeNodeBuilder
       :icon   => ActionController::Base.helpers.image_path("100/role-#{object.name}.png"),
       :expand => true
     }
-    @node
     tooltip(_("Role: %{description} (%{status})") % {:description => object.description, :status => status})
+    @node
   end
 end
