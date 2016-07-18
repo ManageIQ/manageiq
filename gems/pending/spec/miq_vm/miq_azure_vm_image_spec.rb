@@ -19,7 +19,7 @@ describe MiqAzureVm do
   end
 
   before(:each) do |example|
-    Azure::Armrest::ArmrestService.clear_caches
+    Azure::Armrest::Configuration.clear_caches
     example_id = "#{example.example_group.description}-#{example.metadata[:ex_tag]}"
     cassette_name = @test_env.cassette_for(example_id)
     VCR.insert_cassette(cassette_name, :decode_compressed_response => true)
