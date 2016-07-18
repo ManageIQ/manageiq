@@ -1,27 +1,74 @@
 class ManageIQ::Providers::Azure::CloudManager::MetricsCapture < ManageIQ::Providers::BaseManager::MetricsCapture
   INTERVAL_1_MINUTE = "PT1M".freeze
 
+  # Linux, Windows counters
+  CPU_METERS     = ["\\Processor(_Total)\\% Processor Time", "\\Processor\\PercentProcessorTime"].freeze
+  NETWORK_METERS = ["\\NetworkInterface\\BytesTotal"].freeze # Linux (No windows counter available)
+  MEMORY_METERS  = ["\\Memory\\PercentUsedMemory", "\\Memory\\% Committed Bytes In Use"].freeze
+  DISK_METERS    = ["\\PhysicalDisk\\BytesPerSecond",
+                    "\\PhysicalDisk(_Total)\\Disk Read Bytes/sec", # Windows
+                    "\\PhysicalDisk(_Total)\\Disk Write Bytes/sec"].freeze # Windows
+
   COUNTER_INFO = [
     {
-      :native_counters => [
-        # CPU percentage guest OS
-        "\\Processor(_Total)\\% Processor Time", # Windows
-        "\\Processor\\PercentProcessorTime"      # Linux
-      ],
+      :native_counters       => CPU_METERS,
+      :calculation           => ->(stat) { stat.first },
       :vim_style_counter_key => "cpu_usage_rate_average"
     },
+    {
+      :native_counters       => NETWORK_METERS,
+      :calculation           => ->(stat) { stat.first / 1.kilobyte },
+      :vim_style_counter_key => "net_usage_rate_average",
+    },
+    {
+      :native_counters       => MEMORY_METERS,
+      :calculation           => ->(stat) { stat.first },
+      :vim_style_counter_key => "mem_usage_absolute_average",
+    },
+    {
+      :native_counters       => DISK_METERS,
+      :calculation           => ->(stat) { stat.sum / 1.kilobyte },
+      :vim_style_counter_key => "disk_usage_rate_average",
+    }
   ].freeze
 
   COUNTER_NAMES = COUNTER_INFO.flat_map { |i| i[:native_counters] }.uniq.to_set.freeze
 
   VIM_STYLE_COUNTERS = {
-    "cpu_usage_rate_average" => {
+    "cpu_usage_rate_average"      => {
       :counter_key           => "cpu_usage_rate_average",
       :instance              => "",
       :capture_interval      => "20",
       :precision             => 1,
       :rollup                => "average",
       :unit_key              => "percent",
+      :capture_interval_name => "realtime"
+    },
+    "mem_usage_absolute_average"  => {
+      :counter_key           => "mem_usage_absolute_average",
+      :instance              => "",
+      :capture_interval      => "20",
+      :precision             => 1,
+      :rollup                => "average",
+      :unit_key              => "percent",
+      :capture_interval_name => "realtime"
+    },
+    "net_usage_rate_average"      => {
+      :counter_key           => "net_usage_rate_average",
+      :instance              => "",
+      :capture_interval      => "20",
+      :precision             => 1,
+      :rollup                => "average",
+      :unit_key              => "kilobytespersecond",
+      :capture_interval_name => "realtime"
+    },
+    "disk_usage_rate_average"     => {
+      :counter_key           => "disk_usage_rate_average",
+      :instance              => "",
+      :capture_interval      => "20",
+      :precision             => 1,
+      :rollup                => "average",
+      :unit_key              => "kilobytespersecond",
       :capture_interval_name => "realtime"
     },
   }.freeze
@@ -84,7 +131,7 @@ class ManageIQ::Providers::Azure::CloudManager::MetricsCapture < ManageIQ::Provi
 
       timestamps.each_cons(2) do |last_ts, ts|
         metrics = i[:native_counters].collect { |c| metrics_by_counter_name.fetch_path(c, ts) }
-        value = metrics.compact.first # assume only one of the native_counters returned a value
+        value = i[:calculation].call(metrics.compact)
 
         # For (temporary) symmetry with VIM API we create 20-second intervals.
         (last_ts + 20.seconds..ts).step_value(20.seconds).each do |inner_ts|
