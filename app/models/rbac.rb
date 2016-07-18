@@ -237,10 +237,7 @@ module Rbac
       scope = scope.where(:id => miq_group.id)
     end
 
-    targets     = method_with_scope(scope, find_options)
-    auth_count = targets.except(:offset, :limit, :order).count(:all)
-
-    return targets, auth_count
+    method_with_scope(scope, find_options)
   end
 
   def self.find_options_for_tenant(scope, user, miq_group, find_options)
@@ -270,7 +267,9 @@ module Rbac
       auth_count  = targets.except(:offset, :limit, :order).count
       return targets, auth_count
     elsif apply_user_group_rbac_to_class?(klass, miq_group)
-      find_targets_with_user_group_rbac(scope, rbac_filters, find_options, user, miq_group)
+      targets = find_targets_with_user_group_rbac(scope, rbac_filters, find_options, user, miq_group)
+      auth_count = targets.except(:offset, :limit, :order).count(:all)
+      return targets, auth_count
     else
       find_targets_without_rbac(scope, find_options)
     end
