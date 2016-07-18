@@ -696,7 +696,7 @@ en:
       Container:                Container
       ContainerGroup:           Pod
       ContainerImageRegistry:   Image Registry
-      ContainerImage:           Image
+      ContainerImage:           Container Image
       ContainerNode:            Node
       ContainerProject:         Project
       ContainerRoute:           Route
