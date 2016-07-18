@@ -95,7 +95,7 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
         button(
           :middleware_deployment_add,
           'pficon pficon-add-circle-o fa-lg',
-          N_('Add a new #{ui_lookup(:table=>"middleware_deployment")}'),
+          N_('Add a new Middleware Deployment'),
           N_('Add Deployment'),
           :data => {'toggle'        => 'modal',
                     'target'        => '#modal_d_div',

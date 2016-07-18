@@ -46,7 +46,7 @@ class LogFile < ApplicationRecord
     # so that the nfs, ftp, smb, etc. mechanism have very little LogFile logic and only need to know how decipher the URI and build the directories as appropraite.
     raise _("LogFile local_file is nil") unless local_file
     unless File.exist?(local_file)
-      raise _("LogFile local_file: [#{file_name}] does not exist!") % {:file_name => local_file}
+      raise _("LogFile local_file: [%{file_name}] does not exist!") % {:file_name => local_file}
     end
     raise _("Log Depot settings not configured") unless file_depot
 

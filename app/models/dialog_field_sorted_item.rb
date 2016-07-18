@@ -16,7 +16,7 @@ class DialogFieldSortedItem < DialogField
 
   def sort_order=(value)
     unless [:ascending, :descending].include?(value.to_sym)
-      raise _("Invalid sort_order type <#{value}> specified.") % {:value => value}
+      raise _("Invalid sort_order type <%{value}> specified.") % {:value => value}
     end
     options[:sort_order] = value.to_sym
   end

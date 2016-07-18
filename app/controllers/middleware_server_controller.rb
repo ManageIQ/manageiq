@@ -121,7 +121,7 @@ class MiddlewareServerController < ApplicationController
     items.split(/,/).each do |item|
       mw_server = identify_record item
       if mw_server.product == 'Hawkular' && operation_info.fetch(:skip)
-        add_flash(_("Not #{operation_info.fetch(:hawk)} the provider"))
+        add_flash(_("Not %{hawkular_info} the provider") % {:hawkular_info => operation_info.fetch(:hawk)})
       else
         if operation_info.key? :param
           # Fetch param from UI - > see #9462/#8079
