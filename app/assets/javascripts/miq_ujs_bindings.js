@@ -60,7 +60,7 @@ $(document).ready(function () {
       if (parms.auto_refresh === true) {
         dialogFieldRefresh.triggerAutoRefresh(parms.field_id, parms.trigger);
       }
-    }
+    };
   };
 
   $(document).on('focus', '[data-miq_observe]', function () {
@@ -73,7 +73,7 @@ $(document).ready(function () {
 
     if (typeof interval == "undefined") {
       // No interval passed, use event observer
-      el.off('change')
+      el.off('change');
       el.on('change', _.debounce(function() {
         var id = el.attr('id');
         var value = el.prop('multiple') ? el.val() : encodeURIComponent(el.prop('value'));
@@ -85,7 +85,7 @@ $(document).ready(function () {
           complete: !! el.attr('data-miq_sparkle_off'),
           done: attemptAutoRefreshTrigger(parms),
         });
-      }, 700, { leading: false, trailing: true }));
+      }, 700, {leading: true, trailing: true}));
     } else {
       el.off(); // Use jQuery to turn off observe_field, prevents multi ajax transactions
       el.observe_field(interval, function () {
