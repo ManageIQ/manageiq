@@ -17,7 +17,7 @@ describe AzureBlobDisk do
   end
 
   before(:each) do |example|
-    Azure::Armrest::ArmrestService.clear_caches
+    Azure::Armrest::Configuration.clear_caches
     #
     # Each example has its own cassette file.
     # These cassette files are named based on the spec file name, the example group

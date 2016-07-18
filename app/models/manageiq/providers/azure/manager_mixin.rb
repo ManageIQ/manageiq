@@ -13,12 +13,11 @@ module ManageIQ::Providers::Azure::ManagerMixin
     require 'azure-armrest'
     conf = connect(options)
 
-    unless subscription.blank?
-      vms = ::Azure::Armrest::VirtualMachineService.new(conf)
-      subscriptions = vms.subscriptions.map(&:subscription_id)
-      unless subscriptions.include?(subscription)
-        raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - check your Azure Subscription ID")
-      end
+    # TODO: Modify this if/when the azure-armrest gem does automatic subscription validation
+    vms = ::Azure::Armrest::VirtualMachineService.new(conf)
+    subscriptions = vms.subscriptions.map(&:subscription_id)
+    unless subscriptions.include?(subscription)
+      raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - check your Azure Subscription ID")
     end
   rescue Azure::Armrest::UnauthorizedException, Azure::Armrest::BadRequestException
     raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - check your Azure Client ID and Client Key")
@@ -32,10 +31,15 @@ module ManageIQ::Providers::Azure::ManagerMixin
   end
 
   module ClassMethods
-    def raw_connect(client_id, client_key, azure_tenant_id, subscription = nil, proxy_uri = nil)
+    def raw_connect(client_id, client_key, azure_tenant_id, subscription, proxy_uri = nil)
       proxy_uri ||= VMDB::Util.http_proxy_uri
 
       require 'azure-armrest'
+
+      if subscription.blank?
+        raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - check your Azure Subscription ID")
+      end
+
       ::Azure::Armrest::ArmrestService.configure(
         :client_id       => client_id,
         :client_key      => client_key,

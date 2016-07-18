@@ -87,7 +87,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
     end
 
     after do
-      ::Azure::Armrest::ArmrestService.clear_caches
+      ::Azure::Armrest::Configuration.clear_caches
     end
 
     def recorded_discover(example)
