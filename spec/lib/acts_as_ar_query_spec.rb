@@ -228,6 +228,30 @@ describe ActsAsArQuery do
     end
   end
 
+  describe "#any?" do
+    it "returns true when results are returned" do
+      expect(model).to receive(:find).with(:all, {}).and_return([1, 2])
+      expect(query.any?).to be true
+    end
+
+    it "returns false when no results are returned" do
+      expect(model).to receive(:find).with(:all, {}).and_return([])
+      expect(query.any?).to be false
+    end
+  end
+
+  describe "#blank?" do
+    it "returns false when results are returned" do
+      expect(model).to receive(:find).with(:all, {}).and_return([1, 2])
+      expect(query.blank?).to be false
+    end
+
+    it "returns true when no results are returned" do
+      expect(model).to receive(:find).with(:all, {}).and_return([])
+      expect(query.blank?).to be true
+    end
+  end
+
   describe "#empty?" do
     it "returns false when results are returned" do
       expect(model).to receive(:find).with(:all, {}).and_return([1, 2])
@@ -237,6 +261,48 @@ describe ActsAsArQuery do
     it "returns true when no results are returned" do
       expect(model).to receive(:find).with(:all, {}).and_return([])
       expect(query.empty?).to be true
+    end
+  end
+
+  describe "#many?" do
+    it "returns true when many results are returned" do
+      expect(model).to receive(:find).with(:all, {}).and_return([1, 2])
+      expect(query.many?).to be true
+    end
+
+    it "returns false when 1 result is returned" do
+      expect(model).to receive(:find).with(:all, {}).and_return([1])
+      expect(query.many?).to be false
+    end
+
+    it "returns false when no results are returned" do
+      expect(model).to receive(:find).with(:all, {}).and_return([])
+      expect(query.many?).to be false
+    end
+  end
+
+  describe "#present?" do
+    it "returns false when results are returned" do
+      expect(model).to receive(:find).with(:all, {}).and_return([1, 2])
+      expect(query.present?).to be true
+    end
+
+    it "returns true when no results are returned" do
+      expect(model).to receive(:find).with(:all, {}).and_return([])
+      expect(query.present?).to be false
+    end
+  end
+
+  describe "#presence" do
+    it "returns array when results are returned" do
+      results = [1, 2]
+      expect(model).to receive(:find).with(:all, {}).and_return(results)
+      expect(query.presence).to be(results) # want same exact object
+    end
+
+    it "returns nil when no results are returned" do
+      expect(model).to receive(:find).with(:all, {}).and_return([])
+      expect(query.presence).to be_nil
     end
   end
 
