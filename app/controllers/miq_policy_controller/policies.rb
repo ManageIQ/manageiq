@@ -221,16 +221,10 @@ module MiqPolicyController::Policies
     event.name.end_with?("compliance_check", "perf_complete")
   end
 
-  def policy_get_all_folders(parent = nil)
-    if !parent.nil?
-      @folders = MiqPolicyController::UI_FOLDERS.collect(&:name)
-      @right_cell_text = _("%{typ} %{model}") % {:typ => parent, :model => ui_lookup(:models => "MiqPolicy")}
-      @right_cell_div = "policy_folders"
-    else
-      @folders = ["Compliance", "Control"]
-      @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "MiqPolicy")}
-      @right_cell_div = "policy_folders"
-    end
+  def policy_get_all_folders
+    @folders = ["Compliance", "Control"]
+    @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "MiqPolicy")}
+    @right_cell_div = "policy_folders"
   end
 
   # Get information for a policy
