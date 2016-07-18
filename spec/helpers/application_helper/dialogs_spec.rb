@@ -56,7 +56,7 @@ describe ApplicationHelper::Dialogs do
           expect(helper.textbox_tag_options(dialog_field, "url")).to eq(
             :maxlength         => 50,
             :class             => "dynamic-text-box-100 form-control",
-            "data-miq_observe" => '{"interval":".5","url":"url"}'
+            "data-miq_observe" => '{"url":"url"}'
           )
         end
       end
@@ -69,7 +69,6 @@ describe ApplicationHelper::Dialogs do
             :maxlength         => 50,
             :class             => "dynamic-text-box-100 form-control",
             "data-miq_observe" => {
-              :interval     => ".5",
               :url          => "url",
               :auto_refresh => true,
               :field_id     => "100",
@@ -108,7 +107,6 @@ describe ApplicationHelper::Dialogs do
             :maxlength         => 8192,
             :size              => "50x6",
             "data-miq_observe" => {
-              :interval     => ".5",
               :url          => "url",
               :auto_refresh => true,
               :field_id     => "100",
@@ -126,7 +124,7 @@ describe ApplicationHelper::Dialogs do
             :class             => "dynamic-text-area-100 form-control",
             :maxlength         => 8192,
             :size              => "50x6",
-            "data-miq_observe" => '{"interval":".5","url":"url"}'
+            "data-miq_observe" => '{"url":"url"}'
           )
         end
       end
