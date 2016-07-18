@@ -1039,10 +1039,6 @@ describe Rbac do
 
   # find_targets_with_direct_rbac(klass, scope, rbac_filters, find_options, user_or_group)
   describe "find_targets_with_direct_rbac" do
-    let(:host_filter_find_options) do
-      {:conditions => {"hosts.hostname" => "good"}, :include => "host"}
-    end
-
     let(:host_match) { FactoryGirl.create(:host, :hostname => 'good') }
     let(:host_other) { FactoryGirl.create(:host, :hostname => 'bad') }
     let(:vms_match) { FactoryGirl.create_list(:vm_vmware, 2, :host => host_match) }
@@ -1051,15 +1047,13 @@ describe Rbac do
 
     it "works with no filters" do
       all_vms
-      result = Rbac.find_targets_with_direct_rbac(Vm, {}, {}, nil, nil)
+      result = Rbac.filtered(Vm)
       expect(result).to match_array(all_vms)
     end
 
-    # most of the functionality of search is channeled through find_options. including filters
-    # including :conditions, :include, :order, :limit
     it "applies find_options[:conditions, :include]" do
       all_vms
-      result = Rbac.find_targets_with_direct_rbac(Vm, {}, host_filter_find_options, nil, nil)
+      result = Rbac.filtered(Vm, :conditions => {"hosts.hostname" => "good"}, :include_for_find => {:host => {}})
       expect(result).to match_array(vms_match)
     end
   end
