@@ -130,37 +130,37 @@
           - else
             = _('All')
   - unless @sortby1 == NOTHING_STRING || @edit[:new][:group] == "No"
-    %fieldset
-      %h3
-        = _("Specify Calculations for Summary Rows")
-      %table.table.table-striped.table-bordered
-        %thead
+    %hr
+    %h3
+      = _("Specify Calculations for Summary Rows")
+    %table.table.table-striped.table-bordered
+      %thead
+        %tr
+          %th
+            = _('Column Name')
+          %th
+            = _('Header')
+          %th
+            = _('Calculations')
+      %tbody
+        - @edit[:new][:field_order].each_with_index do |f, f_idx|
           %tr
-            %th
-              = _('Column Name')
-            %th
-              = _('Header')
-            %th
-              = _('Calculations')
-        %tbody
-          - @edit[:new][:field_order].each_with_index do |f, f_idx|
-            %tr
-              %td
-                = h(f.first)
-              %td
-                = h(@edit[:new][:headers][f.last])
-              %td{:id => "calc_#{f_idx}_div"}
-                - ci = MiqReport.get_col_info(f.last.split("__").first)
-                - if ci[:numeric]
-                  #form-group
-                  - field_name = "calc_id_#{f_idx}"
-                  - col = field_to_col(f.last)
-                  - selected = @edit[:new][:col_options][col] && @edit[:new][:col_options][col][:grouping] ? @edit[:new][:col_options][col][:grouping] : []
-                  = select_tag(field_name,
-                      options_for_select(MiqReport::GROUPINGS.map(&:reverse), selected),
-                      :class    => "selectpicker show-tick",
-                      :multiple => true,
-                      "title"   => "Check Option")
-                  :javascript
-                    miqInitSelectPicker();
-                    miqSelectPickerEvent("#{field_name}", "#{url}")
+            %td
+              = h(f.first)
+            %td
+              = h(@edit[:new][:headers][f.last])
+            %td{:id => "calc_#{f_idx}_div"}
+              - ci = MiqReport.get_col_info(f.last.split("__").first)
+              - if ci[:numeric]
+                #form-group
+                - field_name = "calc_id_#{f_idx}"
+                - col = field_to_col(f.last)
+                - selected = @edit[:new][:col_options][col] && @edit[:new][:col_options][col][:grouping] ? @edit[:new][:col_options][col][:grouping] : []
+                = select_tag(field_name,
+                    options_for_select(MiqReport::GROUPINGS.map(&:reverse), selected),
+                    :class    => "selectpicker show-tick",
+                    :multiple => true,
+                    "title"   => "Check Option")
+                :javascript
+                  miqInitSelectPicker();
+                  miqSelectPickerEvent("#{field_name}", "#{url}")
