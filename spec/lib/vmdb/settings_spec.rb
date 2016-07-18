@@ -178,6 +178,37 @@ describe Vmdb::Settings do
       change = miq_server.settings_changes.find_by(:key => "/authentication/user_proxies")
       expect(change.value).to eq [{:bind_pwd => encrypted}]
     end
+
+    it "saving settings for Zone does not change saved Region or Server settings" do
+      MiqRegion.seed
+
+      described_class.save!(miq_server.zone, :api => {:token_ttl => "2.hour"})
+      miq_server.zone.reload
+      expect(miq_server.zone.settings_changes.count).to eq 1
+      expect(miq_server.zone.settings_changes.first).to have_attributes(:key   => "/api/token_ttl",
+                                                                        :value => "2.hour")
+      miq_server.reload
+      expect(miq_server.settings_changes.count).to eq 0
+
+      miq_server.miq_region.reload
+      expect(miq_server.miq_region.settings_changes.count).to eq 0
+    end
+
+    it "saving settings for Region does not change saved Zone or Server settings" do
+      MiqRegion.seed
+
+      described_class.save!(miq_server.zone.miq_region, :api => {:token_ttl => "3.hour"})
+      miq_server.zone.miq_region.reload
+
+      expect(miq_server.miq_region.settings_changes.count).to eq 1
+      expect(miq_server.miq_region.settings_changes.first).to have_attributes(:key   => "/api/token_ttl",
+                                                                              :value => "3.hour")
+      miq_server.reload
+      expect(miq_server.settings_changes.count).to eq 0
+
+      miq_server.zone.reload
+      expect(miq_server.zone.settings_changes.count).to eq 0
+    end
   end
 
   shared_examples_for "password handling" do
@@ -272,6 +303,38 @@ describe Vmdb::Settings do
       server.settings_changes.create!(:key => "/log/collection/current/pattern", :value => ["*.log"])
       settings = Vmdb::Settings.for_resource(server)
       expect(settings.log.collection.current.pattern).to eq ["*.log"]
+    end
+
+    it "can load settings on each level from Region -> Zone -> Server hierarchy" do
+      MiqRegion.seed
+      described_class.save!(server.zone.miq_region, :api => {:token_ttl => "3.hour"})
+      described_class.save!(server.zone, :api => {:token_ttl => "4.hour"})
+      described_class.save!(server, :api => {:token_ttl => "5.hour"})
+
+      settings = Vmdb::Settings.for_resource(server)
+      expect(settings.api.token_ttl).to eq "5.hour"
+
+      settings = Vmdb::Settings.for_resource(server.zone)
+      expect(settings.api.token_ttl).to eq "4.hour"
+
+      settings = Vmdb::Settings.for_resource(server.zone.miq_region)
+      expect(settings.api.token_ttl).to eq "3.hour"
+    end
+
+    it "applied settings from hierarchy Region -> Zone -> Server" do
+      MiqRegion.seed
+
+      described_class.save!(server.zone.miq_region, :api => {:token_ttl => "3.hour"})
+      settings = Vmdb::Settings.for_resource(server)
+      expect(settings.api.token_ttl).to eq "3.hour"
+
+      described_class.save!(server.zone, :api => {:token_ttl => "4.hour"})
+      settings = Vmdb::Settings.for_resource(server)
+      expect(settings.api.token_ttl).to eq "4.hour"
+
+      described_class.save!(server, :api => {:token_ttl => "5.hour"})
+      settings = Vmdb::Settings.for_resource(server)
+      expect(settings.api.token_ttl).to eq "5.hour"
     end
   end
 end
