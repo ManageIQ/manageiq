@@ -286,7 +286,19 @@ module EmsRefresh::SaveInventoryInfra
   end
 
   def save_storage_profiles_inventory(ems, hashes, _target = nil)
-    save_inventory_multi(ems.storage_profiles, hashes, :use_association, [:ems_ref])
+    save_inventory_multi(ems.storage_profiles, hashes, :use_association, [:ems_ref], [:storage_profile_storages])
+  end
+
+  def save_storage_profile_storages_inventory(storage_profile, storages)
+    hashes = storages.collect do |storage|
+      {
+        :storage_profile_id => storage_profile.id,
+        :storage_id         => storage[:id]
+      }
+    end
+
+    save_inventory_multi(storage_profile.storage_profile_storages, hashes,
+                         :use_association, [:storage_profile_id, :storage_id])
   end
 
   def save_customization_specs_inventory(ems, hashes, _target = nil)
