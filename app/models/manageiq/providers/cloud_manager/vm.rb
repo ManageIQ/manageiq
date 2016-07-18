@@ -82,11 +82,11 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   end
 
   def validate_associate_floating_ip
-    validate_unsupported(_("Associate Floating IP Operation"))
+    {:available => supports_associate_floating_ip?, :message => unsupported_reason(:associate_floating_ip)}
   end
 
   def validate_disassociate_floating_ip
-    validate_unsupported(_("Disassociate Floating IP Operation"))
+    {:available => supports_disassociate_floating_ip?, :message => unsupported_reason(:disassociate_floating_ip)}
   end
 
   def raw_associate_floating_ip(_ip_address)

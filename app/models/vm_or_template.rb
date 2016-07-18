@@ -32,6 +32,8 @@ class VmOrTemplate < ApplicationRecord
   include AvailabilityMixin
 
   supports_not :retire
+  supports_not :associate_floating_ip
+  supports_not :disassociate_floating_ip
 
   has_many :ems_custom_attributes, -> { where(:source => 'VC') }, :as => :resource, :dependent => :destroy,
            :class_name => "CustomAttribute"
