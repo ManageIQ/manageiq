@@ -639,10 +639,10 @@ module EmsCommon
   end
 
   def retrieve_provider_regions
-    cloud_managers = model.supported_subclasses.select { |c| c.is_available?(:regions) }
-    cloud_managers.each_with_object({}) do |cloud_manager, provider_regions|
-      regions = cloud_manager.parent::Regions.all.sort_by { |r| r[:description] }
-      provider_regions[cloud_manager.ems_type] = regions.map do |region|
+    managers = model.supported_subclasses.select(&:supports_regions?)
+    managers.each_with_object({}) do |manager, provider_regions|
+      regions = manager.parent::Regions.all.sort_by { |r| r[:description] }
+      provider_regions[manager.ems_type] = regions.map do |region|
         [region[:description], region[:name]]
       end
     end

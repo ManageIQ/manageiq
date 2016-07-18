@@ -56,14 +56,6 @@ module ManageIQ::Providers
       {:available => true, :message => nil}
     end
 
-    def self.validate_regions
-      if "#{parent}::Regions".safe_constantize
-        {:available => true, :message => nil}
-      else
-        {:available => false, :message => nil}
-      end
-    end
-
     def validate_authentication_status
       {:available => true, :message => nil}
     end
