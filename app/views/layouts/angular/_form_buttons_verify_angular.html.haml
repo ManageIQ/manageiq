@@ -1,6 +1,6 @@
 - if !session[:host_items].nil?
   - verify_title_on ||= _("Validate the credentials by logging into the selected %{title_for_host}") % {:title_for_host => title_for_host}
-  - verify_title_off ||= _("%s to validate against, Username and matching password fields are needed to perform verification of credentials") % title_for_host
+  - verify_title_off ||= _("%{host} to validate against, Username and matching password fields are needed to perform verification of credentials") % {:host => title_for_host}
 - else
   - verify_title_on = "Validate the credentials by logging into the Server"
   - verify_title_off ||= _("Server information, Username and matching password fields are needed to perform verification of credentials")

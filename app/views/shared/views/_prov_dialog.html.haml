@@ -290,7 +290,7 @@
               :keys                       => keys})
         - if (@edit && @edit[:new] && @edit[:new][:sysprep_upload_text]) || (@options && @options[:sysprep_upload_text])
           - file_name = (@edit && @edit[:new]) ? @edit[:new][:sysprep_upload_file] : @options[:sysprep_upload_file]
-          - label = _("Uploaded File '%s'") % file_name
+          - label = _("Uploaded File '%{filename}'") % {:filename => file_name}
           - keys = [:sysprep_upload_text]
           = render(:partial => "/miq_request/prov_dialog_fieldset",
             :locals         => {:workflow => wf,

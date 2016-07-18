@@ -27,7 +27,7 @@
                         "data-miq_sparkle_off" => true,
                         :remote                => true,
                         "data-method"          => :post,
-                        :title                 => _("Remove %s") % e)
+                        :title                 => _("Remove %{email}") % {:email => e})
       .form-group
         %label.control-label.col-md-2
           = _("Add a User")

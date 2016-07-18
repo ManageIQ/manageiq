@@ -20,7 +20,7 @@
           - unless selected_id[:total_size].blank?
             %p.form-control-static
               = number_to_human_size(selected_id[:total_size], :precision => 2)
-              = _("(%s bytes)") % number_with_delimiter(selected_id[:total_size], :delimiter => ",", :separator => ".")
+              = _("(%{number} bytes)") % {:number => number_with_delimiter(selected_id[:total_size], :delimiter => ",", :separator => ".")}
       .form-group
         %label.control-label.col-sm-2
           = _('Created On')
@@ -30,4 +30,4 @@
               = format_timezone(selected_id[:create_time].to_time, Time.zone, "view")
     %hr
   - else
-    = render :partial => 'layouts/info_msg', :locals => {:message => _("%s has no snapshots") % @record.name}
+    = render :partial => 'layouts/info_msg', :locals => {:message => _("%{record_name} has no snapshots") % {:record_name => @record.name}}

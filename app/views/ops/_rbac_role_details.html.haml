@@ -55,9 +55,11 @@
                 = h(g.description)
     .col-md-12.col-lg-6
       %hr
-      - temp = @edit ? _("Editing") : _("Read Only")
+      - if @edit
+        = _("Product Features (Editing)")
+      - else
+        = _("Product Features (Read Only)")
       %h3
-        = _("Product Features (%s)") % temp
       #features_treebox{:style => "width:100%;height:100%;color:#000"}
       = render(:partial => "layouts/dynatree",
                :locals  => {:tree_id        => "features_treebox",

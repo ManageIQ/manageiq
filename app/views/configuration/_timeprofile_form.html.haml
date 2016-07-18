@@ -65,7 +65,7 @@
                           :disabled                   => rollup_disabled,
                           "data-miq_observe_checkbox" => {:url => url}.to_json)
           - unless @timeprofile.miq_reports.empty?
-            .note= _("In use by %s reports, cannot be disabled") % @timeprofile.miq_reports.count
+            .note= _("In use by %{count} reports, cannot be disabled") % {:counts => @timeprofile.miq_reports.count}
 
 
   - if %w(timeprofile_new timeprofile_copy timeprofile_create).include?(controller.action_name)

@@ -211,7 +211,7 @@
 
   .note
     - arr = [Vm.cpu_recommendation_minimum, MiqReport.new.format_mbytes_to_human_size(Vm.mem_recommendation_minimum)]
-    = _("* Recommendations are subject to minimum of CPU: %s and Memory: %s.") % arr
+    = _("* Recommendations are subject to minimum of CPU: %{cpu} and Memory: %{memory}.") % {:cpu => arr[0], :memory => arr[1]}
 
   - unless @explorer
     #buttons_on{:style => "float: right"}

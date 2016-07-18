@@ -2,7 +2,7 @@
   Parameters:
     widget      MiqWidget object
 - if @edit && @edit[:current]
-  - params = {:id => "w_#{widget.id}", :title => _("Drag/drop Widget \"%s\"") % widget.title}
+  - params = {:id => "w_#{widget.id}", :title => _("Drag/drop Widget \"%{widget_title}\"") % {:widget_title => widget.title}}
 - else
   - url = "/report/x_show/xx-#{WIDGET_CONTENT_TYPE.invert[widget.content_type]}_-#{to_cid(widget.id)}?accord=widgets"
   - params = {:onclick => remote_function(:url => url), :id => widget.id, :title => _("View this Widget")}

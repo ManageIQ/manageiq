@@ -74,7 +74,7 @@
             - unless forest.blank?
               %tr
                 %td{:onclick => remote_function(:url => {:action => 'forest_delete',
-                :ldaphost_id => forest[:ldaphost].to_s}, :confirm => _("Are you sure you want to delete forest %s ?") % forest[:ldaphost]),
+                :ldaphost_id => forest[:ldaphost].to_s}, :confirm => _("Are you sure you want to delete forest %{ldaphost} ?") % {:ldaphost => forest[:ldaphost]}),
                 :title => _("Click to delete this forest")}
                   = image_tag(image_path('toolbars/delete.png'))
                 %td{:onclick => remote_function(:url => {:action => 'forest_select', :ldaphost_id => forest[:ldaphost].to_s}), :title => _("Click to edit this forest")}

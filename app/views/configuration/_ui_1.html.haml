@@ -23,7 +23,7 @@
             - if icons_checkbox[0]
               .form-group
                 %label.col-md-3.control-label
-                  = _("Show %s Quadrants") % icons_checkbox[1]
+                  = _("Show %{title} Quadrants") % {:title => icons_checkbox[1]}
                 .col-md-8
                   = check_box_tag("quadicons_#{icons_checkbox[2]}",
                                   true,

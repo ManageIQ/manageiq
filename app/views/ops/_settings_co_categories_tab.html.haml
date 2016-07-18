@@ -40,13 +40,13 @@
             = h(default)
 
           - if cat[:default] == "t" || cat[:default].to_s == "1"
-            %td.action-cell{:title => _("Category '%s' cannot be deleted") % cat[:name]}
+            %td.action-cell{:title => _("Category '%{category_name}' cannot be deleted") % {:category_name => cat[:name]}}
               %button.btn.btn-default.btn-block.btn-sm
                 = _("Delete")
           - else
             %td.action-cell{:onclick => remote_function(:url => {:action => 'category_delete',
               :id      => cat[:id]},
-              :confirm => _("Are you sure you want to delete category '%s'?") % cat[:name]),
+              :confirm => _("Are you sure you want to delete category '%{category_name}'?") % {:category_name => cat[:name]}),
               :title   => _("Click to delete this category")}
               %button.btn.btn-default.btn-block.btn-sm
                 = _("Delete")

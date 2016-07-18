@@ -3,7 +3,10 @@
     = render :partial => "layouts/flash_msg"
     - if @events.empty?
       .note
-        = _("* No Events are defined%s.") % @search_text.blank? ? "" : _(" that match the entered search string")
+        - if @search_text.blank?
+          = _("* No Events are defined")
+        - else
+          = _("* No Events are defined that match the entered search string")
     - else
       %table.table.table-striped.table-bordered.table-hover
         %tbody

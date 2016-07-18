@@ -27,7 +27,7 @@
             :tables                   => 'ontap_file_share',
             :display                  => 'ontap_file_share',
             :action                   => 'show',
-            :title                    => _("Show all %s") % ui_lookup(:tables => "ontap_file_share"))
+            :title                    => _("Show all File Shares"))
 
         - if role_allows(:feature => "snia_local_file_system_show")
           = li_link_if_condition(:cond => !@record.file_system.nil?,
@@ -43,7 +43,7 @@
             :tables                   => 'cim_base_storage_extent',
             :display                  => 'cim_base_storage_extents',
             :action                   => 'show',
-            :title                    => _("Show all %s") % ui_lookup(:tables => "cim_base_storage_extent"))
+            :title                    => _("Show all Base Extents"))
 
     = miq_accordion_panel(_("Infrastructure Relationships"), false, "cim_ld_inf_rel") do
       %ul.nav.nav-pills.nav-stacked
@@ -53,7 +53,7 @@
             :tables                   => 'vm',
             :display                  => 'vms',
             :action                   => 'show',
-            :title                    => _("Show all %s") % ui_lookup(:tables => "vm"))
+            :title                    => _("Show all VMs") % ui_lookup(:tables => "vm"))
 
         - if role_allows(:feature => "host_show_list")
           = li_link_if_nonzero(:count => @record.hosts_size,
@@ -61,7 +61,7 @@
             :tables                   => 'host',
             :display                  => 'hosts',
             :action                   => 'show',
-            :title                    => _("Show all %s") % ui_lookup(:tables => "host"))
+            :title                    => _("Show all Hosts"))
 
         - if role_allows(:feature => "storage_show_list")
           = li_link_if_nonzero(:count => @record.storages.size,
@@ -69,4 +69,4 @@
             :tables                   => 'storage',
             :display                  => 'storages',
             :action                   => 'show',
-            :title                    => _("Show all %s") % ui_lookup(:tables => "storage"))
+            :title                    => _("Show all Datastores"))

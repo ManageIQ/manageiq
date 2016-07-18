@@ -9,7 +9,7 @@
             %img{:src => image_path('100/folder.png')}
           %td Examples (read only)
         - @folders.each do |f|
-          %tr{:title => _("View '%s' Folder") % f.name,
+          %tr{:title => _("View '%{name}' Folder") % {:name => f.name},
             :onclick => "miqDynatreeActivateNode('customization_templates_tree', 'xx-xx-#{to_cid(f.id)}');"}
             %td.icon
               %img{:src => image_path('100/folder.png')}

@@ -40,7 +40,7 @@
               :record_id     => @record.id,
               :tables        => 'ontap_storage_system',
               :display       => 'storage_systems',
-              :title         => _("Show all %s") % ui_lookup(:tables => "ontap_storage_system"))
+              :title         => _("Show all Filers"))
 
           - unless @record.file_share.nil?
             - if role_allows(:feature => "ontap_file_share_show")
@@ -48,14 +48,14 @@
               %li
                 = link_to("#{ui_lookup(:table => "ontap_file_share")}: #{fs.name}",
                   {:controller => "ontap_file_share", :action => 'show', :id => fs.id.to_s},
-                  :title => _("Show %s") % ui_lookup(:table => "ontap_file_share"))
+                  :title => _("Show File Shares"))
             - else
               - if role_allows(:feature => "ontap_storage_volume_show_list")
                 = li_link(:count => @record.storage_volumes_size,
                   :record_id     => @record.id,
                   :tables        => 'ontap_storage_volume',
                   :display       => 'ontap_storage_volumes',
-                  :title         => _("Show all %s") % ui_lookup(:tables => "ontap_storage_volume"))
+                  :title         => _("Show all LUNs"))
 
           - if role_allows(:feature => "cim_base_storage_volume_show_list")
             = li_link(:count => @record.base_storage_extents_size,
@@ -63,7 +63,7 @@
               :tables        => 'cim_base_storage_extent',
               :display       => 'storage_extents',
               :action        => 'show',
-              :title         => _("Show all %s") % ui_lookup(:tables => "cim_base_storage_extent"))
+              :title         => _("Show all Base Extents"))
 
       = miq_accordion_panel(_("Content"), false, "storage_content") do
         %ul.nav.nav-pills.nav-stacked
@@ -71,40 +71,40 @@
             :record_id     => @record.id,
             :table         => 'storages',
             :action        => 'files',
-            :title         => _("Show all files on this %s") % ui_lookup(:table => "storages"),
+            :title         => _("Show all files on this Datastore"),
             :link_text     => _('All Files'))
 
           = li_link(:count => @record.number_of(:disk_files),
             :record_id     => @record.id,
             :table         => 'storages',
             :action        => 'disk_files',
-            :title         => _("Show VM Provisioned Disk Files on this %s") % ui_lookup(:table => "storages"),
+            :title         => _("Show VM Provisioned Disk Files on this Datastore"),
             :link_text     => _('VM Provisioned Disk Files'))
 
           = li_link(:count => @record.number_of(:snapshot_files),
             :record_id     => @record.id,
             :table         => 'storages',
             :action        => 'snapshot_files',
-            :title         => _("Show VM snapshot files on this %s") % ui_lookup(:table => "storages"),
+            :title         => _("Show VM snapshot files on this Datastore"),
             :link_text     => _('VM Snapshot Files'))
 
           = li_link(:count => @record.number_of(:vm_ram_files),
             :record_id     => @record.id,
             :table         => 'storages',
             :action        => 'vm_ram_files',
-            :title         => _("Show VM memory files on this %s") % ui_lookup(:table => "storages"),
+            :title         => _("Show VM memory files on this Datastore"),
             :link_text     => _('VM Memory Files'))
 
           = li_link(:count => @record.number_of(:vm_misc_files),
             :record_id     => @record.id,
             :table         => 'storages',
             :action        => 'vm_misc_files',
-            :title         => _("Show Other VM files on this %s") % ui_lookup(:table => "storages"),
+            :title         => _("Show Other VM files on this Datastore"),
             :link_text     => _('Other VM Files'))
 
           = li_link(:count => @record.number_of(:debris_files),
             :record_id     => @record.id,
             :table         => 'storages',
             :action        => 'debris_files',
-            :title         => _("Show non-VM files on this %s") % ui_lookup(:table => "storages"),
+            :title         => _("Show non-VM files on this Datastore"),
             :link_text     => _('Non-VM Files'))

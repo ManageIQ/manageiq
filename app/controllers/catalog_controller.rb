@@ -679,13 +679,13 @@ class CatalogController < ApplicationController
       replace_right_cell(x_node)
       return
     end
-    ot_edit_set_form_vars(_("Editing %s"))
+    ot_edit_set_form_vars(_("Editing %{record_name}"))
     replace_right_cell("ot_edit")
   end
 
   def ot_copy
     assert_privileges("orchestration_template_copy")
-    ot_edit_set_form_vars(_("Copying %s"))
+    ot_edit_set_form_vars(_("Copying %{record_name}"))
     @edit[:new][:name] = @edit[:current][:name] = _("Copy of %{name}") % {:name => @edit[:new][:name]}
     replace_right_cell("ot_copy")
   end
@@ -980,7 +980,7 @@ class CatalogController < ApplicationController
     @edit[:current][:available_managers] = available_orchestration_managers_for_template_type(@record.type)
     @edit[:new] = @edit[:current].dup
     @edit[:key] = "ot_edit__#{@record.id}"
-    @right_cell_text = right_cell_text % @record.name
+    @right_cell_text = right_cell_text % {:record_name => @record.name}
     @in_a_form = true
   end
 
@@ -1027,7 +1027,7 @@ class CatalogController < ApplicationController
 
   def ot_edit_submit_reset
     add_flash(_("All changes have been reset"), :warning)
-    ot_edit_set_form_vars(_("Editing %s"))
+    ot_edit_set_form_vars(_("Editing %{record_name}"))
     @changed = session[:changed] = false
     replace_right_cell("ot_edit")
   end

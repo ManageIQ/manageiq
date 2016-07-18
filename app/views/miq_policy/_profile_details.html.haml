@@ -88,7 +88,7 @@
         %table.table.table-striped.table-bordered.table-hover
           %tbody
             - @profile_policies.each do |p|
-              %tr{:title => _("View this %s Policy") % ui_lookup(:model => p.towhat),
+              %tr{:title => _("View this %{model} Policy") % {:model => ui_lookup(:model => p.towhat)},
                 :onclick => "miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}_p-#{to_cid(p.id)}');"}
                 %td.narrow
                   %img{:src => image_path("100/miq_policy_#{p.towhat.downcase + (p.active ? '' : '_inactive')}.png")}

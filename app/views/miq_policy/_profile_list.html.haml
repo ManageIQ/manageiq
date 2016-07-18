@@ -2,8 +2,10 @@
   - if @profiles
     = render :partial => "layouts/flash_msg"
     - if @profiles.empty?
-      - t = @search_text.blank? ? "" : _(" that match the entered search string")
-      - msg = _("No %s Policy Profiles are defined%s.") % [@mode, t]
+      - if @search_text.blank?
+        - msg = _("No %{mode} Policy Profiles are defined.") % {:mode => @mode}
+      - else
+        - msg = _("No %{mode} Policy Profiles are defined that match the entered search string.") % {:mode => @mode}
       = render :partial => 'layouts/info_msg', :locals => {:message => msg}
     - else
       %table.table.table-striped.table-bordered.table-hover

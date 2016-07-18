@@ -9,7 +9,7 @@
             {:action => 'show', :id => @record, :display => 'main'},
             :title => _("Show Summary"))
         %li
-          = link_to(_("Instances (%s)") % record.instances.count,
+          = link_to(_("Instances (%{count})") % {:count => record.instances.count},
             {:action => 'show_instances', :id => @record.id},
             :title  => _("View Instances"),
             :align  => 'left',
