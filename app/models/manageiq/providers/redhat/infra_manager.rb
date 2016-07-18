@@ -212,7 +212,7 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
 
     vm.with_provider_object do |rhevm_vm|
       _log.info("#{log_header} Started...")
-      rhevm_vm.memory = spec["memoryMB"] * 1.megabyte   if spec["memoryMB"]
+      update_vm_memory(rhevm_vm, spec["memoryMB"] * 1.megabyte) if spec["memoryMB"]
 
       cpu_options = {}
       cpu_options[:cores]   = spec["numCoresPerSocket"] if spec["numCoresPerSocket"]
@@ -221,6 +221,19 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
       rhevm_vm.cpu_topology = cpu_options if cpu_options.present?
     end
     _log.info("#{log_header} Completed.")
+  end
+
+  # RHEVM requires that the memory of the VM will be bigger or equal to the reserved memory at any given time.
+  # Therefore, increasing the memory of the vm should precede to updating the reserved memory, and the opposite:
+  # Decreasing the memory to a lower value than the reserved memory requires first to update the reserved memory
+  def update_vm_memory(rhevm_vm, memory)
+    if memory > rhevm_vm.attributes.fetch_path(:memory)
+      rhevm_vm.memory = memory
+      rhevm_vm.memory_reserve = memory
+    else
+      rhevm_vm.memory_reserve = memory
+      rhevm_vm.memory = memory
+    end
   end
 
   # Calculates an "ems_ref" from the "href" attribute provided by the oVirt REST API, removing the
