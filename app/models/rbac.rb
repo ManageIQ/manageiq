@@ -255,22 +255,17 @@ module Rbac
 
     if apply_rbac_to_class?(klass)
       targets = find_targets_with_direct_rbac(scope, rbac_filters, find_options, user, miq_group)
-      auth_count  = targets.except(:offset, :limit, :order).count(:all)
-      return targets, auth_count
     elsif apply_rbac_to_associated_class?(klass)
       targets = find_targets_with_indirect_rbac(scope, rbac_filters, find_options, user, miq_group)
-      auth_count  = targets.except(:offset, :limit, :order).count
-      return targets, auth_count
     elsif apply_user_group_rbac_to_class?(klass, miq_group)
       targets = find_targets_with_user_group_rbac(scope, rbac_filters, find_options, user, miq_group)
-      auth_count = targets.except(:offset, :limit, :order).count(:all)
-      return targets, auth_count
     else
       targets = method_with_scope(scope, find_options)
-      auth_count = find_options[:limit] ? targets.except(:offset, :limit, :order).count : targets.length
-
-      return targets, auth_count
     end
+
+    auth_count = find_options[:limit] ? targets.except(:offset, :limit, :order).count(:all) : targets.length
+
+    return targets, auth_count
   end
 
   def self.get_user_info(user, userid, miq_group, miq_group_id)
