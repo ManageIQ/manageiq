@@ -1287,6 +1287,7 @@ function miqJqueryRequest(url, options) {
   // copy selected options over
   _.extend(ajax_options, _.pick(options, [
     'data',
+    'dataType',
     'contentType',
     'processData',
     'cache',
@@ -1363,7 +1364,7 @@ function miqSelectPickerEvent(element, url, options) {
     miqObserveRequest(finalUrl, options);
 
     return true;
-  }, 700, { leading: false, trailing: true }));
+  }, 700, {leading: true, trailing: true}));
 }
 
 function miqAccordSelect(e) {
