@@ -485,10 +485,6 @@ describe Rbac do
             v.save
           end
 
-          group.entitlement = Entitlement.new
-          group.entitlement.set_belongsto_filters([@vm_folder_path])
-          group.entitlement.set_managed_filters([])
-          group.save!
           results = Rbac.search(:class => "VmOrTemplate", :user => user)
           objects = results.first
           expect(objects.length).to eq(2)
@@ -515,10 +511,6 @@ describe Rbac do
             v.save
           end
 
-          group.entitlement = Entitlement.new
-          group.entitlement.set_belongsto_filters([@vm_folder_path])
-          group.entitlement.set_managed_filters([])
-          group.save!
           results = Rbac.search(:class => "Vm", :user => user)
           objects = results.first
           expect(objects.length).to eq(1)
@@ -545,10 +537,6 @@ describe Rbac do
             v.save
           end
 
-          group.entitlement = Entitlement.new
-          group.entitlement.set_belongsto_filters([@vm_folder_path])
-          group.entitlement.set_managed_filters([])
-          group.save!
           results = Rbac.search(:class => "MiqTemplate", :user => user)
           objects = results.first
           expect(objects.length).to eq(1)
@@ -634,10 +622,6 @@ describe Rbac do
             v.with_relationship_type("ems_metadata") { v.parent = @rp }
             v.save
           end
-          group.entitlement = Entitlement.new
-          group.entitlement.set_belongsto_filters([@cluster_folder_path])
-          group.entitlement.set_managed_filters([])
-          group.save!
 
           results2, attrs = Rbac.search(:class => "VmOrTemplate", :user => user)
           expect(attrs[:user_filters]).to eq({"managed" => [], "belongsto" => [@cluster_folder_path]})
