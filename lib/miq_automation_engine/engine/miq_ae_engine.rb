@@ -16,6 +16,7 @@ module MiqAeEngine
   AE_ROOT_DIR            = File.expand_path(File.join(Rails.root,    'product/automate'))
   AE_IMPORT_DIR          = File.expand_path(File.join(AE_ROOT_DIR,   'import'))
   AE_DEFAULT_IMPORT_FILE = File.expand_path(File.join(AE_IMPORT_DIR, 'automate.xml'))
+  @@deliver_mutex        = Mutex.new
 
   def self.instantiate(uri, user)
     $miq_ae_logger.info("MiqAeEngine: Instantiating Workspace for URI=#{uri}")
@@ -50,6 +51,10 @@ module MiqAeEngine
   end
 
   def self.deliver(*args)
+    @@deliver_mutex.synchronize { deliver_block(*args) }
+  end
+
+  def self.deliver_block(*args)
     options = {}
 
     case args.length
