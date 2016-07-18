@@ -206,9 +206,7 @@ module Rbac
 
   def self.find_targets_filtered_by_ids(scope, find_options, filtered_ids)
     if filtered_ids
-      ids_clause  = ["#{scope.table_name}.id IN (?)", filtered_ids]
-      find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], ids_clause)
-      _log.debug("New Find options: #{find_options.inspect}")
+      scope = scope.where("#{scope.table_name}.id IN (?)", filtered_ids)
     end
     method_with_scope(scope, find_options)
   end
