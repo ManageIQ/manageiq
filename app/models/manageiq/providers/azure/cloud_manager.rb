@@ -21,35 +21,14 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
 
   has_many :resource_groups, :foreign_key => :ems_id, :dependent => :destroy
 
-  has_one :network_manager,
-          :foreign_key => :parent_ems_id,
-          :class_name  => "ManageIQ::Providers::Azure::NetworkManager",
-          :autosave    => true,
-          :dependent   => :destroy
-
-  delegate :floating_ips,
-           :security_groups,
-           :cloud_networks,
-           :cloud_subnets,
-           :network_ports,
-           :network_routers,
-           :public_networks,
-           :private_networks,
-           :all_cloud_networks,
-           :to        => :network_manager,
-           :allow_nil => true
-
-  before_validation :ensure_managers
-
   supports :discovery
   supports :provisioning
   supports :regions
 
-  def ensure_managers
-    build_network_manager unless network_manager
-    network_manager.name            = "#{name} Network Manager"
-    network_manager.zone_id         = zone_id
-    network_manager.provider_region = provider_region
+  before_validation :ensure_managers
+
+  def ensure_network_manager
+    build_network_manager(:type => 'ManageIQ::Providers::Azure::NetworkManager') unless network_manager
   end
 
   def self.ems_type
