@@ -54,8 +54,8 @@ describe MiqAeToolsController, "ApplicationController::Automate" do
         controller.instance_variable_set(:@sb, sb)
         controller.instance_variable_set(:@_params, :button => 'throw')
         allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(workspace)
-        allow(workspace).to receive(:to_expanded_xml).and_return("<A/>")
-        allow(MiqAeToolsController).to receive(:ws_tree_from_xml).and_return(nil)
+        data = "<MiqAeWorkspace>\\n<MiqAeObject namespace='ManageIQ/SYSTEM'>\\n</MiqAeObject>\\n</MiqAeWorkspace>\\n"
+        allow(workspace).to receive(:to_expanded_xml).and_return(data)
         controller.build_results
         expect(resolve[:ae_result]).to eql('ok')
         expect(resolve[:state_attributes]).to be_empty
@@ -74,10 +74,10 @@ describe MiqAeToolsController, "ApplicationController::Automate" do
         controller.instance_variable_set(:@sb, sb)
         controller.instance_variable_set(:@_params, :button => 'retry')
         allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(workspace)
-        allow(workspace).to receive(:to_expanded_xml).and_return("<A/>")
+        data = "<MiqAeWorkspace>\\n<MiqAeObject namespace='ManageIQ/SYSTEM'>\\n</MiqAeObject>\\n</MiqAeWorkspace>\\n"
+        allow(workspace).to receive(:to_expanded_xml).and_return(data)
         allow(workspace).to receive(:persist_state_hash).and_return(state_hash)
         allow(workspace).to receive(:current_state_info).and_return({})
-        allow(MiqAeToolsController).to receive(:ws_tree_from_xml).and_return(nil)
         controller.build_results
         expect(resolve[:ae_result]).to eql('retry')
         expect(resolve[:state_attributes]['ae_state']).to eql('state1')
