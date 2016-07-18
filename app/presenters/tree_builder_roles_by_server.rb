@@ -33,24 +33,20 @@ class TreeBuilderRolesByServer < TreeBuilder
   end
 
   def x_get_tree_miq_servers
-    objects = []
-    @root.miq_servers.sort_by { |s| s.name.to_s }.each do |s|
+    @root.miq_servers.sort_by { |s| s.name.to_s }.each_with_object([]) do |server, objects|
       unless @sb[:diag_selected_id] # Set default selected record vars
-        @sb[:diag_selected_model] = s.class.to_s
-        @sb[:diag_selected_id] = s.id
+        @sb[:diag_selected_model] = server.class.to_s
+        @sb[:diag_selected_id] = server.id
       end
-      objects.push(s)
+      objects.push(server)
     end
-    objects
   end
 
   def x_get_tree_miq_server_kids(parent, _count_only)
-    objects = []
-    parent.assigned_server_roles.sort_by { |asr| asr.server_role.description }.each do |asr|
+    parent.assigned_server_roles.sort_by { |asr| asr.server_role.description }.each_with_object([]) do |asr, objects|
       next if parent.kind_of?(MiqRegion) && !asr.server_role.regional_role? # Only regional roles under Region
       next if asr.server_role.name == "database_owner"
       objects.push(asr)
     end
-    objects
   end
 end

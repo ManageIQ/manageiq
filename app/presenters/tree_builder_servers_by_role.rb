@@ -33,8 +33,7 @@ class TreeBuilderServersByRole < TreeBuilder
   end
 
   def x_get_tree_server_roles
-    objects = []
-    ServerRole.all.sort_by(&:description).each do |r|
+    ServerRole.all.sort_by(&:description).each_with_object([]) do |r, objects|
       next if @root.kind_of?(MiqRegion) && !r.regional_role? # Only regional roles under Region
       next unless (@root.kind_of?(Zone) && r.miq_servers.any? { |s| s.my_zone == @root.name }) ||
                   (@root.kind_of?(MiqRegion) && !r.miq_servers.empty?) # Skip if no assigned servers in this zone
@@ -45,15 +44,12 @@ class TreeBuilderServersByRole < TreeBuilder
       end
       objects.push(r)
     end
-    objects
   end
 
   def x_get_tree_server_role_kids(parent, count_only)
-    kids = count_only ? 0 : []
-    parent.assigned_server_roles.sort_by { |asr| asr.miq_server.name }.each do |asr|
+    parent.assigned_server_roles.sort_by { |asr| asr.miq_server.name }.each_with_object([]) do |asr, kids|
       next if parent.kind_of?(Zone) && asr.miq_server.my_zone != parent.name
       kids.push(asr)
     end
-    kids
   end
 end

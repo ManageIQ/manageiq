@@ -72,8 +72,6 @@ describe TreeBuilderRolesByServer do
                               },
                 ],
                }]
-      p "XXXX #{@server_tree.locals_for_render[:json_tree].inspect}"
-      p "XXXX #{nodes.to_json.inspect}"
       expect(@server_tree.locals_for_render[:json_tree]).to eq(nodes.to_json)
     end
   end

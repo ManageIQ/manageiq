@@ -296,7 +296,11 @@ class TreeBuilder
   end
 
   def x_build_single_node(object, pid, options)
-    node_builder.build(object, pid, options, @sb)
+    sandbox_variables = {
+      :parent_kls  => @sb[:parent_kls],
+      :parent_name => @sb[:parent_name],
+    }
+    node_builder.build(object, pid, options, sandbox_variables)
   end
 
   # Called with object, tree node parent id, tree options
