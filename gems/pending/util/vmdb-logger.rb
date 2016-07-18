@@ -19,6 +19,18 @@ class VMDBLogger < Logger
     @local_levels = {}
   end
 
+  # Silences the logger for the duration of the block.
+  #
+  # Taken from activesupport/logger_silence
+  def silence(temporary_level = Logger::ERROR)
+    old_local_level  = local_level
+    self.local_level = temporary_level
+
+    yield self
+  ensure
+    self.local_level = old_local_level
+  end
+
   attr_reader :logdev # Expose logdev
 
   def logdev=(logdev)
