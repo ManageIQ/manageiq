@@ -29,7 +29,7 @@
           %li
             = link_to("#{ui_lookup(:table => "base_snapshot")}: #{@record.base_snapshot.name}",
               {:action => 'show', :id => @record.base_snapshot.id, :controller => 'cloud_volume_snapshot'},
-              :title => _("Show this Cloud Volume's parent %s") % ui_lookup(:table => "cloud_volume_snapshot"))
+              :title => _("Show this Cloud Volume's parent Cloud Volume Snapshot"))
         - if role_allows(:feature => "cloud_volume_snapshot_show")
           - if @record.number_of(:cloud_volume_snapshots) == 0
             %li.disabled

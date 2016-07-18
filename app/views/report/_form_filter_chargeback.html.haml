@@ -11,9 +11,9 @@
         - if @edit[:new][:model] == "ChargebackContainerProject"
           - opts += [[ui_lookup(:model => @edit[:new][:cb_model]), "entity"]]
         - elsif @edit[:new][:model] == "ChargebackVm"
-          - opts += [[_('Owner'), "owner"], ["%s Tag" % current_tenant.name, "tag"], [_('Tenant'), "tenant"]]
+          - opts += [[_('Owner'), "owner"], ["%{tenant_name} Tag" % {:tenant_name => current_tenant.name}, "tag"], [_('Tenant'), "tenant"]]
         - else
-          - opts += [[_('Owner'), "owner"], ["%s Tag" % current_tenant.name, "tag"], [_(@edit[:new][:cb_model].to_s), "entity"]]
+          - opts += [[_('Owner'), "owner"], ["%{tenant_name} Tag" % {:tenant_name => current_tenant.name}, "tag"], [_(@edit[:new][:cb_model].to_s), "entity"]]
         = select_tag("cb_show_typ",
           options_for_select(opts, @edit[:new][:cb_show_typ]),
           :class                 => "selectpicker")
@@ -130,11 +130,11 @@
         miqSelectPickerEvent('cb_interval', '#{url}', {beforeSend: true, complete: true});
   .form-group
     %label.control-label.col-md-2
-      = _("%s  Ending with") % @edit[:new][:cb_interval].capitalize
+      = _("%{chargeback_interval} Ending with") % {:chargeback_interval => @edit[:new][:cb_interval].capitalize}
     .col-md-8
       - case @edit[:new][:cb_interval]
       - when "daily"
-        - opts = [[_("Today (partial)"), 0], [_("Yesterday"), 1]] + (2..6).map { |i| [_("%s Days Ago") % i, i] } + [[_("1 Week Ago"), 7]]
+        - opts = [[_("Today (partial)"), 0], [_("Yesterday"), 1]] + (2..6).map { |i| [_("%{number} Days Ago") % {:number => i}, i] } + [[_("1 Week Ago"), 7]]
       - when "weekly"
         - opts = [[_("This Week (partial)"), 0], [_("Last Week"), 1]] + (2..4).map { |i| [_("%d Weeks Ago") % i, i] }
       - when "monthly"
@@ -148,11 +148,11 @@
       = _("going back")
       - case @edit[:new][:cb_interval]
       - when "daily"
-        - opts = (1..6).map { |i| [n_('%s Day', '%s Days', i) % i, i] } + (1..4).map { |i| [n_('%s Week', '%s Weeks', i) % i, i * 7] }
+        - opts = (1..6).map { |i| [n_('%{number} Day', '%{number} Days', i) % {:number => i}, i] } + (1..4).map { |i| [n_('%{number} Week', '%{number} Weeks', i) % {:number => i}, i * 7] }
       - when "weekly"
-        - opts = [1, 2, 3, 4, 8, 12].map! { |i| [n_('%s Week', '%s Weeks', i) % i, i] }
+        - opts = [1, 2, 3, 4, 8, 12].map! { |i| [n_('%{number} Week', '%{number} Weeks', i) % {:number => i}, i] }
       - when "monthly"
-        - opts = [1, 2, 3, 6, 9, 12].map! { |i| [n_('%s Month', '%s Months', i) % i, i] }
+        - opts = [1, 2, 3, 6, 9, 12].map! { |i| [n_('%{number} Month', '%{number} Months', i) % {:number => i}, i] }
       = select_tag("cb_interval_size",
         options_for_select(opts, @edit[:new][:cb_interval_size]),
         :class                 => "selectpicker")

@@ -10,5 +10,5 @@
   :remote               => true,
   "data-method"         => :post,
   :id                   => "#{parent_id}_#{obj[:id]}_close",
-  :title                => _("Remove this %s") % typ.capitalize.singularize,
+  :title                => _("Remove this %{type}") % {:type => typ.capitalize.singularize},
   :class                => "fa fa-close pull-right")

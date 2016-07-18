@@ -12,7 +12,7 @@
     #spice-area
       .console-status
         #spice-status.label{'data-host' => @url}
-          = _("Connecting (unencrypted) to: %s") % @url
+          = _("Connecting (unencrypted) to: %{url}") % {:url => @url}
 
       #spice-screen.console-screen
 

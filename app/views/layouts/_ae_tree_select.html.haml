@@ -17,7 +17,7 @@
             Close
         %h4.modal-title#ep_modal_label
           = hidden_field_tag(:ignore_form_changes)
-          = _("Select Entry Point %s") % entry_point
+          = _("Select Entry Point %{entry_point}") % {:entry_point => entry_point}
 
       .modal-body
         #automate_treebox

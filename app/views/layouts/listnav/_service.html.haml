@@ -14,9 +14,9 @@
       %ul.nav.nav-pills.nav-stacked
         - if @record.number_of(:get_vms) == 0
           %li.disabled
-            = link_to(_("Member VMs (%s)") % @record.number_of(:get_vms), "#")
+            = link_to(_("Member VMs (%{count})") % {:count => @record.number_of(:get_vms)}, "#")
         - else
           %li
-            = link_to(_("Member VMs (%s)") % @record.number_of(:get_vms),
+            = link_to(_("Member VMs (%{count})") % {:count => @record.number_of(:get_vms)},
               {:action => 'show', :id => @record, :display => 'vms'},
               :title => _("Show member VMs"))

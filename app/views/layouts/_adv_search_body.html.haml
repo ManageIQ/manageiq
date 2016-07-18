@@ -30,7 +30,7 @@
           .form-group
             %label.control-label.col-md-2
               %font{:color => "black"}
-                = _("Choose a saved %s filter:") % ui_lookup(:model => @edit[@expkey][:exp_model])
+                = _("Choose a saved %{model} filter:") % {:model => ui_lookup(:model => @edit[@expkey][:exp_model])}
             .col-md-8
               = select_tag("chosen_search",
                            options_for_select([[_("<Choose>"), "0"]] + @edit[@expkey][:exp_search_expressions],
@@ -48,7 +48,7 @@
           .form-group
             %label.control-label.col-md-2
               %font{:color => "black"}
-                = _("Choose a %s report filter") % ui_lookup(:model => @edit[@expkey][:exp_model])
+                = _("Choose a %{model} report filter") % {:model => ui_lookup(:model => @edit[@expkey][:exp_model])}
   - elsif mode == "save"
     .modal-body
       = render(:partial => "layouts/flash_msg",
@@ -67,7 +67,7 @@
       .form-horizontal
         .form-group
           %label.control-label.col-md-5
-            = _("Save this %s search as:") % ui_lookup(:model => @edit[@expkey][:exp_model])
+            = _("Save this %{model} search as:") % {:model => ui_lookup(:model => @edit[@expkey][:exp_model])}
           .col-md-6
             %span#search_name_span
               = text_field_tag("search_name",

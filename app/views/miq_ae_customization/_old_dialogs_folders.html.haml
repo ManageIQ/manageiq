@@ -3,7 +3,7 @@
   %table.table.table-striped.table-bordered.table-hover
     %tbody
       - @folders.each do |f|
-        %tr{:title => (_("View %s Folder") % f[0]),
+        %tr{:title => (_("View %{name} Folder") % {:name => f[0]}),
           :onclick => "miqDynatreeActivateNode('old_dialogs_tree', 'xx-MiqDialog_#{f[1]}');"}
           %td.narrow
             %img{:src => image_path('100/folder.png')}

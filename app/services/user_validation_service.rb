@@ -39,8 +39,7 @@ class UserValidationService
     feature = missing_user_features(db_user)
     return ValidateResult.new(
       :fail,
-      _("Login not allowed, User's %s is missing. Please contact the administrator") %
-      feature
+      _("Login not allowed, User's %{feature} is missing. Please contact the administrator") % {:feature => feature}
     ) if feature
 
     session_init(db_user)

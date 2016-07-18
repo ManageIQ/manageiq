@@ -32,22 +32,22 @@
           :text       => _('Devices'),
           :record_id  => @record.id,
           :display    => 'devices',
-          :title      => _("Show %s devices") % host_title)
+          :title      => _("Show %{host} devices") % {:host => host_title})
         = li_link(:count => @record.number_of(:switches),
           :text          => _('Network'),
           :record_id     => @record.id,
           :display       => 'network',
-          :title         => _("Show %s network") % host_title)
+          :title         => _("Show %{host} network") % {:host => host_title})
         = li_link(:if => !(@record.hardware.blank? || @record.hardware.number_of(:storage_adapters) == 0),
           :text       => _('Storage Adapters'),
           :record_id  => @record.id,
           :display    => 'storage_adapters',
-          :title      => _("Show %s storage adapters") % host_title)
+          :title      => _("Show %{host} storage adapters") % {:host => host_title})
         = li_link(:if => !(@osinfo.nil? || @osinfo.empty?),
           :text       => _('OS Information'),
           :record_id  => @record.id,
           :display    => 'os_info',
-          :title      => _("Show %s OS information") % host_title)
+          :title      => _("Show %{host} OS information") % {:host => host_title})
         = li_link(:if => !(@vmminfo.nil? || @vmminfo.empty?),
           :text       => _('VMM Information'),
           :record_id  => @record.id,
@@ -75,14 +75,14 @@
           %li
             = link_to("#{ui_lookup(:table => "ext_management_systems")}: #{@record.ext_management_system.name}",
               ems_infra_path(@record.ext_management_system),
-              :title => _("Show this %s parent %s") % ["#{host_title}'s", ui_lookup(:table => "ems_infra")])
+              :title => _("Show this parent %{provider} for this %{host}") % {:host => host_title, :provider => ui_lookup(:table => "ems_infra")})
 
         - if role_allows(:feature => "ems_cluster_show") && !@record.ems_cluster.nil?
           - cluster_title = title_for_cluster
           %li
             = link_to("#{cluster_title}: #{@record.ems_cluster.name}",
               {:controller => "ems_cluster", :action => 'show', :id => @record.ems_cluster.id.to_s},
-              :title => _("Show %s parent %s") % ["#{host_title}'s", cluster_title])
+              :title => _("Show parent %{cluster} for this %{host}") % {:host => host_title, :cluster => cluster_title})
 
         - if role_allows(:feature => "storage_show_list")
           = li_link(:count => @record.number_of(:storages),

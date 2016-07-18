@@ -2,8 +2,10 @@
   - if @alert_profiles
     = render :partial => "layouts/flash_msg"
     - if @alert_profiles.empty?
-      - t = @search_text.blank? ? "" : _(" that match the entered search string")
-      - msg = _("No %s Alert Profiles are defined %s.") % [ui_lookup(:model => @sb[:folder]), t]
+      - if @search_text.blank?
+        - msg = _("No %{alert_profile_type} Alert Profiles are defined.") % {:alert_profile_type => ui_lookup(:model => @sb[:folder])}
+      - else
+        - msg = _("No %{alert_profile_type} Alert Profiles are defined that match the entered search string.") % {:alert_profile_type => ui_lookup(:model => @sb[:folder])}
       = render :partial => 'layouts/info_msg', :locals => {:message => msg}
     - else
       %table.table.table-striped.table-bordered.table-hover

@@ -6,5 +6,5 @@
       #spinner_div
       - if login && MiqServer.my_server(true).logon_status == :starting
         %span{:style => "color: white;"}
-          = _("The server is initializing; access is being retried every 10 seconds %s") % ". . ."
+          = _("The server is initializing; access is being retried every 10 seconds . . .")
           = render :partial => "login_message"

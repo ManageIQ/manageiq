@@ -20,10 +20,10 @@
           - ae_value = field.ae_values.find_or_initialize_by(:instance_id => @record.id, :field_id => field.id)
           %tr
             %td.text-nowrap
-              %i.product.fa-lg{:class => "product-ae_#{field.aetype}", :title => _("Type: %s") % field.aetype}
+              %i.product.fa-lg{:class => "product-ae_#{field.aetype}", :title => _("Type: %{automation_type}") % {:automation_type => field.aetype}}
               - unless field.datatype.blank? || field.datatype == 'string'
-                %i.product.fa-lg{:class => "product-#{field.datatype}", :title => _("Data type: %s") % field.datatype}
-              %i.pficon.fa-lg{:class => "pficon-ok#{field.substitute ? '' : '-closed'}", :title => _("Substitute: %s") % field.substitute}
+                %i.product.fa-lg{:class => "product-#{field.datatype}", :title => _("Data type: %{data_type}") % {:data_type => field.datatype}}
+              %i.pficon.fa-lg{:class => "pficon-ok#{field.substitute ? '' : '-closed'}", :title => _("Substitute: %{substitute}") % {:substitute => field.substitute}}
               &nbsp;
               = record_name(field)
             %td

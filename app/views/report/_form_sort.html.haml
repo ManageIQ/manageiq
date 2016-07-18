@@ -119,7 +119,7 @@
           = _('Number of Rows to Show')
         .col-md-8
           - if @edit[:new][:group] == "No"
-            - opts = [[_("All"), ""]] + [5, 10, 20, 50, 100].map! { |x| [_("First %s") % x, x] }
+            - opts = [[_("All"), ""]] + [5, 10, 20, 50, 100].map! { |x| [_("First %{number}") % {:number => x}, x] }
             = select_tag('row_limit',
               options_for_select(opts, @edit[:new][:row_limit]),
               :multiple              => false,

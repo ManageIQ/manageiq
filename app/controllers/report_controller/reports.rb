@@ -345,7 +345,7 @@ module ReportController::Reports
           add_flash(_("Filter tab is not available until Trending Target Limit has been configured"), :error)
         end
         if @edit[:new][:perf_limit_val] && !is_numeric?(@edit[:new][:perf_limit_val])
-          add_flash(_("%s must be numeric") % "Trend Target Limit", :error)
+          add_flash(_("Trend Target Limit must be numeric"), :error)
         end
       else
         if @edit[:new][:fields].length == 0

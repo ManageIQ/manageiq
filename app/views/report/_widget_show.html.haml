@@ -140,7 +140,7 @@
     - if @sb[:wtype] == "r"
       - @sb[:col_order].each_with_index do |col, idx|
         .form-group
-          %label.control-label.col-md-2= _("Column %s") % (idx + 1)
+          %label.control-label.col-md-2= _("Column %{index}") % {:index => (idx + 1)}
           .col-md-10
             %p.form-control-static= h(col)
 

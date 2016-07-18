@@ -9,4 +9,4 @@
             %td.narrow
               %img{:src => image_path("100/#{f.underscore}.png")}
             %td
-              = _("%s Conditions") % ui_lookup(:model => f)
+              = _("%{object} Conditions") % {:object => ui_lookup(:model => f)}

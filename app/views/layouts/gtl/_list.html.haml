@@ -178,11 +178,11 @@
                   - if !row['agent_class'].nil? && row['agent_class'] != ""
                     - a_rec = @targets_hash[row['agent_id']] if @targets_hash
                     - if a_rec.nil?
-                      - title = _("%s record no longer exists") % row['agent_class']
+                      - title = _("%{agent} record no longer exists") % {:agent => row['agent_class']}
                     - else
                       - if row['agent_class'] != "MiqServer"
                         - click = "DoNav('/#{row['agent_class'].underscore}/show/#{to_cid(row['agent_id'])}');"
-                        - title = _("Click to view %s") % h("#{row['agent_class']}<#{a_rec.name}>")
+                        - title = _("Click to view %{record}") % {:record => h("#{row['agent_class']}<#{a_rec.name}>")}
                 - else
                   - if row['target_id'].blank?
                     - title = _("No task target captured")
@@ -190,9 +190,9 @@
                     - target_class = row['target_class']
                     - action = target_class.to_s == "VmOrTemplate" ? "vm_show" : "show"
                     - click = "DoNav('/#{target_class.constantize.base_class.name.underscore.downcase}/#{action}/#{to_cid(row['target_id'])}');"
-                    - title = _("Click to view target %s") % h(ui_lookup(:model => target_class.constantize.base_class.name))
+                    - title = _("Click to view target %{model}") % {:model => h(ui_lookup(:model => target_class.constantize.base_class.name))}
               - elsif %w(total_space free_space).include?(col)
-                - title = _("%s bytes") % number_with_delimiter(h(row[col]), :delimiter => ",", :separator => ".")
+                - title = _("%{number} bytes") % {:number => number_with_delimiter(h(row[col]), :delimiter => ",", :separator => ".")}
               - else
                 - if (row[col].kind_of?(Time) || %w(updated_on created_on started_on finished_on).include?(col)) && !row[col].nil? && row[col] != ""
                   - row[col] = row[col].to_time if row[col].kind_of?(String)
@@ -285,7 +285,7 @@
               - elsif col == "agent_class" && row[col].nil? && view.db == "Job"
                 - unless row['agent_class'].blank?
                   - if a_rec.nil?
-                    = _("%s record no longer exists") % row['agent_class']
+                    = _("%{agent} record no longer exists") % {:agent => row['agent_class']}
                   - else
                     %center
                       = h(a_rec.name)

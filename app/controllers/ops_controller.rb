@@ -633,7 +633,8 @@ class OpsController < ApplicationController
       # when editing/adding schedule in settings tree
       presenter.update(:rbac_details, r[:partial => "tenant_form"])
       if !@tenant.id
-        @right_cell_text = _("Adding a new %s") % tenant_type_title_string(params[:tenant_type] == "tenant")
+        @right_cell_text = _("Adding a new %{tenant}") %
+          {:tenant => tenant_type_title_string(params[:tenant_type] == "tenant")}
       else
         model = tenant_type_title_string(@tenant.divisible)
         @right_cell_text = @edit ?

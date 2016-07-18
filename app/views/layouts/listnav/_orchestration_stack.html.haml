@@ -14,10 +14,9 @@
       %ul.nav.nav-pills.nav-stacked
         - if role_allows(:feature => "ems_cloud_show") && @record.ext_management_system
           %li
-            - l = [ui_lookup(:table => "ems_cloud"), ui_lookup(:table => "orchestration_stack")]
             = link_to("#{ui_lookup(:table => "ext_management_system")}: #{@record.ext_management_system.name}",
               ems_cloud_path(@record.ext_management_system.id),
-              :title => _("Show parent %s for this %s") % l)
+              :title => _("Show parent Cloud Provider for this Stack"))
 
         - if @record.try(:orchestration_template)
           %li.disabled

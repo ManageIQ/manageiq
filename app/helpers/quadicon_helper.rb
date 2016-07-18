@@ -268,7 +268,7 @@ module QuadiconHelper
     }
 
     if quadicon_render_for_policy_sim?
-      link_options[:options][:title] = _("Show policy details for %s") % row['name']
+      link_options[:options][:title] = _("Show policy details for %{name}") % {:name => row['name']}
     end
 
     if quadicon_in_explorer_view?
@@ -479,7 +479,7 @@ module QuadiconHelper
              end
 
       output << content_tag(:div, :class => 'flobj') do
-        title = _("Name: %s | Hostname: %s") % [h(item.name), h(item.hostname)]
+        title = _("Name: %{name} | Hostname: %{hostname}") % {:name => h(item.name), :hostname => h(item.hostname)}
 
         link_to(href, :title => title) do
           quadicon_reflection_img(:size => size)
@@ -512,8 +512,10 @@ module QuadiconHelper
       output << flobj_img_simple(size, "#{size}/reflection.png")
     else
       output << content_tag(:div, :class => 'flobj') do
-        values = [h(item.name), h(item.hostname), h(item.last_refresh_status.titleize)]
-        title = _("Name: %s | Hostname: %s | Refresh Status: %s") % values
+        title = _("Name: %{name} | Hostname: %{hostname} | Refresh Status: %{status}") %
+          {:name     => h(item.name),
+           :hostname => h(item.hostname),
+           :status   => h(item.last_refresh_status.titleize)}
 
         link_to(url_for_record(item), :title => title) do
           quadicon_reflection_img(:size => size)

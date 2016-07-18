@@ -13,21 +13,21 @@
             = clusters_title
           .form-group
             %label.col-md-4.control-label
-              = _("Collect for All %s") % clusters_title
+              = _("Collect for All %{clusters}") % {:clusters => clusters_title}
             .col-md-8
               = check_box_tag("all_clusters", true, @edit[:new][:all_clusters],
                               "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true, :data => {:on_text => 'Yes', :off_text => 'No'})
             :javascript
               miqInitBootstrapSwitch('all_clusters', "#{url}")
           .note
-            %b= _("Note: Collect for All %s must be checked to be able to collect C & U data from Cloud Providers such as Red Hat OpenStack or Amazon EC2") % clusters_title
+            %b= _("Note: Collect for All %{clusters} must be checked to be able to collect C & U data from Cloud Providers such as Red Hat OpenStack or Amazon EC2") % {:clusters => clusters_title}
           #clusters_div{:style => "display:#{@edit[:new][:all_clusters] ? "none" : ""}"}
             - cluster_title = title_for_cluster
             - if @edit[:new][:clusters].blank? && @edit[:new][:non_cl_hosts].blank?
-              = _("No %s found in the current region.") % clusters_title
+              = _("No %{clusters} found in the current region.") % {:clusters => clusters_title}
             - else
               %br/
-              %b= _("Enable Collection by %s") % cluster_title
+              %b= _("Enable Collection by %{clusters}") % {:clusters => cluster_title}
               %br/
               %input#cl_toggle{:name => "cl_toggle", :onclick => "miqCheckCUAll(this,'#{session[:tree_name]}');", :type => "checkbox"}/
               = _("Check All")
@@ -42,7 +42,7 @@
                   :exp_tree => true,
                   :checkboxes => true})
               %br/
-              .note= _("VM data will be collected for VMs under selected %s only. Data is collected for a %s and all of its %s when at least one %s is selected.") % [title_for_hosts, cluster_title, title_for_hosts, title_for_host]
+              .note= _("VM data will be collected for VMs under selected %{hosts} only. Data is collected for a %{cluster} and all of its %{hosts} when at least one %{host} is selected.") % {:hosts => title_for_hosts, :cluster => cluster_title, :host => title_for_host}
       .col-md-12.col-lg-6
         %fieldset
           %h3= ui_lookup(:tables => "storages")

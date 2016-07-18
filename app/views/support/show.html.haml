@@ -36,12 +36,12 @@
                                     :width  => "20",
                                     :height => "20",
                                     :align  => "left",
-                                    :alt    => t = _("View the %s Guide") % title),
+                                    :alt    => t = _("View the %{title} Guide") % {:title => title}),
                           docfile_path,
                           :title   => t,
                           :onclick => "return miqClickAndPop(this);")
                 &nbsp;
-                = link_to((_("%s Guide") % title), docfile_path, :onclick => "return miqClickAndPop(this);")
+                = link_to((_("%{title} Guide") % {:title => title}), docfile_path, :onclick => "return miqClickAndPop(this);")
                 %br
             - if cond_url
               %br
