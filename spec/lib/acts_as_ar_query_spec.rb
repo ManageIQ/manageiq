@@ -228,6 +228,18 @@ describe ActsAsArQuery do
     end
   end
 
+  describe "#empty?" do
+    it "returns false when results are returned" do
+      expect(model).to receive(:find).with(:all, {}).and_return([1, 2])
+      expect(query.empty?).to be false
+    end
+
+    it "returns true when no results are returned" do
+      expect(model).to receive(:find).with(:all, {}).and_return([])
+      expect(query.empty?).to be true
+    end
+  end
+
   describe "klass" do
     it "is the model" do
       expect(query.klass).to eq(model)
