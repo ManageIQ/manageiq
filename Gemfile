@@ -62,6 +62,9 @@ gem "sshkey",                         "~>1.8.0",   :require => false
 gem "uglifier",                       "~>2.7.1",   :require => false
 gem "websocket-driver",               "~>0.6.3"
 
+# Required by the oVirt 4 provider:
+gem "ovirt-engine-sdk", "~>4.0.0.alpha", :require => false
+
 # Modified gems (forked on Github)
 gem "config",                         "~>1.1.0",                      :git => "git://github.com/ManageIQ/config.git", :branch => "overwrite_arrays"
 gem "deep_merge",                     "~>1.0.1",                      :git => "git://github.com/ManageIQ/deep_merge.git", :branch => "overwrite_arrays"
