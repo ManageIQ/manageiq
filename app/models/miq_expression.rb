@@ -105,6 +105,7 @@ class MiqExpression
     hosts
     host_services
     kernel_drivers
+    key_pairs
     lans
     last_compliances
     linux_initprocesses
