@@ -1,4 +1,8 @@
 module ComplianceSummaryHelper
+  def textual_group_compliance
+    %i(compliance_status compliance_history)
+  end
+
   def textual_compliance_status
     h = {:label => _("Status")}
     if @record.number_of(:compliances) == 0
@@ -22,6 +26,24 @@ module ComplianceSummaryHelper
         :id         => @record,
         :display    => 'compliance_history', :count => 1
       )
+    end
+    h
+  end
+
+  def textual_compliance_history(options_if_available = {})
+    h = {:label => _("History")}
+    if @record.number_of(:compliances) == 0
+      h[:value] = _("Not Available")
+    else
+      h[:image] = "compliance"
+      h[:value] = _("Available")
+      h[:title] = _("Show Compliance History of this %{model} (Last 10 Checks)") % ui_lookup(:model => controller.model)
+      h[:link] = url_for(
+        :controller => controller.controller_name,
+        :action     => 'show',
+        :id         => @record,
+        :display    => 'compliance_history')
+      h.merge!(options_if_available)
     end
     h
   end
