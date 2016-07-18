@@ -50,8 +50,7 @@ module MiqAeEngine
   end
 
   def self.deliver_synchronous(args)
-    log_header = "MIQ(#{name}.deliver_synchronous)"
-    options       = {:action => "Automate Request", :userid => 'system'}
+    options = {:action => "Automate Request", :userid => User.current_user.try(:userid) || 'system'}
     attrs = args[:attrs]
     request = "#{attrs['request']}##{attrs['message']}" if attrs
     options[:action] = options[:action] + " " + request.to_s
@@ -65,25 +64,24 @@ module MiqAeEngine
                      :msg_timeout => 60,
                      :task_id     => 'automate'
                     }
-    $log.info("#{log_header} Queuing MiqAeEngine deliver_from_queue with options: <#{options}>  Queue Options: #{queue_options}")
+    _log.info("Queuing MiqAeEngine deliver_from_queue with options: <#{options}>  Queue Options: #{queue_options}")
     task = MiqTask.wait_for_taskid(MiqTask.generic_action_with_callback(options, queue_options))
-    raise "#{log_header} Error while processing deliver_from_queue." if task.nil?
+    raise "Error while processing deliver_synchronous." if task.nil?
     task_results = task.task_results.duplicable? ? task.task_results.dup : task.task_results
-    task.task_results = nil
-    task.save
+    task.update_attributes(:task_results => nil)
     return task_results if task.status == "Ok"
     raise task_results
   end
 
   def self.deliver_from_queue(args)
-    $log.info("Starting deliver_from_queue with args:  <#{args}>  ")
+    _log.info("Starting deliver_from_queue with args:  <#{args}>  ")
     begin
       task = MiqTask.find_by_id(args.delete(:task_id))
       task.update_status(MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, "Running task")
       MiqAeEngine.deliver(args)
     rescue => err
       task.task_results = err
-      $log.log_backtrace(err)
+      _log.log_backtrace(err)
     end
   end
 
