@@ -86,7 +86,8 @@ module ManageIQ::Providers
           }
 
           placement_inv[uid].to_miq_a.each do |placement_hub|
-            new_result[:storage_profile_storages] << storage_uids[placement_hub.hubId] if placement_hub.hubType == "Datastore"
+            datastore = storage_uids[placement_hub.hubId] if placement_hub.hubType == "Datastore"
+            new_result[:storage_profile_storages] << datastore unless datastore.nil?
           end
 
           result << new_result
