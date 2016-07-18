@@ -271,15 +271,11 @@ module Rbac
       auth_count = targets.except(:offset, :limit, :order).count(:all)
       return targets, auth_count
     else
-      find_targets_without_rbac(scope, find_options)
+      targets = method_with_scope(scope, find_options)
+      auth_count = find_options[:limit] ? targets.except(:offset, :limit, :order).count : targets.length
+
+      return targets, auth_count
     end
-  end
-
-  def self.find_targets_without_rbac(scope, find_options)
-    targets    = method_with_scope(scope, find_options)
-    auth_count = find_options[:limit] ? targets.except(:offset, :limit, :order).count : targets.length
-
-    return targets, auth_count
   end
 
   def self.get_user_info(user, userid, miq_group, miq_group_id)
