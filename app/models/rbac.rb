@@ -254,18 +254,14 @@ module Rbac
     end
 
     if apply_rbac_to_class?(klass)
-      targets = find_targets_with_direct_rbac(scope, rbac_filters, find_options, user, miq_group)
+      find_targets_with_direct_rbac(scope, rbac_filters, find_options, user, miq_group)
     elsif apply_rbac_to_associated_class?(klass)
-      targets = find_targets_with_indirect_rbac(scope, rbac_filters, find_options, user, miq_group)
+      find_targets_with_indirect_rbac(scope, rbac_filters, find_options, user, miq_group)
     elsif apply_user_group_rbac_to_class?(klass, miq_group)
-      targets = find_targets_with_user_group_rbac(scope, rbac_filters, find_options, user, miq_group)
+      find_targets_with_user_group_rbac(scope, rbac_filters, find_options, user, miq_group)
     else
-      targets = method_with_scope(scope, find_options)
+      method_with_scope(scope, find_options)
     end
-
-    auth_count = find_options[:limit] ? targets.except(:offset, :limit, :order).count(:all) : targets.length
-
-    return targets, auth_count
   end
 
   def self.get_user_info(user, userid, miq_group, miq_group_id)
@@ -416,7 +412,8 @@ module Rbac
 
     _log.debug("Find options: #{find_options.inspect}")
 
-    targets, auth_count = find_targets_with_rbac(klass, scope, user_filters, find_options, user, miq_group)
+    targets = find_targets_with_rbac(klass, scope, user_filters, find_options, user, miq_group)
+    auth_count = find_options[:limit] ? targets.except(:offset, :limit, :order).count(:all) : targets.length
 
     if search_filter && targets && (!exp_attrs || !exp_attrs[:supported_by_sql])
       rejects     = targets.reject { |obj| self.matches_search_filters?(obj, search_filter, tz) }
