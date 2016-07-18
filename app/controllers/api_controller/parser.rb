@@ -21,8 +21,7 @@ class ApiController
       # Method Validation for the collection or sub-collection specified
       if cname && ctype
         mname = @req.method
-        cent  = collection_config[cname.to_sym]  # For Sub-Collection
-        unless Array(cent[:verbs]).include?(mname)
+        unless collection_config.supports_http_method?(cname, mname)
           raise BadRequestError, "Unsupported HTTP Method #{mname} for the #{ctype} #{cname} specified"
         end
       end
@@ -41,7 +40,7 @@ class ApiController
           raise BadRequestError, "Management of #{cname} is unsupported for the Provider class"
         end
       end
-      @collection_klasses[:providers] = "Provider"
+      @collection_klasses[:providers] = Provider
     end
 
     def validate_api_action
@@ -98,11 +97,6 @@ class ApiController
 
     def href_id(href, collection)
       href.match(%r{^.*/#{collection}/([0-9]+)$}) && Regexp.last_match(1) if href.present?
-    end
-
-    def resource_can_have_custom_actions(type, cspec = nil)
-      cspec ||= collection_config[type.to_sym] if collection_config[type.to_sym]
-      cspec && cspec[:options].include?(:custom_actions)
     end
 
     def parse_by_attr(resource, type, attr_list)
@@ -173,9 +167,8 @@ class ApiController
     #
     def validate_post_method
       cname = @req.subcollection || @req.collection
-      cspec = collection_config[cname.to_sym]
       type, target = request_type_target
-      validate_post_api_action(cname, @req.method, cspec, type, target)
+      validate_post_api_action(cname, @req.method, type, target)
     end
 
     #
@@ -203,8 +196,7 @@ class ApiController
                       else
                         [@req.subcollection || @req.collection, request_type_target.last]
                       end
-      cspec = collection_config[cname.to_sym]
-      aspec = cspec["#{target}_actions".to_sym]
+      aspec = collection_config.typed_collection_actions(cname, target)
       return if method_name == :get && aspec.nil?
       action_hash = fetch_action_hash(aspec, method_name, action_name)
       raise BadRequestError, "Disabled action #{action_name}" if action_hash[:disabled]
@@ -221,16 +213,15 @@ class ApiController
       end
     end
 
-    def validate_post_api_action(cname, mname, cspec, type, target)
+    def validate_post_api_action(cname, mname, type, target)
       aname = @req.action
 
-      aspecnames = "#{target}_actions"
-      raise BadRequestError, "No actions are supported for #{cname} #{type}" unless cspec[aspecnames.to_sym]
+      aspec = collection_config.typed_collection_actions(cname, target)
+      raise BadRequestError, "No actions are supported for #{cname} #{type}" unless aspec
 
-      aspec = cspec[aspecnames.to_sym]
       action_hash = fetch_action_hash(aspec, mname, aname)
       if action_hash.blank?
-        unless type == :resource && resource_can_have_custom_actions(cname, cspec)
+        unless type == :resource && collection_config.custom_actions?(cname)
           raise BadRequestError, "Unsupported Action #{aname} for the #{cname} #{type} specified"
         end
       end
@@ -248,14 +239,13 @@ class ApiController
       if @req.collection
         cname = @req.collection
         ctype = "Collection"
-        raise BadRequestError, "Unsupported #{ctype} #{cname} specified" unless collection_config[cname.to_sym]
-        cspec = collection_config[cname.to_sym]
-        if cspec[:options].include?(:primary)
+        raise BadRequestError, "Unsupported #{ctype} #{cname} specified" unless collection_config[cname]
+        if collection_config.primary?(cname)
           if "#{@req.c_id}#{@req.subcollection}#{@req.s_id}".present?
             raise BadRequestError, "Invalid request for #{ctype} #{cname} specified"
           end
         else
-          raise BadRequestError, "Unsupported #{ctype} #{cname} specified" unless cspec[:options].include?(:collection)
+          raise BadRequestError, "Unsupported #{ctype} #{cname} specified" unless collection_config.collection?(cname)
         end
         [cname, ctype]
       end
@@ -265,23 +255,20 @@ class ApiController
       # Sub-Collection Validation for the specified Collection
       if cname && @req.subcollection
         return [cname, ctype] if collection_option?(:arbitrary_resource_path)
-        cent  = collection_config[cname.to_sym]  # For Collection
-        cname = @req.subcollection
         ctype = "Sub-Collection"
-        unless Array(cent[:subcollections]).include?(cname.to_sym)
-          raise BadRequestError, "Unsupported #{ctype} #{cname} specified"
+        unless collection_config.subcollection?(cname, @req.subcollection)
+          raise BadRequestError, "Unsupported #{ctype} #{@req.subcollection} specified"
         end
+        cname = @req.subcollection
       end
       [cname, ctype]
     end
 
     def validate_post_api_action_as_subcollection(cname, mname, aname)
       return if cname == @req.collection
+      return if collection_config.subcollection_denied?(@req.collection, cname)
 
-      cspec = collection_config[@req.collection.to_sym]
-      return if cspec[:subcollections] && !cspec[:subcollections].include?(cname.to_sym)
-
-      aspec = cspec["#{cname}_subcollection_actions".to_sym]
+      aspec = collection_config.typed_subcollection_actions(@req.collection, cname)
       return unless aspec
 
       action_hash = fetch_action_hash(aspec, mname, aname)
