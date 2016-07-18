@@ -21,6 +21,7 @@ RSpec.describe 'Arbitration Profile API' do
       api_basic_authorize
 
       run_post(arbitration_profiles_url, request_body)
+
       expect(response).to have_http_status(:forbidden)
     end
 
@@ -30,6 +31,7 @@ RSpec.describe 'Arbitration Profile API' do
       expect do
         run_post(arbitration_profiles_url, request_body)
       end.to change(ArbitrationProfile, :count).by(1)
+
       expect(response).to have_http_status(:ok)
     end
 
@@ -39,10 +41,21 @@ RSpec.describe 'Arbitration Profile API' do
       expect do
         run_post(arbitration_profiles_url, gen_request(:create, request_body))
       end.to change(ArbitrationProfile, :count).by(1)
+
       expect(response).to have_http_status(:ok)
     end
 
-    it 'supports arbitration_default creation with provider href or id specified' do
+    it 'supports arbitration_default creation with provider id' do
+      api_basic_authorize collection_action_identifier(:arbitration_profiles, :create)
+      provider = FactoryGirl.create(:ext_management_system)
+
+      expect do
+        run_post(arbitration_profiles_url, request_body.merge(:provider => {:id => provider.id}))
+      end.to change(ArbitrationProfile, :count).by(1)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'supports arbitration_default creation with provider href ' do
       api_basic_authorize collection_action_identifier(:arbitration_profiles, :create)
       provider = FactoryGirl.create(:ext_management_system)
       provider_href = providers_url(provider.id)
@@ -52,12 +65,22 @@ RSpec.describe 'Arbitration Profile API' do
         run_post(arbitration_profiles_url, request_json.merge(:provider => {:href => provider_href}))
       end.to change(ArbitrationProfile, :count).by(1)
 
-      expect do
-        run_post(arbitration_profiles_url, request_body.merge(:provider => {:id => provider.id}))
-      end.to change(ArbitrationProfile, :count).by(1)
+      expect(response).to have_http_status(:ok)
     end
 
-    it 'supports arbitration_default creation with the provider as ext_management_system specified' do
+    it 'supports arbitration_default creation with ext_management_system id' do
+      api_basic_authorize collection_action_identifier(:arbitration_profiles, :create)
+      provider = FactoryGirl.create(:ext_management_system)
+      request_json = {:name => 'arbitration profile'}
+
+      expect do
+        run_post(arbitration_profiles_url, request_json.merge(:ext_management_system => {:id => provider.id}))
+      end.to change(ArbitrationProfile, :count).by(1)
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'supports arbitration_default creation with ext_management_system href' do
       api_basic_authorize collection_action_identifier(:arbitration_profiles, :create)
       provider = FactoryGirl.create(:ext_management_system)
       provider_href = providers_url(provider.id)
@@ -67,12 +90,21 @@ RSpec.describe 'Arbitration Profile API' do
         run_post(arbitration_profiles_url, request_json.merge(:ext_management_system => {:href => provider_href}))
       end.to change(ArbitrationProfile, :count).by(1)
 
-      expect do
-        run_post(arbitration_profiles_url, request_json.merge(:ext_management_system => {:id => provider.id}))
-      end.to change(ArbitrationProfile, :count).by(1)
+      expect(response).to have_http_status(:ok)
     end
 
-    it 'supports arbitration_default creation with availability_zone href or id specified' do
+    it 'supports arbitration_default creation with availability_zone id' do
+      api_basic_authorize collection_action_identifier(:arbitration_profiles, :create)
+      availability_zone = FactoryGirl.create(:availability_zone)
+
+      expect do
+        run_post(arbitration_profiles_url, request_body.merge(:availability_zone => {:id => availability_zone.id}))
+      end.to change(ArbitrationProfile, :count).by(1)
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'supports arbitration_default creation with availability_zone href' do
       api_basic_authorize collection_action_identifier(:arbitration_profiles, :create)
       availability_zone = FactoryGirl.create(:availability_zone)
       availability_zone_href = availability_zones_url(availability_zone.id)
@@ -81,15 +113,14 @@ RSpec.describe 'Arbitration Profile API' do
         run_post(arbitration_profiles_url, request_body.merge(:availability_zone => {:href => availability_zone_href}))
       end.to change(ArbitrationProfile, :count).by(1)
 
-      expect do
-        run_post(arbitration_profiles_url, request_body.merge(:availability_zone => {:id => availability_zone.id}))
-      end.to change(ArbitrationProfile, :count).by(1)
+      expect(response).to have_http_status(:ok)
     end
 
     it 'rejects a request with an invalid availability zone' do
       api_basic_authorize collection_action_identifier(:arbitration_profiles, :create)
 
       run_post(arbitration_profiles_url, request_body.merge(:availability_zone => {:id => 999_999}))
+
       expect(response).to have_http_status(:not_found)
     end
 
@@ -97,6 +128,7 @@ RSpec.describe 'Arbitration Profile API' do
       api_basic_authorize collection_action_identifier(:arbitration_profiles, :create)
 
       run_post(arbitration_profiles_url, request_body.merge(:provider => {:id => 999_999}))
+
       expect(response).to have_http_status(:not_found)
     end
 
@@ -105,6 +137,7 @@ RSpec.describe 'Arbitration Profile API' do
       request_json = {:name => 'arbitration profile'}
 
       run_post(arbitration_profiles_url, request_json.merge(:provider => {:id => 999_999}))
+
       expect(response).to have_http_status(:not_found)
     end
 
@@ -119,6 +152,7 @@ RSpec.describe 'Arbitration Profile API' do
 
     it 'rejects a request with an href' do
       api_basic_authorize collection_action_identifier(:arbitration_profiles, :create)
+
       run_post(arbitration_profiles_url, request_body.merge(:href => arbitration_profiles_url))
 
       expect_bad_request(/Resource id or href should not be specified/)
@@ -126,6 +160,7 @@ RSpec.describe 'Arbitration Profile API' do
 
     it 'rejects a request with an id' do
       api_basic_authorize collection_action_identifier(:arbitration_profiles, :create)
+
       run_post(arbitration_profiles_url, request_body.merge(:id => 1))
 
       expect_bad_request(/Resource id or href should not be specified/)
@@ -150,8 +185,8 @@ RSpec.describe 'Arbitration Profile API' do
     end
 
     it 'supports edit with a provider id' do
-      api_basic_authorize collection_action_identifier(:arbitration_profiles, :edit)
       provider = FactoryGirl.create(:ext_management_system)
+      api_basic_authorize collection_action_identifier(:arbitration_profiles, :edit)
 
       run_post(arbitration_profiles_url(default.id), gen_request(:edit, :provider => {:id => provider.id}))
 
@@ -159,17 +194,17 @@ RSpec.describe 'Arbitration Profile API' do
     end
 
     it 'supports edit with an ext_management_system id' do
-      api_basic_authorize collection_action_identifier(:arbitration_profiles, :edit)
       provider = FactoryGirl.create(:ext_management_system)
+      api_basic_authorize collection_action_identifier(:arbitration_profiles, :edit)
 
       run_post(arbitration_profiles_url(default.id), gen_request(:edit, :ext_management_system => {:id => provider.id}))
 
       expect(default.reload.ext_management_system).to eq(provider)
     end
 
-    it 'supports edit with an availability_zone id or href specified' do
-      api_basic_authorize collection_action_identifier(:arbitration_profiles, :edit)
+    it 'supports edit with an availability_zone id specified' do
       az = FactoryGirl.create(:availability_zone)
+      api_basic_authorize collection_action_identifier(:arbitration_profiles, :edit)
 
       run_post(arbitration_profiles_url(default.id), gen_request(:edit, :availability_zone => {:id => az.id}))
 
@@ -177,10 +212,10 @@ RSpec.describe 'Arbitration Profile API' do
     end
 
     it 'supports multiple arbitration_default edit' do
-      api_basic_authorize collection_action_identifier(:arbitration_profiles, :edit)
       subnet = FactoryGirl.create(:cloud_subnet)
       ext = FactoryGirl.create(:ext_management_system)
       default_two = FactoryGirl.create(:arbitration_profile, :ext_management_system => ext)
+      api_basic_authorize collection_action_identifier(:arbitration_profiles, :edit)
 
       default_id_1, default_id_2 = default.id, default_two.id
 

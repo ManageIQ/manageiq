@@ -127,12 +127,16 @@ class ApiController
       parse_id(resource, :tenants) unless resource.blank?
     end
 
-    def parse_provider(resource)
-      parse_id(resource, :providers) unless resource.blank?
+    def fetch_provider(data)
+      provider_id = parse_id(data, :providers)
+      raise BadRequestError, 'Missing Provider identifier href or id' if provider_id.nil?
+      resource_search(provider_id, :providers, collection_class(:providers))
     end
 
-    def parse_availability_zone(resource)
-      parse_id(resource, :availability_zones) unless resource.blank?
+    def fetch_availability_zone(data)
+      availability_zone_id = parse_id(data, :availability_zones)
+      raise BadRequestError, 'Missing availability zone identifier href or id' if availability_zone_id.nil?
+      resource_search(availability_zone_id, :availability_zones, collection_class(:availability_zones))
     end
 
     def parse_ownership(data)
@@ -165,22 +169,6 @@ class ApiController
         tenant_id = parse_tenant(data)
         raise BadRequestError, "Missing Tenant identifier href or id" if tenant_id.nil?
         resource_search(tenant_id, :tenants, collection_class(:tenants))
-      end
-    end
-
-    def parse_fetch_provider(data)
-      if data
-        provider_id = parse_provider(data)
-        raise BadRequestError, 'Missing Provider identifier href or id' if provider_id.nil?
-        resource_search(provider_id, :providers, collection_class(:providers))
-      end
-    end
-
-    def parse_fetch_availability_zone(data)
-      if data
-        availability_zone_id = parse_availability_zone(data)
-        raise BadRequestError, 'Missing availability zone identifier href or id' if availability_zone_id.nil?
-        resource_search(availability_zone_id, :availability_zones, collection_class(:availability_zones))
       end
     end
 
