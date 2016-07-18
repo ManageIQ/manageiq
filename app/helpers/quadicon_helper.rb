@@ -241,7 +241,7 @@ module QuadiconHelper
     if quadicon_in_explorer_view?
       quadicon_build_explorer_url(item, row)
     else
-      url_for_db(quadicon_model_name(item))
+      url_for_db(quadicon_model_name(item), "show", item)
     end
   end
 

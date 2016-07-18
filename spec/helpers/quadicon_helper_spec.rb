@@ -336,6 +336,21 @@ describe QuadiconHelper do
       end
     end
 
+    context "when item is a EmsContainer" do
+      let(:ems) do
+        FactoryGirl.create(:ems_container, :name => "Ems Container")
+      end
+
+      subject { helper.render_quadicon_text(ems, row) }
+
+      it "renders a link to ems_container" do
+        @id = ems.id
+
+        expect(subject).to have_selector('a')
+        expect(subject).to include("/ems_container/#{@id}")
+      end
+    end
+
     context "when item is a StorageManager" do
       let(:stor) do
         FactoryGirl.create(:storage_manager, :name => "Store Man")
