@@ -1519,10 +1519,8 @@ module ReportController::Reports::Editor
 
     # Only show chargeback users choice if an admin
     if admin_user?
-      @edit[:cb_users] = {}
-      User.all.each { |u| @edit[:cb_users][u.userid] = u.name }
-      @edit[:cb_tenant] = {}
-      Tenant.all.each { |t| @edit[:cb_tenant][t.id] = t.name }
+      @edit[:cb_users] = User.all.each_with_object({}) { |u, h| h[u.userid] = u.name }
+      @edit[:cb_tenant] = Tenant.all.each_with_object({}) { |t, h| h[t.id] = t.name }
     else
       @edit[:new][:cb_show_typ] = "owner"
       @edit[:new][:cb_owner_id] = session[:userid]
@@ -1532,8 +1530,7 @@ module ReportController::Reports::Editor
     # Get chargeback tags
     cats = Classification.categories.collect { |c| c if c.show }.compact  # Get categories, sort by name, remove nils
     cats.delete_if { |c| c.read_only? || c.entries.length == 0 }  # Remove categories that are read only or have no entries
-    @edit[:cb_cats] = {}
-    cats.each { |c| @edit[:cb_cats][c.name] = c.description }
+    @edit[:cb_cats] = cats.each_with_object({}) { |c, h| h[c.name] = c.description }
 
     @edit[:cb_providers] = {}
     @edit[:cb_providers][:container_project] = {}
@@ -1665,19 +1662,14 @@ module ReportController::Reports::Editor
 
     @edit[:current] = ["copy", "new"].include?(params[:action]) ? {} : copy_hash(@edit[:new])
 
-    unless @edit[:models] # Only create once
-      @edit[:models] = []
-      MiqReport.reportable_models.each do |m|
-        @edit[:models].push([Dictionary.gettext(m, :type => :model, :notfound => :titleize, :plural => true), m])
-      end
+    @edit[:models] ||= MiqReport.reportable_models.collect do |m|
+      [Dictionary.gettext(m, :type => :model, :notfound => :titleize, :plural => true), m]
     end
 
     # Only show chargeback users choice if an admin
     if admin_user?
-      @edit[:cb_users] = {}
-      User.all.each { |u| @edit[:cb_users][u.userid] = u.name }
-      @edit[:cb_tenant] = {}
-      Tenant.all.each { |t| @edit[:cb_tenant][t.id] = t.name }
+      @edit[:cb_users] = User.all.each_with_object({}) { |u, h| h[u.userid] = u.name }
+      @edit[:cb_tenant] = Tenant.all.each_with_object({}) { |t, h| h[t.id] = t.name }
     else
       @edit[:new][:cb_show_typ] = "owner"
       @edit[:new][:cb_owner_id] = session[:userid]
