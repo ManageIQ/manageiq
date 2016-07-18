@@ -193,13 +193,10 @@ module Rbac
     if filtered_ids
       reflection = scope.reflections[parent_class.name.underscore]
       if reflection
-        ids_clause = ["#{scope.table_name}.#{reflection.foreign_key} IN (?)", filtered_ids]
+        scope = scope.where("#{scope.table_name}.#{reflection.foreign_key} IN (?)", filtered_ids)
       else
-        ids_clause = ["#{scope.table_name}.resource_type = ? AND #{scope.table_name}.resource_id IN (?)", parent_class.name, filtered_ids]
+        scope = scope.where("#{scope.table_name}.resource_type = ? AND #{scope.table_name}.resource_id IN (?)", parent_class.name, filtered_ids)
       end
-
-      find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], ids_clause)
-      _log.debug("New Find options: #{find_options.inspect}")
     end
     method_with_scope(scope, find_options)
   end
