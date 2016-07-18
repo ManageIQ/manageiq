@@ -847,9 +847,9 @@ class ApplicationHelper::ToolbarBuilder
       when "vm_reconfigure"
         return true unless @record.reconfigurable?
       when "vm_retire"
-        return true unless @record.is_available?(:retire)
+        return true unless @record.supports_retire?
       when "vm_retire_now"
-        return true unless @record.is_available?(:retire_now)
+        return true unless @record.supports_retire?
       when "vm_stop", "instance_stop"
         return true unless @record.is_available?(:stop)
       when "vm_reset", "instance_reset"
