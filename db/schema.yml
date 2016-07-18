@@ -6144,6 +6144,18 @@ storage_metrics_metadata:
 - counter_info
 - created_at
 - updated_at
+storage_profile_storages:
+- id
+- storage_profile_id
+- storage_id
+storage_profiles:
+- id
+- ems_id
+- name
+- ems_ref
+- profile_type
+- created_at
+- updated_at
 storages:
 - id
 - name

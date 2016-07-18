@@ -4,6 +4,8 @@ class Storage < ApplicationRecord
   has_many :vms,               :foreign_key => :storage_id
   has_many :host_storages
   has_many :hosts,             :through => :host_storages
+  has_many :storage_profile_storages,   :dependent  => :destroy
+  has_many :storage_profiles,           :through    => :storage_profile_storages
   has_and_belongs_to_many :all_vms_and_templates, :class_name => "VmOrTemplate", :join_table => :storages_vms_and_templates, :association_foreign_key => :vm_or_template_id
   has_and_belongs_to_many :all_miq_templates,     :class_name => "MiqTemplate",  :join_table => :storages_vms_and_templates, :association_foreign_key => :vm_or_template_id
   has_and_belongs_to_many :all_vms,               :class_name => "Vm",           :join_table => :storages_vms_and_templates, :association_foreign_key => :vm_or_template_id
