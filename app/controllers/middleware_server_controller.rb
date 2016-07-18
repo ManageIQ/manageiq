@@ -73,8 +73,10 @@ class MiddlewareServerController < ApplicationController
     @record = identify_record(params[:id], ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer)
 
     if @display == 'middleware_datasources'
+      @gtl_url = '/show'
       show_container_display(@record, 'middleware_datasource', MiddlewareDatasource)
     elsif @display == 'middleware_deployments'
+      @gtl_url = '/show'
       show_container_display(@record, 'middleware_deployment', MiddlewareDeployment)
     else
       show_container(@record, controller_name, display_name)
