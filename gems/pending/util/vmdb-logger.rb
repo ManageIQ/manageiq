@@ -12,6 +12,11 @@ class VMDBLogger < Logger
     # ActiveSupport::BufferedLogger, so this hack may not be needed in future
     # version of Rails.
     self.formatter = Formatter.new
+
+    # Allow for thread safe Logger level changes, similar to functionalities
+    # provided by ActiveSupport::LoggerThreadSafeLevel
+    @write_lock   = Mutex.new
+    @local_levels = {}
   end
 
   attr_reader :logdev # Expose logdev
@@ -101,7 +106,29 @@ class VMDBLogger < Logger
     self.class.log_hashes(self, h, options)
   end
 
+  def level
+    local_level || super
+  end
+
   private
+
+  def local_log_id
+    Thread.current.object_id
+  end
+
+  def local_level
+    @local_levels[local_log_id]
+  end
+
+  def local_level=(level)
+    @write_lock.synchronize do
+      if level
+        @local_levels[local_log_id] = level
+      else
+        @local_levels.delete(local_log_id)
+      end
+    end
+  end
 
   class Formatter < Logger::Formatter
     FORMAT = "[----] %s, [%s#%d:%x] %5s -- %s: %s\n"
