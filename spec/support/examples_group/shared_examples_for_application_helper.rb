@@ -1,20 +1,20 @@
 
 shared_examples_for 'record without latest derived metrics' do |message|
-  it "#{message}" do
+  it message.to_s do
     allow(@record).to receive_messages(:latest_derived_metrics => false)
     expect(subject).to eq(message)
   end
 end
 
 shared_examples_for 'record without perf data' do |message|
-  it "#{message}" do
+  it message.to_s do
     allow(@record).to receive_messages(:has_perf_data? => false)
     expect(subject).to eq(message)
   end
 end
 
 shared_examples_for 'record without ems events and policy events' do |message|
-  it "#{message}" do
+  it message.to_s do
     allow(@record).to receive(:has_events?).and_return(false)
     expect(subject).to eq(message)
   end
@@ -37,7 +37,7 @@ shared_examples_for 'default true_case' do
 end
 
 shared_examples_for 'will be skipped for this record' do |message|
-  it "#{message}" do
+  it message.to_s do
     view_context = setup_view_context_with_sandbox({})
     button = described_class.new(view_context, {}, {'record' => @record}, {})
     expect(button.skip?).to be_truthy
@@ -45,7 +45,7 @@ shared_examples_for 'will be skipped for this record' do |message|
 end
 
 shared_examples_for 'will not be skipped for this record' do |message|
-  it "#{message}" do
+  it message.to_s do
     view_context = setup_view_context_with_sandbox({})
     button = described_class.new(view_context, {}, {'record' => @record}, {})
     expect(button.skip?).to be_falsey
@@ -53,7 +53,7 @@ shared_examples_for 'will not be skipped for this record' do |message|
 end
 
 shared_examples_for 'vm not powered on' do |message|
-  it "#{message}" do
+  it message.to_s do
     allow(@record).to receive_messages(:current_state => 'off')
     expect(subject).to eq(message)
   end
