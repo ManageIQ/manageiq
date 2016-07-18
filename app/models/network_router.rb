@@ -15,6 +15,12 @@ class NetworkRouter < ApplicationRecord
   has_many :network_ports, :through => :cloud_subnets
   has_many :vms, :through => :cloud_subnets
 
+  has_many :floating_ips, :through => :cloud_network
+  has_many :cloud_networks, :through => :cloud_subnets
+
+  alias private_networks cloud_networks
+  alias public_network cloud_network
+
   # Use for virtual columns, mainly for modeling array and hash types, we get from the API
   serialize :extra_attributes
 
