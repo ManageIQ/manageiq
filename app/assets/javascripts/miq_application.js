@@ -1389,7 +1389,7 @@ function miqSelectPickerEvent(element, url, options) {
     miqObserveRequest(finalUrl, options);
 
     return true;
-  }, 700, { leading: false, trailing: true }));
+  }, 700, {leading: true, trailing: true}));
 }
 
 function miqAccordSelect(e) {
