@@ -1,12 +1,10 @@
-module HasManyCloudNetworksMixin
+module HasNetworkManagerMixin
   extend ActiveSupport::Concern
 
-  # TODO(lsmola) NetworkManager, change this once we have a full representation of the NetworkManager, now we are
-  # showing everything under CloudManager
   included do
     has_one :network_manager,
             :foreign_key => :parent_ems_id,
-            :class_name  => "ManageIQ::Providers::Openstack::NetworkManager",
+            :class_name  => "ManageIQ::Providers::NetworkManager",
             :autosave    => true,
             :dependent   => :destroy
 
@@ -22,14 +20,15 @@ module HasManyCloudNetworksMixin
              :to        => :network_manager,
              :allow_nil => true
 
-    before_validation :ensure_managers
+    alias_method :all_cloud_networks, :cloud_networks
 
     private
 
     def ensure_managers
-      build_network_manager unless network_manager
-      network_manager.name    = "#{name} Network Manager"
-      network_manager.zone_id = zone_id
+      ensure_network_manager
+      network_manager.name            = "#{name} Network Manager"
+      network_manager.zone_id         = zone_id
+      network_manager.provider_region = provider_region
     end
   end
 end
