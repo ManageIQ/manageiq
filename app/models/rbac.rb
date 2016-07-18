@@ -213,10 +213,7 @@ module Rbac
       find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], ids_clause)
       _log.debug("New Find options: #{find_options.inspect}")
     end
-    targets     = method_with_scope(scope, find_options)
-    auth_count  = targets.except(:offset, :limit, :order).count(:all)
-
-    return targets, auth_count
+    method_with_scope(scope, find_options)
   end
 
   def self.get_belongsto_filter_object_ids(klass, filter)
@@ -268,7 +265,9 @@ module Rbac
     end
 
     if apply_rbac_to_class?(klass)
-      find_targets_with_direct_rbac(scope, rbac_filters, find_options, user, miq_group)
+      targets = find_targets_with_direct_rbac(scope, rbac_filters, find_options, user, miq_group)
+      auth_count  = targets.except(:offset, :limit, :order).count(:all)
+      return targets, auth_count
     elsif apply_rbac_to_associated_class?(klass)
       find_targets_with_indirect_rbac(scope, rbac_filters, find_options, user, miq_group)
     elsif apply_user_group_rbac_to_class?(klass, miq_group)
