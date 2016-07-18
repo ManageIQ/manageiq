@@ -1627,9 +1627,9 @@ module ApplicationController::Filter
     temp = MiqSearch.new
     temp.description = "ALL"
     temp.id = 0
-    @def_searches = MiqSearch.where(:db => db).visible_to_all.sort_by { |s| s.description.downcase }
+    @def_searches = MiqSearch.where(:db => [db, db.constantize.to_s]).visible_to_all.sort_by { |s| s.description.downcase }
     @def_searches = @def_searches.unshift(temp) unless @def_searches.empty?
-    @my_searches = MiqSearch.where(:search_type => "user", :search_key => session[:userid], :db => db).sort_by { |s| s.description.downcase }
+    @my_searches = MiqSearch.where(:search_type => "user", :search_key => session[:userid], :db => [db, db.constantize.to_s]).sort_by { |s| s.description.downcase }
   end
 
   def process_changed_expression(params, chosen_key, exp_key, exp_value, exp_valx)
