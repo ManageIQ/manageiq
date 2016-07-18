@@ -43,6 +43,7 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
 
   supports :discovery
   supports :provisioning
+  supports :regions
 
   def ensure_managers
     build_network_manager unless network_manager
