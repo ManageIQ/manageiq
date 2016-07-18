@@ -223,7 +223,7 @@ module MiqPolicyController::Policies
 
   def policy_get_all_folders
     @folders = ["Compliance", "Control"]
-    @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "MiqPolicy")}
+    @right_cell_text = _("All Policies")
     @right_cell_div = "policy_folders"
   end
 
