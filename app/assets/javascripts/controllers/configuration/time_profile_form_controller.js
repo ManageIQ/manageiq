@@ -14,6 +14,7 @@ ManageIQ.angular.app.controller('timeProfileFormController', ['$http', '$scope',
       hourValuesAMSecondHalf: [],
       hourValuesPMFirstHalf: [],
       hourValuesPMSecondHalf: [],
+      some_days_checked: true,
     };
     $scope.dayNames = [__("Sunday"), __("Monday"), __("Tuesday"), __("Wednesday"), __("Thursday"), __("Friday"), __("Saturday")];
     $scope.hourNamesFirstHalf = [__("12-1"), __("1-2"), __("2-3"), __("3-4"), __("4-5"), __("5-6")];
@@ -138,9 +139,11 @@ ManageIQ.angular.app.controller('timeProfileFormController', ['$http', '$scope',
     if ($scope.timeProfileModel.all_days) {
       $scope.timeProfileModel.dayValues = _.times(7, _.constant(true));
       $scope.timeProfileModel.days = _.times(7, _.constant(true));
+      $scope.timeProfileModel.some_days_checked = true;
     } else {
       $scope.timeProfileModel.dayValues = _.times(7, _.constant(false));
       $scope.timeProfileModel.days = [];
+      $scope.timeProfileModel.some_days_checked = false;
     }
   };
 

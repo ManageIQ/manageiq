@@ -55,7 +55,7 @@
                                   "bs-switch"   => "",
                                   :checkchange  => "",
                                 }
-        .form-group
+        .form-group{"ng-class" => "{'has-error': angularForm.some_days_checked.$error.someDaysCheck}"}
           %label.col-md-2.control-label
           %div{"ng-hide" => "timeProfileModel.all_days"}
             %span.col-sm-1{"ng-repeat" => "day in timeProfileModel.dayValues track by $index"}
@@ -68,7 +68,20 @@
                                     'ng-change'   => "dayValuesChanged()",
                                     "bs-switch"   => "",
                                     :checkchange  => "",
+                                    "days-check"  => "{{$index}}",
                                    }
+        .form-group{"ng-class" => "{'has-error': angularForm.some_days_checked.$error.someDaysCheck}"}
+          %label.col-md-2.control-label
+          .col-md-8
+            %div
+              %input.form-control{:type             => "checkbox",
+                                  :name             => "some_days_checked",
+                                  "id"              => "some_days_checked",
+                                  'ng-model'        => "timeProfileModel.some_days_checked",
+                                  'ng-hide'         => true,
+                                  "some-days-check" => ""}
+              %span.help-block{"ng-show" => "angularForm.some_days_checked.$error.someDaysCheck"}
+                = _("At least one day needs to be selected")
         .form-group
           %label.col-md-2.control-label
             = _('Hours')
