@@ -1,6 +1,4 @@
 class DialogFieldDropDownList < DialogFieldSortedItem
-  AUTOMATE_VALUE_FIELDS = %w(required read_only visible).freeze
-
   def initialize_with_values(dialog_values)
     if load_values_on_init?
       raw_values
