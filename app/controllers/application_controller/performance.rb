@@ -1123,7 +1123,7 @@ module ApplicationController::Performance
       miq_task = MiqTask.find(params[:task_id])     # Not first time, read the task record
       begin
         unless miq_task.results_ready?
-          add_flash(_("Error while generating report: #{miq_task.message}"), :error)
+          add_flash(_("Error while generating report: %{error_message}") % {:error_message => miq_task.message}, :error)
           return
         end
         rpt = miq_task.miq_report_result.report_results # Grab the report object from the blob

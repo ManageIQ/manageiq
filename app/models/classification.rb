@@ -95,7 +95,7 @@ class Classification < ApplicationRecord
 
   def self.unclassify_by_tag(obj, tag, is_request = true)
     parts = tag.split("/")
-    raise _("Tag #{tag} is not a category entry") % {:tag => tag} unless parts[1] == "managed"
+    raise _("Tag %{tag} is not a category entry") % {:tag => tag} unless parts[1] == "managed"
 
     entry_name = parts.pop
     category_name = parts.pop

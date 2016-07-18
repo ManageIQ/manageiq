@@ -262,7 +262,8 @@ module ReportController::Reports
           end
         elsif @edit[:new][:cb_show_typ] == "entity"
           unless @edit[:new][:cb_entity_id]
-            add_flash(_("A specific #{ui_lookup(:model => @edit[:new][:cb_model])} or all must be selected"), :error)
+            add_flash(_("A specific %{chargeback} or all must be selected") %
+              {:chargeback => ui_lookup(:model => @edit[:new][:cb_model])}, :error)
             active_tab = "edit_3"
           end
         end
