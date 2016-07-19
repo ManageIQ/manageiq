@@ -1119,6 +1119,7 @@
       :event_catcher_redhat:
         :poll: 15.seconds
       :event_catcher_vmware:
+        :flooding_monitor_enabled: true
         :poll: 1.seconds
         :ems_event_max_wait: 60
       :event_catcher_openstack:
