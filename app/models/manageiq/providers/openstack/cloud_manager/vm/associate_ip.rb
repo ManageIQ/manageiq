@@ -16,7 +16,6 @@ module ManageIQ::Providers::Openstack::CloudManager::Vm::AssociateIp
         unsupported_reason_add(:disassociate_floating_ip,
                                _("This %{instance} does not have any associated %{floating_ips}") % {
                                  :instance     => ui_lookup(:table => 'vm_cloud'),
-                                 :name         => name,
                                  :floating_ips => ui_lookup(:tables => 'floating_ip')
                                })
       end

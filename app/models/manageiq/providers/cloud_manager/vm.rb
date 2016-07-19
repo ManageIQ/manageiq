@@ -81,14 +81,6 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     super
   end
 
-  def validate_associate_floating_ip
-    {:available => supports_associate_floating_ip?, :message => unsupported_reason(:associate_floating_ip)}
-  end
-
-  def validate_disassociate_floating_ip
-    {:available => supports_disassociate_floating_ip?, :message => unsupported_reason(:disassociate_floating_ip)}
-  end
-
   def raw_associate_floating_ip(_ip_address)
     raise NotImplementedError, _("raw_associate_floating_ip must be implemented in a subclass")
   end
