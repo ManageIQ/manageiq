@@ -7,7 +7,7 @@
 
   - unless item.state.blank?
     .flobj{:class => "b#{size}"}
-      %img{:src => image_path("72/currentstate-#{h(item.state.downcase)}.png")}
+      %img{:src => image_path("72/currentstate-#{h(item.normalized_state.downcase)}.png")}
 
   .flobj{:class => "c#{size}"}
     %img{:src => image_path(img_for_host_vendor(item))}
