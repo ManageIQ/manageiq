@@ -543,39 +543,8 @@ module ReportController::Widgets
 
     if @sb[:wtype] == "r"
       # Look at the pivot group field selectors
-      if params[:chosen_pivot1] && params[:chosen_pivot1] != @edit[:new][:pivot].by1
-        @edit[:new][:pivot].by1 = params[:chosen_pivot1]
-        if params[:chosen_pivot1] == NOTHING_STRING
-          @edit[:new][:pivot].by2 = NOTHING_STRING
-          @edit[:new][:pivot].by3 = NOTHING_STRING
-          @edit[:new][:pivot].by4 = NOTHING_STRING
-        elsif params[:chosen_pivot1] == @edit[:new][:pivot].by2
-          @edit[:new][:pivot].by2 = @edit[:new][:pivot].by3
-          @edit[:new][:pivot].by3 = @edit[:new][:pivot].by4
-          @edit[:new][:pivot].by4 = NOTHING_STRING
-        elsif params[:chosen_pivot1] == @edit[:new][:pivot].by3
-          @edit[:new][:pivot].by3 = @edit[:new][:pivot].by4
-          @edit[:new][:pivot].by4 = NOTHING_STRING
-        end
-      elsif params[:chosen_pivot2] && params[:chosen_pivot2] != @edit[:new][:pivot].by2
-        @edit[:new][:pivot].by2 = params[:chosen_pivot2]
-        if params[:chosen_pivot2] == NOTHING_STRING
-          @edit[:new][:pivot].by3 = NOTHING_STRING
-          @edit[:new][:pivot].by4 = NOTHING_STRING
-        elsif params[:chosen_pivot2] == @edit[:new][:pivot].by3
-          @edit[:new][:pivot].by3 = @edit[:new][:pivot].by4
-          @edit[:new][:pivot].by4 = NOTHING_STRING
-        elsif params[:chosen_pivot2] == @edit[:new][:pivot].by4
-          @edit[:new][:pivot].by4 = NOTHING_STRING
-        end
-      elsif params[:chosen_pivot3] && params[:chosen_pivot3] != @edit[:new][:pivot].by3
-        @edit[:new][:pivot].by3 = params[:chosen_pivot3]
-        if params[:chosen_pivot3] == NOTHING_STRING || params[:chosen_pivot3] == @edit[:new][:pivot].by4
-          @edit[:new][:pivot].by4 = NOTHING_STRING
-        end
-      elsif params[:chosen_pivot4] && params[:chosen_pivot4] != @edit[:new][:pivot].by4
-        @edit[:new][:pivot].by4 = params[:chosen_pivot4]
-      end
+      @edit[:new][:pivot].update(params)
+
       if @edit[:new][:filter]
         @folders ||= []
         report_selection_menus          # to build sub folders

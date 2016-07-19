@@ -24,5 +24,41 @@ class ReportController
     def options4
       @opts[4] ||= options3.reject { |g| g[1] == by3 }
     end
+
+    def update(params)
+      if params[:chosen_pivot1] && params[:chosen_pivot1] != by1
+        self.by1 = params[:chosen_pivot1]
+        if params[:chosen_pivot1] == NOTHING_STRING
+          self.by2 = NOTHING_STRING
+          self.by3 = NOTHING_STRING
+          self.by4 = NOTHING_STRING
+        elsif params[:chosen_pivot1] == by2
+          self.by2 = by3
+          self.by3 = by4
+          self.by4 = NOTHING_STRING
+        elsif params[:chosen_pivot1] == by3
+          self.by3 = by4
+          self.by4 = NOTHING_STRING
+        end
+      elsif params[:chosen_pivot2] && params[:chosen_pivot2] != by2
+        self.by2 = params[:chosen_pivot2]
+        if params[:chosen_pivot2] == NOTHING_STRING
+          self.by3 = NOTHING_STRING
+          self.by4 = NOTHING_STRING
+        elsif params[:chosen_pivot2] == by3
+          self.by3 = by4
+          self.by4 = NOTHING_STRING
+        elsif params[:chosen_pivot2] == by4
+          self.by4 = NOTHING_STRING
+        end
+      elsif params[:chosen_pivot3] && params[:chosen_pivot3] != by3
+        self.by3 = params[:chosen_pivot3]
+        if params[:chosen_pivot3] == NOTHING_STRING || params[:chosen_pivot3] == by4
+          self.by4 = NOTHING_STRING
+        end
+      elsif params[:chosen_pivot4]
+        self.by4 = params[:chosen_pivot4]
+      end
+    end
   end
 end
