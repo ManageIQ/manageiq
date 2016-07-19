@@ -1,4 +1,4 @@
-angular.module('miq.util').factory('chartsMixin', function(pfUtils) {
+angular.module('miq.util').factory('chartsMixin', ['pfUtils', function(pfUtils) {
   'use strict';
 
   var hourlyTimeTooltip = function (data) {
@@ -163,4 +163,4 @@ angular.module('miq.util').factory('chartsMixin', function(pfUtils) {
     processPodUtilizationData: processPodUtilizationData,
     dailyTimeTooltip: dailyTimeTooltip
   };
-});
+}]);
