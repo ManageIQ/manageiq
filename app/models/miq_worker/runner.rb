@@ -49,9 +49,6 @@ class MiqWorker::Runner
     @server = MiqServer.my_server(true)
 
     worker_initialization
-    after_initialize
-
-    @worker.release_db_connection if @worker.respond_to?(:release_db_connection)
   end
 
   def worker_initialization
@@ -124,6 +121,10 @@ class MiqWorker::Runner
   end
 
   def start
+    after_initialize
+
+    @worker.release_db_connection if @worker.respond_to?(:release_db_connection)
+
     prepare
     run
 

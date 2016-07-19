@@ -12,6 +12,7 @@ describe MiqEmsRefreshCoreWorker::Runner do
     allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive(:authentication_check).and_return([true, ""])
 
     @worker = MiqEmsRefreshCoreWorker::Runner.new(:guid => @worker_record.guid, :ems_id => @ems.id)
+    @worker.after_initialize
   end
 
   context "#process_update" do

@@ -13,6 +13,7 @@ describe MiqScheduleWorker::Runner do
       allow_any_instance_of(MiqScheduleWorker::Runner).to receive(:set_connection_pool_size)
 
       @schedule_worker = MiqScheduleWorker::Runner.new(:guid => worker_guid)
+      @schedule_worker.after_initialize
     end
 
     context "with a stuck dispatch in each zone" do

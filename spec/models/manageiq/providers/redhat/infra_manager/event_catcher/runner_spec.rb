@@ -1,7 +1,7 @@
 describe ManageIQ::Providers::Redhat::InfraManager::EventCatcher::Runner do
   context "#event_monitor_options" do
     let(:ems)     { FactoryGirl.create(:ems_redhat, :hostname => "hostname") }
-    let(:catcher) { described_class.new(:ems_id => ems.id) }
+    let(:catcher) { described_class.new(:ems_id => ems.id).tap(&:after_initialize) }
 
     before do
       allow_any_instance_of(ManageIQ::Providers::Redhat::InfraManager).to receive_messages(:authentication_check => [true, ""])
