@@ -2542,6 +2542,8 @@ class MiqAeClassController < ApplicationController
     @in_a_form = true
     @explorer = true
 
+    session[:changed] = true
+
     git_repo = MiqAeDomain.find(params[:id]).git_repository
     @branch_names = git_repo.git_branches.collect(&:name)
     @tag_names = git_repo.git_tags.collect(&:name)
@@ -2578,7 +2580,7 @@ class MiqAeClassController < ApplicationController
     presenter.reload_toolbars(:history => h_tb)
     presenter.show(:toolbar)
 
-    render :js => presenter.to_html
+    render :json => presenter.for_render
   end
 
   def git_based_domain_import_service
