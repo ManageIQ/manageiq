@@ -16,7 +16,6 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Runner 
   before do
     allow_any_instance_of(ManageIQ::Providers::Hawkular::MiddlewareManager)
       .to receive_messages(:authentication_check => [true, ""])
-    allow_any_instance_of(MiqWorker::Runner).to receive(:worker_initialization)
   end
 
   context "#whitelist" do

@@ -11,7 +11,6 @@ describe ManageIQ::Providers::Azure::CloudManager::EventCatcher::Runner do
 
     before do
       allow_any_instance_of(ManageIQ::Providers::Azure::CloudManager).to receive_messages(:authentication_check => [true, ""])
-      allow_any_instance_of(MiqWorker::Runner).to receive(:worker_initialization)
     end
 
     describe "parse properties" do

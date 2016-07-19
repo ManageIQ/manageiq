@@ -5,7 +5,6 @@ describe ManageIQ::Providers::Redhat::InfraManager::EventCatcher::Runner do
 
     before do
       allow_any_instance_of(ManageIQ::Providers::Redhat::InfraManager).to receive_messages(:authentication_check => [true, ""])
-      allow_any_instance_of(MiqWorker::Runner).to receive(:worker_initialization)
     end
 
     it "numeric port" do
