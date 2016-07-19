@@ -8,7 +8,7 @@
         = _('Column 1')
       .col-md-8
         = select_tag('chosen_pivot1',
-          options_for_select([NOTHING_STRING] + @pivots1, @pivotby1),
+          options_for_select([NOTHING_STRING] + @edit[:new][:pivot].options1, @pivotby1),
           :multiple             => false,
           :class                => "selectpicker")
         :javascript
@@ -20,7 +20,7 @@
           = _('Column 2')
         .col-md-8
           = select_tag('chosen_pivot2',
-            options_for_select([NOTHING_STRING] + @pivots2, @pivotby2),
+            options_for_select([NOTHING_STRING] + @edit[:new][:pivot].options2, @pivotby2),
             :multiple             => false,
             :class                => "selectpicker")
           :javascript
@@ -32,7 +32,7 @@
             = _('Column 3')
           .col-md-8
             = select_tag('chosen_pivot3',
-              options_for_select([NOTHING_STRING] + @pivots3, @pivotby3),
+              options_for_select([NOTHING_STRING] + @edit[:new][:pivot].options3, @pivotby3),
               :multiple             => false,
               :class                => "selectpicker")
             :javascript

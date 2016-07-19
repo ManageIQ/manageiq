@@ -170,9 +170,7 @@ module ReportController::Reports::Editor
 
     when "8"  # Consolidate
       # Build group chooser arrays
-      @pivots1  = @edit[:new][:fields].dup
-      @pivots2  = @pivots1.dup.delete_if { |g| g[1] == @edit[:new][:pivot].by1 }
-      @pivots3  = @pivots2.dup.delete_if { |g| g[1] == @edit[:new][:pivot].by2 }
+      @edit[:new][:pivot].options = @edit[:new][:fields].dup
       @pivotby1 = @edit[:new][:pivot].by1
       @pivotby2 = @edit[:new][:pivot].by2
       @pivotby3 = @edit[:new][:pivot].by3
