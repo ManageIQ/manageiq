@@ -404,17 +404,17 @@ module ReportController::Widgets
     end
 
     if @sb[:wtype] == "r"
-      @edit[:new][:pivot] = ReportController::PivotOptions.new
-      @pivotby1 = @edit[:new][:pivot].by1 = NOTHING_STRING # Initialize groupby fields to nothing
-      @pivotby2 = @edit[:new][:pivot].by2 = NOTHING_STRING
-      @pivotby3 = @edit[:new][:pivot].by3 = NOTHING_STRING
-      @pivotby4 = @edit[:new][:pivot].by4 = NOTHING_STRING
+      @pivot = @edit[:new][:pivot] = ReportController::PivotOptions.new
+      @edit[:new][:pivot].by1 = NOTHING_STRING # Initialize groupby fields to nothing
+      @edit[:new][:pivot].by2 = NOTHING_STRING
+      @edit[:new][:pivot].by3 = NOTHING_STRING
+      @edit[:new][:pivot].by4 = NOTHING_STRING
       rpt = @widget.resource_id && @widget.resource_type == "MiqReport" ? @widget.resource_id : nil
       widget_set_column_vars(rpt)
-      @pivotby1 = @edit[:new][:pivot].by1 = @widget.options[:col_order][0] if @widget.options && @widget.options[:col_order] && @widget.options[:col_order][0]
-      @pivotby2 = @edit[:new][:pivot].by2 = @widget.options[:col_order][1] if @widget.options && @widget.options[:col_order] && @widget.options[:col_order][1]
-      @pivotby3 = @edit[:new][:pivot].by3 = @widget.options[:col_order][2] if @widget.options && @widget.options[:col_order] && @widget.options[:col_order][2]
-      @pivotby4 = @edit[:new][:pivot].by4 = @widget.options[:col_order][3] if @widget.options && @widget.options[:col_order] && @widget.options[:col_order][3]
+      @edit[:new][:pivot].by1 = @widget.options[:col_order][0] if @widget.options && @widget.options[:col_order] && @widget.options[:col_order][0]
+      @edit[:new][:pivot].by2 = @widget.options[:col_order][1] if @widget.options && @widget.options[:col_order] && @widget.options[:col_order][1]
+      @edit[:new][:pivot].by3 = @widget.options[:col_order][2] if @widget.options && @widget.options[:col_order] && @widget.options[:col_order][2]
+      @edit[:new][:pivot].by4 = @widget.options[:col_order][3] if @widget.options && @widget.options[:col_order] && @widget.options[:col_order][3]
       @edit[:new][:pivot].options = @edit[:new][:fields].dup
       @edit[:new][:row_count] = @widget.row_count
     elsif @sb[:wtype] == "rf"
@@ -590,10 +590,7 @@ module ReportController::Widgets
         widget_set_column_vars(rpt)
       end
       @edit[:new][:pivot].options = @edit[:new][:fields].dup
-      @pivotby1 = @edit[:new][:pivot].by1
-      @pivotby2 = @edit[:new][:pivot].by2
-      @pivotby3 = @edit[:new][:pivot].by3
-      @pivotby4 = @edit[:new][:pivot].by4
+      @pivot = @edit[:new][:pivot]
     elsif @sb[:wtype] == "c"
       widget_graph_menus      # to build report pulldown with only reports with grpahs
     elsif @sb[:wtype] == "rf"
