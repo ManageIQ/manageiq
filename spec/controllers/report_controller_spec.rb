@@ -458,7 +458,7 @@ describe ReportController do
         it "sets pivot 1" do
           controller.instance_variable_set(:@_params, :chosen_pivot1 => P1)
           controller.send(:gfv_pivots)
-          expect(assigns(:edit)[:new][:pivotby1]).to eq(P1)
+          expect(assigns(:edit)[:new][:pivot].by1).to eq(P1)
           expect(assigns(:refresh_div)).to eq("consolidate_div")
           expect(assigns(:refresh_partial)).to eq("form_consolidate")
         end
@@ -466,7 +466,7 @@ describe ReportController do
         it "sets pivot 2" do
           controller.instance_variable_set(:@_params, :chosen_pivot2 => P2)
           controller.send(:gfv_pivots)
-          expect(assigns(:edit)[:new][:pivotby2]).to eq(P2)
+          expect(assigns(:edit)[:new][:pivot].by2).to eq(P2)
           expect(assigns(:refresh_div)).to eq("consolidate_div")
           expect(assigns(:refresh_partial)).to eq("form_consolidate")
         end
@@ -474,71 +474,75 @@ describe ReportController do
         it "sets pivot 3" do
           controller.instance_variable_set(:@_params, :chosen_pivot3 => P3)
           controller.send(:gfv_pivots)
-          expect(assigns(:edit)[:new][:pivotby3]).to eq(P3)
+          expect(assigns(:edit)[:new][:pivot].by3).to eq(P3)
           expect(assigns(:refresh_div)).to eq("consolidate_div")
           expect(assigns(:refresh_partial)).to eq("form_consolidate")
         end
 
         it "clearing pivot 1 also clears pivot 2 and 3" do
           edit = assigns(:edit)
-          edit[:new][:pivotby1] = P1
-          edit[:new][:pivotby2] = P2
-          edit[:new][:pivotby3] = P3
+          edit[:new][:pivot] = ReportController::PivotOptions.new
+          edit[:new][:pivot].by1 = P1
+          edit[:new][:pivot].by2 = P2
+          edit[:new][:pivot].by3 = P3
           controller.instance_variable_set(:@edit, edit)
           controller.instance_variable_set(:@_params, :chosen_pivot1 => NOTHING_STRING)
           controller.send(:gfv_pivots)
           edit_new = assigns(:edit)[:new]
-          expect(edit_new[:pivotby1]).to eq(NOTHING_STRING)
-          expect(edit_new[:pivotby2]).to eq(NOTHING_STRING)
-          expect(edit_new[:pivotby3]).to eq(NOTHING_STRING)
+          expect(edit_new[:pivot].by1).to eq(NOTHING_STRING)
+          expect(edit_new[:pivot].by2).to eq(NOTHING_STRING)
+          expect(edit_new[:pivot].by3).to eq(NOTHING_STRING)
           expect(assigns(:refresh_div)).to eq("consolidate_div")
           expect(assigns(:refresh_partial)).to eq("form_consolidate")
         end
 
         it "clearing pivot 2 also clears pivot 3" do
           edit = assigns(:edit)
-          edit[:new][:pivotby1] = P1
-          edit[:new][:pivotby2] = P2
-          edit[:new][:pivotby3] = P3
+          edit[:new][:pivot] = ReportController::PivotOptions.new
+          edit[:new][:pivot].by1 = P1
+          edit[:new][:pivot].by2 = P2
+          edit[:new][:pivot].by3 = P3
           controller.instance_variable_set(:@edit, edit)
           controller.instance_variable_set(:@_params, :chosen_pivot2 => NOTHING_STRING)
           controller.send(:gfv_pivots)
           edit_new = assigns(:edit)[:new]
-          expect(edit_new[:pivotby1]).to eq(P1)
-          expect(edit_new[:pivotby2]).to eq(NOTHING_STRING)
-          expect(edit_new[:pivotby3]).to eq(NOTHING_STRING)
+          expect(edit_new[:pivot].by1).to eq(P1)
+          expect(edit_new[:pivot].by2).to eq(NOTHING_STRING)
+          expect(edit_new[:pivot].by3).to eq(NOTHING_STRING)
           expect(assigns(:refresh_div)).to eq("consolidate_div")
           expect(assigns(:refresh_partial)).to eq("form_consolidate")
         end
 
         it "setting pivot 1 = pivot 2 bubbles up pivot 3 to 2" do
           edit = assigns(:edit)
-          edit[:new][:pivotby1] = P1
-          edit[:new][:pivotby2] = P2
-          edit[:new][:pivotby3] = P3
+          edit[:new][:pivot] = ReportController::PivotOptions.new
+          edit[:new][:pivot].by1 = P1
+          edit[:new][:pivot].by2 = P2
+          edit[:new][:pivot].by3 = P3
           controller.instance_variable_set(:@edit, edit)
           controller.instance_variable_set(:@_params, :chosen_pivot1 => P2)
           controller.send(:gfv_pivots)
           edit_new = assigns(:edit)[:new]
-          expect(edit_new[:pivotby1]).to eq(P2)
-          expect(edit_new[:pivotby2]).to eq(P3)
-          expect(edit_new[:pivotby3]).to eq(NOTHING_STRING)
+          expect(edit_new[:pivot].by1).to eq(P2)
+          expect(edit_new[:pivot].by2).to eq(P3)
+          expect(edit_new[:pivot].by3).to eq(NOTHING_STRING)
           expect(assigns(:refresh_div)).to eq("consolidate_div")
           expect(assigns(:refresh_partial)).to eq("form_consolidate")
         end
 
         it "setting pivot 2 = pivot 3 clears pivot 3" do
           edit = assigns(:edit)
-          edit[:new][:pivotby1] = P1
-          edit[:new][:pivotby2] = P2
-          edit[:new][:pivotby3] = P3
+          edit[:new][:pivot] = ReportController::PivotOptions.new
+          edit[:new][:pivot].by1 = P1
+          edit[:new][:pivot].by2 = P2
+          edit[:new][:pivot].by3 = P3
           controller.instance_variable_set(:@edit, edit)
           controller.instance_variable_set(:@_params, :chosen_pivot2 => P3)
           controller.send(:gfv_pivots)
           edit_new = assigns(:edit)[:new]
-          expect(edit_new[:pivotby1]).to eq(P1)
-          expect(edit_new[:pivotby2]).to eq(P3)
-          expect(edit_new[:pivotby3]).to eq(NOTHING_STRING)
+          expect(edit_new[:pivot].by1).to eq(P1)
+          expect(edit_new[:pivot].by2).to eq(P3)
+          expect(edit_new[:pivot].by3).to eq(NOTHING_STRING)
           expect(assigns(:refresh_div)).to eq("consolidate_div")
           expect(assigns(:refresh_partial)).to eq("form_consolidate")
         end
