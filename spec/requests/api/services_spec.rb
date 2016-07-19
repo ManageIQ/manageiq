@@ -20,7 +20,7 @@
 #   with subcollection
 #   virtual attribute:          /api/services/:id?expand=vms&attributes=vms.cpu_total_cores
 #
-describe ApiController do
+describe Api::BaseController do
   let(:svc)  { FactoryGirl.create(:service, :name => "svc",  :description => "svc description")  }
   let(:svc1) { FactoryGirl.create(:service, :name => "svc1", :description => "svc1 description") }
   let(:svc2) { FactoryGirl.create(:service, :name => "svc2", :description => "svc2 description") }

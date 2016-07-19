@@ -1,7 +1,7 @@
 #
 # REST API Request Tests - /api authentication
 #
-describe ApiController do
+describe Api::BaseController do
   ENTRYPOINT_KEYS = %w(name description version versions identity collections)
 
   context "Basic Authentication" do

@@ -17,7 +17,7 @@
 #       POST /api/services/:id
 #          { "action" : "<custom_action_button_name>" }
 #
-describe ApiController do
+describe Api::BaseController do
   let(:template1) { FactoryGirl.create(:service_template, :name => "template1") }
   let(:svc1) { FactoryGirl.create(:service, :name => "svc1", :service_template_id => template1.id) }
 

@@ -7,7 +7,7 @@
 # Event subcollection:
 #   /api/policies/:id/events
 #
-describe ApiController do
+describe Api::BaseController do
   let(:miq_event_guid_list) { MiqEventDefinition.pluck(:guid) }
 
   def create_events(count)
