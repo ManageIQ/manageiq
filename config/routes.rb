@@ -976,6 +976,7 @@ Vmdb::Application.routes.draw do
         perf_top_chart
         protect
         show_list
+        topology_data
         tagging_edit
         ems_container_form_fields
         tag_edit_form_field_changed
