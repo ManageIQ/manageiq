@@ -8,9 +8,11 @@ class DialogField < ApplicationRecord
 
   alias_attribute :order, :position
 
-  validates_presence_of   :name
+  validates_presence_of   :name,
+  :if => :editable?
   validates :name, :exclusion => {:in      => %w(action controller),
-                                  :message => "Field Name %{value} is reserved."}
+                                  :message => "Field Name %{value} is reserved."},
+  :if => :editable?
 
   default_value_for :required, false
   default_value_for(:visible, :allows_nil => false) { true }
@@ -113,6 +115,10 @@ class DialogField < ApplicationRecord
     dup.tap do |new_field|
       new_field.resource_action = resource_action.dup
     end
+  end
+
+  def editable?
+    self.visible && !self.read_only ? true : false
   end
 
   private
