@@ -5026,3 +5026,26 @@
       :description: Show Cloud Networks
       :feature_type: view
       :identifier: miq_cloud_networks_view
+
+# ArbitrationSettings
+- :name: Arbitration Settings
+  :description: Get and Edit Arbitration Settings
+  :feature_type: admin
+  :identifier: miq_arbitration_settings
+  :children:
+  - :name: Show Arbitration Settings
+    :description: Show Arbitration Settings
+    :feature_type: admin
+    :identifier: show_arbitration_setting
+  - :name: Create Arbitration Settings
+    :description: Create Arbitration Setting
+    :feature_type: admin
+    :identifier: create_arbitration_setting
+  - :name: Edit Arbitration Settings
+    :description: Edit Arbitration Settings
+    :feature_type: admin
+    :identifier: edit_arbitration_setting
+  - :name: Delete Arbitration Settings
+    :description: Delete Arbitration Settings
+    :feature_type: admin
+    :identifier: delete_arbitration_setting

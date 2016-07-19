@@ -1710,3 +1710,31 @@
       :get:
       - :name: read
         :identifier: miq_cloud_networks_view
+  :arbitration_settings:
+    :description: Arbitration Settings
+    :identifier: miq_arbitration_settings
+    :options:
+    - :collection
+    :verbs: *70174834084700
+    :klass: ArbitrationSetting
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: show_arbitration_setting
+      :post:
+      - :name: create
+        :identifier: create_arbitration_setting
+      - :name: edit
+        :identifier: edit_arbitration_setting
+      - :name: delete
+        :identifier: delete_arbitration_setting
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: edit_arbitration_setting
+      - :name: delete
+        :identifier: delete_arbitration_setting
+      :delete:
+      - :name: delete
+        :identifier: delete_arbitration_setting
+
