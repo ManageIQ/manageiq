@@ -717,6 +717,17 @@
         :identifier: miq_request_approval
       - :name: deny
         :identifier: miq_request_approval
+  :queue:
+    :description: Queue
+    :options:
+    - :collection
+    :verbs: *70174834085860
+    :klass: MiqQueue
+    :collection_actions:
+      :get:
+      - :name: read
+      :post:
+      - :name: create
   :rates:
     :description: Chargeback Rates
     :identifier: chargeback_rates
