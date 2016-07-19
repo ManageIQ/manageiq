@@ -1,6 +1,10 @@
 class ReportController
   # For groupby fields in repor
   PivotOptions = Struct.new(:by1, :by2, :by3, :by4) do
+    def initialize(by1 = NOTHING_STRING, by2 = NOTHING_STRING, by3 = NOTHING_STRING, by4 = NOTHING_STRING)
+      super
+    end
+
     def options=(options)
       @opts = {1 => options}
     end

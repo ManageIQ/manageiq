@@ -405,10 +405,6 @@ module ReportController::Widgets
 
     if @sb[:wtype] == "r"
       @pivot = @edit[:new][:pivot] = ReportController::PivotOptions.new
-      @edit[:new][:pivot].by1 = NOTHING_STRING # Initialize groupby fields to nothing
-      @edit[:new][:pivot].by2 = NOTHING_STRING
-      @edit[:new][:pivot].by3 = NOTHING_STRING
-      @edit[:new][:pivot].by4 = NOTHING_STRING
       rpt = @widget.resource_id && @widget.resource_type == "MiqReport" ? @widget.resource_id : nil
       widget_set_column_vars(rpt)
       @edit[:new][:pivot].by1 = @widget.options[:col_order][0] if @widget.options && @widget.options[:col_order] && @widget.options[:col_order][0]
@@ -503,10 +499,7 @@ module ReportController::Widgets
     if @sb[:wtype] == "r"
       if params[:filter_typ] || params[:subfilter_typ] || params[:repfilter_typ]
         # reset columns if report has changed
-        @edit[:new][:pivot].by1 = NOTHING_STRING
-        @edit[:new][:pivot].by2 = NOTHING_STRING
-        @edit[:new][:pivot].by3 = NOTHING_STRING
-        @edit[:new][:pivot].by4 = NOTHING_STRING
+        @pivot = @edit[:new][:pivot] = ReportController::PivotOptions.new
       end
       @edit[:new][:subfilter] = params[:subfilter_typ] if params[:subfilter_typ]
       if params[:repfilter_typ] && params[:repfilter_typ] != "<Choose>"
@@ -624,8 +617,8 @@ module ReportController::Widgets
     else
       widget.resource = @edit[:rpt]
     end
+    widget.options[:col_order] = [] if @edit[:new][:pivot]
     @edit[:new][:pivot] ||= ReportController::PivotOptions.new
-    widget.options[:col_order] = [] if @edit[:new][:pivot].by1
     widget.options[:col_order].push(@edit[:new][:pivot].by1) if !@edit[:new][:pivot].by1.blank? && @edit[:new][:pivot].by1 != "<<< Nothing >>>"
     widget.options[:col_order].push(@edit[:new][:pivot].by2) if !@edit[:new][:pivot].by2.blank? && @edit[:new][:pivot].by2 != "<<< Nothing >>>"
     widget.options[:col_order].push(@edit[:new][:pivot].by3) if !@edit[:new][:pivot].by3.blank? && @edit[:new][:pivot].by3 != "<<< Nothing >>>"
