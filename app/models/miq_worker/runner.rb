@@ -47,8 +47,6 @@ class MiqWorker::Runner
     $log ||= Rails.logger
 
     @server = MiqServer.my_server(true)
-
-    worker_initialization
   end
 
   def worker_initialization
@@ -121,6 +119,7 @@ class MiqWorker::Runner
   end
 
   def start
+    worker_initialization
     after_initialize
 
     @worker.release_db_connection if @worker.respond_to?(:release_db_connection)
