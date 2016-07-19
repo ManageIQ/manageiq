@@ -31,7 +31,7 @@ describe('dialogFieldRefresh', function() {
 
     context('when the refreshed values do not contain a checked value', function() {
       beforeEach(function() {
-        data = {values: {refreshed_values: [["test", "test"], ["not test", "not test"]], checked_value: null}};
+        data = {values: {refreshed_values: [["test", "test"], ["not test", "not test"]], checked_value: null, visible: false}};
       });
 
       it('selects the first option', function() {
@@ -73,9 +73,6 @@ describe('dialogFieldRefresh', function() {
     });
   });
 
-  describe('#refreshCheckbox', function() {
-    var loadedDoneFunction;
-
   describe('#setVisible', function() {
     beforeEach(function() {
       var html = "";
@@ -98,9 +95,12 @@ describe('dialogFieldRefresh', function() {
     });
   });
 
-  describe('#refreshDropDownList', function() {
+  describe('#refreshCheckbox', function() {
+    var loadedDoneFunction;
+
     beforeEach(function() {
       spyOn(dialogFieldRefresh, 'setReadOnly');
+      spyOn(dialogFieldRefresh, 'setVisible');
       spyOn($.fn, 'prop');
 
       spyOn(dialogFieldRefresh, 'sendRefreshRequest').and.callFake(function(_url, _data, doneFunction) {
@@ -119,7 +119,7 @@ describe('dialogFieldRefresh', function() {
 
     describe('#refreshCheckbox doneFunction', function() {
       beforeEach(function() {
-        var data = {responseText: JSON.stringify({values: {checked: true, read_only: true}})};
+        var data = {responseText: JSON.stringify({values: {checked: true, read_only: true, visible: false}})};
         loadedDoneFunction(data);
       });
 
@@ -137,6 +137,12 @@ describe('dialogFieldRefresh', function() {
           true
         );
       });
+      it('sets the visible property', function() {
+        expect(dialogFieldRefresh.setVisible).toHaveBeenCalledWith(
+          jasmine.objectContaining({selector: '.dynamic-checkbox-123'}),
+          false
+        );
+      });
     });
   });
 
@@ -145,6 +151,7 @@ describe('dialogFieldRefresh', function() {
 
     beforeEach(function() {
       spyOn(dialogFieldRefresh, 'setReadOnly');
+      spyOn(dialogFieldRefresh, 'setVisible');
       spyOn($.fn, 'val');
 
       spyOn(dialogFieldRefresh, 'sendRefreshRequest').and.callFake(function(_url, _data, doneFunction) {
@@ -163,7 +170,7 @@ describe('dialogFieldRefresh', function() {
 
     describe('#refreshDateTime doneFunction', function() {
       beforeEach(function() {
-        var data = {responseText: JSON.stringify({values: {date: 'today', hour: '12', min: '34', read_only: true}})};
+        var data = {responseText: JSON.stringify({values: {date: 'today', hour: '12', min: '34', read_only: true, visible: false}})};
         loadedDoneFunction(data);
       });
 
@@ -197,6 +204,12 @@ describe('dialogFieldRefresh', function() {
           true
         );
       });
+      it('sets the visible property', function() {
+        expect(dialogFieldRefresh.setVisible).toHaveBeenCalledWith(
+          jasmine.objectContaining({selector: '.dynamic-date-123'}),
+          false
+        );
+      });
     });
   });
 
@@ -205,6 +218,7 @@ describe('dialogFieldRefresh', function() {
 
     beforeEach(function() {
       spyOn(dialogFieldRefresh, 'setReadOnly');
+      spyOn(dialogFieldRefresh, 'setVisible');
       spyOn($.fn, 'val');
 
       spyOn(dialogFieldRefresh, 'sendRefreshRequest').and.callFake(function(_url, _data, doneFunction) {
@@ -223,7 +237,7 @@ describe('dialogFieldRefresh', function() {
 
     describe('#refreshTextBox doneFunction', function() {
       beforeEach(function() {
-        var data = {responseText: JSON.stringify({values: {text: 'text', read_only: true}})};
+        var data = {responseText: JSON.stringify({values: {text: 'text', read_only: true, visible: false}})};
         loadedDoneFunction(data);
       });
 
@@ -241,6 +255,12 @@ describe('dialogFieldRefresh', function() {
           true
         );
       });
+      it('sets the visible property', function() {
+        expect(dialogFieldRefresh.setVisible).toHaveBeenCalledWith(
+          jasmine.objectContaining({selector: '.dynamic-text-box-123'}),
+          false
+        );
+      });
     });
   });
 
@@ -249,6 +269,7 @@ describe('dialogFieldRefresh', function() {
 
     beforeEach(function() {
       spyOn(dialogFieldRefresh, 'setReadOnly');
+      spyOn(dialogFieldRefresh, 'setVisible');
       spyOn($.fn, 'val');
 
       spyOn(dialogFieldRefresh, 'sendRefreshRequest').and.callFake(function(_url, _data, doneFunction) {
@@ -267,7 +288,7 @@ describe('dialogFieldRefresh', function() {
 
     describe('#refreshTextAreaBox doneFunction', function() {
       beforeEach(function() {
-        var data = {responseText: JSON.stringify({values: {text: 'text', read_only: true}})};
+        var data = {responseText: JSON.stringify({values: {text: 'text', read_only: true, visible: false}})};
         loadedDoneFunction(data);
       });
 
@@ -285,6 +306,12 @@ describe('dialogFieldRefresh', function() {
           true
         );
       });
+      it('sets the visible property', function() {
+        expect(dialogFieldRefresh.setVisible).toHaveBeenCalledWith(
+          jasmine.objectContaining({selector: '.dynamic-text-area-123'}),
+          false
+        );
+      });
     });
   });
 
@@ -294,6 +321,7 @@ describe('dialogFieldRefresh', function() {
     beforeEach(function() {
       spyOn(dialogFieldRefresh, 'addOptionsToDropDownList');
       spyOn(dialogFieldRefresh, 'setReadOnly');
+      spyOn(dialogFieldRefresh, 'setVisible');
       spyOn($.fn, 'selectpicker');
 
       spyOn(dialogFieldRefresh, 'sendRefreshRequest').and.callFake(function(_url, _data, doneFunction) {
@@ -312,13 +340,13 @@ describe('dialogFieldRefresh', function() {
 
     describe('#refreshDropDownList doneFunction', function() {
       beforeEach(function() {
-        var data = {responseText: JSON.stringify({values: {checked_value: 'selectedTest', read_only: true}})};
+        var data = {responseText: JSON.stringify({values: {checked_value: 'selectedTest', read_only: true, visible: false}})};
         loadedDoneFunction(data);
       });
 
       it('adds the options to the dropdown list', function() {
         expect(dialogFieldRefresh.addOptionsToDropDownList).toHaveBeenCalledWith(
-          {values: {checked_value: 'selectedTest', read_only: true}},
+          {values: {checked_value: 'selectedTest', read_only: true, visible: false}},
           123
         );
       });
@@ -329,6 +357,12 @@ describe('dialogFieldRefresh', function() {
           true
         );
       });
+     it('sets the visible property', function() {
+        expect(dialogFieldRefresh.setVisible).toHaveBeenCalledWith(
+          jasmine.objectContaining({selector: '#field_' + 123 + "_tr"}),
+          false
+        );
+      });
 
       it('ensures the select picker is refreshed', function() {
         expect($.fn.selectpicker).toHaveBeenCalledWith('refresh');
@@ -337,6 +371,7 @@ describe('dialogFieldRefresh', function() {
       it('sets the value in the select picker', function() {
         expect($.fn.selectpicker).toHaveBeenCalledWith('val', 'selectedTest');
       });
+
 
       it('uses the correct selector', function() {
         expect($.fn.selectpicker.calls.mostRecent().object.selector).toEqual('#abc');

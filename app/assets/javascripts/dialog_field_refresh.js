@@ -28,15 +28,10 @@ var dialogFieldRefresh = {
       var responseData = JSON.parse(data.responseText);
       $('.dynamic-checkbox-' + fieldId).prop('checked', responseData.values.checked);
       dialogFieldRefresh.setReadOnly($('.dynamic-checkbox-' + fieldId), responseData.values.read_only);
+      dialogFieldRefresh.setVisible($('.dynamic-checkbox-' + fieldId), responseData.values.visible);
     };
 
     dialogFieldRefresh.sendRefreshRequest('dynamic_checkbox_refresh', data, doneFunction);
-    $.post('dynamic_checkbox_refresh', {name: fieldName}, function(data) {
-      $('.dynamic-checkbox-' + fieldId).prop('checked', data.values.checked);
-      dialogFieldRefresh.setReadOnly($('.dynamic-checkbox-' + fieldId), data.values.read_only);
-      dialogFieldRefresh.setVisible($('.dynamic-checkbox-' + fieldId), data.values.visible);
-      miqSparkle(false);
-    });
   },
 
   refreshDateTime: function(fieldName, fieldId) {
@@ -52,37 +47,22 @@ var dialogFieldRefresh = {
         $('.dynamic-date-min-' + fieldId).val(responseData.values.min);
       }
 
-      dialogFieldRefresh.setReadOnly($('.dynamic-date-' + fieldId), data.values.read_only);
-      dialogFieldRefresh.setVisible($('.dynamic-date-' + fieldId), data.values.visible);
+      dialogFieldRefresh.setReadOnly($('.dynamic-date-' + fieldId), responseData.values.read_only);
+      dialogFieldRefresh.setVisible($('.dynamic-date-' + fieldId), responseData.values.visible);
+    };
 
     dialogFieldRefresh.sendRefreshRequest('dynamic_date_refresh', data, doneFunction);
   },
 
   refreshDropDownList: function(fieldName, fieldId, selectedValue) {
     miqSparkleOn();
+
     var data = {name: fieldName, checked_value: selectedValue};
     var doneFunction = function(data) {
       var responseData = JSON.parse(data.responseText);
       dialogFieldRefresh.addOptionsToDropDownList(responseData, fieldId);
       dialogFieldRefresh.setReadOnly($('#' + fieldName), responseData.values.read_only);
-
-    $.post('dynamic_radio_button_refresh', {
-      name: fieldName,
-      checked_value: selectedValue,
-    })
-    .done(function(data) {
-      dialogFieldRefresh.addOptionsToDropDownList(data, fieldId);
-      dialogFieldRefresh.setReadOnly($('#' + fieldName), data.values.read_only);
-<<<<<<< 36a2a7ef2d40bb274b1e2c63352f722c57706804
-      dialogFieldRefresh.setVisible($('#' + fieldName), data.values.visible);
-=======
-      dialogFieldRefresh.setVisible($('#field_' + fieldId + "_tr"), data.values.visible, fieldId);
-      $('#' + fieldName).selectpicker('refresh');
-      $('#' + fieldName).selectpicker('val', data.values.checked_value);
-    });
-  },
->>>>>>> Add visible to all dialog field automate methods
-
+      dialogFieldRefresh.setVisible($('#field_' + fieldId + "_tr"), responseData.values.visible);
       $('#' + fieldName).selectpicker('refresh');
       $('#' + fieldName).selectpicker('val', responseData.values.checked_value);
     };
@@ -140,15 +120,11 @@ var dialogFieldRefresh = {
       var responseData = JSON.parse(data.responseText);
       $('.dynamic-text-area-' + fieldId).val(responseData.values.text);
       dialogFieldRefresh.setReadOnly($('.dynamic-text-area-' + fieldId), responseData.values.read_only);
+      dialogFieldRefresh.setVisible($('.dynamic-text-area-' + fieldId), responseData.values.visible);
     };
 
     dialogFieldRefresh.sendRefreshRequest('dynamic_text_box_refresh', data, doneFunction);
-    $.post('dynamic_text_box_refresh', {name: fieldName}, function(data) {
-      $('.dynamic-text-area-' + fieldId).val(data.values.text);
-      dialogFieldRefresh.setReadOnly($('.dynamic-text-area-' + fieldId), data.values.read_only);
-      dialogFieldRefresh.setVisible($('.dynamic-text-area-' + fieldId), data.values.visible);
-      miqSparkle(false);
-    });
+  },
 
   refreshTextBox: function(fieldName, fieldId) {
     miqSparkleOn();
@@ -158,6 +134,7 @@ var dialogFieldRefresh = {
       var responseData = JSON.parse(data.responseText);
       $('.dynamic-text-box-' + fieldId).val(responseData.values.text);
       dialogFieldRefresh.setReadOnly($('.dynamic-text-box-' + fieldId), responseData.values.read_only);
+      dialogFieldRefresh.setVisible($('.dynamic-text-box-' + fieldId), responseData.values.visible);
     };
 
     dialogFieldRefresh.sendRefreshRequest('dynamic_text_box_refresh', data, doneFunction);
@@ -183,11 +160,6 @@ var dialogFieldRefresh = {
       }
 
       dropdownOptions.push(option);
-    $.post('dynamic_text_box_refresh', {name: fieldName}, function(data) {
-      $('.dynamic-text-box-' + fieldId).val(data.values.text);
-      dialogFieldRefresh.setReadOnly($('.dynamic-text-box-' + fieldId), data.values.read_only);
-      dialogFieldRefresh.setVisible($('.dynamic-text-box-' + fieldId), data.values.visible);
-      miqSparkle(false);
     });
 
     $('.dynamic-drop-down-' + fieldId + '.selectpicker').html(dropdownOptions);
@@ -219,6 +191,7 @@ var dialogFieldRefresh = {
       complete: true,
       done: doneFunction
     });
+  },
 
   setVisible: function(field, visible) {
     if (visible === true) {
@@ -227,4 +200,5 @@ var dialogFieldRefresh = {
       field.hide();
     }
   }
+
 };
