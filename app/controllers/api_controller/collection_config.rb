@@ -8,25 +8,28 @@ class ApiController
       @cfg[collection_name.to_sym]
     end
 
+    def option?(collection_name, option_name)
+      self[collection_name][:options].include?(option_name) if self[collection_name]
+    end
+
     def collection?(collection_name)
-      self[collection_name][:options].include?(:collection)
+      option?(collection_name, :collection)
     end
 
     def custom_actions?(collection_name)
-      cspec = self[collection_name]
-      cspec && cspec[:options].include?(:custom_actions)
+      option?(collection_name, :custom_actions)
     end
 
     def primary?(collection_name)
-      self[collection_name][:options].include?(:primary)
+      option?(collection_name, :primary)
     end
 
     def show?(collection_name)
-      self[collection_name][:options].include?(:show)
+      option?(collection_name, :show)
     end
 
     def show_as_collection?(collection_name)
-      self[collection_name][:options].include?(:show_as_collection)
+      option?(collection_name, :show_as_collection)
     end
 
     def supports_http_method?(collection_name, method)
