@@ -193,30 +193,19 @@ module Rbac
     if filtered_ids
       reflection = scope.reflections[parent_class.name.underscore]
       if reflection
-        ids_clause = ["#{scope.table_name}.#{reflection.foreign_key} IN (?)", filtered_ids]
+        scope = scope.where("#{scope.table_name}.#{reflection.foreign_key} IN (?)", filtered_ids)
       else
-        ids_clause = ["#{scope.table_name}.resource_type = ? AND #{scope.table_name}.resource_id IN (?)", parent_class.name, filtered_ids]
+        scope = scope.where("#{scope.table_name}.resource_type = ? AND #{scope.table_name}.resource_id IN (?)", parent_class.name, filtered_ids)
       end
-
-      find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], ids_clause)
-      _log.debug("New Find options: #{find_options.inspect}")
     end
-    targets     = method_with_scope(scope, find_options)
-    auth_count  = scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count
-
-    return targets, auth_count
+    method_with_scope(scope, find_options)
   end
 
   def self.find_targets_filtered_by_ids(scope, find_options, filtered_ids)
     if filtered_ids
-      ids_clause  = ["#{scope.table_name}.id IN (?)", filtered_ids]
-      find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], ids_clause)
-      _log.debug("New Find options: #{find_options.inspect}")
+      scope = scope.where("#{scope.table_name}.id IN (?)", filtered_ids)
     end
-    targets     = method_with_scope(scope, find_options)
-    auth_count  = targets.except(:offset, :limit, :order).count(:all)
-
-    return targets, auth_count
+    method_with_scope(scope, find_options)
   end
 
   def self.get_belongsto_filter_object_ids(klass, filter)
@@ -238,17 +227,12 @@ module Rbac
   def self.find_targets_with_user_group_rbac(scope, _rbac_filters, find_options, user, miq_group)
     klass = scope.respond_to?(:klass) ? scope.klass : scope
     if klass == User && user
-      cond = {:id => user.id}
+      scope = scope.where(:id => user.id)
     elsif klass == MiqGroup
-      cond = {:id => miq_group.id}
+      scope = scope.where(:id => miq_group.id)
     end
 
-    targets = klass.where(cond).where(find_options[:condition])
-                .includes(find_options[:include]).references(find_options[:include])
-                .group(find_options[:group]).order(find_options[:order])
-                .offset(find_options[:offset]).limit(find_options[:limit]).to_a
-
-    [targets, targets.length, targets.length]
+    method_with_scope(scope, find_options)
   end
 
   def self.find_options_for_tenant(scope, user, miq_group, find_options)
@@ -276,15 +260,8 @@ module Rbac
     elsif apply_user_group_rbac_to_class?(klass, miq_group)
       find_targets_with_user_group_rbac(scope, rbac_filters, find_options, user, miq_group)
     else
-      find_targets_without_rbac(scope, find_options)
+      method_with_scope(scope, find_options)
     end
-  end
-
-  def self.find_targets_without_rbac(scope, find_options)
-    targets    = method_with_scope(scope, find_options)
-    auth_count = find_options[:limit] ? scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count : targets.length
-
-    return targets, auth_count
   end
 
   def self.get_user_info(user, userid, miq_group, miq_group_id)
@@ -408,7 +385,8 @@ module Rbac
       ids_clause = ["#{klass.table_name}.id IN (?)", target_ids] if klass.respond_to?(:table_name)
     else # targets is a scope, class, or AASM class (VimPerformanceDaily in particular)
       targets = to_class(targets)
-      targets = targets.all if targets < ActiveRecord::Base
+      # could just call all on everything, but that will display deprecation warnings
+      targets = targets.all if targets < ActiveRecord::Base || targets.kind_of?(ActsAsArModel)
 
       scope = apply_scope(targets, scope)
 
@@ -434,7 +412,8 @@ module Rbac
 
     _log.debug("Find options: #{find_options.inspect}")
 
-    targets, auth_count = find_targets_with_rbac(klass, scope, user_filters, find_options, user, miq_group)
+    targets = find_targets_with_rbac(klass, scope, user_filters, find_options, user, miq_group)
+    auth_count = find_options[:limit] ? targets.except(:offset, :limit, :order).count(:all) : targets.length
 
     if search_filter && targets && (!exp_attrs || !exp_attrs[:supported_by_sql])
       rejects     = targets.reject { |obj| self.matches_search_filters?(obj, search_filter, tz) }
@@ -459,12 +438,7 @@ module Rbac
   end
 
   def self.method_with_scope(ar_scope, options)
-    # for the most part, it is just asking if it extends ActsAsArModel
-    if ar_scope.try(:instances_are_derived?)
-      ar_scope.all(options)
-    else
-      ar_scope.apply_legacy_finder_options(options)
-    end
+    ar_scope.apply_legacy_finder_options(options)
   end
 
   def self.apply_scope(klass, scope)
