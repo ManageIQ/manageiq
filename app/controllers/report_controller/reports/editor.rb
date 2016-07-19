@@ -335,9 +335,6 @@ module ReportController::Reports::Editor
     @edit[:new][:fields]          = []                    # Clear fields array
     @edit[:new][:headers]         = {}                  # Clear headers hash
     @edit[:new][:pivot]           = ReportController::PivotOptions.new
-    @edit[:new][:pivot].by1       = NOTHING_STRING      # Clear consolidate group fields
-    @edit[:new][:pivot].by2       = NOTHING_STRING
-    @edit[:new][:pivot].by3       = NOTHING_STRING
     @edit[:new][:sortby1]         = NOTHING_STRING      # Clear sort fields
     @edit[:new][:sortby2]         = NOTHING_STRING
     @edit[:new][:filter_operator] = nil
@@ -1642,9 +1639,6 @@ module ReportController::Reports::Editor
     @edit[:new][:sortby1]  = NOTHING_STRING # Initialize sortby fields to nothing
     @edit[:new][:sortby2]  = NOTHING_STRING
     @edit[:new][:pivot] = ReportController::PivotOptions.new
-    @edit[:new][:pivot].by1 = NOTHING_STRING # Initialize groupby fields to nothing
-    @edit[:new][:pivot].by2 = NOTHING_STRING
-    @edit[:new][:pivot].by3 = NOTHING_STRING
     if params[:pressed] == "miq_report_new"
       @edit[:new][:fields]      = []
       @edit[:new][:categories]  = []

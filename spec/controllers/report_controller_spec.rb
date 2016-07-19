@@ -481,10 +481,7 @@ describe ReportController do
 
         it "clearing pivot 1 also clears pivot 2 and 3" do
           edit = assigns(:edit)
-          edit[:new][:pivot] = ReportController::PivotOptions.new
-          edit[:new][:pivot].by1 = P1
-          edit[:new][:pivot].by2 = P2
-          edit[:new][:pivot].by3 = P3
+          edit[:new][:pivot] = ReportController::PivotOptions.new(P1, P2, P3)
           controller.instance_variable_set(:@edit, edit)
           controller.instance_variable_set(:@_params, :chosen_pivot1 => NOTHING_STRING)
           controller.send(:gfv_pivots)
@@ -498,10 +495,7 @@ describe ReportController do
 
         it "clearing pivot 2 also clears pivot 3" do
           edit = assigns(:edit)
-          edit[:new][:pivot] = ReportController::PivotOptions.new
-          edit[:new][:pivot].by1 = P1
-          edit[:new][:pivot].by2 = P2
-          edit[:new][:pivot].by3 = P3
+          edit[:new][:pivot] = ReportController::PivotOptions.new(P1, P2, P3)
           controller.instance_variable_set(:@edit, edit)
           controller.instance_variable_set(:@_params, :chosen_pivot2 => NOTHING_STRING)
           controller.send(:gfv_pivots)
@@ -515,10 +509,7 @@ describe ReportController do
 
         it "setting pivot 1 = pivot 2 bubbles up pivot 3 to 2" do
           edit = assigns(:edit)
-          edit[:new][:pivot] = ReportController::PivotOptions.new
-          edit[:new][:pivot].by1 = P1
-          edit[:new][:pivot].by2 = P2
-          edit[:new][:pivot].by3 = P3
+          edit[:new][:pivot] = ReportController::PivotOptions.new(P1, P2, P3)
           controller.instance_variable_set(:@edit, edit)
           controller.instance_variable_set(:@_params, :chosen_pivot1 => P2)
           controller.send(:gfv_pivots)
@@ -532,10 +523,7 @@ describe ReportController do
 
         it "setting pivot 2 = pivot 3 clears pivot 3" do
           edit = assigns(:edit)
-          edit[:new][:pivot] = ReportController::PivotOptions.new
-          edit[:new][:pivot].by1 = P1
-          edit[:new][:pivot].by2 = P2
-          edit[:new][:pivot].by3 = P3
+          edit[:new][:pivot] = ReportController::PivotOptions.new(P1, P2, P3)
           controller.instance_variable_set(:@edit, edit)
           controller.instance_variable_set(:@_params, :chosen_pivot2 => P3)
           controller.send(:gfv_pivots)
