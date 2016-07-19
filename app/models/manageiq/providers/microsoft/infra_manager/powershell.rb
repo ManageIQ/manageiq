@@ -32,7 +32,7 @@ class ManageIQ::Providers::Microsoft::InfraManager
 
       def log_dos_error_results(results)
         log_header = "MIQ(#{self.class.name}##{__method__})"
-        error = results.stderr
+        error = results.respond_to?(:stderr) ? results.stderr : results
         $scvmm_log.error("#{log_header} #{error}") unless error.blank?
       end
 
@@ -42,10 +42,11 @@ class ManageIQ::Providers::Microsoft::InfraManager
       end
 
       def decompress_results(results)
+        results = results.stdout if results.respond_to?(:stdout)
         begin
-          ActiveSupport::Gzip.decompress(Base64.decode64(results.stdout))
+          ActiveSupport::Gzip.decompress(Base64.decode64(results))
         rescue Zlib::GzipFile::Error # Not in gzip format
-          results.stdout
+          results
         end
       end
     end
