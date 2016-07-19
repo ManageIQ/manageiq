@@ -106,8 +106,12 @@ describe ApiController do
       run_post(providers_url, sample_rhevm)
 
       expect(response).to have_http_status(:ok)
-      expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
-      expect_results_to_match_hash("results", [sample_rhevm.except(*ENDPOINT_ATTRS)])
+      expected = {
+        "results" => [
+          a_hash_including({"id" => kind_of(Integer)}.merge(sample_rhevm.except(*ENDPOINT_ATTRS)))
+        ]
+      }
+      expect(response.parsed_body).to include(expected)
 
       provider_id = response.parsed_body["results"].first["id"]
       expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
@@ -121,8 +125,12 @@ describe ApiController do
       run_post(providers_url, sample_openshift.merge("credentials" => [openshift_credentials]))
 
       expect(response).to have_http_status(:ok)
-      expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
-      expect_results_to_match_hash("results", [sample_openshift.except(*ENDPOINT_ATTRS)])
+      expected = {
+        "results" => [
+          a_hash_including({"id" => kind_of(Integer)}.merge(sample_openshift.except(*ENDPOINT_ATTRS)))
+        ]
+      }
+      expect(response.parsed_body).to include(expected)
 
       provider_id = response.parsed_body["results"].first["id"]
       expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
@@ -139,8 +147,12 @@ describe ApiController do
       run_post(providers_url, gen_request(:create, sample_rhevm))
 
       expect(response).to have_http_status(:ok)
-      expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
-      expect_results_to_match_hash("results", [sample_rhevm.except(*ENDPOINT_ATTRS)])
+      expected = {
+        "results" => [
+          a_hash_including({"id" => kind_of(Integer)}.merge(sample_rhevm.except(*ENDPOINT_ATTRS)))
+        ]
+      }
+      expect(response.parsed_body).to include(expected)
 
       provider_id = response.parsed_body["results"].first["id"]
       expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
@@ -152,8 +164,12 @@ describe ApiController do
       run_post(providers_url, sample_vmware.merge("credentials" => default_credentials))
 
       expect(response).to have_http_status(:ok)
-      expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
-      expect_results_to_match_hash("results", [sample_vmware.except(*ENDPOINT_ATTRS)])
+      expected = {
+        "results" => [
+          a_hash_including({"id" => kind_of(Integer)}.merge(sample_vmware.except(*ENDPOINT_ATTRS)))
+        ]
+      }
+      expect(response.parsed_body).to include(expected)
 
       provider_id = response.parsed_body["results"].first["id"]
       expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
@@ -168,8 +184,12 @@ describe ApiController do
       run_post(providers_url, sample_rhevm.merge("credentials" => compound_credentials))
 
       expect(response).to have_http_status(:ok)
-      expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
-      expect_results_to_match_hash("results", [sample_rhevm.except(*ENDPOINT_ATTRS)])
+      expected = {
+        "results" => [
+          a_hash_including({"id" => kind_of(Integer)}.merge(sample_rhevm.except(*ENDPOINT_ATTRS)))
+        ]
+      }
+      expect(response.parsed_body).to include(expected)
 
       provider_id = response.parsed_body["results"].first["id"]
       expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
@@ -186,9 +206,13 @@ describe ApiController do
       run_post(providers_url, gen_request(:create, [sample_vmware, sample_rhevm]))
 
       expect(response).to have_http_status(:ok)
-      expect_result_resource_keys_to_be_like_klass("results", "id", Integer)
-      expect_results_to_match_hash("results",
-                                   [sample_vmware.except(*ENDPOINT_ATTRS), sample_rhevm.except(*ENDPOINT_ATTRS)])
+      expected = {
+        "results" => a_collection_containing_exactly(
+          a_hash_including({"id" => kind_of(Integer)}.merge(sample_vmware.except(*ENDPOINT_ATTRS))),
+          a_hash_including({"id" => kind_of(Integer)}.merge(sample_rhevm.except(*ENDPOINT_ATTRS)))
+        )
+      }
+      expect(response.parsed_body).to include(expected)
 
       results = response.parsed_body["results"]
       p1_id, p2_id = results.first["id"], results.second["id"]
