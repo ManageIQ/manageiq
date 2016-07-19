@@ -61,4 +61,18 @@ class ReportController
       end
     end
   end
+
+  def drop_from_selection(item)
+    # Compress the pivotby fields if being moved left
+    if item == by1
+      self.by1 = by2
+      self.by2 = by3
+      self.by3 = NOTHING_STRING
+    elsif item == by2
+      self.by2 = by3
+      self.by3 = NOTHING_STRING
+    elsif item == by3
+      self.by3 = NOTHING_STRING
+    end
+  end
 end
