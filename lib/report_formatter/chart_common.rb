@@ -156,6 +156,8 @@ module ReportFormatter
       return no_records_found_chart if series.empty?
 
       add_axis_category_text(categories)
+
+      series.zip(categories) { |ser, category| ser[:tooltip] = category }
       add_series('', series)
     end
 
