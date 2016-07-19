@@ -27,6 +27,8 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Refresher)
       .to receive(:refresh_targets_for_ems)
       .and_raise(StandardError.new(error))
-    EmsRefresh.refresh(ems)
+    expect do
+      EmsRefresh.refresh(ems)
+    end.to raise_error(EmsRefresh::Refreshers::EmsRefresherMixin::PartialRefreshError)
   end
 end
