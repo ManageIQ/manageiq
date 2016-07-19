@@ -25,7 +25,8 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           :url_parms => "main_div",
           :confirm   => N_("Perform SmartState Analysis on the selected items?"),
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => "1+",
+          :klass     => ApplicationHelper::Button::VmInstanceScan),
         button(
           :vm_collect_running_processes,
           'fa fa-eyedropper fa-lg',
@@ -154,7 +155,8 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           N_('Clone selected item'),
           :url_parms => "main_div",
           :enabled   => false,
-          :onwhen    => "1"),
+          :onwhen    => "1",
+          :klass     => ApplicationHelper::Button::BasicImage),
         button(
           :vm_publish,
           'pficon pficon-export',
@@ -162,7 +164,8 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           t,
           :url_parms => "main_div",
           :enabled   => false,
-          :onwhen    => "1"),
+          :onwhen    => "1",
+          :klass     => ApplicationHelper::Button::BasicImage),
         button(
           :vm_migrate,
           'product product-migrate fa-lg',

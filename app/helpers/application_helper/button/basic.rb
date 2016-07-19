@@ -26,11 +26,25 @@ class ApplicationHelper::Button::Basic < Hash
     self[:enabled] = !disabled? if self[:enabled].nil?
   end
 
+  def skipped?
+    return true if self.class.record_needed && @record.nil?
+    skip?
+  end
+
   def skip?
     false
   end
 
   def disabled?
     false
+  end
+
+
+  class << self
+    attr_reader :record_needed
+
+    def needs_record
+      @record_needed = true
+    end
   end
 end

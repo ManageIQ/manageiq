@@ -372,7 +372,6 @@ describe ApplicationHelper do
      "vm_policy_sim",
      "vm_protect",
      "vm_start",
-     "vm_stop",
      "vm_suspend",
      "vm_reset",
      "vm_retire",
@@ -577,7 +576,7 @@ describe ApplicationHelper do
       end
     end
 
-    ["host_miq_request_new", "vm_miq_request_new", "vm_clone", "vm_publish", "vm_pre_prov"].each do |id|
+    %w(host_miq_request_new vm_miq_request_new vm_pre_prov).each do |id|
       it "when with #{id}" do
         @id = id
         allow(user).to receive(:role_allows?).and_return(true)
@@ -1150,7 +1149,7 @@ describe ApplicationHelper do
         allow(user).to receive(:role_allows?).and_return(true)
       end
 
-      %w(vm_migrate vm_publish).each do |id|
+      %w(vm_migrate).each do |id|
         context "and id = #{id}" do
           before { @id = id }
 
@@ -1179,21 +1178,6 @@ describe ApplicationHelper do
         end
 
         it "and @record.reconfigurable?" do
-          expect(subject).to be_falsey
-        end
-      end
-
-      context "and id = vm_clone" do
-        before { @id = "vm_clone" }
-
-        it "record is not cloneable" do
-          @record = Vm.create(:type => "ManageIQ::Providers::Microsoft::InfraManager::Vm", :name => "vm", :location => "l2", :vendor => "microsoft")
-          expect(subject).to be_truthy
-        end
-
-        it "record is cloneable" do
-          @record = Vm.create(:type => "ManageIQ::Providers::Vmware::InfraManager::Vm", :name => "rh", :location => "l1", :vendor => "redhat")
-          allow(@record).to receive(:archived?).and_return(false)
           expect(subject).to be_falsey
         end
       end
@@ -1315,22 +1299,6 @@ describe ApplicationHelper do
         end
       end
 
-      context "and id = vm_stop" do
-        before do
-          @id = "vm_stop"
-          allow(@record).to receive(:is_available?).with(:stop).and_return(true)
-        end
-
-        it "and !@record.is_available?(:stop)" do
-          allow(@record).to receive(:is_available?).with(:stop).and_return(false)
-          expect(subject).to be_truthy
-        end
-
-        it "and @record.is_available?(:stop)" do
-          expect(subject).to be_falsey
-        end
-      end
-
       context "and id = vm_reset" do
         before do
           @id = "vm_reset"
@@ -1383,50 +1351,6 @@ describe ApplicationHelper do
             allow(@record).to receive_messages(:host => nil)
             expect(subject).to be_falsey
           end
-        end
-      end
-
-      context "and id = vm_refresh" do
-        before do
-          @id = "vm_refresh"
-          allow(@record).to receive_messages(:host => double(:vmm_product => "Workstation"), :ext_management_system => true)
-        end
-
-        it "and !@record.ext_management_system & @record.host.vmm_product.downcase != workstation" do
-          allow(@record).to receive_messages(:host => double(:vmm_product => "Server"), :ext_management_system => false)
-          expect(subject).to be_truthy
-        end
-
-        it "and @record.ext_management_system" do
-          expect(subject).to be_falsey
-        end
-
-        it "and @record.host.vmm_product.downcase = workstation" do
-          expect(subject).to be_falsey
-        end
-      end
-
-      context "and id = vm_scan" do
-        before do
-          @id = "vm_scan"
-          @record = FactoryGirl.create(:vm_vmware)
-          allow(@record).to receive(:has_proxy?).and_return(true)
-          allow(@record).to receive_messages(:archived? => false)
-          allow(@record).to receive_messages(:orphaned? => false)
-        end
-
-        it "and !@record.has_proxy?" do
-          allow(@record).to receive(:has_proxy?).and_return(false)
-          expect(subject).to be_truthy
-        end
-
-        it "and @record.has_proxy?" do
-          expect(subject).to be_falsey
-        end
-
-        it "and @record.has_proxy? and is archived" do
-          allow(@record).to receive_messages(:archived? => true)
-          expect(subject).to eq(true)
         end
       end
 
@@ -1698,24 +1622,6 @@ describe ApplicationHelper do
       end
     end
 
-    context "when id == vm_scan" do
-      before do
-        @id = "vm_scan"
-      end
-
-      it "vm_scan button should be hidden when user does not have access to vm_rules feature" do
-        feature = EvmSpecHelper.specific_product_features("vm_infra_explorer")
-        login_as FactoryGirl.create(:user, :features => feature)
-        expect(subject).to be_truthy
-      end
-
-      it "vm_scan button should be displayed when user does has access to vm_scan feature" do
-        feature = EvmSpecHelper.specific_product_features("vm_infra_explorer", "vm_scan")
-        login_as FactoryGirl.create(:user, :features => feature)
-        expect(subject).to be_falsey
-      end
-    end
-
     context "when id == event_edit" do
       before(:each) do
         @record = FactoryGirl.create(:miq_event_definition)
@@ -1785,7 +1691,7 @@ describe ApplicationHelper do
     it "hides Lifecycle options in archived VMs list" do
       allow(ApplicationHelper).to receive(:get_record_cls).and_return(nil)
       @sb = {:trees => {:vandt_tree => {:active_node => "xx-arch"}}}
-      %w(vm_clone vm_publish vm_migrate).each do |tb_button|
+      %w(vm_migrate).each do |tb_button|
         expect(build_toolbar_hide_button(tb_button)).to be_truthy
       end
     end
@@ -1793,7 +1699,7 @@ describe ApplicationHelper do
     it "hides Lifecycle options in orphaned VMs list" do
       allow(ApplicationHelper).to receive(:get_record_cls).and_return(nil)
       @sb = {:trees => {:vandt_tree => {:active_node => "xx-orph"}}}
-      %w(vm_clone vm_publish vm_migrate).each do |tb_button|
+      %w(vm_migrate).each do |tb_button|
         expect(build_toolbar_hide_button(tb_button)).to be_truthy
       end
     end
@@ -1801,7 +1707,7 @@ describe ApplicationHelper do
     it "hides Lifecycle options for archived VMs" do
       @record = FactoryGirl.create(:vm_microsoft)
       allow(@record).to receive(:archived?).and_return(true)
-      %w(vm_clone vm_publish vm_migrate).each do |tb_button|
+      %w(vm_migrate).each do |tb_button|
         expect(build_toolbar_hide_button(tb_button)).to be_truthy
       end
     end
@@ -1809,7 +1715,7 @@ describe ApplicationHelper do
     it "hides Lifecycle options for orphaned VMs" do
       @record = FactoryGirl.create(:vm_microsoft)
       allow(@record).to receive(:orphaned?).and_return(true)
-      %w(vm_clone vm_publish vm_migrate).each do |tb_button|
+      %w(vm_migrate).each do |tb_button|
         expect(build_toolbar_hide_button(tb_button)).to be_truthy
       end
     end
@@ -2323,7 +2229,7 @@ describe ApplicationHelper do
         it_behaves_like 'default case'
       end
 
-      context "id = vm_collect_running_processes" do
+      context "and id = vm_collect_running_processes" do
         before do
           @id = "vm_collect_running_processes"
           allow(@record).to receive(:is_available_now_error_message).and_return(false)
@@ -2414,15 +2320,6 @@ describe ApplicationHelper do
         it_behaves_like 'default case'
       end
 
-      context "and id = vm_stop" do
-        before do
-          @id = "vm_stop"
-          allow(@record).to receive(:is_available_now_error_message).and_return(false)
-        end
-        it_behaves_like 'record with error message', 'stop'
-        it_behaves_like 'default case'
-      end
-
       context "and id = vm_reset" do
         before do
           @id = "vm_reset"
@@ -2450,31 +2347,6 @@ describe ApplicationHelper do
           end
           it_behaves_like 'default case'
         end
-      end
-
-      context "and id = vm_scan" do
-        before do
-          @id = "vm_scan"
-          @record = FactoryGirl.create(:vm_vmware, :vendor => "vmware")
-          allow(@record).to receive_messages(:archived? => false)
-          allow(@record).to receive_messages(:orphaned? => false)
-          allow(@record).to receive_messages(:has_active_proxy? => true)
-        end
-        it "when no active proxy" do
-          allow(@record).to receive_messages(:has_active_proxy? => false)
-          expect(subject).to eq("No active SmartProxies found to analyze this VM")
-        end
-        it_behaves_like 'default case'
-      end
-
-      context "and id = instance_scan" do
-        before do
-          @id = "instance_scan"
-          @record = FactoryGirl.create(:vm_amazon, :vendor => "amazon")
-          allow(@record).to receive_messages(:has_active_proxy? => true)
-        end
-        before { allow(@record).to receive(:is_available?).with(:smartstate_analysis).and_return(false) }
-        it_behaves_like 'record with error message', 'smartstate_analysis'
       end
 
       context "and id = storage_scan" do
@@ -2907,19 +2779,6 @@ describe ApplicationHelper do
       it "when input[:onwhen] exists" do
         @input[:onwhen] = '1+'
         expect(subject).to have_key(:onwhen)
-      end
-    end
-
-    context "parameters correctness" do
-      it "Ensures that build_toolbar_disable_button method is called with correct parameters" do
-        button = {:child_id => "vm_scan",
-                  :id       => "vm_vmdb_choice__vm_scan",
-                  :type     => :button}
-        input = {:button    => "vm_scan",
-                 :url_parms => "main_div"}
-        b = _toolbar_builder
-        expect(b).to receive(:build_toolbar_disable_button).with("vm_scan")
-        b.send(:apply_common_props, button, input)
       end
     end
   end
