@@ -240,8 +240,7 @@ module Rbac
     user_or_group = user || miq_group
     tenant_id_clause = klass.tenant_id_clause(user_or_group)
 
-    find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], tenant_id_clause) if tenant_id_clause
-    find_options
+    tenant_id_clause ? scope.where(tenant_id_clause) : scope
   end
 
   def self.accessible_tenant_ids_strategy(klass)
@@ -250,7 +249,7 @@ module Rbac
 
   def self.find_targets_with_rbac(klass, scope, rbac_filters, find_options, user, miq_group)
     if klass.respond_to?(:scope_by_tenant?) && klass.scope_by_tenant?
-      find_options = find_options_for_tenant(scope, user, miq_group, find_options)
+      scope = find_options_for_tenant(scope, user, miq_group, find_options)
     end
 
     if apply_rbac_to_class?(klass)
