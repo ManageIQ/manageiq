@@ -1669,15 +1669,6 @@ module ReportController::Reports::Editor
 
     @edit[:current] = ["copy", "new"].include?(params[:action]) ? {} : copy_hash(@edit[:new])
 
-    # Only show chargeback users choice if an admin
-    if admin_user?
-      @edit[:cb_users] = User.all.each_with_object({}) { |u, h| h[u.userid] = u.name }
-      @edit[:cb_tenant] = Tenant.all.each_with_object({}) { |t, h| h[t.id] = t.name }
-    else
-      @edit[:new][:cb_show_typ] = "owner"
-      @edit[:new][:cb_owner_id] = session[:userid]
-    end
-
     # For trend reports, check for percent field chosen
     if @rpt.db && @rpt.db == TREND_MODEL &&
        MiqExpression.reporting_available_fields(@edit[:new][:model], @edit[:new][:perf_interval]).find do|af|
