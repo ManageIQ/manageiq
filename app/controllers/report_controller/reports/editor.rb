@@ -937,16 +937,7 @@ module ReportController::Reports::Editor
           @edit[:new][:col_formats].delete_if { |k, _v| k.starts_with?("#{nf.last}__") } # Delete pivot calc keys
 
           # Clear out pivot field options
-          if nf.last == @edit[:new][:pivot].by1              # Compress the pivotby fields if being moved left
-            @edit[:new][:pivot].by1 = @edit[:new][:pivot].by2
-            @edit[:new][:pivot].by2 = @edit[:new][:pivot].by3
-            @edit[:new][:pivot].by3 = NOTHING_STRING
-          elsif nf.last == @edit[:new][:pivot].by2
-            @edit[:new][:pivot].by2 = @edit[:new][:pivot].by3
-            @edit[:new][:pivot].by3 = NOTHING_STRING
-          elsif nf.last == @edit[:new][:pivot].by3
-            @edit[:new][:pivot].by3 = NOTHING_STRING
-          end
+          @edit[:new][:pivot].drop_from_selection(nf.last)
           @edit[:pivot_cols].delete(nf.last)          # Delete the column name from the pivot_cols hash
 
           # Clear out sort options
