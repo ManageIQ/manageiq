@@ -6,7 +6,6 @@ describe "Server Monitor" do
         automate,Automation Engine,0,false,region
         database_operations,Database Operations,0,false,region
         database_owner,Database Owner,1,false,database
-        database_synchronization,Database Synchronization,1,false,region
         ems_inventory,Management System Inventory,1,false,zone
         ems_metrics_collector,Capacity & Utilization Data Collector,0,false,zone
         ems_metrics_coordinator,Capacity & Utilization Coordinator,1,false,zone
@@ -182,14 +181,14 @@ describe "Server Monitor" do
         end
 
         it "should activate newly assigned limited region role" do
-          @miq_server.role = 'event, ems_operations, scheduler, reporting, database_synchronization'
+          @miq_server.role = 'event, ems_operations, scheduler, reporting, notifier'
           @miq_server.monitor_server_roles
           expect(@miq_server.active_role_names.length).to eq(5)
           expect(@miq_server.active_role_names.include?("ems_operations")).to be_truthy
           expect(@miq_server.active_role_names.include?("event")).to be_truthy
           expect(@miq_server.active_role_names.include?("scheduler")).to be_truthy
           expect(@miq_server.active_role_names.include?("reporting")).to be_truthy
-          expect(@miq_server.active_role_names.include?("database_synchronization")).to be_truthy
+          expect(@miq_server.active_role_names.include?("notifier")).to be_truthy
         end
 
         it "should deactivate removed unlimited zone role" do
