@@ -5,49 +5,49 @@
       *
     = _('Column 1')
   .col-md-8
-    = select_tag("chosen_pivot1", options_for_select([NOTHING_STRING] + @pivots1, @pivotby1),
+    = select_tag("chosen_pivot1", options_for_select([NOTHING_STRING] + @edit[:new][:pivot].options1, @pivotby1),
       :multiple             => false,
       :class                => "selectpicker",
       :disabled             => @edit[:read_only])
     :javascript
       miqInitSelectPicker();
       miqSelectPickerEvent('chosen_pivot1', '#{url}', {beforeSend: true})
-- if @pivotby1 != NOTHING_STRING && @pivots2.length >= 1
+- if @pivotby1 != NOTHING_STRING && @edit[:new][:pivot].options2.present?
   .form-group
     %label.control-label.col-md-2
       - if @edit[:read_only]
         *
       = _('Column 2')
     .col-md-8
-      = select_tag("chosen_pivot2", options_for_select([NOTHING_STRING] + @pivots2, @pivotby2),
+      = select_tag("chosen_pivot2", options_for_select([NOTHING_STRING] + @edit[:new][:pivot].options2, @pivotby2),
         :multiple             => false,
         :class                => "selectpicker",
         :disabled             => @edit[:read_only])
       :javascript
         miqInitSelectPicker();
         miqSelectPickerEvent('chosen_pivot2', '#{url}', {beforeSend: true});
-  - if @pivotby2 != NOTHING_STRING && @pivots3.length >= 1
+  - if @pivotby2 != NOTHING_STRING && @edit[:new][:pivot].options3.present?
     .form-group
       %label.control-label.col-md-2
         - if @edit[:read_only]
           *
         = _('Column 3')
       .col-md-8
-        = select_tag("chosen_pivot3", options_for_select([NOTHING_STRING] + @pivots3, @pivotby3),
+        = select_tag("chosen_pivot3", options_for_select([NOTHING_STRING] + @edit[:new][:pivot].options3, @pivotby3),
           :multiple             => false,
           :class                => "selectpicker",
           :disabled             => @edit[:read_only])
         :javascript
           miqInitSelectPicker();
           miqSelectPickerEvent('chosen_pivot3', '#{url}', {beforeSend: true});
-  - if @pivotby3 != NOTHING_STRING && @pivots4.length >= 1
+  - if @pivotby3 != NOTHING_STRING && @edit[:new][:pivot].options4.present?
     .form-group
       %label.control-label.col-md-2
         - if @edit[:read_only]
           *
         = _('Column 4')
       .col-md-8
-        = select_tag("chosen_pivot4", options_for_select([NOTHING_STRING] + @pivots4, @pivotby4),
+        = select_tag("chosen_pivot4", options_for_select([NOTHING_STRING] + @edit[:new][:pivot].options4, @pivotby4),
           :multiple             => false,
           :class                => "selectpicker",
           :disabled             => @edit[:read_only],

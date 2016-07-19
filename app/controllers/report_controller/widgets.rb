@@ -415,10 +415,7 @@ module ReportController::Widgets
       @pivotby2 = @edit[:new][:pivot].by2 = @widget.options[:col_order][1] if @widget.options && @widget.options[:col_order] && @widget.options[:col_order][1]
       @pivotby3 = @edit[:new][:pivot].by3 = @widget.options[:col_order][2] if @widget.options && @widget.options[:col_order] && @widget.options[:col_order][2]
       @pivotby4 = @edit[:new][:pivot].by4 = @widget.options[:col_order][3] if @widget.options && @widget.options[:col_order] && @widget.options[:col_order][3]
-      @pivots1  = @edit[:new][:fields].dup
-      @pivots2  = @pivots1.dup.delete_if { |g| g[1] == @edit[:new][:pivot].by1 }
-      @pivots3  = @pivots2.dup.delete_if { |g| g[1] == @edit[:new][:pivot].by2 }
-      @pivots4  = @pivots3.dup.delete_if { |g| g[1] == @edit[:new][:pivot].by3 }
+      @edit[:new][:pivot].options = @edit[:new][:fields].dup
       @edit[:new][:row_count] = @widget.row_count
     elsif @sb[:wtype] == "rf"
       @edit[:rss_feeds] = {}
@@ -592,10 +589,7 @@ module ReportController::Widgets
         rpt = @edit[:new][:repfilter] ? @edit[:new][:repfilter] : (@widget.resource_id && @widget.resource_type == "MiqReport" ? @widget.resource_id : nil)
         widget_set_column_vars(rpt)
       end
-      @pivots1  = @edit[:new][:fields].dup
-      @pivots2  = @pivots1.dup.delete_if { |g| g[1] == @edit[:new][:pivot].by1 }
-      @pivots3  = @pivots2.dup.delete_if { |g| g[1] == @edit[:new][:pivot].by2 }
-      @pivots4  = @pivots3.dup.delete_if { |g| g[1] == @edit[:new][:pivot].by3 }
+      @edit[:new][:pivot].options = @edit[:new][:fields].dup
       @pivotby1 = @edit[:new][:pivot].by1
       @pivotby2 = @edit[:new][:pivot].by2
       @pivotby3 = @edit[:new][:pivot].by3
