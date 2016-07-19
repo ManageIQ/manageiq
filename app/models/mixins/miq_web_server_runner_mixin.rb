@@ -18,6 +18,10 @@ module MiqWebServerRunnerMixin
   module ClassMethods
     def start_worker(*args)
       runner = self.new(*args)
+
+      # TODO: Clean this up, it's not obvious we need to do this
+      runner.worker_initialization
+      runner.after_initialize
       _log.info("URI: #{runner.worker.uri}")
 
       # Do all the SQL worker preparation in the main thread
