@@ -207,6 +207,10 @@ module ManageIQ::Providers
       end
     end
 
+    def remove_middleware_datasource(ems_ref)
+      run_specific_operation('RemoveDatasource', ems_ref)
+    end
+
     # UI methods for determining availability of fields
     def supports_port?
       true
@@ -250,6 +254,24 @@ module ManageIQ::Providers
 
         actual_data = {}
         connection.operations(true).invoke_generic_operation(the_operation) do |on|
+          on.success do |data|
+            _log.debug "Success on websocket-operation #{data}"
+            actual_data[:data] = data
+          end
+          on.failure do |error|
+            actual_data[:data]  = {}
+            actual_data[:error] = error
+            _log.error 'error callback was called, reason: ' + error.to_s
+          end
+        end
+      end
+    end
+
+    def run_specific_operation(operation_name, ems_ref, parameters = {})
+      with_provider_connection do |connection|
+        parameters[:resourcePath] = ems_ref.to_s
+        actual_data = {}
+        connection.operations(true).invoke_specific_operation(parameters, operation_name) do |on|
           on.success do |data|
             _log.debug "Success on websocket-operation #{data}"
             actual_data[:data] = data

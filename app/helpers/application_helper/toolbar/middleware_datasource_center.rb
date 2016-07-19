@@ -32,4 +32,21 @@ class ApplicationHelper::Toolbar::MiddlewareDatasourceCenter < ApplicationHelper
       ]
     ),
   ])
+  button_group(
+    'middleware_datasource_operations', [
+      select(
+        :middleware_datasource_operations_choice,
+        'fa fa-play-circle-o fa-lg',
+        t = N_('Operations'),
+        t,
+        :items => [
+          button(
+            :middleware_datasource_remove,
+            'pficon pficon-delete fa-lg',
+            N_('Remove Middleware Datasource'),
+            N_('Remove'),
+            :confirm => N_('Do you want to remove this datasource ?'))
+        ]
+      ),
+    ])
 end

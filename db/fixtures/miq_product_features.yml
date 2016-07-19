@@ -3499,7 +3499,7 @@
     - :name: Remove
       :description: Remove Middleware Datasource from the VMDB
       :feature_type: admin
-      :identifier: middleware_datasource_delete
+      :identifier: middleware_datasource_remove
     - :name: Edit
       :description: Edit a Middleware Datasource
       :feature_type: admin
