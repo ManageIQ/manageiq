@@ -238,36 +238,26 @@ module ReportController::Reports
     end
 
     if Chargeback.db_is_chargeback?(@edit[:new][:model])
-      case @edit[:new][:cb_show_typ]
-      when nil
-        add_flash(_("Show Costs by must be selected"), :error)
-        active_tab = "edit_3"
-      when 'owner'
-        unless @edit[:new][:cb_owner_id]
-          add_flash(_("An Owner must be selected"), :error)
-          active_tab = "edit_3"
-        end
-      when 'tenant'
-        unless @edit[:new][:cb_tenant_id]
-          add_flash(_("A Tenant Category must be selected"), :error)
-          active_tab = "edit_3"
-        end
-      when 'tag'
-        unless @edit[:new][:cb_tag_cat]
-          add_flash(_("A Tag Category must be selected"), :error)
-          active_tab = "edit_3"
-        else
-          unless @edit[:new][:cb_tag_value]
-            add_flash(_("A Tag must be selected"), :error)
-            active_tab = "edit_3"
-          end
-        end
-      when 'entity'
-        unless @edit[:new][:cb_entity_id]
-          add_flash(_("A specific %{chargeback} or all must be selected") %
-            {:chargeback => ui_lookup(:model => @edit[:new][:cb_model])}, :error)
-          active_tab = "edit_3"
-        end
+      msg = case @edit[:new][:cb_show_typ]
+            when nil
+              _("Show Costs by must be selected")
+            when 'owner'
+              _("An Owner must be selected") unless @edit[:new][:cb_owner_id]
+            when 'tenant'
+              _("A Tenant Category must be selected") unless @edit[:new][:cb_tenant_id]
+            when 'tag'
+              if !@edit[:new][:cb_tag_cat]
+                _("A Tag Category must be selected")
+              elsif !@edit[:new][:cb_tag_value]
+                _("A Tag must be selected")
+              end
+            when 'entity'
+              _("A specific %{chargeback} or all must be selected") %
+                {:chargeback => ui_lookup(:model => @edit[:new][:cb_model])} unless @edit[:new][:cb_entity_id]
+            end
+      if msg
+        add_flash(msg, :error)
+        active_tab = 'edit_3'
       end
     end
 
