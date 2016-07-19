@@ -25,7 +25,7 @@ RSpec.describe "API entrypoint" do
 
     run_get entrypoint_url
 
-    expect(response_hash['settings']).to a_hash_including(test_settings.deep_stringify_keys)
+    expect(response.parsed_body).to include("settings" => a_hash_including(test_settings.deep_stringify_keys))
   end
 
   it "collection query is sorted" do
