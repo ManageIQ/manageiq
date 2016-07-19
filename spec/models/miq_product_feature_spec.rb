@@ -16,6 +16,24 @@ describe MiqProductFeature do
     )
   end
 
+  it "is properly configured" do
+    everything = YAML.load_file(described_class.feature_yaml)
+    required_keys = [:identifier]
+    possible_keys = required_keys + [:name, :feature_type, :description, :children, :hidden, :protected]
+    traverse_product_features(everything) do |pf|
+      expect(pf).to include(*required_keys)
+      expect(pf.keys - possible_keys).to be_empty
+      expect(pf[:children]).not_to be_empty if pf.key?(:children)
+    end
+  end
+
+  def traverse_product_features(product_feature, &block)
+    block.call(product_feature)
+    if product_feature.key?(:children)
+      product_feature[:children].each { |child| traverse_product_features(child, &block) }
+    end
+  end
+
   context ".seed" do
     it "creates feature identifiers once on first seed, changes nothing on second seed" do
       status_seed1 = MiqProductFeature.seed
