@@ -183,7 +183,7 @@ describe DialogFieldCheckBox do
     end
 
     it "returns the checked value in a hash" do
-      expect(dialog_field.refresh_json_value).to eq(:checked => false, :read_only => true)
+      expect(dialog_field.refresh_json_value).to eq(:checked => false, :read_only => true, :visible => true)
     end
 
     it "assigns the processed value to value" do

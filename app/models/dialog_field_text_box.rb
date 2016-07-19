@@ -1,5 +1,5 @@
 class DialogFieldTextBox < DialogField
-  AUTOMATE_VALUE_FIELDS = %w(data_type protected required validator_rule validator_type read_only).freeze
+  AUTOMATE_VALUE_FIELDS = %w(data_type protected required validator_rule validator_type read_only visible).freeze
 
   def value
     @value = values_from_automate if dynamic && @value.blank?
@@ -69,7 +69,7 @@ class DialogFieldTextBox < DialogField
   def refresh_json_value
     @value = values_from_automate
 
-    {:text => @value, :read_only => read_only?}
+    {:text => @value, :read_only => read_only?, :visible => visible?}
   end
 
   def trigger_automate_value_updates

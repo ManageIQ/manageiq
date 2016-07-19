@@ -1,4 +1,5 @@
 class DialogFieldSortedItem < DialogField
+  AUTOMATE_VALUE_FIELDS = %w(sort_by sort_order data_type default_value required read_only visible).freeze
   def sort_by
     options[:sort_by] || :description
   end
@@ -45,7 +46,7 @@ class DialogFieldSortedItem < DialogField
   end
 
   def normalize_automate_values(automate_hash)
-    %w(sort_by sort_order data_type default_value required read_only).each do |key|
+    AUTOMATE_VALUE_FIELDS.each do |key|
       send("#{key}=", automate_hash[key]) if automate_hash.key?(key)
     end
 

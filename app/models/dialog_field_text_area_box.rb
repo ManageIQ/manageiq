@@ -1,3 +1,3 @@
 class DialogFieldTextAreaBox < DialogFieldTextBox
-  AUTOMATE_VALUE_FIELDS = %w(required read_only)
+  AUTOMATE_VALUE_FIELDS = %w(required read_only visible).freeze
 end

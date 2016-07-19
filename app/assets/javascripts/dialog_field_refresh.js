@@ -28,6 +28,7 @@ var dialogFieldRefresh = {
       var responseData = JSON.parse(data.responseText);
       $('.dynamic-checkbox-' + fieldId).prop('checked', responseData.values.checked);
       dialogFieldRefresh.setReadOnly($('.dynamic-checkbox-' + fieldId), responseData.values.read_only);
+      dialogFieldRefresh.setVisible($('.dynamic-checkbox-' + fieldId), responseData.values.visible);
     };
 
     dialogFieldRefresh.sendRefreshRequest('dynamic_checkbox_refresh', data, doneFunction);
@@ -47,6 +48,7 @@ var dialogFieldRefresh = {
       }
 
       dialogFieldRefresh.setReadOnly($('.dynamic-date-' + fieldId), responseData.values.read_only);
+      dialogFieldRefresh.setVisible($('.dynamic-date-' + fieldId), responseData.values.visible);
     };
 
     dialogFieldRefresh.sendRefreshRequest('dynamic_date_refresh', data, doneFunction);
@@ -60,6 +62,7 @@ var dialogFieldRefresh = {
       var responseData = JSON.parse(data.responseText);
       dialogFieldRefresh.addOptionsToDropDownList(responseData, fieldId);
       dialogFieldRefresh.setReadOnly($('#' + fieldName), responseData.values.read_only);
+      dialogFieldRefresh.setVisible($('#field_' + fieldId + "_tr"), responseData.values.visible);
       $('#' + fieldName).selectpicker('refresh');
       $('#' + fieldName).selectpicker('val', responseData.values.checked_value);
     };
@@ -117,6 +120,7 @@ var dialogFieldRefresh = {
       var responseData = JSON.parse(data.responseText);
       $('.dynamic-text-area-' + fieldId).val(responseData.values.text);
       dialogFieldRefresh.setReadOnly($('.dynamic-text-area-' + fieldId), responseData.values.read_only);
+      dialogFieldRefresh.setVisible($('.dynamic-text-area-' + fieldId), responseData.values.visible);
     };
 
     dialogFieldRefresh.sendRefreshRequest('dynamic_text_box_refresh', data, doneFunction);
@@ -130,6 +134,7 @@ var dialogFieldRefresh = {
       var responseData = JSON.parse(data.responseText);
       $('.dynamic-text-box-' + fieldId).val(responseData.values.text);
       dialogFieldRefresh.setReadOnly($('.dynamic-text-box-' + fieldId), responseData.values.read_only);
+      dialogFieldRefresh.setVisible($('.dynamic-text-box-' + fieldId), responseData.values.visible);
     };
 
     dialogFieldRefresh.sendRefreshRequest('dynamic_text_box_refresh', data, doneFunction);
@@ -186,5 +191,14 @@ var dialogFieldRefresh = {
       complete: true,
       done: doneFunction
     });
+  },
+
+  setVisible: function(field, visible) {
+    if (visible === true) {
+      field.show();
+    } else {
+      field.hide();
+    }
   }
+
 };
