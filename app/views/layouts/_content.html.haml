@@ -76,15 +76,14 @@
       = render :partial => "layouts/vertical_navbar"
       .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-tertiary.max-height{:style => "overflow: hidden !important"}
         - if !@in_a_form && taskbar_in_header?
-          .row.toolbar-pf#toolbar
+          .row.toolbar-pf#toolbar{:class => "#{!@angular_toolbar_name.nil? ? 'miq-toolbar-menu' : ''}"}
             .col-md-12
-              .toolbar-pf-actions
-                - if @layout == "dashboard"
-                  = render :partial => "/layouts/tabs"
-                - if @angular_toolbar_name
-                  = render :partial => "layouts/angular/toolbar"
-                  = render_toolbars(calculate_toolbars.slice('view_tb'))
-                - else
+              - if @angular_toolbar_name
+                = render :partial => "layouts/angular/toolbar"
+              - else
+                .toolbar-pf-actions
+                  - if @layout == "dashboard"
+                    = render :partial => "/layouts/tabs"
                   = render_toolbars(calculate_toolbars)
         .row.max-height
           .col-sm-9.col-md-10.col-sm-push-3.col-md-push-2.max-height

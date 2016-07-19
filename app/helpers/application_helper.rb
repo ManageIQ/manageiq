@@ -798,7 +798,7 @@ module ApplicationHelper
   def display_back_button?
     # don't need to back button if @record is not there or @record doesnt have name or
     # evm_display_name column, i.e MiqProvisionRequest
-    if (@lastaction != "show" || (@lastaction == "show" && @display != "main")) &&
+    if ((@lastaction != nil && @lastaction != "show") || (@lastaction == "show" && @display != "main")) &&
        @record &&
        ((@layout == "cim_base_storage_extent" && !@record.evm_display_name.nil?) ||
          (@layout != "cim_base_storage_extent" && @record.respond_to?('name') && !@record.name.nil?))
@@ -1133,7 +1133,7 @@ module ApplicationHelper
   def render_gtl_view_tb?
     GTL_VIEW_LAYOUTS.include?(@layout) && @gtl_type && !@tagitems &&
       !@ownershipitems && !@retireitems && !@politems && !@in_a_form &&
-      %w(show show_list).include?(params[:action])
+      %w(show show_list toolbar_settings).include?(params[:action])
   end
 
   def update_paging_url_parms(action_url, parameter_to_update = {}, post = false)

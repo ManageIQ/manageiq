@@ -1391,8 +1391,14 @@ function miqAccordionSwap(_collapse, expand) {
 
 // This function is called in miqOnLoad
 function miqInitToolbars() {
-  $("#toolbar button:not(.dropdown-toggle), #toolbar ul.dropdown-menu > li > a, #toolbar .toolbar-pf-view-selector > ul.list-inline > li > a").off('click');
-  $("#toolbar button:not(.dropdown-toggle), #toolbar ul.dropdown-menu > li > a, #toolbar .toolbar-pf-view-selector > ul.list-inline > li > a").click(miqToolbarOnClick);
+  $("#toolbar:not(.miq-toolbar-menu) button:not(.dropdown-toggle), "+
+  "#toolbar:not(.miq-toolbar-menu) ul.dropdown-menu > li > a, "+
+  "#toolbar:not(.miq-toolbar-menu) .toolbar-pf-view-selector > ul.list-inline > li > a"
+  ).off('click');
+  $("#toolbar:not(.miq-toolbar-menu) button:not(.dropdown-toggle), " +
+  "#toolbar:not(.miq-toolbar-menu) ul.dropdown-menu > li > a, "+
+  "#toolbar:not(.miq-toolbar-menu) .toolbar-pf-view-selector > ul.list-inline > li > a"
+  ).click(miqToolbarOnClick);
 }
 
 // Function to run transactions when toolbar button is clicked
@@ -1475,7 +1481,7 @@ function miqToolbarOnClick(_e) {
       tb_url += "/" + ManageIQ.record.recordId;
     }
     tb_url += "?pressed=";
-    if (typeof button.data('pressed') == "undefined") {
+    if (typeof button.data('pressed') == "undefined" && button.data('click')) {
       tb_url += button.data('click').split("__").pop();
     } else {
       tb_url += button.data('pressed');

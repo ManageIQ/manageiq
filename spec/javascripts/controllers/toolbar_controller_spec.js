@@ -51,6 +51,25 @@ describe('toolbarController', function () {
                         .value();
       expect(_.filter(allItems, {enabled: true}).length >= 3).toBeTruthy();
      });
+
+     it('Each dataView should have url set', function() {
+       $controller.dataViews.forEach(function(dataView) {
+         expect(dataView.url !== '').toBeTruthy();
+       })
+     })
+
+     it('Each button should have eventFunction set up', function() {
+      _.chain($controller.toolbarItems)
+        .flatten()
+        .map(function(item) {
+          return (item && item.hasOwnProperty('items')) ? item.items : item;
+        })
+        .flatten()
+        .filter({type: 'button'})
+        .each(function(item) {
+          expect(item.hasOwnProperty('eventFunction')).toBeTruthy();
+        })
+     })
    })
 
    describe('show detail toolbar', function() {

@@ -60,7 +60,9 @@ module ProvidersSettings
   #### default routes, defined in router.rb
 
   def toolbar_settings
-    @lastaction = params[:is_list] ? 'show_list' : nil
+    @lastaction = params[:is_list] != "false" ? 'show_list' : nil
+    @gtl_type = params[:glt_type]
+    @record = !params[:id].nil? && identify_record(params[:id])
     render :json => toolbar_from_hash
   end
 
