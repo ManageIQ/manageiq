@@ -219,13 +219,14 @@ FLASH
       git_repo.update_authentication(:values => {:userid => params[:git_username], :password => params[:git_password]})
       task_options = {
         :action => "Retrieve git repository",
-        :userid => current_user.id
+        :userid => current_user.userid
       }
       queue_options = {
         :class_name  => "GitRepository",
         :method_name => "refresh",
         :instance_id => git_repo.id,
-        :role        => "git_owner"
+        :role        => "git_owner",
+        :args        => []
       }
 
       task_id = MiqTask.generic_action_with_callback(task_options, queue_options)

@@ -67,6 +67,8 @@ var Automate = {
       $('select.git-branches').selectpicker('refresh');
       $('select.git-tags').selectpicker('refresh');
     }
+
+    miqSparkleOff();
   },
 
   addDomainOptions: function(domains) {
@@ -141,6 +143,10 @@ var Automate = {
     });
 
     Automate.setUpGitRefreshClickHandlers();
+
+    $('.git-retreive-datastore').click(function() {
+      miqSparkleOn();
+    });
 
     $('.git-import-submit').click(function(event) {
       event.preventDefault();

@@ -306,13 +306,14 @@ Methods updated/added: 10
         let(:git_repo) { double("GitRepository", :id => 321) }
         let(:git_branches) { [double("GitBranch", :name => "git_branch1")] }
         let(:git_tags) { [double("GitTag", :name => "git_tag1")] }
-        let(:task_options) { {:action => "Retrieve git repository", :userid => controller.current_user.id} }
+        let(:task_options) { {:action => "Retrieve git repository", :userid => controller.current_user.userid} }
         let(:queue_options) do
           {
             :class_name  => "GitRepository",
             :method_name => "refresh",
             :instance_id => 321,
-            :role        => "git_owner"
+            :role        => "git_owner",
+            :args        => []
           }
         end
 
