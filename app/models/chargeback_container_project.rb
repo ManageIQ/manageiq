@@ -35,17 +35,23 @@ class ChargebackContainerProject < Chargeback
     #   :chargeback_type => detail | summary
     #   :entity_id => 1/2/3.../all rails id of entity
 
-    # Find Project by id or get all projects
+    # Find ContainerGroups belonging to projects according to any of these:
     provider_id = options[:provider_id]
-    id = options[:entity_id]
-    raise "must provide option :entity_id and provider_id" if id.nil? && provider_id.nil?
+    project_id = options[:entity_id]
+    tag = options[:tag]
 
-    @groups = if provider_id == "all"
+    @groups = if tag.present?
+                # Get all groups belonging to tagged projects
+                project_ids = ContainerProject.find_tagged_with(:all => tag, :ns => "*").select(:id)
+                ContainerGroup.where(:container_project_id => project_ids).or(ContainerGroup.where(:old_container_project_id => project_ids))
+              elsif provider_id == "all"
                 ContainerGroup.all
-              elsif id == "all"
+              elsif provider_id.present? && project_id == "all"
                 ContainerGroup.where('ems_id = ? or old_ems_id = ?', provider_id, provider_id)
+              elsif project_id.present?
+                ContainerGroup.where('container_project_id = ? or old_container_project_id = ?', project_id, project_id)
               else
-                ContainerGroup.where('container_project_id = ? or old_container_project_id = ?', id, id)
+                raise "must provide option :entity_id, provider_id or tag" if project_id.nil? && provider_id.nil? && tag.nil?
               end
 
     @groups = @groups.includes(:container_project, :old_container_project)
