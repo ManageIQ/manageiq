@@ -40,6 +40,17 @@ class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
     )
   end
 
+  def hostname_uniqueness_valid?
+    return unless hostname_required?
+    return unless hostname.present? # Presence is checked elsewhere
+
+    existing_providers = Endpoint.where(:hostname => hostname.downcase)
+                                 .where.not(:resource_id => id).includes(:resource)
+                                 .select { |endpoint| endpoint.resource.uid_ems == keystone_v3_domain_id }
+
+    errors.add(:hostname, "has already been taken") if existing_providers.any?
+  end
+
   def supports_port?
     true
   end
