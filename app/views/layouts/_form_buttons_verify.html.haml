@@ -9,7 +9,7 @@
   - id = record_id ? record_id : nil
 
 - if session[:host_items].present?
-  - verify_title_on  = _("Validate the credentials by logging into the selected %s") % title_for_host
+  - verify_title_on  = _("Validate the credentials by logging into the selected %{host}") % {:host => title_for_host}
 - else
   - verify_title_on ||= _("Validate the credentials by logging into the Server")
 

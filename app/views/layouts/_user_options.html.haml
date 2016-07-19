@@ -8,7 +8,7 @@
     %ul.dropdown-menu
       %li.disabled
         %a{:href => "#"}
-          = _('Server: %s') % appliance_name
+          = _('Server: %{appliance_name}') % {:appliance_name => appliance_name}
 
       - if current_user.miq_groups.length > 1
         %li.dropdown-submenu.pull-left

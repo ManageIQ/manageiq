@@ -90,7 +90,7 @@
       %tr
         %td{:align => "right"}
           #buttons
-            - t = _("Export Selected %s") % title
+            - t = _("Export Selected %{title}") % {:title => title}
             = link_to(_('Export'),
               {:action => "export", :button => "export"},
               :class                 => "btn btn-primary",

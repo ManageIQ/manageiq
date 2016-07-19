@@ -2,7 +2,7 @@
   %html{:lang => I18n.locale.to_s.sub('-', '_')}
     %head
       %title
-        = _("VM %s Remote Console") % @record.name
+        = _("VM %{name} Remote Console") % {:name => @record.name}
       = favicon_link_tag
       :javascript
         function connect() {
@@ -47,7 +47,7 @@
   %html{:lang => I18n.locale.to_s.sub('-', '_')}
     %head
       %title
-        = _("VM %s Remote Console") % @record.name
+        = _("VM %{name} Remote Console") % {:name => @record.name}
     :javascript
       const IMessageListener = Components.interfaces.xpcomIMessageListener;
       const IGrabStateListener = Components.interfaces.xpcomIGrabStateListener;

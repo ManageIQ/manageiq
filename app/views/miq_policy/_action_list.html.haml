@@ -1,7 +1,10 @@
 #action_list_div
   - if x_active_tree == :action_tree && @view
     - if @view.table.data.empty?
-      - msg = _('No Actions are defined %s.') % @search_text.blank? ? "" : _("that match the entered search string")
+      - if @search_text.blank?
+        - msg = _('No Actions are defined.')
+      - else
+        - msg = _('No Actions are defined that match the entered search string')
       = render :partial => 'layouts/info_msg', :locals => {:message => msg}
     - else
       #main_div

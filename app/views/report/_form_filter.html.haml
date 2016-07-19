@@ -8,7 +8,7 @@
   - else
     -# Show expression editors for all other reports
     %h3
-      = _("Primary (Record) Filter - Filters the %s table records") % @edit[:new][:model]
+      = _("Primary (Record) Filter - Filters the %{model} table records") % {:model => @edit[:new][:model]}
     - if @expkey == :record_filter
       = render :partial => 'layouts/exp_editor'
     - else

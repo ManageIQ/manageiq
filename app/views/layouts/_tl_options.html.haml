@@ -3,7 +3,7 @@
   - if @timeline
     %h3
       - if @record != @tl_record
-        = _("Options %s: %s") % [ui_lookup(:model => @tl_record.class.to_s), @tl_record.name]
+        = _("Options %{model}: %{name}") % {:model => ui_lookup(:model => @tl_record.class.to_s), :name => @tl_record.name}
       - else
         = _("Options")
     .form-horizontal
@@ -140,4 +140,4 @@
         %input#filter1{:type => "hidden", :name => "filter1", :value => @tl_options.mngt.fltr1}
         %input#filter2{:type => "hidden", :name => "filter2", :value => @tl_options.mngt.fltr2}
         %input#filter3{:type => "hidden", :name => "filter3", :value => @tl_options.mngt.fltr3}
-    = _("* Dates/Times on this page are based on time zone: %s.") % session[:user_tz]
+    = _("* Dates/Times on this page are based on time zone: %{time_zone}.") % {:time_zone => session[:user_tz]}

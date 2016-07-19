@@ -40,14 +40,14 @@
             %label.control-label.col-md-2= _('Created')
             .col-md-8
               %p.form-control-static
-                = h(_("By Username %s %s") % [@policy.created_by || _("N/A"), format_timezone(@policy.created_on, session[:user_tz], "on_at")])
+                = h(_("By Username %{username} %{created_on}") % {:username => @policy.created_by || _("N/A"), :created_on => format_timezone(@policy.created_on, session[:user_tz], "on_at")})
 
           - if @policy.created_on != @policy.updated_on
             .form-group
               %label.control-label.col-md-2= _("Last Updated")
               .col-md-8
                 %p.form-control-static
-                  = h(_("By Username %s %s") % [@policy.updated_by || _("N/A"), format_timezone(@policy.updated_on, session[:user_tz], "on_at")])
+                  = h(_("By Username %{username} %{updated_on}") % {:username => @policy.updated_by || _("N/A"), :updated_on => format_timezone(@policy.updated_on, session[:user_tz], "on_at")})
       %hr
 
       -# Scope
@@ -80,7 +80,7 @@
                 %td
                   %table#formtest.form{:width => "100%"}
                     %tr
-                      %td{:align => "left"}= _("Available %s Conditions:") % ui_lookup(:model => @edit[:new][:towhat])
+                      %td{:align => "left"}= _("Available %{model} Conditions:") % {:model => ui_lookup(:model => @edit[:new][:towhat])}
                       %td
                       %td.widthed{:align => "left"}= _("Policy Conditions:")
                     %tr

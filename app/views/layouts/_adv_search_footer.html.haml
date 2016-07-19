@@ -44,7 +44,7 @@
                    :button => "delete"},
                   'data-confirm' => confirm_msg,
                   :class         => "btn btn-danger",
-                  :alt           => t = _("Delete the filter named %s") % @edit[@expkey][:selected][:description],
+                  :alt           => t = _("Delete the filter named %{filter_name}") % {:filter_name => @edit[@expkey][:selected][:description]},
                   :remote        => true,
                   "data-method"  => :post,
                   :title         => t)

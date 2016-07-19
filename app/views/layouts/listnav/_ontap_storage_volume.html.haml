@@ -17,14 +17,14 @@
             :text       => "#{ui_lookup(:table => 'ontap_storage_system')}: #{@record.storage_system.evm_display_name}",
             :controller => "ontap_storage_system",
             :record_id  => @record.storage_system.id,
-            :title      => _("Show %s") % ui_lookup(:table => "ontap_storage_system"))
+            :title      => _("Show Filer"))
 
         - if role_allows(:feature => "cim_base_storage_extent_show_list")
           = li_link(:count => @record.base_storage_extents_size,
             :record_id     => @record.id,
             :tables        => 'cim_base_storage_extent',
             :display       => 'cim_base_storage_extents',
-            :title         => _("Show all %s") % ui_lookup(:tables => "cim_base_storage_extent"))
+            :title         => _("Show all Base Extents"))
 
     = miq_accordion_panel(_("Infrastructure Relationships"), false, "cim_sv_inf_rel") do
       %ul.nav.nav-pills.nav-stacked
@@ -33,18 +33,18 @@
             :record_id     => @record.id,
             :tables        => 'vm',
             :display       => 'vms',
-            :title         => _("Show all %s") % ui_lookup(:tables => "vm"))
+            :title         => _("Show all VMs"))
 
         - if role_allows(:feature => "host_show_list")
           = li_link(:count => @record.hosts_size,
             :record_id     => @record.id,
             :tables        => 'host',
             :display       => 'hosts',
-            :title         => _("Show all %s") % ui_lookup(:tables => "host"))
+            :title         => _("Show all Hosts"))
 
         - if role_allows(:feature => "storage_show_list")
           = li_link(:count => @record.storages.size,
             :record_id     => @record.id,
             :tables        => 'storage',
             :display       => 'storages',
-            :title         => _("Show all %s") % ui_lookup(:tables => "storage"))
+            :title         => _("Show all Datastores"))

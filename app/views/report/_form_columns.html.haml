@@ -34,7 +34,7 @@
           %label.control-label.col-md-2
             = _('Cancel after')
           .col-md-8
-            - opts = [["<#{_('System Default')}>", nil]] + (1..6).map { |i| [n_('%s Hour', '%s Hours', i) % i, i.hours] }
+            - opts = [["<#{_('System Default')}>", nil]] + (1..6).map { |i| [n_('%{number} Hour', '%{number} Hours', i) % {:number => i}, i.hours] }
             = select_tag('chosen_queue_timeout',
               options_for_select(opts, @edit[:new][:queue_timeout]),
               :multiple              => false,

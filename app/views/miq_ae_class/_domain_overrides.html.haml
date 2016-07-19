@@ -7,7 +7,7 @@
           %tr{:onclick => remote_function(:loading => "miqSparkle(true);",
                                           :complete => "miqSparkle(false);",
                                           :url     => "/miq_ae_class/x_show?id=#{node_prefix}-#{to_cid(id)}"),
-              :title => _("Click to view this %s in the \"%s\" Domain") % [model, name]}
+              :title => _("Click to view this %{model} in the \"%{domain_name}\" Domain") % {:model => model, :domain_name => name}}
             %td
               = name
         - else

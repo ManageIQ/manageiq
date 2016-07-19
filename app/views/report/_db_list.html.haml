@@ -9,7 +9,7 @@
             = _('Type')
       %tbody
         - @db_nodes_order.each do |node|
-          %tr{:title => _("Click to view '%s'") % @db_nodes[node][:title],
+          %tr{:title => _("Click to view '%{title}'") % {:title => @db_nodes[node][:title]},
             :onclick => "miqDynatreeActivateNode('#{@sb[:active_tree]}', '#{@db_nodes[node][:id]}');"}
             %td.narrow{:nowrap => 1}
               %ul.icons.list-unstyled
@@ -29,7 +29,7 @@
       %tbody
         - @miq_groups.sort_by(&:description).each do |g|
           %tr{:onclick => remote_function(:loading => "miqSparkle(true);", :complete => "miqSparkle(false);",
-              :url => {:action => 'tree_select', :id => "xx-g_g-#{to_cid(g.id)}"}), :title => _("Click to view %s ") % g.description, :class => "icon"}
+              :url => {:action => 'tree_select', :id => "xx-g_g-#{to_cid(g.id)}"}), :title => _("Click to view %{group} ") % {:group => g.description}, :class => "icon"}
             %td.narrow
               %ul.icons.list-unstyled
                 %li
@@ -50,7 +50,7 @@
         %tbody
           - @widgetsets.sort_by { |widgetset| widgetset.name.downcase }.each do |ws|
             %tr{:onclick => remote_function(:loading => "miqSparkle(true);", :complete => "miqSparkle(false);", :url => {:action => 'tree_select',
-                :id => "xx-g_g-#{@sb[:nodes][2]}_-#{to_cid(ws.id)}"}), :title => _("Click to view '%s (%s)'") % [ws.description, ws.name], :class => "icon"}
+                :id => "xx-g_g-#{@sb[:nodes][2]}_-#{to_cid(ws.id)}"}), :title => _("Click to view '%{widgetset_description} (%{widgetset_name})'") % {:widgetset_description => ws.description, :widgetset_name => ws.name}, :class => "icon"}
               %td.narrow
                 %i.fa.fa-2x.fa-dashboard{:title => ws.description}
               %td

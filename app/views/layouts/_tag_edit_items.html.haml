@@ -1,7 +1,7 @@
 %hr
 %div
   %h3
-    = _("%s Being Tagged") % pluralize(@tagitems.length, ui_lookup(:model => @edit[:tagging]))
+    = _("%{objects} Being Tagged") % {:objects => pluralize(@tagitems.length, ui_lookup(:model => @edit[:tagging]))}
   %table.admintable{:height => "75"}
     %tbody
       %tr

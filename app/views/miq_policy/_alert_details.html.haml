@@ -176,7 +176,7 @@
                 = _("From")
               .col-md-8
                 - if @alert.options[:notifications][:email][:from].blank?
-                  = _("(Default: %s)") % h(get_vmdb_config[:smtp][:from])
+                  = _("(Default: %{email_from})") % {:email_from => h(get_vmdb_config[:smtp][:from])}
                 - else
                   = h(@alert.options[:notifications][:email][:from])
             .form-group

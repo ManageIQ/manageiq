@@ -64,7 +64,7 @@
       %td
   - else
     %tr{:id => "#{entry_idx}_tr", :class => cycle('row0', 'row1')}
-      %td{:onclick => remote_function(:url => {:action => 'ls_delete', :id => entry_idx, :domain_id => domain_id}, :confirm => _("Deleting the '%s' LDAP Server, are you sure?")) % entry[:hostname],
+      %td{:onclick => remote_function(:url => {:action => 'ls_delete', :id => entry_idx, :domain_id => domain_id}, :confirm => _("Deleting the '%{hostname}' LDAP Server, are you sure?")) % {:hostname => entry[:hostname]},
           :title   => _("Click to delete this LDAP Server")}
         = image_tag(image_path('toolbars/delete.png'), :class => "rollover small")
       %td{:onclick => remote_function(:url => {:action => 'ls_select', :id => entry_idx, :field => "hostname", :domain_id => domain_id}), :title => t = _("Click to update this LDAP Server")}
@@ -80,7 +80,7 @@
                    :id        => entry_idx,
                    :domain_id => domain_id},
                   :class                 => "btn btn-primary",
-                  :alt                   => t = _("Validate the LDAP Settings by binding with the %s") % title_for_host,
+                  :alt                   => t = _("Validate the LDAP Settings by binding with the %{host}") % {:host => title_for_host},
                   "data-miq_sparkle_on"  => true,
                   "data-miq_sparkle_off" => true,
                   :remote                => true,

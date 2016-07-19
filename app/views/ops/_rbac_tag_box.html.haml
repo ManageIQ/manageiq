@@ -7,7 +7,7 @@
     .col-md-8
       - if session[:assigned_filters].empty?
         %i.fa.fa-tag
-        = _("No %s Tags have been assigned") % current_tenant.name
+        = _("No %{tenant_name} Tags have been assigned") % {:tenant_name => current_tenant.name}
       - else
         - session[:assigned_filters].keys.sort.each do |k|
           - v = session[:assigned_filters][k]

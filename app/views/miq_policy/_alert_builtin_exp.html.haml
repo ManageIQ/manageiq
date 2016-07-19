@@ -182,7 +182,7 @@
     .col-md-8
       - if @edit
         - if @edit[:emss].length == 0
-          = _("No %s found") % ui_lookup(:tables => "ext_management_system")
+          = _("No %{types} found") % {:types => ui_lookup(:tables => "ext_management_system")}
         - elsif @edit[:emss].length == 1
           = h(@edit[:emss][@edit[:new][:expression][:options][:ems_id]])
         - else
@@ -196,7 +196,7 @@
       - else
         - if @ems.blank?
           %span{:style => "color: red;"}
-            = _("%s no longer exists, this alert must be reconfigured") % ui_lookup(:model => "ExtManagementSystem")
+            = _("Provider no longer exists, this alert must be reconfigured")
         - else
           = h(@ems.name)
   - when :ems_alarm_mor
@@ -208,7 +208,7 @@
         - if @edit
           - if @edit[:new][:expression][:options][:ems_id]
             - if @edit[:ems_alarms].length == 0
-              = _("No alarms found for the selected %s") % ui_lookup(:table => "ext_management_system")
+              = _("No alarms found for the selected Provider")
             - else
               - opts = [["<#{_('Choose')}>", nil]] + @edit[:ems_alarms].invert.sort_by { |a| a.first.downcase }
               = select_tag('select_ems_alarm_mor',
@@ -218,7 +218,7 @@
                 miqInitSelectPicker();
                 miqSelectPickerEvent('select_ems_alarm_mor', '#{url}', {beforeSend: true, complete: true})
           - else
-            = _("Choose a %s first") % ui_lookup(:table => "ext_management_system")
+            = _("Choose a %{provider} first") % {:provider => ui_lookup(:table => "ext_management_system")}
         - else
           = h(@alert.expression[:options][:ems_alarm_name])
   - when :mw_operator

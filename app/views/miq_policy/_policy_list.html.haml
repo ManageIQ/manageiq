@@ -1,8 +1,10 @@
 #policy_list_div
   - if x_active_tree == :policy_tree && @view
     - if @view.table.data.empty?
-      - t = @search_text.blank? ? "" : _(" that match the entered search string")
-      - msg = _("No %s %s Policies are defined %s.") % [ui_lookup(:model => @sb[:folder]), @mode, t]
+      - if @search_text.blank?
+        - msg = _("No %{model} %{mode} Policies are defined.") % {:model => ui_lookup(:model => @sb[:folder]), :mode => @mode}
+      - else
+        - msg = _("No %{model} %{mode} Policies are defined that match the entered search string.") % {:model => ui_lookup(:model => @sb[:folder]), :mode => @mode}
       = render :partial => 'layouts/info_msg', :locals => {:message => msg}
     - else
       #main_div

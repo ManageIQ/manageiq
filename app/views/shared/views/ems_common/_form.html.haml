@@ -101,7 +101,7 @@
         %td{:align => "right"}
           #buttons_on
             - name = ui_lookup(:model => @ems.class.base_manager.name)
-            - t = _("Add this %s") % name
+            - t = _("Add this %{provider}") % {:provider => name}
             = button_tag(_('Add'),
               :class   => "btn btn-primary",
               :alt     => t,
@@ -112,7 +112,7 @@
               :class   => "btn btn-default",
               :alt     => t,
               :title   => t,
-              :href    => url_for(:action => "show_list", :flash_msg => _("Add of new %s was cancelled by the user") % name),
+              :href    => url_for(:action => "show_list", :flash_msg => _("Add of new %{provider} was cancelled by the user") % {:provider => name}),
               :onclick => 'window.location = this.getAttribute("href");')
   - else
     = render :partial => '/layouts/edit_form_buttons', :locals  => {:record_id => @ems.id, :ajax_buttons => true, :restful => true}
