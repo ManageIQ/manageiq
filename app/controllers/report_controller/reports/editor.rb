@@ -171,9 +171,7 @@ module ReportController::Reports::Editor
     when "8"  # Consolidate
       # Build group chooser arrays
       @edit[:new][:pivot].options = @edit[:new][:fields].dup
-      @pivotby1 = @edit[:new][:pivot].by1
-      @pivotby2 = @edit[:new][:pivot].by2
-      @pivotby3 = @edit[:new][:pivot].by3
+      @pivot = @edit[:new][:pivot]
     when "2"  # Formatting
     #     @edit[:calc_xml] = build_calc_combo_xml                                     # Get the combobox XML for any numeric fields
 
