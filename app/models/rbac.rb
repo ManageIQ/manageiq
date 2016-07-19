@@ -193,19 +193,17 @@ module Rbac
     if filtered_ids
       reflection = scope.reflections[parent_class.name.underscore]
       if reflection
-        scope = scope.where("#{scope.table_name}.#{reflection.foreign_key} IN (?)", filtered_ids)
+        scope.where("#{scope.table_name}.#{reflection.foreign_key} IN (?)", filtered_ids)
       else
-        scope = scope.where("#{scope.table_name}.resource_type = ? AND #{scope.table_name}.resource_id IN (?)", parent_class.name, filtered_ids)
+        scope.where("#{scope.table_name}.resource_type = ? AND #{scope.table_name}.resource_id IN (?)", parent_class.name, filtered_ids)
       end
+    else
+      scope
     end
-    method_with_scope(scope, find_options)
   end
 
   def self.find_targets_filtered_by_ids(scope, find_options, filtered_ids)
-    if filtered_ids
-      scope = scope.where("#{scope.table_name}.id IN (?)", filtered_ids)
-    end
-    method_with_scope(scope, find_options)
+    filtered_ids ? scope.where("#{scope.table_name}.id IN (?)", filtered_ids) : scope
   end
 
   def self.get_belongsto_filter_object_ids(klass, filter)
@@ -227,12 +225,12 @@ module Rbac
   def self.find_targets_with_user_group_rbac(scope, _rbac_filters, find_options, user, miq_group)
     klass = scope.respond_to?(:klass) ? scope.klass : scope
     if klass == User && user
-      scope = scope.where(:id => user.id)
+      scope.where(:id => user.id)
     elsif klass == MiqGroup
-      scope = scope.where(:id => miq_group.id)
+      scope.where(:id => miq_group.id)
+    else # no user security applied
+      scope
     end
-
-    method_with_scope(scope, find_options)
   end
 
   def self.find_options_for_tenant(scope, user, miq_group, find_options)
@@ -253,13 +251,13 @@ module Rbac
     end
 
     if apply_rbac_to_class?(klass)
-      find_targets_with_direct_rbac(scope, rbac_filters, find_options, user, miq_group)
+      scope = find_targets_with_direct_rbac(scope, rbac_filters, find_options, user, miq_group)
     elsif apply_rbac_to_associated_class?(klass)
-      find_targets_with_indirect_rbac(scope, rbac_filters, find_options, user, miq_group)
+      scope = find_targets_with_indirect_rbac(scope, rbac_filters, find_options, user, miq_group)
     elsif apply_user_group_rbac_to_class?(klass, miq_group)
-      find_targets_with_user_group_rbac(scope, rbac_filters, find_options, user, miq_group)
+      scope = find_targets_with_user_group_rbac(scope, rbac_filters, find_options, user, miq_group)
     else
-      method_with_scope(scope, find_options)
+      scope
     end
   end
 
@@ -411,7 +409,8 @@ module Rbac
 
     _log.debug("Find options: #{find_options.inspect}")
 
-    targets = find_targets_with_rbac(klass, scope, user_filters, find_options, user, miq_group)
+    scope = find_targets_with_rbac(klass, scope, user_filters, find_options, user, miq_group)
+    targets = method_with_scope(scope, find_options)
     auth_count = find_options[:limit] ? targets.except(:offset, :limit, :order).count(:all) : targets.length
 
     if search_filter && targets && (!exp_attrs || !exp_attrs[:supported_by_sql])
