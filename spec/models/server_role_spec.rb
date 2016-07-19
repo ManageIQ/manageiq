@@ -33,7 +33,6 @@ describe ServerRole do
         automate,Automation Engine,0,false,region
         database_operations,Database Operations,0,false,region
         database_owner,Database Owner,1,false,database
-        database_synchronization,Database Synchronization,1,false,region
         ems_inventory,Management System Inventory,1,false,zone
         ems_metrics_collector,Capacity & Utilization Data Collector,0,false,zone
         ems_metrics_coordinator,Capacity & Utilization Coordinator,1,false,zone
