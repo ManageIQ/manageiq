@@ -13,6 +13,15 @@
   :max_value: 100.4
   :decimals: 1
 
+- :title: Memory (MB)
+  :type: Line
+  :columns:
+  - derived_memory_used
+  :menu:
+  - Chart-Current-Hourly:Hourly on this day
+  - Chart-VMs-topday:Top Instances for <cat> on this day
+  - Display-VMs-bytag:Instances for <cat> that were running
+
 - :title: Disk I/O (KBps)
   :type: Line
   :columns:
