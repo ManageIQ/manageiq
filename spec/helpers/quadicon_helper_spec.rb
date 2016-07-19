@@ -26,7 +26,7 @@ RSpec.shared_examples :host_vendor_icon do |cls|
 end
 
 RSpec.shared_examples :no_link_for_listnav do
-  let(:options) { {:type => :listnav} }
+  let(:options) { {:typ => :listnav} }
 
   it 'has no link when type is listnav' do
     expect(subject).not_to have_selector("a")
@@ -115,7 +115,7 @@ describe QuadiconHelper do
 
     context "when type is listnav" do
       let(:item) { FactoryGirl.build(:vm_vmware) }
-      let(:options) { {:type => :listnav} }
+      let(:options) { {:typ => :listnav} }
       subject(:listnav_quad) { helper.render_quadicon(item, options) }
 
       it 'includes inline styles' do
@@ -202,7 +202,7 @@ describe QuadiconHelper do
       include_examples :quadicon_with_link
 
       it 'renders a quadicon without a link with listnav option' do
-        quadicon = helper.render_quadicon(item, :mode => :icon, :type => :listnav)
+        quadicon = helper.render_quadicon(item, :mode => :icon, :typ => :listnav)
         expect(quadicon).to_not have_selector('a')
       end
     end
@@ -784,7 +784,7 @@ describe QuadiconHelper do
       end
 
       it 'renders a quadicon with a state img' do
-        expect(host_quad).to have_selector("img[src*='currentstate-on']")
+        expect(host_quad).to have_selector("img[src*='currentstate-archived']")
       end
 
       include_examples :host_vendor_icon, "c"
@@ -1069,7 +1069,7 @@ describe QuadiconHelper do
     end
 
     context "when type is :listnav" do
-      let(:options) { {:type => :listnav} }
+      let(:options) { {:typ => :listnav} }
 
       include_examples :has_reflection
       include_examples :no_link_for_listnav

@@ -145,7 +145,7 @@ module QuadiconHelper
       :id => "quadicon_#{item.id}"
     }
 
-    if options[:type] == :listnav
+    if options[:typ] == :listnav
       tag_options[:style] = quadicon_default_inline_styles
       tag_options[:class] = ""
     end
@@ -435,7 +435,7 @@ module QuadiconHelper
     output << flobj_img_simple(width * 1.8, "100/#{img}", "e#{size}")
     output << flobj_img_simple(size, '100/shield.png', "g#{size}") unless item.get_policies.empty?
 
-    unless options[:type] == :listnav
+    unless options[:typ] == :listnav
       # listnav, no clear image needed
       output << content_tag(:div, :class => "flobj") do
         url = quadicon_show_links? ? url_for_record(item) : ""
@@ -468,7 +468,7 @@ module QuadiconHelper
       output << flobj_img_simple(width * 1.8, img_for_host_vendor(item), "e#{size}")
     end
 
-    if options[:type] == :listnav
+    if options[:typ] == :listnav
       # Listnav, no href needed
       output << content_tag(:div, :class => 'flobj') do
         tag(:img, :src => ActionController::Base.helpers.image_path("#{options[:size]}/reflection.png"), :border => 0)
@@ -508,7 +508,7 @@ module QuadiconHelper
       output << flobj_img_simple(width * 1.8, "svg/vendor-#{h(item.image_name)}.svg", "e#{size}")
     end
 
-    if options[:type] == :listnav
+    if options[:typ] == :listnav
       output << flobj_img_simple(size, "#{size}/reflection.png")
     else
       output << content_tag(:div, :class => 'flobj') do
@@ -533,7 +533,7 @@ module QuadiconHelper
     output << flobj_img_simple(size * 1.8, "100/emscluster.png", "e#{size}")
     output << flobj_img_simple(size, "100/shield.png", "g#{size}") unless item.get_policies.empty?
 
-    unless options[:type] == :listnav
+    unless options[:typ] == :listnav
       # Listnav, no clear image needed
       url = quadicon_show_links? ? url_for_record(item) : nil
 
@@ -565,7 +565,7 @@ module QuadiconHelper
     output << flobj_img_simple(size, "#{size}/base-single.png")
     output << flobj_img_simple(size, img_path, "e#{size}")
 
-    unless options[:type] == :listnav
+    unless options[:typ] == :listnav
       name = item.kind_of?(MiqCimInstance) ? item.evm_display_name : item.name
 
       img_opts = {
@@ -606,7 +606,7 @@ module QuadiconHelper
     output << flobj_img_simple(width, "#{size}/base-single.png")
     output << flobj_img_simple(width * 1.8, "100/#{@listicon}.png", "e#{size}")
 
-    unless options[:type] == :listnav
+    unless options[:typ] == :listnav
       title = case @listicon
               when "scan_history"
                 item.started_on
@@ -664,7 +664,7 @@ module QuadiconHelper
       output << flobj_img_simple(size, "100/datastore-#{h(space_percent)}.png", "e#{size}")
     end
 
-    if options[:type] == :listnav
+    if options[:typ] == :listnav
       output << flobj_img_simple(size, "#{size}/reflection.png")
     else
       output << content_tag(:div, :class => 'flobj') do
@@ -750,7 +750,7 @@ module QuadiconHelper
       output << flobj_img_simple(adjusted_width, img_for_vendor(item), "e#{size}")
     end
 
-    unless options[:type] == :listnav
+    unless options[:typ] == :listnav
       output << content_tag(:div, :class => 'flobj') do
         quadicon_link_to(quadicon_vt_url(item), **quadicon_vt_link_options) do
           quadicon_reflection_img(quadicon_vt_img_options(item))
