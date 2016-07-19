@@ -810,10 +810,10 @@ ManageIQ.oneTransition.oneTrans = 0;
 
 // Function to generate an Ajax request, but only once for a drawn screen
 function miqSendOneTrans(url, observe) {
-  if (typeof ManageIQ.oneTransition.IEButtonPressed != "undefined") {
+  if (ManageIQ.oneTransition.IEButtonPressed) {
     // page replace after clicking save/reset was making observe_field on
     // text_area in IE send up a trascation to form_field_changed method
-    ManageIQ.oneTransition.IEButtonPressed = undefined;
+    ManageIQ.oneTransition.IEButtonPressed = false;
     return;
   }
   if (ManageIQ.oneTransition.oneTrans) {

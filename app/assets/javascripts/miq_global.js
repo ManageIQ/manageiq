@@ -16,7 +16,7 @@ if (typeof(ManageIQ) === 'undefined') {
     timelineFilter: null, //
     toolbars: null, // toolbars
     oneTransition: {
-      IEButtonPressed: null, // pressed save/reset button identificator
+      IEButtonPressed: false, // pressed save/reset button identificator
       oneTrans: null, // used to generate Ajax request only once for a drawn screen
     },
     noCollapseEvent: false, // enable/disable events fired after collapsing an accordion
