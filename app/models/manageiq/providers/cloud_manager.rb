@@ -13,6 +13,7 @@ module ManageIQ::Providers
       define_method(:singular_route_key) { "ems_cloud" }
     end
 
+    has_many :arbitration_profiles,          :foreign_key => :ems_id, :dependent => :destroy
     has_many :availability_zones,            :foreign_key => :ems_id, :dependent => :destroy
     has_many :flavors,                       :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_database_flavors,        :foreign_key => :ems_id, :dependent => :destroy
