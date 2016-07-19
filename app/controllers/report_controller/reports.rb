@@ -238,34 +238,35 @@ module ReportController::Reports
     end
 
     if Chargeback.db_is_chargeback?(@edit[:new][:model])
-      unless @edit[:new][:cb_show_typ]
+      case @edit[:new][:cb_show_typ]
+      when nil
         add_flash(_("Show Costs by must be selected"), :error)
         active_tab = "edit_3"
-      else
-        if @edit[:new][:cb_show_typ] == "owner"
-          unless @edit[:new][:cb_owner_id]
-            add_flash(_("An Owner must be selected"), :error)
-            active_tab = "edit_3"
-          end
-        elsif @edit[:new][:cb_show_typ] == "tenant" && !@edit[:new][:cb_tenant_id]
+      when 'owner'
+        unless @edit[:new][:cb_owner_id]
+          add_flash(_("An Owner must be selected"), :error)
+          active_tab = "edit_3"
+        end
+      when 'tenant'
+        unless @edit[:new][:cb_tenant_id]
           add_flash(_("A Tenant Category must be selected"), :error)
           active_tab = "edit_3"
-        elsif @edit[:new][:cb_show_typ] == "tag"
-          unless @edit[:new][:cb_tag_cat]
-            add_flash(_("A Tag Category must be selected"), :error)
-            active_tab = "edit_3"
-          else
-            unless @edit[:new][:cb_tag_value]
-              add_flash(_("A Tag must be selected"), :error)
-              active_tab = "edit_3"
-            end
-          end
-        elsif @edit[:new][:cb_show_typ] == "entity"
-          unless @edit[:new][:cb_entity_id]
-            add_flash(_("A specific %{chargeback} or all must be selected") %
-              {:chargeback => ui_lookup(:model => @edit[:new][:cb_model])}, :error)
+        end
+      when 'tag'
+        unless @edit[:new][:cb_tag_cat]
+          add_flash(_("A Tag Category must be selected"), :error)
+          active_tab = "edit_3"
+        else
+          unless @edit[:new][:cb_tag_value]
+            add_flash(_("A Tag must be selected"), :error)
             active_tab = "edit_3"
           end
+        end
+      when 'entity'
+        unless @edit[:new][:cb_entity_id]
+          add_flash(_("A specific %{chargeback} or all must be selected") %
+            {:chargeback => ui_lookup(:model => @edit[:new][:cb_model])}, :error)
+          active_tab = "edit_3"
         end
       end
     end
