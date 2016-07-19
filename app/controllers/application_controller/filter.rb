@@ -600,6 +600,7 @@ module ApplicationController::Filter
   def adv_search_new
     MiqSearch.new(:db => @edit[@expkey][:exp_model], :description => @edit[:new_search_name])
   end
+  private :adv_search_new
 
   def adv_search_set_details(search, type, user=nil)
     search.update_attributes!(
@@ -608,6 +609,7 @@ module ApplicationController::Filter
       :search_type => type
     )
   end
+  private :adv_search_set_details
 
   # One of the form buttons was pressed on the advanced search panel
   def adv_search_button
