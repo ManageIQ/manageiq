@@ -596,74 +596,81 @@ module ApplicationController::Filter
     @edit[:adv_search_open] = false                               # Close the adv search box
   end
 
+  # Add a new search and set the model
+  def adv_search_new
+    MiqSearch.new(:db => @edit[@expkey][:exp_model], :description => @edit[:new_search_name])
+  end
+  private :adv_search_new
+
+  def adv_search_set_details(search, type, user=nil)
+    search.update_attributes!(
+      :search_key => user,
+      :name => "#{type == "global" ? "global" : "user_#{user}"}_#{@edit[:new_search_name]}",
+      :search_type => type
+    )
+  end
+  private :adv_search_set_details
+
   # One of the form buttons was pressed on the advanced search panel
   def adv_search_button
     @edit = session[:edit]
     @view = session[:view]
-    @edit[:custom_search] = false             # setting default to false
+
+    # setting default to false
+    @edit[:custom_search] = false
+
     case params[:button]
     when "saveit"
       if @edit[:new_search_name].nil? || @edit[:new_search_name] == ""
         add_flash(_("Search Name is required"), :error)
-        params[:button] = "save"                                    # Redraw the save screen
+        params[:button] = "save" # Redraw the save screen
       else
-        #       @edit[:new][@expkey] = copy_hash(@edit[@expkey][:expression]) # Copy the current expression to new
         if @edit[@expkey][:selected].nil? || # If no search was loaded
            @edit[:new_search_name] != @edit[@expkey][:selected][:description] || # or user changed the name of a loaded search
            @edit[@expkey][:selected][:typ] == "default"                          # or loaded search is a default search, save it as my search
-          s = MiqSearch.new                                         # Adding a new search
-          s.db = @edit[@expkey][:exp_model]                         # Set the model
-          s.description = @edit[:new_search_name]
-          if @edit[:search_type]        # adding global search
-            s.name = "global_#{@edit[:new_search_name]}"            # Set the unique name within searches
-            s.search_key = nil                                      # Set userid that saved search
-            s.search_type = "global"
-          else                  # adding user search
-            s.name = "user_#{session[:userid]}_#{@edit[:new_search_name]}"          # Set the unique name within searches
-            s.search_key = session[:userid]                                         # Set userid that saved search
-            s.search_type = "user"
-          end
-        else          # if search was loaded exists or saving it with same name
-          s = MiqSearch.find(@edit[@expkey][:selected][:id])            # Fetch the last search loaded
+          s = adv_search_new
           if @edit[:search_type]
-            if s.name != "global_#{@edit[:new_search_name]}"              # if search selected was not global, create new search
-              s = MiqSearch.new
-              s.db = @edit[@expkey][:exp_model]                         # Set the model
-              s.description = @edit[:new_search_name]
+            adv_search_set_details(s, "global")
+          else
+            adv_search_set_details(s, "user", session[:userid])
+          end
+        else # search was loaded exists or saving it with same name
+          # Fetch the last search loaded
+          s = MiqSearch.find(@edit[@expkey][:selected][:id])
+          if @edit[:search_type]
+            # Search selected was not global
+            if s.name != "global_#{@edit[:new_search_name]}"
+              s = adv_search_new
             end
-            s.name = "global_#{@edit[:new_search_name]}"                # Set the unique name within searches
-            s.search_key = nil                                          # Set userid that saved search
-            s.search_type = "global"
-          else                  # adding user search
-            if s.name != "user_#{session[:userid]}_#{@edit[:new_search_name]}"              # if search selected was not my search, create new search
-              s = MiqSearch.new
-              s.db = @edit[@expkey][:exp_model]                         # Set the model
-              s.description = @edit[:new_search_name]
+              adv_search_set_details(s, "global")
+          else
+            # Search selected was not my search, create new search
+            if s.name != "user_#{session[:userid]}_#{@edit[:new_search_name]}"
+              s = adv_search_new
             end
-            s.name = "user_#{session[:userid]}_#{@edit[:new_search_name]}"          # Set the unique name within searches
-            s.search_key = session[:userid]                                         # Set userid that saved search
-            s.search_type = "user"
+            adv_search_set_details(s, "user", session[:userid])
           end
         end
-        s.filter = MiqExpression.new(@edit[:new][@expkey])      # Set the new expression
+        s.filter = MiqExpression.new(@edit[:new][@expkey]) # Set the new expression
         if s.save
-          #         AuditEvent.success(build_created_audit(s, s_old))
           add_flash(_("%{model} search \"%{name}\" was saved") %
-            {:model => ui_lookup(:model => @edit[@expkey][:exp_model]), :name => @edit[:new_search_name]})
+            {:model => ui_lookup(:model => @edit[@expkey][:exp_model]),
+             :name => @edit[:new_search_name]})
           adv_search_build_lists
-
-          @edit[@expkey][:exp_last_loaded] = {:id => s.id, :name => s.name, :description => s.description, :typ => s.search_type}     # Save the last search loaded (saved)
-          # @edit[@expkey][:selected] = @edit[@expkey][:exp_last_loaded] = {:id=>s.id, :name=>s.name, :description=>s.description, :typ=>s.search_type}      # Save the last search loaded (saved)
+          # Save the last search loaded (saved)
+          @edit[@expkey][:exp_last_loaded] = {:id => s.id, :name => s.name, :description => s.description, :typ => s.search_type}
           @edit[:new_search_name] = @edit[:adv_search_name] = @edit[@expkey][:exp_last_loaded][:description]
           @edit[@expkey][:expression] = copy_hash(@edit[:new][@expkey])
-          @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])       # Build the expression table
+          # Build the expression table
+          @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])
           exp_array(:init, @edit[@expkey][:expression])
-          @edit[@expkey][:exp_token] = nil                                        # Clear the current selected token
+          # Clear the current selected token
+          @edit[@expkey][:exp_token] = nil
         else
           s.errors.each do |field, msg|
             add_flash("#{field.to_s.capitalize} #{msg}", :error)
           end
-          params[:button] = "save"                                  # Redraw the save screen
+          params[:button] = "save" # Redraw the save screen
         end
       end
 
