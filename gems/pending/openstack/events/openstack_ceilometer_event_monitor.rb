@@ -70,7 +70,7 @@ class OpenstackCeilometerEventMonitor < OpenstackEventMonitor
   def query_options
     [{
       'field' => 'start_timestamp',
-      'op'    => 'gt',
+      'op'    => 'ge',
       'value' => latest_event_timestamp || ''
     }]
   end
