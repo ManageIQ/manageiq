@@ -628,7 +628,6 @@ module ReportController::Reports::Editor
     elsif params[:chosen_tz]
       @edit[:new][:tz] = params[:chosen_tz]
     elsif params.key?(:chosen_time_profile)
-      tp = TimeProfile.find(params[:chosen_time_profile]) unless params[:chosen_time_profile].blank?
       @edit[:new][:time_profile] = params[:chosen_time_profile].blank? ? nil : params[:chosen_time_profile].to_i
       @refresh_div = "filter_div"
       @refresh_partial = "form_filter"
