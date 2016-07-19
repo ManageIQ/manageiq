@@ -929,11 +929,10 @@ module ReportController::Reports::Editor
             if af[0].include?(":")                            # Not a base column
               table = af[0].split(" : ")[0].split(".")[-1]    # Get the table name
               table = table.singularize unless table == "OS"  # Singularize, except "OS"
-              header = table + " " + af[0].split(" : ")[1]    # Add the table + col name
               temp = af[0].split(" : ")[1]
-              temp_header = table == temp.split(" ")[0] ? af[0].split(" : ")[1] : temp_header = table + " " + af[0].split(" : ")[1]
+              temp_header = table == temp.split(" ")[0] ? af[0].split(" : ")[1] : table + " " + af[0].split(" : ")[1]
             else
-              header = temp_header = af[0].strip              # Base column, just use it without leading space
+              temp_header = af[0].strip                       # Base column, just use it without leading space
             end
             @edit[:new][:headers][af[1]] = temp_header        # Add the column title to the headers hash
           end
