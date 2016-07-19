@@ -5015,3 +5015,14 @@
           :description: Revert to selected snapshot on Templates
           :feature_type: control
           :identifier: miq_template_snapshot_revert
+
+# CloudNetworks
+- :name: Cloud Networks
+  :description: Get Cloud Networks
+  :feature_type: node
+  :identifier: miq_cloud_networks
+  :children:
+    - :name: View
+      :description: Show Cloud Networks
+      :feature_type: view
+      :identifier: miq_cloud_networks_view

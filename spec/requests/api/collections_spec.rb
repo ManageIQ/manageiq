@@ -250,5 +250,10 @@ describe ApiController do
       FactoryGirl.create(:arbitration_profile, :ems_id => ems.id)
       test_collection_query(:arbitration_profiles, arbitration_profiles_url, ArbitrationProfile)
     end
+
+    it 'queries CloudNetworks' do
+      FactoryGirl.create(:cloud_network)
+      test_collection_query(:cloud_networks, cloud_networks_url, CloudNetwork)
+    end
   end
 end
