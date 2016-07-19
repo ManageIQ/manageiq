@@ -31,6 +31,7 @@ describe ServerRole do
       @csv = <<-CSV.gsub(/^\s+/, "")
         name,description,max_concurrent,external_failover,role_scope
         automate,Automation Engine,0,false,region
+        database_failover_admin,Database Failover Administration,1,false,region
         database_operations,Database Operations,0,false,region
         database_owner,Database Owner,1,false,database
         database_synchronization,Database Synchronization,1,false,region
