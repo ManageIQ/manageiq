@@ -724,25 +724,7 @@ module ReportController::Reports::Editor
 
   def gfv_pivots
     @edit[:new][:pivot] ||= ReportController::PivotOptions.new
-    if params[:chosen_pivot1] && params[:chosen_pivot1] != @edit[:new][:pivot].by1
-      @edit[:new][:pivot].by1 = params[:chosen_pivot1]
-      if params[:chosen_pivot1] == NOTHING_STRING
-        @edit[:new][:pivot].by2 = NOTHING_STRING
-        @edit[:new][:pivot].by3 = NOTHING_STRING
-      elsif params[:chosen_pivot1] == @edit[:new][:pivot].by2
-        @edit[:new][:pivot].by2 = @edit[:new][:pivot].by3
-        @edit[:new][:pivot].by3 = NOTHING_STRING
-      elsif params[:chosen_pivot1] == @edit[:new][:pivot].by3
-        @edit[:new][:pivot].by3 = NOTHING_STRING
-      end
-    elsif params[:chosen_pivot2] && params[:chosen_pivot2] != @edit[:new][:pivot].by2
-      @edit[:new][:pivot].by2 = params[:chosen_pivot2]
-      if params[:chosen_pivot2] == NOTHING_STRING || params[:chosen_pivot2] == @edit[:new][:pivot].by3
-        @edit[:new][:pivot].by3 = NOTHING_STRING
-      end
-    elsif params[:chosen_pivot3] && params[:chosen_pivot3] != @edit[:new][:pivot].by3
-      @edit[:new][:pivot].by3 = params[:chosen_pivot3]
-    end
+    @edit[:new][:pivot].update(params)
     if params[:chosen_pivot1] || params[:chosen_pivot2] || params[:chosen_pivot3]
       if @edit[:new][:pivot].by1 == NOTHING_STRING
         @edit[:pivot_cols] = {}                       # Clear pivot_cols if no pivot grouping fields selected
