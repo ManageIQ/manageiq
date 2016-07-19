@@ -202,7 +202,7 @@ Methods updated/added: %{method_stats}") % stat_options, :success)
     if git_url.blank?
       add_flash(_("Please provide a valid git URL"), :error)
     elsif !MiqRegion.my_region.role_active?("git_owner")
-      add_flash(_("Git Owner role not enabled, enable it in Settings -> Configuration"), :error)
+      add_flash(_("Please enable the git owner role in order to import git repositories"), :error)
     else
       if GitRepository.exists?(:url => git_url)
         flash_message = <<FLASH

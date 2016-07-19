@@ -294,7 +294,7 @@ Methods updated/added: 10
           expect(response).to redirect_to(
             :action  => :review_git_import,
             :message => {
-              :message => "Git Owner role not enabled, enable it in Settings -> Configuration",
+              :message => "Please enable the git owner role in order to import git repositories",
               :level   => :error
             }.to_json
           )
