@@ -117,18 +117,21 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           :vm_migrate,
           'product product-migrate fa-lg',
           N_('Migrate this VM to another Host/Datastore'),
-          N_('Migrate this VM')),
+          N_('Migrate this VM'),
+          :klass => ApplicationHelper::Button::VmMigrate),
         button(
           :vm_retire,
           'fa fa-clock-o fa-lg',
           N_('Set Retirement Dates for this VM'),
-          N_('Set Retirement Date')),
+          N_('Set Retirement Date'),
+          :klass => ApplicationHelper::Button::VmRetire),
         button(
           :vm_retire_now,
           'fa fa-clock-o fa-lg',
           t = N_('Retire this VM'),
           t,
-          :confirm => N_("Retire this VM?")),
+          :confirm => N_("Retire this VM?"),
+          :klass => ApplicationHelper::Button::VmRetire),
       ]
     ),
   ])
@@ -204,7 +207,8 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           N_('Reset this VM'),
           N_('Reset'),
           :image   => "power_reset",
-          :confirm => N_("Reset this VM?")),
+          :confirm => N_("Reset this VM?"),
+          :klass   => ApplicationHelper::Button::VmReset),
       ]
     ),
     button(

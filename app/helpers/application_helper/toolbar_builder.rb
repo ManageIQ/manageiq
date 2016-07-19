@@ -838,18 +838,10 @@ class ApplicationHelper::ToolbarBuilder
         return true unless @record.is_available?(:shutdown_guest)
       when "vm_guest_restart", "instance_guest_restart"
         return true unless @record.is_available?(:reboot_guest)
-      when "vm_migrate"
-        return true unless @record.supports_migrate?
       when "vm_reconfigure"
         return true unless @record.reconfigurable?
-      when "vm_retire"
-        return true unless @record.supports_retire?
-      when "vm_retire_now"
-        return true unless @record.supports_retire?
       when "instance_stop"
         return true unless @record.is_available?(:stop)
-      when "vm_reset", "instance_reset"
-        return true unless @record.is_available?(:reset)
       when "vm_suspend", "instance_suspend"
         return true unless @record.is_available?(:suspend)
       when "instance_shelve"
@@ -908,12 +900,6 @@ class ApplicationHelper::ToolbarBuilder
         return true unless @report
       when "timeline_txt"
         return true unless @report
-      when "vm_migrate", "vm_retire", "vm_retire_now"
-        if @sb[:trees][:vandt_tree].present? &&
-           (@sb[:trees][:vandt_tree][:active_node] == "xx-arch" ||
-            @sb[:trees][:vandt_tree][:active_node] == "xx-orph")
-          return true
-        end
       else
         return !role_allows(:feature => id)
       end
@@ -1294,19 +1280,10 @@ class ApplicationHelper::ToolbarBuilder
         return @record.is_available_now_error_message(:shutdown_guest) if @record.is_available_now_error_message(:shutdown_guest)
       when "vm_guest_restart"
         return @record.is_available_now_error_message(:reboot_guest) if @record.is_available_now_error_message(:reboot_guest)
-      when "vm_reset"
-        return @record.is_available_now_error_message(:reset) if @record.is_available_now_error_message(:reset)
       when "vm_suspend"
         return @record.is_available_now_error_message(:suspend) if @record.is_available_now_error_message(:suspend)
-      when "instance_retire", "instance_retire_now",
-              "vm_retire", "vm_retire_now"
-        if @record.retired == true
-          if @record.kind_of?(ManageIQ::Providers::CloudManager::Vm)
-            return N_("Instance is already retired")
-          else
-            return N_("VM is already retired")
-          end
-        end
+      when "instance_retire", "instance_retire_now"
+        return N_("Instance is already retired") if @record.retired
       when "vm_timeline"
         unless @record.has_events? || @record.has_events?(:policy_events)
           return N_("No Timeline data has been collected for this VM")
