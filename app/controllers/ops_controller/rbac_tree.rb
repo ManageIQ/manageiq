@@ -31,6 +31,7 @@ class OpsController
 
       section.items.each do |item|
         if item.kind_of?(Menu::Section) # recurse for sections
+          next unless Vmdb::PermissionStores.instance.can?(item.id)
           feature = build_section(item, parent_checked)
           kids.push(feature)
         else # kind_of?(Menu::Item) # add item features
@@ -75,6 +76,7 @@ class OpsController
       Menu::Manager.each do |section|
         # skip storage node unless it's enabled in product setting
         next if section.id == :sto && !VMDB::Config.new("vmdb").config[:product][:storage]
+        next unless Vmdb::PermissionStores.instance.can?(section.id)
 
         top_nodes.push(build_section(section, root_node[:select]))
       end
