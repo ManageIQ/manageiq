@@ -130,19 +130,25 @@ module OpsController::Settings::CapAndU
             end
           end
           @changed_id_list.each do |item|
-            page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}',
+            if item[1] == 'unsure'
+              page << "miqDynatreeSelectNode('#{j_str(params[:tree_name])}', '#{j_str(item[0])}', false)"
+              page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}',
+                                                  '#{j_str(item[0])}',
+                                                  'miq-dynatree-partsel-blue');"
+            else
+              page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}',
                                                   '#{j_str(item[0])}',
                                                   'cfme-blue-bold-node');"
-            if params.key?('check')
               page << "miqDynatreeSelectNode('#{j_str(params[:tree_name])}', '#{j_str(item[0])}', #{j_str(!!item[1])})"
             end
           end
           @unchanged_id_list.each do |item|
-            item
-            page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}',
-                                                  '#{j_str(item[0])}',
-                                                  'dynatree-title');"
-            page << "miqDynatreeSelectNode('#{j_str(params[:tree_name])}', '#{j_str(item[0])}', #{j_str(!!item[1])})"
+            if item[1] == 'unsure'
+              page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}','#{j_str(item[0])}','dynatree-partsel');"
+            else
+              page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}','#{j_str(item[0])}','dynatree-title');"
+              page << "miqDynatreeSelectNode('#{j_str(params[:tree_name])}', '#{j_str(item[0])}', #{j_str(!!item[1])})"
+            end
           end
         end
       end

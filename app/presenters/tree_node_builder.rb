@@ -230,6 +230,7 @@ class TreeNodeBuilder
     @node[:cfmeNoClick] = object[:cfmeNoClick] if object.key?(:cfmeNoClick)
     @node[:hideCheckbox] = true if object.key?(:hideCheckbox)
     @node[:select] = object[:select] if object.key?(:select)
+    @node[:addClass] = object[:addClass] if object.key?(:addClass)
 
     # FIXME: check the following
     # TODO: With dynatree, unless folders are open, we can't jump to a child node until it has been visible once

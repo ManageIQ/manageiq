@@ -245,6 +245,17 @@ span.dynatree-checkbox:hover
 	background-position: -16px -32px;
 }
 
+.miq-dynatree-partsel-blue span.dynatree-checkbox
+{
+    background-position: -64px -32px;
+}
+.miq-dynatree-partsel-blue .dynatree-title
+{
+    font-family: OpenSansSemibold,Arial,Helvetica,sans-serif;
+    color: #2289ba;
+    cursor: default;
+}
+
 .dynatree-partsel span.dynatree-checkbox
 {
 	background-position: -64px -32px;

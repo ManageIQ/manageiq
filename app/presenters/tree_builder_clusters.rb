@@ -34,7 +34,13 @@ class TreeBuilderClusters < TreeBuilder
     @root[:non_cl_hosts].each do |h|
       i += 1 if h[:capture]
     end
-    @root[:non_cl_hosts].size == i
+    if @root[:non_cl_hosts].size == i
+      true
+    elsif @root[:non_cl_hosts].size == 0
+      false
+    else
+      'unsure'
+    end
   end
 
   def x_get_tree_roots(count_only = false, _options)
@@ -43,18 +49,24 @@ class TreeBuilderClusters < TreeBuilder
         :text     => node[:name],
         :image    => 'cluster',
         :tip      => node[:name],
-        :select   => node[:capture],
+        :select   => node[:capture] != 'unsure' && node[:capture],
+        :addClass => node[:capture] == 'unsure' ? 'dynatree-partsel' : '',
         :children => @data[node[:id]][:ho_enabled].concat(@data[node[:id]][:ho_disabled])
       }
     end
     if @root[:non_cl_hosts].present?
-      nodes.push({:id       => "NonCluster",
-                 :text     => _("Non-clustered Hosts"),
-                 :image    => 'host',
-                 :tip      => _("Non-clustered Hosts"),
-                 :select   => non_cluster_selected,
-                 :children => @root[:non_cl_hosts]
-                })
+      node = {:id       => "NonCluster",
+              :text     => _("Non-clustered Hosts"),
+              :image    => 'host',
+              :tip      => _("Non-clustered Hosts"),
+              :select   => non_cluster_selected,
+              :children => @root[:non_cl_hosts]
+      }
+      if non_cluster_selected == 'unsure'
+        node[:addClass] = 'dynatree-partsel'
+        node[:select] = true
+      end
+      nodes.push(node)
     end
     count_only_or_objects(count_only, nodes)
   end
@@ -62,11 +74,14 @@ class TreeBuilderClusters < TreeBuilder
   def x_get_tree_hash_kids(parent, count_only)
     hosts = parent[:children]
     nodes = hosts.map do |node|
+      if @data[parent[:id].to_i]
+        value = @data[parent[:id].to_i][:ho_disabled].include? node
+      end
       {:id       => "#{parent[:id]}_#{node[:id]}",
        :text     => node[:name],
        :tip      => _("Host: %{name}") % {:name => node[:name]},
        :image    => 'host',
-       :select   => node.kind_of?(Hash) ? node[:capture] : parent[:select],
+       :select   => node.kind_of?(Hash) ? node[:capture] : ! value,
        :children => []}
     end
     count_only_or_objects(count_only, nodes)
