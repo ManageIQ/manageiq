@@ -627,6 +627,7 @@
     - :tags
     - :policies
     - :policy_profiles
+    - :cloud_networks
     :collection_actions:
       :get:
       - :name: read
@@ -672,6 +673,10 @@
         :identifier: ems_infra_protect
       - :name: unassign
         :identifier: ems_infra_protect
+    :cloud_networks_subcollection_actions:
+      :get:
+      - :name: show
+      - :identifier: miq_cloud_networks_view
   :provision_dialogs:
     :description: Provisioning Dialogs
     :identifier: miq_ae_customization_explorer
@@ -1694,3 +1699,14 @@
       :delete:
       - :name: delete
         :identifier: delete_arbitration_profile
+  :cloud_networks:
+    :description: Cloud Networks
+    :identifier: miq_cloud_networks
+    :options:
+    - :collection
+    :verbs: *70174834086080
+    :klass: CloudNetwork
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: miq_cloud_networks_view
