@@ -5,16 +5,13 @@ describe TreeBuilderDatastores do
       @group = FactoryGirl.create(:miq_group, :miq_user_role => role, :description => "Datastores Group")
       login_as FactoryGirl.create(:user, :userid => 'datastores_wilma', :miq_groups => [@group])
       @host = FactoryGirl.create(:host, :name => 'Host Name')
-      storage = FactoryGirl.create(:storage, :name => 'Name', :id => 1, :hosts => [@host])
-      @datastore = [{:id => 1,
-                     :name => 'Datastore',
-                     :location => 'Location',
-                     :capture => false}]
+      FactoryGirl.create(:storage, :name => 'Name', :id => 1, :hosts => [@host])
+      @datastore = [{:id => 1, :name => 'Datastore', :location => 'Location', :capture => false}]
       @datastores_tree = TreeBuilderDatastores.new(:datastore, :datastore_tree, {}, true, @datastore)
     end
     it 'sets tree to have full ids, not lazy and no root' do
       root_options = @datastores_tree.send(:tree_init_options, nil)
-      expect(root_options).to eq({:full_ids => false, :add_root => false, :lazy => false})
+      expect(root_options).to eq(:full_ids => false, :add_root => false, :lazy => false)
     end
     it 'sets locals correctly' do
       locals = @datastores_tree.send(:set_locals_for_render)

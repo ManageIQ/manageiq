@@ -12,16 +12,16 @@ class TreeBuilderClusters < TreeBuilder
   def tree_init_options(_tree_name)
     {:full_ids => false,
      :add_root => false,
-     :lazy => false}
+     :lazy     => false}
   end
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix => 'cluster_',
+    locals.merge!(:id_prefix                   => 'cluster_',
                   :checkboxes                  => true,
-                  :onselect => "miqOnCheckCUFilters",
+                  :onselect                    => "miqOnCheckCUFilters",
                   :onclick                     => false,
-                  :check_url => "/ops/cu_collection_field_changed/",
+                  :check_url                   => "/ops/cu_collection_field_changed/",
                   :open_close_all_on_dbl_click => true)
   end
 
@@ -36,7 +36,7 @@ class TreeBuilderClusters < TreeBuilder
     end
     if @root[:non_cl_hosts].size == i
       true
-    elsif @root[:non_cl_hosts].size == 0
+    elsif @root[:non_cl_hosts].empty?
       false
     else
       'unsure'
@@ -45,13 +45,13 @@ class TreeBuilderClusters < TreeBuilder
 
   def x_get_tree_roots(count_only = false, _options)
     nodes = @root[:clusters].map do |node|
-      { :id       => "#{node[:id]}",
+      { :id       => node[:id].to_s,
         :text     => node[:name],
         :image    => 'cluster',
         :tip      => node[:name],
         :select   => node[:capture] != 'unsure' && node[:capture],
         :addClass => node[:capture] == 'unsure' ? 'dynatree-partsel' : '',
-        :children => @data[node[:id]][:ho_enabled].concat(@data[node[:id]][:ho_disabled])
+        :children => @data[node[:id]][:ho_enabled] + @data[node[:id]][:ho_disabled]
       }
     end
     if @root[:non_cl_hosts].present?
@@ -81,7 +81,7 @@ class TreeBuilderClusters < TreeBuilder
        :text     => node[:name],
        :tip      => _("Host: %{name}") % {:name => node[:name]},
        :image    => 'host',
-       :select   => node.kind_of?(Hash) ? node[:capture] : ! value,
+       :select   => node.kind_of?(Hash) ? node[:capture] : !value,
        :children => []}
     end
     count_only_or_objects(count_only, nodes)

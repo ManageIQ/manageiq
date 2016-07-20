@@ -12,15 +12,15 @@ class TreeBuilderDatastores < TreeBuilder
   def tree_init_options(_tree_name)
     {:full_ids => false,
      :add_root => false,
-     :lazy => false}
+     :lazy     => false}
   end
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix => 'datastore_',
+    locals.merge!(:id_prefix                   => 'datastore_',
                   :checkboxes                  => true,
-                  :onselect => "miqOnCheckCUFilters",
-                  :check_url => "/ops/cu_collection_field_changed/",
+                  :onselect                    => "miqOnCheckCUFilters",
+                  :check_url                   => "/ops/cu_collection_field_changed/",
                   :open_close_all_on_dbl_click => true)
   end
 
@@ -36,11 +36,11 @@ class TreeBuilderDatastores < TreeBuilder
           {:name => kid.name}
         end
       end
-      { :id => "#{node[:id]}",
-        :text => "<b>#{node[:name]}</b> [#{node[:location]}]".html_safe,
-        :image => 'storage',
-        :tip => "#{node[:name]} [#{node[:location]}]",
-        :select => node[:capture] == true,
+      { :id       => node[:id].to_s,
+        :text     => "<b>#{node[:name]}</b> [#{node[:location]}]".html_safe,
+        :image    => 'storage',
+        :tip      => "#{node[:name]} [#{node[:location]}]",
+        :select   => node[:capture] == true,
         :children => children
       }
     end
@@ -49,13 +49,13 @@ class TreeBuilderDatastores < TreeBuilder
 
   def x_get_tree_hash_kids(parent, count_only)
     nodes = parent[:children].map do |node|
-      { :id => node[:name],
-        :text => node[:name],
-        :image => 'host',
-        :tip => node[:name],
+      { :id           => node[:name],
+        :text         => node[:name],
+        :image        => 'host',
+        :tip          => node[:name],
         :hideCheckbox => true,
         :style_class  => "cfme-no-cursor-node",
-        :children => []
+        :children     => []
       }
     end
     count_only_or_objects(count_only, nodes)

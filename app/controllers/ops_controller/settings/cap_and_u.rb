@@ -100,10 +100,12 @@ module OpsController::Settings::CapAndU
             positive = 0
             @edit[:new][:non_cl_hosts].each_with_index do |h, i|
               positive += 1 if h[:capture]
-              if  @edit[:new][:non_cl_hosts][i] != @edit[:current][:non_cl_hosts][i]
-                @changed_id_list.push(["xx-NonCluster_#{@edit[:new][:non_cl_hosts][i][:id]}", @edit[:new][:non_cl_hosts][i][:capture]])
+              if @edit[:new][:non_cl_hosts][i] != @edit[:current][:non_cl_hosts][i]
+                @changed_id_list.push(["xx-NonCluster_#{@edit[:new][:non_cl_hosts][i][:id]}",
+                                       @edit[:new][:non_cl_hosts][i][:capture]])
               else
-                @unchanged_id_list.push(["xx-NonCluster_#{@edit[:new][:non_cl_hosts][i][:id]}", @edit[:new][:non_cl_hosts][i][:capture]])
+                @unchanged_id_list.push(["xx-NonCluster_#{@edit[:new][:non_cl_hosts][i][:id]}",
+                                         @edit[:new][:non_cl_hosts][i][:capture]])
               end
             end
             value = positive == @edit[:new][:non_cl_hosts].size
@@ -184,16 +186,16 @@ module OpsController::Settings::CapAndU
                                       :id      => c.id,
                                       :capture => en_flg) # grab name, id, and capture setting
       @edit[:current][c.id] = []
-      hosts.each do |h|
-        host_capture = enabled_host_ids.include?(h.id.to_i)
-        @edit[:current][c.id].push(:name    => h.name,
-                                           :id      => h.id,
-                                           :capture => host_capture)
+      hosts.each do |host|
+        host_capture = enabled_host_ids.include?(host.id.to_i)
+        @edit[:current][c.id].push(:name    => host.name,
+                                   :id      => host.id,
+                                   :capture => host_capture)
       end
       flg = true
       count = 0
-      @edit[:current][c.id].each do |h|
-        unless h[:capture]
+      @edit[:current][c.id].each do |host|
+        unless host[:capture]
           count += 1          # checking if all hosts are unchecked then cluster capture will be false else unsure
           flg = (count == @edit[:current][c.id].length) ? false : "unsure"
         end
@@ -207,11 +209,9 @@ module OpsController::Settings::CapAndU
     ExtManagementSystem.in_my_region.each do |e|
       all = e.non_clustered_hosts
       all.each do |h|
-        @edit[:current][:non_cl_hosts] << {
-            :name    => h.name,
-            :id      => h.id,
-            :capture => h.perf_capture_enabled?,
-        }
+        @edit[:current][:non_cl_hosts] << {:name    => h.name,
+                                           :id      => h.id,
+                                           :capture => h.perf_capture_enabled?}
       end
     end
 
@@ -227,7 +227,7 @@ module OpsController::Settings::CapAndU
                                       :store_type => s.store_type,
                                       :location   => s.location) # fields we need
     end
-    @datastore_tree  = TreeBuilderDatastores.new(:datastore, :datastore_tree, @sb, true, @edit[:current][:storages])
+    @datastore_tree = TreeBuilderDatastores.new(:datastore, :datastore_tree, @sb, true, @edit[:current][:storages])
     @edit[:new] = copy_hash(@edit[:current])
     session[:edit] = @edit
   end
@@ -246,16 +246,16 @@ module OpsController::Settings::CapAndU
     @edit[:new][:all_clusters] = params[:all_clusters] == 'true' if params[:all_clusters]
     @edit[:new][:all_storages] = params[:all_storages] == 'true' if params[:all_storages]
     if params[:tree_name] == 'datastore'
-      datastore_tree_settings(node_type)
+      datastore_tree_settings
     elsif params[:tree_name] == 'cluster'
       cluster_tree_settings(node_type)
     end
   end
 
   def cluster_tree_settings(node_type)
-    if params[:check_all]                         # to handle check/uncheck cluster all checkbox
-      @edit[:new][:clusters].each do |c|                                  # Check each clustered host
-        c[:capture] = params[:check_all] == "true" # if cluster checked/unchecked Set C&U flag for all hosts under it as well
+    if params[:check_all] # to handle check/uncheck cluster all checkbox
+      @edit[:new][:clusters].each do |c| # Check each clustered host
+        c[:capture] = params[:check_all] == "true" # if cluster Set C&U flag for all hosts under it as well
         @edit[:new][c[:id]].each do |h|
           h[:capture] = params[:check_all] == "true" # Set C&U flag depending on if checkbox parm is present
         end
@@ -273,9 +273,9 @@ module OpsController::Settings::CapAndU
           @edit[:new][:non_cl_hosts].find(node_type[1].to_i).first[:capture] = params[:check] == "true"
         end
       end
-      @edit[:new][:clusters].each do |c|                                  # Check each cluster
+      @edit[:new][:clusters].each do |c| # Check each cluster
         if node_type[0] == "Cluster" && node_type[1].to_s == c[:id].to_s
-          c[:capture] = params[:check] == "true" # if cluster checked/unchecked Set C&U flag for all hosts under it as well
+          c[:capture] = params[:check] == "true" # if cluster Set C&U flag for all hosts under it as well
           @edit[:new][c[:id]].each do |h|
             h[:capture] = params[:check] == "true" # Set C&U flag depending on if checkbox parm is present
           end
@@ -292,7 +292,7 @@ module OpsController::Settings::CapAndU
           count = 0
           @edit[:new][c[:id]].each do |h|
             unless h[:capture]
-              count += 1          # checking if all hosts are unchecked then cluster capture will be false else unsure
+              count += 1 # checking if all hosts are unchecked then cluster capture will be false else unsure
               flg = (count == @edit[:new][c[:id]].length) ? false : "unsure"
             end
             c[:capture] = flg
@@ -300,16 +300,15 @@ module OpsController::Settings::CapAndU
         end
       end
     end
-    @edit
   end
 
-  def datastore_tree_settings(node_type)
-    if params[:check_all]          # to handle check/uncheck storage all checkbox
-      @edit[:new][:storages].each do |s|                                        # Check each storage
+  def datastore_tree_settings
+    if params[:check_all] # to handle check/uncheck storage all checkbox
+      @edit[:new][:storages].each do |s| # Check each storage
         s[:capture] = params[:check_all] == "true" # Set C&U flag depending on if checkbox parm is present
       end
     else
-      @edit[:new][:storages].find{ |x| x[:id].to_s == params[:id].split('-').last}[:capture] = params[:check] == "true"
+      @edit[:new][:storages].find { |x| x[:id].to_s == params[:id].split('-').last }[:capture] = params[:check] == "true"
     end
   end
 end
