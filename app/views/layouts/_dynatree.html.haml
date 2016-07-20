@@ -16,127 +16,44 @@
 - no_base_exp                 ||= false
 - open_close_all_on_dbl_click ||= false
 - autoload                    ||= false
+- json_tree                   ||= '{}'
 - min_expand_level            ||= 1
 - tree_id                     ||= "tree_div"
 - tree_name                   ||= "tree"
 
-%script{:type => "text/javascript"}
-  - if check_url
-    ManageIQ.dynatree.checkUrl = "#{j_str check_url}";
-  - if click_url
-    ManageIQ.dynatree.clickUrl = "#{j_str click_url}";
-  - if session[:group_changed]
-    miqDeleteDynatreeCookies();
-    - session[:group_changed] = false
 
-  $("##{tree_id}").dynatree({
-  title: "#{tree_name}",
-  imagePath: "",
-  generateIds: true,
-  idPrefix: "#{id_prefix}",
-  children: #{json_tree.to_s.html_safe},
-  cookieId: "#{cookie_id_prefix}#{tree_name}",
-  cookie: {path: "/"},
+- options = {:tree_id                     => tree_id,
+             :tree_name                   => tree_name,
+             :group_changed               => session[:group_changed],
+             :id_prefix                   => id_prefix,
+             :cookie_id                   => "#{cookie_id_prefix}#{tree_name}",
+             :no_base_exp                 => no_base_exp,
+             :open_close_all_on_dbl_click => open_close_all_on_dbl_click,
+             :min_expand_level            => min_expand_level ? min_expand_level : 1,
+             :checkboxes                  => checkboxes,
+             :select_mode                 => three_checks ? 3 : 2,
+             :tree_state                  => tree_state,
+             :no_click                    => cfme_no_click,
+             :onclick                     => onclick,
+             :disable_checks              => disable_checks,
+             :oncheck                     => oncheck,
+             :click_url                   => click_url,
+             :check_url                   => check_url,
+             :onselect                    => onselect,
+             :autoload                    => autoload,
+             :controller                  => j(request.parameters[:controller]),
+             :silent_activate             => @explorer && tree_name == x_active_tree.to_s,
+             :select_node                 => select_node,
+             :reselect_node               => @reselect_node,
+             :expand_parent_nodes         => @expand_parent_nodes,
+             :add_nodes                   => @add_nodes && @add_nodes[x_active_tree] && tree_name == x_active_tree.to_s,
+             :active_tree                 => x_active_tree,
+             :add_node_key                => Hash.new(@add_nodes).fetch(x_active_tree, {}).fetch(:key, nil),
+             :children                    => Hash.new(@add_nodes).fetch(x_active_tree, {}).fetch(:children, nil),
+             :onhover                     => onmousein || onmouseout}
 
-  - if no_base_exp
-    onDblClick: miqOnDblClickNoBaseExpand,
-  - if min_expand_level
-    minExpandLevel: #{min_expand_level},
-  - if checkboxes
-    checkbox: #{checkboxes},
-  - if three_checks
-    selectMode: 3,
-  - if open_close_all_on_dbl_click
-    onDblClick: miqOnDblClickExpand,
-  - if tree_state
-    persist: true,
+:javascript
+  miqInitDynatree(#{options.to_json.html_safe}, #{json_tree.html_safe})
 
-  - if cfme_no_click
-    onClick: function(node, event) {
-    var event_type = node.getEventTargetType(event);
-    if (event_type != 'expander') {
-    return false;
-    }
-    },
-
-  - if onselect
-    onSelect: function(flag, node) {
-    var selectedNodes = node.tree.getSelectedNodes();
-    var selectedKeys = $.map(selectedNodes, function(node) {
-    return node.data.key;
-    });
-    #{onselect}('#{tree_name}', node.data.key, flag, selectedKeys);
-    },
-
-  - if onclick || disable_checks || oncheck
-
-    - if onclick
-      onActivate: function(node) {
-      #{onclick}(node.data.key);
-      },
-
-    onClick: function(node, event) {
-    var event_type = node.getEventTargetType(event);
-    if (event_type != 'expander' && node.data.cfmeNoClick) return false;
-    - if onclick
-      if (event_type == 'icon' || event_type == 'title' || event.target.localName == 'img') {
-      - if click_url
-        if (node.isActive()) #{onclick}(node.data.key);
-        return;
-      - else
-        if (miqCheckForChanges() == false) {
-        this.activeNode.focus();
-        return false;
-        } else {
-        if (node.isActive()) #{onclick}(node.data.key);
-        return;
-        }
-      }
-
-    - if disable_checks || oncheck
-      if (event_type == 'checkbox') {
-      - if disable_checks
-        return false;
-      - elsif oncheck
-        #{oncheck}(node, "#{tree_name}");
-        return;
-      }
-
-      if (event_type != 'expander') return false;
-    },
-
-    - if onmousein || onmouseout
-      onExpand: function(node){
-      miqBindHoverEvent("#{tree_name}");
-      },
-
-
-  - if autoload
-    onLazyRead: function(node) {
-    miqOnLazyReadGetNodeChildren(node, '#{tree_name}', '#{request.parameters[:controller]}');
-    },
-
-  - if @explorer && tree_name == x_active_tree.to_s
-    onPostInit: function(isReloading, isError) {
-    miqDynatreeActivateNodeSilently('#{tree_name}', '#{select_node}');
-    },
-
-  debugLevel: 0
-  });
-
-  - if @reselect_node
-    miqDynatreeActivateNodeSilently('#{tree_name}', '#{@reselect_node}');
-
-  - if @expand_parent_nodes
-    miqExpandParentNodes("#{tree_name}", "#{@expand_parent_nodes}");
-
-  - if @add_nodes && @add_nodes[x_active_tree] && tree_name == x_active_tree.to_s
-    miqAddNodeChildren(
-    '#{x_active_tree}',
-    '#{@add_nodes[x_active_tree][:key]}',
-    '#{select_node}',
-    #{@add_nodes[x_active_tree][:children].to_json.html_safe}
-    );
-
-  - if onmousein || onmouseout
-    miqBindHoverEvent("#{tree_name}");
+- if session[:group_changed]
+  - session[:group_changed] = false
