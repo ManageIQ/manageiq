@@ -28,4 +28,8 @@ module ContainerReplicatorHelper::TextualSummary
   def textual_current_replicas
     {:label => _("Current pods"), :value => @record.current_replicas}
   end
+
+  def textual_compliance_history
+    super(:title => _("Show Compliance History of this Replicator (Last 10 Checks)"))
+  end
 end
