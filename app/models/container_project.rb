@@ -15,6 +15,7 @@ class ContainerProject < ApplicationRecord
   has_many :container_limits
   has_many :container_limit_items, :through => :container_limits
   has_many :container_builds
+  has_many :container_templates
 
   # Needed for metrics
   has_many :metrics,                :as => :resource

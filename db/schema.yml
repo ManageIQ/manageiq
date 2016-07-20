@@ -821,6 +821,30 @@ container_services:
 - service_type
 - container_image_registry_id
 - created_on
+container_template_parameters:
+- id
+- name
+- ems_created_on
+- display_name
+- description
+- value
+- generate
+- from
+- required
+- container_template_id
+- created_at
+- updated_at
+container_templates:
+- id
+- ems_ref
+- name
+- ems_created_on
+- resource_version
+- ems_id
+- container_project_id
+- objects
+- created_at
+- updated_at
 container_volumes:
 - id
 - parent_id
