@@ -1059,6 +1059,7 @@ class MiqRequestWorkflow
   end
 
   def allowed_hosts_obj(options = {})
+    #byebug_term
     return [] if (src = resources_for_ui).blank? || src[:ems].nil?
     datacenter = src[:datacenter] || options[:datacenter]
     rails_logger('allowed_hosts_obj', 0)
@@ -1117,6 +1118,7 @@ class MiqRequestWorkflow
   end
 
   def allowed_clusters(_options = {})
+    #byebug_term
     all_clusters     = EmsCluster.where(:ems_id => get_source_and_targets[:ems].try(:id))
     filtered_targets = process_filter(:cluster_filter, EmsCluster, all_clusters)
     allowed_ci(:cluster, [:respool, :host, :folder], filtered_targets.collect(&:id))
@@ -1164,6 +1166,7 @@ class MiqRequestWorkflow
   end
 
   def host_to_cluster(src)
+    #byebug_term
     return nil unless ems_has_clusters?
     sources = src[:host].nil? ? allowed_hosts_obj : [src[:host]]
     targets = sources.collect { |h| find_cluster_above_ci(h) }.compact

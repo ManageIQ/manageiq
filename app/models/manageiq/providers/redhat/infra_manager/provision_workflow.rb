@@ -62,6 +62,7 @@ class ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow < MiqProvisio
   end
 
   def allowed_datacenters(_options = {})
+    #byebug_term
     super.slice(datacenter_by_vm.id)
   end
 

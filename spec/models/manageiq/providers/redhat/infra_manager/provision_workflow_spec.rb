@@ -48,6 +48,55 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
     end
   end
 
+  context "allowed clusters" do
+    let(:workflow) { described_class.new({:src_vm_id => template.id}, admin) }
+    let(:datacenter1) { FactoryGirl.create(:ems_folder, :type => "Datacenter") }
+    let(:cluster1) { FactoryGirl.create(:ems_cluster, :ems_id => ems.id, :name => 'Cluster1') }
+    let(:rp1) { FactoryGirl.create(:resource_pool).parent = cluster1 }
+    let(:template) { FactoryGirl.create(:template_redhat, :ext_management_system => ems, :ems_cluster => cluster1) }
+    let(:host1) { FactoryGirl.create(:host, :ems_id => ems.id, :ems_cluster => cluster1 ) }
+    before(:each) do
+      allow_any_instance_of(User).to receive(:get_timezone).and_return("UTC")
+      allow(workflow).to receive(:get_source_and_targets).and_return(:ems => ems)
+      datacenter1.add_child(cluster1)
+      cluster1.with_relationship_type("ems_metadata") { cluster1.parent = datacenter1 }
+    end
+    it 'only from same data_center as template' do
+      puts workflow.allowed_clusters.to_s
+      #byebug_term
+    end
+  end
+
+  #context "allowes clusters" do
+    #let(:workflow) { described_class.new({:src_vm_id => template.id}, admin) }
+    #let(:datacenter1) { FactoryGirl.create(:ems_folder, :type => "Datacenter") }
+    #let(:datacenter2) { FactoryGirl.create(:ems_folder, :type => "Datacenter") }
+    #let(:cluster1) { FactoryGirl.create(:ems_cluster, :ems_id => ems.id, :name => 'Cluster1') }
+    #let(:rp1) { FactoryGirl.create(:resource_pool).parent = cluster1 }
+    #let(:cluster2) { FactoryGirl.create(:ems_cluster, :ems_id => ems.id, :name => 'Cluster2') }
+    #let(:rp2) { FactoryGirl.create(:resource_pool).parent = cluster2 }
+    #let(:cluster3) { FactoryGirl.create(:ems_cluster, :ems_id => ems.id, :name => 'Cluster3') }
+    #let(:rp3) { FactoryGirl.create(:resource_pool).parent = cluster3 }
+    #let(:template) { FactoryGirl.create(:template_redhat, :ext_management_system => ems, :ems_cluster => cluster1) }
+    #let(:host1) { FactoryGirl.create(:host, :ems_id => ems.id, :ems_cluster => cluster1 ) }
+    #let(:host2) { FactoryGirl.create(:host, :ems_id => ems.id, :ems_cluster => cluster2 ) }
+    #let(:host3) { FactoryGirl.create(:host, :ems_id => ems.id, :ems_cluster => cluster3 ) }
+    #before(:each) do
+      #allow_any_instance_of(User).to receive(:get_timezone).and_return("UTC")
+      #allow(workflow).to receive(:get_source_and_targets).and_return(:ems => ems)
+      #datacenter1.add_child(cluster1)
+      #datacenter1.add_child(cluster2)
+      #datacenter2.add_child(cluster3)
+      #cluster1.with_relationship_type("ems_metadata") { cluster1.parent = datacenter1 }
+      #cluster2.with_relationship_type("ems_metadata") { cluster2.parent = datacenter1 }
+      #cluster3.with_relationship_type("ems_metadata") { cluster3.parent = datacenter2 }
+    #end
+    #it 'only from same data_center as template' do
+      #puts workflow.allowed_clusters.to_s
+      #byebug_term
+    #end
+  #end
+
   context "supports_linked_clone?" do
     let(:workflow) { described_class.new({:src_vm_id => template.id, :linked_clone => true}, admin) }
 
