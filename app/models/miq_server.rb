@@ -610,6 +610,6 @@ class MiqServer < ApplicationRecord
   end
 
   def miq_region
-    MiqRegion.my_region
+    ::MiqRegion.my_region
   end
 end # class MiqServer
