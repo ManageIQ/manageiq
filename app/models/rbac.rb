@@ -175,37 +175,33 @@ module Rbac
     filtered_ids
   end
 
-  def self.find_targets_with_indirect_rbac(scope, rbac_filters, find_options, user, miq_group)
+  def self.scope_by_indirect_rbac(scope, rbac_filters, user, miq_group)
     parent_class = rbac_class(scope)
     filtered_ids = calc_filtered_ids(parent_class, rbac_filters, user, miq_group)
 
-    find_targets_filtered_by_parent_ids(parent_class, scope, find_options, filtered_ids)
+    scope_by_parent_ids(parent_class, scope, filtered_ids)
   end
 
   # @param parent_class [Class] Class of parent (e.g. Host)
   # @param klass [Class] Class of child node (e.g. Vm)
   # @param scope [] scope for active records (e.g. Vm.archived)
-  # @param find_options [Hash<Symbol,String|Array>] options for active record conditions
-  # @option find_options :conditions [String|Hash|Array] active record where conditions for primary records (e.g. { "vms.archived" => true} )
   # @param filtered_ids [nil|Array<Integer>] ids for the parent class (e.g. [1,2,3] for host)
   # @return [Array<Array<Object>,Integer,Integer] targets, authorized count
-  def self.find_targets_filtered_by_parent_ids(parent_class, scope, find_options, filtered_ids)
+  def self.scope_by_parent_ids(parent_class, scope, filtered_ids)
     if filtered_ids
       reflection = scope.reflections[parent_class.name.underscore]
       if reflection
-        scope = scope.where("#{scope.table_name}.#{reflection.foreign_key} IN (?)", filtered_ids)
+        scope.where("#{scope.table_name}.#{reflection.foreign_key} IN (?)", filtered_ids)
       else
-        scope = scope.where("#{scope.table_name}.resource_type = ? AND #{scope.table_name}.resource_id IN (?)", parent_class.name, filtered_ids)
+        scope.where("#{scope.table_name}.resource_type = ? AND #{scope.table_name}.resource_id IN (?)", parent_class.name, filtered_ids)
       end
+    else
+      scope
     end
-    method_with_scope(scope, find_options)
   end
 
-  def self.find_targets_filtered_by_ids(scope, find_options, filtered_ids)
-    if filtered_ids
-      scope = scope.where("#{scope.table_name}.id IN (?)", filtered_ids)
-    end
-    method_with_scope(scope, find_options)
+  def self.scope_by_ids(scope, filtered_ids)
+    filtered_ids ? scope.where("#{scope.table_name}.id IN (?)", filtered_ids) : scope
   end
 
   def self.get_belongsto_filter_object_ids(klass, filter)
@@ -219,48 +215,47 @@ module Rbac
     scope.find_tags_by_grouping(filter, :ns => '*').reorder(nil)
   end
 
-  def self.find_targets_with_direct_rbac(scope, rbac_filters, find_options, user, miq_group)
+  def self.scope_by_direct_rbac(scope, rbac_filters, user, miq_group)
     filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group)
-    find_targets_filtered_by_ids(scope, find_options, filtered_ids)
+    scope_by_ids(scope, filtered_ids)
   end
 
-  def self.find_targets_with_user_group_rbac(scope, _rbac_filters, find_options, user, miq_group)
+  def self.scope_by_user_group_rbac(scope, user, miq_group)
     klass = scope.respond_to?(:klass) ? scope.klass : scope
     if klass == User && user
-      scope = scope.where(:id => user.id)
+      scope.where(:id => user.id)
     elsif klass == MiqGroup
-      scope = scope.where(:id => miq_group.id)
+      scope.where(:id => miq_group.id)
+    else # no user security applied
+      scope
     end
-
-    method_with_scope(scope, find_options)
   end
 
-  def self.find_options_for_tenant(scope, user, miq_group, find_options)
+  def self.scope_to_tenant(scope, user, miq_group)
     klass = scope.respond_to?(:klass) ? scope.klass : scope
     user_or_group = user || miq_group
     tenant_id_clause = klass.tenant_id_clause(user_or_group)
 
-    find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], tenant_id_clause) if tenant_id_clause
-    find_options
+    tenant_id_clause ? scope.where(tenant_id_clause) : scope
   end
 
   def self.accessible_tenant_ids_strategy(klass)
     TENANT_ACCESS_STRATEGY[klass.base_model.to_s]
   end
 
-  def self.find_targets_with_rbac(klass, scope, rbac_filters, find_options, user, miq_group)
+  def self.scope_targets(klass, scope, rbac_filters, user, miq_group)
     if klass.respond_to?(:scope_by_tenant?) && klass.scope_by_tenant?
-      find_options = find_options_for_tenant(scope, user, miq_group, find_options)
+      scope = scope_to_tenant(scope, user, miq_group)
     end
 
     if apply_rbac_to_class?(klass)
-      find_targets_with_direct_rbac(scope, rbac_filters, find_options, user, miq_group)
+      scope = scope_by_direct_rbac(scope, rbac_filters, user, miq_group)
     elsif apply_rbac_to_associated_class?(klass)
-      find_targets_with_indirect_rbac(scope, rbac_filters, find_options, user, miq_group)
+      scope = scope_by_indirect_rbac(scope, rbac_filters, user, miq_group)
     elsif apply_user_group_rbac_to_class?(klass, miq_group)
-      find_targets_with_user_group_rbac(scope, rbac_filters, find_options, user, miq_group)
+      scope = scope_by_user_group_rbac(scope, user, miq_group)
     else
-      method_with_scope(scope, find_options)
+      scope
     end
   end
 
@@ -412,7 +407,8 @@ module Rbac
 
     _log.debug("Find options: #{find_options.inspect}")
 
-    targets = find_targets_with_rbac(klass, scope, user_filters, find_options, user, miq_group)
+    scope = scope_targets(klass, scope, user_filters, user, miq_group)
+    targets = method_with_scope(scope, find_options)
     auth_count = find_options[:limit] ? targets.except(:offset, :limit, :order).count(:all) : targets.length
 
     if search_filter && targets && (!exp_attrs || !exp_attrs[:supported_by_sql])
