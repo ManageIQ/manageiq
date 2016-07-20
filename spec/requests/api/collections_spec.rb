@@ -255,5 +255,10 @@ describe ApiController do
       FactoryGirl.create(:cloud_network)
       test_collection_query(:cloud_networks, cloud_networks_url, CloudNetwork)
     end
+
+    it 'queries ArbitrationSettings' do
+      FactoryGirl.create(:arbitration_setting)
+      test_collection_query(:arbitration_settings, arbitration_settings_url, ArbitrationSetting)
+    end
   end
 end
