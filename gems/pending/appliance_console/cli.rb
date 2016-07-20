@@ -177,7 +177,10 @@ module ApplianceConsole
       # initdb, relabel log directory for selinux, update configs,
       # start pg, create user, create db update the rails configuration,
       # verify, set up the database with region. activate does it all!
-      config.activate
+      unless config.activate
+        say "Failed to configure internal database"
+        return
+      end
 
       # enable/start related services
       config.post_activation
@@ -195,7 +198,10 @@ module ApplianceConsole
       }.delete_if { |_n, v| v.nil? })
 
       # call create_or_join_region (depends on region value)
-      config.activate
+      unless config.activate
+        say "Failed to configure external database"
+        return
+      end
 
       # enable/start related services
       config.post_activation
