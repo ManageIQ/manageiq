@@ -187,16 +187,6 @@ describe MiqExpression do
     end
 
     context "date/time support" do
-      it "generates the SQL for an EQUAL expression with a datetime field" do
-        sql, * = MiqExpression.new("EQUAL" => {"field" => "Vm-boot_time", "value" => "2016-01-01"}).to_sql
-        expect(sql).to eq("\"vms\".\"boot_time\" = '2016-01-01 00:00:00'")
-      end
-
-      it "generates the SQL for a = expression with a datetime field" do
-        sql, * = MiqExpression.new("=" => {"field" => "Vm-boot_time", "value" => "2016-01-01"}).to_sql
-        expect(sql).to eq("\"vms\".\"boot_time\" = '2016-01-01 00:00:00'")
-      end
-
       it "generates the SQL for a = expression with a date field" do
         sql, * = described_class.new("=" => {"field" => "Vm-retires_on", "value" => "2016-01-01"}).to_sql
         expect(sql).to eq(%q("vms"."retires_on" = '2016-01-01'))
@@ -263,11 +253,6 @@ describe MiqExpression do
       it "generates the SQL for a != expression with a date field" do
         sql, * = described_class.new("!=" => {"field" => "Vm-retires_on", "value" => "2016-01-01"}).to_sql
         expect(sql).to eq(%q("vms"."retires_on" != '2016-01-01'))
-      end
-
-      it "generates the SQL for a != expression with a datetime field" do
-        sql, * = described_class.new("!=" => {"field" => "Vm-last_scan_on", "value" => "2016-01-01"}).to_sql
-        expect(sql).to eq(%q("vms"."last_scan_on" != '2016-01-01 00:00:00'))
       end
 
       it "generates the SQL for an IS expression" do
