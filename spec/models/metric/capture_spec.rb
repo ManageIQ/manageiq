@@ -1,69 +1,52 @@
 describe Metric::Capture do
-  shared_examples "captures a threshold" do |capture_fixnum, capture|
-    let(:threshold_default) { 10 }
-    let(:capture_rt) { 2 }
-    let(:time) { Time.utc(2013, 4, 22, 8, 31) }
+  describe ".alert_capture_threshold" do
+    let(:target) { FactoryGirl.build(:host_vmware) }
 
-    before do
-      settings =  {:performance =>
-                    {:capture_threshold             => {:vm => capture,    :host => capture},
-                     :capture_threshold_with_alerts => {:vm => capture_rt, :host => capture_rt}
-                    }
-                  }
-      stub_server_configuration(settings)
-    end
-
-    it "realtime vm uses capture_threshold_with_alerts minutes ago" do
-      target = FactoryGirl.build(:vm_vmware)
-      allow(MiqAlert).to receive(:target_needs_realtime_capture?).with(target).and_return(true)
-
-      Timecop.freeze(time) do
-        expect(described_class.capture_threshold(target)).to eq capture_rt.minutes.ago.utc
+    it "parses fixed num" do
+      stub_performance_settings(:capture_threshold_with_alerts => {:host => 4})
+      Timecop.freeze(Time.now.utc) do
+        expect(described_class.alert_capture_threshold(target)).to eq 4.minutes.ago.utc
       end
     end
 
-    it "realtime host uses capture_threshold_with_alerts minutes ago" do
-      target = FactoryGirl.build(:host_vmware)
-      allow(MiqAlert).to receive(:target_needs_realtime_capture?).with(target).and_return(true)
-
-      Timecop.freeze(time) do
-        expect(described_class.capture_threshold(target)).to eq capture_rt.minutes.ago.utc
+    it "parses string" do
+      stub_performance_settings(:capture_threshold_with_alerts => {:host => "4.minutes"})
+      Timecop.freeze(Time.now.utc) do
+        expect(described_class.alert_capture_threshold(target)).to eq 4.minutes.ago.utc
       end
     end
 
-    it "non-realtime vm uses capture_threshold minutes ago" do
-      target = FactoryGirl.build(:vm_vmware)
-      allow(MiqAlert).to receive(:target_needs_realtime_capture?).with(target).and_return(false)
-
-      Timecop.freeze(time) do
-        result = threshold_default.minutes.ago.utc
-        result = capture_fixnum.minutes.ago.utc unless capture_fixnum.nil?
-        expect(described_class.capture_threshold(target)).to eq result
-      end
-    end
-
-    it "non-realtime host uses capture_threshold minutes ago" do
-      target = FactoryGirl.build(:host_vmware)
-      allow(MiqAlert).to receive(:target_needs_realtime_capture?).with(target).and_return(false)
-
-      Timecop.freeze(time) do
-        result = threshold_default.minutes.ago.utc
-        result = capture_fixnum.minutes.ago.utc unless capture_fixnum.nil?
-        expect(described_class.capture_threshold(target)).to eq result
+    it "produces default with class not found" do
+      stub_performance_settings(:capture_threshold_with_alerts => {:vm => "4.minutes"})
+      Timecop.freeze(Time.now.utc) do
+        expect(described_class.alert_capture_threshold(target)).to eq 1.minute.ago.utc
       end
     end
   end
 
-  context ".capture_threshold with Fixnum" do
-    include_examples "captures a threshold", 20, 20
-  end
+  describe ".standard_capture_threshold" do
+    let(:host) { FactoryGirl.build(:host_vmware) }
 
-  context ".capture_threshold with String" do
-    include_examples "captures a threshold", 50, "50.minutes"
-  end
+    it "parses fixed num" do
+      stub_performance_settings(:capture_threshold => {:host => 4})
+      Timecop.freeze(Time.now.utc) do
+        expect(described_class.standard_capture_threshold(host)).to eq 4.minutes.ago.utc
+      end
+    end
 
-  context ".capture_threshold handles nil" do
-    include_examples "captures a threshold", nil, nil
+    it "parses string" do
+      stub_performance_settings(:capture_threshold => {:host => "4.minutes"})
+      Timecop.freeze(Time.now.utc) do
+        expect(described_class.standard_capture_threshold(host)).to eq 4.minutes.ago.utc
+      end
+    end
+
+    it "produces default with class not found" do
+      stub_performance_settings(:capture_threshold => {:vm => "4.minutes"})
+      Timecop.freeze(Time.now.utc) do
+        expect(described_class.standard_capture_threshold(host)).to eq 10.minutes.ago.utc
+      end
+    end
   end
 
   context ".perf_capture_health_check" do
@@ -82,5 +65,72 @@ describe Metric::Capture do
       expect(Metric::Capture._log).to receive(:info).with(/0 "historical" captures on the queue/)
       described_class.perf_capture_health_check(miq_server.zone)
     end
+  end
+
+  describe ".perf_capture_now?" do
+    before do
+      stub_performance_settings(
+        :capture_threshold_with_alerts => {:host => 2},
+        :capture_threshold             => {}
+      )
+    end
+
+    let(:target) { FactoryGirl.build(:host_vmware) }
+
+    context "with a host with alerts" do
+      before do
+        allow(MiqAlert).to receive(:target_needs_realtime_capture?).with(target).and_return(true)
+      end
+
+      it "captures if the target has never been captured" do
+        target.last_perf_capture_on = nil
+        expect(described_class.perf_capture_now?(target)).to eq(true)
+      end
+
+      it "does not capture if the target has been captured very recenlty" do
+        target.last_perf_capture_on = 1.minute.ago
+        expect(described_class.perf_capture_now?(target)).to eq(false)
+      end
+
+      it "captures if the target has been captured recently (but after realtime minimum)" do
+        target.last_perf_capture_on = 5.minutes.ago
+        expect(described_class.perf_capture_now?(target)).to eq(true)
+      end
+
+      it "captures if the target hasn't been captured in a long while" do
+        target.last_perf_capture_on = 15.minutes.ago
+        expect(described_class.perf_capture_now?(target)).to eq(true)
+      end
+    end
+
+    context "with an alertless host" do
+      before do
+        allow(MiqAlert).to receive(:target_needs_realtime_capture?).with(target).and_return(false)
+      end
+
+      it "captures if the target has never been captured" do
+        target.last_perf_capture_on = nil
+        expect(described_class.perf_capture_now?(target)).to eq(true)
+      end
+
+      it "does not captures if the target has been captured very recently" do
+        target.last_perf_capture_on = 1.minute.ago
+        expect(described_class.perf_capture_now?(target)).to eq(false)
+      end
+
+      it "does not captures if the target has been captured recently (but after realtime minimum)" do
+        target.last_perf_capture_on = 5.minutes.ago
+        expect(described_class.perf_capture_now?(target)).to eq(false)
+      end
+
+      it "captures if the target hasn't been captured in a long while" do
+        target.last_perf_capture_on = 15.minutes.ago
+        expect(described_class.perf_capture_now?(target)).to eq(true)
+      end
+    end
+  end
+
+  def stub_performance_settings(hash)
+    stub_settings(:performance => hash)
   end
 end
