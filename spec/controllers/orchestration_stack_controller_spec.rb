@@ -140,5 +140,23 @@ describe OrchestrationStackController do
         expect(response.body).to include("/catalog/ot_show/")
       end
     end
+
+    context "retire orchestration stack" do
+      it "set retirement date redirects to retirement screen" do
+        record = FactoryGirl.create(:orchestration_stack_cloud)
+        post :button, :params => {:miq_grid_checks => record.id, :pressed => "orchestration_stack_retire"}
+        expect(response.status).to eq(200)
+        expect(controller.send(:flash_errors?)).not_to be_truthy
+        expect(response.body).to include('window.location.href')
+      end
+
+      it "retires the orchestration stack now" do
+        record = FactoryGirl.create(:orchestration_stack_cloud)
+        session[:orchestration_stack_lastaction] = 'show_list'
+        post :button, :params => {:miq_grid_checks => record.id, :pressed => "orchestration_stack_retire_now"}
+        expect(response.status).to eq(200)
+        expect(controller.send(:flash_errors?)).not_to be_truthy
+      end
+    end
   end
 end
