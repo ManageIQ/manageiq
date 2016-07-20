@@ -373,7 +373,6 @@ describe ApplicationHelper do
      "vm_protect",
      "vm_start",
      "vm_suspend",
-     "vm_retire",
      "vm_retire_now",
      "vm_snapshot_add",
      "vm_snapshot_delete",
@@ -2312,7 +2311,7 @@ describe ApplicationHelper do
         it_behaves_like 'default case'
       end
 
-      ["vm_retire", "vm_retire_now"].each do |button_id|
+      ["vm_retire_now"].each do |button_id|
         context "and id = #{button_id}" do
           before { @id = button_id }
           it "when VM is already retired" do
