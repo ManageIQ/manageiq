@@ -104,21 +104,21 @@ class MiqAeClassController < ApplicationController
       @sb[:namespace_path] = rec.fqname
     when "aei"
       txt = ui_lookup(:model => "MiqAeInstance")
-      updated_by = rec.updated_by ? _(" by %{time}") % {:time => rec.updated_by} : ""
+      updated_by = rec.updated_by ? _(" by %{user}") % {:user => rec.updated_by} : ""
       @sb[:namespace_path] = rec.fqname
       @right_cell_text = _("%{model} [%{name} - Updated %{time}%{update}]") %
         {:model  => txt,
          :name   => get_rec_name(rec),
-         :time   => format_timezone(rec.created_on, Time.zone, "gtl"),
+         :time   => format_timezone(rec.updated_on, Time.zone, "gtl"),
          :update => updated_by}
     when "aem"
       txt = ui_lookup(:model => "MiqAeMethod")
-      updated_by = rec.updated_by ? _(" by %{time}") % {:time => rec.updated_by} : ""
+      updated_by = rec.updated_by ? _(" by %{user}") % {:user => rec.updated_by} : ""
       @sb[:namespace_path] = rec.fqname
       @right_cell_text = _("%{model} [%{name} - Updated %{time}%{update}]") %
         {:model  => txt,
          :name   => get_rec_name(rec),
-         :time   => format_timezone(rec.created_on, Time.zone, "gtl"),
+         :time   => format_timezone(rec.updated_on, Time.zone, "gtl"),
          :update => updated_by}
     when "aen"
       txt = ui_lookup(:model => rec.domain? ? "MiqAeDomain" : "MiqAeNamespace")
