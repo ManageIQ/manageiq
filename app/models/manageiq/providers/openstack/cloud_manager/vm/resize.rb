@@ -3,8 +3,7 @@ module ManageIQ::Providers::Openstack::CloudManager::Vm::Resize
 
   included do
     supports :resize do
-      msg = validate_vm_control
-      unsupported_reason_add(:resize, msg[1]) unless msg.nil?
+      unsupported_reason_add(:resize, unsupported_reason(:control)) unless supports_control?
       unless %w(ACTIVE SHUTOFF).include?(raw_power_state)
         unsupported_reason_add(:resize, _("The Instance cannot be resized, current state has to be active or shutoff."))
       end
