@@ -59,10 +59,8 @@ class ManageIQ::Providers::Azure::CloudManager::MetricsCapture < ManageIQ::Provi
     ]
   end
 
-  def storage_accounts(connection)
-    @storage_accounts ||= with_metrics_services(connection) do |_metrics_conn, storage_conn|
-      storage_conn.list_all
-    end
+  def storage_accounts(storage_account_service)
+    @storage_accounts ||= storage_account_service.list_all
   end
 
   def perf_capture_data_azure(metrics_conn, storage_conn, start_time, end_time)
