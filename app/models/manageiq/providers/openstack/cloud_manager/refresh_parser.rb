@@ -250,6 +250,7 @@ module ManageIQ::Providers
         :description => tenant.description,
         :enabled     => tenant.enabled,
         :ems_ref     => uid,
+        :parent_id   => tenant.try(:parent_id)
       }
 
       return uid, new_result
