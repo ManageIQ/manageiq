@@ -70,6 +70,7 @@ module EmsRefresh::SaveInventoryCloud
     save_child_inventory(ems, hashes, child_keys, target)
 
     link_volumes_to_base_snapshots(hashes[:cloud_volumes]) if hashes.key?(:cloud_volumes)
+    link_parents_to_cloud_tenant(hashes[:cloud_tenants]) if hashes.key?(:cloud_tenants)
 
     ems.save!
     hashes[:id] = ems.id
@@ -117,7 +118,7 @@ module EmsRefresh::SaveInventoryCloud
                 []
               end
 
-    save_inventory_multi(ems.cloud_tenants, hashes, deletes, [:ems_ref])
+    save_inventory_multi(ems.cloud_tenants, hashes, deletes, [:ems_ref], nil, [:parent_id])
     store_ids_for_new_records(ems.cloud_tenants, hashes, :ems_ref)
   end
 
@@ -202,6 +203,22 @@ module EmsRefresh::SaveInventoryCloud
 
     base_snapshot_to_volume.each do |bsid, volids|
       CloudVolume.where(:id => volids).update_all(:cloud_volume_snapshot_id => bsid)
+    end
+  end
+
+  def link_parents_to_cloud_tenant(hashes)
+    mapped_ids = hashes.each_with_object({}) do |cloud_tenant, mapped_ids_hash|
+      ems_ref_parent_id = cloud_tenant[:parent_id]
+      next if ems_ref_parent_id.nil?
+
+      parent_cloud_tenant = hashes.detect { |x| x[:ems_ref] == ems_ref_parent_id }
+      next if parent_cloud_tenant.nil?
+
+      (mapped_ids_hash[parent_cloud_tenant[:id]] ||= []) << cloud_tenant[:id]
+    end
+
+    mapped_ids.each do |parent_id, ids|
+      CloudTenant.where(:id => ids).update_all(:parent_id => parent_id)
     end
   end
 
