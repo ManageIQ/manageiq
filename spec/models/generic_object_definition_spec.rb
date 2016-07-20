@@ -25,8 +25,24 @@ describe GenericObjectDefinition do
   end
 
   it 'raises an error if any property attribute is not of a recognized type' do
-    testdef = described_class.new(:name => 'test')
-    expect { testdef.properties = {:attributes => {'myattr' => :strange_type}} }.to raise_error(ArgumentError)
+    testdef = described_class.new(:name => 'test', :properties => {:attributes => {'myattr' => :strange_type}})
+    expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
+  it 'raises an error if any property association is not of valid model' do
+    testdef = described_class.new(:name => 'test', :properties => {:associations => {'vms' => :strang_model}})
+    expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
+  it 'property name is unique among attributes and association' do
+    testdef = described_class.new(
+      :name       => 'test',
+      :properties => {
+        :attributes   => {:vms => "float"},
+        :associations => {'vms' => :strang_model}
+      }
+    )
+    expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
   describe '#destroy' do
