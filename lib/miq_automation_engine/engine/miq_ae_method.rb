@@ -126,7 +126,7 @@ begin
   DRbObject.send(:undef_method, :inspect)
   DRbObject.send(:undef_method, :id) if DRbObject.respond_to?(:id)
 
-  DRb.start_service("druby://127.0.0.1:0")
+  DRb.start_service
   $evmdrb = DRbObject.new(nil, MIQ_URI)
   raise AutomateMethodException,"Cannot create DRbObject for uri=\#{MIQ_URI}" if $evmdrb.nil?
   $evm = $evmdrb.find(MIQ_ID)
