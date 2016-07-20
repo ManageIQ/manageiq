@@ -275,7 +275,7 @@ module ApplicationHelper
     when "OrchestrationStackOutput"    then "outputs"
     when "OrchestrationStackParameter" then "parameters"
     when "OrchestrationStackResource"  then "resources"
-    when 'AdvancedSetting', 'Filesystem', 'FirewallRule', 'GuestApplication', 'Patch', 'RegistryItem',
+    when 'AdvancedSetting', 'ArbitrationProfile', 'Filesystem', 'FirewallRule', 'GuestApplication', 'Patch', 'RegistryItem',
          'ScanHistory', 'OpenscapRuleResult'
                                        then view.db.tableize
     when "SystemService"

@@ -339,6 +339,14 @@
       :description: Display Individual Cloud Providers
       :feature_type: view
       :identifier: ems_cloud_show
+    - :name: Arbitration Profiles List
+      :description: Display Lists of Arbitration Profiles
+      :feature_type: view
+      :identifier: ems_cloud_arbitration_profile_show_list
+    - :name: Arbitration Profile Show
+      :description: Display Individual Arbitration Profiles
+      :feature_type: view
+      :identifier: ems_cloud_arbitration_profile_show
     - :name: Timeline
       :description: Display Timelines for Cloud Providers
       :feature_type: view
@@ -385,6 +393,22 @@
       :description: Add a Cloud Provider
       :feature_type: admin
       :identifier: ems_cloud_new
+    - :name: Add Arbitartion Profile
+      :description: Add Arbitartion Profile
+      :feature_type: admin
+      :identifier: ems_cloud_arbitration_profile_new
+    - :name: Edit Arbitartion Profile
+      :description: Edit Arbitartion Profile
+      :feature_type: admin
+      :identifier: ems_cloud_arbitration_profile_edit
+    - :name: Remove Arbitartion Profile
+      :description: Remove Arbitartion Profile
+      :feature_type: admin
+      :identifier: ems_cloud_arbitration_profile_delete
+    - :name: Mark Arbitartion Profile as default
+      :description: Mark Arbitartion Profile as default
+      :feature_type: admin
+      :identifier: ems_cloud_arbitration_profile_default
 
 # AvailabilityZone
 - :name: Availability Zones

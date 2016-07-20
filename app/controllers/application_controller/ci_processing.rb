@@ -941,6 +941,8 @@ module ApplicationController::CiProcessing
       @miq_template = @record = identify_record(params[:id], MiqTemplate)
     elsif ["vm_infra", "vm_cloud", "vm", "vm_or_template"].include?(db)
       @vm = @record = identify_record(params[:id], VmOrTemplate)
+    elsif db == "ems_cloud"
+      @ems = @record = identify_record(params[:id], EmsCloud)
     end
   end
 

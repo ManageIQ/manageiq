@@ -461,6 +461,8 @@ class ApplicationHelper::ToolbarChooser
       elsif @display == "topology"
         return "topology_center"
       end
+    elsif @lastaction == "arbitration_profiles"
+      return @showtype == "item" ? "arbitration_profile_center_tb" : "arbitration_profiles_center_tb"
     elsif @lastaction == "compare_miq" || @lastaction == "compare_compress"
       return "compare_center_tb"
     elsif @lastaction == "drift_history"

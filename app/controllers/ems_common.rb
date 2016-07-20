@@ -464,6 +464,35 @@ module EmsCommon
     "http://manageiq.org/documentation/getting-started/#adding-a-provider"
   end
 
+  def arbitration_profiles
+    @db = params[:db] ? params[:db] : request.parameters[:controller]
+    session[:db] = @db unless @db.nil?
+    @db = session[:db] unless session[:db].nil?
+    get_record(@db)
+    @sb[:action] = params[:action]
+    return if record_no_longer_exists?(@record)
+
+    @lastaction = "arbitration_profiles"
+    if params[:show].nil?
+      # display list of association
+      drop_breadcrumb({:name => @record.name, :url => "/#{@db}/show/#{@record.id}"}, true)
+      drop_breadcrumb(:name => _("%{name} (Arbitration Profiles)") % {:name => @record.name},
+                      :url  => "/#{@db}/arbitration_profiles/#{@record.id}")
+      @listicon = "arbitration_profile"
+      @no_checkboxes = false
+      show_details(ArbitrationProfile)
+    else
+      # single item
+      id = params[:show] ? params[:show] : params[:x_show]
+      @item = @record.arbitration_profiles.find(from_cid(id))
+      drop_breadcrumb(:name => _("%{name} (Arbitration Profiles)") % {:name => @record.name},
+                      :url  => "/#{@db}/arbitration_profiles/#{@record.id}?page=#{@current_page}")
+      drop_breadcrumb(:name => @item.name, :url => "/#{@db}/show/#{@record.id}?show=#{@item.id}")
+      @view = get_db_view(ArbitrationProfile)         # Instantiate the MIQ Report view object
+      show_item
+    end
+  end
+
   private ############################
 
   def set_verify_status
