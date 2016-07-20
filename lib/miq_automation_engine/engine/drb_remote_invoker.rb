@@ -16,6 +16,7 @@ module MiqAeEngine
       svc.inputs     = inputs
       svc.preamble   = method_preamble(drb_uri, svc.object_id)
       svc.body       = body
+      svc.logger     = $miq_ae_logger
 
       yield [svc.preamble, svc.body, RUBY_METHOD_POSTSCRIPT]
     ensure
@@ -101,6 +102,11 @@ begin
   $evm = $evmdrb.find(MIQ_ID)
   raise AutomateMethodException,"Cannot find Service for id=\#{MIQ_ID} and uri=\#{MIQ_URI}" if $evm.nil?
   MIQ_ARGS = $evm.inputs
+
+  # Setup stdout and stderr to go through the logger on the MiqAeService instance ($evm)
+  silence_warnings { STDOUT = $stdout = $evm.stdout ; nil}
+  silence_warnings { STDERR = $stderr = $evm.stderr ; nil}
+
 rescue Exception => err
   STDERR.puts('The following error occurred during inline method preamble evaluation:')
   STDERR.puts("  \#{err.class}: \#{err.message}")

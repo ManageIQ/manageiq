@@ -21,6 +21,8 @@ module MiqAeMethodService
     include MiqAeMethodService::MiqAeServiceModelLegacy
     include MiqAeMethodService::MiqAeServiceVmdb
 
+    attr_accessor :logger
+
     @@id_hash = {}
     @@current = []
 
@@ -50,6 +52,14 @@ module MiqAeMethodService
       @body                  = []
       @persist_state_hash    = ws.persist_state_hash
       self.class.add(self)
+    end
+
+    def stdout
+      @stdout ||= Vmdb::Loggers::IoLogger.new(logger, :info, "Method STDOUT:")
+    end
+
+    def stderr
+      @stderr ||= Vmdb::Loggers::IoLogger.new(logger, :error, "Method STDERR:")
     end
 
     def destroy
