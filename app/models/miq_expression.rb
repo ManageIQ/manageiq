@@ -20,7 +20,6 @@ class MiqExpression
     ContainerImageRegistry
     ContainerNode
     ContainerProject
-    ContainerService
     ContainerReplicator
     ContainerRoute
     ContainerService
