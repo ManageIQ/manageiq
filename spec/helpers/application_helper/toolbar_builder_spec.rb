@@ -1146,23 +1146,6 @@ describe ApplicationHelper do
         allow(user).to receive(:role_allows?).and_return(true)
       end
 
-      %w(vm_migrate).each do |id|
-        context "and id = #{id}" do
-          before { @id = id }
-
-          it "and vendor is redhat" do
-            @record = FactoryGirl.create(:vm_redhat)
-            expect(subject).to be_truthy
-          end
-
-          it "and vendor is not redhat" do
-            @record = FactoryGirl.create(:vm_vmware)
-            allow(@record).to receive(:archived?).and_return(false)
-            expect(subject).to be_falsey
-          end
-        end
-      end
-
       context "and id = vm_reconfigure" do
         before do
           @id = "vm_reconfigure"
@@ -1666,38 +1649,6 @@ describe ApplicationHelper do
       it "when with view_#{g}" do
         @gtl_type = g
         expect(build_toolbar_disable_button("view_#{g}")).to be_truthy
-      end
-    end
-
-    it "hides Lifecycle options in archived VMs list" do
-      allow(ApplicationHelper).to receive(:get_record_cls).and_return(nil)
-      @sb = {:trees => {:vandt_tree => {:active_node => "xx-arch"}}}
-      %w(vm_migrate).each do |tb_button|
-        expect(build_toolbar_hide_button(tb_button)).to be_truthy
-      end
-    end
-
-    it "hides Lifecycle options in orphaned VMs list" do
-      allow(ApplicationHelper).to receive(:get_record_cls).and_return(nil)
-      @sb = {:trees => {:vandt_tree => {:active_node => "xx-orph"}}}
-      %w(vm_migrate).each do |tb_button|
-        expect(build_toolbar_hide_button(tb_button)).to be_truthy
-      end
-    end
-
-    it "hides Lifecycle options for archived VMs" do
-      @record = FactoryGirl.create(:vm_microsoft)
-      allow(@record).to receive(:archived?).and_return(true)
-      %w(vm_migrate).each do |tb_button|
-        expect(build_toolbar_hide_button(tb_button)).to be_truthy
-      end
-    end
-
-    it "hides Lifecycle options for orphaned VMs" do
-      @record = FactoryGirl.create(:vm_microsoft)
-      allow(@record).to receive(:orphaned?).and_return(true)
-      %w(vm_migrate).each do |tb_button|
-        expect(build_toolbar_hide_button(tb_button)).to be_truthy
       end
     end
 
