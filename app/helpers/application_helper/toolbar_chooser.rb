@@ -1,4 +1,6 @@
 class ApplicationHelper::ToolbarChooser
+  include RestfulControllerMixin
+
   # Return a blank tb if a placeholder is needed for AJAX explorer screens, return nil if no center toolbar to be shown
   def center_toolbar_filename
     if @explorer
@@ -44,7 +46,7 @@ class ApplicationHelper::ToolbarChooser
     elsif !%w(all_tasks all_ui_tasks timeline diagnostics my_tasks my_ui_tasks miq_server usage).include?(@layout) &&
           (!@layout.starts_with?("miq_request")) && !@treesize_buttons &&
           @display == "main" && @showtype == "main" && !@in_a_form
-      @view_context.send(:restful?) ? "summary_view_restful_tb" : "summary_view_tb"
+      controller_restful? ? "summary_view_restful_tb" : "summary_view_tb"
     else
       'blank_view_tb'
     end
@@ -55,8 +57,9 @@ class ApplicationHelper::ToolbarChooser
   delegate :session, :from_cid, :x_node, :x_active_tree, :super_admin_user?, :render_gtl_view_tb?, :x_gtl_view_tb_render?,
            :to => :@view_context
 
-  def initialize(view_context, instance_data)
+  def initialize(view_context, view_binding, instance_data)
     @view_context = view_context
+    @view_binding = view_binding
 
     instance_data.each do |name, value|
       instance_variable_set(:"@#{name}", value)
