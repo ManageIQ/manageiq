@@ -123,11 +123,17 @@ describe ApiController do
 
       expect_multiple_action_result(2)
       expect_result_resources_to_include_hrefs("results", :svcreqs_list)
-      expect_result_resources_to_match_key_data(
-        "results",
-        "message",
-        [/Service request #{svcreq1.id} approved/i, /Service request #{svcreq2.id} approved/i]
-      )
+      expected = {
+        "results" => a_collection_containing_exactly(
+          {
+            "message" => a_string_matching(/Service request #{svcreq1.id} approved/i),
+          },
+          {
+            "message" => a_string_matching(/Service request #{svcreq2.id} approved/i),
+          }
+        )
+      }
+      expect(response.parsed_body).to include(expected)
     end
 
     it "supports denying multiple requests" do
@@ -138,11 +144,17 @@ describe ApiController do
 
       expect_multiple_action_result(2)
       expect_result_resources_to_include_hrefs("results", :svcreqs_list)
-      expect_result_resources_to_match_key_data(
-        "results",
-        "message",
-        [/Service request #{svcreq1.id} denied/i, /Service request #{svcreq2.id} denied/i]
-      )
+      expected = {
+        "results" => a_collection_containing_exactly(
+          {
+            "message" => a_string_matching(/Service request #{svcreq1.id} denied/i),
+          },
+          {
+            "message" => a_string_matching(/Service request #{svcreq2.id} denied/i),
+          }
+        )
+      }
+      expect(response.parsed_body).to include(expected)
     end
   end
 

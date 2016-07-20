@@ -195,11 +195,6 @@ module ApiSpecHelper
     end
   end
 
-  def expect_result_resources_to_match_key_data(collection, key, values)
-    value_list = fetch_value(values)
-    expect(response.parsed_body).to include(collection => value_list.collect { |v| a_hash_including(key => v) })
-  end
-
   def expect_result_to_have_keys(keys)
     expect(response.parsed_body).to include(*keys)
   end

@@ -64,11 +64,17 @@ RSpec.describe "Instances API" do
 
       expect_multiple_action_result(2)
       expect_result_resources_to_include_hrefs("results", :instances_list)
-      expect_result_resources_to_match_key_data(
-        "results",
-        "message",
-        [/#{instance1.id}.* terminating/i, /#{instance2.id}.* terminating/i]
-      )
+      expected = {
+        "results" => a_collection_containing_exactly(
+          a_hash_including(
+            "message" => a_string_matching(/#{instance1.id}.* terminating/i),
+          ),
+          a_hash_including(
+            "message" => a_string_matching(/#{instance2.id}.* terminating/i),
+          )
+        )
+      }
+      expect(response.parsed_body).to include(expected)
     end
   end
 

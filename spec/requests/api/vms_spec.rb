@@ -880,8 +880,17 @@ describe ApiController do
 
       expect_multiple_action_result(2)
       expect_result_resources_to_include_hrefs("results", :vms_list)
-      expect_result_resources_to_match_key_data("results", "message",
-                                                [/adding event .*etype1/i, /adding event .*etype2/i])
+      expected = {
+        "results" => a_collection_containing_exactly(
+          {
+            "message" => a_string_matching(/adding event .*etype1/i),
+          },
+          {
+            "message" => a_string_matching(/adding event .*etype2/i),
+          }
+        )
+      }
+      expect(response.parsed_body).to include(expected)
     end
   end
 
@@ -917,11 +926,17 @@ describe ApiController do
 
       expect_multiple_action_result(2)
       expect_result_resources_to_include_hrefs("results", :vms_list)
-      expect_result_resources_to_match_key_data(
-        "results",
-        "message",
-        [/#{vm1.id}.* retiring/i, /#{vm2.id}.* retiring/i]
-      )
+      expected = {
+        "results" => a_collection_containing_exactly(
+          {
+            "message" => a_string_matching(/#{vm1.id}.* retiring/i),
+          },
+          {
+            "message" => a_string_matching(/#{vm2.id}.* retiring/ii),
+          }
+        )
+      }
+      expect(response.parsed_body).to include(expected)
     end
 
     it "in the future" do
@@ -965,11 +980,17 @@ describe ApiController do
 
       expect_multiple_action_result(2)
       expect_result_resources_to_include_hrefs("results", :vms_list)
-      expect_result_resources_to_match_key_data(
-        "results",
-        "message",
-        [/#{vm1.id}.* resetting/i, /#{vm2.id}.* resetting/i]
-      )
+      expected = {
+        "results" => a_collection_containing_exactly(
+          a_hash_including(
+            "message" => a_string_matching(/#{vm1.id}.* resetting/i),
+          ),
+          a_hash_including(
+            "message" => a_string_matching(/#{vm2.id}.* resetting/i),
+          )
+        )
+      }
+      expect(response.parsed_body).to include(expected)
     end
   end
 
@@ -1005,11 +1026,17 @@ describe ApiController do
 
       expect_multiple_action_result(2)
       expect_result_resources_to_include_hrefs("results", :vms_list)
-      expect_result_resources_to_match_key_data(
-        "results",
-        "message",
-        [/#{vm1.id}.* shutting down/i, /#{vm2.id}.* shutting down/i]
-      )
+      expected = {
+        "results" => a_collection_containing_exactly(
+          a_hash_including(
+            "message" => a_string_matching(/#{vm1.id}.* shutting down/i),
+          ),
+          a_hash_including(
+            "message" => a_string_matching(/#{vm2.id}.* shutting down/i),
+          )
+        )
+      }
+      expect(response.parsed_body).to include(expected)
     end
   end
 
@@ -1045,11 +1072,17 @@ describe ApiController do
 
       expect_multiple_action_result(2)
       expect_result_resources_to_include_hrefs("results", :vms_list)
-      expect_result_resources_to_match_key_data(
-        "results",
-        "message",
-        [/#{vm1.id}.* refreshing/i, /#{vm2.id}.* refreshing/i]
-      )
+      expected = {
+        "results" => a_collection_containing_exactly(
+          a_hash_including(
+            "message" => a_string_matching(/#{vm1.id}.* refreshing/i),
+          ),
+          a_hash_including(
+            "message" => a_string_matching(/#{vm2.id}.* refreshing/i),
+          )
+        )
+      }
+      expect(response.parsed_body).to include(expected)
     end
   end
 
@@ -1085,11 +1118,17 @@ describe ApiController do
 
       expect_multiple_action_result(2)
       expect_result_resources_to_include_hrefs("results", :vms_list)
-      expect_result_resources_to_match_key_data(
-        "results",
-        "message",
-        [/#{vm1.id}.* rebooting/i, /#{vm2.id}.* rebooting/i]
-      )
+      expected = {
+        "results" => a_collection_containing_exactly(
+          a_hash_including(
+            "message" => a_string_matching(/#{vm1.id}.* rebooting/i,),
+          ),
+          a_hash_including(
+            "message" => a_string_matching(/#{vm2.id}.* rebooting/i),
+          )
+        )
+      }
+      expect(response.parsed_body).to include(expected)
     end
   end
 end
