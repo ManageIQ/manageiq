@@ -1,5 +1,6 @@
+require_relative 'hawkular_helper'
+
 describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource do
-  THE_FEED_ID = '70c798a0-6985-4f8a-a525-012d8d28e8a3'.freeze
 
   let(:ems_hawkular) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
@@ -15,9 +16,9 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
     FactoryGirl.create(:hawkular_middleware_server,
                        :id                    => 1,
                        :name                  => 'Local',
-                       :feed                  => THE_FEED_ID,
+                       :feed                  => the_feed_id,
                        :ems_ref               => '/t;hawkular'\
-                                                 "/f;#{THE_FEED_ID}/r;Local~~",
+                                                 "/f;#{the_feed_id}/r;Local~~",
                        :nativeid              => 'Local~~',
                        :ext_management_system => ems_hawkular)
   end
@@ -26,7 +27,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
     FactoryGirl.create(:hawkular_middleware_datasource,
                        :name                  => 'KeycloakDS',
                        :ems_ref               => '/t;hawkular'\
-                                                 "/f;#{THE_FEED_ID}/r;Local~~"\
+                                                 "/f;#{the_feed_id}/r;Local~~"\
                                                  '/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS',
                        :ext_management_system => ems_hawkular,
                        :middleware_server     => eap,
