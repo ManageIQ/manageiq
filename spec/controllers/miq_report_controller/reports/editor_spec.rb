@@ -68,6 +68,14 @@ describe ReportController do
 
         expect(rep.tz).to eq("Eastern Time (US & Canada)")
       end
+
+      describe '#reportable_models' do
+        subject { controller.send(:reportable_models) }
+        it 'does not contain duplicate items' do
+          duplicates = subject.group_by(&:first).select { |_, v| v.size > 1 }.map(&:first)
+          expect(duplicates).to be_empty
+        end
+      end
     end
 
     context "#miq_report_edit" do
