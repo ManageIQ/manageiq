@@ -1,5 +1,6 @@
+require_relative 'hawkular_helper'
+
 describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
-  THE_FEED_ID = '70c798a0-6985-4f8a-a525-012d8d28e8a3'.freeze
 
   let(:ems_hawkular) do
     # allow(MiqServer).to receive(:my_zone).and_return("default")
@@ -15,9 +16,9 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
   let(:eap) do
     FactoryGirl.create(:hawkular_middleware_server,
                        :name                  => 'Local',
-                       :feed                  => THE_FEED_ID,
+                       :feed                  => the_feed_id,
                        :ems_ref               => '/t;hawkular'\
-                                                 "/f;#{THE_FEED_ID}/r;Local~~",
+                                                 "/f;#{the_feed_id}/r;Local~~",
                        :nativeid              => 'Local~~',
                        :ext_management_system => ems_hawkular)
   end
