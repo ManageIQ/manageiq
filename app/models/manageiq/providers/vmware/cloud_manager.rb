@@ -1,4 +1,8 @@
 class ManageIQ::Providers::Vmware::CloudManager < ManageIQ::Providers::CloudManager
+  require_nested :RefreshParser
+  require_nested :Refresher
+  require_nested :Vm
+
   def self.ems_type
     @ems_type ||= "vmware_cloud".freeze
   end
