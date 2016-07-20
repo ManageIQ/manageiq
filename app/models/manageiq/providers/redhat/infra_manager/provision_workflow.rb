@@ -61,14 +61,20 @@ class ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow < MiqProvisio
     end
   end
 
-  def allowed_hosts_obj(options = {})
-    return [] if (src = resources_for_ui).blank?
-    return [] unless src[:vm]
+  def allowed_datacenters(_options = {})
+    #byebug_term
+    super.slice(datacenter_by_vm.id)
+  end
 
-    hosts = super
-    ems_cluster = load_ar_obj(src[:vm]).ems_cluster
-    hosts &= ems_cluster.hosts if supports_native_clone? && ems_cluster
-    hosts
+  def datacenter_by_vm
+    @datacenter_by_vm ||= begin
+                            vm = resources_for_ui[:vm]
+                            VmOrTemplate.find(vm.id).parent_datacenter
+                          end
+  end
+
+  def allowed_hosts_obj(_options = {})
+    super(:datacenter => datacenter_by_vm)
   end
 
   def allowed_storages(options = {})
