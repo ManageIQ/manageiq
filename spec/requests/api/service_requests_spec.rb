@@ -121,19 +121,22 @@ describe ApiController do
       run_post(service_requests_url, gen_request(:approve, [{"href" => svcreq1_url, "reason" => "approve reason"},
                                                             {"href" => svcreq2_url, "reason" => "approve reason"}]))
 
-      expect_multiple_action_result(2)
-      expect_result_resources_to_include_hrefs("results", :svcreqs_list)
       expected = {
         "results" => a_collection_containing_exactly(
           {
             "message" => a_string_matching(/Service request #{svcreq1.id} approved/i),
+            "success" => true,
+            "href"    => a_string_matching(svcreq1_url)
           },
           {
             "message" => a_string_matching(/Service request #{svcreq2.id} approved/i),
+            "success" => true,
+            "href"    => a_string_matching(svcreq2_url)
           }
         )
       }
       expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
     end
 
     it "supports denying multiple requests" do
@@ -142,19 +145,22 @@ describe ApiController do
       run_post(service_requests_url, gen_request(:deny, [{"href" => svcreq1_url, "reason" => "deny reason"},
                                                          {"href" => svcreq2_url, "reason" => "deny reason"}]))
 
-      expect_multiple_action_result(2)
-      expect_result_resources_to_include_hrefs("results", :svcreqs_list)
       expected = {
         "results" => a_collection_containing_exactly(
           {
             "message" => a_string_matching(/Service request #{svcreq1.id} denied/i),
+            "success" => true,
+            "href"    => a_string_matching(svcreq1_url)
           },
           {
             "message" => a_string_matching(/Service request #{svcreq2.id} denied/i),
+            "success" => true,
+            "href"    => a_string_matching(svcreq2_url)
           }
         )
       }
       expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
     end
   end
 
