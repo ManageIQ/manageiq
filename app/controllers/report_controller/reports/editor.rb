@@ -155,6 +155,7 @@ module ReportController::Reports::Editor
 
     case @sb[:miq_tab].split("_")[1]
     when "1"  # Select columns
+      @edit[:models] ||= reportable_models
       # Add the blank choice if no table chosen yet
       #     @edit[:models].insert(0,["<Choose>", "<Choose>"]) if @edit[:new][:model] == nil && @edit[:models][0][0] != "<Choose>"
       if @edit[:new][:model].nil?
@@ -275,6 +276,12 @@ module ReportController::Reports::Editor
     else
       # drop_breadcrumb( {:name=>"Edit Report", :url=>"/report/edit"} )
       @gtl_url = "/edit"
+    end
+  end
+
+  def reportable_models
+    MiqReport.reportable_models.collect do |m|
+      [Dictionary.gettext(m, :type => :model, :notfound => :titleize, :plural => true), m]
     end
   end
 
@@ -1661,10 +1668,6 @@ module ReportController::Reports::Editor
     end
 
     @edit[:current] = ["copy", "new"].include?(params[:action]) ? {} : copy_hash(@edit[:new])
-
-    @edit[:models] ||= MiqReport.reportable_models.collect do |m|
-      [Dictionary.gettext(m, :type => :model, :notfound => :titleize, :plural => true), m]
-    end
 
     # Only show chargeback users choice if an admin
     if admin_user?
