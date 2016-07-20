@@ -701,7 +701,7 @@ en:
       ContainerProject:         Project
       ContainerRoute:           Route
       ContainerReplicator:      Replicator
-      ContainerService:         Service
+      ContainerService:         Container Service
       EmsCluster:               Cluster / Deployment Role
       EmsClusterPerformance:    Performance - Cluster
       EmsEvent:                 Management Event
