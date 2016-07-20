@@ -59,7 +59,7 @@ describe Metric do
 
       context "executing perf_capture_timer" do
         before(:each) do
-          stub_server_configuration(:performance => {:history => {:initial_capture_days => 7}})
+          stub_settings(:performance => {:history => {:initial_capture_days => 7}})
           Metric::Capture.perf_capture_timer
         end
 
@@ -401,7 +401,7 @@ describe Metric do
 
       context "executing perf_capture_now?" do
         before(:each) do
-          stub_server_configuration(:performance => {:capture_threshold => {:vm => 10}, :capture_threshold_with_alerts => {:vm => 2}})
+          stub_settings(:performance => {:capture_threshold => {:vm => 10}, :capture_threshold_with_alerts => {:vm => 2}})
         end
 
         it "without alerts assigned" do
@@ -1129,7 +1129,7 @@ describe Metric do
 
       context "executing perf_capture_timer" do
         before(:each) do
-          stub_server_configuration(:performance => {:history => {:initial_capture_days => 7}})
+          stub_settings(:performance => {:history => {:initial_capture_days => 7}})
           Metric::Capture.perf_capture_timer
         end
 
