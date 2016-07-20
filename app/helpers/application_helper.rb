@@ -756,6 +756,7 @@ module ApplicationHelper
   def _toolbar_chooser
     ToolbarChooser.new(
       self,
+      binding,
       :alert_profiles => @alert_profiles,
       :button_group   => @button_group,
       :conditions     => @conditions,
@@ -770,6 +771,7 @@ module ApplicationHelper
       :record         => @record,
       :report         => @report,
       :sb             => @sb,
+      :showtype       => @showtype,
       :tabform        => @tabform,
       :view           => @view,
       :center_toolbar => @center_toolbar
