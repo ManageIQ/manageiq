@@ -431,6 +431,7 @@ module Mixins
          ems.supports_authentication?(:bearer) && !params[:default_password].blank?
         creds[:hawkular] = {:auth_key => params[:default_password], :userid => "_"}
         creds[:bearer] = {:auth_key => params[:default_password]}
+        creds.delete(:default)
         ems.update_authentication(creds, :save => (mode != :validate))
       end
       creds
