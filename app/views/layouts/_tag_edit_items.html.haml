@@ -1,7 +1,8 @@
 %hr
 %div
   %h3
-    = _("%{objects} Being Tagged") % {:objects => pluralize(@tagitems.length, ui_lookup(:model => @edit[:tagging]))}
+    - t = {:amount => @tagitems.length, :object => ui_lookup(:model => @edit[:tagging]), :objects => ui_lookup(:models => @edit[:tagging])}
+    = n_("%{amount} %{object} Being Tagged", "%{amount} %{objects} Being Tagged", @tagitems.length) % t
   %table.admintable{:height => "75"}
     %tbody
       %tr

@@ -189,10 +189,13 @@ module ApplicationController::CiProcessing
     # check to see if coming from show_list or drilled into vms from another CI
     if request.parameters[:controller] == "vm" || %w(all_vms instances vms).include?(params[:display])
       rec_cls = "vm"
+      bc_msg = _("Retire VM or Instance")
     elsif request.parameters[:controller] == "service"
       rec_cls =  "service"
+      bc_msg = _("Retire Service")
     elsif request.parameters[:controller] == "orchestration_stack"
       rec_cls = "orchestration_stack"
+      bc_msg = _("Retire Orchestration Stack")
     end
     if vms.blank?
       session[:retire_items] = [params[:id]]
@@ -211,7 +214,7 @@ module ApplicationController::CiProcessing
     if @explorer
       retire
     else
-      drop_breadcrumb(:name => _("Retire %{name}") % {:name => rec_cls.to_s.pluralize},
+      drop_breadcrumb(:name => bc_msg,
                       :url  => "/#{session[:controller]}/retire")
       javascript_redirect :controller => rec_cls, :action => 'retire' # redirect to build the retire screen
     end
@@ -289,7 +292,7 @@ module ApplicationController::CiProcessing
       return
     end
     session[:changed] = @changed = false
-    drop_breadcrumb(:name => _("Retire %{name}") % {:name => kls.to_s.pluralize},
+    drop_breadcrumb(:name => _("Retire %{name}") % {:name => ui_lookup(:models => kls.to_s)},
                     :url  => "/#{session[:controller]}/retire")
     session[:cat] = nil                 # Clear current category
     @retireitems = kls.find(session[:retire_items]).sort_by(&:name) # Get the db records
@@ -1654,9 +1657,12 @@ module ApplicationController::CiProcessing
   rescue => err
     add_flash(_("Error during '%{task}': %{error_message}") % {:task => task, :error_message => err.message}, :error)
   else
-    add_flash(_("%{task} initiated for %{model} from the CFME Database") %
-      {:task  => display_name ? display_name.titleize : task_name(task),
-       :model => pluralize(objs.length, ui_lookup(:model => klass.to_s))})
+    add_flash(n_("%{task} initiated for %{number} %{model} from the CFME Database",
+                 "%{task} initiated for %{number} %{models} from the CFME Database", objs.length) %
+      {:task   => display_name ? display_name.titleize : task_name(task),
+       :number => objs.length,
+       :model  => ui_lookup(:model => klass.to_s),
+       :models => ui_lookup(:models => klass.to_s)})
   end
 
   def foreman_button_operation(method, display_name)
@@ -1688,10 +1694,11 @@ module ApplicationController::CiProcessing
   rescue => err
     add_flash(_("Error during '%{task}': %{message}") % {:task => task, :message => err.message}, :error)
   else
-    add_flash(_("%{task} initiated for %{count_model} (%{controller})") %
-                {:task        => task_name(task),
-                 :controller  => ProviderForemanController.model_to_name(kls.to_s),
-                 :count_model => pluralize(providers.length, _("provider"))})
+    add_flash(n_("%{task} initiated for %{count} provider (%{controller})",
+                 "%{task} initiated for %{count} providers (%{controller})", providers.length) %
+                {:task       => task_name(task),
+                 :controller => ProviderForemanController.model_to_name(kls.to_s),
+                 :count      => providers.length})
   end
 
   # Delete all selected or single displayed VM(s)
@@ -2040,9 +2047,10 @@ module ApplicationController::CiProcessing
     case task
     when "refresh_ems"
       Host.refresh_ems(hosts)
-      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % \
-        {:task        => (display_name || task_name(task)),
-         :count_model => pluralize(hosts.length, "Host")})
+      add_flash(n_("%{task} initiated for %{count} Host from the CFME Database",
+                   "%{task} initiated for %{count} Hosts from the CFME Database", hosts.length) % \
+        {:task  => (display_name || task_name(task)),
+         :count => hosts.length})
       AuditEvent.success(:userid => session[:userid], :event => "host_#{task}",
           :message => "'#{task_name}' successfully initiated for #{pluralize(hosts.length, "Host")}",
           :target_class => "Host")
@@ -2380,8 +2388,11 @@ module ApplicationController::CiProcessing
           {:model => ui_lookup(:tables => model_class.table_name)}, :error)
       end
       send(destroy_method, elements, "destroy") unless elements.empty?
-      add_flash(_("Delete initiated for %{count_model} from the CFME Database") %
-        {:count_model => pluralize(elements.length, ui_lookup(:table => model_class.table_name))}) unless flash_errors?
+      add_flash(n_("Delete initiated for %{count} %{model} from the CFME Database",
+                   "Delete initiated for %{count} %{models} from the CFME Database", elements.length) %
+        {:count  => elements.length,
+         :model  => ui_lookup(:table => model_class.table_name),
+         :models => ui_lookup(:tables => model_class.table_name)}) unless flash_errors?
     else # showing 1 element, delete it
       if params[:id].nil? || model_class.find_by_id(params[:id]).nil?
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => model_class.table_name)}, :error)
