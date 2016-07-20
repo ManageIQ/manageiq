@@ -1600,15 +1600,7 @@ class MiqExpression
     case operator.downcase
     when "equal", "="
       field = Field.parse(exp[operator]["field"])
-      value = case
-              when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = nil).to_date
-              when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = nil).utc
-              else
-                exp[operator]["value"]
-              end
-      field.eq(value)
+      field.eq(exp[operator]["value"])
     when ">", "after"
       field = Field.parse(exp[operator]["field"])
       value = case
@@ -1655,15 +1647,7 @@ class MiqExpression
       field.lteq(value)
     when "!="
       field = Field.parse(exp[operator]["field"])
-      value = case
-              when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = nil).to_date
-              when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = nil).utc
-              else
-                exp[operator]["value"]
-              end
-      field.not_eq(value)
+      field.not_eq(exp[operator]["value"])
     when "like", "includes"
       field = Field.parse(exp[operator]["field"])
       field.matches("%#{exp[operator]["value"]}%")
