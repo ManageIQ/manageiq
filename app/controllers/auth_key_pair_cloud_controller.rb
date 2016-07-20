@@ -246,9 +246,8 @@ class AuthKeyPairCloudController < ApplicationController
       kp.delete_key_pair
       kp.destroy
     end
-    add_flash(_("Delete initiated for %{models}") % {
-      :models => pluralize(key_pairs.length, ui_lookup(:table => 'auth_key_pair_cloud'))
-    })
+    add_flash(n_("Delete initiated for %{number} Key Pair",
+                 "Delete initiated for %{number} Key Pairs", key_pairs.length) % {:number => key_pairs.length})
   end
 
   private
