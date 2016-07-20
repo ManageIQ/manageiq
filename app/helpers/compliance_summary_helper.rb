@@ -37,7 +37,8 @@ module ComplianceSummaryHelper
     else
       h[:image] = "compliance"
       h[:value] = _("Available")
-      h[:title] = _("Show Compliance History of this %{model} (Last 10 Checks)") % ui_lookup(:model => controller.model)
+      h[:title] = _("Show Compliance History of this %{model} (Last 10 Checks)") %
+                  {:model => ui_lookup(:model => controller.class.model.name)}
       h[:link] = url_for(
         :controller => controller.controller_name,
         :action     => 'show',

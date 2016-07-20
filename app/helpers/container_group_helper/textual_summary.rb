@@ -130,4 +130,8 @@ module ContainerGroupHelper::TextualSummary
   def textual_terminated
     container_statuses_summary[:terminated] || 0
   end
+
+  def textual_compliance_history
+    super(:title => _("Show Compliance History of this Replicator (Last 10 Checks)"))
+  end
 end
