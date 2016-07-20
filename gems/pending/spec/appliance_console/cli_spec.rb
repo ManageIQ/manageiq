@@ -54,6 +54,43 @@ describe ApplianceConsole::Cli do
     subject.run
   end
 
+  it "should not run post activation if internal database activation fails" do
+    subject.parse(%w(--internal --username user --password pass -r 1 --dbdisk x))
+    expect_v2_key
+    expect(subject).to receive(:disk_from_string).and_return('x')
+    expect(subject).to receive(:say).twice
+    config_double = double(:activate => false)
+    expect(ApplianceConsole::InternalDatabaseConfiguration).to receive(:new)
+      .with(:region      => 1,
+            :database    => 'vmdb_production',
+            :username    => 'user',
+            :password    => 'pass',
+            :interactive => false,
+            :disk        => 'x')
+      .and_return(config_double)
+    expect(config_double).not_to receive(:post_activation)
+
+    subject.run
+  end
+
+  it "should not run post activation if external database activation fails" do
+    subject.parse(%w(--hostname host --dbname db --username user --password pass -r 1))
+    expect_v2_key
+    expect(subject).to receive(:say).twice
+    config_double = double(:activate => false)
+    expect(ApplianceConsole::ExternalDatabaseConfiguration).to receive(:new)
+      .with(:host        => 'host',
+            :database    => 'db',
+            :region      => 1,
+            :username    => 'user',
+            :password    => 'pass',
+            :interactive => false)
+      .and_return(config_double)
+    expect(config_double).not_to receive(:post_activation)
+
+    subject.run
+  end
+
   it "should handle remote databases (and setup region)" do
     subject.parse(%w(--hostname host --dbname db --username user --password pass -r 1))
     expect_v2_key
