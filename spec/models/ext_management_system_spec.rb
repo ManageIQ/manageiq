@@ -92,6 +92,26 @@ describe ExtManagementSystem do
     end
   end
 
+  it "#total_storages" do
+    storage1 = FactoryGirl.create(:storage)
+    storage2 = FactoryGirl.create(:storage)
+
+    ems = FactoryGirl.create(:ems_vmware)
+    FactoryGirl.create(
+      :host_vmware,
+      :storages              => [storage1, storage2],
+      :ext_management_system => ems
+    )
+
+    FactoryGirl.create(
+      :host_vmware,
+      :storages              => [storage2],
+      :ext_management_system => ems
+    )
+
+    expect(ems.total_storages).to eq 2
+  end
+
   context "#hostname / #hostname=" do
     it "will delegate to the default endpoint" do
       ems = FactoryGirl.build(:ems_vmware, :hostname => "example.org")
