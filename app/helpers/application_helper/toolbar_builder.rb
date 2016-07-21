@@ -219,14 +219,13 @@ class ApplicationHelper::ToolbarBuilder
 
       @sep_added = false
       @groups_added.push(group_index)
-
       case group
       when ApplicationHelper::Toolbar::Group
         group.buttons.each do |bgi|
           build_button(bgi, group_index)
         end
       when ApplicationHelper::Toolbar::Custom
-        group.render(@view_context)
+        group[:args][:html] = CGI.escapeHTML(group.render(@view_context)).delete!("\n")
         @toolbar << group
       end
     end

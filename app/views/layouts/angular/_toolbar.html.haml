@@ -1,6 +1,6 @@
-%div.miq-angular-toolbar{"ng-app" => @angular_toolbar_name.to_s,
+%div{"ng-app" => @angular_toolbar_name.to_s,
      "ng-controller" => "miqToolbarController as toolbarCtrl",
-     "ng-init" => "toolbarCtrl.init('#{@gtl_type}')"}
+     "ng-init" => "toolbarCtrl.initObject('#{toolbar_from_hash.to_json}')"}
   %miq-toolbar-menu{"toolbar-items" => "toolbarCtrl.toolbarItems",
-  "toolbar-views" => "toolbarCtrl.dataViews",
-  "on-view-click" => "toolbarCtrl.onViewClick(item)"}
+                    "toolbar-views" => "toolbarCtrl.dataViews",
+                    "on-view-click" => "toolbarCtrl.onViewClick(item)"}

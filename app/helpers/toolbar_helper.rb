@@ -215,4 +215,13 @@ module ToolbarHelper
   def prepare_data_keys(props)
     Hash(props[:data]).each_with_object({}) { |(k, v), h| h["data-#{k}"] = v }
   end
+
+  # Method for generating toolbar hash.
+  # This method calls calculate_toolbars and build_toolbar(toolbar_name)
+  # each button is pushed to array.
+  def toolbar_from_hash
+    calculate_toolbars.collect do |_div_id, toolbar_name|
+      buttons = toolbar_name ? build_toolbar(toolbar_name) : nil
+    end
+  end
 end

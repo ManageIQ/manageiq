@@ -29,6 +29,16 @@
     }
   }
 
+  function generateGetData(type, lastaction, display) {
+    var getData = {
+      id: ManageIQ.record.recordId,
+      gtl_type: type,
+      lastAction: lastaction,
+      display: display
+    }
+    return _.pick(getData, _.identity);
+  }
+
   /**
   * Constructor of angular's miqToolbarController.
   * @param MiQToolbarSettingsService toolbarSettings service from ui-components.
@@ -74,9 +84,9 @@
   * Settings is called with this.isList and $location search object with value of `type`.
   * No need to worry about multiple search params and no complicated function for parsing is needed.
   */
-  ToolbarController.prototype.fetchData = function(id, type) {
+  ToolbarController.prototype.fetchData = function(getData) {
     return this.MiQToolbarSettingsService
-      .getSettings(this.isList, id, type)
+      .getSettings(getData)
       .then(function(toolbarItems) {
         this.toolbarItems = toolbarItems.items;
         this.dataViews = toolbarItems.dataViews;
@@ -97,7 +107,7 @@
       .filter({type: 'button'})
       .each(function(item) {
         item.eventFunction = function($event) {
-          miqToolbarOnClick.bind($event.target)($event);
+          miqToolbarOnClick.bind($event.delegateTarget)($event);
         }
       })
       .value();
@@ -116,12 +126,20 @@
   * It will bind this controller to rxSubject, fetches data, filter Data views and sets default view's url. All these
   * methods are public, except subscribeToSubject.
   */
-  ToolbarController.prototype.init = function(type) {
+  ToolbarController.prototype.init = function(type, lastaction, display) {
     subscribeToSubject.bind(this)();
-    return this.fetchData(ManageIQ.record.recordId, type).then(function() {
+    return this.fetchData(generateGetData(type, lastaction, display)).then(function() {
       this.defaultViewUrl();
       this.setClickHandler();
     }.bind(this));
+  }
+
+  ToolbarController.prototype.initObject = function(toolbarString) {
+    toolbarItems = this.MiQToolbarSettingsService.generateToolbarObject(JSON.parse(toolbarString));
+    this.toolbarItems = toolbarItems.items;
+    this.dataViews = toolbarItems.dataViews;
+    this.defaultViewUrl();
+    this.setClickHandler();
   }
 
   ToolbarController.$inject = ['MiQToolbarSettingsService', 'MiQEndpointsService', '$scope', '$location'];
