@@ -37,7 +37,7 @@ module  ConfigurationJobHelper::TextualSummary
     else
       h[:value] = service.name
       h[:title] = _("Show this Service")
-      h[:link]  = url_for(:controller => 'service', :action => 'show', :id => service)
+      h[:link]  = url_for(:controller => 'service', :action => 'show', :id => to_cid(service.id))
     end
     h
   end
