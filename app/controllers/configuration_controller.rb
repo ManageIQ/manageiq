@@ -550,22 +550,12 @@ class ConfigurationController < ApplicationController
 
   def build_tabs
     @breadcrumbs = []
-    case @config_tab
-    when "ui"
+    if @config_tab == "ui"
       if @tabform != "ui_4"
         drop_breadcrumb({:name => _("User Interface Configuration"), :url => "/configuration/edit"}, true)
       end
 
-      case @tabform
-      when "ui_1"
-        @active_tab = "1"
-      when "ui_2"
-        @active_tab = "2"
-      when "ui_3"
-        @active_tab = "3"
-      when "ui_4"
-        @active_tab = "4"
-      end
+      @active_tab = @tabform.split("_").last
 
       @tabs = []
       @tabs.push(["1", _("Visual")])          if role_allows(:feature => "my_settings_visuals")

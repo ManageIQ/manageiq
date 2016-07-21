@@ -28,6 +28,8 @@ class MiqTaskController < ApplicationController
     @tasks_options[:zones] = Zone.all.collect { |z| z.name unless z.miq_servers.blank? }.compact
     tasks_set_default_options if @tasks_options[@tabform].blank?
 
+    @tabs ||= []
+
     if role_allows(:feature => "job_my_smartproxy")
       @tabs.push(["1", _("My VM and Container Analysis Tasks")])
     end
@@ -41,18 +43,7 @@ class MiqTaskController < ApplicationController
       @tabs.push(["4", _("All Other Tasks")])
     end
 
-    @active_tab = @tabs.first.first
-
-    case @tabform
-    when "tasks_1"
-      @active_tab = "1"
-    when "tasks_2"
-      @active_tab = "2"
-    when "tasks_3"
-      @active_tab = "3"
-    when "tasks_4"
-      @active_tab = "4"
-    end
+    @active_tab = @tabform.split("_").last
   end
 
   # Show job list for the current user
