@@ -26,7 +26,11 @@ module MiqException
   class PolicyPreventAction < MiqActionError; end
 
   # Login/Logout user related errors
-  class MiqEVMLoginError < Error; end
+  class MiqEVMLoginError < Error
+    def initialize(msg = "Login failed due to a bad username or password.")
+      super
+    end
+  end
   class MiqHostError < Error; end
   class MiqInvalidCredentialsError < Error; end
   class MiqUnreachableError < Error; end
