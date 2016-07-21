@@ -40,8 +40,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
   end
 
   it "#collect_live_metrics for all metrics available" do
-    start_time = Time.new(2016, 6, 22, 10, 0, 0, "+02:00")
-    end_time = Time.new(2016, 6, 22, 11, 0, 0, "+02:00")
+    start_time = Time.new(2016, 7, 17, 10, 0, 0, "+02:00")
+    end_time = Time.new(2016, 7, 17, 11, 0, 0, "+02:00")
     interval = 3600
     VCR.use_cassette(described_class.name.underscore.to_s,
                      :allow_unused_http_interactions => true,
@@ -54,8 +54,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
   end
 
   it "#collect_live_metrics for three metrics" do
-    start_time = Time.new(2016, 6, 22, 10, 0, 0, "+02:00")
-    end_time = Time.new(2016, 6, 22, 11, 0, 0, "+02:00")
+    start_time = Time.new(2016, 7, 17, 10, 0, 0, "+02:00")
+    end_time = Time.new(2016, 7, 17, 11, 0, 0, "+02:00")
     interval = 3600
     VCR.use_cassette(described_class.name.underscore.to_s,
                      :allow_unused_http_interactions => true,
@@ -87,7 +87,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
       "Datasource Pool Metrics~In Use Count"          => "mw_ds_in_use_count",
       "Datasource Pool Metrics~Timed Out"             => "mw_ds_timed_out",
       "Datasource Pool Metrics~Average Get Time"      => "mw_ds_average_get_time",
-      "Datasource Pool Metrics~Average Creation Time" => "mw_ds_average_creation_time"
+      "Datasource Pool Metrics~Average Creation Time" => "mw_ds_average_creation_time",
+      "Datasource Pool Metrics~Max Wait Time"         => "mw_ds_max_wait_time"
     }.freeze
     supported_metrics = MiddlewareDatasource.supported_metrics
     expected_metrics.each { |k, v| expect(supported_metrics[k]).to eq(v) }
