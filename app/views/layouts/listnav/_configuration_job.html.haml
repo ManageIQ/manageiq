@@ -27,13 +27,3 @@
           :action        => 'parameters',
           :record_id     => @record.id,
           :title         => _("Show all Parameters"))
-        = li_link(:count => @record.number_of(:outputs),
-          :text          => _("Outputs"),
-          :action        => 'outputs',
-          :record_id     => @record.id,
-          :title         => _("Show all Outputs"))
-        = li_link(:count => @record.number_of(:resources),
-          :text          => _("Resources"),
-          :action        => 'resources',
-          :record_id     => @record.id,
-          :title         => _("Show all Resources"))
