@@ -48,7 +48,7 @@ class ApplicationHelper::Toolbar::EmsCloudsCenter < ApplicationHelper::Toolbar::
           :onwhen    => "1+"),
         separator,
         button(
-          :ems_cloud_arbitration_profile_new,
+          :arbitration_profile_new,
           'pficon pficon-edit fa-lg',
           N_('Add a new Arbitration Profile to Cloud Provider'),
           N_('Add a new Arbitration Profile to Cloud Provider'),
