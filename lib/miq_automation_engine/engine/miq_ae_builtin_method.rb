@@ -54,6 +54,21 @@ module MiqAeEngine
       obj.workspace.root["ae_provider_category"] = provider_category || UNKNOWN
     end
 
+    def self.miq_parse_automation_request(obj, _inputs)
+      obj['target_component'], obj['target_class'], obj['target_instance'] =
+        case obj['request']
+        when 'vm_provision'   then %w(VM   Lifecycle Provisioning)
+        when 'vm_retired'     then %w(VM   Lifecycle Retirement)
+        when 'vm_migrate'     then %w(VM   Lifecycle Migrate)
+        when 'host_provision' then %w(Host Lifecycle Provisioning)
+        when 'configured_system_provision'
+          obj.workspace.root['ae_provider_category'] = 'infrastructure'
+          %w(Configured_System Lifecycle Provisioning)
+        end
+      $miq_ae_logger.info("Request:<#{obj['request']}> Target Component:<#{obj['target_component']}> ")
+      $miq_ae_logger.info("Target Class:<#{obj['target_class']}> Target Instance:<#{obj['target_instance']}>")
+    end
+
     def self.miq_host_and_storage_least_utilized(obj, _inputs)
       prov = obj.workspace.get_obj_from_path("/")['miq_provision']
       raise MiqAeException::MethodParmMissing, "Provision not specified" if prov.nil?
