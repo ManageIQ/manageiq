@@ -730,8 +730,13 @@ module ApplicationController::Performance
       rpt.tz = @perf_options[:tz]
       rpt.extras = Hash.new
       rpt.extras[:realtime] = true
-      @perf_options[:range] = to_dt.nil? ? nil :
-                              "#{format_timezone(from_dt, @perf_options[:tz], "datetime")} to #{format_timezone(to_dt, @perf_options[:tz], "gtl")}"
+      @perf_options[:range] = if to_dt.nil?
+                                nil
+                              else
+                                _("%{date_from} to %{date_to}") %
+                                  {:date_from => format_timezone(from_dt, @perf_options[:tz], "datetime"),
+                                   :date_to   => format_timezone(to_dt, @perf_options[:tz], "gtl")}
+                              end
       rpt.where_clause =  ["resource_type = ? and resource_id = ? and timestamp >= ? and timestamp <= ? and capture_interval_name = ?",
                            @perf_options[:model],
                            @perf_record.id,
