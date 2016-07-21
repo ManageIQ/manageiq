@@ -100,19 +100,20 @@ describe EmsEvent do
     end
   end
 
-  context ".process_container_entities_in_event!" do
+  context "container events" do
     let(:ems_ref) { "test_ems_ref" }
 
     before :each do
       @ems = FactoryGirl.create(:ems_kubernetes)
       @container_project = FactoryGirl.create(:container_project, :ext_management_system => @ems)
       @event_hash = {
-        :ems_ref => ems_ref,
-        :ems_id  => @ems.id
+        :ems_ref    => ems_ref,
+        :ems_id     => @ems.id,
+        :event_type => "STUFF_HAPPENED"
       }
     end
 
-    context "process node in events" do
+    context "on node" do
       before :each do
         @container_node = FactoryGirl.create(:container_node,
                                              :ext_management_system => @ems,
@@ -120,13 +121,18 @@ describe EmsEvent do
                                              :ems_ref               => ems_ref)
       end
 
-      it "should link node id to event" do
+      it "process_container_entities_in_event! links node id to event" do
         EmsEvent.process_container_entities_in_event!(@event_hash)
         expect(@event_hash[:container_node_id]).to eq @container_node.id
       end
+
+      it "constructed event has .container_node" do
+        event = EmsEvent.add(@ems.id, @event_hash)
+        expect(event.container_node).to eq @container_node
+      end
     end
 
-    context "process pods in events" do
+    context "on pod" do
       before :each do
         @container_group = FactoryGirl.create(:container_group,
                                               :ext_management_system => @ems,
@@ -135,13 +141,18 @@ describe EmsEvent do
                                               :ems_ref               => ems_ref)
       end
 
-      it "should link pod id to event" do
+      it "process_container_entities_in_event! links pod id to event" do
         EmsEvent.process_container_entities_in_event!(@event_hash)
         expect(@event_hash[:container_group_id]).to eq @container_group.id
       end
+
+      it "constructed event has .container_group" do
+        event = EmsEvent.add(@ems.id, @event_hash)
+        expect(event.container_group).to eq @container_group
+      end
     end
 
-    context "process replicator in events" do
+    context "on replicator" do
       before :each do
         @container_replicator = FactoryGirl.create(:container_replicator,
                                                    :ext_management_system => @ems,
@@ -150,9 +161,14 @@ describe EmsEvent do
                                                    :ems_ref               => ems_ref)
       end
 
-      it "should link replicator id to event" do
+      it "process_container_entities_in_event! links replicator id to event" do
         EmsEvent.process_container_entities_in_event!(@event_hash)
         expect(@event_hash[:container_replicator_id]).to eq @container_replicator.id
+      end
+
+      it "constructed event has .container_replicator" do
+        event = EmsEvent.add(@ems.id, @event_hash)
+        expect(event.container_replicator).to eq @container_replicator
       end
     end
   end
