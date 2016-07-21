@@ -19,7 +19,7 @@
               &times;
             %span.sr-only
               = _("Close")
-          %h4.modal-title{ "ng-bind-html" => "paramsModel.operationTitle"}
+          %h4.modal-title{"ng-bind" => "paramsModel.operationTitle"}
 
         .modal-body
           %input#mw_param_server_id{:type  => "hidden",
@@ -49,7 +49,7 @@
           %button.btn.btn-primary{:type         => "button",
                                   "ng-click"    => "runOperation(paramsModel.operation)",
                                   "ng-disabled" => "opsParamForm.$invalid",
-                                  "ng-bind"     => "paramsModel.operationButtonName" }
+                                  "ng-bind"     => "paramsModel.operationButtonName"}
 
 
 :javascript
