@@ -2382,7 +2382,9 @@ module ApplicationController::CiProcessing
 
   def configuration_job_delete
     assert_privileges("configuration_job_delete")
-    delete_elements(ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job, :process_configuration_jobs, 'configuration_job')
+    delete_elements(ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job,
+                    :process_configuration_jobs,
+                    'configuration_job')
   end
 
   # Delete all selected or single displayed datastore(s)
@@ -2425,7 +2427,7 @@ module ApplicationController::CiProcessing
   def delete_elements(model_class, destroy_method, model_name = nil)
     elements = []
     model_name ||= model_class.table_name
-    if @lastaction == "show_list" || (@lastaction == "show" && @layout != model_name.singularize)  # showing a list
+    if @lastaction == "show_list" || (@lastaction == "show" && @layout != model_name.singularize) # showing a list
       elements = find_checked_items
       if elements.empty?
         add_flash(_("No %{model} were selected for deletion") %

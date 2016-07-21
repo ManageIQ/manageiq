@@ -910,10 +910,10 @@ module ApplicationHelper
 
   def controller_for_stack(model)
     case model.to_s
-      when "ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job"
-        "configuration_job"
-      else
-        model.name.underscore
+    when "ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job"
+      "configuration_job"
+    else
+      model.name.underscore
     end
   end
 

@@ -14,16 +14,14 @@
       %ul.nav.nav-pills.nav-stacked
         - if role_allows(:feature => "provider_foreman_view") && @record.ext_management_system
           %li
-            - l = [ui_lookup(:model => @record.ext_management_system.class.to_s), ui_lookup(:table => "job")]
             = link_to("#{ui_lookup(:model => @record.ext_management_system.class.to_s)}: #{@record.ext_management_system.name}",
               {:controller => "provider_foreman", :action => 'explorer', :id => "at-#{to_cid(@record.ext_management_system.id)}"},
-              :title => _("Show parent %s for this %s") % l)
+              :title => _("Show parent %s for this Job") % ui_lookup(:model => @record.ext_management_system.class.to_s))
         - if role_allows(:feature => "service_view") && @record.ext_management_system
           %li
-            - l = [ui_lookup(:table => "service"), ui_lookup(:table => "job")]
             = link_to("#{ui_lookup(:table => "service")}: #{@record.service.name}",
               {:controller => "service", :action => 'show', :id => to_cid(@record.service.id)},
-              :title => _("Show service %s for this %s") % l)
+              :title => _("Show service %s for this Job") % ui_lookup(:table => "service"))
         = li_link(:count => @record.number_of(:parameters),
           :text          => _("Parameters"),
           :action        => 'parameters',
