@@ -89,7 +89,7 @@ class ApiController
     def user_settings
       {
         :locale => I18n.locale.to_s.sub('-', '_'),
-      }
+      }.merge(@auth_user_obj.settings)
     end
 
     def userid_to_userobj(userid)

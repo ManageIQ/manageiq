@@ -1,12 +1,15 @@
 class ApiController
-  INVALID_USER_ATTRS = %w(id href current_group_id)
+  INVALID_USER_ATTRS = %w(id href current_group_id settings).freeze # Cannot update other people's settings
+  INVALID_SELF_USER_ATTRS = %w(id href current_group_id).freeze
 
   module Users
     def update_users
       aname = parse_action_name
       if aname == "edit" && !api_user_role_allows?(aname) && update_target_is_api_user?
-        if json_body_resource.try(:keys) != %w(password)
-          raise BadRequestError, "Cannot update non-password attributes of the authenticated user resource"
+        editable_attrs = %w(password email settings)
+        if (Array(json_body_resource.try(:keys)) - editable_attrs).present?
+          raise BadRequestError,
+                "Cannot update attributes other than #{editable_attrs.join(', ')} for the authenticated user"
         end
         render_normal_update :users, update_collection(:users, @req[:c_id])
       else
@@ -18,6 +21,7 @@ class ApiController
       validate_user_create_data(data)
       parse_set_group(data)
       raise BadRequestError, "Must specify a valid group for creating a user" unless data["miq_groups"]
+      parse_set_settings(data)
       user = collection_class(:users).create(data)
       if user.invalid?
         raise BadRequestError, "Failed to add a new user - #{user.errors.full_messages.join(', ')}"
@@ -26,8 +30,9 @@ class ApiController
     end
 
     def edit_resource_users(type, id, data)
-      validate_user_data(data)
+      (id == @auth_user_obj.id) ? validate_self_user_data(data) : validate_user_data(data)
       parse_set_group(data)
+      parse_set_settings(data, resource_search(id, type, collection_class(type)))
       edit_resource(type, id, data)
     end
 
@@ -48,9 +53,22 @@ class ApiController
       data.merge!("miq_groups" => Array(group)) if group
     end
 
+    def parse_set_settings(data, user = nil)
+      settings = data.delete("settings")
+      if settings.present?
+        current_settings = user.nil? ? {} : user.settings
+        data.merge!("settings" => Hash(current_settings).deep_merge(settings.deep_symbolize_keys))
+      end
+    end
+
     def validate_user_data(data = {})
       bad_attrs = data.keys.select { |k| INVALID_USER_ATTRS.include?(k) }.compact.join(", ")
       raise BadRequestError, "Invalid attribute(s) #{bad_attrs} specified for a user" if bad_attrs.present?
+    end
+
+    def validate_self_user_data(data = {})
+      bad_attrs = data.keys.select { |k| INVALID_SELF_USER_ATTRS.include?(k) }.compact.join(", ")
+      raise BadRequestError, "Invalid attribute(s) #{bad_attrs} specified for the current user" if bad_attrs.present?
     end
 
     def validate_user_create_data(data)
