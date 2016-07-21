@@ -147,7 +147,7 @@ class MiqWorker < ApplicationRecord
       _log.info("Workers are being synchronized: Current #: [#{current}], Desired #: [#{desired}]")
 
       if desired > current && enough_resource_to_start_worker?
-        (desired - current).times { result[:adds] << start_worker.pid }
+        (desired - current).times { result[:adds] << Proc.new { start_worker } }
       elsif desired < current
         w = w.to_a
         (current - desired).times do

@@ -73,8 +73,7 @@ module MiqWebServerWorkerMixin
             _log.info("Reserved port=#{port}, Current ports in use: #{ports.inspect}")
             ports << port
             ports_hash[:adds] << port
-            w = start_worker(:uri => build_uri(port))
-            result[:adds] << w.pid
+            result[:adds] << Proc.new { start_worker(:uri => build_uri(port)) }
           end
         elsif desired < current
           workers = workers.to_a

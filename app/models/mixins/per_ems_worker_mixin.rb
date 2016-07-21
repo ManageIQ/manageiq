@@ -43,8 +43,7 @@ module PerEmsWorkerMixin
 
         if desired.length > current.length && enough_resource_to_start_worker?
           (desired - current).each do |x|
-            w = start_worker_for_ems(x)
-            result[:adds] << w.pid unless w.nil?
+            result[:adds] << Proc.new { start_worker_for_ems(x) }
           end
         elsif desired.length < current.length
           (current - desired).each do |x|

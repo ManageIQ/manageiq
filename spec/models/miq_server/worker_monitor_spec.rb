@@ -397,4 +397,45 @@ describe "MiqWorker Monitor" do
       end
     end
   end
+
+  context ".sync_workers" do
+    before do
+      @miq_server = EvmSpecHelper.local_miq_server
+      @miq_server.setup_drb_variables
+    end
+
+    def assert_sync_workers(klass, expected_args, pids)
+      allow(klass).to receive(:has_required_role?).and_return(true)
+
+      pids_with_doubles = pids.collect do |ret|
+        double(:pid => ret)
+      end
+
+      allow(klass).to receive(:start_worker) do |args|
+        expect(args).to eq(expected_args)
+      end.and_return(*pids_with_doubles)
+
+      expect(@miq_server.sync_workers(klass.name)[klass.name][:adds])
+        .to eq(pids)
+
+      workers = @miq_server.instance_variable_get(:@workers).keys.sort
+      expect(workers).to eq(pids.sort)
+    end
+
+    it "MiqUiWorker" do
+      assert_sync_workers(MiqUiWorker, {:uri => "http://0.0.0.0:3000"}, [10])
+    end
+
+    it "MiqGenericWorker" do
+      assert_sync_workers(MiqGenericWorker, nil, [10, 11])
+    end
+
+    it "MiqEmsRefreshCoreWorker" do
+      allow(MiqEmsRefreshCoreWorker)
+        .to(receive(:desired_queue_names))
+        .and_return(["ems_1"])
+
+      assert_sync_workers(MiqEmsRefreshCoreWorker, {:queue_name => "ems_1"}, [10])
+    end
+  end
 end

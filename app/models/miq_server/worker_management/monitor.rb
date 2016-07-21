@@ -45,14 +45,28 @@ module MiqServer::WorkerManagement::Monitor
     MiqVimBrokerWorker.cleanup_for_pid(w.pid)
   end
 
-  def sync_workers
+  def sync_workers(class_names = self.class.monitor_class_names)
     result = {}
-    self.class.monitor_class_names.each do |class_name|
+    Array(class_names).each do |class_name|
       c = class_name.constantize
       result[c.name] = c.sync_workers
-      result[c.name][:adds].each { |pid| worker_add(pid) unless pid.nil? }
+    end
+
+    result.each do |_class_name, sync_result|
+      process_sync_worker_adds_for_worker_class(sync_result)
     end
     result
+  end
+
+  def process_sync_worker_adds_for_worker_class(sync_result)
+    new_adds = sync_result[:adds].collect do |proc|
+      w = proc.call
+      worker_add(w.pid) unless w.pid.nil?
+      w.pid
+    end.compact
+
+    sync_result[:adds] = new_adds
+    sync_result
   end
 
   def restart_worker(w, reason = nil)
