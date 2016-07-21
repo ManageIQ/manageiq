@@ -628,7 +628,6 @@ module ReportController::Reports::Editor
     elsif params[:chosen_tz]
       @edit[:new][:tz] = params[:chosen_tz]
     elsif params.key?(:chosen_time_profile)
-      tp = TimeProfile.find(params[:chosen_time_profile]) unless params[:chosen_time_profile].blank?
       @edit[:new][:time_profile] = params[:chosen_time_profile].blank? ? nil : params[:chosen_time_profile].to_i
       @refresh_div = "filter_div"
       @refresh_partial = "form_filter"
@@ -930,11 +929,10 @@ module ReportController::Reports::Editor
             if af[0].include?(":")                            # Not a base column
               table = af[0].split(" : ")[0].split(".")[-1]    # Get the table name
               table = table.singularize unless table == "OS"  # Singularize, except "OS"
-              header = table + " " + af[0].split(" : ")[1]    # Add the table + col name
               temp = af[0].split(" : ")[1]
-              temp_header = table == temp.split(" ")[0] ? af[0].split(" : ")[1] : temp_header = table + " " + af[0].split(" : ")[1]
+              temp_header = table == temp.split(" ")[0] ? af[0].split(" : ")[1] : table + " " + af[0].split(" : ")[1]
             else
-              header = temp_header = af[0].strip              # Base column, just use it without leading space
+              temp_header = af[0].strip                       # Base column, just use it without leading space
             end
             @edit[:new][:headers][af[1]] = temp_header        # Add the column title to the headers hash
           end
@@ -1669,15 +1667,6 @@ module ReportController::Reports::Editor
 
     @edit[:current] = ["copy", "new"].include?(params[:action]) ? {} : copy_hash(@edit[:new])
 
-    # Only show chargeback users choice if an admin
-    if admin_user?
-      @edit[:cb_users] = User.all.each_with_object({}) { |u, h| h[u.userid] = u.name }
-      @edit[:cb_tenant] = Tenant.all.each_with_object({}) { |t, h| h[t.id] = t.name }
-    else
-      @edit[:new][:cb_show_typ] = "owner"
-      @edit[:new][:cb_owner_id] = session[:userid]
-    end
-
     # For trend reports, check for percent field chosen
     if @rpt.db && @rpt.db == TREND_MODEL &&
        MiqExpression.reporting_available_fields(@edit[:new][:model], @edit[:new][:perf_interval]).find do|af|
@@ -1850,5 +1839,179 @@ module ReportController::Reports::Editor
         end
       end
     end
+  end
+
+  def valid_report?(rpt)
+    active_tab = 'edit_1'
+    if @edit[:new][:model] == TREND_MODEL
+      unless @edit[:new][:perf_trend_col]
+        add_flash(_('Trending for is required'), :error)
+      end
+      unless @edit[:new][:perf_limit_col] || @edit[:new][:perf_limit_val]
+        add_flash(_('Trend Target Limit must be configured'), :error)
+      end
+      if @edit[:new][:perf_limit_val] && !is_numeric?(@edit[:new][:perf_limit_val])
+        add_flash(_('Trend Target Limit must be numeric'), :error)
+      end
+    elsif @edit[:new][:fields].empty?
+      add_flash(_('At least one Field must be selected'), :error)
+    end
+
+    if Chargeback.db_is_chargeback?(@edit[:new][:model])
+      msg = case @edit[:new][:cb_show_typ]
+            when nil
+              _('Show Costs by must be selected')
+            when 'owner'
+              _('An Owner must be selected') unless @edit[:new][:cb_owner_id]
+            when 'tenant'
+              _('A Tenant Category must be selected') unless @edit[:new][:cb_tenant_id]
+            when 'tag'
+              if !@edit[:new][:cb_tag_cat]
+                _('A Tag Category must be selected')
+              elsif !@edit[:new][:cb_tag_value]
+                _('A Tag must be selected')
+              end
+            when 'entity'
+              unless @edit[:new][:cb_entity_id]
+                _("A specific #{ui_lookup(:model => @edit[:new][:cb_model])} or all must be selected")
+              end
+            end
+      if msg
+        add_flash(msg, :error)
+        active_tab = 'edit_3'
+      end
+    end
+
+    # Validate column styles
+    unless rpt.col_options.blank? || @edit[:new][:field_order].nil?
+      @edit[:new][:field_order].each do |f| # Go thru all of the cols in order
+        col = f.last.split('.').last.split('-').last
+        if val = rpt.col_options[col] # Skip if no options for this col
+          next unless val.key?(:style) # Skip if no style options
+          val[:style].each_with_index do |s, s_idx| # Go through all of the configured ifs
+            if s[:value]
+              if e = MiqExpression.atom_error(rpt.col_to_expression_col(col.split('__').first), # See if the value is in error
+                                              s[:operator],
+                                              s[:value])
+                msg = case s_idx + 1
+                      when 1
+                        add_flash(_("Styling for '%{item}', first value is in error: %{message}") %
+                                    {:item => f.first, :message => e.message}, :error)
+                      when 2
+                        add_flash(_("Styling for '%{item}', second value is in error: %{message}") %
+                                    {:item => f.first, :message => e.message}, :error)
+                      when 3
+                        add_flash(_("Styling for '%{item}', third value is in error: %{message}") %
+                                    {:item => f.first, :message => e.message}, :error)
+                      end
+                active_tab = 'edit_9'
+              end
+            end
+          end
+        end
+      end
+    end
+
+    unless rpt.valid? # Check the model for errors
+      rpt.errors.each do |field, msg|
+        add_flash("#{field.to_s.capitalize} #{msg}", :error)
+      end
+    end
+    @sb[:miq_tab] = active_tab if flash_errors?
+    @flash_array.nil?
+  end
+
+  # Check for valid report configuration in @edit[:new]
+  # Check if chargeback field is valid
+  def valid_chargeback_fields
+    is_valid = false
+    # There are valid show typ fields
+    if %w(owner tenant tag entity).include?(@edit[:new][:cb_show_typ])
+      is_valid = case @edit[:new][:cb_show_typ]
+                 when 'owner' then @edit[:new][:cb_owner_id]
+                 when 'tenant' then @edit[:new][:cb_tenant_id]
+                 when 'tag' then @edit[:new][:cb_tag_cat] && @edit[:new][:cb_tag_value]
+                 when 'entity' then @edit[:new][:cb_entity_id] && @edit[:new][:cb_provider_id]
+                 end
+    end
+    is_valid
+  end
+
+  # Check for tab switch error conditions
+  def check_tabs
+    @sb[:miq_tab] = params[:tab]
+    active_tab = 'edit_1'
+    case @sb[:miq_tab].split('_')[1]
+    when '8'
+      if @edit[:new][:fields].empty?
+        add_flash(_('Consolidation tab is not available until at least 1 field has been selected'), :error)
+      end
+    when '2'
+      if @edit[:new][:fields].empty?
+        add_flash(_('Formatting tab is not available until at least 1 field has been selected'), :error)
+      end
+    when '3'
+      if @edit[:new][:model] == TREND_MODEL
+        unless @edit[:new][:perf_trend_col]
+          add_flash(_('Filter tab is not available until Trending for field has been selected'), :error)
+        end
+        unless @edit[:new][:perf_limit_col] || @edit[:new][:perf_limit_val]
+          add_flash(_('Filter tab is not available until Trending Target Limit has been configured'), :error)
+        end
+        if @edit[:new][:perf_limit_val] && !is_numeric?(@edit[:new][:perf_limit_val])
+          add_flash(_('Trend Target Limit must be numeric'), :error)
+        end
+      elsif @edit[:new][:fields].empty?
+        add_flash(_('Filter tab is not available until at least 1 field has been selected'), :error)
+      end
+    when '4'
+      if @edit[:new][:fields].empty?
+        add_flash(_('Summary tab is not available until at least 1 field has been selected'), :error)
+      end
+    when '5'
+      if @edit[:new][:fields].empty?
+        add_flash(_('Charts tab is not available until at least 1 field has been selected'), :error)
+      elsif @edit[:new][:sortby1].blank? || @edit[:new][:sortby1] == NOTHING_STRING
+        add_flash(_('Charts tab is not available unless a sort field has been selected'), :error)
+        active_tab = 'edit_4'
+      end
+    when '6'
+      if @edit[:new][:fields].empty?
+        add_flash(_('Timeline tab is not available until at least 1 field has been selected'), :error)
+      else
+        found = false
+        @edit[:new][:fields].each do |field|
+          if MiqReport.get_col_type(field[1]) == :datetime
+            found = true
+            break
+          end
+        end
+        unless found
+          add_flash(_('Timeline tab is not available unless at least 1 time field has been selected'), :error)
+        end
+      end
+    when '7'
+      if @edit[:new][:model] == TREND_MODEL
+        unless @edit[:new][:perf_trend_col]
+          add_flash(_('Preview tab is not available until Trending for field has been selected'), :error)
+        end
+        unless @edit[:new][:perf_limit_col] || @edit[:new][:perf_limit_val]
+          add_flash(_('Preview tab is not available until Trend Target Limit has been configured'), :error)
+        end
+        if @edit[:new][:perf_limit_val] && !is_numeric?(@edit[:new][:perf_limit_val])
+          add_flash(_('Trend Target Limit: Value must be numeric'), :error)
+        end
+      elsif @edit[:new][:fields].empty?
+        add_flash(_('Preview tab is not available until at least 1 field has been selected'), :error)
+      elsif Chargeback.db_is_chargeback?(@edit[:new][:model]) && !valid_chargeback_fields
+        add_flash(_('Preview tab is not available until Chargeback Filters has been configured'), :error)
+        active_tab = 'edit_3'
+      end
+    when '9'
+      if @edit[:new][:fields].empty?
+        add_flash(_('Styling tab is not available until at least 1 field has been selected'), :error)
+      end
+    end
+    @sb[:miq_tab] = active_tab if flash_errors?
   end
 end
