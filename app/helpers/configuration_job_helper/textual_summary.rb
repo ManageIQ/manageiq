@@ -11,7 +11,7 @@ module  ConfigurationJobHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(service security_groups parameters outputs resources)
+    %i(provider service security_groups parameters outputs resources)
   end
 
   #
@@ -42,14 +42,15 @@ module  ConfigurationJobHelper::TextualSummary
     h
   end
 
-  def textual_job_template
-    template = @record.try(:configuration_script)
-    return nil if template.nil?
-    label = ui_lookup(:table => "configuration_scripts")
-    h = {:label => label, :image => "configuration_scripts", :value => template.name}
-    if role_allows(:feature => "configuration_scripts_view")
-      h[:title] = _("Show this Configuration Script")
-      h[:link] = url_for(:action => 'show', :id => @configuration_job, :display => 'configuration_script')
+  def textual_provider
+    h = {:label => _("Provider"), :image => "vendor-ansible_tower_configuration"}
+    provider = @record.ext_management_system
+    if provider.nil?
+      h[:value] = _("None")
+    else
+      h[:value] = provider.name
+      h[:title] = _("Show this Parent Provider")
+      h[:link]  = url_for(:controller => 'provider_foreman', :action => 'explorer', :id => "at-#{to_cid(provider.id)}")
     end
     h
   end
