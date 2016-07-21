@@ -2,7 +2,7 @@ class MiqAeValue < ApplicationRecord
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
   belongs_to :ae_field,    :class_name => "MiqAeField",    :foreign_key => :field_id
-  belongs_to :ae_instance, :class_name => "MiqAeInstance", :foreign_key => :instance_id
+  belongs_to :ae_instance, :class_name => "MiqAeInstance", :foreign_key => :instance_id, :touch => true
 
   def to_export_xml(options = {})
     require 'builder'
