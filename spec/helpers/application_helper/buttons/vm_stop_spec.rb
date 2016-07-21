@@ -41,7 +41,7 @@ describe ApplicationHelper::Button::VmStop do
       it "disables the button and returns the stop error message" do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'record' => @record}, {})
-        expect(button.disable?).to eq("xx stop message")
+        expect(button.disable?).to be_truthy
       end
     end
   end

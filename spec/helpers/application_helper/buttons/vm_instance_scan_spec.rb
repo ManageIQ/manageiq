@@ -48,7 +48,7 @@ describe ApplicationHelper::Button::VmInstanceScan do
       it "disables the button and return an error message" do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'record' => @record}, {})
-        expect(button.disable?).to eq("No active SmartProxies found to analyze this VM")
+        expect(button.disable?).to be_truthy
       end
     end
 
@@ -79,7 +79,7 @@ describe ApplicationHelper::Button::VmInstanceScan do
       it "returns the smartstate_analysis error message" do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'record' => @record}, {})
-        expect(button.disable?).to eq("xx smartstate_analysis message")
+        expect(button.disable?).to be_truthy
       end
     end
   end
