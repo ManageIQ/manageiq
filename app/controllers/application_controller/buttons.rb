@@ -994,7 +994,7 @@ module ApplicationController::Buttons
     @resolve ||= {}
     @resolve[:new] ||= {}
     @resolve[:new][:starting_object] ||= "SYSTEM/PROCESS"
-    @resolve[:new][:readonly] = true
+    @resolve[:new][:readonly] = false
     @resolve[:throw_ready] = false
 
     # Following commented out since all resolutions start at SYSTEM/PROCESS
@@ -1004,7 +1004,7 @@ module ApplicationController::Buttons
     if matching_instances.any?
       @resolve[:instance_names] = matching_instances.collect(&:name)
       instance_name = @custom_button && @custom_button.uri_object_name
-      @resolve[:new][:instance_name] = instance_name ? instance_name : "Automation"
+      @resolve[:new][:instance_name] = instance_name ? instance_name : "Request"
       @resolve[:new][:object_message] = @custom_button && @custom_button.uri_message || "create"
       @resolve[:target_class] = nil
       @resolve[:target_classes] = {}
