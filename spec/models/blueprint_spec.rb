@@ -35,6 +35,10 @@ describe Blueprint do
     dialog
   end
 
+  let(:catalog) do
+    FactoryGirl.create(:service_template_catalog)
+  end
+
   context 'blueprint with a bundle' do
     let!(:catalog_bundle) do
       subject.update_attribute(:status, 'published')
@@ -68,6 +72,27 @@ describe Blueprint do
         expect(new_bp.bundle.display).to be_falsey
         expect(new_bp.status).to be_nil
       end
+    end
+  end
+
+  describe '#create_bundle' do
+    it 'create a bundle from existing items' do
+      bundle = subject.create_bundle([catalog_vm_provisioning], dialog, catalog)
+      expect(Dialog.count).to eq(2)
+      expect(subject.bundle).to eq(bundle)
+      expect(bundle.display).to be_falsey
+      expect(bundle.composite?).to be_truthy
+      expect(bundle.service_template_catalog).to eq(catalog)
+
+      expect(bundle.descendants.first.name).to eq(catalog_vm_provisioning.name)
+      expect(bundle.descendants.first.id).not_to eq(catalog_vm_provisioning.id)
+
+      prov = bundle.resource_actions.find_by(:action => 'Provision')
+      expect(prov.ae_uri).to eq(ServiceTemplate.default_provisioning_entry_point)
+
+      retire = bundle.resource_actions.find_by(:action => 'Retirement')
+      expect(retire.ae_uri).to eq(ServiceTemplate.default_retirement_entry_point)
+      expect(retire.dialog).to eq(prov.dialog)
     end
   end
 end

@@ -21,6 +21,25 @@ class Blueprint < ApplicationRecord
     end
   end
 
+  def create_bundle(catalog_items, service_dialog, service_catalog, options = {})
+    self.class.transaction do
+      ServiceTemplate.create(
+        :name         => name,
+        :description  => description,
+        :blueprint    => self,
+        :service_type => 'composite'
+      ).tap do |new_bundle|
+        add_catalog_items(new_bundle, catalog_items)
+        new_bundle.service_template_catalog = service_catalog
+
+        new_dialog = service_dialog.deep_copy(:name => random_dialog_name(name)).tap(&:save!)
+        add_entry_points(new_bundle, options['entry_points'], new_dialog)
+
+        new_bundle.save!
+      end
+    end
+  end
+
   private
 
   # Copy a service template and link its blueprint;
@@ -86,5 +105,22 @@ class Blueprint < ApplicationRecord
     end
 
     new_template.save!
+  end
+
+  def add_catalog_items(new_bundle, catalog_items)
+    catalog_items.each do |item|
+      new_bundle.add_resource(copy_service_template(self, item, false))
+    end
+  end
+
+  def add_entry_points(new_bundle, entry_points, dialog)
+    entry_points ||= {
+      'Provision'  => ServiceTemplate.default_provisioning_entry_point,
+      'Retirement' => ServiceTemplate.default_retirement_entry_point
+    }
+
+    entry_points.each do |key, value|
+      new_bundle.resource_actions.build(:action => key, :fqname => value, :dialog => dialog)
+    end
   end
 end
