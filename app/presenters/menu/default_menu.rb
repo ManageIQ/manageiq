@@ -201,8 +201,7 @@ module Menu
         Menu::Section.new(:set, N_("Settings"), 'pficon pficon-settings fa-2x', [
           Menu::Item.new('configuration', N_('My Settings'),   'my_settings',  {:feature => 'my_settings', :any => true},  '/configuration/index?config_tab=ui'),
           Menu::Item.new('my_tasks',      N_('Tasks'),         'tasks',        {:feature => 'tasks', :any => true},        '/miq_task/index?jobs_tab=tasks'),
-          Menu::Item.new('ops',           N_('Configuration'), 'ops_explorer', {:feature => 'ops_explorer', :any => true}, '/ops/explorer'),
-          Menu::Item.new('about',         N_('About'),         'about',        {:feature => 'about'},                      '/support/index?support_tab=about')
+          Menu::Item.new('ops',           N_('Configuration'), 'ops_explorer', {:feature => 'ops_explorer', :any => true}, '/ops/explorer')
         ], :top_right)
       end
 

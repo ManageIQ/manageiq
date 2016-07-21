@@ -1492,6 +1492,17 @@ module ApplicationHelper
     MiqServer.my_server.name
   end
 
+  def vmdb_build_info(key)
+    case key
+    when :version then Vmdb::Appliance.VERSION
+    when :build then Vmdb::Appliance.BUILD
+    end
+  end
+
+  def user_role_name
+    User.current_user.miq_user_role_name
+  end
+
   def rbac_common_feature_for_buttons(pressed)
     # return feature that should be checked for the button that came in
     case pressed
