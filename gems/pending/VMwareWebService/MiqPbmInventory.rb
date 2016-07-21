@@ -32,6 +32,24 @@ module MiqPbmInventory
     profiles
   end
 
+  def pbmQueryAssociatedEntity(profile_ids)
+    assoc_entities = {}
+    return assoc_entities if @pbm_svc.nil?
+
+    begin
+      profile_ids.each do |profile_id|
+        # If a string was passed in create a PbmProfileId object
+        profile_id = RbVmomi::PBM::PbmProfileId(:uniqueId => profile_id) if profile_id.kind_of?(String)
+
+        assoc_entities[profile_id.uniqueId] = @pbm_svc.queryAssociatedEntity(profile_id)
+      end
+    rescue => err
+      $vim_log.warn("MiqPbmInventory: pbmQueryAssociatedEntity: #{err}")
+    end
+
+    assoc_entities
+  end
+
   def pbmQueryMatchingHub(profile_id)
     hubs = []
     return hubs if @pbm_svc.nil?
@@ -47,4 +65,5 @@ module MiqPbmInventory
 
     hubs
   end
+
 end

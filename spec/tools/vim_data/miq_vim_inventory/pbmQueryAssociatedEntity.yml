@@ -1,0 +1,31 @@
+---
+f4e5bade-15a2-4805-bf8e-52318c4ce443: []
+aa6d5a82-1c88-45da-85d3-3d74b91a5bad:
+- !ruby/object:RbVmomi::PBM::PbmServerObjectRef
+  props:
+    :dynamicProperty: []
+    :objectType: virtualDiskId
+    :key: vm-901:2001
+    :serverUuid: af6dcd8d-0690-4b2c-9c63-d4b84f10823f
+6fe1c7b4-7f7e-4db1-a545-c756e392de62:
+- !ruby/object:RbVmomi::PBM::PbmServerObjectRef
+  props:
+    :dynamicProperty: []
+    :objectType: virtualDiskId
+    :key: vm-901:2000
+    :serverUuid: af6dcd8d-0690-4b2c-9c63-d4b84f10823f
+- !ruby/object:RbVmomi::PBM::PbmServerObjectRef
+  props:
+    :dynamicProperty: []
+    :objectType: virtualMachine
+    :key: vm-901
+    :serverUuid: af6dcd8d-0690-4b2c-9c63-d4b84f10823f
+Default-VM-Home521041ccef13f2d1-3d43b46f398ab14c: []
+Default-VirtualDisk521041ccef13f2d1-3d43b46f398ab14c: []
+521041ccef13f2d1-3d43b46f398ab14c:
+- !ruby/object:RbVmomi::PBM::PbmServerObjectRef
+  props:
+    :dynamicProperty: []
+    :objectType: datastore
+    :key: datastore-953
+    :serverUuid: af6dcd8d-0690-4b2c-9c63-d4b84f10823f
