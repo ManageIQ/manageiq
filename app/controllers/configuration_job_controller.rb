@@ -38,13 +38,6 @@ class ConfigurationJobController < ApplicationController
                       :url  => "/configuration_job/show/#{@configuration_job.id}")
       @showtype = "main"
       set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
-    when "security_groups"
-      title = ui_lookup(:tables => "security_group")
-      kls   = SecurityGroup
-      drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @configuration_job.name, :title => title},
-                      :url  => "/configuration_job/show/#{@configuration_job.id}?display=#{@display}")
-      @view, @pages = get_view(kls, :parent => @configuration_job) # Get the records (into a view) and the paginator
-      @showtype = @display
     end
 
     # Came in from outside show_list partial
@@ -57,16 +50,8 @@ class ConfigurationJobController < ApplicationController
     process_show_list
   end
 
-  def outputs
-    show_association('outputs', _('Outputs'), 'output', :outputs, OrchestrationStackOutput)
-  end
-
   def parameters
     show_association('parameters', _('Parameters'), 'parameter', :parameters, OrchestrationStackParameter)
-  end
-
-  def resources
-    show_association('resources', _('Resources'), 'resource', :resources, OrchestrationStackResource)
   end
 
   # handle buttons pressed on the button bar

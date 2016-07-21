@@ -44,7 +44,7 @@ describe OpsController do
         expect do |b|
           controller.send(:recurse_sections_and_features, '_tab_conf', &b)
         end.to yield_successive_args(
-          ["provider_foreman_explorer",include("provider_foreman_view")],
+          ["provider_foreman_explorer", include("provider_foreman_view")],
           ["configuration_job", include("configuration_job")])
       end
     end
