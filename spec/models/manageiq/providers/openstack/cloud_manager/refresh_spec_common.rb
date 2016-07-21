@@ -373,6 +373,14 @@ module Openstack
     def assert_specific_tenant
       assert_objects_with_hashes(CloudTenant.all, identity_data.projects)
 
+      identity_data.projects.each do |project|
+        next unless project[:__parent_name]
+
+        parent_id = CloudTenant.find_by(:name => project[:__parent_name]).try(:id)
+        cloud_tenant = CloudTenant.find_by(:name => project[:name])
+        expect(cloud_tenant.parent_id).to eq(parent_id)
+      end
+
       CloudTenant.all.each do |tenant|
         expect(tenant).to be_kind_of(CloudTenant)
         expect(tenant.ext_management_system).to eq(@ems)
