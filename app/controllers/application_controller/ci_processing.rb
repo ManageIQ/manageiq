@@ -2419,8 +2419,8 @@ module ApplicationController::CiProcessing
       add_flash(n_("Delete initiated for %{count} %{model} from the CFME Database",
                    "Delete initiated for %{count} %{models} from the CFME Database", elements.length) %
         {:count  => elements.length,
-         :model  => ui_lookup(:table => model_class.table_name),
-         :models => ui_lookup(:tables => model_class.table_name)}) unless flash_errors?
+         :model  => ui_lookup(:table => model_name),
+         :models => ui_lookup(:tables => model_name)}) unless flash_errors?
     else # showing 1 element, delete it
       if params[:id].nil? || model_class.find_by_id(params[:id]).nil?
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => model_name)}, :error)
