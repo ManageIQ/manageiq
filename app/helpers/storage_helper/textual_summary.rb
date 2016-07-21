@@ -173,10 +173,12 @@ module StorageHelper::TextualSummary
   def textual_disk_files
     num   = @record.number_of(:disk_files)
     value = num == 0 ? 0 :
-                     _("%{number} (%{percentage} of Used Space, %{files})") %
-                     {:number    => number_to_human_size(@record.v_total_disk_size, :precision => 2),
-                      :percentage => @record.v_disk_percent_of_used.to_s + "%",
-                      :files     => pluralize(@record.number_of(:disk_files), 'files')}
+                     n_("%{number} (%{percentage} of Used Space, %{amount} file)",
+                        "%{number} (%{percentage} of Used Space, %{amount} files)",
+                        @record.number_of(:disk_files)) %
+                       {:number     => number_to_human_size(@record.v_total_disk_size, :precision => 2),
+                        :percentage => @record.v_disk_percent_of_used.to_s + "%",
+                        :amount     => @record.number_of(:disk_files)}
 
     h     = {:label => _("VM Provisioned Disk Files"), :image => "storage_disk_files", :value => value}
     if num > 0
@@ -190,10 +192,12 @@ module StorageHelper::TextualSummary
   def textual_snapshot_files
     num   = @record.number_of(:snapshot_files)
     value = num == 0 ? 0 :
-                    _("%{number} (%{percentage} of Used Space, %{files})") %
+                    n_("%{number} (%{percentage} of Used Space, %{amount} file)",
+                       "%{number} (%{percentage} of Used Space, %{amount} files)",
+                       @record.number_of(:snapshot_files)) %
                     {:number     => number_to_human_size(@record.v_total_snapshot_size, :precision => 2),
                      :percentage => @record.v_snapshot_percent_of_used.to_s + "%",
-                     :files      => pluralize(@record.number_of(:snapshot_files), 'files')}
+                     :amount     => @record.number_of(:snapshot_files)}
     h     = {:label => _("VM Snapshot Files"), :image => "storage_snapshot_files", :value => value}
     if num > 0
       h[:title] = _("Show VM Snapshot Files installed on this %{storage}") %
@@ -206,10 +210,12 @@ module StorageHelper::TextualSummary
   def textual_vm_ram_files
     num   = @record.number_of(:vm_ram_files)
     value = num == 0 ? 0 :
-                    _("%{number} (%{percentage} of Used Space, %{files})") %
+                    n_("%{number} (%{percentage} of Used Space, %{amount} file)",
+                       "%{number} (%{percentage} of Used Space, %{amount} files)",
+                       @record.number_of(:vm_ram_files)) %
                     {:number     => number_to_human_size(@record.v_total_memory_size, :precision => 2),
                      :percentage => @record.v_memory_percent_of_used.to_s + "%",
-                     :files      => pluralize(@record.number_of(:vm_ram_files), 'files')}
+                     :amount     => @record.number_of(:vm_ram_files)}
     h     = {:label => _("VM Memory Files"), :image => "storage_memory_files", :value => value}
     if num > 0
       h[:title] = _("Show VM Memory Files installed on this %{storage}") % {:storage => ui_lookup(:table => "storages")}
@@ -221,10 +227,12 @@ module StorageHelper::TextualSummary
   def textual_vm_misc_files
     num   = @record.number_of(:vm_misc_files)
     value = num == 0 ? 0 :
-                    _("%{number} (%{percentage} of Used Space, %{files})") %
+                    n_("%{number} (%{percentage} of Used Space, %{amount} file)",
+                       "%{number} (%{percentage} of Used Space, %{amount} files)",
+                       @record.number_of(:vm_misc_files)) %
                     {:number     => number_to_human_size(@record.v_total_vm_misc_size, :precision => 2),
                      :percentage => @record.v_vm_misc_percent_of_used.to_s + "%",
-                     :files      => pluralize(@record.number_of(:vm_misc_files), 'files')}
+                     :amount     => @record.number_of(:vm_misc_files)}
     h     = {:label => _("Other VM Files"), :image => "storage_other_vm_files", :value => value}
     if num > 0
       h[:title] = _("Show Other VM Files installed on this %{storage}") % {:storage => ui_lookup(:table => "storages")}
@@ -236,10 +244,12 @@ module StorageHelper::TextualSummary
   def textual_debris_files
     num   = @record.number_of(:debris_files)
     value = num == 0 ? 0 :
-                    _("%{number} (%{percentage} of Used Space, %{files})") %
+                    n_("%{number} (%{percentage} of Used Space, %{amount} file)",
+                       "%{number} (%{percentage} of Used Space, %{amount} files)",
+                       @record.number_of(:debris_files)) %
                     {:number     => number_to_human_size(@record.v_total_debris_size, :precision => 2),
                      :percentage => @record.v_debris_percent_of_used.to_s + "%",
-                     :files      => pluralize(@record.number_of(:debris_files), 'files')}
+                     :amount     => @record.number_of(:debris_files)}
     h     = {:label => _("Non-VM Files"), :image => "storage_non_vm_files", :value => value}
     if num > 0
       h[:title] = _("Show Non-VM Files installed on this %{storage}") % {:storage => ui_lookup(:table => "storages")}

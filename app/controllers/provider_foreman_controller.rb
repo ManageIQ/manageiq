@@ -101,7 +101,9 @@ class ProviderForemanController < ApplicationController
         provider.destroy_queue
       end
 
-      add_flash(_("Delete initiated for %{count_model}") % {:count_model => pluralize(providers.length, "provider")})
+      add_flash(n_("Delete initiated for %{count} Provider",
+                   "Delete initiated for %{count} Providers",
+                   providers.length) % {:count => providers.length})
     end
     replace_right_cell
   end

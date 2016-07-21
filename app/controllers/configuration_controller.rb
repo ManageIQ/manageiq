@@ -331,8 +331,9 @@ class ConfigurationController < ApplicationController
                       :error)
           elsif !tp.miq_reports.empty?
             timeprofiles.delete(tp.id.to_s)
-            add_flash(_("\"%{name}\": In use by %{rep_count}, cannot be deleted") % {:name      => tp.description, :rep_count => pluralize(tp.miq_reports.count, "report")},
-                      :error)
+            add_flash(n_("\"%{name}\": In use by %{rep_count} Report, cannot be deleted",
+                         "\"%{name}\": In use by %{rep_count} Reports, cannot be deleted",
+                         tp.miq_reports.count) % {:name => tp.description, :rep_count => tp.miq_reports.count}, :error)
           end
         end
       end
