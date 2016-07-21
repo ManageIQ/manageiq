@@ -8,7 +8,7 @@ function MiddlewareServerController($scope, $http, miqService) {
   ManageIQ.angular.scope = $scope;
 
   $scope.showListener = function (args) {
-    var operation = args[0].split(':')[1]; // format is 'operation:XXXXX'
+    var operation = args.split(':')[1]; // format is 'operation:resume'
 
     $scope.paramsModel = {};
     if(operation){
