@@ -12,19 +12,18 @@
 
     = miq_accordion_panel(_("Relationships"), false, "stack_rel") do
       %ul.nav.nav-pills.nav-stacked
-        - if role_allows(:feature => "ems_infra_show") && @record.ext_management_system
+        - if role_allows(:feature => "provider_foreman_view") && @record.ext_management_system
           %li
-            - l = [ui_lookup(:table => "provider"), ui_lookup(:table => "job")]
-            = link_to("#{ui_lookup(:table => "ext_management_system")}: #{@record.ext_management_system.name}",
-              {:controller => "provider_foreman", :action => 'explorer', :id => ("at-#{to_cid(@record.ext_management_system.id)}")},
+            - l = [ui_lookup(:model => @record.ext_management_system.class.to_s), ui_lookup(:table => "job")]
+            = link_to("#{ui_lookup(:model => @record.ext_management_system.class.to_s)}: #{@record.ext_management_system.name}",
+              {:controller => "provider_foreman", :action => 'explorer', :id => "at-#{to_cid(@record.ext_management_system.id)}"},
               :title => _("Show parent %s for this %s") % l)
-
-        - if role_allows(:feature => "security_group_show_list")
-          = li_link(:count => @record.number_of(:security_groups),
-            :text          => _("Security Groups"),
-            :record_id     => @record.id,
-            :display       => 'security_groups',
-            :title         => _("Show all Security Groups"))
+        - if role_allows(:feature => "service_view") && @record.ext_management_system
+          %li
+            - l = [ui_lookup(:table => "service"), ui_lookup(:table => "job")]
+            = link_to("#{ui_lookup(:table => "service")}: #{@record.service.name}",
+              {:controller => "service", :action => 'show', :id => to_cid(@record.service.id)},
+              :title => _("Show service %s for this %s") % l)
         = li_link(:count => @record.number_of(:parameters),
           :text          => _("Parameters"),
           :action        => 'parameters',
