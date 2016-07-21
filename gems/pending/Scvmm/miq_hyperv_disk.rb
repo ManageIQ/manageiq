@@ -110,26 +110,31 @@ STAT_EOL
         @cache_hits[start_sector] += 1
         return @block_cache[block_range][buffer_offset, length]
       elsif block_range.include?(start_sector)
+        # This range overlaps the start of our requested read, but more data is required at the end of the request
         sectors_in_range = block_range.last - start_sector
         length           = sectors_in_range * @block_size
         remaining_blocks = number_sectors - sectors_in_range
         @cache_hits[start_sector] += 1
-        return @block_cache[block_range][buffer_offset, length] << bread_cached(block_range.last + 1, remaining_blocks)
+        # The "+" operator is required rather than "<<" so as not to modify the @block_cache object.
+        return @block_cache[block_range][buffer_offset, length] + bread_cached(block_range.last + 1, remaining_blocks)
       elsif block_range.include?(start_sector + number_sectors - 1)
+        # This range overlaps the end of our requested read, but more data is required at the start of the request
         sectors_in_range = (start_sector + number_sectors) - block_range.first
         length           = sectors_in_range * @block_size
         remaining_blocks = number_sectors - sectors_in_range
         @cache_hits[start_sector] += 1
+        # The  "<<" operator is valid and more efficient here
         return bread_cached(start_sector, remaining_blocks) << @block_cache[block_range][0, length]
       elsif block_range.first > start_sector && block_range.last < start_sector + number_sectors
-        #
-        # This range overlaps and is a subset of our requested read
-        #
+        # This range overlaps our requested read but more data is required both before and after the range
         sectors_in_range   = block_range.last - block_range.first + 1
         sectors_pre_range  = block_range.first - start_sector
         sectors_post_range = number_sectors - sectors_in_range - sectors_pre_range
+        # Note the mixed use of operators below.
+        # The first "<<" operator is valid and more efficient while the second "+" operator 
+        # is required instead so as not to modify the in-place @block_cache object.
         return bread_cached(start_sector, sectors_pre_range) <<
-               @block_cache[block_range] <<
+               @block_cache[block_range] +
                bread_cached(block_range.last + 1, sectors_post_range)
       end
     end
@@ -214,11 +219,16 @@ DELETE_SNAP_EOL
   end
 
   def entry_range(start_sector, number_sectors)
-    number_cache_blocks, partial_block = number_sectors.divmod(MIN_SECTORS_TO_CACHE)
-    real_start_block  = start_sector / MIN_SECTORS_TO_CACHE
-    sectors_to_read   = (number_cache_blocks + (partial_block > 0 ? 1 : 0)) * MIN_SECTORS_TO_CACHE
-    real_start_sector = real_start_block * MIN_SECTORS_TO_CACHE
-    end_sector        = real_start_sector + sectors_to_read - 1
+    # Cache entries are *multiples* of MIN_SECTORS_TO_CACHE * @blocksize  in length,
+    # aligned to MIN_SECTORS_TO_CACHE * @blocksize byte boundaries.
+    # real_start_block is the aligned cache block based on the start_sector, and
+    # real_start_sector is the disk sector for that cache block.
+    real_start_block    = start_sector / MIN_SECTORS_TO_CACHE
+    real_end_block      = (start_sector + number_sectors) / MIN_SECTORS_TO_CACHE
+    number_cache_blocks = real_end_block - real_start_block + 1
+    sectors_to_read     = number_cache_blocks * MIN_SECTORS_TO_CACHE
+    real_start_sector   = real_start_block * MIN_SECTORS_TO_CACHE
+    end_sector          = real_start_sector + sectors_to_read - 1
     Range.new(real_start_sector, end_sector)
   end
 end
