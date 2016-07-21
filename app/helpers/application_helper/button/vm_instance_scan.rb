@@ -2,7 +2,7 @@ class ApplicationHelper::Button::VmInstanceScan < ApplicationHelper::Button::Bas
   needs_record
 
   def skip?
-    return false if @record.kind_of?(OrchestrationStack) && @display == "instances"
+    return false if @display == "instances"
     !(@record.is_available?(:smartstate_analysis) ||
       @record.is_available_now_error_message(:smartstate_analysis)) ||
     !@record.has_proxy?
