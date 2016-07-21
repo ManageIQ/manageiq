@@ -1,0 +1,56 @@
+- @angular_form = true
+
+%form.form-horizontal#form_op_params{"name"          => "opsParamForm",
+                                     "ng-controller" => "middlewareServerController",
+                                     "novalidate"    => "true"}
+  .modal.fade#modal_param_div{"tabindex"     => "-1",
+                          "role"             => "dialog",
+                          "aria-labelledby"  => "mw_modal_label",
+                          "aria-describedby" => "modal",
+                          "aria-hidden"      => "true",
+                          "data-keyboard"    => "false",
+                          "data-backdrop"    => "static",
+                          :style             => "display: none"}
+    .modal-dialog.modal-sm
+      .modal-content#op_params_div
+        .modal-header
+          %button.close{"data-dismiss" => "modal"}
+            %span{"aria-hidden" => "true"}
+              &times;
+            %span.sr-only
+              = _("Close")
+          %h4.modal-title{ "ng-bind-html" => "paramsModel.operationTitle"}
+
+        .modal-body
+          %input#mw_param_server_id{:type  => "hidden",
+                                    :name  => "id",
+                                    :value => params[:id]}
+          .form-group
+            %label.col-sm-3.control-label{:for => "modalTimeout"}
+              = _("Timeout")
+            .col-sm-4
+              %input#timeout.form-control{:type          => "number",
+                                          :name          => "timeout",
+                                          "ng-maxlength" => "2",
+                                          "ng-required"  => "true",
+                                          "ng-model"     => "paramsModel.timeout"}
+            .col-sm-2.text-left
+              = _("seconds")
+          .col-sm-2
+          .col-sm-10
+            %p.ng-error-messages{"ng-show" => "opsParamForm.timeout.$error.required"}
+              = _("Timeout is required")
+            %p.ng-error-messages{"ng-show" => "opsParamForm.timeout.$error.maxlength"}
+              = _("Timeout max is 99")
+
+        .modal-footer
+          %button.btn.btn-default{:type => "button", "data-dismiss" => "modal"}
+            = _("Cancel")
+          %button.btn.btn-primary{:type         => "button",
+                                  "ng-click"    => "runOperation(paramsModel.operation)",
+                                  "ng-disabled" => "opsParamForm.$invalid",
+                                  "ng-bind"     => "paramsModel.operationButtonName" }
+
+
+:javascript
+  miq_bootstrap('#form_op_params');
