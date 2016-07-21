@@ -1116,6 +1116,7 @@ Vmdb::Application.routes.draw do
         listnav_search_selected
         perf_chart_chooser
         quick_search
+        run_operation
         sections_field_changed
         show
         show_list

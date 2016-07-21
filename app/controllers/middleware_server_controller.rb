@@ -87,6 +87,46 @@ class MiddlewareServerController < ApplicationController
     end
   end
 
+  def run_operation
+    selected_operation = ('middleware_server_' + params["operation"]).to_sym
+
+    if OPERATIONS.key?(selected_operation)
+      selected_servers = identify_selected_servers
+      operation_info = OPERATIONS.fetch(selected_operation)
+
+      if selected_servers.nil?
+        render :json => {:status => :error, :msg => _("No Servers selected")}
+        return
+      end
+
+      operation_triggered = false
+      selected_servers.split(/,/).each do |item|
+        mw_server = identify_record item
+
+        if mw_server.product == 'Hawkular' && operation_info.fetch(:skip)
+          skip_message = _("Not #{operation_info.fetch(:hawk)} the provider")
+          render :json => {:status => :ok, :msg => skip_message}
+        else
+          if operation_info.key? :param
+            name = operation_info.fetch(:param) # which currently evaluates to :timeout
+            val = params["timeout"]
+            trigger_mw_operation operation_info.fetch(:op), mw_server, name => val
+          else
+            trigger_mw_operation operation_info.fetch(:op), mw_server
+          end
+          operation_triggered = true
+        end
+      end
+      if operation_triggered
+        initiated_msg = _("#{operation_info.fetch(:msg)} initiated for selected server(s)")
+        render :json => {:status => :ok, :msg => initiated_msg}
+      end
+    else
+      msg = _("Unknown server operation: ") + selected_operation
+      render :json => {:status => :error, :msg => msg }
+    end
+  end
+
   private ############################
 
 end
