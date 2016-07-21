@@ -1,4 +1,4 @@
-module  ConfigurationJobHelper::TextualSummary
+module ConfigurationJobHelper::TextualSummary
   include TextualMixins::TextualDescription
   include TextualMixins::TextualGroupTags
   include TextualMixins::TextualName
