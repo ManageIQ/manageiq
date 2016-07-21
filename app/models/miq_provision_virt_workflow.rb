@@ -306,21 +306,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     fields(:hardware) { |fn, f, _dn, _d| f[:read_only] = true if options[:read_only_fields].include?(fn) }
   end
 
-  def set_default_values
-    super
-    set_default_filters
-  end
-
-  def set_default_filters
-    [[:requester, :vm_filter, :Vm], [:environment, :host_filter, :Host], [:environment, :ds_filter, :Storage], [:environment, :cluster_filter, :EmsCluster]].each do |dialog, field, model|
-      filter = @dialogs.fetch_path(:dialogs, dialog, :fields, field)
-      unless filter.nil?
-        current_filter = get_value(@values[field])
-        filter[:default] = current_filter.nil? ? @requester.settings.fetch_path(:default_search, model) : current_filter
-      end
-    end
-  end
-
   #
   # Methods for populating lists of allowed values for a field
   # => Input  - A hash containing options specific to the called method
