@@ -355,6 +355,7 @@ cloud_tenants:
 - created_at
 - updated_at
 - type
+- parent_id
 cloud_tenants_vms:
 - cloud_tenant_id
 - vm_id
