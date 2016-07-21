@@ -147,11 +147,6 @@ class MiqRequestWorkflow
 
         if !field_values[:default].nil?
           val = field_values[:default]
-
-        # if default is not set to anything and there is only one value in hash,
-        # use set element to be displayed default
-        elsif field_values[:values] && field_values[:values].length == 1
-          val = field_values[:values].first[0]
         end
 
         if field_values[:values]
