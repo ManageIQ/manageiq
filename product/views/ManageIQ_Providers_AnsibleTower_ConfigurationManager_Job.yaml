@@ -21,8 +21,8 @@ db: ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job
 cols:
 - name
 - type
-- draft
-- description
+- ems_ref
+- status
 - created_at
 - updated_at
 
@@ -33,17 +33,17 @@ include:
 col_order:
 - name
 - type
-- draft
-- description
+- ems_ref
+- status
 - created_at
 - updated_at
 
 # Column titles, in order
 headers:
-- Name
-- Template Type
-- Draft
-- Description
+- Template Name
+- Type
+- Id
+- Status
 - Created On
 - Updated On
 

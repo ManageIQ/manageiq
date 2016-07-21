@@ -11,7 +11,7 @@ module ConfigurationJobHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(provider service security_groups parameters outputs resources)
+    %i(provider service parameters status)
   end
 
   #
@@ -55,36 +55,12 @@ module ConfigurationJobHelper::TextualSummary
     h
   end
 
-  def textual_security_groups
-    @record.security_groups
-  end
-
   def textual_parameters
     num   = @record.number_of(:parameters)
     h     = {:label => _("Parameters"), :image => "parameter", :value => num}
     if num > 0
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'parameters', :id => @record)
       h[:title] = _("Show all parameters")
-    end
-    h
-  end
-
-  def textual_outputs
-    num   = @record.number_of(:outputs)
-    h     = {:label => _("Outputs"), :image => "output", :value => num}
-    if num > 0
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'outputs', :id => @record)
-      h[:title] = _("Show all outputs")
-    end
-    h
-  end
-
-  def textual_resources
-    num   = @record.number_of(:resources)
-    h     = {:label => _("Resources"), :image => "resource", :value => num}
-    if num > 0
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'resources', :id => @record)
-      h[:title] = _("Show all resources")
     end
     h
   end
