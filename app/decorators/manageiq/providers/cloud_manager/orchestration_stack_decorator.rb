@@ -7,4 +7,3 @@ class ManageIQ::Providers::CloudManager::OrchestrationStackDecorator < Draper::D
     "100/orchestration_stack.png"
   end
 end
-

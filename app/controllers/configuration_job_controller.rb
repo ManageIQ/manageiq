@@ -32,19 +32,19 @@ class ConfigurationJobController < ApplicationController
     drop_breadcrumb({:name => _("Configuration_Jobs"),
                      :url  => "/configuration_job/show_list?page=#{@current_page}&refresh=y"}, true)
     case @display
-      when "download_pdf", "main", "summary_only"
-        get_tagdata(@configuration_job)
-        drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @configuration_job.name},
-                        :url  => "/configuration_job/show/#{@configuration_job.id}")
-        @showtype = "main"
-        set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
+    when "download_pdf", "main", "summary_only"
+      get_tagdata(@configuration_job)
+      drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @configuration_job.name},
+                      :url  => "/configuration_job/show/#{@configuration_job.id}")
+      @showtype = "main"
+      set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
     when "security_groups"
-        title = ui_lookup(:tables => "security_group")
-        kls   = SecurityGroup
-        drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @configuration_job.name, :title => title},
-                        :url  => "/configuration_job/show/#{@configuration_job.id}?display=#{@display}")
-        @view, @pages = get_view(kls, :parent => @configuration_job)  # Get the records (into a view) and the paginator
-        @showtype = @display
+      title = ui_lookup(:tables => "security_group")
+      kls   = SecurityGroup
+      drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @configuration_job.name, :title => title},
+                      :url  => "/configuration_job/show/#{@configuration_job.id}?display=#{@display}")
+      @view, @pages = get_view(kls, :parent => @configuration_job) # Get the records (into a view) and the paginator
+      @showtype = @display
     end
 
     # Came in from outside show_list partial
@@ -72,19 +72,18 @@ class ConfigurationJobController < ApplicationController
   # handle buttons pressed on the button bar
   # handle buttons pressed on the button bar
   def button
-    @edit = session[:edit]                          # Restore @edit for adv search box
-    params[:page] = @current_page if @current_page.nil?   # Save current page for list refresh
+    @edit = session[:edit] # Restore @edit for adv search box
+    params[:page] = @current_page if @current_page.nil? # Save current page for list refresh
 
-    params[:page] = @current_page if @current_page.nil?                     # Save current page for list refresh
+    params[:page] = @current_page if @current_page.nil? # Save current page for list refresh
     @refresh_div = "main_div" # Default div for button.rjs to refresh
     case params[:pressed]
-      when "configuration_job_delete"
-        configuration_job_delete
-      when "configuration_job_tag"
-        tag(ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job)
+    when "configuration_job_delete"
+      configuration_job_delete
+    when "configuration_job_tag"
+      tag(ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job)
     end
-    return if %w(configuration_job_tag).include?(params[:pressed]) &&
-      @flash_array.nil? # Tag screen showing, so return
+    return if %w(configuration_job_tag).include?(params[:pressed]) && @flash_array.nil? # Tag screen showing, so return
 
     if @flash_array.nil? && !@refresh_partial # if no button handler ran, show not implemented msg
       add_flash(_("Button not yet implemented"), :error)
@@ -98,12 +97,10 @@ class ConfigurationJobController < ApplicationController
 
     if !@flash_array.nil? && params[:pressed] == "configurations_job_delete" && @single_delete
       javascript_redirect :action => 'show_list', :flash_msg => @flash_array[0][:message]
+    elsif @refresh_div == "main_div" && @lastaction == "show_list"
+      replace_gtl_main_div
     else
-      if @refresh_div == "main_div" && @lastaction == "show_list"
-        replace_gtl_main_div
-      else
-        render_flash
-      end
+      render_flash
     end
   end
 

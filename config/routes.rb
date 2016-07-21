@@ -303,7 +303,6 @@ Vmdb::Application.routes.draw do
         save_post
     },
 
-
     :consumption                  => {
       :get => %w(
         show
