@@ -63,11 +63,21 @@ class ProviderForemanController < ApplicationController
     assert_privileges("provider_foreman_add_provider")
     @provider_cfgmgmt = ManageIQ::Providers::ConfigurationManager.new
     @provider_types = ["Ansible Tower", ui_lookup(:ui_title => 'foreman')]
+    @server_zones = []
+    zones = Zone.order('lower(description)')
+    zones.each do |zone|
+      @server_zones.push([zone.description, zone.name])
+    end
     render_form
   end
 
   def edit
     @provider_types = ["Ansible Tower", ui_lookup(:ui_title => 'foreman')]
+    @server_zones = []
+    zones = Zone.order('lower(description)')
+    zones.each do |zone|
+      @server_zones.push([zone.description, zone.name])
+    end
     case params[:button]
     when "cancel"
       cancel_provider_foreman
@@ -221,6 +231,7 @@ class ProviderForemanController < ApplicationController
 
     render :json => {:provtype   => model_to_name(config_mgr.type),
                      :name       => provider.name,
+                     :zone       => provider.zone.name,
                      :url        => provider.url,
                      :verify_ssl => provider.verify_ssl,
                      :log_userid => provider.authentications.first.userid}
@@ -521,7 +532,7 @@ class ProviderForemanController < ApplicationController
     @provider_cfgmgmt.name       = params[:name]
     @provider_cfgmgmt.url        = params[:url]
     @provider_cfgmgmt.verify_ssl = params[:verify_ssl].eql?("on")
-    @provider_cfgmgmt.zone       = Zone.find_by_name(MiqServer.my_zone)
+    @provider_cfgmgmt.zone       = Zone.find_by_name(params[:zone].to_s)
   end
 
   def features
