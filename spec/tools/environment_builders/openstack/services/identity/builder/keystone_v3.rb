@@ -32,9 +32,19 @@ module Openstack
 
           def find_or_create_projects
             @data.projects.each do |project|
-              @projects << (find(@service.projects.all(:domain_id => domain_id), project.slice(:name)) ||
-                            create(@service.projects, project.merge(:domain_id => domain_id)))
+              openstack_project = (find(@service.projects.all(:domain_id => domain_id), project.slice(:name)) ||
+                                   create_project(@service.projects, @projects, domain_id, project))
+              @projects << openstack_project
             end
+          end
+
+          def create_project(service_projects, projects, domain_id, project)
+            parent_id = nil
+            if (parent = project.delete(:__parent_name))
+              parent_id = projects.detect { |x| x.name == parent }.id
+            end
+
+            create(service_projects, project.merge(:domain_id => domain_id, :parent_id => parent_id))
           end
 
           def find_or_create_domains
