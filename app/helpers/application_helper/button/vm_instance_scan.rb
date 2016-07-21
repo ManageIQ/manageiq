@@ -19,7 +19,7 @@ class ApplicationHelper::Button::VmInstanceScan < ApplicationHelper::Button::Bas
     !@record.has_proxy?
   end
 
-  def disable?
+  def disabled?
     !(@record.is_available?(:smartstate_analysis) && @record.has_active_proxy?)
   end
 end

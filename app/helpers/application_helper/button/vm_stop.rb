@@ -10,7 +10,7 @@ class ApplicationHelper::Button::VmStop < ApplicationHelper::Button::Basic
     !@record.is_available?(:stop)
   end
 
-  def disable?
+  def disabled?
     !!@record.is_available_now_error_message(:stop)
   end
 end

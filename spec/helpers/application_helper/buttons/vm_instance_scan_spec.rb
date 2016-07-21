@@ -36,7 +36,7 @@ describe ApplicationHelper::Button::VmInstanceScan do
     end
   end
 
-  describe '#disable?' do
+  describe '#disabled?' do
     context "when record has no active proxy and is not orphaned nor archived" do
       before do
         @record = FactoryGirl.create(:vm_vmware, :vendor => "vmware")
@@ -48,7 +48,7 @@ describe ApplicationHelper::Button::VmInstanceScan do
       it "disables the button and return an error message" do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'record' => @record}, {})
-        expect(button.disable?).to be_truthy
+        expect(button.disabled?).to be_truthy
       end
     end
 
@@ -63,7 +63,7 @@ describe ApplicationHelper::Button::VmInstanceScan do
       it "will not be disabled" do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'record' => @record}, {})
-        expect(button.disable?).to be_falsey
+        expect(button.disabled?).to be_falsey
       end
     end
 
@@ -79,7 +79,7 @@ describe ApplicationHelper::Button::VmInstanceScan do
       it "returns the smartstate_analysis error message" do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'record' => @record}, {})
-        expect(button.disable?).to be_truthy
+        expect(button.disabled?).to be_truthy
       end
     end
   end
