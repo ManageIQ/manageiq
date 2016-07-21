@@ -1883,7 +1883,13 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def self.batch_operation_supported?(operation, ids)
-    VmOrTemplate.where(:id => ids).all? { |v| v.public_send("validate_#{operation}")[:available] }
+    VmOrTemplate.where(:id => ids).all? do |vm_or_template|
+      if vm_or_template.respond_to?("supports_#{operation}?")
+        vm_or_template.public_send("supports_#{operation}?")
+      else
+        vm_or_template.public_send("validate_#{operation}")[:available]
+      end
+    end
   end
 
   # Stop showing Reconfigure VM task unless the subclass allows

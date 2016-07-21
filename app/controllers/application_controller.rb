@@ -1782,7 +1782,13 @@ class ApplicationController < ActionController::Base
     end
 
     vms = VmOrTemplate.where(:id => vm_ids)
-    vms.each { |vm| render_flash_not_applicable_to_model(typ) unless vm.is_available?(typ) }
+    vms.each do |vm|
+      if vm.respond_to?("supports_#{typ}?")
+        render_flash_not_applicable_to_model(typ) unless vm.send("supports_#{typ}?")
+      else
+        render_flash_not_applicable_to_model(typ) unless vm.is_available?(typ)
+      end
+    end
   end
 
   def prov_redirect(typ = nil)

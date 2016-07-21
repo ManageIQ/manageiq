@@ -409,22 +409,22 @@ describe VmOrTemplate do
     end
   end
 
-  context "#is_available? for migrate" do
-    it "returns true for vmware VM" do
+  context "#supports_migrate?" do
+    it "returns true for vmware VM neither orphaned nor archived when queried if it supports migrate operation" do
       vm = FactoryGirl.create(:vm_vmware)
       allow(vm).to receive_messages(:archived? => false)
       allow(vm).to receive_messages(:orphaned? => false)
-      expect(vm.is_available?(:migrate)).to eq(true)
+      expect(vm.supports_migrate?).to eq(true)
     end
 
-    it "returns true for SCVMM VM" do
+    it "returns false for SCVMM VM when queried if it supports migrate operation" do
       vm = FactoryGirl.create(:vm_microsoft)
-      expect(vm.is_available?(:migrate)).to_not eq(true)
+      expect(vm.supports_migrate?).to eq(false)
     end
 
-    it "returns false for openstack VM" do
+    it "returns false for openstack VM  when queried if it supports migrate operation" do
       vm = FactoryGirl.create(:vm_openstack)
-      expect(vm.is_available?(:migrate)).to eq(false)
+      expect(vm.supports_migrate?).to eq(false)
     end
   end
 
