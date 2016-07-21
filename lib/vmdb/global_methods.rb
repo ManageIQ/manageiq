@@ -39,7 +39,7 @@ module Vmdb
         new_time = time.in_time_zone(timezone)
         case ftype
         when "gtl"                                  # for gtl views
-          new_time = new_time.strftime("%m/%d/%y %H:%M:%S %Z")
+          new_time = I18n.l(new_time.to_date) + new_time.strftime(" %H:%M:%S %Z")
         when "on_at"                                  # for gtl views
           new_time = new_time.strftime("on %m/%d/%y at %H:%M:%S %Z")
         when "fname"                                # for download filename
