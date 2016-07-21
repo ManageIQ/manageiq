@@ -47,7 +47,6 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
     reset_event_monitor_handle
   end
 
-
   def process_event(event)
     event_data = extract_event_data(event)
     if event_data.nil?
@@ -86,6 +85,11 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
     case event_data[:kind]
     when 'Node'
       event_data[:container_node_name] = event_data[:name]
+      # Workaround for missing/useless node UID (#9600, https://github.com/kubernetes/kubernetes/issues/29289)
+      if event_data[:uid].nil? || event_data[:uid] == event_data[:name]
+        node = ContainerNode.find_by(:ems_id => @ems.id, :name => event_data[:name])
+        event_data[:uid] = node ? node.ems_ref : nil
+      end
     when 'Pod'
       /^spec.containers{(?<container_name>.*)}$/ =~ event_data[:fieldpath]
       unless container_name.nil?
