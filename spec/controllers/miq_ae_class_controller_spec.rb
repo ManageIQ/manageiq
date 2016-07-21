@@ -242,6 +242,7 @@ describe MiqAeClassController do
                                     :name         => "some_name",
                                     :fqname       => "fqname",
                                     :created_on   => Time.now,
+                                    :updated_on   => Time.current,
                                     :updated_by   => "some_user",
                                     :domain       => miq_ae_domain
                                    )
@@ -255,6 +256,7 @@ describe MiqAeClassController do
                                     :name         => "some_name",
                                     :fqname       => "fqname",
                                     :created_on   => Time.now,
+                                    :updated_on   => Time.current,
                                     :updated_by   => "some_user",
                                     :domain       => miq_ae_domain
                                    )
