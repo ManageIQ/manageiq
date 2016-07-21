@@ -44,6 +44,28 @@
                               "readonly" => true,
                               "style"    => "color: black; font-weight: normal;"}
 
+    .form-group{"ng-class" => "{'has-error': angularForm.zone.$invalid}"}
+      %label.col-md-2.control-label{"for" => "prov_zone"}
+        = _("Zone")
+      .col-md-8
+        - if @server_zones.length <= 1
+          %input.form-control{"type"        => "text",
+                              "id"          => "prov_zone",
+                              "name"        => "zone",
+                              "ng-model"    => "providerForemanModel.zone",
+                              "maxlength"   => 15,
+                              "required"    => "",
+                              "checkchange" => "",
+                              "readonly"    => true,
+                              "style"       => "color: black;"}
+        - else
+          = select_tag('zone',
+                       options_for_select(@server_zones.sort_by { |name, _name| name }),
+                       "ng-model"                    => "providerForemanModel.zone",
+                       "checkchange"                 => "",
+                       "required"                    => "",
+                       "selectpicker-for-select-tag" => "")
+
     .form-group{"ng-class" => "{'has-error': angularForm.url.$invalid}"}
       %label.col-md-2.control-label{"for" => "provider_url"}
         = _("Url")

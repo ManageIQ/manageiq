@@ -31,6 +31,7 @@ describe('providerForemanFormController', function() {
     var providerForemanFormResponse = {
       name: '',
       url: '',
+      zone: '',
       verify_ssl: false,
       log_userid: ''
     };
@@ -46,6 +47,9 @@ describe('providerForemanFormController', function() {
     }));
     it('sets the name to blank', function () {
       expect($scope.providerForemanModel.name).toEqual('');
+    });
+    it('sets the zone to blank', function () {
+      expect($scope.providerForemanModel.zone).toEqual('');
     });
     it('sets the url to blank', function () {
       expect($scope.providerForemanModel.url).toEqual('');
@@ -68,6 +72,7 @@ describe('providerForemanFormController', function() {
       var providerForemanFormResponse = {
         name: 'Foreman',
         url: '10.10.10.10',
+        zone: 'My Test Zone',
         verify_ssl: true,
         log_userid: 'admin'
       };
@@ -85,6 +90,9 @@ describe('providerForemanFormController', function() {
 
       it('sets the name to the value returned from http request', function () {
         expect($scope.providerForemanModel.name).toEqual('Foreman');
+      });
+      it('sets the zone to the value returned from the http request', function () {
+        expect($scope.providerForemanModel.zone).toEqual('My Test Zone');
       });
       it('sets the url to the value returned from http request', function () {
         expect($scope.providerForemanModel.url).toEqual('10.10.10.10');
