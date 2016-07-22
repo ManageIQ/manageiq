@@ -40,8 +40,6 @@ module Vmdb
         case ftype
         when "gtl"                                  # for gtl views
           new_time = I18n.l(new_time.to_date) + new_time.strftime(" %H:%M:%S %Z")
-        when "on_at"                                  # for gtl views
-          new_time = new_time.strftime("on %m/%d/%y at %H:%M:%S %Z")
         when "fname"                                # for download filename
           new_time = new_time.strftime("%Y_%m_%d")
         when "date"                                 # for just mm/dd/yy
