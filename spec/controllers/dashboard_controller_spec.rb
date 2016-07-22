@@ -389,6 +389,52 @@ describe DashboardController do
     end
   end
 
+  describe "building tabs" do
+    let(:group) do
+      role = FactoryGirl.create(:miq_user_role)
+      FactoryGirl.create(:miq_group, :miq_user_role => role)
+    end
+
+    let(:user) do
+      FactoryGirl.create(:user, :miq_groups => [group])
+    end
+
+    let(:wset) do
+      FactoryGirl.create(
+        :miq_widget_set,
+        {
+          :name => "Widgets",
+          :userid => user.userid,
+          :group_id => group.id,
+          :set_data => {
+            :last_group_db_updated => Time.now.utc,
+            :col1 => [1], :col2 => [], :col3 => []
+          }
+        }
+      )
+    end
+
+    before(:each) do
+      login_as user
+
+      controller.instance_variable_set(:@_params, { :tab => wset.id })
+      controller.instance_variable_set(:@sb, {
+        :active_db => wset.name, :active_db_id => wset.id,
+        :dashboards => { wset.name => {:col1 => [1], :col2 => [], :col3 => []} }
+      })
+
+      controller.show
+    end
+
+    it 'sets the active tab' do
+      expect(assigns(:active_tab)).to eq(wset.id.to_s)
+    end
+
+    it 'sets available tabs' do
+      expect(assigns(:tabs)).not_to be_empty
+    end
+  end
+
   def skip_data_checks(url = '/')
     allow_any_instance_of(UserValidationService).to receive(:server_ready?).and_return(true)
     allow(controller).to receive(:start_url_for_user).and_return(url)

@@ -829,6 +829,28 @@ describe MiqTaskController do
       end
     end
 
+    describe "building tabs" do
+      before(:each) do
+        controller.instance_variable_set(:@tabform, "ui_2")
+        controller.instance_variable_set(:@settings, {:perpage => {}})
+        allow(controller).to receive(:role_allows).and_return(true)
+      end
+      it 'sets the active tab' do
+        controller.build_jobs_tab
+        expect(assigns(:active_tab)).to eq("2")
+      end
+
+      it 'sets the available tabs' do
+        controller.build_jobs_tab
+        expect(assigns(:tabs)).to eq([
+          ["1", _("My VM and Container Analysis Tasks")],
+          ["2", _("My Other UI Tasks")],
+          ["3", _("All VM and Container Analysis Tasks")],
+          ["4", _("All Other Tasks")]
+        ])
+      end
+    end
+
     def get_time_period(period)
       t = format_timezone(period.to_i != 0 ? period.days.ago : Time.now, Time.zone, "raw")
       ret = []
