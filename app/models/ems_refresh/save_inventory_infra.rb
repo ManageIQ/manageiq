@@ -2,6 +2,7 @@
 # Calling order for EmsInfra:
 # - ems
 #   - storages
+#   - storage_profiles
 #   - ems_clusters
 #   - hosts
 #     - storages (link)
@@ -53,12 +54,12 @@ module EmsRefresh::SaveInventoryInfra
 
     child_keys = [
       :storages,
+      :storage_profiles,
       :clusters,
       :hosts,
       :vms,
       :folders,
       :resource_pools,
-      :storage_profiles,
       :customization_specs,
       :orchestration_templates,
       :orchestration_stacks
@@ -287,6 +288,7 @@ module EmsRefresh::SaveInventoryInfra
 
   def save_storage_profiles_inventory(ems, hashes, _target = nil)
     save_inventory_multi(ems.storage_profiles, hashes, :use_association, [:ems_ref], [:storage_profile_storages])
+    store_ids_for_new_records(ems.storage_profiles, hashes, [:ems_ref])
   end
 
   def save_storage_profile_storages_inventory(storage_profile, storages)

@@ -16,7 +16,16 @@ module ManageIQ::Providers
         result[:storage_profiles], uids[:storage_profiles] = storage_profile_inv_to_hashes(inv[:storage_profile], uids[:storages], inv[:storage_profile_datastore])
 
         result[:hosts], uids[:hosts], uids[:clusters_by_host], uids[:lans], uids[:switches], uids[:guest_devices], uids[:scsi_luns] = host_inv_to_hashes(inv[:host], inv, uids[:storages], uids[:clusters])
-        result[:vms], uids[:vms] = vm_inv_to_hashes(inv[:vm], inv[:storage], uids[:storages], uids[:hosts], uids[:clusters_by_host], uids[:lans])
+        result[:vms], uids[:vms] = vm_inv_to_hashes(
+            inv[:vm],
+            inv[:storage],
+            inv[:storage_profile_entity],
+            uids[:storages],
+            uids[:storage_profiles],
+            uids[:hosts],
+            uids[:clusters_by_host],
+            uids[:lans]
+        )
 
         result[:folders], uids[:folders] = inv_to_ems_folder_hashes(inv)
         result[:resource_pools], uids[:resource_pools] = rp_inv_to_hashes(inv[:rp])
@@ -769,12 +778,28 @@ module ManageIQ::Providers
         result
       end
 
-      def self.vm_inv_to_hashes(inv, storage_inv, storage_uids, host_uids, cluster_uids_by_host, lan_uids)
+      def self.storage_profile_by_entity(storage_profile_entity_inv, storage_profile_uids)
+        groupings = {'virtualDiskId' => {}, 'virtualMachine' => {}}
+        storage_profile_entity_inv.each do |storage_profile_uid, entities|
+          next if storage_profile_uids[storage_profile_uid][:profile_type] == 'RESOURCE'
+          entities.each do |entity|
+            groupings[entity.objectType][entity.key] = storage_profile_uids[storage_profile_uid]
+          end
+        end
+        [groupings['virtualDiskId'], groupings['virtualMachine']]
+      end
+
+      def self.vm_inv_to_hashes(inv, storage_inv, storage_profile_entity_inv, storage_uids, storage_profile_uids,
+          host_uids, cluster_uids_by_host, lan_uids
+      )
         result = []
         result_uids = {}
         guest_device_uids = {}
         return result, result_uids if inv.nil?
 
+        storage_profile_by_disk_mor, storage_profile_by_vm_mor = storage_profile_by_entity(storage_profile_entity_inv,
+          storage_profile_uids
+        )
         inv.each do |mor, vm_inv|
           mor = vm_inv['MOR'] # Use the MOR directly from the data since the mor as a key may be corrupt
 
@@ -901,6 +926,7 @@ module ManageIQ::Providers
             :ems_cluster           => cluster_uids_by_host[host_mor],
             :storages              => storages,
             :storage               => storage,
+            :storage_profile       => storage_profile_by_vm_mor[mor],
             :operating_system      => vm_inv_to_os_hash(vm_inv),
             :hardware              => hardware,
             :custom_attributes     => vm_inv_to_custom_attribute_hashes(vm_inv),

@@ -38,6 +38,17 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     assert_relationship_tree
   end
 
+  it 'handles storage profile associated vms' do
+    refresher = @ems.refresher.new([@ems])
+    target, inventory = refresher.collect_inventory_for_targets(@ems, [@ems])[0]
+    expect(inventory[:storage_profile_entity].size).to eql(6)
+
+    hashes = refresher.parse_targeted_inventory(@ems, target, inventory)
+    refresher.save_inventory(@ems, target, hashes)
+    storage_profile = StorageProfile.find_by(:ems_ref => '6fe1c7b4-7f7e-4db1-a545-c756e392de62')
+    expect(storage_profile.vms_and_templates.first.ems_ref).to eq('vm-901')
+  end
+
   it 'handles switch deletion' do
     EmsRefresh.refresh(@ems)
     @ems.reload

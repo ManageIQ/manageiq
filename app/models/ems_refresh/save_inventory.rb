@@ -28,7 +28,7 @@ module EmsRefresh::SaveInventory
                   end
 
     child_keys = [:operating_system, :hardware, :custom_attributes, :snapshots, :advanced_settings]
-    extra_infra_keys = [:host, :ems_cluster, :storage, :storages, :raw_power_state, :parent_vm]
+    extra_infra_keys = [:host, :ems_cluster, :storage, :storages, :storage_profile, :raw_power_state, :parent_vm]
     extra_cloud_keys = [
       :flavor,
       :availability_zone,
@@ -57,6 +57,7 @@ module EmsRefresh::SaveInventory
       h[:host_id]                = key_backup.fetch_path(:host, :id) || key_backup.fetch_path(:host).try(:id)
       h[:ems_cluster_id]         = key_backup.fetch_path(:ems_cluster, :id) || key_backup.fetch_path(:ems_cluster).try(:id)
       h[:storage_id]             = key_backup.fetch_path(:storage, :id)
+      h[:storage_profile_id]     = key_backup.fetch_path(:storage_profile, :id)
       h[:flavor_id]              = key_backup.fetch_path(:flavor, :id)
       h[:availability_zone_id]   = key_backup.fetch_path(:availability_zone, :id)
       h[:cloud_network_id]       = key_backup.fetch_path(:cloud_network, :id)
