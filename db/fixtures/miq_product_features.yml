@@ -4402,6 +4402,48 @@
           :description: Edit Job Templates Tags
           :feature_type: control
           :identifier: configuration_script_tag
+# Configuration Jobs
+- :name: Configuration Jobs
+  :description: Everything under Configuration Jobs
+  :feature_type: node
+  :identifier: configuration_job
+  :children:
+  - :name: View
+    :description: View Configuration Jobs
+    :feature_type: view
+    :identifier: configuration_job_view
+    :children:
+    - :name: List
+      :description: Display Lists of Configuration Jobs
+      :feature_type: view
+      :identifier: configuration_job_show_list
+    - :name: Show
+      :description: Display Individual Configuration Jobs
+      :feature_type: view
+      :identifier: configuration_job_show
+  - :name: Modify
+    :description: Modify Configuration Job
+    :feature_type: admin
+    :identifier: configuration_job_admin
+    :children:
+    - :name: Remove
+      :description: Remove Configuration Jobs from the VMDB
+      :feature_type: admin
+      :identifier: configuration_job_delete
+    - :name: Edit
+      :description: Edit Configuration Job
+      :feature_type: admin
+      :identifier: configuration_job_edit
+  - :name: Operate
+    :description: Perform Operations on Configuration Jobs
+    :feature_type: control
+    :identifier: configuration_job_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Configuration Jobs
+      :feature_type: control
+      :identifier: configuration_job_tag
+
 - :name: All VM and Instance Access Rules
   :description: All VM and Instance Access Rules
   :feature_type: node

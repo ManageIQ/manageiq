@@ -43,7 +43,9 @@ describe OpsController do
       it 'yields features including "provider_foreman_view"' do
         expect do |b|
           controller.send(:recurse_sections_and_features, '_tab_conf', &b)
-        end.to yield_with_args('provider_foreman_explorer', include('provider_foreman_view'))
+        end.to yield_successive_args(
+          ["provider_foreman_explorer", include("provider_foreman_view")],
+          ["configuration_job", include("configuration_job")])
       end
     end
     context '"vm" feature node' do

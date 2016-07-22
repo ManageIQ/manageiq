@@ -729,6 +729,7 @@ en:
       ManageIQ::Providers::ConfigurationManager:                            Configuration Manager
       ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem: Configured System (Ansible Tower)
       ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem: Configured System (Foreman)
+      ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job:         Ansible Tower Job
       ManageIQ::Providers::CloudManager:                                    Cloud Provider
       ManageIQ::Providers::CloudManager::Vm:                                Instance
       ManageIQ::Providers::Google::CloudManager::Vm:                        Instance (Google)
@@ -737,6 +738,7 @@ en:
       ManageIQ::Providers::Amazon::CloudManager::Vm:                        Instance (Amazon)
       ManageIQ::Providers::CloudManager::Template:                          Image
       ManageIQ::Providers::CloudManager::VirtualTemplate:                   Resourceless Server Template
+      ManageIQ::Providers::CloudManager::OrchestrationStack:                Orchestration Stack
       ManageIQ::Providers::ContainerManager:                                Containers Provider
       ManageIQ::Providers::InfraManager:                                    Infrastructure Provider
       ManageIQ::Providers::InfraManager::Vm:                                Virtual Machine
