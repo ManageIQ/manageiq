@@ -810,10 +810,10 @@ ManageIQ.oneTransition.oneTrans = 0;
 
 // Function to generate an Ajax request, but only once for a drawn screen
 function miqSendOneTrans(url, observe) {
-  if (typeof ManageIQ.oneTransition.IEButtonPressed != "undefined") {
+  if (ManageIQ.oneTransition.IEButtonPressed) {
     // page replace after clicking save/reset was making observe_field on
     // text_area in IE send up a trascation to form_field_changed method
-    ManageIQ.oneTransition.IEButtonPressed = undefined;
+    ManageIQ.oneTransition.IEButtonPressed = false;
     return;
   }
   if (ManageIQ.oneTransition.oneTrans) {
@@ -1363,6 +1363,43 @@ function miqInitSelectPicker() {
     dropupAuto: false
   });
   $('.bootstrap-select > button[title]').not('.selectpicker').tooltip({container: 'none'});
+}
+
+function miqInitCodemirror(options) {
+  if (! miqDomElementExists(options.text_area_id)) {
+    return;
+  }
+
+  var textarea = $('#' + options.text_area_id)[0];
+
+  ManageIQ.editor = CodeMirror.fromTextArea(textarea, {
+    mode: options.mode,
+    lineNumbers: options.line_numbers,
+    matchBrackets: true,
+    theme: 'eclipse',
+    readOnly: options.read_only ? 'nocursor' : false,
+    viewportMargin: Infinity,
+  });
+
+  ManageIQ.editor.on('change', function (cm, change) {
+    if (options.angular) {
+      ManageIQ.editor.save();
+      $(textarea).trigger("change");
+    } else {
+      miqSendOneTrans(options.url);
+    }
+  });
+
+  ManageIQ.editor.on('blur', function (cm, change) {
+    ManageIQ.editor.save();
+  });
+
+  $('.CodeMirror').css('height', options.height);
+  $('.CodeMirror').css('width', options.width);
+
+  if (! options.no_focus) {
+    ManageIQ.editor.focus();
+  }
 }
 
 function miqSelectPickerEvent(element, url, options) {
