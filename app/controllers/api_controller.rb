@@ -71,6 +71,7 @@ class ApiController < ApplicationController
   include_concern 'PolicyActions'
   include_concern 'Providers'
   include_concern 'ProvisionRequests'
+  include_concern "Queue"
   include_concern "Rates"
   include_concern "Reports"
   include_concern 'Requests'

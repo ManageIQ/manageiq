@@ -123,6 +123,11 @@ describe ApiController do
       test_collection_query(:provision_dialogs, provision_dialogs_url, MiqDialog)
     end
 
+    it "query Queue" do
+      FactoryGirl.create(:miq_queue)
+      test_collection_query(:queue, queue_url, MiqQueue)
+    end
+
     it "query Provision Requests" do
       FactoryGirl.create(:miq_provision_request, :source => template, :requester => @user)
       test_collection_query(:provision_requests, provision_requests_url, MiqProvisionRequest)

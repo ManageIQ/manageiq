@@ -114,7 +114,7 @@ module ApiSpecHelper
   end
 
   def update_user_role(role, *identifiers)
-    return if identifiers.blank?
+    return if identifiers.compact.blank?
     product_features = identifiers.collect do |identifier|
       MiqProductFeature.find_or_create_by(:identifier => identifier)
     end
