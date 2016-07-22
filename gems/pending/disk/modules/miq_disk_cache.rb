@@ -3,13 +3,13 @@ require_relative "../MiqDisk"
 require 'ostruct'
 
 module MiqDiskCache
-  MIN_SECTORS_TO_CACHE = 32
+  MIN_SECTORS_PER_ENTRY = 32
   DEF_LRU_HASH_ENTRIES = 100
   DEBUG_CACHE_STATS    = false
 
   attr_reader :d_size, :blockSize, :lru_hash_entries, :min_sectors_per_entry, :cache_hits, :cache_misses
 
-  def self.new(up_stream, lru_hash_entries = DEF_LRU_HASH_ENTRIES, min_sectors_per_entry = MIN_SECTORS_TO_CACHE)
+  def self.new(up_stream, lru_hash_entries = DEF_LRU_HASH_ENTRIES, min_sectors_per_entry = MIN_SECTORS_PER_ENTRY)
     raise "MiqDiskCache: Downstream Disk Module is nil" if up_stream.nil?
     @dInfo                       = OpenStruct.new
     @dInfo.lru_hash_entries      = lru_hash_entries
@@ -120,15 +120,15 @@ module MiqDiskCache
   end
 
   def entry_range(start_sector, number_sectors)
-    # Cache entries are *multiples* of MIN_SECTORS_TO_CACHE * @blocksize  in length,
-    # aligned to MIN_SECTORS_TO_CACHE * @blocksize byte boundaries.
+    # Cache entries are *multiples* of MIN_SECTORS_PER_ENTRY * @blocksize  in length,
+    # aligned to MIN_SECTORS_PER_ENTRY * @blocksize byte boundaries.
     # real_start_block is the aligned cache block based on the start_sector, and
     # real_start_sector is the disk sector for that cache block.
-    real_start_block    = start_sector / MIN_SECTORS_TO_CACHE
-    real_end_block      = (start_sector + number_sectors) / MIN_SECTORS_TO_CACHE
+    real_start_block    = start_sector / MIN_SECTORS_PER_ENTRY
+    real_end_block      = (start_sector + number_sectors) / MIN_SECTORS_PER_ENTRY
     number_cache_blocks = real_end_block - real_start_block + 1
-    sectors_to_read     = number_cache_blocks * MIN_SECTORS_TO_CACHE
-    real_start_sector   = real_start_block * MIN_SECTORS_TO_CACHE
+    sectors_to_read     = number_cache_blocks * MIN_SECTORS_PER_ENTRY
+    real_start_sector   = real_start_block * MIN_SECTORS_PER_ENTRY
     end_sector          = real_start_sector + sectors_to_read - 1
     Range.new(real_start_sector, end_sector)
   end
