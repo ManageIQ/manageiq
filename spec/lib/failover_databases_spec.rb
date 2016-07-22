@@ -4,7 +4,7 @@ describe FailoverDatabases do
   before(:all) do
     @connection = ApplicationRecord.connection_pool.checkout
     clean_up
-    
+
     @connection.execute("CREATE SCHEMA repmgr_miq")
 
     @connection.execute(<<-SQL)
@@ -21,17 +21,17 @@ describe FailoverDatabases do
     SQL
 
     @connection.execute(<<-SQL)
-      INSERT INTO 
+      INSERT INTO
         repmgr_miq.repl_nodes(id, type, active)
-      VALUES 
+      VALUES
         (2, 'master', 'true'),
         (1, 'standby', 'true'),
         (3, 'standby', 'false')
     SQL
   end
 
-  after (:each) do
-    remove_file  
+  after(:each) do
+    remove_file
   end
 
   after(:all) do
@@ -59,7 +59,7 @@ describe FailoverDatabases do
       expect(list.size).to be 3
 
       add_new_record
-      
+
       described_class.all_databases
       expect(list.size).to be 3
       expect(list).to match_array(initial_db_records)
@@ -78,7 +78,7 @@ describe FailoverDatabases do
       expect(list).to include new_record
     end
   end
-  
+
   describe ".standby_databases" do
     it "returns list of databases in standby mode" do
       list = described_class.standby_databases
@@ -92,15 +92,15 @@ describe FailoverDatabases do
       expect(list.size).to eq 1
     end
   end
-  
+
   def initial_db_records
-    [{"id"   => 1, "type" => "standby", "active" => true}, 
+    [{"id"   => 1, "type" => "standby", "active" => true},
      {"id"   => 2, "type" => "master", "active" => true},
-     {"id"   => 3, "type" => "standby", "active" => false}]  
+     {"id"   => 3, "type" => "standby", "active" => false}]
   end
 
   def new_record
-    {"id"   => 4, "type" => "standby", "active" => true}  
+    {"id" => 4, "type" => "standby", "active" => true} 
   end
 
   def add_new_record
@@ -108,24 +108,20 @@ describe FailoverDatabases do
     connection.execute(<<-SQL)
       INSERT INTO 
         repmgr_miq.repl_nodes(id, type, active)
-      VALUES 
+      VALUES
         (4, 'standby', 'true')
     SQL
   end
 
   def remove_file
-    begin
+    if File.exists?(described_class::FAILOVER_DATABASES_YAML_FILE)
       File.delete(described_class::FAILOVER_DATABASES_YAML_FILE)
-    rescue Exception
-      # ignore
     end
   end
 
   def remove_schema
-    begin
+    if @connection.table_exists? "repmgr_miq.repl_nodes"
       @connection.execute("DROP SCHEMA repmgr_miq cascade")
-    rescue Exception
-      # ignore
     end
   end
 
