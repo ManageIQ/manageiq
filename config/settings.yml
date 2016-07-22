@@ -1193,6 +1193,7 @@
         :ems_metrics_collector_worker_amazon: {}
         :ems_metrics_collector_worker_atomic: {}
         :ems_metrics_collector_worker_atomic_enterprise: {}
+        :ems_metrics_collector_worker_google: {}
         :ems_metrics_collector_worker_kubernetes:
           :metrics_port: 5000
           :metrics_path: "/hawkular/metrics"

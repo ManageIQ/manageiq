@@ -51,6 +51,8 @@ module ManageIQ::Providers::Google::ManagerMixin
         ::Fog::Compute.new(config)
       when 'pubsub'
         ::Fog::Google::Pubsub.new(config.except(:provider))
+      when 'monitoring'
+        ::Fog::Google::Monitoring.new(config.except(:provider))
       else
         raise ArgumentError, "Unknown service: #{options[:service]}"
       end
