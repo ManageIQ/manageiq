@@ -8,9 +8,23 @@ module MiqAeEngine
       @num_methods = 0
     end
 
+    def with_server
+      setup if num_methods == 0
+      self.num_methods += 1
+
+      svc = MiqAeMethodService::MiqAeService.new(@workspace)
+      yield
+    ensure
+      svc.destroy # Reset inputs to empty to avoid storing object references
+      self.num_methods -= 1
+      teardown if num_methods == 0
+    end
+
     def drb_uri
       DRb.uri
     end
+
+    private
 
     def setup
       require 'drb/timeridconv'
