@@ -16,11 +16,9 @@ describe MiqProductFeature do
 
   it "is properly configured" do
     everything = YAML.load_file(described_class.feature_yaml)
-    required_keys = [:identifier]
-    possible_keys = required_keys + [:name, :feature_type, :description, :children, :hidden, :protected]
     traverse_product_features(everything) do |pf|
-      expect(pf).to include(*required_keys)
-      expect(pf.keys - possible_keys).to be_empty
+      expect(pf).to include(*described_class::REQUIRED_ATTRIBUTES)
+      expect(pf.keys - described_class::ALLOWED_ATTRIBUTES).to be_empty
       expect(pf[:children]).not_to be_empty if pf.key?(:children)
     end
   end
