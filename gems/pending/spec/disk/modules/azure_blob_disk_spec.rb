@@ -8,10 +8,11 @@ describe AzureBlobDisk do
     @test_env = TestEnvHelper.new(__FILE__)
     @test_env.vcr_filter
 
-    @client_id  = @test_env[:azure_client_id]
-    @client_key = @test_env[:azure_client_key]
-    @tenant_id  = @test_env[:azure_tenant_id]
-    @blob_uri   = @test_env[:blob_uri]
+    @client_id       = @test_env[:azure_client_id]
+    @client_key      = @test_env[:azure_client_key]
+    @tenant_id       = @test_env[:azure_tenant_id]
+    @subscription_id = @test_env[:azure_subscription_id]
+    @blob_uri        = @test_env[:blob_uri]
 
     @test_env.ensure_recording_dir_exists
   end
@@ -31,9 +32,10 @@ describe AzureBlobDisk do
     VCR.insert_cassette(cassette_name, :decode_compressed_response => true)
 
     @azure_config = Azure::Armrest::ArmrestService.configure(
-      :client_id  => @client_id,
-      :client_key => @client_key,
-      :tenant_id  => @tenant_id
+      :client_id       => @client_id,
+      :client_key      => @client_key,
+      :tenant_id       => @tenant_id,
+      :subscription_id => @subscription_id
     )
 
     @storage_account_service = Azure::Armrest::StorageAccountService.new(@azure_config)

@@ -12,20 +12,15 @@ module ManageIQ::Providers::Azure::ManagerMixin
   def verify_credentials(_auth_type = nil, options = {})
     require 'azure-armrest'
     conf = connect(options)
-
-    # TODO: Modify this if/when the azure-armrest gem does automatic subscription validation
-    vms = ::Azure::Armrest::VirtualMachineService.new(conf)
-    subscriptions = vms.subscriptions.map(&:subscription_id)
-    unless subscriptions.include?(subscription)
-      raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - check your Azure Subscription ID")
-    end
+  rescue ArgumentError => err
+    raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - #{err.message}")
   rescue Azure::Armrest::UnauthorizedException, Azure::Armrest::BadRequestException
     raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - check your Azure Client ID and Client Key")
   rescue MiqException::MiqInvalidCredentialsError
     raise # Raise before falling into catch-all block below
   rescue StandardError => err
     _log.error("Error Class=#{err.class.name}, Message=#{err.message}")
-    raise MiqException::MiqInvalidCredentialsError, _("Unexpected response returned from system, see log for details")
+    raise MiqException::MiqInvalidCredentialsError, _("Unexpected response returned from system: #{err.message}")
   else
     conf
   end
