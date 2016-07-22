@@ -1,5 +1,3 @@
-require 'drb'
-
 module MiqAeEngine
   class MiqAeMethod
     AE_ROOT_DIR    = File.expand_path(File.join(Rails.root,  'product/automate'))
@@ -223,42 +221,15 @@ RUBY
       true
     end
 
-    def self.setup_drb_for_ruby_method
-      require 'drb/timeridconv'
-      @global_id_conv = DRb.install_id_conv(DRb::TimerIdConv.new(drb_cache_timeout))
-      drb_front  = MiqAeMethodService::MiqAeServiceFront.new
-      drb        = DRb.start_service("druby://127.0.0.1:0", drb_front)
-    end
-
-    def self.drb_cache_timeout
-      1.hour
-    end
-
-    def self.teardown_drb_for_ruby_method
-      DRb.stop_service
-      # Set the ID conv to nil so that the cache can be GC'ed
-      DRb.install_id_conv(nil)
-      # This hack was done to prevent ruby from leaking the
-      # TimerIdConv thread.
-      # https://bugs.ruby-lang.org/issues/12342
-      thread = @global_id_conv
-               .try(:instance_variable_get, '@holder')
-               .try(:instance_variable_get, '@keeper')
-      @global_id_conv = nil
-      return unless thread
-
-      thread.kill
-      Thread.pass while thread.alive?
-    end
-
     def self.invoke_inline_ruby(aem, obj, inputs)
       if ruby_method_runnable?(aem)
+        obj.workspace.invoker ||= MiqAeEngine::DrbRemoteInvoker.new(obj.workspace)
         begin
-          setup_drb_for_ruby_method if obj.workspace.num_drb_methods == 0
-          obj.workspace.num_drb_methods += 1
+          obj.workspace.invoker.setup if obj.workspace.invoker.num_methods == 0
+          obj.workspace.invoker.num_methods += 1
           svc            = MiqAeMethodService::MiqAeService.new(obj.workspace)
           svc.inputs     = inputs
-          svc.preamble   = method_preamble(DRb.uri, svc.object_id)
+          svc.preamble   = method_preamble(obj.workspace.invoker.drb_uri, svc.object_id)
           svc.body       = aem.data
           $miq_ae_logger.info("<AEMethod [#{aem.fqname}]> Starting ")
           rc, msg, stderr = run_ruby_method(svc.body, svc.preamble)
@@ -267,8 +238,8 @@ RUBY
           process_ruby_method_results(rc, msg, stderr)
         ensure
           svc.destroy  # Reset inputs to empty to avoid storing object references
-          obj.workspace.num_drb_methods -= 1
-          teardown_drb_for_ruby_method if obj.workspace.num_drb_methods == 0
+          obj.workspace.invoker.num_methods -= 1
+          obj.workspace.invoker.teardown_drb_for_ruby_method if obj.workspace.invoker.num_methods == 0
         end
       end
     end

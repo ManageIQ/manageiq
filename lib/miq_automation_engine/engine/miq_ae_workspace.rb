@@ -35,7 +35,7 @@ module MiqAeEngine
   end
 
   class MiqAeWorkspaceRuntime
-    attr_accessor :graph, :num_drb_methods, :class_methods
+    attr_accessor :graph, :class_methods, :invoker
     attr_accessor :datastore_cache, :persist_state_hash, :current_state_info
     attr_accessor :ae_user
     include MiqAeStateInfo
@@ -46,7 +46,6 @@ module MiqAeEngine
       @readonly          = options[:readonly] || false
       @nodes             = []
       @current           = []
-      @num_drb_methods   = 0
       @datastore_cache   = {}
       @class_methods     = {}
       @dom_search        = MiqAeDomainSearch.new
