@@ -3451,6 +3451,14 @@
       :description: Edit Tags of Middleware Deployments
       :feature_type: control
       :identifier: middleware_deployment_tag
+    - :name: Stop middleware deployment
+      :description: Stop Middleware deployment
+      :feature_type: admin
+      :identifier: middleware_deployment_stop
+    - :name: Start middleware deployment
+      :description: StartMiddleware deployment
+      :feature_type: admin
+      :identifier: middleware_deployment_start
     - :name: Undeploy middleware deployment
       :description: Undeploy Middleware deployment
       :feature_type: admin
