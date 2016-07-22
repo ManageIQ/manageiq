@@ -1,5 +1,4 @@
 class FailoverDatabases
-
   FAILOVER_DATABASES_YAML_FILE = Rails.root.join("config", "failover_databases.yaml")
 
   def self.refresh_databases_list
@@ -7,10 +6,10 @@ class FailoverDatabases
   end
 
   def self.all_databases
-    if  File.exist?(FAILOVER_DATABASES_YAML_FILE)
+    if File.exist?(FAILOVER_DATABASES_YAML_FILE)
       begin
         YAML.load(File.read(FAILOVER_DATABASES_YAML_FILE))
-      rescue =>err
+      rescue => err
         _log.error("#{err.class}: #{err}")
         _log.error(err.backtrace.join("\n"))
         []
@@ -22,15 +21,15 @@ class FailoverDatabases
 
   def self.standby_databases
     result = []
-    all_databases.each do   |record|
-      result << record if record["type"] == 'standby'  
+    all_databases.each do |record|
+      result << record if record["type"] == 'standby'
     end
     result
   end
 
   def self.standby_and_active_databases
     result = []
-    all_databases.each do   |record|
+    all_databases.each do |record|
       result << record if record["type"] == 'standby' && record["active"] == true
     end
     result
@@ -38,18 +37,25 @@ class FailoverDatabases
 
   def self.query_replication_manager
     connection = ApplicationRecord.connection
-    return if !(connection.table_exists? "repmgr_miq.repl_nodes")
     result = []
-    connection.execute("SELECT * FROM repmgr_miq.repl_nodes").each do |data|
-      result << data
+    if connection.table_exists? "repmgr_miq.repl_nodes"
+      connection.execute("SELECT * FROM repmgr_miq.repl_nodes").each do |data|
+        result << data
+      end
+      write_file(result)
     end
+    result
+  end
+  private_class_method :query_replication_manager
+
+  def self.write_file(result)
     File.open(FAILOVER_DATABASES_YAML_FILE, 'w+') do |file|
       file.write(result.to_yaml)
     end
-    result
   rescue => err
     _log.error("#{err.class}: #{err}")
     _log.error(err.backtrace.join("\n"))
+    raise
   end
-  private_class_method :query_replication_manager
+  private_class_method :write_file
 end
