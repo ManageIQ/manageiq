@@ -54,8 +54,8 @@ describe 'routes for ServiceController' do
   end
 
   describe "#edit" do
-    it "routes with POST" do
-      expect(post("/service/edit")).to route_to("service#edit")
+    it "routes with GET" do
+      expect(get("/service/123/edit")).to route_to("service#edit", :id => "123")
     end
   end
 

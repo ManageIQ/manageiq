@@ -2180,7 +2180,6 @@ Vmdb::Application.routes.draw do
         ownership_update
         reload
         retire
-        edit
         service_tag
         tag_edit_form_field_changed
         tree_autoload_dynatree
