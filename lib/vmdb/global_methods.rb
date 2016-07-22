@@ -53,7 +53,7 @@ module Vmdb
         when "compare_hdr"                          # for drift/compare headers
           new_time = new_time.strftime("%m/%d/%y %H:%M %Z")
         when "widget_footer"                        # for widget footers
-          new_time = new_time.strftime("%m/%d/%y %H:%M")
+          new_time = I18n.l(new_time, :format => :long)
         else                                        # for summary screens
           new_time = new_time.strftime("%a %b %d %H:%M:%S %Z %Y")
         end
