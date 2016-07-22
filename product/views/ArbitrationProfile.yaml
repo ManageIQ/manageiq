@@ -21,7 +21,6 @@ db: ArbitrationProfile
 cols:
 - name
 - description
-- default_profile
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -30,14 +29,12 @@ include:
 col_order: 
 - name
 - description
-- default_profile
 
 
 # Column titles, in order
 headers:
 - Name
 - Description
-- Default
 
 
 # Condition(s) string for the SQL query

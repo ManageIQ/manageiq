@@ -858,7 +858,23 @@ module ApplicationController::CiProcessing
       if params[:ppsetting] || params[:entry] || params[:sort_choice]
         replace_gtl_main_div
       else
-        render :action => 'show'
+        # Ajax request
+        unless request.xml_http_request?
+          render :action => 'show'
+        else
+          c_tb = build_toolbar(center_toolbar_filename)
+          render :update do |page|
+            page << javascript_prologue
+            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+            page.replace_html("main_div", :partial => "shared/views/ems_common/show") # Replace the main div area contents
+            page << javascript_pf_toolbar_reload('center_tb', c_tb)
+            page.replace_html("paging_div", :partial => 'layouts/pagingcontrols',
+                              :locals  => {:pages      => @pages,
+                                           :action_url => @lastaction,
+                                           :db         => @view.db,
+                                           :headers    => @view.headers})
+          end
+        end
       end
     end
   end
@@ -870,7 +886,17 @@ module ApplicationController::CiProcessing
       @refresh_partial = "layouts/#{@showtype}"
       replace_right_cell
     else
-      render :action => 'show'
+      unless request.xml_http_request?
+        render :action => 'show'
+      else
+        c_tb = build_toolbar(center_toolbar_filename)
+        render :update do |page|
+          page << javascript_prologue
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          page.replace_html("main_div", :partial => "shared/views/ems_common/show") # Replace the main div area contents
+          page << javascript_pf_toolbar_reload('center_tb', c_tb)
+        end
+      end
     end
   end
 

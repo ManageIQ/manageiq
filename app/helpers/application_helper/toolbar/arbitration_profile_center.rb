@@ -11,13 +11,14 @@ class ApplicationHelper::Toolbar::ArbitrationProfileCenter < ApplicationHelper::
           'pficon pficon-edit fa-lg',
           t = N_('Edit this Arbitration Profile'),
           t,
+          :association_id => true,
           :full_path => "<%= edit_ems_cloud_path(@ems) %>"),
         button(
           :arbitration_profile_delete,
           'pficon pficon-delete fa-lg',
           t = N_('Remove this Arbitration Profile from the VMDB'),
           t,
-          :url_parms => "&refresh=y",
+          :association_id => true,
           :confirm   => N_("Warning: This Arbitration Profile will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Arbitration Profile?")),
       ]
     ),

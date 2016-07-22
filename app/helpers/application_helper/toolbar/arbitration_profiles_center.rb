@@ -28,14 +28,6 @@ class ApplicationHelper::Toolbar::ArbitrationProfilesCenter < ApplicationHelper:
           :confirm   => N_("Warning: The selected Cloud Providers and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Cloud Providers?"),
           :enabled   => false,
           :onwhen    => "1+"),
-        button(
-          :arbitration_profile_default,
-          'pficon pficon-edit fa-lg',
-          N_('Make selected Arbitration Profile default profile'),
-          N_('Make selected Arbitration Profile default profile'),
-          :url_parms => "main_div",
-          :enabled   => false,
-          :onwhen    => "1"),
       ]
     ),
   ])

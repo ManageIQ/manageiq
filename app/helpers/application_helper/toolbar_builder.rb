@@ -117,6 +117,10 @@ class ApplicationHelper::ToolbarBuilder
       button[:window_url] = "/#{request.parameters["controller"]}#{input[:url]}"
     end
 
+    if input[:association_id] # special behavior: button opens window_url in a new window
+      button[:url_parms] = "?show=#{request.parameters[:show]}"
+    end
+
     dis_title = build_toolbar_disable_button(button[:child_id] || button[:id])
     if dis_title
       button[:enabled] = false

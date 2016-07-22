@@ -392,6 +392,7 @@ module EmsCommon
       @refresh_div = "main_div" # Default div for button.rjs to refresh
       redirect_to :action => "new" if params[:pressed] == "new"
       deleteemss if params[:pressed] == "#{@table_name}_delete"
+      arbitration_profile_delete if params[:pressed] == "arbitration_profile_delete"
       refreshemss if params[:pressed] == "#{@table_name}_refresh"
       #     scanemss if params[:pressed] == "scan"
       tag(model) if params[:pressed] == "#{@table_name}_tag"
@@ -455,9 +456,36 @@ module EmsCommon
       if @refresh_div == "main_div" && @lastaction == "show_list"
         replace_gtl_main_div
       else
-        render_flash
+        render_flash unless performed?
       end
     end
+  end
+
+  def arbitration_profile_delete
+    assert_privileges(params[:pressed])
+    profiles = []
+    if params[:miq_grid_checks] # showing a list
+      profiles = find_checked_items
+      if profiles.empty?
+        add_flash(_("No %{record} were selected for deletion") % {:record => ui_lookup(:table => "ArbitrationProfile")}, :error)
+      end
+      process_elements(profiles, ArbitrationProfile, "destroy") unless profiles.empty?
+      add_flash(_("Delete initiated for %{count_model} from the CFME Database") %
+                  {:count_model => pluralize(profiles.length, ui_lookup(:table => "ArbitrationProfile"))}) if @flash_array.nil?
+    else # showing 1 item
+      if params[:show].nil? || ArbitrationProfile.find_by_id(from_cid(params[:show])).nil?
+        add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => "ArbitrationProfile")}, :error)
+      else
+        profiles.push(from_cid(params[:show]))
+      end
+      process_elements(profiles, ArbitrationProfile, "destroy") unless profiles.empty?
+      @single_delete = true unless flash_errors?
+      add_flash(_("The selected %{record} was deleted") %
+                  {:record => ui_lookup(:tables => "ArbitrationProfile")}) if @flash_array.nil?
+      params.delete(:show) unless flash_errors?
+    end
+    @_params[:db] = "ems_cloud"
+    arbitration_profiles
   end
 
   def provider_documentation_url

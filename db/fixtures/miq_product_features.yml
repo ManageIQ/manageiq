@@ -405,10 +405,6 @@
       :description: Remove Arbitartion Profile
       :feature_type: admin
       :identifier: arbitration_profile_delete
-    - :name: Mark Arbitartion Profile as default
-      :description: Mark Arbitartion Profile as default
-      :feature_type: admin
-      :identifier: arbitration_profile_default
 
 # AvailabilityZone
 - :name: Availability Zones

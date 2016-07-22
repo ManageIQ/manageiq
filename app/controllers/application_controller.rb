@@ -2302,8 +2302,8 @@ class ApplicationController < ActionController::Base
 
   def get_record_display_name(record)
     return record.label                      if record.respond_to?("label")
-    return record.ext_management_system.name if record.respond_to?("ems_id")
     return record.description                if record.respond_to?("description") && !record.description.nil?
+    return record.ext_management_system.name if record.respond_to?("ems_id")
     return record.title                      if record.respond_to?("title")
     return record.name                       if record.respond_to?("name")
     "<Record ID #{record.id}>"
