@@ -31,7 +31,8 @@
             .col-sm-4
               %input#timeout.form-control{:type          => "number",
                                           :name          => "timeout",
-                                          "ng-maxlength" => "2",
+                                          "min" => "0",
+                                          "max" => "60",
                                           "ng-required"  => "true",
                                           "ng-model"     => "paramsModel.timeout"}
             .col-sm-2.text-left
@@ -40,8 +41,10 @@
           .col-sm-10
             %p.ng-error-messages{"ng-show" => "opsParamForm.timeout.$error.required"}
               = _("Timeout is required")
-            %p.ng-error-messages{"ng-show" => "opsParamForm.timeout.$error.maxlength"}
-              = _("Timeout max is 99")
+            %p.ng-error-messages{"ng-show" => "opsParamForm.timeout.$error.min"}
+              = _("Timeout max is 0")
+            %p.ng-error-messages{"ng-show" => "opsParamForm.timeout.$error.max"}
+              = _("Timeout max is 60")
 
         .modal-footer
           %button.btn.btn-default{:type => "button", "data-dismiss" => "modal"}
