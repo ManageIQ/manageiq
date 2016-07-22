@@ -123,7 +123,8 @@ describe ReportController do
 
         post :miq_report_edit, :params => { :id => rep.id, :button => 'reset' }
         expect(assigns(:sb)[:miq_tab]).to eq("edit_1")
-        expect(assigns(:tabs)).to include(["edit_1", ""])
+        expect(assigns(:tabs)).to include(["edit_1", "Columns"])
+        expect(assigns(:active_tab)).to eq("edit_1")
       end
     end
 
