@@ -67,7 +67,7 @@ class Dialog < ApplicationRecord
     dialog_tabs.each do |dt|
       dt.dialog_groups.each do |dg|
         dg.dialog_fields.each do |df|
-          err_msg = df.validate_field_data(dt, dg) if df.visible
+          err_msg = df.validate_field_data(dt, dg)
           result << err_msg unless err_msg.blank?
         end
       end

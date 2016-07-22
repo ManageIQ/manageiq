@@ -98,7 +98,7 @@ class DialogField < ApplicationRecord
   end
 
   def validate_field_data(dialog_tab, dialog_group)
-    validate_error_message(dialog_tab, dialog_group) if required? && required_value_error?
+    validate_error_message(dialog_tab, dialog_group) if visible? && required? && required_value_error?
   end
 
   def resource
