@@ -12,6 +12,7 @@ describe MiqAzureVm do
     @client_id               = @test_env[:azure_client_id]
     @client_key              = @test_env[:azure_client_key]
     @tenant_id               = @test_env[:azure_tenant_id]
+    @subscription_id         = @test_env[:azure_subscription_id]
     @instance_name           = @test_env[:instance_name]
     @instance_resource_group = @test_env[:instance_resource_group]
 
@@ -25,9 +26,10 @@ describe MiqAzureVm do
     VCR.insert_cassette(cassette_name, :decode_compressed_response => true)
 
     @azure_config = Azure::Armrest::ArmrestService.configure(
-      :client_id  => @client_id,
-      :client_key => @client_key,
-      :tenant_id  => @tenant_id
+      :client_id       => @client_id,
+      :client_key      => @client_key,
+      :tenant_id       => @tenant_id,
+      :subscription_id => @subscription_id
     )
   end
 
