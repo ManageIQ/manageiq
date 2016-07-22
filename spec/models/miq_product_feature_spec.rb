@@ -2,8 +2,6 @@ require 'tmpdir'
 require 'pathname'
 
 describe MiqProductFeature do
-  let(:expected_feature_count) { 1075 }
-
   # - container_dashboard
   # - miq_report_widget_editor
   #   - miq_report_widget_admin
@@ -19,13 +17,16 @@ describe MiqProductFeature do
   context ".seed" do
     it "creates feature identifiers once on first seed, changes nothing on second seed" do
       status_seed1 = MiqProductFeature.seed
-      expect(MiqProductFeature.count).to eq(expected_feature_count)
+      features_after_seed1 = MiqProductFeature.count
+      # If this fails because we went down to 998, update this test;
+      # the idea was just to test we're not suddenly getting 10 or 0...
+      expect(features_after_seed1).to be > 1000
       expect(status_seed1[:created]).to match_array status_seed1[:created].uniq
       expect(status_seed1[:updated]).to match_array []
       expect(status_seed1[:unchanged]).to match_array []
 
       status_seed2 = MiqProductFeature.seed
-      expect(MiqProductFeature.count).to eq(expected_feature_count)
+      expect(MiqProductFeature.count).to eq(features_after_seed1)
       expect(status_seed2[:created]).to match_array []
       expect(status_seed2[:updated]).to match_array []
       expect(status_seed2[:unchanged]).to match_array status_seed1[:created]
