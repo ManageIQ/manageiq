@@ -399,18 +399,4 @@ describe OpsController do
       expect(edit[:current][:ldap_groups].find { |lg| lg.group_type == 'user' }).not_to be(nil)
     end
   end
-
-  describe "building tabs" do
-    before(:each) do
-      controller.rbac_group_seq_edit_screen
-    end
-
-    it 'sets the active tab' do
-      expect(assigns(:active_tab)).to eq("ldap_seq_edit")
-    end
-
-    it 'sets the available tabs' do
-      expect(assigns(:tabs)).to eq([ ["ldap_seq_edit", "Edit Sequence of User Groups"] ])
-    end
-  end
 end

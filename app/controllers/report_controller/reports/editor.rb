@@ -384,7 +384,7 @@ module ReportController::Reports::Editor
       ]
     end
 
-    tab = @sb[:miq_tab].split("_")[1]  # Get the tab number of the active tab
+    tab = @sb[:miq_tab].split("_")[1] # Get the tab number of the active tab
     @active_tab = "#{req}_#{tab}"
   end
 

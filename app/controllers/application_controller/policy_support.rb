@@ -91,9 +91,6 @@ module ApplicationController::PolicySupport
     session[:policies] = {} unless params[:continue]  # Clear current policies, unless continuing previous simulation
     policy_sim_build_screen
 
-    @active_tab = "polsim"
-    @tabs = [ ["polsim", "Policy Simulation"] ]
-
     if @explorer
       @record = @tagitems.first
       @in_a_form = true

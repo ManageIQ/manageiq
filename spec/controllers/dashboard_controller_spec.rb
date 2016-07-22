@@ -402,14 +402,12 @@ describe DashboardController do
     let(:wset) do
       FactoryGirl.create(
         :miq_widget_set,
-        {
-          :name => "Widgets",
-          :userid => user.userid,
-          :group_id => group.id,
-          :set_data => {
-            :last_group_db_updated => Time.now.utc,
-            :col1 => [1], :col2 => [], :col3 => []
-          }
+        :name     => "Widgets",
+        :userid   => user.userid,
+        :group_id => group.id,
+        :set_data => {
+          :last_group_db_updated => Time.now.utc,
+          :col1 => [1], :col2 => [], :col3 => []
         }
       )
     end
@@ -417,11 +415,12 @@ describe DashboardController do
     before(:each) do
       login_as user
 
-      controller.instance_variable_set(:@_params, { :tab => wset.id })
-      controller.instance_variable_set(:@sb, {
-        :active_db => wset.name, :active_db_id => wset.id,
+      controller.instance_variable_set(:@_params, :tab => wset.id)
+      controller.instance_variable_set(
+        :@sb,
+        :active_db  => wset.name, :active_db_id => wset.id,
         :dashboards => { wset.name => {:col1 => [1], :col2 => [], :col3 => []} }
-      })
+      )
 
       controller.show
     end

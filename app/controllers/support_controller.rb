@@ -17,8 +17,6 @@ class SupportController < ApplicationController
   end
 
   def about
-    #   @active_tab ||= "1"
-    #   @tabs.push( ["1", "Help"] )
     @vmdb = {:version => Vmdb::Appliance.VERSION, :build => Vmdb::Appliance.BUILD}
     @user_role = User.current_user.miq_user_role_name
     @pdf_documents = pdf_documents

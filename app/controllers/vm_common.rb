@@ -689,10 +689,6 @@ module VmCommon
     @edit[:current] = copy_hash(@edit[:new])
     session[:changed] = false
 
-    @active_tab = "evm_relationship"
-    @tab_id = @record.id.to_s
-    @tabs = [ ["evm_relationship", "Edit Management Engine Relationship"] ]
-
     @in_a_form = true
     if @explorer
       @refresh_partial = "vm_common/evm_relationship"
@@ -851,7 +847,7 @@ module VmCommon
 
     @active_tab = "edit"
     @tab_id = @record.id.to_s
-    @tabs = [ ["edit", "Information"] ]
+    @tabs = [["edit", "Information"]]
 
     @refresh_partial = "vm_common/form"
   end
@@ -867,7 +863,7 @@ module VmCommon
     @in_a_form = true
     @active_tab = "edit"
     @tab_id = @record.id.to_s
-    @tabs = [ ["edit", "Information"] ]
+    @tabs = [["edit", "Information"]]
   end
 
   # AJAX driven routine to check for changes in ANY field on the form
