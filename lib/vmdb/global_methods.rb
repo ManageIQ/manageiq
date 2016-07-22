@@ -43,7 +43,7 @@ module Vmdb
         when "fname"                                # for download filename
           new_time = new_time.strftime("%Y_%m_%d")
         when "date"                                 # for just mm/dd/yy
-          new_time = new_time.strftime("%m/%d/%y")
+          new_time = I18n.l(new_time.to_date)
         when "datetime"                             # mm/dd/yy hh:mm:ss
           new_time = new_time.strftime("%m/%d/%y %H:%M:%S")
         when "export_filename", "support_log_fname"    # for export/log filename
