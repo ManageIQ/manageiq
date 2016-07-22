@@ -224,22 +224,14 @@ RUBY
     def self.invoke_inline_ruby(aem, obj, inputs)
       if ruby_method_runnable?(aem)
         obj.workspace.invoker ||= MiqAeEngine::DrbRemoteInvoker.new(obj.workspace)
-        begin
-          obj.workspace.invoker.setup if obj.workspace.invoker.num_methods == 0
-          obj.workspace.invoker.num_methods += 1
-          svc            = MiqAeMethodService::MiqAeService.new(obj.workspace)
+        obj.workspace.invoker.with_server do |svc|
           svc.inputs     = inputs
           svc.preamble   = method_preamble(obj.workspace.invoker.drb_uri, svc.object_id)
           svc.body       = aem.data
           $miq_ae_logger.info("<AEMethod [#{aem.fqname}]> Starting ")
           rc, msg, stderr = run_ruby_method(svc.body, svc.preamble)
           $miq_ae_logger.info("<AEMethod [#{aem.fqname}]> Ending")
-
           process_ruby_method_results(rc, msg, stderr)
-        ensure
-          svc.destroy  # Reset inputs to empty to avoid storing object references
-          obj.workspace.invoker.num_methods -= 1
-          obj.workspace.invoker.teardown_drb_for_ruby_method if obj.workspace.invoker.num_methods == 0
         end
       end
     end
