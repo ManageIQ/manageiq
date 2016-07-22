@@ -20,12 +20,12 @@ module MiqAeCustomizationController::Dialogs
     dialog_get_form_vars
 
     # dialog_edit_set_form_vars
-    dialog_edit_build_tree
+    #dialog_edit_build_tree
     dialog_sort_values if (params[:field_data_typ] || params[:field_sort_by] ||
         params[:field_sort_order]) && @edit[:field_sort_by].to_s != "none"
     @_params[:typ] = ""
     get_field_types
-
+    @dialog_edit_tree = TreeBuilderDialogEdit.new(:dialog_edit, :edit_dialog_tree, @sb, true, @edit)
     # Use JS to update the display
     render :update do |page|
       page << javascript_prologue
@@ -149,7 +149,6 @@ module MiqAeCustomizationController::Dialogs
     if valid
       @sb[:node_typ] = params[:typ]
       @sb[:edit_typ] = "add"
-      # dialog_edit_build_tree(:dialog_edit,:dialog_edit_tree)
       nodes = x_node.split('_')
 
       case params[:typ]
@@ -295,7 +294,9 @@ module MiqAeCustomizationController::Dialogs
         self.x_node = "#{nodes[0]}_#{nodes[1]}_#{nodes[2]}"
       end
     end
-    dialog_edit_build_tree
+    #dialog_edit_build_tree
+    get_field_types if @edit[:field_types].nil?
+    @dialog_edit_tree = TreeBuilderDialogEdit.new(:dialog_edit, :edit_dialog_tree, @sb, true, @edit)
     @sb[:edit_typ] = nil
     replace_right_cell(x_node, [:dialog_edit])
   end
@@ -417,7 +418,10 @@ module MiqAeCustomizationController::Dialogs
 
     parent[name] = temp
 
-    dialog_edit_build_tree
+    #dialog_edit_build_tree
+    get_field_types if @edit[:field_types].nil?
+    @dialog_edit_tree = TreeBuilderDialogEdit.new(:dialog_edit, :edit_dialog_tree, @sb, true, @edit)
+
     render :update do |page|
       page << javascript_prologue
       session[:changed] = changed = (@edit[:new] != @edit[:current])
@@ -1108,7 +1112,9 @@ module MiqAeCustomizationController::Dialogs
 
       @sb[:node_typ] = "element" if params[:action] != "dialog_form_field_changed"
     end
-    dialog_edit_build_tree
+    #dialog_edit_build_tree
+    get_field_types if @edit[:field_types].nil?
+    @dialog_edit_tree = TreeBuilderDialogEdit.new(:dialog_edit, :edit_dialog_tree, @sb, true, @edit)
     session[:changed] = (@edit[:new] != @edit[:current])
     session[:edit] = @edit
   end
@@ -1251,7 +1257,9 @@ module MiqAeCustomizationController::Dialogs
     end
 
     @edit[:current] = copy_hash(@edit[:new])
-    dialog_edit_build_tree
+    #dialog_edit_build_tree
+    get_field_types if @edit[:field_types].nil?
+    @dialog_edit_tree = TreeBuilderDialogEdit.new(:dialog_edit, :edit_dialog_tree, @sb, true, @edit)
     x_node_set("root", :dialog_edit_tree)     # always set it to root for edit tree
 
     session[:edit] = @edit
