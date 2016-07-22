@@ -44,7 +44,7 @@ module Vmdb
           new_time = new_time.strftime("%Y_%m_%d")
         when "date"                                 # for just mm/dd/yy
           new_time = I18n.l(new_time.to_date)
-        when "export_filename", "support_log_fname"    # for export/log filename
+        when "export_filename"                      # for export/log filename
           new_time = new_time.strftime("%Y%m%d_%H%M%S")
         when "tl"
           new_time = new_time.strftime("%a %b %d %Y %H:%M:%S") + " " + Time.zone.to_s
