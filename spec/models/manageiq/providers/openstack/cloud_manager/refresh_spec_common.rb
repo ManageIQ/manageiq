@@ -66,24 +66,24 @@ module Openstack
       # We have broken flavor list, but there is fallback for private flavors using get, which will collect used flavors
       expect(Flavor.count).to              eq 2
 
-      expect(ExtManagementSystem.count).to eq 2 # Can this be not hardcoded?
-      expect(SecurityGroup.count).to       eq security_groups_count
-      expect(FirewallRule.count).to        eq firewall_rules_count
-      expect(FloatingIp.count).to          eq network_data.floating_ips.sum
-      expect(CloudNetwork.count).to        eq network_data.networks.count
-      expect(CloudSubnet.count).to         eq network_data.subnets.count
-      expect(NetworkRouter.count).to       eq network_data.routers.count
-      expect(CloudVolume.count).to         eq volumes_count
-      expect(VmOrTemplate.count).to        eq vms_count + images_count
-      expect(MiqTemplate.count).to         eq images_count
-      expect(Disk.count).to                eq disks_count
-      expect(Hardware.count).to            eq vms_count + images_count
-      expect(Vm.count).to                  eq vms_count
-      expect(OperatingSystem.count).to     eq 0
-      expect(Snapshot.count).to            eq 0
-      expect(SystemService.count).to       eq 0
-      expect(GuestDevice.count).to         eq 0
-      expect(CustomAttribute.count).to     eq 0
+      expect(ExtManagementSystem.count).to               eq 2 # Can this be not hardcoded?
+      expect(security_groups_without_defaults.count).to  eq security_groups_count
+      expect(firewall_without_defaults.count).to         eq firewall_rules_count
+      expect(FloatingIp.count).to                        eq network_data.floating_ips.sum
+      expect(CloudNetwork.count).to                      eq network_data.networks.count
+      expect(CloudSubnet.count).to                       eq network_data.subnets.count
+      expect(NetworkRouter.count).to                     eq network_data.routers.count
+      expect(CloudVolume.count).to                       eq volumes_count
+      expect(VmOrTemplate.count).to                      eq vms_count + images_count
+      expect(MiqTemplate.count).to                       eq images_count
+      expect(Disk.count).to                              eq disks_count
+      expect(Hardware.count).to                          eq vms_count + images_count
+      expect(Vm.count).to                                eq vms_count
+      expect(OperatingSystem.count).to                   eq 0
+      expect(Snapshot.count).to                          eq 0
+      expect(SystemService.count).to                     eq 0
+      expect(GuestDevice.count).to                       eq 0
+      expect(CustomAttribute.count).to                   eq 0
 
       # Just check that Relationship are not empty
       expect(Relationship.count).to        be > 0
@@ -155,7 +155,7 @@ module Openstack
       count = network_data.security_group_rules.count
       # Neutron puts there + 4 default rules for each default security group + 2 empty default rules for each security
       # group created
-      count += default_security_groups_count * 4 + network_data.security_groups.count * 2 if neutron_networking?
+      count += network_data.security_groups.count * 2 if neutron_networking?
       count
     end
 
@@ -169,7 +169,7 @@ module Openstack
 
     def security_groups_count
       # Number of defined security groups + default group per each project, that is created automatically
-      network_data.security_groups.count + default_security_groups_count
+      network_data.security_groups.count
     end
 
     def images_count
@@ -237,31 +237,31 @@ module Openstack
     end
 
     def assert_table_counts
-      expect(ExtManagementSystem.count).to eq 2 # Can this be not hardcoded?
-      expect(Flavor.count).to              eq compute_data.flavors.count
-      expect(AvailabilityZone.count).to    eq availability_zones_count
-      expect(FloatingIp.count).to          eq network_data.floating_ips.sum
-      expect(AuthPrivateKey.count).to      eq compute_data.key_pairs.count
-      expect(SecurityGroup.count).to       eq security_groups_count
-      expect(FirewallRule.count).to        eq firewall_rules_count
-      expect(CloudNetwork.count).to        eq network_data.networks.count
-      expect(CloudSubnet.count).to         eq network_data.subnets.count
-      expect(NetworkRouter.count).to       eq network_data.routers.count
-      expect(CloudVolume.count).to         eq volumes_count
-      expect(VmOrTemplate.count).to        eq vms_count + images_count
-      expect(Vm.count).to                  eq vms_count
-      expect(MiqTemplate.count).to         eq images_count
-      expect(Disk.count).to                eq disks_count
+      expect(ExtManagementSystem.count).to               eq 2 # Can this be not hardcoded?
+      expect(Flavor.count).to                            eq compute_data.flavors.count
+      expect(AvailabilityZone.count).to                  eq availability_zones_count
+      expect(FloatingIp.count).to                        eq network_data.floating_ips.sum
+      expect(AuthPrivateKey.count).to                    eq compute_data.key_pairs.count
+      expect(security_groups_without_defaults.count).to  eq security_groups_count
+      expect(firewall_without_defaults.count).to         eq firewall_rules_count
+      expect(CloudNetwork.count).to                      eq network_data.networks.count
+      expect(CloudSubnet.count).to                       eq network_data.subnets.count
+      expect(NetworkRouter.count).to                     eq network_data.routers.count
+      expect(CloudVolume.count).to                       eq volumes_count
+      expect(VmOrTemplate.count).to                      eq vms_count + images_count
+      expect(Vm.count).to                                eq vms_count
+      expect(MiqTemplate.count).to                       eq images_count
+      expect(Disk.count).to                              eq disks_count
       # One hardware per each VM
-      expect(Hardware.count).to            eq vms_count + images_count
+      expect(Hardware.count).to                          eq vms_count + images_count
       # TODO(lsmola) 2 networks per each floatingip assigned, it's kinda weird now, will replace with
       # neutron models, then the number of networks will fit the number of neutron networks
       # expect(Network.count).to           eq vms_count * 2
-      expect(OperatingSystem.count).to     eq 0
-      expect(Snapshot.count).to            eq 0
-      expect(SystemService.count).to       eq 0
-      expect(GuestDevice.count).to         eq 0
-      expect(CustomAttribute.count).to     eq 0
+      expect(OperatingSystem.count).to                   eq 0
+      expect(Snapshot.count).to                          eq 0
+      expect(SystemService.count).to                     eq 0
+      expect(GuestDevice.count).to                       eq 0
+      expect(CustomAttribute.count).to                   eq 0
 
       # Just check that Relationship are not empty
       expect(Relationship.count).to        be > 0
@@ -304,7 +304,8 @@ module Openstack
       expect(@ems.availability_zones.size).to eq availability_zones_count
       expect(@ems.floating_ips.size).to       eq network_data.floating_ips.sum
       expect(@ems.key_pairs.size).to          eq compute_data.key_pairs.count
-      expect(@ems.security_groups.size).to    eq security_groups_count
+      security_groups_count = @ems.security_groups.count { |x| x.name != 'default' }
+      expect(security_groups_count).to        eq security_groups_count
       expect(@ems.vms_and_templates.size).to  eq vms_count + images_count
       expect(@ems.vms.size).to                eq vms_count
       expect(@ems.miq_templates.size).to      eq images_count
@@ -372,6 +373,14 @@ module Openstack
     def assert_specific_tenant
       assert_objects_with_hashes(CloudTenant.all, identity_data.projects)
 
+      identity_data.projects.each do |project|
+        next unless project[:__parent_name]
+
+        parent_id = CloudTenant.find_by(:name => project[:__parent_name]).try(:id)
+        cloud_tenant = CloudTenant.find_by(:name => project[:name])
+        expect(cloud_tenant.parent_id).to eq(parent_id)
+      end
+
       CloudTenant.all.each do |tenant|
         expect(tenant).to be_kind_of(CloudTenant)
         expect(tenant.ext_management_system).to eq(@ems)
@@ -382,11 +391,19 @@ module Openstack
       assert_objects_with_hashes(ManageIQ::Providers::Openstack::CloudManager::AuthKeyPair.all, compute_data.key_pairs)
     end
 
-    def assert_specific_security_groups
-      # We don't want to compare default groups
-      without_default = ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup.all.select do |x|
+    def firewall_without_defaults
+      security_groups_without_defaults.collect(&:firewall_rules).flatten
+    end
+
+    def security_groups_without_defaults
+      SecurityGroup.all.select do |x|
         x[:name] != 'default'
       end
+    end
+
+    def assert_specific_security_groups
+      # We don't want to compare default groups
+      without_default = security_groups_without_defaults
 
       # Compare security groups to expected
       assert_objects_with_hashes(without_default, network_data.security_groups)

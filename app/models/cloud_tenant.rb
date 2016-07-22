@@ -23,6 +23,8 @@ class CloudTenant < ApplicationRecord
 
   acts_as_miq_taggable
 
+  acts_as_tree
+
   virtual_total :total_vms, :vms
 
   def all_cloud_networks
