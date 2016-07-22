@@ -22,7 +22,10 @@ describe AnsibleTowerJobTemplateDialogService do
         \"variable\": \"param7\", \"choices\": \"\", \"type\": \"float\"}],\"name\":\"\",\"description\":\"\"}"
       allow(template).to receive(:survey_spec).and_return(JSON.parse(survey))
 
-      allow(template).to receive(:variables).and_return('some_extra_var' => 'blah')
+      allow(template).to receive(:variables).and_return('some_extra_var'  => 'blah',
+                                                        'other_extra_var' => {'name' => 'some_value'},
+                                                        'array_extra_var' => [{'name' => 'some_value'}]
+                                                       )
       dialog = subject.create_dialog(template)
 
       expect(dialog).to have_attributes(:label => template.name, :buttons => "submit,cancel")
@@ -78,8 +81,10 @@ describe AnsibleTowerJobTemplateDialogService do
     expect(group).to have_attributes(:label => "Extra Variables", :display => "edit")
 
     fields = group.dialog_fields
-    expect(fields.size).to eq(1)
+    expect(fields.size).to eq(3)
 
     assert_field(fields[0], DialogFieldTextBox, :name => 'param_some_extra_var', :default_value => 'blah', :data_type => 'string', :read_only => true)
+    assert_field(fields[1], DialogFieldTextBox, :name => 'param_other_extra_var', :default_value => '{"name":"some_value"}', :data_type => 'string', :read_only => true)
+    assert_field(fields[2], DialogFieldTextBox, :name => 'param_array_extra_var', :default_value => '[{"name":"some_value"}]', :data_type => 'string', :read_only => true)
   end
 end
