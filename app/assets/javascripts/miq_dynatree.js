@@ -569,3 +569,158 @@ function miqSquashToggle(treeName) {
     ManageIQ.tree.expandAll = true;
   }
 }
+
+function miqTreeEventSafeEval(func) {
+  var whitelist = ['miqOnCheckProtect',
+                  'miqOnCheckHandler',
+                  'miqOnCheckProvTags',
+                  'miqOnCheckUserFilters',
+                  'miqOnClickSmartProxyAffinityCheck',
+                  'miqGetChecked',
+                  'miqOnClickSelectTreeNode',
+                  'miqOnClickHostNet',
+                  'miqOnClickSelectAETreeNode',
+                  'miqOnClickTimelineSelection',
+                  'miqOnClickSelectDlgEditTreeNode',
+                  'miqOnClickSelectOptimizeTreeNode',
+                  'miqOnClickServerRoles',
+                  'miqOnClickGenealogyTree',
+                  'miqOnCheckSections',
+                  'miqOnCheckCUFilters'];
+
+  if (whitelist.includes(func)) {
+    return window[func];
+  } else {
+    throw new Error("Function not in whitelist: " + func);
+  }
+}
+
+function miqInitDynatree(options, tree) {
+
+  if (options.check_url) {
+    ManageIQ.dynatree.checkUrl = options.check_url;
+  }
+
+  if (options.click_url) {
+    ManageIQ.dynatree.clickUrl = options.click_url;
+  }
+
+  if (options.group_changed) {
+    miqDeleteDynatreeCookies();
+  }
+
+  $('#' + options.tree_id).dynatree({
+    title: options.tree_name,
+    imagePath: '',
+    generateIds: true,
+    idPrefix: options.id_prefix,
+    children: tree,
+    cookieId: options.cookie_id,
+    cookie: {
+      path: '/'
+    },
+    onDblClick: function (node, event) {
+      if (options.no_base_exp) {
+        miqOnDblClickNoBaseExpand(node, event);
+      }
+      if (options.open_close_all_on_dbl_click) {
+        miqOnDblClickExpand(node, event);
+      }
+    },
+    minExpandLevel: options.min_expand_level,
+    checkbox: options.checkboxes,
+    selectMode: options.select_mode,
+    persist: options.tree_state,
+    onClick: function(node, event) {
+      var event_type = node.getEventTargetType(event);
+
+      if (options.no_click && event_type != 'expander') {
+        return false;
+      }
+
+      if (options.onclick || options.disable_checks || options.oncheck) {
+        if (event_type != 'expander' && node.data.cfmeNoClick) return false;
+        if (options.onclick) {
+          if (event_type == 'icon' || event_type == 'title' || event.target.localName == 'img') {
+            if(options.click_url) {
+              if (node.isActive()) miqTreeEventSafeEval(options.onclick)(node.data.key);
+              return;
+            } else {
+              if (miqCheckForChanges() == false) {
+                this.activeNode.focus();
+                return false;
+              } else {
+                if (node.isActive()) miqTreeEventSafeEval(options.onclick)(node.data.key);
+                return;
+              }
+            }
+          }
+        }
+        if (options.disable_checks || options.oncheck) {
+          if (event_type == 'checkbox') {
+            if (options.disable_checks) {
+              return false;
+            } else if (options.oncheck) {
+              miqTreeEventSafeEval(options.oncheck)(node, options.tree_name);
+              return;
+            }
+          }
+
+          if (event_type != 'expander') return false;
+        }
+      }
+    },
+    onSelect: function(flag, node) {
+      if (options.onselect) {
+        var selectedNodes = node.tree.getSelectedNodes();
+        var selectedKeys = $.map(selectedNodes, function(node) {
+          return node.data.key;
+        });
+        miqTreeEventSafeEval(options.onselect)(options.tree_name, node.data.key, flag, selectedKeys);
+      }
+    },
+    onActivate: function(node) {
+      if (options.onclick) {
+        miqTreeEventSafeEval(options.onclick)(node.data.key);
+      }
+    },
+    onExpand: function(node) {
+      if(options.onclick || options.disable_checks || options.oncheck) {
+        miqBindHoverEvent(options.tree_name);
+      }
+    },
+    onLazyRead: function(node) {
+      if(options.autoload) {
+        miqOnLazyReadGetNodeChildren(node, options.tree_name, options.controller);
+      }
+    },
+    onPostInit: function(isReloading, isError) {
+      if (options.silent_activate) {
+        miqDynatreeActivateNodeSilently(options.tree_name, options.select_node);
+      }
+    },
+    debugLevel: 0
+  });
+
+  if (options.reselect_node) {
+    miqDynatreeActivateNodeSilently(options.tree_name, options.reselect_node);
+  }
+
+  if (options.expand_parent_nodes) {
+    miqExpandParentNodes(options.tree_name, options.expand_parent_nodes);
+  }
+
+  if (options.add_nodes) {
+    miqAddNodeChildren(
+      options.active_tree,
+      options.add_node_key,
+      options.select_node,
+      options.children
+    );
+  }
+
+  if (options.onhover) {
+    miqBindHoverEvent(options.tree_name);
+  }
+
+}
