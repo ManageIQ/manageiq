@@ -17,6 +17,9 @@ class MiqProductFeature < ApplicationRecord
   ]
 
   FEATURE_TYPE_ORDER = ["view", "control", "admin", "node"]
+  REQUIRED_ATTRIBUTES = [:identifier].freeze
+  OPTIONAL_ATTRIBUTES = [:name, :feature_type, :description, :children, :hidden, :protected].freeze
+  ALLOWED_ATTRIBUTES = (REQUIRED_ATTRIBUTES + OPTIONAL_ATTRIBUTES).freeze
 
   def self.feature_yaml(path = FIXTURE_PATH)
     "#{path}.yml".freeze

@@ -2,8 +2,6 @@ require 'tmpdir'
 require 'pathname'
 
 describe MiqProductFeature do
-  let(:expected_feature_count) { 1086 }
-
   # - container_dashboard
   # - miq_report_widget_editor
   #   - miq_report_widget_admin
@@ -16,16 +14,32 @@ describe MiqProductFeature do
     )
   end
 
+  it "is properly configured" do
+    everything = YAML.load_file(described_class.feature_yaml)
+    traverse_product_features(everything) do |pf|
+      expect(pf).to include(*described_class::REQUIRED_ATTRIBUTES)
+      expect(pf.keys - described_class::ALLOWED_ATTRIBUTES).to be_empty
+      expect(pf[:children]).not_to be_empty if pf.key?(:children)
+    end
+  end
+
+  def traverse_product_features(product_feature, &block)
+    block.call(product_feature)
+    if product_feature.key?(:children)
+      product_feature[:children].each { |child| traverse_product_features(child, &block) }
+    end
+  end
+
   context ".seed" do
     it "creates feature identifiers once on first seed, changes nothing on second seed" do
-      status_seed1 = MiqProductFeature.seed
-      expect(MiqProductFeature.count).to eq(expected_feature_count)
+      status_seed1 = nil
+      expect { status_seed1 = MiqProductFeature.seed }.to change(MiqProductFeature, :count)
       expect(status_seed1[:created]).to match_array status_seed1[:created].uniq
       expect(status_seed1[:updated]).to match_array []
       expect(status_seed1[:unchanged]).to match_array []
 
-      status_seed2 = MiqProductFeature.seed
-      expect(MiqProductFeature.count).to eq(expected_feature_count)
+      status_seed2 = nil
+      expect { status_seed2 = MiqProductFeature.seed }.not_to change(MiqProductFeature, :count)
       expect(status_seed2[:created]).to match_array []
       expect(status_seed2[:updated]).to match_array []
       expect(status_seed2[:unchanged]).to match_array status_seed1[:created]
