@@ -591,6 +591,8 @@ module EmsCommon
 
     @edit[:openstack_api_versions] = retrieve_openstack_api_versions
 
+    @edit[:rhevm_api_versions] = retrieve_rhevm_api_versions
+
     @edit[:new][:default_userid] = @ems.authentication_userid
     @edit[:new][:default_password] = @ems.authentication_password
     @edit[:new][:default_verify] = @ems.authentication_password
@@ -638,6 +640,7 @@ module EmsCommon
     @openstack_amqp_security_protocols = retrieve_openstack_amqp_security_protocols
     @scvmm_security_protocols = [[_('Basic (SSL)'), 'ssl'], ['Kerberos', 'kerberos']]
     @openstack_api_versions = retrieve_openstack_api_versions
+    @rhevm_api_versions = retrieve_rhevm_api_versions
     @emstype_display = model.supported_types_and_descriptions_hash[@ems.emstype]
   end
 
@@ -667,6 +670,10 @@ module EmsCommon
   def retrieve_openstack_amqp_security_protocols
     # OSP8 doesn't support SSL for AMQP
     [[_('Non-SSL'), 'non-ssl']]
+  end
+
+  def retrieve_rhevm_api_versions
+    [[_('Version 3'), '3'], [_('Version 4'), '4']]
   end
 
   # Get variables from edit form

@@ -53,7 +53,6 @@ class ManageIQ::Providers::Redhat::InfraManager
         [target, data]
       end
 
-      ems.api_version = inventory.service.version_string
       ems.save
 
       targets_with_data

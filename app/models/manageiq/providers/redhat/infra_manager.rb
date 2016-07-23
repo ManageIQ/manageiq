@@ -39,6 +39,10 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     true
   end
 
+  def supports_api_version?
+    true
+  end
+
   def supported_auth_types
     %w(default metrics)
   end
@@ -47,7 +51,26 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     supported_auth_types.include?(authtype.to_s)
   end
 
-  def self.raw_connect(server, port, path, username, password, service = "Service")
+  # Connect to the engine using version 4 of the API and the `ovirt-engine-sdk` gem.
+  def self.raw_connect_v4(server, port, path, username, password, service)
+    require 'ovirtsdk4'
+
+    # Get the timeout from the configuration:
+    timeout, = ems_timeouts(:ems_redhat, service)
+
+    # Create the connection:
+    OvirtSDK4::Connection.new(
+      :url      => "https://#{server}:#{port}#{path}",
+      :username => username,
+      :password => password,
+      :timeout  => timeout,
+      :insecure => true,
+      :log      => $rhevm_log,
+    )
+  end
+
+  # Connect to the engine using version 3 of the API and the `ovirt` gem.
+  def self.raw_connect_v3(server, port, path, username, password, service)
     require 'ovirt'
 
     Ovirt.logger = $rhevm_log
@@ -80,11 +103,19 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     username = options[:user] || authentication_userid(options[:auth_type])
     password = options[:pass] || authentication_password(options[:auth_type])
     service  = options[:service] || "Service"
+    version  = options[:version] || 3
 
-    result = self.class.raw_connect(server, port, path, username, password, service)
+    # Create the underlying connection according to the version of the oVirt API requested by
+    # the caller:
+    result =
+      if version == 4
+        self.class.raw_connect_v4(server, port, path, username, password, service)
+      else
+        self.class.raw_connect_v3(server, port, path, username, password, service)
+      end
 
     # Copy the API path to the endpoints table:
-    default_endpoint.path = result.api_path
+    default_endpoint.path = version == 4 ? '/ovirt-engine/api' : result.api_path
 
     result
   end
@@ -104,7 +135,19 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
       connection = connect(options)
       yield connection
     ensure
-      connection.try(:disconnect) rescue nil
+      # The `connect` method will return different types of objects depending on the value of the `version`
+      # parameter. If `version` is 3 the connection object is created by the `ovirt` gem and it is closed
+      # using the `disconnect` method. If `version` is 4 the object is created by the oVirt Ruby SDK, and
+      # it is clused using the `close` method.
+      begin
+        if connection.respond_to?(:disconnect)
+          connection.disconnect
+        elsif connection.respond_to?(:close)
+          connection.close
+        end
+      rescue
+        nil
+      end
     end
   end
 
