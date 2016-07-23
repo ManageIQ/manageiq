@@ -839,7 +839,7 @@ class ApplicationHelper::ToolbarBuilder
       when "vm_guest_restart", "instance_guest_restart"
         return true unless @record.is_available?(:reboot_guest)
       when "vm_migrate"
-        return true unless @record.is_available?(:migrate)
+        return true unless @record.supports_migrate?
       when "vm_reconfigure"
         return true unless @record.reconfigurable?
       when "vm_retire"

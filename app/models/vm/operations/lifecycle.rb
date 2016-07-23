@@ -5,6 +5,12 @@ module Vm::Operations::Lifecycle
     supports :retire do
       unsupported_reason_add(:retire, "VM orphaned or archived already") if orphaned? || archived?
     end
+
+    supports :migrate do
+      if blank? || orphaned? || archived?
+        unsupported_reason_add(:migrate, "Migrate operation in not supported.")
+      end
+    end
   end
 
   def validate_clone
@@ -12,10 +18,6 @@ module Vm::Operations::Lifecycle
   end
 
   def validate_publish
-    {:available => !(self.blank? || self.orphaned? || self.archived?), :message   => nil}
-  end
-
-  def validate_migrate
     {:available => !(self.blank? || self.orphaned? || self.archived?), :message   => nil}
   end
 

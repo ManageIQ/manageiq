@@ -4,6 +4,8 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
   include_concern 'Reconfigure'
   include_concern 'ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared'
 
+  supports_not :migrate, :reason => _("Migrate operation is not supported.")
+
   POWER_STATES = {
     'up'        => 'on',
     'down'      => 'off',
@@ -40,10 +42,6 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
 
   def self.calculate_power_state(raw_power_state)
     POWER_STATES[raw_power_state] || super
-  end
-
-  def validate_migrate
-    validate_unsupported("Migrate")
   end
 
   def validate_publish
