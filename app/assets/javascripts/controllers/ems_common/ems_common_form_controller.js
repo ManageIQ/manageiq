@@ -50,7 +50,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       service_account_auth_status: '',
       metrics_auth_status: '',
       ssh_keypair_auth_status: '',
-      hawkular_auth_status: ''
+      hawkular_auth_status: '',
+      vmware_cloud_api_version: ''
     };
     $scope.realmNote = __("Note: Username must be in the format: name@realm");
     $scope.formId = emsCommonFormId;
@@ -85,6 +86,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.metrics_auth_status             = true;
         $scope.emsCommonModel.ssh_keypair_auth_status         = true;
         $scope.emsCommonModel.hawkular_auth_status            = true;
+        $scope.emsCommonModel.vmware_cloud_api_version        = '9.0';
         miqService.sparkleOff();
       });
       $scope.afterGet  = true;
@@ -122,6 +124,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.default_userid                  = data.default_userid;
         $scope.emsCommonModel.amqp_userid                     = data.amqp_userid;
         $scope.emsCommonModel.metrics_userid                  = data.metrics_userid;
+        $scope.emsCommonModel.vmware_cloud_api_version        = data.api_version;
 
         $scope.emsCommonModel.ssh_keypair_userid              = data.ssh_keypair_userid;
 
@@ -184,11 +187,12 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
   $scope.isBasicInfoValid = function() {
     if(($scope.currentTab == "default" && $scope.emsCommonModel.emstype != "azure") &&
       ($scope.emsCommonModel.emstype == "ec2" ||
-      ($scope.emsCommonModel.emstype == "openstack" && $scope.emsCommonModel.default_hostname ||
+       $scope.emsCommonModel.emstype == "openstack" && $scope.emsCommonModel.default_hostname ||
        $scope.emsCommonModel.emstype == "scvmm" && $scope.emsCommonModel.default_hostname ||
        $scope.emsCommonModel.emstype == "openstack_infra" && $scope.emsCommonModel.default_hostname ||
        $scope.emsCommonModel.emstype == "rhevm" && $scope.emsCommonModel.default_hostname ||
-       $scope.emsCommonModel.emstype == "vmwarews" && $scope.emsCommonModel.default_hostname)) &&
+       $scope.emsCommonModel.emstype == "vmwarews" && $scope.emsCommonModel.default_hostname || 
+       $scope.emsCommonModel.emstype == "vmware_cloud" && $scope.emsCommonModel.default_hostname) &&
       ($scope.emsCommonModel.default_userid != '' && $scope.angularForm.default_userid.$valid &&
        $scope.emsCommonModel.default_password != '' && $scope.angularForm.default_password.$valid &&
        $scope.emsCommonModel.default_verify != '' && $scope.angularForm.default_verify.$valid)) {
@@ -310,6 +314,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       $scope.emsCommonModel.metrics_database_name = "ovirt_engine_history";
     } else if ($scope.emsCommonModel.ems_controller === 'ems_container') {
       $scope.emsCommonModel.default_api_port = "8443";
+    } else if ($scope.emsCommonModel.emstype === 'vmware_cloud') {
+      $scope.emsCommonModel.default_api_port = "443";
     }
   };
 

@@ -29,6 +29,7 @@
               "ng-if" => "emsCommonModel.emstype == 'openstack' || " +       |
                          "emsCommonModel.emstype == 'openstack_infra' || " + |
                          "emsCommonModel.emstype == 'rhevm' || " +           |
+                         "emsCommonModel.emstype == 'vmware_cloud' || " +    |
                          "emsCommonModel.ems_controller == 'ems_container'"} |
     %label.col-md-2.control-label{"for" => "#{prefix}_api_port"}
       = _('API Port')
