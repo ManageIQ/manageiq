@@ -1853,7 +1853,7 @@ class CatalogController < ApplicationController
       h_tb = build_toolbar("x_history_tb")
     end
 
-    presenter = ExplorerPresenter.new(
+    presenter = ExplorerPresenter.right_cell(
       :active_tree => x_active_tree,
       :add_nodes   => add_nodes
     )

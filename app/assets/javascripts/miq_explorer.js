@@ -14,22 +14,77 @@ ManageIQ.explorer.buildCalendar = function(options) {
   ManageIQ.calendar.calSkipDays = _.isObject(options.skipDays) ? options.skipDays : undefined;
 
   miqBuildCalendar();
-}
+};
 
 ManageIQ.explorer.lock_tree = function(tree, lock) {
   $('#' + tree + 'box').dynatree(lock ? 'disable' : 'enable');
   miqDimDiv('#' + tree + '_div', lock);
-}
+};
 
-ManageIQ.explorer.clear_search_toggle = function(show) {
+ManageIQ.explorer.clearSearchToggle = function(show) {
   if ( show ) {
     $('#clear_search').show();
   } else {
     $('#clear_search').hide();
   }
-}
+};
 
 ManageIQ.explorer.process = function(data) {
+  switch (data.explorer) {
+    case 'flash':
+      ManageIQ.explorer.processFlash(data);
+      break;
+    case 'replace_right_cell':
+      ManageIQ.explorer.processReplaceRightCell(data);
+      break;
+    case 'replace_main_div':
+      ManageIQ.explorer.processReplaceMainDiv(data);
+      break;
+    case 'buttons':
+      ManageIQ.explorer.processButtons(data);
+      break;
+  }
+};
+
+ManageIQ.explorer.processButtons = function(data) {
+  ManageIQ.explorer.miqButtons( data );
+};
+
+ManageIQ.explorer.processReplaceMainDiv = function(data) {
+  ManageIQ.explorer.updatePartials(data);
+}
+
+ManageIQ.explorer.processFlash = function(data) {
+  ManageIQ.explorer.replacePartials(data);
+}
+
+ManageIQ.explorer.replacePartials = function (data) {
+  if ( _.isObject(data.replacePartials) ) {
+    _.forEach(data.replacePartials, function (content, element) {
+      $('#' + element).replaceWith(content);
+    });
+  }
+}
+
+ManageIQ.explorer.updatePartials = function (data) {
+  if ( _.isObject(data.updatePartials) ) {
+    _.forEach(data.updatePartials, function (content, element) {
+      $('#' + element).html(content);
+    });
+  }
+}
+
+ManageIQ.explorer.spinnerOff = function (data) {
+  if ( data.spinnerOff ) {
+    miqSparkle(false);
+  }
+}
+
+ManageIQ.explorer.miqButtons = function ( data ) {
+  miqButtons( data.showMiqButtons ? 'show' : 'hide' );
+}
+
+ManageIQ.explorer.processReplaceRightCell = function(data) {
   /* variables for the expression editor */
   if ( _.isObject(data.expEditor)) {
     if ( _.isObject(data.expEditor.first)) {
@@ -51,7 +106,7 @@ ManageIQ.explorer.process = function(data) {
     }
   }
 
-  miqButtons( data.showMiqButtons ? 'show' : 'hide' );
+  ManageIQ.explorer.miqButtons( data );
 
   if ( _.isString(data.clearTreeCookies) ) { miqDeleteDynatreeCookies(data.clearTreeCookies); }
 
@@ -89,11 +144,7 @@ ManageIQ.explorer.process = function(data) {
     $('#advsearchModal').modal('hide');
   }
 
-  if ( _.isObject(data.updatePartials) ) {
-    _.forEach(data.updatePartials, function (content, element) {
-      $('#' + element).html(content);
-    });
-  }
+  ManageIQ.explorer.updatePartials(data);
 
   if ( _.isObject(data.updateElement) ) {
     _.forEach(data.updateElement, function (options, element) {
@@ -101,11 +152,7 @@ ManageIQ.explorer.process = function(data) {
     });
   }
 
-  if ( _.isObject(data.replacePartials) ) {
-    _.forEach(data.replacePartials, function (content, element) {
-      $('#' + element).replaceWith(content);
-    });
-  }
+  ManageIQ.explorer.replacePartials(data);
 
   if ( _.isObject(data.buildCalendar) ) { ManageIQ.explorer.buildCalendar(data.buildCalendar); }
 
@@ -165,7 +212,7 @@ ManageIQ.explorer.process = function(data) {
   }
 
   if ( !_.isUndefined(data.clearSearch) ) {
-    ManageIQ.explorer.clear_search_toggle(data.clearSearch);
+    ManageIQ.explorer.clearSearchToggle(data.clearSearch);
   }
 
   miqInitMainContent();

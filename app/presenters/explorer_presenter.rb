@@ -45,6 +45,22 @@ class ExplorerPresenter
   #   reload_toolbars           -- toolbars to reload and their content
   #
 
+  def self.right_cell(args = {})
+    self.new(args.update(:mode => 'right_cell'))
+  end
+
+  def self.flash(args = {})
+    self.new(args.update(:mode => 'flash'))
+  end
+  
+  def self.main_div(args = {})
+    self.new(args.update(:mode => 'main_div'))
+  end
+
+  def self.buttons(show)
+    self.new(:mode => 'buttons', :show_miq_buttons => show)
+  end
+
   def initialize(options = {})
     @options = {
       :lock_unlock_trees    => {},
@@ -62,26 +78,37 @@ class ExplorerPresenter
 
   def reset_changes
     @options[:reset_changes] = true
+    self
   end
 
   def reset_one_trans
     @options[:reset_one_trans] = true
+    self
   end
 
   def one_trans_ie
     @options[:one_trans_ie] = true
+    self
   end
 
   def focus(element_id)
     @options[:focus] = element_id
+    self
+  end
+
+  def spinner_off
+    @options[:spinner_off] = true
+    self
   end
 
   def load_chart(chart_data)
     @options[:load_chart] = chart_data
+    self
   end
 
   def show_miq_buttons(show = true)
     @options[:show_miq_buttons] = show
+    self
   end
 
   def set_visibility(value, *elements)
@@ -128,7 +155,41 @@ class ExplorerPresenter
   end
 
   def to_json
-    data = {:explorer => true}
+    case @options[:mode]
+    when 'main_div' then to_json_main_div
+    when 'flash'    then to_json_flash
+    when 'buttons'  then to_json_buttons
+    else to_json_default
+    end
+  end
+
+  private
+
+  def to_json_flash
+    data = {:explorer => 'flash'}
+    data[:replacePartials] = @options[:replace_partials]
+    data
+  end
+
+  def to_json_main_div
+    data = check_spinner(:explorer => 'replace_main_div')
+    data[:updatePartials] = @options[:update_partials]
+    data
+  end
+
+  def check_spinner(data)
+    data[:spinnerOff] = true if @options[:spinner_off]
+    data
+  end
+
+  def to_json_buttons
+    data = {:explorer => 'buttons'}
+    data[:showMiqButtons] = @options[:show_miq_buttons]
+    data
+  end
+
+  def to_json_default
+    data = {:explorer => 'replace_right_cell'}
 
     if @options[:exp].present?
       data.store_path(:expEditor, :first, :type,   @options[:exp][:val1_type]) if @options[:exp][:val1_type]
@@ -157,9 +218,9 @@ class ExplorerPresenter
     } if @options[:delete_node]
 
     data[:dashboardUrl] = @options[:miq_widget_dd_url] if @options[:miq_widget_dd_url]
-    data[:updatePartials] = @options[:update_partials] # Update elements in the DOM with rendered partials
+    data[:updatePartials] = @options[:update_partials] # Replace content of given DOM element (element stays).
     data[:updateElements] = @options[:element_updates] # Update element in the DOM with given options
-    data[:replacePartials] = @options[:replace_partials] # Replace elements in the DOM with rendered partials
+    data[:replacePartials] = @options[:replace_partials] # Replace given DOM element (and it's children) (element goes away).
     data[:buildCalendar] = format_calendar_dates(@options[:build_calendar])
     data[:initDashboard] = !! @options[:init_dashboard]
     data[:ajaxUrl] = ajax_action_url(@options[:ajax_action]) if @options[:ajax_action]
@@ -196,8 +257,6 @@ class ExplorerPresenter
 
     data
   end
-
-  private
 
   def format_calendar_dates(options)
     return {} unless @options[:build_calendar].kind_of?(Hash)

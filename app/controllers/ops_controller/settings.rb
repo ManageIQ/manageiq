@@ -193,11 +193,7 @@ module OpsController::Settings
   def region_form_field_changed
     return unless load_edit("region_edit__#{params[:id]}", "replace_cell__explorer")
     region_get_form_vars
-    changed = (@edit[:new] != @edit[:current])
-    render :update do |page|
-      page << javascript_prologue
-      page << javascript_for_miq_button_visibility(changed)
-    end
+    javascript_miq_button_visibility(@edit[:new] != @edit[:current])
   end
 
   private ############################
