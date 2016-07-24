@@ -7,7 +7,7 @@
         %input#new-provider-name{:name => "name", "ng-change" => "updateProviderName()", "ng-model" => "data.providerName", :required => "", :type => "text"}/
       %div{"pf-form-group" => "", "pf-input-class" => "miq-radio-input-class", "pf-label" => _("Type"),
       "pf-label-class" => "miq-input-label-class", :required => ""}
-        %label.radio
+        %label.radio{"ng-if" => "originAvailable"}
           %input{"ng-model" => "data.providerType", :type => "radio", :value => "openshiftOrigin"}
             = _("OpenShift Origin")
         %label.radio

@@ -25,7 +25,7 @@ miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 
     var initializeDeploymentWizard = function () {
       $scope.data = {
         providerName: '',
-        providerType: 'openshiftOrigin',
+        providerType: 'openshiftEnterprise',
         provisionOn: 'existingVms',
         masterCount: 0,
         nodeCount: 0,
@@ -38,6 +38,7 @@ miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 
 
       $scope.data.existingProviders = $scope.deploymentData.providers;
       $scope.data.newVmProviders = $scope.deploymentData.provision;
+      $scope.originAvailable = $scope.deploymentData.deployment_types.includes("origin");
       $scope.deployProviderReady = true;
     };
 
