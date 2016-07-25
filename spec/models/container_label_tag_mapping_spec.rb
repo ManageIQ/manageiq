@@ -91,10 +91,11 @@ describe ContainerLabelTagMapping do
       label(node, 'name', '')
     end
 
-    it "any-value mapping does not crash" do
-      pending "fix"
+    it "any-value mapping generates a tag" do
       FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag)
-      ContainerLabelTagMapping.tags_for_entity(node)
+      tags = ContainerLabelTagMapping.tags_for_entity(node)
+      expect(tags.size).to eq(1)
+      expect(tags[0].classification.description).to eq('<empty value>')
     end
 
     it "honors specific mapping for the empty value" do
