@@ -46,6 +46,18 @@ arbitration_profiles:
 - name
 - description
 - default_profile
+arbitration_rules:
+- id
+- type
+- name
+- object_attribute
+- condition
+- object_attribute_value
+- action
+- arbitration_profile_id
+- priority
+- created_on
+- updated_on
 arbitration_settings:
 - id
 - name
