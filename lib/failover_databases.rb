@@ -1,8 +1,8 @@
 class FailoverDatabases
-  FAILOVER_DATABASES_YAML_FILE = Rails.root.join("config", "failover_databases.yaml")
+  FAILOVER_DATABASES_YAML_FILE = Rails.root.join("config", "failover_databases.yml")
 
   def self.refresh_databases_list
-    query_replication_manager
+    query_repmgr
   end
 
   def self.all_databases
@@ -15,7 +15,7 @@ class FailoverDatabases
         []
       end
     else
-      query_replication_manager
+      query_repmgr
     end
   end
 
@@ -27,7 +27,7 @@ class FailoverDatabases
     result
   end
 
-  def self.standby_and_active_databases
+  def self.active_standby_databases
     result = []
     all_databases.each do |record|
       result << record if record["type"] == 'standby' && record["active"] == true
@@ -35,7 +35,7 @@ class FailoverDatabases
     result
   end
 
-  def self.query_replication_manager
+  def self.query_repmgr
     connection = ApplicationRecord.connection
     result = []
     if connection.table_exists? "repmgr_miq.repl_nodes"
@@ -46,7 +46,7 @@ class FailoverDatabases
     end
     result
   end
-  private_class_method :query_replication_manager
+  private_class_method :query_repmgr
 
   def self.write_file(result)
     File.open(FAILOVER_DATABASES_YAML_FILE, 'w+') do |file|

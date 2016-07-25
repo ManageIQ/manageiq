@@ -86,9 +86,9 @@ describe FailoverDatabases do
     end
   end
 
-  describe ".standby_and_active_databases" do
+  describe ".active_standby_databases" do
     it "returns list of active databases in standby mode" do
-      list = described_class.standby_and_active_databases
+      list = described_class.active_standby_databases
       expect(list.size).to eq 1
     end
   end
