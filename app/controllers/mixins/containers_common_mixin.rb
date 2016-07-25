@@ -25,9 +25,12 @@ module ContainersCommonMixin
 
     # Handle Toolbar Policy Tag Button
     @refresh_div = "main_div" # Default div for button.rjs to refresh
-    tag(self.class.model) if params[:pressed] == "#{params[:controller]}_tag"
-    assign_policies(ContainerImage) if params[:pressed] == "container_image_protect"
-    check_compliance_images if params[:pressed] == "container_image_check_compliance"
+    model = self.class.model
+    tag(model) if params[:pressed] == "#{params[:controller]}_tag"
+    if [ContainerReplicator, ContainerGroup, ContainerNode, ContainerImage].include?(model)
+      assign_policies(model) if params[:pressed] == "#{model.name.underscore}_protect"
+      check_compliance(model) if params[:pressed] == "#{model.name.underscore}_check_compliance"
+    end
     return if ["#{params[:controller]}_tag"].include?(params[:pressed]) && @flash_array.nil? # Tag screen showing
 
     # Handle scan
@@ -164,47 +167,46 @@ module ContainersCommonMixin
   def scan_images
     assert_privileges("image_scan")
     showlist = @lastaction == "show_list"
-    images = showlist ? find_checked_items : find_scan_item
+    ids = showlist ? find_checked_items : find_current_item(ContainerImage)
 
-    if images.empty?
+    if ids.empty?
       add_flash(_("No %{model} were selected for Analysis") % {:model => ui_lookup(:tables => "container_image")},
                 :error)
     else
-      process_scan_images(images)
+      process_scan_images(ids)
     end
 
     showlist ? show_list : show
-    images.count
+    ids.count
   end
 
-  def check_compliance_images
-    assert_privileges("container_image_check_compliance")
+  def check_compliance(model)
+    assert_privileges("#{model.name.underscore}_check_compliance")
     showlist = @lastaction == "show_list"
-    images = showlist ? find_checked_items : find_scan_item
+    ids = showlist ? find_checked_items : find_current_item(model)
 
-    if images.empty?
-      add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "container_image"),
-                                                              :task  => "Conpliance Check"}, :error)
+    if ids.empty?
+      add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:models => model),
+                                                              :task  => "Compliance Check"}, :error)
     else
-      process_check_images_compliance(images)
+      process_check_compliance(model, ids)
     end
 
     showlist ? show_list : show
-    images.count
+    ids.count
   end
 
-  def find_scan_item
-    images = []
-    if params[:id].nil? || ContainerImage.find_by_id(params[:id]).nil?
-      add_flash(_("%{table} no longer exists") % {:table => ui_lookup(:table => "container_image")}, :error)
+  def find_current_item(model)
+    if params[:id].nil? || model.find_by(:id => params[:id].to_i).nil?
+      add_flash(_("%{model} no longer exists") % {:table => ui_lookup(:model => model)}, :error)
+      []
     else
-      images.push(params[:id])
+      [params[:id].to_i]
     end
-    images
   end
 
-  def process_scan_images(images)
-    ContainerImage.where(:id => images).order("lower(name)").each do |image|
+  def process_scan_images(ids)
+    ContainerImage.where(:id => ids).order("lower(name)").each do |image|
       image_name = image.name
       begin
         image.scan
@@ -220,17 +222,17 @@ module ContainersCommonMixin
     end
   end
 
-  def process_check_images_compliance(images)
-    ContainerImage.where(:id => images).order("lower(name)").each do |image|
+  def process_check_compliance(model, ids)
+    model.where(:id => ids).order("lower(name)").each do |entity|
       begin
-        image.check_compliance
+        entity.check_compliance
       rescue StandardError => bang
         add_flash(_("%{model} \"%{name}\": Error during 'Check Compliance': ") %
-                  {:model => ui_lookup(:model => "ContainerImage"),
-                   :name  => image.name} << bang.message,
+                  {:model => ui_lookup(:model => model),
+                   :name  => entity.name} << bang.message,
                   :error) # Push msg and error flag
       else
-        add_flash(_("\"%{record}\": Compliance check successfully initiated") % {:record => image.name})
+        add_flash(_("\"%{record}\": Compliance check successfully initiated") % {:record => entity.name})
       end
     end
   end

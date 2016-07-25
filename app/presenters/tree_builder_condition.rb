@@ -20,21 +20,30 @@ class TreeBuilderCondition < TreeBuilder
 
   # level 1 - host / vm
   def x_get_tree_roots(count_only, _options)
-    objects = []
-    objects << {:id => "host", :text => N_("Host Conditions"), :image => "host", :tip => N_("Host Conditions")}
-    objects << {:id => "vm", :text => N_("All VM and Instance Conditions"), :image => "vm", :tip => N_("All VM and Instance Conditions")}
-    objects << {:id => "containerImage", :text => N_("Container Image Conditions"), :image => "container_image", :tip => N_("All Container Image Conditions")}
+    text_i18n = {:Host                => N_("Host Conditions"),
+                 :Vm                  => N_("VM and Instance Conditions"),
+                 :ContainerReplicator => N_("Replicator Conditions"),
+                 :ContainerGroup      => N_("Pod Conditions"),
+                 :ContainerNode       => N_("Container Node Conditions"),
+                 :ContainerImage      => N_("Container Image Conditions")}
 
+    objects = MiqPolicyController::UI_FOLDERS.collect do |model|
+      text = text_i18n[model.name.to_sym]
+      {:id    => model.name.camelize(:lower),
+       :image => model.name.underscore,
+       :text  => text,
+       :tip   => text}
+    end
     count_only_or_objects(count_only, objects)
   end
 
   # level 2 - conditions
   def x_get_tree_custom_kids(parent, count_only, options)
     assert_type(options[:type], :condition)
-    return super unless %w(host vm containerImage).include?(parent[:id])
+    towhat = parent[:id].camelize
+    return super unless MiqPolicyController::UI_FOLDERS.collect(&:name).include?(towhat)
 
-    objects = Condition.where(:towhat => parent[:id].camelize)
-
+    objects = Condition.where(:towhat => towhat)
     count_only_or_objects(count_only, objects, :description)
   end
 

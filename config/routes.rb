@@ -475,6 +475,7 @@ Vmdb::Application.routes.draw do
         show_list
         tagging_edit
         tag_edit_form_field_changed
+        protect
       ),
       :post => %w(
         button
@@ -492,6 +493,8 @@ Vmdb::Application.routes.draw do
         wait_for_task
         tagging_edit
         tag_edit_form_field_changed
+        protect
+        squash_toggle
       ) +
                adv_search_post +
                exp_post +
@@ -510,6 +513,7 @@ Vmdb::Application.routes.draw do
         show_list
         tagging_edit
         tag_edit_form_field_changed
+        protect
       ),
       :post => %w(
         button
@@ -527,6 +531,8 @@ Vmdb::Application.routes.draw do
         wait_for_task
         tagging_edit
         tag_edit_form_field_changed
+        protect
+        squash_toggle
       ) +
                adv_search_post +
                exp_post +
@@ -545,6 +551,7 @@ Vmdb::Application.routes.draw do
         show_list
         tagging_edit
         tag_edit_form_field_changed
+        protect
       ),
       :post => %w(
         button
@@ -562,6 +569,8 @@ Vmdb::Application.routes.draw do
         wait_for_task
         tagging_edit
         tag_edit_form_field_changed
+        protect
+        squash_toggle
       ) +
                adv_search_post +
                exp_post +
@@ -583,7 +592,6 @@ Vmdb::Application.routes.draw do
         openscap_rule_results
         openscap_html
         protect
-        squash_toggle
       ),
       :post => %w(
         button

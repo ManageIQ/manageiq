@@ -192,7 +192,8 @@ module ApplicationController::PolicySupport
       end
     end
   end
-  %w(image instance vm miq_template container_image ems_container).each do |old_name|
+  %w(image instance vm miq_template
+     container_replicator container_group container_node container_image ems_container).each do |old_name|
     alias_method "#{old_name}_protect".to_sym, :assign_policies
   end
 
