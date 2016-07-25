@@ -17,7 +17,7 @@ ManageIQ.angular.app.service('postService', ['miqService', '$timeout', '$window'
     }
 
     function handleFailure(response) {
-      var msg = sprintf(__("Error during 'Service Edit': [%s - %s]"), response.status, response.responseText);
+      var msg = sprintf(__("Error during Post: [%s - %s]"), response.status, response.responseText);
       $timeout(function () {
         $window.location.href = redirectURL + '?flash_msg=' + msg + '&flash_error=true';
         miqService.sparkleOff();
