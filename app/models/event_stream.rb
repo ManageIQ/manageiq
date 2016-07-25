@@ -19,5 +19,9 @@ class EventStream < ApplicationRecord
 
   belongs_to :service
 
+  belongs_to :container_replicator
+  belongs_to :container_group
+  belongs_to :container_node
+
   include ReportableMixin
 end

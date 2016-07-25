@@ -90,6 +90,7 @@ class EmsEvent
       policy_event ||= event_type
       policy_src     = parse_policy_source(target, param) if target
 
+      _log.warn("Unable to find target [#{target_str}], skipping policy evaluation") if target.nil?
       _log.debug("Target: [#{target_str}], Policy event: [#{policy_event}]")
       _log.debug("Target object: [#{target.inspect}]")
       _log.debug("Policy source: [#{policy_src}]")
