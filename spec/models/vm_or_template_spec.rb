@@ -440,15 +440,15 @@ describe VmOrTemplate do
     end
   end
 
-  context "#is_available? for evacuate" do
-    it "returns false for vmware VM" do
+  context "#supports_evacuate?" do
+    it "returns false for querying vmware VM if it supports evacuate operation" do
       vm =  FactoryGirl.create(:vm_vmware)
-      expect(vm.is_available?(:evacuate)).to eq(false)
+      expect(vm.supports_evacuate?).to eq(false)
     end
 
-    it "returns false for SCVMM VM" do
+    it "returns false for querying SCVMM VM if it supports evacuate operation" do
       vm =  FactoryGirl.create(:vm_microsoft)
-      expect(vm.is_available?(:evacuate)).to eq(false)
+      expect(vm.supports_evacuate?).to eq(false)
     end
   end
 
