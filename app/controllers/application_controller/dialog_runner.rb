@@ -1,6 +1,15 @@
 module ApplicationController::DialogRunner
   extend ActiveSupport::Concern
 
+  def redirect_url(flash)
+    model = self.class.model
+    if restful_routed?(model)
+      polymorphic_path(model.find(session[:edit][:target_id]), :flash_msg => flash)
+    else
+      {:action => 'show', :id => session[:edit][:target_id], :flash_msg => flash}
+    end
+  end
+
   def dialog_cancel_form(flash = nil)
     @sb[:action] = @edit = nil
     @in_a_form = false
@@ -8,9 +17,7 @@ module ApplicationController::DialogRunner
       add_flash(flash)
       replace_right_cell
     else
-      javascript_redirect :action    => 'show',
-                          :id        => session[:edit][:target_id],
-                          :flash_msg => flash # redirect to miq_request show_list screen
+      javascript_redirect redirect_url(flash)
     end
   end
 
@@ -44,14 +51,7 @@ module ApplicationController::DialogRunner
                                   :action     => 'show_list',
                                   :flash_msg  => flash
             else
-              model = ("#{controller_name.camelize}Controller").constantize.model
-              javascript_redirect(
-                if restful_routed?(model)
-                  polymorphic_path(model.where(:id => session[:edit][:target_id]).first, :flash_msg => flash)
-                else
-                  {:action => 'show', :id => session[:edit][:target_id], :flash_msg => flash}
-                end
-              )
+              javascript_redirect redirect_url(flash)
             end
           else
             dialog_cancel_form(flash)
