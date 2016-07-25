@@ -1,7 +1,14 @@
 class RemoveTypeTemplateAndVMsFiltersFromMiqSearch < ActiveRecord::Migration[5.0]
+  puts "migration"
+  puts Gem.loaded_specs.keys.inspect
+  puts defined?(GoodMigrations)
+  puts Rails.env
+  
   class MiqSearch < ActiveRecord::Base
     serialize :filter
   end
+
+  puts "BEFORE MIQEXPRESSION"
 
   TEMPLATE_FITLER_EXPR = MiqExpression.new("=" => {"field" => "VmInfra-template", "value" => "true"})
   TEMPLATE_TYPE_FILTER = {:name => "default_Type / Template", :description => "Type / Template",
@@ -11,6 +18,8 @@ class RemoveTypeTemplateAndVMsFiltersFromMiqSearch < ActiveRecord::Migration[5.0
   VMS_FITLER_EXPR = MiqExpression.new("not" => {"ENDS WITH" => {"field" => "VmInfra-location", "value" => ".vmtx"}})
   VMS_TYPE_FILTER = {:name => "default_Type / VM", :description => "Type / VM", :filter => VMS_FITLER_EXPR,
                      :search_type => "default", :db => "ManageIQ::Providers::InfraManager::Vm"}.freeze
+
+  puts "AFTER MIQEXPRESSION"
 
   def up
     say_with_time('Remove Type / Template and Type / VM from VMs filters') do
@@ -25,6 +34,7 @@ class RemoveTypeTemplateAndVMsFiltersFromMiqSearch < ActiveRecord::Migration[5.0
   end
 
   def down
+    puts "migration"
     say_with_time('Add Type / Template and Type / VM to VMs filters') do
       MiqSearch.create!(TEMPLATE_TYPE_FILTER)
       MiqSearch.create!(VMS_TYPE_FILTER)

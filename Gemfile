@@ -114,7 +114,7 @@ unless ENV["APPLIANCE"]
   end
 
   group :development, :test do
-    gem "good_migrations"
+    gem "good_migrations",  :git => "https://github.com/lpichler/good-migrations"
     gem "parallel_tests"
     gem "rspec-rails",      "~>3.5.0"
   end
