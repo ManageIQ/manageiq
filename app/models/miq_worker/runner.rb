@@ -51,7 +51,6 @@ class MiqWorker::Runner
 
   def worker_initialization
     starting_worker_record
-    set_process_title
 
     # Sync the config and roles early since heartbeats and logging require the configuration
     sync_active_roles
@@ -122,8 +121,6 @@ class MiqWorker::Runner
     worker_initialization
     after_initialize
 
-    @worker.release_db_connection if @worker.respond_to?(:release_db_connection)
-
     prepare
     run
 
@@ -142,6 +139,9 @@ class MiqWorker::Runner
   end
 
   def prepare
+    set_process_title
+    @worker.release_db_connection if @worker.respond_to?(:release_db_connection)
+
     ObjectSpace.garbage_collect
     started_worker_record
     do_wait_for_worker_monitor if self.class.wait_for_worker_monitor?
