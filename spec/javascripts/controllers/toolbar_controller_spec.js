@@ -16,14 +16,8 @@ describe('toolbarController', function () {
    }));
 
    describe('show list toolbar', function() {
-     beforeEach(function(done){
-       $httpBackend.when('GET', '//toolbar_settings?is_list=true').respond(200, middleware_toolbar_list);
-       $controller.isList = true;
-       var dataLoading = $controller.init();
-       $q.all([dataLoading]).then(function(data) {
-         done();
-       });
-       $httpBackend.flush();
+     beforeEach(function(){
+       $controller.initObject(JSON.stringify(middleware_toolbar_list));
      });
 
      it('toolbar data loaded, toolbar items more than one, 3 toolbar items contain {url_parms: "main_div"}', function() {
@@ -73,16 +67,12 @@ describe('toolbarController', function () {
    })
 
    describe('show detail toolbar', function() {
-     it('middleware server, it should be different than list toolbar', function(done) {
-       $httpBackend.when('GET', '//toolbar_settings?is_list=false').respond(200, middleware_toolbar_list);
-       $controller.isList = false;
-       var listToolbar = $controller.toolbarItems;
-       var dataLoading = $controller.init();
-       $q.all([dataLoading]).then(function(data) {
-         expect(listToolbar !== $controller.toolbarItems).toBeTruthy();
-         done();
-       });
-       $httpBackend.flush();
+     beforeEach(function(){
+       $controller.initObject(JSON.stringify(middleware_toolbar_detail));
+     });
+
+     it('middleware server, it should be different than list toolbar', function() {
+       expect(middleware_toolbar_list !== $controller.toolbarItems).toBeTruthy();
      });
    });
 

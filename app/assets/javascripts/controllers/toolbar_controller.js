@@ -135,6 +135,7 @@
   }
 
   ToolbarController.prototype.initObject = function(toolbarString) {
+    subscribeToSubject.bind(this)();
     toolbarItems = this.MiQToolbarSettingsService.generateToolbarObject(JSON.parse(toolbarString));
     this.toolbarItems = toolbarItems.items;
     this.dataViews = toolbarItems.dataViews;
