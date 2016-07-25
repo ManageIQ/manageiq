@@ -149,8 +149,9 @@ module ManageIQ::Providers::Kubernetes
     def scheme_to_provider_mapping
       @scheme_to_provider_mapping ||= begin
         {
-          'gce' => ['ManageIQ::Providers::Google::CloudManager'.safe_constantize, :name],
-          'aws' => ['ManageIQ::Providers::Amazon::CloudManager'.safe_constantize, :uid_ems],
+          'gce'       => ['ManageIQ::Providers::Google::CloudManager'.safe_constantize, :name],
+          'aws'       => ['ManageIQ::Providers::Amazon::CloudManager'.safe_constantize, :uid_ems],
+          'openstack' => ['ManageIQ::Providers::Openstack::CloudManager'.safe_constantize, :uid_ems]
         }.reject { |_key, (provider, _name)| provider.nil? }
       end
     end
