@@ -14,7 +14,9 @@ ManageIQ.angular.app.controller('timeProfileFormController', ['$http', '$scope',
       hourValuesAMSecondHalf: [],
       hourValuesPMFirstHalf: [],
       hourValuesPMSecondHalf: [],
+      hourValues: [],
       some_days_checked: true,
+      some_hours_checked: true,
     };
     $scope.dayNames = [__("Sunday"), __("Monday"), __("Tuesday"), __("Wednesday"), __("Thursday"), __("Friday"), __("Saturday")];
     $scope.hourNamesFirstHalf = [__("12-1"), __("1-2"), __("2-3"), __("3-4"), __("4-5"), __("5-6")];
@@ -107,6 +109,7 @@ ManageIQ.angular.app.controller('timeProfileFormController', ['$http', '$scope',
         $scope.timeProfileModel.hourValuesPMSecondHalf.push(false);
       }
     }
+    $scope.calculateTimeProfileHourValues();
   };
 
   $scope.hourValuesChanged = function() {
@@ -133,6 +136,16 @@ ManageIQ.angular.app.controller('timeProfileFormController', ['$http', '$scope',
       }
     }
     $scope.timeProfileModel.hours = tempHours;
+    $scope.calculateTimeProfileHourValues();
+  };
+
+  $scope.calculateTimeProfileHourValues = function() {
+    $scope.timeProfileModel.hourValues = [];
+    $scope.timeProfileModel.hourValues.push($scope.timeProfileModel.hourValuesAMFirstHalf);
+    $scope.timeProfileModel.hourValues.push($scope.timeProfileModel.hourValuesAMSecondHalf);
+    $scope.timeProfileModel.hourValues.push($scope.timeProfileModel.hourValuesPMFirstHalf);
+    $scope.timeProfileModel.hourValues.push($scope.timeProfileModel.hourValuesPMSecondHalf);
+    $scope.timeProfileModel.hourValues = _.flattenDeep($scope.timeProfileModel.hourValues);
   };
 
   $scope.allDaysClicked = function() {
@@ -154,13 +167,16 @@ ManageIQ.angular.app.controller('timeProfileFormController', ['$http', '$scope',
       $scope.timeProfileModel.hourValuesPMFirstHalf = _.times(6, _.constant(true));
       $scope.timeProfileModel.hourValuesPMSecondHalf = _.times(6, _.constant(true));
       $scope.timeProfileModel.hours = _.times(24, _.constant(true));
+      $scope.timeProfileModel.some_hours_checked = true;
     } else {
       $scope.timeProfileModel.hourValuesAMFirstHalf = _.times(6, _.constant(false));
       $scope.timeProfileModel.hourValuesAMSecondHalf = _.times(6, _.constant(false));
       $scope.timeProfileModel.hourValuesPMFirstHalf = _.times(6, _.constant(false));
       $scope.timeProfileModel.hourValuesPMSecondHalf = _.times(6, _.constant(false));
+      $scope.timeProfileModel.some_hours_checked = false;
       $scope.timeProfileModel.hours = [];
     }
+    $scope.calculateTimeProfileHourValues();
   };
 
   var timeProfileEditButtonClicked = function(buttonName, serializeFields) {
