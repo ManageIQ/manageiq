@@ -137,7 +137,9 @@ class ServiceController < ApplicationController
     checked[0] = params[:id] if checked.blank? && params[:id]
     @service = find_by_id_filtered(Service, checked[0])
     @in_a_form = true
-    @title = _("Editing %{model} \"%{name}\"") % {:name => @service.name, :model => ui_lookup(:model => "Service")}
+    @explorer = true
+    build_accordions_and_trees
+    @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name => @service.name, :model => ui_lookup(:model => "Service")}
   end
 
   def service_reconfigure

@@ -52,4 +52,6 @@
       = render :partial => "layouts/header"
       = render :partial => "layouts/content"
       = render :partial => 'layouts/footer'
-
+    - if controller.send(:angular_app?) && @in_a_form
+      :javascript
+        $('#toolbar').hide();
