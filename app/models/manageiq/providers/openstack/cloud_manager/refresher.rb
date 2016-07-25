@@ -14,7 +14,7 @@ module ManageIQ::Providers
     end
 
     def post_process_refresh_classes
-      [Vm]
+      [Vm, CloudTenant]
     end
   end
 end

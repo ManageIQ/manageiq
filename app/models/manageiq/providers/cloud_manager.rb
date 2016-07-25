@@ -31,6 +31,7 @@ module ManageIQ::Providers
 
     include HasNetworkManagerMixin
     include HasManyOrchestrationStackMixin
+    include CloudTenantMixin
 
     supports_not :discovery
 
@@ -57,6 +58,10 @@ module ManageIQ::Providers
         stop_event_monitor_queue
         network_manager.stop_event_monitor_queue if respond_to?(:network_manager) && network_manager
       end
+    end
+
+    def supports_cloud_tenants?
+      false
     end
   end
 end
