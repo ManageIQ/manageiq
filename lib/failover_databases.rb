@@ -8,7 +8,7 @@ class FailoverDatabases
   def self.all_databases
     if File.exist?(FAILOVER_DATABASES_YAML_FILE)
       begin
-        YAML.load(File.read(FAILOVER_DATABASES_YAML_FILE))
+        YAML.load_file(FAILOVER_DATABASES_YAML_FILE)
       rescue IOError => err
         _log.error("#{err.class}: #{err}")
         _log.error(err.backtrace.join("\n"))
@@ -20,19 +20,11 @@ class FailoverDatabases
   end
 
   def self.standby_databases
-    result = []
-    all_databases.each do |record|
-      result << record if record["type"] == 'standby'
-    end
-    result
+    all_databases.select { |record| record["type"] == 'standby' }
   end
 
   def self.active_standby_databases
-    result = []
-    all_databases.each do |record|
-      result << record if record["type"] == 'standby' && record["active"] == true
-    end
-    result
+    all_databases.select { |record| record["type"] == 'standby' && record["active"] == true }
   end
 
   def self.query_repmgr
@@ -49,9 +41,7 @@ class FailoverDatabases
   private_class_method :query_repmgr
 
   def self.write_file(result)
-    File.open(FAILOVER_DATABASES_YAML_FILE, 'w+') do |file|
-      file.write(result.to_yaml)
-    end
+    File.write(FAILOVER_DATABASES_YAML_FILE, result.to_yaml)
   rescue IOError => err
     _log.error("#{err.class}: #{err}")
     _log.error(err.backtrace.join("\n"))
