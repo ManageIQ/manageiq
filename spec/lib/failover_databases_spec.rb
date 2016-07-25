@@ -1,13 +1,9 @@
 describe FailoverDatabases do
-  let(:connection) { ActiveRecord::Base.connection }
+  before(:each) do
+    connection = ActiveRecord::Base.connection
+    connection.execute("CREATE SCHEMA repmgr_miq")
 
-  before(:all) do
-    @connection = ApplicationRecord.connection_pool.checkout
-    clean_up
-
-    @connection.execute("CREATE SCHEMA repmgr_miq")
-
-    @connection.execute(<<-SQL)
+    connection.execute(<<-SQL)
       CREATE TABLE repmgr_miq.repl_nodes (
       id integer NOT NULL,
       type text NOT NULL,
@@ -15,12 +11,12 @@ describe FailoverDatabases do
       CONSTRAINT repl_nodes_type_check CHECK ((type = ANY (ARRAY['master'::text, 'standby'::text, 'witness'::text]))))
     SQL
 
-    @connection.execute(<<-SQL)
+    connection.execute(<<-SQL)
       ALTER TABLE ONLY repmgr_miq.repl_nodes
       ADD CONSTRAINT repl_nodes_pkey PRIMARY KEY (id)
     SQL
 
-    @connection.execute(<<-SQL)
+    connection.execute(<<-SQL)
       INSERT INTO
         repmgr_miq.repl_nodes(id, type, active)
       VALUES
@@ -32,11 +28,6 @@ describe FailoverDatabases do
 
   after(:each) do
     remove_file
-  end
-
-  after(:all) do
-    clean_up
-    ApplicationRecord.connection_pool.checkin(@connection)
   end
 
   describe ".all_databases" do
@@ -117,16 +108,5 @@ describe FailoverDatabases do
     if File.exist?(described_class::FAILOVER_DATABASES_YAML_FILE)
       File.delete(described_class::FAILOVER_DATABASES_YAML_FILE)
     end
-  end
-
-  def remove_schema
-    if @connection.table_exists? "repmgr_miq.repl_nodes"
-      @connection.execute("DROP SCHEMA repmgr_miq cascade")
-    end
-  end
-
-  def clean_up
-    remove_file
-    remove_schema
   end
 end
