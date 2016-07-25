@@ -33,10 +33,6 @@ module VmCloudHelper::TextualSummary
     textual_ems_custom_attributes
   end
 
-  def textual_group_compliance
-    %i(compliance_status compliance_history)
-  end
-
   def textual_group_power_management
     %i(power_state boot_time state_changed_on)
   end
@@ -383,17 +379,8 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_compliance_history
-    h = {:label => _("History")}
-    if @record.number_of(:compliances) == 0
-      h[:value] = _("Not Available")
-    else
-      h[:image] = "compliance"
-      h[:value] = _("Available")
-      h[:title] = _("Show Compliance History of this VM (Last 10 Checks)")
-      h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => 'compliance_history')
-    end
-    h
+    super(:title    => _("Show Compliance History of this VM (Last 10 Checks)"),
+          :explorer => true)
   end
 
   def textual_power_state
