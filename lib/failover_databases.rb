@@ -9,7 +9,7 @@ class FailoverDatabases
     if File.exist?(FAILOVER_DATABASES_YAML_FILE)
       begin
         YAML.load(File.read(FAILOVER_DATABASES_YAML_FILE))
-      rescue => err
+      rescue IOError => err
         _log.error("#{err.class}: #{err}")
         _log.error(err.backtrace.join("\n"))
         []
@@ -52,7 +52,7 @@ class FailoverDatabases
     File.open(FAILOVER_DATABASES_YAML_FILE, 'w+') do |file|
       file.write(result.to_yaml)
     end
-  rescue => err
+  rescue IOError => err
     _log.error("#{err.class}: #{err}")
     _log.error(err.backtrace.join("\n"))
     raise
