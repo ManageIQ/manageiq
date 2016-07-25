@@ -221,7 +221,7 @@ module ToolbarHelper
   # each button is pushed to array.
   def toolbar_from_hash
     calculate_toolbars.collect do |_div_id, toolbar_name|
-      buttons = toolbar_name ? build_toolbar(toolbar_name) : nil
+      toolbar_name ? build_toolbar(toolbar_name) : nil
     end
   end
 end

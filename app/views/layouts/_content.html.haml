@@ -16,10 +16,9 @@
   = render :partial => "layouts/vertical_navbar"
 
   .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-tertiary.resizable-sidebar.max-height{:style => "overflow: hidden !important"}
-    .row.toolbar-pf#toolbar
+    .row.toolbar-pf#toolbar.miq-toolbar-menu
       .col-md-12
-        .toolbar-pf-actions
-          = render_toolbars(calculate_toolbars)
+        = render :partial => "layouts/angular/toolbar"
     .row.max-height
       #right_div.resizable.max-height{:class => "col-md-#{maindiv} col-md-push-#{sidewidth}"}
         #main-content.row
@@ -76,15 +75,12 @@
       = render :partial => "layouts/vertical_navbar"
       .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-tertiary.max-height{:style => "overflow: hidden !important"}
         - if !@in_a_form && taskbar_in_header?
-          .row.toolbar-pf#toolbar{:class => "#{!@angular_toolbar_name.nil? ? 'miq-toolbar-menu' : ''}"}
+          .row.toolbar-pf#toolbar.miq-toolbar-menu
             .col-md-12
-              - if @angular_toolbar_name
+              .toolbar-pf-actions
+                - if @layout == "dashboard"
+                  = render :partial => "/layouts/tabs"
                 = render :partial => "layouts/angular/toolbar"
-              - else
-                .toolbar-pf-actions
-                  - if @layout == "dashboard"
-                    = render :partial => "/layouts/tabs"
-                  = render_toolbars(calculate_toolbars)
         .row.max-height
           .col-sm-9.col-md-10.col-sm-push-3.col-md-push-2.max-height
             #main-content.row
@@ -135,10 +131,9 @@
         .row.max-height
           .col-md-12.max-height
             - if !@in_a_form && taskbar_in_header?
-              .row.toolbar-pf#toolbar
+              .row.toolbar-pf#toolbar.miq-toolbar-menu
                 .col-md-12
-                  .toolbar-pf-actions
-                    = render_toolbars(calculate_toolbars)
+                  = render :partial => "layouts/angular/toolbar"
             .row#main-content
               .col-md-12
                 = render :partial => "layouts/breadcrumbs"
