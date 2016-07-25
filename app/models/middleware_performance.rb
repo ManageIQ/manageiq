@@ -13,8 +13,11 @@ class MiddlewarePerformance < ActsAsArModel
   alias resource_name name
 
   def self.build_results_for_report_middleware(options)
+    check_if_current_class_implements_model_class
+
     start_time, end_time, interval = parse_time_interval(options)
     results = []
+
     model_class.find_each do |ms|
       raw_stats = fetch_raw_stats(ms, start_time, end_time, interval)
       if raw_stats.values[0]
@@ -23,6 +26,11 @@ class MiddlewarePerformance < ActsAsArModel
       end
     end
     [results, {}]
+  end
+
+  def self.check_if_current_class_implements_model_class
+    raise 'You are not supposed to use MiddlewarePerformance model for reporting.' if self == MiddlewarePerformance
+    raise 'You need to implement :model_class in your model. ' unless respond_to?(:model_class)
   end
 
   def self.parse_raw_stats_columns(raw_stats)
