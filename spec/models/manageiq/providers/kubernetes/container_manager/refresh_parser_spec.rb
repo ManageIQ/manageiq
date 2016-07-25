@@ -645,6 +645,14 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
                                  :ext_management_system => @ems)
       end
 
+      it "cross links openstack through provider id" do
+        @node[:identity_infra] = "openstack:///openstack_id"
+        @ems = FactoryGirl.create(:ems_openstack)
+        @vm = FactoryGirl.create(:vm_openstack,
+                                 :uid_ems               => 'openstack_id',
+                                 :ext_management_system => @ems)
+      end
+
       it 'cross links with missing data in ProviderID' do
         @node[:identity_infra] = "gce:////instance_id/"
         @ems = FactoryGirl.create(:ems_google,
