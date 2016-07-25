@@ -63,21 +63,13 @@ class ProviderForemanController < ApplicationController
     assert_privileges("provider_foreman_add_provider")
     @provider_cfgmgmt = ManageIQ::Providers::ConfigurationManager.new
     @provider_types = ["Ansible Tower", ui_lookup(:ui_title => 'foreman')]
-    @server_zones = []
-    zones = Zone.order('lower(description)')
-    zones.each do |zone|
-      @server_zones.push([zone.description, zone.name])
-    end
+    @server_zones = Zone.in_my_region.order('lower(description)').pluck(:description, :name)
     render_form
   end
 
   def edit
     @provider_types = ["Ansible Tower", ui_lookup(:ui_title => 'foreman')]
-    @server_zones = []
-    zones = Zone.order('lower(description)')
-    zones.each do |zone|
-      @server_zones.push([zone.description, zone.name])
-    end
+    @server_zones = Zone.in_my_region.order('lower(description)').pluck(:description, :name)
     case params[:button]
     when "cancel"
       cancel_provider_foreman
