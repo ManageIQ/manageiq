@@ -188,8 +188,18 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
 
   def history_database_name
     @history_database_name ||= begin
-      require 'ovirt_metrics'
-      version_3_0? ? OvirtMetrics::DEFAULT_HISTORY_DATABASE_NAME_3_0 : OvirtMetrics::DEFAULT_HISTORY_DATABASE_NAME
+      version = version_3_0? ? '3_0' : '>3_0'
+      self.class.history_database_name_for(version)
+    end
+  end
+
+  def self.history_database_name_for(api_version)
+    require 'ovirt_metrics'
+    case api_version
+    when '3_0'
+      OvirtMetrics::DEFAULT_HISTORY_DATABASE_NAME_3_0
+    else
+      OvirtMetrics::DEFAULT_HISTORY_DATABASE_NAME
     end
   end
 

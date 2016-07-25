@@ -30,6 +30,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       amqp_verify: '',
       metrics_userid: '',
       metrics_password: '',
+      metrics_database_name: '',
       metrics_verify: '',
       ssh_keypair_userid: '',
       ssh_keypair_password: '',
@@ -111,6 +112,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.amqp_api_port                   = angular.isDefined(data.amqp_api_port) && data.amqp_api_port != '' ? data.amqp_api_port.toString() : '5672';
         $scope.emsCommonModel.hawkular_api_port               = angular.isDefined(data.hawkular_api_port) && data.hawkular_api_port != '' ? data.hawkular_api_port.toString() : '443';
         $scope.emsCommonModel.metrics_api_port                = angular.isDefined(data.metrics_api_port) && data.metrics_api_port != '' ? data.metrics_api_port.toString() : '';
+        $scope.emsCommonModel.metrics_database_name           = angular.isDefined(data.metrics_database_name) && data.metrics_database_name != '' ? data.metrics_database_name : data.metrics_default_database_name;
         $scope.emsCommonModel.api_version                     = data.api_version;
         $scope.emsCommonModel.default_security_protocol       = data.default_security_protocol;
         $scope.emsCommonModel.realm                           = data.realm;
@@ -305,6 +307,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       $scope.note = $scope.realmNote;
     } else if ($scope.emsCommonModel.emstype === 'rhevm') {
       $scope.emsCommonModel.metrics_api_port = "5432";
+      $scope.emsCommonModel.metrics_database_name = "ovirt_engine_history";
     } else if ($scope.emsCommonModel.ems_controller === 'ems_container') {
       $scope.emsCommonModel.default_api_port = "8443";
     }
