@@ -64,11 +64,15 @@ $(document).ready(function () {
   };
 
   var observeWithInterval = function(el, parms) {
+    if (el.data('isObserved')) {
+      return;
+    }
+    el.data('isObserved', true);
+
     var interval = parms.interval;
     var url = parms.url;
     var submit = parms.submit;
 
-    el.off(); // Use jQuery to turn off observe_field, prevents multi ajax transactions
     el.observe_field(interval, function () {
       var oneTrans = this.getAttribute('data-miq_send_one_trans'); // Grab one trans URL, if present
       if (typeof submit != "undefined") {
