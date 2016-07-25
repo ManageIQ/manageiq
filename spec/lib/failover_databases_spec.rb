@@ -1,32 +1,26 @@
 describe FailoverDatabases do
-  before(:each) do
+  before do
     connection = ActiveRecord::Base.connection
     connection.execute("CREATE SCHEMA repmgr_miq")
 
     connection.execute(<<-SQL)
       CREATE TABLE repmgr_miq.repl_nodes (
-      id integer NOT NULL,
       type text NOT NULL,
-      active boolean DEFAULT true NOT NULL,
-      CONSTRAINT repl_nodes_type_check CHECK ((type = ANY (ARRAY['master'::text, 'standby'::text, 'witness'::text]))))
-    SQL
-
-    connection.execute(<<-SQL)
-      ALTER TABLE ONLY repmgr_miq.repl_nodes
-      ADD CONSTRAINT repl_nodes_pkey PRIMARY KEY (id)
+      conninfo text NOT NULL,
+      active boolean DEFAULT true NOT NULL)
     SQL
 
     connection.execute(<<-SQL)
       INSERT INTO
-        repmgr_miq.repl_nodes(id, type, active)
+        repmgr_miq.repl_nodes(type, conninfo, active)
       VALUES
-        (2, 'master', 'true'),
-        (1, 'standby', 'true'),
-        (3, 'standby', 'false')
+        ('master', 'host=1.1.1.1 user=root dbname=vmdb_test', 'true'),
+        ('standby', 'host=2.2.2.2 user=root dbname=vmdb_test', 'true'),
+        ('standby', 'host=3.3.3.3 user=root dbname=vmdb_test', 'false')
     SQL
   end
 
-  after(:each) do
+  after do
     remove_file
   end
 
@@ -35,7 +29,12 @@ describe FailoverDatabases do
       list = described_class.all_databases
 
       expect(list.size).to be 3
-      expect(list).to match_array(initial_db_records)
+      expect(list).to include({:type => "master", :host => "1.1.1.1", :dbname => "vmdb_test",
+                               :user => "root", :active => true},
+                              {:type => "standby", :host => "2.2.2.2", :dbname => "vmdb_test",
+                               :user => "root", :active => true},
+                              {:type => "standby", :host => "3.3.3.3", :dbname => "vmdb_test",
+                               :user => "root", :active => false})
     end
 
     it "create yaml file with list of available databases if file did not exist" do
@@ -53,7 +52,12 @@ describe FailoverDatabases do
 
       described_class.all_databases
       expect(list.size).to be 3
-      expect(list).to match_array(initial_db_records)
+      expect(list).to include({:type => "master", :host => "1.1.1.1", :dbname => "vmdb_test",
+                              :user => "root", :active => true},
+                              {:type => "standby", :host => "2.2.2.2", :dbname => "vmdb_test",
+                               :user => "root", :active => true},
+                              {:type => "standby", :host => "3.3.3.3", :dbname => "vmdb_test",
+                               :user => "root", :active => false})
     end
   end
 
@@ -66,7 +70,8 @@ describe FailoverDatabases do
 
       list = described_class.refresh_databases_list
       expect(list.size).to be 4
-      expect(list).to include new_record
+      expect(list).to include(:type => "standby", :host => "4.4.4.4", :dbname => "some_db",
+                              :user => "root", :active => true)
     end
   end
 
@@ -84,23 +89,13 @@ describe FailoverDatabases do
     end
   end
 
-  def initial_db_records
-    [{"id"   => 1, "type" => "standby", "active" => true},
-     {"id"   => 2, "type" => "master", "active" => true},
-     {"id"   => 3, "type" => "standby", "active" => false}]
-  end
-
-  def new_record
-    {"id" => 4, "type" => "standby", "active" => true}
-  end
-
   def add_new_record
     connection = ApplicationRecord.connection
     connection.execute(<<-SQL)
       INSERT INTO
-        repmgr_miq.repl_nodes(id, type, active)
+        repmgr_miq.repl_nodes(type, conninfo, active)
       VALUES
-        (4, 'standby', 'true')
+        ('standby', 'host=4.4.4.4 user=root dbname=some_db', 'true')
     SQL
   end
 

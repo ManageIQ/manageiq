@@ -20,19 +20,20 @@ class FailoverDatabases
   end
 
   def self.standby_databases
-    all_databases.select { |record| record["type"] == 'standby' }
+    all_databases.select { |record| record[:type] == 'standby' }
   end
 
   def self.active_standby_databases
-    all_databases.select { |record| record["type"] == 'standby' && record["active"] == true }
+    all_databases.select { |record| record[:type] == 'standby' && record[:active] == true }
   end
 
   def self.query_repmgr
     connection = ApplicationRecord.connection
     result = []
     if connection.table_exists? "repmgr_miq.repl_nodes"
-      connection.execute("SELECT * FROM repmgr_miq.repl_nodes").each do |data|
-        result << data
+      connection.execute("SELECT type, conninfo, active FROM repmgr_miq.repl_nodes").each do |record|
+        dsn = connection.class.parse_dsn(record.delete("conninfo"))
+        result << record.symbolize_keys.merge(dsn)
       end
       write_file(result)
     end
