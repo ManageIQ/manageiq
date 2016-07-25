@@ -126,10 +126,6 @@ class EmsCluster < ApplicationRecord
   alias_method :all_miq_template_ids,   :miq_template_ids
 
   # Host relationship methods
-  def total_hosts
-    hosts.size
-  end
-
   def failover_hosts(_options = {})
     hosts.select(&:failover)
   end
@@ -164,13 +160,8 @@ class EmsCluster < ApplicationRecord
     direct_vm_ids + direct_miq_template_ids
   end
 
-  def total_direct_vms
-    direct_vm_rels.size
-  end
-
-  def total_direct_miq_templates
-    direct_miq_template_ids.size
-  end
+  virtual_total :total_direct_vms, :direct_vm_rels
+  virtual_total :total_direct_miq_templates, :direct_miq_templates
 
   def total_direct_vms_and_templates
     total_direct_vms + total_direct_miq_templates
