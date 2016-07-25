@@ -320,6 +320,7 @@ class MiqWorker < ApplicationRecord
   def self.after_fork
     close_pg_sockets_inherited_from_parent
     DRb.stop_service
+    renice(Process.pid)
   end
 
   # When we fork, the children inherits the parent's file descriptors
@@ -512,8 +513,8 @@ class MiqWorker < ApplicationRecord
                          end
   end
 
-  def self.nice_prefix
-    @nice_prefix ||= "nice -n #{nice_increment}"
+  def self.renice(pid)
+    AwesomeSpawn.run("renice", :params =>  {:n => nice_increment, :p => pid })
   end
 
   def self.nice_increment
