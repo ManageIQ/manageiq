@@ -77,12 +77,13 @@ class ServiceController < ApplicationController
       return
     end
 
+    build_accordions_and_trees
+
     if params[:id]  # If a tree node id came in, show in one of the trees
       nodetype, id = params[:id].split("-")
       self.x_node = "#{nodetype}-#{to_cid(id)}"
+      get_node_info(x_node)
     end
-
-    build_accordions_and_trees
 
     params.instance_variable_get(:@parameters).merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
