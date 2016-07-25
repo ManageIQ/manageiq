@@ -100,13 +100,13 @@ describe FailoverDatabases do
   end
 
   def new_record
-    {"id" => 4, "type" => "standby", "active" => true} 
+    {"id" => 4, "type" => "standby", "active" => true}
   end
 
   def add_new_record
     connection = ApplicationRecord.connection
     connection.execute(<<-SQL)
-      INSERT INTO 
+      INSERT INTO
         repmgr_miq.repl_nodes(id, type, active)
       VALUES
         (4, 'standby', 'true')
@@ -114,7 +114,7 @@ describe FailoverDatabases do
   end
 
   def remove_file
-    if File.exists?(described_class::FAILOVER_DATABASES_YAML_FILE)
+    if File.exist?(described_class::FAILOVER_DATABASES_YAML_FILE)
       File.delete(described_class::FAILOVER_DATABASES_YAML_FILE)
     end
   end
