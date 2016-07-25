@@ -38,7 +38,7 @@ gem "pg",                      "~>0.18.2",          :require => false
 gem "psych",                   "~>2.0.12"
 gem "rake",                    "~>10.1"
 gem "rbvmomi",                 "~>1.8.0",           :require => false
-gem "rest-client",             "=2.0.0.rc1",        :require => false
+gem "rest-client",             "~>2.0.0",           :require => false
 gem "rubyzip",                 "~>1.2.0",           :require => false
 gem "rufus-lru",               "~>1.0.3",           :require => false
 gem "sys-proctable",           "~>1.1.0",           :require => false
