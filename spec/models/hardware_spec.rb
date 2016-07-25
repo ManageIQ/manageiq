@@ -28,6 +28,33 @@ describe Hardware do
     expect(host.hardware.host).to eq(host)
   end
 
+  describe ".aggregate_cpu_speed" do
+    context "with empty hardware" do
+      let(:hardware) { FactoryGirl.build(:hardware) }
+      it "bails ruby calculation" do
+        expect(hardware.aggregate_cpu_speed).to be_nil
+      end
+
+      it "bails database calculation" do
+        hardware.save
+        expect(virtual_column_sql_value(Hardware, "aggregate_cpu_speed")).to be_nil
+      end
+    end
+
+    context "with values" do
+      let(:hardware) { FactoryGirl.build(:hardware, :cpu_total_cores => 4, :cpu_speed => 1000) }
+
+      it "calculates in ruby" do
+        expect(hardware.aggregate_cpu_speed).to eq(4000)
+      end
+
+      it "calculates in the database" do
+        hardware.save
+        expect(virtual_column_sql_value(Hardware, "aggregate_cpu_speed")).to eq(4000)
+      end
+    end
+  end
+
   describe ".v_pct_free_disk_space" do
     context "with empty hardware" do
       let(:hardware) { FactoryGirl.build(:hardware) }

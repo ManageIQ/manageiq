@@ -84,9 +84,16 @@ class Hardware < ApplicationRecord
   end
 
   def aggregate_cpu_speed
-    return nil if cpu_total_cores.blank? || cpu_speed.blank?
-    (cpu_total_cores * cpu_speed)
+    if has_attribute?("aggregate_cpu_speed")
+      self["aggregate_cpu_speed"]
+    elsif try(:cpu_total_cores) && try(:cpu_speed)
+      cpu_total_cores * cpu_speed
+    end
   end
+
+  virtual_attribute :aggregate_cpu_speed, :integer, :arel => (lambda do |t|
+    t.grouping(t[:cpu_total_cores] * t[:cpu_speed])
+  end)
 
   def v_pct_free_disk_space
     return nil if disk_free_space.nil? || disk_capacity.nil? || disk_capacity.zero?
