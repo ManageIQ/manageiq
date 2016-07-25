@@ -37,6 +37,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Openstack::CloudManager::RefreshWorker
     ManageIQ::Providers::Openstack::NetworkManager::RefreshWorker
     ManageIQ::Providers::Openstack::InfraManager::RefreshWorker
+    ManageIQ::Providers::Vmware::CloudManager::RefreshWorker
     ManageIQ::Providers::Vmware::InfraManager::RefreshWorker
     ManageIQ::Providers::Amazon::CloudManager::EventCatcher
     ManageIQ::Providers::Azure::CloudManager::EventCatcher
@@ -113,6 +114,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Openstack::CloudManager::RefreshWorker
     ManageIQ::Providers::Openstack::NetworkManager::RefreshWorker
     ManageIQ::Providers::Openstack::InfraManager::RefreshWorker
+    ManageIQ::Providers::Vmware::CloudManager::RefreshWorker
     ManageIQ::Providers::Vmware::InfraManager::RefreshWorker
     MiqScheduleWorker
     MiqPriorityWorker
