@@ -63,55 +63,63 @@ $(document).ready(function () {
     };
   };
 
-  $(document).on('focus', '[data-miq_observe]', function () {
-    var el = $(this);
-    var parms = $.parseJSON(el.attr('data-miq_observe'));
-
+  var observeWithInterval = function(el, parms) {
     var interval = parms.interval;
     var url = parms.url;
     var submit = parms.submit;
 
-    if (typeof interval == "undefined") {
-      // No interval passed, use event observer
-      el.off('change');
-      el.on('change', _.debounce(function() {
-        var id = el.attr('id');
-        var value = el.prop('multiple') ? el.val() : encodeURIComponent(el.prop('value'));
-
+    el.off(); // Use jQuery to turn off observe_field, prevents multi ajax transactions
+    el.observe_field(interval, function () {
+      var oneTrans = this.getAttribute('data-miq_send_one_trans'); // Grab one trans URL, if present
+      if (typeof submit != "undefined") {
+        // If submit element passed in
         miqObserveRequest(url, {
-          no_encoding: true,
-          data: id + '=' + value,
-          beforeSend: !! el.attr('data-miq_sparkle_on'),
-          complete: !! el.attr('data-miq_sparkle_off'),
+          data: miqSerializeForm(submit),
           done: attemptAutoRefreshTrigger(parms),
         });
-      }, 700, {leading: true, trailing: true}));
-    } else {
-      el.off(); // Use jQuery to turn off observe_field, prevents multi ajax transactions
-      el.observe_field(interval, function () {
-        var oneTrans = this.getAttribute('data-miq_send_one_trans'); // Grab one trans URL, if present
-        if (typeof submit != "undefined") {
-          // If submit element passed in
-          miqObserveRequest(url, {
-            data: miqSerializeForm(submit),
-            done: attemptAutoRefreshTrigger(parms),
-          });
-        } else if (oneTrans) {
-          miqSendOneTrans(url, {
-            observe: true,
-            done: attemptAutoRefreshTrigger(parms),
-          });
-        } else {
-          // tack on the id and value to the URL
-          var data = {};
-          data[el.attr('id')] = el.prop('value');
+      } else if (oneTrans) {
+        miqSendOneTrans(url, {
+          observe: true,
+          done: attemptAutoRefreshTrigger(parms),
+        });
+      } else {
+        // tack on the id and value to the URL
+        var data = {};
+        data[el.attr('id')] = el.prop('value');
 
-          miqObserveRequest(url, {
-            done: attemptAutoRefreshTrigger(parms),
-            data: data,
-          });
-        }
+        miqObserveRequest(url, {
+          done: attemptAutoRefreshTrigger(parms),
+          data: data,
+        });
+      }
+    });
+  };
+
+  var observeOnChange = function(el, parms) {
+    // No interval passed, use event observer
+    el.off('change');
+    el.on('change', _.debounce(function() {
+      var id = el.attr('id');
+      var value = el.prop('multiple') ? el.val() : encodeURIComponent(el.prop('value'));
+
+      miqObserveRequest(parms.url, {
+        no_encoding: true,
+        data: id + '=' + value,
+        beforeSend: !! el.attr('data-miq_sparkle_on'),
+        complete: !! el.attr('data-miq_sparkle_off'),
+        done: attemptAutoRefreshTrigger(parms),
       });
+    }, 700, {leading: true, trailing: true}));
+  };
+
+  $(document).on('focus', '[data-miq_observe]', function () {
+    var el = $(this);
+    var parms = $.parseJSON(el.attr('data-miq_observe'));
+
+    if (typeof parms.interval == "undefined") {
+      observeOnChange(el, parms);
+    } else {
+      observeWithInterval(el, parms);
     }
   });
 
