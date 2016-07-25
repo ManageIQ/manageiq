@@ -292,7 +292,7 @@ describe MiqGroup do
     end
 
     it "is read_only for system groups" do
-      expect(FactoryGirl.create(:system_group)).to be_read_only
+      expect(FactoryGirl.create(:miq_group, :system_type)).to be_read_only
     end
 
     it "is read_only for tenant groups" do
@@ -326,7 +326,7 @@ describe MiqGroup do
     end
 
     it "is system_group for system groups" do
-      expect(FactoryGirl.create(:system_group)).to be_system_group
+      expect(FactoryGirl.create(:miq_group, :system_type)).to be_system_group
     end
   end
 
