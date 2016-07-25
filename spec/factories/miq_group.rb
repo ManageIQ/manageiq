@@ -25,8 +25,12 @@ FactoryGirl.define do
       end
     end
 
-    factory :system_group do
-      group_type "system" # dont want to reference class from factory MiqGroup::SYSTEM_GROUP
+    trait :system_type do
+      group_type MiqGroup::SYSTEM_GROUP
+    end
+
+    trait :tenant_type do
+      group_type MiqGroup::TENANT_GROUP
     end
   end
 end
