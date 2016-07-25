@@ -47,7 +47,19 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
     reset_event_monitor_handle
   end
 
+
   def process_event(event)
+    event_data = extract_event_data(event)
+    if event_data.nil?
+      _log.debug "#{log_prefix} Discarding event [#{event_data}]"
+    else
+      _log.info "#{log_prefix} Queuing event [#{event_data}]"
+      EmsEvent.add_queue('add_kubernetes', @cfg[:ems_id], event_data)
+    end
+  end
+
+  # Returns hash, or nil if event should be discarded.
+  def extract_event_data(event)
     event_data = {
       :timestamp => event.object.lastTimestamp,
       :kind      => event.object.involvedObject.kind,
@@ -65,7 +77,6 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
     supported_reasons = ENABLED_EVENTS[event_data[:kind]] || []
 
     unless supported_reasons.include?(event_data[:reason])
-      _log.debug "#{log_prefix} Discarding event [#{event_data}]"
       return
     end
 
@@ -91,7 +102,6 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
 
     event_data[:event_type] = "#{event_type_prefix}_#{event_data[:reason].upcase}"
 
-    _log.info "#{log_prefix} Queuing event [#{event_data}]"
-    EmsEvent.add_queue('add_kubernetes', @cfg[:ems_id], event_data)
+    event_data
   end
 end
