@@ -27,6 +27,7 @@ module Vmdb
         else
           break_on_complete ? break : sleep(1.second)
         end
+        break if break_on_complete.kind_of?(Integer) && (break_on_complete -= 1) <= 0
       end
     end
   end
