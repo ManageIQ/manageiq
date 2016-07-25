@@ -1,7 +1,4 @@
 module ConfigurationJobHelper::TextualSummary
-  include TextualMixins::TextualDescription
-  include TextualMixins::TextualGroupTags
-  include TextualMixins::TextualName
   #
   # Groups
   #
@@ -29,6 +26,21 @@ module ConfigurationJobHelper::TextualSummary
     @record.status_reason
   end
 
+  def textual_group_tags
+    %i(tags)
+  end
+
+  #
+  # Items
+  #
+
+  def textual_name
+    @record.name
+  end
+
+  def textual_description
+    @record.description
+  end
   def textual_service
     h = {:label => _("Service"), :image => "service"}
     service = @record.service
