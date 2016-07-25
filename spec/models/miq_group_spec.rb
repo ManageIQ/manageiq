@@ -247,12 +247,33 @@ describe MiqGroup do
       expect(MiqGroup.last.sequence).to eql(1)
     end
 
-    it "assigns roles to tenant_groups" do
-      tenant = Tenant.seed
-      expect(tenant.reload.default_miq_group.miq_user_role).not_to be
-      MiqUserRole.seed
-      MiqGroup.seed
-      expect(tenant.reload.default_miq_group.miq_user_role).to be_truthy
+    context "tenant groups" do
+      let!(:tenant) { Tenant.seed }
+      let!(:group_with_no_entitlement) { tenant.default_miq_group }
+      let!(:group_with_existing_entitlement) do
+        FactoryGirl.create(:miq_group,
+                           :tenant_type,
+                           :entitlement => FactoryGirl.create(:entitlement, :miq_user_role => nil))
+      end
+      let(:default_tenant_role) { MiqUserRole.default_tenant_role }
+
+      before do
+        MiqUserRole.seed
+        expect(group_with_no_entitlement.entitlement).not_to be_present
+        expect(group_with_no_entitlement.miq_user_role).not_to be_present
+        expect(group_with_existing_entitlement.entitlement).to be_present
+        expect(group_with_existing_entitlement.miq_user_role).not_to be_present
+        MiqGroup.seed
+        group_with_no_entitlement.reload
+        group_with_existing_entitlement.reload
+      end
+
+      it "assigns the default_tenant_role to tenant_groups without roles" do
+        expect(group_with_no_entitlement.entitlement).to be_present
+        expect(group_with_no_entitlement.miq_user_role).to eq(default_tenant_role)
+        expect(group_with_existing_entitlement.entitlement).to be_present
+        expect(group_with_existing_entitlement.miq_user_role).to eq(default_tenant_role)
+      end
     end
   end
 
