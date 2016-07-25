@@ -136,4 +136,20 @@ module MiqAeServiceSpec
       end
     end
   end
+
+  describe MiqAeService do
+    context "#prepend_namespace=" do
+      let(:options) { {} }
+      let(:workspace) { double("MiqAeEngine::MiqAeWorkspaceRuntime", :root => options) }
+      let(:miq_ae_service) { MiqAeService.new(workspace) }
+      let(:ns) { "fred" }
+
+      it "set namespace" do
+        allow(workspace).to receive(:persist_state_hash).and_return({})
+        expect(workspace).to receive(:prepend_namespace=).with(ns)
+
+        miq_ae_service.prepend_namespace = ns
+      end
+    end
+  end
 end
