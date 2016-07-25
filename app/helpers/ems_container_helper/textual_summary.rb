@@ -25,7 +25,7 @@ module EmsContainerHelper::TextualSummary
     authentications = @ems.authentications
     return [{:label => _("Default Authentication"), :title => t = _("None"), :value => t}] if authentications.blank?
 
-    authentications.collect do |auth|
+    authentications.order(:authtype).collect do |auth|
       label =
         case auth.authtype
         when "default" then _("Default")
