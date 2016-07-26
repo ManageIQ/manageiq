@@ -4,6 +4,7 @@ ManageIQ.angular.app.controller('providerForemanFormController', ['$http', '$sco
         provtype: '',
         name: '',
         url: '',
+        zone: '',
         verify_ssl: '',
         log_userid: '',
         log_password: '',
@@ -21,6 +22,7 @@ ManageIQ.angular.app.controller('providerForemanFormController', ['$http', '$sco
         $scope.newRecord                            = true;
         $scope.providerForemanModel.provtype        = '';
         $scope.providerForemanModel.name            = '';
+        $scope.providerForemanModel.zone            = '';
         $scope.providerForemanModel.url             = '';
         $scope.providerForemanModel.verify_ssl    = false;
 
@@ -37,6 +39,7 @@ ManageIQ.angular.app.controller('providerForemanFormController', ['$http', '$sco
         $http.get('/provider_foreman/provider_foreman_form_fields/' + providerForemanFormId).success(function(data) {
           $scope.providerForemanModel.provtype        = data.provtype;
           $scope.providerForemanModel.name            = data.name;
+          $scope.providerForemanModel.zone            = data.zone;
           $scope.providerForemanModel.url             = data.url;
           $scope.providerForemanModel.verify_ssl      = data.verify_ssl == "1";
 

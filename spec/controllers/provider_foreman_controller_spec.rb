@@ -180,6 +180,27 @@ describe ProviderForemanController do
       expect(right_cell_text).to eq(_("Edit Configuration Manager Provider"))
     end
 
+    it "should display the zone field" do
+      new_zone = FactoryGirl.create(:zone, :name => "TestZone")
+      controller.instance_variable_set(:@provider_cfgmgmt, @provider)
+      post :edit, :params => { :id => @config_mgr.id }
+      expect(response.status).to eq(200)
+      expect(response.body).to include("option value=\\\"#{new_zone.name}\\\"")
+    end
+
+    it "should save the zone field" do
+      new_zone = FactoryGirl.create(:zone, :name => "TestZone")
+      controller.instance_variable_set(:@provider_cfgmgmt, @provider)
+      allow(controller).to receive(:leaf_record).and_return(false)
+      post :edit, :params => { :button     => 'save',
+                               :id         => @config_mgr.id,
+                               :zone       => new_zone.name,
+                               :url        => @provider.url,
+                               :verify_ssl => @provider.verify_ssl }
+      expect(response.status).to eq(200)
+      expect(@provider.zone).to eq(new_zone)
+    end
+
     it "renders the edit page when the configuration manager id is selected from a list view" do
       post :edit, :params => { :miq_grid_checks => @config_mgr.id }
       expect(response.status).to eq(200)
