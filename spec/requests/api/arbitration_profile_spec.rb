@@ -31,8 +31,6 @@ RSpec.describe 'Arbitration Profile API' do
       expect do
         run_post(arbitration_profiles_url, request_body)
       end.to change(ArbitrationProfile, :count).by(1)
-
-      expect(response).to have_http_status(:ok)
     end
 
     it 'supports arbitration_default creation via action' do
@@ -41,8 +39,6 @@ RSpec.describe 'Arbitration Profile API' do
       expect do
         run_post(arbitration_profiles_url, gen_request(:create, request_body))
       end.to change(ArbitrationProfile, :count).by(1)
-
-      expect(response).to have_http_status(:ok)
     end
 
     it 'supports arbitration_default creation with provider id' do
@@ -52,7 +48,6 @@ RSpec.describe 'Arbitration Profile API' do
       expect do
         run_post(arbitration_profiles_url, request_body.merge(:provider => {:id => provider.id}))
       end.to change(ArbitrationProfile, :count).by(1)
-      expect(response).to have_http_status(:ok)
     end
 
     it 'supports arbitration_default creation with provider href ' do
@@ -64,8 +59,6 @@ RSpec.describe 'Arbitration Profile API' do
       expect do
         run_post(arbitration_profiles_url, request_json.merge(:provider => {:href => provider_href}))
       end.to change(ArbitrationProfile, :count).by(1)
-
-      expect(response).to have_http_status(:ok)
     end
 
     it 'supports arbitration_default creation with ext_management_system id' do
@@ -76,8 +69,6 @@ RSpec.describe 'Arbitration Profile API' do
       expect do
         run_post(arbitration_profiles_url, request_json.merge(:ext_management_system => {:id => provider.id}))
       end.to change(ArbitrationProfile, :count).by(1)
-
-      expect(response).to have_http_status(:ok)
     end
 
     it 'supports arbitration_default creation with ext_management_system href' do
@@ -89,8 +80,6 @@ RSpec.describe 'Arbitration Profile API' do
       expect do
         run_post(arbitration_profiles_url, request_json.merge(:ext_management_system => {:href => provider_href}))
       end.to change(ArbitrationProfile, :count).by(1)
-
-      expect(response).to have_http_status(:ok)
     end
 
     it 'supports arbitration_default creation with availability_zone id' do
@@ -100,8 +89,6 @@ RSpec.describe 'Arbitration Profile API' do
       expect do
         run_post(arbitration_profiles_url, request_body.merge(:availability_zone => {:id => availability_zone.id}))
       end.to change(ArbitrationProfile, :count).by(1)
-
-      expect(response).to have_http_status(:ok)
     end
 
     it 'supports arbitration_default creation with availability_zone href' do
@@ -112,8 +99,6 @@ RSpec.describe 'Arbitration Profile API' do
       expect do
         run_post(arbitration_profiles_url, request_body.merge(:availability_zone => {:href => availability_zone_href}))
       end.to change(ArbitrationProfile, :count).by(1)
-
-      expect(response).to have_http_status(:ok)
     end
 
     it 'rejects a request with an invalid availability zone' do

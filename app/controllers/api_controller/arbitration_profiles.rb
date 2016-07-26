@@ -1,8 +1,7 @@
 class ApiController
   module ArbitrationProfiles
     def create_resource_arbitration_profiles(_type, _id, data)
-      validate_profile_data(data)
-      attributes = data.dup
+      attributes = build_arbitration_attributes(data)
       attributes['ext_management_system'] = fetch_provider(provider_from_data(data)) if provider_from_data(data)
       attributes['availability_zone'] = fetch_availability_zone(data['availability_zone']) if data['availability_zone']
       attributes.delete('provider')
@@ -21,6 +20,11 @@ class ApiController
     end
 
     private
+
+    def build_arbitration_attributes(data)
+      validate_profile_data(data)
+      data.dup
+    end
 
     def provider_from_data(data)
       @provider_ref ||= data['provider'] || data['ext_management_system']
