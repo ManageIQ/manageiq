@@ -5966,6 +5966,7 @@ resource_pools:
 - ems_ref_obj
 - vapp
 - ems_ref
+- type
 rss_feeds:
 - id
 - name
