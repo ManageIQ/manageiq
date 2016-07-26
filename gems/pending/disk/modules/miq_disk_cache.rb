@@ -120,15 +120,15 @@ module MiqDiskCache
   end
 
   def entry_range(start_sector, number_sectors)
-    # Cache entries are *multiples* of MIN_SECTORS_PER_ENTRY * @blocksize  in length,
-    # aligned to MIN_SECTORS_PER_ENTRY * @blocksize byte boundaries.
+    # Cache entries are *multiples* of @min_sectors_per_entry * @blocksize  in length,
+    # aligned to @min_sectors_per_entry * @blocksize byte boundaries.
     # real_start_block is the aligned cache block based on the start_sector, and
     # real_start_sector is the disk sector for that cache block.
-    real_start_block    = start_sector / MIN_SECTORS_PER_ENTRY
-    real_end_block      = (start_sector + number_sectors) / MIN_SECTORS_PER_ENTRY
+    real_start_block    = start_sector / @min_sectors_per_entry
+    real_end_block      = (start_sector + number_sectors) / @min_sectors_per_entry
     number_cache_blocks = real_end_block - real_start_block + 1
-    sectors_to_read     = number_cache_blocks * MIN_SECTORS_PER_ENTRY
-    real_start_sector   = real_start_block * MIN_SECTORS_PER_ENTRY
+    sectors_to_read     = number_cache_blocks * @min_sectors_per_entry
+    real_start_sector   = real_start_block * @min_sectors_per_entry
     end_sector          = real_start_sector + sectors_to_read - 1
     Range.new(real_start_sector, end_sector)
   end
