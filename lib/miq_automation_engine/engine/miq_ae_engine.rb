@@ -51,7 +51,13 @@ module MiqAeEngine
   end
 
   def self.deliver(*args)
-    @deliver_mutex.synchronize { deliver_block(*args) }
+    # This was added because in RAILS 5 PUMA sends multiple requests
+    # to the same process and our DRb server implementation for Automate
+    # Methods is not thread safe. The permit_concurrent_loads allows the
+    # DRb requests which run in different threads to load constants.
+    ActiveSupport::Dependencies.interlock.permit_concurrent_loads do
+      @deliver_mutex.synchronize { deliver_block(*args) }
+    end
   end
 
   def self.deliver_block(*args)
