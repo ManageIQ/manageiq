@@ -5964,7 +5964,6 @@ resource_pools:
 - cpu_shares_level
 - is_default
 - ems_ref_obj
-- vapp
 - ems_ref
 - type
 rss_feeds:
