@@ -38,17 +38,6 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     assert_relationship_tree
   end
 
-  it 'handles storage profile associated vms' do
-    refresher = @ems.refresher.new([@ems])
-    target, inventory = refresher.collect_inventory_for_targets(@ems, [@ems])[0]
-    expect(inventory[:storage_profile_entity].size).to eql(6)
-
-    hashes = refresher.parse_targeted_inventory(@ems, target, inventory)
-    refresher.save_inventory(@ems, target, hashes)
-    storage_profile = StorageProfile.find_by(:ems_ref => '6fe1c7b4-7f7e-4db1-a545-c756e392de62')
-    expect(storage_profile.vms_and_templates.first.ems_ref).to eq('vm-901')
-  end
-
   it 'handles switch deletion' do
     EmsRefresh.refresh(@ems)
     @ems.reload
@@ -213,6 +202,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     target, inventory = refresher.collect_inventory_for_targets(@ems, [@ems])[0]
 
     inventory[:storage_profile].delete(storage_profile_ref)
+    inventory[:storage_profile_entity].delete(storage_profile_ref)
 
     hashes = refresher.parse_targeted_inventory(@ems, target, inventory)
     refresher.save_inventory(@ems, target, hashes)
@@ -220,6 +210,51 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     storage = Storage.find_by(:location => storage_location)
     expect(storage.storage_profiles).not_to include(storage_profile)
     expect(StorageProfileStorage.count).to eql(profile_assoc_count - 1)
+  end
+
+  it 'handles storage profile associated vms' do
+    storage_profile_ref = '6fe1c7b4-7f7e-4db1-a545-c756e392de62'
+    EmsRefresh.refresh(@ems)
+    storage_profile = StorageProfile.find_by(:ems_ref => storage_profile_ref)
+    vm = Vm.find_by(:ems_ref => 'vm-901')
+    expect(storage_profile.vms_and_templates).to match_array([vm])
+  end
+
+  it 'clears the association when the storage profile of a VM is deleted' do
+    EmsRefresh.refresh(@ems)
+    vm = Vm.find_by(:ems_ref => 'vm-901')
+    expect(vm.storage_profile.ems_ref).to eq('6fe1c7b4-7f7e-4db1-a545-c756e392de62')
+
+    refresher = @ems.refresher.new([@ems])
+    target, inventory = refresher.collect_inventory_for_targets(@ems, [@ems])[0]
+    expect(inventory[:storage_profile_entity].size).to eql(6)
+    inventory[:storage_profile].delete('6fe1c7b4-7f7e-4db1-a545-c756e392de62')
+    inventory[:storage_profile_entity].delete('6fe1c7b4-7f7e-4db1-a545-c756e392de62')
+
+    hashes = refresher.parse_targeted_inventory(@ems, target, inventory)
+    refresher.save_inventory(@ems, target, hashes)
+    vm.reload
+    storage_profile = StorageProfile.find_by(:ems_ref => '6fe1c7b4-7f7e-4db1-a545-c756e392de62')
+    expect(storage_profile).to be_nil
+    expect(vm.storage_profile).to be_nil
+  end
+
+  it 'clears the association when the storage profile is detached from a VM' do
+    EmsRefresh.refresh(@ems)
+    vm = Vm.find_by(:ems_ref => 'vm-901')
+    expect(vm.storage_profile.ems_ref).to eq('6fe1c7b4-7f7e-4db1-a545-c756e392de62')
+
+    refresher = @ems.refresher.new([@ems])
+    target, inventory = refresher.collect_inventory_for_targets(@ems, [@ems])[0]
+    expect(inventory[:storage_profile_entity].size).to eql(6)
+    inventory[:storage_profile_entity]['6fe1c7b4-7f7e-4db1-a545-c756e392de62'].reject! { |e| e.key.match(/^vm-901/) }
+    hashes = refresher.parse_targeted_inventory(@ems, target, inventory)
+    refresher.save_inventory(@ems, target, hashes)
+
+    storage_profile = StorageProfile.find_by(:ems_ref => '6fe1c7b4-7f7e-4db1-a545-c756e392de62')
+    expect(storage_profile).not_to be_nil
+    vm.reload
+    expect(vm.storage_profile).to be_nil
   end
 
   def assert_table_counts
