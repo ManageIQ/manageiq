@@ -271,6 +271,20 @@ describe ProviderForemanController do
     expect(objects).to match_array(expected_objects)
   end
 
+  it "foreman unassigned configuration profile tree node does not list ansible configured systems" do
+    controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
+    tree_builder = TreeBuilderConfigurationManager.new("root", "", {})
+    objects = tree_builder.send(:x_get_tree_objects, @inventory_group, nil, false, nil)
+    expected_objects = [@ans_configured_system, @ans_configured_system2a]
+    expect(objects).to match_array(expected_objects)
+    unassigned_id = "#{ems_id_for_provider(@provider)}-unassigned"
+    unassigned_configuration_profile = ConfigurationProfile.new(:name       => "Unassigned Profiles Group|#{unassigned_id}",
+                                                                :manager_id => ems_id_for_provider(@provider))
+    objects = tree_builder.send(:x_get_tree_cpf_kids, unassigned_configuration_profile, false)
+    expected_objects = [@configured_system_unprovisioned]
+    expect(objects).to match_array(expected_objects)
+  end
+
   it "builds ansible tower job templates tree" do
     controller.send(:build_configuration_manager_tree, :configuration_scripts, :configuration_scripts_tree)
     tree_builder = TreeBuilderConfigurationManagerConfigurationScripts.new("root", "", {})
