@@ -4441,6 +4441,7 @@ middleware_datasources:
 - ems_id
 - created_at
 - updated_at
+- feed
 middleware_deployments:
 - id
 - name
@@ -4451,6 +4452,8 @@ middleware_deployments:
 - created_at
 - updated_at
 - status
+- feed
+- properties
 middleware_domains:
 - id
 - name

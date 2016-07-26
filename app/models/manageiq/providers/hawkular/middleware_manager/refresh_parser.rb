@@ -183,23 +183,63 @@ module ManageIQ::Providers
       end
 
       def parse_deployment(server, deployment)
-        {
+        specific = {
           :name              => parse_deployment_name(deployment.id),
-          :middleware_server => server, # TODO: does that make sense? What is better?
-          :nativeid          => deployment.id,
-          :ems_ref           => deployment.path
+          :middleware_server => server,
         }
+        parse_base_item(deployment).merge(specific)
       end
 
       def parse_datasource(server, datasource, config)
-        data = {
+        specific = {
           :name              => datasource.name,
           :middleware_server => server,
-          :nativeid          => datasource.id,
-          :ems_ref           => datasource.path
         }
         if !config.empty? && !config['value'].empty? && config['value'].respond_to?(:except)
-          data[:properties] = config['value'].except('Username', 'Password')
+          specific[:properties] = config['value'].except('Username', 'Password')
+        end
+        parse_base_item(datasource).merge(specific)
+      end
+
+      def parse_middleware_domain(domain)
+        specific = {
+          :name      => domain.properties['Name'],
+          :type_path => domain.type_path,
+        }
+        parse_base_item(domain).merge(specific)
+      end
+
+      def parse_middleware_server_group(domain, group)
+        specific = {
+          :middleware_domain => domain,
+          :name              => parse_server_group_name(group.name),
+          :type_path         => group.type_path,
+          :profile           => group.properties['Profile'],
+        }
+        parse_base_item(group).merge(specific)
+      end
+
+      def parse_middleware_server(eap, name = nil)
+        specific = {
+          :name      => name || parse_standalone_server_name(eap.id),
+          :type_path => eap.type_path,
+          :hostname  => eap.properties['Hostname'],
+          :product   => eap.properties['Product Name'],
+        }
+        parse_base_item(eap).merge(specific)
+      end
+
+      private
+
+      def parse_base_item(item)
+        data = {
+          :ems_ref  => item.path,
+          :nativeid => item.id,
+        }
+        [:properties, :feed].each do |field|
+          if item.respond_to? field
+            data.merge!(field => item.send(field))
+          end
         end
         data
       end
@@ -216,44 +256,7 @@ module ManageIQ::Providers
         name.sub(%r{^.*\/server=}, '')
       end
 
-      def parse_middleware_domain(domain)
-        {
-          :feed       => domain.feed,
-          :ems_ref    => domain.path,
-          :nativeid   => domain.id,
-          :name       => domain.properties['Name'],
-          :type_path  => domain.type_path,
-          :properties => domain.properties
-        }
-      end
-
-      def parse_middleware_server_group(domain, group)
-        {
-          :feed              => group.feed,
-          :ems_ref           => group.path,
-          :nativeid          => group.id,
-          :middleware_domain => domain,
-          :name              => parse_server_group_name(group.name),
-          :type_path         => group.type_path,
-          :profile           => group.properties['Profile'],
-          :properties        => group.properties
-        }
-      end
-
-      def parse_middleware_server(eap, name = nil)
-        {
-          :feed       => eap.feed,
-          :ems_ref    => eap.path,
-          :nativeid   => eap.id,
-          :name       => name || parse_name(eap.id),
-          :hostname   => eap.properties['Hostname'],
-          :product    => eap.properties['Product Name'],
-          :type_path  => eap.type_path,
-          :properties => eap.properties
-        }
-      end
-
-      def parse_name(name)
+      def parse_standalone_server_name(name)
         name.sub(/~~$/, '').sub(/^.*?~/, '')
       end
     end
