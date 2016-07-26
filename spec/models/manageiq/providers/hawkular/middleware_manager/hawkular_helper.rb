@@ -1,4 +1,4 @@
 # Feed id to be used for all spec
 def the_feed_id
-  '70c798a0-6985-4f8a-a525-012d8d28e8a3'.freeze
+  '3a06ba83-355b-4ae7-86ea-d0692ba6b347'.freeze
 end

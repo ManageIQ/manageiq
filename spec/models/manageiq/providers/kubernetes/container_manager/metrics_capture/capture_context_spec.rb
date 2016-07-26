@@ -43,8 +43,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::Capt
       )
 
       metrics = {"MetricsService"         => "STARTED",
-                 "Implementation-Version" => "0.17.0-SNAPSHOT",
-                 "Built-From-Git-SHA1"    => "56ede2a1bf69da749b4e7092b4b8ed7a399e8f2f"}
+                 "Implementation-Version" => "0.18.0-SNAPSHOT",
+                 "Built-From-Git-SHA1"    => "65404bcc24e76f005a438ce0022fc2cfd7c90267"}
 
       data = context.hawkular_client.http_get('/status')
 
