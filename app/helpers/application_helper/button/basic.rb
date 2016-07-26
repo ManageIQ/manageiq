@@ -28,6 +28,7 @@ class ApplicationHelper::Button::Basic < Hash
 
   def skipped?
     return true if self.class.record_needed && @record.nil?
+    calculate_properties
     skip?
   end
 

@@ -20,6 +20,7 @@ class ApplicationHelper::Button::VmInstanceScan < ApplicationHelper::Button::Bas
   end
 
   def disabled?
+    return false if @display == "instances"
     !(@record.is_available?(:smartstate_analysis) && @record.has_active_proxy?)
   end
 end
