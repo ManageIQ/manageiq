@@ -1658,10 +1658,19 @@ function chartData(type, data, data2) {
     return;
   }
 
-  // set maximum count of x axis tick labels
-  if (_.isObject(data.miq) && data.miq.performance) {
-    data.axis.x.tick.centered = true;
-    data.axis.x.tick.culling = { max: 5 };
+
+  if (_.isObject(data.miq)) {
+    // set maximum count of x axis tick labels for C&U charts
+    if (data.miq.performance_chart) {
+      data.axis.x.tick.centered = true;
+      data.axis.x.tick.culling = { max: 5 };
+    }
+
+    // small C&U charts have very limited height
+    if (data.miq.flat_chart) {
+      var max = _.max(_.flatten(_.tail(data.data.columns).map(_.tail)));
+      data.axis.y.tick.values = [0, max];
+    }
   }
 
   // set formating function for tooltip and y tick labels
