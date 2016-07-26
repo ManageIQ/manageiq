@@ -937,6 +937,8 @@ module ApplicationController::CiProcessing
   def get_record(db)
     if db == "host"
       @host = @record = identify_record(params[:id], Host)
+    elsif db == "storage"
+      @storage = @record = identify_record(params[:id], Storage)
     elsif db == "miq_template"
       @miq_template = @record = identify_record(params[:id], MiqTemplate)
     elsif ["vm_infra", "vm_cloud", "vm", "vm_or_template"].include?(db)

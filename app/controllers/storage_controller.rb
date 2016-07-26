@@ -126,6 +126,33 @@ class StorageController < ApplicationController
     @lastaction = "show"
   end
 
+  def hosts
+    @explorer = true if request.xml_http_request? && explorer_controller? # Ajax request means in explorer
+    @db = params[:db] ? params[:db] : request.parameters[:controller]
+    session[:db] = @db unless @db.nil?
+    @db = session[:db] unless session[:db].nil?
+    get_record(@db)
+    @sb[:action] = params[:action]
+    return if record_no_longer_exists?(@record)
+
+    @lastaction = "hosts"
+    if !params[:show].nil? || !params[:x_show].nil?
+      id = params[:show] ? params[:show] : params[:x_show]
+      @item = @record.hosts.find(from_cid(id))
+      drop_breadcrumb(:name => _("%{name} (Hosts)") % {:name => @record.name},
+                      :url  => "/#{@db}/hosts/#{@record.id}?page=#{@current_page}")
+      drop_breadcrumb(:name => @item.name, :url => "/#{@db}/show/#{@record.id}?show=#{@item.id}")
+      @group_names = @item.groups
+      @view = get_db_view(Account, :association => "hosts")
+      show_item
+    else
+      drop_breadcrumb(:name => _("%{name} (Hosts)") % {:name => @record.name},
+                      :url  => "/#{@db}/hosts/#{@record.id}")
+      @listicon = "host"
+      show_details(Account, :association => "hosts")
+    end
+  end
+
 
   # handle buttons pressed on the button bar
   def button
@@ -260,6 +287,7 @@ class StorageController < ApplicationController
 
     @sb[:storage_search_text] ||= {}
     @sb[:storage_search_text]["#{x_active_accord}_search_text"] = @search_text
+    @sb[:action] = nil
 
     self.x_active_accord = params[:id].sub(/_accord$/, '')
     self.x_active_tree   = "#{x_active_accord}_tree"
@@ -320,6 +348,7 @@ class StorageController < ApplicationController
     @lastaction = "explorer"
     self.x_active_tree = params[:tree] if params[:tree]
     self.x_node        = params[:id]
+    @sb[:action] = nil
 
     load_or_clear_adv_search
     apply_node_search_text if x_active_tree == :storage_tree
@@ -444,6 +473,7 @@ class StorageController < ApplicationController
 
   def get_node_info(node)
     node = valid_active_node(node)
+    @sb[:action] = nil
     case x_active_tree
     when :storage_tree     then storage_get_node_info(node)
     when :storage_pod_tree then storage_pod_get_node_info(node)
@@ -475,6 +505,54 @@ class StorageController < ApplicationController
     record.try(:id)
   end
 
+  def action_type(type, amount)
+    return if type.nil?
+    case type
+      when "hosts"
+        n_("Host", "Hosts", amount)
+      when "drift_history"
+        n_("Drift History", "Drift History", amount)
+      else
+        amount > 1 ? type.titleize : type.titleize.singularize
+    end
+  end
+
+  # set partial name and cell header for edit screens
+  def set_right_cell_vars
+    name = @record ? @record.name.to_s.gsub(/'/, "\\\\'") : "" # If record, get escaped name
+    table = request.parameters["controller"]
+    # now take care of links on summary screen
+    if ["details"].include?(@showtype)
+      partial = "layouts/x_gtl"
+    elsif @showtype == "item"
+      partial = "layouts/item"
+    elsif @showtype == "drift_history"
+      partial = "layouts/#{@showtype}"
+    end
+    if @showtype == "item"
+      header = _("%{action} \"%{item_name}\" for %{datastore} \"%{name}\"") % {
+        :datastore => ui_lookup(:table => storage),
+        :name      => name,
+        :item_name => @item.kind_of?(ScanHistory) ? @item.started_on.to_s : @item.name,
+        :action    => action_type(@sb[:action], 1)
+      }
+      x_history_add_item(:id => x_node, :text => header, :action => @sb[:action], :item => @item.id)
+    else
+      header = _("\"%{action}\" for %{datastore} \"%{name}\"") % {
+        :datastore => ui_lookup(:table => table),
+        :name      => name,
+        :action    => action_type(@sb[:action], 2)
+      }
+      if @display && @display != "main"
+        x_history_add_item(:id => x_node, :text => header, :display => @display)
+      else
+        x_history_add_item(:id => x_node, :text => header, :action => @sb[:action]) if @sb[:action] != "drift_history"
+      end
+    end
+    action = nil
+    return partial, action, header
+  end
+
   def replace_right_cell(_nodetype = "root", replace_trees = [])
     replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
     # FIXME
@@ -485,7 +563,14 @@ class StorageController < ApplicationController
       return
     end
     return if @in_a_form
-    record_showing = leaf_record
+
+    if @sb[:action] || params[:display]
+      partial, action, @right_cell_text = set_right_cell_vars # Set partial name, action and cell header
+    end
+
+    if !@sb[:action]
+      record_showing = leaf_record
+    end
 
     trees = {}
     if replace_trees
@@ -493,7 +578,14 @@ class StorageController < ApplicationController
       trees[:storage_pod] = storage_pod_build_tree if replace_trees.include?(:storage_pod)
     end
     presenter, r = rendering_objects
-    update_partials(record_showing, presenter, r)
+    if (record_showing)
+      update_partials(record_showing, presenter, r)
+    elsif @sb[:action] || params[:display]
+      presenter[:parent_id]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
+      presenter[:parent_class] = params[:controller] # Set parent class for URL also
+      presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
+    end
+
     replace_search_box(presenter, r)
     handle_bottom_cell(presenter, r)
     replace_trees_by_presenter(presenter, trees)

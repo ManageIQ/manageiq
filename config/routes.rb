@@ -2227,6 +2227,7 @@ Vmdb::Application.routes.draw do
         debris_files
         explorer
         files
+        hosts
         listnav_search_selected
         disk_files
         perf_chart_chooser
