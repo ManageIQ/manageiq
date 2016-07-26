@@ -2059,4 +2059,33 @@ describe MiqExpression do
       expect(obj.field_in_sql?(field)).to eq(true)
     end
   end
+
+  describe ".operands2rubyvalue" do
+    RSpec.shared_examples :coerces_value_to_integer do |value|
+      it 'coerces the value to an integer' do
+        expect(subject.last).to eq(0)
+      end
+    end
+
+    let(:operator) { ">" }
+
+    subject do
+      described_class.operands2rubyvalue(operator, ops, nil)
+    end
+
+    context "when ops field equals count" do
+      let(:ops) { {"field" => "<count>", "value" => "foo"} }
+      include_examples :coerces_value_to_integer
+    end
+
+    context "when ops key is count" do
+      let(:ops) do
+        {
+          "count" => "ManageIQ::Providers::InfraManager::Vm.advanced_settings",
+          "value" => "foo"
+        }
+      end
+      include_examples :coerces_value_to_integer
+    end
+  end
 end

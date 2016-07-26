@@ -1200,7 +1200,7 @@ class MiqExpression
     elsif ops["field"]
       if ops["field"] == "<count>"
         ret.push("<count>")
-        ret.push(ops["value"])
+        ret.push(quote(ops["value"], "integer"))
       else
         case context_type
         when "hash"
@@ -1223,7 +1223,7 @@ class MiqExpression
     elsif ops["count"]
       ref, count = value2tag(ops["count"])
       ret.push(ref ? "<count ref=#{ref}>#{count}</count>" : "<count>#{count}</count>")
-      ret.push(ops["value"])
+      ret.push(quote(ops["value"], "integer"))
     elsif ops["regkey"]
       ret.push("<registry>#{ops["regkey"].strip} : #{ops["regval"]}</registry>")
       if ["like", "not like", "starts with", "ends with", "includes", "regular expression matches", "regular expression does not match"].include?(operator)
