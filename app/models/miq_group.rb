@@ -81,7 +81,11 @@ class MiqGroup < ApplicationRecord
     tenant_role = MiqUserRole.default_tenant_role
     if tenant_role
       tenant_groups.includes(:entitlement).where(:entitlements => {:miq_user_role_id => nil}).each do |group|
-        group.update_attributes(:miq_user_role => tenant_role)
+        if group.entitlement.present? # Relation is read-only if present
+          Entitlement.update(group.entitlement.id, :miq_user_role => tenant_role)
+        else
+          group.update_attributes(:miq_user_role => tenant_role)
+        end
       end
     else
       _log.warn("Unable to find default tenant role for tenant access")
