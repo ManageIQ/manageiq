@@ -8,31 +8,31 @@
         = _('Column 1')
       .col-md-8
         = select_tag('chosen_pivot1',
-          options_for_select([NOTHING_STRING] + @pivots1, @pivotby1),
+          options_for_select([NOTHING_STRING] + @pivot.options1, @pivot.by1),
           :multiple             => false,
           :class                => "selectpicker")
         :javascript
           miqInitSelectPicker();
           miqSelectPickerEvent('chosen_pivot1', '#{url}', {beforeSend: true, complete: true});
-    - if @pivotby1 != NOTHING_STRING
+    - if @pivot.by1 != NOTHING_STRING
       .form-group
         %label.control-label.col-md-2
           = _('Column 2')
         .col-md-8
           = select_tag('chosen_pivot2',
-            options_for_select([NOTHING_STRING] + @pivots2, @pivotby2),
+            options_for_select([NOTHING_STRING] + @pivot.options2, @pivot.by2),
             :multiple             => false,
             :class                => "selectpicker")
           :javascript
             miqInitSelectPicker();
             miqSelectPickerEvent('chosen_pivot2', '#{url}', {beforeSend: true});
-      - if @pivotby2 != NOTHING_STRING
+      - if @pivot.by2 != NOTHING_STRING
         .form-group
           %label.control-label.col-md-2
             = _('Column 3')
           .col-md-8
             = select_tag('chosen_pivot3',
-              options_for_select([NOTHING_STRING] + @pivots3, @pivotby3),
+              options_for_select([NOTHING_STRING] + @pivot.options3, @pivot.by3),
               :multiple             => false,
               :class                => "selectpicker")
             :javascript
@@ -43,7 +43,7 @@
     = _('Note:')
   = _('Consolidating records will not show detail records in the report.')
   %hr
-  - if @pivotby1 != NOTHING_STRING
+  - if @pivot.by1 != NOTHING_STRING
     %h3
       = _('Specify Calculations of Numeric Values for Grouped Records')
     %table.table.table-striped.table-bordered
@@ -55,7 +55,7 @@
             = _('Calculations')
       %tbody
         - @edit[:new][:fields].each_with_index do |f, f_idx|
-          - next if [@pivotby1, @pivotby2, @pivotby3]. include?(f.last)
+          - next if [@pivot.by1, @pivot.by2, @pivot.by3]. include?(f.last)
           - next unless MiqReport.get_col_info(f.last)[:numeric]
           %tr
             %td

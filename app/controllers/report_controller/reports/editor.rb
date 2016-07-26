@@ -170,12 +170,8 @@ module ReportController::Reports::Editor
 
     when "8"  # Consolidate
       # Build group chooser arrays
-      @pivots1  = @edit[:new][:fields].dup
-      @pivots2  = @pivots1.dup.delete_if { |g| g[1] == @edit[:new][:pivotby1] }
-      @pivots3  = @pivots2.dup.delete_if { |g| g[1] == @edit[:new][:pivotby2] }
-      @pivotby1 = @edit[:new][:pivotby1]
-      @pivotby2 = @edit[:new][:pivotby2]
-      @pivotby3 = @edit[:new][:pivotby3]
+      @edit[:new][:pivot].options = @edit[:new][:fields].dup
+      @pivot = @edit[:new][:pivot]
     when "2"  # Formatting
     #     @edit[:calc_xml] = build_calc_combo_xml                                     # Get the combobox XML for any numeric fields
 
@@ -338,9 +334,7 @@ module ReportController::Reports::Editor
   def reset_report_col_fields
     @edit[:new][:fields]          = []                    # Clear fields array
     @edit[:new][:headers]         = {}                  # Clear headers hash
-    @edit[:new][:pivotby1]        = NOTHING_STRING      # Clear consolidate group fields
-    @edit[:new][:pivotby2]        = NOTHING_STRING
-    @edit[:new][:pivotby3]        = NOTHING_STRING
+    @edit[:new][:pivot]           = ReportController::PivotOptions.new
     @edit[:new][:sortby1]         = NOTHING_STRING      # Clear sort fields
     @edit[:new][:sortby2]         = NOTHING_STRING
     @edit[:new][:filter_operator] = nil
@@ -729,32 +723,15 @@ module ReportController::Reports::Editor
   end
 
   def gfv_pivots
-    if params[:chosen_pivot1] && params[:chosen_pivot1] != @edit[:new][:pivotby1]
-      @edit[:new][:pivotby1] = params[:chosen_pivot1]
-      if params[:chosen_pivot1] == NOTHING_STRING
-        @edit[:new][:pivotby2] = NOTHING_STRING
-        @edit[:new][:pivotby3] = NOTHING_STRING
-      elsif params[:chosen_pivot1] == @edit[:new][:pivotby2]
-        @edit[:new][:pivotby2] = @edit[:new][:pivotby3]
-        @edit[:new][:pivotby3] = NOTHING_STRING
-      elsif params[:chosen_pivot1] == @edit[:new][:pivotby3]
-        @edit[:new][:pivotby3] = NOTHING_STRING
-      end
-    elsif params[:chosen_pivot2] && params[:chosen_pivot2] != @edit[:new][:pivotby2]
-      @edit[:new][:pivotby2] = params[:chosen_pivot2]
-      if params[:chosen_pivot2] == NOTHING_STRING || params[:chosen_pivot2] == @edit[:new][:pivotby3]
-        @edit[:new][:pivotby3] = NOTHING_STRING
-      end
-    elsif params[:chosen_pivot3] && params[:chosen_pivot3] != @edit[:new][:pivotby3]
-      @edit[:new][:pivotby3] = params[:chosen_pivot3]
-    end
+    @edit[:new][:pivot] ||= ReportController::PivotOptions.new
+    @edit[:new][:pivot].update(params)
     if params[:chosen_pivot1] || params[:chosen_pivot2] || params[:chosen_pivot3]
-      if @edit[:new][:pivotby1] == NOTHING_STRING
+      if @edit[:new][:pivot].by1 == NOTHING_STRING
         @edit[:pivot_cols] = {}                       # Clear pivot_cols if no pivot grouping fields selected
       else
-        @edit[:pivot_cols].delete(@edit[:new][:pivotby1])   # Remove any pivot grouping fields from pivot cols
-        @edit[:pivot_cols].delete(@edit[:new][:pivotby2])
-        @edit[:pivot_cols].delete(@edit[:new][:pivotby3])
+        @edit[:pivot_cols].delete(@edit[:new][:pivot].by1)   # Remove any pivot grouping fields from pivot cols
+        @edit[:pivot_cols].delete(@edit[:new][:pivot].by2)
+        @edit[:pivot_cols].delete(@edit[:new][:pivot].by3)
       end
       build_field_order
       @refresh_div = "consolidate_div"
@@ -960,16 +937,7 @@ module ReportController::Reports::Editor
           @edit[:new][:col_formats].delete_if { |k, _v| k.starts_with?("#{nf.last}__") } # Delete pivot calc keys
 
           # Clear out pivot field options
-          if nf.last == @edit[:new][:pivotby1]              # Compress the pivotby fields if being moved left
-            @edit[:new][:pivotby1] = @edit[:new][:pivotby2]
-            @edit[:new][:pivotby2] = @edit[:new][:pivotby3]
-            @edit[:new][:pivotby3] = NOTHING_STRING
-          elsif nf.last == @edit[:new][:pivotby2]
-            @edit[:new][:pivotby2] = @edit[:new][:pivotby3]
-            @edit[:new][:pivotby3] = NOTHING_STRING
-          elsif nf.last == @edit[:new][:pivotby3]
-            @edit[:new][:pivotby3] = NOTHING_STRING
-          end
+          @edit[:new][:pivot].drop_from_selection(nf.last)
           @edit[:pivot_cols].delete(nf.last)          # Delete the column name from the pivot_cols hash
 
           # Clear out sort options
@@ -1302,7 +1270,7 @@ module ReportController::Reports::Editor
     @edit[:new][:fields].each do |field_entry|          # Go thru all of the fields
       field = field_entry[1]                            # Get the encoded fully qualified field name
 
-      if @edit[:new][:pivotby1] != NOTHING_STRING && # If we are doing pivoting and
+      if @edit[:new][:pivot].by1 != NOTHING_STRING && # If we are doing pivoting and
          @edit[:pivot_cols].key?(field)              # this is a pivot calc column
         @edit[:pivot_cols][field].each do |calc_typ|    # Add header/format/col_order for each calc type
           rpt.headers.push(@edit[:new][:headers][field + "__#{calc_typ}"])
@@ -1380,11 +1348,11 @@ module ReportController::Reports::Editor
             rpt.sortby.push(table_field)              # Add the field to the sortby array
           end
 
-          if field == @edit[:new][:pivotby1]          # Save the group fields
+          if field == @edit[:new][:pivot].by1          # Save the group fields
             @pg1 = table_field
-          elsif field == @edit[:new][:pivotby2]
+          elsif field == @edit[:new][:pivot].by2
             @pg2 = table_field
-          elsif field == @edit[:new][:pivotby3]
+          elsif field == @edit[:new][:pivot].by3
             @pg3 = table_field
           end
         else                                          # Set up for the next embedded include hash
@@ -1405,11 +1373,11 @@ module ReportController::Reports::Editor
       elsif field == sortby2                          # Is this the second sort field?
         rpt.sortby.push(@edit[:new][:sortby2].split("-")[1])  # Add the field to the sortby array
       end
-      if field == @edit[:new][:pivotby1]          # Save the group fields
+      if field == @edit[:new][:pivot].by1          # Save the group fields
         @pg1 = field.split("-")[1]
-      elsif field == @edit[:new][:pivotby2]
+      elsif field == @edit[:new][:pivot].by2
         @pg2 = field.split("-")[1]
-      elsif field == @edit[:new][:pivotby3]
+      elsif field == @edit[:new][:pivot].by3
         @pg3 = field.split("-")[1]
       end
     end
@@ -1643,9 +1611,7 @@ module ReportController::Reports::Editor
     # build selected fields array from the report record
     @edit[:new][:sortby1]  = NOTHING_STRING # Initialize sortby fields to nothing
     @edit[:new][:sortby2]  = NOTHING_STRING
-    @edit[:new][:pivotby1] = NOTHING_STRING # Initialize groupby fields to nothing
-    @edit[:new][:pivotby2] = NOTHING_STRING
-    @edit[:new][:pivotby3] = NOTHING_STRING
+    @edit[:new][:pivot] = ReportController::PivotOptions.new
     if params[:pressed] == "miq_report_new"
       @edit[:new][:fields]      = []
       @edit[:new][:categories]  = []
@@ -1720,13 +1686,13 @@ module ReportController::Reports::Editor
          rpt.rpt_options[:pivot][:group_cols] &&
          rpt.rpt_options[:pivot][:group_cols].kind_of?(Array)
         if rpt.rpt_options[:pivot][:group_cols].length > 0
-          @edit[:new][:pivotby1] = field_key if col == rpt.rpt_options[:pivot][:group_cols][0]
+          @edit[:new][:pivot].by1 = field_key if col == rpt.rpt_options[:pivot][:group_cols][0]
         end
         if rpt.rpt_options[:pivot][:group_cols].length > 1
-          @edit[:new][:pivotby2] = field_key if col == rpt.rpt_options[:pivot][:group_cols][1]
+          @edit[:new][:pivot].by2 = field_key if col == rpt.rpt_options[:pivot][:group_cols][1]
         end
         if rpt.rpt_options[:pivot][:group_cols].length > 2
-          @edit[:new][:pivotby3] = field_key if col == rpt.rpt_options[:pivot][:group_cols][2]
+          @edit[:new][:pivot].by3 = field_key if col == rpt.rpt_options[:pivot][:group_cols][2]
         end
       end
 
@@ -1780,7 +1746,7 @@ module ReportController::Reports::Editor
   def build_field_order
     @edit[:new][:field_order] = []
     @edit[:new][:fields].each do |f|
-      if @edit[:new][:pivotby1] != NOTHING_STRING && # If we are doing pivoting and
+      if @edit[:new][:pivot] && @edit[:new][:pivot].by1 != NOTHING_STRING && # If we are doing pivoting and
          @edit[:pivot_cols].key?(f.last)             # this is a pivot calc column
         MiqReport::PIVOTS.each do |c|
           calc_typ = c.first
