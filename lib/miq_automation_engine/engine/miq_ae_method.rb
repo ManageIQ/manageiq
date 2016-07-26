@@ -8,7 +8,8 @@ module MiqAeEngine
     Dir.mkdir(AE_METHODS_DIR) unless File.directory?(AE_METHODS_DIR)
 
     def self.invoke_inline(aem, obj, inputs)
-      return invoke_inline_ruby(aem, obj, inputs) if aem.language.downcase.strip == "ruby"
+      #return invoke_inline_ruby(aem, obj, inputs) if aem.language.downcase.strip == "ruby"
+      return invoke_rest_method(aem, obj, inputs) if aem.language.downcase.strip == "ruby"
       raise  MiqAeException::InvalidMethod, "Inline Method Language [#{aem.language}] not supported"
     end
 
@@ -42,7 +43,6 @@ module MiqAeEngine
 
     def self.invoke(obj, aem, args)
       inputs = {}
-
       aem.inputs.each do |f|
         key   = f.name
         value = args[key]
@@ -161,7 +161,8 @@ rescue Exception => err
   end
   raise
 ensure
-  $evm.disconnect_sql
+  # $evm.disconnect_sql
+  $evm.save_workspace
 end
 RUBY
 
@@ -214,6 +215,7 @@ RUBY
       preamble << RUBY_METHOD_PREAMBLE
       preamble
     end
+
 
     def self.ruby_method_runnable?(aem)
       return false if aem.data.blank?
@@ -321,6 +323,104 @@ RUBY
         end
       end
       threads.each(&:exit)
+    end
+
+    def self.invoke_rest_method(aem, obj, inputs)
+      if ruby_method_runnable?(aem)
+        input_file = File.join(Dir.tmpdir,"in#{Process.pid}_#{Thread.current.object_id}.yaml")
+        output_file = File.join(Dir.tmpdir,"out#{Process.pid}_#{Thread.current.object_id}.yaml")
+        begin
+          state_var_hash = obj.workspace.persist_state_hash.each.with_object({}) { |(k, v), hash| hash[k.to_s] = v }
+          rest_ws = {:workspace => obj.workspace.hash_workspace,
+                     :inputs    => inputs,
+                     :current   => current_info(obj.workspace),
+                     :state_var => state_var_hash}.to_yaml
+          open(input_file, 'w') { |f| f.puts rest_ws }
+          File.delete(output_file) if File.exist?(output_file)
+
+          preamble = rest_method_preamble(input_file, output_file, miq_method_token(obj))
+          obj.workspace.num_rest_methods += 1
+          $miq_ae_logger.info("<AEMethod [#{aem.fqname}]> Starting ")
+          rc, msg, stderr = run_ruby_method(aem.data, preamble)
+          $miq_ae_logger.info("<AEMethod [#{aem.fqname}]> Ending")
+          process_ruby_method_results(rc, msg, stderr)
+          update_workspace(obj, output_file)
+        ensure
+          obj.workspace.num_rest_methods -= 1
+          #File.delete(input_file) if File.exist?(input_file)
+          #File.delete(output_file) if File.exist?(output_file)
+        end
+      end
+    end
+
+    REST_RUBY_METHOD_PREAMBLE = <<-RUBY
+begin
+  require 'date'
+  require 'miq_ae_method_wrapper'
+  $evm = MiqAeMethodWrapper.new
+end
+
+begin
+RUBY
+    def self.rest_method_preamble(input_file, output_file, token)
+      preamble = "$:.unshift('#{Rails.root.join("lib/miq_automation_engine/rest")}')\n"
+      preamble << "MIQ_INPUT_FILE = '#{input_file}'\n"
+      preamble << "MIQ_OUTPUT_FILE = '#{output_file}'\n"
+      preamble << "MIQ_METHOD_TOKEN = '#{token}'\n"
+      preamble << REST_RUBY_METHOD_PREAMBLE
+      $miq_ae_logger.info("<AEMethod> Preamble")
+      $miq_ae_logger.info(preamble)
+      preamble
+    end
+
+    def self.miq_method_token(obj)
+      ae_user = obj.workspace.ae_user
+      tm = TokenManager.new("api")
+      tm.gen_token("api", :userid => ae_user.userid)
+    end
+
+    def self.update_workspace(obj, output_file)
+      hash = YAML.load_file(output_file)
+      update_object(obj.workspace, hash['workspace'])
+      hash['state_var'].each { |k, v| obj.workspace.presist_state_hash[k] = v }
+    end
+
+    def self.update_object(workspace, obj_hash)
+      path = "/#{obj_hash['namespace']}/#{obj_hash['class']}/#{obj_hash['instance']}"
+
+      obj = find_object(workspace.root, path)
+      $miq_ae_logger.error("Object #{path} not found in workspace") unless obj
+      raise MiqAeException::Error, "object not found #{path}" unless obj
+
+      update_obj_attributes(obj, obj_hash['attributes']) if obj_hash['attributes']
+      update_obj_references(obj, obj_hash['references']) if obj_hash['references']
+
+      obj_hash['MiqAeObject'].each { |hash| update_object(workspace, hash) } if obj_hash['MiqAeObject']
+    end
+
+    def self.find_object(obj, object_name)
+      return obj if obj.object_name == object_name
+      obj.children.each do |child|
+        if found = find_object(child, object_name)
+          break found
+        end
+      end
+    end
+
+    def self.update_obj_attributes(obj, attributes)
+      $miq_ae_logger.info("Updating object #{obj.object_name}")
+      attributes.each { |k, v| obj[k] = v }
+    end
+
+    def self.update_obj_references(obj, references)
+      #TODO: Load the VMDB Object
+      references.each { |k, v| obj[k] = v }
+    end
+
+    def self.current_info(workspace)
+      list = [:current_namespace, :current_class, :current_instance,
+              :current_message, :current_method]
+      list.each.with_object({}) { |m, hash| hash[m.to_s] = workspace.send(m) }
     end
   end
 end

@@ -37,7 +37,7 @@ module MiqAeEngine
   class MiqAeWorkspaceRuntime
     attr_accessor :graph, :num_drb_methods, :class_methods
     attr_accessor :datastore_cache, :persist_state_hash, :current_state_info
-    attr_accessor :ae_user
+    attr_accessor :ae_user, :num_rest_methods
     include MiqAeStateInfo
 
     attr_reader :nodes
@@ -47,6 +47,7 @@ module MiqAeEngine
       @nodes             = []
       @current           = []
       @num_drb_methods   = 0
+      @num_rest_methods  = 0
       @datastore_cache   = {}
       @class_methods     = {}
       @dom_search        = MiqAeDomainSearch.new
@@ -203,6 +204,12 @@ module MiqAeEngine
       s
     end
 
+    def hash_workspace(path = nil)
+      objs = path.nil? ? roots : get_obj_from_path(path)
+      objs.collect { |obj| to_hash_with_refs(obj) }.compact
+    end
+
+
     def to_dot(path = nil)
       require "rubygems"
       require "graphviz"
@@ -237,6 +244,49 @@ module MiqAeEngine
         "MiqAeObject" => obj.children.collect { |c| to_hash(c) }
       }
       result.delete_if { |_k, v| v.nil? }
+    end
+
+    def to_hash_with_refs(obj)
+      result = {
+        "namespace"   => obj.namespace,
+        "class"       => obj.klass,
+        "instance"    => obj.instance,
+        "attributes"  => simple_attributes(obj),
+        "references"  => references(obj),
+        "MiqAeObject" => obj.children.collect { |c| to_hash_with_refs(c) }
+      }
+      result.delete_if { |_k, v| v.nil? }
+    end
+
+    def gen_api_url(klass, options = {})
+      #TODO Handle Provider Names
+      klass = klass.split('::').last
+      @api_config ||= YAML.load_file(Rails.root.join("config/api.yml"))
+      @api_collections ||= {}
+      base_url = options[:base_url] || ""
+      id = options[:id]
+      unless @api_collections[klass]
+        cspec =  @api_config[:collections].detect { |k, d| d[:klass] == klass }
+        raise "Unsupported class #{klass} in API" unless cspec
+        @api_collections[klass] = cspec.first
+      end
+      base = "#{base_url}/api/#{@api_collections[klass]}"
+      base << "/#{id}"if id
+      base
+    end
+
+    def references(obj)
+      obj.attributes.each_with_object({}) { |(k, v), hash|
+        next unless /MiqAeMethodService::/.match(v.class.to_s)
+        hash[k] = gen_api_url(v.instance_variable_get('@object').class.to_s, {:id => v.id})
+      }
+    end
+
+    def simple_attributes(obj)
+      obj.attributes.each_with_object({}) { |(k, v), hash|
+        next if /MiqAeMethodService::/.match(v.class.to_s)
+        hash[k] = v
+      }
     end
 
     def cyclical?(ns, klass, instance, message)
