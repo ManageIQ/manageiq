@@ -37,8 +37,9 @@ module ManageIQ::Providers::Openshift::ContainerManagerMixin
       OpenshiftClient::Client.new(
         raw_api_endpoint(hostname, port),
         api_version,
-        :ssl_options  => {:verify_ssl => verify_ssl_mode},
-        :auth_options => kubernetes_auth_options(options),
+        :ssl_options    => { :verify_ssl => verify_ssl_mode },
+        :auth_options   => kubernetes_auth_options(options),
+        :http_proxy_uri => VMDB::Util.http_proxy_uri
       )
     end
   end
