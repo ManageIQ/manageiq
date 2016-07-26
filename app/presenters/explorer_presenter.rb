@@ -46,19 +46,19 @@ class ExplorerPresenter
   #
 
   def self.right_cell(args = {})
-    self.new(args.update(:mode => 'right_cell'))
+    new(args.update(:mode => 'right_cell'))
   end
 
   def self.flash(args = {})
-    self.new(args.update(:mode => 'flash'))
+    new(args.update(:mode => 'flash'))
   end
-  
+
   def self.main_div(args = {})
-    self.new(args.update(:mode => 'main_div'))
+    new(args.update(:mode => 'main_div'))
   end
 
   def self.buttons(show)
-    self.new(:mode => 'buttons', :show_miq_buttons => show)
+    new(:mode => 'buttons', :show_miq_buttons => show)
   end
 
   def initialize(options = {})
