@@ -13,12 +13,15 @@ describe ContainerLabelTagMapping do
   let(:cat_classification) { FactoryGirl.create(:classification) }
   let(:cat_tag) { cat_classification.tag }
   let(:tag_under_cat) { cat_classification.add_entry(:name => 'value_1', :description => 'value-1').tag }
+  let(:empty_tag_under_cat) do
+    cat_classification.add_entry(:name => 'my_empty', :description => 'Custom description for empty value').tag
+  end
 
   # Each test here may populate the table differently.
   after :each do
     ContainerLabelTagMapping.drop_cache
   end
-  # If the mapping was called from *elsewhere* the might already be a stale cache.
+  # If the mapping was called from *elsewhere* there might already be a stale cache.
   # TODO: This assumes all other tests only use an empty mapping.
   before :all do
     ContainerLabelTagMapping.drop_cache
@@ -55,7 +58,7 @@ describe ContainerLabelTagMapping do
       FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag)
       FactoryGirl.create(:container_label_tag_mapping, :label_value => 'value-1', :tag => tag1)
       FactoryGirl.create(:container_label_tag_mapping, :label_value => 'value-1', :tag => tag_under_cat)
-      # Force a tag to exist that we don't map to.
+      # Force a tag to exist that we don't map to (for testing .mappable_tags).
       tag2
     end
 
@@ -80,6 +83,27 @@ describe ContainerLabelTagMapping do
       expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(tags[0])
 
       expect(ContainerLabelTagMapping.mappable_tags).to contain_exactly(tag1, tag_under_cat, tags[0])
+    end
+  end
+
+  context "given an empty label value" do
+    before do
+      label(node, 'name', '')
+    end
+
+    it "any-value mapping generates a tag" do
+      FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag)
+      tags = ContainerLabelTagMapping.tags_for_entity(node)
+      expect(tags.size).to eq(1)
+      expect(tags[0].classification.description).to eq('<empty value>')
+    end
+
+    it "honors specific mapping for the empty value" do
+      FactoryGirl.create(:container_label_tag_mapping, :label_value => '', :tag => empty_tag_under_cat)
+      expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(empty_tag_under_cat)
+      # same with both any-value and specific-value mappings
+      FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag)
+      expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(empty_tag_under_cat)
     end
   end
 
