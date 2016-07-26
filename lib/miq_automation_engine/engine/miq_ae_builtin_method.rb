@@ -5,6 +5,15 @@ module MiqAeEngine
 
   # All Class Methods beginning with miq_ are callable from the engine
   class MiqAeBuiltinMethod
+      ATTRIBUTE_LIST = %w(
+        vm
+        orchestration_stack
+        miq_request
+        miq_provision
+        miq_host_provision
+        vm_migrate_task
+        platform_category
+      )
     def self.miq_log_object(obj, _inputs)
       $miq_ae_logger.info("===========================================")
       $miq_ae_logger.info("Dumping Object")
@@ -47,12 +56,13 @@ module MiqAeEngine
 
     def self.miq_parse_provider_category(obj, _inputs)
       provider_category = nil
-      keys = %w(vm orchestration_stack miq_request miq_provision miq_host_provision vm_migrate_task platform_category)
-      keys.detect { |k| provider_category = category_for_key(obj, k) }
+      ATTRIBUTE_LIST.detect { |attr| provider_category = category_for_key(obj, attr) }
       $miq_ae_logger.info("Setting provider_category to: #{provider_category}")
-
       obj.workspace.root["ae_provider_category"] = provider_category || UNKNOWN
+
+      set_vendor(obj)
     end
+
 
     def self.miq_host_and_storage_least_utilized(obj, _inputs)
       prov = obj.workspace.get_obj_from_path("/")['miq_provision']
@@ -160,5 +170,32 @@ module MiqAeEngine
       end
     end
     private_class_method :category_for_key
+
+    def self.set_vendor(obj)
+      vendor = nil
+      ATTRIBUTE_LIST.detect { |attr| vendor = detect_vendor(obj, attr) }
+      if vendor
+        $miq_ae_logger.info("Setting prepend_namespace to: #{vendor}")
+        obj.workspace.prepend_namespace = vendor
+      end
+    end
+    private_class_method :set_vendor
+
+    def self.detect_vendor(obj, attr)
+      src_obj = obj.workspace.root[attr]
+      case attr
+      when "orchestration_stack"
+        src_obj.type.split('::')[2] if src_obj
+      when "miq_host_provision"
+        "vmware" if src_obj
+      when "miq_request", "miq_provision", "vm_migrate_task"
+        src_obj.source.vendor if src_obj && src_obj.source.respond_to?(:vendor)
+      when "vm"
+        src_obj.vendor if src_obj && src_obj.respond_to?(:vendor)
+      else
+        nil
+      end
+    end
+    private_class_method :detect_vendor
   end
 end
