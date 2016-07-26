@@ -162,6 +162,27 @@ class MiqAeCustomizationController < ApplicationController
     tree_select
   end
 
+  def edit_dialog_node_data(node)
+    nodes = x_node.split('xx-')
+    case nodes.length
+    when 1
+      {:type => 'root'}
+    when 2
+      {:type => 'tab',
+       :data => @edit[:new][:tabs].find{ |x| x[:id] == nodes.last.to_i},
+       :children => @edit[:new][:tabs].find{ |x| x[:id] == nodes.last.to_i}[:groups]}
+    when 3
+      {:type => 'group',
+       :data => @edit[:new][:tabs].find{ |x| x[:id] == nodes[1].delete('_').to_i}[:groups].find{ |x| x[:id] == nodes.last.to_i},
+       :children => @edit[:new][:tabs].find{ |x| x[:id] == nodes[1].delete('_').to_i}[:groups].find{ |x| x[:id] == nodes.last.to_i}[:fields],
+       :parent_id => nodes[1].delete('_').to_i}
+    when 4
+      {:type => 'field',
+       :data => @edit[:new][:tabs].find{ |x| x[:id] == nodes[1].delete('_').to_i}[:groups].find{ |x| x[:id] == nodes[2].delete('_').to_i}[:fields].find{ |x| x[:id] == nodes.last.to_i},
+       :parent_id => nodes[2].delete('_').to_i}
+    end
+  end
+
   private
 
   def features
@@ -208,7 +229,10 @@ class MiqAeCustomizationController < ApplicationController
       trees[:ab]           = ab_build_tree                if replace_trees.include?(:ab)
       trees[:old_dialogs]  = old_dialogs_build_tree       if replace_trees.include?(:old_dialogs)
       trees[:dialogs]      = dialog_build_tree            if replace_trees.include?(:dialogs)
-      trees[:dialog_edit]  = dialog_edit_build_tree       if replace_trees.include?(:dialog_edit)
+      if replace_trees.include?(:dialog_edit)
+        get_field_types if @edit[:field_types].nil?
+        trees[:dialog_edit]  = TreeBuilderDialogEdit.new(:dialog_edit, :edit_dialog_tree, @sb, true, @edit)
+      end
     end
 
     @explorer = true
