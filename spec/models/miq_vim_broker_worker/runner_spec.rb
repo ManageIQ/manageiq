@@ -3,7 +3,6 @@ require 'MiqVimBroker'
 
 describe MiqVimBrokerWorker::Runner do
   before(:each) do
-    _guid_2, _server_2, @zone_2 = EvmSpecHelper.create_guid_miq_server_zone
     guid, server, @zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)
     other_ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)
@@ -336,7 +335,7 @@ describe MiqVimBrokerWorker::Runner do
         end
 
         it "will not reconnect to an EMS in another zone" do
-          ems_2 = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone_2)
+          ems_2 = FactoryGirl.create(:ems_vmware_with_authentication, :zone => FactoryGirl.create(:zone))
 
           event = {
             :server   => ems_2.address,
