@@ -80,30 +80,23 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     }
 
     # TODO: move this to a more appropriate place (lib)
-    loop do
-      response = pod_health_poll(client, health_url, http_options)
+    response = pod_health_poll(client, health_url, http_options)
 
-      case response
-      when Net::HTTPOK
-        _log.info("pod #{pod_full_name} is ready and accessible")
-        break
-      when Net::HTTPServiceUnavailable
-        # TODO: check that the pod wasn't terminated (exit code)
-        # continue: pod is still not up and running
-      else
-        msg = "unknown access error to pod #{pod_full_name}: #{response}"
-        _log.info(msg)
-        return queue_signal(:abort_job, msg, "error")
-      end
-
-      # TODO: for recovery purposes it would be better if this
-      # method was short-lived instead of waiting for the pod to be
-      # available
+    case response
+    when Net::HTTPOK
+      _log.info("pod #{pod_full_name} is ready and accessible")
+      queue_signal(:analyze)
+    when Net::HTTPServiceUnavailable
+      # TODO: check that the pod wasn't terminated (exit code)
+      # continue: pod is still not up and running
       _log.info("pod #{pod_full_name} is not available")
-      sleep(POD_POLL_INTERVAL)
+      queue_signal(:pod_wait,
+                   :deliver_on => POD_POLL_INTERVAL.seconds.from_now.utc)
+    else
+      msg = "unknown access error to pod #{pod_full_name}: #{response}"
+      _log.info(msg)
+      queue_signal(:abort_job, msg, "error")
     end
-
-    queue_signal(:analyze)
   end
 
   def analyze
@@ -247,7 +240,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     )
   end
 
-  def queue_signal(*args)
+  def queue_signal(*args, deliver_on: nil)
     MiqQueue.put_unless_exists(
       :args        => args,
       :class_name  => "Job",
@@ -256,6 +249,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
       :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => "smartstate",
       :task_id     => guid,
+      :deliver_on  => deliver_on,
       :zone        => zone
     ) do |_msg, find_options|
       find_options.merge(
