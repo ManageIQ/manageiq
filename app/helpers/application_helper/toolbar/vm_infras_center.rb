@@ -26,7 +26,7 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           :confirm   => N_("Perform SmartState Analysis on the selected items?"),
           :enabled   => false,
           :onwhen    => "1+",
-          :klass     => ApplicationHelper::Button::VmInstanceScan),
+          :klass     => ApplicationHelper::Button::BasicImage),
         button(
           :vm_collect_running_processes,
           'fa fa-eyedropper fa-lg',
