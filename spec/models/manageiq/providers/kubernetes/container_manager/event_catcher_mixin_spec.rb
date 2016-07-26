@@ -1,5 +1,5 @@
 describe ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin do
-  let(:dummy_class) do
+  let(:test_class) do
     Class.new do
       def initialize(ems = nil)
         @ems = ems if ems
@@ -9,9 +9,6 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin do
   let(:ems) { FactoryGirl.create(:ems_kubernetes) }
 
   describe '#extract_event_data' do
-    it 'processes node event' do
-    end
-
     context 'given container event (Pod event with fieldPath)' do
       let(:kubernetes_event) do
         {
@@ -66,7 +63,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin do
           :event_type           => 'CONTAINER_KILLING'
         }
         event = RecursiveOpenStruct.new(:object => kubernetes_event)
-        expect(dummy_class.new.extract_event_data(event)).to eq(expected_data)
+        expect(test_class.new.extract_event_data(event)).to eq(expected_data)
       end
     end
 
@@ -119,7 +116,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin do
           :event_type           => 'POD_FAILEDSYNC'
         }
         event = RecursiveOpenStruct.new(:object => kubernetes_event)
-        expect(dummy_class.new.extract_event_data(event)).to eq(expected_data)
+        expect(test_class.new.extract_event_data(event)).to eq(expected_data)
       end
     end
 
@@ -169,7 +166,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin do
           :event_type                => 'REPLICATOR_SUCCESSFULCREATE'
         }
         event = RecursiveOpenStruct.new(:object => kubernetes_event)
-        expect(dummy_class.new.extract_event_data(event)).to eq(expected_data)
+        expect(test_class.new.extract_event_data(event)).to eq(expected_data)
       end
     end
 
@@ -223,7 +220,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin do
 
       it 'given good uid extracts NODE_REBOOTED event data' do
         event = RecursiveOpenStruct.new(:object => kubernetes_event)
-        expect(dummy_class.new.extract_event_data(event)).to eq(expected_data)
+        expect(test_class.new.extract_event_data(event)).to eq(expected_data)
       end
 
       # Remove when we no longer support kubernetes with bug
@@ -250,8 +247,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin do
         end
 
         it 'without matching node returns nil uid' do
-          expect(dummy_class.new(ems).extract_event_data(bad_uid_event)[:uid]).to eq(nil)
-          expect(dummy_class.new(ems).extract_event_data(missing_uid_event)[:uid]).to eq(nil)
+          expect(test_class.new(ems).extract_event_data(bad_uid_event)[:uid]).to eq(nil)
+          expect(test_class.new(ems).extract_event_data(missing_uid_event)[:uid]).to eq(nil)
         end
 
         it 'with matching node takes its uid' do
@@ -260,8 +257,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin do
           node.ems_ref = 'd30a880d-dfa7-11e5-af89-525400c7c086'
           node.save
 
-          expect(dummy_class.new(ems).extract_event_data(bad_uid_event)).to eq(expected_data)
-          expect(dummy_class.new(ems).extract_event_data(missing_uid_event)).to eq(expected_data)
+          expect(test_class.new(ems).extract_event_data(bad_uid_event)).to eq(expected_data)
+          expect(test_class.new(ems).extract_event_data(missing_uid_event)).to eq(expected_data)
         end
       end
     end

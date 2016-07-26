@@ -88,7 +88,7 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
       # Workaround for missing/useless node UID (#9600, https://github.com/kubernetes/kubernetes/issues/29289)
       if event_data[:uid].nil? || event_data[:uid] == event_data[:name]
         node = ContainerNode.find_by(:ems_id => @ems.id, :name => event_data[:name])
-        event_data[:uid] = node ? node.ems_ref : nil
+        event_data[:uid] = node.try!(:ems_ref)
       end
     when 'Pod'
       /^spec.containers{(?<container_name>.*)}$/ =~ event_data[:fieldpath]
