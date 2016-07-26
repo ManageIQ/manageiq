@@ -62,9 +62,6 @@ class TreeBuilderPolicy < TreeBuilder
       mode = parent[:id]
       objects = compliance_control_kids(mode)
 
-      # Push folder node ids onto open_nodes array
-      objects.each { |o| open_node("xx-#{mode}_xx-#{o[:id]}") }
-
       return count_only_or_objects(count_only, objects)
     end
 
