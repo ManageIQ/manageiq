@@ -36,6 +36,7 @@ class FailoverDatabases
         result << record.symbolize_keys.merge(dsn)
       end
       write_file(result)
+      _log.info("List standby databases in #{FAILOVER_DATABASES_YAML_FILE} replaced.")
     end
     result
   end
