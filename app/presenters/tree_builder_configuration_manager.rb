@@ -69,7 +69,8 @@ class TreeBuilderConfigurationManager < TreeBuilder
 
   def x_get_tree_cpf_kids(object, count_only)
     count_only_or_objects(count_only,
-                          rbac_filtered_objects(ConfiguredSystem.where(:configuration_profile_id => object[:id]),
+                          rbac_filtered_objects(ConfiguredSystem.where(:configuration_profile_id => object[:id],
+                                                                       :manager_id               => object[:manager_id]),
                                                 :match_via_descendants => ConfiguredSystem),
                           "hostname")
   end
