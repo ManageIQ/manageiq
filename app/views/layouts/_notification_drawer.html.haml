@@ -1,0 +1,607 @@
+%li.drawer-pf-trigger.dropdown
+  %a{:class => "nav-item-iconic drawer-pf-trigger-icon"}
+    %span{:class => "fa fa-bell", :title => "Notifications"}
+      // In case of all notifications read, the icon should be fa-bell-o
+
+.drawer-pf.hide.drawer-pf-notifications-non-clickable
+  .drawer-pf-title
+    %h3.text-center Notifications Drawer
+  #notification-drawer-accordion.panel-group
+    .panel.panel-default
+      .panel-heading{"data-component" => "collapse-heading"}
+        %h4.panel-title
+          %a{"data-parent" => "#notification-drawer-accordion", "data-toggle" => "collapse", :href => "#fixedCollapseOne"}
+            Notification Tab 1
+        %span.panel-counter 5 New Events
+      #fixedCollapseOne.panel-collapse.collapse.in
+        .panel-body
+          .drawer-pf-notification.unread
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-info.pull-left
+            %span.drawer-pf-notification-message A New Event! Huzzah! Bold!
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification.unread
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-ok.pull-left
+            %span.drawer-pf-notification-message Another Event Notification
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-warning-triangle-o.pull-left
+            %span.drawer-pf-notification-message Another Event Notification
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-error-circle-o.pull-left
+            %span.drawer-pf-notification-message Another Event Notification
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+        .drawer-pf-action
+          %button.btn.btn-link.btn-block Mark All Read
+    .panel.panel-default
+      .panel-heading{"data-component" => "collapse-heading"}
+        %h4.panel-title
+          %a.collapsed{"data-parent" => "#notification-drawer-accordion", "data-toggle" => "collapse", :href => "#fixedCollapseTwo"}
+            Notification Tab 2
+        %span.panel-counter 5 New Events
+      #fixedCollapseTwo.panel-collapse.collapse
+        .panel-body
+          .drawer-pf-notification.unread
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-info.pull-left
+            %span.drawer-pf-notification-message A New Event! Huzzah! Bold!
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification.unread
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-ok.pull-left
+            %span.drawer-pf-notification-message Another Event Notification
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-warning-triangle-o.pull-left
+            %span.drawer-pf-notification-message Another Event Notification
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-error-circle-o.pull-left
+            %span.drawer-pf-notification-message Another Event Notification
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification.unread
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-info.pull-left
+            %span.drawer-pf-notification-message A New Event! Huzzah! Bold!
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification.unread
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-ok.pull-left
+            %span.drawer-pf-notification-message Another Event Notification
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-warning-triangle-o.pull-left
+            %span.drawer-pf-notification-message Another Event Notification
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-error-circle-o.pull-left
+            %span.drawer-pf-notification-message Another Event Notification
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification.unread
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-info.pull-left
+            %span.drawer-pf-notification-message A New Event! Huzzah! Bold!
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification.unread
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-ok.pull-left
+            %span.drawer-pf-notification-message Another Event Notification
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-warning-triangle-o.pull-left
+            %span.drawer-pf-notification-message Another Event Notification
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-error-circle-o.pull-left
+            %span.drawer-pf-notification-message Another Event Notification
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-loading.text-center
+            %span.spinner.spinner-xs.spinner-inline
+            Loading More
+        .drawer-pf-action
+          %button.btn.btn-link.btn-block Mark All Read
+    .panel.panel-default
+      .panel-heading{"data-component" => "collapse-heading"}
+        %h4.panel-title
+          %a.collapsed{"data-parent" => "#notification-drawer-accordion", "data-toggle" => "collapse", :href => "#fixedCollapseThree"}
+            Notification Tab 3
+        %span.panel-counter 5 New Events
+      #fixedCollapseThree.panel-collapse.collapse
+        .panel-body
+          .drawer-pf-notification.unread
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-info.pull-left
+            %span.drawer-pf-notification-message A New Event! Huzzah! Bold!
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification.unread
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-ok.pull-left
+            %span.drawer-pf-notification-message Another Event Notification
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-warning-triangle-o.pull-left
+            %span.drawer-pf-notification-message Another Event Notification
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-error-circle-o.pull-left
+            %span.drawer-pf-notification-message Another Event Notification
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification.unread
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-info.pull-left
+            %span.drawer-pf-notification-message A New Event! Huzzah! Bold!
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification.unread
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-ok.pull-left
+            %span.drawer-pf-notification-message Another Event Notification
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-warning-triangle-o.pull-left
+            %span.drawer-pf-notification-message Another Event Notification
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-error-circle-o.pull-left
+            %span.drawer-pf-notification-message Another Event Notification
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification.unread
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-info.pull-left
+            %span.drawer-pf-notification-message A New Event! Huzzah! Bold!
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification.unread
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-ok.pull-left
+            %span.drawer-pf-notification-message Another Event Notification
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-warning-triangle-o.pull-left
+            %span.drawer-pf-notification-message Another Event Notification
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+          .drawer-pf-notification
+            .dropdown.pull-right.dropdown-kebab-pf
+              %button#dropdownKebabRight.btn.btn-link.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight"}
+                %li
+                  %a{:href => "#"} Action
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider{:role => "separator"}
+                %li
+                  %a{:href => "#"} Separated link
+            %span.pficon.pficon-error-circle-o.pull-left
+            %span.drawer-pf-notification-message Another Event Notification
+            .drawer-pf-notification-info
+              %span.date 3/31/16
+              %span.time 12:12:44 PM
+        .drawer-pf-action
+          %button.btn.btn-link.btn-block Mark All Read
+
+:javascript
+  $(document).ready(function() {
+    // Show/Hide Notifications Drawer
+    $('.drawer-pf-trigger').click(function() {
+      var $drawer = $('.drawer-pf');
+
+      $(this).toggleClass('open');
+      if ($drawer.hasClass('hide')) {
+        $drawer.removeClass('hide');
+        setTimeout(function () {
+          if (window.dispatchEvent) {
+            window.dispatchEvent(new Event('resize'));
+          }
+          // Special case for IE
+          if ($(document).fireEvent) {
+            $(document).fireEvent('onresize');
+          }
+        }, 100);
+      } else {
+        $drawer.addClass('hide');
+      }
+    });
+    // Mark All Read
+    $('.panel-collapse').each(function (index, panel) {
+      var $panel = $(panel);
+      $panel.on('click', '.drawer-pf-action .btn', function() {
+        $panel.find('.unread').removeClass('unread');
+      });
+    });
+
+    $('#notification-drawer-accordion').initCollapseHeights('.panel-body');
+  });

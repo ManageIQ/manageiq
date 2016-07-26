@@ -12,6 +12,7 @@
     %ul.nav.navbar-nav.navbar-right.navbar-iconic
       %li{:class => "dropdown brand-white-label #{current_tenant.logo? ? "whitelabeled" : ""}"}
 
+      = render :partial => "layouts/notification_drawer"
       = render :partial => "layouts/user_options"
   = render :partial => "layouts/spinner"
   = render :partial => "layouts/lightbox_panel"

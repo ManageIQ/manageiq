@@ -29,8 +29,15 @@ $login-container-details-border-color-rgba: rgba(0, 0, 0, 0.5);
 @import "icon_customizations";
 @import "header_background"; // sets a custom background image in the header
 
+// sets background color of open notification drawer dropdown in header (upstream only)
 
-.login-pf #brand img { // sets size of brand.svg on login screen (upstream only)
+.navbar-pf-vertical .nav .drawer-pf-trigger.open .drawer-pf-trigger-icon {
+  background-color: $navbar-pf-alt-bg-color;
+}
+
+// sets size of brand.svg on login screen (upstream only)
+
+.login-pf #brand img {
   height: 38px;
 }
 
