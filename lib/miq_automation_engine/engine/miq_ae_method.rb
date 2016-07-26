@@ -98,71 +98,6 @@ module MiqAeEngine
     MIQ_STOP  = 8
     MIQ_ABORT = 16
 
-    RUBY_METHOD_PREAMBLE = <<-RUBY
-class AutomateMethodException < StandardError
-end
-
-begin
-  require 'date'
-  require 'rubygems'
-  $:.unshift("#{Gem.loaded_specs['activesupport'].full_gem_path}/lib")
-  require 'active_support/all'
-  require 'socket'
-  Socket.do_not_reverse_lookup = true  # turn off reverse DNS resolution
-
-  require 'drb'
-  require 'yaml'
-
-  Time.zone = 'UTC'
-
-  MIQ_OK    = 0
-  MIQ_WARN  = 4
-  MIQ_ERROR = 8
-  MIQ_STOP  = 8
-  MIQ_ABORT = 16
-
-  DRbObject.send(:undef_method, :inspect)
-  DRbObject.send(:undef_method, :id) if DRbObject.respond_to?(:id)
-
-  DRb.start_service("druby://127.0.0.1:0")
-  $evmdrb = DRbObject.new(nil, MIQ_URI)
-  raise AutomateMethodException,"Cannot create DRbObject for uri=\#{MIQ_URI}" if $evmdrb.nil?
-  $evm = $evmdrb.find(MIQ_ID)
-  raise AutomateMethodException,"Cannot find Service for id=\#{MIQ_ID} and uri=\#{MIQ_URI}" if $evm.nil?
-  MIQ_ARGS = $evm.inputs
-rescue Exception => err
-  STDERR.puts('The following error occurred during inline method preamble evaluation:')
-  STDERR.puts("  \#{err.class}: \#{err.message}")
-  STDERR.puts("  \#{err.backtrace.join('\n')}") unless err.kind_of?(AutomateMethodException)
-  raise
-end
-
-class Exception
-  def backtrace_with_evm
-    value = backtrace_without_evm
-    value ? $evm.backtrace(value) : value
-  end
-
-  alias backtrace_without_evm backtrace
-  alias backtrace backtrace_with_evm
-end
-
-begin
-RUBY
-
-    RUBY_METHOD_POSTSCRIPT = <<-RUBY
-rescue Exception => err
-  unless err.kind_of?(SystemExit)
-    $evm.log('error', 'The following error occurred during method evaluation:')
-    $evm.log('error', "  \#{err.class}: \#{err.message}")
-    $evm.log('error', "  \#{err.backtrace[0..-2].join('\n')}")
-  end
-  raise
-ensure
-  $evm.disconnect_sql
-end
-RUBY
-
     def self.open_transactions_threshold
       @open_transactions_threshold ||= Rails.env.test? ? 1 : 0
     end
@@ -206,13 +141,6 @@ RUBY
       rc
     end
 
-    def self.method_preamble(miq_uri, miq_id)
-      preamble  = "MIQ_URI = '#{miq_uri}'\n"
-      preamble << "MIQ_ID = #{miq_id}\n"
-      preamble << RUBY_METHOD_PREAMBLE
-      preamble
-    end
-
     def self.ruby_method_runnable?(aem)
       return false if aem.data.blank?
 
@@ -224,12 +152,9 @@ RUBY
     def self.invoke_inline_ruby(aem, obj, inputs)
       if ruby_method_runnable?(aem)
         obj.workspace.invoker ||= MiqAeEngine::DrbRemoteInvoker.new(obj.workspace)
-        obj.workspace.invoker.with_server do |svc|
-          svc.inputs     = inputs
-          svc.preamble   = method_preamble(obj.workspace.invoker.drb_uri, svc.object_id)
-          svc.body       = aem.data
+        obj.workspace.invoker.with_server(inputs, aem.data) do |code|
           $miq_ae_logger.info("<AEMethod [#{aem.fqname}]> Starting ")
-          rc, msg, stderr = run_ruby_method(svc.body, svc.preamble)
+          rc, msg, stderr = run_ruby_method(code)
           $miq_ae_logger.info("<AEMethod [#{aem.fqname}]> Ending")
           process_ruby_method_results(rc, msg, stderr)
         end
