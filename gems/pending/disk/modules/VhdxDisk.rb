@@ -185,6 +185,7 @@ module VhdxDisk
     @hyperv_connection    = nil
     @vhdx_file            = connection_to_file(dInfo)
     @converter            = Encoding::Converter.new("UTF-16LE", "UTF-8")
+    @bat                  = []
     header_section
   end
 
@@ -373,9 +374,13 @@ module VhdxDisk
     VHDX_REGION_TABLE_ENTRY.decode(@vhdx_file.read(SIZEOF_VHDX_REGION_TABLE_ENTRY))
   end
 
+  def bat(entry)
+    @bat.empty? && process_bat
+    @bat[entry]
+  end
+
   def process_bat
     @vhdx_file.seek(@bat_offset, IO::SEEK_SET)
-    @bat = []
     1.step(@total_bat_entries, 1) do |block_num|
       encoded_bat_entry    = @vhdx_file.read(SIZEOF_VHDX_BAT_ENTRY)
 
@@ -413,11 +418,11 @@ module VhdxDisk
     @data_blocks_count          = (@virtual_disk_size / @payload_block_size).ceil
     @sector_bitmap_blocks_count = (@data_blocks_count / @chunk_ratio).ceil
     @sectors_per_block          = @payload_block_size / @logical_sector_size
-    if @has_parent
-      @total_bat_entries = @sector_bitmap_blocks_count * (@chunk_ratio + 1)
-    else
-      @total_bat_entries = @data_blocks_count + ((@data_blocks_count - 1) / @chunk_ratio).floor
-    end
+    @total_bat_entries          = if @has_parent && @sector_bitmap_blocks_count > 0
+                                    @sector_bitmap_blocks_count * (@chunk_ratio + 1)
+                                  else
+                                    @data_blocks_count + ((@data_blocks_count - 1) / @chunk_ratio).floor
+                                  end
   end
 
   def process_metadata_table_entry(entry_number)
@@ -588,13 +593,11 @@ module VhdxDisk
   end
 
   def bat_status(block_number)
-    bat_entry = @bat[bat_entry_number(block_number)]
-    bat_entry.state
+    bat(bat_entry_number(block_number)).state
   end
 
   def bat_offset(block_number)
-    bat_entry = @bat[bat_entry_number(block_number)]
-    bat_entry.offset * BAT_OFFSET_UNITS
+    bat(bat_entry_number(block_number)).offset * BAT_OFFSET_UNITS
   end
 
   def bat_entry_number(block_number)
@@ -602,13 +605,11 @@ module VhdxDisk
   end
 
   def bitmap_status(block_number)
-    bat_entry = @bat[bitmap_entry_number(block_number)]
-    bat_entry.state
+    bat(bitmap_entry_number(block_number)).state
   end
 
   def bitmap_offset(block_number)
-    bat_entry = @bat[bitmap_entry_number(block_number)]
-    bat_entry.offset * BAT_OFFSET_UNITS
+    bat(bitmap_entry_number(block_number)).offset * BAT_OFFSET_UNITS
   end
 
   def bitmap_entry_number(block_number)
