@@ -1,0 +1,88 @@
+--- 
+where_clause: 
+dims: 
+created_on: 2016-07-07 14:53:10.822035 Z
+reserved: 
+title: "Datasource Pool - every minute for the last hour"
+conditions: 
+updated_on: 2016-07-08 17:23:33.732482 Z
+order: Descending
+graph: 
+menu_name: "Datasource Pool - every minute for the last hour"
+rpt_group: Custom
+priority: 
+col_order: 
+- id
+- name
+- start_time
+- mw_ds_available_count_min
+- mw_ds_available_count_avg
+- mw_ds_available_count_max
+- mw_ds_in_use_count_min
+- mw_ds_in_use_count_avg
+- mw_ds_in_use_count_max
+- mw_ds_timed_out_min
+- mw_ds_timed_out_avg
+- mw_ds_timed_out_max
+- mw_ds_average_get_time_min
+- mw_ds_average_get_time_avg
+- mw_ds_average_get_time_max
+- mw_ds_average_creation_time_min
+- mw_ds_average_creation_time_avg
+- mw_ds_average_creation_time_max
+timeline: 
+file_mtime:
+categories: 
+rpt_type: Custom
+filename: 
+db_options:
+  :rpt_type: middleware
+  :options:
+    :interval: every minute
+    :start_offset: 3600
+    :end_offset: 0
+include: {}
+
+db: MiddlewareDatasourcePerformance
+cols: 
+- id
+- name
+- start_time
+- mw_ds_available_count_min
+- mw_ds_available_count_avg
+- mw_ds_available_count_max
+- mw_ds_in_use_count_min
+- mw_ds_in_use_count_avg
+- mw_ds_in_use_count_max
+- mw_ds_timed_out_min
+- mw_ds_timed_out_avg
+- mw_ds_timed_out_max
+- mw_ds_average_get_time_min
+- mw_ds_average_get_time_avg
+- mw_ds_average_get_time_max
+- mw_ds_average_creation_time_min
+- mw_ds_average_creation_time_avg
+- mw_ds_average_creation_time_max
+template_type: report
+group: n
+sortby:
+- id
+headers: 
+- Id
+- Name
+- Start
+- Available count - min
+- Available count - avg
+- Available count - max
+- In use count - min
+- In use count - avg
+- In use count - max
+- Timed out count - min
+- Timed out count - avg
+- Timed out count - max
+- Average get time - min (ms)
+- Average get time - avg (ms)
+- Average get time - max (ms)
+- Average creation time - min (ms)
+- Average creation time - avg (ms)
+- Average creation time - max (ms)
