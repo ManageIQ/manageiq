@@ -51,7 +51,9 @@ class MiqWorker::Runner
 
   def worker_initialization
     starting_worker_record
+  end
 
+  def startup_configuration_tasks
     # Sync the config and roles early since heartbeats and logging require the configuration
     sync_active_roles
     sync_config
@@ -119,8 +121,8 @@ class MiqWorker::Runner
 
   def start
     worker_initialization
+    startup_configuration_tasks
     after_initialize
-
     prepare
     run
 

@@ -1,8 +1,9 @@
 describe MiqWorker::Runner do
   context "#start" do
     before do
-      @worker_base = MiqWorker::Runner.new
-      allow(@worker_base).to receive(:worker_initialization)
+      worker = MiqWorker.create_worker_record
+      @worker_base = described_class.new(:guid => worker.guid)
+      allow(@worker_base).to receive(:startup_configuration_tasks)
       allow(@worker_base).to receive(:prepare)
     end
 
