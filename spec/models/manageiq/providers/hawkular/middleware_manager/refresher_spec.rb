@@ -17,11 +17,15 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
 
     @ems_hawkular.reload
 
+    expect(@ems_hawkular.middleware_domains.count).to be > 0
+    expect(@ems_hawkular.middleware_server_groups.count).to be > 0
     expect(@ems_hawkular.middleware_servers.count).to be > 0
     expect(@ems_hawkular.middleware_deployments.count).to be > 0
     expect(@ems_hawkular.middleware_datasources.count).to be > 0
     expect(@ems_hawkular.middleware_deployments.first).to have_attributes(:status => 'Enabled')
     assert_specific_datasource
+    assert_specific_server_group
+    assert_specific_domain
   end
 
   def assert_specific_datasource
@@ -36,5 +40,29 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
       'JNDI Name'   => 'java:jboss/datasources/ExampleDS',
       'Enabled'     => 'true'
     )
+  end
+
+  def assert_specific_domain
+    domain = @ems_hawkular.middleware_domains.find_by_name('master')
+    expect(domain).to have_attributes(
+      :name     => 'master',
+      :nativeid => 'Local~/host=master',
+    )
+    expect(domain.properties).not_to be_nil
+    expect(domain.properties).to have_attributes(
+      'Running Mode'         => 'NORMAL',
+      'Host State'           => 'running',
+      'Is Domain Controller' => 'true',
+    )
+  end
+
+  def assert_specific_server_group
+    server_group = @ems_hawkular.middleware_server_groups.find_by_name('main-server-group')
+    expect(server_group).to have_attributes(
+      :name     => 'main-server-group',
+      :nativeid => 'Local~/server-group=main-server-group',
+      :profile  => 'full',
+    )
+    expect(server_group.properties).not_to be_nil
   end
 end

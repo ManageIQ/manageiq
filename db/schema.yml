@@ -4451,6 +4451,31 @@ middleware_deployments:
 - created_at
 - updated_at
 - status
+middleware_domains:
+- id
+- name
+- ems_ref
+- nativeid
+- feed
+- type_path
+- profile
+- properties
+- ems_id
+- created_at
+- updated_at
+middleware_server_groups:
+- id
+- name
+- ems_ref
+- nativeid
+- feed
+- type_path
+- profile
+- properties
+- domain_id
+- ems_id
+- created_at
+- updated_at
 middleware_servers:
 - id
 - name
@@ -4466,6 +4491,7 @@ middleware_servers:
 - updated_at
 - lives_on_type
 - lives_on_id
+- server_group_id
 miq_actions:
 - id
 - name

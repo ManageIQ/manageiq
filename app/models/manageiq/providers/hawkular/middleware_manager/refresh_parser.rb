@@ -15,16 +15,18 @@ module ManageIQ::Providers
       end
 
       def ems_inv_to_hashes
-        @data[:middleware_servers] = get_middleware_servers
+        # the order of the method calls is important here, because they make use of @eaps and @data_index
+        fetch_middleware_servers
+        fetch_domains_with_servers
         fetch_server_entities
         fetch_availability
         @data
       end
 
-      def get_middleware_servers
+      def fetch_middleware_servers
         @data[:middleware_servers] = []
-        @ems.feeds.map do |feed|
-          @ems.eaps(feed).map do |eap|
+        @ems.feeds.each do |feed|
+          @ems.eaps(feed).each do |eap|
             @eaps << eap
             server = parse_middleware_server(eap)
 
@@ -40,7 +42,50 @@ module ManageIQ::Providers
             @data[:middleware_servers] << server
             @data_index.store_path(:middleware_servers, :by_ems_ref, server[:ems_ref], server)
           end
-        end.flatten
+        end
+      end
+
+      def fetch_domains_with_servers
+        @data[:middleware_domains] = []
+        @data[:middleware_server_groups] = []
+        @ems.feeds.each do |feed|
+          @ems.domains(feed).each do |domain|
+            parsed_domain = parse_middleware_domain(domain)
+            @data[:middleware_domains] << parsed_domain
+            @data_index.store_path(:middleware_domains, :by_ems_ref, parsed_domain[:ems_ref], parsed_domain)
+
+            fetch_server_groups(feed, domain, parsed_domain)
+            fetch_domain_servers(domain)
+          end
+        end
+      end
+
+      def fetch_server_groups(feed, domain, parsed_domain)
+        @ems.server_groups(feed, domain).each do |group|
+          parsed_group = parse_middleware_server_group(parsed_domain, group)
+          @data[:middleware_server_groups] << parsed_group
+          @data_index.store_path(:middleware_server_groups, :by_name, parsed_group[:name], parsed_group)
+        end
+      end
+
+      def fetch_domain_servers(domain)
+        @ems.child_resources(domain.path).each do |child|
+          next unless child.type_path.end_with?(hawk_escape_id('Domain WildFly Server'))
+          @eaps << child
+
+          server_name = parse_domain_server_name(child.id)
+          server = parse_middleware_server(child, server_name)
+
+          # add the association to server group (it's well hidden in the inventory)
+          config_path = child.path.to_s.sub(/%2Fserver%3D/, '%2Fserver-config%3D')
+          config = @ems.inventory_client.get_config_data_for_resource(config_path)
+          server_group_name = config['value']['Server Group']
+          server_group = @data_index.fetch_path(:middleware_server_groups, :by_name, server_group_name)
+          server[:middleware_server_group] = server_group
+
+          @data[:middleware_servers] << server
+          @data_index.store_path(:middleware_servers, :by_ems_ref, server[:ems_ref], server)
+        end
       end
 
       def alternate_machine_id(machine_id)
@@ -163,12 +208,44 @@ module ManageIQ::Providers
         name.sub(/^.*deployment=/, '')
       end
 
-      def parse_middleware_server(eap)
+      def parse_server_group_name(name)
+        name.sub(/^Domain Server Group \[/, '').chomp(']')
+      end
+
+      def parse_domain_server_name(name)
+        name.sub(%r{^.*\/server=}, '')
+      end
+
+      def parse_middleware_domain(domain)
+        {
+          :feed       => domain.feed,
+          :ems_ref    => domain.path,
+          :nativeid   => domain.id,
+          :name       => domain.properties['Name'],
+          :type_path  => domain.type_path,
+          :properties => domain.properties
+        }
+      end
+
+      def parse_middleware_server_group(domain, group)
+        {
+          :feed              => group.feed,
+          :ems_ref           => group.path,
+          :nativeid          => group.id,
+          :middleware_domain => domain,
+          :name              => parse_server_group_name(group.name),
+          :type_path         => group.type_path,
+          :profile           => group.properties['Profile'],
+          :properties        => group.properties
+        }
+      end
+
+      def parse_middleware_server(eap, name = nil)
         {
           :feed       => eap.feed,
           :ems_ref    => eap.path,
           :nativeid   => eap.id,
-          :name       => parse_name(eap.id),
+          :name       => name || parse_name(eap.id),
           :hostname   => eap.properties['Hostname'],
           :product    => eap.properties['Product Name'],
           :type_path  => eap.type_path,

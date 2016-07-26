@@ -60,6 +60,37 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
     end
   end
 
+  describe 'parse_domain' do
+    it 'handles simple data' do
+      properties = {
+        'Running Mode'         => 'NORMAL',
+        'Version'              => '9.0.2.Final',
+        'Product Name'         => 'WildFly Full',
+        'Host State'           => 'running',
+        'Is Domain Controller' => 'true',
+        'Name'                 => 'master',
+      }
+      feed = 'master.Unnamed%20Domain'
+      id = 'Local~/host=master'
+      path = '/t;hawkular/f;master.Unnamed%20Domain/r;Local~~/r;Local~%2Fhost%3Dmaster'
+      type_path = '/t;hawkular/f;master.Unnamed%20Domain/rt;Domain%20Host'
+      domain = OpenStruct.new(:feed       => feed,
+                              :id         => id,
+                              :path       => path,
+                              :properties => properties,
+                              :type_path  => type_path)
+      parsed_domain = {
+        :name       => 'master',
+        :feed       => feed,
+        :type_path  => type_path,
+        :nativeid   => id,
+        :ems_ref    => path,
+        :properties => properties,
+      }
+      expect(parser.send(:parse_middleware_domain, domain)).to eq(parsed_domain)
+    end
+  end
+
   describe 'alternate_machine_id' do
     it 'should transform machine ID to dmidecode BIOS UUID' do
       # the /etc/machine-id is usually in downcase, and the dmidecode BIOS UUID is usually upcase
