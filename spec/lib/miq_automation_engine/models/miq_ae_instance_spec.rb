@@ -1,6 +1,7 @@
 describe MiqAeInstance do
   context "legacy tests" do
     before(:each) do
+      @user = FactoryGirl.create(:user_with_group)
       @c1 = MiqAeClass.create(:namespace => "TEST", :name => "instance_test")
       @fname1 = "field1"
       @f1 = @c1.ae_fields.create(:name => @fname1)
@@ -140,17 +141,20 @@ describe MiqAeInstance do
     end
 
     it "should return editable as false if the parent namespace/class is not editable" do
-      n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :priority => 10, :system => true)
+      d1 = FactoryGirl.create(:miq_ae_domain, :system => true, :tenant => User.current_tenant)
+      n1 = FactoryGirl.create(:miq_ae_namespace, :parent_id => d1.id)
       c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
       i1 = FactoryGirl.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
-      expect(i1).not_to be_editable
+      expect(i1.editable?(@user)).to be_falsey
     end
 
     it "should return editable as true if the parent namespace/class is editable" do
-      n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1')
+      User.current_user = @user
+      d1 = FactoryGirl.create(:miq_ae_domain, :tenant => User.current_tenant)
+      n1 = FactoryGirl.create(:miq_ae_namespace, :parent_id => d1.id)
       c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
       i1 = FactoryGirl.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
-      expect(i1).to be_editable
+      expect(i1.editable?(@user)).to be_truthy
     end
   end
 

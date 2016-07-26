@@ -36,6 +36,10 @@ describe MiqAeClass do
     end
   end
 
+  before do
+    @user = FactoryGirl.create(:user_with_group)
+  end
+
   it "should not create class without namespace" do
     expect { MiqAeClass.new(:name => "TEST").save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
@@ -60,15 +64,15 @@ describe MiqAeClass do
   end
 
   it "should return editable as false if the parent namespace is not editable" do
-    n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :priority => 10, :system => true)
+    n1 = FactoryGirl.create(:miq_ae_domain, :system => true, :tenant => @user.current_tenant)
     c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
-    expect(c1).not_to be_editable
+    expect(c1.editable?(@user)).to be_falsey
   end
 
   it "should return editable as true if the parent namespace is editable" do
-    n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1')
+    n1 = FactoryGirl.create(:miq_ae_domain, :tenant => @user.current_tenant)
     c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
-    expect(c1).to be_editable
+    expect(c1.editable?(@user)).to be_truthy
   end
 
   context "cross domain instances" do

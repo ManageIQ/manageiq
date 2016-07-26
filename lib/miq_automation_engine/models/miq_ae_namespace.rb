@@ -79,10 +79,11 @@ class MiqAeNamespace < ApplicationRecord
     @fqname ||= "/#{ancestors.collect(&:name).reverse.push(name).join('/')}"
   end
 
-  def editable?
+  def editable?(user = User.current_user)
+    raise ArgumentError, "User not provided to editable?" unless user
+    return false if domain? && user.current_tenant.id != tenant_id
     return !system? if domain?
-    return false if ancestors.any?(&:system?)
-    !system?
+    ancestors.all? { |a| a.editable?(user) }
   end
 
   def ns_fqname

@@ -100,9 +100,7 @@ class MiqAeField < ApplicationRecord
     set_default_value(default_value)
   end
 
-  def editable?
-    ae_class.ae_namespace.editable?
-  end
+  delegate :editable?, :to => :ae_class
 
   private
 

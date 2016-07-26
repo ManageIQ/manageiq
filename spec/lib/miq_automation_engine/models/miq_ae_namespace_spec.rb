@@ -33,6 +33,10 @@ describe MiqAeNamespace do
     end
   end
 
+  before do
+    @user = FactoryGirl.create(:user_with_group)
+  end
+
   it "should find or create namespaces by fqname" do
     n1 = MiqAeNamespace.find_or_create_by_fqname("System/TEST")
     expect(n1).not_to be_nil
@@ -65,20 +69,24 @@ describe MiqAeNamespace do
   end
 
   it "should return editable as false if the parent has the system property set to true" do
-    n1 = MiqAeNamespace.create!(:name => 'ns1', :priority => 10, :system => true)
-    expect(n1).not_to be_editable
+    n1 = MiqAeDomain.create!(:name => 'ns1', :tenant => @user.current_tenant, :system => true)
+    expect(n1.editable?(@user)).to be_falsey
 
     n2 = MiqAeNamespace.create!(:name => 'ns2', :parent_id => n1.id)
 
     n3 = MiqAeNamespace.create!(:name => 'ns3', :parent_id => n2.id)
-    expect(n3).not_to be_editable
+    expect(n3.editable?(@user)).to be_falsey
   end
 
   it "should return editable as true if the namespace doesn't have the system property defined" do
-    n1 = MiqAeNamespace.create!(:name => 'ns1')
-    expect(n1).to be_editable
+    n1 = MiqAeDomain.create!(:name => 'ns1', :tenant => @user.current_tenant)
+    expect(n1.editable?(@user)).to be_truthy
   end
 
+  it "should raise exception if user is nil" do
+    n1 = MiqAeDomain.create!(:name => 'ns1', :tenant => @user.current_tenant)
+    expect { n1.editable?(nil) }.to raise_error(ArgumentError)
+  end
   it 'find_by_fqname works with and without leading slash' do
     n1 = MiqAeNamespace.find_or_create_by_fqname("foo/bar")
     MiqAeNamespace.find_by_fqname('/foo/bar').id == n1.id
