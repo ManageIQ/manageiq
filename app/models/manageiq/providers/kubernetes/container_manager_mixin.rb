@@ -19,8 +19,9 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
       Kubeclient::Client.new(
         raw_api_endpoint(hostname, port),
         kubernetes_version,
-        :ssl_options  => {:verify_ssl => verify_ssl_mode},
-        :auth_options => kubernetes_auth_options(options),
+        :ssl_options    => { :verify_ssl => verify_ssl_mode },
+        :auth_options   => kubernetes_auth_options(options),
+        :http_proxy_uri => VMDB::Util.http_proxy_uri
       )
     end
 
