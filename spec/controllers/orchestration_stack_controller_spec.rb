@@ -52,6 +52,19 @@ describe OrchestrationStackController do
     end
   end
 
+  describe "#show_list" do
+    context "orchestration stack listing" do
+      before do
+        get :show_list
+      end
+
+      it "correctly constructs breadcrumb url" do
+        expect(session[:breadcrumbs]).not_to be_empty
+        expect(session[:breadcrumbs].first[:url]).to eq("/orchestration_stack/show_list")
+      end
+    end
+  end
+
   describe "#stacks_ot_info" do
     it "returns all the orchestration template attributes" do
       stack = FactoryGirl.create(:orchestration_stack_cloud_with_template)
