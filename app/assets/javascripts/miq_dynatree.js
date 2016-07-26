@@ -586,7 +586,8 @@ function miqTreeEventSafeEval(func) {
                   'miqOnClickServerRoles',
                   'miqOnClickGenealogyTree',
                   'miqOnCheckSections',
-                  'miqOnCheckCUFilters'];
+                  'miqOnCheckCUFilters',
+                  'miqOnClickSnapshotTree'];
 
   if (whitelist.includes(func)) {
     return window[func];
