@@ -148,9 +148,6 @@ class Service < ApplicationRecord
   end
 
   def queue_group_action(action, group_idx = 0, direction = 1, deliver_delay = 0)
-    # Verify that the VMs attached to this service have not been converted to templates
-    validate_resources
-
     nh = {
       :class_name  => self.class.name,
       :instance_id => id,
@@ -164,13 +161,6 @@ class Service < ApplicationRecord
     nh[:zone] = first_vm.ext_management_system.zone.name unless first_vm.nil?
     MiqQueue.put(nh)
     true
-  end
-
-  def validate_resources
-    # self.each_group_resource do |svc_rsc|
-    #   rsc = svc_rsc.resource
-    #   raise "Unsupported resource type #{rsc.class.name}" if rsc.kind_of?(VmOrTemplate) && rsc.template? == true
-    # end
   end
 
   def validate_reconfigure
