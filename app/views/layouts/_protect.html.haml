@@ -12,7 +12,9 @@
     = render :partial => '/layouts/edit_form_buttons',
              :locals  => {:action_url => "protect"}
   %h3
-    - t = {:amount => @politems.length, :items => Dictionary.gettext(session[:pol_db].to_s, :type => :model, :notfound => :titleize)}
+    - t = {:amount => @politems.length,
+           :item => Dictionary.gettext(session[:pol_db].to_s, :type => :model, :notfound => :titleize, :plural => false),
+           :items => Dictionary.gettext(session[:pol_db].to_s, :type => :model, :notfound => :titleize, :plural => true)}
     = n_("Policy changes will affect %{amount} %{item}", "Policy changes will affect %{amount} %{items}", @politems.length) % t
   %table.admintable{:height => "75"}
     %tbody
