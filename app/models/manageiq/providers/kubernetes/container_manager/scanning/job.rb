@@ -19,14 +19,18 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     {
       :initializing => {'initializing'     => 'waiting_to_start'},
       :start        => {'waiting_to_start' => 'pod_create'},
-      :pod_wait     => {'pod_create'       => 'waiting_to_scan'},
+      :pod_wait     => {'pod_create'       => 'waiting_to_scan',
+                        'waiting_to_scan'  => 'waiting_to_scan'},
       :analyze      => {'waiting_to_scan'  => 'scanning'},
       :data         => {'scanning'      => 'synchronizing',
                         'synchronizing' => 'synchronizing'},
       :cleanup      => {'synchronizing'    => 'pod_delete'},
       :abort_job    => {'*'                => 'aborting'},
+      :cancel_job   => {'*'                => 'canceling'},
+      :cancel       => {'*'                => 'canceling'},
       :finish       => {'pod_delete' => 'finished',
-                        'aborting'   => 'finished'},
+                        'aborting'   => 'finished',
+                        'canceling'  => 'finished'},
     }
   end
 
@@ -194,19 +198,33 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
         # TODO: handle the cleanup at a later time
       end
     end
-    set_status('image analysis completed successfully', 'ok')
-
   ensure
-    args.empty? ? queue_signal(:finish) : process_abort(*args)
+    case self.state
+    when 'aborting' then process_abort(*args)
+    when 'canceling' then process_cancel(*args)
+    else queue_signal(:finish, 'image analysis completed successfully', 'ok')
+    end
   end
 
-  def finish(*_args)
+  def finish(*args)
     # exactly like job.dispatch_finish except for storage bits
     _log.info "Dispatch Status is 'finished'"
     update(:dispatch_status => "finished")
+    process_finished(*args)
   end
 
   alias_method :abort_job, :cleanup
+
+  def cancel(*_args)
+    _log.info "Job Canceling"
+    if self.state != "canceling" # ensure change of states
+      signal :cancel
+    else
+      unqueue_all_signals
+      queue_signal(:cancel_job)
+    end
+  end
+  alias_method :cancel_job, :cleanup
 
   def queue_callback(state, msg, _)
     if state == "timeout" && self.state != "aborting"
@@ -240,18 +258,24 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     )
   end
 
-  def queue_signal(*args, deliver_on: nil)
-    MiqQueue.put_unless_exists(
-      :args        => args,
+  def queue_options
+    {
       :class_name  => "Job",
       :instance_id => id,
       :method_name => "signal",
       :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => "smartstate",
       :task_id     => guid,
-      :deliver_on  => deliver_on,
       :zone        => zone
-    ) do |_msg, find_options|
+    }
+  end
+
+  def unqueue_all_signals
+    MiqQueue.unqueue(queue_options)
+  end
+
+  def queue_signal(*args, deliver_on: nil)
+    MiqQueue.put_unless_exists(**queue_options, :args => args, :deliver_on => deliver_on) do |_msg, find_options|
       find_options.merge(
         :miq_callback => {
           :class_name  => self.class.to_s,
