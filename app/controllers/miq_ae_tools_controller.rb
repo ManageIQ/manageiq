@@ -395,7 +395,7 @@ Methods updated/added: %{method_stats}") % stat_options)
       @resolve[:new][:target_class] = params[:target_class]
       klass = CustomButton.name_to_button_class(params[:target_class])
       unless klass.nil?
-        targets = klass.all
+        targets = klass
         @resolve[:targets] = targets.sort_by { |t| t.name.downcase }.collect { |t| [t.name, t.id.to_s] }
         @resolve[:new][:target_id] = nil
       end
