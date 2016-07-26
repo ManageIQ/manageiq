@@ -134,10 +134,6 @@ class CustomButton < ApplicationRecord
     BUTTON_CLASSES.collect(&:name)
   end
 
-  def self.name_to_button_class(name)
-    Rbac.search(:class => name)[0]
-  end
-
   def self.available_for_user(user, group)
     user = get_user(user)
     role = user.miq_user_role_name
