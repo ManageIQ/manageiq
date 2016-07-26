@@ -1,5 +1,5 @@
 class FailoverDatabases
-  FAILOVER_DATABASES_YAML_FILE = Rails.root.join("config", "failover_databases.yml")
+  FAILOVER_DATABASES_YAML_FILE = Rails.root.join("config", "failover_databases.yml").freeze
 
   def self.refresh_databases_list
     query_repmgr
