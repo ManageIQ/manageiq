@@ -1,0 +1,2 @@
+class VirtualApp < ResourcePool
+end
