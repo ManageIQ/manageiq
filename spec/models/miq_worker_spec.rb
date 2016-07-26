@@ -22,6 +22,13 @@ describe MiqWorker do
     end
   end
 
+  it "renice" do
+    allow(AwesomeSpawn).to receive(:launch)
+    allow(described_class).to receive(:worker_settings).and_return(:nice_delta => 5)
+    result = described_class.renice(123)
+    expect(result.command_line).to eq "renice -n 5 -p 123"
+  end
+
   context ".has_required_role?" do
     def check_has_required_role(worker_role_names, expected_result)
       allow(described_class).to receive(:required_roles).and_return(worker_role_names)
