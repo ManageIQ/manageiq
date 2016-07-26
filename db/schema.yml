@@ -48,16 +48,14 @@ arbitration_profiles:
 - default_profile
 arbitration_rules:
 - id
-- type
 - name
-- object_attribute
-- condition
-- object_attribute_value
+- description
 - action
 - arbitration_profile_id
 - priority
-- created_on
-- updated_on
+- expression
+- created_at
+- updated_at
 arbitration_settings:
 - id
 - name
