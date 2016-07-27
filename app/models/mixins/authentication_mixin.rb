@@ -276,10 +276,8 @@ module AuthenticationMixin
           verify_credentials(type, options) ? [:valid, ""] : [:invalid, "Unknown reason"]
         rescue MiqException::MiqUnreachableError => err
           [:unreachable, err]
-        rescue MiqException::MiqInvalidCredentialsError => err
+        rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqEVMLoginError => err
           [:invalid, err]
-        rescue MiqException::MiqEVMLoginError
-          [:invalid, "Login failed due to a bad username or password."]
         rescue => err
           [:error, err]
         end
