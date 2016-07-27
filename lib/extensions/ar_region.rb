@@ -125,9 +125,8 @@ module ArRegion
     end
 
     def region_number_from_sequence
+      return unless connection.data_source_exists?("miq_databases")
       id_to_region(connection.select_value("SELECT last_value FROM miq_databases_id_seq"))
-    rescue ActiveRecord::StatementInvalid # sequence does not exist yet
-      nil
     end
 
     private
