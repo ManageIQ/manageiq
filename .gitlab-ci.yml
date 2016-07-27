@@ -1,4 +1,4 @@
-image: manageiq_gitlabci:master
+image: manageiq_gitlabci:darga
 before_script:
   - su postgres -c ". /docker-environment.sh && pg_ctl start -w -D /var/opt/rh/rh-postgresql94/lib/pgsql/data/"
   - ruby -v
@@ -50,3 +50,14 @@ test:javascript:
     - bower install --allow-root -F --config.analytics=false
     - bundle exec rake test:javascript:setup
     - bundle exec rake test:javascript
+test:gems-manageiq_foreman:
+  script:
+    - cd gems/manageiq_foreman
+    - export BUNDLE_GEMFILE=$PWD/Gemfile
+    - bundle update
+    - bundle exec rake
+test:manageiq-providers-amazon:
+  script:
+    - bundle update
+    - bundle exec rake test:manageiq-providers-amazon:setup
+    - bundle exec rake test:manageiq-providers-amazon
