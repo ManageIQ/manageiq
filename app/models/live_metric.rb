@@ -9,7 +9,7 @@ class LiveMetric < ActsAsArModel
     processed = process_conditions(raw_query[:conditions])
     resource = fetch_resource(processed[:resource_type], processed[:resource_id])
     ext_options = raw_query[:ext_options]
-    filtered_cols = ext_options ? ext_options[:only_cols] : nil
+    filtered_cols = raw_query[:select] || ext_options ? ext_options[:only_cols] : nil
     if resource.nil?
       []
     else
