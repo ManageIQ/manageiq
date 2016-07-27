@@ -42,8 +42,6 @@ module Metric::Common
     virtual_column :v_derived_cpu_reserved_pct,     :type => :float
     virtual_column :v_derived_memory_reserved_pct,  :type => :float
     virtual_column :v_derived_cpu_total_cores_used, :type => :float
-
-    virtual_column :v_derived_logical_cpus_used, :type => :float # Deprecated
   end
 
   def v_find_min_max(vcol)
@@ -145,8 +143,6 @@ module Metric::Common
     return nil if cpu_usage_rate_average.nil? || derived_vm_numvcpus.nil? || derived_vm_numvcpus == 0
     (cpu_usage_rate_average * derived_vm_numvcpus) / 100.0
   end
-  alias_method :v_derived_logical_cpus_used, :v_derived_cpu_total_cores_used
-  Vmdb::Deprecation.deprecate_methods(self, :v_derived_logical_cpus_used => :v_derived_cpu_total_cores_used)
 
   # Applies the given time profile to this metric record
   # unless record already refer to some time profile (which were used for aggregation)

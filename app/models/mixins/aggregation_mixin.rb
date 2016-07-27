@@ -9,8 +9,6 @@ module AggregationMixin
     virtual_column :aggregate_vm_memory,       :type => :integer, :uses => :vms_and_templates
     virtual_column :aggregate_disk_capacity,   :type => :integer, :uses => :hosts
 
-    virtual_column :aggregate_logical_cpus, :type => :integer, :uses => :hosts # Deprecated
-
     def self.aggregation_mixin_virtual_columns_use(hosts, vms = nil)
       vms ||= hosts
       define_virtual_include "aggregate_cpu_speed",       hosts
@@ -18,8 +16,6 @@ module AggregationMixin
       define_virtual_include "aggregate_physical_cpus",   hosts
       define_virtual_include "aggregate_memory",          hosts
       define_virtual_include "aggregate_disk_capacity",   hosts
-
-      define_virtual_include "aggregate_logical_cpus", hosts # Deprecated
 
       define_virtual_include "aggregate_vm_cpus",   vms
       define_virtual_include "aggregate_vm_memory", vms
@@ -33,8 +29,6 @@ module AggregationMixin
   def aggregate_cpu_total_cores(targets = nil)
     aggregate_hardware(:hosts, :cpu_total_cores, targets)
   end
-  alias_method :aggregate_logical_cpus, :aggregate_cpu_total_cores
-  Vmdb::Deprecation.deprecate_methods(self, :aggregate_logical_cpus => :aggregate_cpu_total_cores)
 
   def aggregate_physical_cpus(targets = nil)
     aggregate_hardware(:hosts, :cpu_sockets, targets)

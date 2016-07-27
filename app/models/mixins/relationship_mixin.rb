@@ -118,7 +118,6 @@ module RelationshipMixin
 
   # Returns all of the parents of the record, [] for a root node
   def parents(*args)
-    args = RelationshipMixin.deprecate_of_type_parameter(*args)
     Relationship.resources(parent_rels(*args))
   end
 
@@ -195,7 +194,6 @@ module RelationshipMixin
   # Returns a list of ancestor records, starting with the root record and ending
   #   with the parent record
   def ancestors(*args)
-    args = RelationshipMixin.deprecate_of_type_parameter(*args)
     Relationship.resources(ancestor_rels(*args))
   end
 
@@ -248,7 +246,6 @@ module RelationshipMixin
 
   # Returns a list of child records
   def children(*args)
-    args = RelationshipMixin.deprecate_of_type_parameter(*args)
     Relationship.resources(child_rels(*args))
   end
 
@@ -313,7 +310,6 @@ module RelationshipMixin
 
   # Returns a list of descendant records
   def descendants(*args)
-    args = RelationshipMixin.deprecate_of_type_parameter(*args)
     Relationship.resources(descendant_rels(*args))
   end
 
@@ -611,13 +607,10 @@ module RelationshipMixin
   alias_method :remove_child, :remove_children
 
   def remove_all_parents(*args)
-    args = RelationshipMixin.deprecate_of_type_and_rel_type_parameter(*args)
     parents(*args).collect { |p| remove_parent(p) }
   end
 
   def remove_all_children(*args)
-    args = RelationshipMixin.deprecate_of_type_and_rel_type_parameter(*args)
-
     # Determine if we are removing all or some children
     options = args.last.kind_of?(Hash) ? args.last : {}
     of_type = options[:of_type].to_miq_a
@@ -652,7 +645,6 @@ module RelationshipMixin
   end
 
   def detect_ancestor(*args, &block)
-    args = RelationshipMixin.deprecate_start_parameter(*args)
     ancestors(*args).reverse.detect(&block)
   end
 
@@ -666,40 +658,5 @@ module RelationshipMixin
 
   def puts_relationship_tree
     Relationship.puts_arranged_resources(subtree_arranged)
-  end
-
-  #
-  # Deprecation methods
-  #
-
-  def self.deprecate_of_type_parameter(*args)
-    return args if args.empty? || args.first.kind_of?(Hash)
-
-    Vmdb::Deprecation.deprecation_warning("of_type parameter without hash symbol", "use :of_type => 'Type' style instead", caller(2)) unless Rails.env.production?
-
-    options = args.extract_options!
-    [options.merge(:of_type => args.first)]
-  end
-
-  def self.deprecate_of_type_and_rel_type_parameter(*args)
-    return args if args.empty? || args.first.kind_of?(Hash)
-
-    Vmdb::Deprecation.deprecation_warning("of_type parameter without hash symbol", "use :of_type => 'Type' style instead", caller(2)) unless Rails.env.production?
-
-    options = args.extract_options!
-
-    if args.length > 1
-      Vmdb::Deprecation.deprecation_warning("relationship_type parameter", "use with_relationship_type method before calling instead", caller(2)) unless Rails.env.production?
-    end
-
-    [options.merge(:of_type => args.first)]
-  end
-
-  def self.deprecate_start_parameter(*args)
-    return args if args.empty? || args.first.kind_of?(Hash)
-
-    Vmdb::Deprecation.deprecation_warning("start parameter", nil, caller(2)) unless Rails.env.production?
-
-    [args.extract_options!]
   end
 end

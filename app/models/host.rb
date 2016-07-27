@@ -1883,6 +1883,4 @@ class Host < ApplicationRecord
     return power_state unless power_state.nil?
     "unknown"
   end
-
-  include DeprecatedCpuMethodsMixin
 end

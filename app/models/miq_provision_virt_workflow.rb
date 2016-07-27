@@ -349,16 +349,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     result
   end
 
-  def allowed_datastore_storage_controller(_options = {})
-    {}
-  end
-  Vmdb::Deprecation.deprecate_methods(self, :allowed_datastore_storage_controller)
-
-  def allowed_datastore_aggregate(_options = {})
-    {}
-  end
-  Vmdb::Deprecation.deprecate_methods(self, :allowed_datastore_aggregate)
-
   def get_source_vm
     get_source_and_targets[:vm]
   end

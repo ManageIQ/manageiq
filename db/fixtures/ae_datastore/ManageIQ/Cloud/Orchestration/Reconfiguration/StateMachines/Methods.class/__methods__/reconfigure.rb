@@ -9,7 +9,7 @@ service = task.source
 
 begin
   service.update_orchestration_stack
-  $evm.log("info", "Stack #{service.stack_name} with reference id (#{service.stack_ems_ref}) is being updated")
+  $evm.log("info", "Stack #{service.stack_name} with reference id (#{service.orchestration_stack.try(:ems_ref)}) is being updated")
 rescue => err
   $evm.root['ae_result'] = 'error'
   $evm.root['ae_reason'] = err.message
