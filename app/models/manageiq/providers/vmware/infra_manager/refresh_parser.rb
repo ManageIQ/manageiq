@@ -1297,12 +1297,18 @@ module ManageIQ::Providers
 
           # :is_default will be set later as we don't know until we find out who the parent is.
 
+          type = if mor.vimType == "VirtualApp"
+                   ManageIQ::Providers::Vmware::InfraManager::VirtualApp.name
+                 else
+                   ResourcePool.name
+                 end
+
           new_result = {
             :ems_ref               => mor,
             :ems_ref_obj           => mor,
             :uid_ems               => mor,
             :name                  => URI.decode(data["name"].to_s),
-            :vapp                  => mor.vimType == "VirtualApp",
+            :type                  => type,
 
             :memory_reserve        => memory["reservation"],
             :memory_reserve_expand => memory["expandableReservation"].to_s.downcase == "true",

@@ -13,6 +13,7 @@ module ManageIQ::Providers
     require_nested :ProvisionViaPxe
     require_nested :ProvisionWorkflow
     require_nested :Template
+    require_nested :VirtualApp
     require_nested :Vm
 
     include VimConnectMixin
