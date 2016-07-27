@@ -11,12 +11,12 @@ class ApiController
       #
       # Let's fetch encrypted attribute names of objects being rendered if not already done
       #
-      def fetch_encrypted_attribute_names(obj)
+      def fetch_encrypted_attribute_names(klass)
         @encrypted_objects_checked ||= {}
-        klass = obj.class.name
-        return unless @encrypted_objects_checked[klass].nil?
-        @encrypted_objects_checked[klass] = object_encrypted_attributes(obj)
-        @encrypted_objects_checked[klass].each { |attr| normalized_attributes[:encrypted][attr] = true }
+        return [] unless klass.respond_to?(:encrypted_columns)
+        @encrypted_objects_checked[klass.name] ||= klass.encrypted_columns.each do |attr|
+          normalized_attributes[:encrypted][attr] = true
+        end
       end
 
       def user_token_service
@@ -72,10 +72,6 @@ class ApiController
             normalized_attributes[:time][name] = true if %w(date datetime).include?(typeobj.type.to_s)
           end
         end
-      end
-
-      def object_encrypted_attributes(obj)
-        obj.class.respond_to?(:encrypted_columns) ? obj.class.encrypted_columns : []
       end
     end
   end
