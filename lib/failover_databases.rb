@@ -1,3 +1,5 @@
+require 'util/postgres_dsn_parser'
+
 class FailoverDatabases
   FAILOVER_DATABASES_YAML_FILE = Rails.root.join("config", "failover_databases.yml").freeze
 
@@ -32,7 +34,7 @@ class FailoverDatabases
     result = []
     if connection.table_exists? "repmgr_miq.repl_nodes"
       connection.execute("SELECT type, conninfo, active FROM repmgr_miq.repl_nodes").each do |record|
-        dsn = connection.class.parse_dsn(record.delete("conninfo"))
+        dsn = PostgresDsnParser.parse_dsn(record.delete("conninfo"))
         result << record.symbolize_keys.merge(dsn)
       end
       write_file(result)
