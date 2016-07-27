@@ -46,7 +46,10 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
           N_('Gracefully shut this server down'),
           N_('Gracefully shutdown Server'),
           :image   => "guest_shutdown",
-          :confirm => N_("Do you want to shutdown this server?")),
+          :data    => {'toggle'        => 'modal',
+                       'target'        => '#modal_param_div',
+                       'function'      => 'miqCallAngular',
+                       'function-data' => '{"name": "showListener", "args": ["operation:shutdown"]}'}),
         button(
           :middleware_server_restart,
           nil,
@@ -78,10 +81,7 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
           N_('Resume this server'),
           N_('Resume Server'),
           :image   => "resume",
-          :data  => {'toggle'        => 'modal',
-                     'target'        => '#modal_param_div',
-                     'function'      => 'miqCallAngular',
-                     'function-data' => '{"name": "showListener", "args": ["operation:resume"]}'}),
+          :confirm => N_("Do you want to stop this server?")),
         button(
           :middleware_server_reload,
           'pficon pficon-restart fa-lg',
