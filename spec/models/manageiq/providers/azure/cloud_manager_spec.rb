@@ -139,12 +139,12 @@ describe ManageIQ::Providers::Azure::CloudManager do
       create_factory_ems("Azure-eastus", "eastus")
 
       found = recorded_discover(example)
-      expect(found.count).to eq(6)
+      expect(found.count).to eq(2)
 
       emses = ManageIQ::Providers::Azure::CloudManager.order(:name)
-      expect(emses.count).to eq(7)
+      expect(emses.count).to eq(3)
       assert_region(emses[1], "Azure-eastus")
-      assert_region(emses[2], "Azure-eastus2")
+      assert_region(emses[2], "Azure-westus")
     end
 
     it "with all existing records" do |example|
