@@ -34,11 +34,7 @@ describe "pglogical replication" do
     master_db_config = Rails.configuration.database_configuration[Rails.env].symbolize_keys
                                                                             .merge(:database => master_db_name)
 
-    c = MiqServer.my_server.get_config
-    c.config.store_path(:workers, :worker_base, :replication_worker, :replication, :destination, master_db_config)
-    c.save
-
-    @replication_config = c.config.fetch_path(:workers, :worker_base, :replication_worker, :replication)
+    @replication_config = MiqServer.my_server.get_config.config.fetch_path(:replication)
 
     class ::MasterDb < ActiveRecord::Base; end
     MasterDb.establish_connection(master_db_config)
