@@ -67,7 +67,6 @@ gem "config",                         "~>1.1.0",                      :git => "g
 gem "deep_merge",                     "~>1.0.1",                      :git => "git://github.com/ManageIQ/deep_merge.git", :branch => "overwrite_arrays"
 gem "draper",                         "~>2.1.0",                      :git => "git://github.com/janraasch/draper.git", :branch => "feature/rails5-compatibility" # https://github.com/drapergem/draper/pull/712
 gem "foreman_api_client",             ">=0.1.0",   :require => false, :git => "git://github.com/ManageIQ/foreman_api_client.git", :branch => "master"
-gem "rubyrep",                        "=1.2.0",    :require => false, :git => "git://github.com/ManageIQ/rubyrep.git", :tag => "v1.2.0-9"
 gem "ruport",                         "=1.7.0",                       :git => "git://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-3"
 gem "ziya",                           "=2.3.0",    :require => false, :git => "git://github.com/ManageIQ/ziya.git", :tag => "v2.3.0-3"
 

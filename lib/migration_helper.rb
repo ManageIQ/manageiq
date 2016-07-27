@@ -118,5 +118,3 @@ module MigrationHelper
     ) > 0
   end
 end
-
-Dir.glob(File.join(File.dirname(__FILE__), "migration_helper", "*.rb")).each { |f| require f }

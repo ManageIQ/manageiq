@@ -4674,8 +4674,6 @@ miq_databases:
 - id
 - created_at
 - updated_at
-- last_replication_count
-- last_replication_id
 - registration_type
 - registration_organization
 - registration_server
