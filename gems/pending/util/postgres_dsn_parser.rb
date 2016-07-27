@@ -1,5 +1,4 @@
 class PostgresDsnParser
-
   def self.parse_dsn(dsn)
     scanner = StringScanner.new(dsn)
 
@@ -17,14 +16,13 @@ class PostgresDsnParser
   end
 
   def self.get_dsn_value(scanner)
-    value =
-        if scanner.peek(1) == "'"
-          # if we are a quoted value get the first quote and the
-          # string that ends with a quote not preceded by a backslash
-          scanner.getch + scanner.scan_until(/(?<!\\)'\s*/).strip
-        else
-          scanner.scan_until(/\s+|$/).strip
-        end
+    value = if scanner.peek(1) == "'"
+              # if we are a quoted value get the first quote and the
+              # string that ends with a quote not preceded by a backslash
+              scanner.getch + scanner.scan_until(/(?<!\\)'\s*/).strip
+            else
+              scanner.scan_until(/\s+|$/).strip
+            end
 
     value = value[1..-2] if value.start_with?("'") && value.end_with?("'")
 

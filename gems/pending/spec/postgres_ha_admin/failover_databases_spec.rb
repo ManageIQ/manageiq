@@ -1,4 +1,9 @@
-describe FailoverDatabases do
+require 'postgres_ha_admin/failover_databases'
+require 'postgres_ha_admin/postgres_ha_admin'
+
+describe PostgresHaAdmin::FailoverDatabases do
+  subject { described_class.new(Rails.root.join('config'), Rails.root.join('log')) }
+
   before do
     connection = ActiveRecord::Base.connection
     connection.execute("CREATE SCHEMA repmgr_miq")
@@ -26,7 +31,7 @@ describe FailoverDatabases do
 
   describe ".all_databases" do
     it "returns list of all available databases saved in yaml file" do
-      list = described_class.all_databases
+      list = subject.all_databases
 
       expect(list.size).to be 3
       expect(list).to include({:type => "master", :host => "1.1.1.1", :dbname => "vmdb_test",
@@ -38,19 +43,19 @@ describe FailoverDatabases do
     end
 
     it "create yaml file with list of available databases if file did not exist" do
-      expect(File.exist?(described_class::FAILOVER_DATABASES_YAML_FILE)).to be false
+      expect(File.exist?(subject.yml_file)).to be false
 
-      described_class.all_databases
-      expect(File.exist?(described_class::FAILOVER_DATABASES_YAML_FILE)).to be true
+      subject.all_databases
+      expect(File.exist?(subject.yml_file)).to be true
     end
 
     it "if yaml file exists, it loads list of databases from existing file" do
-      list = described_class.all_databases
+      list = subject.all_databases
       expect(list.size).to be 3
 
       add_new_record
 
-      described_class.all_databases
+      subject.all_databases
       expect(list.size).to be 3
       expect(list).to include({:type => "master", :host => "1.1.1.1", :dbname => "vmdb_test",
                               :user => "root", :active => true},
@@ -63,12 +68,12 @@ describe FailoverDatabases do
 
   describe ".refresh_databases_list" do
     it "override existing yaml file and returns updated list of databases" do
-      list = described_class.all_databases
+      list = subject.all_databases
       expect(list.size).to be 3
 
       add_new_record
 
-      list = described_class.refresh_databases_list
+      list = subject.refresh_databases_list
       expect(list.size).to be 4
       expect(list).to include(:type => "standby", :host => "4.4.4.4", :dbname => "some_db",
                               :user => "root", :active => true)
@@ -77,14 +82,14 @@ describe FailoverDatabases do
 
   describe ".standby_databases" do
     it "returns list of databases in standby mode" do
-      list = described_class.standby_databases
+      list = subject.standby_databases
       expect(list.size).to eq 2
     end
   end
 
   describe ".active_standby_databases" do
     it "returns list of active databases in standby mode" do
-      list = described_class.active_standby_databases
+      list = subject.active_standby_databases
       expect(list.size).to eq 1
     end
   end
@@ -100,8 +105,11 @@ describe FailoverDatabases do
   end
 
   def remove_file
-    if File.exist?(described_class::FAILOVER_DATABASES_YAML_FILE)
-      File.delete(described_class::FAILOVER_DATABASES_YAML_FILE)
+    if File.exist?(subject.yml_file)
+      File.delete(subject.yml_file)
+    end
+    if File.exist?(subject.log_file)
+      File.delete(subject.log_file)
     end
   end
 end
