@@ -2383,6 +2383,7 @@ Vmdb::Application.routes.draw do
         event_logs
         explorer
         launch_html5_console
+        launch_cockpit
         filesystems
         filesystem_drivers
         form_field_changed
@@ -2514,6 +2515,7 @@ Vmdb::Application.routes.draw do
         tree_select
         users
         vmrc_console
+        launch_cockpit
         vm_pre_prov
         vm_vdi
         html5_console
