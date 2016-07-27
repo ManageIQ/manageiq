@@ -320,7 +320,8 @@ class ExtManagementSystem < ApplicationRecord
     endpoint = endpoints.detect { |e| e.role == role }
 
     if endpoint
-      auth = authentications.detect { |a| a.authtype == endpoint.role }
+      authtype = endpoint.role == "default" ? default_authentication_type.to_s : endpoint.role
+      auth = authentications.detect { |a| a.authtype == authtype }
 
       options = {:endpoint => endpoint, :authentication => auth}
       OpenStruct.new(options)
