@@ -39,10 +39,10 @@ module MiqAeServiceSpec
 
     def assert_readonly_instance(automate_method_script)
       dom_obj = MiqAeDomain.find_by_name(@domain)
-      dom_obj.update_attributes!(:system => true)
+      dom_obj.lock
       @ae_method.update_attributes(:data => automate_method_script)
       result = invoke_ae.root(@ae_result_key)
-      dom_obj.update_attributes!(:system => false)
+      dom_obj.unlock
       expect(result).to be_falsey
     end
 

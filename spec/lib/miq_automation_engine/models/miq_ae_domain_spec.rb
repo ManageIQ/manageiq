@@ -51,30 +51,30 @@ describe MiqAeDomain do
 
   context "any_unlocked?" do
     it "should return unlocked_domains? as true if the there are any unlocked domains available" do
-      FactoryGirl.create(:miq_ae_namespace, :name => 'd1', :priority => 10, :system => true)
-      FactoryGirl.create(:miq_ae_namespace, :name => 'd2', :priority => 10, :system => false)
+      FactoryGirl.create(:miq_ae_system_domain)
+      FactoryGirl.create(:miq_ae_domain)
       expect(MiqAeDomain.any_unlocked?).to be_truthy
     end
 
     it "should return unlocked_domains? as false if the there are no unlocked domains available" do
-      FactoryGirl.create(:miq_ae_namespace, :name => 'd1', :priority => 10, :system => true)
-      FactoryGirl.create(:miq_ae_namespace, :name => 'd2', :priority => 10, :system => true)
+      FactoryGirl.create(:miq_ae_system_domain)
+      FactoryGirl.create(:miq_ae_system_domain)
       expect(MiqAeDomain.any_unlocked?).to be_falsey
     end
   end
 
   context "all_unlocked" do
     it "should return all unlocked domains" do
-      FactoryGirl.create(:miq_ae_namespace, :name => 'd1', :priority => 10, :system => true)
-      FactoryGirl.create(:miq_ae_namespace, :name => 'd2', :priority => 10, :system => false)
-      FactoryGirl.create(:miq_ae_namespace, :name => 'd3', :priority => 10, :system => nil)
+      FactoryGirl.create(:miq_ae_system_domain)
+      FactoryGirl.create(:miq_ae_domain)
+      FactoryGirl.create(:miq_ae_domain)
       expect(MiqAeDomain.all_unlocked.count).to eq(2)
     end
 
     it "should return empty array when there are no unlocked domains" do
-      FactoryGirl.create(:miq_ae_namespace, :name => 'd1', :priority => 10, :system => true)
-      FactoryGirl.create(:miq_ae_namespace, :name => 'd2', :priority => 10, :system => true)
-      FactoryGirl.create(:miq_ae_namespace, :name => 'd3', :priority => 10, :system => true)
+      FactoryGirl.create(:miq_ae_system_domain)
+      FactoryGirl.create(:miq_ae_system_domain)
+      FactoryGirl.create(:miq_ae_system_domain)
       expect(MiqAeDomain.all_unlocked.count).to eq(0)
     end
   end

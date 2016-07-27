@@ -388,18 +388,13 @@ describe TreeNodeBuilder do
     end
 
     it "should return node text with Locked in the text for Locked domain" do
-      domain = FactoryGirl.create(:miq_ae_domain,
-                                  :name   => "test1",
-                                  :system => true)
+      domain = FactoryGirl.create(:miq_ae_system_domain_enabled, :name => "test1")
       node = TreeNodeBuilder.build(domain, nil, {})
       expect(node[:title]).to eq('test1 (Locked)')
     end
 
     it "should return node text with Locked & Disabled in the text for Locked & Disabled domain" do
-      domain = FactoryGirl.create(:miq_ae_domain,
-                                  :name    => "test1",
-                                  :enabled => false,
-                                  :system  => true)
+      domain = FactoryGirl.create(:miq_ae_system_domain, :name => "test1")
       node = TreeNodeBuilder.build(domain, nil, {})
       expect(node[:title]).to eq('test1 (Locked & Disabled)')
     end

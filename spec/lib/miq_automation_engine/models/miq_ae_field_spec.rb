@@ -159,7 +159,7 @@ describe MiqAeField do
     end
 
     it "should return editable as false if the parent namespace/class is not editable" do
-      n1 = FactoryGirl.create(:miq_ae_domain, :system => true, :tenant => User.current_tenant)
+      n1 = FactoryGirl.create(:miq_ae_system_domain, :tenant => User.current_tenant)
       c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
       f1 = FactoryGirl.create(:miq_ae_field, :class_id => c1.id, :name => "foo_field")
       expect(f1.editable?(@user)).to be_falsey

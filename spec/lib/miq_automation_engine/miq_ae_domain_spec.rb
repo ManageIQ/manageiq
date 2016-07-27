@@ -13,9 +13,9 @@ describe MiqAeDomain do
     yaml_file = File.join(File.dirname(__FILE__), 'data', 'domain_test.yaml')
     import_options = {'yaml_file' => yaml_file, 'preview' => false, 'domain' => '*', 'tenant_id' => root_tenant.id}
     MiqAeImport.new('*', import_options).import
-    update_domain_attributes('root', :priority => 10, :system => true, :enabled => true)
+    update_domain_attributes('root', :priority => 10, :enabled => true)
     update_domain_attributes('user', :priority => 20, :enabled => true)
-    update_domain_attributes('inert', :priority => 10, :system => true, :enabled => false)
+    update_domain_attributes('inert', :priority => 10, :enabled => false)
     update_domain_attributes('evm1', :priority => 100, :enabled => true)
     update_domain_attributes('evm2', :priority => 100, :enabled => true)
     @enabled_domains = %w(evm2 evm1 user root)
@@ -36,7 +36,7 @@ describe MiqAeDomain do
 
     it 'can set other attributes in a domain object' do
       domain = MiqAeDomain.create!(:name => 'Fred', :tenant => root_tenant)
-      expect(domain.update_attributes!(:priority => 10, :system => false)).to be_truthy
+      expect(domain.update_attributes!(:priority => 10)).to be_truthy
     end
   end
 

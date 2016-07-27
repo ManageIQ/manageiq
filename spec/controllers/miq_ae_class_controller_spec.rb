@@ -108,7 +108,7 @@ describe MiqAeClassController do
       ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
       cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
 
-      d2 = FactoryGirl.create(:miq_ae_domain, :name => "domain2", :system => false)
+      d2 = FactoryGirl.create(:miq_ae_domain, :name => "domain2")
       ns2 = FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => d2.id)
 
       new = {:domain => d2.id, :namespace => ns2.fqname, :overwrite_location => false}
@@ -165,7 +165,7 @@ describe MiqAeClassController do
       ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
       cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
 
-      d2 = FactoryGirl.create(:miq_ae_domain, :system => false)
+      d2 = FactoryGirl.create(:miq_ae_domain)
       ns2 = FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => d2.id)
 
       new = {:domain => d2.id, :namespace => ns2.fqname, :override_existing => true}
@@ -402,9 +402,9 @@ describe MiqAeClassController do
   context "#delete_domain" do
     it "Should only delete editable domains" do
       set_user_privileges
-      domain1 = FactoryGirl.create(:miq_ae_domain_enabled, :system => true)
+      domain1 = FactoryGirl.create(:miq_ae_system_domain_enabled)
 
-      domain2 = FactoryGirl.create(:miq_ae_domain_enabled, :system => false)
+      domain2 = FactoryGirl.create(:miq_ae_domain_enabled)
       controller.instance_variable_set(:@_params,
                                        :miq_grid_checks => "aen-#{domain1.id}, aen-#{domain2.id}, aen-someid"
                                       )

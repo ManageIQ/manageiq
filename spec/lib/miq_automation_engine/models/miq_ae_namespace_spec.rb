@@ -61,15 +61,8 @@ describe MiqAeNamespace do
     expect(n2.updated_by).to eq('system')
   end
 
-  it "should have system property as false by default" do
-    n1 = MiqAeNamespace.find_or_create_by_fqname("ns1/ns2")
-    expect(n1.system).to be_falsey
-    n2 = MiqAeNamespace.find_or_create_by_fqname("ns1")
-    expect(n2.system).to be_falsey
-  end
-
   it "should return editable as false if the parent has the system property set to true" do
-    n1 = MiqAeDomain.create!(:name => 'ns1', :tenant => @user.current_tenant, :system => true)
+    n1 = FactoryGirl.create(:miq_ae_system_domain, :tenant => @user.current_tenant)
     expect(n1.editable?(@user)).to be_falsey
 
     n2 = MiqAeNamespace.create!(:name => 'ns2', :parent_id => n1.id)
@@ -79,12 +72,12 @@ describe MiqAeNamespace do
   end
 
   it "should return editable as true if the namespace doesn't have the system property defined" do
-    n1 = MiqAeDomain.create!(:name => 'ns1', :tenant => @user.current_tenant)
+    n1 = FactoryGirl.create(:miq_ae_domain, :tenant => @user.current_tenant)
     expect(n1.editable?(@user)).to be_truthy
   end
 
   it "should raise exception if user is nil" do
-    n1 = MiqAeDomain.create!(:name => 'ns1', :tenant => @user.current_tenant)
+    n1 = FactoryGirl.create(:miq_ae_domain, :tenant => @user.current_tenant)
     expect { n1.editable?(nil) }.to raise_error(ArgumentError)
   end
   it 'find_by_fqname works with and without leading slash' do
