@@ -1,7 +1,7 @@
 require 'drb'
 module MiqAeEngine
   class DrbRemoteInvoker
-    attr_accessor :num_methods
+    attr_accessor :drb_server, :num_methods
 
     def initialize(workspace)
       @workspace = workspace
@@ -29,27 +29,26 @@ module MiqAeEngine
     # invocation
 
     def drb_uri
-      DRb.uri
+      drb_server.uri
     end
 
     def setup
       require 'drb/timeridconv'
-      @@global_id_conv = DRb.install_id_conv(DRb::TimerIdConv.new(drb_cache_timeout))
-      drb_front  = MiqAeMethodService::MiqAeServiceFront.new
-      drb        = DRb.start_service("druby://127.0.0.1:0", drb_front)
+      global_id_conv = DRb::TimerIdConv.new(drb_cache_timeout)
+      drb_front = MiqAeMethodService::MiqAeServiceFront.new
+      self.drb_server = DRb::DRbServer.new("druby://127.0.0.1:0", drb_front, :idconv => global_id_conv)
     end
 
     def teardown
-      DRb.stop_service
-      # Set the ID conv to nil so that the cache can be GC'ed
-      DRb.install_id_conv(nil)
+      global_id_conv = drb_server.config[:idconv]
+      drb_server.stop_service
+      self.drb_server = nil
       # This hack was done to prevent ruby from leaking the
       # TimerIdConv thread.
       # https://bugs.ruby-lang.org/issues/12342
-      thread = @@global_id_conv
+      thread = global_id_conv
                .try(:instance_variable_get, '@holder')
                .try(:instance_variable_get, '@keeper')
-      @@global_id_conv = nil
       return unless thread
 
       thread.kill
@@ -66,7 +65,7 @@ module MiqAeEngine
       "MIQ_URI = '#{miq_uri}'\nMIQ_ID = #{miq_id}\n" << RUBY_METHOD_PREAMBLE
     end
 
-    RUBY_METHOD_PREAMBLE = <<-RUBY
+    RUBY_METHOD_PREAMBLE = <<-RUBY.freeze
 class AutomateMethodException < StandardError
 end
 
@@ -118,7 +117,7 @@ end
 begin
 RUBY
 
-    RUBY_METHOD_POSTSCRIPT = <<-RUBY
+    RUBY_METHOD_POSTSCRIPT = <<-RUBY.freeze
 rescue Exception => err
   unless err.kind_of?(SystemExit)
     $evm.log('error', 'The following error occurred during method evaluation:')
