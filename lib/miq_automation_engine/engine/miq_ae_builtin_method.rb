@@ -208,6 +208,7 @@ module MiqAeEngine
         src_obj.source.try(:vendor)
       when "vm"
         src_obj.try(:vendor)
+
       end
     end
   end
