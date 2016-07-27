@@ -1022,19 +1022,19 @@ describe Rbac do
 
   # determine what to run
   it ".apply_rbac_to_class?" do
-    expect(Rbac.new.send(:apply_rbac_to_class?, Vm)).to be_truthy
-    expect(Rbac.new.send(:apply_rbac_to_class?, Rbac)).not_to be
+    expect(Rbac::Filterer.new.send(:apply_rbac_to_class?, Vm)).to be_truthy
+    expect(Rbac::Filterer.new.send(:apply_rbac_to_class?, Rbac)).not_to be
   end
 
   it ".apply_rbac_to_associated_class?" do
-    expect(Rbac.new.send(:apply_rbac_to_associated_class?, HostMetric)).to be_truthy
-    expect(Rbac.new.send(:apply_rbac_to_associated_class?, Vm)).not_to be
+    expect(Rbac::Filterer.new.send(:apply_rbac_to_associated_class?, HostMetric)).to be_truthy
+    expect(Rbac::Filterer.new.send(:apply_rbac_to_associated_class?, Vm)).not_to be
   end
 
   it ".apply_user_group_rbac_to_class?" do
-    expect(Rbac.new.send(:apply_user_group_rbac_to_class?, User, double("MiqGroup", :self_service? => true))).to be_truthy
-    expect(Rbac.new.send(:apply_user_group_rbac_to_class?, User, double("MiqGroup", :self_service? => false))).not_to be_truthy
-    expect(Rbac.new.send(:apply_user_group_rbac_to_class?, Vm, double("MiqGroup", :self_service? => true))).not_to be_truthy
+    expect(Rbac::Filterer.new.send(:apply_user_group_rbac_to_class?, User, double("MiqGroup", :self_service? => true))).to be_truthy
+    expect(Rbac::Filterer.new.send(:apply_user_group_rbac_to_class?, User, double("MiqGroup", :self_service? => false))).not_to be_truthy
+    expect(Rbac::Filterer.new.send(:apply_user_group_rbac_to_class?, Vm, double("MiqGroup", :self_service? => true))).not_to be_truthy
   end
 
   # find_targets_with_direct_rbac(klass, scope, rbac_filters, find_options, user_or_group)
