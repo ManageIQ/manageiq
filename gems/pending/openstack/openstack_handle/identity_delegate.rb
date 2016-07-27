@@ -25,7 +25,7 @@ module OpenstackHandle
     def visible_tenants_v3
       # Huge inconsistency in Keystone v3, we actually need to provide domain_id both in token and query param, but only
       # for keystone. This rule is defined in policy.json
-      projects.all(:domain_id => @os_handle.domain_id)
+      projects.all(:domain_id => @os_handle.domain_id, :user_id => current_user_id)
     end
 
     #
