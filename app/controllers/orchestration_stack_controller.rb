@@ -9,6 +9,10 @@ class OrchestrationStackController < ApplicationController
     ManageIQ::Providers::CloudManager::OrchestrationStack
   end
 
+  def self.table_name
+    @table_name ||= "orchestration_stack"
+  end
+
   def index
     redirect_to :action => 'show_list'
   end
