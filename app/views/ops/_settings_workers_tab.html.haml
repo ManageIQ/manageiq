@@ -1,8 +1,3 @@
-- change_stored_password ||= _("Change stored password")
-- cancel_password_change ||= _("Cancel password change")
-- stored_password_placeholder = "●●●●●●●●"
-- pfx ||= "replication_worker"
-
 - if @sb[:active_tab] == "settings_workers"
   - url = url_for(:action => 'settings_form_field_changed', :id => "#{@sb[:active_tab].split('_').last}")
   = render :partial => "layouts/flash_msg"
