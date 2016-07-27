@@ -29,25 +29,28 @@ class TreeBuilderDialogEdit < TreeBuilder
 
   def x_get_tree_roots(count_only = false, _options)
     nodes = @root[:new][:tabs].map do |node|
-      {:id => node[:id].to_s,
+      {:id => node[:id].nil? ? 'new' : node[:id].to_s,
        :text => t = node[:label] || _('[New Tab]'),
        :image => "dialog_tab",
        :tip => t,
-       #:expand => true,
+       :expand => true,
        :children => node[:groups].present? ? node[:groups] : []
       }
+    end
+    nodes.each do |node|
+      open_node(node[:id])
     end
     count_only ? nodes.size : nodes
   end
 
   def x_get_tree_hash_kids(parent, count_only)
     nodes = parent[:children].map do |node|
-      if node[:fields].present?
-        {:id => node[:id].to_s,
+      if node.key?(:fields)
+        {:id => node[:id].nil? ? 'new' : node[:id].to_s,
          :text => node[:label] || _('[New Box]'),
          :image => "dialog_group",
          :tip => node[:description] || node[:label],
-         #:expand => true,
+         :expand => true,
          :children => node[:fields].present? ? node[:fields] : []
         }
       else
@@ -56,14 +59,17 @@ class TreeBuilderDialogEdit < TreeBuilder
                         else
                           "#{@root[:field_types][node[:typ]]}: #{node[:description]}"
                         end
-        {:id => node[:id].to_s,
+        {:id => node[:id].nil? ? 'new' : node[:id].to_s,
          :text => node[:label] || _('[New Element]'),
          :image => "dialog_field",
          :tip => field_tooltip,
-         #:expand => true,
+         :expand => true,
          :children => []
         }
       end
+    end
+    nodes.each do |node|
+      open_node(node[:id])
     end
     count_only ? nodes.size : nodes
   end

@@ -144,12 +144,11 @@ module MiqAeCustomizationController::Dialogs
     return unless load_edit("dialog_edit__#{id}", "replace_cell__explorer")
     @record = @edit[:dialog]
     @in_a_form = true
-    valid = dialog_validate
 
-    if valid
+    if dialog_validate
       @sb[:node_typ] = params[:typ]
       @sb[:edit_typ] = "add"
-      nodes = x_node.split('_')
+      nodes = edit_dialog_node_data(x_node)
 
       case params[:typ]
       when "tab"
@@ -159,17 +158,21 @@ module MiqAeCustomizationController::Dialogs
         @sb[:node_typ] = "tab"
 
       when "box"
-        @edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups] ||= []
-        key = @edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups]
+        key = nodes[:type] == 'tab' ? nodes[:data][:groups] : @edit[:new][:tabs].find{ |x| x[:id] == nodes[:parent_id]}[:groups]
         key ||= []
-        key.push(:label => nil, :description => nil)
+        key.push(:label => nil, :description => nil, :fields => [])
         @edit[:group_label] = @edit[:group_description] = nil
         @sb[:node_typ] = "box"
 
       when "element"
         get_field_types
-        @edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups][nodes[2].split('-').last.to_i][:fields] ||= []
-        key = @edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups][nodes[2].split('-').last.to_i][:fields]
+
+        key = if nodes[:type] == 'group'
+                nodes[:data][:fields]
+              else
+                @edit[:new][:tabs].find{ |x| x[:id] == nodes[:data][:tab_id]}[:groups].find{ |x| x[:id] == nodes[:data][:group_id]}[:fields]
+              end
+        key ||= []
         key.push(:label => nil, :description => nil, :typ => "DialogFieldButton")
         @edit[:field_label] = @edit[:field_name] = @edit[:field_description] =
             @edit[:field_required] = @edit[:field_typ] = @edit[:field_values] =
@@ -177,6 +180,8 @@ module MiqAeCustomizationController::Dialogs
         @sb[:node_typ] = "element"
       end
 
+      get_field_types if @edit[:field_types].nil?
+      @dialog_edit_tree = TreeBuilderDialogEdit.new(:dialog_edit, :edit_dialog_tree, @sb, true, @edit)
       replace_right_cell(x_node, [:dialog_edit])
 
     else
