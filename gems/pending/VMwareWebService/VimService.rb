@@ -20,13 +20,13 @@ class VimService < Handsoap::Service
       @sic = retrieveServiceContent
     end
 
-    @about        = @sic.about
-    @apiVersion         = @about.apiVersion
-    @v20        = @apiVersion =~ /2\.0\..*/
-    @v2         = @apiVersion =~ /2\..*/
-    @v4         = @apiVersion =~ /4\..*/
-    @isVirtualCenter    = @about.apiType == "VirtualCenter"
-    @session_cookie     = nil
+    @about           = @sic.about
+    @apiVersion      = @about.apiVersion
+    @v20             = @apiVersion =~ /2\.0\..*/
+    @v2              = @apiVersion =~ /2\..*/
+    @v4              = @apiVersion =~ /4\..*/
+    @isVirtualCenter = @about.apiType == "VirtualCenter"
+    @session_cookie  = nil
 
     setNameSpace('urn:vim25') unless @v20
   end
