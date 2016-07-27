@@ -11,7 +11,7 @@ module ApplicationController::CiProcessing
     render :json => request_hash
   end
 
-   # Set Ownership selected db records
+  # Set Ownership selected db records
   def set_ownership(klass = "VmOrTemplate")
     assert_privileges(params[:pressed])
 
@@ -60,7 +60,7 @@ module ApplicationController::CiProcessing
   alias_method :miq_template_ownership, :set_ownership
   alias_method :service_ownership, :set_ownership
 
-  def get_class_from_controller_param (controller)
+  def get_class_from_controller_param(controller)
     case controller
     when "orchestration_stack"
       OrchestrationStack
@@ -95,7 +95,7 @@ module ApplicationController::CiProcessing
     user = record.evm_owner if @ownership_items.length == 1
     @user = user ? user.id.to_s : nil
 
-    @groups = {}                    # Create new entries hash (2nd pulldown)
+    @groups = {} # Create new entries hash (2nd pulldown)
     # need to do this only if 1 vm is selected and miq_group has been set for it
     group = record.miq_group if @ownership_items.length == 1
     @group = group ? group.id.to_s : nil
@@ -104,27 +104,27 @@ module ApplicationController::CiProcessing
     @user = @group = DONT_CHANGE_OWNER if @ownership_items.length > 1
 
     @ownershipitems = klass.find(@ownership_items).sort_by(&:name)
-    @view = get_db_view(klass == VmOrTemplate ? Vm : klass)       # Instantiate the MIQ Report view object
+    @view = get_db_view(klass == VmOrTemplate ? Vm : klass) # Instantiate the MIQ Report view object
     @view.table = MiqFilter.records2table(@ownershipitems, @view.cols + ['id'])
   end
 
   # Build the ownership assignment screen
   def build_ownership_hash
-    @users = {}   # Users array for first chooser
+    @users = {} # Users array for first chooser
     rbac_filtered_objects(User).each { |u| @users[u.name] = u.id.to_s }
     klass = get_class_from_controller_param(params[:controller])
     record = klass.find(@ownership_items[0])
     user = record.evm_owner if @ownership_items.length == 1
-    @user = user ? user.id.to_s : nil            # Set to first category, if not already set
-    @groups = {}                    # Create new entries hash (2nd pulldown)
+    @user = user ? user.id.to_s : nil # Set to first category, if not already set
+    @groups = {} # Create new entries hash (2nd pulldown)
     # need to do this only if 1 vm is selected and miq_group has been set for it
     group = record.miq_group if @ownership_items.length == 1
     @group = group ? group.id.to_s : nil
     rbac_filtered_objects(MiqGroup).each { |g| @groups[g.description] = g.id.to_s }
     @user = @group = DONT_CHANGE_OWNER if @ownership_items.length > 1
     @ownershipitems = klass.find(@ownership_items).sort_by(&:name)
-    {:user      => @user,
-     :group     => @group}
+    {:user  => @user,
+     :group => @group}
   end
 
   def ownership_update
