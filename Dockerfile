@@ -40,6 +40,7 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
                    rh-postgresql95-postgresql-devel  \
                    rh-postgresql95-postgresql-pglogical-output \
                    rh-postgresql95-postgresql-pglogical \
+                   rh-repmgr95             \
                    readline-devel          \
                    sqlite-devel            \
                    sysvinit-tools          \
