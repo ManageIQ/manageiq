@@ -1,8 +1,8 @@
 describe ArbitrationRule do
-  describe '#action' do
+  describe '#operation' do
     it 'validates allowed actions' do
-      expect { FactoryGirl.create(:arbitration_rule, :action => 'skip') }
-        .to raise_error(ActiveRecord::RecordInvalid, /Action is not included in the list/)
+      expect { FactoryGirl.create(:arbitration_rule, :operation => 'skip') }
+        .to raise_error(ActiveRecord::RecordInvalid, /Operation is not included in the list/)
     end
   end
 

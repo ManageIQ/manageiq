@@ -50,7 +50,7 @@ arbitration_rules:
 - id
 - name
 - description
-- action
+- operation
 - arbitration_profile_id
 - priority
 - expression
