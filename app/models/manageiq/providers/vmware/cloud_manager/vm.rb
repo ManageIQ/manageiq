@@ -1,9 +1,17 @@
 class ManageIQ::Providers::Vmware::CloudManager::Vm < ManageIQ::Providers::CloudManager::Vm
+  include_concern 'Operations'
+
+  def provider_object(connection = nil)
+    connection ||= ext_management_system.connect
+    connection.vms.get_single_vm(uid_ems)
+  end
+
   POWER_STATES = {
-    "creating" => "powering_up",
-    "off"      => "off",
-    "on"       => "on",
-    "unknown"  => "terminated",
+    "creating"  => "powering_up",
+    "off"       => "off",
+    "on"        => "on",
+    "unknown"   => "terminated",
+    "suspended" => "suspended"
   }.freeze
 
   def self.calculate_power_state(raw_power_state)
