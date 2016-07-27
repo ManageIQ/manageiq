@@ -203,9 +203,7 @@ describe MiqAeInstance do
       @i1 = FactoryGirl.create(:miq_ae_instance, :class_id => @cls1.id, :name => "foo_instance1")
       @i2 = FactoryGirl.create(:miq_ae_instance, :class_id => @cls1.id, :name => "foo_instance2")
 
-      @d2 = FactoryGirl.create(:miq_ae_domain,
-                               :name      => "domain2",
-                               :priority  => 2)
+      @d2 = FactoryGirl.create(:miq_ae_domain, :name => "domain2", :priority => 2)
       @ns2 = FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => @d2.id)
     end
 
