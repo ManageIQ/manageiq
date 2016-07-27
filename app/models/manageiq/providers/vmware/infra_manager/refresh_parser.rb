@@ -804,7 +804,7 @@ module ManageIQ::Providers
         guest_device_uids = {}
         return result, result_uids if inv.nil?
 
-        _storage_profile_by_disk_mor, storage_profile_by_vm_mor = storage_profile_by_entity(
+        storage_profile_by_disk_mor, storage_profile_by_vm_mor = storage_profile_by_entity(
           storage_profile_entity_inv,
           storage_profile_uids
         )
@@ -895,7 +895,7 @@ module ManageIQ::Providers
 
           host_mor = runtime['host']
           hardware = vm_inv_to_hardware_hash(vm_inv)
-          hardware[:disks] = vm_inv_to_disk_hashes(vm_inv, storage_uids)
+          hardware[:disks] = vm_inv_to_disk_hashes(vm_inv, storage_uids, storage_profile_by_disk_mor)
           hardware[:guest_devices], guest_device_uids[mor] = vm_inv_to_guest_device_hashes(vm_inv, lan_uids[host_mor])
           hardware[:networks] = vm_inv_to_network_hashes(vm_inv, guest_device_uids[mor])
           uid = hardware[:bios]
@@ -1044,7 +1044,8 @@ module ManageIQ::Providers
         return result, result_uids
       end
 
-      def self.vm_inv_to_disk_hashes(inv, storage_uids)
+      def self.vm_inv_to_disk_hashes(inv, storage_uids, storage_profile_by_disk_mor = {})
+        vm_mor = inv['MOR']
         inv = inv.fetch_path('config', 'hardware', 'device')
 
         result = []
@@ -1082,8 +1083,9 @@ module ManageIQ::Providers
 
           if device_type == 'disk'
             new_result.merge!(
-              :size => device['capacityInKB'].to_i.kilobytes,
-              :mode => backing['diskMode']
+              :size            => device['capacityInKB'].to_i.kilobytes,
+              :mode            => backing['diskMode'],
+              :storage_profile => storage_profile_by_disk_mor["#{vm_mor}:#{device['key']}"]
             )
             new_result[:disk_type] = if backing.key?('compatibilityMode')
                                        "rdm-#{backing['compatibilityMode'].to_s[0...-4]}"  # physicalMode or virtualMode

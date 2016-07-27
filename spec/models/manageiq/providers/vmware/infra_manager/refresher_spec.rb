@@ -220,10 +220,22 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     expect(storage_profile.vms_and_templates).to match_array([vm])
   end
 
-  it 'clears the association when the storage profile of a VM is deleted' do
+  it 'handles storage profile associated disks' do
     EmsRefresh.refresh(@ems)
     vm = Vm.find_by(:ems_ref => 'vm-901')
-    expect(vm.storage_profile.ems_ref).to eq('6fe1c7b4-7f7e-4db1-a545-c756e392de62')
+    disk = vm.disks.detect { |d| d.device_type == 'disk' }
+    storage_profile = StorageProfile.find_by(:ems_ref => '6fe1c7b4-7f7e-4db1-a545-c756e392de62')
+    expect(disk.storage_profile).to eq(storage_profile)
+    expect(storage_profile.disks).to include(disk)
+  end
+
+  it 'clears the association when the storage profile of a VM/Disk is deleted' do
+    EmsRefresh.refresh(@ems)
+    storage_profile = StorageProfile.find_by(:ems_ref => '6fe1c7b4-7f7e-4db1-a545-c756e392de62')
+    vm = Vm.find_by(:ems_ref => 'vm-901')
+    disk = vm.disks.detect { |d| d.device_type == 'disk' }  # only 1 disk in this vm
+    expect(vm.storage_profile).to eq(storage_profile)
+    expect(disk.storage_profile).to eq(storage_profile)
 
     refresher = @ems.refresher.new([@ems])
     target, inventory = refresher.collect_inventory_for_targets(@ems, [@ems])[0]
@@ -234,15 +246,19 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     hashes = refresher.parse_targeted_inventory(@ems, target, inventory)
     refresher.save_inventory(@ems, target, hashes)
     vm.reload
-    storage_profile = StorageProfile.find_by(:ems_ref => '6fe1c7b4-7f7e-4db1-a545-c756e392de62')
-    expect(storage_profile).to be_nil
+    disk.reload
+    expect(StorageProfile.find_by(:ems_ref => '6fe1c7b4-7f7e-4db1-a545-c756e392de62')).to be_nil
     expect(vm.storage_profile).to be_nil
+    expect(disk.storage_profile).to be_nil
   end
 
-  it 'clears the association when the storage profile is detached from a VM' do
+  it 'clears the association when the storage profile is detached from a VM and its disk' do
     EmsRefresh.refresh(@ems)
+    storage_profile = StorageProfile.find_by(:ems_ref => '6fe1c7b4-7f7e-4db1-a545-c756e392de62')
     vm = Vm.find_by(:ems_ref => 'vm-901')
-    expect(vm.storage_profile.ems_ref).to eq('6fe1c7b4-7f7e-4db1-a545-c756e392de62')
+    disk = vm.disks.detect { |d| d.device_type == 'disk' }  # only 1 disk in this vm
+    expect(vm.storage_profile).to eq(storage_profile)
+    expect(disk.storage_profile).to eq(storage_profile)
 
     refresher = @ems.refresher.new([@ems])
     target, inventory = refresher.collect_inventory_for_targets(@ems, [@ems])[0]
@@ -251,10 +267,12 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     hashes = refresher.parse_targeted_inventory(@ems, target, inventory)
     refresher.save_inventory(@ems, target, hashes)
 
-    storage_profile = StorageProfile.find_by(:ems_ref => '6fe1c7b4-7f7e-4db1-a545-c756e392de62')
-    expect(storage_profile).not_to be_nil
+    storage_profile.reload
     vm.reload
+    disk.reload
+    expect(storage_profile).not_to be_nil
     expect(vm.storage_profile).to be_nil
+    expect(disk.storage_profile).to be_nil
   end
 
   def assert_table_counts
