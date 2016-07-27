@@ -2200,7 +2200,7 @@ class ApplicationController < ActionController::Base
     end
 
     # Clearing out session objects that are no longer needed
-    session[:myco_tree] = session[:hac_tree] = session[:vat_tree] = nil if controller_name != "ops"
+    session[:hac_tree] = session[:vat_tree] = nil if controller_name != "ops"
     session[:ch_tree] = nil if !["compliance_history"].include?(params[:display]) && params[:action] != "treesize" && params[:action] != "squash_toggle"
     session[:vm_tree] = nil if !["vmtree_info"].include?(params[:display]) && params[:action] != "treesize"
     session[:policy_tree] = nil if params[:action] != "policies" && params[:pressed] != "vm_protect" && params[:action] != "treesize"
