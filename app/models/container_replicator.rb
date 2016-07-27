@@ -2,6 +2,7 @@ class ContainerReplicator < ApplicationRecord
   include ComplianceMixin
   include CustomAttributeMixin
   include MiqPolicyMixin
+  include TenantIdentityMixin
 
   belongs_to  :ext_management_system, :foreign_key => "ems_id"
   has_many :container_groups
@@ -32,14 +33,6 @@ class ContainerReplicator < ApplicationRecord
     when :policy_events
       # TODO: implement policy events and its relationship
       ["#{events_table_name(assoc)}.ems_id = ?", ems_id]
-    end
-  end
-
-  def tenant_identity
-    if ext_management_system
-      ext_management_system.tenant_identity
-    else
-      User.super_admin.tap { |u| u.current_group = Tenant.root_tenant.default_miq_group }
     end
   end
 

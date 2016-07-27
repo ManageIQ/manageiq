@@ -7,6 +7,7 @@ class OrchestrationStack < ApplicationRecord
   include ProcessTasksMixin
   include_concern 'RetirementManagement'
   include VirtualTotalMixin
+  include TenantIdentityMixin
 
   acts_as_miq_taggable
 
@@ -45,14 +46,6 @@ class OrchestrationStack < ApplicationRecord
 
   def service
     direct_service.try(:root_service)
-  end
-
-  def tenant_identity
-    if ext_management_system
-      ext_management_system.tenant_identity
-    else
-      User.super_admin.tap { |u| u.current_group = Tenant.root_tenant.default_miq_group }
-    end
   end
 
   def indirect_vms

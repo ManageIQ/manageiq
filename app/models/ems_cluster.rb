@@ -3,6 +3,7 @@ class EmsCluster < ApplicationRecord
   include_concern 'CapacityPlanning'
   include EventMixin
   include VirtualTotalMixin
+  include TenantIdentityMixin
 
   acts_as_miq_taggable
 
@@ -55,14 +56,6 @@ class EmsCluster < ApplicationRecord
   include Metric::CiMixin
   include MiqPolicyMixin
   include AsyncDeleteMixin
-
-  def tenant_identity
-    if ext_management_system
-      ext_management_system.tenant_identity
-    else
-      User.super_admin.tap { |u| u.current_group = Tenant.root_tenant.default_miq_group }
-    end
-  end
 
   #
   # Provider Object methods
