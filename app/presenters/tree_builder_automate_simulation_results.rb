@@ -28,12 +28,11 @@ class TreeBuilderAutomateSimulationResults < TreeBuilder
     []
   end
 
-  def x_get_tree_roots(count_only = false, _options)
+  def x_get_tree_roots(_count_only = false, _options)
     objects = []
-    idx = 1
-    MiqXml.load(@root).root.each_element do |el|
-      objects.push(get_root_elements(el, idx))
-      idx += 1
+    xml = MiqXml.load(@root).root
+    xml.each_element do |el|
+      objects.push(get_root_elements(el, xml.index(el)))
     end
     objects
   end
@@ -53,33 +52,26 @@ class TreeBuilderAutomateSimulationResults < TreeBuilder
       icon = title.underscore.sub(/^miq_ae_service_/, '')
       el_attributes = el.attributes
     end
-    e_kids = []
-    el.each_element do |e|
-      e_kids.push(e)
-    end
-    object = {:id => "e_#{idx}", :text => _(title).html_safe, :image => icon, :tip => _(title).html_safe, :elements => e_kids, :addClass => "cfme-no-cursor-node"}
+    object = {:id       => "e_#{idx}",
+              :text     => _(title).html_safe,
+              :image    => icon,
+              :tip      => _(title).html_safe,
+              :elements => el.each_element {|e| e},
+              :addClass => "cfme-no-cursor-node"
+             }
     object[:attributes] = el_attributes if el_attributes
     object
   end
 
   def x_get_tree_hash_kids(parent, count_only)
     kids = []
-    idx = 1
     if parent[:attributes]
-      parent[:attributes].each_pair do |k, v|
-        node = {}
-        node[:id] = "a_#{idx}"
-        idx += 1
-        node[:text] = "#{k} <b>=</b> #{v}".html_safe
-        node[:image] = "attribute"
-        node[:addClass] = "cfme-no-cursor-node"
-        kids.push(node)
+      parent[:attributes].each_with_index do |k, idx|
+        kids.push({:id => "a_#{idx}", :image => "attribute", :addClass => "cfme-no-cursor-node", :text => "#{k.first} <b>=</b> #{k.last}".html_safe})
       end
     end
-    if parent[:elements]
-      parent[:elements].each_with_index do |el, i|
-        kids.push(get_root_elements(el, i))
-      end
+    Array(parent[:elements]).each_with_index do |el, i|
+      kids.push(get_root_elements(el, i))
     end
     count_only_or_objects(count_only, kids)
   end
