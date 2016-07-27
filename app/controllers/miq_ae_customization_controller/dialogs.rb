@@ -1246,7 +1246,6 @@ module MiqAeCustomizationController::Dialogs
     get_field_types if @edit[:field_types].nil?
     @dialog_edit_tree = TreeBuilderDialogEdit.new(:dialog_edit, :edit_dialog_tree, @sb, true, @edit)
     x_node_set("root", :dialog_edit_tree)     # always set it to root for edit tree
-
     session[:edit] = @edit
   end
 

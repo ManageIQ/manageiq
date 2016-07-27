@@ -218,6 +218,7 @@ class TreeBuilder
     root[:title], root[:tooltip], icon, options = root_options
     root[:icon] = ActionController::Base.helpers.image_path("100/#{icon || 'folder'}.png")
     root[:cfmeNoClick] = options[:cfmeNoClick] if options.present? && options.key?(:cfmeNoClick)
+    root[:activate] = options[:activate] if options.present? && options.key?(:activate)
   end
 
   def set_locals_for_render

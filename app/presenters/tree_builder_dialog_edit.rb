@@ -24,7 +24,7 @@ class TreeBuilderDialogEdit < TreeBuilder
   end
 
   def root_options
-    ["#{@root[:new][:label] || _('[New Dialog]')}", @root[:new][:description] || @root[:new][:label], "dialog"]
+    ["#{@root[:new][:label] || _('[New Dialog]')}", @root[:new][:description] || @root[:new][:label], "dialog", {:activate => true}]
   end
 
   def x_get_tree_roots(count_only = false, _options)
