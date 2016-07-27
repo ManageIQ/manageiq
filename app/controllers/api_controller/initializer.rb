@@ -20,7 +20,7 @@ class ApiController
       end
 
       def user_token_service
-        @api_user_token_service
+        @user_token_service ||= ApiUserTokenService.new(Api::Settings, :log_init => true)
       end
 
       private
@@ -34,7 +34,6 @@ class ApiController
       #
       def init_env
         $api_log.info("Initializing Environment for #{Api::Settings.base[:name]}")
-        @api_user_token_service ||= ApiUserTokenService.new(Api::Settings, :log_init => true)
         log_config
       end
 
