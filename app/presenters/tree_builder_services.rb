@@ -24,7 +24,7 @@ class TreeBuilderServices < TreeBuilder
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
-    roots = rbac_filtered_objects(Service.roots)
+    roots = Rbac.filtered(Service.roots)
 
     # Preload the root service picture since it's called by TreeNodeBuilder#build
     MiqPreloader.preload(roots, :picture)
@@ -33,7 +33,7 @@ class TreeBuilderServices < TreeBuilder
   end
 
   def x_get_tree_service_kids(object, count_only)
-    objects = rbac_filtered_objects(object.direct_service_children.select(&:display).sort_by { |o| o.name.downcase })
+    objects = Rbac.filtered(object.direct_service_children.select(&:display).sort_by { |o| o.name.downcase })
     count_only_or_objects(count_only, objects, 'name')
   end
 end

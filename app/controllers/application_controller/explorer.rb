@@ -204,10 +204,6 @@ module ApplicationController::Explorer
                                      id)
   end
 
-  def rbac_filtered_objects(objects, options = {})
-    Rbac.filtered(objects, options)
-  end
-
   # FIXME: move partly to Tree once Trees are made from TreeBuilder
   def valid_active_node(treenodeid)
     modelname, rec_id, nodetype = TreeBuilder.extract_node_model_and_id(treenodeid)

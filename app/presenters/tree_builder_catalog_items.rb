@@ -27,7 +27,7 @@ class TreeBuilderCatalogItems < TreeBuilderCatalogsClass
                 else
                   object.service_templates
                 end
-    count_only_or_objects(count_only, rbac_filtered_objects(templates), 'name')
+    count_only_or_objects(count_only, Rbac.filtered(templates), 'name')
   end
 
   # Handle custom tree nodes (object is a Hash)

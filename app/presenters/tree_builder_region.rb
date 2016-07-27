@@ -26,8 +26,8 @@ class TreeBuilderRegion < TreeBuilder
               else
                 object.ext_management_systems
               end
-    emses = rbac_filtered_objects(emstype)
-    storages  = rbac_filtered_objects(object.storages)
+    emses = Rbac.filtered(emstype)
+    storages = Rbac.filtered(object.storages)
     if count_only
       emses.count + storages.count
     else
@@ -81,6 +81,6 @@ class TreeBuilderRegion < TreeBuilder
   end
 
   def rbac_filtered_sorted_objects(records, sort_by, options = {})
-    rbac_filtered_objects(records, options).sort_by { |o| o.deep_send(sort_by).to_s.downcase }
+    Rbac.filtered(records, options).sort_by { |o| o.deep_send(sort_by).to_s.downcase }
   end
 end

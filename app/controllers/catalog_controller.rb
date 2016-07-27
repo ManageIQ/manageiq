@@ -1304,7 +1304,7 @@ class CatalogController < ApplicationController
     @edit[:new][:provision_cost] = @record.provision_cost
     @edit[:new][:display]  = @record.display ? @record.display : false
     @edit[:new][:catalog_id] = @record.service_template_catalog ? @record.service_template_catalog.id : nil
-    @edit[:new][:available_catalogs] = rbac_filtered_objects(ServiceTemplateCatalog.all).collect do |stc|
+    @edit[:new][:available_catalogs] = Rbac.filtered(ServiceTemplateCatalog.all).collect do |stc|
       [stc.tenant.present? && stc.tenant.ancestors.present? ? stc.name + " (#{stc.tenant.name})" : stc.name, stc.id]
     end
     @edit[:new][:available_catalogs] = @edit[:new][:available_catalogs].sort
@@ -1702,7 +1702,7 @@ class CatalogController < ApplicationController
         else
           if x_active_tree == :stcat_tree
             @record = ServiceTemplateCatalog.find_by_id(from_cid(id))
-            @record_service_templates = rbac_filtered_objects(@record.service_templates)
+            @record_service_templates = Rbac.filtered(@record.service_templates)
             typ = x_active_tree == :svccat_tree ? "Service" : TreeBuilder.get_model_for_prefix(@nodetype)
             @right_cell_text = _("%{model} \"%{name}\"") % {:name => @record.name, :model => ui_lookup(:model => typ)}
           elsif x_active_tree == :ot_tree
