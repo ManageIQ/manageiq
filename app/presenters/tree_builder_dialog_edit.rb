@@ -9,7 +9,7 @@ class TreeBuilderDialogEdit < TreeBuilder
   private
 
   def tree_init_options(_tree_name)
-    {:full_ids => true, :lazy => false}
+    {:full_ids => true, :lazy => false, :open_all => true}
   end
 
   def set_locals_for_render
@@ -36,9 +36,6 @@ class TreeBuilderDialogEdit < TreeBuilder
        :expand => true,
        :children => node[:groups].present? ? node[:groups] : []
       }
-    end
-    nodes.each do |node|
-      open_node(node[:id])
     end
     count_only ? nodes.size : nodes
   end
@@ -67,9 +64,6 @@ class TreeBuilderDialogEdit < TreeBuilder
          :children => []
         }
       end
-    end
-    nodes.each do |node|
-      open_node(node[:id])
     end
     count_only ? nodes.size : nodes
   end
