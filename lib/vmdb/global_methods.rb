@@ -55,7 +55,7 @@ module Vmdb
         when "widget_footer"                        # for widget footers
           new_time = I18n.l(new_time, :format => :long)
         else                                        # for summary screens
-          new_time = new_time.strftime("%a %b %d %H:%M:%S %Z %Y")
+          new_time = I18n.l new_time
         end
       else    # if time is nil
         new_time = ""
