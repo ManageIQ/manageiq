@@ -51,7 +51,7 @@ module Vmdb
           new_time = new_time.gsub(/\) [a-zA-Z0-9\s\S]*/, ")")
         when "raw"                                  # return without formatting
         when "compare_hdr"                          # for drift/compare headers
-          new_time = new_time.strftime("%m/%d/%y %H:%M %Z")
+          new_time = I18n.l(new_time, :format => :long) + new_time.strftime(" %Z")
         when "widget_footer"                        # for widget footers
           new_time = I18n.l(new_time, :format => :long)
         else                                        # for summary screens
