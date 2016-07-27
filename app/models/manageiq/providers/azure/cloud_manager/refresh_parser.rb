@@ -13,13 +13,6 @@ module ManageIQ::Providers
       def initialize(ems, options = nil)
         @ems    = ems
         @config = ems.connect
-
-        # Save the default subscription ID to the database if one wasn't provided.
-        unless ems.subscription
-          ems.subscription = @config.subscription_id
-          ems.save
-        end
-
         @subscription_id = ems.subscription
 
         # TODO(lsmola) NetworkManager, remove network endpoints once this is entirely moved under NetworkManager
