@@ -449,6 +449,7 @@ Vmdb::Application.routes.draw do
         timeprofile_copy
         timeprofile_edit
         timeprofile_new
+        get_visual_settings
       ),
       :post => %w(
         button
@@ -462,6 +463,7 @@ Vmdb::Application.routes.draw do
         tree_autoload_dynatree
         update
         view_selected
+        set_visual_settings
       )
     },
 
