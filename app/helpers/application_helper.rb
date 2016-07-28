@@ -132,14 +132,14 @@ module ApplicationHelper
   end
 
   # Check role based authorization for a UI task
-  def role_allows(*args)
-    Rbac::Authorizer.role_allows(*args) rescue false
+  def role_allows(**options)
+    Rbac::Authorizer.role_allows(options.merge(user: User.current_user)) rescue false
   end
   module_function :role_allows
   public :role_allows
 
-  def role_allows!(*args)
-    Rbac::Authorizer.role_allows(*args)
+  def role_allows!(**options)
+    Rbac::Authorizer.role_allows(options.merge(user: User.current_user))
   end
   module_function :role_allows!
 
