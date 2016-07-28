@@ -448,10 +448,29 @@ class MiqExpression
     case operator.downcase
     when "equal", "=", "<", ">", ">=", "<=", "!=", "before", "after"
       col_type = get_col_type(exp[operator]["field"]) if exp[operator]["field"]
-      return _to_ruby({"date_time_with_logical_operator" => exp}, context_type, tz) if col_type == :date || col_type == :datetime
+      if col_type == :date || col_type == :datetime
+        col_name = exp[operator]["field"]
+        col_ruby, _ = operands2rubyvalue(operator, {"field" => col_name}, context_type)
 
-      operands = operands2rubyvalue(operator, exp[operator], context_type)
-      clause = operands.join(" #{normalize_ruby_operator(operator)} ")
+        normalized_operator = normalize_ruby_operator(operator)
+        mode = case normalized_operator
+               when ">", "<="  then "end"        # (>  <date> 23::59:59), (<= <date> 23::59:59)
+               when "<", ">="  then "beginning"  # (<  <date> 00::00:00), (>= <date> 00::00:00)
+               end
+
+        if col_type == :date
+          val = RelativeDatetime.normalize(exp[operator]["value"], tz, mode)
+
+          clause = "val=#{col_ruby}; !val.nil? && val.to_date #{normalized_operator} #{quote(val.to_date, :date)}"
+        else
+          val = RelativeDatetime.normalize(exp[operator]["value"], tz, mode)
+
+          clause = "val=#{col_ruby}; !val.nil? && val.to_time #{normalized_operator} #{quote(val.utc, :datetime)}"
+        end
+      else
+        operands = operands2rubyvalue(operator, exp[operator], context_type)
+        clause = operands.join(" #{normalize_ruby_operator(operator)} ")
+      end
     when "includes all"
       operands = operands2rubyvalue(operator, exp[operator], context_type)
       clause = "(#{operands[0]} & #{operands[1]}) == #{operands[1]}"
@@ -541,29 +560,6 @@ class MiqExpression
         end_val   = quote(RelativeDatetime.normalize(end_val, tz, "end").utc, :datetime)
 
         clause = "val=#{col_ruby}; !val.nil? && val.to_time >= #{start_val} && val.to_time <= #{end_val}"
-      end
-    when "date_time_with_logical_operator"
-      exp = exp[operator]
-      operator = exp.keys.first
-
-      col_name = exp[operator]["field"]
-      col_type = get_col_type(col_name)
-      col_ruby, dummy = operands2rubyvalue(operator, {"field" => col_name}, context_type)
-
-      normalized_operator = normalize_ruby_operator(operator)
-      mode = case normalized_operator
-             when ">", "<="  then "end"        # (>  <date> 23::59:59), (<= <date> 23::59:59)
-             when "<", ">="  then "beginning"  # (<  <date> 00::00:00), (>= <date> 00::00:00)
-             end
-
-      if col_type == :date
-        val = RelativeDatetime.normalize(exp[operator]["value"], tz, mode)
-
-        clause = "val=#{col_ruby}; !val.nil? && val.to_date #{normalized_operator} #{quote(val.to_date, :date)}"
-      else
-        val = RelativeDatetime.normalize(exp[operator]["value"], tz, mode)
-
-        clause = "val=#{col_ruby}; !val.nil? && val.to_time #{normalized_operator} #{quote(val.utc, :datetime)}"
       end
     else
       raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator}
