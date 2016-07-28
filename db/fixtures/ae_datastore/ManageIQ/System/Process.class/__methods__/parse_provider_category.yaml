@@ -8,5 +8,5 @@ object:
     description: 
     scope: instance
     language: ruby
-    location: inline
+    location: builtin
   inputs: []
