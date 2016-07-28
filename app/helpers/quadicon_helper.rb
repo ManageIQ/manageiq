@@ -426,7 +426,7 @@ module QuadiconHelper
   # Renders a quadicon for resource_pools
   #
   def render_resource_pool_quadicon(item, options)
-    img = item.vapp ? "vapp.png" : "resource_pool.png"
+    img = item.kind_of?(VirtualApp) ? "vapp.png" : "resource_pool.png"
     size = options[:size]
     width = options[:size] == 150 ? 54 : 35
     output = []
