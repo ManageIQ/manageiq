@@ -1,15 +1,16 @@
 require 'util/postgres_dsn_parser'
 require 'postgres_ha_admin/postgres_ha_logger'
-require 'pathname'
+require 'pg'
 
 module PostgresHaAdmin
   class FailoverDatabases
     include PostgresHaLogger
     include PostgresHaAdmin
 
-    def initialize(config_dir, log_dir)
+    def initialize(config_dir, log_dir, connection_params_hash)
       init_config_dir(config_dir)
       init_logger(log_dir)
+      @connection_hash = connection_params_hash
     end
 
     def refresh_databases_list
@@ -41,16 +42,19 @@ module PostgresHaAdmin
     private
 
     def query_repmgr
-      connection = ApplicationRecord.connection
       result = []
-      if connection.table_exists? "repmgr_miq.repl_nodes"
-        connection.execute("SELECT type, conninfo, active FROM repmgr_miq.repl_nodes").each do |record|
+      connection = PG::Connection.open(connection_hash)
+      if table_exists?(connection)
+        db_result = connection.exec("SELECT type, conninfo, active FROM repmgr_miq.repl_nodes")
+        db_result.map_types!(PG::BasicTypeMapForResults.new(connection)).each do |record|
           dsn = PostgresDsnParser.parse_dsn(record.delete("conninfo"))
           result << record.symbolize_keys.merge(dsn)
         end
+        db_result.clear
         write_file(result)
         log_info("List standby databases in #{yml_file} replaced.")
       end
+      connection.finish
       result
     end
 
@@ -60,6 +64,10 @@ module PostgresHaAdmin
       log_error("#{err.class}: #{err}")
       log_error(err.backtrace.join("\n"))
       raise
+    end
+
+    def table_exists?(connection)
+      connection.exec("SELECT to_regclass('repmgr_miq.repl_nodes')")
     end
   end
 end

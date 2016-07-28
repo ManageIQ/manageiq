@@ -1,21 +1,26 @@
 require 'postgres_ha_admin/failover_databases'
 require 'postgres_ha_admin/postgres_ha_admin'
+require 'spec/support/test_env_helper'
+require 'pg'
 
 describe PostgresHaAdmin::FailoverDatabases do
-  subject { described_class.new(Rails.root.join('config'), Rails.root.join('log')) }
+  subject do
+    described_class.new(TestEnvHelper::SPEC_DIR, TestEnvHelper::SPEC_DIR, :dbname => 'vmdb_test')
+  end
 
   before do
-    connection = ActiveRecord::Base.connection
-    connection.execute("CREATE SCHEMA repmgr_miq")
+    drop_schema
+    connection = pg_connection
+    connection.exec("CREATE SCHEMA repmgr_miq")
 
-    connection.execute(<<-SQL)
+    connection.exec(<<-SQL)
       CREATE TABLE repmgr_miq.repl_nodes (
       type text NOT NULL,
       conninfo text NOT NULL,
       active boolean DEFAULT true NOT NULL)
     SQL
 
-    connection.execute(<<-SQL)
+    connection.exec(<<-SQL)
       INSERT INTO
         repmgr_miq.repl_nodes(type, conninfo, active)
       VALUES
@@ -23,10 +28,15 @@ describe PostgresHaAdmin::FailoverDatabases do
         ('standby', 'host=2.2.2.2 user=root dbname=vmdb_test', 'true'),
         ('standby', 'host=3.3.3.3 user=root dbname=vmdb_test', 'false')
     SQL
+    connection.finish
   end
 
   after do
     remove_file
+  end
+
+  after(:all) do
+    drop_schema
   end
 
   describe ".all_databases" do
@@ -94,14 +104,19 @@ describe PostgresHaAdmin::FailoverDatabases do
     end
   end
 
+  def pg_connection
+    PG::Connection.open(:dbname => 'vmdb_test')
+  end
+
   def add_new_record
-    connection = ApplicationRecord.connection
-    connection.execute(<<-SQL)
+    connection = pg_connection
+    connection.exec(<<-SQL)
       INSERT INTO
         repmgr_miq.repl_nodes(type, conninfo, active)
       VALUES
         ('standby', 'host=4.4.4.4 user=root dbname=some_db', 'true')
     SQL
+    connection.finish
   end
 
   def remove_file
@@ -111,5 +126,14 @@ describe PostgresHaAdmin::FailoverDatabases do
     if File.exist?(subject.log_file)
       File.delete(subject.log_file)
     end
+  end
+
+  def drop_schema
+    connection = pg_connection
+    connection.exec("DROP SCHEMA repmgr_miq cascade")
+    connection.finish
+    true
+  rescue PG::Error => _err
+    false
   end
 end

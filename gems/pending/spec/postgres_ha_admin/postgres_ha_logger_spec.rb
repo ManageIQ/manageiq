@@ -1,9 +1,10 @@
 require 'postgres_ha_admin/postgres_ha_logger'
+require 'spec/support/test_env_helper'
 
 describe PostgresHaAdmin::PostgresHaLogger do
   let(:dummy_class) do
     clazz = Dummy.new
-    clazz.init_logger(Rails.root.join("log"))
+    clazz.init_logger(TestEnvHelper::SPEC_DIR)
     clazz
   end
 
