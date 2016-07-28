@@ -171,7 +171,6 @@ describe MiqAeDomain do
       dom = FactoryGirl.create(:miq_ae_system_domain, :tenant => @user.current_tenant)
       expect(dom.contents_locked?).to be_truthy
     end
-
   end
 
   context "editable contents for a domain" do
