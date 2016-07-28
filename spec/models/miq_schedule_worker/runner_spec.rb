@@ -137,6 +137,9 @@ describe MiqScheduleWorker::Runner do
             schedules = @schedule_worker.instance_variable_get(:@schedules)
             expect(schedules[:scheduler].length).to eq(60)
           end
+          @user.jobs(:tag => "miq_schedules_1").each_with_index do |job, i|
+            expect(job.next_time).to eq(first_at + i.month)
+          end
         end
 
         it "monthly schedule starting Jan 31 will next run Feb 28" do
