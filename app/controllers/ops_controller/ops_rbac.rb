@@ -940,8 +940,8 @@ module OpsController::OpsRbac
       @filters[f.split("/")[-2] + "-" + f.split("/")[-1]] = f
     end
     rbac_build_myco_tree                              # Build the MyCompanyTags tree for this user
-    build_belongsto_tree(@belongsto.keys)  # Build the Hosts & Clusters tree for this user
-    build_belongsto_tree(@belongsto.keys, true)  # Build the VMs & Templates tree for this user
+    @hac_tree = build_belongsto_tree(@belongsto.keys, false, false)  # Build the Hosts & Clusters tree for this user
+    @vat_tree = build_belongsto_tree(@belongsto.keys, true, false)  # Build the VMs & Templates tree for this user
   end
 
   def rbac_role_get_details(id)
@@ -1105,8 +1105,8 @@ module OpsController::OpsRbac
 
     @edit[:current] = copy_hash(@edit[:new])
     rbac_build_myco_tree                              # Build the MyCompanyTags tree for this user
-    build_belongsto_tree(@edit[:new][:belongsto].keys)  # Build the Hosts & Clusters tree for this user
-    build_belongsto_tree(@edit[:new][:belongsto].keys, true)  # Build the VMs & Templates tree for this user
+    @hac_tree = build_belongsto_tree(@edit[:new][:belongsto].keys, false, false)  # Build the Hosts & Clusters tree for this user
+    @vat_tree = build_belongsto_tree(@edit[:new][:belongsto].keys, true, false)  # Build the VMs & Templates tree for this user
   end
 
   # Build the MyCompany Tags tree
@@ -1142,8 +1142,7 @@ module OpsController::OpsRbac
       cat_node[:expand] = true if kids_checked
       cats.push(cat_node) unless cat_kids.empty?
     end
-    session[:myco_tree] = cats.to_json.html_safe # Add cats node array to root of tree
-    session[:tree] = "myco"
+    @myco_tree = cats.to_json.html_safe # Add cats node array to root of tree
   end
 
   # Set group record variables to new values
