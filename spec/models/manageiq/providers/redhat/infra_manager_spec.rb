@@ -35,22 +35,31 @@ describe ManageIQ::Providers::Redhat::InfraManager do
       @num_of_sockets   = 3
       @total_mem_in_mb  = 4096
 
-      @spec             = {"memoryMB"          => @total_mem_in_mb,
-                           "numCPUs"           => @cores_per_socket * @num_of_sockets,
-                           "numCoresPerSocket" => @cores_per_socket}
-
-      @rhevm_vm = double('rhevm_vm').as_null_object
+      @rhevm_vm_attrs = double('rhevm_vm_attrs')
+      allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:memory).and_return(@total_mem_in_mb.megabytes)
+      @rhevm_vm = double('rhevm_vm')
+      allow(@rhevm_vm).to receive(:attributes).and_return(@rhevm_vm_attrs)
       allow(@vm).to receive(:with_provider_object).and_yield(@rhevm_vm)
     end
 
     it "cpu_topology=" do
+      spec = {
+        "numCPUs"           => @cores_per_socket * @num_of_sockets,
+        "numCoresPerSocket" => @cores_per_socket
+      }
+
       expect(@rhevm_vm).to receive(:cpu_topology=).with(:cores => @cores_per_socket, :sockets => @num_of_sockets)
-      @ems.vm_reconfigure(@vm, :spec => @spec)
+      @ems.vm_reconfigure(@vm, :spec => spec)
     end
 
     it "memory=" do
+      spec = {
+        "memoryMB" => @total_mem_in_mb
+      }
+
       expect(@rhevm_vm).to receive(:memory=).with(@total_mem_in_mb.megabytes)
-      @ems.vm_reconfigure(@vm, :spec => @spec)
+      expect(@rhevm_vm).to receive(:memory_reserve=).with(@total_mem_in_mb.megabytes)
+      @ems.vm_reconfigure(@vm, :spec => spec)
     end
   end
 
