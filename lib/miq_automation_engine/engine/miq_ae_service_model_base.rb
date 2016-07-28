@@ -260,7 +260,7 @@ module MiqAeMethodService
     def object_send(name, *params)
       ar_method do
         begin
-          @object.send(name, *params)
+          @object.public_send(name, *params)
         rescue Exception => err
           $miq_ae_logger.error("The following error occurred during instance method <#{name}> for AR object <#{@object.inspect}>")
           raise

@@ -17,6 +17,10 @@ class GenericObjectDefinition < ApplicationRecord
 
   before_destroy :check_not_in_use
 
+  def create_object(options)
+    GenericObject.create!({:generic_object_definition => self}.merge(options))
+  end
+
   def defined_property_attributes
     properties[:attributes]
   end

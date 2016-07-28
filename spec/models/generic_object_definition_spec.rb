@@ -39,4 +39,13 @@ describe GenericObjectDefinition do
       expect { definition.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
     end
   end
+
+  describe '#create_object' do
+    it 'creates a generic object' do
+      obj = definition.create_object(:name => 'test', :max_number => 100)
+      expect(obj).to be_a_kind_of(GenericObject)
+      expect(obj.generic_object_definition).to eq(definition)
+      expect(obj.max_number).to eq(100)
+    end
+  end
 end
