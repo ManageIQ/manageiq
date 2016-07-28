@@ -17,8 +17,8 @@ class Relationship < ApplicationRecord
   end
 
   def self.filter_by_resource_type(relationships, options)
-    of_type = options[:of_type].to_miq_a
-    except_type = options[:except_type].to_miq_a
+    of_type = Array.wrap(options[:of_type])
+    except_type = Array.wrap(options[:except_type])
     return relationships if of_type.empty? && except_type.empty?
     relationships.reject { |r| r.filtered?(of_type, except_type) }
   end
