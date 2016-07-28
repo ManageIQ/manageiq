@@ -439,7 +439,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     # Treat months differently since rufus doesn't support :schedule_every with X.months type of options
     sch = MiqSchedule.find(schedule_id)
     next_run = sch.next_interval_time
-    @schedules[:scheduler] << @user_scheduler.send(method, next_run, options) do |rufus_job|
+    @schedules[:scheduler] << @user_scheduler.send(method, next_run, options.dup) do |rufus_job|
       enqueue [:miq_schedule_queue_scheduled_work, schedule_id, rufus_job]
     end
 
@@ -447,7 +447,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     remaining_months = ((5 * 12) / months) - 1
     remaining_months.times do
       next_run += months.months
-      @schedules[:scheduler] << @user_scheduler.send(method, next_run, options) do |rufus_job|
+      @schedules[:scheduler] << @user_scheduler.send(method, next_run, options.dup) do |rufus_job|
         enqueue [:miq_schedule_queue_scheduled_work, schedule_id, rufus_job]
       end
     end
