@@ -17,7 +17,6 @@ module MiqAeEngine
   AE_ROOT_DIR            = File.expand_path(File.join(Rails.root,    'product/automate'))
   AE_IMPORT_DIR          = File.expand_path(File.join(AE_ROOT_DIR,   'import'))
   AE_DEFAULT_IMPORT_FILE = File.expand_path(File.join(AE_IMPORT_DIR, 'automate.xml'))
-  @deliver_mutex         = Mutex.new
 
   def self.instantiate(uri, user)
     $miq_ae_logger.info("MiqAeEngine: Instantiating Workspace for URI=#{uri}")
@@ -52,16 +51,6 @@ module MiqAeEngine
   end
 
   def self.deliver(*args)
-    # This was added because in RAILS 5 PUMA sends multiple requests
-    # to the same process and our DRb server implementation for Automate
-    # Methods is not thread safe. The permit_concurrent_loads allows the
-    # DRb requests which run in different threads to load constants.
-    ActiveSupport::Dependencies.interlock.permit_concurrent_loads do
-      @deliver_mutex.synchronize { deliver_block(*args) }
-    end
-  end
-
-  def self.deliver_block(*args)
     options = {}
 
     case args.length
@@ -168,8 +157,6 @@ module MiqAeEngine
       vmdb_object.after_ae_delivery(ae_result.to_s.downcase) if vmdb_object.respond_to?(:after_ae_delivery)
     end
   end
-
-  private_class_method :deliver_block
 
   def self.format_benchmark_counts(bm)
     formatted = ''
