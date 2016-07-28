@@ -118,7 +118,6 @@ module ManageIQ::Providers
           :description => flavor.description,
           :enabled     => !flavor.deprecated,
           :cpus        => flavor.guest_cpus,
-          :cpu_cores   => 1,
           :memory      => flavor.memory_mb * 1.megabyte,
         }
 
@@ -243,11 +242,9 @@ module ManageIQ::Providers
           :operating_system  => operating_system,
           :key_pairs         => [],
           :hardware          => {
-            :cpu_sockets          => flavor[:cpus],
-            :cpu_total_cores      => flavor[:cpu_cores],
-            :cpu_cores_per_socket => 1,
-            :memory_mb            => flavor[:memory] / 1.megabyte,
-            :disks                => [], # populated below
+            :cpu_total_cores => flavor[:cpus],
+            :memory_mb       => flavor[:memory] / 1.megabyte,
+            :disks           => [], # populated below
           }
         }
 

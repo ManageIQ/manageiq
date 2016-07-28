@@ -258,7 +258,6 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :description => "1 vCPU (shared physical core) and 0.6 GB RAM",
       :enabled     => true,
       :cpus        => 1,
-      :cpu_cores   => 1,
       :memory      => 643825664,
     )
 
@@ -273,7 +272,6 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :description => "Custom created machine type.",
       :enabled     => true,
       :cpus        => 1,
-      :cpu_cores   => 1,
       :memory      => 2147483648,
     )
 
@@ -325,7 +323,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :guest_os_full_name  => nil,
       :bios                => nil,
       :annotation          => nil,
-      :cpu_sockets         => 1,
+      :cpu_total_cores     => 1,
       :memory_mb           => 614,
       :bitness             => nil,
       :virtualization_type => nil
@@ -496,8 +494,8 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :guest_os_full_name => nil,
       :bios               => nil,
       :annotation         => nil,
-      :cpu_sockets        => 1,
       :memory_mb          => 614,
+      :cpu_total_cores    => 1,
       :bitness            => nil
     )
 
