@@ -141,7 +141,7 @@ describe MiqAeInstance do
     end
 
     it "should return editable as false if the parent namespace/class is not editable" do
-      d1 = FactoryGirl.create(:miq_ae_domain, :system => true, :tenant => User.current_tenant)
+      d1 = FactoryGirl.create(:miq_ae_system_domain, :tenant => User.current_tenant)
       n1 = FactoryGirl.create(:miq_ae_namespace, :parent_id => d1.id)
       c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
       i1 = FactoryGirl.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
@@ -203,11 +203,7 @@ describe MiqAeInstance do
       @i1 = FactoryGirl.create(:miq_ae_instance, :class_id => @cls1.id, :name => "foo_instance1")
       @i2 = FactoryGirl.create(:miq_ae_instance, :class_id => @cls1.id, :name => "foo_instance2")
 
-      @d2 = FactoryGirl.create(:miq_ae_namespace,
-                               :name      => "domain2",
-                               :parent_id => nil,
-                               :priority  => 2,
-                               :system    => false)
+      @d2 = FactoryGirl.create(:miq_ae_domain, :name => "domain2", :priority => 2)
       @ns2 = FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => @d2.id)
     end
 
@@ -248,7 +244,7 @@ describe MiqAeInstance do
   end
 
   it "#domain" do
-    n1 = FactoryGirl.create(:miq_ae_domain, :name => 'dom1', :priority => 10, :system => true)
+    n1 = FactoryGirl.create(:miq_ae_system_domain, :name => 'dom1')
     c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     i1 = FactoryGirl.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
     expect(i1.domain.name).to eql('dom1')

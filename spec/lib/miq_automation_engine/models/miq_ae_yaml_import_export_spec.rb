@@ -240,17 +240,17 @@ describe MiqAeDatastore do
     end
 
     it "domain, as directory" do
-      import_options = {'import_dir' => @export_dir, 'system' => false, 'enabled' => true}
+      import_options = {'import_dir' => @export_dir, 'enabled' => true}
       assert_export_import_roundtrip({}, import_options)
     end
 
     it "domain, as zip" do
-      options = {'zip_file' => @zip_file,  'system' => false, 'enabled' => true}
+      options = {'zip_file' => @zip_file, 'enabled' => true}
       assert_export_import_roundtrip(options, options)
     end
 
     it "domain, as yaml" do
-      options = {'yaml_file' => @yaml_file, 'system' => false, 'enabled' => true}
+      options = {'yaml_file' => @yaml_file, 'enabled' => true}
       assert_export_import_roundtrip(options, options)
     end
 

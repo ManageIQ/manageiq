@@ -39,6 +39,16 @@ class MiqAeDomain < MiqAeNamespace
     self.priority = MiqAeDomain.highest_priority(tenant) + 1 unless priority
   end
 
+  def lock_contents!
+    self.system = true
+    save!
+  end
+
+  def unlock_contents!
+    self.system = false
+    save!
+  end
+
   def version
     version_field = about_class.try(:ae_fields).try(:detect) { |fld| fld.name == 'version' }
     version_field.try(:default_value)

@@ -1,9 +1,20 @@
 FactoryGirl.define do
   factory :miq_ae_domain_enabled, :parent => :miq_ae_domain do
+    enabled true
   end
 
   factory :miq_ae_domain_disabled, :parent => :miq_ae_domain do
     enabled false
+  end
+
+  factory :miq_ae_system_domain, :parent => :miq_ae_domain do
+    enabled false
+    system true
+  end
+
+  factory :miq_ae_system_domain_enabled, :parent => :miq_ae_domain do
+    system true
+    enabled true
   end
 
   factory :miq_ae_git_domain, :parent => :miq_ae_domain do

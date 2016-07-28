@@ -64,7 +64,7 @@ describe MiqAeClass do
   end
 
   it "should return editable as false if the parent namespace is not editable" do
-    n1 = FactoryGirl.create(:miq_ae_domain, :system => true, :tenant => @user.current_tenant)
+    n1 = FactoryGirl.create(:miq_ae_system_domain, :tenant => @user.current_tenant)
     c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     expect(c1.editable?(@user)).to be_falsey
   end
@@ -181,11 +181,7 @@ describe MiqAeClass do
       @cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => @ns1.id)
       @cls2 = FactoryGirl.create(:miq_ae_class, :name => "cls2", :namespace_id => @ns1.id)
 
-      @d2 = FactoryGirl.create(:miq_ae_namespace,
-                               :name      => "domain2",
-                               :parent_id => nil,
-                               :priority  => 2,
-                               :system    => false)
+      @d2 = FactoryGirl.create(:miq_ae_domain, :name => "domain2", :priority  => 2)
       @ns2 = FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => @d2.id)
     end
 
@@ -296,7 +292,7 @@ describe MiqAeClass do
 
   context "state_machine_class tests" do
     before(:each) do
-      n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :priority => 10, :system => true)
+      n1 = FactoryGirl.create(:miq_ae_system_domain, :name => 'ns1', :priority => 10)
       @c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     end
 

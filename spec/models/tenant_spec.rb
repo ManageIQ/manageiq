@@ -441,10 +441,10 @@ describe Tenant do
 
     context "reset priority" do
       it "#reset_domain_priority_by_ordered_ids" do
-        FactoryGirl.create(:miq_ae_domain, :name => 'ManageIQ', :priority => 0,
-                           :tenant_id => root_tenant.id, :system => true)
-        FactoryGirl.create(:miq_ae_domain, :name => 'Redhat', :priority => 1,
-                           :tenant_id => root_tenant.id, :system => true)
+        FactoryGirl.create(:miq_ae_system_domain, :name => 'ManageIQ', :priority => 0,
+                           :tenant_id => root_tenant.id)
+        FactoryGirl.create(:miq_ae_system_domain, :name => 'Redhat', :priority => 1,
+                           :tenant_id => root_tenant.id)
         dom3 = FactoryGirl.create(:miq_ae_domain, :name => 'A', :tenant_id => root_tenant.id)
         dom4 = FactoryGirl.create(:miq_ae_domain, :name => 'B', :tenant_id => root_tenant.id)
 
@@ -514,11 +514,10 @@ describe Tenant do
 
     it "no editable domains available for current tenant" do
       t1_1
-      FactoryGirl.create(:miq_ae_domain,
+      FactoryGirl.create(:miq_ae_system_domain,
                          :name      => 'non_editable',
                          :priority  => 3,
-                         :tenant_id => t1_1.id,
-                         :system    => true)
+                         :tenant_id => t1_1.id)
       expect(t1_1.any_editable_domains?).to eq(false)
     end
 

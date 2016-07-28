@@ -87,7 +87,7 @@ module MiqAeServiceModelSpec
       domain
       t = MiqAeMethodService::MiqAeServiceTenant.new(tenant)
       dom = t.ae_domains.first
-      [:name, :system, :priority, :id].each do |attr|
+      [:name, :priority, :id].each do |attr|
         expect(dom.send(attr)).to eql(domain.send(attr))
       end
     end
