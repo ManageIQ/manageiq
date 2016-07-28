@@ -11,6 +11,13 @@ describe ArbitrationRule do
       expect { FactoryGirl.create(:arbitration_rule, :expression => nil) }
         .to raise_error(ActiveRecord::RecordInvalid, /Expression can't be blank/)
     end
+
+    it 'serializes expression' do
+      expression = MiqExpression.new('EQUAL' => { 'field' => 'User-userid', 'value' => 'admin' })
+      rule = FactoryGirl.create(:arbitration_rule, :expression => expression)
+
+      expect(rule.expression.kind_of?(MiqExpression)).to be_truthy
+    end
   end
 
   describe '#name' do
