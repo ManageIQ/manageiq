@@ -889,7 +889,6 @@ describe Rbac::Filterer do
               FactoryGirl.create(:ems_event, :timestamp => Time.now.utc, :message => "Event #{i}")
             end
 
-            report = MiqReport.new(:db => "EmsEvent")
             exp = YAML.load '--- !ruby/object:MiqExpression
             exp:
               IS:
