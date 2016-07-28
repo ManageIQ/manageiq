@@ -49,6 +49,19 @@ class MiqAeDomain < MiqAeNamespace
     save!
   end
 
+  def contents_locked?
+    system
+  end
+
+  def editable_properties?
+    name != 'ManageIQ'
+  end
+
+  def editable_contents?(user = User.current_user)
+    return false if name == 'ManageIQ'
+    editable?(user)
+  end
+
   def version
     version_field = about_class.try(:ae_fields).try(:detect) { |fld| fld.name == 'version' }
     version_field.try(:default_value)
