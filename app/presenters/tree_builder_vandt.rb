@@ -17,7 +17,7 @@ class TreeBuilderVandt < TreeBuilder
   end
 
   def x_get_tree_roots(count_only, options)
-    objects = rbac_filtered_objects(EmsInfra.order("lower(name)"), :match_via_descendants => VmOrTemplate)
+    objects = Rbac.filtered(EmsInfra.order("lower(name)"), :match_via_descendants => VmOrTemplate)
 
     if count_only
       objects.length + 2
@@ -35,11 +35,11 @@ class TreeBuilderVandt < TreeBuilder
   def x_get_tree_custom_kids(object, count_only, _options)
     objects = case object[:id]
               when "orph" # Orphaned
-                rbac_filtered_objects(VmInfra.all_orphaned) +
-                rbac_filtered_objects(TemplateInfra.all_orphaned)
+                Rbac.filtered(VmInfra.all_orphaned) +
+                Rbac.filtered(TemplateInfra.all_orphaned)
               when "arch" # Archived
-                rbac_filtered_objects(VmInfra.all_archived) +
-                rbac_filtered_objects(TemplateInfra.all_archived)
+                Rbac.filtered(VmInfra.all_archived) +
+                Rbac.filtered(TemplateInfra.all_archived)
               end
     count_only_or_objects(count_only, objects, "name")
   end

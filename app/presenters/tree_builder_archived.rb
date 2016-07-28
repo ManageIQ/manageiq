@@ -5,7 +5,7 @@ module TreeBuilderArchived
              when "orph" then :all_orphaned
              when "arch" then :all_archived
              end
-    objects = rbac_filtered_objects(klass.send(method))
+    objects = Rbac.filtered(klass.send(method))
     count_only ? objects.length : objects
   end
 end

@@ -19,8 +19,8 @@ class TreeBuilderUtilization < TreeBuilderRegion
   end
 
   def x_get_tree_ems_kids(object, count_only)
-    ems_clusters        = rbac_filtered_objects(object.ems_clusters)
-    non_clustered_hosts = rbac_filtered_objects(object.non_clustered_hosts)
+    ems_clusters        = Rbac.filtered(object.ems_clusters)
+    non_clustered_hosts = Rbac.filtered(object.non_clustered_hosts)
 
     total = ems_clusters.count + non_clustered_hosts.count
 
@@ -55,7 +55,7 @@ class TreeBuilderUtilization < TreeBuilderRegion
         objects += rbac_filtered_sorted_objects(f.vms_and_templates, "name")
       elsif f.name == "host"            # Don't count host folder children
       else                              # add in other folders
-        objects += rbac_filtered_objects([f], :match_via_descendants => VmOrTemplate)
+        objects += Rbac.filtered([f], :match_via_descendants => VmOrTemplate)
       end
     end
   end
@@ -69,7 +69,7 @@ class TreeBuilderUtilization < TreeBuilderRegion
         objects += rbac_filtered_sorted_objects(f.clusters, "name")
         objects += rbac_filtered_sorted_objects(f.hosts, "name")
       else                              # add in other folders
-        objects += rbac_filtered_objects([f])
+        objects += Rbac.filtered([f])
       end
     end
   end

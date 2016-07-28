@@ -125,7 +125,7 @@ module ApplicationController::MiqRequestMethods
         @edit[:vm_sortdir] = "ASC"
       end
       @edit[:vm_sortcol] = params[:sort_choice]
-      templates = rbac_filtered_objects(@edit[:template_kls].eligible_for_provisioning).sort_by { |a| a.name.downcase }
+      templates = Rbac.filtered(@edit[:template_kls].eligible_for_provisioning).sort_by { |a| a.name.downcase }
       build_vm_grid(templates, @edit[:vm_sortdir], @edit[:vm_sortcol])
       render :update do |page|
         page << javascript_prologue
@@ -150,7 +150,7 @@ module ApplicationController::MiqRequestMethods
       @edit[:vm_sortcol] ||= "name"
       @edit[:prov_type] = "VM Provision"
       @edit[:template_kls] = get_template_kls
-      templates = rbac_filtered_objects(@edit[:template_kls].eligible_for_provisioning).sort_by { |a| a.name.downcase }
+      templates = Rbac.filtered(@edit[:template_kls].eligible_for_provisioning).sort_by { |a| a.name.downcase }
       build_vm_grid(templates, @edit[:vm_sortdir], @edit[:vm_sortcol])
       session[:changed] = false                                 # Turn off the submit button
       @edit[:explorer] = true if @explorer

@@ -332,20 +332,12 @@ class TreeBuilder
     @vmdb_config ||= VMDB::Config.new("vmdb").config
   end
 
-  def rbac_filtered_objects(objects, options = {})
-    Rbac.filtered(objects, options)
-  end
-
   # Add child nodes to the active tree below node 'id'
   def self.tree_add_child_nodes(sandbox, klass_name, id)
     tree = klass_name.constantize.new(sandbox[:active_tree].to_s,
                                       sandbox[:active_tree].to_s.sub(/_tree$/, ''),
                                       sandbox, false)
     tree.x_get_child_nodes(id)
-  end
-
-  def self.rbac_filtered_objects(objects, options = {})
-    Rbac.filtered(objects, options)
   end
 
   def self.rbac_has_visible_descendants?(o, type)
