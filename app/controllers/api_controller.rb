@@ -102,19 +102,6 @@ class ApiController < ApplicationController
   TAG_NAMESPACE = "/managed"
 
   #
-  # Custom normalization on these attribute types.
-  # Converted to normalized_attributes hash at init, much faster access.
-  #
-  ATTR_TYPES = {
-    :time      => %w(expires_on),
-    :url       => %w(href),
-    :resource  => %w(image_href),
-    :encrypted => %w(password) |
-                  ::MiqRequestWorkflow.all_encrypted_options_fields.map(&:to_s) |
-                  ::Vmdb::Settings::PASSWORD_FIELDS.map(&:to_s)
-  }
-
-  #
   # Attributes used for identification
   #
   ID_ATTRS = %w(href id)
