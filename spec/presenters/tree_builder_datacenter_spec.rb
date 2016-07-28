@@ -50,7 +50,7 @@ describe TreeBuilderDatacenter do
         root = @datacenter_tree.send(:root_options)
         expect(root[0]).to eq(@datacenter_tree.instance_variable_get(:@root).name)
         expect(root[1]).to eq("Resource Pool: #{@datacenter_tree.instance_variable_get(:@root).name}")
-        expect(root[2]).to eq(@datacenter_tree.instance_variable_get(:@root).vapp ? "vapp" : "resource_pool")
+        expect(root[2]).to eq(@datacenter_tree.instance_variable_get(:@root).kind_of?(VirtualApp) ? "vapp" : "resource_pool")
     end
     it 'returns right kind of children' do
       kids = @datacenter_tree.send(:x_get_tree_roots, false)

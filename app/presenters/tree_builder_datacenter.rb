@@ -39,7 +39,7 @@ class TreeBuilderDatacenter < TreeBuilder
     if @root.kind_of?(EmsCluster)
       [@root.name, _("Cluster: %{name}") % {:name => @root.name}, "cluster"]
     elsif @root.kind_of?(ResourcePool)
-      [@root.name, _("Resource Pool: %{name}") % {:name => @root.name}, @root.vapp ? "vapp" : "resource_pool"]
+      [@root.name, _("Resource Pool: %{name}") % {:name => @root.name}, @root.kind_of?(VirtualApp) ? "vapp" : "resource_pool"]
     end
   end
 
