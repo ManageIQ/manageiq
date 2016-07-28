@@ -229,19 +229,6 @@ class MiqPolicyController < ApplicationController
     end
   end
 
-  # Show/Unshow out of scope items
-  def policy_options
-    @record = identify_record(params[:id])
-    @policy_options ||= {}
-    @policy_options[:out_of_scope] = (params[:out_of_scope] == "1")
-    build_policy_tree(@polArr)
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page.replace("main_div", :partial => "vm/policies")
-    end
-  end
-
   def explorer
     @breadcrumbs = []
     @explorer = true
@@ -291,22 +278,6 @@ class MiqPolicyController < ApplicationController
 
     get_node_info(x_node)
     replace_right_cell(@nodetype)
-  end
-
-  def cat_pressed
-    @cat_selected = params[:id].split(':')[1] + ": " + params[:id].split(':')[2]
-    temp_tagname = params[:id].split(':')[0]
-    @tag_name = temp_tagname.split('__')[1]
-    get_form_vars
-    changed = (@edit[:new] != @edit[:current])
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("form_options_div", :partial => "form_options")
-      if changed != session[:changed]
-        session[:changed] = changed
-        page << javascript_for_miq_button_visibility(changed)
-      end
-    end
   end
 
   def search
