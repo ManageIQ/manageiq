@@ -121,5 +121,41 @@ module MiqAeStateMachineSpec
       ws = MiqAeEngine.instantiate("#{@domain}/Factory/statemachine/Provisioning", @user)
       expect(ws.root("test_root_object_attribute")).to eq("test_class_method")
     end
+
+    it "executes on_entry partially qualified class methods properly" do
+      EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "state_machine"), @domain)
+
+      c1 = MiqAeClass.find_by_namespace_and_name("#{@domain}/Factory", "StateMachine")
+      i1 = c1.ae_instances.detect { |i| i.name == "Provisioning" }
+      f1 = c1.ae_fields.detect    { |f| f.name == "AcquireIPAddress" }
+      method_string = "/factory/method.test_class_method(status => 'Test',status_state => 'on_entry')"
+      i1.set_field_attribute(f1, method_string, :on_entry)
+      ws = MiqAeEngine.instantiate("#{@domain}/Factory/statemachine/Provisioning", @user)
+      expect(ws.root("test_root_object_attribute")).to eq("test_class_method")
+    end
+
+    it "executes method:: method properly" do
+      EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "state_machine"), @domain)
+
+      c1 = MiqAeClass.find_by_namespace_and_name("#{@domain}/Factory", "StateMachine")
+      i1 = c1.ae_instances.detect { |i| i.name == "Provisioning" }
+      f1 = c1.ae_fields.detect    { |f| f.name == "AcquireIPAddress" }
+      method_string = "METHOD::update_provision_status(status => 'Test',status_state => 'value')"
+      i1.set_field_attribute(f1, method_string, :value)
+      ws = MiqAeEngine.instantiate("#{@domain}/Factory/statemachine/Provisioning", @user)
+      expect(ws.root("test_root_object_attribute")).to eq("update_provision_status")
+    end
+
+    it "executes class method notation method:: properly" do
+      EvmSpecHelper.import_yaml_model(File.join(@model_data_dir, "state_machine"), @domain)
+
+      c1 = MiqAeClass.find_by_namespace_and_name("#{@domain}/Factory", "StateMachine")
+      i1 = c1.ae_instances.detect { |i| i.name == "Provisioning" }
+      f1 = c1.ae_fields.detect    { |f| f.name == "AcquireIPAddress" }
+      method_string = "METHOD::/factory/method.test_class_method(status => 'Test',status_state => 'on_entry')"
+      i1.set_field_attribute(f1, method_string, :value)
+      ws = MiqAeEngine.instantiate("#{@domain}/Factory/statemachine/Provisioning", @user)
+      expect(ws.root("test_root_object_attribute")).to eq("test_class_method")
+    end
   end
 end

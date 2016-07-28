@@ -452,9 +452,8 @@ module MiqAeEngine
         aem = cm[method_name] unless cm.nil?
       end
 
-      if namespace_provided.nil?
-        aem = method_override(namespace, klass, method_name, aem)
-      elsif aem.nil?
+      aem = method_override(namespace, klass, method_name, aem)
+      if aem.nil?
         method_aec = fetch_class(fq)
         aem = method_aec.ae_methods.detect { |c| c[:name] == method_name } unless method_aec.nil?
       end
