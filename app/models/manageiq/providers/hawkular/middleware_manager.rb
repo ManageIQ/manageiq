@@ -30,8 +30,17 @@ module ManageIQ::Providers
         # As the connect will only give a handle
         # we verify the credentials via an actual operation
         connect(options).inventory.list_feeds
+      rescue URI::InvalidComponentError
+        raise MiqException::MiqHostError, "Host '#{hostname}' is invalid"
+      rescue ::Hawkular::BaseClient::HawkularConnectionException
+        raise MiqException::MiqUnreachableError, "Unable to connect to #{hostname}:#{port}"
+      rescue ::Hawkular::BaseClient::HawkularException => he
+        raise MiqException::MiqInvalidCredentialsError, 'Invalid credentials' if he.status_code == 401
+        raise MiqException::MiqHostError, 'Hawkular not found on host' if he.status_code == 404
+        raise MiqException::MiqCommunicationsError, he.message
       rescue => err
-        raise MiqException::MiqInvalidCredentialsError, 'Invalid credentials'
+        $log.error(err)
+        raise MiqException::Error, 'Unable to verify credentials'
       end
 
       true
