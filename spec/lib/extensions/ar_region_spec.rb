@@ -169,12 +169,13 @@ describe "AR Regions extension" do
     end
 
     def reject_db_sequence_lookup
-      allow(VmOrTemplate.connection).to receive(:select_value)
-        .at_least(:once).with("SELECT last_value FROM miq_databases_id_seq")
-        .and_raise(ActiveRecord::StatementInvalid, "not defined yet", nil)
+      allow(VmOrTemplate.connection).to receive(:data_source_exists?)
+        .at_least(:once).with("miq_databases").and_return(false)
     end
 
     def db_sequence_lookup(sequence = nil)
+      allow(VmOrTemplate.connection).to receive(:data_source_exists?)
+        .at_least(:once).with("miq_databases").and_return(true)
       allow(VmOrTemplate.connection).to receive(:select_value)
         .at_least(:once).with("SELECT last_value FROM miq_databases_id_seq")
         .and_return(ArRegion::DEFAULT_RAILS_SEQUENCE_FACTOR * sequence + 1)
