@@ -1,4 +1,8 @@
 module MiqAeEngine
+  INFRASTRUCTURE = 'infrastructure'.freeze
+  CLOUD          = 'cloud'.freeze
+  UNKNOWN        = 'unknown'.freeze
+
   # All Class Methods beginning with miq_ are callable from the engine
   class MiqAeBuiltinMethod
     def self.miq_log_object(obj, _inputs)
@@ -39,6 +43,15 @@ module MiqAeEngine
 
     def self.powershell(_obj, inputs)
       MiqAeMethodService::MiqAeServiceMethods.powershell(inputs['script'], inputs['returns'])
+    end
+
+    def self.miq_parse_provider_category(obj, _inputs)
+      provider_category = nil
+      keys = %w(vm orchestration_stack miq_request miq_provision miq_host_provision vm_migrate_task platform_category)
+      keys.detect { |k| provider_category = category_for_key(obj, k) }
+      $miq_ae_logger.info("Setting provider_category to: #{provider_category}")
+
+      obj.workspace.root["ae_provider_category"] = provider_category || UNKNOWN
     end
 
     def self.miq_host_and_storage_least_utilized(obj, _inputs)
@@ -109,5 +122,43 @@ module MiqAeEngine
       event
     end
     private_class_method :event_object_from_workspace
+
+    def self.vm_detect_category(prov_obj_source)
+      return nil unless prov_obj_source.respond_to?(:cloud)
+      prov_obj_source.cloud ? CLOUD : INFRASTRUCTURE
+    end
+    private_class_method :vm_detect_category
+
+    def self.detect_platform_category(platform_category)
+      platform_category == 'infra' ? INFRASTRUCTURE : platform_category
+    end
+    private_class_method :detect_platform_category
+
+    def self.detect_category(obj_name, prov_obj)
+      case obj_name
+      when "orchestration_stack"
+        CLOUD
+      when "miq_host_provision"
+        INFRASTRUCTURE
+      when "miq_request", "miq_provision", "vm_migrate_task"
+        vm_detect_category(prov_obj.source) if prov_obj
+      when "vm"
+        vm_detect_category(prov_obj) if prov_obj
+      else
+        UNKNOWN
+      end
+    end
+    private_class_method :detect_category
+
+    def self.category_for_key(obj, key)
+      if key == "platform_category"
+        key_object = obj.workspace.root
+        detect_platform_category(key_object[key]) if key_object[key]
+      else
+        key_object = obj.workspace.root[key]
+        detect_category(key, key_object) if key_object
+      end
+    end
+    private_class_method :category_for_key
   end
 end
