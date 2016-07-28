@@ -10,7 +10,7 @@ module Menu
     end
 
     def visible?
-      ApplicationHelper.role_allows_intern(rbac_feature)
+      ApplicationHelper.role_allows!(rbac_feature)
     end
 
     def url

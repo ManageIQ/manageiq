@@ -132,26 +132,16 @@ module ApplicationHelper
   end
 
   # Check role based authorization for a UI task
-  def role_allows(options = {})
-    ApplicationHelper.role_allows_intern(options) rescue false
+  def role_allows(*args)
+    Rbac::Authorizer.role_allows(*args) rescue false
   end
   module_function :role_allows
   public :role_allows
 
-  def role_allows_intern(options = {})
-    userid  = User.current_userid
-    role_id = User.current_user.miq_user_role.try(:id)
-    if options[:feature]
-      auth = options[:any] ? User.current_user.role_allows_any?(:identifiers => [options[:feature]]) :
-                             User.current_user.role_allows?(:identifier => options[:feature])
-      $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{userid}], role id [#{role_id}], feature identifier [#{options[:feature]}]")
-    else
-      auth = false
-      $log.debug("Role Authorization #{auth ? "successful" : "failed"} for: userid [#{userid}], role id [#{role_id}], no main tab or feature passed to role_allows")
-    end
-    auth
+  def role_allows!(*args)
+    Rbac::Authorizer.role_allows(*args)
   end
-  module_function :role_allows_intern
+  module_function :role_allows!
 
   # NB: This differs from controller_for_model; until they're unified,
   # make sure you have the right one.
