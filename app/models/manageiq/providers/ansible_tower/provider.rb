@@ -38,13 +38,15 @@ class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
   end
 
   def verify_credentials(auth_type = nil, options = {})
-    validity = with_provider_connection(options.merge(:auth_type => auth_type), &:verify_credentials)
-    raise MiqException::MiqInvalidCredentialsError, _("Username or password is not valid") if validity.nil?
-    validity
-  rescue Faraday::ConnectionFailed, Faraday::SSLError => err
-    raise MiqException::MiqUnreachableError, err.message, err.backtrace
-  rescue Faraday::Error::ClientError => err
-    raise MiqException::MiqCommunicationsError, JSON.parse(err.message)['detail']
+    require 'ansible_tower_client'
+    begin
+      with_provider_connection(options.merge(:auth_type => auth_type), &:verify_credentials) ||
+        raise(MiqException::MiqInvalidCredentialsError, _("Username or password is not valid"))
+    rescue Faraday::ConnectionFailed, Faraday::SSLError => err
+      raise MiqException::MiqUnreachableError, err.message, err.backtrace
+    rescue AnsibleTowerClient::ConnectionError => err
+      raise MiqException::MiqCommunicationsError, err.message
+    end
   end
 
   def self.process_tasks(options)
