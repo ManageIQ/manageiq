@@ -13,6 +13,14 @@ class MiddlewareDeploymentController < ApplicationController
                                         :hawk => N_('Not redeploying deployment'),
                                         :msg  => N_('Redeployment initiated for selected deployment(s)')
     },
+    :middleware_deployment_stop     => {:op   => :stop_middleware_deployment,
+                                        :hawk => N_('Not stopping deployment'),
+                                        :msg  => N_('Stop initiated for selected deployment(s)')
+    },
+    :middleware_deployment_start    => {:op   => :start_middleware_deployment,
+                                        :hawk => N_('Not starting deployment'),
+                                        :msg  => N_('Start initiated for selected deployment(s)')
+    },
     :middleware_deployment_undeploy => {:op   => :undeploy_middleware_deployment,
                                         :hawk => N_('Not undeploying deployment'),
                                         :msg  => N_('Undeployment initiated for selected deployment(s)')

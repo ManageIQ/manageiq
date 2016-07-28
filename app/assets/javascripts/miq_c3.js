@@ -11,6 +11,7 @@ function load_c3_charts() {
 
         chart_id += "_2";
         if (typeof (data.xml2) !== "undefined") {
+          data.xml2.miq.flat_chart = true;
           load_c3_chart(data.xml2, chart_id, 100);
         }
       }

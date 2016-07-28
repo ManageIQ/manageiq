@@ -86,6 +86,9 @@ module EmsCommon
     elsif @display == "orchestration_stacks" || session[:display] == "orchestration_stacks" && params[:display].nil?
       title = _("Stacks")
       view_setup_helper(OrchestrationStack, title, title.singularize)
+    elsif @display == "configuration_jobs" || session[:display] == "configuration_jobs" && params[:display].nil?
+      title = _("Configuration Jobs")
+      view_setup_helper(ConfigurationJob, title, title.singularize)
     elsif @display == "persistent_volumes" || session[:display] == "persistent_volumes" && params[:display].nil?
       title = ui_lookup(:tables => "persistent_volumes")
       view_setup_helper(PersistentVolume, title, title.singularize, :persistent_volumes)
@@ -639,10 +642,10 @@ module EmsCommon
   end
 
   def retrieve_provider_regions
-    cloud_managers = model.supported_subclasses.select { |c| c.is_available?(:regions) }
-    cloud_managers.each_with_object({}) do |cloud_manager, provider_regions|
-      regions = cloud_manager.parent::Regions.all.sort_by { |r| r[:description] }
-      provider_regions[cloud_manager.ems_type] = regions.map do |region|
+    managers = model.supported_subclasses.select(&:supports_regions?)
+    managers.each_with_object({}) do |manager, provider_regions|
+      regions = manager.parent::Regions.all.sort_by { |r| r[:description] }
+      provider_regions[manager.ems_type] = regions.map do |region|
         [region[:description], region[:name]]
       end
     end
@@ -785,9 +788,12 @@ module EmsCommon
 
     if task == "refresh_ems"
       model.refresh_ems(emss, true)
-      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % \
-        {:task        => task_name(task).gsub("Ems", "#{ui_lookup(:tables => @table_name)}"),
-         :count_model => pluralize(emss.length, ui_lookup(:table => @table_name))})
+      add_flash(n_("%{task} initiated for %{count} %{model} from the CFME Database",
+                   "%{task} initiated for %{count} %{models} from the CFME Database", emss.length) % \
+        {:task   => task_name(task).gsub("Ems", ui_lookup(:tables => @table_name)),
+         :count  => emss.length,
+         :model  => ui_lookup(:table => @table_name),
+         :models => ui_lookup(:tables => @table_name)})
       AuditEvent.success(:userid => session[:userid], :event => "#{@table_name}_#{task}",
           :message => _("'%{task}' successfully initiated for %{table}") %
             {:task => task, :table => pluralize(emss.length, "#{ui_lookup(:tables => @table_name)}")},
@@ -804,8 +810,11 @@ module EmsCommon
         AuditEvent.success(audit)
       end
       model.destroy_queue(emss)
-      add_flash(_("Delete initiated for %{count_model} from the CFME Database") %
-        {:count_model => pluralize(emss.length, ui_lookup(:table => @table_name))}) if @flash_array.nil?
+      add_flash(n_("Delete initiated for %{count} %{model} from the CFME Database",
+                   "Delete initiated for %{count} %{models} from the CFME Database", emss.length) %
+        {:count  => emss.length,
+         :model  => ui_lookup(:table => @table_name),
+         :models => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
     else
       model.where(:id => emss).order("lower(name)").each do |ems|
         id = ems.id
@@ -853,8 +862,11 @@ module EmsCommon
         add_flash(_("No %{record} were selected for deletion") % {:record => ui_lookup(:table => @table_name)}, :error)
       end
       process_emss(emss, "destroy") unless emss.empty?
-      add_flash(_("Delete initiated for %{count_model} from the CFME Database") %
-        {:count_model => pluralize(emss.length, ui_lookup(:table => @table_name))}) if @flash_array.nil?
+      add_flash(n_("Delete initiated for %{count} %{model} from the CFME Database",
+                   "Delete initiated for %{count} %{models} from the CFME Database", emss.length) %
+        {:count  => emss.length,
+         :model  => ui_lookup(:table => @table_name),
+         :models => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
     else # showing 1 ems, scan it
       if params[:id].nil? || model.find_by_id(params[:id]).nil?
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => @table_name)}, :error)
@@ -882,8 +894,11 @@ module EmsCommon
         add_flash(_("No %{model} were selected for scanning") % {:model => ui_lookup(:table => @table_name)}, :error)
       end
       process_emss(emss, "scan")  unless emss.empty?
-      add_flash(_("Analysis initiated for %{count_model} from the CFME Database") %
-        {:count_model => pluralize(emss.length, ui_lookup(:tables => @table_name))}) if @flash_array.nil?
+      add_flash(n_("Analysis initiated for %{count} %{model} from the CFME Database",
+                   "Analysis initiated for %{count} %{models} from the CFME Database", emss.length) %
+        {:count  => emss.length,
+         :model  => ui_lookup(:table => @table_name),
+         :models => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
       show_list
       @refresh_partial = "layouts/gtl"
     else # showing 1 ems, scan it
@@ -893,8 +908,11 @@ module EmsCommon
         emss.push(params[:id])
       end
       process_emss(emss, "scan")  unless emss.empty?
-      add_flash(_("Analysis initiated for %{count_model} from the CFME Database") %
-        {:count_model => pluralize(emss.length, ui_lookup(:tables => @table_name))}) if @flash_array.nil?
+      add_flash(n_("Analysis initiated for %{count} %{model} from the CFME Database",
+                   "Analysis initiated for %{count} %{models} from the CFME Database", emss.length) %
+        {:count  => emss.length,
+         :model  => ui_lookup(:table => @table_name),
+         :models => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
       params[:display] = @display
       show
       if ["vms", "hosts", "storages"].include?(@display)
@@ -915,8 +933,11 @@ module EmsCommon
         add_flash(_("No %{model} were selected for refresh") % {:model => ui_lookup(:table => @table_name)}, :error)
       end
       process_emss(emss, "refresh_ems") unless emss.empty?
-      add_flash(_("Refresh initiated for %{count_model} from the CFME Database") %
-        {:count_model => pluralize(emss.length, ui_lookup(:tables => @table_name))}) if @flash_array.nil?
+      add_flash(n_("Refresh initiated for %{count} %{model} from the CFME Database",
+                   "Refresh initiated for %{count} %{models} from the CFME Database", emss.length) %
+        {:count  => emss.length,
+         :model  => ui_lookup(:table => @table_name),
+         :models => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
       show_list
       @refresh_partial = "layouts/gtl"
     else # showing 1 ems, scan it
@@ -926,8 +947,11 @@ module EmsCommon
         emss.push(params[:id])
       end
       process_emss(emss, "refresh_ems") unless emss.empty?
-      add_flash(_("Refresh initiated for %{count_model} from the CFME Database") %
-        {:count_model => pluralize(emss.length, ui_lookup(:tables => @table_name))}) if @flash_array.nil?
+      add_flash(n_("Refresh initiated for %{count} %{model} from the CFME Database",
+                   "Refresh initiated for %{count} %{models} from the CFME Database", emss.length) %
+        {:count  => emss.length,
+         :model  => ui_lookup(:table => @table_name),
+         :models => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
       params[:display] = @display
       show
       if ["vms", "hosts", "storages"].include?(@display)

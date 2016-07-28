@@ -20,7 +20,6 @@ class MiqExpression
     ContainerImageRegistry
     ContainerNode
     ContainerProject
-    ContainerService
     ContainerReplicator
     ContainerRoute
     ContainerService
@@ -514,11 +513,11 @@ class MiqExpression
       value = exp[operator]["value"]
       if col_type == :date
         if RelativeDatetime.relative?(value)
-          start_val = quote(RelativeDatetime.normalize(value, "UTC", "beginning").to_date, :date)
-          end_val   = quote(RelativeDatetime.normalize(value, "UTC", "end").to_date, :date)
+          start_val = quote(RelativeDatetime.normalize(value, tz, "beginning").to_date, :date)
+          end_val   = quote(RelativeDatetime.normalize(value, tz, "end").to_date, :date)
           clause    = "val=#{col_ruby}; !val.nil? && val.to_date >= #{start_val} && val.to_date <= #{end_val}"
         else
-          value  = quote(RelativeDatetime.normalize(value, "UTC", "beginning").to_date, :date)
+          value  = quote(RelativeDatetime.normalize(value, tz, "beginning").to_date, :date)
           clause = "val=#{col_ruby}; !val.nil? && val.to_date == #{value}"
         end
       else
@@ -533,8 +532,8 @@ class MiqExpression
 
       start_val, end_val = exp[operator]["value"]
       if col_type == :date
-        start_val = quote(RelativeDatetime.normalize(start_val, "UTC", "beginning").to_date, :date)
-        end_val   = quote(RelativeDatetime.normalize(end_val, "UTC", "end").to_date, :date)
+        start_val = quote(RelativeDatetime.normalize(start_val, tz, "beginning").to_date, :date)
+        end_val   = quote(RelativeDatetime.normalize(end_val, tz, "end").to_date, :date)
 
         clause = "val=#{col_ruby}; !val.nil? && val.to_date >= #{start_val} && val.to_date <= #{end_val}"
       else
@@ -558,7 +557,7 @@ class MiqExpression
              end
 
       if col_type == :date
-        val = RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode)
+        val = RelativeDatetime.normalize(exp[operator]["value"], tz, mode)
 
         clause = "val=#{col_ruby}; !val.nil? && val.to_date #{normalized_operator} #{quote(val.to_date, :date)}"
       else
@@ -1601,22 +1600,14 @@ class MiqExpression
     case operator.downcase
     when "equal", "="
       field = Field.parse(exp[operator]["field"])
-      value = case
-              when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = nil).to_date
-              when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = nil).utc
-              else
-                exp[operator]["value"]
-              end
-      field.eq(value)
+      field.eq(exp[operator]["value"])
     when ">", "after"
       field = Field.parse(exp[operator]["field"])
       value = case
               when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "end").to_date
+                RelativeDatetime.normalize(exp[operator]["value"], tz, _mode = "end").to_date
               when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "end").utc
+                RelativeDatetime.normalize(exp[operator]["value"], tz, _mode = "end").utc
               else
                 exp[operator]["value"]
               end
@@ -1625,9 +1616,9 @@ class MiqExpression
       field = Field.parse(exp[operator]["field"])
       value = case
               when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "beginning").to_date
+                RelativeDatetime.normalize(exp[operator]["value"], tz, _mode = "beginning").to_date
               when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "beginning").utc
+                RelativeDatetime.normalize(exp[operator]["value"], tz, _mode = "beginning").utc
               else
                 exp[operator]["value"]
               end
@@ -1636,9 +1627,9 @@ class MiqExpression
       field = Field.parse(exp[operator]["field"])
       value = case
               when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "beginning").to_date
+                RelativeDatetime.normalize(exp[operator]["value"], tz, _mode = "beginning").to_date
               when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "beginning").utc
+                RelativeDatetime.normalize(exp[operator]["value"], tz, _mode = "beginning").utc
               else
                 exp[operator]["value"]
               end
@@ -1647,24 +1638,16 @@ class MiqExpression
       field = Field.parse(exp[operator]["field"])
       value = case
               when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "end").to_date
+                RelativeDatetime.normalize(exp[operator]["value"], tz, _mode = "end").to_date
               when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "end").utc
+                RelativeDatetime.normalize(exp[operator]["value"], tz, _mode = "end").utc
               else
                 exp[operator]["value"]
               end
       field.lteq(value)
     when "!="
       field = Field.parse(exp[operator]["field"])
-      value = case
-              when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = nil).to_date
-              when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = nil).utc
-              else
-                exp[operator]["value"]
-              end
-      field.not_eq(value)
+      field.not_eq(exp[operator]["value"])
     when "like", "includes"
       field = Field.parse(exp[operator]["field"])
       field.matches("%#{exp[operator]["value"]}%")
@@ -1726,11 +1709,11 @@ class MiqExpression
       value = exp[operator]["value"]
       if field.date?
         if RelativeDatetime.relative?(value)
-          start_val = RelativeDatetime.normalize(value, "UTC", "beginning").to_date
-          end_val = RelativeDatetime.normalize(value, "UTC", "end").to_date
+          start_val = RelativeDatetime.normalize(value, tz, "beginning").to_date
+          end_val = RelativeDatetime.normalize(value, tz, "end").to_date
           field.between(start_val..end_val)
         else
-          value  = RelativeDatetime.normalize(value, "UTC", "beginning").to_date
+          value = RelativeDatetime.normalize(value, tz, "beginning").to_date
           field.eq(value)
         end
       else
@@ -1742,8 +1725,8 @@ class MiqExpression
       field = Field.parse(exp[operator]["field"])
       start_val, end_val = exp[operator]["value"]
       if field.date?
-        start_val = RelativeDatetime.normalize(start_val, "UTC", "beginning").to_date
-        end_val   = RelativeDatetime.normalize(end_val, "UTC", "end").to_date
+        start_val = RelativeDatetime.normalize(start_val, tz, "beginning").to_date
+        end_val   = RelativeDatetime.normalize(end_val, tz, "end").to_date
       else
         start_val = RelativeDatetime.normalize(start_val, tz, "beginning").utc
         end_val   = RelativeDatetime.normalize(end_val, tz, "end").utc

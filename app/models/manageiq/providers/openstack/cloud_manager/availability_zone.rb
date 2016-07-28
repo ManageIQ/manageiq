@@ -6,7 +6,7 @@ class ManageIQ::Providers::Openstack::CloudManager::AvailabilityZone < ::Availab
   # hosts that has the matching availability_zone configured in /etc/cinder/cinder.conf.
   def block_storage_disk_capacity
     cluster = ext_management_system.provider.infra_ems.ems_clusters.find { |c| c.block_storage? == true }
-    cluster.aggregate_disk_capacity
+    cluster.nil? ? 0 : cluster.aggregate_disk_capacity
   end
 
   def block_storage_disk_usage

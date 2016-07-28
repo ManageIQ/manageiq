@@ -1,5 +1,7 @@
 class ApplicationHelper::ToolbarBuilder
   include MiqAeClassHelper
+  include RestfulControllerMixin
+
   def call(toolbar_name)
     build_toolbar(toolbar_name)
   end
@@ -837,7 +839,7 @@ class ApplicationHelper::ToolbarBuilder
       when "vm_guest_restart", "instance_guest_restart"
         return true unless @record.is_available?(:reboot_guest)
       when "vm_migrate"
-        return true unless @record.is_available?(:migrate)
+        return true unless @record.supports_migrate?
       when "vm_reconfigure"
         return true unless @record.reconfigurable?
       when "vm_retire"
@@ -1447,21 +1449,6 @@ class ApplicationHelper::ToolbarBuilder
     return true if id == "view_topology" && @showtype == "topology"
     return true if id == "view_summary" && @showtype == "main"
     false
-  end
-
-  def controller_restful?
-    # want to be able to cache false, so no ||=
-    return @_restful_cache unless @_restful_cache.nil?
-
-    @_restful_cache = (
-      obj = @view_binding.receiver
-
-      if obj.respond_to? :controller
-        obj.controller.try(:restful?)
-      else
-        obj.try(:restful?)
-      end
-    )
   end
 
   def url_for_button(name, url_tpl, controller_restful)

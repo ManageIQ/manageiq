@@ -8,30 +8,15 @@
 - no_focus ||= false
 - angular ||= false
 
+- options = {:text_area_id => text_area_id,
+             :url          => url,
+             :mode         => mode,
+             :line_numbers => line_numbers,
+             :height       => height,
+             :width        => width,
+             :read_only    => read_only,
+             :no_focus     => no_focus,
+             :angular      => angular}
+
 :javascript
-  if (miqDomElementExists('#{text_area_id}')) {
-    var textarea = $('##{text_area_id}')[0];
-    ManageIQ.editor = CodeMirror.fromTextArea(textarea, {
-      mode:          '#{mode}',
-      lineNumbers:   #{line_numbers},
-      matchBrackets: true,
-      theme:         'eclipse',
-      readOnly:      #{read_only ? "'nocursor'".html_safe : false}
-    });
-    ManageIQ.editor.on('change', function (cm, change) {
-      if (#{angular}) {
-        ManageIQ.editor.save();
-        $(textarea).trigger("change");
-      } else {
-        miqSendOneTrans('#{url}');
-      }
-    });
-    ManageIQ.editor.on('blur', function (cm, change) {
-      ManageIQ.editor.save();
-    });
-    $('.CodeMirror').css('height', '#{height}');
-    $('.CodeMirror').css('width', '#{width}');
-  }
-%script{:tyle => "text/javascript"}
-  - unless no_focus
-    if (ManageIQ.editor) ManageIQ.editor.focus();
+  miqInitCodemirror(#{options.to_json});

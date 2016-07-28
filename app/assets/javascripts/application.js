@@ -1,5 +1,6 @@
 //= require miq_global
 //= require es6-shim
+//= require array-includes
 //= require fetch
 //= require jquery
 //= require jquery_overrides
@@ -57,13 +58,13 @@
 //= require dynatree/jquery.dynatree
 //= require miq_dynatree
 //= require codemirror
-//= require codemirror/modes/css
-//= require codemirror/modes/htmlmixed
-//= require codemirror/modes/javascript
-//= require codemirror/modes/ruby
-//= require codemirror/modes/shell
-//= require codemirror/modes/xml
-//= require codemirror/modes/yaml
+//= require codemirror/mode/css/css
+//= require codemirror/mode/htmlmixed/htmlmixed
+//= require codemirror/mode/javascript/javascript
+//= require codemirror/mode/ruby/ruby
+//= require codemirror/mode/shell/shell
+//= require codemirror/mode/xml/xml
+//= require codemirror/mode/yaml/yaml
 //= require spin.js/spin
 //= require spin.js/jquery.spin
 //= require jquery-hotkeys

@@ -38,7 +38,7 @@
               %td
                 = h(desc)
   %hr
-  %h3= _("Policy Simulation for %{items}") % {:items => pluralize(@tagitems.length, 'Item')}
+  %h3= n_("Policy Simulation for %{amount} Item", "Policy Simulation for %{amount} Items", @tagitems.length) % {:amount => @tagitems.length}
   %table.admintable{:height => "75"}
     %tbody
       %tr

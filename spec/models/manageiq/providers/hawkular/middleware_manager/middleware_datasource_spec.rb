@@ -1,5 +1,6 @@
+require_relative 'hawkular_helper'
+
 describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource do
-  THE_FEED_ID = '70c798a0-6985-4f8a-a525-012d8d28e8a3'.freeze
 
   let(:ems_hawkular) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
@@ -15,9 +16,9 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
     FactoryGirl.create(:hawkular_middleware_server,
                        :id                    => 1,
                        :name                  => 'Local',
-                       :feed                  => THE_FEED_ID,
+                       :feed                  => the_feed_id,
                        :ems_ref               => '/t;hawkular'\
-                                                 "/f;#{THE_FEED_ID}/r;Local~~",
+                                                 "/f;#{the_feed_id}/r;Local~~",
                        :nativeid              => 'Local~~',
                        :ext_management_system => ems_hawkular)
   end
@@ -26,7 +27,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
     FactoryGirl.create(:hawkular_middleware_datasource,
                        :name                  => 'KeycloakDS',
                        :ems_ref               => '/t;hawkular'\
-                                                 "/f;#{THE_FEED_ID}/r;Local~~"\
+                                                 "/f;#{the_feed_id}/r;Local~~"\
                                                  '/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS',
                        :ext_management_system => ems_hawkular,
                        :middleware_server     => eap,
@@ -39,8 +40,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
   end
 
   it "#collect_live_metrics for all metrics available" do
-    start_time = Time.new(2016, 6, 22, 10, 0, 0, "+02:00")
-    end_time = Time.new(2016, 6, 22, 11, 0, 0, "+02:00")
+    start_time = Time.new(2016, 7, 17, 10, 0, 0, "+02:00")
+    end_time = Time.new(2016, 7, 17, 11, 0, 0, "+02:00")
     interval = 3600
     VCR.use_cassette(described_class.name.underscore.to_s,
                      :allow_unused_http_interactions => true,
@@ -53,8 +54,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
   end
 
   it "#collect_live_metrics for three metrics" do
-    start_time = Time.new(2016, 6, 22, 10, 0, 0, "+02:00")
-    end_time = Time.new(2016, 6, 22, 11, 0, 0, "+02:00")
+    start_time = Time.new(2016, 7, 17, 10, 0, 0, "+02:00")
+    end_time = Time.new(2016, 7, 17, 11, 0, 0, "+02:00")
     interval = 3600
     VCR.use_cassette(described_class.name.underscore.to_s,
                      :allow_unused_http_interactions => true,
@@ -86,7 +87,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
       "Datasource Pool Metrics~In Use Count"          => "mw_ds_in_use_count",
       "Datasource Pool Metrics~Timed Out"             => "mw_ds_timed_out",
       "Datasource Pool Metrics~Average Get Time"      => "mw_ds_average_get_time",
-      "Datasource Pool Metrics~Average Creation Time" => "mw_ds_average_creation_time"
+      "Datasource Pool Metrics~Average Creation Time" => "mw_ds_average_creation_time",
+      "Datasource Pool Metrics~Max Wait Time"         => "mw_ds_max_wait_time"
     }.freeze
     supported_metrics = MiddlewareDatasource.supported_metrics
     expected_metrics.each { |k, v| expect(supported_metrics[k]).to eq(v) }

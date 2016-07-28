@@ -60,8 +60,9 @@ module Mixins
       verify_ems ||= find_by_id_filtered(model, params[:id])
       set_ems_record_vars(verify_ems, :validate)
       @in_a_form = true
-
-      result, details = verify_ems.authentication_check(params[:cred_type], :save => false)
+      result, details = verify_ems.authentication_check(params[:cred_type],
+                                                        :save     => false,
+                                                        :database => params[:metrics_database_name])
 
       if result
         add_flash(_("Credential validation was successful"))
@@ -136,6 +137,7 @@ module Mixins
       metrics_userid = ""
       metrics_hostname = ""
       metrics_port = ""
+      metrics_database_name = ""
       keystone_v3_domain_id = ""
       hawkular_hostname = ""
       hawkular_api_port = ""
@@ -158,7 +160,9 @@ module Mixins
       if @ems.connection_configurations.metrics.try(:endpoint)
         metrics_hostname = @ems.connection_configurations.metrics.endpoint.hostname
         metrics_port = @ems.connection_configurations.metrics.endpoint.port
+        metrics_database_name = @ems.connection_configurations.metrics.endpoint.path
       end
+
       if @ems.has_authentication_type?(:metrics)
         metrics_userid = @ems.has_authentication_type?(:metrics) ? @ems.authentication_userid(:metrics).to_s : ""
         metrics_auth_status = @ems.authentication_status_ok?(:metrics)
@@ -235,33 +239,35 @@ module Mixins
                        :service_account_auth_status     => service_account_auth_status
       } if controller_name == "ems_cloud" || controller_name == "ems_network"
 
-      render :json => {:name                        => @ems.name,
-                       :emstype                     => @ems.emstype,
-                       :zone                        => zone,
-                       :provider_id                 => @ems.provider_id ? @ems.provider_id : "",
-                       :default_hostname            => @ems.connection_configurations.default.endpoint.hostname,
-                       :amqp_hostname               => amqp_hostname,
-                       :metrics_hostname            => metrics_hostname,
-                       :default_api_port            => default_api_port ? default_api_port : "",
-                       :amqp_api_port               => amqp_port ? amqp_port : "",
-                       :metrics_api_port            => metrics_port ? metrics_port : "",
-                       :default_security_protocol   => default_security_protocol,
-                       :amqp_security_protocol      => amqp_security_protocol,
-                       :api_version                 => @ems.api_version ? @ems.api_version : "v2",
-                       :provider_region             => @ems.provider_region,
-                       :default_userid              => @ems.authentication_userid ? @ems.authentication_userid : "",
-                       :amqp_userid                 => amqp_userid,
-                       :ssh_keypair_userid          => ssh_keypair_userid,
-                       :metrics_userid              => metrics_userid,
-                       :keystone_v3_domain_id       => keystone_v3_domain_id,
-                       :emstype_vm                  => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager),
-                       :host_default_vnc_port_start => host_default_vnc_port_start ? host_default_vnc_port_start : "",
-                       :host_default_vnc_port_end   => host_default_vnc_port_end ? host_default_vnc_port_end : "",
-                       :event_stream_selection      => retrieve_event_stream_selection,
-                       :ems_controller              => controller_name,
-                       :default_auth_status         => default_auth_status,
-                       :metrics_auth_status         => metrics_auth_status.nil? ? true : metrics_auth_status,
-                       :ssh_keypair_auth_status     => ssh_keypair_auth_status.nil? ? true : ssh_keypair_auth_status
+      render :json => { :name                          => @ems.name,
+                        :emstype                       => @ems.emstype,
+                        :zone                          => zone,
+                        :provider_id                   => @ems.provider_id ? @ems.provider_id : "",
+                        :default_hostname              => @ems.connection_configurations.default.endpoint.hostname,
+                        :amqp_hostname                 => amqp_hostname,
+                        :metrics_hostname              => metrics_hostname,
+                        :metrics_database_name         => metrics_database_name,
+                        :metrics_default_database_name => metrics_default_database_name,
+                        :default_api_port              => default_api_port ? default_api_port : "",
+                        :amqp_api_port                 => amqp_port ? amqp_port : "",
+                        :metrics_api_port              => metrics_port ? metrics_port : "",
+                        :default_security_protocol     => default_security_protocol,
+                        :amqp_security_protocol        => amqp_security_protocol,
+                        :api_version                   => @ems.api_version ? @ems.api_version : "v2",
+                        :provider_region               => @ems.provider_region,
+                        :default_userid                => @ems.authentication_userid ? @ems.authentication_userid : "",
+                        :amqp_userid                   => amqp_userid,
+                        :ssh_keypair_userid            => ssh_keypair_userid,
+                        :metrics_userid                => metrics_userid,
+                        :keystone_v3_domain_id         => keystone_v3_domain_id,
+                        :emstype_vm                    => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager),
+                        :host_default_vnc_port_start   => host_default_vnc_port_start ? host_default_vnc_port_start : "",
+                        :host_default_vnc_port_end     => host_default_vnc_port_end ? host_default_vnc_port_end : "",
+                        :event_stream_selection        => retrieve_event_stream_selection,
+                        :ems_controller                => controller_name,
+                        :default_auth_status           => default_auth_status,
+                        :metrics_auth_status           => metrics_auth_status.nil? ? true : metrics_auth_status,
+                        :ssh_keypair_auth_status       => ssh_keypair_auth_status.nil? ? true : ssh_keypair_auth_status
       } if controller_name == "ems_infra"
 
       render :json => {:name                      => @ems.name,
@@ -287,6 +293,12 @@ module Mixins
 
     private ############################
 
+    def metrics_default_database_name
+      if @ems.class.name == 'ManageIQ::Providers::Redhat::InfraManager'
+        ManageIQ::Providers::Redhat::InfraManager.history_database_name_for('4.0')
+      end
+    end
+
     def table_name
       self.class.table_name
     end
@@ -310,6 +322,7 @@ module Mixins
       amqp_security_protocol = params[:amqp_security_protocol].strip if params[:amqp_security_protocol]
       metrics_hostname = params[:metrics_hostname].strip if params[:metrics_hostname]
       metrics_port = params[:metrics_api_port].strip if params[:metrics_api_port]
+      metrics_database_name = params[:metrics_database_name].strip if params[:metrics_database_name]
       hawkular_hostname = params[:hawkular_hostname].strip if params[:hawkular_hostname]
       hawkular_api_port = params[:hawkular_api_port].strip if params[:hawkular_api_port]
       default_endpoint = {}
@@ -333,7 +346,10 @@ module Mixins
 
       if ems.kind_of?(ManageIQ::Providers::Redhat::InfraManager)
         default_endpoint = {:role => :default, :hostname => hostname, :port => port, :security_protocol => ems.security_protocol}
-        metrics_endpoint = {:role => :metrics, :hostname => metrics_hostname, :port => metrics_port}
+        metrics_endpoint = { :role     => :metrics,
+                             :hostname => metrics_hostname,
+                             :port     => metrics_port,
+                             :path     => metrics_database_name }
       end
 
       if ems.kind_of?(ManageIQ::Providers::Google::CloudManager)

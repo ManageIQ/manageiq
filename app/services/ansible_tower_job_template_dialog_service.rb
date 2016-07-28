@@ -111,7 +111,10 @@ class AnsibleTowerJobTemplateDialogService
       :label    => "Extra Variables",
       :position => position
     ).tap do |dialog_group|
-      template.variables.each_with_index { |(key, value), index| add_variable_field(key, value, dialog_group, index) }
+      template.variables.each_with_index do |(key, value), index|
+        value = value.to_json if [Hash, Array].include?(value.class)
+        add_variable_field(key, value, dialog_group, index)
+      end
     end
   end
 

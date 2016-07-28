@@ -77,14 +77,21 @@ class ContainerLabelTagMapping < ApplicationRecord
   private_class_method :create_specific_value_mapping
 
   def self.create_tag(name, value, category_tag)
-    entry_name = Classification.sanitize_name(value)
     category = category_tag.classification
     unless category
       category = Classification.create_category!(:description => "Kubernetes label '#{name}'",
                                                  :read_only   => true,
                                                  :tag         => category_tag)
     end
-    entry = category.add_entry(:name => entry_name, :description => value)
+
+    if value.empty?
+      entry_name = ':empty:' # ':' character won't occur in kubernetes values.
+      description = '<empty value>'
+    else
+      entry_name = Classification.sanitize_name(value)
+      description = value
+    end
+    entry = category.add_entry(:name => entry_name, :description => description)
     entry.save!
     entry.tag
   end

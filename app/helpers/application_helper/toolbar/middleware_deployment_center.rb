@@ -30,6 +30,18 @@ class ApplicationHelper::Toolbar::MiddlewareDeploymentCenter < ApplicationHelper
           N_('Redeploy'),
           :confirm => N_("Do you want to redeploy this deployment ?")),
         button(
+          :middleware_deployment_start,
+          'fa fa-play-circle-o fa-lg',
+          N_('Start this Middleware Deployment'),
+          N_('Start'),
+          :confirm => N_("Do you want to start this deployment ?")),
+        button(
+          :middleware_deployment_stop,
+          'fa fa-stop-circle-o fa-lg',
+          N_('Stop this Middleware Deployment'),
+          N_('Stop'),
+          :confirm => N_("Do you want to stop this deployment ?")),
+        button(
           :middleware_deployment_undeploy,
           'fa fa-eject fa-lg',
           N_('Undeploy this Middleware Deployment'),

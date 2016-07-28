@@ -627,6 +627,7 @@
     - :tags
     - :policies
     - :policy_profiles
+    - :cloud_networks
     :collection_actions:
       :get:
       - :name: read
@@ -672,6 +673,10 @@
         :identifier: ems_infra_protect
       - :name: unassign
         :identifier: ems_infra_protect
+    :cloud_networks_subcollection_actions:
+      :get:
+      - :name: show
+      - :identifier: miq_cloud_networks_view
   :provision_dialogs:
     :description: Provisioning Dialogs
     :identifier: miq_ae_customization_explorer
@@ -1694,3 +1699,42 @@
       :delete:
       - :name: delete
         :identifier: delete_arbitration_profile
+  :cloud_networks:
+    :description: Cloud Networks
+    :identifier: miq_cloud_networks
+    :options:
+    - :collection
+    :verbs: *70174834086080
+    :klass: CloudNetwork
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: miq_cloud_networks_view
+  :arbitration_settings:
+    :description: Arbitration Settings
+    :identifier: miq_arbitration_settings
+    :options:
+    - :collection
+    :verbs: *70174834084700
+    :klass: ArbitrationSetting
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: show_arbitration_setting
+      :post:
+      - :name: create
+        :identifier: create_arbitration_setting
+      - :name: edit
+        :identifier: edit_arbitration_setting
+      - :name: delete
+        :identifier: delete_arbitration_setting
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: edit_arbitration_setting
+      - :name: delete
+        :identifier: delete_arbitration_setting
+      :delete:
+      - :name: delete
+        :identifier: delete_arbitration_setting
+

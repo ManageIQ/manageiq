@@ -63,11 +63,13 @@ class ProviderForemanController < ApplicationController
     assert_privileges("provider_foreman_add_provider")
     @provider_cfgmgmt = ManageIQ::Providers::ConfigurationManager.new
     @provider_types = ["Ansible Tower", ui_lookup(:ui_title => 'foreman')]
+    @server_zones = Zone.in_my_region.order('lower(description)').pluck(:description, :name)
     render_form
   end
 
   def edit
     @provider_types = ["Ansible Tower", ui_lookup(:ui_title => 'foreman')]
+    @server_zones = Zone.in_my_region.order('lower(description)').pluck(:description, :name)
     case params[:button]
     when "cancel"
       cancel_provider_foreman
@@ -101,7 +103,9 @@ class ProviderForemanController < ApplicationController
         provider.destroy_queue
       end
 
-      add_flash(_("Delete initiated for %{count_model}") % {:count_model => pluralize(providers.length, "provider")})
+      add_flash(n_("Delete initiated for %{count} Provider",
+                   "Delete initiated for %{count} Providers",
+                   providers.length) % {:count => providers.length})
     end
     replace_right_cell
   end
@@ -219,6 +223,7 @@ class ProviderForemanController < ApplicationController
 
     render :json => {:provtype   => model_to_name(config_mgr.type),
                      :name       => provider.name,
+                     :zone       => provider.zone.name,
                      :url        => provider.url,
                      :verify_ssl => provider.verify_ssl,
                      :log_userid => provider.authentications.first.userid}
@@ -446,18 +451,20 @@ class ProviderForemanController < ApplicationController
     if params[:button]
       @miq_after_onload = "miqAjax('/#{controller_name}/x_button?pressed=#{params[:button]}');"
     end
+
+    build_accordions_and_trees
+
     params.instance_variable_get(:@parameters).merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
     @in_a_form = false
+
     if params[:id] # If a tree node id came in, show in one of the trees
       nodetype, id = params[:id].split("-")
       # treebuilder initializes x_node to root first time in locals_for_render,
       # need to set this here to force & activate node when link is clicked outside of explorer.
       @reselect_node = self.x_node = "#{nodetype}-#{to_cid(id)}"
+      get_node_info(x_node)
     end
-
-    build_accordions_and_trees
-
     render :layout => "application"
   end
 
@@ -517,7 +524,7 @@ class ProviderForemanController < ApplicationController
     @provider_cfgmgmt.name       = params[:name]
     @provider_cfgmgmt.url        = params[:url]
     @provider_cfgmgmt.verify_ssl = params[:verify_ssl].eql?("on")
-    @provider_cfgmgmt.zone       = Zone.find_by_name(MiqServer.my_zone)
+    @provider_cfgmgmt.zone       = Zone.find_by_name(params[:zone].to_s)
   end
 
   def features

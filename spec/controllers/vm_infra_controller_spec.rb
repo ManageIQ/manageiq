@@ -36,8 +36,6 @@ describe VmInfraController do
     expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
-    node_id = "v-#{vm_vmware.compressed_id}"
-    expect(response.body).to match(/miqDynatreeActivateNodeSilently\('vandt_tree', '#{node_id}'\);/)
 
     expect(response).to render_template('shared/summary/_textual_tags')
     expect(response.body).to match(/VM and Instance &quot;#{vm_vmware.name}&quot;/)

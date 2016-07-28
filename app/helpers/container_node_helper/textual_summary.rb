@@ -112,4 +112,8 @@ module ContainerNodeHelper::TextualSummary
   def textual_kernel_version
     @record.computer_system.try(:operating_system).try(:kernel_version) || _("N/A")
   end
+
+  def textual_compliance_history
+    super(:title => _("Show Compliance History of this Node (Last 10 Checks)"))
+  end
 end

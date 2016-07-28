@@ -8,10 +8,12 @@
         %span.pficon.pficon-error-exclamation
       %strong
         = _("Caution: Manual changes to configuration files can disable the Server!")
+
     = text_area_tag("file_data", @edit[:new][:file_data], :style => "display:none;")
-  - if params[:action] != "explorer"
     = render :partial => "/layouts/my_code_mirror",
-      :locals  => {:text_area_id => "file_data",
-      :mode         => "yaml",
-      :line_numbers => true,
-      :url          => url}
+             :locals  => {:text_area_id => "file_data",
+                          :mode         => "yaml",
+                          :line_numbers => true,
+                          :url          => url}
+    :javascript
+      ManageIQ.editor.refresh();

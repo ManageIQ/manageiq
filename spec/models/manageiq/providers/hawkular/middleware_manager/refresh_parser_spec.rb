@@ -1,8 +1,8 @@
 require 'spec_helper'
 require 'recursive-open-struct'
+require_relative 'hawkular_helper'
 
 describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
-  THE_FEED_ID = '70c798a0-6985-4f8a-a525-012d8d28e8a3'.freeze
 
   let(:ems_hawkular) do
     # allow(MiqServer).to receive(:my_zone).and_return("default")
@@ -18,9 +18,9 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
   let(:server) do
     FactoryGirl.create(:hawkular_middleware_server,
                        :name                  => 'Local',
-                       :feed                  => THE_FEED_ID,
+                       :feed                  => the_feed_id,
                        :ems_ref               => '/t;Hawkular'\
-                                                 "/f;#{THE_FEED_ID}/r;Local~~",
+                                                 "/f;#{the_feed_id}/r;Local~~",
                        :nativeid              => 'Local~~',
                        :ext_management_system => ems_hawkular)
   end
@@ -31,7 +31,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
       datasource = RecursiveOpenStruct.new(:name => 'ruby-sample-build',
                                            :id   => 'Local~/subsystem=datasources/data-source=ExampleDS',
                                            :path => '/t;Hawkular'\
-                                                    "/f;#{THE_FEED_ID}/r;Local~~"\
+                                                    "/f;#{the_feed_id}/r;Local~~"\
                                                     '/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS'
                                           )
       config = {
@@ -47,7 +47,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
         :middleware_server => server,
         :nativeid          => 'Local~/subsystem=datasources/data-source=ExampleDS',
         :ems_ref           => '/t;Hawkular'\
-                                                 "/f;#{THE_FEED_ID}/r;Local~~"\
+                                                 "/f;#{the_feed_id}/r;Local~~"\
                                                  '/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS',
         :properties        => {
           'Driver Name'    => 'h2',

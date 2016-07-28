@@ -1,6 +1,8 @@
 class ManageIQ::Providers::Microsoft::InfraManager::Vm < ManageIQ::Providers::InfraManager::Vm
   include_concern 'ManageIQ::Providers::Microsoft::InfraManager::VmOrTemplateShared'
 
+  supports_not :migrate, :reason => _("Migrate operation is not supported.")
+
   POWER_STATES = {
     "Running"  => "on",
     "Paused"   => "suspended",
@@ -10,10 +12,6 @@ class ManageIQ::Providers::Microsoft::InfraManager::Vm < ManageIQ::Providers::In
 
   def self.calculate_power_state(raw_power_state)
     POWER_STATES[raw_power_state] || super
-  end
-
-  def validate_migrate
-    validate_unsupported("Migrate")
   end
 
   def proxies4job(_job = nil)

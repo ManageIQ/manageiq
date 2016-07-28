@@ -67,6 +67,8 @@ class VmOrTemplate < ApplicationRecord
   belongs_to                :storage
   has_and_belongs_to_many   :storages, :join_table => 'storages_vms_and_templates'
 
+  belongs_to                :storage_profile
+
   belongs_to                :ext_management_system, :foreign_key => "ems_id"
 
   has_one                   :miq_provision, :dependent => :nullify, :as => :destination
@@ -127,6 +129,8 @@ class VmOrTemplate < ApplicationRecord
   belongs_to                :tenant
 
   acts_as_miq_taggable
+
+  supports_not :resize
 
   virtual_column :is_evm_appliance,                     :type => :boolean,    :uses => :miq_server
   virtual_column :os_image_name,                        :type => :string,     :uses => [:operating_system, :hardware]
@@ -1881,7 +1885,13 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def self.batch_operation_supported?(operation, ids)
-    VmOrTemplate.where(:id => ids).all? { |v| v.public_send("validate_#{operation}")[:available] }
+    VmOrTemplate.where(:id => ids).all? do |vm_or_template|
+      if vm_or_template.respond_to?("supports_#{operation}?")
+        vm_or_template.public_send("supports_#{operation}?")
+      else
+        vm_or_template.public_send("validate_#{operation}")[:available]
+      end
+    end
   end
 
   # Stop showing Reconfigure VM task unless the subclass allows

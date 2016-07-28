@@ -1,6 +1,8 @@
 module AvailabilityMixin
   extend ActiveSupport::Concern
 
+  # PLEASE PREFER supports_feature_mixin.rb OVER THIS
+  #
   # UI Button Validation Methods
   #
   # The UI calls this method to determine if a feature is supported for this model
@@ -17,21 +19,17 @@ module AvailabilityMixin
 
   class_methods do
     def is_available?(request_type, *args)
+      # please prefer supports_feature_mixin.rb over this
       validate_method = "validate_#{request_type}"
-      if respond_to?(validate_method)
-        send(validate_method, *args)[:available]
-      else
-        false
-      end
+      send(validate_method, *args)[:available]
     end
 
     # Returns an error message string if there is an error.
     # Otherwise nil to indicate no errors.
     def is_available_now_error_message(request_type, *args)
+      # please prefer supports_feature_mixin.rb over this
       send("validate_#{request_type}", *args)[:message]
     end
-
-    # FIXME: refactor validate_ call
   end
 
   included do

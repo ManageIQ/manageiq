@@ -48,7 +48,7 @@
               .col-md-8
                 %p.form-control-static
                   = h(_("By Username %{username} %{updated_on}") % {:username => @policy.updated_by || _("N/A"), :updated_on => format_timezone(@policy.updated_on, session[:user_tz], "on_at")})
-      %hr
+        %hr
 
       -# Scope
       - if @edit
@@ -68,68 +68,55 @@
                   = h([token].flatten.first)
         - else
           = render :partial => 'layouts/info_msg', :locals => {:message => _("No Policy scope defined, the scope of this policy includes all elements.")}
-        %hr
+          %hr
 
       -# Conditions for this policy
       - if @edit
         - if @edit[:typ] == "conditions"
-          %fieldset
-            %h3= _("Condition Selection")
-            %table.admintable
-              %tr
-                %td
-                  %table#formtest.form{:width => "100%"}
-                    %tr
-                      %td{:align => "left"}= _("Available %{model} Conditions:") % {:model => ui_lookup(:model => @edit[:new][:towhat])}
-                      %td
-                      %td.widthed{:align => "left"}= _("Policy Conditions:")
-                    %tr
-                      %td.widthed{:align => "left", :valign => "top"}
-                        %span#choices_chosen_div
-                          = select_tag('choices_chosen[]',
-                            options_for_select(@edit[:choices].sort),
-                            :multiple => true,
-                            :class    => "widthed",
-                            :size     => 8,
-                            :id       => "choices_chosen")
-                        %p
-                      %td{:width => "20", :valign => "middle"}
-                        - t = _("Move selected Conditions into this Policy")
-                        = link_to(image_tag(image_path('toolbars/right.png'), :border => "0", :class  => "rollover small", :alt => t),
-                          {:action => 'policy_edit', :button => 'move_right', :id => @policy},
-                          "data-miq_sparkle_on"  => true,
-                          "data-miq_sparkle_off" => true,
-                          "data-submit"          => 'choices_chosen_div',
-                          :remote                => true,
-                          "data-method"          => :post,
-                          :title                 => t)
-                        - t = _("Remove all Conditions from this Policy")
-                        = link_to(image_tag(image_path('toolbars/allleft.png'), :border => "0", :class  => "rollover small", :alt => t),
-                          {:action => 'policy_edit', :button => 'move_allleft', :id => @policy},
-                          "data-miq_sparkle_on"  => true,
-                          "data-miq_sparkle_off" => true,
-                          :remote                => true,
-                          "data-method"          => :post,
-                          :title                 => t)
-                        - t = _("Remove selected Conditions from this Policy")
-                        = link_to(image_tag(image_path('toolbars/left.png'), :border => "0", :class  => "rollover small", :alt => t),
-                          {:action => 'policy_edit', :button => 'move_left', :id => @policy},
-                          "data-miq_sparkle_on"  => true,
-                          "data-miq_sparkle_off" => true,
-                          "data-submit"          => 'members_chosen_div',
-                          :remote                => true,
-                          "data-method"          => :post,
-                          :title                 => t)
-                      %td{:align => "right", :valign => "top"}
-                        %span#members_chosen_div
-                          = select_tag('members_chosen[]',
-                            options_for_select(@edit[:new][:conditions].sort),
-                            :multiple => true,
-                            :class    => "widthed",
-                            :size     => 8,
-                            :id       => "members_chosen")
-                  %strong
-                    = _("* If all Conditions are removed from a Policy, it will be unconditional and always evaluate to true.")
+          %h3= _("Condition Selection")
+          %table.admintable
+            %tr
+              %td
+                %table#formtest.form{:width => "100%"}
+                  %tr
+                    %td{:align => "left"}= _("Available %{model} Conditions:") % {:model => ui_lookup(:model => @edit[:new][:towhat])}
+                    %td
+                    %td.widthed{:align => "left"}= _("Policy Conditions:")
+                  %tr
+                    %td.widthed{:align => "left", :valign => "top"}
+                      %span#choices_chosen_div
+                        = select_tag('choices_chosen[]',
+                          options_for_select(@edit[:choices].sort),
+                          :multiple => true,
+                          :class    => "widthed",
+                          :size     => 8,
+                          :id       => "choices_chosen")
+                      %p
+                    %td{:width => "20", :valign => "middle"}
+                      .btn-group-vertical
+                        - [[_("Move selected Conditions into this Policy"),   'choices_chosen_div', 'move_right',   'fa-angle-right'],
+                           [_("Remove all Conditions from this Policy"),      nil,                  'move_allleft', 'fa-angle-double-left'],
+                           [_("Remove selected Conditions from this Policy"), 'members_chosen_div', 'move_left',    'fa-angle-left']].each do |title, chosen_div, action, arrow_style|
+                          %button.btn.btn-default{:title => title,
+                                                  :remote => true,
+                                                  "data-submit" => chosen_div,
+                                                  "data-method" => :post,
+                                                  "data-miq_sparkle_on"  => true,
+                                                  "data-miq_sparkle_off" => true,
+                                                  "data-click_url" => {:url => url_for(:action => 'policy_edit',
+                                                                                       :button => action,
+                                                                                       :id => @policy)}.to_json}
+                            %i.fa.fa-lg{:class => arrow_style}
+                    %td{:align => "right", :valign => "top"}
+                      %span#members_chosen_div
+                        = select_tag('members_chosen[]',
+                          options_for_select(@edit[:new][:conditions].sort),
+                          :multiple => true,
+                          :class    => "widthed",
+                          :size     => 8,
+                          :id       => "members_chosen")
+                %strong
+                  = _("* If all Conditions are removed from a Policy, it will be unconditional and always evaluate to true.")
       - else
         %h3= _("Conditions")
         - if @policy_conditions.empty?
@@ -169,17 +156,15 @@
       -# Events for this policy
       - if @edit
         - if @edit[:typ] == "events"
-          %fieldset
-            %h3= _("Event Selection")
-            - @edit[:allevents].keys.sort.each do |k|
-              %fieldset
-                %h3
-                  = h(k)
-                - @edit[:allevents][k].sort_by(&:first).each do |e|
-                  %div{:style => "width: 300px; height: 18px; float:left; padding: 0px 5px 0px 0px;"}
-                    = check_box_tag("event_#{e.last}", "1", @edit[:new][:events].include?(e.last) ? true : false,
-                      "data-miq_observe_checkbox" => {:url => url}.to_json)
-                    = h(e.first)
+          %h3= _("Event Selection")
+          - @edit[:allevents].keys.sort.each do |k|
+            %fieldset
+              %h3= h(k)
+              - @edit[:allevents][k].sort_by(&:first).each do |e|
+                %div{:style => "width: 300px; height: 18px; float:left; padding: 0px 5px 0px 0px;"}
+                  = check_box_tag("event_#{e.last}", "1", @edit[:new][:events].include?(e.last) ? true : false,
+                    "data-miq_observe_checkbox" => {:url => url}.to_json)
+                  = h(e.first)
       - else
         %h3= _("Events")
         - if @policy_events.empty?
@@ -240,7 +225,6 @@
             :counter                    => "notes_count",
             "data-miq_check_max_length" => true,
             "data-miq_observe"          => observe_with_interval)
-          %hr
       - else
         %h3= _("Notes")
         - if @policy.notes.blank?

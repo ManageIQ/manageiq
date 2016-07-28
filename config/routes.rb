@@ -271,6 +271,38 @@ Vmdb::Application.routes.draw do
       )
     },
 
+    :configuration_job      => {
+      :get  => %w(
+        download_data
+        index
+        outputs
+        parameters
+        resources
+        show
+        show_list
+        tagging_edit
+        protect
+      ),
+      :post => %w(
+        button
+        outputs
+        listnav_search_selected
+        panel_control
+        parameters
+        quick_search
+        resources
+        sections_field_changed
+        show
+        show_list
+        protect
+        tagging_edit
+        tag_edit_form_field_changed
+      ) +
+        adv_search_post +
+        exp_post +
+        save_post
+    },
+
     :consumption                  => {
       :get => %w(
         show
@@ -478,6 +510,7 @@ Vmdb::Application.routes.draw do
         show_list
         tagging_edit
         tag_edit_form_field_changed
+        protect
       ),
       :post => %w(
         button
@@ -494,6 +527,8 @@ Vmdb::Application.routes.draw do
         wait_for_task
         tagging_edit
         tag_edit_form_field_changed
+        protect
+        squash_toggle
       ) +
                adv_search_post +
                exp_post +
@@ -512,6 +547,7 @@ Vmdb::Application.routes.draw do
         show_list
         tagging_edit
         tag_edit_form_field_changed
+        protect
       ),
       :post => %w(
         button
@@ -528,6 +564,8 @@ Vmdb::Application.routes.draw do
         wait_for_task
         tagging_edit
         tag_edit_form_field_changed
+        protect
+        squash_toggle
       ) +
                adv_search_post +
                exp_post +
@@ -546,6 +584,7 @@ Vmdb::Application.routes.draw do
         show_list
         tagging_edit
         tag_edit_form_field_changed
+        protect
       ),
       :post => %w(
         button
@@ -562,6 +601,8 @@ Vmdb::Application.routes.draw do
         wait_for_task
         tagging_edit
         tag_edit_form_field_changed
+        protect
+        squash_toggle
       ) +
                adv_search_post +
                exp_post +
@@ -583,7 +624,6 @@ Vmdb::Application.routes.draw do
         openscap_rule_results
         openscap_html
         protect
-        squash_toggle
       ),
       :post => %w(
         button
@@ -2580,20 +2620,22 @@ Vmdb::Application.routes.draw do
   # Enablement for the REST API
 
   # Semantic Versioning Regex for API, i.e. vMajor.minor.patch[-pre]
-  API_VERSION_REGEX = /v[\d]+(\.[\da-zA-Z]+)*(\-[\da-zA-Z]+)?/
+  API_VERSION_REGEX = /v[\d]+(\.[\da-zA-Z]+)*(\-[\da-zA-Z]+)?/ unless defined?(API_VERSION_REGEX)
 
   # OPTIONS requests for REST API pre-flight checks
   match '/api/*path' => 'api#handle_options_request', :via => [:options]
 
   get '/api(/:version)' => 'api#show_entrypoint', :format => 'json', :version => API_VERSION_REGEX
 
-  API_ACTIONS = {
-    :get    => "show",
-    :post   => "update",
-    :put    => "update",
-    :patch  => "update",
-    :delete => "destroy"
-  }.freeze
+  unless defined?(API_ACTIONS)
+    API_ACTIONS = {
+      :get    => "show",
+      :post   => "update",
+      :put    => "update",
+      :patch  => "update",
+      :delete => "destroy"
+    }.freeze
+  end
 
   def action_for(verb)
     "api##{API_ACTIONS[verb]}"
@@ -2662,6 +2704,7 @@ Vmdb::Application.routes.draw do
   resources :ems_cloud, :as => :ems_clouds
   resources :ems_infra, :as => :ems_infras
   resources :ems_container, :as => :ems_containers
+
   match "/auth/:provider/callback" => "sessions#create", :via => :get
 
   if Rails.env.development? && defined?(Rails::Server)

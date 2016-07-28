@@ -1534,7 +1534,7 @@ class ApplicationController < ActionController::Base
     @items_per_page = controller_name.downcase == "miq_policy" ? ONE_MILLION : get_view_pages_perpage(dbname)
     @items_per_page = ONE_MILLION if 'vm' == db_sym.to_s && controller_name == 'service'
 
-    @current_page = options[:page] || (params[:page].blank? ? 1 : params[:page].to_i)
+    @current_page = options[:page] || ((params[:page].to_i < 1) ? 1 : params[:page].to_i)
 
     view.conditions = options[:conditions] # Get passed in conditions (i.e. tasks date filters)
 
@@ -1782,7 +1782,13 @@ class ApplicationController < ActionController::Base
     end
 
     vms = VmOrTemplate.where(:id => vm_ids)
-    vms.each { |vm| render_flash_not_applicable_to_model(typ) unless vm.is_available?(typ) }
+    vms.each do |vm|
+      if vm.respond_to?("supports_#{typ}?")
+        render_flash_not_applicable_to_model(typ) unless vm.send("supports_#{typ}?")
+      else
+        render_flash_not_applicable_to_model(typ) unless vm.is_available?(typ)
+      end
+    end
   end
 
   def prov_redirect(typ = nil)

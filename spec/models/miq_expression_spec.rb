@@ -187,16 +187,6 @@ describe MiqExpression do
     end
 
     context "date/time support" do
-      it "generates the SQL for an EQUAL expression with a datetime field" do
-        sql, * = MiqExpression.new("EQUAL" => {"field" => "Vm-boot_time", "value" => "2016-01-01"}).to_sql
-        expect(sql).to eq("\"vms\".\"boot_time\" = '2016-01-01 00:00:00'")
-      end
-
-      it "generates the SQL for a = expression with a datetime field" do
-        sql, * = MiqExpression.new("=" => {"field" => "Vm-boot_time", "value" => "2016-01-01"}).to_sql
-        expect(sql).to eq("\"vms\".\"boot_time\" = '2016-01-01 00:00:00'")
-      end
-
       it "generates the SQL for a = expression with a date field" do
         sql, * = described_class.new("=" => {"field" => "Vm-retires_on", "value" => "2016-01-01"}).to_sql
         expect(sql).to eq(%q("vms"."retires_on" = '2016-01-01'))
@@ -265,11 +255,6 @@ describe MiqExpression do
         expect(sql).to eq(%q("vms"."retires_on" != '2016-01-01'))
       end
 
-      it "generates the SQL for a != expression with a datetime field" do
-        sql, * = described_class.new("!=" => {"field" => "Vm-last_scan_on", "value" => "2016-01-01"}).to_sql
-        expect(sql).to eq(%q("vms"."last_scan_on" != '2016-01-01 00:00:00'))
-      end
-
       it "generates the SQL for an IS expression" do
         exp = MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
         sql, * = exp.to_sql
@@ -307,6 +292,44 @@ describe MiqExpression do
 
     context "relative date/time support" do
       around { |example| Timecop.freeze("2011-01-11 17:30 UTC") { example.run } }
+
+      context "given a non-UTC timezone" do
+        it "generates the SQL for a > expression with a value of 'Yesterday' for a date field" do
+          exp = described_class.new(">" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
+          sql, * = exp.to_sql("Asia/Jakarta")
+          expect(sql).to eq(%q("vms"."retires_on" > '2011-01-11'))
+        end
+
+        it "generates the SQL for a >= expression with a value of 'Yesterday' for a date field" do
+          exp = described_class.new(">=" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
+          sql, * = exp.to_sql("Asia/Jakarta")
+          expect(sql).to eq(%q("vms"."retires_on" >= '2011-01-11'))
+        end
+
+        it "generates the SQL for a < expression with a value of 'Yesterday' for a date field" do
+          exp =  described_class.new("<" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
+          sql, * = exp.to_sql("Asia/Jakarta")
+          expect(sql).to eq(%q("vms"."retires_on" < '2011-01-11'))
+        end
+
+        it "generates the SQL for a <= expression with a value of 'Yesterday' for a date field" do
+          exp = described_class.new("<=" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
+          sql, * = exp.to_sql("Asia/Jakarta")
+          expect(sql).to eq(%q("vms"."retires_on" <= '2011-01-11'))
+        end
+
+        it "generates the SQL for an IS expression with a value of 'Yesterday' for a date field" do
+          exp = described_class.new("IS" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
+          sql, * = exp.to_sql("Asia/Jakarta")
+          expect(sql).to eq(%q("vms"."retires_on" BETWEEN '2011-01-11' AND '2011-01-11'))
+        end
+
+        it "generates the SQL for a FROM expression with a value of 'Yesterday'/'Today' for a date field" do
+          exp = described_class.new("FROM" => {"field" => "Vm-retires_on", "value" => %w(Yesterday Today)})
+          sql, * = exp.to_sql("Asia/Jakarta")
+          expect(sql).to eq(%q("vms"."retires_on" BETWEEN '2011-01-11' AND '2011-01-12'))
+        end
+      end
 
       it "generates the SQL for an AFTER expression with an 'n Days Ago' value for a date field" do
         exp = MiqExpression.new("AFTER" => {"field" => "Vm-retires_on", "value" => "2 Days Ago"})
@@ -1127,6 +1150,44 @@ describe MiqExpression do
 
     context "relative date/time support" do
       around { |example| Timecop.freeze("2011-01-11 17:30 UTC") { example.run } }
+
+      context "given a non-UTC timezone" do
+        it "generates the SQL for a > expression with a value of 'Yesterday' for a date field" do
+          exp = described_class.new(">" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
+          ruby, * = exp.to_ruby("Asia/Jakarta")
+          expect(ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date > '2011-01-11'.to_date")
+        end
+
+        it "generates the RUBY for a >= expression with a value of 'Yesterday' for a date field" do
+          exp = described_class.new(">=" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
+          ruby, * = exp.to_ruby("Asia/Jakarta")
+          expect(ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date >= '2011-01-11'.to_date")
+        end
+
+        it "generates the RUBY for a < expression with a value of 'Yesterday' for a date field" do
+          exp = described_class.new("<" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
+          ruby, * = exp.to_ruby("Asia/Jakarta")
+          expect(ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date < '2011-01-11'.to_date")
+        end
+
+        it "generates the RUBY for a <= expression with a value of 'Yesterday' for a date field" do
+          exp = described_class.new("<=" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
+          ruby, * = exp.to_ruby("Asia/Jakarta")
+          expect(ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date <= '2011-01-11'.to_date")
+        end
+
+        it "generates the RUBY for an IS expression with a value of 'Yesterday' for a date field" do
+          exp = described_class.new("IS" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
+          ruby, * = exp.to_ruby("Asia/Jakarta")
+          expect(ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date >= '2011-01-11'.to_date && val.to_date <= '2011-01-11'.to_date")
+        end
+
+        it "generates the RUBY for a FROM expression with a value of 'Yesterday'/'Today' for a date field" do
+          exp = described_class.new("FROM" => {"field" => "Vm-retires_on", "value" => %w(Yesterday Today)})
+          ruby, * = exp.to_ruby("Asia/Jakarta")
+          expect(ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date >= '2011-01-11'.to_date && val.to_date <= '2011-01-12'.to_date")
+        end
+      end
 
       context "relative dates with no time zone" do
         it "generates the ruby for an AFTER expression with date value of n Days Ago" do

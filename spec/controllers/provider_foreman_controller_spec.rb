@@ -182,6 +182,27 @@ describe ProviderForemanController do
       expect(right_cell_text).to eq(_("Edit Configuration Manager Provider"))
     end
 
+    it "should display the zone field" do
+      new_zone = FactoryGirl.create(:zone, :name => "TestZone")
+      controller.instance_variable_set(:@provider_cfgmgmt, @provider)
+      post :edit, :params => { :id => @config_mgr.id }
+      expect(response.status).to eq(200)
+      expect(response.body).to include("option value=\\\"#{new_zone.name}\\\"")
+    end
+
+    it "should save the zone field" do
+      new_zone = FactoryGirl.create(:zone, :name => "TestZone")
+      controller.instance_variable_set(:@provider_cfgmgmt, @provider)
+      allow(controller).to receive(:leaf_record).and_return(false)
+      post :edit, :params => { :button     => 'save',
+                               :id         => @config_mgr.id,
+                               :zone       => new_zone.name,
+                               :url        => @provider.url,
+                               :verify_ssl => @provider.verify_ssl }
+      expect(response.status).to eq(200)
+      expect(@provider.zone).to eq(new_zone)
+    end
+
     it "renders the edit page when the configuration manager id is selected from a list view" do
       post :edit, :params => { :miq_grid_checks => @config_mgr.id }
       expect(response.status).to eq(200)
@@ -268,6 +289,20 @@ describe ProviderForemanController do
     tree_builder = TreeBuilderConfigurationManager.new("root", "", {})
     objects = tree_builder.send(:x_get_tree_objects, @inventory_group, nil, false, nil)
     expected_objects = [@ans_configured_system, @ans_configured_system2a]
+    expect(objects).to match_array(expected_objects)
+  end
+
+  it "foreman unassigned configuration profile tree node does not list ansible configured systems" do
+    controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
+    tree_builder = TreeBuilderConfigurationManager.new("root", "", {})
+    objects = tree_builder.send(:x_get_tree_objects, @inventory_group, nil, false, nil)
+    expected_objects = [@ans_configured_system, @ans_configured_system2a]
+    expect(objects).to match_array(expected_objects)
+    unassigned_id = "#{ems_id_for_provider(@provider)}-unassigned"
+    unassigned_configuration_profile = ConfigurationProfile.new(:name       => "Unassigned Profiles Group|#{unassigned_id}",
+                                                                :manager_id => ems_id_for_provider(@provider))
+    objects = tree_builder.send(:x_get_tree_cpf_kids, unassigned_configuration_profile, false)
+    expected_objects = [@configured_system_unprovisioned]
     expect(objects).to match_array(expected_objects)
   end
 

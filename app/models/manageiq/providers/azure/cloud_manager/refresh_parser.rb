@@ -13,13 +13,6 @@ module ManageIQ::Providers
       def initialize(ems, options = nil)
         @ems    = ems
         @config = ems.connect
-
-        # Save the default subscription ID to the database if one wasn't provided.
-        unless ems.subscription
-          ems.subscription = @config.subscription_id
-          ems.save
-        end
-
         @subscription_id = ems.subscription
 
         # TODO(lsmola) NetworkManager, remove network endpoints once this is entirely moved under NetworkManager
@@ -146,7 +139,7 @@ module ManageIQ::Providers
       end
 
       def get_images
-        images = gather_data_for_this_region(@sas, 'list_private_images')
+        images = gather_data_for_this_region(@sas, 'list_all_private_images')
         process_collection(images, :vms) { |image| parse_image(image) }
       end
 

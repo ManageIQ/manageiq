@@ -450,9 +450,9 @@ class CloudVolumeController < ApplicationController
         AuditEvent.success(audit)
         volume.delete_volume
       end
-      add_flash(_("Delete initiated for %{models}.") % {
-        :models => pluralize(volumes.length, ui_lookup(:table => 'cloud_volume'))
-      })
+      add_flash(n_("Delete initiated for %{number} Cloud Volume.",
+                   "Delete initiated for %{number} Cloud Volumes.",
+                   volumes.length) % {:number => volumes.length})
     end
   end
 

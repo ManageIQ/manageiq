@@ -14,7 +14,7 @@ gem "activerecord-session_store",     "~>1.0.0"
 gem "acts_as_list",                   "~>0.7.2"
 gem "acts_as_tree",                   "~>2.1.0" # acts_as_tree needs to be required so that it loads before ancestry
 gem "ancestry",                       "~>2.1.0",   :require => false
-gem "ansible_tower_client",           "~>0.3.0",   :require => false
+gem "ansible_tower_client",           "~>0.3.1",   :require => false
 gem "aws-sdk",                        "~>2.2.19",  :require => false
 gem "color",                          "~>1.8"
 gem "dalli",                          "~>2.7.4",   :require => false
@@ -67,7 +67,6 @@ gem "config",                         "~>1.1.0",                      :git => "g
 gem "deep_merge",                     "~>1.0.1",                      :git => "git://github.com/ManageIQ/deep_merge.git", :branch => "overwrite_arrays"
 gem "draper",                         "~>2.1.0",                      :git => "git://github.com/janraasch/draper.git", :branch => "feature/rails5-compatibility" # https://github.com/drapergem/draper/pull/712
 gem "foreman_api_client",             ">=0.1.0",   :require => false, :git => "git://github.com/ManageIQ/foreman_api_client.git", :branch => "master"
-gem "rubyrep",                        "=1.2.0",    :require => false, :git => "git://github.com/ManageIQ/rubyrep.git", :tag => "v1.2.0-9"
 gem "ruport",                         "=1.7.0",                       :git => "git://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-3"
 gem "ziya",                           "=2.3.0",    :require => false, :git => "git://github.com/ManageIQ/ziya.git", :tag => "v2.3.0-3"
 
@@ -84,7 +83,6 @@ end
 group :ui_dependencies do # Added to Bundler.require in config/application.rb
   # Unmodified gems
   gem "angular-ui-bootstrap-rails",   "~>0.13.0"
-  gem "codemirror-rails",             "~>5.11.1"
   gem "jquery-hotkeys-rails"
   gem "jquery-rails",                 "~>4.1.1"
   gem "lodash-rails",                 "~>3.10.0"
@@ -93,7 +91,7 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
 
   # Modified gems (forked on Github)
   gem "jquery-rjs",                   "=0.1.1",                       :git => "git://github.com/amatsuda/jquery-rjs.git", :ref => "1288c09"
-  gem "patternfly-sass",                                              :git => "git://github.com/ManageIQ/patternfly-sass", :branch => "tertiary-3.6.0"
+  gem "patternfly-sass",                                              :git => "git://github.com/ManageIQ/patternfly-sass", :branch => "tertiary-3.7.0"
 end
 
 ### Start of gems excluded from the appliances.

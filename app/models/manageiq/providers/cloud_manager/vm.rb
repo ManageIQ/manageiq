@@ -76,10 +76,6 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     {:available => true, :message => nil}
   end
 
-  def validate_resize
-    validate_unsupported(_("Resize"))
-  end
-
   def disconnect_ems(e = nil)
     self.availability_zone = nil if e.nil? || ext_management_system == e
     super

@@ -92,6 +92,26 @@ describe ExtManagementSystem do
     end
   end
 
+  it "#total_storages" do
+    storage1 = FactoryGirl.create(:storage)
+    storage2 = FactoryGirl.create(:storage)
+
+    ems = FactoryGirl.create(:ems_vmware)
+    FactoryGirl.create(
+      :host_vmware,
+      :storages              => [storage1, storage2],
+      :ext_management_system => ems
+    )
+
+    FactoryGirl.create(
+      :host_vmware,
+      :storages              => [storage2],
+      :ext_management_system => ems
+    )
+
+    expect(ems.total_storages).to eq 2
+  end
+
   context "#hostname / #hostname=" do
     it "will delegate to the default endpoint" do
       ems = FactoryGirl.build(:ems_vmware, :hostname => "example.org")
@@ -133,6 +153,58 @@ describe ExtManagementSystem do
     it "will contain multiple endpoints" do
       expected_endpoints = ["example.org", "amqp.example.org"]
       expect(ems.hostnames).to match_array(expected_endpoints)
+    end
+  end
+
+  context "with multiple endpoints using connection_configurations" do
+    let(:ems) do
+      FactoryGirl.build("ems_openstack",
+                        :hostname                  => "example.org",
+                        :connection_configurations => [{:endpoint => {:role     => "amqp",
+                                                                      :hostname => "amqp.example.org"}}])
+    end
+
+    it "will contain seperate ampq endpoint" do
+      expect(ems.default_endpoint.hostname).to eq "example.org"
+      expect(ems.connection_configuration_by_role("amqp").endpoint.hostname).to eq "amqp.example.org"
+    end
+
+    it "will contain multiple endpoints" do
+      expected_endpoints = ["example.org", "amqp.example.org"]
+      expect(ems.hostnames).to match_array(expected_endpoints)
+    end
+  end
+
+  context "with multiple endpoints using connection_configurations (string keys)" do
+    let(:ems) do
+      FactoryGirl.build("ems_openstack",
+                        "hostname"                  => "example.org",
+                        "connection_configurations" => [{"endpoint" => {"role"     => "amqp",
+                                                                        "hostname" => "amqp.example.org"}}])
+    end
+
+    it "will contain seperate ampq endpoint" do
+      expect(ems.default_endpoint.hostname).to eq "example.org"
+      expect(ems.connection_configuration_by_role("amqp").endpoint.hostname).to eq "amqp.example.org"
+    end
+
+    it "will contain multiple endpoints" do
+      expected_endpoints = ["example.org", "amqp.example.org"]
+      expect(ems.hostnames).to match_array(expected_endpoints)
+    end
+  end
+
+  context "with multiple endpoints using default authtype" do
+    let(:ems) do
+      FactoryGirl.build(:ems_openshift,
+                        :connection_configurations => [{:endpoint       => {:role     => "default",
+                                                                            :hostname => "openshift.example.org"},
+                                                        :authentication => {:role     => "bearer",
+                                                                            :auth_key => "SomeSecret"}}])
+    end
+
+    it "will contain the bearer authentication as default" do
+      expect(ems.connection_configuration_by_role("default").authentication.authtype).to eq("bearer")
     end
   end
 

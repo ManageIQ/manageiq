@@ -58,6 +58,17 @@ class ApplicationHelper::Toolbar::ContainerReplicatorCenter < ApplicationHelper:
           'pficon pficon-edit fa-lg',
           N_('Edit Tags for this Replicator'),
           N_('Edit Tags')),
+        button(
+          :container_replicator_protect,
+          'pficon pficon-edit fa-lg',
+          N_('Manage Policies for this Replicator'),
+          N_('Manage Policies')),
+        button(
+          :container_replicator_check_compliance,
+          'fa fa-search fa-lg',
+          N_('Check Compliance of the last known configuration for this Replicator'),
+          N_('Check Compliance of Last Known Configuration'),
+          :confirm => N_("Initiate Check Compliance of the last known configuration for this item?")),
       ]
     ),
   ])

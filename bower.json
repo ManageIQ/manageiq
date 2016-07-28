@@ -20,7 +20,7 @@
     "angular": "^1.5.3",
     "angular-animate": "^1.5.3",
     "angular-mocks": "^1.5.3",
-    "angular-patternfly-sass": "3.6.0",
+    "angular-patternfly-sass": "3.7.0",
     "angular-sanitize": "^1.5.3",
     "bootstrap-filestyle": "^1.2.1",
     "bootstrap-hover-dropdown": "^2.0.11",
@@ -42,6 +42,8 @@
     "spice-html5-bower": "himdel/spice-html5-bower#^0.1.5",
     "es6-shim": "^0.35.0",
     "phantomjs-polyfill": "^0.0.2",
-    "fetch": "^1.0.0"
+    "fetch": "^1.0.0",
+    "codemirror": "^5.16.0",
+    "array-includes": "^1.0.0"
   }
 }

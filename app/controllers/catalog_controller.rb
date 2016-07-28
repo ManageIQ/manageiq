@@ -306,8 +306,9 @@ class CatalogController < ApplicationController
           {:model => ui_lookup(:tables => "service_template")}, :error)
       end
       process_sts(elements, 'destroy') unless elements.empty?
-      add_flash(_("The selected %{record} were deleted") %
-        {:record => pluralize(elements.length, ui_lookup(:table => "service_template"))}) unless flash_errors?
+      add_flash(n_("The selected %{number} Catalog Item was deleted",
+                   "The selected %{number} Catalog Items were deleted",
+                   elements.length) % {:number => elements.length}) unless flash_errors?
     end
     params[:id] = nil
     replace_right_cell(nil, trees_to_replace([:sandt, :svccat]))

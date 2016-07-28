@@ -23,18 +23,11 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
 
     @ems.authentications << FactoryGirl.create(:authentication, cred)
     @ems.update_attributes(:azure_tenant_id => @tenant_id)
-
-    # A true thread may fail the test with VCR
-    allow(Thread).to receive(:new) do |*args, &block|
-      block.call(*args)
-      Class.new do
-        def join; end
-      end.new
-    end
+    @ems.update_attributes(:subscription => @subscription_id)
   end
 
   after do
-    ::Azure::Armrest::ArmrestService.clear_caches
+    ::Azure::Armrest::Configuration.clear_caches
   end
 
   it ".ems_type" do
@@ -73,7 +66,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   def expected_table_counts
     {
       :ext_management_system         => 2,
-      :flavor                        => 53,
+      :flavor                        => 63,
       :availability_zone             => 1,
       :vm_or_template                => 9,
       :vm                            => 8,
@@ -93,7 +86,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       :security_group                => 8,
       :network_port                  => 10,
       :cloud_network                 => 6,
-      :floating_ip                   => 11,
+      :floating_ip                   => 10,
       :network_router                => 0,
       :cloud_subnet                  => 6,
     }
@@ -294,7 +287,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
 
     expect(v.hardware.guest_devices.size).to eql(0)
     expect(v.hardware.nics.size).to eql(0)
-    floating_ip   = ManageIQ::Providers::Azure::NetworkManager::FloatingIp.where(:address => "13.92.253.245").first
+    floating_ip   = ManageIQ::Providers::Azure::NetworkManager::FloatingIp.where(:address => "40.87.56.124").first
     cloud_network = ManageIQ::Providers::Azure::NetworkManager::CloudNetwork.where(:name => "miq-azure-test1").first
     cloud_subnet  = cloud_network.cloud_subnets.first
     expect(v.floating_ip).to eql(floating_ip)
@@ -309,7 +302,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     network = v.hardware.networks.where(:description => "public").first
     expect(network).to have_attributes(
       :description => "public",
-      :ipaddress   => "13.92.253.245",
+      :ipaddress   => "40.87.56.124",
       :hostname    => "ipconfig1"
     )
     network = v.hardware.networks.where(:description => "private").first
@@ -553,7 +546,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   def assert_specific_nic_and_ip
     nic_group  = 'miq-azure-test1' # EastUS
     ip_group   = 'miq-azure-test4' # Also EastUS
-    ip_address = '40.76.5.200'
+    ip_address = '52.186.122.167'
 
     nic_name = "/subscriptions/#{@subscription_id}/resourceGroups"\
                "/#{nic_group}/providers/Microsoft.Network"\

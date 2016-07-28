@@ -3451,6 +3451,14 @@
       :description: Edit Tags of Middleware Deployments
       :feature_type: control
       :identifier: middleware_deployment_tag
+    - :name: Stop middleware deployment
+      :description: Stop Middleware deployment
+      :feature_type: admin
+      :identifier: middleware_deployment_stop
+    - :name: Start middleware deployment
+      :description: StartMiddleware deployment
+      :feature_type: admin
+      :identifier: middleware_deployment_start
     - :name: Undeploy middleware deployment
       :description: Undeploy Middleware deployment
       :feature_type: admin
@@ -3810,6 +3818,14 @@
       :description: Edit Tags of Pods
       :feature_type: control
       :identifier: container_group_tag
+    - :name: Manage Policies
+      :description: Manage Policies of Pods
+      :feature_type: control
+      :identifier: container_group_protect
+    - :name: Check Compliance
+      :description: Check Compliance of Last Known Configuration
+      :feature_type: control
+      :identifier: container_group_check_compliance
 
 # ContainerNode
 - :name: Nodes
@@ -3864,6 +3880,14 @@
       :description: Edit Tags of Container Nodes
       :feature_type: control
       :identifier: container_node_tag
+    - :name: Manage Policies
+      :description: Manage Policies of Container Nodes
+      :feature_type: control
+      :identifier: container_node_protect
+    - :name: Check Compliance
+      :description: Check Compliance of Last Known Configuration
+      :feature_type: control
+      :identifier: container_node_check_compliance
 
 # ContainerReplicator
 - :name: Replicators
@@ -3918,6 +3942,14 @@
       :description: Edit Tags of Container Replicators
       :feature_type: control
       :identifier: container_replicator_tag
+    - :name: Manage Policies
+      :description: Manage Policies of Container Replicators
+      :feature_type: control
+      :identifier: container_replicator_protect
+    - :name: Check Compliance
+      :description: Check Compliance of Last Known Configuration
+      :feature_type: control
+      :identifier: container_replicator_check_compliance
 
 
 # ContainerImage
@@ -4394,6 +4426,48 @@
           :description: Edit Job Templates Tags
           :feature_type: control
           :identifier: configuration_script_tag
+# Configuration Jobs
+- :name: Configuration Jobs
+  :description: Everything under Configuration Jobs
+  :feature_type: node
+  :identifier: configuration_job
+  :children:
+  - :name: View
+    :description: View Configuration Jobs
+    :feature_type: view
+    :identifier: configuration_job_view
+    :children:
+    - :name: List
+      :description: Display Lists of Configuration Jobs
+      :feature_type: view
+      :identifier: configuration_job_show_list
+    - :name: Show
+      :description: Display Individual Configuration Jobs
+      :feature_type: view
+      :identifier: configuration_job_show
+  - :name: Modify
+    :description: Modify Configuration Job
+    :feature_type: admin
+    :identifier: configuration_job_admin
+    :children:
+    - :name: Remove
+      :description: Remove Configuration Jobs from the VMDB
+      :feature_type: admin
+      :identifier: configuration_job_delete
+    - :name: Edit
+      :description: Edit Configuration Job
+      :feature_type: admin
+      :identifier: configuration_job_edit
+  - :name: Operate
+    :description: Perform Operations on Configuration Jobs
+    :feature_type: control
+    :identifier: configuration_job_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Configuration Jobs
+      :feature_type: control
+      :identifier: configuration_job_tag
+
 - :name: All VM and Instance Access Rules
   :description: All VM and Instance Access Rules
   :feature_type: node
@@ -5015,3 +5089,37 @@
           :description: Revert to selected snapshot on Templates
           :feature_type: control
           :identifier: miq_template_snapshot_revert
+
+# CloudNetworks
+- :name: Cloud Networks
+  :description: Get Cloud Networks
+  :feature_type: node
+  :identifier: miq_cloud_networks
+  :children:
+    - :name: View
+      :description: Show Cloud Networks
+      :feature_type: view
+      :identifier: miq_cloud_networks_view
+
+# ArbitrationSettings
+- :name: Arbitration Settings
+  :description: Get and Edit Arbitration Settings
+  :feature_type: admin
+  :identifier: miq_arbitration_settings
+  :children:
+  - :name: Show Arbitration Settings
+    :description: Show Arbitration Settings
+    :feature_type: admin
+    :identifier: show_arbitration_setting
+  - :name: Create Arbitration Settings
+    :description: Create Arbitration Setting
+    :feature_type: admin
+    :identifier: create_arbitration_setting
+  - :name: Edit Arbitration Settings
+    :description: Edit Arbitration Settings
+    :feature_type: admin
+    :identifier: edit_arbitration_setting
+  - :name: Delete Arbitration Settings
+    :description: Delete Arbitration Settings
+    :feature_type: admin
+    :identifier: delete_arbitration_setting

@@ -48,6 +48,17 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
   end
 
   def process_event(event)
+    event_data = extract_event_data(event)
+    if event_data.nil?
+      _log.debug "#{log_prefix} Discarding event [#{event_data}]"
+    else
+      _log.info "#{log_prefix} Queuing event [#{event_data}]"
+      EmsEvent.add_queue('add_kubernetes', @cfg[:ems_id], event_data)
+    end
+  end
+
+  # Returns hash, or nil if event should be discarded.
+  def extract_event_data(event)
     event_data = {
       :timestamp => event.object.lastTimestamp,
       :kind      => event.object.involvedObject.kind,
@@ -65,7 +76,6 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
     supported_reasons = ENABLED_EVENTS[event_data[:kind]] || []
 
     unless supported_reasons.include?(event_data[:reason])
-      _log.debug "#{log_prefix} Discarding event [#{event_data}]"
       return
     end
 
@@ -75,6 +85,11 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
     case event_data[:kind]
     when 'Node'
       event_data[:container_node_name] = event_data[:name]
+      # Workaround for missing/useless node UID (#9600, https://github.com/kubernetes/kubernetes/issues/29289)
+      if event_data[:uid].nil? || event_data[:uid] == event_data[:name]
+        node = ContainerNode.find_by(:ems_id => @ems.id, :name => event_data[:name])
+        event_data[:uid] = node.try!(:ems_ref)
+      end
     when 'Pod'
       /^spec.containers{(?<container_name>.*)}$/ =~ event_data[:fieldpath]
       unless container_name.nil?
@@ -91,7 +106,6 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
 
     event_data[:event_type] = "#{event_type_prefix}_#{event_data[:reason].upcase}"
 
-    _log.info "#{log_prefix} Queuing event [#{event_data}]"
-    EmsEvent.add_queue('add_kubernetes', @cfg[:ems_id], event_data)
+    event_data
   end
 end

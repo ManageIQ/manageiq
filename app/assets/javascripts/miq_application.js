@@ -798,10 +798,10 @@ ManageIQ.oneTransition.oneTrans = 0;
 
 // Function to generate an Ajax request, but only once for a drawn screen
 function miqSendOneTrans(url, observe) {
-  if (typeof ManageIQ.oneTransition.IEButtonPressed != "undefined") {
+  if (ManageIQ.oneTransition.IEButtonPressed) {
     // page replace after clicking save/reset was making observe_field on
     // text_area in IE send up a trascation to form_field_changed method
-    ManageIQ.oneTransition.IEButtonPressed = undefined;
+    ManageIQ.oneTransition.IEButtonPressed = false;
     return;
   }
   if (ManageIQ.oneTransition.oneTrans) {
@@ -1340,6 +1340,43 @@ function miqInitSelectPicker() {
   $('.bootstrap-select > button[title]').not('.selectpicker').tooltip({container: 'none'});
 }
 
+function miqInitCodemirror(options) {
+  if (! miqDomElementExists(options.text_area_id)) {
+    return;
+  }
+
+  var textarea = $('#' + options.text_area_id)[0];
+
+  ManageIQ.editor = CodeMirror.fromTextArea(textarea, {
+    mode: options.mode,
+    lineNumbers: options.line_numbers,
+    matchBrackets: true,
+    theme: 'eclipse',
+    readOnly: options.read_only ? 'nocursor' : false,
+    viewportMargin: Infinity,
+  });
+
+  ManageIQ.editor.on('change', function (cm, change) {
+    if (options.angular) {
+      ManageIQ.editor.save();
+      $(textarea).trigger("change");
+    } else {
+      miqSendOneTrans(options.url);
+    }
+  });
+
+  ManageIQ.editor.on('blur', function (cm, change) {
+    ManageIQ.editor.save();
+  });
+
+  $('.CodeMirror').css('height', options.height);
+  $('.CodeMirror').css('width', options.width);
+
+  if (! options.no_focus) {
+    ManageIQ.editor.focus();
+  }
+}
+
 function miqSelectPickerEvent(element, url, options) {
   options = options || {};
   options.no_encoding = true;
@@ -1658,10 +1695,19 @@ function chartData(type, data, data2) {
     return;
   }
 
-  // set maximum count of x axis tick labels
-  if (_.isObject(data.miq) && data.miq.performance) {
-    data.axis.x.tick.centered = true;
-    data.axis.x.tick.culling = { max: 5 };
+
+  if (_.isObject(data.miq)) {
+    // set maximum count of x axis tick labels for C&U charts
+    if (data.miq.performance_chart) {
+      data.axis.x.tick.centered = true;
+      data.axis.x.tick.culling = { max: 5 };
+    }
+
+    // small C&U charts have very limited height
+    if (data.miq.flat_chart) {
+      var max = _.max(_.flatten(_.tail(data.data.columns).map(_.tail)));
+      data.axis.y.tick.values = [0, max];
+    }
   }
 
   // set formating function for tooltip and y tick labels

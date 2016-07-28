@@ -287,7 +287,6 @@ describe EmsInfraController do
                                            {:name=>"#{@ems.name} (All Managed Datastores)",
                                             :url=>"/ems_infra/#{@ems.id}?display=storages"},
                                            {:name=>"Tag Assignment", :url=>"//tagging_edit"}])
-
     end
   end
 
@@ -584,53 +583,48 @@ describe EmsInfraController do
 
     render_views
 
-    it 'creates on post' do
-      expect do
-        post :create, :params => {
-          "button"           => "add",
-          "name"             => "foo",
-          "emstype"          => "rhevm",
-          "zone"             => zone.name,
-          "cred_type"        => "default",
-          "default_hostname" => "foo.com",
-          "default_api_port" => "5000",
-          "default_userid"   => "foo",
-          "default_password" => "[FILTERED]",
-          "default_verify"   => "[FILTERED]",
-          "metrics_hostname" => "foo_metrics.com",
-          "metrics_api_port" => "5672",
-          "metrics_userid"   => "metrics_foo",
-          "metrics_password" => "[FILTERED]",
-          "metrics_verify"   => "[FILTERED]"
-        }
-      end.to change { ManageIQ::Providers::Redhat::InfraManager.count }.by(1)
+    let(:creation_params) do
+      {
+        "button"                => "add",
+        "name"                  => "foo_rhevm",
+        "emstype"               => "rhevm",
+        "zone"                  => zone.name,
+        "cred_type"             => "default",
+        "default_hostname"      => "foo.com",
+        "default_api_port"      => "5000",
+        "default_userid"        => "foo",
+        "default_password"      => "[FILTERED]",
+        "default_verify"        => "[FILTERED]",
+        "metrics_hostname"      => "foo_metrics.com",
+        "metrics_api_port"      => "5672",
+        "metrics_userid"        => "metrics_foo",
+        "metrics_password"      => "[FILTERED]",
+        "metrics_verify"        => "[FILTERED]",
+        "metrics_database_name" => "metrics_dwh"
+      }
     end
 
-    it 'creates and updates an authentication record on post' do
+    subject(:create) { post :create, :params => creation_params }
+
+    it 'creates on post' do
       expect do
-        post :create, :params => {
-          "button"           => "add",
-          "name"             => "foo_rhevm",
-          "emstype"          => "rhevm",
-          "zone"             => zone.name,
-          "cred_type"        => "default",
-          "default_hostname" => "foo.com",
-          "default_api_port" => "5000",
-          "default_userid"   => "foo",
-          "default_password" => "[FILTERED]",
-          "default_verify"   => "[FILTERED]",
-          "metrics_hostname" => "foo_metrics.com",
-          "metrics_api_port" => "5672",
-          "metrics_userid"   => "metrics_foo",
-          "metrics_password" => "[FILTERED]",
-          "metrics_verify"   => "[FILTERED]"
-        }
+        create
+      end.to change { ManageIQ::Providers::Redhat::InfraManager.where("name" => creation_params["name"]).count }.by(1)
+    end
+
+    it 'creates authentication records on post' do
+      expect do
+        create
       end.to change { Authentication.count }.by(2)
 
       expect(response.status).to eq(200)
       rhevm = ManageIQ::Providers::Redhat::InfraManager.where(:name => "foo_rhevm").first
       expect(rhevm.authentications.size).to eq(2)
+    end
 
+    it 'updates authentication records on post' do
+      create
+      rhevm = ManageIQ::Providers::Redhat::InfraManager.where(:name => "foo_rhevm").first
       expect do
         post :update, :params => {
           "id"               => rhevm.id,
@@ -646,6 +640,45 @@ describe EmsInfraController do
 
       expect(response.status).to eq(200)
       expect(rhevm.authentications.first).to have_attributes(:userid => "bar", :password => "[FILTERED]")
+    end
+
+    context "Metrics endpoint" do
+      it 'creates endpoints records on post' do
+        create
+        expect(response.status).to eq(200)
+        rhevm = ManageIQ::Providers::Redhat::InfraManager.where(:name => "foo_rhevm").first
+        expect(rhevm.endpoints.size).to eq(2)
+      end
+
+      it 'updates metrics endpoint records on post when button is "save"' do
+        create
+        rhevm = ManageIQ::Providers::Redhat::InfraManager.where(:name => "foo_rhevm").first
+
+        updated_metrics_params = { "default_hostname"      => "host_rhevm",
+                                   "metrics_hostname"      => "foo_metrics.com",
+                                   "metrics_api_port"      => "5672",
+                                   "metrics_userid"        => "metrics_foo",
+                                   "metrics_password"      => "[FILTERED]",
+                                   "metrics_verify"        => "[FILTERED]",
+                                   "metrics_database_name" => "metrics_dwh_updated"
+        }
+
+        expect do
+          post :update, :params => { "id" => rhevm.id, :button => 'save' }.merge(updated_metrics_params)
+        end.not_to change { Endpoint.count }
+
+        expect(Endpoint.where(:path => updated_metrics_params["metrics_database_name"]).count)
+          .to eq(1)
+      end
+
+      it 'tries to varify with the right params on post when button is "validate"' do
+        create
+        rhevm = ManageIQ::Providers::Redhat::InfraManager.where(:name => "foo_rhevm").first
+        expect_any_instance_of(ManageIQ::Providers::Redhat::InfraManager).to receive(:authentication_check)
+          .with("metrics",
+                hash_including(:save => false, :database => creation_params["metrics_database_name"]))
+        post :update, creation_params.merge(:button => "validate", :cred_type => "metrics", :id => rhevm.id)
+      end
     end
   end
 

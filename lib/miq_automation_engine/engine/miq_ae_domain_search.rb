@@ -4,6 +4,12 @@ module MiqAeEngine
       @fqns_id_cache       = {}
       @fqns_id_class_cache = {}
       @partial_ns          = []
+      @prepend_namespace   = nil
+    end
+
+    def prepend_namespace=(ns)
+      @prepend_namespace = ns.chomp('/').sub(%r{^/}, '')
+      $miq_ae_logger.info("Prepend namespace [#{@prepend_namespace} during domain search")
     end
 
     def ae_user=(obj)
@@ -35,7 +41,9 @@ module MiqAeEngine
         end
       end
       @partial_ns << ns unless @partial_ns.include?(ns)
-      find_first_fq_domain(uri, ns, klass, instance, method)
+      updated_ns = find_first_fq_domain(uri, "#{@prepend_namespace}/#{ns}", klass, instance, method) if @prepend_namespace
+      updated_ns ||= find_first_fq_domain(uri, ns, klass, instance, method)
+      updated_ns || ns
     end
 
     def find_first_fq_domain(uri, ns, klass, instance, method)
@@ -45,12 +53,13 @@ module MiqAeEngine
       parts.unshift("")
       matching_domain = get_matching_domain(parts, klass, instance, method)
       matching_domain ||= get_matching_domain(parts, klass, MiqAeObject::MISSING_INSTANCE, method)
+      updated_ns = nil
       if matching_domain
-        parts[0]     = matching_domain
-        ns = parts.join('/')
-        $miq_ae_logger.info("Updated namespace [#{uri}  #{ns}]")
+        parts[0]   = matching_domain
+        updated_ns = parts.join('/')
+        $miq_ae_logger.info("Updated namespace [#{uri}  #{updated_ns}]")
       end
-      ns
+      updated_ns
     end
 
     def get_matching_domain(ns_parts, klass, instance, method)

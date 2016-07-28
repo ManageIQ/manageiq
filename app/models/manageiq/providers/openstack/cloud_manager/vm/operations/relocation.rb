@@ -5,6 +5,12 @@ module ManageIQ::Providers::Openstack::CloudManager::Vm::Operations::Relocation
     supports :live_migrate do
       unsupported_reason_add(:live_migrate, unsupported_reason(:control)) unless supports_control?
     end
+
+    supports_not :migrate, :reason => _("Migrate operation is not supported.")
+
+    supports :evacuate do
+      unsupported_reason_add(:evacuate, unsupported_reason(:control)) unless supports_control?
+    end
   end
 
   def raw_live_migrate(options = {})
@@ -29,15 +35,5 @@ module ManageIQ::Providers::Openstack::CloudManager::Vm::Operations::Relocation
     end
     # Temporarily update state for quick UI response until refresh comes along
     self.update_attributes!(:raw_power_state => "MIGRATING")
-  end
-
-  def validate_evacuate
-    msg = validate_vm_control
-    return {:available => msg[0], :message => msg[1]} unless msg.nil?
-    {:available => true, :message => nil}
-  end
-
-  def validate_migrate
-    validate_unsupported("Migrate")
   end
 end

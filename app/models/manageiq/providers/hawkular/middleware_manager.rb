@@ -135,8 +135,16 @@ module ManageIQ::Providers
       run_generic_operation(:Shutdown, ems_ref)
     end
 
-    def undeploy_middleware_deployment(ems_ref)
+    def stop_middleware_deployment(ems_ref)
       run_generic_operation(:Undeploy, ems_ref)
+    end
+
+    def start_middleware_deployment(ems_ref)
+      run_generic_operation(:Deploy, ems_ref)
+    end
+
+    def undeploy_middleware_deployment(ems_ref)
+      run_generic_operation(:Remove, ems_ref)
     end
 
     def restart_middleware_server(ems_ref)

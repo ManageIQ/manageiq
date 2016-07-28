@@ -155,6 +155,7 @@ module ReportController::Reports::Editor
 
     case @sb[:miq_tab].split("_")[1]
     when "1"  # Select columns
+      @edit[:models] ||= reportable_models
       # Add the blank choice if no table chosen yet
       #     @edit[:models].insert(0,["<Choose>", "<Choose>"]) if @edit[:new][:model] == nil && @edit[:models][0][0] != "<Choose>"
       if @edit[:new][:model].nil?
@@ -169,12 +170,8 @@ module ReportController::Reports::Editor
 
     when "8"  # Consolidate
       # Build group chooser arrays
-      @pivots1  = @edit[:new][:fields].dup
-      @pivots2  = @pivots1.dup.delete_if { |g| g[1] == @edit[:new][:pivotby1] }
-      @pivots3  = @pivots2.dup.delete_if { |g| g[1] == @edit[:new][:pivotby2] }
-      @pivotby1 = @edit[:new][:pivotby1]
-      @pivotby2 = @edit[:new][:pivotby2]
-      @pivotby3 = @edit[:new][:pivotby3]
+      @edit[:new][:pivot].options = @edit[:new][:fields].dup
+      @pivot = @edit[:new][:pivot]
     when "2"  # Formatting
     #     @edit[:calc_xml] = build_calc_combo_xml                                     # Get the combobox XML for any numeric fields
 
@@ -278,6 +275,12 @@ module ReportController::Reports::Editor
     end
   end
 
+  def reportable_models
+    MiqReport.reportable_models.collect do |m|
+      [Dictionary.gettext(m, :type => :model, :notfound => :titleize, :plural => true), m]
+    end
+  end
+
   # Create the arrays for the start/end interval pulldowns
   def build_perf_interval_arrays(interval)
     case interval
@@ -331,9 +334,7 @@ module ReportController::Reports::Editor
   def reset_report_col_fields
     @edit[:new][:fields]          = []                    # Clear fields array
     @edit[:new][:headers]         = {}                  # Clear headers hash
-    @edit[:new][:pivotby1]        = NOTHING_STRING      # Clear consolidate group fields
-    @edit[:new][:pivotby2]        = NOTHING_STRING
-    @edit[:new][:pivotby3]        = NOTHING_STRING
+    @edit[:new][:pivot]           = ReportController::PivotOptions.new
     @edit[:new][:sortby1]         = NOTHING_STRING      # Clear sort fields
     @edit[:new][:sortby2]         = NOTHING_STRING
     @edit[:new][:filter_operator] = nil
@@ -621,7 +622,6 @@ module ReportController::Reports::Editor
     elsif params[:chosen_tz]
       @edit[:new][:tz] = params[:chosen_tz]
     elsif params.key?(:chosen_time_profile)
-      tp = TimeProfile.find(params[:chosen_time_profile]) unless params[:chosen_time_profile].blank?
       @edit[:new][:time_profile] = params[:chosen_time_profile].blank? ? nil : params[:chosen_time_profile].to_i
       @refresh_div = "filter_div"
       @refresh_partial = "form_filter"
@@ -723,32 +723,15 @@ module ReportController::Reports::Editor
   end
 
   def gfv_pivots
-    if params[:chosen_pivot1] && params[:chosen_pivot1] != @edit[:new][:pivotby1]
-      @edit[:new][:pivotby1] = params[:chosen_pivot1]
-      if params[:chosen_pivot1] == NOTHING_STRING
-        @edit[:new][:pivotby2] = NOTHING_STRING
-        @edit[:new][:pivotby3] = NOTHING_STRING
-      elsif params[:chosen_pivot1] == @edit[:new][:pivotby2]
-        @edit[:new][:pivotby2] = @edit[:new][:pivotby3]
-        @edit[:new][:pivotby3] = NOTHING_STRING
-      elsif params[:chosen_pivot1] == @edit[:new][:pivotby3]
-        @edit[:new][:pivotby3] = NOTHING_STRING
-      end
-    elsif params[:chosen_pivot2] && params[:chosen_pivot2] != @edit[:new][:pivotby2]
-      @edit[:new][:pivotby2] = params[:chosen_pivot2]
-      if params[:chosen_pivot2] == NOTHING_STRING || params[:chosen_pivot2] == @edit[:new][:pivotby3]
-        @edit[:new][:pivotby3] = NOTHING_STRING
-      end
-    elsif params[:chosen_pivot3] && params[:chosen_pivot3] != @edit[:new][:pivotby3]
-      @edit[:new][:pivotby3] = params[:chosen_pivot3]
-    end
+    @edit[:new][:pivot] ||= ReportController::PivotOptions.new
+    @edit[:new][:pivot].update(params)
     if params[:chosen_pivot1] || params[:chosen_pivot2] || params[:chosen_pivot3]
-      if @edit[:new][:pivotby1] == NOTHING_STRING
+      if @edit[:new][:pivot].by1 == NOTHING_STRING
         @edit[:pivot_cols] = {}                       # Clear pivot_cols if no pivot grouping fields selected
       else
-        @edit[:pivot_cols].delete(@edit[:new][:pivotby1])   # Remove any pivot grouping fields from pivot cols
-        @edit[:pivot_cols].delete(@edit[:new][:pivotby2])
-        @edit[:pivot_cols].delete(@edit[:new][:pivotby3])
+        @edit[:pivot_cols].delete(@edit[:new][:pivot].by1)   # Remove any pivot grouping fields from pivot cols
+        @edit[:pivot_cols].delete(@edit[:new][:pivot].by2)
+        @edit[:pivot_cols].delete(@edit[:new][:pivot].by3)
       end
       build_field_order
       @refresh_div = "consolidate_div"
@@ -923,11 +906,10 @@ module ReportController::Reports::Editor
             if af[0].include?(":")                            # Not a base column
               table = af[0].split(" : ")[0].split(".")[-1]    # Get the table name
               table = table.singularize unless table == "OS"  # Singularize, except "OS"
-              header = table + " " + af[0].split(" : ")[1]    # Add the table + col name
               temp = af[0].split(" : ")[1]
-              temp_header = table == temp.split(" ")[0] ? af[0].split(" : ")[1] : temp_header = table + " " + af[0].split(" : ")[1]
+              temp_header = table == temp.split(" ")[0] ? af[0].split(" : ")[1] : table + " " + af[0].split(" : ")[1]
             else
-              header = temp_header = af[0].strip              # Base column, just use it without leading space
+              temp_header = af[0].strip                       # Base column, just use it without leading space
             end
             @edit[:new][:headers][af[1]] = temp_header        # Add the column title to the headers hash
           end
@@ -955,16 +937,7 @@ module ReportController::Reports::Editor
           @edit[:new][:col_formats].delete_if { |k, _v| k.starts_with?("#{nf.last}__") } # Delete pivot calc keys
 
           # Clear out pivot field options
-          if nf.last == @edit[:new][:pivotby1]              # Compress the pivotby fields if being moved left
-            @edit[:new][:pivotby1] = @edit[:new][:pivotby2]
-            @edit[:new][:pivotby2] = @edit[:new][:pivotby3]
-            @edit[:new][:pivotby3] = NOTHING_STRING
-          elsif nf.last == @edit[:new][:pivotby2]
-            @edit[:new][:pivotby2] = @edit[:new][:pivotby3]
-            @edit[:new][:pivotby3] = NOTHING_STRING
-          elsif nf.last == @edit[:new][:pivotby3]
-            @edit[:new][:pivotby3] = NOTHING_STRING
-          end
+          @edit[:new][:pivot].drop_from_selection(nf.last)
           @edit[:pivot_cols].delete(nf.last)          # Delete the column name from the pivot_cols hash
 
           # Clear out sort options
@@ -1297,7 +1270,7 @@ module ReportController::Reports::Editor
     @edit[:new][:fields].each do |field_entry|          # Go thru all of the fields
       field = field_entry[1]                            # Get the encoded fully qualified field name
 
-      if @edit[:new][:pivotby1] != NOTHING_STRING && # If we are doing pivoting and
+      if @edit[:new][:pivot].by1 != NOTHING_STRING && # If we are doing pivoting and
          @edit[:pivot_cols].key?(field)              # this is a pivot calc column
         @edit[:pivot_cols][field].each do |calc_typ|    # Add header/format/col_order for each calc type
           rpt.headers.push(@edit[:new][:headers][field + "__#{calc_typ}"])
@@ -1375,11 +1348,11 @@ module ReportController::Reports::Editor
             rpt.sortby.push(table_field)              # Add the field to the sortby array
           end
 
-          if field == @edit[:new][:pivotby1]          # Save the group fields
+          if field == @edit[:new][:pivot].by1          # Save the group fields
             @pg1 = table_field
-          elsif field == @edit[:new][:pivotby2]
+          elsif field == @edit[:new][:pivot].by2
             @pg2 = table_field
-          elsif field == @edit[:new][:pivotby3]
+          elsif field == @edit[:new][:pivot].by3
             @pg3 = table_field
           end
         else                                          # Set up for the next embedded include hash
@@ -1400,11 +1373,11 @@ module ReportController::Reports::Editor
       elsif field == sortby2                          # Is this the second sort field?
         rpt.sortby.push(@edit[:new][:sortby2].split("-")[1])  # Add the field to the sortby array
       end
-      if field == @edit[:new][:pivotby1]          # Save the group fields
+      if field == @edit[:new][:pivot].by1          # Save the group fields
         @pg1 = field.split("-")[1]
-      elsif field == @edit[:new][:pivotby2]
+      elsif field == @edit[:new][:pivot].by2
         @pg2 = field.split("-")[1]
-      elsif field == @edit[:new][:pivotby3]
+      elsif field == @edit[:new][:pivot].by3
         @pg3 = field.split("-")[1]
       end
     end
@@ -1638,9 +1611,7 @@ module ReportController::Reports::Editor
     # build selected fields array from the report record
     @edit[:new][:sortby1]  = NOTHING_STRING # Initialize sortby fields to nothing
     @edit[:new][:sortby2]  = NOTHING_STRING
-    @edit[:new][:pivotby1] = NOTHING_STRING # Initialize groupby fields to nothing
-    @edit[:new][:pivotby2] = NOTHING_STRING
-    @edit[:new][:pivotby3] = NOTHING_STRING
+    @edit[:new][:pivot] = ReportController::PivotOptions.new
     if params[:pressed] == "miq_report_new"
       @edit[:new][:fields]      = []
       @edit[:new][:categories]  = []
@@ -1661,19 +1632,6 @@ module ReportController::Reports::Editor
     end
 
     @edit[:current] = ["copy", "new"].include?(params[:action]) ? {} : copy_hash(@edit[:new])
-
-    @edit[:models] ||= MiqReport.reportable_models.collect do |m|
-      [Dictionary.gettext(m, :type => :model, :notfound => :titleize, :plural => true), m]
-    end
-
-    # Only show chargeback users choice if an admin
-    if admin_user?
-      @edit[:cb_users] = User.all.each_with_object({}) { |u, h| h[u.userid] = u.name }
-      @edit[:cb_tenant] = Tenant.all.each_with_object({}) { |t, h| h[t.id] = t.name }
-    else
-      @edit[:new][:cb_show_typ] = "owner"
-      @edit[:new][:cb_owner_id] = session[:userid]
-    end
 
     # For trend reports, check for percent field chosen
     if @rpt.db && @rpt.db == TREND_MODEL &&
@@ -1728,13 +1686,13 @@ module ReportController::Reports::Editor
          rpt.rpt_options[:pivot][:group_cols] &&
          rpt.rpt_options[:pivot][:group_cols].kind_of?(Array)
         if rpt.rpt_options[:pivot][:group_cols].length > 0
-          @edit[:new][:pivotby1] = field_key if col == rpt.rpt_options[:pivot][:group_cols][0]
+          @edit[:new][:pivot].by1 = field_key if col == rpt.rpt_options[:pivot][:group_cols][0]
         end
         if rpt.rpt_options[:pivot][:group_cols].length > 1
-          @edit[:new][:pivotby2] = field_key if col == rpt.rpt_options[:pivot][:group_cols][1]
+          @edit[:new][:pivot].by2 = field_key if col == rpt.rpt_options[:pivot][:group_cols][1]
         end
         if rpt.rpt_options[:pivot][:group_cols].length > 2
-          @edit[:new][:pivotby3] = field_key if col == rpt.rpt_options[:pivot][:group_cols][2]
+          @edit[:new][:pivot].by3 = field_key if col == rpt.rpt_options[:pivot][:group_cols][2]
         end
       end
 
@@ -1788,7 +1746,7 @@ module ReportController::Reports::Editor
   def build_field_order
     @edit[:new][:field_order] = []
     @edit[:new][:fields].each do |f|
-      if @edit[:new][:pivotby1] != NOTHING_STRING && # If we are doing pivoting and
+      if @edit[:new][:pivot] && @edit[:new][:pivot].by1 != NOTHING_STRING && # If we are doing pivoting and
          @edit[:pivot_cols].key?(f.last)             # this is a pivot calc column
         MiqReport::PIVOTS.each do |c|
           calc_typ = c.first
@@ -1847,5 +1805,179 @@ module ReportController::Reports::Editor
         end
       end
     end
+  end
+
+  def valid_report?(rpt)
+    active_tab = 'edit_1'
+    if @edit[:new][:model] == TREND_MODEL
+      unless @edit[:new][:perf_trend_col]
+        add_flash(_('Trending for is required'), :error)
+      end
+      unless @edit[:new][:perf_limit_col] || @edit[:new][:perf_limit_val]
+        add_flash(_('Trend Target Limit must be configured'), :error)
+      end
+      if @edit[:new][:perf_limit_val] && !is_numeric?(@edit[:new][:perf_limit_val])
+        add_flash(_('Trend Target Limit must be numeric'), :error)
+      end
+    elsif @edit[:new][:fields].empty?
+      add_flash(_('At least one Field must be selected'), :error)
+    end
+
+    if Chargeback.db_is_chargeback?(@edit[:new][:model])
+      msg = case @edit[:new][:cb_show_typ]
+            when nil
+              _('Show Costs by must be selected')
+            when 'owner'
+              _('An Owner must be selected') unless @edit[:new][:cb_owner_id]
+            when 'tenant'
+              _('A Tenant Category must be selected') unless @edit[:new][:cb_tenant_id]
+            when 'tag'
+              if !@edit[:new][:cb_tag_cat]
+                _('A Tag Category must be selected')
+              elsif !@edit[:new][:cb_tag_value]
+                _('A Tag must be selected')
+              end
+            when 'entity'
+              unless @edit[:new][:cb_entity_id]
+                _("A specific #{ui_lookup(:model => @edit[:new][:cb_model])} or all must be selected")
+              end
+            end
+      if msg
+        add_flash(msg, :error)
+        active_tab = 'edit_3'
+      end
+    end
+
+    # Validate column styles
+    unless rpt.col_options.blank? || @edit[:new][:field_order].nil?
+      @edit[:new][:field_order].each do |f| # Go thru all of the cols in order
+        col = f.last.split('.').last.split('-').last
+        if val = rpt.col_options[col] # Skip if no options for this col
+          next unless val.key?(:style) # Skip if no style options
+          val[:style].each_with_index do |s, s_idx| # Go through all of the configured ifs
+            if s[:value]
+              if e = MiqExpression.atom_error(rpt.col_to_expression_col(col.split('__').first), # See if the value is in error
+                                              s[:operator],
+                                              s[:value])
+                msg = case s_idx + 1
+                      when 1
+                        add_flash(_("Styling for '%{item}', first value is in error: %{message}") %
+                                    {:item => f.first, :message => e.message}, :error)
+                      when 2
+                        add_flash(_("Styling for '%{item}', second value is in error: %{message}") %
+                                    {:item => f.first, :message => e.message}, :error)
+                      when 3
+                        add_flash(_("Styling for '%{item}', third value is in error: %{message}") %
+                                    {:item => f.first, :message => e.message}, :error)
+                      end
+                active_tab = 'edit_9'
+              end
+            end
+          end
+        end
+      end
+    end
+
+    unless rpt.valid? # Check the model for errors
+      rpt.errors.each do |field, msg|
+        add_flash("#{field.to_s.capitalize} #{msg}", :error)
+      end
+    end
+    @sb[:miq_tab] = active_tab if flash_errors?
+    @flash_array.nil?
+  end
+
+  # Check for valid report configuration in @edit[:new]
+  # Check if chargeback field is valid
+  def valid_chargeback_fields
+    is_valid = false
+    # There are valid show typ fields
+    if %w(owner tenant tag entity).include?(@edit[:new][:cb_show_typ])
+      is_valid = case @edit[:new][:cb_show_typ]
+                 when 'owner' then @edit[:new][:cb_owner_id]
+                 when 'tenant' then @edit[:new][:cb_tenant_id]
+                 when 'tag' then @edit[:new][:cb_tag_cat] && @edit[:new][:cb_tag_value]
+                 when 'entity' then @edit[:new][:cb_entity_id] && @edit[:new][:cb_provider_id]
+                 end
+    end
+    is_valid
+  end
+
+  # Check for tab switch error conditions
+  def check_tabs
+    @sb[:miq_tab] = params[:tab]
+    active_tab = 'edit_1'
+    case @sb[:miq_tab].split('_')[1]
+    when '8'
+      if @edit[:new][:fields].empty?
+        add_flash(_('Consolidation tab is not available until at least 1 field has been selected'), :error)
+      end
+    when '2'
+      if @edit[:new][:fields].empty?
+        add_flash(_('Formatting tab is not available until at least 1 field has been selected'), :error)
+      end
+    when '3'
+      if @edit[:new][:model] == TREND_MODEL
+        unless @edit[:new][:perf_trend_col]
+          add_flash(_('Filter tab is not available until Trending for field has been selected'), :error)
+        end
+        unless @edit[:new][:perf_limit_col] || @edit[:new][:perf_limit_val]
+          add_flash(_('Filter tab is not available until Trending Target Limit has been configured'), :error)
+        end
+        if @edit[:new][:perf_limit_val] && !is_numeric?(@edit[:new][:perf_limit_val])
+          add_flash(_('Trend Target Limit must be numeric'), :error)
+        end
+      elsif @edit[:new][:fields].empty?
+        add_flash(_('Filter tab is not available until at least 1 field has been selected'), :error)
+      end
+    when '4'
+      if @edit[:new][:fields].empty?
+        add_flash(_('Summary tab is not available until at least 1 field has been selected'), :error)
+      end
+    when '5'
+      if @edit[:new][:fields].empty?
+        add_flash(_('Charts tab is not available until at least 1 field has been selected'), :error)
+      elsif @edit[:new][:sortby1].blank? || @edit[:new][:sortby1] == NOTHING_STRING
+        add_flash(_('Charts tab is not available unless a sort field has been selected'), :error)
+        active_tab = 'edit_4'
+      end
+    when '6'
+      if @edit[:new][:fields].empty?
+        add_flash(_('Timeline tab is not available until at least 1 field has been selected'), :error)
+      else
+        found = false
+        @edit[:new][:fields].each do |field|
+          if MiqReport.get_col_type(field[1]) == :datetime
+            found = true
+            break
+          end
+        end
+        unless found
+          add_flash(_('Timeline tab is not available unless at least 1 time field has been selected'), :error)
+        end
+      end
+    when '7'
+      if @edit[:new][:model] == TREND_MODEL
+        unless @edit[:new][:perf_trend_col]
+          add_flash(_('Preview tab is not available until Trending for field has been selected'), :error)
+        end
+        unless @edit[:new][:perf_limit_col] || @edit[:new][:perf_limit_val]
+          add_flash(_('Preview tab is not available until Trend Target Limit has been configured'), :error)
+        end
+        if @edit[:new][:perf_limit_val] && !is_numeric?(@edit[:new][:perf_limit_val])
+          add_flash(_('Trend Target Limit: Value must be numeric'), :error)
+        end
+      elsif @edit[:new][:fields].empty?
+        add_flash(_('Preview tab is not available until at least 1 field has been selected'), :error)
+      elsif Chargeback.db_is_chargeback?(@edit[:new][:model]) && !valid_chargeback_fields
+        add_flash(_('Preview tab is not available until Chargeback Filters has been configured'), :error)
+        active_tab = 'edit_3'
+      end
+    when '9'
+      if @edit[:new][:fields].empty?
+        add_flash(_('Styling tab is not available until at least 1 field has been selected'), :error)
+      end
+    end
+    @sb[:miq_tab] = active_tab if flash_errors?
   end
 end

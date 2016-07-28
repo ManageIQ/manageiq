@@ -275,10 +275,6 @@ class TreeBuilder
 
     node = x_build_single_node(object, pid, options)
 
-    if [:policy_profile_tree, :policy_tree].include?(options[:tree])
-      open_node(node[:key])
-    end
-
     # Process the node's children
     node[:expand] = Array(@tree_state.x_tree(@name)[:open_nodes]).include?(node[:key]) || !!options[:open_all]
     if object[:load_children] ||

@@ -238,9 +238,7 @@ module ApiSpecHelper
   end
 
   def expect_result_resources_to_include_keys(collection, keys)
-    expect(response.parsed_body).to have_key(collection)
-    results = response.parsed_body[collection]
-    fetch_value(keys).each { |key| expect(results.all? { |r| r.key?(key) }).to be_truthy, "resource missing: #{key}" }
+    expect(response.parsed_body).to include(collection => all(a_hash_including(*fetch_value(keys))))
   end
 
   def expect_result_resources_to_have_only_keys(collection, keys)

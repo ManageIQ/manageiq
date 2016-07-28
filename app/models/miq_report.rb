@@ -58,7 +58,7 @@ class MiqReport < ApplicationRecord
       miq_group_relation = where(miq_group_condition)
     end
 
-    miq_group_relation.includes(:miq_report_results).references(:miq_report_results)
+    miq_group_relation.joins(:miq_report_results).distinct
   end
 
   # Scope on reports that have report results.

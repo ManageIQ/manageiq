@@ -428,8 +428,9 @@ class StorageManagerController < ApplicationController
           :message => _("Error during '%{task} ': %{message}") % {:task => task, :message => bang.message},
           :target_class => "StorageManager", :target_id => id)
       else
-        add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % \
-          {:task => task_name(task), :count_model => pluralize(sms.length, "Storage Manager")})
+        add_flash(n_("%{task} initiated for %{count} Storage Manager from the CFME Database",
+                     "%{task} initiated for %{count} Storage Managers from the CFME Database",
+                     sms.length) % {:task => task_name(task), :count => sms.length})
         AuditEvent.success(:userid => session[:userid], :event => "storage_manager_#{task}",
             :message => _("'%{task}' successfully initiated for %{items}") %
               {:task => task, :items => pluralize(sms.length, "Storage Manager")},

@@ -152,6 +152,13 @@ FactoryGirl.define do
     end
   end
 
+  factory :ems_amazon_with_cloud_networks,
+          :parent => :ems_amazon do
+    after(:create) do |x|
+      2.times { x.cloud_networks << FactoryGirl.create(:cloud_network_amazon) }
+    end
+  end
+
   factory :ems_openstack,
           :aliases => ["manageiq/providers/openstack/cloud_manager"],
           :class   => "ManageIQ::Providers::Openstack::CloudManager",

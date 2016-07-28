@@ -12,30 +12,29 @@ module ManageIQ::Providers::Azure::ManagerMixin
   def verify_credentials(_auth_type = nil, options = {})
     require 'azure-armrest'
     conf = connect(options)
-
-    unless subscription.blank?
-      vms = ::Azure::Armrest::VirtualMachineService.new(conf)
-      subscriptions = vms.subscriptions.map(&:subscription_id)
-      unless subscriptions.include?(subscription)
-        raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - check your Azure Subscription ID")
-      end
-    end
+  rescue ArgumentError => err
+    raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - #{err.message}")
   rescue Azure::Armrest::UnauthorizedException, Azure::Armrest::BadRequestException
     raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - check your Azure Client ID and Client Key")
   rescue MiqException::MiqInvalidCredentialsError
     raise # Raise before falling into catch-all block below
   rescue StandardError => err
     _log.error("Error Class=#{err.class.name}, Message=#{err.message}")
-    raise MiqException::MiqInvalidCredentialsError, _("Unexpected response returned from system, see log for details")
+    raise MiqException::MiqInvalidCredentialsError, _("Unexpected response returned from system: #{err.message}")
   else
     conf
   end
 
   module ClassMethods
-    def raw_connect(client_id, client_key, azure_tenant_id, subscription = nil, proxy_uri = nil)
+    def raw_connect(client_id, client_key, azure_tenant_id, subscription, proxy_uri = nil)
       proxy_uri ||= VMDB::Util.http_proxy_uri
 
       require 'azure-armrest'
+
+      if subscription.blank?
+        raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - check your Azure Subscription ID")
+      end
+
       ::Azure::Armrest::ArmrestService.configure(
         :client_id       => client_id,
         :client_key      => client_key,

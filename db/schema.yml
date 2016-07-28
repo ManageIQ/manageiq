@@ -355,6 +355,7 @@ cloud_tenants:
 - created_at
 - updated_at
 - type
+- parent_id
 cloud_tenants_vms:
 - cloud_tenant_id
 - vm_id
@@ -1027,6 +1028,7 @@ disks:
 - storage_id
 - backing_id
 - backing_type
+- storage_profile_id
 drift_states:
 - id
 - timestamp
@@ -4672,8 +4674,6 @@ miq_databases:
 - id
 - created_at
 - updated_at
-- last_replication_count
-- last_replication_id
 - registration_type
 - registration_organization
 - registration_server
@@ -6462,6 +6462,7 @@ vms:
 - tenant_id
 - resource_group_id
 - deprecated
+- storage_profile_id
 volumes:
 - id
 - name
