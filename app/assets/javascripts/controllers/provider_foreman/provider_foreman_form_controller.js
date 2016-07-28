@@ -19,18 +19,22 @@ ManageIQ.angular.app.controller('providerForemanFormController', ['$http', '$sco
       ManageIQ.angular.scope = $scope;
 
       if (providerForemanFormId == 'new') {
-        $scope.newRecord                            = true;
-        $scope.providerForemanModel.provtype        = '';
-        $scope.providerForemanModel.name            = '';
-        $scope.providerForemanModel.zone            = '';
-        $scope.providerForemanModel.url             = '';
-        $scope.providerForemanModel.verify_ssl    = false;
+        $scope.newRecord = true;
 
-        $scope.providerForemanModel.log_userid   = '';
-        $scope.providerForemanModel.log_password = '';
-        $scope.providerForemanModel.log_verify   = '';
-        $scope.afterGet                          = true;
-        $scope.modelCopy                         = angular.copy( $scope.providerForemanModel );
+        $http.get('/provider_foreman/provider_foreman_form_fields/' + providerForemanFormId).success(function(data) {
+          $scope.providerForemanModel.provtype = '';
+          $scope.providerForemanModel.name = '';
+          $scope.providerForemanModel.zone = data.zone;
+          $scope.providerForemanModel.url = '';
+          $scope.providerForemanModel.verify_ssl = false;
+
+          $scope.providerForemanModel.log_userid = '';
+          $scope.providerForemanModel.log_password = '';
+          $scope.providerForemanModel.log_verify = '';
+          $scope.afterGet = true;
+          $scope.modelCopy = angular.copy($scope.providerForemanModel);
+
+        });
       } else {
         $scope.newRecord = false;
 
