@@ -145,7 +145,7 @@ describe MiqAeDomain do
     let(:commit_sha) { "abcd" }
     let(:branch_name) { "b1" }
     let(:tag_name) { "t1" }
-    let(:dom1) { FactoryGirl.create(:miq_ae_git_domain) }
+    let(:dom1) { FactoryGirl.create(:miq_ae_git_domain, :tenant => @user.current_tenant) }
     let(:dom2) { FactoryGirl.create(:miq_ae_domain) }
     let(:repo) { FactoryGirl.create(:git_repository, :url => "http://www.example.com/x/y") }
     let(:git_import) { instance_double('MiqAeYamlImportGitfs') }
@@ -157,7 +157,7 @@ describe MiqAeDomain do
     end
 
     it "check if a git domain is locked" do
-      expect(dom1.editable?).to be_falsey
+      expect(dom1.editable?(@user)).to be_falsey
       expect(dom1.git_enabled?).to be_truthy
     end
 

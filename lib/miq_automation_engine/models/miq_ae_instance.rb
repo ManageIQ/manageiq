@@ -102,9 +102,7 @@ class MiqAeInstance < ApplicationRecord
     end.compact
   end
 
-  def editable?
-    ae_class.ae_namespace.editable?
-  end
+  delegate :editable?, :to => :ae_class
 
   def field_names
     fields = ae_values.collect(&:field_id)

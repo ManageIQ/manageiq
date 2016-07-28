@@ -329,8 +329,8 @@ module MiqAeMethodService
       return false unless owned_domain?(dom)
       domain = MiqAeDomain.find_by_fqname(dom, false)
       return false unless domain
-      $log.warn "path=#{path.inspect} : is not editable" unless domain.editable?
-      domain.editable?
+      $log.warn "path=#{path.inspect} : is not editable" unless domain.editable?(@workspace.ae_user)
+      domain.editable?(@workspace.ae_user)
     end
 
     def owned_domain?(dom)

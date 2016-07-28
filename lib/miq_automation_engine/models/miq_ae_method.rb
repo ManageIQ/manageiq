@@ -84,9 +84,7 @@ class MiqAeMethod < ApplicationRecord
     end
   end
 
-  def editable?
-    ae_class.ae_namespace.editable?
-  end
+  delegate :editable?, :to => :ae_class
 
   def field_names
     inputs.collect { |f| f.name.downcase }
