@@ -79,5 +79,16 @@ describe Relationship do
     it "neither includes nor excludes" do
       expect(Relationship.filter_by_resource_type(vms, {})).to eq(vms)
     end
+
+    it "scopes" do
+      vms.map(&:save!)
+      hosts.map(&:save!)
+      storages.map(&:save!)
+      filtered_results = Relationship.filter_by_resource_type(Relationship.all,
+                                                              :of_type     => %w(Host VmOrTemplate),
+                                                              :except_type => %w(Storage))
+      expect(filtered_results).not_to be_kind_of(Array)
+      expect(filtered_results).to match_array(vms + hosts)
+    end
   end
 end
