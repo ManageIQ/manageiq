@@ -47,8 +47,7 @@ module Vmdb
         when "export_filename"                      # for export/log filename
           new_time = new_time.strftime("%Y%m%d_%H%M%S")
         when "tl"
-          new_time = new_time.strftime("%a %b %d %Y %H:%M:%S") + " " + Time.zone.to_s
-          new_time = new_time.gsub(/\) [a-zA-Z0-9\s\S]*/, ")")
+          new_time = I18n.l new_time
         when "raw"                                  # return without formatting
         when "compare_hdr"                          # for drift/compare headers
           new_time = I18n.l(new_time, :format => :long) + new_time.strftime(" %Z")
