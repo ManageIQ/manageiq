@@ -136,4 +136,14 @@ describe MiqProvisionWorkflow do
       expect(described_class.class_for_source(template.id)).to eq(workflow_class)
     end
   end
+
+  context '.class_for_platform' do
+    {
+      "openstack" => ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow,
+      "redhat"    => ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow,
+      "vmware"    => ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow,
+    }.each do |k, v|
+      it(k) { expect(described_class.class_for_platform(k)).to eq(v) }
+    end
+  end
 end
