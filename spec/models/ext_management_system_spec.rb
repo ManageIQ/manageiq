@@ -402,4 +402,14 @@ describe ExtManagementSystem do
       expect(tenant.ext_management_systems).to include(ems)
     end
   end
+
+  describe "#vm_count_by_state" do
+    it "counts state" do
+      ems = FactoryGirl.create(:ext_management_system)
+      FactoryGirl.create(:vm, :raw_power_state => "poweredOn", :ext_management_system => ems)
+      FactoryGirl.create(:vm, :raw_power_state => "poweredOn", :ext_management_system => ems)
+      FactoryGirl.create(:vm, :raw_power_state => "poweredOff, :ext_management_system => ems)
+      expect(ems.vm_count_by_state("on")).to eq(2)
+    end
+  end
 end

@@ -1952,5 +1952,14 @@ class VmOrTemplate < ApplicationRecord
     Arel::Nodes::NamedFunction.new('COALESCE', values)
   end
 
+  # TODO: add states for other vms
+  def self.calculate_raw_power_state(state)
+    case state
+    when "on" then "poweredOn"
+    when "off" then "poweredOff"
+    when "suspended" then "suspended"
+    end
+  end
+
   include DeprecatedCpuMethodsMixin
 end

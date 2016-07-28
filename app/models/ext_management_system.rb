@@ -476,8 +476,9 @@ class ExtManagementSystem < ApplicationRecord
     HostStorage.where(:host_id => host_ids).count("DISTINCT storage_id")
   end
 
-  def vm_count_by_state(state)
-    vms.inject(0) { |t, vm| vm.power_state == state ? t + 1 : t }
+  def vm_count_by_state()
+    raw_power_state = VmOrTemplate.calculate_state(state)
+    vms.where(:raw_power_state => raw_power_state).count
   end
 
   def total_vms_on;        vm_count_by_state("on");        end
