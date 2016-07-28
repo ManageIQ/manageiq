@@ -2908,7 +2908,7 @@ describe ApplicationHelper do
     end
 
     it "Disables buttons for Locked domain" do
-      @domain.lock
+      @domain.lock_contents!
       @domain.reload
       expect(build_toolbar_hide_button('miq_ae_class_edit')).to be_truthy
     end
@@ -2918,13 +2918,13 @@ describe ApplicationHelper do
     end
 
     it "Disables copy button when there are no Editable domains available" do
-      @domain.lock
+      @domain.lock_contents!
       @domain.reload
       expect(build_toolbar_hide_button('miq_ae_class_copy')).to be_truthy
     end
 
     it "Shows the button for domains even if locked" do
-      @domain.lock
+      @domain.lock_contents!
       @domain.reload
       @record = @domain
 
@@ -2932,14 +2932,14 @@ describe ApplicationHelper do
     end
 
     it 'Shows the button for classes when locked' do
-      @domain.lock
+      @domain.lock_contents!
       @domain.reload
 
       expect(build_toolbar_hide_button('miq_ae_instance_copy')).to be_falsey
     end
 
     it 'Shows the button for instances when locked' do
-      @domain.lock
+      @domain.lock_contents!
       @domain.reload
       miq_class = @record
       @record = FactoryGirl.build(
@@ -2951,7 +2951,7 @@ describe ApplicationHelper do
     end
 
     it 'Shows the button for methods when locked' do
-      @domain.lock
+      @domain.lock_contents!
       @domain.reload
       miq_class = @record
       @record = FactoryGirl.build(

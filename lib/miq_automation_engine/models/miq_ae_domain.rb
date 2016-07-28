@@ -39,14 +39,14 @@ class MiqAeDomain < MiqAeNamespace
     self.priority = MiqAeDomain.highest_priority(tenant) + 1 unless priority
   end
 
-  def lock
+  def lock_contents!
     self.system = true
-    save
+    save!
   end
 
-  def unlock
+  def unlock_contents!
     self.system = false
-    save
+    save!
   end
 
   def version
