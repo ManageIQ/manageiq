@@ -159,143 +159,15 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def update_field_visibility(options = {})
-    # Determine the visibility of fields based on current values and collect the fields
-    # together so we can update the dialog in one pass
-
-    number_of_vms = get_value(@values[:number_of_vms]).to_i
-
-    # Show/Hide Fields
-    f = Hash.new { |h, k| h[k] = [] }
-
-    if get_value(@values[:service_template_request])
-      f[:hide] = [:number_of_vms, :vm_description, :schedule_type, :schedule_time]
+    if request_type == :clone_to_template
+      show_dialog(:customize, :hide, "disabled")
     end
 
-    auto_placement = show_flag = auto_placement_enabled? ? :hide : :edit
-    f[show_flag] += [:placement_host_name, :placement_ds_name, :host_filter, :ds_filter, :cluster_filter, :placement_cluster_name, :rp_filter, :placement_rp_name, :placement_dc_name]
+    update_field_display_values(options)
 
-    show_flag = get_value(@values[:sysprep_enabled]).in?(%w(fields file)) || self.supports_pxe? || self.supports_iso? ? :edit : :hide
-    f[show_flag] += [:addr_mode]
-
-    # If we are hiding the network fields always hide.  If available then the show_flag depends on the addr_mode
-    if show_flag == :edit
-      f[show_flag] += [:dns_suffixes, :dns_servers]
-      show_flag = (get_value(@values[:addr_mode]) == 'static') || self.supports_pxe? || self.supports_iso? ? :edit : :hide
-      f[show_flag] += [:ip_addr, :subnet_mask, :gateway]
-    else
-      # Hide all networking fields if we are not customizing
-      f[show_flag] += [:ip_addr, :subnet_mask, :gateway, :dns_servers, :dns_suffixes]
-    end
-
-    show_flag = get_value(@values[:sysprep_auto_logon]) == false ? :hide : :edit
-    f[show_flag] += [:sysprep_auto_logon_count]
-
-    show_flag = number_of_vms > 1 ? :hide : :edit
-    f[show_flag] += [:sysprep_computer_name]
-
-    show_flag = get_value(@values[:retirement]).to_i > 0 ? :edit : :hide
-    f[show_flag] += [:retirement_warn]
-    vm = get_source_vm
-    platform = options[:force_platform] || vm.try(:platform)
-    show_customize_fields(f, platform)
-
-    show_flag = number_of_vms > 1 ? :hide : :edit
-    if platform == 'linux'
-      f[show_flag] += [:linux_host_name]
-      f[:hide] += [:sysprep_computer_name]
-    else
-      f[show_flag] += [:sysprep_computer_name]
-      f[:hide] += [:linux_host_name]
-    end
-
-    show_flag = get_value(@values[:sysprep_custom_spec]).blank? ? :hide : :edit
-    f[show_flag] += [:sysprep_spec_override]
-
-    # Hide VM filter if we are using a pre-selected VM
-    if [:clone_to_vm, :clone_to_template].include?(request_type)
-      f[:hide] += [:vm_filter]
-      if request_type == :clone_to_template
-        show_dialog(:customize, :hide, "disabled")
-        f[:hide] += [:vm_auto_start]
-      end
-    end
-
-    update_field_visibility_linked_clone(options, f)
-
-    update_field_visibility_pxe_iso(f)
-
-    # Update field :display value
-    f.each { |k, v| show_fields(k, v) }
-
-    # Show/Hide Notes
-    f = Hash.new { |h, k| h[k] = [] }
-
-    show_flag = number_of_vms > 1 ? :edit : :hide
-    f[show_flag] += [:ip_addr]
-
-    show_flag = @vm_snapshot_count.zero? ? :edit : :hide
-    f[show_flag] += [:linked_clone]
-
-    # Update field :notes_display value
-    f.each { |k, v| show_fields(k, v, :notes_display) }
-
+    update_field_display_notes_values
 
     update_field_read_only(options)
-  end
-
-  def update_field_visibility_linked_clone(_options = {}, f)
-    if get_value(@values[:provision_type]).to_s == 'vmware'
-      show_flag = @vm_snapshot_count.zero? ? :show : :edit
-      f[show_flag] += [:linked_clone]
-
-      show_flag = get_value(@values[:linked_clone]) == true ? :edit : :hide
-      f[show_flag] += [:snapshot]
-    else
-      f[:hide] += [:linked_clone, :snapshot]
-    end
-  end
-
-  def update_field_visibility_pxe_iso(f)
-    show_flag = self.supports_pxe? ? :edit : :hide
-    f[show_flag] += [:pxe_image_id, :pxe_server_id]
-
-    show_flag = self.supports_iso? ? :edit : :hide
-    f[show_flag] += [:iso_image_id]
-  end
-
-  def show_customize_fields_pxe(fields)
-    pxe_customization_fields = [
-      :root_password,
-      :addr_mode,
-      :hostname,
-      :ip_addr,
-      :subnet_mask,
-      :gateway,
-      :dns_servers,
-      :dns_suffixes,
-      :customization_template_id,
-      :customization_template_script,
-    ]
-
-    pxe_customization_fields.each do |f|
-      fields[:edit].push(f) unless fields[:edit].include?(f)
-      fields[:hide].delete(f)
-    end
-  end
-
-  def show_customize_fields(fields, platform)
-    # ISO and cloud-init prov. needs to show same fields on customize tab as Pxe prov.
-    return show_customize_fields_pxe(fields) if self.supports_customization_template?
-
-    exclude_list = [:sysprep_spec_override, :sysprep_custom_spec, :sysprep_enabled, :sysprep_upload_file, :sysprep_upload_text,
-                    :linux_host_name, :sysprep_computer_name, :ip_addr, :subnet_mask, :gateway, :dns_servers, :dns_suffixes]
-    linux_fields = [:linux_domain_name]
-    show_options = [:edit, :hide]
-    show_options.reverse! if platform == 'linux'
-    self.fields(:customize) do |fn, _f, _dn, _d|
-      next if exclude_list.include?(fn)
-      linux_fields.include?(fn) ? fields[show_options[1]] += [fn] : fields[show_options[0]] += [fn]
-    end
   end
 
   def update_field_read_only(options = {})
@@ -1072,6 +944,63 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   private
+
+  def dialog_field_visibility_service
+    @dialog_field_visibility_service ||= DialogFieldVisibilityService.new
+  end
+
+  def update_field_display_values(options = {})
+    options_hash = setup_parameters_for_visibility_service(options)
+    visibility_hash = dialog_field_visibility_service.determine_visibility(options_hash)
+
+    all_fields = []
+    fields do |field_name, field, _dialog_name, _dialog|
+      all_fields << field.merge(:name => field_name)
+    end
+    dialog_field_visibility_service.set_shown_fields(visibility_hash[:edit], all_fields)
+    dialog_field_visibility_service.set_hidden_fields(visibility_hash[:hide], all_fields)
+  end
+
+  def update_field_display_notes_values
+    field_note_visibility = Hash.new([])
+
+    edit_or_hide = get_value(@values[:number_of_vms]).to_i > 1 ? :edit : :hide
+    field_note_visibility[edit_or_hide] += [:ip_addr]
+
+    edit_or_hide = @vm_snapshot_count.zero? ? :edit : :hide
+    field_note_visibility[edit_or_hide] += [:linked_clone]
+
+    field_note_visibility.each { |display_flag, field_names| show_fields(display_flag, field_names, :notes_display) }
+  end
+
+  def setup_parameters_for_visibility_service(options)
+    vm = get_source_vm
+    platform = options[:force_platform] || vm.try(:platform)
+
+    number_of_vms = get_value(@values[:number_of_vms]).to_i
+
+    customize_fields_list = []
+    fields(:customize) do |field_name, _, _, _|
+      customize_fields_list << field_name.to_sym
+    end
+
+    {
+      :addr_mode                       => get_value(@values[:addr_mode]),
+      :auto_placement_enabled          => auto_placement_enabled?,
+      :customize_fields_list           => customize_fields_list,
+      :number_of_vms                   => number_of_vms,
+      :platform                        => platform,
+      :request_type                    => request_type,
+      :retirement                      => get_value(@values[:retirement]).to_i,
+      :service_template_request        => get_value(@values[:service_template_request]),
+      :supports_customization_template => supports_customization_template?,
+      :supports_iso                    => supports_iso?,
+      :supports_pxe                    => supports_pxe?,
+      :sysprep_auto_logon              => get_value(@values[:sysprep_auto_logon]),
+      :sysprep_custom_spec             => get_value(@values[:sysprep_custom_spec]),
+      :sysprep_enabled                 => get_value(@values[:sysprep_enabled])
+    }
+  end
 
   def create_hash_struct_from_vm_or_template(vm_or_template, options)
     data_hash = {:id                     => vm_or_template.id,

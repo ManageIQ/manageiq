@@ -95,16 +95,6 @@ describe MiqProvisionWorkflow do
           end
         end
       end
-
-      context "#show_customize_fields" do
-        it "should show PXE fields when customization supported" do
-          fields = {'key' => 'value'}
-          wf = MiqProvisionVirtWorkflow.new({}, admin)
-          expect(wf).to receive(:supports_customization_template?).and_return(true)
-          expect(wf).to receive(:show_customize_fields_pxe).with(fields)
-          wf.show_customize_fields(fields, 'linux')
-        end
-      end
     end
   end
 
