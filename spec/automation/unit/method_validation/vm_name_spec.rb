@@ -7,9 +7,14 @@ describe VmName do
   let(:root_object) { MiqAeMockObject.new.tap { |ro| ro["miq_provision"] = provision } }
   let(:service) { MiqAeMockService.new(root_object).tap { |s| s.object = {'vm_prefix' => "abc"} } }
   let(:classification) { FactoryGirl.create(:classification, :tag => tag, :name => "environment") }
-  let(:classification2) { FactoryGirl.create(:classification, :tag => tag2, :parent => classification, :name => "prod") }
+  let(:classification2) do
+    FactoryGirl.create(:classification,
+                       :tag    => tag2,
+                       :parent => classification,
+                       :name   => "prod")
+  end
   let(:tag) { FactoryGirl.create(:tag, :name => "/managed/environment") }
-  let(:tag2) { FactoryGirl.create(:tag, :name => "/managed/environment/production")  }
+  let(:tag2) { FactoryGirl.create(:tag, :name => "/managed/environment/production") }
 
   context "#main" do
     it "no vm name from dialog" do
@@ -43,6 +48,5 @@ describe VmName do
 
       expect(service.object['vmname']).to eq('abc$n{3}')
     end
-
   end
 end
