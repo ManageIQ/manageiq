@@ -102,6 +102,35 @@ describe MoveNetworkPortCloudSubnetIdToNetworkPortsCloudSubnets do
 
       expect(cloud_subnet_network_port_stub.count).to eq 4
     end
+
+    it "does not migrate rows from remote regions" do
+      remote_region_start = (ApplicationRecord.my_region_number + 1) * ApplicationRecord.rails_sequence_factor
+
+      id = remote_region_start
+
+      cloud_subnet_entries.each do |x|
+        x[:object] = cloud_subnet_stub.create!(
+          :id   => id,
+          :type => x[:type],
+          :name => x[:name])
+        id += 1
+      end
+
+      network_port_entries.each do |x|
+        x[:object] = network_port_stub.create!(
+          :id              => id,
+          :type            => x[:type],
+          :cloud_subnet_id => x[:cloud_subnet][:object].id,
+          :name            => x[:name])
+        id += 1
+      end
+
+      expect(cloud_subnet_network_port_stub.count).to eq 0
+
+      migrate
+
+      expect(cloud_subnet_network_port_stub.count).to eq 0
+    end
   end
 
   migration_context :down do
@@ -134,6 +163,48 @@ describe MoveNetworkPortCloudSubnetIdToNetworkPortsCloudSubnets do
       end
 
       expect(cloud_subnet_network_port_stub.count).to eq 0
+    end
+
+    it "does not migrate rows from remote regions" do
+      remote_region_start = (ApplicationRecord.my_region_number + 1) * ApplicationRecord.rails_sequence_factor
+
+      id = remote_region_start
+
+      cloud_subnet_entries.each do |x|
+        x[:object] = cloud_subnet_stub.create!(
+          :id   => id,
+          :type => x[:type],
+          :name => x[:name])
+        id += 1
+      end
+
+      id = remote_region_start
+
+      network_port_entries.each do |x|
+        x[:object] = network_port_stub.create!(
+          :id              => id,
+          :type            => x[:type],
+          :cloud_subnet_id => x[:cloud_subnet][:object].id,
+          :name            => x[:name])
+        id += 1
+      end
+
+      id = remote_region_start
+
+      cloud_subnet_network_port_entries.each do |x|
+        x[:object] = cloud_subnet_network_port_stub.create!(
+          :id              => id,
+          :address         => x[:address],
+          :cloud_subnet_id => x[:cloud_subnet][:object].id,
+          :network_port_id => x[:network_port][:object].id)
+        id += 1
+      end
+
+      expect(cloud_subnet_network_port_stub.count).to eq 4
+
+      migrate
+
+      expect(cloud_subnet_network_port_stub.count).to eq 4
     end
   end
 end
