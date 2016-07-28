@@ -11,10 +11,8 @@ module Rbac
     end
 
     def role_allows(user:, feature:, any: nil)
-      userid  = user.id
-      role_id = user.miq_user_role.try(:id)
       auth = any.present? ? user.role_allows_any?(:identifiers => [feature]) : user.role_allows?(:identifier => feature)
-      _log.info("Auth #{auth ? "successful" : "failed"} for: userid [#{userid}], role id [#{role_id}], feature identifier [#{feature}]")
+      _log.debug("Auth #{auth ? "successful" : "failed"} for user '#{user.userid}', role '#{user.miq_user_role.try(:name)}', feature identifier '#{feature}'")
 
       auth
     end
