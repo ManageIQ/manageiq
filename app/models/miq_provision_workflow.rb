@@ -7,14 +7,20 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
     classy = platform.classify
 
     if classy =~ /(.*)Infra/
-      "MiqProvision#{classy}Workflow".safe_constantize ||
-        "ManageIQ::Providers::#{$1}::InfraManager::ProvisionWorkflow".constantize
+      find_matching_constant("MiqProvision#{classy}Workflow") ||
+        find_matching_constant("ManageIQ::Providers::#{$1}::InfraManager::ProvisionWorkflow")
     else
-      "MiqProvision#{classy}Workflow".safe_constantize ||
-        "ManageIQ::Providers::#{classy}::CloudManager::ProvisionWorkflow".safe_constantize ||
-        "ManageIQ::Providers::#{classy}::InfraManager::ProvisionWorkflow".constantize
+      find_matching_constant("MiqProvision#{classy}Workflow") ||
+        find_matching_constant("ManageIQ::Providers::#{classy}::CloudManager::ProvisionWorkflow") ||
+        find_matching_constant("ManageIQ::Providers::#{classy}::InfraManager::ProvisionWorkflow")
     end
   end
+
+  def self.find_matching_constant(string)
+    const = string.safe_constantize
+    const.try(:name) == string ? const : nil
+  end
+  private_class_method :find_matching_constant
 
   def self.class_for_source(source_or_id)
     source = case source_or_id
