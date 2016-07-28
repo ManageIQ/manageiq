@@ -250,6 +250,17 @@ module ApplicationController::Buttons
     applies_to_class == "ServiceTemplate" ? Service : applies_to_class.constantize
   end
 
+  def custom_button_done
+    url = SystemConsole.where(:vm => params[:id]).first.try(:url)
+
+    if url.present?
+      javascript_open_window(url)
+    else
+      render_flash(_('No url was returned from automate.'), :error)
+    end
+  end
+  private :custom_button_done
+
   def custom_buttons
     button = CustomButton.find_by_id(params[:button_id])
     cls = applies_to_class_model(button.applies_to_class)
@@ -265,15 +276,21 @@ module ApplicationController::Buttons
       options[:target_kls] = obj.class.name
       dialog_initialize(button.resource_action, options)
     else
-      begin
-        button.invoke(obj)    # Run the task
-      rescue => bang
-        add_flash(_("Error executing: \"%{task_description}\" %{error_message}") %
-          {:task_description => params[:desc], :error_message => bang.message}, :error) # Push msg and error flag
+      wait_for = true
+      if wait_for
+        task_id = button.invoke_async(obj)
+        initiate_wait_for_task(:task_id => task_id, :action => :custom_button_done)
       else
-        add_flash(_("\"%{task_description}\" was executed") % {:task_description => params[:desc]})
+        begin
+          button.invoke(obj)    # Run the task
+        rescue StandardError => bang
+          add_flash(_("Error executing: \"%{task_description}\" %{error_message}") %
+            {:task_description => params[:desc], :error_message => bang.message}, :error) # Push msg and error flag
+        else
+          add_flash(_("\"%{task_description}\" was executed") % {:task_description => params[:desc]})
+        end
+        javascript_flash
       end
-      javascript_flash
     end
   end
 
