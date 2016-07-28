@@ -1,4 +1,4 @@
-class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraManager
+class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::Ovirt4::InfraManager
   require_nested :EventCatcher
   require_nested :EventParser
   require_nested :RefreshWorker
@@ -69,6 +69,15 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   end
 
   def connect(options = {})
+    if options[:version] == 4
+      super
+    else
+      connect_legacy(options)
+    end
+  end
+
+  # Connect to the engine using version 3 of the API and the `ovirt` gem.
+  def connect_legacy(options = {})
     raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
 
     # If there is API path stored in the endpoints table and use it:

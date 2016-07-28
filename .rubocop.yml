@@ -15,6 +15,7 @@ GlobalVars:
   - $policy_log
   - $rails_log
   - $rhevm_log
+  - $ovirt4_log
   - $kube_log
   - $mw_log
   - $scvmm_log
