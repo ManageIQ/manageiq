@@ -711,9 +711,9 @@ class ApplicationHelper::ToolbarBuilder
       return false if MIQ_AE_COPY_ACTIONS.include?(id) && User.current_tenant.any_editable_domains? && MiqAeDomain.any_unlocked?
       case id
       when "miq_ae_domain_lock"
-        return true unless @record.editable_properties? && !@record.contents_locked?
+        return true unless @record.lockable?
       when "miq_ae_domain_unlock"
-        return true unless @record.editable_properties? && @record.contents_locked?
+        return true unless @record.unlockable?
       when "miq_ae_domain_edit"
         return false unless @record.editable_properties?
       when "miq_ae_namespace_edit", "miq_ae_instance_copy", "miq_ae_method_copy"

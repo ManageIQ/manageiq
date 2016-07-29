@@ -53,6 +53,14 @@ class MiqAeDomain < MiqAeNamespace
     system
   end
 
+  def lockable?
+    editable_properties? && !contents_locked?
+  end
+
+  def unlockable?
+    editable_properties? && contents_locked?
+  end
+
   def editable_properties?
     # TODO: In the new design will use SOURCE != SYSTEM
     name != 'ManageIQ'

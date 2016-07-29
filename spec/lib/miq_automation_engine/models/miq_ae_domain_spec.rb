@@ -190,6 +190,32 @@ describe MiqAeDomain do
     end
   end
 
+  context "lockable" do
+    it "a user domain should be lockable" do
+      dom = FactoryGirl.create(:miq_ae_domain, :tenant => @user.current_tenant)
+      expect(dom.lockable?).to be_truthy
+    end
+
+    it "a locked user domain should not be lockable" do
+      dom = FactoryGirl.create(:miq_ae_domain, :tenant => @user.current_tenant)
+      dom.lock_contents!
+      expect(dom.lockable?).to be_falsey
+    end
+  end
+
+  context "unlockable" do
+    it "a locked user domain should be unlockable" do
+      dom = FactoryGirl.create(:miq_ae_domain, :tenant => @user.current_tenant)
+      dom.lock_contents!
+      expect(dom.unlockable?).to be_truthy
+    end
+
+    it "a unlocked user domain should not be unlockable" do
+      dom = FactoryGirl.create(:miq_ae_domain, :tenant => @user.current_tenant)
+      expect(dom.unlockable?).to be_falsey
+    end
+  end
+
   context "git enabled domains" do
     let(:commit_time) { Time.now.utc }
     let(:commit_time_new) { Time.now.utc + 1.hour }
