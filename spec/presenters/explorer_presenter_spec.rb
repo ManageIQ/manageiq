@@ -6,7 +6,7 @@ describe ExplorerPresenter do
       @content   = "<div>Sample div element</div>"
     end
 
-    subject { @presenter.to_json }
+    subject { @presenter.for_render }
 
     context "#replace" do
       it 'adds content to :replacePartials' do

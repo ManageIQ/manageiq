@@ -708,7 +708,7 @@ class MiqPolicyController < ApplicationController
       end
     end
 
-    render :json => presenter.to_json
+    render :json => presenter.for_render
   end
 
   def send_button_changes

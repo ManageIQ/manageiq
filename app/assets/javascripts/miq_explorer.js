@@ -1,9 +1,9 @@
-ManageIQ.explorer = {}
+ManageIQ.explorer = {};
 
 ManageIQ.explorer.updateElement = function(element, options) {
-  if ( _.isString(options.legend) ) {
+  if (_.isString(options.legend)) {
     $('#' + element).html(options.legend);
-  } else if ( _.isString(options.title) ) {
+  } else if (_.isString(options.title)) {
     $('#' + element).attr( {'title': options.title});
   }
 };
@@ -14,53 +14,108 @@ ManageIQ.explorer.buildCalendar = function(options) {
   ManageIQ.calendar.calSkipDays = _.isObject(options.skipDays) ? options.skipDays : undefined;
 
   miqBuildCalendar();
-}
+};
 
 ManageIQ.explorer.lock_tree = function(tree, lock) {
   $('#' + tree + 'box').dynatree(lock ? 'disable' : 'enable');
   miqDimDiv('#' + tree + '_div', lock);
-}
+};
 
-ManageIQ.explorer.clear_search_toggle = function(show) {
-  if ( show ) {
+ManageIQ.explorer.clearSearchToggle = function(show) {
+  if (show) {
     $('#clear_search').show();
   } else {
     $('#clear_search').hide();
   }
-}
+};
 
 ManageIQ.explorer.process = function(data) {
+  switch (data.explorer) {
+    case 'flash':
+      ManageIQ.explorer.processFlash(data);
+      break;
+    case 'replace_right_cell':
+      ManageIQ.explorer.processReplaceRightCell(data);
+      break;
+    case 'replace_main_div':
+      ManageIQ.explorer.processReplaceMainDiv(data);
+      break;
+    case 'buttons':
+      ManageIQ.explorer.processButtons(data);
+      break;
+  }
+};
+
+ManageIQ.explorer.processButtons = function(data) {
+  ManageIQ.explorer.miqButtons(data);
+};
+
+ManageIQ.explorer.processReplaceMainDiv = function(data) {
+  ManageIQ.explorer.updatePartials(data);
+};
+
+ManageIQ.explorer.processFlash = function(data) {
+  ManageIQ.explorer.replacePartials(data);
+};
+
+ManageIQ.explorer.replacePartials = function(data) {
+  if (_.isObject(data.replacePartials)) {
+    _.forEach(data.replacePartials, function (content, element) {
+      $('#' + element).replaceWith(content);
+    });
+  }
+};
+
+ManageIQ.explorer.updatePartials = function(data) {
+  if (_.isObject(data.updatePartials)) {
+    _.forEach(data.updatePartials, function (content, element) {
+      $('#' + element).html(content);
+    });
+  }
+};
+
+ManageIQ.explorer.spinnerOff = function(data) {
+  if (data.spinnerOff) {
+    miqSparkle(false);
+  }
+};
+
+ManageIQ.explorer.miqButtons = function(data) {
+  miqButtons(data.showMiqButtons ? 'show' : 'hide');
+};
+
+ManageIQ.explorer.processReplaceRightCell = function(data) {
   /* variables for the expression editor */
-  if ( _.isObject(data.expEditor)) {
-    if ( _.isObject(data.expEditor.first)) {
-      if ( !_.isUndefined(data.expEditor.first.type)) {
+  if (_.isObject(data.expEditor)) {
+    if (_.isObject(data.expEditor.first)) {
+      if (!_.isUndefined(data.expEditor.first.type)) {
         ManageIQ.expEditor.first.type   = data.expEditor.first.type;
       }
-      if ( !_.isUndefined(data.expEditor.first.title)) {
+      if (!_.isUndefined(data.expEditor.first.title)) {
         ManageIQ.expEditor.first.title  = data.expEditor.first.title;
       }
     }
 
-    if ( _.isObject(data.expEditor.second)) {
-      if ( !_.isUndefined(data.expEditor.second.type)) {
+    if (_.isObject(data.expEditor.second)) {
+      if (!_.isUndefined(data.expEditor.second.type)) {
         ManageIQ.expEditor.second.type   = data.expEditor.second.type;
       }
-      if ( !_.isUndefined(data.expEditor.second.title)) {
+      if (!_.isUndefined(data.expEditor.second.title)) {
         ManageIQ.expEditor.second.title  = data.expEditor.second.title;
       }
     }
   }
 
-  miqButtons( data.showMiqButtons ? 'show' : 'hide' );
+  ManageIQ.explorer.miqButtons(data);
 
-  if ( _.isString(data.clearTreeCookies) ) { miqDeleteDynatreeCookies(data.clearTreeCookies); }
+  if (_.isString(data.clearTreeCookies)) { miqDeleteDynatreeCookies(data.clearTreeCookies); }
 
-  if ( _.isString(data.accordionSwap) ) {
+  if (_.isString(data.accordionSwap)) {
     miqAccordionSwap('#accordion .panel-collapse.collapse.in', '#' + data.accordionSwap + '_accord');
   }
 
   /* dealing with tree nodes */
-  if ( !_.isUndefined(data.addNodes) ) {
+  if (!_.isUndefined(data.addNodes)) {
 
     if (data.addNodes.remove) {
       miqRemoveNodeChildren(data.addNodes.activeTree, data.addNodes.key);
@@ -73,7 +128,7 @@ ManageIQ.explorer.process = function(data) {
   }
 
 
-  if ( !_.isUndefined(data.deleteNode) ) {
+  if (!_.isUndefined(data.deleteNode)) {
     var del_node = $('#' + data.deleteNode.activeTree + 'box')
       .dynatree('getTree')
       .getNodeByKey(data.deleteNode.node);
@@ -81,39 +136,31 @@ ManageIQ.explorer.process = function(data) {
     del_node.remove();
   }
 
-  if ( _.isString(data.dashboardUrl) ) {
+  if (_.isString(data.dashboardUrl)) {
     ManageIQ.widget.dashboardUrl = data.dashboardUrl;
   }
 
-  if ( $('#advsearchModal').hasClass('modal fade in') ) {
+  if ($('#advsearchModal').hasClass('modal fade in')) {
     $('#advsearchModal').modal('hide');
   }
 
-  if ( _.isObject(data.updatePartials) ) {
-    _.forEach(data.updatePartials, function (content, element) {
-      $('#' + element).html(content);
-    });
-  }
+  ManageIQ.explorer.updatePartials(data);
 
-  if ( _.isObject(data.updateElement) ) {
+  if (_.isObject(data.updateElement)) {
     _.forEach(data.updateElement, function (options, element) {
         ManageIQ.explorer.updateElement(element, options);
     });
   }
 
-  if ( _.isObject(data.replacePartials) ) {
-    _.forEach(data.replacePartials, function (content, element) {
-      $('#' + element).replaceWith(content);
-    });
-  }
+  ManageIQ.explorer.replacePartials(data);
 
-  if ( _.isObject(data.buildCalendar) ) { ManageIQ.explorer.buildCalendar(data.buildCalendar); }
+  if (_.isObject(data.buildCalendar)) { ManageIQ.explorer.buildCalendar(data.buildCalendar); }
 
-  if ( data.initDashboard ) { miqInitDashboardCols(); }
+  if (data.initDashboard) { miqInitDashboardCols(); }
 
-  if ( data.clearGtlListGrid ) { ManageIQ.grids.gtl_list_grid = undefined; }
+  if (data.clearGtlListGrid) { ManageIQ.grids.gtl_list_grid = undefined; }
 
-  if ( _.isObject(data.setVisibility) )
+  if (_.isObject(data.setVisibility))
     _.forEach(data.setVisibility, function (visible, element) {
       if ( miqDomElementExists(element) ) {
         if ( visible ) {
@@ -126,12 +173,12 @@ ManageIQ.explorer.process = function(data) {
 
   $('#main_div').scrollTop(0);
 
-  if ( _.isString(data.rightCellText) ) {
+  if (_.isString(data.rightCellText)) {
     $('h1#explorer_title > span#explorer_title_text')
       .html(data.rightCellText);
   }
 
-  if ( _.isObject(data.reloadToolbars) ) {
+  if (_.isObject(data.reloadToolbars)) {
     _.forEach(data.reloadToolbars, function (content, element) {
       $('#' + element).html(content);
     });
@@ -140,40 +187,40 @@ ManageIQ.explorer.process = function(data) {
 
   ManageIQ.record = data.record;
 
-  if ( !_.isUndefined(data.activateNode) ) {
+  if (!_.isUndefined(data.activateNode)) {
     miqDynatreeActivateNodeSilently(data.activateNode.activeTree, data.activateNode.osf);
   }
 
-  if ( _.isObject(data.lockTrees) ) {
+  if (_.isObject(data.lockTrees)) {
     _.forEach(data.lockTrees, function (lock, tree) {
       ManageIQ.explorer.lock_tree(tree, lock);
     });
   }
 
-  if ( _.isObject(data.chartData) ) {
+  if (_.isObject(data.chartData)) {
     ManageIQ.charts.chartData = data.chartData;
     // FIXME:  @out << Charting.js_load_statement(true)
   }
 
-  if ( data.resetChanges ) { ManageIQ.changes = null; }
-  if ( data.resetOneTrans ) { ManageIQ.oneTransition.oneTrans = 0; }
-  if ( data.oneTransIE ) { ManageIQ.oneTransition.IEButtonPressed = true; }
+  if (data.resetChanges) { ManageIQ.changes = null; }
+  if (data.resetOneTrans) { ManageIQ.oneTransition.oneTrans = 0; }
+  if (data.oneTransIE) { ManageIQ.oneTransition.IEButtonPressed = true; }
 
-  if ( _.isString( data.focus ) ) {
+  if (_.isString(data.focus)) {
     var element = $('#' + data.focus);
     if ( element.length ) element.focus();
   }
 
-  if ( !_.isUndefined(data.clearSearch) ) {
-    ManageIQ.explorer.clear_search_toggle(data.clearSearch);
+  if (!_.isUndefined(data.clearSearch)) {
+    ManageIQ.explorer.clearSearchToggle(data.clearSearch);
   }
 
   miqInitMainContent();
 
-  if ( data.hideModal ) { $('#quicksearchbox').modal('hide'); }
-  if ( data.initAccords ) { miqInitAccordions(); }
+  if (data.hideModal) { $('#quicksearchbox').modal('hide'); }
+  if (data.initAccords) { miqInitAccordions(); }
 
-  if ( _.isString(data.ajaxUrl) ) {
+  if (_.isString(data.ajaxUrl)) {
     miqAsyncAjax(data.ajaxUrl);
   } else {
     miqSparkleOff();

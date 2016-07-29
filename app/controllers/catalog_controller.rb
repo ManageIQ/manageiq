@@ -1853,7 +1853,7 @@ class CatalogController < ApplicationController
       h_tb = build_toolbar("x_history_tb")
     end
 
-    presenter = ExplorerPresenter.new(
+    presenter = ExplorerPresenter.right_cell(
       :active_tree => x_active_tree,
       :add_nodes   => add_nodes
     )
@@ -1987,7 +1987,7 @@ class CatalogController < ApplicationController
     presenter.reset_changes
     presenter.reset_one_trans
 
-    render :json => presenter.to_json
+    render :json => presenter.for_render
   end
 
   # Build a Catalog Items explorer tree

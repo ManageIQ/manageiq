@@ -876,7 +876,7 @@ class ChargebackController < ApplicationController
       presenter.lock_tree(x_active_tree, @in_a_form && @edit)
     end
 
-    render :json => presenter.to_json
+    render :json => presenter.for_render
   end
 
   def get_session_data

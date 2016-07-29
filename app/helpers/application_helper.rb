@@ -1078,20 +1078,23 @@ module ApplicationHelper
   end
 
   def javascript_flash
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-    end
+    render :json => ExplorerPresenter.flash.replace(
+      'flash_msg_div',
+      render_to_string(:partial => "layouts/flash_msg")).for_render
   end
 
+  # this keeps the main_div wrapping tag, replaces only the inside
   def replace_main_div(args, options = {})
-    render :update do |page|
-      page << javascript_prologue
-      page.replace_html('main_div', args)
+    ex = ExplorerPresenter.main_div.update('main_div', render_to_string(args))
 
-      page << "miqSparkle(false);" if options[:spinner_off]
-      page.replace_html("flash_msg_div", :partial => "layouts/flash_msg") if options[:flash]
-    end
+    ex.replace("flash_msg_div", render_to_string(:partial => "layouts/flash_msg")) if options[:flash]
+    ex.spinner_off if options[:spinner_off]
+
+    render :json => ex.for_render
+  end
+
+  def javascript_miq_button_visibility(changed)
+    render :json => ExplorerPresenter.buttons(changed).for_render
   end
 
   def record_no_longer_exists?(what, model = nil)

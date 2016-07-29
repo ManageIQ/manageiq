@@ -508,7 +508,7 @@ class StorageController < ApplicationController
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
     presenter[:osf_node] = x_node # Open, select, and focus on this node
 
-    render :json => presenter.to_json
+    render :json => presenter.for_render
   end
 
   def search_text_type(node)
@@ -616,7 +616,7 @@ class StorageController < ApplicationController
     rebuild_toolbars(false, presenter)
     handle_bottom_cell(presenter, r)
 
-    render :json => presenter.to_json
+    render :json => presenter.for_render
   end
 
   def update_tree_and_render_list(replace_trees)
@@ -629,7 +629,7 @@ class StorageController < ApplicationController
     rebuild_toolbars(false, presenter)
     handle_bottom_cell(presenter, r)
 
-    render :json => presenter.to_json
+    render :json => presenter.for_render
   end
 
   def rebuild_toolbars(record_showing, presenter)

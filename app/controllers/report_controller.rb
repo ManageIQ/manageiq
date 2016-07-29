@@ -883,7 +883,7 @@ class ReportController < ApplicationController
       end
     end
 
-    render :json => presenter.to_json
+    render :json => presenter.for_render
   end
 
   def get_session_data

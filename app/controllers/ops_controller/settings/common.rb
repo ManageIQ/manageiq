@@ -172,11 +172,7 @@ module OpsController::Settings::Common
 
     smartproxy_affinity_get_form_vars(params[:id], params[:check] == '1') if params[:id] && params[:check]
 
-    changed = (@edit[:new] != @edit[:current])
-    render :update do |page|
-      page << javascript_prologue
-      page << javascript_for_miq_button_visibility(changed)
-    end
+    javascript_miq_button_visibility(@edit[:new] != @edit[:current])
   end
 
   def pglogical_subscriptions_form_fields

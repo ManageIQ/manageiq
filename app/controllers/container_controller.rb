@@ -328,7 +328,7 @@ class ContainerController < ApplicationController
     presenter.hide(:quicksearchbox)
     presenter.lock_tree(x_active_tree, @in_a_form && @edit)
 
-    render :json => presenter.to_json
+    render :json => presenter.for_render
   end
 
   # Build a Containers explorer tree
