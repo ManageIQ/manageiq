@@ -393,9 +393,8 @@ Methods updated/added: %{method_stats}") % stat_options)
     #   @resolve[:new][:target_attr_name] = params[:target_attr_name] if params.has_key?(:target_attr_name)
     if params.key?(:target_class)
       @resolve[:new][:target_class] = params[:target_class]
-      klass = CustomButton.name_to_button_class(params[:target_class])
-      unless klass.nil?
-        targets = klass.all
+      targets = Rbac.filtered(params[:target_class]).select(:id, :name)
+      unless targets.nil?
         @resolve[:targets] = targets.sort_by { |t| t.name.downcase }.collect { |t| [t.name, t.id.to_s] }
         @resolve[:new][:target_id] = nil
       end
