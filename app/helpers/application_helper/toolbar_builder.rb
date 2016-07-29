@@ -76,7 +76,6 @@ class ApplicationHelper::ToolbarBuilder
           :img      => img = img_value(bsi),
           :imgdis   => img,
         )
-        props.calculate_properties
       end
       build_toolbar_save_button(bsi, props) unless bsi.key?(:separator)
       current_item[:items] << props unless props.skipped?
@@ -189,7 +188,6 @@ class ApplicationHelper::ToolbarBuilder
             end
 
     unless props.nil?
-      props.calculate_properties
       @toolbar << build_toolbar_save_button(bgi, props) unless props.skipped?
     end
   end

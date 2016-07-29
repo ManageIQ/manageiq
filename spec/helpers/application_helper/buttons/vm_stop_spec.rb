@@ -30,7 +30,7 @@ describe ApplicationHelper::Button::VmStop do
     end
   end
 
-  describe '#disable?' do
+  describe '#disabled?' do
     context "when record has an error message" do
       before do
         @record = FactoryGirl.create(:vm_vmware)
@@ -41,7 +41,7 @@ describe ApplicationHelper::Button::VmStop do
       it "disables the button and returns the stop error message" do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'record' => @record}, {})
-        expect(button.disable?).to eq("xx stop message")
+        expect(button.disabled?).to be_truthy
       end
     end
   end
