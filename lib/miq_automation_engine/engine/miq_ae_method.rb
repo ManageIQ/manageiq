@@ -28,9 +28,9 @@ module MiqAeEngine
       svc = MiqAeMethodService::MiqAeService.new(obj.workspace)
 
       begin
-        return MiqAeBuiltinMethod.invoke_builtin(mname.to_sym, obj, inputs)
+        return MiqAeBuiltinMethod.invoke_builtin(mname, obj, inputs)
       rescue MiqAeException::MethodNotFound
-        # In order for MethodNotFound to not become AbortInstantiation
+        # In order for MethodNotFound to not become AbortInstantiation so the engine can handle it
         raise
       rescue => err
         raise MiqAeException::AbortInstantiation, err.message

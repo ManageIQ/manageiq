@@ -40,7 +40,7 @@ module MiqAeEngine
       def builtin(name, metadata = {}, &block)
         @builtins ||= {}
         $miq_ae_logger.warn("Overwriting builtin method #{name}") if @builtins.include?(name)
-        @builtins[name] = [block, metadata]
+        @builtins[name.to_s] = [block, metadata]
       end
 
       # Invokes a builtin on obj with inputs.
@@ -53,17 +53,25 @@ module MiqAeEngine
       # * +obj+ - Object to invoke the builtin on.
       # * +inputs+ - Inputs to pass to the method. Hash
       def invoke_builtin(name, obj, inputs)
-        meth = get_builtin(name).first
+        meth, metadata = get_builtin(name)
+        required_params = (metadata[:required] || []).collect(&:to_s)
+        # Detect missing required parameters
+        missing_required_params = required_params - inputs.keys
+        unless missing_required_params.empty?
+          raise MiqAeException::MethodParmMissing, "Built-In method [#{name}] requires parameters #{required_params.inspect}, but only #{missing_required_params.inspect} were passed"
+        end
         # Taking only :opt, we do not care about :rest
         meth_params = meth.parameters.select { |pt, _| pt == :opt } .collect do |_, param_name|
-          if param_name == :obj
+          param_name = param_name.to_s
+          if param_name == 'obj'
             obj
-          elsif param_name == :inputs
+          elsif param_name == 'inputs'
             # Backwards compatibility
             inputs
           else
-            inputs[param_name.to_s]
-          end # Otherwise nil as
+            # Param is present or the param is not required so nil is placed in there
+            inputs[param_name]
+          end
         end
         instance_exec(*meth_params, &meth)
       end
@@ -80,7 +88,7 @@ module MiqAeEngine
       #
       # * +name+ - Name of the builtin to check. Symbol
       def builtin?(name)
-        builtins.include?(name)
+        builtins.include?(name.to_s)
       end
 
       # Returns a list of known inputs that the builtin method takes
@@ -112,6 +120,7 @@ module MiqAeEngine
       private
 
       def get_builtin(name)
+        name = name.to_s
         raise MiqAeException::MethodNotFound, "Built-In Method [#{name}] does not exist" unless builtin?(name)
         @builtins[name]
       end
