@@ -1,50 +1,55 @@
 require 'util/postgres_dsn_parser'
-require 'postgres_ha_admin/postgres_ha_logger'
+require 'postgres_ha_admin/postgres_ha_admin'
 require 'pg'
 
 module PostgresHaAdmin
   class FailoverDatabases
-    include PostgresHaLogger
-    include PostgresHaAdmin
+    attr_reader :yml_file, :connection_hash, :logger, :log_file
 
     def initialize(config_dir, log_dir, connection_params_hash)
-      init_config_dir(config_dir)
-      init_logger(log_dir)
+      @yml_file = Pathname.new(config_dir).join(DB_YML_FILE)
+      @log_file = Pathname.new(log_dir).join(LOG_FILE_NAME)
+      @logger = Logger.new(@log_file)
+      @logger.level = Logger::INFO
       @connection_hash = connection_params_hash
     end
 
-    def refresh_databases_list
-      query_repmgr
+    def refresh_databases_list(connection = nil)
+      query_repmgr(connection)
     end
 
-    def all_databases
+    def all_databases(connection = nil)
       if File.exist?(yml_file)
         begin
           YAML.load_file(yml_file)
         rescue IOError => err
-          log_error("#{err.class}: #{err}")
-          log_error(err.backtrace.join("\n"))
+          logger.error("#{err.class}: #{err}")
+          logger.error(err.backtrace.join("\n"))
           []
         end
       else
-        query_repmgr
+        query_repmgr(connection)
       end
     end
 
-    def standby_databases
-      all_databases.select { |record| record[:type] == 'standby' }
+    def standby_databases(connection = nil)
+      all_databases(connection).select { |record| record[:type] == 'standby' }
     end
 
-    def active_standby_databases
-      all_databases.select { |record| record[:type] == 'standby' && record[:active] == true }
+    def active_standby_databases(connection = nil)
+      all_databases(connection).select { |record| record[:type] == 'standby' && record[:active] == true }
     end
 
     private
 
-    def query_repmgr
+    def query_repmgr(connection)
+      if connection.nil?
+        connection = PG::Connection.open(connection_hash)
+        new_connection = true
+      end
+
       result = []
-      connection = PG::Connection.open(connection_hash)
-      if table_exists?(connection)
+      if miq_repllication_exists?(connection)
         db_result = connection.exec("SELECT type, conninfo, active FROM repmgr_miq.repl_nodes")
         db_result.map_types!(PG::BasicTypeMapForResults.new(connection)).each do |record|
           dsn = PostgresDsnParser.parse_dsn(record.delete("conninfo"))
@@ -52,21 +57,21 @@ module PostgresHaAdmin
         end
         db_result.clear
         write_file(result)
-        log_info("List standby databases in #{yml_file} replaced.")
+        logger.info("List standby databases in #{yml_file} replaced.")
       end
-      connection.finish
+      connection.finish if new_connection
       result
     end
 
     def write_file(result)
       File.write(yml_file, result.to_yaml)
     rescue IOError => err
-      log_error("#{err.class}: #{err}")
-      log_error(err.backtrace.join("\n"))
+      logger.error("#{err.class}: #{err}")
+      logger.error(err.backtrace.join("\n"))
       raise
     end
 
-    def table_exists?(connection)
+    def miq_repllication_exists?(connection)
       connection.exec("SELECT to_regclass('repmgr_miq.repl_nodes')")
     end
   end
