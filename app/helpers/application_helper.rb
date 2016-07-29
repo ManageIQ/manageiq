@@ -1080,7 +1080,7 @@ module ApplicationHelper
   def javascript_flash
     render :json => ExplorerPresenter.flash.replace(
       'flash_msg_div',
-      render_to_string(:partial => "layouts/flash_msg")).to_json
+      render_to_string(:partial => "layouts/flash_msg")).for_render
   end
 
   # this keeps the main_div wrapping tag, replaces only the inside
@@ -1090,11 +1090,11 @@ module ApplicationHelper
     ex.replace("flash_msg_div", render_to_string(:partial => "layouts/flash_msg")) if options[:flash]
     ex.spinner_off if options[:spinner_off]
 
-    render :json => ex.to_json
+    render :json => ex.for_render
   end
 
   def javascript_miq_button_visibility(changed)
-    render :json => ExplorerPresenter.buttons(changed).to_json
+    render :json => ExplorerPresenter.buttons(changed).for_render
   end
 
   def record_no_longer_exists?(what, model = nil)

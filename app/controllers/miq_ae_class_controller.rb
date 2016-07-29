@@ -375,7 +375,7 @@ class MiqAeClassController < ApplicationController
     presenter[:osf_node] = x_node
     presenter.show_miq_buttons if @changed
 
-    render :json => presenter.to_json
+    render :json => presenter.for_render
   end
 
   def build_type_options

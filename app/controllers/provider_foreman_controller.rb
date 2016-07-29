@@ -759,7 +759,7 @@ class ProviderForemanController < ApplicationController
     rebuild_toolbars(false, presenter)
     handle_bottom_cell(presenter, r)
 
-    render :json => presenter.to_json
+    render :json => presenter.for_render
   end
 
   def render_tagging_form
@@ -773,7 +773,7 @@ class ProviderForemanController < ApplicationController
     rebuild_toolbars(false, presenter)
     handle_bottom_cell(presenter, r)
 
-    render :json => presenter.to_json
+    render :json => presenter.for_render
   end
 
   def render_service_dialog_form
@@ -786,7 +786,7 @@ class ProviderForemanController < ApplicationController
     handle_bottom_cell(presenter, r)
     presenter[:right_cell_text] = @right_cell_text
 
-    render :json => presenter.to_json
+    render :json => presenter.for_render
   end
 
   def update_tree_and_render_list(replace_trees)
@@ -799,7 +799,7 @@ class ProviderForemanController < ApplicationController
     rebuild_toolbars(false, presenter)
     handle_bottom_cell(presenter, r)
 
-    render :json => presenter.to_json
+    render :json => presenter.for_render
   end
 
   def update_title(presenter)
@@ -836,7 +836,7 @@ class ProviderForemanController < ApplicationController
     presenter[:right_cell_text] = @right_cell_text
     presenter[:osf_node] = x_node  # Open, select, and focus on this node
 
-    render :json => presenter.to_json
+    render :json => presenter.for_render
   end
 
   def leaf_record

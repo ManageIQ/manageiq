@@ -229,7 +229,7 @@ class MiqAeCustomizationController < ApplicationController
     setup_dialog_sample_buttons(nodetype, presenter)
     set_miq_record_id(presenter)
 
-    render :json => presenter.to_json
+    render :json => presenter.for_render
   end
 
   def dialog_edit_tree_active?

@@ -154,24 +154,24 @@ class ExplorerPresenter
     @options[key]
   end
 
-  def to_json
+  def for_render
     case @options[:mode]
-    when 'main_div' then to_json_main_div
-    when 'flash'    then to_json_flash
-    when 'buttons'  then to_json_buttons
-    else to_json_default
+    when 'main_div' then for_render_main_div
+    when 'flash'    then for_render_flash
+    when 'buttons'  then for_render_buttons
+    else for_render_default
     end
   end
 
   private
 
-  def to_json_flash
+  def for_render_flash
     data = {:explorer => 'flash'}
     data[:replacePartials] = @options[:replace_partials]
     data
   end
 
-  def to_json_main_div
+  def for_render_main_div
     data = check_spinner(:explorer => 'replace_main_div')
     data[:updatePartials] = @options[:update_partials]
     data
@@ -182,13 +182,13 @@ class ExplorerPresenter
     data
   end
 
-  def to_json_buttons
+  def for_render_buttons
     data = {:explorer => 'buttons'}
     data[:showMiqButtons] = @options[:show_miq_buttons]
     data
   end
 
-  def to_json_default
+  def for_render_default
     data = {:explorer => 'replace_right_cell'}
 
     if @options[:exp].present?

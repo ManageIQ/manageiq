@@ -497,7 +497,7 @@ class OpsController < ApplicationController
     x_active_tree_replace_cell(nodetype, presenter, r)
     extra_js_commands(presenter)
 
-    render :json => presenter.to_json
+    render :json => presenter.for_render
   end
 
   def x_active_tree_replace_cell(nodetype, presenter, r)
