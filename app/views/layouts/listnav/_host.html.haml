@@ -11,16 +11,15 @@
         - height = 78
       = render_quadicon(@record, :mode => :icon, :size => 72, :height => height, :typ => :listnav)
 
-      %div{:style => "margin-top: -23px; line-height: 13px;"}
-        %center{:style => "color: #000;"}
-          - unless @record.vmm_product.nil?
-            = h(@record.vmm_product)
-          - unless @record.vmm_version.nil?
-            &nbsp;
-            = h(@record.vmm_version)
-          - unless @record.vmm_buildnumber.nil?
-            %br
-            = h(@record.vmm_buildnumber)
+      %div{:style => "text-align:center"}
+        - unless @record.vmm_product.nil?
+          = h(@record.vmm_product)
+        - unless @record.vmm_version.nil?
+          &nbsp;
+          = h(@record.vmm_version)
+        - unless @record.vmm_buildnumber.nil?
+          %br
+          = h(@record.vmm_buildnumber)
 
     = miq_accordion_panel(_("Properties"), false, "host_prop") do
       %ul.nav.nav-pills.nav-stacked
