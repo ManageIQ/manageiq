@@ -199,6 +199,15 @@ module ReportController::Schedules
                                   :record     => @schedule})
         page.replace("schedule_email_options_div", :partial => "schedule_email_options")
       end
+
+      # when timer_typ set to hourly set starting date to current day otherwise it's the day after
+      if params[:timer_typ] == 'Hourly'
+        @edit[:new][:timer].start_date = Time.zone.now.strftime("%m/%d/%Y")
+      else
+        @edit[:new][:timer].start_date = (Time.zone.now + 1.day).strftime("%m/%d/%Y")
+      end
+      page << "$('#miq_date_1').val('#{@edit[:new][:timer].start_date}');"
+
       changed = (@edit[:new] != @edit[:current])
       if changed != session[:changed]
         session[:changed] = changed
