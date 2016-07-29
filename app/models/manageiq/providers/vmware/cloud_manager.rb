@@ -1,10 +1,14 @@
 class ManageIQ::Providers::Vmware::CloudManager < ManageIQ::Providers::CloudManager
   require_nested :OrchestrationStack
+  require_nested :EventCatcher
+  require_nested :EventParser
   require_nested :RefreshParser
   require_nested :RefreshWorker
   require_nested :Refresher
   require_nested :Template
   require_nested :Vm
+
+  include ManageIQ::Providers::Vmware::CloudManagerMixinEvents
 
   def self.ems_type
     @ems_type ||= "vmware_cloud".freeze
@@ -27,7 +31,7 @@ class ManageIQ::Providers::Vmware::CloudManager < ManageIQ::Providers::CloudMana
   end
 
   def supported_auth_types
-    %w(default)
+    %w(default amqp)
   end
 
   def supports_authentication?(authtype)
@@ -98,23 +102,37 @@ class ManageIQ::Providers::Vmware::CloudManager < ManageIQ::Providers::CloudMana
     case err
     when Fog::Compute::VcloudDirector::Unauthorized
       MiqException::MiqInvalidCredentialsError.new "Login failed due to a bad username or password."
+    when Excon::Errors::Timeout
+      MiqException::MiqUnreachableError.new "Login attempt timed out"
+    when Excon::Errors::SocketError
+      MiqException::MiqHostError.new "Socket error: #{err.message}"
+    when MiqException::MiqInvalidCredentialsError, MiqException::MiqHostError
+      err
     else
       MiqException::MiqHostError.new "Unexpected response returned from system: #{err.message}"
     end
   end
 
   def verify_credentials(auth_type = nil, options = {})
+    auth_type ||= 'default'
     raise MiqException::MiqHostError, "No credentials defined" if missing_credentials?(auth_type)
 
-    begin
-      with_provider_connection(options.merge(:auth_type => auth_type)) do |vcd|
-        vcd.organizations.all
-      end
-    rescue => err
-      miq_exception = translate_exception(err)
+    options[:auth_type] = auth_type
 
-      _log.error("Error Class=#{err.class.name}, Message=#{err.message}")
-      raise miq_exception
+    case auth_type.to_s
+    when 'default' then
+      begin
+        with_provider_connection(options) do |vcd|
+          vcd.organizations.all
+        end
+      rescue => err
+        miq_exception = translate_exception(err)
+        _log.error("Error Class=#{err.class.name}, Message=#{err.message}")
+        raise miq_exception
+      end
+    when 'amqp' then verify_amqp_credentials(options)
+    else
+      raise "Invalid Vmware vCloud Authentication Type: #{auth_type.inspect}"
     end
 
     true

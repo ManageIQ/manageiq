@@ -92,6 +92,10 @@ class EmsEvent < EventStream
     add(ems_id, ManageIQ::Providers::Google::CloudManager::EventParser.event_to_hash(event, ems_id))
   end
 
+  def self.add_vmware_vcloud(ems_id, event)
+    add(ems_id, ManageIQ::Providers::Vmware::CloudManager::EventParser.event_to_hash(event, ems_id))
+  end
+
   def self.add(ems_id, event_hash)
     event_type = event_hash[:event_type]
     raise MiqException::Error, _("event_type must be set in event") if event_type.nil?
