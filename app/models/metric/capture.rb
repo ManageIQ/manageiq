@@ -196,7 +196,7 @@ module Metric::Capture
         target.perf_capture_queue(interval_name, options)
       else
         _log.debug do
-          log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
+          log_target = "#{target.class.name} name: [#{target.name}], id: [#{target.id}]"
           "Skipping capture of #{log_target} -" +
             "Performance last captured on [#{target.last_perf_capture_on}] is within threshold"
         end
