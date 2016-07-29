@@ -19,7 +19,12 @@ class MiddlewarePerformance < ActsAsArModel
     results = []
 
     model_class.find_each do |ms|
-      raw_stats = fetch_raw_stats(ms, start_time, end_time, interval)
+      begin
+        raw_stats = fetch_raw_stats(ms, start_time, end_time, interval)
+      rescue ::Hawkular::BaseClient::HawkularConnectionException => exception
+        $log.error(exception)
+        next
+      end
       if raw_stats.values[0]
         parse_raw_stats_columns raw_stats
         raw_stats.each { |timestamp, stats| results.push(parse_row(ms, timestamp, interval, stats)) }
