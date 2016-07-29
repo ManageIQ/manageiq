@@ -37,6 +37,10 @@ module ManageIQ::Providers
       true
     end
 
+    def validate_authentication_status
+      {:available => true, :message => nil}
+    end
+
     # Hawkular Client
     def self.raw_connect(hostname, port, username, password)
       entrypoint = URI::HTTP.build(:host => hostname, :port => port.to_i).to_s

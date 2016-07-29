@@ -61,4 +61,20 @@ class ApplicationHelper::Toolbar::EmsMiddlewareCenter < ApplicationHelper::Toolb
       ]
     ),
   ])
+  button_group('ems_middleware_authentication', [
+    select(
+      :ems_middleware_authentication_choice,
+      'fa fa-lock fa-lg',
+      t = N_('Authentication'),
+      t,
+      :items => [
+        button(
+          :ems_middleware_recheck_auth_status,
+          'fa fa-search fa-lg',
+          N_('Re-check Authentication Status for this #{ui_lookup(:table=>"ems_middleware")}'),
+          N_('Re-check Authentication Status'),
+          :klass => ApplicationHelper::Button::EmsMiddlewareRecheckAuthStatus),
+      ]
+    ),
+  ])
 end
