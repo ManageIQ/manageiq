@@ -192,7 +192,7 @@ module MiqAeEngine
       ATTRIBUTE_LIST.detect { |attr| vendor = detect_vendor(obj.workspace.root[attr], attr) }
       if vendor
         $miq_ae_logger.info("Setting prepend_namespace to: #{vendor}")
-        obj.workspace.prepend_namespace = vendor
+        obj.workspace.prepend_namespace = vendor.downcase
       end
     end
     private_class_method :prepend_vendor
@@ -201,14 +201,46 @@ module MiqAeEngine
       return unless src_obj
       case attr
       when "orchestration_stack"
-        src_obj.type.split('::')[2]
+        src_obj.ext_management_system.try(:provider_name)
       when "miq_host_provision"
         "vmware"
       when "miq_request", "miq_provision", "vm_migrate_task"
-        src_obj.source.try(:vendor)
+        src_obj.source.try(:provider_name)
       when "vm"
-        src_obj.try(:vendor)
+        src_obj.try(:provider_name)
+      end
+    end
 
+    def self.emsevent_provider_name(event_stream)
+      return nil if event_stream.ext_management_system.nil?
+      event_stream.ext_management_system.try(:provider_name)
+    end
+    private_class_method :emsevent_provider_name
+
+    def self.emsevent_manager_type(event_stream)
+      return nil if event_stream.ext_management_system.nil?
+      manager_type = event_stream.ext_management_system.try(:manager_type).downcase
+      manager_type == "infra" ? INFRASTRUCTURE : manager_type
+    end
+    private_class_method :emsevent_manager_type
+
+    def self.emsevent?(event_stream)
+      event_stream.object_class.name.casecmp("emsevent").zero?
+    end
+    private_class_method :emsevent?
+
+    def self.miq_parse_event_stream(obj, _attr)
+      event_stream = obj.workspace.root['event_stream']
+      raise "Event Stream object not found" if event_stream.nil?
+
+      if emsevent?(event_stream)
+        provider_name = emsevent_provider_name(event_stream)
+        raise "EMS event - Invalid provider" if provider_name.blank?
+        manager_type = emsevent_manager_type(event_stream)
+        raise "EMS event - Invalid manager type" if manager_type.blank?
+        obj.workspace.root['event_path'] = "/#{provider_name}/EMSEvent/#{manager_type}/Event"
+      else
+        obj.workspace.root['event_path'] = "/System/Event/#{event_stream.event_namespace}/#{event_stream.source}"
       end
     end
   end

@@ -35,7 +35,7 @@ describe "parse_provider_category" do
 
   let(:cloud_ems) { FactoryGirl.create(:ems_amazon_with_authentication) }
   let(:cloud_vm)  { FactoryGirl.create(:vm_amazon, :ems_id => cloud_ems.id, :evm_owner => user) }
-  let(:stack)     { FactoryGirl.create(:orchestration_stack_amazon) }
+  let(:stack)     { FactoryGirl.create(:orchestration_stack_amazon, :ext_management_system => cloud_ems) }
 
   let(:cloud_vm_template) do
     FactoryGirl.create(:template_amazon,
