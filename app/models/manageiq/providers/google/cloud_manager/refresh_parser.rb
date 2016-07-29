@@ -248,6 +248,9 @@ module ManageIQ::Providers
             :cpu_cores_per_socket => 1,
             :memory_mb            => flavor[:memory] / 1.megabyte,
             :disks                => [], # populated below
+          },
+          :provider_options  => {
+            :is_preemptible => instance.scheduling["preemptible"]
           }
         }
 

@@ -6463,6 +6463,7 @@ vms:
 - resource_group_id
 - deprecated
 - storage_profile_id
+- provider_options
 volumes:
 - id
 - name
