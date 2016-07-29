@@ -81,7 +81,7 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
           N_('Resume this server'),
           N_('Resume Server'),
           :image   => "resume",
-          :confirm => N_("Do you want to stop this server?")),
+          :confirm => N_("Do you want to resume this server?")),
         button(
           :middleware_server_reload,
           'pficon pficon-restart fa-lg',
