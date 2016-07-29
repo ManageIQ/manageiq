@@ -139,7 +139,7 @@ describe('dialogFieldRefresh', function() {
       });
       it('sets the visible property', function() {
         expect(dialogFieldRefresh.setVisible).toHaveBeenCalledWith(
-          jasmine.objectContaining({selector: '.dynamic-checkbox-123'}),
+          jasmine.objectContaining({selector: '#field_123_tr'}),
           false
         );
       });
@@ -206,7 +206,7 @@ describe('dialogFieldRefresh', function() {
       });
       it('sets the visible property', function() {
         expect(dialogFieldRefresh.setVisible).toHaveBeenCalledWith(
-          jasmine.objectContaining({selector: '.dynamic-date-123'}),
+          jasmine.objectContaining({selector: '#field_123_tr'}),
           false
         );
       });
@@ -257,7 +257,7 @@ describe('dialogFieldRefresh', function() {
       });
       it('sets the visible property', function() {
         expect(dialogFieldRefresh.setVisible).toHaveBeenCalledWith(
-          jasmine.objectContaining({selector: '.dynamic-text-box-123'}),
+          jasmine.objectContaining({selector: '#field_123_tr'}),
           false
         );
       });
@@ -308,7 +308,7 @@ describe('dialogFieldRefresh', function() {
       });
       it('sets the visible property', function() {
         expect(dialogFieldRefresh.setVisible).toHaveBeenCalledWith(
-          jasmine.objectContaining({selector: '.dynamic-text-area-123'}),
+          jasmine.objectContaining({selector: '#field_123_tr'}),
           false
         );
       });
