@@ -1,4 +1,4 @@
-ManageIQ.angular.app.controller('mySettingsVisualsController', ['$http', '$scope', 'miqService', '$timeout', function($http, $scope, miqService, $timeout) {
+ManageIQ.angular.app.controller('mySettingsVisualsController', ['$http', '$scope', 'miqService', function($http, $scope, miqService) {
     var init = function() {
         $scope.afterGet = false;
         $scope.hideCancel = true;

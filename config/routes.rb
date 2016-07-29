@@ -449,7 +449,7 @@ Vmdb::Application.routes.draw do
         timeprofile_copy
         timeprofile_edit
         timeprofile_new
-        get_visual_settings
+        visual_settings
       ),
       :post => %w(
         button
