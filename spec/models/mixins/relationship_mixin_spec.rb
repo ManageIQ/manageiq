@@ -1,49 +1,44 @@
 describe RelationshipMixin do
-  TEST_REL_TYPE = "testing"
-
+  let(:test_rel_type) { "testing" }
   #      0
   #  1        2
   # 3 4    5  6  7
   #             8 9
-  VMS_REL_TREE = {0 => [{1 => [3, 4]}, {2 => [5, 6, {7 => [8, 9]}]}]}
+  let(:vms_rel_tree) { {0 => [{1 => [3, 4]}, {2 => [5, 6, {7 => [8, 9]}]}]} }
+  let(:vms) { build_relationship_tree(vms_rel_tree, FactoryGirl.create_list(:vm_vmware, 10), test_rel_type) }
 
-  context "tree with relationship type '#{TEST_REL_TYPE}'" do
-    before(:each) do
-      @vms = (0...10).collect { FactoryGirl.create(:vm_vmware) }
-      build_relationship_tree(VMS_REL_TREE, @vms)
-    end
-
+  context "tree with relationship" do
     it "#with_relationship_type and #relationship_type" do
-      expect(@vms[0].relationship_type).not_to eq(TEST_REL_TYPE)
-      @vms[0].with_relationship_type(TEST_REL_TYPE) do
-        expect(@vms[0].relationship_type).to eq(TEST_REL_TYPE)
+      expect(vms[0].relationship_type).not_to eq(test_rel_type)
+      vms[0].with_relationship_type(test_rel_type) do
+        expect(vms[0].relationship_type).to eq(test_rel_type)
       end
 
-      expect(@vms[0].parents).to be_empty
-      expect(@vms[0].children).to be_empty
+      expect(vms[0].parents).to be_empty
+      expect(vms[0].children).to be_empty
 
-      @vms[0].clear_relationships_cache
+      vms[0].clear_relationships_cache
 
-      expect(@vms[0].with_relationship_type(TEST_REL_TYPE) { |v| v.parents.length  }).to eq(0)
-      expect(@vms[0].with_relationship_type(TEST_REL_TYPE) { |v| v.children.length }).to eq(2)
+      expect(vms[0].with_relationship_type(test_rel_type) { |v| v.parents.length  }).to eq(0)
+      expect(vms[0].with_relationship_type(test_rel_type) { |v| v.children.length }).to eq(2)
 
-      expect(@vms[0].parents).to be_empty
-      expect(@vms[0].children).to be_empty
+      expect(vms[0].parents).to be_empty
+      expect(vms[0].children).to be_empty
     end
 
     it "#parents" do
-      expect(@vms[0].parents).to be_empty
-      recurse_relationship_tree(VMS_REL_TREE) do |parent, child|
-        @vms[child].with_relationship_type(TEST_REL_TYPE) do |c|
-          expect(c.parents).to eq([@vms[parent]])
+      expect(vms[0].parents).to be_empty
+      recurse_relationship_tree(vms_rel_tree) do |parent, child|
+        vms[child].with_relationship_type(test_rel_type) do |c|
+          expect(c.parents).to eq([vms[parent]])
         end
       end
     end
 
     it "#children" do
-      recurse_relationship_tree(VMS_REL_TREE) do |parent, child|
-        @vms[parent].with_relationship_type(TEST_REL_TYPE) do |p|
-          expect(p.children).to include @vms[child]
+      recurse_relationship_tree(vms_rel_tree) do |parent, child|
+        vms[parent].with_relationship_type(test_rel_type) do |p|
+          expect(p.children).to include vms[child]
         end
       end
     end
@@ -59,41 +54,41 @@ describe RelationshipMixin do
 
       it "with a second new object will link a new tree node for the parent to a new tree node for the child" do
         child = FactoryGirl.create(:vm_vmware)
-        @parent.with_relationship_type(TEST_REL_TYPE) { |v| v.set_child(child) }
+        @parent.with_relationship_type(test_rel_type) { |v| v.set_child(child) }
 
-        assert_parent_child_structure(TEST_REL_TYPE,
+        assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
                                       child,   1, [@parent], []
                                      )
       end
 
       it "with a root object will link a new tree node for the parent to the existing tree node for the child" do
-        child = @vms[0]
-        @parent.with_relationship_type(TEST_REL_TYPE) { |v| v.set_child(child) }
+        child = vms[0]
+        @parent.with_relationship_type(test_rel_type) { |v| v.set_child(child) }
 
-        assert_parent_child_structure(TEST_REL_TYPE,
+        assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
-                                      child,   1, [@parent], [@vms[1], @vms[2]]
+                                      child,   1, [@parent], [vms[1], vms[2]]
                                      )
       end
 
       it "with an inner object will link a new tree node for the parent to a second new tree node for the child" do
-        child = @vms[1]
-        @parent.with_relationship_type(TEST_REL_TYPE) { |v| v.set_child(child) }
+        child = vms[1]
+        @parent.with_relationship_type(test_rel_type) { |v| v.set_child(child) }
 
-        assert_parent_child_structure(TEST_REL_TYPE,
+        assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
-                                      child,   2, [@vms[0], @parent], [@vms[3], @vms[4]]
+                                      child,   2, [vms[0], @parent], [vms[3], vms[4]]
                                      )
       end
 
       it "with a leaf object will link a new tree node for the parent to a second new tree node for the child" do
-        child = @vms[3]
-        @parent.with_relationship_type(TEST_REL_TYPE) { |v| v.set_child(child) }
+        child = vms[3]
+        @parent.with_relationship_type(test_rel_type) { |v| v.set_child(child) }
 
-        assert_parent_child_structure(TEST_REL_TYPE,
+        assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
-                                      child,   2, [@vms[1], @parent], []
+                                      child,   2, [vms[1], @parent], []
                                      )
       end
     end
@@ -103,40 +98,40 @@ describe RelationshipMixin do
 
       it "with a second new object will link a new tree node for the parent to a new tree node for the child" do
         parent = FactoryGirl.create(:vm_vmware)
-        @child.with_relationship_type(TEST_REL_TYPE) { |v| v.set_parent(parent) }
+        @child.with_relationship_type(test_rel_type) { |v| v.set_parent(parent) }
 
-        assert_parent_child_structure(TEST_REL_TYPE,
+        assert_parent_child_structure(test_rel_type,
                                       parent, 1, [], [@child],
                                       @child, 1, [parent], []
                                      )
       end
 
       it "with a root object will link the existing tree node for the parent to a new tree node for the child" do
-        parent = @vms[0]
-        @child.with_relationship_type(TEST_REL_TYPE) { |v| v.set_parent(parent) }
+        parent = vms[0]
+        @child.with_relationship_type(test_rel_type) { |v| v.set_parent(parent) }
 
-        assert_parent_child_structure(TEST_REL_TYPE,
-                                      parent, 1, [], [@vms[1], @vms[2], @child],
+        assert_parent_child_structure(test_rel_type,
+                                      parent, 1, [], [vms[1], vms[2], @child],
                                       @child, 1, [parent], []
                                      )
       end
 
       it "with an inner object will link the existing tree node for the parent to a new tree node for the child" do
-        parent = @vms[1]
-        @child.with_relationship_type(TEST_REL_TYPE) { |v| v.set_parent(parent) }
+        parent = vms[1]
+        @child.with_relationship_type(test_rel_type) { |v| v.set_parent(parent) }
 
-        assert_parent_child_structure(TEST_REL_TYPE,
-                                      parent, 1, [@vms[0]], [@vms[3], @vms[4], @child],
+        assert_parent_child_structure(test_rel_type,
+                                      parent, 1, [vms[0]], [vms[3], vms[4], @child],
                                       @child, 1, [parent], []
                                      )
       end
 
       it "with a leaf object will link the existing tree node for the parent to a new tree node for the child" do
-        parent = @vms[3]
-        @child.with_relationship_type(TEST_REL_TYPE) { |v| v.set_parent(parent) }
+        parent = vms[3]
+        @child.with_relationship_type(test_rel_type) { |v| v.set_parent(parent) }
 
-        assert_parent_child_structure(TEST_REL_TYPE,
-                                      parent, 1, [@vms[1]], [@child],
+        assert_parent_child_structure(test_rel_type,
+                                      parent, 1, [vms[1]], [@child],
                                       @child, 1, [parent], []
                                      )
       end
@@ -147,39 +142,39 @@ describe RelationshipMixin do
 
       it "on a second new object will link a new tree node for the parent to a new tree node for the child and be the only parent for the child" do
         child = FactoryGirl.create(:vm_vmware)
-        child.with_relationship_type(TEST_REL_TYPE) { |v| v.replace_parent(@parent) }
+        child.with_relationship_type(test_rel_type) { |v| v.replace_parent(@parent) }
 
-        assert_parent_child_structure(TEST_REL_TYPE,
+        assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
                                       child,   1, [@parent], []
                                      )
       end
 
       it "on a root object will link a new tree node for the parent to the existing tree node for the child and be the only parent for the child" do
-        child = @vms[0]
-        child.with_relationship_type(TEST_REL_TYPE) { |v| v.replace_parent(@parent) }
+        child = vms[0]
+        child.with_relationship_type(test_rel_type) { |v| v.replace_parent(@parent) }
 
-        assert_parent_child_structure(TEST_REL_TYPE,
+        assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
-                                      child,   1, [@parent], [@vms[1], @vms[2]]
+                                      child,   1, [@parent], [vms[1], vms[2]]
                                      )
       end
 
       it "on an inner object will link a new tree node for the parent to the existing tree node for the child and be the only parent for the child" do
-        child = @vms[1]
-        child.with_relationship_type(TEST_REL_TYPE) { |v| v.replace_parent(@parent) }
+        child = vms[1]
+        child.with_relationship_type(test_rel_type) { |v| v.replace_parent(@parent) }
 
-        assert_parent_child_structure(TEST_REL_TYPE,
+        assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
-                                      child,   1, [@parent], [@vms[3], @vms[4]]
+                                      child,   1, [@parent], [vms[3], vms[4]]
                                      )
       end
 
       it "on a leaf object will link a new tree node for the parent to the existing tree node for the child and be the only parent for the child" do
-        child = @vms[3]
-        child.with_relationship_type(TEST_REL_TYPE) { |v| v.replace_parent(@parent) }
+        child = vms[3]
+        child.with_relationship_type(test_rel_type) { |v| v.replace_parent(@parent) }
 
-        assert_parent_child_structure(TEST_REL_TYPE,
+        assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
                                       child,   1, [@parent], []
                                      )
@@ -188,45 +183,45 @@ describe RelationshipMixin do
 
     context "#replace_parent on an inner object" do
       it "with another inner object will link the existing tree node for the parent to the existing tree node for the child and be the only parent for the child " do
-        parent = @vms[1]
-        child = @vms[2]
-        child.with_relationship_type(TEST_REL_TYPE) { |v| v.replace_parent(parent) }
+        parent = vms[1]
+        child = vms[2]
+        child.with_relationship_type(test_rel_type) { |v| v.replace_parent(parent) }
 
-        assert_parent_child_structure(TEST_REL_TYPE,
-                                      parent, 1, [@vms[0]], [child, @vms[3], @vms[4]],
-                                      child,  1, [parent], [@vms[5], @vms[6], @vms[7]]
+        assert_parent_child_structure(test_rel_type,
+                                      parent, 1, [vms[0]], [child, vms[3], vms[4]],
+                                      child,  1, [parent], [vms[5], vms[6], vms[7]]
                                      )
       end
     end
 
     it "#replace_children" do
       new_vms = (0...2).collect { FactoryGirl.create(:vm_vmware) }
-      @vms[0].with_relationship_type(TEST_REL_TYPE) do |v|
+      vms[0].with_relationship_type(test_rel_type) do |v|
         v.replace_children(new_vms)
         expect(new_vms).to match_array(v.children)
       end
 
-      @vms[1].with_relationship_type(TEST_REL_TYPE) do |v|
+      vms[1].with_relationship_type(test_rel_type) do |v|
         expect(v.parents).to be_empty
       end
     end
 
     it "#remove_all_parents" do
-      @vms[1].with_relationship_type(TEST_REL_TYPE) do |v|
+      vms[1].with_relationship_type(test_rel_type) do |v|
         v.remove_all_parents
         expect(v.parents).to be_empty
       end
     end
 
     it "#remove_all_children" do
-      @vms[1].with_relationship_type(TEST_REL_TYPE) do |v|
+      vms[1].with_relationship_type(test_rel_type) do |v|
         v.remove_all_children
         expect(v.children).to be_empty
       end
     end
 
     it "#remove_all_relationships" do
-      @vms[1].with_relationship_type(TEST_REL_TYPE) do |v|
+      vms[1].with_relationship_type(test_rel_type) do |v|
         v.remove_all_relationships
         expect(v.parents).to be_empty
         expect(v.children).to be_empty
@@ -234,25 +229,25 @@ describe RelationshipMixin do
     end
 
     it "#is_descendant_of?" do
-      expect(@vms[1].with_relationship_type(TEST_REL_TYPE) { |v| v.is_descendant_of?(@vms[0]) }).to be_truthy
-      expect(@vms[3].with_relationship_type(TEST_REL_TYPE) { |v| v.is_descendant_of?(@vms[0]) }).to be_truthy
-      expect(@vms[2].with_relationship_type(TEST_REL_TYPE) { |v| v.is_descendant_of?(@vms[1]) }).not_to be_truthy
+      expect(vms[1].with_relationship_type(test_rel_type) { |v| v.is_descendant_of?(vms[0]) }).to be_truthy
+      expect(vms[3].with_relationship_type(test_rel_type) { |v| v.is_descendant_of?(vms[0]) }).to be_truthy
+      expect(vms[2].with_relationship_type(test_rel_type) { |v| v.is_descendant_of?(vms[1]) }).not_to be_truthy
     end
 
     it "#is_ancestor_of?" do
-      expect(@vms[0].with_relationship_type(TEST_REL_TYPE) { |v| v.is_ancestor_of?(@vms[1]) }).to be_truthy
-      expect(@vms[0].with_relationship_type(TEST_REL_TYPE) { |v| v.is_ancestor_of?(@vms[3]) }).to be_truthy
-      expect(@vms[2].with_relationship_type(TEST_REL_TYPE) { |v| v.is_ancestor_of?(@vms[1]) }).not_to be_truthy
+      expect(vms[0].with_relationship_type(test_rel_type) { |v| v.is_ancestor_of?(vms[1]) }).to be_truthy
+      expect(vms[0].with_relationship_type(test_rel_type) { |v| v.is_ancestor_of?(vms[3]) }).to be_truthy
+      expect(vms[2].with_relationship_type(test_rel_type) { |v| v.is_ancestor_of?(vms[1]) }).not_to be_truthy
     end
 
     it "#ancestors" do
-      expect(@vms[0].with_relationship_type(TEST_REL_TYPE) { |v| v.ancestors.empty? }).to be_truthy
-      expect(@vms[9].with_relationship_type(TEST_REL_TYPE, &:ancestors)).to match_array([@vms[7], @vms[2], @vms[0]])
+      expect(vms[0].with_relationship_type(test_rel_type) { |v| v.ancestors.empty? }).to be_truthy
+      expect(vms[9].with_relationship_type(test_rel_type, &:ancestors)).to match_array([vms[7], vms[2], vms[0]])
     end
 
     it "#descendants" do
-      expect(@vms[9].with_relationship_type(TEST_REL_TYPE) { |v| v.descendants.empty? }).to be_truthy
-      expect(@vms[0].with_relationship_type(TEST_REL_TYPE, &:descendants)).to match_array(@vms - [@vms[0]])
+      expect(vms[9].with_relationship_type(test_rel_type) { |v| v.descendants.empty? }).to be_truthy
+      expect(vms[0].with_relationship_type(test_rel_type, &:descendants)).to match_array(vms - [vms[0]])
     end
   end
 
@@ -273,14 +268,11 @@ describe RelationshipMixin do
   end
 
   context "tree with relationship type 'ems_metadata'" do
-    before(:each) do
-      @vms = (0...10).collect { FactoryGirl.create(:vm_vmware) }
-      build_relationship_tree(VMS_REL_TREE, @vms, "ems_metadata")
-    end
+    let(:vms) { build_relationship_tree(vms_rel_tree, FactoryGirl.create_list(:vm_vmware, 10), "ems_metadata") }
 
     it "#detect_ancestor" do
-      expect(@vms[8].with_relationship_type("ems_metadata") { |v| v.detect_ancestor { |a| a.id == @vms[2].id } }).not_to be_nil
-      expect(@vms[8].with_relationship_type("ems_metadata") { |v| v.detect_ancestor { |a| a.id == @vms[1].id } }).to be_nil
+      expect(vms[8].with_relationship_type("ems_metadata") { |v| v.detect_ancestor { |a| a.id == vms[2].id } }).not_to be_nil
+      expect(vms[8].with_relationship_type("ems_metadata") { |v| v.detect_ancestor { |a| a.id == vms[1].id } }).to be_nil
     end
   end
 
@@ -305,7 +297,7 @@ describe RelationshipMixin do
 
   protected
 
-  def build_relationship_tree(tree, objs, rel_type = TEST_REL_TYPE)
+  def build_relationship_tree(tree, objs, rel_type = test_rel_type)
     rels = objs.collect { |o| FactoryGirl.create(:relationship_vm_vmware, :resource_id => o.id, :relationship => rel_type) }
     recurse_relationship_tree(tree) do |parent, child|
       rels[child].parent = rels[parent]
