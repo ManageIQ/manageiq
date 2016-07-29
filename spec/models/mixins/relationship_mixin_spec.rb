@@ -5,7 +5,7 @@ describe RelationshipMixin do
   # 3 4    5  6  7
   #             8 9
   let(:vms_rel_tree) { {0 => [{1 => [3, 4]}, {2 => [5, 6, {7 => [8, 9]}]}]} }
-  let(:vms) { build_relationship_tree(vms_rel_tree, FactoryGirl.create_list(:vm_vmware, 10), test_rel_type) }
+  let(:vms) { build_relationship_tree(vms_rel_tree) }
 
   context "tree with relationship" do
     it "#with_relationship_type and #relationship_type" do
@@ -247,7 +247,7 @@ describe RelationshipMixin do
 
     it "#descendants" do
       expect(vms[9].with_relationship_type(test_rel_type) { |v| v.descendants.empty? }).to be_truthy
-      expect(vms[0].with_relationship_type(test_rel_type, &:descendants)).to match_array(vms - [vms[0]])
+      expect(vms[0].with_relationship_type(test_rel_type, &:descendants)).to match_array(vms.values - [vms[0]])
     end
   end
 
@@ -268,7 +268,7 @@ describe RelationshipMixin do
   end
 
   context "tree with relationship type 'ems_metadata'" do
-    let(:vms) { build_relationship_tree(vms_rel_tree, FactoryGirl.create_list(:vm_vmware, 10), "ems_metadata") }
+    let(:vms) { build_relationship_tree(vms_rel_tree, "ems_metadata") }
 
     it "#detect_ancestor" do
       expect(vms[8].with_relationship_type("ems_metadata") { |v| v.detect_ancestor { |a| a.id == vms[2].id } }).not_to be_nil
@@ -297,13 +297,22 @@ describe RelationshipMixin do
 
   protected
 
-  def build_relationship_tree(tree, objs, rel_type = test_rel_type)
-    rels = objs.collect { |o| FactoryGirl.create(:relationship_vm_vmware, :resource_id => o.id, :relationship => rel_type) }
+  def build_relationship_tree(tree, rel_type = test_rel_type)
+    # temp list of the relationships
+    # allows easy access while building
+    # can map to the resource to return all the resources created
+    rels = Hash.new do |hash, key|
+      hash[key] = FactoryGirl.create(:relationship_vm_vmware,
+                                     :resource     => FactoryGirl.create(:vm_vmware),
+                                     :relationship => rel_type)
+    end
+
     recurse_relationship_tree(tree) do |parent, child|
       rels[child].parent = rels[parent]
       rels[child].save!
     end
-    objs.each(&:unmemoize_all)
+    # pull out all values in key order. (0, 1, 2, 3, ...) (unmemoize them on the way out)
+    rels.each_with_object({}) { |(n, v), h| h[n] = v.resource.tap(&:unmemoize_all) }
   end
 
   def recurse_relationship_tree(tree, &block)
