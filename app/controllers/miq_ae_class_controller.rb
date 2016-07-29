@@ -2518,10 +2518,9 @@ class MiqAeClassController < ApplicationController
     domain_toggle(false)
   end
 
-  def domain_toggle_lock(domain_id, lock_value)
-    domain        = MiqAeNamespace.find_by_id(domain_id)
-    domain.system = lock_value
-    domain.save!
+  def domain_toggle_lock(domain_id, lock)
+    domain = MiqAeDomain.find(domain_id)
+    lock ? domain.lock_contents! : domain.unlock_contents!
   end
 
   def get_instance_node_info(id)

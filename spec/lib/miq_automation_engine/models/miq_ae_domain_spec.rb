@@ -138,6 +138,84 @@ describe MiqAeDomain do
     end
   end
 
+  context "editable properties for a domain" do
+    it "manageiq domain can't change properties" do
+      dom = FactoryGirl.create(:miq_ae_domain, :name => "ManageIQ", :tenant => @user.current_tenant)
+      expect(dom.editable_properties?).to be_falsey
+    end
+
+    it "user domain can change properties" do
+      dom = FactoryGirl.create(:miq_ae_domain, :tenant => @user.current_tenant)
+      expect(dom.editable_properties?).to be_truthy
+    end
+
+    it "git domain cannot change properties" do
+      dom = FactoryGirl.create(:miq_ae_git_domain, :tenant => @user.current_tenant)
+      expect(dom.editable_properties?).to be_truthy
+    end
+  end
+
+  context "lock contents" do
+    it "contents_locked? should be false for user domain" do
+      dom = FactoryGirl.create(:miq_ae_domain, :tenant => @user.current_tenant)
+      expect(dom.contents_locked?).to be_falsey
+    end
+
+    it "contents_locked? should be true for user domain after its locked" do
+      dom = FactoryGirl.create(:miq_ae_domain, :tenant => @user.current_tenant)
+      dom.lock_contents!
+      expect(dom.contents_locked?).to be_truthy
+    end
+
+    it "contents_locked? should be true for user domain" do
+      dom = FactoryGirl.create(:miq_ae_system_domain, :tenant => @user.current_tenant)
+      expect(dom.contents_locked?).to be_truthy
+    end
+  end
+
+  context "editable contents for a domain" do
+    it "system domain can't change contents" do
+      dom = FactoryGirl.create(:miq_ae_system_domain, :tenant => @user.current_tenant)
+      expect(dom.editable_contents?(@user)).to be_falsey
+    end
+
+    it "user domain can change contents" do
+      dom = FactoryGirl.create(:miq_ae_domain, :tenant => @user.current_tenant)
+      expect(dom.editable_contents?(@user)).to be_truthy
+    end
+
+    it "git domain cannot change contents" do
+      dom = FactoryGirl.create(:miq_ae_git_domain, :tenant => @user.current_tenant)
+      expect(dom.editable_contents?(@user)).to be_falsey
+    end
+  end
+
+  context "lockable" do
+    it "a user domain should be lockable" do
+      dom = FactoryGirl.create(:miq_ae_domain, :tenant => @user.current_tenant)
+      expect(dom.lockable?).to be_truthy
+    end
+
+    it "a locked user domain should not be lockable" do
+      dom = FactoryGirl.create(:miq_ae_domain, :tenant => @user.current_tenant)
+      dom.lock_contents!
+      expect(dom.lockable?).to be_falsey
+    end
+  end
+
+  context "unlockable" do
+    it "a locked user domain should be unlockable" do
+      dom = FactoryGirl.create(:miq_ae_domain, :tenant => @user.current_tenant)
+      dom.lock_contents!
+      expect(dom.unlockable?).to be_truthy
+    end
+
+    it "a unlocked user domain should not be unlockable" do
+      dom = FactoryGirl.create(:miq_ae_domain, :tenant => @user.current_tenant)
+      expect(dom.unlockable?).to be_falsey
+    end
+  end
+
   context "git enabled domains" do
     let(:commit_time) { Time.now.utc }
     let(:commit_time_new) { Time.now.utc + 1.hour }

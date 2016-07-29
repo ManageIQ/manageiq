@@ -49,6 +49,29 @@ class MiqAeDomain < MiqAeNamespace
     save!
   end
 
+  def contents_locked?
+    system
+  end
+
+  def lockable?
+    editable_properties? && !contents_locked?
+  end
+
+  def unlockable?
+    editable_properties? && contents_locked?
+  end
+
+  def editable_properties?
+    # TODO: In the new design will use SOURCE != SYSTEM
+    name != 'ManageIQ'
+  end
+
+  def editable_contents?(user = User.current_user)
+    # TODO: In the new design will use SOURCE != SYSTEM
+    return false if name == 'ManageIQ'
+    editable?(user)
+  end
+
   def version
     version_field = about_class.try(:ae_fields).try(:detect) { |fld| fld.name == 'version' }
     version_field.try(:default_value)
