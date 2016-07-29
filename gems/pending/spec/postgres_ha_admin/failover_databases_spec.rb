@@ -5,7 +5,7 @@ require 'pg'
 
 describe PostgresHaAdmin::FailoverDatabases do
   subject do
-    described_class.new(TestEnvHelper::SPEC_DIR, TestEnvHelper::SPEC_DIR, :dbname => 'vmdb_test')
+    described_class.new(TestEnvHelper::SPEC_DIR, TestEnvHelper::SPEC_DIR, :dbname => 'travis', :user => 'travis')
   end
 
   before do
@@ -105,7 +105,7 @@ describe PostgresHaAdmin::FailoverDatabases do
   end
 
   def pg_connection
-    PG::Connection.open(:dbname => 'vmdb_test')
+    PG::Connection.open(:dbname => 'travis', :user => 'travis')
   end
 
   def add_new_record
