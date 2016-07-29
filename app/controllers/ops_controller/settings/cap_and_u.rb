@@ -20,9 +20,9 @@ module OpsController::Settings::CapAndU
       set_perf_collection_for_clusters if @edit[:new] != @edit[:current]
 
       unless @edit[:current][:non_cl_hosts].blank?   # if there are any hosts without clusters
-        @edit[:current][:non_cl_hosts].each do |h_id|
+        @edit[:current][:non_cl_hosts].each_with_index do |h_id, i|
           h = Host.find_by_id(h_id[:id])
-          h.perf_capture_enabled = @edit[:new][:non_cluster_host_enabled][h.id.to_s] == true
+          h.perf_capture_enabled = @edit[:new][:non_cl_hosts][i][:capture]
         end
       end
 
@@ -52,7 +52,7 @@ module OpsController::Settings::CapAndU
     clusters = EmsCluster.where(:id => cluster_ids).includes(:hosts)
 
     clusters.each do |cl|
-      enabled_hosts = @edit[:new][cl.name.to_sym].select { |h| h[:capture] }
+      enabled_hosts = @edit[:new][cl.id].select { |h| h[:capture] }
       enabled_host_ids = enabled_hosts.collect { |h| h[:id] }.uniq
       cl.perf_capture_enabled_host_ids = enabled_host_ids
     end
@@ -69,14 +69,14 @@ module OpsController::Settings::CapAndU
       page.replace_html(@refresh_div, :partial => @refresh_partial) if @refresh_div
       page << "$('#clusters_div').#{params[:all_clusters] == 'true' ? "hide" : "show"}()" if params[:all_clusters]
       page << "$('#storages_div').#{params[:all_storages] == 'true' ? "hide" : "show"}()" if params[:all_storages]
-      if params[:id] || params[:check_all] # || (params[:tree_name] == "cu_datastore_tree" && params[:check_all])
-        if (params[:id] && params[:id].split('_')[0] == "Datastore") || (params[:tree_name] == "cu_datastore_tree" && params[:check_all])
+      if params[:id] || params[:check_all]
+        if params[:tree_name] == "datastore"
           # change nodes to blue if they were changed during current edit session
           @changed_id_list   = []
           # change ids back to black if change during current session is reverted back
           @unchanged_id_list = []
           @edit[:new][:storages].each_with_index do |s, i|
-            datastore_id = "Datastore_#{s[:id]}"
+            datastore_id = "xx-#{s[:id]}"
             if @edit[:new][:storages][i][:capture] != @edit[:current][:storages][i][:capture]
               @changed_id_list.push(datastore_id)
             elsif datastore_id == params[:id] || params[:check_all]
@@ -96,47 +96,61 @@ module OpsController::Settings::CapAndU
         else
           @changed_id_list   = []
           @unchanged_id_list = []
-          @edit[:new][:clusters].each_with_index do |c, i|
-            cname = c[:name]
-            cluster_id = "Cluster_#{c[:id]}"
-            if @edit[:new][:clusters][i][:capture] != @edit[:current][:clusters][i][:capture]
-              @changed_id_list.push(cluster_id)
-            else
-              @unchanged_id_list.push(cluster_id)
-            end
-            @edit[:new][cname.to_sym].each_with_index do |host, j|
-              host_id = "#{cluster_id}:Host_#{host[:id]}"
-              if @edit[:new][cname.to_sym][j][:capture] != @edit[:current][cname.to_sym][j][:capture]
-                @changed_id_list.push(host_id)
-              elsif cluster_id == params[:id] || host_id == params[:id] || params[:check_all]
-                @unchanged_id_list.push(host_id)
+          if @edit[:current][:non_cl_hosts].present?
+            positive = 0
+            @edit[:new][:non_cl_hosts].each_with_index do |h, i|
+              positive += 1 if h[:capture]
+              if @edit[:new][:non_cl_hosts][i] != @edit[:current][:non_cl_hosts][i]
+                @changed_id_list.push(["xx-NonCluster_#{@edit[:new][:non_cl_hosts][i][:id]}",
+                                       @edit[:new][:non_cl_hosts][i][:capture]])
+              else
+                @unchanged_id_list.push(["xx-NonCluster_#{@edit[:new][:non_cl_hosts][i][:id]}",
+                                         @edit[:new][:non_cl_hosts][i][:capture]])
               end
             end
-          end
-          unless @edit[:current][:non_cl_hosts].blank?   # if there are any hosts without clusters
-            if @edit[:new][:non_cluster_host_enabled] == @edit[:current][:non_cluster_host_enabled]
-              @unchanged_id_list.push('NonCluster_0')
+            value = positive == @edit[:new][:non_cl_hosts].size
+            if @edit[:new][:non_cl_hosts] != @edit[:current][:non_cl_hosts]
+              @changed_id_list.push(['xx-NonCluster', value])
             else
-              @changed_id_list.push('NonCluster_0')
+              @unchanged_id_list.push(['xx-NonCluster', value])
             end
-            @edit[:new][:non_cluster_host_enabled].each do |h|
-              non_clustered_host_id = "NonCluster_0:Host_#{h[0]}"
-              if @edit[:current][:non_cluster_host_enabled][h[0]] != @edit[:new][:non_cluster_host_enabled][h[0]]
-                @changed_id_list.push(non_clustered_host_id)
-              elsif non_clustered_host_id == params[:id] || params[:check_all]
-                @unchanged_id_list.push(non_clustered_host_id)
+          end
+          @edit[:new][:clusters].each_with_index do |c, i|
+            cluster_id = "xx-#{c[:id]}"
+            if @edit[:new][:clusters][i][:capture] != @edit[:current][:clusters][i][:capture]
+              @changed_id_list.push([cluster_id, @edit[:new][:clusters][i][:capture]])
+            else
+              @unchanged_id_list.push([cluster_id, @edit[:current][:clusters][i][:capture]])
+            end
+            @edit[:new][c[:id]].each_with_index do |host, j|
+              host_id = "#{cluster_id}_#{host[:id]}"
+              if @edit[:new][c[:id]][j][:capture] != @edit[:current][c[:id]][j][:capture]
+                @changed_id_list.push([host_id, @edit[:new][c[:id]][j][:capture]])
+              else
+                @unchanged_id_list.push([host_id, @edit[:current][c[:id]][j][:capture]])
               end
             end
           end
           @changed_id_list.each do |item|
-            page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}',
-                                                  '#{j_str(item)}',
+            if item[1] == 'unsure'
+              page << "miqDynatreeSelectNode('#{j_str(params[:tree_name])}', '#{j_str(item[0])}', false)"
+              page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}',
+                                                  '#{j_str(item[0])}',
+                                                  'miq-dynatree-partsel-blue');"
+            else
+              page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}',
+                                                  '#{j_str(item[0])}',
                                                   'cfme-blue-bold-node');"
+              page << "miqDynatreeSelectNode('#{j_str(params[:tree_name])}', '#{j_str(item[0])}', #{j_str(!!item[1])})"
+            end
           end
           @unchanged_id_list.each do |item|
-            page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}',
-                                                  '#{j_str(item)}',
-                                                  'dynatree-title');"
+            if item[1] == 'unsure'
+              page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}','#{j_str(item[0])}','dynatree-partsel');"
+            else
+              page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}','#{j_str(item[0])}','dynatree-title');"
+              page << "miqDynatreeSelectNode('#{j_str(params[:tree_name])}', '#{j_str(item[0])}', #{j_str(!!item[1])})"
+            end
           end
         end
       end
@@ -167,33 +181,41 @@ module OpsController::Settings::CapAndU
       else
         en_flg = false
       end
-      # cname = "#{c.ext_management_system.name} : " +
-      #         (c.parent_datacenter != nil ? "#{c.parent_datacenter.name} : " : "") +
-      #         "#{c.name}"
       cname = c.name
       @edit[:current][:clusters].push(:name    => cname,
                                       :id      => c.id,
                                       :capture => en_flg) # grab name, id, and capture setting
-      @edit[:current][cname.to_sym] = []
-      hosts.each do |h|
-        host_capture = enabled_host_ids.include?(h.id.to_i)
-        @edit[:current][cname.to_sym].push(:name    => h.name,
-                                           :id      => h.id,
-                                           :capture => host_capture)
+      @edit[:current][c.id] = []
+      hosts.each do |host|
+        host_capture = enabled_host_ids.include?(host.id.to_i)
+        @edit[:current][c.id].push(:name    => host.name,
+                                   :id      => host.id,
+                                   :capture => host_capture)
       end
       flg = true
       count = 0
-      @edit[:current][cname.to_sym].each do |h|
-        unless h[:capture]
+      @edit[:current][c.id].each do |host|
+        unless host[:capture]
           count += 1          # checking if all hosts are unchecked then cluster capture will be false else unsure
-          flg = (count == @edit[:current][cname.to_sym].length) ? false : "unsure"
+          flg = (count == @edit[:current][c.id].length) ? false : "unsure"
         end
         @edit[:current][:clusters][j][:capture] = flg
       end
     end
     @edit[:current][:clusters].sort_by! { |c| c[:name] }
-    build_cl_hosts_tree(@edit[:current][:clusters])
 
+    ##################### Adding Non-Clustered hosts node
+    @edit[:current][:non_cl_hosts] ||= []
+    ExtManagementSystem.in_my_region.each do |e|
+      all = e.non_clustered_hosts
+      all.each do |h|
+        @edit[:current][:non_cl_hosts] << {:name    => h.name,
+                                           :id      => h.id,
+                                           :capture => h.perf_capture_enabled?}
+      end
+    end
+
+    @cluster_tree = TreeBuilderClusters.new(:cluster, :cluster_tree, @sb, true, @edit[:current])
     @edit[:current][:storages] = []
     @st_recs = {}
     Storage.in_my_region.includes(:taggings, :tags, :hosts).select(:id, :name, :store_type, :location)
@@ -205,255 +227,88 @@ module OpsController::Settings::CapAndU
                                       :store_type => s.store_type,
                                       :location   => s.location) # fields we need
     end
-    build_ds_tree(@edit[:current][:storages])
+    @datastore_tree = TreeBuilderDatastores.new(:datastore, :datastore_tree, @sb, true, @edit[:current][:storages])
     @edit[:new] = copy_hash(@edit[:current])
     session[:edit] = @edit
   end
 
   def cu_collection_get_form_vars
     if params[:id]
-      nodetype = params[:id].split(':')
-      node_type = nodetype.length >= 2 ? nodetype[1].split('_') : nodetype[0].split('_')
+      nodetype = params[:id].split('_')
+      node_type = if params[:tree_name] == 'cluster'
+                    if nodetype[0] == 'xx-NonCluster'
+                      nodetype.size == 2 ? ['NonCluster', nodetype[1]] : ['NonCluster']
+                    else
+                      nodetype.size == 2 ? ["Host", nodetype[1]] : ["Cluster", nodetype[0].split('-')[1]]
+                    end
+                  end
     end
     @edit[:new][:all_clusters] = params[:all_clusters] == 'true' if params[:all_clusters]
     @edit[:new][:all_storages] = params[:all_storages] == 'true' if params[:all_storages]
-    if params[:tree_name] == "clhosts_tree"     # User checked/unchecked a cluster tree node
-      if params[:check_all]                         # to handle check/uncheck cluster all checkbox
-        @edit[:new][:clusters].each do |c|                                  # Check each clustered host
-          c[:capture] = params[:check_all] == "true" # if cluster checked/unchecked Set C&U flag for all hosts under it as well
-          @edit[:new][c[:name].to_sym].each do |h|
-            h[:capture] = params[:check_all] == "true" # Set C&U flag depending on if checkbox parm is present
-          end
-        end
-        @edit[:new][:non_cl_hosts].each do |h|                                  # Check each non clustered host
-          @edit[:new][:non_cluster_host_enabled][h[:id].to_s] = params[:check_all] == "true" # Set C&U flag depending on if checkbox parm is present
-        end
-      else
-        @edit[:new][:clusters].each do |c|                                  # Check each cluster
-          if node_type[0] == "Cluster" && node_type[1].to_s == c[:id].to_s
-            c[:capture] = params[:check] == "true" # if cluster checked/unchecked Set C&U flag for all hosts under it as well
-            @edit[:new][c[:name].to_sym].each do |h|
-              h[:capture] = params[:check] == "true" # Set C&U flag depending on if checkbox parm is present
-            end
-          elsif nodetype[0] == "NonCluster_0"
-            process_form_vars_for_non_clustered(node_type)
-          elsif node_type[0] == "Host"
-            @edit[:new][c[:name].to_sym].each do |h|
-              if node_type[1].to_i == h[:id].to_i
-                h[:capture] = params[:check] == "true" # Set C&U flag depending on if checkbox parm is present
-                c[:capture] = false if params[:check] == "0"
-              end
-            end
-          end
-
-          if node_type[0] == "Host"
-            flg = true
-            count = 0
-            @edit[:new][c[:name].to_sym].each do |h|
-              unless h[:capture]
-                count += 1          # checking if all hosts are unchecked then cluster capture will be false else unsure
-                flg = (count == @edit[:new][c[:name].to_sym].length) ? false : "unsure"
-              end
-              c[:capture] = flg
-            end
-          end
-        end
-        # if there are no clusters, handle non-clustered hosts here
-        if @edit[:new][:clusters].blank?
-          @edit[:new][:non_cluster_host_enabled].each do |_h|
-            if nodetype[0] == "NonCluster_0"
-              process_form_vars_for_non_clustered(node_type)
-            end
-          end
-        end
-      end
-    end
-
-    if params[:tree_name] == "cu_datastore_tree" # User checked/unchecked a storage tree node
-      if params[:check_all]          # to handle check/uncheck storage all checkbox
-        @edit[:new][:storages].each do |s|                                        # Check each storage
-          s[:capture] = params[:check_all] == "true" # Set C&U flag depending on if checkbox parm is present
-        end
-      else
-        @edit[:new][:storages].each do |s|                                  # Check each storage
-          if node_type[0] == "Datastore" && node_type[1].to_s == s[:id].to_s
-            s[:capture] = params[:check] == "true" # Set C&U flag depending on if checkbox parm is present
-          end
-        end
-      end
+    if params[:tree_name] == 'datastore'
+      datastore_tree_settings
+    elsif params[:tree_name] == 'cluster'
+      cluster_tree_settings(node_type)
     end
   end
 
-  def build_cl_hosts_tree(clusters)
-    # Build the Cluster & Hosts tree for the C&U data collection
-    cl_hosts = []                          # Array to hold all EMSs
-    clusters.each do |c|  # Go thru all of the EMSs
-      cl_node = {}                        # Build the ems node
-      cl_node[:key] = "Cluster_" + c[:id].to_s
-      cl_node[:title] = c[:name]
-      cl_node[:tooltip] = c[:name]
-      cl_node[:style] = "cursor:default"     # No cursor pointer
-      cl_node[:icon] = ActionController::Base.helpers.image_path("100/cluster.png")
-      cl_kids = []
-      cl_hash = @cl_hash[c[:id]]
-      cluster = cl_hash[:cl_rec]
-      enabled = cl_hash[:ho_enabled]
-      enabled_host_ids = []
-      enabled.each do |cls|
-        if cls.class != EmsCluster
-          enabled_host_ids.push(cls.id) unless enabled_host_ids.include?(cls.id)
+  def cluster_tree_settings(node_type)
+    if params[:check_all] # to handle check/uncheck cluster all checkbox
+      @edit[:new][:clusters].each do |c| # Check each clustered host
+        c[:capture] = params[:check_all] == "true" # if cluster Set C&U flag for all hosts under it as well
+        @edit[:new][c[:id]].each do |h|
+          h[:capture] = params[:check_all] == "true" # Set C&U flag depending on if checkbox parm is present
         end
       end
-      hosts = cl_hash[:ho_enabled] + cl_hash[:ho_disabled]
-      # checking if any of the hosts in above list aren't enabled, show cluster partially checked
-      cl_enabled = enabled_host_ids.length == hosts.length
-      if cl_enabled && !enabled.empty?
-        cl_node[:select] = true
-      elsif enabled.empty?
-        cl_node[:select] = false
-      else
-        cl_node[:select] = -1
-      end
-      hosts.sort_by(&:name).each do |h|
-        temp = {}
-        temp[:key] = "Cluster_" + c[:id].to_s + ":Host_" + h.id.to_s
-        temp[:title] = h.name
-        temp[:tooltip] = _("Host: %{name}") % {:name => h.name}
-        temp[:style] = "cursor:default"      # No cursor pointer
-        temp[:icon] = ActionController::Base.helpers.image_path("100/host.png")
-        temp[:select] = enabled_host_ids.include?(h.id.to_i) ? true : false
-        cl_kids.push(temp)
-      end
-      cl_node[:children] = cl_kids unless cl_kids.empty?
-      cl_hosts.push(cl_node)
-    end
-
-    ##################### Adding Non-Clustered hosts node
-    @edit[:current][:non_cl_hosts] ||= []
-    ExtManagementSystem.in_my_region.each do |e|
-      all = e.non_clustered_hosts
-      all.each do |h|
-        @edit[:current][:non_cl_hosts] << {
-          :name    => h.name,
-          :id      => h.id,
-          :capture => h.perf_capture_enabled?,
-        }
-      end
-    end
-    unless @edit[:current][:non_cl_hosts].blank?
-      h_node = {}                       # Build the ems node
-      h_node[:key] = "NonCluster_0"
-      h_node[:title] = _("Non-clustered Hosts")
-      h_node[:tooltip] = _("Non-clustered Hosts")
-      h_node[:style] = "cursor:default"      # No cursor pointer
-      h_node[:icon] = ActionController::Base.helpers.image_path("100/host.png")
-      count = non_cl_host_capture_state
-      if count.to_i == @edit[:current][:non_cl_hosts].length
-        h_node[:select] = true
-      elsif count.to_i == 0
-        h_node[:select] = false
-      else
-        h_node[:select] = -1
-      end
-      h_kids = []
-      @edit[:current][:non_cl_hosts].each do |h|
-        temp = {}
-        temp[:key] = "NonCluster_0" + ":Host_" + h[:id].to_s
-        temp[:title] = h[:name]
-        temp[:tooltip] = _("Host: %{name}") % {:name => h[:name]}
-        temp[:style] = "cursor:default"      # No cursor pointer
-        temp[:icon] = ActionController::Base.helpers.image_path("100/host.png")
-        temp[:select] = h[:capture] ? true : false
-        h_kids.push(temp)
-      end
-      h_node[:children] = h_kids unless h_kids.empty?
-      cl_hosts.push(h_node)
-    end
-    ##################### Ending Non-Clustered hosts node
-
-    @clhosts_tree = cl_hosts.to_json  # Add ems node array to root of tree
-    session[:tree] = "clhosts"
-    session[:tree_name] = "clhosts_tree"
-  end
-
-  def non_cl_host_capture_state
-    @edit[:current][:non_cluster_host_enabled] = {}
-    i = 0
-    @edit[:current][:non_cl_hosts].each do |h|
-      enabled = h[:capture]
-      i += 1 if enabled
-      @edit[:current][:non_cluster_host_enabled][h[:id].to_s] = enabled unless @edit[:current][:non_cluster_host_enabled].key?(h[:id].to_s)
-    end
-    i
-  end
-
-  def build_ds_tree(storages)
-    # Build the Storages tree for the C&U data collection
-    ds = []                          # Array to hold all Storages
-    # ems_hash = ExtManagementSystem.in_my_region.inject({}) {|h,e| h[e.id] = e.name; h}
-    storages.each do |s|                    # Go thru all of the Storages
-      ds_node = {}                        # Build the storage node
-      ds_node[:key] = "Datastore_" + s[:id].to_s
-      ds_node[:title] = "<b>#{s[:name]}</b> [#{s[:location]}]"
-      ds_node[:tooltip] = "#{s[:name]} [#{s[:location]}]"
-      ds_node[:style] = "cursor:default"     # No cursor pointer
-      ds_node[:icon] = ActionController::Base.helpers.image_path("100/storage.png")
-      ds_node[:select] = s[:capture] == true
-
-      children = []
-      st = @st_recs[s[:id]]
-      st_hosts = []      # Array to hold host/datastore relationship that will be sorted and displayed under each storage node
-      st.hosts.each do |h|
-        # ems_name = ems_hash[h.ems_id]
-        #         cname = "#{ems_name != nil ? "#{ems_name} : " : ""}" +
-        #                 (h.parent_datacenter != nil ? "#{h.parent_datacenter.name} : " : "") +
-        #                 (h.ems_cluster != nil ? "#{h.ems_cluster.name} : " : "") +
-        #                 "#{h.name}"
-        cname = h.name
-        st_hosts.push(:name => cname)
-      end
-
-      st_hosts.sort_by { |h| h[:name].downcase }.each do |h|
-        temp = {}
-        temp[:key] = h[:name]
-        temp[:title] = h[:name]
-        temp[:tooltip] = h[:name]
-        temp[:style] = "cursor:default"      # No cursor pointer
-        temp[:hideCheckbox] = true
-        temp[:icon] = ActionController::Base.helpers.image_path("100/host.png")
-        children.push(temp)
-      end
-
-      ds_node[:children] = children unless children.empty?
-      ds.push(ds_node)
-    end
-
-    @cu_datastore_tree = ds.to_json # Add ems node array to root of tree
-    session[:tree] = "cu_datastore"
-    session[:ds_tree_name] = "cu_datastore_tree"
-  end
-
-  def process_form_vars_for_non_clustered(node_type)
-    if node_type[1].to_i == 0     # dont add if non-clustered node was checked/unchecked
-      if params[:check] == "1"
-        @edit[:new][:non_cluster_host_enabled].each do |h|
-          @edit[:new][:non_cluster_host_enabled][h[0]] = true
-        end
-      else
-        @edit[:new][:non_cluster_host_enabled].each do |h|
-          @edit[:new][:non_cluster_host_enabled][h[0]] = false
-        end
+      @edit[:new][:non_cl_hosts].each do |c|
+        c[:capture] = params[:check_all] == 'true'
       end
     else
-      if params[:check] == "1"
-        @edit[:new][:non_cluster_host_enabled][node_type[1].to_s] = true
-      else
-        @edit[:new][:non_cluster_host_enabled].each do |h|
-          if h[0].to_s == node_type[1].to_s
-            @edit[:new][:non_cluster_host_enabled][node_type[1].to_s] = false
+      if node_type[0] == "NonCluster"
+        if node_type.size == 1
+          @edit[:new][:non_cl_hosts].each do |c|
+            c[:capture] = params[:check] == "true"
+          end
+        else
+          @edit[:new][:non_cl_hosts].find(node_type[1].to_i).first[:capture] = params[:check] == "true"
+        end
+      end
+      @edit[:new][:clusters].each do |c| # Check each cluster
+        if node_type[0] == "Cluster" && node_type[1].to_s == c[:id].to_s
+          c[:capture] = params[:check] == "true" # if cluster Set C&U flag for all hosts under it as well
+          @edit[:new][c[:id]].each do |h|
+            h[:capture] = params[:check] == "true" # Set C&U flag depending on if checkbox parm is present
+          end
+        elsif node_type[0] == "Host"
+          @edit[:new][c[:id]].each do |h|
+            if node_type[1].to_i == h[:id].to_i
+              h[:capture] = params[:check] == "true" # Set C&U flag depending on if checkbox parm is present
+              c[:capture] = params[:check] == "true"
+            end
+          end
+        end
+        if node_type[0] == "Host"
+          flg = true
+          count = 0
+          @edit[:new][c[:id]].each do |h|
+            unless h[:capture]
+              count += 1 # checking if all hosts are unchecked then cluster capture will be false else unsure
+              flg = (count == @edit[:new][c[:id]].length) ? false : "unsure"
+            end
+            c[:capture] = flg
           end
         end
       end
+    end
+  end
+
+  def datastore_tree_settings
+    if params[:check_all] # to handle check/uncheck storage all checkbox
+      @edit[:new][:storages].each do |s| # Check each storage
+        s[:capture] = params[:check_all] == "true" # Set C&U flag depending on if checkbox parm is present
+      end
+    else
+      @edit[:new][:storages].find { |x| x[:id].to_s == params[:id].split('-').last }[:capture] = params[:check] == "true"
     end
   end
 end

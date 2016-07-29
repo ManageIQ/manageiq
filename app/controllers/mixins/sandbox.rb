@@ -43,6 +43,7 @@ module Sandbox
     cb_assignments_tree
     cb_rates_tree
     cb_reports_tree
+    cluster_tree
     configuration_scripts_tree
     condition_tree
     containers_tree
@@ -50,6 +51,7 @@ module Sandbox
     cs_filter_tree
     customization_templates_tree
     datacenter_tree
+    datastore_tree
     db_tree
     df_tree
     diagnostics_tree

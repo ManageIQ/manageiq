@@ -29,18 +29,11 @@
               %br/
               %b= _("Enable Collection by %{clusters}") % {:clusters => cluster_title}
               %br/
-              %input#cl_toggle{:name => "cl_toggle", :onclick => "miqCheckCUAll(this,'#{session[:tree_name]}');", :type => "checkbox"}/
+              %input#cl_toggle{:name => "cl_toggle", :onclick => "miqCheckCUAll(this,'#{@cluster_tree.name}');", :type => "checkbox"}/
               = _("Check All")
-              #clhosts_treebox{:style => "color:#000"}
-              = render(:partial => "layouts/dynatree",
-                  :locals => {:tree_id => "clhosts_treebox",
-                  :tree_name => "clhosts_tree",
-                  :json_tree => @clhosts_tree,
-                  :onselect => "miqOnCheckCUFilters",
-                  :check_url => "/ops/cu_collection_field_changed/",
-                  :three_checks => true,
-                  :exp_tree => true,
-                  :checkboxes => true})
+              :javascript
+                miqDynatreeResetState('#{j_str @cluster_tree.name}');
+              = render(:partial => 'shared/tree', :locals => {:tree => @cluster_tree, :name => @cluster_tree.name})
               %br/
               .note= _("VM data will be collected for VMs under selected %{hosts} only. Data is collected for a %{cluster} and all of its %{hosts} when at least one %{host} is selected.") % {:hosts => title_for_hosts, :cluster => cluster_title, :host => title_for_host}
       .col-md-12.col-lg-6
@@ -61,14 +54,9 @@
               %br/
               %b= _("Enable Collection by Datastore")
               %br/
-              %input#ds_toggle{:name => "ds_toggle", :onclick => "miqCheckCUAll(this,'#{session[:ds_tree_name]}');", :type => "checkbox"}/
+              %input#ds_toggle{:name => "ds_toggle", :onclick => "miqCheckCUAll(this,'#{@datastore_tree.name}');", :type => "checkbox"}/
               = _("Check All")
-              #cu_datastore_treebox{:style => "color:#000"}
-              = render(:partial => "layouts/dynatree",
-                  :locals => {:tree_id => "cu_datastore_treebox",
-                  :tree_name => "cu_datastore_tree",
-                  :json_tree => @cu_datastore_tree,
-                  :onselect => "miqOnCheckCUFilters",
-                  :check_url => "/ops/cu_collection_field_changed/",
-                  :exp_tree => false,
-                  :checkboxes => true})
+              :javascript
+                miqDynatreeResetState('#{j_str @datastore_tree.name}');
+              = render(:partial => 'shared/tree', :locals => {:tree => @datastore_tree, :name => @datastore_tree.name})
+

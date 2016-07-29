@@ -141,6 +141,16 @@ function miqExpandParentNodes(treename, selected_node) {
   node.makeVisible();
 }
 
+function miqDynatreeSelectNode(treename, key, value) {
+    var node;
+    if (_.isString(key)) {
+        node = $("#" + treename + "box").dynatree('getTree').getNodeByKey(key);
+    } else {
+        node = $.ui.dynatree.getNode(key);
+    }
+    node._select(value);
+}
+
 function miqDynatreeNodeAddClass(treename, key, klass) {
   var node;
   if (_.isString(key)) {
