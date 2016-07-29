@@ -715,9 +715,6 @@ function miqBuildChartMenuEx(col, row, _value, category, series, chart_set, char
 
 // Handle chart context menu clicks
 function miqChartMenuClick(itemId) {
-  // remove the event handler that closes the menu
-  $(document).off('click.close_popup');
-
   if ($('#menu_div').length) {
     $('#menu_div').hide();
   }
