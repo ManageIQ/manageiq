@@ -1672,6 +1672,8 @@ class ApplicationController < ActionController::Base
         javascript_redirect edit_ems_infra_path(params[:id])
       elsif params[:pressed] == "ems_container_edit" && params[:id]
         javascript_redirect edit_ems_container_path(params[:id])
+      elsif %w(arbitration_profile_edit arbitration_profile_new).include?(params[:pressed]) && params[:id]
+        javascript_redirect :action => @refresh_partial, :id => params[:id], :show => @redirect_id
       else
         javascript_redirect :action => @refresh_partial, :id => @redirect_id
       end
@@ -2393,6 +2395,10 @@ class ApplicationController < ActionController::Base
     false
   end
   public :restful?
+
+  def angular_app?
+    false
+  end
 
   def determine_record_id_for_presenter
     if @in_a_form

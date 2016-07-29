@@ -393,16 +393,16 @@
       :description: Add a Cloud Provider
       :feature_type: admin
       :identifier: ems_cloud_new
-    - :name: Add Arbitartion Profile
-      :description: Add Arbitartion Profile
+    - :name: Add Arbitration Profile
+      :description: Add Arbitration Profile
       :feature_type: admin
       :identifier: arbitration_profile_new
-    - :name: Edit Arbitartion Profile
-      :description: Edit Arbitartion Profile
+    - :name: Edit Arbitration Profile
+      :description: Edit Arbitration Profile
       :feature_type: admin
       :identifier: arbitration_profile_edit
-    - :name: Remove Arbitartion Profile
-      :description: Remove Arbitartion Profile
+    - :name: Remove Arbitration Profile
+      :description: Remove Arbitration Profile
       :feature_type: admin
       :identifier: arbitration_profile_delete
 

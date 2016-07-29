@@ -1,0 +1,108 @@
+%form.form-horizontal#form_div{"name" => "angularForm"}
+  %div
+    %div
+      .form-group{"ng-class" => "{'has-error': angularForm.name.$invalid}"}
+  %div
+    %div
+      .form-group{"ng-class" => "{'has-error': angularForm.name.$invalid}"}
+        %label.col-md-2.control-label{"for" => "textInput-markup"}
+          = _("Name")
+        .col-md-8
+          %input.form-control{"type"        => "text",
+                              "id"          => "name",
+                              "name"        => "name",
+                              "ng-model"    => "arbitrationProfileModel.name",
+                              "maxlength"   => 20,
+                              "required"    => "",
+                              "checkchange" => "",
+                              "auto-focus"  => ""}
+          %span.help-block{"ng-show" => "angularForm.name.$error.required"}
+            = _("Required")
+      .form-group{"ng-class" => "{'has-error': angularForm.description.$invalid}"}
+        %label.col-md-2.control-label{"for" => "textInput-markup"}
+          = _("Description")
+        .col-md-8
+          %input.form-control{"type"        => "text",
+                              "id"          => "description",
+                              "name"        => "description",
+                              "ng-model"    => "arbitrationProfileModel.description",
+                              "maxlength"   => 50,
+                              "required"    => "",
+                              "checkchange" => ""}
+          %span.help-block{"ng-show" => "angularForm.description.$error.required"}
+            = _("Required")
+      .form-group
+        %label.col-md-2.control-label{"for" => "availability_zone_id"}
+          = _('Key Pair')
+        .col-md-8
+          %select{"ng-model"    => "arbitrationProfileModel.authentication_id",
+                  "name"        => "authentication_id",
+                  "checkchange" => ""}
+            %option{"value" => ""}
+              = "<#{_('Choose')}>"
+            %option{"ng-repeat"   => "authentication in arbitrationProfileModel.authentications track by $index",
+                    "value"       => "{{authentication.id}}"}
+              {{authentication.name}}
+      .form-group
+        %label.col-md-2.control-label{"for" => "availability_zone_id"}
+          = _('Availability Zone')
+        .col-md-8
+          %select{"ng-model"    => "arbitrationProfileModel.availability_zone_id",
+                  "name"        => "availability_zone_id",
+                  "checkchange" => ""}
+            %option{"value" => ""}
+              = "<#{_('Choose')}>"
+            %option{"ng-repeat"   => "availability_zone in arbitrationProfileModel.availability_zones track by $index",
+                    "value"       => "{{availability_zone.id}}"}
+              {{availability_zone.name}}
+      .form-group
+        %label.col-md-2.control-label{"for" => "cloud_network_id"}
+          = _('Cloud Network')
+        .col-md-8
+          %select{"ng-model"    => "arbitrationProfileModel.cloud_network_id",
+                  "name"        => "cloud_network_id",
+                  "checkchange" => ""}
+            %option{"value" => ""}
+              = "<#{_('Choose')}>"
+            %option{"ng-repeat"   => "cloud_network in arbitrationProfileModel.cloud_networks track by $index",
+                    "value"       => "{{cloud_network.id}}"}
+              {{cloud_network.name}}
+      .form-group
+        %label.col-md-2.control-label{"for" => "cloud_subnet_id"}
+          = _('Cloud Subnet')
+        .col-md-8
+          %select{"ng-model"    => "arbitrationProfileModel.cloud_subnet_id",
+                  "name"        => "cloud_subnet_id",
+                  "checkchange" => ""}
+            %option{"value" => ""}
+              = "<#{_('Choose')}>"
+            %option{"ng-repeat"   => "cloud_subnet in arbitrationProfileModel.cloud_subnets track by $index",
+                    "value"       => "{{cloud_subnet.id}}"}
+              {{cloud_subnet.name}}
+      .form-group
+        %label.col-md-2.control-label{"for" => "flavor_id"}
+          = _('Flavor')
+        .col-md-8
+          %select{"ng-model"    => "arbitrationProfileModel.flavor_id",
+                  "name"        => "flavor_id",
+                  "checkchange" => ""}
+            %option{"value" => ""}
+              = "<#{_('Choose')}>"
+            %option{"ng-repeat"   => "flavor in arbitrationProfileModel.flavors track by $index",
+                    "value"       => "{{flavor.id}}"}
+              {{flavor.name}}
+      .form-group
+        %label.col-md-2.control-label{"for" => "availability_zone_id"}
+          = _('Security Group')
+        .col-md-8
+          %select{"ng-model"    => "arbitrationProfileModel.security_group_id",
+                  "name"        => "security_group_id",
+                  "checkchange" => ""}
+            %option{"value" => ""}
+              = "<#{_('Choose')}>"
+            %option{"ng-repeat"   => "security_group in arbitrationProfileModel.security_groups track by $index",
+                    "value"       => "{{security_group.id}}"}
+              {{security_group.name}}
+          :javascript
+            miqInitSelectPicker();
+  %form-buttons

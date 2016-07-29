@@ -46,15 +46,6 @@ class ApplicationHelper::Toolbar::EmsCloudsCenter < ApplicationHelper::Toolbar::
           :confirm   => N_("Warning: The selected Cloud Providers and ALL related components will be permanently removed!"),
           :enabled   => false,
           :onwhen    => "1+"),
-        separator,
-        button(
-          :arbitration_profile_new,
-          'pficon pficon-edit fa-lg',
-          N_('Add a new Arbitration Profile to Cloud Provider'),
-          N_('Add a new Arbitration Profile to Cloud Provider'),
-          :url_parms => "main_div",
-          :enabled   => false,
-          :onwhen    => "1"),
       ]
     ),
   ])

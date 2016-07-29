@@ -1632,6 +1632,27 @@ function miqHideSearchClearButton() {
   });
 }
 
+function miqSaveTreeDiv() {
+  var leftCell = $('#default_left_cell').html();
+  if (leftCell != undefined) {
+    localStorage.setItem("default_left_cell", leftCell);
+  }
+}
+
+function miqLoadSavedTreeDiv() {
+  $('#default_left_cell').html(localStorage.getItem("default_left_cell"));
+  $('#' + localStorage.getItem("left_cell_tree") + '_div').prop('disabled', true);
+  miqDimDiv('#' + localStorage.getItem("left_cell_tree") + '_div', true);
+}
+
+function miqSetLeftCellTree(tree) {
+  localStorage.setItem("left_cell_tree", tree);
+}
+
+function miqSetAngularPagingDivForButtons() {
+  $('#form_buttons_div').html("<div id='angular_paging_div_buttons'></div>");
+}
+
 function toggle_expansion(link) {
   link = $(link);
   link.find("i").toggleClass("fa-angle-right fa-angle-down");
@@ -1723,4 +1744,11 @@ function miqScrollToSelected(div_name) {
   if (rowpos) {
     $('#' + div_name).scrollTop(rowpos.top);
   }
+}
+
+function miqUncompressedId(id) {
+  if (id.match(/r/)) {
+    return sprintf("%s%012d", id.split('r')[0], id.split('r')[1]);
+  }
+  return id;
 }

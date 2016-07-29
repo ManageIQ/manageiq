@@ -1,0 +1,5 @@
+= render :partial => "layouts/flash_msg"
+%div{"ui-view" => ""}
+
+:javascript
+  ManageIQ.angular.app.value('arbitrationProfileFormId', '#{@arbitration_profile.id || "new"}');

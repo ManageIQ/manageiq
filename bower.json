@@ -21,6 +21,7 @@
     "angular-animate": "^1.5.3",
     "angular-mocks": "^1.5.3",
     "angular-patternfly-sass": "3.7.0",
+    "angular-ui-router": "^0.2.18",
     "angular-sanitize": "^1.5.3",
     "bootstrap-filestyle": "^1.2.1",
     "bootstrap-hover-dropdown": "^2.0.11",

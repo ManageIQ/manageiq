@@ -392,6 +392,8 @@ module EmsCommon
       @refresh_div = "main_div" # Default div for button.rjs to refresh
       redirect_to :action => "new" if params[:pressed] == "new"
       deleteemss if params[:pressed] == "#{@table_name}_delete"
+      arbitration_profile_edit if params[:pressed] == "arbitration_profile_new"
+      arbitration_profile_edit if params[:pressed] == "arbitration_profile_edit"
       arbitration_profile_delete if params[:pressed] == "arbitration_profile_delete"
       refreshemss if params[:pressed] == "#{@table_name}_refresh"
       #     scanemss if params[:pressed] == "scan"
@@ -449,7 +451,7 @@ module EmsCommon
 
     if !@flash_array.nil? && params[:pressed] == "#{@table_name}_delete" && @single_delete
       javascript_redirect :action => 'show_list', :flash_msg => @flash_array[0][:message] # redirect to build the retire screen
-    elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
+    elsif params[:pressed].ends_with?("_edit") || ["arbitration_profile_new", "#{pfx}_miq_request_new", "#{pfx}_clone",
                                                    "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
       render_or_redirect_partial(pfx)
     else
@@ -488,6 +490,21 @@ module EmsCommon
     arbitration_profiles
   end
 
+  def arbitration_profile_edit
+    assert_privileges("arbitration_profile_edit")
+    checked = find_checked_items
+    checked[0] = params[:show] if checked.blank? && params[:show]
+    @arbitration_profile = checked[0] ? find_by_id_filtered(ArbitrationProfile, from_cid(checked[0])) : ArbitrationProfile.new
+    @refresh_partial = "arbitration_profile_edit"
+    @redirect_id = @arbitration_profile.try(:id) || nil
+    @in_a_form = true
+    @title = _("Arbitration Profiles")
+  end
+
+  def angular_app?
+    true
+  end
+
   def provider_documentation_url
     "http://manageiq.org/documentation/getting-started/#adding-a-provider"
   end
@@ -516,7 +533,7 @@ module EmsCommon
       drop_breadcrumb(:name => _("%{name} (Arbitration Profiles)") % {:name => @record.name},
                       :url  => "/#{@db}/arbitration_profiles/#{@record.id}?page=#{@current_page}")
       drop_breadcrumb(:name => @item.name, :url => "/#{@db}/show/#{@record.id}?show=#{@item.id}")
-      @view = get_db_view(ArbitrationProfile)         # Instantiate the MIQ Report view object
+      @view = get_db_view(ArbitrationProfile) # Instantiate the MIQ Report view object
       show_item
     end
   end

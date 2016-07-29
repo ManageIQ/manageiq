@@ -89,6 +89,7 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
   gem "lodash-rails",                 "~>3.10.0"
   gem "sass-rails"
   gem "sprockets-es6",                "~>0.9.0",  :require => "sprockets/es6"
+  gem "angular-rails-templates"
 
   # Modified gems (forked on Github)
   gem "jquery-rjs",                   "=0.1.1",                       :git => "git://github.com/amatsuda/jquery-rjs.git", :ref => "1288c09"

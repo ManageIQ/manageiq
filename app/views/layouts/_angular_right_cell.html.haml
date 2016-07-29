@@ -1,0 +1,7 @@
+= render :partial => right_cell_partial
+
+:javascript
+  var leftCell = $('#default_left_cell').html();
+  if (leftCell != undefined) {
+    localStorage.setItem("default_left_cell", leftCell);
+  }
