@@ -409,10 +409,10 @@ Methods updated/added: %{method_stats}") % stat_options)
 
   def get_session_data
     @layout  = "miq_ae_tools"
-    @resolve = session[:resolve] if session[:resolve]
+    @resolve = session[:resolve_tools] if session[:resolve_tools]
   end
 
   def set_session_data
-    session[:resolve] = @resolve if @resolve
+    session[:resolve_tools] = @resolve if @resolve
   end
 end
