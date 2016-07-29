@@ -1,4 +1,5 @@
 require 'rbac/filterer'
+require 'rbac/authorizer'
 
 module Rbac
   def self.search(*args)

@@ -138,27 +138,11 @@ class User < ApplicationRecord
   alias_method :miq_group_description, :ldap_group
 
   def role_allows?(options = {})
-    return false if miq_user_role.nil?
-    return true if miq_user_role.allows?(options)
-
-    ident = options[:identifier]
-    parent = MiqProductFeature.feature_parent(ident)
-    return false if parent.nil?
-
-    if MiqProductFeature.feature_hidden(ident)
-      # return true for common features that are hidden and are under hidden parent
-      # return true if any visible siblings are entitled
-      if MiqProductFeature.feature_hidden(parent)
-        true
-      else
-        miq_user_role.allows_any?(:identifiers => MiqProductFeature.feature_children(parent))
-      end
-    end
+    Rbac::Authorizer.new.user_role_allows?(self, options)
   end
 
   def role_allows_any?(options = {})
-    return false if miq_user_role.nil?
-    miq_user_role.allows_any?(options)
+    Rbac::Authorizer.new.user_role_allows_any?(self, options)
   end
 
   def miq_user_role_name

@@ -133,12 +133,23 @@ module ApplicationHelper
 
   # Check role based authorization for a UI task
   def role_allows(**options)
+    if options[:feature].nil?
+      $log.debug("Auth failed - no feature was specified (required)")
+      return false
+    end
+
     Rbac::Authorizer.role_allows(options.merge(user: User.current_user)) rescue false
   end
   module_function :role_allows
   public :role_allows
 
+  # TODO: This only has one caller. Is this really necessary?
   def role_allows!(**options)
+    if options[:feature].nil?
+      $log.debug("Auth failed - no feature was specified (required)")
+      return false
+    end
+
     Rbac::Authorizer.role_allows(options.merge(user: User.current_user))
   end
   module_function :role_allows!
