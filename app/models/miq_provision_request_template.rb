@@ -1,8 +1,10 @@
 class MiqProvisionRequestTemplate < MiqProvisionRequest
   def create_tasks_for_service(service_task, parent_svc)
     template_service_resource = ServiceResource.find_by_id(service_task.options[:service_resource_id])
-    scaling_min = template_service_resource.try(:scaling_min) || 1
+    scaling_min = number_of_vms(service_task, parent_svc, template_service_resource)
+    scaling_min ||= template_service_resource.try(:scaling_min) || 1
 
+    _log.info("create_tasks_for_service ID #{service_task.id} SCALING : #{scaling_min}")
     scaling_min.times.collect do |idx|
       create_request_task(idx) do |req_task|
         req_task.miq_request_id = service_task.miq_request.id
@@ -47,5 +49,38 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
       :owner_first_name => user.first_name,
       :owner_last_name  => user.last_name
     }
+  end
+
+  def number_of_vms(service_task, parent_svc, template_service_resource)
+    vm_count = nil
+    if template_service_resource
+      parent_task = get_parent_task(service_task)
+      root_svc = get_root_svc(parent_svc)
+      value = number_of_vms_from_dialog(root_svc, parent_task) if root_svc && parent_task
+      vm_count = value.to_i unless value.blank?
+      resource = template_service_resource.resource
+      vm_count ||= resource.get_option(:number_of_vms) if resource.respond_to?(:get_option)
+    end
+    vm_count
+  end
+
+  def get_root_svc(parent_svc)
+    return nil unless parent_svc
+    parent_svc.parent ? parent_svc.parent : parent_svc
+  end
+
+  def get_parent_task(service_task)
+    MiqRequestTask.find_by_id(service_task.options[:parent_task_id])
+  end
+
+  def number_of_vms_from_dialog(root_svc, parent_task)
+    value = root_svc.options[:dialog]["dialog_option_0_number_of_vms"]
+    if parent_task.service_resource
+      index = parent_task.service_resource.provision_index
+      value ||= root_svc.options[:dialog]["dialog_option_#{index + 1}_number_of_vms"]
+    end
+    value ||= root_svc.options[:dialog]["dialog_option_number_of_vms"]
+    value ||= root_svc.options[:dialog]["dialog_number_of_vms"]
+    value
   end
 end
