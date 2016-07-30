@@ -34,4 +34,8 @@ FactoryGirl.define do
     auth_key    nil
     status      "SomeMockedStatus"
   end
+
+  factory :authentication_internal, :parent => :authentication, :class => AuthInternalUseridPassword do
+    type        "AuthInternalUseridPassword"
+  end
 end

@@ -28,6 +28,17 @@ describe Authentication do
     it "should store encrypted password" do
       expect(Authentication.where(:password => pwd_plain).count).to eq(0)
       expect(auth.reload.password).to eq(pwd_plain)
+      expect(auth.password_digest).to be_nil
+    end
+  end
+
+  context "internal user password" do
+    let(:pwd_plain) { "smartvm" }
+    let(:pwd_encrypt) { MiqPassword.encrypt(pwd_plain) }
+    let(:auth) { FactoryGirl.create(:authentication_internal, :password => pwd_plain) }
+
+    it "should store the bcrypt hash in password digest" do
+      expect(BCrypt::Password.new(auth.password_digest)).to eq(pwd_plain)
     end
   end
 end
