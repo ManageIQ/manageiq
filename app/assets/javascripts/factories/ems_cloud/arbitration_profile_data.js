@@ -1,7 +1,6 @@
 ManageIQ.angular.app.factory('arbitrationProfileDataFactory', ['$http', function($http) {
   var factoryService = {
     getArbitrationProfileData: function(ems_id, id) {
-      alert("in app/assets/javascripts/factories/ems_cloud/arbitration_profile_data.js")
       if(angular.isDefined(id)) {
         var promise = $http({
           method: 'GET',

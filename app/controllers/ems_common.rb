@@ -463,33 +463,6 @@ module EmsCommon
     end
   end
 
-  def arbitration_profile_delete
-    assert_privileges(params[:pressed])
-    profiles = []
-    if params[:miq_grid_checks] # showing a list
-      profiles = find_checked_items
-      if profiles.empty?
-        add_flash(_("No %{record} were selected for deletion") % {:record => ui_lookup(:table => "ArbitrationProfile")}, :error)
-      end
-      process_elements(profiles, ArbitrationProfile, "destroy") unless profiles.empty?
-      add_flash(_("Delete initiated for %{count_model} from the CFME Database") %
-                  {:count_model => pluralize(profiles.length, ui_lookup(:table => "ArbitrationProfile"))}) if @flash_array.nil?
-    else # showing 1 item
-      if params[:show].nil? || ArbitrationProfile.find_by_id(from_cid(params[:show])).nil?
-        add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => "ArbitrationProfile")}, :error)
-      else
-        profiles.push(from_cid(params[:show]))
-      end
-      process_elements(profiles, ArbitrationProfile, "destroy") unless profiles.empty?
-      @single_delete = true unless flash_errors?
-      add_flash(_("The selected %{record} was deleted") %
-                  {:record => ui_lookup(:tables => "ArbitrationProfile")}) if @flash_array.nil?
-      params.delete(:show) unless flash_errors?
-    end
-    @_params[:db] = "ems_cloud"
-    arbitration_profiles
-  end
-
   def arbitration_profile_edit
     assert_privileges("arbitration_profile_edit")
     checked = find_checked_items
@@ -539,6 +512,33 @@ module EmsCommon
   end
 
   private ############################
+
+  def arbitration_profile_delete
+    assert_privileges("arbitration_profile_delete")
+    profiles = []
+    if params[:miq_grid_checks] # showing a list
+      profiles = find_checked_items
+      if profiles.empty?
+        add_flash(_("No %{record} were selected for deletion") % {:record => ui_lookup(:table => "ArbitrationProfile")}, :error)
+      end
+      process_elements(profiles, ArbitrationProfile, "destroy") unless profiles.empty?
+      add_flash(_("Delete initiated for %{count_model} from the CFME Database") %
+                  {:count_model => pluralize(profiles.length, ui_lookup(:table => "ArbitrationProfile"))}) if @flash_array.nil?
+    else # showing 1 item
+      if params[:show].nil? || ArbitrationProfile.find_by_id(from_cid(params[:show])).nil?
+        add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => "ArbitrationProfile")}, :error)
+      else
+        profiles.push(from_cid(params[:show]))
+      end
+      process_elements(profiles, ArbitrationProfile, "destroy") unless profiles.empty?
+      @single_delete = true unless flash_errors?
+      add_flash(_("The selected %{record} was deleted") %
+                  {:record => ui_lookup(:tables => "ArbitrationProfile")}) if @flash_array.nil?
+      params.delete(:show) unless flash_errors?
+    end
+    @_params[:db] = "ems_cloud"
+    arbitration_profiles
+  end
 
   def set_verify_status
     edit_new = @edit[:new]

@@ -148,7 +148,10 @@ module EmsCloudHelper::TextualSummary
     if num > 0
       h[:title] = n_("Show Arbitration Profiles for this Provider",
                      "Show Arbitration Profiles for this Provider", num)
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'arbitration_profiles', :id => @record, :db => controller.controller_name)
+      h[:link]  = url_for(:controller => controller.controller_name,
+                          :action     => 'arbitration_profiles',
+                          :id         => @record,
+                          :db         => controller.controller_name)
     end
     h
   end
