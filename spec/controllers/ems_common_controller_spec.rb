@@ -1,14 +1,3 @@
-def set_up_controller_for_show_method(controller, ems_id)
-  controller.instance_variable_set(:@_params, {:display => "download_pdf", :id => ems_id})
-  controller.instance_variable_set(:@settings, :views => {:vm_summary_cool => "summary"})
-  allow(controller).to receive_messages(:record_no_longer_exists? => false)
-  allow(controller).to receive(:drop_breadcrumb)
-  allow(controller).to receive(:disable_client_cache)
-  allow(controller).to receive_messages(:render_to_string => "")
-  allow(controller).to receive(:send_data)
-  allow(PdfGenerator).to receive(:pdf_from_string).with('', 'pdf_summary').and_return("")
-end
-
 describe EmsCloudController do
   context "::EmsCommon" do
     context "#get_form_vars" do
@@ -163,8 +152,9 @@ describe EmsCloudController do
 
     context "download pdf file" do
       before :each do
-        set_up_controller_for_show_method(controller, ems_openstack.id)
-        controller.send(:show)
+        set_user_privileges
+        allow(PdfGenerator).to receive(:pdf_from_string).with('', 'pdf_summary').and_return("")
+        get :show, :id => ems_openstack.id, :display => "download_pdf"
       end
 
       it "should not contains string 'ManageIQ' in the title of summary report" do
@@ -258,9 +248,9 @@ describe EmsContainerController do
 
       context "download pdf file" do
         before :each do
-          controller.instance_variable_set(:@table_name, "ems_container")
-          set_up_controller_for_show_method(controller, ems_kubernetes_container.id)
-          controller.send(:show)
+          set_user_privileges
+          allow(PdfGenerator).to receive(:pdf_from_string).with('', 'pdf_summary').and_return("")
+          get :show, :id => ems_kubernetes_container.id, :display => "download_pdf"
         end
 
         it "should not contains string 'ManageIQ' in the title of summary report" do
@@ -307,9 +297,9 @@ describe EmsInfraController do
 
     context "download pdf file" do
       before :each do
-        controller.instance_variable_set(:@table_name, "ems_infra")
-        set_up_controller_for_show_method(controller, ems_openstack_infra.id)
-        controller.send(:show)
+        set_user_privileges
+        allow(PdfGenerator).to receive(:pdf_from_string).with('', 'pdf_summary').and_return("")
+        get :show, :id => ems_openstack_infra.id, :display => "download_pdf"
       end
 
       it "should not contains string 'ManageIQ' in the title of summary report" do

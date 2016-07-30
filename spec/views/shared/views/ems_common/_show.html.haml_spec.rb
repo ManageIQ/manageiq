@@ -1,9 +1,10 @@
-describe "ems_cloud/show.html.haml" do
+describe "shared/views/ems_common/show" do
   let(:zone) { FactoryGirl.create(:zone) }
   let(:ems_cloud) { FactoryGirl.create(:ems_openstack, :hostname => '1.1.1.1', :zone => zone) }
   let(:action) { 'index' }
 
   before do
+    view.extend EmsCloudHelper::TextualSummary
     allow(MiqServer).to receive(:my_zone).and_return("default")
     creds = {}
     creds[:amqp] = {:userid => "amqp_user", :password => "amqp_password"}
