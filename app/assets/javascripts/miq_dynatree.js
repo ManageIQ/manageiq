@@ -386,11 +386,7 @@ function miqGetChecked(node, treename) {
     }
   }
   count = selectedKeys.length;
-  if (miqDomElementExists('center_tb')) {
-    miqSetButtons(count, "center_tb");
-  } else {
-    miqSetButtons(count, "center_buttons_div");
-  }
+  miqSetButtons(count, "center_tb");
   if (count) {
     miqJqueryRequest(ManageIQ.dynatree.checkUrl + '?all_checked=' + selectedKeys, {beforeSend: true, complete: true});
   }
@@ -408,11 +404,7 @@ function miqCheckAll(cb, treename) {
   });
 
   var count = selectedKeys.length;
-  if (miqDomElementExists('center_tb')) {
-    miqSetButtons(count, "center_tb");
-  } else if (miqDomElementExists('center_buttons_div')) {
-    miqSetButtons(count, "center_buttons_div");
-  }
+  miqSetButtons(count, "center_tb");
 
   if (count > 0) {
     var url = ManageIQ.dynatree.checkUrl + '?check_all=' + cb.checked + '&all_checked=' + selectedKeys;

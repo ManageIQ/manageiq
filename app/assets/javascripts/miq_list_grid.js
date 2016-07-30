@@ -65,11 +65,7 @@ function miqGridOnCheck(elem, button_div, grid) {
   var crows = miqGridGetCheckedRows(grid);
   ManageIQ.gridChecks = crows;
 
-  if (miqDomElementExists('center_tb')) {
-    miqSetButtons(crows.length, "center_tb");
-  } else {
-    miqSetButtons(crows.length, "center_buttons_div");
-  }
+  miqSetButtons(crows.length, "center_tb");
 }
 
 // Handle sort
