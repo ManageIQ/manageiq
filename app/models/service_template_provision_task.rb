@@ -145,6 +145,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
         :method_name => 'deliver',
         :args        => [args],
         :role        => 'automate',
+        :queue_name  => 'automate',
         :zone        => nil,
         :task_id     => "#{self.class.name.underscore}_#{id}"
       )

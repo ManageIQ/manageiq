@@ -144,6 +144,7 @@ class MiqRequestTask < ApplicationRecord
         :method_name => 'deliver',
         :args        => [args],
         :role        => 'automate',
+        :queue_name  => 'automate',
         :zone        => options.fetch(:miq_zone, zone),
         :task_id     => my_task_id,
       )

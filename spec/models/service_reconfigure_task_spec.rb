@@ -87,6 +87,7 @@ describe ServiceReconfigureTask do
           :method_name => 'deliver',
           :args        => [automate_args],
           :role        => 'automate',
+          :queue_name  => 'automate',
           :zone        => nil,
           :task_id     => "service_reconfigure_task_#{task.id}")
         task.deliver_to_automate

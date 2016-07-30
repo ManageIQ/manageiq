@@ -53,9 +53,10 @@ class ResourceAction < ApplicationRecord
   def deliver_to_automate_from_dialog(dialog_hash_values, target, user)
     _log.info("Queuing <#{self.class.name}:#{id}> for <#{resource_type}:#{resource_id}>")
     MiqAeEngine.deliver_queue(automate_queue_hash(target, dialog_hash_values[:dialog], user),
-                              :zone     => target.try(:my_zone),
-                              :priority => MiqQueue::HIGH_PRIORITY,
-                              :task_id  => "#{self.class.name.underscore}_#{id}")
+                              :zone       => target.try(:my_zone),
+                              :priority   => MiqQueue::HIGH_PRIORITY,
+                              :queue_name => 'automate',
+                              :task_id    => "#{self.class.name.underscore}_#{id}")
   end
 
   def deliver_to_automate_from_dialog_field(dialog_hash_values, target, user)

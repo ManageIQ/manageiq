@@ -22,6 +22,7 @@ describe ResourceAction do
         :method_name => 'deliver',
         :args        => [q_args],
         :role        => 'automate',
+        :queue_name  => 'automate',
         :zone        => zone_name,
         :priority    => MiqQueue::HIGH_PRIORITY,
         :task_id     => "#{ra.class.name.underscore}_#{ra.id}",
