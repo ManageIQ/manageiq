@@ -946,7 +946,7 @@ module ApplicationHelper
   #     :table/tables --- string  - name of entity
   #                               - determines singular/plural case
   #     :link_text    --- string  - to override calculated link text
-  #     :display      --- string  - FIXME
+  #     :display      --- string  - type of display (timeline/performance/main/....)
   #     :[count]      --- fixnum  - number of entities, must be set if :tables
   #                                 is used
   #   args to construct URL
