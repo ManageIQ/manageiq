@@ -1728,14 +1728,14 @@ describe ApplicationHelper do
     end
 
     it 'disables the add new iso datastore button when no EMSes are available' do
-      allow(ManageIQ::Providers::Redhat::InfraManager)
-        .to(receive(:any_without_datastores?))
+      expect(ManageIQ::Providers::Redhat::InfraManager)
+        .to(receive(:any_without_iso_datastores?))
         .and_return(false)
 
       @layout = "pxe"
       @id = "iso_datastore_new"
 
-      expect(subject).to be_truthy
+      expect(subject).to match(/No.*are available/)
     end
 
     context "when record class = AssignedServerRole" do

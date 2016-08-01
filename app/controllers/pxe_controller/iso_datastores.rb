@@ -282,7 +282,7 @@ module PxeController::IsoDatastores
     @edit[:new][:ems_id] = @isd.ext_management_system ? @isd.ext_management_system.id : nil
 
     @edit[:emses] = ManageIQ::Providers::Redhat::InfraManager
-                    .without_datastores
+                    .without_iso_datastores
                     .order(:name)
                     .pluck(:name, :id)
 
