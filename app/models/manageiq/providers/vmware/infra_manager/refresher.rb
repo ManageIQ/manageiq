@@ -90,7 +90,7 @@ module ManageIQ::Providers
         [:virtualAppsByMor,             :vapp]
       ]
 
-      def get_vc_data(ems)
+      def get_vc_data(ems, accessors = VC_ACCESSORS, sel_spec_list = [])
         log_header = format_ems_for_logging(ems)
 
         cleanup_callback = proc { @vc_data = nil }
@@ -98,9 +98,16 @@ module ManageIQ::Providers
         retrieve_from_vc(ems, cleanup_callback) do
           @vc_data = Hash.new { |h, k| h[k] = {} }
 
-          VC_ACCESSORS.each do |acc, type|
+          accessors.each do |accessor, type|
             _log.info("#{log_header} Retrieving #{type.to_s.titleize} inventory...")
-            inv_hash = @vi.send(acc, :"ems_refresh_#{type}")
+            if sel_spec_list.any?
+              inv_hash = sel_spec_list.each_with_object({}) do |m, h|
+                data = @vi.send(accessor, m)
+                h[m] = data unless data.nil?
+              end
+            else
+              inv_hash = @vi.send(accessor, :"ems_refresh_#{type}")
+            end
             EmsRefresh.log_inv_debug_trace(inv_hash, "#{_log.prefix} #{log_header} inv_hash:")
 
             @vc_data[type] = inv_hash unless inv_hash.blank?
@@ -243,31 +250,6 @@ module ManageIQ::Providers
         :vapp        => :virtualAppByMor
       }
 
-      def get_vc_data_by_mor(ems, type, mor)
-        log_header = format_ems_for_logging(ems)
-
-        accessor = VC_ACCESSORS_BY_MOR[type]
-        raise ArgumentError, "Invalid type" if accessor.nil?
-
-        mor = [mor] unless mor.kind_of?(Array)
-
-        cleanup_callback = proc { @vc_data = nil }
-
-        retrieve_from_vc(ems, cleanup_callback) do
-          @vc_data = Hash.new { |h, k| h[k] = {} } if @vc_data.nil?
-
-          _log.info("#{log_header} Retrieving #{type.to_s.titleize} inventory...")
-          inv_hash = mor.each_with_object({}) do |m, h|
-            data = @vi.send(accessor, m)
-            h[m] = data unless data.nil?
-          end
-          EmsRefresh.log_inv_debug_trace(inv_hash, "#{_log.prefix} #{log_header} inv_hash:")
-
-          @vc_data[type] = inv_hash unless inv_hash.blank?
-          _log.info("#{log_header} Retrieving #{type.to_s.titleize} inventory...Complete - Count: [#{inv_hash.blank? ? 0 : inv_hash.length}]")
-        end
-      end
-
       #
       # Inventory refresh for Reconfigure VM Task event
       #
@@ -289,9 +271,11 @@ module ManageIQ::Providers
         dummy, timings = Benchmark.realtime_block(:total_time) do
           Benchmark.realtime_block(:get_vc_data_total) do
             begin
-              get_vc_data_by_mor(ems, :vm, vm.ems_ref_obj)
-              get_vc_data_by_mor(ems, :host, vm.host.ems_ref_obj)
-              get_vc_data_by_mor(ems, :storage, vm.host.storages.collect(&:ems_ref_obj))
+              accessors = [:vm, :host, :storage].each_with_object([]) do |type, m|
+                m.push([VC_ACCESSORS_BY_MOR[type], type])
+              end
+              sel_spec_list = [vm.ems_ref_obj, vm.host.ems_ref_obj, vm.host.storages.collect(&:ems_ref_obj)]
+              get_vc_data(ems, accessors, sel_spec_list)
             ensure
               disconnect_from_ems(ems)
             end
