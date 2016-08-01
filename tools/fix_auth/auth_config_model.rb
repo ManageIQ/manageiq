@@ -35,12 +35,32 @@ module FixAuth
       def recrypt(old_value, options = {})
         hash = YAML.load(old_value)
 
-        Vmdb::Settings.walk(hash) do |key, value, _path, owning|
+        walk(hash) do |key, value, _path, owning|
           owning[key] = super(value, options) if password_field?(key) && value.present?
         end
 
         symbol_keys ? hash.deep_symbolize_keys! : hash.deep_stringify_keys!
         hash.to_yaml
+      end
+
+      # Copy of Vmdb::Setting.walk
+      # Can't reference classes over there, so this is the minimal change
+      def walk(settings, path = [], &block)
+        settings.each do |key, value|
+          new_path = path.dup << key
+
+          yield key, value, new_path, settings
+
+          case value
+          when settings.class
+            walk(value, new_path, &block)
+          when Array
+            value.each_with_index do |v, i|
+              walk(v, new_path.dup << i, &block) if v.kind_of?(settings.class)
+            end
+          end
+        end
+        settings
       end
     end
   end
