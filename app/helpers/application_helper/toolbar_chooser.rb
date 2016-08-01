@@ -97,8 +97,6 @@ class ApplicationHelper::ToolbarChooser
                   when :vms_instances_filter_tree then               "vms_center_tb"
                   end
         end
-      elsif @layout == "miq_policy_rsop"
-        return session[:rsop_tree] ? "miq_policy_rsop_center_tb" : "blank_view_tb"
       elsif @layout == "provider_foreman" && [:configuration_manager_providers_tree, :cs_filter_tree, :configuration_scripts_tree].include?(x_active_tree)
         return center_toolbar_filename_configuration_manager_providers
       else

@@ -2206,7 +2206,6 @@ class ApplicationController < ActionController::Base
     session[:policy_tree] = nil if params[:action] != "policies" && params[:pressed] != "vm_protect" && params[:action] != "treesize"
     session[:resolve] = session[:resolve_object] = nil unless ["catalog", "miq_ae_customization", "miq_ae_tools"].include?(request.parameters[:controller])
     session[:report_menu] = session[:report_folders] = session[:menu_roles_tree] = nil if controller_name != "report"
-    session[:rsop_tree] = nil if controller_name != "miq_policy"
     if session.class != Hash
       session_hash = session.respond_to?(:to_hash) ? session.to_hash : session.data
       get_data_size(session_hash)

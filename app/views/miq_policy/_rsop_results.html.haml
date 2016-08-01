@@ -2,7 +2,7 @@
 - observe = {:url => url}.to_json
 #rsop_results_div
   = render :partial => "layouts/flash_msg"
-  - if session[:rsop_tree]
+  - if @rsop_tree
     %fieldset{:style => "margin: 8px;"}
       %h3= _("Display Options")
       .form-horizontal
@@ -40,18 +40,11 @@
           %i
             = _("red italics")
         = _("do not change the outcome of the scope or expression")
-      #rsop_treebox
-      = render(:partial => "layouts/dynatree",
-        :locals         => {:tree_id => "rsop_treebox",
-          :tree_name                 => "rsop_tree",
-          :json_tree                 => session[:rsop_tree] || "[]",
-          :icon_size                 => settings(:views, :treesize).to_i,
-          :exp_tree                  => @sb[:rsop][:open],
-          :cursor_style              => true,
-          :no_base_exp               => true,
-          :base_id                   => "rsoproot",
-          :multi_lines               => true,
-          :min_expand_level          => 2})
+      %br{:style => "line-height: 2.5em"}
+      .btn.btn-default{:id => "squash_button", :onclick => "miqSquashToggle('#{j_str(@rsop_tree.name.to_s)}')", :title => _('Expand All')}
+        %i{:class => "fa fa-plus-square-o fa-lg"}
+      %br{:style => "line-height: 2.5em"}
+      = render(:partial => 'shared/tree', :locals => {:tree => @rsop_tree, :name => @rsop_tree.name})
   - else
     &nbsp;
     %strong
