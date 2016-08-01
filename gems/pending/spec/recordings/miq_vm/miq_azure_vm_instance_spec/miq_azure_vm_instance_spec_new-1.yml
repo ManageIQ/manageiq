@@ -12,7 +12,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0 (darwin15.4.0 x86_64) ruby/2.3.1p112
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.5p319
       Content-Length:
       - '186'
       Content-Type:
@@ -36,30 +36,30 @@ http_interactions:
       - max-age=31536000; includeSubDomains
       X-Content-Type-Options:
       - nosniff
-      X-Ms-Request-Id:
-      - f461a27d-009f-42d6-b482-0a70b9abb849
       Client-Request-Id:
-      - 961fee06-fc43-4b0a-b2d9-691d57c18e0f
+      - 9f539e08-c036-4c9c-a1a4-1a865a5aa31c
+      X-Ms-Request-Id:
+      - 1dab0b26-a440-4868-bf96-b43800287f0f
       X-Ms-Responsehealth:
-      - TargetId=ESTSFE_IN_485;Action=None;Category=None;Health=0;Load=29;
+      - TargetId=ESTSFE_IN_98;Action=None;Category=None;Health=0;Load=17;
       P3p:
       - CP="DSP CUR OTPi IND OTRi ONL FIN"
       Set-Cookie:
-      - esctx=AAABAAAA0TWEUN3YUUq5vuCvmnaQidrxuyISgHcZngtWubYj3afeLojlQ4qlFx875FQfjybHHGJG6Q_V0EMdU0yQDTtAHHvFNDR0YWYzQP9V9-l_A6pevvt8svJZVE3C2jl5JMBrDEnGyo0bA4FtKyA8psewAsPZzwQ0Jda4umPDiJsZ_oxrYHfWxzdvUijbQo2ewJPPIAA;
-        domain=.login.windows.net; path=/; secure; HttpOnly
+      - esctx=AAABAAAA0TWEUN3YUUq5vuCvmnaQiV0UpMuJWa3bmz5XdIMDpVnB5SQKfSx60rG950jKSwCkRrjcnBcQQ4PLnwvMm3H_by0Dyr2eDMY46Z7LETd1rzQuuX6xyOpipkYvrfjUJTLvP0p2WMpez6AOyWIFOm7QTWkWAQ7ct13_zJCvbXliDf9lTrxLNDzJZv-RDNyGq0dxIAA;
+        path=/; secure; HttpOnly
       - stsservicecookie=ests; path=/; secure; HttpOnly
-      - x-ms-gateway-slice=productionb; path=/; secure; HttpOnly
+      - x-ms-gateway-slice=productiona; path=/; secure; HttpOnly
       X-Powered-By:
       - ASP.NET
       Date:
-      - Tue, 26 Jul 2016 15:39:16 GMT
+      - Thu, 28 Jul 2016 20:04:00 GMT
       Content-Length:
       - '1412'
     body:
       encoding: UTF-8
-      string: '{"token_type":"Bearer","expires_in":"3600","ext_expires_in":"3600","expires_on":"1469551156","not_before":"1469547256","resource":"https://management.azure.com/","access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0Njk1NDcyNTYsIm5iZiI6MTQ2OTU0NzI1NiwiZXhwIjoxNDY5NTUxMTU2LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.DPbHL-7lVfMDwHkeQZCBtAwbKIWxLcqHzBPdL9AQJemlCsSldri2yCcwQ--wn4o0wuH88gaDEAmlCEwJ6FYzS1x5RQtXfBrWm5CdfAX4-7P3c1M99fph57DuUsmn5yGqB9TTznFA8O2TL8XKmyVHq3mLE2DNULCnwfBbKRYuy_mmjWdEWXR-YrWV081hQGWhNGWD8KF5Qay0o985h7O8lKNm2wtBNprq8jht9x2lNmCWdXSi8zp2gXhGOMnuOKAEZypxmJPVySDqNzamwLFLDPjYYxZ0s-riGODPyxRUlvRHOtrzLyaVq1BhFjZYwUAYFB3pkAN6K9R5islT8L-s4g"}'
+      string: '{"token_type":"Bearer","expires_in":"3599","ext_expires_in":"3600","expires_on":"1469739839","not_before":"1469735939","resource":"https://management.azure.com/","access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0Njk3MzU5MzksIm5iZiI6MTQ2OTczNTkzOSwiZXhwIjoxNDY5NzM5ODM5LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.oBUzJ_Q61l51lktMT0UTer7e68wb3CyOf58N13zAYGY7DbqU06HWGa_1wOM1YXeeymAjWevRYx0uT_gV7CdnkFgKGs663bgLC-P2fgFqYFbvNr30Si2mHFS6H3ndeHm2dYB3GfpQIOaTut6kOIsG5H0xFy-JL7-XIyeoiO0nxqUuKZXWG4eWSiuUJmD1gHtbm6CX8u6jw92_vuAYUN8SQ165uYZZJmo91uyMj8-Hk3hkfjsQ0DV6-oeOj7TtJIo9QDI2Rvcw8kqienR9wUQeWHkY1Y8ErsnZR8FuyVgxXFHcVcN-NN3ZWWxAoicOhINsZkD_X7kGvoL6AP5VWhuW9g"}'
     http_version: 
-  recorded_at: Tue, 26 Jul 2016 15:39:18 GMT
+  recorded_at: Thu, 28 Jul 2016 20:04:00 GMT
 - request:
     method: get
     uri: https://management.azure.com/subscriptions?api-version=2015-01-01
@@ -72,11 +72,63 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0 (darwin15.4.0 x86_64) ruby/2.3.1p112
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.5p319
       Content-Type:
       - application/json
       Authorization:
-      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0Njk1NDcyNTYsIm5iZiI6MTQ2OTU0NzI1NiwiZXhwIjoxNDY5NTUxMTU2LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.DPbHL-7lVfMDwHkeQZCBtAwbKIWxLcqHzBPdL9AQJemlCsSldri2yCcwQ--wn4o0wuH88gaDEAmlCEwJ6FYzS1x5RQtXfBrWm5CdfAX4-7P3c1M99fph57DuUsmn5yGqB9TTznFA8O2TL8XKmyVHq3mLE2DNULCnwfBbKRYuy_mmjWdEWXR-YrWV081hQGWhNGWD8KF5Qay0o985h7O8lKNm2wtBNprq8jht9x2lNmCWdXSi8zp2gXhGOMnuOKAEZypxmJPVySDqNzamwLFLDPjYYxZ0s-riGODPyxRUlvRHOtrzLyaVq1BhFjZYwUAYFB3pkAN6K9R5islT8L-s4g
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0Njk3MzU5MzksIm5iZiI6MTQ2OTczNTkzOSwiZXhwIjoxNDY5NzM5ODM5LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.oBUzJ_Q61l51lktMT0UTer7e68wb3CyOf58N13zAYGY7DbqU06HWGa_1wOM1YXeeymAjWevRYx0uT_gV7CdnkFgKGs663bgLC-P2fgFqYFbvNr30Si2mHFS6H3ndeHm2dYB3GfpQIOaTut6kOIsG5H0xFy-JL7-XIyeoiO0nxqUuKZXWG4eWSiuUJmD1gHtbm6CX8u6jw92_vuAYUN8SQ165uYZZJmo91uyMj8-Hk3hkfjsQ0DV6-oeOj7TtJIo9QDI2Rvcw8kqienR9wUQeWHkY1Y8ErsnZR8FuyVgxXFHcVcN-NN3ZWWxAoicOhINsZkD_X7kGvoL6AP5VWhuW9g
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache
+      Pragma:
+      - no-cache
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json; charset=utf-8
+      Expires:
+      - "-1"
+      Vary:
+      - Accept-Encoding
+      X-Ms-Ratelimit-Remaining-Tenant-Reads:
+      - '14997'
+      X-Ms-Request-Id:
+      - 6fa018c3-ce98-4223-96c6-4eb65239c604
+      X-Ms-Correlation-Request-Id:
+      - 6fa018c3-ce98-4223-96c6-4eb65239c604
+      X-Ms-Routing-Request-Id:
+      - EASTUS:20160728T200401Z:6fa018c3-ce98-4223-96c6-4eb65239c604
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Date:
+      - Thu, 28 Jul 2016 20:04:00 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '{"value":[{"id":"/subscriptions/azure_subscription_id","subscriptionId":"azure_subscription_id","displayName":"Microsoft
+        Azure Sponsorship","state":"Enabled","subscriptionPolicies":{"locationPlacementId":"Public_2014-09-01","quotaId":"Default_2014-09-01"}}]}'
+    http_version: 
+  recorded_at: Thu, 28 Jul 2016 20:04:01 GMT
+- request:
+    method: get
+    uri: https://management.azure.com/providers?api-version=2015-01-01
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.5p319
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0Njk3MzU5MzksIm5iZiI6MTQ2OTczNTkzOSwiZXhwIjoxNDY5NzM5ODM5LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.oBUzJ_Q61l51lktMT0UTer7e68wb3CyOf58N13zAYGY7DbqU06HWGa_1wOM1YXeeymAjWevRYx0uT_gV7CdnkFgKGs663bgLC-P2fgFqYFbvNr30Si2mHFS6H3ndeHm2dYB3GfpQIOaTut6kOIsG5H0xFy-JL7-XIyeoiO0nxqUuKZXWG4eWSiuUJmD1gHtbm6CX8u6jw92_vuAYUN8SQ165uYZZJmo91uyMj8-Hk3hkfjsQ0DV6-oeOj7TtJIo9QDI2Rvcw8kqienR9wUQeWHkY1Y8ErsnZR8FuyVgxXFHcVcN-NN3ZWWxAoicOhINsZkD_X7kGvoL6AP5VWhuW9g
   response:
     status:
       code: 200
@@ -97,67 +149,15 @@ http_interactions:
       X-Ms-Ratelimit-Remaining-Tenant-Reads:
       - '14998'
       X-Ms-Request-Id:
-      - 6a315011-2bb6-49c6-8d3c-67233d9e6694
+      - 10c2dfdb-85ad-4758-be6f-8e1a11ef131e
       X-Ms-Correlation-Request-Id:
-      - 6a315011-2bb6-49c6-8d3c-67233d9e6694
+      - 10c2dfdb-85ad-4758-be6f-8e1a11ef131e
       X-Ms-Routing-Request-Id:
-      - NORTHCENTRALUS:20160726T153918Z:6a315011-2bb6-49c6-8d3c-67233d9e6694
+      - EASTUS:20160728T200401Z:10c2dfdb-85ad-4758-be6f-8e1a11ef131e
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
       Date:
-      - Tue, 26 Jul 2016 15:39:18 GMT
-    body:
-      encoding: ASCII-8BIT
-      string: '{"value":[{"id":"/subscriptions/azure_subscription_id","subscriptionId":"azure_subscription_id","displayName":"Microsoft
-        Azure Sponsorship","state":"Enabled","subscriptionPolicies":{"locationPlacementId":"Public_2014-09-01","quotaId":"Default_2014-09-01"}}]}'
-    http_version: 
-  recorded_at: Tue, 26 Jul 2016 15:39:18 GMT
-- request:
-    method: get
-    uri: https://management.azure.com/providers?api-version=2015-01-01
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - "*/*"
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (darwin15.4.0 x86_64) ruby/2.3.1p112
-      Content-Type:
-      - application/json
-      Authorization:
-      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0Njk1NDcyNTYsIm5iZiI6MTQ2OTU0NzI1NiwiZXhwIjoxNDY5NTUxMTU2LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.DPbHL-7lVfMDwHkeQZCBtAwbKIWxLcqHzBPdL9AQJemlCsSldri2yCcwQ--wn4o0wuH88gaDEAmlCEwJ6FYzS1x5RQtXfBrWm5CdfAX4-7P3c1M99fph57DuUsmn5yGqB9TTznFA8O2TL8XKmyVHq3mLE2DNULCnwfBbKRYuy_mmjWdEWXR-YrWV081hQGWhNGWD8KF5Qay0o985h7O8lKNm2wtBNprq8jht9x2lNmCWdXSi8zp2gXhGOMnuOKAEZypxmJPVySDqNzamwLFLDPjYYxZ0s-riGODPyxRUlvRHOtrzLyaVq1BhFjZYwUAYFB3pkAN6K9R5islT8L-s4g
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Cache-Control:
-      - no-cache
-      Pragma:
-      - no-cache
-      Transfer-Encoding:
-      - chunked
-      Content-Type:
-      - application/json; charset=utf-8
-      Expires:
-      - "-1"
-      Vary:
-      - Accept-Encoding
-      X-Ms-Ratelimit-Remaining-Tenant-Reads:
-      - '14995'
-      X-Ms-Request-Id:
-      - f380c91b-8b0f-4034-ba38-fed3e266b0aa
-      X-Ms-Correlation-Request-Id:
-      - f380c91b-8b0f-4034-ba38-fed3e266b0aa
-      X-Ms-Routing-Request-Id:
-      - NORTHCENTRALUS:20160726T153919Z:f380c91b-8b0f-4034-ba38-fed3e266b0aa
-      Strict-Transport-Security:
-      - max-age=31536000; includeSubDomains
-      Date:
-      - Tue, 26 Jul 2016 15:39:18 GMT
+      - Thu, 28 Jul 2016 20:04:01 GMT
     body:
       encoding: ASCII-8BIT
       string: '{"value":[{"namespace":"Aspera.Transfers","resourceTypes":[{"resourceType":"services","locations":["West
@@ -575,11 +575,11 @@ http_interactions:
         Central US","East US 2","Canada East","Canada Central","Central US","Australia
         East","Australia Southeast","Brazil South","South India","Central India","West
         India","UK North","UK South 2"],"apiVersions":["2015-07-01"]},{"resourceType":"metricDefinitions","locations":["West
-        US","Brazil South","East US","West US 2","West Central US","North Europe","West
-        Europe","East Asia","Southeast Asia","Japan East","Japan West","North Central
-        US","South Central US","East US 2","Canada East","Canada Central","Central
-        US","Australia East","Australia Southeast","South India","Central India","West
-        India","UK North","UK South 2"],"apiVersions":["2015-07-01"]},{"resourceType":"logDefinitions","locations":["West
+        US","East US","West US 2","West Central US","North Europe","West Europe","East
+        Asia","Southeast Asia","Japan East","Japan West","North Central US","South
+        Central US","East US 2","Canada East","Canada Central","Central US","Australia
+        East","Australia Southeast","Brazil South","South India","Central India","West
+        India","UK North","UK South 2"],"apiVersions":["2016-03-01","2015-07-01"]},{"resourceType":"logDefinitions","locations":["West
         US","East US","North Europe","West Europe","East Asia","Southeast Asia","Japan
         East","Japan West","North Central US","South Central US","East US 2","Canada
         East","Canada Central","Central US","Australia East","Australia Southeast","Brazil
@@ -793,9 +793,9 @@ http_interactions:
         US","East US"],"apiVersions":["2016-01-15-alpha","2016-01-03-alpha","2016-01-02-alpha","2016-01-01-alpha","2015-06-01-preview"]},{"resourceType":"securitySolutions","locations":["Central
         US","East US"],"apiVersions":["2016-01-15-alpha","2016-01-03-alpha","2016-01-02-alpha","2016-01-01-alpha","2015-06-01-preview"]},{"resourceType":"securitySolutionsReferenceData","locations":["Central
         US","East US"],"apiVersions":["2016-01-15-alpha","2016-01-03-alpha","2016-01-02-alpha","2016-01-01-alpha","2015-06-01-preview"]}]},{"namespace":"Microsoft.ServerManagement","resourceTypes":[{"resourceType":"operations","locations":["Central
-        US","East US","North Europe","West Europe"],"apiVersions":["2015-07-01-preview"]},{"resourceType":"gateways","locations":["Central
-        US","East US","North Europe","West Europe"],"apiVersions":["2015-07-01-preview"]},{"resourceType":"nodes","locations":["Central
-        US","East US","North Europe","West Europe"],"apiVersions":["2015-07-01-preview"]}]},{"namespace":"Microsoft.ServiceBus","resourceTypes":[{"resourceType":"namespaces","locations":["Australia
+        US","East US","North Europe","West Europe"],"apiVersions":["2016-07-01-preview","2015-07-01-preview"]},{"resourceType":"gateways","locations":["Central
+        US","East US","North Europe","West Europe"],"apiVersions":["2016-07-01-preview","2015-07-01-preview"]},{"resourceType":"nodes","locations":["Central
+        US","East US","North Europe","West Europe"],"apiVersions":["2016-07-01-preview","2015-07-01-preview"]}]},{"namespace":"Microsoft.ServiceBus","resourceTypes":[{"resourceType":"namespaces","locations":["Australia
         East","Australia Southeast","Central US","East US","East US 2","West US 2","West
         US","North Central US","South Central US","West Central US","East Asia","Southeast
         Asia","Brazil South","Japan East","Japan West","North Europe","West Europe","Central
@@ -1326,7 +1326,7 @@ http_interactions:
         Central US","Central US","South Central US","North Europe","West Europe","East
         Asia","Southeast Asia","West US","East US","East US 2","Japan West","Japan
         East","Brazil South","Australia East","Australia Southeast"],"apiVersions":["2016-06-01","2015-08-01-preview"]}]},{"namespace":"Myget.PackageManagement","resourceTypes":[{"resourceType":"services","locations":["West
-        US (Partner)"],"apiVersions":["2015-01-01"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-01-01"]},{"resourceType":"listCommunicationPreference","locations":["West
+        Europe","West US (Partner)"],"apiVersions":["2015-01-01"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-01-01"]},{"resourceType":"listCommunicationPreference","locations":["West
         US (Partner)"],"apiVersions":["2015-01-01"]},{"resourceType":"updateCommunicationPreference","locations":["West
         US (Partner)"],"apiVersions":["2015-01-01"]}]},{"namespace":"NewRelic.APM","resourceTypes":[{"resourceType":"accounts","locations":["North
         Central US","South Central US","West US","East US","North Europe","West Europe","Southeast
@@ -1360,5 +1360,5 @@ http_interactions:
         US (Partner)"],"apiVersions":["2015-06-15"]},{"resourceType":"updateCommunicationPreference","locations":["West
         US (Partner)"],"apiVersions":["2015-06-15"]}]}]}'
     http_version: 
-  recorded_at: Tue, 26 Jul 2016 15:39:19 GMT
+  recorded_at: Thu, 28 Jul 2016 20:04:01 GMT
 recorded_with: VCR 3.0.3
