@@ -285,10 +285,7 @@ class ApiController
     end
 
     def collection_option?(option)
-      if @req.collection
-        cname = @req.collection.to_sym
-        collection_config[cname][:options].include?(option) if collection_config[cname]
-      end
+      collection_config.option?(@req.collection, option) if @req.collection
     end
   end
 end
