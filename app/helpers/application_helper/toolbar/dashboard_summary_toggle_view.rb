@@ -1,13 +1,6 @@
 class ApplicationHelper::Toolbar::DashboardSummaryToggleView < ApplicationHelper::Toolbar::Basic
   button_group('ems_container_dashboard', [
     twostate(
-      :view_topology,
-      'fa pficon-topology',
-      N_('Topology View'),
-      nil,
-      :url       => "/",
-      :url_parms => "?display=topology"),
-    twostate(
       :view_dashboard,
       'fa fa-tachometer fa-1xplus',
       N_('Dashboard View'),
@@ -21,5 +14,12 @@ class ApplicationHelper::Toolbar::DashboardSummaryToggleView < ApplicationHelper
       nil,
       :url       => "/",
       :url_parms => ""),
+    twostate(
+      :view_topology,
+      'fa pficon-topology',
+      N_('Topology View'),
+      nil,
+      :url       => "/",
+      :url_parms => "?display=topology")
   ])
 end
