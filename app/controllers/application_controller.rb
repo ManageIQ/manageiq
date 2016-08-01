@@ -2230,15 +2230,15 @@ class ApplicationController < ActionController::Base
                :model     => ui_lookup(:model => db.to_s)})
   end
 
-  def find_filtered(db, options = {})
+  def find_filtered(db)
     user     = current_user
     mfilters = user ? user.get_managed_filters : []
     bfilters = user ? user.get_belongsto_filters : []
 
     if db.respond_to?(:find_tags_by_grouping) && !mfilters.empty?
-      result = db.where(options[:conditions]).find_tags_by_grouping(mfilters, :ns => "*")
+      result = db.find_tags_by_grouping(mfilters, :ns => "*")
     else
-      result = db.apply_legacy_finder_options(options)
+      result = db.all
     end
 
     result = MiqFilter.apply_belongsto_filters(result, bfilters) if db.respond_to?(:apply_belongsto_filters) && result
