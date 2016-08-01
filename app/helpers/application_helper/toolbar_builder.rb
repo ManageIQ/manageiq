@@ -624,7 +624,7 @@ class ApplicationHelper::ToolbarBuilder
       return true unless @edit
       return true if id == "dialog_res_discard" && @sb[:edit_typ] != "add"
       return true if id == "dialog_resource_remove" && (@sb[:edit_typ] == "add" || x_node == "root")
-      nodes = x_node.split('_')
+      nodes = x_node.split('xx-')
       return true if id == "dialog_add_tab" && (nodes.length > 2)
       return true if id == "dialog_add_box" && (nodes.length < 2 || nodes.length > 3)
       return true if id == "dialog_add_element" && (nodes.length < 3 || nodes.length > 4)

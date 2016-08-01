@@ -1,21 +1,20 @@
-- nodes = x_node.split('_')
+- node = controller.edit_dialog_node_data(x_node)
 = render :partial => "layouts/flash_msg"
 #form_div
   = hidden_field_tag(:ignore_form_changes)
-  - if nodes.length == 1 && @sb[:node_typ].blank?
+  - if node[:type] == 'root' && @sb[:node_typ].blank?
     -# dialog info form fields
     = render :partial => 'dialog_info_form'
-    = render :partial => 'dialog_resources', :locals => {:typ => "tabs", :parent_id => nil}
-  - elsif (nodes.length == 2 && @sb[:node_typ] != "box") || (nodes.length == 1 && @sb[:node_typ] == "tab")
+    = render :partial => 'dialog_resources', :locals => {:typ => "tabs", :data => node[:children], :parent_id => nil}
+  - elsif (node[:type] == 'tab' && @sb[:node_typ] != "box") || (node[:type] == 'root' && @sb[:node_typ] == "tab")
     -# dialog tab form fields
     = render :partial => 'dialog_tab_form'
-    = render :partial => 'dialog_resources', :locals => {:typ => "boxes", :parent_id => nodes.last.split('-').last}
-  - elsif (nodes.length == 3 && @sb[:node_typ] != "element") || (nodes.length == 2 && @sb[:node_typ] == "box")
+    = render :partial => 'dialog_resources', :locals => {:typ => "boxes", :data => node[:children], :parent_id => node[:parent_id]}
+  - elsif (node[:type] == 'group' && @sb[:node_typ] != "element") || (node[:type] == 'tab' && @sb[:node_typ] == "box")
     -# dialog group form fields
     = render :partial => 'dialog_group_form'
-    - parent_id = nodes.length == 3 ? "#{nodes[1].split('-').last}_#{nodes[2].split('-').last}" : "#{nodes[1].split('-').last}_#{@edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups].length - 1}"
-    = render :partial => 'dialog_resources', :locals => {:typ => "elements", :parent_id => parent_id}
-  - elsif nodes.length == 4 || (nodes.length == 3 && @sb[:node_typ] == "element")
+    = render :partial => 'dialog_resources', :locals => {:typ => "elements", :data => node[:children], :parent_id => node[:parent_id]}
+  - elsif node[:type] == 'field' || (node[:type] == 'group' && @sb[:node_typ] == "element")
     -# dialog field form fields
     = hidden_div_if(!@edit[:ae_tree_select], :id => 'ae_tree_select_div') do
       = render :partial => 'layouts/ae_tree_select'

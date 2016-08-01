@@ -1,18 +1,11 @@
-- parent_id ||= nil
+- data ||= nil
 #form_widgets_div
   %hr
   %h3
     = typ.capitalize
   .row#modules
     .col-md-4#col1
-      - objects = @edit[:new][:tabs]
-      - if parent_id
-        - ids = parent_id.split('_')
-        - case ids.length
-        - when 1
-          - objects = !@edit[:new][:tabs][ids.first.to_i].blank? ? @edit[:new][:tabs][ids.first.to_i][:groups] : nil
-        - when 2
-          - objects = !@edit[:new][:tabs][ids.first.to_i][:groups][ids[1].to_i].blank? ? @edit[:new][:tabs][ids.first.to_i][:groups][ids[1].to_i][:fields] : nil
+      - objects = data.nil? ? @edit[:new][:tabs] : data
       - if objects.blank?
         = _("No %{types} found.") % {:types => typ.pluralize.capitalize}
       - else
