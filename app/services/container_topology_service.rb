@@ -79,7 +79,7 @@ class ContainerTopologyService < TopologyService
     elsif entity.kind_of?(ContainerReplicator)
       status = (entity.current_replicas == entity.replicas) ? 'OK' : 'Warning'
     elsif entity.kind_of?(ManageIQ::Providers::ContainerManager)
-      status = entity.authentications.empty? ? 'Unknown' : entity.authentications.first.status.capitalize
+      status = entity.authentications.empty? ? 'Unknown' : entity.default_authentication.status.capitalize
     else
       status = 'Unknown'
     end
