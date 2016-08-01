@@ -11,21 +11,41 @@ class Session < ApplicationRecord
     purge(ttl)
   end
 
-  def self.purge(ttl)
-    ses = where("updated_at <= ?", ttl.seconds.ago.utc)
-    ses.each do|s|
-      begin
-        userid = Marshal.load(Base64.decode64(s.data.split("\n").join))[:userid]
-        user = User.find_by_userid(userid)
-        if user && ((user.lastlogoff && user.lastlogon && user.lastlogoff < user.lastlogon) || (user.lastlogon && user.lastlogoff.nil?))
-          user.logoff
-        end
-      rescue Exception
-      end
+  def self.purge(ttl, batch_size = 100)
+    deleted = 0
+    loop do
+      cnt = purge_one_batch(ttl, batch_size)
+      deleted += cnt
 
-      s.destroy
+      break if cnt.zero?
     end
-    _log.info("purged stale session data, #{ses.length} entries deleted") unless ses.length == 0
+
+    _log.info("purged stale session data, #{deleted} entries deleted") unless deleted == 0
+  end
+
+  def self.purge_one_batch(ttl, batch_size)
+    sessions = where("updated_at <= ?", ttl.seconds.ago.utc).limit(batch_size)
+    return 0 if sessions.size.zero?
+
+    log_off_user_sessions(sessions)
+    where(:id => sessions.collect(&:id)).destroy_all.size
+  end
+
+  def self.log_off_user_sessions(sessions)
+    # Log off the users associated with the sessions that are eligible for deletion
+    userids = sessions.each_with_object([]) do |s, a|
+      begin
+        a << Marshal.load(Base64.decode64(s.data.split("\n").join))[:userid]
+      rescue => err
+        _log.warn("Error '#{err.message}', attempting to load session with id [#{s.id}]")
+      end
+    end
+
+    User.where(:userid => userids).each do |user|
+      if (user.lastlogoff && user.lastlogon && user.lastlogoff < user.lastlogon) || (user.lastlogon && user.lastlogoff.nil?)
+        user.logoff
+      end
+    end
   end
 
   def self.timeout(ttl = nil)
