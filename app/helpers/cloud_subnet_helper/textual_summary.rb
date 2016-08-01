@@ -15,6 +15,11 @@ module CloudSubnetHelper::TextualSummary
     %i(tags)
   end
 
+  def textual_group_topology
+    items = %w(topology)
+    items.collect { |m| send("textual_#{m}") }.flatten.compact
+  end
+
   #
   # Items
   #
@@ -88,5 +93,12 @@ module CloudSubnetHelper::TextualSummary
 
   def textual_availability_zone
     @record.availability_zone
+  end
+
+  def textual_topology
+    {:label => _('Topology'),
+     :image => 'topology',
+     :link => url_for(:controller => 'subnet_topology', :action => 'show', :id => @record.id),
+     :title => _('Show topology')}
   end
 end
