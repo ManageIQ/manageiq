@@ -2,6 +2,7 @@ ManageIQ.angular.app = angular.module('ManageIQ', [
   'ui.bootstrap',
   'patternfly',
   'frapontillo.bootstrap-switch',
+  'miq.templates',
 ]);
 miqHttpInject(ManageIQ.angular.app);
 

@@ -13,6 +13,7 @@
 //= require angular-ui-bootstrap
 //= require angular-ui-bootstrap-tpls
 //= require angular-sanitize
+//= require angular-rails-templates
 //= require moment
 //= require moment-strftime/build/moment-strftime.min
 //= require moment-timezone
@@ -23,6 +24,7 @@
 //= require_tree ./directives/
 //= require_tree ./services/
 //= require_tree ./controllers/
+//= require_tree ../../views/static/
 //= require d3
 //= require c3
 //= require lodash
