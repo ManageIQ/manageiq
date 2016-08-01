@@ -5,7 +5,7 @@ ManageIQ.angular.app.config([ '$httpProvider', '$stateProvider', '$urlRouterProv
   $stateProvider
     .state('edit', {
       url: '/ems_cloud/arbitration_profile_edit/:ems_id?show',
-      templateUrl: 'ems_cloud/arbitration_profile_edit.html',
+      templateUrl: '/static/ems_cloud/arbitration_profile_edit.html',
       controller: 'arbitrationProfileFormController',
       resolve: {
         arbitrationProfileData: function (arbitrationProfileDataFactory, $stateParams) {

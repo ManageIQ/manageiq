@@ -1,0 +1,45 @@
+.button-group
+  %button{:class     => "btn btn-primary btn-disabled",
+          :alt       => "Add",
+          :title     => "Add",
+          "ng-click" => "disabledClick($event)",
+          :style     => "cursor:not-allowed",
+          "ng-show"  => "newRecord && !saveable(angularForm)"}
+    {{addText}} 
+
+  %button{:class     => "btn btn-primary",
+          :alt       => "Add",
+          :title     => "Add",
+          "ng-click" => "addClicked($event, true)",
+          "ng-show"  => "newRecord && saveable(angularForm)"}
+    {{addText}} 
+
+  %button{:class     => "btn btn-primary btn-disabled",
+          :alt       => "Save changes",
+          :title     => "Save changes",
+          "ng-click" => "disabledClick($event)",
+          :style     => "cursor:not-allowed",
+          "ng-show"  => "!newRecord && !saveable(angularForm)"}
+    {{saveText}} 
+
+  %button{:class     => "btn btn-primary",
+          :alt       => "Save changes",
+          :title     => "Save changes",
+          "ng-click" => "saveClicked($event, true)",
+          "ng-show"  => "!newRecord && saveable(angularForm)"}
+    {{saveText}} 
+
+  %button{:class        => "btn btn-default btn-disabled",
+          :alt          => "Reset changes",
+          :title        => "Reset changes",
+          "ng-class"    => "{'btn-disabled': angularForm.$pristine}",
+          "ng-click"    => "resetClicked()",
+          "ng-disabled" => "angularForm.$pristine",
+          "ng-hide"     => "newRecord"}
+    {{resetText}} 
+
+  %button{:class     => "btn btn-default",
+          :alt       => "Cancel",
+          :title     => "Cancel",
+          "ng-click" => "cancelClicked($event)"}
+    {{cancelText}} 

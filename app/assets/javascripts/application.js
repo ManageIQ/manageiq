@@ -14,7 +14,6 @@
 //= require angular-ui-bootstrap-tpls
 //= require angular-sanitize
 //= require angular-ui-router
-//= require angular-rails-templates
 //= require moment
 //= require moment-strftime/build/moment-strftime.min
 //= require moment-timezone
@@ -80,4 +79,3 @@
 //= require xml_display
 //= require miq_c3
 //= require miq_explorer
-//= require_tree ../templates
