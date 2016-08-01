@@ -74,23 +74,23 @@ module ManageIQ::Providers
       # VC data collection methods
       #
 
-      VC_ACCESSORS = [
-        [:dataStoresByMor,              :storage],
-        [:storagePodsByMor,             :storage_pod],
-        [:pbmProfilesByUid,             :storage_profile],
-        [:dvPortgroupsByMor,            :dvportgroup],
-        [:dvSwitchesByMor,              :dvswitch],
-        [:hostSystemsByMor,             :host],
-        [:virtualMachinesByMor,         :vm],
-        [:datacentersByMor,             :dc],
-        [:foldersByMor,                 :folder],
-        [:clusterComputeResourcesByMor, :cluster],
-        [:computeResourcesByMor,        :host_res],
-        [:resourcePoolsByMor,           :rp],
-        [:virtualAppsByMor,             :vapp]
-      ]
+      VC_ACCESSORS_HASH = {
+        :storage         => :dataStoresByMor,
+        :storage_pod     => :storagePodsByMor,
+        :storage_profile => :pbmProfilesByUid,
+        :dvportgroup     => :dvPortgroupsByMor,
+        :dvswitch        => :dvSwitchesByMor,
+        :host            => :hostSystemsByMor,
+        :vm              => :virtualMachinesByMor,
+        :dc              => :datacentersByMor,
+        :folder          => :foldersByMor,
+        :cluster         => :clusterComputeResourcesByMor,
+        :host_res        => :computeResourcesByMor,
+        :rp              => :resourcePoolsByMor,
+        :vapp            => :virtualAppsByMor
+      }.freeze
 
-      def get_vc_data(ems, accessors = VC_ACCESSORS, sel_spec_list = [])
+      def get_vc_data(ems, accessors = VC_ACCESSORS_HASH, mor_filters = {})
         log_header = format_ems_for_logging(ems)
 
         cleanup_callback = proc { @vc_data = nil }
@@ -98,12 +98,12 @@ module ManageIQ::Providers
         retrieve_from_vc(ems, cleanup_callback) do
           @vc_data = Hash.new { |h, k| h[k] = {} }
 
-          accessors.each do |accessor, type|
+          accessors.each do |type, accessor|
             _log.info("#{log_header} Retrieving #{type.to_s.titleize} inventory...")
-            if sel_spec_list.any?
-              inv_hash = sel_spec_list.each_with_object({}) do |m, h|
-                data = @vi.send(accessor, m)
-                h[m] = data unless data.nil?
+            if mor_filters.any?
+              inv_hash = mor_filters[type].each_with_object({}) do |mor, memo|
+                data = @vi.send(accessor, mor)
+                memo[mor] = data unless data.nil?
               end
             else
               inv_hash = @vi.send(accessor, :"ems_refresh_#{type}")
@@ -271,11 +271,13 @@ module ManageIQ::Providers
         dummy, timings = Benchmark.realtime_block(:total_time) do
           Benchmark.realtime_block(:get_vc_data_total) do
             begin
-              accessors = [:vm, :host, :storage].each_with_object([]) do |type, m|
-                m.push([VC_ACCESSORS_BY_MOR[type], type])
-              end
-              sel_spec_list = [vm.ems_ref_obj, vm.host.ems_ref_obj, vm.host.storages.collect(&:ems_ref_obj)]
-              get_vc_data(ems, accessors, sel_spec_list)
+              accessors = VC_ACCESSORS_BY_MOR.slice(:vm, :host, :storage)
+              mor_filters = {
+                :vm      => [vm.ems_ref_obj],
+                :host    => [vm.host.ems_ref_obj],
+                :storage => [vm.host.storages.collect(&:ems_ref_obj)]
+              }
+              get_vc_data(ems, accessors, mor_filters)
             ensure
               disconnect_from_ems(ems)
             end
