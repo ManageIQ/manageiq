@@ -447,6 +447,10 @@ function miqButtonOnWhen(button, onwhen, count) {
 
 // Set the buttons in a div based on the count of checked items passed in
 function miqSetButtons(count, button_div) {
+  if (!miqDomElementExists(button_div)) {
+    return
+  }
+
   if (button_div.match("_tb$")) {
     var toolbar = $('#' + button_div);
 
@@ -467,39 +471,6 @@ function miqSetButtons(count, button_div) {
       var button = $(v);
       miqButtonOnWhen(button.parent(), button.data('onwhen'), count);
     });
-  } else if (button_div.match("_buttons$")) {
-    // Handle newer divs with button elements
-    if (count === 0) {
-      $("#" + button_div + " button[id$=on_1]").prop('disabled', true);
-    } else if (count == 1) {
-      $("#" + button_div + " button[id$=on_1]").prop('disabled', false);
-    } else {
-      $("#" + button_div + " button[id$=on_1]").prop('disabled', false);
-    }
-  } else {
-    // Handle older li based buttons
-    if (count === 0) {
-      $('#' + button_div + ' li[id~=on_1]').hide();
-      $('#' + button_div + ' li[id~=on_2]').hide();
-      $('#' + button_div + ' li[id~=on_only_1]').hide();
-      $('#' + button_div + ' li[id~=off_0]').show();
-      $('#' + button_div + ' li[id~=off_1]').show();
-      $('#' + button_div + ' li[id~=off_not_1]').show();
-    } else if (count === 1) {
-      $('#' + button_div + ' li[id~=off_0]').hide();
-      $('#' + button_div + ' li[id~=on_2]').hide();
-      $('#' + button_div + ' li[id~=off_not_1]').hide();
-      $('#' + button_div + ' li[id~=off_1]').show();
-      $('#' + button_div + ' li[id~=on_1]').show();
-      $('#' + button_div + ' li[id~=on_only_1]').show();
-    } else {
-      $('#' + button_div + ' li[id~=off_0]').hide();
-      $('#' + button_div + ' li[id~=off_1]').hide();
-      $('#' + button_div + ' li[id~=on_only_1]').hide();
-      $('#' + button_div + ' li[id~=on_1]').show();
-      $('#' + button_div + ' li[id~=on_2]').show();
-      $('#' + button_div + ' li[id~=off_not_1]').show();
-    }
   }
 }
 
@@ -1107,13 +1078,6 @@ function miq_tabs_init(id, url) {
     // Refresh CodeMirror when its tab is toggled
     if ($($(e.target).attr('href')).hasClass('cm-tab') && typeof(ManageIQ.editor) != 'undefined') {
       ManageIQ.editor.refresh();
-    }
-
-    // Show buttons according to the show/hide-buttons class
-    if ($($(e.target).attr('href')).hasClass('show-buttons')) {
-      $("#center_buttons_div").show();
-    } else if ($($(e.target).attr('href')).hasClass('hide-buttons')) {
-      $("#center_buttons_div").hide();
     }
   });
 
