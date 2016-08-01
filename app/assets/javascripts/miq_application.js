@@ -1079,13 +1079,6 @@ function miq_tabs_init(id, url) {
     if ($($(e.target).attr('href')).hasClass('cm-tab') && typeof(ManageIQ.editor) != 'undefined') {
       ManageIQ.editor.refresh();
     }
-
-    // Show buttons according to the show/hide-buttons class
-    if ($($(e.target).attr('href')).hasClass('show-buttons')) {
-      $("#center_buttons_div").show();
-    } else if ($($(e.target).attr('href')).hasClass('hide-buttons')) {
-      $("#center_buttons_div").hide();
-    }
   });
 
   // If no active tab is present, set the first tab as active
