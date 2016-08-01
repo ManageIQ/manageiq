@@ -2,8 +2,85 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - as of Sprint 43 end 2016-07-11
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+43+Ending+July+11%2C+2016%22+label%3Aenhancement)
+
+- Automate
+  - Service resolution based on Provision Order
+  - Added /System/Process/MiqEvent instance
+  - Added Provider refresh call to Amazon retire state machine in Pre-Retirement state
+  - Service Dialogs: Added ‘Visible’ flag to all dialog fields
+  - Class Schema allows for EMS, Host, Policy, Provision, Request, Server, Storage, and VM(or Template) datatypes
+    - Value is id of the objects
+    - If object is not found, the attribute is not defined.
+  - Null Coalescing Operator
+    - Multiple String values separated by “||”
+    - Evaluated on new attribute data type “Null Coalescing”
+    - Order dependent, left to right evaluation
+    - First non-blank value is used
+    - Skip and warn about missing objects
+- Platform: Custom attributes support in reporting and expressions
+  - Selectable as a column
+  - Usable in report filters and charts
+- Providers
+  - Amazon: Public Images Filter
+  - Networking
+    - Separate Google Network Manager
+    - NFV: VNFD Templates and VNF Stacks
+  - Hawkular
+    - Deployment entity operations: Undeploy, redeploy
+    - Server operations: Reload, suspend, resume
+    - Live metrics for datasources and transactions
+    - Performance reports for middleware servers
+    - Support for alert profiles and alert automated expressions for middleware server
+    - Crosslink middleware servers with RHEV VMs
+    - Collect and display deployment status
+    - Datasources topology view
+- REST API
+  - Support for report schedules
+  - Support for approving or denying service requests
+  - Support for OpenShift Container Deployments
+  - Support for Virtual Templates
+- Service Broker
+  - Started work on Service Broker to allow ManageIQ to select VM for you based on criteria (cloud, cost, or performance)
+  - Added API backend for Resourceless Servers
+  - Added datastore for the default settings for resourceless servers
+- SmartState: Generalized disk LRU caching module
+  - Caching module can be used by any disk module, eliminating duplication.
+  - Can be inserted “higher” in the IO path.
+  - Configurable caching parameters (memory vs performance)
+  - Will be employed to address Azure performance and throttling issues.
+  - Other disk modules converted over time.
+- User Interface
+  - Settings moved to top right navigation header
+  - C3 Charts fully implemented - chart interaction coming soon!
+  - Tagging for Ansible Tower job templates
+  - Live Search added to bootstrap selects
+  - Self Service UI Order History with detail
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+43+Ending+July+11%2C+2016%22+label%3Aenhancement)
+
+- Automate: Generic Object: Model refactoring/cleanup, use PostgreSQL jsonb column
+- Performance
+  - Capacity and Utlization improvements included reduced number of SQL queries and number of objects
+  - Improved tag processing for Alert Profiles
+  - UI Performance: specific pages targeted resulted in up to 98% reduction in rendering for those pages
+- Platform: PostgreSQL upgraded to 9.5 needed for HA feature
+- Providers:
+  - Pluggability: Began extraction of Amazon Provider into separate repository
+  - Hawkular
+      - Upgraded to hawkular gem version 2.2.1
+      - Refactor infrastructure for easier configuration
+  - Ansible: Automate method updated to pass JobTemplate “Extra Variables” defined in the Provision Task
+- User Interface
+  - Default Filters tree converted to TreeBuilder - more on the way
+  - Cloud Key Pair form converted to AngularJS (Dana - UX team)
+  - Toolbars:Cleaned up partials, YAML -> classes
+  - Provider Forms: Credentials Validation improvements
+
 ## Unreleased - as of Sprint 42 end 2016-06-20
-   
+
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+42+Ending+June+20%2C+2016%22+label%3Aenhancement)
 
 - Providers
@@ -22,7 +99,7 @@ All notable changes to this project will be documented in this file.
   - Limited menu when running inside a container
   - Removed menu items that are not applicable when running inside a container
 - Automate
-  - Engine: Allow arguments in method calls during substitution 
+  - Engine: Allow arguments in method calls during substitution
   - Policy: Built-in policy to prevent retired VM from starting on a resume power operation
   - Service Model: Expose provision_priority value
   - Retirement: Restored retirement logic to verify that VM was provisioned or contains Lifecycle tag before processing
@@ -43,15 +120,15 @@ All notable changes to this project will be documented in this file.
   - Updated /api entrypoint so collection list is sorted
 
 ### [Fixes](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+42+Ending+June+20%2C+2016%22+label%3A"bug")
- 
+
 Notable fixes include:
 
 - Providers
   - Hawkular: Fixes for LiveMetrics
   - VMware: Fix for adding multiple disks
-  
+
 ## Unreleased - as of Sprint 41 end 2016-05-30
-   
+
 ### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+41+Ending+May+30%2C+2016%22+label%3Aenhancement)
 
 - REST API: API CLI moved to tools/rest_api.rb
@@ -60,7 +137,7 @@ Notable fixes include:
   - Optimization and enhancement of event fetching
 
 ### [Removed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+41+Ending+May+30%2C+2016%22+label%3A"technical debt")
- 
+
 - REST API: gems/cfme_client removed
 
 ## Unreleased - as of Sprint 40 end 2016-05-09
@@ -70,7 +147,7 @@ Notable fixes include:
 - REST API
   - Post Darga versioning updated to v2.3.0-pre
   - Added GET role identifiers
-   
+
 ### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+40+Ending+May+9%2C+2016%22+label%3Aenhancement)
 
 - Platform
@@ -99,7 +176,7 @@ Notable fixes include:
 - Switchboard events for OpenStack
     - New Events: compute.instance.reboot.end, compute.instance.reset.end, compute.instance.snapshot.start
     - Policy Event updates: compute.instance.snapshot.end, compute.instance.suspend
-- Service Model 
+- Service Model
   - Added “networks” relationship to Hardware model
   - Support where method, find_by, and find_by!
   - Azure VM retirement modeling added
@@ -141,7 +218,7 @@ Notable fixes include:
   - New classes Settings and Vmdb::Settings
   - `VMDB::Config` is deprecated
   - `config/*.tmpl.yml` -> `config/settings.yml`
-  - Locally override with `config/settings.local.yml` or `config/settings/development.local.yml` 
+  - Locally override with `config/settings.local.yml` or `config/settings/development.local.yml`
 - Replication (pglogical)
     - Replacement of rubyrep with pglogical
     - New MiqPglogical class: provides generic functionality for remote and global regions
@@ -183,18 +260,18 @@ and before subscription is enabled
     - Cloud Cross Linking
     - Pod Network Metrics
     - Persistent Volume Claims
-    - Seed for policies, policy sets, policy contents and conditions 
+    - Seed for policies, policy sets, policy contents and conditions
     - Auto-tagging from kubernetes labels (backend only)
     - MiqAction to annotate container images as non-secure at
     - Multiple endpoint support OpenShift
-- Google Compute Engine 
+- Google Compute Engine
   - Inventory
   - Power Operations
   - Provisioning
   - Events
   - Better OS identification for VMs
   - Allow custom flavors
-- Hawkular 
+- Hawkular
   - First Middleware provider
   - Inventory and topology
   - Event Catcher and power operations to reload and stop Middleware servers
@@ -215,10 +292,10 @@ and before subscription is enabled
   - Clustered datastores
   - Add/remove disk methods for reconfigure
 - Red Hat Enterprise Virtualization: Targeted refresh process
-- Red Hat OpenStack 
+- Red Hat OpenStack
   - Instance Evacuation
   - Better neutron modeling
-  - Ceilometer events 
+  - Ceilometer events
   - cleanup SSL support
   - VM operations
   - Memory metrics
@@ -242,7 +319,7 @@ and before subscription is enabled
   - Microsoft Azure
 - Services Back End
   - Service Order (Cart) created for each Service Request based on current user and tenant.
-- VMware 
+- VMware
   - Clustered Datastores in Provisioning
   - Distributed Switches referenced from database during provisioning workflow
 - Google Compute Engine: Added Google Auto-Placement methods
@@ -269,7 +346,7 @@ and before subscription is enabled
 - Automation Requests approve and deny actions
 
 ### SmartState
-- Microsoft SCVMM: new 
+- Microsoft SCVMM: new
   - Virtual hard disks residing on Hyper-V servers
   - VHD, and newer VHDX disk formats
   - Snapshotted disks
@@ -320,8 +397,8 @@ and before subscription is enabled
 - Topology Status Colors
 - Vertical navigation menus
 - VM Reconfigure - add/remove disks
-- Orderable Orchestration Templates - create and copy 
-- Explorer for Datastore Clusters for VMware vSphere 5+ 
+- Orderable Orchestration Templates - create and copy
+- Explorer for Datastore Clusters for VMware vSphere 5+
 - Template/Image compliance policy checking (previously only allowed for VMs/Instances)
 - New UI for replication configuration
 - OpenStack - Cloud Volumes Add/Delete/Update/Attach/Detach
@@ -329,7 +406,7 @@ and before subscription is enabled
 - Support for Ansible Tower Jobs
 - Support to add Service Dialog for a Job Template & display Surveys on summary screen
 - Support added for Evacuate Openstack VMs
-   
+
 ## Removed
 
 - Providers: Removed Amazon SDK v1
@@ -371,7 +448,7 @@ and before subscription is enabled
   - Performance capture failure on cloud platforms caused by orphan VMs
   - Reduction in base size of workers
   - Reduction in memory used by EmsRefresh
-- Platform 
+- Platform
   - Updated to Rails 5 (using Rails master branch until stable branch is cut)
   - Appliance OS updated to CentOS 7.2 build 1511
   - oVirt-metrics gem fixed for Rails 5
