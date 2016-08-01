@@ -10,8 +10,17 @@ module Rbac
 
     end
 
-    def role_allows(user:, feature:, any: nil)
-      auth = any.present? ? user.role_allows_any?(:identifiers => [feature]) : user.role_allows?(:identifier => feature)
+    def role_allows(options = {})
+      # Known options:
+      user    = options[:user]
+      feature = options[:feature]
+      any     = options[:any]
+
+      auth = if any.present?
+               user.role_allows_any?(:identifiers => [feature])
+             else
+               user.role_allows?(:identifier => feature)
+             end
       _log.debug("Auth #{auth ? "successful" : "failed"} for user '#{user.userid}', role '#{user.miq_user_role.try(:name)}', feature identifier '#{feature}'")
 
       auth
