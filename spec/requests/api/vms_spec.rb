@@ -878,10 +878,22 @@ describe ApiController do
                            [{"href" => vm1_url, "event_type" => "etype1", "event_message" => "emsg1"},
                             {"href" => vm2_url, "event_type" => "etype2", "event_message" => "emsg2"}]))
 
-      expect_multiple_action_result(2)
-      expect_result_resources_to_include_hrefs("results", :vms_list)
-      expect_result_resources_to_match_key_data("results", "message",
-                                                [/adding event .*etype1/i, /adding event .*etype2/i])
+      expected = {
+        "results" => a_collection_containing_exactly(
+          {
+            "message" => a_string_matching(/adding event .*etype1/i),
+            "success" => true,
+            "href"    => a_string_matching(vm1_url)
+          },
+          {
+            "message" => a_string_matching(/adding event .*etype2/i),
+            "success" => true,
+            "href"    => a_string_matching(vm2_url)
+          }
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
     end
   end
 
@@ -915,13 +927,22 @@ describe ApiController do
 
       run_post(vms_url, gen_request(:retire, [{"href" => vm1_url}, {"href" => vm2_url}]))
 
-      expect_multiple_action_result(2)
-      expect_result_resources_to_include_hrefs("results", :vms_list)
-      expect_result_resources_to_match_key_data(
-        "results",
-        "message",
-        [/#{vm1.id}.* retiring/i, /#{vm2.id}.* retiring/i]
-      )
+      expected = {
+        "results" => a_collection_containing_exactly(
+          {
+            "message" => a_string_matching(/#{vm1.id}.* retiring/i),
+            "success" => true,
+            "href"    => a_string_matching(vm1_url)
+          },
+          {
+            "message" => a_string_matching(/#{vm2.id}.* retiring/ii),
+            "success" => true,
+            "href"    => a_string_matching(vm2_url)
+          }
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
     end
 
     it "in the future" do
@@ -963,13 +984,22 @@ describe ApiController do
 
       run_post(vms_url, gen_request(:reset, [{"href" => vm1_url}, {"href" => vm2_url}]))
 
-      expect_multiple_action_result(2)
-      expect_result_resources_to_include_hrefs("results", :vms_list)
-      expect_result_resources_to_match_key_data(
-        "results",
-        "message",
-        [/#{vm1.id}.* resetting/i, /#{vm2.id}.* resetting/i]
-      )
+      expected = {
+        "results" => a_collection_containing_exactly(
+          a_hash_including(
+            "message" => a_string_matching(/#{vm1.id}.* resetting/i),
+            "success" => true,
+            "href"    => a_string_matching(vm1_url)
+          ),
+          a_hash_including(
+            "message" => a_string_matching(/#{vm2.id}.* resetting/i),
+            "success" => true,
+            "href"    => a_string_matching(vm2_url)
+          )
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
     end
   end
 
@@ -1003,13 +1033,22 @@ describe ApiController do
 
       run_post(vms_url, gen_request(:shutdown_guest, [{"href" => vm1_url}, {"href" => vm2_url}]))
 
-      expect_multiple_action_result(2)
-      expect_result_resources_to_include_hrefs("results", :vms_list)
-      expect_result_resources_to_match_key_data(
-        "results",
-        "message",
-        [/#{vm1.id}.* shutting down/i, /#{vm2.id}.* shutting down/i]
-      )
+      expected = {
+        "results" => a_collection_containing_exactly(
+          a_hash_including(
+            "message" => a_string_matching(/#{vm1.id}.* shutting down/i),
+            "success" => true,
+            "href"    => a_string_matching(vm1_url)
+          ),
+          a_hash_including(
+            "message" => a_string_matching(/#{vm2.id}.* shutting down/i),
+            "success" => true,
+            "href"    => a_string_matching(vm2_url)
+          )
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
     end
   end
 
@@ -1043,13 +1082,22 @@ describe ApiController do
 
       run_post(vms_url, gen_request(:refresh, [{"href" => vm1_url}, {"href" => vm2_url}]))
 
-      expect_multiple_action_result(2)
-      expect_result_resources_to_include_hrefs("results", :vms_list)
-      expect_result_resources_to_match_key_data(
-        "results",
-        "message",
-        [/#{vm1.id}.* refreshing/i, /#{vm2.id}.* refreshing/i]
-      )
+      expected = {
+        "results" => a_collection_containing_exactly(
+          a_hash_including(
+            "message" => a_string_matching(/#{vm1.id}.* refreshing/i),
+            "success" => true,
+            "href"    => a_string_matching(vm1_url)
+          ),
+          a_hash_including(
+            "message" => a_string_matching(/#{vm2.id}.* refreshing/i),
+            "success" => true,
+            "href"    => a_string_matching(vm2_url)
+          )
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
     end
   end
 
@@ -1083,13 +1131,22 @@ describe ApiController do
 
       run_post(vms_url, gen_request(:reboot_guest, [{"href" => vm1_url}, {"href" => vm2_url}]))
 
-      expect_multiple_action_result(2)
-      expect_result_resources_to_include_hrefs("results", :vms_list)
-      expect_result_resources_to_match_key_data(
-        "results",
-        "message",
-        [/#{vm1.id}.* rebooting/i, /#{vm2.id}.* rebooting/i]
-      )
+      expected = {
+        "results" => a_collection_containing_exactly(
+          a_hash_including(
+            "message" => a_string_matching(/#{vm1.id}.* rebooting/i,),
+            "success" => true,
+            "href"    => a_string_matching(vm1_url)
+          ),
+          a_hash_including(
+            "message" => a_string_matching(/#{vm2.id}.* rebooting/i),
+            "success" => true,
+            "href"    => a_string_matching(vm2_url)
+          )
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
     end
   end
 end

@@ -62,13 +62,22 @@ RSpec.describe "Instances API" do
 
       run_post(instances_url, gen_request(:terminate, [{"href" => instance1_url}, {"href" => instance2_url}]))
 
-      expect_multiple_action_result(2)
-      expect_result_resources_to_include_hrefs("results", :instances_list)
-      expect_result_resources_to_match_key_data(
-        "results",
-        "message",
-        [/#{instance1.id}.* terminating/i, /#{instance2.id}.* terminating/i]
-      )
+      expected = {
+        "results" => a_collection_containing_exactly(
+          a_hash_including(
+            "message" => a_string_matching(/#{instance1.id}.* terminating/i),
+            "success" => true,
+            "href"    => a_string_matching(instance1_url)
+          ),
+          a_hash_including(
+            "message" => a_string_matching(/#{instance2.id}.* terminating/i),
+            "success" => true,
+            "href"    => a_string_matching(instance2_url)
+          )
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
     end
   end
 

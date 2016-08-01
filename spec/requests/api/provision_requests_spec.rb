@@ -277,13 +277,22 @@ describe ApiController do
 
       run_post(provision_requests_url, gen_request(:approve, [{"href" => provreq1_url}, {"href" => provreq2_url}]))
 
-      expect_multiple_action_result(2)
-      expect_result_resources_to_include_hrefs("results", :provreqs_list)
-      expect_result_resources_to_match_key_data(
-        "results",
-        "message",
-        [/Provision request #{provreq1.id} approved/i, /Provision request #{provreq2.id} approved/i]
-      )
+      expected = {
+        "results" => a_collection_containing_exactly(
+          {
+            "message" => a_string_matching(/Provision request #{provreq1.id} approved/i),
+            "success" => true,
+            "href"    => a_string_matching(provreq1_url)
+          },
+          {
+            "message" => a_string_matching(/Provision request #{provreq2.id} approved/i),
+            "success" => true,
+            "href"    => a_string_matching(provreq2_url)
+          }
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
     end
 
     it "supports denying multiple requests" do
@@ -291,13 +300,22 @@ describe ApiController do
 
       run_post(provision_requests_url, gen_request(:deny, [{"href" => provreq1_url}, {"href" => provreq2_url}]))
 
-      expect_multiple_action_result(2)
-      expect_result_resources_to_include_hrefs("results", :provreqs_list)
-      expect_result_resources_to_match_key_data(
-        "results",
-        "message",
-        [/Provision request #{provreq1.id} denied/i, /Provision request #{provreq2.id} denied/i]
-      )
+      expected = {
+        "results" => a_collection_containing_exactly(
+          {
+            "message" => a_string_matching(/Provision request #{provreq1.id} denied/i),
+            "success" => true,
+            "href"    => a_string_matching(provreq1_url)
+          },
+          {
+            "message" => a_string_matching(/Provision request #{provreq2.id} denied/i),
+            "success" => true,
+            "href"    => a_string_matching(provreq2_url)
+          }
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
     end
   end
 end

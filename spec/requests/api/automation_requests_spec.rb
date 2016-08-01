@@ -99,13 +99,22 @@ describe ApiController do
       run_post(automation_requests_url, gen_request(:approve, [{"href" => request1_url, "reason" => "approve reason"},
                                                                {"href" => request2_url, "reason" => "approve reason"}]))
 
-      expect_multiple_action_result(2)
-      expect_result_resources_to_include_hrefs("results", [request1_url, request2_url])
-      expect_result_resources_to_match_key_data(
-        "results",
-        "message",
-        [/Automation request #{request1.id} approved/i, /Automation request #{request2.id} approved/i]
-      )
+      expected = {
+        "results" => a_collection_containing_exactly(
+          {
+            "message" => a_string_matching(/Automation request #{request1.id} approved/i),
+            "success" => true,
+            "href"    => a_string_matching(request1_url)
+          },
+          {
+            "message" => a_string_matching(/Automation request #{request2.id} approved/i),
+            "success" => true,
+            "href"    => a_string_matching(request2_url)
+          }
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
     end
 
     it "supports denying multiple requests" do
@@ -114,13 +123,22 @@ describe ApiController do
       run_post(automation_requests_url, gen_request(:deny, [{"href" => request1_url, "reason" => "deny reason"},
                                                             {"href" => request2_url, "reason" => "deny reason"}]))
 
-      expect_multiple_action_result(2)
-      expect_result_resources_to_include_hrefs("results", [request1_url, request2_url])
-      expect_result_resources_to_match_key_data(
-        "results",
-        "message",
-        [/Automation request #{request1.id} denied/i, /Automation request #{request2.id} denied/i]
-      )
+      expected = {
+        "results" => a_collection_containing_exactly(
+          {
+            "message" => a_string_matching(/Automation request #{request1.id} denied/i,),
+            "success" => true,
+            "href"    => a_string_matching(request1_url)
+          },
+          {
+            "message" => a_string_matching(/Automation request #{request2.id} denied/i),
+            "success" => true,
+            "href"    => a_string_matching(request2_url)
+          }
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
     end
   end
 end
