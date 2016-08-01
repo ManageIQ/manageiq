@@ -154,8 +154,11 @@ class ResourcePool < ApplicationRecord
 
   # Overridden from AggregationMixin to provide hosts related to this RP
   def all_hosts
-    p = parent_cluster_or_host
-    p.kind_of?(Host) ? [p] : p.all_hosts
+    if p = parent_cluster_or_host
+      p.kind_of?(Host) ? [p] : p.all_hosts
+    else
+      []
+    end
   end
 
   def all_host_ids

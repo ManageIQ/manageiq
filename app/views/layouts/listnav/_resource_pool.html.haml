@@ -16,9 +16,9 @@
         - if role_allows(:feature => "ems_cluster_show")
           = li_link(:if => !@record.parent_cluster.nil?,
             :text       => _("Parent %{title}: %{name}") % {:title => title_for_cluster,
-              :name       => @record.parent_cluster.name},
+              :name       => @record.parent_cluster.try(:name)},
             :controller => 'ems_cluster',
-            :record_id  => @record.parent_cluster.id,
+            :record_id  => @record.parent_cluster.try(:id),
             :title      => _('Show VMs'))
 
         - if role_allows(:feature => "host_show")
