@@ -50,7 +50,7 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
   end
 
   def profile_nodes(data)
-    data.sort_by { |a| a[:name].downcase }.map do |node|
+    data.sort_by! { |a| a[:description].downcase }.map do |node|
       {:id       => node[:id],
        :text     => "<strong>#{_('Profile:')}</strong> #{node[:description]}".html_safe,
        :image    => node_icon(node[:result]),
@@ -59,7 +59,7 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
   end
 
   def policy_nodes(data)
-    data.sort_by { |a| a[:name].downcase }.map do |node|
+    data.sort_by! { |a| a[:description].downcase }.map do |node|
       active_caption = node[:active] ? "" : _(" (Inactive)")
       {:id         => node['id'],
        :text       => "<strong>#{_('Policy')}#{active_caption}:</strong> #{node[:description]}".html_safe,
@@ -97,10 +97,18 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
 
   def expression_node(data)
     name, tip = exp_build_string(data)
+    image = case data["result"]
+            when true
+              'checkmark'
+            when false
+              'x'
+            else
+              'na'
+            end
     {:id    => nil,
      :text  => "<strong>#{_('Expression:')}</strong> <span class='ws-wrap'>#{name}".html_safe,
      :tip   => tip.html_safe,
-     :image => 'na'}
+     :image => image}
   end
 
   def x_get_tree_roots(count_only = false, _options = nil)
