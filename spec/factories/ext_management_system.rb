@@ -179,6 +179,12 @@ FactoryGirl.define do
           :parent  => :ems_network do
   end
 
+  factory :ems_nuage_network,
+          :aliases => ["manageiq/providers/nuage/network_manager"],
+          :class   => "ManageIQ::Providers::Nuage::NetworkManager",
+          :parent  => :ems_network do
+  end
+
   factory :ems_google,
           :aliases => ["manageiq/providers/google/cloud_manager"],
           :class   => "ManageIQ::Providers::Google::CloudManager",
