@@ -1,10 +1,8 @@
 class ApiController
   module ArbitrationProfiles
     def create_resource_arbitration_profiles(_type, _id, data)
+      validate_profile_data(data)
       attributes = build_arbitration_attributes(data)
-      attributes['ext_management_system'] = fetch_provider(provider_from_data(data)) if provider_from_data(data)
-      attributes['availability_zone'] = fetch_availability_zone(data['availability_zone']) if data['availability_zone']
-      attributes.delete('provider')
       arbitration_profile = collection_class(:arbitration_profiles).create(attributes)
       validate_profile(arbitration_profile)
       arbitration_profile
@@ -12,18 +10,18 @@ class ApiController
 
     def edit_resource_arbitration_profiles(type, id, data)
       validate_profile_data(data)
-      attributes = data.dup
-      attributes['ext_management_system'] = fetch_provider(provider_from_data(data)) if provider_from_data(data)
-      attributes['availability_zone'] = fetch_availability_zone(data['availability_zone']) if data['availability_zone']
-      attributes.delete('provider')
+      attributes = build_arbitration_attributes(data)
       edit_resource(type, id, attributes)
     end
 
     private
 
     def build_arbitration_attributes(data)
-      validate_profile_data(data)
-      data.dup
+      attributes = data.dup
+      attributes['ext_management_system'] = fetch_provider(provider_from_data(data)) if provider_from_data(data)
+      attributes['availability_zone'] = fetch_availability_zone(data['availability_zone']) if data['availability_zone']
+      attributes.delete('provider')
+      attributes
     end
 
     def provider_from_data(data)
