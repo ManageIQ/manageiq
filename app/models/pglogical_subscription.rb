@@ -1,6 +1,8 @@
 # This model wraps a pglogical stored proc (pglogical.show_subscription_status)
 # This is exposed to us through the PostgreSQLAdapter#pglogical object's #subscriptions method
 # This model then exposes select values returned from that method
+require 'util/postgres_dsn_parser'
+
 class PglogicalSubscription < ActsAsArModel
   set_columns_hash(
     :id                   => :string,
@@ -103,7 +105,7 @@ class PglogicalSubscription < ActsAsArModel
   private_class_method :subscription_to_columns
 
   def self.dsn_attributes(dsn)
-    attrs = connection.class.parse_dsn(dsn)
+    attrs = PostgresDsnParser.parse_dsn(dsn)
     attrs.select! { |k, _v| [:dbname, :host, :user, :port].include?(k) }
     port = attrs.delete(:port)
     attrs[:port] = port.to_i unless port.blank?
@@ -179,7 +181,7 @@ class PglogicalSubscription < ActsAsArModel
   # sets this instance's password field to the one in the subscription dsn in the database
   def find_password
     s = pglogical.subscription_show_status(id).symbolize_keys
-    dsn_hash = connection.class.parse_dsn(s.delete(:provider_dsn))
+    dsn_hash = PostgresDsnParser.parse_dsn(s.delete(:provider_dsn))
     self.password = dsn_hash[:password]
   end
 
