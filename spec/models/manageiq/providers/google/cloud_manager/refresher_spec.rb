@@ -39,6 +39,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       assert_specific_vm_powered_on
       assert_specific_vm_with_proper_subnets
       assert_specific_vm_powered_off
+      assert_specific_vm_preemptible
       assert_specific_image_template
       assert_specific_snapshot_template
       assert_specific_cloud_volume
@@ -508,6 +509,20 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(v.network_ports.size).to          eql(1)
     expect(v.cloud_networks.size).to         eql(1)
     expect(v.floating_ips.size).to           eql(0)
+  end
+
+  def assert_specific_vm_preemptible
+    v = ManageIQ::Providers::Google::CloudManager::Vm.where(:name => "preemptible-1").first
+    expect(v).to have_attributes(
+      :raw_power_state       => "TERMINATED",
+      :template              => false,
+      :ems_ref               => "9023820458355785494",
+      :uid_ems               => "9023820458355785494",
+      :vendor                => "google",
+      :power_state           => "off"
+    )
+
+    expect(v.provider_options[:is_preemptible]).to eql(true)
   end
 
   def assert_specific_image_template
