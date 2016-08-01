@@ -127,6 +127,18 @@ class ApiController
       parse_id(resource, :tenants) unless resource.blank?
     end
 
+    def fetch_provider(data)
+      provider_id = parse_id(data, :providers)
+      raise BadRequestError, 'Missing Provider identifier href or id' if provider_id.nil?
+      resource_search(provider_id, :providers, collection_class(:providers))
+    end
+
+    def fetch_availability_zone(data)
+      availability_zone_id = parse_id(data, :availability_zones)
+      raise BadRequestError, 'Missing availability zone identifier href or id' if availability_zone_id.nil?
+      resource_search(availability_zone_id, :availability_zones, collection_class(:availability_zones))
+    end
+
     def parse_ownership(data)
       {
         :owner => collection_class(:users).find_by_id(parse_owner(data["owner"])),
