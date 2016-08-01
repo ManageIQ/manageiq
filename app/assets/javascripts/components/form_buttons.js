@@ -3,6 +3,6 @@ ManageIQ.angular.app.directive('formButtons', function() {
     restrict: 'E',
     scope: false,
     controller: 'buttonGroupController',
-    templateUrl: 'shared_components/form_buttons.html'
+    templateUrl: '/static/shared_components/form_buttons.html'
   };
 });
