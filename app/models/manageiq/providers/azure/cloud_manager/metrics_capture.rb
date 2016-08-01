@@ -53,10 +53,10 @@ class ManageIQ::Providers::Azure::CloudManager::MetricsCapture < ManageIQ::Provi
   private
 
   def with_metrics_services(connection)
-    yield [
-      Azure::Armrest::Insights::MetricsService.new(connection),
-      Azure::Armrest::StorageAccountService.new(connection)
-    ]
+    metrics_conn = Azure::Armrest::Insights::MetricsService.new(connection)
+    storage_conn = Azure::Armrest::StorageAccountService.new(connection)
+
+    yield metrics_conn, storage_conn
   end
 
   def storage_accounts(storage_account_service)
