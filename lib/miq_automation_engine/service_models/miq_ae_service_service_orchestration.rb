@@ -16,5 +16,11 @@ module MiqAeMethodService
     expose :orchestration_stack
     expose :build_stack_options_from_dialog
     expose :post_provision_configure
+
+    def self.create(options = {})
+      attributes = options.symbolize_keys.slice(*CREATE_ATTRIBUTES)
+
+      ar_method { MiqAeServiceModelBase.wrap_results(ServiceOrchestration.create!(attributes)) }
+    end
   end
 end
