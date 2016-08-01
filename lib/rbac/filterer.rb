@@ -200,16 +200,13 @@ module Rbac
 
       attrs[:apply_limit_in_sql] = (exp_attrs.nil? || exp_attrs[:supported_by_sql]) && user_filters["belongsto"].blank?
 
-      find_options = {:conditions => conditions, :include => include_for_find, :order => order}
-      find_options.merge!(:limit => limit, :offset => offset) if attrs[:apply_limit_in_sql]
-      find_options[:ext_options] = options[:ext_options] if options[:ext_options] && klass.respond_to?(:instances_are_derived?) && klass.instances_are_derived?
-
       scope = scope.except(:offset, :limit) if !attrs[:apply_limit_in_sql]
 
-      _log.debug("Find options: #{find_options.inspect}")
-
       scope = scope_targets(klass, scope, user_filters, user, miq_group)
-      targets = method_with_scope(scope, find_options)
+      scope = scope.where(conditions).includes(include_for_find).references(include_for_find).order(options[:order])
+      scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
+      targets = scope
+
       auth_count = attrs[:apply_limit_in_sql] && limit ? targets.except(:offset, :limit, :order).count(:all) : targets.length
 
       if search_filter && targets && (!exp_attrs || !exp_attrs[:supported_by_sql])
@@ -450,10 +447,6 @@ module Rbac
 
     def to_class(klass)
       klass.kind_of?(String) || klass.kind_of?(Symbol) ? klass.to_s.constantize : klass
-    end
-
-    def method_with_scope(ar_scope, options)
-      ar_scope.apply_legacy_finder_options(options)
     end
 
     def apply_scope(klass, scope)
