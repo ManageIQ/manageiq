@@ -1128,7 +1128,7 @@ class VmOrTemplate < ApplicationRecord
     unless ext_management_system.authentication_status_ok?
       raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "ext_management_systems")}
     end
-    EmsRefresh.reconfig_refresh(self)
+    EmsRefresh.refresh(self)
   end
 
   def self.post_refresh_ems(ems_id, update_start_time)
