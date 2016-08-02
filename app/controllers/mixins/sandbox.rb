@@ -72,6 +72,7 @@ module Sandbox
     policy_profile_tree
     policy_tree
     policy_simulation_tree
+    protect_tree
     pxe_image_types_tree
     pxe_servers_tree
     configuration_manager_providers_tree

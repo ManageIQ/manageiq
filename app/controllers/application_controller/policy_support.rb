@@ -18,9 +18,9 @@ module ApplicationController::PolicySupport
       render :update do |page|
         page << javascript_prologue
         if @edit[:new][profile_id] == @edit[:current][profile_id]
-          page << "miqDynatreeNodeAddClass('#{j_str(session[:tree_name])}', 'policy_profile_#{profile_id}','dynatree-title')"
+          page << "miqDynatreeNodeAddClass('protect', 'xx-policy_profile_#{profile_id}','dynatree-title')"
         else
-          page << "miqDynatreeNodeAddClass('#{j_str(session[:tree_name])}', 'policy_profile_#{profile_id}', 'cfme-blue-bold-node')"
+          page << "miqDynatreeNodeAddClass('protect', 'xx-policy_profile_#{profile_id}', 'cfme-blue-bold-node')"
         end
         if changed != session[:changed]
           session[:changed] = changed
@@ -212,7 +212,10 @@ module ApplicationController::PolicySupport
     @edit[:current] = @edit[:new].dup                 # Save the existing counts
     session[:changed] = false
     @in_a_form = true
-    protect_build_tree                                # Build the protect tree
+    @edit[:controller_name] = controller_name
+    @edit[:pol_items] = session[:pol_items]
+    protect_build_tree # Build the protect tree
+    @protect_tree = TreeBuilderProtect.new(:protect, :protect_tree, @sb, true, @edit)
     build_targets_hash(@politems)
   end
 
