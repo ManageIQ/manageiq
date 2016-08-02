@@ -47,6 +47,7 @@ module Metric::Capture
     targets_by_rollup_parent = calc_targets_by_rollup_parent(targets)
     tasks_by_rollup_parent   = calc_tasks_by_rollup_parent(targets_by_rollup_parent)
     target_options = calc_target_options(zone, targets, targets_by_rollup_parent, tasks_by_rollup_parent)
+    targets = filter_perf_capture_now(targets, target_options)
     queue_captures(targets, target_options)
 
     # Purge tasks older than 4 hours
@@ -76,6 +77,23 @@ module Metric::Capture
     item[:zone] = zone.name if zone
 
     MiqQueue.put(item)
+  end
+
+  def self.filter_perf_capture_now(targets, target_options)
+    targets.select do |target|
+      options = target_options[target]
+      # [:force] is set if we already determined this target needs perf capture
+      if options[:force] || perf_capture_now?(target)
+        true
+      else
+        _log.debug do
+          log_target = "#{target.class.name} name: [#{target.name}], id: [#{target.id}]"
+          "Skipping capture of #{log_target} -" +
+            "Performance last captured on [#{target.last_perf_capture_on}] is within threshold"
+        end
+        false
+      end
+    end
   end
 
   # if it has not been run, or it was a very long time ago, just run it
@@ -192,16 +210,7 @@ module Metric::Capture
 
       options = target_options[target]
 
-      if options[:force] || perf_capture_now?(target)
-        target.perf_capture_queue(interval_name, options)
-      else
-        _log.debug do
-          log_target = "#{target.class.name} name: [#{target.name}], id: [#{target.id}]"
-          "Skipping capture of #{log_target} -" +
-            "Performance last captured on [#{target.last_perf_capture_on}] is within threshold"
-        end
-      end
-
+      target.perf_capture_queue(interval_name, options)
       if !target.kind_of?(Storage) && use_historical && target.last_perf_capture_on.nil?
         target.perf_capture_queue('historical')
       end
