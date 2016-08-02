@@ -1,6 +1,6 @@
-require 'util/postgres_dsn_parser'
 require 'postgres_ha_admin/postgres_ha_admin'
 require 'pg'
+require 'pg/dsn_parser'
 
 module PostgresHaAdmin
   class FailoverDatabases
@@ -52,7 +52,7 @@ module PostgresHaAdmin
       if miq_repllication_exists?(connection)
         db_result = connection.exec("SELECT type, conninfo, active FROM repmgr_miq.repl_nodes")
         db_result.map_types!(PG::BasicTypeMapForResults.new(connection)).each do |record|
-          dsn = PostgresDsnParser.parse_dsn(record.delete("conninfo"))
+          dsn = PG::DSNParser.parse(record.delete("conninfo"))
           result << record.symbolize_keys.merge(dsn)
         end
         db_result.clear
