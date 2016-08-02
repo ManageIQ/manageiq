@@ -44,7 +44,7 @@ class TreeBuilderProtect < TreeBuilder
   def x_get_tree_hash_kids(parent, count_only)
     nodes = parent[:children].map do |policy|
       {:id       => "policy_#{policy.id}",
-       :text     => policy.description,
+       :text     => "<b>#{ui_lookup(:model => policy.towhat)} #{policy.mode.capitalize}:</b> #{policy.description}".html_safe,
        :image    => "miq_policy_#{policy.towhat.downcase}#{policy.active ? "" : "_inactive"}",
        :tip      => policy.description,
        :hideCheckbox => true,

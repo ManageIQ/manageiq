@@ -214,7 +214,6 @@ module ApplicationController::PolicySupport
     @in_a_form = true
     @edit[:controller_name] = controller_name
     @edit[:pol_items] = session[:pol_items]
-    protect_build_tree # Build the protect tree
     @protect_tree = TreeBuilderProtect.new(:protect, :protect_tree, @sb, true, @edit)
     build_targets_hash(@politems)
   end
