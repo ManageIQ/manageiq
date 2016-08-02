@@ -1,13 +1,18 @@
 require_relative 'hawkular_helper'
 
+# VCR Cassettes: Hawkular Services 0.0.8.Final-SNAPSHOT (commit 0b50b06025641fa83128bb13de3a3eff8d37bb8b)
+
 describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource do
 
   let(:ems_hawkular) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
-    auth = AuthToken.new(:name => "test", :auth_key => "valid-token", :userid => "jdoe", :password => "password")
+    auth = AuthToken.new(:name     => "test",
+                         :auth_key => "valid-token",
+                         :userid   => test_userid,
+                         :password => test_password)
     FactoryGirl.create(:ems_hawkular,
-                       :hostname        => 'localhost',
-                       :port            => 8080,
+                       :hostname        => test_hostname,
+                       :port            => test_port,
                        :authentications => [auth],
                        :zone            => zone)
   end
@@ -25,7 +30,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
 
   let(:ds) do
     FactoryGirl.create(:hawkular_middleware_datasource,
-                       :name                  => 'KeycloakDS',
+                       :name                  => 'ExampleDS',
                        :ems_ref               => '/t;hawkular'\
                                                  "/f;#{the_feed_id}/r;Local~~"\
                                                  '/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS',
@@ -40,8 +45,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
   end
 
   it "#collect_live_metrics for all metrics available" do
-    start_time = Time.new(2016, 7, 17, 10, 0, 0, "+02:00")
-    end_time = Time.new(2016, 7, 17, 11, 0, 0, "+02:00")
+    start_time = test_start_time
+    end_time = test_end_time
     interval = 3600
     VCR.use_cassette(described_class.name.underscore.to_s,
                      :allow_unused_http_interactions => true,
@@ -54,8 +59,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
   end
 
   it "#collect_live_metrics for three metrics" do
-    start_time = Time.new(2016, 7, 17, 10, 0, 0, "+02:00")
-    end_time = Time.new(2016, 7, 17, 11, 0, 0, "+02:00")
+    start_time = test_start_time
+    end_time = test_end_time
     interval = 3600
     VCR.use_cassette(described_class.name.underscore.to_s,
                      :allow_unused_http_interactions => true,
@@ -83,12 +88,12 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
 
   it "#supported_metrics" do
     expected_metrics = {
-      "Datasource Pool Metrics~Available Count"       => "mw_ds_available_count",
-      "Datasource Pool Metrics~In Use Count"          => "mw_ds_in_use_count",
-      "Datasource Pool Metrics~Timed Out"             => "mw_ds_timed_out",
-      "Datasource Pool Metrics~Average Get Time"      => "mw_ds_average_get_time",
-      "Datasource Pool Metrics~Average Creation Time" => "mw_ds_average_creation_time",
-      "Datasource Pool Metrics~Max Wait Time"         => "mw_ds_max_wait_time"
+      "Available Count"       => "mw_ds_available_count",
+      "In Use Count"          => "mw_ds_in_use_count",
+      "Timed Out"             => "mw_ds_timed_out",
+      "Average Get Time"      => "mw_ds_average_get_time",
+      "Average Creation Time" => "mw_ds_average_creation_time",
+      "Max Wait Time"         => "mw_ds_max_wait_time"
     }.freeze
     supported_metrics = MiddlewareDatasource.supported_metrics
     expected_metrics.each { |k, v| expect(supported_metrics[k]).to eq(v) }
