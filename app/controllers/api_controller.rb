@@ -58,6 +58,7 @@ class ApiController < ApplicationController
   include_concern 'ArbitrationProfiles'
   include_concern 'Authentication'
   include_concern 'AutomationRequests'
+  include_concern 'Blueprints'
   include_concern 'Categories'
   include_concern 'CloudNetworks'
   include_concern 'Conditions'

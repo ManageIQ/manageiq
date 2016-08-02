@@ -5127,3 +5127,32 @@
     :description: Delete Arbitration Settings
     :feature_type: admin
     :identifier: delete_arbitration_setting
+
+# Blueprints
+- :name: Blueprints
+  :description: All Blueprint Access Rules
+  :feature_type: node
+  :identifier: blueprint
+  :children:
+  - :name: View
+    :description: View Blueprint
+    :feature_type: view
+    :identifier: blueprint_view
+    :children:
+    - :name: List
+      :description: List Blueprint
+      :feature_type: view
+      :identifier: blueprint_show_list
+    - :name: Show
+      :description: Show Blueprint
+      :feature_type: view
+      :identifier: blueprint_show
+  - :name: Modify
+    :description: Modify Blueprint
+    :feature_type: admin
+    :identifier: blueprint_admin
+    :children:
+    - :name: Add
+      :description: Add Blueprint
+      :feature_type: admin
+      :identifier: blueprint_new
