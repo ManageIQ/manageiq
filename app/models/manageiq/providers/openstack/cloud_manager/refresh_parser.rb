@@ -89,11 +89,11 @@ module ManageIQ::Providers
     end
 
     def availability_zones_compute
-      @availability_zones_compute ||= safe_list { @connection.availability_zones }
+      @availability_zones_compute ||= safe_list { @connection.availability_zones.summary }
     end
 
     def availability_zones_volume
-      @availability_zones_volume ||= safe_list { @volume_service.availability_zones }
+      @availability_zones_volume ||= safe_list { @volume_service.availability_zones.summary }
     end
 
     def availability_zones
@@ -117,9 +117,11 @@ module ManageIQ::Providers
     end
 
     def get_availability_zones
-      azs = availability_zones
-      azs << nil # force the null availability zone for openstack
-      process_collection(azs, :availability_zones) { |az| parse_availability_zone(az) }
+      compute_azs = availability_zones_compute
+      volume_azs = availability_zones_volume
+      compute_azs << nil # force the null availability zone for openstack
+      process_collection(compute_azs, :availability_zones) { |az| parse_availability_zone(az, :compute) }
+      process_collection(volume_azs, :availability_zones) { |az| parse_availability_zone(az, :volume) }
     end
 
     def get_tenants
@@ -202,7 +204,7 @@ module ManageIQ::Providers
       return uid, new_result
     end
 
-    def parse_availability_zone(az)
+    def parse_availability_zone(az, service_name)
       if az.nil?
         uid        = "null_az"
         new_result = {
@@ -210,14 +212,14 @@ module ManageIQ::Providers
           :ems_ref => uid
         }
       else
-        uid = name = az.zoneName
+        name = az.zoneName
+        uid = "#{service_name}-#{name}"
         new_result = {
           :type    => "ManageIQ::Providers::Openstack::CloudManager::AvailabilityZone",
           :ems_ref => uid,
           :name    => name
         }
       end
-
       return uid, new_result
     end
 
@@ -297,7 +299,7 @@ module ManageIQ::Providers
         :snapshot_uid      => volume.snapshot_id,
         :size              => volume.size.to_i.gigabytes,
         :tenant            => @data_index.fetch_path(:cloud_tenants, volume.tenant_id),
-        :availability_zone => @data_index.fetch_path(:availability_zones, volume.availability_zone || "null_az"),
+        :availability_zone => @data_index.fetch_path(:availability_zones, "volume-" + volume.availability_zone || "null_az"),
       }
 
       volume.attachments.each do |a|
@@ -418,7 +420,7 @@ module ManageIQ::Providers
         :host                => parent_host,
         :ems_cluster         => parent_cluster,
         :flavor              => flavor,
-        :availability_zone   => @data_index.fetch_path(:availability_zones, server.availability_zone.blank? ? "null_az" : server.availability_zone),
+        :availability_zone   => @data_index.fetch_path(:availability_zones, server.availability_zone.blank? ? "null_az" : "compute-" + server.availability_zone),
         :key_pairs           => [@data_index.fetch_path(:key_pairs, server.key_name)].compact,
         # TODO(lsmola) moving this under has_many :security_groups, :through => :network_port will require changing
         # saving code and refresh of all providers
@@ -475,7 +477,7 @@ module ManageIQ::Providers
       host = hosts.try(:find) { |h| h.hypervisor_hostname == service.host.split('.').first }
       system_services = host.try(:system_services)
       system_service = system_services.try(:find) { |ss| ss.name =~ /#{service.binary}/ }
-      availability_zone = @ems.availability_zones.find { |zone| zone.ems_ref == service.zone }
+      availability_zone = @ems.availability_zones.find { |zone| zone.ems_ref == "compute-" + service.zone }
 
       new_result = {
         :ems_ref                    => uid,

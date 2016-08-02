@@ -40,7 +40,8 @@ module Openstack
       # Error in Availability zones list
       allow_any_instance_of(Fog::Compute::OpenStack::Real).to receive(:availability_zones).and_raise(forbidden)
       allow_any_instance_of(Fog::Volume::OpenStack::Real).to  receive(:availability_zones).and_raise(not_found)
-
+      allow_any_instance_of(Fog::Compute::OpenStack::AvailabilityZones).to receive(:summary).and_raise(forbidden)
+      allow_any_instance_of(Fog::Volume::OpenStack::AvailabilityZones).to  receive(:summary).and_raise(not_found)
       # Error in list of quotas
       allow_any_instance_of(Fog::Compute::OpenStack::Real).to receive(:get_quota).and_raise(forbidden)
       allow_any_instance_of(Fog::Network::OpenStack::Real).to receive(:get_quota).and_raise(not_found)
@@ -84,7 +85,6 @@ module Openstack
       expect(SystemService.count).to                     eq 0
       expect(GuestDevice.count).to                       eq 0
       expect(CustomAttribute.count).to                   eq 0
-
       # Just check that Relationship are not empty
       expect(Relationship.count).to        be > 0
       # Just check that queue is not empty
@@ -358,7 +358,7 @@ module Openstack
       # standard openstack AZs have their ems_ref set to their name ("nova" in the test case)...
       # the "null" openstack AZ has a unique ems_ref and name
       expect(@nova_az).to have_attributes(
-        :ems_ref => @nova_az.name
+        :ems_ref => "compute-#{@nova_az.name}"
       )
     end
 
