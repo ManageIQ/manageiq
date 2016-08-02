@@ -3,7 +3,7 @@ require "spec_helper"
 describe ContainerBuildController do
   render_views
   before(:each) do
-    set_user_privileges
+    stub_user(:features => :all)
   end
 
   it "renders index" do

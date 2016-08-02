@@ -1,8 +1,7 @@
 describe VmOrTemplateController do
   context "#snap_pressed" do
     before :each do
-      set_user_privileges
-      allow(controller).to receive(:role_allows).and_return(true)
+      stub_user(:features => :all)
       vm = FactoryGirl.create(:vm_vmware)
       @snapshot = FactoryGirl.create(:snapshot, :vm_or_template_id => vm.id,
                                                 :name              => 'EvmSnapshot',
@@ -75,7 +74,7 @@ describe VmOrTemplateController do
     end
 
     it "Redirects user with privileges to vm_infra/explorer" do
-      set_user_privileges
+      stub_user(:features => :all)
       get :show, :params => {:id => @vm.id}
       expect(response.status).to eq(302)
       expect(response).to redirect_to(:controller => "vm_infra", :action => 'explorer')

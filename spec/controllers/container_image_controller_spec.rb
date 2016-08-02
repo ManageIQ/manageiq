@@ -1,7 +1,7 @@
 describe ContainerImageController do
   render_views
   before(:each) do
-    set_user_privileges
+    stub_user(:features => :all)
   end
 
   it "when Smart Analysis is pressed" do

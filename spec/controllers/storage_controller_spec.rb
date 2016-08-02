@@ -4,7 +4,7 @@ describe StorageController do
 
   let(:storage) { FactoryGirl.create(:storage, :name => 'test_storage1') }
   let(:storage_cluster) { FactoryGirl.create(:storage_cluster, :name => 'test_storage_cluster1') }
-  before { set_user_privileges }
+  before { stub_user(:features => :all) }
 
   context "#button" do
     it "when VM Right Size Recommendations is pressed" do
@@ -229,11 +229,10 @@ describe StorageController do
   end
 
   context "#tags_edit" do
+    let!(:user) { stub_user(:features => :all) }
     before(:each) do
       EvmSpecHelper.create_guid_miq_server_zone
       @ds = FactoryGirl.create(:storage, :name => "Datastore-01")
-      user = FactoryGirl.create(:user, :userid => 'testuser')
-      set_user_privileges user
       allow(@ds).to receive(:tagged_with).with(:cat => user.userid).and_return("my tags")
       classification = FactoryGirl.create(:classification, :name => "department", :description => "Department")
       @tag1 = FactoryGirl.create(:classification_tag,

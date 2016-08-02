@@ -1,6 +1,6 @@
 describe PxeController do
   before do
-    set_user_privileges
+    stub_user(:features => :all)
   end
 
   describe "#iso_datastore_set_form_vars" do

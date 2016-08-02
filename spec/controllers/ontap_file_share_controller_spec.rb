@@ -1,7 +1,7 @@
 describe OntapFileShareController do
   context "#process_button" do
     before(:each) do
-      set_user_privileges
+      stub_user(:features => :all)
       EvmSpecHelper.create_guid_miq_server_zone
 
       ApplicationController.handle_exceptions = true

@@ -1,6 +1,6 @@
 describe ServiceController do
   before(:each) do
-    set_user_privileges
+    stub_user(:features => :all)
   end
 
   context "#service_delete" do

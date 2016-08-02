@@ -5,7 +5,7 @@ describe EmsInfraController do
   let(:zone) { FactoryGirl.build(:zone) }
   context "#button" do
     before(:each) do
-      set_user_privileges
+      stub_user(:features => :all)
       EvmSpecHelper.create_guid_miq_server_zone
 
       ApplicationController.handle_exceptions = true
@@ -97,7 +97,7 @@ describe EmsInfraController do
 
   describe "#scaling" do
     before do
-      set_user_privileges
+      stub_user(:features => :all)
       @ems = FactoryGirl.create(:ems_openstack_infra_with_stack)
       @orchestration_stack_parameter_compute = FactoryGirl.create(:orchestration_stack_parameter_openstack_infra_compute)
 
@@ -167,7 +167,7 @@ describe EmsInfraController do
 
   describe "#scaledown" do
     before do
-      set_user_privileges
+      stub_user(:features => :all)
       @ems = FactoryGirl.create(:ems_openstack_infra_with_stack_and_compute_nodes)
 
       allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack)
@@ -274,7 +274,7 @@ describe EmsInfraController do
     end
 
     it " can tag associated datastores" do
-      set_user_privileges
+      stub_user(:features => :all)
       datastore = FactoryGirl.create(:storage, :name => 'storage_name')
       datastore.parent = @ems
       controller.instance_variable_set(:@_orig_action, "x_history")
@@ -292,7 +292,7 @@ describe EmsInfraController do
 
   describe "#show_list" do
     before(:each) do
-      set_user_privileges
+      stub_user(:features => :all)
       FactoryGirl.create(:ems_vmware)
       get :show_list
     end
@@ -304,7 +304,7 @@ describe EmsInfraController do
     render_views
     context "#form_field_changed" do
       before do
-        set_user_privileges
+        stub_user(:features => :all)
         EvmSpecHelper.create_guid_miq_server_zone
       end
 
@@ -329,7 +329,7 @@ describe EmsInfraController do
 
   describe "breadcrumbs path on a 'show' page of an Infrastructure Provider accessed from Dashboard maintab" do
     before do
-      set_user_privileges
+      stub_user(:features => :all)
       EvmSpecHelper.create_guid_miq_server_zone
     end
     context "when previous breadcrumbs path contained 'Cloud Providers'" do

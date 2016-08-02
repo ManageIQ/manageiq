@@ -7,23 +7,19 @@ describe ContainerSummaryHelper do
     self.class.send(:include, ApplicationHelper)
 
     @record = FactoryGirl.build(:container_group, :container_project => container_project)
-
-    login_as @user = FactoryGirl.create(:user)
   end
 
   context ".textual_container_project" do
     subject { textual_container_project }
 
     it 'show link when role allows' do
-      allow(@user).to receive(:role_allows?).and_return(true)
-
+      stub_user(:features => :all)
       expect(subject.keys).to eq(REL_HASH_WITH_LINK)
       expect(subject[:value]).to eq(container_project.name)
     end
 
     it 'hide link when role does not allow' do
-      allow(@user).to receive(:role_allows?).and_return(false)
-
+      stub_user(:features => :none)
       expect(subject.keys).to eq(REL_HASH_WITHOUT_LINK)
       expect(subject[:value]).to eq(container_project.name)
     end
@@ -34,15 +30,13 @@ describe ContainerSummaryHelper do
     subject { textual_containers }
 
     it 'show link when role allows' do
-      allow(@user).to receive(:role_allows?).and_return(true)
-
+      stub_user(:features => :all)
       expect(subject.keys).to eq(REL_HASH_WITH_LINK)
       expect(subject[:value]).to eq("2")
     end
 
     it 'hide link when role does not allow' do
-      allow(@user).to receive(:role_allows?).and_return(false)
-
+      stub_user(:features => :none)
       expect(subject.keys).to eq(REL_HASH_WITHOUT_LINK)
       expect(subject[:value]).to eq("2")
     end

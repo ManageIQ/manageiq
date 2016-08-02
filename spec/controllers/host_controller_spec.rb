@@ -3,7 +3,7 @@ describe HostController do
     render_views
 
     before(:each) do
-      set_user_privileges
+      stub_user(:features => :all)
       EvmSpecHelper.create_guid_miq_server_zone
 
       ApplicationController.handle_exceptions = true
@@ -85,7 +85,7 @@ describe HostController do
 
   context "#create" do
     it "can create a host with custom id and no host name" do
-      set_user_privileges
+      stub_user(:features => :all)
       controller.instance_variable_set(:@breadcrumbs, [])
 
       controller.instance_variable_set(:@_params,
@@ -103,7 +103,7 @@ describe HostController do
     end
 
     it "doesn't crash when trying to validate a new host" do
-      set_user_privileges
+      stub_user(:features => :all)
       controller.instance_variable_set(:@breadcrumbs, [])
       controller.new
 
@@ -126,7 +126,7 @@ describe HostController do
 
   context "#set_record_vars" do
     it "strips leading/trailing whitespace from hostname/ipaddress when adding infra host" do
-      set_user_privileges
+      stub_user(:features => :all)
       controller.instance_variable_set(:@_params,
                                        :name     => 'EMS 2',
                                        :emstype  => 'rhevm',
@@ -140,7 +140,7 @@ describe HostController do
 
   context "#show_association" do
     before(:each) do
-      set_user_privileges
+      stub_user(:features => :all)
       @host = FactoryGirl.create(:host, :name =>'hostname1')
       @guest_application = FactoryGirl.create(:guest_application, :name => "foo", :host_id => @host.id)
       @datastore = FactoryGirl.create(:storage, :name => 'storage_name')
@@ -265,7 +265,7 @@ describe HostController do
   context "#render pages" do
     render_views
     before do
-      set_user_privileges
+      stub_user(:features => :all)
       EvmSpecHelper.create_guid_miq_server_zone
     end
     it "renders a new page with ng-required condition set to false for password" do

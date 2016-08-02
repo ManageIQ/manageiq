@@ -1,6 +1,6 @@
 describe MiqPolicyController do
   before :each do
-    set_user_privileges
+    stub_user(:features => :all)
   end
   context "::Policies" do
     context "#policy_edit" do

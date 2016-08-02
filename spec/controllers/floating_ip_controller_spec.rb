@@ -3,7 +3,7 @@ include CompressedIds
 describe FloatingIpController do
   render_views
   before :each do
-    set_user_privileges
+    stub_user(:features => :all)
     setup_zone
   end
 

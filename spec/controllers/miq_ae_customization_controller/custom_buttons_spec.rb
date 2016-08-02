@@ -1,6 +1,6 @@
 describe MiqAeCustomizationController do
   before(:each) do
-    set_user_privileges
+    stub_user(:features => :all)
   end
   context "::CustomButtons" do
     context "#ab_get_node_info" do

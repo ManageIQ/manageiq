@@ -1,6 +1,6 @@
 describe EmsMiddlewareController do
   before(:each) do
-    set_user_privileges
+    stub_user(:features => :all)
   end
 
   it "#new" do

@@ -1,17 +1,16 @@
 describe AuthKeyPairCloudController do
   context "#button" do
     before(:each) do
-      set_user_privileges
+      stub_user(:features => :all)
       EvmSpecHelper.create_guid_miq_server_zone
     end
   end
 
   context "#tags_edit" do
+    let!(:user) { stub_user(:features => :all) }
     before(:each) do
       EvmSpecHelper.create_guid_miq_server_zone
       @kp = FactoryGirl.create(:auth_key_pair_cloud, :name => "auth-key-pair-cloud-01")
-      user = FactoryGirl.create(:user, :userid => 'testuser')
-      set_user_privileges user
       allow(@kp).to receive(:tagged_with).with(:cat => user.userid).and_return("my tags")
       classification = FactoryGirl.create(:classification, :name => "department", :description => "Department")
       @tag1 = FactoryGirl.create(:classification_tag,

@@ -35,7 +35,7 @@ describe MiqAeClassController do
 
   context "#domain_lock" do
     it "Marks domain as locked/readonly" do
-      set_user_privileges
+      stub_user(:features => :all)
       ns = FactoryGirl.create(:miq_ae_domain_enabled)
       controller.instance_variable_set(:@_params, :id => ns.id)
       allow(controller).to receive(:replace_right_cell)
@@ -47,7 +47,7 @@ describe MiqAeClassController do
 
   context "#domain_unlock" do
     it "Marks domain as unlocked/editable" do
-      set_user_privileges
+      stub_user(:features => :all)
       ns = FactoryGirl.create(:miq_ae_domain_disabled)
       controller.instance_variable_set(:@_params, :id => ns.id)
       allow(controller).to receive(:replace_right_cell)
@@ -59,7 +59,7 @@ describe MiqAeClassController do
 
   context "#domains_priority_edit" do
     it "sets priority of domains" do
-      set_user_privileges
+      stub_user(:features => :all)
       FactoryGirl.create(:miq_ae_domain, :name => "test1", :parent => nil, :priority => 1)
       FactoryGirl.create(:miq_ae_domain, :name => "test2", :parent => nil, :priority => 2)
       FactoryGirl.create(:miq_ae_domain, :name => "test3", :parent => nil, :priority => 3)
@@ -84,7 +84,7 @@ describe MiqAeClassController do
 
   context "#copy_objects" do
     it "do not replace left side explorer tree when copy form is loaded initially" do
-      set_user_privileges
+      stub_user(:features => :all)
       d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
       ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
       cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
@@ -103,7 +103,7 @@ describe MiqAeClassController do
     end
 
     it "copies class under specified namespace" do
-      set_user_privileges
+      stub_user(:features => :all)
       d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
       ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
       cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
@@ -133,7 +133,7 @@ describe MiqAeClassController do
     end
 
     it "copy class under same namespace returns error when class exists" do
-      set_user_privileges
+      stub_user(:features => :all)
       d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
       ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
       cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
@@ -160,7 +160,7 @@ describe MiqAeClassController do
     end
 
     it "overwrite class under same namespace when class exists" do
-      set_user_privileges
+      stub_user(:features => :all)
       d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
       ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
       cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
@@ -189,7 +189,7 @@ describe MiqAeClassController do
     end
 
     it "copies a class with new name under same domain" do
-      set_user_privileges
+      stub_user(:features => :all)
       d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
       ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
       cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
@@ -286,7 +286,7 @@ describe MiqAeClassController do
 
     context "#node_info" do
       it "collect namespace info" do
-        set_user_privileges
+        stub_user(:features => :all)
         d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
         ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
         FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => ns1.id)
@@ -401,7 +401,7 @@ describe MiqAeClassController do
 
   context "#delete_domain" do
     it "Should only delete editable domains" do
-      set_user_privileges
+      stub_user(:features => :all)
       domain1 = FactoryGirl.create(:miq_ae_system_domain_enabled)
 
       domain2 = FactoryGirl.create(:miq_ae_domain_enabled)
@@ -420,7 +420,7 @@ describe MiqAeClassController do
 
   context "#ae_class_validation" do
     before(:each) do
-      set_user_privileges
+      stub_user(:features => :all)
       ns = FactoryGirl.create(:miq_ae_namespace)
       @cls = FactoryGirl.create(:miq_ae_class, :namespace_id => ns.id)
       @cls.ae_fields << FactoryGirl.create(:miq_ae_field, :name => 'fred',
@@ -499,7 +499,7 @@ describe MiqAeClassController do
 
   context "save class/method" do
     before do
-      set_user_privileges
+      stub_user(:features => :all)
       ns = FactoryGirl.create(:miq_ae_namespace)
       @cls = FactoryGirl.create(:miq_ae_class, :namespace_id => ns.id)
       @cls.ae_fields << FactoryGirl.create(:miq_ae_field, :name => 'fred',
@@ -570,7 +570,7 @@ describe MiqAeClassController do
 
   context "#delete_domain_or_namespaces" do
     before do
-      set_user_privileges
+      stub_user(:features => :all)
       domain = FactoryGirl.create(:miq_ae_domain, :tenant => Tenant.seed)
       @namespace = FactoryGirl.create(:miq_ae_namespace, :name => "foo_namespace", :parent => domain)
       @ae_class = FactoryGirl.create(:miq_ae_class, :name => "foo_class", :namespace_id => 1)

@@ -1,7 +1,7 @@
 describe VmCloudController do
   render_views
   before :each do
-    set_user_privileges
+    stub_user(:features => :all)
     EvmSpecHelper.create_guid_miq_server_zone
   end
 

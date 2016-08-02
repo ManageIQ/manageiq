@@ -1,9 +1,9 @@
 describe ReportController do
   context "::Reports::Editor" do
     context "#set_form_vars" do
+      let(:user) { stub_user(:features => :all) }
+
       it "check existence of cb_owner_id key" do
-        user = FactoryGirl.create(:user)
-        login_as user
         rep = FactoryGirl.create(
           :miq_report,
           :db         => "ChargebackVm",
@@ -21,8 +21,6 @@ describe ReportController do
       it "should save the selected time zone with a chargeback report" do
         ApplicationController.handle_exceptions = true
 
-        user = FactoryGirl.create(:user)
-        login_as user
         rep = FactoryGirl.create(
           :miq_report,
           :db         => "ChargebackVm",
@@ -50,9 +48,6 @@ describe ReportController do
 
         allow(User).to receive(:server_timezone).and_return("UTC")
 
-        login_as user
-        allow_any_instance_of(User).to receive(:role_allows?).and_return(true)
-
         allow(controller).to receive(:check_privileges).and_return(true)
         allow(controller).to receive(:load_edit).and_return(true)
         allow(controller).to receive(:valid_report?).and_return(true)
@@ -79,11 +74,11 @@ describe ReportController do
     end
 
     context "#miq_report_edit" do
+      before { stub_user(:features => :all) }
+
       it "should build tabs with correct tab id after reset button is pressed to prevent error when changing tabs" do
         ApplicationController.handle_exceptions = true
 
-        user = FactoryGirl.create(:user)
-        login_as user
         rep = FactoryGirl.create(
           :miq_report,
           :rpt_type   => "Custom",
@@ -111,12 +106,6 @@ describe ReportController do
         controller.instance_variable_set(:@edit, edit)
         session[:edit] = assigns(:edit)
 
-        allow(User).to receive(:server_timezone).and_return("UTC")
-
-        login_as user
-        allow_any_instance_of(User).to receive(:role_allows?).and_return(true)
-
-        allow(controller).to receive(:check_privileges).and_return(true)
         allow(controller).to receive(:load_edit).and_return(true)
 
         allow(controller).to receive(:replace_right_cell)

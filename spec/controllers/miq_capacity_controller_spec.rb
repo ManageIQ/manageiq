@@ -46,7 +46,7 @@ describe MiqCapacityController do
   context "#find_filtered" do
     before do
       EvmSpecHelper.create_guid_miq_server_zone
-      set_user_privileges
+      stub_user(:features => :all)
 
       @host1 = FactoryGirl.create(:host, :name => 'Host1')
       @host2 = FactoryGirl.create(:host, :name => 'Host2')
@@ -97,7 +97,7 @@ describe MiqCapacityController do
   context '#bottlenecks' do
     before do
       EvmSpecHelper.create_guid_miq_server_zone
-      set_user_privileges
+      stub_user(:features => :all)
       FactoryGirl.create(:miq_enterprise)
       FactoryGirl.create(:miq_region, :description => "My Region")
     end
@@ -113,7 +113,7 @@ describe MiqCapacityController do
   describe "#reload" do
     before do
       EvmSpecHelper.create_guid_miq_server_zone
-      set_user_privileges
+      stub_user(:features => :all)
       FactoryGirl.create(:miq_enterprise)
     end
     it 'reloads tree with active node' do

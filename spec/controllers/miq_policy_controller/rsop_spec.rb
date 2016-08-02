@@ -2,7 +2,7 @@ describe MiqPolicyController do
   render_views
   before :each do
     EvmSpecHelper.local_miq_server
-    set_user_privileges
+    stub_user(:features => :all)
   end
 
   context "#rsop" do

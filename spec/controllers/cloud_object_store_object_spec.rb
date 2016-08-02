@@ -1,10 +1,9 @@
 describe CloudObjectStoreObjectController do
   context "#tags_edit" do
+    let!(:user) { stub_user(:features => :all) }
     before(:each) do
       EvmSpecHelper.create_guid_miq_server_zone
       @object = FactoryGirl.create(:cloud_object_store_object, :name => "cloud-object-store-container-01")
-      user = FactoryGirl.create(:user, :userid => 'testuser')
-      set_user_privileges user
       allow(@object).to receive(:tagged_with).with(:cat => user.userid).and_return("my tags")
       classification = FactoryGirl.create(:classification, :name => "department", :description => "D    epartment")
       @tag1 = FactoryGirl.create(:classification_tag,

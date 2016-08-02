@@ -243,7 +243,7 @@ end
 describe HostController do
   context "#show_association" do
     before(:each) do
-      set_user_privileges
+      stub_user(:features => :all)
       EvmSpecHelper.create_guid_miq_server_zone
       @host = FactoryGirl.create(:host)
       @guest_application = FactoryGirl.create(:guest_application, :name => "foo", :host_id => @host.id)

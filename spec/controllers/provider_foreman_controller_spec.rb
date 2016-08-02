@@ -64,14 +64,14 @@ describe ProviderForemanController do
   end
 
   it "renders index" do
-    set_user_privileges
+    stub_user(:features => :all)
     get :index
     expect(response.status).to eq(302)
     expect(response).to redirect_to(:action => 'explorer')
   end
 
   it "renders explorer" do
-    set_user_privileges user_with_feature %w(providers_accord configured_systems_filter_accord configuration_scripts_accord)
+    login_as user_with_feature(%w(providers_accord configured_systems_filter_accord configuration_scripts_accord))
 
     get :explorer
     accords = controller.instance_variable_get(:@accords)
@@ -84,7 +84,7 @@ describe ProviderForemanController do
 
   context "renders explorer based on RBAC" do
     it "renders explorer based on RBAC access to feature 'configured_system_tag'" do
-      set_user_privileges user_with_feature %w(configured_system_tag)
+      login_as user_with_feature %w(configured_system_tag)
 
       get :explorer
       accords = controller.instance_variable_get(:@accords)
@@ -95,7 +95,7 @@ describe ProviderForemanController do
     end
 
     it "renders explorer based on RBAC access to feature 'provider_foreman_add_provider'" do
-      set_user_privileges user_with_feature %w(provider_foreman_add_provider)
+      login_as user_with_feature %w(provider_foreman_add_provider)
 
       get :explorer
       accords = controller.instance_variable_get(:@accords)
@@ -122,7 +122,7 @@ describe ProviderForemanController do
   end
 
   it "renders show_list" do
-    set_user_privileges
+    stub_user(:features => :all)
     get :show_list
     expect(response.status).to eq(302)
     expect(response.body).to_not be_empty
@@ -172,7 +172,7 @@ describe ProviderForemanController do
 
   context "#edit" do
     before do
-      set_user_privileges
+      stub_user(:features => :all)
     end
 
     it "renders the edit page when the configuration manager id is supplied" do
@@ -216,7 +216,7 @@ describe ProviderForemanController do
 
   context "#refresh" do
     before do
-      set_user_privileges
+      stub_user(:features => :all)
       allow(controller).to receive(:x_node).and_return("root")
       allow(controller).to receive(:rebuild_toolbars).and_return("true")
     end
@@ -237,7 +237,7 @@ describe ProviderForemanController do
   context "renders right cell text" do
     before do
       right_cell_text = nil
-      set_user_privileges user_with_feature %w(providers_accord configured_systems_filter_accord configuration_scripts_accord)
+      login_as user_with_feature(%w(providers_accord configured_systems_filter_accord configuration_scripts_accord))
       controller.instance_variable_set(:@right_cell_text, right_cell_text)
       allow(controller).to receive(:get_view_calculate_gtl_type)
       allow(controller).to receive(:get_view_pages)
@@ -315,7 +315,7 @@ describe ProviderForemanController do
   end
 
   it "constructs the ansible tower job templates tree node" do
-    set_user_privileges user_with_feature %w(providers_accord configured_systems_filter_accord configuration_scripts_accord)
+    login_as user_with_feature(%w(providers_accord configured_systems_filter_accord configuration_scripts_accord))
     controller.send(:build_configuration_manager_tree, :configuration_scripts, :configuration_scripts_tree)
     tree_builder = TreeBuilderConfigurationManagerConfigurationScripts.new("root", "", {})
     objects = tree_builder.send(:x_get_tree_roots, false, {})
@@ -328,7 +328,7 @@ describe ProviderForemanController do
     before do
       get :explorer
       right_cell_text = nil
-      set_user_privileges user_with_feature %w(providers_accord configured_systems_filter_accord configuration_scripts_accord)
+      login_as user_with_feature(%w(providers_accord configured_systems_filter_accord configuration_scripts_accord))
       controller.instance_variable_set(:@right_cell_text, right_cell_text)
       allow(controller).to receive(:get_view_calculate_gtl_type)
       allow(controller).to receive(:get_view_pages)
@@ -494,7 +494,7 @@ describe ProviderForemanController do
     allow(controller).to receive(:replace_search_box)
     allow(controller).to receive(:update_partials)
 
-    set_user_privileges
+    stub_user(:features => :all)
 
     key = ems_key_for_provider(@provider)
     post :tree_select, :params => { :id => key, :format => :js }
@@ -525,7 +525,7 @@ describe ProviderForemanController do
 
   context "fetches the list setting:Grid/Tile/List from settings" do
     before do
-      set_user_privileges user_with_feature %w(providers_accord configured_systems_filter_accord)
+      login_as user_with_feature(%w(providers_accord configured_systems_filter_accord))
       allow(controller).to receive(:items_per_page).and_return(20)
       allow(controller).to receive(:current_page).and_return(1)
       allow(controller).to receive(:get_view_pages)
@@ -607,7 +607,7 @@ describe ProviderForemanController do
 
   context "#configscript_service_dialog" do
     before(:each) do
-      set_user_privileges
+      stub_user(:features => :all)
       @cs = FactoryGirl.create(:ansible_configuration_script)
       @dialog_label = "New Dialog 01"
       session[:edit] = {

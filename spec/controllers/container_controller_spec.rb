@@ -3,17 +3,16 @@ describe ContainerController do
     server = EvmSpecHelper.local_miq_server
     allow(MiqServer).to receive(:my_server).and_return(server)
     allow(MiqServer).to receive(:my_zone).and_return("default")
-    set_user_privileges
+    stub_user(:features => :all)
   end
 
   render_views
 
   context "#tags_edit" do
+    let!(:user) { stub_user(:features => :all) }
     before(:each) do
       EvmSpecHelper.create_guid_miq_server_zone
       @ct = FactoryGirl.create(:container, :name => "container-01")
-      user = FactoryGirl.create(:user, :userid => 'testuser')
-      set_user_privileges user
       allow(@ct).to receive(:tagged_with).with(:cat => user.userid).and_return("my tags")
       classification = FactoryGirl.create(:classification, :name => "department", :description => "Department")
 

@@ -1,7 +1,7 @@
 describe VmOrTemplateController do
   let(:template_vmware) { FactoryGirl.create(:template_vmware, :name => 'template_vmware Name') }
   let(:vm_vmware)       { FactoryGirl.create(:vm_vmware, :name => "vm_vmware Name") }
-  before { set_user_privileges }
+  before { stub_user(:features => :all) }
 
   # All of the x_button is a suplement for Rails routes that is written in
   # controller.

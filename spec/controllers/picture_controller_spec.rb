@@ -3,7 +3,7 @@ describe PictureController do
   let(:picture) { FactoryGirl.create(:picture, :id => 10_000_000_000_005, :extension => "jpg") }
 
   before do
-    set_user_privileges
+    stub_user(:features => :all)
 
     EvmSpecHelper.create_guid_miq_server_zone
 

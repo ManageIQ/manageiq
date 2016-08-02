@@ -2,7 +2,7 @@ describe OpsController do
   before(:each) do
     EvmSpecHelper.create_guid_miq_server_zone
     MiqRegion.seed
-    set_user_privileges
+    stub_user(:features => :all)
   end
 
   describe 'x_button' do
