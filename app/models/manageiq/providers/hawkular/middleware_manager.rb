@@ -170,7 +170,7 @@ module ManageIQ::Providers
     end
 
     def suspend_middleware_server(ems_ref, params)
-      timeout = params.fetch ':timeout' || 0
+      timeout = params[':timeout'] || 0
       run_generic_operation(:Suspend, ems_ref, :timeout => timeout)
     end
 
