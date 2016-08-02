@@ -1464,6 +1464,10 @@ key_pairs_vms:
 - authentication_id
 - vm_id
 - id
+lan_virtual_apps:
+- id
+- lan_id
+- virtual_app_id
 lans:
 - id
 - switch_id
