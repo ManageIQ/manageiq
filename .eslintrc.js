@@ -26,7 +26,6 @@ var rules = {
   'vars-on-top': 0,
   'no-var': 0,
   'linebreak-style': [ 'error', 'unix' ],
-  'quotes': [ 'error', 'single' ],
   'semi-spacing': ['error', {
     before: false,
     after: true,
