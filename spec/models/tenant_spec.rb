@@ -457,6 +457,18 @@ describe Tenant do
       end
     end
 
+    context "sequencing" do
+      it '#sequenceable' do
+        t1_1
+        FactoryGirl.create(:miq_ae_domain, :name => 'DOM15', :priority => 15,
+                           :tenant_id => t1_1.id)
+        FactoryGirl.create(:miq_ae_system_domain, :name => 'DOM10', :priority => 10,
+                           :tenant_id => root_tenant.id, :enabled => false)
+
+        expect(t1_1.sequenceable_domains.collect(&:name)).to eq(%w(DOM15))
+      end
+    end
+
     context "visibility" do
       before do
         dom1

@@ -704,9 +704,11 @@ class ApplicationHelper::ToolbarBuilder
         return true unless @record.lockable?
       when "miq_ae_domain_unlock"
         return true unless @record.unlockable?
-      when "miq_ae_domain_edit"
-        return false unless @record.editable_properties?
-      when "miq_ae_namespace_edit", "miq_ae_instance_copy", "miq_ae_method_copy"
+      when "miq_ae_domain_delete", "miq_ae_domain_edit"
+        return true unless @record.editable_properties?
+      when "miq_ae_namespace_edit"
+        return true unless @record.editable_contents?
+      when "miq_ae_instance_copy", "miq_ae_method_copy"
         return false unless editable_domain?(@record)
       else
         return true unless editable_domain?(@record)
@@ -1088,8 +1090,8 @@ class ApplicationHelper::ToolbarBuilder
         return N_("Default actions can not be deleted.") if @record.action_type == "default"
         return N_("Actions assigned to Policies can not be deleted") unless @record.miq_policies.empty?
       end
-    when "MiqAeDomain", "MiqAeNamespace"
-      editable_domain = editable_domain?(@record)
+    when "MiqAeDomain"
+      editable_domain = @record.editable_properties?
       case id
       when "miq_ae_domain_delete"
         return N_("Read Only Domain cannot be deleted.") unless editable_domain

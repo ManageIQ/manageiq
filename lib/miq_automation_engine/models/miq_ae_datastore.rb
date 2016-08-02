@@ -8,7 +8,7 @@ module MiqAeDatastore
   DEFAULT_OBJECT_NAMESPACE = "$"
   TEMP_DOMAIN_PREFIX = "TEMP_DOMAIN"
   ALL_DOMAINS = "*"
-  PRESERVED_ATTRS = [:priority, :enabled, :system]
+  PRESERVED_ATTRS = [:priority, :enabled, :source].freeze
 
   # deprecated module
   module Import
@@ -137,7 +137,8 @@ module MiqAeDatastore
     import_yaml_dir(datastore_dir, domain_name, tenant)
     if domain_name.downcase == MANAGEIQ_DOMAIN.downcase
       ns = MiqAeDomain.find_by_fqname(MANAGEIQ_DOMAIN)
-      ns.update_attributes!(:system => true, :enabled => true, :priority => MANAGEIQ_PRIORITY) if ns
+      ns.update_attributes!(:source   => MiqAeDomain::SYSTEM_SOURCE, :enabled => true,
+                            :priority => MANAGEIQ_PRIORITY) if ns
     end
   end
 

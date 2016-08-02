@@ -1,14 +1,22 @@
 class MiqAeDomain < MiqAeNamespace
+  SYSTEM_SOURCE = "system".freeze
+  REMOTE_SOURCE = "remote".freeze
+  USER_SOURCE   = "user".freeze
+  USER_LOCKED_SOURCE = "user_locked".freeze
+  VALID_SOURCES = [SYSTEM_SOURCE, REMOTE_SOURCE, USER_SOURCE, USER_LOCKED_SOURCE].freeze
+  LOCKED_SOURCES = [SYSTEM_SOURCE, REMOTE_SOURCE, USER_LOCKED_SOURCE].freeze
+
   default_scope { where(:parent_id => nil).where(arel_table[:name].not_eq("$")) }
   validates_inclusion_of :parent_id, :in => [nil], :message => 'should be nil for Domain'
 
   validates_presence_of :tenant, :message => "object is needed to own the domain"
   after_destroy :squeeze_priorities
-  default_value_for :system,  false
+  default_value_for :source,  USER_SOURCE
   default_value_for :enabled, false
   before_save :default_priority
   belongs_to :tenant
   belongs_to :git_repository
+  validates_inclusion_of :source, :in => VALID_SOURCES
 
   BRANCH = 'branch'.freeze
   TAG    = 'tag'.freeze
@@ -40,37 +48,36 @@ class MiqAeDomain < MiqAeNamespace
   end
 
   def lock_contents!
-    self.system = true
+    return if source == USER_LOCKED_SOURCE # already locked
+    raise MiqAeException::CannotLock, "Cannot lock non user domains" unless source == USER_SOURCE
+    self.source = USER_LOCKED_SOURCE
     save!
   end
 
   def unlock_contents!
-    self.system = false
+    return if source == USER_SOURCE # already unlocked
+    raise MiqAeException::CannotUnlock, "Cannot unlock non user domains" unless source == USER_LOCKED_SOURCE
+    self.source = USER_SOURCE
     save!
   end
 
   def contents_locked?
-    system
+    LOCKED_SOURCES.include?(source)
   end
 
   def lockable?
-    editable_properties? && !contents_locked?
+    editable_properties? && !contents_locked? && source == USER_SOURCE
   end
 
   def unlockable?
-    editable_properties? && contents_locked?
+    editable_properties? && contents_locked? && source == USER_LOCKED_SOURCE
   end
 
   def editable_properties?
-    # TODO: In the new design will use SOURCE != SYSTEM
-    name != 'ManageIQ'
+    source != SYSTEM_SOURCE
   end
 
-  def editable_contents?(user = User.current_user)
-    # TODO: In the new design will use SOURCE != SYSTEM
-    return false if name == 'ManageIQ'
-    editable?(user)
-  end
+  alias editable_contents? editable?
 
   def version
     version_field = about_class.try(:ae_fields).try(:detect) { |fld| fld.name == 'version' }
@@ -107,7 +114,7 @@ class MiqAeDomain < MiqAeNamespace
                        :commit_sha     => info['commit_sha'],
                        :commit_message => info['commit_message'],
                        :commit_time    => info['commit_time'],
-                       :system         => true)
+                       :source         => REMOTE_SOURCE)
   end
 
   def git_enabled?
@@ -141,11 +148,11 @@ class MiqAeDomain < MiqAeNamespace
   end
 
   def self.any_unlocked?
-    MiqAeDomain.where('system is null OR system = ?', [false]).count > 0
+    MiqAeDomain.where('source = ?', USER_SOURCE).count > 0
   end
 
   def self.all_unlocked
-    MiqAeDomain.where('system is null OR system = ?', [false]).order('priority DESC')
+    MiqAeDomain.where('source = ?', USER_SOURCE).order('priority DESC')
   end
 
   def about_class

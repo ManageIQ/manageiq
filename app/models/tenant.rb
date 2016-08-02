@@ -232,11 +232,15 @@ class Tenant < ApplicationRecord
   end
 
   def editable_domains
-    ae_domains.where(:system => false).order('priority DESC')
+    ae_domains.where(:source => MiqAeDomain::USER_SOURCE).order('priority DESC')
+  end
+
+  def sequenceable_domains
+    ae_domains.where.not(:source => MiqAeDomain::SYSTEM_SOURCE).order('priority DESC')
   end
 
   def any_editable_domains?
-    ae_domains.where(:system => false).count > 0
+    ae_domains.where(:source => MiqAeDomain::USER_SOURCE).count > 0
   end
 
   def reset_domain_priority_by_ordered_ids(ids)

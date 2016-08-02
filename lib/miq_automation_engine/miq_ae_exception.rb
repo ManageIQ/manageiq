@@ -36,6 +36,8 @@ module MiqAeException
   class DirectoryExists < MiqAeDatastoreError; end
   class FileExists < MiqAeDatastoreError; end
   class DomainNotAccessible < MiqAeDatastoreError; end
+  class CannotLock < MiqAeDatastoreError; end
+  class CannotUnlock < MiqAeDatastoreError; end
 end
 
 module MiqException

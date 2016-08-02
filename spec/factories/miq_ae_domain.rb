@@ -9,16 +9,16 @@ FactoryGirl.define do
 
   factory :miq_ae_system_domain, :parent => :miq_ae_domain do
     enabled false
-    system true
+    source  { 'system' }
   end
 
   factory :miq_ae_system_domain_enabled, :parent => :miq_ae_domain do
-    system true
+    source  { 'system' }
     enabled true
   end
 
   factory :miq_ae_git_domain, :parent => :miq_ae_domain do
-    system true
+    source  { 'remote' }
     git_repository { FactoryGirl.create(:git_repository, :url => 'https://www.example.com/abc') }
   end
 
@@ -26,6 +26,7 @@ FactoryGirl.define do
     sequence(:name) { |n| "miq_ae_domain#{seq_padded_for_sorting(n)}" }
     tenant { Tenant.seed }
     enabled true
+    source { 'user' }
     trait :with_methods do
       transient do
         ae_methods do

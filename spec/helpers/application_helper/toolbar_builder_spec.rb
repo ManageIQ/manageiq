@@ -2468,7 +2468,7 @@ describe ApplicationHelper do
       let(:tooltip) { "At least one domain should be enabled & unlocked" }
 
       it 'disables the configure button for MiqAeNamespace' do
-        @record = FactoryGirl.build(:miq_ae_namespace)
+        @record = FactoryGirl.build(:miq_ae_system_domain)
         result = builder.send(:build_toolbar_disable_button, 'miq_ae_namespace_edit')
 
         expect(result).to include("Domain is Locked.")
