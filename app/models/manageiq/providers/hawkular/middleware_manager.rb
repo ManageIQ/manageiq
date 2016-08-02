@@ -220,6 +220,10 @@ module ManageIQ::Providers
       end
     end
 
+    def remove_middleware_datasource(ems_ref)
+      run_specific_operation('RemoveDatasource', ems_ref)
+    end
+
     # UI methods for determining availability of fields
     def supports_port?
       true
@@ -253,25 +257,42 @@ module ManageIQ::Providers
     # selected target server. This server is identified
     # by ems_ref, which in Hawkular terms is the
     # fully qualified resource path from Hawkular inventory
-    def run_generic_operation(operation, ems_ref, parameters = {})
-      with_provider_connection do |connection|
-        the_operation = {
-          :operationName => operation,
-          :resourcePath  => ems_ref.to_s,
-          :parameters    => parameters
-        }
+    #
+    # this method execute an operation through ExecuteOperation request command.
+    #
+    def run_generic_operation(operation_name, ems_ref, parameters = {})
+      the_operation = {
+        :operationName => operation_name,
+        :resourcePath  => ems_ref.to_s,
+        :parameters    => parameters
+      }
+      run_operation(the_operation)
+    end
 
-        actual_data = {}
-        connection.operations(true).invoke_generic_operation(the_operation) do |on|
+    #
+    # this method send a specific command to the server
+    # with his own JSON. this doesn't use ExecuteOperation.
+    #
+    def run_specific_operation(operation_name, ems_ref, parameters = {})
+      parameters[:resourcePath] = ems_ref.to_s
+      run_operation(parameters, operation_name)
+    end
+
+    def run_operation(parameters, operation_name = nil)
+      with_provider_connection do |connection|
+        callback = proc do |on|
           on.success do |data|
             _log.debug "Success on websocket-operation #{data}"
-            actual_data[:data] = data
           end
           on.failure do |error|
-            actual_data[:data]  = {}
-            actual_data[:error] = error
             _log.error 'error callback was called, reason: ' + error.to_s
           end
+        end
+        operation_connection = connection.operations(true)
+        if operation_name.nil?
+          operation_connection.invoke_generic_operation(parameters, &callback)
+        else
+          operation_connection.invoke_specific_operation(parameters, operation_name, &callback)
         end
       end
     end
