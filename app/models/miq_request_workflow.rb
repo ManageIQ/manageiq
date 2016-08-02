@@ -591,28 +591,25 @@ class MiqRequestWorkflow
     rails_logger('allowed_tags', 0)
     st = Time.now
     @tags = {}
-    class_tags = Classification.where(:show => true).includes(:tag).to_a
-    class_tags.reject!(&:read_only?) # Can't do in query because column is a string.
 
     exclude_list  = options[:exclude].blank? ? [] : options[:exclude].collect(&:to_s)
     include_list  = options[:include].blank? ? [] : options[:include].collect(&:to_s)
     single_select = options[:single_select].blank? ? [] : options[:single_select].collect(&:to_s)
 
-    cats, ents = class_tags.partition { |t| t.parent_id == 0 }
+    cats = Classification.visible.writeable.managed
     cats.each do |t|
-      next unless t.tag2ns(t.tag.name) == "/managed"
       next if exclude_list.include?(t.name)
       next unless include_list.blank? || include_list.include?(t.name)
       # Force passed tags to be single select
       single_value = single_select.include?(t.name) ? true : t.single_value?
       @tags[t.id] = {:name => t.name, :description => t.description, :single_value => single_value, :children => {}, :id => t.id}
     end
+
+    ents = Classification.visible.writeable.parent_ids(@tags.keys).with_tag_name
     ents.each do |t|
-      if @tags.key?(t.parent_id)
-        full_tag_name = "#{@tags[t.parent_id][:name]}/#{t.name}"
-        next if exclude_list.include?(full_tag_name)
-        @tags[t.parent_id][:children][t.id] = {:name => t.name, :description => t.description}
-      end
+      full_tag_name = "#{@tags[t.parent_id][:name]}/#{t.name}"
+      next if exclude_list.include?(full_tag_name)
+      @tags[t.parent_id][:children][t.id] = {:name => t.name, :description => t.description}
     end
 
     @tags.delete_if { |_k, v| v[:children].empty? }
