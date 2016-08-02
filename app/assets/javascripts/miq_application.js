@@ -410,7 +410,7 @@ function miqUpdateButtons(obj, button_div) {
   var count = 0;
 
   if (typeof obj.id != "undefined") {
-    $("input[id^='" + obj.id + "']").each(function () {
+    $("input[id^='check_']").each(function () {
       if (this.checked && !this.disabled) {
         count++;
       }
