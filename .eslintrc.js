@@ -5,7 +5,6 @@ if (mode === undefined) {
   console.warn('Please use the environmental variable MIQ_ESLINT to enable specific rulesets..');
   console.warn('MIQ_ESLINT=vanilla\tfor non-angular, non-es6, non-spec code');
   console.warn('MIQ_ESLINT=angular\tfor angular code');
-  console.warn('MIQ_ESLINT=spec\tfor specs');
 }
 
 if (!mode) {
@@ -29,20 +28,6 @@ var globals = {
   numeral: false, // bower: numeral
   sprintf: false, // bower: sprintf
 };
-
-var specGlobals = {
-  describe: false,
-  context: false,
-  it: false,
-  beforeEach: false,
-  afterEach: false,
-  inject: false,
-  spyOn: false,
-  expect: false,
-  jasmine: false,
-  setFixtures: false,
-};
-
 
 var rules = {
   'indent': [ 'error', 2, {
@@ -139,11 +124,6 @@ switch (mode) {
       'angular/typecheck-string': 0,
     });
 
-    break;
-
-  case 'spec':
-    xtends.push('airbnb-es5');
-    globals = Object.assign(globals, specGlobals);
     break;
 
   default:
