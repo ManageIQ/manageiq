@@ -9,57 +9,58 @@ unless dependencies.detect { |d| d.name == "manageiq-providers-amazon" }
 end
 
 # Unmodified gems
-gem "activemodel-serializers-xml",                 :require => false # required by draper: https://github.com/drapergem/draper/issues/697
+gem "activemodel-serializers-xml",                     :require => false # required by draper: https://github.com/drapergem/draper/issues/697
 gem "activerecord-session_store",     "~>1.0.0"
 gem "acts_as_list",                   "~>0.7.2"
 gem "acts_as_tree",                   "~>2.1.0" # acts_as_tree needs to be required so that it loads before ancestry
-gem "ancestry",                       "~>2.1.0",   :require => false
-gem "ansible_tower_client",           "~>0.3.2",   :require => false
-gem "aws-sdk",                        "~>2.2.19",  :require => false
+gem "ancestry",                       "~>2.1.0",       :require => false
+gem "ansible_tower_client",           "~>0.3.2",       :require => false
+gem "aws-sdk",                        "~>2.2.19",      :require => false
 gem "color",                          "~>1.8"
-gem "dalli",                          "~>2.7.4",   :require => false
+gem "dalli",                          "~>2.7.4",       :require => false
 gem "default_value_for",              "~>3.0.2"
-gem "elif",                           "=0.1.0",    :require => false
+gem "elif",                           "=0.1.0",        :require => false
 gem "fast_gettext",                   "~>1.1.0"
-gem "fog-google",                     "~>0.3.0",   :require => false
-gem "fog-vcloud-director",            "~>0.1.1",   :require => false
+gem "fog-google",                     "~>0.3.0",       :require => false
+gem "fog-vcloud-director",            "~>0.1.1",       :require => false
 gem "gettext_i18n_rails",             "~>1.7.2"
 gem "gettext_i18n_rails_js",          "~>1.1.0"
-gem "google-api-client",              "~>0.8.6",   :require => false
-gem "hamlit",                         "~>2.0.0",   :require => false
+gem "google-api-client",              "~>0.8.6",       :require => false
+gem "hamlit",                         "~>2.0.0",       :require => false
 gem "hamlit-rails",                   "~>0.1.0"
 gem "high_voltage",                   "~>2.4.0"
-gem "inifile",                        "~>3.0",     :require => false
+gem "inifile",                        "~>3.0",         :require => false
 gem "jbuilder",                       "~>2.5.0" # For the REST API
-gem "mime-types",                     "~>2.6.1",   :require => "mime/types/columnar"
+gem "mime-types",                     "~>2.6.1",       :require => "mime/types/columnar"
 gem "nakayoshi_fork",                 "~>0.0.3"  # provides a more CoW friendly fork (GC a few times before fork)
-gem "net-ldap",                       "~>0.7.0",   :require => false
-gem "net-ping",                       "~>1.7.4",   :require => false
-gem "net-ssh",                        "=3.2.0",    :require => false
-gem "net_app_manageability",          ">=0.1.0",   :require => false
+gem "net-ldap",                       "~>0.7.0",       :require => false
+gem "net-ping",                       "~>1.7.4",       :require => false
+gem "net-ssh",                        "=3.2.0",        :require => false
+gem "net_app_manageability",          ">=0.1.0",       :require => false
 gem "novnc-rails",                    "~>0.2"
-gem "omniauth",                       "~>1.3.1",   :require => false
+gem "omniauth",                       "~>1.3.1",       :require => false
 gem "omniauth-google-oauth2",         "~>0.2.6"
-gem "open4",                          "~>1.3.0",   :require => false
+gem "open4",                          "~>1.3.0",       :require => false
 gem "outfielding-jqplot-rails",       "= 1.0.8"
-gem "ovirt_metrics",                  "~>1.2.0",   :require => false
+gem "ovirt-engine-sdk",               "~>4.0.0.alpha", :require => false # Required by the oVirt provider
+gem "ovirt_metrics",                  "~>1.2.0",       :require => false
 gem "paperclip",                      "~>4.3.0"
 gem "puma",                           "~>3.3.0"
 gem "rails",                          "~>5.0.0"
-gem "rails-controller-testing",                    :require => false
+gem "rails-controller-testing",                        :require => false
 gem "rails-i18n",                     "~>5.x"
 gem "recursive-open-struct",          "~>1.0.0"
 gem "responders",                     "~>2.0"
 gem "ruby-dbus" # For external auth
-gem "ruby-progressbar",               "~>1.7.0",   :require => false
-gem "ruby_parser",                    "~>3.7",     :require => false
-gem "rufus-scheduler",                "~>3.1.3",   :require => false
-gem "rugged",                         "~>0.23.0",  :require => false
+gem "ruby-progressbar",               "~>1.7.0",       :require => false
+gem "ruby_parser",                    "~>3.7",         :require => false
+gem "rufus-scheduler",                "~>3.1.3",       :require => false
+gem "rugged",                         "~>0.23.0",      :require => false
 gem "secure_headers",                 "~>3.0.0"
-gem "simple-rss",                     "~>1.3.1",   :require => false
-gem "snmp",                           "~>1.2.0",   :require => false
-gem "sshkey",                         "~>1.8.0",   :require => false
-gem "uglifier",                       "~>2.7.1",   :require => false
+gem "simple-rss",                     "~>1.3.1",       :require => false
+gem "snmp",                           "~>1.2.0",       :require => false
+gem "sshkey",                         "~>1.8.0",       :require => false
+gem "uglifier",                       "~>2.7.1",       :require => false
 gem "websocket-driver",               "~>0.6.3"
 
 # Modified gems (forked on Github)
