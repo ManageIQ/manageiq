@@ -107,8 +107,7 @@ module EmsCommon
       replace_gtl_main_div
     end
 
-    return if performed?
-    render :template => "shared/views/ems_common/show"
+    render :template => "shared/views/ems_common/show" if params[:action] == 'show' && !performed?
   end
 
   def calculate_display_class(display_name, session_display)
