@@ -599,7 +599,6 @@ function miqTreeEventSafeEval(func) {
 }
 
 function miqInitDynatree(options, tree) {
-
   if (options.check_url) {
     ManageIQ.dynatree.checkUrl = options.check_url;
   }
@@ -637,10 +636,6 @@ function miqInitDynatree(options, tree) {
     onClick: function(node, event) {
       var event_type = node.getEventTargetType(event);
 
-      if (options.no_click && event_type != 'expander') {
-        return false;
-      }
-
       if (options.onclick || options.disable_checks || options.oncheck) {
         if (event_type != 'expander' && node.data.cfmeNoClick) return false;
         if (options.onclick) {
@@ -671,6 +666,8 @@ function miqInitDynatree(options, tree) {
 
           if (event_type != 'expander') return false;
         }
+      } else if (options.no_click && event_type != 'expander') {
+        return false;
       }
     },
     onSelect: function(flag, node) {
