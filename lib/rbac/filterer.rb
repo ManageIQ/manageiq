@@ -151,6 +151,10 @@ module Rbac
       include_for_find  = options[:include_for_find]
       search_filter     = options[:filter]
 
+      limit             = options[:limit]  || targets.try(:limit_value)
+      offset            = options[:offset] || targets.try(:offset_value)
+      order             = options[:order]  || targets.try(:order_values)
+
       user, miq_group, user_filters = get_user_info(options[:user],
                                                     options[:userid],
                                                     options[:miq_group],
@@ -196,15 +200,17 @@ module Rbac
 
       attrs[:apply_limit_in_sql] = (exp_attrs.nil? || exp_attrs[:supported_by_sql]) && user_filters["belongsto"].blank?
 
-      find_options = {:conditions => conditions, :include => include_for_find, :order => options[:order]}
-      find_options.merge!(:limit => options[:limit], :offset => options[:offset]) if attrs[:apply_limit_in_sql]
+      find_options = {:conditions => conditions, :include => include_for_find, :order => order}
+      find_options.merge!(:limit => limit, :offset => offset) if attrs[:apply_limit_in_sql]
       find_options[:ext_options] = options[:ext_options] if options[:ext_options] && klass.respond_to?(:instances_are_derived?) && klass.instances_are_derived?
+
+      scope = scope.except(:offset, :limit) if !attrs[:apply_limit_in_sql]
 
       _log.debug("Find options: #{find_options.inspect}")
 
       scope = scope_targets(klass, scope, user_filters, user, miq_group)
       targets = method_with_scope(scope, find_options)
-      auth_count = find_options[:limit] ? targets.except(:offset, :limit, :order).count(:all) : targets.length
+      auth_count = attrs[:apply_limit_in_sql] && limit ? targets.except(:offset, :limit, :order).count(:all) : targets.length
 
       if search_filter && targets && (!exp_attrs || !exp_attrs[:supported_by_sql])
         rejects     = targets.reject { |obj| matches_search_filters?(obj, search_filter, tz) }
@@ -212,10 +218,10 @@ module Rbac
         targets -= rejects
       end
 
-      if options[:limit] && !attrs[:apply_limit_in_sql]
+      if limit && !attrs[:apply_limit_in_sql]
         attrs[:target_ids_for_paging] = targets.collect(&:id) # Save ids of targets, since we have then all, to avoid going back to SQL for the next page
-        offset = options[:offset].to_i
-        targets = targets[offset...(offset + options[:limit].to_i)]
+        offset = offset.to_i
+        targets = targets[offset...(offset + limit.to_i)]
       end
 
       # Preserve sort order of incoming target_ids

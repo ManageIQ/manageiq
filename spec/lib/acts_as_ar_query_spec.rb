@@ -71,7 +71,7 @@ describe ActsAsArQuery do
 
   describe "#order_values" do
     it { expect(query.order_values).to eq([]) }
-    it { expect(query.order(:a).order(:b)order_values).to eq([:a, :b]) }
+    it { expect(query.order(:a).order(:b).order_values).to eq([:a, :b]) }
   end
 
   # - [X] references (partial) - currently ignored
