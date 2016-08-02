@@ -17,19 +17,19 @@
   - :patch
   - :delete
   :sets:
-    :g: &70174834086080
+    :g: &g
     - :get
-    :gd: &70174834086081
+    :gd: &gd
     - :get
     - :delete
-    :gp: &70174834085860
+    :gp: &gp
     - :get
     - :post
-    :gpd: &70174834085620
+    :gpd: &gpd
     - :get
     - :post
     - :delete
-    :gpppd: &70174834084700
+    :gpppd: &gpppd
     - :get
     - :put
     - :post
@@ -40,18 +40,18 @@
     :description: Accounts
     :options:
     - :subcollection
-    :verbs: *70174834086080
+    :verbs: *g
     :klass: Account
   :auth:
     :description: REST API Authentication
     :options:
     - :primary
-    :verbs: *70174834086081
+    :verbs: *gd
   :automation_requests:
     :description: Automation Requests
     :options:
     - :collection
-    :verbs: *70174834085860
+    :verbs: *gp
     :klass: AutomationRequest
     :subcollections:
     - :request_tasks
@@ -74,7 +74,7 @@
     :identifier: availability_zone
     :options:
     - :collection
-    :verbs: *70174834086080
+    :verbs: *g
     :klass: AvailabilityZone
     :collection_actions:
       :get:
@@ -86,7 +86,7 @@
         :identifier: availability_zone_show
   :blueprints:
     :description: Blueprints
-    :verbs: *70174834085860
+    :verbs: *gp
     :options:
     - :collection
     :klass: Blueprint
@@ -106,7 +106,7 @@
     :identifier: ops_settings
     :options:
     - :collection
-    :verbs: *70174834085620
+    :verbs: *gpd
     :klass: Category
     :subcollections:
     - :tags
@@ -144,7 +144,7 @@
     :identifier: chargeback
     :options:
     - :collection
-    :verbs: *70174834084700
+    :verbs: *gpppd
     :klass: ChargebackRate
     :subcollections:
     - :rates
@@ -175,7 +175,7 @@
     :description: Container Provider Deployment
     :identifier: container_deployment
     :klass: ContainerDeployment
-    :verbs: *70174834084700
+    :verbs: *gpppd
     :options:
     - :collection
     :collection_actions:
@@ -194,21 +194,21 @@
     :identifier: currency
     :options:
     - :collection
-    :verbs: *70174834086080
+    :verbs: *g
     :klass: ChargebackRateDetailCurrency
   :measures:
     :description: Measures
     :identifier: measure
     :options:
     - :collection
-    :verbs: *70174834086080
+    :verbs: *g
     :klass: ChargebackRateDetailMeasure
   :clusters:
     :description: Clusters
     :identifier: ems_cluster
     :options:
     - :collection
-    :verbs: *70174834085860
+    :verbs: *gp
     :klass: EmsCluster
     :subcollections:
     - :tags
@@ -253,7 +253,7 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *70174834086080
+    :verbs: *g
     :klass: Condition
     :collection_actions:
       :get:
@@ -268,7 +268,7 @@
     :identifier: storage
     :options:
     - :collection
-    :verbs: *70174834085860
+    :verbs: *gp
     :klass: Storage
     :subcollections:
     - :tags
@@ -299,7 +299,7 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *70174834086080
+    :verbs: *g
     :klass: MiqEventDefinition
     :collection_actions:
       :get:
@@ -315,7 +315,7 @@
     - :collection
     - :subcollection
     - :show
-    :verbs: *70174834085860
+    :verbs: *gp
     :klass: MiqProductFeature
     :subcollection_actions:
       :post:
@@ -326,7 +326,7 @@
     :identifier: flavor
     :options:
     - :collection
-    :verbs: *70174834086080
+    :verbs: *g
     :klass: Flavor
     :collection_actions:
       :get:
@@ -341,7 +341,7 @@
     :identifier: rbac_group
     :options:
     - :collection
-    :verbs: *70174834084700
+    :verbs: *gpppd
     :klass: MiqGroup
     :subcollections:
     - :tags
@@ -379,7 +379,7 @@
     :identifier: host
     :options:
     - :collection
-    :verbs: *70174834085860
+    :verbs: *gp
     :klass: Host
     :subcollections:
     - :tags
@@ -472,7 +472,7 @@
     :description: Instances
     :identifier: instance
     :klass: ManageIQ::Providers::CloudManager::Vm
-    :verbs: *70174834085860
+    :verbs: *gp
     :options:
     - :collection
     :collection_actions:
@@ -521,7 +521,7 @@
     :description: Pictures
     :options:
     - :collection
-    :verbs: *70174834086080
+    :verbs: *g
     :klass: Picture
   :policies:
     :description: Policies
@@ -529,7 +529,7 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *70174834085860
+    :verbs: *gp
     :klass: MiqPolicy
     :subcollections:
     - :conditions
@@ -577,7 +577,7 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *70174834086080
+    :verbs: *g
     :klass: MiqAction
     :collection_actions:
       :get:
@@ -593,7 +593,7 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *70174834085860
+    :verbs: *gp
     :klass: MiqPolicySet
     :subcollections:
     - :policies
@@ -638,7 +638,7 @@
     :identifier: ems_infra
     :options:
     - :collection
-    :verbs: *70174834085620
+    :verbs: *gpd
     :klass: ExtManagementSystem
     :subcollections:
     - :tags
@@ -699,7 +699,7 @@
     :identifier: miq_ae_customization_explorer
     :options:
     - :collection
-    :verbs: *70174834086080
+    :verbs: *g
     :klass: MiqDialog
     :collection_actions:
       :get:
@@ -714,7 +714,7 @@
     :identifier: miq_request
     :options:
     - :collection
-    :verbs: *70174834085860
+    :verbs: *gp
     :klass: MiqProvisionRequest
     :subcollections:
     - :request_tasks
@@ -745,7 +745,7 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *70174834084700
+    :verbs: *gpppd
     :klass: ChargebackRateDetail
     :collection_actions:
       :get:
@@ -775,7 +775,7 @@
     :identifier: miq_report
     :options:
     - :collection
-    :verbs: *70174834085860
+    :verbs: *gp
     :klass: MiqReport
     :resource_actions:
       :get:
@@ -801,14 +801,14 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *70174834086080
+    :verbs: *g
     :klass: MiqRequestTask
   :requests:
     :description: Requests
     :identifier: miq_request
     :options:
     - :collection
-    :verbs: *70174834086080
+    :verbs: *g
     :klass: MiqRequest
     :collection_actions:
       :get:
@@ -822,14 +822,14 @@
     :description: Resource Actions
     :options:
     - :subcollection
-    :verbs: *70174834086080
+    :verbs: *g
     :klass: ResourceAction
   :resource_pools:
     :description: Resource Pools
     :identifier: resource_pool
     :options:
     - :collection
-    :verbs: *70174834085860
+    :verbs: *gp
     :klass: ResourcePool
     :subcollections:
     - :tags
@@ -874,7 +874,7 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *70174834086080
+    :verbs: *g
     :klass: MiqReportResult
     :collection_actions:
       :get:
@@ -889,7 +889,7 @@
     :identifier: miq_report_reports
     :options:
     - :subcollection
-    :verbs: *70174834086080
+    :verbs: *g
     :klass: MiqSchedule
     :collection_actions:
       :get:
@@ -904,7 +904,7 @@
     :identifier: rbac_role
     :options:
     - :collection
-    :verbs: *70174834085620
+    :verbs: *gpd
     :klass: MiqUserRole
     :subcollections:
     - :features
@@ -938,7 +938,7 @@
     :identifier: security_group
     :options:
     - :collection
-    :verbs: *70174834086080
+    :verbs: *g
     :klass: SecurityGroup
     :collection_actions:
       :get:
@@ -952,14 +952,14 @@
     :description: EVM Servers
     :options:
     - :collection
-    :verbs: *70174834086080
+    :verbs: *g
     :klass: MiqServer
   :service_catalogs:
     :description: Service Catalogs
     :identifier: st_catalog_accord
     :options:
     - :collection
-    :verbs: *70174834084700
+    :verbs: *gpppd
     :klass: ServiceTemplateCatalog
     :subcollections:
     - :service_templates
@@ -994,7 +994,7 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *70174834085860
+    :verbs: *gp
     :klass: Dialog
     :collection_actions:
       :get:
@@ -1015,7 +1015,7 @@
     :identifier: svc_catalog_provision
     :options:
     - :collection
-    :verbs: *70174834084700
+    :verbs: *gpppd
     :klass: ServiceOrder
     :subcollections:
     - :service_requests
@@ -1052,7 +1052,7 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *70174834085860
+    :verbs: *gp
     :klass: ServiceTemplateProvisionRequest
     :subcollections:
     - :request_tasks
@@ -1099,7 +1099,7 @@
     - :subcollection
     - :show
     - :show_as_collection
-    :verbs: *70174834084700
+    :verbs: *gpppd
     :klass: ServiceTemplate
     :subcollections:
     - :resource_actions
@@ -1168,7 +1168,7 @@
     :options:
     - :collection
     - :custom_actions
-    :verbs: *70174834084700
+    :verbs: *gpppd
     :klass: Service
     :subcollections:
     - :tags
@@ -1217,7 +1217,7 @@
     :options:
     - :arbitrary_resource_path
     - :collection
-    :verbs: *70174834086080
+    :verbs: *g
     :categories:
       - product
     :collection_actions:
@@ -1232,13 +1232,13 @@
     :description: Software
     :options:
     - :subcollection
-    :verbs: *70174834086080
+    :verbs: *g
     :klass: GuestApplication
   :custom_attributes:
     :description: Custom Attributes
     :options:
     - :subcollection
-    :verbs: *70174834085620
+    :verbs: *gpd
     :klass: CustomAttribute
     :subcollection_actions:
       :post:
@@ -1255,7 +1255,7 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *70174834085620
+    :verbs: *gpd
     :klass: Tag
     :collection_actions:
       :get:
@@ -1298,7 +1298,7 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *70174834086080
+    :verbs: *g
     :klass: MiqTask
     :collection_actions:
       :get:
@@ -1313,7 +1313,7 @@
     :identifier: miq_template
     :options:
     - :collection
-    :verbs: *70174834085620
+    :verbs: *gpd
     :klass: MiqTemplate
     :subcollections:
     - :tags
@@ -1377,7 +1377,7 @@
     :identifier: rbac_tenant
     :options:
     - :collection
-    :verbs: *70174834084700
+    :verbs: *gpppd
     :klass: Tenant
     :subcollections:
     - :tags
@@ -1426,7 +1426,7 @@
     :description: TenantQuotas
     :options:
     - :subcollection
-    :verbs: *70174834084700
+    :verbs: *gpppd
     :klass: TenantQuota
     :subcollection_actions:
       :get:
@@ -1459,7 +1459,7 @@
     :identifier: rbac_user
     :options:
     - :collection
-    :verbs: *70174834084700
+    :verbs: *gpppd
     :klass: User
     :subcollections:
     - :tags
@@ -1497,7 +1497,7 @@
     :identifier: vm
     :options:
     - :collection
-    :verbs: *70174834085620
+    :verbs: *gpd
     :klass: Vm
     :subcollections:
     - :tags
@@ -1635,7 +1635,7 @@
     :identifier: zone
     :options:
     - :collection
-    :verbs: *70174834086080
+    :verbs: *g
     :klass: Zone
     :collection_actions:
       :get:
@@ -1663,7 +1663,7 @@
     :identifier: miq_virtual_template
     :options:
     - :collection
-    :verbs: *70174834084700
+    :verbs: *gpppd
     :klass: ManageIQ::Providers::CloudManager::VirtualTemplate
     :collection_actions:
       :get:
@@ -1694,7 +1694,7 @@
     :identifier: miq_arbitration_profile
     :options:
     - :collection
-    :verbs: *70174834084700
+    :verbs: *gpppd
     :klass: ArbitrationProfile
     :collection_actions:
       :get:
@@ -1721,7 +1721,7 @@
     :identifier: miq_cloud_networks
     :options:
     - :collection
-    :verbs: *70174834086080
+    :verbs: *g
     :klass: CloudNetwork
     :collection_actions:
       :get:
@@ -1732,7 +1732,7 @@
     :identifier: miq_arbitration_settings
     :options:
     - :collection
-    :verbs: *70174834084700
+    :verbs: *gpppd
     :klass: ArbitrationSetting
     :collection_actions:
       :get:
