@@ -313,6 +313,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(v.operating_system.product_name).to eql("linux_redhat")
     expect(v.custom_attributes.size).to        eql(0)
     expect(v.snapshots.size).to                eql(0)
+    expect(v.preemptible?).to                  eql(false)
 
     assert_specific_vm_powered_on_hardware(v)
   end

@@ -245,7 +245,17 @@ module ManageIQ::Providers
             :cpu_total_cores => flavor[:cpus],
             :memory_mb       => flavor[:memory] / 1.megabyte,
             :disks           => [], # populated below
-          }
+          },
+          :advanced_settings => [
+            {
+              :name         => "preemptible?",
+              :display_name => N_("Is VM Preemptible"),
+              :description  => N_("Whether or not the VM is 'preemptible'. See"\
+                               " https://cloud.google.com/compute/docs/instances/preemptible for more details."),
+              :value        => instance.scheduling["preemptible"].to_s,
+              :read_only    => true
+            }
+          ]
         }
 
         populate_hardware_hash_with_disks(new_result[:hardware][:disks], instance)
