@@ -3308,6 +3308,10 @@
       :description: Refresh Middleware Providers
       :feature_type: control
       :identifier: ems_middleware_refresh
+    - :name: Re-check Authentication Status
+      :description: Re-check Authentication Status of Middleware Providers
+      :feature_type: control
+      :identifier: ems_middleware_recheck_auth_status
     - :name: Edit Tags
       :description: Edit Tags of Middleware Providers
       :feature_type: control
