@@ -1,5 +1,5 @@
 class CustomButton < ApplicationRecord
-  has_one       :resource_action, :as => :resource, :dependent => :destroy, :autosave => true
+  has_one :resource_action, :as => :resource, :dependent => :destroy, :autosave => true
 
   serialize :options
   serialize :applies_to_exp
