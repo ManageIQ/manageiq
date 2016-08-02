@@ -7,7 +7,7 @@
       %label.control-label.col-md-2
         = _('Run')
       .col-md-8
-        - timer_types = [_("Once"), _("Hourly"), _("Daily"), _("Weekly"), _("Monthly")]
+        - timer_types = [[_("Once"), "Once"], [_("Hourly"), "Hourly"], [_("Daily"), "Daily"], [_("Weekly"), "Weekly"], [_("Monthly"), "Monthly"]]
         - timer_types.shift if x_active_tree == :widgets_tree
         = select_tag("timer_typ",
           options_for_select(timer_types, @edit[:new][:timer_typ]),
