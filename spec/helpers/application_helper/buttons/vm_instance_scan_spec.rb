@@ -45,7 +45,7 @@ describe ApplicationHelper::Button::VmInstanceScan do
         allow(@record).to receive(:orphaned?).and_return(false)
       end
 
-      it "disables the button and return an error message" do
+      it "disables the button" do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'record' => @record}, {})
         expect(button.disabled?).to be_truthy
@@ -76,7 +76,7 @@ describe ApplicationHelper::Button::VmInstanceScan do
         allow(@record).to receive(:is_available_now_error_message).with(:smartstate_analysis).and_return(message)
       end
 
-      it "returns the smartstate_analysis error message" do
+      it "disables the button" do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'record' => @record}, {})
         expect(button.disabled?).to be_truthy

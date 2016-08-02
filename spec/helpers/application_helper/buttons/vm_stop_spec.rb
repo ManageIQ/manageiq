@@ -38,7 +38,7 @@ describe ApplicationHelper::Button::VmStop do
         allow(@record).to receive(:is_available_now_error_message).with(:stop).and_return(message)
       end
 
-      it "disables the button and returns the stop error message" do
+      it "disables the button" do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'record' => @record}, {})
         expect(button.disabled?).to be_truthy
