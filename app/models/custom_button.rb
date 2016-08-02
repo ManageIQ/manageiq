@@ -116,8 +116,7 @@ class CustomButton < ApplicationRecord
   end
 
   def get_resource_action
-    return resource_action unless resource_action.nil?
-    build_resource_action
+    resource_action || build_resource_action
   end
   # End - Helper methods to support moving automate columns to resource_actions table
 
