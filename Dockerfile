@@ -25,6 +25,7 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
                    file                    \
                    gcc-c++                 \
                    git                     \
+                   libcurl-devel           \
                    libffi-devel            \
                    libtool                 \
                    libxml2-devel           \
