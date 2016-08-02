@@ -1,16 +1,3 @@
-var mode;
-mode = global.process.env.MIQ_ESLINT;
-
-if (mode === undefined) {
-  console.warn('Please use the environmental variable MIQ_ESLINT to enable specific rulesets..');
-  console.warn('MIQ_ESLINT=vanilla\tfor non-angular, non-es6, non-spec code');
-  console.warn('MIQ_ESLINT=angular\tfor angular code');
-}
-
-if (!mode) {
-  mode = "vanilla";
-}
-
 var plugins = [];
 var xtends = ['airbnb-es5'];
 
@@ -88,48 +75,6 @@ var rules = {
   }],
   'padded-blocks': [ 'error', 'never' ],
 };
-
-switch (mode) {
-  case 'vanilla':
-    xtends.push('airbnb-es5');
-    break;
-
-  case 'angular':
-    plugins.push('angular');
-    xtends.push('airbnb-es5');
-    xtends.push('angular');
-
-    rules = Object.assign(rules, {
-      // eslint-plugin-angular
-      'angular/module-setter': 0,
-      'angular/foreach': 0,
-      'angular/watchers-execution': [ 'warn', '$apply' ], // but allow $digest for specs
-      'angular/json-functions': 0,
-      'angular/definedundefined': 0,
-      'angular/log': 0,
-      'angular/no-service-method': 0,
-      'angular/di': [ 'error', 'array' ], // strictDi
-
-      // only warnings for now
-      'angular/controller-as': 1,
-      'angular/module-getter': 1,
-      'angular/no-services': [ "warn", ['$http'] ],
-
-      // prefer lodash for typechecks
-      'angular/typecheck-array': 0,
-      'angular/typecheck-date': 0,
-      'angular/typecheck-function': 0,
-      'angular/typecheck-number': 0,
-      'angular/typecheck-object': 0,
-      'angular/typecheck-string': 0,
-    });
-
-    break;
-
-  default:
-    console.error('Unknown mode: ' + mode + " - sorry");
-    global.process.exit(1);
-}
 
 
 module.exports = {
