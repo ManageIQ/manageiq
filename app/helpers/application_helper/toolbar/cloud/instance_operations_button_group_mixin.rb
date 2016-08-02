@@ -45,7 +45,8 @@ module ApplicationHelper::Toolbar::Cloud::InstanceOperationsButtonGroupMixin
             N_('Shelve this Instance'),
             N_('Shelve'),
             :image   => "power_shelve",
-            :confirm => N_("Shelve this Instance?")),
+            :confirm => N_("Shelve this Instance?"),
+            :klass   => ApplicationHelper::Button::InstanceShelve),
           included_class.button(
             :instance_shelve_offload,
             nil,

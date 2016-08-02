@@ -829,10 +829,6 @@ class ApplicationHelper::ToolbarBuilder
         return true unless @record.is_available?(:reboot_guest)
       when "vm_reconfigure"
         return true unless @record.reconfigurable?
-      when "instance_shelve"
-        return true unless @record.is_available?(:shelve)
-      when "instance_shelve_offload"
-        return true unless @record.is_available?(:shelve_offload)
       when "instance_terminate"
         return true unless @record.is_available?(:terminate)
       when "vm_policy_sim", "vm_protect"
