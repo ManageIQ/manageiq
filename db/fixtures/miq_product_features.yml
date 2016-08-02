@@ -5128,6 +5128,29 @@
     :feature_type: admin
     :identifier: delete_arbitration_setting
 
+# ArbitrationRules
+- :name: Arbitration Rules
+  :description: All functions for Arbitration Rules
+  :feature_type: admin
+  :identifier: miq_arbitration_rules
+  :children:
+  - :name: Show Arbitration List
+    :description: Show Arbitration Rule list
+    :feature_type: admin
+    :identifier: arbitration_rule_show_list
+  - :name: Create Arbitration Rule
+    :description: Create Arbitration Rule
+    :feature_type: admin
+    :identifier: arbitration_rule_new
+  - :name: Delete Arbitration Rule
+    :description: Delete Arbitration Rule
+    :feature_type: admin
+    :identifier: arbitration_rule_delete
+  - :name: Edit Arbitration Rule
+    :description: Edit Arbitration Rule
+    :feature_type: admin
+    :identifier: arbitration_rule_edit
+
 # Blueprints
 - :name: Blueprints
   :description: All Blueprint Access Rules
