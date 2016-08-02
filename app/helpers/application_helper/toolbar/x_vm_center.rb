@@ -201,7 +201,8 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           N_('Suspend this VM'),
           N_('Suspend'),
           :image   => "power_suspend",
-          :confirm => N_("Suspend this VM?")),
+          :confirm => N_("Suspend this VM?"),
+          :klass   => ApplicationHelper::Button::VmSuspend),
         button(
           :vm_reset,
           nil,

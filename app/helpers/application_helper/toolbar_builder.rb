@@ -829,8 +829,6 @@ class ApplicationHelper::ToolbarBuilder
         return true unless @record.is_available?(:reboot_guest)
       when "vm_reconfigure"
         return true unless @record.reconfigurable?
-      when "vm_suspend", "instance_suspend"
-        return true unless @record.is_available?(:suspend)
       when "instance_shelve"
         return true unless @record.is_available?(:shelve)
       when "instance_shelve_offload"
@@ -1263,8 +1261,6 @@ class ApplicationHelper::ToolbarBuilder
         return @record.is_available_now_error_message(:shutdown_guest) if @record.is_available_now_error_message(:shutdown_guest)
       when "vm_guest_restart"
         return @record.is_available_now_error_message(:reboot_guest) if @record.is_available_now_error_message(:reboot_guest)
-      when "vm_suspend"
-        return @record.is_available_now_error_message(:suspend) if @record.is_available_now_error_message(:suspend)
       when "instance_retire", "instance_retire_now"
         return N_("Instance is already retired") if @record.retired
       when "vm_timeline"

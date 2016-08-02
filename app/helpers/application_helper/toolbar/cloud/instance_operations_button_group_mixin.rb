@@ -37,7 +37,8 @@ module ApplicationHelper::Toolbar::Cloud::InstanceOperationsButtonGroupMixin
             N_('Suspend this Instance'),
             N_('Suspend'),
             :image   => "suspend",
-            :confirm => N_("Suspend this Instance?")),
+            :confirm => N_("Suspend this Instance?"),
+            :klass   => ApplicationHelper::Button::InstanceSuspend),
           included_class.button(
             :instance_shelve,
             nil,
