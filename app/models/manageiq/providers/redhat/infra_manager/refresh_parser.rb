@@ -506,7 +506,8 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
           :size            => (device[:provisioned_size] || device[:size]).to_i,
           :size_on_disk    => device[:actual_size] ? device[:actual_size].to_i : 0,
           :disk_type       => device[:sparse] == true ? 'thin' : 'thick',
-          :mode            => 'persistent'
+          :mode            => 'persistent',
+          :bootable        => device[:bootable]
         }
 
         new_result[:storage] = storage_uids[storage_mor] unless storage_mor.nil?

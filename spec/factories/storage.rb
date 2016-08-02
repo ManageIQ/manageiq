@@ -11,6 +11,14 @@ FactoryGirl.define do
     store_type "NFS"
   end
 
+  factory :storage_block, :parent => :storage do
+    store_type "FCP"
+  end
+
+  factory :storage_unknown, :parent => :storage do
+    store_type "UNKNOWN"
+  end
+
   # Factories for perf_capture_timer and perf_capture_gap testing
   factory :storage_target_vmware, :parent => :storage_vmware do
     after(:create) do |x|

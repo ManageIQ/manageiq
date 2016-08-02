@@ -105,7 +105,7 @@
                                 "auto-focus"     => ""}
             %span{"style" => "color:red", "ng-show" => "angularForm.total_cpus.$invalid"}
               = _(" Total processors value larger than the maximum allowed")
-  - if @reconfigitems.length == 1 && @reconfigitems.first.vendor && @reconfigitems.first.vendor == 'vmware'
+  - if @reconfigitems.length == 1 && @reconfigitems.first.vendor  && (@reconfigitems.first.vendor == 'vmware' || @reconfigitems.first.vendor == 'redhat')
     %hr
     %div
       %h3
@@ -124,11 +124,12 @@
         %thead
           %th= _('Name')
           %th= _('Type')
-          %th= _('Mode')
+          %th{"ng-if" => @reconfigitems.first.vendor == 'vmware'}= _('Mode')
           %th= _('Size')
           %th.narrow
-          %th.narrow= _('Dependent')
-          %th.narrow= _('Delete Backing')
+          %th.narrow{"ng-if" => @reconfigitems.first.vendor == 'vmware'}= _('Dependent')
+          %th.narrow{"ng-if" => @reconfigitems.first.vendor == 'vmware'}= _('Delete Backing')
+          %th.narrow{"ng-if" => @reconfigitems.first.vendor == 'redhat'}= _('Bootable')
           %th= _('Actions')
         %tbody
           %tr{"ng-if"       => "reconfigureModel.addEnabled",
@@ -143,7 +144,7 @@
                            "data-width"                  => "auto",
                            "required"                    => "",
                            "selectpicker-for-select-tag" => "")
-            %td
+            %td{"ng-if" => @reconfigitems.first.vendor == 'vmware'}
               = select_tag('hdMode',
                             options_for_select(%w(persistent nonpersistent)),
                             "ng-model"                    => "reconfigureModel.hdMode",
@@ -171,12 +172,18 @@
                        "data-width"                  => "auto",
                        "required"                    => "",
                        "selectpicker-for-select-tag" => "")
-            %td.narrow
+            %td.narrow{"ng-if" => @reconfigitems.first.vendor == 'vmware'}
               %input{"bs-switch" => "",
                      :data       => {:on_text => 'Yes', :off_text => 'No', :size => 'mini'},
                      "type"      => "checkbox",
                      "name"      => "cb_dependent",
                      "ng-model"  => "reconfigureModel.cb_dependent"}
+            %td.narrow{"ng-if" => @reconfigitems.first.vendor == 'redhat'}
+              %input{"bs-switch" => "",
+                     :data           => {:on_text => 'Yes', :off_text => 'No', :size => 'mini'},
+                     "type"          => "checkbox",
+                     "name"          => "cb_bootable",
+                     "ng-model"      => "reconfigureModel.cb_bootable"}
             %td.narrow
             %td.action-cell
               %button.btn.btn-default.btn-block.btn-sm{:type => "button", "ng-click" => "addDisk()", "ng-disabled" => "rowForm.dvcSize.$invalid"}= _(' Add ')
@@ -185,13 +192,13 @@
               {{disk.hdFilename}}
             %td
               {{disk.hdType}}
-            %td
+            %td{"ng-if" => @reconfigitems.first.vendor == 'vmware'}
               {{disk.hdMode}}
             %td
               {{disk.hdSize}}
             %td.narrow
               {{disk.hdUnit}}
-            %td.narrow
+            %td.narrow{"ng-if" => @reconfigitems.first.vendor == 'vmware'}
               %input{"bs-switch"     => "",
                      :data           => {:on_text => 'Yes', :off_text => 'No', :size => 'mini'},
                      "type"          => "checkbox",
@@ -200,7 +207,7 @@
                      "switch-active" => "{{disk.add_remove!='add'}}",
                      "ng-readonly"   => "disk.add_remove=='add'",
                      "ng-if"         => "disk.add_remove=='add'"}
-            %td.narrow
+            %td.narrow{"ng-if" => @reconfigitems.first.vendor == 'vmware'}
               %input{"bs-switch"     => "",
                      :data           => {:on_text => 'Yes', :off_text => 'No', :size => 'mini'},
                      "type"          => "checkbox",
@@ -209,6 +216,14 @@
                      "ng-readonly"   => "disk.add_remove=='remove'",
                      "switch-active" => "{{disk.add_remove!='remove'}}",
                      "ng-if"         => "disk.add_remove!='add'"}
+            %td.narrow{"ng-if" => @reconfigitems.first.vendor == 'redhat'}
+              %input{"bs-switch"     => "",
+                     :data           => {:on_text => 'Yes', :off_text => 'No', :size => 'mini'},
+                     "type"          => "checkbox",
+                     "name"          => "cb_bootable",
+                     "ng-model"      => "disk.cb_bootable",
+                     "ng-readonly"   => true,
+                     "switch-active" => false}
             %td.action-cell
               %button.btn.btn-default.btn-block.btn-sm{:type      => "button",
                                             "ng-if"    => "disk.add_remove == ''",

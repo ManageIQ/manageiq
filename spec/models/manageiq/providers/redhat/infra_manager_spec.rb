@@ -72,4 +72,10 @@ describe ManageIQ::Providers::Redhat::InfraManager do
       expect(described_class.make_ems_ref("/api/vms/123")).to eq("/api/vms/123")
     end
   end
+
+  context ".extract_ems_ref_id" do
+    it "extracts the resource ID from the href" do
+      expect(described_class.extract_ems_ref_id("/ovirt-engine/api/vms/123")).to eq("123")
+    end
+  end
 end
