@@ -77,6 +77,7 @@ var rules = {
 
 
 module.exports = {
+  root: true,
   installedESLint: true,
   env: {
     browser: true,
