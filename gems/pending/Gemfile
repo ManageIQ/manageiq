@@ -35,6 +35,7 @@ gem "openscap",                "~>0.4.3",           :require => false
 gem "openshift_client",        "=1.2.0",            :require => false
 gem "ovirt",                   "~>0.11.0",          :require => false
 gem "pg",                      "~>0.18.2",          :require => false
+gem "pg-dsn_parser",           "~>0.1.0",           :require => false
 gem "psych",                   "~>2.0.12"
 gem "rake",                    "~>10.1"
 gem "rbvmomi",                 "~>1.8.0",           :require => false
