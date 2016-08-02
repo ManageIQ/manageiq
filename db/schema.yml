@@ -46,6 +46,8 @@ arbitration_profiles:
 - name
 - description
 - default_profile
+- type
+- profile
 arbitration_rules:
 - id
 - name
