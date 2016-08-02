@@ -13,15 +13,15 @@ class CustomButton < ApplicationRecord
   acts_as_miq_set_member
 
   BUTTON_CLASSES = [
-    Vm,
-    Host,
-    ExtManagementSystem,
-    Storage,
+    CloudTenant,
     EmsCluster,
+    ExtManagementSystem,
+    Host,
     MiqTemplate,
     Service,
-    CloudTenant
-  ]
+    Storage,
+    Vm,
+  ].freeze
 
   def self.buttons_for(other, applies_to_id = nil)
     if other.kind_of?(Class)
