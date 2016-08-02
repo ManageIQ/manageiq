@@ -1,7 +1,7 @@
 class ApiController
   module ArbitrationRules
     def create_resource_arbitration_rules(type, _id, data)
-      attributes = validate_arbitration_rules(data)
+      attributes = build_rule_attributes(data)
       arbitration_rule = collection_class(type).create(attributes)
       if arbitration_rule.invalid?
         raise BadRequestError,
@@ -11,16 +11,14 @@ class ApiController
     end
 
     def edit_resource_arbitration_rules(type, id, data)
-      attributes = validate_arbitration_rules(data)
+      attributes = build_rule_attributes(data)
       edit_resource(type, id, attributes)
     end
 
     private
 
-    def validate_arbitration_rules(data)
-      if data.key?('id') || data.key?('href')
-        raise BadRequestError, 'Resource id or href should not be specified'
-      end
+    def build_rule_attributes(data)
+      return data unless data.key?('expression')
       attributes = data.dup
       attributes['expression'] = MiqExpression.new(data['expression'])
       attributes

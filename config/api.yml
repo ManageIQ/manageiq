@@ -1759,7 +1759,7 @@
     :identifier: miq_arbitration_rules
     :options:
     - :collection
-    :verbs: *70174834084700
+    :verbs: *gpppd
     :klass: ArbitrationRule
     :collection_actions:
       :get:

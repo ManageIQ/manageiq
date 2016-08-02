@@ -23,52 +23,41 @@ RSpec.describe 'Arbitration Rule API' do
   end
 
   context 'arbitration rules create' do
-    let(:expression) do
+    let(:request_body) do
       {
-        'EQUAL' => {
-          'field' => 'User-userid',
-          'value' => 'admin'
+        'name'       => 'admin rule',
+        'operation'  => 'inject',
+        'expression' => {
+          'EQUAL' => {
+            'field' => 'User-userid',
+            'value' => 'admin'
+          }
         }
       }
     end
-    let(:request_body) do
-      {
-        'name'      => 'admin rule',
-        'operation' => 'inject'
-      }
-    end
 
-    it 'can create an arbitration rule with an expression' do
+    it 'supports single arbitration_rule creation' do
       api_basic_authorize collection_action_identifier(:arbitration_rules, :create)
-      body = request_body.merge('expression' => expression)
+
       expect do
-        run_post(arbitration_rules_url, gen_request(:create, body))
+        run_post(arbitration_rules_url, gen_request(:create, request_body))
       end.to change(ArbitrationRule, :count).by(1)
     end
 
     it 'supports multiple arbitration_rule creation' do
       api_basic_authorize collection_action_identifier(:arbitration_rules, :create)
-      body = request_body.merge('expression' => expression)
 
       expect do
-        run_post(arbitration_rules_url, gen_request(:create, [body, body]))
+        run_post(arbitration_rules_url, gen_request(:create, [request_body, request_body]))
       end.to change(ArbitrationRule, :count).by(2)
-    end
-
-    it 'rejects a request with an href' do
-      api_basic_authorize collection_action_identifier(:arbitration_rules, :create)
-
-      run_post(arbitration_rules_url, request_body.merge(:href => arbitration_rules_url))
-
-      expect_bad_request(/Resource id or href should not be specified/)
     end
 
     it 'rejects a request with an id' do
       api_basic_authorize collection_action_identifier(:arbitration_rules, :create)
 
-      run_post(arbitration_rules_url, request_body.merge(:id => 999_999))
+      run_post(arbitration_rules_url(999_999), request_body.merge(:id => 999_999))
 
-      expect_bad_request(/Resource id or href should not be specified/)
+      expect_bad_request(/Unsupported Action create for the arbitration_rules resource/)
     end
   end
 
@@ -96,6 +85,7 @@ RSpec.describe 'Arbitration Rule API' do
     it 'supports single arbitration rule delete' do
       rule = FactoryGirl.create(:arbitration_rule)
       api_basic_authorize collection_action_identifier(:arbitration_rules, :delete)
+
       expect do
         run_delete(arbitration_rules_url(rule.id))
       end.to change(ArbitrationRule, :count).by(-1)
