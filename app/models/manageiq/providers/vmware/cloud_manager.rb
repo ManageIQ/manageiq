@@ -64,6 +64,34 @@ class ManageIQ::Providers::Vmware::CloudManager < ManageIQ::Providers::CloudMana
     self.class.raw_connect(server, port, username, password)
   end
 
+  #
+  # Operations
+  #
+
+  def vm_start(vm, _options = {})
+    vm.start
+  rescue => err
+    _log.error "vm=[#{vm.name}, error: #{err}"
+  end
+
+  def vm_stop(vm, _options = {})
+    vm.stop
+  rescue => err
+    _log.error "vm=[#{vm.name}, error: #{err}"
+  end
+
+  def vm_suspend(vm, _options = {})
+    vm.suspend
+  rescue => err
+    _log.error "vm=[#{vm.name}], error: #{err}"
+  end
+
+  def vm_restart(vm, _options = {})
+    vm.restart
+  rescue => err
+    _log.error "vm=[#{vm.name}], error: #{err}"
+  end
+
   def translate_exception(err)
     case err
     when Fog::Compute::VcloudDirector::Unauthorized
