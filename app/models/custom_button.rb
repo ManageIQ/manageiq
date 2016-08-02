@@ -121,7 +121,7 @@ class CustomButton < ApplicationRecord
   # End - Helper methods to support moving automate columns to resource_actions table
 
   def self.parse_uri(uri)
-    scheme, userinfo, host, port, registry, path, opaque, query, fragment = MiqAeEngine::MiqAeUri.split(uri)
+    _scheme, _userinfo, _host, _port, _registry, path, _opaque, query, fragment = MiqAeEngine::MiqAeUri.split(uri)
     return path, MiqAeEngine::MiqAeUri.query2hash(query), fragment
   end
 
