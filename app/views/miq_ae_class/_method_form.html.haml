@@ -47,7 +47,7 @@
         .col-md-8
           = h(format_timezone(@ae_method.created_on, Time.zone, "gtl"))
   %hr
-  %h3= _("Data")
+  %h3= (@edit[:new][:location] == 'builtin') ? _('Builtin name') : _("Data")
   = render :partial => "method_data", :locals => {:field_name => "#{prefix}method"}
   %hr
   %h3= _("Input Parameters")

@@ -35,7 +35,7 @@
           %p.form-control-static
             = h(format_timezone(@ae_method.created_on, Time.zone, "gtl"))
     = render :partial => "domain_overrides", :locals => {:node_prefix => "aem", :model => "Method"}
-    %h3= _('Data')
+    %h3= (@ae_method.location == 'builtin') ? _('Builtin name') : _('Data')
     - if @ae_method.location == "inline"
       = text_area("method1",
         "data",
