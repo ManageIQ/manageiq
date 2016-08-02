@@ -41,6 +41,7 @@
 
     # Chargeback cost columns
     :cpu_used_cost: :currency_precision_2
+    :cpu_cores_used_cost: :currency_precision_2
     :cpu_allocated_cost: :currency_precision_2
     :cpu_allocated_metric: :general_number_precision_0
     :cpu_cost: :currency_precision_2
