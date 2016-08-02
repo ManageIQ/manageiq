@@ -1034,6 +1034,8 @@ module ApplicationController::MiqRequestMethods
     # Build the default filters tree for the search views
     all_tags = []                          # Array to hold all CIs
     kids_checked = false
+    parent_icon = ActionController::Base.helpers.image_path("100/folder.png")
+    child_icon  = ActionController::Base.helpers.image_path("100/tag.png")
     tags.each_with_index do |t, i| # Go thru all of the Searches
       if @curr_tag.blank? || @curr_tag != t[:name]
         if @curr_tag != t[:name] && @ci_node
@@ -1049,7 +1051,7 @@ module ApplicationController::MiqRequestMethods
         @ci_node[:title] += " *" if t[:single_value]
         @ci_node[:tooltip] = t[:description]
         @ci_node[:addClass] = "cfme-no-cursor-node"      # No cursor pointer
-        @ci_node[:icon] = ActionController::Base.helpers.image_path("100/folder.png")
+        @ci_node[:icon] = parent_icon
         @ci_node[:hideCheckbox] = @ci_node[:cfmeNoClick] = true
         @ci_node[:addClass] = "cfme-bold-node"  # Show node as different
         @ci_kids = []
@@ -1062,7 +1064,7 @@ module ApplicationController::MiqRequestMethods
           temp[:cfme_parent_key] = t[:id].to_s if t[:single_value]
           temp[:title] = temp[:tooltip] = c[1][:description]
           temp[:addClass] = "cfme-no-cursor-node"
-          temp[:icon] = ActionController::Base.helpers.image_path("100/tag.png")
+          temp[:icon] = child_icon
           if edit_mode              # Don't show checkboxes/radio buttons in non-edit mode
             if vm_tags && vm_tags.include?(c[0].to_i)
               temp[:select] = true
