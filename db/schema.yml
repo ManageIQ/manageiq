@@ -46,6 +46,16 @@ arbitration_profiles:
 - name
 - description
 - default_profile
+arbitration_rules:
+- id
+- name
+- description
+- operation
+- arbitration_profile_id
+- priority
+- expression
+- created_at
+- updated_at
 arbitration_settings:
 - id
 - name
