@@ -6,7 +6,6 @@ if (mode === undefined) {
   console.warn('MIQ_ESLINT=vanilla\tfor non-angular, non-es6, non-spec code');
   console.warn('MIQ_ESLINT=angular\tfor angular code');
   console.warn('MIQ_ESLINT=spec\tfor specs');
-  console.warn('MIQ_ESLINT=es6\tfor .es6 files');
 }
 
 if (!mode) {
@@ -14,8 +13,7 @@ if (!mode) {
 }
 
 var plugins = [];
-var xtends = [];
-var ecmaVersion = 5;
+var xtends = ['airbnb-es5'];
 
 var globals = {
   API: false, // local: miq_api.js
@@ -148,12 +146,6 @@ switch (mode) {
     globals = Object.assign(globals, specGlobals);
     break;
 
-  case 'es6':
-    // note that eslint has to be run with --ext .es6 to pick these up
-    xtends.push('airbnb');
-    ecmaVersion = 6;
-    break;
-
   default:
     console.error('Unknown mode: ' + mode + " - sorry");
     global.process.exit(1);
@@ -167,7 +159,7 @@ module.exports = {
     jquery: true,
   },
   parserOptions: {
-    ecmaVersion: ecmaVersion,
+    ecmaVersion: 5,
     sourceType: 'script',
     ecmaFeatures: {
       globalReturn: false,

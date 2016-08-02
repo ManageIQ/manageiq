@@ -16,9 +16,5 @@ MIQ_ESLINT=angular $ESLINT "$@" \
   app/assets/javascripts/services \
   app/assets/javascripts/components
 
-MIQ_ESLINT=es6 $ESLINT "$@" \
-  --ext .es6 \
-  app/assets/javascripts/
-
 MIQ_ESLINT=spec $ESLINT "$@" \
   spec/javascripts/
