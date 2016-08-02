@@ -93,7 +93,16 @@ module VimPropMaps
     :VirtualApp       => {
       :baseName => "@virtualApps",
       :keyPath  => nil, # by mor only
-      :props    => ["name", "summary.config", "resourcePool", "owner", "parent", "vm"] # childConfiguration currently has a problem updating.  See FB3269
+      :props    => [ # childConfiguration currently has a problem updating.  See FB3269
+        "datastore",
+        "name",
+        "network",
+        "summary.config",
+        "resourcePool",
+        "owner",
+        "parent",
+        "vm"
+      ]
     }
   }
 
