@@ -2,6 +2,7 @@ class ManageIQ::Providers::Vmware::CloudManager < ManageIQ::Providers::CloudMana
   require_nested :RefreshParser
   require_nested :RefreshWorker
   require_nested :Refresher
+  require_nested :Template
   require_nested :Vm
 
   def self.ems_type

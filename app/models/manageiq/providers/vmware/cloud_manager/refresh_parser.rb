@@ -1,6 +1,11 @@
 class ManageIQ::Providers::Vmware::CloudManager::RefreshParser < ManageIQ::Providers::CloudManager::RefreshParser
   include ManageIQ::Providers::Vmware::RefreshHelperMethods
 
+  # While parsing the VMWare catalog only those vapp templates whose status
+  # is reported to be "8" are ready to be used. The documentation says this
+  # status is POWERED_OFF, however the cloud director shows it as "Ready"
+  VAPP_TEMPLATE_STATUS_READY = "8".freeze
+
   def initialize(ems, options = nil)
     @ems        = ems
     @connection = ems.connect
@@ -20,6 +25,8 @@ class ManageIQ::Providers::Vmware::CloudManager::RefreshParser < ManageIQ::Provi
     get_vdcs
     get_vapps
     get_vms
+    get_vapp_templates
+    get_images
 
     $log.info("#{log_header}...Complete")
 
@@ -56,6 +63,29 @@ class ManageIQ::Providers::Vmware::CloudManager::RefreshParser < ManageIQ::Provi
     end
 
     process_collection(@inv[:vms], :vms) { |vm| parse_vm(vm) }
+  end
+
+  def get_vapp_templates
+    @inv[:orgs].each do |org|
+      org.catalogs.each do |catalog|
+        next if catalog.is_published && !@options.get_public_images
+
+        catalog.catalog_items.each do |item|
+          @inv[:vapp_templates] << {
+            :vapp_template => item.vapp_template,
+            :is_published  => catalog.is_published
+          } if item.vapp_template.status == VAPP_TEMPLATE_STATUS_READY
+        end
+      end
+    end
+  end
+
+  def get_images
+    @inv[:vapp_templates].each do |template_obj|
+      @inv[:images] += template_obj[:vapp_template].vms.map { |image| { :image => image, :is_published => template_obj[:is_published] } }
+    end
+
+    process_collection(@inv[:images], :vms) { |image_obj| parse_image(image_obj[:image], image_obj[:is_published]) }
   end
 
   def parse_vm(vm)
@@ -127,6 +157,23 @@ class ManageIQ::Providers::Vmware::CloudManager::RefreshParser < ManageIQ::Provi
       :description => name,
       :status      => status,
     }
+    return uid, new_result
+  end
+
+  def parse_image(image, is_public)
+    uid  = image.id
+    name = image.name
+
+    new_result = {
+      :type               => ManageIQ::Providers::Vmware::CloudManager::Template.name,
+      :uid_ems            => uid,
+      :ems_ref            => uid,
+      :name               => name,
+      :vendor             => "vmware",
+      :raw_power_state    => "never",
+      :publicly_available => is_public
+    }
+
     return uid, new_result
   end
 end

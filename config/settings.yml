@@ -137,6 +137,8 @@
   :refresh_interval: 24.hours
   :scvmm:
     :refresh_interval: 15.minutes
+  :vmware_cloud:
+    :get_public_images: false
 :event_handling:
   :bottleneck_event_groups:
     :Capacity:
