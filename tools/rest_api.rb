@@ -120,6 +120,8 @@ class RestApi
             :default => "smartvm",                :short => '-p'
         opt :token,      "Token to use for authentication instead of user/password",
             :default => "",                       :short => '-t'
+        opt :miqtoken,   "Token to use for system authentication",
+            :default => "",                       :short => '-m'
         opt :format,     "How to format Json, pretty|none",
             :default => "pretty",                 :short => '-f'
         opt :inputfile,  "File to use as input to the POST/PUT/PATCH methods",
@@ -206,7 +208,7 @@ class RestApi
         faraday.response(:logger) if opts[:verbose] # log requests to STDOUT
         faraday.use FaradayMiddleware::FollowRedirects, :limit => 3, :standards_compliant => true
         faraday.adapter(Faraday.default_adapter)    # make requests with Net::HTTP
-        faraday.basic_auth(opts[:user], opts[:password]) if opts[:token].empty?
+        faraday.basic_auth(opts[:user], opts[:password]) if opts[:token].empty? && opts[:miqtoken].empty?
       end
 
       if action == "run"
@@ -249,6 +251,7 @@ class RestApi
           req.headers[:content_type]  = CTYPE
           req.headers[:accept]        = CTYPE
           req.headers['X-MIQ-Group']  = opts[:group] unless opts[:group].empty?
+          req.headers['X-MIQ-Token']  = opts[:miqtoken] unless opts[:miqtoken].empty?
           req.headers['X-Auth-Token'] = opts[:token] unless opts[:token].empty?
           req.params.merge!(params)
           req.body = data if METHODS_NEEDING_DATA.include?(method)
