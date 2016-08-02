@@ -1,9 +1,11 @@
 #event_list_div
   - if @events
-    = render :partial => "layouts/flash_msg"
     - if @events.empty?
-      .note
-        = _("* No Events are defined%s.") % @search_text.blank? ? "" : _(" that match the entered search string")
+      - if @search_text.empty?
+        - msg = _("No Events are defined")
+      - else
+        - msg = _("No Events are defined that match the entered search string '%s'") % @search_text
+      = render 'layouts/info_msg', :message => msg
     - else
       %table.table.table-striped.table-bordered.table-hover
         %tbody
