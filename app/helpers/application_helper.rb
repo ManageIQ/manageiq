@@ -84,18 +84,9 @@ module ApplicationHelper
         end
       else
         out = content_tag(:li) do
-          if restful_routed?(record)
-            link_to("#{plural} (#{count})",
-                    polymorphic_path(record, :display => table_name.to_s.pluralize),
-                    :title => _("Show %{plural_linked_name}") % {:plural_linked_name => plural})
-          else
-            link_to("#{plural} (#{count})",
-                    {:controller => controller_name,
-                     :action     => 'show',
-                     :id         => record.id,
-                     :display    => table_name.to_s.pluralize},
-                    {:title => _("Show %{plural_linked_name}") % {:plural_linked_name => plural}})
-          end
+          link_to("#{plural} (#{count})",
+                  polymorphic_path(@record, :display => table_name.to_s.pluralize),
+                  :title => _("Show %{plural_linked_name}") % {:plural_linked_name => plural})
         end
       end
     end
