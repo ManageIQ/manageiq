@@ -90,6 +90,10 @@ module Rbac
       new.filtered(*args)
     end
 
+    def self.filtered_object(*args)
+      new.filtered_object(*args)
+    end
+
     def self.accessible_tenant_ids_strategy(klass)
       TENANT_ACCESS_STRATEGY[klass.base_model.to_s]
     end
@@ -226,6 +230,10 @@ module Rbac
 
     def filtered(objects, options = {})
       Rbac.search(options.reverse_merge(:targets => objects)).first
+    end
+
+    def filtered_object(object, options = {})
+      filtered([object], options).first
     end
 
     private
