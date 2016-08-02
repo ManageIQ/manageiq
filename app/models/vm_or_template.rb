@@ -128,6 +128,8 @@ class VmOrTemplate < ApplicationRecord
   has_many                  :direct_services, :through => :service_resources, :source => :service
   belongs_to                :tenant
 
+  serialize :provider_options, Hash
+
   acts_as_miq_taggable
 
   supports_not :resize

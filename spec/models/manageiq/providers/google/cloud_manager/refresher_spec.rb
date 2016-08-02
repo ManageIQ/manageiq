@@ -39,6 +39,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       assert_specific_vm_powered_on
       assert_specific_vm_with_proper_subnets
       assert_specific_vm_powered_off
+      assert_specific_vm_preemptible
       assert_specific_image_template
       assert_specific_snapshot_template
       assert_specific_cloud_volume
@@ -50,28 +51,28 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     {
       :ext_management_system         => 2,
       :flavor                        => 19,
-      :availability_zone             => 13,
-      :vm_or_template                => 547,
-      :vm                            => 4,
-      :miq_template                  => 543,
-      :disk                          => 4,
+      :availability_zone             => 15,
+      :vm_or_template                => 574,
+      :vm                            => 5,
+      :miq_template                  => 569,
+      :disk                          => 5,
       :guest_device                  => 0,
-      :hardware                      => 4,
+      :hardware                      => 5,
       :network                       => 0,
-      :operating_system              => 547,
-      :relationship                  => 8,
-      :miq_queue                     => 548,
+      :operating_system              => 574,
+      :relationship                  => 10,
+      :miq_queue                     => 575,
       :orchestration_template        => 0,
       :orchestration_stack           => 0,
       :orchestration_stack_parameter => 0,
       :orchestration_stack_output    => 0,
       :orchestration_stack_resource  => 0,
       :security_group                => 3,
-      :network_port                  => 4,
+      :network_port                  => 5,
       :cloud_network                 => 3,
-      :floating_ip                   => 4,
+      :floating_ip                   => 3,
       :network_router                => 0,
-      :cloud_subnet                  => 5,
+      :cloud_subnet                  => 6,
       :key_pair                      => 4,
     }
   end
@@ -309,12 +310,13 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :cpu_shares_level      => nil
     )
 
-    expect(v.ext_management_system).to         eql(@ems)
-    expect(v.availability_zone).to             eql(@zone)
-    expect(v.flavor).to                        eql(@flavor)
-    expect(v.operating_system.product_name).to eql("linux_redhat")
-    expect(v.custom_attributes.size).to        eql(0)
-    expect(v.snapshots.size).to                eql(0)
+    expect(v.ext_management_system).to             eql(@ems)
+    expect(v.availability_zone).to                 eql(@zone)
+    expect(v.flavor).to                            eql(@flavor)
+    expect(v.operating_system.product_name).to     eql("linux_redhat")
+    expect(v.custom_attributes.size).to            eql(0)
+    expect(v.snapshots.size).to                    eql(0)
+    expect(v.provider_options[:is_preemptible]).to eql(false)
 
     assert_specific_vm_powered_on_hardware(v)
   end
@@ -446,19 +448,20 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
 
     assert_specific_vm_powered_off_attributes(v)
 
-    expect(v.ext_management_system).to         eql(@ems)
-    expect(v.availability_zone).to             eql(zone1)
-    expect(v.floating_ip).to                   be_nil
-    expect(v.cloud_network).to                 eql(@cn)
-    expect(v.cloud_networks.first).to          eql(@cn)
-    expect(v.cloud_subnet).to                  eql(@cs)
-    expect(v.cloud_subnets.first).to           eql(@cs)
-    expect(v.operating_system.product_name).to eql("linux_debian")
+    expect(v.ext_management_system).to             eql(@ems)
+    expect(v.availability_zone).to                 eql(zone1)
+    expect(v.floating_ip).to                       be_nil
+    expect(v.cloud_network).to                     eql(@cn)
+    expect(v.cloud_networks.first).to              eql(@cn)
+    expect(v.cloud_subnet).to                      eql(@cs)
+    expect(v.cloud_subnets.first).to               eql(@cs)
+    expect(v.operating_system.product_name).to     eql("linux_debian")
     # This should have keys added on just this vm (@kp) as well as
     # on the whole project (@project_kp)
-    expect(v.key_pairs.to_a).to                eql([@kp, @project_kp])
-    expect(v.custom_attributes.size).to        eql(0)
-    expect(v.snapshots.size).to                eql(0)
+    expect(v.key_pairs.to_a).to                    eql([@kp, @project_kp])
+    expect(v.custom_attributes.size).to            eql(0)
+    expect(v.snapshots.size).to                    eql(0)
+    expect(v.provider_options[:is_preemptible]).to eql(false)
 
     assert_specific_vm_powered_off_hardware(v)
   end
@@ -506,6 +509,20 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     expect(v.network_ports.size).to          eql(1)
     expect(v.cloud_networks.size).to         eql(1)
     expect(v.floating_ips.size).to           eql(0)
+  end
+
+  def assert_specific_vm_preemptible
+    v = ManageIQ::Providers::Google::CloudManager::Vm.where(:name => "preemptible-1").first
+    expect(v).to have_attributes(
+      :raw_power_state       => "TERMINATED",
+      :template              => false,
+      :ems_ref               => "9023820458355785494",
+      :uid_ems               => "9023820458355785494",
+      :vendor                => "google",
+      :power_state           => "off"
+    )
+
+    expect(v.provider_options[:is_preemptible]).to eql(true)
   end
 
   def assert_specific_image_template
