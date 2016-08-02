@@ -26,10 +26,8 @@ class CustomButton < ApplicationRecord
   def self.buttons_for(other, applies_to_id = nil)
     if other.kind_of?(Class)
       applies_to_class = other.base_model.name
-      applies_to_id    = applies_to_id
     elsif other.kind_of?(String)
       applies_to_class = other
-      applies_to_id    = applies_to_id
     else
       raise _("Instance has no id") if other.id.nil?
       applies_to_class = other.class.base_model.name
