@@ -33,6 +33,14 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     )
   end
 
+  def self.without_iso_datastores
+    includes(:iso_datastore).where(:iso_datastores => {:id => nil})
+  end
+
+  def self.any_without_iso_datastores?
+    without_iso_datastores.count > 0
+  end
+
   def supports_port?
     true
   end

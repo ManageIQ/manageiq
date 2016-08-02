@@ -944,7 +944,7 @@ class ApplicationHelper::ToolbarBuilder
     return true if ["button_add", "button_save", "button_reset"].include?(id) && !@changed
 
     # need to add this here, since this button is on list view screen
-    if @layout == "pxe" && id == "iso_datastore_new" && ManageIQ::Providers::Redhat::InfraManager.datastore?
+    if disable_new_iso_datastore?(id)
       return N_("No %{providers} are available to create an ISO Datastore on") %
         {:providers => ui_lookup(:tables => "ext_management_system")}
     end
@@ -1517,5 +1517,11 @@ class ApplicationHelper::ToolbarBuilder
     User.current_tenant.any_editable_domains? &&
     MiqAeDomain.any_unlocked? &&
     MiqAeDomain.any_enabled?
+  end
+
+  def disable_new_iso_datastore?(item_id)
+    @layout == "pxe" &&
+      item_id == "iso_datastore_new" &&
+      !ManageIQ::Providers::Redhat::InfraManager.any_without_iso_datastores?
   end
 end
