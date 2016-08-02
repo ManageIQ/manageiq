@@ -32,7 +32,7 @@
           %span.help-block{"ng-show" => "angularForm.description.$error.required"}
             = _("Required")
       .form-group
-        %label.col-md-2.control-label{"for" => "availability_zone_id"}
+        %label.col-md-2.control-label{"for" => "authentication_id"}
           = _('Key Pair')
         .col-md-8
           %select{"ng-model"    => "arbitrationProfileModel.authentication_id",
@@ -56,11 +56,24 @@
                     "value"       => "{{availability_zone.id}}"}
               {{availability_zone.name}}
       .form-group
+        %label.col-md-2.control-label{"for" => "flavor_id"}
+          = _('Flavor')
+        .col-md-8
+          %select{"ng-model"    => "arbitrationProfileModel.flavor_id",
+                  "name"        => "flavor_id",
+                  "checkchange" => ""}
+            %option{"value" => ""}
+              = "<#{_('Choose')}>"
+            %option{"ng-repeat"   => "flavor in arbitrationProfileModel.flavors track by $index",
+                    "value"       => "{{flavor.id}}"}
+              {{flavor.name}}
+      .form-group
         %label.col-md-2.control-label{"for" => "cloud_network_id"}
           = _('Cloud Network')
         .col-md-8
           %select{"ng-model"    => "arbitrationProfileModel.cloud_network_id",
                   "name"        => "cloud_network_id",
+                  "ng-change"   => "cloudNetworkChanged(arbitrationProfileModel.cloud_network_id)",
                   "checkchange" => ""}
             %option{"value" => ""}
               = "<#{_('Choose')}>"
@@ -80,19 +93,7 @@
                     "value"       => "{{cloud_subnet.id}}"}
               {{cloud_subnet.name}}
       .form-group
-        %label.col-md-2.control-label{"for" => "flavor_id"}
-          = _('Flavor')
-        .col-md-8
-          %select{"ng-model"    => "arbitrationProfileModel.flavor_id",
-                  "name"        => "flavor_id",
-                  "checkchange" => ""}
-            %option{"value" => ""}
-              = "<#{_('Choose')}>"
-            %option{"ng-repeat"   => "flavor in arbitrationProfileModel.flavors track by $index",
-                    "value"       => "{{flavor.id}}"}
-              {{flavor.name}}
-      .form-group
-        %label.col-md-2.control-label{"for" => "availability_zone_id"}
+        %label.col-md-2.control-label{"for" => "security_group_id"}
           = _('Security Group')
         .col-md-8
           %select{"ng-model"    => "arbitrationProfileModel.security_group_id",
@@ -103,6 +104,6 @@
             %option{"ng-repeat"   => "security_group in arbitrationProfileModel.security_groups track by $index",
                     "value"       => "{{security_group.id}}"}
               {{security_group.name}}
-          :javascript
-            miqInitSelectPicker();
+    :javascript
+      miqInitSelectPicker();
   %form-buttons

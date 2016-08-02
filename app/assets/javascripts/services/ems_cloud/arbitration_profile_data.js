@@ -11,17 +11,6 @@ ManageIQ.angular.app.service('arbitrationProfileDataFactory', ['API', function(A
       }
     }
   };
-
-  this.getArbitrationProfileOptions = function (ems_id) {
-    var url = "/api/providers/" + ems_id + "?attributes=authentications,availability_zones,cloud_networks,cloud_subnets,flavors,security_groups";
-    if(angular.isDefined(ems_id)) {
-      return API.get(url).then(handleSuccess);
-
-      function handleSuccess(response) {
-        return response;
-      }
-    }
-  };
   return this;
 }]);
 

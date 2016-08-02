@@ -10,9 +10,6 @@ ManageIQ.angular.app.config([ '$httpProvider', '$stateProvider', '$urlRouterProv
       resolve: {
         arbitrationProfileData: function (arbitrationProfileDataFactory, $stateParams) {
           return arbitrationProfileDataFactory.getArbitrationProfileData($stateParams.ems_id, $stateParams.show);
-        },
-        arbitrationProfileOptions: function (arbitrationProfileDataFactory, $stateParams) {
-          return arbitrationProfileDataFactory.getArbitrationProfileOptions($stateParams.ems_id);
         }
       }
     });

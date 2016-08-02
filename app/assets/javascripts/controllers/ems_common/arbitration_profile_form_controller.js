@@ -1,4 +1,4 @@
-ManageIQ.angular.app.controller('arbitrationProfileFormController', ['$http', '$scope', '$location', 'arbitrationProfileFormId', 'miqService', 'postService', 'arbitrationProfileData', 'arbitrationProfileOptions', function($http, $scope, $location, arbitrationProfileFormId, miqService, postService, arbitrationProfileData, arbitrationProfileOptions) {
+ManageIQ.angular.app.controller('arbitrationProfileFormController', ['$http', '$scope', '$location', 'arbitrationProfileFormId', 'miqService', 'postService', 'arbitrationProfileData', 'API', function($http, $scope, $location, arbitrationProfileFormId, miqService, postService, arbitrationProfileData, API) {
     var init = function() {
       $scope.arbitrationProfileModel = {
         name: '',
@@ -31,13 +31,7 @@ ManageIQ.angular.app.controller('arbitrationProfileFormController', ['$http', '$
         $scope.arbitrationProfileModel.security_group_id    = convertToString(arbitrationProfileData.security_group_id);
       }
 
-      $scope.arbitrationProfileModel.authentications    = arbitrationProfileOptions.authentications
-      $scope.arbitrationProfileModel.availability_zones = arbitrationProfileOptions.availability_zones
-      $scope.arbitrationProfileModel.cloud_networks     = arbitrationProfileOptions.cloud_networks
-      $scope.arbitrationProfileModel.cloud_subnets      = arbitrationProfileOptions.cloud_subnets
-      $scope.arbitrationProfileModel.flavors            = arbitrationProfileOptions.flavors
-      $scope.arbitrationProfileModel.security_groups    = arbitrationProfileOptions.security_groups
-
+      $scope.profileOptions($scope.arbitrationProfileModel.ems_id, $scope.arbitrationProfileModel.cloud_network_id);
       $scope.modelCopy = angular.copy( $scope.arbitrationProfileModel );
     };
 
@@ -50,6 +44,7 @@ ManageIQ.angular.app.controller('arbitrationProfileFormController', ['$http', '$
 
   $scope.resetClicked = function() {
     $scope.arbitrationProfileModel = angular.copy( $scope.modelCopy );
+    $scope.profileOptions($scope.arbitrationProfileModel.ems_id, $scope.arbitrationProfileModel.cloud_network_id);
     $scope.angularForm.$setUntouched(true);
     $scope.angularForm.$setPristine(true);
     miqService.miqFlash("warn", __("All changes have been reset"));
@@ -97,5 +92,32 @@ ManageIQ.angular.app.controller('arbitrationProfileFormController', ['$http', '$
               security_group_id:    $scope.arbitrationProfileModel.security_group_id
             }
   }
+
+  $scope.cloudNetworkChanged = function(id) {
+    var url = "/api/cloud_networks/" + id + "?attributes=cloud_subnets,security_groups";
+
+    API.get(url).then(function(response) {
+      $scope.arbitrationProfileModel.cloud_subnets   = response.cloud_subnets;
+      $scope.arbitrationProfileModel.security_groups = response.security_groups;
+    })
+  };
+
+  $scope.profileOptions = function(id, cloud_network_id) {
+    var url = "/api/providers/" + id + "?attributes=authentications,availability_zones,cloud_networks,cloud_subnets,flavors,security_groups";
+
+    API.get(url).then(function(response) {
+      $scope.arbitrationProfileModel.authentications   = response.authentications;
+      $scope.arbitrationProfileModel.availability_zones = response.availability_zones;
+      $scope.arbitrationProfileModel.flavors   = response.flavors;
+      $scope.arbitrationProfileModel.cloud_networks = response.cloud_networks;
+      if(cloud_network_id != "") {
+        $scope.cloudNetworkChanged(cloud_network_id)
+      } else {
+        $scope.arbitrationProfileModel.cloud_subnets   = response.cloud_subnets;
+        $scope.arbitrationProfileModel.security_groups = response.security_groups;
+      }
+    })
+  };
+
   init();
 }]);
