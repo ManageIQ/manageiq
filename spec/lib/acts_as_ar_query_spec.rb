@@ -33,6 +33,11 @@ describe ActsAsArQuery do
     end
   end
 
+  describe "#limit_value" do
+    it { expect(query.limit_value).to eq(nil) }
+    it { expect(query.limit(5).limit_value).to eq(5) }
+  end
+
   # - [.] none
 
   describe "#offset" do
@@ -40,6 +45,11 @@ describe ActsAsArQuery do
       expect(model).to receive(:find).with(:all, :offset => 5)
       query.offset(5).to_a
     end
+  end
+
+  describe "#offset_value" do
+    it { expect(query.offset_value).to eq(nil) }
+    it { expect(query.offset(5).offset_value).to eq(5) }
   end
 
   describe "#order" do
@@ -57,6 +67,11 @@ describe ActsAsArQuery do
       expect(model).to receive(:find).with(:all, :order => [:a, :b])
       query.order(:a).order(:b).to_a
     end
+  end
+
+  describe "#order_values" do
+    it { expect(query.order_values).to eq([]) }
+    it { expect(query.order(:a).order(:b)order_values).to eq([:a, :b]) }
   end
 
   # - [X] references (partial) - currently ignored
