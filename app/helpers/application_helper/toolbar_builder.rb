@@ -225,7 +225,8 @@ class ApplicationHelper::ToolbarBuilder
           build_button(bgi, group_index)
         end
       when ApplicationHelper::Toolbar::Custom
-        group[:args][:html] = CGI.escapeHTML(group.render(@view_context)).delete!("\n")
+        rendered_html = group.render(@view_context).delete!("\n").gsub('\'', '"')
+        group[:args][:html] = ERB::Util.html_escape(rendered_html).html_safe
         @toolbar << group
       end
     end

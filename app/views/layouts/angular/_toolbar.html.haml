@@ -1,7 +1,7 @@
-#miq-toolbar-menu{"ng-controller" => "miqToolbarController as toolbarCtrl",
-     "ng-init" => "toolbarCtrl.initObject('#{toolbar_from_hash.to_json}')"}
+%ng-csp#miq-toolbar-menu{"ng-controller" => "miqToolbarController as toolbarCtrl",
+     "ng-init" => "toolbarCtrl.initObject('#{j_str(toolbar_from_hash.to_json)}')"}
   %miq-toolbar-menu{"toolbar-items" => "toolbarCtrl.toolbarItems",
                     "toolbar-views" => "toolbarCtrl.dataViews",
                     "on-view-click" => "toolbarCtrl.onViewClick(item)"}
-%script{:type=>"text/javascript"}
+:javascript
   angular.bootstrap(document.getElementById('miq-toolbar-menu'), ['ManageIQ.toolbar']);

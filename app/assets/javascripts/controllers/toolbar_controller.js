@@ -29,16 +29,6 @@
     }
   }
 
-  function generateGetData(type, lastaction, display) {
-    var getData = {
-      id: ManageIQ.record.recordId,
-      gtl_type: type,
-      lastAction: lastaction,
-      display: display
-    }
-    return _.pick(getData, _.identity);
-  }
-
   /**
   * Constructor of angular's miqToolbarController.
   * @param MiQToolbarSettingsService toolbarSettings service from ui-components.
@@ -47,7 +37,7 @@
   * @param $location service for managing browser's location.
   * this contructor will assign all params to `this`, it will init endpoits, set if toolbar is used on list page.
   */
-  var ToolbarController = function(MiQToolbarSettingsService, MiQEndpointsService, $scope,$location) {
+  var ToolbarController = function(MiQToolbarSettingsService, MiQEndpointsService, $scope, $location) {
     this.MiQToolbarSettingsService = MiQToolbarSettingsService;
     this.MiQEndpointsService = MiQEndpointsService;
     this.$scope = $scope;
@@ -119,19 +109,6 @@
   ToolbarController.prototype.onViewClick = function(item) {
     var tail = (ManageIQ.record.recordId) ? ManageIQ.record.recordId : '';
     location.replace('/' + ManageIQ.controller + item.url + tail + item.url_parms);
-  }
-
-  /**
-  * Default init method for non angularized views.
-  * It will bind this controller to rxSubject, fetches data, filter Data views and sets default view's url. All these
-  * methods are public, except subscribeToSubject.
-  */
-  ToolbarController.prototype.init = function(type, lastaction, display) {
-    subscribeToSubject.bind(this)();
-    return this.fetchData(generateGetData(type, lastaction, display)).then(function() {
-      this.defaultViewUrl();
-      this.setClickHandler();
-    }.bind(this));
   }
 
   ToolbarController.prototype.initObject = function(toolbarString) {
