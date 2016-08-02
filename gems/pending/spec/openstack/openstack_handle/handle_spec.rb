@@ -56,6 +56,7 @@ describe OpenstackHandle::Handle do
                                            {:openstack_tenant       => "admin",
                                             :openstack_project_name => "admin",
                                             :openstack_domain_id    => nil,
+                                            :openstack_region       => nil,
                                             :connection_options     => {:ssl_verify_peer => false}})
                                            .once do |_, _, address|
         expect(address).to eq(auth_url)
@@ -77,6 +78,7 @@ describe OpenstackHandle::Handle do
                                            {:openstack_tenant       => "admin",
                                             :openstack_project_name => "admin",
                                             :openstack_domain_id    => nil,
+                                            :openstack_region       => nil,
                                             :connection_options     => {}})
                                            .once do |_, _, address|
         expect(address).to eq(auth_url)
@@ -98,6 +100,7 @@ describe OpenstackHandle::Handle do
                                            {:openstack_tenant       => "admin",
                                             :openstack_project_name => "admin",
                                             :openstack_domain_id    => nil,
+                                            :openstack_region       => nil,
                                             :connection_options     => {:ssl_verify_peer => false}}) do |_, _, address|
         expect(address).to eq(auth_url_ssl)
         fog
@@ -119,6 +122,7 @@ describe OpenstackHandle::Handle do
                                            {:openstack_tenant       => "admin",
                                             :openstack_project_name => "admin",
                                             :openstack_domain_id    => nil,
+                                            :openstack_region       => nil,
                                             :connection_options     => {:ssl_verify_peer => true}}) do |_, _, address|
         expect(address).to eq(auth_url_ssl)
         fog
@@ -138,6 +142,7 @@ describe OpenstackHandle::Handle do
       expected_options = {:openstack_tenant       => "admin",
                           :openstack_project_name => "admin",
                           :openstack_domain_id    => nil,
+                          :openstack_region       => nil,
                           :connection_options     => {:ssl_verify_peer => true,
                                                       :ssl_ca_file     => "file",
                                                       :ssl_ca_path     => "path",
@@ -157,6 +162,29 @@ describe OpenstackHandle::Handle do
         fog
       end
 
+      expect(handle.connect(:tenant_name => "admin")).to eq(fog)
+    end
+  end
+
+  context "supports regions" do
+    it "handles connections with region just fine" do
+      fog      = double('fog')
+      handle   = OpenstackHandle::Handle.new("dummy", "dummy", "address", 5000, 'v2', 'non-ssl', :region => 'RegionOne')
+      auth_url = OpenstackHandle::Handle.auth_url("address", 5000, "http")
+
+      expect(OpenstackHandle::Handle).to receive(:raw_connect).with(
+        "dummy",
+        "dummy",
+        "http://address:5000/v2.0/tokens",
+        "Compute",
+        :openstack_tenant       => "admin",
+        :openstack_project_name => "admin",
+        :openstack_domain_id    => nil,
+        :openstack_region       => 'RegionOne',
+        :connection_options     => {}).once do |_, _, address|
+          expect(address).to eq(auth_url)
+          fog
+        end
       expect(handle.connect(:tenant_name => "admin")).to eq(fog)
     end
   end

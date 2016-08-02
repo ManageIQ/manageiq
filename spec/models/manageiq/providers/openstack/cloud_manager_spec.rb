@@ -51,15 +51,30 @@ describe ManageIQ::Providers::Openstack::CloudManager do
       expect(@ems.event_monitor_available?).to be_falsey
     end
 
-    it "fails uniqueness check for same hostname with same or without domains" do
+    it "fails uniqueness check for same hostname with same or without domains and regions" do
       dup_ems = FactoryGirl.build(:ems_openstack_with_authentication)
       taken_hostname = @ems.endpoints.first.hostname
       dup_ems.endpoints.first.hostname = taken_hostname
       expect(dup_ems.valid?).to be_falsey
     end
 
-    it "passes uniqueness check for same hostname with different domains" do
+    it "passes uniqueness check for same hostname with different domain" do
       dup_ems = FactoryGirl.build(:ems_openstack_with_authentication, :uid_ems => 'my_domain')
+      taken_hostname = @ems.endpoints.first.hostname
+      dup_ems.endpoints.first.hostname = taken_hostname
+      expect(dup_ems.valid?).to be_truthy
+    end
+
+    it "passes uniqueness check for same hostname with different region" do
+      dup_ems = FactoryGirl.build(:ems_openstack_with_authentication, :provider_region => 'RegionTwo')
+      taken_hostname = @ems.endpoints.first.hostname
+      dup_ems.endpoints.first.hostname = taken_hostname
+      expect(dup_ems.valid?).to be_truthy
+    end
+
+    it "passes uniqueness check for same hostname with different domain and region" do
+      dup_ems = FactoryGirl.build(:ems_openstack_with_authentication,
+                                  :uid_ems => 'my_domain', :provider_region => 'RegionTwo')
       taken_hostname = @ems.endpoints.first.hostname
       dup_ems.endpoints.first.hostname = taken_hostname
       expect(dup_ems.valid?).to be_truthy

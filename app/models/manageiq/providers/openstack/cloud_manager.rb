@@ -48,7 +48,10 @@ class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
 
     existing_providers = Endpoint.where(:hostname => hostname.downcase)
                                  .where.not(:resource_id => id).includes(:resource)
-                                 .select { |endpoint| endpoint.resource.uid_ems == keystone_v3_domain_id }
+                                 .select do |endpoint|
+                                   endpoint.resource.uid_ems == keystone_v3_domain_id &&
+                                     endpoint.resource.provider_region == provider_region
+                                 end
 
     errors.add(:hostname, "has already been taken") if existing_providers.any?
   end
