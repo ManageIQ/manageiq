@@ -365,7 +365,6 @@ describe ApplicationHelper do
      "repo_protect",
      "resource_pool_protect",
      "vm_check_compliance",
-     "vm_guest_startup",
      "vm_guest_shutdown",
      "vm_guest_standby",
      "vm_guest_restart",
@@ -1162,17 +1161,6 @@ describe ApplicationHelper do
         end
       end
 
-      context "and id = vm_start" do
-        before { @id = "vm_start" }
-
-        it "hides the start button" do
-          @record = FactoryGirl.create(:vm_amazon)
-          allow(@record).to receive_messages(:retired => false, :current_state => "terminated")
-          result = build_toolbar_hide_button(@id)
-          expect(result).to be_truthy
-        end
-      end
-
       context "and id = vm_collect_running_processes" do
         before do
           @id = "vm_collect_running_processes"
@@ -1210,24 +1198,6 @@ describe ApplicationHelper do
         it "and @lastaction = drift_history" do
           @lastaction = "drift_history"
           expect(subject).to be_falsey
-        end
-      end
-
-      ["vm_guest_startup", "vm_start"].each do |id|
-        context "and id = #{id}" do
-          before do
-            @id = id
-            allow(@record).to receive(:is_available?).with(:start).and_return(true)
-          end
-
-          it "and !@record.is_available?(:start)" do
-            allow(@record).to receive(:is_available?).with(:start).and_return(false)
-            expect(subject).to be_truthy
-          end
-
-          it "and @record.is_available?(:start)" do
-            expect(subject).to be_falsey
-          end
         end
       end
 
@@ -2227,24 +2197,6 @@ describe ApplicationHelper do
         end
 
         it_behaves_like 'vm not powered on', "The web-based console is not available because the VM is not powered on"
-      end
-
-      context "and id = vm_guest_startup" do
-        before do
-          @id = "vm_guest_startup"
-          allow(@record).to receive(:is_available_now_error_message).and_return(false)
-        end
-        it_behaves_like 'record with error message', 'start'
-        it_behaves_like 'default case'
-      end
-
-      context "and id = vm_start" do
-        before do
-          @id = "vm_start"
-          allow(@record).to receive(:is_available_now_error_message).and_return(false)
-        end
-        it_behaves_like 'record with error message', 'start'
-        it_behaves_like 'default case'
       end
 
       context "and id = vm_guest_standby" do

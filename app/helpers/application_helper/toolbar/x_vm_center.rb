@@ -185,7 +185,8 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           N_('Power On this VM'),
           N_('Power On'),
           :image   => "power_on",
-          :confirm => N_("Power On this VM?")),
+          :confirm => N_("Power On this VM?"),
+          :klass   => ApplicationHelper::Button::VmStart),
         button(
           :vm_stop,
           nil,

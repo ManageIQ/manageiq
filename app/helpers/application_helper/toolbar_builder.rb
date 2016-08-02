@@ -821,8 +821,6 @@ class ApplicationHelper::ToolbarBuilder
       case id
       when "vm_collect_running_processes"
         return true if (@record.retired || @record.current_state == "never") && !@record.is_available?(:collect_running_processes)
-      when "vm_guest_startup", "vm_start", "instance_start", "instance_resume"
-        return true unless @record.is_available?(:start)
       when "vm_guest_standby"
         return true unless @record.is_available?(:standby_guest)
       when "vm_guest_shutdown", "instance_guest_shutdown"
@@ -1261,8 +1259,6 @@ class ApplicationHelper::ToolbarBuilder
         if @record.current_state != "on"
           return N_("The web-based VNC console is not available because the VM is not powered on")
         end
-      when "vm_guest_startup", "vm_start"
-        return @record.is_available_now_error_message(:start) if @record.is_available_now_error_message(:start)
       when "vm_guest_standby"
         return @record.is_available_now_error_message(:standby_guest) if @record.is_available_now_error_message(:standby_guest)
       when "vm_guest_shutdown"
