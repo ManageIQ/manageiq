@@ -465,9 +465,10 @@ module EmsCommon
 
   def arbitration_profile_edit
     assert_privileges("arbitration_profile_edit")
-    checked = find_checked_items
-    checked[0] = params[:show] if checked.blank? && params[:show]
-    @arbitration_profile = checked[0] ? find_by_id_filtered(ArbitrationProfile, from_cid(checked[0])) : ArbitrationProfile.new
+    id = params[:show] ? params[:show] : find_checked_items.first
+    @arbitration_profile = id ?
+      find_by_id_filtered(ArbitrationProfile, from_cid(id)) :
+      ArbitrationProfile.new
     @refresh_partial = "arbitration_profile_edit"
     @redirect_id = @arbitration_profile.try(:id) || nil
     @in_a_form = true
@@ -484,10 +485,7 @@ module EmsCommon
 
   def arbitration_profiles
     @db = params[:db] ? params[:db] : request.parameters[:controller]
-    session[:db] = @db unless @db.nil?
-    @db = session[:db] unless session[:db].nil?
     get_record(@db)
-    @sb[:action] = params[:action]
     return if record_no_longer_exists?(@record)
 
     @lastaction = "arbitration_profiles"
@@ -501,8 +499,7 @@ module EmsCommon
       show_details(ArbitrationProfile)
     else
       # single item
-      id = params[:show] ? params[:show] : params[:x_show]
-      @item = @record.arbitration_profiles.find(from_cid(id))
+      @item = @record.arbitration_profiles.find(from_cid(params[:show]))
       drop_breadcrumb(:name => _("%{name} (Arbitration Profiles)") % {:name => @record.name},
                       :url  => "/#{@db}/arbitration_profiles/#{@record.id}?page=#{@current_page}")
       drop_breadcrumb(:name => @item.name, :url => "/#{@db}/show/#{@record.id}?show=#{@item.id}")
@@ -518,24 +515,18 @@ module EmsCommon
     profiles = []
     if params[:miq_grid_checks] # showing a list
       profiles = find_checked_items
-      if profiles.empty?
-        add_flash(_("No %{record} were selected for deletion") % {:record => ui_lookup(:table => "ArbitrationProfile")}, :error)
-      end
-      process_elements(profiles, ArbitrationProfile, "destroy") unless profiles.empty?
-      add_flash(_("Delete initiated for %{count_model} from the CFME Database") %
-                  {:count_model => pluralize(profiles.length, ui_lookup(:table => "ArbitrationProfile"))}) if @flash_array.nil?
-    else # showing 1 item
-      if params[:show].nil? || ArbitrationProfile.find_by_id(from_cid(params[:show])).nil?
-        add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => "ArbitrationProfile")}, :error)
-      else
-        profiles.push(from_cid(params[:show]))
-      end
-      process_elements(profiles, ArbitrationProfile, "destroy") unless profiles.empty?
-      @single_delete = true unless flash_errors?
-      add_flash(_("The selected %{record} was deleted") %
-                  {:record => ui_lookup(:tables => "ArbitrationProfile")}) if @flash_array.nil?
-      params.delete(:show) unless flash_errors?
+      add_flash(_("No %{record} were selected for deletion") %
+                  {:record => ui_lookup(:table => "ArbitrationProfile")}, :error) if profiles.empty?
+    elsif params[:show].nil? || ArbitrationProfile.find_by_id(from_cid(params[:show])).nil?  # showing 1 item
+      add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => "ArbitrationProfile")}, :error)
+    else  # showing 1 item
+      profiles.push(from_cid(params[:show]))
     end
+    process_elements(profiles, ArbitrationProfile, "destroy") unless profiles.empty?
+    add_flash(_("Delete initiated for %{count_model} from the CFME Database") %
+                {:count_model => pluralize(profiles.length,
+                                           ui_lookup(:table => "ArbitrationProfile"))}) if @flash_array.nil?
+    params.delete(:show) unless flash_errors?
     @_params[:db] = "ems_cloud"
     arbitration_profiles
   end
