@@ -6,6 +6,7 @@ class ContainerDefinition < ApplicationRecord
   has_many :container_env_vars,     :dependent => :destroy
   has_one :container,               :dependent => :destroy
   has_one :security_context,        :as => :resource, :dependent => :destroy
+  has_and_belongs_to_many           :container_images, :join_table => :containers
 
   def disconnect_inv
     _log.info "Disconnecting Container definition [#{name}] id [#{id}]"
