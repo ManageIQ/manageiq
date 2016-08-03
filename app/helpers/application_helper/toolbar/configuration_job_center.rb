@@ -12,7 +12,7 @@ class ApplicationHelper::Toolbar::ConfigurationJobCenter < ApplicationHelper::To
           t = N_('Remove this Job from the VMDB'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Job and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Job?")),
+          :confirm   => N_("Warning: This Job and ALL of its components will be permanently removed!")),
       ]
     ),
   ])
