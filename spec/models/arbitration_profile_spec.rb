@@ -1,24 +1,22 @@
 describe ArbitrationProfile do
-  let(:ems) { FactoryGirl.create(:ext_management_system) }
-
   describe '#ems_id' do
     it 'validates existence of ext management system' do
-      expect { FactoryGirl.create(:arbitration_profile) }
+      expect { FactoryGirl.create(:arbitration_profile, :ems_id => nil) }
         .to raise_error(ActiveRecord::RecordInvalid, /Ext management system can't be blank/)
     end
   end
 
   describe '#name' do
     it 'requires a name' do
-      expect { FactoryGirl.create(:arbitration_profile, :ems_id => ems.id, :name => nil) }
+      expect { FactoryGirl.create(:arbitration_profile, :name => nil) }
         .to raise_error(ActiveRecord::RecordInvalid, /Name can't be blank/)
     end
   end
 
   describe '#default_profile' do
     it 'will falsify all other records when new default is set' do
-      original_default = FactoryGirl.create(:arbitration_profile, :default, :ems_id => ems.id)
-      original_non_default = FactoryGirl.create(:arbitration_profile, :ems_id => ems.id)
+      original_default = FactoryGirl.create(:arbitration_profile, :default)
+      original_non_default = FactoryGirl.create(:arbitration_profile)
 
       expect(original_default.default_profile).to be_truthy
       expect(original_non_default.default_profile).to be_falsey
@@ -32,11 +30,11 @@ describe ArbitrationProfile do
     end
 
     it 'will falsify all other records when new default is created' do
-      original_default = FactoryGirl.create(:arbitration_profile, :default, :ems_id => ems.id)
+      original_default = FactoryGirl.create(:arbitration_profile, :default)
 
       expect(original_default.default_profile).to be_truthy
 
-      new_default = FactoryGirl.create(:arbitration_profile, :default, :ems_id => ems.id)
+      new_default = FactoryGirl.create(:arbitration_profile, :default)
 
       expect(original_default.reload.default_profile).to be_falsey
       expect(new_default.default_profile).to be_truthy
