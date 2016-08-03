@@ -33,7 +33,7 @@ class ApplicationHelper::Toolbar::ChargebacksCenter < ApplicationHelper::Toolbar
           t = N_('Remove selected Chargeback Rates from the VMDB'),
           t,
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected Chargeback Rate will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Chargeback Rates?"),
+          :confirm   => N_("Warning: The selected Chargeback Rate will be permanently removed!"),
           :enabled   => false,
           :onwhen    => "1+"),
       ]
