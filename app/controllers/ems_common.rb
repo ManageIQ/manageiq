@@ -475,10 +475,6 @@ module EmsCommon
     @title = _("Arbitration Profiles")
   end
 
-  def angular_app?
-    true
-  end
-
   def provider_documentation_url
     "http://manageiq.org/documentation/getting-started/#adding-a-provider"
   end

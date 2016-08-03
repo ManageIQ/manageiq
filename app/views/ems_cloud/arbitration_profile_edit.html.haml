@@ -1,5 +1,7 @@
 = render :partial => "layouts/flash_msg"
-%div{"ui-view" => ""}
+%div{'ng-controller' => 'arbitrationProfileFormController', :id => 'angular_form_div'}
+  %div{'ng-include' => "'/static/ems_cloud/arbitration_profile_edit.html'"}
 
 :javascript
   ManageIQ.angular.app.value('arbitrationProfileFormId', '#{@arbitration_profile.id || "new"}');
+  miq_bootstrap('#angular_form_div');

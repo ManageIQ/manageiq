@@ -1,4 +1,4 @@
-ManageIQ.angular.app.controller('arbitrationProfileFormController', ['$http', '$scope', '$location', 'arbitrationProfileFormId', 'miqService', 'postService', 'arbitrationProfileData', 'API', function($http, $scope, $location, arbitrationProfileFormId, miqService, postService, arbitrationProfileData, API) {
+ManageIQ.angular.app.controller('arbitrationProfileFormController', ['$http', '$scope', '$location', 'arbitrationProfileFormId', 'miqService', 'postService', 'API', 'arbitrationProfileDataFactory', function($http, $scope, $location, arbitrationProfileFormId, miqService, postService, API, arbitrationProfileDataFactory) {
     var init = function() {
       $scope.arbitrationProfileModel = {
         name: '',
@@ -19,20 +19,24 @@ ManageIQ.angular.app.controller('arbitrationProfileFormController', ['$http', '$
       if (arbitrationProfileFormId == 'new') {
         $scope.newRecord = true;
         $scope.arbitrationProfileModel.ems_id = emsId;
+        $scope.profileOptions($scope.arbitrationProfileModel.ems_id, $scope.arbitrationProfileModel.cloud_network_id);
+        $scope.modelCopy = angular.copy( $scope.arbitrationProfileModel );
       } else {
-        $scope.newRecord = false;
-        $scope.arbitrationProfileModel.name                 = arbitrationProfileData.name;
-        $scope.arbitrationProfileModel.description          = arbitrationProfileData.description;
-        $scope.arbitrationProfileModel.authentication_id    = convertToString(arbitrationProfileData.authentication_id);
-        $scope.arbitrationProfileModel.availability_zone_id = convertToString(arbitrationProfileData.availability_zone_id);
-        $scope.arbitrationProfileModel.cloud_network_id     = convertToString(arbitrationProfileData.cloud_network_id);
-        $scope.arbitrationProfileModel.cloud_subnet_id      = convertToString(arbitrationProfileData.cloud_subnet_id);
-        $scope.arbitrationProfileModel.flavor_id            = convertToString(arbitrationProfileData.flavor_id);
-        $scope.arbitrationProfileModel.security_group_id    = convertToString(arbitrationProfileData.security_group_id);
-      }
+        arbitrationProfileDataFactory.getArbitrationProfileData(emsId, profileId).then (function(arbitrationProfileData) {
+          $scope.newRecord = false;
+          $scope.arbitrationProfileModel.name                 = arbitrationProfileData.name;
+          $scope.arbitrationProfileModel.description          = arbitrationProfileData.description;
+          $scope.arbitrationProfileModel.authentication_id    = convertToString(arbitrationProfileData.authentication_id);
+          $scope.arbitrationProfileModel.availability_zone_id = convertToString(arbitrationProfileData.availability_zone_id);
+          $scope.arbitrationProfileModel.cloud_network_id     = convertToString(arbitrationProfileData.cloud_network_id);
+          $scope.arbitrationProfileModel.cloud_subnet_id      = convertToString(arbitrationProfileData.cloud_subnet_id);
+          $scope.arbitrationProfileModel.flavor_id            = convertToString(arbitrationProfileData.flavor_id);
+          $scope.arbitrationProfileModel.security_group_id    = convertToString(arbitrationProfileData.security_group_id);
 
-      $scope.profileOptions($scope.arbitrationProfileModel.ems_id, $scope.arbitrationProfileModel.cloud_network_id);
-      $scope.modelCopy = angular.copy( $scope.arbitrationProfileModel );
+          $scope.profileOptions($scope.arbitrationProfileModel.ems_id, $scope.arbitrationProfileModel.cloud_network_id);
+          $scope.modelCopy = angular.copy( $scope.arbitrationProfileModel );
+        });
+      }
     };
 
   $scope.cancelClicked = function() {
@@ -70,6 +74,7 @@ ManageIQ.angular.app.controller('arbitrationProfileFormController', ['$http', '$
 
   // extract ems_id from url
   var emsId = (/ems_cloud\/arbitration_profile_edit\/(\d+)/.exec($location.absUrl())[1]);
+  var profileId = (/^.*show=([\dr]+).*$/).exec(location.search)[1];
   var redirectUrl = '/ems_cloud/arbitration_profiles/' + emsId + '?db=ems_cloud';
 
   var convertToString = function(id) {

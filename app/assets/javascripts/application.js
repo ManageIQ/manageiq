@@ -21,7 +21,6 @@
 //= require numeral
 //= require miq_api
 //= require miq_angular_application
-//= require miq_angular_configuration
 //= require_tree ./components/
 //= require_tree ./controllers/
 //= require_tree ./directives/

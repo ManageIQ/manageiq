@@ -2396,10 +2396,6 @@ class ApplicationController < ActionController::Base
   end
   public :restful?
 
-  def angular_app?
-    false
-  end
-
   def determine_record_id_for_presenter
     if @in_a_form
       @edit && @edit[:rec_id]
