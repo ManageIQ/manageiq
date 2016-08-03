@@ -34,7 +34,7 @@ class ApplicationHelper::Toolbar::TimeProfilesCenter < ApplicationHelper::Toolba
           t = N_('Delete selected Time Profiles'),
           t,
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected Time Profiles will be permanently removed from the VMDB. Are you sure you want to delete the selected Time Profiles?"),
+          :confirm   => N_("Warning: The selected Time Profiles will be permanently removed!"),
           :enabled   => false,
           :onwhen    => "1+"),
       ]
