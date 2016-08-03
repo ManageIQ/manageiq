@@ -1,5 +1,3 @@
-require File.expand_path("../app/controllers/application_controller/", "feature.rb")
-
 describe ApplicationController do
   context "Feature" do
     Feature = ApplicationController.const_get('Feature')
