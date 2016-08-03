@@ -132,8 +132,7 @@ class MiqAlert < ApplicationRecord
 
     # Get list of targets from assigned profiles
     targets = []
-    assignments.each do |ass|
-      prof = ass[:assigned]
+    assignments.values.flatten.uniq.each do |prof|
       prof.miq_alerts.each do |a|
         next unless a.enabled? && a.responds_to_events && a.responds_to_events.include?(HOURLY_TIMER_EVENT)
 
