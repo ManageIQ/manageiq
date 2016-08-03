@@ -7,4 +7,6 @@ class ContainerDeployment < ApplicationRecord
   has_many :custom_attributes, :as => :resource, :dependent => :destroy
   has_many :authentications, :as => :resource, :dependent => :destroy
   serialize :customize, Hash
+
+  DEPLOYMENT_TYPES = %w(origin openshift-enterprise).freeze
 end

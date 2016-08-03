@@ -54,6 +54,6 @@ class ContainerDeploymentService
   end
 
   def optional_deployment_types
-    %w(openshiftOrigin, openshiftEnterprise)
+    ContainerDeployment::DEPLOYMENT_TYPES
   end
 end
