@@ -18,7 +18,7 @@ class ApplicationHelper::Toolbar::EmsClusterCenter < ApplicationHelper::Toolbar:
           N_('Remove this item from the VMDB'),
           N_('Remove from the VMDB'),
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This item and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this item?")),
+          :confirm   => N_("Warning: This item and ALL of its components will be permanently removed!")),
       ]
     ),
   ])
