@@ -36,14 +36,14 @@ class ApplicationHelper::Toolbar::MiqReportCenter < ApplicationHelper::Toolbar::
           :url_parms => "main_div",
           :enabled   => false,
           :onwhen    => "1+",
-          :confirm   => N_("The selected Saved Reports will be permanently removed from the database. Are you sure you want to delete this saved Report?")),
+          :confirm   => N_("Warning: The selected Saved Reports will be permanently removed from the database!")),
         button(
           :miq_report_delete,
           'pficon pficon-delete fa-lg',
           t = N_('Delete this Report from the Database'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("The selected Reports will be permanently removed from the database. Are you sure you want to delete this Report?")),
+          :confirm   => N_("Warning: The selected Reports will be permanently removed from the database!")),
         button(
           :miq_report_schedule_add,
           'fa fa-clock-o fa-lg',
