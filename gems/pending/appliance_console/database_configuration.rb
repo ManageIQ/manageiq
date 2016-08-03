@@ -79,7 +79,6 @@ module ApplianceConsole
     end
 
     def post_activation
-      ServiceGroup.new.restart_services
       LinuxAdmin::Service.new("evmserverd").enable.start
     end
 
