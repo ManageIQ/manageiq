@@ -513,9 +513,9 @@ module EmsCommon
       profiles = find_checked_items
       add_flash(_("No %{record} were selected for deletion") %
                   {:record => ui_lookup(:table => "ArbitrationProfile")}, :error) if profiles.empty?
-    elsif params[:show].nil? || ArbitrationProfile.find_by_id(from_cid(params[:show])).nil?  # showing 1 item
+    elsif params[:show].nil? || ArbitrationProfile.find_by_id(from_cid(params[:show])).nil? # showing 1 item
       add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => "ArbitrationProfile")}, :error)
-    else  # showing 1 item
+    else # showing 1 item
       profiles.push(from_cid(params[:show]))
     end
     process_elements(profiles, ArbitrationProfile, "destroy") unless profiles.empty?

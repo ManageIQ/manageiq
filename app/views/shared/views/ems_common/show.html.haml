@@ -10,7 +10,7 @@
   - elsif @showtype == "details"
     = render(:partial => "layouts/gtl", :locals => {:action_url => @lastaction})
   - elsif @showtype ==  "item"
-    = render(:partial => "layouts/#{@showtype}")
+    = render(:partial => "layouts/item")
   - elsif @showtype == "compare"
     = render :partial => "layouts/compare"
   - elsif @showtype == "timeline"

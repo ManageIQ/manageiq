@@ -22,7 +22,8 @@ ManageIQ.angular.app.controller('arbitrationProfileFormController', ['$http', '$
         $scope.profileOptions($scope.arbitrationProfileModel.ems_id, $scope.arbitrationProfileModel.cloud_network_id);
         $scope.modelCopy = angular.copy( $scope.arbitrationProfileModel );
       } else {
-        arbitrationProfileDataFactory.getArbitrationProfileData(emsId, profileId).then (function(arbitrationProfileData) {
+        var profileId = (/^.*show=([\dr]+).*$/).exec(location.search)[1];
+        arbitrationProfileDataFactory.getArbitrationProfileData(profileId).then (function(arbitrationProfileData) {
           $scope.newRecord = false;
           $scope.arbitrationProfileModel.name                 = arbitrationProfileData.name;
           $scope.arbitrationProfileModel.description          = arbitrationProfileData.description;
@@ -40,8 +41,10 @@ ManageIQ.angular.app.controller('arbitrationProfileFormController', ['$http', '$
     };
 
   $scope.cancelClicked = function() {
-    var task = $scope.newRecord ? "Add" : "Edit"
-    var msg = sprintf(__(task + " of Arbitration Profile %s was cancelled by the user"), $scope.arbitrationProfileModel.description);
+    if ($scope.newRecord)
+      var msg = sprintf(__("Add of Arbitration Profile %s was cancelled by the user"), $scope.arbitrationProfileModel.description);
+    else
+      var msg = sprintf(__("Edit of Arbitration Profile was cancelled by the user"));
     postService.cancelOperation(redirectUrl, msg);
     $scope.angularForm.$setPristine(true);
   };
@@ -74,7 +77,6 @@ ManageIQ.angular.app.controller('arbitrationProfileFormController', ['$http', '$
 
   // extract ems_id from url
   var emsId = (/ems_cloud\/arbitration_profile_edit\/(\d+)/.exec($location.absUrl())[1]);
-  var profileId = (/^.*show=([\dr]+).*$/).exec(location.search)[1];
   var redirectUrl = '/ems_cloud/arbitration_profiles/' + emsId + '?db=ems_cloud';
 
   var convertToString = function(id) {

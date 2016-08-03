@@ -1,45 +1,45 @@
 .button-group
   %button{:class     => "btn btn-primary btn-disabled",
-          :alt       => "Add",
-          :title     => "Add",
+          :alt       => _("Add"),
+          :title     => _("Add"),
           "ng-click" => "disabledClick($event)",
           :style     => "cursor:not-allowed",
           "ng-show"  => "newRecord && !saveable(angularForm)"}
-    {{addText}} 
+    {{addText}}
 
   %button{:class     => "btn btn-primary",
-          :alt       => "Add",
-          :title     => "Add",
+          :alt       => _("Add"),
+          :title     => _("Add"),
           "ng-click" => "addClicked($event, true)",
           "ng-show"  => "newRecord && saveable(angularForm)"}
-    {{addText}} 
+    {{addText}}
 
   %button{:class     => "btn btn-primary btn-disabled",
-          :alt       => "Save changes",
-          :title     => "Save changes",
+          :alt       => _("Save changes"),
+          :title     => _("Save changes"),
           "ng-click" => "disabledClick($event)",
           :style     => "cursor:not-allowed",
           "ng-show"  => "!newRecord && !saveable(angularForm)"}
-    {{saveText}} 
+    {{saveText}}
 
   %button{:class     => "btn btn-primary",
-          :alt       => "Save changes",
-          :title     => "Save changes",
+          :alt       => _("Save changes"),
+          :title     => _("Save changes"),
           "ng-click" => "saveClicked($event, true)",
           "ng-show"  => "!newRecord && saveable(angularForm)"}
-    {{saveText}} 
+    {{saveText}}
 
   %button{:class        => "btn btn-default btn-disabled",
-          :alt          => "Reset changes",
-          :title        => "Reset changes",
+          :alt          => _("Reset changes"),
+          :title        => _("Reset changes"),
           "ng-class"    => "{'btn-disabled': angularForm.$pristine}",
           "ng-click"    => "resetClicked()",
           "ng-disabled" => "angularForm.$pristine",
           "ng-hide"     => "newRecord"}
-    {{resetText}} 
+    {{resetText}}
 
   %button{:class     => "btn btn-default",
-          :alt       => "Cancel",
-          :title     => "Cancel",
+          :alt       => _("Cancel"),
+          :title     => _("Cancel"),
           "ng-click" => "cancelClicked($event)"}
-    {{cancelText}} 
+    {{cancelText}}
