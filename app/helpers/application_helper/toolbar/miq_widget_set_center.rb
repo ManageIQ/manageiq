@@ -17,7 +17,7 @@ class ApplicationHelper::Toolbar::MiqWidgetSetCenter < ApplicationHelper::Toolba
           t = N_('Delete this Dashboard from the Database'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Dashboard and ALL of its components will be permanently removed from the VMDB.  Are you sure you want to delete this Dashboard?")),
+          :confirm   => N_("Warning: This Dashboard and ALL of its components will be permanently removed!")),
       ]
     ),
   ])
