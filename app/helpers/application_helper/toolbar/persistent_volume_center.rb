@@ -17,11 +17,11 @@ class ApplicationHelper::Toolbar::PersistentVolumeCenter < ApplicationHelper::To
         button(
           :persistent_volume_delete,
           nil,
-          t = N_('Remove this Volume from the VMDB'),
+          t = N_('Remove this Volume'),
           t,
           :image     => "delete",
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Volume and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Volume?")),
+          :confirm   => N_("Warning: This Volume and ALL of its components will be permanently removed!")),
       ]
     ),
   ])

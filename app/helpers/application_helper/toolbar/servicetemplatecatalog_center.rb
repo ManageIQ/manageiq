@@ -19,7 +19,7 @@ class ApplicationHelper::Toolbar::ServicetemplatecatalogCenter < ApplicationHelp
           N_('Remove this Catalog'),
           N_('Remove Catalog'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: This Catalog will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Catalog?")),
+          :confirm   => N_("Warning: This Catalog will be permanently removed!")),
       ]
     ),
   ])

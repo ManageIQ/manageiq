@@ -25,7 +25,7 @@ class ApplicationHelper::Toolbar::ContainerReplicatorsCenter < ApplicationHelper
           N_('Remove selected Replicators from the VMDB'),
           N_('Remove Replicators from the VMDB'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected Replicators and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Replicators?"),
+          :confirm   => N_("Warning: The selected Replicators and ALL of their components will be permanently removed!"),
           :onwhen    => "1+"),
       ]
     ),

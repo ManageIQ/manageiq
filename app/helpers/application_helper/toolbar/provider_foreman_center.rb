@@ -37,11 +37,11 @@ class ApplicationHelper::Toolbar::ProviderForemanCenter < ApplicationHelper::Too
         button(
           :provider_foreman_delete_provider,
           'pficon pficon-delete fa-lg',
-          t = N_('Remove selected items from the VMDB'),
+          t = N_('Remove selected items'),
           t,
           :url       => "delete",
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected items and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected items?"),
+          :confirm   => N_("Warning: The selected items and ALL of their components will be permanently removed!"),
           :enabled   => false,
           :onwhen    => "1+"),
         separator,

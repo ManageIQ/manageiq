@@ -18,7 +18,7 @@ class ApplicationHelper::Toolbar::ContainerImageRegistryCenter < ApplicationHelp
           t = N_('Remove this Image Registry from the VMDB'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Image Registry and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Image Registry")),
+          :confirm   => N_("Warning: This Image Registry and ALL of its components will be permanently removed!")),
       ]
     ),
   ])

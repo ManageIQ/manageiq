@@ -18,10 +18,10 @@ class ApplicationHelper::Toolbar::TasksCenter < ApplicationHelper::Toolbar::Basi
         button(
           :miq_task_delete,
           'pficon pficon-delete fa-lg',
-          N_('Delete selected tasks from the VMDB'),
+          N_('Delete selected tasks'),
           N_('Delete'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected tasks will be permanently removed from the database. Are you sure you want to delete the selected tasks?"),
+          :confirm   => N_("Warning: The selected tasks will be permanently removed from the database!"),
           :enabled   => false,
           :onwhen    => "1+"),
         button(
@@ -30,7 +30,7 @@ class ApplicationHelper::Toolbar::TasksCenter < ApplicationHelper::Toolbar::Basi
           N_('Delete tasks older than the selected task'),
           N_('Delete Older'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: Tasks that are older than selected task will be permanently removed from the database. Are you sure you want to delete older tasks?"),
+          :confirm   => N_("Warning: Tasks that are older than selected task will be permanently removed from the database!"),
           :enabled   => false,
           :onwhen    => "1"),
         button(
@@ -39,7 +39,7 @@ class ApplicationHelper::Toolbar::TasksCenter < ApplicationHelper::Toolbar::Basi
           N_('Delete all finished tasks'),
           N_('Delete All'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: Finished tasks will be permanently removed from the database. Are you sure you want to delete all finished tasks?"),
+          :confirm   => N_("Warning: Finished tasks will be permanently removed from the database!"),
           :enabled   => true),
       ]
     ),

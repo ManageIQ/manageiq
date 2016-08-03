@@ -19,10 +19,10 @@ class ApplicationHelper::Toolbar::CustomizationTemplateCenter < ApplicationHelpe
         button(
           :customization_template_delete,
           'pficon pficon-delete fa-lg',
-          t = N_('Remove this Customization Template from the VMDB'),
+          t = N_('Remove this Customization Template'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Customization Template will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Customization Template?")),
+          :confirm   => N_("Warning: This Customization Template will be permanently removed!")),
       ]
     ),
   ])

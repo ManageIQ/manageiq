@@ -31,11 +31,11 @@ class ApplicationHelper::Toolbar::MiqDialogsCenter < ApplicationHelper::Toolbar:
         button(
           :old_dialogs_delete,
           'pficon pficon-delete fa-lg',
-          t = N_('Remove selected Dialogs from the VMDB'),
+          t = N_('Remove selected Dialogs'),
           t,
           :klass     => ApplicationHelper::Button::OldDialogsEditDelete,
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected Dialog will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Dialogs?"),
+          :confirm   => N_("Warning: The selected Dialog will be permanently removed!"),
           :enabled   => false,
           :onwhen    => "1+"),
       ]

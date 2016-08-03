@@ -25,7 +25,7 @@ class ApplicationHelper::Toolbar::ContainerGroupsCenter < ApplicationHelper::Too
           N_('Remove selected Pods from the VMDB'),
           N_('Remove Pods from the VMDB'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected Pods and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Pods?"),
+          :confirm   => N_("Warning: The selected Pods and ALL of their components will be permanently removed!"),
           :onwhen    => "1+"),
       ]
     ),

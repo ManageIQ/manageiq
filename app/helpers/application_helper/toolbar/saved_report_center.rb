@@ -20,7 +20,7 @@ class ApplicationHelper::Toolbar::SavedReportCenter < ApplicationHelper::Toolbar
           t = N_('Delete this Saved Report from the Database'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Saved Report and ALL of its components will be permanently removed from the VMDB.  Are you sure you want to delete this Saved Report?")),
+          :confirm   => N_("Warning: This Saved Report and ALL of its components will be permanently removed!")),
       ]
     ),
   ])

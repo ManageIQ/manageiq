@@ -38,10 +38,10 @@ class ApplicationHelper::Toolbar::EmsInfraCenter < ApplicationHelper::Toolbar::B
         button(
           :ems_infra_delete,
           'pficon pficon-delete fa-lg',
-          t = N_('Remove this Infrastructure Provider from the VMDB'),
+          t = N_('Remove this Infrastructure Provider'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Infrastructure Provider and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Infrastructure Provider?")),
+          :confirm   => N_("Warning: This Infrastructure Provider and ALL of its components will be permanently removed!")),
       ]
     ),
   ])

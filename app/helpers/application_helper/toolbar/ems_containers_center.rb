@@ -33,10 +33,10 @@ class ApplicationHelper::Toolbar::EmsContainersCenter < ApplicationHelper::Toolb
         button(
           :ems_container_delete,
           'pficon pficon-delete fa-lg',
-          N_('Remove selected Containers Providers from the VMDB'),
-          N_('Remove Containers Providers from the VMDB'),
+          N_('Remove selected Containers Providers'),
+          N_('Remove Containers Providers'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected Containers Providers and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Containers Providers?"),
+          :confirm   => N_("Warning: The selected Containers Providers and ALL of their components will be permanently removed!"),
           :enabled   => false,
           :onwhen    => "1+"),
       ]

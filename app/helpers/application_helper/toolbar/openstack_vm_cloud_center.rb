@@ -33,10 +33,10 @@ class ApplicationHelper::Toolbar::OpenstackVmCloudCenter < ApplicationHelper::To
         button(
           :instance_delete,
           'pficon pficon-delete fa-lg',
-          N_('Remove this Instance from the VMDB'),
-          N_('Remove from the VMDB'),
+          N_('Remove this Instance'),
+          N_('Remove Instance'),
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Instance and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Instance?")),
+          :confirm   => N_("Warning: This Instance and ALL of its components will be permanently removed!")),
         button(
           :instance_evm_relationship,
           'pficon pficon-edit fa-lg',

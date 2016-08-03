@@ -17,7 +17,7 @@ class ApplicationHelper::Toolbar::MiqScheduleCenter < ApplicationHelper::Toolbar
           t = N_('Delete this Schedule from the Database'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Schedule and ALL of its components will be permanently removed from the VMDB.  Are you sure you want to delete this Schedule?")),
+          :confirm   => N_("Warning: This Schedule and ALL of its components will be permanently removed!")),
         separator,
         button(
           :schedule_run_now,

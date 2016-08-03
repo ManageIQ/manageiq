@@ -24,10 +24,10 @@ class ApplicationHelper::Toolbar::ConfigurationProfileForemanCenter < Applicatio
         button(
           :provider_foreman_delete_provider,
           'pficon pficon-delete fa-lg',
-          t = N_('Remove this Provider from the VMDB'),
+          t = N_('Remove this Provider'),
           t,
           :url     => "delete",
-          :confirm => N_("Warning: The selected Provider and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Provider?")),
+          :confirm => N_("Warning: The selected Provider and ALL of their components will be permanently removed!")),
       ]
     ),
   ])

@@ -35,10 +35,10 @@ class ApplicationHelper::Toolbar::ScanProfilesCenter < ApplicationHelper::Toolba
         button(
           :ap_delete,
           'pficon pficon-delete fa-lg',
-          t = N_('Delete the selected Analysis Profiles from the VMDB'),
+          t = N_('Delete the selected Analysis Profiles'),
           t,
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected Analysis Profiles and ALL of their components will be permanently removed from the VMDB.  Are you sure you want to delete the selected Analysis Profiles?"),
+          :confirm   => N_("Warning: The selected Analysis Profiles and ALL of their components will be permanently removed!"),
           :enabled   => false,
           :onwhen    => "1+"),
       ]

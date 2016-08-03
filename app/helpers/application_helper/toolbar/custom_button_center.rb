@@ -18,7 +18,7 @@ class ApplicationHelper::Toolbar::CustomButtonCenter < ApplicationHelper::Toolba
           t = N_('Remove this Button'),
           t,
           :url_parms => "main_div",
-          :confirm   => N_("Warning: This Button will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Button?")),
+          :confirm   => N_("Warning: This Button will be permanently removed from the Virtual Management Database!")),
         separator,
         button(
           :ab_button_simulate,

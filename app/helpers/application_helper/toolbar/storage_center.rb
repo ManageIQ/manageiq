@@ -16,10 +16,10 @@ class ApplicationHelper::Toolbar::StorageCenter < ApplicationHelper::Toolbar::Ba
         button(
           :storage_delete,
           'pficon pficon-delete fa-lg',
-          N_('Remove this Datastore from the VMDB'),
-          N_('Remove from the VMDB'),
+          N_('Remove this Datastore'),
+          N_('Remove Datastore'),
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Datastore and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Datastore?")),
+          :confirm   => N_("Warning: This Datastore and ALL of its components will be permanently removed!")),
       ]
     ),
   ])
