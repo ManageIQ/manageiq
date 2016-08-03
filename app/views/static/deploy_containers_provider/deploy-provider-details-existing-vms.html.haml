@@ -26,28 +26,29 @@
             %span.caret
           .dropdown-menu{:role => "menu"}
             .dropdown-container
-              %a.select-all-roles.btn-link{"ng-click" => "toolbarMenuSelectAll()"} Select All
+              %a.select-all-roles.btn-link{"ng-click" => "toolbarMenuSelectAll()"}
+              = _("Select All")
               %label.checkbox
                 %input{"ng-model" => "toolbarMenu.master", :role => "presentation", :type => "checkbox"}
-                  Master
+                = _("Master")
               %label.checkbox
                 %input{"ng-model" => "toolbarMenu.node", :role => "presentation", :type => "checkbox"}
-                  Node
+                = _("Node")
               %label.checkbox
                 %input{"ng-model" => "toolbarMenu.storage", :role => "presentation", :type => "checkbox"}
-                  Storage
+                = _("Storage")
               %label.checkbox
                 %input{"ng-model" => "toolbarMenu.loadBalancer", :role => "presentation", :type => "checkbox"}
-                  Load Balancer
+                = _("Load Balancer")
               %label.checkbox
                 %input{"ng-model" => "toolbarMenu.dns", :role => "presentation", :type => "checkbox"}
-                  DNS
+                = _("DNS")
               %label.checkbox
                 %input{"ng-model" => "toolbarMenu.etcd", :role => "presentation", :type => "checkbox"}
-                  Etcd
+                = _("Etcd")
               %label.checkbox
                 %input{"ng-model" => "toolbarMenu.infrastructure", :role => "presentation", :type => "checkbox"}
-                  Infrastructure
+                = _("Infrastructure")
               %button.btn.btn-primary.btn-sm{"ng-click" => "updateSelectedRoles()", :type => "button"} Submit
         %button.btn.btn-default.primary-action{"ng-click" => "removeRoles()",
         "ng-disabled" => "disableMasterNodeActions", :title => "Remove all roles from the selected items", :type => "button"}
@@ -78,34 +79,34 @@
             %td
               .role-column
                 %span.label.label-primary{"ng-if" => "node.master"}
-                  Master
+                  = _("Master")
                   %a
                     %span.fa.fa-close{"aria-hidden" => "true", "ng-click" => "removeMaster(node)"}
                 %span.label.label-primary{"ng-if" => "node.node"}
-                  Node
+                  = _("Node")
                   %a
                     %span.fa.fa-close{"aria-hidden" => "true", "ng-click" => "removeNode(node)"}
                 %span.label.label-primary{"ng-if" => "node.storage"}
-                  Storage
+                  = _("Storage")
                   %a
                     %span.fa.fa-close{"aria-hidden" => "true", "ng-click" => "removeStorage(node)"}
                 %span.label.label-primary{"ng-if" => "node.loadBalancer"}
-                  Load Balancer
+                  = _("Load Balancer")
                   %a
                     %span.fa.fa-close{"aria-hidden" => "true", "ng-click" => "removeLoadBalancer(node)"}
                 %span.label.label-primary{"ng-if" => "node.dns"}
-                  DNS
+                  = _("DNS")
                   %a
                     %span.fa.fa-close{"aria-hidden" => "true", "ng-click" => "removeDns(node)"}
                 %span.label.label-primary{"ng-if" => "node.etcd"}
-                  Etcd
+                  = _("Etcd")
                   %a
                     %span.fa.fa-close{"aria-hidden" => "true", "ng-click" => "removeEtcd(node)"}
                 %span.label.label-primary{"ng-if" => "node.infrastructure"}
-                  Infrastructure
+                  = _("Infrastructure")
                   %a
                     %span.fa.fa-close{"aria-hidden" => "true", "ng-click" => "removeInfrastructure(node)"}
-                %a.label.label-default{"ng-if" => "!node.master || !node.node || !node.storage || !node.loadBalancer || !node.dns || !node.etcd || !node.infrastructure", "popover-placement" => "right", "popover-template" => "'/static/deploy-provider-add-roles-popover.html'", "popover-trigger" => "focus", :tabindex => "0", :type => "button"}
+                %a.label.label-default{"ng-if" => "!node.master || !node.node || !node.storage || !node.loadBalancer || !node.dns || !node.etcd || !node.infrastructure", "popover-placement" => "right", "popover-template" => "'/static/deploy_containers_provider/deploy-provider-add-roles-popover.html'", "popover-trigger" => "focus", :tabindex => "0", :type => "button"}
                   %span.fa.fa-plus{"aria-hidden" => "true"}
             %td {{node.cpu || node.cpus}}
             %td {{node.memo || node.memory}}
@@ -113,25 +114,35 @@
     .table-footer
       .badge{:tooltip => "{{mastersWarning}}", "tooltip-placement" => "right"}
         %span.pficon.pficon-warning-triangle-o{"ng-if" => "mastersWarning && mastersWarning != ''"}
-        %span{"ng-if" => "mastersCount == 1"} {{mastersCount}} Master
-        %span{"ng-if" => "mastersCount != 1"} {{mastersCount}} Masters
+        %span{"ng-if" => "mastersCount == 1"}
+          = "{{mastersCount}} " + _("Master")
+        %span{"ng-if" => "mastersCount != 1"}
+          = "{{mastersCount}} " + _("Masters")
       .badge{:tooltip => "{{nodesWarning}}", "tooltip-placement" => "right"}
         %span.pficon.pficon-warning-triangle-o{"ng-if" => "nodesWarning && nodesWarning != ''"}
-        %span{"ng-if" => "nodesCount == 1"} {{nodesCount}} Node
-        %span{"ng-if" => "nodesCount != 1"} {{nodesCount}} Nodes
+        %span{"ng-if" => "nodesCount == 1"}
+          = "{{nodesCount}} " + _("Node")
+        %span{"ng-if" => "nodesCount != 1"}
+          = "{{nodesCount}} " + _("Nodes")
       .badge{"ng-if" => "storageCount > 0 || data.serverConfigType == 'integratedNFS'", :tooltip => "{{storageNodeWarning}}", "tooltip-placement" => "right"}
         %span.pficon.pficon-warning-triangle-o{"ng-if" => "storageNodeWarning && storageNodeWarning != ''"}
-        %span {{storageCount}} Storage
+        %span
+          = "{{storageCount}} " + _("Storage")
       .badge{"ng-if" => "dnsCount > 0", :tooltip => "{{dnsNodeWarning}}", "tooltip-placement" => "right"}
         %span.pficon.pficon-warning-triangle-o{"ng-if" => "dnsNodeWarning && dnsNodeWarning != ''"}
-        %span {{dnsCount}} DNS
+        %span
+          = "{{dnsCount}} " + _("DNS")
       .badge{"ng-if" => "loadBalancerCount > 0", :tooltip => "{{loadBalancerWarning}}", "tooltip-placement" => "right"}
         %span.pficon.pficon-warning-triangle-o{"ng-if" => "loadBalancerWarning && loadBalancerWarning != ''"}
-        %span{"ng-if" => "loadBalancerCount == 1"} {{loadBalancerCount}} Load Balancer
-        %span{"ng-if" => "loadBalancerCount != 1"} {{loadBalancerCount}} Load Balancers
+        %span{"ng-if" => "loadBalancerCount == 1"}
+          = "{{loadBalancerCount}} " + _("Load Balancer")
+        %span{"ng-if" => "loadBalancerCount != 1"}
+          = "{{loadBalancerCount}} " + _("Load Balancers")
       .badge{"ng-if" => "etcdCount > 0", :tooltip => "{{etcdNodeWarning}}", "tooltip-placement" => "right"}
         %span.pficon.pficon-warning-triangle-o{"ng-if" => "etcdNodeWarning && etcdNodeWarning != ''"}
-        %span {{etcdCount}} Etcd
+        %span
+          = "{{etcdCount}} " + _("Etcd")
       .badge{"ng-if" => "infrastructureCount > 0", :tooltip => "{{infrastructureWarning}}", "tooltip-placement" => "right"}
         %span.pficon.pficon-warning-triangle-o{"ng-if" => "infrastructureWarning && infrastructureWarning != ''"}
-        %span {{infrastructureCount}} Infrastructure
+        %span
+          = "{{infrastructureCount}} " + _("Infrastructure")

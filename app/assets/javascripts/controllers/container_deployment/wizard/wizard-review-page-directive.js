@@ -21,7 +21,6 @@ angular.module('miq.wizard').directive('miqWizardReviewPage', function() {
       };
       $scope.getReviewSubSteps = function (reviewStep) {
         var substeps = reviewStep.getReviewSteps();
-        console.log("Step " + reviewStep.stepTitle + " has " + substeps.length + " steps");
         return substeps;
       };
       $scope.reviewSteps = [];

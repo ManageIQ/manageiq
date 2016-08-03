@@ -8,6 +8,7 @@ angular.module('miq.wizard').directive('miqWizardStep', function() {
       stepId: '@',
       stepPriority: '@',
       substeps: '=?',
+      subStepCount: '=?',
       nextEnabled: '=?',
       prevEnabled: '=?',
       nextTooltip: '=?',
@@ -30,6 +31,9 @@ angular.module('miq.wizard').directive('miqWizardStep', function() {
       $scope.context = {};
       this.context = $scope.context;
 
+      if (!angular.isNumber($scope.subStepCount)) {
+        $scope.subStepCount = 0;
+      }
       if (angular.isUndefined($scope.nextEnabled)) {
         $scope.nextEnabled = true;
       }
@@ -51,7 +55,7 @@ angular.module('miq.wizard').directive('miqWizardStep', function() {
       if (angular.isUndefined($scope.stepPriority)) {
         $scope.stepPriority = 999;
       } else {
-        $scope.stepPriority = parseInt($scope.stepPriority);
+        $scope.stepPriority = parseInt($scope.stepPriority, 10);
       }
       if (angular.isUndefined($scope.okToNavAway)) {
         $scope.okToNavAway = true;
@@ -273,6 +277,10 @@ angular.module('miq.wizard').directive('miqWizardStep', function() {
         } else {
           $scope.steps.push(step);
         }
+
+        if ($scope.steps.length >= $scope.subStepCount) {
+          $scope.wizard.stepSetupComplete();
+        }
       };
 
       this.currentStepTitle = function(){
@@ -392,6 +400,10 @@ angular.module('miq.wizard').directive('miqWizardStep', function() {
 
       wizard.addStep($scope);
       $scope.wizard = wizard;
+
+      if (!$scope.substeps) {
+        wizard.stepSetupComplete();
+      }
     }
   };
 });

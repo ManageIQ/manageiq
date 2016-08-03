@@ -1,6 +1,6 @@
-miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 'patternfly', 'miq.dialogs', 'miq.wizard', 'ManageIQ'])).controller('containers.deployProviderController',
-  ['$rootScope', '$scope', '$timeout', 'miqService',
-  function($rootScope, $scope, $timeout, miqService) {
+miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 'patternfly', 'miq.dialogs', 'miq.wizard', 'ManageIQ', 'miq.api'])).controller('containers.deployProviderController',
+  ['$rootScope', '$scope', 'miqService', 'API',
+  function($rootScope, $scope, miqService, API) {
     'use strict';
 
     $scope.showDeploymentWizard = false;
@@ -14,13 +14,15 @@ miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 
       userDefinedVMs: []
     };
 
-    var initializeDeploymentWizard = function () {
-      $scope.deployProviderReady = false;
-      $scope.deployComplete = false;
-      $scope.deployInProgress = false;
-      $scope.deploySuccess = false;
-      $scope.deployFailed = false;
+    $scope.deployProviderReady = false;
+    $scope.deployComplete = false;
+    $scope.deployInProgress = false;
+    $scope.deploySuccess = false;
+    $scope.deployFailed = false;
+    $scope.deploymentDetailsGeneralComplete = false;
+    $scope.nextButtonTitle = __("Next >");
 
+    var initializeDeploymentWizard = function () {
       $scope.data = {
         providerName: '',
         providerType: 'openshiftOrigin',
@@ -34,16 +36,9 @@ miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 
         }
       };
 
-      $timeout(function() {
-        $scope.data.existingProviders = $scope.deploymentData.providers;
-        $scope.data.newVmProviders = $scope.deploymentData.provision;
-        $scope.deployProviderReady = true;
-      }, 5000);
-
-      $scope.deploymentDetailsGeneralComplete = false;
-      $scope.deployComplete = false;
-      $scope.deployInProgress = false;
-      $scope.nextButtonTitle = __("Next >");
+      $scope.data.existingProviders = $scope.deploymentData.providers;
+      $scope.data.newVmProviders = $scope.deploymentData.provision;
+      $scope.deployProviderReady = true;
     };
 
     var create_auth_object = function () {
@@ -54,7 +49,7 @@ miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 
           break;
         case 'htPassword':
           auth.type = 'AuthenticationHtpasswd';
-          auth.users = $scope.data.authentication.htPassword.users;
+          auth.htpassd_users = $scope.data.authentication.htPassword.users;
           break;
         case 'ldap':
           auth.type = 'AuthenticationLdap';
@@ -100,17 +95,15 @@ miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 
 
     var create_nodes_object = function() {
       var nodes = [];
-      var id = "";
-      var name = "";
-      var publicName = "";
       $scope.nodeData.allNodes.forEach(function(item) {
+        var name = "";
         if ($scope.data.provisionOn == 'existingVms') {
-          id = item.id;
+          var id = item.id;
           name = item.name;
         }
         else if ($scope.data.provisionOn == 'noProvider') {
           name = item.vmName;
-          publicName = item.publicName;
+          var publicName = item.publicName;
         }
         nodes.push({
           name: name,
@@ -120,7 +113,7 @@ miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 
             master: item.master,
             node: item.node,
             storage: item.storage,
-            load_balancer: item.loadBalancer,
+            master_lb: item.loadBalancer,
             dns: item.dns,
             etcd: item.etcd,
             infrastructure: item.infrastructure
@@ -145,14 +138,12 @@ miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 
         provider_type: $scope.data.providerType,
         method_type: method_types[$scope.data.provisionOn],
         rhsm_authentication: {
-          mode: "AuthenticationRhsm",
           userid: $scope.data.rhnUsername,
           password: $scope.data.rhnPassword,
           rhsm_sku: $scope.data.rhnSKU,
           rhsm_server: $scope.data.rhnSatelliteUrl
         },
         ssh_authentication: {
-          mode: "AuthPrivateKey",
           userid: $scope.data.deploymentUsername,
           auth_key: $scope.data.deploymentKey
         },
@@ -173,13 +164,6 @@ miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 
     };
 
     $scope.ready = false;
-    var url = '/api/container_deployments/container_deployment_data';
-    API.get(url).then(function (response) {
-      'use strict';
-      $scope.deploymentData = response.data;
-      initializeDeploymentWizard();
-      $scope.ready = true;
-    });
 
     $scope.data = {};
     $scope.deployComplete = false;
@@ -187,23 +171,26 @@ miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 
 
     var startDeploy = function () {
       $scope.deployInProgress = true;
-      $timeout(function () {
-        var url = '/api/container_deployments';
-        var resource = create_deployment_resource();
-        API.post(url, {"action" : "create", "resource" :  resource}).then(function (response) {
-          'use strict';
-          $scope.deployInProgress = true;
-          var automationID = response
-        });
+      $scope.deployComplete = false;
+      $scope.deploySuccess = false;
+      $scope.deployFailed = false;
 
-        if ($scope.deployInProgress) {
-          $scope.deployInProgress = false;
-          $scope.deployComplete = false;
-          $scope.deploySuccess = false;
-          $scope.deployFailed = false;
-          $scope.deployFailureMessage = __("An unknown error has occurred.");
+      var url = '/api/container_deployments';
+      var resource = create_deployment_resource();
+      API.post(url, {"action" : "create", "resource" : resource}).then(function (response) {
+        'use strict';
+        $scope.deployInProgress = false;
+        $scope.deployComplete = true;
+        $scope.deployFailed = response.error !== undefined;
+        if (response.error) {
+          if (response.error.message) {
+            $scope.deployFailureMessage = response.error.message;
+          }
+          else {
+            $scope.deployFailureMessage = __("An unknown error has occurred.");
+          }
         }
-      }, 5000);
+      });
     };
 
     $scope.nextCallback = function(step) {
@@ -229,7 +216,13 @@ miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 
     $scope.showDeploymentWizard = false;
     $scope.showListener = function() {
       if (!$scope.showDeploymentWizard) {
-        initializeDeploymentWizard();
+        var url = '/api/container_deployments/container_deployment_data';
+        API.get(url).then(function (response) {
+          'use strict';
+          $scope.deploymentData = response.data;
+          initializeDeploymentWizard();
+          $scope.ready = true;
+        });
         $scope.showDeploymentWizard = true;
       }
     };

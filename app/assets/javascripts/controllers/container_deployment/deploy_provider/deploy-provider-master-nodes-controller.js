@@ -1,10 +1,10 @@
 miqHttpInject(angular.module('miq.containers.providersModule')).controller('containers.deployProviderMasterNodesController',
-  ['$rootScope', '$scope', 'miqService',
-  function($rootScope, $scope, miqService) {
+  ['$rootScope', '$scope', 'miqService', '$document',
+  function($rootScope, $scope, miqService, $document) {
     'use strict';
 
     $scope.deploymentDetailsMasterNodesComplete = false;
-    $scope.reviewTemplate = "/static/deploy-provider-master-nodes-review.html.haml";
+    $scope.reviewTemplate = "/static/deploy_containers_provider/deploy-provider-master-nodes-review.html.haml";
     $scope.data.deploymentKey = '';
     $scope.data.deploymentUsername = '';
 

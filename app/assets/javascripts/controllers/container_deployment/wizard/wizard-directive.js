@@ -10,6 +10,7 @@ angular.module('miq.wizard').directive('miqWizard', function () {
       modalSize: '@',
       contentHeight: '@?',
       hideIndicators: '=?',
+      stepCount: '@',
       currentStep: '=',
       cancelTitle: '=?',
       backTitle: '=?',
@@ -21,12 +22,18 @@ angular.module('miq.wizard').directive('miqWizard', function () {
       wizardReady: '=?',
       wizardDone: '=?'
     },
-    templateUrl: '/static/wizard.html',
+    templateUrl: '/static/wizard.html.haml',
     controller: ['$scope', '$timeout', function($scope, $timeout) {
       var firstRun = true;
+      $scope.setupSteps = 0;
+      $scope.stepsLoaded = false;
       $scope.steps = [];
       $scope.context = {};
       this.context = $scope.context;
+
+      if (!angular.isNumber($scope.stepCount)) {
+        $scope.stepCount = 0;
+      }
 
       if (angular.isUndefined($scope.wizardReady)) {
         $scope.wizardReady = true;
@@ -233,9 +240,15 @@ angular.module('miq.wizard').directive('miqWizard', function () {
         } else {
           $scope.steps.push(step);
         }
+      };
 
-        if ($scope.wizardReady && ($scope.getEnabledSteps().length > 0) && (step == $scope.getEnabledSteps()[0])) {
-          $scope.goTo($scope.getEnabledSteps()[0]);
+      this.stepSetupComplete = function () {
+        $scope.setupSteps++;
+        if ($scope.setupSteps >= $scope.stepCount) {
+          $scope.stepsLoaded = true;
+          if ($scope.wizardReady) {
+            $scope.goTo($scope.getEnabledSteps()[0]);
+          }
         }
       };
 
@@ -380,7 +393,7 @@ angular.module('miq.wizard').directive('miqWizard', function () {
     }],
     link: function($scope, $element, $attrs) {
       $scope.$watch('wizardReady', function () {
-        if ($scope.wizardReady) {
+        if ($scope.wizardReady && $scope.stepsLoaded) {
           $scope.goTo($scope.getEnabledSteps()[0]);
         }
       });

@@ -3,7 +3,7 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
   function($rootScope, $scope, miqService) {
     'use strict';
 
-    $scope.reviewTemplate = "/static/deploy-provider-config-settings-review.html.haml";
+    $scope.reviewTemplate = "/static/deploy_containers_provider/deploy-provider-config-settings-review.html.haml";
     var firstShow = true;
     $scope.onShow = function () {
       if (firstShow) {
@@ -36,13 +36,11 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
     };
 
     $scope.validateInfraNode = function() {
-      if (angular.isUndefined($scope.data.infrastructureNodes) || $scope.data.infrastructureNodes.length == 0){
+      if (angular.isUndefined($scope.data.infrastructureNodes) || $scope.data.infrastructureNodes.length == 0) {
         $scope.data.configureRouter = false;
         return false;
-      } else {
-        $scope.data.configureRouter = true;
-        return true;
       }
+      return true;
     };
 
     $scope.nfsChange = function() {

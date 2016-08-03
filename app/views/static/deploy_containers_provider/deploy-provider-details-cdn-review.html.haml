@@ -5,14 +5,18 @@
         = _("CDN Channel:")
       %span.wizard-miq-review-item-value {{data.cdnEnabled ? "Enabled" : "Disabled"}}
     .wizard-miq-review-item{"ng-if" => "data.cdnEnabled"}
-      %span.wizard-miq-review-item-label Username:
+      %span.wizard-miq-review-item-label
+        = _("Username:")
       %span.wizard-miq-review-item-value {{data.rhnUsername}}
     .wizard-miq-review-item{"ng-if" => "data.cdnEnabled"}
-      %span.wizard-miq-review-item-label Password:
+      %span.wizard-miq-review-item-label
+        = _("Password:")
       %span.wizard-miq-review-item-value {{data.rhnPassword}}
     .wizard-miq-review-item{"ng-if" => "data.cdnEnabled"}
-      %span.wizard-miq-review-item-label SKU:
+      %span.wizard-miq-review-item-label
+        = _("SKU:")
       %span.wizard-miq-review-item-value {{data.rhnSKU}}
     .wizard-miq-review-item{"ng-if" => "data.cdnEnabled"}
-      %span.wizard-miq-review-item-label RHN Satellite URL:
+      %span.wizard-miq-review-item-label
+        = _("RHN Satellite URL:")
       %span.wizard-miq-review-item-value {{data.specifySatelliteUrl ? data.rhnSatelliteUrl : 'Unspecified'}}

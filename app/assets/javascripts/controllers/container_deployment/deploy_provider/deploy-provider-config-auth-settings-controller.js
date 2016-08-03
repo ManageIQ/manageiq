@@ -3,7 +3,7 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
   function($rootScope, $scope, $timeout, $document, miqService) {
     'use strict';
     $scope.deploymentDetailsAuthSettingsComplete = false;
-    $scope.reviewTemplate = "/static/deploy-provider-auth-settings-review.html.haml";
+    $scope.reviewTemplate = "/static/deploy_containers_provider/deploy-provider-auth-settings-review.html.haml";
     var firstShow = true;
     $scope.onShow = function () {
       if (firstShow) {
@@ -18,6 +18,10 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
         $scope.data.authentication.google = {};
         $scope.data.authentication.github = {};
         firstShow = false;
+
+        $scope.$watch('data.authentication.mode', function() {
+          $scope.validateForm();
+        });
       }
       $scope.validateForm();
       miqService.dynamicAutoFocus('htpasswordUser' + ($scope.data.authentication.htPassword.users.length - 1));
@@ -44,10 +48,6 @@ miqHttpInject(angular.module('miq.containers.providersModule')).controller('cont
           break;
       }
     };
-
-    $scope.$watch('data.authentication.mode', function() {
-      $scope.validateForm();
-    });
 
     var validString = function(value) {
       return angular.isDefined(value) && value.length > 0;

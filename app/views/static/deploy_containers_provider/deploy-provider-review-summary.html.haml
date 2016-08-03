@@ -12,10 +12,6 @@
             %form
               %textarea.miq-review-edit-text{"ng-change" => "onInventoryTextChange()",
               "ng-model" => "data.editedInventoryText", :readonly => "", :rows => "10", :type => "text"}
-              / <div class="modal-footer miq-review-button-panel">
-              / <button class="btn btn-default" ng-disabled="!playbookChanged" ng-click="cancelPlaybookChanges()">Cancel</button>
-              / <button class="btn btn-primary" ng-disabled="!playbookChanged" ng-click="savePlaybookChanges()">Save</button>
-              / </div>
     .miq-wizard-page-wait-dialog{"miq-modal" => "", "modal-size" => "small", "show-close" => "false", "show-header" => "false", :visible => "showWaitDialog"}
       .miq-wait-dialog-content
         .spinner.spinner-lg
