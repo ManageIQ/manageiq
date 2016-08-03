@@ -45,10 +45,10 @@ class ApplicationHelper::Toolbar::MiqTemplatesCenter < ApplicationHelper::Toolba
         button(
           :miq_template_delete,
           'pficon pficon-delete fa-lg',
-          N_('Remove selected Templates from the VMDB'),
-          N_('Remove Templates from the VMDB'),
+          N_('Remove selected Templates'),
+          N_('Remove Templates'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected Templates and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Templates?"),
+          :confirm   => N_("Warning: The selected Templates and ALL of their components will be permanently removed!"),
           :enabled   => false,
           :onwhen    => "1+"),
       ]

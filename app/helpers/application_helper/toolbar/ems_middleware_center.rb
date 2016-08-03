@@ -22,10 +22,10 @@ class ApplicationHelper::Toolbar::EmsMiddlewareCenter < ApplicationHelper::Toolb
         button(
           :ems_middleware_delete,
           'pficon pficon-delete fa-lg',
-          t = N_('Remove this Middleware Provider from the VMDB'),
+          t = N_('Remove this Middleware Provider'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Middleware Provider and ALL of its components will be permanently removed from the Virtual Management Database. Are you sure you want to remove this Middleware Provider?")),
+          :confirm   => N_("Warning: This Middleware Provider and ALL of its components will be permanently removed!")),
       ]
     ),
   ])

@@ -9,10 +9,10 @@ class ApplicationHelper::Toolbar::ResourcePoolCenter < ApplicationHelper::Toolba
         button(
           :resource_pool_delete,
           'pficon pficon-delete fa-lg',
-          N_('Remove this Resource Pool from the VMDB'),
-          N_('Remove from the VMDB'),
+          N_('Remove this Resource Pool'),
+          N_('Remove Resource Pool'),
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Resource Pool and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Resource Pool?")),
+          :confirm   => N_("Warning: This Resource Pool and ALL of its components will be permanently removed!")),
       ]
     ),
   ])

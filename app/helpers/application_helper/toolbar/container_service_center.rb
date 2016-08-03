@@ -15,10 +15,10 @@ class ApplicationHelper::Toolbar::ContainerServiceCenter < ApplicationHelper::To
         button(
           :container_service_delete,
           'pficon pficon-delete fa-lg',
-          t = N_('Remove this Service from the VMDB'),
+          t = N_('Remove this Service'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Service and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Service?")),
+          :confirm   => N_("Warning: This Service and ALL of its components will be permanently removed!")),
       ]
     ),
   ])

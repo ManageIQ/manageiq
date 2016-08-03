@@ -22,10 +22,10 @@ class ApplicationHelper::Toolbar::PxeServersCenter < ApplicationHelper::Toolbar:
         button(
           :pxe_server_delete,
           'pficon pficon-delete fa-lg',
-          N_('Remove selected PXE Servers from the VMDB'),
-          N_('Remove PXE Servers from the VMDB'),
+          N_('Remove selected PXE Servers'),
+          N_('Remove PXE Servers'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected PXE Servers and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected PXE Servers?"),
+          :confirm   => N_("Warning: The selected PXE Servers and ALL of their components will be permanently removed!"),
           :enabled   => false,
           :onwhen    => "1+"),
         separator,

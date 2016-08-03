@@ -21,10 +21,10 @@ class ApplicationHelper::Toolbar::DialogCenter < ApplicationHelper::Toolbar::Bas
         button(
           :dialog_delete,
           'pficon pficon-delete fa-lg',
-          N_('Remove this Dialog from the VMDB'),
-          N_('Remove from the VMDB'),
+          N_('Remove this Dialog'),
+          N_('Remove Dialog'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: This Dialog will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Dialog?")),
+          :confirm   => N_("Warning: This Dialog will be permanently removed!")),
       ]
     ),
   ])

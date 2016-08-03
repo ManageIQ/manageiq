@@ -32,10 +32,10 @@ class ApplicationHelper::Toolbar::XTemplateCloudCenter < ApplicationHelper::Tool
         button(
           :image_delete,
           'pficon pficon-delete fa-lg',
-          N_('Remove this Image from the VMDB'),
-          N_('Remove from the VMDB'),
+          N_('Remove this Image'),
+          N_('Remove Image'),
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Image and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Image?")),
+          :confirm   => N_("Warning: This Image and ALL of its components will be permanently removed!")),
         separator,
         button(
           :image_right_size,

@@ -14,10 +14,10 @@ class ApplicationHelper::Toolbar::PxeServerCenter < ApplicationHelper::Toolbar::
         button(
           :pxe_server_delete,
           'pficon pficon-delete fa-lg',
-          t = N_('Remove this PXE Server from the VMDB'),
+          t = N_('Remove this PXE Server'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This PXE Server and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this PXE Server?")),
+          :confirm   => N_("Warning: This PXE Server and ALL of its components will be permanently removed!")),
         separator,
         button(
           :pxe_server_refresh,

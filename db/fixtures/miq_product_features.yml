@@ -149,7 +149,7 @@
       :identifier: catalogitem_admin
       :children:
       - :name: Remove Catalog Item
-        :description: Remove Catalog Items from the VMDB
+        :description: Remove Catalog Items
         :feature_type: admin
         :identifier: catalogitem_delete
       - :name: Edit Composite Catalog Item
@@ -206,7 +206,7 @@
       :identifier: st_catalog_admin
       :children:
       - :name: Remove Catalog
-        :description: Remove Catalog from the VMDB
+        :description: Remove Catalog
         :feature_type: admin
         :identifier: st_catalog_delete
       - :name: Edit Catalog
@@ -291,7 +291,7 @@
         :feature_type: admin
         :identifier: service_edit
       - :name: Remove Services
-        :description: Remove Services from the VMDB
+        :description: Remove Services
         :feature_type: admin
         :identifier: service_delete
       - :name: Set Ownership
@@ -374,7 +374,7 @@
     :identifier: ems_cloud_admin
     :children:
     - :name: Remove
-      :description: Remove Cloud Providers from the VMDB
+      :description: Remove Cloud Providers
       :feature_type: admin
       :identifier: ems_cloud_delete
     - :name: Edit
@@ -568,7 +568,7 @@
       :feature_type: admin
       :identifier: cloud_volume_detach
     - :name: Remove
-      :description: Remove Volumes from the VMDB
+      :description: Remove Volumes
       :feature_type: admin
       :identifier: cloud_volume_delete
 
@@ -726,7 +726,7 @@
     :identifier: ems_infra_admin
     :children:
     - :name: Remove
-      :description: Remove Infrastructure Providers from the VMDB
+      :description: Remove Infrastructure Providers
       :feature_type: admin
       :identifier: ems_infra_delete
     - :name: Edit
@@ -824,7 +824,7 @@
     :identifier: ems_cluster_admin
     :children:
     - :name: Remove
-      :description: Remove Clusters / Deployment Roles from the VMDB
+      :description: Remove Clusters / Deployment Roles
       :feature_type: admin
       :identifier: ems_cluster_delete
 
@@ -945,7 +945,7 @@
       :feature_type: admin
       :identifier: host_new
     - :name: Remove
-      :description: Remove Hosts / Nodes from the VMDB
+      :description: Remove Hosts / Nodes
       :feature_type: admin
       :identifier: host_delete
     - :name: Edit
@@ -995,7 +995,7 @@
     :identifier: resource_pool_admin
     :children:
     - :name: Remove
-      :description: Remove Resource Pools from the VMDB
+      :description: Remove Resource Pools
       :feature_type: admin
       :identifier: resource_pool_delete
 
@@ -1041,7 +1041,7 @@
     :identifier: storage_admin
     :children:
     - :name: Remove
-      :description: Remove Datastores from the VMDB
+      :description: Remove Datastores
       :feature_type: admin
       :identifier: storage_delete
 
@@ -1079,7 +1079,7 @@
     :identifier: storage_pod_admin
     :children:
     - :name: Remove
-      :description: Remove Datastore Clusters from the VMDB
+      :description: Remove Datastore Clusters
       :feature_type: admin
       :identifier: storage_pod_delete
 
@@ -2960,7 +2960,7 @@
       :feature_type: admin
       :identifier: storage_manager_new
     - :name: Remove
-      :description: Remove Storage Managers from the VMDB
+      :description: Remove Storage Managers
       :feature_type: admin
       :identifier: storage_manager_delete
     - :name: Edit
@@ -3003,7 +3003,7 @@
         :feature_type: admin
         :identifier: pxe_server_new
       - :name: Remove
-        :description: Remove PXE Servers from the VMDB
+        :description: Remove PXE Servers
         :feature_type: admin
         :identifier: pxe_server_delete
       - :name: Edit
@@ -3038,7 +3038,7 @@
         :feature_type: admin
         :identifier: customization_template_new
       - :name: Remove
-        :description: Remove Customization Templates from the VMDB
+        :description: Remove Customization Templates
         :feature_type: admin
         :identifier: customization_template_delete
       - :name: Edit
@@ -3069,7 +3069,7 @@
         :feature_type: admin
         :identifier: pxe_image_type_new
       - :name: Remove
-        :description: Remove System Image Types from the VMDB
+        :description: Remove System Image Types
         :feature_type: admin
         :identifier: pxe_image_type_delete
       - :name: Edit
@@ -3105,7 +3105,7 @@
         :feature_type: admin
         :identifier: iso_datastore_new
       - :name: Remove
-        :description: Remove ISO Datastores from the VMDB
+        :description: Remove ISO Datastores
         :feature_type: admin
         :identifier: iso_datastore_delete
       - :name: Edit ISO Images
@@ -3161,7 +3161,7 @@
     :identifier: orchestration_stack_admin
     :children:
     - :name: Remove
-      :description: Remove Orchestration Stacks from the VMDB
+      :description: Remove Orchestration Stack
       :feature_type: admin
       :identifier: orchestration_stack_delete
     - :name: Edit
@@ -3264,7 +3264,7 @@
     :identifier: ems_container_admin
     :children:
     - :name: Remove
-      :description: Remove Containers Providers from the VMDB
+      :description: Remove Containers Provider
       :feature_type: admin
       :identifier: ems_container_delete
     - :name: Edit
@@ -3322,7 +3322,8 @@
     :identifier: ems_middleware_admin
     :children:
     - :name: Remove
-      :description: Remove Middleware Providers from the VMDB
+      :description: Remove Middleware Provider720709
+      
       :feature_type: admin
       :identifier: ems_middleware_delete
     - :name: Edit
@@ -3435,7 +3436,7 @@
     :identifier: middleware_deployment_admin
     :children:
     - :name: Remove
-      :description: Remove Middleware Deployments from the VMDB
+      :description: Remove Middleware Deployment
       :feature_type: admin
       :identifier: middleware_deployment_delete
     - :name: Edit
@@ -3501,7 +3502,7 @@
     :identifier: middleware_datasource_admin
     :children:
     - :name: Remove
-      :description: Remove Middleware Datasource from the VMDB
+      :description: Remove Middleware Datasource
       :feature_type: admin
       :identifier: middleware_datasource_remove
     - :name: Edit
@@ -3572,7 +3573,7 @@
     :identifier: ems_network_admin
     :children:
     - :name: Remove
-      :description: Remove Network Providers from the VMDB
+      :description: Remove Network Provider
       :feature_type: admin
       :identifier: ems_network_delete
     - :name: Edit
@@ -3802,7 +3803,7 @@
     :identifier: container_group_admin
     :children:
     - :name: Remove
-      :description: Remove Pods from the VMDB
+      :description: Remove Pod
       :feature_type: admin
       :identifier: container_group_delete
     - :name: Edit
@@ -3864,7 +3865,7 @@
     :identifier: container_node_admin
     :children:
     - :name: Remove
-      :description: Remove Container Nodes from the VMDB
+      :description: Remove Container Nodes
       :feature_type: admin
       :identifier: container_node_delete
     - :name: Edit
@@ -3926,7 +3927,7 @@
     :identifier: container_replicator_admin
     :children:
     - :name: Remove
-      :description: Remove Container Replicators from the VMDB
+      :description: Remove Container Replicator
       :feature_type: admin
       :identifier: container_replicator_delete
     - :name: Edit
@@ -4022,7 +4023,7 @@
     :identifier: container_image_registry_admin
     :children:
     - :name: Remove
-      :description: Remove Container Image Registries from the VMDB
+      :description: Remove Container Image Registry
       :feature_type: admin
       :identifier: container_image_registry_delete
     - :name: Edit
@@ -4068,7 +4069,7 @@
     :identifier: persistent_volume_admin
     :children:
     - :name: Remove
-      :description: Remove Persistent Volumes from the VMDB
+      :description: Remove Persistent Volume
       :feature_type: admin
       :identifier: persistent_volume_delete
     - :name: Edit
@@ -4114,7 +4115,7 @@
     :identifier: container_build_admin
     :children:
     - :name: Remove
-      :description: Remove Container Build from the VMDB
+      :description: Remove Container Build
       :feature_type: admin
       :identifier: container_build_delete
     - :name: Edit
@@ -4164,7 +4165,7 @@
     :identifier: container_service_admin
     :children:
     - :name: Remove
-      :description: Remove Container Services from the VMDB
+      :description: Remove Container Services
       :feature_type: admin
       :identifier: container_service_delete
     - :name: Edit
@@ -4290,7 +4291,7 @@
       :identifier: container_admin
       :children:
       - :name: Remove Container
-        :description: Remove Containers from the VMDB
+        :description: Remove Container
         :feature_type: admin
         :identifier: container_delete
       - :name: Edit Container
@@ -4375,7 +4376,7 @@
       :identifier: provider_admin
       :children:
         - :name: Remove Providers
-          :description: Remove Proviers from the VMDB
+          :description: Remove Provier
           :feature_type: admin
           :identifier: provider_foreman_delete_provider
         - :name: Edit Provider
@@ -4455,7 +4456,7 @@
     :identifier: configuration_job_admin
     :children:
     - :name: Remove
-      :description: Remove Configuration Jobs from the VMDB
+      :description: Remove Configuration Job
       :feature_type: admin
       :identifier: configuration_job_delete
     - :name: Edit
@@ -4623,7 +4624,7 @@
         :feature_type: admin
         :identifier: instance_miq_request_new
       - :name: Remove
-        :description: Remove Instances from the VMDB
+        :description: Remove Instance
         :feature_type: admin
         :identifier: instance_delete
       - :name: Edit
@@ -4709,7 +4710,7 @@
       :identifier: image_admin
       :children:
       - :name: Remove
-        :description: Remove Images from the VMDB
+        :description: Remove Image
         :feature_type: admin
         :identifier: image_delete
       - :name: Edit
@@ -4868,7 +4869,7 @@
         :feature_type: admin
         :identifier: vm_migrate
       - :name: Remove
-        :description: Remove VMs from the VMDB
+        :description: Remove VM
         :feature_type: admin
         :identifier: vm_delete
       - :name: Edit

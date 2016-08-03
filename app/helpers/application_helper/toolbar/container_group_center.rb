@@ -18,7 +18,7 @@ class ApplicationHelper::Toolbar::ContainerGroupCenter < ApplicationHelper::Tool
           t = N_('Remove this Pod from the VMDB'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Pod and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Pod?")),
+          :confirm   => N_("Warning: This Pod and ALL of its components will be permanently removed!")),
       ]
     ),
   ])

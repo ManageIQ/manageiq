@@ -22,10 +22,10 @@ class ApplicationHelper::Toolbar::MiqReportSchedulesCenter < ApplicationHelper::
         button(
           :miq_report_schedule_delete,
           'pficon pficon-delete fa-lg',
-          t = N_('Delete the selected Schedules from the VMDB'),
+          t = N_('Delete the selected Schedules'),
           t,
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected Schedules and ALL of their components will be permanently removed from the VMDB.  Are you sure you want to delete the selected Schedules?"),
+          :confirm   => N_("Warning: The selected Schedules and ALL of their components will be permanently removed!"),
           :enabled   => false,
           :onwhen    => "1+"),
         button(

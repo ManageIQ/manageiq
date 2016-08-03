@@ -23,7 +23,7 @@ class ApplicationHelper::Toolbar::CustomButtonsCenter < ApplicationHelper::Toolb
           t = N_('Remove this Button Group'),
           t,
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected Button Group will be permanently removed.  Are you sure you want to remove the selected Button Group?")),
+          :confirm   => N_("Warning: The selected Button Group will be permanently removed!")),
       ]
     ),
   ])

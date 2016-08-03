@@ -156,7 +156,7 @@ _("Modify Catalog Items")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Remove Catalog Item")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Catalog Items from the VMDB")
+_("Remove Catalog Items")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Composite Catalog Item")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -199,7 +199,7 @@ _("Modify Catalog")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Remove Catalog")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Catalog from the VMDB")
+_("Remove Catalog")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Catalog")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -254,7 +254,7 @@ _("Edit Services")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Remove Services")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Services from the VMDB")
+_("Remove Services")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Set Ownership")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -313,7 +313,7 @@ _("Modify Cloud Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Remove")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Cloud Providers from the VMDB")
+_("Remove Cloud Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Cloud Provider")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -413,7 +413,7 @@ _("Detach")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Detach a Volume")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Volumes from the VMDB")
+_("Remove Volumes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Auth Key Pairs")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -491,7 +491,7 @@ _("Re-check Authentication Status of Infrastructure Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Infrastructure Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Infrastructure Providers from the VMDB")
+_("Remove Infrastructure Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit an Infrastructure Provider")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -552,7 +552,7 @@ _("Edit Tags for Clusters / Deployment Roles")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Clusters / Deployment Roles")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Clusters / Deployment Roles from the VMDB")
+_("Remove Clusters / Deployment Roles")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Hosts / Nodes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -632,7 +632,7 @@ _("Modify Hosts / Nodes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Add a Host / Node")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Hosts / Nodes from the VMDB")
+_("Remove Hosts / Nodes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Host / Node")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -657,7 +657,7 @@ _("Manage Policies of Resource Pools")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Resource Pools")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Resource Pools from the VMDB")
+_("Remove Resource Pools")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 # TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
@@ -686,7 +686,7 @@ _("Edit Datastore Tags")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Datastores")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Datastores from the VMDB")
+_("Remove Datastores")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Datastore Clusters")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -704,7 +704,7 @@ _("Edit Datastore Cluster Tags")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Datastore Clusters")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Datastore Clusters from the VMDB")
+_("Remove Datastore Clusters")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Dashboard")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1581,7 +1581,7 @@ _("Modify Storage Managers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Add an Storage Manager")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Storage Managers from the VMDB")
+_("Remove Storage Managers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit an Storage Manager")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1604,7 +1604,7 @@ _("Modify PXE Servers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Add an PXE Server")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove PXE Servers from the VMDB")
+_("Remove PXE Servers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit an PXE Server")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1627,7 +1627,7 @@ _("Modify Customization Templates")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Add an Customization Template")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Customization Templates from the VMDB")
+_("Remove Customization Templates")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Customization Template")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1644,7 +1644,7 @@ _("Modify System Image Types")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Add System Image Types")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove System Image Types from the VMDB")
+_("Remove System Image Types")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit System Image Type")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1663,7 +1663,7 @@ _("Modify ISO Datastores")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Add an ISO Datastore")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove ISO Datastores from the VMDB")
+_("Remove ISO Datastores")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit ISO Images")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1689,7 +1689,7 @@ _("Display Individual Orchestration Stacks")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Orchestration Stacks")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Orchestration Stacks from the VMDB")
+_("Remove Orchestration Stacks")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Orchestration Stack")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1735,7 +1735,7 @@ _("Container Deployment Create")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Containers Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Containers Providers from the VMDB")
+_("Remove Containers Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Containers Provider")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1763,7 +1763,7 @@ _("Edit Tags of Middleware Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Middleware Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Middleware Providers from the VMDB")
+_("Remove Middleware Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Middleware Provider")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1829,7 +1829,7 @@ _("Display Individual Middleware Deployments")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Middleware Deployments")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Middleware Deployments from the VMDB")
+_("Remove Middleware Deployments")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Middleware Deployment")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1861,7 +1861,7 @@ _("Show Capacity & Utilization data of Middleware DataSources")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Middleware Datasources")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Middleware Datasource from the VMDB")
+_("Remove Middleware Datasource")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Middleware Datasource")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1896,7 +1896,7 @@ _("Refresh Network Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Network Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Network Providers from the VMDB")
+_("Remove Network Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Network Provider")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2012,7 +2012,7 @@ _("Show Capacity & Utilization data of Pods")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Pods")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Pods from the VMDB")
+_("Remove Pods")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Pod")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2038,7 +2038,7 @@ _("Display Timelines for Container Nodes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Container Nodes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Container Nodes from the VMDB")
+_("Remove Container Nodes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Container Nodes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2063,7 +2063,7 @@ _("Show Capacity & Utilization data of Replicators")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Display Timelines for container Replicators")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Container Replicators from the VMDB")
+_("Remove Container Replicators")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Container Replicator")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2103,7 +2103,7 @@ _("Display Individual Container Image Registries")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Container Image Registries")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Container Image Registries from the VMDB")
+_("Remove Container Image Registries")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Container Image Registry")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2125,7 +2125,7 @@ _("Display Individual Persistent Volume")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Persistent Volumes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Persistent Volumes from the VMDB")
+_("Remove Persistent Volumes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Persistent Volume")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2147,7 +2147,7 @@ _("Display Individual Container Build")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Container Build")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Container Build from the VMDB")
+_("Remove Container Build")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Container Build")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2175,7 +2175,7 @@ _("Show Capacity & Utilization data of Service")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Container Services")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Container Services from the VMDB")
+_("Remove Container Services")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Container Services")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2235,7 +2235,7 @@ _("Modify Containers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Remove Container")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Containers from the VMDB")
+_("Remove Containers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Container")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2281,7 +2281,7 @@ _("Modify Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Remove Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Proviers from the VMDB")
+_("Remove Proviers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Provider")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2404,7 +2404,7 @@ _("Provision Instances")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Request to Provision Instances")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Instances from the VMDB")
+_("Remove Instances")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Instance")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2444,7 +2444,7 @@ _("Edit Image Tags")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Images")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Images from the VMDB")
+_("Remove Images")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Image")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml

@@ -22,7 +22,7 @@ class ApplicationHelper::Toolbar::MiqWidgetCenter < ApplicationHelper::Toolbar::
           t = N_('Delete this Widget from the Database'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Widget and ALL of its components will be permanently removed from the VMDB.  Are you sure you want to delete this Widget?")),
+          :confirm   => N_("Warning: This Widget and ALL of its components will be permanently removed!")),
         separator,
         button(
           :widget_generate_content,
