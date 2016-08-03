@@ -128,7 +128,7 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_security_groups
-    label = ui_lookup(:tables => "security_groups")
+    label = ui_lookup(:tables => "security_group")
     num = @ems.number_of(:security_groups)
     h = {:label => label, :image => "security_group", :value => num}
     if num > 0 && role_allows(:feature => "security_group_show_list")
