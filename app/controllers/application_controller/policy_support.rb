@@ -212,10 +212,14 @@ module ApplicationController::PolicySupport
     @edit[:current] = @edit[:new].dup                 # Save the existing counts
     session[:changed] = false
     @in_a_form = true
+    protect_build_tree
+    build_targets_hash(@politems)
+  end
+
+  def protect_build_tree
     @edit[:controller_name] = controller_name
     @edit[:pol_items] = session[:pol_items]
     @protect_tree = TreeBuilderProtect.new(:protect, :protect_tree, @sb, true, @edit)
-    build_targets_hash(@politems)
   end
 
   # Create policy assignment audit record

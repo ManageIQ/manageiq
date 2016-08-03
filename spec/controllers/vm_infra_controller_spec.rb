@@ -9,6 +9,9 @@ describe VmInfraController do
 
     session[:settings] = {:views => {:treesize => 20}}
 
+    allow(controller).to receive(:protect_build_tree).and_return(nil)
+    controller.instance_variable_set(:@protect_tree, OpenStruct.new(:name => "name"))
+
     EvmSpecHelper.create_guid_miq_server_zone
   end
 

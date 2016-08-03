@@ -19,8 +19,7 @@ class TreeBuilderProtect < TreeBuilder
                   :onclick                     => false,
                   :open_close_all_on_dbl_click => true,
                   :oncheck                     => "miqOnCheckProtect",
-                  :check_url                   =>  "/#{@data[:controller_name]}/protect/ " # TODO "/#{request.parameters["controller"]}/protect/"
-    )
+                  :check_url                   => "/#{@data[:controller_name]}/protect/")
   end
 
   def root_options
@@ -43,12 +42,13 @@ class TreeBuilderProtect < TreeBuilder
 
   def x_get_tree_hash_kids(parent, count_only)
     nodes = parent[:children].map do |policy|
-      {:id       => "policy_#{policy.id}",
-       :text     => "<b>#{ui_lookup(:model => policy.towhat)} #{policy.mode.capitalize}:</b> #{policy.description}".html_safe,
-       :image    => "miq_policy_#{policy.towhat.downcase}#{policy.active ? "" : "_inactive"}",
-       :tip      => policy.description,
+      text = "<b>#{ui_lookup(:model => policy.towhat)} #{policy.mode.capitalize}:</b> #{policy.description}"
+      {:id           => "policy_#{policy.id}",
+       :text         => text.html_safe,
+       :image        => "miq_policy_#{policy.towhat.downcase}#{policy.active ? "" : "_inactive"}",
+       :tip          => policy.description,
        :hideCheckbox => true,
-       :children => []
+       :children     => []
       }
     end
     count_only_or_objects(count_only, nodes)

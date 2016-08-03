@@ -312,6 +312,8 @@ describe EmsCloudController do
     end
 
     it 'manage cloud provider policies' do
+      allow(controller).to receive(:protect_build_tree).and_return(nil)
+      controller.instance_variable_set(:@protect_tree, OpenStruct.new(:name => "name"))
       ems = FactoryGirl.create(:ems_amazon)
       post :button, :params => { :miq_grid_checks => to_cid(ems.id), :pressed => "ems_cloud_protect" }
       expect(response.status).to eq(200)
