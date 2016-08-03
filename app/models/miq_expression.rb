@@ -911,7 +911,6 @@ class MiqExpression
 
     if ops["tag"] && context_type != "hash"
       ref, val = value2tag(preprocess_managed_tag(ops["tag"]), ops["value"])
-      fld = val
       [ref ? "<exist ref=#{ref}>#{val}</exist>" : "<exist>#{val}</exist>"]
     elsif ops["tag"] && context_type == "hash"
       # This is only for supporting reporting "display filters"
@@ -936,7 +935,6 @@ class MiqExpression
           ref, val = value2tag(ops["field"])
         end
         col_type = get_col_type(ops["field"]) || "string"
-        fld = val
         fld = ref ? "<value ref=#{ref}, type=#{col_type}>#{val}</value>" : "<value type=#{col_type}>#{val}</value>"
         if ["like", "not like", "starts with", "ends with", "includes", "regular expression matches", "regular expression does not match"].include?(operator)
           [fld, ops["value"]]
