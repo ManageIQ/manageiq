@@ -33,13 +33,6 @@ describe ApplianceConsole::InternalDatabaseConfiguration do
     @config.choose_disk
   end
 
-  it "#post_activation" do
-    expect(ApplianceConsole::ServiceGroup).to(
-      receive(:new).with(:internal_postgresql => true).and_return(double(:restart_services => true))
-    )
-    @config.post_activation
-  end
-
   it "#create_partition_to_fill_disk (private)" do
     disk_double = double(:path => "/dev/vdb")
     expect(disk_double).to receive(:create_partition_table)

@@ -92,10 +92,6 @@ module ApplianceConsole
       copy_template "pg_ident.conf"
     end
 
-    def post_activation
-      ServiceGroup.new(:internal_postgresql => true).restart_services
-    end
-
     private
 
     def copy_template(src, src_dir = self.class.postgresql_template, dest_dir = PostgresAdmin.data_directory)
@@ -172,7 +168,7 @@ module ApplianceConsole
     end
 
     def start_postgres
-      LinuxAdmin::Service.new(PostgresAdmin.service_name).start
+      LinuxAdmin::Service.new(PostgresAdmin.service_name).enable.start
       block_until_postgres_accepts_connections
     end
 
