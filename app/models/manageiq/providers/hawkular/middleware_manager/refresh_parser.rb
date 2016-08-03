@@ -51,18 +51,22 @@ module ManageIQ::Providers
         @ems.feeds.each do |feed|
           @ems.domains(feed).each do |domain|
             parsed_domain = parse_middleware_domain(domain)
+            fetch_server_groups(feed, domain)
+
+            # add the server groups to the domain
+            parsed_domain[:middleware_server_groups] = @data[:middleware_server_groups]
             @data[:middleware_domains] << parsed_domain
             @data_index.store_path(:middleware_domains, :by_ems_ref, parsed_domain[:ems_ref], parsed_domain)
 
-            fetch_server_groups(feed, domain, parsed_domain)
+            # now it's safe to fetch the domain servers (it assumes the server groups to be already fetched)
             fetch_domain_servers(domain)
           end
         end
       end
 
-      def fetch_server_groups(feed, domain, parsed_domain)
+      def fetch_server_groups(feed, domain)
         @ems.server_groups(feed, domain).each do |group|
-          parsed_group = parse_middleware_server_group(parsed_domain, group)
+          parsed_group = parse_middleware_server_group(group)
           @data[:middleware_server_groups] << parsed_group
           @data_index.store_path(:middleware_server_groups, :by_name, parsed_group[:name], parsed_group)
         end
@@ -76,7 +80,8 @@ module ManageIQ::Providers
           server_name = parse_domain_server_name(child.id)
           server = parse_middleware_server(child, server_name)
 
-          # add the association to server group (it's well hidden in the inventory)
+          # Add the association to server group. The information about what server is in which server group is under
+          # the server-config resource's configuration
           config_path = child.path.to_s.sub(/%2Fserver%3D/, '%2Fserver-config%3D')
           config = @ems.inventory_client.get_config_data_for_resource(config_path)
           server_group_name = config['value']['Server Group']
@@ -209,12 +214,11 @@ module ManageIQ::Providers
         parse_base_item(domain).merge(specific)
       end
 
-      def parse_middleware_server_group(domain, group)
+      def parse_middleware_server_group(group)
         specific = {
-          :middleware_domain => domain,
-          :name              => parse_server_group_name(group.name),
-          :type_path         => group.type_path,
-          :profile           => group.properties['Profile'],
+          :name      => parse_server_group_name(group.name),
+          :type_path => group.type_path,
+          :profile   => group.properties['Profile'],
         }
         parse_base_item(group).merge(specific)
       end

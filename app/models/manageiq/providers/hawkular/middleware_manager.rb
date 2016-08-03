@@ -20,7 +20,6 @@ module ManageIQ::Providers
     default_value_for :port, DEFAULT_PORT
 
     has_many :middleware_domains, :foreign_key => :ems_id, :dependent => :destroy
-    has_many :middleware_server_groups, :foreign_key => :ems_id, :dependent => :destroy
     has_many :middleware_servers, :foreign_key => :ems_id, :dependent => :destroy
     has_many :middleware_deployments, :foreign_key => :ems_id, :dependent => :destroy
     has_many :middleware_datasources, :foreign_key => :ems_id, :dependent => :destroy
@@ -79,12 +78,12 @@ module ManageIQ::Providers
     end
 
     def machine_id(feed)
-      os_resource_for(hawk_escape_id(feed)).properties['Machine Id']
+      os_resource_for(feed).properties['Machine Id']
     end
 
     def os_resource_for(feed)
       with_provider_connection do |connection|
-        os = os_for(hawk_escape_id(feed))
+        os = os_for(feed)
         os_resources = connection.inventory.list_resources_for_type(os.path, true)
         unless os_resources.nil? || os_resources.empty?
           return os_resources.first

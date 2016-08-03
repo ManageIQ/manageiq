@@ -9,7 +9,6 @@ class CreateMiddlewareServerGroups < ActiveRecord::Migration[5.0]
       t.string :profile
       t.text   :properties
       t.bigint :domain_id
-      t.bigint :ems_id
 
       t.timestamps :null => false
     end

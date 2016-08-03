@@ -18,13 +18,14 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
     @ems_hawkular.reload
 
     expect(@ems_hawkular.middleware_domains.count).to be > 0
-    expect(@ems_hawkular.middleware_server_groups.count).to be > 0
+    domain = @ems_hawkular.middleware_domains.first
+    expect(domain.middleware_server_groups.count).to be > 0
     expect(@ems_hawkular.middleware_servers.count).to be > 0
     expect(@ems_hawkular.middleware_deployments.count).to be > 0
     expect(@ems_hawkular.middleware_datasources.count).to be > 0
     expect(@ems_hawkular.middleware_deployments.first).to have_attributes(:status => 'Enabled')
     assert_specific_datasource
-    assert_specific_server_group
+    assert_specific_server_group(domain)
     assert_specific_domain
   end
 
@@ -56,8 +57,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
     )
   end
 
-  def assert_specific_server_group
-    server_group = @ems_hawkular.middleware_server_groups.find_by_name('main-server-group')
+  def assert_specific_server_group(domain)
+    server_group = domain.middleware_server_groups.find_by_name('main-server-group')
     expect(server_group).to have_attributes(
       :name     => 'main-server-group',
       :nativeid => 'Local~/server-group=main-server-group',

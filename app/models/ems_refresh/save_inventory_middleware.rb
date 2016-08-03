@@ -2,7 +2,7 @@ module EmsRefresh::SaveInventoryMiddleware
   def save_ems_middleware_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
-    child_keys = [:middleware_domains, :middleware_server_groups, :middleware_servers, :middleware_deployments,
+    child_keys = [:middleware_domains, :middleware_servers, :middleware_deployments,
                   :middleware_datasources]
     # Save and link other subsections
     child_keys.each do |k|
@@ -23,15 +23,15 @@ module EmsRefresh::SaveInventoryMiddleware
                 []
               end
 
-    save_inventory_multi(ems.middleware_domains, hashes, deletes, [:ems_ref])
+    save_inventory_multi(ems.middleware_domains, hashes, deletes, [:ems_ref], [:middleware_server_groups])
     store_ids_for_new_records(ems.middleware_domains, hashes, :ems_ref)
   end
 
-  def save_middleware_server_groups_inventory(ems, hashes, target = nil)
+  def save_middleware_server_groups_inventory(domain, hashes, target = nil)
     return if hashes.nil?
-    target = ems if target.nil?
+    target = domain if target.nil?
 
-    ems.middleware_server_groups(true)
+    domain.middleware_server_groups.reset
     deletes = if target.kind_of?(ExtManagementSystem)
                 :use_association
               else
@@ -39,12 +39,12 @@ module EmsRefresh::SaveInventoryMiddleware
               end
 
     hashes.each do |h|
-      h[:domain_id] = h.fetch_path(:middleware_domain, :id)
+      h[:domain_id] = domain[:id]
     end
 
-    save_inventory_multi(ems.middleware_server_groups, hashes, deletes, [:ems_ref], nil,
+    save_inventory_multi(domain.middleware_server_groups, hashes, deletes, [:ems_ref], nil,
                          [:middleware_domain])
-    store_ids_for_new_records(ems.middleware_server_groups, hashes, :ems_ref)
+    store_ids_for_new_records(domain.middleware_server_groups, hashes, :ems_ref)
   end
 
   def save_middleware_servers_inventory(ems, hashes, target = nil)
