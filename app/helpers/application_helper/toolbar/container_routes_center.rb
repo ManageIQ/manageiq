@@ -22,10 +22,10 @@ class ApplicationHelper::Toolbar::ContainerRoutesCenter < ApplicationHelper::Too
         button(
           :container_service_delete,
           'pficon pficon-delete fa-lg',
-          N_('Remove selected Projects from the VMDB'),
-          N_('Remove Projects from the VMDB'),
+          N_('Remove selected Projects'),
+          N_('Remove Projects'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected Projects and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Projects?"),
+          :confirm   => N_("Warning: The selected Projects and ALL of their components will be permanently removed!"),
           :onwhen    => "1+"),
       ]
     ),
