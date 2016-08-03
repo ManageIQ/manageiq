@@ -198,54 +198,14 @@ describe MiqExpression do
         expect(sql).to eq("\"vms\".\"retires_on\" > '2011-01-10'")
       end
 
-      it "generates the SQL for a > expression" do
-        exp = MiqExpression.new(">" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-        sql, * = exp.to_sql
-        expect(sql).to eq("\"vms\".\"retires_on\" > '2011-01-10'")
-      end
-
       it "generates the SQL for a BEFORE expression" do
         exp = MiqExpression.new("BEFORE" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
         sql, * = exp.to_sql
         expect(sql).to eq("\"vms\".\"retires_on\" < '2011-01-10'")
       end
 
-      it "generates the SQL for a < expression" do
-        exp = MiqExpression.new("<" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-        sql, * = exp.to_sql
-        expect(sql).to eq("\"vms\".\"retires_on\" < '2011-01-10'")
-      end
-
-      it "generates the SQL for a >= expression with a date field" do
-        exp = MiqExpression.new(">=" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-        sql, * = exp.to_sql
-        expect(sql).to eq("\"vms\".\"retires_on\" >= '2011-01-10'")
-      end
-
-      it "generates the SQL for a >= expression with a datetime field" do
-        sql, * = described_class.new(">=" => {"field" => "Vm-last_scan_on", "value" => "2016-01-01"}).to_sql
-        expect(sql).to eq(%q("vms"."last_scan_on" >= '2016-01-01 00:00:00'))
-      end
-
-      it "generates the SQL for a <= expression with a date field" do
-        exp = MiqExpression.new("<=" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-        sql, * = exp.to_sql
-        expect(sql).to eq("\"vms\".\"retires_on\" <= '2011-01-10'")
-      end
-
-      it "generates the SQL for a <= expression with a datetime field" do
-        sql, * = described_class.new("<=" => {"field" => "Vm-last_scan_on", "value" => "2016-01-01"}).to_sql
-        expect(sql).to eq(%q("vms"."last_scan_on" <= '2016-01-01 23:59:59.999999'))
-      end
-
       it "generates the SQL for an AFTER expression with date/time" do
         exp = MiqExpression.new("AFTER" => {"field" => "Vm-last_scan_on", "value" => "2011-01-10 9:00"})
-        sql, * = exp.to_sql
-        expect(sql).to eq("\"vms\".\"last_scan_on\" > '2011-01-10 09:00:00'")
-      end
-
-      it "generates the SQL for a > expression with date/time" do
-        exp = MiqExpression.new(">" => {"field" => "Vm-last_scan_on", "value" => "2011-01-10 9:00"})
         sql, * = exp.to_sql
         expect(sql).to eq("\"vms\".\"last_scan_on\" > '2011-01-10 09:00:00'")
       end
@@ -294,28 +254,16 @@ describe MiqExpression do
       around { |example| Timecop.freeze("2011-01-11 17:30 UTC") { example.run } }
 
       context "given a non-UTC timezone" do
-        it "generates the SQL for a > expression with a value of 'Yesterday' for a date field" do
-          exp = described_class.new(">" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
+        it "generates the SQL for a AFTER expression with a value of 'Yesterday' for a date field" do
+          exp = described_class.new("AFTER" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
           sql, * = exp.to_sql("Asia/Jakarta")
           expect(sql).to eq(%q("vms"."retires_on" > '2011-01-11'))
         end
 
-        it "generates the SQL for a >= expression with a value of 'Yesterday' for a date field" do
-          exp = described_class.new(">=" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
-          sql, * = exp.to_sql("Asia/Jakarta")
-          expect(sql).to eq(%q("vms"."retires_on" >= '2011-01-11'))
-        end
-
-        it "generates the SQL for a < expression with a value of 'Yesterday' for a date field" do
-          exp =  described_class.new("<" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
+        it "generates the SQL for a BEFORE expression with a value of 'Yesterday' for a date field" do
+          exp =  described_class.new("BEFORE" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
           sql, * = exp.to_sql("Asia/Jakarta")
           expect(sql).to eq(%q("vms"."retires_on" < '2011-01-11'))
-        end
-
-        it "generates the SQL for a <= expression with a value of 'Yesterday' for a date field" do
-          exp = described_class.new("<=" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
-          sql, * = exp.to_sql("Asia/Jakarta")
-          expect(sql).to eq(%q("vms"."retires_on" <= '2011-01-11'))
         end
 
         it "generates the SQL for an IS expression with a value of 'Yesterday' for a date field" do
@@ -404,14 +352,6 @@ describe MiqExpression do
           _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 9:00")
           vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 9:00:00.000001")
           filter = MiqExpression.new("AFTER" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11 9:00"})
-          result = Vm.where(filter.to_sql.first)
-          expect(result).to eq([vm2])
-        end
-
-        it "finds the correct instances for a > expression with a datetime field" do
-          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 9:00")
-          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 9:00:00.000001")
-          filter = MiqExpression.new(">" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11 9:00"})
           result = Vm.where(filter.to_sql.first)
           expect(result).to eq([vm2])
         end

@@ -1602,50 +1602,34 @@ class MiqExpression
     when "equal", "="
       field = Field.parse(exp[operator]["field"])
       field.eq(exp[operator]["value"])
-    when ">", "after"
+    when ">"
       field = Field.parse(exp[operator]["field"])
-      value = case
-              when field.date?
+      field.gt(exp[operator]["value"])
+    when "after"
+      field = Field.parse(exp[operator]["field"])
+      value = if field.date?
                 RelativeDatetime.normalize(exp[operator]["value"], tz, _mode = "end").to_date
-              when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, _mode = "end").utc
               else
-                exp[operator]["value"]
+                RelativeDatetime.normalize(exp[operator]["value"], tz, _mode = "end").utc
               end
       field.gt(value)
     when ">="
       field = Field.parse(exp[operator]["field"])
-      value = case
-              when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, _mode = "beginning").to_date
-              when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, _mode = "beginning").utc
-              else
-                exp[operator]["value"]
-              end
-      field.gteq(value)
-    when "<", "before"
+      field.gteq(exp[operator]["value"])
+    when "<"
       field = Field.parse(exp[operator]["field"])
-      value = case
-              when field.date?
+      field.lt(exp[operator]["value"])
+    when "before"
+      field = Field.parse(exp[operator]["field"])
+      value = if field.date?
                 RelativeDatetime.normalize(exp[operator]["value"], tz, _mode = "beginning").to_date
-              when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, _mode = "beginning").utc
               else
-                exp[operator]["value"]
+                RelativeDatetime.normalize(exp[operator]["value"], tz, _mode = "beginning").utc
               end
       field.lt(value)
     when "<="
       field = Field.parse(exp[operator]["field"])
-      value = case
-              when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, _mode = "end").to_date
-              when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, _mode = "end").utc
-              else
-                exp[operator]["value"]
-              end
-      field.lteq(value)
+      field.lteq(exp[operator]["value"])
     when "!="
       field = Field.parse(exp[operator]["field"])
       field.not_eq(exp[operator]["value"])
