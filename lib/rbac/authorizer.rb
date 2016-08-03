@@ -11,20 +11,35 @@ module Rbac
     end
 
     def role_allows(options = {})
-      # Known options:
       user    = options[:user]
-      feature = options[:feature]
+
+      # 'identifier' comes from the back end (ex: User#role_allows?)
+      # 'feature' comes from the front end (ex: ApplicationHelper#role_allows)
+      # As this API is a combination of the two, 'feature' is considered
+      # an alias of 'identifier' for legacy purposes.
+      identifier = options[:identifier] || options[:feature]
+
+      # The 'identifiers' option comes from the former User#role_allows_any? API
+      # It should be noted that there may be only ONE caller using 'identifiers'
+      # in Menu::Section, so this option may be changed shortly.
+      identifiers = options[:identifiers]
+
       any     = options[:any]
 
+      # Potentially removable; MiqUserRole uses it internally
+      scope   = options[:scope]
+
       auth = if any.present?
-               user.role_allows_any?(:identifiers => [feature])
+               user_role_allows_any?(user, :identifiers => (identifiers || [identifier]), :scope => scope)
              else
-               user.role_allows?(:identifier => feature)
+               user_role_allows?(user, :identifier => identifier, :scope => scope)
              end
-      _log.debug("Auth #{auth ? "successful" : "failed"} for user '#{user.userid}', role '#{user.miq_user_role.try(:name)}', feature identifier '#{feature}'")
+      _log.debug("Auth #{auth ? "successful" : "failed"} for user '#{user.userid}', role '#{user.miq_user_role.try(:name)}', feature identifier '#{identifier}'")
 
       auth
     end
+
+    private
 
     def user_role_allows?(user, options = {})
       return false if user.miq_user_role.nil?
@@ -46,7 +61,6 @@ module Rbac
     end
 
     def user_role_allows_any?(user, options = {})
-      binding.pry if ENV["LOLZ"]
       return false if user.miq_user_role.nil?
       user.miq_user_role.allows_any?(options)
     end
