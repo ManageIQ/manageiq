@@ -115,11 +115,9 @@ module AssignmentMixin
         parents = options[:parents]
       else
         model = kind_of?(Class) ? self : model
-        parents = model::ASSIGNMENT_PARENT_ASSOCIATIONS.each_with_object([]) do |rel, arr|
-          t = rel == :my_enterprise ? MiqEnterprise : target
-          next unless t.respond_to?(rel)
-          arr << t.send(rel)
-        end.flatten.compact
+        parents = model::ASSIGNMENT_PARENT_ASSOCIATIONS.flat_map do |rel|
+          (rel == :my_enterprise ? MiqEnterprise.my_enterprise : target.try(rel)) || []
+        end
         parents << target
       end
 
