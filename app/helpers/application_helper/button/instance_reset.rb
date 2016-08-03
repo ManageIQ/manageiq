@@ -2,7 +2,7 @@ class ApplicationHelper::Button::InstanceReset < ApplicationHelper::Button::Basi
   needs_record
 
   def skip?
-    return false if @record.kind_of?(OrchestrationStack) && @display == "instances"
+    return false if @display == "instances"
     !@record.is_available?(:reset)
   end
 end
