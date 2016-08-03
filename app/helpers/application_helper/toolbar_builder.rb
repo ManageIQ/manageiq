@@ -482,14 +482,6 @@ class ApplicationHelper::ToolbarBuilder
     end
   end
 
-  def build_toolbar_hide_button_service(id)
-    case id
-    when "service_reconfigure"
-      return true unless @record.validate_reconfigure
-    end
-    false
-  end
-
   # Determine if a button should be hidden
   def build_toolbar_hide_button(id)
     return false if id.start_with?('history_')
@@ -816,8 +808,6 @@ class ApplicationHelper::ToolbarBuilder
       when "server_delete", "role_start", "role_suspend", "promote_server", "demote_server"
         return true
       end
-    when "Service", "ServiceOrchestration"
-      return build_toolbar_hide_button_service(id)
     when "ServiceTemplate"
       case id
       when "ab_group_new", "ab_button_new"
