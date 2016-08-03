@@ -24,7 +24,7 @@ class ApiController
 
     def log_api_request
       @parameter_filter ||= ActionDispatch::Http::ParameterFilter.new(Rails.application.config.filter_parameters)
-      log_request("Request", @req)
+      log_request("Request", @req.to_hash)
       log_request("Parameters", @parameter_filter.filter(params))
       log_request_body
     end
