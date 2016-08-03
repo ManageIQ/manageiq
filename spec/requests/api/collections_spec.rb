@@ -229,12 +229,6 @@ describe ApiController do
       test_collection_query(:vms, vms_url, Vm, :guid)
     end
 
-    it 'query Virtual Templates' do
-      FactoryGirl.create(:virtual_template, :ems_id => ems.id)
-      test_collection_query(:virtual_templates,
-                            virtual_templates_url, ManageIQ::Providers::CloudManager::VirtualTemplate)
-    end
-
     it "query Zones" do
       FactoryGirl.create(:zone, :name => "api zone")
       test_collection_query(:zones, zones_url, Zone)
