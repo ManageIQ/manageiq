@@ -685,7 +685,7 @@ describe MiqExpression do
 
     it "raises error if expression contains ruby script" do
       exp = MiqExpression.new("RUBY" => {"field" => "Host-name", "value" => "puts 'Hello world!'"})
-      expect { exp.to_ruby }.to raise_error(/Ruby scripts in expressions are no longer supported/)
+      expect { exp.to_ruby }.to raise_error(/operator 'RUBY' is not supported/)
     end
 
     it "tests numeric set expressions" do

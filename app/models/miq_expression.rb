@@ -497,8 +497,6 @@ class MiqExpression
       clause = operands2rubyvalue(operator, exp[operator], context_type)
     when "value exists"
       clause = operands2rubyvalue(operator, exp[operator], context_type)
-    when "ruby"
-      raise _("Ruby scripts in expressions are no longer supported. Please use the regular expression feature of conditions instead.")
     when "is"
       col_name = exp[operator]["field"]
       col_ruby, dummy = operands2rubyvalue(operator, {"field" => col_name}, context_type)
