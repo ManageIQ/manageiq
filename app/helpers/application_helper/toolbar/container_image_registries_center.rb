@@ -25,7 +25,7 @@ class ApplicationHelper::Toolbar::ContainerImageRegistriesCenter < ApplicationHe
           N_('Remove selected Image Registries from the VMDB'),
           N_('Remove Image Registries from the VMDB'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected Image Registries and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Image Registries?"),
+          :confirm   => N_("Warning: The selected Image Registries and ALL of their components will be permanently removed!"),
           :onwhen    => "1+"),
       ]
     ),
