@@ -1,5 +1,5 @@
 - tooltipOptions = {"tooltip-placement" => "bottom", "tooltip" => "{{legendTooltip}}"}
-.container_topology{'data-ng-app' => "topologyApp", 'ng-controller' => "containerTopologyController"}
+.container_topology{'ng-controller' => "containerTopologyController"}
   .legend
     %label#selected
     %div{'ng-if' => "kinds"}
@@ -75,3 +75,6 @@
     %strong
       = _("Click on the legend to show/hide entities, and double click/right click the entities in the graph to navigate to their summary pages.")
   %kubernetes-topology-graph{:items => "items", :relations => "relations", :kinds => "kinds"}
+
+:javascript
+  miq_bootstrap('.container_topology', 'topologyApp');
