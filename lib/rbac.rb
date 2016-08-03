@@ -5,6 +5,10 @@ module Rbac
     Filterer.search(*args)
   end
 
+  def self.filtered_object(*args)
+    Filterer.filtered_object(*args)
+  end
+
   def self.filtered(*args)
     Filterer.filtered(*args)
   end

@@ -2217,12 +2217,13 @@ class ApplicationController < ActionController::Base
   def find_by_id_filtered(db, id)
     raise _("Invalid input") unless is_integer?(id)
 
-    unless db.where(:id => from_cid(id)).exists?
+    db_obj = db.find_by(:id => from_cid(id))
+    if db_obj.nil?
       msg = _("Selected %{model_name} no longer exists") % {:model_name => ui_lookup(:model => db.to_s)}
       raise msg
     end
 
-    Rbac.filtered(db, :conditions => ["#{db.table_name}.id = ?", id], :user => current_user).first ||
+    Rbac.filtered_object(db_obj, :user => current_user) ||
       raise(_("User '%{user_id}' is not authorized to access '%{model}' record id '%{record_id}'") %
               {:user_id   => current_userid,
                :record_id => id,

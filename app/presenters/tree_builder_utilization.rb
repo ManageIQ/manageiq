@@ -55,7 +55,8 @@ class TreeBuilderUtilization < TreeBuilderRegion
         objects += rbac_filtered_sorted_objects(f.vms_and_templates, "name")
       elsif f.name == "host"            # Don't count host folder children
       else                              # add in other folders
-        objects += Rbac.filtered([f], :match_via_descendants => VmOrTemplate)
+        f = Rbac.filtered_object(f, :match_via_descendants => VmOrTemplate)
+        objects << f if f
       end
     end
   end
@@ -69,7 +70,8 @@ class TreeBuilderUtilization < TreeBuilderRegion
         objects += rbac_filtered_sorted_objects(f.clusters, "name")
         objects += rbac_filtered_sorted_objects(f.hosts, "name")
       else                              # add in other folders
-        objects += Rbac.filtered([f])
+        f = Rbac.filtered_object(f)
+        objects << f if f
       end
     end
   end

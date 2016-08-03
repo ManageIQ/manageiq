@@ -971,7 +971,7 @@ describe Rbac::Filterer do
     end
   end
 
-  describe ".filter" do
+  describe ".filtered" do
     let(:vm_location_filter) do
       MiqExpression.new("=" => {"field" => "Vm-location", "value" => "good"})
     end
@@ -1013,6 +1013,18 @@ describe Rbac::Filterer do
     it "runs rbac on array target" do
       all_vms
       expect(described_class.filtered(all_vms, :class => Vm)).to match_array(all_vms)
+    end
+  end
+
+  describe ".filtered_object" do
+    it "with :user keeps vm" do
+      result = described_class.filtered_object(owned_vm, :user => owner_user)
+      expect(result).to eq(owned_vm)
+    end
+
+    it "with :user filters out vm" do
+      result = described_class.filtered_object(other_vm, :user => owner_user)
+      expect(result).to be_nil
     end
   end
 
