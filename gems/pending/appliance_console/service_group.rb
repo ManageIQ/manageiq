@@ -3,7 +3,7 @@ require "util/postgres_admin"
 
 module ApplianceConsole
   class ServiceGroup
-    SERVICES  = %w(evminit memcached miqtop evmserverd).freeze
+    SERVICES  = %w(evmserverd).freeze
 
     def initialize(hash = {})
       @postgresql = hash[:internal_postgresql]
@@ -29,7 +29,6 @@ module ApplianceConsole
     end
 
     def enable
-      enable_miqtop
       SERVICES.each { |s| run_service(s, "enable") }
       run_service(PostgresAdmin.service_name, "enable") if postgresql?
     end
@@ -47,10 +46,6 @@ module ApplianceConsole
     end
 
     private
-
-    def enable_miqtop
-      LinuxAdmin::Service.new("miqtop").enable
-    end
 
     def run_service(service, action)
       LinuxAdmin::Service.new(service).send(action)

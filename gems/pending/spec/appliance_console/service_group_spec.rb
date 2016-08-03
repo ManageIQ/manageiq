@@ -3,7 +3,7 @@ require "linux_admin"
 
 describe ApplianceConsole::ServiceGroup do
   let(:group)             { described_class.new }
-  let(:common_services)   { %w(evminit memcached miqtop evmserverd) }
+  let(:common_services)   { %w(evmserverd) }
 
   before do
     allow(PostgresAdmin).to receive_messages(:service_name => "postgresql")
@@ -27,7 +27,6 @@ describe ApplianceConsole::ServiceGroup do
     let(:group) { described_class.new(:internal_postgresql => false) }
 
     it "enables all but postgres" do
-      expect(group).to receive(:enable_miqtop)
       common_services.each do |service|
         expect_run_service(service, "enable")
       end
@@ -39,7 +38,6 @@ describe ApplianceConsole::ServiceGroup do
       let(:group) { described_class.new(:internal_postgresql => true) }
 
       it "enables all including postgres" do
-        expect(group).to receive(:enable_miqtop)
         common_services.each do |service|
           expect_run_service(service, "enable")
         end
@@ -111,16 +109,6 @@ describe ApplianceConsole::ServiceGroup do
 
         group.stop
       end
-    end
-  end
-
-  # this is private, but since we are stubbing it, make sure it works
-  context "#enable_miqtop" do
-    it "enables the service" do
-      service_double = double
-      expect(LinuxAdmin::Service).to receive(:new).with("miqtop").and_return(service_double)
-      expect(service_double).to receive(:enable)
-      group.send(:enable_miqtop)
     end
   end
 
