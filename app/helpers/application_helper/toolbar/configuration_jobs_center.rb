@@ -12,7 +12,7 @@ class ApplicationHelper::Toolbar::ConfigurationJobsCenter < ApplicationHelper::T
           N_('Remove selected Jobs from the VMDB'),
           N_('Remove Jobs from the VMDB'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected Jobs and ALL of their components will be permanently removed from the Virtual Management Database. Are you sure you want to remove the selected Jobs?"),
+          :confirm   => N_("Warning: The selected Jobs and ALL of their components will be permanently removed!"),
           :enabled   => false,
           :onwhen    => "1+"),
       ]
