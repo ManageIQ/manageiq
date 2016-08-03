@@ -9,8 +9,8 @@ class ApplicationHelper::Toolbar::ConfigurationJobsCenter < ApplicationHelper::T
         button(
           :configuration_job_delete,
           'pficon pficon-delete fa-lg',
-          N_('Remove selected Jobs from the VMDB'),
-          N_('Remove Jobs from the VMDB'),
+          N_('Remove selected Jobs'),
+          N_('Remove Jobs'),
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected Jobs and ALL of their components will be permanently removed!"),
           :enabled   => false,
