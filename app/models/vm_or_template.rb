@@ -1938,13 +1938,13 @@ class VmOrTemplate < ApplicationRecord
     {:available => true,   :message => nil}
   end
 
-  def validate_supported_check(message_prefix)
-    return {:available => false, :message => nil} if self.archived?
-    if self.orphaned?
-      return {:available => false,
-              :message   => "#{message_prefix} cannot be performed on orphaned #{self.class.model_suffix} VM."}
+  def check_feature_support(message_prefix)
+    if archived?
+      return [false, nil]
+    elsif orphaned?
+      return [false, _("#{message_prefix} cannot be performed on orphaned VM.")]
     end
-    {:available => true,   :message => nil}
+    [true, nil]
   end
 
   # this is verbose, helper for generating arel

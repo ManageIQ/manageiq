@@ -46,6 +46,7 @@ class Storage < ApplicationRecord
   include StorageMixin
   include AsyncDeleteMixin
   include AvailabilityMixin
+  include SupportsFeatureMixin
 
   virtual_column :v_used_space,                   :type => :integer
   virtual_column :v_used_space_percent_of_total,  :type => :integer
@@ -69,6 +70,12 @@ class Storage < ApplicationRecord
   virtual_column :count_of_vmdk_disk_files,       :type => :integer
 
   SUPPORTED_STORAGE_TYPES = %w( VMFS NFS FCP ISCSI GLUSTERFS )
+
+  supports :smartstate_analysis do
+    if ext_management_systems.blank? || !ext_management_system.class.supports_smartstate_analysis?
+      unsupported_reason_add(:smartstate_analysis, _("Smartstate Analysis cannot be performed on selected Datastore"))
+    end
+  end
 
   def to_s
     name
@@ -872,14 +879,12 @@ class Storage < ApplicationRecord
   end
 
   def self.batch_operation_supported?(operation, ids)
-    Storage.where(:id => ids).all? { |s| s.public_send("validate_#{operation}")[:available] }
-  end
-
-  def validate_smartstate_analysis
-    if ext_management_systems.blank? || !ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
-      {:available => false, :message => "Smartstate Analysis cannot be performed on selected Datastore"}
-    else
-      {:available => true, :message => nil}
+    Storage.where(:id => ids).all? do |s|
+      if s.respond_to?("supports_#{operation}?")
+        s.public_send("supports_#{operation}?")
+      else
+        s.public_send("validate_#{operation}")[:available]
+      end
     end
   end
 

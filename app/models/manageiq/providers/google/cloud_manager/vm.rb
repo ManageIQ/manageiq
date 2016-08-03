@@ -36,8 +36,4 @@ class ManageIQ::Providers::Google::CloudManager::Vm < ManageIQ::Providers::Cloud
       "unknown"
     end
   end
-
-  def validate_smartstate_analysis
-    validate_unsupported("Smartstate Analysis")
-  end
 end

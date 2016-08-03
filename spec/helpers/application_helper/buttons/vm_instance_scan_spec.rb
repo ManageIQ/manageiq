@@ -71,9 +71,9 @@ describe ApplicationHelper::Button::VmInstanceScan do
       before do
         @record = FactoryGirl.create(:vm_amazon, :vendor => "amazon")
         allow(@record).to receive(:has_active_proxy?).and_return(true)
-        allow(@record).to receive(:is_available?).with(:smartstate_analysis).and_return(false)
+        allow(@record).to receive(:supports_smartstate_analysis?).and_return(false)
         message = "xx smartstate_analysis message"
-        allow(@record).to receive(:is_available_now_error_message).with(:smartstate_analysis).and_return(message)
+        allow(@record).to receive(:unsupported_reason).with(:smartstate_analysis).and_return(message)
       end
 
       it "returns the smartstate_analysis error message" do

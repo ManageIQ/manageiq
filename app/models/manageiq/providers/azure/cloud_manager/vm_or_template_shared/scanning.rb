@@ -1,4 +1,15 @@
 module ManageIQ::Providers::Azure::CloudManager::VmOrTemplateShared::Scanning
+  extend ActiveSupport::Concern
+
+  included do
+    supports :smartstate_analysis do
+      feature_supported, reason = check_feature_support('smartstate_analysis')
+      unless feature_supported
+        unsupported_reason_add(:smartstate_analysis, reason)
+      end
+    end
+  end
+
   def perform_metadata_scan(ost)
     require 'MiqVm/miq_azure_vm'
 
@@ -44,9 +55,5 @@ module ManageIQ::Providers::Azure::CloudManager::VmOrTemplateShared::Scanning
 
   def requires_storage_for_scan?
     false
-  end
-
-  def validate_smartstate_analysis
-    validate_supported_check("Smartstate Analysis")
   end
 end

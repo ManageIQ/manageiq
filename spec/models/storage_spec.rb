@@ -415,15 +415,15 @@ describe Storage do
       @storage =  FactoryGirl.create(:storage)
     end
 
-    it "returns true for VMware Storage" do
+    it "returns true for VMware Storage when queried whether it supports smartstate analysis" do
       FactoryGirl.create(:host_vmware,
                          :ext_management_system => FactoryGirl.create(:ems_vmware),
                          :storages              => [@storage])
-      expect(@storage.is_available?(:smartstate_analysis)).to eq(true)
+      expect(@storage.supports_smartstate_analysis?).to eq(true)
     end
 
-    it "returns false for non-vmware Storage" do
-      expect(@storage.is_available?(:smartstate_analysis)).to_not eq(true)
+    it "returns false for non-vmware Storage when queried whether it supports smartstate analysis" do
+      expect(@storage.supports_smartstate_analysis?).to_not eq(true)
     end
   end
 
@@ -432,11 +432,11 @@ describe Storage do
       @storage =  FactoryGirl.create(:storage)
     end
 
-    it "when the storage supports smarstate analysis,  returns false" do
+    it "returns false when queried whether the storage supports smarstate analysis" do
       expect(Storage.batch_operation_supported?(:smartstate_analysis, [@storage.id])).to eq(false)
     end
 
-    it "when the storage perform smartstate analysis, returns true" do
+    it "returns true when queried whether the storage supports smarstate analysis" do
       FactoryGirl.create(:host_vmware,
                          :ext_management_system => FactoryGirl.create(:ems_vmware),
                          :storages              => [@storage])
@@ -481,15 +481,15 @@ describe Storage do
       @storage = FactoryGirl.create(:storage)
     end
 
-    it "returns true for VMware Storage" do
+    it "returns true for VMware Storage when queried whether it supports smartstate analysis" do
       FactoryGirl.create(:host_vmware,
                          :ext_management_system => FactoryGirl.create(:ems_vmware),
                          :storages              => [@storage])
-      expect(@storage.is_available?(:smartstate_analysis)).to eq(true)
+      expect(@storage.supports_smartstate_analysis?).to eq(true)
     end
 
-    it "returns false for non-vmware Storage" do
-      expect(@storage.is_available?(:smartstate_analysis)).to_not eq(true)
+    it "returns false for non-vmware Storage when queried whether it supports smartstate analysis" do
+      expect(@storage.supports_smartstate_analysis?).to_not eq(true)
     end
   end
   describe "#smartstate_analysis_count_for_host_id" do
