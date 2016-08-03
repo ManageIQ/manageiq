@@ -873,7 +873,11 @@ module ApplicationController::CiProcessing
                                          :headers    => @view.headers})
         end
       else
-        render :action => 'show'
+        if controller_name == "ems_cloud"
+          render :template => "shared/views/ems_common/show"
+        else
+          render :action => "show"
+        end
       end
     end
   end
@@ -894,7 +898,11 @@ module ApplicationController::CiProcessing
         page << javascript_pf_toolbar_reload('center_tb', c_tb)
       end
     else
-      render :action => 'show'
+      if controller_name == "ems_cloud"
+        render :template => "shared/views/ems_common/show"
+      else
+        render :action => "show"
+      end
     end
   end
 
