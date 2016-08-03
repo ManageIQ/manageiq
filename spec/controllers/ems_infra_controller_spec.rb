@@ -266,7 +266,7 @@ describe EmsInfraController do
       controller.instance_variable_set(:@breadcrumbs, [])
       get :show, :params => {:id => @ems.id, :display => 'storages'}
       expect(response.status).to eq(200)
-      expect(response).to render_template('ems_infra/show')
+      expect(response).to render_template('shared/views/ems_common/show')
       expect(assigns(:breadcrumbs)).to eq([{:name=>"Infrastructure Providers",
                                             :url=>"/ems_infra/show_list?page=&refresh=y"},
                                            {:name=>"#{@ems.name} (All Managed Datastores)",

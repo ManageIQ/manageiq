@@ -106,6 +106,8 @@ module EmsCommon
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
       replace_gtl_main_div
     end
+
+    render :template => "shared/views/ems_common/show" if params[:action] == 'show' && !performed?
   end
 
   def calculate_display_class(display_name, session_display)
