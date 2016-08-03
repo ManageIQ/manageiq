@@ -821,8 +821,6 @@ class ApplicationHelper::ToolbarBuilder
       case id
       when "vm_collect_running_processes"
         return true if (@record.retired || @record.current_state == "never") && !@record.is_available?(:collect_running_processes)
-      when "vm_guest_startup", "vm_start", "instance_start", "instance_resume"
-        return true unless @record.is_available?(:start)
       when "vm_guest_standby"
         return true unless @record.is_available?(:standby_guest)
       when "vm_guest_shutdown", "instance_guest_shutdown"
@@ -831,16 +829,6 @@ class ApplicationHelper::ToolbarBuilder
         return true unless @record.is_available?(:reboot_guest)
       when "vm_reconfigure"
         return true unless @record.reconfigurable?
-      when "instance_stop"
-        return true unless @record.is_available?(:stop)
-      when "vm_suspend", "instance_suspend"
-        return true unless @record.is_available?(:suspend)
-      when "instance_shelve"
-        return true unless @record.is_available?(:shelve)
-      when "instance_shelve_offload"
-        return true unless @record.is_available?(:shelve_offload)
-      when "instance_pause"
-        return true unless @record.is_available?(:pause)
       when "instance_terminate"
         return true unless @record.is_available?(:terminate)
       when "vm_policy_sim", "vm_protect"
@@ -1263,16 +1251,12 @@ class ApplicationHelper::ToolbarBuilder
         if @record.current_state != "on"
           return N_("The web-based VNC console is not available because the VM is not powered on")
         end
-      when "vm_guest_startup", "vm_start"
-        return @record.is_available_now_error_message(:start) if @record.is_available_now_error_message(:start)
       when "vm_guest_standby"
         return @record.is_available_now_error_message(:standby_guest) if @record.is_available_now_error_message(:standby_guest)
       when "vm_guest_shutdown"
         return @record.is_available_now_error_message(:shutdown_guest) if @record.is_available_now_error_message(:shutdown_guest)
       when "vm_guest_restart"
         return @record.is_available_now_error_message(:reboot_guest) if @record.is_available_now_error_message(:reboot_guest)
-      when "vm_suspend"
-        return @record.is_available_now_error_message(:suspend) if @record.is_available_now_error_message(:suspend)
       when "instance_retire", "instance_retire_now"
         return N_("Instance is already retired") if @record.retired
       when "vm_timeline"
