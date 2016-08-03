@@ -1625,6 +1625,7 @@ Vmdb::Application.routes.draw do
         alert_profile_edit
         alert_profile_field_changed
         button
+        clear_search_text
         condition_edit
         condition_field_changed
         event_edit

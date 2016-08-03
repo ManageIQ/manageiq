@@ -711,6 +711,11 @@ class MiqPolicyController < ApplicationController
     render :json => presenter.for_render
   end
 
+  # Clear out search text when clear when requested
+  def clear_search_text
+    @search_text = params[:search_text] = nil
+  end
+
   def send_button_changes
     if @edit
       @changed = (@edit[:new] != @edit[:current])
