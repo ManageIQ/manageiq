@@ -947,14 +947,17 @@ class MiqExpression
       field = ref ? "<count ref=#{ref}>#{count}</count>" : "<count>#{count}</count>"
       [field, ops["value"]]
     elsif ops["regkey"]
-      if ["like", "not like", "starts with", "ends with", "includes", "regular expression matches", "regular expression does not match"].include?(operator)
-        ["<registry>#{ops["regkey"].strip} : #{ops["regval"]}</registry>", ops["value"]]
-      elsif operator == "key exists"
+      if operator == "key exists"
         "<registry key_exists=1, type=boolean>#{ops["regkey"].strip}</registry>  == 'true'"
       elsif operator == "value exists"
         "<registry value_exists=1, type=boolean>#{ops["regkey"].strip} : #{ops["regval"]}</registry>  == 'true'"
       else
-        ["<registry>#{ops["regkey"].strip} : #{ops["regval"]}</registry>", quote(ops["value"], "string")]
+        fld = "<registry>#{ops["regkey"].strip} : #{ops["regval"]}</registry>"
+        if ["like", "not like", "starts with", "ends with", "includes", "regular expression matches", "regular expression does not match"].include?(operator)
+          [fld, ops["value"]]
+        else
+          [fld, quote(ops["value"], "string")]
+        end
       end
     end
   end
