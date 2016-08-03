@@ -1629,6 +1629,12 @@ function miqHideSearchClearButton() {
   $(".search-pf .has-clear .clear").click(function () {
     $(this).prev('.form-control').val('').focus();
     $(this).hide();
+    // Clear @search_text
+    // miqJqueryRequest(miqPassFields(explr_url));
+    // miqJqueryRequest(miqPassFields(explr_url, {search_text: value}));
+    var url = "/" + ManageIQ.controller + "/clear_search_text";
+    console.log(url);
+    miqJqueryRequest(url);
   });
 }
 

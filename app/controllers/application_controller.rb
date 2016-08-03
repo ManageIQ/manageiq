@@ -1417,6 +1417,11 @@ class ApplicationController < ActionController::Base
     gtl_type
   end
 
+# Clear out search text when clear when requested
+def clear_search_text
+  @search_text = params[:search_text] = nil
+end
+
   def get_view_process_search_text(view)
     # Check for new search by name text entered
     if params[:search] &&

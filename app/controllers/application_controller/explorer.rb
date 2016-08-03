@@ -133,6 +133,11 @@ module ApplicationController::Explorer
     tree_select
   end
 
+# Clear out search text when clear when requested
+def x_clear_search_text
+  @search_text = params[:search_text] = nil
+end
+
   private ############################
 
   # Add an item to the tree history array
