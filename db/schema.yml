@@ -4551,7 +4551,6 @@ miq_ae_namespaces:
 - display_name
 - updated_by
 - updated_by_user_id
-- system
 - priority
 - enabled
 - tenant_id
@@ -4562,6 +4561,7 @@ miq_ae_namespaces:
 - ref
 - ref_type
 - last_import_on
+- source
 miq_ae_values:
 - id
 - instance_id
