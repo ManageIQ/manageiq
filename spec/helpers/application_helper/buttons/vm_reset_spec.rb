@@ -1,32 +1,23 @@
 require "spec_helper"
 
-describe ApplicationHelper::Button::VmStop do
+describe ApplicationHelper::Button::VmReset do
   describe '#skip?' do
-    context "when record is stopable" do
+    context "when record is resetable" do
       before do
         @record = FactoryGirl.create(:vm_vmware)
-        allow(@record).to receive(:is_available?).with(:stop).and_return(true)
+        allow(@record).to receive(:is_available?).with(:reset).and_return(true)
       end
 
       it_behaves_like "will not be skipped for this record"
     end
 
-    context "when record is not stopable" do
+    context "when record is not resetable" do
       before do
         @record = FactoryGirl.create(:vm_vmware)
-        allow(@record).to receive(:is_available?).with(:stop).and_return(false)
+        allow(@record).to receive(:is_available?).with(:reset).and_return(false)
       end
 
       it_behaves_like "will be skipped for this record"
-    end
-
-    context "when record has no error message" do
-      before do
-        @record = FactoryGirl.create(:vm_vmware)
-        allow(@record).to receive(:is_available_now_error_message).and_return(false)
-      end
-
-      it_behaves_like "will not be skipped for this record"
     end
   end
 
@@ -34,8 +25,8 @@ describe ApplicationHelper::Button::VmStop do
     context "when record has an error message" do
       before do
         @record = FactoryGirl.create(:vm_vmware)
-        message = "xx stop message"
-        allow(@record).to receive(:is_available_now_error_message).with(:stop).and_return(message)
+        message = "xx reset message"
+        allow(@record).to receive(:is_available_now_error_message).with(:reset).and_return(message)
       end
 
       it "disables the button" do

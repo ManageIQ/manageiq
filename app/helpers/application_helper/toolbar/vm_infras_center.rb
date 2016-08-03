@@ -173,7 +173,8 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           N_('Migrate selected items'),
           :url_parms => "main_div",
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => "1+",
+          :klass     => ApplicationHelper::Button::BasicImage),
         button(
           :vm_retire,
           'fa fa-clock-o fa-lg',
@@ -181,7 +182,8 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           N_('Set Retirement Dates'),
           :url_parms => "main_div",
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => "1+",
+          :klass     => ApplicationHelper::Button::BasicImage),
         button(
           :vm_retire_now,
           'fa fa-clock-o fa-lg',
@@ -190,7 +192,8 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           :url_parms => "main_div",
           :confirm   => N_("Retire the selected items?"),
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => "1+",
+          :klass     => ApplicationHelper::Button::BasicImage),
       ]
     ),
   ])

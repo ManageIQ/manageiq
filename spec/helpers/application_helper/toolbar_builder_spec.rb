@@ -373,9 +373,6 @@ describe ApplicationHelper do
      "vm_protect",
      "vm_start",
      "vm_suspend",
-     "vm_reset",
-     "vm_retire",
-     "vm_retire_now",
      "vm_snapshot_add",
      "vm_snapshot_delete",
      "vm_snapshot_delete_all",
@@ -1149,23 +1146,6 @@ describe ApplicationHelper do
         allow(user).to receive(:role_allows?).and_return(true)
       end
 
-      %w(vm_migrate).each do |id|
-        context "and id = #{id}" do
-          before { @id = id }
-
-          it "and vendor is redhat" do
-            @record = FactoryGirl.create(:vm_redhat)
-            expect(subject).to be_truthy
-          end
-
-          it "and vendor is not redhat" do
-            @record = FactoryGirl.create(:vm_vmware)
-            allow(@record).to receive(:archived?).and_return(false)
-            expect(subject).to be_falsey
-          end
-        end
-      end
-
       context "and id = vm_reconfigure" do
         before do
           @id = "vm_reconfigure"
@@ -1295,22 +1275,6 @@ describe ApplicationHelper do
         end
 
         it "and @record.is_available?(:reboot_guest)" do
-          expect(subject).to be_falsey
-        end
-      end
-
-      context "and id = vm_reset" do
-        before do
-          @id = "vm_reset"
-          allow(@record).to receive(:is_available?).with(:reset).and_return(true)
-        end
-
-        it "and !@record.is_available?(:reset)" do
-          allow(@record).to receive(:is_available?).with(:reset).and_return(false)
-          expect(subject).to be_truthy
-        end
-
-        it "and @record.is_available?(:reset)" do
           expect(subject).to be_falsey
         end
       end
@@ -1696,38 +1660,6 @@ describe ApplicationHelper do
       it "when with view_#{g}" do
         @gtl_type = g
         expect(build_toolbar_disable_button("view_#{g}")).to be_truthy
-      end
-    end
-
-    it "hides Lifecycle options in archived VMs list" do
-      allow(ApplicationHelper).to receive(:get_record_cls).and_return(nil)
-      @sb = {:trees => {:vandt_tree => {:active_node => "xx-arch"}}}
-      %w(vm_migrate).each do |tb_button|
-        expect(build_toolbar_hide_button(tb_button)).to be_truthy
-      end
-    end
-
-    it "hides Lifecycle options in orphaned VMs list" do
-      allow(ApplicationHelper).to receive(:get_record_cls).and_return(nil)
-      @sb = {:trees => {:vandt_tree => {:active_node => "xx-orph"}}}
-      %w(vm_migrate).each do |tb_button|
-        expect(build_toolbar_hide_button(tb_button)).to be_truthy
-      end
-    end
-
-    it "hides Lifecycle options for archived VMs" do
-      @record = FactoryGirl.create(:vm_microsoft)
-      allow(@record).to receive(:archived?).and_return(true)
-      %w(vm_migrate).each do |tb_button|
-        expect(build_toolbar_hide_button(tb_button)).to be_truthy
-      end
-    end
-
-    it "hides Lifecycle options for orphaned VMs" do
-      @record = FactoryGirl.create(:vm_microsoft)
-      allow(@record).to receive(:orphaned?).and_return(true)
-      %w(vm_migrate).each do |tb_button|
-        expect(build_toolbar_hide_button(tb_button)).to be_truthy
       end
     end
 
@@ -2342,15 +2274,6 @@ describe ApplicationHelper do
         it_behaves_like 'default case'
       end
 
-      context "and id = vm_reset" do
-        before do
-          @id = "vm_reset"
-          allow(@record).to receive(:is_available_now_error_message).and_return(false)
-        end
-        it_behaves_like 'record with error message', 'reset'
-        it_behaves_like 'default case'
-      end
-
       context "and id = vm_suspend" do
         before do
           @id = "vm_suspend"
@@ -2358,17 +2281,6 @@ describe ApplicationHelper do
         end
         it_behaves_like 'record with error message', 'suspend'
         it_behaves_like 'default case'
-      end
-
-      ["vm_retire", "vm_retire_now"].each do |button_id|
-        context "and id = #{button_id}" do
-          before { @id = button_id }
-          it "when VM is already retired" do
-            allow(@record).to receive_messages(:retired => true)
-            expect(subject).to eq("VM is already retired")
-          end
-          it_behaves_like 'default case'
-        end
       end
 
       context "and id = storage_scan" do
@@ -2501,13 +2413,6 @@ describe ApplicationHelper do
     end
 
     context "Disable Retire button for already retired VMs and Instances" do
-      it "button vm_retire_now" do
-        @record = FactoryGirl.create(:vm_redhat, :retired => true)
-        res = build_toolbar_disable_button("vm_retire_now")
-        expect(res).to be_truthy
-        expect(res).to include("already retired")
-      end
-
       it "button instance_retire_now" do
         @record = FactoryGirl.create(:vm_amazon, :retired => true)
         res = build_toolbar_disable_button("instance_retire_now")

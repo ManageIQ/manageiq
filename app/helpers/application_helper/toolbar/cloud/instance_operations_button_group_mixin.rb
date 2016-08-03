@@ -70,7 +70,8 @@ module ApplicationHelper::Toolbar::Cloud::InstanceOperationsButtonGroupMixin
             N_('Hard Reboot the Guest OS on this Instance'),
             N_('Hard Reboot'),
             :image   => "guest_restart",
-            :confirm => N_("Hard Reboot the Guest OS on this Instance?")),
+            :confirm => N_("Hard Reboot the Guest OS on this Instance?"),
+            :klass   => ApplicationHelper::Button::InstanceReset),
           included_class.button(
             :instance_terminate,
             nil,

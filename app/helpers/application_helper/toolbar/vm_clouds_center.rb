@@ -267,7 +267,8 @@ class ApplicationHelper::Toolbar::VmCloudsCenter < ApplicationHelper::Toolbar::B
           :url_parms => "main_div",
           :confirm   => N_("Hard Reboot the Guest OS on the selected items?"),
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => "1+",
+          :klass     => ApplicationHelper::Button::InstanceReset),
         button(
           :instance_terminate,
           nil,
