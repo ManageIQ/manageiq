@@ -1396,9 +1396,7 @@ class MiqExpression
     case col_type.to_s.downcase.to_sym
     when :string
       return STRING_OPERATORS
-    when :integer, :float, :fixnum
-      return NUM_OPERATORS
-    when :count
+    when :integer, :float, :fixnum, :count
       return NUM_OPERATORS
     when :numeric_set, :string_set
       return SET_OPERATORS
