@@ -1,5 +1,4 @@
 require "appliance_console/database_configuration"
-require "appliance_console/service_group"
 require "pathname"
 require "util/postgres_admin"
 require "pg"
