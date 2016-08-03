@@ -828,16 +828,12 @@ class ApplicationHelper::ToolbarBuilder
       end
     when "Vm"
       case id
-      when "vm_collect_running_processes"
-        return true if (@record.retired || @record.current_state == "never") && !@record.is_available?(:collect_running_processes)
       when "vm_guest_standby"
         return true unless @record.is_available?(:standby_guest)
       when "vm_guest_shutdown", "instance_guest_shutdown"
         return true unless @record.is_available?(:shutdown_guest)
       when "vm_reconfigure"
         return true unless @record.reconfigurable?
-      when "vm_policy_sim", "vm_protect"
-        return true if @record.host && @record.host.vmm_product.to_s.downcase == "workstation"
       when "perf_refresh", "perf_reload", "vm_perf_refresh", "vm_perf_reload"
         return true unless @perf_options[:typ] == "realtime"
       end
@@ -1233,8 +1229,6 @@ class ApplicationHelper::ToolbarBuilder
         unless @record.has_compliance_policies?
           return N_("No Compliance Policies assigned to this virtual machine")
         end
-      when "vm_collect_running_processes"
-        return @record.is_available_now_error_message(:collect_running_processes) if @record.is_available_now_error_message(:collect_running_processes)
       when "vm_console", "vm_vmrc_console"
         if !is_browser?(%w(explorer firefox mozilla chrome)) ||
            !is_browser_os?(%w(windows linux))
