@@ -38,7 +38,7 @@ module ApplianceConsole
     end
 
     def start
-      SERVICES.each { |s| run_detached_service(s, "start") }
+      SERVICES.each { |s| run_service(s, "start") }
     end
 
     def stop
@@ -49,11 +49,6 @@ module ApplianceConsole
 
     def run_service(service, action)
       LinuxAdmin::Service.new(service).send(action)
-    end
-
-    # TODO: Fix LinuxAdmin::Service to detach.
-    def run_detached_service(service, action)
-      Process.detach(Kernel.spawn("/sbin/service #{service} #{action}", [:out, :err] => ["/dev/null", "w"]))
     end
   end
 end

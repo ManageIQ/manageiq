@@ -53,7 +53,7 @@ describe ApplianceConsole::ServiceGroup do
 
     it "starts all but postgres" do
       common_services.each do |service|
-        expect_run_detached_service(service, "start")
+        expect_run_service(service, "start")
       end
 
       group.start
@@ -64,7 +64,7 @@ describe ApplianceConsole::ServiceGroup do
 
       it "starts all including postgres" do
         common_services.each do |service|
-          expect_run_detached_service(service, "start")
+          expect_run_service(service, "start")
         end
 
         group.start
@@ -123,26 +123,10 @@ describe ApplianceConsole::ServiceGroup do
   end
 
   # this is private, but since we are stubbing it, make sure it works
-  context "#detached_service" do
-    it "invokes Spawn" do
-      spwn = double
-      expect(Kernel).to receive(:spawn).with(
-        "/sbin/service service start", [:out, :err] => ["/dev/null", "w"]
-      ).and_return(spwn)
-      expect(Process).to receive(:detach).with(spwn)
-
-      group.send(:run_detached_service, "service", "start")
-    end
-  end
-
   private
 
   def expect_no_service_calls
     expect(group).not_to receive(:run_service)
-  end
-
-  def expect_run_detached_service(service, command)
-    expect(group).to receive(:run_detached_service).with(service, command)
   end
 
   def expect_run_service(service, command)
