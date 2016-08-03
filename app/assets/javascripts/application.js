@@ -81,5 +81,5 @@
 //= require miq_explorer
 //= require qs
 // Bower packages
-//= require hawkular-ui-components/dist/js/hawkular-ui-components
+//= require ui-components/dist/js/ui-components
 //= require rx-angular/dist/rx.angular
