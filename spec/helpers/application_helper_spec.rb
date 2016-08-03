@@ -1701,4 +1701,14 @@ describe ApplicationHelper do
       ).to eq('host_services')
     end
   end
+
+  describe "#multiple_relationship_link" do
+    context "When record is a Container Provider" do
+      it "Uses polymorphic_path for the show action" do
+        ems = FactoryGirl.create(:ems_kubernetes)
+        ContainerProject.create(:ext_management_system => ems, :name => "Test Project")
+        expect(helper.multiple_relationship_link(ems, "container_project")).to eq("<li><a title=\"Show Projects\" href=\"/ems_container/#{ems.id}?display=container_projects\">Projects (1)</a></li>")
+      end
+    end
+  end
 end
