@@ -57,10 +57,10 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
         button(
           :host_delete,
           'pficon pficon-delete fa-lg',
-          N_('Remove Selected items from the VMDB'),
-          N_('Remove items from the VMDB'),
+          N_('Remove Selected items'),
+          N_('Remove items'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected items and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected items?"),
+          :confirm   => N_("Warning: The selected items and ALL of their components will be permanently removed!?"),
           :enabled   => false,
           :onwhen    => "1+"),
       ]
