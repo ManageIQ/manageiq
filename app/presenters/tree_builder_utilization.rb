@@ -4,7 +4,21 @@ class TreeBuilderUtilization < TreeBuilderRegion
   has_kids_for EmsFolder, [:x_get_tree_folder_kids, :type]
   has_kids_for EmsCluster, [:x_get_tree_cluster_kids]
 
+  def initialize(name, type, sandbox, build = true, selected_node)
+    @selected_node = selected_node
+    super(name, type, sandbox, build)
+  end
+
   private
+
+  def set_locals_for_render
+    locals = super
+    locals.merge!(:id_prefix                   => @name == :utilization_tree ? 'utilization_' : 'bottlenecks_',
+                  :onclick                     => "miqOnClickSelectOptimizeTreeNode",
+                  :select_node                 => @selected_node.to_s,
+                  :open_close_all_on_dbl_click => true,
+                  :tree_state                  => true)
+  end
 
   def root_options
     if MiqEnterprise.my_enterprise.is_enterprise?
