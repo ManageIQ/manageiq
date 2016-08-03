@@ -9,7 +9,7 @@ class ApplicationHelper::Toolbar::ConfigurationJobCenter < ApplicationHelper::To
         button(
           :configuration_job_delete,
           'pficon pficon-delete fa-lg',
-          t = N_('Remove this Job from the VMDB'),
+          t = N_('Remove this Job'),
           t,
           :url_parms => "&refresh=y",
           :confirm   => N_("Warning: This Job and ALL of its components will be permanently removed!")),
