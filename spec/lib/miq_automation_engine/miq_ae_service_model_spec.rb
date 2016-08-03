@@ -77,6 +77,18 @@ module MiqAeServiceModelSpec
         expect(@ae_vm.tag_unassign("#{category.name}/non_exisiting_tag")).to be_truthy
       end
     end
+
+    describe "#taggable" do
+      it "Vm model is taggable" do
+        expect(@ae_vm.taggable?).to be_truthy
+      end
+
+      it "Lan model is not taggable" do
+        lan = FactoryGirl.create(:lan)
+        lan_provider = MiqAeMethodService::MiqAeServiceLan.new(lan.id)
+        expect(lan_provider.taggable?).to be_falsey
+      end
+    end
   end
 
   describe MiqAeMethodService::MiqAeServiceMiqAeDomain do

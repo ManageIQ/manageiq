@@ -230,25 +230,41 @@ module MiqAeMethodService
     end
 
     def tagged_with?(category, name)
-      object_send(:is_tagged_with?, name.to_s, :ns => "/managed/#{category}")
+      if taggable?
+        object_send(:is_tagged_with?, name.to_s, :ns => "/managed/#{category}")
+      else
+        raise MiqAeException::UntaggableModel, "Model #{self.class} doesn't support tagging!"
+      end
     end
 
     def tags(category = nil)
-      ns = category.nil? ? "/managed" : "/managed/#{category}"
-      object_send(:tag_list, :ns => ns).split
+      if taggable?
+        ns = category.nil? ? "/managed" : "/managed/#{category}"
+        object_send(:tag_list, :ns => ns).split
+      else
+        raise MiqAeException::UntaggableModel, "Model #{self.class} doesn't support tagging!"
+      end
     end
 
     def tag_assign(tag)
-      ar_method do
-        Classification.classify_by_tag(@object, "/managed/#{tag}")
-        true
+      if taggable?
+        ar_method do
+          Classification.classify_by_tag(@object, "/managed/#{tag}")
+          true
+        end
+      else
+        raise MiqAeException::UntaggableModel, "Model #{self.class} doesn't support tagging!"
       end
     end
 
     def tag_unassign(tag)
-      ar_method do
-        Classification.unclassify_by_tag(@object, "/managed/#{tag}")
-        true
+      if taggable?
+        ar_method do
+          Classification.unclassify_by_tag(@object, "/managed/#{tag}")
+          true
+        end
+      else
+        raise MiqAeException::UntaggableModel, "Model #{self.class} doesn't support tagging!"
       end
     end
 
@@ -290,6 +306,14 @@ module MiqAeMethodService
 
     def ar_method(&block)
       self.class.ar_method(&block)
+    end
+
+    def taggable?
+      self.class.taggable?
+    end
+
+    def self.taggable?
+      model.respond_to?(:tags)
     end
   end
 end
