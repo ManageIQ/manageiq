@@ -72,4 +72,13 @@ class ApplicationHelper::Toolbar::ContainerNodeCenter < ApplicationHelper::Toolb
       ]
     ),
   ])
+  button_group('container_cockpit_button_group', [
+    button(
+      :vm_cockpit,
+      nil,
+      N_('Open a new browser window with Cockpit for this Node.  This requires that Cockpit is pre-configured on the Node.'),
+      nil,
+      :image => "cockpit",
+      :url   => "launch_cockpit"),
+  ])
 end
