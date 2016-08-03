@@ -1363,7 +1363,7 @@ class MiqExpression
     return model, parts, col
   end
 
-  NUM_OPERATORS     = ["=", "!=", "<", "<=", ">=", ">"]
+  NUM_OPERATORS     = ["=", "!=", "<", "<=", ">=", ">"].freeze
   STRING_OPERATORS  = ["=",
                        "STARTS WITH",
                        "ENDS WITH",
@@ -1409,7 +1409,7 @@ class MiqExpression
     end
   end
 
-  STYLE_OPERATORS_EXCLUDES = ["REGULAR EXPRESSION MATCHES", "REGULAR EXPRESSION DOES NOT MATCH", "FROM"]
+  STYLE_OPERATORS_EXCLUDES = ["REGULAR EXPRESSION MATCHES", "REGULAR EXPRESSION DOES NOT MATCH", "FROM"].freeze
   def self.get_col_style_operators(field)
     result = get_col_operators(field) - STYLE_OPERATORS_EXCLUDES
   end
