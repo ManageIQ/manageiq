@@ -2001,12 +2001,12 @@ describe MiqExpression do
 
     it "returns list of available operations for field type 'integer'" do
       @field = "ManageIQ::Providers::InfraManager::Vm-cpu_limit"
-      expect(subject).to contain_exactly("=", "!=", "<", "<=", ">=", ">", "RUBY")
+      expect(subject).to contain_exactly("=", "!=", "<", "<=", ">=", ">")
     end
 
     it "returns list of available operations for field type 'float'" do
       @field = "Storage-v_provisioned_percent_of_total"
-      expect(subject).to contain_exactly("=", "!=", "<", "<=", ">=", ">", "RUBY")
+      expect(subject).to contain_exactly("=", "!=", "<", "<=", ">=", ">")
     end
 
 =begin

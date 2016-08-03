@@ -316,10 +316,6 @@ class MiqExpression
       :short_name => _("Regular Expression"),
       :title      => _("Enter a Regular Expression")
     },
-    :ruby        => {
-      :short_name => _("Ruby Script"),
-      :title      => _("Enter one or more lines of Ruby Script")
-    },
     :string      => {
       :short_name => _("Text String"),
       :title      => _("Enter a Text String")
@@ -411,10 +407,6 @@ class MiqExpression
       clause = "KEY EXISTS #{exp[operator]['regkey']}"
     when "value exists"
       clause = "VALUE EXISTS #{exp[operator]['regkey']} : #{exp[operator]['regval']}"
-    when "ruby"
-      operands = operands2humanvalue(exp[operator], options)
-      operands[1] = "<RUBY Expression>"
-      clause = operands.join(" #{normalize_operator(operator)} \n")
     when "is"
       operands = operands2humanvalue(exp[operator], options)
       clause = "#{operands.first} #{operator} #{operands.last}"
@@ -638,7 +630,7 @@ class MiqExpression
         # TODO: Support includes operator for sub-sub-tables
         return false
       end
-    when "find", "regular expression matches", "regular expression does not match", "key exists", "value exists", "ruby"
+    when "find", "regular expression matches", "regular expression does not match", "key exists", "value exists"
       return false
     else
       # => false if operand is a tag
@@ -950,11 +942,10 @@ class MiqExpression
           ref, val = value2tag(ops["field"])
         end
         col_type = get_col_type(ops["field"]) || "string"
-        col_type = "raw" if operator == "ruby"
         fld = val
         fld = ref ? "<value ref=#{ref}, type=#{col_type}>#{val}</value>" : "<value type=#{col_type}>#{val}</value>"
         ret.push(fld)
-        if ["like", "not like", "starts with", "ends with", "includes", "regular expression matches", "regular expression does not match", "ruby"].include?(operator)
+        if ["like", "not like", "starts with", "ends with", "includes", "regular expression matches", "regular expression does not match"].include?(operator)
           ret.push(ops["value"])
         else
           ret.push(quote(ops["value"], col_type.to_s))
@@ -1374,7 +1365,7 @@ class MiqExpression
     return model, parts, col
   end
 
-  NUM_OPERATORS     = ["=", "!=", "<", "<=", ">=", ">", "RUBY"]
+  NUM_OPERATORS     = ["=", "!=", "<", "<=", ">=", ">"]
   STRING_OPERATORS  = ["=",
                        "STARTS WITH",
                        "ENDS WITH",
@@ -1408,7 +1399,7 @@ class MiqExpression
     when :integer, :float, :fixnum
       return NUM_OPERATORS
     when :count
-      return NUM_OPERATORS - ["RUBY"]
+      return NUM_OPERATORS
     when :numeric_set, :string_set
       return SET_OPERATORS
     when :regkey
@@ -1422,7 +1413,7 @@ class MiqExpression
     end
   end
 
-  STYLE_OPERATORS_EXCLUDES = ["RUBY", "REGULAR EXPRESSION MATCHES", "REGULAR EXPRESSION DOES NOT MATCH", "FROM"]
+  STYLE_OPERATORS_EXCLUDES = ["REGULAR EXPRESSION MATCHES", "REGULAR EXPRESSION DOES NOT MATCH", "FROM"]
   def self.get_col_style_operators(field)
     result = get_col_operators(field) - STYLE_OPERATORS_EXCLUDES
   end
@@ -1451,8 +1442,6 @@ class MiqExpression
     value = value.to_s unless value.kind_of?(Array)
 
     dt = case operator.to_s.downcase
-         when "ruby" # TODO
-           :ruby
          when "regular expression matches", "regular expression does not match" # TODO
            :regexp
          else
@@ -1510,9 +1499,6 @@ class MiqExpression
         return _("Regular expression '%{value}' is invalid, '%{error_message}'") % {:value         => value,
                                                                                     :error_message => err.message}
       end
-      return false
-    when :ruby
-      return _("Ruby Script must not be blank") if value.blank?
       return false
     else
       return false
