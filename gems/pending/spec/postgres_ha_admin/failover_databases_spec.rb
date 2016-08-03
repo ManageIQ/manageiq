@@ -21,10 +21,9 @@ describe PostgresHaAdmin::FailoverDatabases do
   around(:each) do |example|
     begin
       connection.exec("START TRANSACTION")
-      connection.exec("CREATE SCHEMA repmgr_miq")
 
       connection.exec(<<-SQL)
-        CREATE TABLE repmgr_miq.repl_nodes (
+        CREATE TABLE #{described_class::TABLE_NAME} (
           type text NOT NULL,
           conninfo text NOT NULL,
           active boolean DEFAULT true NOT NULL
@@ -33,7 +32,7 @@ describe PostgresHaAdmin::FailoverDatabases do
 
       connection.exec(<<-SQL)
         INSERT INTO
-          repmgr_miq.repl_nodes(type, conninfo, active)
+          #{described_class::TABLE_NAME}(type, conninfo, active)
         VALUES
           ('master', 'host=1.1.1.1 user=root dbname=vmdb_test', 'true'),
           ('standby', 'host=2.2.2.2 user=root dbname=vmdb_test', 'true'),
@@ -116,7 +115,7 @@ describe PostgresHaAdmin::FailoverDatabases do
   def add_new_record
     connection.exec(<<-SQL)
       INSERT INTO
-        repmgr_miq.repl_nodes(type, conninfo, active)
+        #{described_class::TABLE_NAME}(type, conninfo, active)
       VALUES
         ('standby', 'host=4.4.4.4 user=root dbname=some_db', 'true')
     SQL
