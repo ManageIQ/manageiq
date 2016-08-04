@@ -1,5 +1,4 @@
-.container-fluid.container-tiles-pf.containers-dashboard.miq-dashboard-view{"ng-app"        => "containerDashboard",
-                                                                            "ng-controller" => "containerDashboardController as dashboard"}
+.container-fluid.container-tiles-pf.containers-dashboard.miq-dashboard-view{"ng-controller" => "containerDashboardController as dashboard"}
   .row.row-tile-pf
     .col-xs-12.col-sm-12.col-md-2
       .provider-card{"pf-card"         => "",
@@ -144,3 +143,6 @@
 
             %span.trend-footer-pf{"ng-class" => "{ 'chart-transparent-text': !podEntityTrendDailyConfig }"}
               = _("Last 30 Days")
+
+:javascript
+  miq_bootstrap('.containers-dashboard', 'containerDashboard');

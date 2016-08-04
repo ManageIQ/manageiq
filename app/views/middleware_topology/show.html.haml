@@ -1,5 +1,5 @@
 - tooltipOptions = {"tooltip-placement" => "bottom", "tooltip" => "{{legendTooltip}}"}
-.container_topology{'data-ng-app' => "mwTopologyApp", 'ng-controller' => "middlewareTopologyController"}
+.container_topology{'ng-controller' => "middlewareTopologyController"}
   .row.toolbar-pf
     .col-md-12
       = render :partial => "shared/topology_header"
@@ -38,3 +38,5 @@
       = _("Click on the legend to show/hide entities, and double click on the entities in the graph to navigate to their summary pages.")
   %kubernetes-topology-graph.middleware{:items => "items", :relations => "relations", :kinds => "kinds"}
 
+:javascript
+  miq_bootstrap('.container_topology', 'mwTopologyApp');
