@@ -1,10 +1,21 @@
 describe Blueprint do
-  let(:subject) { FactoryGirl.create(:blueprint) }
+  subject { FactoryGirl.build(:blueprint) }
+
+  let(:admin)                    { FactoryGirl.create(:user_admin) }
+  let(:button_in_a_set)          { FactoryGirl.create(:custom_button, :applies_to => catalog_bundle) }
+  let(:catalog)                  { FactoryGirl.create(:service_template_catalog) }
+  let(:custom_button_set)        { FactoryGirl.create(:custom_button_set) }
+  let(:dialog)                   { FactoryGirl.create(:dialog, :label => 'dialog').tap { |d| d.dialog_tabs << dialog_tab } }
+  let(:dialog_field)             { FactoryGirl.create(:dialog_field, :label => 'field 1', :name => "field_1") }
+  let(:dialog_group)             { FactoryGirl.create(:dialog_group, :label => 'group').tap { |dg| dg.dialog_fields << dialog_field } }
+  let(:dialog_tab)               { FactoryGirl.create(:dialog_tab, :label => 'tab').tap { |dt| dt.dialog_groups << dialog_group } }
+  let(:direct_custom_button)     { FactoryGirl.create(:custom_button, :applies_to => catalog_bundle) }
+  let(:ptr)                      { FactoryGirl.create(:miq_provision_request_template, :requester => admin, :src_vm_id => vm_template.id) }
+  let(:resource_action_1)        { FactoryGirl.create(:resource_action, :dialog => dialog) }
+  let(:resource_action_2)        { FactoryGirl.create(:resource_action, :dialog => dialog) }
+  let(:vm_template)              { FactoryGirl.create(:template) }
 
   let(:catalog_vm_provisioning) do
-    admin = FactoryGirl.create(:user_admin)
-    vm_template = FactoryGirl.create(:template)
-    ptr = FactoryGirl.create(:miq_provision_request_template, :requester => admin, :src_vm_id => vm_template.id)
     FactoryGirl.create(:service_template, :name => 'Service Template Vm Provisioning').tap do |item|
       add_and_save_service(item, ptr)
       item.resource_actions = [FactoryGirl.create(:resource_action)]
@@ -19,37 +30,20 @@ describe Blueprint do
     end
   end
 
-  let(:dialog) do
-    dialog       = FactoryGirl.create(:dialog, :label => 'dialog')
-    dialog_tab   = FactoryGirl.create(:dialog_tab, :label => 'tab')
-    dialog_group = FactoryGirl.create(:dialog_group, :label => 'group')
-    dialog_field = FactoryGirl.create(:dialog_field, :label => 'field 1', :name => "field_1")
-
-    dialog.dialog_tabs << dialog_tab
-    dialog_tab.dialog_groups << dialog_group
-    dialog_group.dialog_fields << dialog_field
-
-    dialog_group.save
-    dialog_tab.save
-    dialog.save
-    dialog
-  end
-
-  let(:catalog) do
-    FactoryGirl.create(:service_template_catalog)
+  let(:catalog_bundle) do
+    FactoryGirl.create(:service_template, :name => 'Service Template Bundle', :display => true, :blueprint => subject)
   end
 
   context 'blueprint with a bundle' do
-    let!(:catalog_bundle) do
-      subject.update_attribute(:status, 'published')
-      catalog_vm_provisioning.update_attribute(:blueprint, subject)
-      catalog_orchestration.update_attribute(:blueprint, subject)
-      FactoryGirl.create(:service_template, :name => 'Service Template Bundle', :display => true, :blueprint => subject).tap do |bundle|
-        bundle.resource_actions =
-          [FactoryGirl.create(:resource_action, :dialog => dialog), FactoryGirl.create(:resource_action, :dialog => dialog)]
-        add_and_save_service(bundle, catalog_vm_provisioning)
-        add_and_save_service(bundle, catalog_orchestration)
-      end
+    before do
+      subject.update_attributes(:status => 'published')
+      catalog_vm_provisioning.update_attributes(:blueprint => subject)
+      catalog_orchestration.update_attributes(:blueprint => subject)
+      catalog_bundle.resource_actions = [resource_action_1, resource_action_2]
+      add_and_save_service(catalog_bundle, catalog_vm_provisioning)
+      add_and_save_service(catalog_bundle, catalog_orchestration)
+      direct_custom_button
+      catalog_bundle.custom_button_sets << custom_button_set.tap { |cbs| cbs.add_member(button_in_a_set) }
     end
 
     describe '#bundle' do
@@ -61,16 +55,18 @@ describe Blueprint do
     describe '#deep_copy' do
       it "copies a blueprint and its service templates" do
         new_bp = subject.deep_copy(:name => 'cloned bp')
-        expect(ExtManagementSystem.count).to eq(1)
+        expect(CustomButton.count).to          eq(2)
+        expect(CustomButtonSet.count).to       eq(1)
+        expect(Dialog.count).to                eq(2)
+        expect(ExtManagementSystem.count).to   eq(1)
+        expect(MiqRequest.count).to            eq(2)
         expect(OrchestrationTemplate.count).to eq(1)
-        expect(ResourceAction.count).to eq(10)
-        expect(MiqRequest.count).to eq(2)
-        expect(ServiceResource.count).to eq(10)
-        expect(ServiceTemplate.count).to eq(6)
-        expect(Dialog.count).to eq(2)
-        expect(new_bp.bundle.name).to eq(catalog_bundle.name)
-        expect(new_bp.bundle.display).to be_falsey
-        expect(new_bp.status).to be_nil
+        expect(ResourceAction.count).to        eq(10)
+        expect(ServiceResource.count).to       eq(10)
+        expect(ServiceTemplate.count).to       eq(6)
+        expect(new_bp.bundle.name).to          eq(catalog_bundle.name)
+        expect(new_bp.bundle.display).to       be_falsey
+        expect(new_bp.status).to               be_nil
       end
     end
   end
