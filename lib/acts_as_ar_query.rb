@@ -73,8 +73,16 @@ class ActsAsArQuery
     assign_arg :limit, val
   end
 
+  def limit_value
+    options[:limit]
+  end
+
   def order(*args)
     append_hash_arg :order, *args
+  end
+
+  def order_values
+    options[:order] || []
   end
 
   def group(*args)
@@ -111,6 +119,10 @@ class ActsAsArQuery
 
   def offset(val)
     assign_arg :offset, val
+  end
+
+  def offset_value
+    options[:offset]
   end
 
   # @param val [Array<Sting,Symbol>,String, Symbol]

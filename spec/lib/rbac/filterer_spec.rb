@@ -1014,6 +1014,26 @@ describe Rbac::Filterer do
       all_vms
       expect(described_class.filtered(all_vms, :class => Vm)).to match_array(all_vms)
     end
+
+    it "supports limit on scopes" do
+      all_vms
+      expect(described_class.filtered(Vm.all.limit(2)).size).to eq(2)
+      expect(described_class.filtered(Vm.all.limit(2), :limit => 3).size).to eq(3)
+    end
+
+    it "supports limits in ruby with limits on scopes" do
+      filter = MiqExpression.new("=" => {"field" => "Vm-location", "value" => "b"})
+      # force this filter to be evaluated in ruby
+      expect(filter).to receive(:sql_supports_atom?).and_return(false)
+
+      FactoryGirl.create_list(:vm_vmware, 3, :location => "a")
+      FactoryGirl.create_list(:vm_vmware, 3, :location => "b")
+      # ordering by location, so the bad records come first
+      # if we limit in sql, then only bad results will come back - and final result size will be 0
+      # if we limit in ruby, then all 6 records will come back, we'll filter to 3 and then limit to 2.
+      result = described_class.filtered(Vm.limit(2).order(:location), :filter => filter)
+      expect(result.size).to eq(2)
+    end
   end
 
   describe ".filtered_object" do
