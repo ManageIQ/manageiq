@@ -143,4 +143,9 @@ class CustomButton < ApplicationRecord
     raise _("Unable to find user '%{user}'") % {:user => user} if user.nil?
     user
   end
+
+  def copy(options = {})
+    options[:guid] = MiqUUID.new_guid
+    options.each_with_object(dup) { |(k, v), button| button.send("#{k}=", v) }.tap(&:save!)
+  end
 end
