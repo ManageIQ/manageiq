@@ -79,7 +79,8 @@ module ApplianceConsole
     end
 
     def post_activation
-      LinuxAdmin::Service.new("evmserverd").enable.start
+      pid = fork { LinuxAdmin::Service.new("evmserverd").enable.start }
+      Process.detach(pid)
     end
 
     def create_or_join_region

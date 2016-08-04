@@ -374,12 +374,19 @@ describe ApplianceConsole::DatabaseConfiguration do
       end
     end
 
-    it "#post_activation" do
-      service = double(:service)
-      expect(LinuxAdmin::Service).to receive(:new).and_return(service)
-      expect(service).to receive(:enable).and_return(service)
-      expect(service).to receive(:start).and_return(service)
-      @config.post_activation
+    describe "#post_activation" do
+      it "forks and detaches the service start command" do
+        expect(@config).to receive(:fork) do |&block|
+          service = double(:service)
+          expect(LinuxAdmin::Service).to receive(:new).and_return(service)
+          expect(service).to receive(:enable).and_return(service)
+          expect(service).to receive(:start).and_return(service)
+          block.call
+          1234 # return a test pid
+        end
+        expect(Process).to receive(:detach).with(1234)
+        @config.post_activation
+      end
     end
   end
 
