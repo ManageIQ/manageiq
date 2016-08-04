@@ -161,8 +161,6 @@ describe CustomButton do
       vm_other = FactoryGirl.create(:vm_vmware)
 
       button_for_single_vm = FactoryGirl.create(:custom_button,
-                                                # :applies_to_class => "Vm",
-                                                # :applies_to_id    => @vm.id,
                                                 :applies_to  => @vm,
                                                 :name        => @default_name,
                                                 :description => @default_description)
