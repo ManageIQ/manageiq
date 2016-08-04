@@ -1008,6 +1008,11 @@ describe Rbac::Filterer do
       expect(described_class.filtered(Vm.where(:location => "good"))).to match_array(matched_vms)
     end
 
+    it "support aaarm object" do
+      expect(LiveMetric).to receive(:find).with(:all, :include => {:a => {}}).and_return([:good])
+      expect(described_class.filtered(LiveMetric, :include_for_find => {:a => {}}).to_a).to match_array([:good])
+    end
+
     # it returns objects too
     # TODO: cap number of queries here
     it "runs rbac on array target" do

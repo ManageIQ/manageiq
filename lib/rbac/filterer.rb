@@ -177,11 +177,8 @@ module Rbac
         scope = apply_scope(klass, scope)
 
         ids_clause = ["#{klass.table_name}.id IN (?)", target_ids] if klass.respond_to?(:table_name)
-      else # targets is a scope, class, or AASM class (VimPerformanceDaily in particular)
-        targets = to_class(targets)
-        # could just call all on everything, but that will display deprecation warnings
-        targets = targets.all if targets < ActiveRecord::Base || targets.kind_of?(ActsAsArModel)
-
+      else # targets is a class_name, scope, class, or AASM class (VimPerformanceDaily in particular)
+        targets = to_class(targets).all
         scope = apply_scope(targets, scope)
 
         unless klass.respond_to?(:find)
@@ -450,6 +447,7 @@ module Rbac
     end
 
     def apply_scope(klass, scope)
+      klass = klass.all
       scope_name = Array.wrap(scope).first
       if scope_name.nil?
         klass
