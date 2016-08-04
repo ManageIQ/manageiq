@@ -66,7 +66,7 @@ class ActsAsArQuery
   end
 
   def references(*args)
-    append_hash_arg :references, *args
+    append_hash_array_arg :references, {}, *args
   end
 
   def limit(val)

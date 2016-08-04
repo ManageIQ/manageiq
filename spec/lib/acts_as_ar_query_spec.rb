@@ -109,7 +109,15 @@ describe ActsAsArQuery do
     it { expect(query.order(:a).order(:b).order_values).to eq([:a, :b]) }
   end
 
-  # - [X] references (partial) - currently ignored
+  # this is a copy of includes, so just ensuring that the "hardest" thing works
+  # our finders do not use this, so it is just skipped
+  # we're just making sure stuff does not blow up
+  describe "#references" do
+    it "chains array hash" do
+      expect(model).to receive(:find).with(:all, {})
+      query.references(:a).references(:b => {}).to_a
+    end
+  end
 
   describe "#reorder" do
     it "reorders" do
