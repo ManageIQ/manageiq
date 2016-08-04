@@ -38,11 +38,11 @@ class ActsAsArQuery
   end
 
   def where(*val)
-    val = val.flatten
+    val = val.flatten.compact
     val = val.first if val.size == 1 && val.first.kind_of?(Hash)
     dup.tap do |r|
       old_where = r.options[:where]
-      if val.empty?
+      if val.blank?
         # nop
       elsif old_where.blank?
         r.options[:where] = val
@@ -90,7 +90,7 @@ class ActsAsArQuery
   end
 
   def reorder(*val)
-    val = val.flatten
+    val = val.flatten.compact
     if val.first.kind_of?(Hash)
       raise ArgumentError, "Need to support #{__callee__}(#{val.class.name})"
     end
@@ -102,7 +102,7 @@ class ActsAsArQuery
 
   def except(*val)
     dup.tap do |r|
-      val.flatten.each do |key|
+      val.flatten.compact.each do |key|
         r.options.delete(key)
       end
     end
@@ -111,7 +111,7 @@ class ActsAsArQuery
   # similar to except. difference being this persists across merges
   def unscope(*val)
     dup.tap do |r|
-      val.flatten.each do |key|
+      val.flatten.compact.each do |key|
         r.options[key] = nil
       end
     end
@@ -185,7 +185,7 @@ class ActsAsArQuery
   end
 
   def append_hash_arg(symbol, *val)
-    val = val.flatten
+    val = val.flatten.compact
     if val.first.kind_of?(Hash)
       raise ArgumentError, "Need to support #{symbol}(#{val.class.name})"
     end
@@ -195,7 +195,7 @@ class ActsAsArQuery
   end
 
   def append_hash_array_arg(symbol, default, *val)
-    val = val.flatten
+    val = val.flatten.compact
     val = val.first if val.size == 1 && val.first.kind_of?(Hash)
     dup.tap do |r|
       r.options[symbol] = merge_hash_or_array(r.options[symbol], val, default)
@@ -208,7 +208,7 @@ class ActsAsArQuery
   def merge_hash_or_array(a, b, default = {})
     if a.blank?
       b
-    elsif b.empty?
+    elsif b.blank?
       a
     elsif a.kind_of?(Array) && b.kind_of?(Array)
       a + b

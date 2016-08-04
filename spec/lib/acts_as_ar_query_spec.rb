@@ -40,6 +40,11 @@ describe ActsAsArQuery do
       query.includes(:a => {}).includes(:b).to_a
     end
 
+    it "ignores nils" do
+      expect(model).to receive(:find).with(:all, :include => {:a => 5})
+      query.includes(nil).includes(:a => 5).includes(nil).to_a
+    end
+
     it "chains array hash" do
       expect(model).to receive(:find).with(:all, :include => {:a => {}, :b => {}})
       query.includes(:a).includes(:b => {}).to_a
@@ -50,6 +55,11 @@ describe ActsAsArQuery do
     it "limits" do
       expect(model).to receive(:find).with(:all, :limit => 5)
       query.limit(5).to_a
+    end
+
+    it "supports nils" do
+      expect(model).to receive(:find).with(:all, {})
+      query.limit(5).limit(nil).to_a
     end
   end
 
@@ -64,6 +74,11 @@ describe ActsAsArQuery do
     it "offsets" do
       expect(model).to receive(:find).with(:all, :offset => 5)
       query.offset(5).to_a
+    end
+
+    it "supports nils" do
+      expect(model).to receive(:find).with(:all, {})
+      query.offset(5).offset(nil).to_a
     end
   end
 
@@ -135,9 +150,14 @@ describe ActsAsArQuery do
       query.reorder(:c, :d).reorder(:a, :b).to_a
     end
 
-    it "order" do
+    it "overrides order" do
       expect(model).to receive(:find).with(:all, :order => [:a, :b])
       query.order(:c).order(:d).reorder(:a, :b).to_a
+    end
+
+    it "replaces order with nil" do
+      expect(model).to receive(:find).with(:all, {})
+      query.order(:c).reorder(nil).to_a
     end
   end
 
@@ -155,6 +175,11 @@ describe ActsAsArQuery do
     it "chains fields" do
       expect(model).to receive(:find).with(:all, :select => [:c, :d, :a, :b])
       query.select(:c, :d).select(:a, :b).to_a
+    end
+
+    it "ignores nils" do
+      expect(model).to receive(:find).with(:all, :select => [:a, :b])
+      query.select(nil).select(:a, :b).select(nil).to_a
     end
 
     it "doesn't support hashes" do # TODO
@@ -188,6 +213,11 @@ describe ActsAsArQuery do
     it "merges hashes" do
       expect(model).to receive(:find).with(:all, :conditions => {:a => [5, 55], :b => [6, 66]})
       query.where(:a => 5, :b => 6).where(:a => 55, :b => 66).to_a
+    end
+
+    it "ignores nils" do
+      expect(model).to receive(:find).with(:all, :conditions => {:a => 5})
+      query.where(nil).where(:a => 5).where(nil).to_a
     end
 
     it "supports string queries" do
