@@ -25,7 +25,7 @@ class MiqCapacityController < ApplicationController
     @explorer = true
     @collapse_c_cell = true
     @sb[:active_tab] = "summary"
-    self.x_node = ""
+    self.x_node ||= ""
     @sb[:util] = {}            # reset existing values
     @sb[:util][:options] = {}  # reset existing values
     get_time_profiles # Get time profiles list (global and user specific)
