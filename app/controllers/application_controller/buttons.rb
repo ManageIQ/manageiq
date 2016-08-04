@@ -852,7 +852,7 @@ module ApplicationController::Buttons
     @edit[:new][:button_image] = @custom_button.options && @custom_button.options[:button_image] ? @custom_button.options[:button_image] : ""
     @edit[:new][:display] = @custom_button.options && @custom_button.options.key?(:display) ? @custom_button.options[:display] : true
     @edit[:new][:object_message] = @custom_button.uri_message || "create"
-    @edit[:new][:instance_name] ||= "Automation"
+    @edit[:new][:instance_name] ||= "Request"
     @edit[:current] = copy_hash(@edit[:new])
 
     @edit[:new][:button_images] = @edit[:current][:button_images] = build_button_image_options
