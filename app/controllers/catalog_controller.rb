@@ -150,6 +150,17 @@ class CatalogController < ApplicationController
     }
   end
 
+  def generic_item_subtypes
+    {
+      "custom"          => _("Custom"),
+      "vm"              => _("VM"),
+      "playbook"        => _("Playbook"),
+      "hosted_database" => _("Hosted Database"),
+      "load_balancer"   => _("Load Balancer"),
+      "storage"         => _("Storage")
+    }
+  end
+
   def atomic_form_field_changed
     # need to check req_id in session since we are using common code for prov requests and atomic ST screens
     id = session[:edit][:req_id] || "new"
