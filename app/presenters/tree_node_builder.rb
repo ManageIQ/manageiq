@@ -24,18 +24,18 @@ class TreeNodeBuilder
   #   :open_nodes -- Tree node ids of currently open nodes
   #   FIXME: fill in missing docs
   #
-  def self.build(object, parent_id, options, sandbox)
-    builder = new(object, parent_id, options, sandbox)
+  def self.build(object, parent_id, options)
+    builder = new(object, parent_id, options)
     builder.build
   end
 
-  def self.build_id(object, parent_id, options, sandbox)
-    builder = new(object, parent_id, options, sandbox)
+  def self.build_id(object, parent_id, options)
+    builder = new(object, parent_id, options)
     builder.build_id
   end
 
-  def initialize(object, parent_id, options, sandbox)
-    @object, @parent_id, @options, @sb = object, parent_id, options, sandbox
+  def initialize(object, parent_id, options)
+    @object, @parent_id, @options = object, parent_id, options
   end
 
   attr_reader :object, :parent_id, :options
@@ -498,7 +498,7 @@ class TreeNodeBuilder
       end
       @node[:addClass] = "cfme-red-node" if object.priority == 1
     end
-    if @sb[:parent_kls] == "Zone" && object.server_role.regional_role?
+    if @options[:parent_kls] == "Zone" && object.server_role.regional_role?
       @node[:addClass] = "cfme-opacity-node"
     end
     @node
@@ -508,8 +508,8 @@ class TreeNodeBuilder
     status = "stopped"
     object.assigned_server_roles.where(:active => true).each do |asr| # Go thru all active assigned server roles
       next unless asr.miq_server.started? # Find a started server
-      if @sb[:parent_kls] == "MiqRegion" || # it's in the region
-         (@sb[:parent_kls] == "Zone" && asr.miq_server.my_zone == @sb[:parent_name]) # it's in the zone
+      if @options[:parent_kls] == "MiqRegion" || # it's in the region
+         (@options[:parent_kls] == "Zone" && asr.miq_server.my_zone == @options[:parent_name]) # it's in the zone
         status = "active"
         break
       end

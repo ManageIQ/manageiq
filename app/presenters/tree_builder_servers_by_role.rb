@@ -47,9 +47,8 @@ class TreeBuilderServersByRole < TreeBuilder
   end
 
   def x_get_tree_server_role_kids(parent, _count_only)
-    parent.assigned_server_roles.sort_by { |asr| asr.miq_server.name }.each_with_object([]) do |asr, kids|
-      next if parent.kind_of?(Zone) && asr.miq_server.my_zone != parent.name
-      kids.push(asr)
+    parent.assigned_server_roles.sort_by { |asr| asr.miq_server.name }.select do |asr|
+      !parent.kind_of?(Zone) || asr.miq_server.my_zone == parent.name
     end
   end
 end
