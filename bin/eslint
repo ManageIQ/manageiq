@@ -3,22 +3,4 @@ ESLINT="node_modules/.bin/eslint"
 
 cd `dirname $0`/..
 
-MIQ_ESLINT=vanilla $ESLINT "$@" \
-  --ignore-pattern '**/controllers/**/*' \
-  --ignore-pattern '**/directives/**/*' \
-  --ignore-pattern '**/services/**/*' \
-  --ignore-pattern '**/components/**/*' \
-  app/assets/javascripts/
-
-MIQ_ESLINT=angular $ESLINT "$@" \
-  app/assets/javascripts/controllers \
-  app/assets/javascripts/directives \
-  app/assets/javascripts/services \
-  app/assets/javascripts/components
-
-MIQ_ESLINT=es6 $ESLINT "$@" \
-  --ext .es6 \
-  app/assets/javascripts/
-
-MIQ_ESLINT=spec $ESLINT "$@" \
-  spec/javascripts/
+$ESLINT "$@" app/assets/javascripts/ spec/javascripts/
