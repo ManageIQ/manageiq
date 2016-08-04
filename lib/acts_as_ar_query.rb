@@ -148,7 +148,7 @@ class ActsAsArQuery
     to_a.size
   end
 
-  def_delegators :to_a, :size, :take, :each, :empty?, :presence
+  def_delegators :to_a, :size, :length, :take, :each, :empty?, :presence
 
   # TODO: support arguments
   def first

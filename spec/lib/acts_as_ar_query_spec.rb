@@ -269,6 +269,13 @@ describe ActsAsArQuery do
     end
   end
 
+  describe "#length" do
+    it "accepts a single table" do
+      expect(model).to receive(:find).with(:all, :include => [:a]).and_return([1, 2, 3, 4, 5])
+      expect(query.includes(:a).length).to eq(5)
+    end
+  end
+
   describe "#size" do
     it "accepts a single table" do
       expect(model).to receive(:find).with(:all, :include => [:a]).and_return([1, 2, 3, 4, 5])
