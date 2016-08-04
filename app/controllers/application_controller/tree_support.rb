@@ -53,55 +53,6 @@ module ApplicationController::TreeSupport
 
   private ############################
 
-  # Build the manage policies tree
-  def protect_build_tree
-    @sb[:no_policy_profiles] = false
-    policy_profiles = policy_profile_nodes
-    session[:policy_tree] = policy_profiles.to_json
-    @sb[:no_policy_profiles] = true if policy_profiles.blank?
-    session[:tree_name] = "protect_tree"
-  end
-
-  def policy_profile_nodes
-    profiles = []
-    MiqPolicySet.all.sort_by { |profile| profile.description.downcase }.each do |profile|
-      policy_profile_node = TreeNodeBuilder.generic_tree_node(
-        "policy_profile_#{profile.id}",
-        profile.description,
-        "policy_profile#{profile.active? ? "" : "_inactive"}.png",
-        nil,
-        :style_class => "cfme-no-cursor-node"
-      )
-      unless @edit[:new][profile.id] == 0              # If some have this policy: set check if all, set mixed check if some
-        policy_profile_node[:select] = true if @edit[:new][profile.id] == session[:pol_items].length
-        policy_profile_node[:title]  = "* #{policy_profile_node[:title]}" unless @edit[:new][profile.id] == session[:pol_items].length
-      end
-      if @edit[:new][profile.id] != @edit[:current][profile.id]
-        policy_profile_node[:addClass] = "cfme-blue-bold-node"
-      end
-      policy_profile_node[:children] = policy_profile_branch_nodes(profile) if profile.members.length > 0
-      profiles.push(policy_profile_node)
-    end
-    profiles
-  end
-
-  def policy_profile_branch_nodes(profile)
-    policy_profile_children = []
-    profile.members.sort_by { |policy| [policy.towhat, policy.mode, policy.description.downcase] }.each do |policy|
-      policy_node = TreeNodeBuilder.generic_tree_node(
-        "policy_#{policy.id}",
-        policy.description,
-        "miq_policy_#{policy.towhat.downcase}#{policy.active ? "" : "_inactive"}.png",
-        nil,
-        :style_class  => "cfme-no-cursor-node",
-        :hideCheckbox => true
-      )
-      policy_node[:title] = "<b>#{ui_lookup(:model => policy.towhat)} #{policy.mode.capitalize}:</b> #{policy_node[:title]}"
-      policy_profile_children.push(policy_node)
-    end
-    policy_profile_children
-  end
-
   # Build the H&C or V&T tree with nodes selected
   def build_belongsto_tree(selected_ids, vat = false, save_tree_in_session = true, rp_only = false)
     @selected_ids = selected_ids
