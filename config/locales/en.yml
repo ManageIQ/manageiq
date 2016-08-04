@@ -788,8 +788,10 @@ en:
       ManageIQ::Providers::Azure::NetworkManager::NetworkPort:              Network Port (Microsoft Azure)
       ManageIQ::Providers::Openstack::NetworkManager::NetworkPort:          Network Port (OpenStack)
       MiddlewareDatasource:     Middleware Datasource
+      MiddlewareDomain:         Middleware Domain
       MiddlewareDeployment:     Middleware Deployment
       MiddlewareServer:         Middleware Server
+      MiddlewareServerGroup:    Middleware Server Group
       MiqAction:                Action
       MiqAeClass:               Automate Class
       MiqAeDomain:              Automate Domain
@@ -932,8 +934,12 @@ en:
       middleware_servers:          Middleware Servers
       middleware_datasource:       Middleware Datasource
       middleware_datasources:      Middleware Datasources
+      middleware_domain:           Middleware Domain
+      middleware_domains:          Middleware Domains
       middleware_deployment:       Middleware Deployment
       middleware_deployments:      Middleware Deployments
+      middleware_server_group:     Middleware Server Group
+      middleware_server_groups:    Middleware Server Groups
       evm_owner:                   EVM Owner
       ext_management_system:       Cloud/Infrastructure Provider
       ext_management_systems:      Cloud/Infrastructure Providers

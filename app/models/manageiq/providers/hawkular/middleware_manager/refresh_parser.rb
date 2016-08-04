@@ -15,16 +15,18 @@ module ManageIQ::Providers
       end
 
       def ems_inv_to_hashes
-        @data[:middleware_servers] = get_middleware_servers
+        # the order of the method calls is important here, because they make use of @eaps and @data_index
+        fetch_middleware_servers
+        fetch_domains_with_servers
         fetch_server_entities
         fetch_availability
         @data
       end
 
-      def get_middleware_servers
+      def fetch_middleware_servers
         @data[:middleware_servers] = []
-        @ems.feeds.map do |feed|
-          @ems.eaps(feed).map do |eap|
+        @ems.feeds.each do |feed|
+          @ems.eaps(feed).each do |eap|
             @eaps << eap
             server = parse_middleware_server(eap)
 
@@ -40,7 +42,55 @@ module ManageIQ::Providers
             @data[:middleware_servers] << server
             @data_index.store_path(:middleware_servers, :by_ems_ref, server[:ems_ref], server)
           end
-        end.flatten
+        end
+      end
+
+      def fetch_domains_with_servers
+        @data[:middleware_domains] = []
+        @data[:middleware_server_groups] = []
+        @ems.feeds.each do |feed|
+          @ems.domains(feed).each do |domain|
+            parsed_domain = parse_middleware_domain(domain)
+            fetch_server_groups(feed, domain)
+
+            # add the server groups to the domain
+            parsed_domain[:middleware_server_groups] = @data[:middleware_server_groups]
+            @data[:middleware_domains] << parsed_domain
+            @data_index.store_path(:middleware_domains, :by_ems_ref, parsed_domain[:ems_ref], parsed_domain)
+
+            # now it's safe to fetch the domain servers (it assumes the server groups to be already fetched)
+            fetch_domain_servers(domain)
+          end
+        end
+      end
+
+      def fetch_server_groups(feed, domain)
+        @ems.server_groups(feed, domain).each do |group|
+          parsed_group = parse_middleware_server_group(group)
+          @data[:middleware_server_groups] << parsed_group
+          @data_index.store_path(:middleware_server_groups, :by_name, parsed_group[:name], parsed_group)
+        end
+      end
+
+      def fetch_domain_servers(domain)
+        @ems.child_resources(domain.path).each do |child|
+          next unless child.type_path.end_with?(hawk_escape_id('Domain WildFly Server'))
+          @eaps << child
+
+          server_name = parse_domain_server_name(child.id)
+          server = parse_middleware_server(child, server_name)
+
+          # Add the association to server group. The information about what server is in which server group is under
+          # the server-config resource's configuration
+          config_path = child.path.to_s.sub(/%2Fserver%3D/, '%2Fserver-config%3D')
+          config = @ems.inventory_client.get_config_data_for_resource(config_path)
+          server_group_name = config['value']['Server Group']
+          server_group = @data_index.fetch_path(:middleware_server_groups, :by_name, server_group_name)
+          server[:middleware_server_group] = server_group
+
+          @data[:middleware_servers] << server
+          @data_index.store_path(:middleware_servers, :by_ems_ref, server[:ems_ref], server)
+        end
       end
 
       def alternate_machine_id(machine_id)
@@ -138,23 +188,62 @@ module ManageIQ::Providers
       end
 
       def parse_deployment(server, deployment)
-        {
+        specific = {
           :name              => parse_deployment_name(deployment.id),
-          :middleware_server => server, # TODO: does that make sense? What is better?
-          :nativeid          => deployment.id,
-          :ems_ref           => deployment.path
+          :middleware_server => server,
         }
+        parse_base_item(deployment).merge(specific)
       end
 
       def parse_datasource(server, datasource, config)
-        data = {
+        specific = {
           :name              => datasource.name,
           :middleware_server => server,
-          :nativeid          => datasource.id,
-          :ems_ref           => datasource.path
         }
         if !config.empty? && !config['value'].empty? && config['value'].respond_to?(:except)
-          data[:properties] = config['value'].except('Username', 'Password')
+          specific[:properties] = config['value'].except('Username', 'Password')
+        end
+        parse_base_item(datasource).merge(specific)
+      end
+
+      def parse_middleware_domain(domain)
+        specific = {
+          :name      => domain.properties['Name'],
+          :type_path => domain.type_path,
+        }
+        parse_base_item(domain).merge(specific)
+      end
+
+      def parse_middleware_server_group(group)
+        specific = {
+          :name      => parse_server_group_name(group.name),
+          :type_path => group.type_path,
+          :profile   => group.properties['Profile'],
+        }
+        parse_base_item(group).merge(specific)
+      end
+
+      def parse_middleware_server(eap, name = nil)
+        specific = {
+          :name      => name || parse_standalone_server_name(eap.id),
+          :type_path => eap.type_path,
+          :hostname  => eap.properties['Hostname'],
+          :product   => eap.properties['Product Name'],
+        }
+        parse_base_item(eap).merge(specific)
+      end
+
+      private
+
+      def parse_base_item(item)
+        data = {
+          :ems_ref  => item.path,
+          :nativeid => item.id,
+        }
+        [:properties, :feed].each do |field|
+          if item.respond_to? field
+            data.merge!(field => item.send(field))
+          end
         end
         data
       end
@@ -163,20 +252,15 @@ module ManageIQ::Providers
         name.sub(/^.*deployment=/, '')
       end
 
-      def parse_middleware_server(eap)
-        {
-          :feed       => eap.feed,
-          :ems_ref    => eap.path,
-          :nativeid   => eap.id,
-          :name       => parse_name(eap.id),
-          :hostname   => eap.properties['Hostname'],
-          :product    => eap.properties['Product Name'],
-          :type_path  => eap.type_path,
-          :properties => eap.properties
-        }
+      def parse_server_group_name(name)
+        name.sub(/^Domain Server Group \[/, '').chomp(']')
       end
 
-      def parse_name(name)
+      def parse_domain_server_name(name)
+        name.sub(%r{^.*\/server=}, '')
+      end
+
+      def parse_standalone_server_name(name)
         name.sub(/~~$/, '').sub(/^.*?~/, '')
       end
     end

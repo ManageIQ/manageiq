@@ -19,6 +19,7 @@ module ManageIQ::Providers
     DEFAULT_PORT = 80
     default_value_for :port, DEFAULT_PORT
 
+    has_many :middleware_domains, :foreign_key => :ems_id, :dependent => :destroy
     has_many :middleware_servers, :foreign_key => :ems_id, :dependent => :destroy
     has_many :middleware_deployments, :foreign_key => :ems_id, :dependent => :destroy
     has_many :middleware_datasources, :foreign_key => :ems_id, :dependent => :destroy
@@ -94,7 +95,7 @@ module ManageIQ::Providers
 
     def os_for(feed)
       with_provider_connection do |connection|
-        resources = connection.inventory.list_resource_types(feed)
+        resources = connection.inventory.list_resource_types(hawk_escape_id(feed))
         oses = resources.select { |item| item.id == 'Operating System' }
         unless oses.nil? || oses.empty?
           return oses.first
@@ -106,8 +107,24 @@ module ManageIQ::Providers
 
     def eaps(feed)
       with_provider_connection do |connection|
-        path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id          => feed,
+        path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id          => hawk_escape_id(feed),
                                                         :resource_type_id => hawk_escape_id('WildFly Server'))
+        connection.inventory.list_resources_for_type(path.to_s, :fetch_properties => true)
+      end
+    end
+
+    def domains(feed)
+      with_provider_connection do |connection|
+        path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id          => hawk_escape_id(feed),
+                                                        :resource_type_id => hawk_escape_id('Domain Host'))
+        connection.inventory.list_resources_for_type(path.to_s, :fetch_properties => true)
+      end
+    end
+
+    def server_groups(feed, _domain)
+      with_provider_connection do |connection|
+        path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id          => hawk_escape_id(feed),
+                                                        :resource_type_id => hawk_escape_id('Domain Server Group'))
         connection.inventory.list_resources_for_type(path.to_s, :fetch_properties => true)
       end
     end
@@ -184,7 +201,7 @@ module ManageIQ::Providers
 
     def self.raw_alerts_connect(hostname, port, username, password)
       require 'hawkular_all'
-      url         = URI::HTTP.build(:host => hostname, :port => port.to_i, :path => '/hawkular/alerts').to_s
+      url = URI::HTTP.build(:host => hostname, :port => port.to_i, :path => '/hawkular/alerts').to_s
       credentials = {
         :username => username,
         :password => password
@@ -212,7 +229,7 @@ module ManageIQ::Providers
             actual_data[:data] = data
           end
           on.failure do |error|
-            actual_data[:data]  = {}
+            actual_data[:data] = {}
             actual_data[:error] = error
             _log.error 'error callback was called, reason: ' + error.to_s
           end
