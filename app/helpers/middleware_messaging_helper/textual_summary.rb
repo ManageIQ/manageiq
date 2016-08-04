@@ -1,9 +1,5 @@
-module MiddlewareJmsHelper::TextualSummary
+module MiddlewareMessagingHelper::TextualSummary
   include TextualMixins::TextualName
-  #
-  # Groups
-  #
-
   #
   # Groups
   #

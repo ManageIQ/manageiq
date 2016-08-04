@@ -136,7 +136,7 @@ module ManageIQ::Providers
       def fetch_server_entities
         @data[:middleware_deployments] = []
         @data[:middleware_datasources] = []
-        @data[:middleware_jms] = []
+        @data[:middleware_messagings] = []
         @eaps.map do |eap|
           @ems.child_resources(eap.path, true).map do |child|
             next unless child.type_path.end_with?('Deployment', 'Datasource', 'JMS%20Topic', 'JMS%20Queue')
@@ -167,13 +167,13 @@ module ManageIQ::Providers
         parse_datasource(server, datasource, config)
       end
 
-      def process_jms(server, jms)
+      def process_messaging(server, messaging)
         wildfly_res_id = hawk_escape_id server[:nativeid]
-        jms_res_id = hawk_escape_id jms.id
+        messaging_res_id = hawk_escape_id messaging.id
         resource_path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id      => server[:feed],
-                                                                 :resource_ids => [wildfly_res_id, jms_res_id])
+                                                                 :resource_ids => [wildfly_res_id, messaging_res_id])
         config = @ems.inventory_client.get_config_data_for_resource(resource_path.to_s)
-        parse_jms(server, jms, config)
+        parse_messaging(server, messaging, config)
       end
 
       def process_server_entity(server, entity)
@@ -182,7 +182,7 @@ module ManageIQ::Providers
         elsif entity.type_path.end_with?('Datasource')
           @data[:middleware_datasources] << process_datasource(server, entity)
         else
-          @data[:middleware_jms] << process_jms(server, entity)
+          @data[:middleware_messagings] << process_messaging(server, entity)
         end
       end
 
@@ -207,12 +207,12 @@ module ManageIQ::Providers
         parse_base_item(deployment).merge(specific)
       end
 
-      def parse_jms(server, jms, config)
+      def parse_messaging(server, messaging, config)
         data = {
-          :name              => jms.name,
+          :name              => messaging.name,
           :middleware_server => server,
-          :nativeid          => jms.id,
-          :ems_ref           => jms.path
+          :nativeid          => messaging.id,
+          :ems_ref           => messaging.path
         }
         if !config.empty? && !config['value'].empty? && config['value'].respond_to?(:except)
           data[:properties] = config['value'].except('Username', 'Password')

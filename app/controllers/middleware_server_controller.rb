@@ -69,6 +69,7 @@ class MiddlewareServerController < ApplicationController
     case params[:display]
     when 'middleware_datasources' then show_middleware_entities(MiddlewareDatasource)
     when 'middleware_deployments' then show_middleware_entities(MiddlewareDeployment)
+    when 'middleware_messagings' then show_middleware_entities(MiddlewareMessaging)
     else show_middleware
     end
   end

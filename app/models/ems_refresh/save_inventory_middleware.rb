@@ -3,7 +3,7 @@ module EmsRefresh::SaveInventoryMiddleware
     target = ems if target.nil?
 
     child_keys = [:middleware_domains, :middleware_servers, :middleware_deployments, :middleware_datasources,
-      :middleware_jms]
+      :middleware_messagings]
     # Save and link other subsections
     child_keys.each do |k|
       send("save_#{k}_inventory", ems, hashes[k], target)
@@ -106,11 +106,11 @@ module EmsRefresh::SaveInventoryMiddleware
     store_ids_for_new_records(ems.middleware_datasources, hashes, :ems_ref)
   end
 
-  def save_middleware_jms_inventory(ems, hashes, target = nil)
+  def save_middleware_messagings_inventory(ems, hashes, target = nil)
     return if hashes.nil?
     target = ems if target.nil?
 
-    ems.middleware_jms(true)
+    ems.middleware_messagings(true)
     deletes = if target.kind_of?(ExtManagementSystem)
                 :use_association
               else
@@ -121,8 +121,8 @@ module EmsRefresh::SaveInventoryMiddleware
       h[:server_id] = h.fetch_path(:middleware_server, :id)
     end
 
-    save_inventory_multi(ems.middleware_jms, hashes, deletes, [:ems_ref], nil,
+    save_inventory_multi(ems.middleware_messagings, hashes, deletes, [:ems_ref], nil,
                          [:middleware_server])
-    store_ids_for_new_records(ems.middleware_jms, hashes, :ems_ref)
+    store_ids_for_new_records(ems.middleware_messagings, hashes, :ems_ref)
   end
 end

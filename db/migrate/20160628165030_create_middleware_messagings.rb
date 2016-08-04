@@ -1,7 +1,7 @@
-class CreateMiddlewareJms < ActiveRecord::Migration
+class CreateMiddlewareMessagings < ActiveRecord::Migration
   def change
-    create_table :middleware_jms do |t|
-      t.string :name # name of the datasource
+    create_table :middleware_messagings do |t|
+      t.string :name # name of the messaging
       t.string :ems_ref # path
       t.string :nativeid
       t.bigint :server_id

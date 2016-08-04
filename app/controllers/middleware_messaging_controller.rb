@@ -1,4 +1,4 @@
-class MiddlewareJmsController < ApplicationController
+class MiddlewareMessagingController < ApplicationController
   include EmsCommon
   include ContainersCommonMixin
   include MiddlewareCommonMixin

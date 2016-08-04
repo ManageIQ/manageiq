@@ -1,4 +1,4 @@
-class MiddlewareJmsDecorator < Draper::Decorator
+class MiddlewareMessagingDecorator < Draper::Decorator
   delegate_all
   include MiddlewareDecoratorMixin
 
@@ -8,6 +8,6 @@ class MiddlewareJmsDecorator < Draper::Decorator
 
   # Determine the icon
   def item_image
-    'middleware_jms'
+    'middleware_messaging'
   end
 end

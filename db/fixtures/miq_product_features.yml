@@ -3604,55 +3604,55 @@
       :feature_type: control
       :identifier: middleware_server_group_tag
 
-# Middleware Jms
-- :name: Middleware Jms
-  :description: Everything under Middleware Jms
+# Middleware Messaging
+- :name: Middleware Messaging
+  :description: Everything under Middleware Messaging
   :feature_type: node
-  :identifier: middleware_jms
+  :identifier: middleware_messaging
   :children:
   - :name: View
-    :description: View Middleware Jms
+    :description: View Middleware Messaging
     :feature_type: view
-    :identifier: middleware_jms_view
+    :identifier: middleware_messaging_view
     :children:
     - :name: List
-      :description: Display Lists of Middleware Jms
+      :description: Display Lists of Middleware Messaging
       :feature_type: view
-      :identifier: middleware_jms_show_list
+      :identifier: middleware_messaging_show_list
     - :name: Show
-      :description: Display Individual Middleware Jms
+      :description: Display Individual Middleware Messaging
       :feature_type: view
-      :identifier: middleware_jms_show
+      :identifier: middleware_messaging_show
     - :name: Utilization
-      :description: Show Capacity & Utilization data of Middleware Jms
+      :description: Show Capacity & Utilization data of Middleware Messaging
       :feature_type: view
-      :identifier: middleware_jms_perf
+      :identifier: middleware_messaging_perf
   - :name: Modify
-    :description: Modify Middleware Jms
+    :description: Modify Middleware Messaging
     :feature_type: admin
-    :identifier: middleware_jms_admin
+    :identifier: middleware_messaging_admin
     :children:
     - :name: Remove
-      :description: Remove Middleware Jms from the VMDB
+      :description: Remove Middleware Messaging from the VMDB
       :feature_type: admin
-      :identifier: middleware_jms_delete
+      :identifier: middleware_messaging_delete
     - :name: Edit
-      :description: Edit a Middleware Jms
+      :description: Edit a Middleware Messaging
       :feature_type: admin
-      :identifier: middleware_jms_edit
+      :identifier: middleware_messaging_edit
     - :name: Add
-      :description: Add a Middleware Jms
+      :description: Add a Middleware Messaging
       :feature_type: admin
-      :identifier: middleware_jms_new
+      :identifier: middleware_messaging_new
   - :name: Operate
-    :description: Perform Operations on Middleware Jms
+    :description: Perform Operations on Middleware Messaging
     :feature_type: control
-    :identifier: middleware_jms_control
+    :identifier: middleware_messaging_control
     :children:
     - :name: Edit Tags
-      :description: Edit Tags of Middleware Jms
+      :description: Edit Tags of Middleware Messaging
       :feature_type: control
-      :identifier: middleware_jms_tag
+      :identifier: middleware_messaging_tag
 
 # EmsNetwork
 - :name: Network Providers

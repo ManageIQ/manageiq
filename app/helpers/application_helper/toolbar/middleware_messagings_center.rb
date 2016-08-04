@@ -1,7 +1,8 @@
-class ApplicationHelper::Toolbar::MiddlewareJmsListCenter < ApplicationHelper::Toolbar::Basic
-  button_group('middleware_jms_policy', [
+# noinspection RubyArgCount
+class ApplicationHelper::Toolbar::MiddlewareMessagingsCenter < ApplicationHelper::Toolbar::Basic
+  button_group('middleware_messaging_policy', [
     select(
-      :middleware_jms_policy_choice,
+      :middleware_messaging_policy_choice,
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
@@ -9,9 +10,9 @@ class ApplicationHelper::Toolbar::MiddlewareJmsListCenter < ApplicationHelper::T
       :onwhen  => "1+",
       :items   => [
         button(
-          :middleware_jms_tag,
+          :middleware_messaging_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for these Middleware JMS'),
+          N_('Edit Tags for these Middleware mesagings'),
           N_('Edit Tags'),
           :url_parms => "main_div",
           :enabled   => false,

@@ -1,4 +1,4 @@
-describe MiddlewareJmsController do
+describe MiddlewareMessagingController do
   render_views
   before(:each) do
     set_user_privileges
@@ -14,18 +14,18 @@ describe MiddlewareJmsController do
     before do
       EvmSpecHelper.create_guid_miq_server_zone
       login_as FactoryGirl.create(:user)
-      @jms = FactoryGirl.create(:hawkular_middleware_jms_initialized)
+      @messaging = FactoryGirl.create(:hawkular_middleware_messaging_initialized)
     end
 
-    subject { get :show, :id => @jms.id }
+    subject { get :show, :id => @messaging.id }
 
     context 'render' do
       render_views
 
       it do
         is_expected.to have_http_status 200
-        is_expected.to render_template(:partial => 'layouts/listnav/_middleware_jms')
-        is_expected.to render_template(:partial => 'middleware_jms/_main')
+        is_expected.to render_template(:partial => 'layouts/listnav/_middleware_messaging')
+        is_expected.to render_template(:partial => 'middleware_messaging/_main')
       end
     end
   end

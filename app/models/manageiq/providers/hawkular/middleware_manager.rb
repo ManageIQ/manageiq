@@ -10,7 +10,7 @@ module ManageIQ::Providers
     require_nested :LiveMetricsCapture
     require_nested :MiddlewareDeployment
     require_nested :MiddlewareDatasource
-    require_nested :MiddlewareJms
+    require_nested :MiddlewareMessaging
     require_nested :MiddlewareServer
     require_nested :RefreshParser
     require_nested :RefreshWorker
@@ -26,7 +26,7 @@ module ManageIQ::Providers
     has_many :middleware_servers, :foreign_key => :ems_id, :dependent => :destroy
     has_many :middleware_deployments, :foreign_key => :ems_id, :dependent => :destroy
     has_many :middleware_datasources, :foreign_key => :ems_id, :dependent => :destroy
-    has_many :middleware_jms, :class_name => "MiddlewareJms", :foreign_key => :ems_id, :dependent => :destroy
+    has_many :middleware_messagings, :foreign_key => :ems_id, :dependent => :destroy
 
     attr_accessor :client
 
