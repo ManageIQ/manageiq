@@ -1,7 +1,7 @@
 describe ReportController do
   before(:each) do
     EvmSpecHelper.create_guid_miq_server_zone
-    set_user_privileges
+    stub_user(:features => :all)
   end
   describe "#widget_edit" do
     let(:miq_schedule) { FactoryGirl.build(:miq_schedule, :run_at => {}, :sched_action => {}) }

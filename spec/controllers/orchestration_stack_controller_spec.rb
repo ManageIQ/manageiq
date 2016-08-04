@@ -1,8 +1,7 @@
 describe OrchestrationStackController do
-  let(:user) { FactoryGirl.create(:user_with_group) }
+  let!(:user) { stub_user(:features => :all) }
 
   before(:each) do
-    set_user_privileges user
     EvmSpecHelper.create_guid_miq_server_zone
   end
 

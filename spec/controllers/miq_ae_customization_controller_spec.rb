@@ -1,6 +1,6 @@
 describe MiqAeCustomizationController do
   before(:each) do
-    set_user_privileges
+    stub_user(:features => :all)
   end
 
   context "#get_node_info" do
@@ -120,9 +120,6 @@ describe MiqAeCustomizationController do
 
   describe 'x_button' do
     before(:each) do
-      allow_any_instance_of(described_class).to receive(:set_user_time_zone)
-      allow(controller).to receive(:check_privileges).and_return(true)
-
       ApplicationController.handle_exceptions = true
     end
 
@@ -240,6 +237,10 @@ describe MiqAeCustomizationController do
       before do
         FactoryGirl.create(:miq_server, :guid => MiqServer.my_guid)
         MiqServer.my_server_clear_cache
+
+        # It looks like edit state causes some of the features to be denied
+        # Why?
+        stub_user(:features => :none)
       end
 
       it "still renders the main_div" do
@@ -517,7 +518,6 @@ describe MiqAeCustomizationController do
   context "#x_button" do
     before :each do
       controller.instance_variable_set(:@sb, :applies_to_class => "EmsCluster")
-      allow(controller).to receive(:role_allows).and_return(true)
       session[:sandboxes] = {
         "miq_ae_customization" => {
           :applies_to_class => "EmsCluster",

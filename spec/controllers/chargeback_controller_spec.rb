@@ -1,5 +1,5 @@
 describe ChargebackController do
-  before { set_user_privileges }
+  before { stub_user(:features => :all) }
 
   context "returns current rate assignments or set them to blank if category/tag is deleted" do
     let(:category) { FactoryGirl.create(:classification) }

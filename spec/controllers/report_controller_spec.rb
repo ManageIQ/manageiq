@@ -845,7 +845,7 @@ describe ReportController do
 
   describe 'x_button' do
     before(:each) do
-      set_user_privileges
+      stub_user(:features => :all)
       ApplicationController.handle_exceptions = true
     end
 

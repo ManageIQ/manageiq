@@ -1,7 +1,7 @@
 describe ReportController do
   render_views
   before :each do
-    set_user_privileges
+    login_as FactoryGirl.create(:user_with_group)
     EvmSpecHelper.create_guid_miq_server_zone
   end
 

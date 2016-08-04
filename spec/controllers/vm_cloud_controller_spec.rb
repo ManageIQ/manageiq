@@ -6,7 +6,7 @@ describe VmCloudController do
                        :ext_management_system => FactoryGirl.create(:ems_openstack))
   end
   before(:each) do
-    set_user_privileges
+    stub_user(:features => :all)
     session[:settings] = {:views => {:treesize => 20}}
     EvmSpecHelper.create_guid_miq_server_zone
   end

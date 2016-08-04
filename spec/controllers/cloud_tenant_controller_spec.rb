@@ -1,7 +1,7 @@
 describe CloudTenantController do
   context "#button" do
     before(:each) do
-      set_user_privileges
+      stub_user(:features => :all)
       EvmSpecHelper.create_guid_miq_server_zone
 
       ApplicationController.handle_exceptions = true
@@ -21,11 +21,10 @@ describe CloudTenantController do
   end
 
   context "#tags_edit" do
+    let!(:user) { stub_user(:features => :all) }
     before(:each) do
       EvmSpecHelper.create_guid_miq_server_zone
       @ct = FactoryGirl.create(:cloud_tenant, :name => "cloud-tenant-01")
-      user = FactoryGirl.create(:user, :userid => 'testuser')
-      set_user_privileges user
       allow(@ct).to receive(:tagged_with).with(:cat => user.userid).and_return("my tags")
       classification = FactoryGirl.create(:classification, :name => "department", :description => "Department")
       @tag1 = FactoryGirl.create(:classification_tag,

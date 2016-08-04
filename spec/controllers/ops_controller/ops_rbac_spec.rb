@@ -5,7 +5,7 @@ describe OpsController do
     before do
       Tenant.seed
       MiqRegion.seed
-      set_user_privileges
+      stub_user(:features => :all)
     end
 
     context "#tree_select" do
@@ -306,9 +306,8 @@ describe OpsController do
     end
 
     describe "#tags_edit" do
+      let!(:user) { stub_user(:features => :all) }
       before(:each) do
-        user = FactoryGirl.create(:user)
-        set_user_privileges user
         @tenant = FactoryGirl.create(:tenant,
                                      :name      => "OneTenant",
                                      :parent    => Tenant.root_tenant,
@@ -381,7 +380,7 @@ describe OpsController do
       MiqUserRole.seed
       MiqGroup.seed
       MiqRegion.seed
-      set_user_privileges
+      stub_user(:features => :all)
     end
 
     it "does not display tenant default groups in Edit Sequence" do

@@ -1,7 +1,6 @@
 describe TextualSummaryHelper do
   before do
-    login_as @user = FactoryGirl.create(:user)
-    allow(@user).to receive(:role_allows?).and_return(true)
+    stub_user(:features => :all)
   end
 
   context "textual_link" do

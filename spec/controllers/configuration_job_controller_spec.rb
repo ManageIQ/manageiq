@@ -1,10 +1,9 @@
 include CompressedIds
 
 describe ConfigurationJobController do
-  let(:user) { FactoryGirl.create(:user_with_group) }
+  let!(:user) { stub_user(:features => :all) }
 
   before(:each) do
-    set_user_privileges user
     EvmSpecHelper.create_guid_miq_server_zone
   end
 
@@ -28,11 +27,10 @@ describe ConfigurationJobController do
   end
 
   context "#tags_edit" do
+    let!(:user) { stub_user(:features => :all) }
     before(:each) do
       EvmSpecHelper.create_guid_miq_server_zone
       @cj = FactoryGirl.create(:ansible_tower_job, :name => "testJob")
-      user = FactoryGirl.create(:user, :userid => 'testuser')
-      set_user_privileges user
       allow(@cj).to receive(:tagged_with).with(:cat => user.userid).and_return("my tags")
       classification = FactoryGirl.create(:classification, :name => "department", :description => "Department")
       @tag1 = FactoryGirl.create(:classification_tag,

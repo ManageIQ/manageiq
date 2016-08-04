@@ -1,7 +1,7 @@
 describe MiqAeCustomizationController, "ApplicationController::Automate" do
   context "#resolve" do
     before(:each) do
-      set_user_privileges
+      stub_user(:features => :all)
       @custom_button = FactoryGirl.create(:custom_button, :applies_to_class => "Host")
       target_classes = {}
       CustomButton.button_classes.each { |db| target_classes[db] = ui_lookup(:model => db) }
@@ -32,7 +32,7 @@ describe MiqAeToolsController, "ApplicationController::Automate" do
     let(:custom_button) { FactoryGirl.create(:custom_button, :applies_to_class => "Host") }
     let(:workspace) { double("MiqAeEngine::MiqAeWorkspaceRuntime", :root => options) }
     before(:each) do
-      set_user_privileges
+      stub_user(:features => :all)
     end
 
     def resolve_hash(button)

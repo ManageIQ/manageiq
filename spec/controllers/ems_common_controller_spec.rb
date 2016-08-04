@@ -34,7 +34,7 @@ describe EmsCloudController do
 
     context "#new" do
       before do
-        set_user_privileges
+        stub_user(:features => :all)
         allow(controller).to receive(:drop_breadcrumb)
       end
 
@@ -53,7 +53,7 @@ describe EmsCloudController do
 
     context "#form_field_changed" do
       before :each do
-        set_user_privileges
+        stub_user(:features => :all)
       end
 
       it "form_div should be updated when server type is sent up" do
@@ -74,7 +74,7 @@ describe EmsCloudController do
     context "#set_record_vars" do
       context "strip leading/trailing whitespace from hostname/ipaddress" do
         after :each do
-          set_user_privileges
+          stub_user(:features => :all)
           controller.instance_variable_set(:@edit, :new => {:name     => 'EMS 1',
                                                             :emstype  => @type,
                                                             :hostname => '  10.10.10.10  ',
@@ -127,7 +127,7 @@ describe EmsCloudController do
 
     context "#button" do
       before(:each) do
-        set_user_privileges
+        stub_user(:features => :all)
         EvmSpecHelper.create_guid_miq_server_zone
       end
 
@@ -152,7 +152,7 @@ describe EmsCloudController do
 
     context "download pdf file" do
       before :each do
-        set_user_privileges
+        stub_user(:features => :all)
         allow(PdfGenerator).to receive(:pdf_from_string).with('', 'pdf_summary').and_return("")
         get :show, :id => ems_openstack.id, :display => "download_pdf"
       end
@@ -180,7 +180,7 @@ describe EmsContainerController do
     context "#update" do
       context "updates provider with new token" do
         after :each do
-          set_user_privileges
+          stub_user(:features => :all)
           controller.instance_variable_set(:@_params, :name              => 'EMS 2',
                                                       :default_hostname  => '10.10.10.11',
                                                       :default_api_port  => '5000',
@@ -212,7 +212,7 @@ describe EmsContainerController do
 
     context "#button" do
       before(:each) do
-        set_user_privileges
+        stub_user(:features => :all)
         EvmSpecHelper.create_guid_miq_server_zone
       end
 
@@ -248,7 +248,7 @@ describe EmsContainerController do
 
       context "download pdf file" do
         before :each do
-          set_user_privileges
+          stub_user(:features => :all)
           allow(PdfGenerator).to receive(:pdf_from_string).with('', 'pdf_summary').and_return("")
           get :show, :id => ems_kubernetes_container.id, :display => "download_pdf"
         end
@@ -297,7 +297,7 @@ describe EmsInfraController do
 
     context "download pdf file" do
       before :each do
-        set_user_privileges
+        stub_user(:features => :all)
         allow(PdfGenerator).to receive(:pdf_from_string).with('', 'pdf_summary').and_return("")
         get :show, :id => ems_openstack_infra.id, :display => "download_pdf"
       end

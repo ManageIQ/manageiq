@@ -150,7 +150,7 @@ describe MiqRequestController do
 
   context "#button" do
     before(:each) do
-      set_user_privileges
+      stub_user(:features => :all)
       EvmSpecHelper.create_guid_miq_server_zone
       @miq_request = MiqProvisionConfiguredSystemRequest.create(:description    => "Foreman provision",
                                                                 :approval_state => "pending_approval",
@@ -172,7 +172,7 @@ describe MiqRequestController do
   render_views
   context "#edit_button" do
     before do
-      set_user_privileges
+      stub_user(:features => :all)
       EvmSpecHelper.create_guid_miq_server_zone
       @miq_request = MiqProvisionConfiguredSystemRequest.create(:description    => "Foreman provision",
                                                                 :approval_state => "pending_approval",
@@ -188,7 +188,7 @@ describe MiqRequestController do
 
   context "#layout_from_tab_name" do
     before do
-      set_user_privileges
+      stub_user(:features => :all)
       EvmSpecHelper.create_guid_miq_server_zone
       session[:settings] = {:display   => {:quad_truncate => 'f'},
                             :views     => {:miq_request => 'grid'}}

@@ -2,7 +2,7 @@ describe StorageManagerController do
   render_views
   before(:each) do
     @zone = EvmSpecHelper.local_miq_server.zone
-    set_user_privileges
+    stub_user(:features => :all)
   end
 
   it "renders index" do

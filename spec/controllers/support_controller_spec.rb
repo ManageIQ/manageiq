@@ -3,7 +3,7 @@ describe SupportController do
 
   before do
     EvmSpecHelper.create_guid_miq_server_zone
-    set_user_privileges
+    stub_user(:features => :all)
   end
 
   context "#index" do

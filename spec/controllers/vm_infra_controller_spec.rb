@@ -5,7 +5,7 @@ describe VmInfraController do
   let(:host_2x2)  { FactoryGirl.create(:host_vmware_esx, :hardware => FactoryGirl.create(:hardware, :cpu2x2, :ram1GB)) }
   let(:vm_vmware) { FactoryGirl.create(:vm_vmware) }
   before do
-    set_user_privileges
+    stub_user(:features => :all)
 
     session[:settings] = {:views => {:treesize => 20}}
 

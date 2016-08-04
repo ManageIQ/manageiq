@@ -13,7 +13,7 @@ describe CatalogController do
   end
 
   before(:each) do
-    set_user_privileges user
+    stub_user(:features => :all)
     controller.instance_variable_set(:@settings, {})
     allow_any_instance_of(ApplicationController).to receive(:fetch_path)
   end
