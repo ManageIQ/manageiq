@@ -573,23 +573,28 @@ function miqSquashToggle(treeName) {
 }
 
 function miqTreeEventSafeEval(func) {
-  var whitelist = ['miqOnCheckProtect',
-                  'miqOnCheckHandler',
-                  'miqOnCheckProvTags',
-                  'miqOnCheckUserFilters',
-                  'miqOnClickSmartProxyAffinityCheck',
-                  'miqGetChecked',
-                  'miqOnClickSelectTreeNode',
-                  'miqOnClickHostNet',
-                  'miqOnClickSelectAETreeNode',
-                  'miqOnClickTimelineSelection',
-                  'miqOnClickSelectDlgEditTreeNode',
-                  'miqOnClickSelectOptimizeTreeNode',
-                  'miqOnClickServerRoles',
-                  'miqOnClickGenealogyTree',
-                  'miqOnCheckSections',
-                  'miqOnCheckCUFilters',
-                  'miqOnClickSnapshotTree'];
+  var whitelist = [
+    'miqGetChecked',
+    'miqMenuEditor',
+    'miqOnCheckCUFilters',
+    'miqOnCheckHandler',
+    'miqOnCheckProtect',
+    'miqOnCheckProvTags',
+    'miqOnCheckSections',
+    'miqOnCheckUserFilters',
+    'miqOnClickGenealogyTree',
+    'miqOnClickHostNet',
+    'miqOnClickProvLdapOus',
+    'miqOnClickSelectAETreeNode',
+    'miqOnClickSelectDlgEditTreeNode',
+    'miqOnClickSelectOptimizeTreeNode',
+    'miqOnClickSelectTreeNode',
+    'miqOnClickServerRoles',
+    'miqOnClickSmartProxyAffinityCheck',
+    'miqOnClickSnapshotTree',
+    'miqOnClickTagCat',
+    'miqOnClickTimelineSelection',
+  ];
 
   if (whitelist.includes(func)) {
     return window[func];
