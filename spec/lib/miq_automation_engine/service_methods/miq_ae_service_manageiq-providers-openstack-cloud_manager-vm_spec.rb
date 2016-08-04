@@ -13,12 +13,6 @@ module MiqAeServiceVmOpenstackSpec
         :role        => 'ems_operations',
         :task_id     => nil
       }
-
-      $_miq_worker_current_msg = FactoryGirl.build(:miq_queue, :task_id => '1234')
-    end
-
-    after do
-      $_miq_worker_current_msg = nil
     end
 
     it "#attach_volume" do
