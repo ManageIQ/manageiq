@@ -195,15 +195,16 @@ module Rbac
       user_filters['match_via_descendants'] = to_class(options[:match_via_descendants])
 
       exp_sql, exp_includes, exp_attrs = search_filter.to_sql(tz) if search_filter && !klass.try(:instances_are_derived?)
-      conditions = MiqExpression.merge_where_clauses(conditions, sub_filter, where_clause, exp_sql, ids_clause)
-      include_for_find = MiqExpression.merge_includes(include_for_find, exp_includes)
-
       attrs[:apply_limit_in_sql] = (exp_attrs.nil? || exp_attrs[:supported_by_sql]) && user_filters["belongsto"].blank?
 
       scope = scope.except(:offset, :limit) if !attrs[:apply_limit_in_sql]
 
       scope = scope_targets(klass, scope, user_filters, user, miq_group)
-      scope = scope.where(conditions).includes(include_for_find).references(include_for_find).order(options[:order])
+              .where(conditions).where(sub_filter).where(where_clause).where(exp_sql).where(ids_clause)
+              .includes(include_for_find).references(include_for_find)
+              .includes(exp_includes).references(exp_includes)
+              .order(options[:order])
+
       scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
       targets = scope
 
