@@ -360,6 +360,22 @@ describe EmsCloudController do
     end
   end
 
+  describe "#show" do
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+      login_as FactoryGirl.create(:user)
+    end
+
+    context "all instances" do
+      it 'render screen with all instances' do
+        get :show, :id => FactoryGirl.create(:vm_amazon).id, :params => { :display => 'instances' }
+        #binding.pry
+        expect(response.status).to eq(200)
+        expect(response).to render_template('shared/views/ems_common/show')
+      end
+    end
+  end
+
   describe "#dialog_form_button_pressed" do
     let(:dialog) { double("Dialog") }
     let(:wf) { double(:dialog => dialog) }
