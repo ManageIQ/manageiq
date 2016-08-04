@@ -1,50 +1,50 @@
 ManageIQ.angular.app.controller('arbitrationProfileFormController', ['$http', '$scope', '$location', 'arbitrationProfileFormId', 'miqService', 'postService', 'API', 'arbitrationProfileDataFactory', function($http, $scope, $location, arbitrationProfileFormId, miqService, postService, API, arbitrationProfileDataFactory) {
-    var init = function() {
-      $scope.arbitrationProfileModel = {
-        name: '',
-        description: '',
-        ems_id: emsId,
-        authentication_id: '',
-        availability_zone_id: '',
-        cloud_network_id: '',
-        cloud_subnet_id: '',
-        flavor_id: '',
-        security_group_id: ''
-      };
-      $scope.formId    = arbitrationProfileFormId;
-      $scope.afterGet  = false;
-      $scope.model     = "arbitrationProfileModel";
-      ManageIQ.angular.scope = $scope;
+  var init = function() {
+    $scope.arbitrationProfileModel = {
+      name: '',
+      description: '',
+      ems_id: emsId,
+      authentication_id: '',
+      availability_zone_id: '',
+      cloud_network_id: '',
+      cloud_subnet_id: '',
+      flavor_id: '',
+      security_group_id: ''
+    };
+    $scope.formId    = arbitrationProfileFormId;
+    $scope.afterGet  = false;
+    $scope.model     = "arbitrationProfileModel";
+    ManageIQ.angular.scope = $scope;
 
-      if (arbitrationProfileFormId == 'new') {
-        $scope.newRecord = true;
-        $scope.arbitrationProfileModel.ems_id = emsId;
+    if (arbitrationProfileFormId == 'new') {
+      $scope.newRecord = true;
+      $scope.arbitrationProfileModel.ems_id = emsId;
+      $scope.profileOptions($scope.arbitrationProfileModel.ems_id, $scope.arbitrationProfileModel.cloud_network_id);
+      $scope.modelCopy = angular.copy( $scope.arbitrationProfileModel );
+    } else {
+      var profileId = queryParam('show').toString();
+      arbitrationProfileDataFactory.getArbitrationProfileData(profileId).then (function(arbitrationProfileData) {
+        $scope.newRecord = false;
+        $scope.arbitrationProfileModel.name                 = arbitrationProfileData.name;
+        $scope.arbitrationProfileModel.description          = arbitrationProfileData.description;
+        $scope.arbitrationProfileModel.authentication_id    = convertToString(arbitrationProfileData.authentication_id);
+        $scope.arbitrationProfileModel.availability_zone_id = convertToString(arbitrationProfileData.availability_zone_id);
+        $scope.arbitrationProfileModel.cloud_network_id     = convertToString(arbitrationProfileData.cloud_network_id);
+        $scope.arbitrationProfileModel.cloud_subnet_id      = convertToString(arbitrationProfileData.cloud_subnet_id);
+        $scope.arbitrationProfileModel.flavor_id            = convertToString(arbitrationProfileData.flavor_id);
+        $scope.arbitrationProfileModel.security_group_id    = convertToString(arbitrationProfileData.security_group_id);
+
         $scope.profileOptions($scope.arbitrationProfileModel.ems_id, $scope.arbitrationProfileModel.cloud_network_id);
         $scope.modelCopy = angular.copy( $scope.arbitrationProfileModel );
-      } else {
-        var profileId = (/^.*show=([\dr]+).*$/).exec(location.search)[1];
-        arbitrationProfileDataFactory.getArbitrationProfileData(profileId).then (function(arbitrationProfileData) {
-          $scope.newRecord = false;
-          $scope.arbitrationProfileModel.name                 = arbitrationProfileData.name;
-          $scope.arbitrationProfileModel.description          = arbitrationProfileData.description;
-          $scope.arbitrationProfileModel.authentication_id    = convertToString(arbitrationProfileData.authentication_id);
-          $scope.arbitrationProfileModel.availability_zone_id = convertToString(arbitrationProfileData.availability_zone_id);
-          $scope.arbitrationProfileModel.cloud_network_id     = convertToString(arbitrationProfileData.cloud_network_id);
-          $scope.arbitrationProfileModel.cloud_subnet_id      = convertToString(arbitrationProfileData.cloud_subnet_id);
-          $scope.arbitrationProfileModel.flavor_id            = convertToString(arbitrationProfileData.flavor_id);
-          $scope.arbitrationProfileModel.security_group_id    = convertToString(arbitrationProfileData.security_group_id);
-
-          $scope.profileOptions($scope.arbitrationProfileModel.ems_id, $scope.arbitrationProfileModel.cloud_network_id);
-          $scope.modelCopy = angular.copy( $scope.arbitrationProfileModel );
-        });
-      }
-    };
+      });
+    }
+  };
 
   $scope.cancelClicked = function() {
     if ($scope.newRecord)
-      var msg = sprintf(__("Add of Arbitration Profile %s was cancelled by the user"), $scope.arbitrationProfileModel.description);
+      var msg = sprintf(__("Add of Arbitration Profile was cancelled by the user"));
     else
-      var msg = sprintf(__("Edit of Arbitration Profile was cancelled by the user"));
+      var msg = sprintf(__("Edit of Arbitration Profile %s was cancelled by the user"), $scope.arbitrationProfileModel.description);
     postService.cancelOperation(redirectUrl, msg);
     $scope.angularForm.$setPristine(true);
   };

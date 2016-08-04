@@ -1752,3 +1752,5 @@ function miqUncompressedId(id) {
   }
   return id;
 }
+
+function queryParam(name) { return QS(window.location.href).get(name); }

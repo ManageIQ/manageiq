@@ -3,7 +3,7 @@ describe('arbitrationProfileFormController', function() {
 
   beforeEach(module('ManageIQ'));
 
-  beforeEach(inject(function($rootScope, $location, _$controller_, _$httpBackend_, _miqService_, _postService_) {
+  beforeEach(inject(function($rootScope, $location, _$controller_, _$httpBackend_, _miqService_, _postService_, _API_) {
     miqService = _miqService_;
     postService = _postService_;
     spyOn(miqService, 'showButtons');
@@ -14,9 +14,11 @@ describe('arbitrationProfileFormController', function() {
     spyOn(postService, 'cancelOperation');
     spyOn(postService, 'saveRecord');
     spyOn(postService, 'createRecord');
+    $scope = $rootScope.$new();
 
     spyOn($location, 'absUrl').and.returnValue('/ems_cloud/arbitration_profile_edit/1000000000001?db=ems_cloud')
-    $scope = $rootScope.$new();
+    spyOn(window, 'queryParam').and.returnValue(1000000000001)
+
     $location = $location;
     $httpBackend = _$httpBackend_;
 
@@ -31,15 +33,14 @@ describe('arbitrationProfileFormController', function() {
                                   security_group_id:    ''
     };
 
-    var arbitrationProfileOptions = {availability_zones: []};
+    spyOn(_API_, 'get').and.returnValue(Promise.resolve(arbitrationProfileData))
 
     $controller = _$controller_('arbitrationProfileFormController', {
       $scope: $scope,
       $location: $location,
       arbitrationProfileFormId: 1000000000001,
       miqService: miqService,
-      arbitrationProfileData: arbitrationProfileData,
-      arbitrationProfileOptions: arbitrationProfileOptions
+      API: _API_
     });
   }));
 

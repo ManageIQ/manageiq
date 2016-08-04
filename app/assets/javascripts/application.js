@@ -76,3 +76,4 @@
 //= require xml_display
 //= require miq_c3
 //= require miq_explorer
+//= require qs
