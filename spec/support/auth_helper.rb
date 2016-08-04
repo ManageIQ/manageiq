@@ -12,7 +12,9 @@ module AuthHelper
 
   # TODO: Stub specific features, document use
   def stub_user(features:)
-    user = FactoryGirl.create(:user_with_group) # TODO stub instead
+    user = FactoryGirl.build(:user_with_group)
+    allow(controller).to receive(:current_user).and_return(user)
+    allow(User).to receive(:current_user).and_return(user)
     allow(User).to receive(:server_timezone).and_return("UTC")
     allow_any_instance_of(described_class).to receive(:set_user_time_zone)
 
