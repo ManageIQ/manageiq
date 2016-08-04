@@ -2,7 +2,7 @@ require 'pg'
 
 class MiqPglogical
   REPLICATION_SET_NAME = 'miq'.freeze
-  SETTINGS_PATH = [:workers, :worker_base, :replication_worker, :replication].freeze
+  SETTINGS_PATH = [:replication].freeze
   NODE_PREFIX = "region_".freeze
 
   def initialize
