@@ -55,8 +55,8 @@ describe Blueprint do
     describe '#deep_copy' do
       it "copies a blueprint and its service templates" do
         new_bp = subject.deep_copy(:name => 'cloned bp')
-        expect(CustomButton.count).to          eq(2)
-        expect(CustomButtonSet.count).to       eq(1)
+        expect(CustomButton.count).to          eq(4)
+        expect(CustomButtonSet.count).to       eq(2)
         expect(Dialog.count).to                eq(2)
         expect(ExtManagementSystem.count).to   eq(1)
         expect(MiqRequest.count).to            eq(2)
@@ -67,6 +67,14 @@ describe Blueprint do
         expect(new_bp.bundle.name).to          eq(catalog_bundle.name)
         expect(new_bp.bundle.display).to       be_falsey
         expect(new_bp.status).to               be_nil
+
+        new_service_template = new_bp.send(:service_templates).find_by(:name => 'Service Template Bundle')
+        expect(new_service_template.custom_buttons.count).to                          eq(1)
+        expect(new_service_template.custom_button_sets.count).to                      eq(1)
+        expect(new_service_template.custom_button_sets.first.custom_buttons.count).to eq(1)
+        expect(new_service_template.custom_buttons).to_not                            include(direct_custom_button)
+        expect(new_service_template.custom_button_sets).to_not                        include(custom_button_set)
+        expect(new_service_template.custom_button_sets.first.custom_buttons).to_not   include(button_in_a_set)
       end
     end
   end
