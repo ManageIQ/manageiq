@@ -1,0 +1,52 @@
+---
+title: Number of Pods per Node
+rpt_group: Custom
+rpt_type: Custom
+priority:
+db: ContainerNode
+cols:
+- name
+include:
+  container_groups:
+    columns:
+    - name
+col_order:
+- name
+- container_groups.name
+headers:
+- Node Name
+- Pod Name
+conditions:
+order: Ascending
+sortby:
+- name
+group: c
+graph:
+dims:
+filename:
+file_mtime:
+categories: []
+timeline:
+template_type: report
+where_clause:
+db_options: {}
+generate_cols:
+generate_rows:
+col_formats:
+-
+-
+tz:
+time_profile_id:
+display_filter:
+col_options:
+  name:
+    :break_label: 'Name: '
+rpt_options:
+  :pdf:
+    :page_size: US-Letter
+  :queue_timeout:
+  :summary:
+    :hide_detail_rows: false
+miq_group_id: 2
+user_id: 1
+menu_name: Number of Pods per Node
