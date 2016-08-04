@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_Vmware_NetworkManager_CloudNetwork_VappNet < MiqAeServiceManageIQ_Providers_Vmware_NetworkManager_CloudNetwork
+  end
+end

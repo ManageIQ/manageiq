@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_Vmware_NetworkManager_CloudNetwork_OrgVdcNet < MiqAeServiceManageIQ_Providers_Vmware_NetworkManager_CloudNetwork
+  end
+end
