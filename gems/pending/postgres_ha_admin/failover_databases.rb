@@ -4,6 +4,8 @@ require 'pg/dsn_parser'
 
 module PostgresHaAdmin
   class FailoverDatabases
+    TABLE_NAME = "repl_nodes".freeze
+
     attr_reader :yml_file, :connection_hash, :logger, :log_file
 
     def initialize(config_dir, log_dir, connection_params_hash)
@@ -49,8 +51,8 @@ module PostgresHaAdmin
       end
 
       result = []
-      if miq_repllication_exists?(connection)
-        db_result = connection.exec("SELECT type, conninfo, active FROM repmgr_miq.repl_nodes")
+      if miq_replication_exists?(connection)
+        db_result = connection.exec("SELECT type, conninfo, active FROM #{TABLE_NAME}")
         db_result.map_types!(PG::BasicTypeMapForResults.new(connection)).each do |record|
           dsn = PG::DSNParser.parse(record.delete("conninfo"))
           result << record.symbolize_keys.merge(dsn)
@@ -71,8 +73,8 @@ module PostgresHaAdmin
       raise
     end
 
-    def miq_repllication_exists?(connection)
-      connection.exec("SELECT to_regclass('repmgr_miq.repl_nodes')")
+    def miq_replication_exists?(connection)
+      connection.exec("SELECT to_regclass('#{TABLE_NAME}')")
     end
   end
 end
