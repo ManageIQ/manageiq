@@ -259,7 +259,10 @@ class ContainerDashboardService
   end
 
   def daily_provider_metrics
-    @daily_metrics ||= Metric::Helper.find_for_interval_name('daily', @controller.current_user.get_timezone)
+    current_user = @controller.current_user
+    tp = TimeProfile.profile_for_user_tz(current_user.id, current_user.get_timezone) || TimeProfile.default_time_profile
+
+    @daily_metrics ||= Metric::Helper.find_for_interval_name('daily', tp)
                                      .where(:resource => (@ems || ManageIQ::Providers::ContainerManager.all))
                                      .where('timestamp > ?', 30.days.ago.utc).order('timestamp')
   end
