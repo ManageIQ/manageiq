@@ -2,6 +2,7 @@ class ApiController
   module Logger
     def log_request_initiated
       @requested_at = Time.now.utc
+      return unless api_log_info?
       api_log_info(" ")
       log_request("API Request", :requested_at => @requested_at.to_s,
                                  :method       => request.request_method,
@@ -9,6 +10,7 @@ class ApiController
     end
 
     def log_api_auth
+      return unless api_log_info?
       log_request("Authentication", :type        => @auth_token.blank? ? "basic" : "token",
                                     :token       => @auth_token,
                                     :x_miq_group => request.headers['X-MIQ-Group'],
@@ -24,6 +26,7 @@ class ApiController
 
     def log_api_request
       @parameter_filter ||= ActionDispatch::Http::ParameterFilter.new(Rails.application.config.filter_parameters)
+      return unless api_log_info?
       log_request("Request", @req.to_hash)
       log_request("Parameters", @parameter_filter.filter(params))
       log_request_body
@@ -31,6 +34,7 @@ class ApiController
 
     def log_api_response
       @completed_at = Time.now.utc
+      return unless api_log_info?
       log_request("Response", :completed_at => @completed_at.to_s,
                               :size         => '%.3f KBytes' % (response.body.size / 1000.0),
                               :time_taken   => '%.3f Seconds' % (@completed_at - @requested_at),
@@ -39,6 +43,10 @@ class ApiController
 
     def api_log_debug?
       $api_log.debug?
+    end
+
+    def api_log_info?
+      $api_log.info?
     end
 
     def api_get_method_name(call_stack, method)
