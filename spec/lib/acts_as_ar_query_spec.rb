@@ -20,9 +20,29 @@ describe ActsAsArQuery do
       query.includes(:a, :b).to_a
     end
 
-    it "chains" do
+    it "accepts a hash argument" do
+      expect(model).to receive(:find).with(:all, :include => {:a => {}})
+      query.includes(:a => {}).to_a
+    end
+
+    it "chains singles" do
       expect(model).to receive(:find).with(:all, :include => [:a, :b])
       query.includes(:a).includes(:b).to_a
+    end
+
+    it "chains arrays" do
+      expect(model).to receive(:find).with(:all, :include => [:a, :b, :c, :d])
+      query.includes(:a, :b).includes(:c, :d).to_a
+    end
+
+    it "chains hash array" do
+      expect(model).to receive(:find).with(:all, :include => {:a => {}, :b => {}})
+      query.includes(:a => {}).includes(:b).to_a
+    end
+
+    it "chains array hash" do
+      expect(model).to receive(:find).with(:all, :include => {:a => {}, :b => {}})
+      query.includes(:a).includes(:b => {}).to_a
     end
   end
 

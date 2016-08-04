@@ -62,7 +62,7 @@ class ActsAsArQuery
   end
 
   def includes(*args)
-    append_hash_arg :includes, *args
+    append_hash_array_arg :includes, {}, *args
   end
 
   def references(*args)
@@ -192,6 +192,35 @@ class ActsAsArQuery
     dup.tap do |r|
       r.options[symbol] = r.options[symbol] ? (r.options[symbol] + val) : val
     end
+  end
+
+  def append_hash_array_arg(symbol, default, *val)
+    val = val.flatten
+    val = val.first if val.size == 1 && val.first.kind_of?(Hash)
+    dup.tap do |r|
+      r.options[symbol] = merge_hash_or_array(r.options[symbol], val, default)
+    end
+  end
+
+  # @param a [Array, Hash]
+  # @param b [Array, Hash]
+  # @param default default value for conversion to a hash. e.g.: {} or "ASC"
+  def merge_hash_or_array(a, b, default = {})
+    if a.blank?
+      b
+    elsif b.empty?
+      a
+    elsif a.kind_of?(Array) && b.kind_of?(Array)
+      a + b
+    else
+      a = array_to_hash(a, default) if a.kind_of?(Array)
+      b = array_to_hash(b, default) if b.kind_of?(Array)
+      a.merge(b)
+    end
+  end
+
+  def array_to_hash(arr, default = {})
+    arr.each_with_object({}) { |k, h| h[k] = default.dup }
   end
 
   def assign_arg(symbol, val)
