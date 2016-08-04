@@ -78,7 +78,7 @@ class ActsAsArQuery
   end
 
   def order(*args)
-    append_hash_arg :order, *args
+    append_hash_array_arg :order, "ASC", *args
   end
 
   def order_values

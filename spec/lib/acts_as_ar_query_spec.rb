@@ -83,9 +83,24 @@ describe ActsAsArQuery do
       query.order(:a, :b).to_a
     end
 
-    it "chains" do
+    it "chains singles" do
       expect(model).to receive(:find).with(:all, :order => [:a, :b])
       query.order(:a).order(:b).to_a
+    end
+
+    it "chains arrays" do
+      expect(model).to receive(:find).with(:all, :order => [:a, :b, :c, :d])
+      query.order(:a, :b).order(:c, :d).to_a
+    end
+
+    it "chains hash array" do
+      expect(model).to receive(:find).with(:all, :order => {:a => "DESC", :b => "ASC"})
+      query.order(:a => "DESC").order(:b).to_a
+    end
+
+    it "chains hash array" do
+      expect(model).to receive(:find).with(:all, :order => {:a => "ASC", :b => "DESC"})
+      query.order(:a).order(:b => "DESC").to_a
     end
   end
 
