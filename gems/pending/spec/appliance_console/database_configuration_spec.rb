@@ -386,8 +386,8 @@ describe ApplianceConsole::DatabaseConfiguration do
     end
   end
 
-  def stubbed_say(clazz)
-    Class.new(clazz) do
+  def stubbed_say(klass)
+    Class.new(klass) do
       include ApplianceConsole::Prompts
       # don't display the messages prompted to the end user
       def say(*_args)

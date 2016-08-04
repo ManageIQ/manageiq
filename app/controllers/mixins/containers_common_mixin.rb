@@ -151,11 +151,11 @@ module ContainersCommonMixin
     session["#{prefix}_display".to_sym]    = @display unless @display.nil?
   end
 
-  def show_container_display(record, display, clazz, alt_controller_name = nil)
+  def show_container_display(record, display, klass, alt_controller_name = nil)
     title = ui_lookup(:tables => display)
     drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => record.name, :title => title},
                     :url  => "/#{alt_controller_name || controller_name}/show/#{record.id}?display=#{@display}")
-    @view, @pages = get_view(clazz, :parent => record)  # Get the records (into a view) and the paginator
+    @view, @pages = get_view(klass, :parent => record)  # Get the records (into a view) and the paginator
     @showtype = @display
   end
 
