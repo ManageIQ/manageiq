@@ -55,6 +55,7 @@ module ApplicationController::Compare
     end
     @compare = create_compare_view
     build_sections_tree
+    @sections_tree = TreeBuilderSections.new(:all_sections, :all_sections_tree, @sb, true, @compare, controller_name, current_tenant.name)
     compare_to_json(@compare)
     if params[:ppsetting] # Came in from per page setting
       replace_main_div({:partial => "layouts/compare"}, {:spinner_off => true})
@@ -548,6 +549,7 @@ module ApplicationController::Compare
     @lastaction = "drift"
     @compare = create_drift_view
     build_sections_tree
+    @sections_tree = TreeBuilderSections.new(:all_sections, :all_sections_tree, @sb, true, @compare, controller_name, current_tenant.name)
     drift_to_json(@compare)
     drop_breadcrumb(:name => _("'%{name}' Drift Analysis") % {:name => @drift_obj.name},
                     :url  => "/#{@sb[:compare_db].downcase}/drift")
@@ -962,7 +964,9 @@ module ApplicationController::Compare
   def build_sections_tree
     all_sections = []
     i = 0
+    # TODO
     set_sections_groups_len
+
     @compare.master_list.each_slice(3) do |section, _records, _fields|  # Go thru all of the Sections
       if @group.blank? || section[:group] != @group
         if section[:group] != @group && @group
