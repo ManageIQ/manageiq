@@ -17,7 +17,7 @@ describe ApplicationController do
       feature = Feature.new_with_hash(:name => "foo")
       expect(feature.accord_name).to eq("foo")
       expect(feature.tree_name).to eq(:foo_tree)
-      expect(feature.container).to eq("foo_tree_div")
+      expect(feature.container).to eq("foo_accord")
     end
   end
 end
