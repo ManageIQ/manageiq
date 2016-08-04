@@ -257,19 +257,19 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
       :start_connected => true,
     )
 
-    expect(v2.hardware.guest_devices[0]).to have_attributes(
-      :device_name     => "en_visio_professional_2016_x005F_x86_x005F_x64_dvd_6962139",
+    expect(v2.hardware.guest_devices.order(:device_name).first).to have_attributes(
+      :device_name     => "en_office_professional_plus_2016_x005F_x86_x005F_x64_dvd_6962141",
       :device_type     => "cdrom",
-      :filename        => "C:\\tmp\\en_visio_professional_2016_x005F_x86_x005F_x64_dvd_6962139.iso",
+      :filename        => "C:\\tmp\\en_office_professional_plus_2016_x005F_x86_x005F_x64_dvd_6962141.iso",
       :controller_type => "IDE",
       :present         => true,
       :start_connected => true,
     )
 
-    expect(v2.hardware.guest_devices[1]).to have_attributes(
-      :device_name     => "en_office_professional_plus_2016_x005F_x86_x005F_x64_dvd_6962141",
+    expect(v2.hardware.guest_devices.order(:device_name).last).to have_attributes(
+      :device_name     => "en_visio_professional_2016_x005F_x86_x005F_x64_dvd_6962139",
       :device_type     => "cdrom",
-      :filename        => "C:\\tmp\\en_office_professional_plus_2016_x005F_x86_x005F_x64_dvd_6962141.iso",
+      :filename        => "C:\\tmp\\en_visio_professional_2016_x005F_x86_x005F_x64_dvd_6962139.iso",
       :controller_type => "IDE",
       :present         => true,
       :start_connected => true,
