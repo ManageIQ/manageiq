@@ -5017,26 +5017,10 @@
       :feature_type: admin
       :identifier: miq_virtual_template
       :children:
-      - :name: Create Virtual Template
-        :description: Create Virtual Template
-        :feature_type: admin
-        :identifier: create_virtual_template
       - :name: Show Virtual Templates
         :description: Show Virtual Templates
         :feature_type: admin
         :identifier: virtual_template_show
-      - :name: Edit Virtual Templates
-        :description: Edit Virtual Template
-        :feature_type: admin
-        :identifier: edit_virtual_template
-      - :name: Delete Virtual Template
-        :description: Delete Virtual Template
-        :feature_type: admin
-        :identifier: delete_virtual_template
-      - :name: Provision Virtual Template
-        :description: Provision Virtual Template
-        :feature_type: admin
-        :identifier: provision_virtual_template
     - :name: Arbitration Profiles
       :description: Everything for Arbitration Profile
       :feature_type: admin

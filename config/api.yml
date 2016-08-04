@@ -1663,32 +1663,12 @@
     :identifier: miq_virtual_template
     :options:
     - :collection
-    :verbs: *gpppd
+    :verbs: *g
     :klass: ManageIQ::Providers::CloudManager::VirtualTemplate
     :collection_actions:
       :get:
       - :name: read
         :identifier: virtual_template_show
-      :post:
-      - :name: create
-        :identifier: create_virtual_template
-      - :name: edit
-        :identifier: edit_virtual_template
-      - :name: delete
-        :identifier: delete_virtual_template
-      - :name: provision
-        :identifier: provision_virtual_template
-    :resource_actions:
-      :post:
-      - :name: edit
-        :identifier: edit_virtual_template
-      - :name: delete
-        :identifier: delete_virtual_template
-      - :name: provision
-        :identifier: provision_virtual_template
-      :delete:
-      - :name: delete
-        :identifier: delete_virtual_template
   :arbitration_profiles:
     :description: Arbitration Profiles
     :identifier: miq_arbitration_profile
