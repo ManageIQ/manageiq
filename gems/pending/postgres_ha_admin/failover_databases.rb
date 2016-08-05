@@ -1,4 +1,3 @@
-require 'postgres_ha_admin/postgres_ha_admin'
 require 'pg'
 require 'pg/dsn_parser'
 
@@ -6,75 +5,51 @@ module PostgresHaAdmin
   class FailoverDatabases
     TABLE_NAME = "repl_nodes".freeze
 
-    attr_reader :yml_file, :connection_hash, :logger, :log_file
+    attr_reader :yml_file
 
-    def initialize(config_dir, log_dir, connection_params_hash)
-      @yml_file = Pathname.new(config_dir).join(DB_YML_FILE)
-      @log_file = Pathname.new(log_dir).join(LOG_FILE_NAME)
-      @logger = Logger.new(@log_file)
-      @logger.level = Logger::INFO
-      @connection_hash = connection_params_hash
+    def initialize(yml_file, logger)
+      @yml_file = yml_file
+      @logger = logger
     end
 
-    def refresh_databases_list(connection = nil)
-      query_repmgr(connection)
+    def active_databases
+      all_databases.select { |record| record[:active] }
     end
 
-    def all_databases(connection = nil)
-      if File.exist?(yml_file)
-        begin
-          YAML.load_file(yml_file)
-        rescue IOError => err
-          logger.error("#{err.class}: #{err}")
-          logger.error(err.backtrace.join("\n"))
-          []
-        end
-      else
-        query_repmgr(connection)
-      end
-    end
-
-    def standby_databases(connection = nil)
-      all_databases(connection).select { |record| record[:type] == 'standby' }
-    end
-
-    def active_standby_databases(connection = nil)
-      all_databases(connection).select { |record| record[:type] == 'standby' && record[:active] == true }
+    def update_failover_yml(connection)
+      arr_yml = query_repmgr(connection)
+      File.write(yml_file, arr_yml.to_yaml) unless arr_yml.empty?
+    rescue IOError => err
+      @logger.error("#{err.class}: #{err}")
+      @logger.error(err.backtrace.join("\n"))
     end
 
     private
 
-    def query_repmgr(connection)
-      if connection.nil?
-        connection = PG::Connection.open(connection_hash)
-        new_connection = true
-      end
+    def all_databases
+      return [] unless File.exist?(yml_file)
+      YAML.load_file(yml_file)
+    end
 
+    def query_repmgr(connection)
+      return [] unless table_exists?(connection, TABLE_NAME)
       result = []
-      if miq_replication_exists?(connection)
-        db_result = connection.exec("SELECT type, conninfo, active FROM #{TABLE_NAME}")
-        db_result.map_types!(PG::BasicTypeMapForResults.new(connection)).each do |record|
-          dsn = PG::DSNParser.parse(record.delete("conninfo"))
-          result << record.symbolize_keys.merge(dsn)
-        end
-        db_result.clear
-        write_file(result)
-        logger.info("List standby databases in #{yml_file} replaced.")
+      db_result = connection.exec("SELECT type, conninfo, active FROM #{TABLE_NAME}")
+      db_result.map_types!(PG::BasicTypeMapForResults.new(connection)).each do |record|
+        dsn = PG::DSNParser.parse(record.delete("conninfo"))
+        result << record.symbolize_keys.merge(dsn)
       end
-      connection.finish if new_connection
+      db_result.clear
+      result
+    rescue PG::Error => err
+      @logger.error("#{err.class}: #{err}")
+      @logger.error(err.backtrace.join("\n"))
       result
     end
 
-    def write_file(result)
-      File.write(yml_file, result.to_yaml)
-    rescue IOError => err
-      logger.error("#{err.class}: #{err}")
-      logger.error(err.backtrace.join("\n"))
-      raise
-    end
-
-    def miq_replication_exists?(connection)
-      connection.exec("SELECT to_regclass('#{TABLE_NAME}')")
+    def table_exists?(connection, table_name)
+      result = connection.exec("SELECT to_regclass('#{table_name}')").first
+      !result['to_regclass'].nil?
     end
   end
 end
