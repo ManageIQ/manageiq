@@ -22,7 +22,8 @@ module ApplicationHelper::Toolbar::Cloud::InstanceOperationsButtonGroupMixin
             N_('Start'),
             :image   => "power_on",
             :confirm => N_("Start this Instance?"),
-            :klass   => ApplicationHelper::Button::InstanceStart),
+            :klass   => ApplicationHelper::Button::GenericFeatureButton,
+            :options => {:feature => :start}),
           included_class.button(
             :instance_pause,
             nil,
@@ -65,7 +66,8 @@ module ApplicationHelper::Toolbar::Cloud::InstanceOperationsButtonGroupMixin
             N_('Resume'),
             :image   => "power_resume",
             :confirm => N_("Resume this Instance?"),
-            :klass   => ApplicationHelper::Button::InstanceStart),
+            :klass   => ApplicationHelper::Button::GenericFeatureButton,
+            :options => {:feature => :start}),
           included_class.separator,
           included_class.button(
             :instance_guest_restart,
