@@ -85,19 +85,20 @@ module EmsCommon
       'container_builds'              => [ContainerBuild, _('Container Builds'), _('Container Build')],
       'container_projects'            => [ContainerProject, _('Container Projects'), _('Container Project')],
       'container_image_registries'    => [ContainerImageRegistry, _('Container Image Registries'), _('Container Image Registry')],
-      'availability_zones'             => [AvailabilityZone, _('Availability Zones'), _('Availability Zone')],
-      'middleware_servers'             => [MiddlewareServer, _('Middleware Servers'), _('Middleware Server')],
-      'middleware_deployments'         => [MiddlewareDeployment, _('Middleware'), _('Middleware')],
-      'middleware_datasources'         => [MiddlewareDatasource, _('Middleware'), _('Middleware')],
-      'cloud_tenants'                  => [CloudTenant, _('Cloud Tenants'), _('Cloud Tenant')],
-      'cloud_volumes'                  => [CloudVolume, _('Cloud Volumes'), _('Cloud Volume')],
-      'flavors'                        => [Flavor, _('Flavors'), _('Flavor')],
-      'security_groups'                => [SecurityGroup, _('Security Groups'), _('Security Group')],
-      'floating_ips'                   => [FloatingIp, _('Floating IPs'), _('Floating IP')],
-      'network_routers'                => [NetworkRouter, _('Network Routers'), _('Network Router')],
-      'network_ports'                  => [NetworkPort, _('Network Ports'), _('Network Port')],
-      'cloud_subnets'                  => [CloudSubnet, _('Cloud Subnets'), _('Cloud Subnet')],
-      'cloud_networks'                 => [CloudNetwork, _('Cloud Networks'), _('Cloud Network')],
+      'availability_zones'            => [AvailabilityZone, _('Availability Zones'), _('Availability Zone')],
+      'middleware_servers'            => [MiddlewareServer, _('Middleware Servers'), _('Middleware Server')],
+      'middleware_deployments'        => [MiddlewareDeployment, _('Middleware'), _('Middleware')],
+      'middleware_datasources'        => [MiddlewareDatasource, _('Middleware'), _('Middleware')],
+      'cloud_tenants'                 => [CloudTenant, _('Cloud Tenants'), _('Cloud Tenant')],
+      'cloud_volumes'                 => [CloudVolume, _('Cloud Volumes'), _('Cloud Volume')],
+      'flavors'                       => [Flavor, _('Flavors'), _('Flavor')],
+      'security_groups'               => [SecurityGroup, _('Security Groups'), _('Security Group')],
+      'floating_ips'                  => [FloatingIp, _('Floating IPs'), _('Floating IP')],
+      'network_routers'               => [NetworkRouter, _('Network Routers'), _('Network Router')],
+      'network_ports'                 => [NetworkPort, _('Network Ports'), _('Network Port')],
+      'cloud_subnets'                 => [CloudSubnet, _('Cloud Subnets'), _('Cloud Subnet')],
+      'cloud_networks'                => [CloudNetwork, _('Cloud Networks'), _('Cloud Network')],
+      'storages'                      => [Storage, _('Managed Datastores'), _('Datastore')],
     }
   end
 
@@ -107,11 +108,6 @@ module EmsCommon
 
   def show_ems_clusters
      view_setup_helper(EmsCluster, title_for_clusters, "Cluster")
-  end
-
-  def show_storages
-    title = ui_lookup(:tables => "storages")
-    view_setup_helper(Storage, _("Managed ") + title, title)
   end
 
   def show_persistent_volumes
@@ -141,7 +137,6 @@ module EmsCommon
     when "topology"                     then show_topology
     when "performance"                  then show_performance
     when 'ems_clusters'                 then show_ems_clusters
-    when 'storages'                     then show_storages
     when 'persistent_volumes'           then show_persistent_volumes
     when 'cloud_object_store_containers'
                                         then show_entities(params[:display])
@@ -152,7 +147,6 @@ module EmsCommon
 
       if control_selected?
         case session[:display]
-        when "storages"                      then show_storages
         when "persistent_volumes"            then show_persistent_volumes
         else                                      show_entities(session[:display])
         end
