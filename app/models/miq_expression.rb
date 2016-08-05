@@ -660,10 +660,6 @@ class MiqExpression
     col_details[field][:sql_support]
   end
 
-  def field_is_virtual_column?(field)
-    col_details[field][:virtual_column]
-  end
-
   def field_excluded_by_preprocess_options?(field)
     col_details[field][:excluded_by_preprocess_options]
   end
