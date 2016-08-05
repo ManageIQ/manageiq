@@ -761,13 +761,14 @@ class MiqCapacityController < ApplicationController
   end
 
   def util_build_tree(type, name)
-    utilization = TreeBuilderUtilization.new(name, type, @sb)
-    @right_cell_text = if type == :bottlenecks
-                         _("Bottlenecks Summary")
-                       else
-                         _("Utilization Summary")
-                       end
-    instance_variable_set :"@#{name}", utilization.tree_nodes
+    selected_node = x_node(name)
+    if type == :bottlenecks
+      @right_cell_text = _("Bottlenecks Summary")
+      @bottlenecks_tree = TreeBuilderUtilization.new(name, type, @sb, true, selected_node)
+    else
+      @right_cell_text = _("Utilization Summary")
+      @utilization_tree = TreeBuilderUtilization.new(name, type, @sb, true, selected_node)
+    end
   end
 
   # Create an array of hashes from the Utilization summary report tab information
