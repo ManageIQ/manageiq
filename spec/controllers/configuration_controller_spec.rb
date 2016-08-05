@@ -38,7 +38,7 @@ describe ConfigurationController do
     end
 
     it 'sets the available tabs' do
-      allow(controller).to receive(:role_allows).and_return(true)
+      allow(controller).to receive(:role_allows?).and_return(true)
       controller.send(:build_tabs)
 
       expect(assigns(:tabs)).to eq([

@@ -42,7 +42,7 @@ module ApplicationController::DialogRunner
           javascript_flash
         else
           flash = _("Order Request was Submitted")
-          if role_allows(:feature => "miq_request_show_list", :any => true)
+          if role_allows?(:feature => "miq_request_show_list", :any => true)
             @sb[:action] = @edit = nil
             @in_a_form = false
             if session[:edit][:explorer]

@@ -958,7 +958,7 @@ class CatalogController < ApplicationController
     if x_active_tree == :svccat_tree
       @gtl_buttons = ["view_list", "view_tile"]
       @gtl_small_tiles = true
-      if role_allows(:feature => 'svc_catalog_provision')
+      if role_allows?(:feature => 'svc_catalog_provision')
         @row_button = {:label    => _("Order"),
                        :function => "miqOrderService",
                        :title    => _("Order this Service")} # Show a button instead of the checkbox
@@ -1231,11 +1231,11 @@ class CatalogController < ApplicationController
 
   def trees_to_replace(trees)
     trees_to_replace = []
-    trees_to_replace.push(:stcat) if trees.include?(:stcat) && role_allows(:feature => "st_catalog_accord")
-    trees_to_replace.push(:sandt) if trees.include?(:sandt) && role_allows(:feature => "catalog_items_view")
-    trees_to_replace.push(:svccat) if trees.include?(:svccat) && role_allows(:feature => "svc_catalog_accord")
+    trees_to_replace.push(:stcat) if trees.include?(:stcat) && role_allows?(:feature => "st_catalog_accord")
+    trees_to_replace.push(:sandt) if trees.include?(:sandt) && role_allows?(:feature => "catalog_items_view")
+    trees_to_replace.push(:svccat) if trees.include?(:svccat) && role_allows?(:feature => "svc_catalog_accord")
     trees_to_replace.push(:ot) if trees.include?(:ot) &&
-                                  role_allows(:feature => "orchestration_templates_accord", :any => true)
+                                  role_allows?(:feature => "orchestration_templates_accord", :any => true)
     trees_to_replace
   end
 

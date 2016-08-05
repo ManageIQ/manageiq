@@ -70,7 +70,7 @@ module EmsCloudHelper::TextualSummary
     label = ui_lookup(:tables => "vm_cloud")
     num   = @ems.number_of(:vms)
     h     = {:label => label, :image => "vm", :value => num}
-    if num > 0 && role_allows(:feature => "vm_show_list")
+    if num > 0 && role_allows?(:feature => "vm_show_list")
       h[:link]  = ems_cloud_path(@ems.id, :display => 'instances')
       h[:title] = _("Show all %{label}") % {:label => label}
     end
@@ -81,7 +81,7 @@ module EmsCloudHelper::TextualSummary
     label = ui_lookup(:tables => "template_cloud")
     num = @ems.number_of(:miq_templates)
     h = {:label => label, :image => "vm", :value => num}
-    if num > 0 && role_allows(:feature => "miq_template_show_list")
+    if num > 0 && role_allows?(:feature => "miq_template_show_list")
       h[:link] = ems_cloud_path(@ems.id, :display => 'images')
       h[:title] = _("Show all %{label}") % {:label => label}
     end
@@ -112,7 +112,7 @@ module EmsCloudHelper::TextualSummary
     label = ui_lookup(:tables => "cloud_object_store_container")
     num = @ems.number_of(:cloud_object_store_containers)
     h = {:label => label, :image => "cloud_object_store_container", :value => num}
-    if num > 0 && role_allows(:feature => "cloud_object_store_container_show_list")
+    if num > 0 && role_allows?(:feature => "cloud_object_store_container_show_list")
       h[:link] = ems_cloud_path(@ems.id, :display => 'cloud_object_store_containers')
       h[:title] = _("Show all %{label}") % {:label => label}
     end
@@ -131,7 +131,7 @@ module EmsCloudHelper::TextualSummary
     label = ui_lookup(:tables => "security_group")
     num = @ems.number_of(:security_groups)
     h = {:label => label, :image => "security_group", :value => num}
-    if num > 0 && role_allows(:feature => "security_group_show_list")
+    if num > 0 && role_allows?(:feature => "security_group_show_list")
       h[:link] = ems_cloud_path(@ems.id, :display => 'security_groups')
       h[:title] = _("Show all %{label}") % {:label => label}
     end

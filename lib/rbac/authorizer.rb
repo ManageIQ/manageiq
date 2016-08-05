@@ -10,7 +10,7 @@ module Rbac
       user    = options[:user]
 
       # 'identifier' comes from the back end (ex: User#role_allows?)
-      # 'feature' comes from the front end (ex: ApplicationHelper#role_allows)
+      # 'feature' comes from the front end (ex: ApplicationHelper#role_allows?)
       # As this API is a combination of the two, 'feature' is considered
       # an alias of 'identifier' for legacy purposes.
       identifier = options[:identifier] || options[:feature]

@@ -125,19 +125,19 @@ describe MiqUserRole do
     it "allows everything" do
       EvmSpecHelper.seed_specific_product_features(%w(everything miq_report))
       user = FactoryGirl.create(:user, :features => "everything")
-      expect(user).to be_role_allows(:identifier => "miq_report")
+      expect(user).to be_role_allows?(:identifier => "miq_report")
     end
 
     it "dissallows unentitled" do
       EvmSpecHelper.seed_specific_product_features(%w(miq_report container_dashboard))
       user = FactoryGirl.create(:user, :features => "container_dashboard")
-      expect(user).not_to be_role_allows(:identifier => "miq_report")
+      expect(user).not_to be_role_allows?(:identifier => "miq_report")
     end
 
     it "allows entitled" do
       EvmSpecHelper.seed_specific_product_features(%w(miq_report))
       user = FactoryGirl.create(:user, :features => "miq_report")
-      expect(user).to be_role_allows(:identifier => "miq_report")
+      expect(user).to be_role_allows?(:identifier => "miq_report")
     end
 
     # - container_dashboard
@@ -147,13 +147,13 @@ describe MiqUserRole do
     it "disallows hidden child with not-entitled parent" do
       EvmSpecHelper.seed_specific_product_features(%w(miq_report_view render_report_csv container_dashboard))
       user = FactoryGirl.create(:user, :features => "container_dashboard")
-      expect(user).not_to be_role_allows(:identifier => "render_report_csv")
+      expect(user).not_to be_role_allows?(:identifier => "render_report_csv")
     end
 
     it "allows hidden child with entitled parent" do
       EvmSpecHelper.seed_specific_product_features(%w(miq_report_view render_report_csv))
       user = FactoryGirl.create(:user, :features => "miq_report_view")
-      expect(user).to be_role_allows(:identifier => "render_report_csv")
+      expect(user).to be_role_allows?(:identifier => "render_report_csv")
     end
 
     # - container_dashboard
@@ -167,7 +167,7 @@ describe MiqUserRole do
         %w(miq_report_widget_admin widget_refresh widget_edit widget_copy container_dashboard)
       )
       user = FactoryGirl.create(:user, :features => "widget_edit")
-      expect(user).to be_role_allows(:identifier => "widget_refresh")
+      expect(user).to be_role_allows?(:identifier => "widget_refresh")
     end
 
     it "disallows hidden child of not entitled, if no sibling is entitled" do
@@ -175,7 +175,7 @@ describe MiqUserRole do
         %w(miq_report_widget_admin widget_refresh widget_edit widget_copy container_dashboard)
       )
       user = FactoryGirl.create(:user, :features => "container_dashboard")
-      expect(user).not_to be_role_allows(:identifier => "widget_refresh")
+      expect(user).not_to be_role_allows?(:identifier => "widget_refresh")
     end
 
     # - container_dashboard
@@ -186,7 +186,7 @@ describe MiqUserRole do
         %w(policy_profile_admin profile_new container_dashboard)
       )
       user = FactoryGirl.create(:user, :features => "container_dashboard")
-      expect(user).to be_role_allows(:identifier => "profile_new")
+      expect(user).to be_role_allows?(:identifier => "profile_new")
     end
   end
 

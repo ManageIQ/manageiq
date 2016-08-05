@@ -5,7 +5,7 @@ describe "layouts/listnav/_cloud_network.html.haml" do
     set_controller_for_view("cloud_network")
     assign(:panels, "ems_prop" => true, "ems_rel" => true)
     allow(view).to receive(:truncate_length).and_return(15)
-    allow(view).to receive(:role_allows).and_return(true)
+    allow(view).to receive(:role_allows?).and_return(true)
   end
 
   %w(openstack google).each do |t|

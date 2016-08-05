@@ -33,7 +33,7 @@ module CloudObjectStoreObjectHelper::TextualSummary
     cloud_tenant = @record.cloud_tenant if @record.respond_to?(:cloud_tenant)
     label = ui_lookup(:table => "cloud_tenant")
     h = {:label => label, :image => "cloud_tenant", :value => (cloud_tenant.nil? ? "None" : cloud_tenant.name)}
-    if cloud_tenant && role_allows(:feature => "cloud_tenant_show")
+    if cloud_tenant && role_allows?(:feature => "cloud_tenant_show")
       h[:title] = _("Show this Cloud Object's parent %{parent}") % {:parent => label}
       h[:link]  = url_for(:controller => 'cloud_tenant', :action => 'show', :id => cloud_tenant)
     end
@@ -48,7 +48,7 @@ module CloudObjectStoreObjectHelper::TextualSummary
       :image => "cloud_object_store_container",
       :value => (object_store_container.nil? ? "None" : object_store_container.key)
     }
-    if object_store_container && role_allows(:feature => "cloud_object_store_container_show")
+    if object_store_container && role_allows?(:feature => "cloud_object_store_container_show")
       h[:title] = _("Show this Cloud Object's parent %{parent}") % {:parent => label}
       h[:link]  = url_for(:controller => 'cloud_object_store_container',
                           :action     => 'show',

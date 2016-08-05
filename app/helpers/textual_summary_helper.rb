@@ -77,7 +77,7 @@ module TextualSummaryHelper
 
     h = {:label => label, :image => image, :value => value}
 
-    if role_allows(:feature => feature)
+    if role_allows?(:feature => feature)
       if restful_routed?(object)
         h[:link] = polymorphic_path(object)
       else
@@ -110,7 +110,7 @@ module TextualSummaryHelper
 
     h = {:label => label, :image => image, :value => count.to_s}
 
-    if count > 0 && role_allows(:feature => feature)
+    if count > 0 && role_allows?(:feature => feature)
       if link
         h[:link] = link
       elsif collection.respond_to?(:proxy_association)

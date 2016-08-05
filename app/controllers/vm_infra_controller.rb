@@ -45,13 +45,13 @@ class VmInfraController < ApplicationController
     prefix = prefix_by_nodetype(@nodetype)
 
     # Position in tree that matches selected record
-    if role_allows(:feature => "vandt_accord")
+    if role_allows?(:feature => "vandt_accord")
       set_active_elements_authorized_user('vandt_tree', 'vandt', true, VmOrTemplate, id)
-    elsif role_allows(:feature => "#{prefix}_filter_accord")
+    elsif role_allows?(:feature => "#{prefix}_filter_accord")
       set_active_elements_authorized_user("#{prefix}_filter_tree", "#{prefix}_filter", false, nil, id)
     else
-      if (prefix == "vms" && role_allows(:feature => "vms_instances_filter_accord")) ||
-         (prefix == "templates" && role_allows(:feature => "templates_images_filter_accord"))
+      if (prefix == "vms" && role_allows?(:feature => "vms_instances_filter_accord")) ||
+         (prefix == "templates" && role_allows?(:feature => "templates_images_filter_accord"))
         redirect_to(:controller => 'vm_or_template', :action => "explorer", :id => params[:id])
       else
         redirect_to(:controller => 'dashboard', :action => "auth_error")

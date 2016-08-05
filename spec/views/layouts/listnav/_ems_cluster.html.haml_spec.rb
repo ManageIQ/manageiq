@@ -5,7 +5,7 @@ describe "layouts/listnav/_ems_cluster.html.haml" do
     set_controller_for_view("ems_cluster")
     assign(:panels, "ems_cluster_prop" => true, "ems_cluster_rel" => true)
     allow(view).to receive(:truncate_length).and_return(23)
-    allow(view).to receive(:role_allows).and_return(true)
+    allow(view).to receive(:role_allows?).and_return(true)
   end
 
   it "both timeline links pass display=timeline" do

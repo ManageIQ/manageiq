@@ -44,7 +44,7 @@ module ApplicationController::CiProcessing
       @edit[:explorer] = true
       ownership
     else
-      if role_allows(:feature => "vm_ownership")
+      if role_allows?(:feature => "vm_ownership")
         javascript_redirect :controller => "#{rec_cls}", :action => 'ownership' # redirect to build the ownership screen
       else
         head :ok
@@ -664,7 +664,7 @@ module ApplicationController::CiProcessing
       right_size
       replace_right_cell if @orig_action == "x_history"
     else
-      if role_allows(:feature => "vm_right_size")
+      if role_allows?(:feature => "vm_right_size")
         javascript_redirect :controller => "#{rec_cls}", :action => 'right_size', :id => recs[0], :escape => false # redirect to build the ownership screen
       else
         head :ok
@@ -754,7 +754,7 @@ module ApplicationController::CiProcessing
       end
       if VmReconfigureRequest.make_request(@request_id, options, current_user)
         flash = _("VM Reconfigure Request was saved")
-        if role_allows(:feature => "miq_request_show_list", :any => true)
+        if role_allows?(:feature => "miq_request_show_list", :any => true)
           javascript_redirect :controller => 'miq_request', :action => 'show_list', :flash_msg => flash
         else
           url = previous_breadcrumb_url.split('/')
@@ -1425,7 +1425,7 @@ module ApplicationController::CiProcessing
       session[:changed] = true  # need to enable submit button when screen loads
       @refresh_partial = "vm_common/reconfigure"
     else
-      if role_allows(:feature => "vm_reconfigure")
+      if role_allows?(:feature => "vm_reconfigure")
         javascript_redirect :controller => "#{rec_cls}", :action => 'reconfigure', :req_id => @request_id, :rec_ids => @reconfigure_items, :escape => false # redirect to build the ownership screen
       else
         head :ok

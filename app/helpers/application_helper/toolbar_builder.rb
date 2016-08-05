@@ -10,7 +10,7 @@ class ApplicationHelper::ToolbarBuilder
 
   delegate :request, :current_user, :to => :@view_context
 
-  delegate :get_vmdb_config, :role_allows, :model_for_vm, :rbac_common_feature_for_buttons, :to => :@view_context
+  delegate :get_vmdb_config, :role_allows?, :model_for_vm, :rbac_common_feature_for_buttons, :to => :@view_context
   delegate :x_tree_history, :x_node, :x_active_tree, :to => :@view_context
   delegate :is_browser?, :is_browser_os?, :to => :@view_context
 
@@ -359,12 +359,12 @@ class ApplicationHelper::ToolbarBuilder
   def build_toolbar_hide_button_cb(id)
     case x_active_tree
     when :cb_reports_tree
-      if role_allows(:feature => "chargeback_reports") && ["chargeback_download_csv", "chargeback_download_pdf",
+      if role_allows?(:feature => "chargeback_reports") && ["chargeback_download_csv", "chargeback_download_pdf",
                                                            "chargeback_download_text", "chargeback_report_only"].include?(id)
         return false
       end
     when :cb_rates_tree
-      if role_allows(:feature => "chargeback_rates") && ["chargeback_rates_copy", "chargeback_rates_delete",
+      if role_allows?(:feature => "chargeback_rates") && ["chargeback_rates_copy", "chargeback_rates_delete",
                                                          "chargeback_rates_edit", "chargeback_rates_new"].include?(id)
         return false
       end
@@ -410,7 +410,7 @@ class ApplicationHelper::ToolbarBuilder
     when :rbac_tree
       common_buttons = %w(rbac_project_add rbac_tenant_add)
       feature = common_buttons.include?(id) ? rbac_common_feature_for_buttons(id) : id
-      return true unless role_allows(:feature => feature)
+      return true unless role_allows?(:feature => feature)
       return true if common_buttons.include?(id) && @record.project?
       return false
     when :vmdb_tree
@@ -423,7 +423,7 @@ class ApplicationHelper::ToolbarBuilder
   def build_toolbar_hide_button_pxe(id)
     case x_active_tree
     when :customization_templates_tree
-      return true unless role_allows(:feature => id)
+      return true unless role_allows?(:feature => id)
       nodes = x_node.split('-')
       if nodes.first == "root"
         # show only add button on root node
@@ -435,7 +435,7 @@ class ApplicationHelper::ToolbarBuilder
         false
       end
     else
-      !role_allows(:feature => id)
+      !role_allows?(:feature => id)
     end
   end
 
@@ -443,7 +443,7 @@ class ApplicationHelper::ToolbarBuilder
     if %w(miq_report_copy miq_report_delete miq_report_edit
           miq_report_new miq_report_run miq_report_schedule_add).include?(id) ||
        x_active_tree == :schedules_tree
-      return true unless role_allows(:feature => id)
+      return true unless role_allows?(:feature => id)
     end
     case x_active_tree
     when :widgets_tree
@@ -469,7 +469,7 @@ class ApplicationHelper::ToolbarBuilder
       end
     when :savedreports_tree
       if %w(saved_report_delete).include?(id)
-        return true unless role_allows(:feature => id)
+        return true unless role_allows?(:feature => id)
       end
       case id
       when "reload"
@@ -596,17 +596,17 @@ class ApplicationHelper::ToolbarBuilder
       return res
     end
 
-    return false if role_allows(:feature => "my_settings_time_profiles") && @layout == "configuration" &&
+    return false if role_allows?(:feature => "my_settings_time_profiles") && @layout == "configuration" &&
                     @tabform == "ui_4"
 
     return false if id.starts_with?("miq_capacity_") && @sb[:active_tab] == "report"
 
     # hide button if id is approve/deny and miq_request_approval feature is not allowed.
-    return true if !role_allows(:feature => "miq_request_approval") && ["miq_request_approve", "miq_request_deny"].include?(id)
+    return true if !role_allows?(:feature => "miq_request_approval") && ["miq_request_approve", "miq_request_deny"].include?(id)
 
     # don't check for feature RBAC if id is miq_request_approve/deny
     unless %w(miq_policy catalogs).include?(@layout)
-      return true if !role_allows(:feature => id) && !["miq_request_approve", "miq_request_deny"].include?(id) &&
+      return true if !role_allows?(:feature => id) && !["miq_request_approve", "miq_request_deny"].include?(id) &&
                      id !~ /^history_\d*/ &&
                      !id.starts_with?("dialog_") && !id.starts_with?("miq_task_")
     end
@@ -642,7 +642,7 @@ class ApplicationHelper::ToolbarBuilder
     # Scale is only supported by OpenStack Infrastructure Provider
     return true if (id == "ems_infra_scale" || id == "ems_infra_scaledown") &&
                    (@record.class != ManageIQ::Providers::Openstack::InfraManager ||
-                    !role_allows(:feature => "ems_infra_scale") ||
+                    !role_allows?(:feature => "ems_infra_scale") ||
                    (@record.class == ManageIQ::Providers::Openstack::InfraManager && @record.orchestration_stacks.count == 0))
 
     # Now check model/record specific rules
@@ -655,15 +655,15 @@ class ApplicationHelper::ToolbarBuilder
     when "Condition"
       case id
       when "condition_edit"
-        return true unless role_allows(:feature => "condition_edit")
+        return true unless role_allows?(:feature => "condition_edit")
       when "condition_copy"
-        return true if x_active_tree != :condition_tree || !role_allows(:feature => "condition_new")
+        return true if x_active_tree != :condition_tree || !role_allows?(:feature => "condition_new")
       when "condition_delete"
-        return true if x_active_tree != :condition_tree || !role_allows(:feature => "condition_delete")
+        return true if x_active_tree != :condition_tree || !role_allows?(:feature => "condition_delete")
       when "condition_policy_copy"
-        return true if x_active_tree == :condition_tree || !role_allows(:feature => "condition_new")
+        return true if x_active_tree == :condition_tree || !role_allows?(:feature => "condition_new")
       when "condition_remove"
-        return true if x_active_tree == :condition_tree || !role_allows(:feature => "condition_delete")
+        return true if x_active_tree == :condition_tree || !role_allows?(:feature => "condition_delete")
       end
     when "CustomButton"
       case id
@@ -694,9 +694,9 @@ class ApplicationHelper::ToolbarBuilder
     when "MiqAction"
       case id
       when "action_edit"
-        return true unless role_allows(:feature => "action_edit")
+        return true unless role_allows?(:feature => "action_edit")
       when "action_delete"
-        return true unless role_allows(:feature => "action_delete")
+        return true unless role_allows?(:feature => "action_delete")
       end
     when "MiqAeClass", "MiqAeDomain", "MiqAeField", "MiqAeInstance", "MiqAeMethod", "MiqAeNamespace"
       return false if MIQ_AE_COPY_ACTIONS.include?(id) && User.current_tenant.any_editable_domains? && MiqAeDomain.any_unlocked?
@@ -715,46 +715,46 @@ class ApplicationHelper::ToolbarBuilder
     when "MiqAlert"
       case id
       when "alert_copy"
-        return true unless role_allows(:feature => "alert_copy")
+        return true unless role_allows?(:feature => "alert_copy")
       when "alert_edit"
-        return true unless role_allows(:feature => "alert_edit")
+        return true unless role_allows?(:feature => "alert_edit")
       when "alert_delete"
-        return true unless role_allows(:feature => "alert_delete")
+        return true unless role_allows?(:feature => "alert_delete")
       end
     when "MiqAlertSet"
       case id
       when "alert_profile_edit"
-        return true unless role_allows(:feature => "alert_profile_edit")
+        return true unless role_allows?(:feature => "alert_profile_edit")
       when "alert_profile_delete"
-        return true unless role_allows(:feature => "alert_profile_delete")
+        return true unless role_allows?(:feature => "alert_profile_delete")
       end
     when "MiqEventDefinition"
       case id
       when "event_edit"
-        return true if x_active_tree == :event_tree || !role_allows(:feature => "event_edit")
+        return true if x_active_tree == :event_tree || !role_allows?(:feature => "event_edit")
       end
     when "MiqPolicy"
       case id
       when "condition_edit", "policy_edit", "policy_edit_conditions"
-        return true unless role_allows(:feature => "policy_edit")
+        return true unless role_allows?(:feature => "policy_edit")
       when "policy_edit_conditions"
-        return true unless role_allows(:feature => "policy_edit_conditions")
+        return true unless role_allows?(:feature => "policy_edit_conditions")
       when "policy_edit_events"
-        return true if !role_allows(:feature => "policy_edit") ||
+        return true if !role_allows?(:feature => "policy_edit") ||
                        @policy.mode == "compliance"
       when "policy_copy"
-        return true if !role_allows(:feature => "policy_copy") ||
+        return true if !role_allows?(:feature => "policy_copy") ||
                        x_active_tree != :policy_tree
       when "policy_delete"
-        return true if !role_allows(:feature => "policy_delete") ||
+        return true if !role_allows?(:feature => "policy_delete") ||
                        x_active_tree != :policy_tree
       end
     when "MiqPolicySet"
       case id
       when "profile_edit"
-        return true unless role_allows(:feature => "profile_edit")
+        return true unless role_allows?(:feature => "profile_edit")
       when "profile_delete"
-        return true unless role_allows(:feature => "profile_delete")
+        return true unless role_allows?(:feature => "profile_delete")
       end
     when "MiqRequest"
       # Don't hide certain buttons on AutomationRequest screen
@@ -816,7 +816,7 @@ class ApplicationHelper::ToolbarBuilder
       when /^history_\d*/
         return false
       else
-        return !role_allows(:feature => id)
+        return !role_allows?(:feature => id)
       end
     when "Vm"
       case id
@@ -838,7 +838,7 @@ class ApplicationHelper::ToolbarBuilder
         return true unless @perf_options[:typ] == "realtime"
       end
     when "OrchestrationTemplate", "OrchestrationTemplateCfn", "OrchestrationTemplateHot", "OrchestrationTemplateAzure", "OrchestrationTemplateVnfd"
-      return true unless role_allows(:feature => id)
+      return true unless role_allows?(:feature => id)
     when "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem", "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem"
       case id
       when "configured_system_provision"
@@ -849,13 +849,13 @@ class ApplicationHelper::ToolbarBuilder
       when "ab_group_new", "ab_button_new", "ab_group_reorder"
         return !role_allows_button_manipulation if x_active_tree == :sandt_tree
       when "action_new"
-        return true unless role_allows(:feature => "action_new")
+        return true unless role_allows?(:feature => "action_new")
       when "alert_profile_new"
-        return true unless role_allows(:feature => "alert_profile_new")
+        return true unless role_allows?(:feature => "alert_profile_new")
       when "alert_new"
-        return true unless role_allows(:feature => "alert_new")
+        return true unless role_allows?(:feature => "alert_new")
       when "condition_new"
-        return true unless role_allows(:feature => "condition_new")
+        return true unless role_allows?(:feature => "condition_new")
       when "log_download"
         return true if ["workers", "download_logs"].include?(@lastaction)
       when "log_collect"
@@ -865,9 +865,9 @@ class ApplicationHelper::ToolbarBuilder
       when "logdepot_edit"
         return true if ["workers", "evm_logs", "audit_logs"].include?(@lastaction)
       when "policy_new"
-        return true unless role_allows(:feature => "policy_new")
+        return true unless role_allows?(:feature => "policy_new")
       when "profile_new"
-        return true unless role_allows(:feature => "profile_new")
+        return true unless role_allows?(:feature => "profile_new")
       when "processmanager_restart"
         return true if ["download_logs", "evm_logs", "audit_logs"].include?(@lastaction)
       when "refresh_workers"
@@ -881,7 +881,7 @@ class ApplicationHelper::ToolbarBuilder
       when "timeline_txt"
         return true unless @report
       else
-        return !role_allows(:feature => id)
+        return !role_allows?(:feature => id)
       end
     end
     false  # No reason to hide, allow the button to show
@@ -889,7 +889,7 @@ class ApplicationHelper::ToolbarBuilder
 
   def role_allows_button_manipulation
     %w(catalogitem_new catalogitem_edit atomic_catalogitem_new atomic_catalogitem_edit).any? do |feature|
-      role_allows(:feature => feature)
+      role_allows?(:feature => feature)
     end
   end
 

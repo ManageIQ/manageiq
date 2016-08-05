@@ -13,7 +13,7 @@
 
     = miq_accordion_panel(_("Relationships"), false, "resource_pool_rel") do
       %ul.nav.nav-pills.nav-stacked
-        - if role_allows(:feature => "ems_cluster_show")
+        - if role_allows?(:feature => "ems_cluster_show")
           = li_link(:if => !@record.parent_cluster.nil?,
             :text       => _("Parent %{title}: %{name}") % {:title => title_for_cluster,
               :name       => @record.parent_cluster.try(:name)},
@@ -21,7 +21,7 @@
             :record_id  => @record.parent_cluster.try(:id),
             :title      => _('Show VMs'))
 
-        - if role_allows(:feature => "host_show")
+        - if role_allows?(:feature => "host_show")
           - host = @record.parent_host
           = li_link(:if => !@record.parent_host.nil?,
             :text       => _("Parent %{title}: %{name}") % {:title => host_title,
@@ -30,21 +30,21 @@
             :record_id  => (host.id if host),
             :title      => _('Show Parent %{host}') % {:host => host_title})
 
-        - if role_allows(:feature => "vm_show_list")
+        - if role_allows?(:feature => "vm_show_list")
           = li_link(:count => @record.v_direct_vms,
             :text          => _("Direct VMs"),
             :display       => "vms",
             :record_id     => @record.id,
             :title         => _('Show VMs in this Resource Pool, but not in Resource Pools below'))
 
-        - if role_allows(:feature => "vm_show_list")
+        - if role_allows?(:feature => "vm_show_list")
           = li_link(:count => @record.total_vms,
             :text          => _("All VMs"),
             :display       => "all_vms",
             :record_id     => @record.id,
             :title         => _('Show all VMs in this Resource Pool'))
 
-        - if role_allows(:feature => "_show_list")
+        - if role_allows?(:feature => "_show_list")
           = li_link(:count => @record.v_total_vms,
             :text          => _("All VMs (Tree View)"),
             :display       => "descendant_vms",

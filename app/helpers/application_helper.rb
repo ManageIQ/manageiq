@@ -55,7 +55,7 @@ module ApplicationHelper
     property_name ||= table_name
     ent = record.send(property_name)
     name = ui_lookup(:table => table_name.to_s)
-    if role_allows(:feature => "#{table_name}_show") && !ent.nil?
+    if role_allows?(:feature => "#{table_name}_show") && !ent.nil?
       out = content_tag(:li) do
         link_params = if restful_routed?(ent)
                         polymorphic_path(ent)
@@ -74,7 +74,7 @@ module ApplicationHelper
 
   def multiple_relationship_link(record, table_name)
     out = ''
-    if role_allows(:feature => "#{table_name}_show_list") &&
+    if role_allows?(:feature => "#{table_name}_show_list") &&
        (table_name != 'container_route' || record.respond_to?(:container_routes))
       plural = ui_lookup(:tables => table_name.to_s)
       count = record.number_of(table_name.to_s.pluralize)
@@ -1228,7 +1228,7 @@ module ApplicationHelper
   end
 
   def vm_cloud_explorer_accords_attributes(record)
-    if role_allows(:feature => "instances_accord") || role_allows(:feature => "instances_filter_accord")
+    if role_allows?(:feature => "instances_accord") || role_allows?(:feature => "instances_filter_accord")
       attributes = {}
       attributes[:link] = true
       attributes[:controller] = "vm_cloud"
@@ -1245,7 +1245,7 @@ module ApplicationHelper
   end
 
   def vm_infra_explorer_accords_attributes(record)
-    if role_allows(:feature => "vandt_accord") || role_allows(:feature => "vms_filter_accord")
+    if role_allows?(:feature => "vandt_accord") || role_allows?(:feature => "vms_filter_accord")
       attributes = {}
       attributes[:link] = true
       attributes[:controller] = "vm_infra"
@@ -1257,7 +1257,7 @@ module ApplicationHelper
 
   def service_workload_attributes(record)
     attributes = {}
-    if role_allows(:feature => "vms_instances_filter_accord")
+    if role_allows?(:feature => "vms_instances_filter_accord")
       attributes[:link] = true
       attributes[:controller] = "vm_or_template"
       attributes[:action] = "explorer"
@@ -1318,7 +1318,7 @@ module ApplicationHelper
                                 container_service_show_list
                                 container_view)
     return false if containers_start_pages.include?(start_page) && !get_vmdb_config[:product][:containers]
-    role_allows(:feature => start_page, :any => true)
+    role_allows?(:feature => start_page, :any => true)
   end
 
   def miq_tab_header(id, active = nil, options = {}, &_block)

@@ -36,7 +36,7 @@ describe ApplicationHelper do
     end
   end
 
-  describe "#role_allows" do
+  describe "#role_allows?" do
     let(:features) { MiqProductFeature.find_all_by_identifier("everything") }
     before(:each) do
       EvmSpecHelper.seed_specific_product_features("miq_report", "service")
@@ -77,23 +77,23 @@ describe ApplicationHelper do
     context "when with :feature" do
       context "and :any" do
         it "and entitled" do
-          expect(helper.role_allows(:feature => "miq_report", :any => true)).to be_truthy
+          expect(helper.role_allows?(:feature => "miq_report", :any => true)).to be_truthy
         end
 
         it "and not entitled" do
           login_as FactoryGirl.create(:user, :features => "service")
-          expect(helper.role_allows(:feature => "miq_report", :any => true)).to be_falsey
+          expect(helper.role_allows?(:feature => "miq_report", :any => true)).to be_falsey
         end
       end
 
       context "and no :any" do
         it "and entitled" do
-          expect(helper.role_allows(:feature => "miq_report")).to be_truthy
+          expect(helper.role_allows?(:feature => "miq_report")).to be_truthy
         end
 
         it "and not entitled" do
           login_as FactoryGirl.create(:user, :features => "service")
-          expect(helper.role_allows(:feature => "miq_report")).to be_falsey
+          expect(helper.role_allows?(:feature => "miq_report")).to be_falsey
         end
       end
     end
@@ -110,7 +110,7 @@ describe ApplicationHelper do
     end
 
     it "when not with :feature or :main_tab_id" do
-      expect(helper.role_allows).to be_falsey
+      expect(helper.role_allows?).to be_falsey
     end
   end
 

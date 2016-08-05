@@ -70,7 +70,7 @@ describe OpsController do
 
     context "#rbac_tenant_delete" do
       before do
-        allow(ApplicationHelper).to receive(:role_allows).and_return(true)
+        allow(ApplicationHelper).to receive(:role_allows?).and_return(true)
         @t = FactoryGirl.create(:tenant, :parent => Tenant.root_tenant)
         sb_hash = {
           :trees       => {:rbac_tree => {:active_node => "tn-#{controller.to_cid(@t.id)}"}},
@@ -103,7 +103,7 @@ describe OpsController do
       end
 
       it "deletes checked tenant records successfully" do
-        allow(ApplicationHelper).to receive(:role_allows).and_return(true)
+        allow(ApplicationHelper).to receive(:role_allows?).and_return(true)
         t = FactoryGirl.create(:tenant, :parent => Tenant.root_tenant)
         sb_hash = {
           :trees       => {:rbac_tree => {:active_node => "tn-#{controller.to_cid(t.id)}"}},
@@ -145,7 +145,7 @@ describe OpsController do
           :active_tab  => "rbac_details"
         }
         controller.instance_variable_set(:@sb, sb_hash)
-        allow(ApplicationHelper).to receive(:role_allows).and_return(true)
+        allow(ApplicationHelper).to receive(:role_allows?).and_return(true)
       end
       it "resets tenant edit" do
         controller.instance_variable_set(:@_params, :id => @tenant.id, :button => "reset")
@@ -263,7 +263,7 @@ describe OpsController do
           :active_tab  => "rbac_details"
         }
         controller.instance_variable_set(:@sb, sb_hash)
-        allow(ApplicationHelper).to receive(:role_allows).and_return(true)
+        allow(ApplicationHelper).to receive(:role_allows?).and_return(true)
       end
       it "resets tenant manage quotas" do
         controller.instance_variable_set(:@_params, :id => @tenant.id, :button => "reset")
@@ -318,7 +318,7 @@ describe OpsController do
                     :active_tab  => "rbac_details"
                   }
         controller.instance_variable_set(:@sb, sb_hash)
-        allow(ApplicationHelper).to receive(:role_allows).and_return(true)
+        allow(ApplicationHelper).to receive(:role_allows?).and_return(true)
         allow(@tenant).to receive(:tagged_with).with(:cat => user.userid).and_return("my tags")
         classification = FactoryGirl.create(:classification, :name => "department", :description => "Department")
         @tag1 = FactoryGirl.create(:classification_tag,

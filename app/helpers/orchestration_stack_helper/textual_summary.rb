@@ -58,7 +58,7 @@ module OrchestrationStackHelper::TextualSummary
     return nil if template.nil?
     label = ui_lookup(:table => "orchestration_template")
     h = {:label => label, :image => "orchestration_template", :value => template.name}
-    if role_allows(:feature => "orchestration_templates_view")
+    if role_allows?(:feature => "orchestration_templates_view")
       h[:title] = _("Show this Orchestration Template")
       h[:link] = url_for(:action => 'show', :id => @orchestration_stack, :display => 'stack_orchestration_template')
     end
@@ -69,7 +69,7 @@ module OrchestrationStackHelper::TextualSummary
     label = ui_lookup(:tables => "vm_cloud")
     num   = @record.number_of(:vms)
     h     = {:label => label, :image => "vm", :value => num}
-    if num > 0 && role_allows(:feature => "vm_show_list")
+    if num > 0 && role_allows?(:feature => "vm_show_list")
       h[:link]  = url_for(:action => 'show', :id => @orchestration_stack, :display => 'instances')
       h[:title] = _("Show all %{label}") % {:label => label}
     end

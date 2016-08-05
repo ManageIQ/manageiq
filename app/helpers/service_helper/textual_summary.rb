@@ -76,7 +76,7 @@ module ServiceHelper::TextualSummary
     # {:label => "Parent Catalog Item", :value => @record.service_template.name }
     st = @record.service_template
     s = {:label => _("Parent Catalog Item"), :image => "service_template", :value => (st.nil? ? _("None") : st.name)}
-    if st && role_allows(:feature => "catalog_items_accord")
+    if st && role_allows?(:feature => "catalog_items_accord")
       s[:title] = _("Show this Service's Parent Service Catalog")
       s[:link]  = url_for(:controller => 'catalog', :action => 'show', :id => st)
     end

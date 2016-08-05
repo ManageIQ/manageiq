@@ -446,7 +446,7 @@ describe QuadiconHelper do
         end
 
         it "renders a sparkle link for Vms, role permitting" do
-          allow(helper).to receive(:role_allows) { true }
+          allow(helper).to receive(:role_allows?) { true }
 
           expect(subject).to include("Fred")
           expect(subject).to include("/vm_infra/show/#{vm.id}")
@@ -1260,7 +1260,7 @@ describe QuadiconHelper do
 
             context "and when url can be found with vm_quad_link_attributes" do
               before(:each) do
-                allow(helper).to receive(:role_allows) { true }
+                allow(helper).to receive(:role_allows?) { true }
                 allow(helper).to receive(:vm_quad_link_attributes) do
                   {
                     :link       => true,

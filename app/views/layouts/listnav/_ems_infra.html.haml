@@ -28,31 +28,31 @@
           :display    => 'ems_folders',
           :vat        => true,
           :title      => _("Show VMs & Templates"))
-        - if role_allows(:feature => "ems_cluster_show_list")
+        - if role_allows?(:feature => "ems_cluster_show_list")
           = li_link(:count => @record.number_of(:ems_clusters),
             :text          => clusters_title,
             :record        => @record,
             :display       => 'ems_clusters',
             :title         => _("Show all managed %{cluster}") % {:cluster => clusters_title})
-        - if role_allows(:feature => "host_show_list")
+        - if role_allows?(:feature => "host_show_list")
           = li_link(:count => @record.number_of(:hosts),
             :text          => hosts_title,
             :record        => @record,
             :display       => 'hosts',
             :title         => _("Show all managed %{hosts}") % {:hosts => hosts_title})
-        - if role_allows(:feature => "storage_show_list")
+        - if role_allows?(:feature => "storage_show_list")
           = li_link(:count => @record.number_of(:storages),
             :record        => @record,
             :tables        => 'storages',
             :display       => 'storages',
             :title         => _("Show all managed %{storages}") % {:storages => ui_lookup(:tables => "storages")})
-        - if role_allows(:feature => "vm_show_list")
+        - if role_allows?(:feature => "vm_show_list")
           = li_link(:count => @record.number_of(:vms),
             :text          => _("VMs"),
             :record        => @record,
             :display       => 'vms',
             :title         => _("Show all VMs"))
-        - if role_allows(:feature => "miq_template_show_list")
+        - if role_allows?(:feature => "miq_template_show_list")
           = li_link(:count => @record.number_of(:miq_templates),
             :text          => _("Templates"),
             :record        => @record,

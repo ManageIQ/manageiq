@@ -50,7 +50,7 @@ class OntapFileShareController < CimInstanceController
     @sb[:sfs_id] = params[:id]
     @record = OntapFileShare.find(params[:id])
     area = request.parameters["controller"]
-    if role_allows(:feature => "#{area}_tag")
+    if role_allows?(:feature => "#{area}_tag")
       javascript_redirect :action => 'create_ds'
     else
       render :update do |page|

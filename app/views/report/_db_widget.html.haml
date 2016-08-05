@@ -21,7 +21,7 @@
       - if widget.status.downcase != "none"
         %i{:class => "#{glyphicon}"}
 
-      - if role_allows(:feature => "dashboard_add") && @edit && @edit[:current]
+      - if role_allows?(:feature => "dashboard_add") && @edit && @edit[:current]
         = render :partial => 'db_widget_remove', :locals => {:widget => widget}
 
       = widget.title

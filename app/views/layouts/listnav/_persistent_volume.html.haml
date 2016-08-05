@@ -10,7 +10,7 @@
 
     = miq_accordion_panel(_("Relationships"), false, "persistent_volume_rel") do
       %ul.nav.nav-pills.nav-stacked
-        - if role_allows(:feature => "ems_container_show") && !@record.parent.nil?
+        - if role_allows?(:feature => "ems_container_show") && !@record.parent.nil?
           %li
             = link_to("#{ui_lookup(:table => "ems_container")}: #{@record.parent.name}",
                 {:controller => "ems_container", :action => 'show', :id => @record.parent.id.to_s},

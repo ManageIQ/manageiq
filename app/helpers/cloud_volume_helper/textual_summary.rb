@@ -31,7 +31,7 @@ module CloudVolumeHelper::TextualSummary
       :image => "availability_zone",
       :value => (availability_zone.nil? ? _("None") : availability_zone.name)
     }
-    if availability_zone && role_allows(:feature => "availability_zone_show")
+    if availability_zone && role_allows?(:feature => "availability_zone_show")
       h[:title] = _("Show this Volume's %{availability_zone}") % {:availability_zone => label}
       h[:link]  = url_for(:controller => 'availability_zone', :action => 'show', :id => availability_zone)
     end
@@ -46,7 +46,7 @@ module CloudVolumeHelper::TextualSummary
       :image => "cloud_volume_snapshot",
       :value => (base_snapshot.nil? ? _("None") : base_snapshot.name)
     }
-    if base_snapshot && role_allows(:feature => "cloud_volume_snapshot_show")
+    if base_snapshot && role_allows?(:feature => "cloud_volume_snapshot_show")
       h[:title] = _("Show this Volume's %{parent}") % {:parent => label}
       h[:link]  = url_for(:controller => 'cloud_volume_snapshot', :action => 'show', :id => base_snapshot)
     end
@@ -57,7 +57,7 @@ module CloudVolumeHelper::TextualSummary
     cloud_tenant = @record.cloud_tenant if @record.respond_to?(:cloud_tenant)
     label = ui_lookup(:table => "cloud_tenants")
     h = {:label => label, :image => "cloud_tenant", :value => (cloud_tenant.nil? ? _("None") : cloud_tenant.name)}
-    if cloud_tenant && role_allows(:feature => "cloud_tenant_show")
+    if cloud_tenant && role_allows?(:feature => "cloud_tenant_show")
       h[:title] = _("Show this Volume's %{cloud_tenant}") % {:cloud_tenant => label}
       h[:link]  = url_for(:controller => 'cloud_tenant', :action => 'show', :id => cloud_tenant)
     end
@@ -68,7 +68,7 @@ module CloudVolumeHelper::TextualSummary
     label = ui_lookup(:tables => "cloud_volume_snapshots")
     num   = @record.number_of(:cloud_volume_snapshots)
     h     = {:label => label, :image => "cloud_volume_snapshot", :value => num}
-    if num > 0 && role_allows(:feature => "cloud_volume_snapshot_show_list")
+    if num > 0 && role_allows?(:feature => "cloud_volume_snapshot_show_list")
       label = ui_lookup(:tables => "cloud_volume_snapshots")
       h[:title] = _("Show all %{models}") % {:models => label}
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'cloud_volume_snapshots')
@@ -80,7 +80,7 @@ module CloudVolumeHelper::TextualSummary
     label = ui_lookup(:tables => "vm_cloud")
     num   = @record.number_of(:attachments)
     h     = {:label => label, :image => "vm", :value => num}
-    if num > 0 && role_allows(:feature => "vm_show_list")
+    if num > 0 && role_allows?(:feature => "vm_show_list")
       h[:title] = _("Show all attached %{models}") % {:models => label}
       h[:link]  = url_for(:action => 'show', :id => @volume, :display => 'instances')
     end
