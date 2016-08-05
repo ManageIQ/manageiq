@@ -18,7 +18,7 @@ module VmHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(name region server description hostname ipaddress custom_1 container host_platform tools_status osinfo devices cpu_affinity snapshots advanced_settings resources guid)
+    %i(name region server description hostname ipaddress custom_1 container host_platform tools_status osinfo devices cpu_affinity snapshots advanced_settings resources guid storage_profile)
   end
 
   def textual_group_lifecycle
@@ -164,6 +164,11 @@ module VmHelper::TextualSummary
 
   def textual_guid
     {:label => _("Management Engine GUID"), :value => @record.guid}
+  end
+
+  def textual_storage_profile
+    return nil if @record.storage_profile.nil?
+    {:label => _("Storage Profile"), :value => @record.storage_profile}
   end
 
   def textual_discovered
