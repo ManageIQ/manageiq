@@ -138,11 +138,11 @@ class User < ApplicationRecord
   alias_method :miq_group_description, :ldap_group
 
   def role_allows?(options = {})
-    Rbac::Authorizer.role_allows?(options.merge(:user => self))
+    Rbac.role_allows?(options.merge(:user => self))
   end
 
   def role_allows_any?(options = {})
-    Rbac::Authorizer.role_allows?(options.merge(:user => self, :any => true))
+    Rbac.role_allows?(options.merge(:user => self, :any => true))
   end
 
   def miq_user_role_name
