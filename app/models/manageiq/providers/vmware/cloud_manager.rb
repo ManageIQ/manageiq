@@ -2,6 +2,8 @@ class ManageIQ::Providers::Vmware::CloudManager < ManageIQ::Providers::CloudMana
   require_nested :AvailabilityZone
   require_nested :OrchestrationStack
   require_nested :OrchestrationTemplate
+  require_nested :EventCatcher
+  require_nested :EventParser
   require_nested :RefreshParser
   require_nested :RefreshWorker
   require_nested :Refresher
@@ -9,6 +11,7 @@ class ManageIQ::Providers::Vmware::CloudManager < ManageIQ::Providers::CloudMana
   require_nested :Vm
 
   include ManageIQ::Providers::Vmware::ManagerAuthMixin
+  include ManageIQ::Providers::Vmware::ManagerEventsMixin
   include HasNetworkManagerMixin
 
   before_validation :ensure_managers
@@ -38,7 +41,7 @@ class ManageIQ::Providers::Vmware::CloudManager < ManageIQ::Providers::CloudMana
   end
 
   def supported_auth_types
-    %w(default)
+    %w(default amqp)
   end
 
   def supports_authentication?(authtype)
@@ -77,6 +80,12 @@ class ManageIQ::Providers::Vmware::CloudManager < ManageIQ::Providers::CloudMana
     case err
     when Fog::Compute::VcloudDirector::Unauthorized
       MiqException::MiqInvalidCredentialsError.new "Login failed due to a bad username or password."
+    when Excon::Errors::Timeout
+      MiqException::MiqUnreachableError.new "Login attempt timed out"
+    when Excon::Errors::SocketError
+      MiqException::MiqHostError.new "Socket error: #{err.message}"
+    when MiqException::MiqInvalidCredentialsError, MiqException::MiqHostError
+      err
     else
       MiqException::MiqHostError.new "Unexpected response returned from system: #{err.message}"
     end
