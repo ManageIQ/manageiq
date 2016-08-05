@@ -62,6 +62,8 @@ class MiqReportResult < ApplicationRecord
     miq_report_result_details.build(results)
   end
 
+  # @option options :per_page number of items per page
+  # @option options :page page number (defaults to page 1)
   def html_rows(options = {})
     per_page = options.delete(:per_page)
     page     = options.delete(:page) || 1
@@ -71,7 +73,7 @@ class MiqReportResult < ApplicationRecord
     end
     update_attribute(:last_accessed_on, Time.now.utc)
     purge_for_user
-    html_details.apply_legacy_finder_options(options.merge(:order => "id asc")).collect(&:data)
+    html_details.order("id asc").offset(options[:offset]).limit(options[:limit]).collect(&:data)
   end
 
   def save_for_user(userid)
