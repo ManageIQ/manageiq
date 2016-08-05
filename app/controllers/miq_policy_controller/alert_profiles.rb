@@ -54,6 +54,7 @@ module MiqPolicyController::AlertProfiles
                                                 _("%{model} \"%{name}\" was added")
         add_flash(flash_key % {:model => ui_lookup(:model => "MiqAlertSet"), :name => @edit[:new][:description]})
         alert_profile_get_info(MiqAlertSet.find(alert_profile.id))
+        alert_profile_sync_provider(current, mems.keys)
         @edit = nil
         self.x_node = @new_alert_profile_node = "xx-#{alert_profile.mode}_ap-#{to_cid(alert_profile.id)}"
         get_node_info(@new_alert_profile_node)
@@ -89,6 +90,7 @@ module MiqPolicyController::AlertProfiles
         add_flash(_("At least one Selection must be checked"), :error)
       end
       unless flash_errors?
+        alert_profile_sync_provider
         alert_profile_assign_save
         add_flash(_("Alert Profile \"%{alert_profile}\" assignments succesfully saved") %
           {:alert_profile => @alert_profile.description})
@@ -113,6 +115,8 @@ module MiqPolicyController::AlertProfiles
                 :error)
     else
       alert_profiles.push(params[:id])
+      alert_profile_get_info(MiqAlertSet.find(params[:id]))
+      alert_profile_sync_provider
     end
     process_alert_profiles(alert_profiles, "destroy") unless alert_profiles.empty?
     nodes = x_node.split("_")
@@ -342,5 +346,29 @@ module MiqPolicyController::AlertProfiles
     @alert_profile_alerts = @alert_profile.miq_alerts.sort_by { |a| a.description.downcase }
     @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "MiqAlertSet"), :name => alert_profile.description}
     @right_cell_div = "alert_profile_details"
+  end
+
+  def alert_profile_sync_provider(old_alerts = nil, new_alerts = nil)
+    if @alert_profile.mode == "MiddlewareServer"
+      if old_alerts.nil? && new_alerts.nil?
+        operation = :update_assignments
+        old_alerts = new_alerts = @alert_profile.miq_alerts.collect(&:id)
+        assigned = @alert_profile.get_assigned_tos
+      else
+        operation = :update_alerts
+      end
+      MiqQueue.put(
+        :class_name  => "ManageIQ::Providers::Hawkular::MiddlewareManager",
+        :method_name => "update_alert_profile",
+        :args        => {
+          :operation       => operation,
+          :profile_id      => @alert_profile.id,
+          :old_alerts      => old_alerts,
+          :new_alerts      => new_alerts,
+          :old_assignments => assigned ? assigned[:objects] : nil,
+          :new_assignments => @assign ? @assign[:new] : nil
+        }
+      )
+    end
   end
 end

@@ -268,6 +268,14 @@ module ManageIQ::Providers
       "#{type}I~R~[#{resource[:middleware_server][:feed]}/#{resource[:nativeid]}]~#{type}T~#{metric_id}"
     end
 
+    def self.update_alert(*args)
+      _log.debug("Updating an alert on Hawkular provider: #{args}")
+    end
+
+    def self.update_alert_profile(*args)
+      _log.debug("Updating an alert profile on Hawkular provider: #{args}")
+    end
+
     private
 
     # Trigger running a (Hawkular) operation on the
