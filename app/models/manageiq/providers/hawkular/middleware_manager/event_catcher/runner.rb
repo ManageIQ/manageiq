@@ -10,10 +10,16 @@ class ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Runner <
     # Supported event_types (see settings.yml)
     @whitelist = [
       # summary
+      'hawkular_datasource.error',
+      'hawkular_datasource_remove.error',
       'hawkular_deployment.error',
+      'hawkular_deployment_remove.error',
       'hawkular_event.critical', # general purpose critical/summary level event
       # detail
+      'hawkular_datasource.ok',
+      'hawkular_datasource_remove.ok',
       'hawkular_deployment.ok',
+      'hawkular_deployment_remove.ok',
       'hawkular_event' # # general purpose detail level event
     ].to_set.freeze
   end

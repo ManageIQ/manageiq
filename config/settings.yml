@@ -219,10 +219,16 @@
       :name: Creation/Addition
     :application:
       :critical:
+      - hawkular_datasource.error
+      - hawkular_datasource_remove.error
       - hawkular_deployment.error
+      - hawkular_deployment_remove.error
       - hawkular_event.critical
       :detail:
+      - hawkular_datasource.ok
+      - hawkular_datasource_remove.ok
       - hawkular_deployment.ok
+      - hawkular_deployment_remove.ok
       - hawkular_event
       :name: Application
     :configuration:
