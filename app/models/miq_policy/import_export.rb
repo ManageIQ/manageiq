@@ -61,7 +61,8 @@ module MiqPolicy::ImportExport
       end
 
       policy["towhat"] ||= "Vm"      # Default "towhat" value to "Vm" to support older export decks that don't have a value set.
-      policy["active"] ||= true      # Default "active" value to true to support older export decks that don't have a value set.
+      # Default "active" value to true to support older export decks that don't have a value set.
+      policy["active"] = true if policy["active"].nil?
       policy["mode"] ||= "control" # Default "mode" value to true to support older export decks that don't have a value set.
 
       p = MiqPolicy.find_by_guid(policy["guid"])
