@@ -6,10 +6,6 @@ module Rbac
       new.role_allows?(*args)
     end
 
-    def initialize
-
-    end
-
     def role_allows?(options = {})
       user    = options[:user]
 
