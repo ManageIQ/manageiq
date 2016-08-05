@@ -3,7 +3,7 @@ require 'pg'
 
 describe PostgresHaAdmin::FailoverDatabases do
   let(:logger) { Logger.new(@logger_file) }
-  let(:failover_databases) { described_class.new(@yml_file, logger) }
+  let(:failover_databases) { described_class.new(@yml_file.path, logger) }
 
   before do
     @yml_file = Tempfile.new('failover_databases.yml')
