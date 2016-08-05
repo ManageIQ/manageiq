@@ -138,7 +138,7 @@ module ApplicationHelper
       return false
     end
 
-    Rbac::Authorizer.role_allows(options.merge(user: User.current_user)) rescue false
+    Rbac::Authorizer.role_allows?(options.merge(user: User.current_user)) rescue false
   end
   module_function :role_allows
   public :role_allows

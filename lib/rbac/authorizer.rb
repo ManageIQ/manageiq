@@ -2,15 +2,15 @@ module Rbac
   class Authorizer
     include Vmdb::Logging
 
-    def self.role_allows(*args)
-      new.role_allows(*args)
+    def self.role_allows?(*args)
+      new.role_allows?(*args)
     end
 
     def initialize
 
     end
 
-    def role_allows(options = {})
+    def role_allows?(options = {})
       user    = options[:user]
 
       # 'identifier' comes from the back end (ex: User#role_allows?)

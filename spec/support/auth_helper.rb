@@ -28,7 +28,7 @@ module AuthHelper
                   EOS
                 end
     allow(controller).to receive(:check_privileges).and_return(stub_bool)
-    allow(Rbac::Authorizer).to receive(:role_allows).and_return(stub_bool)
+    allow(Rbac::Authorizer).to receive(:role_allows?).and_return(stub_bool)
 
     login_as user
     user
