@@ -77,9 +77,9 @@ function miqMenuEditor(id) {
 function miqBindHoverEvent(tree_name) {
   var node_id;
 
-  $("#" + tree_name + "box a").hover(function () {
+  $("#" + tree_name + "box a").hover(function (event) {
     var node = $.ui.dynatree.getNode(this);
-    node_id = miqOnMouseInHostNet(node.data.key);
+    node_id = miqOnMouseInHostNet(node.data.key, event);
   }, function () {
     var node = $.ui.dynatree.getNode(this);
     miqOnMouseOutHostNet(node.data.key, node_id);
@@ -271,15 +271,12 @@ function miqOnClickSnapshotTree(id) {
 }
 
 // Show the hidden quad icon div when mousing over VMs in the Host Network tree
-function miqOnMouseInHostNet(id) {
+function miqOnMouseInHostNet(id, event) {
   var nid = hoverNodeId(id);
   if (nid) {
-    // div id exists
-    var node = $('#' + id); // Get html node
-    // FIXME: replace with a saner display method
-    var top  = node[0].getBoundingClientRect().top + node.scrollTop() - 220;
-    $("#" + nid).css({ top: top + "px" }); // Set quad top location
-    $("#" + nid).show(); // Show the quad div
+    var top = $(event.target).position().top;
+    $("#" + nid).css({ top: top + "px" }).show(); // Set quad top location
+    // $("#" + nid).show(); // Show the quad div
     return nid; // return current node id
   }
 }
