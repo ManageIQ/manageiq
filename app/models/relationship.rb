@@ -11,16 +11,27 @@ class Relationship < ApplicationRecord
   # Filtering methods
   #
 
+  def self.filtered(of_type, except_type)
+    relationships = self
+    relationships = relationships.where(:resource_type => of_type) if of_type.present?
+    relationships = relationships.where.not(:resource_type => except_type) if except_type.present?
+    relationships
+  end
+
   def filtered?(of_type, except_type)
     (!of_type.empty? && !of_type.include?(resource_type)) ||
       (!except_type.empty? && except_type.include?(resource_type))
   end
 
   def self.filter_by_resource_type(relationships, options)
-    of_type = options[:of_type].to_miq_a
-    except_type = options[:except_type].to_miq_a
+    of_type = Array.wrap(options[:of_type])
+    except_type = Array.wrap(options[:except_type])
     return relationships if of_type.empty? && except_type.empty?
-    relationships.reject { |r| r.filtered?(of_type, except_type) }
+    if relationships.kind_of?(Array)
+      relationships.reject { |r| r.filtered?(of_type, except_type) }
+    else
+      relationships.filtered(of_type, except_type)
+    end
   end
 
   #
