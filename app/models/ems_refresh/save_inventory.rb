@@ -27,7 +27,7 @@ module EmsRefresh::SaveInventory
                     []
                   end
 
-    child_keys = [:operating_system, :hardware, :custom_attributes, :snapshots]
+    child_keys = [:operating_system, :hardware, :custom_attributes, :snapshots, :advanced_settings]
     extra_infra_keys = [:host, :ems_cluster, :storage, :storages, :raw_power_state, :parent_vm]
     extra_cloud_keys = [
       :flavor,
