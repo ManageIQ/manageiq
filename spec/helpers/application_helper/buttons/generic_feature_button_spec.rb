@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ApplicationHelper::Button::GenericFeatureButton do
   describe '#skip?' do
     [:pause].each do |feature|
@@ -15,7 +13,6 @@ describe ApplicationHelper::Button::GenericFeatureButton do
            expect(button.skip?).to be_falsey
         end
       end
-
 
       context "when instance does not support feature #{feature}" do
         before do

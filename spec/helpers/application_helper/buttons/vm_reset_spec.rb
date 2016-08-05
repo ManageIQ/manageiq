@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ApplicationHelper::Button::VmReset do
   describe '#skip?' do
     context "when record is resetable" do

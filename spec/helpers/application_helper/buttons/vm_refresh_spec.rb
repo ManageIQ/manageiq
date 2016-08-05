@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ApplicationHelper::Button::VmRefresh do
   describe '#skip?' do
     context "when record has ext_management_system and host vmm_product is workstation" do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Endpoint do
   let(:endpoint) { described_class.new }
 

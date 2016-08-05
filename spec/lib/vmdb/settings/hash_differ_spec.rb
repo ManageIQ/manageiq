@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Vmdb::Settings::HashDiffer do
   let(:before_hash) do
     {

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe SettingsChange do
   describe "#key_path" do
     it "with multiple parts in the key" do

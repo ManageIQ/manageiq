@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'recursive-open-struct'
 require_relative 'hawkular_helper'
 

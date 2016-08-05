@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ApplicationHelper::Button::VmSuspend do
   describe '#skip?' do
     context "when record is suspendable" do
