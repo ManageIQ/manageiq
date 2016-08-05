@@ -20,4 +20,17 @@ describe CustomButtonSet do
       expect(all_button_sets.count).to eq(3)
     end
   end
+
+  it "#deep_copy" do
+    service_template1 = FactoryGirl.create(:service_template)
+    service_template2 = FactoryGirl.create(:service_template)
+    custom_button     = FactoryGirl.create(:custom_button, :applies_to => service_template1)
+    custom_button_set = FactoryGirl.create(:custom_button_set)
+
+    custom_button_set.add_member(custom_button)
+    custom_button_set.deep_copy(:owner => service_template2)
+
+    expect(CustomButton.count).to eq(2)
+    expect(CustomButtonSet.count).to eq(2)
+  end
 end
