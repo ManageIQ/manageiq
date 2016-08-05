@@ -902,11 +902,9 @@ class MiqExpression
     operator = operator.downcase
     ops["tag"] = ops["field"] if operator == "contains" && !ops["tag"] # process values in contains as tags
 
-    ret = []
     if ops["tag"] && context_type != "hash"
       ref, val = value2tag(preprocess_managed_tag(ops["tag"]), ops["value"])
-      fld = val
-      ret.push(ref ? "<exist ref=#{ref}>#{val}</exist>" : "<exist>#{val}</exist>")
+      [ref ? "<exist ref=#{ref}>#{val}</exist>" : "<exist>#{val}</exist>"]
     elsif ops["tag"] && context_type == "hash"
       # This is only for supporting reporting "display filters"
       # In the report object the tag value is actually the description and not the raw tag name.
@@ -915,15 +913,12 @@ class MiqExpression
         break(t.first) if t.last == ops["value"]
         s
       end
-
       val = ops["tag"].split(".").last.split("-").join(".")
       fld = "<value type=string>#{val}</value>"
-      ret.push(fld)
-      ret.push(quote(description, "string"))
+      [fld, quote(description, "string")]
     elsif ops["field"]
       if ops["field"] == "<count>"
-        ret.push("<count>")
-        ret.push(ops["value"])
+        ["<count>", ops["value"]]
       else
         case context_type
         when "hash"
@@ -933,32 +928,31 @@ class MiqExpression
           ref, val = value2tag(ops["field"])
         end
         col_type = get_col_type(ops["field"]) || "string"
-        fld = val
         fld = ref ? "<value ref=#{ref}, type=#{col_type}>#{val}</value>" : "<value type=#{col_type}>#{val}</value>"
-        ret.push(fld)
         if ["like", "not like", "starts with", "ends with", "includes", "regular expression matches", "regular expression does not match"].include?(operator)
-          ret.push(ops["value"])
+          [fld, ops["value"]]
         else
-          ret.push(quote(ops["value"], col_type.to_s))
+          [fld, quote(ops["value"], col_type.to_s)]
         end
       end
     elsif ops["count"]
       ref, count = value2tag(ops["count"])
-      ret.push(ref ? "<count ref=#{ref}>#{count}</count>" : "<count>#{count}</count>")
-      ret.push(ops["value"])
+      field = ref ? "<count ref=#{ref}>#{count}</count>" : "<count>#{count}</count>"
+      [field, ops["value"]]
     elsif ops["regkey"]
-      ret.push("<registry>#{ops["regkey"].strip} : #{ops["regval"]}</registry>")
-      if ["like", "not like", "starts with", "ends with", "includes", "regular expression matches", "regular expression does not match"].include?(operator)
-        ret.push(ops["value"])
-      elsif operator == "key exists"
-        ret = "<registry key_exists=1, type=boolean>#{ops["regkey"].strip}</registry>  == 'true'"
+      if operator == "key exists"
+        "<registry key_exists=1, type=boolean>#{ops["regkey"].strip}</registry>  == 'true'"
       elsif operator == "value exists"
-        ret = "<registry value_exists=1, type=boolean>#{ops["regkey"].strip} : #{ops["regval"]}</registry>  == 'true'"
+        "<registry value_exists=1, type=boolean>#{ops["regkey"].strip} : #{ops["regval"]}</registry>  == 'true'"
       else
-        ret.push(quote(ops["value"], "string"))
+        fld = "<registry>#{ops["regkey"].strip} : #{ops["regval"]}</registry>"
+        if ["like", "not like", "starts with", "ends with", "includes", "regular expression matches", "regular expression does not match"].include?(operator)
+          [fld, ops["value"]]
+        else
+          [fld, quote(ops["value"], "string")]
+        end
       end
     end
-    ret
   end
 
   def self.quote(val, typ)
