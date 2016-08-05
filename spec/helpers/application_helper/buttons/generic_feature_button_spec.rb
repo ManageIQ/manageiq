@@ -42,6 +42,47 @@ describe ApplicationHelper::Button::GenericFeatureButton do
       end
     end
 
+    describe 'the button for the service' do
+      [:reconfigure].each do |feature|
+        context "that supports feature #{feature}" do
+          before do
+            @record = FactoryGirl.create(:service)
+            allow(@record).to receive(:is_available?).with(feature).and_return(true)
+          end
+
+          it "will not be skipped" do
+             view_context = setup_view_context_with_sandbox({})
+             button = described_class.new(
+               view_context,
+               {},
+               {'record' => @record},
+               {:options => {:feature => feature}}
+             )
+             expect(button.skip?).to be_falsey
+          end
+        end
+
+
+        context "that does not support feature #{feature}" do
+          before do
+            @record = FactoryGirl.create(:service)
+            allow(@record).to receive(:is_available?).with(feature).and_return(false)
+          end
+
+          it "will be skipped" do
+             view_context = setup_view_context_with_sandbox({})
+             button = described_class.new(
+               view_context,
+               {},
+               {'record' => @record},
+               {:options => {:feature => feature}}
+             )
+             expect(button.skip?).to be_truthy
+          end
+        end
+      end
+    end
+
     describe 'the button for the vm' do
       [:clone].each do |feature|
         context "that supports feature #{feature}" do
