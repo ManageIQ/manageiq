@@ -170,13 +170,6 @@ end
 
 describe EmsContainerController do
   context "::EmsCommon" do
-    it 'calculate_display_class correctly' do
-      expect(controller.calculate_display_class("container_nodes")).to eq(ContainerNode)
-      expect(controller.calculate_display_class("cloud_tenants")).to eq(CloudTenant)
-      expect(controller.calculate_display_class("flavors")).to eq(Flavor)
-      expect(controller.calculate_display_class("container_routes")).to eq(ContainerRoute)
-    end
-
     context "#update" do
       context "updates provider with new token" do
         after :each do

@@ -68,13 +68,36 @@ module EmsCommon
 
   def view_setup_params
     {
-      "instances"                     => [ManageIQ::Providers::CloudManager::Vm, _("Instances")],
-      "images"                        => [ManageIQ::Providers::CloudManager::Template, _("Images")],
-      "miq_templates"                 => [MiqTemplate, _("Templates")],
-      "vms"                           => [Vm,_("VMs")],
-      "orchestration_stacks"          => [OrchestrationStack, _("Stacks")],
+      "instances"                     => [ManageIQ::Providers::CloudManager::Vm, _("Instances"), _('Instance')],
+      "images"                        => [ManageIQ::Providers::CloudManager::Template, _("Images"), _('Image')],
+      "miq_templates"                 => [MiqTemplate, _("Templates"), _('Template')],
+      "vms"                           => [Vm, _("VMs"), _('VM')],
+      "orchestration_stacks"          => [OrchestrationStack, _("Stacks"), _('Stack')],
 #      "configuration_jobs"            => [ConfigurationJob, _("Configuration Jobs")],
-      "cloud_object_store_containers" => [CloudObjectStoreContainer, ui_lookup(:tables => 'cloud_object_stores')],
+      "cloud_object_store_containers" => [CloudObjectStoreContainer, _('Cloud Object Stores'), _('Cloud Object Store')],
+      'containers'                    => [Container, _('Containers'), _('Container')],
+      'container_replicators'         => [ContainerReplicator, _('Container Replicators'), _('Container Replicator')],
+      'container_nodes'               => [ContainerNode, _('Container Nodes'), _('Container Node')],
+      'container_groups'              => [ContainerGroup, _('Container Groups'), _('Container Group')],
+      'container_services'            => [ContainerService, _('Container Services'), _('Container Service')],
+      'container_images'              => [ContainerImage, _('Container Images'), _('Container Image')],
+      'container_routes'              => [ContainerRoute, _('Container Routes'), _('Container Route')],
+      'container_builds'              => [ContainerBuild, _('Container Builds'), _('Container Build')],
+      'container_projects'            => [ContainerProject, _('Container Projects'), _('Container Project')],
+      'container_image_registries'    => [ContainerImageRegistry, _('Container Image Registries'), _('Container Image Registry')],
+      'availability_zones'             => [AvailabilityZone, _('Availability Zones'), _('Availability Zone')],
+      'middleware_servers'             => [MiddlewareServer, _('Middleware Servers'), _('Middleware Server')],
+      'middleware_deployments'         => [MiddlewareDeployment, _('Middleware'), _('Middleware')],
+      'middleware_datasources'         => [MiddlewareDatasource, _('Middleware'), _('Middleware')],
+      'cloud_tenants'                  => [CloudTenant, _('Cloud Tenants'), _('Cloud Tenant')],
+      'cloud_volumes'                  => [CloudVolume, _('Cloud Volumes'), _('Cloud Volume')],
+      'flavors'                        => [Flavor, _('Flavors'), _('Flavor')],
+      'security_groups'                => [SecurityGroup, _('Security Groups'), _('Security Group')],
+      'floating_ips'                   => [FloatingIp, _('Floating IPs'), _('Floating IP')],
+      'network_routers'                => [NetworkRouter, _('Network Routers'), _('Network Router')],
+      'network_ports'                  => [NetworkPort, _('Network Ports'), _('Network Port')],
+      'cloud_subnets'                  => [CloudSubnet, _('Cloud Subnets'), _('Cloud Subnet')],
+      'cloud_networks'                 => [CloudNetwork, _('Cloud Networks'), _('Cloud Network')],
     }
   end
 
@@ -94,15 +117,6 @@ module EmsCommon
   def show_persistent_volumes
     title = ui_lookup(:tables => "persistent_volumes")
     view_setup_helper(PersistentVolume, title, title.singularize, :persistent_volumes)
-  end
-
-  def show_calculated(display)
-    display_class = calculate_display_class(display)
-    return unless display_class.present?
-
-    display_name = display_class.name.underscore.pluralize
-    title = ui_lookup(:tables => display_name)
-    view_setup_helper(display_class, title, title.singularize)
   end
 
   def show
@@ -148,13 +162,13 @@ module EmsCommon
         when "persistent_volumes"            then show_persistent_volumes
         when "cloud_object_store_containers" then show_entities(session[:display])
         when 'vms'                           then show_entities(session[:display])
-        else                                      show_calculated(session[:display])
+        else                                      show_entities(session[:display])
         end
       else
         show_main
       end
 
-    else show_calculated(params[:display])
+    else show_entities(params[:display])
     end
 
     @lastaction = "show"
@@ -166,17 +180,6 @@ module EmsCommon
     end
 
     render :template => "shared/views/ems_common/show" if params[:action] == 'show' && !performed?
-  end
-
-  def calculate_display_class(display_name)
-    [Container, ContainerReplicator, ContainerNode, ContainerGroup,
-     ContainerService, ContainerImage, ContainerRoute, ContainerBuild,
-     ContainerProject, ContainerImageRegistry, AvailabilityZone,
-     MiddlewareServer, MiddlewareDeployment, MiddlewareDatasource,
-     CloudTenant, CloudVolume, Flavor,
-     SecurityGroup, FloatingIp, NetworkRouter, NetworkPort, CloudSubnet, CloudNetwork].detect do |klass|
-      display_name == klass.name.underscore.pluralize
-    end
   end
 
   def view_setup_helper(kls, title, view_item_name = nil, parent_method = nil)
