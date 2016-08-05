@@ -3,7 +3,6 @@ require 'recursive-open-struct'
 require_relative 'hawkular_helper'
 
 describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
-
   let(:ems_hawkular) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     auth = AuthToken.new(:name => "test", :auth_key => "valid-token", :userid => "jdoe", :password => "password")
