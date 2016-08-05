@@ -10,10 +10,27 @@ module OwnershipMixin
     virtual_column :evm_owner_userid,                     :type => :string,     :uses => :evm_owner
     virtual_column :owned_by_current_user,                :type => :boolean,    :uses => :evm_owner_userid
     virtual_column :owning_ldap_group,                    :type => :string,     :uses => :miq_group
-    virtual_column :owned_by_current_ldap_group,          :type => :boolean,    :uses => :owning_ldap_group
+
+    # Determine whether to return objects owned by the current user's miq_group
+    # or not. Requires `with_miq_group` scope to function
+    #
+    # Resulting SQL: "(LOWER("miq_groups"."description") = 'some_miq_group')"
+    #
+    # Will result in the following when used with MiqExpression:
+    #
+    #   WHERE ((LOWER("miq_groups"."description") = 'some_miq_group') = 'true')
+    virtual_attribute :owned_by_current_ldap_group, :boolean, :arel => (lambda do |t|
+      ldap_group = User.current_user.try(:ldap_group).to_s.downcase
+
+      t.grouping(MiqGroup.arel_table[:description].lower.eq(ldap_group))
+    end)
   end
 
   module ClassMethods
+    def with_miq_group
+      select(arel_table[Arel.star]).joins(:miq_group)
+    end
+
     def set_ownership(ids, options)
       errors = ActiveModel::Errors.new(self)
       objects = where(:id => ids)
