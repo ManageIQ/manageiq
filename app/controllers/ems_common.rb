@@ -140,12 +140,8 @@ module EmsCommon
     when "dashboard"                    then show_dashboard
     when "topology"                     then show_topology
     when "performance"                  then show_performance
-    when "instances", "images", "miq_templates", "vms"
-                                        then show_entities(params[:display])
     when 'ems_clusters'                 then show_ems_clusters
     when 'storages'                     then show_storages
-    when 'orchestration_stacks'         then show_entities(params[:display])
-    when 'configuration_jobs'           then show_entities(params[:display])
     when 'persistent_volumes'           then show_persistent_volumes
     when 'cloud_object_store_containers'
                                         then show_entities(params[:display])
@@ -157,11 +153,7 @@ module EmsCommon
       if control_selected?
         case session[:display]
         when "storages"                      then show_storages
-        when "orchestration_stacks"          then show_entities(session[:display])
-        when "configuration_jobs"            then show_entities(session[:display])
         when "persistent_volumes"            then show_persistent_volumes
-        when "cloud_object_store_containers" then show_entities(session[:display])
-        when 'vms'                           then show_entities(session[:display])
         else                                      show_entities(session[:display])
         end
       else
