@@ -26,7 +26,7 @@ ManageIQ.angular.app.controller('mySettingsVisualsController', ['$http', '$scope
 
         ManageIQ.angular.scope = $scope;
 
-        $http.get('/configuration/get_visual_settings').success(function(data) {
+        $http.get('/configuration/visual_settings').success(function(data) {
             $scope.mySettingsModel = data;
             $scope.modelCopy = angular.copy( $scope.mySettingsModel );
             $scope.afterGet = true;
