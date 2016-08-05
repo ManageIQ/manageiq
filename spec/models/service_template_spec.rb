@@ -1,4 +1,6 @@
 describe ServiceTemplate do
+  include_examples "miq ownership"
+
   describe "#custom_actions" do
     let(:service_template) do
       described_class.create(:name => "test", :description => "test", :custom_button_sets => [assigned_group_set])
