@@ -99,15 +99,12 @@ module EmsCommon
       'cloud_subnets'                 => [CloudSubnet, _('Cloud Subnets'), _('Cloud Subnet')],
       'cloud_networks'                => [CloudNetwork, _('Cloud Networks'), _('Cloud Network')],
       'storages'                      => [Storage, _('Managed Datastores'), _('Datastore')],
+      'ems_clusters'                  => [EmsCluster, title_for_clusters, _("Cluster")],
     }
   end
 
   def show_entities(display)
     view_setup_helper(*view_setup_params[display])
-  end
-
-  def show_ems_clusters
-     view_setup_helper(EmsCluster, title_for_clusters, "Cluster")
   end
 
   def show_persistent_volumes
@@ -136,7 +133,6 @@ module EmsCommon
     when "dashboard"                    then show_dashboard
     when "topology"                     then show_topology
     when "performance"                  then show_performance
-    when 'ems_clusters'                 then show_ems_clusters
     when 'persistent_volumes'           then show_persistent_volumes
     when 'cloud_object_store_containers'
                                         then show_entities(params[:display])
