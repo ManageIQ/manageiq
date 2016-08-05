@@ -65,16 +65,16 @@ class MiddlewareDeploymentController < ApplicationController
     end
     operation_triggered = false
     items.split(/,/).each do |item|
-      mw_server = identify_record item
-      trigger_mw_operation operation_info.fetch(:op), mw_server
+      mw_deployment = identify_record item
+      trigger_mw_operation operation_info.fetch(:op), mw_deployment
       operation_triggered = true
     end
     add_flash(operation_info.fetch(:msg)) if operation_triggered
   end
 
-  def trigger_mw_operation(operation, mw_server)
-    mw_manager = mw_server.ext_management_system
+  def trigger_mw_operation(operation, mw_deployment)
+    mw_manager = mw_deployment.ext_management_system
     op = mw_manager.public_method operation
-    op.call mw_server.ems_ref
+    op.call(mw_deployment.ems_ref, mw_deployment.name)
   end
 end

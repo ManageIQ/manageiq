@@ -165,16 +165,30 @@ module ManageIQ::Providers
       run_generic_operation(:Shutdown, ems_ref)
     end
 
-    def stop_middleware_deployment(ems_ref)
+    def stop_middleware_deployment(ems_ref, name)
       run_generic_operation(:Undeploy, ems_ref)
     end
 
-    def start_middleware_deployment(ems_ref)
+    def start_middleware_deployment(ems_ref, name)
       run_generic_operation(:Deploy, ems_ref)
     end
 
-    def undeploy_middleware_deployment(ems_ref)
-      run_generic_operation(:Remove, ems_ref)
+    def undeploy_middleware_deployment(ems_ref, name)
+      with_provider_connection do |connection|
+        deployment_data = {
+          :resource_path   => ems_ref.to_s,
+          :deployment_name => name
+        }
+
+        connection.operations(true).remove_deployment(deployment_data) do |on|
+          on.success do |data|
+            _log.debug "Success on websocket-operation #{data}"
+          end
+          on.failure do |error|
+            _log.error 'error callback was called, reason: ' + error.to_s
+          end
+        end
+      end
     end
 
     def restart_middleware_server(ems_ref)
@@ -209,7 +223,7 @@ module ManageIQ::Providers
       ::Hawkular::Alerts::AlertsClient.new(url, credentials)
     end
 
-    def redeploy_middleware_deployment(ems_ref)
+    def redeploy_middleware_deployment(ems_ref, name)
       run_generic_operation(:Redeploy, ems_ref)
     end
 
