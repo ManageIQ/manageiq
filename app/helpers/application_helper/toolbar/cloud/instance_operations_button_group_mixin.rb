@@ -14,7 +14,8 @@ module ApplicationHelper::Toolbar::Cloud::InstanceOperationsButtonGroupMixin
             N_('Stop'),
             :image   => "guest_shutdown",
             :confirm => N_("Stop this Instance?"),
-            :klass   => ApplicationHelper::Button::InstanceStop),
+            :klass   => ApplicationHelper::Button::GenericFeatureButton,
+            :options => {:feature => :stop}),
           included_class.button(
             :instance_start,
             nil,
