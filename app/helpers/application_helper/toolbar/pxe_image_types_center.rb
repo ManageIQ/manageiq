@@ -22,10 +22,10 @@ class ApplicationHelper::Toolbar::PxeImageTypesCenter < ApplicationHelper::Toolb
         button(
           :pxe_image_type_delete,
           'pficon pficon-delete fa-lg',
-          N_('Remove selected System Image Types from the VMDB'),
-          N_('Remove System Image Types from the VMDB'),
+          N_('Remove selected System Image Types'),
+          N_('Remove System Image Types'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected System Image Types will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected System Image Types?"),
+          :confirm   => N_("Warning: The selected System Image Types will be permanently removed!"),
           :enabled   => false,
           :onwhen    => "1+"),
       ]

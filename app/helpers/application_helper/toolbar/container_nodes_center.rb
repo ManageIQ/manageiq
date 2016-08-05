@@ -25,7 +25,7 @@ class ApplicationHelper::Toolbar::ContainerNodesCenter < ApplicationHelper::Tool
           N_('Remove selected Nodes from the VMDB'),
           N_('Remove Nodes from the VMDB'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected Nodes and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Nodes?"),
+          :confirm   => N_("Warning: The selected Nodes and ALL of their components will be permanently removed!"),
           :onwhen    => "1+"),
       ]
     ),

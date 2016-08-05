@@ -14,10 +14,10 @@ class ApplicationHelper::Toolbar::IsoDatastoresCenter < ApplicationHelper::Toolb
         button(
           :iso_datastore_delete,
           'pficon pficon-delete fa-lg',
-          N_('Remove selected ISO Datastores from the VMDB'),
-          N_('Remove ISO Datastores from the VMDB'),
+          N_('Remove selected ISO Datastores'),
+          N_('Remove ISO Datastores'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected ISO Datastores and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected ISO Datastores?"),
+          :confirm   => N_("Warning: The selected ISO Datastores and ALL of their components will be permanently removed!"),
           :enabled   => false,
           :onwhen    => "1+"),
         separator,

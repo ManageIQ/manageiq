@@ -18,7 +18,7 @@ class ApplicationHelper::Toolbar::ContainerRouteCenter < ApplicationHelper::Tool
           t = N_('Remove this Route from the VMDB'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Route and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Route?")),
+          :confirm   => N_("Warning: This Route and ALL of its components will be permanently removed!")),
       ]
     ),
   ])

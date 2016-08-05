@@ -38,7 +38,7 @@ class ApplicationHelper::Toolbar::AuthKeyPairCloudsCenter < ApplicationHelper::T
           t = N_('Remove selected Key Pairs'),
           t,
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected Key Pairs and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Key Pairs"),
+          :confirm   => N_("Warning: The selected Key Pairs and ALL of their components will be permanently removed!"),
           :enabled   => false,
           :onwhen    => "1+"),
       ]

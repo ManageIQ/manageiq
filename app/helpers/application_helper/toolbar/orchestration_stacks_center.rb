@@ -9,10 +9,10 @@ class ApplicationHelper::Toolbar::OrchestrationStacksCenter < ApplicationHelper:
         button(
           :orchestration_stack_delete,
           'pficon pficon-delete fa-lg',
-          N_('Remove selected Orchestration Stacks from the VMDB'),
-          N_('Remove Orchestration Stacks from the VMDB'),
+          N_('Remove selected Orchestration Stacks'),
+          N_('Remove Orchestration Stacks'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected Orchestration Stacks and ALL of their components will be permanently removed from the Virtual Management Database. Are you sure you want to remove the selected Orchestration Stacks?"),
+          :confirm   => N_("Warning: The selected Orchestration Stacks and ALL of their components will be permanently removed!"),
           :enabled   => false,
           :onwhen    => "1+"),
       ]

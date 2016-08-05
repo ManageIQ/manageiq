@@ -40,10 +40,10 @@ class ApplicationHelper::Toolbar::EmsInfrasCenter < ApplicationHelper::Toolbar::
         button(
           :ems_infra_delete,
           'pficon pficon-delete fa-lg',
-          N_('Remove selected Infrastructure Providers from the VMDB'),
-          N_('Remove Infrastructure Providers from the VMDB'),
+          N_('Remove selected Infrastructure Providers'),
+          N_('Remove Infrastructure Providers'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected Infrastructure Providers and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Infrastructure Providers?"),
+          :confirm   => N_("Warning: The selected Infrastructure Providers and ALL of their components will be permanently removed!"),
           :enabled   => false,
           :onwhen    => "1+"),
       ]

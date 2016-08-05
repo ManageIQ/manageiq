@@ -40,10 +40,10 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
         button(
           :vm_delete,
           'pficon pficon-delete fa-lg',
-          N_('Remove this VM from the VMDB'),
-          N_('Remove from the VMDB'),
+          N_('Remove this Virtual machine'),
+          N_('Remove Virtual Machine'),
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This VM and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this VM?")),
+          :confirm   => N_("Warning: This Virtual Machine and ALL of its components will be permanently removed!")),
         button(
           :vm_evm_relationship,
           'pficon pficon-edit fa-lg',
