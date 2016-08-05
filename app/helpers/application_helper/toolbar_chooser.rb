@@ -41,7 +41,7 @@ class ApplicationHelper::ToolbarChooser
       'compare_view_tb'
     elsif @lastaction == "drift"
       'drift_view_tb'
-    elsif %w(ems_container).include?(@layout) && %(main dashboard topology).include?(@display)
+    elsif %w(ems_container).include?(@layout) && %w(main dashboard topology).include?(@display)
       'dashboard_summary_toggle_view_tb'
     elsif !%w(all_tasks all_ui_tasks timeline diagnostics my_tasks my_ui_tasks miq_server usage).include?(@layout) &&
           (!@layout.starts_with?("miq_request")) && !@treesize_buttons &&
