@@ -54,7 +54,6 @@ module ApplicationController::Compare
       @items_per_page = params[:ppsetting].to_i           # Set the new per page value
     end
     @compare = create_compare_view
-    build_sections_tree
     @sections_tree = TreeBuilderSections.new(:all_sections, :all_sections_tree, @sb, true, @compare, controller_name, current_tenant.name)
     compare_to_json(@compare)
     if params[:ppsetting] # Came in from per page setting
@@ -548,7 +547,6 @@ module ApplicationController::Compare
   def drift
     @lastaction = "drift"
     @compare = create_drift_view
-    build_sections_tree
     @sections_tree = TreeBuilderSections.new(:all_sections, :all_sections_tree, @sb, true, @compare, controller_name, current_tenant.name)
     drift_to_json(@compare)
     drop_breadcrumb(:name => _("'%{name}' Drift Analysis") % {:name => @drift_obj.name},
@@ -935,14 +933,6 @@ module ApplicationController::Compare
   end
   alias_method :common_drift, :drift_analysis
 
-  def set_sections_groups_len
-    @compare.master_list.each_slice(3) do |section, _records, _fields|  # Go thru all of the Sections
-      @sb[section[:group]] ||= {}
-      @sb[section[:group]][:section_len] = 0    # to track number sections are in a group in oder to uncheck/check group checkbox on initial load
-      @sb[section[:group]][:checked_len] = 0    # to track number checked sections in a group in oder to uncheck/check group checkbox on initial load
-    end
-  end
-
   def section_checked(mode)
     @compare = Marshal.load(session[:miq_compare])
     @compressed = session[:miq_compressed]
@@ -959,66 +949,6 @@ module ApplicationController::Compare
     end
     send("#{mode}_to_json", @compare)
     replace_main_div({:partial => "layouts/compare"}, {:spinner_off => true})
-  end
-
-  def build_sections_tree
-    all_sections = []
-    i = 0
-    # TODO
-    set_sections_groups_len
-
-    @compare.master_list.each_slice(3) do |section, _records, _fields|  # Go thru all of the Sections
-      if @group.blank? || section[:group] != @group
-        if section[:group] != @group && @group
-          @ci_node[:select] = !(@sb[@group][:checked_len] == 0 && @sb[@group][:section_len] > 0)
-          @ci_node[:children] = @ci_kids unless @ci_kids.blank?
-          all_sections.push(@ci_node)
-        end
-        @group = section[:group]
-        @ci_node = TreeNodeBuilder.generic_tree_node(
-          "group_#{section[:group]}",
-          section[:group] == "Categories" ? "#{current_tenant.name} Tags" : section[:group],
-          false,
-          section[:group],
-          :cfmeNoClick => true,
-          :noLink      => true,
-          :style_class => "cfme-no-cursor-node"
-        )
-        @ci_kids = []
-      end
-      if !@group.blank? && section[:group] == @group
-        i += 1
-        temp = TreeNodeBuilder.generic_tree_node(
-          "group_#{section[:group]}:#{section[:name]}",
-          section[:header],
-          false,
-          section[:header],
-          :cfmeNoClick => true,
-          :noLink      => true,
-          :style_class => "cfme-no-cursor-node"
-        )
-        # number of checked sections
-        @sb[@group][:section_len] += 1
-        if @compare.include[section[:name]][:checked]
-          temp[:select] = true
-          # number of checked items under sections
-          @sb[@group][:checked_len] += 1
-        else
-          temp[:select] = false
-        end
-        @ci_kids.push(temp) unless @ci_kids.include?(temp)
-      end
-      # Adding last node/ or when there is only one node in a tree
-      if i == @compare.master_list.length / 3 - 1 || @compare.master_list.length / 3 - 1 == 0
-        @ci_node[:children] = @ci_kids unless @ci_kids.blank?
-        @ci_node[:select] = !(@sb[@group][:checked_len] == 0 && @sb[@group][:section_len] > 0)
-        all_sections.push(@ci_node)
-      end
-    end
-
-    @all_sections_tree = all_sections.to_json # Add ci node array to root of tree
-    session[:tree] = "all_sections"
-    session[:tree_name] = "all_sections_tree"
   end
 
   # Build the header row of the compare grid xml

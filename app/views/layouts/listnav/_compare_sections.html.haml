@@ -80,24 +80,9 @@
             = @drift_obj.service_pack
 
   = miq_accordion_panel(@lastaction == "drift" ? _("Drift Sections") : _("Comparison Sections"), true, "sections") do
-    %div{:style => "color:#000;"}
-      - tree_id = "#{session[:tree_name]}box"
-      %div{:id => "#{tree_id}", :style => "position:relative;width:100%;height:100%;color:#000; overflow: hidden"}
-        -#= render(:partial => "layouts/dynatree",
-          :locals         => {:tree_id   => tree_id,
-            :tree_name                   => session[:tree_name],
-            :json_tree                   => @all_sections_tree,
-            :onselect                    => "miqOnCheckSections",
-            :check_url                   => "/#{controller_name}/sections_field_changed/",
-            :exp_tree                    => false,
-            :three_checks                => true,
-            :enable_tree_images          => true,
-            :multi_lines                 => true,
-            :open_close_all_on_dbl_click => true,
-            :checkboxes                  => true})
-        :javascript
-          miqDynatreeResetState('#{j_str @sections_tree.name}');
-        = render(:partial => 'shared/tree', :locals => {:tree => @sections_tree, :name => @sections_tree.name})
+    :javascript
+      miqDynatreeResetState('#{j_str @sections_tree.name}');
+    = render(:partial => 'shared/tree', :locals => {:tree => @sections_tree, :name => @sections_tree.name})
   .spacer
   = link_to(_('Apply'),
     {:action => 'sections_field_changed', :check => @lastaction},
