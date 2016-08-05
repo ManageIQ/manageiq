@@ -100,16 +100,12 @@ module EmsCommon
       'cloud_networks'                => [CloudNetwork, _('Cloud Networks'), _('Cloud Network')],
       'storages'                      => [Storage, _('Managed Datastores'), _('Datastore')],
       'ems_clusters'                  => [EmsCluster, title_for_clusters, _("Cluster")],
+      'persistent_volumes'            => [PersistentVolume, _('Volumes'), _('Volume'), :persistent_volumes],
     }
   end
 
   def show_entities(display)
     view_setup_helper(*view_setup_params[display])
-  end
-
-  def show_persistent_volumes
-    title = ui_lookup(:tables => "persistent_volumes")
-    view_setup_helper(PersistentVolume, title, title.singularize, :persistent_volumes)
   end
 
   def show
@@ -133,7 +129,6 @@ module EmsCommon
     when "dashboard"                    then show_dashboard
     when "topology"                     then show_topology
     when "performance"                  then show_performance
-    when 'persistent_volumes'           then show_persistent_volumes
     when 'cloud_object_store_containers'
                                         then show_entities(params[:display])
     when 'vms'                          then show_vms
@@ -143,7 +138,6 @@ module EmsCommon
 
       if control_selected?
         case session[:display]
-        when "persistent_volumes"            then show_persistent_volumes
         else                                      show_entities(session[:display])
         end
       else
