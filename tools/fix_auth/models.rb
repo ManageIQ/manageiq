@@ -79,13 +79,16 @@ module FixAuth
 
   class FixSettingsChange < ActiveRecord::Base
     include FixAuth::AuthModel
+    # Sorry - duplicate of Vmdb::Settings::PASSWORD_FIELDS. Can't reference app classes from here
+    PASSWORD_FIELDS = %i(bind_pwd password amazon_secret).to_set.freeze
+
     self.table_name = "settings_changes"
     self.password_columns = %w(value)
 
     serialize :value
 
     def self.contenders
-      query = Vmdb::Settings::PASSWORD_FIELDS.collect do |field|
+      query = PASSWORD_FIELDS.collect do |field|
         "(key LIKE '%/#{field}')"
       end.join(" OR ")
 
