@@ -45,6 +45,7 @@ class ApplicationHelper::ToolbarBuilder
 
   def toolbar_button(inputs, props)
     button_class = inputs[:klass] || ApplicationHelper::Button::Basic
+    props[:options] = inputs[:options] if inputs[:options]
     button = button_class.new(@view_context, @view_binding, @instance_data, props)
     apply_common_props(button, inputs)
   end
