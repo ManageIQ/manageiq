@@ -228,8 +228,8 @@ class ExplorerPresenter
     data[:setVisibility] = @options[:set_visible_elements]
     data[:rightCellText] = @options[:right_cell_text] if @options[:right_cell_text]
 
-    data[:reloadToolbars] = @options[:reload_toolbars].each_with_object({}) do | (div_name, toolbar), h|
-      h["#{div_name}_tb"] = buttons_to_html(Array(toolbar))
+    data[:reloadToolbars] = @options[:reload_toolbars].collect do |div_name, toolbar|
+      toolbar
     end
 
     data[:record] = {

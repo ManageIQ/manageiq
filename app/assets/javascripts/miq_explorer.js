@@ -184,7 +184,12 @@ ManageIQ.explorer.processReplaceRightCell = function(data) {
       .html(data.rightCellText);
   }
 
-  if (_.isObject(data.reloadToolbars)) {
+
+  if (_.isArray(data.reloadToolbars)) {
+    ManageIQ.angular.rxSubject.onNext({
+      redrawToolbar: data.reloadToolbars
+    })
+  } else if (_.isObject(data.reloadToolbars)) {
     _.forEach(data.reloadToolbars, function (content, element) {
       $('#' + element).html(content);
     });

@@ -1,5 +1,13 @@
 (function(){
 
+  function isButton(item) {
+    return item.type === 'button';
+  }
+
+  function isButtonTwoState(item) {
+    return item.type === 'buttonTwoState' && item.id.indexOf('view') === -1;
+  }
+
   /**
   * Private method for subscribing to rxSubject.
   * For success functuon @see ToolbarController#onRowSelect()
@@ -8,6 +16,10 @@
     ManageIQ.angular.rxSubject.subscribe(function(event) {
       if (event.rowSelect) {
         this.onRowSelect(event.rowSelect);
+      } else if (event.redrawToolbar) {
+         this.onUpdateToolbar(event.redrawToolbar);
+      } else if (event.update) {
+        this.onUpdateItem(event);
       }
     }.bind(this),
     function (err) {
@@ -94,7 +106,10 @@
         return (item && item.hasOwnProperty('items')) ? item.items : item;
       })
       .flatten()
-      .filter({type: 'button'})
+      .filter(function(item){
+        return item.type &&
+          (isButton(item) || isButtonTwoState(item))
+      })
       .each(function(item) {
         item.eventFunction = function($event) {
           miqToolbarOnClick.bind($event.delegateTarget)($event);
@@ -113,7 +128,25 @@
 
   ToolbarController.prototype.initObject = function(toolbarString) {
     subscribeToSubject.bind(this)();
-    toolbarItems = this.MiQToolbarSettingsService.generateToolbarObject(JSON.parse(toolbarString));
+    this.updateToolbar(JSON.parse(toolbarString));
+  }
+
+  ToolbarController.prototype.onUpdateToolbar = function(toolbarObject) {
+    this.updateToolbar(toolbarObject);
+    if(!this.$scope.$$phase) {
+      this.$scope.$digest();
+    }
+  }
+
+  ToolbarController.prototype.onUpdateItem = function(updateData) {
+    _.find(_.flatten(this.toolbarItems), {id: updateData.update})[updateData.type] = updateData.value;
+    if(!this.$scope.$$phase) {
+      this.$scope.$digest();
+    }
+  }
+
+  ToolbarController.prototype.updateToolbar = function(toolbarObject) {
+    toolbarItems = this.MiQToolbarSettingsService.generateToolbarObject(toolbarObject);
     this.toolbarItems = toolbarItems.items;
     this.dataViews = toolbarItems.dataViews;
     this.defaultViewUrl();
