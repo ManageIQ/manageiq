@@ -5,6 +5,7 @@ require_dependency 'vmdb/settings/hash_differ'
 
 module Vmdb
   class Settings
+    # if you change, please also change over in tools/fix_auth/models.rb
     PASSWORD_FIELDS = %i(bind_pwd password amazon_secret).to_set.freeze
 
     cattr_accessor :last_loaded
@@ -20,6 +21,7 @@ module Vmdb
       activate
     end
 
+    # if you change, please also change over in tools/fix_auth/auth_config_model.rb
     def self.walk(settings = ::Settings, path = [], &block)
       settings.each do |key, value|
         new_path = path.dup << key
