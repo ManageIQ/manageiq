@@ -6,6 +6,23 @@
 # category values: [prov_max_cpu, prov_max_vm, prov_max_memory, prov_max_retirement_days]
 #
 
+def vmdb_object(model, id)
+  $evm.vmdb(model, id.to_i) if model && id
+end
+
+def requested_memory(prov_resource, number_of_vms)
+  flavor_value(prov_resource, :memory).to_i * number_of_vms
+end
+
+def requested_cpu(prov_resource, number_of_vms)
+  flavor_value(prov_resource, :cpus).to_i * number_of_vms
+end
+
+def flavor_value(prov_resource, option)
+  flavor = vmdb_object('flavor', prov_resource.get_option(:instance_type))
+  flavor[option] if flavor
+end
+
 # Initialize Variables
 prov = $evm.root['miq_request']
 prov_resource = prov.resource
@@ -22,6 +39,7 @@ reason2      = nil
 reason3      = nil
 reason4      = nil
 
+desired_nvms = prov_resource.get_option(:number_of_vms).to_i
 ###################################
 #
 # max_cpus:
@@ -51,11 +69,7 @@ end
 
 # Validate max_cpus if not nil or empty
 unless max_cpus.blank?
-  desired_cpus = prov_resource.get_option(:number_of_cpus).to_i
-  if desired_cpus.zero?
-    desired_cpus = prov_resource.get_option(:number_of_sockets).to_i * prov_resource.get_option(:cores_per_socket).to_i
-  end
-
+  desired_cpus = requested_cpu(prov_resource, desired_nvms)
   if desired_cpus > max_cpus.to_i
     $evm.log("info", "Auto-Approval Threshold(Warning): Number of vCPUs requested:<#{desired_cpus}> exceeds:<#{max_cpus}>")
     approval_req = true
@@ -92,7 +106,6 @@ end
 
 # Validate max_vms if not nil or empty
 unless max_vms.blank?
-  desired_nvms = prov_resource.get_option(:number_of_vms)
   if desired_nvms && (desired_nvms.to_i > max_vms.to_i)
     $evm.log("info", "Auto-Approval Threshold(Warning): Number of VMs requested:<#{desired_nvms}> exceeds:<#{max_vms}>")
     approval_req = true
@@ -129,11 +142,12 @@ end
 
 # Validate max_memory if not nil or empty
 unless max_memory.blank?
-  desired_mem = prov_resource.get_option(:vm_memory)
+  desired_mem = requested_memory(prov_resource, desired_nvms)
   if desired_mem && (desired_mem.to_i > max_memory.to_i)
-    $evm.log("info", "Auto-Approval Threshold(Warning): Number of vRAM requested:<#{desired_mem}> exceeds:<#{max_memory}>")
+    $evm.log("info", "Auto-Approval Threshold(Warning): Number of vRAM requested: \
+    <#{desired_mem.to_s(:human_size)}> exceeds:<#{max_memory}>")
     approval_req = true
-    reason2 = "Requested Memory #{desired_mem}MB limit is #{max_memory}MB"
+    reason2 = "Requested Memory #{desired_mem.to_s(:human_size)} limit is #{max_memory}"
   end
 end
 
@@ -186,7 +200,7 @@ if approval_req == true
   msg += "(#{reason3}) " unless reason3.nil?
   msg += "(#{reason4}) " unless reason4.nil?
   prov_resource.set_message(msg)
-  $evm.log("info", "Inspecting Messge:<#{msg}>")
+  $evm.log("info", "Auto-Approval #{msg}")
 
   $evm.root['ae_result'] = 'error'
   $evm.object['reason'] = msg
