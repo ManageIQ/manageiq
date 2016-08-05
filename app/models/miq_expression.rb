@@ -447,24 +447,20 @@ class MiqExpression
       col_type = get_col_type(exp[operator]["field"]) if exp[operator]["field"]
       col_name = exp[operator]["field"]
       col_ruby, _ = operands2rubyvalue(operator, {"field" => col_name}, context_type)
-
+      val = RelativeDatetime.normalize(exp[operator]["value"], tz, "beginning")
       clause = if col_type == :date
-                 val = RelativeDatetime.normalize(exp[operator]["value"], tz, "beginning")
                  "val=#{col_ruby}; !val.nil? && val.to_date < #{quote(val.to_date, :date)}"
                else
-                 val = RelativeDatetime.normalize(exp[operator]["value"], tz, "beginning")
                  "val=#{col_ruby}; !val.nil? && val.to_time < #{quote(val.utc, :datetime)}"
                end
     when "after"
       col_type = get_col_type(exp[operator]["field"]) if exp[operator]["field"]
       col_name = exp[operator]["field"]
       col_ruby, _ = operands2rubyvalue(operator, {"field" => col_name}, context_type)
-
+      val = RelativeDatetime.normalize(exp[operator]["value"], tz, "end")
       clause = if col_type == :date
-                 val = RelativeDatetime.normalize(exp[operator]["value"], tz, "end")
                  "val=#{col_ruby}; !val.nil? && val.to_date > #{quote(val.to_date, :date)}"
                else
-                 val = RelativeDatetime.normalize(exp[operator]["value"], tz, "end")
                  "val=#{col_ruby}; !val.nil? && val.to_time > #{quote(val.utc, :datetime)}"
                end
     when "includes all"
