@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ApplicationHelper::Button::BasicImage do
   describe '#skip?' do
     context "in list of archived VMs" do
