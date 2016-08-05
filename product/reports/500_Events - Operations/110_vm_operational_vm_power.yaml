@@ -73,9 +73,9 @@ conditions: !ruby/object:MiqExpression
     - "ENDS WITH": 
         field: EmsEvent-event_type
         value: Event
-    - ">=":
+    - "IS":
         field: EmsEvent-timestamp
-        value: 7 Days Ago
+        value: Last Week
 
 # Order string for the SQL query
 order: Descending

@@ -4,9 +4,9 @@ created_on: 2008-08-11 16:25:13.490154 Z
 title: "Hosts: Date brought under Management for Last Week"
 conditions: !ruby/object:MiqExpression
   exp:
-    ">=":
+    "IS":
       field: Host-created_on
-      value: 7 Days Ago
+      value: Last Week
 updated_on: 2008-08-13 21:07:38.833909 Z
 order: Ascending
 graph: 
