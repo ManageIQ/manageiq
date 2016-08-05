@@ -219,8 +219,21 @@ class ActsAsArQuery
     end
   end
 
-  def array_to_hash(arr, default = {})
-    arr.each_with_object({}) { |k, h| h[k] = default.dup }
+  # This takes the array form and converts into the equivalent hash form
+  #
+  # @example converting an order parameter
+  #   # Vm.order(:name, :ip)
+  #   array_to_hash([:name, :ip], "ASC") #=> {:name => "ASC", :ip => "ASC"}
+  #
+  # @example converting an includes parameter
+  #   # Vm.includes([:ext_management_system, :host])
+  #   array_to_hash([:ext_management_system, :host], {}) #=> {:ext_management_system => {}, :host =>{}}
+  #
+  # @param array [Array<Symbol>] array of names
+  # @param default value to be associated with each object (i.e.: "ASC", {})
+  # @return [Hash{Symbol => String, Hash}] Hash equivalent of the input array
+  def array_to_hash(array, default = {})
+    array.each_with_object({}) { |k, h| h[k] = default.dup }
   end
 
   def assign_arg(symbol, val)
