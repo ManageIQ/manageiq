@@ -132,7 +132,7 @@ module ApplicationHelper
   end
 
   # Check role based authorization for a UI task
-  def role_allows(**options)
+  def role_allows?(**options)
     if options[:feature].nil?
       $log.debug("Auth failed - no feature was specified (required)")
       return false
@@ -140,8 +140,10 @@ module ApplicationHelper
 
     Rbac.role_allows?(options.merge(:user => User.current_user)) rescue false
   end
-  module_function :role_allows
-  public :role_allows
+  module_function :role_allows?
+  public :role_allows?
+  alias_method :role_allows, :role_allows?
+  Vmdb::Deprecation.deprecate_methods(self, :role_allows => :role_allows?)
 
   # NB: This differs from controller_for_model; until they're unified,
   # make sure you have the right one.
