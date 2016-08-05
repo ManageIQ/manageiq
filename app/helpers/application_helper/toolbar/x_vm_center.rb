@@ -106,7 +106,8 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           'product product-clone fa-lg',
           t = N_('Clone this VM'),
           t,
-          :klass => ApplicationHelper::Button::VmClone),
+          :klass => ApplicationHelper::Button::GenericFeatureButton,
+          :options => {:feature => :clone}),
         button(
           :vm_publish,
           'pficon pficon-export',
