@@ -30,7 +30,8 @@ module ApplicationHelper::Toolbar::Cloud::InstanceOperationsButtonGroupMixin
             N_('Pause'),
             :image   => "power_pause",
             :confirm => N_("Pause this Instance?"),
-            :klass   => ApplicationHelper::Button::InstancePause),
+            :klass   => ApplicationHelper::Button::GenericFeatureButton,
+            :options => {:feature => :pause}),
           included_class.button(
             :instance_suspend,
             nil,
