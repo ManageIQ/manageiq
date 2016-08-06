@@ -6,6 +6,7 @@ class MiqAeDomain < MiqAeNamespace
   VALID_SOURCES  = [SYSTEM_SOURCE, REMOTE_SOURCE, USER_SOURCE, USER_LOCKED_SOURCE].freeze
   LOCKED_SOURCES = [SYSTEM_SOURCE, REMOTE_SOURCE, USER_LOCKED_SOURCE].freeze
   EDITABLE_PROPERTIES_FOR_REMOTES = [:priority, :enabled].freeze
+  AUTH_KEYS = %w(userid password).freeze
 
   default_scope { where(:parent_id => nil).where(arel_table[:name].not_eq("$")) }
   validates_inclusion_of :parent_id, :in => [nil], :message => 'should be nil for Domain'
@@ -112,6 +113,25 @@ class MiqAeDomain < MiqAeNamespace
     version_field.try(:fetch_path, 'field', 'default_value')
   end
 
+  def self.import_git_url(options)
+    gr = GitRepository.find_or_create_by(:url => options['url'])
+    if options['userid'] && options['password']
+      auth = gr.authentications.detect { |item| item.authtype == 'default' }
+      if auth
+        auth.update_attributes(options.slice(*AUTH_KEYS))
+      else
+        gr.authentications.create(options.slice(*AUTH_KEYS).merge(:authtype => 'default'))
+      end
+    end
+
+    gr.refresh
+    gr.reload
+    options['git_repository_id'] = gr.id
+
+    validate_refs(gr, options)
+    import_git_repo(options)
+  end
+
   def self.import_git_repo(options)
     git_repo = GitRepository.find(options['git_repository_id'])
     raise "Git repository with id #{options['git_repository_id']} not found" unless git_repo
@@ -196,7 +216,7 @@ class MiqAeDomain < MiqAeNamespace
     options['ref_type'] ||= BRANCH
     options['ref_type'] = options['ref_type'].downcase
 
-    case options['ref_type']
+    case options['ref_type'].downcase
     when BRANCH
       options['branch'] = options['ref']
     when TAG
@@ -222,4 +242,21 @@ class MiqAeDomain < MiqAeNamespace
   end
 
   private_class_method :reset_priority_of_non_system_domains
+
+  def self.validate_refs(repo, options)
+    match = nil
+    case options['ref_type'].downcase
+    when BRANCH
+      other_name = "origin/#{options['ref']}"
+      match = repo.git_branches.detect { |branch| branch.name.casecmp(options['ref']) == 0 }
+      match ||= repo.git_branches.detect { |branch| branch.name.casecmp(other_name) == 0 }
+    when TAG
+      match = repo.git_tags.detect { |tag| tag.name.casecmp(options['ref']) == 0 }
+    end
+    unless match
+      raise ArgumentError, "#{options['ref_type'].titleize} #{options['ref']} doesn't exist in repository"
+    end
+    options['ref'] = match.name
+  end
+  private_class_method :validate_refs
 end

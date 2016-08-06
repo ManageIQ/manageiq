@@ -126,9 +126,9 @@ namespace :evm do
     desc 'Import automate model information from an export folder or zip file. '
     task :import => :environment do
       begin
-        raise "Must specify domain for import:" if ENV['DOMAIN'].blank?
-        if ENV['YAML_FILE'].blank? && ENV['IMPORT_DIR'].blank? && ENV['ZIP_FILE'].blank?
-          raise 'Must specify either a directory with exported automate model or a zip file'
+        raise "Must specify domain for import:" if ENV['DOMAIN'].blank? && ENV['GIT_URL'].blank?
+        if ENV['YAML_FILE'].blank? && ENV['IMPORT_DIR'].blank? && ENV['ZIP_FILE'].blank? && ENV['GIT_URL'].blank?
+          raise 'Must specify either a directory with exported automate model or a zip file or a http based git url'
         end
         preview        = ENV['PREVIEW'] ||= 'true'
         raise 'Preview must be true or false' unless %w{true false}.include?(preview)
@@ -150,6 +150,14 @@ namespace :evm do
         elsif ENV['YAML_FILE'].present?
           puts "Importing automate domain: #{ENV['DOMAIN']} from file #{ENV['YAML_FILE']}"
           import_options['yaml_file']   = ENV['YAML_FILE']
+        elsif ENV['GIT_URL'].present?
+          puts "Importing automate domain from url #{ENV['GIT_URL']}"
+          import_options['url'] = ENV['GIT_URL']
+          import_options['overwrite'] = true
+          import_options['userid'] = ENV['USERID']
+          import_options['password'] = ENV['PASSWORD']
+          import_options['ref'] = ENV['REF'] || MiqAeDomain::DEFAULT_BRANCH
+          import_options['ref_type'] = ENV['REF_TYPE'] || MiqAeDomain::BRANCH
         end
         %w(SYSTEM ENABLED).each do |name|
           if ENV[name].present?
@@ -157,7 +165,11 @@ namespace :evm do
             import_options[name.downcase] = ENV[name]
           end
         end
-        MiqAeImport.new(ENV['DOMAIN'], import_options).import
+        if ENV['GIT_URL'].present?
+          MiqAeDomain.import_git_url(import_options)
+        else
+          MiqAeImport.new(ENV['DOMAIN'], import_options).import
+        end
       rescue => err
         STDERR.puts err.backtrace
         STDERR.puts err.message
