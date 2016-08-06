@@ -200,8 +200,9 @@ module Rbac
 
       attrs[:apply_limit_in_sql] = (exp_attrs.nil? || exp_attrs[:supported_by_sql]) && user_filters["belongsto"].blank?
 
-      scope = scope.except(:offset, :limit) if !attrs[:apply_limit_in_sql]
-
+      # for belongs_to filters, scope_targets uses scope to make queries. want to remove limits for those.
+      # if you note, the limits are put back into scope a few lines down from here
+      scope = scope.except(:offset, :limit)
       scope = scope_targets(klass, scope, user_filters, user, miq_group)
       scope = scope.where(conditions).includes(include_for_find).references(include_for_find).order(options[:order])
       scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
