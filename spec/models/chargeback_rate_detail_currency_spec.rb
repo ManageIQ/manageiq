@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ChargebackRateDetailCurrency do
   it "has a valid factory" do
     expect(FactoryGirl.create(:chargeback_rate_detail_currency_EUR)).to be_valid

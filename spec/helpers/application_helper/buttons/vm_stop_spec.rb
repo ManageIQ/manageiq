@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ApplicationHelper::Button::VmStop do
   describe '#skip?' do
     context "when record is stopable" do

@@ -1,4 +1,3 @@
-require 'spec_helper'
 include AutomationSpecHelper
 
 describe "miq_ae_class/_instance_fields.html.haml" do

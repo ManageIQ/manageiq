@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe GitWorktree do
   context "repository" do
     before do

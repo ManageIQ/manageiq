@@ -1,4 +1,3 @@
-require_relative "../spec_helper"
 require_relative '../../vmware/vcenter_thumb_print'
 require_relative '../../vmware/esx_thumb_print'
 

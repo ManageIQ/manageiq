@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'recursive-open-struct'
 
 describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do

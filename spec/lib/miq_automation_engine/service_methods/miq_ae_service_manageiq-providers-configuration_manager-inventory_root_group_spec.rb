@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceManageIQProvidersConfigurationManagerInventoryRootGroupSpec
   include MiqAeEngine
   describe MiqAeMethodService::MiqAeServiceManageIQ_Providers_ConfigurationManager_InventoryRootGroup do

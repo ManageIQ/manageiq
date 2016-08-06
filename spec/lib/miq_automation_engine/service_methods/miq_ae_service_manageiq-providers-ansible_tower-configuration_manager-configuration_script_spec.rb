@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module MiqAeServiceManageIQProvidersAnsibleTowerConfigurationManagerConfigurationScriptSpec
   include MiqAeEngine
   describe MiqAeMethodService::MiqAeServiceManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript do

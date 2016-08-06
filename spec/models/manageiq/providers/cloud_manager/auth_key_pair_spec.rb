@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::CloudManager::AuthKeyPair do
   let(:ems) { FactoryGirl.build(:ems_cloud) }
 

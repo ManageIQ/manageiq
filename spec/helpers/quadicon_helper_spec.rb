@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'wbem'
 
 RSpec.shared_examples :quadicon_with_link do

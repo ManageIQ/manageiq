@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module MiqAeServiceManageIQ_Providers_Google_CloudManagerSpec
   include MiqAeEngine
   describe MiqAeMethodService::MiqAeServiceManageIQ_Providers_Google_CloudManager do

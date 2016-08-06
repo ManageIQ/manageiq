@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ApplicationHelper::Button::VmInstanceScan do
   describe '#skip?' do
     context "when record has proxy and is not orphaned nor archived" do

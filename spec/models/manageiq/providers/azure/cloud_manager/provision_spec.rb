@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Azure::CloudManager::Provision do
   let(:provider)     { FactoryGirl.create(:ems_azure_with_authentication) }
   let(:template)     { FactoryGirl.create(:template_azure, :ext_management_system => provider) }
@@ -9,7 +7,6 @@ describe ManageIQ::Providers::Azure::CloudManager::Provision do
   let(:subnet)       { FactoryGirl.create(:cloud_subnet_azure) }
   let(:network_port) { FactoryGirl.create(:network_port_azure) }
   let(:floating_ip)  { FactoryGirl.create(:floating_ip_azure) }
-
 
   context "#create vm" do
     subscription_id = "01234567890"

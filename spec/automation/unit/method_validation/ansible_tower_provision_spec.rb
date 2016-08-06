@@ -1,4 +1,3 @@
-require "spec_helper"
 require Rails.root.join('db/fixtures/ae_datastore/ManageIQ/ConfigurationManagement/AnsibleTower/Service/Provisioning/StateMachines/Provision.class/__methods__/provision').to_s
 require Rails.root.join('spec/support/miq_ae_mock_service').to_s
 

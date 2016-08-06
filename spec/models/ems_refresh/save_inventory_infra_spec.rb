@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe EmsRefresh::SaveInventoryInfra do
   let(:refresher) do
     Class.new do

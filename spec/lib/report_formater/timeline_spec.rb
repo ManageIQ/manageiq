@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ReportFormatter::ReportTimeline do
   context '#bubble_icon' do
     def stub_bottleneck_event(resource_type, ems_type = nil)

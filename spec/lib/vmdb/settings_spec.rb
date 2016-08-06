@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Vmdb::Settings do
   it ".walk" do
     stub_settings(:a => {:b => 'c'}, :d => {:e => {:f => 'g'}}, :i => [{:j => 'k'}, {:l => 'm'}])

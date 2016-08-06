@@ -1,4 +1,3 @@
-require 'spec_helper'
 include AutomationSpecHelper
 
 describe "update_serviceprovision_status" do

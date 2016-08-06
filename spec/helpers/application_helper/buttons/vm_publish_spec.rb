@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ApplicationHelper::Button::VmPublish do
   describe '#skip?' do
     it_behaves_like "when record is orphaned"

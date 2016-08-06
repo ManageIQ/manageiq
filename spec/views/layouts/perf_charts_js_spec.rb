@@ -1,4 +1,3 @@
-require "spec_helper"
 include ChartingHelper
 
 describe 'layouts/_perf_chart_js.html.haml' do

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe ManageIQ::Providers::Azure::CloudManager::ProvisionWorkflow do
   include WorkflowSpecHelper
 

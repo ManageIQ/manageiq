@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe GitRepository do
   it "no url" do
     expect { FactoryGirl.create(:git_repository) }.to raise_error(ActiveRecord::RecordInvalid)
