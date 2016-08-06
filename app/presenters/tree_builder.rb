@@ -71,6 +71,8 @@ class TreeBuilder
     # OPS explorer trees
     when :diagnostics           then TreeBuilderOpsDiagnostics
     when :rbac                  then TreeBuilderOpsRbac
+    when :servers_by_role       then TreeBuilderServersByRole
+    when :roles_by_server       then TreeBuilderRolesByServer
     when :settings              then TreeBuilderOpsSettings
     when :vmdb                  then TreeBuilderOpsVmdb
 
@@ -294,6 +296,8 @@ class TreeBuilder
   end
 
   def x_build_single_node(object, pid, options)
+    options[:parent_kls]  = @sb[:parent_kls] if @sb[:parent_kls]
+    options[:parent_name] = @sb[:parent_name] if @sb[:parent_name]
     node_builder.build(object, pid, options)
   end
 
@@ -355,6 +359,7 @@ class TreeBuilder
     "aen" => "MiqAeNamespace",
     "al"  => "MiqAlert",
     "ap"  => "MiqAlertSet",
+    "asr" => "AssignedServerRole",
     "az"  => "AvailabilityZone",
     "azu" => "OrchestrationTemplateAzure",
     "at"  => "ManageIQ::Providers::AnsibleTower::ConfigurationManager",
@@ -412,6 +417,7 @@ class TreeBuilder
     "sl"  => "MiqScsiLun",
     "sg"  => "MiqScsiTarget",
     "sis" => "ScanItemSet",
+    "role" => "ServerRole",
     "st"  => "ServiceTemplate",
     "stc" => "ServiceTemplateCatalog",
     "sr"  => "ServiceResource",

@@ -3,20 +3,19 @@ module OpsController::Diagnostics
   extend ActiveSupport::Concern
 
   def diagnostics_tree_select
-    typ, id = params[:id].split("_")
+    typ, id = params[:id].split("-")
     case typ
-    when "server"
-      @record = MiqServer.find(id)
+    when "svr"
+      @record = MiqServer.find(from_cid(id))
     when "role"
-      @record = ServerRole.find(id)
+      @record = ServerRole.find(from_cid(id))
       @rec_status = @record.assigned_server_roles.find_by_active(true) ? "active" : "stopped" if @record.class == ServerRole
     when "asr"
-      @record = AssignedServerRole.find(id)
+      @record = AssignedServerRole.find(from_cid(id))
       @rec_status = @record.assigned_server_roles.find_by_active(true) ? "active" : "stopped" if @record.class == ServerRole
     end
     @sb[:diag_selected_model] = @record.class.to_s
     @sb[:diag_selected_id] = @record.id
-    zone = Zone.find_by_id(from_cid(x_node.split('-').last))
     refresh_screen
   end
 
@@ -802,7 +801,7 @@ module OpsController::Diagnostics
     else
       parent = Zone.find_by_id(from_cid(x_node.split('-').last))
     end
-    @server_tree = build_server_tree(parent).to_json
+    build_server_tree(parent)
     @sb[:center_tb_filename] = center_toolbar_filename
     c_tb = build_toolbar(@sb[:center_tb_filename])
     render :update do |page|
@@ -840,7 +839,7 @@ module OpsController::Diagnostics
     else
       parent = Zone.find_by_id(from_cid(x_node.split('-').last))
     end
-    @server_tree = build_server_tree(parent).to_json
+    build_server_tree(parent)
     render :update do |page|
       page << javascript_prologue
       #   Replace tree
@@ -856,7 +855,7 @@ module OpsController::Diagnostics
       @sb[:selected_typ] = "zone"
       if @selected_server.miq_servers.length >= 1 &&
          ["diagnostics_roles_servers", "diagnostics_servers_roles"].include?(@sb[:active_tab])
-        @server_tree = build_server_tree(@selected_server).to_json
+        build_server_tree(@selected_server)
       else
         @server_tree = nil
       end
@@ -879,7 +878,7 @@ module OpsController::Diagnostics
         @sb[:selected_server_id] = @selected_server.id
         @sb[:selected_typ] = "miq_region"
         if @selected_server.miq_servers.length >= 1
-          @server_tree = build_server_tree(@selected_server).to_json
+          build_server_tree(@selected_server)
         else
           @server_tree = nil
         end
@@ -993,133 +992,15 @@ module OpsController::Diagnostics
 
   # Method to build the server tree (parent is a zone or region instance)
   def build_server_tree(parent)
-    tree_kids = []
-
-    case @sb[:diag_tree_type]
-    when "roles"
-      session[:tree_name] = "#{parent.class.to_s.downcase}_roles_tree"
-      parent.miq_servers.sort_by { |s| s.name.to_s }.each do |s|
-        unless @sb[:diag_selected_id] # Set default selected record vars
-          @sb[:diag_selected_model] = s.class.to_s
-          @sb[:diag_selected_id] = s.id
-        end
-        server_node = {}
-        server_node[:key] = "server_#{s.id}"
-        if @sb[:diag_selected_model] == "MiqServer" && s.id == @sb[:diag_selected_id]
-          server_node[:select] = true
-        end
-        if s.status != "stopped"
-          title = "#{Dictionary.gettext('MiqServer', :type => :model, :notfound => :titleize)}: #{s.name}(#{s.id}) PID=#{s.pid} (#{s.status})"
-        else
-          title = "#{Dictionary.gettext('MiqServer', :type => :model, :notfound => :titleize)}: #{s.name}(#{s.id}) (#{s.status})"
-        end
-        server_node[:icon] = ActionController::Base.helpers.image_path("100/evm_server.png")
-        server_node[:title] = s.started? ?
-                                "<b class='cfme-bold-node'>#{title}</b>".html_safe :
-                                title
-        server_node[:expand] = true
-        tree_kids.push(server_node)
-
-        server_kids = []
-        active_role_names = s.active_role_names
-        s.assigned_server_roles.sort_by { |asr| asr.server_role.description }.each do |asr|
-          next if parent.kind_of?(MiqRegion) && !asr.server_role.regional_role?  # Only regional roles under Region
-          if asr.server_role.name != "database_owner"
-            role_node = {}
-            role_node[:key] = "asr_#{asr.id}"
-            role_node[:title] = "Role: #{asr.server_role.description}"
-            server_kids.push(asr_node_props(asr, role_node))
-          end
-        end
-        server_node[:children] = server_kids unless server_kids.empty?
-      end
-    when "servers"
-      session[:tree_name] = "#{parent.class.to_s.downcase}_servers_tree"
-      ServerRole.all.sort_by(&:description).each do |r|
-        next if parent.kind_of?(MiqRegion) && !r.regional_role?  # Only regional roles under Region
-        next unless (parent.kind_of?(Zone) && r.miq_servers.any? { |s| s.my_zone == parent.name }) ||
-                    (parent.kind_of?(MiqRegion) && !r.miq_servers.empty?) # Skip if no assigned servers in this zone
-        if r.name != "database_owner"
-          unless @sb[:diag_selected_id] # Set default selected record vars
-            @sb[:diag_selected_model] = r.class.to_s
-            @sb[:diag_selected_id] = r.id
-          end
-          role_node = {}
-          role_node[:key] = "role_#{r.id}"
-          if @sb[:diag_selected_model] == "ServerRole" && r.id == @sb[:diag_selected_id]
-            role_node[:select] = true
-          end
-          status = "stopped"
-          r.assigned_server_roles.where(:active => true).each do |asr|            # Go thru all active assigned server roles
-            if asr.miq_server.started?        # Find a started server
-              if parent.kind_of?(MiqRegion) || # it's in the region
-                 (parent.kind_of?(Zone) && asr.miq_server.my_zone == parent.name) # it's in the zone
-                status = "active"
-                break
-              end
-            end
-          end
-          role_node[:title] = _("Role: %{description} (%{status})") % {:description => r.description, :status => status}
-          role_node[:icon] = ActionController::Base.helpers.image_path("100/role-#{r.name}.png")
-          role_node[:expand] = true
-          tree_kids.push(role_node)
-
-          role_kids = []
-          r.assigned_server_roles.sort_by { |asr| asr.miq_server.name }.each do |asr|
-            next if parent.kind_of?(Zone) && asr.miq_server.my_zone != parent.name
-            server_node = {}
-            server_node[:key] = "asr_#{asr.id}"
-            server_node[:title] = "#{Dictionary.gettext('MiqServer', :type => :model, :notfound => :titleize)}: #{asr.miq_server.name} [#{asr.miq_server.id}]"
-            role_kids.push(asr_node_props(asr, server_node))
-          end
-          role_node[:children] = role_kids unless role_kids.empty?
-        end
-      end
-    end
+    @sb[:parent_name] = parent.name
+    @sb[:parent_kls] = parent.class.name
+    @server_tree = @sb[:diag_tree_type] == "roles" ?
+                   TreeBuilderRolesByServer.new(:roles_by_server_tree, :roles_by_server, @sb, true, parent) :
+                   TreeBuilderServersByRole.new(:servers_by_role_tree, :servers_by_role, @sb, true, parent)
     if @sb[:diag_selected_id]
       @record = @sb[:diag_selected_model].constantize.find(@sb[:diag_selected_id]) # Set the current record
       @rec_status = @record.assigned_server_roles.find_by_active(true) ? "active" : "stopped" if @record.class == ServerRole
     end
-    tree_kids
-  end
-
-  # Add assigned_server_role node properties to passed in node hash
-  def asr_node_props(asr, node)
-    if @sb[:diag_selected_model] == "AssignedServerRole" && asr.id == @sb[:diag_selected_id]
-      node[:select] = true
-    end
-
-    if asr.master_supported?
-      priority = case asr.priority
-                 when 1
-                   "primary, "
-                 when 2
-                   "secondary, "
-                 else
-                   ""
-                 end
-    end
-
-    node[:addClass] = "dynatree-title"
-    if asr.active? && asr.miq_server.started?
-      node[:icon] = ActionController::Base.helpers.image_path("100/on.png")
-      node[:title] += _(" (%{priority}active, PID=%{number})") % {:priority => priority, :number => asr.miq_server.pid}
-    else
-      if asr.miq_server.started?
-        node[:icon] = ActionController::Base.helpers.image_path("100/suspended.png")
-        node[:title] += _(" (%{priority}available, PID=%{number})") % {:priority => priority,
-                                                                       :number   => asr.miq_server.pid}
-      else
-        node[:icon] = ActionController::Base.helpers.image_path("100/off.png")
-        node[:title] += _(" (%{priority}unavailable)") % {:priority => priority}
-      end
-      node[:addClass] = "cfme-red-node" if asr.priority == 1
-    end
-    node[:addClass] = "cfme-bold-node" if asr.priority == 1
-    if x_node != "root" && asr.server_role.regional_role? # Dim regional roles
-      node[:addClass] = "cfme-opacity-node"
-    end
-    node
   end
 
   # Get information for a node

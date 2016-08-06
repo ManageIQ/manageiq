@@ -209,7 +209,7 @@ describe TreeNodeBuilder do
 
     it 'MiqAction node' do
       action = FactoryGirl.build(:miq_action, :name => "raise_automation_event")
-      node = TreeNodeBuilder.build(action, nil, :tree => :action_tree)
+      node = TreeNodeBuilder.build(action, nil, {:tree => :action_tree})
       expect(node).not_to be_nil
     end
 
@@ -350,19 +350,19 @@ describe TreeNodeBuilder do
 
     it "expand attribute of node should be set to true when open_all is true and expand is nil in options" do
       tenant = FactoryGirl.build(:tenant)
-      node = TreeNodeBuilder.build(tenant, "root", :expand => nil, :open_all => true)
+      node = TreeNodeBuilder.build(tenant, "root", {:expand => nil, :open_all => true})
       expect(node[:expand]).to eq(true)
     end
 
     it "expand attribute of node should be set to nil when open_all is true and expand is set to false in options" do
       tenant = FactoryGirl.build(:tenant)
-      node = TreeNodeBuilder.build(tenant, "root", :expand => false, :open_all => true)
+      node = TreeNodeBuilder.build(tenant, "root", {:expand => false, :open_all => true})
       expect(node[:expand]).to eq(nil)
     end
 
     it "expand attribute of node should be set to true when open_all and expand are true in options" do
       tenant = FactoryGirl.build(:tenant)
-      node = TreeNodeBuilder.build(tenant, "root", :expand => true, :open_all => true)
+      node = TreeNodeBuilder.build(tenant, "root", {:expand => true, :open_all => true})
       expect(node[:expand]).to eq(true)
     end
 
@@ -372,6 +372,47 @@ describe TreeNodeBuilder do
       mgmt_system.id = 'e-1000'
       node = TreeNodeBuilder.build(mgmt_system, nil, {})
       expect(node).not_to be_nil
+    end
+  end
+
+  context "Nodes for Server By Roles/Roles By Servers trees" do
+    before(:each) do
+      @miq_server = EvmSpecHelper.local_miq_server
+      @server_role = FactoryGirl.create(
+        :server_role,
+        :name              => "smartproxy",
+        :description       => "SmartProxy",
+        :max_concurrent    => 1,
+        :external_failover => false,
+        :role_scope        => "zone"
+      )
+
+      @priority = AssignedServerRole::DEFAULT_PRIORITY
+      @assigned_server_role = FactoryGirl.create(
+        :assigned_server_role,
+        :miq_server_id  => @miq_server.id,
+        :server_role_id => @server_role.id,
+        :active         => true,
+        :priority       => 1
+      )
+    end
+
+    it 'Node for ServerRole' do
+      node = TreeNodeBuilder.build(@server_role, nil, {})
+      expect(node[:key]).to eq("role-#{MiqRegion.compress_id(@server_role.id)}")
+      expect(node[:title]).to eq("Role: SmartProxy (stopped)")
+    end
+
+    it 'Node for AssignedServerRole' do
+      node = TreeNodeBuilder.build(@assigned_server_role, nil, {})
+      expect(node[:key]).to eq("asr-#{MiqRegion.compress_id(@assigned_server_role.id)}")
+      expect(node[:title]).to eq("Role: SmartProxy (primary, active, PID=)")
+    end
+
+    it 'Node for MiqServer' do
+      node = TreeNodeBuilder.build(@miq_server, nil, {})
+      expect(node[:key]).to eq("svr-#{MiqRegion.compress_id(@miq_server.id)}")
+      expect(node[:title]).to eq("Server: #{@miq_server.name} [#{@miq_server.id}]")
     end
   end
 
