@@ -13,17 +13,17 @@ describe MiqAeMethodService::MiqAeServiceEmsEvent do
 
   context "#refresh" do
     it "when queued" do
-      expect(EmsRefresh).to receive(:queue_refresh).once.with([@ems])
-      @service_event.refresh("src_vm")
+      expect(EmsRefresh).to receive(:queue_refresh).once.with([@ems], nil, false)
+      @service_event.refresh("src_vm", false)
     end
 
     it "when with multiple targets" do
       @vm.update_attributes(:ext_management_system => @ems)
-      expect(EmsRefresh).to receive(:queue_refresh).once do |args|
-        expect(args).to match_array([@ems, @vm])
+      expect(EmsRefresh).to receive(:queue_refresh).once do |*args|
+        expect(args[0]).to match_array([@ems, @vm])
       end
 
-      @service_event.refresh("src_vm", "dest_vm")
+      @service_event.refresh("src_vm", "dest_vm", false)
     end
 
     it "when target object is empty" do
@@ -31,27 +31,27 @@ describe MiqAeMethodService::MiqAeServiceEmsEvent do
       @service_event.reload
 
       expect(EmsRefresh).not_to receive(:queue_refresh)
-      @service_event.refresh("dest_vm")
+      @service_event.refresh("dest_vm", false)
     end
 
     it "when target is empty string" do
       expect(EmsRefresh).not_to receive(:queue_refresh)
-      @service_event.refresh("")
+      @service_event.refresh("", false)
     end
 
     it "when target is empty" do
       expect(EmsRefresh).not_to receive(:queue_refresh)
-      @service_event.refresh
+      @service_event.refresh([], false)
     end
 
     it "when target is nil" do
       expect(EmsRefresh).not_to receive(:queue_refresh)
-      @service_event.refresh(nil)
+      @service_event.refresh(nil, false)
     end
 
     it "when target is an array" do
-      expect(EmsRefresh).to receive(:queue_refresh).once.with([@ems])
-      @service_event.refresh(%w(src_vm dest_vm))
+      expect(EmsRefresh).to receive(:queue_refresh).once.with([@ems], nil, false)
+      @service_event.refresh(%w(src_vm dest_vm), false)
     end
   end
 
