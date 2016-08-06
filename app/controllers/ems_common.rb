@@ -101,15 +101,16 @@ module EmsCommon
       'storages'                      => [Storage, _('Managed Datastores'), _('Datastore')],
       'ems_clusters'                  => [EmsCluster, title_for_clusters, _("Cluster")],
       'persistent_volumes'            => [PersistentVolume, _('Volumes'), _('Volume'), :persistent_volumes],
+      'hosts'                         => [Host, _("Managed Hosts"), _("Host")],
     }
   end
 
   def show_entities(display)
-    view_setup_helper(*view_setup_params[display])
+    view_setup_helper(display, *view_setup_params[display])
   end
 
   def show
-    @display = params[:display] # || "main" unless control_selected? # FIXME
+    @display = params[:display]
 
     session[:vm_summary_cool] = (settings(:views, :vm_summary_cool).to_s == "summary")
     @summary_view = session[:vm_summary_cool]
@@ -121,29 +122,22 @@ module EmsCommon
     drop_breadcrumb({:name => ui_lookup(:tables => @table_name), :url => "/#{@table_name}/show_list?page=#{@current_page}&refresh=y"}, true)
 
     case params[:display]
-    when 'main'                         then show_main
-    when "download_pdf", "summary_only" then show_download
-    when "props"                        then show_props
-    when "ems_folders"                  then show_ems_folders
-    when "timeline"                     then show_timeline
-    when "dashboard"                    then show_dashboard
-    when "topology"                     then show_topology
-    when "performance"                  then show_performance
-    when 'cloud_object_store_containers'
-                                        then show_entities(params[:display])
-    when 'vms'                          then show_vms
-    # FIXME: there was no condition, just an 'else', need to verify
-    when 'hosts'                        then view_setup_helper(Host, _("Managed Hosts"), _("Host"))
-    when nil # param[:display] is nil, let's use session[:display]
-
-      if control_selected?
-        case session[:display]
-        else                                      show_entities(session[:display])
-        end
-      else
+    when 'main'                          then show_main
+    when 'download_pdf', 'summary_only'  then show_download
+    when 'props'                         then show_props
+    when 'ems_folders'                   then show_ems_folders
+    when 'timeline'                      then show_timeline
+    when 'dashboard'                     then show_dashboard
+    when 'topology'                      then show_topology
+    when 'performance'                   then show_performance
+    when 'cloud_object_store_containers' then show_entities(params[:display])
+    when 'vms'                           then show_vms
+    when nil
+      if control_selected? # pagination controls
+        show_entities(session[:display])
+      else                 # or default display
         show_main
       end
-
     else show_entities(params[:display])
     end
 
@@ -158,15 +152,15 @@ module EmsCommon
     render :template => "shared/views/ems_common/show" if params[:action] == 'show' && !performed?
   end
 
-  def view_setup_helper(kls, title, view_item_name = nil, parent_method = nil)
+  def view_setup_helper(display, kls, title, view_item_name = nil, parent_method = nil)
     view_item_name ||= title.singularize
 
     drop_breadcrumb(:name => @ems.name + _(" (All %{title})") % {:title => title},
-                    :url  => show_link(@ems, :display => @display))
+                    :url  => show_link(@ems, :display => display))
     opts = {:parent => @ems}
     opts[:parent_method] = parent_method if parent_method
     @view, @pages = get_view(kls, **opts)
-    @showtype = @display
+    @showtype = @display = display
   end
 
   # Show the main MS list view
