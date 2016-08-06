@@ -140,6 +140,16 @@ module RelationshipMixin
     Relationship.resource_pairs(parent_rels(*args))
   end
 
+  # return a scope of all of the parents of this record
+  def parents_scope(*args)
+    options = args.extract_options!
+    if options[:of_type].nil? || options[:of_type].kind_of?(Array)
+      raise ArgumentError, ":of_type required as a single parameter"
+    end
+    klass = options[:of_type].constantize
+    klass.where(:id => parent_rels(options).select(:resource_id))
+  end
+
   # Returns the number of parents of the record
   def parent_count(*args)
     parent_rels(*args).size

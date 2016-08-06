@@ -755,8 +755,9 @@ class VmOrTemplate < ApplicationRecord
   alias_method :owning_blue_folder, :parent_blue_folder
 
   def parent_blue_folders(*args)
-    f = parent_blue_folder
-    f.nil? ? [] : f.folder_path_objs(*args)
+    with_relationship_type('ems_metadata') do
+      parents_scope(:of_type => "EmsFolder").folder_path_objs("ems_metadata", *args)
+    end
   end
 
   def under_blue_folder?(folder)
