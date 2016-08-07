@@ -35,6 +35,7 @@ class OpenscapResult < ApplicationRecord
   end
 
   def create_results(rule_results, benchmark_items)
+    openscap_rule_results.delete_all
     rule_results.each do |openscap_id, result|
       openscap_rule_results << OpenscapRuleResult.new(
         :name            => ascii8bit_to_utf8(openscap_id),
