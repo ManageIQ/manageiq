@@ -107,6 +107,17 @@
                      "checkchange"                 => "",
                      "selectpicker-for-select-tag" => "")
 
+    .form-group{"ng-class" => "{'has-error': angularForm.vmware_cloud_api_version.$invalid}", "ng-if" => "emsCommonModel.emstype == 'vmware_cloud'"}
+      %label.col-md-2.control-label{"for" => "ems_api_version"}
+        = _("API Version")
+      .col-md-8
+        = select_tag('api_version',
+                     options_for_select(@vmware_cloud_api_versions),
+                     "ng-model"                    => "emsCommonModel.vmware_cloud_api_version",
+                     "id"                          => "ems_vmware_cloud_api_version",
+                     "checkchange"                 => "",
+                     "selectpicker-for-select-tag" => "")
+
     .form-group{"ng-class" => "{'has-error': angularForm.api_version.$invalid}",
                 "ng-if"    => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra'"}
       %label.col-md-2.control-label{"for" => "ems_region_input"}

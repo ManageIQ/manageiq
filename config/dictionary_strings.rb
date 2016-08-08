@@ -1482,6 +1482,10 @@ _("Instances (Microsoft Azure)")
 _("Instance (Amazon)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::CloudManager::Vm (plural form)
 _("Instances (Amazon)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::CloudManager::Vm
+_("Instance (VMware vCloud)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::CloudManager::Vm (plural form)
+_("Instances (VMware vCloud)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager::Template
 _("Image")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager::Template (plural form)
@@ -1562,6 +1566,10 @@ _("Cloud Providers (Amazon)")
 _("Cloud Provider (Microsoft Azure)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::CloudManager (plural form)
 _("Cloud Providers (Microsoft Azure)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::CloudManager
+_("Cloud Provider (VMware vCloud)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::CloudManager (plural form)
+_("Cloud Providers (VMware vCloud)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::NetworkManager::CloudNetwork
 _("Cloud Network (Microsoft Azure)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::NetworkManager::CloudNetwork (plural form)
