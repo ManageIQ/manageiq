@@ -1,6 +1,8 @@
 class ApiController
   module Parser
     class RequestAdapter
+      include CompressedIds
+
       def initialize(req, params)
         @request = req
         @params = params
@@ -39,7 +41,8 @@ class ApiController
       end
 
       def c_id
-        @params[:c_id] || c_path_parts[1]
+        id = @params[:c_id] || c_path_parts[1]
+        id =~ /\A[0-9]/ ? from_cid(id) : id
       end
 
       def subcollection
@@ -47,7 +50,7 @@ class ApiController
       end
 
       def s_id
-        @params[:s_id] || c_path_parts[3]
+        from_cid(@params[:s_id] || c_path_parts[3])
       end
 
       def expand?(what)
