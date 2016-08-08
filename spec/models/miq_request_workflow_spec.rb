@@ -48,6 +48,18 @@ describe MiqRequestWorkflow do
       end
     end
 
+    context 'required_method can be a list' do
+      it "multiple items" do
+        dialog.store_path(:dialogs, :customize, :fields, :root_password, :required_method, [:some_required_method_1,
+                                                                                            :some_required_method_2])
+        dialog.store_path(:dialogs, :customize, :fields, :root_password, :required, true)
+
+        expect(workflow).to receive(:some_required_method_1)
+        expect(workflow).to receive(:some_required_method_2)
+        expect(workflow.validate({})).to be true
+      end
+    end
+
     context "failures shouldn't be reverted" do
       it "validation_method" do
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :validation_method, :some_validation_method)
