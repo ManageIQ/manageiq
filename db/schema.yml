@@ -1564,6 +1564,79 @@ lifecycle_events:
 - vm_or_template_id
 - created_by
 - created_on
+load_balancer_health_check_members:
+- id
+- load_balancer_health_check_id
+- load_balancer_pool_member_id
+load_balancer_health_checks:
+- id
+- ems_ref
+- name
+- protocol
+- port
+- url_path
+- interval
+- timeout
+- healthy_threshold
+- unhealthy_threshold
+- ems_id
+- load_balancer_listener_id
+- cloud_tenant_id
+- created_at
+- updated_at
+load_balancer_listener_pools:
+- id
+- load_balancer_listener_id
+- load_balancer_pool_id
+- created_at
+- updated_at
+load_balancer_listeners:
+- id
+- ems_ref
+- name
+- description
+- load_balancer_protocol
+- load_balancer_port
+- instance_protocol
+- instance_port
+- ems_id
+- cloud_tenant_id
+- load_balancer_id
+- load_balancer_pool_id
+- network_port_id
+- created_at
+- updated_at
+load_balancer_pool_members:
+- id
+- ems_ref
+- address
+- port
+- cloud_tenant_id
+- cloud_subnet_id
+- network_port_id
+- resource_group_id
+- created_at
+- updated_at
+load_balancer_pools:
+- id
+- ems_ref
+- name
+- description
+- load_balancer_algorithm
+- protocol
+- ems_id
+- cloud_tenant_id
+- created_at
+- updated_at
+load_balancers:
+- id
+- ems_ref
+- name
+- description
+- ems_id
+- cloud_tenant_id
+- created_at
+- updated_at
 log_files:
 - id
 - name
