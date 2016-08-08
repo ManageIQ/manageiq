@@ -355,7 +355,11 @@ module Rbac
     end
 
     def scope_by_ids(scope, filtered_ids)
-      filtered_ids ? scope.where("#{scope.table_name}.id IN (?)", filtered_ids) : scope
+      if filtered_ids
+        scope.where(:id => filtered_ids)
+      else
+        scope
+      end
     end
 
     def get_belongsto_filter_object_ids(klass, filter)
