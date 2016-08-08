@@ -4568,6 +4568,17 @@ middleware_domains:
 - ems_id
 - created_at
 - updated_at
+middleware_messagings:
+- id
+- name
+- ems_ref
+- nativeid
+- server_id
+- properties
+- ems_id
+- messaging_type
+- created_at
+- updated_at
 middleware_server_groups:
 - id
 - name
