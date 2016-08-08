@@ -141,10 +141,9 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
     source.with_provider_connection do |azure|
       vms = Azure::Armrest::VirtualMachineService.new(azure)
       vm  = vms.create(dest_name, resource_group.name, clone_options)
-      subscription_id = vm.id.split('/')[2]
 
       {
-        :subscription_id   => subscription_id,
+        :subscription_id   => azure.subscription_id,
         :vm_resource_group => vm.resource_group,
         :type              => vm.type.downcase,
         :vm_name           => vm.name
