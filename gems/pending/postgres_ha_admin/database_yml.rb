@@ -23,10 +23,10 @@ module PostgresHaAdmin
       FileUtils.copy(db_yml_file, new_name)
       begin
         File.write(db_yml_file, db_yml.to_yaml)
-      rescue IOError => err
+      rescue StandardError
         FileUtils.copy(new_name, db_yml_file)
         File.delete(new_name)
-        raise err
+        raise
       end
       new_name
     end

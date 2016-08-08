@@ -5,7 +5,7 @@ describe PostgresHaAdmin::DatabaseYml do
 
   before do
     @yml_file = Tempfile.new('database.yml')
-    yml_data = YAML.load('---
+    yml_data = YAML.load(<<-HEREDOC
       base: &base
         username: user
         wait_timeout: 5
@@ -13,7 +13,8 @@ describe PostgresHaAdmin::DatabaseYml do
       test: &test
         <<: *base
         pool: 3
-        database: vmdb_test'
+        database: vmdb_test
+                         HEREDOC
                         )
     File.write(@yml_file.path, yml_data.to_yaml)
   end
