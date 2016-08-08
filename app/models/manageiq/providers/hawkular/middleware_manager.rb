@@ -165,11 +165,11 @@ module ManageIQ::Providers
       run_generic_operation(:Shutdown, ems_ref)
     end
 
-    def stop_middleware_deployment(ems_ref, name)
+    def stop_middleware_deployment(ems_ref, _name)
       run_generic_operation(:Undeploy, ems_ref)
     end
 
-    def start_middleware_deployment(ems_ref, name)
+    def start_middleware_deployment(ems_ref, _name)
       run_generic_operation(:Deploy, ems_ref)
     end
 
@@ -223,7 +223,7 @@ module ManageIQ::Providers
       ::Hawkular::Alerts::AlertsClient.new(url, credentials)
     end
 
-    def redeploy_middleware_deployment(ems_ref, name)
+    def redeploy_middleware_deployment(ems_ref, _name)
       run_generic_operation(:Redeploy, ems_ref)
     end
 
