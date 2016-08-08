@@ -83,20 +83,20 @@ class ApiController
       collection, c_id    = path_array[cidx..cidx + 1]
       subcollection, s_id = path_array[cidx + 2..cidx + 3]
 
-      subcollection ? [subcollection.to_sym, s_id] : [collection.to_sym, c_id]
+      subcollection ? [subcollection.to_sym, from_cid(s_id)] : [collection.to_sym, from_cid(c_id)]
     end
 
     def parse_id(resource, collection)
       return nil if resource.blank?
 
       href_id = href_id(resource["href"], collection)
-      return href_id if href_id.present?
+      return from_cid(href_id) if href_id.present?
 
       resource["id"].kind_of?(Integer) ? resource["id"] : nil
     end
 
     def href_id(href, collection)
-      href.match(%r{^.*/#{collection}/([0-9]+)$}) && Regexp.last_match(1) if href.present?
+      href.match(%r{^.*/#{collection}/([0-9r]+)$}) && Regexp.last_match(1) if href.present?
     end
 
     def parse_by_attr(resource, type, attr_list)
