@@ -458,7 +458,8 @@ Static Network Configuration
         when "create_internal", /_external/
           database_configuration.run_interactive
         end
-        dbhost, database, region = ApplianceConsole::Utilities.db_host_database_region
+        configured = ApplianceConsole::DatabaseConfiguration.configured?
+        dbhost, database, region = ApplianceConsole::Utilities.db_host_database_region if configured
         press_any_key
 
       when I18n.t("advanced_settings.tmp_config")

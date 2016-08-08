@@ -78,11 +78,6 @@ module ApplianceConsole
       end
     end
 
-    def post_activation
-      pid = fork { LinuxAdmin::Service.new("evmserverd").enable.start }
-      Process.detach(pid)
-    end
-
     def create_or_join_region
       region ? create_region : join_region
     end
@@ -211,6 +206,11 @@ FRIENDLY
       ensure
         ModelWithNoBackingTable.remove_connection
       end
+    end
+
+    def start_evm
+      pid = fork { LinuxAdmin::Service.new("evmserverd").enable.start }
+      Process.detach(pid)
     end
 
     private
