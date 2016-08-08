@@ -181,6 +181,35 @@ describe DialogFieldDropDownList do
         end
       end
 
+      context "dialog field dropdown without options hash" do
+        before do
+          @df = FactoryGirl.create(:dialog_field_drop_down_list, :name => 'test drop down')
+        end
+
+        it "#multi_value?" do
+          expect(@df.multi_value?).to be_falsey
+
+          @df.force_multi_value = true
+          expect(@df.multi_value?).to be_truthy
+        end
+
+        it "#automate_key_name" do
+          expect(@df.automate_key_name).to eq("dialog_#{@df.name}")
+        end
+      end
+
+      context "dialog field dropdown with options hash" do
+        before do
+          @df = FactoryGirl.create(:dialog_field_drop_down_list,
+                                   :name    => 'test drop down',
+                                   :options => {:force_multi_value => true})
+        end
+
+        it "#multi_value?" do
+          expect(@df.multi_value?).to be_truthy
+        end
+      end
+
       context "when the raw values are not already set" do
         before do
           dialog_field.values = %w(original values)
