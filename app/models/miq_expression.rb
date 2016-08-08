@@ -672,6 +672,11 @@ class MiqExpression
     @col_details ||= self.class.get_cols_from_expression(@exp, @preprocess_options)
   end
 
+  def class_details
+    field, _details = col_details.first
+    field.split('-').first
+  end
+
   def includes_for_sql
     col_details.values.each_with_object({}) { |v, result| result.deep_merge!(v[:include]) }
   end
