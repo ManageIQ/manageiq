@@ -10,7 +10,7 @@
           %th
           %th
         %tbody{'data-click-url' => '/miq_ae_class/tree_select/'}
-          - @record.ae_instances.each do |record|
+          - @record.ae_instances.order(:name).each do |record|
             - next if record.name == '$'
             - cls_cid = "#{class_prefix(record.class)}-#{ApplicationRecord.compress_id(record.id)}"
             %tr{'data-click-id' => cls_cid}
