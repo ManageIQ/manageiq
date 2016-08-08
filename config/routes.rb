@@ -2341,7 +2341,6 @@ Vmdb::Application.routes.draw do
         show_list
         tree_autoload_dynatree
         vmtree_selected
-        ownership_form_fields
         ownership_update
       ) +
                ownership_post +

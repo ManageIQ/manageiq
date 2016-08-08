@@ -14,7 +14,7 @@ ManageIQ.angular.app.controller('ownershipFormController', ['$http', '$scope', '
     ManageIQ.angular.scope = $scope;
 
     miqService.sparkleOn();
-    $http.get('ownership_form_fields/' + objectIds).success(function(data) {
+    $http.get('ownership_form_fields/' + objectIds.join(',')).success(function(data) {
       $scope.ownershipModel.user = data.user;
       $scope.ownershipModel.group = data.group;
       $scope.afterGet = true;
@@ -24,24 +24,18 @@ ManageIQ.angular.app.controller('ownershipFormController', ['$http', '$scope', '
   };
 
   $scope.canValidateBasicInfo = function () {
-    if ($scope.isBasicInfoValid())
-      return true;
-    else
-      return false;
+    return $scope.isBasicInfoValid();
   };
 
   $scope.isBasicInfoValid = function() {
-    if(( $scope.angularForm.user && !$scope.angularForm.user.$valid) ||
-      ($scope.angularForm.group && !$scope.angularForm.group.$valid))
-      return false;
-    else
-      return true;
+    return ( $scope.angularForm.user && $scope.angularForm.user.$valid) &&
+      ($scope.angularForm.group && $scope.angularForm.group.$valid);
   };
 
 
   var ownershipEditButtonClicked = function(buttonName, serializeFields) {
     miqService.sparkleOn();
-    var url = 'ownership_update/' + objectIds[0] + '?button=' + buttonName;
+    var url = 'ownership_update/' + '?button=' + buttonName;
     if (serializeFields === undefined) {
       miqService.miqAjaxButton(url);
     } else {

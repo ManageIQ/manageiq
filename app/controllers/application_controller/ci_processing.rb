@@ -7,15 +7,13 @@ module ApplicationController::CiProcessing
 
   def ownership_form_fields
     @ownership_items = params[:id].split(/\s*,\s*/)
-    request_hash = build_ownership_hash
-    render :json => request_hash
+    render :json => build_ownership_hash
   end
 
   # Set Ownership selected db records
   def set_ownership(klass = "VmOrTemplate")
     assert_privileges(params[:pressed])
 
-    @klass = klass.constantize
     # check to see if coming from show_list or drilled into vms from another CI
     if request.parameters[:controller] == "vm" || ["all_vms", "vms", "instances", "images"].include?(params[:display])
       rec_cls = "vm"

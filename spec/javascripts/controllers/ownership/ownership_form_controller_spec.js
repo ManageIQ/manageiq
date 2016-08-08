@@ -36,10 +36,10 @@ describe('ownershipFormController', function() {
   describe('initialization', function() {
     it('sets the owner and group to the values returned via the http request', function() {
       describe('#cancelClicked', function() {
-      expect($scope.ownershipModel.user).toEqual('testUser2');
-      expect($scope.ownershipModel.group).toEqual('testGroup2');
+        expect($scope.ownershipModel.user).toEqual('testUser2');
+        expect($scope.ownershipModel.group).toEqual('testGroup2');
+      });
     });
-  });
 
     beforeEach(function() {
       $scope.angularForm = {
@@ -53,7 +53,7 @@ describe('ownershipFormController', function() {
     });
 
     it('delegates to miqService.miqAjaxButton', function() {
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('ownership_update/1000000000001?button=cancel');
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('ownership_update/?button=cancel');
     });
   });
 
@@ -74,7 +74,7 @@ describe('ownershipFormController', function() {
         user: $scope.ownershipModel.user,
         group: $scope.ownershipModel.group};
 
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('ownership_update/1000000000001?button=save', submitContent);
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('ownership_update/?button=save', submitContent);
     });
   });
 });
