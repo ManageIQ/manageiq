@@ -52,10 +52,6 @@ class DashboardController < ApplicationController
   # Accept window sizes from the client
   def window_sizes
     session[:winH] = params[:height] if params[:height]
-    if params[:exp_left] && params[:exp_controller]
-      # Set the left divider position in the controller's sandbox
-      session[:sandboxes][params[:exp_controller]][:exp_left] = params[:exp_left]
-    end
     head :ok # No response required
   end
 

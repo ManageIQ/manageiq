@@ -481,11 +481,10 @@ function DoNav(theUrl) {
 
 // Routines to get the size of the window
 function miqResetSizeTimer() {
-  var sizes = miqGetSize();
+  var height = window.innerHeight;
   var offset = 427;
-  var h = sizes[1] - offset;
+  var h = height - offset;
   var url = "/dashboard/window_sizes";
-  var args = {width: sizes[0], height: sizes[1]};
 
   if (h < 200) {
     h = 200;
@@ -499,32 +498,7 @@ function miqResetSizeTimer() {
   }
 
   // Send the new values to the server
-  miqJqueryRequest(miqPassFields(url, args));
-}
-
-// Get the size and pass to the server
-function miqGetSize() {
-  var myWidth = 0;
-  var myHeight = 0;
-
-  if (typeof window.innerWidth == 'number') {
-    // Non-IE
-    myWidth = window.innerWidth;
-    myHeight = window.innerHeight;
-  } else if (document.documentElement &&
-             (document.documentElement.clientWidth ||
-              document.documentElement.clientHeight)) {
-    // IE 6+ in 'standards compliant mode'
-    myWidth = document.documentElement.clientWidth;
-    myHeight = document.documentElement.clientHeight;
-  } else if (document.body &&
-             (document.body.clientWidth ||
-              document.body.clientHeight)) {
-    // IE 4 compatible
-    myWidth = document.body.clientWidth;
-    myHeight = document.body.clientHeight;
-  }
-  return [ myWidth, myHeight ];
+  miqJqueryRequest(miqPassFields(url, { height: height }));
 }
 
 // Pass fields to server given a URL and fields in name/value pairs
