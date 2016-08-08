@@ -117,7 +117,7 @@ class ApplicationHelper::ToolbarBuilder
       button[:window_url] = "/#{request.parameters["controller"]}#{input[:url]}"
     end
 
-    if input[:association_id] # special behavior: button opens window_url in a new window
+    if input[:association_id] # special behavior to pass in id of association
       button[:url_parms] = "?show=#{request.parameters[:show]}"
     end
 

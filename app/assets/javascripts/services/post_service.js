@@ -11,8 +11,6 @@ ManageIQ.angular.app.service('postService', ["miqService", "$timeout", "$window"
     function handleSuccess(response) {
       $timeout(function () {
         $window.location.href = redirectURL + '&flash_msg=' + successMsg;
-        miqService.sparkleOff();
-        miqService.miqFlash("success", successMsg);
       });
     }
 
@@ -20,8 +18,6 @@ ManageIQ.angular.app.service('postService', ["miqService", "$timeout", "$window"
       var msg = sprintf(__("Error during Save: [%s - %s]"), response.status, response.responseText);
       $timeout(function () {
         $window.location.href = redirectURL + '&flash_msg=' + msg + '&flash_error=true';
-        miqService.sparkleOff();
-        miqService.miqFlash("error", msg);
       });
     }
   };
@@ -37,8 +33,6 @@ ManageIQ.angular.app.service('postService', ["miqService", "$timeout", "$window"
     function handleSuccess(response) {
       $timeout(function () {
         $window.location.href = redirectURL + '&flash_msg=' + successMsg;
-        miqService.sparkleOff();
-        miqService.miqFlash("success", successMsg);
       });
     }
 
@@ -46,8 +40,6 @@ ManageIQ.angular.app.service('postService', ["miqService", "$timeout", "$window"
       var msg = sprintf(__("Error during Add: [%s - %s]"), response.status, response.responseText);
       $timeout(function () {
         $window.location.href = redirectURL + '&flash_msg=' + msg + '&flash_error=true';
-        miqService.sparkleOff();
-        miqService.miqFlash("error", msg);
       });
     }
   };
@@ -55,8 +47,6 @@ ManageIQ.angular.app.service('postService', ["miqService", "$timeout", "$window"
   this.cancelOperation = function(redirectURL, msg) {
     $timeout(function () {
       $window.location.href = redirectURL + '&flash_msg=' + msg;
-      miqService.sparkleOff();
-      miqService.miqFlash("success", msg);
     });
   };
 }]);

@@ -6,6 +6,5 @@ ManageIQ.angular.app.service('arbitrationProfileDataFactory', ['API', function(A
       return API.get(urlBase + '/' + miqUncompressedId(ap_id))
     }
   };
-  return this;
 }]);
 
