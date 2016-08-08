@@ -29,6 +29,12 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
     raise MiqException::MiqProvisionError, "Provision Request's Destination VM Name=[#{dest_name}] cannot be blank" if dest_name.blank?
     raise MiqException::MiqProvisionError, "A VM with name: [#{dest_name}] already exists" if source.ext_management_system.vms.where(:name => dest_name).any?
 
+    vm_name = options[:vm_name]
+    [:hostname, :linux_host_name, :vm_target_hostname, :vm_target_name].each do |option|
+      options[option] ||= vm_name
+    end
+    save!
+
     clone_options = {
       :name          => dest_name,
       :host          => dest_host,
