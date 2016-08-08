@@ -327,6 +327,12 @@ describe MiqRequestWorkflow do
   context "#validate regex" do
     let(:regex) { {:required_regex => "^n@test.com$"} }
     let(:regex_two) { {:required_regex => "^n$"} }
+    let(:regex_with_details) do
+      {
+        :required_regex              => "^n@test.com$",
+        :required_regex_fail_details => "We are looking for a specific email here."
+      }
+    end
     let(:value_email) { 'n@test.com' }
     let(:value_no_email) { 'n' }
 
@@ -342,6 +348,11 @@ describe MiqRequestWorkflow do
 
     it "returns an error when no value exists" do
       expect(workflow.validate_regex(nil, {}, {}, regex, '')).to eq "'/' is required"
+    end
+
+    it "returns a detailed formatting message when fail details are defined" do
+      expect(workflow.validate_regex(nil, {}, {}, regex_with_details, value_no_email)).to eq "'/' must be correctly"\
+        " formatted. We are looking for a specific email here."
     end
   end
 
