@@ -374,7 +374,7 @@ describe ApplianceConsole::DatabaseConfiguration do
       end
     end
 
-    describe "#post_activation" do
+    describe "#start_evm" do
       it "forks and detaches the service start command" do
         expect(@config).to receive(:fork) do |&block|
           service = double(:service)
@@ -385,7 +385,7 @@ describe ApplianceConsole::DatabaseConfiguration do
           1234 # return a test pid
         end
         expect(Process).to receive(:detach).with(1234)
-        @config.post_activation
+        @config.start_evm
       end
     end
   end
