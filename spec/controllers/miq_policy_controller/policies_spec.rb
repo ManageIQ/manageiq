@@ -38,7 +38,8 @@ describe MiqPolicyController do
       it "Renders the control policy creation form correctly" do
         session[:sandboxes] = {"miq_policy" => {:trees       => {:policy_tree => {:active_node => "xx-compliance_xx-compliance-host"}},
                                                 :active_tree => :policy_tree,
-                                                :folder      => "compliance-host"}}
+                                                :folder      => "compliance-host",
+                                                :nodeid      => "host"}}
         session[:edit] = {:new => {:mode => "compliance", :towhat => "Host"}}
         post :x_button, :pressed => "policy_new", :typ => "basic"
         expect(response).to render_template("layouts/exp_atom/_editor")

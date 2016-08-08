@@ -11,7 +11,7 @@ class ApplicationHelper::Toolbar::MiqPoliciesCenter < ApplicationHelper::Toolbar
           'pficon pficon-add-circle-o fa-lg',
           t = proc do
               _('Add a New %{model} %{mode} Policy') % {
-                :model => ui_lookup(:model => @sb[:nodeid]),
+                :model => ui_lookup(:model => @sb[:nodeid].camelize),
                 :mode  => @sb[:mode].capitalize
               }
           end,

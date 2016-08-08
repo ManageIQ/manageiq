@@ -254,4 +254,18 @@ describe MiqPolicyController do
       expect(response).to render_template('layouts/exception')
     end
   end
+
+  describe '#ui_model_from_id' do
+    it 'looks up lowerCamelCase model name' do
+      expect(I18n).to receive('t').with('dictionary.model.ContainerImage', :locale => "en") { "Image" }
+      expect(controller.ui_model_from_id('containerImage')).to eq("Image")
+    end
+  end
+
+  describe '#ui_models_from_id' do
+    it 'looks up lowerCamelCase model name' do
+      expect(I18n).to receive('t').with('dictionary.model.ContainerImage', :locale => "en") { "Image" }
+      expect(controller.ui_models_from_id('containerImage')).to eq("Images")
+    end
+  end
 end
