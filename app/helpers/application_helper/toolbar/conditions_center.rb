@@ -13,7 +13,9 @@ class ApplicationHelper::Toolbar::ConditionsCenter < ApplicationHelper::Toolbar:
             if @sb[:folder].upcase == "VM"
               _('Add a New VM Condition')
             else
-              _('Add a New %{condition_type} Condition') % {:condition_type => ui_lookup(:model => @sb[:folder])}
+              _('Add a New %{condition_type} Condition') % {
+                :condition_type => ui_lookup(:model => @sb[:folder].camelize)
+              }
             end
           end,
           t),
