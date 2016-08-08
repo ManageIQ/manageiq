@@ -264,6 +264,10 @@ module AuthenticationMixin
     return status == :valid, details
   end
 
+  def default_authentication
+    authentication_type(default_authentication_type)
+  end
+
   private
 
   def authentication_check_no_validation(type, options)
