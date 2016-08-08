@@ -9,13 +9,13 @@
 #
 
 # Report title
-title: Middleware Messagings
+title: Middleware Messaging
 
 # Menu name
-name: Middleware Messagings
+name: Middleware Messaging
 
 # Main DB table report is based on
-db: MiddlewareMessaging
+db: MiddlewareMessagings
 
 # Columns to fetch from the main table
 cols:

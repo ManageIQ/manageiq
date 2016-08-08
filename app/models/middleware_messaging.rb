@@ -3,10 +3,4 @@ class MiddlewareMessaging < ApplicationRecord
   belongs_to :middleware_server, :foreign_key => "server_id"
   acts_as_miq_taggable
   serialize :properties
-
-  include LiveMetricsMixin
-
-  def metrics_capture
-    @metrics_capture ||= ManageIQ::Providers::Hawkular::MiddlewareManager::LiveMetricsCapture.new(self)
-  end
 end
