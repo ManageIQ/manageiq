@@ -45,7 +45,7 @@
   %table.table.table-striped.table-bordered
     %thead
       %th
-        = check_box_tag('masterToggle', 1, @check_all,
+        = check_box_tag('masterToggle', 1, false,
                         :onclick => "miqUpdateAllCheckboxes('rhn_buttons', null);")
       %th= _("Appliance")
       %th= _("Zone")

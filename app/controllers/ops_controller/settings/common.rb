@@ -1097,7 +1097,6 @@ module OpsController::Settings::Common
         @edit[:new][:servers] ||= {}
         @customer = rhn_subscription
         @buttons_on = @edit[:new][:servers].detect { |_, value| !!value }
-        @check_all  = @edit[:new][:servers_all]
         @updates = rhn_update_information
       end
     when "xx"
