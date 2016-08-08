@@ -19,6 +19,7 @@ module RelationshipMixin
     :subtree_arranged,     :subtree_rels_arranged,
     :fulltree,             :fulltree_rels,
     :fulltree_arranged,    :fulltree_rels_arranged,
+    :parent_rel_ids,
   ]
 
   included do
@@ -109,10 +110,17 @@ module RelationshipMixin
   # has_ancestry methods
   #
 
+  # Returns the id in the relationship table for this record's parents
+  # from this id, relationship records can be brought back and mapped to the resource of interest
+  # NOTE: parent_id is read from ancestry field, while parent is a db hit (N+1)
+  def parent_rel_ids
+    relationships.where.not(:ancestry => [nil, ""]).select(:ancestry).collect(&:parent_id)
+  end
+
   # Returns all of the relationships of the parents of the record, [] for a root node
   def parent_rels(*args)
     options = args.extract_options!
-    rels = relationships.collect(&:parent).compact
+    rels = Relationship.where(:id => parent_rel_ids)
     Relationship.filter_by_resource_type(rels, options)
   end
 
@@ -141,9 +149,9 @@ module RelationshipMixin
 
   # Returns the parent of the record, nil for a root node
   def parent(*args)
-    rels = parents(*args).take(2)
+    rels = parent_rels(*args).take(2)
     raise _("Multiple parents found.") if rels.length > 1
-    rels.first
+    rels.first.try(:resource)
   end
 
   # Returns the class/id pair of the parent of the record, nil for a root node

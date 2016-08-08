@@ -791,14 +791,14 @@ class VmOrTemplate < ApplicationRecord
   # TODO: Replace all with ancestors lookup once multiple parents is sorted out
   def parent_resource_pool
     with_relationship_type('ems_metadata') do
-      parents(:of_type => "ResourcePool").first
+      parent(:of_type => "ResourcePool")
     end
   end
   alias_method :owning_resource_pool, :parent_resource_pool
 
   def parent_blue_folder
     with_relationship_type('ems_metadata') do
-      parents(:of_type => "EmsFolder").first
+      parent(:of_type => "EmsFolder")
     end
   end
   alias_method :owning_blue_folder, :parent_blue_folder
