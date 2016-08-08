@@ -344,11 +344,10 @@ module Rbac
     # @return [Array<Array<Object>,Integer,Integer] targets, authorized count
     def scope_by_parent_ids(parent_class, scope, filtered_ids)
       if filtered_ids
-        reflection = scope.reflections[parent_class.name.underscore]
-        if reflection
-          scope.where("#{scope.table_name}.#{reflection.foreign_key} IN (?)", filtered_ids)
+        if (reflection = scope.reflections[parent_class.name.underscore])
+          scope.where(reflection.foreign_key.to_sym => filtered_ids)
         else
-          scope.where("#{scope.table_name}.resource_type = ? AND #{scope.table_name}.resource_id IN (?)", parent_class.name, filtered_ids)
+          scope.where(:resource_type => parent_class.name, :resource_id => filtered_ids)
         end
       else
         scope
