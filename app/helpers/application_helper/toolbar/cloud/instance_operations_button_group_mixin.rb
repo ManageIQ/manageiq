@@ -14,7 +14,8 @@ module ApplicationHelper::Toolbar::Cloud::InstanceOperationsButtonGroupMixin
             N_('Stop'),
             :image   => "guest_shutdown",
             :confirm => N_("Stop this Instance?"),
-            :klass   => ApplicationHelper::Button::InstanceStop),
+            :klass   => ApplicationHelper::Button::GenericFeatureButton,
+            :options => {:feature => :stop}),
           included_class.button(
             :instance_start,
             nil,
@@ -22,7 +23,8 @@ module ApplicationHelper::Toolbar::Cloud::InstanceOperationsButtonGroupMixin
             N_('Start'),
             :image   => "power_on",
             :confirm => N_("Start this Instance?"),
-            :klass   => ApplicationHelper::Button::InstanceStart),
+            :klass   => ApplicationHelper::Button::GenericFeatureButton,
+            :options => {:feature => :start}),
           included_class.button(
             :instance_pause,
             nil,
@@ -39,7 +41,8 @@ module ApplicationHelper::Toolbar::Cloud::InstanceOperationsButtonGroupMixin
             N_('Suspend'),
             :image   => "suspend",
             :confirm => N_("Suspend this Instance?"),
-            :klass   => ApplicationHelper::Button::InstanceSuspend),
+            :klass   => ApplicationHelper::Button::GenericFeatureButton,
+            :options => {:feature => :suspend}),
           included_class.button(
             :instance_shelve,
             nil,
@@ -47,7 +50,8 @@ module ApplicationHelper::Toolbar::Cloud::InstanceOperationsButtonGroupMixin
             N_('Shelve'),
             :image   => "power_shelve",
             :confirm => N_("Shelve this Instance?"),
-            :klass   => ApplicationHelper::Button::InstanceShelve),
+            :klass   => ApplicationHelper::Button::GenericFeatureButton,
+            :options => {:feature => :shelve}),
           included_class.button(
             :instance_shelve_offload,
             nil,
@@ -55,7 +59,8 @@ module ApplicationHelper::Toolbar::Cloud::InstanceOperationsButtonGroupMixin
             N_('Shelve Offload'),
             :image   => "power_shelve_offload",
             :confirm => N_("Shelve Offload this Instance?"),
-            :klass   => ApplicationHelper::Button::InstanceShelveOffload),
+            :klass   => ApplicationHelper::Button::GenericFeatureButton,
+            :options => {:feature => :shelve_offload}),
           included_class.button(
             :instance_resume,
             nil,
@@ -63,7 +68,8 @@ module ApplicationHelper::Toolbar::Cloud::InstanceOperationsButtonGroupMixin
             N_('Resume'),
             :image   => "power_resume",
             :confirm => N_("Resume this Instance?"),
-            :klass   => ApplicationHelper::Button::InstanceStart),
+            :klass   => ApplicationHelper::Button::GenericFeatureButton,
+            :options => {:feature => :start}),
           included_class.separator,
           included_class.button(
             :instance_guest_restart,
