@@ -45,8 +45,9 @@
   %table.table.table-striped.table-bordered
     %thead
       %th
-        = check_box_tag('masterToggle', 1, false,
-                        :onclick => "miqUpdateAllCheckboxes('rhn_buttons', null);")
+        = render :partial => 'shared/master_toggle',
+                 :locals  => {:button_div => 'rhn_buttons',
+                              :label      => nil}
       %th= _("Appliance")
       %th= _("Zone")
       %th= _("Update Status")
