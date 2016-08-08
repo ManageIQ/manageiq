@@ -100,7 +100,7 @@
         :owner_email:
           :description: E-Mail
           :required_method: :validate_regex
-          :required_regex: !ruby/regexp /\A[\w!#$\%&'*+\/=?`\{|\}~^-]+(?:\.[\w!#$\%&'*+\/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z/i 
+          :required_regex: !ruby/regexp /\A[\w!#$\%&'*+\/=?`\{|\}~^-]+(?:\.[\w!#$\%&'*+\/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z/i
           :required: true
           :display: :edit
           :data_type: :string
@@ -205,14 +205,18 @@
           :notes_display: :show
         :vm_name:
           :description: Instance Name
-          :required_method: :validate_vm_name
+          :required_method:
+            - :validate_vm_name
+            - :validate_regex
+          :required_regex: !ruby/regexp /\A(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?)\Z/
+          :required_regex_fail_details: The name must be composed only of lower-case English alphabet characters (a-z), numbers (0-9), and dashes (-). The first character must be a lower-case English alphabet character, and the last character must not be a dash.
           :required: true
           :notes:
           :display: :edit
           :data_type: :string
           :notes_display: :show
-          :min_length:
-          :max_length:
+          :min_length: 1
+          :max_length: 63
       :display: :show
     :schedule:
       :description: Schedule
