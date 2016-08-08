@@ -24,6 +24,12 @@ class TreeBuilderRolesByServer < TreeBuilder
                   :onclick   => "miqOnClickServerRoles")
   end
 
+  def x_build_single_node(object, pid, options)
+    options[:parent_kls]  = @sb[:parent_kls] if @sb && @sb[:parent_kls]
+    options[:parent_name] = @sb[:parent_name] if @sb && @sb[:parent_name]
+    super(object, pid, options)
+  end
+
   def root_options
     []
   end
