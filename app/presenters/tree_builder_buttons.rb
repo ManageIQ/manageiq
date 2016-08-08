@@ -58,6 +58,7 @@ class TreeBuilderButtons < TreeBuilderAeCustomization
     case node
     when "ExtManagementSystem" then "ext_management_system"
     when "MiqTemplate"         then "vm"
+    when 'CloudTenant'         then 'cloud_tenant'
     else                            node.downcase
     end
   end
