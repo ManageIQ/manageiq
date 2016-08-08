@@ -130,8 +130,6 @@ module EmsCommon
     when 'dashboard'                     then show_dashboard
     when 'topology'                      then show_topology
     when 'performance'                   then show_performance
-    when 'cloud_object_store_containers' then show_entities(params[:display])
-    when 'vms'                           then show_vms
     when nil
       if control_selected? # pagination controls
         show_entities(session[:display])
