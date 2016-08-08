@@ -43,7 +43,7 @@ module EmsCommon
     @record = find_by_id_filtered(model, session[:tl_record_id])
     @timeline = @timeline_filter = true
     @lastaction = "show_timeline"
-    tl_build_timeline                       # Create the timeline report
+    tl_build_timeline # Create the timeline report
     drop_breadcrumb(:name => _("Timelines"), :url => show_link(@record, :refresh => "n", :display => "timeline"))
   end
 
@@ -73,7 +73,7 @@ module EmsCommon
       "miq_templates"                 => [MiqTemplate,            _("Templates")],
       "vms"                           => [Vm,                     _("VMs")],
       "orchestration_stacks"          => [OrchestrationStack,     _("Stacks")],
-#      "configuration_jobs"            => [ConfigurationJob, _("Configuration Jobs")],
+      # "configuration_jobs"            => [ConfigurationJob, _("Configuration Jobs")],
       "cloud_object_store_containers" => [CloudObjectStoreContainer, _('Cloud Object Stores')],
       'containers'                    => [Container,              _('Containers')],
       'container_replicators'         => [ContainerReplicator,    _('Container Replicators')],
@@ -153,8 +153,6 @@ module EmsCommon
   end
 
   def view_setup_helper(display, kls, title, parent_method = nil)
-    view_item_name ||= title.singularize
-
     drop_breadcrumb(:name => @ems.name + _(" (All %{title})") % {:title => title},
                     :url  => show_link(@ems, :display => display))
     opts = {:parent => @ems}
