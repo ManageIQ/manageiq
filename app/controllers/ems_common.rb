@@ -5,8 +5,112 @@ module EmsCommon
     restful? ? '/' : '/show'
   end
 
+  def show_download
+    get_tagdata(@ems)
+    drop_breadcrumb(:name => @ems.name + _(" (Summary)"), :url => show_link(@ems))
+    @showtype = "main"
+    set_summary_pdf_data
+  end
+
+  def show_main
+    get_tagdata(@ems)
+    drop_breadcrumb(:name => @ems.name + _(" (Summary)"), :url => show_link(@ems))
+    @showtype = "main"
+  end
+
+  def show_props
+    drop_breadcrumb(:name => @ems.name + _(" (Properties)"), :url => show_link(@ems, :display  =>  "props"))
+  end
+
+  def show_ems_folders
+    if params[:vat]
+      drop_breadcrumb(:name => @ems.name + _(" (VMs & Templates)"),
+                      :url  => show_link(@ems, :display => "ems_folder", :vat => "true"))
+    else
+      drop_breadcrumb(:name => @ems.name + _(" (Hosts & Clusters)"),
+                      :url  => show_link(@ems, :display => "ems_folders"))
+    end
+    @showtype = "config"
+
+    cluster = @record
+    @datacenter_tree = TreeBuilderVat.new(:vat_tree, :vat, @sb, true, cluster, !!params[:vat])
+    self.x_active_tree = :vat_tree
+  end
+
+  def show_timeline
+    @showtype = "timeline"
+    session[:tl_record_id] = params[:id] if params[:id]
+    @record = find_by_id_filtered(model, session[:tl_record_id])
+    @timeline = @timeline_filter = true
+    @lastaction = "show_timeline"
+    tl_build_timeline # Create the timeline report
+    drop_breadcrumb(:name => _("Timelines"), :url => show_link(@record, :refresh => "n", :display => "timeline"))
+  end
+
+  def show_dashboard
+    @showtype = "dashboard"
+    @lastaction = "show_dashboard"
+    drop_breadcrumb(:name => @ems.name + _(" (Dashboard)"), :url => show_link(@ems))
+  end
+
+  def show_topology
+    @showtype = "topology"
+    @lastaction = "show_topology"
+    drop_breadcrumb(:name => @ems.name + _(" (Topology)"), :url => show_link(@ems))
+  end
+
+  def show_performance
+    @showtype = "performance"
+    drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @record.name},
+                    :url  => "/#{@table_name}/show/#{@record.id}?display=#{@display}&refresh=n")
+    perf_gen_init_options # Initialize perf chart options, charts will be generated async
+  end
+
+  def view_setup_params
+    {
+      "instances"                     => [ManageIQ::Providers::CloudManager::Vm, _("Instances")],
+      "images"                        => [ManageIQ::Providers::CloudManager::Template, _("Images")],
+      "miq_templates"                 => [MiqTemplate,            _("Templates")],
+      "vms"                           => [Vm,                     _("VMs")],
+      "orchestration_stacks"          => [OrchestrationStack,     _("Stacks")],
+      # "configuration_jobs"            => [ConfigurationJob, _("Configuration Jobs")],
+      "cloud_object_store_containers" => [CloudObjectStoreContainer, _('Cloud Object Stores')],
+      'containers'                    => [Container,              _('Containers')],
+      'container_replicators'         => [ContainerReplicator,    _('Container Replicators')],
+      'container_nodes'               => [ContainerNode,          _('Container Nodes')],
+      'container_groups'              => [ContainerGroup,         _('Container Groups')],
+      'container_services'            => [ContainerService,       _('Container Services')],
+      'container_images'              => [ContainerImage,         _('Container Images')],
+      'container_routes'              => [ContainerRoute,         _('Container Routes')],
+      'container_builds'              => [ContainerBuild,         _('Container Builds')],
+      'container_projects'            => [ContainerProject,       _('Container Projects')],
+      'container_image_registries'    => [ContainerImageRegistry, _('Container Image Registries')],
+      'availability_zones'            => [AvailabilityZone,       _('Availability Zones')],
+      'middleware_servers'            => [MiddlewareServer,       _('Middleware Servers')],
+      'middleware_deployments'        => [MiddlewareDeployment,   _('Middleware')],
+      'middleware_datasources'        => [MiddlewareDatasource,   _('Middleware')],
+      'cloud_tenants'                 => [CloudTenant,            _('Cloud Tenants')],
+      'cloud_volumes'                 => [CloudVolume,            _('Cloud Volumes')],
+      'flavors'                       => [Flavor,                 _('Flavors')],
+      'security_groups'               => [SecurityGroup,          _('Security Groups')],
+      'floating_ips'                  => [FloatingIp,             _('Floating IPs')],
+      'network_routers'               => [NetworkRouter,          _('Network Routers')],
+      'network_ports'                 => [NetworkPort,            _('Network Ports')],
+      'cloud_subnets'                 => [CloudSubnet,            _('Cloud Subnets')],
+      'cloud_networks'                => [CloudNetwork,           _('Cloud Networks')],
+      'storages'                      => [Storage,                _('Managed Datastores')],
+      'ems_clusters'                  => [EmsCluster,             title_for_clusters],
+      'persistent_volumes'            => [PersistentVolume,       _('Volumes'), :persistent_volumes],
+      'hosts'                         => [Host,                   _("Managed Hosts")],
+    }
+  end
+
+  def show_entities(display)
+    view_setup_helper(display, *view_setup_params[display])
+  end
+
   def show
-    @display = params[:display] || "main" unless control_selected?
+    @display = params[:display]
 
     session[:vm_summary_cool] = (settings(:views, :vm_summary_cool).to_s == "summary")
     @summary_view = session[:vm_summary_cool]
@@ -17,88 +121,26 @@ module EmsCommon
     @showtype = "config"
     drop_breadcrumb({:name => ui_lookup(:tables => @table_name), :url => "/#{@table_name}/show_list?page=#{@current_page}&refresh=y"}, true)
 
-    if ["download_pdf", "main", "summary_only"].include?(@display)
-      get_tagdata(@ems)
-      drop_breadcrumb(:name => @ems.name + _(" (Summary)"), :url => show_link(@ems))
-      @showtype = "main"
-      set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
-    elsif @display == "props"
-      drop_breadcrumb(:name => @ems.name + _(" (Properties)"), :url => show_link(@ems, :display  =>  "props"))
-    elsif @display == "ems_folders"
-      if params[:vat]
-        drop_breadcrumb(:name => @ems.name + _(" (VMs & Templates)"),
-                        :url  => show_link(@ems, :display => "ems_folder", :vat => "true"))
-      else
-        drop_breadcrumb(:name => @ems.name + _(" (Hosts & Clusters)"),
-                        :url  => show_link(@ems, :display => "ems_folders"))
+    case params[:display]
+    when 'main'                          then show_main
+    when 'download_pdf', 'summary_only'  then show_download
+    when 'props'                         then show_props
+    when 'ems_folders'                   then show_ems_folders
+    when 'timeline'                      then show_timeline
+    when 'dashboard'                     then show_dashboard
+    when 'topology'                      then show_topology
+    when 'performance'                   then show_performance
+    when 'cloud_object_store_containers' then show_entities(params[:display])
+    when 'vms'                           then show_vms
+    when nil
+      if control_selected? # pagination controls
+        show_entities(session[:display])
+      else                 # or default display
+        show_main
       end
-      @showtype = "config"
-
-      cluster = @record
-      @datacenter_tree = TreeBuilderVat.new(:vat_tree, :vat, @sb, true, cluster, !!params[:vat])
-      self.x_active_tree = :vat_tree
-
-    elsif @display == "timeline"
-      @showtype = "timeline"
-      session[:tl_record_id] = params[:id] if params[:id]
-      @record = find_by_id_filtered(model, session[:tl_record_id])
-      @timeline = @timeline_filter = true
-      @lastaction = "show_timeline"
-      tl_build_timeline                       # Create the timeline report
-      drop_breadcrumb(:name => _("Timelines"), :url => show_link(@record, :refresh => "n", :display => "timeline"))
-    elsif @display == "dashboard"
-      @showtype = "dashboard"
-      @lastaction = "show_dashboard"
-      drop_breadcrumb(:name => @ems.name + _(" (Dashboard)"), :url => show_link(@ems))
-    elsif @display == "topology"
-      @showtype = "topology"
-      @lastaction = "show_topology"
-      drop_breadcrumb(:name => @ems.name + _(" (Topology)"), :url => show_link(@ems))
-    elsif @display == "performance"
-      @showtype = "performance"
-      drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @record.name},
-                      :url  => "/#{@table_name}/show/#{@record.id}?display=#{@display}&refresh=n")
-      perf_gen_init_options               # Initialize perf chart options, charts will be generated async
-    elsif ["instances", "images", "miq_templates", "vms"].include?(@display) || session[:display] == "vms" && params[:display].nil?
-      if @display == "instances"
-        title = _("Instances")
-        kls = ManageIQ::Providers::CloudManager::Vm
-      elsif @display == "images"
-        title = _("Images")
-        kls = ManageIQ::Providers::CloudManager::Template
-      elsif @display == "miq_templates"
-        title = _("Templates")
-        kls = MiqTemplate
-      elsif @display == "vms"
-        title = _("VMs")
-        kls = Vm
-      end
-      view_setup_helper(kls, title, title.singularize)
-    elsif (display_class = calculate_display_class(@display, (session[:display] unless params[:display])))
-      display_name = display_class.name.underscore.pluralize
-      title = ui_lookup(:tables => display_name)
-      view_setup_helper(display_class, title, title.singularize)
-    elsif @display == "storages" || session[:display] == "storages" && params[:display].nil?
-      title = ui_lookup(:tables => "storages")
-      view_setup_helper(Storage, _("Managed ") + title, title)
-    elsif @display == "ems_clusters"
-      view_setup_helper(EmsCluster, title_for_clusters, "Cluster")
-    elsif @display == "orchestration_stacks" || session[:display] == "orchestration_stacks" && params[:display].nil?
-      title = _("Stacks")
-      view_setup_helper(OrchestrationStack, title, title.singularize)
-    elsif @display == "configuration_jobs" || session[:display] == "configuration_jobs" && params[:display].nil?
-      title = _("Configuration Jobs")
-      view_setup_helper(ConfigurationJob, title, title.singularize)
-    elsif @display == "persistent_volumes" || session[:display] == "persistent_volumes" && params[:display].nil?
-      title = ui_lookup(:tables => "persistent_volumes")
-      view_setup_helper(PersistentVolume, title, title.singularize, :persistent_volumes)
-    elsif @display == "cloud_object_store_containers" ||
-          (session[:display] == "cloud_object_store_containers" && params[:display].nil?)
-      title = ui_lookup(:tables => 'cloud_object_stores')
-      view_setup_helper(CloudObjectStoreContainer, title, title.singularize)
-    else  # Must be Hosts # FIXME !!!
-      view_setup_helper(Host, _("Managed Hosts"), _("Host"))
+    else show_entities(params[:display])
     end
+
     @lastaction = "show"
     session[:tl_record_id] = @record.id
 
@@ -110,25 +152,13 @@ module EmsCommon
     render :template => "shared/views/ems_common/show" if params[:action] == 'show' && !performed?
   end
 
-  def calculate_display_class(display_name, session_display)
-    [Container, ContainerReplicator, ContainerNode, ContainerGroup,
-     ContainerService, ContainerImage, ContainerRoute, ContainerBuild,
-     ContainerProject, ContainerImageRegistry, AvailabilityZone,
-     MiddlewareServer, MiddlewareDeployment, MiddlewareDatasource,
-     CloudTenant, CloudVolume, Flavor,
-     SecurityGroup, FloatingIp, NetworkRouter, NetworkPort, CloudSubnet, CloudNetwork].detect do |klass|
-      name = klass.name.underscore.pluralize
-      [display_name, session_display].include?(name)
-    end
-  end
-
-  def view_setup_helper(kls, title, view_item_name, parent_method = nil)
+  def view_setup_helper(display, kls, title, parent_method = nil)
     drop_breadcrumb(:name => @ems.name + _(" (All %{title})") % {:title => title},
-                    :url  => show_link(@ems, :display => @display))
+                    :url  => show_link(@ems, :display => display))
     opts = {:parent => @ems}
     opts[:parent_method] = parent_method if parent_method
     @view, @pages = get_view(kls, **opts)
-    @showtype = @display
+    @showtype = @display = display
   end
 
   # Show the main MS list view

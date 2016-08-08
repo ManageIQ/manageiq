@@ -281,7 +281,7 @@ describe EmsInfraController do
       get :show, :params => {:id => @ems.id, :display => 'storages'}
       post :button, :params => {:id => @ems.id, :display => 'storages', :miq_grid_checks => to_cid(datastore.id), :pressed => "storage_tag", :format => :js}
       expect(response.status).to eq(200)
-      breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
+      _breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
       expect(assigns(:breadcrumbs)).to eq([{:name=>"Infrastructure Providers",
                                             :url=>"/ems_infra/show_list?page=&refresh=y"},
                                            {:name=>"#{@ems.name} (All Managed Datastores)",
