@@ -1,32 +1,7 @@
-class TreeBuilderServersByRole < TreeBuilder
+class TreeBuilderServersByRole < TreeBuilderDiagnostics
   has_kids_for ServerRole, [:x_get_tree_server_role_kids]
 
-  def initialize(name, type, sandbox, build = true, parent = nil)
-    @root = parent
-    super(name, type, sandbox, build)
-  end
-
   private
-
-  def tree_init_options(_tree_name)
-    {
-      :add_root => false,
-      :expand   => true,
-      :lazy     => false,
-      :open_all => true
-    }
-  end
-
-  def set_locals_for_render
-    locals = super
-    locals.merge!(:autoload  => false,
-                  :click_url => "/ops/diagnostics_tree_select/",
-                  :onclick   => "miqOnClickServerRoles")
-  end
-
-  def root_options
-    []
-  end
 
   def x_get_tree_roots(_count_only, _options)
     x_get_tree_server_roles
