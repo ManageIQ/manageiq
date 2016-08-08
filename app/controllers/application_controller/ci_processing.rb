@@ -111,7 +111,7 @@ module ApplicationController::CiProcessing
   # Build the ownership assignment screen
   def build_ownership_hash
     @users = {} # Users array for first chooser
-    rbac_filtered_objects(User).each { |u| @users[u.name] = u.id.to_s }
+    Rbac.filtered(User).each { |u| @users[u.name] = u.id.to_s }
     klass = get_class_from_controller_param(params[:controller])
     record = klass.find(@ownership_items[0])
     user = record.evm_owner if @ownership_items.length == 1
@@ -120,7 +120,7 @@ module ApplicationController::CiProcessing
     # need to do this only if 1 vm is selected and miq_group has been set for it
     group = record.miq_group if @ownership_items.length == 1
     @group = group ? group.id.to_s : nil
-    rbac_filtered_objects(MiqGroup).each { |g| @groups[g.description] = g.id.to_s }
+    Rbac.filtered(MiqGroup).each { |g| @groups[g.description] = g.id.to_s }
     @user = @group = DONT_CHANGE_OWNER if @ownership_items.length > 1
     @ownershipitems = klass.find(@ownership_items).sort_by(&:name)
     {:user  => @user,
