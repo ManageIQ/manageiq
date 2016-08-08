@@ -16,10 +16,6 @@ module ActiveMetrics
         )
       end
 
-      def write(metric)
-        write_multiple(metric)
-      end
-
       def write_multiple(*metrics)
         metrics.flatten!
 

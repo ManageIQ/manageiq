@@ -15,10 +15,6 @@ module ActiveMetrics
         end
       end
 
-      def write(metric)
-        write_multiple(metric)
-      end
-
       def write_multiple(*metrics)
         metrics.flatten!
         points = metrics.map { |metric| build_point(metric) }

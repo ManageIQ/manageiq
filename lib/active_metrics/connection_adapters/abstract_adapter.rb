@@ -20,8 +20,8 @@ module ActiveMetrics
       #   Also expected are either :resource or a :resource_type/:resource_id
       #     pair
       #   Optional key is :tags, which is an arbitrary set of key/value pairs.
-      def write(_metric)
-        raise NotImplementedError, "must implemented by the adapter"
+      def write(metric)
+        write_multiple(metric)
       end
 
       # Writes multiple metrics.
@@ -32,10 +32,8 @@ module ActiveMetrics
       #     Also expected are either :resource or a :resource_type/:resource_id
       #       pair
       #     Optional key is :tags, which is an arbitrary set of key/value pairs.
-      def write_multiple(*metrics)
-        # Default naive implementation. Can be overridden by the adapter.
-        metrics.flatten!
-        metrics.each { |metric| write(metric) }
+      def write_multiple(*_metrics)
+        raise NotImplementedError, "must implemented by the adapter"
       end
     end
   end
