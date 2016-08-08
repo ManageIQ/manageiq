@@ -1266,6 +1266,7 @@ Vmdb::Application.routes.draw do
       :post => %w(
         button
         quick_search
+        listnav_search_selected
         show
         show_list
         tag_edit_form_field_changed
@@ -1273,6 +1274,7 @@ Vmdb::Application.routes.draw do
       ) +
         adv_search_post +
         compare_post +
+        save_post +
         exp_post
     },
 
