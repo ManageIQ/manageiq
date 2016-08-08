@@ -1,4 +1,5 @@
 class TreeBuilderServersByRole < TreeBuilder
+  include TreeBuilderServerRolesCommon
   has_kids_for ServerRole, [:x_get_tree_server_role_kids]
 
   def initialize(name, type, sandbox, build = true, parent = nil)

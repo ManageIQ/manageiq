@@ -1,4 +1,5 @@
 class TreeBuilderRolesByServer < TreeBuilder
+  include TreeBuilderServerRolesCommon
   has_kids_for MiqServer, [:x_get_tree_miq_server_kids]
 
   def initialize(name, type, sandbox, build = true, parent = nil)
