@@ -230,15 +230,18 @@ module MiqAeMethodService
     end
 
     def tagged_with?(category, name)
+      verify_taggable_model
       object_send(:is_tagged_with?, name.to_s, :ns => "/managed/#{category}")
     end
 
     def tags(category = nil)
+      verify_taggable_model
       ns = category.nil? ? "/managed" : "/managed/#{category}"
       object_send(:tag_list, :ns => ns).split
     end
 
     def tag_assign(tag)
+      verify_taggable_model
       ar_method do
         Classification.classify_by_tag(@object, "/managed/#{tag}")
         true
@@ -246,11 +249,25 @@ module MiqAeMethodService
     end
 
     def tag_unassign(tag)
+      verify_taggable_model
       ar_method do
         Classification.unclassify_by_tag(@object, "/managed/#{tag}")
         true
       end
     end
+
+    def taggable?
+      self.class.taggable?
+    end
+
+    def self.taggable?
+      model.respond_to?(:tags)
+    end
+
+    def verify_taggable_model
+      raise MiqAeException::UntaggableModel, "Model #{self.class} doesn't support tagging" unless taggable?
+    end
+    private :verify_taggable_model
 
     def reload
       object_send(:reload)
