@@ -1,17 +1,12 @@
-class ArbitrationProfile < ApplicationRecord
+class ArbitrationProfile < ArbitrationRecord
+  default_scope { where(:profile => true) }
+
   validates :ext_management_system, :presence => true
   validates :name, :presence => true
   validate :falsify_all_others, :if => :default_profile_changed?
 
   default_value_for :default_profile, false
-
-  belongs_to :ext_management_system, :foreign_key => :ems_id
-  belongs_to :cloud_subnet
-  belongs_to :cloud_network
-  belongs_to :authentication
-  belongs_to :flavor
-  belongs_to :availability_zone
-  belongs_to :security_group
+  default_value_for :profile, true
 
   # If a record is updated as the default, falsify others
   def falsify_all_others
