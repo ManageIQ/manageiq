@@ -15,7 +15,7 @@ RSpec.describe MiqExpression::RelativeDatetime do
 
       it "end mode" do
         result = described_class.normalize("3 Hours Ago", "UTC", "end")
-        expect(result).to eq("2011-01-11 14:59:59.999999 UTC")
+        expect(result).to eq("2011-01-11 14:59:59.999999999 UTC")
       end
     end
 
@@ -112,7 +112,7 @@ RSpec.describe MiqExpression::RelativeDatetime do
 
       it "end mode" do
         result = described_class.normalize("Now", "UTC", "end")
-        expect(result).to eq("2011-01-11 17:59:59.999999 UTC")
+        expect(result).to eq("2011-01-11 17:59:59.999999999 UTC")
       end
     end
 
@@ -163,7 +163,7 @@ RSpec.describe MiqExpression::RelativeDatetime do
 
       it "end mode" do
         result = described_class.normalize("Last Hour", "UTC", "end")
-        expect(result).to eq("2011-01-11 16:59:59.999999 UTC")
+        expect(result).to eq("2011-01-11 16:59:59.999999999 UTC")
       end
     end
 
@@ -231,7 +231,7 @@ RSpec.describe MiqExpression::RelativeDatetime do
 
       it "end mode" do
         result = described_class.normalize("This Hour", "UTC", "end")
-        expect(result).to eq("2011-01-11 17:59:59.999999 UTC")
+        expect(result).to eq("2011-01-11 17:59:59.999999999 UTC")
       end
     end
 
