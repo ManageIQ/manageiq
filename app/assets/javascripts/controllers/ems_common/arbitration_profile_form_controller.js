@@ -1,4 +1,4 @@
-ManageIQ.angular.app.controller('arbitrationProfileFormController', ['$http', '$scope', '$location', 'arbitrationProfileFormId', 'miqService', 'postService', 'API', 'arbitrationProfileDataFactory', function($http, $scope, $location, arbitrationProfileFormId, miqService, postService, API, arbitrationProfileDataFactory) {
+ManageIQ.angular.app.controller('arbitrationProfileFormController', ['$scope', '$location', 'arbitrationProfileFormId', 'miqService', 'postService', 'API', 'arbitrationProfileDataFactory', function($scope, $location, arbitrationProfileFormId, miqService, postService, API, arbitrationProfileDataFactory) {
   var init = function() {
     $scope.arbitrationProfileModel = {
       name: '',
