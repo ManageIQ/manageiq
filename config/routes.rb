@@ -1288,11 +1288,13 @@ Vmdb::Application.routes.draw do
         quick_search
         show
         show_list
+        listnav_search_selected
         tag_edit_form_field_changed
         tagging_edit
       ) +
         adv_search_post +
         compare_post +
+        save_post +
         exp_post
     },
 
