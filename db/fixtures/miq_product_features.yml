@@ -3623,10 +3623,6 @@
       :description: Display Individual Middleware Messaging
       :feature_type: view
       :identifier: middleware_messaging_show
-    - :name: Utilization
-      :description: Show Capacity & Utilization data of Middleware Messaging
-      :feature_type: view
-      :identifier: middleware_messaging_perf
   - :name: Modify
     :description: Modify Middleware Messaging
     :feature_type: admin
@@ -3636,14 +3632,6 @@
       :description: Remove Middleware Messaging from the VMDB
       :feature_type: admin
       :identifier: middleware_messaging_delete
-    - :name: Edit
-      :description: Edit a Middleware Messaging
-      :feature_type: admin
-      :identifier: middleware_messaging_edit
-    - :name: Add
-      :description: Add a Middleware Messaging
-      :feature_type: admin
-      :identifier: middleware_messaging_new
   - :name: Operate
     :description: Perform Operations on Middleware Messaging
     :feature_type: control

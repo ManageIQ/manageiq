@@ -7,6 +7,7 @@ class CreateMiddlewareMessagings < ActiveRecord::Migration
       t.bigint :server_id
       t.text   :properties
       t.bigint :ems_id
+      t.string :messaging_type
 
       t.timestamps :null => false
     end

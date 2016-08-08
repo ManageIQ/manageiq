@@ -5,7 +5,7 @@ module MiddlewareMessagingHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(name nativeid)
+    %i(name nativeid messaging_type)
   end
 
   def textual_group_relationships
@@ -19,5 +19,9 @@ module MiddlewareMessagingHelper::TextualSummary
 
   def textual_nativeid
     @record.nativeid
+  end
+
+  def textual_messaging_type
+    @record.messaging_type
   end
 end

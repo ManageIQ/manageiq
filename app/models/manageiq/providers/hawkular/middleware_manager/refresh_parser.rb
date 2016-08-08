@@ -212,7 +212,8 @@ module ManageIQ::Providers
           :name              => messaging.name,
           :middleware_server => server,
           :nativeid          => messaging.id,
-          :ems_ref           => messaging.path
+          :ems_ref           => messaging.path,
+          :messaging_type    => messaging.to_h['type']['name']
         }
         if !config.empty? && !config['value'].empty? && config['value'].respond_to?(:except)
           data[:properties] = config['value'].except('Username', 'Password')

@@ -15,11 +15,12 @@ title: Middleware Messaging
 name: Middleware Messaging
 
 # Main DB table report is based on
-db: MiddlewareMessagings
+db: MiddlewareMessaging
 
 # Columns to fetch from the main table
 cols:
 - name
+- messaging_type
 
 
 # Included tables (joined, has_one, has_many) and columns
@@ -34,11 +35,13 @@ include:
 # Order of columns (from all tables)
 col_order:
 - name
+- messaging_type
 - middleware_server.name
 
 # Column titles, in order
 headers:
 - Messaging Name
+- Messaging Type
 - Server
 
 # Condition(s) string for the SQL query
