@@ -10,10 +10,7 @@ class ApiController
     RESTRICTED_ATTRS  = [TYPE_ATTR, CREDENTIALS_ATTR, ZONE_ATTR, "zone_id"]
 
     def create_resource_providers(type, _id, data = {})
-      if data.key?("id") || data.key?("href")
-        raise BadRequestError,
-              "Resource id or href should not be specified for creating a new #{type}"
-      end
+      assert_id_not_specified(data, type)
 
       create_provider(data)
     end

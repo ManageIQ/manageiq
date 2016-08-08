@@ -1,10 +1,7 @@
 class ApiController
   module AutomationRequests
     def create_resource_automation_requests(type, _id, data)
-      if data.key?("id") || data.key?("href")
-        raise BadRequestError,
-              "Resource id or href should not be specified for creating a new #{type}"
-      end
+      assert_id_not_specified(data, type)
 
       version_str = data["version"] || "1.1"
       uri_parts   = hash_fetch(data, "uri_parts")

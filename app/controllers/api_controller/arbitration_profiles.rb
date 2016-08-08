@@ -29,9 +29,8 @@ class ApiController
     end
 
     def validate_profile_data(data)
-      if data.key?('id') || data.key?('href')
-        raise BadRequestError, 'Resource id or href should not be specified when creating a new arbitration profile'
-      elsif data.key?('provider') && data.key?('ext_management_system')
+      assert_id_not_specified(data, 'arbitration profile')
+      if data.key?('provider') && data.key?('ext_management_system')
         raise BadRequestError, 'Only one of provider or ext_management_system may be specified'
       end
     end
