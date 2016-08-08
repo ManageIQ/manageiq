@@ -173,6 +173,7 @@ describe EmsContainerController do
         after :each do
           set_user_privileges
           controller.instance_variable_set(:@_params, :name              => 'EMS 2',
+                                                      :default_userid    => '_',
                                                       :default_hostname  => '10.10.10.11',
                                                       :default_api_port  => '5000',
                                                       :default_password  => 'valid-token',
@@ -186,6 +187,7 @@ describe EmsContainerController do
           expect(@ems.connection_configurations.hawkular.endpoint.hostname).to eq('10.10.10.10')
           expect(@ems.connection_configurations.hawkular.endpoint.port).to eq(8443)
           expect(@ems.authentication_token("bearer")).to eq('valid-token')
+          expect(@ems.authentication_type("default")).to be_nil
           expect(@ems.hostname).to eq('10.10.10.11')
         end
 
