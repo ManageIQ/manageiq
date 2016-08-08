@@ -6,11 +6,12 @@ describe PostgresHaAdmin::DatabaseYml do
   before do
     @yml_file = Tempfile.new('database.yml')
     yml_data = YAML.load('---
-      base:
+      base: &base
         username: user
         wait_timeout: 5
         port:
-      test:
+      test: &test
+        <<: *base
         pool: 3
         database: vmdb_test'
                         )
@@ -24,8 +25,7 @@ describe PostgresHaAdmin::DatabaseYml do
   describe "#pg_params_from_database_yml" do
     it "returns pg connection parameters based on 'database.yml'" do
       params = yml_utils.pg_params_from_database_yml
-      expect(params).to include(:dbname => 'vmdb_test', :user => 'user')
-      expect(params).not_to include(:pool, :port, :wait_timout)
+      expect(params).to eq(:dbname => 'vmdb_test', :user => 'user')
     end
   end
 
@@ -43,20 +43,8 @@ describe PostgresHaAdmin::DatabaseYml do
       yml_utils.update_database_yml(:dbname => 'some_db', :host => "localhost", :port => '')
       yml = YAML.load_file(@yml_file)
 
-      expect(yml['test']).to include('database' => 'some_db', 'host' => 'localhost', 'username' => 'user')
-      expect(yml['test']).not_to include('port' => '')
+      expect(yml['test']).to eq('database' => 'some_db', 'host' => 'localhost',
+                                'username' => 'user', 'pool' => 3, 'wait_timeout' => 5)
     end
-  end
-
-  def yml_sample
-    '---
-      base:
-        username: some_user
-        wait_timeout: 5
-        port:
-      test:
-        pool: 3
-        database: vmdb_test
-    '
   end
 end
