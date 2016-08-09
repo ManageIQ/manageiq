@@ -30,7 +30,7 @@ module AzureBlobDisk
     raise "AzureBlob: Storage account #{@acct_name} not found." unless @storage_acct
 
     $log.debug "AzureBlobDisk: open(#{@blob_uri})"
-    @t0 = Time.now
+    @t0 = Time.now.to_i
     @reads = 0
     @bytes = 0
     @split_reads = 0
@@ -38,7 +38,7 @@ module AzureBlobDisk
 
   def d_close
     return nil unless $log.debug?
-    t1 = Time.now
+    t1 = Time.now.to_i
     $log.debug "AzureBlobDisk: close(#{@blob_uri})"
     $log.debug "AzureBlobDisk: (#{@blob_uri}) time:  #{t1 - @t0}"
     $log.debug "AzureBlobDisk: (#{@blob_uri}) reads: #{@reads}, split_reads: #{@split_reads}"
