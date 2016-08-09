@@ -26,12 +26,17 @@ module MiqReport::Search
     [klass.arel_attribute(col), klass.type_for_attribute(col).type] if db_class.follow_associations(parts)
   end
 
-  def get_cached_page(limit, offset, includes, options)
-    ids          = extras[:target_ids_for_paging]
+  def limited_ids(limit, offset)
+    ids = extras[:target_ids_for_paging]
     if limit.kind_of?(Numeric)
       offset ||= 0
-      ids      = ids[offset..offset + limit - 1]
+      ids[offset...offset + limit]
+    else
+      ids
     end
+  end
+
+  def get_cached_page(ids, includes, options)
     data         = db_class.where(:id => ids).includes(includes).to_a
     targets_hash = data.index_by(&:id) if options[:targets_hash]
     build_table(data, db, options)
@@ -84,7 +89,7 @@ module MiqReport::Search
     includes = MiqExpression.merge_includes(get_include_for_find(include), include_for_find)
 
     self.extras ||= {}
-    return get_cached_page(limit, offset, includes, options) if self.extras[:target_ids_for_paging] && db_class.column_names.include?('id')
+    return get_cached_page(limited_ids(limit, offset), includes, options) if self.extras[:target_ids_for_paging] && db_class.column_names.include?('id')
 
     order = get_order_info
 
