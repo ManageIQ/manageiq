@@ -62,8 +62,11 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def custom_buttons
-    service_buttons = CustomButton.buttons_for("Service").select { |button| button.parent.nil? }
-    service_buttons + CustomButton.buttons_for(self).select { |b| b.parent.nil? }
+    CustomButton.buttons_for("Service").select { |button| button.parent.nil? } + direct_custom_buttons
+  end
+
+  def direct_custom_buttons
+    CustomButton.buttons_for(self).select { |b| b.parent.nil? }
   end
 
   def vms_and_templates
