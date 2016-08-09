@@ -20,9 +20,34 @@ describe ActsAsArQuery do
       query.includes(:a, :b).to_a
     end
 
-    it "chains" do
+    it "accepts a hash argument" do
+      expect(model).to receive(:find).with(:all, :include => {:a => {}})
+      query.includes(:a => {}).to_a
+    end
+
+    it "chains singles" do
       expect(model).to receive(:find).with(:all, :include => [:a, :b])
       query.includes(:a).includes(:b).to_a
+    end
+
+    it "chains arrays" do
+      expect(model).to receive(:find).with(:all, :include => [:a, :b, :c, :d])
+      query.includes(:a, :b).includes(:c, :d).to_a
+    end
+
+    it "chains hash array" do
+      expect(model).to receive(:find).with(:all, :include => {:a => {}, :b => {}})
+      query.includes(:a => {}).includes(:b).to_a
+    end
+
+    it "ignores nils" do
+      expect(model).to receive(:find).with(:all, :include => {:a => 5})
+      query.includes(nil).includes(:a => 5).includes(nil).to_a
+    end
+
+    it "chains array hash" do
+      expect(model).to receive(:find).with(:all, :include => {:a => {}, :b => {}})
+      query.includes(:a).includes(:b => {}).to_a
     end
   end
 
@@ -30,6 +55,11 @@ describe ActsAsArQuery do
     it "limits" do
       expect(model).to receive(:find).with(:all, :limit => 5)
       query.limit(5).to_a
+    end
+
+    it "supports nils" do
+      expect(model).to receive(:find).with(:all, {})
+      query.limit(5).limit(nil).to_a
     end
   end
 
@@ -44,6 +74,11 @@ describe ActsAsArQuery do
     it "offsets" do
       expect(model).to receive(:find).with(:all, :offset => 5)
       query.offset(5).to_a
+    end
+
+    it "supports nils" do
+      expect(model).to receive(:find).with(:all, {})
+      query.offset(5).offset(nil).to_a
     end
   end
 
@@ -63,9 +98,24 @@ describe ActsAsArQuery do
       query.order(:a, :b).to_a
     end
 
-    it "chains" do
+    it "chains singles" do
       expect(model).to receive(:find).with(:all, :order => [:a, :b])
       query.order(:a).order(:b).to_a
+    end
+
+    it "chains arrays" do
+      expect(model).to receive(:find).with(:all, :order => [:a, :b, :c, :d])
+      query.order(:a, :b).order(:c, :d).to_a
+    end
+
+    it "chains hash array" do
+      expect(model).to receive(:find).with(:all, :order => {:a => "DESC", :b => "ASC"})
+      query.order(:a => "DESC").order(:b).to_a
+    end
+
+    it "chains hash array" do
+      expect(model).to receive(:find).with(:all, :order => {:a => "ASC", :b => "DESC"})
+      query.order(:a).order(:b => "DESC").to_a
     end
   end
 
@@ -74,7 +124,15 @@ describe ActsAsArQuery do
     it { expect(query.order(:a).order(:b).order_values).to eq([:a, :b]) }
   end
 
-  # - [X] references (partial) - currently ignored
+  # this is a copy of includes, so just ensuring that the "hardest" thing works
+  # our finders do not use this, so it is just skipped
+  # we're just making sure stuff does not blow up
+  describe "#references" do
+    it "chains array hash" do
+      expect(model).to receive(:find).with(:all, {})
+      query.references(:a).references(:b => {}).to_a
+    end
+  end
 
   describe "#reorder" do
     it "reorders" do
@@ -92,9 +150,14 @@ describe ActsAsArQuery do
       query.reorder(:c, :d).reorder(:a, :b).to_a
     end
 
-    it "order" do
+    it "overrides order" do
       expect(model).to receive(:find).with(:all, :order => [:a, :b])
       query.order(:c).order(:d).reorder(:a, :b).to_a
+    end
+
+    it "replaces order with nil" do
+      expect(model).to receive(:find).with(:all, {})
+      query.order(:c).reorder(nil).to_a
     end
   end
 
@@ -112,6 +175,11 @@ describe ActsAsArQuery do
     it "chains fields" do
       expect(model).to receive(:find).with(:all, :select => [:c, :d, :a, :b])
       query.select(:c, :d).select(:a, :b).to_a
+    end
+
+    it "ignores nils" do
+      expect(model).to receive(:find).with(:all, :select => [:a, :b])
+      query.select(nil).select(:a, :b).select(nil).to_a
     end
 
     it "doesn't support hashes" do # TODO
@@ -145,6 +213,11 @@ describe ActsAsArQuery do
     it "merges hashes" do
       expect(model).to receive(:find).with(:all, :conditions => {:a => [5, 55], :b => [6, 66]})
       query.where(:a => 5, :b => 6).where(:a => 55, :b => 66).to_a
+    end
+
+    it "ignores nils" do
+      expect(model).to receive(:find).with(:all, :conditions => {:a => 5})
+      query.where(nil).where(:a => 5).where(nil).to_a
     end
 
     it "supports string queries" do
@@ -223,6 +296,13 @@ describe ActsAsArQuery do
       my_query = query.includes(:a)
       my_query.to_a # executes/caches the results
       expect(my_query.last).to eq(3)
+    end
+  end
+
+  describe "#length" do
+    it "accepts a single table" do
+      expect(model).to receive(:find).with(:all, :include => [:a]).and_return([1, 2, 3, 4, 5])
+      expect(query.includes(:a).length).to eq(5)
     end
   end
 

@@ -38,11 +38,11 @@ class ActsAsArQuery
   end
 
   def where(*val)
-    val = val.flatten
+    val = val.flatten.compact
     val = val.first if val.size == 1 && val.first.kind_of?(Hash)
     dup.tap do |r|
       old_where = r.options[:where]
-      if val.empty?
+      if val.blank?
         # nop
       elsif old_where.blank?
         r.options[:where] = val
@@ -62,11 +62,11 @@ class ActsAsArQuery
   end
 
   def includes(*args)
-    append_hash_arg :includes, *args
+    append_hash_array_arg :includes, {}, *args
   end
 
   def references(*args)
-    append_hash_arg :references, *args
+    append_hash_array_arg :references, {}, *args
   end
 
   def limit(val)
@@ -78,7 +78,7 @@ class ActsAsArQuery
   end
 
   def order(*args)
-    append_hash_arg :order, *args
+    append_hash_array_arg :order, "ASC", *args
   end
 
   def order_values
@@ -90,7 +90,7 @@ class ActsAsArQuery
   end
 
   def reorder(*val)
-    val = val.flatten
+    val = val.flatten.compact
     if val.first.kind_of?(Hash)
       raise ArgumentError, "Need to support #{__callee__}(#{val.class.name})"
     end
@@ -102,7 +102,7 @@ class ActsAsArQuery
 
   def except(*val)
     dup.tap do |r|
-      val.flatten.each do |key|
+      val.flatten.compact.each do |key|
         r.options.delete(key)
       end
     end
@@ -111,7 +111,7 @@ class ActsAsArQuery
   # similar to except. difference being this persists across merges
   def unscope(*val)
     dup.tap do |r|
-      val.flatten.each do |key|
+      val.flatten.compact.each do |key|
         r.options[key] = nil
       end
     end
@@ -148,7 +148,7 @@ class ActsAsArQuery
     to_a.size
   end
 
-  def_delegators :to_a, :size, :take, :each, :empty?, :presence
+  def_delegators :to_a, :size, :length, :take, :each, :empty?, :presence
 
   # TODO: support arguments
   def first
@@ -185,13 +185,55 @@ class ActsAsArQuery
   end
 
   def append_hash_arg(symbol, *val)
-    val = val.flatten
+    val = val.flatten.compact
     if val.first.kind_of?(Hash)
       raise ArgumentError, "Need to support #{symbol}(#{val.class.name})"
     end
     dup.tap do |r|
       r.options[symbol] = r.options[symbol] ? (r.options[symbol] + val) : val
     end
+  end
+
+  def append_hash_array_arg(symbol, default, *val)
+    val = val.flatten.compact
+    val = val.first if val.size == 1 && val.first.kind_of?(Hash)
+    dup.tap do |r|
+      r.options[symbol] = merge_hash_or_array(r.options[symbol], val, default)
+    end
+  end
+
+  # @param a [Array, Hash]
+  # @param b [Array, Hash]
+  # @param default default value for conversion to a hash. e.g.: {} or "ASC"
+  def merge_hash_or_array(a, b, default = {})
+    if a.blank?
+      b
+    elsif b.blank?
+      a
+    elsif a.kind_of?(Array) && b.kind_of?(Array)
+      a + b
+    else
+      a = array_to_hash(a, default) if a.kind_of?(Array)
+      b = array_to_hash(b, default) if b.kind_of?(Array)
+      a.merge(b)
+    end
+  end
+
+  # This takes the array form and converts into the equivalent hash form
+  #
+  # @example converting an order parameter
+  #   # Vm.order(:name, :ip)
+  #   array_to_hash([:name, :ip], "ASC") #=> {:name => "ASC", :ip => "ASC"}
+  #
+  # @example converting an includes parameter
+  #   # Vm.includes([:ext_management_system, :host])
+  #   array_to_hash([:ext_management_system, :host], {}) #=> {:ext_management_system => {}, :host =>{}}
+  #
+  # @param array [Array<Symbol>] array of names
+  # @param default value to be associated with each object (i.e.: "ASC", {})
+  # @return [Hash{Symbol => String, Hash}] Hash equivalent of the input array
+  def array_to_hash(array, default = {})
+    array.each_with_object({}) { |k, h| h[k] = default.dup }
   end
 
   def assign_arg(symbol, val)
