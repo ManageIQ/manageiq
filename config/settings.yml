@@ -1205,6 +1205,8 @@
       :thread_shutdown_timeout: 10.seconds
     :event_catcher:
       :defaults:
+        :flooding_events_per_minute: 30
+        :flooding_monitor_enabled: false
         :ems_event_page_size: 100
         :ems_event_thread_shutdown_timeout: 10.seconds
         :memory_threshold: 2.gigabytes
@@ -1213,6 +1215,7 @@
       :event_catcher_redhat:
         :poll: 15.seconds
       :event_catcher_vmware:
+        :flooding_monitor_enabled: true
         :poll: 1.seconds
         :ems_event_max_wait: 60
       :event_catcher_openstack:

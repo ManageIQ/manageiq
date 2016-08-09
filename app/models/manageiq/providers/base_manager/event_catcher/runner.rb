@@ -1,9 +1,12 @@
 require 'thread'
 require 'concurrent/atomic/event'
+require 'util/duplicate_blocker'
 
 class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runner
   class EventCatcherHandledException < StandardError
   end
+
+  include DuplicateBlocker
 
   self.wait_for_worker_monitor = false
 
@@ -20,8 +23,43 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
     _log.info "#{log_prefix} Event Catcher skipping the following events:"
     $log.log_hashes(@filtered_events)
 
+    configure_event_flooding_prevention if worker_settings.try(:[], :flooding_monitor_enabled)
+
     # Global Work Queue
     @queue = Queue.new
+  end
+
+  def configure_event_flooding_prevention
+    flood_handler = self.class.dedup_handler
+
+    flood_handler.duplicate_window    = 1.minute
+    flood_handler.window_slot_width   = 6.seconds
+    flood_handler.progress_threshold  = 100
+    flood_handler.duplicate_threshold = worker_settings[:flooding_events_per_minute]
+    flood_handler.throw_exception_when_blocked = false
+
+    flood_handler.logger = _log
+    flood_handler.descriptor    = ->(_meth, *args) { event_dedup_descriptor(args[0]) }
+    flood_handler.key_generator = ->(_meth, *args) { event_dedup_key(args[0]) }
+
+    self.class.dedup_instance_method(:queue_event)
+
+    _log.info("Event flood_handler settings:")
+    _log.info("  duplicate_window #{flood_handler.duplicate_window}")
+    _log.info("  duplicate_threshold #{flood_handler.duplicate_threshold}")
+    _log.info("  window_slot_width #{flood_handler.window_slot_width}")
+    _log.info("  progress_threshold #{flood_handler.progress_threshold}")
+  end
+
+  # Extract a key to represent an event. Events with the same key are considered duplicates and
+  # might be subjected to be blocked to prevent flooding
+  def event_dedup_key(_event)
+    raise NotImplementedError, _("must be implemented in subclass")
+  end
+
+  # A string representation for an event. This is used for logging the blocked events
+  def event_dedup_descriptor(_event)
+    raise NotImplementedError, _("must be implemented in subclass")
   end
 
   def do_before_work_loop
@@ -84,8 +122,22 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
     raise NotImplementedError, _("must be implemented in subclass")
   end
 
-  def process_event(_event)
+  # This method has been refactored to go through two steps, namely filtered? and queue_event.
+  # Therefore every subclass should override filtered? and queue_event
+  #
+  # For historical reason existing providers still directly implement process_event
+  # They should be eventually refactored following the example of VMWare provider.
+  def process_event(event)
+    queue_event(event) unless filtered?(event)
+  end
+
+  def queue_event(_event)
     raise NotImplementedError, _("must be implemented in subclass")
+  end
+
+  # default implementation: none event is skipped
+  def filtered?(_event)
+    false
   end
 
   def event_monitor_running

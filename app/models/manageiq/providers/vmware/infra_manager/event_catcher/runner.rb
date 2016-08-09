@@ -43,7 +43,37 @@ class ManageIQ::Providers::Vmware::InfraManager::EventCatcher::Runner < ManageIQ
     reset_event_monitor_handle
   end
 
-  def process_event(event)
+  def event_dedup_key(event)
+    # duplicate the event but remove ids and timestamps that change with every event
+    # the remaining attributes are used to determine whether an event is a duplicate of another
+    event.except("key", "chainId", "createdTime").tap do |hash|
+      hash["info"] &&= hash["info"].except("key", "task", "queueTime", "eventChainId")
+    end
+  end
+
+  def event_dedup_descriptor(event)
+    event_dedup_key(event)
+  end
+
+  def filtered?(event)
+    event_type = event['eventType']
+    return true if event_type.nil?
+
+    sub_event_type, display_name = sub_type_and_name(event)
+
+    return false unless filtered_events.include?(event_type) || filtered_events.include?(sub_event_type)
+
+    _log.info("#{log_prefix} Skipping caught event [#{display_name}] chainId [#{event['chainId']}]")
+    true
+  end
+
+  def queue_event(event)
+    _sub_event_type, display_name = sub_type_and_name(event)
+    _log.info("#{log_prefix} Queueing event [#{display_name}] chainId [#{event['chainId']}]")
+    EmsEvent.add_queue('add_vc', @cfg[:ems_id], event)
+  end
+
+  def sub_type_and_name(event)
     event_type = event['eventType']
     return if event_type.nil?
 
@@ -59,11 +89,6 @@ class ManageIQ::Providers::Vmware::InfraManager::EventCatcher::Runner < ManageIQ
       display_name   = event_type
     end
 
-    if filtered_events.include?(event_type) || filtered_events.include?(sub_event_type)
-      _log.info "#{log_prefix} Skipping caught event [#{display_name}] chainId [#{event['chainId']}]"
-    else
-      _log.info "#{log_prefix} Queueing event [#{display_name}] chainId [#{event['chainId']}]"
-      EmsEvent.add_queue('add_vc', @cfg[:ems_id], event)
-    end
+    [sub_event_type, display_name]
   end
 end
