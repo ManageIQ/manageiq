@@ -1,3 +1,8 @@
+#
+# Initializing REST API environment, called once @ startup
+#
+Api::Initializer.new.go
+
 class ApiController < ApplicationController
   skip_before_action :get_global_session_data
   skip_after_action :set_global_session_data
@@ -103,19 +108,6 @@ class ApiController < ApplicationController
   TAG_NAMESPACE = "/managed"
 
   #
-  # Custom normalization on these attribute types.
-  # Converted to normalized_attributes hash at init, much faster access.
-  #
-  ATTR_TYPES = {
-    :time      => %w(expires_on),
-    :url       => %w(href),
-    :resource  => %w(image_href),
-    :encrypted => %w(password) |
-                  ::MiqRequestWorkflow.all_encrypted_options_fields.map(&:to_s) |
-                  ::Vmdb::Settings::PASSWORD_FIELDS.map(&:to_s)
-  }
-
-  #
   # Attributes used for identification
   #
   ID_ATTRS = %w(href id)
@@ -141,8 +133,6 @@ class ApiController < ApplicationController
     @collection_config ||= CollectionConfig.new
   end
 
-  delegate :user_token_service, :to => self
-
   def initialize
     @module          = base_config[:module]
     @name            = base_config[:name]
@@ -151,11 +141,6 @@ class ApiController < ApplicationController
     @prefix          = "/#{@module}"
     @api_config      = VMDB::Config.new("vmdb").config[@module.to_sym] || {}
   end
-
-  #
-  # Initializing REST API environment, called once @ startup
-  #
-  include_concern 'Initializer'
 
   before_action :parse_api_request, :log_api_request, :validate_api_request
   after_action :log_api_response
