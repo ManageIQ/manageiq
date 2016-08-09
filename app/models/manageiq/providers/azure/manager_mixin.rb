@@ -81,7 +81,7 @@ module ManageIQ::Providers::Azure::ManagerMixin
       new_emses
     end
 
-    def discover_queue(clientid, clientkey, azure_tenant_id, subscription)
+    def discover_queue(clientid, clientkey, azure_tenant_id, subscription = nil)
       MiqQueue.put(
         :class_name  => name,
         :method_name => "discover_from_queue",
