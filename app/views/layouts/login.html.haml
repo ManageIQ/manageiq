@@ -9,6 +9,7 @@
     = javascript_include_tag 'application'
     - if Rails.env.development?
       = javascript_include_tag 'miq_debug'
+      = stylesheet_link_tag 'miq_debug'
 
     = csrf_meta_tag
     = render :partial => 'layouts/i18n_js'

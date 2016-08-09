@@ -38,6 +38,7 @@ Vmdb::Application.configure do
 
   # Include miq_debug in the list of assets here because it is only used in development
   config.assets.precompile << 'miq_debug.js'
+  config.assets.precompile << 'miq_debug.css'
   # Include totally (https://khan.github.io/tota11y/) here for dev-mode only to help working
   # on accessibility issues.
   config.assets.precompile << 'tota11y.js'
