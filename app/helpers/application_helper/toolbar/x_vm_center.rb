@@ -214,7 +214,8 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           N_('Reset'),
           :image   => "power_reset",
           :confirm => N_("Reset this VM?"),
-          :klass   => ApplicationHelper::Button::VmReset),
+          :klass   => ApplicationHelper::Button::GenericFeatureButtonWithDisable,
+          :options => {:feature => :reset}),
       ]
     ),
     button(
