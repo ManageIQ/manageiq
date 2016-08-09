@@ -20,8 +20,8 @@ module Quadicons
       quadrant_classes.first && concat(quadrant_classes.first.render)
     end
 
+    # Do nothing in base
     def render_badge
-      # => do nothing in base
     end
 
     def render_label
@@ -37,10 +37,7 @@ module Quadicons
     end
 
     def quadicon_tag(options = {}, &block)
-      options = {
-        :class => default_tag_classes.join(' '),
-        :id    => "quadicon_#{record.id}"
-      }.merge!(options)
+      options = default_tag_options.merge!(options)
       content_tag(:div, options, &block)
     end
 
@@ -63,7 +60,7 @@ module Quadicons
 
     def quadrant_classes
       quadrants.map do |type|
-        quadrantize(type)
+        Quadrants.quadrantize(type, record, context)
       end
     end
 
@@ -121,14 +118,20 @@ module Quadicons
       css
     end
 
-    def css_class
-      self.class.to_s.demodulize.underscore
+    def default_tag_options
+      {
+        :class => default_tag_classes.join(' '),
+        :id    => "quadicon_#{record.id}",
+        :title => default_title_attr
+      }
     end
 
-    def quadrantize(type)
-      if (klass = "Quadicons::Quadrants::#{type.to_s.camelize}".safe_constantize)
-        klass.new(record, context)
-      end
+    def default_title_attr
+      "#{record_class}_#{record.id}"
+    end
+
+    def css_class
+      self.class.to_s.demodulize.underscore
     end
 
     def record_class
