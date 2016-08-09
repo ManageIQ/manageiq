@@ -224,15 +224,15 @@ class TreeNodeBuilder
     # FIXME: expansion
     @node = {
       :key   => build_hash_id,
-      :title => ERB::Util.html_escape(text),
+      :title => ERB::Util.html_escape(text)
     }
+    @node[:icon] = node_icon("#{object[:image] || text}.png") if object[:image]
     # Start with all nodes open unless expand is explicitly set to false
     @node[:expand] = true if options[:open_all] && options[:expand] != false
     @node[:cfmeNoClick] = object[:cfmeNoClick] if object.key?(:cfmeNoClick)
     @node[:hideCheckbox] = true if object.key?(:hideCheckbox)
     @node[:select] = object[:select] if object.key?(:select)
     @node[:addClass] = object[:addClass] if object.key?(:addClass)
-    @node[:icon] = node_icon("#{object[:image] || text}.png") if object[:image]
 
     # FIXME: check the following
     # TODO: With dynatree, unless folders are open, we can't jump to a child node until it has been visible once

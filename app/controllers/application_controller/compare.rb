@@ -54,7 +54,13 @@ module ApplicationController::Compare
       @items_per_page = params[:ppsetting].to_i           # Set the new per page value
     end
     @compare = create_compare_view
-    @sections_tree = TreeBuilderSections.new(:all_sections, :all_sections_tree, @sb, true, @compare, controller_name, current_tenant.name)
+    @sections_tree = TreeBuilderSections.new(:all_sections,
+                                             :all_sections_tree,
+                                             @sb,
+                                             true,
+                                             @compare,
+                                             controller_name,
+                                             current_tenant.name)
     compare_to_json(@compare)
     if params[:ppsetting] # Came in from per page setting
       replace_main_div({:partial => "layouts/compare"}, {:spinner_off => true})
@@ -547,7 +553,13 @@ module ApplicationController::Compare
   def drift
     @lastaction = "drift"
     @compare = create_drift_view
-    @sections_tree = TreeBuilderSections.new(:all_sections, :all_sections_tree, @sb, true, @compare, controller_name, current_tenant.name)
+    @sections_tree = TreeBuilderSections.new(:all_sections,
+                                             :all_sections_tree,
+                                             @sb,
+                                             true,
+                                             @compare,
+                                             controller_name,
+                                             current_tenant.name)
     drift_to_json(@compare)
     drop_breadcrumb(:name => _("'%{name}' Drift Analysis") % {:name => @drift_obj.name},
                     :url  => "/#{@sb[:compare_db].downcase}/drift")
