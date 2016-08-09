@@ -3,7 +3,7 @@ class MiqAeDomain < MiqAeNamespace
   REMOTE_SOURCE = "remote".freeze
   USER_SOURCE   = "user".freeze
   USER_LOCKED_SOURCE = "user_locked".freeze
-  VALID_SOURCES = [SYSTEM_SOURCE, REMOTE_SOURCE, USER_SOURCE, USER_LOCKED_SOURCE].freeze
+  VALID_SOURCES  = [SYSTEM_SOURCE, REMOTE_SOURCE, USER_SOURCE, USER_LOCKED_SOURCE].freeze
   LOCKED_SOURCES = [SYSTEM_SOURCE, REMOTE_SOURCE, USER_LOCKED_SOURCE].freeze
 
   default_scope { where(:parent_id => nil).where(arel_table[:name].not_eq("$")) }
@@ -148,11 +148,11 @@ class MiqAeDomain < MiqAeNamespace
   end
 
   def self.any_unlocked?
-    MiqAeDomain.where('source = ?', USER_SOURCE).count > 0
+    MiqAeDomain.where(:source => USER_SOURCE).count > 0
   end
 
   def self.all_unlocked
-    MiqAeDomain.where('source = ?', USER_SOURCE).order('priority DESC')
+    MiqAeDomain.where(:source => USER_SOURCE).order('priority DESC')
   end
 
   def about_class

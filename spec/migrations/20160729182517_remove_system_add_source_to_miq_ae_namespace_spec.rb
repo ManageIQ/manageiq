@@ -9,10 +9,9 @@ describe RemoveSystemAddSourceToMiqAeNamespace do
       miq_ae_namespace_stub.create!(:name => 'Customer', :system => true, :parent_id => nil)
       miq_ae_namespace_stub.create!(:name => 'Temp', :system => false, :parent_id => nil)
 
-      expect(miq_ae_namespace_stub.count).to eq 3
-
       migrate
 
+      expect(miq_ae_namespace_stub.count).to eq 3
       expect(miq_ae_namespace_stub.find_by_name('ManageIQ').source).to eql("system")
       expect(miq_ae_namespace_stub.find_by_name('Customer').source).to eql("user_locked")
       expect(miq_ae_namespace_stub.find_by_name('Temp').source).to eql("user")
@@ -25,10 +24,9 @@ describe RemoveSystemAddSourceToMiqAeNamespace do
       miq_ae_namespace_stub.create!(:name => 'Customer', :source => "user_locked", :parent_id => nil)
       miq_ae_namespace_stub.create!(:name => 'Temp', :source => "user", :parent_id => nil)
 
-      expect(miq_ae_namespace_stub.count).to eq 3
-
       migrate
 
+      expect(miq_ae_namespace_stub.count).to eq 3
       expect(miq_ae_namespace_stub.find_by_name('ManageIQ').system).to be_truthy
       expect(miq_ae_namespace_stub.find_by_name('Customer').system).to be_truthy
       expect(miq_ae_namespace_stub.find_by_name('Temp').system).to be_falsey
