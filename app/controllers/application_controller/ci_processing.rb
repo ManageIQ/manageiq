@@ -872,12 +872,10 @@ module ApplicationController::CiProcessing
                                          :db         => @view.db,
                                          :headers    => @view.headers})
         end
+      elsif controller_name == "ems_cloud"
+        render :template => "shared/views/ems_common/show"
       else
-        if controller_name == "ems_cloud"
-          render :template => "shared/views/ems_common/show"
-        else
-          render :action => "show"
-        end
+        render :action => "show"
       end
     end
   end
@@ -897,12 +895,10 @@ module ApplicationController::CiProcessing
         page.replace_html("main_div", :partial => "shared/views/ems_common/show") # Replace the main div area contents
         page << javascript_pf_toolbar_reload('center_tb', c_tb)
       end
+    elsif controller_name == "ems_cloud"
+      render :template => "shared/views/ems_common/show"
     else
-      if controller_name == "ems_cloud"
-        render :template => "shared/views/ems_common/show"
-      else
-        render :action => "show"
-      end
+      render :action => "show"
     end
   end
 

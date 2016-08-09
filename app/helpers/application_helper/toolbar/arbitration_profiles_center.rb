@@ -25,6 +25,7 @@ class ApplicationHelper::Toolbar::ArbitrationProfilesCenter < ApplicationHelper:
                        N_('Remove selected Arbitration Profiles from the VMDB'),
                        N_('Remove Arbitration Profiles from the VMDB'),
                        :url_parms => "main_div",
+                       # rubocop:disable LineLength
                        :confirm   => N_("Warning: The selected Cloud Providers and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected Cloud Providers?"),
                        :enabled   => false,
                        :onwhen    => "1+"),

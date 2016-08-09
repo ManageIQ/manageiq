@@ -19,6 +19,7 @@ class ApplicationHelper::Toolbar::ArbitrationProfileCenter < ApplicationHelper::
                        t = N_('Remove this Arbitration Profile from the VMDB'),
                        t,
                        :association_id => true,
+                       # rubocop:disable LineLength
                        :confirm        => N_("Warning: This Arbitration Profile will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Arbitration Profile?")),
                    ]
                  ),
