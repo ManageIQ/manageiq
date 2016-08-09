@@ -18,7 +18,7 @@
 
     // table-checkable
     if (table.hasClass('table-checkable')) {
-      checkboxes.click(function (_e) {
+      checkboxes.on('change', function (_e) {
         var checked = $.map(checkboxes.filter(':checked'), function (cb) {
           return cb.value;
         });
@@ -32,7 +32,7 @@
       });
 
       // Handle the click on the "Check all" checkbox
-      checkall.click(function (_e) {
+      checkall.on('change', function (_e) {
         var unchecked = checkboxes.filter(':not(:checked)');
         if (unchecked.length > 0) {
           unchecked.trigger('click');

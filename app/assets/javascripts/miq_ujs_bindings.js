@@ -127,7 +127,7 @@ $(document).ready(function () {
     }
   });
 
-  $(document).on('click', '[data-miq_observe_checkbox]', function (event) {
+  $(document).on('change', '[data-miq_observe_checkbox]', function (event) {
     var el = $(this);
     var parms = $.parseJSON(el.attr('data-miq_observe_checkbox'));
     var url = parms.url;

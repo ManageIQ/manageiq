@@ -62,7 +62,7 @@
             = check_box_tag("check_server_#{update.id}", 1,
                             update.checked,
                             :class => 'listcheckbox',
-                            :onclick => "miqUpdateButtons(this,'rhn_buttons');")
+                            :onchange => "miqUpdateButtons(this, 'rhn_buttons');")
           %td= update.name
           %td= update.zone
           %td= update.status

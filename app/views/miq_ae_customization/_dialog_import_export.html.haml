@@ -68,7 +68,7 @@
        e.preventDefault();
      });
 
-    $('#check-all').click(function (e) {
+    $('#check-all').on('change', function (e) {
       $("table#import-grid tbody input[type='checkbox']").prop('checked', $(this).prop('checked'));
     });
 

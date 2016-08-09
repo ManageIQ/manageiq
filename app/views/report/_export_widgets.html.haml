@@ -92,7 +92,7 @@
       e.preventDefault();
     });
 
-    $('#check-all').click(function (e) {
+    $('#check-all').on('change', function (e) {
       $("#import-widgets-form table tbody input[type='checkbox']").prop('checked', $(this).prop('checked'));
     });
 

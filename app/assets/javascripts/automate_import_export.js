@@ -191,7 +191,7 @@ var Automate = {
       showSuccessMessage('Import cancelled');
     });
 
-    $('#toggle-all').click(function() {
+    $('#toggle-all').on('change', function() {
       $('.domain-tree').dynatree('getRoot').visit(function(node) {
         node.select($('#toggle-all').prop('checked'));
       });

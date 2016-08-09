@@ -65,7 +65,7 @@
           %td{{:onclick => (cell[:is_checkbox] || cell[:is_button]) ? "event.stopPropagation()" : false}}
             - if cell[:is_checkbox]
               = check_box_tag("check_#{row[:id]}", row[:id], false,
-                :onclick => "miqGridOnCheck(this, '#{button_div}')",
+                :onchange => "miqGridOnCheck(this, '#{button_div}')",
                 :class => "list-grid-checkbox")
             - elsif cell[:is_button]
               %button.btn.btn-primary{:onclick => cell[:onclick] + "; return false;",
