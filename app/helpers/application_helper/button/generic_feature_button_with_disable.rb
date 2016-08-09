@@ -6,9 +6,6 @@ class ApplicationHelper::Button::GenericFeatureButtonWithDisable < ApplicationHe
   end
 
   def disabled?
-<<<<<<< HEAD
-    !!(@error_message = @record.is_available_now_error_message(@feature))
-=======
     begin
       begin
         @error_message = @record.try(:unsupported_reason, @feature)
@@ -19,6 +16,5 @@ class ApplicationHelper::Button::GenericFeatureButtonWithDisable < ApplicationHe
       @error_message = 'Feature is not supported.'
       true
     end
->>>>>>> 407f786... fixup
   end
 end
