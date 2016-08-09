@@ -2,7 +2,7 @@ describe ApplicationHelper::Button::GenericFeatureButton do
   describe '#skip?' do
     describe 'the button for the instance' do
       [:pause, :shelve, :shelve_offload, :start, :stop,
-       :suspend].each do |feature|
+       :suspend, :timeline].each do |feature|
         context "that supports feature #{feature}" do
           before do
             @record = FactoryGirl.create(:vm_openstack)
