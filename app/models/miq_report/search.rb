@@ -101,17 +101,10 @@ module MiqReport::Search
 
     if options[:parent]
       targets = get_parent_targets(options[:parent], options[:association] || options[:parent_method])
-      # necessary? is targets = [] or targets.nil?
-      if targets.empty?
-        search_results, attrs = [targets, {:auth_count => 0}]
-      else
-        search_results, attrs = Rbac.search(search_options.merge(:targets => targets))
-      end
     else
-      search_results, attrs = Rbac.search(search_options)
+      targets = db_class
     end
-
-    search_results ||= []
+    search_results, attrs = Rbac.search(search_options.merge(:targets => targets))
 
     if order.nil?
       options[:limit]   = limit
