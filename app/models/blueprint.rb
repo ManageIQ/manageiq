@@ -129,7 +129,7 @@ class Blueprint < ApplicationRecord
   end
 
   def duplicate_custom_buttons(old_template, new_template)
-    old_template.custom_buttons.each do |old_button|
+    old_template.direct_custom_buttons.each do |old_button|
       old_button.copy(:applies_to => new_template)
     end
   end
