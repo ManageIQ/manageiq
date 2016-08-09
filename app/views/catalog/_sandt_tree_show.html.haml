@@ -23,7 +23,7 @@
             = _('Name / Description')
           .col-md-8
             #{@record.name} / #{@record.description}
-            = check_box_tag(display, true, @record.display, :disabled => true)
+            = check_box_tag("display", true, @record.display, :disabled => true)
             &nbsp;
             = _('Display in Catalog')
         - if @record.display
