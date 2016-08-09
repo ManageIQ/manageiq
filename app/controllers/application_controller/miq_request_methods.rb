@@ -36,6 +36,7 @@ module ApplicationController::MiqRequestMethods
           all_dialogs.each do |dialog_name, dialog|
             if dialog[:display] == :show && dialog_name == @edit[:new][:current_tab_key]
               page.replace_html(dialog_name, :partial => dialog_partial_for_workflow, :locals => {:wf => @edit[:wf], :dialog => dialog_name})
+              page << "$('[data-toggle=popover]').popovers()"
             end
           end
         end

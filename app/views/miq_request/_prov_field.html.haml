@@ -49,6 +49,16 @@
       %label.col-md-2.control-label{:valign => "top"}
         = field_hash[:description]
         - len =  field_hash[:max_length] ? field_hash[:max_length] : MAX_NAME_LEN
+        - if field_hash[:help]
+          %a{:tabindex => 0,
+             :role             => "button",
+             :"data-toggle"    => "popover",
+             :"data-trigger"   => "focus",
+             :"data-html"      => "true",
+             :title            => "",
+             :"data-content"   => "#{field_hash[:help]}",
+             :"data-placement" => "top"}
+            %span.fa.fa-info-circle
         - if field_hash[:description] == "Provision on"
           (#{get_timezone_abbr(current_user)})
         - if @edit && @edit[:new] && [:vm_description].include?(field)
