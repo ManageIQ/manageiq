@@ -9,10 +9,10 @@
 #
 
 # Report title
-title: Orchestration Templates
+title: Ansible Tower Jobs
 
 # Menu name
-name: Orchestration Template
+name: Ansible Tower Job
 
 # Main DB table report is based on
 db: ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job
