@@ -183,15 +183,16 @@ module MiqAeEngine
     private_class_method :prepend_vendor
 
     def self.detect_vendor(src_obj, attr)
+      return unless src_obj
       case attr
       when "orchestration_stack"
-        src_obj.type.split('::')[2] if src_obj
+        src_obj.type.split('::')[2]
       when "miq_host_provision"
-        "vmware" if src_obj
+        "vmware"
       when "miq_request", "miq_provision", "vm_migrate_task"
-        src_obj.source.vendor if src_obj && src_obj.source.respond_to?(:vendor)
+        src_obj.source.try(:vendor)
       when "vm"
-        src_obj.vendor if src_obj && src_obj.respond_to?(:vendor)
+        src_obj.try(:vendor)
       end
     end
   end
