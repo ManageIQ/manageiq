@@ -46,9 +46,7 @@ class ContainerDeployment < ApplicationRecord
   end
 
   def addresses_array(container_deployment_nodes)
-    container_deployment_nodes.select do |container_deployment_node|
-      container_deployment_node.node_address.presence
-    end
+    container_deployment_nodes.collect(&:node_address)
   end
 
   def add_deployment_provider(options)
@@ -322,14 +320,12 @@ EOS
           }
         },
       }
-      parameters.merge parameters_provision
+      parameters.merge(parameters_provision)
     else
       parameters_existing = { # non-managed + managed-existing
-        :deployment_master => roles_addresses("deployment_master"),
-        :masters           => roles_addresses("master"),
-        :nodes             => roles_addresses("node")
+        :deployment_master => roles_addresses("deployment_master")
       }
-      parameters.merge parameters_existing
+      parameters.merge(parameters_existing)
     end
   end
 
