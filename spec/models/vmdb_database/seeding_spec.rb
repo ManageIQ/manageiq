@@ -1,6 +1,7 @@
 describe VmdbDatabase do
   context "::Seeding" do
     include_examples(".seed called multiple times")
+    let(:connection) { ApplicationRecord.connection }
 
     it ".seed" do
       MiqDatabase.seed
@@ -17,31 +18,31 @@ describe VmdbDatabase do
       end
 
       it "adds new tables" do
-        table_names = ['flintstones']
-        allow(described_class.connection).to receive(:tables).and_return(table_names)
+        connection.select_value("CREATE TABLE flintstones (id BIGINT PRIMARY KEY)")
+        expect(@db.evm_tables.collect(&:name)).not_to include("flintstones")
         @db.seed
-        expect(@db.evm_tables.collect(&:name)).to eq(table_names)
+        expect(@db.evm_tables.collect(&:name)).to include("flintstones")
       end
 
       it "removes deleted tables" do
-        table_names = ['flintstones']
-        table_names.each { |t| FactoryGirl.create(:vmdb_table_evm, :vmdb_database => @db, :name => t) }
+        table = 'flintstones'
+        FactoryGirl.create(:vmdb_table_evm, :vmdb_database => @db, :name => table)
         @db.reload
-        expect(@db.evm_tables.collect(&:name)).to eq(table_names)
+        expect(@db.evm_tables.collect(&:name)).to include(table)
 
-        allow(described_class.connection).to receive(:tables).and_return([])
         @db.seed
         @db.reload
-        expect(@db.evm_tables.collect(&:name)).to eq([])
+        expect(@db.evm_tables.collect(&:name)).not_to include(table)
       end
 
       it "finds existing tables" do
-        table_names = ['flintstones']
-        table_names.each { |t| FactoryGirl.create(:vmdb_table_evm, :vmdb_database => @db, :name => t) }
-        allow(described_class.connection).to receive(:tables).and_return(table_names)
+        table = 'flintstones'
+        connection.select_value("CREATE TABLE #{table} (id BIGINT PRIMARY KEY)")
+        FactoryGirl.create(:vmdb_table_evm, :vmdb_database => @db, :name => table)
+
         expect(VmdbTableEvm).to receive(:create).never
         @db.seed
-        expect(@db.evm_tables.collect(&:name)).to eq(table_names)
+        expect(@db.evm_tables.collect(&:name)).to include(table)
       end
     end
 

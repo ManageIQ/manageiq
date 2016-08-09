@@ -7,6 +7,55 @@ describe VmdbTableEvm do
     evm_table.seed
   end
 
+  describe "#sql_indexes" do
+    let(:connection)  { ApplicationRecord.connection }
+    let(:table_name)  { "vmdb_table_evm_test_table" }
+    let(:unique_name) { "vmdb_table_evm_test_unique" }
+    let(:index_name)  { "vmdb_table_evm_test_index" }
+    let(:evm_table)   { FactoryGirl.create(:vmdb_table_evm, :name => table_name) }
+
+    let(:expected_values) do
+      [
+        {
+          :table   => table_name,
+          :name    => "#{table_name}_pkey",
+          :unique  => true,
+          :columns => ["id"]
+        },
+        {
+          :table   => table_name,
+          :name    => unique_name,
+          :unique  => true,
+          :columns => ["uuid"]
+        },
+        {
+          :table   => table_name,
+          :name    => index_name,
+          :unique  => false,
+          :columns => ["data"]
+        }
+      ]
+    end
+
+    before do
+      connection.select_value("CREATE TABLE #{table_name} (id INTEGER PRIMARY KEY, uuid VARCHAR, data INTEGER)")
+      connection.select_value("CREATE UNIQUE INDEX #{unique_name} ON #{table_name} (uuid)")
+      connection.select_value("CREATE INDEX #{index_name} ON #{table_name} (data)")
+    end
+
+    it "returns the set of indexes" do
+      all_indexes = evm_table.sql_indexes
+      check_attrs = [:table, :name, :unique, :columns]
+      all_indexes.map! do |idx|
+        check_attrs.each_with_object({}) do |attr, h|
+          h[attr] = idx.send(attr)
+        end
+      end
+
+      expect(all_indexes).to match_array(expected_values)
+    end
+  end
+
   context "#seed_texts" do
     before(:each) do
       @db = VmdbDatabase.seed_self
