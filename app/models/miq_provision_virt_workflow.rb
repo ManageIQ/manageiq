@@ -59,7 +59,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def update_request(request, values, _requester = nil)
     request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
-    request.src_vm_id = request.get_option(:src_vm_id)
+    request.src_vm_id = get_value(values[:src_vm_id])
     super
   end
 
