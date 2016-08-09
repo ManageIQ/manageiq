@@ -196,7 +196,8 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           N_('Power Off'),
           :image   => "power_off",
           :confirm => N_("Power Off this VM?"),
-          :klass   => ApplicationHelper::Button::VmStop),
+          :klass   => ApplicationHelper::Button::GenericFeatureButtonWithDisable
+          :options => {:feature => :stop}),
         button(
           :vm_suspend,
           nil,
