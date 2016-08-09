@@ -7,8 +7,9 @@ describe MiddlewareTopologyService do
 
   describe "#build_kinds" do
     it "creates the expected number of entity types" do
-      expect(middleware_topology_service.build_kinds.keys).to match_array([:MiddlewareServer, :MiddlewareDeployment,
-                                                                           :MiddlewareDatasource, :MiddlewareManager, :Vm])
+      supported_kinds = [:MiddlewareServer, :MiddlewareDeployment, :MiddlewareDatasource, :MiddlewareManager, :Vm,
+                         :MiddlewareDomain, :MiddlewareServerGroup]
+      expect(middleware_topology_service.build_kinds.keys).to match_array(supported_kinds)
     end
   end
 
