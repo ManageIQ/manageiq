@@ -313,7 +313,7 @@ class ProviderForemanController < ApplicationController
     if x_active_tree != :cs_filter_tree || x_node == "root"
       listnav_search_selected(0)
     else
-      @nodetype, id = valid_active_node(x_node).split("_").last.split("-")
+      @nodetype, id = parse_nodetype_and_id(valid_active_node(x_node))
 
       if x_active_tree == :cs_filter_tree && (@nodetype == "xx-csf" || @nodetype == "xx-csa")
         search_id = @nodetype == "root" ? 0 : from_cid(id)
@@ -565,7 +565,7 @@ class ProviderForemanController < ApplicationController
 
   def get_node_info(treenodeid)
     @sb[:action] = nil
-    @nodetype, id = valid_active_node(treenodeid).split("_").last.split("-")
+    @nodetype, id = parse_nodetype_and_id(valid_active_node(treenodeid))
 
     model = TreeBuilder.get_model_for_prefix(@nodetype)
     if model == "Hash"
@@ -850,17 +850,17 @@ class ProviderForemanController < ApplicationController
   def leaf_record
     get_node_info(x_node)
     @delete_node = params[:id] if @replace_trees
-    type, _id = x_node.split("_").last.split("-")
+    type, _id = parse_nodetype_and_id(x_node)
     type && %w(ConfiguredSystem ConfigurationScript).include?(TreeBuilder.get_model_for_prefix(type))
   end
 
   def configuration_profile_record?(node = x_node)
-    type, _id = node.split("_").last.split("-")
+    type, _id = parse_nodetype_and_id(node)
     type && %w(ConfigurationProfile).include?(TreeBuilder.get_model_for_prefix(type))
   end
 
   def inventory_group_record?(node = x_node)
-    type, _id = node.split("_").last.split("-")
+    type, _id = parse_nodetype_and_id(node)
     type && %w(EmsFolder).include?(TreeBuilder.get_model_for_prefix(type))
   end
 
@@ -1082,7 +1082,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def unassigned_configuration_profile?(node)
-    _type, _pid, nodeinfo = node.split("_").last.split("-")
+    _type, _pid, nodeinfo = parse_nodetype_and_id(node)
     nodeinfo == "unassigned"
   end
 

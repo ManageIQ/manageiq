@@ -500,7 +500,7 @@ class ReportController < ApplicationController
     if [:db_tree, :reports_tree, :saved_tree, :savedreports_tree, :widgets_tree].include?(x_active_tree)
       @nodetype = case x_active_tree
                   when :savedreports_tree
-                    treenodeid.split('_').last.split('-')[0]
+                    parse_nodetype_and_id(treenodeid)[0]
                   else
                     treenodeid.split('-')[0]
                   end

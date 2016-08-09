@@ -1045,7 +1045,7 @@ module VmCommon
     @sb[:action] = nil
 
     # Need to see if record is unauthorized if it's a VM node
-    @nodetype, id = params[:id].split("_").last.split("-")
+    @nodetype, id = parse_nodetype_and_id(params[:id])
     @vm = @record = identify_record(id, VmOrTemplate) if ["Vm", "MiqTemplate"].include?(TreeBuilder.get_model_for_prefix(@nodetype)) && !@record
 
     # Handle filtered tree nodes
@@ -1181,7 +1181,7 @@ module VmCommon
   def get_node_info(treenodeid)
     # resetting action that was stored during edit to determine what is being edited
     @sb[:action] = nil
-    @nodetype, id = valid_active_node(treenodeid).split("_").last.split("-")
+    @nodetype, id = parse_nodetype_and_id(valid_active_node(treenodeid))
     model, title =  case x_active_tree.to_s
                     when "images_filter_tree"
                       ["ManageIQ::Providers::CloudManager::Template", _("Images")]
@@ -1311,7 +1311,7 @@ module VmCommon
       get_node_info(x_node)
       # set @delete_node since we don't rebuild vm tree
       @delete_node = params[:id] if @replace_trees  # get_node_info might set this
-      type, id = x_node.split("_").last.split("-")
+      type, _id = parse_nodetype_and_id(x_node)
 
       record_showing = type && ["Vm", "MiqTemplate"].include?(TreeBuilder.get_model_for_prefix(type))
       c_tb = build_toolbar(center_toolbar_filename) # Use vm or template tb

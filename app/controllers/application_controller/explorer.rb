@@ -7,19 +7,19 @@ module ApplicationController::Explorer
     @hist = x_tree_history[params[:item].to_i]  # Set instance var so we know hist button was pressed
     if @hist[:button]         # Button press from show screen
       self.x_node = @hist[:id]
-      nodetype, params[:id] = x_node.split("_").last.split("-")
+      params[:id] = parse_nodetype_and_id(x_node).last
       params[:x_show] = @hist[:item]
       params[:pressed] = @hist[:button] # Look like we came in with this action
       params[:display] = @hist[:display]
       x_button
     elsif @hist[:display]           # Display link from show screen
       self.x_node = @hist[:id]
-      nodetype, params[:id] = x_node.split("_").last.split("-")
+      params[:id] = parse_nodetype_and_id(x_node).last
       params[:display] = @hist[:display]
       show
     elsif @hist[:action]          # Action link from show screen
       self.x_node = @hist[:id]
-      nodetype, params[:id] = x_node.split("_").last.split("-")
+      params[:id] = parse_nodetype_and_id(x_node).last
       params[:x_show] = @hist[:item]
       params[:action] = @hist[:action]  # Look like we came in with this action
       session[:view] = @hist[:view] if @hist[:view]

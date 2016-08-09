@@ -148,7 +148,7 @@ class ContainerController < ApplicationController
 
     @lastaction = "explorer"
     self.x_node = params[:id]
-    @nodetype, id = params[:id].split("_").last.split("-")
+    @nodetype, id = parse_nodetype_and_id(params[:id])
 
     if x_tree[:type] == :containers_filter && TreeBuilder.get_model_for_prefix(@nodetype) != "Container"
       search_id = @nodetype == "root" ? 0 : from_cid(id)
@@ -197,7 +197,7 @@ class ContainerController < ApplicationController
   # Get all info for the node about to be displayed
   def get_node_info(treenodeid)
     @show_adv_search = true
-    @nodetype, id = valid_active_node(treenodeid).split("_").last.split("-")
+    @nodetype, id = parse_nodetype_and_id(valid_active_node(treenodeid))
     # resetting action that was stored during edit to determine what is being edited
     @sb[:action] = nil
     if x_node == "root" || TreeBuilder.get_model_for_prefix(@nodetype) == "MiqSearch"
@@ -250,7 +250,7 @@ class ContainerController < ApplicationController
     partial, action_url, @right_cell_text = set_right_cell_vars(action) if action
     get_node_info(x_node) if !@in_a_form && !params[:display]
     replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
-    type, = x_node.split("_").last.split("-")
+    type, = parse_nodetype_and_id(x_node)
     trees = {}
     if replace_trees
       trees[:containers] = build_containers_tree if replace_trees.include?(:containers)
