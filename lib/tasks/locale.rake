@@ -132,4 +132,32 @@ namespace :locale do
 
     FileUtils.mv(attributes_file, 'config/model_attributes.rb')
   end
+
+  desc "Extract plugin strings - execute as: rake locale:plugin:find[plugin_name]"
+  task "plugin:find", :engine do |_, args|
+    @domain = args[:engine]
+    @engine = "#{@domain.camelize}::Engine".constantize
+    @engine_root = @engine.root
+
+    namespace :gettext do
+      def locale_path
+        @engine_root.join('locale').to_s
+      end
+
+      def files_to_translate
+        Dir.glob("#{@engine.root}/{app,db,lib,config,locale}/**/*.{rb,erb,haml,slim,rhtml,js}")
+      end
+
+      def text_domain
+        @domain
+      end
+    end
+
+    FastGettext.add_text_domain(@domain,
+                                :path           => @engine_root.join('locale').to_s,
+                                :type           => :po,
+                                :ignore_fuzzy   => true,
+                                :report_warning => false)
+    Rake::Task['gettext:find'].invoke
+  end
 end
