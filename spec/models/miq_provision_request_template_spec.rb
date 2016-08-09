@@ -82,4 +82,10 @@ describe MiqProvisionRequestTemplate do
       end
     end
   end
+
+  it 'exists after source template is deleted' do
+    provision_request_template
+    template.destroy
+    expect(provision_request_template.reload).not_to be_nil
+  end
 end
