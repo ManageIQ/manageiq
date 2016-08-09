@@ -226,7 +226,7 @@ class CatalogController < ApplicationController
     build_accordions_and_trees
 
     if params[:id]  # If a tree node id came in, show in one of the trees
-      @nodetype, id = params[:id].split("_").last.split("-")
+      @nodetype, id = parse_nodetype_and_id(params[:id])
       self.x_active_tree   = 'sandt_tree'
       self.x_active_accord = 'sandt'
       st = ServiceTemplate.find_by_id(from_cid(params[:id].split("-").last))
@@ -1670,7 +1670,7 @@ class CatalogController < ApplicationController
 
   # Get all info for the node about to be displayed
   def get_node_info(treenodeid)
-    @nodetype, id = valid_active_node(treenodeid).split("_").last.split("-")
+    @nodetype, id = parse_nodetype_and_id(valid_active_node(treenodeid))
     # saving this so it can be used while adding buttons/groups in buttons editor
     @sb[:applies_to_id] = from_cid(id)
     tree_nodes = treenodeid.split('_')
@@ -1827,7 +1827,7 @@ class CatalogController < ApplicationController
     replace_trees   = @replace_trees   if @replace_trees    # get_node_info might set this
     right_cell_text = @right_cell_text if @right_cell_text  # get_node_info might set this too
 
-    type, _id = x_node.split("_").last.split("-")
+    type, _id = parse_nodetype_and_id(x_node)
     trees = {}
     if replace_trees
       trees[:sandt]  = build_st_tree        if replace_trees.include?(:sandt)

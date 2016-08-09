@@ -312,4 +312,8 @@ module ApplicationController::TreeSupport
     end
     return kids, kids_checked || node[:select] == true
   end
+
+  def parse_nodetype_and_id(x_node)
+    x_node.split('_').last.split('-')
+  end
 end

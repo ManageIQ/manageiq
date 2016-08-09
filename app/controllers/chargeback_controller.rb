@@ -361,7 +361,7 @@ class ChargebackController < ApplicationController
   end
 
   def cb_rpts_show_saved_report
-    @sb[:last_savedreports_id] = params[:id].split('_').last.split('-').last if params[:id] && params[:id] != "reports"
+    @sb[:last_savedreports_id] = parse_nodetype_and_id(params[:id]).last if params[:id] && params[:id] != "reports"
     cb_rpts_fetch_saved_report(@sb[:last_savedreports_id])
     @sb[:parent_reports] = nil if @report.blank?
   end
@@ -423,7 +423,7 @@ class ChargebackController < ApplicationController
                            end
         cb_rates_list
       else
-        @record = ChargebackRate.find(from_cid(node.split('_').last.split('-').last))
+        @record = ChargebackRate.find(from_cid(parse_nodetype_and_id(node).last))
         @sb[:action] = nil
         @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ => @record.rate_type, :model => ui_lookup(:model => "ChargebackRate"), :name => @record.description}
         cb_rate_show

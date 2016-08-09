@@ -279,7 +279,7 @@ class StorageController < ApplicationController
     if x_tree[:type] != :storage || x_node == "root"
       listnav_search_selected(0)
     else
-      @nodetype, id = valid_active_node(x_node).split("_").last.split("-")
+      @nodetype, id = parse_nodetype_and_id(valid_active_node(x_node))
 
       if x_tree[:type] == :storage && (@nodetype == "root" || @nodetype == "ms")
         search_id = @nodetype == "root" ? 0 : from_cid(id)
@@ -462,12 +462,12 @@ class StorageController < ApplicationController
   def leaf_record
     get_node_info(x_node)
     @delete_node = params[:id] if @replace_trees
-    type, _id = x_node.split("_").last.split("-")
+    type, _id = parse_nodetype_and_id(x_node)
     type && ["Storage"].include?(TreeBuilder.get_model_for_prefix(type))
   end
 
   def storage_record?(node = x_node)
-    type, _id = node.split("_").last.split("-")
+    type, _id = parse_nodetype_and_id(node)
     type && ["Storage"].include?(TreeBuilder.get_model_for_prefix(type))
   end
 

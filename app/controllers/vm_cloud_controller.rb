@@ -179,7 +179,7 @@ class VmCloudController < ApplicationController
   end
 
   def set_elements_and_redirect_unauthorized_user
-    @nodetype, id = params[:id].split("_").last.split("-")
+    @nodetype, id = parse_nodetype_and_id(params[:id])
     prefix = prefix_by_nodetype(@nodetype)
 
     # Position in tree that matches selected record

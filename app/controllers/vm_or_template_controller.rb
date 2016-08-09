@@ -31,7 +31,7 @@ class VmOrTemplateController < ApplicationController
   end
 
   def set_elements_and_redirect_unauthorized_user
-    @nodetype, = params[:id].split("_").last.split("-")
+    @nodetype, = parse_nodetype_and_id(params[:id])
     prefix = prefix_by_nodetype(@nodetype)
 
     # Position in tree that matches selected record
