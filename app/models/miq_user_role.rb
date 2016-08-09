@@ -44,13 +44,7 @@ class MiqUserRole < ApplicationRecord
     parent = MiqProductFeature.feature_parent(ident)
     return false if parent.nil?
 
-    self.allows?(:identifier => parent)
-  end
-
-  def self.allows?(role, options = {})
-    role = get_role(role)
-    return false if role.nil?
-    role.allows?(options)
+    allows?(:identifier => parent)
   end
 
   def allows_any?(options = {})
@@ -62,19 +56,13 @@ class MiqUserRole < ApplicationRecord
 
     if [:base, :sub].include?(scope)
       # Check passed in identifiers
-      return true if idents.any? { |i| self.allows?(:identifier => i) }
+      return true if idents.any? { |i| allows?(:identifier => i) }
     end
 
     return false if scope == :base
 
     # Check children of passed in identifiers (scopes :one and :base)
-    idents.any? { |i| self.allows_any_children?(:scope => (scope == :one ? :base : :sub), :identifier => i) }
-  end
-
-  def self.allows_any?(role, options = {})
-    role = get_role(role)
-    return false if role.nil?
-    role.allows_any?(options)
+    idents.any? { |i| allows_any_children?(:scope => (scope == :one ? :base : :sub), :identifier => i) }
   end
 
   def allows_any_children?(options = {})
@@ -82,24 +70,7 @@ class MiqUserRole < ApplicationRecord
     return false if ident.nil? || !MiqProductFeature.feature_exists?(ident)
 
     child_idents = MiqProductFeature.feature_children(ident)
-    self.allows_any?(options.merge(:identifiers => child_idents))
-  end
-
-  def self.allows_any_children?(role, options = {})
-    role = get_role(role)
-    return false if role.nil?
-    role.allows_any_children?(options)
-  end
-
-  def self.get_role(role)
-    case role
-    when self, nil
-      role
-    when Integer
-      includes(:miq_product_features).find_by_id(role)
-    else
-      includes(:miq_product_features).find_by_name(role)
-    end
+    allows_any?(options.merge(:identifiers => child_idents))
   end
 
   def self_service?
