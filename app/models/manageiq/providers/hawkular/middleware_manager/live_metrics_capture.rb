@@ -14,7 +14,7 @@ module ManageIQ::Providers
 
     def fetch_metrics_available
       metrics_available = @ems.metrics_resource(@target.ems_ref).collect do |metric|
-        next unless @supported_metrics[metric.name]
+        next unless @supported_metrics[metric.type_id]
         parse_metric(metric)
       end.compact
       fetch_child_metrics(@target.ems_ref, metrics_available) if @included_children
@@ -24,7 +24,7 @@ module ManageIQ::Providers
     def fetch_child_metrics(resource_path, metrics_available)
       children = @ems.child_resources(resource_path)
       children.select { |child| @included_children.include?(child.name) }.each do |child|
-        @ems.metrics_resource(child.path).select { |metric| @supported_metrics[metric.name] }.each do |metric|
+        @ems.metrics_resource(child.path).select { |metric| @supported_metrics[metric.type_id] }.each do |metric|
           metrics_available << parse_metric(metric)
         end
       end
@@ -32,7 +32,7 @@ module ManageIQ::Providers
     end
 
     def parse_metric(metric)
-      {:id => metric.id, :name => @supported_metrics[metric.name], :type => metric.type, :unit => metric.unit}
+      {:id => metric.id, :name => @supported_metrics[metric.type_id], :type => metric.type, :unit => metric.unit}
     end
 
     def collect_live_metric(metric, start_time, end_time, interval)
