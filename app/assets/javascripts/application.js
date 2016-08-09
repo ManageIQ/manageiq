@@ -19,6 +19,7 @@
 //= require sprintf
 //= require numeral
 //= require miq_api
+//= require rxjs/dist/rx.all
 //= require miq_angular_application
 //= require_tree ./controllers/
 //= require_tree ./directives/
