@@ -433,9 +433,7 @@ class ApplicationHelper::ToolbarChooser
 
     # Original non vmx view code follows
     # toolbar buttons on sub-screens
-    if ((@lastaction == "show" && @view) ||
-        (@lastaction == "show" && @display != "main")) &&
-       !@layout.starts_with?("miq_request")
+    if @lastaction == 'show' && (@view || @display != 'main') && !@layout.starts_with?("miq_request")
       if @display == "vms" || @display == "all_vms"
         return "vm_infras_center_tb"
       elsif @display == "ems_clusters"
