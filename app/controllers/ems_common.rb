@@ -110,7 +110,7 @@ module EmsCommon
   end
 
   def show
-    @display = params[:display]
+    @display = params[:display] || "main" unless control_selected?
 
     session[:vm_summary_cool] = (settings(:views, :vm_summary_cool).to_s == "summary")
     @summary_view = session[:vm_summary_cool]
