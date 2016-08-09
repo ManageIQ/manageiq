@@ -4611,7 +4611,7 @@
         :feature_type: control
         :identifier: instance_detach
       - :name: Evacuate Instance
-        :description: Evacate Instance
+        :description: Evacuate Instance
         :feature_type: control
         :identifier: instance_evacuate
     - :name: Modify
