@@ -78,10 +78,6 @@ describe MiqUserRole do
       expect(@role2.allows?(:identifier => "dashboard_add")).to eq(true)
       expect(@role2.allows?(:identifier => "dashboard_view")).to eq(true)
       expect(@role2.allows?(:identifier => "policy")).to eq(true)
-
-      # Test calling with an id of a role
-      ident = MiqProductFeature.find_by_identifier("dashboard_admin")
-      expect(@role1.allows?(:identifier => ident)).to eq(true)
     end
 
     it "should return the correct answer calling allows_any? with scope => :base)" do

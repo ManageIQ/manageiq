@@ -37,11 +37,6 @@ class MiqUserRole < ApplicationRecord
     ident = options[:identifier]
     raise _("No value provided for option :identifier") if ident.nil?
 
-    if ident.kind_of?(MiqProductFeature)
-      feat = ident
-      ident = feat.identifier
-    end
-
     return true if feature_identifiers.include?(ident)
 
     return false unless MiqProductFeature.feature_exists?(ident)
