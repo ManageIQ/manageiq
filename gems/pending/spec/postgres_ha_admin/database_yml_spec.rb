@@ -5,17 +5,17 @@ describe PostgresHaAdmin::DatabaseYml do
 
   before do
     @yml_file = Tempfile.new('database.yml')
-    yml_data = YAML.load(<<-HEREDOC
-      base: &base
-        username: user
-        wait_timeout: 5
-        port:
-      test: &test
-        <<: *base
-        pool: 3
-        database: vmdb_test
-                         HEREDOC
-                        )
+    yml_data = YAML.load(<<-DOC)
+---
+base: &base
+  username: user
+  wait_timeout: 5
+  port:
+test: &test
+  <<: *base
+  pool: 3
+  database: vmdb_test
+DOC
     File.write(@yml_file.path, yml_data.to_yaml)
   end
 
@@ -38,6 +38,14 @@ describe PostgresHaAdmin::DatabaseYml do
 
       expect(new_name.size).to be > @yml_file.path.size
       expect(YAML.load_file(new_name)).to eq original_yml
+    end
+
+    it "expect raise error and keep original 'database.yml' if updating database.yml failed" do
+      original_yml = YAML.load_file(@yml_file)
+      allow(File).to receive(:write).and_raise(StandardError)
+
+      expect { yml_utils.update_database_yml(:any => 'any') }.to raise_error(StandardError)
+      expect(YAML.load_file(@yml_file)).to eq original_yml
     end
 
     it "takes hash with 'pg style' parameters and override database.yml" do

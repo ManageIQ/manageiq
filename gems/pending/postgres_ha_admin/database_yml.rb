@@ -24,8 +24,7 @@ module PostgresHaAdmin
       begin
         File.write(db_yml_file, db_yml.to_yaml)
       rescue StandardError
-        FileUtils.copy(new_name, db_yml_file)
-        File.delete(new_name)
+        FileUtils.mv(new_name, db_yml_file)
         raise
       end
       new_name
