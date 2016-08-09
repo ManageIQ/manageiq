@@ -65,7 +65,7 @@ class ApiController
       return klass.find_by_guid(guid) if guid.present?
 
       href = data["href"]
-      href.match(%r{^.*/#{collection}/[0-9]+$}) ? klass.find(href.split('/').last) : {}
+      href.match(%r{^.*/#{collection}/[0-9r]+$}) ? klass.find(from_cid(href.split('/').last)) : {}
     end
 
     def policy_subcollection_action(ctype, policy)

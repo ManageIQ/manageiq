@@ -140,9 +140,9 @@ class ApiController
 
     def parse_tag_from_href(data)
       href = data["href"]
-      tag  = if href && href.match(%r{^.*/tags/[0-9]+$})
+      tag  = if href && href.match(%r{^.*/tags/[0-9r]+$})
                klass = collection_class(:tags)
-               klass.find(href.split('/').last)
+               klass.find(from_cid(href.split('/').last))
              end
       tag.present? ? tag_path_to_spec(tag.name).merge(:id => tag.id) : {}
     end
