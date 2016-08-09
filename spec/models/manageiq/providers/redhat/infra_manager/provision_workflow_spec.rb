@@ -48,6 +48,40 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
     end
   end
 
+  context "allowed clusters" do
+    let(:workflow) { described_class.new({:src_vm_id => template.id}, admin) }
+    let(:datacenter1) { FactoryGirl.create(:ems_folder, :type => "Datacenter") }
+    let(:datacenter2) { FactoryGirl.create(:ems_folder, :type => "Datacenter") }
+    let(:cluster1) { FactoryGirl.create(:ems_cluster, :ems_id => ems.id, :name => 'Cluster1') }
+    let(:cluster2) { FactoryGirl.create(:ems_cluster, :ems_id => ems.id, :name => 'Cluster2') }
+    let(:cluster3) { FactoryGirl.create(:ems_cluster, :ems_id => ems.id, :name => 'Cluster3') }
+    let(:rp1) { FactoryGirl.create(:resource_pool) }
+    let(:rp2) { FactoryGirl.create(:resource_pool) }
+    let(:rp3) { FactoryGirl.create(:resource_pool) }
+    let(:template) { FactoryGirl.create(:template_redhat, :ext_management_system => ems, :ems_cluster => cluster1) }
+    let(:host1) { FactoryGirl.create(:host, :ems_id => ems.id, :ems_cluster => cluster1) }
+    let(:host2) { FactoryGirl.create(:host, :ems_id => ems.id, :ems_cluster => cluster2) }
+    let(:host3) { FactoryGirl.create(:host, :ems_id => ems.id, :ems_cluster => cluster3) }
+    before(:each) do
+      allow_any_instance_of(User).to receive(:get_timezone).and_return("UTC")
+      allow(workflow).to receive(:get_source_and_targets).and_return(:ems => ems, :vm => template)
+      ems.add_child(datacenter1)
+      ems.add_child(datacenter2)
+      datacenter1.add_child(cluster1)
+      datacenter1.add_child(cluster2)
+      datacenter2.add_child(cluster3)
+      rp1.set_parent(cluster1)
+      rp2.set_parent(cluster2)
+      rp3.set_parent(cluster3)
+      host1.set_parent(rp1)
+      host2.set_parent(rp2)
+      host3.set_parent(rp3)
+    end
+
+    it 'only from same data_center as template' do
+      expect(workflow.allowed_clusters).to match_array([[cluster1.id, cluster1.name], [cluster2.id, cluster2.name]])
+    end
+  end
   context "supports_linked_clone?" do
     let(:workflow) { described_class.new({:src_vm_id => template.id, :linked_clone => true}, admin) }
 
