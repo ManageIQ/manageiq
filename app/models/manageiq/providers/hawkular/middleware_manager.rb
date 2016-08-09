@@ -4,6 +4,8 @@ module ManageIQ::Providers
   class Hawkular::MiddlewareManager < ManageIQ::Providers::MiddlewareManager
     require 'hawkular/hawkular_client'
 
+    require_nested :AlertManager
+    require_nested :AlertProfileManager
     require_nested :EventCatcher
     require_nested :LiveMetricsCapture
     require_nested :MiddlewareDeployment
@@ -283,11 +285,37 @@ module ManageIQ::Providers
     end
 
     def self.update_alert(*args)
-      _log.debug("Updating an alert on Hawkular provider: #{args}")
+      operation = args[0][:operation]
+      alert = args[0][:alert]
+      miq_alert = {
+        :id          => alert[:id],
+        :enabled     => alert[:enabled],
+        :description => alert[:description],
+        :conditions  => alert[:expression]
+      }
+      MiddlewareManager.find_each { |m| m.alert_manager.process_alert(operation, miq_alert) }
     end
 
     def self.update_alert_profile(*args)
-      _log.debug("Updating an alert profile on Hawkular provider: #{args}")
+      alert_profile_arg = args[0]
+      miq_alert_profile = {
+        :id                  => alert_profile_arg[:profile_id],
+        :old_alerts_ids      => alert_profile_arg[:old_alerts],
+        :new_alerts_ids      => alert_profile_arg[:new_alerts],
+        :old_assignments_ids => process_old_assignments_ids(alert_profile_arg[:old_assignments]),
+        :new_assignments_ids => process_new_assignments_ids(alert_profile_arg[:new_assignments])
+      }
+      MiddlewareManager.find_each do |m|
+        m.alert_profile_manager.process_alert_profile(alert_profile_arg[:operation], miq_alert_profile)
+      end
+    end
+
+    def alert_manager
+      @alert_manager ||= ManageIQ::Providers::Hawkular::MiddlewareManager::AlertManager.new(self)
+    end
+
+    def alert_profile_manager
+      @alert_profile_manager ||= ManageIQ::Providers::Hawkular::MiddlewareManager::AlertProfileManager.new(self)
     end
 
     private
@@ -335,5 +363,32 @@ module ManageIQ::Providers
         end
       end
     end
+
+    def self.process_old_assignments_ids(old_assignments)
+      old_assignments_ids = []
+      unless old_assignments.empty?
+        if old_assignments[0].class.name == "MiqEnterprise"
+          MiddlewareManager.find_each { |m| m.middleware_servers.find_each { |eap| old_assignments_ids << eap.id } }
+        else
+          old_assignments_ids = old_assignments.collect(&:id)
+        end
+      end
+      old_assignments_ids
+    end
+
+    def self.process_new_assignments_ids(new_assignments)
+      new_assignments_ids = []
+      unless new_assignments.nil? || new_assignments["assign_to"].nil?
+        if new_assignments["assign_to"] == "enterprise"
+          # Note that in this version the assign to enterprise is resolved at the moment of the assignment
+          # In following iterations, enterprise assignment should be managed dynamically on the provider
+          MiddlewareManager.find_each { |m| m.middleware_servers.find_each { |eap| new_assignments_ids << eap.id } }
+        else
+          new_assignments_ids = new_assignments["objects"]
+        end
+      end
+      new_assignments_ids
+    end
+    private_class_method :process_old_assignments_ids, :process_new_assignments_ids
   end
 end

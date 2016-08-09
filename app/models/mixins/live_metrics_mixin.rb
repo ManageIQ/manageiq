@@ -55,6 +55,10 @@ module LiveMetricsMixin
       @live_metrics_config['supported_metrics']
     end
 
+    def supported_metrics_by_column
+      @supported_metrics_by_column ||= supported_metrics.invert
+    end
+
     def load_live_metrics_config
       live_metrics_file = File.join(LIVE_METRICS_DIR, "#{name.demodulize.underscore}.yaml")
       live_metrics_config = File.exist?(live_metrics_file) ? YAML.load_file(live_metrics_file) : {}

@@ -353,10 +353,10 @@ module MiqPolicyController::AlertProfiles
       if old_alerts.nil? && new_alerts.nil?
         operation = :update_assignments
         old_alerts = new_alerts = @alert_profile.miq_alerts.collect(&:id)
-        assigned = @alert_profile.get_assigned_tos
       else
         operation = :update_alerts
       end
+      assigned = @alert_profile.get_assigned_tos
       MiqQueue.put(
         :class_name  => "ManageIQ::Providers::Hawkular::MiddlewareManager",
         :method_name => "update_alert_profile",
