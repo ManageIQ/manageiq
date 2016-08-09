@@ -101,6 +101,7 @@ module ApplicationHelper::Dialogs
     auto_refresh_string = field.trigger_auto_refresh ? "dialogFieldRefresh.triggerAutoRefresh('#{field.id}', '#{field.trigger_auto_refresh}');" : ""
 
     extra_options = {
+      # FIXME: when removing remote_function, note that onclick should really be onchange instead
       :onclick  => auto_refresh_string + remote_function(
         :with     => "miqSerializeForm('dynamic-radio-#{field.id}')",
         :url      => url,
