@@ -67,14 +67,8 @@ class MiqAeCustomizationController < ApplicationController
 
   def import_service_dialogs
     if params[:commit] == _('Commit')
-
       if params[:dialogs_to_import].blank?
-        add_flash(_("At least one Service Dialog must be selected."), :error)
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-          page << "miqSparkle(false);"
-        end
+        render_flash_and_stop_sparkle(_("At least one Service Dialog must be selected."), :error)
         return
       end
 

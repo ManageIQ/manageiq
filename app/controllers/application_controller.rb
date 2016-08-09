@@ -417,6 +417,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def render_flash_and_stop_sparkle(*args)
+    render_flash(*args) do |page|
+      page << "miqSparkle(false);"
+    end
+  end
+
   def tagging_explorer_controller?
     false
   end
