@@ -121,7 +121,7 @@
         %td
           = _("Processors")
         %td{:align => "right"}
-          = @record.num_cpu ? @record.num_cpu : notavail
+          = @record.cpu_total_cores ? @record.cpu_total_cores : notavail
         %td{:align => "right"}
           = @record.conservative_recommended_vcpus ? @record.conservative_recommended_vcpus : notavail
         %td{:align => "right"}
@@ -156,7 +156,7 @@
         %td
           = _("Processors")
         %td{:align => "right"}
-          = @record.num_cpu ? @record.num_cpu : notavail
+          = @record.cpu_total_cores ? @record.cpu_total_cores : notavail
         %td{:align => "right"}
           = @record.moderate_recommended_vcpus ? @record.moderate_recommended_vcpus : notavail
         %td{:align => "right"}
@@ -190,7 +190,7 @@
         %td
           = _("Processors")
         %td{:align => "right"}
-          = @record.num_cpu ? @record.num_cpu : notavail
+          = @record.cpu_total_cores ? @record.cpu_total_cores : notavail
         %td{:align => "right"}
           = @record.aggressive_recommended_vcpus ? @record.aggressive_recommended_vcpus : notavail
         %td{:align => "right"}
