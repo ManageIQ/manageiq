@@ -830,8 +830,6 @@ class ApplicationHelper::ToolbarBuilder
         return true unless @record.is_available?(:standby_guest)
       when "vm_guest_shutdown", "instance_guest_shutdown"
         return true unless @record.is_available?(:shutdown_guest)
-      when "vm_guest_restart"
-        return true unless @record.is_available?(:reboot_guest)
       when "vm_reconfigure"
         return true unless @record.reconfigurable?
       when "vm_policy_sim", "vm_protect"
@@ -1258,8 +1256,6 @@ class ApplicationHelper::ToolbarBuilder
         return @record.is_available_now_error_message(:standby_guest) if @record.is_available_now_error_message(:standby_guest)
       when "vm_guest_shutdown"
         return @record.is_available_now_error_message(:shutdown_guest) if @record.is_available_now_error_message(:shutdown_guest)
-      when "vm_guest_restart"
-        return @record.is_available_now_error_message(:reboot_guest) if @record.is_available_now_error_message(:reboot_guest)
       when "instance_retire", "instance_retire_now"
         return N_("Instance is already retired") if @record.retired
       when "vm_timeline"
