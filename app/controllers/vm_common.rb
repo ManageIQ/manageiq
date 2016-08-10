@@ -191,14 +191,14 @@ module VmCommon
       # or redirect them to the one they have access to
       case controller_name
       when "vm_infra"
-        redirect_controller = role_allows(:feature => "vandt_accord") || role_allows(:feature => "vms_filter_accord") ?
+        redirect_controller = role_allows?(:feature => "vandt_accord") || role_allows?(:feature => "vms_filter_accord") ?
                                 "vm_infra" : nil
       when "vm_cloud"
-        redirect_controller = role_allows(:feature => "instances_accord") || role_allows(:feature => "instances_filter_accord") ?
+        redirect_controller = role_allows?(:feature => "instances_accord") || role_allows?(:feature => "instances_filter_accord") ?
                                 "vm_cloud" : nil
       end
 
-      redirect_controller = role_allows(:feature => "vms_instances_filter_accord") ? "vm_or_template" : nil unless redirect_controller
+      redirect_controller = role_allows?(:feature => "vms_instances_filter_accord") ? "vm_or_template" : nil unless redirect_controller
 
       if redirect_controller
         action = "explorer"

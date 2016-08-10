@@ -374,7 +374,7 @@ describe EmsCloudController do
 
     it "redirects to requests show list after dialog is submitted" do
       controller.instance_variable_set(:@_params, :button => 'submit', :id => 'foo')
-      allow(controller).to receive(:role_allows).and_return(true)
+      allow(controller).to receive(:role_allows?).and_return(true)
       allow(wf).to receive(:submit_request).and_return({})
       page = double('page')
       allow(page).to receive(:<<).with(any_args)

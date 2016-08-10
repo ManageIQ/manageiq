@@ -191,8 +191,8 @@ class DashboardController < ApplicationController
       end
     end
 
-    can_add   = role_allows(:feature => "dashboard_add")
-    can_reset = role_allows(:feature => "dashboard_reset")
+    can_add   = role_allows?(:feature => "dashboard_add")
+    can_reset = role_allows?(:feature => "dashboard_reset")
     if can_add || can_reset
       @widgets_menu = {}
       if widget_list.blank?

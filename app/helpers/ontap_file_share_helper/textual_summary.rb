@@ -59,7 +59,7 @@ module OntapFileShareHelper::TextualSummary
     label = ui_lookup(:table => "ontap_storage_system")
     ss    = @record.storage_system
     h     = {:label => label, :image => "ontap_storage_system", :value => (ss.blank? ? _("None") : ss.evm_display_name)}
-    if !ss.blank? && role_allows(:feature => "ontap_storage_system_show")
+    if !ss.blank? && role_allows?(:feature => "ontap_storage_system_show")
       h[:title] = _("Show %{label} '%{name}'") % {:label => label, :name => ss.evm_display_name}
       h[:link]  = url_for(:controller => 'ontap_storage_system', :action => 'show', :id => ss.id)
     end
@@ -72,7 +72,7 @@ module OntapFileShareHelper::TextualSummary
     h     = {:label => label,
              :image => "snia_local_file_system",
              :value => (lfs.blank? ? _("None") : lfs.evm_display_name)}
-    if !lfs.blank? && role_allows(:feature => "snia_local_file_system_show")
+    if !lfs.blank? && role_allows?(:feature => "snia_local_file_system_show")
       h[:title] = _("Show %{label} '%{name}'") % {:label => label, :name => lfs.evm_display_name}
       # h[:link]  = url_for(:controller => 'snia_local_file_system', :action => 'show', :id => lfs.id)
       h[:link]  = url_for(:action => 'snia_local_file_systems', :id => @record, :show => lfs.id, :db => controller.controller_name)
@@ -84,7 +84,7 @@ module OntapFileShareHelper::TextualSummary
     label = ui_lookup(:table => "ontap_logical_disk")
     ld    = @record.logical_disk
     h     = {:label => label, :image => "ontap_logical_disk", :value => (ld.blank? ? _("None") : ld.evm_display_name)}
-    if !ld.blank? && role_allows(:feature => "ontap_logical_disk_show")
+    if !ld.blank? && role_allows?(:feature => "ontap_logical_disk_show")
       h[:title] = _("Show %{label} '%{name}'") % {:label => label, :name => ld.evm_display_name}
       h[:link]  = url_for(:controller => 'ontap_logical_disk', :action => 'show', :id => ld.id)
     end
@@ -95,7 +95,7 @@ module OntapFileShareHelper::TextualSummary
     label = ui_lookup(:tables => "cim_base_storage_extent")
     num   = @record.base_storage_extents_size
     h     = {:label => label, :image => "cim_base_storage_extent", :value => num}
-    if num > 0 && role_allows(:feature => "cim_base_storage_extent_show")
+    if num > 0 && role_allows?(:feature => "cim_base_storage_extent_show")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:action => 'cim_base_storage_extents', :id => @record, :db => controller.controller_name)
     end
@@ -106,7 +106,7 @@ module OntapFileShareHelper::TextualSummary
     label = title_for_hosts
     num   = @record.hosts_size
     h     = {:label => label, :image => "host", :value => num}
-    if num > 0 && role_allows(:feature => "host_show_list")
+    if num > 0 && role_allows?(:feature => "host_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'hosts')
     end

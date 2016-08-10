@@ -478,7 +478,7 @@ class ReportController < ApplicationController
 
     elsif nodes.length == 5
       @sb[:selected_rep_id] = from_cid(nodes[4])
-      if role_allows(:feature => "miq_report_widget_editor")
+      if role_allows?(:feature => "miq_report_widget_editor")
         # all widgets for this report
         get_all_widgets("report", from_cid(nodes[4]))
       end

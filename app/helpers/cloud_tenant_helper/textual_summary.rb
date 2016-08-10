@@ -21,7 +21,7 @@ module CloudTenantHelper::TextualSummary
     label = ui_lookup(:tables => "vm_cloud")
     num   = @record.number_of(:vms)
     h     = {:label => label, :image => "vm", :value => num}
-    if num > 0 && role_allows(:feature => "vm_show_list")
+    if num > 0 && role_allows?(:feature => "vm_show_list")
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'instances')
       h[:title] = _("Show all %{label}") % {:label => label}
     end
@@ -32,7 +32,7 @@ module CloudTenantHelper::TextualSummary
     label = ui_lookup(:tables => "template_cloud")
     num   = @record.number_of(:miq_templates)
     h     = {:label => label, :image => "vm", :value => num}
-    if num > 0 && role_allows(:feature => "miq_template_show_list")
+    if num > 0 && role_allows?(:feature => "miq_template_show_list")
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'images')
       h[:title] = _("Show all %{label}") % {:label => label}
     end
@@ -55,7 +55,7 @@ module CloudTenantHelper::TextualSummary
     label = _('Volumes')
     num   = @record.number_of(:cloud_volumes)
     h     = {:label => label, :image => "cloud_volume", :value => num}
-    if num > 0 && role_allows(:feature => "cloud_volume_show_list")
+    if num > 0 && role_allows?(:feature => "cloud_volume_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:action => 'show', :id => @record, :display => "cloud_volumes")
     end
@@ -66,7 +66,7 @@ module CloudTenantHelper::TextualSummary
     label = _('Volume Snapshots')
     num   = @record.number_of(:cloud_volume_snapshots)
     h     = {:label => label, :image => "cloud_volume_snapshot", :value => num}
-    if num > 0 && role_allows(:feature => "cloud_volume_snapshot_show_list")
+    if num > 0 && role_allows?(:feature => "cloud_volume_snapshot_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:action => 'show', :id => @record, :display => "cloud_volume_snapshots")
     end
@@ -77,7 +77,7 @@ module CloudTenantHelper::TextualSummary
     label = ui_lookup(:tables => "cloud_object_store_container")
     num   = @record.number_of(:cloud_object_store_containers)
     h     = {:label => label, :image => "cloud_object_store_container", :value => num}
-    if num > 0 && role_allows(:feature => "cloud_object_store_container_show_list")
+    if num > 0 && role_allows?(:feature => "cloud_object_store_container_show_list")
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'cloud_object_store_containers')
       h[:title] = _("Show all %{models}") % {:models => label}
     end

@@ -5,7 +5,7 @@ describe "layouts/listnav/_network_router.html.haml" do
     set_controller_for_view("network_router")
     assign(:panels, "ems_prop" => true, "ems_rel" => true)
     allow(view).to receive(:truncate_length).and_return(15)
-    allow(view).to receive(:role_allows).and_return(true)
+    allow(view).to receive(:role_allows?).and_return(true)
   end
 
   %w(openstack amazon azure google).each do |t|

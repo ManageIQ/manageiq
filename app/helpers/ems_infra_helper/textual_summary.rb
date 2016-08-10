@@ -93,7 +93,7 @@ module EmsInfraHelper::TextualSummary
     label = title_for_clusters
     num   = @ems.number_of(:ems_clusters)
     h     = {:label => label, :image => "cluster", :value => num}
-    if num > 0 && role_allows(:feature => "ems_cluster_show_list")
+    if num > 0 && role_allows?(:feature => "ems_cluster_show_list")
       h[:link] = ems_infra_path(@ems.id, :display => 'ems_clusters', :vat => true)
       h[:title] = _("Show all %{label}") % {:label => label}
     end
@@ -104,7 +104,7 @@ module EmsInfraHelper::TextualSummary
     label = title_for_hosts
     num   = @ems.number_of(:hosts)
     h     = {:label => label, :image => "host", :value => num}
-    if num > 0 && role_allows(:feature => "host_show_list")
+    if num > 0 && role_allows?(:feature => "host_show_list")
       h[:link]  = ems_infra_path(@ems.id, :display => 'hosts')
       h[:title] = _("Show all %{label}") % {:label => label}
     end

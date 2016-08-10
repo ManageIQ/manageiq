@@ -87,7 +87,7 @@ module ConfigurationHelper
     end
 
     def has_any_role?(arr)
-      arr.any? { |r| role_allows(:feature => r) }
+      arr.any? { |r| role_allows?(:feature => r) }
     end
   end
 end

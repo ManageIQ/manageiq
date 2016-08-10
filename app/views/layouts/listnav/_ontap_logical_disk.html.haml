@@ -13,7 +13,7 @@
 
     = miq_accordion_panel(_("Relationships"), false, "cim_ld_rel") do
       %ul.nav.nav-pills.nav-stacked
-        - if role_allows(:feature => "ontap_storage_system_show")
+        - if role_allows?(:feature => "ontap_storage_system_show")
           = li_link_if_condition(:cond => !@record.storage_system.nil?,
             :record_id                 => @record.storage_system.id,
             :table                     => 'ontap_storage_system',
@@ -21,7 +21,7 @@
             :action                    => 'show',
             :link_text                 => "#{ui_lookup(:table => "ontap_storage_system")}: #{@record.storage_system.evm_display_name}")
 
-        - if role_allows(:feature => "ontap_file_share_show_list")
+        - if role_allows?(:feature => "ontap_file_share_show_list")
           = li_link_if_nonzero(:count => @record.file_shares_size,
             :record_id                => @record.id,
             :tables                   => 'ontap_file_share',
@@ -29,7 +29,7 @@
             :action                   => 'show',
             :title                    => _("Show all File Shares"))
 
-        - if role_allows(:feature => "snia_local_file_system_show")
+        - if role_allows?(:feature => "snia_local_file_system_show")
           = li_link_if_condition(:cond => !@record.file_system.nil?,
             :record_id                 => @record.file_system.id,
             :table                     => 'snia_local_file_system',
@@ -37,7 +37,7 @@
             :action                    => 'show',
             :link_text                 => "#{ui_lookup(:table => "snia_local_file_system")}: #{@record.file_system.evm_display_name}")
 
-        - if role_allows(:feature => "cim_base_storage_extent_show_list")
+        - if role_allows?(:feature => "cim_base_storage_extent_show_list")
           = li_link_if_nonzero(:count => @record.base_storage_extents_size,
             :record_id                => @record.id,
             :tables                   => 'cim_base_storage_extent',
@@ -47,7 +47,7 @@
 
     = miq_accordion_panel(_("Infrastructure Relationships"), false, "cim_ld_inf_rel") do
       %ul.nav.nav-pills.nav-stacked
-        - if role_allows(:feature => "vm_show_list")
+        - if role_allows?(:feature => "vm_show_list")
           = li_link_if_nonzero(:count => @record.vms_size,
             :record_id                => @record.id,
             :tables                   => 'vm',
@@ -55,7 +55,7 @@
             :action                   => 'show',
             :title                    => _("Show all VMs") % ui_lookup(:tables => "vm"))
 
-        - if role_allows(:feature => "host_show_list")
+        - if role_allows?(:feature => "host_show_list")
           = li_link_if_nonzero(:count => @record.hosts_size,
             :record_id                => @record.id,
             :tables                   => 'host',
@@ -63,7 +63,7 @@
             :action                   => 'show',
             :title                    => _("Show all Hosts"))
 
-        - if role_allows(:feature => "storage_show_list")
+        - if role_allows?(:feature => "storage_show_list")
           = li_link_if_nonzero(:count => @record.storages.size,
             :record_id                => @record.id,
             :tables                   => 'storage',

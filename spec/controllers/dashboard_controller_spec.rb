@@ -280,7 +280,7 @@ describe DashboardController do
       login_as FactoryGirl.create(:user, :features => "everything")
       controller.instance_variable_set(:@settings, :display => {:startpage => "/dashboard/show"})
 
-      allow(controller).to receive(:role_allows).and_return(true)
+      allow(controller).to receive(:role_allows?).and_return(true)
       url = controller.send(:start_url_for_user, nil)
       expect(url).to eq("/dashboard/show")
     end

@@ -1052,7 +1052,7 @@ class ApplicationController < ActionController::Base
     common_buttons = %w(rbac_project_add rbac_tenant_add)
     task = common_buttons.include?(params[:pressed]) ? rbac_common_feature_for_buttons(params[:pressed]) : params[:pressed]
     # Intentional single = so we can check auth later
-    rbac_free_for_custom_button?(task, params[:button_id]) || role_allows(:feature => task)
+    rbac_free_for_custom_button?(task, params[:button_id]) || role_allows?(:feature => task)
   end
 
   def handle_button_rbac
@@ -1067,7 +1067,7 @@ class ApplicationController < ActionController::Base
   def check_generic_rbac
     ident = "#{controller_name}_#{action_name}"
     if MiqProductFeature.feature_exists?(ident)
-      role_allows(:feature => ident, :any => true)
+      role_allows?(:feature => ident, :any => true)
     else
       true
     end
@@ -2317,7 +2317,7 @@ class ApplicationController < ActionController::Base
 
   def assert_privileges(feature)
     raise MiqException::RbacPrivilegeException,
-          _("The user is not authorized for this task or item.") unless role_allows(:feature => feature)
+          _("The user is not authorized for this task or item.") unless role_allows?(:feature => feature)
   end
 
   def previous_breadcrumb_url

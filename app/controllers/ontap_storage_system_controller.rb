@@ -55,7 +55,7 @@ class OntapStorageSystemController < CimInstanceController
     @sb[:ccs_id] = params[:id]
     @record = OntapStorageSystem.find(params[:id])
     area = request.parameters["controller"]
-    if role_allows(:feature => "#{area}_tag")
+    if role_allows?(:feature => "#{area}_tag")
       javascript_redirect :action => 'create_ld'
     else
       render :update do |page|

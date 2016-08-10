@@ -45,7 +45,7 @@
               = _("Groups Using this Role")
             .col-md-8
               - @role.miq_groups.sort_by { |a| a.description.downcase }.each do |g|
-                - if role_allows(:feature => "rbac_group_show")
+                - if role_allows?(:feature => "rbac_group_show")
                   - params = {:class   => "pointer",
                               :onclick => "miqDynatreeActivateNode('rbac_tree', 'g-#{to_cid(g.id)}');",
                               :title   => _("View this Group")}

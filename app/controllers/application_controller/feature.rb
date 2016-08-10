@@ -30,7 +30,7 @@ class ApplicationController
 
     def self.allowed_features(features)
       features.select do |f|
-        ApplicationHelper.role_allows(:feature => f.role, :any => f.role_any)
+        ApplicationHelper.role_allows?(:feature => f.role, :any => f.role_any)
       end
     end
   end

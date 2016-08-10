@@ -2819,7 +2819,7 @@ describe ApplicationHelper do
       expect(build_toolbar_hide_button('miq_ae_method_copy')).to be_falsey
     end
 
-    def role_allows(_)
+    def role_allows?(_)
       true
     end
   end

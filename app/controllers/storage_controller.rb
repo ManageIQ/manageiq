@@ -44,7 +44,7 @@ class StorageController < ApplicationController
 
       # redirect user back to where they came from if they dont have access to any of vm explorers
       # or redirect them to the one they have access to
-      redirect_controller = role_allows(:feature => "storage") ? "storage" : nil
+      redirect_controller = role_allows?(:feature => "storage") ? "storage" : nil
 
       if redirect_controller
         action = "explorer"

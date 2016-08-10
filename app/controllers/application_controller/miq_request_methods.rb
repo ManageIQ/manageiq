@@ -592,7 +592,7 @@ module ApplicationController::MiqRequestMethods
       flash = @edit[:req_id].nil? ? _("%{typ} Request was Submitted, you will be notified when your %{title} are ready") % {:typ => @edit[:prov_type], :title => title} : _("%{typ} Request was re-submitted, you will be notified when your %{title} are ready") % {:typ => @edit[:prov_type], :title => title}
       @explorer = @edit[:explorer] ? @edit[:explorer] : false
       @sb[:action] = @edit = session[:edit] =  nil                                                # Clear out session[:edit]
-      if role_allows(:feature => "miq_request_show_list", :any => true)
+      if role_allows?(:feature => "miq_request_show_list", :any => true)
         javascript_redirect :controller => 'miq_request',
                             :action     => 'show_list',
                             :flash_msg  => flash,

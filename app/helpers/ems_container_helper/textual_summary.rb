@@ -108,7 +108,7 @@ module EmsContainerHelper::TextualSummary
     count_of_volumes = @ems.number_of(:persistent_volumes)
     label = ui_lookup(:tables => "volume")
     h     = {:label => label, :image => "container_volume", :value => count_of_volumes}
-    if count_of_volumes > 0 && role_allows(:feature => "persistent_volume_show_list")
+    if count_of_volumes > 0 && role_allows?(:feature => "persistent_volume_show_list")
       h[:link]  = ems_container_path(@ems.id, :display => 'persistent_volumes')
       h[:title] = _("Show all %{label}") % {:label => label}
     end

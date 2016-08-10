@@ -13,13 +13,13 @@ class ConfigurationController < ApplicationController
     @breadcrumbs = []
     @config_tab = params[:config_tab] ? params[:config_tab] : "ui"
     active_tab = nil
-    if role_allows(:feature => "my_settings_visuals")
+    if role_allows?(:feature => "my_settings_visuals")
       active_tab = 1 if active_tab.nil?
-    elsif role_allows(:feature => "my_settings_default_views")
+    elsif role_allows?(:feature => "my_settings_default_views")
       active_tab = 2 if active_tab.nil?
-    elsif role_allows(:feature => "my_settings_default_filters")
+    elsif role_allows?(:feature => "my_settings_default_filters")
       active_tab = 3 if active_tab.nil?
-    elsif role_allows(:feature => "my_settings_time_profiles")
+    elsif role_allows?(:feature => "my_settings_time_profiles")
       active_tab = 4 if active_tab.nil?
     end
     @tabform = params[:load_edit_err] ? @tabform : @config_tab + "_#{active_tab}"
@@ -558,10 +558,10 @@ class ConfigurationController < ApplicationController
       @active_tab = @tabform.split("_").last
 
       @tabs = []
-      @tabs.push(["1", _("Visual")])          if role_allows(:feature => "my_settings_visuals")
-      @tabs.push(["2", _("Default Views")])   if role_allows(:feature => "my_settings_default_views")
-      @tabs.push(["3", _("Default Filters")]) if role_allows(:feature => "my_settings_default_filters")
-      @tabs.push(["4", _("Time Profiles")])   if role_allows(:feature => "my_settings_time_profiles")
+      @tabs.push(["1", _("Visual")])          if role_allows?(:feature => "my_settings_visuals")
+      @tabs.push(["2", _("Default Views")])   if role_allows?(:feature => "my_settings_default_views")
+      @tabs.push(["3", _("Default Filters")]) if role_allows?(:feature => "my_settings_default_filters")
+      @tabs.push(["4", _("Time Profiles")])   if role_allows?(:feature => "my_settings_time_profiles")
     end
   end
 

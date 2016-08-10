@@ -187,7 +187,7 @@ module OntapLogicalDiskHelper::TextualSummary
     label = ui_lookup(:table => "ontap_storage_system")
     ss    = @record.storage_system
     h     = {:label => label, :image => "ontap_storage_system", :value => (ss.blank? ? _("None") : ss.evm_display_name)}
-    if !ss.blank? && role_allows(:feature => "ontap_storage_system_show")
+    if !ss.blank? && role_allows?(:feature => "ontap_storage_system_show")
       h[:title] = _("Show %{label} '%{name}'") % {:label => label, :name => ss.evm_display_name}
       h[:link]  = url_for(:controller => 'ontap_storage_system', :action => 'show', :id => ss.id)
     end
@@ -198,7 +198,7 @@ module OntapLogicalDiskHelper::TextualSummary
     label = ui_lookup(:tables => "ontap_file_share")
     num   = @record.file_shares_size
     h = {:label => label, :image => "ontap_file_share", :value => num}
-    if num > 0 && role_allows(:feature => "ontap_file_share_show")
+    if num > 0 && role_allows?(:feature => "ontap_file_share_show")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:controller => 'ontap_logical_disk', :action => 'show', :id => @record, :display => 'ontap_file_share')
     end
@@ -209,7 +209,7 @@ module OntapLogicalDiskHelper::TextualSummary
     label = ui_lookup(:table => "snia_local_file_system")
     lfs   = @record.file_system
     h = {:label => label, :image => "snia_local_file_system", :value => (lfs.blank? ? _("None") : lfs.evm_display_name)}
-    if !lfs.blank? && role_allows(:feature => "snia_local_file_system_show")
+    if !lfs.blank? && role_allows?(:feature => "snia_local_file_system_show")
       h[:title] = _("Show %{label} '%{name}'") % {:label => label, :name => lfs.evm_display_name}
       h[:link]  = url_for(:db => controller.controller_name, :action => 'snia_local_file_systems', :id => @record, :show => lfs.id)
     end
@@ -220,7 +220,7 @@ module OntapLogicalDiskHelper::TextualSummary
     label = ui_lookup(:tables => "cim_base_storage_extent")
     num   = @record.base_storage_extents_size
     h     = {:label => label, :image => "cim_base_storage_extent", :value => num}
-    if num > 0 && role_allows(:feature => "cim_base_storage_extent_show")
+    if num > 0 && role_allows?(:feature => "cim_base_storage_extent_show")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:controller => 'ontap_logical_disk', :action => 'show', :id => @record, :display => 'cim_base_storage_extents')
     end
@@ -231,7 +231,7 @@ module OntapLogicalDiskHelper::TextualSummary
     label = title_for_hosts
     num   = @record.hosts_size
     h     = {:label => label, :image => "host", :value => num}
-    if num > 0 && role_allows(:feature => "host_show_list")
+    if num > 0 && role_allows?(:feature => "host_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'hosts')
     end

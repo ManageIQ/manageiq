@@ -12,7 +12,7 @@
 
     = miq_accordion_panel(_("Relationships"), false, "stack_rel") do
       %ul.nav.nav-pills.nav-stacked
-        - if role_allows(:feature => "ems_cloud_show") && @record.ext_management_system
+        - if role_allows?(:feature => "ems_cloud_show") && @record.ext_management_system
           %li
             = link_to("#{ui_lookup(:table => "ext_management_system")}: #{@record.ext_management_system.name}",
               ems_cloud_path(@record.ext_management_system.id),
@@ -22,14 +22,14 @@
           %li.disabled
             = link_to("#{ui_lookup(:table => 'orchestration_template')}: #{@record.orchestration_template.name}", "#")
 
-        - if role_allows(:feature => "vm_show_list")
+        - if role_allows?(:feature => "vm_show_list")
           = li_link(:count => @record.number_of(:vms),
             :text          => _("Instances"),
             :record_id     => @record.id,
             :display       => 'instances',
             :title         => _("Show all Instances"))
 
-        - if role_allows(:feature => "security_group_show_list")
+        - if role_allows?(:feature => "security_group_show_list")
           = li_link(:count => @record.number_of(:security_groups),
             :text          => _("Security Groups"),
             :record_id     => @record.id,

@@ -10,7 +10,7 @@
           %button.btn.btn-link.dropdown-toggle{:type => "button", :id => button_id, "data-toggle" => "dropdown"}
             %span.fa.fa-ellipsis-v
           %ul.dropdown-menu{"aria-labelledby" => button_id}
-            - if role_allows(:feature => "dashboard_add")
+            - if role_allows?(:feature => "dashboard_add")
               %li
                 = presenter.button_close
             %li

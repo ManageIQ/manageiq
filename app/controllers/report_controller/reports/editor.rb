@@ -68,7 +68,7 @@ module ReportController::Reports::Editor
           setnode_for_customreport
         end
         @edit = session[:edit] = nil # clean out the saved info
-        if role_allows(:feature => "miq_report_widget_editor")
+        if role_allows?(:feature => "miq_report_widget_editor")
           # all widgets for this report
           get_all_widgets("report", from_cid(x_node.split('_').last))
         end

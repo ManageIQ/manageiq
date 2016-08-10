@@ -64,7 +64,7 @@ describe MiqRequestController do
                                                        {:url => "/ems_infra/1000000000001?display=vms"},
                                                        {}])
       controller.instance_variable_set(:@_params, :id => "new", :button => "cancel")
-      allow(controller).to receive(:role_allows).and_return(true)
+      allow(controller).to receive(:role_allows?).and_return(true)
       page = double('page')
       allow(page).to receive(:<<).with(any_args)
       expect(page).to receive(:redirect_to).with("/ems_infra/1000000000001?display=vms")

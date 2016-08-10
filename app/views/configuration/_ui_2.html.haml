@@ -31,7 +31,7 @@
                :orchestrationtemplate => ["orchestration_templates_accord", _('Orchestration Templates')],
                :vm                    => ["vms_instances_filter_accord",    _('VMs & Instances')],
                :miqtemplate           => ["templates_images_filter_accord", _('Templates & Images')]}.each do |resource, (feature, view_name)|
-              - if role_allows(:feature => feature)
+              - if role_allows?(:feature => feature)
                 .form-group
                   %label.col-md-3.control-label
                     #{view_name}
@@ -67,7 +67,7 @@
                :middlewareserver                     => ["middleware_server_show_list",     _('Middleware Servers')],
                :middlewaredeployment                 => ["middleware_deployment_show_list", _('Middleware Deployments')],
                :middlewaredatasource                 => ["middleware_datasource_show_list", _('Middleware Datasources')]}.each do |resource, (feature, view_name)|
-              - if role_allows(:feature => feature)
+              - if role_allows?(:feature => feature)
                 .form-group
                   %label.col-md-3.control-label
                     #{view_name}

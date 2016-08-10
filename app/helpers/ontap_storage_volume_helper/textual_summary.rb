@@ -111,7 +111,7 @@ module OntapStorageVolumeHelper::TextualSummary
     label = ui_lookup(:table => "ontap_storage_system")
     ss   = @record.storage_system
     h     = {:label => label, :image => "ontap_storage_system", :value => ss.evm_display_name}
-    if role_allows(:feature => "ontap_storage_system_show")
+    if role_allows?(:feature => "ontap_storage_system_show")
       h[:title] = _("Show all %{label} '%{name}'") % {:label => label, :name => ss.evm_display_name}
       h[:link]  = url_for(:controller => 'ontap_storage_system', :action => 'show', :id => ss.id)
     end
@@ -122,7 +122,7 @@ module OntapStorageVolumeHelper::TextualSummary
     label = ui_lookup(:tables => "cim_base_storage_extent")
     num   = @record.base_storage_extents_size
     h     = {:label => label, :image => "cim_base_storage_extent", :value => num}
-    if num > 0 && role_allows(:feature => "cim_base_storage_extent_show")
+    if num > 0 && role_allows?(:feature => "cim_base_storage_extent_show")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:action => 'cim_base_storage_extents', :id => @record, :db => controller.controller_name)
     end
@@ -133,7 +133,7 @@ module OntapStorageVolumeHelper::TextualSummary
     label = title_for_hosts
     num   = @record.hosts_size
     h     = {:label => label, :image => "host", :value => num}
-    if num > 0 && role_allows(:feature => "host_show_list")
+    if num > 0 && role_allows?(:feature => "host_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'hosts')
     end

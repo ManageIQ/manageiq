@@ -2,7 +2,7 @@ describe ApplicationController do
   before do
     EvmSpecHelper.local_miq_server
     login_as FactoryGirl.create(:user, :features => "everything")
-    allow(controller).to receive(:role_allows).and_return(true)
+    allow(controller).to receive(:role_allows?).and_return(true)
   end
 
   context "Verify proper methods are called for snapshot" do

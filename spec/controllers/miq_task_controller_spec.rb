@@ -833,7 +833,7 @@ describe MiqTaskController do
       before(:each) do
         controller.instance_variable_set(:@tabform, "ui_2")
         controller.instance_variable_set(:@settings, :perpage => {})
-        allow(controller).to receive(:role_allows).and_return(true)
+        allow(controller).to receive(:role_allows?).and_return(true)
       end
       it 'sets the active tab' do
         controller.build_jobs_tab
