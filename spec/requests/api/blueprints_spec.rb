@@ -39,6 +39,28 @@ RSpec.describe "Blueprints API" do
       expect(response).to have_http_status(:ok)
     end
 
+    it "will show a blueprint's bundle if requested" do
+      blueprint = FactoryGirl.create(:blueprint, :name => "Test Blueprint")
+      service_catalog = FactoryGirl.create(:service_template_catalog)
+      service_dialog = build_dialog
+      service_templates = FactoryGirl.create_list(:service_template, 2)
+      blueprint.create_bundle(service_templates, service_dialog, service_catalog)
+      api_basic_authorize action_identifier(:blueprints, :read, :resource_actions, :get)
+
+      run_get(blueprints_url(blueprint.id), :attributes => "bundle")
+
+      expected = {
+        "bundle" => a_hash_including(
+          "id"                          => kind_of(Integer),
+          "name"                        => blueprint.name,
+          "service_type"                => "composite",
+          "service_template_catalog_id" => service_catalog.id,
+          "blueprint_id"                => blueprint.id
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+    end
+
     it "forbids access to a blueprint without an appropriate role" do
       blueprint = FactoryGirl.create(:blueprint)
       api_basic_authorize
