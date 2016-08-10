@@ -92,7 +92,9 @@ module ApplicationHelper::Toolbar::Cloud::InstanceOperationsButtonGroupMixin
             N_('Delete this Instance'),
             N_('Delete'),
             :image   => "power_off",
-            :confirm => N_("Delete this Instance?")),
+            :confirm => N_("Delete this Instance?"),
+            :klass   => ApplicationHelper::Button::GenericFeatureButton,
+            :options => {:feature => :terminate}),
         ]
       ),
       included_class.button(

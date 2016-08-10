@@ -834,8 +834,6 @@ class ApplicationHelper::ToolbarBuilder
         return true unless @record.is_available?(:reboot_guest)
       when "vm_reconfigure"
         return true unless @record.reconfigurable?
-      when "instance_terminate"
-        return true unless @record.is_available?(:terminate)
       when "vm_policy_sim", "vm_protect"
         return true if @record.host && @record.host.vmm_product.to_s.downcase == "workstation"
       when "perf_refresh", "perf_reload", "vm_perf_refresh", "vm_perf_reload"
