@@ -2,6 +2,8 @@ class Blueprint < ApplicationRecord
   has_many :service_templates
   private  :service_templates, :service_templates=
 
+  virtual_has_one :bundle
+
   # the top of the service_templates, a bundle that contains child items
   def bundle
     service_templates.find { |st| st.parent_services.blank? }
