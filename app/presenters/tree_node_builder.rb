@@ -354,6 +354,8 @@ class TreeNodeBuilder
       text = tip
     end
     generic_node(text, 'miq_server.png', tip)
+    @node[:expand] = true
+    @node
   end
 
   def miq_action_node

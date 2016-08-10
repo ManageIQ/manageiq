@@ -601,6 +601,7 @@ module OpsController::Settings::Common
     end
 
     @smartproxy_affinity_tree = build_smartproxy_affinity_tree(@selected_zone)
+    @smart  = TreeBuilderSmartproxyAffinity.new(:smartproxy_affinity, :smartproxy_affinity_tree, @sb, true, @selected_zone)
 
     @edit[:new] = copy_hash(@edit[:current])
     session[:edit] = @edit
