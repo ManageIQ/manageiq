@@ -435,7 +435,7 @@ class MiqExpression
   end
 
   def self._to_ruby(exp, context_type, tz)
-    return exp unless exp.kind_of?(Hash) || exp.kind_of?(Array)
+    return exp unless exp.kind_of?(Hash)
 
     operator = exp.keys.first
     case operator.downcase
