@@ -783,7 +783,7 @@ module EmsCommon
   end
   
   def retrieve_nuage_api_versions
-    [[_('v3_2'), 'v4_0']]
+    [[_('v3_2'), 'v3_2'], [_('v4_0'), 'v4_0']]
   end
 
   # Get variables from edit form
