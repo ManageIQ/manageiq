@@ -46,7 +46,7 @@ module ApplicationController::CiProcessing
       ownership
     else
       if role_allows?(:feature => "vm_ownership")
-        javascript_redirect :controller => "#{rec_cls}", :action => 'ownership', :recs =>@ownership_items # redirect to build the ownership screen
+        javascript_redirect :controller => rec_cls.to_s, :action => 'ownership', :recs => @ownership_items # redirect to build the ownership screen
       else
         head :ok
       end
@@ -89,7 +89,6 @@ module ApplicationController::CiProcessing
     klass = get_class_from_controller_param(params[:controller])
     Rbac.filtered(User).each { |u| @users[u.name] = u.id.to_s }
     record = klass.find(@ownership_items[0])
-    @objType = klass.name
     user = record.evm_owner if @ownership_items.length == 1
     @user = user ? user.id.to_s : nil
 
