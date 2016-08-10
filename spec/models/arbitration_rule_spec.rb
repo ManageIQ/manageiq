@@ -26,4 +26,14 @@ describe ArbitrationRule do
         .to raise_error(ActiveRecord::RecordInvalid, /Name can't be blank/)
     end
   end
+
+  describe '#get_by_rule_class' do
+    it 'returns only rules of the given type' do
+      user_rules = FactoryGirl.create_list(:arbitration_rule, 2)
+      expression = MiqExpression.new('EQUAL' => {'field' => 'Blueprint-name', 'value' => 'test'})
+      FactoryGirl.create(:arbitration_rule, :expression => expression)
+
+      expect(ArbitrationRule.get_by_rule_class('User')).to eq(user_rules)
+    end
+  end
 end
