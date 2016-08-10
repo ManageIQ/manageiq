@@ -106,7 +106,7 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           'product product-clone fa-lg',
           t = N_('Clone this VM'),
           t,
-          :klass => ApplicationHelper::Button::GenericFeatureButton,
+          :klass   => ApplicationHelper::Button::GenericFeatureButton,
           :options => {:feature => :clone}),
         button(
           :vm_publish,
@@ -187,7 +187,8 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           N_('Power On'),
           :image   => "power_on",
           :confirm => N_("Power On this VM?"),
-          :klass   => ApplicationHelper::Button::VmStart),
+          :klass   => ApplicationHelper::Button::GenericFeatureButtonWithDisable,
+          :options => {:feature => :start}),
         button(
           :vm_stop,
           nil,
