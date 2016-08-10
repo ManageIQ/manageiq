@@ -26,7 +26,8 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           N_('Extract Running Processes for this VM'),
           N_('Extract Running Processes'),
           :confirm => N_("Extract Running Processes for this VM?"),
-          :klass => ApplicationHelper::Button::VmCollectRunningProcesses),
+          :klass => ApplicationHelper::Button::GenericFeatureButtonWithDisable,
+          :options => {:feature => :collect_running_processes}),
         separator,
         button(
           :vm_edit,
