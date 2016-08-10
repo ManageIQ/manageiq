@@ -86,7 +86,7 @@
         :identifier: availability_zone_show
   :blueprints:
     :description: Blueprints
-    :verbs: *gp
+    :verbs: *gpd
     :options:
     - :collection
     :klass: Blueprint
@@ -97,10 +97,21 @@
       :post:
       - :name: create
         :identifier: blueprint_new
+      - :name: delete
+        :identifier: blueprint_delete
+      :delete:
+      - :name: delete
+        :identifier: blueprint_delete
     :resource_actions:
       :get:
       - :name: read
         :identifier: blueprint_show
+      :post:
+      - :name: delete
+        :identifier: blueprint_delete
+      :delete:
+      - :name: delete
+        :identifier: blueprint_delete
   :categories:
     :description: Categories
     :identifier: ops_settings
