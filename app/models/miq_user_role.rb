@@ -30,39 +30,43 @@ class MiqUserRole < ApplicationRecord
   }
 
   def feature_identifiers
+    # TODO: Why can't this be #pluck?
     miq_product_features.collect(&:identifier)
   end
 
-  def allows?(options = {})
-    ident = options[:identifier]
-    raise _("No value provided for option :identifier") if ident.nil?
-
-    return true if feature_identifiers.include?(ident)
-
-    return false unless MiqProductFeature.feature_exists?(ident)
-
-    parent = MiqProductFeature.feature_parent(ident)
-    return false if parent.nil?
-
-    allows?(:identifier => parent)
+  # @param identifier [String] Product feature identifier to check if this role allows access to it
+  #   Returns true when requested feature is directly assigned or a descendant of a feature
+  # @param scope [nil] Unused option, added here for legacy callers passing it anyway
+  def allows?(identifier:, scope: nil)
+    if feature_identifiers.include?(identifier)
+      true
+    elsif parent = MiqProductFeature.parent_for_feature(identifier)
+      allows?(:identifier => parent.identifier)
+    else
+      false
+    end
   end
 
-  def allows_any?(options = {})
-    scope = options[:scope] || :sub
-    raise _(":scope must be one of %{scope}") % {:scope => SCOPES.inspect} unless SCOPES.include?(scope)
-
-    idents = options[:identifiers].to_miq_a
-    return false if idents.empty?
+  # @param identifiers [Array] Product feature identifiers to check if this role allows access
+  #   to any of them in the given scope.
+  # @param scope [Symbol] Scope to search feature tree for access; must be of type :sub (default), :base, or :one
+  #   Returns true if the role gives access to the feature under one of the following scope options:
+  #   :sub  - Feature is within the role's feature subtree (this feature and all of its descendants)
+  #   :base - Feature is root of the role's feature subtree, i.e. directly assigned to this role
+  #   :one  - Feature is included in the first generation of the feature's subtree only (i.e. NOT root, NOT > 2nd generation)
+  def allows_any?(identifiers: [], scope: :sub)
+    raise _("scope option must be one of #{SCOPES.inspect}") unless SCOPES.include?(scope)
+    return false if identifiers.empty?
 
     if [:base, :sub].include?(scope)
       # Check passed in identifiers
-      return true if idents.any? { |i| allows?(:identifier => i) }
+      return true if identifiers.any? { |i| allows?(:identifier => i) }
     end
 
     return false if scope == :base
 
     # Check children of passed in identifiers (scopes :one and :base)
-    idents.any? { |i| allows_any_children?(:scope => (scope == :one ? :base : :sub), :identifier => i) }
+     identifiers.any? { |i| allows_any_children?(:scope => (scope == :one ? :base : :sub), :identifier => i) }
   end
 
   def allows_any_children?(options = {})
