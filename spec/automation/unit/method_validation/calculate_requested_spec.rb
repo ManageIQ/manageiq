@@ -1,7 +1,8 @@
 include QuotaHelper
-include ServiceTemplateHelper
 
 describe "Quota Validation" do
+  include ServiceTemplateHelper
+
   def run_automate_method(attrs)
     MiqAeEngine.instantiate("/ManageIQ/system/request/Call_Instance?namespace=System/CommonMethods&" \
                             "class=QuotaMethods&instance=requested&#{attrs.join('&')}", @user)

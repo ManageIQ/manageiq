@@ -1,6 +1,6 @@
-include ServiceTemplateHelper
-
 describe "CatalogBundleInitialization Automate Method" do
+  include ServiceTemplateHelper
+
   before do
     @allowed_service_templates = %w(top vm_service1 vm_service2)
     user_helper
