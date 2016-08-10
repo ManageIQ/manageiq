@@ -8,7 +8,6 @@ class CloudTenant < ApplicationRecord
   has_many   :cloud_subnets
   has_many   :network_ports
   has_many   :network_routers
-  has_many   :shared_cloud_networks, -> { where :shared => true }, :through => :ext_management_system, :source => :cloud_networks
   has_many   :vms
   has_many   :vms_and_templates
   has_many   :miq_templates
@@ -29,5 +28,9 @@ class CloudTenant < ApplicationRecord
 
   def all_cloud_networks
     direct_cloud_networks + shared_cloud_networks
+  end
+
+  def shared_cloud_networks
+    try(:ext_management_system).try(:cloud_networks).try(:where, :shared => true) || []
   end
 end

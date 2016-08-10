@@ -95,10 +95,10 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
 
     expect(@ems.flavors.size).to eq(0)
     expect(@ems.availability_zones.size).to eq(0)
-    expect(@ems.floating_ips.size).to eq(0)
+    expect(@ems.floating_ips).to eq(nil)
     expect(@ems.key_pairs.size).to eq(0)
-    expect(@ems.cloud_networks.size).to eq(0)
-    expect(@ems.security_groups.size).to eq(0)
+    expect(@ems.cloud_networks).to eq(nil)
+    expect(@ems.security_groups).to eq(nil)
     expect(@ems.vms_and_templates.size).to eq(5)
     expect(@ems.vms.size).to eq(2)
     expect(@ems.miq_templates.size).to eq(3)

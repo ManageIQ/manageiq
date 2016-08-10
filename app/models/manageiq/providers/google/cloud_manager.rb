@@ -16,34 +16,13 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
 
   include ManageIQ::Providers::Google::ManagerMixin
 
-  has_one :network_manager,
-          :foreign_key => :parent_ems_id,
-          :class_name  => "ManageIQ::Providers::Google::NetworkManager",
-          :autosave    => true,
-          :dependent   => :destroy
-
-  delegate :floating_ips,
-           :security_groups,
-           :cloud_networks,
-           :cloud_subnets,
-           :network_ports,
-           :network_routers,
-           :public_networks,
-           :private_networks,
-           :all_cloud_networks,
-           :to        => :network_manager,
-           :allow_nil => true
-
-  before_validation :ensure_managers
-
   supports :provisioning
   supports :regions
 
-  def ensure_managers
-    build_network_manager unless network_manager
-    network_manager.name            = "#{name} Network Manager"
-    network_manager.zone_id         = zone_id
-    network_manager.provider_region = provider_region
+  before_validation :ensure_managers
+
+  def ensure_network_manager
+    build_network_manager(:type => 'ManageIQ::Providers::Google::NetworkManager') unless network_manager
   end
 
   def self.ems_type

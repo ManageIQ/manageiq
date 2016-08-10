@@ -1,4 +1,4 @@
-class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
+class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudManager
   require_nested :AuthKeyPair
   require_nested :AvailabilityZone
   require_nested :AvailabilityZoneNull
@@ -22,9 +22,14 @@ class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
   require_nested :Vm
 
   include ManageIQ::Providers::Openstack::ManagerMixin
-  include HasManyCloudNetworksMixin
 
   supports :provisioning
+
+  before_validation :ensure_managers
+
+  def ensure_network_manager
+    build_network_manager(:type => 'ManageIQ::Providers::Openstack::NetworkManager') unless network_manager
+  end
 
   def self.ems_type
     @ems_type ||= "openstack".freeze
