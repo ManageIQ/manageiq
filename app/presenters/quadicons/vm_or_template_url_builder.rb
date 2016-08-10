@@ -35,8 +35,8 @@ module Quadicons
     end
 
     def vm_cloud_explorer_accords_attributes
-      if context.role_allows(:feature => "instances_accord") ||
-         context.role_allows(:feature => "instances_filter_accord")
+      if context.role_allows?(:feature => "instances_accord") ||
+         context.role_allows?(:feature => "instances_filter_accord")
 
         attributes = {}
         attributes[:link] = true
@@ -48,8 +48,8 @@ module Quadicons
     end
 
     def vm_infra_explorer_accords_attributes
-      if context.role_allows(:feature => "vandt_accord") ||
-         context.role_allows(:feature => "vms_filter_accord")
+      if context.role_allows?(:feature => "vandt_accord") ||
+         context.role_allows?(:feature => "vms_filter_accord")
 
         attributes = {}
         attributes[:link] = true
@@ -62,7 +62,7 @@ module Quadicons
 
     def service_workload_attributes
       attributes = {}
-      if context.role_allows(:feature => "vms_instances_filter_accord")
+      if context.role_allows?(:feature => "vms_instances_filter_accord")
         attributes[:link] = true
         attributes[:controller] = "vm_or_template"
         attributes[:action] = "explorer"

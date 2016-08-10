@@ -8,7 +8,7 @@ describe Quadicons::VmOrTemplateUrlBuilder, :type => :helper do
     end
 
     before do
-      allow(helper).to receive(:role_allows) { true }
+      allow(helper).to receive(:role_allows?) { true }
     end
 
     context "record is a cloud vm" do
@@ -51,7 +51,7 @@ describe Quadicons::VmOrTemplateUrlBuilder, :type => :helper do
 
           context "and when url can be found with vm_quad_link_attributes" do
             before do
-              allow(helper).to receive(:role_allows).and_return(true)
+              allow(helper).to receive(:role_allows?).and_return(true)
             end
 
             it 'builds the link based on attributes' do
@@ -70,7 +70,7 @@ describe Quadicons::VmOrTemplateUrlBuilder, :type => :helper do
         context "when not in service controller" do
           before do
             # because quadicon_vm_attributes_present? can be true
-            allow(helper).to receive(:role_allows).and_return(true)
+            allow(helper).to receive(:role_allows?).and_return(true)
           end
 
           it 'links to x_show' do

@@ -11,7 +11,7 @@ module Quadicons
                   :parent, :policies, :policy_sim,
                   :settings, :showlinks, :view
 
-    delegate  :content_tag, :image_tag, :concat, :link_to, :role_allows,
+    delegate  :content_tag, :image_tag, :concat, :link_to, :role_allows?,
               :url_for, :to => :template
 
     def initialize(template)
