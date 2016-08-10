@@ -19,7 +19,7 @@ class ApplicationHelper::Toolbar::EmsNetworksCenter < ApplicationHelper::Toolbar
         button(
           :ems_network_new,
           'pficon pficon-add-circle-o fa-lg',
-          t = N_('Add a New #{ui_lookup(:table=>"ems_network")}'),
+          t = N_('Add a New Network Manager'),
           t,
           :url => "/new"),
         button(
