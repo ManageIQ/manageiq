@@ -27,7 +27,8 @@ class ApplicationHelper::Toolbar::EmsContainersCenter < ApplicationHelper::Toolb
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Create Containers Provider'),
           t,
-          :data => {'function' => 'miqCallAngular', 'function-data' => '{ "name": "showListener", "args": [] }'}),
+          :data   => {'function' => 'miqCallAngular', 'function-data' => '{ "name": "showListener", "args": [] }'},
+          :hidden => ContainerDeploymentService.hide_deployment_wizard?),
         button(
           :ems_container_edit,
           'pficon pficon-edit fa-lg',
