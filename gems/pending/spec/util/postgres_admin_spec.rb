@@ -55,5 +55,23 @@ describe PostgresAdmin do
           .to eql "su - postgres -c '/ctl/path stop -W -D /pgdata/path -s -m fast'"
       end
     end
+
+    describe ".initialized?" do
+      around do |example|
+        Dir.mktmpdir do |dir|
+          ENV["APPLIANCE_PG_DATA"] = dir
+          example.run
+        end
+      end
+
+      it "returns true with files in the data directory" do
+        FileUtils.touch("#{ENV["APPLIANCE_PG_DATA"]}/somefile")
+        expect(described_class.initialized?).to be true
+      end
+
+      it "returns false without files in the data directory" do
+        expect(described_class.initialized?).to be false
+      end
+    end
   end
 end

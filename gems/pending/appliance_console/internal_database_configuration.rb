@@ -17,10 +17,6 @@ module ApplianceConsole
       PostgresAdmin.template_directory.join(postgres_dir)
     end
 
-    def self.database_initialized?
-      configured? && !Dir[PostgresAdmin.data_directory.join("*")].empty?
-    end
-
     def initialize(hash = {})
       set_defaults
       super
@@ -34,7 +30,7 @@ module ApplianceConsole
     end
 
     def activate
-      if self.class.database_initialized?
+      if PostgresAdmin.initialized?
         say(<<-EOF.gsub!(/^\s+/, ""))
           An internal database already exists.
           Choose "Reset Internal Database" to reset the existing installation
