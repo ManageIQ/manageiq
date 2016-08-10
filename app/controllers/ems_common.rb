@@ -132,7 +132,7 @@ module EmsCommon
     when 'performance'                   then show_performance
     when nil
       if control_selected? # pagination controls
-        show_entities(session[:display])
+        show_entities(@display) # display loaded from session
       else                 # or default display
         show_main
       end
@@ -156,6 +156,8 @@ module EmsCommon
     opts = {:parent => @ems}
     opts[:parent_method] = parent_method if parent_method
     @view, @pages = get_view(kls, **opts)
+
+    # display need's to be set so that it's stored in the session
     @showtype = @display = display
   end
 

@@ -271,6 +271,9 @@ describe EmsInfraController do
                                             :url=>"/ems_infra/show_list?page=&refresh=y"},
                                            {:name=>"#{@ems.name} (All Managed Datastores)",
                                             :url=>"/ems_infra/#{@ems.id}?display=storages"}])
+
+      # display needs to be saved to session for GTL pagination and such
+      expect(session[:ems_infra_display]).to eq('storages')
     end
 
     it " can tag associated datastores" do
