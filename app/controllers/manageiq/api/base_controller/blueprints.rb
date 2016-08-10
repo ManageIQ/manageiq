@@ -11,6 +11,15 @@ module ManageIQ
           blueprint
         end
 
+        def edit_resource_blueprints(_type, id, data)
+          attributes = data.except("bundle")
+          blueprint = Blueprint.find(id)
+          blueprint.update!(attributes)
+          bundle = data["bundle"]
+          update_bundle(blueprint, bundle) if bundle
+          blueprint
+        end
+
         private
 
         def create_bundle(blueprint, bundle)
@@ -28,6 +37,23 @@ module ManageIQ
           blueprint.create_bundle(options)
         rescue => e
           raise BadRequestError, "Couldn't create the bundle - #{e}"
+        end
+
+        def update_bundle(blueprint, bundle)
+          options = {}
+          if bundle["service_catalog"]
+            options[:service_catalog] = ServiceTemplateCatalog.find(parse_id(bundle["service_catalog"], :service_catalogs))
+          end
+          if bundle["service_dialog"]
+            options[:service_dialog] = Dialog.find(parse_id(bundle["service_dialog"], :service_dialogs))
+          end
+          options[:service_templates] = bundle.fetch("service_templates", []).collect do |st|
+            ServiceTemplate.find(parse_id(st, :service_templates))
+          end
+          options[:entry_points] = bundle["automate_entrypoints"] if bundle["automate_entrypoints"]
+          blueprint.update_bundle(options)
+        rescue => e
+          raise BadRequestError, "Couldn't update the bundle - #{e}"
         end
       end
     end
