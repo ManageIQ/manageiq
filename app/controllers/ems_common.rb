@@ -773,12 +773,8 @@ module EmsCommon
     [[_('SSL without validation'), 'ssl'], [_('SSL'), 'ssl-with-validation'], [_('Non-SSL'), 'non-ssl']]
   end
 
-  def retrieve_openstack_security_protocols
-    retrieve_security_protocols
-  end
-
   def retrieve_nuage_security_protocols
-    retrieve_security_protocols
+    [[_('SSL without validation'), 'ssl'], [_('SSL'), 'ssl-with-validation'], [_('Non-SSL'), 'non-ssl']]
   end
 
   def retrieve_openstack_amqp_security_protocols
