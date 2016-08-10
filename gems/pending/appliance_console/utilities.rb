@@ -33,23 +33,22 @@ module ApplianceConsole
       end
     end
 
-    def self.db_host_database_region
+    def self.db_region
       result = AwesomeSpawn.run(
         "bin/rails runner",
-        :params => ["puts Rails.configuration.database_configuration[Rails.env].values_at('host', 'database'), ApplicationRecord.my_region_number"],
+        :params => ["puts ApplicationRecord.my_region_number"],
         :chdir  => RAILS_ROOT
       )
 
-      host, database, region = result.output.split("\n").last(3)
-
-      if database.blank?
+      if result.failure?
         logger = ApplianceConsole::Logging.logger
-        logger.error "db_host_type_database: Failed to detect some/all DB configuration"
+        logger.error "db_region: Failed to detect region_number"
         logger.error "Output: #{result.output.inspect}" unless result.output.blank?
         logger.error "Error:  #{result.error.inspect}"  unless result.error.blank?
+        return
       end
 
-      return host.presence, database, region
+      result.output.strip
     end
 
     def self.pg_status

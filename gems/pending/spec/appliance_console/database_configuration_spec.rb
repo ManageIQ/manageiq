@@ -3,6 +3,7 @@ require "appliance_console/database_configuration"
 require "appliance_console/external_database_configuration"
 require "appliance_console/internal_database_configuration"
 require "appliance_console/logging"
+require "tempfile"
 
 describe ApplianceConsole::DatabaseConfiguration do
   before do
@@ -386,6 +387,79 @@ describe ApplianceConsole::DatabaseConfiguration do
         end
         expect(Process).to receive(:detach).with(1234)
         @config.start_evm
+      end
+    end
+  end
+
+  context "with test database yml file" do
+    let(:db_yml) { Tempfile.new("appliance_console_database.yml") }
+
+    around(:each) do |example|
+      db_yml.write(<<-DBYML)
+---
+production:
+  database: prod_database
+env1:
+  database: database1
+  username: user1
+  host: host1.example.com
+
+env2:
+  database: database2
+  username: user2
+DBYML
+      db_yml.close
+      begin
+        example.run
+      ensure
+        db_yml.unlink
+      end
+    end
+
+    before do
+      stub_const("#{described_class}::DB_YML", db_yml.path)
+    end
+
+    describe ".database_host" do
+      it "returns the proper host when host is specified" do
+        allow(described_class).to receive(:rails_env).and_return('env1')
+        expect(described_class.database_host).to eq("host1.example.com")
+      end
+
+      it "returns localhost when the host is not specified" do
+        allow(described_class).to receive(:rails_env).and_return('env2')
+        expect(described_class.database_host).to eq("localhost")
+      end
+    end
+
+    describe ".database_name" do
+      it "returns the correct database name" do
+        allow(described_class).to receive(:rails_env).and_return('env1')
+        expect(described_class.database_name).to eq("database1")
+      end
+    end
+  end
+
+  context "with no database yml file" do
+    before do
+      expect(described_class).to receive(:database_yml_configured?).and_return false
+    end
+
+    describe ".database_host" do
+      it "returns nil" do
+        expect(described_class.database_host).to be_nil
+      end
+    end
+
+    describe ".database_name" do
+      it "returns nil" do
+        expect(described_class.database_name).to be_nil
+      end
+    end
+
+    describe ".region" do
+      it "returns nil" do
+        expect(described_class.region).to be_nil
       end
     end
   end
