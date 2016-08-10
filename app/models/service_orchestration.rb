@@ -13,11 +13,6 @@ class ServiceOrchestration < Service
     save_option(:stack_name, stname)
   end
 
-  def stack_ems_ref
-    orchestration_stack.try(:ems_ref)
-  end
-  Vmdb::Deprecation.deprecate_methods(ServiceOrchestration, :stack_ems_ref => "use orchestration_stack#ems_ref instead")
-
   def orchestration_stack_status
     return "check_status_failed", "stack has not been deployed" unless orchestration_stack
 

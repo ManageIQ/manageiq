@@ -1951,6 +1951,4 @@ class VmOrTemplate < ApplicationRecord
   def self.arel_coalesce(values)
     Arel::Nodes::NamedFunction.new('COALESCE', values)
   end
-
-  include DeprecatedCpuMethodsMixin
 end

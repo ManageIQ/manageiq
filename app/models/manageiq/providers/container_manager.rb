@@ -28,8 +28,6 @@ module ManageIQ::Providers
     def aggregate_cpu_total_cores(targets = nil)
       aggregate_hardware(:computer_systems, :cpu_total_cores, targets)
     end
-    alias_method :aggregate_logical_cpus, :aggregate_cpu_total_cores
-    Vmdb::Deprecation.deprecate_methods(self, :aggregate_logical_cpus => :aggregate_cpu_total_cores)
 
     def aggregate_memory(targets = nil)
       aggregate_hardware(:computer_systems, :memory_mb, targets)
