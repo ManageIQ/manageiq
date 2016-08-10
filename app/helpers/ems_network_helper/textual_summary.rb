@@ -56,15 +56,15 @@ module EmsNetworkHelper::TextualSummary
   end
 
   def textual_parent_ems_cloud
-    textual_link(@record.parent_manager)
+    @record.try(:parent_manager)
   end
 
   def textual_availability_zones
-    @record.availability_zones
+    @record.try(:availability_zones)
   end
 
   def textual_cloud_tenants
-    @record.cloud_tenants
+    @record.try(:cloud_tenants)
   end
 
   def textual_security_groups

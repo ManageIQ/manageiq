@@ -89,37 +89,5 @@ module ManageIQ::Providers
       end
       _log.error('Error in connection ' + response.code.to_s)
     end
-
-    def install_license(license_str)
-      license_dict = {}
-      license_dict['license'] = license_str
-      response = @rest_call.post(@server + '/licenses', JSON.dump(license_dict))
-      if response.code != 201
-        if response.body == 'The license already exists'
-          _log.error('license install failed')
-        end
-      end
-    end
-
-    def add_csproot_to_cms_group
-      response = @rest_call.get(@server + "/enterprises/#{@enterprise_id}/groups")
-      groups = JSON.parse(response.body)
-      @cms_group_id = nil
-
-      @cms_group_id = groups.detect { ['name'] == 'CMS Group' }.try(:[], 'ID')
-      _log.info("groups::#{groups}")
-
-      response = @rest_call.get(@server + "/enterprises/#{@enterprise_id}/users")
-      users = JSON.parse(response.body)
-      csproot_user_id = users.detect { ['userName'] == 'csproot' }.try(:[], 'ID')
-      _log.info("user::#{users}")
-
-      response = @rest_call.get(@server + "/enterprises/#{@cms_group_id}/users")
-      _log.info(response.body)
-      userlist = ["{#{csproot_user_id}}"]
-      @rest_call.put(@server + "/groups/#{@cms_group_id}/users", JSON.dump(userlist))
-      response = @rest_call.get(@server + "/groups/#{@cms_group_id}/users")
-      _log.info(response.body)
-    end
   end
 end
