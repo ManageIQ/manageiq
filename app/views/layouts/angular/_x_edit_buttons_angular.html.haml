@@ -33,10 +33,16 @@
                :class        => "btn btn-default btn-disabled",
                :alt          => _("Reset changes"),
                :title        => _("Reset changes"),
-               "ng-class"    => "{'btn-disabled': angularForm.$pristine}",
+               "ng-click"    => "disabledClick($event)",
+               :style        => "cursor:not-allowed",
+               "ng-show"     => "!newRecord && angularForm.$pristine")
+
+  = button_tag(_("Reset"),
+               :class        => "btn btn-default",
+               :alt          => _("Reset changes"),
+               :title        => _("Reset changes"),
                "ng-click"    => "resetClicked()",
-               "ng-disabled" => "angularForm.$pristine",
-               "ng-hide"     => "newRecord")
+               "ng-show"     => "!newRecord && !angularForm.$pristine")
 
   = button_tag(_("Cancel"),
                :class => "btn btn-default",
