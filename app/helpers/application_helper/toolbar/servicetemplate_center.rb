@@ -5,7 +5,6 @@ class ApplicationHelper::Toolbar::ServicetemplateCenter < ApplicationHelper::Too
       'fa fa-cog fa-lg',
       t = N_('Configuration'),
       t,
-      :onwhen => "1+",
       :items  => [
         button(
           :ab_group_new,
