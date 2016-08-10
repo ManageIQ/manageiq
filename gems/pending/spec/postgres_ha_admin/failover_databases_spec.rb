@@ -24,7 +24,7 @@ describe PostgresHaAdmin::FailoverDatabases do
     end
   end
 
-  describe "#update_failover_yml" do
+  context "accessing database" do
     after do
       @connection.exec("ROLLBACK")
       @connection.finish
@@ -57,17 +57,26 @@ describe PostgresHaAdmin::FailoverDatabases do
       SQL
     end
 
-    it "updates 'failover_databases.yml'" do
-      failover_databases.update_failover_yml(@connection)
+    describe "#update_failover_yml" do
+      it "updates 'failover_databases.yml'" do
+        failover_databases.update_failover_yml(@connection)
 
-      yml_hash = YAML.load_file(@yml_file)
-      expect(yml_hash).to eq initial_db_list
+        yml_hash = YAML.load_file(@yml_file)
+        expect(yml_hash).to eq initial_db_list
 
-      add_new_record
+        add_new_record
 
-      failover_databases.update_failover_yml(@connection)
-      yml_hash = YAML.load_file(@yml_file)
-      expect(yml_hash).to eq new_db_list
+        failover_databases.update_failover_yml(@connection)
+        yml_hash = YAML.load_file(@yml_file)
+        expect(yml_hash).to eq new_db_list
+      end
+    end
+
+    describe "#query_repmgr" do
+      it "returns list of all databases registered in repmgr" do
+        result = failover_databases.query_repmgr(@connection)
+        expect(result).to eq initial_db_list
+      end
     end
   end
 

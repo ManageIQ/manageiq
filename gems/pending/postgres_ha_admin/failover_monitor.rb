@@ -20,11 +20,11 @@ module PostgresHaAdmin
     end
 
     def monitor
-       connection = begin
-                      PG::Connection.open(@database_yml.pg_params_from_database_yml)
-                    rescue PG::Error
-                      nil
-                    end
+      connection = begin
+                     PG::Connection.open(@database_yml.pg_params_from_database_yml)
+                   rescue PG::Error
+                     nil
+                   end
       if connection
         @failover_db.update_failover_yml(connection)
         connection.finish

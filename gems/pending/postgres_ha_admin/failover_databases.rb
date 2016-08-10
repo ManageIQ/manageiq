@@ -24,13 +24,6 @@ module PostgresHaAdmin
       @logger.error(err.backtrace.join("\n"))
     end
 
-    private
-
-    def all_databases
-      return [] unless File.exist?(yml_file)
-      YAML.load_file(yml_file)
-    end
-
     def query_repmgr(connection)
       return [] unless table_exists?(connection, TABLE_NAME)
       result = []
@@ -45,6 +38,13 @@ module PostgresHaAdmin
       @logger.error("#{err.class}: #{err}")
       @logger.error(err.backtrace.join("\n"))
       result
+    end
+
+    private
+
+    def all_databases
+      return [] unless File.exist?(yml_file)
+      YAML.load_file(yml_file)
     end
 
     def table_exists?(connection, table_name)
