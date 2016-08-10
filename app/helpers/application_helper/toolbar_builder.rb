@@ -830,7 +830,7 @@ class ApplicationHelper::ToolbarBuilder
         return true unless @record.is_available?(:standby_guest)
       when "vm_guest_shutdown", "instance_guest_shutdown"
         return true unless @record.is_available?(:shutdown_guest)
-      when "vm_guest_restart", "instance_guest_restart"
+      when "vm_guest_restart"
         return true unless @record.is_available?(:reboot_guest)
       when "vm_reconfigure"
         return true unless @record.reconfigurable?

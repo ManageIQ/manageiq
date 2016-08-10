@@ -77,7 +77,9 @@ module ApplicationHelper::Toolbar::Cloud::InstanceOperationsButtonGroupMixin
             N_('Soft Reboot this Instance'),
             N_('Soft Reboot'),
             :image   => "power_reset",
-            :confirm => N_("Soft Reboot this Instance?")),
+            :confirm => N_("Soft Reboot this Instance?"),
+            :klass   => ApplicationHelper::Button::GenericFeatureButton,
+            :options => {:feature => :reboot_guest}),
           included_class.button(
             :instance_reset,
             nil,
