@@ -1,13 +1,7 @@
-- @angular_form = true
-
-%form.form-horizontal#form_div{"name"          => "angularForm",
-                               "ng-controller" => "serviceFormController",
-                               "ng-show"       => "afterGet"}
-  = render :partial => "layouts/flash_msg"
+%form.form-horizontal#form_div{"name" => "angularForm"}
   %div
     %div
       .form-group{"ng-class" => "{'has-error': angularForm.name.$invalid}"}
-  = render :partial => "layouts/flash_msg"
   %div
     %div
       .form-group{"ng-class" => "{'has-error': angularForm.name.$invalid}"}
@@ -18,11 +12,11 @@
                               "id"          => "name",
                               "name"        => "name",
                               "ng-model"    => "serviceModel.name",
-                              "maxlength"   => "#{MAX_NAME_LEN}",
-                              "miqrequired" => "",
+                              "maxlength"   => 50,
+                              "required"    => "",
                               "checkchange" => "",
                               "auto-focus"  => ""}
-          %span.help-block{"ng-show" => "angularForm.name.$error.miqrequired"}
+          %span.help-block{"ng-show" => "angularForm.name.$error.required"}
             = _("Required")
       .form-group{"ng-class" => "{'has-error': angularForm.description.$invalid}"}
         %label.col-md-2.control-label{"for" => "description"}
@@ -32,11 +26,14 @@
                               "id"          => "description",
                               "name"        => "description",
                               "ng-model"    => "serviceModel.description",
-                              "maxlength"  => "#{MAX_DESC_LEN}",
-                              "miqrequired" => "",
+                              "maxlength"   => 50,
+                              "required"    => "",
                               "checkchange" => ""}
-  = render :partial => "layouts/angular/x_edit_buttons_angular"
-
+          %span.help-block{"ng-show" => "angularForm.description.$error.required"}
+            = _("Required")
+  %paging-div-form-buttons{'paging_div_buttons_id'   => "angular_paging_div_buttons",
+                           'paging_div_buttons_type' => "Save"}
 :javascript
-  ManageIQ.angular.app.value('serviceFormId', '#{@service.id}');
-  miq_bootstrap('#form_div');
+  $('#pc_div_1').hide();
+  $('#form_buttons_div').html("<div id='angular_paging_div_buttons'></div>");
+  miqDimDiv('#svcs_tree_div', true);

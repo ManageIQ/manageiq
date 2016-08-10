@@ -1,4 +1,4 @@
-ManageIQ.angular.app.controller('serviceFormController', ['$http', '$scope', 'serviceFormId', 'miqService', function($http, $scope, serviceFormId, miqService) {
+ManageIQ.angular.app.controller('serviceFormController', ['$http', '$scope', 'serviceFormId', 'miqService', 'postService', 'serviceData', function($http, $scope, serviceFormId, miqService, postService, serviceData) {
     var init = function() {
       $scope.serviceModel = {
         name: '',
@@ -7,30 +7,17 @@ ManageIQ.angular.app.controller('serviceFormController', ['$http', '$scope', 'se
       $scope.formId    = serviceFormId;
       $scope.afterGet  = false;
       $scope.newRecord = false;
-      $scope.modelCopy = angular.copy( $scope.serviceModel );
       $scope.model     = "serviceModel";
       ManageIQ.angular.scope = $scope;
 
-      miqService.sparkleOn();
-      $http.get('/service/service_form_fields/' + serviceFormId).success(function(data) {
-        $scope.serviceModel.name        = data.name;
-        $scope.serviceModel.description = data.description;
-
-        $scope.afterGet = true;
-        $scope.modelCopy = angular.copy( $scope.serviceModel );
-        miqService.sparkleOff();
-      });
-    };
-
-    var serviceEditButtonClicked = function(buttonName, serializeFields) {
-      miqService.sparkleOn();
-      var url = '/service/service_edit/' + serviceFormId + '?button=' + buttonName;
-
-      miqService.miqAjaxButton(url, serializeFields);
+      $scope.serviceModel.name = serviceData.name;
+      $scope.serviceModel.description = serviceData.description;
+      $scope.modelCopy = angular.copy( $scope.serviceModel );
     };
 
     $scope.cancelClicked = function() {
-      serviceEditButtonClicked('cancel');
+      var msg = sprintf(__("Edit of Service %s was cancelled by the user"), $scope.serviceModel.description);
+      postService.cancelOperation('/service/explorer', msg);
       $scope.angularForm.$setPristine(true);
     };
 
@@ -42,7 +29,12 @@ ManageIQ.angular.app.controller('serviceFormController', ['$http', '$scope', 'se
     };
 
     $scope.saveClicked = function() {
-      serviceEditButtonClicked('save', true);
+      var successMsg = sprintf(__("Service %s was saved"), $scope.serviceModel.name);
+      postService.saveRecord('/api/services/' + serviceFormId,
+        '/service/explorer',
+        {name:         $scope.serviceModel.name,
+          description: $scope.serviceModel.description},
+        successMsg);
       $scope.angularForm.$setPristine(true);
     };
 
