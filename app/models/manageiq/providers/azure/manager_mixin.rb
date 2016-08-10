@@ -27,7 +27,7 @@ module ManageIQ::Providers::Azure::ManagerMixin
 
   module ClassMethods
     def raw_connect(client_id, client_key, azure_tenant_id, subscription, proxy_uri = nil)
-      proxy_uri ||= VMDB::Util.http_proxy_uri
+      proxy_uri ||= http_proxy_uri
 
       require 'azure-armrest'
 

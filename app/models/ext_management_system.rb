@@ -78,6 +78,7 @@ class ExtManagementSystem < ApplicationRecord
   include TenancyMixin
   include AvailabilityMixin
   include SupportsFeatureMixin
+  include ProviderProxyMixin
 
   after_destroy { |record| $log.info "MIQ(ExtManagementSystem.after_destroy) Removed EMS [#{record.name}] id [#{record.id}]" }
 
