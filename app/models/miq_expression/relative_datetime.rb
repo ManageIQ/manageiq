@@ -1,10 +1,4 @@
 class MiqExpression::RelativeDatetime
-  def self.beginning_or_end_of_hour(ts, mode)
-    ts_str = ts.iso8601
-    ts_str[14..18] = mode == "end" ? "59:59.999999" : "00:00"
-    Time.parse(ts_str)
-  end
-
   def self.relative?(value)
     v = value.downcase
     v.starts_with?("this", "last") || v.ends_with?("ago") || ["today", "yesterday", "now"].include?(v)
@@ -36,9 +30,7 @@ class MiqExpression::RelativeDatetime
       value, interval, ago = rt.split
       interval = interval.pluralize
 
-      if interval == "hours"
-        beginning_or_end_of_hour(value.to_i.hours.ago.in_time_zone(tz), mode)
-      elsif interval == "quarters"
+      if interval == "quarters"
         ts = Time.now.in_time_zone(tz).beginning_of_quarter
         (ts - (value.to_i * 3.months)).send("#{mode}_of_quarter")
       else
@@ -49,7 +41,8 @@ class MiqExpression::RelativeDatetime
     elsif rt == "yesterday"
       1.day.ago.in_time_zone(tz).send("#{mode}_of_day")
     elsif rt == "now"
-      beginning_or_end_of_hour(Time.now.in_time_zone(tz), mode)
+      t = Time.now.in_time_zone(tz)
+      mode == "beginning" ? t.beginning_of_hour : t.end_of_hour
     else
       # Assume it's an absolute date or time
       value_is_date = !rel_time.include?(":")
