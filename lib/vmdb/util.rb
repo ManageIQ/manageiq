@@ -1,7 +1,7 @@
 module VMDB
   module Util
-    def self.http_proxy_uri
-      proxy = VMDB::Config.new("vmdb").config[:http_proxy] || {}
+    def self.http_proxy_uri(proxy_config = :http_proxy)
+      proxy = VMDB::Config.new("vmdb").config[proxy_config] || {}
       return nil unless proxy[:host]
       proxy = proxy.dup
 
