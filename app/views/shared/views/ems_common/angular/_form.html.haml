@@ -140,7 +140,7 @@
                             "required"    => true,
                             "checkchange" => ""}
 
-    .form-group{"ng-class" => "{'has-error': angularForm.api_version.$invalid}", "ng-if" => "emsCommonModel.emstype == 'nuage'"}
+    .form-group{"ng-class" => "{'has-error': angularForm.api_version.$invalid}", "ng-if" => "emsCommonModel.emstype == 'nuage_network'"}
       %label.col-md-2.control-label{"for" => "textInput-markup"}
         = _("API Version")
       .col-md-8
