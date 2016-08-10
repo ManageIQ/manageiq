@@ -5241,6 +5241,10 @@
       :description: Add Blueprint
       :feature_type: admin
       :identifier: blueprint_new
+    - :name: Edit
+      :description: Edit Blueprint
+      :feature_type: admin
+      :identifier: blueprint_edit
     - :name: Remove
       :description: Remove Blueprint
       :feature_type: admin
