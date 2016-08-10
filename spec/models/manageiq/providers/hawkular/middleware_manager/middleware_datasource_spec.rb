@@ -82,18 +82,19 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
                      :allow_unused_http_interactions => true,
                      :decode_compressed_response     => true) do # , :record => :new_episodes) do
       capture = ds.first_and_last_capture
+      expect(capture.any?).to be true
       expect(capture[0]).to be < capture[1]
     end
   end
 
   it "#supported_metrics" do
     expected_metrics = {
-      "Available Count"       => "mw_ds_available_count",
-      "In Use Count"          => "mw_ds_in_use_count",
-      "Timed Out"             => "mw_ds_timed_out",
-      "Average Get Time"      => "mw_ds_average_get_time",
-      "Average Creation Time" => "mw_ds_average_creation_time",
-      "Max Wait Time"         => "mw_ds_max_wait_time"
+      "Datasource Pool Metrics~Available Count"       => "mw_ds_available_count",
+      "Datasource Pool Metrics~In Use Count"          => "mw_ds_in_use_count",
+      "Datasource Pool Metrics~Timed Out"             => "mw_ds_timed_out",
+      "Datasource Pool Metrics~Average Get Time"      => "mw_ds_average_get_time",
+      "Datasource Pool Metrics~Average Creation Time" => "mw_ds_average_creation_time",
+      "Datasource Pool Metrics~Max Wait Time"         => "mw_ds_max_wait_time"
     }.freeze
     supported_metrics = MiddlewareDatasource.supported_metrics
     expected_metrics.each { |k, v| expect(supported_metrics[k]).to eq(v) }
