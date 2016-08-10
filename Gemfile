@@ -20,7 +20,7 @@ gem "color",                          "~>1.8"
 gem "dalli",                          "~>2.7.4",       :require => false
 gem "default_value_for",              "~>3.0.2"
 gem "elif",                           "=0.1.0",        :require => false
-gem "fast_gettext",                   "~>1.1.0"
+gem "fast_gettext",                   "~>1.2.0"
 gem "fog-google",                     "~>0.3.0",       :require => false
 gem "fog-vcloud-director",            "~>0.1.3",       :require => false
 gem "gettext_i18n_rails",             "~>1.7.2"
