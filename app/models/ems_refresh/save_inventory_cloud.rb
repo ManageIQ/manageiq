@@ -166,12 +166,12 @@ module EmsRefresh::SaveInventoryCloud
 
     hashes.each do |h|
       h[:ems_id]               = ems.id
-      h[:cloud_tenant_id]      = h.fetch_path(:tenant, :id)
+      h[:cloud_tenant_id]      = h.fetch_path(:cloud_tenant, :id)
       h[:availability_zone_id] = h.fetch_path(:availability_zone, :id)
       # Defer setting :cloud_volume_snapshot_id until after snapshots are saved.
     end
 
-    save_inventory_multi(ems.cloud_volumes, hashes, deletes, [:ems_ref], nil, [:tenant, :availability_zone, :base_snapshot])
+    save_inventory_multi(ems.cloud_volumes, hashes, deletes, [:ems_ref], nil, [:cloud_tenant, :availability_zone, :base_snapshot])
     store_ids_for_new_records(ems.cloud_volumes, hashes, :ems_ref)
   end
 
@@ -187,11 +187,11 @@ module EmsRefresh::SaveInventoryCloud
 
     hashes.each do |h|
       h[:ems_id]          = ems.id
-      h[:cloud_tenant_id] = h.fetch_path(:tenant, :id)
+      h[:cloud_tenant_id] = h.fetch_path(:cloud_tenant, :id)
       h[:cloud_volume_id] = h.fetch_path(:volume, :id)
     end
 
-    save_inventory_multi(ems.cloud_volume_snapshots, hashes, deletes, [:ems_ref], nil, [:tenant, :volume])
+    save_inventory_multi(ems.cloud_volume_snapshots, hashes, deletes, [:ems_ref], nil, [:cloud_tenant, :volume])
     store_ids_for_new_records(ems.cloud_volume_snapshots, hashes, :ems_ref)
   end
 
@@ -234,10 +234,10 @@ module EmsRefresh::SaveInventoryCloud
 
     hashes.each do |h|
       h[:ems_id]          = ems.id
-      h[:cloud_tenant_id] = h.fetch_path(:tenant, :id)
+      h[:cloud_tenant_id] = h.fetch_path(:cloud_tenant, :id)
     end
 
-    save_inventory_multi(ems.cloud_object_store_containers, hashes, deletes, [:ems_ref], nil, :tenant)
+    save_inventory_multi(ems.cloud_object_store_containers, hashes, deletes, [:ems_ref], nil, :cloud_tenant)
     store_ids_for_new_records(ems.cloud_object_store_containers, hashes, :ems_ref)
   end
 
@@ -253,11 +253,11 @@ module EmsRefresh::SaveInventoryCloud
 
     hashes.each do |h|
       h[:ems_id]                          = ems.id
-      h[:cloud_tenant_id]                 = h.fetch_path(:tenant, :id)
+      h[:cloud_tenant_id]                 = h.fetch_path(:cloud_tenant, :id)
       h[:cloud_object_store_container_id] = h.fetch_path(:container, :id)
     end
 
-    save_inventory_multi(ems.cloud_object_store_objects, hashes, deletes, [:ems_ref], nil, [:tenant, :container])
+    save_inventory_multi(ems.cloud_object_store_objects, hashes, deletes, [:ems_ref], nil, [:cloud_tenant, :container])
     store_ids_for_new_records(ems.cloud_object_store_objects, hashes, :ems_ref)
   end
 

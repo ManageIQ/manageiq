@@ -199,6 +199,19 @@ module ManageIQ::Providers
       end if @data[:cloud_volumes]
     end
 
+    def parse_key_pair(kp)
+      name = uid = kp.name
+
+      new_result = {
+        :type         => self.class.key_pair_type,
+        :name         => name,
+        :fingerprint  => kp.fingerprint,
+        :cloud_tenant => @data_index.fetch_path(:cloud_tenants, kp.tenant_id),
+      }
+
+      return uid, new_result
+    end
+
     def parse_flavor(flavor)
       uid = flavor.id
 
@@ -211,6 +224,7 @@ module ManageIQ::Providers
         :memory               => flavor.ram.megabytes,
         :root_disk_size       => flavor.disk.to_i.gigabytes,
         :swap_disk_size       => flavor.swap.to_i.megabytes,
+        :cloud_tenant         => @data_index.fetch_path(:cloud_tenants, flavor.tenant_id),
         :ephemeral_disk_size  => flavor.ephemeral.nil? ? nil : flavor.ephemeral.to_i.gigabytes,
         :ephemeral_disk_count => if flavor.ephemeral.nil?
                                    nil
@@ -319,7 +333,7 @@ module ManageIQ::Providers
         :volume_type       => volume.volume_type,
         :snapshot_uid      => volume.snapshot_id,
         :size              => volume.size.to_i.gigabytes,
-        :tenant            => @data_index.fetch_path(:cloud_tenants, volume.tenant_id),
+        :cloud_tenant      => @data_index.fetch_path(:cloud_tenants, volume.tenant_id),
         :availability_zone => @data_index.fetch_path(:availability_zones, "volume-" + volume.availability_zone || "null_az"),
       }
 
@@ -380,7 +394,7 @@ module ManageIQ::Providers
         # Supporting both Cinder v1 and Cinder v2
         :description   => snap['display_description'] || snap['description'],
         :size          => snap['size'].to_i.gigabytes,
-        :tenant        => @data_index.fetch_path(:cloud_tenants, snap['os-extended-snapshot-attributes:project_id']),
+        :cloud_tenant  => @data_index.fetch_path(:cloud_tenants, snap['os-extended-snapshot-attributes:project_id']),
         :volume        => @data_index.fetch_path(:cloud_volumes, snap['volume_id'])
       }
       return uid, new_result
@@ -499,12 +513,13 @@ module ManageIQ::Providers
       uid = vnfd.id
 
       new_result = {
-        :type        => "OrchestrationTemplateVnfd",
-        :ems_ref     => uid,
-        :name        => vnfd.name.blank? ? uid : vnfd.name,
-        :description => vnfd.description,
-        :content     => vnfd.vnf_attributes["vnfd"],
-        :orderable   => true
+        :type         => "OrchestrationTemplateVnfd",
+        :ems_ref      => uid,
+        :name         => vnfd.name.blank? ? uid : vnfd.name,
+        :description  => vnfd.description,
+        :content      => vnfd.vnf_attributes["vnfd"],
+        :orderable    => true,
+        :cloud_tenant => @data_index.fetch_path(:cloud_tenants, vnfd.tenant_id)
       }
       return uid, new_result
     end
