@@ -9,9 +9,9 @@ include Openstack::HelperMethods
 
 def usage(s)
   $stderr.puts(s)
-  $stderr.puts("Usage: bundle exec rails rspec/tools/environment_builders/openstack_environments.rb --load")
+  $stderr.puts("Usage: bundle exec rails r rspec/tools/environment_builders/openstack_environments.rb --load")
   $stderr.puts("- loads credentials for enviroments.yaml to all refresh tests and VCRs")
-  $stderr.puts("Usage: bundle exec rails rspec/tools/environment_builders/openstack_environments.rb --obfuscate")
+  $stderr.puts("Usage: bundle exec rails r rspec/tools/environment_builders/openstack_environments.rb --obfuscate")
   $stderr.puts("- obfuscates all credentials in tests and VCRs")
   exit(2)
 end
