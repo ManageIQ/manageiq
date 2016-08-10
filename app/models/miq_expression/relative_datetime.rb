@@ -30,10 +30,7 @@ class MiqExpression::RelativeDatetime
       value, interval, ago = rt.split
       interval = interval.pluralize
 
-      if interval == "hours"
-        t = value.to_i.hours.ago.in_time_zone(tz)
-        mode == "beginning" ? t.beginning_of_hour : t.end_of_hour
-      elsif interval == "quarters"
+      if interval == "quarters"
         ts = Time.now.in_time_zone(tz).beginning_of_quarter
         (ts - (value.to_i * 3.months)).send("#{mode}_of_quarter")
       else
