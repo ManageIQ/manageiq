@@ -1,5 +1,5 @@
 describe "CatalogBundleInitialization Automate Method" do
-  include ServiceTemplateHelper
+  include Spec::Support::ServiceTemplateHelper
 
   before do
     @allowed_service_templates = %w(top vm_service1 vm_service2)

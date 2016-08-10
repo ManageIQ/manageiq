@@ -1,7 +1,7 @@
 include QuotaHelper
 
 describe "Quota Validation" do
-  include ServiceTemplateHelper
+  include Spec::Support::ServiceTemplateHelper
 
   def run_automate_method(attrs)
     MiqAeEngine.instantiate("/ManageIQ/system/request/Call_Instance?namespace=System/CommonMethods&" \
