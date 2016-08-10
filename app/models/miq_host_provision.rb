@@ -13,12 +13,17 @@ class MiqHostProvision < MiqRequestTask
   alias_attribute :miq_host_provision_request, :miq_request
   alias_attribute :host,                       :source
 
-  validates_inclusion_of :request_type, :in => %w( host_pxe_install ),                           :message => "should be 'host_pxe_install'"
-  validates_inclusion_of :state,        :in => %w( pending queued active provisioned finished ), :message => "should be pending, queued, active, provisioned or finished"
+  validates :request_type,
+            :inclusion => { :in      => %w(host_pxe_install),
+                            :message => "should be 'host_pxe_install'"
+                          }
+  validates :state,
+            :inclusion => { :in      => %w(pending queued active provisioned finished),
+                            :message => 'should be pending, queued, active, provisioned or finished' }
 
   virtual_column :provision_type, :type => :string
 
-  AUTOMATE_DRIVES   = true
+  AUTOMATE_DRIVES = true
 
   def self.get_description(prov_obj)
     prov_obj.description
