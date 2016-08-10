@@ -112,17 +112,50 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
     :bearer
   end
 
-  def scan_job_create(entity_class, entity_id)
+  def scan_job_create(entity)
+    check_policy_prevent(:request_containerimage_scan, entity, :raw_scan_job_create, entity)
+  end
+
+  def raw_scan_job_create(entity)
     Job.create_job(
       "ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job",
       :name            => "Container image analysis",
-      :target_class    => entity_class,
-      :target_id       => entity_id,
+      :target_class    => entity.class.name,
+      :target_id       => entity.id,
       :zone            => my_zone,
       :miq_server_host => MiqServer.my_server.hostname,
       :miq_server_guid => MiqServer.my_server.guid,
       :ems_id          => id,
     )
+  end
+
+  # policy_event: the event sent to automate for policy resolution
+  # cb_method:    the MiqQueue callback method along with the parameters that is called
+  #               when automate process is done and the event is not prevented to proceed by policy
+  def check_policy_prevent(policy_event, event_target, *cb_method)
+    cb = {
+      :class_name  => self.class.to_s,
+      :instance_id => id,
+      :method_name => :check_policy_prevent_callback,
+      :args        => [*cb_method],
+      :server_guid => MiqServer.my_guid
+    }
+    enforce_policy(event_target, policy_event, {}, { :miq_callback => cb }) unless policy_event.nil?
+  end
+
+  def check_policy_prevent_callback(*action, _status, _message, result)
+    prevented = false
+    if result.kind_of?(MiqAeEngine::MiqAeWorkspaceRuntime)
+
+      event = result.get_obj_from_path("/")['event_stream']
+      data  = event.attributes["full_data"]
+      prevented = data.fetch_path(:policy, :prevented) if data
+    end
+    prevented ? _log.info(event.attributes["message"].to_s) : send(*action)
+  end
+
+  def enforce_policy(event_target, event, inputs = {}, options = {})
+    MiqEvent.raise_evm_event(event_target, event, inputs, options)
   end
 
   SCAN_CONTENT_PATH = '/api/v1/content'

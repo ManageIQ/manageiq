@@ -55,7 +55,7 @@ class ContainerImage < ApplicationRecord
   end
 
   def scan
-    ext_management_system.scan_job_create(self.class.name, id)
+    ext_management_system.scan_job_create(self)
   end
 
   def perform_metadata_scan(ost)
