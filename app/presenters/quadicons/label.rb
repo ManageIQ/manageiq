@@ -15,9 +15,9 @@ module Quadicons
       end
     end
 
-    def render_label
+    def render_label(builder = LinkBuilders::Base)
       if context.render_link?
-        link_to(label_content, Quadicons::UrlBuilder.new(record, context).url)
+        link_to(label_content, builder.new(record, context).url)
       else
         label_content
       end

@@ -41,14 +41,11 @@ module Quadicons
       content_tag(:div, options, &block)
     end
 
-    def quadicon_button_tag(options = {}, &block)
+    def quadrant_group_tag(options = {}, &block)
       options = { :class => "quadrant-group" }.merge!(options)
 
       if context.render_link?
-        options.reverse_merge!(url_options)
-
-        url = url_builder.new(record, context).url
-        concat(link_to(url, options, &block))
+        concat(link_builder.new(record, context).link_to(options, &block))
       else
         content_tag(:div, options, &block)
       end
@@ -86,7 +83,7 @@ module Quadicons
 
     def render_full
       quadicon_tag do
-        quadicon_button_tag do
+        quadrant_group_tag do
           render_quadrants
           render_badge
         end
@@ -100,10 +97,6 @@ module Quadicons
         render_single_quadrant
         render_label
       end
-    end
-
-    def url_options
-      {}
     end
 
     private
@@ -138,8 +131,8 @@ module Quadicons
       record.class.to_s.demodulize.underscore
     end
 
-    def url_builder
-      UrlBuilder
+    def link_builder
+      LinkBuilders::Base
     end
   end
 end

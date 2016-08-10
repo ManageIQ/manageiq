@@ -12,28 +12,6 @@ module Quadicons
       context.fetch_settings(:quadicons, record_class).nil?
     end
 
-    def url_options
-      options = {
-        :data => {
-          :miq_sparkle_on  => "",
-          :miq_sparkle_off => ""
-        }
-      }
-
-      unless context.service_ctrlr_and_vm_view_db?
-        options[:remote] = true
-        options[:data][:method] = :post
-      end
-
-      if context.render_for_policy_sim?
-        options[:data][:toggle] = "tooltip"
-        options[:data][:placement] = "top"
-        options[:title] = _("Show policy details for %{name}") % {:name => record.name}
-      end
-
-      options
-    end
-
     def record_class
       record.class.base_model.name.underscore.to_sym
     end
@@ -46,8 +24,8 @@ module Quadicons
 
     private
 
-    def url_builder
-      VmOrTemplateUrlBuilder
+    def link_builder
+      LinkBuilders::VmOrTemplateLinkBuilder
     end
 
     def single_list

@@ -1,10 +1,27 @@
-describe Quadicons::VmOrTemplateUrlBuilder, :type => :helper do
+require "presenters/quadicons/quadicon_shared_specs"
+
+RSpec.shared_examples :has_remote_link do
+  it 'builds a remote link' do
+    expect(subject).to have_selector("a[data-remote]")
+    expect(subject).to have_selector("a[data-method='post']")
+  end
+end
+
+RSpec.shared_examples :has_sparkle_link do
+  it 'builds a sparkle link' do
+    expect(subject).to have_selector("a[data-miq-sparkle-on]")
+    expect(subject).to have_selector("a[data-miq-sparkle-off]")
+  end
+end
+
+describe Quadicons::LinkBuilders::VmOrTemplateLinkBuilder, :type => :helper do
   let(:record) { FactoryGirl.create(:vm_redhat) }
   let(:kontext) { Quadicons::Context.new(helper) }
+  let(:instance) { Quadicons::LinkBuilders::VmOrTemplateLinkBuilder.new(record, kontext) }
 
-  describe "vm_link_attributes" do
+  describe "finding url based on role" do
     subject do
-      Quadicons::VmOrTemplateUrlBuilder.new(record, kontext).vm_link_attributes
+      Quadicons::LinkBuilders::VmOrTemplateLinkBuilder.new(record, kontext).vm_link_attributes
     end
 
     before do
@@ -30,7 +47,7 @@ describe Quadicons::VmOrTemplateUrlBuilder, :type => :helper do
 
   describe 'url' do
     subject(:url) do
-      Quadicons::VmOrTemplateUrlBuilder.new(record, kontext).url
+      Quadicons::LinkBuilders::VmOrTemplateLinkBuilder.new(record, kontext).url
     end
 
     context "when not embedded" do
@@ -41,6 +58,10 @@ describe Quadicons::VmOrTemplateUrlBuilder, :type => :helper do
       context "when in explorer view" do
         before do
           kontext.explorer = true
+        end
+
+        it 'has a sparkle link' do
+
         end
 
         context "when service controller and Vm view" do
@@ -125,6 +146,67 @@ describe Quadicons::VmOrTemplateUrlBuilder, :type => :helper do
           end
 
           expect(url).to match(/vm_infra/)
+        end
+      end
+    end
+  end
+
+  describe "building link tag" do
+    subject(:link) do
+      instance.link_to(record.name)
+    end
+
+    context "when not embedded" do
+      before do
+        kontext.embedded = false
+      end
+
+      context "when in explorer view" do
+        before do
+          kontext.explorer = true
+        end
+
+        include_examples :has_sparkle_link
+
+        context "when service controller and Vm view" do
+          before do
+            kontext.view = FactoryGirl.build(:miq_report)
+            kontext.controller = "service"
+          end
+
+          it 'does not build a remote link' do
+            expect(link).not_to have_selector("a[data-remote]")
+            expect(link).not_to have_selector("a[data-method='post']")
+          end
+        end
+
+        context "when not in service controller" do
+          include_examples :has_remote_link
+        end
+      end
+    end
+
+    context "when embedded" do
+      before do
+        kontext.embedded = true
+        kontext.showlinks = false
+        kontext.explorer = false
+      end
+
+      context "when @policy_sim" do
+        before do
+          kontext.policy_sim = true
+          kontext.policies = {:foo => :bar}
+          allow(record).to receive(:passes_profiles?) { true }
+        end
+
+        context "and when @edit[:explorer]" do
+          before do
+            kontext.edit = {:explorer => true}
+          end
+
+          include_examples :has_remote_link
+          include_examples :has_sparkle_link
         end
       end
     end

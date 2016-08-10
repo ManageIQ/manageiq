@@ -38,13 +38,7 @@ describe Quadicons::VmOrTemplateQuadicon, :type => :helper do
       expect(quadicon.render).to match(/quadicon-label/)
     end
 
-    # when context settings[:quadicons] includes item base class name
     context "render all quadrants" do
-      # a: guest_os
-      # b: guest_state
-      # c: host_vendor
-      # d: compliance / snapshots
-
       it 'knows to render in full mode' do
         expect(quadicon.render_full?).to be true
       end
@@ -77,8 +71,6 @@ describe Quadicons::VmOrTemplateQuadicon, :type => :helper do
 
         context "and context policy_sim is truthy and context policies is not empty" do
           before do
-            # @policy_sim = true
-            # session[:policies] = {:foo => :bar}
             kontext.policy_sim = true
             kontext.policies = { :foo => :bar }
             allow(record).to receive(:passes_profiles?) { true }
@@ -158,35 +150,6 @@ describe Quadicons::VmOrTemplateQuadicon, :type => :helper do
           kontext.embedded = false
         end
 
-        context "when in explorer view" do
-          before do
-            kontext.explorer = true
-          end
-
-          include_examples :has_sparkle_link
-
-          context "when service controller and Vm view" do
-            before do
-              kontext.view = FactoryGirl.build(:miq_report)
-              kontext.controller = "service"
-            end
-
-            it 'does not build a remote link' do
-              expect(quadicon.render).not_to have_selector("a[data-remote]")
-              expect(quadicon.render).not_to have_selector("a[data-method='post']")
-            end
-          end
-
-          context "when not in service controller" do
-            it 'links to x_show' do
-              cid = ApplicationRecord.compress_id(record.id)
-              expect(quadicon.render).to have_selector("a[href*='x_show/#{cid}']")
-            end
-
-            include_examples :has_remote_link
-          end
-        end
-
         context "when not in explorer view" do
           before do
             kontext.explorer = false
@@ -210,15 +173,6 @@ describe Quadicons::VmOrTemplateQuadicon, :type => :helper do
             kontext.policy_sim = true
             kontext.policies = {:foo => :bar}
             allow(record).to receive(:passes_profiles?) { true }
-          end
-
-          context "and when @edit[:explorer]" do
-            before do
-              kontext.edit = {:explorer => true}
-            end
-
-            include_examples :has_remote_link
-            include_examples :has_sparkle_link
           end
 
           context "and when @edit or @edit[:explorer] is not present" do
