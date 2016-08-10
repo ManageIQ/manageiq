@@ -781,6 +781,10 @@ module EmsCommon
     # OSP8 doesn't support SSL for AMQP
     [[_('Non-SSL'), 'non-ssl']]
   end
+  
+  def retrieve_nuage_api_versions
+    [[_('v3_2'), 'v4_0']]
+  end
 
   # Get variables from edit form
   def get_form_vars
