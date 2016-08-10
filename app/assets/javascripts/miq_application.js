@@ -1698,3 +1698,12 @@ function miqScrollToSelected(div_name) {
     $('#' + div_name).scrollTop(rowpos.top);
   }
 }
+
+function miqUncompressedId(id) {
+  if (id.match(/r/)) {
+    return sprintf("%s%012d", id.split('r')[0], id.split('r')[1]);
+  }
+  return id;
+}
+
+function queryParam(name) { return QS(window.location.href).get(name); }

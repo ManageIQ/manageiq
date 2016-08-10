@@ -5,15 +5,17 @@ ManageIQ.angular.app.directive('checkchange', ['miqService', function(miqService
       scope['formchange_' + ctrl.$name] = elem[0].name
       scope['elemType_' + ctrl.$name] = attr.type;
 
-      scope.$watch(attr.ngModel, function() {
-        if (scope['elemType_' + ctrl.$name] == "date" || _.isDate(ctrl.$modelValue)) {
-          viewModelDateComparison(scope, ctrl);
-        } else {
-          viewModelComparison(scope, ctrl);
-        }
-        if (scope.angularForm.$pristine)
-          checkForOverallFormPristinity(scope, ctrl);
-      });
+      if (angular.isDefined(scope.modelCopy)) {
+        scope.$watch(attr.ngModel, function () {
+          if (scope['elemType_' + ctrl.$name] == "date" || _.isDate(ctrl.$modelValue)) {
+            viewModelDateComparison(scope, ctrl);
+          } else {
+            viewModelComparison(scope, ctrl);
+          }
+          if (scope.angularForm.$pristine)
+            checkForOverallFormPristinity(scope, ctrl);
+        });
+      }
 
       ctrl.$parsers.push(function(value) {
         miqService.miqFlashClear();

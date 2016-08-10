@@ -891,6 +891,8 @@ Vmdb::Application.routes.draw do
 
     :ems_cloud                => {
       :get  => %w(
+        arbitration_profiles
+        arbitration_profile_edit
         dialog_load
         discover
         download_data
@@ -901,6 +903,8 @@ Vmdb::Application.routes.draw do
       ) +
                compare_get,
       :post => %w(
+        arbitration_profiles
+        arbitration_profile_edit
         button
         create
         dynamic_checkbox_refresh
@@ -2178,6 +2182,7 @@ Vmdb::Application.routes.draw do
     :service                  => {
       :get  => %w(
         download_data
+        edit
         explorer
         retirement_info
         reconfigure_form_fields

@@ -857,8 +857,25 @@ module ApplicationController::CiProcessing
       # Came in from outside, use RJS to redraw gtl partial
       if params[:ppsetting] || params[:entry] || params[:sort_choice]
         replace_gtl_main_div
+      elsif request.xml_http_request?
+        # reload toolbars - AJAX request
+        c_tb = build_toolbar(center_toolbar_filename)
+        render :update do |page|
+          page << javascript_prologue
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          page.replace_html("main_div", :partial => "shared/views/ems_common/show") # Replace main div area contents
+          page << javascript_pf_toolbar_reload('center_tb', c_tb)
+          page.replace_html("paging_div",
+                            :partial => 'layouts/pagingcontrols',
+                            :locals  => {:pages      => @pages,
+                                         :action_url => @lastaction,
+                                         :db         => @view.db,
+                                         :headers    => @view.headers})
+        end
+      elsif controller_name == "ems_cloud"
+        render :template => "shared/views/ems_common/show"
       else
-        render :action => 'show'
+        render :action => "show"
       end
     end
   end
@@ -869,8 +886,19 @@ module ApplicationController::CiProcessing
     if @explorer
       @refresh_partial = "layouts/#{@showtype}"
       replace_right_cell
+    elsif request.xml_http_request?
+      # reload toolbars - AJAX request
+      c_tb = build_toolbar(center_toolbar_filename)
+      render :update do |page|
+        page << javascript_prologue
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace_html("main_div", :partial => "shared/views/ems_common/show") # Replace the main div area contents
+        page << javascript_pf_toolbar_reload('center_tb', c_tb)
+      end
+    elsif controller_name == "ems_cloud"
+      render :template => "shared/views/ems_common/show"
     else
-      render :action => 'show'
+      render :action => "show"
     end
   end
 
@@ -941,6 +969,8 @@ module ApplicationController::CiProcessing
       @miq_template = @record = identify_record(params[:id], MiqTemplate)
     elsif ["vm_infra", "vm_cloud", "vm", "vm_or_template"].include?(db)
       @vm = @record = identify_record(params[:id], VmOrTemplate)
+    elsif db == "ems_cloud"
+      @ems = @record = identify_record(params[:id], EmsCloud)
     end
   end
 

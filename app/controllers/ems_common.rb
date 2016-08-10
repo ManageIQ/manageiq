@@ -422,6 +422,9 @@ module EmsCommon
       @refresh_div = "main_div" # Default div for button.rjs to refresh
       redirect_to :action => "new" if params[:pressed] == "new"
       deleteemss if params[:pressed] == "#{@table_name}_delete"
+      arbitration_profile_edit if params[:pressed] == "arbitration_profile_new"
+      arbitration_profile_edit if params[:pressed] == "arbitration_profile_edit"
+      arbitration_profile_delete if params[:pressed] == "arbitration_profile_delete"
       refreshemss if params[:pressed] == "#{@table_name}_refresh"
       #     scanemss if params[:pressed] == "scan"
       tag(model) if params[:pressed] == "#{@table_name}_tag"
@@ -478,23 +481,88 @@ module EmsCommon
 
     if !@flash_array.nil? && params[:pressed] == "#{@table_name}_delete" && @single_delete
       javascript_redirect :action => 'show_list', :flash_msg => @flash_array[0][:message] # redirect to build the retire screen
-    elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
+    elsif params[:pressed].ends_with?("_edit") || ["arbitration_profile_new", "#{pfx}_miq_request_new", "#{pfx}_clone",
                                                    "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
       render_or_redirect_partial(pfx)
     else
       if @refresh_div == "main_div" && @lastaction == "show_list"
         replace_gtl_main_div
       else
-        render_flash
+        render_flash unless performed?
       end
     end
+  end
+
+  def arbitration_profile_edit
+    assert_privileges("arbitration_profile_edit")
+    id = params[:show] ? params[:show] : find_checked_items.first
+    # rubocop:disable LineLength
+    @arbitration_profile = id ? find_by_id_filtered(ArbitrationProfile, from_cid(id)) : ArbitrationProfile.new
+    @refresh_partial = "arbitration_profile_edit"
+    @redirect_id = @arbitration_profile.try(:id) || nil
+    @in_a_form = true
+    @title = _("Arbitration Profiles")
   end
 
   def provider_documentation_url
     "http://manageiq.org/documentation/getting-started/#adding-a-provider"
   end
 
+  def arbitration_profiles
+    @db = params[:db] ? params[:db] : request.parameters[:controller]
+    get_record(@db)
+    return if record_no_longer_exists?(@record)
+    @lastaction = "arbitration_profiles"
+    params[:show].nil? ? fetch_arbitration_profiles_list : fetch_arbitration_profile_item
+  end
+
   private ############################
+
+  def fetch_arbitration_profiles_list
+    generate_breadcrumb(@record.name, "/#{@db}/show/#{@record.id}", true)
+    generate_breadcrumb(_("%{name} (Arbitration Profiles)") % {:name => @record.name}, "/#{@db}/arbitration_profiles/#{@record.id}")
+    @listicon = "arbitration_profile"
+    @no_checkboxes = false
+    show_details(ArbitrationProfile)
+  end
+
+  def fetch_arbitration_profile_item
+    @item = ArbitrationProfile.find_by_id(from_cid(params[:show]))
+    generate_breadcrumb(_("%{name} (Arbitration Profiles)") % {:name => @record.name}, "/#{@db}/arbitration_profiles/#{@record.id}?page=#{@current_page}")
+    generate_breadcrumb(@item.name, "/#{@db}/show/#{@record.id}?show=#{@item.id}")
+    @view = get_db_view(ArbitrationProfile) # Instantiate the MIQ Report view object
+    show_item
+  end
+
+  def arbitration_profile_delete
+    assert_privileges("arbitration_profile_delete")
+    profiles = profiles_to_delete
+    process_elements(profiles, ArbitrationProfile, "destroy") unless profiles.empty?
+    add_flash(_("Delete initiated for %{count_model} from the Database") %
+                {:count_model => pluralize(profiles.length,
+                                           ui_lookup(:table => "ArbitrationProfile"))}) if @flash_array.nil?
+    params.delete(:show) unless flash_errors?
+    @_params[:db] = "ems_cloud"
+    arbitration_profiles
+  end
+
+  def profiles_to_delete
+    if params[:miq_grid_checks] # showing a list
+      profiles = find_checked_items
+      add_flash(_("No %{record} were selected for deletion") %
+                  {:record => ui_lookup(:table => "ArbitrationProfile")}, :error) if profiles.empty?
+    elsif params[:show].nil? || ArbitrationProfile.find_by_id(from_cid(params[:show])).nil? # showing 1 item
+      profiles = []
+      add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => "ArbitrationProfile")}, :error)
+    else # showing 1 item
+      profiles.push(from_cid(params[:show]))
+    end
+    profiles
+  end
+
+  def generate_breadcrumb(name, url, replace = false)
+    drop_breadcrumb({:name => name, :url => url}, replace)
+  end
 
   def set_verify_status
     edit_new = @edit[:new]
