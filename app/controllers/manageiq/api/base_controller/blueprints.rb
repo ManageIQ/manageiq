@@ -23,23 +23,18 @@ module ManageIQ
         private
 
         def create_bundle(blueprint, bundle)
-          options = {}
-          if bundle["service_catalog"]
-            options[:service_catalog] = ServiceTemplateCatalog.find(parse_id(bundle["service_catalog"], :service_catalogs))
-          end
-          if bundle["service_dialog"]
-            options[:service_dialog] = Dialog.find(parse_id(bundle["service_dialog"], :service_dialogs))
-          end
-          options[:service_templates] = bundle.fetch("service_templates", []).collect do |st|
-            ServiceTemplate.find(parse_id(st, :service_templates))
-          end
-          options[:entry_points] = bundle["automate_entrypoints"] if bundle["automate_entrypoints"]
-          blueprint.create_bundle(options)
+          blueprint.create_bundle(deserialize_bundle(bundle))
         rescue => e
           raise BadRequestError, "Couldn't create the bundle - #{e}"
         end
 
         def update_bundle(blueprint, bundle)
+          blueprint.update_bundle(deserialize_bundle(bundle))
+        rescue => e
+          raise BadRequestError, "Couldn't update the bundle - #{e}"
+        end
+
+        def deserialize_bundle(bundle)
           options = {}
           if bundle["service_catalog"]
             options[:service_catalog] = ServiceTemplateCatalog.find(parse_id(bundle["service_catalog"], :service_catalogs))
@@ -51,9 +46,7 @@ module ManageIQ
             ServiceTemplate.find(parse_id(st, :service_templates))
           end
           options[:entry_points] = bundle["automate_entrypoints"] if bundle["automate_entrypoints"]
-          blueprint.update_bundle(options)
-        rescue => e
-          raise BadRequestError, "Couldn't update the bundle - #{e}"
+          options
         end
       end
     end
