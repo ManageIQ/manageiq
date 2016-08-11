@@ -47,6 +47,7 @@ class Storage < ApplicationRecord
   include AsyncDeleteMixin
   include AvailabilityMixin
   include SupportsFeatureMixin
+  include TenantIdentityMixin
 
   virtual_column :v_used_space,                   :type => :integer
   virtual_column :v_used_space_percent_of_total,  :type => :integer
@@ -886,10 +887,6 @@ class Storage < ApplicationRecord
         s.public_send("validate_#{operation}")[:available]
       end
     end
-  end
-
-  def tenant_identity
-    ext_management_system.tenant_identity
   end
 
   # @param [String, Storage] store_type upcased version of the storage type
