@@ -557,6 +557,12 @@ module OpsController::Settings::Common
     # Add/remove affinity based on the node that was checked
     server_id, child = id.split('__')
 
+    if server_id.include?('svr')
+      server_id.sub!('svr-','')
+      from_cid(server_id)
+    else
+      server_id.sub!('xx-', '')
+    end
     all_children = @edit[:new][:children]
     server = @edit[:new][:servers][server_id.to_i]
 
