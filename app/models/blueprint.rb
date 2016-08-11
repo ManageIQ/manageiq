@@ -54,6 +54,8 @@ class Blueprint < ApplicationRecord
       duplicate_resource_actions(service_template, new_template, is_top)
       duplicate_service_resources(blueprint, service_template, new_template)
       update_copied_service_template(blueprint, new_template, new_attributes)
+      duplicate_custom_buttons(service_template, new_template)
+      duplicate_custom_button_sets(service_template, new_template)
     end
   end
 
@@ -123,6 +125,18 @@ class Blueprint < ApplicationRecord
 
     entry_points.each do |key, value|
       new_bundle.resource_actions.build(:action => key, :fqname => value, :dialog => dialog)
+    end
+  end
+
+  def duplicate_custom_buttons(old_template, new_template)
+    old_template.direct_custom_buttons.each do |old_button|
+      old_button.copy(:applies_to => new_template)
+    end
+  end
+
+  def duplicate_custom_button_sets(old_template, new_template)
+    old_template.custom_button_sets.each do |old_button_set|
+      old_button_set.deep_copy(:owner => new_template)
     end
   end
 end

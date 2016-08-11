@@ -260,4 +260,11 @@ describe CustomButton do
       end
     end
   end
+
+  it "#copy" do
+    service_template1 = FactoryGirl.create(:service_template)
+    service_template2 = FactoryGirl.create(:service_template)
+    button = FactoryGirl.create(:custom_button, :applies_to => service_template1)
+    expect { button.copy(:applies_to => service_template2) }.to change { CustomButton.count }.by(1)
+  end
 end
