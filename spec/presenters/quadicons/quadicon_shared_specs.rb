@@ -51,19 +51,19 @@ end
 #   end
 # end
 #
-# RSpec.shared_examples :has_remote_link do
-#   it 'builds a remote link' do
-#     expect(subject.render).to have_selector("a[data-remote]")
-#     expect(subject.render).to have_selector("a[data-method='post']")
-#   end
-# end
-#
-# RSpec.shared_examples :has_sparkle_link do
-#   it 'builds a sparkle link' do
-#     expect(subject.render).to have_selector("a[data-miq-sparkle-on]")
-#     expect(subject.render).to have_selector("a[data-miq-sparkle-off]")
-#   end
-# end
+RSpec.shared_examples :has_remote_link do
+  it 'builds a remote link' do
+    expect(subject).to match(/data-remote/)
+    expect(subject).to match(/data-method="post"/)
+  end
+end
+
+RSpec.shared_examples :has_sparkle_link do
+  it 'builds a sparkle link' do
+    expect(subject).to match(/data-miq-sparkle-on/)
+    expect(subject).to match(/data-miq-sparkle-off/)
+  end
+end
 
 # RSpec.shared_examples :storage_inferred_url do
 #   it 'links to an inferred url' do
