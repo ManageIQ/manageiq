@@ -22,7 +22,7 @@ class MiqUserRole < ApplicationRecord
   FIXTURE_PATH = File.join(FIXTURE_DIR, table_name)
   FIXTURE_YAML = "#{FIXTURE_PATH}.yml"
 
-  SCOPES = [:base, :one, :sub]
+  SCOPES = [:base, :sub]
 
   RESTRICTIONS = {
     :user          => "Only User Owned",
@@ -49,32 +49,21 @@ class MiqUserRole < ApplicationRecord
 
   # @param identifiers [Array] Product feature identifiers to check if this role allows access
   #   to any of them in the given scope.
-  # @param scope [Symbol] Scope to search feature tree for access; must be of type :sub (default), :base, or :one
+  # @param scope [Symbol] Scope to search feature tree for access; must be of type :sub (default), or :base
   #   Returns true if the role gives access to the feature under one of the following scope options:
   #   :sub  - Feature is within the role's feature subtree (this feature and all of its descendants)
   #   :base - Feature is root of the role's feature subtree, i.e. directly assigned to this role
-  #   :one  - Feature is included in the first generation of the feature's subtree only (i.e. NOT root, NOT > 2nd generation)
   def allows_any?(identifiers: [], scope: :sub)
     raise _("scope option must be one of #{SCOPES.inspect}") unless SCOPES.include?(scope)
     return false if identifiers.empty?
 
-    if [:base, :sub].include?(scope)
-      # Check passed in identifiers
-      return true if identifiers.any? { |i| allows?(:identifier => i) }
+    role_allows_feature = identifiers.any? { |i| allows?(:identifier => i) }
+    if scope == :sub && !role_allows_feature
+      child_idents = identifiers.map { |i| MiqProductFeature.feature_children(i) }.flatten
+      allows_any?(:identifiers => child_idents, :scope => :sub)
+    else
+      role_allows_feature
     end
-
-    return false if scope == :base
-
-    # Check children of passed in identifiers (scopes :one and :base)
-     identifiers.any? { |i| allows_any_children?(:scope => (scope == :one ? :base : :sub), :identifier => i) }
-  end
-
-  def allows_any_children?(options = {})
-    ident = options.delete(:identifier)
-    return false if ident.nil? || !MiqProductFeature.feature_exists?(ident)
-
-    child_idents = MiqProductFeature.feature_children(ident)
-    allows_any?(options.merge(:identifiers => child_idents))
   end
 
   def self_service?

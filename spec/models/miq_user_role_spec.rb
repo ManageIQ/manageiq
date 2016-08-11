@@ -90,30 +90,12 @@ describe MiqUserRole do
       expect(@role3.allows_any?(:scope => :base, :identifiers => ["everything"])).to eq(false)
     end
 
-    it "should return the correct answer calling allows_any? with scope => :one)" do
-      expect(@role1.allows_any?(:scope => :one, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
-
-      expect(@role2.allows_any?(:scope => :one, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
-
-      expect(@role3.allows_any?(:scope => :one, :identifiers => ["host_view"])).to eq(true)
-      expect(@role3.allows_any?(:scope => :one, :identifiers => ["vm"])).to eq(false)
-      expect(@role3.allows_any?(:scope => :one, :identifiers => ["everything"])).to eq(false)
-    end
-
     it "should return the correct answer calling allows_any? with default scope => :sub" do
       expect(@role1.allows_any?(:identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
       expect(@role2.allows_any?(:identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
       expect(@role3.allows_any?(:identifiers => ["host_view"])).to eq(true)
       expect(@role3.allows_any?(:identifiers => ["vm"])).to eq(false)
       expect(@role3.allows_any?(:identifiers => ["everything"])).to eq(true)
-    end
-
-    it "should return the correct answer calling allows_any_children?" do
-      expect(@role1.allows_any_children?(:identifier => "dashboard_admin")).to eq(true)
-      expect(@role2.allows_any_children?(:identifier => "dashboard_admin")).to eq(true)
-      expect(@role2.allows_any_children?(:identifier => "everything")).to eq(true)
-      expect(@role1.allows_any_children?(:identifier => "everything")).to eq(true)
-      expect(@role1.allows_any_children?(:identifier => "dashboard")).to eq(true)
     end
   end
 
