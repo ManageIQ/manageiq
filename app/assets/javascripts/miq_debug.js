@@ -77,7 +77,7 @@ angular.module('miq.debug', [])
       '    </div>',
       '  </div>',
       '',
-      '  <toast-item ng-repeat="item in $ctrl.items" data="item" close="close"></toast-item>',
+      '  <toast-item ng-repeat="item in $ctrl.items" data="item" close="$ctrl.close"></toast-item>',
       '</div>',
     ].join("\n"),
     controller: ['$timeout', function($timeout) {
