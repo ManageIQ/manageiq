@@ -20,8 +20,13 @@ class ApiController
       parse_set_tenant(data)
       group = resource_search(id, type, collection_class(:groups))
       parse_set_filters(data, :entitlement_id => group.entitlement.try(:id))
-      raise BadRequestError, "Cannot edit a read-only group" if group.read_only
+      raise Forbidden, "Cannot edit a read-only group" if group.read_only
       edit_resource(type, id, data)
+    end
+
+    def delete_resource_groups(type, id, data = {})
+      raise Forbidden, "Cannot delete a read-only group" if MiqGroup.find(id).read_only?
+      delete_resource(type, id, data)
     end
 
     private
