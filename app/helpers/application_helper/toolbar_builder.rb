@@ -828,8 +828,6 @@ class ApplicationHelper::ToolbarBuilder
       end
     when "Vm"
       case id
-      when "vm_guest_standby"
-        return true unless @record.is_available?(:standby_guest)
       when "vm_guest_shutdown", "instance_guest_shutdown"
         return true unless @record.is_available?(:shutdown_guest)
       when "vm_reconfigure"
@@ -1250,8 +1248,6 @@ class ApplicationHelper::ToolbarBuilder
         if @record.current_state != "on"
           return N_("The web-based VNC console is not available because the VM is not powered on")
         end
-      when "vm_guest_standby"
-        return @record.is_available_now_error_message(:standby_guest) if @record.is_available_now_error_message(:standby_guest)
       when "vm_guest_shutdown"
         return @record.is_available_now_error_message(:shutdown_guest) if @record.is_available_now_error_message(:shutdown_guest)
       when "instance_retire", "instance_retire_now"
