@@ -71,6 +71,9 @@ class ManageIQ::Providers::Vmware::CloudManager::RefreshParser < ManageIQ::Provi
         next if catalog.is_published && !@options.get_public_images
 
         catalog.catalog_items.each do |item|
+          # Skip all Catalog Items which are not vApp Templates (e.g. Media & Other)
+          next unless item.vapp_template_id.starts_with?('vappTemplate-')
+
           @inv[:vapp_templates] << {
             :vapp_template => item.vapp_template,
             :is_published  => catalog.is_published
