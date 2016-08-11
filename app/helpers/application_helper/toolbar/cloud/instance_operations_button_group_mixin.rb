@@ -77,7 +77,9 @@ module ApplicationHelper::Toolbar::Cloud::InstanceOperationsButtonGroupMixin
             N_('Soft Reboot this Instance'),
             N_('Soft Reboot'),
             :image   => "power_reset",
-            :confirm => N_("Soft Reboot this Instance?")),
+            :confirm => N_("Soft Reboot this Instance?"),
+            :klass   => ApplicationHelper::Button::GenericFeatureButton,
+            :options => {:feature => :reboot_guest}),
           included_class.button(
             :instance_reset,
             nil,
@@ -92,7 +94,9 @@ module ApplicationHelper::Toolbar::Cloud::InstanceOperationsButtonGroupMixin
             N_('Delete this Instance'),
             N_('Delete'),
             :image   => "power_off",
-            :confirm => N_("Delete this Instance?")),
+            :confirm => N_("Delete this Instance?"),
+            :klass   => ApplicationHelper::Button::GenericFeatureButton,
+            :options => {:feature => :terminate}),
         ]
       ),
       included_class.button(

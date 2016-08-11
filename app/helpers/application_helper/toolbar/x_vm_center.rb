@@ -178,7 +178,9 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           N_('Restart the Guest OS on this VM'),
           N_('Restart Guest'),
           :image   => "guest_restart",
-          :confirm => N_("Restart the Guest OS on this VM?")),
+          :confirm => N_("Restart the Guest OS on this VM?"),
+          :klass   => ApplicationHelper::Button::GenericFeatureButtonWithDisable,
+          :options => {:feature => :reboot_guest}),
         separator,
         button(
           :vm_start,
