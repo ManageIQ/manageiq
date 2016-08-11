@@ -1,6 +1,5 @@
-include QuotaHelper
-
 describe "Quota Validation" do
+  include Spec::Support::QuotaHelper
   include Spec::Support::ServiceTemplateHelper
 
   def run_automate_method(attrs)

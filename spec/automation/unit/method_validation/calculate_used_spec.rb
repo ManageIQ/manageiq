@@ -1,6 +1,6 @@
-include QuotaHelper
-
 describe "Quota Validation" do
+  include Spec::Support::QuotaHelper
+
   def run_automate_method(prov_req)
     attrs = []
     attrs << "MiqProvisionRequest::miq_provision_request=#{@miq_provision_request.id}&" \
