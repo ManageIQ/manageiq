@@ -176,7 +176,9 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           N_('Shutdown the Guest OS on this VM'),
           N_('Shutdown Guest'),
           :image   => "guest_shutdown",
-          :confirm => N_("Shutdown the Guest OS on this VM?")),
+          :confirm => N_("Shutdown the Guest OS on this VM?"),
+          :klass   => ApplicationHelper::Button::GenericFeatureButtonWithDisable,
+          :options => {:feature => :shutdown_guest}),
         button(
           :vm_guest_restart,
           nil,

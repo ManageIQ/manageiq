@@ -365,7 +365,6 @@ describe ApplicationHelper do
      "repo_protect",
      "resource_pool_protect",
      "vm_check_compliance",
-     "vm_guest_shutdown",
      "vm_start",
      "vm_suspend",
      "vm_snapshot_add",
@@ -1165,22 +1164,6 @@ describe ApplicationHelper do
 
         it "and @lastaction = drift_history" do
           @lastaction = "drift_history"
-          expect(subject).to be_falsey
-        end
-      end
-
-      context "and id = vm_guest_shutdown" do
-        before do
-          @id = "vm_guest_shutdown"
-          allow(@record).to receive(:is_available?).with(:shutdown_guest).and_return(true)
-        end
-
-        it "and !@record.is_available?(:shutdown_guest)" do
-          allow(@record).to receive(:is_available?).with(:shutdown_guest).and_return(false)
-          expect(subject).to be_truthy
-        end
-
-        it "and @record.is_available?(:shutdown_guest)" do
           expect(subject).to be_falsey
         end
       end
@@ -2085,15 +2068,6 @@ describe ApplicationHelper do
         end
 
         it_behaves_like 'vm not powered on', "The web-based console is not available because the VM is not powered on"
-      end
-
-      context "and id = vm_guest_shutdown" do
-        before do
-          @id = "vm_guest_shutdown"
-          allow(@record).to receive(:is_available_now_error_message).and_return(false)
-        end
-        it_behaves_like 'record with error message', 'shutdown_guest'
-        it_behaves_like 'default case'
       end
 
       context "and id = storage_scan" do
