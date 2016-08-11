@@ -17,25 +17,25 @@ module OpsController::OpsRbac
       rbac_edit_tags_save
     when "reset", nil # Reset or first time in
       nodes = x_node.split('-')
-      if nodes.first == "g" || nodes.last == "g"
-        @_params[:tagging] = "MiqGroup"
-      elsif nodes.first == "u" || nodes.last == "u"
-        @_params[:tagging] = "User"
-      end
-      rbac_edit_tags_reset
+      tagging = if nodes.first == "g" || nodes.last == "g"
+                  'MiqGroup'
+                elsif nodes.first == "u" || nodes.last == "u"
+                  'User'
+                else
+                  params[:tagging]
+                end
+      rbac_edit_tags_reset(tagging)
     end
   end
 
   def rbac_user_add
     assert_privileges("rbac_user_add")
-    @_params[:typ] = "new"
-    rbac_edit_reset('user', User)
+    rbac_edit_reset('new', 'user', User)
   end
 
   def rbac_user_copy
     assert_privileges("rbac_user_copy")
-    @_params[:typ] = "copy"
-    rbac_edit_reset('user', User)
+    rbac_edit_reset('copy', 'user', User)
   end
 
   def rbac_user_edit
@@ -43,14 +43,13 @@ module OpsController::OpsRbac
     case params[:button]
     when 'cancel'      then rbac_edit_cancel('user')
     when 'save', 'add' then rbac_edit_save_or_add('user')
-    when 'reset', nil  then rbac_edit_reset('user', User) # Reset or first time in
+    when 'reset', nil  then rbac_edit_reset(params[:typ], 'user', User) # Reset or first time in
     end
   end
 
   def rbac_group_add
     assert_privileges("rbac_group_add")
-    @_params[:typ] = "new"
-    rbac_edit_reset('group', MiqGroup)
+    rbac_edit_reset('new', 'group', MiqGroup)
   end
 
   def rbac_group_edit
@@ -58,20 +57,18 @@ module OpsController::OpsRbac
     case params[:button]
     when 'cancel'      then rbac_edit_cancel('group')
     when 'save', 'add' then rbac_edit_save_or_add('group')
-    when 'reset', nil  then rbac_edit_reset('group', MiqGroup) # Reset or first time in
+    when 'reset', nil  then rbac_edit_reset(params[:typ], 'group', MiqGroup) # Reset or first time in
     end
   end
 
   def rbac_role_add
     assert_privileges("rbac_role_add")
-    @_params[:typ] = "new"
-    rbac_edit_reset('role', MiqUserRole)
+    rbac_edit_reset('new', 'role', MiqUserRole)
   end
 
   def rbac_role_copy
     assert_privileges("rbac_role_copy")
-    @_params[:typ] = "copy"
-    rbac_edit_reset('role', MiqUserRole)
+    rbac_edit_reset('copy', 'role', MiqUserRole)
   end
 
   def rbac_role_edit
@@ -79,7 +76,7 @@ module OpsController::OpsRbac
     case params[:button]
     when 'cancel'      then rbac_edit_cancel('role')
     when 'save', 'add' then rbac_edit_save_or_add('role', 'miq_user_role')
-    when 'reset', nil  then rbac_edit_reset('role', MiqUserRole) # Reset or first time in
+    when 'reset', nil  then rbac_edit_reset(params[:typ], 'role', MiqUserRole) # Reset or first time in
     end
   end
 
@@ -233,8 +230,7 @@ module OpsController::OpsRbac
       assert_privileges("rbac_tenant_tags_edit")
       rbac_edit_tags_save
     when "reset", nil # Reset or first time in
-      @_params[:tagging] = "Tenant"
-      rbac_edit_tags_reset
+      rbac_edit_tags_reset('Tenant')
     end
   end
 
@@ -571,7 +567,7 @@ module OpsController::OpsRbac
     end
   end
 
-  def rbac_edit_tags_reset
+  def rbac_edit_tags_reset(tagging)
     @object_ids = find_checked_items
     if params[:button] == "reset"
       id = params[:id] if params[:id]
@@ -580,7 +576,7 @@ module OpsController::OpsRbac
       session[:tag_db] = @tagging = @edit[:tagging]
     else
       @object_ids[0] = params[:id] if @object_ids.blank? && params[:id]
-      session[:tag_db] = @tagging = params[:tagging]
+      session[:tag_db] = @tagging = tagging
     end
 
     @gtl_type = "list"  # No quad icons for user/group list views
@@ -646,19 +642,19 @@ module OpsController::OpsRbac
     replace_right_cell(@nodetype)
   end
 
-  def rbac_edit_reset(what, klass)
+  def rbac_edit_reset(operation, what, klass)
     key = what.to_sym
     obj = find_checked_items
     obj[0] = params[:id] if obj.blank? && params[:id]
     record = klass.find_by_id(from_cid(obj[0])) if obj[0]
 
-    if [:group, :role].include?(key) && record && record.read_only && params[:typ] != "copy"
+    if [:group, :role].include?(key) && record && record.read_only && operation != 'copy'
       add_flash(_("Read Only %{model} \"%{name}\" can not be edited") % {:model => key == :role ? ui_lookup(:model => "MiqUserRole") : ui_lookup(:model => "MiqGroup"), :name => key == :role ? record.name : record.description}, :warning)
       javascript_flash
       return
     end
 
-    case params[:typ]
+    case operation
     when "new"
       @record = klass.new                 # New record
       if key == :role
@@ -678,7 +674,7 @@ module OpsController::OpsRbac
     else
       @record = record                      # Use existing record
     end
-    @sb[:typ] = params[:typ]
+    @sb[:typ] = operation
     send("rbac_#{what}_set_form_vars")
     @in_a_form = true
     session[:changed] = false
