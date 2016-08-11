@@ -12,7 +12,7 @@ class ApplicationHelper::Toolbar::MiddlewareServersCenter < ApplicationHelper::T
         button(
           :middleware_server_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this Middleware Servers'),
+          N_('Edit Tags for these Middleware Servers'),
           N_('Edit Tags'),
           :url_parms => "main_div",
           :enabled   => false,
