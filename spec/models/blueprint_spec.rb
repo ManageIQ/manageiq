@@ -81,7 +81,9 @@ describe Blueprint do
 
   describe '#create_bundle' do
     it 'create a bundle from existing items' do
-      bundle = subject.create_bundle([catalog_vm_provisioning], dialog, catalog)
+      bundle = subject.create_bundle(:service_templates => [catalog_vm_provisioning],
+                                     :service_dialog    => dialog,
+                                     :service_catalog   => catalog)
       expect(Dialog.count).to eq(2)
       expect(subject.bundle).to eq(bundle)
       expect(bundle.display).to be_falsey
