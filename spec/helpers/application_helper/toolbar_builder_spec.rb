@@ -367,8 +367,6 @@ describe ApplicationHelper do
      "vm_check_compliance",
      "vm_guest_shutdown",
      "vm_guest_standby",
-     "vm_policy_sim",
-     "vm_protect",
      "vm_start",
      "vm_suspend",
      "vm_snapshot_add",
@@ -1160,34 +1158,6 @@ describe ApplicationHelper do
         end
       end
 
-      context "and id = vm_collect_running_processes" do
-        before do
-          @id = "vm_collect_running_processes"
-          allow(@record).to receive_messages(:retired => false, :current_state => "new")
-          allow(@record).to receive(:is_available?).with(:collect_running_processes).and_return(true)
-        end
-
-        it "and @record.retired & !@record.is_available?(:collect_running_processes)" do
-          allow(@record).to receive_messages(:retired => true)
-          allow(@record).to receive(:is_available?).with(:collect_running_processes).and_return(false)
-          expect(subject).to be_truthy
-        end
-
-        it "and @record.current_state = never & !@record.is_available?(:collect_running_processes)" do
-          allow(@record).to receive(:is_available?).with(:collect_running_processes).and_return(false)
-          allow(@record).to receive_messages(:current_state => "never")
-          expect(subject).to be_truthy
-        end
-
-        it "and @record.is_available?(:collect_running_processes)" do
-          expect(subject).to be_falsey
-        end
-
-        it "and !@record.retired & @record.current_state != never" do
-          expect(subject).to be_falsey
-        end
-      end
-
       context "and id = common_drift" do
         before do
           @id = "common_drift"
@@ -1229,29 +1199,6 @@ describe ApplicationHelper do
 
         it "and @record.is_available?(:shutdown_guest)" do
           expect(subject).to be_falsey
-        end
-      end
-
-      ["vm_policy_sim", "vm_protect"].each do |id|
-        context "and id = #{id}" do
-          before do
-            @id = id
-            allow(@record).to receive_messages(:host => double(:vmm_product => "Server"))
-          end
-
-          it "and @record.host.vmm_product = workstation" do
-            allow(@record).to receive_messages(:host => double(:vmm_product => "Workstation"))
-            expect(subject).to be_truthy
-          end
-
-          it "and @record.host.vmm_product != workstation" do
-            expect(subject).to be_falsey
-          end
-
-          it "and @record.host does exist" do
-            allow(@record).to receive_messages(:host => nil)
-            expect(subject).to be_falsey
-          end
         end
       end
 
@@ -2117,15 +2064,6 @@ describe ApplicationHelper do
           allow(@record).to receive_messages(:has_perf_data? => true)
         end
         it_behaves_like 'record without perf data', "No Capacity & Utilization data has been collected for this VM"
-        it_behaves_like 'default case'
-      end
-
-      context "and id = vm_collect_running_processes" do
-        before do
-          @id = "vm_collect_running_processes"
-          allow(@record).to receive(:is_available_now_error_message).and_return(false)
-        end
-        it_behaves_like 'record with error message', 'collect_running_processes'
         it_behaves_like 'default case'
       end
 
