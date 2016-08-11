@@ -92,7 +92,8 @@ NETWORK_INTERFACE = "eth0".freeze
 module ApplianceConsole
   eth0 = LinuxAdmin::NetworkInterface.new(NETWORK_INTERFACE)
   ip = eth0.address
-  # Because it takes a few seconds, get the database information once in the outside loop
+  # Because it takes a few seconds, get the region once in the outside loop
+  region = ApplianceConsole::DatabaseConfiguration.region
   clear_screen
 
   # Calling stty to provide the equivalent line settings when the console is run via an ssh session or
@@ -119,7 +120,6 @@ module ApplianceConsole
       version     = File.read(VERSION_FILE).chomp if File.exist?(VERSION_FILE)
       dbhost      = ApplianceConsole::DatabaseConfiguration.database_host
       database    = ApplianceConsole::DatabaseConfiguration.database_name
-      region      = ApplianceConsole::DatabaseConfiguration.region
       evm_running = LinuxAdmin::Service.new("evmserverd").running?
 
       summary_attributes = [
@@ -458,6 +458,9 @@ Static Network Configuration
         when "create_internal", /_external/
           database_configuration.run_interactive
         end
+        # Get the region again because it may have changed
+        region = ApplianceConsole::DatabaseConfiguration.region
+
         press_any_key
 
       when I18n.t("advanced_settings.tmp_config")
