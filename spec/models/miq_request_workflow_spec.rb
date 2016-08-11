@@ -205,6 +205,29 @@ describe MiqRequestWorkflow do
     end
   end
 
+  context "#allowed_tags" do
+    let!(:managed_classification)   { FactoryGirl.create(:classification) }
+    let!(:no_child_classification)  { FactoryGirl.create(:classification) }
+    let!(:read_only_classification) { FactoryGirl.create(:classification, :read_only => true) }
+    let!(:hidden_classification)    { FactoryGirl.create(:classification, :show => false) }
+    let!(:unmanaged_classification) { FactoryGirl.create(:classification, :ns => "/unmanaged") }
+    let!(:child_classification_1)   { FactoryGirl.create(:classification, :parent => managed_classification) }
+    let!(:child_classification_2)   { FactoryGirl.create(:classification, :parent => unmanaged_classification) }
+
+    it "includes all managed tags" do
+      allowed_tag_ids = workflow.allowed_tags.map { |c| c[:id] }
+      expect(allowed_tag_ids).to match_array([managed_classification.id])
+    end
+
+    it "includes all managed children" do
+      allowed_tags_children = workflow.allowed_tags
+                                      .map { |c| c[:children].map(&:first) }
+                                      .flatten
+
+      expect(allowed_tags_children).to match_array([child_classification_1.id])
+    end
+  end
+
   context "'allowed_*' methods" do
     let(:cluster)       { FactoryGirl.create(:ems_cluster, :ems_id => ems.id) }
     let(:ems)           { FactoryGirl.create(:ext_management_system) }
