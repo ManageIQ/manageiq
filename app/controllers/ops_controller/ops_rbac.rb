@@ -17,12 +17,14 @@ module OpsController::OpsRbac
       rbac_edit_tags_save
     when "reset", nil # Reset or first time in
       nodes = x_node.split('-')
-      if nodes.first == "g" || nodes.last == "g"
-        @_params[:tagging] = "MiqGroup"
-      elsif nodes.first == "u" || nodes.last == "u"
-        @_params[:tagging] = "User"
-      end
-      rbac_edit_tags_reset
+      tagging = if nodes.first == "g" || nodes.last == "g"
+                  'MiqGroup'
+                elsif nodes.first == "u" || nodes.last == "u"
+                  'User'
+                else
+                  params[:tagging]
+                end
+      rbac_edit_tags_reset(tagging)
     end
   end
 
@@ -228,8 +230,7 @@ module OpsController::OpsRbac
       assert_privileges("rbac_tenant_tags_edit")
       rbac_edit_tags_save
     when "reset", nil # Reset or first time in
-      @_params[:tagging] = "Tenant"
-      rbac_edit_tags_reset
+      rbac_edit_tags_reset('Tenant')
     end
   end
 
@@ -566,7 +567,7 @@ module OpsController::OpsRbac
     end
   end
 
-  def rbac_edit_tags_reset
+  def rbac_edit_tags_reset(tagging)
     @object_ids = find_checked_items
     if params[:button] == "reset"
       id = params[:id] if params[:id]
@@ -575,7 +576,7 @@ module OpsController::OpsRbac
       session[:tag_db] = @tagging = @edit[:tagging]
     else
       @object_ids[0] = params[:id] if @object_ids.blank? && params[:id]
-      session[:tag_db] = @tagging = params[:tagging]
+      session[:tag_db] = @tagging = tagging
     end
 
     @gtl_type = "list"  # No quad icons for user/group list views
