@@ -154,7 +154,7 @@ module QuadiconHelper
     end
 
     # TEMP -- for visual testing
-    # if item.kind_of?(VmOrTemplate)
+    # if item.kind_of?(Storage)
     #   quadicon_for(item)
     # else
     #   quadicon_tag(tag_options) do
@@ -922,6 +922,6 @@ module QuadiconHelper
     end
 
     # Quadicons.build_quadicon_for(record, context)
-    Quadicons::VmOrTemplateQuadicon.new(record, context).render
+    Quadicons::StorageQuadicon.new(record, context).render
   end
 end
