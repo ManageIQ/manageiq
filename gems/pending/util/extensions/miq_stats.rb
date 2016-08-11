@@ -1,3 +1,6 @@
+require 'more_core_extensions/core_ext/array'
+require 'more_core_extensions/core_ext/numeric'
+
 module MiqStats
   def self.slope(x_array, y_array)
     return [] if x_array.empty? || y_array.empty?
@@ -50,13 +53,7 @@ end
 # Version: 2007-10-01b
 #
 
-class Numeric
-  def square; self * self; end
-end
-
 class Array
-  def mean; sum.to_f / size; end
-
   def median
     case size % 2
     when 0 then sort[size / 2 - 1, 2].mean
@@ -71,12 +68,6 @@ class Array
     max = map.values.max
     map.keys.select { |x| map[x] == max }
   end
-
-  def squares; inject(0) { |a, x| x.square + a }; end
-
-  def variance; squares.to_f / size - mean.square; end
-
-  def deviation; Math.sqrt(variance); end
 
   def permute; dup.permute!; end
 
@@ -102,7 +93,7 @@ if __FILE__ == $0
 
   fields.each_index do |i|
     next unless fields[i].size > 0
-    puts [i,  fields[i].mean, fields[i].deviation] \
+    puts [i,  fields[i].mean, fields[i].stddev] \
       .collect(&:to_s).join("\t")
   end
 end
