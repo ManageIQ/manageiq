@@ -1,5 +1,5 @@
 describe ApplicationHelper::Button::GenericFeatureButtonWithDisable do
-  [:start].each do |feature|
+  [:start, :stop, :suspend, :reset].each do |feature|
     describe '#skip?' do
       context "when vm supports feature #{feature}" do
         before do
