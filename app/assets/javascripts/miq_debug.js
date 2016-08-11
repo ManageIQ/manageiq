@@ -46,6 +46,11 @@ $(function() {
   }, true);
 
   window.debug_toast = function (type, data) {
+    // Don't display debug toasts if the user doesn't want it
+    if (sessionStorage.getItem('disableDebugToasts')) {
+      return false;
+    }
+
     if (type == 'warn') {
       type = 'warning';
     }
@@ -74,6 +79,8 @@ angular.module('miq.debug', [])
       '    <div class="toast-pf alert col-xs-12" ng-click="$ctrl.clear()">',
       '      <span class="pficon pficon-close"></span>',
       '      <a href="">Clear all</a>',
+      '      &nbsp;|&nbsp;',
+      '      <a href="" ng-click="$ctrl.disable()">Disable notifications</a>',
       '    </div>',
       '  </div>',
       '',
@@ -101,6 +108,10 @@ angular.module('miq.debug', [])
       this.clear = function() {
         _.remove(this.items, _.identity);
       };
+
+      this.disable = function() {
+        sessionStorage.setItem('disableDebugToasts', true);
+      }
     }],
   })
   .component('toastItem', {
