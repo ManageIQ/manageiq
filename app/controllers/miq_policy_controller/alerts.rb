@@ -8,9 +8,9 @@ module MiqPolicyController::Alerts
       @edit = nil
       @alert = session[:edit][:alert_id] ? MiqAlert.find_by_id(session[:edit][:alert_id]) : MiqAlert.new
       if @alert && @alert.id.blank?
-        add_flash(_("Add of new %{models} was cancelled by the user") % {:models => ui_lookup(:model => "MiqAlert")})
+        add_flash(_("Add of new Alert was cancelled by the user"))
       else
-        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "MiqAlert"), :name => @alert.description})
+        add_flash(_("Edit of Alert \"%{name}\" was cancelled by the user") % {:name => @alert.description})
       end
       get_node_info(x_node)
       replace_right_cell(@nodetype)
@@ -22,9 +22,9 @@ module MiqPolicyController::Alerts
       alert_set_record_vars(alert)
       if alert_valid_record?(alert) && alert.valid? && !@flash_array && alert.save
         AuditEvent.success(build_saved_audit(alert, params[:button] == "add"))
-        flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") :
-                                                _("%{model} \"%{name}\" was added")
-        add_flash(flash_key % {:model => ui_lookup(:model => "MiqAlert"), :name => @edit[:new][:description]})
+        flash_key = params[:button] == "save" ? _("Alert \"%{name}\" was saved") :
+                                                _("Alert \"%{name}\" was added")
+        add_flash(flash_key % {:name => @edit[:new][:description]})
         alert_get_info(MiqAlert.find(alert.id))
         alert_sync_provider(@edit[:alert_id] ? :update : :new)
         @edit = nil
@@ -53,10 +53,9 @@ module MiqPolicyController::Alerts
     # showing 1 alert, delete it
 
     if params[:id].nil? || MiqAlert.find_by_id(params[:id]).nil?
-      add_flash(_("%{models} no longer exists") % {:models => ui_lookup(:model => "MiqAlert")},
-                :error)
+      add_flash(_("Alert no longer exists"), :error)
     elsif MiqAlert.find_by_id(params[:id]).read_only
-      add_flash(_("%{models} can not be deleted") % {:models => ui_lookup(:model => "MiqAlert")}, :error)
+      add_flash(_("Alert can not be deleted"), :error)
     else
       alerts.push(params[:id])
     end
@@ -641,7 +640,7 @@ module MiqPolicyController::Alerts
         @email_to.push(user ? "#{user.name} (#{to})" : to)
       end
     end
-    @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "MiqAlert"), :name => alert.description}
+    @right_cell_text = _("Alert \"%{name}\"") % {:name => alert.description}
     @right_cell_div = "alert_details"
 
     @record = @alert

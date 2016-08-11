@@ -8,9 +8,9 @@ module MiqPolicyController::MiqActions
       @edit = nil
       @action = MiqAction.find_by_id(session[:edit][:action_id]) if session[:edit] && session[:edit][:action_id]
       if @action && @action.id
-        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "MiqAction"), :name => @action.description})
+        add_flash(_("Edit of Action \"%{name}\" was cancelled by the user") % {:name => @action.description})
       else
-        add_flash(_("Add of new %{models} was cancelled by the user") % {:models => ui_lookup(:model => "MiqAction")})
+        add_flash(_("Add of new Action was cancelled by the user"))
       end
       @sb[:action] = nil
       get_node_info(x_node)
@@ -42,9 +42,9 @@ module MiqPolicyController::MiqActions
       action_set_record_vars(action)
       if action_valid_record?(action) && !@flash_array && action.save
         AuditEvent.success(build_saved_audit(action, params[:button] == "add"))
-        flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") :
-                                                _("%{model} \"%{name}\" was added")
-        add_flash(flash_key % {:model => ui_lookup(:model => "MiqAction"), :name => @edit[:new][:description]})
+        flash_key = params[:button] == "save" ? _("Action \"%{name}\" was saved") :
+                                                _("Action \"%{name}\" was added")
+        add_flash(flash_key % {:name => @edit[:new][:description]})
         action_get_info(MiqAction.find(action.id))
         @edit = nil
         @nodetype = "a"
@@ -69,8 +69,7 @@ module MiqPolicyController::MiqActions
     actions = []
     # showing 1 action, delete it
     if params[:id].nil? || MiqAction.find_by_id(params[:id]).nil?
-      add_flash(_("%{models} no longer exists") % {:models => ui_lookup(:model => "MiqAction")},
-                :error)
+      add_flash(_("Action no longer exists"), :error)
     else
       actions.push(params[:id])
     end
@@ -419,7 +418,7 @@ module MiqPolicyController::MiqActions
   # Get information for an action
   def action_get_info(action)
     @record = @action = action
-    @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "MiqAction"), :name => action.description}
+    @right_cell_text = _("Action \"%{name}\"") % {:name => action.description}
     @right_cell_div = "action_details"
     @alert_guids = []
     if action.options && action.options[:alert_guids]

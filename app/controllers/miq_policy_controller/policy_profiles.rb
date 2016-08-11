@@ -7,10 +7,9 @@ module MiqPolicyController::PolicyProfiles
       @edit = nil
       @profile = MiqPolicySet.find_by_id(session[:edit][:profile_id]) if session[:edit] && session[:edit][:profile_id]
       if !@profile || (@profile && @profile.id.blank?)
-        add_flash(_("Add of new %{models} was cancelled by the user") %
-          {:models => ui_lookup(:model => "MiqPolicySet")})
+        add_flash(_("Add of new Policy Profile was cancelled by the user"))
       else
-        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "MiqPolicySet"), :name => @profile.description})
+        add_flash(_("Edit of Policy Profile \"%{name}\" was cancelled by the user") % {:name => @profile.description})
       end
       get_node_info(x_node)
       replace_right_cell(@nodetype)
@@ -33,7 +32,7 @@ module MiqPolicyController::PolicyProfiles
     case params[:button]
     when "save", "add"
       assert_privileges("profile_#{@profile.id ? "edit" : "new"}")
-      add_flash(_("%{model} must contain at least one %{field}") % {:model => ui_lookup(:model => "MiqPolicySet"), :field => ui_lookup(:model => "MiqPolicy")}, :error) if @edit[:new][:policies].length == 0 # At least one member is required
+      add_flash(_("Policy Profile must contain at least one Policy"), :error) if @edit[:new][:policies].length == 0 # At least one member is required
       profile = @profile.id.blank? ? MiqPolicySet.new : MiqPolicySet.find(@profile.id)  # Get new or existing record
       profile.description = @edit[:new][:description]
       profile.notes = @edit[:new][:notes]
@@ -50,9 +49,9 @@ module MiqPolicyController::PolicyProfiles
             {:params => params[:button], :messages => bang.message}, :error)
         end
         AuditEvent.success(build_saved_audit(profile, params[:button] == "add"))
-        flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") :
-                                                _("%{model} \"%{name}\" was added")
-        add_flash(flash_key % {:model => ui_lookup(:model => "MiqPolicySet"), :name => @edit[:new][:description]})
+        flash_key = params[:button] == "save" ? _("Policy Profile \"%{name}\" was saved") :
+                                                _("Policy Profile \"%{name}\" was added")
+        add_flash(flash_key % {:name => @edit[:new][:description]})
         profile_get_info(MiqPolicySet.find(profile.id))
         @edit = nil
         @nodetype = "pp"
@@ -76,14 +75,12 @@ module MiqPolicyController::PolicyProfiles
     profiles = []
     # showing 1 policy set, delete it
     if params[:id].nil? || MiqPolicySet.find_by_id(params[:id]).nil?
-      add_flash(_("%{models} no longer exists") % {:models => ui_lookup(:model => "MiqPolicySet")},
-                :error)
+      add_flash(_("Policy Profile no longer exists"), :error)
     else
       profiles.push(params[:id])
     end
     process_profiles(profiles, "destroy") unless profiles.empty?
-    add_flash(_("The selected %{models} was deleted") %
-      {:models => ui_lookup(:models => "MiqPolicySet")}) if @flash_array.nil?
+    add_flash(_("The selected Policy Profile was deleted")) if @flash_array.nil?
     self.x_node = @new_profile_node = 'root'
     get_node_info('root')
     replace_right_cell('root', [:policy_profile])
@@ -143,7 +140,7 @@ module MiqPolicyController::PolicyProfiles
     @profiles = MiqPolicySet.all.sort_by { |ps| ps.description.downcase }
     set_search_text
     @profiles = apply_search_filter(@search_text, @profiles) unless @search_text.blank?
-    @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "MiqPolicySet")}
+    @right_cell_text = _("All Policy Profiles")
     @right_cell_div = "profile_list"
   end
 
@@ -151,7 +148,7 @@ module MiqPolicyController::PolicyProfiles
   def profile_get_info(profile)
     @record = @profile = profile
     @profile_policies = @profile.miq_policies.sort_by { |p| [p.towhat, p.mode, p.description.downcase] }
-    @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "MiqPolicySet"), :name => @profile.description}
+    @right_cell_text = _("Policy Profile \"%{name}\"") % {:name => @profile.description}
     @right_cell_div = "profile_details"
   end
 end
