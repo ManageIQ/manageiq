@@ -5,8 +5,7 @@ jQuery.evalLog = function (text) {
     if (typeof console !== "undefined" && typeof console.error !== "undefined") {
       console.error('exception caught evaling RJS');
       console.error(ex);
-      console.error('script follows:')
-      console.error(text);
+      console.debug('script follows:', text);
     }
   }
   return text;

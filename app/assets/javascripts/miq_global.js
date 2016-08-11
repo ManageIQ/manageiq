@@ -5,6 +5,7 @@ if (! window.ManageIQ) {
     angular: {
       app: null, // angular application
       scope: null,  // helper scope, pending refactor
+      rxSubject: null,  // an observable
     },
     browser: null, // browser name
     controller: null, // stored controller, used to build URL
