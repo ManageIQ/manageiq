@@ -6,12 +6,17 @@ module ManageIQ::Providers
     end
 
     # cloud_subnets are defined on base class, because of virtual_total performance
-    has_many :floating_ips,    :foreign_key => :ems_id, :dependent => :destroy
-    has_many :security_groups, :foreign_key => :ems_id, :dependent => :destroy
-    has_many :cloud_networks,  :foreign_key => :ems_id, :dependent => :destroy
-    has_many :network_ports,   :foreign_key => :ems_id, :dependent => :destroy
-    has_many :network_routers, :foreign_key => :ems_id, :dependent => :destroy
-    has_many :network_groups,  :foreign_key => :ems_id, :dependent => :destroy
+    has_many :floating_ips,                :foreign_key => :ems_id, :dependent => :destroy
+    has_many :security_groups,             :foreign_key => :ems_id, :dependent => :destroy
+    has_many :cloud_networks,              :foreign_key => :ems_id, :dependent => :destroy
+    has_many :network_ports,               :foreign_key => :ems_id, :dependent => :destroy
+    has_many :network_routers,             :foreign_key => :ems_id, :dependent => :destroy
+    has_many :network_groups,              :foreign_key => :ems_id, :dependent => :destroy
+    has_many :load_balancers,              :foreign_key => :ems_id, :dependent => :destroy
+    has_many :load_balancer_pools,         :foreign_key => :ems_id, :dependent => :destroy
+    has_many :load_balancer_pool_members,  :foreign_key => :ems_id, :dependent => :destroy
+    has_many :load_balancer_listeners,     :foreign_key => :ems_id, :dependent => :destroy
+    has_many :load_balancer_health_checks, :foreign_key => :ems_id, :dependent => :destroy
 
     alias all_cloud_networks cloud_networks
 
