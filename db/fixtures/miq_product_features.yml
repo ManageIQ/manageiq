@@ -3623,15 +3623,6 @@
       :description: Display Individual Middleware Messaging
       :feature_type: view
       :identifier: middleware_messaging_show
-  - :name: Modify
-    :description: Modify Middleware Messaging
-    :feature_type: admin
-    :identifier: middleware_messaging_admin
-    :children:
-    - :name: Remove
-      :description: Remove Middleware Messaging from the VMDB
-      :feature_type: admin
-      :identifier: middleware_messaging_delete
   - :name: Operate
     :description: Perform Operations on Middleware Messaging
     :feature_type: control

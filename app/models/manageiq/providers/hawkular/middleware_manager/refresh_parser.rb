@@ -208,17 +208,15 @@ module ManageIQ::Providers
       end
 
       def parse_messaging(server, messaging, config)
-        data = {
+        specific = {
           :name              => messaging.name,
           :middleware_server => server,
-          :nativeid          => messaging.id,
-          :ems_ref           => messaging.path,
           :messaging_type    => messaging.to_h['type']['name']
         }
         if !config.empty? && !config['value'].empty? && config['value'].respond_to?(:except)
-          data[:properties] = config['value'].except('Username', 'Password')
+          specific[:properties] = config['value'].except('Username', 'Password')
         end
-        data
+        parse_base_item(messaging).merge(specific)
       end
 
       def parse_datasource(server, datasource, config)

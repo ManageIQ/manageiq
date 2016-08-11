@@ -4573,6 +4573,7 @@ middleware_messagings:
 - name
 - ems_ref
 - nativeid
+- feed
 - server_id
 - properties
 - ems_id

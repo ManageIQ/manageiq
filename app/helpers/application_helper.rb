@@ -1166,18 +1166,9 @@ module ApplicationHelper
          container_node container_service ems_container container_group ems_cloud ems_cluster container_route
          container_project container_replicator container_image container_image_registry container_build
          ems_infra host miq_template offline orchestration_stack persistent_volume ems_middleware
-<<<<<<< 9dae56d4ab8e1d7b4ae22c92ed7e8741c28c91c9
-<<<<<<< c3101d87de1381e4c23b50e72ef0dd4dce05fe06
          middleware_server middleware_deployment middleware_datasource middleware_domain middleware_server_group
-=======
-         middleware_server middleware_deployment middleware_datasource middleware_jms
->>>>>>> Add middleware jms to application
-=======
-         middleware_server middleware_deployment middleware_datasource middleware_messaging
->>>>>>> Rename jms to messaging
-         ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
-         load_balancer
-         resource_pool retired service templates vm configuration_job).include?(@layout) && !@in_a_form
+         middleware_messaging ems_network security_group floating_ip cloud_subnet network_router network_port
+         cloud_network resource_pool retired service templates vm configuration_job).include?(@layout) && !@in_a_form
       "show_list"
     elsif @compare
       "compare_sections"
@@ -1189,16 +1180,8 @@ module ApplicationHelper
              cloud_object_store_object cloud_tenant cloud_volume cloud_volume_snapshot condition container_group
              container_route container_project container_replicator container_image container_image_registry
              container_build container_node container_service persistent_volume ems_cloud ems_container ems_cluster ems_infra
-<<<<<<< 9dae56d4ab8e1d7b4ae22c92ed7e8741c28c91c9
-<<<<<<< c3101d87de1381e4c23b50e72ef0dd4dce05fe06
              ems_middleware middleware_server middleware_deployment middleware_datasource middleware_domain
-             middleware_server_group flavor
-=======
-             ems_middleware middleware_server middleware_deployment middleware_datasource middleware_jms flavor
->>>>>>> Add middleware jms to application
-=======
-             ems_middleware middleware_server middleware_deployment middleware_datasource middleware_messaging flavor
->>>>>>> Rename jms to messaging
+             middleware_messaging middleware_server_group flavor
              ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
              load_balancer
              host miq_schedule miq_template policy ontap_file_share ontap_logical_disk

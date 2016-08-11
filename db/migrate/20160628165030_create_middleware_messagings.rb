@@ -4,6 +4,7 @@ class CreateMiddlewareMessagings < ActiveRecord::Migration
       t.string :name # name of the messaging
       t.string :ems_ref # path
       t.string :nativeid
+      t.string :feed
       t.bigint :server_id
       t.text   :properties
       t.bigint :ems_id

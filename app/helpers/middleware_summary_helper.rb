@@ -46,6 +46,6 @@ module MiddlewareSummaryHelper
   end
 
   def textual_middleware_messagings
-    textual_link(@record.middleware_jms)
+    textual_link(@record.middleware_messagings)
   end
 end
