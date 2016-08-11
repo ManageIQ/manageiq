@@ -20,17 +20,14 @@ module PostgresHaAdmin
     end
 
     def monitor
-      connection = begin
-                     PG::Connection.open(@database_yml.pg_params_from_database_yml)
-                   rescue PG::Error
-                     nil
-                   end
+      connection = pg_connection(@database_yml.pg_params_from_database_yml)
       if connection
         @failover_db.update_failover_yml(connection)
         connection.finish
         return
       end
 
+      @logger.error("Primary Database is not available. EVM server stop initiated. Starting to execute failover...")
       stop_evmserverd
 
       if execute_failover
@@ -52,7 +49,7 @@ module PostgresHaAdmin
       end
     end
 
-    def primary_database_host(connection, params)
+    def host_for_primary_database(connection, params)
       result = @failover_db.query_repmgr(connection)
       result.each do |record|
         next if record[:host] != params[:host]
@@ -69,7 +66,7 @@ module PostgresHaAdmin
       FAILOVER_ATTEMPTS.times do
         with_each_standby_connection do |connection, params|
           next if database_in_recovery?(connection)
-          next if primary_database_host(connection, params).nil?
+          next if host_for_primary_database(connection, params).nil?
           @failover_db.update_failover_yml(connection)
           @database_yml.update_database_yml(params)
           return true
@@ -111,7 +108,6 @@ module PostgresHaAdmin
     end
 
     def start_evmserverd
-      @logger.info("EVM server start initiated by failover monitor")
       service = LinuxAdmin::Service.new("evmserverd")
       service.stop if service.running?
       @logger.info("Starting EVM server from failover monitor")
@@ -119,12 +115,8 @@ module PostgresHaAdmin
     end
 
     def stop_evmserverd
-      @logger.error("Primary Database is not available. Starting to execute failover...")
       service = LinuxAdmin::Service.new("evmserverd")
-      if service.running?
-        @logger.info("EVM server stop initiated by failover monitor")
-        service.stop
-      end
+      service.stop if service.running?
     end
   end
 end
