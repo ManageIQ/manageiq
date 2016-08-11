@@ -243,9 +243,10 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
       :confirm => N_("Opening a VM web-based VMRC console requires that VMRC is pre-configured to work in your browser.  Are you sure?")),
     button(
       :vm_cockpit,
-      'pficon pficon-screen fa-lg',
+      nil,
       N_('Open a new browser window with Cockpit for this VM.  This requires that Cockpit is pre-configured on the VM.'),
       nil,
+      :image   => "cockpit",
       :url     => "launch_cockpit"),
   ])
   button_group('snapshot_tasks', [
