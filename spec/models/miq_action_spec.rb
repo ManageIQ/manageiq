@@ -359,4 +359,24 @@ describe MiqAction do
       expect(a.round_to_nearest_4mb(17)).to eq 20
     end
   end
+
+  context 'validate action email should have correct type' do
+    it 'should generate a MiqAction invoking action_email' do
+      action = MiqAction.new
+      inputs = {
+        :policy      => nil,
+        :synchronous => false
+      }
+      q_options = {
+        :class_name  => "MiqAction",
+        :method_name => "queue_email",
+        :args        => [{:to => nil, :from => "cfadmin@cfserver.com"}],
+        :role        => "notifier",
+        :priority    => 20,
+        :zone        => nil
+      }
+      expect(MiqQueue).to receive(:put).with(q_options).once
+      action.action_email(action, nil, inputs)
+    end
+  end
 end

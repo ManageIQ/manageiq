@@ -310,7 +310,7 @@ class MiqAction < ApplicationRecord
       }
     end
 
-    invoke_or_queue(inputs[:synchronous], __method__, "notifier", nil, MiqSnmp, 'queue_email', [email_options])
+    invoke_or_queue(inputs[:synchronous], __method__, "notifier", nil, MiqAction, 'queue_email', [email_options])
   end
 
   def self.queue_email(options)
@@ -1002,7 +1002,7 @@ class MiqAction < ApplicationRecord
     log_suffix = nil
   )
     log_prefix = "MIQ(#{calling_method}):"
-    log_suffix ||= calling_method.titleize[7..-1] # remove 'Action '
+    log_suffix ||= calling_method.to_s.titleize[7..-1] # remove 'Action '
     static = target.instance_of?(Class) || target.instance_of?(Module)
 
     if synchronous
