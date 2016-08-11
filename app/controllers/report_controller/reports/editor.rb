@@ -524,14 +524,14 @@ module ReportController::Reports::Editor
   end
 
   def gfv_move_cols_buttons
-    if params[:button]
-      move_cols_right if params[:button] == "right"
-      move_cols_left if params[:button] == "left"
-      move_cols_up if params[:button] == "up"
-      move_cols_down if params[:button] == "down"
-      move_cols_top if params[:button] == "top"
-      move_cols_bottom if params[:button] == "bottom"
-    end
+    case params[:button]
+    when 'right'  then move_cols_right
+    when 'left'   then move_cols_left
+    when 'up'     then move_cols_up
+    when 'down'   then move_cols_down
+    when 'top'    then move_cols_top
+    when 'bottom' then move_cols_bottom
+    end && build_field_order
   end
 
   def gfv_model
@@ -918,7 +918,6 @@ module ReportController::Reports::Editor
       end
       @refresh_div = "column_lists"
       @refresh_partial = "column_lists"
-      build_field_order
     end
   end
 
@@ -974,7 +973,6 @@ module ReportController::Reports::Editor
       @edit[:new][:fields].delete_if { |nf| params[:selected_fields].include?(nf.last) } # Remove selected fields
       @refresh_div = "column_lists"
       @refresh_partial = "column_lists"
-      build_field_order
     end
   end
 
@@ -989,96 +987,6 @@ module ReportController::Reports::Editor
       end
     end
     !@flash_array.nil?
-  end
-
-  def move_cols_up
-    if !params[:selected_fields] || params[:selected_fields].length == 0 || params[:selected_fields][0] == ""
-      add_flash(_("No fields were selected to move up"), :error)
-      return
-    end
-    consecutive, first_idx, last_idx = selected_consecutive?
-    if !consecutive
-      add_flash(_("Select only one or consecutive fields to move up"), :error)
-    else
-      if first_idx > 0
-        @edit[:new][:fields][first_idx..last_idx].reverse_each do |field|
-          pulled = @edit[:new][:fields].delete(field)
-          @edit[:new][:fields].insert(first_idx - 1, pulled)
-        end
-      end
-      @refresh_div = "column_lists"
-      @refresh_partial = "column_lists"
-    end
-    @selected = params[:selected_fields]
-    build_field_order
-  end
-
-  def move_cols_down
-    if !params[:selected_fields] || params[:selected_fields].length == 0 || params[:selected_fields][0] == ""
-      add_flash(_("No fields were selected to move down"), :error)
-      return
-    end
-    consecutive, first_idx, last_idx = selected_consecutive?
-    if !consecutive
-      add_flash(_("Select only one or consecutive fields to move down"), :error)
-    else
-      if last_idx < @edit[:new][:fields].length - 1
-        insert_idx = last_idx + 1   # Insert before the element after the last one
-        insert_idx = -1 if last_idx == @edit[:new][:fields].length - 2 # Insert at end if 1 away from end
-        @edit[:new][:fields][first_idx..last_idx].each do |field|
-          pulled = @edit[:new][:fields].delete(field)
-          @edit[:new][:fields].insert(insert_idx, pulled)
-        end
-      end
-      @refresh_div = "column_lists"
-      @refresh_partial = "column_lists"
-    end
-    @selected = params[:selected_fields]
-    build_field_order
-  end
-
-  def move_cols_top
-    if !params[:selected_fields] || params[:selected_fields].length == 0 || params[:selected_fields][0] == ""
-      add_flash(_("No fields were selected to move to the top"), :error)
-      return
-    end
-    consecutive, first_idx, last_idx = selected_consecutive?
-    if !consecutive
-      add_flash(_("Select only one or consecutive fields to move to the top"), :error)
-    else
-      if first_idx > 0
-        @edit[:new][:fields][first_idx..last_idx].reverse_each do |field|
-          pulled = @edit[:new][:fields].delete(field)
-          @edit[:new][:fields].unshift(pulled)
-        end
-      end
-      @refresh_div = "column_lists"
-      @refresh_partial = "column_lists"
-    end
-    @selected = params[:selected_fields]
-    build_field_order
-  end
-
-  def move_cols_bottom
-    if !params[:selected_fields] || params[:selected_fields].length == 0 || params[:selected_fields][0] == ""
-      add_flash(_("No fields were selected to move to the bottom"), :error)
-      return
-    end
-    consecutive, first_idx, last_idx = selected_consecutive?
-    if !consecutive
-      add_flash(_("Select only one or consecutive fields to move to the bottom"), :error)
-    else
-      if last_idx < @edit[:new][:fields].length - 1
-        @edit[:new][:fields][first_idx..last_idx].each do |field|
-          pulled = @edit[:new][:fields].delete(field)
-          @edit[:new][:fields].push(pulled)
-        end
-      end
-      @refresh_div = "column_lists"
-      @refresh_partial = "column_lists"
-    end
-    @selected = params[:selected_fields]
-    build_field_order
   end
 
   def selected_consecutive?
