@@ -12,7 +12,7 @@ RemoteDatabase.establish_connection(config)
 new_region = RemoteDatabase.region_number_from_sequence.to_i
 
 region_file = Rails.root.join("REGION")
-old_region = region_file.exists? ? region_file.read.to_i : 0
+old_region = region_file.exist? ? region_file.read.to_i : 0
 
 if new_region != old_region
   $log.info("MIQ(#{$0}) Changing REGION file from [#{old_region}] to [#{new_region}]. Restart to use the new region.")
