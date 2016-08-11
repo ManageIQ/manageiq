@@ -2248,11 +2248,6 @@ class ApplicationController < ActionController::Base
     result
   end
 
-  def ruport_ize_filtered(report, options = {})
-    options[:tag_filters] = current_user.try(:get_filters) || []
-    report.ruport_ize!(options)
-  end
-
   VISIBILITY_TYPES = {'role' => 'role', 'group' => 'group', 'all' => 'all'}
 
   def visibility_box_edit
