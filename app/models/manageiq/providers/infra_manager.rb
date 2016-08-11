@@ -50,5 +50,9 @@ module ManageIQ::Providers
     def validate_authentication_status
       {:available => true, :message => nil}
     end
+
+    def snapshot_name_optional?
+      false
+    end
   end
 end

@@ -2219,99 +2219,122 @@ describe ApplicationHelper do
       end
 
       context "snapshot buttons" do
-        before do
-          @record = FactoryGirl.create(:vm_vmware, :vendor => "vmware")
-        end
-
-        context "and id = vm_snapshot_add" do
+        shared_examples "a vm of a snapshotable provider" do |vm_record|
           before do
-            @id = "vm_snapshot_add"
-            allow(@record).to receive(:is_available?).with(:create_snapshot).and_return(false)
+            @record = vm_record
           end
 
-          context "when number of snapshots <= 0" do
-            before { allow(@record).to receive(:is_available?).with(:create_snapshot).and_return(false) }
-            it_behaves_like 'record with error message', 'create_snapshot'
-          end
-
-          context "when number of snapshots > 0" do
+          context "and id = vm_snapshot_add" do
             before do
-              allow(@record).to receive(:number_of).with(:snapshots).and_return(4)
+              @id = "vm_snapshot_add"
               allow(@record).to receive(:is_available?).with(:create_snapshot).and_return(false)
             end
 
-            it_behaves_like 'record with error message', 'create_snapshot'
+            context "when number of snapshots <= 0" do
+              before { allow(@record).to receive(:is_available?).with(:create_snapshot).and_return(false) }
+              it_behaves_like 'record with error message', 'create_snapshot'
+            end
 
-            it "when no available message but active" do
-              allow(@record).to receive(:is_available?).with(:create_snapshot).and_return(false)
-              @active = true
-              expect(subject).to eq("The VM is not connected to a Host")
+            context "when number of snapshots > 0" do
+              before do
+                allow(@record).to receive(:number_of).with(:snapshots).and_return(4)
+                allow(@record).to receive(:is_available?).with(:create_snapshot).and_return(false)
+              end
+
+              it_behaves_like 'record with error message', 'create_snapshot'
+
+              context "when no available message but active" do
+                before(:each) do
+                  allow(@record).to receive(:is_available?).with(:create_snapshot).and_return(false)
+                  @active = true
+                end
+                it "when it has required host" do
+                  allow(@record).to receive(:has_required_host?).and_return(true)
+                  expect(subject).to eq("The VM is not connected to an active Cloud/Infrastructure Providers")
+                end
+                it "when it does not have required host" do
+                  allow(@record).to receive(:has_required_host?).and_return(false)
+                  expect(subject).to eq("The VM is not connected to a Host")
+                end
+              end
+            end
+
+            it_behaves_like 'default true_case'
+          end
+          context "and id = vm_snapshot_delete" do
+            before { @id = "vm_snapshot_delete" }
+            context "when with available message" do
+              before { allow(@record).to receive(:is_available?).with(:remove_snapshot).and_return(false) }
+              it_behaves_like 'record with error message', 'remove_snapshot'
+            end
+            context "when without snapshots" do
+              before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(0) }
+              it_behaves_like 'record with error message', 'remove_snapshot'
+            end
+            context "when with snapshots" do
+              before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(2) }
+              it_behaves_like 'default case'
             end
           end
-          it_behaves_like 'default true_case'
-        end
 
-        context "and id = vm_snapshot_delete" do
-          before { @id = "vm_snapshot_delete" }
-          context "when with available message" do
-            before { allow(@record).to receive(:is_available?).with(:remove_snapshot).and_return(false) }
-            it_behaves_like 'record with error message', 'remove_snapshot'
+          context "and id = vm_snapshot_delete_all" do
+            before { @id = "vm_snapshot_delete_all" }
+            context "when with available message" do
+              before { allow(@record).to receive(:is_available?).with(:remove_all_snapshots).and_return(false) }
+              it_behaves_like 'record with error message', 'remove_all_snapshots'
+            end
+            context "when without snapshots" do
+              before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(0) }
+              it_behaves_like 'record with error message', 'remove_all_snapshots'
+            end
           end
-          context "when without snapshots" do
-            before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(0) }
-            it_behaves_like 'record with error message', 'remove_snapshot'
-          end
-          context "when with snapshots" do
-            before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(2) }
-            it_behaves_like 'default case'
-          end
-        end
 
-        context "and id = vm_snapshot_delete_all" do
-          before { @id = "vm_snapshot_delete_all" }
-          context "when with available message" do
-            before { allow(@record).to receive(:is_available?).with(:remove_all_snapshots).and_return(false) }
-            it_behaves_like 'record with error message', 'remove_all_snapshots'
-          end
-          context "when without snapshots" do
-            before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(0) }
-            it_behaves_like 'record with error message', 'remove_all_snapshots'
-          end
-          context "when with snapshots" do
-            before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(2) }
-            it_behaves_like 'default case'
+          context "id = vm_snapshot_revert" do
+            before { @id = "vm_snapshot_revert" }
+            context "when with available message" do
+              before { allow(@record).to receive(:is_available?).with(:revert_to_snapshot).and_return(false) }
+              it_behaves_like 'record with error message', 'revert_to_snapshot'
+            end
+            context "when without snapshots" do
+              before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(0) }
+              it_behaves_like 'record with error message', 'revert_to_snapshot'
+            end
+            context "when with snapshots" do
+              before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(2) }
+              it_behaves_like 'default case'
+            end
           end
         end
 
-        context "id = vm_snapshot_revert" do
-          before { @id = "vm_snapshot_revert" }
-          context "when with available message" do
-            before { allow(@record).to receive(:is_available?).with(:revert_to_snapshot).and_return(false) }
-            it_behaves_like 'record with error message', 'revert_to_snapshot'
+        context "when rhevm provider" do
+          it_behaves_like "a vm of a snapshotable provider", FactoryGirl.create(:vm_redhat, :vendor => "redhat")
+          context "and id = vm_snapshot_delete_all" do
+            before do
+              @record = FactoryGirl.create(:vm_redhat, :vendor => "redhat")
+              @id = "vm_snapshot_delete_all"
+            end
+            context "when with snapshots" do
+              before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(2) }
+              it { is_expected.to eq("Removing all snapshots is currently not supported") }
+            end
           end
-          context "when without snapshots" do
-            before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(0) }
-            it_behaves_like 'record with error message', 'revert_to_snapshot'
-          end
-          context "when with snapshots" do
-            before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(2) }
-            it_behaves_like 'default case'
+        end
+
+        context "when vmware provider" do
+          it_behaves_like "a vm of a snapshotable provider", FactoryGirl.create(:vm_vmware, :vendor => "vmware")
+          context "and id = vm_snapshot_delete_all" do
+            before do
+              @record = FactoryGirl.create(:vm_vmware, :vendor => "vmware")
+              @id = "vm_snapshot_delete_all"
+            end
+            context "when with snapshots" do
+              before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(2) }
+              it_behaves_like 'default case'
+            end
           end
         end
       end
     end # end of Vm class
-
-    context "Disable Snapshot buttons for RHEV VMs" do
-      before { @record = FactoryGirl.create(:vm_redhat) }
-
-      ['vm_snapshot_add', 'vm_snapshot_delete', 'vm_snapshot_delete_all', 'vm_snapshot_revert'].each do |b|
-        it "button #{b}" do
-          res = build_toolbar_disable_button(b)
-          expect(res).to be_truthy
-          expect(res).to include("not supported")
-        end
-      end
-    end
 
     context "Disable Retire button for already retired VMs and Instances" do
       it "button instance_retire_now" do

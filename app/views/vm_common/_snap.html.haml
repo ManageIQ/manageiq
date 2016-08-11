@@ -6,7 +6,7 @@
   #form_div
     %h3= _('Snapshot Information')
     .form-horizontal
-      .form-group
+      .form-group{"hidden" => @record.vendor == "redhat" ? true : nil}
         %label.control-label.col-md-2
           = _('Name')
         .col-md-8
