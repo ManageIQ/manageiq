@@ -228,7 +228,7 @@ class ExplorerPresenter
     data[:setVisibility] = @options[:set_visible_elements]
     data[:rightCellText] = @options[:right_cell_text] if @options[:right_cell_text]
 
-    data[:reloadToolbars] = @options[:reload_toolbars].collect do |div_name, toolbar|
+    data[:reloadToolbars] = @options[:reload_toolbars].collect do |_div_name, toolbar|
       toolbar
     end
 

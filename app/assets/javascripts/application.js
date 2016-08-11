@@ -21,11 +21,10 @@
 //= require miq_api
 //= require rxjs/dist/rx.all
 //= require miq_angular_application
+//= require_tree ./angular_modules/
 //= require_tree ./controllers/
 //= require_tree ./directives/
 //= require_tree ./services/
-//= require_tree ./angular_modules/
-//= require_tree ./controllers/
 //= require d3
 //= require c3
 //= require lodash
