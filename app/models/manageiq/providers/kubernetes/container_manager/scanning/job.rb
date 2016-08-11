@@ -67,6 +67,9 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     end
 
     queue_signal(:pod_wait)
+  rescue
+    queue_abort("unexpected exception, see log")
+    raise
   end
 
   def pod_wait
@@ -104,6 +107,9 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     end
 
     queue_signal(:analyze)
+  rescue
+    queue_abort("unexpected exception, see log")
+    raise
   end
 
   def analyze
@@ -134,6 +140,9 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
                         "taskid" => jobid,
                         "host"   => MiqServer.my_server,
                         "args"   => [YAML.dump(scan_args)])
+  rescue
+    queue_abort("unexpected exception, see log")
+    raise
   end
 
   def collect_compliance_data(image)
@@ -369,6 +378,11 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     pod_def[:spec][:volumes].append(
       :name   => "inspector-admin-secret",
       :secret => {:secretName => inspector_admin_secret_name})
+  end
+
+  def queue_abort(error_msg)
+    _log.error(error_msg)
+    queue_signal(:abort_job, error_msg, "error")
   end
 
   def inspector_image
