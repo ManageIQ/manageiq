@@ -52,7 +52,7 @@ describe PostgresHaAdmin::FailoverMonitor do
       end
     end
 
-    context "primary database is not available" do
+    context "primary database is not accessable" do
       let(:linux_admin) do
         linux_adm = double('LinuxAdmin')
         allow(LinuxAdmin::Service).to receive(:new).and_return(linux_adm)
@@ -61,22 +61,21 @@ describe PostgresHaAdmin::FailoverMonitor do
       end
 
       before do
-        allow(PG::Connection).to receive(:open).and_return(nil)
-        allow(failover_monitor).to receive(:pg_connection).and_return(connection)
+        allow(PG::Connection).to receive(:open).and_return(nil, connection, connection)
       end
 
-      describe "#primary_database_host" do
+      describe "#host_for_primary_database" do
         it "return host if supplied connection established with primary database" do
           params = {:host => '203.0.113.2', :user => 'root', :dbname => 'vmdb_test'}
           expect(failover_db).to receive(:query_repmgr).with(connection).and_return(guery_repmanager_result)
-          host = failover_monitor.primary_database_host(connection, params)
+          host = failover_monitor.host_for_primary_database(connection, params)
           expect(host).to eq '203.0.113.2'
         end
 
         it "return nil if supplied connection established with mot primary database" do
           params = {:host => '203.0.113.3', :user => 'root', :dbname => 'vmdb_test'}
           expect(failover_db).to receive(:query_repmgr).with(connection).and_return(guery_repmanager_result)
-          host = failover_monitor.primary_database_host(connection, params)
+          host = failover_monitor.host_for_primary_database(connection, params)
           expect(host).to be nil
         end
       end
