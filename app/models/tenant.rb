@@ -33,6 +33,7 @@ class Tenant < ApplicationRecord
   has_many :services, :dependent => :destroy
 
   belongs_to :default_miq_group, :class_name => "MiqGroup", :dependent => :destroy
+  belongs_to :source, :polymorphic => true
 
   # FUTURE: /uploads/tenant/:id/logos/:basename.:extension # may want style
   has_attached_file :logo,

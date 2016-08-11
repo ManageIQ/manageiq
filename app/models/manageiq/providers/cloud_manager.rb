@@ -28,6 +28,8 @@ module ManageIQ::Providers
     has_many :key_pairs,                     :class_name  => "AuthPrivateKey", :as => :resource, :dependent => :destroy
     has_many :host_aggregates,               :foreign_key => :ems_id, :dependent => :destroy
 
+    has_one  :source_tenant, :as => :source, :class_name => 'Tenant'
+
     validates_presence_of :zone
 
     include HasNetworkManagerMixin
