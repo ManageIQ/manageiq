@@ -23,7 +23,8 @@ class Blueprint < ApplicationRecord
     end
   end
 
-  def create_bundle(catalog_items, service_dialog, service_catalog, options = {})
+  def create_bundle(options)
+    options = options.with_indifferent_access
     self.class.transaction do
       ServiceTemplate.create(
         :name         => name,
@@ -31,15 +32,21 @@ class Blueprint < ApplicationRecord
         :blueprint    => self,
         :service_type => 'composite'
       ).tap do |new_bundle|
-        add_catalog_items(new_bundle, catalog_items)
-        new_bundle.service_template_catalog = service_catalog
+        add_catalog_items(new_bundle, options[:service_templates]) if options.key?(:service_templates)
+        new_bundle.service_template_catalog = options[:service_catalog]
 
-        new_dialog = service_dialog.deep_copy(:name => random_dialog_name(name)).tap(&:save!)
-        add_entry_points(new_bundle, options['entry_points'], new_dialog)
+        if options.key?(:service_dialog)
+          new_dialog = options[:service_dialog].deep_copy(:name => random_dialog_name(name)).tap(&:save!)
+        end
+        add_entry_points(new_bundle, options[:entry_points], new_dialog)
 
         new_bundle.save!
       end
     end
+  end
+
+  def update_bundle(options)
+    # TODO
   end
 
   private
@@ -54,8 +61,8 @@ class Blueprint < ApplicationRecord
       duplicate_resource_actions(service_template, new_template, is_top)
       duplicate_service_resources(blueprint, service_template, new_template)
       update_copied_service_template(blueprint, new_template, new_attributes)
-      duplicate_custom_buttons(service_template, new_template)
-      duplicate_custom_button_sets(service_template, new_template)
+      duplicate_custom_buttons(service_template, new_template) if is_top
+      duplicate_custom_button_sets(service_template, new_template) if is_top
     end
   end
 
