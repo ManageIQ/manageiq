@@ -19,7 +19,7 @@ class LoadBalancerPoolMember < ApplicationRecord
                  :uses => :load_balancer_health_check_members
 
   def load_balancer_health_check_states
-    @load_balancer_health_check_states ||= load_balancer_health_check_members.collect { |x| x.status }
+    @load_balancer_health_check_states ||= load_balancer_health_check_members.collect(&:status)
   end
 
   def load_balancer_health_check_states_with_reason
