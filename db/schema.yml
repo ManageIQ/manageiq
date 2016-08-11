@@ -1570,6 +1570,8 @@ load_balancer_health_check_members:
 - id
 - load_balancer_health_check_id
 - load_balancer_pool_member_id
+- status
+- status_reason
 load_balancer_health_checks:
 - id
 - ems_ref
@@ -1586,6 +1588,8 @@ load_balancer_health_checks:
 - cloud_tenant_id
 - created_at
 - updated_at
+- load_balancer_id
+- type
 load_balancer_listener_pools:
 - id
 - load_balancer_listener_id
@@ -1604,10 +1608,13 @@ load_balancer_listeners:
 - ems_id
 - cloud_tenant_id
 - load_balancer_id
-- load_balancer_pool_id
-- network_port_id
 - created_at
 - updated_at
+- type
+load_balancer_pool_member_pools:
+- id
+- load_balancer_pool_id
+- load_balancer_pool_member_id
 load_balancer_pool_members:
 - id
 - ems_ref
@@ -1619,6 +1626,9 @@ load_balancer_pool_members:
 - resource_group_id
 - created_at
 - updated_at
+- vm_id
+- type
+- ems_id
 load_balancer_pools:
 - id
 - ems_ref
@@ -1630,6 +1640,7 @@ load_balancer_pools:
 - cloud_tenant_id
 - created_at
 - updated_at
+- type
 load_balancers:
 - id
 - ems_ref
@@ -1639,6 +1650,7 @@ load_balancers:
 - cloud_tenant_id
 - created_at
 - updated_at
+- type
 log_files:
 - id
 - name
