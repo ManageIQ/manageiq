@@ -2,9 +2,10 @@ class ApiController
   module Blueprints
     def create_resource_blueprints(_type, _id, data)
       attributes = data.except("bundle")
-      blueprint = Blueprint.create!(attributes)
+      blueprint = Blueprint.new(attributes)
       bundle = data["bundle"]
       create_bundle(blueprint, bundle) if bundle
+      blueprint.save!
       blueprint
     end
 
