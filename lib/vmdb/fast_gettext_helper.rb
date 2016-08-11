@@ -1,3 +1,5 @@
+require 'vmdb/gettext/domains'
+
 module Vmdb
   module FastGettextHelper
     def self.register_human_localenames
@@ -52,16 +54,14 @@ module Vmdb
     end
 
     def self.register_locales
-      FastGettext.add_text_domain('manageiq',
-                                  :path           => locale_path,
-                                  :type           => :po,
-                                  :report_warning => false)
+      Vmdb::Gettext::Domains.add_domain(Vmdb::Gettext::Domains::TEXT_DOMAIN, locale_path, :po) # Default ManageIQ domain
+      Vmdb::Gettext::Domains.initialize_chain_repo
 
       FastGettext.default_available_locales = find_available_locales
 
       # temporary hack to fix a problem with locales including "_"
       fix_i18n_available_locales
-      FastGettext.default_text_domain = 'manageiq'
+      FastGettext.default_text_domain = Vmdb::Gettext::Domains::TEXT_DOMAIN
     end
   end
 end
