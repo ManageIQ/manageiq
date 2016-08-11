@@ -197,7 +197,7 @@ class TreeNodeBuilder
       :icon  => node_icon(image)
     }
     # Start with all nodes open unless expand is explicitly set to false
-    @node[:expand] = true if options[:open_all] && options[:expand] != false
+    @node[:expand] = options[:open_all].present? && options[:open_all] && options[:expand] != false
     tooltip(tip)
   end
 

@@ -558,7 +558,7 @@ module OpsController::Settings::Common
     server_id, child = id.split('__')
 
     if server_id.include?('svr')
-      server_id.sub!('svr-','')
+      server_id.sub!('svr-', '')
       from_cid(server_id)
     else
       server_id.sub!('xx-', '')
@@ -606,7 +606,11 @@ module OpsController::Settings::Common
       }
     end
 
-    @smartproxy_affinity_tree  = TreeBuilderSmartproxyAffinity.new(:smartproxy_affinity, :smartproxy_affinity_tree, @sb, true, @selected_zone)
+    @smartproxy_affinity_tree = TreeBuilderSmartproxyAffinity.new(:smartproxy_affinity,
+                                                                  :smartproxy_affinity_tree,
+                                                                  @sb,
+                                                                  true,
+                                                                  @selected_zone)
 
     @edit[:new] = copy_hash(@edit[:current])
     session[:edit] = @edit

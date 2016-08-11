@@ -3,7 +3,6 @@ class TreeBuilderSmartproxyAffinity < TreeBuilder
   has_kids_for MiqServer, [:x_get_server_kids]
 
   def initialize(name, type, sandbox, build = true, data)
-    #@sb = sandbox
     @data = data
     super(name, type, sandbox, build)
   end
@@ -21,7 +20,6 @@ class TreeBuilderSmartproxyAffinity < TreeBuilder
                   :onclick                     => false,
                   :three_checks                => true,
                   :oncheck                     => 'miqOnClickSmartProxyAffinityCheck',
-                  :enable_tree_images          => false,
                   :check_url                   => '/ops/smartproxy_affinity_field_changed/',
                   :open_close_all_on_dbl_click => true)
   end
@@ -36,12 +34,12 @@ class TreeBuilderSmartproxyAffinity < TreeBuilder
   end
 
   def x_get_server_kids(parent, count_only = false)
-    nodes = ['host','storage'].map  do |kid|
-    {:id       => "#{parent.id}__#{kid}",
-     :image    => kid,
-     :parent   => parent,
-     :text     => Dictionary.gettext(kid.camelcase, :type => :model, :notfound => :titleize, :plural => true),
-     :children => @data.send(kid.pluralize).sort_by(&:name)}
+    nodes = %w(host storage).map do |kid|
+      {:id       => "#{parent.id}__#{kid}",
+       :image    => kid,
+       :parent   => parent,
+       :text     => Dictionary.gettext(kid.camelcase, :type => :model, :notfound => :titleize, :plural => true),
+       :children => @data.send(kid.pluralize).sort_by(&:name)}
     end
     count_only_or_objects(count_only, nodes)
   end

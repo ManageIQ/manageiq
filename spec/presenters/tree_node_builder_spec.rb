@@ -354,10 +354,10 @@ describe TreeNodeBuilder do
       expect(node[:expand]).to eq(true)
     end
 
-    it "expand attribute of node should be set to nil when open_all is true and expand is set to false in options" do
+    it "expand attribute of node should be set to false when open_all is true and expand is set to false in options" do
       tenant = FactoryGirl.build(:tenant)
       node = TreeNodeBuilder.build(tenant, "root", {:expand => false, :open_all => true})
-      expect(node[:expand]).to eq(nil)
+      expect(node[:expand]).to eq(false)
     end
 
     it "expand attribute of node should be set to true when open_all and expand are true in options" do
