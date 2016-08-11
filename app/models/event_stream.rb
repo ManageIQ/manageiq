@@ -22,4 +22,6 @@ class EventStream < ApplicationRecord
   belongs_to :container_replicator
   belongs_to :container_group
   belongs_to :container_node
+
+  belongs_to :middleware_server, :foreign_key => :middleware_server_id
 end

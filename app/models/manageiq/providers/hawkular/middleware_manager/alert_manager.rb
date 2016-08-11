@@ -31,7 +31,11 @@ module ManageIQ::Providers
                                       'description' => miq_alert[:description],
                                       'enabled'     => miq_alert[:enabled],
                                       'type'        => :GROUP,
-                                      'eventType'   => :EVENT)
+                                      'eventType'   => :EVENT,
+                                      'tags'        => {
+                                        'miq.event_type'    => 'hawkular_event',
+                                        'miq.resource_type' => miq_alert[:based_on]
+                                      })
     end
 
     def convert_to_group_conditions(miq_alert)

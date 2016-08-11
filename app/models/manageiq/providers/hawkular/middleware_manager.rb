@@ -291,7 +291,8 @@ module ManageIQ::Providers
         :id          => alert[:id],
         :enabled     => alert[:enabled],
         :description => alert[:description],
-        :conditions  => alert[:expression]
+        :conditions  => alert[:expression],
+        :based_on    => alert[:db]
       }
       MiddlewareManager.find_each { |m| m.alert_manager.process_alert(operation, miq_alert) }
     end

@@ -12,4 +12,22 @@ class MiddlewareServer < ApplicationRecord
   def metrics_capture
     @metrics_capture ||= ManageIQ::Providers::Hawkular::MiddlewareManager::LiveMetricsCapture.new(self)
   end
+
+  def tenant_identity
+    if ext_management_system
+      ext_management_system.tenant_identity
+    else
+      User.super_admin.tap { |u| u.current_group = Tenant.root_tenant.default_miq_group }
+    end
+  end
+
+  def evaluate_alert(alert_id, event)
+    s_start = event.full_data.index("id=\"") + 4
+    s_end = event.full_data.index("\"", s_start + 4) - 1
+    event_id = event.full_data[s_start..s_end]
+    if event_id.start_with?("MiQ-#{alert_id}") && event.middleware_server_id == id
+      return true
+    end
+    false
+  end
 end
