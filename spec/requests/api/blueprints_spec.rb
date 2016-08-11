@@ -198,6 +198,66 @@ RSpec.describe "Blueprints API" do
     end
   end
 
+  describe "POST /api/blueprints" do
+    it "can delete multiple blueprints" do
+      blueprint1, blueprint2 = FactoryGirl.create_list(:blueprint, 2)
+      api_basic_authorize collection_action_identifier(:blueprints, :delete)
+
+      run_post(blueprints_url, :action => "delete", :resources => [{:id => blueprint1.id}, {:id => blueprint2.id}])
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "forbids multiple blueprint deletion without an appropriate role" do
+      blueprint1, blueprint2 = FactoryGirl.create_list(:blueprint, 2)
+      api_basic_authorize
+
+      run_post(blueprints_url, :action => "delete", :resources => [{:id => blueprint1.id}, {:id => blueprint2.id}])
+
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
+  describe "POST /api/blueprints/:id" do
+    it "can delete a blueprint with an appropriate role" do
+      blueprint = FactoryGirl.create(:blueprint)
+      api_basic_authorize action_identifier(:blueprints, :delete)
+
+      run_post(blueprints_url(blueprint.id), :action => "delete")
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "forbids blueprint deletion without an appropriate role" do
+      blueprint = FactoryGirl.create(:blueprint)
+      api_basic_authorize
+
+      run_post(blueprints_url(blueprint.id), :action => "delete")
+
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
+  describe "DELETE /api/blueprints/:id" do
+    it "can delete a blueprint with an appropriate role" do
+      blueprint = FactoryGirl.create(:blueprint)
+      api_basic_authorize action_identifier(:blueprints, :delete, :resource_actions, :delete)
+
+      run_delete(blueprints_url(blueprint.id))
+
+      expect(response).to have_http_status(:no_content)
+    end
+
+    it "forbids blueprint deletion without an appropriate role" do
+      blueprint = FactoryGirl.create(:blueprint)
+      api_basic_authorize
+
+      run_delete(blueprints_url(blueprint.id))
+
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
   # TODO: factor this out of this test so it can be used elsewhere
   def build_dialog
     FactoryGirl.create(
