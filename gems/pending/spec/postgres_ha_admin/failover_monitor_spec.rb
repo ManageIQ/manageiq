@@ -67,14 +67,14 @@ describe PostgresHaAdmin::FailoverMonitor do
       describe "#host_for_primary_database" do
         it "return host if supplied connection established with primary database" do
           params = {:host => '203.0.113.2', :user => 'root', :dbname => 'vmdb_test'}
-          expect(failover_db).to receive(:query_repmgr).with(connection).and_return(guery_repmanager_result)
+          expect(failover_db).to receive(:query_repmgr).and_return(guery_repmanager_result)
           host = failover_monitor.host_for_primary_database(connection, params)
           expect(host).to eq '203.0.113.2'
         end
 
-        it "return nil if supplied connection established with mot primary database" do
+        it "return nil if supplied connection established with not primary database" do
           params = {:host => '203.0.113.3', :user => 'root', :dbname => 'vmdb_test'}
-          expect(failover_db).to receive(:query_repmgr).with(connection).and_return(guery_repmanager_result)
+          expect(failover_db).to receive(:query_repmgr).and_return(guery_repmanager_result)
           host = failover_monitor.host_for_primary_database(connection, params)
           expect(host).to be nil
         end
@@ -87,18 +87,49 @@ describe PostgresHaAdmin::FailoverMonitor do
         failover_monitor.monitor
       end
 
-      it "updates 'database.yml' if there is available primary database and restart evm server" do
+      it "does not update 'database.yml' and 'failover_databases.yml' if all standby DBs are in recovery mode" do
         allow(failover_monitor).to receive(:stop_evmserverd)
-        allow(failover_monitor).to receive(:database_in_recovery?).with(connection).and_return(false)
+        allow(failover_monitor).to receive(:database_in_recovery?).and_return(true)
+
         expect(failover_db).to receive(:active_databases).and_return(active_databases_list)
-        expect(failover_db).to receive(:query_repmgr).exactly(2).times
-          .with(connection).and_return(guery_repmanager_result)
+        expect(failover_db).not_to receive(:update_database_yml)
+        expect(db_yml).not_to receive(:update_database_yml)
+        expect(linux_admin).not_to receive(:start)
 
+        stub_const("PostgresHaAdmin::FailoverMonitor::FAILOVER_ATTEMPTS", 1)
+        stub_const("PostgresHaAdmin::FailoverMonitor::FAILOVER_CHECK_FREQUENCY", 1)
+        failover_monitor.monitor
+      end
+
+      it "does not update 'database.yml' and 'failover_databases.yml' if there is no master database avaiable" do
+        allow(failover_monitor).to receive(:stop_evmserverd)
+        allow(failover_monitor).to receive(:database_in_recovery?).and_return(false)
+        allow(failover_db).to receive(:query_repmgr).and_return(no_master_db_list)
+
+        expect(failover_db).to receive(:active_databases).and_return(active_databases_list)
+        expect(failover_db).not_to receive(:update_database_yml)
+        expect(db_yml).not_to receive(:update_database_yml)
+        expect(linux_admin).not_to receive(:start)
+
+        stub_const("PostgresHaAdmin::FailoverMonitor::FAILOVER_ATTEMPTS", 1)
+        stub_const("PostgresHaAdmin::FailoverMonitor::FAILOVER_CHECK_FREQUENCY", 1)
+        failover_monitor.monitor
+      end
+
+      it "updates 'database.yml' and 'failover_databases.yml' and start evm server if new primary db available" do
+        allow(failover_monitor).to receive(:stop_evmserverd)
+        allow(failover_monitor).to receive(:database_in_recovery?).and_return(false)
+        allow(failover_db).to receive(:query_repmgr).and_return(guery_repmanager_result)
+
+        expect(failover_db).to receive(:active_databases).and_return(active_databases_list)
         expect(failover_db).to receive(:update_failover_yml).with(connection)
-        expect(db_yml).to receive(:update_database_yml)
-        expect(linux_admin).to receive(:stop)
-        expect(linux_admin).to receive(:start)
 
+        expect(db_yml).to receive(:update_database_yml).ordered
+        expect(linux_admin).to receive(:stop).ordered
+        expect(linux_admin).to receive(:start).ordered
+
+        stub_const("PostgresHaAdmin::FailoverMonitor::FAILOVER_ATTEMPTS", 1)
+        stub_const("PostgresHaAdmin::FailoverMonitor::FAILOVER_CHECK_FREQUENCY", 1)
         failover_monitor.monitor
       end
     end
@@ -115,6 +146,13 @@ describe PostgresHaAdmin::FailoverMonitor do
     arr = []
     arr << {:type => 'standby', :active => false, :host => '203.0.113.1', :user => 'root', :dbname => 'vmdb_test'}
     arr << {:type => 'master', :active => true, :host => '203.0.113.2', :user => 'root', :dbname => 'vmdb_test'}
+    arr << {:type => 'standby', :active => true, :host => '203.0.113.3', :user => 'root', :dbname => 'vmdb_test'}
+  end
+
+  def no_master_db_list
+    arr = []
+    arr << {:type => 'standby', :active => false, :host => '203.0.113.1', :user => 'root', :dbname => 'vmdb_test'}
+    arr << {:type => 'standby', :active => true, :host => '203.0.113.2', :user => 'root', :dbname => 'vmdb_test'}
     arr << {:type => 'standby', :active => true, :host => '203.0.113.3', :user => 'root', :dbname => 'vmdb_test'}
   end
 end
