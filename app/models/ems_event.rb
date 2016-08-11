@@ -146,6 +146,15 @@ class EmsEvent < EventStream
         event[:vm_name] ||= vm.name
       end
     end
+
+    event_type = event[:event_type]
+    # both event types are Rhev specific
+    if (event_type == 'USER_ADD_VM' || event_type == 'USER_ADD_VM_FINISHED_SUCCESS') && event[:vm_or_template_id].nil?
+      new_vm = ManageIQ::Providers::Redhat::InfraManager::Vm.create_from_event(event)
+
+      event[:vm_or_template_id] = new_vm.id
+      event[:vm_name] ||= new_vm.name
+    end
   end
 
   def self.process_host_in_event!(event, options = {})

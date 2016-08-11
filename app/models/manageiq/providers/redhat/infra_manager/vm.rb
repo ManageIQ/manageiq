@@ -28,6 +28,31 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
   alias_method :owning_cluster, :parent_cluster
   alias_method :ems_cluster, :parent_cluster
 
+  def self.create_from_event(event)
+    data = event[:full_data]
+    vm = data[:vm]
+    cluster = data[:cluster]
+
+    ems_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(vm[:href])
+    cluster_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(cluster[:href])
+
+    vm_data = [ems_ref.include?('/templates/'), ems_ref, vm[:id], event[:message].split(/\W/)[1]]
+    vm_hash = ManageIQ::Providers::Redhat::InfraManager::RefreshParser.create_vm_hash(vm_data)
+
+    old_cluster = EmsCluster.find_by(:ems_ref => cluster_ref)
+    vm_hash[:ems_cluster_id] = old_cluster[:id]
+
+    ems = ExtManagementSystem.find_by_id(event[:ems_id])
+    new_vm = ems.vms_and_templates.build(vm_hash)
+    new_vm.save!
+
+    resource_pool = old_cluster.children.first
+    resource_pool.add_vm(new_vm)
+    resource_pool.save!
+
+    new_vm
+  end
+
   #
   # UI Button Validation Methods
   #
