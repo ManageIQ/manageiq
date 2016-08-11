@@ -30,6 +30,7 @@ class ServiceTemplate < ApplicationRecord
   virtual_column   :template_valid_error_message, :type => :string
 
   default_value_for :service_type,  'unknown'
+  default_value_for(:generic_subtype) { |st| 'custom' if st.prov_type == 'generic' }
 
   virtual_has_one :custom_actions, :class_name => "Hash"
   virtual_has_one :custom_action_buttons, :class_name => "Array"
