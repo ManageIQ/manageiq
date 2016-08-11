@@ -1,5 +1,5 @@
 describe "Quota Validation" do
-  include QuotaHelper
+  include Spec::Support::QuotaHelper
 
   def run_automate_method(prov_req)
     attrs = []

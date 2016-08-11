@@ -127,7 +127,7 @@ describe TenantQuota do
   end
 
   context "formatted tenant quota values" do
-    include QuotaHelper
+    include Spec::Support::QuotaHelper
 
     let(:child_tenant) { FactoryGirl.create(:tenant, :parent => @tenant) }
 

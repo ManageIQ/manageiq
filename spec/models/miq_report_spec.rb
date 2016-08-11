@@ -552,7 +552,7 @@ describe MiqReport do
     end
 
     context "Tenant Quota Report" do
-      include QuotaHelper
+      include Spec::Support::QuotaHelper
 
       let!(:tenant_without_quotas) { FactoryGirl.create(:tenant, :name=>"tenant_without_quotas") }
 

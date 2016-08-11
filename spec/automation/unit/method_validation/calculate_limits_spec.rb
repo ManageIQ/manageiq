@@ -1,5 +1,5 @@
 describe "Quota Validation" do
-  include QuotaHelper
+  include Spec::Support::QuotaHelper
 
   def run_automate_method(provision_request, quota_source)
     source = case quota_source

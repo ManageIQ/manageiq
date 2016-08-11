@@ -1,5 +1,5 @@
 describe "Quota Validation" do
-  include QuotaHelper
+  include Spec::Support::QuotaHelper
 
   def run_automate_method(provision_request)
     @quota_used       = YAML.dump(:storage => 32_768, :vms => 2, :cpu => 2,  :memory => 4096)
