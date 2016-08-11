@@ -3,7 +3,7 @@ class TreeBuilderSmartproxyAffinity < TreeBuilder
   has_kids_for MiqServer, [:x_get_server_kids]
 
   def initialize(name, type, sandbox, build = true, data)
-    @sb = sandbox
+    #@sb = sandbox
     @data = data
     super(name, type, sandbox, build)
   end
