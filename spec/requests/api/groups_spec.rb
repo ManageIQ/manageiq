@@ -215,6 +215,14 @@ describe ApiController do
       expect(response).to have_http_status(:not_found)
     end
 
+    it 'rejects a request to remove a default tenant group' do
+      api_basic_authorize collection_action_identifier(:groups, :delete)
+
+      run_delete(groups_url(tenant3.default_miq_group_id))
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
     it "supports single group delete" do
       api_basic_authorize collection_action_identifier(:groups, :delete)
 
