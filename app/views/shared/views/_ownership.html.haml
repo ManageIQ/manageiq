@@ -12,9 +12,9 @@
         = _('Select an Owner:')
       .col-md-8
         - if @ownershipitems.length > 1
-          - opts = [["<#{_("Don't change")}>", ApplicationController::CiProcessing::DONT_CHANGE_OWNER], ["<#{_('No Owner')}>", nil]]
+          - opts = [["<#{_("Don't change")}>", ApplicationController::CiProcessing::DONT_CHANGE_OWNER], ["<#{_('No Owner')}>", '']]
         - else
-          - opts =  [["<#{_('No Owner')}>", nil]]
+          - opts =  [["<#{_('No Owner')}>", '']]
         - opts += @users.sort
         = select_tag("user",
                     options_for_select(opts, @user),

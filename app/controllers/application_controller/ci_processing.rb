@@ -112,9 +112,8 @@ module ApplicationController::CiProcessing
     klass = get_class_from_controller_param(params[:controller])
     record = klass.find(@ownership_items[0])
     user = record.evm_owner if @ownership_items.length == 1
-    @user = user ? user.id.to_s : nil # Set to first category, if not already set
-    @groups = {} # Create new entries hash (2nd pulldown)
-    # need to do this only if 1 vm is selected and miq_group has been set for it
+    @user = user ? user.id.to_s : ''
+    @groups = {}
     group = record.miq_group if @ownership_items.length == 1
     @group = group ? group.id.to_s : nil
     Rbac.filtered(MiqGroup).each { |g| @groups[g.description] = g.id.to_s }
