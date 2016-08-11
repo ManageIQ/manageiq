@@ -21,7 +21,7 @@ def usage(s)
   $stderr.puts("Installs OpenStack on servers using packstack")
   $stderr.puts("Filter one with --only-environment")
   $stderr.puts("Options:")
-  $stderr.puts("         [--only-envinronment <name>]  - allowed values #{allowed_enviroments}")
+  $stderr.puts("         [--only-environment <name>]  - allowed values #{allowed_environments}")
   exit(2)
 end
 
@@ -36,7 +36,7 @@ loop do
   case option
   when '--only-environment', '-o'
     argv      = ARGV.shift
-    supported = allowed_enviroments
+    supported = allowed_environments
     raise ArgumentError, usage("supported --identity options are #{supported}") unless supported.include?(argv.to_sym)
     @only_environment = argv.to_sym
   when /^-/
