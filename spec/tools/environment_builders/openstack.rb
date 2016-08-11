@@ -28,8 +28,8 @@ def usage(s)
   exit(2)
 end
 
-unless File.exist?("openstack_environments.yml")
-  raise ArgumentError, usage("expecting openstack_environments.yml in ManageIQ root dir")
+unless File.exist?(openstack_environment_file)
+  raise ArgumentError, usage("expecting #{openstack_environment_file}")
 end
 
 @only_environment = nil

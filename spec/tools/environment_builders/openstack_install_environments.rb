@@ -25,8 +25,8 @@ def usage(s)
   exit(2)
 end
 
-unless File.exist?("openstack_environments.yml")
-  raise ArgumentError, usage("expecting openstack_environments.yml in ManageIQ root dir")
+unless File.exist?(openstack_environment_file)
+  raise ArgumentError, usage("expecting #{openstack_environment_file}")
 end
 
 @only_environment = nil
@@ -110,7 +110,7 @@ def install_environments
   end
 
   puts "---------------------------------------------------------------------------------------------------------------"
-  puts "Updating openstack_environments.yml with OpenStack credentials"
+  puts "Updating #{openstack_environment_file} with OpenStack credentials"
   File.open(openstack_environment_file, 'w') { |f| f.write openstack_environments.to_yaml }
 end
 
