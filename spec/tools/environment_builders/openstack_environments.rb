@@ -17,7 +17,7 @@ def usage(s)
 end
 
 @method = ARGV.shift
-unless %w(--load --obfuscate --activate-paginations --deactivate-paginations).include?(@method)
+unless %w(--load --obfuscate).include?(@method)
   raise ArgumentError, usage("expecting method name as first argument")
 end
 
@@ -60,59 +60,6 @@ def obfuscate_environments
   end
 end
 
-def activate_paginations
-  openstack_environments.each do |env|
-    env_name     = env.keys.first
-    env          = env[env_name]
-    ssh_user     = env["ssh_user"] || "root"
-
-    @environment = env_name.to_sym
-
-    case @environment
-    when :grizzly
-      puts " We don't support pagination for grizzly"
-      next
-    when :havana
-      file = "openstack-activate-pagination-rhel6"
-    else
-      file = "openstack-activate-pagination"
-    end
-
-    puts "-------------------------------------------------------------------------------------------------------------"
-    puts "Activate paginations in installed OpenStack #{env_name}"
-    cmd = " ssh #{ssh_user}@#{env["ip"]} "\
-          " 'curl http://file.brq.redhat.com/~lsmola/miq/#{file} | bash -x' "
-    puts cmd
-    ` #{cmd} `
-  end
-end
-
-def deactivate_paginations
-  openstack_environments.each do |env|
-    env_name     = env.keys.first
-    env          = env[env_name]
-    ssh_user     = env["ssh_user"] || "root"
-
-    @environment = env_name.to_sym
-
-    puts "-------------------------------------------------------------------------------------------------------------"
-    case @environment
-    when :grizzly
-      puts " We don't support pagination for grizzly"
-      next
-    when :havana
-      file = "openstack-deactivate-pagination-rhel6"
-    else
-      file = "openstack-deactivate-pagination"
-    end
-
-    puts "Deactivate paginations in installed OpenStack #{env_name}"
-    cmd = " ssh #{ssh_user}@#{env["ip"]} "\
-          " 'curl http://file.brq.redhat.com/~lsmola/miq/#{file} | bash -x' "
-    puts cmd
-    ` #{cmd} `
-  end
-end
 
 def change_file(file_name, from_password, to_password, from_ip, to_ip)
   return unless File.exist?(file_name)
@@ -131,8 +78,4 @@ when "--load"
   load_environments
 when "--obfuscate"
   obfuscate_environments
-when "--activate-paginations"
-  activate_paginations
-when "--deactivate-paginations"
-  deactivate_paginations
 end
