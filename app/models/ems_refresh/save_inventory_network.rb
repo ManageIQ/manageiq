@@ -5,10 +5,19 @@
 #     - cloud_subnets
 #   - security_groups
 #     - firewall_rules
-#   - floating_ips
+#   - load_balancers
 #   - network_ports
+#   - floating_ips
 #   - network_routers
+#   - load_balancer_pool_members
+#   - load_balancer_pools
+#     - load_balancer_pool_member_pools
+#   - load_balancer_listeners
+#     - load_balancer_listener_pools
+#   - load_balancer_health_checks
+#     - load_balancer_health_check_members
 #
+
 
 module EmsRefresh::SaveInventoryNetwork
   def save_ems_network_inventory(ems, hashes, target = nil)
@@ -32,8 +41,13 @@ module EmsRefresh::SaveInventoryNetwork
       :network_groups,
       :security_groups,
       :network_routers,
+      :load_balancers,
       :network_ports,
       :floating_ips,
+      :load_balancer_pool_members,
+      :load_balancer_pools,
+      :load_balancer_listeners,
+      :load_balancer_health_checks,
     ]
 
     # Save and link other subsections
@@ -214,6 +228,20 @@ module EmsRefresh::SaveInventoryNetwork
     store_ids_for_new_records(ems.network_routers, hashes, :ems_ref)
   end
 
+  def save_load_balancers_inventory(ems, hashes, target = nil)
+    target = ems if target.nil?
+
+    ems.load_balancers.reset
+    deletes = if target == ems
+                :use_association
+              else
+                []
+              end
+
+    save_inventory_multi(ems.load_balancers, hashes, deletes, [:ems_ref])
+    store_ids_for_new_records(ems.load_balancers, hashes, :ems_ref)
+  end
+
   def save_network_ports_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
@@ -249,7 +277,133 @@ module EmsRefresh::SaveInventoryNetwork
       end
     end
 
-    save_inventory_multi(network_port.cloud_subnet_network_ports, hashes, deletes, [:cloud_subnet])
+    save_inventory_multi(network_port.cloud_subnet_network_ports, hashes, deletes, [:cloud_subnet_id])
+  end
+
+  def save_load_balancer_pool_members_inventory(ems, hashes, target = nil)
+    target = ems if target.nil?
+
+    ems.load_balancer_pool_members(true)
+    deletes = if (target == ems)
+                ems.load_balancer_pool_members.dup
+              else
+                []
+              end
+
+    hashes.each do |h|
+      %i(vm).each do |relation|
+        h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
+      end
+    end
+
+    save_inventory_multi(ems.load_balancer_pool_members,
+                         hashes,
+                         deletes,
+                         [:ems_ref])
+    store_ids_for_new_records(ems.load_balancer_pool_members, hashes, :ems_ref)
+  end
+
+  def save_load_balancer_pools_inventory(ems, hashes, target = nil)
+    target = ems if target.nil?
+
+    ems.load_balancer_pools(true)
+    deletes = if (target == ems)
+                ems.load_balancer_pools.dup
+              else
+                []
+              end
+
+    save_inventory_multi(ems.load_balancer_pools,
+                         hashes,
+                         deletes,
+                         [:ems_ref],
+                         :load_balancer_pool_member_pools)
+    store_ids_for_new_records(ems.load_balancer_pools, hashes, :ems_ref)
+  end
+
+  def save_load_balancer_pool_member_pools_inventory(load_balancer_pool, hashes)
+    deletes = load_balancer_pool.load_balancer_pool_member_pools.reload.dup
+
+    hashes.each do |h|
+      %i(load_balancer_pool_member).each do |relation|
+        h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
+      end
+    end
+
+    save_inventory_multi(load_balancer_pool.load_balancer_pool_member_pools, hashes, deletes, [:load_balancer_pool_member_id])
+  end
+
+  def save_load_balancer_listeners_inventory(ems, hashes, target = nil)
+    target = ems if target.nil?
+
+    ems.load_balancer_listeners(true)
+    deletes = if (target == ems)
+                ems.load_balancer_listeners.dup
+              else
+                []
+              end
+
+    hashes.each do |h|
+      %i(load_balancer).each do |relation|
+        h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
+      end
+    end
+
+    save_inventory_multi(ems.load_balancer_listeners,
+                         hashes,
+                         deletes,
+                         [:ems_ref],
+                         :load_balancer_listener_pools)
+    store_ids_for_new_records(ems.load_balancer_listeners, hashes, :ems_ref)
+  end
+
+  def save_load_balancer_listener_pools_inventory(load_balancer_listener, hashes)
+    deletes = load_balancer_listener.load_balancer_listener_pools.reload.dup
+
+    hashes.each do |h|
+      %i(load_balancer_pool).each do |relation|
+        h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
+      end
+    end
+
+    save_inventory_multi(load_balancer_listener.load_balancer_listener_pools, hashes, deletes, [:load_balancer_pool_id])
+  end
+
+  def save_load_balancer_health_checks_inventory(ems, hashes, target = nil)
+    target = ems if target.nil?
+
+    ems.load_balancer_health_checks(true)
+    deletes = if (target == ems)
+                ems.load_balancer_health_checks.dup
+              else
+                []
+              end
+
+    hashes.each do |h|
+      %i(load_balancer load_balancer_listener).each do |relation|
+        h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
+      end
+    end
+
+    save_inventory_multi(ems.load_balancer_health_checks,
+                         hashes,
+                         deletes,
+                         [:ems_ref],
+                         :load_balancer_health_check_members)
+    store_ids_for_new_records(ems.load_balancer_health_checks, hashes, :ems_ref)
+  end
+
+  def save_load_balancer_health_check_members_inventory(load_balancer_health_check, hashes)
+    deletes = load_balancer_health_check.load_balancer_health_check_members.reload.dup
+
+    hashes.each do |h|
+      %i(load_balancer_pool_member).each do |relation|
+        h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
+      end
+    end
+
+    save_inventory_multi(load_balancer_health_check.load_balancer_health_check_members, hashes, deletes,
+                         [:load_balancer_pool_member_id])
   end
 
   def link_cloud_subnets_to_network_routers(hashes)
