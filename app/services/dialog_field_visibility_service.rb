@@ -25,12 +25,12 @@ class DialogFieldVisibilityService
     @linked_clone_visibility_service = linked_clone_visibility_service
   end
 
-  def set_hidden_fields(field_names_to_hide, fields)
-    set_fields_display_status(fields, field_names_to_hide, :hide)
-  end
+  def set_visibility_for_field(visibility_hash, field_name, field)
+    status = field[:display]
+    status = :edit if visibility_hash[:edit].include?(field_name)
+    status = :hide if visibility_hash[:hide].include?(field_name)
 
-  def set_shown_fields(field_names_to_show, fields)
-    set_fields_display_status(fields, field_names_to_show, :edit)
+    field[:display] = field[:display_override].presence || status || :edit
   end
 
   def determine_visibility(options)

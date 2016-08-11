@@ -167,78 +167,76 @@ describe DialogFieldVisibilityService do
     end
   end
 
-  describe "#set_hidden_fields" do
-    let(:fields) { [field] }
-    let(:field) { {:name => field_name, :display => :unchanged, :display_override => display_override} }
-    let(:field_names_to_hide) { ["hide_me"] }
+  describe "#set_visibility_for_field" do
+    let(:field) { {:display_override => display_override} }
+    let(:visibility_hash) { {:edit => "edit_me", :hide => "hide_me"} }
 
-    context "when the field name is contained in the field names to hide" do
-      let(:field_name) { "hide_me" }
+    before do
+      subject.set_visibility_for_field(visibility_hash, field_name, field)
+    end
 
+    shared_examples_for "#set_visibility_for_field with a display override" do
       context "when the field has a display override" do
         let(:display_override) { :potato }
 
-        it "sets the field's display property to :hide" do
-          subject.set_hidden_fields(field_names_to_hide, fields)
+        it "sets the display value to the override" do
           expect(field[:display]).to eq(:potato)
-        end
-      end
-
-      context "when the field display override is blank" do
-        let(:display_override) { "" }
-
-        it "sets the field's display property to :hide" do
-          subject.set_hidden_fields(field_names_to_hide, fields)
-          expect(field[:display]).to eq(:hide)
         end
       end
     end
 
-    context "when the field name is not contained in the field names to hide" do
-      let(:field_name) { "test" }
-      let(:display_override) { "" }
+    context "when the field name is contained in the field names to edit" do
+      let(:field_name) { "edit_me" }
 
-      it "does not change the field's display property" do
-        subject.set_hidden_fields(field_names_to_hide, fields)
-        expect(field[:display]).to eq(:unchanged)
-      end
-    end
-  end
-
-  describe "#set_shown_fields" do
-    let(:fields) { [field] }
-    let(:field) { {:name => field_name, :display => :unchanged, :display_override => display_override} }
-    let(:field_names_to_show) { ["show_me"] }
-
-    context "when the field name is contained in the field names to hide" do
-      let(:field_name) { "show_me" }
-
-      context "when the field has a display override" do
-        let(:display_override) { :potato }
-
-        it "sets the field's display property to the override" do
-          subject.set_shown_fields(field_names_to_show, fields)
-          expect(field[:display]).to eq(:potato)
-        end
-      end
+      it_behaves_like "#set_visibility_for_field with a display override"
 
       context "when the field display override is blank" do
         let(:display_override) { "" }
 
-        it "sets the field's display property to :edit" do
-          subject.set_shown_fields(field_names_to_show, fields)
+        it "sets the display value to edit" do
           expect(field[:display]).to eq(:edit)
         end
       end
     end
 
-    context "when the field name is not contained in the field names to show" do
-      let(:field_name) { "test" }
-      let(:display_override) { nil }
+    context "when the field name is contained in the field names to hide" do
+      let(:field_name) { "hide_me" }
 
-      it "does not change the field's display property" do
-        subject.set_shown_fields(field_names_to_show, fields)
-        expect(field[:display]).to eq(:unchanged)
+      it_behaves_like "#set_visibility_for_field with a display override"
+
+      context "when the field display override is blank" do
+        let(:display_override) { "" }
+
+        it "sets the display value to hide" do
+          expect(field[:display]).to eq(:hide)
+        end
+      end
+    end
+
+    context "when the field name is not contained in either the field names to edit or hide" do
+      let(:field_name) { "potato" }
+
+      it_behaves_like "#set_visibility_for_field with a display override"
+
+      context "when the field display override is blank" do
+        let(:display_override) { "" }
+
+        context "when the field does not have a display value" do
+          let(:display) { nil }
+
+          it "sets the display value to edit" do
+            expect(field[:display]).to eq(:edit)
+          end
+        end
+
+
+        context "when the field does have a display value" do
+          let(:field) { {:display_override => display_override, :display => :hide} }
+
+          it "uses the given display value" do
+            expect(field[:display]).to eq(:hide)
+          end
+        end
       end
     end
   end
