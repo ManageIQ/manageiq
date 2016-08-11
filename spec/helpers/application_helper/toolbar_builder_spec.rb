@@ -367,7 +367,6 @@ describe ApplicationHelper do
      "vm_check_compliance",
      "vm_guest_shutdown",
      "vm_guest_standby",
-     "vm_guest_restart",
      "vm_policy_sim",
      "vm_protect",
      "vm_start",
@@ -1229,22 +1228,6 @@ describe ApplicationHelper do
         end
 
         it "and @record.is_available?(:shutdown_guest)" do
-          expect(subject).to be_falsey
-        end
-      end
-
-      context "and id = vm_guest_restart" do
-        before do
-          @id = "vm_guest_restart"
-          allow(@record).to receive(:is_available?).with(:reboot_guest).and_return(true)
-        end
-
-        it "and !@record.is_available?(:reboot_guest)" do
-          allow(@record).to receive(:is_available?).with(:reboot_guest).and_return(false)
-          expect(subject).to be_truthy
-        end
-
-        it "and @record.is_available?(:reboot_guest)" do
           expect(subject).to be_falsey
         end
       end
@@ -2198,15 +2181,6 @@ describe ApplicationHelper do
           allow(@record).to receive(:is_available_now_error_message).and_return(false)
         end
         it_behaves_like 'record with error message', 'shutdown_guest'
-        it_behaves_like 'default case'
-      end
-
-      context "and id = vm_guest_restart" do
-        before do
-          @id = "vm_guest_restart"
-          allow(@record).to receive(:is_available_now_error_message).and_return(false)
-        end
-        it_behaves_like 'record with error message', 'reboot_guest'
         it_behaves_like 'default case'
       end
 
