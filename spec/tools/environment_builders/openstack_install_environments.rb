@@ -59,6 +59,13 @@ def install_environments
     env          = env[env_name]
     ssh_user     = env["ssh_user"] || "root"
 
+    @environment = env_name.to_sym
+
+    unless @only_environment.blank?
+      puts "Skipping enviroment #{@environment}"
+      next unless @environment == @only_environment
+    end
+
     cmd = "ssh-copy-id #{ssh_user}@#{env["ip"]}"
     puts "Executing: #{cmd}"
     ` #{cmd} `
@@ -104,6 +111,11 @@ def install_environments
     ssh_user     = env["ssh_user"] || "root"
 
     @environment = env_name.to_sym
+
+    unless @only_environment.blank?
+      puts "Skipping enviroment #{@environment}"
+      next unless @environment == @only_environment
+    end
 
     stackrc_name = 'keystonerc_admin'
     stackrc_name += '_v3' if identity_service == :v3
