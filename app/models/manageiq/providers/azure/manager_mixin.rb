@@ -6,7 +6,7 @@ module ManageIQ::Providers::Azure::ManagerMixin
 
     client_id  = options[:user] || authentication_userid(options[:auth_type])
     client_key = options[:pass] || authentication_password(options[:auth_type])
-    self.class.raw_connect(client_id, client_key, azure_tenant_id, subscription, options[:proxy_uri] ||= http_proxy_uri)
+    self.class.raw_connect(client_id, client_key, azure_tenant_id, subscription, options[:proxy_uri] || http_proxy_uri)
   end
 
   def verify_credentials(_auth_type = nil, options = {})
