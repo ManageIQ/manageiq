@@ -113,6 +113,9 @@ module ManageIQ::Providers
             @vc_data[type] = inv_hash unless inv_hash.blank?
             _log.info("#{log_header} Retrieving #{type.to_s.titleize} inventory...Complete - Count: [#{inv_hash.blank? ? 0 : inv_hash.length}]")
           end
+
+          storage_profile_ids = @vc_data[:storage_profile].collect { |uid, _profile| uid }
+          @vc_data[:storage_profile_datastore] = @vi.pbmQueryMatchingHub(storage_profile_ids)
         end
 
         # Merge Virtual Apps into Resource Pools
