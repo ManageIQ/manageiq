@@ -384,6 +384,27 @@ describe ServiceTemplate do
       end
     end
   end
+
+  describe 'generic_subtype' do
+    context 'when prov_type = generic ' do
+      it 'sets a default value' do
+        st = ServiceTemplate.create(:prov_type => 'generic')
+        expect(st.generic_subtype).to eq('custom')
+      end
+
+      it 'sets specified value' do
+        st = ServiceTemplate.create(:prov_type => 'generic', :generic_subtype => 'vm')
+        expect(st.generic_subtype).to eq('vm')
+      end
+    end
+
+    context 'when prov_type != generic' do
+      it 'does not set default value' do
+        st = ServiceTemplate.create(:prov_type => 'vmware')
+        expect(st.generic_subtype).to be_nil
+      end
+    end
+  end
 end
 
 def add_and_save_service(p, c)
