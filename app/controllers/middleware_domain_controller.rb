@@ -1,6 +1,5 @@
 class MiddlewareDomainController < ApplicationController
   include EmsCommon
-  include ContainersCommonMixin
   include MiddlewareCommonMixin
 
   before_action :check_privileges
@@ -9,16 +8,10 @@ class MiddlewareDomainController < ApplicationController
   after_action :set_session_data
 
   def show
-    clear_topology_breadcrumb
-    @display = params[:display] || "main" unless control_selected?
-    @lastaction = "show"
-    @showtype = "main"
-    @record = identify_record(params[:id])
-    if @display == 'middleware_server_groups'
-      @gtl_url = '/show'
-      show_container_display(@record, 'middleware_server_group', MiddlewareServerGroup)
-    else
-      show_container(@record, controller_name, display_name)
+    return unless init_show
+    case params[:display]
+    when 'middleware_server_groups' then show_middleware_entities(MiddlewareServerGroup)
+    else show_middleware
     end
   end
 end
