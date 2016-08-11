@@ -1,6 +1,6 @@
-include ServiceTemplateHelper
-
 describe "FilterByDialogParameters Automate Method" do
+  include Spec::Support::ServiceTemplateHelper
+
   before do
     @allowed_service_templates = %w(top)
     user_helper

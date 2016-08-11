@@ -1,6 +1,6 @@
-include ServiceTemplateHelper
-
 describe "DialogParser Automate Method" do
+  include Spec::Support::ServiceTemplateHelper
+
   before(:each) do
     @root_stp = FactoryGirl.create(:miq_request_task, :type => 'ServiceTemplateProvisionTask')
     @user = FactoryGirl.create(:user_with_group)

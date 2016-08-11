@@ -1,6 +1,6 @@
-include ServiceTemplateHelper
-
 describe "Service Filter" do
+  include Spec::Support::ServiceTemplateHelper
+
   before do
     @allowed_service_templates = []
     user_helper
