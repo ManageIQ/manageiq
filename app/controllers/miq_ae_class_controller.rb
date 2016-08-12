@@ -2004,8 +2004,10 @@ class MiqAeClassController < ApplicationController
         end
       end
     elsif params[:button] == "accept"
-      if session[:field_data]['name'].blank?
-        add_flash(_("Name is required"), :error)
+      if session[:field_data]['name'].blank? || session[:field_data]['aetype'].blank?
+        field = session[:field_data]['name'].blank? ? "Name" : "Type"
+        field += " and Type" if field == "Name" && session[:field_data]['aetype'].blank?
+        add_flash(_(field + " is required"), :error)
         return
       end
       new_fields = {}
