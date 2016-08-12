@@ -1,5 +1,3 @@
-include AutomationSpecHelper
-
 describe "update_provision_status" do
   let(:user)      { FactoryGirl.create(:user_with_group) }
 
