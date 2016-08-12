@@ -1579,6 +1579,9 @@ function miqHideSearchClearButton() {
   $(".search-pf .has-clear .clear").click(function () {
     $(this).prev('.form-control').val('').focus();
     $(this).hide();
+    // Clear @search_text
+    var url = "/" + ManageIQ.controller + "/clear_search_text";
+    miqJqueryRequest(url);
   });
 }
 

@@ -8,6 +8,7 @@ Vmdb::Application.routes.draw do
     adv_search_load_choice
     adv_search_name_typed
     adv_search_toggle
+    clear_search_text
   )
 
   button_post = %w(
