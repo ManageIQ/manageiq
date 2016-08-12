@@ -1088,7 +1088,10 @@ class MiqRequestWorkflow
     storages = hosts.each_with_object({}) do |host, hash|
       host.writable_storages.each { |s| hash[s.id] = s }
     end.values
-
+    selected_storage_profile_id = get_value(@values[:storage_profile_filter])
+    if selected_storage_profile_id
+      storages.reject!{ |s| !s.storage_profiles.pluck(:id).include?(selected_storage_profile_id) }
+    end
     allowed_storages_cache = process_filter(:ds_filter, Storage, storages).collect do |s|
       ci_to_hash_struct(s)
     end
