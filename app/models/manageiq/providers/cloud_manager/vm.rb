@@ -15,6 +15,11 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   has_many :security_groups, -> { distinct }, :through => :network_ports
   has_many :cloud_volumes, :through => :disks, :source => :backing, :source_type => "CloudVolume"
 
+  has_many :load_balancer_pool_members
+  has_many :load_balancer_listeners, -> { distinct }, :through => :load_balancer_pool_members
+  has_many :load_balancers, -> { distinct }, :through => :load_balancer_pool_members
+  has_many :load_balancer_health_checks, -> { distinct }, :through => :load_balancer_pool_members
+
   has_and_belongs_to_many :key_pairs, :join_table              => :key_pairs_vms,
                                       :foreign_key             => :vm_id,
                                       :association_foreign_key => :authentication_id,
@@ -24,6 +29,33 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
 
   virtual_column :ipaddresses,   :type => :string_set, :uses => {:network_ports => :ipaddresses}
   virtual_column :mac_addresses, :type => :string_set, :uses => :network_ports
+  virtual_column :load_balancer_health_check_state, :type => :string,
+                 :uses => {:load_balancer_pool_members => :load_balancer_health_check_states}
+  virtual_column :load_balancer_health_check_states, :type => :string_set,
+                 :uses => {:load_balancer_pool_members => :load_balancer_health_check_states}
+  virtual_column :load_balancer_health_check_states_with_reason, :type => :string_set,
+                 :uses => {:load_balancer_pool_members => :load_balancer_health_check_states_with_reason}
+
+  def load_balancer_health_check_state
+    return @health_check_state if @health_check_state
+    return (@health_check_state = nil) if load_balancer_pool_members.blank?
+
+    out_of_service_states = load_balancer_pool_members.collect(&:load_balancer_health_check_states).flatten.compact.detect do |state|
+      state != 'InService'
+    end
+
+    @health_check_state = out_of_service_states.blank? ? 'InService' : 'OutOfService'
+  end
+
+  def load_balancer_health_check_states
+    @health_check_states ||=
+      load_balancer_pool_members.collect(&:load_balancer_health_check_states).flatten.compact
+  end
+
+  def load_balancer_health_check_states_with_reason
+    @health_check_states_with_reason ||=
+      load_balancer_pool_members.collect(&:load_balancer_health_check_states_with_reason).flatten.compact
+  end
 
   def ipaddresses
     @ipaddresses ||= network_ports.collect(&:ipaddresses).flatten.compact.uniq
