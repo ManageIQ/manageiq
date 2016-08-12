@@ -42,11 +42,8 @@ class ApiController
     # Same signature.
     #
     def add_resource(type, _id, data)
+      assert_id_not_specified(data, "#{type} resource")
       klass = collection_class(type)
-      if data.key?("id") || data.key?("href")
-        raise BadRequestError,
-              "Resource id or href should not be specified for creating a new #{type} resource"
-      end
       subcollection_data = collection_config.subcollections(type).each_with_object({}) do |sc, hash|
         if data.key?(sc.to_s)
           hash[sc] = data[sc.to_s]

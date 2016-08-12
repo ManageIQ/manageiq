@@ -1,10 +1,7 @@
 class ApiController
   module ProvisionRequests
     def create_resource_provision_requests(type, _id, data)
-      if data.key?("id") || data.key?("href")
-        raise BadRequestError,
-              "Resource id or href should not be specified for creating a new #{type}"
-      end
+      assert_id_not_specified(data, type)
 
       version_str       = data["version"] || "1.1"
       template_fields   = hash_fetch(data, "template_fields")

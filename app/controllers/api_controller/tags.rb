@@ -43,11 +43,8 @@ class ApiController
       action_result(false, err.to_s)
     end
 
-    def create_resource_tags(_type, _id, data)
-      if data.key?("id") || data.key?("href")
-        raise BadRequestError,
-              "Resource id or href should not be specified for creating a new tag resource"
-      end
+    def create_resource_tags(type, _id, data)
+      assert_id_not_specified(data, type)
       category_data = data.delete("category") { {} }
       category = fetch_category(category_data)
       unless category

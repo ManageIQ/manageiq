@@ -299,5 +299,11 @@ class ApiController
     def collection_option?(option)
       collection_config.option?(@req.collection, option) if @req.collection
     end
+
+    def assert_id_not_specified(data, type)
+      if data.key?('id') || data.key?('href')
+        raise BadRequestError, "Resource id or href should not be specified for creating a new #{type}"
+      end
+    end
   end
 end
