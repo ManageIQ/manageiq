@@ -107,10 +107,6 @@
               - 13.times do
                 %td
           - else
-            - @prty = 1
-            - @edit[:new][:fields].sort_by { |a| [a['priority'].to_i] }.each_with_index do |field, i|
-              - @prty = (field['priority'].to_i + 1) if i == (@edit[:new][:fields].length - 1)
-
             %tr
               %td
                 = link_to(image_tag(image_path("16/na.png"), :alt => (t = _("Add this entry"))),
