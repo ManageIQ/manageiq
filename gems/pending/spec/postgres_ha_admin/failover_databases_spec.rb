@@ -55,7 +55,8 @@ describe PostgresHaAdmin::FailoverDatabases do
         VALUES
           ('master', 'host=203.0.113.1 user=root dbname=vmdb_test', 'true'),
           ('standby', 'host=203.0.113.2 user=root dbname=vmdb_test', 'true'),
-          ('standby', 'host=203.0.113.3 user=root dbname=vmdb_test', 'false')
+          ('standby', 'host=203.0.113.3 user=root dbname=vmdb_test', 'false'),
+          ('master', 'host=203.0.113.5 user=root dbname=vmdb_test', 'false')
       SQL
     end
 
@@ -79,12 +80,16 @@ describe PostgresHaAdmin::FailoverDatabases do
         expect(failover_databases.host_is_repmgr_primary?('203.0.113.1', @connection)).to be true
       end
 
-      it "return false if supplied connection established with not not active database" do
+      it "return false if supplied connection established with not active standby database" do
         expect(failover_databases.host_is_repmgr_primary?('203.0.113.3', @connection)).to be false
       end
 
-      it "return false if supplied connection established with not master database" do
+      it "return false if supplied connection established with active standby database" do
         expect(failover_databases.host_is_repmgr_primary?('203.0.113.2', @connection)).to be false
+      end
+
+      it "return false if supplied connection established with not active master database" do
+        expect(failover_databases.host_is_repmgr_primary?('203.0.113.5', @connection)).to be false
       end
     end
   end
@@ -94,6 +99,7 @@ describe PostgresHaAdmin::FailoverDatabases do
     arr << {:type => 'master', :active => true, :host => '203.0.113.1', :user => 'root', :dbname => 'vmdb_test'}
     arr << {:type => 'standby', :active => true, :host => '203.0.113.2', :user => 'root', :dbname => 'vmdb_test'}
     arr << {:type => 'standby', :active => false, :host => '203.0.113.3', :user => 'root', :dbname => 'vmdb_test'}
+    arr << {:type => 'master', :active => false, :host => '203.0.113.5', :user => 'root', :dbname => 'vmdb_test'}
     arr
   end
 
