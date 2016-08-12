@@ -36,8 +36,7 @@ class MiqUserRole < ApplicationRecord
 
   # @param identifier [String] Product feature identifier to check if this role allows access to it
   #   Returns true when requested feature is directly assigned or a descendant of a feature
-  # @param scope [nil] Unused option, added here for legacy callers passing it anyway
-  def allows?(identifier:, scope: nil)
+  def allows?(identifier:)
     if feature_identifiers.include?(identifier)
       true
     elsif parent = MiqProductFeature.parent_for_feature(identifier)

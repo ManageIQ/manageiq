@@ -22,13 +22,10 @@ module Rbac
 
       any     = options[:any]
 
-      # Potentially removable; MiqUserRole uses it internally
-      scope   = options[:scope]
-
       auth = if any.present?
-               user_role_allows_any?(user, :identifiers => (identifiers || [identifier]), :scope => scope)
+               user_role_allows_any?(user, :identifiers => (identifiers || [identifier]))
              else
-               user_role_allows?(user, :identifier => identifier, :scope => scope)
+               user_role_allows?(user, :identifier => identifier)
              end
       _log.debug("Auth #{auth ? "successful" : "failed"} for user '#{user.userid}', role '#{user.miq_user_role.try(:name)}', feature identifier '#{identifier}'")
 
