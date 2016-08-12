@@ -1,4 +1,9 @@
 class LoadBalancerHealthCheck < ApplicationRecord
+  include NewWithTypeStiMixin
+  include VirtualTotalMixin
+
+  acts_as_miq_taggable
+
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::NetworkManager"
   belongs_to :cloud_tenant
   belongs_to :load_balancer
@@ -9,4 +14,6 @@ class LoadBalancerHealthCheck < ApplicationRecord
 
   has_many :vms, -> { distinct }, :through => :load_balancer_pool_members
   has_many :resource_groups, -> { distinct }, :through => :load_balancer_pool_members
+
+  virtual_total :total_vms, :vms, :uses => :vms
 end

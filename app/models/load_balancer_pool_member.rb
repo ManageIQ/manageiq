@@ -1,4 +1,9 @@
 class LoadBalancerPoolMember < ApplicationRecord
+  include NewWithTypeStiMixin
+  include VirtualTotalMixin
+
+  acts_as_miq_taggable
+
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::NetworkManager"
   belongs_to :cloud_tenant
   belongs_to :resource_group
@@ -17,6 +22,8 @@ class LoadBalancerPoolMember < ApplicationRecord
   virtual_column :load_balancer_health_check_states_with_reason,
                  :type => :string_set,
                  :uses => :load_balancer_health_check_members
+
+  virtual_total :total_vms, :vms, :uses => :vms
 
   def load_balancer_health_check_states
     @load_balancer_health_check_states ||= load_balancer_health_check_members.collect(&:status)
