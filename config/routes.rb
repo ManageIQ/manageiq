@@ -1106,6 +1106,7 @@ Vmdb::Application.routes.draw do
       :post => %w(
         add_deployment
         add_jdbc_driver
+        add_datasource
         button
         create
         dynamic_checkbox_refresh

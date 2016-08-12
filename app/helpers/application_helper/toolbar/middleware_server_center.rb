@@ -129,4 +129,23 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
       ]
     ),
   ])
+  button_group('middleware_server_datasources', [
+    select(
+      :middleware_server_datasources_choice,
+      'pficon pficon-save fa-lg',
+      t = N_('Datasources'),
+      t,
+      :items => [
+        button(
+          :middleware_datasource_add,
+          'fa fa-database fa-lg',
+          N_('Add a new Middleware Datasource'),
+          N_('Add Datasource'),
+          :data => {'toggle'        => 'modal',
+                    'target'        => '#modal_ds_div',
+                    'function'      => 'miqCallAngular',
+                    'function-data' => '{"name": "showListener", "args": []}'})
+      ]
+    ),
+  ])
 end

@@ -50,6 +50,12 @@ class MiddlewareServerController < ApplicationController
                                     :skip  => false,
                                     :msg   => N_('JDBC Driver installation'),
                                     :param => :driver
+    },
+    :middleware_add_datasource  => {:op    => :add_middleware_datasource,
+                                    :skip  => false,
+                                    :hawk  => N_('Not adding new datasource to Hawkular server'),
+                                    :msg   => N_('New datasource initiated for selected server(s)'),
+                                    :param => :file
     }
   }.freeze
 
@@ -94,6 +100,15 @@ class MiddlewareServerController < ApplicationController
     render :json => {
       :status => :success, :msg => _("JDBC Driver \"%s\" has been installed on this server.") % params["driverName"]
     }
+  end
+
+  def add_datasource
+    # @todo: fill in with operation logic for 'add datasource'
+
+    render :update do |page|
+      page << javascript_prologue
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+    end
   end
 
   def show

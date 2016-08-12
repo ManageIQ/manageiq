@@ -3627,6 +3627,10 @@
       :description: Add middleware jdbc driver
       :feature_type: admin
       :identifier: middleware_jdbc_driver_add
+    - :name: Add middleware datasource
+      :description: Add middleware datasource
+      :feature_type: admin
+      :identifier: middleware_datasource_add
 
 # MiddlewareDeployment
 - :name: Middleware Deployment
