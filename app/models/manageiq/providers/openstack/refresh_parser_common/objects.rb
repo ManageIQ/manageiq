@@ -19,7 +19,7 @@ module ManageIQ::Providers
             :key          => container.key,
             :object_count => container.count,
             :bytes        => container.bytes,
-            :tenant       => @data_index.fetch_path(:cloud_tenants, tenant.id)
+            :cloud_tenant => @data_index.fetch_path(:cloud_tenants, tenant.id)
           }
           return uid, new_result
         end
@@ -34,7 +34,7 @@ module ManageIQ::Providers
             :key            => obj.key,
             :content_type   => obj.content_type,
             :container      => container,
-            :tenant         => @data_index.fetch_path(:cloud_tenants, tenant.id)
+            :cloud_tenant   => @data_index.fetch_path(:cloud_tenants, tenant.id)
           }
           content = get_object_content(obj)
           new_result.merge!(:content => content) if content
