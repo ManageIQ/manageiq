@@ -6,7 +6,7 @@ require 'linux_admin'
 
 module PostgresHaAdmin
   class FailoverMonitor
-    FAILOVER_ATTEMPTS = 60
+    FAILOVER_ATTEMPTS = 10
     DB_CONNECTED_CHECK_FREQUENCY = 5.minutes
     FAILOVER_CHECK_FREQUENCY = 1.minute
 
@@ -50,24 +50,26 @@ module PostgresHaAdmin
       end
     end
 
-    def host_for_primary_database(connection, params)
-      result = @failover_db.query_repmgr(connection)
-      result.each do |record|
-        next if record[:host] != params[:host]
-        next if record[:type] != 'master'
-        next unless record[:active]
-        return params[:host]
+    def host_is_repmgr_primary?(host, connection)
+      @failover_db.query_repmgr(connection).each do |record|
+        if record[:host] == host && entry_is_active_master?(record)
+          return true
+        end
       end
-      nil
+      false
     end
 
     private
+
+    def entry_is_active_master?(record)
+      record[:type] == 'master' && record[:active]
+    end
 
     def execute_failover
       FAILOVER_ATTEMPTS.times do
         with_each_standby_connection do |connection, params|
           next if PostgresAdmin.database_in_recovery?(connection)
-          next if host_for_primary_database(connection, params).nil?
+          next unless host_is_repmgr_primary?(params[:host], connection)
           @failover_db.update_failover_yml(connection)
           @database_yml.update_database_yml(params)
           return true
@@ -82,8 +84,10 @@ module PostgresHaAdmin
       @logger.info("Standby Database Servers: #{servers}")
       servers.each do |params|
         connection = pg_connection(params)
-        unless connection.nil?
+        next if connection.nil?
+        begin
           yield connection, params
+        ensure
           connection.finish
         end
       end

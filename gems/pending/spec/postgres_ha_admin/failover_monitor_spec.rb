@@ -30,7 +30,7 @@ describe PostgresHaAdmin::FailoverMonitor do
     allow(LinuxAdmin::Service).to receive(:new).and_return(linux_adm)
     linux_adm
   end
-  
+
   before do
     @logger_file = Tempfile.new('ha_admin.log')
   end
@@ -61,24 +61,19 @@ describe PostgresHaAdmin::FailoverMonitor do
     end
 
     context "primary database is not accessable" do
-
       before do
         allow(PG::Connection).to receive(:open).and_return(nil, connection, connection)
       end
 
-      describe "#host_for_primary_database" do
-        it "return host if supplied connection established with primary database" do
-          params = {:host => '203.0.113.2', :user => 'root', :dbname => 'vmdb_test'}
+      describe "#host_is_repmgr_primary?" do
+        it "return true if supplied connection established with primary database" do
           expect(failover_db).to receive(:query_repmgr).and_return(guery_repmanager_result)
-          host = failover_monitor.host_for_primary_database(connection, params)
-          expect(host).to eq '203.0.113.2'
+          expect(failover_monitor.host_is_repmgr_primary?('203.0.113.2', connection)).to be true
         end
 
-        it "return nil if supplied connection established with not primary database" do
-          params = {:host => '203.0.113.3', :user => 'root', :dbname => 'vmdb_test'}
+        it "return false if supplied connection established with not primary database" do
           expect(failover_db).to receive(:query_repmgr).and_return(guery_repmanager_result)
-          host = failover_monitor.host_for_primary_database(connection, params)
-          expect(host).to be nil
+          expect(failover_monitor.host_is_repmgr_primary?('203.0.113.3', connection)).to be false
         end
       end
 
@@ -125,7 +120,7 @@ describe PostgresHaAdmin::FailoverMonitor do
         allow(failover_db).to receive(:query_repmgr).and_return(guery_repmanager_result)
         allow(failover_db).to receive(:active_databases).and_return(active_databases_list)
         allow(failover_db).to receive(:update_failover_yml).with(connection)
-        
+
         expect(linux_admin).to receive(:stop).ordered
         expect(db_yml).to receive(:update_database_yml).ordered
         expect(linux_admin).to receive(:restart).ordered
