@@ -1,4 +1,6 @@
 class GenericObject < ApplicationRecord
+  acts_as_miq_taggable
+
   belongs_to :generic_object_definition
 
   validates :name, :presence => true
