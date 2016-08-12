@@ -53,6 +53,7 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
       assert_specific_template
       assert_specific_vm_powered_on
       assert_specific_vm_powered_off
+      assert_specific_orchestration_template
     end
   end
 
@@ -64,27 +65,27 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
     expect(AuthPrivateKey.count).to eq(0)
     expect(CloudNetwork.count).to eq(0)
     expect(CloudSubnet.count).to eq(0)
-    expect(OrchestrationTemplate.count).to eq(0)
-    expect(OrchestrationStack.count).to eq(2)
+    expect(OrchestrationTemplate.count).to eq(3)
+    expect(OrchestrationStack.count).to eq(4)
     expect(OrchestrationStackParameter.count).to eq(0)
     expect(OrchestrationStackOutput.count).to eq(0)
     expect(OrchestrationStackResource.count).to eq(0)
     expect(SecurityGroup.count).to eq(0)
     expect(FirewallRule.count).to eq(0)
-    expect(VmOrTemplate.count).to eq(5)
-    expect(Vm.count).to eq(2)
+    expect(VmOrTemplate.count).to eq(9)
+    expect(Vm.count).to eq(6)
     expect(MiqTemplate.count).to eq(3)
 
     expect(CustomAttribute.count).to eq(0)
-    expect(Disk.count).to eq(2)
+    expect(Disk.count).to eq(6)
     expect(GuestDevice.count).to eq(0)
-    expect(Hardware.count).to eq(2)
-    expect(OperatingSystem.count).to eq(2)
+    expect(Hardware.count).to eq(6)
+    expect(OperatingSystem.count).to eq(6)
     expect(Snapshot.count).to eq(0)
     expect(SystemService.count).to eq(0)
 
     expect(Relationship.count).to eq(0)
-    expect(MiqQueue.count).to eq(5)
+    expect(MiqQueue.count).to eq(9)
   end
 
   def assert_ems
@@ -99,12 +100,13 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
     expect(@ems.key_pairs.size).to eq(0)
     expect(@ems.cloud_networks).to eq(nil)
     expect(@ems.security_groups).to eq(nil)
-    expect(@ems.vms_and_templates.size).to eq(5)
-    expect(@ems.vms.size).to eq(2)
+    expect(@ems.vms_and_templates.size).to eq(9)
+    expect(@ems.vms.size).to eq(6)
     expect(@ems.miq_templates.size).to eq(3)
-    expect(@ems.orchestration_stacks.size).to eq(2)
+    expect(@ems.orchestration_stacks.size).to eq(4)
+    expect(@ems.orchestration_templates.size).to eq(3)
 
-    expect(@ems.direct_orchestration_stacks.size).to eq(2)
+    expect(@ems.direct_orchestration_stacks.size).to eq(4)
   end
 
   def assert_specific_template
@@ -143,12 +145,12 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
   end
 
   def assert_specific_vm_powered_on
-    v = ManageIQ::Providers::Vmware::CloudManager::Vm.where(:name => "Damn Small Linux").first
+    v = ManageIQ::Providers::Vmware::CloudManager::Vm.find_by(:name => "DSL-rspec")
     expect(v).to have_attributes(
       :template              => false,
-      :ems_ref               => "vm-07fe0493-dbca-453b-8a2d-cd71f43291a4",
+      :ems_ref               => "vm-224dbb24-9639-4d97-8d36-801e7ccce7e9",
       :ems_ref_obj           => nil,
-      :uid_ems               => "vm-07fe0493-dbca-453b-8a2d-cd71f43291a4",
+      :uid_ems               => "vm-224dbb24-9639-4d97-8d36-801e7ccce7e9",
       :vendor                => "vmware",
       :power_state           => "on",
       :location              => "unknown",
@@ -227,12 +229,12 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
   end
 
   def assert_specific_vm_powered_off
-    v = ManageIQ::Providers::Vmware::CloudManager::Vm.where(:name => "TTYLinux").first
+    v = ManageIQ::Providers::Vmware::CloudManager::Vm.find_by(:name => "TTYL-rspec")
     expect(v).to have_attributes(
       :template              => false,
-      :ems_ref               => "vm-f4625547-9bba-4ec9-bcd8-7cb3c5ca0290",
+      :ems_ref               => "vm-6844a379-61be-4652-817a-f14bb5f09512",
       :ems_ref_obj           => nil,
-      :uid_ems               => "vm-f4625547-9bba-4ec9-bcd8-7cb3c5ca0290",
+      :uid_ems               => "vm-6844a379-61be-4652-817a-f14bb5f09512",
       :vendor                => "vmware",
       :power_state           => "off",
       :location              => "unknown",
@@ -313,13 +315,26 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
 
   def assert_specific_orchestration_stack
     @orchestration_stack1 = ManageIQ::Providers::Vmware::CloudManager::OrchestrationStack
-                            .find_by(:name => "vApp_system_7")
+                            .find_by(:name => "DSL-rspec")
     @orchestration_stack2 = ManageIQ::Providers::Vmware::CloudManager::OrchestrationStack
-                            .find_by(:name => "Tiny01")
-    vm1 = ManageIQ::Providers::Vmware::CloudManager::Vm.where(:name => "Damn Small Linux").first
-    vm2 = ManageIQ::Providers::Vmware::CloudManager::Vm.where(:name => "TTYLinux").first
+                            .find_by(:name => "TTYL-rspec")
+    vm1 = ManageIQ::Providers::Vmware::CloudManager::Vm.find_by(:name => "DSL-rspec")
+    vm2 = ManageIQ::Providers::Vmware::CloudManager::Vm.find_by(:name => "TTYL-rspec")
 
     expect(vm1.orchestration_stack).to eq(@orchestration_stack1)
     expect(vm2.orchestration_stack).to eq(@orchestration_stack2)
+  end
+
+  def assert_specific_orchestration_template
+    @template = ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate.where(:name => "DSL-Linux-template").first
+    expect(@template).not_to be_nil
+    expect(@template).to have_attributes(
+      :ems_ref   => "vappTemplate-44b686fb-d4bf-4ec4-b3fb-6554008f1868",
+      :orderable => false,
+    )
+
+    expect(@template.ems_id).to eq(@ems.id)
+    expect(@template.content.include?('ovf:Envelope')).to be_truthy
+    expect(@template.md5).to eq('48650e81c6433bd2a788766b382aaa5a')
   end
 end

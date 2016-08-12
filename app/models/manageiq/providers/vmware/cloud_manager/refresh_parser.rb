@@ -81,6 +81,8 @@ class ManageIQ::Providers::Vmware::CloudManager::RefreshParser < ManageIQ::Provi
         end
       end
     end
+
+    process_collection(@inv[:vapp_templates], :orchestration_templates) { |vapp_template_obj| parse_vapp_template(vapp_template_obj[:vapp_template]) }
   end
 
   def get_images
@@ -175,6 +177,28 @@ class ManageIQ::Providers::Vmware::CloudManager::RefreshParser < ManageIQ::Provi
       :vendor             => "vmware",
       :raw_power_state    => "never",
       :publicly_available => is_public
+    }
+
+    return uid, new_result
+  end
+
+  def parse_vapp_template(vapp_template)
+    uid = vapp_template.id
+
+    # The content of the template is the OVF specification of the vApp template
+    content = @connection.get_vapp_template_ovf_descriptor(uid).body
+
+    new_result = {
+      :type        => ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate.name,
+      :ems_ref     => uid,
+      :name        => vapp_template.name,
+      :description => vapp_template.description,
+      :orderable   => false,
+      :content     => content,
+      # By default #save_orchestration_templates_inventory does not set the EMS
+      # ID because templates are not EMS specific. We are setting the EMS
+      # explicitly here, because vapps are specific to concrete EMS.
+      :ems_id      => @ems.id
     }
 
     return uid, new_result

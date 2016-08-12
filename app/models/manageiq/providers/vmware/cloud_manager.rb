@@ -1,5 +1,6 @@
 class ManageIQ::Providers::Vmware::CloudManager < ManageIQ::Providers::CloudManager
   require_nested :OrchestrationStack
+  require_nested :OrchestrationTemplate
   require_nested :RefreshParser
   require_nested :RefreshWorker
   require_nested :Refresher
