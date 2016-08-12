@@ -24,6 +24,7 @@ cols:
 - last_compliance_status
 - allocated_disk_storage
 - last_scan_on
+- load_balancer_health_check_state
 - region_description
 
 # Included tables (joined, has_one, has_many) and columns
@@ -59,6 +60,7 @@ col_order:
 - allocated_disk_storage
 - hardware.bitness
 - last_scan_on
+- load_balancer_health_check_state
 - region_description
 
 # Column titles, in order
@@ -72,6 +74,7 @@ headers:
 - Allocated Size
 - Architecture
 - Last Analysis Time
+- Load Balancer Status
 - Region
 
 # Condition(s) string for the SQL query
