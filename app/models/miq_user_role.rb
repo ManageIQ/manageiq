@@ -22,8 +22,6 @@ class MiqUserRole < ApplicationRecord
   FIXTURE_PATH = File.join(FIXTURE_DIR, table_name)
   FIXTURE_YAML = "#{FIXTURE_PATH}.yml"
 
-  SCOPES = [:base, :sub]
-
   RESTRICTIONS = {
     :user          => "Only User Owned",
     :user_or_group => "Only User or Group Owned"
@@ -48,20 +46,16 @@ class MiqUserRole < ApplicationRecord
 
   # @param identifiers [Array] Product feature identifiers to check if this role allows access
   #   to any of them in the given scope.
-  # @param scope [Symbol] Scope to search feature tree for access; must be of type :sub (default), or :base
-  #   Returns true if the role gives access to the feature under one of the following scope options:
-  #   :sub  - Feature is within the role's feature subtree (this feature and all of its descendants)
-  #   :base - Feature is root of the role's feature subtree, i.e. directly assigned to this role
-  def allows_any?(identifiers: [], scope: :sub)
-    raise _("scope option must be one of #{SCOPES.inspect}") unless SCOPES.include?(scope)
-    return false if identifiers.empty?
-
-    role_allows_feature = identifiers.any? { |i| allows?(:identifier => i) }
-    if scope == :sub && !role_allows_feature
-      child_idents = identifiers.map { |i| MiqProductFeature.feature_children(i) }.flatten
-      allows_any?(:identifiers => child_idents, :scope => :sub)
+  def allows_any?(identifiers: [])
+    if identifiers.any? { |i| allows?(:identifier => i) }
+      true
     else
-      role_allows_feature
+      child_idents = identifiers.map { |i| MiqProductFeature.feature_children(i) }.flatten
+      if child_idents.present?
+        allows_any?(:identifiers => child_idents)
+      else
+        false
+      end
     end
   end
 
