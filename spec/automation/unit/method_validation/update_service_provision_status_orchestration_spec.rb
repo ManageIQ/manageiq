@@ -1,5 +1,3 @@
-include AutomationSpecHelper
-
 describe "update_serviceprovision_status" do
   let(:miq_request_task) do
     FactoryGirl.create(:miq_request_task, :destination => service_orchestration,
