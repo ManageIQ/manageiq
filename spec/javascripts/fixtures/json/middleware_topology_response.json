@@ -113,10 +113,12 @@
       }
     ],
     "kinds": {
-      "MiddlewareServer": true,
       "MiddlewareDeployment": true,
       "MiddlewareDatasource": true,
-      "MiddlewareManager": true
+      "MiddlewareDomain": true,
+      "MiddlewareManager": true,
+      "MiddlewareServer": true,
+      "MiddlewareServerGroup": true
     },
     "icons": {
       "ContainerReplicator": {
@@ -178,6 +180,16 @@
         "type": "glyph",
         "icon": "",
         "fontfamily": "icomoon"
+      },
+      "MiddlewareDomain": {
+        "type": "glyph",
+        "icon": "",
+        "fontfamily": "FontAwesome"
+      },
+      "MiddlewareServerGroup": {
+        "type": "glyph",
+        "icon": "",
+        "fontfamily": "FontAwesome"
       },
       "Kubernetes": {
         "type": "image",
