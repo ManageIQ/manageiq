@@ -91,7 +91,7 @@ module EmsRefresh::SaveInventoryNetwork
     target = ems if target.nil?
 
     ems.network_groups(true)
-    deletes = if (target == ems)
+    deletes = if target == ems
                 ems.network_groups.dup
               else
                 []
