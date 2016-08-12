@@ -1850,20 +1850,7 @@ class MiqAeClassController < ApplicationController
   # Delete all selected or single displayed aeclasses(s)
   def deleteclasses
     assert_privileges("miq_ae_class_delete")
-    aeclasses = []
-    if params[:id]
-      aeclasses.push(params[:id])
-      cls = MiqAeClass.find_by_id(from_cid(params[:id]))
-      self.x_node = "aen-#{to_cid(cls.namespace_id)}"
-    else
-      @sb[:row_selected] = find_checked_items
-      @sb[:row_selected].each do |items|
-        item = items.split('-')
-        aeclasses.push(from_cid(item[1]))
-      end
-    end
-    process_aeclasses(aeclasses, "destroy") unless aeclasses.empty?
-    replace_right_cell([:ae])
+    delete_namespaces_or_classes
   end
 
   # Common aeclasses button handler routines
@@ -1950,23 +1937,24 @@ class MiqAeClassController < ApplicationController
   # Delete all selected or single displayed aeclasses(s)
   def delete_ns
     assert_privileges("miq_ae_namespace_delete")
-    delete_domain_or_namespaces
+    delete_namespaces_or_classes
   end
 
-  def delete_domain_or_namespaces
+  def delete_namespaces_or_classes
     selected = find_checked_items
     ae_ns = []
     ae_cs = []
-    if params[:id] && params[:miq_grid_checks].blank?
+    node = x_node.split('-')
+    if params[:id] && params[:miq_grid_checks].blank? && node.first == "aen"
       ae_ns.push(params[:id])
-      self.x_node = "root"
+      ns = MiqAeNamespace.find_by_id(from_cid(node.last))
+      self.x_node = ns.parent_id ? "aen-#{to_cid(ns.parent_id)}" : "root"
     elsif selected
       ae_ns, ae_cs = items_to_delete(selected)
     else
-      node = x_node.split('-')
       ae_cs.push(from_cid(node[1]))
       cls = MiqAeClass.find_by_id(from_cid(node[1]))
-      self.x_node = "aen-#{cls.namespace_id}"
+      self.x_node = "aen-#{to_cid(cls.namespace_id)}"
     end
     process_ae_ns(ae_ns, "destroy")     unless ae_ns.empty?
     process_aeclasses(ae_cs, "destroy") unless ae_cs.empty?

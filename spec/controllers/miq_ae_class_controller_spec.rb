@@ -1,4 +1,5 @@
 describe MiqAeClassController do
+  include CompressedIds
   context "#set_record_vars" do
     it "Namespace remains unchanged when a class is edited" do
       ns = FactoryGirl.create(:miq_ae_namespace)
@@ -568,7 +569,7 @@ describe MiqAeClassController do
     end
   end
 
-  context "#delete_domain_or_namespaces" do
+  context "#delete_namespaces_or_classes" do
     before do
       stub_user(:features => :all)
       domain = FactoryGirl.create(:miq_ae_domain, :tenant => Tenant.seed)
@@ -578,6 +579,7 @@ describe MiqAeClassController do
                                        :trees       => {},
                                        :active_tree => :ae_tree)
       allow(controller).to receive(:replace_right_cell)
+      controller.x_node = "aen-#{@namespace.compressed_id}"
     end
 
 
@@ -586,7 +588,7 @@ describe MiqAeClassController do
                                        :miq_grid_checks => "aec-#{@ae_class.id},aen-#{@namespace.id}",
                                        :id              => @namespace.id
       )
-      controller.send(:delete_domain_or_namespaces)
+      controller.send(:delete_namespaces_or_classes)
       flash_messages = assigns(:flash_array)
       expect(flash_messages.first[:message]).to include("Automate Namespace \"foo_namespace\": Delete successful")
       expect(flash_messages.last[:message]).to include("Automate Class \"foo_class\": Delete successful")
@@ -597,9 +599,34 @@ describe MiqAeClassController do
                                        :id => @namespace.id
       )
 
-      controller.send(:delete_domain_or_namespaces)
+      controller.send(:delete_namespaces_or_classes)
       flash_messages = assigns(:flash_array)
       expect(flash_messages.first[:message]).to include("Automate Namespace \"foo_namespace\": Delete successful")
+    end
+  end
+
+  context "#deleteclasses" do
+    before do
+      stub_user(:features => :all)
+      domain = FactoryGirl.create(:miq_ae_domain, :tenant => Tenant.seed)
+      @namespace = FactoryGirl.create(:miq_ae_namespace, :name => "foo_namespace", :parent => domain)
+      @ae_class = FactoryGirl.create(:miq_ae_class, :name => "foo_class", :namespace_id => @namespace.id)
+      controller.instance_variable_set(:@sb,
+                                       :trees       => {},
+                                       :active_tree => :ae_tree)
+      allow(controller).to receive(:replace_right_cell)
+    end
+
+    it "Should delete selected class in the tree" do
+      controller.x_node = "aec-#{@ae_class.compressed_id}"
+      controller.instance_variable_set(:@_params,
+                                       :id => @namespace.id
+      )
+
+      controller.send(:deleteclasses)
+      flash_messages = assigns(:flash_array)
+      expect(flash_messages.first[:message]).to include("Automate Class \"foo_class\": Delete successful")
+      expect(controller.x_node).to eq("aen-#{@namespace.compressed_id}")
     end
   end
 
