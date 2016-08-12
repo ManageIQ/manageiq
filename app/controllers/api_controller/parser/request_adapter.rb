@@ -76,7 +76,7 @@ class ApiController
         @version ||= if version_override?
                        @params[:version][1..-1] # Switching API Version
                      else
-                       Api::Settings.base[:version] # Default API Version
+                       ManageIQ::API::Settings.base[:version] # Default API Version
                      end
       end
 
@@ -87,7 +87,7 @@ class ApiController
       end
 
       def version_override?
-        @params[:version] && @params[:version].match(Api::Settings.version[:regex]) # v#.# version signature
+        @params[:version] && @params[:version].match(ManageIQ::API::Settings.version[:regex]) # v#.# version signature
       end
 
       def fullpath
