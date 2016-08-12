@@ -1,5 +1,6 @@
 require 'postgres_ha_admin/failover_databases'
 require 'postgres_ha_admin/database_yml'
+require 'util/postgres_admin'
 require 'pg'
 require 'linux_admin'
 
@@ -65,7 +66,7 @@ module PostgresHaAdmin
     def execute_failover
       FAILOVER_ATTEMPTS.times do
         with_each_standby_connection do |connection, params|
-          next if database_in_recovery?(connection)
+          next if PostgresAdmin.database_in_recovery?(connection)
           next if host_for_primary_database(connection, params).nil?
           @failover_db.update_failover_yml(connection)
           @database_yml.update_database_yml(params)
@@ -86,19 +87,6 @@ module PostgresHaAdmin
           connection.finish
         end
       end
-    end
-
-    # TODO: move database_in_recovery? move this method to gem/pending/util/postgres_admin.rb
-    def database_in_recovery?(connection)
-      db_result = connection.exec("SELECT pg_catalog.pg_is_in_recovery()")
-      result = db_result.map_types!(PG::BasicTypeMapForResults.new(connection)).first
-      result['pg_is_in_recovery']
-    rescue PG::Error => err
-      @logger.error("#{err.class}: #{err}")
-      @logger.error(err.backtrace.join("\n"))
-      true
-    ensure
-      db_result.clear
     end
 
     def pg_connection(params)
