@@ -7,6 +7,8 @@ class ManageIQ::Providers::Vmware::CloudManager < ManageIQ::Providers::CloudMana
   require_nested :Template
   require_nested :Vm
 
+  include ManageIQ::Providers::Vmware::ManagerAuthMixin
+
   def self.ems_type
     @ems_type ||= "vmware_cloud".freeze
   end
@@ -33,40 +35,6 @@ class ManageIQ::Providers::Vmware::CloudManager < ManageIQ::Providers::CloudMana
 
   def supports_authentication?(authtype)
     supported_auth_types.include?(authtype.to_s)
-  end
-
-  #
-  # Connections
-  #
-
-  def self.raw_connect(server, port, api_version, username, password)
-    require 'fog/vcloud_director'
-
-    params = {
-      :vcloud_director_username      => username,
-      :vcloud_director_password      => password,
-      :vcloud_director_host          => server,
-      :port                          => port,
-      :vcloud_director_api_version   => api_version,
-      :vcloud_director_show_progress => false,
-      :connection_options            => {
-        :ssl_verify_peer => false # for development
-      }
-    }
-
-    Fog::Compute::VcloudDirector.new(params)
-  end
-
-  def connect(options = {})
-    raise "no credentials defined" if missing_credentials?(options[:auth_type])
-
-    server      = options[:ip] || address
-    port        = options[:port] || self.port
-    api_version = options[:api_version] || self.api_version
-    username    = options[:user] || authentication_userid(options[:auth_type])
-    password    = options[:pass] || authentication_password(options[:auth_type])
-
-    self.class.raw_connect(server, port, api_version, username, password)
   end
 
   #
@@ -104,22 +72,5 @@ class ManageIQ::Providers::Vmware::CloudManager < ManageIQ::Providers::CloudMana
     else
       MiqException::MiqHostError.new "Unexpected response returned from system: #{err.message}"
     end
-  end
-
-  def verify_credentials(auth_type = nil, options = {})
-    raise MiqException::MiqHostError, "No credentials defined" if missing_credentials?(auth_type)
-
-    begin
-      with_provider_connection(options.merge(:auth_type => auth_type)) do |vcd|
-        vcd.organizations.all
-      end
-    rescue => err
-      miq_exception = translate_exception(err)
-
-      _log.error("Error Class=#{err.class.name}, Message=#{err.message}")
-      raise miq_exception
-    end
-
-    true
   end
 end
