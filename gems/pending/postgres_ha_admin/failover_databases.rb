@@ -24,6 +24,17 @@ module PostgresHaAdmin
       @logger.error(err.backtrace.join("\n"))
     end
 
+    def host_is_repmgr_primary?(host, connection)
+      query_repmgr(connection).each do |record|
+        if record[:host] == host && entry_is_active_master?(record)
+          return true
+        end
+      end
+      false
+    end
+
+    private
+
     def query_repmgr(connection)
       return [] unless table_exists?(connection, TABLE_NAME)
       result = []
@@ -40,7 +51,9 @@ module PostgresHaAdmin
       result
     end
 
-    private
+    def entry_is_active_master?(record)
+      record[:type] == 'master' && record[:active]
+    end
 
     def all_databases
       return [] unless File.exist?(yml_file)

@@ -65,18 +65,6 @@ describe PostgresHaAdmin::FailoverMonitor do
         allow(PG::Connection).to receive(:open).and_return(nil, connection, connection)
       end
 
-      describe "#host_is_repmgr_primary?" do
-        it "return true if supplied connection established with primary database" do
-          expect(failover_db).to receive(:query_repmgr).and_return(guery_repmanager_result)
-          expect(failover_monitor.host_is_repmgr_primary?('203.0.113.2', connection)).to be true
-        end
-
-        it "return false if supplied connection established with not primary database" do
-          expect(failover_db).to receive(:query_repmgr).and_return(guery_repmanager_result)
-          expect(failover_monitor.host_is_repmgr_primary?('203.0.113.3', connection)).to be false
-        end
-      end
-
       it "stop evm server(if it is running) before failover attempt" do
         expect(linux_admin).to receive(:stop).ordered
         expect(failover_monitor).to receive(:execute_failover).ordered
@@ -106,9 +94,7 @@ describe PostgresHaAdmin::FailoverMonitor do
 
         expect(PostgresAdmin).to receive(:database_in_recovery?).and_return(false, false, false)
         expect(linux_admin).to receive(:stop).ordered
-        expect(failover_db).to receive(:query_repmgr).and_return(no_master_db_list,
-                                                                 no_master_db_list,
-                                                                 no_master_db_list).ordered
+        expect(failover_db).to receive(:host_is_repmgr_primary?).and_return(false, false, false).ordered
 
         stub_const("PostgresHaAdmin::FailoverMonitor::FAILOVER_ATTEMPTS", 1)
         stub_const("PostgresHaAdmin::FailoverMonitor::FAILOVER_CHECK_FREQUENCY", 1)
@@ -117,7 +103,7 @@ describe PostgresHaAdmin::FailoverMonitor do
 
       it "updates 'database.yml' and 'failover_databases.yml' and restart evm server if new primary db available" do
         allow(PostgresAdmin).to receive(:database_in_recovery?).and_return(false)
-        allow(failover_db).to receive(:query_repmgr).and_return(guery_repmanager_result)
+        allow(failover_db).to receive(:host_is_repmgr_primary?).and_return(guery_repmanager_result)
         allow(failover_db).to receive(:active_databases).and_return(active_databases_list)
         allow(failover_db).to receive(:update_failover_yml).with(connection)
 

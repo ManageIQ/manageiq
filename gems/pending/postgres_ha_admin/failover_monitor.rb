@@ -50,26 +50,13 @@ module PostgresHaAdmin
       end
     end
 
-    def host_is_repmgr_primary?(host, connection)
-      @failover_db.query_repmgr(connection).each do |record|
-        if record[:host] == host && entry_is_active_master?(record)
-          return true
-        end
-      end
-      false
-    end
-
     private
-
-    def entry_is_active_master?(record)
-      record[:type] == 'master' && record[:active]
-    end
 
     def execute_failover
       FAILOVER_ATTEMPTS.times do
         with_each_standby_connection do |connection, params|
           next if PostgresAdmin.database_in_recovery?(connection)
-          next unless host_is_repmgr_primary?(params[:host], connection)
+          next unless @failover_db.host_is_repmgr_primary?(params[:host], connection)
           @failover_db.update_failover_yml(connection)
           @database_yml.update_database_yml(params)
           return true

@@ -26,8 +26,10 @@ describe PostgresHaAdmin::FailoverDatabases do
 
   context "accessing database" do
     after do
-      @connection.exec("ROLLBACK")
-      @connection.finish
+      if @connection
+        @connection.exec("ROLLBACK")
+        @connection.finish
+      end
     end
 
     before do
@@ -72,10 +74,17 @@ describe PostgresHaAdmin::FailoverDatabases do
       end
     end
 
-    describe "#query_repmgr" do
-      it "returns list of all databases registered in repmgr" do
-        result = failover_databases.query_repmgr(@connection)
-        expect(result).to eq initial_db_list
+    describe "#host_is_repmgr_primary?" do
+      it "return true if supplied connection established with primary database" do
+        expect(failover_databases.host_is_repmgr_primary?('203.0.113.1', @connection)).to be true
+      end
+
+      it "return false if supplied connection established with not not active database" do
+        expect(failover_databases.host_is_repmgr_primary?('203.0.113.3', @connection)).to be false
+      end
+
+      it "return false if supplied connection established with not master database" do
+        expect(failover_databases.host_is_repmgr_primary?('203.0.113.2', @connection)).to be false
       end
     end
   end
