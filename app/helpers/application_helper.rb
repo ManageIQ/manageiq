@@ -243,6 +243,7 @@ module ApplicationHelper
                 NetworkPort
                 CloudNetwork
                 CloudSubnet
+                LoadBalancer
                 CloudVolume
                 ).include?(view.db)
             return url_for(:controller => controller, :action => "show") + "/"
@@ -815,6 +816,7 @@ module ApplicationHelper
        ems_container vm miq_template offline retired templates
        host service storage ems_cloud ems_cluster flavor
        ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
+       load_balancer
        resource_pool ems_infra ontap_storage_system ontap_storage_volume
        ontap_file_share snia_local_file_system ontap_logical_disk
        orchestration_stack cim_base_storage_extent storage storage_manager configuration_job).include?(@layout)
@@ -1125,6 +1127,7 @@ module ApplicationHelper
                         ems_middleware middleware_server middleware_deployment middleware_datasource
                         middleware_domain middleware_server_group
                         ems_network security_group floating_ip cloud_subnet network_router network_topology network_port cloud_network
+                        load_balancer
                         flavor host miq_schedule miq_template offline ontap_file_share
                         ontap_logical_disk ontap_storage_system ontap_storage_volume orchestration_stack
                         policy policy_group policy_profile resource_pool retired scan_profile
@@ -1168,6 +1171,7 @@ module ApplicationHelper
          ems_infra host miq_template offline orchestration_stack persistent_volume ems_middleware
          middleware_server middleware_deployment middleware_datasource middleware_domain middleware_server_group
          ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
+         load_balancer
          resource_pool retired service templates vm configuration_job).include?(@layout) && !@in_a_form
       "show_list"
     elsif @compare
@@ -1183,6 +1187,7 @@ module ApplicationHelper
              ems_middleware middleware_server middleware_deployment middleware_datasource middleware_domain
              middleware_server_group flavor
              ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
+             load_balancer
              host miq_schedule miq_template policy ontap_file_share ontap_logical_disk
              ontap_storage_system ontap_storage_volume orchestration_stack resource_pool configuration_job
              scan_profile service snia_local_file_system storage_manager timeline).include?(@layout)
@@ -1197,6 +1202,7 @@ module ApplicationHelper
                      ems_cloud ems_cluster ems_container ems_infra flavor host miq_template offline
                      ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
                      ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
+                     load_balancer
                      orchestration_stack resource_pool retired service configuration_job
                      snia_local_file_system storage_manager templates vm)
     (@lastaction == "show_list" && !session[:menu_click] && show_search.include?(@layout) && !@in_a_form) ||

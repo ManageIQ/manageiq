@@ -1917,7 +1917,7 @@ class ApplicationController < ActionController::Base
          "container_image_registry", "container_image", "container_topology", "container_dashboard",
          "container_build"
       session[:tab_url][:compute] = session[:tab_url][:cnt] = inbound_url if %w(explorer show show_list).include?(action_name)
-    when "ems_network", "cloud_network", "cloud_subnet", "network_router", "security_group", "floating_ip"
+    when "ems_network", "cloud_network", "cloud_subnet", "network_router", "security_group", "floating_ip", "load_balancer"
       session[:tab_url][:net] = inbound_url if %w(show show_list).include?(action_name)
     when "ems_middleware", "middleware_server", "middleware_deployment", "middleware_datasource",
          "middleware_topology", "middleware_domain", "middleware_server_group"

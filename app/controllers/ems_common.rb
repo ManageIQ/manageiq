@@ -100,6 +100,7 @@ module EmsCommon
       'network_ports'                 => [NetworkPort,            _('Network Ports')],
       'cloud_subnets'                 => [CloudSubnet,            _('Cloud Subnets')],
       'cloud_networks'                => [CloudNetwork,           _('Cloud Networks')],
+      'load_balancers'                => [LoadBalancer,           _('Load Balancers')],
       'storages'                      => [Storage,                _('Managed Datastores')],
       'ems_clusters'                  => [EmsCluster,             title_for_clusters],
       'persistent_volumes'            => [PersistentVolume,       _('Volumes'), :persistent_volumes],
@@ -364,6 +365,7 @@ module EmsCommon
   # handle buttons pressed on the button bar
   def button
     @edit = session[:edit]                                  # Restore @edit for adv search box
+
     params[:display] = @display if ["vms", "hosts", "storages", "instances", "images"].include?(@display)  # Were we displaying vms/hosts/storages
     params[:page] = @current_page unless @current_page.nil?   # Save current page for list refresh
 

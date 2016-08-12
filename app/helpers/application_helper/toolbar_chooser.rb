@@ -473,7 +473,7 @@ class ApplicationHelper::ToolbarChooser
         if %w(auth_key_pair_cloud availability_zone cloud_object_store_object cloud_object_store_container cloud_tenant
               cloud_volume cloud_volume_snapshot configuration_job container_group container_node container_service ems_cloud ems_cluster
               ems_container ems_middleware container_project container_route container_replicator container_image
-              ems_network security_group floating_ip cloud_subnet network_router network_topology network_port cloud_network
+              ems_network security_group floating_ip cloud_subnet network_router network_topology network_port cloud_network load_balancer
               container_image_registry ems_infra flavor host container_build
               ontap_file_share ontap_logical_disk container_topology middleware_topology middleware_server
               middleware_deployment middleware_datasource middleware_domain middleware_server_group
