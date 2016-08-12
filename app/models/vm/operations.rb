@@ -14,7 +14,7 @@ module Vm::Operations
   end
 
   def cockpit_url
-    "http://#{ipaddresses.first}:9090"
+    URI::HTTP.build(:host => ipaddresses.first, :port => 9090).to_s
   end
 
   def validate_collect_running_processes
