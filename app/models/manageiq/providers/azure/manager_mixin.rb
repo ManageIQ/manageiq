@@ -41,7 +41,7 @@ module ManageIQ::Providers::Azure::ManagerMixin
         :client_key      => client_key,
         :tenant_id       => azure_tenant_id,
         :subscription_id => subscription,
-        :proxy           => proxy_uri.to_s
+        :proxy           => proxy_uri
       )
     end
 

@@ -344,7 +344,20 @@ module ManageIQ::Providers
 
       def download_template(uri)
         require 'open-uri'
-        open(uri) { |f| f.read }
+
+        if @config.proxy.blank?
+          open(uri) { |f| f.read }
+        else
+          proxy = Addressable::URI.parse(@config.proxy)
+          proxy_url = "#{proxy.scheme}://#{proxy.host}:#{proxy.port}"
+
+          if proxy.user.blank?
+            open(uri, :proxy => proxy_url) { |f| f.read }
+          else
+            auth_array = [proxy_url, proxy.user, proxy.password]
+            open(uri.to_s, :proxy_http_basic_authentication => auth_array) { |f| f.read }
+          end
+        end
       rescue => e
         _log.error("Failed to download Azure template #{uri}. Reason: #{e.inspect}")
         nil

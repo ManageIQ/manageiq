@@ -41,18 +41,45 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     expect(described_class.ems_type).to eq(:azure)
   end
 
+  def setup_ems_and_cassette
+    @ems.reload
+    name = described_class.name.underscore
+
+    # Must decode compressed response for subscription id.
+    VCR.use_cassette(name, :allow_unused_http_interactions => true, :decode_compressed_response => true) do
+      EmsRefresh.refresh(@ems)
+      EmsRefresh.refresh(@ems.network_manager)
+    end
+
+    @ems.reload
+  end
+
+  context "proxy support" do
+    let(:proxy) { URI::HTTP.build(:host => 'localhost', :port => 8080) }
+
+    2.times do
+      it "will perform a full refresh with a plain proxy enabled" do
+        allow(VMDB::Util).to receive(:http_proxy_uri).and_return(proxy)
+        setup_ems_and_cassette
+        expect(OrchestrationTemplate.count).to eql(2)
+      end
+    end
+
+    2.times do
+      it "will perform a full refresh with an authenticating proxy enabled" do
+        proxy.user = "foo"
+        proxy.password = "xxx"
+
+        allow(VMDB::Util).to receive(:http_proxy_uri).and_return(proxy)
+        setup_ems_and_cassette
+        expect(OrchestrationTemplate.count).to eql(2)
+      end
+    end
+  end
+
   it "will perform a full refresh" do
     2.times do # Run twice to verify that a second run with existing data does not change anything
-      @ems.reload
-      name = described_class.name.underscore
-
-      # Must decode compressed response for subscription id.
-      VCR.use_cassette(name, :allow_unused_http_interactions => true, :decode_compressed_response => true) do
-        EmsRefresh.refresh(@ems)
-        EmsRefresh.refresh(@ems.network_manager)
-      end
-
-      @ems.reload
+      setup_ems_and_cassette
 
       assert_table_counts
       assert_ems
