@@ -65,7 +65,6 @@ module EmsRefresh::SaveInventory
       h[:cloud_tenant_id]        = key_backup.fetch_path(:cloud_tenant, :id)
       h[:cloud_tenants]          = key_backup.fetch_path(:cloud_tenants).compact.map { |x| x[:_object] } if key_backup.fetch_path(:cloud_tenants, 0, :_object)
       h[:orchestration_stack_id] = key_backup.fetch_path(:orchestration_stack, :id)
-
       begin
         raise MiqException::MiqIncompleteData if h[:invalid]
 
@@ -214,11 +213,12 @@ module EmsRefresh::SaveInventory
 
     # Update the associated ids
     hashes.each do |h|
-      h[:storage_id] = h.fetch_path(:storage, :id)
-      h[:backing_id] = h.fetch_path(:backing, :id)
+      h[:storage_id]         = h.fetch_path(:storage, :id)
+      h[:backing_id]         = h.fetch_path(:backing, :id)
+      h[:storage_profile_id] = h.fetch_path(:storage_profile, :id)
     end
 
-    save_inventory_multi(hardware.disks, hashes, :use_association, [:controller_type, :location], nil, [:storage, :backing])
+    save_inventory_multi(hardware.disks, hashes, :use_association, [:controller_type, :location], nil, [:storage, :backing, :storage_profile])
   end
 
   def save_network_inventory(guest_device, hash)
