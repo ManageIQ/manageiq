@@ -86,6 +86,22 @@ module VmCommon
   end
   alias_method :vmrc_console, :console  # VMRC needs its own URL for RBAC checking
 
+  def launch_cockpit
+    vm = identify_record(params[:id], VmOrTemplate)
+
+    if vm.supports_launch_cockpit?
+      url = vm.cockpit_url
+      render :update do |page|
+        page << javascript_prologue
+        page << "miqSparkle(false);"
+        page << "window.open('#{url}');"
+      end
+    else
+      add_flash(vm.unsupported_reason(:launch_cockpit))
+      javascript_flash
+    end
+  end
+
   def html5_console
     params[:task_id] ? console_after_task('html5') : console_before_task('html5')
   end

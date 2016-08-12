@@ -5,6 +5,18 @@ module Vm::Operations
   include_concern 'Power'
   include_concern 'Lifecycle'
 
+  included do
+    supports :launch_cockpit do
+      if ipaddresses.blank?
+        unsupported_reason_add :launch_cockpit, 'Launching of Cockpit requires an IP address for the VM.'
+      end
+    end
+  end
+
+  def cockpit_url
+    URI::HTTP.build(:host => ipaddresses.first, :port => 9090).to_s
+  end
+
   def validate_collect_running_processes
     s = {:available => false, :message => nil}
 

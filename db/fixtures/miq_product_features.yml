@@ -4863,6 +4863,10 @@
         :description: Open a web-based VMRC console for VMs
         :feature_type: control
         :identifier: vm_vmrc_console
+      - :name: Cockpit Console
+        :description: Open the Cockpit console for VMs
+        :feature_type: control
+        :identifier: vm_cockpit
       - :name: Edit Tags
         :description: Edit VM Tags
         :feature_type: control
