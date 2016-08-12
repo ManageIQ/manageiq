@@ -2,6 +2,11 @@ module ManageIQ
   module API
     class BaseController
       module Blueprints
+        def show_blueprints
+          @additional_attributes = %w(content)
+          show_generic
+        end
+
         def create_resource_blueprints(_type, _id, data)
           attributes = data.except("bundle")
           blueprint = Blueprint.new(attributes)
