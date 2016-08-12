@@ -17,7 +17,7 @@ class ApiController
     private
 
     def exposed_settings
-      Api::Settings.collections[:settings][:categories]
+      ManageIQ::API::Settings.collections[:settings][:categories]
     end
   end
 end

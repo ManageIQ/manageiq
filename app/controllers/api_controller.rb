@@ -1,7 +1,7 @@
 #
 # Initializing REST API environment, called once @ startup
 #
-Api::Initializer.new.go
+ManageIQ::API::Initializer.new.go
 
 class ApiController < ApplicationController
   skip_before_action :get_global_session_data
@@ -123,11 +123,11 @@ class ApiController < ApplicationController
   end
 
   def base_config
-    Api::Settings.base
+    ManageIQ::API::Settings.base
   end
 
   def version_config
-    Api::Settings.version
+    ManageIQ::API::Settings.version
   end
 
   def collection_config

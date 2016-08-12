@@ -2672,7 +2672,7 @@ Vmdb::Application.routes.draw do
     public_send(verb, url, :to => action, :format => "json", :version => API_VERSION_REGEX)
   end
 
-  Api::Settings.collections.each do |collection_name, collection|
+  ManageIQ::API::Settings.collections.each do |collection_name, collection|
     collection.verbs.each do |verb|
       if collection.options.include?(:primary)
         create_api_route(verb, "/api(/:version)/#{collection_name}", action_for(verb))
@@ -2688,7 +2688,7 @@ Vmdb::Application.routes.draw do
     end
 
     Array(collection.subcollections).each do |subcollection_name|
-      Api::Settings.collections[subcollection_name].verbs.each do |verb|
+      ManageIQ::API::Settings.collections[subcollection_name].verbs.each do |verb|
         create_api_route(verb,
                          "/api(/:version)/#{collection_name}/:c_id/#{subcollection_name}(/:s_id)",
                          action_for(verb))

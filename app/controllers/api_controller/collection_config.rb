@@ -1,7 +1,7 @@
 class ApiController
   class CollectionConfig
     def initialize
-      @cfg = Api::Settings.collections
+      @cfg = ManageIQ::API::Settings.collections
     end
 
     def [](collection_name)
