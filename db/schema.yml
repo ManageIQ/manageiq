@@ -372,6 +372,21 @@ cloud_tenants_vms:
 - cloud_tenant_id
 - vm_id
 - id
+cloud_volume_backups:
+- id
+- ems_id
+- type
+- name
+- description
+- ems_ref
+- status
+- creation_time
+- size
+- object_count
+- is_incremental
+- has_dependent_backups
+- cloud_volume_id
+- availability_zone_id
 cloud_volume_snapshots:
 - id
 - type

@@ -10,6 +10,7 @@ class CloudVolume < ApplicationRecord
   belongs_to :availability_zone
   belongs_to :cloud_tenant
   belongs_to :base_snapshot, :class_name => 'CloudVolumeSnapshot', :foreign_key => :cloud_volume_snapshot_id
+  has_many   :cloud_volume_backups
   has_many   :cloud_volume_snapshots
   has_many   :attachments, :class_name => 'Disk', :as => :backing
   has_many   :hardwares, :through => :attachments

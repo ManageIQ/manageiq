@@ -21,6 +21,14 @@ module OpenstackHandle
       ra.uniq { |s| s['id'] }
     end
 
+    def backups_for_accessible_tenants
+      ra = []
+      @os_handle.service_for_each_accessible_tenant(SERVICE_NAME) do |svc|
+        ra.concat(svc.list_backups.body['backups'])
+      end
+      ra.uniq { |s| s['id'] }
+    end
+
     def quotas_for_current_tenant
       if current_tenant.kind_of?(Hash)
         @tenant_id ||= current_tenant['id']
