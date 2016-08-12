@@ -12,7 +12,7 @@ module PostgresHaAdmin
 
     def initialize(db_yml_file = '/var/www/miq/vmdb/config/database.yml',
                    failover_yml_file = '/var/www/miq/vmdb/config/failover_databases.yml',
-                   log_file = '/var/www/miq/vmdb/config/ha_admin.log',
+                   log_file = '/var/www/miq/vmdb/log/ha_admin.log',
                    environment = 'production')
       @logger = Logger.new(log_file)
       @logger.level = Logger::INFO
