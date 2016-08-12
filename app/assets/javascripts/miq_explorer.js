@@ -5,6 +5,12 @@ ManageIQ.explorer.updateElement = function(element, options) {
     $('#' + element).html(options.legend);
   } else if (_.isString(options.title)) {
     $('#' + element).attr( {'title': options.title});
+  } else if (_.isString(options.class)) {
+    if (options.add) {
+      $('#' + element).addClass(options.class);
+    } else {
+      $('#' + element).removeClass(options.class);
+    }
   }
 };
 
@@ -146,8 +152,8 @@ ManageIQ.explorer.processReplaceRightCell = function(data) {
 
   ManageIQ.explorer.updatePartials(data);
 
-  if (_.isObject(data.updateElement)) {
-    _.forEach(data.updateElement, function (options, element) {
+  if (_.isObject(data.updateElements)) {
+    _.forEach(data.updateElements, function (options, element) {
         ManageIQ.explorer.updateElement(element, options);
     });
   }

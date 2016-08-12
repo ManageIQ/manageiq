@@ -1,7 +1,7 @@
 #menu_div2
   - if @selected && @selected[1] && (!@edit[:selected_reports].blank? || !@edit[:available_reports].blank?)
     - url = url_for(:action => 'menu_field_changed')
-    %fieldset{:style => "height: 450px;"}
+    .col-sm-6
       %h3
         = _('Manage Reports')
       #column_lists
@@ -18,10 +18,10 @@
               = select_tag('available_reports[]',
                 options_for_select(@edit[:available_reports].sort),
                 :multiple => true,
-                :style    => "width: 280px; height: 310px;",
+                :style    => "height: 310px;",
                 :id       => "available_reports")
 
-            %td.text-center{:width => "40"}
+            %td.text-center
               .btn-group-vertical
 
                 - if @edit[:available_reports].empty?
