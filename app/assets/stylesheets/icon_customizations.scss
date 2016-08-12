@@ -51,7 +51,9 @@
   font-style: normal;
 }
 
-[class^="product-"], [class*=" product-"] {
+i[class^="product-"], i[class*=" product-"],
+span[class^="product-"], span[class*=" product-"], // i & span tags prevent conflicts with 'About' modal
+ {
     /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'icomoon' !important;
   speak: none;

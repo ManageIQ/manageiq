@@ -2,57 +2,36 @@
   #tab_div
     = render :partial => "layouts/flash_msg"
     .row
-      .col-md-12.col-lg-6
-        %fieldset
-          %h3= _('Session Information')
-          .form-horizontal.static
-            - [[_("Server Name"),     h(appliance_name)],
-               [_("Version"),         h(@vmdb[:version] + "." + @vmdb[:build])],
-               [_("User Name"),       h(current_user.name)],
-               [_("User Role"),       h(@user_role)],
-               [_("Browser"),         h(browser_info(:name_ui))],
-               [_("Browser Version"), h(browser_info(:version))],
-               [_("Browser OS"),      h(browser_info(:os_ui))]].each do |session_info|
-              .form-group
-                %label.col-md-3.control-label
-                  = session_info[0]
-                .col-md-9
-                  %p.form-control-static
-                    = session_info[1]
-
       - desc = get_vmdb_config[:server][:custom_support_url_description]
       - url  = get_vmdb_config[:server][:custom_support_url]
       - cond_url      = desc.present? && url.present?
       - if admin_user? || (!admin_user? && cond_url)
-        .col-md-12.col-lg-6
-          %fieldset
-            %h3= _('Product Assistance')
-            - if admin_user?
-              - @pdf_documents.each do |filename, title|
-                - docfile_path = "/doc/#{filename}.pdf"
-                %br
-                = link_to(image_tag(image_path("100/acrobat.png"),
-                                    :border => "0",
-                                    :width  => "20",
-                                    :height => "20",
-                                    :align  => "left",
-                                    :alt    => t = _("View the %{title} Guide") % {:title => title}),
-                          docfile_path,
-                          :title   => t,
-                          :onclick => "return miqClickAndPop(this);")
-                &nbsp;
-                = link_to((_("%{title} Guide") % {:title => title}), docfile_path, :onclick => "return miqClickAndPop(this);")
-                %br
-            - if cond_url
+        .col-md-12
+          - if admin_user?
+            - @pdf_documents.each do |filename, title|
+              - docfile_path = "/doc/#{filename}.pdf"
               %br
-              - url = "http://" + url if !url.starts_with?("http://") && !url.starts_with?("https://")
-              = link_to(desc, url, :onclick => "return miqClickAndPop(this);")
+              = link_to(image_tag(image_path("100/acrobat.png"),
+                                  :border => "0",
+                                  :width  => "20",
+                                  :height => "20",
+                                  :align  => "left",
+                                  :alt    => t = _("View the %{title} Guide") % {:title => title}),
+                        docfile_path,
+                        :title   => t,
+                        :onclick => "return miqClickAndPop(this);")
+              &nbsp;
+              = link_to((_("%{title} Guide") % {:title => title}), docfile_path, :onclick => "return miqClickAndPop(this);")
               %br
-            - if admin_user?
-              %br
-              - rh_cust_portal = link_to(_("Red Hat Customer Portal"),
-                                         "https://access.redhat.com/home",
-                                         :onclick => "return miqClickAndPop(this);")
-              = _("For questions or problem reporting, go to the")
-              = rh_cust_portal
-              %br
+          - if cond_url
+            %br
+            - url = "http://" + url if !url.starts_with?("http://") && !url.starts_with?("https://")
+            = link_to(desc, url, :onclick => "return miqClickAndPop(this);")
+            %br
+          - if admin_user?
+            %br
+              = _("For questions or problem reporting, visit ")
+              %a{:href => I18n.t("product.support_website").html_safe, :target => "_new"}
+                = I18n.t("product.support_website_text").html_safe
+
+            %br

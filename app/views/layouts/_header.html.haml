@@ -1,3 +1,4 @@
+= render :partial => 'layouts/about_modal'
 %nav.navbar.navbar-pf-vertical
   .navbar-header
     %button{:type => "button", :class => "navbar-toggle"}
@@ -11,8 +12,23 @@
   %nav.collapse.navbar-collapse
     %ul.nav.navbar-nav.navbar-right.navbar-iconic
       %li{:class => "dropdown brand-white-label #{current_tenant.logo? ? "whitelabeled" : ""}"}
+      %li.dropdown
+        %a{:class => "dropdown-toggle nav-item-iconic", :id => "dropdownMenu1",  "data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "true"}
+          %span.fa.pficon-help
+          %span.caret
+        %ul.dropdown-menu{"aria-labelledby" => "dropdownMenu1"}
+          %li
+            %a{:href => "/support/index?support_tab=about"}
+              = _('Documentation')
+          %li
+            %a{:href => I18n.t("product.support_website").html_safe, :target => "_new"}
+              = I18n.t("product.support_website_text").html_safe
+          %li
+            %a{"data-toggle" => "modal", "data-target" => "#aboutModal"}
+              = _('About')
 
       = render :partial => "layouts/user_options"
+
   = render :partial => "layouts/spinner"
   = render :partial => "layouts/lightbox_panel"
 
