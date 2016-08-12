@@ -24,7 +24,7 @@ module Api
 
       $api_log.info("")
       $api_log.info("Dynamic Configuration")
-      Api.user_token_service.api_config.each { |key, val| log_kv(key, val) }
+      Api::Environment.user_token_service.api_config.each { |key, val| log_kv(key, val) }
     end
 
     #
@@ -32,7 +32,7 @@ module Api
     # Accessed as normalized_attributes[<name>], much faster than array include?
     #
     def gen_attr_type_hash
-      attr_types.each { |type, attrs| attrs.each { |a| Api.normalized_attributes[type][a] = true } }
+      attr_types.each { |type, attrs| attrs.each { |a| Api::Environment.normalized_attributes[type][a] = true } }
       gen_time_attr_type_hash
     end
 
@@ -44,7 +44,7 @@ module Api
         next if cspec[:klass].blank?
         klass = cspec[:klass].constantize
         klass.columns_hash.collect do |name, typeobj|
-          Api.normalized_attributes[:time][name] = true if %w(date datetime).include?(typeobj.type.to_s)
+          Api::Environment.normalized_attributes[:time][name] = true if %w(date datetime).include?(typeobj.type.to_s)
         end
       end
     end
