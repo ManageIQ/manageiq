@@ -1,3 +1,6 @@
+require 'more_core_extensions/core_ext/array'
+require 'more_core_extensions/core_ext/numeric'
+
 module MiqStats
   def self.slope(x_array, y_array)
     return [] if x_array.empty? || y_array.empty?
@@ -38,58 +41,6 @@ module MiqStats
   end
 end
 
-# Misc statistical methods
-#
-#############################
-# Statistics Module for Ruby
-# (C) Derrick Pallas
-#
-# Authors: Derrick Pallas
-# Website: http://derrick.pallas.us/ruby-stats/
-# License: Academic Free License 3.0
-# Version: 2007-10-01b
-#
-
-class Numeric
-  def square; self * self; end
-end
-
-class Array
-  def mean; sum.to_f / size; end
-
-  def median
-    case size % 2
-    when 0 then sort[size / 2 - 1, 2].mean
-    when 1 then sort[size / 2].to_f
-    end if size > 0
-  end
-
-  def histogram; sort.inject({}) { |a, x| a[x] = a[x].to_i + 1; a }; end
-
-  def mode
-    map = histogram
-    max = map.values.max
-    map.keys.select { |x| map[x] == max }
-  end
-
-  def squares; inject(0) { |a, x| x.square + a }; end
-
-  def variance; squares.to_f / size - mean.square; end
-
-  def deviation; Math.sqrt(variance); end
-
-  def permute; dup.permute!; end
-
-  def permute!
-    (1...size).each do |i|
-      j = rand(i + 1)
-      self[i], self[j] = self[j], self[i] if i != j
-    end; self
-  end
-
-  def sample(n = 1); (0...n).collect { self[rand(size)] }; end
-end
-
 if __FILE__ == $0
   fields = []
   $stdin.each do |line|
@@ -102,7 +53,7 @@ if __FILE__ == $0
 
   fields.each_index do |i|
     next unless fields[i].size > 0
-    puts [i,  fields[i].mean, fields[i].deviation] \
+    puts [i,  fields[i].mean, fields[i].stddev] \
       .collect(&:to_s).join("\t")
   end
 end
