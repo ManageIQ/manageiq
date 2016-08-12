@@ -14,4 +14,10 @@ FactoryGirl.define do
       instance.save!
     end
   end
+
+  factory :dialog_with_tab_and_group_and_field, :parent => :dialog do
+    after(:create) do |dialog|
+      create(:dialog_tab_with_group_and_field, :dialog => dialog)
+    end
+  end
 end

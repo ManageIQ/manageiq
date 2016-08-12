@@ -204,10 +204,7 @@ describe ApiController do
   end
 
   describe "Service reconfiguration" do
-    let(:dialog1) { FactoryGirl.create(:dialog, :label => "Dialog1") }
-    let(:tab1)    { FactoryGirl.create(:dialog_tab, :label => "Tab1") }
-    let(:group1)  { FactoryGirl.create(:dialog_group, :label => "Group1") }
-    let(:text1)   { FactoryGirl.create(:dialog_field_text_box, :label => "TextBox1", :name => "text1") }
+    let(:dialog1) { FactoryGirl.create(:dialog_with_tab_and_group_and_field) }
     let(:st1)     { FactoryGirl.create(:service_template, :name => "template1") }
     let(:ra1) do
       FactoryGirl.create(:resource_action, :action => "Reconfigure", :dialog => dialog1,

@@ -42,7 +42,7 @@ RSpec.describe "Blueprints API" do
     it "will show a blueprint's bundle if requested" do
       blueprint = FactoryGirl.create(:blueprint, :name => "Test Blueprint")
       service_catalog = FactoryGirl.create(:service_template_catalog)
-      service_dialog = build_dialog
+      service_dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field)
       service_templates = FactoryGirl.create_list(:service_template, 2)
       blueprint.create_bundle(service_templates, service_dialog, service_catalog)
       api_basic_authorize action_identifier(:blueprints, :read, :resource_actions, :get)
@@ -121,7 +121,7 @@ RSpec.describe "Blueprints API" do
     end
 
     it "can create a blueprint with a bundle by href with an appropriate role" do
-      service_dialog = build_dialog
+      service_dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field)
       service_template_1, service_template_2 = FactoryGirl.create_list(:service_template, 2)
       service_catalog = FactoryGirl.create(:service_template_catalog)
       api_basic_authorize collection_action_identifier(:blueprints, :create)
@@ -145,7 +145,7 @@ RSpec.describe "Blueprints API" do
     end
 
     it "can create a blueprint with a bundle by id with an appropriate role" do
-      service_dialog = build_dialog
+      service_dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field)
       service_template_1, service_template_2 = FactoryGirl.create_list(:service_template, 2)
       service_catalog = FactoryGirl.create(:service_template_catalog)
       api_basic_authorize collection_action_identifier(:blueprints, :create)
@@ -256,23 +256,5 @@ RSpec.describe "Blueprints API" do
 
       expect(response).to have_http_status(:forbidden)
     end
-  end
-
-  # TODO: factor this out of this test so it can be used elsewhere
-  def build_dialog
-    FactoryGirl.create(
-      :dialog,
-      :dialog_tabs => [
-        FactoryGirl.create(
-          :dialog_tab,
-          :dialog_groups => [
-            FactoryGirl.create(
-              :dialog_group,
-              :dialog_fields => [FactoryGirl.create(:dialog_field_text_box)]
-            )
-          ]
-        )
-      ]
-    )
   end
 end

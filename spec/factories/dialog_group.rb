@@ -14,4 +14,10 @@ FactoryGirl.define do
       instance.save!
     end
   end
+
+  factory :dialog_group_with_field, :parent => :dialog_group do
+    after(:create) do |dialog_group|
+      create(:dialog_field_text_box, :dialog_group => dialog_group)
+    end
+  end
 end

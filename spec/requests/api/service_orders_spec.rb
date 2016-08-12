@@ -184,20 +184,7 @@ RSpec.describe "service orders API" do
       end
 
       it "can add a service request to a shopping cart" do
-        dialog = FactoryGirl.create(
-          :dialog,
-          :dialog_tabs => [
-            FactoryGirl.create(
-              :dialog_tab,
-              :dialog_groups => [
-                FactoryGirl.create(
-                  :dialog_group,
-                  :dialog_fields => [FactoryGirl.create(:dialog_field_text_box)]
-                )
-              ]
-            )
-          ]
-        )
+        dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field)
         service_template = FactoryGirl.create(:service_template)
         service_template.resource_actions << FactoryGirl.create(:resource_action,
                                                                 :action => "Provision",
@@ -227,20 +214,7 @@ RSpec.describe "service orders API" do
       end
 
       it "can add muliple service requests to a shopping cart by href" do
-        dialog = FactoryGirl.create(
-          :dialog,
-          :dialog_tabs => [
-            FactoryGirl.create(
-              :dialog_tab,
-              :dialog_groups => [
-                FactoryGirl.create(
-                  :dialog_group,
-                  :dialog_fields => [FactoryGirl.create(:dialog_field_text_box)]
-                )
-              ]
-            )
-          ]
-        )
+        dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field)
 
         service_template_1, service_template_2 = FactoryGirl.create_list(:service_template, 2)
         service_template_1.resource_actions << FactoryGirl.create(:resource_action,
@@ -461,20 +435,7 @@ RSpec.describe "service orders API" do
       end
 
       it "will not add a service request to a shopping cart" do
-        dialog = FactoryGirl.create(
-          :dialog,
-          :dialog_tabs => [
-            FactoryGirl.create(
-              :dialog_tab,
-              :dialog_groups => [
-                FactoryGirl.create(
-                  :dialog_group,
-                  :dialog_fields => [FactoryGirl.create(:dialog_field_text_box)]
-                )
-              ]
-            )
-          ]
-        )
+        dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field)
         service_template = FactoryGirl.create(:service_template)
         service_template.resource_actions << FactoryGirl.create(:resource_action,
                                                                 :action => "Provision",
@@ -491,20 +452,7 @@ RSpec.describe "service orders API" do
       end
 
       it "will not add multiple service requests to a shopping cart" do
-        dialog = FactoryGirl.create(
-          :dialog,
-          :dialog_tabs => [
-            FactoryGirl.create(
-              :dialog_tab,
-              :dialog_groups => [
-                FactoryGirl.create(
-                  :dialog_group,
-                  :dialog_fields => [FactoryGirl.create(:dialog_field_text_box)]
-                )
-              ]
-            )
-          ]
-        )
+        dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field)
         service_template_1, service_template_2 = FactoryGirl.create_list(:service_template, 2)
         service_template_1.resource_actions << FactoryGirl.create(:resource_action,
                                                                   :action => "Provision",
