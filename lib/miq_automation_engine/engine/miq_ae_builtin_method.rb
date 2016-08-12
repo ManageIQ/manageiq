@@ -96,7 +96,11 @@ module MiqAeEngine
     end
 
     def self.miq_event_action_refresh(obj, inputs)
-      event_object_from_workspace(obj).refresh(inputs['target'])
+      event_object_from_workspace(obj).refresh(inputs['target'], false)
+    end
+
+    def self.miq_event_action_refresh_sync(obj, inputs)
+      event_object_from_workspace(obj).refresh(inputs['target'], true)
     end
 
     def self.miq_event_action_policy(obj, inputs)

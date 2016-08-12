@@ -91,4 +91,31 @@ describe EmsRefresh do
       ])
     end
   end
+
+  context '.queue_merge_async' do
+    let(:ems) { FactoryGirl.create(:ems_vmware, :name => "ems_vmware1") }
+    let(:vm)  { FactoryGirl.create(:vm_vmware, :name => "vm_vmware1", :ext_management_system => ems) }
+
+    it 'sends the command to queue' do
+      EmsRefresh.queue_merge_async([vm], ems)
+      expect(MiqQueue.count).to eq(1)
+    end
+  end
+
+  context '.queue_merge_sync' do
+    let(:ems) { FactoryGirl.create(:ems_vmware, :name => "ems_vmware1") }
+    let(:vm)  { FactoryGirl.create(:vm_vmware, :name => "vm_vmware1", :ext_management_system => ems) }
+
+    it 'sends the refresh command to queue' do
+      allow(MiqQueue).to receive(:find_by).and_return(nil)
+      EmsRefresh.queue_merge_sync([vm], ems)
+      expect(MiqQueue.count).to eq(1)
+    end
+
+    it 'returns after the refresh command is processed' do
+      allow(MiqQueue).to receive(:find_by).and_return(1, nil)
+      expect(EmsRefresh).to receive(:sleep)
+      EmsRefresh.queue_merge_sync([vm], ems)
+    end
+  end
 end

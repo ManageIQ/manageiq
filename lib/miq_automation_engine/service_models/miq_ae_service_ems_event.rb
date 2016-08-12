@@ -1,7 +1,7 @@
 module MiqAeMethodService
   class MiqAeServiceEmsEvent < MiqAeServiceEventStream
-    def refresh(*targets)
-      ar_method { @object.refresh(*targets) } unless targets.blank?
+    def refresh(*targets, sync)
+      ar_method { @object.refresh(*targets, sync) } unless targets.blank?
     end
 
     def policy(target_str, policy_event, param)

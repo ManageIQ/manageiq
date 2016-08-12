@@ -2,14 +2,14 @@ class EmsEvent
   module Automate
     extend ActiveSupport::Concern
 
-    def refresh(*targets)
+    def refresh(*targets, sync)
       targets = targets.flatten
       return if targets.blank?
 
       refresh_targets = targets.collect { |t| get_target("#{t}_refresh_target") unless t.blank? }.compact.uniq
       return if refresh_targets.empty?
 
-      EmsRefresh.queue_refresh(refresh_targets)
+      EmsRefresh.queue_refresh(refresh_targets, nil, sync)
     end
 
     def policy(target_str, policy_event, param = nil)
