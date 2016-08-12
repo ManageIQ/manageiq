@@ -1,4 +1,5 @@
 require 'postgres_ha_admin/failover_monitor'
+require 'util/postgres_admin'
 
 describe PostgresHaAdmin::FailoverMonitor do
   let(:db_yml) do
@@ -89,7 +90,7 @@ describe PostgresHaAdmin::FailoverMonitor do
 
       it "does not update 'database.yml' and 'failover_databases.yml' if all standby DBs are in recovery mode" do
         allow(failover_monitor).to receive(:stop_evmserverd)
-        allow(failover_monitor).to receive(:database_in_recovery?).and_return(true)
+        allow(PostgresAdmin).to receive(:database_in_recovery?).and_return(true)
 
         expect(failover_db).to receive(:active_databases).and_return(active_databases_list)
         expect(failover_db).not_to receive(:update_database_yml)
@@ -103,7 +104,7 @@ describe PostgresHaAdmin::FailoverMonitor do
 
       it "does not update 'database.yml' and 'failover_databases.yml' if there is no master database avaiable" do
         allow(failover_monitor).to receive(:stop_evmserverd)
-        allow(failover_monitor).to receive(:database_in_recovery?).and_return(false)
+        allow(PostgresAdmin).to receive(:database_in_recovery?).and_return(true)
         allow(failover_db).to receive(:query_repmgr).and_return(no_master_db_list)
 
         expect(failover_db).to receive(:active_databases).and_return(active_databases_list)
@@ -118,7 +119,7 @@ describe PostgresHaAdmin::FailoverMonitor do
 
       it "updates 'database.yml' and 'failover_databases.yml' and start evm server if new primary db available" do
         allow(failover_monitor).to receive(:stop_evmserverd)
-        allow(failover_monitor).to receive(:database_in_recovery?).and_return(false)
+        allow(PostgresAdmin).to receive(:database_in_recovery?).and_return(false)
         allow(failover_db).to receive(:query_repmgr).and_return(guery_repmanager_result)
 
         expect(failover_db).to receive(:active_databases).and_return(active_databases_list)
