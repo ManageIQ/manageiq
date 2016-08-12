@@ -25,6 +25,12 @@ describe PostgresHaAdmin::FailoverMonitor do
     failover_instance
   end
 
+  let(:linux_admin) do
+    linux_adm = double('LinuxAdmin')
+    allow(LinuxAdmin::Service).to receive(:new).and_return(linux_adm)
+    linux_adm
+  end
+  
   before do
     @logger_file = Tempfile.new('ha_admin.log')
   end
@@ -40,26 +46,21 @@ describe PostgresHaAdmin::FailoverMonitor do
       end
 
       it "updates 'failover_databases.yml'" do
-        expect(failover_db).to receive(:update_failover_yml).with(connection)
+        expect(failover_db).to receive(:update_failover_yml)
         failover_monitor.monitor
       end
 
       it "does not stop evm server and does not execute failover" do
-        expect(failover_db).to receive(:update_failover_yml).with(connection)
-        expect(failover_monitor).not_to receive(:stop_evmserverd)
+        expect(failover_db).to receive(:update_failover_yml)
+        expect(linux_admin).not_to receive(:stop)
+        expect(linux_admin).not_to receive(:restart)
         expect(failover_monitor).not_to receive(:execute_failover)
-        expect(failover_monitor).not_to receive(:start_evmserver)
+
         failover_monitor.monitor
       end
     end
 
     context "primary database is not accessable" do
-      let(:linux_admin) do
-        linux_adm = double('LinuxAdmin')
-        allow(LinuxAdmin::Service).to receive(:new).and_return(linux_adm)
-        allow(linux_adm).to receive("running?").and_return(true)
-        linux_adm
-      end
 
       before do
         allow(PG::Connection).to receive(:open).and_return(nil, connection, connection)
@@ -82,20 +83,20 @@ describe PostgresHaAdmin::FailoverMonitor do
       end
 
       it "stop evm server(if it is running) before failover attempt" do
-        expect(linux_admin).to receive(:stop)
-        expect(failover_monitor).to receive(:execute_failover).and_return(false)
+        expect(linux_admin).to receive(:stop).ordered
+        expect(failover_monitor).to receive(:execute_failover).ordered
 
         failover_monitor.monitor
       end
 
       it "does not update 'database.yml' and 'failover_databases.yml' if all standby DBs are in recovery mode" do
-        allow(failover_monitor).to receive(:stop_evmserverd)
-        allow(PostgresAdmin).to receive(:database_in_recovery?).and_return(true)
-
         expect(failover_db).to receive(:active_databases).and_return(active_databases_list)
         expect(failover_db).not_to receive(:update_database_yml)
         expect(db_yml).not_to receive(:update_database_yml)
-        expect(linux_admin).not_to receive(:start)
+        expect(linux_admin).not_to receive(:restart)
+
+        expect(failover_monitor).to receive(:stop_evmserverd).ordered
+        expect(PostgresAdmin).to receive(:database_in_recovery?).and_return(true, true, true).ordered
 
         stub_const("PostgresHaAdmin::FailoverMonitor::FAILOVER_ATTEMPTS", 1)
         stub_const("PostgresHaAdmin::FailoverMonitor::FAILOVER_CHECK_FREQUENCY", 1)
@@ -103,31 +104,31 @@ describe PostgresHaAdmin::FailoverMonitor do
       end
 
       it "does not update 'database.yml' and 'failover_databases.yml' if there is no master database avaiable" do
-        allow(failover_monitor).to receive(:stop_evmserverd)
-        allow(PostgresAdmin).to receive(:database_in_recovery?).and_return(true)
-        allow(failover_db).to receive(:query_repmgr).and_return(no_master_db_list)
-
         expect(failover_db).to receive(:active_databases).and_return(active_databases_list)
         expect(failover_db).not_to receive(:update_database_yml)
         expect(db_yml).not_to receive(:update_database_yml)
-        expect(linux_admin).not_to receive(:start)
+        expect(linux_admin).not_to receive(:restart)
+
+        expect(PostgresAdmin).to receive(:database_in_recovery?).and_return(false, false, false)
+        expect(linux_admin).to receive(:stop).ordered
+        expect(failover_db).to receive(:query_repmgr).and_return(no_master_db_list,
+                                                                 no_master_db_list,
+                                                                 no_master_db_list).ordered
 
         stub_const("PostgresHaAdmin::FailoverMonitor::FAILOVER_ATTEMPTS", 1)
         stub_const("PostgresHaAdmin::FailoverMonitor::FAILOVER_CHECK_FREQUENCY", 1)
         failover_monitor.monitor
       end
 
-      it "updates 'database.yml' and 'failover_databases.yml' and start evm server if new primary db available" do
-        allow(failover_monitor).to receive(:stop_evmserverd)
+      it "updates 'database.yml' and 'failover_databases.yml' and restart evm server if new primary db available" do
         allow(PostgresAdmin).to receive(:database_in_recovery?).and_return(false)
         allow(failover_db).to receive(:query_repmgr).and_return(guery_repmanager_result)
-
-        expect(failover_db).to receive(:active_databases).and_return(active_databases_list)
-        expect(failover_db).to receive(:update_failover_yml).with(connection)
-
-        expect(db_yml).to receive(:update_database_yml).ordered
+        allow(failover_db).to receive(:active_databases).and_return(active_databases_list)
+        allow(failover_db).to receive(:update_failover_yml).with(connection)
+        
         expect(linux_admin).to receive(:stop).ordered
-        expect(linux_admin).to receive(:start).ordered
+        expect(db_yml).to receive(:update_database_yml).ordered
+        expect(linux_admin).to receive(:restart).ordered
 
         stub_const("PostgresHaAdmin::FailoverMonitor::FAILOVER_ATTEMPTS", 1)
         stub_const("PostgresHaAdmin::FailoverMonitor::FAILOVER_CHECK_FREQUENCY", 1)

@@ -10,9 +10,9 @@ module PostgresHaAdmin
     DB_CONNECTED_CHECK_FREQUENCY = 5.minutes
     FAILOVER_CHECK_FREQUENCY = 1.minute
 
-    def initialize(db_yml_file = '/var.www/miq/vmdb/config/database.yml',
-                   failover_yml_file = '/var.www/miq/vmdb/config/failover_databases.yml',
-                   log_file = '/var.www/miq/vmdb/config/ha_admin.log',
+    def initialize(db_yml_file = '/var/www/miq/vmdb/config/database.yml',
+                   failover_yml_file = '/var/www/miq/vmdb/config/failover_databases.yml',
+                   log_file = '/var/www/miq/vmdb/config/ha_admin.log',
                    environment = 'production')
       @logger = Logger.new(log_file)
       @logger.level = Logger::INFO
@@ -96,15 +96,12 @@ module PostgresHaAdmin
     end
 
     def start_evmserverd
-      service = LinuxAdmin::Service.new("evmserverd")
-      service.stop if service.running?
+      LinuxAdmin::Service.new("evmserverd").restart
       @logger.info("Starting EVM server from failover monitor")
-      service.start
     end
 
     def stop_evmserverd
-      service = LinuxAdmin::Service.new("evmserverd")
-      service.stop if service.running?
+      LinuxAdmin::Service.new("evmserverd").stop
     end
   end
 end
