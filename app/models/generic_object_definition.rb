@@ -8,47 +8,107 @@ class GenericObjectDefinition < ApplicationRecord
     :time     => ActiveModel::Type::Time.new
   }.freeze
 
-  validates :name, :presence => true, :uniqueness => true
+  FEATURES = %w(attribute association).freeze
 
   serialize :properties, Hash
 
   has_one   :picture, :dependent => :destroy, :as => :resource
   has_many  :generic_objects
 
-  before_destroy :check_not_in_use
+  validates :name, :presence => true, :uniqueness => true
+  validate  :validate_property_attributes,
+            :validate_property_associations,
+            :validate_property_name_unique
+
+  before_validation :set_default_properties
+  before_validation :normalize_property_attributes,
+                    :normalize_property_associations
+
+  before_destroy    :check_not_in_use
 
   def create_object(options)
     GenericObject.create!({:generic_object_definition => self}.merge(options))
   end
 
-  def defined_property_attributes
-    properties[:attributes]
+  FEATURES.each do |feature|
+    define_method("defined_property_#{feature}s") do
+      return errors[:properties] if properties_changed? && !valid?
+      properties["#{feature}s".to_sym]
+    end
+
+    define_method("property_#{feature}_defined?") do |attr|
+      send("defined_property_#{feature}s").try(:key?, attr.to_s)
+    end
   end
 
-  def property_attribute_defined?(attr)
-    defined_property_attributes.try(:key?, attr.to_s)
+  def property_defined?(attr)
+    property_attribute_defined?(attr) || property_association_defined?(attr)
+  end
+
+  def property_getter(attr, val)
+    return type_cast(attr, val) if property_attribute_defined?(attr)
+    return get_associations(attr, val) if property_association_defined?(attr)
+  end
+
+  def type_cast(attr, value)
+    TYPE_MAP.fetch(defined_property_attributes[attr]).cast(value)
   end
 
   def properties=(props)
-    props = props.symbolize_keys
-    if props.key?(:attributes)
-      props[:attributes] = props[:attributes].each_with_object({}) do |(name, type), hash|
-        raise ArgumentError, "#{type} is not a recognized type" unless TYPE_MAP.key?(type.to_sym)
-        hash[name.to_s] = type.to_sym
-      end
-    end
+    props.reverse_merge!(:attributes => {}, :associations => {})
     super
   end
 
-  def type_cast(attr_name, value)
-    TYPE_MAP.fetch(defined_property_attributes[attr_name]).cast(value)
+  private
+
+  def get_associations(attr, values)
+    defined_property_associations[attr].constantize.where(:id => values).to_a
   end
 
-  private
+  def normalize_property_attributes
+    props = properties.symbolize_keys
+
+    properties[:attributes] = props[:attributes].each_with_object({}) do |(name, type), hash|
+      hash[name.to_s] = type.to_sym
+    end
+  end
+
+  def normalize_property_associations
+    props = properties.symbolize_keys
+
+    properties[:associations] = props[:associations].each_with_object({}) do |(name, type), hash|
+      hash[name.to_s] = type.to_s.classify
+    end
+  end
+
+  def validate_property_attributes
+    properties[:attributes].each do |name, type|
+      errors[:properties] << "attribute [#{name}] is not of a recognized type: [#{type}]" unless TYPE_MAP.key?(type.to_sym)
+    end
+  end
+
+  def validate_property_associations
+    properties[:associations].each do |name, klass|
+      begin
+        klass.constantize
+      rescue NameError
+        errors[:properties] << "association [#{name}] is not of a valid model: [#{klass}]"
+      end
+    end
+  end
+
+  def validate_property_name_unique
+    common = properties[:attributes].keys & properties[:associations].keys
+    errors[:properties] << "property name has to be unique: [#{common.join(",")}]" unless common.blank?
+  end
 
   def check_not_in_use
     return true if generic_objects.empty?
     errors[:base] << "Cannot delete the definition while it is referenced by some generic objects"
     throw :abort
+  end
+
+  def set_default_properties
+    self.properties = {:attributes => {}, :associations => {}} unless properties.present?
   end
 end
