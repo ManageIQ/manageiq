@@ -1270,6 +1270,7 @@ module VmCommon
                                end
           end
         elsif TreeBuilder.get_model_for_prefix(@nodetype) == "MiqSearch"
+          options[:named_scope] = @named_scope if @named_scope
           process_show_list(options)  # Get all VMs & Templates
           @right_cell_text = if model
                                _("All %{models}") % {:models => ui_lookup(:models => model)}
