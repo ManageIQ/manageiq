@@ -1,5 +1,5 @@
 describe "miq_ae_class/_instance_fields.html.haml" do
-  include AutomationSpecHelper
+  include Spec::Support::AutomationHelper
 
   context 'display instances' do
     before do

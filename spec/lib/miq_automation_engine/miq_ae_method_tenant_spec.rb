@@ -1,5 +1,5 @@
 describe "MiqAeMethodWithTenat" do
-  include AutomationSpecHelper
+  include Spec::Support::AutomationHelper
 
   let(:user) { FactoryGirl.create(:user_with_group) }
   let(:user2) { FactoryGirl.create(:user_with_group) }

@@ -1,5 +1,5 @@
 describe MiqAeDomain do
-  include AutomationSpecHelper
+  include Spec::Support::AutomationHelper
 
   before do
     EvmSpecHelper.local_guid_miq_server_zone

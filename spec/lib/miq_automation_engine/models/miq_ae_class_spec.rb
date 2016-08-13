@@ -1,5 +1,5 @@
 describe MiqAeClass do
-  include AutomationSpecHelper
+  include Spec::Support::AutomationHelper
 
   describe "name attribute validation" do
     subject { described_class.new }

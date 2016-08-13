@@ -1,5 +1,5 @@
 describe MiqAeEngine do
-  include AutomationSpecHelper
+  include Spec::Support::AutomationHelper
 
   before(:each) do
     MiqAeDatastore.reset
@@ -750,7 +750,8 @@ describe MiqAeEngine do
 end
 
 describe MiqAeEngine do
-  include AutomationSpecHelper
+  include Spec::Support::AutomationHelper
+
   before do
     @user = FactoryGirl.create(:user_with_group)
     ae_fields = {'var1' => {:aetype => 'attribute', :datatype => 'string'}}
@@ -793,7 +794,7 @@ describe MiqAeEngine do
 end
 
 describe MiqAeEngine do
-  include AutomationSpecHelper
+  include Spec::Support::AutomationHelper
 
   before do
     @user = FactoryGirl.create(:user_with_group)

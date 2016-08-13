@@ -1,5 +1,5 @@
 describe MiqAeExport do
-  include AutomationSpecHelper
+  include Spec::Support::AutomationHelper
 
   describe "#instantiate" do
     let(:tenant1) { FactoryGirl.create(:tenant) }

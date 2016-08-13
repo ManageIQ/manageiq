@@ -1,5 +1,5 @@
 describe MiqAeDomain do
-  include AutomationSpecHelper
+  include Spec::Support::AutomationHelper
 
   let(:root_tenant) { Tenant.seed }
   before do
