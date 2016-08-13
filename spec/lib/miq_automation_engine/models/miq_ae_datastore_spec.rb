@@ -1,6 +1,6 @@
-include AutomationSpecHelper
-
 describe MiqAeDatastore do
+  include AutomationSpecHelper
+
   before(:each) do
     @ver_fname = File.expand_path(File.join(File.dirname(__FILE__), "version.xml"))
 

@@ -1,8 +1,8 @@
-include AutomationSpecHelper
-
 module MiqAeObjectSpec
-  include MiqAeEngine
   describe MiqAeObject do
+    include AutomationSpecHelper
+    include MiqAeEngine
+
     before(:each) do
       MiqAeDatastore.reset
       @domain = 'SPEC_DOMAIN'

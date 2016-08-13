@@ -1,6 +1,6 @@
-include AutomationSpecHelper
-
 describe "miq_ae_class/_instance_fields.html.haml" do
+  include AutomationSpecHelper
+
   context 'display instances' do
     before do
       ae_fields = {'ae_var1' => {:aetype => 'relationship', :datatype => 'string'}}
