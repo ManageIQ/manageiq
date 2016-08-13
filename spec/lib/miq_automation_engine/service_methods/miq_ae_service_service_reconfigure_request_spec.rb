@@ -1,12 +1,12 @@
-include AutomationSpecHelper
 module MiqAeServiceServiceReconfigureRequestSpec
   describe MiqAeMethodService::MiqAeServiceServiceReconfigureRequest do
+    include AutomationSpecHelper
+
     before(:each) do
       method_script   = "$evm.root['ci_type'] = $evm.root['request'].ci_type"
       create_ae_model_with_method(:method_script => method_script, :ae_class => 'AUTOMATE',
                                   :ae_namespace  => 'EVM', :instance_name => 'test1',
                                   :method_name   => 'test', :name => 'TEST_DOMAIN')
-
     end
 
     let(:ae_method)     { ::MiqAeMethod.first }

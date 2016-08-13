@@ -1,6 +1,6 @@
-include AutomationSpecHelper
-
 describe MiqAeDomain do
+  include AutomationSpecHelper
+
   before do
     EvmSpecHelper.local_guid_miq_server_zone
     @user = FactoryGirl.create(:user_with_group)

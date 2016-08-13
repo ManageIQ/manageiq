@@ -1,7 +1,8 @@
-include AutomationSpecHelper
 module MiqAeEngineSpec
-  include MiqAeEngine
   describe MiqAeEngine do
+    include AutomationSpecHelper
+    include MiqAeEngine
+
     before(:each) do
       MiqAeDatastore.reset
       EvmSpecHelper.local_guid_miq_server_zone

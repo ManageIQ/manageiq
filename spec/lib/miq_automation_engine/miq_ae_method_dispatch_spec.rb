@@ -1,6 +1,6 @@
-include AutomationSpecHelper
-
 describe "MiqAeMethodDispatch" do
+  include AutomationSpecHelper
+
   before do
     @method_name     = 'MY_METHOD'
     @method_instance = 'MY_METHOD_INSTANCE'

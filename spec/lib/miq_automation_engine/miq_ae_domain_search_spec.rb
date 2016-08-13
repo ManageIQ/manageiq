@@ -1,7 +1,8 @@
-include AutomationSpecHelper
 module MiqAeDomainSearchSpec
-  include MiqAeEngine
   describe MiqAeDomainSearch do
+    include AutomationSpecHelper
+    include MiqAeEngine
+
     let(:user) { FactoryGirl.create(:user_with_group) }
     let(:search) { MiqAeDomainSearch.new }
 

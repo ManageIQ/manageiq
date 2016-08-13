@@ -1,7 +1,8 @@
-include AutomationSpecHelper
 module MiqAeExpressionSpec
-  include MiqAeEngine
   describe MiqAeObject do
+    include AutomationSpecHelper
+    include MiqAeEngine
+
     context "Expression" do
       let(:user) { FactoryGirl.create(:user_with_group) }
       let(:instance_name) { 'FRED' }
