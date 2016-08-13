@@ -1,13 +1,10 @@
 describe AuthenticationMixin do
-  before(:each) do
-    class TestClass < ActiveRecord::Base
+  let(:test_class_instance) do
+    Class.new(ActiveRecord::Base) do
+      def self.name; "TestClass"; end
       self.table_name = "vms"
       include AuthenticationMixin
-    end
-  end
-
-  after(:each) do
-    Object.send(:remove_const, :TestClass)
+    end.new
   end
 
   shared_examples "authentication_components" do |method, required_field|
@@ -22,26 +19,22 @@ describe AuthenticationMixin do
       end
 
       it "no authentication" do
-        t = TestClass.new
-        allow(t).to receive_messages(:authentication_best_fit => nil)
-        expect(t.send(method)).to eq(expected)
+        allow(test_class_instance).to receive_messages(:authentication_best_fit => nil)
+        expect(test_class_instance.send(method)).to eq(expected)
       end
 
       it "no #{required_field}" do
-        t = TestClass.new
-        allow(t).to receive_messages(:authentication_best_fit => double(required_field => nil))
-        expect(t.send(method)).to eq(expected)
+        allow(test_class_instance).to receive_messages(:authentication_best_fit => double(required_field => nil))
+        expect(test_class_instance.send(method)).to eq(expected)
       end
 
       it "blank #{required_field}" do
-        t = TestClass.new
-        allow(t).to receive_messages(:authentication_best_fit => double(required_field => ""))
-        expect(t.send(method)).to eq(expected)
+        allow(test_class_instance).to receive_messages(:authentication_best_fit => double(required_field => ""))
+        expect(test_class_instance.send(method)).to eq(expected)
       end
 
       it "normal case" do
-        t = TestClass.new
-        allow(t).to receive_messages(:authentication_best_fit => double(required_field => "test"))
+        allow(test_class_instance).to receive_messages(:authentication_best_fit => double(required_field => "test"))
 
         expected = case method
                    when :has_credentials?
@@ -52,7 +45,7 @@ describe AuthenticationMixin do
                      "test"
                    end
 
-        expect(t.send(method)).to eq(expected)
+        expect(test_class_instance.send(method)).to eq(expected)
       end
     end
   end
@@ -66,35 +59,31 @@ describe AuthenticationMixin do
   context "required fields" do
     context "requires one field" do
       it "saves when populated" do
-        t = TestClass.new
         data    = {:test => {:userid => "test_user"}}
         options = {:required => :userid}
-        t.update_authentication(data, options)
-        expect(t.has_authentication_type?(:test)).to be_truthy
+        test_class_instance.update_authentication(data, options)
+        expect(test_class_instance.has_authentication_type?(:test)).to be_truthy
       end
 
       it "raises when blank" do
-        t = TestClass.new
         data    = {:test => {:userid => "test_user"}}
         options = {:required => :password}
-        expect { t.update_authentication(data, options) }.to raise_error(ArgumentError, "password is required")
+        expect { test_class_instance.update_authentication(data, options) }.to raise_error(ArgumentError, "password is required")
       end
     end
 
     context "requires both fields" do
       it "saves when populated" do
-        t = TestClass.new
         data    = {:test => {:userid => "test_user", :password => "test_pass"}}
         options = {:required => [:userid, :password]}
-        t.update_authentication(data, options)
-        expect(t.has_authentication_type?(:test)).to be_truthy
+        test_class_instance.update_authentication(data, options)
+        expect(test_class_instance.has_authentication_type?(:test)).to be_truthy
       end
 
       it "raises when blank" do
-        t = TestClass.new
         data    = {:test => {:userid => "test_user"}}
         options = {:required => [:userid, :password]}
-        expect { t.update_authentication(data, options) }.to raise_error(ArgumentError, "password is required")
+        expect { test_class_instance.update_authentication(data, options) }.to raise_error(ArgumentError, "password is required")
       end
     end
   end
