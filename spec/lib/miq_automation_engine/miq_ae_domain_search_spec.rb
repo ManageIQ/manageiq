@@ -1,5 +1,5 @@
 describe MiqAeEngine::MiqAeDomainSearch do
-  include AutomationSpecHelper
+  include Spec::Support::AutomationHelper
 
   let(:user) { FactoryGirl.create(:user_with_group) }
   let(:search) { described_class.new }

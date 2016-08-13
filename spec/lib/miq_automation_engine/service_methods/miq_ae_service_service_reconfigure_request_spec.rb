@@ -1,5 +1,5 @@
 describe MiqAeMethodService::MiqAeServiceServiceReconfigureRequest do
-  include AutomationSpecHelper
+  include Spec::Support::AutomationHelper
 
   before(:each) do
     method_script   = "$evm.root['ci_type'] = $evm.root['request'].ci_type"

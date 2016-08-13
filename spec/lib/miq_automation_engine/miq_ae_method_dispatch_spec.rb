@@ -1,5 +1,5 @@
 describe "MiqAeMethodDispatch" do
-  include AutomationSpecHelper
+  include Spec::Support::AutomationHelper
 
   before do
     @method_name     = 'MY_METHOD'

@@ -1,5 +1,5 @@
 describe MiqAeMethodService::MiqAeServiceServiceReconfigureTask do
-  include AutomationSpecHelper
+  include Spec::Support::AutomationHelper
 
   before(:each) do
     method_script   = "$evm.root['result'] = $evm.root['service_reconfigure_task'].status"

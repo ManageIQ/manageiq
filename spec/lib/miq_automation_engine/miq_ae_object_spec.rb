@@ -1,5 +1,5 @@
 describe MiqAeEngine::MiqAeObject do
-  include AutomationSpecHelper
+  include Spec::Support::AutomationHelper
 
   before(:each) do
     MiqAeDatastore.reset
@@ -124,7 +124,7 @@ describe MiqAeEngine::MiqAeObject do
 end
 
 describe MiqAeEngine::MiqAeObject do
-  include AutomationSpecHelper
+  include Spec::Support::AutomationHelper
 
   context "substitute_value" do
 
@@ -174,7 +174,7 @@ describe MiqAeEngine::MiqAeObject do
 end
 
 describe MiqAeEngine::MiqAeObject do
-  include AutomationSpecHelper
+  include Spec::Support::AutomationHelper
 
   context "resolve vmdb objects" do
     let(:user) { FactoryGirl.create(:user_with_group) }

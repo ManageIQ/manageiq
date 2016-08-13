@@ -1,5 +1,5 @@
 describe MiqAeDomain do
-  include AutomationSpecHelper
+  include Spec::Support::AutomationHelper
 
   before do
     @user = FactoryGirl.create(:user_with_group)

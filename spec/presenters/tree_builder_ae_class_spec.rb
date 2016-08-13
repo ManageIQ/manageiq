@@ -1,5 +1,5 @@
 describe TreeBuilderAeClass do
-  include AutomationSpecHelper
+  include Spec::Support::AutomationHelper
 
   context "initialize" do
     before do
