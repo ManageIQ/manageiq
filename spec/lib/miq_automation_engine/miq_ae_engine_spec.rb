@@ -1,6 +1,5 @@
 describe MiqAeEngine do
   include AutomationSpecHelper
-  include MiqAeEngine
 
   before(:each) do
     MiqAeDatastore.reset
