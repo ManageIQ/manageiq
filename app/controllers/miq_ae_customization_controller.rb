@@ -67,6 +67,11 @@ class MiqAeCustomizationController < ApplicationController
 
   def import_service_dialogs
     if params[:commit] == _('Commit')
+      if params[:dialogs_to_import].blank?
+        render_flash_and_stop_sparkle(_("At least one Service Dialog must be selected."), :error)
+        return
+      end
+
       import_file_upload = ImportFileUpload.find_by(:id => params[:import_file_upload_id])
 
       if import_file_upload
