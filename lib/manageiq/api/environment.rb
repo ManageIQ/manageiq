@@ -4,7 +4,7 @@ class ManageIQ::API::Environment
   end
 
   def self.user_token_service
-    @user_token_service ||= ApiUserTokenService.new(ManageIQ::API::Settings, :log_init => true)
+    @user_token_service ||= ManageIQ::API::UserTokenService.new(ManageIQ::API::Settings, :log_init => true)
   end
 
   def self.fetch_encrypted_attribute_names(klass)
