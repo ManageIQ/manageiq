@@ -626,6 +626,9 @@ class MiqExpression
       # => false if operand is a tag
       return false if exp[operator].keys.include?("tag")
 
+      # => false if operand is a registry
+      return false if exp[operator].keys.include?("regkey")
+
       # => TODO: support count of child relationship
       return false if exp[operator].key?("count")
 

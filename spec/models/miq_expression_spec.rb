@@ -167,6 +167,12 @@ describe MiqExpression do
       expect(sql).to eq("\"vms\".\"id\" IN (#{vm.id})")
     end
 
+    it "returns nil for a Registry expression" do
+      exp = {"=" => {"regkey" => "test", "regval" => "value", "value" => "data"}}
+      sql, * = MiqExpression.new(exp).to_sql
+      expect(sql).to be_nil
+    end
+
     it "raises an error for an expression with unknown operator" do
       expect do
         MiqExpression.new("FOOBAR" => {"field" => "Vm-name", "value" => "foo"}).to_sql
