@@ -61,6 +61,7 @@ class ApiController < ApplicationController
 
   include_concern 'Accounts'
   include_concern 'ArbitrationProfiles'
+  include_concern 'ArbitrationRules'
   include_concern 'Authentication'
   include_concern 'AutomationRequests'
   include_concern 'Blueprints'

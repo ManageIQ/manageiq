@@ -254,5 +254,10 @@ describe ApiController do
       FactoryGirl.create(:arbitration_setting)
       test_collection_query(:arbitration_settings, arbitration_settings_url, ArbitrationSetting)
     end
+
+    it 'queries ArbitrationRules' do
+      FactoryGirl.create(:arbitration_rule)
+      test_collection_query(:arbitration_rules, arbitration_rules_url, ArbitrationRule)
+    end
   end
 end

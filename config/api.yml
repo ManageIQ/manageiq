@@ -1745,3 +1745,30 @@
       :delete:
       - :name: delete
         :identifier: delete_arbitration_setting
+  :arbitration_rules:
+    :description: Arbitration Rules
+    :identifier: miq_arbitration_rules
+    :options:
+    - :collection
+    :verbs: *gpppd
+    :klass: ArbitrationRule
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: arbitration_rule_show_list
+      :post:
+      - :name: create
+        :identifier: arbitration_rule_new
+      - :name: delete
+        :identifier: arbitration_rule_delete
+      - :name: edit
+        :identifier: arbitration_rule_edit
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: arbitration_rule_edit
+      - :name: delete
+        :identifier: arbitration_rule_delete
+      :delete:
+      - :name: edit
+        :identifier: arbitration_rule_delete
