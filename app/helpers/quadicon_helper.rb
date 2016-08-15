@@ -912,7 +912,6 @@ module QuadiconHelper
       c.lastaction  = @lastaction
       c.listicon    = @listicon
       c.listnav     = @listnav
-      c.listicon    = @listicon
       c.parent      = @parent
       c.policies    = session[:policies]
       c.policy_sim  = quadicon_policy_sim?
