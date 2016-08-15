@@ -12,6 +12,7 @@ en:
     - datetime
     - dbrestore
     - db_config
+    - db_replication
     - httpdauth
     - extauth_opts
     - key_gen
@@ -29,6 +30,7 @@ en:
     datetime: Set Date and Time
     dbrestore: Restore Database From Backup
     db_config: Configure Database
+    db_replication: Configure Database Replication
     httpdauth: Configure External Authentication (httpd)
     extauth_opts: Update External Authentication Options
     evmstop: Stop EVM Server Processes
