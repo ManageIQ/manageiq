@@ -26,11 +26,13 @@ describe EmsCloud do
     expect(described_class.supported_types).to match_array(expected_types)
   end
 
-  context "CloudTenant Mapping" do
+  context "OpenStack CloudTenant Mapping" do
     describe "#sync_cloud_tenants_with_tenants" do
-      let(:ems_cloud)              { FactoryGirl.create(:ems_openstack) }
-      let(:name_of_created_tenant) { "#{described_class::OPENSTACK_CLOUD_PROVIDER} #{ems_cloud.name}" }
-      let!(:default_tenant)        { Tenant.seed }
+      let(:ems_cloud)       { FactoryGirl.create(:ems_openstack) }
+      let!(:default_tenant) { Tenant.seed }
+      let(:name_of_created_tenant) do
+        "#{ManageIQ::Providers::Openstack::CloudManager.description} Cloud Provider #{ems_cloud.name}"
+      end
 
       it "creates tenant related to provider" do
         ems_cloud.sync_cloud_tenants_with_tenants
@@ -48,8 +50,11 @@ describe EmsCloud do
         ems_cloud.sync_cloud_tenants_with_tenants
 
         expect(Tenant.count).to eq(count_of_tenants + 1)
+        ems_cloud.reload
 
         ems_cloud.sync_cloud_tenants_with_tenants
+
+        ems_cloud.reload
         ems_cloud.sync_cloud_tenants_with_tenants
 
         expect(Tenant.count).to eq(count_of_tenants + 1)

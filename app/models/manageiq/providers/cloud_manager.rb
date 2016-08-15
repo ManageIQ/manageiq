@@ -75,6 +75,7 @@ module ManageIQ::Providers
       ems_tenant = source_tenant || Tenant.new(:parent => Tenant.root_tenant, :source => self)
 
       ems_tenant_name = "#{self.class.description} Cloud Provider #{name}"
+
       ems_tenant.update_attributes!(:name => ems_tenant_name, :description => ems_tenant_name)
     end
   end
