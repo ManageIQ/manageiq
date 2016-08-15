@@ -38,6 +38,7 @@ class Service < ApplicationRecord
   include NewWithTypeStiMixin
   include ProcessTasksMixin
   include TenancyMixin
+  include AvailabilityMixin
 
   include_concern 'RetirementManagement'
   include_concern 'Aggregation'
@@ -165,7 +166,7 @@ class Service < ApplicationRecord
 
   def validate_reconfigure
     ra = reconfigure_resource_action
-    ra && ra.dialog_id && ra.fqname.present?
+    {:available => ra && ra.dialog_id && ra.fqname.present?}
   end
 
   def reconfigure_resource_action
