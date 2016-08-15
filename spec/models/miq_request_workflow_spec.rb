@@ -48,6 +48,18 @@ describe MiqRequestWorkflow do
       end
     end
 
+    context 'required_method can be a list' do
+      it "multiple items" do
+        dialog.store_path(:dialogs, :customize, :fields, :root_password, :required_method, [:some_required_method_1,
+                                                                                            :some_required_method_2])
+        dialog.store_path(:dialogs, :customize, :fields, :root_password, :required, true)
+
+        expect(workflow).to receive(:some_required_method_1)
+        expect(workflow).to receive(:some_required_method_2)
+        expect(workflow.validate({})).to be true
+      end
+    end
+
     context "failures shouldn't be reverted" do
       it "validation_method" do
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :validation_method, :some_validation_method)
@@ -338,6 +350,12 @@ describe MiqRequestWorkflow do
   context "#validate regex" do
     let(:regex) { {:required_regex => "^n@test.com$"} }
     let(:regex_two) { {:required_regex => "^n$"} }
+    let(:regex_with_details) do
+      {
+        :required_regex              => "^n@test.com$",
+        :required_regex_fail_details => "We are looking for a specific email here."
+      }
+    end
     let(:value_email) { 'n@test.com' }
     let(:value_no_email) { 'n' }
 
@@ -353,6 +371,11 @@ describe MiqRequestWorkflow do
 
     it "returns an error when no value exists" do
       expect(workflow.validate_regex(nil, {}, {}, regex, '')).to eq "'/' is required"
+    end
+
+    it "returns a detailed formatting message when fail details are defined" do
+      expect(workflow.validate_regex(nil, {}, {}, regex_with_details, value_no_email)).to eq "'/' must be correctly"\
+        " formatted. We are looking for a specific email here."
     end
   end
 

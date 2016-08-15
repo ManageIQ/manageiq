@@ -192,7 +192,12 @@ class MiqRequestWorkflow
         if fld[:required] == true
           # If :required_method is defined let it determine if the field is value
           unless fld[:required_method].nil?
-            fld[:error] = send(fld[:required_method], f, values, dlg, fld, value)
+            Array.wrap(fld[:required_method]).each do |method|
+              fld[:error] = send(method, f, values, dlg, fld, value)
+              # Bail out early if we see an error
+              break unless fld[:error].nil?
+            end
+
             unless fld[:error].nil?
               valid = false
               next
