@@ -78,11 +78,6 @@ module ApplianceConsole
       end
     end
 
-    def post_activation
-      pid = fork { LinuxAdmin::Service.new("evmserverd").enable.start }
-      Process.detach(pid)
-    end
-
     def create_or_join_region
       region ? create_region : join_region
     end
@@ -192,8 +187,20 @@ FRIENDLY
       decrypt_password(load_current)
     end
 
-    def self.configured?
+    def self.database_yml_configured?
       File.exist?(DB_YML)
+    end
+
+    def self.database_host
+      database_yml_configured? ? current[rails_env]['host'] || "localhost" : nil
+    end
+
+    def self.database_name
+      database_yml_configured? ? current[rails_env]['database'] : nil
+    end
+
+    def self.region
+      database_yml_configured? ? ApplianceConsole::Utilities.db_region : nil
     end
 
     def validated
@@ -213,7 +220,17 @@ FRIENDLY
       end
     end
 
+    def start_evm
+      pid = fork { LinuxAdmin::Service.new("evmserverd").enable.start }
+      Process.detach(pid)
+    end
+
     private
+
+    def self.rails_env
+      ENV["RAILS_ENV"] || "development"
+    end
+    private_class_method :rails_env
 
     def self.encrypt_decrypt_password(settings)
       new_settings = {}

@@ -24,6 +24,7 @@ require 'rubygems'
 require 'bcrypt'
 require 'linux_admin'
 require 'util/vmdb-logger'
+require 'util/postgres_admin'
 require 'awesome_spawn'
 include HighLine::SystemExtensions
 
@@ -92,10 +93,8 @@ NETWORK_INTERFACE = "eth0".freeze
 module ApplianceConsole
   eth0 = LinuxAdmin::NetworkInterface.new(NETWORK_INTERFACE)
   ip = eth0.address
-  # Because it takes a few seconds, get the database information once in the outside loop
-  configured = ApplianceConsole::DatabaseConfiguration.configured?
-  dbhost, database, region = ApplianceConsole::Utilities.db_host_database_region if configured
-
+  # Because it takes a few seconds, get the region once in the outside loop
+  region = ApplianceConsole::DatabaseConfiguration.region
   clear_screen
 
   # Calling stty to provide the equivalent line settings when the console is run via an ssh session or
@@ -103,7 +102,7 @@ module ApplianceConsole
   system("stty -echoprt ixany iexten echoe echok")
 
   say("#{I18n.t("product.name")} Virtual Appliance\n")
-  say("To administer this appliance, browse to https://#{ip}\n") if configured
+  say("To administer this appliance, browse to https://#{ip}\n")
 
   loop do
     begin
@@ -111,16 +110,18 @@ module ApplianceConsole
       eth0.reload
       eth0.parse_conf if eth0.respond_to?(:parse_conf)
 
-      host       = LinuxAdmin::Hosts.new.hostname
-      ip         = eth0.address
-      mac        = eth0.mac_address
-      mask       = eth0.netmask
-      gw         = eth0.gateway
-      dns1, dns2 = dns.nameservers
-      order      = dns.search_order.join(' ')
-      timezone   = LinuxAdmin::TimeDate.system_timezone
-      version    = File.read(VERSION_FILE).chomp if File.exist?(VERSION_FILE)
-      configured = ApplianceConsole::DatabaseConfiguration.configured?
+      host        = LinuxAdmin::Hosts.new.hostname
+      ip          = eth0.address
+      mac         = eth0.mac_address
+      mask        = eth0.netmask
+      gw          = eth0.gateway
+      dns1, dns2  = dns.nameservers
+      order       = dns.search_order.join(' ')
+      timezone    = LinuxAdmin::TimeDate.system_timezone
+      version     = File.read(VERSION_FILE).chomp if File.exist?(VERSION_FILE)
+      dbhost      = ApplianceConsole::DatabaseConfiguration.database_host
+      database    = ApplianceConsole::DatabaseConfiguration.database_name
+      evm_running = LinuxAdmin::Service.new("evmserverd").running?
 
       summary_attributes = [
         summary_entry("Hostname", host),
@@ -132,13 +133,12 @@ module ApplianceConsole
         summary_entry("Search Order", order),
         summary_entry("MAC Address", mac),
         summary_entry("Timezone", timezone),
-        summary_entry("Local Database", ApplianceConsole::Utilities.pg_status),
-        summary_entry("#{I18n.t("product.name")} Database",
-                      configured ? "postgres @ #{dbhost || "localhost"}" : "not configured"),
-        summary_entry("Database/Region", configured ? "#{database} / #{region || 0}" : "not configured"),
+        summary_entry("Local Database Server", PostgresAdmin.local_server_status),
+        summary_entry("#{I18n.t("product.name")} Server", evm_running ? "running" : "not running"),
+        summary_entry("#{I18n.t("product.name")} Database", dbhost || "not configured"),
+        summary_entry("Database/Region", database ? "#{database} / #{region.to_i}" : "not configured"),
         summary_entry("External Auth", ExternalHttpdAuthentication.config_status),
         summary_entry("#{I18n.t("product.name")} Version", version),
-        summary_entry("#{I18n.t("product.name")} Console", configured ? "https://#{ip}" : "not configured")
       ]
 
       clear_screen
@@ -459,7 +459,9 @@ Static Network Configuration
         when "create_internal", /_external/
           database_configuration.run_interactive
         end
-        dbhost, database, region = ApplianceConsole::Utilities.db_host_database_region
+        # Get the region again because it may have changed
+        region = ApplianceConsole::DatabaseConfiguration.region
+
         press_any_key
 
       when I18n.t("advanced_settings.db_replication")

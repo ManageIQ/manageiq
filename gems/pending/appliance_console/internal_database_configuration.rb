@@ -7,8 +7,7 @@ RAILS_ROOT ||= Pathname.new(__dir__).join("../../../")
 
 module ApplianceConsole
   class InternalDatabaseConfiguration < DatabaseConfiguration
-    attr_accessor :disk
-    attr_accessor :ssl
+    attr_accessor :disk, :ssl, :run_as_evm_server
 
     def self.postgres_dir
       PostgresAdmin.data_directory.relative_path_from(Pathname.new("/"))
@@ -18,23 +17,20 @@ module ApplianceConsole
       PostgresAdmin.template_directory.join(postgres_dir)
     end
 
-    def self.database_initialized?
-      configured? && !Dir[PostgresAdmin.data_directory.join("*")].empty?
-    end
-
     def initialize(hash = {})
       set_defaults
       super
     end
 
     def set_defaults
-      self.host     = "127.0.0.1"
-      self.username = "root"
-      self.database = "vmdb_production"
+      self.host              = "127.0.0.1"
+      self.username          = "root"
+      self.database          = "vmdb_production"
+      self.run_as_evm_server = true
     end
 
     def activate
-      if self.class.database_initialized?
+      if PostgresAdmin.initialized?
         say(<<-EOF.gsub!(/^\s+/, ""))
           An internal database already exists.
           Choose "Reset Internal Database" to reset the existing installation
@@ -43,14 +39,16 @@ module ApplianceConsole
       end
       initialize_postgresql_disk if disk
       initialize_postgresql
-      super
+      return super if run_as_evm_server
+      true
     end
 
     def ask_questions
       choose_disk
+      self.run_as_evm_server = ask_yn?("Do you also want to use this server as an application server")
       # TODO: Assume we want to create a region for a new internal database disk
       # until we allow for the internal selection against an already initialized disk.
-      create_new_region_questions(false)
+      create_new_region_questions(false) if run_as_evm_server
       ask_for_database_credentials
     end
 
@@ -89,6 +87,10 @@ module ApplianceConsole
       copy_template "postgresql.conf.erb"
       copy_template "pg_hba.conf.erb"
       copy_template "pg_ident.conf"
+    end
+
+    def post_activation
+      start_evm if run_as_evm_server
     end
 
     private

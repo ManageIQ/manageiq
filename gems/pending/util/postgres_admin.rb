@@ -53,6 +53,24 @@ class PostgresAdmin
     "xfs".freeze
   end
 
+  def self.initialized?
+    !Dir[data_directory.join("*")].empty?
+  end
+
+  def self.service_running?
+    LinuxAdmin::Service.new(service_name).running?
+  end
+
+  def self.local_server_status
+    if service_running?
+      "running"
+    elsif initialized?
+      "initialized and stopped"
+    else
+      "not initialized"
+    end
+  end
+
   def self.logical_volume_path
     Pathname.new("/dev").join(volume_group_name, logical_volume_name)
   end
