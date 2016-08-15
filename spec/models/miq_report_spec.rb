@@ -287,12 +287,10 @@ describe MiqReport do
       host1 = FactoryGirl.create(:host)
       FactoryGirl.create(:vm_vmware, :host => host1, :name => "a")
 
+      ems   = FactoryGirl.create(:ems_vmware)
       host2 = FactoryGirl.create(:host)
-      vmb   = FactoryGirl.create(:vm_vmware, :host => host2, :name => "b")
-      allow(vmb).to receive(:archived?).and_return(false)
-      vmc   = FactoryGirl.create(:vm_vmware, :host => host2, :name => "c")
-      allow(vmc).to receive(:archived?).and_return(false)
-      allow(Vm).to receive(:find_by).and_return(vmb)
+      vmb   = FactoryGirl.create(:vm_vmware, :host => host2, :name => "b", :ext_management_system => ems)
+      vmc   = FactoryGirl.create(:vm_vmware, :host => host2, :name => "c", :ext_management_system => ems)
 
       report = MiqReport.new(:db => "Vm", :sortby => "name", :order => "Descending")
       results, = report.paged_view_search(
