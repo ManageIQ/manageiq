@@ -1,41 +1,50 @@
-describe 'ops/_settings_add_new_group.html.haml' do
+describe 'ops/_rbac_group_details.html.haml' do
   context 'add new group' do
     before(:each) do
-      @edit = nil
-      let(:current_tenant) { FactoryGirl.create(:tenant, :name => 'tenant1') }
-      let(:tenant_name) { 'tenant1' }
-      @group = FactoryGirl.create(:miq_group, :description => 'asdf')
+      miq_server = FactoryGirl.create(:miq_server)
+      current = VMDB::Config.new("vmdb")
+      edit = {:current             => current,
+              :new                 => copy_hash(current.config),
+              :key                 => "settings_authentication_edit__#{miq_server.id}",
+              :ldap_groups_by_user => [],
+              :roles               => ["fred", "wilma"],
+              :projects_tenants    => [["projects", ["foo", "bar"]]]
+      }
+      view.instance_variable_set(:@edit, edit)
+      @group = FactoryGirl.create(:miq_group, :description => 'flintstones')
+      allow(view).to receive(:current_tenant).and_return(Tenant.seed)
+      allow(view).to receive(:session).and_return({:assigned_filters => []})
     end
 
-    it 'should show group LDAP Look up groups checkbox and label' do
+    it 'should show "Look up groups" checkbox and label for auth mode ldap' do
       stub_server_configuration(:authentication => { :mode => 'ldap' })
       render :partial => 'ops/rbac_group_details'
       expect(rendered).to have_selector('input#lookup', type='checkbox')
       expect(rendered).to include('Look up LDAP Groups')
     end
 
-    it 'should show group LDAPS Look up groups checkbox and label' do
+    it 'should show "Look up groups" checkbox and label for auth mode ldaps' do
       stub_server_configuration(:authentication => { :mode => 'ldaps' })
       render :partial => 'ops/rbac_group_details'
       expect(rendered).to have_selector('input#lookup', type='checkbox')
       expect(rendered).to include('Look up LDAPS Groups')
     end
 
-    it 'should show group Amazon Look up groups checkbox and label' do
+    it 'should show "Look up groups" checkbox and label for auth mode amazon' do
       stub_server_configuration(:authentication => { :mode => 'amazon' })
       render :partial => 'ops/rbac_group_details'
       expect(rendered).to have_selector('input#lookup', type='checkbox')
       expect(rendered).to include('Look up Amazon Groups')
     end
 
-    it 'should show group httpd Look up groups checkbox and label' do
+    it 'should show "Look up groups" checkbox and label for auth mode httpd' do
       stub_server_configuration(:authentication => { :mode => 'httpd' })
       render :partial => 'ops/rbac_group_details'
       expect(rendered).to have_selector('input#lookup', type='checkbox')
       expect(rendered).to include('Look up External Authentication Groups')
     end
 
-    it 'should not show group Database Look up groups checkbox and label' do
+    it 'should not show "Look up groups" checkbox and label for auth mode database' do
       stub_server_configuration(:authentication => { :mode => 'database' })
       render :partial => 'ops/rbac_group_details'
       expect(rendered).not_to have_selector('input#lookup', type='checkbox')
