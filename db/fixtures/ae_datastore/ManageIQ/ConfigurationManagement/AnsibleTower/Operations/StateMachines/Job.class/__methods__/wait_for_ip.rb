@@ -13,27 +13,26 @@ class WaitForIP
     vm ||= @handle.root["vm"]
     vm ? check_ip_addr_available(vm) : vm_not_found
   end
-  
-  require 'timeout'  
-  require 'socket'  
-  def is_port_open?(host, port, timeout=180, sleep_period=5)
-    begin
-      Timeout::timeout(timeout) do
-        begin
-          s = TCPSocket.new(host, port)
-          s.close
-          return true
-        rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
-          sleep(sleep_period)
-          retry
-        end
+
+  require 'timeout'
+  require 'socket'
+  def ssh_port_open?(host, port, timeout = 180, sleep_period = 5)
+    Timeout.timeout(timeout) do
+      begin
+        s = TCPSocket.new(host, port)
+        s.close
+        return true
+      rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
+        sleep(sleep_period)
+        retry
       end
-    rescue Timeout::Error
-      return false
     end
+  rescue Timeout::Error
+    return false
+    # end
   end
-  
-  def check_ip_addr_available(vm, port=22, timeout=600, sleep_period=10)
+
+  def check_ip_addr_available(vm, port = 22, timeout = 600, sleep_period = 10)
     ip_list = vm.ipaddresses
     @handle.log(:info, "Current Power State #{vm.power_state}")
     @handle.log(:info, "IP addresses for VM #{ip_list}")
@@ -42,10 +41,8 @@ class WaitForIP
       vm.refresh
       @handle.root['ae_result'] = 'retry'
       @handle.root['ae_retry_limit'] = 1.minute
-    else
-      if is_port_open?( ip_list.first , port, timeout, sleep_period)
-        @handle.root['ae_result'] = 'ok'
-      end
+    elsif ssh_port_open?(ip_list.first, port, timeout, sleep_period)
+      @handle.root['ae_result'] = 'ok'
     end
   end
 
