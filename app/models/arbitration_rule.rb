@@ -4,4 +4,8 @@ class ArbitrationRule < ApplicationRecord
   validates :name, :expression, :presence => true
 
   serialize :expression
+
+  def self.get_by_rule_class(rule_class)
+    where('expression like ?', "%#{rule_class}%").order(:priority)
+  end
 end
