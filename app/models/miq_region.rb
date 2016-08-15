@@ -18,6 +18,8 @@ class MiqRegion < ApplicationRecord
   virtual_has_many :miq_templates,          :uses => :all_relationships
   virtual_has_many :vms,                    :uses => :all_relationships
 
+  after_save :clear_my_region_cache
+
   acts_as_miq_taggable
   include UuidMixin
   include NamingSequenceMixin
@@ -312,5 +314,11 @@ class MiqRegion < ApplicationRecord
       options[type] = self.is_tagged_with?("capture_enabled", :ns => "/performance/#{type}")
     end
     @perf_capture_always = options.freeze
+  end
+
+  private
+
+  def clear_my_region_cache
+    MiqRegion.my_region_clear_cache
   end
 end
