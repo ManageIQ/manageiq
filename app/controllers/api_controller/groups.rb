@@ -2,6 +2,14 @@ class ApiController
   INVALID_GROUP_ATTRS = %w(id href group_type).freeze
 
   module Groups
+    def groups_search_conditions
+      ["group_type != ?", MiqGroup::TENANT_GROUP]
+    end
+
+    def find_groups(id)
+      MiqGroup.non_tenant_groups.find(id)
+    end
+
     def create_resource_groups(_type, _id, data)
       validate_group_data(data)
       parse_set_role(data)
