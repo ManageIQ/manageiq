@@ -119,7 +119,7 @@ describe DashboardController do
       skip_data_checks(validation_url)
 
       allow(User).to receive(:authenticate).and_return(user)
-      allow_any_instance_of(ApiUserTokenService).to receive(:generate_token)
+      allow_any_instance_of(ManageIQ::API::UserTokenService).to receive(:generate_token)
         .with(user.userid, "ui")
         .and_return(auth_token)
 
