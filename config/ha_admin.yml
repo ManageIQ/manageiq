@@ -1,0 +1,4 @@
+---
+failover_attempts: 10
+db_connected_check_frequency: 5.minutes
+failover_check_frequency: 1.minute
