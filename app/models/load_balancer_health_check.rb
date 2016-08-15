@@ -4,5 +4,9 @@ class LoadBalancerHealthCheck < ApplicationRecord
   belongs_to :load_balancer
   belongs_to :load_balancer_listener
 
+  has_many :load_balancer_health_check_members, -> { distinct }, :dependent => :destroy
   has_many :load_balancer_pool_members, :through => :load_balancer_health_check_members
+
+  has_many :vms, -> { distinct }, :through => :load_balancer_pool_members
+  has_many :resource_groups, -> { distinct }, :through => :load_balancer_pool_members
 end
