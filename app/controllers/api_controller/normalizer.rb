@@ -8,7 +8,7 @@ class ApiController
     # virtual subcollections is added.
 
     def normalize_hash(type, obj, opts = {})
-      Api.fetch_encrypted_attribute_names(obj.class)
+      ManageIQ::API::Environment.fetch_encrypted_attribute_names(obj.class)
       attrs = normalize_select_attributes(obj, opts)
       result = {}
 
@@ -36,7 +36,7 @@ class ApiController
     end
 
     def normalize_virtual_hash(vtype, obj, options)
-      Api.fetch_encrypted_attribute_names(obj.class)
+      ManageIQ::API::Environment.fetch_encrypted_attribute_names(obj.class)
       attrs = (obj.respond_to?(:attributes) ? obj.attributes.keys : obj.keys)
       attrs.each_with_object({}) do |k, res|
         value = normalize_virtual(vtype, k, obj[k], options)
@@ -49,13 +49,13 @@ class ApiController
     #
     def normalize_attr_byname(attr, value)
       return if value.nil?
-      if Api.normalized_attributes[:time].key?(attr.to_s)
+      if ManageIQ::API::Environment.normalized_attributes[:time].key?(attr.to_s)
         normalize_time(value)
-      elsif Api.normalized_attributes[:url].key?(attr.to_s)
+      elsif ManageIQ::API::Environment.normalized_attributes[:url].key?(attr.to_s)
         normalize_url(value)
-      elsif Api.normalized_attributes[:encrypted].key?(attr.to_s) || attr.to_s.include?("password")
+      elsif ManageIQ::API::Environment.normalized_attributes[:encrypted].key?(attr.to_s) || attr.to_s.include?("password")
         normalize_encrypted
-      elsif Api.normalized_attributes[:resource].key?(attr.to_s)
+      elsif ManageIQ::API::Environment.normalized_attributes[:resource].key?(attr.to_s)
         normalize_resource(value)
       else
         value

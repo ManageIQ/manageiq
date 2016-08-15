@@ -1,5 +1,5 @@
 class ApiUserTokenService
-  def initialize(config = Api::Settings, args = {})
+  def initialize(config = ManageIQ::API::Settings, args = {})
     @config = config
     @svc_options = args
     @token_mgr = new_token_mgr(base_config[:module], base_config[:name], api_config)
