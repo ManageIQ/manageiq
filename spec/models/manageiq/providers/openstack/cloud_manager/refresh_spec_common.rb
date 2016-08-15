@@ -851,5 +851,12 @@ module Openstack
         expect(CloudService.where(:executable_name => executable_name).count).to eq count
       end
     end
+
+    def expect_sync_cloud_tenants_with_tenants_is_queued
+      sync_cloud_tenant = MiqQueue.last
+
+      expect(sync_cloud_tenant.method_name).to eq("sync_cloud_tenants_with_tenants")
+      expect(sync_cloud_tenant.state).to eq(MiqQueue::STATE_READY)
+    end
   end
 end

@@ -31,6 +31,10 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
     build_network_manager(:type => 'ManageIQ::Providers::Openstack::NetworkManager') unless network_manager
   end
 
+  def supports_cloud_tenants?
+    true
+  end
+
   def self.ems_type
     @ems_type ||= "openstack".freeze
   end

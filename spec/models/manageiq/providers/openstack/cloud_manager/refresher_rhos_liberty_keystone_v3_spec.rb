@@ -16,6 +16,8 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
       end
 
       assert_common
+
+      expect_sync_cloud_tenants_with_tenants_is_queued
     end
   end
 
