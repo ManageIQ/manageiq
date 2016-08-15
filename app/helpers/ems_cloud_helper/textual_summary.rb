@@ -38,7 +38,7 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_region
-    return nil if @ems.provider_region.nil?
+    return nil if @ems.provider_region.blank?
     label_val = _('Region')
     {:label => label_val, :value => @ems.provider_region}
   end
