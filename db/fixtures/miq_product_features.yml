@@ -4964,7 +4964,7 @@
       - :name: Cockpit Console
         :description: Open the Cockpit console for VMs
         :feature_type: control
-        :identifier: vm_cockpit
+        :identifier: cockpit_console
       - :name: Edit Tags
         :description: Edit VM Tags
         :feature_type: control
