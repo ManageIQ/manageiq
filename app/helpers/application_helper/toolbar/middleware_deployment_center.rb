@@ -16,7 +16,7 @@ class ApplicationHelper::Toolbar::MiddlewareDeploymentCenter < ApplicationHelper
       ]
     ),
   ])
-  button_group('middleware_deployments_operations', [
+  button_group('middleware_deployment_operations', [
     select(
       :middleware_deployment_deploy_choice,
       'fa fa-play-circle-o fa-lg',
@@ -24,23 +24,23 @@ class ApplicationHelper::Toolbar::MiddlewareDeploymentCenter < ApplicationHelper
       t,
       :items => [
         button(
-          :middleware_deployment_redeploy,
+          :middleware_deployment_restart,
           'pficon pficon-restart fa-lg',
-          N_('Redeploy this Middleware Deployment'),
-          N_('Redeploy'),
-          :confirm => N_("Do you want to redeploy this deployment ?")),
+          N_('Restart this Middleware Deployment'),
+          N_('Restart'),
+          :confirm => N_("Do you want to restart this deployment ?")),
         button(
-          :middleware_deployment_start,
-          'fa fa-play-circle-o fa-lg',
-          N_('Start this Middleware Deployment'),
-          N_('Start'),
-          :confirm => N_("Do you want to start this deployment ?")),
-        button(
-          :middleware_deployment_stop,
+          :middleware_deployment_disable,
           'fa fa-stop-circle-o fa-lg',
-          N_('Stop this Middleware Deployment'),
-          N_('Stop'),
-          :confirm => N_("Do you want to stop this deployment ?")),
+          N_('Disable this Middleware Deployment'),
+          N_('Disable'),
+          :confirm => N_("Do you want to disable this deployment ?")),
+        button(
+          :middleware_deployment_enable,
+          'fa fa-play-circle-o fa-lg',
+          N_('Enable this Middleware Deployment'),
+          N_('Enable'),
+          :confirm => N_("Do you want to enable this deployment ?")),
         button(
           :middleware_deployment_undeploy,
           'fa fa-eject fa-lg',

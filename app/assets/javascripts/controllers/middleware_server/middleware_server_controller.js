@@ -65,6 +65,7 @@ function MwServerController($scope, miqService) {
 
   $scope.deployAddModel = {};
   $scope.deployAddModel.enableDeployment = true;
+  $scope.deployAddModel.forceDeploy = false;
   $scope.deployAddModel.serverId = angular.element('#server_id').val();
 
   $scope.showDeployListener = function () {
@@ -74,6 +75,7 @@ function MwServerController($scope, miqService) {
 
   $scope.resetDeployForm = function () {
     $scope.deployAddModel.enableDeployment = true;
+    $scope.deployAddModel.forceDeploy = false;
     $scope.deployAddModel.runtimeName = undefined;
     $scope.deployAddModel.filePath = undefined;
     angular.element('#deploy_div :file#upload_file').val('');
