@@ -28,6 +28,12 @@ namespace :evm do
     EvmApplication.status
   end
 
+  desc "Write a remote region id to this server's REGION file"
+  task :join_region => :environment do
+    configured_region = ApplicationRecord.region_number_from_sequence.to_i
+    EvmApplication.set_region_file(Rails.root.join("REGION"), configured_region)
+  end
+
   # update_start can be called in an environment where the database configuration is
   # not set, so we need to give it a dummy config
   task :update_start do
