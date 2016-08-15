@@ -222,11 +222,11 @@ module MiqAeEngine
     end
 
     builtin :miq_event_action_refresh do |obj, target|
-      event_object_from_workspace(obj).refresh(inputs['target'], false)
+      event_object_from_workspace(obj).refresh(target, false)
     end
 
     builtin :miq_event_action_refresh_sync do |obj, target|
-      event_object_from_workspace(obj).refresh(inputs['target'], true)
+      event_object_from_workspace(obj).refresh(target, true)
     end
 
     builtin :event_action_refresh do |obj, target|
