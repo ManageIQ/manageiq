@@ -11,7 +11,8 @@ Vmdb::Application.load_tasks
 begin
   require 'jasmine'
   load 'jasmine/tasks/jasmine.rake'
-rescue LoadError
+rescue LoadError => e
+  puts e.message
 end
 
 # Clear noisy and unusable tasks added by rspec-rails
