@@ -296,11 +296,14 @@ describe ApiController do
 
       # Confirm requested features removed first, and others remain
       @product_features.each do |feature|
-        expect(role.allows?(:identifier => feature.identifier)).to be_truthy unless features_list['features'].find do |removed_feature|
+        removed = features_list['features'].find do |removed_feature|
           removed_feature[:identifier] == feature[:identifier]
         end
-        expect(role.allows?(:identifier => feature.identifier)).to be_falsey if features_list['features'].find do |removed_feature|
-          removed_feature[:identifier] == feature[:identifier]
+
+        if removed
+          expect(role.allows?(:identifier => feature.identifier)).to be_falsey
+        else
+          expect(role.allows?(:identifier => feature.identifier)).to be_truthy
         end
       end
     end
