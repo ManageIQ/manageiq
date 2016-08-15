@@ -12,16 +12,18 @@ class ApiController
     private
 
     def create_bundle(blueprint, bundle)
-      service_catalog = ServiceTemplateCatalog.find(parse_id(bundle["service_catalog"], :service_catalogs))
-      service_dialog = Dialog.find(parse_id(bundle["service_dialog"], :service_dialogs))
-      service_templates = bundle["service_templates"].collect do |st|
+      options = {}
+      if bundle["service_catalog"]
+        options[:service_catalog] = ServiceTemplateCatalog.find(parse_id(bundle["service_catalog"], :service_catalogs))
+      end
+      if bundle["service_dialog"]
+        options[:service_dialog] = Dialog.find(parse_id(bundle["service_dialog"], :service_dialogs))
+      end
+      options[:service_templates] = bundle.fetch("service_templates", []).collect do |st|
         ServiceTemplate.find(parse_id(st, :service_templates))
       end
-      automate_entrypoints = bundle["automate_entrypoints"]
-      blueprint.create_bundle(service_templates,
-                              service_dialog,
-                              service_catalog,
-                              "entry_points" => automate_entrypoints)
+      options[:entry_points] = bundle["automate_entrypoints"] if bundle["automate_entrypoints"]
+      blueprint.create_bundle(options)
     rescue => e
       raise BadRequestError, "Couldn't create the bundle - #{e}"
     end

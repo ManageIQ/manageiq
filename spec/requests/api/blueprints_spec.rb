@@ -41,10 +41,13 @@ RSpec.describe "Blueprints API" do
 
     it "will show a blueprint's bundle if requested" do
       blueprint = FactoryGirl.create(:blueprint, :name => "Test Blueprint")
-      service_catalog = FactoryGirl.create(:service_template_catalog)
-      service_dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field)
       service_templates = FactoryGirl.create_list(:service_template, 2)
-      blueprint.create_bundle(service_templates, service_dialog, service_catalog)
+      service_catalog   = FactoryGirl.create(:service_template_catalog)
+      service_dialog    = FactoryGirl.create(:dialog_with_tab_and_group_and_field)
+      blueprint.create_bundle(:service_templates => service_templates,
+                              :service_catalog   => service_catalog,
+                              :service_dialog    => service_dialog)
+
       api_basic_authorize action_identifier(:blueprints, :read, :resource_actions, :get)
 
       run_get(blueprints_url(blueprint.id), :attributes => "bundle")
