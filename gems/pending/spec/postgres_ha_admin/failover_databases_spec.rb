@@ -24,10 +24,12 @@ describe PostgresHaAdmin::FailoverDatabases do
     end
   end
 
-  describe "#update_failover_yml" do
+  context "accessing database" do
     after do
-      @connection.exec("ROLLBACK")
-      @connection.finish
+      if @connection
+        @connection.exec("ROLLBACK")
+        @connection.finish
+      end
     end
 
     before do
@@ -53,21 +55,42 @@ describe PostgresHaAdmin::FailoverDatabases do
         VALUES
           ('master', 'host=203.0.113.1 user=root dbname=vmdb_test', 'true'),
           ('standby', 'host=203.0.113.2 user=root dbname=vmdb_test', 'true'),
-          ('standby', 'host=203.0.113.3 user=root dbname=vmdb_test', 'false')
+          ('standby', 'host=203.0.113.3 user=root dbname=vmdb_test', 'false'),
+          ('master', 'host=203.0.113.5 user=root dbname=vmdb_test', 'false')
       SQL
     end
 
-    it "updates 'failover_databases.yml'" do
-      failover_databases.update_failover_yml(@connection)
+    describe "#update_failover_yml" do
+      it "updates 'failover_databases.yml'" do
+        failover_databases.update_failover_yml(@connection)
 
-      yml_hash = YAML.load_file(@yml_file)
-      expect(yml_hash).to eq initial_db_list
+        yml_hash = YAML.load_file(@yml_file)
+        expect(yml_hash).to eq initial_db_list
 
-      add_new_record
+        add_new_record
 
-      failover_databases.update_failover_yml(@connection)
-      yml_hash = YAML.load_file(@yml_file)
-      expect(yml_hash).to eq new_db_list
+        failover_databases.update_failover_yml(@connection)
+        yml_hash = YAML.load_file(@yml_file)
+        expect(yml_hash).to eq new_db_list
+      end
+    end
+
+    describe "#host_is_repmgr_primary?" do
+      it "return true if supplied connection established with primary database" do
+        expect(failover_databases.host_is_repmgr_primary?('203.0.113.1', @connection)).to be true
+      end
+
+      it "return false if supplied connection established with not active standby database" do
+        expect(failover_databases.host_is_repmgr_primary?('203.0.113.3', @connection)).to be false
+      end
+
+      it "return false if supplied connection established with active standby database" do
+        expect(failover_databases.host_is_repmgr_primary?('203.0.113.2', @connection)).to be false
+      end
+
+      it "return false if supplied connection established with not active master database" do
+        expect(failover_databases.host_is_repmgr_primary?('203.0.113.5', @connection)).to be false
+      end
     end
   end
 
@@ -76,6 +99,7 @@ describe PostgresHaAdmin::FailoverDatabases do
     arr << {:type => 'master', :active => true, :host => '203.0.113.1', :user => 'root', :dbname => 'vmdb_test'}
     arr << {:type => 'standby', :active => true, :host => '203.0.113.2', :user => 'root', :dbname => 'vmdb_test'}
     arr << {:type => 'standby', :active => false, :host => '203.0.113.3', :user => 'root', :dbname => 'vmdb_test'}
+    arr << {:type => 'master', :active => false, :host => '203.0.113.5', :user => 'root', :dbname => 'vmdb_test'}
     arr
   end
 

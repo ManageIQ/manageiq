@@ -24,12 +24,16 @@ module PostgresHaAdmin
       @logger.error(err.backtrace.join("\n"))
     end
 
-    private
-
-    def all_databases
-      return [] unless File.exist?(yml_file)
-      YAML.load_file(yml_file)
+    def host_is_repmgr_primary?(host, connection)
+      query_repmgr(connection).each do |record|
+        if record[:host] == host && entry_is_active_master?(record)
+          return true
+        end
+      end
+      false
     end
+
+    private
 
     def query_repmgr(connection)
       return [] unless table_exists?(connection, TABLE_NAME)
@@ -45,6 +49,15 @@ module PostgresHaAdmin
       @logger.error("#{err.class}: #{err}")
       @logger.error(err.backtrace.join("\n"))
       result
+    end
+
+    def entry_is_active_master?(record)
+      record[:type] == 'master' && record[:active]
+    end
+
+    def all_databases
+      return [] unless File.exist?(yml_file)
+      YAML.load_file(yml_file)
     end
 
     def table_exists?(connection, table_name)
