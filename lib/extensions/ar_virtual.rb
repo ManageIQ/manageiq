@@ -85,24 +85,26 @@ module VirtualDelegates
 
     private
 
-    # @option :methods :to
-    # @option :methods :prefix
-    def define_virtual_delegate(methods, options)
+    # define virtual_attribute for delegates
+    #
+    # this is called at schema load time (and not at class definition time)
+    #
+    # @param  method_name [Symbol] name of the attribute on the source class to be defined
+    # @param  col [Symbol] name of the attribute on the associated class to be referenced
+    # @option options :to [Symbol] name of the association from the source class to be referenced
+    # @option options :arel [Proc] (optional and not common)
+    # @option options :uses [Array|Symbol|Hash] sql includes hash. (default: to)
+    def define_virtual_delegate(method_name, col, options)
       unless (to = options[:to]) && (to_ref = reflection_with_virtual(to.to_s))
         raise ArgumentError, 'Delegation needs an association. Supply an options hash with a :to key as the last argument (e.g. delegate :hello, to: :greeter).'
       end
 
-      prefix = options[:prefix]
-      method_prefix = virtual_delegate_name_prefix(prefix, to)
-
       to_model = to_ref.klass
-      methods.each do |col|
-        col = col.to_s
-        type = to_model.type_for_attribute(col)
-        raise "unknown attribute #{to_model.name}##{col} referenced in #{name}" unless type
-        arel = virtual_delegate_arel(col, to, to_model, to_ref)
-        define_virtual_attribute "#{method_prefix}#{col}", type, :uses => (options[:uses] || to), :arel => arel
-      end
+      col = col.to_s
+      type = to_model.type_for_attribute(col)
+      raise "unknown attribute #{to_model.name}##{col} referenced in #{name}" unless type
+      arel = virtual_delegate_arel(col, to, to_model, to_ref)
+      define_virtual_attribute method_name, type, :uses => (options[:uses] || to), :arel => arel
     end
 
     def virtual_delegate_name_prefix(prefix, to)
@@ -220,7 +222,7 @@ module VirtualAttributes
       end
 
       virtual_delegates_to_define.each do |method_name, (method, options)|
-        define_virtual_delegate([method], options)
+        define_virtual_delegate(method_name, method, options)
       end
     end
 
