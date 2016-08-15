@@ -39,7 +39,7 @@ describe ApiController do
       api_basic_authorize
 
       log_request_expectations = EXPECTED_LOGGED_PARAMETERS.merge(
-        "Request" => a_hash_including(:method, :fullpath, :url, :base, :path, :prefix, :version, :api_prefix,
+        "Request" => a_hash_including(:method, :action, :fullpath, :url, :base, :path, :prefix, :version, :api_prefix,
                                       :collection, :c_suffix, :c_id, :subcollection, :s_id)
       )
 
