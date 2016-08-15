@@ -1,5 +1,6 @@
-#main_div
-  = render :partial => "layouts/flash_msg"
+= render :partial => "layouts/flash_msg"
+
+#tab_div
   %div{:style => "padding-top:10px"}
     - if @timeprofiles.empty?
       = render :partial => 'layouts/info_msg', :locals => {:message => _("No Records Found.")}
