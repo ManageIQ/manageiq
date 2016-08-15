@@ -1,4 +1,4 @@
-class ApiUserTokenService
+class ManageIQ::API::UserTokenService
   def initialize(config = ManageIQ::API::Settings, args = {})
     @config = config
     @svc_options = args
