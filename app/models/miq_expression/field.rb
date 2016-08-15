@@ -2,7 +2,7 @@ class MiqExpression::Field
   FIELD_REGEX = /
 (?<model_name>([[:upper:]][[:alnum:]]*(::)?)+)
 \.?(?<associations>[a-z_\.]+)*
--(?<column>[a-z]+(_[a-z]+)*)
+-(?<column>[a-z]+(_[[:alnum:]]+)*)
 /x
 
   ParseError = Class.new(StandardError)
@@ -36,6 +36,10 @@ class MiqExpression::Field
   def plural?
     return false if reflections.empty?
     [:has_many, :has_and_belongs_to_many].include?(reflections.last.macro)
+  end
+
+  def custom_attribute_column?
+    @column.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
   end
 
   def reflections
