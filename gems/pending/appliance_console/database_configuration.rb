@@ -95,18 +95,7 @@ module ApplianceConsole
     end
 
     def join_region
-      output = AwesomeSpawn.run(
-        'bin/rails runner',
-        :params => [File.expand_path("join_region.rb", __dir__)],
-        :chdir  => RAILS_ROOT
-      ).output
-
-      if output.to_s.empty?
-        true
-      else
-        say("\n#{output}") if interactive?
-        false
-      end
+      ApplianceConsole::Utilities.rake("evm:join_region", {})
     end
 
     def reset_region
