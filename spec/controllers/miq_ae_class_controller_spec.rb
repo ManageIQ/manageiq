@@ -41,7 +41,7 @@ describe MiqAeClassController do
       allow(controller).to receive(:replace_right_cell)
       controller.send(:domain_lock)
       ns.reload
-      expect(ns.system).to eq(true)
+      expect(ns.contents_locked?).to eq(true)
     end
   end
 
@@ -53,7 +53,7 @@ describe MiqAeClassController do
       allow(controller).to receive(:replace_right_cell)
       controller.send(:domain_unlock)
       ns.reload
-      expect(ns.system).to eq(false)
+      expect(ns.contents_locked?).to eq(false)
     end
   end
 

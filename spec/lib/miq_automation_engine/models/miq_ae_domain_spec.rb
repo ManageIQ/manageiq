@@ -140,7 +140,7 @@ describe MiqAeDomain do
 
   context "editable properties for a domain" do
     it "manageiq domain can't change properties" do
-      dom = FactoryGirl.create(:miq_ae_domain, :name => "ManageIQ", :tenant => @user.current_tenant)
+      dom = FactoryGirl.create(:miq_ae_system_domain, :name => "ManageIQ", :tenant => @user.current_tenant)
       expect(dom.editable_properties?).to be_falsey
     end
 
@@ -167,9 +167,36 @@ describe MiqAeDomain do
       expect(dom.contents_locked?).to be_truthy
     end
 
+    it "call lock_contents! multiple times" do
+      dom = FactoryGirl.create(:miq_ae_domain, :tenant => @user.current_tenant)
+      dom.lock_contents!
+      dom.lock_contents!
+      expect(dom.contents_locked?).to be_truthy
+    end
+
     it "contents_locked? should be true for user domain" do
       dom = FactoryGirl.create(:miq_ae_system_domain, :tenant => @user.current_tenant)
       expect(dom.contents_locked?).to be_truthy
+    end
+
+    it "cannot lock a system domain" do
+      dom = FactoryGirl.create(:miq_ae_system_domain, :tenant => @user.current_tenant)
+      expect { dom.lock_contents! }.to raise_error(MiqAeException::CannotLock)
+    end
+  end
+
+  context "unlock contents" do
+    it "cannot unlock a system domain" do
+      dom = FactoryGirl.create(:miq_ae_system_domain, :tenant => @user.current_tenant)
+      expect { dom.unlock_contents! }.to raise_error(MiqAeException::CannotUnlock)
+    end
+
+    it "call unlock_contents! multiple times" do
+      dom = FactoryGirl.create(:miq_ae_domain, :tenant => @user.current_tenant)
+      dom.lock_contents!
+      dom.unlock_contents!
+      dom.unlock_contents!
+      expect(dom.contents_locked?).to be_falsey
     end
   end
 
@@ -289,7 +316,6 @@ describe MiqAeDomain do
     it "import without git_repository_id" do
       expect { MiqAeDomain.import_git_repo({}) }.to raise_error(ActiveRecord::RecordNotFound)
     end
-
 
     it "git repo changed for non git domain" do
       expect { dom2.git_repo_changed? }.to raise_error(MiqAeException::InvalidDomain)

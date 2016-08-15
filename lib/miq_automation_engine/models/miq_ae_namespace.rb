@@ -82,7 +82,7 @@ class MiqAeNamespace < ApplicationRecord
   def editable?(user = User.current_user)
     raise ArgumentError, "User not provided to editable?" unless user
     return false if domain? && user.current_tenant.id != tenant_id
-    return !system? if domain?
+    return source == MiqAeDomain::USER_SOURCE if domain?
     ancestors.all? { |a| a.editable?(user) }
   end
 

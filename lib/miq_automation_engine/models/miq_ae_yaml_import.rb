@@ -103,14 +103,25 @@ class MiqAeYamlImport
   def reset_manageiq_attributes(domain_yaml)
     domain_yaml.store_path('object', 'attributes', 'name', MiqAeDatastore::MANAGEIQ_DOMAIN)
     domain_yaml.store_path('object', 'attributes', 'priority', MiqAeDatastore::MANAGEIQ_PRIORITY)
-    domain_yaml.store_path('object', 'attributes', 'system', true)
+    domain_yaml.store_path('object', 'attributes', 'source', MiqAeDomain::SYSTEM_SOURCE)
     domain_yaml.store_path('object', 'attributes', 'enabled', true)
+    domain_yaml.delete_path('object', 'attributes', 'system')
   end
 
   def reset_domain_attributes(domain_yaml)
     domain_yaml.delete_path('object', 'attributes', 'enabled') unless @restore
     domain_yaml.delete_path('object', 'attributes', 'tenant_id') unless @restore
     domain_yaml.delete_path('object', 'attributes', 'priority')
+    source_from_system(domain_yaml) if domain_yaml.has_key_path?('object', 'attributes', 'system')
+  end
+
+  def source_from_system(domain_yaml)
+    system = domain_yaml.delete_path('object', 'attributes', 'system')
+    if system == true
+      domain_yaml.store_path('object', 'attributes', 'source', MiqAeDomain::USER_LOCKED_SOURCE)
+    else
+      domain_yaml.store_path('object', 'attributes', 'source', MiqAeDomain::USER_SOURCE)
+    end
   end
 
   def import_all_namespaces(namespace_folder, domain_obj, domain_name)
@@ -214,7 +225,7 @@ class MiqAeYamlImport
 
   def update_attributes(domain_obj)
     return if domain_obj.name.downcase == MiqAeDatastore::MANAGEIQ_DOMAIN.downcase
-    attrs = @options.slice('enabled', 'system')
+    attrs = @options.slice('enabled', 'source')
     domain_obj.update_attributes(attrs) unless attrs.empty?
   end
 end # class

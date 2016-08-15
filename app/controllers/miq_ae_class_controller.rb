@@ -1935,7 +1935,7 @@ class MiqAeClassController < ApplicationController
         item = items.split('-')
         domain = MiqAeDomain.find_by_id(from_cid(item[1]))
         next unless domain
-        if domain.editable?
+        if domain.editable_properties?
           aedomains.push(domain.id)
         else
           add_flash(_("Read Only %{model} \"%{name}\" cannot be deleted") %
@@ -1980,7 +1980,7 @@ class MiqAeClassController < ApplicationController
       item = items.split('-')
       if item[0] == "aen"
         record = MiqAeNamespace.find_by_id(from_cid(item[1]))
-        if record.editable?
+        if (record.domain? && record.editable_properties?) || record.editable?
           ns_list.push(from_cid(item[1]))
         else
           add_flash(_("\"%{field}\" %{model} cannot be deleted") %
@@ -2408,7 +2408,7 @@ class MiqAeClassController < ApplicationController
     obj = [x_node] if obj.nil? && params[:id]
     typ = params[:pressed] == "miq_ae_domain_edit" ? MiqAeDomain : MiqAeNamespace
     @ae_ns = typ.find(from_cid(obj[0].split('-')[1]))
-    if @ae_ns.domain? && !@ae_ns.editable?
+    if @ae_ns.domain? && !@ae_ns.editable_properties?
       add_flash(_("Read Only %{model} \"%{name}\" cannot be edited") %
                   {:model => ui_lookup(:model => "MiqAeDomain"), :name  => @ae_ns.name},
                 :error)
@@ -2469,7 +2469,7 @@ class MiqAeClassController < ApplicationController
   end
 
   def ordered_domains_for_priority_edit_screen
-    User.current_tenant.editable_domains.collect { |d| d.name }
+    User.current_tenant.sequenceable_domains.collect(&:name)
   end
 
   def priority_edit_screen

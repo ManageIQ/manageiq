@@ -260,7 +260,7 @@ describe MiqAeDatastore do
       check_counts('dom'  => 1, 'ns'    => 3,  'class' => 4, 'inst'  => 10,
                    'meth' => 3, 'field' => 12, 'value' => 8)
       dom = MiqAeDomain.find_by_fqname(@manageiq_domain.name, false)
-      expect(dom).to be_system
+      expect(dom.source).to eq(MiqAeDomain::SYSTEM_SOURCE)
       expect(dom).to be_enabled
     end
 
