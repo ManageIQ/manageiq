@@ -1,5 +1,4 @@
 module MiddlewareServerHelper::TextualSummary
-  include TextualMixins::TextualName
   #
   # Groups
   #
@@ -11,10 +10,6 @@ module MiddlewareServerHelper::TextualSummary
   def textual_group_relationships
     # Order of items should be from parent to child
     %i(ems middleware_deployments middleware_datasources lives_on)
-  end
-
-  def textual_group_smart_management
-    %i(tags)
   end
 
   #
