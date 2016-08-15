@@ -112,6 +112,18 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
                                        :image_ref => example_ref},
                        :registry   => {:name => "localhost", :host => "localhost", :port => "1234"}},
 
+                      # host with no port. more that one subdomain (a.b.c.com)
+                      {:image_name => "reg.access.rh.com/openshift3/image-inspector",
+                       :image      => {:name => "openshift3/image-inspector", :tag => nil, :digest => nil,
+                                       :image_ref => example_ref},
+                       :registry   => {:name => "reg.access.rh.com", :host => "reg.access.rh.com", :port => nil}},
+
+                      # host with port. more that one subdomain (a.b.c.com:1234)
+                      {:image_name => "host.access.com:1234/subname/more/names/example:tag",
+                       :image      => {:name => "subname/more/names/example", :tag => "tag", :digest => nil,
+                                       :image_ref => example_ref},
+                       :registry   => {:name => "host.access.com", :host => "host.access.com", :port => "1234"}},
+
                       {:image_name => "example@sha256:1234567abcdefg",
                        :image      => {:name => "example", :tag => nil, :digest => "sha256:1234567abcdefg",
                                        :image_ref => example_ref},
