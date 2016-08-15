@@ -66,8 +66,8 @@ module VirtualDelegates
     #
 
     def virtual_delegate(*methods)
-      options = methods.pop
-      unless options.kind_of?(Hash) && options[:to]
+      options = methods.extract_options!
+      unless (to = options[:to])
         raise ArgumentError, 'Delegation needs an association. Supply an options hash with a :to key as the last argument (e.g. delegate :hello, to: :greeter).'
       end
       delegate(*methods, options.except(:arel, :uses))
