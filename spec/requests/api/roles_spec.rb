@@ -272,8 +272,12 @@ describe ApiController do
       role = MiqUserRole.find(role.id)
 
       @product_features.each do |feature|
-        expect(role.allows?(:identifier => feature.identifier)).to be_truthy unless feature[:identifier].eql?('ems_infra_tag')
-        expect(role.allows?(:identifier => feature.identifier)).to be_falsey if feature[:identifier].eql?('ems_infra_tag')
+        unless feature[:identifier].eql?('ems_infra_tag')
+          expect(role.allows?(:identifier => feature.identifier)).to be_truthy
+        end
+        if feature[:identifier].eql?('ems_infra_tag')
+          expect(role.allows?(:identifier => feature.identifier)).to be_falsey
+        end
       end
     end
 

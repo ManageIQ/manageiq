@@ -81,8 +81,8 @@ describe MiqUserRole do
     end
 
     it "should return the correct answer calling allows_any? with default scope => :sub" do
-      expect(@role1.allows_any?(:identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
-      expect(@role2.allows_any?(:identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
+      expect(@role1.allows_any?(:identifiers => %w(dashboard_admin dashboard_add dashboard_view policy))).to eq(true)
+      expect(@role2.allows_any?(:identifiers => %w(dashboard_admin dashboard_add dashboard_view policy))).to eq(true)
       expect(@role3.allows_any?(:identifiers => ["host_view"])).to eq(true)
       expect(@role3.allows_any?(:identifiers => ["vm"])).to eq(false)
       expect(@role3.allows_any?(:identifiers => ["everything"])).to eq(true)
