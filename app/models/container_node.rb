@@ -67,4 +67,12 @@ class ContainerNode < ApplicationRecord
   def perf_rollup_parents(interval_name = nil)
     [ext_management_system] unless interval_name == 'realtime'
   end
+
+  def ipaddress
+    labels.find_by_name("kubernetes.io/hostname").try(:value)
+  end
+
+  def cockpit_url
+    URI::HTTP.build(:host => ipaddress, :port => 9090)
+  end
 end
