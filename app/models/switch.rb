@@ -4,4 +4,6 @@ class Switch < ApplicationRecord
 
   has_many :guest_devices
   has_many :lans, :dependent => :destroy
+
+  acts_as_miq_taggable
 end
