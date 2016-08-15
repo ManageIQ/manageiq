@@ -180,14 +180,15 @@
                 = _("At least one hour needs to be selected")
         .form-group
           %label.col-md-2.control-label
-            = _('Scope')
+            = _('Timezone')
           .col-md-8
             = select_tag('profile_tz',
                        options_for_select([["<#{_('Determine at Run Time')}>", nil]] + ALL_TIMEZONES),
                        "ng-model"                    => "timeProfileModel.profile_tz",
                        'ng-disabled'                 => "timeProfileModel.restricted_time_profile",
                        "checkchange"                 => "",
-                       "selectpicker-for-select-tag" => "")
+                       "selectpicker-for-select-tag" => "",
+                       "data-live-search"            => "true")
 
       .form-group{"ng-if" => "timeProfileModel.admin_user && timeProfileModel.profile_tz != ''"}
         %label.col-md-2.control-label
