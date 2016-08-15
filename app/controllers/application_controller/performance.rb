@@ -203,12 +203,12 @@ module ApplicationController::Performance
     edate_daily = edate.hour < 23 ? edate - 1.day : edate
     options[:edate_daily] = edate_daily
 
-    if options[:hourly_date] && # Need to clear hourly date if not nil so it will be reset below if
+    if options[:hourly_date].present? && # Need to clear hourly date if not nil so it will be reset below if
        (options[:hourly_date].to_date < sdate.to_date || options[:hourly_date].to_date > edate.to_date || # it is out of range
          (options[:typ] == "Hourly" && options[:time_profile] && !options[:time_profile_days].include?(options[:hourly_date].to_date.wday))) # or not in profile
       options[:hourly_date] = nil
     end
-    if options[:daily_date] &&
+    if options[:daily_date].present? &&
        (options[:daily_date].to_date < sdate_daily.to_date || options[:daily_date].to_date > edate_daily.to_date)
       options[:daily_date] = nil
     end
