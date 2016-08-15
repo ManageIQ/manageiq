@@ -138,6 +138,7 @@ module Menu
       def middleware_menu_section
         Menu::Section.new(:mdl, N_("Middleware"), 'fa product-middleware fa-2x', [
           Menu::Item.new('ems_middleware', N_('Providers'), 'ems_middleware', {:feature => 'ems_middleware_show_list'}, '/ems_middleware'),
+          Menu::Item.new('middleware_domain', deferred_ui_lookup(:tables => 'middleware_domains'), 'middleware_domain', {:feature => 'middleware_domain_show_list'}, '/middleware_domain'),
           Menu::Item.new('middleware_server', deferred_ui_lookup(:tables => 'middleware_server'), 'middleware_server', {:feature => 'middleware_server_show_list'}, '/middleware_server'),
           Menu::Item.new('middleware_deployment', deferred_ui_lookup(:tables => 'middleware_deployment'), 'middleware_deployment', {:feature => 'middleware_deployment_show_list'}, '/middleware_deployment'),
           Menu::Item.new('middleware_datasource', deferred_ui_lookup(:tables => 'middleware_datasource'), 'middleware_datasource', {:feature => 'middleware_datasource_show_list'}, '/middleware_datasource'),
