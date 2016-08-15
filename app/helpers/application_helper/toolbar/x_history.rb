@@ -6,78 +6,16 @@ class ApplicationHelper::Toolbar::XHistory < ApplicationHelper::Toolbar::Basic
       N_('History'),
       nil,
       :klass => ApplicationHelper::Button::HistoryChoice,
-      :items => [
+      :items => (1..10).map do |level|
         button(
-          :history_1,
+          "history_#{level}".to_sym,
           'fa fa-arrow-left fa-lg',
           N_('Go to this item'),
           nil,
           :klass => ApplicationHelper::Button::HistoryItem,
-          :url   => "x_history?item=1"),
-        button(
-          :history_2,
-          'fa fa-arrow-left fa-lg',
-          N_('Go to this item'),
-          nil,
-          :klass => ApplicationHelper::Button::HistoryItem,
-          :url   => "x_history?item=2"),
-        button(
-          :history_3,
-          'fa fa-arrow-left fa-lg',
-          N_('Go to this item'),
-          nil,
-          :klass => ApplicationHelper::Button::HistoryItem,
-          :url   => "x_history?item=3"),
-        button(
-          :history_4,
-          'fa fa-arrow-left fa-lg',
-          N_('Go to this item'),
-          nil,
-          :klass => ApplicationHelper::Button::HistoryItem,
-          :url   => "x_history?item=4"),
-        button(
-          :history_5,
-          'fa fa-arrow-left fa-lg',
-          N_('Go to this item'),
-          nil,
-          :klass => ApplicationHelper::Button::HistoryItem,
-          :url   => "x_history?item=5"),
-        button(
-          :history_6,
-          'fa fa-arrow-left fa-lg',
-          N_('Go to this item'),
-          nil,
-          :klass => ApplicationHelper::Button::HistoryItem,
-          :url   => "x_history?item=6"),
-        button(
-          :history_7,
-          'fa fa-arrow-left fa-lg',
-          N_('Go to this item'),
-          nil,
-          :klass => ApplicationHelper::Button::HistoryItem,
-          :url   => "x_history?item=7"),
-        button(
-          :history_8,
-          'fa fa-arrow-left fa-lg',
-          N_('Go to this item'),
-          nil,
-          :klass => ApplicationHelper::Button::HistoryItem,
-          :url   => "x_history?item=8"),
-        button(
-          :history_9,
-          'fa fa-arrow-left fa-lg',
-          N_('Go to this item'),
-          nil,
-          :klass => ApplicationHelper::Button::HistoryItem,
-          :url   => "x_history?item=9"),
-        button(
-          :history_10,
-          'fa fa-arrow-left fa-lg',
-          N_('Go to this item'),
-          nil,
-          :klass => ApplicationHelper::Button::HistoryItem,
-          :url   => "x_history?item=10"),
-      ]
+          :url   => "x_history?item=#{level}"
+        )
+      end
     ),
     button(
       :summary_reload,
