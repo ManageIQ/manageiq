@@ -63,6 +63,7 @@ module Metric::LongTermAverages
 
       begin
         results[:dev][c]  = vals[c].stddev
+        raise StandardError, "result was NaN" if results[:dev][c].try(:nan?)
       rescue => err
         _log.warn("Unable to calculate standard deviation, '#{err.message}', values: #{vals[c].inspect}")
         results[:dev][c] = 0
