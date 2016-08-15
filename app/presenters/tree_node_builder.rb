@@ -94,7 +94,7 @@ class TreeNodeBuilder
                                                 "#{ui_lookup(:table => "host")}: #{object.name}")
     when IsoDatastore         then generic_node(object.name, "isodatastore.png")
     when IsoImage             then generic_node(object.name, "isoimage.png")
-    when ResourcePool         then generic_node(object.name, object.vapp ? "vapp.png" : "resource_pool.png")
+    when ResourcePool         then resource_pool_node(object)
 
     when Vm                   then vm_node(object)
     when Lan                  then generic_node(object.name,
@@ -331,6 +331,16 @@ class TreeNodeBuilder
     else # normal Folders
       normal_folder_node
     end
+  end
+
+  def resource_pool_node(object)
+    object_img = if object.kind_of?(VirtualApp)
+                   "vapp.png"
+                 else
+                   "resource_pool.png"
+                 end
+
+    generic_node(object.name, object_img)
   end
 
   def miq_scsi_target(iscsi_name, target)

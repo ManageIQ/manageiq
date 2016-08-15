@@ -8,4 +8,7 @@ class Lan < ApplicationRecord
 
   # TODO: Should this go through switch and not guest devices?
   has_many :hosts,             :through => :guest_devices
+
+  has_many :lan_virtual_apps
+  has_many :virtual_apps, :through => :lan_virtual_apps
 end

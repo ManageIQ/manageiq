@@ -12,4 +12,6 @@ FactoryGirl.define do
       rp.add_child(FactoryGirl.create(:vm_vmware))
     end
   end
+
+  factory :virtualapp, :parent => :resource_pool, :class => "VirtualApp"
 end

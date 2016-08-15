@@ -731,35 +731,43 @@ describe QuadiconHelper do
   end
 
   describe "#render_resource_pool_quadicon" do
-    let(:item) { FactoryGirl.create(:resource_pool) }
-    let(:options) { {:mode => :icon} }
-    subject(:quadicon) { helper.render_resource_pool_quadicon(item, options) }
+    context "resource_pool" do
+      let(:item) { FactoryGirl.create(:resource_pool) }
+      let(:options) { {:mode => :icon} }
+      subject(:quadicon) { helper.render_resource_pool_quadicon(item, options) }
 
-    include_examples :shield_img_with_policies
+      include_examples :shield_img_with_policies
 
-    it 'has a vapp image when vapp' do
-      item.vapp = true
+      context "when type is not listnav" do
+        it 'has a link to nowhere when embedded' do
+          @embedded = true
 
-      expect(subject).to have_selector('img[src*="vapp"]')
-    end
+          expect(subject).to have_selector("a")
+          expect(subject).to include('href=""')
+        end
 
-    context "when type is not listnav" do
-      it 'has a link to nowhere when embedded' do
-        @embedded = true
-
-        expect(subject).to have_selector("a")
-        expect(subject).to include('href=""')
+        it 'links to the item when not embedded' do
+          @embedded = false
+          cid = ApplicationRecord.compress_id(item.id)
+          expect(subject).to have_selector("a[href*='resource_pool/show/#{cid}']")
+        end
       end
 
-      it 'links to the item when not embedded' do
-        @embedded = false
-        cid = ApplicationRecord.compress_id(item.id)
-        expect(subject).to have_selector("a[href*='resource_pool/show/#{cid}']")
+      context "when type is listnav" do
+        include_examples :no_link_for_listnav
       end
     end
 
-    context "when type is listnav" do
-      include_examples :no_link_for_listnav
+    context "vapp" do
+      let(:item) { FactoryGirl.create(:virtualapp) }
+      let(:options) { {:mode => :icon} }
+      subject(:quadicon) { helper.render_resource_pool_quadicon(item, options) }
+
+      include_examples :shield_img_with_policies
+
+      it 'has a vapp image when vapp' do
+        expect(subject).to have_selector('img[src*="vapp"]')
+      end
     end
   end
 

@@ -278,10 +278,30 @@ module EmsRefresh::VcUpdates
       "config.storageDevice.scsiTopology.adapter[*].target[*].transport.address",
       "config.storageDevice.scsiTopology.adapter[*].target[*].transport.iScsiAlias",
       "config.storageDevice.scsiTopology.adapter[*].target[*].transport.iScsiName",
+    ],
+
+    :ems_refresh_vapp        => [
+      "MOR",
+      "datastore",
+      "name",
+      "network",
+      "parent", # Used by ManageIQ::Providers::Vmware::InfraManager::RefreshParser::Filter#ems_metadata_inv_by_*
+      "resourcePool",
+      "resourcePool.ManagedObjectReference",
+      "summary.config.cpuAllocation.expandableReservation",
+      "summary.config.cpuAllocation.limit",
+      "summary.config.cpuAllocation.reservation",
+      "summary.config.cpuAllocation.shares.level",
+      "summary.config.cpuAllocation.shares.shares",
+      "summary.config.memoryAllocation.expandableReservation",
+      "summary.config.memoryAllocation.limit",
+      "summary.config.memoryAllocation.reservation",
+      "summary.config.memoryAllocation.shares.level",
+      "summary.config.memoryAllocation.shares.shares",
+      "vm",
+      "vm.ManagedObjectReference",
     ]
   }
-  # Virtual Apps are treated like Resource Pools
-  VIM_SELECTOR_SPEC[:ems_refresh_vapp] = VIM_SELECTOR_SPEC[:ems_refresh_rp].dup
 
   OBJ_TYPE_TO_TYPE_AND_CLASS = {
     'VirtualMachine' => [:vm,   VmOrTemplate],
