@@ -91,7 +91,7 @@ RSpec.configure do |config|
   # end
 
   config.before(:each) do |example|
-    EmsRefresh.debug_failures = true if example.metadata[:migrations].blank?
+    EmsRefresh.try(:debug_failures=, true) if example.metadata[:migrations].blank?
     ApplicationController.handle_exceptions = false if %w(controller requests).include?(example.metadata[:type])
   end
 
