@@ -18,7 +18,7 @@ module VmCloudHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(name region server description ipaddress mac_address custom_1 container tools_status osinfo architecture advanced_settings resources guid virtualization_type root_device_type)
+    %i(name region server description ipaddress mac_address custom_1 container preemptible tools_status osinfo architecture advanced_settings resources guid virtualization_type root_device_type)
   end
 
   def textual_group_security
@@ -71,6 +71,16 @@ module VmCloudHelper::TextualSummary
   def textual_custom_1
     return nil if @record.custom_1.blank?
     {:label => _("Custom Identifier"), :value => @record.custom_1}
+  end
+
+  def textual_preemptible
+    preemptible = @record.try(:preemptible?)
+    return nil if preemptible.nil?
+
+    {
+      :label => _("Preemptible"),
+      :value => (preemptible ? _("Yes; VM will run at most 24 hours.") : _("No"))
+    }
   end
 
   def textual_tools_status
