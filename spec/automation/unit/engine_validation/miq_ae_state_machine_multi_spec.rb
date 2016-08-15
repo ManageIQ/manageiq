@@ -1,5 +1,4 @@
 require "timecop"
-include AutomationSpecHelper
 
 describe "MultipleStateMachineSteps" do
   before do

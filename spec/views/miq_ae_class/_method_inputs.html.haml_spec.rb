@@ -1,6 +1,6 @@
-include AutomationSpecHelper
-
 describe "miq_ae_class/_method_inputs.html.haml" do
+  include Spec::Support::AutomationHelper
+
   context 'display method inputs' do
     before do
       method_params = {'ae_result'     => {:datatype => 'string', :default_value => 'ok'},

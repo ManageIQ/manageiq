@@ -1,31 +1,27 @@
 describe CustomAttributeMixin do
-  before do
-    class TestClass < ActiveRecord::Base
+  let(:supported_factories) { [:vm_redhat, :host] }
+  let(:test_class) do
+    Class.new(ActiveRecord::Base) do
+      def self.name; "TestClass"; end
       self.table_name = "vms"
       include CustomAttributeMixin
     end
-
-    @supported_factories = [:vm_redhat, :host]
-  end
-
-  after do
-    Object.send(:remove_const, "TestClass")
   end
 
   it "defines #miq_custom_keys" do
-    expect(TestClass.new).to respond_to(:miq_custom_keys)
+    expect(test_class.new).to respond_to(:miq_custom_keys)
   end
 
   it "defines #miq_custom_get" do
-    expect(TestClass.new).to respond_to(:miq_custom_get)
+    expect(test_class.new).to respond_to(:miq_custom_get)
   end
 
   it "defines #miq_custom_set" do
-    expect(TestClass.new).to respond_to(:miq_custom_set)
+    expect(test_class.new).to respond_to(:miq_custom_set)
   end
 
   it "defines custom getter and setter methods" do
-    t = TestClass.new
+    t = test_class.new
     (1..9).each do |custom_id|
       custom_str = "custom_#{custom_id}"
       getter     = custom_str.to_sym
@@ -37,8 +33,8 @@ describe CustomAttributeMixin do
   end
 
   it "#miq_custom_keys" do
-    expect(TestClass.new.miq_custom_keys).to eq([])
-    @supported_factories.each do |factory_name|
+    expect(test_class.new.miq_custom_keys).to eq([])
+    supported_factories.each do |factory_name|
       object = FactoryGirl.create(factory_name)
 
       expect(object.miq_custom_keys).to eq([])
@@ -63,7 +59,7 @@ describe CustomAttributeMixin do
   end
 
   it "#miq_custom_set" do
-    @supported_factories.each do |factory_name|
+    supported_factories.each do |factory_name|
       object = FactoryGirl.create(factory_name)
 
       key    = "foo"
@@ -101,7 +97,7 @@ describe CustomAttributeMixin do
   end
 
   it "#miq_custom_get" do
-    @supported_factories.each do |factory_name|
+    supported_factories.each do |factory_name|
       object = FactoryGirl.create(factory_name)
 
       key   = "foo"

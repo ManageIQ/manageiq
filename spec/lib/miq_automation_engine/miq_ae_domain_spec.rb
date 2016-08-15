@@ -1,6 +1,6 @@
-include AutomationSpecHelper
-
 describe MiqAeDomain do
+  include Spec::Support::AutomationHelper
+
   let(:root_tenant) { Tenant.seed }
   before do
     @user = FactoryGirl.create(:user_with_group)

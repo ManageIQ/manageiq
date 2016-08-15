@@ -1,6 +1,6 @@
-include AutomationSpecHelper
-
 describe TreeBuilderAeClass do
+  include Spec::Support::AutomationHelper
+
   context "initialize" do
     before do
       user = FactoryGirl.create(:user_with_group)
