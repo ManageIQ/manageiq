@@ -259,7 +259,7 @@ module ApplicationHelper
         else
           controller = "vm_cloud" if controller == "template_cloud"
           controller = "vm_infra" if controller == "template_infra"
-          return url_for(:controller => controller, :action => action) + "/"
+          return url_for(:controller => controller, :action => action, :id => nil) + "/"
         end
       end
 
