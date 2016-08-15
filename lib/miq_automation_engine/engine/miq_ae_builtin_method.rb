@@ -227,6 +227,7 @@ module MiqAeEngine
 
     builtin :miq_event_action_refresh_sync do |obj, target|
       event_object_from_workspace(obj).refresh(inputs['target'], true)
+    end
 
     builtin :event_action_refresh do |obj, target|
       event_object_from_workspace(obj).refresh(target)
