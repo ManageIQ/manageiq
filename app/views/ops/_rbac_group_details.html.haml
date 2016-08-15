@@ -22,7 +22,7 @@
                            :class => "form-control",
                            "data-miq_observe" => {:interval => '.5',
                                                   :url      => url}.to_json)
-          - unless auth_mode_name.downcase == "database"
+          - unless "database".include?(auth_mode_name.downcase)
             = check_box_tag("lookup",
                             "1",
                             false,
