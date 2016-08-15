@@ -915,7 +915,7 @@ class MiqRequestWorkflow
   end
 
   def get_ems_folders(folder, dh = {}, full_path = "")
-    if folder.evm_object_class == :EmsFolder && !folder.hidden?
+    if folder.evm_object_class == :EmsFolder && !folder.hidden
       full_path += full_path.blank? ? "#{folder.name}" : " / #{folder.name}"
       dh[folder.id] = full_path unless folder.type == "Datacenter"
     end
@@ -1047,7 +1047,7 @@ class MiqRequestWorkflow
   end
 
   def ems_folder_to_hash_struct(ci)
-    build_ci_hash_struct(ci, [:name, :type])
+    build_ci_hash_struct(ci, [:name, :type, :hidden])
   end
 
   def storage_to_hash_struct(ci)

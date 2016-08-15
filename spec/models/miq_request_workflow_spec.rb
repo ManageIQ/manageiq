@@ -312,6 +312,17 @@ describe MiqRequestWorkflow do
     end
   end
 
+  context "#ems_folder_to_hash_struct" do
+    it 'contains hidden column' do
+      hs = workflow.ems_folder_to_hash_struct(FactoryGirl.create(:ems_folder, :name => 'vm', :hidden => true))
+
+      expect(hs.id).to               be_kind_of(Integer)
+      expect(hs.evm_object_class).to eq(:EmsFolder)
+      expect(hs.name).to             be_kind_of(String)
+      expect(hs.hidden).to           be true
+    end
+  end
+
   context "#validate regex" do
     let(:regex) { {:required_regex => "^n@test.com$"} }
     let(:regex_two) { {:required_regex => "^n$"} }
