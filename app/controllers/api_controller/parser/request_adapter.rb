@@ -9,7 +9,7 @@ class ApiController
       end
 
       def to_hash
-        [:method, :fullpath, :url, :base,
+        [:method, :action, :fullpath, :url, :base,
          :path, :prefix, :version, :api_prefix,
          :collection, :c_suffix, :c_id, :subcollection, :s_id]
           .each_with_object({}) { |attr, hash| hash[attr] = send(attr) }
@@ -17,7 +17,12 @@ class ApiController
 
       def action
         # for basic HTTP POST, default action is "create" with data being the POST body
-        @action ||= method == :put ? 'edit' : (json_body['action'] || 'create')
+        @action ||= case method
+                    when :get         then 'read'
+                    when :put, :patch then 'edit'
+                    when :delete      then 'delete'
+                    else json_body['action'] || 'create'
+                    end
       end
 
       def api_prefix
