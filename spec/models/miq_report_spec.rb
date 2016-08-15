@@ -40,6 +40,45 @@ shared_examples "custom_report_with_custom_attributes" do |base_report, custom_a
 end
 
 describe MiqReport do
+  context "report with filtering in Registry" do
+    let(:options)  { {:targets_hash => true, :userid => "admin"} }
+    let(:miq_task) { FactoryGirl.create(:miq_task) }
+
+    before do
+      @user     = FactoryGirl.create(:user_with_group)
+
+      @registry = FactoryGirl.create(:registry_item, :name => "HKLM\\SOFTWARE\\WindowsFirewall : EnableFirewall",
+                                                     :data => 0)
+      @vm       = FactoryGirl.create(:vm_vmware, :registry_items => [@registry])
+      EvmSpecHelper.local_miq_server
+    end
+
+    let(:report) do
+      MiqReport.new(:name => "Custom VM report", :title => "Custom VM report", :rpt_group => "Custom",
+        :rpt_type => "Custom", :db => "Vm", :cols => %w(name),
+        :conditions => MiqExpression.new("=" => {"regkey" => "HKLM\\SOFTWARE\\WindowsFirewall",
+                                                 "regval" => "EnableFirewall", "value" => "0"}),
+        :include   => {"registry_items" => {"columns" => %w(data name value_name)}},
+        :col_order => %w(name registry_items.data registry_items.name registry_items.value_name),
+        :headers   => ["Name", "Registry Data", "Registry Name", "Registry Value Name"],
+        :order     => "Ascending")
+    end
+
+    it "can generate a report filtered by registry items" do
+      report.queue_generate_table(:userid => @user.userid)
+      report._async_generate_table(miq_task.id, :userid => @user.userid, :mode => "async",
+                                   :report_source => "Requested by user")
+
+      report_result = report.table.data.map do |x|
+        x.data.delete("id")
+        x.data
+      end
+
+      expect(report_result.count).to eq(1)
+      expect(report_result.first["name"]).to eq(@vm.name)
+    end
+  end
+
   context "report with virtual dynamic custom attributes" do
     let(:options) { {:targets_hash => true, :userid => "admin"} }
     let(:custom_column_key_1)   { 'ATTR_Name_1' }
