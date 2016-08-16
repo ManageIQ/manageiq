@@ -14,3 +14,5 @@ object:
       value: amazon_check_pre_retirement
   - azure_meth1:
       value: check_pre_retirement
+  - google_meth1:
+      value: check_pre_retirement
