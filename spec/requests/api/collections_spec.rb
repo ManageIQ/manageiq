@@ -84,8 +84,12 @@ describe ApiController do
     end
 
     it "query Groups" do
+      expect(Tenant.exists?).to be_truthy
       FactoryGirl.create(:miq_group)
-      test_collection_query(:groups, groups_url, MiqGroup)
+      api_basic_authorize collection_action_identifier(:groups, :read, :get)
+      run_get groups_url, :expand => 'resources'
+      expect_query_result(:groups, MiqGroup.non_tenant_groups.count, MiqGroup.count)
+      expect_result_resources_to_include_data('resources', 'id' => MiqGroup.non_tenant_groups.pluck(:id))
     end
 
     it "query Hosts" do
