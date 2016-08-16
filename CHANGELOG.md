@@ -2,6 +2,84 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - as of Sprint 44 end 2016-08-1
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+44+Ending+Aug+1%2C+2016%22+label%3Aenhancement)
+
+- Automate
+  - Simulation: RBAC filtering applied to Object Attributes
+  - Service Provisioning: Exposed number_of_vms when building the provision request for a service
+  - Service Dialogs: Support for “visible” flag for dynamic fields
+  - Expose Compliance and ComplianceDetail models
+  - New associations on VmOrTemplate and Host models:
+    - `expose :compliances`
+    - `expose :last_compliance`
+  - New Service Models
+    - Compliance: `expose :compliance_details`
+    - ComplianceDetail: `expose :compliance`, `expose :miq_policy`
+  - Generic Object: Service models created for GenericObject and GenericObjectDefinition
+- Platform
+  - PostgreSQL High Availability
+    - Added [repmgr](http://repmgr.org/)  to support automatic failover
+    - Maintain list of active standby database servers
+    - Added [pg-dsn_parser](https://github.com/ManageIQ/pg-dsn_parser) for converting DSN to a hash
+  - Tenancy: Added parent_id to CloudTenant as prerequisite for mapping OpenStack tenants to ManageIQ tenants
+  - Watermark reports updated to be based on max of daily max value instead of max of average value
+  - Nice values added to worker processes
+-  Providers
+  - Google Compute Engine: Metrics
+  - Hawkular
+    - Operations: Add Deployment, Start/stop deployment
+    - Performance reports for datasources
+    - Collect more metrics for datasource
+  - Kubernetes: Cross-linking with OpenStack instances
+  - Microsoft Azure: Support floating IPs during provisioning
+  - Nuage: Inventory of Managed Cloud Subnets
+  - Red Hat Enterprise Virtualization: v4 API
+  - VMware vSphere: Storage Profiles modeling and inventory
+  - VMware vCloud: Initial PRs for modeling and inventory
+- REST API
+  - Support for arbitrary resource paths
+  - Work started on [ManageIQ API Client](https://github.com/ManageIQ/manageiq-api-client)
+  - Support for Arbitration Profiles
+  - Support for Cloud Networks queries
+  - Support for Arbitration Settings
+  - Updated /api/users to support edits of user settings
+- User Interface
+  - Both UIs updated to latest PatternFly and Angular PatternFly
+  - Self Service UI language selections separated from Operations UI
+  - Internationalization
+    - Virtual Columns
+    - Toolbars
+    - Removed string interpolation (for better localization)
+    - Changed to use gettext’s pluralization
+  - Ansible Tower Jobs moved to the Configuration tab (from Clouds/Stacks)
+  - Interactivity added to C3 charts on C&U screens  
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+44+Ending+Aug+1%2C+2016%22+label%3Aenhancement)
+
+- Automate
+  - Simulation: Updated defaults
+    - Entry-point: `/System/Process/Request` (Previous value of “Automation”)
+    - Execute Method: Enabled
+  - Infrastructure Provision: Updated memory values for VM provisioning dialogs to 1, 2, 4, 8, 12, 16, 32 GB
+- Performance: Reduced the time and memory required to schedule Capacity and Utilization data collection.
+- Platform: Expression refactoring and cleanup with relative dates and times
+- Providers: Hawkular
+  - Upgrade of Hawkular gem to 2.3.0
+  - Skip unreachable middleware providers when reporting
+  - Add re-checking authentication status functionality/button
+- User Interface
+  - Converted to TreeBuilder - Snapshot, Policy, Policy RSOP, C&U Build Datastores and Clusters/Hosts, Automate Results
+  - CodeMirror version updated (used for text/yaml editors)
+
+### [Removed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+44+Ending+Aug+1%2C+2016%22+label%3Aenhancement)
+
+- Platform
+  - Removed rubyrep
+  - Removed hourly checking of log growth and rotation if > 1gb
+- User Interface: Explorer Presenter RJS removal
+
 ## Unreleased - as of Sprint 43 end 2016-07-11
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+43+Ending+July+11%2C+2016%22+label%3Aenhancement)
