@@ -12,26 +12,9 @@ describe Quadicons::LinkBuilders::ConfigurationManagerLinkBuilder, :type => :hel
       end
     end
 
-    context "when in explorer" do
-      before do
-        kontext.explorer = true
-      end
-
-      it 'links to x_show with compressed id' do
-        cid = ApplicationRecord.compress_id(record.id)
-        expect(link.url).to match(/x_show\/#{cid}/)
-      end
-    end
-
-    context "when not in explorer" do
-      before do
-        kontext.explorer = false
-      end
-
-      it 'links using url_for_record' do
-        # binding.pry
-        # expect(link.url).to eq()
-      end
+    it 'links to x_show with compressed id' do
+      cid = ApplicationRecord.compress_id(record.id)
+      expect(link.url).to match(/x_show\/#{cid}/)
     end
   end
 

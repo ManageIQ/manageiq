@@ -2,7 +2,7 @@ module Quadicons
   module LinkBuilders
     class ConfigurationManagerLinkBuilder < LinkBuilders::Base
       def url
-        if context.in_explorer_view? && context.in_embedded_view?
+        if !context.in_embedded_view?
           context.url_for(:action => 'x_show', :id => compressed_id)
         else
           ""
