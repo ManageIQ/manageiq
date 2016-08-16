@@ -180,7 +180,7 @@ module MiqAeEngine
       prepend_vendor(obj)
     end
 
-    builtin :miq_parse_automation_request do |obj|
+    builtin :parse_automation_request do |obj|
       obj['target_component'], obj['target_class'], obj['target_instance'] =
         case obj['request']
         when 'vm_provision'   then %w(VM   Lifecycle Provisioning)
@@ -221,11 +221,11 @@ module MiqAeEngine
       ["host", "storage"].each { |k| obj[k] = result[k] } unless result.empty?
     end
 
-    builtin :miq_event_action_refresh do |obj, target|
+    builtin :event_action_refresh do |obj, target|
       event_object_from_workspace(obj).refresh(target, false)
     end
 
-    builtin :miq_event_action_refresh_sync do |obj, target|
+    builtin :event_action_refresh_sync do |obj, target|
       event_object_from_workspace(obj).refresh(target, true)
     end
 
