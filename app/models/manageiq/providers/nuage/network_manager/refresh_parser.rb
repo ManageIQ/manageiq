@@ -1,6 +1,7 @@
 module ManageIQ::Providers
   class Nuage::NetworkManager::RefreshParser
     include ManageIQ::Providers::Nuage::RefreshParserCommon::HelperMethods
+    include Vmdb::Logging
 
     def self.ems_inv_to_hashes(ems, options = nil)
       new(ems, options).ems_inv_to_hashes
@@ -20,10 +21,10 @@ module ManageIQ::Providers
     def ems_inv_to_hashes
       log_header = "MIQ(#{self.class.name}.#{__method__}) Collecting data for EMS name: [#{@ems.name}] id: [#{@ems.id}]"
 
-      $log.info("#{log_header}...")
+      _log.info("#{log_header}...")
       get_enterprises
-      get_policy_groups
-      $log.info(@data)
+   #   get_policy_groups
+      _log.info(@data)
       @data
     end
 
@@ -34,6 +35,7 @@ module ManageIQ::Providers
       enterprises.each do |enterprise|
         @enterprises[enterprise['ID']] = enterprise['name']
       end
+      process_collection(enterprises, :network_groups) { |n| parse_network_group(n) }
       get_domains
     end
 
@@ -57,14 +59,14 @@ module ManageIQ::Providers
     def get_subnets
       @data[:cloud_subnets] = []
       @data[:network_groups].each do |net|
-      #filtering out subnets based on the enterprise they are mapped to
-       net[:cloud_subnets] = @vsd_client.get_subnets.collect { |s| parse_subnet(s) }.select { |filter| filter[:extra_attributes][:enterprise_name] == net[:name] }
+        # filtering out subnets based on the enterprise they are mapped to
+        net[:cloud_subnets] = @vsd_client.get_subnets.collect { |s| parse_subnet(s) }.select { |filter| filter[:extra_attributes]['enterprise_name'] == net[:name] }
 
-       # Lets store also subnets into indexed data, so we can reference them elsewhere
-       net[:cloud_subnets].each do |x|
-         @data_index.store_path(:cloud_subnets, x[:ems_ref], x)
-         @data[:cloud_subnets] << x
-       end
+        # Lets store also subnets into indexed data, so we can reference them elsewhere
+        net[:cloud_subnets].each do |x|
+          @data_index.store_path(:cloud_subnets, x[:ems_ref], x)
+          @data[:cloud_subnets] << x
+        end
       end
     end
 
@@ -83,7 +85,7 @@ module ManageIQ::Providers
 
       new_result = {
         :type    => self.class.network_group_type,
-        :name    => uid,
+        :name    => network_group['name'],
         :ems_ref => uid,
         :status  => status,
       }
@@ -115,6 +117,17 @@ module ManageIQ::Providers
        'domain_id'       => zone[1],
        'zone_name'       => zone[0],
        'zone_id'         => zone_id}
+    end
+
+    def parse_policy_group(pg)
+      uid        = pg['ID']
+      new_result = {
+        :type          => self.class.security_group_type,
+        :ems_ref       => uid,
+        :name          => pg['name'],
+        :network_group => NetworkGroup.find_by(:name => "Raleigh-NOC")
+      }
+      return uid, new_result
     end
 
     class << self
