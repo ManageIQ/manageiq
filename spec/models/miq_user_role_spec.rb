@@ -69,55 +69,23 @@ describe MiqUserRole do
     end
 
     it "should return the correct answer calling allows? when requested feature is directly assigned or a descendant of a feature in a role" do
-      expect(MiqUserRole.allows?(@role1.name, :identifier => "dashboard_admin")).to eq(true)
-      expect(MiqUserRole.allows?(@role1.name, :identifier => "dashboard_add")).to eq(true)
-      expect(MiqUserRole.allows?(@role1.name, :identifier => "dashboard_view")).to eq(false)
-      expect(MiqUserRole.allows?(@role1.name, :identifier => "policy")).to eq(false)
+      expect(@role1.allows?(:identifier => "dashboard_admin")).to eq(true)
+      expect(@role1.allows?(:identifier => "dashboard_add")).to eq(true)
+      expect(@role1.allows?(:identifier => "dashboard_view")).to eq(false)
+      expect(@role1.allows?(:identifier => "policy")).to eq(false)
 
-      expect(MiqUserRole.allows?(@role2.name, :identifier => "dashboard_admin")).to eq(true)
-      expect(MiqUserRole.allows?(@role2.name, :identifier => "dashboard_add")).to eq(true)
-      expect(MiqUserRole.allows?(@role2.name, :identifier => "dashboard_view")).to eq(true)
-      expect(MiqUserRole.allows?(@role2.name, :identifier => "policy")).to eq(true)
-
-      # Test calling with an id of a role
-      ident = MiqProductFeature.find_by_identifier("dashboard_admin")
-      expect(MiqUserRole.allows?(@role1.id, :identifier => ident)).to eq(true)
-    end
-
-    it "should return the correct answer calling allows_any? with scope => :base)" do
-      expect(MiqUserRole.allows_any?(@role1.name, :scope => :base, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
-
-      expect(MiqUserRole.allows_any?(@role2.name, :scope => :base, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
-
-      expect(MiqUserRole.allows_any?(@role3.name, :scope => :base, :identifiers => ["host_view"])).to eq(false)
-      expect(MiqUserRole.allows_any?(@role3.name, :scope => :base, :identifiers => ["vm"])).to eq(false)
-      expect(MiqUserRole.allows_any?(@role3.name, :scope => :base, :identifiers => ["everything"])).to eq(false)
-    end
-
-    it "should return the correct answer calling allows_any? with scope => :one)" do
-      expect(MiqUserRole.allows_any?(@role1.name, :scope => :one, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
-
-      expect(MiqUserRole.allows_any?(@role2.name, :scope => :one, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
-
-      expect(MiqUserRole.allows_any?(@role3.name, :scope => :one, :identifiers => ["host_view"])).to eq(true)
-      expect(MiqUserRole.allows_any?(@role3.name, :scope => :one, :identifiers => ["vm"])).to eq(false)
-      expect(MiqUserRole.allows_any?(@role3.name, :scope => :one, :identifiers => ["everything"])).to eq(false)
+      expect(@role2.allows?(:identifier => "dashboard_admin")).to eq(true)
+      expect(@role2.allows?(:identifier => "dashboard_add")).to eq(true)
+      expect(@role2.allows?(:identifier => "dashboard_view")).to eq(true)
+      expect(@role2.allows?(:identifier => "policy")).to eq(true)
     end
 
     it "should return the correct answer calling allows_any? with default scope => :sub" do
-      expect(MiqUserRole.allows_any?(@role1.name, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
-      expect(MiqUserRole.allows_any?(@role2.name, :identifiers => ["dashboard_admin", "dashboard_add", "dashboard_view", "policy"])).to eq(true)
-      expect(MiqUserRole.allows_any?(@role3.name, :identifiers => ["host_view"])).to eq(true)
-      expect(MiqUserRole.allows_any?(@role3.name, :identifiers => ["vm"])).to eq(false)
-      expect(MiqUserRole.allows_any?(@role3.name, :identifiers => ["everything"])).to eq(true)
-    end
-
-    it "should return the correct answer calling allows_any_children?" do
-      expect(MiqUserRole.allows_any_children?(@role1.name, :identifier => "dashboard_admin")).to eq(true)
-      expect(MiqUserRole.allows_any_children?(@role2.name, :identifier => "dashboard_admin")).to eq(true)
-      expect(MiqUserRole.allows_any_children?(@role2.name, :identifier => "everything")).to eq(true)
-      expect(MiqUserRole.allows_any_children?(@role1.name, :identifier => "everything")).to eq(true)
-      expect(MiqUserRole.allows_any_children?(@role1.name, :identifier => "dashboard")).to eq(true)
+      expect(@role1.allows_any?(:identifiers => %w(dashboard_admin dashboard_add dashboard_view policy))).to eq(true)
+      expect(@role2.allows_any?(:identifiers => %w(dashboard_admin dashboard_add dashboard_view policy))).to eq(true)
+      expect(@role3.allows_any?(:identifiers => ["host_view"])).to eq(true)
+      expect(@role3.allows_any?(:identifiers => ["vm"])).to eq(false)
+      expect(@role3.allows_any?(:identifiers => ["everything"])).to eq(true)
     end
   end
 
