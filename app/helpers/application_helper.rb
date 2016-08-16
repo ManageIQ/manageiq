@@ -908,8 +908,6 @@ module ApplicationHelper
       "ManageIQ::Providers::InfraManager::Vm"
     when :templates_filter_tree
       "ManageIQ::Providers::InfraManager::Template"
-    when :instances_filter_tree
-      "ManageIQ::Providers::CloudManager::Vm"
     when :templates_images_filter_tree
       "MiqTemplate"
     when :vms_instances_filter_tree
