@@ -40,6 +40,8 @@ FileName:
 LineLength:
   Exclude:
     - Gemfile
+    - gems/pending/Gemfile
 ExtraSpacing:
   Exclude:
     - Gemfile
+    - gems/pending/Gemfile
