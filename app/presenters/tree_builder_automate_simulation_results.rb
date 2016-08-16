@@ -28,7 +28,7 @@ class TreeBuilderAutomateSimulationResults < TreeBuilder
     []
   end
 
-  def x_get_tree_roots(_count_only = false, _options)
+  def x_get_tree_roots(_count_only = false, _options = {})
     objects = []
     xml = MiqXml.load(@root).root
     xml.each_element do |el|
@@ -37,29 +37,50 @@ class TreeBuilderAutomateSimulationResults < TreeBuilder
     objects
   end
 
-  def get_root_elements(el, idx)
+  def choose_correct_attr(el, attrs)
     if el.name == "MiqAeObject"
-      title = "#{el.attributes["namespace"]} <b>/</b> #{el.attributes["class"]} <b>/</b> #{el.attributes["instance"]}"
-      icon = "q"
+      attrs[:MiqAeObject]
     elsif el.name == "MiqAeAttribute"
-      title = el.attributes["name"]
-      icon = "attribute"
+      attrs[:MiqAeAttribute]
     elsif !el.text.blank?
-      title = el.text
-      icon = el.name.underscore
+      attrs[:not_blank]
     else
-      title = el.name
-      icon = title.underscore.sub(/^miq_ae_service_/, '')
-      el_attributes = el.attributes
+      attrs[:other]
     end
+  end
+
+  def get_element_title(el)
+    titles = {
+      :MiqAeObject    => "#{el.attributes["namespace"]} <b>/</b> "\
+                         "#{el.attributes["class"]} <b>/</b> "\
+                         "#{el.attributes["instance"]}",
+      :MiqAeAttribute => el.attributes["name"],
+      :not_blank      => el.text,
+      :other          => el.name
+    }
+    choose_correct_attr(el, titles)
+  end
+
+  def get_element_icon(el)
+    icons = {
+      :MiqAeObject    => "q",
+      :MiqAeAttribute => "attribute",
+      :not_blank      => el.name.underscore,
+      :other          => el.name.underscore.sub(/^miq_ae_service_/, '')
+    }
+    choose_correct_attr(el, icons)
+  end
+
+  def get_root_elements(el, idx)
+    title = get_element_title(el)
     object = {:id       => "e_#{idx}",
               :text     => _(title).html_safe,
-              :image    => icon,
+              :image    => get_element_icon(el),
               :tip      => _(title).html_safe,
-              :elements => el.each_element {|e| e},
+              :elements => el.each_element { |e| e },
               :addClass => "cfme-no-cursor-node"
              }
-    object[:attributes] = el_attributes if el_attributes
+    object[:attributes] = el.attributes if title == el.name
     object
   end
 
@@ -67,7 +88,13 @@ class TreeBuilderAutomateSimulationResults < TreeBuilder
     kids = []
     if parent[:attributes]
       parent[:attributes].each_with_index do |k, idx|
-        kids.push({:id => "a_#{idx}", :image => "attribute", :addClass => "cfme-no-cursor-node", :text => "#{k.first} <b>=</b> #{k.last}".html_safe})
+        object = {
+          :id       => "a_#{idx}",
+          :image    => "attribute",
+          :addClass => "cfme-no-cursor-node",
+          :text     => "#{k.first} <b>=</b> #{k.last}".html_safe
+        }
+        kids.push(object)
       end
     end
     Array(parent[:elements]).each_with_index do |el, i|
