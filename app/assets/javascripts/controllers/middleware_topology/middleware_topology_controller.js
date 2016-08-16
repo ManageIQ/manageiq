@@ -112,7 +112,7 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location, topologySer
           .attr('class', 'glyph')
           .attr('style', 'font-family:' + iconInfo.fontfamily + ';')
           .attr('x', 0)
-          .attr('y', 8);
+          .attr('y', d.item.kind == 'MiddlewareDomain' ? 6 : 8);
       })
 
 

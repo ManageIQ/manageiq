@@ -12,6 +12,11 @@ class MiddlewareTopologyService < TopologyService
 
     entity_relationships = {
       :MiddlewareManager => {
+        :MiddlewareDomains => {
+          :MiddlewareServerGroups => {
+            :MiddlewareServers => nil
+          }
+        },
         :MiddlewareServers => {
           :MiddlewareDeployments => nil,
           :MiddlewareDatasources => nil,
@@ -24,7 +29,14 @@ class MiddlewareTopologyService < TopologyService
       topo_items, links = build_recursive_topology(entity, entity_relationships[:MiddlewareManager], topo_items, links)
     end
 
-    populate_topology(topo_items, links, build_kinds, icons)
+    # filter out the redundant edges from ems to server, if there is also path ems -> domain -> sg -> server
+    # this ensures the graph will remain a tree (instead of more general DAG)
+    to_delete = links.select { |e| e[:target].match(/^MiddlewareServer[[:digit:]]/) && e[:source].match(/ServerGro/) }
+                     .map { |e| e[:target] }
+
+    filtered_links = links.select { |e| !e[:source].match(/^MiddlewareManager/) || !to_delete.include?(e[:target]) }
+
+    populate_topology(topo_items, filtered_links, build_kinds, icons)
   end
 
   def entity_display_type(entity)
@@ -57,11 +69,13 @@ class MiddlewareTopologyService < TopologyService
   end
 
   def glyph?(entity)
-    [MiddlewareDatasource, MiddlewareDeployment, Vm].any? { |klass| entity.kind_of? klass }
+    [MiddlewareDatasource, MiddlewareDeployment, Vm, MiddlewareDomain, MiddlewareServerGroup]
+      .any? { |klass| entity.kind_of? klass }
   end
 
   def build_kinds
-    kinds = [:MiddlewareServer, :MiddlewareDeployment, :MiddlewareDatasource, :MiddlewareManager, :Vm]
+    kinds = [:MiddlewareDeployment, :MiddlewareDatasource, :MiddlewareDomain, :MiddlewareManager, :Vm,
+             :MiddlewareServer, :MiddlewareServerGroup]
     build_legend_kinds(kinds)
   end
 end

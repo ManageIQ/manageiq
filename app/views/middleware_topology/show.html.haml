@@ -37,6 +37,20 @@
             %text{:y => "9"} &#xE90f;
         %label
           = _("VMs")
+      %kubernetes-topology-icon{tooltipOptions, :kind => "MiddlewareDomain"}
+        %svg.kube-topology
+          %g.MiddlewareDomain{:transform => "translate(21, 21)"}
+            %circle{:r => "17"}
+            %text{:x => "0", :y => "6", :class => "fa fa-sitemap glyph"} &#xF0E8;
+        %label
+          = _("Middleware Domains")
+      %kubernetes-topology-icon{tooltipOptions, :kind => "MiddlewareServerGroup"}
+        %svg.kube-topology
+          %g.MiddlewareServerGroup{:transform => "translate(21, 21)"}
+            %circle{:r => "17"}
+            %text{:x => "0", :y => "8", :class => "fa fa-th glyph"} &#xF00A;
+        %label
+          = _("Middleware Server Groups")
 
   .alert.alert-info.alert-dismissable
     %button.close{"aria-hidden" => "true", "data-dismiss" => "alert", :type => "button"}
