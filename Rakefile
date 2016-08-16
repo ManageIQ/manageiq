@@ -12,7 +12,7 @@ begin
   require 'jasmine'
   load 'jasmine/tasks/jasmine.rake'
 rescue LoadError => e
-  puts e.message
+  # Do nothing because we don't need jasmine in every environment
 end
 
 # Clear noisy and unusable tasks added by rspec-rails
