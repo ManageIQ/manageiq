@@ -67,7 +67,11 @@ module MiddlewareCommonMixin
   def trigger_mw_operation(operation, mw_item, params = nil)
     mw_manager = mw_item.ext_management_system
     op = mw_manager.public_method operation
-    op.call(mw_item.ems_ref, *params)
+    if params
+      op.call(mw_item.ems_ref, params)
+    else
+      op.call mw_item.ems_ref
+    end
   end
 
   #
