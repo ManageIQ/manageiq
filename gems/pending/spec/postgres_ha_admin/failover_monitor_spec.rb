@@ -12,9 +12,11 @@ describe PostgresHaAdmin::FailoverMonitor do
   end
 
   let(:failover_monitor) do
-    expect(PostgresHaAdmin::DatabaseYml).to receive(:new).and_return(db_yml)
-    expect(PostgresHaAdmin::FailoverDatabases).to receive(:new).and_return(failover_db)
-    failover_instance = described_class.new('', '', '', @logger_file.path, 'test')
+    allow(PostgresHaAdmin::DatabaseYml).to receive(:new).and_return(db_yml)
+    allow(PostgresHaAdmin::FailoverDatabases).to \
+      receive(:new).and_return(failover_db)
+    failover_instance = described_class.new('', '', '',
+                                            @logger_file.path, 'test')
     failover_instance
   end
 
@@ -33,16 +35,20 @@ describe PostgresHaAdmin::FailoverMonitor do
   end
 
   describe "#initialize" do
-    it "loads failover settings from 'ha_admin.yml' if there are present in yml" do
-      allow(YAML).to receive(:load_file).and_return('failover_attempts' => 555)
-      monitor_with_settings = described_class.new('', '', '', @logger_file.path, 'test')
-      expect(monitor_with_settings.failover_attempts).to eq 555
-      expect(failover_monitor.db_connected_check_frequency).to eq described_class::DB_CONNECTED_CHECK_FREQUENCY
+    it "loads failover settings from 'ha_admin.yml'" do
+      expect(failover_monitor.failover_attempts).to \
+        eq described_class::FAILOVER_ATTEMPTS
+      allow(YAML).to receive(:load_file).and_return('failover_attempts' => described_class::FAILOVER_ATTEMPTS + 10)
+      monitor_with_settings = described_class.new('', '', '',
+                                                  @logger_file.path, 'test')
+
+      expect(monitor_with_settings.failover_attempts).to eq described_class::FAILOVER_ATTEMPTS + 10
+      expect(failover_monitor.db_check_frequency).to eq described_class::DB_CHECK_FREQUENCY
     end
 
     it "uses default failover settings if 'ha_admin.yml' not found" do
       expect(failover_monitor.failover_attempts).to eq described_class::FAILOVER_ATTEMPTS
-      expect(failover_monitor.db_connected_check_frequency).to eq described_class::DB_CONNECTED_CHECK_FREQUENCY
+      expect(failover_monitor.db_check_frequency).to eq described_class::DB_CHECK_FREQUENCY
       expect(failover_monitor.failover_check_frequency).to eq described_class::FAILOVER_CHECK_FREQUENCY
     end
   end

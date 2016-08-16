@@ -8,17 +8,34 @@ require 'linux_admin'
 module PostgresHaAdmin
   class FailoverMonitor
     FAILOVER_ATTEMPTS = 10
-    DB_CONNECTED_CHECK_FREQUENCY = 300
+    DB_CHECK_FREQUENCY = 300
     FAILOVER_CHECK_FREQUENCY = 60
+    attr_accessor :failover_attempts, :db_check_frequency,
+                  :failover_check_frequency
 
     def initialize(db_yml_file = '/var/www/miq/vmdb/config/database.yml',
                    failover_yml_file = '/var/www/miq/vmdb/config/failover_databases.yml',
+                   ha_admin_yml_file = '/var/www/miq/vmdb/config/ha_admin.yml',
                    log_file = '/var/www/miq/vmdb/log/ha_admin.log',
                    environment = 'production')
       @logger = Logger.new(log_file)
       @logger.level = Logger::INFO
       @database_yml = DatabaseYml.new(db_yml_file, environment)
       @failover_db = FailoverDatabases.new(failover_yml_file, @logger)
+      begin
+        ha_admin_yml = YAML.load_file(ha_admin_yml_file)
+      rescue
+        ha_admin_yml = {}
+        @logger.info("File not found #{ha_admin_yml_file}. "\
+                     "Default settings for failover will be used.")
+      end
+
+      @failover_attempts = ha_admin_yml['failover_attempts'] || FAILOVER_ATTEMPTS
+      @db_check_frequency = ha_admin_yml['db_check_frequency'] || DB_CHECK_FREQUENCY
+      @failover_check_frequency = ha_admin_yml['failover_check_frequency'] || FAILOVER_CHECK_FREQUENCY
+      @logger.info("FAILOVER_ATTEMPTS=#{@failover_attempts}"\
+                   "DB_CHECK_FREQUENCY=#{@db_check_frequency}"\
+                   "FAILOVER_CHECK_FREQUENCY=#{@failover_check_frequency}")
     end
 
     def monitor
@@ -41,7 +58,7 @@ module PostgresHaAdmin
 
     def monitor_loop
       loop do
-        sleep(DB_CONNECTED_CHECK_FREQUENCY)
+        sleep(db_connected_check_frequency)
         begin
           monitor
         rescue StandardError => err
@@ -60,7 +77,7 @@ module PostgresHaAdmin
     private
 
     def execute_failover
-      FAILOVER_ATTEMPTS.times do
+      failover_attempts.times do
         with_each_standby_connection do |connection, params|
           next if PostgresAdmin.database_in_recovery?(connection)
           next unless @failover_db.host_is_repmgr_primary?(params[:host], connection)
@@ -69,7 +86,7 @@ module PostgresHaAdmin
           @database_yml.update_database_yml(params)
           return true
         end
-        sleep(FAILOVER_CHECK_FREQUENCY)
+        sleep(failover_check_frequency)
       end
       false
     end
