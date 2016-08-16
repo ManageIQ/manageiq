@@ -49,11 +49,11 @@ module MiqAeServiceModelSpec
         expect(@ae_vm.tagged_with?(category.name, 'non_exisiting_tag')).to be_falsey
       end
 
-      it "getting UntaggableModel exception while tagging lan model" do
-        lan = FactoryGirl.create(:lan)
-        lan_provider = MiqAeMethodService::MiqAeServiceLan.new(lan.id)
+      it "getting UntaggableModel exception while tagging account model" do
+        account = FactoryGirl.create(:account)
+        account_provider = MiqAeMethodService::MiqAeServiceAccount.new(account.id)
         expect do
-          lan_provider.tag_assign("#{category.name}/#{tag.name}")
+          account_provider.tag_assign("#{category.name}/#{tag.name}")
         end.to raise_error(MiqAeException::UntaggableModel)
       end
     end
@@ -91,10 +91,10 @@ module MiqAeServiceModelSpec
         expect(@ae_vm.taggable?).to be_truthy
       end
 
-      it "Lan model is not taggable" do
-        lan = FactoryGirl.create(:lan)
-        lan_provider = MiqAeMethodService::MiqAeServiceLan.new(lan.id)
-        expect(lan_provider.taggable?).to be_falsey
+      it "Account model is not taggable" do
+        account = FactoryGirl.create(:account)
+        account_provider = MiqAeMethodService::MiqAeServiceAccount.new(account.id)
+        expect(account_provider.taggable?).to be_falsey
       end
     end
   end
