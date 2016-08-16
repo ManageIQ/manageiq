@@ -1524,6 +1524,21 @@ module ApplicationHelper
     true
   end
 
+  def auth_mode_name
+    case get_vmdb_config.fetch_path(:authentication, :mode).downcase
+    when "ldap"
+      _("LDAP")
+    when "ldaps"
+      _("LDAPS")
+    when "amazon"
+      _("Amazon")
+    when "httpd"
+      _("External Authentication")
+    when "database"
+      _("Database")
+    end
+  end
+
   def ext_auth?(auth_option = nil)
     auth_config = get_vmdb_config[:authentication]
     return false unless auth_config[:mode] == "httpd"
