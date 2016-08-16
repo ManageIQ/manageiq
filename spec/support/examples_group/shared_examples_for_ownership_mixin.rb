@@ -53,6 +53,46 @@ shared_examples "miq ownership" do
       end
     end
 
+    describe ".owned_by_current_user" do
+      before { User.current_user = user }
+
+      it "usable as arel" do
+        userid     = User.current_userid.downcase
+        sql        = %`(LOWER("users"."userid") = '#{userid}')`
+        attribute  = described_class.arel_attribute(:owned_by_current_user)
+        expect(stringify_arel(attribute)).to eq [sql]
+      end
+
+      context "when #{described_class} is owned by the current user" do
+        it "returns true" do
+          column = "owned_by_current_user"
+          query  = described_class.with_evm_owner.where(:name => 'user_owned')
+          expect(virtual_column_sql_value(query, column)).to eq(true)
+        end
+      end
+
+      context "when #{described_class} is not owned by the current user" do
+        it "returns false" do
+          column = "owned_by_current_user"
+          query  = described_class.with_evm_owner.where(:name => 'user_owned2')
+          expect(virtual_column_sql_value(query, column)).to eq(false)
+        end
+      end
+
+      # Since we are doing a regular inner join here, no results will be returned
+      # when there isn't an associated user for the record.
+      #
+      # This was the existing behaviour of the owned_by_current_user method, so
+      # we are testing that the query (even without the virtual_attribute) will
+      # return no records.
+      context "when #{described_class} is not owned by any user" do
+        it "returns no results" do
+          query = described_class.with_evm_owner.where(:name => 'no_group')
+          expect(query.to_a.size).to eq(0)
+        end
+      end
+    end
+
     describe "reporting on ownership" do
       let(:exp_value) { "true" }
       let(:exp) { { "="=> { "field" => "#{described_class}-owned_by_current_ldap_group", "value" => exp_value } } }
@@ -89,7 +129,7 @@ shared_examples "miq ownership" do
       end
 
       context "searching on owned by the current user" do
-        let(:search_opts) { { :filter => MiqExpression.new(exp), :per_page => 20 } }
+        let(:search_opts) { { :filter => MiqExpression.new(exp), :per_page => 20, :named_scope => :with_evm_owner } }
         let(:exp) { { "="=> { "field" => "#{described_class}-owned_by_current_user", "value" => "true" } } }
 
         it "returns results owned by the user" do
@@ -99,7 +139,7 @@ shared_examples "miq ownership" do
       end
 
       context "searching on not owned by the current user" do
-        let(:search_opts) { { :filter => MiqExpression.new(exp), :per_page => 20 } }
+        let(:search_opts) { { :filter => MiqExpression.new(exp), :per_page => 20, :named_scope => :with_evm_owner } }
         let(:exp) { { "="=> { "field" => "#{described_class}-owned_by_current_user", "value" => "false" } } }
 
         it "returns results not owned by the user, but have an owner" do
