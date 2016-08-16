@@ -22,11 +22,12 @@
                            :class => "form-control",
                            "data-miq_observe" => {:interval => '.5',
                                                   :url      => url}.to_json)
-          = check_box_tag("lookup",
-                          "1",
-                          false,
-                          "data-miq_observe_checkbox" => {:url => url}.to_json)
-          = _("(Look Up LDAP Groups)")
+          - unless "database".include?(auth_mode_name.downcase)
+            = check_box_tag("lookup",
+                            "1",
+                            false,
+                            "data-miq_observe_checkbox" => {:url => url}.to_json)
+            = _("(Look up %{authentication_mode_name} Groups)") % {:authentication_mode_name => auth_mode_name}
           = javascript_tag(javascript_focus('description'))
     .form-group
       %label.col-md-2.control-label
