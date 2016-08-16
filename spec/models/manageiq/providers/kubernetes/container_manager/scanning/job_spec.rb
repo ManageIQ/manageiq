@@ -144,6 +144,20 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
       end
     end
 
+    it 'should add correct environment variables' do
+      att_name = 'http_proxy'
+      my_value = "MY_TEST_VALUE"
+      @ems.custom_attributes.create(:section => described_class::ATTRIBUTE_SECTION,
+                                    :name    => att_name,
+                                    :value   => my_value)
+      allow_any_instance_of(described_class).to receive_messages(:kubernetes_client => MockKubeClient.new)
+      kc = @job.kubernetes_client
+      secret_name = kc.get_service_account[:imagePullSecrets][0][:name]
+      pod = @job.send(:pod_definition, secret_name)
+      expect(pod[:spec][:containers][0][:env][0][:name]).to eq(att_name.upcase)
+      expect(pod[:spec][:containers][0][:env][0][:value]).to eq(my_value)
+    end
+
     it 'should send correct dockercfg secrets' do
       allow_any_instance_of(described_class).to receive_messages(:kubernetes_client => MockKubeClient.new)
       kc = @job.kubernetes_client

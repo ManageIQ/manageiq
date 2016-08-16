@@ -13,6 +13,8 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   ERRCODE_NOTFOUND = 404
   IMAGE_INSPECTOR_SA = 'inspector-admin'
   INSPECTOR_ADMIN_SECRET_PATH = '/var/run/secrets/kubernetes.io/inspector-admin-secret-'
+  ATTRIBUTE_SECTION = 'cluster_settings'
+  PROXY_ENV_VARIABLES = %w(no_proxy http_proxy https_proxy)
 
   def load_transitions
     self.state ||= 'initializing'
@@ -363,7 +365,8 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
                 :mountPath => DOCKER_SOCKET,
                 :name      => "docker-socket"
               }
-            ]
+            ],
+            :env             => inspector_proxy_env_variables
           }
         ],
         :volumes       => [
@@ -394,5 +397,14 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
 
   def inspector_image
     'docker.io/openshift/image-inspector:2.0'
+  end
+
+  def inspector_proxy_env_variables
+    settings = ext_management_system.custom_attributes
+    settings.where(:section => ATTRIBUTE_SECTION,
+                   :name    => PROXY_ENV_VARIABLES).each_with_object([]) do |att, env|
+      env << {:name  => att.name.upcase,
+              :value => att.value} unless att.value.blank?
+    end
   end
 end
