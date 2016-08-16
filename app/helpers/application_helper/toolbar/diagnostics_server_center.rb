@@ -50,7 +50,7 @@ class ApplicationHelper::Toolbar::DiagnosticsServerCenter < ApplicationHelper::T
   ])
   button_group('ldap_domain_vmdb', [
     select(
-      :support_vmdb_choice,
+      :server_collect_logs_choice,
       'fa fa-filter fa-lg',
       N_('Collect Logs'),
       N_('Collect'),
@@ -77,7 +77,7 @@ class ApplicationHelper::Toolbar::DiagnosticsServerCenter < ApplicationHelper::T
       N_('Edit the Log Depot settings for the selected Server'),
       N_('Edit')),
     select(
-      :support_vmdb_choice,
+      :restart_vmdb_choice,
       'fa fa-cog fa-lg',
       t = N_('Configuration'),
       t,

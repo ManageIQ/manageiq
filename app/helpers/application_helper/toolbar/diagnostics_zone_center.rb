@@ -8,7 +8,7 @@ class ApplicationHelper::Toolbar::DiagnosticsZoneCenter < ApplicationHelper::Too
   ])
   button_group('ldap_domain_vmdb', [
     select(
-      :support_vmdb_choice,
+      :zone_configuration_choice,
       'fa fa-cog fa-lg',
       t = N_('Configuration'),
       t,
@@ -92,7 +92,7 @@ class ApplicationHelper::Toolbar::DiagnosticsZoneCenter < ApplicationHelper::Too
       ]
     ),
     select(
-      :support_vmdb_choice,
+      :zone_collect_logs_choice,
       'fa fa-filter fa-lg',
       N_('Collect Logs'),
       N_('Collect'),
