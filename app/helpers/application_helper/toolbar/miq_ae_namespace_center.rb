@@ -45,7 +45,7 @@ class ApplicationHelper::Toolbar::MiqAeNamespaceCenter < ApplicationHelper::Tool
           :enabled   => false,
           :onwhen    => "1+"),
         button(
-          :miq_ae_namespace_delete,
+          :miq_ae_class_delete,
           'pficon pficon-delete fa-lg',
           t = N_('Remove selected Items'),
           t,
