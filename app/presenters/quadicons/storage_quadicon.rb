@@ -15,11 +15,11 @@ module Quadicons
     private
 
     def full_list
-      %i(storage_type guest_count host_count storage_usage)
+      %i(storage_type guest_count host_count storage_free_space)
     end
 
     def single_list
-      [:storage_usage]
+      [:storage_used_space]
     end
 
     def default_title_attr

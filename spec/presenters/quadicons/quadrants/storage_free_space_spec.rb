@@ -1,6 +1,6 @@
-describe Quadicons::Quadrants::StorageUsage, :type => :helper do
+describe Quadicons::Quadrants::StorageFreeSpace, :type => :helper do
   let(:kontext) { Quadicons::Context.new(helper) }
-  subject(:quadrant) { Quadicons::Quadrants::StorageUsage.new(record, kontext) }
+  subject(:quadrant) { Quadicons::Quadrants::StorageFreeSpace.new(record, kontext) }
 
   let(:record) do
     FactoryGirl.create(

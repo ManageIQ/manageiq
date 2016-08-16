@@ -1,10 +1,10 @@
 require "presenters/quadicons/quadicon_shared_specs"
 
-RSpec.shared_examples :shows_free_space do
-  it 'shows free space' do
-    expect(quadicon.quadrant_list).to include(:storage_usage)
-  end
-end
+# RSpec.shared_examples :shows_free_space do
+#   it 'shows free space' do
+#     expect(quadicon.quadrant_list).to include(:storage_usage)
+#   end
+# end
 
 describe Quadicons::StorageQuadicon, :type => :helper do
   let(:record) do
@@ -34,7 +34,9 @@ describe Quadicons::StorageQuadicon, :type => :helper do
       expect(quadicon.quadrant_list).to include(:storage_type)
     end
 
-    include_examples :shows_free_space
+    it 'shows free space' do
+      expect(quadicon.quadrant_list).to include(:storage_free_space)
+    end
 
     it 'shows a count of vms' do
       expect(quadicon.quadrant_list).to include(:guest_count)
@@ -50,7 +52,9 @@ describe Quadicons::StorageQuadicon, :type => :helper do
       kontext.settings = { :quadicons => {:storage => false} }
     end
 
-    include_examples :shows_free_space
+    it 'shows used space' do
+      expect(quadicon.quadrant_list).to include(:storage_used_space)
+    end
 
     it 'renders in single mode' do
       expect(quadicon.render_single?).to eq(true)
