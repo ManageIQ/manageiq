@@ -1,4 +1,4 @@
-require 'discovery/PortScan'
+require 'discovery/port_scanner'
 
 require 'ostruct'
 require 'benchmark'

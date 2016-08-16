@@ -1,4 +1,4 @@
-require 'discovery/PortScan'
+require 'discovery/port_scanner'
 
 # Ports:
 #        135  - Microsoft Remote Procedure Call (RPC)
