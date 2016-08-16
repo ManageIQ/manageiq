@@ -250,4 +250,18 @@ module MiqAeServiceSpec
       end
     end
   end
+
+  describe MiqAeService do
+    context "#utils" do
+      let(:options) { {} }
+      let(:workspace) { double("MiqAeEngine::MiqAeWorkspaceRuntime", :root => options) }
+      let(:miq_ae_service) { MiqAeService.new(workspace) }
+
+      it "#port_open" do
+        allow(workspace).to receive(:persist_state_hash).and_return({})
+
+        expect(miq_ae_service.utils.respond_to?(:port_open)).to be_truthy
+      end
+    end
+  end
 end

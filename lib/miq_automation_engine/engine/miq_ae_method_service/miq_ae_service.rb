@@ -1,6 +1,7 @@
 require_relative './miq_ae_service_model_legacy'
 require_relative './miq_ae_service_vmdb'
 require_relative './miq_ae_service_rbac'
+require_relative './/miq_ae_service_utils'
 module MiqAeMethodService
   class MiqAeService
     include Vmdb::Logging
@@ -368,6 +369,10 @@ module MiqAeMethodService
       return nil if aec.nil?
 
       aec.ae_instances.detect { |i| instance.casecmp(i.name) == 0 }
+    end
+
+    def utils
+      MiqAeServiceUtils.new
     end
 
     private
