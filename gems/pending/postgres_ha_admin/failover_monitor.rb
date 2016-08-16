@@ -7,8 +7,8 @@ require 'linux_admin'
 module PostgresHaAdmin
   class FailoverMonitor
     FAILOVER_ATTEMPTS = 10
-    DB_CONNECTED_CHECK_FREQUENCY = 5.minutes
-    FAILOVER_CHECK_FREQUENCY = 1.minute
+    DB_CONNECTED_CHECK_FREQUENCY = 300
+    FAILOVER_CHECK_FREQUENCY = 60
 
     def initialize(db_yml_file = '/var/www/miq/vmdb/config/database.yml',
                    failover_yml_file = '/var/www/miq/vmdb/config/failover_databases.yml',
