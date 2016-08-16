@@ -117,6 +117,7 @@
       "MiddlewareDatasource": true,
       "MiddlewareDomain": true,
       "MiddlewareManager": true,
+      "Vm": true,
       "MiddlewareServer": true,
       "MiddlewareServerGroup": true
     },

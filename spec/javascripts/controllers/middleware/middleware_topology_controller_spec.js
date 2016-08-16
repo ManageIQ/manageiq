@@ -46,6 +46,17 @@ describe('middlewareTopologyController', function () {
     }
   };
 
+  var vm = {
+    id: "Vm1",
+    item: {
+      "name": "Vm",
+      "kind": "Vm",
+      "miq_id": 1,
+      "status": "Unknown",
+      "display_kind": "Vm"
+    }
+  };
+
   var mw_domain = {
     id: "MiddlewareDomain1",
     item: {
@@ -97,11 +108,12 @@ describe('middlewareTopologyController', function () {
 
   describe('kinds contains all expected mw kinds', function () {
     it('in all main objects', function () {
-      expect(Object.keys(scope.kinds).length).toBe(6);
+      expect(Object.keys(scope.kinds).length).toBe(7);
       expect(scope.kinds["MiddlewareManager"]).toBeDefined();
       expect(scope.kinds["MiddlewareServer"]).toBeDefined();
       expect(scope.kinds["MiddlewareDeployment"]).toBeDefined();
       expect(scope.kinds["MiddlewareDatasource"]).toBeDefined();
+      expect(scope.kinds["Vm"]).toBeDefined();
       expect(scope.kinds["MiddlewareDomain"]).toBeDefined();
       expect(scope.kinds["MiddlewareServerGroup"]).toBeDefined();
     });
@@ -114,6 +126,7 @@ describe('middlewareTopologyController', function () {
       expect($controller.getIcon(mw_server).icon).toContain("vendor-wildfly");
       expect($controller.getIcon(mw_deployment).fontfamily).toEqual("icomoon");
       expect($controller.getIcon(mw_datasource).fontfamily).toEqual("FontAwesome");
+      expect($controller.getIcon(vm).fontfamily).toEqual("PatternFlyIcons-webfont");
       expect($controller.getIcon(mw_domain).fontfamily).toEqual("FontAwesome");
       expect($controller.getIcon(mw_server_group).fontfamily).toEqual("FontAwesome");
     });
@@ -125,6 +138,7 @@ describe('middlewareTopologyController', function () {
       expect($controller.getCircleDimensions(mw_server)).toEqual({x: -12, y: -12, height: 23, width: 23, r: 19});
       expect($controller.getCircleDimensions(mw_deployment)).toEqual({x: -9, y: -9, height: 18, width: 18, r: 17});
       expect($controller.getCircleDimensions(mw_datasource)).toEqual({x: -9, y: -9, height: 18, width: 18, r: 17});
+      expect($controller.getCircleDimensions(vm)).toEqual({ x: 0, y: 9, height: 40, width: 40, r: 21 });
       expect($controller.getCircleDimensions(mw_domain)).toEqual({x: -9, y: -9, height: 18, width: 18, r: 17});
       expect($controller.getCircleDimensions(mw_server_group)).toEqual({x: -9, y: -9, height: 18, width: 18, r: 17});
     });
@@ -136,6 +150,7 @@ describe('middlewareTopologyController', function () {
       expect($controller.getIcon(mw_server).type).toEqual("image");
       expect($controller.getIcon(mw_deployment).type).toEqual("glyph");
       expect($controller.getIcon(mw_datasource).type).toEqual("glyph");
+      expect($controller.getIcon(vm).type).toEqual("glyph");
       expect($controller.getIcon(mw_domain).type).toEqual("glyph");
       expect($controller.getIcon(mw_server_group).type).toEqual("glyph");
     });
