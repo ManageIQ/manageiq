@@ -16,8 +16,8 @@ module PostgresHaAdmin
                    environment = 'production')
       @logger = Logger.new(log_file)
       @logger.level = Logger::INFO
-      @database_yml = DatabaseYml.new(failover_yml_file, environment)
-      @failover_db = FailoverDatabases.new(db_yml_file, @logger)
+      @database_yml = DatabaseYml.new(db_yml_file, environment)
+      @failover_db = FailoverDatabases.new(failover_yml_file, @logger)
     end
 
     def monitor
