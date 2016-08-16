@@ -995,12 +995,16 @@ describe QuadiconHelper do
           end
 
           context "when not explorer" do
+            # FIXME: This branch will error if item is Configuration Manager,
+            # a bug to be handled in this refactoring
+            #
+            let(:item) { FactoryGirl.create(:middleware_deployment) }
+
             before(:each) do
               @explorer = false
             end
 
             it 'links to the record' do
-              skip
               cid = ApplicationRecord.compress_id(item.id)
               expect(subject).to have_selector("a[href*='#{cid}']")
             end
