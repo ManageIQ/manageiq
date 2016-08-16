@@ -18,7 +18,6 @@
 #     - load_balancer_health_check_members
 #
 
-
 module EmsRefresh::SaveInventoryNetwork
   def save_ems_network_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
@@ -284,7 +283,7 @@ module EmsRefresh::SaveInventoryNetwork
     target = ems if target.nil?
 
     ems.load_balancer_pool_members(true)
-    deletes = if (target == ems)
+    deletes = if target == ems
                 ems.load_balancer_pool_members.dup
               else
                 []
@@ -307,7 +306,7 @@ module EmsRefresh::SaveInventoryNetwork
     target = ems if target.nil?
 
     ems.load_balancer_pools(true)
-    deletes = if (target == ems)
+    deletes = if target == ems
                 ems.load_balancer_pools.dup
               else
                 []
@@ -330,14 +329,15 @@ module EmsRefresh::SaveInventoryNetwork
       end
     end
 
-    save_inventory_multi(load_balancer_pool.load_balancer_pool_member_pools, hashes, deletes, [:load_balancer_pool_member_id])
+    save_inventory_multi(load_balancer_pool.load_balancer_pool_member_pools, hashes, deletes,
+                         [:load_balancer_pool_member_id])
   end
 
   def save_load_balancer_listeners_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
     ems.load_balancer_listeners(true)
-    deletes = if (target == ems)
+    deletes = if target == ems
                 ems.load_balancer_listeners.dup
               else
                 []
@@ -373,7 +373,7 @@ module EmsRefresh::SaveInventoryNetwork
     target = ems if target.nil?
 
     ems.load_balancer_health_checks(true)
-    deletes = if (target == ems)
+    deletes = if target == ems
                 ems.load_balancer_health_checks.dup
               else
                 []
