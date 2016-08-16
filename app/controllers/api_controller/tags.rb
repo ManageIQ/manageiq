@@ -7,7 +7,8 @@ class ApiController
     #
 
     def tags_query_resource(object)
-      object ? object.tags.where(Tag.arel_table[:name].matches "#{TAG_NAMESPACE}%") : {}
+      # object ? object.tags.where(Tag.arel_table[:name].matches "#{TAG_NAMESPACE}%") : {}
+      object.tags
     end
 
     def tags_assign_resource(object, _type, id = nil, data = nil)
