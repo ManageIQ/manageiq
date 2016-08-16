@@ -74,6 +74,8 @@ module VmShowMixin
     @named_scope =
       if miq_search_exp_fields.include? "owned_by_current_ldap_group"
         :with_miq_group
+      elsif miq_search_exp_fields.include? "owned_by_current_user"
+        :with_evm_owner
       end
   end
 
