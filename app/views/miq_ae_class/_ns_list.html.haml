@@ -20,7 +20,10 @@
             %td.narrow.noclick
               %input{:type => 'checkbox', :value => cls_cid}
             %td.narrow
-              %i.fa.fa-2x.fa-globe
+              - if record.git_enabled?
+                %img{:src => image_path('100/ae_git_domain.png')}
+              - else
+                %i.fa.fa-2x.fa-globe
             %td
               = record_name(record).html_safe
             %td

@@ -31,6 +31,46 @@ var Automate = {
       });
   },
 
+  renderGitImport: function(branches, tags, gitRepoId, messages) {
+    clearMessages();
+    message = JSON.parse(messages).message;
+    messageLevel = JSON.parse(messages).level;
+
+    if (messageLevel === "error") {
+      showErrorMessage(message);
+    } else {
+      $('.hidden-git-repo-id').val(gitRepoId);
+      $('.git-import-data').show();
+      $('.import-or-export').hide();
+      if (messageLevel === "warning") {
+        showWarningMessage(message);
+      } else {
+        showSuccessMessage(message);
+      }
+
+      var addToDropDown = function(identifier, child) {
+        $('select.git-' + identifier).append(
+          $('<option>', {
+            value: child,
+            text: child
+          })
+        );
+      };
+
+      $.each(JSON.parse(branches), function(index, child) {
+        addToDropDown('branches', child);
+      });
+      $.each(JSON.parse(tags), function(index, child) {
+        addToDropDown('tags', child);
+      });
+
+      $('select.git-branches').selectpicker('refresh');
+      $('select.git-tags').selectpicker('refresh');
+    }
+
+    miqSparkleOff();
+  },
+
   addDomainOptions: function(domains) {
     $('select.importing-domains').empty();
 
@@ -70,6 +110,17 @@ var Automate = {
   },
 
   setUpAutomateImportClickHandlers: function() {
+    var tearDownGitImportOptions = function() {
+      $('.git-branches').find('option').remove().end();
+      $('.git-tags').find('option').remove().end();
+      $('.git-branches').selectpicker('refresh');
+      $('.git-tags').selectpicker('refresh');
+
+      $('.import-or-export').show();
+      $('.git-import-data').hide();
+      $('#git-url-import').prop('disabled', null);
+    };
+
     $('.import-commit').click(function(event) {
       event.preventDefault();
       miqSparkleOn();
@@ -91,6 +142,31 @@ var Automate = {
       });
     });
 
+    Automate.setUpGitRefreshClickHandlers();
+
+    $('.git-retreive-datastore').click(function() {
+      miqSparkleOn();
+    });
+
+    $('.git-import-submit').click(function(event) {
+      event.preventDefault();
+      miqSparkleOn();
+      clearMessages();
+
+      $.post('import_via_git', $('#git-branch-tag-form').serialize(), function(data) {
+        var flashMessage = data[0];
+        if (flashMessage.level == 'error') {
+          showErrorMessage(flashMessage.message);
+        } else {
+          showSuccessMessage(flashMessage.message);
+        }
+
+        tearDownGitImportOptions();
+
+        miqSparkleOff();
+      }, 'json');
+    });
+
     $('.import-back').click(function(event) {
       event.preventDefault();
       miqSparkleOn();
@@ -108,10 +184,40 @@ var Automate = {
       });
     });
 
+    $('.git-import-cancel').click(function(event) {
+      event.preventDefault();
+      clearMessages();
+      tearDownGitImportOptions();
+      showSuccessMessage('Import cancelled');
+    });
+
     $('#toggle-all').click(function() {
       $('.domain-tree').dynatree('getRoot').visit(function(node) {
         node.select($('#toggle-all').prop('checked'));
       });
+    });
+  },
+
+  setUpGitRefreshClickHandlers: function() {
+    $('.git-branch-or-tag-select').on('change', function(event) {
+      event.preventDefault();
+      if ($(event.currentTarget).val() === "Branch") {
+        $('.git-branch-group').show();
+        $('.git-tag-group').hide();
+        $('.git-branch-or-tag').val($('.git-branches').val());
+      } else {
+        $('.git-branch-group').hide();
+        $('.git-tag-group').show();
+        $('.git-branch-or-tag').val($('.git-tags').val());
+      }
+    });
+
+    $('.git-branches').on('change', function(event) {
+      $('.git-branch-or-tag').val($(event.currentTarget).val());
+    });
+
+    $('.git-tags').on('change', function(event) {
+      $('.git-branch-or-tag').val($(event.currentTarget).val());
     });
   }
 };

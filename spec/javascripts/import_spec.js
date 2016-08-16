@@ -91,7 +91,7 @@ describe('import.js', function() {
       html += '<div class="icon-placeholder pficon pficon-ok pficon-layered"></div>';
       html += '<div id="error-octagon" class="pficon-error-octagon"></div>';
       html += '<div id="error-exclamation" class="pficon-error-exclamation"></div>';
-      html += '<div id="warning-triangle" class="pficon-warning-triangle"></div>';
+      html += '<div id="warning-triangle" class="pficon-warning-triangle-o"></div>';
       html += '<div id="warning-exclamation" class="pficon-warning-exclamation"></div>';
       setFixtures(html);
 
@@ -119,7 +119,7 @@ describe('import.js', function() {
     });
 
     it('removes pficon-warning-triangle class', function() {
-      expect($('#warning-triangle')).not.toHaveClass('pficon-warning-triangle');
+      expect($('#warning-triangle')).not.toHaveClass('pficon-warning-triangle-o');
     });
 
     it('removes pficon-warning-exclamation class', function() {

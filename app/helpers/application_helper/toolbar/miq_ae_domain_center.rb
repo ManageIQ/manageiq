@@ -27,6 +27,11 @@ class ApplicationHelper::Toolbar::MiqAeDomainCenter < ApplicationHelper::Toolbar
           'fa fa-ban fa-lg',
           t = N_('Lock this Domain'),
           t),
+        button(
+          :miq_ae_git_refresh,
+          'fa fa-lg fa-refresh',
+          t = N_('Refresh with a new branch or tag'),
+          t),
         separator,
         button(
           :miq_ae_namespace_new,

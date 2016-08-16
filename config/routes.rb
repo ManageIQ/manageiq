@@ -1509,6 +1509,7 @@ Vmdb::Application.routes.draw do
         form_method_field_changed
         form_ns_field_changed
         priority_form_field_changed
+        refresh_git_domain
         reload
         tree_select
         tree_autoload_dynatree
@@ -1574,6 +1575,7 @@ Vmdb::Application.routes.draw do
         import_export
         log
         resolve
+        review_git_import
         review_import
       ),
       :post => %w(
@@ -1581,8 +1583,10 @@ Vmdb::Application.routes.draw do
         cancel_import
         form_field_changed
         import_automate_datastore
+        import_via_git
         reset_datastore
         resolve
+        retrieve_git_datastore
         upload
         upload_import_file
         wait_for_task

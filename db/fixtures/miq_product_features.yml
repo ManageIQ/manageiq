@@ -1682,6 +1682,10 @@
         :description: Edit Priority Order of Domains
         :feature_type: admin
         :identifier: miq_ae_domain_priority_edit
+      - :name: Refresh
+        :description: Refresh Git-based domain
+        :feature_type: admin
+        :identifier: miq_ae_git_refresh
       - :name: Lock/Unlock
         :description: Lock/Unlock Domain
         :feature_type: admin

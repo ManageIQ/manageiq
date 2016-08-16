@@ -155,7 +155,7 @@ describe TreeNodeBuilder do
     it 'MiqAeNamespace node' do
       login_as FactoryGirl.create(:user_with_group)
 
-      namespace = FactoryGirl.build(:miq_ae_namespace)
+      namespace = FactoryGirl.build(:miq_ae_namespace, :parent_id => 123)
       node = TreeNodeBuilder.build(namespace, nil, {})
       expect(node).not_to be_nil
     end
@@ -420,6 +420,7 @@ describe TreeNodeBuilder do
     before do
       login_as FactoryGirl.create(:user_with_group)
     end
+
     it "should return node text with Disabled in the text for Disabled domain" do
       domain = FactoryGirl.create(:miq_ae_domain,
                                   :name    => "test1",

@@ -293,7 +293,11 @@ class TreeNodeBuilder
   def image_for_node(object, image)
     case object
     when MiqAeNamespace
-      object.domain? ? "ae_domain.png" : "ae_namespace.png"
+      if object.domain?
+        object.git_enabled? ? "ae_git_domain.png" : "ae_domain.png"
+      else
+        "ae_namespace.png"
+      end
     else
       image
     end
