@@ -1,15 +1,15 @@
 - @angular_form = true
 
-%form.form-horizontal#form_deploy{"name"          => "angularForm",
-                                  "ng-controller" => "middlewareAddDeploymentController"}
-  .modal.fade#modal_d_div{"tabindex"        => "-1",
-                          "role"            => "dialog",
-                          "aria-labelledby" => "mw_modal_label",
+%ng-form.form-horizontal#form_deploy{"name"          => "angularForm",
+                                     "ng-controller" => "mwAddDeploymentController"}
+  .modal.fade#modal_d_div{"tabindex"         => "-1",
+                          "role"             => "dialog",
+                          "aria-labelledby"  => "mw_modal_label",
                           "aria-describedby" => "modal",
-                          "aria-hidden"     => "true",
-                          "data-keyboard"   => "false",
-                          "data-backdrop"   => "static",
-                          :style            => "display: none"}
+                          "aria-hidden"      => "true",
+                          "data-keyboard"    => "false",
+                          "data-backdrop"    => "static",
+                          :style             => "display: none"}
     .modal-dialog.modal-md
       .modal-content#deploy_div
         .modal-header
@@ -29,7 +29,7 @@
               = file_field("upload", "file",
                            :class             => "lifestyle",
                            "data-buttonName"  => "btn-default",
-                           "ng-model"         => "filePath",
+                           "ng-model"         => "deployAddModel.filePath",
                            "require-file"     => "handle")
           .form-group
             %label.col-md-4.control-label{:for => "enable_deployment_cb"}
@@ -39,24 +39,23 @@
                                           "bs-switch"       => "",
                                           "switch-on-text"  => "Yes",
                                           "switch-off-text" => "No",
-                                          "switch-active"   => "{{!!filePath}}",
-                                          "ng-model"        => "enableDeployment",
-                                          "ng-disabled"     => "!filePath"}
+                                          "switch-active"   => "{{!!deployAddModel.filePath}}",
+                                          "ng-model"        => "deployAddModel.enableDeployment",
+                                          "ng-disabled"     => "!deployAddModel.filePath"}
           .form-group
             %label.col-md-4.control-label{:for => "runtime_name_input"}
               = _("Runtime Name")
             .col-md-8
               %input.form-control#runtime_name_input{:type         => "text",
                                                      "placeholder" => _("No file chosen"),
-                                                     "ng-model"    => "runtimeName",
-                                                     "ng-disabled" => "!filePath"}
+                                                     "ng-model"    => "deployAddModel.runtimeName",
+                                                     "ng-disabled" => "!deployAddModel.filePath"}
           :javascript
             $(":file").filestyle({icon: false, placeholder: _("No file chosen")});
         .modal-footer
-          %button.btn.btn-primary{"ng-disabled" => "!filePath", "ng-click" => "addDeployment()", :type => "button"}
-            = _("Deploy")
           %button.btn.btn-default{:type => "button", "data-dismiss" => "modal"}
             = _("Cancel")
-
-:javascript
-  miq_bootstrap('#form_deploy');
+          %button.btn.btn-primary{"ng-disabled" => "!deployAddModel.filePath",
+                                  "ng-click"    => "addDeployment()",
+                                  :type         => "button"}
+            = _("Deploy")
