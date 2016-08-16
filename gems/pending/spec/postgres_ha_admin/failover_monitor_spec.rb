@@ -36,11 +36,9 @@ describe PostgresHaAdmin::FailoverMonitor do
 
   describe "#initialize" do
     it "loads failover settings from 'ha_admin.yml'" do
-      expect(failover_monitor.failover_attempts).to \
-        eq described_class::FAILOVER_ATTEMPTS
+      expect(failover_monitor.failover_attempts).to eq described_class::FAILOVER_ATTEMPTS
       allow(YAML).to receive(:load_file).and_return('failover_attempts' => described_class::FAILOVER_ATTEMPTS + 10)
-      monitor_with_settings = described_class.new('', '', '',
-                                                  @logger_file.path, 'test')
+      monitor_with_settings = described_class.new('', '', '', @logger_file.path, 'test')
 
       expect(monitor_with_settings.failover_attempts).to eq described_class::FAILOVER_ATTEMPTS + 10
       expect(failover_monitor.db_check_frequency).to eq described_class::DB_CHECK_FREQUENCY

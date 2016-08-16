@@ -10,8 +10,7 @@ module PostgresHaAdmin
     FAILOVER_ATTEMPTS = 10
     DB_CHECK_FREQUENCY = 300
     FAILOVER_CHECK_FREQUENCY = 60
-    attr_accessor :failover_attempts, :db_check_frequency,
-                  :failover_check_frequency
+    attr_accessor :failover_attempts, :db_check_frequency, :failover_check_frequency
 
     def initialize(db_yml_file = '/var/www/miq/vmdb/config/database.yml',
                    failover_yml_file = '/var/www/miq/vmdb/config/failover_databases.yml',
@@ -24,12 +23,11 @@ module PostgresHaAdmin
       @failover_db = FailoverDatabases.new(failover_yml_file, @logger)
       begin
         ha_admin_yml = YAML.load_file(ha_admin_yml_file)
-      rescue
+      rescue SystemCallError, IOError => err
         ha_admin_yml = {}
-        @logger.info("File not found #{ha_admin_yml_file}. "\
-                     "Default settings for failover will be used.")
+        @logger.error("#{err.class}: #{err}")
+        @logger.info("File not loaded: #{ha_admin_yml_file}. Default settings for failover will be used.")
       end
-
       @failover_attempts = ha_admin_yml['failover_attempts'] || FAILOVER_ATTEMPTS
       @db_check_frequency = ha_admin_yml['db_check_frequency'] || DB_CHECK_FREQUENCY
       @failover_check_frequency = ha_admin_yml['failover_check_frequency'] || FAILOVER_CHECK_FREQUENCY
