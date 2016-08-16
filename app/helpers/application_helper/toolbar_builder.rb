@@ -1,6 +1,7 @@
 class ApplicationHelper::ToolbarBuilder
   include MiqAeClassHelper
   include RestfulControllerMixin
+  include ActionView::Helpers::AssetTagHelper
 
   def call(toolbar_name)
     build_toolbar(toolbar_name)
@@ -75,6 +76,7 @@ class ApplicationHelper::ToolbarBuilder
           :id       => bgi[:id] + "__" + bsi[:id],
           :type     => :button,
           :img      => img = img_value(bsi),
+          :img_url  => image_path("/assets/toolbars/" + img),
           :imgdis   => img,
         )
       end

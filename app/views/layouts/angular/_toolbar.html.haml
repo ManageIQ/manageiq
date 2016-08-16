@@ -2,6 +2,6 @@
      "ng-init" => "toolbarCtrl.initObject('#{j_str(toolbar_from_hash.to_json)}')"}
   %miq-toolbar-menu{"toolbar-items" => "toolbarCtrl.toolbarItems",
                     "toolbar-views" => "toolbarCtrl.dataViews",
-                    "on-view-click" => "toolbarCtrl.onViewClick(item)"}
+                    "on-view-click" => "toolbarCtrl.onViewClick(item, $event)"}
 :javascript
   angular.bootstrap(document.getElementById('miq-toolbar-menu'), ['ManageIQ.toolbar']);

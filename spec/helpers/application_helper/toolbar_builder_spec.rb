@@ -2744,6 +2744,7 @@ describe ApplicationHelper do
                      :type      => :button,
                      :img       => "download_pdf.png",
                      :imgdis    => "download_pdf.png",
+                     :img_url   => "/assets/toolbars/download_pdf.png",
                      :icon      => "fa fa-file-pdf-o fa-lg",
                      :text      => "Download as PDF",
                      :title     => "Download this report in PDF format",

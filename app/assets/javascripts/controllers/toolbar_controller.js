@@ -121,9 +121,13 @@
  /**
  * Public method for changing view over data.
  */
-  ToolbarController.prototype.onViewClick = function(item) {
-    var tail = (ManageIQ.record.recordId) ? ManageIQ.record.recordId : '';
-    location.replace('/' + ManageIQ.controller + item.url + tail + item.url_parms);
+  ToolbarController.prototype.onViewClick = function(item, $event) {
+    if (item.url.indexOf('/') === 0) {
+      var tail = (ManageIQ.record.recordId) ? ManageIQ.record.recordId : '';
+      location.replace('/' + ManageIQ.controller + item.url + tail + item.url_parms);
+    } else {
+      miqToolbarOnClick.bind($event.delegateTarget)($event);
+    }
   }
 
   ToolbarController.prototype.initObject = function(toolbarString) {

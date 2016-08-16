@@ -114,9 +114,8 @@
       .container-fluid.container-cards-pf.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-tertiary{:style => "overflow: hidden; height: 100%;"}
         .row.toolbar-pf#toolbar
           .col-md-12
-            .toolbar-pf-actions
-              - if @widgets_menu
-                = render :partial => "layouts/angular/toolbar"
+            - if @widgets_menu
+              = render :partial => "layouts/angular/toolbar"
         .row#main-content
           .col-md-12
             .spacer
