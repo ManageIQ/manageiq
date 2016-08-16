@@ -1,15 +1,41 @@
-ManageIQ.angular.app.controller('middlewareServerController', MiddlewareServerController);
+ManageIQ.angular.app.controller('mwServerController', MwServerController);
 
-MiddlewareServerController.$inject = ['$scope', 'miqService', 'serverOpsService'];
+MwServerController.$inject = ['$scope', 'miqService' ];
 
-function MiddlewareServerController($scope, miqService, serverOpsService) {
+/**
+ * MwServerController - since there can be only one controller per page due to:
+ * 'ManageIQ.angular.scope = $scope;' since this is needed by miqCallAngular to
+ * showListener via ManageIQ.angular.scope.$apply.
+ * This is the parent controller for the page that is bootstrapped,
+ * interacting with the page via $scope and then $broadcast events down to the sub
+ * controllers to handle them in isolation.
+ *
+ * Controller Hierarchy is:
+ * - MwServerController
+ * -- MwServerOpsController
+ * -- MwAddDeploymentController
+ * -- *Any other controllers (more coming...)
+ *
+ * This is certainly not ideal, but allows us to use multiple controllers on a page.
+ * And provides loose coupling of controllers via events instead of depending on
+ * parent/child controller relationships.
+ * @param $scope
+ * @param miqService
+ * @constructor
+ */
+function MwServerController($scope, miqService) {
   ManageIQ.angular.scope = $scope;
 
-  $scope.showListener = function (args) {
+  /////////////////////////////////////////////////////////////////////////
+  // Server Ops
+  /////////////////////////////////////////////////////////////////////////
+
+  $scope.showServerOpsListener = function (args) {
     var operation = args.split(':')[1]; // format is 'operation:resume'
 
     $scope.paramsModel = {};
     if (operation) {
+      $scope.paramsModel.serverId = angular.element('#mw_param_server_id').val();
       $scope.paramsModel.operation = operation;
       $scope.paramsModel.operationTitle = makeOperationDisplayName(operation) + ' ' + _('Server');
       $scope.paramsModel.operationButtonName = makeOperationDisplayName(operation);
@@ -18,11 +44,56 @@ function MiddlewareServerController($scope, miqService, serverOpsService) {
   };
 
   $scope.runOperation = function () {
+    $scope.$broadcast('mwSeverOpsEvent', $scope.paramsModel);
+  };
+
+  var makeOperationDisplayName = function (operation) {
+    return _.capitalize(operation);
+  };
+
+  /////////////////////////////////////////////////////////////////////////
+  // Add Deployment
+  /////////////////////////////////////////////////////////////////////////
+
+  $scope.deployAddModel = {};
+  $scope.deployAddModel.enableDeployment = true;
+  $scope.deployAddModel.serverId = angular.element('#server_id').val();
+
+  $scope.showDeployListener = function () {
+    $scope.deployAddModel.showDeployModal = true;
+    $scope.resetDeployForm();
+  };
+
+  $scope.resetDeployForm = function () {
+    $scope.enableDeployment = true;
+    $scope.runtimeName = undefined;
+    $scope.filePath = undefined;
+    angular.element('#deploy_div :file#upload_file').val('');
+    angular.element('#deploy_div input[type="text"]:disabled').val('');
+  };
+
+  $scope.$watch('filePath', function(newValue) {
+    if (newValue) {
+      $scope.deployAddModel.runtimeName = newValue.name;
+    }
+  });
+
+  $scope.addDeployment = function () {
+    miqService.sparkleOn();
+    $scope.$broadcast('mwAddDeploymentEvent', $scope.deployAddModel);
+  };
+}
+
+ManageIQ.angular.app.controller('mwServerOpsController', MwServerOpsController);
+
+MwServerOpsController.$inject = ['$scope', 'miqService', 'serverOpsService'];
+
+function MwServerOpsController($scope, miqService, serverOpsService) {
+
+  $scope.$on('mwSeverOpsEvent', function(event, data) {
     miqService.sparkleOn();
 
-    serverOpsService.runOperation(angular.element('#mw_param_server_id').val(),
-      $scope.paramsModel.operation,
-      $scope.paramsModel.timeout)
+    serverOpsService.runOperation(data.serverId, data.operation, data.timeout)
       .then(function (response) {
           miqService.miqFlash('success', response);
         },
@@ -33,13 +104,7 @@ function MiddlewareServerController($scope, miqService, serverOpsService) {
 
       miqService.sparkleOff();
     });
-
-  };
-
-  var makeOperationDisplayName = function (operation) {
-    return _.capitalize(operation);
-  }
-
+  });
 }
 
 ManageIQ.angular.app.service('serverOpsService', ServerOpsService);
@@ -66,9 +131,6 @@ function ServerOpsService($http, $q) {
           } else {
             deferred.reject(data.msg);
           }
-        },
-        function () { // error
-          deferred.reject(errorMsg);
         })
       .catch(function () {
         deferred.reject(errorMsg);

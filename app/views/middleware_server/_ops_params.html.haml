@@ -1,8 +1,8 @@
 - @angular_form = true
 
-%form.form-horizontal#form_op_params{"name"          => "opsParamForm",
-                                     "ng-controller" => "middlewareServerController",
-                                     "novalidate"    => "true"}
+%ng-form.form-horizontal#form_op_params{"name"           => "opsParamForm",
+                                        "ng-controller"  => "mwServerOpsController",
+                                        "novalidate"     => "true"}
   .modal.fade#modal_param_div{"tabindex"     => "-1",
                           "role"             => "dialog",
                           "aria-labelledby"  => "mw_modal_label",
@@ -31,8 +31,8 @@
             .col-sm-4
               %input#timeout.form-control{:type          => "number",
                                           :name          => "timeout",
-                                          "min" => "0",
-                                          "max" => "60",
+                                          "min"          => "0",
+                                          "max"          => "60",
                                           "ng-required"  => "true",
                                           "ng-model"     => "paramsModel.timeout"}
             .col-sm-2.text-left
@@ -54,6 +54,3 @@
                                   "ng-disabled" => "opsParamForm.$invalid",
                                   "ng-bind"     => "paramsModel.operationButtonName"}
 
-
-:javascript
-  miq_bootstrap('#form_op_params');

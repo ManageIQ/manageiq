@@ -49,7 +49,7 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
           :data    => {'toggle'        => 'modal',
                        'target'        => '#modal_param_div',
                        'function'      => 'miqCallAngular',
-                       'function-data' => '{"name": "showListener", "args": ["operation:shutdown"]}'}),
+                       'function-data' => '{"name": "showServerOpsListener", "args": ["operation:shutdown"]}'}),
         button(
           :middleware_server_restart,
           nil,
@@ -74,7 +74,7 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
           :data  => {'toggle'        => 'modal',
                      'target'        => '#modal_param_div',
                      'function'      => 'miqCallAngular',
-                     'function-data' => '{"name": "showListener", "args": ["operation:suspend"]}'}),
+                     'function-data' => '{"name": "showServerOpsListener", "args": ["operation:suspend"]}'}),
         button(
           :middleware_server_resume,
           nil,
@@ -106,7 +106,7 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
           :data => {'toggle'        => 'modal',
                     'target'        => '#modal_d_div',
                     'function'      => 'miqCallAngular',
-                    'function-data' => '{"name": "showListener", "args": []}'})
+                    'function-data' => '{"name": "showDeployListener", "args": []}'})
       ]
     ),
   ])
