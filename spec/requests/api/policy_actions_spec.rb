@@ -7,7 +7,7 @@
 # Policy Action subcollection:
 #   /api/policies/:id/policy_actions
 #
-describe ApiController do
+describe "Policy Actions API" do
   let(:miq_action_guid_list) { MiqAction.pluck(:guid) }
 
   def create_actions(count)

@@ -15,7 +15,7 @@
 # - Delete a role by action               /api/roles/:id                        action "delete"
 # - Delete multiple roles                 /api/roles                            action "delete"
 #
-describe ApiController do
+describe "Roles API" do
   let(:feature_identifiers) do
     %w(vm_explorer ems_infra_tag my_settings_time_profiles
        miq_request_view miq_report_run storage_manager_show_list rbac_role_show)

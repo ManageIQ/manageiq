@@ -13,8 +13,8 @@
 # - Refresh a provider                    /api/providers/:id                    action "refresh"
 # - Refresh multiple providers            /api/providers                        action "refresh"
 #
-describe ApiController do
-  ENDPOINT_ATTRS = ApiController::Providers::ENDPOINT_ATTRS
+describe "Providers API" do
+  ENDPOINT_ATTRS = ManageIQ::API::ApiController::Providers::ENDPOINT_ATTRS
 
   let(:default_credentials) { {"userid" => "admin1", "password" => "password1"} }
   let(:metrics_credentials) { {"userid" => "admin2", "password" => "password2", "auth_type" => "metrics"} }

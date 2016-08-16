@@ -1,7 +1,7 @@
 #
 # REST API Request Tests - /api versioning
 #
-describe ApiController do
+describe "Versioning" do
   context "Versioning Queries" do
     it "test versioning query" do
       api_basic_authorize

@@ -1,7 +1,7 @@
 #
 # REST API Request Tests - /api/settings
 #
-describe ApiController do
+describe "Settings API" do
   let(:api_settings) { ManageIQ::API::Settings.collections[:settings][:categories] }
 
   context "Settings Queries" do
