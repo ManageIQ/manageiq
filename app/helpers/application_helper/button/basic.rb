@@ -22,6 +22,12 @@ class ApplicationHelper::Button::Basic < Hash
     end
   end
 
+  # Sets the attributes for the button:
+  #   self[:enabled] -- displayed button is enabled
+  #   self[:title]   -- button has the title on hover
+  #   self[:prompt]  -- the user has to confirm the action
+  #   self[:hidden]  -- the button is not displayed in the toolbar
+  #   self[:text]    -- text for the button
   def calculate_properties
     self[:enabled] = !disabled? if self[:enabled].nil?
   end
@@ -32,10 +38,14 @@ class ApplicationHelper::Button::Basic < Hash
     skip?
   end
 
+  # Tells whether the button should displayed in the toolbar or not:
+  #   false => button will be displayed
+  #   true => button will be hidden
   def skip?
     false
   end
 
+  # Tells whether the displayed button should be disabled or not
   def disabled?
     false
   end
@@ -44,6 +54,8 @@ class ApplicationHelper::Button::Basic < Hash
   class << self
     attr_reader :record_needed
 
+    # Used to avoid rendering buttons dependent on `@record` instance variable
+    # if the variable is not set
     def needs_record
       @record_needed = true
     end

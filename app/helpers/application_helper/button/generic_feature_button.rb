@@ -9,7 +9,7 @@ class ApplicationHelper::Button::GenericFeatureButton < ApplicationHelper::Butto
   def skip?
     begin
       return !@record.send("supports_#{@feature}?")
-    rescue NoMethodError
+    rescue NoMethodError # TODO: remove with deleting AvailabilityMixin module
       return !@record.is_available?(@feature)
     end
   end
