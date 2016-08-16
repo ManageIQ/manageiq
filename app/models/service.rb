@@ -38,7 +38,7 @@ class Service < ApplicationRecord
   include NewWithTypeStiMixin
   include ProcessTasksMixin
   include TenancyMixin
-  include AvailabilityMixin
+  include SupportsFeatureMixin
 
   include_concern 'RetirementManagement'
   include_concern 'Aggregation'
@@ -46,6 +46,10 @@ class Service < ApplicationRecord
   virtual_column :has_parent,                               :type => :boolean
 
   validates_presence_of :name
+
+  supports :reconfigure do
+    unsupported_reason_add(:reconfigure, _("Reconfigure unsupported")) unless validate_reconfigure
+  end
 
   def add_resource(rsc, options = {})
     if rsc.kind_of?(Vm) && !rsc.service.nil?
@@ -166,7 +170,7 @@ class Service < ApplicationRecord
 
   def validate_reconfigure
     ra = reconfigure_resource_action
-    {:available => ra && ra.dialog_id && ra.fqname.present?}
+    ra && ra.dialog_id && ra.fqname.present?
   end
 
   def reconfigure_resource_action
