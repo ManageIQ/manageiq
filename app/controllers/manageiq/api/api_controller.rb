@@ -3,7 +3,7 @@ module ManageIQ
     #
     # Initializing REST API environment, called once @ startup
     #
-    ManageIQ::API::Initializer.new.go
+    Initializer.new.go
 
     class ApiController < ApplicationController
       skip_before_action :get_global_session_data
