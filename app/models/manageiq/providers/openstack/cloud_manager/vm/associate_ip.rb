@@ -3,7 +3,7 @@ module ManageIQ::Providers::Openstack::CloudManager::Vm::AssociateIp
 
   included do
     supports :associate_floating_ip do
-      if cloud_tenant.nil? || Rbac.filtered(cloud_tenant.floating_ips).empty?
+      if cloud_tenant.nil? || cloud_tenant.floating_ips.empty?
         unsupported_reason_add(:associate_floating_ip,
                                _("There are no %{floating_ips} available to this %{instance}.") % {
                                  :floating_ips => ui_lookup(:tables => "floating_ips"),

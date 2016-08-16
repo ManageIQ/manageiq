@@ -71,12 +71,12 @@ describe ManageIQ::Providers::Openstack::CloudManager::Vm do
       end
 
       it "checks associate_floating_ip is_available? when floating ips are available" do
-        expect(Rbac).to receive(:filtered).and_return([1]) # fake a floating ip being available
+        expect(vm.cloud_tenant).to receive(:floating_ips).and_return([1]) # fake a floating ip being available
         expect(vm.supports_associate_floating_ip?).to eq true
       end
 
       it "checks associate_floating_ip is_available? when floating ips are not available" do
-        expect(Rbac).to receive(:filtered).and_return([])
+        expect(vm.cloud_tenant).to receive(:floating_ips).and_return([])
         expect(vm.supports_associate_floating_ip?).to eq false
       end
     end
