@@ -1297,7 +1297,7 @@ class Host < ApplicationRecord
 
   def quickStats
     return @qs if @qs
-    return {} unless is_vmware?
+    return {} unless supports_quick_stats?
 
     begin
       raise _("Host has no EMS, unable to get host statistics") unless ext_management_system
