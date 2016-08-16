@@ -1118,6 +1118,23 @@ describe Rbac::Filterer do
         end.to match_query_limit_of(0)
       end
 
+      it "skips lookup when group passed in" do
+        # ensure user is looked up outside group block
+        user2.miq_groups.to_a
+        expect do
+          _, group = filter.send(:lookup_user_group, user2, nil, nil, group_list.first.id.to_s)
+          expect(group).to eq(group_list.first)
+        end.to match_query_limit_of(0)
+        expect do
+          _, group = filter.send(:lookup_user_group, user2, nil, nil, group_list.last.id)
+          expect(group).to eq(group_list.last)
+        end.to match_query_limit_of(0)
+        expect do
+          _, group = filter.send(:lookup_user_group, user2, nil, group_list.first, nil)
+          expect(group).to eq(group_list.first)
+        end.to match_query_limit_of(0)
+      end
+
       it "uses group passed" do
         _, group = filter.send(:lookup_user_group, user2, nil, group_list.first, nil)
         expect(group).to eq(group_list.first)
@@ -1136,6 +1153,13 @@ describe Rbac::Filterer do
         admin = FactoryGirl.create(:user_admin)
         random_group = FactoryGirl.create(:miq_group)
         _, group = filter.send(:lookup_user_group, admin, nil, random_group, nil)
+        expect(group).to eq(random_group)
+      end
+
+      it "uses group_id passed in when not member of group when super admin" do
+        admin = FactoryGirl.create(:user_admin)
+        random_group = FactoryGirl.create(:miq_group)
+        _, group = filter.send(:lookup_user_group, admin, nil, nil, random_group.id)
         expect(group).to eq(random_group)
       end
     end
