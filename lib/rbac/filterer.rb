@@ -416,9 +416,9 @@ module Rbac
     end
 
     def lookup_user_group(user, userid, miq_group, miq_group_id)
-      user      ||= (userid && User.find_by_userid(userid)) || User.current_user
-      miq_group ||= miq_group_id && MiqGroup.find_by_id(miq_group_id)
+      user ||= (userid && User.find_by_userid(userid)) || User.current_user
       miq_group_id ||= miq_group.try!(:id)
+      miq_group ||= miq_group_id && MiqGroup.find_by_id(miq_group_id)
       if user && miq_group && user.current_group_id != miq_group_id
         user.current_group = miq_group if user.super_admin_user? || user.miq_groups.include?(miq_group)
       end
