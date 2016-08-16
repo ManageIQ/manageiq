@@ -243,6 +243,32 @@ describe MiqAeDomain do
     end
   end
 
+  context "editable property" do
+    it "system domain" do
+      dom = FactoryGirl.create(:miq_ae_system_domain, :tenant => @user.current_tenant)
+      expect(dom.editable_property?('name')).to be_falsey
+      expect(dom.editable_property?('description')).to be_falsey
+      expect(dom.editable_property?('priority')).to be_falsey
+      expect(dom.editable_property?('enabled')).to be_falsey
+    end
+
+    it "git domain" do
+      dom = FactoryGirl.create(:miq_ae_git_domain, :tenant => @user.current_tenant)
+      expect(dom.editable_property?(:name)).to be_falsey
+      expect(dom.editable_property?(:description)).to be_falsey
+      expect(dom.editable_property?('priority')).to be_truthy
+      expect(dom.editable_property?('enabled')).to be_truthy
+    end
+
+    it "user domain" do
+      dom = FactoryGirl.create(:miq_ae_domain, :tenant => @user.current_tenant)
+      expect(dom.editable_property?(:name)).to be_truthy
+      expect(dom.editable_property?(:description)).to be_truthy
+      expect(dom.editable_property?('priority')).to be_truthy
+      expect(dom.editable_property?('enabled')).to be_truthy
+    end
+  end
+
   context "git enabled domains" do
     let(:commit_time) { Time.now.utc }
     let(:commit_time_new) { Time.now.utc + 1.hour }

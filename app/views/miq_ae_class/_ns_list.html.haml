@@ -52,6 +52,7 @@
             = text_field_tag("ns_name",
                               @edit[:new][:ns_name],
                               :maxlength         => MAX_NAME_LEN,
+                              :readonly => @ae_ns.domain? && !@ae_ns.editable_property?(:name)  ? true : false,
                               :class => "form-control",
                               "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
             = javascript_tag(javascript_focus('ns_name'))
@@ -62,6 +63,7 @@
             = text_field_tag("ns_description",
                               @edit[:new][:ns_description],
                               :maxlength         => MAX_NAME_LEN,
+                              :readonly => @ae_ns.domain? && !@ae_ns.editable_property?(:description) ? true : false,
                               :class => "form-control",
                               "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
         - if @ae_ns.domain?
