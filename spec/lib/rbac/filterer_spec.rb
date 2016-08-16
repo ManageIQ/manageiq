@@ -1101,6 +1101,23 @@ describe Rbac::Filterer do
         expect(group).to eq(user1.current_group)
       end
 
+      it "skips lookup if current_group_id passed" do
+        # ensuring same_group is a different object from user1.current_group
+        same_group = MiqGroup.find_by_id(user1.current_group.id)
+        expect do
+          _, group = filter.send(:lookup_user_group, user1, nil, same_group, nil)
+          expect(group).to eq(same_group)
+        end.to match_query_limit_of(0)
+        expect do
+          _, group = filter.send(:lookup_user_group, user1, nil, nil, user1.current_group.id)
+          expect(group).to eq(same_group)
+        end.to match_query_limit_of(0)
+        expect do
+          _, group = filter.send(:lookup_user_group, user1, nil, nil, user1.current_group.id.to_s)
+          expect(group).to eq(same_group)
+        end.to match_query_limit_of(0)
+      end
+
       it "uses group passed" do
         _, group = filter.send(:lookup_user_group, user2, nil, group_list.first, nil)
         expect(group).to eq(group_list.first)
