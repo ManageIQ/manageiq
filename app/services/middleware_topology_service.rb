@@ -14,7 +14,8 @@ class MiddlewareTopologyService < TopologyService
       :MiddlewareManager => {
         :MiddlewareServers => {
           :MiddlewareDeployments => nil,
-          :MiddlewareDatasources => nil
+          :MiddlewareDatasources => nil,
+          :lives_on              => {:Host => nil}
         }}}
 
     preloaded = @providers.includes(:middleware_server => [:middleware_deployment, :middleware_datasource])
@@ -48,15 +49,19 @@ class MiddlewareTopologyService < TopologyService
     data[:status] = 'Unknown'
     data[:display_kind] = entity_display_type(entity)
     data[:icon] = entity.decorate.try(:item_image) unless glyph? entity
+    if entity.kind_of?(Vm)
+      data[:status] = entity.power_state.capitalize
+      data[:provider] = entity.ext_management_system.name
+    end
     data
   end
 
   def glyph?(entity)
-    [MiddlewareDatasource, MiddlewareDeployment].any? { |klass| entity.kind_of? klass }
+    [MiddlewareDatasource, MiddlewareDeployment, Vm].any? { |klass| entity.kind_of? klass }
   end
 
   def build_kinds
-    kinds = [:MiddlewareServer, :MiddlewareDeployment, :MiddlewareDatasource, :MiddlewareManager]
+    kinds = [:MiddlewareServer, :MiddlewareDeployment, :MiddlewareDatasource, :MiddlewareManager, :Vm]
     build_legend_kinds(kinds)
   end
 end

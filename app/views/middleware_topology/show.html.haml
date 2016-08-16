@@ -29,6 +29,14 @@
             %text{:x => "0", :y => "6", :class => "fa fa-database glyph"} &#xF1C0;
         %label
           = _("Middleware Datasources")
+      %kubernetes-topology-icon{tooltipOptions, :kind => "Vm"}
+        %svg.kube-topology
+          %g.EntityLegend.Infra
+            %circle{:r => "17"}
+            -# pficon-virtual-machine
+            %text{:y => "9"} &#xE90f;
+        %label
+          = _("VMs")
 
   .alert.alert-info.alert-dismissable
     %button.close{"aria-hidden" => "true", "data-dismiss" => "alert", :type => "button"}

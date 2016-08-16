@@ -140,6 +140,7 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location, topologySer
   };
 
   self.getCircleDimensions = function getCircleDimensions(d) {
+    var defaultDimensions = topologyService.defaultElementDimensions();
     switch (d.item.kind) {
       case 'MiddlewareManager':
         return {
@@ -149,14 +150,6 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location, topologySer
           width: 40,
           r: 28
         };
-      case 'Container':
-        return {
-          x: -7,
-          y: -7,
-          height: 14,
-          width: 14,
-          r: 13
-        };
       case 'MiddlewareServer':
         return {
           x: -12,
@@ -165,13 +158,21 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location, topologySer
           width: 23,
           r: 19
         };
+      case "Vm":
+        return {
+          x: defaultDimensions.x,
+          y: defaultDimensions.y,
+          height: 40,
+          width: 40,
+          r: 21
+        };
       default:
         return {
           x: -9,
           y: -9,
           height: 18,
           width: 18,
-          r: 17
+          r: defaultDimensions.r
         };
     }
   }
