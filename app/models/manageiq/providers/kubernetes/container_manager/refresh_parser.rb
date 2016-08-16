@@ -716,7 +716,7 @@ module ManageIQ::Providers::Kubernetes
     def parse_image_name(image, image_ref)
       parts = %r{
         \A
-          (?:(?:(?<host>[^\.:\/]+\.[^\.:\/]+)|(?:(?<host2>[^:\/]+)(?::(?<port>\d+))))\/)?
+          (?:(?:(?<host>([^\.:\/]+\.)+[^\.:\/]+)|(?:(?<host2>[^:\/]+)(?::(?<port>\d+))))\/)?
           (?<name>(?:[^:\/@]+\/)*[^\/:@]+)
           (?:(?::(?<tag>.+))|(?:\@(?<digest>.+)))?
         \z
