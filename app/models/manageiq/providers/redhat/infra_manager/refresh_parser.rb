@@ -19,6 +19,9 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
     # Clean up the temporary cluster-datacenter references
     result[:clusters].each { |c| c.delete(:datacenter_id) }
 
+    # get disk for removed vms
+    result[:vm_disks] = vm_inv_to_disk_hashes({:disks => inv[:vm_disks]}, uids[:storages])
+
     result
   end
 
