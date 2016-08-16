@@ -61,6 +61,8 @@ shared_examples "miq ownership" do
       let(:owned_by_group_1)  { described_class.where(:name => 'in_ldap').first }
       let(:owned_by_group_2)  { described_class.where(:name => 'not_in_ldap').first }
       let(:owned_by_group_3)  { described_class.where(:name => 'no_group').first }
+      let(:owned_by_user)     { described_class.where(:name => 'user_owned').first }
+      let(:owned_by_user2)    { described_class.where(:name => 'user_owned2').first }
 
       before do
         expect(User).to receive(:server_timezone).and_return("UTC")
@@ -85,6 +87,26 @@ shared_examples "miq ownership" do
           expect(owned_ids).to match_array [owned_by_group_2.id]
         end
       end
+
+      context "searching on owned by the current user" do
+        let(:search_opts) { { :filter => MiqExpression.new(exp), :per_page => 20 } }
+        let(:exp) { { "="=> { "field" => "#{described_class}-owned_by_current_user", "value" => "true" } } }
+
+        it "returns results owned by the user" do
+          owned_ids = report.paged_view_search(search_opts).first.map(&:id)
+          expect(owned_ids).to match_array [owned_by_user.id]
+        end
+      end
+
+      context "searching on not owned by the current user" do
+        let(:search_opts) { { :filter => MiqExpression.new(exp), :per_page => 20 } }
+        let(:exp) { { "="=> { "field" => "#{described_class}-owned_by_current_user", "value" => "false" } } }
+
+        it "returns results not owned by the user, but have an owner" do
+          owned_ids = report.paged_view_search(search_opts).first.map(&:id)
+          expect(owned_ids).to match_array [owned_by_user2.id]
+        end
+      end
     end
 
     after(:context) do
@@ -95,11 +117,14 @@ shared_examples "miq ownership" do
       user = FactoryGirl.create :user,
                                 :userid     => "ownership_user",
                                 :miq_groups => FactoryGirl.create_list(:miq_group, 1)
+      user2 = FactoryGirl.create :user
 
       factory = described_class.to_s.underscore.to_sym
       FactoryGirl.create factory, :name => "in_ldap",     :miq_group_id => user.current_group.id
       FactoryGirl.create factory, :name => "not_in_ldap", :miq_group => FactoryGirl.create(:miq_group)
       FactoryGirl.create factory, :name => "no_group"
+      FactoryGirl.create factory, :name => "user_owned",  :evm_owner => user
+      FactoryGirl.create factory, :name => "user_owned2", :evm_owner => user2
     end
 
     def teardown_ownership_users_and_groups
