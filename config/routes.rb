@@ -2237,6 +2237,7 @@ Vmdb::Application.routes.draw do
         perf_chart_chooser
         protect
         quick_search
+        reload
         sections_field_changed
         show
         show_association
