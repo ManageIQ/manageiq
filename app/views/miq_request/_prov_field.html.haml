@@ -50,7 +50,8 @@
         = field_hash[:description]
         - len =  field_hash[:max_length] ? field_hash[:max_length] : MAX_NAME_LEN
         - if field_hash[:help]
-          %a{:tabindex => 0,
+          %a{:id               => "popover-#{field_hash.object_id}",
+             :tabindex         => 0,
              :role             => "button",
              :"data-toggle"    => "popover",
              :"data-trigger"   => "focus",
@@ -59,6 +60,8 @@
              :"data-content"   => "#{field_hash[:help]}",
              :"data-placement" => "top"}
             %span.fa.fa-info-circle
+          :javascript
+            $('#popover-#{field_hash.object_id}').popovers();
         - if field_hash[:description] == "Provision on"
           (#{get_timezone_abbr(current_user)})
         - if @edit && @edit[:new] && [:vm_description].include?(field)
