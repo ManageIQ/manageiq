@@ -32,7 +32,7 @@ class ManageIQ::Providers::Microsoft::InfraManager
 
       def log_dos_error_results(results)
         log_header = "MIQ(#{self.class.name}##{__method__})"
-        error = results.respond_to?(:stderr) ? results.stderr : results
+        error = results.respond_to?(:stderr) ? parse_xml_error_string(results.stderr) : results
         $scvmm_log.error("#{log_header} #{error}") unless error.blank?
       end
 
@@ -47,6 +47,24 @@ class ManageIQ::Providers::Microsoft::InfraManager
           ActiveSupport::Gzip.decompress(Base64.decode64(results))
         rescue Zlib::GzipFile::Error # Not in gzip format
           results
+        end
+      end
+
+      # Parse an ugly XML error string into something much more readable.
+      #
+      def parse_xml_error_string(str)
+        require 'nokogiri'
+        str = str.sub("#< CLIXML\r\n", '') # Illegal, nokogiri can't cope
+        doc = Nokogiri::XML::Document.parse(str)
+        doc.remove_namespaces!
+
+        text = doc.xpath("//S").map(&:text).join
+        array = text.split(/_x\h{1,}_/) # Split on stuff like '_x000D_'
+        array.delete('') # Delete empty elements
+
+        array.inject('') do |string, element|
+          break string if element =~ /at line:\d+/i
+          string << element
         end
       end
     end
