@@ -1483,10 +1483,10 @@ function miqToolbarOnClick(_e) {
   }
 
   var collect_log_buttons = [
-    'support_vmdb_choice__collect_logs',
-    'support_vmdb_choice__collect_current_logs',
-    'support_vmdb_choice__zone_collect_logs',
-    'support_vmdb_choice__zone_collect_current_logs'
+    'server_collect_logs_choice__collect_logs',
+    'server_collect_logs_choice__collect_current_logs',
+    'zone_collect_logs_choice__zone_collect_logs',
+    'zone_collect_logs_choice__zone_collect_current_logs'
   ];
   if (jQuery.inArray(button.attr('name'), collect_log_buttons) >= 0 && button.data('prompt')) {
     tb_url = miqSupportCasePrompt(tb_url);
