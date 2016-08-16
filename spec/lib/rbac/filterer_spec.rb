@@ -1109,6 +1109,12 @@ describe Rbac::Filterer do
         expect(group).to eq(group_list.last)
       end
 
+      it "fallsback to current_group if not member of group" do
+        user1_group = user1.current_group
+        _, group = filter.send(:lookup_user_group, user1, nil, FactoryGirl.create(:miq_group), nil)
+        expect(group).to eq(user1_group)
+      end
+
       it "uses group passed in when not member of group when super admin" do
         admin = FactoryGirl.create(:user_admin)
         random_group = FactoryGirl.create(:miq_group)

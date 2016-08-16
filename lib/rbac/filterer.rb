@@ -420,10 +420,9 @@ module Rbac
       miq_group ||= miq_group_id && MiqGroup.find_by_id(miq_group_id)
       miq_group_id ||= miq_group.try!(:id)
       if user && miq_group && user.current_group_id != miq_group_id
-        user.current_group = miq_group if user.miq_groups.include?(miq_group)
+        user.current_group = miq_group if user.super_admin_user? || user.miq_groups.include?(miq_group)
       end
-      miq_group ||= user.try(:current_group)
-      [user, miq_group]
+      [user, user.try(:current_group) || miq_group]
     end
 
     # for reports, user is currently nil, so use the group filter
