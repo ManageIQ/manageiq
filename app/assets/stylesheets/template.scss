@@ -4,14 +4,6 @@ textarea { width: 98.5%; border: 1px solid #d1d1d1; padding: 7px; line-height: 1
 
 /* begin modified Patternfly code */
 
-.btn-disabled, .disabled {
-  opacity:0.4 !important;
-  filter:alpha(opacity=40);
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);
-}
-
-/* disables mouse events on disabled/blocked DIVS */
-
 div.disabled {
   cursor: default;
 }
