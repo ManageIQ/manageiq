@@ -5299,6 +5299,13 @@ networks:
 - hostname
 - domain
 - ipv6address
+notification_types:
+- id
+- name
+- level
+- audience
+- message
+- expires_in
 ontap_aggregate_derived_metrics:
 - id
 - statistic_time
