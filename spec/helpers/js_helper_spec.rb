@@ -91,7 +91,7 @@ describe JsHelper do
     it 'returns js to check the provided input element of type checkbox' do
       expect(javascript_checked(
         'foo'
-      )).to eq("if ($('#foo').prop('type') == 'checkbox') {$('#foo').prop('checked', 'checked');}")
+      )).to eq("if ($('#foo').prop('type') == 'checkbox') {$('#foo').prop('checked', true);}")
     end
   end
 

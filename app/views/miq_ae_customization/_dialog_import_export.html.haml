@@ -69,7 +69,9 @@
      });
 
     $('#check-all').on('change', function (e) {
-      $("table#import-grid tbody input[type='checkbox']").prop('checked', $(this).prop('checked'));
+      $("table#import-grid tbody input[type='checkbox']")
+        .prop('checked', $(this).prop('checked'))
+        .trigger('change');
     });
 
     $("#import-service-dialogs").submit(function (e) {

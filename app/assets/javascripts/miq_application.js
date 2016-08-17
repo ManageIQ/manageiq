@@ -385,12 +385,16 @@ function miqUpdateAllCheckboxes(button_div) {
     miqSetButtons(crows.length, button_div);
   } else if ($("input.listcheckbox").length) {
     // No list_grid on the screen
-    var cbs = $("input.listcheckbox");
-    cbs.prop('checked', state);
+    var cbs = $("input.listcheckbox")
+      .prop('checked', state)
+      .trigger('change');
+
     miqUpdateButtons(cbs[0], button_div);
   } else if ($("input[id^='storage_cb']").length) {
     // to handle check/uncheck all for C&U collection
-    $("input[id^='storage_cb']").prop('checked', state);
+    $("input[id^='storage_cb']")
+      .prop('checked', state)
+      .trigger('change');
     miqJqueryRequest(miqPassFields(
       "/configuration/form_field_changed",
       {storage_cb_all: state}

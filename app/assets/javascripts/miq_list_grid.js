@@ -13,7 +13,7 @@ function miqRowClick(row_id, row_url, row_url_ajax) {
 }
 
 function checkboxItemId($elem) {
-  var val = $elem.val()
+  var val = $elem.val();
   var name = $elem.attr('name');
 
   if (_.startsWith(name, 'check_')) {
@@ -45,9 +45,9 @@ function miqGridCheckAll(state, grid) {
   grid = grid || 'list_grid';
   state = !! state;
 
-  $('#' + grid + ' .list-grid-checkbox').each(function(_idx, elem) {
-    $(elem).prop('checked', state);
-  });
+  $('#' + grid + ' .list-grid-checkbox')
+    .prop('checked', state)
+    .trigger('change');
 }
 
 // Order a service from the catalog list view
