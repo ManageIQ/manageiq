@@ -1565,15 +1565,13 @@ class MiqExpression
   def to_arel(exp, tz)
     operator = exp.keys.first
 
+    field = Field.parse(exp[operator]["field"]) if exp[operator].kind_of?(Hash) && exp[operator]["field"]
     case operator.downcase
     when "equal", "="
-      field = Field.parse(exp[operator]["field"])
       field.eq(exp[operator]["value"])
     when ">"
-      field = Field.parse(exp[operator]["field"])
       field.gt(exp[operator]["value"])
     when "after"
-      field = Field.parse(exp[operator]["field"])
       value = if field.date?
                 RelativeDatetime.normalize(exp[operator]["value"], tz, _mode = "end").to_date
               else
@@ -1581,13 +1579,10 @@ class MiqExpression
               end
       field.gt(value)
     when ">="
-      field = Field.parse(exp[operator]["field"])
       field.gteq(exp[operator]["value"])
     when "<"
-      field = Field.parse(exp[operator]["field"])
       field.lt(exp[operator]["value"])
     when "before"
-      field = Field.parse(exp[operator]["field"])
       value = if field.date?
                 RelativeDatetime.normalize(exp[operator]["value"], tz, _mode = "beginning").to_date
               else
@@ -1595,22 +1590,16 @@ class MiqExpression
               end
       field.lt(value)
     when "<="
-      field = Field.parse(exp[operator]["field"])
       field.lteq(exp[operator]["value"])
     when "!="
-      field = Field.parse(exp[operator]["field"])
       field.not_eq(exp[operator]["value"])
     when "like", "includes"
-      field = Field.parse(exp[operator]["field"])
       field.matches("%#{exp[operator]["value"]}%")
     when "starts with"
-      field = Field.parse(exp[operator]["field"])
       field.matches("#{exp[operator]["value"]}%")
     when "ends with"
-      field = Field.parse(exp[operator]["field"])
       field.matches("%#{exp[operator]["value"]}")
     when "not like"
-      field = Field.parse(exp[operator]["field"])
       field.does_not_match("%#{exp[operator]["value"]}%")
     when "and"
       operands = exp[operator].each_with_object([]) do |operand, result|
@@ -1632,18 +1621,14 @@ class MiqExpression
     when "not", "!"
       Arel::Nodes::Not.new(to_arel(exp[operator], tz))
     when "is null"
-      field = Field.parse(exp[operator]["field"])
       field.eq(nil)
     when "is not null"
-      field = Field.parse(exp[operator]["field"])
       field.not_eq(nil)
     when "is empty"
-      field = Field.parse(exp[operator]["field"])
       arel = field.eq(nil)
       arel = arel.or(field.eq("")) if field.string?
       arel
     when "is not empty"
-      field = Field.parse(exp[operator]["field"])
       arel = field.not_eq(nil)
       arel = arel.and(field.not_eq("")) if field.string?
       arel
@@ -1653,11 +1638,9 @@ class MiqExpression
         tag = Tag.parse(exp[operator]["tag"])
         tag.contains(exp[operator]["value"])
       else
-        field = Field.parse(exp[operator]["field"])
         field.contains(exp[operator]["value"])
       end
     when "is"
-      field = Field.parse(exp[operator]["field"])
       value = exp[operator]["value"]
       if field.date?
         if RelativeDatetime.relative?(value)
@@ -1674,7 +1657,6 @@ class MiqExpression
         field.between(start_val..end_val)
       end
     when "from"
-      field = Field.parse(exp[operator]["field"])
       start_val, end_val = exp[operator]["value"]
       if field.date?
         start_val = RelativeDatetime.normalize(start_val, tz, "beginning").to_date
