@@ -50,6 +50,22 @@ class ApplicationHelper::Toolbar::XTemplateCloudCenter < ApplicationHelper::Tool
       ]
     ),
   ])
+  button_group('image_lifecycle', [
+    select(
+      :image_lifecycle_choice,
+      'fa fa-recycle fa-lg',
+      t = N_('Lifecycle'),
+      t,
+      :items => [
+        button(
+          :image_miq_request_new,
+          'pficon pficon-add-circle-o fa-lg',
+          t = N_('Provision Instances using this Image'),
+          t,
+          :klass => ApplicationHelper::Button::TemplateProvision)
+      ]
+    ),
+  ])
   button_group('image_policy', [
     select(
       :image_policy_choice,
