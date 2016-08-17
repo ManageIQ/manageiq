@@ -29,9 +29,9 @@ module DrbRemoteInvokerSpec
       let(:user) { FactoryGirl.create(:user_with_group) }
 
       def token_script
-         <<-'RUBY'
-           $evm.root['miq_api_token'] = MIQ_API_TOKEN
-         RUBY
+        <<-'RUBY'
+          $evm.root['miq_api_token'] = MIQ_API_TOKEN
+        RUBY
       end
 
       it "check if the token is acessible in the method" do
