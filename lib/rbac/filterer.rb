@@ -411,20 +411,34 @@ module Rbac
     end
 
     def get_user_info(user, userid, miq_group, miq_group_id)
-      user      ||= (userid && User.find_by_userid(userid)) || User.current_user
-      miq_group ||= miq_group_id && MiqGroup.find_by_id(miq_group_id)
-      miq_group_id ||= miq_group.try!(:id)
-      if user && miq_group && user.current_group_id != miq_group_id
-        user.current_group = miq_group if user.miq_groups.include?(miq_group)
-      end
-      miq_group ||= user.try(:current_group)
-      # for reports, user is currently nil, so use the group filter
-      user_filters = user.try(:get_filters) || miq_group.try(:get_filters) || {}
-      user_filters = user_filters.dup
-      user_filters["managed"] ||= []
-      user_filters["belongsto"] ||= []
+      user, miq_group = lookup_user_group(user, userid, miq_group, miq_group_id)
+      [user, miq_group, lookup_user_filters(user || miq_group)]
+    end
 
-      [user, miq_group, user_filters]
+    def lookup_user_group(user, userid, miq_group, miq_group_id)
+      user ||= (userid && User.find_by_userid(userid)) || User.current_user
+      miq_group_id ||= miq_group.try!(:id)
+      return [user, user.current_group] if user && user.current_group_id.to_s == miq_group_id.to_s
+
+      if user
+        if miq_group_id && (detected_group = user.miq_groups.detect { |g| g.id.to_s == miq_group_id.to_s })
+          user.current_group = detected_group
+        elsif miq_group_id && user.super_admin_user?
+          user.current_group = miq_group || MiqGroup.find_by_id(miq_group_id)
+        end
+      else
+        miq_group ||= miq_group_id && MiqGroup.find_by_id(miq_group_id)
+      end
+      [user, user.try(:current_group) || miq_group]
+    end
+
+    # for reports, user is currently nil, so use the group filter
+    # the user.get_filters delegates to user.current_group anyway
+    def lookup_user_filters(miq_group)
+      filters = miq_group.try!(:get_filters).try!(:dup) || {}
+      filters["managed"] ||= []
+      filters["belongsto"] ||= []
+      filters
     end
 
     # @param klass [Class] base_class found in CLASSES_THAT_PARTICIPATE_IN_RBAC

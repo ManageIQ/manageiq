@@ -1089,6 +1089,95 @@ describe Rbac::Filterer do
     end
   end
 
+  context ".lookup_user_group" do
+    let(:filter) { described_class.new }
+    let(:user1) { FactoryGirl.create(:user_with_group) }
+    let(:group_list) { FactoryGirl.create_list(:miq_group, 2) }
+    let(:user2) { FactoryGirl.create(:user, :miq_groups => group_list) }
+
+    context "user_group" do
+      it "uses user.current_group" do
+        _, group = filter.send(:lookup_user_group, user1, nil, nil, nil)
+        expect(group).to eq(user1.current_group)
+      end
+
+      it "skips lookup if current_group_id passed" do
+        # ensuring same_group is a different object from user1.current_group
+        same_group = MiqGroup.find_by_id(user1.current_group.id)
+        expect do
+          _, group = filter.send(:lookup_user_group, user1, nil, same_group, nil)
+          expect(group).to eq(same_group)
+        end.to match_query_limit_of(0)
+        expect do
+          _, group = filter.send(:lookup_user_group, user1, nil, nil, user1.current_group.id)
+          expect(group).to eq(same_group)
+        end.to match_query_limit_of(0)
+        expect do
+          _, group = filter.send(:lookup_user_group, user1, nil, nil, user1.current_group.id.to_s)
+          expect(group).to eq(same_group)
+        end.to match_query_limit_of(0)
+      end
+
+      it "skips lookup when group passed in" do
+        # ensure user is looked up outside group block
+        user2.miq_groups.to_a
+        expect do
+          _, group = filter.send(:lookup_user_group, user2, nil, nil, group_list.first.id.to_s)
+          expect(group).to eq(group_list.first)
+        end.to match_query_limit_of(0)
+        expect do
+          _, group = filter.send(:lookup_user_group, user2, nil, nil, group_list.last.id)
+          expect(group).to eq(group_list.last)
+        end.to match_query_limit_of(0)
+        expect do
+          _, group = filter.send(:lookup_user_group, user2, nil, group_list.first, nil)
+          expect(group).to eq(group_list.first)
+        end.to match_query_limit_of(0)
+      end
+
+      it "uses group passed" do
+        _, group = filter.send(:lookup_user_group, user2, nil, group_list.first, nil)
+        expect(group).to eq(group_list.first)
+
+        _, group = filter.send(:lookup_user_group, user2, nil, group_list.last, nil)
+        expect(group).to eq(group_list.last)
+      end
+
+      it "fallsback to current_group if not member of group" do
+        user1_group = user1.current_group
+        _, group = filter.send(:lookup_user_group, user1, nil, FactoryGirl.create(:miq_group), nil)
+        expect(group).to eq(user1_group)
+      end
+
+      it "uses group passed in when not member of group when super admin" do
+        admin = FactoryGirl.create(:user_admin)
+        random_group = FactoryGirl.create(:miq_group)
+        _, group = filter.send(:lookup_user_group, admin, nil, random_group, nil)
+        expect(group).to eq(random_group)
+      end
+
+      it "uses group_id passed in when not member of group when super admin" do
+        admin = FactoryGirl.create(:user_admin)
+        random_group = FactoryGirl.create(:miq_group)
+        _, group = filter.send(:lookup_user_group, admin, nil, nil, random_group.id)
+        expect(group).to eq(random_group)
+      end
+    end
+
+    context "user" do
+      it "uses user passed in" do
+        user, = filter.send(:lookup_user_group, user1, nil, nil, nil)
+        expect(user).to eq(user1)
+      end
+
+      it "uses string user passed in" do
+        user, = filter.send(:lookup_user_group, nil, user1.userid, nil, nil)
+        expect(user).to eq(user1)
+      end
+    end
+  end
+
+
   private
 
   # separate them to match easier for failures
