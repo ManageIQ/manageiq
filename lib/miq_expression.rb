@@ -1664,14 +1664,10 @@ class MiqExpression
       start_val = RelativeDatetime.normalize(value, tz, "beginning", field.date?)
       end_val = RelativeDatetime.normalize(value, tz, "end", field.date?)
 
-      if field.date?
-        if RelativeDatetime.relative?(value)
-          field.between(start_val..end_val)
-        else
-          field.eq(start_val)
-        end
-      else
+      if !field.date? || RelativeDatetime.relative?(value)
         field.between(start_val..end_val)
+      else
+        field.eq(start_val)
       end
     when "from"
       start_val, end_val = exp[operator]["value"]
