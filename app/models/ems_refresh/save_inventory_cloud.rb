@@ -3,6 +3,7 @@
 # - ems
 #   - flavors
 #   - availability_zones
+#   - host_aggregates
 #   - cloud_tenants
 #   - key_pairs
 #   - orchestration_templates
@@ -46,6 +47,7 @@ module EmsRefresh::SaveInventoryCloud
     child_keys = [
       :flavors,
       :availability_zones,
+      :host_aggregates,
       :cloud_tenants,
       :key_pairs,
       :orchestration_templates,
@@ -106,6 +108,21 @@ module EmsRefresh::SaveInventoryCloud
 
     save_inventory_multi(ems.availability_zones, hashes, deletes, [:ems_ref])
     store_ids_for_new_records(ems.availability_zones, hashes, :ems_ref)
+  end
+
+  def save_host_aggregates_inventory(ems, hashes, target = nil)
+    target ||= ems
+
+    ems.host_aggregates.reset
+    deletes = if (target == ems)
+                :use_association
+              else
+                []
+              end
+
+    save_inventory_multi(ems.host_aggregates, hashes, deletes, [:ems_ref])
+    store_ids_for_new_records(ems.host_aggregates, hashes, :ems_ref)
+    # FIXME: what about hosts?
   end
 
   def save_cloud_tenants_inventory(ems, hashes, target = nil)

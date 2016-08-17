@@ -62,6 +62,12 @@ module Metric::Rollup
       :derived_memory_used,
       :net_usage_rate_average,
       :disk_usage_rate_average
+    ],
+    :HostAggregate_vms                    => [
+      :cpu_usage_rate_average,
+      :derived_memory_used,
+      :net_usage_rate_average,
+      :disk_usage_rate_average
     ]
   }
 

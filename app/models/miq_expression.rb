@@ -32,6 +32,7 @@ class MiqExpression
     ExtManagementSystemPerformance
     Flavor
     Host
+    HostAggregate
     HostPerformance
     MiqGroup
     MiqRegion
@@ -102,6 +103,7 @@ class MiqExpression
     guest_devices
     hardwares
     hosts
+    host_aggregates
     host_services
     kernel_drivers
     key_pairs

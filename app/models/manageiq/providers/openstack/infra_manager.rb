@@ -33,6 +33,10 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
     AvailabilityZone.where(:ems_id => provider.try(:cloud_ems).try(:collect, &:id).try(:uniq))
   end
 
+  def host_aggregates
+    HostAggregate.where(:ems_id => provider.try(:cloud_ems).try(:collect, &:id).try(:uniq))
+  end
+
   def ensure_parent_provider
     # TODO(lsmola) this might move to a general management of Providers, but for now, we will ensure, every
     # EmsOpenstackInfra has associated a Provider. This relation will serve for relating EmsOpenstackInfra

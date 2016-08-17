@@ -12,5 +12,6 @@ module MiqAeMethodService
     expose :security_groups,        :association => true
     expose :cloud_resource_quotas,  :association => true
     expose :orchestration_stacks,   :association => true
+    expose :host_aggregates,        :association => true
   end
 end

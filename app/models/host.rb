@@ -93,6 +93,8 @@ class Host < ApplicationRecord
   has_many                  :cloud_services, :dependent => :nullify
   has_many                  :host_cloud_services, :class_name => "CloudService", :foreign_key => "host_id",
                             :inverse_of => :host
+  has_many                  :host_aggregate_hosts, :dependent => :destroy
+  has_many                  :host_aggregates, :through => :host_aggregate_hosts
 
 
   serialize :settings, Hash
