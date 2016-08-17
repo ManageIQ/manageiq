@@ -570,17 +570,17 @@ module QuadiconHelper
     size = options[:size]
     output = []
 
-    img_path = if item.kind_of?(MiqCimInstance)
-                 if item.kind_of?(CimStorageExtent)
-                   "100/cim_base_storage_extent.png"
-                 else
-                   "100/#{item.class.to_s.underscore}.png"
-                 end
-               elsif item.respond_to?(:decorator_class?) && item.decorator_class?
-                 item.decorate.try(:listicon_image)
-               else
-                 "100/#{item.class.base_class.to_s.underscore}.png"
-               end
+    img_path =  if item.kind_of?(MiqCimInstance)
+                  if item.kind_of?(CimStorageExtent)
+                    "100/cim_base_storage_extent.png"
+                  else
+                    "100/#{item.class.to_s.underscore}.png"
+                  end
+                elsif item.respond_to?(:decorator_class?) && item.decorator_class?
+                  item.decorate.try(:listicon_image)
+                else
+                  "100/#{item.class.base_class.to_s.underscore}.png"
+                end
 
     output << flobj_img_simple(size, "#{size}/base-single.png")
     output << flobj_img_simple(size, img_path, "e#{size}")

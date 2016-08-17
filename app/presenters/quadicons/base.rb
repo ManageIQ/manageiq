@@ -78,7 +78,7 @@ module Quadicons
     end
 
     def render_single?
-      false
+      true
     end
 
     def render_full
@@ -94,14 +94,17 @@ module Quadicons
 
     def render_single
       quadicon_tag do
-        render_single_quadrant
+        quadrant_group_tag do
+          render_single_quadrant
+        end
+
         render_label
       end
     end
 
     private
 
-    def default_tag_classes
+    def default_tag_css_classes
       css = ["quadicon", css_class]
 
       if render_single?
@@ -113,14 +116,18 @@ module Quadicons
 
     def default_tag_options
       {
-        :class => default_tag_classes.join(' '),
+        :class => default_tag_css_classes.join(' '),
         :id    => "quadicon_#{record.id}",
         :title => default_title_attr
       }
     end
 
     def default_title_attr
-      "#{record_class}_#{record.id}"
+      if record.decorator_class? && record.decorate.respond_to?(:quadicon_title)
+        record.decorate.quadicon_title
+      else
+        "#{record_class}_#{record.id}"
+      end
     end
 
     def css_class

@@ -3,7 +3,7 @@ module Quadicons
     class Base
       attr_reader :record, :context
 
-      delegate :url_for_record, :to => :context
+      delegate :url_for_record, :url_for, :to => :context
 
       def initialize(record, context)
         @record = record
