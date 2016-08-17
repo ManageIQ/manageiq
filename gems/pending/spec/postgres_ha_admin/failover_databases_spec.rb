@@ -15,6 +15,17 @@ describe PostgresHaAdmin::FailoverDatabases do
     @logger_file.close(true)
   end
 
+  describe "#active_databases_conninfo_hash" do
+    it "returns a list of active databases connection info" do
+      expected = [
+        {:host => '203.0.113.1', :user => 'root', :dbname => 'vmdb_test'},
+        {:host => '203.0.113.2', :user => 'root', :dbname => 'vmdb_test'}
+      ]
+      File.write(@yml_file, initial_db_list.to_yaml)
+      expect(failover_databases.active_databases_conninfo_hash).to contain_exactly(*expected)
+    end
+  end
+
   describe "#active_databases" do
     it "return list of active databases saved in 'config/failover_databases.yml'" do
       File.write(@yml_file, initial_db_list.to_yaml)
