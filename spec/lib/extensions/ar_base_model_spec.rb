@@ -1,26 +1,32 @@
 describe "ar_base_model extension" do
   context "with a test class" do
-    before(:each) { class ::TestClass < ActiveRecord::Base; end }
-    after(:each)  { Object.send(:remove_const, :TestClass) }
+    let(:test_class) do
+      Class.new(ActiveRecord::Base) do
+        def self.name; "TestClass"; end
+      end
+    end
 
     it ".base_model" do
-      expect(TestClass.base_model).to eq(TestClass)
+      expect(test_class.base_model).to eq(test_class)
     end
 
     it ".model_suffix" do
-      expect(TestClass.model_suffix).to eq("")
+      expect(test_class.model_suffix).to eq("")
     end
 
     context "with a subclass" do
-      before(:each) { class ::TestClassFoo < ::TestClass; end }
-      after(:each)  { Object.send(:remove_const, :TestClassFoo) }
+      let(:test_class_foo) do
+        Class.new(test_class) do
+          def self.name; "TestClassFoo"; end
+        end
+      end
 
       it ".base_model" do
-        expect(TestClassFoo.base_model).to eq(TestClass)
+        expect(test_class_foo.base_model).to eq(test_class)
       end
 
       it ".model_suffix" do
-        expect(TestClassFoo.model_suffix).to eq("Foo")
+        expect(test_class_foo.model_suffix).to eq("Foo")
       end
     end
   end

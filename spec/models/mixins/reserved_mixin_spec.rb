@@ -1,19 +1,16 @@
 describe ReservedMixin do
-  before(:each) do
-    class TestClass < ActiveRecord::Base
+  let(:test_class) do
+    Class.new(ActiveRecord::Base) do
+      def self.name; "TestClass"; end
       self.table_name = "vms"
       include ReservedMixin
       reserve_attribute :some_field, :string
     end
   end
 
-  after(:each) do
-    Object.send(:remove_const, :TestClass)
-  end
-
   context ".reserve_attribute" do
     it "normal case" do
-      t = TestClass.new
+      t = test_class.new
       expect(t).to respond_to(:some_field)
       expect(t).to respond_to(:some_field?)
       expect(t).to respond_to(:some_field=)
@@ -28,12 +25,15 @@ describe ReservedMixin do
     end
 
     it "with multiple fields" do
-      class TestClass
-        reserve_attribute :another_field, :string
-        reserve_attribute :a_third_field, :string
+      reserved_attributes = Module.new do
+        def self.included(klass)
+          klass.reserve_attribute :another_field, :string
+          klass.reserve_attribute :a_third_field, :string
+        end
       end
+      test_class.include(reserved_attributes)
 
-      t = TestClass.new
+      t = test_class.new
       expect(t).to respond_to(:another_field)
       expect(t).to respond_to(:another_field?)
       expect(t).to respond_to(:another_field=)
@@ -45,7 +45,7 @@ describe ReservedMixin do
 
   context "#reserved" do
     before(:each) do
-      @t = TestClass.create
+      @t = test_class.create
     end
 
     it "without existing reserved data" do
@@ -62,7 +62,7 @@ describe ReservedMixin do
 
   context "#reserved=" do
     before(:each) do
-      @t = TestClass.create
+      @t = test_class.create
     end
 
     context "to a non-empty Hash" do
@@ -135,7 +135,7 @@ describe ReservedMixin do
 
   context "#reserved_hash_get" do
     before(:each) do
-      @t = TestClass.create
+      @t = test_class.create
     end
 
     it "without existing reserved data" do
@@ -154,7 +154,7 @@ describe ReservedMixin do
 
   context "#reserved_hash_set" do
     before(:each) do
-      @t = TestClass.create
+      @t = test_class.create
     end
 
     context "to a non-nil value" do
@@ -241,7 +241,7 @@ describe ReservedMixin do
 
   context "#reserved_hash_migrate" do
     before(:each) do
-      @t = TestClass.create
+      @t = test_class.create
     end
 
     context "when the reserved key name matches the column name" do
@@ -294,7 +294,7 @@ describe ReservedMixin do
   context "#save" do
     context "will touch the parent record's updated_on" do
       before(:each) do
-        @t = TestClass.create
+        @t = test_class.create
         @last_update = @t.updated_on
       end
 
