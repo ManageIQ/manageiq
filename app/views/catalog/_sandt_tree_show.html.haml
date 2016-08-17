@@ -37,6 +37,12 @@
             = _('Dialog')
           .col-md-8
             = h(@sb[:dialog_label])
+        - if @record.prov_type == "generic"
+          .form-group
+            %label.col-md-2.control-label
+              = _('Subtype')
+            .col-md-8
+              = h(@generic_subtypes[@record[:generic_subtype]])
         - if @record.prov_type == "generic_orchestration"
           .form-group
             %label.col-md-2.control-label
