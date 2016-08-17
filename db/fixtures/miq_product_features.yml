@@ -3547,6 +3547,64 @@
       :feature_type: control
       :identifier: middleware_datasource_tag
 
+# Middleware Domain
+- :name: Middleware Domain
+  :description: Everything under Middleware Domain
+  :feature_type: node
+  :identifier: middleware_domain
+  :children:
+  - :name: View
+    :description: View Middleware Domains
+    :feature_type: view
+    :identifier: middleware_domain_view
+    :children:
+    - :name: List
+      :description: Display Lists of Middleware Domains
+      :feature_type: view
+      :identifier: middleware_domain_show_list
+    - :name: Show
+      :description: Display Individual Middleware Domains
+      :feature_type: view
+      :identifier: middleware_domain_show
+  - :name: Operate
+    :description: Perform Operations on Middleware Domains
+    :feature_type: control
+    :identifier: middleware_domain_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Middleware Domains
+      :feature_type: control
+      :identifier: middleware_domain_tag
+
+# Middleware Server Group
+- :name: Middleware Server Group
+  :description: Everything under Middleware Server Group
+  :feature_type: node
+  :identifier: middleware_server_group
+  :children:
+  - :name: View
+    :description: View Middleware Server Groups
+    :feature_type: view
+    :identifier: middleware_server_group_view
+    :children:
+    - :name: List
+      :description: Display Lists of Middleware Server Groups
+      :feature_type: view
+      :identifier: middleware_server_group_show_list
+    - :name: Show
+      :description: Display Individual Middleware Server Groups
+      :feature_type: view
+      :identifier: middleware_server_group_show
+  - :name: Operate
+    :description: Perform Operations on Middleware Server Groups
+    :feature_type: control
+    :identifier: middleware_server_group_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Middleware Server Groups
+      :feature_type: control
+      :identifier: middleware_server_group_tag
+
 # EmsNetwork
 - :name: Network Providers
   :description: Everything under Network Providers

@@ -2,8 +2,7 @@ module EmsRefresh::SaveInventoryMiddleware
   def save_ems_middleware_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
-    child_keys = [:middleware_domains, :middleware_servers, :middleware_deployments,
-                  :middleware_datasources]
+    child_keys = [:middleware_domains, :middleware_servers, :middleware_deployments, :middleware_datasources]
     # Save and link other subsections
     child_keys.each do |k|
       send("save_#{k}_inventory", ems, hashes[k], target)
