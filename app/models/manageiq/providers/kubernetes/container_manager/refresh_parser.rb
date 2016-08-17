@@ -714,14 +714,21 @@ module ManageIQ::Providers::Kubernetes
     end
 
     def parse_image_name(image, image_ref)
+      # parsing using same logic as in docker
+      # https://github.com/docker/docker/blob/348f6529b71502b561aa493e250fd5be248da0d5/reference/reference.go#L174
       parts = %r{
         \A
-          (?:(?:(?<host>([^\.:/]+\.)+[^\.:/]+)|(?:(?<host2>[^:/]+)(?::(?<port>\d+))))/)?
+          (?:(?:
+            (?<host>([^\.:/]+\.)+[^\.:/]+)|
+            (?:(?<host2>[^:/]+)(?::(?<port>\d+)))|
+            (?<localhost>localhost)
+          )/)?
           (?<name>(?:[^:/@]+/)*[^/:@]+)
           (?:(?::(?<tag>.+))|(?:\@(?<digest>.+)))?
         \z
       }x.match(image)
 
+      hostname = parts[:host] || parts[:host2] || parts[:localhost]
       [
         {
           :name          => parts[:name],
@@ -730,9 +737,9 @@ module ManageIQ::Providers::Kubernetes
           :image_ref     => image_ref,
           :registered_on => Time.now.utc
         },
-        (parts[:host] || parts[:host2]) && {
-          :name => parts[:host] || parts[:host2],
-          :host => parts[:host] || parts[:host2],
+        hostname && {
+          :name => hostname,
+          :host => hostname,
           :port => parts[:port],
         },
       ]
