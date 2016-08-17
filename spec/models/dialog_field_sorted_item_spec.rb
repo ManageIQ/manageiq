@@ -7,9 +7,9 @@ describe DialogFieldSortedItem do
       expect(df.get_default_value).to eq("value1")
     end
 
-    it "returns nil when no default and multiple values are available" do
+    it "returns the first value when no default and multiple values are available" do
       df.values = [%w(value1 text1), %w(value2 text2)]
-      expect(df.get_default_value).to be_nil
+      expect(df.get_default_value).to eq("value1")
     end
   end
 

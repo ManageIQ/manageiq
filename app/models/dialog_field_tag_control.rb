@@ -1,4 +1,8 @@
 class DialogFieldTagControl < DialogFieldSortedItem
+  def initialize_with_values(dialog_values)
+    @value = value_from_dialog_fields(dialog_values) || get_default_value
+  end
+
   def category=(id)
     options[:category_id] = id
   end
