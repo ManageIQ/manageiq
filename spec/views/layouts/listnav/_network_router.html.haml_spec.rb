@@ -1,6 +1,6 @@
-include QuadiconHelper
-
 describe "layouts/listnav/_network_router.html.haml" do
+  helper(QuadiconHelper)
+
   before :each do
     set_controller_for_view("network_router")
     assign(:panels, "ems_prop" => true, "ems_rel" => true)
