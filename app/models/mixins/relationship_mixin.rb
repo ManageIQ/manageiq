@@ -49,7 +49,7 @@ module RelationshipMixin
   def clear_relationships_cache(*args)
     options = args.extract_options!
     to_clear = RelationshipMixin::MEMOIZED_METHODS - Array.wrap(options[:except])
-    flush_cache(*to_clear)
+    flush_cache(*to_clear) unless to_clear.empty?
 
     @association_cache.delete(:all_relationships)
   end
