@@ -44,6 +44,19 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
         expect(spec["annotation"]).to include(@vm_prov.phase_context[:new_vm_validation_guid])
       end
 
+      it "should set spec.vmProfile when given a vm_profile" do
+        storage_profile_id = "2f22be4d-d155-46a3-86f9-fcb0f13f876e"
+
+        @vm_prov.options.merge!(:vm_profile => storage_profile_id)
+        expect(@vm_prov).to receive(:build_config_network_adapters)
+
+        spec = @vm_prov.build_config_spec
+
+        expect(spec.vmProfile.xsiType).to      eq("ArrayOfVirtualMachineProfileSpec")
+        expect(spec.vmProfile[0].xsiType).to   eq("VirtualMachineDefinedProfileSpec")
+        expect(spec.vmProfile[0].profileId).to eq(storage_profile_id)
+      end
+
       it "should return a transform spec" do
         spec = @vm_prov.build_transform_spec
         expect(spec).to be_nil
