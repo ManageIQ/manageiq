@@ -67,7 +67,7 @@ module PostgresHaAdmin
     end
 
     def with_each_standby_connection
-      servers = @failover_db.active_databases
+      servers = @failover_db.active_databases_conninfo_hash
       @logger.info("Standby Database Servers: #{servers}")
       servers.each do |params|
         connection = pg_connection(params)
@@ -82,7 +82,8 @@ module PostgresHaAdmin
 
     def pg_connection(params)
       PG::Connection.open(params)
-    rescue PG::Error
+    rescue PG::Error => e
+      @logger.error("Failed to establish PG connection: #{e.message}")
       nil
     end
 

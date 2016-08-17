@@ -92,7 +92,7 @@ describe PostgresHaAdmin::FailoverMonitor do
 
   def failover_executed
     expect(linux_admin).to receive(:stop)
-    expect(failover_db).to receive(:active_databases).and_return(active_databases_list)
+    expect(failover_db).to receive(:active_databases_conninfo_hash).and_return(active_databases_conninfo)
     expect(failover_db).to receive(:update_failover_yml)
     expect(db_yml).to receive(:update_database_yml)
     expect(linux_admin).to receive(:restart)
@@ -100,7 +100,7 @@ describe PostgresHaAdmin::FailoverMonitor do
 
   def failover_not_executed
     expect(linux_admin).to receive(:stop)
-    expect(failover_db).to receive(:active_databases).and_return(active_databases_list)
+    expect(failover_db).to receive(:active_databases_conninfo_hash).and_return(active_databases_conninfo)
     expect(failover_db).not_to receive(:update_failover_yml)
     expect(db_yml).not_to receive(:update_database_yml)
     expect(linux_admin).not_to receive(:restart)
@@ -111,10 +111,10 @@ describe PostgresHaAdmin::FailoverMonitor do
     stub_const("PostgresHaAdmin::FailoverMonitor::FAILOVER_CHECK_FREQUENCY", 1)
   end
 
-  def active_databases_list
+  def active_databases_conninfo
     arr = []
-    arr << {:type => 'master', :active => true, :host => '203.0.113.1', :user => 'root', :dbname => 'vmdb_test'}
-    arr << {:type => 'standby', :active => true, :host => '203.0.113.2', :user => 'root', :dbname => 'vmdb_test'}
-    arr << {:type => 'standby', :active => true, :host => '203.0.113.3', :user => 'root', :dbname => 'vmdb_test'}
+    arr << {:host => '203.0.113.1', :user => 'root', :dbname => 'vmdb_test'}
+    arr << {:host => '203.0.113.2', :user => 'root', :dbname => 'vmdb_test'}
+    arr << {:host => '203.0.113.3', :user => 'root', :dbname => 'vmdb_test'}
   end
 end
