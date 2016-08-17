@@ -171,7 +171,7 @@ module ApplicationController::MiqRequestMethods
       templates = rbac_filtered_objects(@edit[:template_kls].eligible_for_provisioning).sort_by { |a| a.name.downcase }
       build_vm_grid(templates, @edit[:vm_sortdir], @edit[:vm_sortcol])
     end
-    session[:changed] = false                                 # Turn off the submit button
+    session[:changed] = false # Turn off the submit button
     @edit[:explorer] = true if @explorer
     @in_a_form = true
   end

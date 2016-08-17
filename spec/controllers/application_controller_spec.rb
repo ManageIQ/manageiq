@@ -198,7 +198,10 @@ describe ApplicationController do
     end
 
     it "returns flash message when Provisioning button is pressed from list and selected Image is archived" do
-      template = FactoryGirl.create(:miq_template, :name => "template 1", :vendor => "vmware", :location => "template1.vmtx")
+      template = FactoryGirl.create(:miq_template,
+                                    :name     => "template 1",
+                                    :vendor   => "vmware",
+                                    :location => "template1.vmtx")
       controller.instance_variable_set(:@_params,
                                        :pressed         => "image_miq_request_new",
                                        :miq_grid_checks => template.id.to_s)
