@@ -82,7 +82,8 @@ module PostgresHaAdmin
 
     def pg_connection(params)
       PG::Connection.open(params)
-    rescue PG::Error
+    rescue PG::Error => e
+      @logger.error("Failed to establish PG connection: #{e.message}")
       nil
     end
 
