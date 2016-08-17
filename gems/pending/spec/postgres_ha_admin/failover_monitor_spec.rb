@@ -4,29 +4,27 @@ require 'util/postgres_admin'
 describe PostgresHaAdmin::FailoverMonitor do
   let(:db_yml)      { double('DatabaseYml') }
   let(:failover_db) { double('FailoverDatabases') }
+
   let(:connection) do
     conn = double("PGConnection")
     allow(conn).to receive(:finish)
     conn
   end
+  let(:logger) do
+    logger = double('Logger')
+    allow(logger).to receive_messages(:error => 'any', :info => 'any')
+    logger
+  end
   let(:failover_monitor) do
     expect(PostgresHaAdmin::DatabaseYml).to receive(:new).and_return(db_yml)
     expect(PostgresHaAdmin::FailoverDatabases).to receive(:new).and_return(failover_db)
-    failover_instance = described_class.new(:log_file => @logger_file.path)
+    failover_instance = described_class.new(:logger => logger)
     failover_instance
   end
   let(:linux_admin) do
     linux_adm = double('LinuxAdmin')
     allow(LinuxAdmin::Service).to receive(:new).and_return(linux_adm)
     linux_adm
-  end
-
-  before do
-    @logger_file = Tempfile.new('ha_admin.log')
-  end
-
-  after do
-    @logger_file.close(true)
   end
 
   describe "#initialize" do
@@ -39,7 +37,7 @@ failover_attempts: 20
 
       File.write(ha_admin_yml_file.path, yml_data.to_yaml)
       monitor_with_settings = described_class.new(:ha_admin_yml_file => ha_admin_yml_file.path,
-                                                  :log_file          => @logger_file.path)
+                                                  :logger            => logger)
       ha_admin_yml_file.close(true)
 
       expect(described_class::FAILOVER_ATTEMPTS).not_to eq 20
