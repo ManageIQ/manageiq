@@ -90,8 +90,8 @@ class ApplicationHelper::ToolbarBuilder
     current_item[:hidden] = !any_visible
 
     if bs_children
-      @sep_added = true                                        # Separator has officially been added
-      @sep_needed = true                                       # Need a separator from now on
+      @sep_added = true # Separator has officially been added
+      @sep_needed = true # Need a separator from now on
     end
     current_item
   end
@@ -825,11 +825,6 @@ class ApplicationHelper::ToolbarBuilder
         return false
       else
         return !role_allows?(:feature => id)
-      end
-    when "Vm"
-      case id
-      when "perf_refresh", "perf_reload", "vm_perf_refresh", "vm_perf_reload"
-        return true unless @perf_options[:typ] == "realtime"
       end
     when "OrchestrationTemplate", "OrchestrationTemplateCfn", "OrchestrationTemplateHot", "OrchestrationTemplateAzure", "OrchestrationTemplateVnfd"
       return true unless role_allows?(:feature => id)

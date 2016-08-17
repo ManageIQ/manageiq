@@ -1151,24 +1151,6 @@ describe ApplicationHelper do
           expect(subject).to be_falsey
         end
       end
-
-      ["perf_refresh", "perf_reload", "vm_perf_refresh", "vm_perf_reload"].each do |id|
-        context "and id = #{id}" do
-          before do
-            @id = id
-            @perf_options = {:typ => "realtime"}
-          end
-
-          it "and @perf_options[:typ] != realtime" do
-            @perf_options = {:typ => "Daily"}
-            expect(subject).to be_truthy
-          end
-
-          it "and @perf_options[:typ] = realtime" do
-            expect(subject).to be_falsey
-          end
-        end
-      end
     end # with Vm
 
     context "when with MiqTemplate" do
