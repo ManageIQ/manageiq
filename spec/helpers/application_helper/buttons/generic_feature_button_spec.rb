@@ -47,7 +47,9 @@ describe ApplicationHelper::Button::GenericFeatureButton do
         context "that supports feature #{feature}" do
           before do
             @record = FactoryGirl.create(:service)
-            allow(@record).to receive(:is_available?).with(feature).and_return(true)
+            allow(@record)
+              .to receive("supports_#{feature}?".to_sym)
+              .and_return(true)
           end
 
           it "will not be skipped" do
@@ -66,7 +68,9 @@ describe ApplicationHelper::Button::GenericFeatureButton do
         context "that does not support feature #{feature}" do
           before do
             @record = FactoryGirl.create(:service)
-            allow(@record).to receive(:is_available?).with(feature).and_return(false)
+            allow(@record)
+              .to receive("supports_#{feature}?".to_sym)
+              .and_return(false)
           end
 
           it "will be skipped" do
