@@ -3,27 +3,6 @@ module ManageIQ
     class BaseController
       module Authentication
         #
-        # Action Methods
-        #
-
-        def show_auth
-          requester_type = fetch_and_validate_requester_type
-          auth_token = Environment.user_token_service.generate_token(@auth_user, requester_type)
-          res = {
-            :auth_token => auth_token,
-            :token_ttl  => api_token_mgr.token_get_info(@module, auth_token, :token_ttl),
-            :expires_on => api_token_mgr.token_get_info(@module, auth_token, :expires_on)
-          }
-          render_resource :auth, res
-        end
-
-        def destroy_auth
-          api_token_mgr.invalidate_token(@module, @auth_token)
-
-          render_normal_destroy
-        end
-
-        #
         # REST APIs Authenticator and Redirector
         #
         def require_api_user_or_token
@@ -113,14 +92,6 @@ module ManageIQ
           if missing_feature
             raise AuthenticationError, "Invalid User #{user_obj.userid} specified, User's #{missing_feature} is missing"
           end
-        end
-
-        def fetch_and_validate_requester_type
-          requester_type = params['requester_type']
-          Environment.user_token_service.validate_requester_type(requester_type)
-          requester_type
-        rescue => err
-          raise BadRequestError, err.to_s
         end
 
         private
