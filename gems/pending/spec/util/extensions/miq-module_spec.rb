@@ -22,15 +22,15 @@ describe Module do
 
     it 'will create the class method on that class/module only' do
       expect(test_class).to  respond_to(:default)
-      expect(test_class.new).not_to respond_to(:default)
-      expect(Object).not_to respond_to(:default)
-      expect(Class).not_to  respond_to(:default)
-      expect(Module).not_to respond_to(:default)
-
       expect(test_module).to respond_to(:default)
-      expect(Object).not_to respond_to(:default)
-      expect(Class).not_to  respond_to(:default)
-      expect(Module).not_to respond_to(:default)
+      expect(Object).not_to  respond_to(:default)
+      expect(Class).not_to   respond_to(:default)
+      expect(Module).not_to  respond_to(:default)
+
+      expect(test_class.new).not_to respond_to(:default)
+      expect(Object).not_to         respond_to(:default)
+      expect(Class).not_to          respond_to(:default)
+      expect(Module).not_to         respond_to(:default)
     end
 
     it 'will return the cached value' do
