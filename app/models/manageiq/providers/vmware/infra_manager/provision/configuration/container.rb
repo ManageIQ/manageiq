@@ -2,6 +2,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Cont
   def build_config_spec
     VimHash.new("VirtualMachineConfigSpec") do |vmcs|
       vmcs.annotation = build_vm_notes
+      vmcs.vmProfile  = build_vm_profile
 
       #####################################################################################################
       # Note: VMware currently seems to ignore the CPU/memory limit/reservation settings during a clone
@@ -58,6 +59,17 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Cont
     end
     _log.info "Setting VM annotations to [#{vm_notes}]"
     vm_notes
+  end
+
+  def build_vm_profile
+    vm_profile = get_option(:vm_profile)
+    return nil if vm_profile.nil?
+
+    VimArray.new('ArrayOfVirtualMachineProfileSpec') do |vm_profile_spec_array|
+      vm_profile_spec_array << VimHash.new('VirtualMachineDefinedProfileSpec') do |vm_profile_spec|
+        vm_profile_spec.profileId = vm_profile
+      end
+    end
   end
 
   def set_spec_option(obj, property, key, default_value = nil, modifier = nil, override_value = nil)
