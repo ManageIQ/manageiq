@@ -29,11 +29,14 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
 
   virtual_column :ipaddresses,   :type => :string_set, :uses => {:network_ports => :ipaddresses}
   virtual_column :mac_addresses, :type => :string_set, :uses => :network_ports
-  virtual_column :load_balancer_health_check_state, :type => :string,
+  virtual_column :load_balancer_health_check_state,
+                 :type => :string,
                  :uses => {:load_balancer_pool_members => :load_balancer_health_check_states}
-  virtual_column :load_balancer_health_check_states, :type => :string_set,
+  virtual_column :load_balancer_health_check_states,
+                 :type => :string_set,
                  :uses => {:load_balancer_pool_members => :load_balancer_health_check_states}
-  virtual_column :load_balancer_health_check_states_with_reason, :type => :string_set,
+  virtual_column :load_balancer_health_check_states_with_reason,
+                 :type => :string_set,
                  :uses => {:load_balancer_pool_members => :load_balancer_health_check_states_with_reason}
 
   def load_balancer_health_check_state
