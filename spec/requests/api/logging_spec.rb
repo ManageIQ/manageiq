@@ -1,7 +1,7 @@
 #
 # REST API Logging Tests
 #
-describe ApiController do
+describe "Logging" do
   describe "Successful Requests logging" do
     EXPECTED_LOGGED_PARAMETERS = {
       "API Request"    => nil,
@@ -14,7 +14,7 @@ describe ApiController do
 
     def expect_log_requests(expectations)
       expectations.each do |category, expectation|
-        expect_any_instance_of(ApiController).to receive(:log_request)
+        expect_any_instance_of(ManageIQ::API::ApiController).to receive(:log_request)
           .with(category, expectation ? expectation : kind_of(Hash))
       end
     end

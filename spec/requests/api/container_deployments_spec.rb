@@ -1,4 +1,4 @@
-describe ApiController do
+describe "Container Deployments API" do
   it "supports collect-data with GET" do
     allow_any_instance_of(ContainerDeploymentService).to receive(:cloud_init_template_id).and_return(1)
     api_basic_authorize collection_action_identifier(:container_deployments, :read, :get)

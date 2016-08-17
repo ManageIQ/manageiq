@@ -7,7 +7,7 @@
 # Condition subcollection:
 #   /api/policies/:id/conditions
 #
-describe ApiController do
+describe "Conditions API" do
   let(:condition_guid_list) { Condition.pluck(:guid) }
 
   def create_conditions(count)

@@ -1,7 +1,7 @@
 #
 # Rest API Collections Tests
 #
-describe ApiController do
+describe "Rest API Collections" do
   let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
   let(:miq_server) { FactoryGirl.create(:miq_server, :zone => zone) }
   let(:ems) { FactoryGirl.create(:ext_management_system) }
