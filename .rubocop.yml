@@ -37,11 +37,11 @@ ClassAndModuleCamelCase:
 FileName:
   Exclude:
     - lib/miq_automation_engine/service_models/*.rb
-# LineLength: # Commenting until config loading with inheritence is fixed.
-#   Exclude:
-#     - Gemfile
-#     - gems/pending/Gemfile
-ExtraSpacing:
+Metrics/LineLength:
+  Exclude:
+    - Gemfile
+    - gems/pending/Gemfile
+Style/ExtraSpacing:
   Exclude:
     - Gemfile
     - gems/pending/Gemfile
