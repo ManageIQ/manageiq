@@ -1326,5 +1326,15 @@ describe ReportController do
       expect(MiqReport.last.db_options[:rpt_type]).to eq(chosen_model)
       expect(MiqReport.last.db).to eq(chosen_model)
     end
+
+    it 'allows user to remove columns while editing' do
+      post :x_button, :params => {:pressed => 'miq_report_new'}
+      post :form_field_changed, :params => {:id => 'new', :chosen_model => chosen_model}
+      post :form_field_changed, :params => {:id => 'new', :title => 'test'}
+      post :form_field_changed, :params => {:id => 'new', :name => 'test'}
+      post :form_field_changed, :params => {:button => "right", :available_fields => ["ChargebackVm-cpu_cost"]}
+      resp = post :form_field_changed, :params => {:button => "left", :selected_fields => ["ChargebackVm-cpu_cost"]}
+      expect(resp.error?).to be_falsey
+    end
   end
 end
