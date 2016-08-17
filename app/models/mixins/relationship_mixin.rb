@@ -656,10 +656,6 @@ module RelationshipMixin
     ancestors(*args).reverse.detect(&block)
   end
 
-  # TODO: Replace these or get rid of them
-  alias_method :clear_children_cache, :clear_relationships_cache
-  alias_method :clear_parents_cache,  :clear_relationships_cache
-
   #
   # Diagnostic methods
   #
