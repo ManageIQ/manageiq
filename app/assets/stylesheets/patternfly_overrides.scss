@@ -537,6 +537,9 @@ body#dashboard {
     .form-group {
       margin-bottom: 0 !important;
       border-right: 0;
+      &:last-child {
+        padding-right: 0px
+      }
     }
   }
 }
