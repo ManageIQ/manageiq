@@ -828,8 +828,6 @@ class ApplicationHelper::ToolbarBuilder
       end
     when "Vm"
       case id
-      when "vm_reconfigure"
-        return true unless @record.reconfigurable?
       when "perf_refresh", "perf_reload", "vm_perf_refresh", "vm_perf_reload"
         return true unless @perf_options[:typ] == "realtime"
       end

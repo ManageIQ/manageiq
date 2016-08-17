@@ -1140,22 +1140,6 @@ describe ApplicationHelper do
         stub_user(:features => :all)
       end
 
-      context "and id = vm_reconfigure" do
-        before do
-          @id = "vm_reconfigure"
-          allow(@record).to receive(:reconfigurable?).and_return(true)
-        end
-
-        it "and !@record.reconfigurable?" do
-          allow(@record).to receive(:reconfigurable?).and_return(false)
-          expect(subject).to be_truthy
-        end
-
-        it "and @record.reconfigurable?" do
-          expect(subject).to be_falsey
-        end
-      end
-
       context "and id = common_drift" do
         before do
           @id = "common_drift"

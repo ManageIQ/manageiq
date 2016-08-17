@@ -61,7 +61,8 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           :vm_reconfigure,
           'pficon pficon-edit fa-lg',
           N_('Reconfigure the Memory/CPU of this VM'),
-          N_('Reconfigure this VM')),
+          N_('Reconfigure this VM'),
+          :klass => ApplicationHelper::Button::VmReconfigure),
       ]
     ),
   ])
