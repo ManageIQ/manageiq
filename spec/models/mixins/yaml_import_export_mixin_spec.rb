@@ -1,19 +1,13 @@
 describe YAMLImportExportMixin do
+  let(:test_class) { Class.new { include YAMLImportExportMixin } }
+
   before do
-    class TestClass
-      include YAMLImportExportMixin
-    end
-
     @report1 = FactoryGirl.create(:miq_report, :name => "test_report_1")
-  end
-
-  after do
-    Object.send(:remove_const, "TestClass")
   end
 
   context ".export_to_array" do
     before  { @klass = MiqReport }
-    subject { TestClass.export_to_array(@list, @klass) }
+    subject { test_class.export_to_array(@list, @klass) }
 
     it "invalid class" do
       @list, @klass = [12345], "xxx"
@@ -43,12 +37,12 @@ describe YAMLImportExportMixin do
   end
 
   it ".export_to_yaml" do
-    expect(TestClass).to receive(:export_to_array).once.with([@report1.id], MiqReport)
-    TestClass.export_to_yaml([@report1.id], MiqReport)
+    expect(test_class).to receive(:export_to_array).once.with([@report1.id], MiqReport)
+    test_class.export_to_yaml([@report1.id], MiqReport)
   end
 
   context ".import" do
-    subject { TestClass }
+    subject { test_class }
 
     it "valid YAML file" do
       @fd = StringIO.new("---\na:")
