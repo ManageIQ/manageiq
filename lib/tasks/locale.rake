@@ -139,8 +139,8 @@ namespace :locale do
       $stderr.puts "You need to specify a plugin name: rake locale:plugin:find[plugin_name]"
       exit 1
     end
-    @domain = args[:engine]
-    @engine = "#{@domain.camelize}::Engine".constantize
+    @domain = args[:engine].gsub('::', '_')
+    @engine = "#{args[:engine].camelize}::Engine".constantize
     @engine_root = @engine.root
 
     namespace :gettext do
