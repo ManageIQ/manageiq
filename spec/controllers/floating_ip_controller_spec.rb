@@ -1,6 +1,6 @@
-include CompressedIds
-
 describe FloatingIpController do
+  include CompressedIds
+
   render_views
   before :each do
     stub_user(:features => :all)
