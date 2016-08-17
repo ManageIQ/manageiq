@@ -4,7 +4,7 @@ describe NetworkTopologyService do
   describe "#build_kinds" do
     it "creates the expected number of entity types" do
       expect(network_topology_service.build_kinds.keys).to match_array([
-        :CloudNetwork, :CloudSubnet, :CloudTenant, :FloatingIp, :NetworkManager, :NetworkPort, :NetworkRouter,
+        :CloudNetwork, :CloudSubnet, :CloudTenant, :FloatingIp, :LoadBalancer, :NetworkManager, :NetworkPort, :NetworkRouter,
         :SecurityGroup, :Tag, :Vm])
     end
   end
