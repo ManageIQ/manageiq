@@ -1,6 +1,6 @@
-include JsHelper
-
 describe "miq_ae_tools/_results_xml.html.haml" do
+  helper(JsHelper)
+
   before do
     assign(:sb, :active_tab => "xml")
     assign(:results, "<MiqAeAttribute>MiqAeService \n \"EmsCluster\"</send></MiqAeAttribute>")
