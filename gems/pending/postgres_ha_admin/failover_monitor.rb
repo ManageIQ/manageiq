@@ -12,11 +12,11 @@ module PostgresHaAdmin
     FAILOVER_CHECK_FREQUENCY = 60
     attr_accessor :failover_attempts, :db_check_frequency, :failover_check_frequency
 
-    def initialize(db_yml_file = '/var/www/miq/vmdb/config/database.yml',
-                   failover_yml_file = '/var/www/miq/vmdb/config/failover_databases.yml',
-                   ha_admin_yml_file = '/var/www/miq/vmdb/config/ha_admin.yml',
-                   log_file = '/var/www/miq/vmdb/log/ha_admin.log',
-                   environment = 'production')
+    def initialize(db_yml_file: '/var/www/miq/vmdb/config/database.yml',
+                   failover_yml_file: '/var/www/miq/vmdb/config/failover_databases.yml',
+                   ha_admin_yml_file: '/var/www/miq/vmdb/config/ha_admin.yml',
+                   log_file: '/var/www/miq/vmdb/log/ha_admin.log',
+                   environment: 'production')
       @logger = Logger.new(log_file)
       @logger.level = Logger::INFO
       @database_yml = DatabaseYml.new(db_yml_file, environment)
@@ -31,9 +31,7 @@ module PostgresHaAdmin
       @failover_attempts = ha_admin_yml['failover_attempts'] || FAILOVER_ATTEMPTS
       @db_check_frequency = ha_admin_yml['db_check_frequency'] || DB_CHECK_FREQUENCY
       @failover_check_frequency = ha_admin_yml['failover_check_frequency'] || FAILOVER_CHECK_FREQUENCY
-      @logger.info("FAILOVER_ATTEMPTS=#{@failover_attempts}"\
-                   "DB_CHECK_FREQUENCY=#{@db_check_frequency}"\
-                   "FAILOVER_CHECK_FREQUENCY=#{@failover_check_frequency}")
+      @logger.info("FAILOVER_ATTEMPTS=#{@failover_attempts} DB_CHECK_FREQUENCY=#{@db_check_frequency} FAILOVER_CHECK_FREQUENCY=#{@failover_check_frequency}")
     end
 
     def monitor
