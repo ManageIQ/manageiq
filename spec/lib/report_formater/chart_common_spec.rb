@@ -1,9 +1,7 @@
-include ReportsSpecHelper
-
 # describe ReportFormatter::ChartCommon do
 #
 # We have to operate on the specific class although we are testing the common behavior.
-# Othewise expect_any_instance_of(described_class).to receive(:build_performance_chart_area).once.and_call_original
+# Otherwise expect_any_instance_of(described_class).to receive(:build_performance_chart_area).once.and_call_original
 # leads to with:
 #    SystemStackError:
 #      stack level too deep
@@ -11,6 +9,8 @@ include ReportsSpecHelper
 #    # ./lib/report_formatter/chart_common.rb:57:in `call'
 
 describe ReportFormatter::C3Formatter do
+  include Spec::Support::ReportHelper
+
   before(:each) do
     allow(Charting).to receive(:backend).and_return(:c3)
     allow(Charting).to receive(:format).and_return(:c3)

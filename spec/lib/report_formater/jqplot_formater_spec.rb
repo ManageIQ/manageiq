@@ -1,6 +1,6 @@
-include ReportsSpecHelper
-
 describe ReportFormatter::JqplotFormatter do
+  include Spec::Support::ReportHelper
+
   before(:each) do
     allow(Charting).to receive(:backend).and_return(:jqplot)
     allow(Charting).to receive(:format).and_return(:jqplot)
