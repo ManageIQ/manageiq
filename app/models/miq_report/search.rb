@@ -26,13 +26,18 @@ module MiqReport::Search
     [klass.arel_attribute(col), klass.type_for_attribute(col).type] if db_class.follow_associations(parts)
   end
 
-  def get_cached_page(limit, offset, includes, options)
-    ids          = extras[:target_ids_for_paging]
+  def limited_ids(limit, offset)
+    ids = extras[:target_ids_for_paging]
     if limit.kind_of?(Numeric)
       offset ||= 0
-      ids      = ids[offset..offset + limit - 1]
+      ids[offset...offset + limit]
+    else
+      ids
     end
-    data         = db_class.where(:id => ids).includes(includes).to_a
+  end
+
+  def get_cached_page(ids, includes, includes2, options)
+    data         = db_class.where(:id => ids).includes(includes).includes(includes2).to_a
     targets_hash = data.index_by(&:id) if options[:targets_hash]
     build_table(data, db, options)
     return table, extras[:attrs_for_paging].merge(:paged_read_from_cache => true, :targets_hash => targets_hash)
@@ -63,14 +68,7 @@ module MiqReport::Search
       parent = klass.find(id)
     end
     assoc ||= db_class.base_model.to_s.pluralize.underscore  # Derive association from base model
-    ref = parent.class.reflection_with_virtual(assoc.to_sym)
-    if ref.nil? || parent.class.virtual_reflection?(assoc)
-      # why ID?
-      targets = parent.send(assoc).collect(&:id) # assoc is either a virtual reflection or a method so just call the association and collect the ids
-    else
-      targets = parent.send(assoc).ids
-    end
-    targets
+    parent.send(assoc)
   end
 
   def paged_view_search(options = {})
@@ -81,10 +79,13 @@ module MiqReport::Search
     self.display_filter = options.delete(:display_filter_hash)  if options[:display_filter_hash]
     self.display_filter = options.delete(:display_filter_block) if options[:display_filter_block]
 
-    includes = MiqExpression.merge_includes(get_include_for_find(include), include_for_find)
+    includes1 = get_include_for_find(include)
+    includes = MiqExpression.merge_includes(includes1, include_for_find)
 
     self.extras ||= {}
-    return get_cached_page(limit, offset, includes, options) if self.extras[:target_ids_for_paging] && db_class.column_names.include?('id')
+    if extras[:target_ids_for_paging] && db_class.column_names.include?('id')
+      return get_cached_page(limited_ids(limit, offset), includes1, include_for_find, options)
+    end
 
     order = get_order_info
 
@@ -93,17 +94,10 @@ module MiqReport::Search
 
     if options[:parent]
       targets = get_parent_targets(options[:parent], options[:association] || options[:parent_method])
-      # necessary? is targets = [] or targets.nil?
-      if targets.empty?
-        search_results, attrs = [targets, {:auth_count => 0}]
-      else
-        search_results, attrs = Rbac.search(search_options.merge(:targets => targets))
-      end
     else
-      search_results, attrs = Rbac.search(search_options)
+      targets = db_class
     end
-
-    search_results ||= []
+    search_results, attrs = Rbac.search(search_options.merge(:targets => targets))
 
     if order.nil?
       options[:limit]   = limit
