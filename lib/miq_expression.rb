@@ -452,9 +452,9 @@ class MiqExpression
       col_ruby, = operands2rubyvalue(operator, {"field" => col_name}, context_type)
       val = RelativeDatetime.normalize(exp[operator]["value"], tz, "beginning", col_type == :date)
       clause = if col_type == :date
-                 "val=#{col_ruby}; !val.nil? && val.to_date < #{quote(val, :date)}"
+                 "val=#{col_ruby}; !val.nil? && val.to_date < #{quote(val, col_type)}"
                else
-                 "val=#{col_ruby}; !val.nil? && val.to_time < #{quote(val, :datetime)}"
+                 "val=#{col_ruby}; !val.nil? && val.to_time < #{quote(val, col_type)}"
                end
     when "after"
       col_type = get_col_type(exp[operator]["field"]) if exp[operator]["field"]
@@ -462,9 +462,9 @@ class MiqExpression
       col_ruby, = operands2rubyvalue(operator, {"field" => col_name}, context_type)
       val = RelativeDatetime.normalize(exp[operator]["value"], tz, "end", col_type == :date)
       clause = if col_type == :date
-                 "val=#{col_ruby}; !val.nil? && val.to_date > #{quote(val, :date)}"
+                 "val=#{col_ruby}; !val.nil? && val.to_date > #{quote(val, col_type)}"
                else
-                 "val=#{col_ruby}; !val.nil? && val.to_time > #{quote(val, :datetime)}"
+                 "val=#{col_ruby}; !val.nil? && val.to_time > #{quote(val, col_type)}"
                end
     when "includes all"
       operands = operands2rubyvalue(operator, exp[operator], context_type)
@@ -527,16 +527,16 @@ class MiqExpression
       end_val = RelativeDatetime.normalize(value, tz, "end", col_type == :date)
       if col_type == :date
         if RelativeDatetime.relative?(value)
-          start_val = quote(start_val, :date)
-          end_val   = quote(end_val, :date)
+          start_val = quote(start_val, col_type)
+          end_val   = quote(end_val, col_type)
           clause    = "val=#{col_ruby}; !val.nil? && val.to_date >= #{start_val} && val.to_date <= #{end_val}"
         else
-          value  = quote(start_val, :date)
+          value  = quote(start_val, col_type)
           clause = "val=#{col_ruby}; !val.nil? && val.to_date == #{value}"
         end
       else
-        start_val = quote(start_val, :datetime)
-        end_val   = quote(end_val, :datetime)
+        start_val = quote(start_val, col_type)
+        end_val   = quote(end_val, col_type)
         clause    = "val=#{col_ruby}; !val.nil? && val.to_time >= #{start_val} && val.to_time <= #{end_val}"
       end
     when "from"
@@ -548,13 +548,13 @@ class MiqExpression
       start_val = RelativeDatetime.normalize(start_val, tz, "beginning", col_type == :date)
       end_val = RelativeDatetime.normalize(end_val, tz, "end", col_type == :date)
       if col_type == :date
-        start_val = quote(start_val, :date)
-        end_val   = quote(end_val, :date)
+        start_val = quote(start_val, col_type)
+        end_val   = quote(end_val, col_type)
 
         clause = "val=#{col_ruby}; !val.nil? && val.to_date >= #{start_val} && val.to_date <= #{end_val}"
       else
-        start_val = quote(start_val, :datetime)
-        end_val   = quote(end_val, :datetime)
+        start_val = quote(start_val, col_type)
+        end_val   = quote(end_val, col_type)
 
         clause = "val=#{col_ruby}; !val.nil? && val.to_time >= #{start_val} && val.to_time <= #{end_val}"
       end
