@@ -76,7 +76,7 @@ ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'mi
   var resetButton = function() {
     var resetHtml = '<button name="button" id="reset_enabled_disabled" type="submit" ' +
       'class="btn btn-default disabled" alt={{resetAltText}} title={{resetAltText}} ' +
-      'ng-class="{\'disabled\': angularForm.$pristine}" ng-click="resetClicked()" ' +
+      'ng-class="{ disabled: angularForm.$pristine }" ng-click="resetClicked()" ' +
       'ng-disabled="angularForm.$pristine" ng-hide="newRecord" disabled="disabled">{{resetBtnText}}</button>';
     var compiledReset = $compile(resetHtml)($scope);
 

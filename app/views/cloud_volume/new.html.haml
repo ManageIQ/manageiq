@@ -45,7 +45,7 @@
           - if @volume.id.nil?
             = button_tag("Add",
                          :class        => "btn btn-primary",
-                         "ng-class"    => "{'disabled': angularForm.$invalid}",
+                         "ng-class"    => "{ disabled: angularForm.$invalid}",
                          "ng-disabled" => "angularForm.$invalid",
                          "ng-click"    => "addClicked()")
           - else
@@ -53,12 +53,12 @@
                          :class        => "btn btn-primary",
                          "ng-click"    => "saveClicked()",
                          "ng-disabled" => "angularForm.$pristine || angularForm.$invalid",
-                         "ng-class"    => "{'disabled': angularForm.$pristine || angularForm.$invalid}")
+                         "ng-class"    => "{ disabled: angularForm.$pristine || angularForm.$invalid}")
             = button_tag("Reset",
                          :class        => "btn btn-primary",
                          "ng-click"    => "resetClicked()",
                          "ng-disabled" => "angularForm.$pristine",
-                         "ng-class"    => "{'disabled': angularForm.$pristine}")
+                         "ng-class"    => "{ disabled: angularForm.$pristine}")
           = button_tag("Cancel",
                         :class     => "btn btn-default",
                         "ng-click" => "cancelClicked()")
