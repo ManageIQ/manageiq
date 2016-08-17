@@ -14,7 +14,7 @@ describe "Logging" do
 
     def expect_log_requests(expectations)
       expectations.each do |category, expectation|
-        expect_any_instance_of(ManageIQ::API::ApiController).to receive(:log_request)
+        expect_any_instance_of(ManageIQ::API::BaseController).to receive(:log_request)
           .with(category, expectation ? expectation : kind_of(Hash))
       end
     end
