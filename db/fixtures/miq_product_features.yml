@@ -4660,10 +4660,6 @@
         :description: Reset Instance
         :feature_type: control
         :identifier: instance_reset
-      - :name: Shutdown Guest
-        :description: Shutdown the Guest OS on Instances
-        :feature_type: control
-        :identifier: instance_guest_shutdown
       - :name: Restart Guest
         :description: Restart the Guest OS on Instances
         :feature_type: control
