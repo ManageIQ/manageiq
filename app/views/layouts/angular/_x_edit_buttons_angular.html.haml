@@ -4,7 +4,6 @@
                :alt          => _("Add"),
                :title        => _("Add"),
                "ng-click"    => "disabledClick($event)",
-               :style        => "cursor:not-allowed",
                "ng-show"     => "newRecord && !saveable(angularForm)")
 
   = button_tag(_("Add"),
@@ -19,7 +18,6 @@
                :alt          => _("Save changes"),
                :title        => _("Save changes"),
                "ng-click"    => "disabledClick($event)",
-               :style        => "cursor:not-allowed",
                "ng-show"     => "!newRecord && !saveable(angularForm)")
 
   = button_tag(_("Save"),
@@ -34,7 +32,6 @@
                :alt          => _("Reset changes"),
                :title        => _("Reset changes"),
                "ng-click"    => "disabledClick($event)",
-               :style        => "cursor:not-allowed",
                "ng-show"     => "!newRecord && angularForm.$pristine")
 
   = button_tag(_("Reset"),

@@ -52,7 +52,7 @@ ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'mi
       });
     } else {
       var disabledSaveHtml = '<button name="button" id="save_disabled" type="submit" class="btn btn-primary btn-disabled" ' +
-        'alt={{altText}} title={{altText}} ng-click="disabledClick($event)" style="cursor:not-allowed" ' +
+        'alt={{altText}} title={{altText}} ng-click="disabledClick($event)" ' +
         'ng-show="!newRecord && !saveable(angularForm)">{{btnText}}</button>';
       var compiledDisabledSave = $compile(disabledSaveHtml)($scope);
 

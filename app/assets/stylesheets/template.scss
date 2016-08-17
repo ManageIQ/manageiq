@@ -4,6 +4,8 @@ textarea { width: 98.5%; border: 1px solid #d1d1d1; padding: 7px; line-height: 1
 
 /* begin modified Patternfly code */
 
+.btn.disabled,
+.btn[disabled],
 div.disabled {
   cursor: default;
 }

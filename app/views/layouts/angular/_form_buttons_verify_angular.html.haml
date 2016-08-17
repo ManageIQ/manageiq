@@ -13,7 +13,6 @@
                  :class     => "btn btn-primary btn-xs btn-disabled",
                  :alt       => verify_title_off,
                  :title     => verify_title_off,
-                 :style     => "cursor:not-allowed",
                  "ng-show"  => basic_info_needed ? "!canValidateBasicInfo()" : "!canValidate()",
                  "ng-click" => "disabledClick($event)")
   = button_tag(_("Validate"),

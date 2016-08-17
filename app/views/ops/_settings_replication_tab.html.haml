@@ -184,7 +184,6 @@
       = button_tag(_("Save"),
                    :class     => "btn btn-primary btn-disabled",
                    :alt       => _("Save"),
-                   :style     => "cursor:not-allowed",
                    "ng-click" => "disabledClick($event)",
                    "ng-show"  => "!saveEnabled(angularForm)")
       = button_tag(_("Save"),
@@ -195,7 +194,6 @@
       = button_tag(_("Reset"),
                    :class     => "btn btn-default btn-disabled",
                    :alt       => _("Reset changes"),
-                   :style     => "cursor:not-allowed",
                    "ng-click" => "disabledClick($event)",
                    "ng-show"  => "!saveEnabled(angularForm)")
       = button_tag(_("Reset"),
