@@ -81,6 +81,7 @@ describe DialogFieldSerializer do
 
       before do
         allow(Category).to receive(:find_by).with(:id => "123").and_return(category)
+        allow(dialog_field).to receive(:values).and_return("values")
       end
 
       it "serializes the category name and description" do

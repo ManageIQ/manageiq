@@ -26,6 +26,6 @@ class DialogFieldSerializer < Serializer
       dialog_field.options.merge!(:category_name => category.name, :category_description => category.description)
     end
 
-    included_attributes(dialog_field.attributes).merge(extra_attributes)
+    included_attributes(dialog_field.as_json(:methods => [:type, :values])).merge(extra_attributes)
   end
 end

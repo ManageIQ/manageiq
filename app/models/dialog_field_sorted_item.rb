@@ -1,4 +1,15 @@
 class DialogFieldSortedItem < DialogField
+  AUTOMATE_VALUE_FIELDS = %w(sort_by sort_order data_type default_value required read_only visible).freeze
+
+  def initialize_with_values(dialog_values)
+    if load_values_on_init?
+      raw_values
+      @value = value_from_dialog_fields(dialog_values) || default_value
+    else
+      @raw_values = initial_values
+    end
+  end
+
   def sort_by
     options[:sort_by] || :description
   end
@@ -21,10 +32,6 @@ class DialogFieldSortedItem < DialogField
     options[:sort_order] = value.to_sym
   end
 
-  def raw_values
-    read_attribute(:values).to_miq_a
-  end
-
   # Sort values before sending back
   def values
     values_data = raw_values
@@ -32,12 +39,8 @@ class DialogFieldSortedItem < DialogField
   end
 
   def get_default_value
-    values_data = values
-    if values_data.count == 1
-      values_data.first.first
-    elsif values_data.detect { |v| v.first == default_value }
-      default_value
-    end
+    trigger_automate_value_updates
+    default_value
   end
 
   def script_error_values
@@ -54,7 +57,8 @@ class DialogFieldSortedItem < DialogField
   end
 
   def trigger_automate_value_updates
-    @raw_values = @default_value = nil
+    @default_value = nil if dynamic
+    @raw_values = nil
     raw_values
   end
 
@@ -69,5 +73,19 @@ class DialogFieldSortedItem < DialogField
     data_to_sort = data_to_sort.sort_by { |d| d.send(value_position).send(value_modifier) }
     return data_to_sort.reverse! if sort_order == :descending
     data_to_sort
+  end
+
+  def raw_values
+    @raw_values ||= dynamic ? values_from_automate : self[:values].to_miq_a
+    unless @raw_values.collect { |value_pair| value_pair[0] }.include?(@default_value)
+      @default_value = sort_data(@raw_values).first.first
+    end
+    self.value ||= @default_value
+
+    @raw_values
+  end
+
+  def initial_values
+    [[nil, "<None>"]]
   end
 end
