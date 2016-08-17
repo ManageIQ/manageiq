@@ -43,7 +43,7 @@ class LiveMetric < ActsAsArModel
   end
 
   def self.process_conditions(conditions)
-    parsed_conditions = parse_conditions(conditions)
+    parsed_conditions = parse_conditions(conditions[0])
     processed = {}
     parsed_conditions.each do |condition|
       case condition[:column]
