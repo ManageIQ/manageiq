@@ -2,12 +2,9 @@ require 'postgres_ha_admin/failover_monitor'
 require 'util/postgres_admin'
 
 describe PostgresHaAdmin::FailoverMonitor do
-  let(:db_yml) do
-    yml = double('DatabaseYml')
-    allow(yml).to receive(:pg_params_from_database_yml).and_return(:host => 'host.example.com', :user => 'root')
-    yml
-  end
+  let(:db_yml)      { double('DatabaseYml') }
   let(:failover_db) { double('FailoverDatabases') }
+
   let(:connection) do
     conn = double("PGConnection")
     allow(conn).to receive(:finish)
@@ -36,6 +33,15 @@ describe PostgresHaAdmin::FailoverMonitor do
   end
 
   describe "#monitor" do
+    before do
+      params = {
+        :host     => 'host.example.com',
+        :user     => 'root',
+        :password => 'password'
+      }
+      allow(db_yml).to receive(:pg_params_from_database_yml).and_return(params)
+    end
+
     context "primary database is accessable" do
       before do
         allow(PG::Connection).to receive(:open).and_return(connection)
@@ -87,6 +93,23 @@ describe PostgresHaAdmin::FailoverMonitor do
         expect(failover_db).to receive(:host_is_repmgr_primary?).and_return(true)
         failover_monitor.monitor
       end
+    end
+  end
+
+  describe "#active_servers_conninfo" do
+    it "merges settings from database yml and failover yml" do
+      active_servers_conninfo = [
+        {:host => 'failover_host.example.com'},
+        {:host => 'failover_host2.example.com'}
+      ]
+      expected_conninfo = [
+        {:host => 'failover_host.example.com', :password => 'mypassword'},
+        {:host => 'failover_host2.example.com', :password => 'mypassword'}
+      ]
+      settings_from_db_yml = {:host => 'host.example.com', :password => 'mypassword'}
+      expect(failover_db).to receive(:active_databases_conninfo_hash).and_return(active_servers_conninfo)
+      expect(db_yml).to receive(:pg_params_from_database_yml).and_return(settings_from_db_yml)
+      expect(failover_monitor.active_servers_conninfo).to match_array(expected_conninfo)
     end
   end
 

@@ -50,6 +50,12 @@ module PostgresHaAdmin
       end
     end
 
+    def active_servers_conninfo
+      servers = @failover_db.active_databases_conninfo_hash
+      db_yml_params = @database_yml.pg_params_from_database_yml
+      servers.map! { |info| db_yml_params.merge(info) }
+    end
+
     private
 
     def execute_failover
@@ -57,6 +63,7 @@ module PostgresHaAdmin
         with_each_standby_connection do |connection, params|
           next if PostgresAdmin.database_in_recovery?(connection)
           next unless @failover_db.host_is_repmgr_primary?(params[:host], connection)
+          @logger.info("Failing over to server using conninfo: #{params.reject { |k, _v| k == :password }}")
           @failover_db.update_failover_yml(connection)
           @database_yml.update_database_yml(params)
           return true
@@ -67,9 +74,7 @@ module PostgresHaAdmin
     end
 
     def with_each_standby_connection
-      servers = @failover_db.active_databases_conninfo_hash
-      @logger.info("Standby Database Servers: #{servers}")
-      servers.each do |params|
+      active_servers_conninfo.each do |params|
         connection = pg_connection(params)
         next if connection.nil?
         begin
