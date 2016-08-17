@@ -107,7 +107,7 @@ module VmHelper::TextualSummary
   end
 
   def textual_load_balancer_health_check_state
-    return nil if @record.load_balancer_health_check_states.blank?
+    return nil if @record.try(:load_balancer_health_check_states).blank?
     h = {:label    => _("Load Balancer Status"),
          :value    => @record.load_balancer_health_check_state,
          :title    => @record.load_balancer_health_check_states_with_reason.join("\n"),
@@ -416,6 +416,8 @@ module VmHelper::TextualSummary
   end
 
   def textual_load_balancers
+    return nil if @record.try(:load_balancers).nil?
+
     label = ui_lookup(:tables => "load_balancer")
     num   = @record.number_of(:load_balancers)
     h     = {:label => label, :image => "load_balancer", :value => num}
