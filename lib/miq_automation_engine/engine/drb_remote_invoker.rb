@@ -11,8 +11,12 @@ module MiqAeEngine
     def with_server(inputs, body)
       setup if num_methods == 0
       self.num_methods += 1
+
+      svc = MiqAeMethodService::MiqAeService.new(@workspace)
       svc = MiqAeMethodService::MiqAeService.new(@workspace, inputs, body)
-      svc.preamble = method_preamble(drb_uri, svc.object_id)
+      svc.inputs     = inputs
+      svc.preamble   = method_preamble(drb_uri, svc.object_id, api_token)
+      svc.body       = body
 
       yield [svc.preamble, svc.body, RUBY_METHOD_POSTSCRIPT]
     ensure
@@ -71,10 +75,15 @@ module MiqAeEngine
       1.hour
     end
 
+    def api_token
+      uts = Api::UserTokenService.new
+      uts.generate_token(@workspace.ae_user.userid, "api")
+    end
+
     # code building
 
-    def method_preamble(miq_uri, miq_id)
-      "MIQ_URI = '#{miq_uri}'\nMIQ_ID = #{miq_id}\n" << RUBY_METHOD_PREAMBLE
+    def method_preamble(miq_uri, miq_id, miq_api_token)
+      "MIQ_URI = '#{miq_uri}'\nMIQ_ID = #{miq_id}\nMIQ_API_TOKEN = '#{miq_api_token}'\n" << RUBY_METHOD_PREAMBLE
     end
 
     RUBY_METHOD_PREAMBLE = <<-RUBY.freeze
