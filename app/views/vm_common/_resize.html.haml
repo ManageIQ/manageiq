@@ -45,7 +45,7 @@
                                                                  :id     => @edit[:vm_id],
                                                                  :button => "cancel")}');")
         #buttons_off{:style => "display:#{@changed ? "none" : "display"};"}
-          = button_tag(_("Submit"), :class => "btn btn-primary btn-disabled")
+          = button_tag(_("Submit"), :class => "btn btn-primary disabled")
           = button_tag(_("Cancel"),
                            :class   => 'btn btn-default',
                            :alt     => t = _("Cancel Changes"),

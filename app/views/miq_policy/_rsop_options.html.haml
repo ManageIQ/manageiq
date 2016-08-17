@@ -24,7 +24,7 @@
       :title                 => t)
   #form_buttons_off{:style => session[:changed] ? "display: none;" : ""}
     = button_tag(_("Submit"),
-      :class => "btn btn-primary btn-disabled",
+      :class => "btn btn-primary disabled",
       :title => _("Select a VM to Submit the Simulation Options"))
     - t = _("Reset all Policy Simulation options")
     = link_to(_("Reset"),

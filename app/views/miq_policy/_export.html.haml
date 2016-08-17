@@ -11,7 +11,7 @@
           #buttons
             - if @sb[:conflict]
               = button_tag(_("Commit"),
-                :class => "btn btn-primary btn-disabled",
+                :class => "btn btn-primary disabled",
                 :title => (t = _("Resolve conflicts to import the file")),
                 :alt   => t)
             - else

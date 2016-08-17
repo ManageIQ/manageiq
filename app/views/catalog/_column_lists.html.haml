@@ -16,7 +16,7 @@
       %td.text-center{:width => "40"}
         .btn-group-vertical
           - if @edit[:new][:available_fields].length == 0
-            %button.btn.btn-default.btn-disabled
+            %button.btn.btn-default.disabled
               %i.fa.fa-angle-right.fa-lg
           - else
             - t = _("Move Selected buttons right")
@@ -29,7 +29,7 @@
               %i.fa.fa-angle-right.fa-lg
 
           - if @edit[:new][:fields].length == 0
-            %button.btn.btn-default.btn-disabled
+            %button.btn.btn-default.disabled
               %i.fa.fa-angle-left.fa-lg
           - else
             - t = _("Move Selected buttons left")

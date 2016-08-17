@@ -28,9 +28,9 @@
           - @edit[:buttons].each do |button|
             - case button
             - when :continue, :submit
-              = button_tag(_("Continue"), :class => "btn btn-primary btn-disabled")
+              = button_tag(_("Continue"), :class => "btn btn-primary disabled")
             - when :submit
-              = button_tag(_("Submit"), :class => "btn btn-primary btn-disabled")
+              = button_tag(_("Submit"), :class => "btn btn-primary disabled")
             - when :cancel
               - url = url_for(:action => 'prov_edit', :id => "#{@edit[:req_id] || 'new'}", :button => button)
               = button_tag(_("Cancel"),

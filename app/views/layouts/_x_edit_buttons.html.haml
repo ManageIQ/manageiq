@@ -123,21 +123,21 @@
 
   #buttons_off{:style => session[:changed] ? "display: none;" : ""}
     - if record_id.blank? && multi_record.nil? && submit_button.nil? && continue_button.nil?
-      = button_tag(_("Add"), :class => "btn btn-primary btn-disabled")
+      = button_tag(_("Add"), :class => "btn btn-primary disabled")
     - else
       - if apply_button
-        = button_tag(_("Apply"), :class => "btn btn-primary btn-disabled")
+        = button_tag(_("Apply"), :class => "btn btn-primary disabled")
       - elsif submit_button
-        = button_tag(_("Submit"), :class => "btn btn-primary btn-disabled")
+        = button_tag(_("Submit"), :class => "btn btn-primary disabled")
       - elsif continue_button
-        = button_tag(_("Continue"), :class => "btn btn-primary btn-disabled")
+        = button_tag(_("Continue"), :class => "btn btn-primary disabled")
       - elsif copy_button
-        = button_tag(_("Copy"), :class => "btn btn-primary btn-disabled")
+        = button_tag(_("Copy"), :class => "btn btn-primary disabled")
       - else
-        = button_tag(_("Save"), :class => "btn btn-primary btn-disabled")
+        = button_tag(_("Save"), :class => "btn btn-primary disabled")
 
       - unless no_reset
-        = button_tag(_("Reset"), :class => "btn btn-default btn-disabled")
+        = button_tag(_("Reset"), :class => "btn btn-default disabled")
 
     - if default_button
       = button_tag(_('Default'),
@@ -173,7 +173,7 @@
     - else
       -# export_button
       = button_tag(_("Export"),
-        :class  => "btn btn-primary #{@export_reports.empty? ? "btn-disabled" : ""}",
+        :class  => "btn btn-primary #{@export_reports.empty? ? "disabled" : ""}",
         :type   => "application/txt",
         :id     => "export_button",
         :alt    => _("Download Report to YAML"))

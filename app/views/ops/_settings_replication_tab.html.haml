@@ -182,7 +182,7 @@
 
     .button-group{:align => "right"}
       = button_tag(_("Save"),
-                   :class     => "btn btn-primary btn-disabled",
+                   :class     => "btn btn-primary disabled",
                    :alt       => _("Save"),
                    "ng-click" => "disabledClick($event)",
                    "ng-show"  => "!saveEnabled(angularForm)")
@@ -192,7 +192,7 @@
                    "ng-click" => "saveClicked()",
                    "ng-show"  => "saveEnabled(angularForm)")
       = button_tag(_("Reset"),
-                   :class     => "btn btn-default btn-disabled",
+                   :class     => "btn btn-default disabled",
                    :alt       => _("Reset changes"),
                    "ng-click" => "disabledClick($event)",
                    "ng-show"  => "!saveEnabled(angularForm)")

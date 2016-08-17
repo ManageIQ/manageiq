@@ -7,7 +7,7 @@
   - if mode == "search"
     - if @edit[@expkey][:exp_search_expressions].blank? && report_expressions.blank?
       = button_tag(_("Load..."),
-                   :class => "btn btn-primary btn-disabled pull-left",
+                   :class => "btn btn-primary disabled pull-left",
                    :alt   => t = _("No saved filters or report filters are available to load"),
                    :title => t)
 
@@ -22,7 +22,7 @@
                  :title        => t)
 
     - if @edit[@expkey][:exp_table].flatten.first == "???"
-      = button_tag(_("Apply"), :class => "btn btn-primary btn-disabled")
+      = button_tag(_("Apply"), :class => "btn btn-primary disabled")
     - else
       = link_to(_("Apply"),
                 {:action => "adv_search_button",
@@ -49,7 +49,7 @@
                   "data-method"  => :post,
                   :title         => t)
     - if @edit[@expkey][:exp_table].flatten.first == "???"
-      = button_tag(_("Save..."), :class => "btn btn-primary btn-disabled")
+      = button_tag(_("Save..."), :class => "btn btn-primary disabled")
     - else
       = link_to(_("Save..."),
                 {:action => "adv_search_button",
@@ -60,7 +60,7 @@
                 "data-method" => :post,
                 :title        => t)
     - if @edit[@expkey][:exp_table].flatten.first == "???"
-      = button_tag(_("Reset"), :class => "btn btn-default btn-disabled")
+      = button_tag(_("Reset"), :class => "btn btn-default disabled")
     - else
       = link_to(_("Reset"),
                 {:action => "adv_search_button",
@@ -73,7 +73,7 @@
   - elsif mode == "load"
     - if @edit[@expkey][:exp_chosen_report].nil? && @edit[@expkey][:exp_chosen_search].nil?
       = button_tag(_("Load"),
-                   :class => "btn btn-primary btn-disabled pull-left",
+                   :class => "btn btn-primary disabled pull-left",
                    :alt   => t = _("Choose a saved filter or report filter to load"),
                    :title => t)
     - else

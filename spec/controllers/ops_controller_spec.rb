@@ -324,7 +324,7 @@ describe OpsController do
         expect(response.status).to eq(200)
         expect(response.body).to_not be_empty
         expect(response.body).to include("<div id='buttons_on' style='display: none;'>")
-        expect(response.body).to include("<div id='buttons_off' style=''>\n<button name=\"button\" type=\"submit\" class=\"btn btn-primary btn-disabled\">Apply</button>")
+        expect(response.body).to include("<div id='buttons_off' style=''>\n<button name=\"button\" type=\"submit\" class=\"btn btn-primary disabled\">Apply</button>")
       end
 
       it "Apply button enabled when there are no flash errors" do
@@ -333,7 +333,7 @@ describe OpsController do
         expect(response.status).to eq(200)
         expect(response.body).to_not be_empty
         expect(response.body).to include("<div id='buttons_on' style=''>")
-        expect(response.body).to include("<div id='buttons_off' style='display: none;'>\n<button name=\"button\" type=\"submit\" class=\"btn btn-primary btn-disabled\">Apply</button>")
+        expect(response.body).to include("<div id='buttons_off' style='display: none;'>\n<button name=\"button\" type=\"submit\" class=\"btn btn-primary disabled\">Apply</button>")
       end
     end
   end

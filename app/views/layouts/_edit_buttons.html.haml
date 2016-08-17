@@ -40,13 +40,13 @@
       #buttons_off{:style => "display:#{@changed ? "none" : "display"};"}
         - if record_id.blank?
           = button_tag(_("Add"),
-                       :class   => 'btn btn-default btn-disabled',
+                       :class   => 'btn btn-default disabled',
                        :alt     => t = _("Add"),
                        :title   => t)
         - else
-          = button_tag(_("Save"), :class => "btn btn-primary btn-disabled")
+          = button_tag(_("Save"), :class => "btn btn-primary disabled")
           - unless noreset
-            = button_tag(_("Verify"), :class => "btn btn-primary btn-disabled")
+            = button_tag(_("Verify"), :class => "btn btn-primary disabled")
         = button_tag(_("Cancel"),
                      :class   => 'btn btn-default',
                      :alt     => t = _("Cancel"),

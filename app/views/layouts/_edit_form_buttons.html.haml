@@ -123,11 +123,11 @@
                       :method => :post)
       #buttons_off{:style => "display:#{@changed ? "none" : "display"};"}
         - if continue_button
-          = button_tag(_("Continue"), :class => "btn btn-primary btn-disabled")
+          = button_tag(_("Continue"), :class => "btn btn-primary disabled")
         - else
-          = button_tag(_("Save"), :class => "btn btn-primary btn-disabled")
+          = button_tag(_("Save"), :class => "btn btn-primary disabled")
         - unless noreset
-          = button_tag(_("Reset"), :class => "btn btn-default btn-disabled")
+          = button_tag(_("Reset"), :class => "btn btn-default disabled")
           - if @layout == "report" && @sb[:menu_buttons]
             = button_tag(_("Default"),
                          :class   => 'btn btn-primary',

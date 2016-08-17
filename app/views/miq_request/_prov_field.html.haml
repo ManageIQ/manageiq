@@ -113,7 +113,7 @@
             - fh = wf.get_field(:owner_load_ldap, dialog)
             - if @edit && field_hash[:display] == :edit && fh[:display] == :show && !@edit[:stamp_typ]
               #lookup_button_off{:style => "#{options[field].blank? ? '' : 'display:none'}"}
-                = button_tag(_("Lookup"), :class => "btn btn-default btn-disabled")
+                = button_tag(_("Lookup"), :class => "btn btn-default disabled")
               #lookup_button_on{:style => "#{options[field].blank? ? 'display:none' : ''}"}
                 = button_tag(_('Lookup'),
                              :class   => "btn btn-primary",

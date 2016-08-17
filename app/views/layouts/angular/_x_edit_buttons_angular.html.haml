@@ -1,6 +1,6 @@
 .button-group{"ng-controller" => "buttonGroupController"}
   = button_tag(_("Add"),
-               "class"       => "btn btn-primary btn-disabled",
+               "class"       => "btn btn-primary disabled",
                :alt          => _("Add"),
                :title        => _("Add"),
                "ng-click"    => "disabledClick($event)",
@@ -14,7 +14,7 @@
                "ng-show"     => "newRecord && saveable(angularForm)")
 
   = button_tag(_("Save"),
-               :class        => "btn btn-primary btn-disabled",
+               :class        => "btn btn-primary disabled",
                :alt          => _("Save changes"),
                :title        => _("Save changes"),
                "ng-click"    => "disabledClick($event)",
@@ -28,7 +28,7 @@
                "ng-show"     => "!newRecord && saveable(angularForm)")
 
   = button_tag(_("Reset"),
-               :class        => "btn btn-default btn-disabled",
+               :class        => "btn btn-default disabled",
                :alt          => _("Reset changes"),
                :title        => _("Reset changes"),
                "ng-click"    => "disabledClick($event)",

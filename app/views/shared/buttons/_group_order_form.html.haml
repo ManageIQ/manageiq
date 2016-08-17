@@ -18,7 +18,7 @@
                 :id       => "selected_fields")
             %td{:width => "30", :align => "left", :valign => "middle"}
               - if @edit[:new][:fields].length < 2
-                %button.btn.btn-default.btn-disabled
+                %button.btn.btn-default.disabled
                   %i.fa.fa-angle-up.fa-lg
               - else
                 - t = _("Move selected fields up")
@@ -31,7 +31,7 @@
                                                                              :id     => "seq")}.to_json}
                   %i.fa.fa-angle-up.fa-lg
               - if @edit[:new][:fields].length < 2
-                %button.btn.btn-default.btn-disabled
+                %button.btn.btn-default.disabled
                   %i.fa.fa-angle-down.fa-lg
               - else
                 - t = _("Move selected fields down")

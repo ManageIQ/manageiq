@@ -72,8 +72,8 @@
           miqSelectPickerEvent("state_choice", "#{url}");
     #form_buttons_div.clearfix{:style => "padding-right: 10px"}
       #buttons_off.pull-right
-        = button_tag(_("Apply"), :class => "btn btn-primary btn-disabled")
-        = button_tag(_("Reset"), :class => "btn btn-default btn-disabled")
+        = button_tag(_("Apply"), :class => "btn btn-primary disabled")
+        = button_tag(_("Reset"), :class => "btn btn-default disabled")
         = link_to(_('Default'),
           {:action => "tasks_button", :button => "default"},
           :class                 => "btn btn-default",

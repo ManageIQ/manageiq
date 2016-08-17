@@ -64,7 +64,7 @@
                      :alt          => _("Save"),
                      "ng-click"    => "saveClicked()",
                      "ng-disabled" => "angularForm.$pristine || angularForm.$invalid",
-                     "ng-class"    => "{'btn-disabled': angularForm.$pristine || angularForm.$invalid}")
+                     "ng-class"    => "{'disabled': angularForm.$pristine || angularForm.$invalid}")
         = button_tag(_("Cancel"),
                      :class     => "btn btn-default",
                      :alt          => _("Cancel"),

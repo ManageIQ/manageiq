@@ -51,7 +51,7 @@ ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'mi
         }
       });
     } else {
-      var disabledSaveHtml = '<button name="button" id="save_disabled" type="submit" class="btn btn-primary btn-disabled" ' +
+      var disabledSaveHtml = '<button name="button" id="save_disabled" type="submit" class="btn btn-primary disabled" ' +
         'alt={{altText}} title={{altText}} ng-click="disabledClick($event)" ' +
         'ng-show="!newRecord && !saveable(angularForm)">{{btnText}}</button>';
       var compiledDisabledSave = $compile(disabledSaveHtml)($scope);
@@ -75,8 +75,8 @@ ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'mi
 
   var resetButton = function() {
     var resetHtml = '<button name="button" id="reset_enabled_disabled" type="submit" ' +
-      'class="btn btn-default btn-disabled" alt={{resetAltText}} title={{resetAltText}} ' +
-      'ng-class="{\'btn-disabled\': angularForm.$pristine}" ng-click="resetClicked()" ' +
+      'class="btn btn-default disabled" alt={{resetAltText}} title={{resetAltText}} ' +
+      'ng-class="{\'disabled\': angularForm.$pristine}" ng-click="resetClicked()" ' +
       'ng-disabled="angularForm.$pristine" ng-hide="newRecord" disabled="disabled">{{resetBtnText}}</button>';
     var compiledReset = $compile(resetHtml)($scope);
 

@@ -10,7 +10,7 @@
   - validate = "validateClicked('#{url_for(:action => validate_url, :id => id, :type => valtype, :button => "validate")}')"
 %div{"ng-show" => ng_show, "ng-controller" => "buttonGroupController"}
   = button_tag(_("Validate"),
-                 :class     => "btn btn-primary btn-xs btn-disabled",
+                 :class     => "btn btn-primary btn-xs disabled",
                  :alt       => verify_title_off,
                  :title     => verify_title_off,
                  "ng-show"  => basic_info_needed ? "!canValidateBasicInfo()" : "!canValidate()",

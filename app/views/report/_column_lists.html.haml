@@ -23,7 +23,7 @@
            ['fa-angle-up',   'left',  _("up"),   cond_up]].each do |icon, button, text, condition|
           - t = _("Move selected fields %{where}") % {:where => text}
           - if condition
-            %button.btn.btn-default.btn-disabled{:title => t, :disabled => true}
+            %button.btn.btn-default.disabled{:title => t, :disabled => true}
               %i.fa.fa-lg{:class => icon}
           - else
             %button.btn.btn-default{:title           => t,
@@ -57,7 +57,7 @@
              ['fa-angle-double-down', 'bottom', _("to bottom")]].each do |icon, button, text|
             - t = _("Move selected fields %{where}") % {:where => text}
             - if @edit[:new][:fields].length < 2
-              %button.btn.btn-default.btn-disabled{:title => t, :disabled => true}
+              %button.btn.btn-default.disabled{:title => t, :disabled => true}
                 %i.fa.fa-lg{:class => icon}
             - else
               %button.btn.btn-default{:title           => t,
