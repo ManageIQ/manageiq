@@ -1,5 +1,8 @@
+require_relative "../helpers/controller_spec_helper"
+
 describe EmsNetworkController do
   include CompressedIds
+  include ControllerSpecHelper
 
   render_views
   before :each do
@@ -43,6 +46,51 @@ describe EmsNetworkController do
                                                 :url  => "/ems_network/show/#{@ems.id}"}])
 
           is_expected.to render_template(:partial => "layouts/listnav/_ems_network")
+        end
+
+        it "show associated cloud_networks" do
+          cloud_network = FactoryGirl.create("cloud_network_#{t}".to_sym, :ems_id => @ems.id)
+
+          assert_nested_list(@ems, [cloud_network], 'cloud_networks', 'All Cloud Networks')
+        end
+
+        it "show associated cloud_subnets" do
+          cloud_subnet = FactoryGirl.create("cloud_subnet_#{t}".to_sym, :ems_id => @ems.id)
+
+          assert_nested_list(@ems, [cloud_subnet], 'cloud_subnets', 'All Cloud Subnets')
+        end
+
+        it "show associated network routers" do
+          network_router = FactoryGirl.create("network_router_#{t}".to_sym, :ems_id => @ems.id)
+
+          assert_nested_list(@ems, [network_router], 'network_routers', 'All Network Routers')
+        end
+
+        it "show associated security_groups" do
+          security_group = FactoryGirl.create("security_group_#{t}".to_sym, :ems_id => @ems.id)
+
+          assert_nested_list(@ems, [security_group], 'security_groups', 'All Security Groups')
+        end
+
+        it "show associated floating_ips" do
+          floating_ip = FactoryGirl.create("floating_ip_#{t}".to_sym, :ems_id => @ems.id)
+
+          assert_nested_list(@ems, [floating_ip], 'floating_ips', 'All Floating IPs')
+        end
+
+        it "show associated network_ports" do
+          network_port = FactoryGirl.create("network_port_#{t}".to_sym, :ems_id => @ems.id)
+
+          assert_nested_list(@ems, [network_port], 'network_ports', 'All Network Ports')
+        end
+
+        it "show associated load balancers" do
+          # TODO add more cloud providers as the LBaaS is implemented
+          skip unless %w(amazon).include? t
+
+          load_balancer = FactoryGirl.create("load_balancer_#{t}".to_sym, :ems_id => @ems.id)
+
+          assert_nested_list(@ems, [load_balancer], 'load_balancers', 'All Load Balancers')
         end
       end
 
