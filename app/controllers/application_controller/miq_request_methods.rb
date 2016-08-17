@@ -153,22 +153,28 @@ module ApplicationController::MiqRequestMethods
         @edit[:src_vm_id] = params[:sel_id].to_i
       end
     else                                                        # First time in, build pre-provision screen
-      @layout = "miq_request_vm"
-      @edit = {}
-      @edit[:explorer] = @explorer
-      @edit[:vm_sortdir] ||= "ASC"
-      @edit[:vm_sortcol] ||= "name"
-      @edit[:prov_type] = "VM Provision"
-      @edit[:template_kls] = get_template_kls
-      templates = rbac_filtered_objects(@edit[:template_kls].eligible_for_provisioning).sort_by { |a| a.name.downcase }
-      build_vm_grid(templates, @edit[:vm_sortdir], @edit[:vm_sortcol])
-      session[:changed] = false                                 # Turn off the submit button
-      @edit[:explorer] = true if @explorer
-      @in_a_form = true
+      set_pre_prov_vars
     end
   end
   alias_method :instance_pre_prov, :pre_prov
   alias_method :vm_pre_prov, :pre_prov
+
+  def set_pre_prov_vars
+    @layout = "miq_request_vm"
+    @edit = {}
+    @edit[:explorer] = @explorer
+    @edit[:vm_sortdir] ||= "ASC"
+    @edit[:vm_sortcol] ||= "name"
+    @edit[:prov_type] = "VM Provision"
+    unless %w(image_miq_request_new miq_template_miq_request_new).include?(params[:pressed])
+      @edit[:template_kls] = get_template_kls
+      templates = rbac_filtered_objects(@edit[:template_kls].eligible_for_provisioning).sort_by { |a| a.name.downcase }
+      build_vm_grid(templates, @edit[:vm_sortdir], @edit[:vm_sortcol])
+    end
+    session[:changed] = false                                 # Turn off the submit button
+    @edit[:explorer] = true if @explorer
+    @in_a_form = true
+  end
 
   def get_template_kls
     # when clone/migrate buttons are pressed from a sub list view,

@@ -116,6 +116,14 @@ class ApplicationHelper::Toolbar::TemplateInfrasCenter < ApplicationHelper::Tool
       t,
       :items => [
         button(
+          :miq_template_miq_request_new,
+          'pficon pficon-add-circle-o fa-lg',
+          N_('Select a single Template to Provision VMs'),
+          N_('Provision VMs using selected Template'),
+          :url_parms => "main_div",
+          :enabled   => false,
+          :onwhen    => "1"),
+        button(
           :miq_template_clone,
           'product product-clone fa-lg',
           N_('Clone this Template'),

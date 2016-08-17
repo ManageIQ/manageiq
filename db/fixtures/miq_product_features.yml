@@ -4605,6 +4605,10 @@
         :description: Edit EVM Server Relationship
         :feature_type: admin
         :identifier: image_evm_relationship
+      - :name: Provision Instances from Images
+        :description: Request to Provision Instances from Images
+        :feature_type: admin
+        :identifier: image_miq_request_new
   # Virtual Machines access rules
   - :name: VM Access Rules
     :description: Access Rules for Virtual Machines
@@ -4881,6 +4885,10 @@
       :feature_type: admin
       :identifier: miq_template_admin
       :children:
+      - :name: Provision VMs
+        :description: Request to Provision VMs
+        :feature_type: admin
+        :identifier: miq_template_miq_request_new
       - :name: Clone Templates
         :description: Clone Templates
         :feature_type: admin
