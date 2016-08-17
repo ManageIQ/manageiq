@@ -5299,6 +5299,11 @@ networks:
 - hostname
 - domain
 - ipv6address
+notification_recipients:
+- id
+- notification_id
+- user_id
+- seen
 notification_types:
 - id
 - name
