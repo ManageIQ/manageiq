@@ -108,10 +108,39 @@ describe ApplianceConsole::DatabaseReplicationPrimary do
       expect { subject.initialize_primary_server }.to raise_error(AwesomeSpawn::CommandResultError)
     end
 
-    it "Succeed when REGISTER_CMD succeeds" do
+    it "Adds the schema to the search path when REGISTER_CMD succeeds" do
       expect(Process).to receive(:wait).with(1234)
       stub_const("ApplianceConsole::DatabaseReplicationPrimary::REGISTER_CMD", "pwd")
+      expect(subject).to receive(:add_repmgr_schema_to_search_path).and_return(true)
       expect(subject.initialize_primary_server).to be true
+    end
+  end
+
+  describe "#add_repmgr_schema_to_search_path" do
+    let(:cluster_name) { "test_cluster" }
+    let(:db_user)      { "test_db_user" }
+    let(:schema_name)  { "repmgr_#{cluster_name}" }
+
+    before do
+      subject.cluster_name = cluster_name
+      subject.database_user = db_user
+    end
+
+    it "adds the new schema to the search path" do
+      orig_path = "\"$user\",public"
+      new_path  = "\"$user\",public,#{schema_name}"
+
+      connection = double(SPEC_NAME)
+      expect(PG::Connection).to receive(:new).and_return(connection)
+      expect(connection).to receive(:exec).with("SHOW search_path").and_return([{"search_path" => orig_path}])
+      expect(connection).to receive(:exec).with("ALTER ROLE #{db_user} SET search_path = #{new_path}")
+
+      expect(subject.add_repmgr_schema_to_search_path).to be true
+    end
+
+    it "returns false if the connection fails" do
+      expect(PG::Connection).to receive(:new).and_raise(PG::ConnectionBad)
+      expect(subject.add_repmgr_schema_to_search_path).to be false
     end
   end
 end

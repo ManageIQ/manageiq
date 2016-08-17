@@ -62,10 +62,7 @@ Replication Server Configuration
 
     def generate_cluster_name
       begin
-        pg_conn = PG::Connection.new(:dbname   => database_name,
-                                     :host     => primary_host,
-                                     :user     => database_user,
-                                     :password => database_password)
+        pg_conn = PG::Connection.new(primary_connection_hash)
         primary_region_number =
           pg_conn.exec("SELECT last_value FROM miq_databases_id_seq").first["last_value"].to_i / 1_000_000_000_000
         self.cluster_name = "miq_region_#{primary_region_number}_cluster"
@@ -118,6 +115,15 @@ Replication Server Configuration
 
       Process.wait(pid)
       $CHILD_STATUS.success?
+    end
+
+    def primary_connection_hash
+      {
+        :dbname   => database_name,
+        :host     => primary_host,
+        :user     => database_user,
+        :password => database_password
+      }
     end
   end # class DatabaseReplication < DatabaseConfiguration
 end # module ApplianceConsole
