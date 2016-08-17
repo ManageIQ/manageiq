@@ -56,12 +56,12 @@ module MiddlewareCommonMixin
     end
   end
 
-  def show_middleware_entities(klazz)
+  def show_middleware_entities(klass)
+    @showtype = @display = klass.name.underscore.pluralize
     breadcrumb_title = _("%{name} (All %{title})") % {:name  => @record.name,
-                                                      :title => display_name(klazz.name.underscore)}
-    drop_breadcrumb(:name => breadcrumb_title, :url => show_link(@record, :display => klazz.name.underscore))
-    @view, @pages = get_view(klazz, :parent => @record)
-    @showtype = klazz.name.underscore
+                                                      :title => display_name(@display)}
+    drop_breadcrumb(:name => breadcrumb_title, :url => show_link(@record, :display => @display))
+    @view, @pages = get_view(klass, :parent => @record)
   end
 
   def trigger_mw_operation(operation, mw_item, params = nil)
