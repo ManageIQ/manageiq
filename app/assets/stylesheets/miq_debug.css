@@ -3,7 +3,8 @@
   top: 20px;
   right: 20px;
   left: 66%;
-  bottom: 20px;
   z-index: 10000;
   width: calc(34% - 20px);
+  max-height: calc(100% - 40px);
+  overflow-y: auto;
 }
