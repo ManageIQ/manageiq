@@ -87,8 +87,9 @@ class MiddlewareServerController < ApplicationController
     end
   end
 
+  # Our specialized version of run_operation that renders json responses for js
   def run_operation
-    selected_servers = identify_selected_servers
+    selected_servers = identify_selected_entities
     if selected_servers.nil?
       render :json => {:status => :error, :msg => _("No Servers selected")}
       return
@@ -106,16 +107,7 @@ class MiddlewareServerController < ApplicationController
 
   private ############################
 
-  # Identify the selected servers. When we got the call from the
-  # single server page, we need to look at :id, otherwise from
-  # the list of servers we need to query :miq_grid_checks
-  def identify_selected_servers
-    items = params[:miq_grid_checks]
-    return items unless items.nil? || items.empty?
-
-    params[:id]
-  end
-
+  # Run operations returning json response for js
   def run_server_param_operation(operation_info, mw_servers)
     operation_triggered = false
     mw_servers.split(/,/).each do |mw_server|
@@ -125,24 +117,13 @@ class MiddlewareServerController < ApplicationController
         skip_message = _("Not #{operation_info.fetch(:hawk)} the provider")
         render :json => {:status => :ok, :msg => skip_message}
       else
-        operation_triggered = trigger_param_operation(operation_info, mw_server, :param)
+        operation_triggered = run_operation_on_record(operation_info, mw_server)
       end
       if operation_triggered
         initiated_msg = _("#{operation_info.fetch(:msg)} initiated for selected server(s)")
         render :json => {:status => :ok, :msg => initiated_msg}
       end
     end
-  end
-
-  def trigger_param_operation(operation_info, mw_server, op_param)
-    if operation_info.key? op_param
-      name = operation_info.fetch(op_param) # which currently evaluates to :timeout
-      val = params["timeout"]
-      trigger_mw_operation operation_info.fetch(:op), mw_server, name => val
-    else
-      trigger_mw_operation operation_info.fetch(:op), mw_server
-    end
-    true
   end
 
   def run_server_operation(operation_info, items)
@@ -169,16 +150,5 @@ class MiddlewareServerController < ApplicationController
       end
     end
     add_flash(_("#{operation_info.fetch(:msg)} initiated for selected server(s)")) if operation_triggered
-  end
-
-  def trigger_mw_operation(operation, mw_server, params = nil)
-    mw_manager = mw_server.ext_management_system
-
-    op = mw_manager.public_method operation
-    if params
-      op.call(mw_server.ems_ref, params)
-    else
-      op.call mw_server.ems_ref
-    end
   end
 end

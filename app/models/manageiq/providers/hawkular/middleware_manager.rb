@@ -198,12 +198,12 @@ module ManageIQ::Providers
     end
 
     def shutdown_middleware_server(ems_ref, _params)
-      timeout = 10 # we default to 10s until we get the UI params. params.fetch ':timeout'
+      timeout = params['timeout'] || 10
       run_generic_operation(:Shutdown, ems_ref, :restart => false, :timeout => timeout)
     end
 
     def suspend_middleware_server(ems_ref, params)
-      timeout = params[':timeout'] || 0
+      timeout = params['timeout'] || 0
       run_generic_operation(:Suspend, ems_ref, :timeout => timeout)
     end
 
