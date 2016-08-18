@@ -25,7 +25,9 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           'fa fa-eyedropper fa-lg',
           N_('Extract Running Processes for this VM'),
           N_('Extract Running Processes'),
-          :confirm => N_("Extract Running Processes for this VM?")),
+          :confirm => N_("Extract Running Processes for this VM?"),
+          :klass => ApplicationHelper::Button::GenericFeatureButtonWithDisable,
+          :options => {:feature => :collect_running_processes}),
         separator,
         button(
           :vm_edit,
@@ -74,12 +76,14 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           :vm_protect,
           'pficon pficon-edit fa-lg',
           N_('Manage Policies for this VM'),
-          N_('Manage Policies')),
+          N_('Manage Policies'),
+          :klass => ApplicationHelper::Button::VmPolicy),
         button(
           :vm_policy_sim,
           'fa fa-play-circle-o fa-lg',
           N_('View Policy Simulation for this VM'),
-          N_('Policy Simulation')),
+          N_('Policy Simulation'),
+          :klass => ApplicationHelper::Button::VmPolicy),
         button(
           :vm_tag,
           'pficon pficon-edit fa-lg',
