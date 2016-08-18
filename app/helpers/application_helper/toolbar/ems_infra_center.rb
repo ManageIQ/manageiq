@@ -94,7 +94,8 @@ class ApplicationHelper::Toolbar::EmsInfraCenter < ApplicationHelper::Toolbar::B
           'fa fa-search fa-lg',
           N_('Re-check Authentication Status for this Infrastructure Provider'),
           N_('Re-check Authentication Status'),
-          :klass => ApplicationHelper::Button::EmsInfraRecheckAuthStatus),
+          :klass => ApplicationHelper::Button::GenericFeatureButton,
+          :options => {:feature => :authentication_status}),
       ]
     ),
   ])
