@@ -613,6 +613,12 @@ describe VirtualFields do
         TestClass.virtual_delegate :col1, :prefix => 'parent', :to => :ref1
         expect(TestClass.virtual_attribute_names).to include("parent_col1")
       end
+
+      it "defines with a new name" do
+        TestClass.virtual_delegate :col1, :name => 'funky_name', :to => :ref1
+        tc = TestClass.new(:id => 2, :ref1 => parent)
+        expect(tc.funky_name).to eq(4)
+      end
     end
   end
 
