@@ -1482,13 +1482,7 @@ function miqToolbarOnClick(_e) {
     }
   }
 
-  var collect_log_buttons = [
-    'server_collect_logs_choice__collect_logs',
-    'server_collect_logs_choice__collect_current_logs',
-    'zone_collect_logs_choice__zone_collect_logs',
-    'zone_collect_logs_choice__zone_collect_current_logs'
-  ];
-  if (jQuery.inArray(button.attr('name'), collect_log_buttons) >= 0 && button.data('prompt')) {
+  if (button.data('prompt')) {
     tb_url = miqSupportCasePrompt(tb_url);
     if (!tb_url) {
       return false;
