@@ -108,8 +108,9 @@ module VirtualDelegates
       define_virtual_attribute method_name, type, :uses => (options[:uses] || to), :arel => arel
     end
 
-    def define_delegate(method_name, method, to: nil, allow_nil: nil)
-      location = caller_locations(1, 1).first
+    # see activesupport module/delegation.rb
+    def define_delegate(method_name, method, to: nil, allow_nil: nil, default: nil)
+      location = caller_locations(2, 1).first
       file, line = location.path, location.lineno
 
       # Attribute writer methods only accept one argument. Makes sure []=
