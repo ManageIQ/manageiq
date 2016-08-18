@@ -53,7 +53,9 @@
                        "ng-switch-when"              => name,
                        "required"                    => "",
                        "checkchange"                 => "",
-                       "selectpicker-for-select-tag" => "")
+                       "selectpicker-for-select-tag" => "",
+                       "prefix"                      => "default",
+                       "reset-validation-status"     => "default_auth_status")
 
     .form-group{"ng-class" => "{'has-error': angularForm.project.$invalid}", "ng-if" => "emsCommonModel.emstype == 'gce'"}
       %label.col-md-2.control-label{"for" => "ems_project"}

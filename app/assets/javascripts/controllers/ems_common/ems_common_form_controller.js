@@ -392,7 +392,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         default_verify:            default_verify,
         realm:                     $scope.emsCommonModel.realm,
         azure_tenant_id:           $scope.emsCommonModel.azure_tenant_id,
-        subscription:              $scope.emsCommonModel.subscription
+        subscription:              $scope.emsCommonModel.subscription,
+        provider_region:           $scope.emsCommonModel.provider_region
       };
     } else if (prefix === "amqp") {
       if ($scope.newRecord) {
