@@ -97,6 +97,8 @@
       :post:
       - :name: create
         :identifier: blueprint_new
+      - :name: edit
+        :identifier: blueprint_edit
       - :name: delete
         :identifier: blueprint_delete
       :delete:
@@ -107,6 +109,8 @@
       - :name: read
         :identifier: blueprint_show
       :post:
+      - :name: edit
+        :identifier: blueprint_edit
       - :name: delete
         :identifier: blueprint_delete
       :delete:

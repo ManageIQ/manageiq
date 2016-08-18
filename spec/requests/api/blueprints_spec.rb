@@ -202,6 +202,41 @@ RSpec.describe "Blueprints API" do
   end
 
   describe "POST /api/blueprints" do
+    it "can update attributes of multiple blueprints with an appropirate role" do
+      blueprint1 = FactoryGirl.create(:blueprint, :name => "foo")
+      blueprint2 = FactoryGirl.create(:blueprint, :name => "bar")
+      api_basic_authorize collection_action_identifier(:blueprints, :edit)
+
+      run_post(blueprints_url, :action => "edit", :resources => [{:id => blueprint1.id, :name => "baz"},
+                                                                 {:id => blueprint2.id, :name => "qux"}])
+
+      expected = {
+        "results" => a_collection_containing_exactly(
+          a_hash_including(
+            "id"   => blueprint1.id,
+            "name" => "baz"
+          ),
+          a_hash_including(
+            "id"   => blueprint2.id,
+            "name" => "qux"
+          )
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "forbids the updating of multiple blueprints without an appropriate role" do
+      blueprint1 = FactoryGirl.create(:blueprint, :name => "foo")
+      blueprint2 = FactoryGirl.create(:blueprint, :name => "bar")
+      api_basic_authorize
+
+      run_post(blueprints_url, :action => "edit", :resources => [{:id => blueprint1.id, :name => "baz"},
+                                                                 {:id => blueprint2.id, :name => "qux"}])
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
     it "can delete multiple blueprints" do
       blueprint1, blueprint2 = FactoryGirl.create_list(:blueprint, 2)
       api_basic_authorize collection_action_identifier(:blueprints, :delete)
@@ -222,6 +257,46 @@ RSpec.describe "Blueprints API" do
   end
 
   describe "POST /api/blueprints/:id" do
+    it "can update a blueprint's bundle with an appropriate role" do
+      blueprint = FactoryGirl.create(:blueprint)
+
+      original_service_template = FactoryGirl.create(:service_template)
+      original_service_dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field)
+      original_service_catalog = FactoryGirl.create(:service_template_catalog)
+      blueprint.create_bundle(:service_templates => [original_service_template],
+                              :service_dialog    => original_service_dialog,
+                              :service_catalog   => original_service_catalog)
+      new_service_template = FactoryGirl.create(:service_template)
+      new_service_dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field)
+      new_service_catalog = FactoryGirl.create(:service_template_catalog)
+
+      api_basic_authorize action_identifier(:blueprints, :edit)
+
+      run_post(
+        blueprints_url(blueprint.id),
+        :action   => "edit",
+        :resource => {
+          :bundle => {
+            :service_templates    => [{:id => new_service_template.id}],
+            :service_dialog       => {:id => new_service_dialog.id},
+            :service_catalog      => {:id => new_service_catalog.id},
+            :automate_entrypoints => {"Provision" => "a/b/c", "Reconfigure" => "x/y/z"}
+          }
+        }
+      )
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "forbids the updating of blueprints without an appropriate role" do
+      blueprint = FactoryGirl.create(:blueprint, :name => "foo", :description => "bar")
+      api_basic_authorize
+
+      run_post(blueprints_url(blueprint.id), :action => "edit", :resource => {:name => "baz", :description => "qux"})
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
     it "can delete a blueprint with an appropriate role" do
       blueprint = FactoryGirl.create(:blueprint)
       api_basic_authorize action_identifier(:blueprints, :delete)
