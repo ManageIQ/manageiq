@@ -582,7 +582,6 @@ module ApplicationHelper
   def javascript_pf_toolbar_reload(div_id, toolbar)
     "sendDataWithRx({redrawToolbar: #{toolbar_from_hash.to_json}});"
   end
-  ############# End of methods that generate JS lines for render page blocks
 
   def set_edit_timer_from_schedule(schedule)
     @edit[:new][:timer] ||= ReportHelper::Timer.new

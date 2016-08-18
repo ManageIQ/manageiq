@@ -486,9 +486,8 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    node_builder = TreeBuilderAeClass.select_node_builder(controller_name, @sb[:action])
-    tree = TreeBuilderAeClass.new(name, type, @sb, true, :node_builder => node_builder)
-    @automate_tree = tree.locals_for_render[:bs_tree] if name == :automate_tree
+    tree = TreeBuilderAeClass.new(name, type, @sb)
+    @automate_tree = TreeBuilderAeClass.new(name, type, @sb) if name == :automate_tree
     tree
   end
 

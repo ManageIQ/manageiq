@@ -20,6 +20,7 @@
           = _("Select Entry Point %{entry_point}") % {:entry_point => entry_point}
 
       .modal-body
+<<<<<<< 0a518f30ad327797c79ef829e9be767a24799af2
         #automate_treebox
         = render(:partial => "layouts/tree",
                  :locals => {:tree_id             => "automate_treebox",
@@ -27,6 +28,9 @@
                              :bs_tree             => @automate_tree,
                              :onclick             => "miqOnClickSelectAETreeNode",
                              :autoload            => true})
+=======
+        = render(:partial => 'shared/tree', :locals => {:tree => @automate_tree, :name => @automate_tree.name})
+>>>>>>> Convert Automate tree to use shared/tree
       .modal-footer
         %div{:id => "include_domain_prefix_div"}
           %input#include_domain_prefix_chk{:onchange  => "miqOnClickIncludeDomainPrefix()",
