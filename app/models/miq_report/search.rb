@@ -3,13 +3,7 @@ module MiqReport::Search
 
   module ClassMethods
     def get_limit_offset(page, per_page)
-      limit  = nil
-      offset = nil
-      unless per_page.nil?
-        offset = (page - 1) * per_page
-        limit  = per_page
-      end
-      return limit, offset
+      [per_page, (page - 1) * per_page] if per_page
     end
   end
 
@@ -43,6 +37,9 @@ module MiqReport::Search
     return table, extras[:attrs_for_paging].merge(:paged_read_from_cache => true, :targets_hash => targets_hash)
   end
 
+  # @return [Nil] for sorting in ruby
+  # @return [Array<>] (empty array) for no sorting
+  # @return [Array<Arel::Nodes>] for sorting in sql
   def get_order_info
     return [] if sortby.nil? # apply limits (note: without order it is non-deterministic)
     # Convert sort cols from sub-tables from the form of assoc_name.column to arel
