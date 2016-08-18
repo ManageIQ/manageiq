@@ -298,6 +298,7 @@
           :values_from:
             :method: :allowed_guest_access_key_pairs
           :description: Guest Access Key Pair
+          :auto_select_single: false
           :required: false
           :display: :edit
           :data_type: :integer
