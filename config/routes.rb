@@ -2739,6 +2739,10 @@ Vmdb::Application.routes.draw do
     "manage_i_q/a_p_i/base##{API_ACTIONS[verb]}"
   end
 
+  def action_for_collection(collection_name, verb)
+    "manage_i_q/a_p_i/#{collection_name}##{API_ACTIONS[verb]}"
+  end
+
   def create_api_route(verb, url, action)
     public_send(verb, url, :to => action, :format => "json", :version => API_VERSION_REGEX)
   end
@@ -2746,7 +2750,7 @@ Vmdb::Application.routes.draw do
   ManageIQ::API::Settings.collections.each do |collection_name, collection|
     collection.verbs.each do |verb|
       if collection.options.include?(:primary)
-        create_api_route(verb, "/api(/:version)/#{collection_name}", action_for(verb))
+        create_api_route(verb, "/api(/:version)/#{collection_name}", action_for_collection(collection_name, verb))
       end
 
       next unless collection.options.include?(:collection)
