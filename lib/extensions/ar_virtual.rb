@@ -77,7 +77,7 @@ module VirtualDelegates
         method_prefix = virtual_delegate_name_prefix(options[:prefix], options[:to])
         method_name = "#{method_prefix}#{method}"
 
-        define_delegate(method, to: to, prefix: options[:prefix], allow_nil: options[:allow_nil])
+        define_delegate(method_name, method, to: to, allow_nil: options[:allow_nil])
 
         self.virtual_delegates_to_define =
           virtual_delegates_to_define.merge(method_name => [method, options])
@@ -108,21 +108,10 @@ module VirtualDelegates
       define_virtual_attribute method_name, type, :uses => (options[:uses] || to), :arel => arel
     end
 
-    def define_delegate(method, to: nil, prefix: nil, allow_nil: nil)
+    def define_delegate(method_name, method, to: nil, allow_nil: nil)
       unless to
         raise ArgumentError, 'Delegation needs a target. Supply an options hash with a :to key as the last argument (e.g. delegate :hello, to: :greeter).'
       end
-
-      if prefix == true && to =~ /^[^a-z_]/
-        raise ArgumentError, 'Can only automatically set the delegation prefix when delegating to a method.'
-      end
-
-      method_prefix = \
-        if prefix
-          "#{prefix == true ? to : prefix}_"
-        else
-          ''
-        end
 
       location = caller_locations(1, 1).first
       file, line = location.path, location.lineno
@@ -143,7 +132,7 @@ module VirtualDelegates
       # be doing one call.
       if allow_nil
         method_def = [
-          "def #{method_prefix}#{method}(#{definition})",
+          "def #{method_name}(#{definition})",
           "_ = #{to}",
           "if !_.nil? || nil.respond_to?(:#{method})",
           "  _.#{method}(#{definition})",
@@ -151,10 +140,10 @@ module VirtualDelegates
         "end"
         ].join ';'
       else
-        exception = %(raise DelegationError, "#{self}##{method_prefix}#{method} delegated to #{to}.#{method}, but #{to} is nil: \#{self.inspect}")
+        exception = %(raise DelegationError, "#{self}##{method_name} delegated to #{to}.#{method}, but #{to} is nil: \#{self.inspect}")
 
         method_def = [
-          "def #{method_prefix}#{method}(#{definition})",
+          "def #{method_name}(#{definition})",
           " _ = #{to}",
           "  _.#{method}(#{definition})",
           "rescue NoMethodError => e",
