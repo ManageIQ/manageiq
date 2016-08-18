@@ -9,7 +9,7 @@ class ApplicationHelper::Button::GenericFeatureButtonWithDisable < ApplicationHe
     begin
       begin
         @error_message = @record.try(:unsupported_reason, @feature)
-      rescue NoMethodError
+      rescue NoMethodError # TODO: remove with deleting AvailabilityMixin module
         @error_message = @record.try(:is_available_now_error_message, @feature) if @error_message.nil?
       end
     rescue
