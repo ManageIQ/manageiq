@@ -34,6 +34,10 @@ describe Blueprint do
     FactoryGirl.create(:service_template, :name => 'Service Template Bundle', :display => true, :blueprint => subject)
   end
 
+  it 'is taggable' do
+    expect(subject).to respond_to(:tag_with)
+  end
+
   context 'blueprint with a bundle' do
     before do
       subject.update_attributes(:status => 'published')
