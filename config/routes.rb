@@ -1594,6 +1594,38 @@ Vmdb::Application.routes.draw do
                save_post
     },
 
+    :infra_networking         => {
+      :get  => %w(
+        download_data
+        explorer
+        hosts
+        index
+        show
+        show_list
+        tagging_edit
+        x_show
+      ),
+      :post => %w(
+        button
+        explorer
+        hosts
+        listnav_search_selected
+        panel_control
+        quick_search
+        show
+        show_list
+        tag_edit_form_field_changed
+        tagging_edit
+        tree_select
+        tree_autoload_dynatree
+        x_show
+        x_search_by_name
+      ) +
+        adv_search_post +
+        exp_post +
+        save_post
+    },
+
     :miq_ae_class             => {
       :get  => %w(
         explorer

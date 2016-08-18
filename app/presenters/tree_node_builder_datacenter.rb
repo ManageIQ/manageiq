@@ -7,6 +7,7 @@ class TreeNodeBuilderDatacenter < TreeNodeBuilder
     when ResourcePool then "Resource Pool"
     when Datacenter   then "Datacenter"
     when Vm           then "VM"
+    when Switch       then "Switch"
     else                   ""
     end
   end

@@ -77,6 +77,48 @@
       :feature_type: node
       :identifier: images_filter_accord
 
+# Infrastructure Networks
+- :name: Networking
+  :description: Everything under Networking
+  :feature_type: node
+  :identifier: infra_networking
+  :children:
+  - :name: View
+    :description: View Networking Elements
+    :feature_type: view
+    :identifier: infra_networking_view
+    :children:
+    - :name: List
+      :description: Display Lists of Networking Elements
+      :feature_type: view
+      :identifier: infra_networking_show_list
+    - :name: Show
+      :description: Display Individual Networking Elements
+      :feature_type: view
+      :identifier: infra_networking_show
+  - :name: Modify
+    :description: Modify Networking Element
+    :feature_type: admin
+    :identifier: infra_networking_admin
+    :children:
+    - :name: Remove
+      :description: Remove Networks
+      :feature_type: admin
+      :identifier: infra_networking_delete
+    - :name: Edit
+      :description: Edit Network
+      :feature_type: admin
+      :identifier: infra_networking_edit
+  - :name: Operate
+    :description: Perform Operations on Networking Elements
+    :feature_type: control
+    :identifier: infra_networking_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags for Networking Elements
+      :feature_type: control
+      :identifier: infra_networking_tag
+
 # MiqRequest
 - :name: Requests
   :description: Everything under Requests
