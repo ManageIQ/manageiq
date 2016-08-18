@@ -619,6 +619,24 @@ describe VirtualFields do
         tc = TestClass.new(:id => 2, :ref1 => parent)
         expect(tc.funky_name).to eq(4)
       end
+
+      it "defaults for to nil child (array)" do
+        TestClass.virtual_delegate :col1, :prefix => 'parent', :to => :ref1, :allow_nil => true, :default => []
+        tc = TestClass.new(:id => 2)
+        expect(tc.parent_col1).to eq([])
+      end
+
+      it "defaults for to nil child (integer)" do
+        TestClass.virtual_delegate :col1, :prefix => 'parent', :to => :ref1, :allow_nil => true, :default => 0
+        tc = TestClass.new(:id => 2)
+        expect(tc.parent_col1).to eq(0)
+      end
+
+      it "defaults for to nil child (string)" do
+        TestClass.virtual_delegate :col1, :prefix => 'parent', :to => :ref1, :allow_nil => true, :default => "def"
+        tc = TestClass.new(:id => 2)
+        expect(tc.parent_col1).to eq("def")
+      end
     end
   end
 

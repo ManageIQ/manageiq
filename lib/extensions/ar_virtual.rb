@@ -75,13 +75,16 @@ module VirtualDelegates
         raise ArgumentError, 'Delegation only supports :name option only when defining a single virtual method'
       end
 
+      allow_nil = options[:allow_nil]
+      default = options[:default]
+
       # put method entry per method name.
       # This better supports reloading of the class and changing the definitions
       methods.each do |method|
         method_prefix = virtual_delegate_name_prefix(options[:prefix], options[:to])
         method_name = options[:name] || "#{method_prefix}#{method}"
 
-        define_delegate(method_name, method, to: to, allow_nil: options[:allow_nil])
+        define_delegate(method_name, method, to: to, allow_nil: options[:allow_nil], default: default)
 
         self.virtual_delegates_to_define =
           virtual_delegates_to_define.merge(method_name => [method, options])
@@ -120,7 +123,7 @@ module VirtualDelegates
       # Attribute writer methods only accept one argument. Makes sure []=
       # methods still accept two arguments.
       definition = (method =~ /[^\]]=$/) ? 'arg' : '*args, &block'
-
+      default = default ? " || #{default.inspect}" : nil
       # The following generated method calls the target exactly once, storing
       # the returned value in a dummy variable.
       #
@@ -134,7 +137,7 @@ module VirtualDelegates
           "_ = #{to}",
           "if !_.nil? || nil.respond_to?(:#{method})",
           "  _.#{method}(#{definition})",
-          "end",
+          "end#{default}",
         "end"
         ].join ';'
       else
@@ -143,7 +146,7 @@ module VirtualDelegates
         method_def = [
           "def #{method_name}(#{definition})",
           " _ = #{to}",
-          "  _.#{method}(#{definition})",
+          "  _.#{method}(#{definition})#{default}",
           "rescue NoMethodError => e",
           "  if _.nil? && e.name == :#{method}",
           "    #{exception}",
