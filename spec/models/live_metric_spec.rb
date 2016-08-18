@@ -1,18 +1,22 @@
 describe LiveMetric do
-  let(:conditions) do
+  let(:raw_conditions) do
     "resource_type = 'MiddlewareServer' and resource_id = 6 " \
     "and timestamp >= '2016-04-03 00:00:00' and timestamp <= '2016-04-05 23:00:00' " \
     "and capture_interval_name = 'daily'"
   end
 
-  let(:incomplete_conditions) do
+  let(:conditions) { [raw_conditions] }
+
+  let(:incomplete_raw_conditions) do
     "resource_type = 'MiddlewareServer' " \
     "and timestamp >= '2016-04-03 00:00:00' and timestamp <= '2016-04-05 23:00:00' " \
     "and capture_interval_name = 'daily'"
   end
 
+  let(:incomplete_conditions) { [incomplete_raw_conditions] }
+
   it "#parse_conditions" do
-    parsed = LiveMetric.parse_conditions(conditions)
+    parsed = LiveMetric.parse_conditions(raw_conditions)
     expect(parsed.size).to eq(5)
     expect(parsed[0][:column]).to eq("resource_type")
     expect(parsed[0][:op]).to eq("=")
@@ -32,7 +36,7 @@ describe LiveMetric do
   end
 
   it "#process_conditions" do
-    processed = LiveMetric.process_conditions([conditions])
+    processed = LiveMetric.process_conditions(conditions)
     expect(processed[:resource_type]).to eq("MiddlewareServer")
     expect(processed[:resource_id]).to eq("6")
     expect(processed[:start_time]).to eq(Time.parse("2016-04-03 00:00:00 UTC").utc)
@@ -42,7 +46,7 @@ describe LiveMetric do
 
   it "#process_conditions raises error on incomplete conditions" do
     expect do
-      LiveMetric.process_conditions([incomplete_conditions])
+      LiveMetric.process_conditions(incomplete_conditions)
     end.to raise_error(LiveMetric::LiveMetricError, "LiveMetric expression must contain resource_id condition")
   end
 end

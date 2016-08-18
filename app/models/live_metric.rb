@@ -8,8 +8,7 @@ class LiveMetric < ActsAsArModel
     validate_raw_query(raw_query)
     processed = process_conditions(raw_query[:conditions])
     resource = fetch_resource(processed[:resource_type], processed[:resource_id])
-    ext_options = raw_query[:ext_options]
-    filtered_cols = raw_query[:select] || ext_options ? ext_options[:only_cols] : nil
+    filtered_cols = raw_query[:select] || raw_query[:include].keys.map(&:to_s)
     if resource.nil?
       []
     else
@@ -25,12 +24,12 @@ class LiveMetric < ActsAsArModel
     end
   end
 
-  def self.parse_conditions(conditions)
-    if conditions.index('or')
-      _log.error("LiveMetric expression #{conditions} must not contain 'or' operator.")
+  def self.parse_conditions(raw_conditions)
+    if raw_conditions.index('or')
+      _log.error("LiveMetric expression #{raw_conditions} must not contain 'or' operator.")
       raise LiveMetricError, "LiveMetric expression doesn't support 'or' operator"
     end
-    conditions.split('and').collect do |exp|
+    raw_conditions.split('and').collect do |exp|
       parsed = exp.scan(/(.*)\s+(<=|=|>=|<|>|!=)\s+(.*)/)
       parse_condition(parsed[0][0], parsed[0][1], parsed[0][2])
     end
@@ -43,7 +42,7 @@ class LiveMetric < ActsAsArModel
   end
 
   def self.process_conditions(conditions)
-    parsed_conditions = parse_conditions(conditions[0])
+    parsed_conditions = parse_conditions(conditions.first)
     processed = {}
     parsed_conditions.each do |condition|
       case condition[:column]
