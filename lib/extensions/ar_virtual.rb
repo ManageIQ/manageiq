@@ -70,13 +70,14 @@ module VirtualDelegates
       unless (to = options[:to])
         raise ArgumentError, 'Delegation needs an association. Supply an options hash with a :to key as the last argument (e.g. delegate :hello, to: :greeter).'
       end
-      define_delegate(*methods, **options.except(:arel, :uses))
 
       # put method entry per method name.
       # This better supports reloading of the class and changing the definitions
       methods.each do |method|
         method_prefix = virtual_delegate_name_prefix(options[:prefix], options[:to])
         method_name = "#{method_prefix}#{method}"
+
+        define_delegate(method, to: to, prefix: options[:prefix], allow_nil: options[:allow_nil])
 
         self.virtual_delegates_to_define =
           virtual_delegates_to_define.merge(method_name => [method, options])
@@ -107,7 +108,7 @@ module VirtualDelegates
       define_virtual_attribute method_name, type, :uses => (options[:uses] || to), :arel => arel
     end
 
-    def define_delegate(*methods, to: nil, prefix: nil, allow_nil: nil)
+    def define_delegate(method, to: nil, prefix: nil, allow_nil: nil)
       unless to
         raise ArgumentError, 'Delegation needs a target. Supply an options hash with a :to key as the last argument (e.g. delegate :hello, to: :greeter).'
       end
@@ -129,46 +130,44 @@ module VirtualDelegates
       to = to.to_s
       #to = "self.#{to}" if DELEGATION_RESERVED_METHOD_NAMES.include?(to)
 
-      methods.each do |method|
-        # Attribute writer methods only accept one argument. Makes sure []=
-        # methods still accept two arguments.
-        definition = (method =~ /[^\]]=$/) ? 'arg' : '*args, &block'
+      # Attribute writer methods only accept one argument. Makes sure []=
+      # methods still accept two arguments.
+      definition = (method =~ /[^\]]=$/) ? 'arg' : '*args, &block'
 
-        # The following generated method calls the target exactly once, storing
-        # the returned value in a dummy variable.
-        #
-        # Reason is twofold: On one hand doing less calls is in general better.
-        # On the other hand it could be that the target has side-effects,
-        # whereas conceptually, from the user point of view, the delegator should
-        # be doing one call.
-        if allow_nil
-          method_def = [
-            "def #{method_prefix}#{method}(#{definition})",
-            "_ = #{to}",
-            "if !_.nil? || nil.respond_to?(:#{method})",
-            "  _.#{method}(#{definition})",
-            "end",
+      # The following generated method calls the target exactly once, storing
+      # the returned value in a dummy variable.
+      #
+      # Reason is twofold: On one hand doing less calls is in general better.
+      # On the other hand it could be that the target has side-effects,
+      # whereas conceptually, from the user point of view, the delegator should
+      # be doing one call.
+      if allow_nil
+        method_def = [
+          "def #{method_prefix}#{method}(#{definition})",
+          "_ = #{to}",
+          "if !_.nil? || nil.respond_to?(:#{method})",
+          "  _.#{method}(#{definition})",
+          "end",
+        "end"
+        ].join ';'
+      else
+        exception = %(raise DelegationError, "#{self}##{method_prefix}#{method} delegated to #{to}.#{method}, but #{to} is nil: \#{self.inspect}")
+
+        method_def = [
+          "def #{method_prefix}#{method}(#{definition})",
+          " _ = #{to}",
+          "  _.#{method}(#{definition})",
+          "rescue NoMethodError => e",
+          "  if _.nil? && e.name == :#{method}",
+          "    #{exception}",
+          "  else",
+          "    raise",
+          "  end",
           "end"
-          ].join ';'
-        else
-          exception = %(raise DelegationError, "#{self}##{method_prefix}#{method} delegated to #{to}.#{method}, but #{to} is nil: \#{self.inspect}")
-
-          method_def = [
-            "def #{method_prefix}#{method}(#{definition})",
-            " _ = #{to}",
-            "  _.#{method}(#{definition})",
-            "rescue NoMethodError => e",
-            "  if _.nil? && e.name == :#{method}",
-            "    #{exception}",
-            "  else",
-            "    raise",
-            "  end",
-            "end"
-          ].join ';'
-        end
-
-        module_eval(method_def, file, line)
+        ].join ';'
       end
+
+      module_eval(method_def, file, line)
     end
 
     def virtual_delegate_name_prefix(prefix, to)
