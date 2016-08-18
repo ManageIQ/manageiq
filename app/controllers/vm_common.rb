@@ -568,7 +568,7 @@ module VmCommon
     elsif params["create.x"] || params[:button] == "create"
       @name = params[:name]
       @description = params[:description]
-      if params[:name].blank?
+      if params[:name].blank? && !@record.try(:snapshot_name_optional?)
         add_flash(_("Name is required"), :error)
         @in_a_form = true
         drop_breadcrumb(:name => _("Snapshot VM '%{name}'") % {:name => @record.name}, :url => "/vm_common/snap")
