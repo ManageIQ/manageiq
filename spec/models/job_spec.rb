@@ -87,6 +87,35 @@ describe Job do
       end
     end
 
+    context "where job is for a VM that disappeared" do
+      before(:each) do
+        @job.update_attributes(:state => "scanning", :dispatch_status => "active", :zone => nil)
+
+        @vm.destroy
+
+        Timecop.travel 5.minutes
+
+        Job.check_jobs_for_timeout
+
+        @msg = MiqQueue.get(:role => "smartstate", :zone => @zone.name)
+        status, message, result = @msg.deliver
+        @msg.delivered(status, message, result)
+
+        @job.reload
+      end
+
+      after(:each) do
+        Timecop.return
+      end
+
+      it "should be timed out after 5 minutes" do
+        $log.info("@job: #{@job.inspect}")
+        expect(@job.state).to eq("finished")
+        expect(@job.status).to eq("error")
+        expect(@job.message.starts_with?("job timed out after")).to be_truthy
+      end
+    end
+
     context "where 2 VMs in 2 Zones have an EVM Snapshot" do
       before(:each) do
         scan_type   = nil
@@ -218,6 +247,34 @@ describe Job do
         #   Host.any_instance.stub(:miq_proxy).and_return(@miq_server)
         #   lambda { MiqQueue.first.deliver }.should_not raise_error
         # end
+      end
+    end
+
+    context "where scan jobs exist for both vms and container images" do
+      before(:each) do
+        @ems_k8s = FactoryGirl.create(
+          :ems_kubernetes, :hostname => "test.com", :zone => @zone, :port => 8443,
+          :authentications => [AuthToken.new(:name => "test", :type => 'AuthToken', :auth_key => "a secret")]
+        )
+        @image = FactoryGirl.create(
+          :container_image, :ext_management_system => @ems_k8s, :name => 'test',
+          :image_ref => "docker://3629a651e6c11d7435937bdf41da11cf87863c03f2587fa788cf5cbfe8a11b9a"
+        )
+        @image_scan_job = @image.scan
+      end
+
+      context "#target_entity" do
+        it "returns the job target" do
+          expect(@job.target_entity).to eq(@vm)
+          expect(@image_scan_job.target_entity).to eq(@image)
+        end
+      end
+
+      context "#timeout_adjustment" do
+        it "returns the correct adjusment" do
+          expect(@job.timeout_adjustment).to eq(1)
+          expect(@image_scan_job.timeout_adjustment).to eq(1)
+        end
       end
     end
   end

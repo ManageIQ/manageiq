@@ -164,6 +164,10 @@ class Job < ApplicationRecord
     end
   end
 
+  def target_entity
+    target_class.constantize.find_by_id(target_id)
+  end
+
   def self.check_jobs_for_timeout
     $log.debug "Checking for timed out jobs"
     begin
@@ -171,7 +175,7 @@ class Job < ApplicationRecord
         .where("state != 'finished' and (state != 'waiting_to_start' or dispatch_status = 'active')")
         .where("zone is null or zone = ?", MiqServer.my_zone)
         .each do |job|
-          next unless job.updated_on < job.current_job_timeout(timeout_adjustment(job)).seconds.ago
+          next unless job.updated_on < job.current_job_timeout(job.timeout_adjustment).seconds.ago
 
           # Allow jobs to run longer if the MiqQueue task is still active.  (Limited to MiqServer for now.)
           if job.agent_class == "MiqServer"
@@ -185,11 +189,11 @@ class Job < ApplicationRecord
     end
   end
 
-  def self.timeout_adjustment(job)
+  def timeout_adjustment
     timeout_adjustment = 1
-    vm = VmOrTemplate.find(job.target_id)
-    if vm.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm) ||
-       vm.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Template)
+    target = target_entity
+    if target.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm) ||
+       target.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Template)
       timeout_adjustment = 4
     end
     timeout_adjustment
