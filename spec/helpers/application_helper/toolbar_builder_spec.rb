@@ -1134,25 +1134,6 @@ describe ApplicationHelper do
       end
     end
 
-    context "when with Vm" do
-      before do
-        @record = Vm.new
-        stub_user(:features => :all)
-      end
-
-      context "and id = common_drift" do
-        before do
-          @id = "common_drift"
-          @lastaction = "drift"
-        end
-
-        it "and @lastaction = drift_history" do
-          @lastaction = "drift_history"
-          expect(subject).to be_falsey
-        end
-      end
-    end # with Vm
-
     context "when with MiqTemplate" do
       before do
         @record = MiqTemplate.new
