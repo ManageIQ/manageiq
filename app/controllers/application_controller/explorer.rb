@@ -197,13 +197,6 @@ module ApplicationController::Explorer
     TreeNodeBuilder.build_id(object, nil, options)
   end
 
-  # Add the children of a node that is being expanded (autoloaded), called by generic tree_autoload method
-  def tree_add_child_nodes(id)
-    TreeBuilder.tree_add_child_nodes(@sb,
-                                     x_tree[:klass_name],
-                                     id)
-  end
-
   # FIXME: move partly to Tree once Trees are made from TreeBuilder
   def valid_active_node(treenodeid)
     modelname, rec_id, nodetype = TreeBuilder.extract_node_model_and_id(treenodeid)
