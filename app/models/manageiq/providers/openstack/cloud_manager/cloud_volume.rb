@@ -13,9 +13,9 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
       volume = service.volumes.new(options)
       volume.save
     end
-    {:ems_ref => volume.id, :status => volume.status}
+    {:ems_ref => volume.id, :status => volume.status, :name => volume.name}
   rescue => e
-    _log.error "volume=[#{options[:display_name]}], error: #{e}"
+    _log.error "volume=[#{options[:name]}], error: #{e}"
     raise MiqException::MiqVolumeCreateError, e.to_s, e.backtrace
   end
 
