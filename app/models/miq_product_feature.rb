@@ -33,10 +33,6 @@ class MiqProductFeature < ApplicationRecord
     features[identifier.to_s].try(:[], :parent)
   end
 
-  def self.parent_for_feature(identifier)
-    find_by_identifier(feature_parent(identifier))
-  end
-
   def self.feature_children(identifier, sort = true)
     feat = features[identifier.to_s]
     if feat && !feat[:details][:hidden] && feat[:children]

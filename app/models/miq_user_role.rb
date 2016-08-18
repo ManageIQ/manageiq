@@ -37,8 +37,8 @@ class MiqUserRole < ApplicationRecord
   def allows?(identifier:)
     if feature_identifiers.include?(identifier)
       true
-    elsif parent = MiqProductFeature.parent_for_feature(identifier)
-      allows?(:identifier => parent.identifier)
+    elsif (parent_identifier = MiqProductFeature.feature_parent(identifier))
+      allows?(:identifier => parent_identifier)
     else
       false
     end
