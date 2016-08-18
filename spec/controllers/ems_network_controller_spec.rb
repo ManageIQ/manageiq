@@ -1,4 +1,4 @@
-require_relative "../helpers/controller_spec_helper"
+require_relative "../support/controller_spec_helper"
 
 describe EmsNetworkController do
   include CompressedIds
