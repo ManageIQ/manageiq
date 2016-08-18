@@ -1,6 +1,6 @@
-include QuadiconHelper
-
 describe "layouts/listnav/_floating_ip.html.haml" do
+  helper(QuadiconHelper)
+
   before :each do
     set_controller_for_view("floating_ip")
     assign(:panels, "ems_prop" => true, "ems_rel" => true)

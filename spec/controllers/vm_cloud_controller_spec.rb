@@ -1,6 +1,6 @@
-include CompressedIds
-
 describe VmCloudController do
+  include CompressedIds
+
   let(:vm_openstack) do
     FactoryGirl.create(:vm_openstack,
                        :ext_management_system => FactoryGirl.create(:ems_openstack))

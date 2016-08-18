@@ -1,6 +1,6 @@
-include CompressedIds
-
 describe EmsInfraController do
+  include CompressedIds
+
   let!(:server) { EvmSpecHelper.local_miq_server(:zone => zone) }
   let(:zone) { FactoryGirl.build(:zone) }
   context "#button" do

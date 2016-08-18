@@ -1,6 +1,5 @@
-include CompressedIds
-
 describe StorageController do
+  include CompressedIds
 
   let(:storage) { FactoryGirl.create(:storage, :name => 'test_storage1') }
   let(:storage_cluster) { FactoryGirl.create(:storage_cluster, :name => 'test_storage_cluster1') }

@@ -1,8 +1,9 @@
 require 'ostruct'
-include JsHelper
 
 describe 'report/_schedule_list' do
   context 'flash message is set' do
+    helper(JsHelper)
+
     before do
       assign(:sb, :active_accord => :schedules)
       assign(:schedules, true)

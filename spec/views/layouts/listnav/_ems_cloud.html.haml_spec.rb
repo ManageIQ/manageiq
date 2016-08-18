@@ -1,6 +1,6 @@
-include QuadiconHelper
-
 describe "layouts/listnav/_ems_cloud.html.haml" do
+  helper(QuadiconHelper)
+
   before :each do
     set_controller_for_view("ems_cloud")
     assign(:panels, "ems_cloud_prop" => true, "ems_cloud_rel" => true)
