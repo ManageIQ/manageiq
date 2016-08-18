@@ -1,3 +1,21 @@
 describe Notification, :type => :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  before { NotificationType.seed }
+  describe '.emit' do
+    context 'successful' do
+      let(:tenant) { FactoryGirl.create(:tenant) }
+      let(:vm) { FactoryGirl.create(:vm, :tenant => tenant) }
+      let(:tenant_group) { FactoryGirl.create(:miq_group, :tenant => tenant) }
+      let!(:user) { FactoryGirl.create(:user, :miq_groups => [tenant_group]) }
+      let(:notification_type) { :vm_powered_on }
+
+      it 'creates a new notification along with recipients' do
+        n = Notification.create(:type => notification_type, :subject => vm)
+        expect(n.notification_type.name).to eq(notification_type.to_s)
+        expect(n.subject).to eq(vm)
+        expect(n.recipients).to match_array([user])
+        expect(user.notifications.count).to eq(1)
+        expect(user.unseen_notifications.count).to eq(1)
+      end
+    end
+  end
 end

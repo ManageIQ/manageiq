@@ -12,4 +12,33 @@ describe NotificationType, :type => :model do
       end
     end
   end
+
+  describe '#subscribers' do
+    let(:user1) { FactoryGirl.create(:user) }
+    let(:tenant2) { FactoryGirl.create(:tenant) }
+    let(:tenant2_group) { FactoryGirl.create(:miq_group, :tenant => tenant2) }
+    let!(:user2) { FactoryGirl.create(:user, :miq_groups => [tenant2_group]) }
+    let(:vm) { FactoryGirl.create(:vm, :tenant => tenant2) }
+    subject { notification.subscriber_ids(vm, user1) }
+    context 'global notification type' do
+      let(:notification) { FactoryGirl.create(:notification_type, :audience => 'global') }
+      it 'returns all the users' do
+        is_expected.to match_array(User.pluck(:id))
+      end
+    end
+
+    context 'user specific notification type' do
+      let(:notification) { FactoryGirl.create(:notification_type, :audience => 'user') }
+      it 'returns just the user, who initiated the task' do
+        is_expected.to match_array([user1.id])
+      end
+    end
+
+    context 'tenant specific notification type' do
+      let(:notification) { FactoryGirl.create(:notification_type, :audience => 'tenant') }
+      it 'returns the users in the tenant same tenant as concerned vm' do
+        is_expected.to match_array([user2.id])
+      end
+    end
+  end
 end

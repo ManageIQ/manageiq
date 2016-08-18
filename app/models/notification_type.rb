@@ -1,8 +1,22 @@
 class NotificationType < ApplicationRecord
+  AUDIENCE_USER = 'user'.freeze
+  AUDIENCE_TENANT = 'tenant'.freeze
+  AUDIENCE_GLOBAL = 'global'.freeze
   has_many :notifications
   validates :message, :presence => true
   validates :level, :inclusion => { :in => %w(success error warning info) }
-  validates :audience, :inclusion => { :in => %w(user tenant global) }
+  validates :audience, :inclusion => { :in => [AUDIENCE_USER, AUDIENCE_TENANT, AUDIENCE_GLOBAL] }
+
+  def subscriber_ids(subject, initiator)
+    case audience
+    when AUDIENCE_GLOBAL
+      User.pluck(:id)
+    when AUDIENCE_USER
+      [initiator.id]
+    when AUDIENCE_TENANT
+      subject.tenant.user_ids
+    end
+  end
 
   def self.seed
     seed_data.each do |t|
