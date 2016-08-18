@@ -342,35 +342,39 @@ module EmsCommon
     params[:display] = @display if ["vms", "hosts", "storages", "instances", "images"].include?(@display)  # Were we displaying vms/hosts/storages
     params[:page] = @current_page unless @current_page.nil?   # Save current page for list refresh
 
-    if params[:pressed].starts_with?("vm_", # Handle buttons from sub-items screen
-                                     "miq_template_",
+    # Handle buttons from sub-items screen
+    if params[:pressed].starts_with?("ems_cluster_",
                                      "guest_",
+                                     "host_",
                                      "image_",
                                      "instance_",
+                                     "miq_template_",
                                      "storage_",
-                                     "ems_cluster_",
-                                     "host_")
+                                     "vm_")
 
-      scanhosts if params[:pressed] == "host_scan"
-      analyze_check_compliance_hosts if params[:pressed] == "host_analyze_check_compliance"
-      check_compliance_hosts if params[:pressed] == "host_check_compliance"
-      refreshhosts if params[:pressed] == "host_refresh"
-      tag(Host) if params[:pressed] == "host_tag"
-      assign_policies(Host) if params[:pressed] == "host_protect"
-      deletehosts if params[:pressed] == "host_delete"
-      comparemiq if params[:pressed] == "host_compare"
-      edit_record  if params[:pressed] == "host_edit"
-
-      scanclusters if params[:pressed] == "ems_cluster_scan"
-      tag(EmsCluster) if params[:pressed] == "ems_cluster_tag"
-      assign_policies(EmsCluster) if params[:pressed] == "ems_cluster_protect"
-      deleteclusters if params[:pressed] == "ems_cluster_delete"
-      comparemiq if params[:pressed] == "ems_cluster_compare"
-
-      scanstorage if params[:pressed] == "storage_scan"
-      refreshstorage if params[:pressed] == "storage_refresh"
-      tag(Storage) if params[:pressed] == "storage_tag"
-      deletestorages if params[:pressed] == "storage_delete"
+      case params[:pressed]
+      # Clusters
+      when "ems_cluster_compare"              then comparemiq
+      when "ems_cluster_delete"               then deleteclusters
+      when "ems_cluster_protect"              then assign_policies(EmsCluster)
+      when "ems_cluster_scan"                 then scanclusters
+      when "ems_cluster_tag"                  then tag(EmsCluster)
+      # Hosts
+      when "host_analyze_check_compliance"    then analyze_check_compliance_hosts
+      when "host_check_compliance"            then check_compliance_hosts
+      when "host_compare"                     then comparemiq
+      when "host_delete"                      then deletehosts
+      when "host_edit"                        then edit_record
+      when "host_protect"                     then assign_policies(Host)
+      when "host_refresh"                     then refreshhosts
+      when "host_scan"                        then scanhosts
+      when "host_tag"                         then tag(Host)
+      # Storages
+      when "storage_delete"                   then deletestorages
+      when "storage_refresh"                  then refreshstorage
+      when "storage_scan"                     then scanstorage
+      when "storage_tag"                      then tag(Storage)
+      end
 
       pfx = pfx_for_vm_button_pressed(params[:pressed])
       # Handle Host power buttons
