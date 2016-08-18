@@ -123,7 +123,8 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           'product product-migrate fa-lg',
           N_('Migrate this VM to another Host/Datastore'),
           N_('Migrate this VM'),
-          :klass => ApplicationHelper::Button::VmMigrate),
+          :klass => ApplicationHelper::Button::GenericFeatureButton,
+          :options => {:feature => :migrate}),
         button(
           :vm_retire,
           'fa fa-clock-o fa-lg',
