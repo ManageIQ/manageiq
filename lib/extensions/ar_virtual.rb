@@ -84,7 +84,7 @@ module VirtualDelegates
         method_prefix = virtual_delegate_name_prefix(options[:prefix], options[:to])
         method_name = options[:name] || "#{method_prefix}#{method}"
 
-        define_delegate(method_name, method, to: to, allow_nil: options[:allow_nil], default: default)
+        define_delegate(method_name, method, :to => to, :allow_nil => allow_nil, :default => default)
 
         self.virtual_delegates_to_define =
           virtual_delegates_to_define.merge(method_name => [method, options])
@@ -138,7 +138,7 @@ module VirtualDelegates
           "if !_.nil? || nil.respond_to?(:#{method})",
           "  _.#{method}(#{definition})",
           "end#{default}",
-        "end"
+          "end"
         ].join ';'
       else
         exception = %(raise DelegationError, "#{self}##{method_name} delegated to #{to}.#{method}, but #{to} is nil: \#{self.inspect}")

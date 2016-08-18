@@ -595,7 +595,7 @@ describe VirtualFields do
 
     describe ".virtual_delegate" do
       # double purposing col1. It has an actual value in the child class
-      let(:parent) { TestClass.create(:id => 1, :col1 => 4)}
+      let(:parent) { TestClass.create(:id => 1, :col1 => 4) }
 
       it "delegates to child" do
         TestClass.virtual_delegate :col1, :prefix => 'parent', :to => :ref1
