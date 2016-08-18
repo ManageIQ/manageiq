@@ -34,7 +34,7 @@
                              :autoload            => true})
       .modal-footer
         %div{:id => "include_domain_prefix_div"}
-          %input#include_domain_prefix_chk{:onclick  => "miqOnClickIncludeDomainPrefix()",
+          %input#include_domain_prefix_chk{:onchange  => "miqOnClickIncludeDomainPrefix()",
                                            :type     => "checkbox",
                                            :disabled => "disabled"}
           = _("Include Domain prefix in the path")

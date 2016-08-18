@@ -18,21 +18,22 @@
 
     // table-checkable
     if (table.hasClass('table-checkable')) {
-      checkboxes.click(function (_e) {
+      checkboxes.on('change', function (_e) {
         var checked = $.map(checkboxes.filter(':checked'), function (cb) {
           return cb.value;
         });
+
         ManageIQ.gridChecks = checked;
         miqSetButtons(checked.length, 'center_tb');
-        if (checked.length == checkboxes.length) {
-          $('input.checkall').prop('checked', true);
-        } else {
-          $('input.checkall').prop('checked', false);
-        }
+
+        // if all the checkboxes were checked, make checkall checked too,
+        // if some aren't, make it unchecked => no trigger here
+        $('input.checkall')
+          .prop('checked', checked.length == checkboxes.length);
       });
 
       // Handle the click on the "Check all" checkbox
-      checkall.click(function (_e) {
+      checkall.on('change', function (_e) {
         var unchecked = checkboxes.filter(':not(:checked)');
         if (unchecked.length > 0) {
           unchecked.trigger('click');

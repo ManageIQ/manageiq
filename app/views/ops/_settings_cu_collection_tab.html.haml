@@ -29,7 +29,7 @@
               %br/
               %b= _("Enable Collection by %{clusters}") % {:clusters => cluster_title}
               %br/
-              %input#cl_toggle{:name => "cl_toggle", :onclick => "miqCheckCUAll(this,'#{@cluster_tree.name}');", :type => "checkbox"}/
+              %input#cl_toggle{:name => "cl_toggle", :onchange => "miqCheckCUAll(this,'#{@cluster_tree.name}');", :type => "checkbox"}/
               = _("Check All")
               :javascript
                 miqDynatreeResetState('#{j_str @cluster_tree.name}');
@@ -54,9 +54,8 @@
               %br/
               %b= _("Enable Collection by Datastore")
               %br/
-              %input#ds_toggle{:name => "ds_toggle", :onclick => "miqCheckCUAll(this,'#{@datastore_tree.name}');", :type => "checkbox"}/
+              %input#ds_toggle{:name => "ds_toggle", :onchange => "miqCheckCUAll(this,'#{@datastore_tree.name}');", :type => "checkbox"}/
               = _("Check All")
               :javascript
                 miqDynatreeResetState('#{j_str @datastore_tree.name}');
               = render(:partial => 'shared/tree', :locals => {:tree => @datastore_tree, :name => @datastore_tree.name})
-

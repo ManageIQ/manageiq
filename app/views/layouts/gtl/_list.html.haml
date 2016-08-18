@@ -84,7 +84,7 @@
             %td.narrow
               = check_box_tag("check_#{@id}", 1, false,
                               :class   => "listcheckbox list-grid-checkbox",
-                              :onclick => "miqGridOnCheck(this, '#{button_div}', 'gtl_div');")
+                              :onchange => "miqGridOnCheck(this, '#{button_div}', 'gtl_div');")
           - title = ""
           - click = ""
           - unless (@embedded || @no_checkboxes) && ! @showlinks

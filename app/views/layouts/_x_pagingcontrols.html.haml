@@ -14,10 +14,9 @@
         - if @pc_occ == 1
           .form-group
             - if ! @no_checkall && ! @no_checkboxes
-              %input#masterToggle{:name    => "masterToggle",
-                                  :onclick => "miqUpdateAllCheckboxes('#{button_div}', null);",
-                                  :type    => "checkbox"}
-              = _("Check All")
+              = render :partial => 'shared/master_toggle',
+                       :locals  => {:button_div => button_div,
+                                    :label      => _("Check All")}
           .form-group{:style => "border-right: 0"}
             = _('Sorted by: ')
             - sort_text = "#{@view.headers[@sortcol]} (#{@sortdir == "ASC" ? _("Asc.") : _("Desc.")})"

@@ -73,7 +73,7 @@ module JsHelper
   end
 
   def javascript_checked(element)
-    "if ($('##{j_str(element)}').prop('type') == 'checkbox') {$('##{j_str(element)}').prop('checked', 'checked');}"
+    "if ($('##{j_str(element)}').prop('type') == 'checkbox') {$('##{j_str(element)}').prop('checked', true);}"
       .html_safe
   end
 

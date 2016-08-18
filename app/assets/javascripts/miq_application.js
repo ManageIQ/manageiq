@@ -370,38 +370,36 @@ function toggleConvertButtonToLink(button, url, toggle) {
 }
 
 // update all checkboxes on a form when the masterToggle checkbox is changed
-// parms: button_div=<id of div with buttons to update>, override=<forced state>
-function miqUpdateAllCheckboxes(button_div, override) {
-  miqSparkle(true);
-  if ($('#masterToggle').length) {
-    var state = $('#masterToggle').prop('checked');
-    if (override != null) {
-      state = override;
-    }
-    if (typeof ManageIQ.grids.gtl_list_grid == 'undefined' &&
-        ($("input.listcheckbox").length)) {
-      // No list_grid on the screen
-      var cbs = $("input.listcheckbox")
-      cbs.prop('checked', state);
-      miqUpdateButtons(cbs[0], button_div);
-    } else if (typeof ManageIQ.grids.gtl_list_grid == 'undefined' &&
-               $("input[id^='storage_cb']").length) {
-      // to handle check/uncheck all for C&U collection
-      $("input[id^='storage_cb']").prop('checked', state);
-      miqJqueryRequest(miqPassFields(
-        "/configuration/form_field_changed",
-        {storage_cb_all: state}
-      ));
-      return true;
-    } else {
-      miqGridCheckAll(state);
-      var crows = miqGridGetCheckedRows();
+// parms: button_div=<id of div with buttons to update>
+function miqUpdateAllCheckboxes(button_div) {
+  if (! $('#masterToggle').length)
+    return;
 
-      ManageIQ.gridChecks = crows;
-      miqSetButtons(crows.length, button_div);
-    }
+  var state = $('#masterToggle').prop('checked');
+
+  if (ManageIQ.grids.gtl_list_grid) {
+    miqGridCheckAll(state);
+    var crows = miqGridGetCheckedRows();
+
+    ManageIQ.gridChecks = crows;
+    miqSetButtons(crows.length, button_div);
+  } else if ($("input.listcheckbox").length) {
+    // No list_grid on the screen
+    var cbs = $("input.listcheckbox")
+      .prop('checked', state)
+      .trigger('change');
+
+    miqUpdateButtons(cbs[0], button_div);
+  } else if ($("input[id^='storage_cb']").length) {
+    // to handle check/uncheck all for C&U collection
+    $("input[id^='storage_cb']")
+      .prop('checked', state)
+      .trigger('change');
+    miqJqueryRequest(miqPassFields(
+      "/configuration/form_field_changed",
+      {storage_cb_all: state}
+    ));
   }
-  miqSparkle(false);
 }
 
 // Update buttons based on number of checkboxes that are checked

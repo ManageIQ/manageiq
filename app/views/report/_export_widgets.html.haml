@@ -92,10 +92,11 @@
       e.preventDefault();
     });
 
-    $('#check-all').click(function (e) {
-      $("#import-widgets-form table tbody input[type='checkbox']").prop('checked', $(this).prop('checked'));
+    $('#check-all').on('change', function (e) {
+      $("#import-widgets-form table tbody input[type='checkbox']")
+        .prop('checked', $(this).prop('checked'))
+        .trigger('change');
     });
-
 
     $('.widget-export').change(function() {
       if ($('.widget-export').val() !== null) {

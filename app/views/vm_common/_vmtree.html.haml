@@ -1,6 +1,6 @@
 #vm_tree_div
   = render :partial => "layouts/flash_msg"
-  %input#masterToggle{:type => "checkbox", :name => "masterToggle", :onclick => "miqCheckAll(this, 'genealogy_tree');"}
+  %input#masterToggle{:type => "checkbox", :name => "masterToggle", :onchange => "miqCheckAll(this, 'genealogy_tree');"}
   = _("(Check All)")
   %p
 
