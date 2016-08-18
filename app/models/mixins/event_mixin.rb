@@ -1,5 +1,11 @@
 # EventMixin expects that event_where_clause is defined in the model.
 module EventMixin
+  extend ActiveSupport::Concern
+
+  included do
+    supports :timeline
+  end
+
   def first_event(assoc = :ems_events)
     event = find_one_event(assoc, "timestamp ASC")
     event.nil? ? nil : event.timestamp

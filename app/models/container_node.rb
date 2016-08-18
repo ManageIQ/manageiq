@@ -1,4 +1,5 @@
 class ContainerNode < ApplicationRecord
+  include SupportsFeatureMixin
   include ComplianceMixin
   include MiqPolicyMixin
   include NewWithTypeStiMixin

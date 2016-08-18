@@ -1,4 +1,5 @@
 class AvailabilityZone < ApplicationRecord
+  include SupportsFeatureMixin
   include NewWithTypeStiMixin
   include Metric::CiMixin
   include EventMixin

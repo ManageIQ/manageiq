@@ -1,4 +1,5 @@
 class EmsCluster < ApplicationRecord
+  include SupportsFeatureMixin
   include NewWithTypeStiMixin
   include_concern 'CapacityPlanning'
   include EventMixin

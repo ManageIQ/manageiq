@@ -2,6 +2,7 @@ describe EventMixin do
   context "Included in a test class with events" do
     let(:test_class) do
       Class.new do
+        include SupportsFeatureMixin
         include EventMixin
 
         def event_where_clause(assoc)
@@ -42,6 +43,7 @@ describe EventMixin do
   context "Included in a test class with no events" do
     let(:test_class) do
       Class.new do
+        include SupportsFeatureMixin
         include EventMixin
 
         def event_where_clause(assoc)
