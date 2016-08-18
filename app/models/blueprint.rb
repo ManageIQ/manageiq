@@ -4,6 +4,8 @@ class Blueprint < ApplicationRecord
 
   virtual_has_one :bundle
 
+  acts_as_miq_taggable
+
   # the top of the service_templates, a bundle that contains child items
   def bundle
     service_templates.find { |st| st.parent_services.blank? }
