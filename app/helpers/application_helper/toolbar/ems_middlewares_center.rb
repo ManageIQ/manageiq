@@ -52,4 +52,24 @@ class ApplicationHelper::Toolbar::EmsMiddlewaresCenter < ApplicationHelper::Tool
       ]
     ),
   ])
+  button_group('ems_middleware_authentication', [
+    select(
+      :ems_middleware_authentication_choice,
+      'fa fa-lock fa-lg',
+      t = N_('Authentication'),
+      t,
+      :enabled => false,
+      :onwhen  => "1+",
+      :items   => [
+        button(
+          :ems_middleware_recheck_auth_status,
+          'fa fa-search fa-lg',
+          N_('Re-check Authentication Status for the selected Middleware Providers'),
+          N_('Re-check Authentication Status'),
+          :url_parms => "main_div",
+          :enabled   => false,
+          :onwhen    => "1+"),
+      ]
+    ),
+  ])
 end
