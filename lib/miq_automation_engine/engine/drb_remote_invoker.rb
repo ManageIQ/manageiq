@@ -11,12 +11,8 @@ module MiqAeEngine
     def with_server(inputs, body)
       setup if num_methods == 0
       self.num_methods += 1
-
-      svc = MiqAeMethodService::MiqAeService.new(@workspace)
-      svc.inputs     = inputs
-      svc.preamble   = method_preamble(drb_uri, svc.object_id)
-      svc.body       = body
-      svc.logger     = $miq_ae_logger
+      svc = MiqAeMethodService::MiqAeService.new(@workspace, inputs, body)
+      svc.preamble = method_preamble(drb_uri, svc.object_id)
 
       yield [svc.preamble, svc.body, RUBY_METHOD_POSTSCRIPT]
     ensure
