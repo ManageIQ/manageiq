@@ -199,10 +199,10 @@ module Rbac
       scope = scope.except(:offset, :limit)
       scope = scope_targets(klass, scope, user_filters, user, miq_group)
               .where(conditions).where(sub_filter).where(where_clause).where(exp_sql).where(ids_clause)
-              .includes(include_for_find).references(include_for_find)
-              .includes(exp_includes).references(exp_includes)
+              .includes(include_for_find).includes(exp_includes)
               .order(options[:order])
 
+      scope = include_references(scope, klass, include_for_find, exp_includes)
       scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
       targets = scope
 
@@ -228,6 +228,21 @@ module Rbac
       attrs[:auth_count] = auth_count
 
       return targets, attrs
+    end
+
+    def include_references(scope, klass, include_for_find, exp_includes)
+      ref_includes = Hash(include_for_find).merge(Hash(exp_includes))
+      unless polymorphic_include?(klass, ref_includes)
+        scope = scope.references(include_for_find).references(exp_includes)
+      end
+      scope
+    end
+
+    def polymorphic_include?(target_klass, includes)
+      includes.keys.any? do |incld|
+        reflection = target_klass.reflect_on_association(incld)
+        reflection && reflection.polymorphic?
+      end
     end
 
     def filtered(objects, options = {})
