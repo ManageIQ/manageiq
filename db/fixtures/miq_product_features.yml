@@ -5232,6 +5232,10 @@
       :description: Show Blueprint
       :feature_type: view
       :identifier: blueprint_show
+    - :name: Edit Tags
+      :description: Edit Blueprint Tags
+      :feature_type: control
+      :identifier: blueprint_tag
   - :name: Modify
     :description: Modify Blueprint
     :feature_type: admin
