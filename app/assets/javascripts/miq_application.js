@@ -1675,7 +1675,7 @@ function miqScrollToSelected(div_name) {
 
 function miqUncompressedId(id) {
   if (id.match(/r/)) {
-    return sprintf("%s%012d", id.split('r')[0], id.split('r')[1]);
+    return sprintf("%s%012s", id.split('r')[0], id.split('r')[1]);
   }
   return id;
 }
