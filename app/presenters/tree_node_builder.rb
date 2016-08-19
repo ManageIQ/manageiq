@@ -224,9 +224,9 @@ class TreeNodeBuilder
     # FIXME: expansion
     @node = {
       :key   => build_hash_id,
-      :icon  => node_icon("#{object[:image] || text}.png"),
-      :title => ERB::Util.html_escape(text),
+      :title => ERB::Util.html_escape(text)
     }
+    @node[:icon] = node_icon("#{object[:image] || text}.png") if object[:image]
     # Start with all nodes open unless expand is explicitly set to false
     @node[:expand] = true if options[:open_all] && options[:expand] != false
     @node[:cfmeNoClick] = object[:cfmeNoClick] if object.key?(:cfmeNoClick)
