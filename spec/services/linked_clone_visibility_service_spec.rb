@@ -5,24 +5,40 @@ describe LinkedCloneVisibilityService do
     context "when provision type is vmware" do
       let(:provision_type) { "vmware" }
 
-      context "when linked clone is true" do
-        let(:linked_clone) { true }
+      context "when there are snapshots to show" do
+        let(:snapshot_count) { 1 }
 
-        it "adds values to the field names to show" do
-          expect(subject.determine_visibility(provision_type, linked_clone)).to eq(
-            :hide => [],
-            :show => [:linked_clone, :snapshot]
-          )
+        context "when linked clone is true" do
+          let(:linked_clone) { true }
+
+          it "adds values to the field names to show" do
+            expect(subject.determine_visibility(provision_type, linked_clone, snapshot_count)).to eq(
+              :hide => [],
+              :show => [:linked_clone, :snapshot]
+            )
+          end
+        end
+
+        context "when linked clone is not true" do
+          let(:linked_clone) { false }
+
+          it "adds values to the field names to hide" do
+            expect(subject.determine_visibility(provision_type, linked_clone, snapshot_count)).to eq(
+              :hide => [:snapshot],
+              :show => [:linked_clone]
+            )
+          end
         end
       end
 
-      context "when linked clone is not true" do
-        let(:linked_clone) { false }
+      context "when there are no snapshots to show" do
+        let(:snapshot_count) { 0 }
+        let(:linked_clone) { "potato" }
 
         it "adds values to the field names to hide" do
-          expect(subject.determine_visibility(provision_type, linked_clone)).to eq(
-            :hide => [:snapshot],
-            :show => [:linked_clone]
+          expect(subject.determine_visibility(provision_type, linked_clone, snapshot_count)).to eq(
+            :hide => [:linked_clone, :snapshot],
+            :show => []
           )
         end
       end
@@ -31,9 +47,10 @@ describe LinkedCloneVisibilityService do
     context "when provision type is not vmware" do
       let(:provision_type) { nil }
       let(:linked_clone) { nil }
+      let(:snapshot_count) { "potato" }
 
       it "adds values to the field names to hide" do
-        expect(subject.determine_visibility(provision_type, linked_clone)).to eq(
+        expect(subject.determine_visibility(provision_type, linked_clone, snapshot_count)).to eq(
           :hide => [:linked_clone, :snapshot],
           :show => []
         )

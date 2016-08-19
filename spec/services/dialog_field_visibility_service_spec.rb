@@ -30,6 +30,7 @@ describe DialogFieldVisibilityService do
         :request_type                    => request_type,
         :retirement                      => retirement,
         :service_template_request        => service_template_request,
+        :snapshot_count                  => snapshot_count,
         :supports_customization_template => supports_customization_template,
         :supports_iso                    => supports_iso,
         :supports_pxe                    => supports_pxe,
@@ -76,6 +77,7 @@ describe DialogFieldVisibilityService do
     let(:linked_clone_visibility_service) { double("LinkedCloneVisibilityService") }
     let(:provision_type) { "provision_type" }
     let(:linked_clone) { "linked_clone" }
+    let(:snapshot_count) { "snapshot_count" }
 
     before do
       allow(service_template_fields_visibility_service)
@@ -132,7 +134,7 @@ describe DialogFieldVisibilityService do
         )
 
       allow(linked_clone_visibility_service)
-        .to receive(:determine_visibility).with(provision_type, linked_clone).and_return(
+        .to receive(:determine_visibility).with(provision_type, linked_clone, snapshot_count).and_return(
           :hide => [:linked_clone_hide],
           :show => [:linked_clone_show]
         )

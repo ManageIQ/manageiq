@@ -62,7 +62,12 @@ class DialogFieldVisibilityService
     add_to_visiblity_arrays(@sysprep_custom_spec_visibility_service, options[:sysprep_custom_spec])
     add_to_visiblity_arrays(@request_type_visibility_service, options[:request_type])
     add_to_visiblity_arrays(@pxe_iso_visibility_service, options[:supports_iso], options[:supports_pxe])
-    add_to_visiblity_arrays(@linked_clone_visibility_service, options[:provision_type], options[:linked_clone])
+    add_to_visiblity_arrays(
+      @linked_clone_visibility_service,
+      options[:provision_type],
+      options[:linked_clone],
+      options[:snapshot_count]
+    )
 
     @field_names_to_hide -= @field_names_to_hide & @field_names_to_show
     @field_names_to_hide.uniq!
