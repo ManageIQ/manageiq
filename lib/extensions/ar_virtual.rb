@@ -71,8 +71,13 @@ module VirtualDelegates
         raise ArgumentError, 'Delegation needs an association. Supply an options hash with a :to key as the last argument (e.g. delegate :hello, to: :greeter).'
       end
 
-      if options[:name] && methods.size > 1
-        raise ArgumentError, 'Delegation only supports :name option only when defining a single virtual method'
+      to = to.to_s
+      if to.include?(".") && methods.size > 1
+        raise ArgumentError, 'Delegation only supports specifying a method name when defining a single virtual method'
+      end
+
+      if to.count(".") > 1
+        raise ArgumentError, 'Delegation needs a single association. Supply an option hash with a :to key with only 1 period (e.g. delegate :hello, to: "greeter.greeting")'
       end
 
       allow_nil = options[:allow_nil]
@@ -81,8 +86,12 @@ module VirtualDelegates
       # put method entry per method name.
       # This better supports reloading of the class and changing the definitions
       methods.each do |method|
-        method_prefix = virtual_delegate_name_prefix(options[:prefix], options[:to])
-        method_name = options[:name] || "#{method_prefix}#{method}"
+        method_prefix = virtual_delegate_name_prefix(options[:prefix], to)
+        method_name = "#{method_prefix}#{method}"
+        if to.include?(".") # to => "target.method"
+          to, method = to.split(".")
+          options[:to] = to
+        end
 
         define_delegate(method_name, method, :to => to, :allow_nil => allow_nil, :default => default)
 
