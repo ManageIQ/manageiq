@@ -25,16 +25,18 @@ class DialogFieldVisibilityService
     @linked_clone_visibility_service = linked_clone_visibility_service
   end
 
-  def set_hidden_fields(field_names_to_hide, fields)
-    set_fields_display_status(fields, field_names_to_hide, :hide)
-  end
+  def set_visibility_for_field(visibility_hash, field_name, field)
+    status = field[:display]
+    status = :show if visibility_hash[:show].include?(field_name)
+    status = :edit if visibility_hash[:edit].include?(field_name)
+    status = :hide if visibility_hash[:hide].include?(field_name)
 
-  def set_shown_fields(field_names_to_show, fields)
-    set_fields_display_status(fields, field_names_to_show, :edit)
+    field[:display] = field[:display_override].presence || status || :edit
   end
 
   def determine_visibility(options)
     @field_names_to_hide = []
+    @field_names_to_edit = []
     @field_names_to_show = []
 
     add_to_visiblity_arrays(@service_template_fields_visibility_service, options[:service_template_request])
@@ -62,12 +64,22 @@ class DialogFieldVisibilityService
     add_to_visiblity_arrays(@sysprep_custom_spec_visibility_service, options[:sysprep_custom_spec])
     add_to_visiblity_arrays(@request_type_visibility_service, options[:request_type])
     add_to_visiblity_arrays(@pxe_iso_visibility_service, options[:supports_iso], options[:supports_pxe])
-    add_to_visiblity_arrays(@linked_clone_visibility_service, options[:provision_type], options[:linked_clone])
+    add_to_visiblity_arrays(
+      @linked_clone_visibility_service,
+      options[:provision_type],
+      options[:linked_clone],
+      options[:snapshot_count]
+    )
 
-    @field_names_to_hide -= @field_names_to_hide & @field_names_to_show
+    @field_names_to_hide -= @field_names_to_hide & @field_names_to_edit
     @field_names_to_hide.uniq!
-    @field_names_to_show.uniq!
-    {:hide => @field_names_to_hide.flatten, :edit => @field_names_to_show.flatten}
+    @field_names_to_edit.uniq!
+
+    {
+      :hide => @field_names_to_hide.flatten,
+      :edit => @field_names_to_edit.flatten,
+      :show => @field_names_to_show.flatten
+    }
   end
 
   private
@@ -75,6 +87,7 @@ class DialogFieldVisibilityService
   def add_to_visiblity_arrays(visibility_service, *options)
     visibility_hash = visibility_service.determine_visibility(*options)
     @field_names_to_hide += visibility_hash[:hide]
+    @field_names_to_edit += visibility_hash[:edit] if visibility_hash[:edit]
     @field_names_to_show += visibility_hash[:show] if visibility_hash[:show]
   end
 

@@ -7,10 +7,10 @@ describe NetworkVisibilityService do
     let(:addr_mode) { nil }
 
     shared_examples_for "NetworkVisibilityService#determine_visibility that shows everything" do
-      it "adds the network values to the show values" do
+      it "adds the network values to the edit values" do
         expect(subject.determine_visibility(sysprep_enabled, supports_pxe, supports_iso, addr_mode)).to eq(
           :hide => [],
-          :show => [:addr_mode, :dns_suffixes, :dns_servers, :ip_addr, :subnet_mask, :gateway]
+          :edit => [:addr_mode, :dns_suffixes, :dns_servers, :ip_addr, :subnet_mask, :gateway]
         )
       end
     end
@@ -43,10 +43,10 @@ describe NetworkVisibilityService do
           context "when supports_iso is false" do
             let(:supports_iso) { false }
 
-            it "adds the correct values to the show and hide values" do
+            it "adds the correct values to the edit and hide values" do
               expect(subject.determine_visibility(sysprep_enabled, supports_pxe, supports_iso, addr_mode)).to eq(
                 :hide => [:ip_addr, :subnet_mask, :gateway],
-                :show => [:addr_mode, :dns_suffixes, :dns_servers]
+                :edit => [:addr_mode, :dns_suffixes, :dns_servers]
               )
             end
           end
@@ -120,7 +120,7 @@ describe NetworkVisibilityService do
           it "adds the correct values to the hide values" do
             expect(subject.determine_visibility(sysprep_enabled, supports_pxe, supports_iso, addr_mode)).to eq(
               :hide => [:addr_mode, :ip_addr, :subnet_mask, :gateway, :dns_servers, :dns_suffixes],
-              :show => []
+              :edit => []
             )
           end
         end

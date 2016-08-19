@@ -30,6 +30,7 @@ describe DialogFieldVisibilityService do
         :request_type                    => request_type,
         :retirement                      => retirement,
         :service_template_request        => service_template_request,
+        :snapshot_count                  => snapshot_count,
         :supports_customization_template => supports_customization_template,
         :supports_iso                    => supports_iso,
         :supports_pxe                    => supports_pxe,
@@ -76,6 +77,7 @@ describe DialogFieldVisibilityService do
     let(:linked_clone_visibility_service) { double("LinkedCloneVisibilityService") }
     let(:provision_type) { "provision_type" }
     let(:linked_clone) { "linked_clone" }
+    let(:snapshot_count) { "snapshot_count" }
 
     before do
       allow(service_template_fields_visibility_service)
@@ -85,27 +87,27 @@ describe DialogFieldVisibilityService do
 
       allow(auto_placement_visibility_service)
         .to receive(:determine_visibility).with(auto_placement_enabled).and_return(
-          :hide => [:auto_hide], :show => [:auto_show]
+          :hide => [:auto_hide], :edit => [:auto_edit]
         )
 
       allow(number_of_vms_visibility_service)
         .to receive(:determine_visibility).with(number_of_vms, platform).and_return(
-          :hide => [:number_hide], :show => [:number_show]
+          :hide => [:number_hide], :edit => [:number_edit]
         )
 
       allow(network_visibility_service)
         .to receive(:determine_visibility).with(sysprep_enabled, supports_pxe, supports_iso, addr_mode).and_return(
-          :hide => [:network_hide], :show => [:network_show]
+          :hide => [:network_hide], :edit => [:network_edit]
         )
 
       allow(sysprep_auto_logon_visibility_service)
         .to receive(:determine_visibility).with(sysprep_auto_logon).and_return(
-          :hide => [:sysprep_auto_logon_hide], :show => [:sysprep_auto_logon_show]
+          :hide => [:sysprep_auto_logon_hide], :edit => [:sysprep_auto_logon_edit]
         )
 
       allow(retirement_visibility_service)
         .to receive(:determine_visibility).with(retirement).and_return(
-          :hide => [:retirement_hide], :show => [:retirement_show]
+          :hide => [:retirement_hide], :edit => [:retirement_edit]
         )
 
       allow(customize_fields_visibility_service)
@@ -113,13 +115,13 @@ describe DialogFieldVisibilityService do
           platform, supports_customization_template, customize_fields_list
         ).and_return(
           :hide => [:customize_fields_hide, :number_hide], # Forces uniq
-          :show => [:customize_fields_show, :number_show, :retirement_hide] # Forces uniq and removal of intersection
+          :edit => [:customize_fields_edit, :number_edit, :retirement_hide] # Forces uniq and removal of intersection
         )
 
       allow(sysprep_custom_spec_visibility_service)
         .to receive(:determine_visibility).with(sysprep_custom_spec).and_return(
           :hide => [:sysprep_custom_spec_hide],
-          :show => [:sysprep_custom_spec_show]
+          :edit => [:sysprep_custom_spec_edit]
         )
 
       allow(request_type_visibility_service)
@@ -128,17 +130,18 @@ describe DialogFieldVisibilityService do
       allow(pxe_iso_visibility_service)
         .to receive(:determine_visibility).with(supports_iso, supports_pxe).and_return(
           :hide => [:pxe_iso_hide],
-          :show => [:pxe_iso_show]
+          :edit => [:pxe_iso_edit]
         )
 
       allow(linked_clone_visibility_service)
-        .to receive(:determine_visibility).with(provision_type, linked_clone).and_return(
+        .to receive(:determine_visibility).with(provision_type, linked_clone, snapshot_count).and_return(
           :hide => [:linked_clone_hide],
+          :edit => [:linked_clone_edit],
           :show => [:linked_clone_show]
         )
     end
 
-    it "adds the values to the field names to hide and show without duplicates or intersections" do
+    it "adds the values to the field names to hide, edit, and show without duplicates or intersections" do
       result = subject.determine_visibility(options)
       expect(result[:hide]).to match_array([
         :auto_hide,
@@ -153,92 +156,104 @@ describe DialogFieldVisibilityService do
         :sysprep_custom_spec_hide
       ])
       expect(result[:edit]).to match_array([
-        :auto_show,
-        :customize_fields_show,
-        :linked_clone_show,
-        :network_show,
-        :number_show,
-        :pxe_iso_show,
+        :auto_edit,
+        :customize_fields_edit,
+        :linked_clone_edit,
+        :network_edit,
+        :number_edit,
+        :pxe_iso_edit,
         :retirement_hide,
-        :retirement_show,
-        :sysprep_auto_logon_show,
-        :sysprep_custom_spec_show
+        :retirement_edit,
+        :sysprep_auto_logon_edit,
+        :sysprep_custom_spec_edit
       ])
+      expect(result[:show]).to match_array([:linked_clone_show])
     end
   end
 
-  describe "#set_hidden_fields" do
-    let(:fields) { [field] }
-    let(:field) { {:name => field_name, :display => :unchanged, :display_override => display_override} }
-    let(:field_names_to_hide) { ["hide_me"] }
+  describe "#set_visibility_for_field" do
+    let(:field) { {:display_override => display_override} }
+    let(:visibility_hash) { {:edit => "edit_me", :hide => "hide_me", :show => "show_me"} }
 
-    context "when the field name is contained in the field names to hide" do
-      let(:field_name) { "hide_me" }
+    before do
+      subject.set_visibility_for_field(visibility_hash, field_name, field)
+    end
 
+    shared_examples_for "#set_visibility_for_field with a display override" do
       context "when the field has a display override" do
         let(:display_override) { :potato }
 
-        it "sets the field's display property to :hide" do
-          subject.set_hidden_fields(field_names_to_hide, fields)
+        it "sets the display value to the override" do
           expect(field[:display]).to eq(:potato)
         end
       end
+    end
+
+    context "when the field name is contained in the field names to edit" do
+      let(:field_name) { "edit_me" }
+
+      it_behaves_like "#set_visibility_for_field with a display override"
 
       context "when the field display override is blank" do
         let(:display_override) { "" }
 
-        it "sets the field's display property to :hide" do
-          subject.set_hidden_fields(field_names_to_hide, fields)
-          expect(field[:display]).to eq(:hide)
-        end
-      end
-    end
-
-    context "when the field name is not contained in the field names to hide" do
-      let(:field_name) { "test" }
-      let(:display_override) { "" }
-
-      it "does not change the field's display property" do
-        subject.set_hidden_fields(field_names_to_hide, fields)
-        expect(field[:display]).to eq(:unchanged)
-      end
-    end
-  end
-
-  describe "#set_shown_fields" do
-    let(:fields) { [field] }
-    let(:field) { {:name => field_name, :display => :unchanged, :display_override => display_override} }
-    let(:field_names_to_show) { ["show_me"] }
-
-    context "when the field name is contained in the field names to hide" do
-      let(:field_name) { "show_me" }
-
-      context "when the field has a display override" do
-        let(:display_override) { :potato }
-
-        it "sets the field's display property to the override" do
-          subject.set_shown_fields(field_names_to_show, fields)
-          expect(field[:display]).to eq(:potato)
-        end
-      end
-
-      context "when the field display override is blank" do
-        let(:display_override) { "" }
-
-        it "sets the field's display property to :edit" do
-          subject.set_shown_fields(field_names_to_show, fields)
+        it "sets the display value to edit" do
           expect(field[:display]).to eq(:edit)
         end
       end
     end
 
-    context "when the field name is not contained in the field names to show" do
-      let(:field_name) { "test" }
-      let(:display_override) { nil }
+    context "when the field name is contained in the field names to hide" do
+      let(:field_name) { "hide_me" }
 
-      it "does not change the field's display property" do
-        subject.set_shown_fields(field_names_to_show, fields)
-        expect(field[:display]).to eq(:unchanged)
+      it_behaves_like "#set_visibility_for_field with a display override"
+
+      context "when the field display override is blank" do
+        let(:display_override) { "" }
+
+        it "sets the display value to hide" do
+          expect(field[:display]).to eq(:hide)
+        end
+      end
+    end
+
+    context "when the field name is contained in the field names to show" do
+      let(:field_name) { "show_me" }
+
+      it_behaves_like "#set_visibility_for_field with a display override"
+
+      context "when the field display override is blank" do
+        let(:display_override) { "" }
+
+        it "sets the display value to show" do
+          expect(field[:display]).to eq(:show)
+        end
+      end
+    end
+
+    context "when the field name is not contained in either the field names to edit or hide or show" do
+      let(:field_name) { "potato" }
+
+      it_behaves_like "#set_visibility_for_field with a display override"
+
+      context "when the field display override is blank" do
+        let(:display_override) { "" }
+
+        context "when the field does not have a display value" do
+          let(:display) { nil }
+
+          it "sets the display value to edit" do
+            expect(field[:display]).to eq(:edit)
+          end
+        end
+
+        context "when the field does have a display value" do
+          let(:field) { {:display_override => display_override, :display => :hide} }
+
+          it "uses the given display value" do
+            expect(field[:display]).to eq(:hide)
+          end
+        end
       end
     end
   end

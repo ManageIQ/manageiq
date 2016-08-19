@@ -943,12 +943,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     options_hash = setup_parameters_for_visibility_service(options)
     visibility_hash = dialog_field_visibility_service.determine_visibility(options_hash)
 
-    all_fields = []
-    fields do |field_name, field, _dialog_name, _dialog|
-      all_fields << field.merge(:name => field_name)
+    fields do |field_name, field, _, _|
+      dialog_field_visibility_service.set_visibility_for_field(visibility_hash, field_name, field)
     end
-    dialog_field_visibility_service.set_shown_fields(visibility_hash[:edit], all_fields)
-    dialog_field_visibility_service.set_hidden_fields(visibility_hash[:hide], all_fields)
   end
 
   def update_field_display_notes_values
@@ -978,11 +975,14 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       :addr_mode                       => get_value(@values[:addr_mode]),
       :auto_placement_enabled          => auto_placement_enabled?,
       :customize_fields_list           => customize_fields_list,
+      :linked_clone                    => get_value(@values[:linked_clone]),
       :number_of_vms                   => number_of_vms,
       :platform                        => platform,
+      :provision_type                  => get_value(@values[:provision_type]),
       :request_type                    => request_type,
       :retirement                      => get_value(@values[:retirement]).to_i,
       :service_template_request        => get_value(@values[:service_template_request]),
+      :snapshot_count                  => @vm_snapshot_count,
       :supports_customization_template => supports_customization_template?,
       :supports_iso                    => supports_iso?,
       :supports_pxe                    => supports_pxe?,

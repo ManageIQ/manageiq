@@ -18,7 +18,7 @@ describe AutoPlacementVisibilityService do
             :placement_rp_name,
             :placement_dc_name
           ],
-          :show => []
+          :edit => []
         )
       end
     end
@@ -26,10 +26,10 @@ describe AutoPlacementVisibilityService do
     context "when auto placement is not enabled" do
       let(:auto_placement) { false }
 
-      it "adds values to the field names to show" do
+      it "adds values to the field names to edit" do
         expect(subject.determine_visibility(auto_placement)).to eq(
           :hide => [],
-          :show => [
+          :edit => [
             :placement_host_name,
             :placement_ds_name,
             :host_filter,

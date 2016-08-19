@@ -8,10 +8,10 @@ describe NumberOfVmsVisibilityService do
       context "when the platform is linux" do
         let(:platform) { "linux" }
 
-        it "adds values to field names to hide and show" do
+        it "adds values to field names to hide and edit" do
           expect(subject.determine_visibility(number_of_vms, platform)).to eq(
             :hide => [:sysprep_computer_name, :linux_host_name],
-            :show => [:ip_addr]
+            :edit => [:ip_addr]
           )
         end
       end
@@ -19,10 +19,10 @@ describe NumberOfVmsVisibilityService do
       context "when the platform is not linux" do
         let(:platform) { "not linux" }
 
-        it "adds values to field names to hide and show" do
+        it "adds values to field names to hide and edit" do
           expect(subject.determine_visibility(number_of_vms, platform)).to eq(
             :hide => [:sysprep_computer_name, :linux_host_name],
-            :show => [:ip_addr]
+            :edit => [:ip_addr]
           )
         end
       end
@@ -34,10 +34,10 @@ describe NumberOfVmsVisibilityService do
       context "when the platform is linux" do
         let(:platform) { "linux" }
 
-        it "adds values to field names to hide and show" do
+        it "adds values to field names to hide and edit" do
           expect(subject.determine_visibility(number_of_vms, platform)).to eq(
             :hide => [:ip_addr, :sysprep_computer_name],
-            :show => [:linux_host_name]
+            :edit => [:linux_host_name]
           )
         end
       end
@@ -45,10 +45,10 @@ describe NumberOfVmsVisibilityService do
       context "when the platform is not linux" do
         let(:platform) { "not linux" }
 
-        it "adds values to field names to hide and show" do
+        it "adds values to field names to hide and edit" do
           expect(subject.determine_visibility(number_of_vms, platform)).to eq(
             :hide => [:ip_addr, :linux_host_name],
-            :show => [:sysprep_computer_name]
+            :edit => [:sysprep_computer_name]
           )
         end
       end

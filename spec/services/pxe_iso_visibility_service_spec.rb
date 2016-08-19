@@ -8,10 +8,10 @@ describe PxeIsoVisibilityService do
       context "when iso is supported" do
         let(:supports_iso) { true }
 
-        it "returns the values to be shown and hidden" do
+        it "returns the values to be edit and hidden" do
           expect(subject.determine_visibility(supports_iso, supports_pxe)).to eq(
             :hide => [],
-            :show => [:pxe_image_id, :pxe_server_id, :iso_image_id]
+            :edit => [:pxe_image_id, :pxe_server_id, :iso_image_id]
           )
         end
       end
@@ -19,10 +19,10 @@ describe PxeIsoVisibilityService do
       context "when iso is not supported" do
         let(:supports_iso) { false }
 
-        it "returns the values to be shown and hidden" do
+        it "returns the values to be edit and hidden" do
           expect(subject.determine_visibility(supports_iso, supports_pxe)).to eq(
             :hide => [:iso_image_id],
-            :show => [:pxe_image_id, :pxe_server_id]
+            :edit => [:pxe_image_id, :pxe_server_id]
           )
         end
       end
@@ -34,10 +34,10 @@ describe PxeIsoVisibilityService do
       context "when iso is supported" do
         let(:supports_iso) { true }
 
-        it "returns the values to be shown and hidden" do
+        it "returns the values to be edit and hidden" do
           expect(subject.determine_visibility(supports_iso, supports_pxe)).to eq(
             :hide => [:pxe_image_id, :pxe_server_id],
-            :show => [:iso_image_id]
+            :edit => [:iso_image_id]
           )
         end
       end
@@ -45,10 +45,10 @@ describe PxeIsoVisibilityService do
       context "when iso is not supported" do
         let(:supports_iso) { false }
 
-        it "returns the values to be shown and hidden" do
+        it "returns the values to be edit and hidden" do
           expect(subject.determine_visibility(supports_iso, supports_pxe)).to eq(
             :hide => [:pxe_image_id, :pxe_server_id, :iso_image_id],
-            :show => []
+            :edit => []
           )
         end
       end

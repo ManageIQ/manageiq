@@ -7,10 +7,10 @@ describe CustomizeFieldsVisibilityService do
       let(:platform) { "potato" }
       let(:customize_fields_list) { "potato" }
 
-      it "returns a list of pxe customization fields to show" do
+      it "returns a list of pxe customization fields to edit" do
         expect(subject.determine_visibility(platform, supports_customization_template, customize_fields_list)).to eq(
           :hide => [],
-          :show => [
+          :edit => [
             :addr_mode,
             :customization_template_id,
             :customization_template_script,
@@ -48,9 +48,9 @@ describe CustomizeFieldsVisibilityService do
         end
         let(:platform) { "linux" }
 
-        it "returns an empty hide/show hash" do
+        it "returns an empty hide/edit hash" do
           expect(subject.determine_visibility(platform, supports_customization_template, customize_fields_list)).to eq(
-            :hide => [], :show => []
+            :hide => [], :edit => []
           )
         end
       end
@@ -61,12 +61,12 @@ describe CustomizeFieldsVisibilityService do
         context "when the platform is linux" do
           let(:platform) { "linux" }
 
-          it "returns the correct list of things to show/hide" do
+          it "returns the correct list of things to edit/hide" do
             expect(subject.determine_visibility(
               platform,
               supports_customization_template,
               customize_fields_list)).to eq(
-                :hide => [:potato], :show => [:linux_domain_name]
+                :hide => [:potato], :edit => [:linux_domain_name]
               )
           end
         end
@@ -74,12 +74,12 @@ describe CustomizeFieldsVisibilityService do
         context "when the platform is not linux" do
           let(:platform) { "potato" }
 
-          it "returns an empty hide/show hash" do
+          it "returns an empty hide/edit hash" do
             expect(subject.determine_visibility(
               platform,
               supports_customization_template,
               customize_fields_list)).to eq(
-                :hide => [], :show => []
+                :hide => [], :edit => []
               )
           end
         end
