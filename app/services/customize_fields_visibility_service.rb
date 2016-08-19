@@ -1,10 +1,10 @@
 class CustomizeFieldsVisibilityService
   def determine_visibility(platform, supports_customization_template, customize_fields_list)
-    field_names_to_show = []
+    field_names_to_edit = []
     field_names_to_hide = []
 
     if supports_customization_template
-      field_names_to_show += [
+      field_names_to_edit += [
         :addr_mode,
         :customization_template_id,
         :customization_template_script,
@@ -37,13 +37,13 @@ class CustomizeFieldsVisibilityService
         next unless platform == "linux"
 
         if field_name == :linux_domain_name
-          field_names_to_show << field_name
+          field_names_to_edit << field_name
         else
           field_names_to_hide << field_name
         end
       end
     end
 
-    {:hide => field_names_to_hide, :show => field_names_to_show}
+    {:hide => field_names_to_hide, :edit => field_names_to_edit}
   end
 end

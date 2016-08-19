@@ -5,10 +5,10 @@ describe RetirementVisibilityService do
     context "when retirement to_i is greater than 0" do
       let(:retirement) { 123 }
 
-      it "adds the retirement warn to the show fields" do
+      it "adds the retirement warn to the edit fields" do
         expect(subject.determine_visibility(retirement)).to eq(
           :hide => [],
-          :show => [:retirement_warn]
+          :edit => [:retirement_warn]
         )
       end
     end
@@ -19,7 +19,7 @@ describe RetirementVisibilityService do
       it "adds the retirement warn to the hide fields" do
         expect(subject.determine_visibility(retirement)).to eq(
           :hide => [:retirement_warn],
-          :show => []
+          :edit => []
         )
       end
     end

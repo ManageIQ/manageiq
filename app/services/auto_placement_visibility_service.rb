@@ -1,7 +1,7 @@
 class AutoPlacementVisibilityService
   def determine_visibility(auto_placement_enabled)
     field_names_to_hide = []
-    field_names_to_show = []
+    field_names_to_edit = []
 
     auto_placement_values = [
       :placement_host_name,
@@ -18,9 +18,9 @@ class AutoPlacementVisibilityService
     if auto_placement_enabled
       field_names_to_hide += auto_placement_values
     else
-      field_names_to_show += auto_placement_values
+      field_names_to_edit += auto_placement_values
     end
 
-    {:hide => field_names_to_hide, :show => field_names_to_show}
+    {:hide => field_names_to_hide, :edit => field_names_to_edit}
   end
 end

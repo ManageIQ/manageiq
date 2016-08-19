@@ -87,27 +87,27 @@ describe DialogFieldVisibilityService do
 
       allow(auto_placement_visibility_service)
         .to receive(:determine_visibility).with(auto_placement_enabled).and_return(
-          :hide => [:auto_hide], :show => [:auto_show]
+          :hide => [:auto_hide], :edit => [:auto_edit]
         )
 
       allow(number_of_vms_visibility_service)
         .to receive(:determine_visibility).with(number_of_vms, platform).and_return(
-          :hide => [:number_hide], :show => [:number_show]
+          :hide => [:number_hide], :edit => [:number_edit]
         )
 
       allow(network_visibility_service)
         .to receive(:determine_visibility).with(sysprep_enabled, supports_pxe, supports_iso, addr_mode).and_return(
-          :hide => [:network_hide], :show => [:network_show]
+          :hide => [:network_hide], :edit => [:network_edit]
         )
 
       allow(sysprep_auto_logon_visibility_service)
         .to receive(:determine_visibility).with(sysprep_auto_logon).and_return(
-          :hide => [:sysprep_auto_logon_hide], :show => [:sysprep_auto_logon_show]
+          :hide => [:sysprep_auto_logon_hide], :edit => [:sysprep_auto_logon_edit]
         )
 
       allow(retirement_visibility_service)
         .to receive(:determine_visibility).with(retirement).and_return(
-          :hide => [:retirement_hide], :show => [:retirement_show]
+          :hide => [:retirement_hide], :edit => [:retirement_edit]
         )
 
       allow(customize_fields_visibility_service)
@@ -115,13 +115,13 @@ describe DialogFieldVisibilityService do
           platform, supports_customization_template, customize_fields_list
         ).and_return(
           :hide => [:customize_fields_hide, :number_hide], # Forces uniq
-          :show => [:customize_fields_show, :number_show, :retirement_hide] # Forces uniq and removal of intersection
+          :edit => [:customize_fields_edit, :number_edit, :retirement_hide] # Forces uniq and removal of intersection
         )
 
       allow(sysprep_custom_spec_visibility_service)
         .to receive(:determine_visibility).with(sysprep_custom_spec).and_return(
           :hide => [:sysprep_custom_spec_hide],
-          :show => [:sysprep_custom_spec_show]
+          :edit => [:sysprep_custom_spec_edit]
         )
 
       allow(request_type_visibility_service)
@@ -130,17 +130,18 @@ describe DialogFieldVisibilityService do
       allow(pxe_iso_visibility_service)
         .to receive(:determine_visibility).with(supports_iso, supports_pxe).and_return(
           :hide => [:pxe_iso_hide],
-          :show => [:pxe_iso_show]
+          :edit => [:pxe_iso_edit]
         )
 
       allow(linked_clone_visibility_service)
         .to receive(:determine_visibility).with(provision_type, linked_clone, snapshot_count).and_return(
           :hide => [:linked_clone_hide],
+          :edit => [:linked_clone_edit],
           :show => [:linked_clone_show]
         )
     end
 
-    it "adds the values to the field names to hide and show without duplicates or intersections" do
+    it "adds the values to the field names to hide, edit, and show without duplicates or intersections" do
       result = subject.determine_visibility(options)
       expect(result[:hide]).to match_array([
         :auto_hide,
@@ -155,23 +156,26 @@ describe DialogFieldVisibilityService do
         :sysprep_custom_spec_hide
       ])
       expect(result[:edit]).to match_array([
-        :auto_show,
-        :customize_fields_show,
-        :linked_clone_show,
-        :network_show,
-        :number_show,
-        :pxe_iso_show,
+        :auto_edit,
+        :customize_fields_edit,
+        :linked_clone_edit,
+        :network_edit,
+        :number_edit,
+        :pxe_iso_edit,
         :retirement_hide,
-        :retirement_show,
-        :sysprep_auto_logon_show,
-        :sysprep_custom_spec_show
+        :retirement_edit,
+        :sysprep_auto_logon_edit,
+        :sysprep_custom_spec_edit
+      ])
+      expect(result[:show]).to match_array([
+        :linked_clone_show
       ])
     end
   end
 
   describe "#set_visibility_for_field" do
     let(:field) { {:display_override => display_override} }
-    let(:visibility_hash) { {:edit => "edit_me", :hide => "hide_me"} }
+    let(:visibility_hash) { {:edit => "edit_me", :hide => "hide_me", :show => "show_me"} }
 
     before do
       subject.set_visibility_for_field(visibility_hash, field_name, field)
@@ -215,7 +219,21 @@ describe DialogFieldVisibilityService do
       end
     end
 
-    context "when the field name is not contained in either the field names to edit or hide" do
+    context "when the field name is contained in the field names to show" do
+      let(:field_name) { "show_me" }
+
+      it_behaves_like "#set_visibility_for_field with a display override"
+
+      context "when the field display override is blank" do
+        let(:display_override) { "" }
+
+        it "sets the display value to show" do
+          expect(field[:display]).to eq(:show)
+        end
+      end
+    end
+
+    context "when the field name is not contained in either the field names to edit or hide or show" do
       let(:field_name) { "potato" }
 
       it_behaves_like "#set_visibility_for_field with a display override"

@@ -8,7 +8,7 @@ describe SysprepAutoLogonVisibilityService do
       it "adds values to the field names to hide" do
         expect(subject.determine_visibility(sysprep_auto_logon)).to eq(
           :hide => [:sysprep_auto_logon_count],
-          :show => []
+          :edit => []
         )
       end
     end
@@ -16,10 +16,10 @@ describe SysprepAutoLogonVisibilityService do
     context "when sysprep auto logon is true" do
       let(:sysprep_auto_logon) { true }
 
-      it "adds values to the field names to show" do
+      it "adds values to the field names to edit" do
         expect(subject.determine_visibility(sysprep_auto_logon)).to eq(
           :hide => [],
-          :show => [:sysprep_auto_logon_count]
+          :edit => [:sysprep_auto_logon_count]
         )
       end
     end

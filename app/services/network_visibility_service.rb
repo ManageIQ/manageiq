@@ -1,13 +1,13 @@
 class NetworkVisibilityService
   def determine_visibility(sysprep_enabled, supports_pxe, supports_iso, addr_mode)
     field_names_to_hide = []
-    field_names_to_show = []
+    field_names_to_edit = []
 
     if show_dns_settings?(sysprep_enabled, supports_pxe, supports_iso)
-      field_names_to_show += [:addr_mode, :dns_suffixes, :dns_servers]
+      field_names_to_edit += [:addr_mode, :dns_suffixes, :dns_servers]
 
       if show_ip_settings?(addr_mode, supports_pxe, supports_iso)
-        field_names_to_show += [:ip_addr, :subnet_mask, :gateway]
+        field_names_to_edit += [:ip_addr, :subnet_mask, :gateway]
       else
         field_names_to_hide += [:ip_addr, :subnet_mask, :gateway]
       end
@@ -15,7 +15,7 @@ class NetworkVisibilityService
       field_names_to_hide += [:addr_mode, :ip_addr, :subnet_mask, :gateway, :dns_servers, :dns_suffixes]
     end
 
-    {:hide => field_names_to_hide, :show => field_names_to_show}
+    {:hide => field_names_to_hide, :edit => field_names_to_edit}
   end
 
   private
