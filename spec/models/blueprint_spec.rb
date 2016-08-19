@@ -1,23 +1,20 @@
 describe Blueprint do
   subject { FactoryGirl.build(:blueprint) }
 
-  let(:admin)                    { FactoryGirl.create(:user_admin) }
-  let(:button_in_a_set)          { FactoryGirl.create(:custom_button, :applies_to => catalog_bundle) }
-  let(:catalog)                  { FactoryGirl.create(:service_template_catalog) }
-  let(:custom_button_set)        { FactoryGirl.create(:custom_button_set) }
-  let(:dialog)                   { FactoryGirl.create(:dialog, :label => 'dialog').tap { |d| d.dialog_tabs << dialog_tab } }
-  let(:dialog_field)             { FactoryGirl.create(:dialog_field, :label => 'field 1', :name => "field_1") }
-  let(:dialog_group)             { FactoryGirl.create(:dialog_group, :label => 'group').tap { |dg| dg.dialog_fields << dialog_field } }
-  let(:dialog_tab)               { FactoryGirl.create(:dialog_tab, :label => 'tab').tap { |dt| dt.dialog_groups << dialog_group } }
-  let(:direct_custom_button)     { FactoryGirl.create(:custom_button, :applies_to => catalog_bundle) }
-  let(:ptr)                      { FactoryGirl.create(:miq_provision_request_template, :requester => admin, :src_vm_id => vm_template.id) }
-  let(:resource_action_1)        { FactoryGirl.create(:resource_action, :dialog => dialog) }
-  let(:resource_action_2)        { FactoryGirl.create(:resource_action, :dialog => dialog) }
-  let(:vm_template)              { FactoryGirl.create(:template) }
+  let(:admin)                      { FactoryGirl.create(:user_admin) }
+  let(:button_in_a_set)            { FactoryGirl.create(:custom_button, :applies_to => catalog_bundle) }
+  let(:catalog)                    { FactoryGirl.create(:service_template_catalog) }
+  let(:custom_button_set)          { FactoryGirl.create(:custom_button_set) }
+  let(:dialog)                     { FactoryGirl.create(:dialog_with_tab_and_group_and_field) }
+  let(:direct_custom_button)       { FactoryGirl.create(:custom_button, :applies_to => catalog_bundle) }
+  let(:provision_request_template) { FactoryGirl.create(:miq_provision_request_template, :requester => admin, :src_vm_id => vm_template.id) }
+  let(:resource_action_1)          { FactoryGirl.create(:resource_action, :dialog => dialog) }
+  let(:resource_action_2)          { FactoryGirl.create(:resource_action, :dialog => dialog) }
+  let(:vm_template)                { FactoryGirl.create(:template) }
 
   let(:catalog_vm_provisioning) do
     FactoryGirl.create(:service_template, :name => 'Service Template Vm Provisioning').tap do |item|
-      add_and_save_service(item, ptr)
+      add_and_save_service(item, provision_request_template)
       item.resource_actions = [FactoryGirl.create(:resource_action)]
     end
   end
@@ -142,6 +139,76 @@ describe Blueprint do
         )
       }
       expect(blueprint.content).to include(expected)
+    end
+  end
+
+  describe '#update_bundle' do
+    context 'update catalog items' do
+      it 'adds the first catalog item' do
+        bundle = subject.update_bundle(:service_templates => [catalog_vm_provisioning])
+        expect(bundle.descendants.first.name).to eq(catalog_vm_provisioning.name)
+        expect(bundle.descendants.first.id).not_to eq(catalog_vm_provisioning.id)
+      end
+
+      it 'adds the second catalog item' do
+        bundle = subject.update_bundle(:service_templates => [catalog_vm_provisioning])
+        expect(bundle.descendants.size).to eq(1)
+
+        bundle = subject.update_bundle(:service_templates => [bundle.descendants.first, catalog_orchestration])
+        expect(bundle.descendants.size).to eq(2)
+        expect(bundle.descendants.collect(&:name)).to include(catalog_vm_provisioning.name, catalog_orchestration.name)
+      end
+
+      it 'removes and destroys an existing catalog item' do
+        bundle = subject.update_bundle(:service_templates => [catalog_vm_provisioning, catalog_orchestration])
+        expect(bundle.descendants.size).to eq(2)
+        expect(ServiceTemplate.count).to eq(5)
+
+        bundle = subject.update_bundle(:service_templates => [bundle.descendants.first])
+        expect(bundle.descendants.size).to eq(1)
+        expect(ServiceTemplate.count).to eq(4)
+      end
+    end
+
+    context 'update service catalog' do
+      it do
+        bundle = subject.update_bundle(:service_catalog => catalog)
+        expect(bundle.service_template_catalog).to eq(catalog)
+
+        another_catalog = FactoryGirl.create(:service_template_catalog, :name => 'another catalog')
+        bundle = subject.update_bundle(:service_catalog => another_catalog)
+        expect(bundle.service_template_catalog).to eq(another_catalog)
+      end
+    end
+
+    context 'update entry points' do
+      it do
+        bundle = subject.update_bundle(:entry_points => {'Provision' => 'a/b/c'})
+        expect(bundle.resource_actions.find_by(:action => 'Provision').fqname).to eq('/a/b/c')
+
+        bundle = subject.update_bundle(:entry_points => {'Provision' => 'x/y/z'})
+        expect(bundle.resource_actions.find_by(:action => 'Provision').fqname).to eq('/x/y/z')
+      end
+    end
+
+    context 'update dialog' do
+      before do
+        subject.update_bundle(:entry_points => {'Provision' => 'a/b/c'}, :service_dialog => dialog)
+      end
+
+      it 'copies the new dialog' do
+        another_dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field, :label => 'another dialog')
+        expect(another_dialog).to receive(:deep_copy).and_call_original
+        subject.update_bundle(:service_dialog => another_dialog)
+        expect(Dialog.count).to eq(3)
+      end
+
+      it 'skips existing dialog' do
+        existing_dialog = subject.bundle.dialogs.first
+        expect(existing_dialog).not_to receive(:deep_copy)
+        subject.update_bundle(:service_dialog => existing_dialog)
+        expect(Dialog.count).to eq(2)
+      end
     end
   end
 end

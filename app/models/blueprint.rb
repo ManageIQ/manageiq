@@ -29,27 +29,37 @@ class Blueprint < ApplicationRecord
   def create_bundle(options)
     options = options.with_indifferent_access
     self.class.transaction do
-      ServiceTemplate.create(
+      new_bundle = ServiceTemplate.create(
         :name         => name,
         :description  => description,
         :blueprint    => self,
         :service_type => 'composite'
-      ).tap do |new_bundle|
-        add_catalog_items(new_bundle, options[:service_templates]) if options.key?(:service_templates)
-        new_bundle.service_template_catalog = options[:service_catalog]
+      )
+      add_catalog_items(new_bundle, options[:service_templates]) if options.key?(:service_templates)
+      new_bundle.service_template_catalog = options[:service_catalog]
 
-        if options.key?(:service_dialog)
-          new_dialog = options[:service_dialog].deep_copy(:name => random_dialog_name(name)).tap(&:save!)
-        end
-        add_entry_points(new_bundle, options[:entry_points], new_dialog)
-
-        new_bundle.save!
+      if options.key?(:service_dialog)
+        new_dialog = options[:service_dialog].deep_copy(:label => random_dialog_name(name)).tap(&:save!)
       end
+      add_entry_points(new_bundle, options[:entry_points], new_dialog)
+
+      new_bundle.save!
+      reload.bundle
     end
   end
 
   def update_bundle(options)
-    # TODO
+    return create_bundle(options) unless bundle
+
+    self.class.transaction do
+      the_bundle = bundle
+      update_catalog_items(the_bundle, options[:service_templates]) if options.key?(:service_templates)
+      the_bundle.service_template_catalog = options[:service_catalog] if options.key?(:service_catalog)
+      update_entry_points(the_bundle, options[:entry_points]) if options.key?(:entry_points)
+      update_entry_points_dialog(the_bundle, options[:service_dialog]) if options.key?(:service_dialog)
+      the_bundle.save!
+      reload.bundle
+    end
   end
 
   def content
@@ -94,7 +104,7 @@ class Blueprint < ApplicationRecord
   def ensure_new_dialog(dialog_map, old_dialog)
     new_dialog = dialog_map[old_dialog.id]
     unless new_dialog
-      new_dialog = old_dialog.deep_copy(:name => random_dialog_name(old_dialog.name)).tap(&:save!)
+      new_dialog = old_dialog.deep_copy(:label => random_dialog_name(old_dialog.name)).tap(&:save!)
       dialog_map[old_dialog.id] = new_dialog
     end
     new_dialog
@@ -138,6 +148,22 @@ class Blueprint < ApplicationRecord
     end
   end
 
+  def update_catalog_items(the_bundle, catalog_items)
+    existing_ids = the_bundle.service_templates.collect(&:id)
+    catalog_items.each do |item|
+      unless existing_ids.delete(item.id)
+        # new item
+        add_catalog_items(the_bundle, [item])
+      end
+    end
+
+    # remove items
+    ServiceTemplate.where(:id => existing_ids).each do |remaining_item|
+      the_bundle.remove_resource(remaining_item)
+      remaining_item.destroy!
+    end
+  end
+
   def add_entry_points(new_bundle, entry_points, dialog)
     entry_points ||= {
       'Provision'  => ServiceTemplate.default_provisioning_entry_point,
@@ -147,6 +173,30 @@ class Blueprint < ApplicationRecord
     entry_points.each do |key, value|
       new_bundle.resource_actions.build(:action => key, :fqname => value, :dialog => dialog)
     end
+  end
+
+  def update_entry_points(the_bundle, entry_points)
+    existing_actions = the_bundle.resource_actions
+    entry_points.each do |key, value|
+      action = existing_actions.find_by(:action => key)
+      if action
+        action.update_attribute(:fqname, value)
+      else
+        existing_actions.build(:action => key, :fqname => value, :dialog => existing_actions.first.dialog)
+      end
+    end
+  end
+
+  def update_entry_points_dialog(the_bundle, input_dialog)
+    existing_actions = the_bundle.resource_actions
+    return if existing_actions.blank?
+
+    existing_dialog = bundle.dialogs.first
+    return existing_dialog if input_dialog.try(:id) == existing_dialog.try(:id)
+
+    new_dialog = input_dialog ? input_dialog.deep_copy(:label => random_dialog_name(name)).tap(&:save!) : nil
+    existing_actions.update_all(:dialog_id => new_dialog.try(:id))
+    existing_dialog.destroy if existing_dialog
   end
 
   def duplicate_custom_buttons(old_template, new_template)
