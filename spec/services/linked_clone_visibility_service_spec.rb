@@ -11,10 +11,11 @@ describe LinkedCloneVisibilityService do
         context "when linked clone is true" do
           let(:linked_clone) { true }
 
-          it "adds values to the field names to show" do
+          it "adds values to the field names to edit" do
             expect(subject.determine_visibility(provision_type, linked_clone, snapshot_count)).to eq(
               :hide => [],
-              :show => [:linked_clone, :snapshot]
+              :edit => [:linked_clone, :snapshot],
+              :show => []
             )
           end
         end
@@ -25,7 +26,8 @@ describe LinkedCloneVisibilityService do
           it "adds values to the field names to hide" do
             expect(subject.determine_visibility(provision_type, linked_clone, snapshot_count)).to eq(
               :hide => [:snapshot],
-              :show => [:linked_clone]
+              :edit => [:linked_clone],
+              :show => []
             )
           end
         end
@@ -35,10 +37,11 @@ describe LinkedCloneVisibilityService do
         let(:snapshot_count) { 0 }
         let(:linked_clone) { "potato" }
 
-        it "adds values to the field names to hide" do
+        it "adds values to the field names to hide and show" do
           expect(subject.determine_visibility(provision_type, linked_clone, snapshot_count)).to eq(
-            :hide => [:linked_clone, :snapshot],
-            :show => []
+            :hide => [:snapshot],
+            :edit => [],
+            :show => [:linked_clone]
           )
         end
       end
@@ -52,6 +55,7 @@ describe LinkedCloneVisibilityService do
       it "adds values to the field names to hide" do
         expect(subject.determine_visibility(provision_type, linked_clone, snapshot_count)).to eq(
           :hide => [:linked_clone, :snapshot],
+          :edit => [],
           :show => []
         )
       end

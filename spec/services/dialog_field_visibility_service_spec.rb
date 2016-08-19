@@ -167,9 +167,7 @@ describe DialogFieldVisibilityService do
         :sysprep_auto_logon_edit,
         :sysprep_custom_spec_edit
       ])
-      expect(result[:show]).to match_array([
-        :linked_clone_show
-      ])
+      expect(result[:show]).to match_array([:linked_clone_show])
     end
   end
 
@@ -248,7 +246,6 @@ describe DialogFieldVisibilityService do
             expect(field[:display]).to eq(:edit)
           end
         end
-
 
         context "when the field does have a display value" do
           let(:field) { {:display_override => display_override, :display => :hide} }
