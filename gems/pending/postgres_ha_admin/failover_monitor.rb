@@ -1,3 +1,4 @@
+require 'active_support/all'
 require 'postgres_ha_admin/failover_databases'
 require 'postgres_ha_admin/database_yml'
 require 'util/postgres_admin'
