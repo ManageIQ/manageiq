@@ -124,11 +124,11 @@ module ManageIQ
       end
 
       def base_config
-        ManageIQ::API::Settings.base
+        Settings.base
       end
 
       def version_config
-        ManageIQ::API::Settings.version
+        Settings.version
       end
 
       def collection_config

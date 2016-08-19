@@ -18,7 +18,7 @@ module ManageIQ
       private
 
       def exposed_settings
-        ManageIQ::API::Settings.collections[:settings][:categories]
+        Settings.collections[:settings][:categories]
       end
     end
   end
