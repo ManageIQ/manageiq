@@ -39,7 +39,7 @@ RSpec.describe "Blueprints API" do
       expect(response).to have_http_status(:ok)
     end
 
-    it "will show a blueprint's bundle if requested" do
+    it "will show a blueprint's bundle" do
       blueprint = FactoryGirl.create(:blueprint, :name => "Test Blueprint")
       service_templates = FactoryGirl.create_list(:service_template, 2)
       service_catalog   = FactoryGirl.create(:service_template_catalog)
@@ -50,10 +50,10 @@ RSpec.describe "Blueprints API" do
 
       api_basic_authorize action_identifier(:blueprints, :read, :resource_actions, :get)
 
-      run_get(blueprints_url(blueprint.id), :attributes => "bundle")
+      run_get(blueprints_url(blueprint.id))
 
       expected = {
-        "bundle" => a_hash_including(
+        "content" => a_hash_including(
           "id"                          => kind_of(Integer),
           "name"                        => blueprint.name,
           "service_type"                => "composite",
