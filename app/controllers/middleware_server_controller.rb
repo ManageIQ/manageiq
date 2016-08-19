@@ -139,7 +139,6 @@ class MiddlewareServerController < ApplicationController
         add_flash(_("Not %{hawkular_info} the provider") % {:hawkular_info => operation_info.fetch(:hawk)})
       else
         if operation_info.key? :param
-          # Fetch param from UI - > see #9462/#8079
           name = operation_info.fetch(:param)
           val = params.fetch name || 0 # Default until we can really get it from the UI ( #9462/#8079)
           trigger_mw_operation operation_info.fetch(:op), mw_server, name => val
