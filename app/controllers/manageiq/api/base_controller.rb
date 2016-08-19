@@ -92,7 +92,6 @@ module ManageIQ
       include_concern 'ServiceRequests'
       include_concern 'Services'
       include_concern 'ServiceTemplates'
-      include_concern 'Settings'
       include_concern 'Software'
       include_concern 'Tags'
       include_concern 'TenantQuotas'
@@ -125,11 +124,11 @@ module ManageIQ
       end
 
       def base_config
-        ManageIQ::API::Settings.base
+        Settings.base
       end
 
       def version_config
-        ManageIQ::API::Settings.version
+        Settings.version
       end
 
       def collection_config

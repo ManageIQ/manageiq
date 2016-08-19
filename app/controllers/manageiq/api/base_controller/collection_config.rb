@@ -3,7 +3,7 @@ module ManageIQ
     class BaseController
       class CollectionConfig
         def initialize
-          @cfg = ManageIQ::API::Settings.collections
+          @cfg = Settings.collections
         end
 
         def [](collection_name)
