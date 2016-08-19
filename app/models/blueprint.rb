@@ -51,6 +51,16 @@ class Blueprint < ApplicationRecord
     # TODO
   end
 
+  def content
+    result = bundle.as_json.dup
+    result["service_templates"] = bundle.descendants.map(&:as_json)
+    result["service_catalog"] = bundle.service_template_catalog.as_json
+    provision_action = bundle.resource_actions.find_by(:action => "Provision")
+    result["service_dialog"] = provision_action.dialog.as_json if provision_action
+    result["automate_entrypoints"] = bundle.resource_actions.map(&:as_json)
+    result
+  end
+
   private
 
   # Copy a service template and link its blueprint;

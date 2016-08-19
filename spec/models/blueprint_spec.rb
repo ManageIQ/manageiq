@@ -105,6 +105,45 @@ describe Blueprint do
       expect(retire.dialog).to eq(prov.dialog)
     end
   end
+
+  describe "#content" do
+    it "serializes the bundle" do
+      blueprint = FactoryGirl.build(:blueprint)
+      service_template_1 = FactoryGirl.create(:service_template, :name => "Foo Template")
+      service_template_2 = FactoryGirl.create(:service_template, :name => "Bar Template")
+      service_catalog = FactoryGirl.create(:service_template_catalog, :name => "Baz Catalog")
+      service_dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field, :description => "Qux Dialog")
+      automate_entrypoints = {"Provision" => "a/b/c", "Reconfigure" => "x/y/z"}
+      blueprint.create_bundle(:service_templates => [service_template_1, service_template_2],
+                              :service_catalog   => service_catalog,
+                              :service_dialog    => service_dialog,
+                              :entry_points      => automate_entrypoints)
+
+      expected = {
+        "service_templates"    => a_collection_containing_exactly(
+          a_hash_including("name" => "Foo Template"),
+          a_hash_including("name" => "Bar Template")
+        ),
+        "service_catalog"      => a_hash_including("name" => "Baz Catalog"),
+        "service_dialog"       => a_hash_including("description" => "Qux Dialog"),
+        "automate_entrypoints" => a_collection_containing_exactly(
+          a_hash_including(
+            "action"       => "Provision",
+            "ae_namespace" => "a",
+            "ae_class"     => "b",
+            "ae_instance"  => "c"
+          ),
+          a_hash_including(
+            "action"       => "Reconfigure",
+            "ae_namespace" => "x",
+            "ae_class"     => "y",
+            "ae_instance"  => "z"
+          )
+        )
+      }
+      expect(blueprint.content).to include(expected)
+    end
+  end
 end
 
 def add_and_save_service(p, c)
