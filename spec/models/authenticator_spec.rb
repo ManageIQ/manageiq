@@ -14,4 +14,27 @@ describe Authenticator do
       expect(Authenticator.for({:mode => 'httpd'}, 'admin')).to be_a(Authenticator::Database)
     end
   end
+
+  describe '#authorize' do
+    let(:authenticator) { Authenticator::Httpd.new({}) }
+    let(:user) { FactoryGirl.create(:user_with_group) }
+    let(:task) { FactoryGirl.create(:miq_task) }
+    let(:groups) { FactoryGirl.create_list(:miq_group, 2) }
+
+    it 'Updates the user groups when no matching groups' do
+      expect(authenticator).to receive(:find_external_identity)
+        .and_return([{:username => user.userid, :fullname => user.name}, []])
+
+      authenticator.authorize(task.id, user.userid)
+      expect(user.reload.miq_groups).to be_empty
+    end
+
+    it 'Updates the user groups' do
+      expect(authenticator).to receive(:find_external_identity)
+        .and_return([{:username => user.userid, :fullname => user.name}, groups.collect(&:name)])
+
+      authenticator.authorize(task.id, user.userid)
+      expect(user.reload.miq_groups).to match_array(groups)
+    end
+  end
 end
