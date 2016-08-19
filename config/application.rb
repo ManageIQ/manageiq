@@ -159,7 +159,19 @@ module Vmdb
     end
 
     console do
-      Rails::ConsoleMethods.include(Vmdb::ConsoleMethods)
+      # This is to include vmdb methods into the top level namespace of the
+      # repl session being opened (either through `pry` or IRB)
+      #
+      # This takes a page from `pry-rails` and extends the TOPLEVEL_BINDING
+      # instead of Rails::ConsoleMethods when adding the Vmdb::ConsoleMethods.
+      #
+      # https://github.com/rweng/pry-rails/blob/fe29ddcdd/lib/pry-rails/railtie.rb#L25
+      #
+      # Without pry, this isn't required and we could just include this into
+      # the `Rails::ConsoleMethods`, but with `pry-rails`, this isn't possible
+      # since the railtie for it is loaded first and will include
+      # `Rails::ConsoleMethods` before we have a chance to modify them here.
+      TOPLEVEL_BINDING.eval('self').extend(Vmdb::ConsoleMethods)
     end
   end
 end
