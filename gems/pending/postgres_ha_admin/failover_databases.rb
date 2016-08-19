@@ -13,6 +13,13 @@ module PostgresHaAdmin
       @logger = logger
     end
 
+    def active_databases_conninfo_hash
+      valid_keys = PG::Connection.conndefaults_hash.keys + [:requiressl]
+      active_databases.map! do |db_info|
+        db_info.keep_if { |k, _v| valid_keys.include?(k) }
+      end
+    end
+
     def active_databases
       all_databases.select { |record| record[:active] }
     end

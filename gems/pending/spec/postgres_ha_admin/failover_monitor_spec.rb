@@ -2,12 +2,9 @@ require 'postgres_ha_admin/failover_monitor'
 require 'util/postgres_admin'
 
 describe PostgresHaAdmin::FailoverMonitor do
-  let(:db_yml) do
-    yml = double('DatabaseYml')
-    allow(yml).to receive(:pg_params_from_database_yml).and_return(:host => 'host.example.com', :user => 'root')
-    yml
-  end
+  let(:db_yml)      { double('DatabaseYml') }
   let(:failover_db) { double('FailoverDatabases') }
+
   let(:connection) do
     conn = double("PGConnection")
     allow(conn).to receive(:finish)
@@ -36,6 +33,15 @@ describe PostgresHaAdmin::FailoverMonitor do
   end
 
   describe "#monitor" do
+    before do
+      params = {
+        :host     => 'host.example.com',
+        :user     => 'root',
+        :password => 'password'
+      }
+      allow(db_yml).to receive(:pg_params_from_database_yml).and_return(params)
+    end
+
     context "primary database is accessable" do
       before do
         allow(PG::Connection).to receive(:open).and_return(connection)
@@ -90,9 +96,26 @@ describe PostgresHaAdmin::FailoverMonitor do
     end
   end
 
+  describe "#active_servers_conninfo" do
+    it "merges settings from database yml and failover yml" do
+      active_servers_conninfo = [
+        {:host => 'failover_host.example.com'},
+        {:host => 'failover_host2.example.com'}
+      ]
+      expected_conninfo = [
+        {:host => 'failover_host.example.com', :password => 'mypassword'},
+        {:host => 'failover_host2.example.com', :password => 'mypassword'}
+      ]
+      settings_from_db_yml = {:host => 'host.example.com', :password => 'mypassword'}
+      expect(failover_db).to receive(:active_databases_conninfo_hash).and_return(active_servers_conninfo)
+      expect(db_yml).to receive(:pg_params_from_database_yml).and_return(settings_from_db_yml)
+      expect(failover_monitor.active_servers_conninfo).to match_array(expected_conninfo)
+    end
+  end
+
   def failover_executed
     expect(linux_admin).to receive(:stop)
-    expect(failover_db).to receive(:active_databases).and_return(active_databases_list)
+    expect(failover_db).to receive(:active_databases_conninfo_hash).and_return(active_databases_conninfo)
     expect(failover_db).to receive(:update_failover_yml)
     expect(db_yml).to receive(:update_database_yml)
     expect(linux_admin).to receive(:restart)
@@ -100,7 +123,7 @@ describe PostgresHaAdmin::FailoverMonitor do
 
   def failover_not_executed
     expect(linux_admin).to receive(:stop)
-    expect(failover_db).to receive(:active_databases).and_return(active_databases_list)
+    expect(failover_db).to receive(:active_databases_conninfo_hash).and_return(active_databases_conninfo)
     expect(failover_db).not_to receive(:update_failover_yml)
     expect(db_yml).not_to receive(:update_database_yml)
     expect(linux_admin).not_to receive(:restart)
@@ -111,10 +134,10 @@ describe PostgresHaAdmin::FailoverMonitor do
     stub_const("PostgresHaAdmin::FailoverMonitor::FAILOVER_CHECK_FREQUENCY", 1)
   end
 
-  def active_databases_list
+  def active_databases_conninfo
     arr = []
-    arr << {:type => 'master', :active => true, :host => '203.0.113.1', :user => 'root', :dbname => 'vmdb_test'}
-    arr << {:type => 'standby', :active => true, :host => '203.0.113.2', :user => 'root', :dbname => 'vmdb_test'}
-    arr << {:type => 'standby', :active => true, :host => '203.0.113.3', :user => 'root', :dbname => 'vmdb_test'}
+    arr << {:host => '203.0.113.1', :user => 'root', :dbname => 'vmdb_test'}
+    arr << {:host => '203.0.113.2', :user => 'root', :dbname => 'vmdb_test'}
+    arr << {:host => '203.0.113.3', :user => 'root', :dbname => 'vmdb_test'}
   end
 end
