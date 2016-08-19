@@ -106,7 +106,6 @@ module Rbac
     # @option options :named_scope   [Symbol|Array<String,Integer>] support for using named scope in search
     #     Example without args: :named_scope => :in_my_region
     #     Example with args:    :named_scope => [in_region, 1]
-    # @option options :class_or_name [Class|String]
     # @option options :conditions    [Hash|String|Array<String>]
     # @option options :where_clause  []
     # @option options :sub_filter
