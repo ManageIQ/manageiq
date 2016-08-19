@@ -976,6 +976,11 @@
       :description: Request to Provision Hosts / Nodes
       :feature_type: admin
       :identifier: host_miq_request_new
+    - :name: Register Hosts / Nodes
+      :description: Register new Hosts / Nodes
+      :feature_type: admin
+      :identifier: host_register_nodes
+
 
 # Resource Pools
 - :name: Resource Pools

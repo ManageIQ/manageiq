@@ -111,6 +111,61 @@ class EmsInfraController < ApplicationController
     end
   end
 
+  def register_nodes
+    assert_privileges("host_register_nodes")
+    redirect_to ems_infra_path(params[:id], :display => "hosts") if params[:cancel]
+
+    # Hiding the toolbars
+    @in_a_form = true
+    drop_breadcrumb(:name => _("Register Nodes"), :url => "/ems_infra/register_nodes")
+
+    @infra = ManageIQ::Providers::Openstack::InfraManager.find(params[:id])
+
+    if params[:register]
+      uploaded_file = params[:nodes_json_file]
+      if uploaded_file.nil?
+        log_and_flash_message(_("Please select a JSON file containing the nodes you would like to register."))
+        return
+      end
+
+      begin
+        nodes_json = parse_json(uploaded_file)
+        if nodes_json.nil?
+          log_and_flash_message(_("JSON file format is incorrect, missing 'nodes'."))
+        end
+      rescue => ex
+        log_and_flash_message(_("Cannot parse JSON file: %{message}") %
+                                  {:message => ex})
+      end
+
+      if nodes_json
+        begin
+          mistral = workflow_service
+        rescue => ex
+          log_and_flash_message(_("Cannot connect to workflow service: %{message}") %
+                                    {:message => ex})
+          return
+        end
+        begin
+          state, workflow_execution_id = register_nodes_workflow(mistral, nodes_json)
+        rescue => ex
+          log_and_flash_message(_("Error executing register nodes workflow: %{message}") %
+                                    {:message => ex})
+          return
+        end
+        if state == "SUCCESS"
+          EmsRefresh.queue_refresh(@infra)
+          redirect_to ems_infra_path(params[:id],
+                                     :display   => "hosts",
+                                     :flash_msg => _("Nodes were added successfully. Refresh queued."))
+        else
+          response = workflow_service.get_execution(workflow_execution_id)
+          log_and_flash_message(_("Unable to add nodes: %{error}") % {:error => response.body.to_s})
+        end
+      end
+    end
+  end
+
   def ems_infra_form_fields
     ems_form_fields
   end
@@ -208,4 +263,28 @@ class EmsInfraController < ApplicationController
     true
   end
   public :restful?
+
+  def workflow_service
+    os_handle = @infra.openstack_handle
+    os_handle.detect_workflow_service
+  end
+
+  def parse_json(uploaded_file)
+    JSON.parse(uploaded_file.read)["nodes"]
+  end
+
+  def register_nodes_workflow(connection, nodes_json)
+    workflow = "tripleo.baremetal.v1.register_or_update"
+    input = { :nodes_json => nodes_json }
+    response = connection.create_execution(workflow, input)
+    state = response.body["state"]
+    workflow_execution_id = response.body["id"]
+
+    while state == "RUNNING"
+      sleep 5
+      response = connection.get_execution(workflow_execution_id)
+      state = response.body["state"]
+    end
+    [state, workflow_execution_id]
+  end
 end

@@ -26,7 +26,8 @@ module OpenstackHandle
       "Baremetal"     => :baremetal,
       "Orchestration" => :orchestration,
       "Planning"      => :planning,
-      "Introspection" => :introspection
+      "Introspection" => :introspection,
+      "Workflow"      => :workflow
     }
 
     def self.try_connection(security_protocol, ssl_options = {})
@@ -67,11 +68,14 @@ module OpenstackHandle
       # throw an error trying to build an connection error message.
       opts[:openstack_service_type] = ["object-store"] if service == "Storage"
       opts[:openstack_service_type] = ["nfv-orchestration"] if service == "NFV"
+      opts[:openstack_service_type] = ["workflowv2"] if service == "Workflow"
 
       if service == "Planning"
         # Special behaviour for Planning service Tuskar, since it is OpenStack specific service, there is no
         # Fog::Planning module, only Fog::OpenStack::Planning
         Fog::Openstack.const_get(service).new(opts)
+      elsif service == "Workflow"
+        Fog::Workflow::OpenStack.new(opts)
       else
         Fog.const_get(service).new(opts)
       end
@@ -282,6 +286,15 @@ module OpenstackHandle
 
     def detect_introspection_service(tenant_name = nil)
       detect_service("Introspection", tenant_name)
+    end
+
+    def workflow_service(tenant_name = nil)
+      connect(:service => "Workflow", :tenant_name => tenant_name)
+    end
+    alias_method :connect_workflow, :workflow_service
+
+    def detect_workflow_service(tenant_name = nil)
+      detect_service("Workflow", tenant_name)
     end
 
     def detect_service(service, tenant_name = nil)

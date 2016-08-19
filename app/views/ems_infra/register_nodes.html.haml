@@ -1,0 +1,60 @@
+= render :partial => "layouts/flash_msg"
+= form_tag('/ems_infra/register_nodes', :method => :post, :multipart => true)
+= hidden_field_tag('id', @infra.id)
+- unless @infra.nil?
+- record                    ||= @infra
+- ng_model                  ||= 'emsCommonModel'
+- ng_show                   ||= true
+- validate_url              ||= 'register_nodes'
+- prefix                    ||= 'nodes_json'
+- json_file_label         ||= _("Nodes JSON File")
+- new_json_file_label     ||= _("New ") + json_file_label
+  .form-horizontal
+    %div{"ng-show" => "#{ng_show}"}
+    .form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_file.$error.required}"}
+      %label.col-md-2.control-label{"for" => "#{prefix}_file"}
+        %div
+          = json_file_label
+      .col-md-4
+        %div{"ng-if" => "vm.inEditMode('#{prefix}_userid')"}
+          %input.form-control{"type"         => "file",
+                              "id"           => "#{prefix}_file",
+                              "ng-model"     => "#{ng_model}.#{prefix}_file",
+                              "prefix"       => "#{prefix}",
+                              "name"         => "#{prefix}_file",
+                              "checkchange"  => "",
+                              "require-file" => ""}
+        %span.help-block{"ng-show" => "angularForm.#{prefix}_file.$error.required"}
+          = _("Required")
+    -#.form-group
+      %label.col-md-2.control-label
+        = _("Introspect Nodes")
+      .col-md-4
+        = check_box_tag("introspect_nodes", "1", true,
+                           :data => {:on_text => 'On', :off_text => 'Off', :size => 'mini'})
+        :javascript
+           miqInitBootstrapSwitch("introspect_nodes", "{@infra.id}")
+    -#.form-group
+      %label.col-md-2.control-label
+        = _("Provide Nodes")
+      .col-md-4
+        = check_box_tag("provide_nodes", "1", true,
+                           :data => {:on_text => 'On', :off_text => 'Off', :size => 'mini'})
+        :javascript
+           miqInitBootstrapSwitch("provide_nodes", "{@infra.id}")
+  %table{:width => "100%"}
+    %tr
+      %td{:align => "right"}
+        #buttons_on
+          = button_tag(_("Register"),
+                       :name  => "register",
+                       :class => "btn btn-primary",
+                       :alt   => t = _("Register Nodes"),
+                       :title => t,
+                       :type  => "submit")
+          = button_tag(_("Cancel"),
+                       :name  => "cancel",
+                       :class => "btn btn-default",
+                       :alt   => t = _("Cancel"),
+                       :title => t,
+                       :type  => "submit")

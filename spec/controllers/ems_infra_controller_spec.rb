@@ -234,6 +234,54 @@ describe EmsInfraController do
     end
   end
 
+  describe "#register_nodes" do
+    before do
+      stub_user(:features => :all)
+      @ems = FactoryGirl.create(:ems_openstack_infra_with_stack_and_compute_nodes)
+      allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager)
+        .to receive(:openstack_handle).and_return([])
+      allow_any_instance_of(EmsInfraController)
+        .to receive(:parse_json).and_return("{\"nodes\": []}")
+    end
+
+    it "when success expected" do
+      allow_any_instance_of(EmsInfraController)
+          .to receive(:workflow_service).and_return([])
+      allow_any_instance_of(EmsInfraController)
+          .to receive(:register_nodes_workflow).and_return("SUCCESS")
+      post :register_nodes, :params => {:id => @ems.id, :nodes_json_file => "dummy", :register => 1}
+      expect(controller.send(:flash_errors?)).to be_falsey
+      expect(response.body).to include("redirected")
+      expect(response.body).to include("ems_infra")
+    end
+
+    it "when failure expected, workflow service not reachable" do
+      post :register_nodes, :params => {:id => @ems.id, :nodes_json_file => "dummy", :register => 1}
+      expect(controller.send(:flash_errors?)).to be_truthy
+      flash_messages = assigns(:flash_array)
+      message = _("Cannot connect to workflow service")
+      expect(flash_messages.first[:message]).to include(message)
+    end
+
+    it "when failure expected, workflow cannot be executed" do
+      allow_any_instance_of(EmsInfraController)
+          .to receive(:workflow_service).and_return([])
+      post :register_nodes, :params => {:id => @ems.id, :nodes_json_file => "dummy", :register => 1}
+      expect(controller.send(:flash_errors?)).to be_truthy
+      flash_messages = assigns(:flash_array)
+      message = _("Error executing register nodes workflow")
+      expect(flash_messages.first[:message]).to include(message)
+    end
+
+    it "when failure expected, node_json file is not selected" do
+      post :register_nodes, :params => {:id => @ems.id, :register => 1}
+      expect(controller.send(:flash_errors?)).to be_truthy
+      flash_messages = assigns(:flash_array)
+      message = _("Please select a JSON file containing the nodes you would like to register.")
+      expect(flash_messages.first[:message]).to include(message)
+    end
+  end
+
   describe "#show" do
     render_views
     before(:each) do
