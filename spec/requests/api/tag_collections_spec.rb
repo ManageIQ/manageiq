@@ -437,4 +437,65 @@ describe "Tag Collections API" do
       expect_resource_has_tags(tenant, tag2[:path])
     end
   end
+
+  context "Blueprint Tag subcollection" do
+    it "can list all the tags of a blueprint" do
+      api_basic_authorize
+      blueprint = FactoryGirl.create(:blueprint)
+
+      run_get("#{blueprints_url(blueprint.id)}/tags")
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "can assign a tag to a blueprint with an appropriate role" do
+      api_basic_authorize subcollection_action_identifier(:blueprints, :tags, :assign)
+      blueprint = FactoryGirl.create(:blueprint)
+
+      run_post("#{blueprints_url(blueprint.id)}/tags",
+               :action   => "assign",
+               :catagory => tag1[:category],
+               :name     => tag1[:name])
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "can unassign a tag from a bluepring with an appropriate role" do
+      api_basic_authorize subcollection_action_identifier(:blueprints, :tags, :unassign)
+      blueprint = FactoryGirl.create(:blueprint)
+      classify_resource(blueprint)
+
+      run_post("#{blueprints_url(blueprint.id)}/tags",
+               :action   => "unassign",
+               :catagory => tag1[:category],
+               :name     => tag1[:name])
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "will not assign tags to blueprints without an appropriate role" do
+      api_basic_authorize
+      blueprint = FactoryGirl.create(:blueprint)
+
+      run_post("#{blueprints_url(blueprint.id)}/tags",
+               :action   => "assign",
+               :catagory => tag1[:category],
+               :name     => tag1[:name])
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "will not unassign tags from blueprints without an approiate role" do
+      api_basic_authorize
+      blueprint = FactoryGirl.create(:blueprint)
+      classify_resource(blueprint)
+
+      run_post("#{blueprints_url(blueprint.id)}/tags",
+               :action   => "unassign",
+               :catagory => tag1[:category],
+               :name     => tag1[:name])
+
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
 end

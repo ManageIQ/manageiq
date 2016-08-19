@@ -90,6 +90,8 @@
     :options:
     - :collection
     :klass: Blueprint
+    :subcollections:
+    - :tags
     :collection_actions:
       :get:
       - :name: read
@@ -116,6 +118,12 @@
       :delete:
       - :name: delete
         :identifier: blueprint_delete
+    :tags_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: blueprint_tag
+      - :name: unassign
+        :identifier: blueprint_tag
   :categories:
     :description: Categories
     :identifier: ops_settings
