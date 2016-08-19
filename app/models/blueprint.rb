@@ -53,6 +53,7 @@ class Blueprint < ApplicationRecord
   end
 
   def content
+    return {} unless bundle
     result = bundle.as_json.dup
     result["service_templates"] = bundle.descendants.map(&:as_json)
     result["service_catalog"] = bundle.service_template_catalog.as_json
