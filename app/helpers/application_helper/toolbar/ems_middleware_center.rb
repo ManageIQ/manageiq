@@ -73,7 +73,8 @@ class ApplicationHelper::Toolbar::EmsMiddlewareCenter < ApplicationHelper::Toolb
           'fa fa-search fa-lg',
           N_("Re-check Authentication Status for this #{ui_lookup(:table=>'ems_middleware')}"),
           N_('Re-check Authentication Status'),
-          :klass => ApplicationHelper::Button::EmsMiddlewareRecheckAuthStatus),
+          :klass => ApplicationHelper::Button::GenericFeatureButton,
+          :options => {:feature => :authentication_status}),
       ]
     ),
   ])
