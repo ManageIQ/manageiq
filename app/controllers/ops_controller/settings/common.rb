@@ -557,6 +557,12 @@ module OpsController::Settings::Common
     # Add/remove affinity based on the node that was checked
     server_id, child = id.split('__')
 
+    if server_id.include?('svr')
+      server_id.sub!('svr-', '')
+      from_cid(server_id)
+    else
+      server_id.sub!('xx-', '')
+    end
     all_children = @edit[:new][:children]
     server = @edit[:new][:servers][server_id.to_i]
 
@@ -600,7 +606,11 @@ module OpsController::Settings::Common
       }
     end
 
-    @smartproxy_affinity_tree = build_smartproxy_affinity_tree(@selected_zone)
+    @smartproxy_affinity_tree = TreeBuilderSmartproxyAffinity.new(:smartproxy_affinity,
+                                                                  :smartproxy_affinity_tree,
+                                                                  @sb,
+                                                                  true,
+                                                                  @selected_zone)
 
     @edit[:new] = copy_hash(@edit[:current])
     session[:edit] = @edit
@@ -1174,41 +1184,6 @@ module OpsController::Settings::Common
       @ldap_regions = LdapRegion.in_my_region
       @miq_schedules = MiqSchedule.where("(prod_default != 'system' or prod_default is null) and adhoc IS NULL")
                        .sort_by { |s| s.name.downcase }
-    end
-  end
-
-  def build_smartproxy_affinity_node(zone, server, node_type)
-    affinities = server.send("vm_scan_#{node_type}_affinity").collect(&:id)
-    {
-      :key      => "#{server.id}__#{node_type}",
-      :icon     => ActionController::Base.helpers.image_path("100/#{node_type}.png"),
-      :title    => Dictionary.gettext(node_type.camelcase, :type => :model, :notfound => :titleize, :plural => true),
-      :children => zone.send(node_type.pluralize).sort_by(&:name).collect do |node|
-        {
-          :key    => "#{server.id}__#{node_type}_#{node.id}",
-          :icon   => ActionController::Base.helpers.image_path("100/#{node_type}.png"),
-          :title  => node.name,
-          :select => affinities.include?(node.id)
-        }
-      end
-    }
-  end
-
-  def build_smartproxy_affinity_tree(zone)
-    zone.miq_servers.select(&:is_a_proxy?).sort_by { |s| [s.name, s.id] }.collect do |s|
-      title = "#{Dictionary.gettext('MiqServer', :type => :model, :notfound => :titleize)}: #{s.name} [#{s.id}]"
-      if @sb[:my_server_id] == s.id
-        title = "<b class='cfme-bold-node'>'" + _("%{title} (current)") % {:title => title} + "</title>"
-        title = title.html_safe
-      end
-      {
-        :key      => s.id.to_s,
-        :icon     => ActionController::Base.helpers.image_path('100/evm_server.png'),
-        :title    => title,
-        :expand   => true,
-        :children => [build_smartproxy_affinity_node(zone, s, 'host'),
-                      build_smartproxy_affinity_node(zone, s, 'storage')]
-      }
     end
   end
 end

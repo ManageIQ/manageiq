@@ -278,7 +278,7 @@ class TreeBuilder
     node = x_build_single_node(object, pid, options)
 
     # Process the node's children
-    node[:expand] = Array(@tree_state.x_tree(@name)[:open_nodes]).include?(node[:key]) || !!options[:open_all]
+    node[:expand] = Array(@tree_state.x_tree(@name)[:open_nodes]).include?(node[:key]) || !!options[:open_all] || node[:expand]
     if object[:load_children] ||
        node[:expand] ||
        @options[:lazy] == false

@@ -6,14 +6,6 @@
     %strong
       = _("No Servers with the SmartProxy role are in Zone: \"%{zone_description}\"") % {:zone_description => @selected_zone.description}
 - else
-  - tree_id = "smartproxy_affinity_treebox"
-  %div{:id => tree_id}
-  = render(:partial => "layouts/dynatree",
-    :locals => {:tree_id         => tree_id,
-    :tree_name                   => session[:tree_name],
-    :json_tree                   => @smartproxy_affinity_tree.to_json,
-    :checkboxes                  => true,
-    :three_checks                => true,
-    :open_close_all_on_dbl_click => true,
-    :check_url                   => '/ops/smartproxy_affinity_field_changed/',
-    :oncheck                     => 'miqOnClickSmartProxyAffinityCheck'})
+  :javascript
+    miqDynatreeResetState('#{j_str @smartproxy_affinity_tree.name}');
+  = render(:partial => 'shared/tree', :locals => {:tree => @smartproxy_affinity_tree, :name => @smartproxy_affinity_tree.name})
