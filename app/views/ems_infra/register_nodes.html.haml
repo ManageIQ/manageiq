@@ -1,0 +1,20 @@
+= render :partial => "layouts/flash_msg"
+= form_tag('/ems_infra/register_nodes',
+           :class     => "form-horizontal",
+           :multipart => true,
+           :method    => :post) do
+  = hidden_field_tag('id', @infra.id)
+  .form-group
+    .col-md-4
+      = file_field("nodes_json", "file", :class => "filestyle", "data-buttonName"  => "btn-default")
+      :javascript
+        $(":file").filestyle({icon: false,placeholder: "No file chosen"});
+
+    .col-md-6
+      = submit_tag(_("Register"),
+                  :name  => "register",
+                  :class => "btn btn-primary")
+      = submit_tag(_("Cancel"),
+                  :name  => "cancel",
+                  :class => "btn btn-default")
+

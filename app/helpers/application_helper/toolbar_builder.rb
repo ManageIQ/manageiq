@@ -647,6 +647,8 @@ class ApplicationHelper::ToolbarBuilder
     when "ontap_storage_system_statistics", "ontap_logical_disk_statistics", "ontap_storage_volume_statistics",
         "ontap_file_share_statistics"
       return true unless get_vmdb_config[:product][:smis]
+    when "host_register_nodes"
+      return true if @record.class != ManageIQ::Providers::Openstack::InfraManager
     end
 
     # Scale is only supported by OpenStack Infrastructure Provider

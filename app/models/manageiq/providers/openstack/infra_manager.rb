@@ -121,4 +121,27 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
          .all? { |h| h.verify_credentials('ssh_keypair') }
   end
   private :verify_ssh_keypair_credentials
+
+  def workflow_service
+    openstack_handle.detect_workflow_service
+  end
+
+  def register_nodes(nodes_json)
+    connection = openstack_handle.detect_workflow_service
+    workflow = "tripleo.baremetal.v1.register_or_update"
+    input = { :nodes_json => nodes_json }
+    response = connection.create_execution(workflow, input)
+    state = response.body["state"]
+    workflow_execution_id = response.body["id"]
+
+    while state == "RUNNING"
+      sleep 5
+      response = connection.get_execution(workflow_execution_id)
+      state = response.body["state"]
+    end
+
+    EmsRefresh.queue_refresh(@infra) if state == "SUCCESS"
+
+    [state, response.body.to_s]
+  end
 end
