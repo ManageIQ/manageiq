@@ -3,6 +3,7 @@ class Blueprint < ApplicationRecord
   private  :service_templates, :service_templates=
 
   virtual_has_one :bundle
+  virtual_has_one :content, :class_name => "Hash"
 
   acts_as_miq_taggable
 
