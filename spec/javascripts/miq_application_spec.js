@@ -439,4 +439,15 @@ describe('miq_application.js', function() {
     });
   });
 
+  describe('miqUncompressedId', function () {
+    it('returns uncompressed id unchanged', function() {
+      expect(miqUncompressedId('123')).toEqual('123');
+      expect(miqUncompressedId('12345678901234567890')).toEqual('12345678901234567890');
+    });
+
+    it('uncompresses compressed id', function() {
+      expect(miqUncompressedId('1r23')).toEqual('1000000000023');
+      expect(miqUncompressedId('999r123456789012')).toEqual('999123456789012');
+    });
+  });
 });
