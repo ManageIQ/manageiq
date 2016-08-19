@@ -246,9 +246,9 @@ describe EmsInfraController do
 
     it "when success expected" do
       allow_any_instance_of(EmsInfraController)
-          .to receive(:workflow_service).and_return([])
+        .to receive(:workflow_service).and_return([])
       allow_any_instance_of(EmsInfraController)
-          .to receive(:register_nodes_workflow).and_return("SUCCESS")
+        .to receive(:register_nodes_workflow).and_return("SUCCESS")
       post :register_nodes, :params => {:id => @ems.id, :nodes_json_file => "dummy", :register => 1}
       expect(controller.send(:flash_errors?)).to be_falsey
       expect(response.body).to include("redirected")

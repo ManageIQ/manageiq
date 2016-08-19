@@ -139,20 +139,7 @@ class EmsInfraController < ApplicationController
       end
 
       if nodes_json
-        begin
-          mistral = workflow_service
-        rescue => ex
-          log_and_flash_message(_("Cannot connect to workflow service: %{message}") %
-                                    {:message => ex})
-          return
-        end
-        begin
-          state, workflow_execution_id = register_nodes_workflow(mistral, nodes_json)
-        rescue => ex
-          log_and_flash_message(_("Error executing register nodes workflow: %{message}") %
-                                    {:message => ex})
-          return
-        end
+        state, workflow_execution_id = register_nodes_workflow(nodes_json)
         if state == "SUCCESS"
           EmsRefresh.queue_refresh(@infra)
           redirect_to ems_infra_path(params[:id],
@@ -273,16 +260,17 @@ class EmsInfraController < ApplicationController
     JSON.parse(uploaded_file.read)["nodes"]
   end
 
-  def register_nodes_workflow(connection, nodes_json)
+  def register_nodes_workflow(nodes_json)
     workflow = "tripleo.baremetal.v1.register_or_update"
     input = { :nodes_json => nodes_json }
-    response = connection.create_execution(workflow, input)
+    mistral = workflow_service
+    response = mistral.create_execution(workflow, input)
     state = response.body["state"]
     workflow_execution_id = response.body["id"]
 
     while state == "RUNNING"
       sleep 5
-      response = connection.get_execution(workflow_execution_id)
+      response = mistral.get_execution(workflow_execution_id)
       state = response.body["state"]
     end
     [state, workflow_execution_id]
