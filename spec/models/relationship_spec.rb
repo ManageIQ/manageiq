@@ -91,4 +91,18 @@ describe Relationship do
       expect(filtered_results).to match_array(vms + hosts)
     end
   end
+
+  describe ".filtered" do
+    let(:storages) { FactoryGirl.build_list(:relationship_storage_vmware, 1) }
+    let(:vms) { FactoryGirl.build_list(:relationship_vm_vmware, 1) }
+    let(:hosts) { FactoryGirl.build_list(:relationship_host_vmware, 1) }
+
+    it "scopes" do
+      vms.map(&:save!)
+      hosts.map(&:save!)
+      storages.map(&:save!)
+      filtered_results = Relationship.filtered(%w(Host VmOrTemplate), %w(Storage))
+      expect(filtered_results).to match_array(vms + hosts)
+    end
+  end
 end
