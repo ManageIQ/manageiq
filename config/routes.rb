@@ -2756,7 +2756,9 @@ Vmdb::Application.routes.draw do
       next unless collection.options.include?(:collection)
 
       if collection.options.include?(:arbitrary_resource_path)
-        create_api_route(verb, "/api(/:version)/#{collection_name}(/*c_suffix)", action_for(verb))
+        create_api_route(verb,
+                         "/api(/:version)/#{collection_name}(/*c_suffix)",
+                         action_for_collection(collection_name, verb))
       else
         create_api_route(verb, "/api(/:version)/#{collection_name}(/:c_id)", action_for(verb))
       end

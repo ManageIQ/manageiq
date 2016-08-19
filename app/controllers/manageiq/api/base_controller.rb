@@ -92,7 +92,6 @@ module ManageIQ
       include_concern 'ServiceRequests'
       include_concern 'Services'
       include_concern 'ServiceTemplates'
-      include_concern 'Settings'
       include_concern 'Software'
       include_concern 'Tags'
       include_concern 'TenantQuotas'
