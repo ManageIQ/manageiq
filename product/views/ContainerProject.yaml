@@ -26,6 +26,7 @@ cols:
 - replicators_count
 - groups_count
 - containers_count
+- images_count
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -46,6 +47,7 @@ col_order:
 - replicators_count
 - groups_count
 - containers_count
+- images_count
 
 # Column titles, in order
 headers:
@@ -57,6 +59,7 @@ headers:
 - Container Replicators
 - Pods
 - Containers
+- Images
 
 # Condition(s) string for the SQL query
 conditions: 
