@@ -73,7 +73,7 @@ module ManageIQ::Providers::Azure::ManagerMixin
 
       # at least create the Azure-eastus region.
       if new_emses.blank? && known_emses.blank?
-        new_emses << create_discovered_region("Azure-eastus", clientid, clientkey, azure_tenant_id, subscription, all_ems_names)
+        new_emses << create_discovered_region("eastus", clientid, clientkey, azure_tenant_id, subscription, all_ems_names)
       end
 
       EmsRefresh.queue_refresh(new_emses) unless new_emses.blank?
