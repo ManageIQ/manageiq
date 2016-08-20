@@ -6,7 +6,9 @@ class ContainerProject < ApplicationRecord
   has_many :container_routes
   has_many :container_replicators
   has_many :container_services
+  has_many :containers, :through => :container_groups
   has_many :container_definitions, :through => :container_groups
+  has_many :container_images, -> { distinct }, :through => :container_groups
   has_many :container_nodes, -> { distinct }, :through => :container_groups
   has_many :container_quotas
   has_many :container_quota_items, :through => :container_quotas
@@ -27,6 +29,7 @@ class ContainerProject < ApplicationRecord
   virtual_column :routes_count,      :type => :integer
   virtual_column :replicators_count, :type => :integer
   virtual_column :containers_count,  :type => :integer
+  virtual_column :images_count,      :type => :integer
 
   def groups_count
     container_groups.size
@@ -46,6 +49,10 @@ class ContainerProject < ApplicationRecord
 
   def containers_count
     container_definitions.size
+  end
+
+  def images_count
+    container_images.size
   end
 
   include EventMixin
