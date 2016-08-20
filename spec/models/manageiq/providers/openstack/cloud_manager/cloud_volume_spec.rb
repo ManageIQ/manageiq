@@ -35,7 +35,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::CloudVolume do
   describe 'volume actions' do
     context ".create_volume" do
       let(:the_new_volume) { double }
-      let(:volume_options) { {:cloud_tenant => tenant, :display_name => "new_name", :size => 2} }
+      let(:volume_options) { {:cloud_tenant => tenant, :name => "new_name", :size => 2} }
 
       before do
         allow(raw_volumes).to receive(:new).and_return(the_new_volume)

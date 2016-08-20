@@ -274,7 +274,7 @@ class CloudVolumeController < ApplicationController
       if valid_action
         begin
           CloudVolume.create_volume(cloud_tenant.ext_management_system, options)
-          add_flash(_("Create %{volume} \"%{volume_name}\"") % {
+          add_flash(_("Creating %{volume} \"%{volume_name}\"") % {
             :volume      => ui_lookup(:table => 'cloud_volume'),
             :volume_name => options[:name]})
         rescue => ex
