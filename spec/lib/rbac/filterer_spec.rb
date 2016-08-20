@@ -958,7 +958,6 @@ describe Rbac::Filterer do
                               :targets_hash        => true,
                               :association         => nil,
                               :filter              => nil,
-                              :sub_filter          => nil,
                               :where_clause        => nil,
                               :named_scope         => nil,
                               :display_filter_hash => nil,

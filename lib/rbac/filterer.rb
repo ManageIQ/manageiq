@@ -109,7 +109,6 @@ module Rbac
     # @option options :class_or_name [Class|String]
     # @option options :conditions    [Hash|String|Array<String>]
     # @option options :where_clause  []
-    # @option options :sub_filter
     # @option options :include_for_find [Array<Symbol>]
     # @option options :filter
 
@@ -147,7 +146,6 @@ module Rbac
       klass             = to_class(options[:class])
       conditions        = options[:conditions]
       where_clause      = options[:where_clause]
-      sub_filter        = options[:sub_filter]
       include_for_find  = options[:include_for_find]
       search_filter     = options[:filter]
 
@@ -198,7 +196,7 @@ module Rbac
       # if you note, the limits are put back into scope a few lines down from here
       scope = scope.except(:offset, :limit)
       scope = scope_targets(klass, scope, user_filters, user, miq_group)
-              .where(conditions).where(sub_filter).where(where_clause).where(exp_sql).where(ids_clause)
+              .where(conditions).where(where_clause).where(exp_sql).where(ids_clause)
               .includes(include_for_find).references(include_for_find)
               .includes(exp_includes).references(exp_includes)
               .order(options[:order])
