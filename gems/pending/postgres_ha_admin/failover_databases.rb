@@ -49,7 +49,7 @@ module PostgresHaAdmin
       db_result = connection.exec("SELECT type, conninfo, active FROM #{TABLE_NAME}")
       db_result.map_types!(PG::BasicTypeMapForResults.new(connection)).each do |record|
         dsn = PG::DSNParser.parse(record.delete("conninfo"))
-        result << record.symbolize_keys.merge(dsn)
+        result << symbolize_record_keys(record).merge(dsn)
       end
       db_result.clear
       result
@@ -57,6 +57,10 @@ module PostgresHaAdmin
       @logger.error("#{err.class}: #{err}")
       @logger.error(err.backtrace.join("\n"))
       result
+    end
+
+    def symbolize_record_keys(record)
+      record.each_with_object({}) { |(k, v), new_record| new_record[k.to_sym] = v }
     end
 
     def entry_is_active_master?(record)

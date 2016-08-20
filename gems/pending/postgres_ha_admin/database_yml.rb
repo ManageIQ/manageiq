@@ -20,7 +20,7 @@ module PostgresHaAdmin
       db_yml[environment].merge!(pg_parameters_to_rails(params))
       remove_empty(db_yml[environment])
 
-      new_name = "#{db_yml_file}_#{Time.current.strftime("%d-%B-%Y_%H.%M.%S")}"
+      new_name = "#{db_yml_file}_#{Time.now.strftime("%d-%B-%Y_%H.%M.%S")}"
       FileUtils.copy(db_yml_file, new_name)
       begin
         File.write(db_yml_file, db_yml.to_yaml)
