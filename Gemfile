@@ -33,7 +33,7 @@ gem "inifile",                        "~>3.0",         :require => false
 gem "jbuilder",                       "~>2.5.0" # For the REST API
 gem "mime-types",                     "~>2.6.1",       :require => "mime/types/columnar"
 gem "nakayoshi_fork",                 "~>0.0.3"  # provides a more CoW friendly fork (GC a few times before fork)
-gem "net-ldap",                       "~>0.7.0",       :require => false
+gem "net-ldap",                       "~>0.14.0",      :require => false
 gem "net-ping",                       "~>1.7.4",       :require => false
 gem "net-ssh",                        "=3.2.0",        :require => false
 gem "net_app_manageability",          ">=0.1.0",       :require => false
