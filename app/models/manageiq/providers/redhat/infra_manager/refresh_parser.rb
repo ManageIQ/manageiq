@@ -111,8 +111,8 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
         ipmi_address = host_inv.attributes.fetch_path(:power_management, :address)
       end
 
+      host_os_version = host_inv[:os][:version] if host_inv[:os]
       ems_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(host_inv[:href])
-
       new_result = {
         :type             => 'ManageIQ::Providers::Redhat::InfraManager::Host',
         :ems_ref          => ems_ref,
@@ -123,6 +123,8 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
         :uid_ems          => host_inv[:id],
         :vmm_vendor       => 'redhat',
         :vmm_product      => host_inv[:type],
+        :vmm_version      => extract_host_version(host_os_version),
+        :vmm_buildnumber  => (host_os_version[:build] if host_os_version),
         :connection_state => connection_state,
         :power_state      => power_state,
 
@@ -139,6 +141,14 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       result_uids[mor] = new_result
     end
     return result, result_uids, lan_uids, switch_uids, guest_device_uids, scsi_lun_uids
+  end
+
+  def self.extract_host_version(host_os_version)
+    return unless host_os_version && host_os_version[:major]
+
+    version = host_os_version[:major]
+    version = "#{version}.#{host_os_version[:minor]}" if host_os_version[:minor]
+    version
   end
 
   def self.host_inv_to_ip(inv, hostname = nil)
