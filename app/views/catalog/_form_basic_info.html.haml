@@ -52,25 +52,22 @@
                         :class                => "selectpicker")
           :javascript
             miqSelectPickerEvent('dialog_id', '#{url}')
-    - if @record[:generic_subtype].blank? && @edit[:new][:st_prov_type] == "generic"
+    - if @edit[:new][:st_prov_type] == "generic"
       .form-group
         %label.col-md-2.control-label
           = _('Subtype')
         .col-md-4
           %p.form-control-static
-            - available_subtypes = @generic_subtypes.invert.to_a.sort_by { |a| a.first.downcase }
-            = select_tag('generic_subtype',
-                          options_for_select(available_subtypes, available_subtypes[0].first),
-                          "data-miq_sparkle_on" => true,
-                          :class                => "selectpicker")
-            :javascript
-              miqSelectPickerEvent('generic_subtype', '#{url}')
-    - if @edit[:new][:st_prov_type] == "generic" && @record[:generic_subtype].present?
-      .form-group
-        %label.col-md-2.control-label
-          = _('Subtype')
-        .col-md-8
-          = h(@generic_subtypes[@record[:generic_subtype]])
+            - if @record.id
+              = h(ServiceTemplate::GENERIC_ITEM_SUBTYPES[@edit[:new][:generic_subtype]])
+            - else
+              - available_subtypes = ServiceTemplate::GENERIC_ITEM_SUBTYPES.invert.to_a.sort_by { |a| a.first.downcase }
+              = select_tag('generic_subtype',
+                            options_for_select(available_subtypes, @edit[:new][:generic_subtype]),
+                            "data-miq_sparkle_on" => true,
+                            :class                => "selectpicker")
+              :javascript
+                miqSelectPickerEvent('generic_subtype', '#{url}')
     - if @edit[:new][:st_prov_type] == "generic_orchestration"
       - opts = [["<#{_('Choose')}>", nil]] + @edit[:new][:available_templates]
       .form-group

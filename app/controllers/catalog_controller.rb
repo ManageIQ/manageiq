@@ -120,7 +120,6 @@ class CatalogController < ApplicationController
         @edit[:st_prov_types] = catalog_item_types
       end
       @edit[:new][:st_prov_type] = @record.prov_type if @record.prov_type.present?
-      @edit[:new][:generic_subtype] = @record.generic_subtype if @record.try(:id) && @record.prov_type == 'generic'
       # set name and description for ServiceTemplate record
       set_form_vars
       @edit[:new][:service_type] = "atomic"
@@ -149,17 +148,6 @@ class CatalogController < ApplicationController
     }
   end
 
-  def generic_item_subtypes
-    {
-      "custom"          => _("Custom"),
-      "vm"              => _("VM"),
-      "playbook"        => _("Playbook"),
-      "hosted_database" => _("Hosted Database"),
-      "load_balancer"   => _("Load Balancer"),
-      "storage"         => _("Storage")
-    }
-  end
-
   def atomic_form_field_changed
     # need to check req_id in session since we are using common code for prov requests and atomic ST screens
     id = session[:edit][:req_id] || "new"
@@ -174,12 +162,10 @@ class CatalogController < ApplicationController
       @record = class_service_template(params[:st_prov_type]).new
       set_form_vars
       @edit[:new][:st_prov_type] = params[:st_prov_type] if params[:st_prov_type]
-      @edit[:new][:generic_subtype] = params[:generic_subtype] if params[:generic_subtype]
       @edit[:new][:service_type] = "atomic"
       default_entry_point(@edit[:new][:st_prov_type]) if params[:st_prov_type].start_with?('generic')
       @edit[:rec_id] = @record ? @record.id : nil
       @tabactive = @edit[:new][:current_tab_key]
-      @generic_subtypes = generic_item_subtypes if params[:st_prov_type] == 'generic'
     end
     render :update do |page|
       page << javascript_prologue
@@ -1320,7 +1306,8 @@ class CatalogController < ApplicationController
     @edit[:new][:provision_cost] = @record.provision_cost
     @edit[:new][:display]  = @record.display ? @record.display : false
     @edit[:new][:catalog_id] = @record.service_template_catalog ? @record.service_template_catalog.id : nil
-    @edit[:new][:generic_subtype] = @record.generic_subtype if @record.generic_subtype.present?
+    @edit[:new][:st_prov_type] ||= @record.prov_type
+    @edit[:new][:generic_subtype] = @record.generic_subtype || "custom" if @edit[:new][:st_prov_type] == 'generic'
     @edit[:new][:available_catalogs] = Rbac.filtered(ServiceTemplateCatalog.all).collect do |stc|
       [stc.tenant.present? && stc.tenant.ancestors.present? ? stc.name + " (#{stc.tenant.name})" : stc.name, stc.id]
     end
@@ -1461,7 +1448,7 @@ class CatalogController < ApplicationController
     @edit[:new][:dialog_id] = params[:dialog_id] if params[:dialog_id]
     # saving it in @edit as well, to use it later because prov_set_form_vars resets @edit[:new]
     @edit[:st_prov_type] = @edit[:new][:st_prov_type] = params[:st_prov_type] if params[:st_prov_type]
-    @edit[:new][:generic_subtype] = params[:generic_subtype] if params[:generic_subtype].present?
+    @edit[:new][:generic_subtype] = params[:generic_subtype] if params[:generic_subtype]
     @edit[:new][:long_description] = params[:long_description] if params[:long_description]
     @edit[:new][:long_description] = @edit[:new][:long_description].to_s + "..." if params[:transOne]
 
@@ -1896,8 +1883,6 @@ class CatalogController < ApplicationController
       end
     end
     presenter[:right_cell_text] = right_cell_text
-
-    @generic_subtypes = generic_item_subtypes
 
     # Replace right cell divs
     presenter.update(:main_div,

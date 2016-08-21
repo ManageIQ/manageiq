@@ -1,5 +1,15 @@
 class ServiceTemplate < ApplicationRecord
   DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS = 120
+
+  GENERIC_ITEM_SUBTYPES = {
+    "custom"          => _("Custom"),
+    "vm"              => _("VM"),
+    "playbook"        => _("Playbook"),
+    "hosted_database" => _("Hosted Database"),
+    "load_balancer"   => _("Load Balancer"),
+    "storage"         => _("Storage")
+  }.freeze
+
   include ServiceMixin
   include OwnershipMixin
   include NewWithTypeStiMixin
