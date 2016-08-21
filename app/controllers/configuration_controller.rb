@@ -523,6 +523,33 @@ class ConfigurationController < ApplicationController
     end
   end
 
+  def visual_settings
+    # TODO: Placeholder for REST api to get visual settings
+    visual_settings = {
+      :ems                 => true,
+      :ems_cloud           => true,
+      :host                => true,
+      :storage             => true,
+      :vm                  => true,
+      :miq_template        => true,
+      :quad_truncate       => 'f',
+      :startpage           => '',
+      :perpage_grid        => '5',
+      :perpage_tile        => '5',
+      :perpage_list        => '20',
+      :perpage_reports     => '20',
+      :display_reporttheme => '',
+      :display_timezone    => '',
+      :display_locale      => ''
+    }
+
+    render :json => visual_settings
+  end
+
+  def set_visual_settings
+    # TODO: Placeholder for REST api to set visual settings
+  end
+
   private ############################
 
   # copy single selected Object
