@@ -1896,10 +1896,6 @@ class VmOrTemplate < ApplicationRecord
     false
   end
 
-  def supports_provisioning?
-    true
-  end
-
   def self.batch_operation_supported?(operation, ids)
     VmOrTemplate.where(:id => ids).all? { |v| v.public_send("validate_#{operation}")[:available] }
   end
