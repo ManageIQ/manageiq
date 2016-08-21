@@ -3,6 +3,8 @@ require 'ancestry'
 class Service < ApplicationRecord
   DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS = 120
 
+  include VirtualTotalMixin
+
   has_ancestry :orphan_strategy => :destroy
 
   belongs_to :tenant
@@ -19,7 +21,7 @@ class Service < ApplicationRecord
   virtual_has_many   :all_service_children
   virtual_has_many   :vms
   virtual_has_many   :all_vms
-  virtual_column     :v_total_vms,            :type => :integer,  :uses => :vms
+  virtual_total      :v_total_vms, :vms
 
   virtual_has_one    :custom_actions
   virtual_has_one    :custom_action_buttons
@@ -202,10 +204,6 @@ class Service < ApplicationRecord
 
   def raise_provisioned_event
     MiqEvent.raise_evm_event(self, :service_provisioned)
-  end
-
-  def v_total_vms
-    vms.size
   end
 
   def set_tenant_from_group
