@@ -34,9 +34,9 @@ describe TreeBuilderPolicySimulation do
                                                                 :policy_simulation,
                                                                 {},
                                                                 true,
-                                                                @data,
-                                                                'Policy Simulation',
-                                                                @policy_options)
+                                                                :root      => @data,
+                                                                :root_name => 'Policy Simulation',
+                                                                :options   => @policy_options)
     end
 
     it 'sets tree as not lazy' do
@@ -119,9 +119,9 @@ describe TreeBuilderPolicySimulation do
                                                                 :policy_simulaton,
                                                                 {},
                                                                 true,
-                                                                {},
-                                                                'Policy Simulation',
-                                                                @policy_options)
+                                                                :root      => {},
+                                                                :root_name => 'Policy Simulation',
+                                                                :options   => @policy_options)
     end
     it 'sets Policy Profile node correctly if no data found' do
       node = @policy_simulation_tree.send(:x_get_tree_roots, false).first
