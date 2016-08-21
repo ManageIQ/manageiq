@@ -1884,10 +1884,6 @@ class VmOrTemplate < ApplicationRecord
     false
   end
 
-  def supports_provisioning?
-    true
-  end
-
   def self.batch_operation_supported?(operation, ids)
     VmOrTemplate.where(:id => ids).all? do |vm_or_template|
       if vm_or_template.respond_to?("supports_#{operation}?")
