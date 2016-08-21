@@ -1164,6 +1164,7 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
         squash_toggle
+        launch_common_logging
       ) +
                adv_search_post +
                compare_post +

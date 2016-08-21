@@ -1155,6 +1155,12 @@ module ApplicationHelper
     render :json => ex.for_render
   end
 
+  def javascript_open_window_with_post(url, post_params)
+    ex = ExplorerPresenter.open_window_with_post_params(url, post_params)
+    ex.spinner_off
+    render :json => ex.for_render
+  end
+
   def javascript_open_window(url)
     ex = ExplorerPresenter.open_window(url)
     ex.spinner_off

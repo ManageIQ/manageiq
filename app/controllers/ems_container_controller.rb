@@ -4,6 +4,7 @@ class EmsContainerController < ApplicationController
   include EmsCommon        # common methods for EmsInfra/Cloud/Container controllers
   include Mixins::EmsCommonAngular
   include Mixins::GenericSessionMixin
+  include ContainersCommonLoggingMixin
 
   before_action :check_privileges
   before_action :get_session_data

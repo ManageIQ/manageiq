@@ -60,7 +60,39 @@ ManageIQ.explorer.process = function(data) {
     case 'window':
       ManageIQ.explorer.processWindow(data);
       break;
+    case 'window_with_post':
+      ManageIQ.explorer.processWindowWithPost(data);
+      break;
   }
+};
+
+ManageIQ.explorer.addParamsToForm = function(form, params) {
+  for (var v in params) {
+    if (params.hasOwnProperty(v)) {
+      var input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = v;
+      input.value = params[v];
+      form.appendChild(input);
+    }
+  }
+};
+
+ManageIQ.explorer.processWindowWithPost = function(data) {
+  if (_.isString(data.openUrl)) {
+    var winName = 'NewWindow';
+    var form = document.createElement("form");
+    form.setAttribute("method", "post");
+    form.setAttribute("action", data.openUrl);
+    form.setAttribute("target", winName);
+    ManageIQ.explorer.addParamsToForm(form, data.postParams);
+
+    document.body.appendChild(form);
+    window.open('', winName);
+    form.submit();
+    document.body.removeChild(form);
+  }
+  ManageIQ.explorer.spinnerOff(data);
 };
 
 ManageIQ.explorer.processWindow = function(data) {
