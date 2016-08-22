@@ -168,7 +168,7 @@ module VmHelper::TextualSummary
 
   def textual_storage_profile
     return nil if @record.storage_profile.nil?
-    {:label => _("Storage Profile"), :value => @record.storage_profile}
+    {:label => _("Storage Profile"), :value => @record.storage_profile.name}
   end
 
   def textual_discovered
