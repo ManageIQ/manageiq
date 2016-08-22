@@ -26,12 +26,18 @@ module ManageIQ::Providers
     end
 
     def convert_to_group_trigger(miq_alert)
+      eval_method = miq_alert[:conditions][:eval_method]
+      firing_match = case eval_method
+                     when "mw_heap_used", "mw_non_heap_used" then 'ANY'
+                     else 'ALL'
+                     end
       ::Hawkular::Alerts::Trigger.new('id'          => "MiQ-#{miq_alert[:id]}",
                                       'name'        => miq_alert[:description],
                                       'description' => miq_alert[:description],
                                       'enabled'     => miq_alert[:enabled],
                                       'type'        => :GROUP,
                                       'eventType'   => :EVENT,
+                                      'firingMatch' => firing_match,
                                       'tags'        => {
                                         'miq.event_type'    => 'hawkular_event',
                                         'miq.resource_type' => miq_alert[:based_on]
