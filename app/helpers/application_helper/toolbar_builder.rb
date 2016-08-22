@@ -75,6 +75,7 @@ class ApplicationHelper::ToolbarBuilder
           :id       => bgi[:id] + "__" + bsi[:id],
           :type     => :button,
           :img      => img = img_value(bsi),
+          :img_url  => ActionController::Base.helpers.image_path("toolbars/#{img}"),
           :imgdis   => img,
         )
       end
@@ -219,14 +220,14 @@ class ApplicationHelper::ToolbarBuilder
 
       @sep_added = false
       @groups_added.push(group_index)
-
       case group
       when ApplicationHelper::Toolbar::Group
         group.buttons.each do |bgi|
           build_button(bgi, group_index)
         end
       when ApplicationHelper::Toolbar::Custom
-        group.render(@view_context)
+        rendered_html = group.render(@view_context).tr('\'', '"')
+        group[:args][:html] = ERB::Util.html_escape(rendered_html).html_safe
         @toolbar << group
       end
     end

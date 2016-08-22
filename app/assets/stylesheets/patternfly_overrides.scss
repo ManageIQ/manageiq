@@ -518,3 +518,40 @@ body#dashboard {
 .scrollable {
   overflow: auto;
 }
+
+/* begin toolbar styling (to be moved to the ui-components repo) */
+
+.toolbar-pf .form-group { /*compensates for filter-pf not being implemented */
+  padding-left: 0;
+}
+
+.toolbar-pf-actions .btn-group .dropdown button img { /* styling for images (not part of toolbar-pf) */
+  padding-right: 3px;
+}
+
+.toolbar-pf .toolbar-pf-actions .form-group { /* adds padding between buttons when they wrap */
+  margin-bottom: 10px !important
+}
+
+.toolbar-pf .form-group .btn,
+.toolbar-pf .form-group .btn-group { /* overrides _toolbar.scss to account for intermediate Angular markup */
+  margin-left: 5px;
+}
+
+.form-group.miq-toolbar-group { /* fixes the display for the main dashboard toolbar only */
+  display: inline-block;
+  .miq-custom-html {
+    form {
+      display: inline-block;
+    }
+    .form-group {
+      margin-bottom: 0 !important;
+      border-right: 0;
+      &:last-child {
+        padding-right: 0px
+      }
+    }
+  }
+}
+
+/* end toolbar styling */

@@ -16,10 +16,9 @@
   = render :partial => "layouts/vertical_navbar"
 
   .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-tertiary.resizable-sidebar.max-height{:style => "overflow: hidden !important"}
-    .row.toolbar-pf#toolbar
+    .row.toolbar-pf#toolbar.miq-toolbar-menu
       .col-md-12
-        .toolbar-pf-actions
-          = render_toolbars(calculate_toolbars)
+        = render :partial => "layouts/angular/toolbar"
     .row.max-height
       #right_div.resizable.max-height{:class => "col-md-#{maindiv} col-md-push-#{sidewidth}"}
         #main-content.row
@@ -76,12 +75,12 @@
       = render :partial => "layouts/vertical_navbar"
       .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-tertiary.max-height{:style => "overflow: hidden !important"}
         - if !@in_a_form && taskbar_in_header?
-          .row.toolbar-pf#toolbar
+          .row.toolbar-pf#toolbar.miq-toolbar-menu
             .col-md-12
               .toolbar-pf-actions
                 - if @layout == "dashboard"
                   = render :partial => "/layouts/tabs"
-                = render_toolbars(calculate_toolbars)
+                = render :partial => "layouts/angular/toolbar"
         .row.max-height
           .col-sm-9.col-md-10.col-sm-push-3.col-md-push-2.max-height
             #main-content.row
@@ -115,10 +114,8 @@
       .container-fluid.container-cards-pf.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-tertiary{:style => "overflow: hidden; height: 100%;"}
         .row.toolbar-pf#toolbar
           .col-md-12
-            .toolbar-pf-actions
-              - if @widgets_menu
-                = render :partial => "dashboard/dropdownbar"
-
+            - if @widgets_menu
+              = render :partial => "layouts/angular/toolbar"
         .row#main-content
           .col-md-12
             .spacer
@@ -134,8 +131,7 @@
             - if !@in_a_form && taskbar_in_header?
               .row.toolbar-pf#toolbar
                 .col-md-12
-                  .toolbar-pf-actions
-                    = render_toolbars(calculate_toolbars)
+                  = render :partial => "layouts/angular/toolbar"
             .row#main-content
               .col-md-12
                 = render :partial => "layouts/breadcrumbs"

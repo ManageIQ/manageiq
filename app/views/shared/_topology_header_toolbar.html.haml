@@ -9,7 +9,8 @@
 %form.search-pf.topology-search{:role => "form"}
   .form-group.has-clear
     .search-pf-input-group
-      %label.sr-only{:for => "search"} _("Search")
+      %label.sr-only{:for => "search"}
+        = _("Search")
       %input#search.form-control{:id => 'topology', 'placeholder' => _("Search"), 'type' => "search", "ng-model" => "search.query"}
         %button.clear{"aria-hidden" => "true", :type => "button", 'data' => {'function' => 'miqCallAngular', 'function-data' => '{"name":"resetSearch", "args":[]}'}}
           %span.pficon.pficon-close

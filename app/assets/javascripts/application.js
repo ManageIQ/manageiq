@@ -21,6 +21,7 @@
 //= require miq_api
 //= require rxjs/dist/rx.all
 //= require miq_angular_application
+//= require_tree ./angular_modules/
 //= require_tree ./controllers/
 //= require_tree ./directives/
 //= require_tree ./services/
@@ -78,3 +79,6 @@
 //= require miq_c3
 //= require miq_explorer
 //= require qs
+// Bower packages
+//= require manageiq-ui-components/dist/js/ui-components
+//= require rx-angular/dist/rx.angular
