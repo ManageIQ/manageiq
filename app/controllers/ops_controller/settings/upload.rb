@@ -14,10 +14,9 @@ module OpsController::Settings::Upload
   end
 
   def upload_logos(typ)
-    fld = typ == "custom" ? "upload" : "login"
-    if params["#{fld}".to_sym] && params["#{fld}".to_sym][:logo] &&
-       params["#{fld}".to_sym][:logo].respond_to?(:read)
-      if params["#{fld}".to_sym][:logo].original_filename.split(".").last.downcase != "png"
+    fld = typ == 'custom' ? params[:upload] : params[:login]
+    if fld && fld[:logo] && fld[:logo].respond_to?(:read)
+      if fld[:logo].original_filename.split(".").last.downcase != "png"
         msg = if typ == "custom"
                 _("Custom logo image must be a .png file")
               else
@@ -25,11 +24,11 @@ module OpsController::Settings::Upload
               end
         err = true
       else
-        File.open(typ == "custom" ? @@logo_file : @@login_logo_file, "wb") { |f| f.write(params["#{fld}".to_sym][:logo].read) }
+        File.open(typ == "custom" ? @@logo_file : @@login_logo_file, "wb") { |f| f.write(fld[:logo].read) }
         msg = if typ == "custom"
-                _('Custom Logo file "%{name}" uploaded') % {:name => params[fld.to_sym][:logo].original_filename}
+                _('Custom Logo file "%{name}" uploaded') % {:name => fld[:logo].original_filename}
               else
-                _('Custom login file "%{name}" uploaded') % {:name => params[fld.to_sym][:logo].original_filename}
+                _('Custom login file "%{name}" uploaded') % {:name => fld[:logo].original_filename}
               end
         err = false
       end
