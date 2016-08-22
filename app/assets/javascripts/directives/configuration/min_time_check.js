@@ -18,12 +18,14 @@ ManageIQ.angular.app.directive('minTimeCheck', function() {
             scope.timeProfileModel.some_days_checked = false;
           } else {
             scope.timeProfileModel.some_days_checked = true;
+            scope.timeProfileModel.all_days = false;
           }
         } else if (attrs.timeType === "hour") {
           if (allHoursUnchecked(attrs.minTimeCheck)) {
             scope.timeProfileModel.some_hours_checked = false;
           } else {
             scope.timeProfileModel.some_hours_checked = true;
+            scope.timeProfileModel.all_hours = false;
           }
         }
       };
