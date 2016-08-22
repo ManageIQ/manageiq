@@ -152,7 +152,7 @@ ManageIQ.angular.app.controller('timeProfileFormController', ['$http', '$scope',
   $scope.allDaysClicked = function() {
     if ($scope.timeProfileModel.all_days) {
       $scope.timeProfileModel.dayValues = _.times(7, _.constant(true));
-      $scope.timeProfileModel.days = _.times(7, _.constant(true));
+      $scope.timeProfileModel.days = _.times(7, i);
       $scope.timeProfileModel.some_days_checked = true;
     } else {
       $scope.timeProfileModel.dayValues = _.times(7, _.constant(false));
@@ -167,7 +167,7 @@ ManageIQ.angular.app.controller('timeProfileFormController', ['$http', '$scope',
       $scope.timeProfileModel.hourValuesAMSecondHalf = _.times(6, _.constant(true));
       $scope.timeProfileModel.hourValuesPMFirstHalf = _.times(6, _.constant(true));
       $scope.timeProfileModel.hourValuesPMSecondHalf = _.times(6, _.constant(true));
-      $scope.timeProfileModel.hours = _.times(24, _.constant(true));
+      $scope.timeProfileModel.hours = _.times(24, i);
       $scope.timeProfileModel.some_hours_checked = true;
     } else {
       $scope.timeProfileModel.hourValuesAMFirstHalf = _.times(6, _.constant(false));
