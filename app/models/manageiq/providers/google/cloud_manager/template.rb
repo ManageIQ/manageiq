@@ -1,10 +1,7 @@
 class ManageIQ::Providers::Google::CloudManager::Template < ManageIQ::Providers::CloudManager::Template
-
   supports :provisioning do
     if ext_management_system
-      if !ext_management_system.supports_provisioning?
-        unsupported_reason_add(:provisioning, ext_management_system.unsupported_reason(:provisioning))
-      end
+      unsupported_reason_add(:provisioning, ext_management_system.unsupported_reason(:provisioning)) unless ext_management_system.supports_provisioning?
     else
       unsupported_reason_add(:provisioning, _('not connected to ems'))
     end
@@ -14,5 +11,4 @@ class ManageIQ::Providers::Google::CloudManager::Template < ManageIQ::Providers:
     connection ||= ext_management_system.connect
     connection.images[ems_ref]
   end
-
 end
