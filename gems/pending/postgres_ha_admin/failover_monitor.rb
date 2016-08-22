@@ -21,17 +21,7 @@ module PostgresHaAdmin
       @logger.level = Logger::INFO
       @database_yml = DatabaseYml.new(db_yml_file, environment)
       @failover_db = FailoverDatabases.new(failover_yml_file, @logger)
-      begin
-        ha_admin_yml = YAML.load_file(ha_admin_yml_file)
-      rescue SystemCallError, IOError => err
-        ha_admin_yml = {}
-        @logger.error("#{err.class}: #{err}")
-        @logger.info("File not loaded: #{ha_admin_yml_file}. Default settings for failover will be used.")
-      end
-      @failover_attempts = ha_admin_yml['failover_attempts'] || FAILOVER_ATTEMPTS
-      @db_check_frequency = ha_admin_yml['db_check_frequency'] || DB_CHECK_FREQUENCY
-      @failover_check_frequency = ha_admin_yml['failover_check_frequency'] || FAILOVER_CHECK_FREQUENCY
-      @logger.info("FAILOVER_ATTEMPTS=#{@failover_attempts} DB_CHECK_FREQUENCY=#{@db_check_frequency} FAILOVER_CHECK_FREQUENCY=#{@failover_check_frequency}")
+      initialize_settings(ha_admin_yml_file)
     end
 
     def monitor
@@ -54,7 +44,7 @@ module PostgresHaAdmin
 
     def monitor_loop
       loop do
-        sleep(db_connected_check_frequency)
+        sleep(db_check_frequency)
         begin
           monitor
         rescue StandardError => err
@@ -71,6 +61,20 @@ module PostgresHaAdmin
     end
 
     private
+
+    def initialize_settings(ha_admin_yml_file)
+      begin
+        ha_admin_yml = YAML.load_file(ha_admin_yml_file)
+      rescue SystemCallError, IOError => err
+        ha_admin_yml = {}
+        @logger.error("#{err.class}: #{err}")
+        @logger.info("File not loaded: #{ha_admin_yml_file}. Default settings for failover will be used.")
+      end
+      @failover_attempts = ha_admin_yml['failover_attempts'] || FAILOVER_ATTEMPTS
+      @db_check_frequency = ha_admin_yml['db_check_frequency'] || DB_CHECK_FREQUENCY
+      @failover_check_frequency = ha_admin_yml['failover_check_frequency'] || FAILOVER_CHECK_FREQUENCY
+      @logger.info("FAILOVER_ATTEMPTS=#{@failover_attempts} DB_CHECK_FREQUENCY=#{@db_check_frequency} FAILOVER_CHECK_FREQUENCY=#{@failover_check_frequency}")
+    end
 
     def execute_failover
       failover_attempts.times do
