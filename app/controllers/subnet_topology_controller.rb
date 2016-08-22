@@ -1,5 +1,6 @@
-class MiddlewareTopologyController < ApplicationController
+class SubnetTopologyController < ApplicationController
   include TopologyMixin
+
   before_action :check_privileges
   before_action :get_session_data
   after_action :cleanup_action
@@ -8,10 +9,10 @@ class MiddlewareTopologyController < ApplicationController
   private
 
   def get_session_data
-    @layout = "middleware_topology"
+    @layout = "subnet_topology"
   end
 
   def generate_topology(provider_id)
-    MiddlewareTopologyService.new(provider_id).build_topology
+    SubnetTopologyService.new(provider_id).build_topology
   end
 end
