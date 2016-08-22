@@ -343,12 +343,25 @@ module EmsCommon
     params[:page] = @current_page unless @current_page.nil?   # Save current page for list refresh
 
     # Handle buttons from sub-items screen
-    if params[:pressed].starts_with?("ems_cluster_",
+    if params[:pressed].starts_with?("availability_zone_",
+                                     "cloud_network_",
+                                     "cloud_object_store_container_",
+                                     "cloud_subnet_",
+                                     "cloud_tenant_",
+                                     "cloud_volume_",
+                                     "ems_cluster_",
+                                     "flavor_",
+                                     "floating_ip_",
                                      "guest_",
                                      "host_",
                                      "image_",
                                      "instance_",
+                                     "load_balancer_",
                                      "miq_template_",
+                                     "network_port_",
+                                     "network_router_",
+                                     "orchestration_stack_",
+                                     "security_group_",
                                      "storage_",
                                      "vm_")
 
@@ -374,6 +387,20 @@ module EmsCommon
       when "storage_refresh"                  then refreshstorage
       when "storage_scan"                     then scanstorage
       when "storage_tag"                      then tag(Storage)
+      # Edit Tags for Network Manager Relationship pages
+      when "availability_zone_tag"            then tag(AvailabilityZone)
+      when "cloud_network_tag"                then tag(CloudNetwork)
+      when "cloud_object_store_container_tag" then tag(CloudObjectStoreContainer)
+      when "cloud_subnet_tag"                 then tag(CloudSubnet)
+      when "cloud_tenant_tag"                 then tag(CloudTenant)
+      when "cloud_volume_tag"                 then tag(CloudVolume)
+      when "flavor_tag"                       then tag(Flavor)
+      when "floating_ip_tag"                  then tag(FloatingIp)
+      when "load_balancer_tag"                then tag(LoadBalancer)
+      when "network_port_tag"                 then tag(NetworkPort)
+      when "network_router_tag"               then tag(NetworkRouter)
+      when "orchestration_stack_tag"          then tag(OrchestrationStack)
+      when "security_group_tag"               then tag(SecurityGroup)
       end
 
       pfx = pfx_for_vm_button_pressed(params[:pressed])

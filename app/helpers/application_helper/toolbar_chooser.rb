@@ -433,7 +433,9 @@ class ApplicationHelper::ToolbarChooser
   def center_toolbar_filename_classic
     # Original non vmx view code follows
     # toolbar buttons on sub-screens
-    to_display = %w(ems_clusters hosts resource_pools storages)
+    to_display = %w(availability_zones cloud_networks cloud_object_store_containers cloud_subnets
+                    cloud_tenants cloud_volumes ems_clusters flavors floating_ips hosts load_balancers
+                    network_ports network_routers orchestration_stacks resource_pools security_groups storages)
     to_display_center = %w(stack_orchestration_template topology)
     if @lastaction == 'show' && (@view || @display != 'main') && !@layout.starts_with?("miq_request")
       if @display == "vms" || @display == "all_vms"
