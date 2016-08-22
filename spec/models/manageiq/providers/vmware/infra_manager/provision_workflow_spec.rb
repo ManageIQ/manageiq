@@ -76,7 +76,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
     end
   end
 
-  context 'network selection' do
+  context 'provisioning a VM' do
     let(:workflow) { described_class.new({}, admin.userid) }
     before do
       @ems    = FactoryGirl.create(:ems_vmware)
@@ -88,7 +88,22 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
       workflow.instance_variable_set(:@target_resource, nil)
     end
 
-    context 'vlans' do
+    context '#set_on_vm_id_changed' do
+      it 'clears StorageProfile filter' do
+        workflow.instance_variable_set(
+          :@filters,
+          :Host            => {21  => "Platform / ESX 6.0"},
+          'StorageProfile' => {1   => "Tag 1"},
+          :src_vm_id       => @src_vm.id
+        )
+        allow(workflow).to receive(:set_or_default_hardware_field_values).with(@src_vm)
+        workflow.set_on_vm_id_changed
+        filters = workflow.instance_variable_get(:@filters)
+        expect(filters).to eq(:Host => {21=>"Platform / ESX 6.0"}, 'StorageProfile' => nil, :src_vm_id => @src_vm.id)
+      end
+    end
+
+    context 'network selection' do
       let(:s11) { FactoryGirl.create(:switch, :name => "A") }
       let(:s12) { FactoryGirl.create(:switch, :name => "B") }
       let(:s13) { FactoryGirl.create(:switch, :name => "C") }

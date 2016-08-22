@@ -143,7 +143,7 @@ class ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow < ManageIQ::P
     return vlans, hosts
   end
 
-  def allowed_storage_profiles(options = {})
+  def allowed_storage_profiles(_options = {})
     return [] if (src = resources_for_ui).blank? || src[:vm].nil?
     @filters['StorageProfile'] ||= begin
       template = load_ar_obj(src[:vm])
