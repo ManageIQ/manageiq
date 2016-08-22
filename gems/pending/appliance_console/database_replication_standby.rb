@@ -2,12 +2,18 @@ require 'appliance_console/logging'
 require 'appliance_console/prompts'
 require 'appliance_console/database_replication'
 require 'util/postgres_admin'
+require 'fileutils'
+require 'linux_admin'
 
 module ApplianceConsole
   class DatabaseReplicationStandby < DatabaseReplication
     include ApplianceConsole::Logging
 
-    REGISTER_CMD = 'repmgr standby register'.freeze
+    REGISTER_CMD    = 'repmgr standby register'.freeze
+    PGPASS_FILE     = '/var/lib/pgsql/.pgpass'.freeze
+    REPMGRD_SERVICE = 'rh-repmgr95'.freeze
+
+    attr_accessor :run_repmgrd_configuration
 
     def initialize
       self.cluster_name      = nil
@@ -25,12 +31,17 @@ module ApplianceConsole
       ask_for_unique_cluster_node_number
       ask_for_database_credentials
       ask_for_standby_host
+      ask_for_repmgrd_configuration
       return false if repmgr_configured? && !confirm_reconfiguration
       confirm(:including_standby_host)
     end
 
     def ask_for_standby_host
       self.standby_host = ask_for_ip_or_hostname("Standby Server hostname or IP address", standby_host)
+    end
+
+    def ask_for_repmgrd_configuration
+      self.run_repmgrd_configuration = ask_yn?("Configure Replication Manager (repmgrd) for automatic failover")
     end
 
     def activate
@@ -40,7 +51,8 @@ module ApplianceConsole
         create_config_file(standby_host) &&
         clone_standby_server &&
         start_postgres &&
-        register_standby_server
+        register_standby_server &&
+        configure_repmgrd
     end
 
     def data_dir_empty?
@@ -71,6 +83,41 @@ module ApplianceConsole
 
     def register_standby_server
       run_repmgr_command(REGISTER_CMD)
+    end
+
+    def configure_repmgrd
+      return true unless run_repmgrd_configuration
+      write_repmgrd_config
+      write_pgpass_file
+      start_repmgrd
+    end
+
+    def write_repmgrd_config
+      File.open(REPMGR_CONFIG, "a") do |f|
+        f.write("failover=automatic\n")
+        f.write("promote_command='repmgr standby promote'\n")
+        f.write("follow_command='repmgr standby follow'\n")
+      end
+    end
+
+    def write_pgpass_file
+      File.open(PGPASS_FILE, "w") do |f|
+        f.write("*:*:#{database_name}:#{database_user}:#{database_password}\n")
+        f.write("*:*:replication:#{database_user}:#{database_password}\n")
+      end
+
+      FileUtils.chmod(0600, PGPASS_FILE)
+      FileUtils.chown("postgres", "postgres", PGPASS_FILE)
+    end
+
+    def start_repmgrd
+      LinuxAdmin::Service.new(REPMGRD_SERVICE).enable.start
+      true
+    rescue AwesomeSpawn::CommandResultError => e
+      message = "Failed to start repmgrd: #{e.message}"
+      Logging.logger.error(message)
+      say(message)
+      false
     end
   end # class DatabaseReplicationStandby < DatabaseReplication
 end # module ApplianceConsole
