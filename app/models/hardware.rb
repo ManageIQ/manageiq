@@ -25,6 +25,8 @@ class Hardware < ApplicationRecord
   virtual_column :ipaddresses,   :type => :string_set, :uses => :networks
   virtual_column :hostnames,     :type => :string_set, :uses => :networks
   virtual_column :mac_addresses, :type => :string_set, :uses => :nics
+  virtual_attribute :used_disk_storage,      :integer, :uses => :disks
+  virtual_attribute :allocated_disk_storage, :integer, :uses => :disks
 
   def ipaddresses
     @ipaddresses ||= networks.collect(&:ipaddress).compact.uniq
