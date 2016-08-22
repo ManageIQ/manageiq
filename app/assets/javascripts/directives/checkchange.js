@@ -37,7 +37,9 @@ ManageIQ.angular.app.directive('checkchange', ['miqService', function(miqService
 }]);
 
 var viewModelComparison = function(scope, ctrl) {
-  if (ctrl.$viewValue == scope.modelCopy[ctrl.$name]) {
+  if ((Array.isArray(scope.modelCopy[ctrl.$name]) &&
+       angular.equals(scope[scope.model][ctrl.$name], scope.modelCopy[ctrl.$name])) ||
+       ctrl.$viewValue == scope.modelCopy[ctrl.$name]) {
     scope.angularForm[scope['formchange_' + ctrl.$name]].$setPristine();
     scope.angularForm[scope['formchange_' + ctrl.$name]].$setUntouched();
     scope.angularForm.$pristine = true;
