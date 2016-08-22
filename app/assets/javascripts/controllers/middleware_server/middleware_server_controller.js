@@ -4,8 +4,9 @@ MwServerController.$inject = ['$scope', 'miqService' ];
 
 /**
  * MwServerController - since there can be only one controller per page due to:
- * 'ManageIQ.angular.scope = $scope;' since this is needed by miqCallAngular to
- * showListener via ManageIQ.angular.scope.$apply.
+ * 'ManageIQ.angular.scope = $scope;'
+ * We are now using Rx.js Observables instead of miqCallAngular, for sending configurable
+ * data from miq buttons.
  * This is the parent controller for the page that is bootstrapped,
  * interacting with the page via $scope and then $broadcast events down to the sub
  * controllers to handle them in isolation.
@@ -26,22 +27,25 @@ MwServerController.$inject = ['$scope', 'miqService' ];
 function MwServerController($scope, miqService) {
   ManageIQ.angular.scope = $scope;
 
-  /////////////////////////////////////////////////////////////////////////
-  // Server Ops
-  /////////////////////////////////////////////////////////////////////////
-
-  $scope.showServerOpsListener = function (args) {
-    var operation = args.split(':')[1]; // format is 'operation:resume'
+  ManageIQ.angular.rxSubject.subscribe(function(event) {
+    var eventType = event.type,
+        operation = event.operation,
+        timeout = event.timeout;
 
     $scope.paramsModel = {};
-    if (operation) {
+    if (eventType == 'mwServerOps'  && operation) {
       $scope.paramsModel.serverId = angular.element('#mw_param_server_id').val();
       $scope.paramsModel.operation = operation;
       $scope.paramsModel.operationTitle = makeOperationDisplayName(operation) + ' ' + _('Server');
       $scope.paramsModel.operationButtonName = makeOperationDisplayName(operation);
+      $scope.paramsModel.timeout = timeout;
+      $scope.$apply();
     }
-    $scope.paramsModel.timeout = 10; // default timeout value
-  };
+  });
+
+  /////////////////////////////////////////////////////////////////////////
+  // Server Ops
+  /////////////////////////////////////////////////////////////////////////
 
   $scope.runOperation = function () {
     $scope.$broadcast('mwSeverOpsEvent', $scope.paramsModel);

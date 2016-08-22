@@ -48,8 +48,8 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
           :image   => "guest_shutdown",
           :data    => {'toggle'        => 'modal',
                        'target'        => '#modal_param_div',
-                       'function'      => 'miqCallAngular',
-                       'function-data' => '{"name": "showServerOpsListener", "args": ["operation:shutdown"]}'}),
+                       'function'      => 'sendDataWithRx',
+                       'function-data' => '{"type": "mwServerOps", "operation": "shutdown", "timeout": 0}'}),
         button(
           :middleware_server_restart,
           nil,
@@ -73,8 +73,8 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
           :image => "suspend",
           :data  => {'toggle'        => 'modal',
                      'target'        => '#modal_param_div',
-                     'function'      => 'miqCallAngular',
-                     'function-data' => '{"name": "showServerOpsListener", "args": ["operation:suspend"]}'}),
+                     'function'      => 'sendDataWithRx',
+                     'function-data' => '{"type": "mwServerOps", "operation": "suspend", "timeout": 10}'}),
         button(
           :middleware_server_resume,
           nil,
