@@ -423,8 +423,6 @@
           :data_type: :integer
         :storage_profile_filter:
           :values_from:
-            :options:
-              :category: :StorageProfile
             :method: :allowed_storage_profiles
           :auto_select_single: false
           :description: Storage Profile
