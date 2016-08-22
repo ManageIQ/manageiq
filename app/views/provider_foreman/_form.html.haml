@@ -70,15 +70,19 @@
       %label.col-md-2.control-label{"for" => "provider_url"}
         = _("Url")
       .col-md-8
-        %input.form-control{:type        => "text",
-                            :name        => "url",
-                            'ng-model'   => "providerForemanModel.url",
-                            :maxlength   => MAX_DESC_LEN,
-                            "id"         => "provider_url",
-                            :required    => "",
-                            :checkchange => true}
+        %input.form-control{:type           => "text",
+                            :name           => "url",
+                            'ng-model'      => "providerForemanModel.url",
+                            :maxlength      => MAX_DESC_LEN,
+                            "id"            => "url",
+                            :required       => "",
+                            "ng-trim"       => false,
+                            "detect_spaces" => "",
+                            :checkchange    => true}
         %span.help-block{"ng-show" => "angularForm.url.$error.required"}
           = _("Required")
+        %span.help-block{"ng-show" => "angularForm.url.$error.detectedSpaces"}
+          = _("Spaces are prohibited")
     .form-group
       %label.col-md-2.control-label
         = _("Verify Peer Certificate")
