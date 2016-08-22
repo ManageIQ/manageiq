@@ -156,35 +156,35 @@ describe VirtualFields do
     shared_examples_for "TestSubclass with virtual columns" do
       context "TestSubclass" do
         it ".virtual_attribute_names" do
-          expect(TestSubclass.virtual_attribute_names).to match_array(@vcols_sub_strs)
+          expect(test_sub_class.virtual_attribute_names).to match_array(@vcols_sub_strs)
         end
 
         it ".attribute_names" do
-          expect(TestSubclass.attribute_names).to match_array(@cols_sub_strs)
+          expect(test_sub_class.attribute_names).to match_array(@cols_sub_strs)
         end
 
         context ".virtual_attribute?" do
           context "with virtual column" do
-            it("as string") { expect(TestSubclass.virtual_attribute?("vcolsub1")).to be_truthy }
-            it("as symbol") { expect(TestSubclass.virtual_attribute?(:vcolsub1)).to  be_truthy }
+            it("as string") { expect(test_sub_class.virtual_attribute?("vcolsub1")).to be_truthy }
+            it("as symbol") { expect(test_sub_class.virtual_attribute?(:vcolsub1)).to  be_truthy }
           end
 
           context "with column" do
-            it("as string") { expect(TestSubclass.virtual_attribute?("col1")).not_to be_truthy }
-            it("as symbol") { expect(TestSubclass.virtual_attribute?(:col1)).not_to  be_truthy }
+            it("as string") { expect(test_sub_class.virtual_attribute?("col1")).not_to be_truthy }
+            it("as symbol") { expect(test_sub_class.virtual_attribute?(:col1)).not_to  be_truthy }
           end
         end
 
         it ".remove_virtual_fields" do
-          expect(TestSubclass.remove_virtual_fields(:vcol1)).to             be_nil
-          expect(TestSubclass.remove_virtual_fields(:vcolsub1)).to          be_nil
-          expect(TestSubclass.remove_virtual_fields(:ref1)).to eq(:ref1)
-          expect(TestSubclass.remove_virtual_fields([:vcol1])).to eq([])
-          expect(TestSubclass.remove_virtual_fields([:vcolsub1])).to eq([])
-          expect(TestSubclass.remove_virtual_fields([:vcolsub1, :vcol1, :ref1])).to eq([:ref1])
-          expect(TestSubclass.remove_virtual_fields({:vcol1    => {}})).to eq({})
-          expect(TestSubclass.remove_virtual_fields({:vcolsub1 => {}})).to eq({})
-          expect(TestSubclass.remove_virtual_fields(:vcolsub1 => {}, :volsub1 => {}, :ref1 => {})).to eq({:ref1 => {}})
+          expect(test_sub_class.remove_virtual_fields(:vcol1)).to             be_nil
+          expect(test_sub_class.remove_virtual_fields(:vcolsub1)).to          be_nil
+          expect(test_sub_class.remove_virtual_fields(:ref1)).to eq(:ref1)
+          expect(test_sub_class.remove_virtual_fields([:vcol1])).to eq([])
+          expect(test_sub_class.remove_virtual_fields([:vcolsub1])).to eq([])
+          expect(test_sub_class.remove_virtual_fields([:vcolsub1, :vcol1, :ref1])).to eq([:ref1])
+          expect(test_sub_class.remove_virtual_fields({:vcol1    => {}})).to eq({})
+          expect(test_sub_class.remove_virtual_fields({:vcolsub1 => {}})).to eq({})
+          expect(test_sub_class.remove_virtual_fields(:vcolsub1 => {}, :volsub1 => {}, :ref1 => {})).to eq({:ref1 => {}})
         end
       end
     end
@@ -203,19 +203,17 @@ describe VirtualFields do
       it_should_behave_like "TestClass with virtual columns"
 
       context "and TestSubclass with virtual columns" do
-        before(:each) do
-          class TestSubclass < TestClass
+        let(:test_sub_class) do
+          Class.new(TestClass) do
             virtual_column :vcolsub1, :type => :string
           end
-
+        end
+        before(:each) do
+          test_sub_class
           @vcols_sub_strs = @vcols_strs + ["vcolsub1"]
           @vcols_sub_syms = @vcols_syms + [:vcolsub1]
           @cols_sub_strs  = @vcols_sub_strs + ["id", "col1"]
           @cols_sub_syms  = @vcols_sub_syms + [:id, :col1]
-        end
-
-        after(:each) do
-          Object.send(:remove_const, :TestSubclass)
         end
 
         it_should_behave_like "TestClass with virtual columns" # Shows inheritance doesn't pollute base class
@@ -361,13 +359,13 @@ describe VirtualFields do
     shared_examples_for "TestSubclass with virtual reflections" do
       context "TestSubclass" do
         it ".virtual_reflections" do
-          expect(TestSubclass.virtual_reflections.keys).to match_array(@vrefs_sub_syms)
-          expect(TestSubclass.virtual_reflections.values.collect(&:name)).to match_array(@vrefs_sub_syms)
+          expect(test_sub_class.virtual_reflections.keys).to match_array(@vrefs_sub_syms)
+          expect(test_sub_class.virtual_reflections.values.collect(&:name)).to match_array(@vrefs_sub_syms)
         end
 
         it ".reflections_with_virtual" do
-          expect(TestSubclass.reflections_with_virtual.keys).to match_array(@refs_sub_syms)
-          expect(TestSubclass.reflections_with_virtual.values.collect(&:name)).to match_array(@refs_sub_syms)
+          expect(test_sub_class.reflections_with_virtual.keys).to match_array(@refs_sub_syms)
+          expect(test_sub_class.reflections_with_virtual.values.collect(&:name)).to match_array(@refs_sub_syms)
         end
 
         context ".virtual_reflection?" do
@@ -383,15 +381,15 @@ describe VirtualFields do
         end
 
         it ".remove_virtual_fields" do
-          expect(TestSubclass.remove_virtual_fields(:vref1)).to             be_nil
-          expect(TestSubclass.remove_virtual_fields(:vrefsub1)).to          be_nil
-          expect(TestSubclass.remove_virtual_fields(:ref1)).to eq(:ref1)
-          expect(TestSubclass.remove_virtual_fields([:vref1])).to eq([])
-          expect(TestSubclass.remove_virtual_fields([:vrefsub1])).to eq([])
-          expect(TestSubclass.remove_virtual_fields([:vrefsub1, :vref1, :ref1])).to eq([:ref1])
-          expect(TestSubclass.remove_virtual_fields({:vref1    => {}})).to eq({})
-          expect(TestSubclass.remove_virtual_fields({:vrefsub1 => {}})).to eq({})
-          expect(TestSubclass.remove_virtual_fields(:vrefsub1 => {}, :vref1 => {}, :ref1 => {})).to eq({:ref1 => {}})
+          expect(test_sub_class.remove_virtual_fields(:vref1)).to             be_nil
+          expect(test_sub_class.remove_virtual_fields(:vrefsub1)).to          be_nil
+          expect(test_sub_class.remove_virtual_fields(:ref1)).to eq(:ref1)
+          expect(test_sub_class.remove_virtual_fields([:vref1])).to eq([])
+          expect(test_sub_class.remove_virtual_fields([:vrefsub1])).to eq([])
+          expect(test_sub_class.remove_virtual_fields([:vrefsub1, :vref1, :ref1])).to eq([:ref1])
+          expect(test_sub_class.remove_virtual_fields({:vref1    => {}})).to eq({})
+          expect(test_sub_class.remove_virtual_fields({:vrefsub1 => {}})).to eq({})
+          expect(test_sub_class.remove_virtual_fields(:vrefsub1 => {}, :vref1 => {}, :ref1 => {})).to eq({:ref1 => {}})
         end
       end
     end
@@ -408,19 +406,17 @@ describe VirtualFields do
       it_should_behave_like "TestClass with virtual reflections"
 
       context "and TestSubclass with virtual reflections" do
-        before(:each) do
-          class TestSubclass < TestClass
+        let(:test_sub_class) do
+          Class.new(TestClass) do
             def self.reflections; super.merge(:ref2 => OpenStruct.new(:name => :ref2, :options => {}, :klass => TestClass)); end
 
             virtual_has_one :vrefsub1
           end
-
+        end
+        before(:each) do
+          test_sub_class
           @vrefs_sub_syms = @vrefs_syms + [:vrefsub1]
           @refs_sub_syms  = @vrefs_sub_syms + [:ref1, :ref2]
-        end
-
-        after(:each) do
-          Object.send(:remove_const, :TestSubclass)
         end
 
         it_should_behave_like "TestClass with virtual reflections" # Shows inheritance doesn't pollute base class
