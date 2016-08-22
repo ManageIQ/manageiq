@@ -80,5 +80,5 @@
 //= require miq_explorer
 //= require qs
 // Bower packages
-//= require ui-components/dist/js/ui-components
+//= require manageiq-ui-components/dist/js/ui-components
 //= require rx-angular/dist/rx.angular
