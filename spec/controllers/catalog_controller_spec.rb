@@ -230,7 +230,7 @@ describe CatalogController do
 
     it "displays a message when an image file is not selected " do
       post :st_upload_image, :params => { :format => :js, :id => @st.id, :commit => 'Upload' }
-      expect(assigns(:flash_array).first[:message]).to include("Use the Browse button to locate a .png or .jpg image file")
+      expect(assigns(:flash_array).first[:message]).to include("Use the Choose file button to locate a .png or .jpg image file")
     end
   end
 

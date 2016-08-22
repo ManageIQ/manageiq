@@ -164,7 +164,7 @@ class MiqPolicyController < ApplicationController
                                 :action      => "export")
       end
     else
-      redirect_options.merge!(:flash_msg   => _("Use the Browse button to locate an Import file"),
+      redirect_options.merge!(:flash_msg   => _("Use the Choose file button to locate an Import file"),
                               :flash_error => true,
                               :action      => "export")
     end

@@ -234,7 +234,7 @@ Methods updated/added: 10
         post :upload_import_file, :params => params, :xhr => true
         expect(response).to redirect_to(
           :action  => :review_import,
-          :message => {:message => "Use the browse button to locate an import file", :level => :warning}.to_json
+          :message => {:message => "Use the Choose file button to locate an import file", :level => :warning}.to_json
         )
       end
     end

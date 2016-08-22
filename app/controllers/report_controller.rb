@@ -88,7 +88,7 @@ class ReportController < ApplicationController
       end
     else
       redirect_to :action        => 'explorer',
-                  :flash_msg     => _("Use the Browse button to locate an Import file"),
+                  :flash_msg     => _("Use the Choose file button to locate an Import file"),
                   :flash_warning => true
     end
   end
@@ -224,7 +224,7 @@ class ReportController < ApplicationController
     upload_file = params.fetch_path(:upload, :file)
 
     if upload_file.blank?
-      add_flash("Use the browse button to locate an import file", :warning)
+      add_flash("Use the Choose file button to locate an import file", :warning)
     else
       begin
         @in_a_form = true

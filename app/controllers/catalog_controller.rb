@@ -437,7 +437,7 @@ class CatalogController < ApplicationController
       end
     else
       identify_catalog(params[:id])
-      msg = _("Use the Browse button to locate a .png or .jpg image file")
+      msg = _("Use the Choose file button to locate a .png or .jpg image file")
       err = true
     end
     params[:id] = x_build_node_id(@record)  # Get the tree node id

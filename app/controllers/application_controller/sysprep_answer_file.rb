@@ -19,7 +19,7 @@ class ApplicationController
         end
       else
         @edit[:new][:sysprep_upload_text] = nil
-        msg = _("Use the Browse button to locate an Upload file")
+        msg = _("Use the Choose file button to locate an Upload file")
         add_flash(msg, :error)
       end
     end

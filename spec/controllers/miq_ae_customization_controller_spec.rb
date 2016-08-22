@@ -284,7 +284,7 @@ describe MiqAeCustomizationController do
       it "redirects with a warning message" do
         post :upload_import_file, :params => params, :xhr => true
         expect(controller.instance_variable_get(:@flash_array))
-          .to include(:message => "Use the browse button to locate an import file", :level => :warning)
+          .to include(:message => "Use the Choose file button to locate an import file", :level => :warning)
       end
     end
 

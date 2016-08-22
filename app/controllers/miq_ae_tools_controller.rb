@@ -172,7 +172,7 @@ Methods updated/added: %{method_stats}") % stat_options, :success)
     upload_file = params.fetch_path(:upload, :file)
 
     if upload_file.blank?
-      add_flash(_("Use the browse button to locate an import file"), :warning)
+      add_flash(_("Use the Choose file button to locate an import file"), :warning)
     else
       import_file_upload_id = automate_import_service.store_for_import(upload_file.read)
       add_flash(_("Import file was uploaded successfully"), :success)
@@ -206,7 +206,7 @@ Methods updated/added: %{method_stats}") % stat_options)
       end
     else
       @in_a_form = true
-      add_flash(_("Use the Browse button to locate an Import file"), :error)
+      add_flash(_("Use the Choose file button to locate an Import file"), :error)
       #     render :action=>"import_export"
       import_export
     end
