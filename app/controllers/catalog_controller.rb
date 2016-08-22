@@ -111,17 +111,15 @@ class CatalogController < ApplicationController
       end
       if !@record.id.nil? && need_prov_dialogs?(@record.prov_type)
         prov_set_form_vars(MiqRequest.find(@record.service_resources[0].resource_id))      # Set vars from existing request
-        @edit[:new][:st_prov_type] = @record.prov_type
       else
         # prov_set_form_vars
         @edit ||= {}                                    # Set default vars
         @edit[:new] ||= {}
         @edit[:current] ||= {}
         @edit[:key] = "prov_edit__new"
-        @edit[:new][:st_prov_type] = @record.prov_type if @record.try(:id)
         @edit[:st_prov_types] = catalog_item_types
       end
-
+      @edit[:new][:st_prov_type] = @record.prov_type if @record.prov_type.present?
       # set name and description for ServiceTemplate record
       set_form_vars
       @edit[:new][:service_type] = "atomic"
@@ -147,17 +145,6 @@ class CatalogController < ApplicationController
       "openstack"             => "OpenStack",
       "redhat"                => "RHEV",
       "vmware"                => "VMware"
-    }
-  end
-
-  def generic_item_subtypes
-    {
-      "custom"          => _("Custom"),
-      "vm"              => _("VM"),
-      "playbook"        => _("Playbook"),
-      "hosted_database" => _("Hosted Database"),
-      "load_balancer"   => _("Load Balancer"),
-      "storage"         => _("Storage")
     }
   end
 
@@ -884,6 +871,9 @@ class CatalogController < ApplicationController
       # check for service template required fields before creating a request
       add_flash(_("Name is required"), :error)
     end
+    if @edit[:new][:st_prov_type] == 'generic' && @edit[:new][:generic_subtype].blank?
+      add_flash(_('Subtype is required.'), :error)
+    end
     add_flash(_("Provisioning Entry Point is required"), :error) if @edit[:new][:fqname].blank?
 
     # Check for a Dialog if Display in Catalog is selected
@@ -1270,6 +1260,7 @@ class CatalogController < ApplicationController
     st.service_template_catalog = @edit[:new][:catalog_id].nil? ?
       nil : ServiceTemplateCatalog.find_by_id(@edit[:new][:catalog_id])
     st.prov_type = @edit[:new][:st_prov_type]
+    st.generic_subtype = @edit[:new][:generic_subtype] if @edit[:new][:st_prov_type] == 'generic'
   end
 
   def st_set_record_vars(st)
@@ -1315,6 +1306,8 @@ class CatalogController < ApplicationController
     @edit[:new][:provision_cost] = @record.provision_cost
     @edit[:new][:display]  = @record.display ? @record.display : false
     @edit[:new][:catalog_id] = @record.service_template_catalog ? @record.service_template_catalog.id : nil
+    @edit[:new][:st_prov_type] ||= @record.prov_type
+    @edit[:new][:generic_subtype] = @record.generic_subtype || "custom" if @edit[:new][:st_prov_type] == 'generic'
     @edit[:new][:available_catalogs] = Rbac.filtered(ServiceTemplateCatalog.all).collect do |stc|
       [stc.tenant.present? && stc.tenant.ancestors.present? ? stc.name + " (#{stc.tenant.name})" : stc.name, stc.id]
     end
@@ -1455,6 +1448,7 @@ class CatalogController < ApplicationController
     @edit[:new][:dialog_id] = params[:dialog_id] if params[:dialog_id]
     # saving it in @edit as well, to use it later because prov_set_form_vars resets @edit[:new]
     @edit[:st_prov_type] = @edit[:new][:st_prov_type] = params[:st_prov_type] if params[:st_prov_type]
+    @edit[:new][:generic_subtype] = params[:generic_subtype] if params[:generic_subtype]
     @edit[:new][:long_description] = params[:long_description] if params[:long_description]
     @edit[:new][:long_description] = @edit[:new][:long_description].to_s + "..." if params[:transOne]
 
