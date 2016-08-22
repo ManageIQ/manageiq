@@ -66,6 +66,25 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       expect(storage_profile.disks).to include(disk)
     end
 
+    it 'will not delete storage_profiles or clear the associations when target refreshing a VM' do
+      expect(StorageProfile.count).to eq(6)
+      refresher = ems.refresher.new([vm])
+      # full ems refresh
+      target, inventory = refresher.collect_inventory_for_targets(ems, [ems])[0]
+      hashes = refresher.parse_targeted_inventory(ems, target, inventory)
+      refresher.save_inventory(ems, target, hashes)
+      expect(StorageProfile.count).to eq(6)
+
+      # vm-targeted refresh
+      target, inventory = refresher.collect_inventory_for_targets(ems, [vm])[0]
+      hashes = refresher.parse_targeted_inventory(ems, target, inventory)
+      refresher.save_inventory(ems, target, hashes)
+      expect(StorageProfile.count).to eq(6)
+
+      vm.reload
+      expect(vm.storage_profile).to eq(storage_profile)
+    end
+
     it 'clears the association when the storage profile of a VM/Disk is deleted' do
       refresher = ems.refresher.new([ems])
       target, inventory = refresher.collect_inventory_for_targets(ems, [ems])[0]
