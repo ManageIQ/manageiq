@@ -79,7 +79,7 @@ class ApplicationHelper::Toolbar::EmsInfrasCenter < ApplicationHelper::Toolbar::
   ])
   button_group('ems_infra_authentication', [
     select(
-      :ems_cloud_authentication_choice,
+      :ems_infra_authentication_choice,
       'fa fa-lock fa-lg',
       t = N_('Authentication'),
       t,
@@ -87,9 +87,9 @@ class ApplicationHelper::Toolbar::EmsInfrasCenter < ApplicationHelper::Toolbar::
       :onwhen  => "1+",
       :items   => [
         button(
-          :ems_cloud_recheck_auth_status,
+          :ems_infra_recheck_auth_status,
           'fa fa-search fa-lg',
-          N_('Re-check Authentication Status for this #{ui_lookup(:table=>"ems_cloud")}'),
+          N_('Re-check Authentication Status for the selected Infrastructure Providers'),
           N_('Re-check Authentication Status'),
           :url_parms => "main_div",
           :enabled   => false,

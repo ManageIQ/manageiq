@@ -72,7 +72,7 @@ class ApplicationHelper::Toolbar::EmsContainersCenter < ApplicationHelper::Toolb
   ])
   button_group('ems_container_authentication', [
     select(
-      :ems_cloud_authentication_choice,
+      :ems_container_authentication_choice,
       'fa fa-lock fa-lg',
       t = N_('Authentication'),
       t,
@@ -80,9 +80,9 @@ class ApplicationHelper::Toolbar::EmsContainersCenter < ApplicationHelper::Toolb
       :onwhen  => "1+",
       :items   => [
         button(
-          :ems_cloud_recheck_auth_status,
+          :ems_container_recheck_auth_status,
           'fa fa-search fa-lg',
-          N_('Re-check Authentication Status for this #{ui_lookup(:table=>"ems_cloud")}'),
+          N_('Re-check Authentication Status for the selected Containers Providers '),
           N_('Re-check Authentication Status'),
           :url_parms => "main_div",
           :enabled   => false,
