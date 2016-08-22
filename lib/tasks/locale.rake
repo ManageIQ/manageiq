@@ -111,7 +111,7 @@ namespace :locale do
     FastGettext.available_locales.each do |locale|
       FastGettext.locale = locale
       # TRANSLATORS: Provide locale name in native language (e.g. English, Deutsch or Português)
-      human_locale = _("locale_name")
+      human_locale = Vmdb::FastGettextHelper.locale_name
       human_locale = locale if human_locale == "locale_name"
       locale_hash[locale] = human_locale
     end

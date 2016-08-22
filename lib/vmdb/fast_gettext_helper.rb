@@ -63,5 +63,9 @@ module Vmdb
       fix_i18n_available_locales
       FastGettext.default_text_domain = 'manageiq'
     end
+
+    def self.locale_name
+      _('locale_name')
+    end
   end
 end
