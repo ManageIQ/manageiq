@@ -8,6 +8,7 @@ module Rbac
     CLASSES_THAT_PARTICIPATE_IN_RBAC = %w(
       AvailabilityZone
       CloudTenant
+      CloudVolume
       ConfigurationProfile
       ConfiguredSystem
       Container

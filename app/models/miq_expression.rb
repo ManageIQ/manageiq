@@ -11,6 +11,7 @@ class MiqExpression
     ChargebackContainerProject
     CloudResourceQuota
     CloudTenant
+    CloudVolume
     Compliance
     ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem
     ManageIQ::Providers::ConfigurationManager
