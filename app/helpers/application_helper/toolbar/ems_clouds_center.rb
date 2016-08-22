@@ -89,7 +89,7 @@ class ApplicationHelper::Toolbar::EmsCloudsCenter < ApplicationHelper::Toolbar::
         button(
           :ems_cloud_recheck_auth_status,
           'fa fa-search fa-lg',
-          N_('Re-check Authentication Status for this #{ui_lookup(:table=>"ems_cloud")}'),
+          N_('Re-check Authentication Status for the selected Cloud Providers'),
           N_('Re-check Authentication Status'),
           :url_parms => "main_div",
           :enabled   => false,
