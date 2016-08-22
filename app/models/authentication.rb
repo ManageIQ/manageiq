@@ -22,7 +22,7 @@ class Authentication < ApplicationRecord
   ERRORS = {
     :incomplete => "Incomplete credentials",
     :invalid    => "Invalid credentials",
-  }
+  }.freeze
 
   STATUS_SEVERITY = Hash.new(-1).merge(
     ""            => -1,
@@ -79,6 +79,10 @@ class Authentication < ApplicationRecord
     return if prefix.blank?
 
     MiqEvent.raise_evm_event_queue(ci, "#{prefix}_auth_#{status}")
+  end
+
+  def assign_values(options)
+    self.attributes = options
   end
 
   private

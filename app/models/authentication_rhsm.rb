@@ -1,0 +1,2 @@
+class AuthenticationRhsm < Authentication
+end

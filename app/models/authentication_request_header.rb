@@ -1,0 +1,2 @@
+class AuthenticationRequestHeader < Authentication
+end

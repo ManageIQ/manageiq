@@ -1,0 +1,2 @@
+class AuthenticationAllowAll < Authentication
+end
