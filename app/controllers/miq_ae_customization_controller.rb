@@ -46,7 +46,7 @@ class MiqAeCustomizationController < ApplicationController
 
   def upload_import_file
     if params[:upload].nil? || params[:upload][:file].blank?
-      add_flash(_("Use the browse button to locate an import file"), :warning)
+      add_flash(_("Use the Choose file button to locate an import file"), :warning)
     else
       begin
         import_file = dialog_import_service.store_for_import(params[:upload][:file].read)

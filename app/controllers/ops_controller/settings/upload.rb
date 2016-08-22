@@ -33,7 +33,7 @@ module OpsController::Settings::Upload
         err = false
       end
     else
-      msg = _("Use the Browse button to locate .png image file")
+      msg = _("Use the Choose file button to locate .png image file")
       err = true
     end
     redirect_to :action => 'explorer', :flash_msg => msg, :flash_error => err, :no_refresh => true
@@ -93,7 +93,7 @@ module OpsController::Settings::Upload
         end
       end
     else
-      msg = _("Use the Browse button to locate CSV file")
+      msg = _("Use the Choose file button to locate CSV file")
       err = true
     end
     @sb[:show_button] = (@sb[:good] && @sb[:good] > 0)

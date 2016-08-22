@@ -26,7 +26,7 @@ module OpsController::Settings
         session[:imports] = @sb[:imports] = nil
       end
     else
-      msg = _("Use the Browse button to locate CSV file")
+      msg = _("Use the Choose file button to locate CSV file")
       err = true
     end
     @sb[:show_button] = err
