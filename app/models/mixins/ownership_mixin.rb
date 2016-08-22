@@ -5,22 +5,24 @@ module OwnershipMixin
     belongs_to :evm_owner, :class_name => "User"
     belongs_to :miq_group
 
-    virtual_column :evm_owner_email,                      :type => :string,     :uses => :evm_owner
-    virtual_column :evm_owner_name,                       :type => :string,     :uses => :evm_owner
-    virtual_column :evm_owner_userid,                     :type => :string,     :uses => :evm_owner
+    virtual_delegate :email, :name, :userid, :to => :evm_owner, :prefix => true, :allow_nil => true
 
     # Determine whether the selected object is owned by the current user
     # Resulting SQL:
     #
-    #   ((SELECT (LOWER("users"."userid") = 'some_userid')
-    #     FROM "users"
-    #     WHERE "users"."id" = "THIS_MODELS_TABLE"."evm_owner_id"))
-    virtual_attribute :owned_by_current_user, :boolean, :arel => (lambda do |t|
-      user_table = User.arel_table
-      group_sel  = t.grouping(user_table[:userid].lower.eq(User.current_userid.to_s.try(:downcase)))
-      where_cond = user_table[:id].eq(arel_attribute(:evm_owner_id))
-
-      t.grouping(user_table.project(group_sel).where(where_cond))
+    #   (LOWER((SELECT "users"."userid"
+    #           FROM "users"
+    #           WHERE "users"."id" = "THIS_MODELS_TABLE"."evm_owner_id")) = 'some_userid')
+    #
+    # explination:
+    # At first it looks like a simple compare with evm_owner_id = current user id would suffice.
+    #   i.e.: t.grouping(arel_attribute(:evm_owner_id)]).eq(User.current_user.try(:id)))
+    #
+    # But the code is written to support the same userid used across multiple regions. Assuming that they are
+    # all the same user.
+    virtual_attribute :owned_by_current_user, :boolean, :uses => :evm_owner, :arel => (lambda do |t|
+      userid = User.current_userid.to_s.downcase
+      t.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:evm_owner_userid)]).eq(userid))
     end)
 
     virtual_column :owning_ldap_group,                    :type => :string,     :uses => :miq_group
@@ -87,18 +89,6 @@ module OwnershipMixin
         none
       end
     end
-  end
-
-  def evm_owner_email
-    evm_owner.try(:email)
-  end
-
-  def evm_owner_name
-    evm_owner.try(:name)
-  end
-
-  def evm_owner_userid
-    evm_owner.try(:userid)
   end
 
   def owned_by_current_user

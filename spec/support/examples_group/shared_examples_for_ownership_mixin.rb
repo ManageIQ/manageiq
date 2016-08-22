@@ -66,17 +66,77 @@ shared_examples "miq ownership" do
       end
     end
 
+    describe ".evm_owner_name" do
+      before { User.current_user = user }
+
+      context "when has a user" do
+        it "returns userid" do
+          column = "evm_owner_name"
+          query  = described_class.where(:name => 'user_owned')
+          expect(virtual_column_sql_value(query, column)).to eq(user.name)
+        end
+      end
+
+      context "when has no user" do
+        it "returns no description" do
+          column = "evm_owner_name"
+          query  = described_class.where(:name => 'no_group')
+          expect(virtual_column_sql_value(query, column)).to be_nil
+        end
+      end
+    end
+
+    describe ".evm_owner_userid" do
+      before { User.current_user = user }
+
+      context "when has a user" do
+        it "returns userid" do
+          column = "evm_owner_userid"
+          query  = described_class.where(:name => 'user_owned')
+          expect(virtual_column_sql_value(query, column)).to eq(user.userid)
+        end
+      end
+
+      context "when has no user" do
+        it "returns no description" do
+          column = "evm_owner_userid"
+          query  = described_class.where(:name => 'no_group')
+          expect(virtual_column_sql_value(query, column)).to be_nil
+        end
+      end
+    end
+
+    describe ".evm_owner_email" do
+      before { User.current_user = user }
+
+      context "when has a user" do
+        it "returns userid" do
+          column = "evm_owner_email"
+          query  = described_class.where(:name => 'user_owned')
+          expect(virtual_column_sql_value(query, column)).to eq(user.email)
+        end
+      end
+
+      context "when has no user" do
+        it "returns no description" do
+          column = "evm_owner_email"
+          query  = described_class.where(:name => 'no_group')
+          expect(virtual_column_sql_value(query, column)).to be_nil
+        end
+      end
+    end
+
     describe ".owned_by_current_user" do
       before { User.current_user = user }
       it "usable as arel" do
         userid = user.userid.downcase
         sql        = <<-SQL.strip_heredoc.split("\n").join(' ')
-                       SELECT (LOWER("users"."userid") = '#{userid}')
-                       FROM "users"
-                       WHERE "users"."id" = "#{described_class.table_name}"."evm_owner_id"
+                       LOWER((SELECT "users_ss"."userid"
+                       FROM "users" "users_ss"
+                       WHERE "users_ss"."id" = "#{described_class.table_name}"."evm_owner_id")) = '#{userid}'
                      SQL
         attribute  = described_class.arel_attribute(:owned_by_current_user)
-        expect(stringify_arel(attribute)).to eq ["((#{sql}))"]
+        expect(stringify_arel(attribute)).to eq ["(#{sql})"]
       end
 
       context "when owned by the current user" do
