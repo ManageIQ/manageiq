@@ -92,7 +92,7 @@ class Hardware < ApplicationRecord
   end
   # resulting sql: "(cast(disk_free_space as float) / (disk_capacity * 100))"
   virtual_attribute :v_pct_free_disk_space, :float, :arel => (lambda do |t|
-    Arel::Nodes::Grouping.new(Arel::Nodes::Division.new(
+    t.grouping(Arel::Nodes::Division.new(
       Arel::Nodes::NamedFunction.new("CAST", [t[:disk_free_space].as("float")]),
       t[:disk_capacity]) * 100)
   end)
@@ -104,7 +104,7 @@ class Hardware < ApplicationRecord
   # resulting sql: "(cast(disk_free_space as float) / (disk_capacity * -100) + 100)"
   # to work with arel better, put the 100 at the end
   virtual_attribute :v_pct_used_disk_space, :float, :arel => (lambda do |t|
-    Arel::Nodes::Grouping.new(Arel::Nodes::Division.new(
+    t.grouping(Arel::Nodes::Division.new(
       Arel::Nodes::NamedFunction.new("CAST", [t[:disk_free_space].as("float")]),
       t[:disk_capacity]) * -100 + 100)
   end)
