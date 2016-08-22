@@ -314,6 +314,27 @@ RSpec.describe "Blueprints API" do
 
       expect(response).to have_http_status(:forbidden)
     end
+
+    it "updates a blueprint to remove a service catalog" do
+      blueprint = FactoryGirl.create(:blueprint)
+      original_service_template = FactoryGirl.create(:service_template)
+      original_service_catalog = FactoryGirl.create(:service_template_catalog)
+      blueprint.create_bundle(:service_templates => [original_service_template],
+                              :service_catalog   => original_service_catalog)
+      api_basic_authorize action_identifier(:blueprints, :edit)
+
+      run_post(
+        blueprints_url(blueprint.id),
+        :action   => "edit",
+        :resource => {
+          :bundle => {
+            :service_catalog => {}
+          }
+        }
+      )
+
+      expect(blueprint.reload.bundle.descendants).to eq([])
+    end
   end
 
   describe "DELETE /api/blueprints/:id" do
