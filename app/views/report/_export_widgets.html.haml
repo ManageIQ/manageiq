@@ -74,7 +74,7 @@
             :multiple => true)
 
     .pull-right
-      = submit_tag(_("Export"), :class => "btn btn-primary export-widgets btn-disabled")
+      = submit_tag(_("Export"), :class => "btn btn-primary export-widgets disabled")
 
 :javascript
   $(function() {
@@ -100,12 +100,12 @@
 
     $('.widget-export').change(function() {
       if ($('.widget-export').val() !== null) {
-        if ($('.export-widgets').hasClass('btn-disabled')) {
-          $('.export-widgets').removeClass('btn-disabled');
+        if ($('.export-widgets').hasClass('disabled')) {
+          $('.export-widgets').removeClass('disabled');
         }
       } else {
-        if (!$('.export-widgets').hasClass('btn-disabled')) {
-          $('.export-widgets').addClass('btn-disabled');
+        if (!$('.export-widgets').hasClass('disabled')) {
+          $('.export-widgets').addClass('disabled');
         }
       }
     });

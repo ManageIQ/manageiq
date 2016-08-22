@@ -5,10 +5,9 @@
 
 %div{"ng-show" => ng_show, "ng-controller" => "buttonGroupController"}
   = button_tag(_("Submit"),
-                 :class     => "btn btn-primary btn-disabled",
+                 :class     => "btn btn-primary disabled",
                  :alt       => submit_title_off,
                  :title     => submit_title_off,
-                 :style     => "cursor:not-allowed",
                  "ng-show"  => "!saveable(angularForm)",
                  "ng-click" => "disabledClick($event)")
   = button_tag(_("Submit"),

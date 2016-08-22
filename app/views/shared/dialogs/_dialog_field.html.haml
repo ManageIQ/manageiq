@@ -34,7 +34,7 @@
       = render(:partial => "shared/dialogs/dialog_field_drop_down_list", :locals => locals)
 
     - when 'DialogFieldButton'
-      = button_tag(_("Save"), :class => edit ? 'btn btn-primary' : 'btn btn-primary btn-disabled')
+      = button_tag(_("Save"), :class => edit ? 'btn btn-primary' : 'btn btn-primary disabled')
 
     - when 'DialogFieldTagControl'
       - category_tags = DialogFieldTagControl.category_tags(field.category).map { |cat| [cat[:description], cat[:id]] }

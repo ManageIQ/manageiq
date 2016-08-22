@@ -62,8 +62,8 @@
             :type    => "submit")
 
     #buttons_off{:style => "display: #{@changed ? 'none' : 'block'}"}
-      = button_tag(_("Save"),  :class => "btn btn-primary btn-disabled", :type => 'button')
-      = button_tag(_("Reset"), :class => "btn btn-default btn-disabled", :type => 'button')
+      = button_tag(_("Save"),  :class => "btn btn-primary disabled", :type => 'button')
+      = button_tag(_("Reset"), :class => "btn btn-default disabled", :type => 'button')
 
       - unless  @layout == "configuration" || @layout == "ops" || @layout == "chargeback" || @layout == "miq_ae_class"
         = button_tag(t = _("Cancel"),

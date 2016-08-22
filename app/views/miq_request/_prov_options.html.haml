@@ -61,8 +61,8 @@
       .col-md-2
       .col-md-8
         #buttons_off
-          = button_tag(_("Apply"), :id => "apply", :class => "btn btn-primary btn-disabled")
-          = button_tag(_("Reset"), :class => "btn btn-default btn-disabled")
+          = button_tag(_("Apply"), :id => "apply", :class => "btn btn-primary disabled")
+          = button_tag(_("Reset"), :class => "btn btn-default disabled")
           = link_to(_("Default"),
             {:action => "prov_button", :button => "default"},
             :class                 => "btn btn-default",

@@ -230,9 +230,8 @@
     %tr
       %td#buttons_on{:align => "right"}
         = button_tag(_("Submit"),
-                     :class     => "btn btn-primary btn-disabled",
+                     :class     => "btn btn-primary disabled",
                      :alt       => _("Submit"),
-                     :style     => "cursor:not-allowed",
                      "ng-click" => "disabledClick($event)",
                      "ng-show"  => "(angularForm.$pristine && !cb_disks) || angularForm.$invalid || (!cb_memory && !cb_cpu && !cb_disks)")
         = button_tag(_("Submit"),
@@ -241,10 +240,10 @@
                      "ng-click" => "submitClicked()",
                      "ng-show"  => "!((angularForm.$pristine && !cb_disks) || angularForm.$invalid || (!cb_memory && !cb_cpu && !cb_disks))")
         = button_tag("Reset",
-             :class        => "btn btn-default btn-disabled",
+             :class        => "btn btn-default disabled",
              :alt          => "Reset changes",
              :title        => "Reset changes",
-             "ng-class"    => "{'btn-disabled': angularForm.$pristine && !cb_disks}",
+             "ng-class"    => "{ disabled: angularForm.$pristine && !cb_disks}",
              "ng-click"    => "resetClicked()",
              "ng-disabled" => "angularForm.$pristine && !cb_disks",
              "ng-hide"     => "newRecord")

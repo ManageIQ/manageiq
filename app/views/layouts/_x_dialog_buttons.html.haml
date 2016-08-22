@@ -45,13 +45,13 @@
         - buttons.each do |b|
           - case b
           - when "save"
-            = button_tag(_("Save"), :class => "btn btn-primary btn-disabled")
+            = button_tag(_("Save"), :class => "btn btn-primary disabled")
           - when "submit"
-            = button_tag(_("Submit"), :class => "btn btn-primary btn-disabled")
+            = button_tag(_("Submit"), :class => "btn btn-primary disabled")
           - when "continue"
-            = button_tag(_("Continue"), :class => "btn btn-default btn-disabled")
+            = button_tag(_("Continue"), :class => "btn btn-default disabled")
           - when "reset"
-            = button_tag(_("Reset"), :class => "btn btn-default btn-disabled")
+            = button_tag(_("Reset"), :class => "btn btn-default disabled")
           - when "cancel"
             = button_tag(t = _('Cancel'),
              :class   => "btn btn-default",

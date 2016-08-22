@@ -56,7 +56,7 @@
                     "data-method" => :post,
                     :title        => t)
         #automate_buttons_off{:style => "display:#{@changed ? "none" : "display"};"}
-          = button_tag(_("Apply"), :class => "btn btn-primary btn-disabled")
+          = button_tag(_("Apply"), :class => "btn btn-primary disabled")
           = link_to(t = _("Cancel"),
                     {:action => "ae_tree_select_toggle",
                      :button => "cancel"},

@@ -22,12 +22,12 @@
                        :class        => "btn btn-primary",
                        "ng-click"    => "saveClicked()",
                        "ng-disabled" => "angularForm.$pristine || angularForm.$invalid",
-                       "ng-class"    => "{'btn-disabled': cloudVolumeForm.$pristine || angularForm.$invalid}")
+                       "ng-class"    => "{ disabled: cloudVolumeForm.$pristine || angularForm.$invalid}")
           = button_tag("Reset",
                        :class        => "btn btn-primary",
                        "ng-click"    => "resetClicked()",
                        "ng-disabled" => "angularForm.$pristine",
-                       "ng-class"    => "{'btn-disabled': cloudVolumeForm.$pristine}")
+                       "ng-class"    => "{ disabled: cloudVolumeForm.$pristine}")
           = button_tag("Cancel",
                         :class     => "btn btn-default",
                         "ng-click" => "cancelClicked()")
