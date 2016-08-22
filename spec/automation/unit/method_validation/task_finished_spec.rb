@@ -1,5 +1,5 @@
 require 'spec_helper'
-include AutomationSpecHelper
+include Spec::Support::AutomationHelper
 
 describe "task_finished_status" do
   def build_resolve_path
