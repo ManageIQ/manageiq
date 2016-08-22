@@ -1,4 +1,3 @@
-require 'spec_helper'
 include Spec::Support::AutomationHelper
 
 describe "task_finished_status" do
