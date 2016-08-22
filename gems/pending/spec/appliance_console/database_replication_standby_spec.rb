@@ -21,13 +21,12 @@ describe ApplianceConsole::DatabaseReplicationStandby do
 
   context "#ask_questions" do
     before do
-      allow(PG::Connection).to receive(:new).and_return(double(SPEC_NAME, :exec => double(SPEC_NAME, :first => "1")))
-    end
-
-    it "returns true when input is confirmed" do
       expect(subject).to receive(:ask_for_unique_cluster_node_number)
       expect(subject).to receive(:ask_for_database_credentials)
       expect(subject).to receive(:ask_for_standby_host)
+    end
+
+    it "returns true when input is confirmed" do
       expect(subject).to receive(:repmgr_configured?).and_return(false)
       expect(subject).to_not receive(:confirm_reconfiguration)
       expect(subject).to receive(:confirm).and_return(true)
@@ -35,9 +34,6 @@ describe ApplianceConsole::DatabaseReplicationStandby do
     end
 
     it "returns true when confirm_reconfigure and input is confirmed" do
-      expect(subject).to receive(:ask_for_unique_cluster_node_number)
-      expect(subject).to receive(:ask_for_database_credentials)
-      expect(subject).to receive(:ask_for_standby_host)
       expect(subject).to receive(:repmgr_configured?).and_return(true)
       expect(subject).to receive(:confirm_reconfiguration).and_return(true)
       expect(subject).to receive(:confirm).and_return(true)
@@ -45,9 +41,6 @@ describe ApplianceConsole::DatabaseReplicationStandby do
     end
 
     it "returns false when confirm_reconfigure is canceled" do
-      expect(subject).to receive(:ask_for_unique_cluster_node_number)
-      expect(subject).to receive(:ask_for_database_credentials)
-      expect(subject).to receive(:ask_for_standby_host)
       expect(subject).to receive(:repmgr_configured?).and_return(true)
       expect(subject).to receive(:confirm_reconfiguration).and_return(false)
       expect(subject).to_not receive(:confirm)
@@ -55,9 +48,6 @@ describe ApplianceConsole::DatabaseReplicationStandby do
     end
 
     it "returns false when input is not confirmed" do
-      expect(subject).to receive(:ask_for_unique_cluster_node_number)
-      expect(subject).to receive(:ask_for_database_credentials)
-      expect(subject).to receive(:ask_for_standby_host)
       expect(subject).to receive(:repmgr_configured?).and_return(false)
       expect(subject).to_not receive(:confirm_reconfiguration)
       expect(subject).to receive(:confirm).and_return(false)
