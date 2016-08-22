@@ -112,7 +112,17 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     src = get_source_and_targets
     vm, ems = load_ar_obj(src[:vm]), src[:ems]
 
-    clear_field_values([:placement_host_name, :placement_ds_name, :placement_folder_name, :placement_cluster_name, :placement_rp_name, :linked_clone, :snapshot, :placement_dc_name])
+    clear_field_values(
+      [:placement_host_name,
+       :placement_ds_name,
+       :placement_folder_name,
+       :placement_cluster_name,
+       :placement_rp_name,
+       :linked_clone,
+       :snapshot,
+       :placement_dc_name,
+       :storage_profile_filter]
+    )
 
     if vm.nil?
       clear_field_values([:number_of_cpus, :number_of_sockets, :cores_per_socket, :vm_memory, :cpu_limit, :memory_limit, :cpu_reserve, :memory_reserve])
