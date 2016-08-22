@@ -401,6 +401,26 @@
     search_type: global
     db: Storage
 - attributes:
+    name: default_Store Type / FCP
+    description: Store Type / FCP
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: Storage-store_type
+          value: FCP
+    search_type: global
+    db: Storage
+- attributes:
+    name: default_Store Type / ISCSI
+    description: Store Type / ISCSI
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: Storage-store_type
+          value: ISCSI
+    search_type: global
+    db: Storage
+- attributes:
     name: default_Store Type / GlusterFS
     description: Store Type / GlusterFS
     filter: !ruby/object:MiqExpression
