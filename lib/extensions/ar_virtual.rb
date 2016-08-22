@@ -151,7 +151,7 @@ module VirtualDelegates
           end
         elsif to_ref.macro == :belongs_to
           lambda do |t|
-            src_model_id = arel_attribute(to_ref.association_foreign_key, t)
+            src_model_id = arel_attribute(to_ref.foreign_key, t)
             VirtualDelegates.select_from_alias(to_model, to_ref, col, to_ref.active_record_primary_key, src_model_id)
           end
         end
