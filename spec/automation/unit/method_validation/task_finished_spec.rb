@@ -1,7 +1,6 @@
-require 'spec_helper'
-include Spec::Support::AutomationHelper
-
 describe "task_finished_status" do
+  include Spec::Support::AutomationHelper
+
   def build_resolve_path
     instance  = "/System/Request/Call_Method"
     namespace = "namespace=/ManageIQ/System/CommonMethods"
