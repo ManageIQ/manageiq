@@ -66,6 +66,52 @@ shared_examples "miq ownership" do
       end
     end
 
+    describe ".owned_by_current_user" do
+      before { User.current_user = user }
+      it "usable as arel" do
+        userid = user.userid.downcase
+        sql        = <<-SQL.strip_heredoc.split("\n").join(' ')
+                       SELECT (LOWER("users"."userid") = '#{userid}')
+                       FROM "users"
+                       WHERE "users"."id" = "#{described_class.table_name}"."evm_owner_id"
+                     SQL
+        attribute  = described_class.arel_attribute(:owned_by_current_user)
+        expect(stringify_arel(attribute)).to eq ["((#{sql}))"]
+      end
+
+      context "when owned by the current user" do
+        it "returns true" do
+          column = "owned_by_current_user"
+          query  = described_class.where(:name => 'user_owned')
+          expect(virtual_column_sql_value(query, column)).to eq(true)
+        end
+      end
+
+      context "when owned by a different user" do
+        it "returns false" do
+          column = "owned_by_current_user"
+          query  = described_class.where(:name => 'user_owned2')
+          expect(virtual_column_sql_value(query, column)).to eq(false)
+        end
+      end
+
+      context "when no user" do
+        it "returns nil" do
+          column = "owned_by_current_user"
+          query  = described_class.where(:name => 'no_group')
+
+          expect(virtual_column_sql_value(query, column)).to eq(nil)
+        end
+
+        it "returns no results when searching by name and owned_by_current_user" do
+          column = "owned_by_current_user"
+          query  = described_class.where :name  => 'no_group',
+                                         column => false
+          expect(query.to_a.size).to eq(0)
+        end
+      end
+    end
+
     describe "reporting on ownership" do
       let(:exp_value) { "true" }
       let(:exp) { { "="=> { "field" => "#{described_class}-owned_by_current_ldap_group", "value" => exp_value } } }
