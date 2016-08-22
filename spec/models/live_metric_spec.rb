@@ -1,18 +1,22 @@
 describe LiveMetric do
-  let(:conditions) do
+  let(:raw_conditions) do
     "resource_type = 'MiddlewareServer' and resource_id = 6 " \
     "and timestamp >= '2016-04-03 00:00:00' and timestamp <= '2016-04-05 23:00:00' " \
     "and capture_interval_name = 'daily'"
   end
 
-  let(:incomplete_conditions) do
+  let(:conditions) { [raw_conditions] }
+
+  let(:incomplete_raw_conditions) do
     "resource_type = 'MiddlewareServer' " \
     "and timestamp >= '2016-04-03 00:00:00' and timestamp <= '2016-04-05 23:00:00' " \
     "and capture_interval_name = 'daily'"
   end
 
+  let(:incomplete_conditions) { [incomplete_raw_conditions] }
+
   it "#parse_conditions" do
-    parsed = LiveMetric.parse_conditions(conditions)
+    parsed = LiveMetric.parse_conditions(raw_conditions)
     expect(parsed.size).to eq(5)
     expect(parsed[0][:column]).to eq("resource_type")
     expect(parsed[0][:op]).to eq("=")
