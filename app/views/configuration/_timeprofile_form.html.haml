@@ -57,7 +57,7 @@
                                 }
         .form-group{"ng-class" => "{'has-error': angularForm.some_days_checked.$error.someDaysCheck}"}
           %label.col-md-2.control-label
-          %div{"ng-hide" => "timeProfileModel.all_days"}
+          %div
             %span.col-sm-1{"ng-repeat" => "day in timeProfileModel.dayValues track by $index"}
               {{dayNames[$index]}}
               %div
@@ -99,7 +99,7 @@
                                   "bs-switch"   => "",
                                   :checkchange  => "",
                                 }
-        .form-group{"ng-hide" => "timeProfileModel.all_hours"}
+        .form-group
           %label.col-md-2.control-label
             = _('AM')
           %div
@@ -116,7 +116,7 @@
                                     'time-type'      => "hour",
                                     'min-time-check' => "{{$index}}",
                                    }
-        .form-group{"ng-hide" => "timeProfileModel.all_hours"}
+        .form-group
           %label.col-md-2.control-label
           %div
             %span.col-sm-1{"ng-repeat" => "hour in timeProfileModel.hourValuesAMSecondHalf track by $index"}
@@ -132,7 +132,7 @@
                                     'time-type'      => "hour",
                                     'min-time-check' => "{{$index}}",
                                    }
-        .form-group{"ng-hide" => "timeProfileModel.all_hours"}
+        .form-group
           %label.col-md-2.control-label
             = _('PM')
           %div
@@ -149,7 +149,7 @@
                                     'time-type'      => "hour",
                                     'min-time-check' => "{{$index}}",
                                    }
-        .form-group{"ng-hide" => "timeProfileModel.all_hours"}
+        .form-group
           %label.col-md-2.control-label
           %div
             %span.col-sm-1{"ng-repeat" => "hour in timeProfileModel.hourValuesPMSecondHalf track by $index"}
