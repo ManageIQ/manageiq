@@ -1,0 +1,3 @@
+.col-md-12.col-lg-12
+  = render :partial => "shared/summary/textual_multilabel", :locals => {:title => _("Last 20 issues"), :items => textual_group_alerts}
+  = render :partial => "shared/summary/textual_multilabel", :locals => {:title => _("System Status"), :items => textual_group_alerts_summary}

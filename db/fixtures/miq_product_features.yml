@@ -3389,6 +3389,10 @@
       :description: Edit Tags of Containers Providers
       :feature_type: control
       :identifier: ems_container_tag
+    - :name: List
+      :description: Display Lists of Alerts
+      :feature_type: control
+      :identifier: ems_container_alerts
     - :name: Manage Policies
       :description: Manage Policies of Containers Providers
       :feature_type: control

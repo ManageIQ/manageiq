@@ -97,4 +97,15 @@ class ApplicationHelper::Toolbar::EmsContainersCenter < ApplicationHelper::Toolb
       ]
     ),
   ])
+  button_group('ems_container_alertss', [
+                                       button(
+                                         :ems_container_alerts,
+                                         'product product-monitoring fa-lg',
+                                         N_('Show_alerts'),
+                                         N_('Show alerts'),
+                                         :url_parms => "main_div"),
+                                       :enabled   => true,
+                                       :onwhen    => "1",
+                                       :klass => ApplicationHelper::Button
+                                     ])
 end

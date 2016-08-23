@@ -27,6 +27,7 @@ class ExtManagementSystem < ApplicationRecord
 
   belongs_to :provider
   belongs_to :tenant
+  has_many :miq_alert_statuses, :as => :resource, :dependent => :destroy
   has_many :container_deployments, :foreign_key => :deployed_on_ems_id, :inverse_of => :deployed_on_ems
   has_many :endpoints, :as => :resource, :dependent => :destroy, :autosave => true
 

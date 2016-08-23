@@ -160,6 +160,26 @@ module ContainerSummaryHelper
     textual_link(@record.parent)
   end
 
+  def textual_group_alerts
+    labels = [_("Host"), _("Issue"), _("Severity"), _("Last change"), _("Age"), _("Info"), _("Ack") , _("Actions")]
+    h = {:labels => labels}
+    result_array = []
+    @records.each do |record|
+      record.miq_alert_statuses.each do |alert_status|
+        result_array << [record.name, alert_status.miq_alert.description, alert_status.severity, alert_status.evaluated_on.to_datetime, distance_of_time_in_words(alert_status.evaluated_on.to_time - Time.now), "-", "No", "-"]
+      end
+    end
+    h[:values] = result_array
+    h
+  end
+
+  def textual_group_alerts_summary
+    labels = [_("Host group"), _("Disaster"), _("High"), _("Average"), _("Warning	"), _("Information"), _("Not classified")]
+    h = {:labels => labels}
+    h[:values] =[["example.host", 1,2,3,4,5,6]]
+    h
+  end
+
   def textual_tags
     label = _("%{name} Tags") % {:name => session[:customer_name]}
     h = {:label => label}

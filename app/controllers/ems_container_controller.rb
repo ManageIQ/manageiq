@@ -12,6 +12,13 @@ class EmsContainerController < ApplicationController
     ManageIQ::Providers::ContainerManager
   end
 
+  def show_alerts
+    @refresh_partial = "show_alerts"
+    @refresh_div = "main_div"
+    @title = _("Container Providers Alerts")
+    @records = params[:id] ? ExtManagementSystem.includes(:miq_alert_statuses).find(params[:id]) : ExtManagementSystem.includes(:miq_alert_statuses).where(:type => ["ManageIQ::Providers::OpenshiftEnterprise::ContainerManager", "ManageIQ::Providers::Openshift::ContainerManager"])
+  end
+
   def self.table_name
     @table_name ||= "ems_container"
   end

@@ -1031,6 +1031,7 @@ Vmdb::Application.routes.draw do
         tagging_edit
         ems_container_form_fields
         tag_edit_form_field_changed
+        show_alerts
       ) +
                compare_get,
       :post => %w(
