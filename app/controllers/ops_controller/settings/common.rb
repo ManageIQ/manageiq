@@ -230,11 +230,12 @@ module OpsController::Settings::Common
   end
 
   def pglogical_validate_subscription
-    valid = MiqRegionRemote.validate_connection_settings(params[:host],
-                                                         params[:port],
-                                                         params[:user],
-                                                         params[:password],
-                                                         params[:dbname])
+    valid = PglogicalSubscription.validate(params[:subscription_id],
+                                           :host     => params[:host],
+                                           :port     => params[:port],
+                                           :user     => params[:user],
+                                           :password => params[:password],
+                                           :dbname   => params[:dbname])
     if valid.nil?
       add_flash(_("Subscription Credentials validated successfully"))
     else

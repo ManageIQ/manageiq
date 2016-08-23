@@ -86,6 +86,38 @@ class PglogicalSubscription < ActsAsArModel
     self.class.pglogical(refresh)
   end
 
+  def self.validate(id, connection_hash)
+    connection_hash ||= {}
+    if id.nil?
+      return MiqRegionRemote.validate_connection_settings(connection_hash[:host],
+                                                          connection_hash[:port],
+                                                          connection_hash[:user],
+                                                          connection_hash[:password],
+                                                          connection_hash[:dbname])
+    end
+    begin
+      subscription = find(id)
+    rescue ActiveRecord::RecordNotFound => err
+      return ["#{err.message}"]
+    end
+    subscription.validate(connection_hash)
+  end
+
+  def validate(connection_hash)
+    connection_hash ||= {}
+    find_password
+    password = decrypted_password
+    connection_hash[:host] ||= host
+    connection_hash[:port] ||= port
+    connection_hash[:user] ||= user
+    connection_hash[:dbname] ||= dbname
+    MiqRegionRemote.validate_connection_settings(connection_hash[:host],
+                                                 connection_hash[:port],
+                                                 connection_hash[:user],
+                                                 password,
+                                                 connection_hash[:dbname])
+  end
+
   # translate the output from the pglogical stored proc to our object columns
   def self.subscription_to_columns(sub)
     cols = sub.symbolize_keys
