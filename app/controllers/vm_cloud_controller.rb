@@ -4,6 +4,7 @@ class VmCloudController < ApplicationController
 
   before_action :check_privileges
   before_action :get_session_data
+  before_action :set_named_scope, :only => :explorer
   after_action :cleanup_action
   after_action :set_session_data
 
