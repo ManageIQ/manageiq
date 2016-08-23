@@ -1,5 +1,7 @@
 module MiqAeMethodService
   class MiqAeServiceManageIQ_Providers_Vmware_InfraManager_Provision < MiqAeServiceMiqProvision
+    expose_eligible_resources :storage_profiles
+
     def set_customization_spec(name = nil, override = false)
       object_send(:set_customization_spec, name, override)
     end
