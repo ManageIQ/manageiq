@@ -1,4 +1,3 @@
-require Rails.root.join('spec/support/controller_spec_helper')
 require_relative 'shared_network_manager_context'
 
 shared_examples :cloud_network_controller_spec do |providers|
