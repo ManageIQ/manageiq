@@ -43,6 +43,9 @@ class ManageIQ::Providers::Redhat::InfraManager
               :template   => [:disks]
             }
           }
+          unless target.hardware.nil?
+            methods[:primary][:vm_disks] = target.hardware.disks.map { |disk| "#{disk.storage.ems_ref}/disks/#{disk.filename}" }
+          end
           data,  = Benchmark.realtime_block(:fetch_vm_data) { inventory.targeted_refresh(methods) }
 
         else

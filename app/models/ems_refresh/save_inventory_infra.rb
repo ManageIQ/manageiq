@@ -44,6 +44,19 @@ module EmsRefresh::SaveInventoryInfra
       return
     end
 
+    # Check if a vm was removed and we still have disk(s)
+    if target.kind_of?(VmOrTemplate) && hashes[:vms].blank?
+      current = hashes[:vm_disks].collect { |disk| URI(disk[:storage][:ems_ref]).path.split('/').last }.uniq
+      if current.blank?
+        storage = nil
+      else
+        vm_storages = ([target.storage] + target.storages).compact.uniq
+        storage = vm_storages.select { |store| !current.include?(store.ems_ref) }
+      end
+
+      target.disconnect_storage storage
+    end
+
     prev_relats = vmdb_relats(target)
 
     _log.info("#{log_header} Saving EMS Inventory...")
