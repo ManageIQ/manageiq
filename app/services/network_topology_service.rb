@@ -22,6 +22,7 @@ class NetworkTopologyService < TopologyService
         :cloud_network => :tags,
         :vms => [
           :tags,
+          :load_balancers,
           :floating_ips    => :tags,
           :cloud_tenant    => :tags,
           :security_groups => :tags],
@@ -47,6 +48,7 @@ class NetworkTopologyService < TopologyService
              :CloudNetwork  => {:type => "glyph", :icon => "\uE62c", :fontfamily => "IcoMoon"},
              :CloudTenant   => {:type => "glyph", :icon => "\uE904", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-cloud-tenant
              :Vm            => {:type => "glyph", :icon => "\uE90f", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-virtual-machine
+             :LoadBalancer  => {:type => "glyph", :icon => "\uE608", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-load-balancer
              :Tag           => {:type => "glyph", :icon => "\uF02b", :fontfamily => "FontAwesome"},
              :Openstack     => {:type => "image", :icon => provider_icon(:Openstack)},
              :Amazon        => {:type => "image", :icon => provider_icon(:Amazon)},
@@ -106,7 +108,7 @@ class NetworkTopologyService < TopologyService
 
   def build_kinds
     kinds = [:NetworkRouter, :CloudSubnet, :Vm, :NetworkManager, :FloatingIp, :CloudNetwork, :NetworkPort, :CloudTenant,
-             :SecurityGroup, :Tag]
+             :SecurityGroup, :LoadBalancer, :Tag]
     build_legend_kinds(kinds)
   end
 end

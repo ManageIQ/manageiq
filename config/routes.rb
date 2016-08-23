@@ -1452,6 +1452,30 @@ Vmdb::Application.routes.draw do
         exp_post
     },
 
+    :load_balancer             => {
+      :get  => %w(
+        download_data
+        index
+        show
+        show_list
+        tagging_edit
+      ) +
+        compare_get,
+      :post => %w(
+        button
+        quick_search
+        show
+        show_list
+        listnav_search_selected
+        tag_edit_form_field_changed
+        tagging_edit
+      ) +
+        adv_search_post +
+        compare_post +
+        save_post +
+        exp_post
+    },
+
     :flavor                   => {
       # FIXME: Change tagging_edit to POST only; We need to remove the redirects
       # in app/controllers/application_controller/tags.rb#tag that are used in
@@ -2493,6 +2517,7 @@ Vmdb::Application.routes.draw do
         floating_ips
         network_routers
         network_ports
+        load_balancers
         cloud_subnets
         cloud_networks
         cloud_volumes

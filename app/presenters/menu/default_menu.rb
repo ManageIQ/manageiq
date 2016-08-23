@@ -156,6 +156,7 @@ module Menu
           Menu::Item.new('security_group',   N_('Security Groups'), 'security_group',   {:feature => 'security_group_show_list'}, '/security_group'),
           Menu::Item.new('floating_ip',      N_('Floating IPs'),    'floating_ip',      {:feature => 'floating_ip_show_list'},    '/floating_ip'),
           Menu::Item.new('network_port',     N_('Network Ports'),   'network_port',     {:feature => 'network_port_show_list'},   '/network_port'),
+          Menu::Item.new('load_balancer',    N_('Load Balancers'),  'load_balancer',    {:feature => 'load_balancer_show_list'},  '/load_balancer'),
           Menu::Item.new('network_topology', N_('Topology'),        'network_topology', {:feature => 'network_topology'},         '/network_topology'),
         ])
       end

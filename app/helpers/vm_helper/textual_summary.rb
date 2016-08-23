@@ -18,7 +18,7 @@ module VmHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(name region server description hostname ipaddress custom_1 container host_platform tools_status osinfo devices cpu_affinity snapshots advanced_settings resources guid storage_profile)
+    %i(name region server description hostname ipaddress custom_1 container host_platform tools_status load_balancer_health_check_state osinfo devices cpu_affinity snapshots advanced_settings resources guid storage_profile)
   end
 
   def textual_group_lifecycle
@@ -32,7 +32,7 @@ module VmHelper::TextualSummary
   def textual_group_vm_cloud_relationships
     %i(ems ems_infra cluster host availability_zone cloud_tenant flavor vm_template drift scan_history service
        cloud_network cloud_subnet orchestration_stack cloud_networks cloud_subnets network_routers security_groups
-       floating_ips network_ports cloud_volumes)
+       floating_ips network_ports load_balancers cloud_volumes)
   end
 
   def textual_group_template_cloud_relationships
@@ -103,6 +103,15 @@ module VmHelper::TextualSummary
     if @record.hardware.try(:networks) && @record.hardware.networks.present?
       h[:link] = url_for(:action => 'show', :id => @record, :display => 'networks')
     end
+    h
+  end
+
+  def textual_load_balancer_health_check_state
+    return nil if @record.try(:load_balancer_health_check_states).blank?
+    h = {:label    => _("Load Balancer Status"),
+         :value    => @record.load_balancer_health_check_state,
+         :title    => @record.load_balancer_health_check_states_with_reason.join("\n"),
+         :explorer => true}
     h
   end
 
@@ -402,6 +411,20 @@ module VmHelper::TextualSummary
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:explorer] = true
       h[:link]  = url_for(:action => 'network_ports', :id => @record, :display => "network_ports")
+    end
+    h
+  end
+
+  def textual_load_balancers
+    return nil if @record.try(:load_balancers).nil?
+
+    label = ui_lookup(:tables => "load_balancer")
+    num   = @record.number_of(:load_balancers)
+    h     = {:label => label, :image => "load_balancer", :value => num}
+    if num > 0 && role_allows?(:feature => "load_balancer_show_list")
+      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:explorer] = true
+      h[:link]  = url_for(:action => 'load_balancers', :id => @record, :display => "load_balancers")
     end
     h
   end

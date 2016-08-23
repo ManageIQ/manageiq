@@ -18,7 +18,7 @@ module VmCloudHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(name region server description ipaddress mac_address custom_1 container preemptible tools_status osinfo architecture advanced_settings resources guid virtualization_type root_device_type)
+    %i(name region server description ipaddress mac_address custom_1 container preemptible tools_status load_balancer_health_check_state osinfo architecture advanced_settings resources guid virtualization_type root_device_type)
   end
 
   def textual_group_security

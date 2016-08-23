@@ -10,7 +10,7 @@ module EmsNetworkHelper::TextualSummary
 
   def textual_group_relationships
     %i(parent_ems_cloud availability_zones cloud_tenants cloud_networks cloud_subnets network_routers security_groups
-       floating_ips network_ports)
+       floating_ips network_ports load_balancers)
   end
 
   def textual_group_status
@@ -81,6 +81,10 @@ module EmsNetworkHelper::TextualSummary
 
   def textual_network_ports
     @record.network_ports
+  end
+
+  def textual_load_balancers
+    @record.load_balancers
   end
 
   def textual_cloud_networks
