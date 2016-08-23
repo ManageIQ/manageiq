@@ -1,4 +1,6 @@
 describe Vm do
+  include_examples "miq ownership"
+
   it "#corresponding_model" do
     expect(Vm.corresponding_model).to eq(MiqTemplate)
     expect(ManageIQ::Providers::Vmware::InfraManager::Vm.corresponding_model).to eq(ManageIQ::Providers::Vmware::InfraManager::Template)
