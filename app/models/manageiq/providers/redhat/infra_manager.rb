@@ -76,6 +76,7 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   # Connect to the engine using version 3 of the API and the `ovirt` gem.
   def self.raw_connect_v3(server, port, path, username, password, service)
     require 'ovirt'
+    require 'ovirt_provider/inventory/ovirt_inventory'
 
     Ovirt.logger = $rhevm_log
 
@@ -92,7 +93,8 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     params[:timeout]      = read_timeout if read_timeout
     params[:open_timeout] = open_timeout if open_timeout
 
-    Ovirt.const_get(service).new(params)
+    const = service == "Inventory" ? OvirtInventory : Ovirt.const_get(service)
+    const.new(params)
   end
 
   def connect(options = {})
