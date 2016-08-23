@@ -3,7 +3,7 @@ require 'fast_gettext'
 module Vmdb
   module Gettext
     module Domains
-      TEXT_DOMAIN = 'manageiq'.freeze
+      TEXT_DOMAIN ||= 'manageiq'.freeze
 
       def self.domains
         @domains ||= []
