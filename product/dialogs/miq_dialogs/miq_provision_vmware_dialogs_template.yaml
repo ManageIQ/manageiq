@@ -421,6 +421,14 @@
           :required: false
           :display: :edit
           :data_type: :integer
+        :placement_storage_profile:
+          :values_from:
+            :method: :allowed_storage_profiles
+          :auto_select_single: false
+          :description: Storage Profile
+          :required: false
+          :display: :edit
+          :data_type: :integer
         :placement_host_name:
           :values_from:
             :method: :allowed_hosts

@@ -12,7 +12,7 @@
   :javascript
     // Create from/to date JS vars to limit calendar starting from
     ManageIQ.calendar.calDateFrom = miqCalendarDateConversion("#{@timezone_offset}");
-  - if [:cluster_filter, :ds_filter, :host_filter, :rp_filter, :vm_filter].include?(field)
+  - if [:cluster_filter, :ds_filter, :host_filter, :rp_filter, :vm_filter, :placement_storage_profile].include?(field)
     -# Filter Pull Down fields, show them only if there are any values
     - unless field_hash[:values].blank?
       .form-group

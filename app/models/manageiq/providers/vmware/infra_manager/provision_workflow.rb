@@ -142,4 +142,18 @@ class ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow < ManageIQ::P
     end
     return vlans, hosts
   end
+
+  def allowed_storage_profiles(_options = {})
+    return [] if (src = resources_for_ui).blank? || src[:vm].nil?
+    @filters[:StorageProfile] ||= begin
+      template = load_ar_obj(src[:vm])
+      @values[:placement_storage_profile] = [template.storage_profile.try(:id), template.storage_profile.try(:name)]
+      StorageProfile.where(:ems_id => src[:ems].try(:id)).each_with_object({}) { |s, m| m[s.id] = s.name }
+    end
+  end
+
+  def set_on_vm_id_changed
+    super
+    @filters[:StorageProfile] = nil
+  end
 end
