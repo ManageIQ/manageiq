@@ -741,6 +741,7 @@ en:
       ManageIQ::Providers::Azure::CloudManager::Vm:                         Instance (Azure)
       ManageIQ::Providers::Amazon::CloudManager::Vm:                        Instance (Amazon)
       ManageIQ::Providers::CloudManager::Template:                          Image
+      ManageIQ::Providers::CloudManager::OrchestrationStack:                Orchestration Stack
       ManageIQ::Providers::ContainerManager:                                Containers Provider
       ManageIQ::Providers::InfraManager:                                    Infrastructure Provider
       ManageIQ::Providers::InfraManager::Vm:                                Virtual Machine
