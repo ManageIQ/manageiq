@@ -23,6 +23,9 @@ describe VirtualFields do
 
       require 'ostruct'
       class TestClass < TestClassBase
+        def self.connection
+          TestClassBase.connection
+        end
         belongs_to :ref1, :class_name => 'TestClass', :foreign_key => :col1
       end
     end
