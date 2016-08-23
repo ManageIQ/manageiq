@@ -44,4 +44,20 @@ describe MiqTemplate do
     expect(ManageIQ::Providers::Redhat::InfraManager::Template.new.supports_kickstart_provisioning?).to be_truthy
     expect(ManageIQ::Providers::Vmware::InfraManager::Template.new.supports_kickstart_provisioning?).to be_falsey
   end
+
+  it "#supports_provisioning?" do
+    template = FactoryGirl.create(:template_openstack)
+    FactoryGirl.create(:ems_openstack, :miq_templates => [template])
+    expect(template.supports_provisioning?).to be_truthy
+
+    template = FactoryGirl.create(:template_openstack)
+    expect(template.supports_provisioning?).to be_falsey
+
+    template = FactoryGirl.create(:template_microsoft)
+    expect(template.supports_provisioning?).to be_falsey
+
+    template = FactoryGirl.create(:template_microsoft)
+    FactoryGirl.create(:ems_openstack, :miq_templates => [template])
+    expect(template.supports_provisioning?).to be_truthy
+  end
 end

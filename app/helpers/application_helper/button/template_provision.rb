@@ -5,6 +5,6 @@ class ApplicationHelper::Button::TemplateProvision < ApplicationHelper::Button::
   end
 
   def disabled?
-    !@record.send("supports_provisioning?")
+    !@record.supports_provisioning?
   end
 end
