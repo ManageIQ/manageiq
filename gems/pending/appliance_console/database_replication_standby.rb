@@ -14,7 +14,7 @@ module ApplianceConsole
     REPMGRD_SERVICE = 'rh-repmgr95'.freeze
     REPMGRD_LOG     = '/var/log/repmgr/repmgrd.log'.freeze
 
-    attr_accessor :run_repmgrd_configuration
+    attr_accessor :standby_host, :run_repmgrd_configuration
 
     def initialize
       self.cluster_name      = nil
@@ -34,7 +34,13 @@ module ApplianceConsole
       ask_for_standby_host
       ask_for_repmgrd_configuration
       return false if repmgr_configured? && !confirm_reconfiguration
-      confirm(:including_standby_host)
+      confirm
+    end
+
+    def confirm
+      super
+      say("        Standby Host:               #{standby_host}")
+      agree("Apply this Replication Server Configuration? (Y/N): ")
     end
 
     def ask_for_standby_host
