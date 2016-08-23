@@ -27,7 +27,7 @@ module SupportsFeatureMixin
   #   Post.supports_archive?                       # => true
   #   Post.new(featured: true).supports_archive?   # => false
   #
-  # To get a reason why a feature is unsupported use the +unsupported+ method
+  # To get a reason why a feature is unsupported use the +unsupported_reason+ method
   # Note: Because providing a reason for an unsupported feature is optional, you should
   #       not rely on checking the reason to be nil for a feature to be unsupported.
   #       You have to use +supports_feature?+
