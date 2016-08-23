@@ -90,16 +90,11 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
 
     context '#set_on_vm_id_changed' do
       it 'clears StorageProfile filter' do
-        workflow.instance_variable_set(
-          :@filters,
-          :Host            => {21  => "Platform / ESX 6.0"},
-          :StorageProfile  => {1   => "Tag 1"},
-          :src_vm_id       => @src_vm.id
-        )
+        workflow.instance_variable_set(:@filters, :Host => {21 => "ESX 6.0"}, :StorageProfile => {1 => "Tag 1"})
         allow(workflow).to receive(:set_or_default_hardware_field_values).with(@src_vm)
         workflow.set_on_vm_id_changed
         filters = workflow.instance_variable_get(:@filters)
-        expect(filters).to eq(:Host => {21=>"Platform / ESX 6.0"}, :StorageProfile => nil, :src_vm_id => @src_vm.id)
+        expect(filters).to eq(:Host => {21=>"ESX 6.0"}, :StorageProfile => nil)
       end
     end
 
