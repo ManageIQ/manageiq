@@ -8,22 +8,10 @@ module ManageIQ
         def require_api_user_or_token
           log_request_initiated
           @auth_token = @auth_user = nil
-          if request.headers['X-Auth-Token']
-            @auth_token  = request.headers['X-Auth-Token']
-            if !api_token_mgr.token_valid?(@module, @auth_token)
-              raise AuthenticationError, "Invalid Authentication Token #{@auth_token} specified"
-            else
-              @auth_user     = api_token_mgr.token_get_info(@module, @auth_token, :userid)
-              @auth_user_obj = userid_to_userobj(@auth_user)
-
-              unless request.headers['X-Auth-Skip-Token-Renewal'] == 'true'
-                api_token_mgr.reset_token(@module, @auth_token)
-              end
-
-              authorize_user_group(@auth_user_obj)
-              validate_user_identity(@auth_user_obj)
-              User.current_user = @auth_user_obj
-            end
+          if request.headers['X-MIQ-Token']
+            authenticate_with_system_token(request.headers['X-MIQ-Token'])
+          elsif request.headers['X-Auth-Token']
+            authenticate_with_user_token(request.headers['X-Auth-Token'])
           else
             authenticate_options = {
               :require_user => true,
@@ -133,6 +121,51 @@ module ManageIQ
 
         def api_token_mgr
           Environment.user_token_service.token_mgr
+        end
+
+        def authenticate_with_user_token(x_auth_token)
+          @auth_token = x_auth_token
+          if !api_token_mgr.token_valid?(@module, @auth_token)
+            raise AuthenticationError, "Invalid Authentication Token #{@auth_token} specified"
+          else
+            @auth_user     = api_token_mgr.token_get_info(@module, @auth_token, :userid)
+            @auth_user_obj = userid_to_userobj(@auth_user)
+
+            unless request.headers['X-Auth-Skip-Token-Renewal'] == 'true'
+              api_token_mgr.reset_token(@module, @auth_token)
+            end
+
+            authorize_user_group(@auth_user_obj)
+            validate_user_identity(@auth_user_obj)
+            User.current_user = @auth_user_obj
+          end
+        end
+
+        def authenticate_with_system_token(x_miq_token)
+          @miq_token_hash = YAML.load(MiqPassword.decrypt(x_miq_token))
+
+          validate_system_token_server(@miq_token_hash[:server_guid])
+          validate_system_token_timestamp(@miq_token_hash[:timestamp])
+
+          @auth_user     = @miq_token_hash[:userid]
+          @auth_user_obj = userid_to_userobj(@auth_user)
+
+          authorize_user_group(@auth_user_obj)
+          validate_user_identity(@auth_user_obj)
+          User.current_user = @auth_user_obj
+        rescue => err
+          api_log_error("Authentication Failed with System Token\nX-MIQ-Token: #{x_miq_token}\nError: #{err}")
+          raise AuthenticationError, "Invalid System Authentication Token specified"
+        end
+
+        def validate_system_token_server(server_guid)
+          raise "Missing server_guid" if server_guid.blank?
+          raise "Invalid server_guid #{server_guid} specified" unless MiqServer.where(:guid => server_guid).exists?
+        end
+
+        def validate_system_token_timestamp(timestamp)
+          raise "Missing timestamp" if timestamp.blank?
+          raise "Invalid timestamp #{timestamp} specified" if 5.minutes.ago.utc > timestamp
         end
       end
     end

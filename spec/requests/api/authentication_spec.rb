@@ -216,4 +216,60 @@ describe "Authentication API" do
       run_delete auth_url, "auth_token" => auth_token
     end
   end
+
+  context "System Token Based Authentication" do
+    AUTHENTICATION_ERROR = "Invalid System Authentication Token specified".freeze
+
+    def systoken(server_guid, userid, timestamp)
+      MiqPassword.encrypt({:server_guid => server_guid, :userid => userid, :timestamp => timestamp}.to_yaml)
+    end
+
+    it "authentication using a bad token" do
+      run_get entrypoint_url,
+              :headers => {"miq_token" => "badtoken"}
+
+      expect(response).to have_http_status(:unauthorized)
+      expect(response.parsed_body).to include(
+        "error" => a_hash_including("kind" => "unauthorized", "message" => AUTHENTICATION_ERROR)
+      )
+    end
+
+    it "authentication using a token with a bad server guid" do
+      run_get entrypoint_url,
+              :headers => {"miq_token" => systoken("bad_server_guid", api_config(:user), Time.now.utc)}
+
+      expect(response).to have_http_status(:unauthorized)
+      expect(response.parsed_body).to include(
+        "error" => a_hash_including("kind" => "unauthorized", "message" => AUTHENTICATION_ERROR)
+      )
+    end
+
+    it "authentication using a token with bad user" do
+      run_get entrypoint_url,
+              :headers => {"miq_token" => systoken(MiqServer.first.guid, "bad_user_id", Time.now.utc)}
+
+      expect(response).to have_http_status(:unauthorized)
+      expect(response.parsed_body).to include(
+        "error" => a_hash_including("kind" => "unauthorized", "message" => AUTHENTICATION_ERROR)
+      )
+    end
+
+    it "authentication using a token with an old timestamp" do
+      run_get entrypoint_url,
+              :headers => {"miq_token" => systoken(MiqServer.first.guid, api_config(:user), 10.minutes.ago.utc)}
+
+      expect(response).to have_http_status(:unauthorized)
+      expect(response.parsed_body).to include(
+        "error" => a_hash_including("kind" => "unauthorized", "message" => AUTHENTICATION_ERROR)
+      )
+    end
+
+    it "authentication using a valid token succeeds" do
+      run_get entrypoint_url,
+              :headers => {"miq_token" => systoken(MiqServer.first.guid, api_config(:user), Time.now.utc)}
+
+      expect(response).to have_http_status(:ok)
+      expect_result_to_have_keys(ENTRYPOINT_KEYS)
+    end
+  end
 end

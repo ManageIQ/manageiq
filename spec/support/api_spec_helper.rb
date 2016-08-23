@@ -8,6 +8,7 @@ require 'json'
 module ApiSpecHelper
   HEADER_ALIASES = {
     "auth_token" => "HTTP_X_AUTH_TOKEN",
+    "miq_token"  => "HTTP_X_MIQ_TOKEN",
     "miq_group"  => "HTTP_X_MIQ_GROUP"
   }
 

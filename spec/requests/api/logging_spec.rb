@@ -12,6 +12,16 @@ describe "Logging" do
       "Response"       => nil
     }.freeze
 
+    EXPECTED_SYSTEM_AUTH_LOGGED_PARAMETERS = {
+      "API Request"    => nil,
+      "System Auth"    => nil,
+      "Authentication" => nil,
+      "Authorization"  => nil,
+      "Request"        => nil,
+      "Parameters"     => nil,
+      "Response"       => nil
+    }.freeze
+
     def expect_log_requests(expectations)
       expectations.each do |category, expectation|
         expect_any_instance_of(ManageIQ::API::BaseController).to receive(:log_request)
@@ -46,6 +56,25 @@ describe "Logging" do
       expect_log_requests(log_request_expectations)
 
       run_get entrypoint_url
+    end
+
+    it "logs additional system authentication with miq_token" do
+      server_guid = MiqServer.first.guid
+      userid = api_config(:user)
+      timestamp = Time.now.utc
+
+      miq_token = MiqPassword.encrypt({:server_guid => server_guid, :userid => userid, :timestamp => timestamp}.to_yaml)
+
+      log_request_expectations = EXPECTED_SYSTEM_AUTH_LOGGED_PARAMETERS.merge(
+        "System Auth"    => a_hash_including(
+          :x_miq_token => miq_token, :server_guid => server_guid, :userid => userid, :timestamp => timestamp
+        ),
+        "Authentication" => a_hash_including(:type => "system", :user => "api_user_id"),
+      )
+
+      expect_log_requests(log_request_expectations)
+
+      run_get entrypoint_url, :headers => {"miq_token" => miq_token}
     end
   end
 end
