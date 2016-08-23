@@ -10,7 +10,29 @@ module OwnershipMixin
     virtual_column :evm_owner_userid,                     :type => :string,     :uses => :evm_owner
     virtual_column :owned_by_current_user,                :type => :boolean,    :uses => :evm_owner_userid
     virtual_column :owning_ldap_group,                    :type => :string,     :uses => :miq_group
-    virtual_column :owned_by_current_ldap_group,          :type => :boolean,    :uses => :owning_ldap_group
+
+    # Determine whether to return objects owned by the current user's miq_group
+    # or not.
+    #
+    # Resulting SQL:
+    #
+    #   ((SELECT (LOWER("miq_groups"."description") = 'some_miq_group')
+    #     FROM "miq_groups"
+    #     WHERE "miq_groups"."id" = "THIS_MODELS_TABLE"."miq_group_id"))
+    #
+    # Will result in the following when used with MiqExpression:
+    #
+    #   WHERE (((SELECT (LOWER("miq_groups"."description") = 'some_miq_group')
+    #            FROM "miq_groups"
+    #            WHERE "miq_groups"."id" = "THIS_MODELS_TABLE"."miq_group_id")) = 'true')
+    virtual_attribute :owned_by_current_ldap_group, :boolean, :arel => (lambda do |t|
+      group_tbl  = MiqGroup.arel_table
+      ldap_group = User.current_user.try(:ldap_group).to_s.downcase
+      group_sel  = t.grouping(group_tbl[:description].lower.eq(ldap_group))
+      where_cond = group_tbl[:id].eq(arel_attribute(:miq_group_id))
+
+      t.grouping(group_tbl.project(group_sel).where(where_cond))
+    end)
   end
 
   module ClassMethods
