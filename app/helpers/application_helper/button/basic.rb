@@ -34,8 +34,9 @@ class ApplicationHelper::Button::Basic < Hash
 
   def skipped?
     return true if self.class.record_needed && @record.nil?
-    calculate_properties
-    skip?
+    skip = skip?
+    calculate_properties unless skip
+    skip
   end
 
   # Tells whether the button should displayed in the toolbar or not:

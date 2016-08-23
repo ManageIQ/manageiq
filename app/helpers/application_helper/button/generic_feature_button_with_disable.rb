@@ -6,6 +6,7 @@ class ApplicationHelper::Button::GenericFeatureButtonWithDisable < ApplicationHe
   end
 
   def disabled?
+    return true if skip?
     begin
       begin
         @error_message = @record.try(:unsupported_reason, @feature)
