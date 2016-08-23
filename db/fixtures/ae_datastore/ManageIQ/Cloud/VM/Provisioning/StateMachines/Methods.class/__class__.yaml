@@ -15,7 +15,7 @@ object:
       aetype: relationship
       name: common_rel1
       display_name: 
-      datatype: 
+      datatype: string
       priority: 1
       owner: 
       default_value: 
@@ -55,7 +55,7 @@ object:
       aetype: relationship
       name: rel1
       display_name: 
-      datatype: 
+      datatype: string
       priority: 3
       owner: 
       default_value: 
@@ -95,7 +95,7 @@ object:
       aetype: relationship
       name: amazon_rel1
       display_name: 
-      datatype: 
+      datatype: string
       priority: 5
       owner: 
       default_value: 
@@ -135,7 +135,7 @@ object:
       aetype: relationship
       name: openstack_rel1
       display_name: 
-      datatype: 
+      datatype: string
       priority: 7
       owner: 
       default_value: 
