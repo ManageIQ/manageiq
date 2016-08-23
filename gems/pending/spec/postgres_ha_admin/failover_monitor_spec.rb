@@ -4,20 +4,17 @@ require 'util/postgres_admin'
 describe PostgresHaAdmin::FailoverMonitor do
   let(:db_yml)      { double('DatabaseYml') }
   let(:failover_db) { double('FailoverDatabases') }
-
   let(:connection) do
     conn = double("PGConnection")
     allow(conn).to receive(:finish)
     conn
   end
-
   let(:failover_monitor) do
     expect(PostgresHaAdmin::DatabaseYml).to receive(:new).and_return(db_yml)
     expect(PostgresHaAdmin::FailoverDatabases).to receive(:new).and_return(failover_db)
-    failover_instance = described_class.new('', '', @logger_file.path, 'test')
+    failover_instance = described_class.new(:log_file => @logger_file.path)
     failover_instance
   end
-
   let(:linux_admin) do
     linux_adm = double('LinuxAdmin')
     allow(LinuxAdmin::Service).to receive(:new).and_return(linux_adm)
@@ -30,6 +27,31 @@ describe PostgresHaAdmin::FailoverMonitor do
 
   after do
     @logger_file.close(true)
+  end
+
+  describe "#initialize" do
+    it "override default failover settings with settings loaded from 'ha_admin.yml'" do
+      ha_admin_yml_file = Tempfile.new('ha_admin.yml')
+      yml_data = YAML.load(<<-DOC)
+---
+failover_attempts: 20
+      DOC
+
+      File.write(ha_admin_yml_file.path, yml_data.to_yaml)
+      monitor_with_settings = described_class.new(:ha_admin_yml_file => ha_admin_yml_file.path,
+                                                  :log_file          => @logger_file.path)
+      ha_admin_yml_file.close(true)
+
+      expect(described_class::FAILOVER_ATTEMPTS).not_to eq 20
+      expect(monitor_with_settings.failover_attempts).to eq 20
+      expect(monitor_with_settings.db_check_frequency).to eq described_class::DB_CHECK_FREQUENCY
+    end
+
+    it "uses default failover settings if 'ha_admin.yml' not found" do
+      expect(failover_monitor.failover_attempts).to eq described_class::FAILOVER_ATTEMPTS
+      expect(failover_monitor.db_check_frequency).to eq described_class::DB_CHECK_FREQUENCY
+      expect(failover_monitor.failover_check_frequency).to eq described_class::FAILOVER_CHECK_FREQUENCY
+    end
   end
 
   describe "#monitor" do
@@ -135,9 +157,6 @@ describe PostgresHaAdmin::FailoverMonitor do
   end
 
   def active_databases_conninfo
-    arr = []
-    arr << {:host => '203.0.113.1', :user => 'root', :dbname => 'vmdb_test'}
-    arr << {:host => '203.0.113.2', :user => 'root', :dbname => 'vmdb_test'}
-    arr << {:host => '203.0.113.3', :user => 'root', :dbname => 'vmdb_test'}
+    [{}, {}, {}]
   end
 end

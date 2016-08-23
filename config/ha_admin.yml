@@ -1,0 +1,4 @@
+---
+failover_attempts: 10
+db_check_frequency: 300
+failover_check_frequency: 60
