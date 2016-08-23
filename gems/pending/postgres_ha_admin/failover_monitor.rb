@@ -10,15 +10,20 @@ module PostgresHaAdmin
     FAILOVER_ATTEMPTS = 10
     DB_CHECK_FREQUENCY = 300
     FAILOVER_CHECK_FREQUENCY = 60
+    LOG_FILE = '/var/www/miq/vmdb/log/ha_admin.log'.freeze
     attr_accessor :failover_attempts, :db_check_frequency, :failover_check_frequency
 
     def initialize(db_yml_file: '/var/www/miq/vmdb/config/database.yml',
                    failover_yml_file: '/var/www/miq/vmdb/config/failover_databases.yml',
                    ha_admin_yml_file: '/var/www/miq/vmdb/config/ha_admin.yml',
-                   log_file: '/var/www/miq/vmdb/log/ha_admin.log',
+                   logger: nil,
                    environment: 'production')
-      @logger = Logger.new(log_file)
-      @logger.level = Logger::INFO
+      if logger.respond_to?(:error, :info)
+        @logger = logger
+      else
+        @logger = Logger.new(LOG_FILE)
+        @logger.level = Logger::INFO
+      end
       @database_yml = DatabaseYml.new(db_yml_file, environment)
       @failover_db = FailoverDatabases.new(failover_yml_file, @logger)
       initialize_settings(ha_admin_yml_file)
