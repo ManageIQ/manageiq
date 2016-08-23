@@ -200,7 +200,8 @@ class MiqReport < ApplicationRecord
   def load_custom_attributes
     klass = db.safe_constantize
     return unless klass < CustomAttributeMixin
-    klass.load_custom_attributes_for(cols)
+    cols.concat(conditions.custom_attribute_columns) if conditions.present?
+    klass.load_custom_attributes_for(cols.uniq)
   end
 
   # this method adds :custom_attributes => {} to MiqReport#include
