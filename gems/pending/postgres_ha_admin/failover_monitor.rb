@@ -49,13 +49,13 @@ module PostgresHaAdmin
 
     def monitor_loop
       loop do
-        sleep(db_check_frequency)
         begin
           monitor
         rescue StandardError => err
           @logger.error("#{err.class}: #{err}")
           @logger.error(err.backtrace.join("\n"))
         end
+        sleep(db_check_frequency)
       end
     end
 
