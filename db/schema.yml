@@ -5299,6 +5299,28 @@ networks:
 - hostname
 - domain
 - ipv6address
+notification_recipients:
+- id
+- notification_id
+- user_id
+- seen
+notification_types:
+- id
+- name
+- level
+- audience
+- message
+- expires_in
+notifications:
+- id
+- notification_type_id
+- user_id
+- subject_type
+- subject_id
+- cause_type
+- cause_id
+- created_at
+- updated_at
 ontap_aggregate_derived_metrics:
 - id
 - statistic_time
