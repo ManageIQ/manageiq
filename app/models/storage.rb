@@ -45,7 +45,6 @@ class Storage < ApplicationRecord
   include StorageMixin
   include AsyncDeleteMixin
   include AvailabilityMixin
-  include TenantIdentityMixin
 
   virtual_column :v_used_space,                   :type => :integer
   virtual_column :v_used_space_percent_of_total,  :type => :integer
@@ -881,6 +880,10 @@ class Storage < ApplicationRecord
     else
       {:available => true, :message => nil}
     end
+  end
+
+  def tenant_identity
+    ext_management_system.tenant_identity
   end
 
   # @param [String, Storage] store_type upcased version of the storage type
