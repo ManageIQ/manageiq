@@ -12,4 +12,8 @@ class ArbitrationProfile < ArbitrationRecord
   def falsify_all_others
     self.class.where(:default_profile => true).where.not(:id => id).update_all(:default_profile => false)
   end
+
+  def self.base_model
+    ArbitrationProfile
+  end
 end
