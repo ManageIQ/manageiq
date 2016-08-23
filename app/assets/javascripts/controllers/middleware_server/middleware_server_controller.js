@@ -36,8 +36,8 @@ function MwServerController($scope, miqService) {
     if (eventType == 'mwServerOps'  && operation) {
       $scope.paramsModel.serverId = angular.element('#mw_param_server_id').val();
       $scope.paramsModel.operation = operation;
-      $scope.paramsModel.operationTitle = makeOperationDisplayName(operation) + ' ' + _('Server');
-      $scope.paramsModel.operationButtonName = makeOperationDisplayName(operation);
+      $scope.paramsModel.operationTitle = formatOpDisplayName(operation) + ' ' + _('Server');
+      $scope.paramsModel.operationButtonName = formatOpDisplayName(operation);
       $scope.paramsModel.timeout = timeout;
       $scope.$apply();
     }
@@ -48,10 +48,14 @@ function MwServerController($scope, miqService) {
   /////////////////////////////////////////////////////////////////////////
 
   $scope.runOperation = function () {
-    $scope.$broadcast('mwSeverOpsEvent', $scope.paramsModel);
+    //$scope.$broadcast('mwSeverOpsEvent', $scope.paramsModel);
+    var newMwServerOpsEvent = {},
+      mwServerTypePart = {type: 'mwSeverOpsEvent'};
+    angular.extend(newMwServerOpsEvent, mwServerTypePart, $scope.paramsModel);
+    sendDataWithRx(newMwServerOpsEvent);
   };
 
-  var makeOperationDisplayName = function (operation) {
+  var formatOpDisplayName = function (operation) {
     return _.capitalize(operation);
   };
 
@@ -76,7 +80,7 @@ function MwServerController($scope, miqService) {
     angular.element('#deploy_div input[type="text"]:disabled').val('');
   };
 
-  $scope.$watch('filePath', function(newValue) {
+  $scope.$watch('deployAddModel.filePath', function(newValue) {
     if (newValue) {
       $scope.deployAddModel.runtimeName = newValue.name;
     }
@@ -90,24 +94,33 @@ function MwServerController($scope, miqService) {
 
 ManageIQ.angular.app.controller('mwServerOpsController', MwServerOpsController);
 
-MwServerOpsController.$inject = ['$scope', 'miqService', 'serverOpsService'];
+MwServerOpsController.$inject = ['miqService', 'serverOpsService'];
 
-function MwServerOpsController($scope, miqService, serverOpsService) {
+/**
+ * Angular MwServerOpsController to respond to Rx Observable events of type: mwSeverOpsEvent
+ * @param miqService
+ * @param serverOpsService
+ * @constructor
+ */
+function MwServerOpsController( miqService, serverOpsService) {
 
-  $scope.$on('mwSeverOpsEvent', function(event, data) {
-    miqService.sparkleOn();
+    ManageIQ.angular.rxSubject.subscribe(function(event) {
 
-    serverOpsService.runOperation(data.serverId, data.operation, data.timeout)
-      .then(function (response) {
-          miqService.miqFlash('success', response);
-        },
-        function (error) {
-          miqService.miqFlash('error', error);
+      if(event.type == 'mwSeverOpsEvent') {
+        miqService.sparkleOn();
 
-        }).finally(function () {
+        serverOpsService.runOperation(event.serverId, event.operation, event.timeout)
+          .then(function (response) {
+              miqService.miqFlash('success', response);
+            },
+            function (error) {
+              miqService.miqFlash('error', error);
 
-      miqService.sparkleOff();
-    });
+            }).finally(function () {
+
+          miqService.sparkleOff();
+        });
+      }
   });
 }
 
