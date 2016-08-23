@@ -28,6 +28,9 @@ module ManageIQ::Providers
     has_many :key_pairs,                     :class_name  => "AuthPrivateKey", :as => :resource, :dependent => :destroy
     has_many :host_aggregates,               :foreign_key => :ems_id, :dependent => :destroy
 
+    virtual_has_many :cloud_networks,  :uses => {:network_manager => :cloud_networks}
+    virtual_has_many :security_groups, :uses => {:network_manager => :security_groups}
+
     validates_presence_of :zone
 
     include HasNetworkManagerMixin
