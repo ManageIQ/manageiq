@@ -4,7 +4,13 @@
   = select_tag(field.name, options_for_select(select_values, selected), drop_down_options(field, url))
 
   :javascript
-    dialogFieldRefresh.initializeDialogSelectPicker('#{field.name}', '#{field.id}', '#{selected}', '#{url}');
+    dialogFieldRefresh.initializeDialogSelectPicker(
+      '#{field.name}',
+      '#{field.id}',
+      '#{selected}',
+      '#{url}',
+      '#{field.trigger_auto_refresh}'
+    );
 
 - else
   = h(field.values.detect { |k, _v| [k, k.to_s].include?(wf.value(field.name)) }.try(:last) || wf.value(field.name))
