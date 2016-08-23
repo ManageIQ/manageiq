@@ -1,9 +1,9 @@
 module ConfigDecryptPasswords
   def reload!
     Vmdb::Settings.decrypt_passwords!(super).tap do
-      # Do not set the last_loaded when accessing a remote server's settings. It
-      #   should only be set when reloading the current process' Settings.
-      Vmdb::Settings.last_loaded = Time.now.utc if equal?(::Settings)
+      # The following should only be done when loading/reloading the current
+      #   process' Settings, as opposed to a remote server's settings.
+      Vmdb::Settings.on_reload if equal?(::Settings)
     end
   end
 
