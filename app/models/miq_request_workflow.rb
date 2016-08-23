@@ -1088,7 +1088,7 @@ class MiqRequestWorkflow
     storages = hosts.each_with_object({}) do |host, hash|
       host.writable_storages.each { |s| hash[s.id] = s }
     end.values
-    selected_storage_profile_id = get_value(@values[:storage_profile])
+    selected_storage_profile_id = get_value(@values[:placement_storage_profile])
     if selected_storage_profile_id
       storages.reject! { |s| !s.storage_profiles.pluck(:id).include?(selected_storage_profile_id) }
     end

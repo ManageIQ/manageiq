@@ -130,7 +130,7 @@
           :keys                       => keys,
           :extra_table_attributes     => "width=100%"})
       - unless wf.kind_of?(ManageIQ::Providers::CloudManager::ProvisionWorkflow)
-        - keys = [:ds_filter, :storage_profile, :placement_ds_name]
+        - keys = [:ds_filter, :placement_storage_profile, :placement_ds_name]
         = render(:partial => "/miq_request/prov_dialog_fieldset",
           :locals         => {:workflow => wf,
             :dialog                     => dialog,

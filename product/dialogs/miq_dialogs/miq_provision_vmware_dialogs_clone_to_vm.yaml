@@ -407,7 +407,7 @@
           :required: false
           :display: :edit
           :data_type: :integer
-        :storage_profile:
+        :placement_storage_profile:
           :values_from:
             :method: :allowed_storage_profiles
           :auto_select_single: false
