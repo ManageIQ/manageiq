@@ -84,7 +84,7 @@ shared_examples :ems_network_controller_spec do |providers|
         end
 
         it "show associated load balancers" do
-          # TODO add more cloud providers as the LBaaS is implemented
+          # TODO: add more cloud providers as the LBaaS is implemented
           skip unless %w(amazon).include? t
 
           load_balancer = FactoryGirl.create("load_balancer_#{t}".to_sym, :ems_id => @ems.id)

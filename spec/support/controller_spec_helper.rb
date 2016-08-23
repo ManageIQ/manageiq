@@ -32,15 +32,15 @@ module ControllerSpecHelper
     session[:sandboxes][a_controller][:trees][active_tree][:active_node] = node unless node.nil?
   end
 
-  def assert_nested_list(parent, children, relation, label, child_path: nil, _gtl_types: nil)
-    _gtl_types   ||= [:list, :tile, :grid]
+  def assert_nested_list(parent, children, relation, label, child_path: nil, gtl_types: nil)
+    gtl_types    ||= [:list, :tile, :grid]
     child_path   ||= relation.singularize
     parent_route = controller.restful? ? controller.class.table_name : "#{controller.class.table_name}/show"
     child_route  = controller.restful? ? child_path : "#{child_path}/show"
 
     controller.instance_variable_set(:@breadcrumbs, [])
     # TODO(lsmola) we should just cycle through all gtl types, to test all list views
-    controller.instance_variable_set(:@gtl_type, :list)
+    controller.instance_variable_set(:@gtl_type, gtl_types.first)
     # Get the nested table
     get :show, :params => {:id => parent.id, :display => relation}
 
@@ -48,8 +48,8 @@ module ControllerSpecHelper
     expect(response).to render_template("layouts/listnav/_#{controller.class.table_name}")
 
     # Breadcrumbs of nested table contains the right link to itself, which will surface by clicking on the table item
-    expect(assigns(:breadcrumbs)).to include({:name => "#{parent.name} (#{label})",
-                                              :url  => "/#{parent_route}/#{parent.id}?display=#{relation}"})
+    expect(assigns(:breadcrumbs)).to include(:name => "#{parent.name} (#{label})",
+                                             :url  => "/#{parent_route}/#{parent.id}?display=#{relation}")
 
     # TODO(lsmola) for some reason, the toolbar is not being rendered
     # expect(response.body).to include('title="Grid View" id="view_grid" data-url="/show/" data-url_parms="?type=grid"')

@@ -7,7 +7,7 @@ shared_examples :network_router_controller_spec do |providers|
     setup_zone
   end
 
-  %w(openstack amazon azure google).each do |t|
+  providers.each do |t|
     context "for #{t}" do
       before :each do
         @network_router = FactoryGirl.create("network_router_#{t}".to_sym, :name => "Network Router")

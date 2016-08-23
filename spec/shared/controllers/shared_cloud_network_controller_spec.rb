@@ -91,7 +91,7 @@ shared_examples :cloud_network_controller_spec do |providers|
         end
 
         it "show associated instances" do
-          assert_nested_list(@cloud_network, [@vm], 'instances', 'All Instances', child_path: 'vm_cloud')
+          assert_nested_list(@cloud_network, [@vm], 'instances', 'All Instances', :child_path => 'vm_cloud')
         end
       end
 

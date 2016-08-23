@@ -7,7 +7,7 @@ shared_examples :security_group_controller_spec do |providers|
     setup_zone
   end
 
-  %w(openstack amazon azure google).each do |t|
+  providers.each do |t|
     context "for #{t}" do
       before :each do
         @security_group = FactoryGirl.create("security_group_#{t}".to_sym, :name => "Security Group")
