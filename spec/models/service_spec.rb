@@ -1,4 +1,6 @@
 describe Service do
+  include_examples "miq ownership"
+
   context "service events" do
     before(:each) do
       @service = FactoryGirl.create(:service)

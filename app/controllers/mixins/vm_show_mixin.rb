@@ -70,6 +70,27 @@ module VmShowMixin
 
   private
 
+  def set_named_scope
+    @named_scope =
+      if miq_search_exp_fields.include? "owned_by_current_ldap_group"
+        :with_miq_group
+      elsif miq_search_exp_fields.include? "owned_by_current_user"
+        :with_evm_owner
+      end
+  end
+
+  def miq_search_exp_fields
+    @miq_search_exp_fields ||=
+      MiqExpression.get_cols_from_expression(miq_exp_in_edit).map do |key, _|
+        key.to_s.split("-").last
+      end
+  end
+
+  def miq_exp_in_edit
+    exp = (@edit || session[:edit] || {})[:adv_search_applied] || {}
+    exp[:exp] || exp[:qs_exp] || {}
+  end
+
   def set_active_elements(feature)
     if feature
       self.x_active_tree ||= feature.tree_list_name
