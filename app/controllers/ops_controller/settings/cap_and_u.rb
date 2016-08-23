@@ -215,7 +215,11 @@ module OpsController::Settings::CapAndU
       end
     end
 
-    @cluster_tree = TreeBuilderClusters.new(:cluster, :cluster_tree, @sb, true, @edit[:current])
+    @cluster_tree = TreeBuilderClusters.new(:cluster,
+                                            :cluster_tree,
+                                            @sb,
+                                            true,
+                                            @edit[:current]) unless @edit[:current][:clusters].blank?
     @edit[:current][:storages] = []
     @st_recs = {}
     Storage.in_my_region.includes(:taggings, :tags, :hosts).select(:id, :name, :store_type, :location)
@@ -227,7 +231,11 @@ module OpsController::Settings::CapAndU
                                       :store_type => s.store_type,
                                       :location   => s.location) # fields we need
     end
-    @datastore_tree = TreeBuilderDatastores.new(:datastore, :datastore_tree, @sb, true, @edit[:current][:storages])
+    @datastore_tree = TreeBuilderDatastores.new(:datastore,
+                                                :datastore_tree,
+                                                @sb,
+                                                true,
+                                                @edit[:current][:storages]) unless @edit[:current][:storages].blank?
     @edit[:new] = copy_hash(@edit[:current])
     session[:edit] = @edit
   end
