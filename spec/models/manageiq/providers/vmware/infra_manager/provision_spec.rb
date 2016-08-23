@@ -136,13 +136,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
         end
 
         let(:dc_nested) do
-          FactoryGirl.create(:datacenter).tap do |f|
-            f.parent = FactoryGirl.create(:ems_folder, :name => 'testing').tap { |e| e.parent = @ems }.tap do |test|
-              test.parent = FactoryGirl.create(:ems_folder, :name => 'nested') do |nest|
-                nest.parent = FactoryGirl.create(:ems_folder, :name => 'Datacenters')
-              end
-            end
-          end
+          EvmSpecHelper::EmsMetadataHelper.vmware_nested_folders(@ems)
         end
 
         let(:vm_folder_nested) do
