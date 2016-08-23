@@ -39,7 +39,10 @@ module ApplianceConsole
 
     def confirm
       super
-      say("        Standby Host:               #{standby_host}")
+      say(<<-EOS)
+        Standby Host:               #{standby_host}
+        Automatic Failover:         #{run_repmgrd_configuration ? "enabled" : "disabled"}
+      EOS
       agree("Apply this Replication Server Configuration? (Y/N): ")
     end
 
