@@ -536,4 +536,28 @@ describe Storage do
       expect(storage.storage_clusters).to match_array([])
     end
   end
+
+  context "#tenant_identity" do
+    let(:admin)    { FactoryGirl.create(:user_with_group, :userid => "admin") }
+    let(:tenant)   { FactoryGirl.create(:tenant) }
+    let(:ems)      { FactoryGirl.create(:ext_management_system, :tenant => tenant) }
+    let(:host)     { FactoryGirl.create(:host, :ext_management_system => ems) }
+
+    before         { admin }
+    it "has tenant from provider" do
+      storage = FactoryGirl.create(:storage, :hosts => [host])
+
+      expect(storage.tenant_identity).to                eq(admin)
+      expect(storage.tenant_identity.current_group).to  eq(ems.tenant.default_miq_group)
+      expect(storage.tenant_identity.current_tenant).to eq(ems.tenant)
+    end
+
+    it "without a provider, has tenant from root tenant" do
+      storage = FactoryGirl.create(:storage)
+
+      expect(storage.tenant_identity).to                eq(admin)
+      expect(storage.tenant_identity.current_group).to  eq(Tenant.root_tenant.default_miq_group)
+      expect(storage.tenant_identity.current_tenant).to eq(Tenant.root_tenant)
+    end
+  end
 end
