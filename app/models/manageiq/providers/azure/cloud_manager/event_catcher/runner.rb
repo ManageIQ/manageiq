@@ -32,15 +32,7 @@ class ManageIQ::Providers::Azure::CloudManager::EventCatcher::Runner <
   private
 
   def event_monitor_handle
-    unless @event_monitor_handle
-      client_id             = @ems.authentication_userid
-      client_key            = @ems.authentication_password
-      tenant_id             = @ems.azure_tenant_id
-      azure_region          = @ems.provider_region
-      @event_monitor_handle = ManageIQ::Providers::Azure::CloudManager::EventCatcher::Stream.new(
-        client_id, client_key, azure_region, tenant_id)
-    end
-    @event_monitor_handle
+    @event_monitor_handle ||= ManageIQ::Providers::Azure::CloudManager::EventCatcher::Stream.new(@ems)
   end
 
   def reset_event_monitor_handle
