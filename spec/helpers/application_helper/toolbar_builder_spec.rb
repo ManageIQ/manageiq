@@ -365,8 +365,6 @@ describe ApplicationHelper do
      "repo_protect",
      "resource_pool_protect",
      "vm_check_compliance",
-     "vm_guest_shutdown",
-     "vm_guest_standby",
      "vm_start",
      "vm_suspend",
      "vm_snapshot_add",
@@ -1135,91 +1133,6 @@ describe ApplicationHelper do
         end
       end
     end
-
-    context "when with Vm" do
-      before do
-        @record = Vm.new
-        stub_user(:features => :all)
-      end
-
-      context "and id = vm_reconfigure" do
-        before do
-          @id = "vm_reconfigure"
-          allow(@record).to receive(:reconfigurable?).and_return(true)
-        end
-
-        it "and !@record.reconfigurable?" do
-          allow(@record).to receive(:reconfigurable?).and_return(false)
-          expect(subject).to be_truthy
-        end
-
-        it "and @record.reconfigurable?" do
-          expect(subject).to be_falsey
-        end
-      end
-
-      context "and id = common_drift" do
-        before do
-          @id = "common_drift"
-          @lastaction = "drift"
-        end
-
-        it "and @lastaction = drift_history" do
-          @lastaction = "drift_history"
-          expect(subject).to be_falsey
-        end
-      end
-
-      context "and id = vm_guest_standby" do
-        before do
-          @id = "vm_guest_standby"
-          allow(@record).to receive(:is_available?).with(:standby_guest).and_return(true)
-        end
-
-        it "and !@record.is_available?(:standby_guest)" do
-          allow(@record).to receive(:is_available?).with(:standby_guest).and_return(false)
-          expect(subject).to be_truthy
-        end
-
-        it "and @record.is_available?(:standby_guest)" do
-          expect(subject).to be_falsey
-        end
-      end
-
-      context "and id = vm_guest_shutdown" do
-        before do
-          @id = "vm_guest_shutdown"
-          allow(@record).to receive(:is_available?).with(:shutdown_guest).and_return(true)
-        end
-
-        it "and !@record.is_available?(:shutdown_guest)" do
-          allow(@record).to receive(:is_available?).with(:shutdown_guest).and_return(false)
-          expect(subject).to be_truthy
-        end
-
-        it "and @record.is_available?(:shutdown_guest)" do
-          expect(subject).to be_falsey
-        end
-      end
-
-      ["perf_refresh", "perf_reload", "vm_perf_refresh", "vm_perf_reload"].each do |id|
-        context "and id = #{id}" do
-          before do
-            @id = id
-            @perf_options = {:typ => "realtime"}
-          end
-
-          it "and @perf_options[:typ] != realtime" do
-            @perf_options = {:typ => "Daily"}
-            expect(subject).to be_truthy
-          end
-
-          it "and @perf_options[:typ] = realtime" do
-            expect(subject).to be_falsey
-          end
-        end
-      end
-    end # with Vm
 
     context "when with MiqTemplate" do
       before do
@@ -2102,24 +2015,6 @@ describe ApplicationHelper do
         end
 
         it_behaves_like 'vm not powered on', "The web-based console is not available because the VM is not powered on"
-      end
-
-      context "and id = vm_guest_standby" do
-        before do
-          @id = "vm_guest_standby"
-          allow(@record).to receive(:is_available_now_error_message).and_return(false)
-        end
-        it_behaves_like 'record with error message', 'standby_guest'
-        it_behaves_like 'default case'
-      end
-
-      context "and id = vm_guest_shutdown" do
-        before do
-          @id = "vm_guest_shutdown"
-          allow(@record).to receive(:is_available_now_error_message).and_return(false)
-        end
-        it_behaves_like 'record with error message', 'shutdown_guest'
-        it_behaves_like 'default case'
       end
 
       context "and id = storage_scan" do

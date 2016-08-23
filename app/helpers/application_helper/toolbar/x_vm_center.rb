@@ -61,7 +61,8 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           :vm_reconfigure,
           'pficon pficon-edit fa-lg',
           N_('Reconfigure the Memory/CPU of this VM'),
-          N_('Reconfigure this VM')),
+          N_('Reconfigure this VM'),
+          :klass => ApplicationHelper::Button::VmReconfigure),
       ]
     ),
   ])
@@ -176,7 +177,9 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           N_('Shutdown the Guest OS on this VM'),
           N_('Shutdown Guest'),
           :image   => "guest_shutdown",
-          :confirm => N_("Shutdown the Guest OS on this VM?")),
+          :confirm => N_("Shutdown the Guest OS on this VM?"),
+          :klass   => ApplicationHelper::Button::GenericFeatureButtonWithDisable,
+          :options => {:feature => :shutdown_guest}),
         button(
           :vm_guest_restart,
           nil,

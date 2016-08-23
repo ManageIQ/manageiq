@@ -91,8 +91,8 @@ class ApplicationHelper::ToolbarBuilder
     current_item[:hidden] = !any_visible
 
     if bs_children
-      @sep_added = true                                        # Separator has officially been added
-      @sep_needed = true                                       # Need a separator from now on
+      @sep_added = true # Separator has officially been added
+      @sep_needed = true # Need a separator from now on
     end
     current_item
   end
@@ -827,17 +827,6 @@ class ApplicationHelper::ToolbarBuilder
       else
         return !role_allows?(:feature => id)
       end
-    when "Vm"
-      case id
-      when "vm_guest_standby"
-        return true unless @record.is_available?(:standby_guest)
-      when "vm_guest_shutdown", "instance_guest_shutdown"
-        return true unless @record.is_available?(:shutdown_guest)
-      when "vm_reconfigure"
-        return true unless @record.reconfigurable?
-      when "perf_refresh", "perf_reload", "vm_perf_refresh", "vm_perf_reload"
-        return true unless @perf_options[:typ] == "realtime"
-      end
     when "OrchestrationTemplate", "OrchestrationTemplateCfn", "OrchestrationTemplateHot", "OrchestrationTemplateAzure", "OrchestrationTemplateVnfd"
       return true unless role_allows?(:feature => id)
     when "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem", "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem"
@@ -1251,10 +1240,6 @@ class ApplicationHelper::ToolbarBuilder
         if @record.current_state != "on"
           return N_("The web-based VNC console is not available because the VM is not powered on")
         end
-      when "vm_guest_standby"
-        return @record.is_available_now_error_message(:standby_guest) if @record.is_available_now_error_message(:standby_guest)
-      when "vm_guest_shutdown"
-        return @record.is_available_now_error_message(:shutdown_guest) if @record.is_available_now_error_message(:shutdown_guest)
       when "instance_retire", "instance_retire_now"
         return N_("Instance is already retired") if @record.retired
       when "vm_timeline"

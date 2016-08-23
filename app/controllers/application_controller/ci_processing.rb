@@ -1881,7 +1881,6 @@ module ApplicationController::CiProcessing
     assert_privileges(params[:pressed])
     vm_button_operation('shutdown_guest', 'shutdown')
   end
-  alias_method :instance_guest_shutdown, :guestshutdown
   alias_method :vm_guest_shutdown, :guestshutdown
 
   # Standby guests on all selected or single displayed vm(s)
