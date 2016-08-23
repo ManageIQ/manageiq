@@ -244,6 +244,7 @@ describe ApplianceConsole::DatabaseReplicationStandby do
         failover=automatic
         promote_command='repmgr standby promote'
         follow_command='repmgr standby follow'
+        logfile=/var/log/repmgr/repmgrd.log
       EOS
     end
   end

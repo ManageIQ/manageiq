@@ -12,6 +12,7 @@ module ApplianceConsole
     REGISTER_CMD    = 'repmgr standby register'.freeze
     PGPASS_FILE     = '/var/lib/pgsql/.pgpass'.freeze
     REPMGRD_SERVICE = 'rh-repmgr95'.freeze
+    REPMGRD_LOG     = '/var/log/repmgr/repmgrd.log'.freeze
 
     attr_accessor :run_repmgrd_configuration
 
@@ -97,6 +98,7 @@ module ApplianceConsole
         f.write("failover=automatic\n")
         f.write("promote_command='repmgr standby promote'\n")
         f.write("follow_command='repmgr standby follow'\n")
+        f.write("logfile=#{REPMGRD_LOG}\n")
       end
     end
 
