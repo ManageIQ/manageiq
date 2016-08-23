@@ -121,7 +121,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
        :linked_clone,
        :snapshot,
        :placement_dc_name,
-       :storage_profile_filter]
+       :storage_profile]
     )
 
     if vm.nil?
