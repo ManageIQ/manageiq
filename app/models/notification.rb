@@ -13,10 +13,27 @@ class Notification < ApplicationRecord
     self.notification_type = NotificationType.find_by_name!(typ)
   end
 
+  def to_h
+    {
+      :level      => notification_type.level,
+      :created_at => created_at,
+      :text       => notification_type.message,
+      :bindings   => text_bindings
+    }
+  end
+
   private
 
   def set_notification_recipients
     subscribers = notification_type.subscriber_ids(subject, initiator)
     self.notification_recipients_attributes = subscribers.collect { |id| {:user_id => id } }
+  end
+
+  def text_bindings
+    h = {}
+    h[:initiator] = { :text => initiator.name } if initiator
+    h[:subject] = { :text => subject.name } if subject
+    h[:cause] = { :text => cause.name } if cause
+    h
   end
 end
