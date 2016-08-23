@@ -54,9 +54,7 @@
               h(@perf_options[:typ] == "Hourly" ? @perf_options[:hourly_date] : @perf_options[:daily_date]),
               :readonly               => "true",
               "data-miq_sparkle_on"   => true,
-              :class    => "selectpicker")
-          :javascript
-             miqSelectPickerEvent("miq_date_1", "#{url}")
+              "data-miq_observe_date" => {:url => url}.to_json)
 
         - unless @perf_options[:typ] == "Hourly"
           %dt
