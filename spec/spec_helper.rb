@@ -120,7 +120,8 @@ VCR.configure do |c|
 
   c.allow_http_connections_when_no_cassette = false
   c.default_cassette_options = {
-    :allow_unused_http_interactions => false
+    :allow_unused_http_interactions => false,
+    :decode_compressed_response     => true
   }
 
   # Set your config/secrets.yml file
