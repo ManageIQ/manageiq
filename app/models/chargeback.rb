@@ -74,10 +74,10 @@ class Chargeback < ActsAsArModel
     keys.push(tenant_resource.id) unless tenant_resource.nil?
     key = keys.join("_")
     return @rates[key] if @rates.key?(key)
-
     tag_list = perf.tag_names.split("|").inject([]) { |arr, t| arr << "vm/tag/managed/#{t}"; arr }
 
-    parents = [perf.parent_host, perf.parent_ems_cluster, perf.parent_storage, perf.parent_ems, @enterprise].compact
+    parents = [perf.parent_host, perf.parent_ems_cluster, perf.parent_storage, perf.parent_ems, @enterprise,
+               perf.resource.try(:container_project), perf.resource.try(:old_container_project)].compact
     parents.push(tenant_resource) unless tenant_resource.nil?
 
     @rates[key] = ChargebackRate.get_assigned_for_target(perf.resource, :tag_list => tag_list, :parents => parents)
