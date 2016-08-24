@@ -129,6 +129,12 @@ FactoryGirl.define do
           :parent  => :ems_cloud do
   end
 
+  factory :ems_vmware_cloud_network,
+          :aliases => ["manageiq/providers/vmware/network_manager"],
+          :class   => "ManageIQ::Providers::Vmware::NetworkManager",
+          :parent  => :ems_cloud do
+  end
+
   # Leaf classes for ems_cloud
 
   factory :ems_amazon,

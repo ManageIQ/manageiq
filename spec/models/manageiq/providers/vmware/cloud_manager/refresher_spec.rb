@@ -58,7 +58,7 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
   end
 
   def assert_table_counts
-    expect(ExtManagementSystem.count).to eq(1)
+    expect(ExtManagementSystem.count).to eq(2) # cloud_manager + network_manager
     expect(Flavor.count).to eq(0)
     expect(AvailabilityZone.count).to eq(0)
     expect(FloatingIp.count).to eq(0)
@@ -85,7 +85,7 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
     expect(SystemService.count).to eq(0)
 
     expect(Relationship.count).to eq(0)
-    expect(MiqQueue.count).to eq(9)
+    expect(MiqQueue.count).to eq(10) # 8 + cloud_refresh + network_refresh
   end
 
   def assert_ems
@@ -96,10 +96,10 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
 
     expect(@ems.flavors.size).to eq(0)
     expect(@ems.availability_zones.size).to eq(0)
-    expect(@ems.floating_ips).to eq(nil)
+    expect(@ems.floating_ips.count).to eq(0)
     expect(@ems.key_pairs.size).to eq(0)
-    expect(@ems.cloud_networks).to eq(nil)
-    expect(@ems.security_groups).to eq(nil)
+    expect(@ems.cloud_networks.count).to eq(0)
+    expect(@ems.security_groups.count).to eq(0)
     expect(@ems.vms_and_templates.size).to eq(9)
     expect(@ems.vms.size).to eq(6)
     expect(@ems.miq_templates.size).to eq(3)
