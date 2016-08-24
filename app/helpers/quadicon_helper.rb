@@ -214,7 +214,7 @@ module QuadiconHelper
     opts    = quadicon_build_label_options(item, row)
 
     if quadicon_hide_links?
-      content_tag(:span, content, opts)
+      content_tag(:span, content, opts[:options])
     else
       url = quadicon_build_label_url(item, row)
       quadicon_link_to(url, **opts) { content }
@@ -222,7 +222,7 @@ module QuadiconHelper
   end
 
   # FIXME: Even better would be to ask the object what name to use
-  def quadicon_label_content(item, row)
+  def quadicon_label_content(item, row, truncate: true)
     return item.address if item.kind_of? FloatingIp
 
     key = case quadicon_model_name(item)
@@ -234,7 +234,11 @@ module QuadiconHelper
             %w(evm_display_name key name).detect { |k| row[k] }
           end
 
-    truncate_for_quad(row[key], :mode => quadicon_truncate_mode)
+    if truncate
+      truncate_for_quad(row[key], :mode => quadicon_truncate_mode)
+    else
+      row[key]
+    end
   end
 
   def quadicon_build_label_url(item, row)
@@ -263,7 +267,7 @@ module QuadiconHelper
   def quadicon_build_label_options(item, row)
     link_options = {
       :options => {
-        :title => quadicon_label_content(item, row)
+        :title => quadicon_label_content(item, row, :truncate => false)
       }
     }
 
