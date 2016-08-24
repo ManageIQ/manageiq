@@ -8,6 +8,8 @@ class MiqAeImport
       MiqAeYamlImportConsolidated.new(domain, options)
     elsif options['git_dir'].present?
       MiqAeYamlImportGitfs.new(domain, options)
+    elsif options['git_url'].present? || options['git_repository_id'].present?
+      MiqAeGitImport.new(options)
     end
   end
 end

@@ -152,7 +152,8 @@ namespace :evm do
           import_options['yaml_file']   = ENV['YAML_FILE']
         elsif ENV['GIT_URL'].present?
           puts "Importing automate domain from url #{ENV['GIT_URL']}"
-          import_options['url'] = ENV['GIT_URL']
+          ENV['DOMAIN'] = nil
+          import_options['git_url'] = ENV['GIT_URL']
           import_options['overwrite'] = true
           import_options['userid'] = ENV['USERID']
           import_options['password'] = ENV['PASSWORD']
@@ -165,11 +166,7 @@ namespace :evm do
             import_options[name.downcase] = ENV[name]
           end
         end
-        if ENV['GIT_URL'].present?
-          MiqAeDomain.import_git_url(import_options)
-        else
-          MiqAeImport.new(ENV['DOMAIN'], import_options).import
-        end
+        MiqAeImport.new(ENV['DOMAIN'], import_options).import
       rescue => err
         STDERR.puts err.backtrace
         STDERR.puts err.message
