@@ -21,15 +21,17 @@ shared_context :shared_network_manager_context do |t|
     @network_router = FactoryGirl.create("network_router_#{t}".to_sym,
                                          :cloud_network => @cloud_network_public,
                                          :name          => "Network Router")
+    @cloud_subnet   = FactoryGirl.create("cloud_subnet_#{t}".to_sym,
+                                         :network_router        => @network_router,
+                                         :cloud_network         => @cloud_network,
+                                         :ext_management_system => @provider.network_manager,
+                                         :name                  => "Cloud Subnet")
+    @child_subnet   = FactoryGirl.create("cloud_subnet_#{t}".to_sym,
+                                         :name                => "Child Cloud Subnet",
+                                         :parent_cloud_subnet => @cloud_subnet)
+    @floating_ip    = FactoryGirl.create("floating_ip_#{t}".to_sym,
+                                         :ext_management_system => @provider.network_manager)
 
-    @cloud_subnet = FactoryGirl.create("cloud_subnet_#{t}".to_sym,
-                                       :network_router        => @network_router,
-                                       :cloud_network         => @cloud_network,
-                                       :ext_management_system => @provider.network_manager,
-                                       :name                  => "Cloud Subnet")
-
-    @floating_ip = FactoryGirl.create("floating_ip_#{t}".to_sym,
-                                      :ext_management_system => @provider.network_manager)
     @vm.network_ports << @network_port = FactoryGirl.create("network_port_#{t}".to_sym,
                                                             :name            => "eth0",
                                                             :device          => @vm,

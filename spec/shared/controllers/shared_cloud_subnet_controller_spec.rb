@@ -1,3 +1,5 @@
+require_relative 'shared_network_manager_context'
+
 shared_examples :cloud_subnet_controller_spec do |providers|
   include CompressedIds
 
@@ -9,9 +11,7 @@ shared_examples :cloud_subnet_controller_spec do |providers|
 
   providers.each do |t|
     context "for #{t}" do
-      before :each do
-        @cloud_subnet = FactoryGirl.create("cloud_subnet_#{t}".to_sym, :name => "Cloud Subnet")
-      end
+      include_context :shared_network_manager_context, t
 
       describe "#show_list" do
         it "renders index" do
@@ -45,22 +45,12 @@ shared_examples :cloud_subnet_controller_spec do |providers|
           is_expected.to render_template(:partial => "layouts/listnav/_cloud_subnet")
         end
 
-        it "shows associated cloud_subnets" do
-          child_subnet = FactoryGirl.create(
-            "cloud_subnet_#{t}".to_sym, :name => "Child Cloud Subnet", :parent_cloud_subnet => @cloud_subnet)
+        it "show associated cloud_subnets" do
+          assert_nested_list(@cloud_subnet, [@child_subnet], 'cloud_subnets', 'All Cloud Subnets')
+        end
 
-          controller.instance_variable_set(:@breadcrumbs, [])
-          get :show, :params => {:id => @cloud_subnet.id, :display => 'cloud_subnets'}
-          expect(response.status).to eq(200)
-          expect(response).to render_template('cloud_subnet/show')
-          expect(response).to render_template('layouts/listnav/_cloud_subnet')
-          expect(assigns(:breadcrumbs)).to eq([{:name => "#{@cloud_subnet.name} (All Cloud Subnets)",
-                                                :url  => "/cloud_subnet/show/#{@cloud_subnet.id}?display=cloud_subnets"}])
-          child_subnet_row = "miqRowClick(&#39;#{child_subnet.compressed_id}&#39;, &#39;/cloud_subnet/show/&#39;"
-          expect(response.body).to include(child_subnet_row)
-
-          # display needs to be saved to session for GTL pagination and such
-          expect(session[:cloud_subnet_display]).to eq('cloud_subnets')
+        it "show associated instances" do
+          assert_nested_list(@cloud_subnet, [@vm], 'instances', 'All Instances', :child_path => 'vm_cloud')
         end
       end
 
