@@ -70,7 +70,7 @@ module VirtualDelegates
       unless options.kind_of?(Hash) && options[:to]
         raise ArgumentError, 'Delegation needs an association. Supply an options hash with a :to key as the last argument (e.g. delegate :hello, to: :greeter).'
       end
-      delegate(*methods, options)
+      delegate(*methods, options.except(:arel, :uses))
 
       # put method entry per method name.
       # This better supports reloading of the class and changing the definitions
@@ -101,7 +101,7 @@ module VirtualDelegates
         type = to_model.type_for_attribute(col)
         raise "unknown attribute #{to_model.name}##{col} referenced in #{name}" unless type
         arel = virtual_delegate_arel(col, to, to_model, to_ref)
-        define_virtual_attribute "#{method_prefix}#{col}", type, :uses => to, :arel => arel
+        define_virtual_attribute "#{method_prefix}#{col}", type, :uses => (options[:uses] || to), :arel => arel
       end
     end
 
