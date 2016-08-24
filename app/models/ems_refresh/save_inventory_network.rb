@@ -232,7 +232,7 @@ module EmsRefresh::SaveInventoryNetwork
         h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
       end
 
-      h[:security_groups] = h.fetch_path(:security_groups).map { |x| x[:_object] } if h.fetch_path(:security_groups, 0, :_object)
+      h[:security_groups] = (h.fetch_path(:security_groups) || []).map { |x| x.try(:[], :_object) }.compact.uniq
     end
 
     save_inventory_multi(ems.network_ports, hashes, deletes, [:ems_ref], :cloud_subnet_network_ports)
