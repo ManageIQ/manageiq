@@ -1,3 +1,5 @@
+require_relative 'shared_network_manager_context'
+
 shared_examples :network_router_controller_spec do |providers|
   include CompressedIds
 
@@ -9,9 +11,7 @@ shared_examples :network_router_controller_spec do |providers|
 
   providers.each do |t|
     context "for #{t}" do
-      before :each do
-        @network_router = FactoryGirl.create("network_router_#{t}".to_sym, :name => "Network Router")
-      end
+      include_context :shared_network_manager_context, t
 
       describe "#show_list" do
         it "renders index" do
@@ -43,6 +43,14 @@ shared_examples :network_router_controller_spec do |providers|
                                                 :url  => "/network_router/show/#{@network_router.id}"}])
 
           is_expected.to render_template(:partial => "layouts/listnav/_network_router")
+        end
+
+        it "show associated instances" do
+          assert_nested_list(@network_router, [@vm], 'instances', 'All Instances', :child_path => 'vm_cloud')
+        end
+
+        it "show associated cloud_subnets" do
+          assert_nested_list(@network_router, [@cloud_subnet], 'cloud_subnets', 'All Cloud Subnets')
         end
       end
 
