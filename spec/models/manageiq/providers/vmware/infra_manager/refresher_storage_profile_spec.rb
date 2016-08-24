@@ -54,6 +54,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     let(:storage_profile_ref) { '6fe1c7b4-7f7e-4db1-a545-c756e392de62' }
     let(:storage_profile) { StorageProfile.find_by(:ems_ref => storage_profile_ref) }
     let(:vm) { Vm.find_by(:ems_ref => 'vm-901') }
+    let(:host) { Host.find_by(:ems_ref => 'host-648') }
     let(:disk) { vm.disks.detect { |d| d.device_type == 'disk' } } # only 1 disk in this vm
 
     it 'links a storage profile to VMs' do
@@ -67,22 +68,40 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     end
 
     it 'will not delete storage_profiles or clear the associations when target refreshing a VM' do
-      expect(StorageProfile.count).to eq(6)
+      num_storage_profiles = StorageProfile.count
+
       refresher = ems.refresher.new([vm])
       # full ems refresh
       target, inventory = refresher.collect_inventory_for_targets(ems, [ems])[0]
       hashes = refresher.parse_targeted_inventory(ems, target, inventory)
       refresher.save_inventory(ems, target, hashes)
-      expect(StorageProfile.count).to eq(6)
+      expect(StorageProfile.count).to eq(num_storage_profiles)
 
       # vm-targeted refresh
       target, inventory = refresher.collect_inventory_for_targets(ems, [vm])[0]
       hashes = refresher.parse_targeted_inventory(ems, target, inventory)
       refresher.save_inventory(ems, target, hashes)
-      expect(StorageProfile.count).to eq(6)
+      expect(StorageProfile.count).to eq(num_storage_profiles)
 
       vm.reload
       expect(vm.storage_profile).to eq(storage_profile)
+    end
+
+    it 'will not delete storage_profiles or clear the associations when target refreshing a host' do
+      num_storage_profiles = StorageProfile.count
+
+      refresher = ems.refresher.new([host])
+      # full ems refresh
+      target, inventory = refresher.collect_inventory_for_targets(ems, [ems])[0]
+      hashes = refresher.parse_targeted_inventory(ems, target, inventory)
+      refresher.save_inventory(ems, target, hashes)
+      expect(StorageProfile.count).to eq(num_storage_profiles)
+
+      # host-targeted refresh
+      target, inventory = refresher.collect_inventory_for_targets(ems, [host])[0]
+      hashes = refresher.parse_targeted_inventory(ems, target, inventory)
+      refresher.save_inventory(ems, target, hashes)
+      expect(StorageProfile.count).to eq(num_storage_profiles)
     end
 
     it 'clears the association when the storage profile of a VM/Disk is deleted' do
