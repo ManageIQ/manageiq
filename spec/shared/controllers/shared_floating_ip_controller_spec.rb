@@ -1,3 +1,5 @@
+require_relative 'shared_network_manager_context'
+
 shared_examples :floating_ip_controller_spec do |providers|
   include CompressedIds
   render_views
@@ -8,9 +10,7 @@ shared_examples :floating_ip_controller_spec do |providers|
 
   providers.each do |t|
     context "for #{t}" do
-      before :each do
-        @floating_ip = FactoryGirl.create("floating_ip_#{t}".to_sym, :address => "192.0.2.1")
-      end
+      include_context :shared_network_manager_context, t
 
       describe "#show_list" do
         it "renders index" do

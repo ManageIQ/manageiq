@@ -37,6 +37,7 @@ shared_context :shared_network_manager_context do |t|
                                          :parent_cloud_subnet   => @cloud_subnet,
                                          :ext_management_system => @ems)
     @floating_ip    = FactoryGirl.create("floating_ip_#{t}".to_sym,
+                                         :address               => "192.0.2.1",
                                          :ext_management_system => @ems)
 
     @vm.network_ports << @network_port = FactoryGirl.create("network_port_#{t}".to_sym,
