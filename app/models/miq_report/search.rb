@@ -64,8 +64,13 @@ module MiqReport::Search
       id     = parent[:id]
       parent = klass.find(id)
     end
-    assoc ||= db_class.base_model.to_s.pluralize.underscore  # Derive association from base model
-    parent.send(assoc)
+    assoc ||= db_class.base_model.to_s.pluralize.underscore # Derive association from base model
+    ref   = parent.class.reflection_with_virtual(assoc.to_sym)
+    if ref.nil? || parent.class.virtual_reflection?(assoc)
+      parent.send(assoc).collect(&:id)
+    else
+      parent.send(assoc).ids
+    end
   end
 
   def paged_view_search(options = {})
