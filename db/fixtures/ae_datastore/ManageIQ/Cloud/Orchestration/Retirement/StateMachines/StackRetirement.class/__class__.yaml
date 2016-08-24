@@ -136,7 +136,7 @@ object:
       name: RemoveFromProvider
       display_name: 
       datatype: string
-      priority: 11
+      priority: 7
       owner: 
       default_value: "/Cloud/Orchestration/Retirement/StateMachines/Methods/RemoveFromProvider"
       substitute: true
@@ -156,9 +156,9 @@ object:
       name: PreDeleteEmailOwner
       display_name: 
       datatype: string
-      priority: 12
+      priority: 8
       owner: 
-      default_value: "#/Cloud/Orchestration/Retirement/Email/stack_retirement_emails?event=stack_entered_retirement"
+      default_value: "#/System/Notification/Email/CloudOrchestrationVmEnteredRetirement?event=stack_entered_retirement"
       substitute: true
       message: create
       visibility: 
@@ -176,9 +176,9 @@ object:
       name: EmailOwner
       display_name: 
       datatype: string
-      priority: 13
+      priority: 9
       owner: 
-      default_value: "/Cloud/Orchestration/Retirement/Email/stack_retirement_emails?event=stack_retired"
+      default_value: "/System/Notification/Email/CloudOrchestrationVmRetired?event=stack_retired"
       substitute: true
       message: create
       visibility: 
@@ -196,7 +196,7 @@ object:
       name: CheckRemovedFromProvider
       display_name: 
       datatype: string
-      priority: 14
+      priority: 10
       owner: 
       default_value: "/Cloud/Orchestration/Retirement/StateMachines/Methods/CheckRemovedFromProvider"
       substitute: true
@@ -216,7 +216,7 @@ object:
       name: FinishRetirement
       display_name: 
       datatype: string
-      priority: 15
+      priority: 11
       owner: 
       default_value: "/Cloud/Orchestration/Retirement/StateMachines/Methods/FinishRetirement"
       substitute: true
@@ -236,7 +236,7 @@ object:
       name: DeleteFromVMDB
       display_name: 
       datatype: string
-      priority: 16
+      priority: 12
       owner: 
       default_value: "/Cloud/Orchestration/Retirement/StateMachines/Methods/DeleteFromVMDB"
       substitute: true

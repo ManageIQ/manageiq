@@ -1,0 +1,21 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: CloudOrchestrationServiceTemplateProvisionRequestRequesterApproved
+    inherits: 
+    description: 
+  fields:
+  - to:
+      value: "${/#owner.email} || ${/#miq_request.get_option(:owner_email)} || ${/#miq_request.requester.email}
+        \ "
+  - subject:
+      value: Request ID ${/#miq_request.id} - Your Service Request was Approved, pending
+        Quota Validation.
+  - body:
+      value: 'Hello,<br><br>Your Service Request was Approved. If Service provisioning
+        is successful you will be notified via email when the Service is available.<br><br>Approvers
+        notes: ${/#miq_request.reason}<br><br>To view this Request go to: <a href=''https://${/#miq_server.ipaddress}:3000/miq_request/show/${/#miq_request.id}''>https://${/#miq_server.ipaddress}:3000/miq_request/show/${/#miq_request.id}</a><br><br>
+        Thank you,<br> ${#signature}'

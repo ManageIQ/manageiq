@@ -9,4 +9,6 @@ object:
     description: 
   fields:
   - rel5:
-      value: "/Infrastructure/${/#miq_request.resource.ci_type}/Provisioning/Email/Request_Approved"
+      value: "/System/Notification/Email/InfrastructureConfiguredSystemMiqProvisionRequestRequesterApproved"
+  - rel6:
+      value: "/System/Notification/Email/InfrastructureConfiguredSystemMiqProvisionRequestApproverApproved"

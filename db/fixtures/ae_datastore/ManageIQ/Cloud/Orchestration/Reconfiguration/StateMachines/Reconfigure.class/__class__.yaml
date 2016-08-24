@@ -263,7 +263,7 @@ object:
       datatype: string
       priority: 13
       owner: 
-      default_value: "/Cloud/Orchestration/Reconfiguration/Email/ServiceReconfigure_complete?event=service_reconfigured"
+      default_value: "/System/Notification/Email/CloudOrchestrationServiceReconfigureComplete?event=service_reconfigured"
       substitute: true
       message: create
       visibility: 

@@ -258,7 +258,7 @@ object:
       datatype: string
       priority: 13
       owner: 
-      default_value: "/Infrastructure/Host/Provisioning/Email/MiqHostProvision_complete?event=host_provisioned"
+      default_value: "/System/Notification/Email/MiqHostProvisionComplete?event=host_provisioned"
       substitute: true
       message: create
       visibility: 

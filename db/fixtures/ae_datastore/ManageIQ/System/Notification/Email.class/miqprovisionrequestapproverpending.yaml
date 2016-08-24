@@ -1,0 +1,18 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: MiqProvisionRequestApproverPending
+    inherits: 
+    description: 
+  fields:
+  - subject:
+      value: Request ID ${/#miq_request.id} - Virtual Machine Request was not Auto-Approved
+        <${/#miq_request.requester.email}>.
+  - body:
+      value: 'Approver, <br>A Virtual Machine Request received from ${/#miq_request.requester.email}
+        is Pending.<br><br>${/#miq_request.resource.message}.<br><br>Approvers notes:
+        ${/#miq_request.reason}<br><br>For more information you can go to: <a href=''http://${/#miq_server.ipaddress}:3000/miq_request/show/${/#miq_request.id}''>http://${/#miq_server.ipaddress}:3000/miq_request/show/${/#miq_request.id}</a><br><br>
+        Thank you<br> ${#signature}'

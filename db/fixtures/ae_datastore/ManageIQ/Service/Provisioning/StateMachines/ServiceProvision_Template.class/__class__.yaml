@@ -298,7 +298,7 @@ object:
       datatype: string
       priority: 15
       owner: 
-      default_value: "/Service/Provisioning/Email/ServiceProvision_complete?event=service_provisioned"
+      default_value: "/System/Notification/Email/ServiceProvisionComplete?event=service_provisioned"
       substitute: true
       message: create
       visibility: 

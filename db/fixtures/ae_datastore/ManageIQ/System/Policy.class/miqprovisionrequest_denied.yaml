@@ -9,4 +9,6 @@ object:
     description: 
   fields:
   - rel5:
-      value: "/${/#ae_provider_category}/VM/Provisioning/Email/MiqProvisionRequest_denied"
+      value: "/System/Notification/Email/${/#ae_provider_category}MiqProvisionRequestRequesterDenied"
+  - rel6:
+      value: "/System/Notification/Email/${/#ae_provider_category}MiqProvisionRequestApproverDenied"

@@ -1,0 +1,18 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: CloudVmEnteredRetirement
+    inherits: 
+    description: 
+  fields:
+  - to:
+      value: "${/#owner.email} || ${/#miq_request.get_option(:owner_email)} || ${/#miq_request.requester.email}"
+  - subject:
+      value: Virtual Machine <${/#vm.name}> has entered retirement.
+  - body:
+      value: Hello,<br><br>Your Virtual Machine named <${/#vm.name}> has been retired.
+        <br><br>You will have up to 3 days to un-retire this VM. Afterwhich time the
+        VM will be deleted. <br><br> Thank you<br> ${#signature}

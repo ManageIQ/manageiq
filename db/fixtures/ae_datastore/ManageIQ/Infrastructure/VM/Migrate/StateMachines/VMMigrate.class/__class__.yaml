@@ -178,7 +178,7 @@ object:
       datatype: string
       priority: 9
       owner: 
-      default_value: "/Infrastructure/VM/Migrate/Email/VmMigrateTask_Complete?event=vm_migrated"
+      default_value: "/System/Notification/Email/VmMigrateTaskComplete?event=vm_migrated"
       substitute: true
       message: create
       visibility: 

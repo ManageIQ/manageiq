@@ -1,0 +1,21 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: VmMigrateTaskComplete
+    inherits: 
+    description: 
+  fields:
+  - to:
+      value: "${/#owner.email} || ${/#miq_request.get_option(:owner_email)} || ${/#miq_request.requester.email}"
+  - subject:
+      value: Request ID ${/#miq_request.id} - Your Virtual Machine Migration Request
+        has Completed.
+  - body:
+      value: Hello,<br><br>Your Request to Migrate Virtual Machine <${/#vm.name}>
+        has Completed.  <br><br>If you are not already logged in, you can access and
+        manage your host here <a href='https://${/#appliance}/host/show/${/#hostid}'>https://${/#appliance}/host/show/${/#hostid}</a>
+        <br><br> If you have any issues with your new host please contact Support.
+        <br><br> Thank you,<br> ${#signature}

@@ -1,0 +1,19 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: CloudMiqProvisionRequestRequesterDenied
+    inherits: 
+    description: 
+  fields:
+  - to:
+      value: "${/#owner.email} || ${/#miq_request.get_option(:owner_email)} || ${/#miq_request.requester.email} "
+  - subject:
+      value: Request ID ${/#miq_request.id} - Your Instance Request was Denied.
+  - body:
+      value: 'Hello,<br><br>Your Instance Request was Denied.<br><br>${/#miq_request.resource.message}.<br><br>Approvers
+        notes: ${/#miq_request.reason}<br><br>For more information you can go to:
+        <a href=''http://${/#miq_server.ipaddress}:3000/miq_request/show/${/#miq_request.id}''>http://${/#miq_server.ipaddress}:3000/miq_request/show/${/#miq_request.id}</a><br><br>
+        Thank you<br> ${#signature}'

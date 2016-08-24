@@ -13,4 +13,4 @@ object:
   - PostProvision:
       value: "/Cloud/VM/Provisioning/StateMachines/Methods/PostProvision#${/#miq_provision.source.vendor}"
   - EmailOwner:
-      value: "/Cloud/VM/Provisioning/Email/MiqProvision_Complete?event=vm_cloned"
+      value: "/System/Notification/Email/CloudMiqProvisionComplete?event=vm_cloned"

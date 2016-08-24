@@ -1,0 +1,18 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: VmReconfigureTaskComplete
+    inherits: 
+    description: 
+  fields:
+  - to:
+      value: "${/#owner.email} || ${/#miq_request.get_option(:owner_email)} || ${/#miq_request.requester.email}"
+  - subject:
+      value: Request ID ${/#miq_request.id} - Your Virtual Machine Reconfigure Request
+        has Completed.
+  - body:
+      value: Hello,<br><br>Your Virtual Machine Reconfiguration Request has Completed.<br><br>
+        Thank you<br> ${#signature}

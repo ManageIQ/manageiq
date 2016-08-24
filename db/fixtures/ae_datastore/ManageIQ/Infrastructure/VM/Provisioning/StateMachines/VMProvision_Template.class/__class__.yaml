@@ -178,7 +178,7 @@ object:
       datatype: string
       priority: 9
       owner: 
-      default_value: "/Infrastructure/VM/Provisioning/Email/MiqProvision_complete?event=template_provisioned"
+      default_value: "/System/Notification/Email/InfrastructureMiqProvisionComplete?event=template_provisioned"
       substitute: true
       message: create
       visibility: 
@@ -196,7 +196,7 @@ object:
       name: Finished
       display_name: 
       datatype: string
-      priority: 16
+      priority: 10
       owner: 
       default_value: "/System/CommonMethods/StateMachineMethods/vm_provision_finished"
       substitute: true
