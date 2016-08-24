@@ -28,11 +28,12 @@ module ManageIQ::Providers
     has_many :key_pairs,                     :class_name  => "AuthPrivateKey", :as => :resource, :dependent => :destroy
     has_many :host_aggregates,               :foreign_key => :ems_id, :dependent => :destroy
 
+    has_one  :source_tenant, :as => :source, :class_name => 'Tenant'
+
     validates_presence_of :zone
 
     include HasNetworkManagerMixin
     include HasManyOrchestrationStackMixin
-    include CloudTenantMixin
 
     supports_not :discovery
 
@@ -63,6 +64,18 @@ module ManageIQ::Providers
 
     def supports_cloud_tenants?
       false
+    end
+
+    def sync_cloud_tenants_with_tenants
+      return unless supports_cloud_tenants?
+      sync_root_tenant
+    end
+
+    def sync_root_tenant
+      ems_tenant = source_tenant || Tenant.new(:parent => Tenant.root_tenant, :source => self)
+
+      ems_tenant_name = "#{self.class.description} Cloud Provider #{name}"
+      ems_tenant.update_attributes!(:name => ems_tenant_name, :description => ems_tenant_name)
     end
   end
 end

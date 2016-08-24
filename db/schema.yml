@@ -6442,6 +6442,8 @@ tenants:
 - description
 - use_config_for_attributes
 - default_miq_group_id
+- source_type
+- source_id
 time_profiles:
 - id
 - description
