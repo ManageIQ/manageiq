@@ -53,14 +53,9 @@ module EmsRefresh::SaveInventoryCloud
       :orchestration_templates,
       :orchestration_templates_catalog,
       :orchestration_stacks,
-      # TODO(lsmola) NetworkManager, once all providers are converted :cloud_networks and :security_groups will go away
-      :cloud_networks,
-      :security_groups,
       :cloud_volumes,
       :cloud_volume_snapshots,
       :vms,
-      # TODO(lsmola) NetworkManager, once all providers are converted :floating_ips will go away
-      :floating_ips,
       :cloud_resource_quotas,
       :cloud_object_store_containers,
       :cloud_object_store_objects,
