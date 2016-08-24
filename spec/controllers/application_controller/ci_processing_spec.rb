@@ -248,6 +248,20 @@ describe ApplicationController do
       expected_ids = [great_grand_child_tenant.miq_group_ids, grand_child_tenant.miq_group_ids].flatten
       expect(expected_ids).to match_array(groups.values(&:id).map(&:to_i))
     end
+
+    it "lists all non-tenant groups when setting ownership of an Cloud Instance" do
+      login_as(admin_user)
+      @vm_amazon = FactoryGirl.create(:vm_amazon)
+      controller.instance_variable_set(:@ownership_items, [@vm_amazon.id])
+      controller.instance_variable_set(:@user, @user)
+      controller.instance_variable_set(:@_params, :controller => 'vm_cloud')
+      controller.request.parameters['controller'] = 'vm_cloud'
+      controller.request.parameters['pressed'] = 'instance_ownership'
+      controller.build_ownership_info
+      groups = controller.instance_variable_get(:@groups)
+      expect(groups.count).to eq(MiqGroup.non_tenant_groups.count)
+    end
+
   end
 end
 
