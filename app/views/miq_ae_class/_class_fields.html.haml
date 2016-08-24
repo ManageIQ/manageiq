@@ -124,7 +124,7 @@
                     - combo_url  = "/miq_ae_class/fields_form_field_changed/#{@ae_class.id || 'new'}"
                     #form-group
                       = select_tag(combo_name,
-                          options_for_select(combo_options, session[:field_data][fname]),
+                          options_for_select(combo_options, session[:field_data][fname.to_sym]),
                           "title" => "Choose",
                           :class  => "selectpicker")
                     :javascript
@@ -145,4 +145,3 @@
                       "data-miq_observe" => obs)
 :javascript
   miqInitSelectPicker();
-
