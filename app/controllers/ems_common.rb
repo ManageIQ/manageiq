@@ -440,14 +440,24 @@ module EmsCommon
       if params[:pressed] == "ems_cloud_recheck_auth_status" ||
          params[:pressed] == "ems_infra_recheck_auth_status" ||
          params[:pressed] == "ems_container_recheck_auth_status"
-        @record = find_by_id_filtered(model, params[:id])
-        result, details = @record.authentication_check_types_queue(@record.authentication_for_summary.pluck(:authtype),
-                                                                   :save => true)
-        if result
-          add_flash(_("Authentication status will be saved and workers will be restarted for this #{ui_lookup(:table => controller_name)}"))
+        if params[:id]
+          table_key = :table
+          _result, details = recheck_authentication
+          add_flash(_("Re-checking Authentication status for this %{controller_name} was not successful: %{details}") %
+                        {:controller_name => ui_lookup(:table => controller_name), :details => details}, :error) if details
         else
-          add_flash(_("Re-checking Authentication status for this #{ui_lookup(:table => "ems_cloud")} was not successful: %{details}") % {:details => details}, :error)
+          table_key = :tables
+          ems_ids = find_checked_items
+          ems_ids.each do |ems_id|
+            _result, details = recheck_authentication(ems_id)
+            add_flash(_("Re-checking Authentication status for the selected %{controller_name} %{name} was not successful: %{details}") %
+                          {:controller_name => ui_lookup(:table => controller_name),
+                           :name            => @record.name,
+                           :details         => details}, :error) if details
+          end
         end
+        add_flash(_("Authentication status will be saved and workers will be restarted for the selected %{controller_name}") %
+                      {:controller_name => ui_lookup(table_key => controller_name)})
         render_flash
         return
       end
@@ -475,6 +485,11 @@ module EmsCommon
         render_flash
       end
     end
+  end
+
+  def recheck_authentication(id = nil)
+    @record = find_by_id_filtered(model, id || params[:id])
+    @record.authentication_check_types_queue(@record.authentication_for_summary.pluck(:authtype), :save => true)
   end
 
   def provider_documentation_url
