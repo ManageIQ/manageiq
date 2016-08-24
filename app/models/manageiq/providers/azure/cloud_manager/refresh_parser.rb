@@ -124,19 +124,32 @@ module ManageIQ::Providers
         end
       end
 
+      def get_resource_status_message(resource)
+        return nil unless resource.properties.respond_to?(:status_message)
+        if resource.properties.status_message.respond_to?(:error)
+          resource.properties.status_message.error.message
+        else
+          resource.properties.status_message.to_s
+        end
+      end
+
       # new_resource is to be excluded.
       # copy any failed state to the old resource; concatenate all status messages
       def transfer_selected_resource_properties(old_resource, new_resource)
         if new_resource.properties.provisioning_state != 'Succeeded'
-          old_resource.properties.provisioning_state = resource.properties.provisioning_state
+          old_resource.properties.provisioning_state = new_resource.properties.provisioning_state
         end
-        if new_resource.properties.try(:status_message)
-          if old_resource.properties.try(:status_message)
-            old_resource.properties.status_message += "\n#{new_resource.properties.status_message}"
-          else
-            old_resource.properties['status_message'] = new_resource.properties.status_message
-          end
-        end
+
+        new_status_message = get_resource_status_message(new_resource)
+        return unless new_status_message
+
+        old_status_message = get_resource_status_message(old_resource)
+
+        old_resource.properties['status_message'] = if old_status_message
+                                                      "#{old_status_message}\n#{new_status_message}"
+                                                    else
+                                                      new_status_message
+                                                    end
       end
 
       def get_stack_template(stack, content)
@@ -442,7 +455,7 @@ module ManageIQ::Providers
       end
 
       def parse_stack_resource(resource, group)
-        status_message = resource.properties.try(:status_message)
+        status_message = get_resource_status_message(resource)
         status_code = resource.properties.try(:status_code)
         new_result = {
           :ems_ref                => resource.properties.target_resource.id,
