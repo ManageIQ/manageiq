@@ -261,7 +261,6 @@ describe ApplicationController do
       groups = controller.instance_variable_get(:@groups)
       expect(groups.count).to eq(MiqGroup.non_tenant_groups.count)
     end
-
   end
 end
 
