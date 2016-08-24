@@ -1,7 +1,16 @@
 #!/usr/bin/env ruby
 require 'pathname'
 require 'optparse'
+require 'english'
 
+def execute(cmd)
+  system(cmd)
+  result = $CHILD_STATUS
+  unless result.success?
+    puts "ERROR: Command failed: #{cmd}"
+    exit result.exitstatus
+  end
+end
 
 options = {:do_tests => true, :do_db => true}
 OptionParser.new do |opts|
@@ -18,41 +27,40 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-
 # path to your application root.
-APP_ROOT = Pathname.new File.expand_path('../../',  __FILE__)
+APP_ROOT = Pathname.new File.expand_path('../../', __FILE__)
 
 Dir.chdir APP_ROOT do
   puts "== Installing dependencies =="
-  system "gem install bundler --conservative"
-  system "bundle check || bundle install"
-  system "bower install --allow-root -F --config.analytics=false"
+  execute "gem install bundler --conservative"
+  execute "bundle check || bundle install"
+  execute "bower install --allow-root -F --config.analytics=false"
 
   puts "\n== Copying sample files =="
   unless File.exist?("config/database.yml")
-    system "cp config/database.pg.yml config/database.yml"
+    execute "cp config/database.pg.yml config/database.yml"
   end
   unless File.exist?("certs/v2_key")
-    system "cp certs/v2_key.dev certs/v2_key"
+    execute "cp certs/v2_key.dev certs/v2_key"
   end
 
   if options[:do_db]
     puts "\n== Preparing database =="
-    system "bin/rake db:create"
+    execute "bin/rake db:create"
 
     puts "\n== Migrating database =="
-    system "bin/rake db:migrate"
+    execute "bin/rake db:migrate"
 
     puts "\n== Seeding database =="
-    system "bin/rake db:seed GOOD_MIGRATIONS=skip"
+    execute "bin/rake db:seed GOOD_MIGRATIONS=skip"
   end
 
   puts "\n== Removing old logs and tempfiles =="
-  system "rm -f log/*"
-  system "rm -rf tmp/cache"
-  
+  execute "rm -f log/*"
+  execute "rm -rf tmp/cache"
+
   if options[:do_tests]
     puts "\n== Preparing tests =="
-    system "bin/rake test:vmdb:setup"
+    execute "bin/rake test:vmdb:setup"
   end
 end
