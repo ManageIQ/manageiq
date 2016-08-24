@@ -7,13 +7,19 @@ module Vmdb
   class Settings
     # if you change, please also change over in tools/fix_auth/models.rb
     PASSWORD_FIELDS = %i(bind_pwd password amazon_secret).to_set.freeze
+    DUMP_LOG_FILE   = Rails.root.join("log/last_settings.txt").freeze
 
     cattr_accessor :last_loaded
 
     def self.init
       ::Config.overwrite_arrays = true
       reset_settings_constant(for_resource(my_server))
+      on_reload
+    end
+
+    def self.on_reload
       self.last_loaded = Time.now.utc
+      dump_to_log_directory(::Settings)
     end
 
     def self.reload!
@@ -80,6 +86,10 @@ module Vmdb
 
     def self.encrypt_passwords!(settings)
       walk_passwords(settings) { |k, v, h| h[k] = MiqPassword.try_encrypt(v) }
+    end
+
+    def self.dump_to_log_directory(settings)
+      DUMP_LOG_FILE.write(mask_passwords!(settings.to_hash).to_yaml)
     end
 
     def self.build_template

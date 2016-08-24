@@ -1,6 +1,44 @@
 require "spec_helper"
 
 describe Vmdb::Settings do
+  describe ".on_reload" do
+    it "is called on top-level ::Settings.reload!" do
+      expect(described_class).to receive(:on_reload)
+
+      ::Settings.reload!
+    end
+
+    it "updates the last_loaded time" do
+      Timecop.freeze(Time.now.utc) do
+        expect(described_class.last_loaded).to_not eq(Time.now.utc)
+
+        described_class.on_reload
+
+        expect(described_class.last_loaded).to eq(Time.now.utc)
+      end
+    end
+
+    context "dumping the settings to the log directory" do
+      after { ::Settings.reload! }
+
+      it "writes them" do
+        ::Settings.api.token_ttl = "1.minute"
+        described_class.on_reload
+
+        dumped_yaml = YAML.load_file(described_class::DUMP_LOG_FILE)
+        expect(dumped_yaml.fetch_path(:api, :token_ttl)).to eq "1.minute"
+      end
+
+      it "masks passwords" do
+        ::Settings.authentication.bind_pwd = "pa$$w0rd"
+        described_class.on_reload
+
+        dumped_yaml = YAML.load_file(described_class::DUMP_LOG_FILE)
+        expect(dumped_yaml.fetch_path(:authentication, :bind_pwd)).to eq "********"
+      end
+    end
+  end
+
   it ".walk" do
     stub_settings(:a => {:b => 'c'}, :d => {:e => {:f => 'g'}}, :i => [{:j => 'k'}, {:l => 'm'}])
 
