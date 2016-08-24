@@ -21,6 +21,8 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
 
   has_many :resource_groups, :foreign_key => :ems_id, :dependent => :destroy
 
+  supports :provisioning
+
   has_one :network_manager,
           :foreign_key => :parent_ems_id,
           :class_name  => "ManageIQ::Providers::Azure::NetworkManager",
