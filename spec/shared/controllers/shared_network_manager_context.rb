@@ -42,11 +42,15 @@ shared_context :shared_network_manager_context do |t|
 
     @vm.network_ports << @network_port = FactoryGirl.create("network_port_#{t}".to_sym,
                                                             :name                  => "eth0",
+                                                            :mac_address           => "06:04:25:40:8e:79",
                                                             :device                => @vm,
                                                             :security_groups       => [@security_group],
                                                             :floating_ip           => @floating_ip,
                                                             :ext_management_system => @ems)
-    FactoryGirl.create(:cloud_subnet_network_port, :cloud_subnet => @cloud_subnet, :network_port => @network_port)
+    FactoryGirl.create(:cloud_subnet_network_port,
+                       :cloud_subnet => @cloud_subnet,
+                       :network_port => @network_port,
+                       :address      => "10.10.0.2")
 
     if %w(amazon).include? t
       @load_balancer              = FactoryGirl.create("load_balancer_#{t}".to_sym,

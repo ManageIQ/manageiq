@@ -1,3 +1,5 @@
+require_relative 'shared_network_manager_context'
+
 shared_examples :security_group_controller_spec do |providers|
   include CompressedIds
 
@@ -9,9 +11,7 @@ shared_examples :security_group_controller_spec do |providers|
 
   providers.each do |t|
     context "for #{t}" do
-      before :each do
-        @security_group = FactoryGirl.create("security_group_#{t}".to_sym, :name => "Security Group")
-      end
+      include_context :shared_network_manager_context, t
 
       describe "#show_list" do
         it "renders index" do
@@ -43,6 +43,14 @@ shared_examples :security_group_controller_spec do |providers|
                                                 :url  => "/security_group/show/#{@security_group.id}"}])
 
           is_expected.to render_template(:partial => "layouts/listnav/_security_group")
+        end
+
+        it "show associated instances" do
+          assert_nested_list(@security_group, [@vm], 'instances', 'All Instances', :child_path => 'vm_cloud')
+        end
+
+        it "show associated network ports" do
+          assert_nested_list(@security_group, [@network_port], 'network_ports', 'All Network Ports')
         end
       end
 
