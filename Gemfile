@@ -60,7 +60,6 @@ gem "puma",                           "~>3.3.0"
 gem "recursive-open-struct",          "~>1.0.0"
 gem "responders",                     "~>2.0"
 gem "secure_headers",                 "~>3.0.0"
-#gem "thin",                           "~>1.6.0"  # Used by rails server through rack
 
 # Needed by the REST API
 gem "gettext_i18n_rails",             "~>1.4.0"
@@ -98,6 +97,7 @@ gem "savon",                          "~>2.2.0",   :require => false  # Automate
 gem "snmp",                           "~>1.2.0",   :require => false
 gem "uglifier",                       "~>2.7.1",   :require => false
 gem "sshkey",                         "~>1.8.0",   :require => false
+gem "thin",                           "~>1.7.0",   :require => false
 
 
 ### Start of gems excluded from the appliances.

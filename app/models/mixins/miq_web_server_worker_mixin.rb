@@ -40,7 +40,7 @@ module MiqWebServerWorkerMixin
     end
 
     def rails_server
-      VMDB::Config.new("vmdb").config.fetch_path(:server, :rails_server) || "thin"
+      ::Settings.server.rails_server
     end
 
     def all_ports_in_use
@@ -169,7 +169,8 @@ module MiqWebServerWorkerMixin
     params = {
       :Host        => self.class.binding_address,
       :environment => Rails.env.to_s,
-      :app         => rails_application
+      :app         => rails_application,
+      :server      => self.class.rails_server
     }
 
     params[:Port] = port.kind_of?(Numeric) ? port : 3000
