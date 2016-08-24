@@ -1,3 +1,5 @@
+require_relative 'shared_network_manager_context'
+
 shared_examples :network_port_controller_spec do |providers|
   include CompressedIds
   render_views
@@ -8,9 +10,7 @@ shared_examples :network_port_controller_spec do |providers|
 
   providers.each do |t|
     context "for #{t}" do
-      before :each do
-        @network_port = FactoryGirl.create("network_port_#{t}".to_sym, :name => "Network Port")
-      end
+      include_context :shared_network_manager_context, t
 
       describe "#show_list" do
         it "renders index" do
@@ -38,10 +38,18 @@ shared_examples :network_port_controller_spec do |providers|
           expect(response.body).to_not be_empty
           expect(assigns(:breadcrumbs)).to eq([{:name => "network_ports",
                                                 :url  => "/network_port/show_list?page=&refresh=y"},
-                                               {:name => "Network Port (Summary)",
+                                               {:name => "eth0 (Summary)",
                                                 :url  => "/network_port/show/#{@network_port.id}"}])
 
           is_expected.to render_template(:partial => "layouts/listnav/_network_port")
+        end
+
+        it "show associated cloud_subnets" do
+          assert_nested_list(@network_port, [@cloud_subnet], 'cloud_subnets', 'All Cloud Subnets')
+        end
+
+        it "show associated floating ips" do
+          assert_nested_list(@network_port, [@floating_ip], 'floating_ips', 'All Floating Ips')
         end
       end
 
