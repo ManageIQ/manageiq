@@ -206,6 +206,12 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       result[:cpu_total_cores]      = result[:cpu_sockets] * result[:cpu_cores_per_socket]
     end
 
+    hw_info = inv[:hardware_information]
+    unless hw_info.blank?
+      result[:manufacturer] = hw_info[:manufacturer]
+      result[:model] = hw_info[:product_name]
+    end
+
     result
   end
 
@@ -334,9 +340,28 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
   def self.host_inv_to_os_hash(inv, hostname)
     return nil if inv.nil?
 
-    result = {:name => hostname}
-    result[:product_name] = 'linux'
-    result
+    {
+      :name         => hostname,
+      :product_type => 'linux',
+      :product_name => extract_host_os_name(inv),
+      :version      => extract_host_os_full_version(inv[:os])
+    }
+  end
+
+  def self.extract_host_os_full_version(host_os)
+    host_os[:version][:full_version] if host_os && host_os[:version]
+  end
+
+  def self.extract_host_os_name(host_inv)
+    host_os = host_inv[:os]
+    name = host_os && host_os[:type]
+    if name
+      os_full_version = extract_host_os_full_version(host_os)
+      name = "#{name} - #{os_full_version}" if os_full_version
+    else
+      name = host_inv[:type]
+    end
+    name
   end
 
   def self.vm_inv_to_hashes(inv, _storage_inv, storage_uids, cluster_uids, host_uids, lan_uids)
