@@ -45,7 +45,6 @@ class Storage < ApplicationRecord
   include StorageMixin
   include AsyncDeleteMixin
   include AvailabilityMixin
-  include TenantIdentityMixin
 
   virtual_column :v_used_space,                   :type => :integer
   virtual_column :v_used_space_percent_of_total,  :type => :integer
@@ -880,6 +879,14 @@ class Storage < ApplicationRecord
       {:available => false, :message => "Smartstate Analysis cannot be performed on selected Datastore"}
     else
       {:available => true, :message => nil}
+    end
+  end
+
+  def tenant_identity
+    if ext_management_system
+      ext_management_system.tenant_identity
+    else
+      User.super_admin.tap { |u| u.current_group = Tenant.root_tenant.default_miq_group }
     end
   end
 
