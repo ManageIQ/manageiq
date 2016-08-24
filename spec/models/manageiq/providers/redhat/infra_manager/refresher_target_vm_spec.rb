@@ -54,6 +54,29 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     assert_storage(storage, vm)
   end
 
+  it "should refresh new vm" do
+    vm = FactoryGirl.create(:vm_redhat,
+                            :ext_management_system => @ems,
+                            :uid_ems               => "4f6dd4c3-5241-494f-8afc-f1c67254bf77",
+                            :ems_cluster           => @cluster,
+                            :ems_ref               => "/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77")
+    vm.with_relationship_type("ems_metadata") { vm.parent = @rp }
+
+    VCR.use_cassette("#{described_class.name.underscore}_target_new_vm") do
+      EmsRefresh.refresh(vm)
+    end
+
+    assert_table_counts
+
+    storage = Storage.find_by(:ems_ref => "/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0")
+    assert_vm(vm, storage)
+
+    hardware = Hardware.find_by(:vm_or_template_id => vm.id)
+    assert_vm_rels(vm, hardware, storage)
+    assert_cluster
+    assert_storage(storage, vm)
+  end
+
   def assert_table_counts
     expect(ExtManagementSystem.count).to eq(1)
     expect(EmsCluster.count).to eq(1)
