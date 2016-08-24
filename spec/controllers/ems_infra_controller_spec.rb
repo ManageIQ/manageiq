@@ -647,6 +647,26 @@ describe EmsInfraController do
       expect(response.status).to eq(200)
       expect(rhevm.authentications.first).to have_attributes(:userid => "bar", :password => "[FILTERED]")
     end
+
+    it 'updates a wrong migrated endpoint with verify_ssl being nil to the default valued for verify_ssl' do
+      rhevm = FactoryGirl.create(:ems_redhat_with_authentication)
+      rhevm.endpoints.first.update_attribute(:verify_ssl, nil)
+
+      expect do
+        post :update, :params => {
+            "id"               => rhevm.id,
+            "button"           => "save",
+            "default_hostname" => "host_rhevm_updated",
+            "name"             => "foo_rhevm",
+            "emstype"          => "rhevm",
+            "default_userid"   => "bar",
+            "default_password" => "[FILTERED]",
+            "default_verify"   => "[FILTERED]"
+        }
+      end.not_to change { Authentication.count }
+      expect(response.body).not_to match(/Endpoints.verify_ssl is not included in the list/)
+      expect(Endpoint.first.verify_ssl).to eq(OpenSSL::SSL::VERIFY_PEER)
+    end
   end
 
   describe "VMWare - create, update" do
