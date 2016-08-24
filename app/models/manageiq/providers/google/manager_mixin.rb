@@ -34,7 +34,8 @@ module ManageIQ::Providers::Google::ManagerMixin
   end
 
   module ClassMethods
-    def raw_connect(google_project, google_json_key, options, proxy_uri = nil)
+    # TODO: (julian) add proxy_uri back in once supported.
+    def raw_connect(google_project, google_json_key, options, _proxy_uri = nil)
       require 'fog/google'
 
       config = {
@@ -42,8 +43,7 @@ module ManageIQ::Providers::Google::ManagerMixin
         :google_project         => google_project,
         :google_json_key_string => google_json_key,
         :app_name               => I18n.t("product.name"),
-        :app_version            => Vmdb::Appliance.VERSION,
-        :proxy                  => proxy_uri
+        :app_version            => Vmdb::Appliance.VERSION
       }
 
       case options[:service]
