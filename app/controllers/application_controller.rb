@@ -1932,6 +1932,20 @@ class ApplicationController < ActionController::Base
       if typ
         prov_edit
       else
+        if %w(image_miq_request_new miq_template_miq_request_new).include?(params[:pressed])
+          # skip pre prov grid
+          set_pre_prov_vars
+          templates = find_checked_items
+          templates = [params[:id]] if templates.blank?
+
+          template = VmOrTemplate.find_by_id(from_cid(templates.first))
+          render_flash_not_applicable_to_model("provisioning") unless template.send("supports_provisioning?")
+          return if performed?
+
+          @edit[:src_vm_id] = templates.first
+          session[:edit] = @edit
+          @_params[:button] = "continue"
+        end
         vm_pre_prov
       end
     end
@@ -1939,6 +1953,7 @@ class ApplicationController < ActionController::Base
   alias_method :image_miq_request_new, :prov_redirect
   alias_method :instance_miq_request_new, :prov_redirect
   alias_method :vm_miq_request_new, :prov_redirect
+  alias_method :miq_template_miq_request_new, :prov_redirect
 
   def vm_clone
     prov_redirect("clone")

@@ -189,6 +189,52 @@ describe ApplicationController do
     end
   end
 
+  context "#prov_redirect" do
+    before do
+      login_as FactoryGirl.create(:user, :features => "image_miq_request_new")
+      allow(User).to receive(:server_timezone).and_return("UTC")
+      controller.request.parameters[:pressed] = "image_miq_request_new"
+      controller.instance_variable_set(:@explorer, true)
+    end
+
+    it "returns flash message when Provisioning button is pressed from list and selected Image is archived" do
+      template = FactoryGirl.create(:miq_template,
+                                    :name     => "template 1",
+                                    :vendor   => "vmware",
+                                    :location => "template1.vmtx")
+      controller.instance_variable_set(:@_params,
+                                       :pressed         => "image_miq_request_new",
+                                       :miq_grid_checks => template.id.to_s)
+      controller.set_response!(response)
+      expect(controller).not_to receive(:vm_pre_prov)
+      controller.send(:prov_redirect)
+      expect(assigns(:flash_array).first[:message]).to include("does not apply to at least one of the selected")
+    end
+
+    let(:ems)     { FactoryGirl.create(:ext_management_system) }
+    let(:storage) { FactoryGirl.create(:storage) }
+
+    it "sets provisioning data and skips pre provisioning dialog" do
+      template = FactoryGirl.create(:miq_template,
+                                    :name                  => "template 1",
+                                    :vendor                => "vmware",
+                                    :location              => "template1.vmtx",
+                                    :ext_management_system => ems)
+      controller.instance_variable_set(:@_params,
+                                       :pressed         => "image_miq_request_new",
+                                       :miq_grid_checks => template.id.to_s)
+      controller.instance_variable_set(:@breadcrumbs, [])
+      controller.instance_variable_set(:@sb, {})
+      controller.set_response!(response)
+      expect(controller).to receive(:vm_pre_prov)
+      expect(controller).not_to receive(:build_vm_grid)
+      allow(controller).to receive(:replace_right_cell)
+      controller.send(:prov_redirect)
+      expect(controller.send(:flash_errors?)).to be_falsey
+      expect(assigns(:org_controller)).to eq("vm")
+    end
+  end
+
   context "#determine_record_id_for_presenter" do
     context "when in a form" do
       before do

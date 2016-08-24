@@ -78,6 +78,12 @@ class ApplicationHelper::Toolbar::XMiqTemplateCenter < ApplicationHelper::Toolba
       t,
       :items => [
         button(
+          :miq_template_miq_request_new,
+          'pficon pficon-add-circle-o fa-lg',
+          t = N_('Provision VMs using this Template'),
+          t,
+          :klass => ApplicationHelper::Button::TemplateProvision),
+        button(
           :miq_template_clone,
           'product product-clone fa-lg',
           t = N_('Clone this Template'),

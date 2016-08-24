@@ -30,4 +30,8 @@ class MiqTemplate < VmOrTemplate
   end
 
   def active?; false; end
+
+  def supports_provisioning?
+    !ems_id.nil? && ExtManagementSystem.where(:id => ems_id).exists?
+  end
 end
