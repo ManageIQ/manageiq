@@ -1495,12 +1495,13 @@ module ApplicationController::CiProcessing
     @reconfigureitems.first.hardware.disks.each do |disk|
       next if disk.device_type != 'disk'
       dsize, dunit = reconfigure_calculations(disk.size / (1024 * 1024))
-      vmdisks << {:hdFilename => disk.filename,
-                  :hdType     => disk.disk_type,
-                  :hdMode     => disk.mode,
-                  :hdSize     => dsize,
-                  :hdUnit     => dunit,
-                  :add_remove => ''}
+      vmdisks << {:hdFilename  => disk.filename,
+                  :hdType      => disk.disk_type,
+                  :hdMode      => disk.mode,
+                  :hdSize      => dsize,
+                  :hdUnit      => dunit,
+                  :add_remove  => '',
+                  :cb_bootable => disk.bootable}
     end
 
     {:objectIds              => @reconfigure_items,
@@ -1556,6 +1557,7 @@ module ApplicationController::CiProcessing
                       :hdSize       => adsize.to_s,
                       :hdUnit       => adunit,
                       :cb_dependent => disk[:dependent],
+                      :cb_bootable  => disk[:bootable],
                       :add_remove   => 'add'}
         end
       end
@@ -1581,6 +1583,7 @@ module ApplicationController::CiProcessing
                       :hdSize         => dsize.to_s,
                       :hdUnit         => dunit.to_s,
                       :delete_backing => delbacking,
+                      :cb_bootable    => disk.bootable,
                       :add_remove     => removing}
         end
       end

@@ -1041,6 +1041,7 @@ disks:
 - backing_id
 - backing_type
 - storage_profile_id
+- bootable
 drift_states:
 - id
 - timestamp
