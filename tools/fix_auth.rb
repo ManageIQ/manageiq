@@ -13,6 +13,7 @@ end
 
 require 'active_support/all'
 require 'active_support/concern'
+require_relative '../lib/vmdb/settings/walker'
 require 'fix_auth/auth_model'
 require 'fix_auth/auth_config_model'
 require 'fix_auth/models'
