@@ -234,25 +234,25 @@ describe ProviderForemanController do
 
   context "#delete" do
     before do
-      stub_user(:features => :all)
+      set_user_privileges
     end
 
     it "deletes the provider when the configuration manager id is supplied" do
       allow(controller).to receive(:replace_right_cell)
       post :delete, :params => { :id => @config_mgr.id }
-      expect(assigns(:flash_array).first[:message]).to include("Delete initiated for 1 Provider")
+      expect(assigns(:flash_array).first[:message]).to include("Delete initiated for 1 provider")
     end
 
     it "it deletes a provider when the configuration manager id is selected from a list view" do
       allow(controller).to receive(:replace_right_cell)
       post :delete, :params => { :miq_grid_checks => "#{@config_mgr.id}, #{@config_mgr2.id}"}
-      expect(assigns(:flash_array).first[:message]).to include("Delete initiated for 2 Providers")
+      expect(assigns(:flash_array).first[:message]).to include("Delete initiated for 2 providers")
     end
 
     it "it deletes a provider when the configuration manager id is selected from a grid/tile" do
       allow(controller).to receive(:replace_right_cell)
       post :delete, :params => { "check_#{ApplicationRecord.compress_id(@config_mgr.id)}" => "1" }
-      expect(assigns(:flash_array).first[:message]).to include("Delete initiated for 1 Provider")
+      expect(assigns(:flash_array).first[:message]).to include("Delete initiated for 1 provider")
     end
   end
 
