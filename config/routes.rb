@@ -1225,6 +1225,7 @@ Vmdb::Application.routes.draw do
         button
         quick_search
         panel_control
+        listnav_search_selected
         show
         show_list
         tag_edit_form_field_changed
@@ -1232,6 +1233,7 @@ Vmdb::Application.routes.draw do
       ) +
         adv_search_post +
         compare_post +
+        save_post +
         exp_post
     },
 
@@ -1248,6 +1250,7 @@ Vmdb::Application.routes.draw do
         button
         quick_search
         panel_control
+        listnav_search_selected
         show
         show_list
         tag_edit_form_field_changed
@@ -1255,6 +1258,7 @@ Vmdb::Application.routes.draw do
       ) +
         adv_search_post +
         compare_post +
+        save_post +
         exp_post
     },
 
@@ -1273,11 +1277,13 @@ Vmdb::Application.routes.draw do
         panel_control
         show
         show_list
+        listnav_search_selected
         tag_edit_form_field_changed
         tagging_edit
       ) +
         adv_search_post +
         compare_post +
+        save_post +
         exp_post
     },
 
@@ -1294,6 +1300,7 @@ Vmdb::Application.routes.draw do
         button
         quick_search
         panel_control
+        listnav_search_selected
         show
         show_list
         tag_edit_form_field_changed
@@ -1301,6 +1308,7 @@ Vmdb::Application.routes.draw do
       ) +
         adv_search_post +
         compare_post +
+        save_post +
         exp_post
     },
 
@@ -1340,6 +1348,7 @@ Vmdb::Application.routes.draw do
         button
         quick_search
         panel_control
+        listnav_search_selected
         show
         show_list
         tag_edit_form_field_changed
@@ -1347,6 +1356,7 @@ Vmdb::Application.routes.draw do
       ) +
         adv_search_post +
         compare_post +
+        save_post +
         exp_post
     },
 
