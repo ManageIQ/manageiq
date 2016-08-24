@@ -8,6 +8,7 @@ en:
     - dbrestore
     - db_config
     - db_replication
+    - failover_monitor
     - key_gen
     - evmstop
     - evmstart
@@ -18,6 +19,7 @@ en:
     dbrestore: Restore Database From Backup
     db_config: Configure Database
     db_replication: Configure Database Replication
+    failover_monitor: Configure Application Database Failover Monitor
     evmstop: Stop EVM Server Processes
     key_gen: Generate Custom Encryption Key
     evmstart: Start EVM Server Processes

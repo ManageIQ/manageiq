@@ -493,6 +493,38 @@ Static Network Configuration
           press_any_key
           raise MiqSignalError
         end
+      when I18n.t("advanced_settings.failover_monitor")
+        say("#{selection}\n\n")
+
+        options = {
+          "Start Database Failover Monitor" => "start",
+          "Stop Database Failover Monitor"  => "stop"
+        }
+
+        action = ask_with_menu("Failover Monitor Configuration", options)
+        failover_service = LinuxAdmin::Service.new("evm-failover-monitor")
+
+        begin
+          case action
+          when "start"
+            Logging.logger.info("Starting and enabling evm-failover-monitor service")
+            failover_service.enable.start
+          when "stop"
+            Logging.logger.info("Stopping and disabling evm-failover-monitor service")
+            failover_service.disable.stop
+          end
+        rescue AwesomeSpawn::CommandResultError => e
+          say("Failed to configure failover monitor")
+          Logging.logger.error("Failed to configure evm-failover-monitor service")
+          say(e.result.output)
+          say(e.result.error)
+          say("")
+          press_any_key
+          raise MiqSignalError
+        end
+
+        say("Failover Monitor Service configured successfully")
+        press_any_key
 
       when I18n.t("advanced_settings.tmp_config")
         say("#{selection}\n\n")
