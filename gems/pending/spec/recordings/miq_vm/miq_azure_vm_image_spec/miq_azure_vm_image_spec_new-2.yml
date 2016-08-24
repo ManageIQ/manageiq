@@ -4,7 +4,7 @@ http_interactions:
     method: post
     uri: https://login.windows.net/azure_tenant_id/oauth2/token
     body:
-      encoding: US-ASCII
+      encoding: UTF-8
       string: grant_type=client_credentials&client_id=azure_client_id&client_secret=azure_client_key&resource=https%3A%2F%2Fmanagement.azure.com%2F
     headers:
       Accept:
@@ -12,7 +12,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.2p95
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.5p319
       Content-Length:
       - '186'
       Content-Type:
@@ -32,35 +32,32 @@ http_interactions:
       - "-1"
       Server:
       - Microsoft-IIS/8.5
-      X-Ms-Request-Id:
-      - 6b8d2bee-2696-4475-81fe-3b82f7c44aee
-      Client-Request-Id:
-      - 4e17baf2-5a26-473d-851c-fca7a2373a80
-      X-Ms-Gateway-Service-Instanceid:
-      - ESTSFE_IN_396
-      X-Content-Type-Options:
-      - nosniff
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
+      X-Content-Type-Options:
+      - nosniff
+      Client-Request-Id:
+      - 2ce9b657-529c-44e0-96f2-3676029e077a
+      X-Ms-Request-Id:
+      - 307b069a-023f-4b5b-a164-9c46d5868471
       P3p:
       - CP="DSP CUR OTPi IND OTRi ONL FIN"
       Set-Cookie:
-      - esctx=AAABAAAAiL9Kn2Z27UubvWFPbm0gLY2wZmUnZO4ck8ZXsgJbg1lgK8gm7GrnKX5dRfzEOoPyruBjiD18hosZDINvlcffQ80tfgnQASPkZHzeqLDA9NuGE8kvxz0lwyaME2z1GCSJREU1Xp8I3JJPbOu9ZExfU7bLERjmRkfT-Oz02GNE6YSeLKlBVnjabZt_cHXTgISMIAA;
+      - esctx=AQABAAAAAADRNYRQ3dhRSrm-4K-adpCJXaWshabKgBuz6apc_CwvUeBbgzzyQhdQpftzh7m_Ke2gskg03w7ZpBNtq9vrZXJv85Z5Qm5-kRrgxiUsoZPItwyFPA62dMgYkM1mxEEbTpTJ9VoGndYszHhfiCFjsPGHW7vY0Ud2-eFEQTAL6dJB3Yw0XsTWblpK3c0LPHhoin4gAA;
         domain=.login.windows.net; path=/; secure; HttpOnly
-      - flight-uxoptin=true; path=/; secure; HttpOnly
       - stsservicecookie=ests; path=/; secure; HttpOnly
-      - x-ms-gateway-slice=productionb; path=/; secure; HttpOnly
+      - x-ms-gateway-slice=productiona; path=/; secure; HttpOnly
       X-Powered-By:
       - ASP.NET
       Date:
-      - Thu, 12 May 2016 18:07:51 GMT
+      - Wed, 24 Aug 2016 21:10:47 GMT
       Content-Length:
-      - '1247'
+      - '1409'
     body:
       encoding: UTF-8
-      string: '{"token_type":"Bearer","scope":"user_impersonation","expires_in":"3599","expires_on":"1463080072","not_before":"1463076172","resource":"https://management.azure.com/","access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NjMwNzYxNzIsIm5iZiI6MTQ2MzA3NjE3MiwiZXhwIjoxNDYzMDgwMDcyLCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJzdWIiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.Id7Yi0wj-__iTnFuYucEHUtPU-IJCpmOLnLTP6xt4yuQhyIR9OYha-IzO5zcHZIKrsJ3kByceX9KYLFbI7kjyjqnlnPkgesCLM4pwe_TkAmdLTKgRq86qsqGiKZ5drjDYFpRc-P-wO0aevNr_-ZXXhGB5VdyFSSg1E8LRThGcOM9CslLSmeLw16YaczPSx6nu4vaSEJr4mIzs5Rj1yHwAg8gmjISdYwMqNqtxbfJxt-Y_dO8sDc9x_Cq8AGJOTOZYwJQ0p51KOppiy7aQYyOMSb_aTI_8gvwy3YHEDp6kP7YfphAje9MVhT8avMEYrb-QbHdRZVjifh0W1iZX0u8vw"}'
+      string: '{"token_type":"Bearer","expires_in":"3599","ext_expires_in":"0","expires_on":"1472076648","not_before":"1472072748","resource":"https://management.azure.com/","access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NzIwNzI3NDgsIm5iZiI6MTQ3MjA3Mjc0OCwiZXhwIjoxNDcyMDc2NjQ4LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.Siefdc-n3mvmTN2YBI78jj-etGes_aCiJaHuaD78l-p2LthmWBEQFcFJk7zHKEg3P1rmnRZ77p58SCX0rVppxYCIUEOKOiTqivNRh-HYK4LlLl-zU86p6g3RoyVGJYGqvI2TbfJfFvi8SR8SI-eNcApaCor2Dy__YsnFWSBN6m5zMvbWAtHhA5pFz7KwdXcu-j6sqlp7pFEj_LvJ_KbuMwbkuDRtgzM9JdM0ybCpVDiwdCNHCWBLC1DTsIONzule8RnAM9F5ucoKWymDJn7A7NOW5g9uWEwfNnN9el4IvOMsEZMLqYI52caMmjH8vp-QxFag6v1ZdyQgDZgSmOoIfg"}'
     http_version: 
-  recorded_at: Thu, 12 May 2016 18:07:51 GMT
+  recorded_at: Wed, 24 Aug 2016 21:10:49 GMT
 - request:
     method: get
     uri: https://management.azure.com/subscriptions?api-version=2015-01-01
@@ -73,11 +70,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.2p95
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.5p319
       Content-Type:
       - application/json
       Authorization:
-      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NjMwNzYxNzIsIm5iZiI6MTQ2MzA3NjE3MiwiZXhwIjoxNDYzMDgwMDcyLCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJzdWIiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.Id7Yi0wj-__iTnFuYucEHUtPU-IJCpmOLnLTP6xt4yuQhyIR9OYha-IzO5zcHZIKrsJ3kByceX9KYLFbI7kjyjqnlnPkgesCLM4pwe_TkAmdLTKgRq86qsqGiKZ5drjDYFpRc-P-wO0aevNr_-ZXXhGB5VdyFSSg1E8LRThGcOM9CslLSmeLw16YaczPSx6nu4vaSEJr4mIzs5Rj1yHwAg8gmjISdYwMqNqtxbfJxt-Y_dO8sDc9x_Cq8AGJOTOZYwJQ0p51KOppiy7aQYyOMSb_aTI_8gvwy3YHEDp6kP7YfphAje9MVhT8avMEYrb-QbHdRZVjifh0W1iZX0u8vw
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NzIwNzI3NDgsIm5iZiI6MTQ3MjA3Mjc0OCwiZXhwIjoxNDcyMDc2NjQ4LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.Siefdc-n3mvmTN2YBI78jj-etGes_aCiJaHuaD78l-p2LthmWBEQFcFJk7zHKEg3P1rmnRZ77p58SCX0rVppxYCIUEOKOiTqivNRh-HYK4LlLl-zU86p6g3RoyVGJYGqvI2TbfJfFvi8SR8SI-eNcApaCor2Dy__YsnFWSBN6m5zMvbWAtHhA5pFz7KwdXcu-j6sqlp7pFEj_LvJ_KbuMwbkuDRtgzM9JdM0ybCpVDiwdCNHCWBLC1DTsIONzule8RnAM9F5ucoKWymDJn7A7NOW5g9uWEwfNnN9el4IvOMsEZMLqYI52caMmjH8vp-QxFag6v1ZdyQgDZgSmOoIfg
   response:
     status:
       code: 200
@@ -96,26 +93,26 @@ http_interactions:
       Vary:
       - Accept-Encoding
       X-Ms-Ratelimit-Remaining-Tenant-Reads:
-      - '14999'
+      - '14997'
       X-Ms-Request-Id:
-      - 68ec3456-624e-47cd-b3f6-76f014db0707
+      - 2391bf0b-4761-438d-828b-2ec7d7c1b98d
       X-Ms-Correlation-Request-Id:
-      - 68ec3456-624e-47cd-b3f6-76f014db0707
+      - 2391bf0b-4761-438d-828b-2ec7d7c1b98d
       X-Ms-Routing-Request-Id:
-      - EASTUS:20160512T180751Z:68ec3456-624e-47cd-b3f6-76f014db0707
+      - EASTUS:20160824T211049Z:2391bf0b-4761-438d-828b-2ec7d7c1b98d
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
       Date:
-      - Thu, 12 May 2016 18:07:50 GMT
+      - Wed, 24 Aug 2016 21:10:49 GMT
     body:
       encoding: ASCII-8BIT
-      string: '{"value":[{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c","subscriptionId":"2586c64b-38b4-4527-a140-012d49dfc02c","displayName":"Microsoft
+      string: '{"value":[{"id":"/subscriptions/azure_subscription_id","subscriptionId":"azure_subscription_id","displayName":"Microsoft
         Azure Sponsorship","state":"Enabled","subscriptionPolicies":{"locationPlacementId":"Public_2014-09-01","quotaId":"Default_2014-09-01"}}]}'
     http_version: 
-  recorded_at: Thu, 12 May 2016 18:07:51 GMT
+  recorded_at: Wed, 24 Aug 2016 21:10:49 GMT
 - request:
     method: get
-    uri: https://management.azure.com/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames?api-version=2015-01-01
+    uri: https://management.azure.com/subscriptions/azure_subscription_id/tagNames?api-version=2015-01-01
     body:
       encoding: US-ASCII
       string: ''
@@ -125,11 +122,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.2p95
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.5p319
       Content-Type:
       - application/json
       Authorization:
-      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NjMwNzYxNzIsIm5iZiI6MTQ2MzA3NjE3MiwiZXhwIjoxNDYzMDgwMDcyLCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJzdWIiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.Id7Yi0wj-__iTnFuYucEHUtPU-IJCpmOLnLTP6xt4yuQhyIR9OYha-IzO5zcHZIKrsJ3kByceX9KYLFbI7kjyjqnlnPkgesCLM4pwe_TkAmdLTKgRq86qsqGiKZ5drjDYFpRc-P-wO0aevNr_-ZXXhGB5VdyFSSg1E8LRThGcOM9CslLSmeLw16YaczPSx6nu4vaSEJr4mIzs5Rj1yHwAg8gmjISdYwMqNqtxbfJxt-Y_dO8sDc9x_Cq8AGJOTOZYwJQ0p51KOppiy7aQYyOMSb_aTI_8gvwy3YHEDp6kP7YfphAje9MVhT8avMEYrb-QbHdRZVjifh0W1iZX0u8vw
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NzIwNzI3NDgsIm5iZiI6MTQ3MjA3Mjc0OCwiZXhwIjoxNDcyMDc2NjQ4LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.Siefdc-n3mvmTN2YBI78jj-etGes_aCiJaHuaD78l-p2LthmWBEQFcFJk7zHKEg3P1rmnRZ77p58SCX0rVppxYCIUEOKOiTqivNRh-HYK4LlLl-zU86p6g3RoyVGJYGqvI2TbfJfFvi8SR8SI-eNcApaCor2Dy__YsnFWSBN6m5zMvbWAtHhA5pFz7KwdXcu-j6sqlp7pFEj_LvJ_KbuMwbkuDRtgzM9JdM0ybCpVDiwdCNHCWBLC1DTsIONzule8RnAM9F5ucoKWymDJn7A7NOW5g9uWEwfNnN9el4IvOMsEZMLqYI52caMmjH8vp-QxFag6v1ZdyQgDZgSmOoIfg
   response:
     status:
       code: 200
@@ -146,22 +143,24 @@ http_interactions:
       Vary:
       - Accept-Encoding
       X-Ms-Ratelimit-Remaining-Subscription-Reads:
-      - '14959'
+      - '14940'
       X-Ms-Request-Id:
-      - 48e2934a-abb0-4999-9060-17ff70fe3996
+      - 1534480a-71ed-4cbd-bf48-42af3d52d341
       X-Ms-Correlation-Request-Id:
-      - 48e2934a-abb0-4999-9060-17ff70fe3996
+      - 1534480a-71ed-4cbd-bf48-42af3d52d341
       X-Ms-Routing-Request-Id:
-      - EASTUS:20160512T180751Z:48e2934a-abb0-4999-9060-17ff70fe3996
+      - EASTUS:20160824T211050Z:1534480a-71ed-4cbd-bf48-42af3d52d341
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
       Date:
-      - Thu, 12 May 2016 18:07:51 GMT
+      - Wed, 24 Aug 2016 21:10:49 GMT
       Content-Length:
-      - '2903'
+      - '4380'
     body:
       encoding: ASCII-8BIT
-      string: '{"value":[{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName","tagName":"displayName","count":{"type":"Total","value":19},"values":[{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/OpenShiftMasterVirtualMachine","tagValue":"OpenShiftMasterVirtualMachine","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/DeployOpenShift","tagValue":"DeployOpenShift","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/OpenShiftNodes","tagValue":"OpenShiftNodes","count":{"type":"Total","value":3}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/PrepNodes","tagValue":"PrepNodes","count":{"type":"Total","value":3}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/KeyVault","tagValue":"KeyVault","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/OpenShiftNodeLB","tagValue":"OpenShiftNodeLB","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/OpenShiftMasterNetworkInterface","tagValue":"OpenShiftMasterNetworkInterface","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/OpenShiftNodeNetworkInterfaces","tagValue":"OpenShiftNodeNetworkInterfaces","count":{"type":"Total","value":3}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/OpenShiftNodeLBPublicIP","tagValue":"OpenShiftNodeLBPublicIP","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/OpenShiftMasterPublicIP","tagValue":"OpenShiftMasterPublicIP","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/VirtualNetwork","tagValue":"VirtualNetwork","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/StorageAccounts","tagValue":"StorageAccounts","count":{"type":"Total","value":2}}]},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/on-demand","tagName":"on-demand","count":{"type":"Total","value":1},"values":[{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/on-demand/tagValues/true","tagValue":"true","count":{"type":"Total","value":1}}]},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/rlt_test","tagName":"rlt_test","count":{"type":"Total","value":1},"values":[{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/rlt_test/tagValues/b","tagValue":"b","count":{"type":"Total","value":1}}]}]}'
+      string: '{"value":[{"id":"/subscriptions/azure_subscription_id/tagNames/NoDelete","tagName":"NoDelete","count":{"type":"Total","value":8},"values":[{"id":"/subscriptions/azure_subscription_id/tagNames/NoDelete/tagValues/baude","tagValue":"baude","count":{"type":"Total","value":1}},{"id":"/subscriptions/azure_subscription_id/tagNames/NoDelete/tagValues/True","tagValue":"True","count":{"type":"Total","value":7}}]},{"id":"/subscriptions/azure_subscription_id/tagNames/displayName","tagName":"displayName","count":{"type":"Total","value":51},"values":[{"id":"/subscriptions/azure_subscription_id/tagNames/displayName/tagValues/KeyVault","tagValue":"KeyVault","count":{"type":"Total","value":2}},{"id":"/subscriptions/azure_subscription_id/tagNames/displayName/tagValues/VirtualMachine","tagValue":"VirtualMachine","count":{"type":"Total","value":10}},{"id":"/subscriptions/azure_subscription_id/tagNames/displayName/tagValues/VirtualMachineCustomScriptExtension","tagValue":"VirtualMachineCustomScriptExtension","count":{"type":"Total","value":10}},{"id":"/subscriptions/azure_subscription_id/tagNames/displayName/tagValues/NetworkInterface","tagValue":"NetworkInterface","count":{"type":"Total","value":10}},{"id":"/subscriptions/azure_subscription_id/tagNames/displayName/tagValues/NetworkSecurityGroup","tagValue":"NetworkSecurityGroup","count":{"type":"Total","value":6}},{"id":"/subscriptions/azure_subscription_id/tagNames/displayName/tagValues/PublicIPAddress","tagValue":"PublicIPAddress","count":{"type":"Total","value":6}},{"id":"/subscriptions/azure_subscription_id/tagNames/displayName/tagValues/VirtualNetwork","tagValue":"VirtualNetwork","count":{"type":"Total","value":2}},{"id":"/subscriptions/azure_subscription_id/tagNames/displayName/tagValues/StorageAccount","tagValue":"StorageAccount","count":{"type":"Total","value":3}},{"id":"/subscriptions/azure_subscription_id/tagNames/displayName/tagValues/StorageAccounts","tagValue":"StorageAccounts","count":{"type":"Total","value":2}}]},{"id":"/subscriptions/azure_subscription_id/tagNames/autoShutdownSchedule","tagName":"autoShutdownSchedule","count":{"type":"Total","value":1},"values":[{"id":"/subscriptions/azure_subscription_id/tagNames/autoShutdownSchedule/tagValues/21:00
+        -> 0600, Saturday, Sunday","tagValue":"21:00 -> 0600, Saturday, Sunday","count":{"type":"Total","value":1}}]},{"id":"/subscriptions/azure_subscription_id/tagNames/Shutdown","tagName":"Shutdown","count":{"type":"Total","value":13},"values":[{"id":"/subscriptions/azure_subscription_id/tagNames/Shutdown/tagValues/true","tagValue":"true","count":{"type":"Total","value":12}},{"id":"/subscriptions/azure_subscription_id/tagNames/Shutdown/tagValues/false","tagValue":"false","count":{"type":"Total","value":1}}]},{"id":"/subscriptions/azure_subscription_id/tagNames/redhat","tagName":"redhat","count":{"type":"Total","value":2},"values":[{"id":"/subscriptions/azure_subscription_id/tagNames/redhat/tagValues/True","tagValue":"True","count":{"type":"Total","value":1}},{"id":"/subscriptions/azure_subscription_id/tagNames/redhat/tagValues/VirtualMachine","tagValue":"VirtualMachine","count":{"type":"Total","value":1}}]},{"id":"/subscriptions/azure_subscription_id/tagNames/dmulford","tagName":"dmulford","count":{"type":"Total","value":0},"values":[{"id":"/subscriptions/azure_subscription_id/tagNames/dmulford/tagValues/true","tagValue":"true","count":{"type":"Total","value":0}}]},{"id":"/subscriptions/azure_subscription_id/tagNames/description","tagName":"description","count":{"type":"Total","value":2},"values":[{"id":"/subscriptions/azure_subscription_id/tagNames/description/tagValues/jClouds
+        managed VMs","tagValue":"jClouds managed VMs","count":{"type":"Total","value":2}}]},{"id":"/subscriptions/azure_subscription_id/tagNames/rlt_test","tagName":"rlt_test","count":{"type":"Total","value":1},"values":[{"id":"/subscriptions/azure_subscription_id/tagNames/rlt_test/tagValues/b","tagValue":"b","count":{"type":"Total","value":1}}]}]}'
     http_version: 
-  recorded_at: Thu, 12 May 2016 18:07:51 GMT
+  recorded_at: Wed, 24 Aug 2016 21:10:50 GMT
 recorded_with: VCR 2.9.3
