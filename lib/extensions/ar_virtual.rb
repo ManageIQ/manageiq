@@ -111,9 +111,38 @@ module VirtualDelegates
       "#{prefix == true ? to : prefix}_" if prefix
     end
 
+    # @param col [String] attribute name
+    # @param to [Symbol] association name of targeted association
+    # @param to_model [Class] association class of targeted association
+    # @param to_ref [Association] association from source class to target association
+    # @return [Proc] lambda to return arel that selects the attribute in a sub-query
+    # @return [Nil] if the attribute (col) can not be represented in sql.
+    #
+    # To generate a proc, the following cases must happen:
+    #   - the column has sql (virtual_column with arel OR real sql attribute)
+    #   - the association has sql representation (a real association has sql)
+    #   - the association is to a single record (has_one or belongs_to)
+    #
+    # example
+    #
+    #   for the given class definition:
+    #
+    #     class Vm
+    #       belongs_to :hosts #, :foreign_key => :host_id, :primary_key => :id
+    #       virtual_delegate :name, :to => :host, :prefix => true, :allow_nil => true
+    #     end
+    #
+    #   The virtual_delegate calls:
+    #
+    #     virtual_delegate_arel("name", :host, Host, Vm.hostreflection_with_virtual(:host))
+    #
+    #   which will return will return arel to produce:
+    #
+    #     SELECT "hosts"."name" FROM "hosts" WHERE "hosts"."id" = "vms"."host_id"
+
     def virtual_delegate_arel(col, to, to_model, to_ref)
-      # column has sql and the association is reachable via sql
-      # no way to propagate sql over a virtual association
+      # ensure the column has sql and the association is reachable via sql
+      # There is currently no way to propagate sql over a virtual association
       if to_model.arel_attribute(col) && reflect_on_association(to)
         if to_ref.macro == :has_one
           lambda do |t|
