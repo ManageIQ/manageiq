@@ -521,6 +521,38 @@ describe VirtualFields do
         tcs = TestClass.all.select(:id, :col1, TestClass.arel_attribute(:parent_col1).as("x"))
         expect(tcs.map(&:x)).to match_array([nil, 4])
       end
+
+      context "with has_one :parent" do
+        before do
+          TestClass.has_one :ref2, :class_name => 'TestClass', :foreign_key => :col1, :inverse_of => :ref1
+        end
+        # child.col1 will be getting parent's (aka tc's) id
+        let(:child) { TestClass.create(:id => 1) }
+
+        it "delegates to child" do
+          TestClass.virtual_delegate :col1, :prefix => 'child', :to => :ref2
+          tc = TestClass.create(:id => 2, :ref2 => child)
+          expect(tc.child_col1).to eq(2)
+        end
+
+        it "delegates to nil child" do
+          TestClass.virtual_delegate :col1, :prefix => 'child', :to => :ref2, :allow_nil => true
+          tc = TestClass.new(:id => 2)
+          expect(tc.child_col1).to be_nil
+        end
+
+        it "defines child virtual attribute" do
+          TestClass.virtual_delegate :col1, :prefix => 'child', :to => :ref2
+          expect(TestClass.virtual_attribute_names).to include("child_col1")
+        end
+
+        it "delegates to child (sql)" do
+          TestClass.virtual_delegate :col1, :prefix => 'child', :to => :ref2
+          TestClass.create(:id => 2, :ref2 => child)
+          tcs = TestClass.all.select(:id, :col1, TestClass.arel_attribute(:child_col1).as("x"))
+          expect(tcs.map(&:x)).to match_array([nil, 2])
+        end
+      end
     end
   end
 
