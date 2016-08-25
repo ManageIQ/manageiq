@@ -190,24 +190,20 @@ module OpsController::Settings::Common
     if replication_type == :global
       MiqRegion.replication_type = replication_type
       subscriptions_to_save = []
-      params[:subscriptions].each do |_, subscription|
-        sub = subscription['id'] ? PglogicalSubscription.find(subscription['id']) : PglogicalSubscription.new
-        sub.dbname   = subscription['dbname']
-        sub.host     = subscription['host']
-        sub.user     = subscription['user']
-        sub.password = subscription['password'] == '●●●●●●●●' ? nil : subscription['password']
-        sub.port     = subscription['port']
-        if sub.id && subscription['remove'] == "true"
-          sub.delete
+      params[:subscriptions].each do |_, subscription_params|
+        subscription = find_or_new_subscription(subscription_params['id'])
+        if subscription.id && subscription_params['remove'] == "true"
+          subscription.delete
         else
-          subscriptions_to_save.push(sub)
+          set_subscription_attributes(subscription, subscription_params)
+          subscriptions_to_save.push(subscription)
         end
       end
       begin
         PglogicalSubscription.save_all!(subscriptions_to_save)
       rescue  StandardError => bang
         add_flash(_("Error during replication configuration save: %{message}") %
-                    {:message => bang}, :error)
+                      {:message => bang}, :error)
       else
         add_flash(_("Replication configuration save was successful"))
       end
@@ -216,7 +212,7 @@ module OpsController::Settings::Common
         MiqRegion.replication_type = replication_type
       rescue StandardError => bang
         add_flash(_("Error during replication configuration save: ") %
-                    {:message => bang.message}, :error)
+                      {:message => bang.message}, :error)
       else
         add_flash(_("Replication configuration save was successful"))
       end
@@ -230,12 +226,8 @@ module OpsController::Settings::Common
   end
 
   def pglogical_validate_subscription
-    valid = PglogicalSubscription.validate(params[:subscription_id],
-                                           :host     => params[:host],
-                                           :port     => params[:port],
-                                           :user     => params[:user],
-                                           :password => params[:password],
-                                           :dbname   => params[:dbname])
+    subscription = find_or_new_subscription(params[:id])
+    valid = subscription.validate(params_for_connection_validation(params))
     if valid.nil?
       add_flash(_("Subscription Credentials validated successfully"))
     else
@@ -247,6 +239,27 @@ module OpsController::Settings::Common
   end
 
   private
+
+  PASSWORD_MASK = '●●●●●●●●'.freeze
+
+  def find_or_new_subscription(id = nil)
+    id.nil? ? PglogicalSubscription.new : PglogicalSubscription.find(id)
+  end
+
+  def set_subscription_attributes(subscription, params)
+    params_for_connection_validation(params).each do |k, v|
+      subscription.send("#{k}=".to_sym, v)
+    end
+  end
+
+  def params_for_connection_validation(subscription_params)
+    {'host'     => subscription_params['host'],
+     'port'     => subscription_params['port'],
+     'user'     => subscription_params['user'],
+     'dbname'   => subscription_params['dbname'],
+     'password' => subscription_params['password'] == PASSWORD_MASK ? nil : subscription_params['password']
+    }.delete_blanks
+  end
 
   def get_subscriptions_array(subscriptions)
     subscriptions.collect { |sub|
