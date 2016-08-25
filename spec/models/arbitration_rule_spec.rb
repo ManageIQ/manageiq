@@ -20,13 +20,6 @@ describe ArbitrationRule do
     end
   end
 
-  describe '#name' do
-    it 'requires a name' do
-      expect { FactoryGirl.create(:arbitration_rule, :name => nil) }
-        .to raise_error(ActiveRecord::RecordInvalid, /Name can't be blank/)
-    end
-  end
-
   describe '#get_by_rule_class' do
     it 'returns only rules of the given type' do
       user_rules = FactoryGirl.create_list(:arbitration_rule, 2)
