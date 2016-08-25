@@ -8,7 +8,7 @@ module EmsNetworkHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(parent_ems_cloud availability_zones cloud_tenants cloud_networks cloud_subnets network_routers security_groups
+    %i(parent_ems_cloud cloud_networks cloud_subnets network_routers security_groups
        floating_ips network_ports)
   end
 
@@ -58,14 +58,6 @@ module EmsNetworkHelper::TextualSummary
     textual_link(@record.parent_manager)
   end
 
-  def textual_availability_zones
-    @record.availability_zones
-  end
-
-  def textual_cloud_tenants
-    @record.cloud_tenants
-  end
-
   def textual_security_groups
     @record.security_groups
   end
@@ -85,6 +77,7 @@ module EmsNetworkHelper::TextualSummary
   def textual_cloud_networks
     @record.cloud_networks
   end
+
   def textual_cloud_subnets
     @record.cloud_subnets
   end
