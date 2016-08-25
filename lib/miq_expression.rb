@@ -451,13 +451,13 @@ class MiqExpression
       col_type = get_col_type(exp[operator]["field"]) if exp[operator]["field"]
       col_name = exp[operator]["field"]
       col_ruby, = operands2rubyvalue(operator, {"field" => col_name}, context_type)
-      val = RelativeDatetime.normalize(exp[operator]["value"], tz, "beginning", col_type == :date)
+      val = exp[operator]["value"]
       clause = ruby_for_date_compare(col_ruby, col_type, tz, "<", val)
     when "after"
       col_type = get_col_type(exp[operator]["field"]) if exp[operator]["field"]
       col_name = exp[operator]["field"]
       col_ruby, = operands2rubyvalue(operator, {"field" => col_name}, context_type)
-      val = RelativeDatetime.normalize(exp[operator]["value"], tz, "end", col_type == :date)
+      val = exp[operator]["value"]
       clause = ruby_for_date_compare(col_ruby, col_type, tz, nil, nil, ">", val)
     when "includes all"
       operands = operands2rubyvalue(operator, exp[operator], context_type)
@@ -516,12 +516,10 @@ class MiqExpression
       col_ruby, dummy = operands2rubyvalue(operator, {"field" => col_name}, context_type)
       col_type = get_col_type(col_name)
       value = exp[operator]["value"]
-      start_val = RelativeDatetime.normalize(value, tz, "beginning", col_type == :date)
-      end_val = RelativeDatetime.normalize(value, tz, "end", col_type == :date)
       clause = if col_type == :date && !RelativeDatetime.relative?(value)
-                 ruby_for_date_compare(col_ruby, col_type, tz, "==", start_val)
+                 ruby_for_date_compare(col_ruby, col_type, tz, "==", value)
                else
-                 ruby_for_date_compare(col_ruby, col_type, tz, ">=", start_val, "<=", end_val)
+                 ruby_for_date_compare(col_ruby, col_type, tz, ">=", value, "<=", value)
                end
     when "from"
       col_name = exp[operator]["field"]
@@ -529,8 +527,6 @@ class MiqExpression
       col_type = get_col_type(col_name)
 
       start_val, end_val = exp[operator]["value"]
-      start_val = RelativeDatetime.normalize(start_val, tz, "beginning", col_type == :date)
-      end_val = RelativeDatetime.normalize(end_val, tz, "end", col_type == :date)
       clause = ruby_for_date_compare(col_ruby, col_type, tz, ">=", start_val, "<=", end_val)
     else
       raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator}
@@ -1572,6 +1568,8 @@ class MiqExpression
 
   def self.ruby_for_date_compare(col_ruby, col_type, tz, op1, val1, op2 = nil, val2 = nil)
     val_with_cast = "val.#{col_type == :date ? "to_date" : "to_time"}"
+    val1 = RelativeDatetime.normalize(val1, tz, "beginning", col_type == :date) if val1
+    val2 = RelativeDatetime.normalize(val2, tz, "end",       col_type == :date) if val2
     [
       "val=#{col_ruby}; !val.nil?",
       op1 ? "#{val_with_cast} #{op1} #{quote(val1, col_type)}" : nil,
