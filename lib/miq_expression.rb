@@ -452,21 +452,13 @@ class MiqExpression
       col_name = exp[operator]["field"]
       col_ruby, = operands2rubyvalue(operator, {"field" => col_name}, context_type)
       val = RelativeDatetime.normalize(exp[operator]["value"], tz, "beginning", col_type == :date)
-      clause = if col_type == :date
-                 "val=#{col_ruby}; !val.nil? && val.to_date < #{quote(val, col_type)}"
-               else
-                 "val=#{col_ruby}; !val.nil? && val.to_time < #{quote(val, col_type)}"
-               end
+      clause = ruby_compare(col_ruby, col_type, "<", val)
     when "after"
       col_type = get_col_type(exp[operator]["field"]) if exp[operator]["field"]
       col_name = exp[operator]["field"]
       col_ruby, = operands2rubyvalue(operator, {"field" => col_name}, context_type)
       val = RelativeDatetime.normalize(exp[operator]["value"], tz, "end", col_type == :date)
-      clause = if col_type == :date
-                 "val=#{col_ruby}; !val.nil? && val.to_date > #{quote(val, col_type)}"
-               else
-                 "val=#{col_ruby}; !val.nil? && val.to_time > #{quote(val, col_type)}"
-               end
+      clause = ruby_compare(col_ruby, col_type, ">", val)
     when "includes all"
       operands = operands2rubyvalue(operator, exp[operator], context_type)
       clause = "(#{operands[0]} & #{operands[1]}) == #{operands[1]}"
@@ -528,17 +520,12 @@ class MiqExpression
       end_val = RelativeDatetime.normalize(value, tz, "end", col_type == :date)
       if col_type == :date
         if RelativeDatetime.relative?(value)
-          start_val = quote(start_val, col_type)
-          end_val   = quote(end_val, col_type)
-          clause    = "val=#{col_ruby}; !val.nil? && val.to_date >= #{start_val} && val.to_date <= #{end_val}"
+          clause = ruby_compare(col_ruby, col_type, ">=", start_val, "<=", end_val)
         else
-          value  = quote(start_val, col_type)
-          clause = "val=#{col_ruby}; !val.nil? && val.to_date == #{value}"
+          clause = ruby_compare(col_ruby, col_type, "==", start_val)
         end
       else
-        start_val = quote(start_val, col_type)
-        end_val   = quote(end_val, col_type)
-        clause    = "val=#{col_ruby}; !val.nil? && val.to_time >= #{start_val} && val.to_time <= #{end_val}"
+        clause = ruby_compare(col_ruby, col_type, ">=", start_val, "<=", end_val)
       end
     when "from"
       col_name = exp[operator]["field"]
@@ -548,17 +535,7 @@ class MiqExpression
       start_val, end_val = exp[operator]["value"]
       start_val = RelativeDatetime.normalize(start_val, tz, "beginning", col_type == :date)
       end_val = RelativeDatetime.normalize(end_val, tz, "end", col_type == :date)
-      if col_type == :date
-        start_val = quote(start_val, col_type)
-        end_val   = quote(end_val, col_type)
-
-        clause = "val=#{col_ruby}; !val.nil? && val.to_date >= #{start_val} && val.to_date <= #{end_val}"
-      else
-        start_val = quote(start_val, col_type)
-        end_val   = quote(end_val, col_type)
-
-        clause = "val=#{col_ruby}; !val.nil? && val.to_time >= #{start_val} && val.to_time <= #{end_val}"
-      end
+      clause = ruby_compare(col_ruby, col_type, ">=", start_val, "<=", end_val)
     else
       raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator}
     end
@@ -1589,6 +1566,20 @@ class MiqExpression
   end
 
   private
+
+  # example:
+  #   ruby_compare(:updated_at, :date, "==", Time.now)
+  #   # => "val=update_at; !val.nil? && val.to_date == '2016-10-05'"
+  #
+  #   ruby_compare(:updated_at, :time, ">", Time.yesterday, "<", Time.now)
+  #   # => "val=update_at; !val.nil? && val.utc > '2016-10-04T13:08:00-04:00' && val.utc < '2016-10-05T13:08:00-04:00'"
+
+  def self.ruby_compare(col_ruby, col_type, *operators)
+    val_with_cast = "val.#{col_type == :date ? "to_date" : "to_time"}"
+
+    operations = operators.each_slice(2) { |op, val| "#{val_with_cast} #{op} #{quote(val, col_type)}" }
+    (["val=#{col_ruby}; !val.nil?"] + operations).join " && "
+  end
 
   def to_arel(exp, tz)
     operator = exp.keys.first
