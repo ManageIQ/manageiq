@@ -85,6 +85,10 @@ class User < ApplicationRecord
     in_region.find_by(:email => email)
   end
 
+  def self.rule_attributes
+    ['name', 'email', 'userid', 'region', 'current_group_id', 'first_name', 'last_name']
+  end
+
   # find a user by lowercase email
   # often we have the most probably user object onhand. so use that if possible
   def self.find_by_lower_email(email, cache = [])
