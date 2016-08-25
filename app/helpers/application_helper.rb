@@ -460,7 +460,7 @@ module ApplicationHelper
     elsif layout == "ops"
       title += _(": Configuration")
     elsif layout == "provider_foreman"
-      title += ": #{ui_lookup(:ui_title => "foreman")} #{ui_lookup(:model => "ExtManagementSystem")}"
+      title += _(": Configuration Management")
     elsif layout == "pxe"
       title += _(": PXE")
     elsif layout == "explorer"
