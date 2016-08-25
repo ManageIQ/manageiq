@@ -187,17 +187,59 @@ EOF
     end
 
     it "#retires_on - today" do
-      service_service.retires_on = Date.today
+      service.update_attributes(:retirement_last_warn => Date.today)
+      service_service.retires_on = Time.zone.today
       service.reload
-
+      expect(service.retirement_last_warn).to be_nil
       expect(service.retirement_due?).to be_truthy
     end
 
     it "#retires_on - tomorrow" do
-      service_service.retires_on = Date.today + 1
+      service.update_attributes(
+        :retired              => true,
+        :retirement_last_warn => Time.zone.today,
+        :retirement_state     => "retiring"
+      )
+      service_service.retires_on = Time.zone.today + 1
       service.reload
 
-      expect(service.retirement_due?).to be_falsey
+      expect(service).to have_attributes(
+        :retirement_last_warn => nil,
+        :retired              => false,
+        :retirement_state     => nil,
+        :retirement_due?      => false
+      )
+    end
+
+    it "#extend_retires_on - no retirement date set" do
+      extend_days = 7
+      Timecop.freeze(Time.zone.today) do
+        service_service.extend_retires_on(extend_days)
+        service.reload
+        expect(service.retires_on.day).to eq(Time.zone.today.day + extend_days)
+      end
+    end
+
+    it "#extend_retires_on - future retirement date set" do
+      Timecop.freeze(Time.zone.today) do
+        service.update_attributes(
+          :retired              => true,
+          :retirement_last_warn => Time.zone.today,
+          :retirement_state     => "retiring"
+        )
+        future_retires_on = Time.zone.today + 30
+        service_service.retires_on = future_retires_on
+        extend_days = 7
+        service_service.extend_retires_on(extend_days, future_retires_on)
+        service.reload
+
+        expect(service).to have_attributes(
+          :retirement_last_warn => nil,
+          :retired              => false,
+          :retirement_state     => nil,
+          :retires_on           => future_retires_on + extend_days
+        )
+      end
     end
 
     it "#retirement_warn" do
