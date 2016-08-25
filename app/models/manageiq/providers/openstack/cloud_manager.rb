@@ -26,15 +26,18 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
   include ManageIQ::Providers::Openstack::ManagerMixin
 
   supports :provisioning
+  supports :cloud_tenant_mapping do
+    unless defined?(self.class.parent::CloudManager::CloudTenant)
+      reason = _("CloudTenant mapping to Tenants are supported on CloudManager only when CloudTenant exists "\
+                 "on the provider")
+      unsupported_reason_add(:cloud_tenant_mapping, reason)
+    end
+  end
 
   before_validation :ensure_managers
 
   def ensure_network_manager
     build_network_manager(:type => 'ManageIQ::Providers::Openstack::NetworkManager') unless network_manager
-  end
-
-  def supports_cloud_tenants?
-    true
   end
 
   def self.ems_type
