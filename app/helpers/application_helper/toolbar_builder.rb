@@ -709,9 +709,6 @@ class ApplicationHelper::ToolbarBuilder
       when "policy_edit_events"
         return true if !role_allows?(:feature => "policy_edit") ||
                        @policy.mode == "compliance"
-      when "policy_copy"
-        return true if !role_allows?(:feature => "policy_copy") ||
-                       x_active_tree != :policy_tree
       when "policy_delete"
         return true if !role_allows?(:feature => "policy_delete") ||
                        x_active_tree != :policy_tree

@@ -29,7 +29,9 @@ class ApplicationHelper::Toolbar::MiqPolicyCenter < ApplicationHelper::Toolbar::
                             :new_policy_description => truncate("Copy of #{@policy.description}", :length => 255, :omission => "")
                           }
                         end,
-          :url_parms => "main_div"),
+          :url_parms => "main_div",
+          :klass     => ApplicationHelper::Button::PolicyCopyButton,
+          :options   => {:feature => 'policy_copy', :condition => proc do x_active_tree != :policy_tree end} ),
         button(
           :policy_delete,
           'pficon pficon-delete fa-lg',
