@@ -518,15 +518,11 @@ class MiqExpression
       value = exp[operator]["value"]
       start_val = RelativeDatetime.normalize(value, tz, "beginning", col_type == :date)
       end_val = RelativeDatetime.normalize(value, tz, "end", col_type == :date)
-      if col_type == :date
-        if RelativeDatetime.relative?(value)
-          clause = ruby_compare(col_ruby, col_type, ">=", start_val, "<=", end_val)
-        else
-          clause = ruby_compare(col_ruby, col_type, "==", start_val)
-        end
-      else
-        clause = ruby_compare(col_ruby, col_type, ">=", start_val, "<=", end_val)
-      end
+      clause = if col_type == :date && !RelativeDatetime.relative?(value)
+                 ruby_compare(col_ruby, col_type, "==", start_val)
+               else
+                 ruby_compare(col_ruby, col_type, ">=", start_val, "<=", end_val)
+               end
     when "from"
       col_name = exp[operator]["field"]
       col_ruby, dummy = operands2rubyvalue(operator, {"field" => col_name}, context_type)
@@ -1576,7 +1572,6 @@ class MiqExpression
 
   def self.ruby_compare(col_ruby, col_type, *operators)
     val_with_cast = "val.#{col_type == :date ? "to_date" : "to_time"}"
-
     operations = operators.each_slice(2) { |op, val| "#{val_with_cast} #{op} #{quote(val, col_type)}" }
     (["val=#{col_ruby}; !val.nil?"] + operations).join " && "
   end
