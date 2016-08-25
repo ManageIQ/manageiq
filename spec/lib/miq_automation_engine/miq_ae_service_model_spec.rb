@@ -136,4 +136,25 @@ module MiqAeServiceModelSpec
       end.to raise_error(NoMethodError)
     end
   end
+
+  context 'taggable' do
+    let(:taggables) { [:switch, :lan] }
+    let(:taggable_objects) { taggables.collect { |t| FactoryGirl.create(t) } }
+    let(:ae_taggables) do
+      taggable_objects.collect { |t| "MiqAeMethodService::MiqAeService#{t.class.name}".constantize.new(t.id) }
+    end
+
+    let(:category)    { FactoryGirl.create(:classification) }
+    let(:tag)         { FactoryGirl.create(:classification_tag, :parent_id => category.id) }
+
+    it "is taggable" do
+      ae_taggables.each { |ae| expect(ae.taggable?).to be_truthy }
+    end
+
+    it "can unassign tags" do
+      ae_taggables.each { |ae| ae.tag_assign("#{category.name}/#{tag.name}") }
+      ae_taggables.each { |ae| expect(ae.tag_unassign("#{category.name}/#{tag.name}")).to be_truthy }
+      ae_taggables.each { |ae| expect(ae.tagged_with?(category.name, tag.name)).to be_falsey }
+    end
+  end
 end
