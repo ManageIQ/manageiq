@@ -1390,6 +1390,8 @@ hardwares:
 - computer_system_id
 - disk_size_minimum
 - memory_mb_minimum
+- introspected
+- provision_state
 host_aggregate_hosts:
 - id
 - host_id
