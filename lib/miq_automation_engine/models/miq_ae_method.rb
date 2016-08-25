@@ -33,7 +33,7 @@ class MiqAeMethod < ApplicationRecord
   end
 
   def self.available_expression_objects
-    Rbac::CLASSES_THAT_PARTICIPATE_IN_RBAC
+    Rbac::Filterer::CLASSES_THAT_PARTICIPATE_IN_RBAC
   end
 
   # Validate the syntax of the passed in inline ruby code
