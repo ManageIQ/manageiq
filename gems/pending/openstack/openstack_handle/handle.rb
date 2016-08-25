@@ -278,7 +278,7 @@ module OpenstackHandle
     def introspection_service(tenant_name = nil)
       connect(:service => "Introspection", :tenant_name => tenant_name)
     end
-    alias_method :connect_introspection, :metering_service
+    alias_method :connect_introspection, :introspection_service
 
     def detect_introspection_service(tenant_name = nil)
       detect_service("Introspection", tenant_name)

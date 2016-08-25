@@ -153,7 +153,12 @@ module ManageIQ
 
       def get_introspection_details(host)
         return {} unless @introspection_service
-        @introspection_service.get_introspection_details(host.uuid).body
+        begin
+          @introspection_service.get_introspection_details(host.uuid).body
+        rescue
+          # introspection data not available
+          {}
+        end
       end
 
       def get_extra_attributes(introspection_details)
@@ -231,6 +236,8 @@ module ManageIQ
           :guest_os_full_name   => nil,
           :guest_os             => nil,
           :disks                => process_host_hardware_disks(extra_attributes),
+          :introspected         => !introspection_details.blank?,
+          :provision_state      => host.provision_state,
         }
       end
 
