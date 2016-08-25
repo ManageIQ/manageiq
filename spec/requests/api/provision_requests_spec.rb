@@ -111,17 +111,26 @@ describe "Provision Requests API" do
       FactoryGirl.create(:flavor_amazon, :ems_id => ems.id, :name => 't2.small', :cloud_subnet_required => true)
     end
     let(:az)             { FactoryGirl.create(:availability_zone_amazon, :ems_id => ems.id) }
-    let(:cloud_network1) { FactoryGirl.create(:cloud_network_amazon, :ems_id => ems.network_manager.id, :enabled => true) }
+    let(:cloud_network1) { FactoryGirl.create(:cloud_network_amazon,
+                                              :ext_management_system => ems.network_manager,
+                                              :enabled               => true) }
     let(:cloud_subnet1) do
-      FactoryGirl.create(:cloud_subnet, :ems_id => ems.id, :cloud_network => cloud_network1, :availability_zone => az)
+      FactoryGirl.create(:cloud_subnet,
+                         :ext_management_system => ems.network_manager,
+                         :cloud_network         => cloud_network1,
+                         :availability_zone     => az)
     end
     let(:security_group1) do
-      FactoryGirl.create(:security_group_amazon, :name => "sgn_1", :ext_management_system => ems,
-                         :cloud_network => cloud_network1)
+      FactoryGirl.create(:security_group_amazon,
+                         :name                  => "sgn_1",
+                         :ext_management_system => ems.network_manager,
+                         :cloud_network         => cloud_network1)
     end
     let(:floating_ip1) do
-      FactoryGirl.create(:floating_ip_amazon, :cloud_network_only => true, :ems_id => ems.network_manager.id,
-                         :cloud_network => cloud_network1)
+      FactoryGirl.create(:floating_ip_amazon,
+                         :cloud_network_only    => true,
+                         :ext_management_system => ems.network_manager,
+                         :cloud_network         => cloud_network1)
     end
 
     let(:provreq_body) do
