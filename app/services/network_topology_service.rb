@@ -16,7 +16,8 @@ class NetworkTopologyService < TopologyService
     topo_items = {}
     links = []
 
-    included_relations = {
+    included_relations = [
+      :tags,
       :cloud_subnets => [
         :tags,
         :cloud_network => :tags,
@@ -30,7 +31,7 @@ class NetworkTopologyService < TopologyService
           :cloud_network => [
             :floating_ips => :tags
           ]
-        ]]}
+        ]]]
 
     entity_relationships = {:NetworkManager => build_entity_relationships(included_relations)}
 
