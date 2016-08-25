@@ -5,7 +5,7 @@ class RemoveTypeTemplateAndVmsFiltersFromMiqSearch < ActiveRecord::Migration[5.0
   def up
     say_with_time('Remove Type / Template and Type / VM from VMs filters') do
       ["default_Type / Template", "default_Type / VM"].each do |name|
-        MiqSearch.find_by(name: name).try(:delete)
+        MiqSearch.find_by(:name => name).try(:delete)
       end
     end
   end
