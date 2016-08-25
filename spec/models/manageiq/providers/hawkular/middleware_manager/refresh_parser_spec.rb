@@ -88,6 +88,85 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
     end
   end
 
+  describe 'parse_availability' do
+    it 'handles simple data' do
+      resources_by_metric_id = {
+        'resource_id_1' => {},
+        'resource_id_2' => {},
+        'resource_id_3' => {},
+        'resource_id_4' => {},
+      }
+      availabilities = [
+        {
+          'id'   => 'resource_id_1',
+          'data' => [{ 'value' => 'up' }]
+        },
+        {
+          'id'   => 'resource_id_2',
+          'data' => [{ 'value' => 'down' }]
+        },
+        {
+          'id'   => 'resource_id_3',
+          'data' => [{ 'value' => 'something_else' }]
+        },
+        {
+          'id'   => 'resource_id_4',
+          'data' => []
+        }
+      ]
+
+      parsed_resources_with_availability = {
+        'resource_id_1' => {
+          :status => 'Enabled'
+        },
+        'resource_id_2' => {
+          :status => 'Disabled'
+        },
+        'resource_id_3' => {
+          :status => 'Unknown'
+        },
+        'resource_id_4' => {
+          :status => 'Unknown'
+        }
+      }
+      expect(parser.send(:parse_availability,
+                         availabilities,
+                         resources_by_metric_id)).to eq(parsed_resources_with_availability)
+    end
+    it 'handles missing metrics' do
+      resources_by_metric_id = {
+        'resource_id_1' => {},
+        'resource_id_2' => {},
+        'resource_id_3' => {},
+        'resource_id_4' => {},
+      }
+      availabilities = [
+        {
+          'id'   => 'resource_id_1',
+          'data' => [{ 'value' => 'up' }]
+        }
+      ]
+
+      parsed_resources_with_availability = {
+        'resource_id_1' => {
+          :status => 'Enabled'
+        },
+        'resource_id_2' => {
+          :status => 'Unknown'
+        },
+        'resource_id_3' => {
+          :status => 'Unknown'
+        },
+        'resource_id_4' => {
+          :status => 'Unknown'
+        }
+      }
+      expect(parser.send(:parse_availability,
+                         availabilities,
+                         resources_by_metric_id)).to eq(parsed_resources_with_availability)
+    end
+  end
+
   describe 'alternate_machine_id' do
     it 'should transform machine ID to dmidecode BIOS UUID' do
       # the /etc/machine-id is usually in downcase, and the dmidecode BIOS UUID is usually upcase
