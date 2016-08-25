@@ -111,9 +111,11 @@ describe "Provision Requests API" do
       FactoryGirl.create(:flavor_amazon, :ems_id => ems.id, :name => 't2.small', :cloud_subnet_required => true)
     end
     let(:az)             { FactoryGirl.create(:availability_zone_amazon, :ems_id => ems.id) }
-    let(:cloud_network1) { FactoryGirl.create(:cloud_network_amazon,
-                                              :ext_management_system => ems.network_manager,
-                                              :enabled               => true) }
+    let(:cloud_network1) do
+      FactoryGirl.create(:cloud_network_amazon,
+                         :ext_management_system => ems.network_manager,
+                         :enabled               => true)
+    end
     let(:cloud_subnet1) do
       FactoryGirl.create(:cloud_subnet,
                          :ext_management_system => ems.network_manager,
