@@ -20,6 +20,14 @@ class Endpoint < ApplicationRecord
     verify_ssl != OpenSSL::SSL::VERIFY_NONE
   end
 
+  def port
+    # fix for https://bugzilla.redhat.com/show_bug.cgi?id=1360226
+    # the problem was in that migration 20141121200153_migrate_ems_attributes_to_endpoints.rb
+    # here port got converted from a string to int, but "".to_i is 0.
+    # This is for darga only. On euwe this is solved by a migration
+    (super == 0) ? nil : super
+  end
+
   private
 
   def resolve_verify_ssl_value(val)

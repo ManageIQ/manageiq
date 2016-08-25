@@ -47,4 +47,22 @@ describe Endpoint do
       end
     end
   end
+
+  it "#port returns nil for port 0 in the db" do
+    allow(MiqServer).to receive(:my_zone).and_return("default")
+    rhev = FactoryGirl.create(:ems_redhat_with_authentication)
+    Endpoint.update_all(:port => 0)
+    rhev.reload
+    expect(rhev.class).to receive(:raw_connect).with(rhev.address, nil, any_args)
+    rhev.authentication_check
+  end
+
+  it "#port returns the real value for other than 0" do
+    allow(MiqServer).to receive(:my_zone).and_return("default")
+    rhev = FactoryGirl.create(:ems_redhat_with_authentication)
+    Endpoint.update_all(:port => 443)
+    rhev.reload
+    expect(rhev.class).to receive(:raw_connect).with(rhev.address, 443, any_args)
+    rhev.authentication_check
+  end
 end
