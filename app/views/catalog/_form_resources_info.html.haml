@@ -15,7 +15,8 @@
             = select_tag('resource_id',
                          options_for_select(([["<#{_('Choose')}>", nil]]) + array, nil),
                          "data-miq_sparkle_on" => true,
-                         :class                => "selectpicker")
+                         :class                => "selectpicker",
+                         'data-live-search'    => true)
             :javascript
               miqInitSelectPicker();
               miqSelectPickerEvent('resource_id', '#{url}')

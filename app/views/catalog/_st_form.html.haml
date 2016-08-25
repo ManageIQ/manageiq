@@ -11,8 +11,9 @@
           - array = Array(@edit[:st_prov_types].invert).sort_by { |a| a.first.downcase }
           = select_tag('st_prov_type',
                        options_for_select(([["<#{_('Choose')}>",nil]]) + array, nil),
-                       "data-miq_sparkle_on" => true,
-                       :class    => "selectpicker")
+                       "data-miq_sparkle_on"  => true,
+                       :class                 => "selectpicker",
+                       'data-live-search'     => true)
           :javascript
             miqInitSelectPicker();
             miqSelectPickerEvent('st_prov_type', "#{url}", {beforeSend: true, complete: true})
