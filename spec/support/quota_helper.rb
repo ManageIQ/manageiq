@@ -92,6 +92,26 @@ module Spec
                                          :tenant       => @tenant)
       end
 
+      def create_microsoft_vms
+        @active_vm = FactoryGirl.create(:vm_amazon,
+                                        :miq_group_id => @miq_group.id,
+                                        :ems_id       => @ems.id,
+                                        :storage_id   => @storage.id,
+                                        :hardware     => @hw1,
+                                        :tenant       => @tenant)
+        @archived_vm = FactoryGirl.create(:vm_amazon,
+                                          :miq_group_id => @miq_group.id,
+                                          :hardware     => @hw2)
+        @orphaned_vm = FactoryGirl.create(:vm_amazon,
+                                          :miq_group_id => @miq_group.id,
+                                          :storage_id   => @storage.id,
+                                          :hardware     => @hw3)
+        @retired_vm = FactoryGirl.create(:vm_amazon,
+                                         :miq_group_id => @miq_group.id,
+                                         :retired      => true,
+                                         :hardware     => @hw4)
+      end
+
       def create_request(prov_options)
         @miq_provision_request = FactoryGirl.create(:miq_provision_request,
                                                     :requester => @user,
@@ -130,6 +150,24 @@ module Spec
                                             :placement_auto => [true, 1],
                                             :instance_type  => [m2_small_flavor.id, m2_small_flavor.name])
         create_google_vms
+      end
+
+      def microsoft_requested_quota_values
+        {:number_of_vms    => 1,
+         :owner_email      => 'tester@miq.com',
+         :vm_memory        => [1024, '1024'],
+         :number_of_cpus   => [2, '2'],
+         :cores_per_socket => [1, '1']}
+      end
+
+      def microsoft_model
+        @ems = FactoryGirl.create(:ems_microsoft)
+        @vm_template = FactoryGirl.create(:template_microsoft,
+                                          :hardware => FactoryGirl.create(:hardware, :cpu1x2, :memory_mb => 512))
+        @storage = FactoryGirl.create(:storage_nfs)
+        create_request(microsoft_requested_quota_values)
+        create_hardware
+        create_microsoft_vms
       end
 
       def build_generic_service_item
