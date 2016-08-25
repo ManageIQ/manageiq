@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'pathname'
 require 'optparse'
-require 'english'
+require 'English'
 
 def execute(cmd)
   system(cmd)
