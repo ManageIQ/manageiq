@@ -45,7 +45,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
 
       context "cloud network" do
         it "#get_targets_for_ems" do
-          cn1 = FactoryGirl.create(:cloud_network, :ext_management_system => provider)
+          cn1 = FactoryGirl.create(:cloud_network, :ext_management_system => provider.network_manager)
           sg_cn = FactoryGirl.create(:security_group_openstack, :ext_management_system => provider.network_manager, :cloud_network => cn1)
           filtered = workflow.send(:get_targets_for_ems, provider, :cloud_filter, SecurityGroup, 'security_groups')
           expect(filtered.size).to eq(1)
