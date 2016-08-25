@@ -1570,10 +1570,13 @@ class MiqExpression
   #   ruby_compare(:updated_at, :time, ">", Time.yesterday, "<", Time.now)
   #   # => "val=update_at; !val.nil? && val.utc > '2016-10-04T13:08:00-04:00' && val.utc < '2016-10-05T13:08:00-04:00'"
 
-  def self.ruby_compare(col_ruby, col_type, *operators)
+  def self.ruby_compare(col_ruby, col_type, op1, val1, op2 = nil, val2 = nil)
     val_with_cast = "val.#{col_type == :date ? "to_date" : "to_time"}"
-    operations = operators.each_slice(2) { |op, val| "#{val_with_cast} #{op} #{quote(val, col_type)}" }
-    (["val=#{col_ruby}; !val.nil?"] + operations).join " && "
+    [
+      "val=#{col_ruby}; !val.nil?",
+      "#{val_with_cast} #{op1} #{quote(val1, col_type)}",
+      op2 ? "#{val_with_cast} #{op2} #{quote(val2, col_type)}" : nil,
+    ].compact.join(" && ")
   end
 
   def to_arel(exp, tz)
