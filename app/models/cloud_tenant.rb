@@ -38,6 +38,22 @@ class CloudTenant < ApplicationRecord
     try(:ext_management_system).try(:cloud_networks).try(:where, :shared => true) || []
   end
 
+  def update_source_tenant_associations
+    TENANT_MAPPING_ASSOCIATIONS.each do |tenant_association|
+      custom_update_method = "#{__method__}_for_#{tenant_association}"
+
+      if respond_to?(custom_update_method)
+        public_send(custom_update_method)
+      end
+    end
+  end
+
+  def update_source_tenant_associations_for_vms_and_templates
+    vms_and_templates.each do |object|
+      object.miq_group_id = source_tenant.default_miq_group_id
+      object.save!
+    end
+  end
 
   def self.with_ext_management_system(ems_id)
     where(:ext_management_system => ems_id)

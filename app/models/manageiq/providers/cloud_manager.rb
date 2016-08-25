@@ -101,6 +101,7 @@ module ManageIQ::Providers
           $log.info("New Tenant #{cloud_tenant.source_tenant.name} created")
         end
 
+        cloud_tenant.update_source_tenant_associations
         cloud_tenant.save!
         $log.info("CloudTenant #{cloud_tenant.name} saved")
       end
