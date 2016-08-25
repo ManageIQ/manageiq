@@ -42,8 +42,12 @@ module ManageIQ
         def deserialize_bundle(bundle)
           options = {}
           if bundle["service_catalog"]
-            catalog_id = parse_id(bundle["service_catalog"], :service_catalogs)
-            options[:service_catalog] = catalog_id.nil? ? nil : ServiceTemplateCatalog.find(catalog_id)
+            options["service_catalog"] =
+              if bundle["service_catalog"].blank?
+                nil
+              else
+                ServiceTemplateCatalog.find(parse_id(bundle["service_catalog"], :service_catalogs))
+              end
           end
           if bundle["service_dialog"]
             options[:service_dialog] = Dialog.find(parse_id(bundle["service_dialog"], :service_dialogs))
