@@ -1,7 +1,8 @@
 require_relative 'shared_network_manager_context'
 
-shared_examples :floating_ip_controller_spec do |providers|
+shared_examples :shared_examples_for_cloud_subnet_controller do |providers|
   include CompressedIds
+
   render_views
   before :each do
     stub_user(:features => :all)
@@ -33,21 +34,29 @@ shared_examples :floating_ip_controller_spec do |providers|
 
       describe "#show" do
         it "renders show screen" do
-          get :show, :params => {:id => @floating_ip.id}
+          get :show, :params => {:id => @cloud_subnet.id}
           expect(response.status).to eq(200)
           expect(response.body).to_not be_empty
-          expect(assigns(:breadcrumbs)).to eq([{:name => "floating_ips",
-                                                :url  => "/floating_ip/show_list?page=&refresh=y"},
-                                               {:name => "192.0.2.1 (Summary)",
-                                                :url  => "/floating_ip/show/#{@floating_ip.id}"}])
+          expect(assigns(:breadcrumbs)).to eq([{:name => "cloud_subnets",
+                                                :url  => "/cloud_subnet/show_list?page=&refresh=y"},
+                                               {:name => "Cloud Subnet (Summary)",
+                                                :url  => "/cloud_subnet/show/#{@cloud_subnet.id}"}])
 
-          is_expected.to render_template(:partial => "layouts/listnav/_floating_ip")
+          is_expected.to render_template(:partial => "layouts/listnav/_cloud_subnet")
+        end
+
+        it "show associated cloud_subnets" do
+          assert_nested_list(@cloud_subnet, [@child_subnet], 'cloud_subnets', 'All Cloud Subnets')
+        end
+
+        it "show associated instances" do
+          assert_nested_list(@cloud_subnet, [@vm], 'instances', 'All Instances', :child_path => 'vm_cloud')
         end
       end
 
       describe "#test_toolbars" do
-        it 'edit floating ip tags' do
-          post :button, :params => {:miq_grid_checks => to_cid(@floating_ip.id), :pressed => "floating_ip_tag"}
+        it 'edit cloud subnet tags' do
+          post :button, :params => {:miq_grid_checks => to_cid(@cloud_subnet.id), :pressed => "cloud_subnet_tag"}
           expect(response.status).to eq(200)
         end
       end

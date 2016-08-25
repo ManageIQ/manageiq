@@ -1,8 +1,7 @@
 require_relative 'shared_network_manager_context'
 
-shared_examples :security_group_controller_spec do |providers|
+shared_examples :shared_examples_for_network_port_controller do |providers|
   include CompressedIds
-
   render_views
   before :each do
     stub_user(:features => :all)
@@ -34,29 +33,29 @@ shared_examples :security_group_controller_spec do |providers|
 
       describe "#show" do
         it "renders show screen" do
-          get :show, :params => {:id => @security_group.id}
+          get :show, :params => {:id => @network_port.id}
           expect(response.status).to eq(200)
           expect(response.body).to_not be_empty
-          expect(assigns(:breadcrumbs)).to eq([{:name => "security_groups",
-                                                :url  => "/security_group/show_list?page=&refresh=y"},
-                                               {:name => "Security Group (Summary)",
-                                                :url  => "/security_group/show/#{@security_group.id}"}])
+          expect(assigns(:breadcrumbs)).to eq([{:name => "network_ports",
+                                                :url  => "/network_port/show_list?page=&refresh=y"},
+                                               {:name => "eth0 (Summary)",
+                                                :url  => "/network_port/show/#{@network_port.id}"}])
 
-          is_expected.to render_template(:partial => "layouts/listnav/_security_group")
+          is_expected.to render_template(:partial => "layouts/listnav/_network_port")
         end
 
-        it "show associated instances" do
-          assert_nested_list(@security_group, [@vm], 'instances', 'All Instances', :child_path => 'vm_cloud')
+        it "show associated cloud_subnets" do
+          assert_nested_list(@network_port, [@cloud_subnet], 'cloud_subnets', 'All Cloud Subnets')
         end
 
-        it "show associated network ports" do
-          assert_nested_list(@security_group, [@network_port], 'network_ports', 'All Network Ports')
+        it "show associated floating ips" do
+          assert_nested_list(@network_port, [@floating_ip], 'floating_ips', 'All Floating Ips')
         end
       end
 
       describe "#test_toolbars" do
-        it 'edit security group tags' do
-          post :button, :params => {:miq_grid_checks => to_cid(@security_group.id), :pressed => "security_group_tag"}
+        it 'edit Network Port tags' do
+          post :button, :params => {:miq_grid_checks => to_cid(@network_port.id), :pressed => "network_port_tag"}
           expect(response.status).to eq(200)
         end
       end

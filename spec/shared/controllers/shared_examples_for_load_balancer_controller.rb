@@ -1,6 +1,6 @@
 require_relative 'shared_network_manager_context'
 
-shared_examples :load_balancer_controller_spec do |providers|
+shared_examples :shared_examples_for_load_balancer_controller do |providers|
   include CompressedIds
 
   render_views
