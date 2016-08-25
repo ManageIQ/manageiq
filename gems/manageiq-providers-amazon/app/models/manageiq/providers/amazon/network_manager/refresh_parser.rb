@@ -192,7 +192,10 @@ class ManageIQ::Providers::Amazon::NetworkManager::RefreshParser
 
   def parse_network_port(network_port)
     uid                        = network_port.network_interface_id
-    cloud_subnet_network_ports = network_port.private_ip_addresses.map do |x|
+    # TODO(lsmola) AWS can have secondary private IP address assigned to the ENI, our current model does not allow that.
+    # Probably the best fix is, to expand unique index of the cloud_subnet_network_ports to include address. Also we
+    # need to expand our tests to include the secondary fixed IP. Then we can remove the .slice(0..0)
+    cloud_subnet_network_ports = network_port.private_ip_addresses.slice(0..0).map do |x|
       parse_cloud_subnet_network_port(x, network_port.subnet_id)
     end
     device                     = parent_manager_fetch_path(:vms, network_port.try(:attachment).try(:instance_id))
