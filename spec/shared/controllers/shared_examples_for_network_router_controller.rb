@@ -1,6 +1,6 @@
 require_relative 'shared_network_manager_context'
 
-shared_examples :cloud_subnet_controller_spec do |providers|
+shared_examples :shared_examples_for_network_router_controller do |providers|
   include CompressedIds
 
   render_views
@@ -34,29 +34,29 @@ shared_examples :cloud_subnet_controller_spec do |providers|
 
       describe "#show" do
         it "renders show screen" do
-          get :show, :params => {:id => @cloud_subnet.id}
+          get :show, :params => {:id => @network_router.id}
           expect(response.status).to eq(200)
           expect(response.body).to_not be_empty
-          expect(assigns(:breadcrumbs)).to eq([{:name => "cloud_subnets",
-                                                :url  => "/cloud_subnet/show_list?page=&refresh=y"},
-                                               {:name => "Cloud Subnet (Summary)",
-                                                :url  => "/cloud_subnet/show/#{@cloud_subnet.id}"}])
+          expect(assigns(:breadcrumbs)).to eq([{:name => "network_routers",
+                                                :url  => "/network_router/show_list?page=&refresh=y"},
+                                               {:name => "Network Router (Summary)",
+                                                :url  => "/network_router/show/#{@network_router.id}"}])
 
-          is_expected.to render_template(:partial => "layouts/listnav/_cloud_subnet")
-        end
-
-        it "show associated cloud_subnets" do
-          assert_nested_list(@cloud_subnet, [@child_subnet], 'cloud_subnets', 'All Cloud Subnets')
+          is_expected.to render_template(:partial => "layouts/listnav/_network_router")
         end
 
         it "show associated instances" do
-          assert_nested_list(@cloud_subnet, [@vm], 'instances', 'All Instances', :child_path => 'vm_cloud')
+          assert_nested_list(@network_router, [@vm], 'instances', 'All Instances', :child_path => 'vm_cloud')
+        end
+
+        it "show associated cloud_subnets" do
+          assert_nested_list(@network_router, [@cloud_subnet], 'cloud_subnets', 'All Cloud Subnets')
         end
       end
 
       describe "#test_toolbars" do
-        it 'edit cloud subnet tags' do
-          post :button, :params => {:miq_grid_checks => to_cid(@cloud_subnet.id), :pressed => "cloud_subnet_tag"}
+        it 'edit network router tags' do
+          post :button, :params => {:miq_grid_checks => to_cid(@network_router.id), :pressed => "network_router_tag"}
           expect(response.status).to eq(200)
         end
       end

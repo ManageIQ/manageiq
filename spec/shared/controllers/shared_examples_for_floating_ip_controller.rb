@@ -1,8 +1,7 @@
 require_relative 'shared_network_manager_context'
 
-shared_examples :network_router_controller_spec do |providers|
+shared_examples :shared_examples_for_floating_ip_controller do |providers|
   include CompressedIds
-
   render_views
   before :each do
     stub_user(:features => :all)
@@ -34,29 +33,21 @@ shared_examples :network_router_controller_spec do |providers|
 
       describe "#show" do
         it "renders show screen" do
-          get :show, :params => {:id => @network_router.id}
+          get :show, :params => {:id => @floating_ip.id}
           expect(response.status).to eq(200)
           expect(response.body).to_not be_empty
-          expect(assigns(:breadcrumbs)).to eq([{:name => "network_routers",
-                                                :url  => "/network_router/show_list?page=&refresh=y"},
-                                               {:name => "Network Router (Summary)",
-                                                :url  => "/network_router/show/#{@network_router.id}"}])
+          expect(assigns(:breadcrumbs)).to eq([{:name => "floating_ips",
+                                                :url  => "/floating_ip/show_list?page=&refresh=y"},
+                                               {:name => "192.0.2.1 (Summary)",
+                                                :url  => "/floating_ip/show/#{@floating_ip.id}"}])
 
-          is_expected.to render_template(:partial => "layouts/listnav/_network_router")
-        end
-
-        it "show associated instances" do
-          assert_nested_list(@network_router, [@vm], 'instances', 'All Instances', :child_path => 'vm_cloud')
-        end
-
-        it "show associated cloud_subnets" do
-          assert_nested_list(@network_router, [@cloud_subnet], 'cloud_subnets', 'All Cloud Subnets')
+          is_expected.to render_template(:partial => "layouts/listnav/_floating_ip")
         end
       end
 
       describe "#test_toolbars" do
-        it 'edit network router tags' do
-          post :button, :params => {:miq_grid_checks => to_cid(@network_router.id), :pressed => "network_router_tag"}
+        it 'edit floating ip tags' do
+          post :button, :params => {:miq_grid_checks => to_cid(@floating_ip.id), :pressed => "floating_ip_tag"}
           expect(response.status).to eq(200)
         end
       end
