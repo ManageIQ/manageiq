@@ -107,10 +107,12 @@ class ApplicationHelper::ToolbarBuilder
       :data    => input[:data]
     )
 
-    button[:enabled]   = input[:enabled]
-    button[:title]     = input[:title]   unless input[:title].blank?
-    button[:text]      = input[:text]    unless input[:text].blank?
-    button[:confirm]   = input[:confirm] unless input[:confirm].blank?
+    button[:enabled] = input[:enabled]
+    %i(title text confirm).each do |key|
+      unless input[key].blank?
+        button[key] = button.localized(key, input[key])
+      end
+    end
     button[:url_parms] = update_url_parms(safer_eval(input[:url_parms])) unless input[:url_parms].blank?
 
     if input[:popup] # special behavior: button opens window_url in a new window
@@ -125,7 +127,9 @@ class ApplicationHelper::ToolbarBuilder
     dis_title = build_toolbar_disable_button(button[:child_id] || button[:id])
     if dis_title
       button[:enabled] = false
-      button[:title]   = dis_title if dis_title.kind_of? String
+      if dis_title.kind_of? String
+        button[:title] = button.localized(:title, dis_title)
+      end
     end
     button
   end
