@@ -1,5 +1,4 @@
-class ApplicationHelper::Button::PolicyCopyButton < ApplicationHelper::Button::Basic
-  needs_record
+class ApplicationHelper::Button::PolicyCopy < ApplicationHelper::Button::Basic
 
   def initialize(view_context, view_binding, instance_data, props)
     super(view_context, view_binding, instance_data, props)
@@ -8,9 +7,8 @@ class ApplicationHelper::Button::PolicyCopyButton < ApplicationHelper::Button::B
   end
 
   def skip?
-    !role_allows?(:feature => @feature) || self.instance_eval(&@condition)
+    !role_allows?(:feature => @feature) || instance_eval(&@condition)
   end
 
-  private
   delegate :x_active_tree, :role_allows?, :to => :@view_context
 end
