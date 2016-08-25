@@ -231,7 +231,7 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
       data["id"] = subscription.id
     }
     miqService.sparkleOn();
-    var url = '/ops/pglogical_;validate_subscription'
+    var url = '/ops/pglogical_validate_subscription'
     miqService.miqAjaxButton(url, data);
   };
 

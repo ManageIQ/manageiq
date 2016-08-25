@@ -203,7 +203,7 @@ module OpsController::Settings::Common
         PglogicalSubscription.save_all!(subscriptions_to_save)
       rescue  StandardError => bang
         add_flash(_("Error during replication configuration save: %{message}") %
-                      {:message => bang}, :error)
+                    {:message => bang}, :error)
       else
         add_flash(_("Replication configuration save was successful"))
       end
@@ -212,7 +212,7 @@ module OpsController::Settings::Common
         MiqRegion.replication_type = replication_type
       rescue StandardError => bang
         add_flash(_("Error during replication configuration save: ") %
-                      {:message => bang.message}, :error)
+                    {:message => bang.message}, :error)
       else
         add_flash(_("Replication configuration save was successful"))
       end
