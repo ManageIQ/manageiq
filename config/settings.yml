@@ -909,7 +909,7 @@
     :password:
     :port:
     :user:
-  :amazon:
+  :ec2:
     :host:
     :password:
     :port:
