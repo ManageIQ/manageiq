@@ -1,0 +1,70 @@
+.mw_ds_add_step2{"ng-show" => "dsModel.step == 'STEP2'"}
+  %h3
+    = _("Step 2/3: JDBC Driver")
+
+  %ng-form.form-horizontal#form_step2{"name" => "step2Form"}
+    .form-group
+      %label.col-md-4.control-label{:for => "jdbc_driver_name_input"}
+        = _("Name")
+      .col-md-8
+        %input.form-control#jdbc_driver_name_input{:type          => "text",
+                                                   "ng-required"  => "true",
+                                                   "ng-minlength" => "4",
+                                                   "ng-maxlength" => "100",
+                                                   "placeholder"  => _("Enter JDBC Driver name"),
+                                                   "ng-model"     => "step2DsModel.jdbcDriverName"}
+    .form-group
+      %label.col-md-4.control-label{:for => "jdbc_module_name_input"}
+        = _("Module Name")
+      .col-md-8
+        %input.form-control#jdbc_modoule_name_input{:type          => "text",
+                                                    "ng-required"  => "true",
+                                                    "ng-minlength" => "6",
+                                                    "ng-maxlength" => "256",
+                                                    "placeholder"  => _("Enter JDBC Module name"),
+                                                    "ng-model"     => "step2DsModel.jdbcModuleName"}
+
+    .form-group
+      %label.col-md-4.control-label{:for => "jdbc_driver_class_input"}
+        = _("Driver Class")
+      .col-md-8
+        %input.form-control#jdbc_driver_class_input{:type          => "text",
+                                                    "ng-required"  => "true",
+                                                    "ng-minlength" => "6",
+                                                    "ng-maxlength" => "256",
+                                                    "placeholder"  => _("Enter JDBC Driver Class"),
+                                                    "ng-model"     => "step2DsModel.jdbcDriverClass"}
+
+    .form-group
+      %label.col-md-4.control-label{:for => "major_version_input"}
+        = _("Major Version")
+      .col-md-8
+        %input.form-control#major_version_input{:type          => "number",
+                                                "ng-required"  => "true",
+                                                "ng-minlength" => "1",
+                                                "placeholder"  => _("Enter Major Version"),
+                                                "ng-model"     => "step2DsModel.majorVersion"}
+
+    .form-group
+      %label.col-md-4.control-label{:for => "minor_version_input"}
+        = _("Minor Version")
+      .col-md-8
+        %input.form-control#minor_version_input{:type          => "number",
+                                                "ng-required"  => "true",
+                                                "ng-minlength" => "1",
+                                                "placeholder"  => _("Enter Minor Version"),
+                                                "ng-model"     => "step2DsModel.minorVersion"}
+
+
+    .modal-footer
+      %button.btn.btn-default{:type          => "button",
+                              "ng-click"     =>"reset()",
+                              "data-dismiss" => "modal"}
+        = _("Cancel")
+      %button.btn.btn-default{:type          => "button",
+                              "ng-click"     =>"addDatasourceStep2Back()"}
+        = _("Back")
+      %button.btn.btn-primary{"ng-click"    => "addDatasourceStep2Next()",
+                              "ng-disabled" => "step2Form.$invalid",
+                              :type         => "button"}
+        = _("Next")

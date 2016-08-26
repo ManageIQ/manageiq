@@ -1,0 +1,37 @@
+.mw_ds_add_step1{"ng-show" => "dsModel.step == 'STEP1'"}
+  %h3
+    = _("Step 1/3: Datasource Attributes")
+
+  %ng-form.form-horizontal#form_step1{"name" => "step1Form"}
+    .form-group
+      %label.col-md-4.control-label{:for => "ds_name_input"}
+        = _("Name")
+      .col-md-8
+        %input.form-control#ds_name_input{:type          => "text",
+                                          "placeholder"  => _("Enter Datasource name"),
+                                          "ng-required"  => "true",
+                                          "ng-minlength" => "3",
+                                          "ng-maxlength" => "100",
+                                          "ng-model"     => "step1DsModel.datasourceName"}
+    .form-group
+      %label.col-md-4.control-label{:for => "jndi_name_input"}
+        = _("JNDI Name")
+      .col-md-8
+        %input.form-control#jndi_name_input{:type         => "text",
+                                            "placeholder" => _("Enter JNDI name"),
+                                            "ng-minlength" => "4",
+                                            "ng-maxlength" => "256",
+                                            "ng-required" => "true",
+                                            "ng-model"    => "step1DsModel.jndiName"}
+    .modal-footer
+      %button.btn.btn-default{:type          => "button",
+                              "ng-click"     =>"reset()",
+                              "data-dismiss" => "modal"}
+        = _("Cancel")
+      %button.btn.btn-default{:type          => "button",
+                              "ng-click"     =>"addDatasourceStep1Back()"}
+        = _("Back")
+      %button.btn.btn-primary{"ng-click"    => "addDatasourceStep1Next()",
+                              "ng-disabled" => "step1Form.$invalid",
+                              :type         => "button"}
+        = _("Next")

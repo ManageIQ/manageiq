@@ -1,58 +1,90 @@
 ManageIQ.angular.app.controller('middlewareAddDataSourceController', MiddlewareAddDataSourceCtrl);
 
-MiddlewareAddDataSourceCtrl.$inject = ['$scope', '$http', 'miqService'];
+MiddlewareAddDataSourceCtrl.$inject = ['$scope', 'miqService'];
 
-function MiddlewareAddDataSourceCtrl($scope, $http, miqService) {
-  ManageIQ.angular.scope = $scope;
+function MiddlewareAddDataSourceCtrl($scope, miqService) {
 
-  $scope.showListener = function () {
-    $scope.showDataSourceAddModal = true;
-    $scope.resetAddDataSourceForm();
+  $scope.dsModel = {};
+  $scope.dsModel.step = 'CHOOSE_DS';
+
+  $scope.chooseDsModel = {};
+  $scope.chooseDsModel.selectedDatasource = '';
+  $scope.chooseDsModel.datasources = [
+    {id : 'POSTGRES', label: 'Postgres'},
+    {id: 'ORACLE', label: 'Oracle'},
+    {id: 'MSSQL', label: 'Microsoft SQL Server'},
+    {id: 'DB2', label: 'IBM DB2'},
+    {id: 'SYBASE', label: 'Sybase'},
+    {id: 'MYSQL', label: 'MySql'}
+    ];
+
+  $scope.step1DsModel = {};
+  $scope.step1DsModel.datasourceName = '';
+  $scope.step1DsModel.jndiName = '';
+
+  $scope.step2DsModel = {};
+  $scope.step2DsModel.jdbcDriverName = '';
+  $scope.step2DsModel.jdbcModuleName = '';
+  $scope.step2DsModel.driverClass = '';
+  $scope.step2DsModel.majorVersion = 0;
+  $scope.step2DsModel.minorVersion = 0;
+
+
+  $scope.step3DsModel = {};
+  $scope.step3DsModel.connectionUrl = '';
+  $scope.step3DsModel.userName = '';
+  $scope.step3DsModel.password = '';
+  $scope.step3DsModel.securityDomain = '';
+
+  $scope.addDatasourceChooseNext = function() {
+    $scope.dsModel.step = 'STEP1';
   };
 
-  $scope.enableDeployment = true;
+  $scope.addDatasourceStep1Next = function() {
+    $scope.dsModel.step = 'STEP2';
+  };
 
-  $scope.$watch('filePath', function(newValue) {
-    if (newValue) {
-      $scope.runtimeName = newValue.name;
-    }
-  });
+  $scope.addDatasourceStep1Back = function() {
+    $scope.dsModel.step = 'CHOOSE_DS';
+  };
 
-  $scope.addDataSource = function () {
+  $scope.addDatasourceStep2Next = function() {
+    $scope.dsModel.step = 'STEP3';
+  };
+
+  $scope.addDatasourceStep2Back = function() {
+    $scope.dsModel.step = 'STEP1';
+  };
+
+  $scope.finishAddDatasource = function () {
     miqService.sparkleOn();
-    var url = '/middleware_server/add_deployment';
-    $scope.uploadFile($scope.filePath, url);
+    console.log('Calling Add New Datasource');
+    miqService.sparkleOff();
   };
 
-  $scope.uploadFile = function (file, uploadUrl) {
-    var fd = new FormData();
-    fd.append('file', file);
-    fd.append('id', angular.element('#ds_server_id').val());
-    fd.append('enabled', $scope.enableDeployment);
-    fd.append('runtimeName', $scope.runtimeName);
-    $http.post(uploadUrl, fd, {
-      transformRequest: angular.identity,
-      headers: {'Content-Type': undefined}
-    })
-      .then(
-        function() { // success
-          miqService.miqFlash('success', 'Datasource has been successfully added to this server: "' + $scope.runtimeName + '" has been initiated on this server.');
-        },
-        function() { // error
-          miqService.miqFlash('error', 'Failed to add datasource"')
-        })
-      .finally(function() {
-        angular.element("#modal_ds_div").modal('hide');
-        miqService.sparkleOff();
-      });
+  $scope.finishAddDatasourceBack = function () {
+    $scope.dsModel.step = 'STEP2';
   };
 
-  $scope.resetAddDataSourceForm = function () {
-    $scope.enableDeployment = true;
-    $scope.runtimeName = undefined;
-    $scope.filePath = undefined;
-    angular.element('#ds_add_div :file#upload_file').val('');
-    angular.element('#ds_add_div input[type="text"]:disabled').val('');
-  };
+  $scope.reset = function() {
+    $scope.dsModel.step = 'CHOOSE_DS';
+
+    $scope.chooseDsModel.selectedDatasource = '';
+
+    $scope.step1DsModel.datasourceName = '';
+    $scope.step1DsModel.jndiName = '';
+
+    $scope.step2DsModel.jdbcDriverName = '';
+    $scope.step2DsModel.jdbcModuleName = '';
+    $scope.step2DsModel.driverClass = '';
+    $scope.step2DsModel.majorVersion = 0;
+    $scope.step2DsModel.minorVersion = 0;
+
+    $scope.step3DsModel.connectionUrl = '';
+    $scope.step3DsModel.userName = '';
+    $scope.step3DsModel.password = '';
+    $scope.step3DsModel.securityDomain = '';
+
+  }
 
 }

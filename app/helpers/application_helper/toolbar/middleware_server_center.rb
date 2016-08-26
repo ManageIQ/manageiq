@@ -132,7 +132,7 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
   button_group('middleware_server_datasources', [
     select(
       :middleware_server_datasources_choice,
-      'pficon pficon-save fa-lg',
+      'fa fa-database fa-lg',
       t = N_('Datasources'),
       t,
       :items => [
