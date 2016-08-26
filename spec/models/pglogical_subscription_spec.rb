@@ -358,4 +358,21 @@ describe PglogicalSubscription do
       sub.delete
     end
   end
+
+  describe "#validate" do
+    it "validates existing subscriptions with new parameters" do
+      allow(pglogical).to receive(:enabled?).and_return(true)
+      allow(pglogical).to receive(:subscriptions).and_return([subscriptions.first])
+      allow(pglogical).to receive(:subscription_show_status).and_return(subscriptions.first)
+
+      sub = described_class.find(:first)
+      expect(sub.host).to eq "example.com"
+      expect(sub.port).to be_blank
+      expect(sub.user).to eq "root"
+
+      expect(MiqRegionRemote).to receive(:validate_connection_settings)
+        .with("another-example.net", 5423, "root", "p=as' s'", "vmdb's_test")
+      sub.validate('host' => "another-example.net", 'port' => 5423)
+    end
+  end
 end

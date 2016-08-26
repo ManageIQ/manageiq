@@ -84,6 +84,16 @@ class PglogicalSubscription < ActsAsArModel
     self.class.pglogical(refresh)
   end
 
+  def validate(new_connection_params = {})
+    find_password
+    connection_hash = attributes.merge(new_connection_params.delete_blanks)
+    MiqRegionRemote.validate_connection_settings(connection_hash['host'],
+                                                 connection_hash['port'],
+                                                 connection_hash['user'],
+                                                 connection_hash['password'],
+                                                 connection_hash['dbname'])
+  end
+
   # translate the output from the pglogical stored proc to our object columns
   def self.subscription_to_columns(sub)
     cols = sub.symbolize_keys
