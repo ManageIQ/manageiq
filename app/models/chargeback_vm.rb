@@ -90,7 +90,7 @@ class ChargebackVm < Chargeback
     @vm_owners[perf.resource_id] ||= perf.resource.evm_owner_name
 
     extra_fields = {"vm_name" => perf.resource_name, "owner_name" => @vm_owners[perf.resource_id],
-                    "provider_name" => perf.parent_ems.name, "provider_uid" => perf.parent_ems.guid}
+                    "provider_name" => perf.parent_ems.try(:name), "provider_uid" => perf.parent_ems.try(:guid) }
 
     [key, extra_fields]
   end
