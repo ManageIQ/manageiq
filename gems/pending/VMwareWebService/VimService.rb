@@ -903,20 +903,33 @@ class VimService < Handsoap::Service
     (parse_response(response, 'RetrievePropertiesExResponse')['returnval'])
   end
 
-  def retrievePropertiesCompat(propCol, specSet, max_objects = nil)
-    oc = VimArray.new('ArrayOfObjectContent')
+  def retrievePropertiesIter(propCol, specSet, max_objects = nil)
+    result = retrievePropertiesEx(propCol, specSet, max_objects)
 
-    rv = retrievePropertiesEx(propCol, specSet, max_objects)
-    if rv
-      oc.concat(rv['objects'])
-
-      while rv && rv['token']
-        rv = continueRetrievePropertiesEx(propCol, rv['token'])
-        oc.concat(rv['objects']) unless rv.nil?
+    while result
+      begin
+        result['objects'].to_a.each { |oc| yield oc }
+      rescue
+        # if for some reason the caller breaks out of the block let the
+        # server know we are going to cancel this retrievePropertiesEx call
+        cancelRetrievePropertiesEx(propCol, result['token']) if result['token']
       end
-    end
 
-    oc
+      # if there is no token returned then all results fit in a single page
+      # and we are done
+      break if result['token'].nil?
+
+      # there is more than one page of result so continue getting the rest
+      result = continueRetrievePropertiesEx(propCol, result['token'])
+    end
+  end
+
+  def retrievePropertiesCompat(propCol, specSet, max_objects = nil)
+    objects = VimArray.new('ArrayOfObjectContent')
+
+    retrievePropertiesIter(propCol, specSet, max_objects) { |oc| objects << oc }
+
+    objects
   end
 
   def retrieveServiceContent
