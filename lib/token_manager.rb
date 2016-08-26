@@ -10,12 +10,8 @@ class TokenManager
   @token_caches = {}    # Hash of Memory/Dalli Store Caches, Keyed by namespace
   @config       = {:token_ttl => 10.minutes}    # Token expiration managed in seconds
 
-  def self.class_initialize(_name = DEFAULT_NS, options = {})
-    @config.merge!(options)
-  end
-
-  def self.new(name = DEFAULT_NS, options = {})
-    class_initialize(name, options)
+  def self.new(_name = DEFAULT_NS, options = {})
+    class_initialize(options)
     @instance ||= super()
   end
 
@@ -69,6 +65,11 @@ class TokenManager
   end
 
   private
+
+  def self.class_initialize(options = {})
+    @config.merge!(options)
+  end
+  private_class_method :class_initialize
 
   def self.global_token_store(namespace)
     @token_caches[namespace] ||= begin
