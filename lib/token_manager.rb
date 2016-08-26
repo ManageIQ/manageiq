@@ -12,7 +12,7 @@ class TokenManager
 
   def self.new(_name = DEFAULT_NS, options = {})
     class_initialize(options)
-    @instance ||= super()
+    super()
   end
 
   delegate :gen_token, :reset_token, :token_set_info, :token_get_info, :token_valid?, :invalidate_token, :to => self
