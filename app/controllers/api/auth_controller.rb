@@ -12,7 +12,7 @@ module Api
     end
 
     def destroy
-      api_token_mgr.invalidate_token(@module, @auth_token)
+      api_token_mgr.invalidate_token(@auth_token)
 
       render_normal_destroy
     end

@@ -212,7 +212,7 @@ describe "Authentication API" do
 
       auth_token = response.parsed_body["auth_token"]
 
-      expect_any_instance_of(TokenManager).to receive(:invalidate_token).with("api", auth_token)
+      expect_any_instance_of(TokenManager).to receive(:invalidate_token).with(auth_token)
       run_delete auth_url, "auth_token" => auth_token
     end
   end

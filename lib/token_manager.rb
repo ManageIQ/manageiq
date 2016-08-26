@@ -19,7 +19,7 @@ class TokenManager
     super(namespace, @config)
   end
 
-  delegate :gen_token, :reset_token, :token_set_info, :token_get_info, :token_valid?, :invalidate_token, :to => self
+  delegate :gen_token, :reset_token, :token_set_info, :token_get_info, :token_valid?, :to => self
 
   def self.gen_token(namespace, token_options = {})
     ts = global_token_store(namespace)
@@ -64,11 +64,15 @@ class TokenManager
     !global_token_store(namespace).read(token).nil?
   end
 
-  def self.invalidate_token(namespace, token)
-    global_token_store(namespace).delete(token)
+  def invalidate_token(token)
+    token_store.delete(token)
   end
 
   private
+
+  def token_store
+    TokenStore.acquire(@namespace, @options[:token_ttl])
+  end
 
   def self.class_initialize(options = {})
     @config.merge!(options)
