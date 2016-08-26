@@ -86,7 +86,7 @@ class User < ApplicationRecord
   end
 
   def self.rule_attributes
-    ['name', 'email', 'userid', 'region', 'current_group_id', 'first_name', 'last_name']
+    %w(name email userid region current_group_id first_name last_name)
   end
 
   # find a user by lowercase email

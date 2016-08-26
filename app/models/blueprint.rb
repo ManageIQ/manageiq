@@ -74,7 +74,7 @@ class Blueprint < ApplicationRecord
   end
 
   def self.rule_attributes
-    ['name', 'description', 'status', 'version']
+    %w(name description status version)
   end
 
   private
