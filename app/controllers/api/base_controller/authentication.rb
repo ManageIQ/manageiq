@@ -127,7 +127,7 @@ module Api
         if !api_token_mgr.token_valid?(@module, @auth_token)
           raise AuthenticationError, "Invalid Authentication Token #{@auth_token} specified"
         else
-          @auth_user     = api_token_mgr.token_get_info(@module, @auth_token, :userid)
+          @auth_user     = api_token_mgr.token_get_info(@auth_token, :userid)
           @auth_user_obj = userid_to_userobj(@auth_user)
 
           unless request.headers['X-Auth-Skip-Token-Renewal'] == 'true'

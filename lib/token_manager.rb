@@ -19,7 +19,7 @@ class TokenManager
     super(namespace, @config)
   end
 
-  delegate :gen_token, :reset_token, :token_set_info, :token_get_info, :token_valid?, :to => self
+  delegate :gen_token, :reset_token, :token_set_info, :token_valid?, :to => self
 
   def self.gen_token(namespace, token_options = {})
     ts = global_token_store(namespace)
@@ -53,11 +53,10 @@ class TokenManager
     ts.write(token, token_data.merge!(prune_token_options(token_options)))
   end
 
-  def self.token_get_info(namespace, token, what = nil)
-    ts = global_token_store(namespace)
-    return {} unless token_valid?(namespace, token)
+  def token_get_info(token, what = nil)
+    return {} unless self.class.token_valid?(@namespace, token)
 
-    what.nil? ? ts.read(token) : ts.read(token)[what]
+    what.nil? ? token_store.read(token) : token_store.read(token)[what]
   end
 
   def self.token_valid?(namespace, token)

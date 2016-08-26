@@ -165,7 +165,7 @@ describe "Authentication API" do
       token_expires_on = response.parsed_body["expires_on"]
 
       tm = TokenManager.new("api")
-      token_info = tm.token_get_info("api", auth_token)
+      token_info = tm.token_get_info(auth_token)
       expect(token_info[:expires_on].utc.iso8601).to eq(token_expires_on)
 
       expect_any_instance_of(TokenManager).to receive(:reset_token).with("api", auth_token)

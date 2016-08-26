@@ -5,8 +5,8 @@ module Api
       auth_token = Environment.user_token_service.generate_token(@auth_user, requester_type)
       res = {
         :auth_token => auth_token,
-        :token_ttl  => api_token_mgr.token_get_info(@module, auth_token, :token_ttl),
-        :expires_on => api_token_mgr.token_get_info(@module, auth_token, :expires_on)
+        :token_ttl  => api_token_mgr.token_get_info(auth_token, :token_ttl),
+        :expires_on => api_token_mgr.token_get_info(auth_token, :expires_on)
       }
       render_resource :auth, res
     end
