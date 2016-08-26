@@ -19,7 +19,7 @@ class TokenManager
     super(namespace, @config)
   end
 
-  delegate :gen_token, :reset_token, :token_set_info, :to => self
+  delegate :gen_token, :reset_token, :to => self
 
   def self.gen_token(namespace, token_options = {})
     ts = global_token_store(namespace)
@@ -43,14 +43,6 @@ class TokenManager
     ts.write(token,
              token_data.merge!(:expires_on => Time.now.utc + token_ttl),
              :expires_in => token_ttl)
-  end
-
-  def self.token_set_info(namespace, token, token_options = {})
-    ts = global_token_store(namespace)
-    token_data = ts.read(token)
-    return {} if token_data.nil?
-
-    ts.write(token, token_data.merge!(prune_token_options(token_options)))
   end
 
   def token_get_info(token, what = nil)
