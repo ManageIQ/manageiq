@@ -19,7 +19,7 @@ class TokenManager
     super(namespace, @config)
   end
 
-  delegate :gen_token, :reset_token, :token_set_info, :token_valid?, :to => self
+  delegate :gen_token, :reset_token, :token_set_info, :to => self
 
   def self.gen_token(namespace, token_options = {})
     ts = global_token_store(namespace)
@@ -54,13 +54,13 @@ class TokenManager
   end
 
   def token_get_info(token, what = nil)
-    return {} unless self.class.token_valid?(@namespace, token)
+    return {} unless token_valid?(token)
 
     what.nil? ? token_store.read(token) : token_store.read(token)[what]
   end
 
-  def self.token_valid?(namespace, token)
-    !global_token_store(namespace).read(token).nil?
+  def token_valid?(token)
+    !token_store.read(token).nil?
   end
 
   def invalidate_token(token)
