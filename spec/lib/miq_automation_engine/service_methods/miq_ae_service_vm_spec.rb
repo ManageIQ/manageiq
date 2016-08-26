@@ -179,8 +179,8 @@ module MiqAeServiceVmSpec
         extend_days = 7
         service_vm.extend_retires_on(extend_days)
         vm.reload
-
-        expect(vm.retires_on.day).to eq(Time.zone.today.day + extend_days)
+        new_retires_on = Time.zone.today + extend_days
+        expect(vm.retires_on.day).to eq(new_retires_on.day)
       end
     end
 
