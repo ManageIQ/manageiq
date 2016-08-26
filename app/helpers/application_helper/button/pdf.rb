@@ -1,5 +1,5 @@
 class ApplicationHelper::Button::Pdf < ApplicationHelper::Button::Basic
-  def skip?
-    !PdfGenerator.available?
+  def visible?
+    PdfGenerator.available?
   end
 end

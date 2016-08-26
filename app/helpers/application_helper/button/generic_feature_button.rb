@@ -6,11 +6,11 @@ class ApplicationHelper::Button::GenericFeatureButton < ApplicationHelper::Butto
     @feature = props[:options][:feature]
   end
 
-  def skip?
+  def visible?
     begin
-      return !@record.send("supports_#{@feature}?")
+      return @record.send("supports_#{@feature}?")
     rescue NoMethodError # TODO: remove with deleting AvailabilityMixin module
-      return !@record.is_available?(@feature)
+      return @record.is_available?(@feature)
     end
   end
 end
