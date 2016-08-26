@@ -216,7 +216,8 @@ EOF
       Timecop.freeze(Time.zone.today) do
         service_service.extend_retires_on(extend_days)
         service.reload
-        expect(service.retires_on.day).to eq(Time.zone.today.day + extend_days)
+        new_retires_on = Time.zone.today + extend_days
+        expect(service.retires_on.day).to eq(new_retires_on.day)
       end
     end
 
