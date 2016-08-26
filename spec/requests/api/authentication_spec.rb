@@ -168,7 +168,7 @@ describe "Authentication API" do
       token_info = tm.token_get_info(auth_token)
       expect(token_info[:expires_on].utc.iso8601).to eq(token_expires_on)
 
-      expect_any_instance_of(TokenManager).to receive(:reset_token).with("api", auth_token)
+      expect_any_instance_of(TokenManager).to receive(:reset_token).with(auth_token)
       run_get entrypoint_url, :headers => {"auth_token" => auth_token}
 
       expect(response).to have_http_status(:ok)

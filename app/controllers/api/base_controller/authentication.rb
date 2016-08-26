@@ -131,7 +131,7 @@ module Api
           @auth_user_obj = userid_to_userobj(@auth_user)
 
           unless request.headers['X-Auth-Skip-Token-Renewal'] == 'true'
-            api_token_mgr.reset_token(@module, @auth_token)
+            api_token_mgr.reset_token(@auth_token)
           end
 
           authorize_user_group(@auth_user_obj)
