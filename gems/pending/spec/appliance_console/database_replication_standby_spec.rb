@@ -3,6 +3,7 @@ require "appliance_console/database_replication"
 require "appliance_console/database_replication_standby"
 require "linux_admin"
 require "pathname"
+require "tempfile"
 
 describe ApplianceConsole::DatabaseReplicationStandby do
   SPEC_NAME = File.basename(__FILE__).split(".rb").first.freeze
@@ -21,13 +22,13 @@ describe ApplianceConsole::DatabaseReplicationStandby do
 
   context "#ask_questions" do
     before do
-      allow(PG::Connection).to receive(:new).and_return(double(SPEC_NAME, :exec => double(SPEC_NAME, :first => "1")))
-    end
-
-    it "returns true when input is confirmed" do
       expect(subject).to receive(:ask_for_unique_cluster_node_number)
       expect(subject).to receive(:ask_for_database_credentials)
       expect(subject).to receive(:ask_for_standby_host)
+      expect(subject).to receive(:ask_for_repmgrd_configuration)
+    end
+
+    it "returns true when input is confirmed" do
       expect(subject).to receive(:repmgr_configured?).and_return(false)
       expect(subject).to_not receive(:confirm_reconfiguration)
       expect(subject).to receive(:confirm).and_return(true)
@@ -35,9 +36,6 @@ describe ApplianceConsole::DatabaseReplicationStandby do
     end
 
     it "returns true when confirm_reconfigure and input is confirmed" do
-      expect(subject).to receive(:ask_for_unique_cluster_node_number)
-      expect(subject).to receive(:ask_for_database_credentials)
-      expect(subject).to receive(:ask_for_standby_host)
       expect(subject).to receive(:repmgr_configured?).and_return(true)
       expect(subject).to receive(:confirm_reconfiguration).and_return(true)
       expect(subject).to receive(:confirm).and_return(true)
@@ -45,9 +43,6 @@ describe ApplianceConsole::DatabaseReplicationStandby do
     end
 
     it "returns false when confirm_reconfigure is canceled" do
-      expect(subject).to receive(:ask_for_unique_cluster_node_number)
-      expect(subject).to receive(:ask_for_database_credentials)
-      expect(subject).to receive(:ask_for_standby_host)
       expect(subject).to receive(:repmgr_configured?).and_return(true)
       expect(subject).to receive(:confirm_reconfiguration).and_return(false)
       expect(subject).to_not receive(:confirm)
@@ -55,9 +50,6 @@ describe ApplianceConsole::DatabaseReplicationStandby do
     end
 
     it "returns false when input is not confirmed" do
-      expect(subject).to receive(:ask_for_unique_cluster_node_number)
-      expect(subject).to receive(:ask_for_database_credentials)
-      expect(subject).to receive(:ask_for_standby_host)
       expect(subject).to receive(:repmgr_configured?).and_return(false)
       expect(subject).to_not receive(:confirm_reconfiguration)
       expect(subject).to receive(:confirm).and_return(false)
@@ -73,6 +65,7 @@ describe ApplianceConsole::DatabaseReplicationStandby do
       expect(subject).to receive(:clone_standby_server).and_return(true)
       expect(subject).to receive(:start_postgres).and_return(true)
       expect(subject).to receive(:register_standby_server).and_return(true)
+      expect(subject).to receive(:configure_repmgrd).and_return(true)
       expect(subject.activate).to be true
     end
 
@@ -83,6 +76,7 @@ describe ApplianceConsole::DatabaseReplicationStandby do
       expect(subject).to_not receive(:clone_standby_server)
       expect(subject).to_not receive(:start_postgres)
       expect(subject).to_not receive(:register_standby_server)
+      expect(subject).to_not receive(:configure_repmgrd)
       expect(subject.activate).to be false
     end
 
@@ -93,6 +87,7 @@ describe ApplianceConsole::DatabaseReplicationStandby do
       expect(subject).to_not receive(:clone_standby_server)
       expect(subject).to_not receive(:start_postgres)
       expect(subject).to_not receive(:register_standby_server)
+      expect(subject).to_not receive(:configure_repmgrd)
       expect(subject.activate).to be false
     end
 
@@ -103,6 +98,7 @@ describe ApplianceConsole::DatabaseReplicationStandby do
       expect(subject).to_not receive(:clone_standby_server)
       expect(subject).to_not receive(:start_postgres)
       expect(subject).to_not receive(:register_standby_server)
+      expect(subject).to_not receive(:configure_repmgrd)
       expect(subject.activate).to be false
     end
 
@@ -113,6 +109,7 @@ describe ApplianceConsole::DatabaseReplicationStandby do
       expect(subject).to receive(:clone_standby_server).and_return(false)
       expect(subject).to_not receive(:start_postgres)
       expect(subject).to_not receive(:register_standby_server)
+      expect(subject).to_not receive(:configure_repmgrd)
       expect(subject.activate).to be false
     end
 
@@ -123,6 +120,7 @@ describe ApplianceConsole::DatabaseReplicationStandby do
       expect(subject).to receive(:clone_standby_server).and_return(true)
       expect(subject).to receive(:start_postgres).and_return(false)
       expect(subject).to_not receive(:register_standby_server)
+      expect(subject).to_not receive(:configure_repmgrd)
       expect(subject.activate).to be false
     end
 
@@ -133,6 +131,7 @@ describe ApplianceConsole::DatabaseReplicationStandby do
       expect(subject).to receive(:clone_standby_server).and_return(true)
       expect(subject).to receive(:start_postgres).and_return(true)
       expect(subject).to receive(:register_standby_server).and_return(false)
+      expect(subject).to_not receive(:configure_repmgrd)
       expect(subject.activate).to be false
     end
   end
@@ -180,6 +179,14 @@ describe ApplianceConsole::DatabaseReplicationStandby do
     end
   end
 
+  context "#ask_for_repmgrd_configuration" do
+    it "sets the run_repmgrd_configuration attribute" do
+      expect(subject).to receive(:ask_yn?).and_return true
+      subject.ask_for_repmgrd_configuration
+      expect(subject.run_repmgrd_configuration).to be true
+    end
+  end
+
   context "#data_dir_empty?" do
     it "should log a message and return false when not empty" do
       Dir.mktmpdir do |dir|
@@ -206,6 +213,87 @@ describe ApplianceConsole::DatabaseReplicationStandby do
       expect(service).to receive(:enable).and_return(service)
       expect(service).to receive(:start).and_return(service)
       expect(subject.start_postgres).to be_truthy
+    end
+  end
+
+  context "#configure_repmgrd" do
+    it "returns true if not setup to do the configuration" do
+      subject.run_repmgrd_configuration = false
+      expect(subject.configure_repmgrd).to be true
+    end
+  end
+
+  context "#write_repmgrd_config" do
+    let(:config_path) { Tempfile.new("repmgr_config").path }
+
+    before do
+      stub_const("ApplianceConsole::DatabaseReplication::REPMGR_CONFIG", config_path)
+    end
+
+    after do
+      FileUtils.rm_f(config_path)
+    end
+
+    it "appends the correct data to the config file" do
+      File.write(config_path, "some other stuff here\n")
+
+      subject.write_repmgrd_config
+
+      expect(File.read(config_path)).to eq(<<-EOS.strip_heredoc)
+        some other stuff here
+        failover=automatic
+        promote_command='repmgr standby promote'
+        follow_command='repmgr standby follow'
+        logfile=/var/log/repmgr/repmgrd.log
+      EOS
+    end
+  end
+
+  context "#write_pgpass_file" do
+    let(:pgpass_path) { Tempfile.new("pgpass").path }
+
+    before do
+      stub_const("#{described_class}::PGPASS_FILE", pgpass_path)
+    end
+
+    after do
+      FileUtils.rm_f(pgpass_path)
+    end
+
+    it "writes the .pgpass file correctly" do
+      subject.database_name     = "dbname"
+      subject.database_user     = "someuser"
+      subject.database_password = "secret"
+
+      expect(FileUtils).to receive(:chown).with("postgres", "postgres", pgpass_path)
+      subject.write_pgpass_file
+
+      expect(File.read(pgpass_path)).to eq(<<-EOS.gsub(/^\s+/, ""))
+        *:*:dbname:someuser:secret
+        *:*:replication:someuser:secret
+      EOS
+
+      pgpass_stat = File.stat(pgpass_path)
+      expect(pgpass_stat.mode.to_s(8)).to eq("100600")
+    end
+  end
+
+  context "#start_repmgrd" do
+    it "starts and enables repmgrd" do
+      service = double(SPEC_NAME)
+      expect(LinuxAdmin::Service).to receive(:new).and_return(service)
+      expect(service).to receive(:enable).and_return(service)
+      expect(service).to receive(:start).and_return(service)
+      expect(subject.start_repmgrd).to be true
+    end
+
+    it "returns false if the service fails to start" do
+      service = double(SPEC_NAME)
+      result = double(SPEC_NAME, :output => "", :error => "")
+      expect(LinuxAdmin::Service).to receive(:new).and_return(service)
+      expect(service).to receive(:enable).and_return(service)
+      expect(service).to receive(:start).and_raise(AwesomeSpawn::CommandResultError.new("", result))
+      expect(subject.start_repmgrd).to be false
     end
   end
 end

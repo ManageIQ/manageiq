@@ -47,22 +47,6 @@ describe ApplianceConsole::DatabaseReplication do
     end
   end
 
-  context "#confirm" do
-    before do
-      subject.standby_host = "defaultstandby"
-    end
-
-    it "should ask for standby host when requested" do
-      expect(subject).to receive(:say).with(/standby\shost.*defaultstandby/i)
-      subject.confirm(:including_standby_host)
-    end
-
-    it "should not ask for standby host if not requested" do
-      expect(subject).to_not receive(:say).with(/standby\shost.*defaultstandby/i)
-      subject.confirm
-    end
-  end
-
   context "#confirm_reconfiguration" do
     it "should log a warning and ask to continue anyway" do
       expect(subject).to receive(:say).with(/^warning/i)
