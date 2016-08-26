@@ -198,12 +198,12 @@ module ManageIQ::Providers
     end
 
     def shutdown_middleware_server(ems_ref, _params)
-      timeout = 10 # we default to 10s until we get the UI params. params.fetch ':timeout'
+      timeout = params['timeout'] || 10
       run_generic_operation(:Shutdown, ems_ref, :restart => false, :timeout => timeout)
     end
 
     def suspend_middleware_server(ems_ref, params)
-      timeout = params[':timeout'] || 0
+      timeout = params['timeout'] || 0
       run_generic_operation(:Suspend, ems_ref, :timeout => timeout)
     end
 
@@ -231,10 +231,13 @@ module ManageIQ::Providers
 
     def add_middleware_deployment(ems_ref, hash)
       with_provider_connection do |connection|
+        file_hash = hash[:file]
+        rt_name = file_hash["runtime_name"]
+        rt_name = rt_name.nil? || rt_name.empty? || rt_name == 'undefined' ? nil : rt_name
         deployment_data = {
-          :enabled               => hash[:file]["enabled"],
-          :destination_file_name => hash[:file]["runtime_name"] || hash[:file]["file"].original_filename,
-          :binary_content        => hash[:file]["file"].read,
+          :enabled               => file_hash["enabled"],
+          :destination_file_name => rt_name || file_hash["file"].original_filename,
+          :binary_content        => file_hash["file"].read,
           :resource_path         => ems_ref.to_s
         }
 
