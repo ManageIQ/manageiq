@@ -30,6 +30,17 @@ class MiqServer < ApplicationRecord
 
   virtual_column :zone_description, :type => :string
 
+  after_create :debug_origin
+
+  def debug_origin
+    cl = caller_locations.detect { |c| c.path.include?("_spec.rb") } ||
+         caller_locations.detect { |c| c.path.include?("shared") } ||
+         caller_locations.detect { |c| c.path.include?("/spec_helper.rb") }
+
+    puts "MS[#{id % 100000}]@#{cl.path.split("/").last}:#{cl.lineno}"
+    #byebug
+  end
+
   RUN_AT_STARTUP  = %w( MiqRegion MiqWorker MiqQueue MiqReportResult )
 
   STATUS_STARTING       = 'starting'.freeze
