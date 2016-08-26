@@ -14,9 +14,9 @@ class ArbitrationRule < ApplicationRecord
   end
 
   def self.field_values
-    fields = {}
+    fields = []
     FIELD_OBJECTS.each do |object|
-      fields[object] = object.constantize.rule_attributes
+      object.constantize.rule_attributes.each { |attribute| fields.push("#{object}-#{attribute}") }
     end
     fields
   end
