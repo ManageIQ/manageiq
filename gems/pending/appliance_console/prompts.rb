@@ -85,6 +85,19 @@ module ApplianceConsole
       ask_for_ip(prompt, default, validation, "a valid Hostname or IP Address.").gsub(/^'?NONE'?$/i, "")
     end
 
+    def ask_for_schedule_frequency(prompt, default = nil)
+      validation = ->(h) { %w(hourly daily weekly monthly).include?(h) }
+      just_ask(prompt, default, validation, "hourly, daily, weekly or monthly")
+    end
+
+    def ask_for_hour_number(prompt)
+      ask_for_integer(prompt, (0..23))
+    end
+
+    def ask_for_day_number(prompt)
+      ask_for_integer(prompt, (0..6))
+    end
+
     def ask_for_many(prompt, collective = nil, default = nil, max_length = 255, max_count = 6)
       collective ||= "#{prompt}s"
       validate = ->(p) { (p.length < max_length) && (p.split(/[\s,;]+/).length <= max_count) }

@@ -451,6 +451,84 @@ describe ApplianceConsole::Prompts do
     end
   end
 
+  describe "#ask_for_schedule_frequency" do
+    it "supports hourly" do
+      say "hourly"
+      expect(subject.ask_for_schedule_frequency("prompt")).to eq("hourly")
+    end
+
+    it "supports daily" do
+      say "daily"
+      expect(subject.ask_for_schedule_frequency("prompt")).to eq("daily")
+    end
+
+    it "supports weekly" do
+      say "weekly"
+      expect(subject.ask_for_schedule_frequency("prompt")).to eq("weekly")
+    end
+
+    it "supports monthly" do
+      say "monthly"
+      expect(subject.ask_for_schedule_frequency("prompt")).to eq("monthly")
+    end
+
+    it "should ensure valid response" do
+      error = "Please provide hourly, daily, weekly or monthly"
+      say %w(centennially, bob, monthly)
+      expect(subject.ask_for_schedule_frequency("prompt")).to eq("monthly")
+      expect_heard ["Enter the prompt: ", error, prompt + error, prompt]
+    end
+
+    it "should ensure valid response with non-default" do
+      error = "Please provide hourly, daily, weekly or monthly"
+      say %w(centennially, bob, monthly)
+      expect(subject.ask_for_schedule_frequency("prompt", "weekly")).to eq("monthly")
+      expect_heard ["Enter the prompt: |weekly| ", error, prompt + error, prompt]
+    end
+  end
+
+  describe "#ask_for_hour_number" do
+    it "supports 0 as midnight" do
+      say "0"
+      expect(subject.ask_for_hour_number("prompt")).to eq(0)
+    end
+
+    it "should only accept an integer" do
+      error = "Please provide an integer"
+      say %w(no words 23)
+      expect(subject.ask_for_hour_number("prompt")).to eq(23)
+      expect_heard ["Enter the prompt: ", error, prompt + error, prompt]
+    end
+
+    it "should ensure valid response" do
+      error = "Your answer isn't within the expected range (included in 0..23)."
+      say %w(99 24 22)
+      expect(subject.ask_for_hour_number("prompt")).to eq(22)
+      expect_heard ["Enter the prompt: ", error, prompt + error, prompt]
+    end
+  end
+
+  describe "#ask_for_day_number" do
+    it "supports 0 as Sunday" do
+      say "0"
+      expect(subject.ask_for_day_number("prompt")).to eq(0)
+    end
+
+    it "should only accept an integer" do
+      error = "Please provide an integer"
+      say %w(no words 2)
+      expect(subject.ask_for_day_number("prompt")).to eq(2)
+      expect_heard ["Enter the prompt: ", error, prompt + error, prompt]
+    end
+
+    it "should ensure valid response" do
+      error = "Your answer isn't within the expected range (included in 0..6)."
+      say %w(99 9 2)
+      expect(subject.ask_for_day_number("prompt")).to eq(2)
+      expect_heard ["Enter the prompt: ", error, prompt + error, prompt]
+    end
+  end
+
   context "#just_ask (private method)" do
     it "should work without a default" do
       say "x"
