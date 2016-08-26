@@ -7,16 +7,9 @@ class TokenManager
   RESTRICTED_OPTIONS = [:expires_on]
   DEFAULT_NS         = "default"
 
-  @config       = {:token_ttl => 10.minutes}    # Token expiration managed in seconds
-
-  def initialize(namespace, options)
+  def initialize(namespace = DEFAULT_NS, options = {})
     @namespace = namespace
-    @options = options
-  end
-
-  def self.new(namespace = DEFAULT_NS, options = {})
-    class_initialize(options)
-    super(namespace, @config)
+    @options = {:token_ttl => 10.minutes}.merge(options)
   end
 
   def gen_token(token_options = {})
@@ -60,11 +53,6 @@ class TokenManager
   def token_store
     TokenStore.acquire(@namespace, @options[:token_ttl])
   end
-
-  def self.class_initialize(options = {})
-    @config.merge!(options)
-  end
-  private_class_method :class_initialize
 
   def prune_token_options(token_options = {})
     token_options.except(*RESTRICTED_OPTIONS)
