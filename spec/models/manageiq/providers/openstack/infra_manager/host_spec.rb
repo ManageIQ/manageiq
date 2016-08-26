@@ -458,4 +458,62 @@ openstack-keystone:                     active
       end
     end
   end
+
+  describe "ironic tasks" do
+    let(:ext_management_system) do
+      _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
+      FactoryGirl.create(:ems_openstack_infra, :zone => zone)
+    end
+
+    let(:host) do
+      FactoryGirl.create(:host_openstack_infra).tap do |host|
+        host.ext_management_system = ext_management_system
+        host.save
+      end
+    end
+
+    it "check X_queue tasks are queued" do
+      expect(MiqQueue.where(:method_name => "introspect").count).to eq(0)
+      host.introspect_queue
+      expect(MiqQueue.where(:method_name => "introspect").count).to eq(1)
+
+      expect(MiqQueue.where(:method_name => "provide").count).to eq(0)
+      host.provide_queue
+      expect(MiqQueue.where(:method_name => "provide").count).to eq(1)
+
+      expect(MiqQueue.where(:method_name => "manageable").count).to eq(0)
+      host.manageable_queue
+      expect(MiqQueue.where(:method_name => "manageable").count).to eq(1)
+    end
+
+    it "check task executes and queues refresh if success" do
+      allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager).to receive(:openstack_handle).and_return([])
+      allow_any_instance_of(Array).to receive(:detect_workflow_service).and_return([])
+      allow_any_instance_of(Array).to receive(:detect_baremetal_service).and_return([])
+
+      allow_any_instance_of(Array).to receive(:create_execution).and_return([])
+      allow_any_instance_of(Array).to receive(:set_node_provision_state).and_return([])
+      body = {"state" => "SUCCESS", "id" => '1'}
+      allow_any_instance_of(Array).to receive(:body).and_return(body)
+      expect(MiqQueue.where(:method_name => "refresh").count).to eq(0)
+
+      task = FactoryGirl.create(:miq_task)
+      host.introspect(task.id)
+      expect(MiqQueue.where(:method_name => "refresh").count).to eq(1)
+
+      MiqQueue.all.map(&:delete)
+      expect(MiqQueue.where(:method_name => "refresh").count).to eq(0)
+      task = FactoryGirl.create(:miq_task)
+      host.provide(task.id)
+      expect(MiqQueue.where(:method_name => "refresh").count).to eq(1)
+
+      allow_any_instance_of(Array).to receive(:status).and_return(202)
+      MiqQueue.all.map(&:delete)
+      expect(MiqQueue.where(:method_name => "refresh").count).to eq(0)
+      task = FactoryGirl.create(:miq_task)
+      host.manageable(task.id)
+      expect(task.status).to eq("Ok")
+      expect(MiqQueue.where(:method_name => "refresh").count).to eq(1)
+    end
+  end
 end

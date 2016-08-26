@@ -20,6 +20,24 @@ class ApplicationHelper::Toolbar::HostCenter < ApplicationHelper::Toolbar::Basic
           N_('Perform SmartState Analysis'),
           :confirm => N_("Perform SmartState Analysis on this item?"),
           :klass => ApplicationHelper::Button::HostScan),
+        button(
+          :host_manageable,
+          'pficon pficon-edit fa-lg',
+          N_('Set this item to manageable state'),
+          N_('Set Node to Manageable'),
+          :confirm => N_("Set this item to manageable?")),
+        button(
+          :host_introspect,
+          'pficon pficon-edit fa-lg',
+          N_('Introspect this item'),
+          N_('Introspect Node'),
+          :confirm => N_("Introspect this item?")),
+        button(
+          :host_provide,
+          'pficon pficon-edit fa-lg',
+          N_('Provide this item'),
+          N_('Provide Node'),
+          :confirm => N_("Provide this item?")),
         separator,
         button(
           :host_edit,

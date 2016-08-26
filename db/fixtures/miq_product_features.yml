@@ -1022,6 +1022,18 @@
       :description: Register new Hosts / Nodes
       :feature_type: admin
       :identifier: host_register_nodes
+    - :name: Set Hosts / Nodes to Manageable State
+      :description: Set Hosts / Nodes to Manageable State
+      :feature_type: admin
+      :identifier: host_manageable
+    - :name: Introspect Hosts / Nodes
+      :description: Introspect Hosts / Nodes
+      :feature_type: admin
+      :identifier: host_introspect
+    - :name: Provide Hosts / Nodes
+      :description: Provide Hosts / Nodes
+      :feature_type: admin
+      :identifier: host_provide
 
 
 # Resource Pools
