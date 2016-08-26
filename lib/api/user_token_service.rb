@@ -26,8 +26,7 @@ module Api
 
       $api_log.info("Generating Authentication Token for userid: #{userid} requester_type: #{requester_type}")
 
-      token_mgr.gen_token(base_config[:module],
-                          :userid           => userid,
+      token_mgr.gen_token(:userid           => userid,
                           :token_ttl_config => REQUESTER_TTL_CONFIG[requester_type])
     end
 

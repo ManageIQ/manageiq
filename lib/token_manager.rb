@@ -19,18 +19,15 @@ class TokenManager
     super(namespace, @config)
   end
 
-  delegate :gen_token, :to => self
-
-  def self.gen_token(namespace, token_options = {})
-    ts = global_token_store(namespace)
+  def gen_token(token_options = {})
     token = SecureRandom.hex(16)
     token_ttl_config = token_options.delete(:token_ttl_config)
-    token_ttl = (token_ttl_config && @config[token_ttl_config]) ? @config[token_ttl_config] : @config[:token_ttl]
+    token_ttl = (token_ttl_config && @options[token_ttl_config]) ? @options[token_ttl_config] : @options[:token_ttl]
     token_data = {:token_ttl => token_ttl, :expires_on => Time.now.utc + token_ttl}
 
-    ts.write(token,
-             token_data.merge!(prune_token_options(token_options)),
-             :expires_in => @config[:token_ttl])
+    token_store.write(token,
+                      token_data.merge!(prune_token_options(token_options)),
+                      :expires_in => @options[:token_ttl])
     token
   end
 
@@ -69,13 +66,7 @@ class TokenManager
   end
   private_class_method :class_initialize
 
-  def self.global_token_store(namespace)
-    TokenStore.acquire(namespace, @config[:token_ttl])
-  end
-  private_class_method :global_token_store
-
-  def self.prune_token_options(token_options = {})
+  def prune_token_options(token_options = {})
     token_options.except(*RESTRICTED_OPTIONS)
   end
-  private_class_method :prune_token_options
 end
