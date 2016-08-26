@@ -458,4 +458,35 @@ openstack-keystone:                     active
       end
     end
   end
+
+  describe "ironic" do
+    let(:ext_management_system) do
+      _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
+      FactoryGirl.create(:ems_openstack_infra, :zone => zone)
+    end
+
+    let(:host) do
+      FactoryGirl.create(:host_openstack_infra).tap do |host|
+        host.ext_management_system = ext_management_system
+        host.save
+      end
+    end
+
+    it "check introspect_queue queues introspect task" do
+      expect(MiqQueue.where(method_name: "introspect").count).to eq(0)
+      host.introspect_queue
+      expect(MiqQueue.where(method_name: "introspect").count).to eq(1)
+    end
+
+    it "check introspect executes workflows and queues refresh if success" do
+      allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager).to receive(:openstack_handle).and_return([])
+      allow_any_instance_of(Array).to receive(:detect_workflow_service).and_return([])
+      allow_any_instance_of(Array).to receive(:create_execution).and_return([])
+      body = {"state" => "SUCCESS", "id" => '1'}
+      allow_any_instance_of(Array).to receive(:body).and_return(body)
+      task = FactoryGirl.create(:miq_task)
+      host.introspect(task.id)
+      expect(MiqQueue.where(method_name: "refresh").count).to eq(1)
+    end
+  end
 end

@@ -40,6 +40,14 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           :url       => "/register_nodes",
           :url_parms => "?discover_type=hosts"),
         button(
+          :host_introspect,
+          'pficon pficon-edit fa-lg',
+          N_('Introspect selected items'),
+          N_('Introspect'),
+          :url_parms => "main_div",
+          :confirm   => N_("Introspect selected items?"),
+          :onwhen    => "1+"),
+        button(
           :host_discover,
           'fa fa-search fa-lg',
           t = N_('Discover items'),

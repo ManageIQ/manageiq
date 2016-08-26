@@ -501,6 +501,7 @@ class HostController < ApplicationController
       custom_buttons if params[:pressed] == "custom_button"
       prov_redirect if params[:pressed] == "host_miq_request_new"
       toggleservicescheduling if params[:pressed] == "host_cloud_service_scheduling_toggle"
+      introspecthosts if params[:pressed] == "host_introspect"
 
       # Handle Host power buttons
       if ["host_shutdown", "host_reboot", "host_standby", "host_enter_maint_mode", "host_exit_maint_mode",

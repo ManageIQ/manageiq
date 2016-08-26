@@ -980,6 +980,10 @@
       :description: Register new Hosts / Nodes
       :feature_type: admin
       :identifier: host_register_nodes
+    - :name: Introspect Hosts / Nodes
+      :description: Introspect Hosts / Nodes
+      :feature_type: admin
+      :identifier: host_introspect
 
 
 # Resource Pools

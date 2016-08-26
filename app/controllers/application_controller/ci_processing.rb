@@ -2158,6 +2158,15 @@ module ApplicationController::CiProcessing
           end
         end
       end
+    when "introspect"
+      each_host(hosts, task_name) do |host|
+        if host.hardware.provision_state == "manageable"
+          host.send(:introspect_queue)
+          add_flash(_("\"%{record}\": %{task} successfully initiated") % {:record => host.name, :task => (display_name || task)})
+        else
+          add_flash(_("\"%{task}\": not available for %{hostname}. %{hostname}'s provision state needs to be in \"manageable\"") % {:hostname => host.name, :task => (display_name || task)}, :error)
+        end
+      end
     else
       each_host(hosts, task_name) do |host|
         if host.respond_to?(task) && host.is_available?(task)
@@ -2242,6 +2251,12 @@ module ApplicationController::CiProcessing
   def analyze_check_compliance_hosts
     assert_privileges("host_analyze_check_compliance")
     host_button_operation('scan_and_check_compliance_queue', _('Analyze and Compliance Check'))
+  end
+
+  # Introspect host hardware
+  def introspecthosts
+    assert_privileges("host_introspect")
+    host_button_operation('introspect', _('Introspect'))
   end
 
   # Handle the Host power buttons

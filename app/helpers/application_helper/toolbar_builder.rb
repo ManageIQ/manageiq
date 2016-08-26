@@ -649,6 +649,9 @@ class ApplicationHelper::ToolbarBuilder
       return true unless get_vmdb_config[:product][:smis]
     when "host_register_nodes"
       return true if @record.class != ManageIQ::Providers::Openstack::InfraManager
+    when "host_introspect"
+      return true if !(@record.class == ManageIQ::Providers::Openstack::InfraManager ||
+         @record.class == ManageIQ::Providers::Openstack::InfraManager::Host)
     end
 
     # Scale is only supported by OpenStack Infrastructure Provider

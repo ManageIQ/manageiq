@@ -191,4 +191,73 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
     self.availability_zone = nil if e.nil? || ext_management_system == e
     super
   end
+
+  def introspect_queue(userid = "system", _options = {})
+    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
+
+    task = MiqTask.create(:name => "Hardware Introspection for '#{name}' ", :userid => userid)
+
+    _log.info("Requesting Hardware Introspection of #{log_target}")
+    begin
+      MiqEvent.raise_evm_job_event(self, :type => "introspect", :prefix => "request")
+    rescue => err
+      _log.warn("Error raising request introspection for #{log_target}: #{err.message}")
+      return
+    end
+
+    _log.info("Queuing introspection of #{log_target}")
+    timeout = (VMDB::Config.new("vmdb").config.fetch_path(:host_introspection, :queue_timeout) || 20.minutes).to_i_with_method
+    cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
+    MiqQueue.put(
+        :class_name   => self.class.name,
+        :instance_id  => id,
+        :args         => [task.id],
+        :method_name  => "introspect",
+        :miq_callback => cb,
+        :msg_timeout  => timeout,
+        :zone         => my_zone
+    )
+  end
+
+  def introspect(taskid = nil)
+    unless taskid.nil?
+      task = MiqTask.find_by_id(taskid)
+      task.state_active  if task
+    end
+
+    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
+
+    _log.info("Introspecting #{log_target}...")
+
+    task.update_status("Active", "Ok", "Introspecting") if task
+
+    workflow_state = ""
+    _dummy, t = Benchmark.realtime_block(:total_time) do
+      connection = ext_management_system.openstack_handle.detect_workflow_service
+      workflow = "tripleo.baremetal.v1.introspect"
+      input = { :node_uuids => [name] }
+      response = connection.create_execution(workflow, input)
+      workflow_state = response.body["state"]
+      workflow_execution_id = response.body["id"]
+
+      while workflow_state == "RUNNING"
+        sleep 5
+        response = connection.get_execution(workflow_execution_id)
+        workflow_state = response.body["state"]
+      end
+
+      if workflow_state == "SUCCESS"
+        EmsRefresh.queue_refresh(ext_management_system)
+      end
+
+      begin
+        MiqEvent.raise_evm_job_event(self, :type => "introspect", :suffix => "complete")
+      rescue => err
+        _log.warn("Error raising complete introspect event for #{log_target}: #{err.message}")
+      end
+    end
+
+    task.update_status("Finished", "Ok", "Introspecting Complete with #{workflow_state}") if task
+    _log.info("Introspecting #{log_target}...Complete - Timings: #{t.inspect}")
+  end
 end

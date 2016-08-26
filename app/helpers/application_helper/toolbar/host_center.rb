@@ -18,6 +18,12 @@ class ApplicationHelper::Toolbar::HostCenter < ApplicationHelper::Toolbar::Basic
           N_('Perform SmartState Analysis on this item'),
           N_('Perform SmartState Analysis'),
           :confirm => N_("Perform SmartState Analysis on this item?")),
+        button(
+            :host_introspect,
+            'pficon pficon-edit fa-lg',
+            t = N_('Introspect this item'),
+            t = N_('Introspect'),
+            :confirm => N_("Introspect this item?")),
         separator,
         button(
           :host_edit,
