@@ -73,8 +73,8 @@ class ChargebackContainerProject < Chargeback
     extra_fields = {
       "project_name"  => project.name,
       "project_uid"   => project.ems_ref,
-      "provider_name" => perf.parent_ems.name,
-      "provider_uid"  => perf.parent_ems.guid,
+      "provider_name" => perf.parent_ems.try(:name),
+      "provider_uid"  => perf.parent_ems.try(:guid),
       "archived"      => project.archived? ? _("Yes") : _("No")
     }
 
