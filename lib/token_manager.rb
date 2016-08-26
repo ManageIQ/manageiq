@@ -11,7 +11,7 @@ class TokenManager
   @config       = {:token_ttl => 10.minutes}    # Token expiration managed in seconds
 
   def self.class_initialize(_name = DEFAULT_NS, options = {})
-    configure(options)
+    @config.merge!(options)
   end
 
   def self.new(name = DEFAULT_NS, options = {})
@@ -20,10 +20,6 @@ class TokenManager
   end
 
   delegate :gen_token, :reset_token, :token_set_info, :token_get_info, :token_valid?, :invalidate_token, :to => self
-
-  def self.configure(options = {})
-    @config.merge!(options)
-  end
 
   def self.gen_token(namespace, token_options = {})
     ts = global_token_store(namespace)
