@@ -23,7 +23,7 @@ class TokenManager
     @instance ||= super
   end
 
-  delegate :configure, :gen_token, :reset_token, :token_set_info, :token_get_info, :token_valid?, :invalidate_token, :to => self
+  delegate :gen_token, :reset_token, :token_set_info, :token_get_info, :token_valid?, :invalidate_token, :to => self
 
   def self.configure(_namespace, options = {})
     @config.merge!(options)
