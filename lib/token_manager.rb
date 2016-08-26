@@ -7,7 +7,6 @@ class TokenManager
   RESTRICTED_OPTIONS = [:expires_on]
   DEFAULT_NS         = "default"
 
-  @token_caches = {}    # Hash of Memory/Dalli Store Caches, Keyed by namespace
   @config       = {:token_ttl => 10.minutes}    # Token expiration managed in seconds
 
   def initialize(namespace)
@@ -76,32 +75,9 @@ class TokenManager
   private_class_method :class_initialize
 
   def self.global_token_store(namespace)
-    @token_caches[namespace] ||= begin
-      if test_environment?
-        require 'active_support/cache/memory_store'
-        ActiveSupport::Cache::MemoryStore.new(cache_store_options(namespace))
-      else
-        require 'active_support/cache/dalli_store'
-        memcache_server = VMDB::Config.new("vmdb").config[:session][:memcache_server] || "127.0.0.1:11221"
-        ActiveSupport::Cache::DalliStore.new(memcache_server, cache_store_options(namespace))
-      end
-    end
+    TokenStore.acquire(namespace, @config[:token_ttl])
   end
   private_class_method :global_token_store
-
-  def self.cache_store_options(namespace)
-    {
-      :namespace  => "MIQ:TOKENS:#{namespace.upcase}",
-      :threadsafe => true,
-      :expires_in => @config[:token_ttl]
-    }
-  end
-  private_class_method :cache_store_options
-
-  def self.test_environment?
-    !Rails.env.development? && !Rails.env.production?
-  end
-  private_class_method :test_environment?
 
   def self.prune_token_options(token_options = {})
     token_options.except(*RESTRICTED_OPTIONS)
