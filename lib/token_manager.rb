@@ -14,8 +14,8 @@ class TokenManager
     self.class.class_initialize(*args)
   end
 
-  def self.class_initialize(name = DEFAULT_NS, options = {})
-    configure(name, options)
+  def self.class_initialize(_name = DEFAULT_NS, options = {})
+    configure(options)
   end
 
   def self.new(name = DEFAULT_NS, options = {})
@@ -25,7 +25,7 @@ class TokenManager
 
   delegate :gen_token, :reset_token, :token_set_info, :token_get_info, :token_valid?, :invalidate_token, :to => self
 
-  def self.configure(_namespace, options = {})
+  def self.configure(options = {})
     @config.merge!(options)
   end
 
