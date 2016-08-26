@@ -2634,8 +2634,8 @@ describe ApplicationHelper do
       user = FactoryGirl.create(:user_with_group)
       login_as user
       @domain = FactoryGirl.create(:miq_ae_domain)
-      namespace = FactoryGirl.create(:miq_ae_namespace, :name => "test1", :parent => @domain)
-      @record = FactoryGirl.create(:miq_ae_class, :name => "test_class", :namespace_id => namespace.id)
+      @namespace = FactoryGirl.create(:miq_ae_namespace, :name => "test1", :parent => @domain)
+      @record = FactoryGirl.create(:miq_ae_class, :name => "test_class", :namespace_id => @namespace.id)
     end
 
     it "Enables buttons for Unlocked domain" do
@@ -2698,6 +2698,11 @@ describe ApplicationHelper do
       )
 
       expect(build_toolbar_hide_button('miq_ae_method_copy')).to be_falsey
+    end
+
+    it "Enables miq_ae_namespace_edit for Unlocked domain" do
+      @record = @namespace
+      expect(build_toolbar_hide_button('miq_ae_namespace_edit')).to be_falsey
     end
 
     def role_allows?(_)
