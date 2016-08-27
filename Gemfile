@@ -19,6 +19,7 @@ gem "color",                          "~>1.8"
 gem "dalli",                          "~>2.7.4",       :require => false
 gem "draper",                         "~>3.0.0.pre1"
 gem "default_value_for",              "~>3.0.2"
+gem "deep_merge",                     "~>1.1.1"
 gem "elif",                           "=0.1.0",        :require => false
 gem "fast_gettext",                   "~>1.2.0"
 gem "fog-google",                     "~>0.3.0",       :require => false
@@ -67,7 +68,6 @@ gem "websocket-driver",               "~>0.6.3"
 
 # Modified gems (forked on Github)
 gem "config",                         "~>1.1.0",                      :git => "git://github.com/ManageIQ/config.git", :branch => "overwrite_arrays"
-gem "deep_merge",                     "~>1.0.1",                      :git => "git://github.com/ManageIQ/deep_merge.git", :branch => "overwrite_arrays"
 gem "foreman_api_client",             ">=0.1.0",   :require => false, :git => "git://github.com/ManageIQ/foreman_api_client.git", :branch => "master"
 gem "ruport",                         "=1.7.0",                       :git => "git://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-3"
 gem "ziya",                           "=2.3.0",    :require => false, :git => "git://github.com/ManageIQ/ziya.git", :tag => "v2.3.0-3"
