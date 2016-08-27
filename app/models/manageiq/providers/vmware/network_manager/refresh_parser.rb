@@ -1,6 +1,7 @@
 module ManageIQ::Providers
   class Vmware::NetworkManager::RefreshParser
     include ManageIQ::Providers::Vmware::RefreshHelperMethods
+    VappNetwork = Struct.new(:id, :name, :type, :is_shared, :gateway, :dns1, :dns2)
 
     def initialize(ems, options = nil)
       @ems        = ems
@@ -128,8 +129,6 @@ module ManageIQ::Providers
     # Utility
 
     def get_vapp_networks
-      Struct.new("VappNetwork", :id, :name, :type, :is_shared, :gateway, :dns1, :dns2)
-
       vdc_network_names = Set.new @inv[:networks].map(&:name)
       vapp_networks = []
       @org.vdcs.each do |vdc|
@@ -139,7 +138,7 @@ module ManageIQ::Providers
 
             next if vdc_network_names.include? name
 
-            vapp_networks << Struct::VappNetwork.new(
+            vapp_networks << VappNetwork.new(
               vapp_network_id(name, vapp),
               vapp_network_name(name, vapp),
               "application/vnd.vmware.vcloud.vAppNetwork+xml"
