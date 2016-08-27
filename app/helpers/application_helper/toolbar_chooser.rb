@@ -78,6 +78,8 @@ class ApplicationHelper::ToolbarChooser
         return "x_vm_cloud_center_tb"
       elsif @record.kind_of?(ManageIQ::Providers::CloudManager::Template)
         return "x_template_cloud_center_tb"
+      elsif @button_group.eql? "snapshot"
+        return "x_vm_center_tb"
       else
         return "x_#{@button_group}_center_tb"
       end

@@ -772,9 +772,8 @@ describe ApplicationHelper do
     subject { helper.javascript_pf_toolbar_reload(test_tab, 'foobar') }
 
     it "returns javascript to reload toolbar" do
-      expect(helper).to receive(:buttons_to_html).and_return('foobar')
-      is_expected.to include("$('##{test_tab}').html('foobar');")
-      is_expected.to include("miqInitToolbars();")
+      expect(helper).to receive(:toolbar_from_hash).and_return('foobar')
+      is_expected.to include("sendDataWithRx({redrawToolbar: \"foobar\"});")
     end
   end
 
