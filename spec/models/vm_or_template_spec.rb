@@ -711,6 +711,18 @@ describe VmOrTemplate do
     end
   end
 
+  describe ".v_annotation" do
+    let(:vm) { FactoryGirl.create(:vm) }
+    it "handles no hardware" do
+      expect(vm.v_annotation).to be_nil
+    end
+
+    it "handles hardware" do
+      FactoryGirl.create(:hardware, :vm => vm, :annotation => "the annotation")
+      expect(vm.v_annotation).to eq("the annotation")
+    end
+  end
+
   describe "#disconnect_ems" do
     let(:ems) { FactoryGirl.build(:ext_management_system) }
     let(:vm) do
