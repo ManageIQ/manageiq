@@ -18,11 +18,12 @@
 
     // table-checkable
     if (table.hasClass('table-checkable')) {
-      checkboxes.on('change', function (_e) {
+      checkboxes.on('change', function (e) {
         var checked = $.map(checkboxes.filter(':checked'), function (cb) {
           return cb.value;
         });
 
+        sendDataWithRx({rowSelect: e.delegateTarget});
         ManageIQ.gridChecks = checked;
         miqSetButtons(checked.length, 'center_tb');
 
