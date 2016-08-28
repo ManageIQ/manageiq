@@ -32,7 +32,7 @@ describe ExtManagementSystem do
       "hawkular"                    => "Hawkular",
       "kubernetes"                  => "Kubernetes",
       "openshift"                   => "OpenShift Origin",
-      "openshift_enterprise"        => "OpenShift Enterprise",
+      "openshift_enterprise"        => "OpenShift Container Platform",
       "openstack"                   => "OpenStack",
       "openstack_infra"             => "OpenStack Platform Director",
       "openstack_network"           => "OpenStack Network",

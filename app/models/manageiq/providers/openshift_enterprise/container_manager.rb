@@ -13,7 +13,7 @@ class ManageIQ::Providers::OpenshiftEnterprise::ContainerManager < ManageIQ::Pro
   end
 
   def self.description
-    @description ||= "OpenShift Enterprise".freeze
+    @description ||= "OpenShift Container Platform".freeze
   end
 
   def self.event_monitor_class
