@@ -102,4 +102,8 @@ FactoryGirl.define do
     rhsm_pool_id "rhsm_pool_id"
     rhsm_server "rhsm_server"
   end
+
+  factory :authentication_redhat_metric, :parent => :authentication do
+    authtype "metrics"
+  end
 end
