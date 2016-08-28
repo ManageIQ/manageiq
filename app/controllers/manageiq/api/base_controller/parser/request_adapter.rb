@@ -23,6 +23,7 @@ module ManageIQ
                         when :get         then 'read'
                         when :put, :patch then 'edit'
                         when :delete      then 'delete'
+                        when :options     then 'options'
                         else json_body['action'] || 'create'
                         end
           end

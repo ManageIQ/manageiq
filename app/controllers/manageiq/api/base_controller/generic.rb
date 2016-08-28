@@ -34,6 +34,10 @@ module ManageIQ
           render_normal_destroy
         end
 
+        def options_generic
+          binding.pry
+        end
+
         #
         # Action Helper Methods
         #

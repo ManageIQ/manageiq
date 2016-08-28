@@ -23,7 +23,7 @@ module ManageIQ
       def set_access_control_headers
         headers['Access-Control-Allow-Origin'] = '*'
         headers['Access-Control-Allow-Headers'] = 'origin, content-type, authorization, x-auth-token'
-        headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, PATCH'
+        headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, PATCH', 'OPTIONS'
       end
 
       # Order *Must* be from most generic to most specific
@@ -120,7 +120,7 @@ module ManageIQ
       # mechanism.
       #
       if Vmdb::Application.config.action_controller.allow_forgery_protection
-        skip_before_action :verify_authenticity_token, :only => [:show, :update, :destroy, :handle_options_request]
+        skip_before_action :verify_authenticity_token, :only => [:show, :update, :destroy, :options, :handle_options_request]
       end
 
       def base_config
@@ -153,6 +153,10 @@ module ManageIQ
         target_method = "#{method}_generic"
         return send(target_method) if respond_to?(target_method)
         api_error_type(:not_found, "Unknown resource specified")
+      end
+
+      def options # OPTIONS
+        redirect_api_request(:options)
       end
 
       def show    # GET

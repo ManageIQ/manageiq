@@ -2756,7 +2756,7 @@ Vmdb::Application.routes.draw do
   API_VERSION_REGEX = /v[\d]+(\.[\da-zA-Z]+)*(\-[\da-zA-Z]+)?/ unless defined?(API_VERSION_REGEX)
 
   # OPTIONS requests for REST API pre-flight checks
-  match '/api/*path' => 'manage_i_q/a_p_i/base#handle_options_request', :via => [:options]
+  # match '/api/*path' => 'manage_i_q/a_p_i/base#handle_options_request', :via => [:options]
 
   get '/api(/:version)' => 'manage_i_q/a_p_i/base#show_entrypoint', :format => 'json', :version => API_VERSION_REGEX
 
@@ -2766,7 +2766,8 @@ Vmdb::Application.routes.draw do
       :post   => "update",
       :put    => "update",
       :patch  => "update",
-      :delete => "destroy"
+      :delete => "destroy",
+      :options => "options"
     }.freeze
   end
 
