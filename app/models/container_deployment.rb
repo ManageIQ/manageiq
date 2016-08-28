@@ -1,4 +1,5 @@
 class ContainerDeployment < ApplicationRecord
+  include_concern "Automate"
   belongs_to :deployed_ems, :class_name => 'ManageIQ::Providers::ContainerManager'
   belongs_to :deployed_on_ems, :class_name => 'ExtManagementSystem', :inverse_of => :container_deployments
   belongs_to :automation_task
@@ -92,10 +93,10 @@ EOS
       "ansible_config"         => ANSIBLE_CONFIG_LOCATION,
       "ansible_log_path"       => ANSIBLE_CONFIG_LOG,
       "ansible_inventory_path" => ANSIBLE_CONFIG_INVENTORY_PATH,
-      "ansible_ssh_user"       => ssh_auth.userid,
       "deployment"             => {
-        "hosts" => container_deployment_nodes.collect(&:to_ansible_config_format),
-        "roles" => generate_roles
+        "ansible_ssh_user" => ssh_auth.userid,
+        "hosts"            => container_deployment_nodes.collect(&:to_ansible_config_format),
+        "roles"            => generate_roles
       },
       "version"                => version,
       "variant_version"        => kind.include?("origin") ? '1.2' : '3.2',
