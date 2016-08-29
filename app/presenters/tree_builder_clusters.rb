@@ -60,6 +60,7 @@ class TreeBuilderClusters < TreeBuilder
               :image    => 'host',
               :tip      => _("Non-clustered Hosts"),
               :select   => non_cluster_selected,
+              :addClass => 'cfme-no-cursor-node',
               :children => @root[:non_cl_hosts]
       }
       if non_cluster_selected == 'unsure'
