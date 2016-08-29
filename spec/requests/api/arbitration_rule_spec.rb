@@ -101,4 +101,21 @@ RSpec.describe 'Arbitration Rule API' do
       end.to change(ArbitrationRule, :count).by(-2)
     end
   end
+
+  context 'OPTIONS /api/arbitration_rules' do
+    it 'returns arbitration rule field_values' do
+      api_basic_authorize
+
+      expected = {
+        "metadata" => a_hash_including("attributes"         => ArbitrationRule.attribute_types.as_json,
+                                       "virtual_attributes" => ArbitrationRule.virtual_attributes_to_define.as_json,
+                                       "relationships"      => [],
+                                       "data"               => a_hash_including(
+                                         "field_values" => ArbitrationRule.field_values))
+      }
+
+      run_options(arbitration_rules_url)
+      expect(response.parsed_body).to include(expected)
+    end
+  end
 end
