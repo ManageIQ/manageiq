@@ -339,6 +339,25 @@ describe ExtManagementSystem do
               expect { FactoryGirl.create(t, :hostname => nil) }.to raise_error(ActiveRecord::RecordInvalid)
             end
           end
+
+          if ems.new.supports_port?
+            it "numeric port" do
+              expect { FactoryGirl.create(t, :port => "555") }.to_not raise_error
+            end
+
+            it "non-numeric port" do
+              expect { FactoryGirl.create(t, :port => "g55") }.to raise_error(ActiveRecord::RecordInvalid)
+            end
+
+            it "greater than 0 port" do
+              expect { FactoryGirl.create(t, :port => "-1") }.to raise_error(ActiveRecord::RecordInvalid)
+              expect { FactoryGirl.create(t, :port => "0") }.to raise_error(ActiveRecord::RecordInvalid)
+            end
+
+            it "nil port" do
+              expect { FactoryGirl.create(t, :port => nil) }.to_not raise_error
+            end
+          end
         end
       end
     end
