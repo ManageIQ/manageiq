@@ -18,7 +18,8 @@ describe GenericObject do
           :server     => "string",
           :s_time     => "datetime"
         },
-        :associations => {"vms" => "Vm"}
+        :associations => {"vms" => "Vm", "hosts" => "Host"},
+        :methods      => %w(my_host  some_method)
       }
     )
   end
@@ -157,6 +158,17 @@ describe GenericObject do
       go_assoc.vms = [vm1, vm1]
       go_assoc.save!
       expect(go_assoc.vms.count).to eq(1)
+    end
+  end
+
+  describe 'property methods' do
+    it 'sends defined method to automate' do
+      expect(go).to receive(:call_automate)
+      go.my_host
+    end
+
+    it 'raises an error for undefined method' do
+      expect { go.not_defined_method }.to raise_error(NoMethodError)
     end
   end
 end

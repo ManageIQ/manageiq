@@ -34,15 +34,28 @@ describe GenericObjectDefinition do
     expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
-  it 'property name is unique among attributes and association' do
+  it 'property name is unique among attributes, associations and methods' do
     testdef = described_class.new(
       :name       => 'test',
       :properties => {
-        :attributes   => {:vms => "float"},
-        :associations => {'vms' => :strang_model}
+        :attributes   => {:vms => "float", 'server' => 'localhost'},
+        :associations => {'vms' => :strang_model, 'hosts' => :host},
+        :methods      => [:hosts, :some_method]
       }
     )
     expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
+  it 'has property attributes in hash' do
+    expect(definition.properties[:attributes]).to be_kind_of(Hash)
+  end
+
+  it 'has property associations in hash' do
+    expect(definition.properties[:associations]).to be_kind_of(Hash)
+  end
+
+  it 'has property methods in hash' do
+    expect(definition.properties[:methods]).to be_kind_of(Array)
   end
 
   describe '#destroy' do
