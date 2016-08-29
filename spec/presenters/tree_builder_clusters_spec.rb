@@ -33,7 +33,7 @@ describe TreeBuilderClusters do
                                         :image    => "cluster",
                                         :tip      => "Name",
                                         :select   => false,
-                                        :addClass => "dynatree-partsel",
+                                        :addClass => "cfme-no-cursor-node dynatree-partsel",
                                         :children => @ho_enabled + @ho_disabled)
       # non-cluster-node
       expect(cluster_nodes.last).to eq(:id       => "NonCluster",
@@ -41,6 +41,7 @@ describe TreeBuilderClusters do
                                        :image    => 'host',
                                        :tip      => _("Non-clustered Hosts"),
                                        :select   => true,
+                                       :addClass => "cfme-no-cursor-node",
                                        :children => @non_cluster_hosts)
     end
     it 'sets non-cluster host nodes correctly' do
@@ -50,6 +51,7 @@ describe TreeBuilderClusters do
                                        :text     => "Non Cluster Host",
                                        :tip      => "Host: Non Cluster Host",
                                        :image    => "host",
+                                       :addClass => "cfme-no-cursor-node",
                                        :select   => true,
                                        :children => []}])
     end
@@ -61,6 +63,7 @@ describe TreeBuilderClusters do
          :text     => node[:name],
          :tip      => _("Host: %{name}") % {:name => node[:name]},
          :image    => 'host',
+         :addClass => "cfme-no-cursor-node",
          :select   => true,
          :children => []}
       end
@@ -69,6 +72,7 @@ describe TreeBuilderClusters do
          :text     => node[:name],
          :tip      => _("Host: %{name}") % {:name => node[:name]},
          :image    => 'host',
+         :addClass => "cfme-no-cursor-node",
          :select   => false,
          :children => []}
       end

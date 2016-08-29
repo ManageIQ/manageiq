@@ -19,6 +19,7 @@ class TreeBuilderDatastores < TreeBuilder
     locals = super
     locals.merge!(:id_prefix                   => 'datastore_',
                   :checkboxes                  => true,
+                  :onclick                     => false,
                   :onselect                    => "miqOnCheckCUFilters",
                   :check_url                   => "/ops/cu_collection_field_changed/",
                   :open_close_all_on_dbl_click => true)
@@ -41,6 +42,7 @@ class TreeBuilderDatastores < TreeBuilder
         :image    => 'storage',
         :tip      => "#{node[:name]} [#{node[:location]}]",
         :select   => node[:capture] == true,
+        :addClass => "cfme-no-cursor-node",
         :children => children
       }
     end
@@ -54,7 +56,7 @@ class TreeBuilderDatastores < TreeBuilder
         :image        => 'host',
         :tip          => node[:name],
         :hideCheckbox => true,
-        :style_class  => "cfme-no-cursor-node",
+        :addClass     => "cfme-no-cursor-node",
         :children     => []
       }
     end
