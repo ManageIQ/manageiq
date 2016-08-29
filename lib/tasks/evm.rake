@@ -3,12 +3,12 @@ require 'evm_application'
 
 namespace :evm do
   desc "Start the ManageIQ EVM Application"
-  task :start => ["db:verify_local", :environment] do
+  task :start => :environment do
     EvmApplication.start
   end
 
   desc "Restart the ManageIQ EVM Application"
-  task :restart => ["db:verify_local", :environment] do
+  task :restart => :environment do
     EvmApplication.stop
     EvmApplication.start
   end
