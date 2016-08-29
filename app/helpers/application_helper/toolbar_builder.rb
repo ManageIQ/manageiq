@@ -141,10 +141,11 @@ class ApplicationHelper::ToolbarBuilder
     @sep_needed = true unless button_hide
     props = toolbar_button(
       bgi,
-      :id     => bgi[:id],
-      :type   => :button,
-      :img    => "#{get_image(bgi[:image], bgi[:id]) ? get_image(bgi[:image], bgi[:id]) : bgi[:id]}.png",
-      :imgdis => "#{bgi[:image] || bgi[:id]}.png",
+      :id      => bgi[:id],
+      :type    => :button,
+      :img     => img = "#{get_image(bgi[:image], bgi[:id]) ? get_image(bgi[:image], bgi[:id]) : bgi[:id]}.png",
+      :img_url => ActionController::Base.helpers.image_path("toolbars/#{img}"),
+      :imgdis  => "#{bgi[:image] || bgi[:id]}.png",
     )
 
     # set pdf button to be hidden if graphical summary screen is set by default
