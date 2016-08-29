@@ -1,10 +1,10 @@
 module ManageIQ::Providers::Openstack::CloudManager::Vm::Operations::Guest
   def validate_reboot_guest
-    return {:available => supports_vm_control_powered_on?, :message => unsupported_reason(:vm_control_powered_on)}
+    {:available => supports_vm_control_powered_on?, :message => unsupported_reason(:vm_control_powered_on)}
   end
 
   def validate_reset
-    return {:available => supports_vm_control_powered_on?, :message => unsupported_reason(:vm_control_powered_on)}
+    {:available => supports_vm_control_powered_on?, :message => unsupported_reason(:vm_control_powered_on)}
   end
 
   def raw_reboot_guest
