@@ -107,16 +107,19 @@ ManageIQ.angular.app.controller('arbitrationProfileFormController', ['$scope', '
       $scope.arbitrationProfileModel.cloud_subnets   = response.cloud_subnets;
       $scope.arbitrationProfileModel.security_groups = response.security_groups;
     })
+
+    $scope.arbitrationProfileModel.cloud_subnet_id = '';
+    $scope.arbitrationProfileModel.security_group_id = '';
   };
 
   $scope.profileOptions = function(id, cloud_network_id) {
-    var url = "/api/providers/" + id + "?attributes=authentications,availability_zones,cloud_networks,cloud_subnets,flavors,security_groups";
+    var url = "/api/providers/" + id + "?attributes=key_pairs,availability_zones,cloud_networks,cloud_subnets,flavors,security_groups";
 
     API.get(url).then(function(response) {
-      $scope.arbitrationProfileModel.authentications   = response.authentications;
+      $scope.arbitrationProfileModel.authentications    = response.key_pairs;
       $scope.arbitrationProfileModel.availability_zones = response.availability_zones;
-      $scope.arbitrationProfileModel.flavors   = response.flavors;
-      $scope.arbitrationProfileModel.cloud_networks = response.cloud_networks;
+      $scope.arbitrationProfileModel.flavors            = response.flavors;
+      $scope.arbitrationProfileModel.cloud_networks     = response.cloud_networks;
       if(cloud_network_id != "") {
         $scope.cloudNetworkChanged(cloud_network_id)
       } else {
