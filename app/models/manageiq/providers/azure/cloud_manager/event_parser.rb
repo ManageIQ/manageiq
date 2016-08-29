@@ -17,7 +17,7 @@ module ManageIQ::Providers::Azure::CloudManager::EventParser
       :full_data  => event
     }
 
-    resource_type = event["resourceType"]["value"].downcase
+    resource_type = event["resourceType"]["value"].to_s.downcase
     event_hash[:vm_ems_ref] = parse_vm_ref(event) if resource_type == INSTANCE_TYPE
 
     event_hash
