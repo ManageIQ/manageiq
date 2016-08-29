@@ -45,8 +45,11 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
           nil,
           N_('Gracefully shut this server down'),
           N_('Gracefully shutdown Server'),
-          :image   => "guest_shutdown",
-          :confirm => N_("Do you want to shutdown this server?")),
+          :image => "guest_shutdown",
+          :data  => {'toggle'        => 'modal',
+                     'target'        => '#modal_param_div',
+                     'function'      => 'sendDataWithRx',
+                     'function-data' => '{"type": "mwServerOps", "operation": "shutdown", "timeout": 0}'}),
         button(
           :middleware_server_restart,
           nil,
@@ -67,8 +70,11 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
           nil,
           N_('Suspend this server'),
           N_('Suspend Server'),
-          :image   => "suspend",
-          :confirm => N_("Do you want to suspend this server?")),
+          :image => "suspend",
+          :data  => {'toggle'        => 'modal',
+                     'target'        => '#modal_param_div',
+                     'function'      => 'sendDataWithRx',
+                     'function-data' => '{"type": "mwServerOps", "operation": "suspend", "timeout": 10}'}),
         button(
           :middleware_server_resume,
           nil,
@@ -100,7 +106,7 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
           :data => {'toggle'        => 'modal',
                     'target'        => '#modal_d_div',
                     'function'      => 'miqCallAngular',
-                    'function-data' => '{"name": "showListener", "args": []}'})
+                    'function-data' => '{"name": "showDeployListener", "args": []}'})
       ]
     ),
   ])
