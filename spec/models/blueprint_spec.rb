@@ -85,14 +85,13 @@ describe Blueprint do
       bundle = subject.create_bundle(:service_templates => [catalog_vm_provisioning],
                                      :service_dialog    => dialog,
                                      :service_catalog   => catalog)
-      expect(Dialog.count).to eq(2)
+      expect(Dialog.count).to eq(1)
       expect(subject.bundle).to eq(bundle)
       expect(bundle.display).to be_falsey
       expect(bundle.composite?).to be_truthy
       expect(bundle.service_template_catalog).to eq(catalog)
-
-      expect(bundle.descendants.first.name).to eq(catalog_vm_provisioning.name)
-      expect(bundle.descendants.first.id).not_to eq(catalog_vm_provisioning.id)
+      expect(bundle.descendants.first).to eq(catalog_vm_provisioning)
+      expect(bundle.dialogs.first).to eq(dialog)
 
       prov = bundle.resource_actions.find_by(:action => 'Provision')
       expect(prov.ae_uri).to eq(ServiceTemplate.default_provisioning_entry_point)
@@ -146,8 +145,7 @@ describe Blueprint do
     context 'update catalog items' do
       it 'adds the first catalog item' do
         bundle = subject.update_bundle(:service_templates => [catalog_vm_provisioning])
-        expect(bundle.descendants.first.name).to eq(catalog_vm_provisioning.name)
-        expect(bundle.descendants.first.id).not_to eq(catalog_vm_provisioning.id)
+        expect(bundle.descendants.first).to eq(catalog_vm_provisioning)
       end
 
       it 'adds the second catalog item' do
@@ -156,17 +154,18 @@ describe Blueprint do
 
         bundle = subject.update_bundle(:service_templates => [bundle.descendants.first, catalog_orchestration])
         expect(bundle.descendants.size).to eq(2)
-        expect(bundle.descendants.collect(&:name)).to include(catalog_vm_provisioning.name, catalog_orchestration.name)
+        expect(bundle.descendants).to include(catalog_vm_provisioning, catalog_orchestration)
       end
 
-      it 'removes and destroys an existing catalog item' do
+      it 'removes an existing catalog item' do
         bundle = subject.update_bundle(:service_templates => [catalog_vm_provisioning, catalog_orchestration])
         expect(bundle.descendants.size).to eq(2)
-        expect(ServiceTemplate.count).to eq(5)
+        expect(ServiceTemplate.count).to eq(3)
 
-        bundle = subject.update_bundle(:service_templates => [bundle.descendants.first])
+        bundle = subject.update_bundle(:service_templates => [catalog_orchestration])
         expect(bundle.descendants.size).to eq(1)
-        expect(ServiceTemplate.count).to eq(4)
+        expect(ServiceTemplate.count).to eq(3)
+        expect(bundle.descendants.first).to eq(catalog_orchestration)
       end
     end
 
@@ -188,6 +187,10 @@ describe Blueprint do
 
         bundle = subject.update_bundle(:entry_points => {'Provision' => 'x/y/z'})
         expect(bundle.resource_actions.find_by(:action => 'Provision').fqname).to eq('/x/y/z')
+
+        bundle = subject.update_bundle(:entry_points => {'Retirement' => 'm/n/o'})
+        expect(bundle.resource_actions.find_by(:action => 'Retirement').fqname).to eq('/m/n/o')
+        expect(bundle.resource_actions.count).to eq(1)
       end
     end
 
@@ -196,18 +199,12 @@ describe Blueprint do
         subject.update_bundle(:entry_points => {'Provision' => 'a/b/c'}, :service_dialog => dialog)
       end
 
-      it 'copies the new dialog' do
+      it 'uses the new dialog' do
         another_dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field, :label => 'another dialog')
-        expect(another_dialog).to receive(:deep_copy).and_call_original
-        subject.update_bundle(:service_dialog => another_dialog)
-        expect(Dialog.count).to eq(3)
-      end
-
-      it 'skips existing dialog' do
-        existing_dialog = subject.bundle.dialogs.first
-        expect(existing_dialog).not_to receive(:deep_copy)
-        subject.update_bundle(:service_dialog => existing_dialog)
+        bundle = subject.update_bundle(:service_dialog => another_dialog)
         expect(Dialog.count).to eq(2)
+        expect(bundle.dialogs.count).to eq(1)
+        expect(bundle.dialogs.first).to eq(another_dialog)
       end
     end
   end

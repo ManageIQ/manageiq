@@ -1660,7 +1660,8 @@ describe ApplicationHelper do
         allow(helper).to receive_messages(:controller_name => "ems_middleware")
         ems = FactoryGirl.create(:ems_hawkular)
         MiddlewareDatasource.create(:ext_management_system => ems, :name => "Test Middleware")
-        expect(helper.multiple_relationship_link(ems, "middleware_datasource")).to eq("<li><a title=\"Show Middleware Datasources\" href=\"/ems_middleware/show/#{ems.id}?display=middleware_datasources\">Middleware Datasources (1)</a></li>")
+        expect(helper.multiple_relationship_link(ems, "middleware_datasource")).to eq("<li><a title=\"Show Middleware \
+Datasources\" href=\"/ems_middleware/#{ems.id}?display=middleware_datasources\">Middleware Datasources (1)</a></li>")
       end
     end
   end

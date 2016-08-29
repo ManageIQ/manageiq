@@ -102,7 +102,7 @@ module ApiSpecHelper
     "#{api_config(:entrypoint)}/auth"
   end
 
-  (ManageIQ::API::Settings.collections.keys - [:auth]).each do |collection|
+  (Api::Settings.collections.keys - [:auth]).each do |collection|
     define_method("#{collection}_url".to_sym) do |id = nil|
       path = "#{api_config(:entrypoint)}/#{collection}"
       id.nil? ? path : "#{path}/#{id}"
@@ -131,7 +131,7 @@ module ApiSpecHelper
   end
 
   def action_identifier(type, action, selection = :resource_actions, method = :post)
-    ManageIQ::API::Settings.collections[type][selection][method]
+    Api::Settings.collections[type][selection][method]
       .detect { |spec| spec[:name] == action.to_s }[:identifier]
   end
 
@@ -141,7 +141,7 @@ module ApiSpecHelper
 
   def subcollection_action_identifier(type, subtype, action, method = :post)
     subtype_actions = "#{subtype}_subcollection_actions".to_sym
-    if ManageIQ::API::Settings.collections[type][subtype_actions]
+    if Api::Settings.collections[type][subtype_actions]
       action_identifier(type, action, subtype_actions, method)
     else
       action_identifier(subtype, action, :subcollection_actions, method)

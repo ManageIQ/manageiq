@@ -639,7 +639,12 @@ class ApplicationController < ActionController::Base
       else
         redirect_to_action = lastaction
       end
-      javascript_redirect :action => redirect_to_action, :id => params[:id], :escape => false, :load_edit_err => true
+      model = self.class.model
+      if restful_routed?(model)
+        javascript_redirect polymorphic_path(model.find(params[:id]), :escape => false, :load_edit_err => true)
+      else
+        javascript_redirect :action => redirect_to_action, :id => params[:id], :escape => false, :load_edit_err => true
+      end
     else
       redirect_to :action => lastaction, :id => params[:id], :escape => false
     end
@@ -1678,6 +1683,8 @@ class ApplicationController < ActionController::Base
         javascript_redirect edit_ems_infra_path(params[:id])
       elsif params[:pressed] == "ems_container_edit" && params[:id]
         javascript_redirect edit_ems_container_path(params[:id])
+      elsif params[:pressed] == "ems_middleware_edit" && params[:id]
+        javascript_redirect edit_ems_middleware_path(params[:id])
       elsif %w(arbitration_profile_edit arbitration_profile_new).include?(params[:pressed]) && params[:id]
         javascript_redirect :action => @refresh_partial, :id => params[:id], :show => @redirect_id
       else

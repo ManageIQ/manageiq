@@ -35,12 +35,6 @@
     - :post
     - :patch
     - :delete
-    :gpppdo: &gpppdo
-    - :get
-    - :put
-    - :post
-    - :patch
-    - :delete
 :collections:
   :accounts:
     :description: Accounts
@@ -1768,13 +1762,11 @@
     :identifier: miq_arbitration_rules
     :options:
     - :collection
-    :verbs: *gpppdo
+    :verbs: *gpppd
     :klass: ArbitrationRule
     :collection_actions:
       :get:
       - :name: read
-        :identifier: arbitration_rule_show_list
-      - :name: field_values
         :identifier: arbitration_rule_show_list
       :post:
       - :name: create
@@ -1783,9 +1775,6 @@
         :identifier: arbitration_rule_delete
       - :name: edit
         :identifier: arbitration_rule_edit
-      :options:
-      - :name: options
-        :identifier: arbitration_rule_options
     :resource_actions:
       :post:
       - :name: edit
@@ -1795,7 +1784,4 @@
       :delete:
       - :name: edit
         :identifier: arbitration_rule_delete
-      :options:
-      - :name: options
-        :identifier: arbitration_rule_options
 

@@ -7,7 +7,7 @@ function MwAddDeploymentController($scope, $http, miqService) {
   $scope.$on('mwAddDeploymentEvent', function(event, data) {
 
     var fd = new FormData();
-    fd.append('file', data.file);
+    fd.append('file', data.filePath);
     fd.append('id', data.serverId);
     fd.append('enabled', data.enableDeployment);
     fd.append('runtimeName', data.runtimeName);

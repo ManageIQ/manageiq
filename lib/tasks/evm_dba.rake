@@ -61,18 +61,6 @@ end
 
 namespace :evm do
   namespace :db do
-    # Verify appliance's local database is started if configured for local, otherwise stop it.
-    task :verify_local do
-      require File.expand_path(File.join(Rails.root, 'lib/miq_environment')) unless Object.const_defined? :MiqEnvironment
-      if MiqEnvironment::Command.is_appliance?
-        if EvmDba.local?
-          Rake::Task['evm:db:silent_start'].invoke
-        else
-          Rake::Task['evm:db:silent_stop'].invoke
-        end
-      end
-    end
-
     desc 'Start the local ManageIQ EVM Database (VMDB)'
     task :start do
       EvmDba.start

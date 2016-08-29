@@ -3346,8 +3346,7 @@
     :identifier: ems_middleware_admin
     :children:
     - :name: Remove
-      :description: Remove Middleware Provider720709
-      
+      :description: Remove Middleware Providers
       :feature_type: admin
       :identifier: ems_middleware_delete
     - :name: Edit
@@ -5253,10 +5252,6 @@
     :description: Edit Arbitration Rule
     :feature_type: admin
     :identifier: arbitration_rule_edit
-  - :name: Arbitration Rule Options
-    :description: Arbitration Rule Options
-    :feature_type: admin
-    :identifier: arbitration_rule_options
 
 # Blueprints
 - :name: Blueprints

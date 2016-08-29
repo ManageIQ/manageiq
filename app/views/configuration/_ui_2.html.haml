@@ -69,7 +69,7 @@
                :middlewaredatasource                 => ["middleware_datasource_show_list",    _('Middleware Datasources')],
                :middlewaredomain                     => ["middleware_domain_show_list",        _('Middleware Domains')],
                :middlewareservergroup                => ["middleware_server_groups_show_list", _('Middleware Server Groups')]}.each do |resource, (feature, view_name)|
-              - if role_allows(:feature => feature)
+              - if role_allows?(:feature => feature)
                 .form-group
                   %label.col-md-3.control-label
                     #{view_name}

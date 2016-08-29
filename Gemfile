@@ -43,7 +43,7 @@ gem "omniauth",                       "~>1.3.1",       :require => false
 gem "omniauth-google-oauth2",         "~>0.2.6"
 gem "open4",                          "~>1.3.0",       :require => false
 gem "outfielding-jqplot-rails",       "= 1.0.8"
-gem "ovirt-engine-sdk",               "~>4.0.0.alpha", :require => false # Required by the oVirt provider
+gem "ovirt-engine-sdk",               "~>4.0.0",       :require => false # Required by the oVirt provider
 gem "ovirt_metrics",                  "~>1.2.0",       :require => false
 gem "paperclip",                      "~>4.3.0"
 gem "puma",                           "~>3.3.0"
@@ -54,7 +54,7 @@ gem "recursive-open-struct",          "~>1.0.0"
 gem "responders",                     "~>2.0"
 gem "ruby-dbus" # For external auth
 gem "ruby-progressbar",               "~>1.7.0",       :require => false
-gem "ruby_parser",                    "~>3.7",         :require => false
+gem "ruby_parser",                    "~>3.8",         :require => false
 gem "rufus-scheduler",                "~>3.1.3",       :require => false
 gem "rugged",                         "~>0.23.0",      :require => false
 gem "secure_headers",                 "~>3.0.0"
@@ -107,7 +107,7 @@ unless ENV["APPLIANCE"]
   end
 
   group :test do
-    gem "brakeman",         "~>3.1.0",  :require => false
+    gem "brakeman",         "~>3.3",    :require => false
     gem "capybara",         "~>2.5.0",  :require => false
     gem "factory_girl",     "~>4.5.0",  :require => false
     gem "sqlite3",                      :require => false

@@ -1063,10 +1063,6 @@ Vmdb::Application.routes.draw do
     :ems_middleware            => {
       :get  => %w(
         download_data
-        edit
-        index
-        new
-        show
         show_list
         tagging_edit
         tag_edit_form_field_changed
@@ -2756,9 +2752,10 @@ Vmdb::Application.routes.draw do
   API_VERSION_REGEX = /v[\d]+(\.[\da-zA-Z]+)*(\-[\da-zA-Z]+)?/ unless defined?(API_VERSION_REGEX)
 
   # OPTIONS requests for REST API pre-flight checks
-  match '/api(/*path)' => 'manage_i_q/a_p_i/base#options', via: :options
+  match '/api(/*path)' => 'api/base#options', :via => :options
+  match '/api' => 'api/base#handle_options_request', :via => [:options]
 
-  get '/api(/:version)' => 'manage_i_q/a_p_i/base#show_entrypoint', :format => 'json', :version => API_VERSION_REGEX
+  get '/api(/:version)' => 'api/base#show_entrypoint', :format => 'json', :version => API_VERSION_REGEX
 
   unless defined?(API_ACTIONS)
     API_ACTIONS = {
@@ -2771,18 +2768,18 @@ Vmdb::Application.routes.draw do
   end
 
   def action_for(verb)
-    "manage_i_q/a_p_i/base##{API_ACTIONS[verb]}"
+    "api/base##{API_ACTIONS[verb]}"
   end
 
   def action_for_collection(collection_name, verb)
-    "manage_i_q/a_p_i/#{collection_name}##{API_ACTIONS[verb]}"
+    "api/#{collection_name}##{API_ACTIONS[verb]}"
   end
 
   def create_api_route(verb, url, action)
     public_send(verb, url, :to => action, :format => "json", :version => API_VERSION_REGEX)
   end
 
-  ManageIQ::API::Settings.collections.each do |collection_name, collection|
+  Api::Settings.collections.each do |collection_name, collection|
     collection.verbs.each do |verb|
       if collection.options.include?(:primary)
         create_api_route(verb, "/api(/:version)/#{collection_name}", action_for_collection(collection_name, verb))
@@ -2800,7 +2797,7 @@ Vmdb::Application.routes.draw do
     end
 
     Array(collection.subcollections).each do |subcollection_name|
-      ManageIQ::API::Settings.collections[subcollection_name].verbs.each do |verb|
+      Api::Settings.collections[subcollection_name].verbs.each do |verb|
         create_api_route(verb,
                          "/api(/:version)/#{collection_name}/:c_id/#{subcollection_name}(/:s_id)",
                          action_for(verb))
@@ -2810,7 +2807,7 @@ Vmdb::Application.routes.draw do
 
   controller_routes.each do |controller_name, controller_actions|
     # Default route with no action to controller's index action
-    unless [:ems_cloud, :ems_infra, :ems_container].include?(controller_name)
+    unless [:ems_cloud, :ems_infra, :ems_container, :ems_middleware].include?(controller_name)
       match "#{controller_name}", :controller => controller_name, :action => :index, :via => :get
     end
 
@@ -2843,6 +2840,7 @@ Vmdb::Application.routes.draw do
   resources :ems_cloud, :as => :ems_clouds
   resources :ems_infra, :as => :ems_infras
   resources :ems_container, :as => :ems_containers
+  resources :ems_middleware, :as => :ems_middlewares
 
   match "/auth/:provider/callback" => "sessions#create", :via => :get
 
