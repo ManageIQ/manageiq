@@ -1,4 +1,3 @@
-require 'spec_helper'
 module DrbRemoteInvokerSpec
   include MiqAeEngine
   describe MiqAeEngine::DrbRemoteInvoker do
@@ -21,13 +20,9 @@ module DrbRemoteInvokerSpec
 
       expect(Thread.list).to_not include(timer_thread)
     end
-  end
 
-  describe MiqAeEngine::DrbRemoteInvoker do
     include Spec::Support::AutomationHelper
     context "#api_token" do
-      let(:user) { FactoryGirl.create(:user_with_group) }
-
       def token_script
         <<-'RUBY'
           $evm.root['miq_api_token'] = MIQ_API_TOKEN
@@ -35,13 +30,13 @@ module DrbRemoteInvokerSpec
       end
 
       it "check if the token is acessible in the method" do
-         user
-         create_ae_model_with_method(:name => 'FLINTSTONE', :ae_namespace => 'FRED',
-                                     :ae_class => 'WILMA', :instance_name => 'DOGMATIX',
-                                     :method_name => 'OBELIX',
-                                     :method_script => token_script)
-         ws = MiqAeEngine.instantiate("/FRED/WILMA/DOGMATIX", user)
-         expect(ws.root['miq_api_token']).not_to be_nil
+        user
+        create_ae_model_with_method(:name => 'FLINTSTONE', :ae_namespace => 'FRED',
+                                    :ae_class => 'WILMA', :instance_name => 'DOGMATIX',
+                                    :method_name => 'OBELIX',
+                                    :method_script => token_script)
+        ws = MiqAeEngine.instantiate("/FRED/WILMA/DOGMATIX", user)
+        expect(ws.root['miq_api_token']).not_to be_nil
       end
     end
   end
