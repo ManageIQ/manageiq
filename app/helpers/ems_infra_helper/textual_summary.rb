@@ -8,7 +8,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(infrastructure_folders folders clusters hosts used_tenants used_availability_zones datastores vms templates orchestration_stacks)
+    %i(infrastructure_folders folders clusters hosts datastores vms templates orchestration_stacks ems_cloud)
   end
 
   def textual_group_status
@@ -124,6 +124,12 @@ module EmsInfraHelper::TextualSummary
     textual_link(@record.availability_zones,
                  :as   => AvailabilityZone,
                  :link => ems_infra_path(@record.id, :display => 'availability_zones'))
+  end
+
+  def textual_ems_cloud
+    return nil unless @record.provider.respond_to?(:cloud_ems)
+
+    textual_link(@record.provider.try(:cloud_ems).first)
   end
 
   def textual_datastores
