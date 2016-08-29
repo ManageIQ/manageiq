@@ -55,6 +55,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
         allow(VMDB::Util).to receive(:http_proxy_uri).and_return(proxy)
         setup_ems_and_cassette
         expect(OrchestrationTemplate.count).to eql(2)
+        assert_specific_orchestration_template
       end
     end
 
@@ -66,6 +67,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
         allow(VMDB::Util).to receive(:http_proxy_uri).and_return(proxy)
         setup_ems_and_cassette
         expect(OrchestrationTemplate.count).to eql(2)
+        assert_specific_orchestration_template
       end
     end
   end
