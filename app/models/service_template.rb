@@ -59,7 +59,7 @@ class ServiceTemplate < ApplicationRecord
 
   def self.rule_attributes
     %w(name description options service_type prov_type provision_cost
-      service_template_catalog_id tenant_id blueprint_id generic_subtype)
+       service_template_catalog_id tenant_id blueprint_id generic_subtype)
   end
 
   def custom_actions

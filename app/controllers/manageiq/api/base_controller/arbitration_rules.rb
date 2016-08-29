@@ -18,7 +18,7 @@ module ManageIQ
         end
 
         def options_arbitration_rules
-          render_options(:arbitration_rules, { :field_values => ArbitrationRule.field_values })
+          render_options(:arbitration_rules, :field_values => ArbitrationRule.field_values)
         end
 
         private

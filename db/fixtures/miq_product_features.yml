@@ -5253,10 +5253,6 @@
     :description: Edit Arbitration Rule
     :feature_type: admin
     :identifier: arbitration_rule_edit
-  - :name: Arbitration Rule Options
-    :description: Arbitration Rule Options
-    :feature_type: admin
-    :identifier: arbitration_rule_options
 
 # Blueprints
 - :name: Blueprints
