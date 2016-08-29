@@ -19,6 +19,7 @@ class TreeBuilderDatastores < TreeBuilder
     locals = super
     locals.merge!(:id_prefix                   => 'datastore_',
                   :checkboxes                  => true,
+                  :onclick                     => false,
                   :onselect                    => "miqOnCheckCUFilters",
                   :check_url                   => "/ops/cu_collection_field_changed/",
                   :open_close_all_on_dbl_click => true)
