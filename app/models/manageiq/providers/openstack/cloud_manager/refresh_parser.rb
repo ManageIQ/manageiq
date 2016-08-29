@@ -133,7 +133,7 @@ module ManageIQ::Providers
     end
 
     def get_host_aggregates
-      host_aggregates = safe_list { @connection.aggregates }
+      host_aggregates = safe_list { @connection.aggregates.all }
       process_collection(host_aggregates, :host_aggregates) { |ha| parse_host_aggregate(ha) }
     end
 
