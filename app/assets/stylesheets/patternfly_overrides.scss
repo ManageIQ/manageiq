@@ -370,12 +370,6 @@ iframe, .iframe {
   padding-right: 3px;
 }
 
-/* Adds padding between buttons when they wrap */
-
-.toolbar-pf .toolbar-pf-actions .form-group {
-  margin-bottom: 10px !important
-}
-
 /* sets width to auto for bootstrap-select */
 .selectWidth {
   width: auto !important;
@@ -530,7 +524,11 @@ body#dashboard {
 }
 
 .toolbar-pf .toolbar-pf-actions .form-group { /* adds padding between buttons when they wrap */
-  margin-bottom: 10px !important
+  margin-bottom: 10px;
+}
+
+.toolbar-pf-actions { /* removes double paddding resulting from ^ */
+  margin-bottom: 0px;
 }
 
 .toolbar-pf .form-group .btn,
