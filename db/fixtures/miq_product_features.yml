@@ -3346,8 +3346,7 @@
     :identifier: ems_middleware_admin
     :children:
     - :name: Remove
-      :description: Remove Middleware Provider720709
-      
+      :description: Remove Middleware Providers
       :feature_type: admin
       :identifier: ems_middleware_delete
     - :name: Edit
