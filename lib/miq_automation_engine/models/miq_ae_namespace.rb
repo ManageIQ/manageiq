@@ -86,6 +86,8 @@ class MiqAeNamespace < ApplicationRecord
     ancestors.all? { |a| a.editable?(user) }
   end
 
+  alias editable_contents? editable?
+
   def ns_fqname
     return nil if fqname == domain_name
     fqname.sub(domain_name.to_s, '')
