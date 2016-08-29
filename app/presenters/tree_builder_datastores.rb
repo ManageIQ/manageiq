@@ -42,6 +42,7 @@ class TreeBuilderDatastores < TreeBuilder
         :image    => 'storage',
         :tip      => "#{node[:name]} [#{node[:location]}]",
         :select   => node[:capture] == true,
+        :addClass => "cfme-no-cursor-node",
         :children => children
       }
     end
@@ -55,7 +56,7 @@ class TreeBuilderDatastores < TreeBuilder
         :image        => 'host',
         :tip          => node[:name],
         :hideCheckbox => true,
-        :style_class  => "cfme-no-cursor-node",
+        :addClass     => "cfme-no-cursor-node",
         :children     => []
       }
     end

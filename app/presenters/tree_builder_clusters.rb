@@ -50,7 +50,7 @@ class TreeBuilderClusters < TreeBuilder
         :image    => 'cluster',
         :tip      => node[:name],
         :select   => node[:capture] != 'unsure' && node[:capture],
-        :addClass => node[:capture] == 'unsure' ? 'dynatree-partsel' : '',
+        :addClass => node[:capture] == 'unsure' ? 'cfme-no-cursor-node dynatree-partsel' : 'cfme-no-cursor-node',
         :children => @data[node[:id]][:ho_enabled] + @data[node[:id]][:ho_disabled]
       }
     end
@@ -63,7 +63,7 @@ class TreeBuilderClusters < TreeBuilder
               :children => @root[:non_cl_hosts]
       }
       if non_cluster_selected == 'unsure'
-        node[:addClass] = 'dynatree-partsel'
+        node[:addClass] = 'cfme-no-cursor-node dynatree-partsel'
         node[:select] = true
       end
       nodes.push(node)
@@ -82,6 +82,7 @@ class TreeBuilderClusters < TreeBuilder
        :tip      => _("Host: %{name}") % {:name => node[:name]},
        :image    => 'host',
        :select   => node.kind_of?(Hash) ? node[:capture] : !value,
+       :addClass => 'cfme-no-cursor-node',
        :children => []}
     end
     count_only_or_objects(count_only, nodes)

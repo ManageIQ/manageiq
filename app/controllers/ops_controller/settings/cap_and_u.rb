@@ -91,7 +91,7 @@ module OpsController::Settings::CapAndU
           @unchanged_id_list.each do |item|
             page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}',
                                                   '#{j_str(item)}',
-                                                  'dynatree-title');"
+                                                  'cfme-no-cursor-node dynatree-title');"
           end
         else
           @changed_id_list   = []
@@ -140,7 +140,7 @@ module OpsController::Settings::CapAndU
             else
               page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}',
                                                   '#{j_str(item[0])}',
-                                                  'cfme-blue-bold-node');"
+                                                  'cfme-no-cursor-node cfme-blue-bold-node');"
               page << "miqDynatreeSelectNode('#{j_str(params[:tree_name])}', '#{j_str(item[0])}', #{j_str(!!item[1])})"
             end
           end
@@ -148,7 +148,9 @@ module OpsController::Settings::CapAndU
             if item[1] == 'unsure'
               page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}','#{j_str(item[0])}','dynatree-partsel');"
             else
-              page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}','#{j_str(item[0])}','dynatree-title');"
+              page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}',
+                                               '#{j_str(item[0])}',
+                                               'cfme-no-cursor-node dynatree-title');"
               page << "miqDynatreeSelectNode('#{j_str(params[:tree_name])}', '#{j_str(item[0])}', #{j_str(!!item[1])})"
             end
           end
