@@ -620,11 +620,13 @@ module OpsController::Settings::Common
       }
     end
 
-    @smartproxy_affinity_tree = TreeBuilderSmartproxyAffinity.new(:smartproxy_affinity,
-                                                                  :smartproxy_affinity_tree,
-                                                                  @sb,
-                                                                  true,
-                                                                  @selected_zone)
+    if @selected_zone.miq_servers.select(&:is_a_proxy?).present?
+      @smartproxy_affinity_tree = TreeBuilderSmartproxyAffinity.new(:smartproxy_affinity,
+                                                                    :smartproxy_affinity_tree,
+                                                                    @sb,
+                                                                    true,
+                                                                    @selected_zone)
+    end
 
     @edit[:new] = copy_hash(@edit[:current])
     session[:edit] = @edit
