@@ -35,13 +35,17 @@ class ManageIQ::Providers::Redhat::InfraManager
               :cluster     => target.parent_cluster.ems_ref,
               :data_center => target.parent_datacenter.ems_ref,
               :vm          => vm,
-              :template    => "/api/templates?search=vm.id=#{vm_id}"
+              :template    => "/api/templates?search=vm.id=#{vm_id}",
+              :storage     => target.storages.empty? ? {:storagedomains => "storage_domain"} : target.storages.map(&:ems_ref)
             },
             :secondary => {
               :vm         => [:disks, :snapshots, :nics],
               :template   => [:disks]
             }
           }
+          unless target.hardware.nil?
+            methods[:primary][:vm_disks] = target.hardware.disks.map { |disk| "#{disk.storage.ems_ref}/disks/#{disk.filename}" }
+          end
           data,  = Benchmark.realtime_block(:fetch_vm_data) { inventory.targeted_refresh(methods) }
 
         else

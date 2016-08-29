@@ -19,6 +19,9 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
     # Clean up the temporary cluster-datacenter references
     result[:clusters].each { |c| c.delete(:datacenter_id) }
 
+    # get disk for removed vms
+    result[:vm_disks] = vm_inv_to_disk_hashes({:disks => inv[:vm_disks]}, uids[:storages])
+
     result
   end
 
@@ -383,19 +386,14 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
 
       ems_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(vm_inv[:href])
 
-      new_result = {
-        :type              => template ? "ManageIQ::Providers::Redhat::InfraManager::Template" : "ManageIQ::Providers::Redhat::InfraManager::Vm",
-        :ems_ref           => ems_ref,
-        :ems_ref_obj       => ems_ref,
-        :uid_ems           => vm_inv[:id],
+      data = [template, ems_ref, vm_inv[:id], URI.decode(vm_inv[:name])]
+      new_result = create_vm_hash(data)
+
+      additional = {
         :memory_reserve    => vm_memory_reserve(vm_inv),
-        :name              => URI.decode(vm_inv[:name]),
-        :vendor            => "redhat",
         :raw_power_state   => raw_power_state,
-        :location          => "#{vm_inv[:id]}.ovf",
         :boot_time         => boot_time,
         :connection_state  => 'connected',
-        :template          => template,
         :host              => host,
         :ems_cluster       => ems_cluster,
         :storages          => storages,
@@ -405,6 +403,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
         :custom_attributes => vm_inv_to_custom_attribute_hashes(vm_inv),
         :snapshots         => vm_inv_to_snapshot_hashes(vm_inv),
       }
+      new_result.merge!(additional)
 
       # Attach to the cluster's default resource pool
       ems_cluster[:ems_children][:resource_pools].first[:ems_children][:vms] << new_result if ems_cluster && !template
@@ -413,6 +412,20 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       result_uids[mor] = new_result
     end
     return result, result_uids
+  end
+
+  def self.create_vm_hash(data)
+    vm_hash = {
+      :type        => data[0] ? "ManageIQ::Providers::Redhat::InfraManager::Template" : "ManageIQ::Providers::Redhat::InfraManager::Vm",
+      :ems_ref     => data[1],
+      :ems_ref_obj => data[1],
+      :uid_ems     => data[2],
+      :vendor      => "redhat",
+      :name        => data[3],
+      :location    => "#{data[2]}.ovf",
+      :template    => data[0],
+    }
+    vm_hash
   end
 
   def self.vm_inv_to_hardware_hash(inv)
