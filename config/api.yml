@@ -16,7 +16,6 @@
   - :post
   - :patch
   - :delete
-  - :options
   :sets:
     :g: &g
     - :get
@@ -42,7 +41,6 @@
     - :post
     - :patch
     - :delete
-    - :options
 :collections:
   :accounts:
     :description: Accounts

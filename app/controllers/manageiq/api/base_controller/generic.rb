@@ -35,7 +35,7 @@ module ManageIQ
         end
 
         def options_generic
-          binding.pry
+          render_options(@req.collection.to_sym)
         end
 
         #

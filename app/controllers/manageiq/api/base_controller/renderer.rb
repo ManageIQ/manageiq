@@ -470,6 +470,19 @@ module ManageIQ
           end
           true
         end
+
+        def render_options(resource, data = {})
+          collection = collection_class(resource)
+          options = {
+            :metadata => {
+              :attributes => collection.attribute_types,
+              :virtual_attributes => collection.virtual_attributes_to_define,
+              :relationships => collection_config.subcollections(resource),
+              :data => data
+            }
+          }
+          render :json => options
+        end
       end
     end
   end
