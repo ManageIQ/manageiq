@@ -485,7 +485,7 @@ class DashboardController < ApplicationController
   end
 
   def generate_ui_api_token(userid)
-    @api_user_token_service ||= ManageIQ::API::UserTokenService.new
+    @api_user_token_service ||= Api::UserTokenService.new
     @api_user_token_service.generate_token(userid, "ui")
   end
 
