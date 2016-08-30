@@ -1125,7 +1125,7 @@ module ApplicationHelper
                         container_topology container_dashboard middleware_topology persistent_volume container_build
                         container_node container_service ems_cloud ems_cluster ems_container ems_infra event
                         ems_middleware middleware_server middleware_deployment middleware_datasource
-                        middleware_domain middleware_server_group
+                        middleware_domain middleware_server_group middleware_messaging
                         ems_network security_group floating_ip cloud_subnet network_router network_topology network_port cloud_network
                         load_balancer
                         flavor host miq_schedule miq_template offline ontap_file_share
@@ -1170,9 +1170,8 @@ module ApplicationHelper
          container_project container_replicator container_image container_image_registry container_build
          ems_infra host miq_template offline orchestration_stack persistent_volume ems_middleware
          middleware_server middleware_deployment middleware_datasource middleware_domain middleware_server_group
-         ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
-         load_balancer
-         resource_pool retired service templates vm configuration_job).include?(@layout) && !@in_a_form
+         middleware_messaging ems_network security_group floating_ip cloud_subnet network_router network_port
+         cloud_network resource_pool retired service templates vm configuration_job).include?(@layout) && !@in_a_form
       "show_list"
     elsif @compare
       "compare_sections"
@@ -1185,7 +1184,7 @@ module ApplicationHelper
              container_route container_project container_replicator container_image container_image_registry
              container_build container_node container_service persistent_volume ems_cloud ems_container ems_cluster ems_infra
              ems_middleware middleware_server middleware_deployment middleware_datasource middleware_domain
-             middleware_server_group flavor
+             middleware_messaging middleware_server_group flavor
              ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
              load_balancer
              host miq_schedule miq_template policy ontap_file_share ontap_logical_disk

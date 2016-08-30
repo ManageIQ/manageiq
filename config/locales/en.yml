@@ -796,6 +796,7 @@ en:
       ManageIQ::Providers::Openstack::NetworkManager::NetworkPort:          Network Port (OpenStack)
       MiddlewareDatasource:     Middleware Datasource
       MiddlewareDomain:         Middleware Domain
+      MiddlewareMessaging:      Middleware Messaging
       MiddlewareDeployment:     Middleware Deployment
       MiddlewareServer:         Middleware Server
       MiddlewareServerGroup:    Middleware Server Group
@@ -943,6 +944,8 @@ en:
       middleware_datasources:      Middleware Datasources
       middleware_domain:           Middleware Domain
       middleware_domains:          Middleware Domains
+      middleware_messaging:        Middleware Messaging
+      middleware_messagings:       Middleware Messagings
       middleware_deployment:       Middleware Deployment
       middleware_deployments:      Middleware Deployments
       middleware_server_group:     Middleware Server Group
