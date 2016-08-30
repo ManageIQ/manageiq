@@ -39,7 +39,7 @@ module Metric::Rollup
       :derived_vm_numvcpus,
       :derived_vm_used_disk_storage,
     ],
-    :ContainerProject_container_groups    => [
+    :ContainerProject_all_container_groups => [
       :cpu_usage_rate_average,
       :derived_vm_numvcpus,
       :derived_memory_used,
