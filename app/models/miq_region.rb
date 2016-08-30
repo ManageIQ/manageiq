@@ -243,6 +243,19 @@ class MiqRegion < ApplicationRecord
     hostname.nil? ? nil : "https://#{hostname}"
   end
 
+  def generate_auth_key_queue(ssh_user, ssh_password, ssh_host = nil)
+    args = [ssh_user, ssh_password]
+    args << ssh_host if ssh_host
+
+    MiqQueue.put_unless_exists(
+      :class_name  => self.class.name,
+      :instance_id => id,
+      :queue_name  => "generic",
+      :method_name => "generate_auth_key",
+      :args        => args
+    )
+  end
+
   def generate_auth_key(ssh_user, ssh_password, ssh_host = remote_ws_address)
     key = remote_region_v2_key(ssh_user, MiqPassword.try_decrypt(ssh_password), ssh_host)
 
