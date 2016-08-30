@@ -237,6 +237,14 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def validate_template
+    missing_resources = service_resources.select { |sr| sr.resource.nil? }
+
+    if missing_resources.present?
+      missing_list = missing_resources.collect { |sr| "#{sr.resource_type}:#{sr.resource_id}" }.join(", ")
+      return {:valid   => false,
+              :message => "Missing Service Resource(s): #{missing_list}"}
+    end
+
     service_resources.detect do |s|
       r = s.resource
       r.respond_to?(:template_valid?) && !r.template_valid?

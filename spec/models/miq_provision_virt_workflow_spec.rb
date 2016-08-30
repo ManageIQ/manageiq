@@ -253,4 +253,24 @@ describe MiqProvisionVirtWorkflow do
       expect(workflow.ws_find_template_or_vm("", "VMWARE", "asdf-adsf", "asdfadfasdf")).to be_a(MiqHashStruct)
     end
   end
+
+  context '#update_request' do
+    let(:template) do
+      FactoryGirl.create(
+        :template_vmware,
+        :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication)
+      )
+    end
+    let(:values)  { {:src_vm_id => [template.id, template.name]} }
+    let(:request) { workflow.create_request(:src_vm_id => [999, 'old_template']) }
+    before { workflow.update_request(request, values) }
+
+    it 'updates options' do
+      expect(request.options).to include(values)
+    end
+
+    it 'updates soruce_id' do
+      expect(request.source_id).to eq(template.id)
+    end
+  end
 end

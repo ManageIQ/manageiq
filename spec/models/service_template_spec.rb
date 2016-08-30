@@ -351,6 +351,14 @@ describe ServiceTemplate do
         expect(@st1.template_valid?).to be_truthy
         expect(@st1.template_valid_error_message).to be_nil
       end
+
+      it 'not existing request' do
+        @st1.save!
+        @ptr.destroy
+        expect(@st1.reload.template_valid?).to be_falsey
+        msg = "Missing Service Resource(s): #{@ptr.class.base_model.name}:#{@ptr.id}"
+        expect(@st1.template_valid_error_message).to include(msg)
+      end
     end
 
     context 'composite' do
