@@ -40,17 +40,27 @@ module Api
 
       def deserialize_bundle(bundle)
         options = {}
-        if bundle["service_catalog"]
-          options[:service_catalog] = ServiceTemplateCatalog.find(parse_id(bundle["service_catalog"], :service_catalogs))
+        if bundle.key?("service_catalog")
+          options[:service_catalog] = service_catalog_options(bundle)
         end
-        if bundle["service_dialog"]
-          options[:service_dialog] = Dialog.find(parse_id(bundle["service_dialog"], :service_dialogs))
+        if bundle.key?("service_dialog")
+          options[:service_dialog] = service_dialog_options(bundle)
         end
         options[:service_templates] = bundle.fetch("service_templates", []).collect do |st|
           ServiceTemplate.find(parse_id(st, :service_templates))
         end
         options[:entry_points] = bundle["automate_entrypoints"] if bundle["automate_entrypoints"]
         options
+      end
+
+      def service_catalog_options(bundle)
+        if bundle["service_catalog"]
+          ServiceTemplateCatalog.find(parse_id(bundle["service_catalog"], :service_catalogs))
+        end
+      end
+
+      def service_dialog_options(bundle)
+        Dialog.find(parse_id(bundle["service_dialog"], :service_dialogs)) if bundle["service_catalog"]
       end
     end
   end
