@@ -1,12 +1,15 @@
 module EmsRefresh
   module Refreshers
     module EmsRefresherMixin
+      class PartialRefreshError < StandardError; end
+
       def format_ems_for_logging(ems)
         "EMS: [#{ems.name}], id: [#{ems.id}]"
       end
 
       def refresh
         preprocess_targets
+        partial_refresh_errors = []
 
         @targets_by_ems_id.each do |ems_id, targets|
           # Get the ems object
@@ -33,6 +36,7 @@ module EmsRefresh
 
             # record the failed status and skip post-processing
             ems.update_attributes(:last_refresh_error => e.to_s, :last_refresh_date => Time.now.utc)
+            partial_refresh_errors << e.to_s
             next
           ensure
             post_refresh_ems_cleanup(ems, targets)
@@ -43,6 +47,7 @@ module EmsRefresh
         end
 
         _log.info "Refreshing all targets...Complete"
+        raise PartialRefreshError, partial_refresh_errors.join(', ') if partial_refresh_errors.any?
       end
 
       def preprocess_targets
