@@ -218,7 +218,7 @@ module MiqPolicyController::AlertProfiles
           end
           node = TreeNodeBuilder.generic_tree_node(
             o.id,
-            (o.name.presence || o.description),
+            choose_node_identifier(o),
             icon,
             "",
             :select => @assign[:new][:objects].include?(o.id) # Check if tag is assigned
@@ -229,6 +229,14 @@ module MiqPolicyController::AlertProfiles
       end
     end
     tree
+  end
+
+  def choose_node_identifier(o)
+    identifier = (o.name.presence || o.description)
+    if o.kind_of?(MiddlewareServer)
+      identifier += "-" + o.hostname
+    end
+    identifier
   end
 
   def alert_profile_build_edit_screen
