@@ -42,9 +42,12 @@ RSpec.describe "API entrypoint" do
 
     run_get entrypoint_url
 
-    expect(response.parsed_body['server_info']).to be_kind_of(Hash)
-    expect(response.parsed_body['server_info']['version']).to eq(Vmdb::Appliance.VERSION)
-    expect(response.parsed_body['server_info']['build']).to eq(Vmdb::Appliance.BUILD)
-    expect(response.parsed_body['server_info']['appliance']).to eq(MiqServer.my_server.name)
+    expect(response.parsed_body).to include(
+      "server_info" => a_hash_including(
+        "version"   => Vmdb::Appliance.VERSION,
+        "build"     => Vmdb::Appliance.BUILD,
+        "appliance" => MiqServer.my_server.name
+      )
+    )
   end
 end
