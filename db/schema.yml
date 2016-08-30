@@ -1626,6 +1626,8 @@ load_balancer_listeners:
 - created_at
 - updated_at
 - type
+- load_balancer_port_range
+- instance_port_range
 load_balancer_pool_member_pools:
 - id
 - load_balancer_pool_id
