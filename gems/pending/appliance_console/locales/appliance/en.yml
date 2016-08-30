@@ -13,6 +13,7 @@ en:
     - dbrestore
     - db_config
     - db_replication
+    - db_maintenance
     - failover_monitor
     - httpdauth
     - extauth_opts
@@ -32,6 +33,7 @@ en:
     dbrestore: Restore Database From Backup
     db_config: Configure Database
     db_replication: Configure Database Replication
+    db_maintenance: Configure Database Maintenance
     failover_monitor: Configure Application Database Failover Monitor
     httpdauth: Configure External Authentication (httpd)
     extauth_opts: Update External Authentication Options
