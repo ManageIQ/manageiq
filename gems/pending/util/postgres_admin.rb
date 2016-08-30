@@ -1,5 +1,6 @@
 require 'awesome_spawn'
 require 'pathname'
+require 'linux_admin'
 
 RAILS_ROOT ||= Pathname.new(__dir__).join("../../../")
 
@@ -61,9 +62,13 @@ class PostgresAdmin
     LinuxAdmin::Service.new(service_name).running?
   end
 
+  def self.local_server_in_recovery?
+    data_directory.join("recovery.conf").exist?
+  end
+
   def self.local_server_status
     if service_running?
-      "running"
+      "running (#{local_server_in_recovery? ? "standby" : "primary"})"
     elsif initialized?
       "initialized and stopped"
     else
