@@ -328,7 +328,7 @@ RSpec.describe "Blueprints API" do
         :action   => "edit",
         :resource => {
           :bundle => {
-            :service_catalog => {}
+            :service_catalog => nil
           }
         }
       )
@@ -351,7 +351,7 @@ RSpec.describe "Blueprints API" do
         :action   => "edit",
         :resource => {
           :bundle => {
-            :service_dialog => {}
+            :service_dialog => nil
           }
         }
       )
