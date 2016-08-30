@@ -78,4 +78,21 @@ describe ManageIQ::Providers::Redhat::InfraManager do
       expect(described_class.extract_ems_ref_id("/ovirt-engine/api/vms/123")).to eq("123")
     end
   end
+
+  context "api versions" do
+    let(:ems) { FactoryGirl.create(:ems_redhat) }
+    context "#supported_api_versions" do
+      it "returns the supported api versions" do
+        expect(ems.supported_api_versions).to match_array([3])
+      end
+    end
+
+    context "#supports_api_version?" do
+      it "returns the supported api versions" do
+        allow(ems).to receive(:supported_api_versions).and_return([3])
+        expect(ems.supports_api_version?(3)).to eq(true)
+        expect(ems.supports_api_version?(6)).to eq(false)
+      end
+    end
+  end
 end

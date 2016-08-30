@@ -99,6 +99,8 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
 
   def connect(options = {})
     raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
+    version  = options[:version] || 3
+    raise "version #{version} of the api is not supported by the provider" unless supports_api_version?(version)
 
     # If there is API path stored in the endpoints table and use it:
     path = default_endpoint.path
@@ -109,17 +111,24 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     username = options[:user] || authentication_userid(options[:auth_type])
     password = options[:pass] || authentication_password(options[:auth_type])
     service  = options[:service] || "Service"
-    version  = options[:version] || 3
 
     # Create the underlying connection according to the version of the oVirt API requested by
     # the caller:
-    connect_method = version == 4 ? :raw_connect_v4 : :raw_connect_v3
+    connect_method = "raw_connect_v#{version}".to_sym
     connection = self.class.public_send(connect_method, server, port, path, username, password, service)
 
     # Copy the API path to the endpoints table:
     default_endpoint.path = version == 4 ? '/ovirt-engine/api' : connection.api_path
 
     connection
+  end
+
+  def supported_api_versions
+    [3]
+  end
+
+  def supports_api_version?(version)
+    supported_api_versions.include?(version)
   end
 
   def rhevm_service
