@@ -97,8 +97,8 @@ RSpec.configure do |config|
 
   config.before(:each, :rest_api => true) { init_api_spec_env }
 
-  config.after(:each) do
-    EvmSpecHelper.clear_caches
+  config.around(:each) do |example|
+    EvmSpecHelper.clear_caches { example.run }
   end
 
   if ENV["TRAVIS"] && ENV["TEST_SUITE"] == "vmdb"

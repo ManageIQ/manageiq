@@ -17,8 +17,6 @@ describe Vmdb::Settings do
     end
 
     context "dumping the settings to the log directory" do
-      after { ::Settings.reload! }
-
       it "writes them" do
         ::Settings.api.token_ttl = "1.minute"
         described_class.on_reload

@@ -2,7 +2,6 @@ describe TimeProfile do
   before(:each) do
     @server = EvmSpecHelper.local_miq_server
     @ems    = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
-    EvmSpecHelper.clear_caches
   end
 
   it "will default to the correct profile values" do
