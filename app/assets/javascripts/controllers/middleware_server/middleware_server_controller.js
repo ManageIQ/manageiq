@@ -73,9 +73,9 @@ function MwServerController($scope, miqService) {
   };
 
   $scope.resetDeployForm = function () {
-    $scope.enableDeployment = true;
-    $scope.runtimeName = undefined;
-    $scope.filePath = undefined;
+    $scope.deployAddModel.enableDeployment = true;
+    $scope.deployAddModel.runtimeName = undefined;
+    $scope.deployAddModel.filePath = undefined;
     angular.element('#deploy_div :file#upload_file').val('');
     angular.element('#deploy_div input[type="text"]:disabled').val('');
   };
