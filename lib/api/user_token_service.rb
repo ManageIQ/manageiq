@@ -3,10 +3,11 @@ module Api
     def initialize(config = Settings, args = {})
       @config = config
       @svc_options = args
-      @token_mgr = new_token_mgr(base_config[:module], base_config[:name], api_config)
     end
 
-    attr_accessor :token_mgr
+    def token_mgr
+      @token_mgr ||= new_token_mgr(base_config[:module], base_config[:name], api_config)
+    end
 
     # Additional Requester type token ttl's for authentication
     #
