@@ -1,8 +1,12 @@
 class CloudTenant < ApplicationRecord
+  TENANT_MAPPING_ASSOCIATIONS = %i(vms_and_templates).freeze
+
   include NewWithTypeStiMixin
   include VirtualTotalMixin
+  extend ActsAsTree::TreeWalker
 
   belongs_to :ext_management_system, :foreign_key => "ems_id", :class_name => "ManageIQ::Providers::CloudManager"
+  has_one    :source_tenant, :as => :source, :class_name => 'Tenant'
   has_many   :security_groups
   has_many   :cloud_networks
   has_many   :cloud_subnets
@@ -22,7 +26,7 @@ class CloudTenant < ApplicationRecord
 
   acts_as_miq_taggable
 
-  acts_as_tree
+  acts_as_tree :order => 'name'
 
   virtual_total :total_vms, :vms
 
@@ -32,6 +36,27 @@ class CloudTenant < ApplicationRecord
 
   def shared_cloud_networks
     try(:ext_management_system).try(:cloud_networks).try(:where, :shared => true) || []
+  end
+
+  def update_source_tenant_associations
+    TENANT_MAPPING_ASSOCIATIONS.each do |tenant_association|
+      custom_update_method = "#{__method__}_for_#{tenant_association}"
+
+      if respond_to?(custom_update_method)
+        public_send(custom_update_method)
+      end
+    end
+  end
+
+  def update_source_tenant_associations_for_vms_and_templates
+    vms_and_templates.each do |object|
+      object.miq_group_id = source_tenant.default_miq_group_id
+      object.save!
+    end
+  end
+
+  def self.with_ext_management_system(ems_id)
+    where(:ext_management_system => ems_id)
   end
 
   def self.post_refresh_ems(ems_id, _)
