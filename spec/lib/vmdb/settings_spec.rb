@@ -1,8 +1,4 @@
 describe Vmdb::Settings do
-  before do
-    skip "Affected by some global state change, needs fixing"
-  end
-
   describe ".on_reload" do
     it "is called on top-level ::Settings.reload!" do
       expect(described_class).to receive(:on_reload)
