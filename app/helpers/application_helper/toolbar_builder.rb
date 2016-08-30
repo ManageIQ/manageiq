@@ -714,7 +714,7 @@ class ApplicationHelper::ToolbarBuilder
       when "miq_ae_domain_delete", "miq_ae_domain_edit"
         return true unless @record.editable_properties?
       when "miq_ae_namespace_edit"
-        return true unless @record.editable_contents?
+        return true unless editable_domain?(@record)
       when "miq_ae_instance_copy", "miq_ae_method_copy"
         return false unless editable_domain?(@record)
       when "miq_ae_git_refresh"
