@@ -89,7 +89,7 @@ module CloudSubnetHelper::TextualSummary
     label = _("Managed Subnets")
     num   = @record.number_of(:cloud_subnets)
     h     = {:label => label, :image => "cloud_subnet", :value => num}
-    if num > 0 && role_allows(:feature => "cloud_subnet_show_list")
+    if num > 0 && role_allows?(:feature => "cloud_subnet_show_list")
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'cloud_subnets')
       h[:title] = _("Show all %{label}") % {:label => label}
     end
