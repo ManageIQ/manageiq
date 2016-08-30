@@ -21,6 +21,7 @@ class MiqRegion < ApplicationRecord
   after_save :clear_my_region_cache
 
   acts_as_miq_taggable
+  include AuthenticationMixin
   include UuidMixin
   include NamingSequenceMixin
   include AggregationMixin
@@ -242,6 +243,45 @@ class MiqRegion < ApplicationRecord
     hostname.nil? ? nil : "https://#{hostname}"
   end
 
+  def generate_auth_key(ssh_user, ssh_password, ssh_host = remote_ws_address)
+    key = remote_region_v2_key(ssh_user, MiqPassword.try_decrypt(ssh_password), ssh_host)
+
+    auth = AuthToken.new
+    auth.auth_key = key
+    auth.name = "Region #{region} API Key"
+    auth.resource = self
+    auth.save!
+  end
+
+  def verify_credentials(_auth_type = nil, _options = nil)
+    # TODO: verify the key against the remote api using the api client gem
+    true
+  end
+
+  def api_system_auth_token(userid)
+    region_v2_key = authentication_token
+
+    token_hash = {
+      :server_guid => remote_ws_miq_server.guid,
+      :userid      => userid,
+      :timestamp   => Time.now.utc
+    }
+
+    file = Tempfile.new("region_auth_key")
+    begin
+      file.write(region_v2_key)
+      file.close
+      key = EzCrypto::Key.load(file.path)
+      MiqPassword.new.encrypt(token_hash.to_yaml, "v2", key)
+    ensure
+      file.unlink
+    end
+  end
+
+  def self.api_system_auth_token_for_region(region_id, user)
+    find_by_region(region_id).api_system_auth_token(user)
+  end
+
   #
   # Region atStartup - log all management systems
   #
@@ -320,5 +360,11 @@ class MiqRegion < ApplicationRecord
 
   def clear_my_region_cache
     MiqRegion.my_region_clear_cache
+  end
+
+  def remote_region_v2_key(ssh_user, ssh_password, ssh_host)
+    require 'net/scp'
+    key_path = "/var/www/miq/vmdb/certs/v2_key"
+    Net::SCP.download!(ssh_host, ssh_user, key_path, nil, :ssh => {:password => ssh_password})
   end
 end
