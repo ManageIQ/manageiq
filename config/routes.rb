@@ -2754,7 +2754,7 @@ Vmdb::Application.routes.draw do
   # OPTIONS requests for REST API pre-flight checks
   match '/api/*path' => 'api/base#handle_options_request', :via => [:options]
 
-  get '/api(/:version)' => 'api/base#show_entrypoint', :format => 'json', :version => API_VERSION_REGEX
+  get '/api(/:version)' => 'api#index', :format => 'json', :version => API_VERSION_REGEX
 
   unless defined?(API_ACTIONS)
     API_ACTIONS = {

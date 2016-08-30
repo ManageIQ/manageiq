@@ -57,7 +57,6 @@ module Api
     #
     # Support for API Collections
     #
-    include_concern 'Entrypoint'
     include_concern 'Generic'
 
     include_concern 'Accounts'
