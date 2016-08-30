@@ -2476,6 +2476,7 @@ describe ApplicationHelper do
       }
       @tb_buttons = {}
       @button = {:id => "custom_#{btn_num}"}
+      @button = ApplicationHelper::Button::Basic.new(nil, nil, {}, {:id => "custom_#{btn_num}"})
       allow_any_instance_of(Object).to receive(:query_string).and_return("")
       allow_message_expectations_on_nil
     end
@@ -2514,6 +2515,34 @@ describe ApplicationHelper do
       it "when input[:onwhen] exists" do
         @input[:onwhen] = '1+'
         expect(subject).to have_key(:onwhen)
+      end
+    end
+
+    context "internationalization" do
+      it "does translation of text title and confirm strings" do
+        %i(text title confirm).each do |key|
+          @input[key] = 'Configuration' # common button string, translated into Japanese
+        end
+        FastGettext.locale = 'ja'
+        apply_common_props(@button, @input)
+        %i(text title confirm).each do |key|
+          expect(@button[key]).not_to match('Configuration')
+        end
+        FastGettext.locale = 'en'
+      end
+
+      it "does delayed translation of text title and confirm strings" do
+        %i(text title confirm).each do |key|
+          @input[key] = proc do
+            _("Add New %{model}") % {:model => 'Model'}
+          end
+        end
+        FastGettext.locale = 'ja'
+        apply_common_props(@button, @input)
+        %i(text title confirm).each do |key|
+          expect(@button[key]).not_to match('Add New Model')
+        end
+        FastGettext.locale = 'en'
       end
     end
   end

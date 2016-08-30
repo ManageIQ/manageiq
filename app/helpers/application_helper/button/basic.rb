@@ -14,7 +14,9 @@ class ApplicationHelper::Button::Basic < Hash
 
   # Return content under key such as :text or :confirm run through gettext or
   # evalated in the context of controller variables and helper methods.
-  def localized(key)
+  def localized(key, value = nil)
+    self[key] = value if value
+
     case self[key]
     when NilClass then ''
     when Proc     then instance_eval(&self[key])
