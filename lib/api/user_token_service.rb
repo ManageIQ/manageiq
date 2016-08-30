@@ -1,6 +1,6 @@
 module Api
   class UserTokenService
-    TYPES = %w(api ui).freeze
+    TYPES = %w(api ui ws).freeze
     # Additional Requester type token ttl's for authentication
     TYPE_TO_TTL_OVERRIDE = {'ui' => ::Settings.session.timeout}.freeze
 
@@ -9,8 +9,14 @@ module Api
       @svc_options = args
     end
 
-    def token_mgr
-      @token_mgr ||= new_token_mgr(base_config[:module], base_config[:name], api_config)
+    def token_mgr(type)
+      @token_mgr ||= {}
+      case type
+      when 'api', 'ui' # The default API token and UI token share the same TokenStore
+        @token_mgr['api'] ||= new_token_mgr(base_config[:module], base_config[:name], api_config)
+      when 'ws'
+        @token_mgr['ws'] ||= TokenManager.new('ws', :token_ttl => ::Settings.session.timeout)
+      end
     end
 
     # API Settings with additional token ttl's
@@ -25,8 +31,8 @@ module Api
 
       $api_log.info("Generating Authentication Token for userid: #{userid} requester_type: #{requester_type}")
 
-      token_mgr.gen_token(:userid             => userid,
-                          :token_ttl_override => TYPE_TO_TTL_OVERRIDE[requester_type])
+      token_mgr(requester_type).gen_token(:userid             => userid,
+                                          :token_ttl_override => TYPE_TO_TTL_OVERRIDE[requester_type])
     end
 
     def validate_requester_type(requester_type)

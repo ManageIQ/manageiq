@@ -2,11 +2,13 @@ module Api
   class AuthController < BaseController
     def show
       requester_type = fetch_and_validate_requester_type
-      auth_token = Environment.user_token_service.generate_token(@auth_user, requester_type)
+      token_service = Environment.user_token_service
+      auth_token = token_service.generate_token(@auth_user, requester_type)
+      token_info = token_service.token_mgr(requester_type).token_get_info(auth_token)
       res = {
         :auth_token => auth_token,
-        :token_ttl  => api_token_mgr.token_get_info(auth_token, :token_ttl),
-        :expires_on => api_token_mgr.token_get_info(auth_token, :expires_on)
+        :token_ttl  => token_info[:token_ttl],
+        :expires_on => token_info[:expires_on],
       }
       render_resource :auth, res
     end

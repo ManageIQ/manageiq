@@ -119,7 +119,7 @@ module Api
       end
 
       def api_token_mgr
-        Environment.user_token_service.token_mgr
+        Environment.user_token_service.token_mgr('api')
       end
 
       def authenticate_with_user_token(x_auth_token)
