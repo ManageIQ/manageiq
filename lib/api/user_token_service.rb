@@ -27,8 +27,8 @@ module Api
 
       $api_log.info("Generating Authentication Token for userid: #{userid} requester_type: #{requester_type}")
 
-      token_mgr.gen_token(:userid           => userid,
-                          :token_ttl_config => REQUESTER_TTL_CONFIG[requester_type])
+      token_mgr.gen_token(:userid             => userid,
+                          :token_ttl_override => api_config[REQUESTER_TTL_CONFIG[requester_type]])
     end
 
     def validate_requester_type(requester_type)
@@ -50,12 +50,10 @@ module Api
     end
 
     def new_token_mgr(mod, name, api_config)
-      token_ttl    = api_config[:token_ttl]
-      ui_token_ttl = api_config[REQUESTER_TTL_CONFIG["ui"]]
+      token_ttl = api_config[:token_ttl]
 
       options                = {}
       options[:token_ttl]    = token_ttl.to_i_with_method if token_ttl
-      options[:ui_token_ttl] = ui_token_ttl.to_i_with_method if ui_token_ttl
 
       log_init(mod, name, options) if @svc_options[:log_init]
       TokenManager.new(mod, options)
