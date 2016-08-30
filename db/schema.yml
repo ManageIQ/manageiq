@@ -1617,9 +1617,7 @@ load_balancer_listeners:
 - name
 - description
 - load_balancer_protocol
-- load_balancer_port
 - instance_protocol
-- instance_port
 - ems_id
 - cloud_tenant_id
 - load_balancer_id
