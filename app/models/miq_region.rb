@@ -263,6 +263,7 @@ class MiqRegion < ApplicationRecord
     auth.auth_key = key
     auth.name = "Region #{region} API Key"
     auth.resource = self
+    auth.authtype = "system_api"
     auth.save!
   end
 
@@ -272,7 +273,7 @@ class MiqRegion < ApplicationRecord
   end
 
   def api_system_auth_token(userid)
-    region_v2_key = authentication_token
+    region_v2_key = authentication_token("system_api")
 
     token_hash = {
       :server_guid => remote_ws_miq_server.guid,

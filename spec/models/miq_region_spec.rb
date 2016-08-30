@@ -166,7 +166,7 @@ describe MiqRegion do
 
       remote_region.generate_auth_key(user, password, host)
 
-      expect(remote_region.authentication_token).to eq(remote_key)
+      expect(remote_region.authentication_token("system_api")).to eq(remote_key)
     end
   end
 
