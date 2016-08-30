@@ -16,8 +16,8 @@ function MwAddDeploymentController($scope, $http, miqService) {
       headers: {'Content-Type': undefined}
     })
       .then(
-        function() { // success
-          miqService.miqFlash('success', 'Deployment "' + data.runtimeName + '" has been initiated on this server.');
+        function(result) { // success
+          miqService.miqFlash(result.data.status, result.data.msg);
         },
         function() { // error
           miqService.miqFlash('error', 'Unable to deploy "' + data.runtimeName + '" on this server.');
