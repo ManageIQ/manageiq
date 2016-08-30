@@ -466,6 +466,9 @@ class TreeNodeBuilder
         _("Generating Report for - %{report_name}") % {:report_name => name},
         :expand => expand
       )
+    elsif text == "" && status == "error"
+      generic_node(_("Error Generating Report"), image,
+        _("Error Generating Report for %{report_name}") % {:report_name => name})
     else
       generic_node(text, image)
     end
