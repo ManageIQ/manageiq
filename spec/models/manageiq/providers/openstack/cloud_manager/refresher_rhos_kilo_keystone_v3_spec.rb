@@ -4,7 +4,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
   include Openstack::RefreshSpecCommon
 
   before(:each) do
-    setup_ems('10.8.99.245', 'a743425681254134', 5000, "admin", "v3", "default")
+    setup_ems('11.22.33.44', 'password_2WpEraURh', 5000, "admin", "v3", "default")
     @environment = :kilo_keystone_v3
   end
 
