@@ -1,5 +1,6 @@
 require 'MiqVm/MiqVm'
 require 'disk/modules/AzureBlobDisk'
+require 'disk/modules/miq_disk_cache'
 
 class MiqAzureVm < MiqVm
   def initialize(azure_handle, args)
@@ -57,7 +58,7 @@ class MiqAzureVm < MiqVm
       dInfo.rawDisk = true
 
       begin
-        d = AzureBlobDisk.new(sa_svc, @uri, dInfo)
+        d = MiqDiskCache.new(AzureBlobDisk.new(sa_svc, @uri, dInfo), 100, 128)
       rescue => err
         $log.error "Couldn't open disk file: #{df}"
         $log.error err.to_s
