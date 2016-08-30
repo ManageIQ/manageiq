@@ -1724,6 +1724,7 @@
     :identifier: miq_cloud_networks
     :options:
     - :collection
+    - :subcollection
     :verbs: *g
     :klass: CloudNetwork
     :collection_actions:
