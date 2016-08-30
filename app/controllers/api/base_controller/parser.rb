@@ -22,7 +22,7 @@ module Api
         # Method Validation for the collection or sub-collection specified
         if cname && ctype
           mname = @req.method
-          unless collection_config.supports_http_method?(cname, mname)
+          unless collection_config.supports_http_method?(cname, mname) || mname == :options
             raise BadRequestError, "Unsupported HTTP Method #{mname} for the #{ctype} #{cname} specified"
           end
         end

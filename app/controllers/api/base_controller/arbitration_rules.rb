@@ -16,6 +16,10 @@ module Api
         edit_resource(type, id, attributes)
       end
 
+      def options_arbitration_rules
+        render_options(:arbitration_rules, { :field_values => ArbitrationRule.field_values })
+      end
+
       private
 
       def build_rule_attributes(data)
