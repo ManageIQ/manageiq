@@ -8,7 +8,7 @@ class GenericObjectDefinition < ApplicationRecord
     :time     => ActiveModel::Type::Time.new
   }.freeze
 
-  FEATURES = %w(attribute association).freeze
+  FEATURES = %w(attribute association method).freeze
 
   serialize :properties, Hash
 
@@ -22,7 +22,8 @@ class GenericObjectDefinition < ApplicationRecord
 
   before_validation :set_default_properties
   before_validation :normalize_property_attributes,
-                    :normalize_property_associations
+                    :normalize_property_associations,
+                    :normalize_property_methods
 
   before_destroy    :check_not_in_use
 
@@ -37,12 +38,13 @@ class GenericObjectDefinition < ApplicationRecord
     end
 
     define_method("property_#{feature}_defined?") do |attr|
+      return defined_property_methods.include?(attr.to_s) if feature == 'method'
       send("defined_property_#{feature}s").try(:key?, attr.to_s)
     end
   end
 
   def property_defined?(attr)
-    property_attribute_defined?(attr) || property_association_defined?(attr)
+    property_attribute_defined?(attr) || property_association_defined?(attr) || property_method_defined?(attr)
   end
 
   def property_getter(attr, val)
@@ -55,7 +57,7 @@ class GenericObjectDefinition < ApplicationRecord
   end
 
   def properties=(props)
-    props.reverse_merge!(:attributes => {}, :associations => {})
+    props.reverse_merge!(:attributes => {}, :associations => {}, :methods => [])
     super
   end
 
@@ -81,6 +83,11 @@ class GenericObjectDefinition < ApplicationRecord
     end
   end
 
+  def normalize_property_methods
+    props = properties.symbolize_keys
+    properties[:methods] = props[:methods].collect(&:to_s)
+  end
+
   def validate_property_attributes
     properties[:attributes].each do |name, type|
       errors[:properties] << "attribute [#{name}] is not of a recognized type: [#{type}]" unless TYPE_MAP.key?(type.to_sym)
@@ -98,7 +105,8 @@ class GenericObjectDefinition < ApplicationRecord
   end
 
   def validate_property_name_unique
-    common = properties[:attributes].keys & properties[:associations].keys
+    all = properties[:attributes].keys + properties[:associations].keys + properties[:methods]
+    common = all.group_by(&:to_s).select { |_k, v| v.size > 1 }.collect(&:first)
     errors[:properties] << "property name has to be unique: [#{common.join(",")}]" unless common.blank?
   end
 
@@ -109,6 +117,6 @@ class GenericObjectDefinition < ApplicationRecord
   end
 
   def set_default_properties
-    self.properties = {:attributes => {}, :associations => {}} unless properties.present?
+    self.properties = {:attributes => {}, :associations => {}, :methods => []} unless properties.present?
   end
 end
