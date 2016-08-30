@@ -244,7 +244,7 @@ class MiqRegion < ApplicationRecord
   end
 
   def generate_auth_key_queue(ssh_user, ssh_password, ssh_host = nil)
-    args = [ssh_user, ssh_password]
+    args = [ssh_user, MiqPassword.try_encrypt(ssh_password)]
     args << ssh_host if ssh_host
 
     MiqQueue.put_unless_exists(
