@@ -11,14 +11,12 @@ module Api
 
     # Additional Requester type token ttl's for authentication
     #
-    REQUESTER_TTL_CONFIG = {"ui" => :ui_token_ttl}.freeze
+    REQUESTER_TTL_CONFIG = {"ui" => ::Settings.session.timeout}.freeze
 
     # API Settings with additional token ttl's
     #
     def api_config
-      @api_config ||= ::Settings[base_config[:module]].to_hash.merge(
-        REQUESTER_TTL_CONFIG["ui"] => ::Settings.session.timeout
-      )
+      @api_config ||= ::Settings[base_config[:module]].to_hash
     end
 
     def generate_token(userid, requester_type)
@@ -28,7 +26,7 @@ module Api
       $api_log.info("Generating Authentication Token for userid: #{userid} requester_type: #{requester_type}")
 
       token_mgr.gen_token(:userid             => userid,
-                          :token_ttl_override => api_config[REQUESTER_TTL_CONFIG[requester_type]])
+                          :token_ttl_override => REQUESTER_TTL_CONFIG[requester_type])
     end
 
     def validate_requester_type(requester_type)
