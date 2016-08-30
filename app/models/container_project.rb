@@ -51,7 +51,11 @@ class ContainerProject < ApplicationRecord
   include EventMixin
   include Metric::CiMixin
 
-  PERF_ROLLUP_CHILDREN = :container_groups
+  PERF_ROLLUP_CHILDREN = :all_container_groups
+
+  def all_container_groups
+    ContainerGroup.where(:container_project_id => id).or(ContainerGroup.where(:old_container_project_id => id))
+  end
 
   acts_as_miq_taggable
 
