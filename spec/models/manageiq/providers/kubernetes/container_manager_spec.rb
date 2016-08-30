@@ -20,6 +20,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager do
           FactoryGirl.build(:authentication, :authtype => 'hawkular')
         ]
       )
+      allow(@ems).to receive_message_chain(:connect, :proxy_url => "Hello")
+      allow(@ems).to receive_message_chain(:connect, :headers   => { "Authorization" => "Bearer valid-token" })
     end
 
     it "checks for the right credential fields" do

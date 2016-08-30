@@ -379,8 +379,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     }
 
     add_secret_to_pod_def(pod_def, inspector_admin_secret_name) unless inspector_admin_secret_name.blank?
-
-    Kubeclient::Pod.new(pod_def)
+    Kubeclient::Resource.new(pod_def)
   end
 
   def add_secret_to_pod_def(pod_def, inspector_admin_secret_name)
