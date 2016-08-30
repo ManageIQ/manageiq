@@ -70,6 +70,10 @@ class Blueprint < ApplicationRecord
     end
   end
 
+  def self.rule_attributes
+    %w(name description status version)
+  end
+
   private
 
   # Copy a service template and link its blueprint;

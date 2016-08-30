@@ -57,6 +57,11 @@ class ServiceTemplate < ApplicationRecord
     [self] + descendants
   end
 
+  def self.rule_attributes
+    %w(name description options service_type prov_type provision_cost
+       service_template_catalog_id tenant_id blueprint_id generic_subtype)
+  end
+
   def custom_actions
     generic_button_group = CustomButton.buttons_for("Service").select { |button| !button.parent.nil? }
     custom_button_sets_with_generics = custom_button_sets + generic_button_group.map(&:parent).uniq.flatten

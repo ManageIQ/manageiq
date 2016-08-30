@@ -34,6 +34,10 @@ module ManageIQ
           render_normal_destroy
         end
 
+        def options_generic
+          render_options(@req.collection.to_sym)
+        end
+
         #
         # Action Helper Methods
         #
