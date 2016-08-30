@@ -51,6 +51,10 @@ module Spec
         delete url, :headers => update_headers(headers)
       end
 
+      def run_options(url, headers = {})
+        options url, update_headers(headers)
+      end
+
       def resources_include_suffix?(resources, key, suffix)
         resources.any? { |r| r.key?(key) && r[key].match("#{suffix}$") }
       end

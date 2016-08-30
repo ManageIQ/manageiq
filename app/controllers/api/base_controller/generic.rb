@@ -30,6 +30,10 @@ module Api
         render_normal_destroy
       end
 
+      def options
+        render_options(@req.collection)
+      end
+
       #
       # Action Helper Methods
       #

@@ -15,14 +15,14 @@ module Api
     class UnsupportedMediaTypeError < StandardError; end
 
     def handle_options_request
-      head(:ok) if request.request_method == "OPTIONS"
+      head(:ok)
     end
 
     before_action :set_access_control_headers
     def set_access_control_headers
       headers['Access-Control-Allow-Origin'] = '*'
       headers['Access-Control-Allow-Headers'] = 'origin, content-type, authorization, x-auth-token'
-      headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, PATCH'
+      headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, PATCH, OPTIONS'
     end
 
     # Order *Must* be from most generic to most specific
@@ -82,7 +82,8 @@ module Api
     # mechanism.
     #
     if Vmdb::Application.config.action_controller.allow_forgery_protection
-      skip_before_action :verify_authenticity_token, :only => [:show, :update, :destroy, :handle_options_request]
+      skip_before_action :verify_authenticity_token,
+                         :only => [:show, :update, :destroy, :handle_options_request, :options]
     end
 
     def base_config
@@ -106,7 +107,9 @@ module Api
       @api_config      = VMDB::Config.new("vmdb").config[@module.to_sym] || {}
     end
 
-    before_action :parse_api_request, :log_api_request, :validate_api_request, :validate_api_action
+    before_action :parse_api_request, :log_api_request, :validate_api_request
+    before_action :validate_api_action, :except => [:options]
+    before_action :log_request_initiated, :only => [:handle_options_request]
     after_action :log_api_response
   end
 end

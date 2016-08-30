@@ -190,7 +190,7 @@ module Api
           if is_subcollection
             send("#{type}_query_resource", parent_resource_obj)
           elsif by_tag_param
-            klass.find_tagged_with(:all => by_tag_param, :ns  => TAG_NAMESPACE)
+            klass.find_tagged_with(:all => by_tag_param, :ns => TAG_NAMESPACE)
           else
             klass.all
           end
@@ -470,6 +470,28 @@ module Api
           return resource.respond_to?(validate_method) && resource.send(validate_method)
         end
         true
+      end
+
+      def render_options(resource, data = {})
+        collection = collection_class(resource)
+        options =
+          if collection.blank?
+            { :attributes => [], :virtual_attributes => [], :relationships => [] }
+          else
+            {
+              :attributes         => options_attribute_list(collection.attribute_names -
+                                                              collection.virtual_attribute_names),
+              :virtual_attributes => options_attribute_list(collection.virtual_attribute_names),
+              :relationships      => (collection.reflections.keys |
+                                       collection.virtual_reflections.keys.collect(&:to_s)).sort
+            }
+          end
+        options[:data] = data
+        render :json => options
+      end
+
+      def options_attribute_list(attrlist)
+        attrlist.sort.select { |attr| !encrypted_attribute?(attr) }
       end
     end
   end
