@@ -56,7 +56,7 @@ Dir.chdir APP_ROOT do
   end
 
   puts "\n== Removing old logs and tempfiles =="
-  execute "rm -f log/*"
+  execute "find log/ -type 'f' | xargs rm"
   execute "rm -rf tmp/cache"
 
   if options[:do_tests]
