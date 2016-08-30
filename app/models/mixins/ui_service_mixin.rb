@@ -14,6 +14,7 @@ module UiServiceMixin
       :MiddlewareDeploymentEar => {:type => "glyph", :icon => "\uE626", :fontfamily => "icomoon"},                 # product-file-ear-o
       :MiddlewareDeploymentWar => {:type => "glyph", :icon => "\uE627", :fontfamily => "icomoon"},                 # product-file-war-o
       :MiddlewareDomain        => {:type => "glyph", :icon => "\uF0E8", :fontfamily => "FontAwesome"},             # fa-sitemap
+      :MiddlewareMessaging     => {:type => "glyph", :icon => "\uF0EC", :fontfamily => "FontAwesome"},             # fa-exchange (placeholder)
       :MiddlewareServerGroup   => {:type => "glyph", :icon => "\uF00A", :fontfamily => "FontAwesome"},             # fa-th
       :Kubernetes              => {:type => "image", :icon => provider_icon(:Kubernetes)},
       :Openshift               => {:type => "image", :icon => provider_icon(:Openshift)},

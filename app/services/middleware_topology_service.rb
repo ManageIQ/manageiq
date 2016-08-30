@@ -20,6 +20,7 @@ class MiddlewareTopologyService < TopologyService
         :MiddlewareServers => {
           :MiddlewareDeployments => nil,
           :MiddlewareDatasources => nil,
+          :MiddlewareMessagings => nil,
           :lives_on              => {:Host => nil}
         }}}
 
@@ -69,13 +70,13 @@ class MiddlewareTopologyService < TopologyService
   end
 
   def glyph?(entity)
-    [MiddlewareDatasource, MiddlewareDeployment, Vm, MiddlewareDomain, MiddlewareServerGroup]
+    [MiddlewareDatasource, MiddlewareDeployment, Vm, MiddlewareDomain, MiddlewareServerGroup, MiddlewareMessaging]
       .any? { |klass| entity.kind_of? klass }
   end
 
   def build_kinds
     kinds = [:MiddlewareDeployment, :MiddlewareDatasource, :MiddlewareDomain, :MiddlewareManager, :Vm,
-             :MiddlewareServer, :MiddlewareServerGroup]
+             :MiddlewareServer, :MiddlewareServerGroup, :MiddlewareMessaging]
     build_legend_kinds(kinds)
   end
 end
