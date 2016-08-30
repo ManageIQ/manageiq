@@ -909,10 +909,10 @@ module OpsController::OpsRbac
       @right_cell_text = _("Access Control %{model} \"%{name}\"") %
                          {:name  => "#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]",
                           :model => ui_lookup(:model => "MiqRegion")}
-      @users_count   = User.in_my_region.count
-      @groups_count  = MiqGroup.non_tenant_groups.count
-      @roles_count   = MiqUserRole.count
-      @tenants_count = Tenant.roots.count
+      @users_count   = Rbac.filtered(User.in_my_region).count
+      @groups_count  = Rbac.filtered(MiqGroup.non_tenant_groups).count
+      @roles_count   = Rbac.filtered(MiqUserRole).count
+      @tenants_count = Rbac.filtered(Tenant).count
     end
   end
 
