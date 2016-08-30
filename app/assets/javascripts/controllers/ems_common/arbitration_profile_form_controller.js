@@ -27,12 +27,12 @@ ManageIQ.angular.app.controller('arbitrationProfileFormController', ['$scope', '
         $scope.newRecord = false;
         $scope.arbitrationProfileModel.name                 = arbitrationProfileData.name;
         $scope.arbitrationProfileModel.description          = arbitrationProfileData.description;
-        $scope.arbitrationProfileModel.authentication_id    = convertToString(arbitrationProfileData.authentication_id);
-        $scope.arbitrationProfileModel.availability_zone_id = convertToString(arbitrationProfileData.availability_zone_id);
-        $scope.arbitrationProfileModel.cloud_network_id     = convertToString(arbitrationProfileData.cloud_network_id);
-        $scope.arbitrationProfileModel.cloud_subnet_id      = convertToString(arbitrationProfileData.cloud_subnet_id);
-        $scope.arbitrationProfileModel.flavor_id            = convertToString(arbitrationProfileData.flavor_id);
-        $scope.arbitrationProfileModel.security_group_id    = convertToString(arbitrationProfileData.security_group_id);
+        $scope.arbitrationProfileModel.authentication_id    = arbitrationProfileData.authentication_id;
+        $scope.arbitrationProfileModel.availability_zone_id = arbitrationProfileData.availability_zone_id;
+        $scope.arbitrationProfileModel.cloud_network_id     = arbitrationProfileData.cloud_network_id;
+        $scope.arbitrationProfileModel.cloud_subnet_id      = arbitrationProfileData.cloud_subnet_id;
+        $scope.arbitrationProfileModel.flavor_id            = arbitrationProfileData.flavor_id;
+        $scope.arbitrationProfileModel.security_group_id    = arbitrationProfileData.security_group_id;
 
         $scope.profileOptions($scope.arbitrationProfileModel.ems_id, $scope.arbitrationProfileModel.cloud_network_id);
         $scope.modelCopy = angular.copy( $scope.arbitrationProfileModel );
@@ -79,13 +79,6 @@ ManageIQ.angular.app.controller('arbitrationProfileFormController', ['$scope', '
   var emsId = (/ems_cloud\/arbitration_profile_edit\/(\d+)/.exec($location.absUrl())[1]);
   var redirectUrl = '/ems_cloud/arbitration_profiles/' + emsId + '?db=ems_cloud';
 
-  var convertToString = function(id) {
-    if(angular.isDefined(id)) {
-      return id.toString();
-    }
-    return '';
-  }
-
   var setProfileOptions = function() {
     return {
               name:                 $scope.arbitrationProfileModel.name,
@@ -104,30 +97,60 @@ ManageIQ.angular.app.controller('arbitrationProfileFormController', ['$scope', '
     var url = "/api/cloud_networks/" + id + "?attributes=cloud_subnets,security_groups";
 
     API.get(url).then(function(response) {
-      $scope.arbitrationProfileModel.cloud_subnets   = response.cloud_subnets;
-      $scope.arbitrationProfileModel.security_groups = response.security_groups;
+      $scope.cloud_subnets   = response.cloud_subnets;
+      $scope.security_groups = response.security_groups;
+      $scope._cloud_subnet = _.find($scope.cloud_subnets, {id: $scope.arbitrationProfileModel.cloud_subnet_id})
+      $scope._security_group = _.find($scope.security_groups, {id: $scope.arbitrationProfileModel.security_group_id})
     })
 
-    $scope.arbitrationProfileModel.cloud_subnet_id = '';
-    $scope.arbitrationProfileModel.security_group_id = '';
+    if ($scope.arbitrationProfileModel.cloud_network_id != id){
+      $scope.arbitrationProfileModel.cloud_subnet_id = '';
+      $scope.arbitrationProfileModel.security_group_id = '';
+    }
+    $scope.arbitrationProfileModel.cloud_network_id = id;
   };
 
   $scope.profileOptions = function(id, cloud_network_id) {
     var url = "/api/providers/" + id + "?attributes=key_pairs,availability_zones,cloud_networks,cloud_subnets,flavors,security_groups";
 
     API.get(url).then(function(response) {
-      $scope.arbitrationProfileModel.authentications    = response.key_pairs;
-      $scope.arbitrationProfileModel.availability_zones = response.availability_zones;
-      $scope.arbitrationProfileModel.flavors            = response.flavors;
-      $scope.arbitrationProfileModel.cloud_networks     = response.cloud_networks;
+      $scope.authentications    = response.key_pairs;
+      $scope.availability_zones = response.availability_zones;
+      $scope.flavors            = response.flavors;
+      $scope.cloud_networks     = response.cloud_networks;
       if(cloud_network_id != "") {
         $scope.cloudNetworkChanged(cloud_network_id)
       } else {
-        $scope.arbitrationProfileModel.cloud_subnets   = response.cloud_subnets;
-        $scope.arbitrationProfileModel.security_groups = response.security_groups;
+        $scope.cloud_subnets   = response.cloud_subnets;
+        $scope.security_groups = response.security_groups;
       }
+      $scope._authentication = _.find($scope.authentications, {id: $scope.arbitrationProfileModel.authentication_id})
+      $scope._availability_zone = _.find($scope.availability_zones, {id: $scope.arbitrationProfileModel.availability_zone_id})
+      $scope._flavor = _.find($scope.flavors, {id: $scope.arbitrationProfileModel.flavor_id})
+      $scope._cloud_network = _.find($scope.cloud_networks, {id: $scope.arbitrationProfileModel.cloud_network_id})
+      $scope._cloud_subnet = _.find($scope.cloud_subnets, {id: $scope.arbitrationProfileModel.cloud_subnet_id})
+      $scope._security_group = _.find($scope.security_groups, {id: $scope.arbitrationProfileModel.security_group_id})
     })
+
   };
+
+  $scope.$watch('_cloud_network', function(value) {
+    if (value) {
+      $scope.cloudNetworkChanged(value.id)
+      $scope.arbitrationProfileModel[name + '_id'] = value.id;
+    }
+  });
+
+  // watch for all the drop downs on screen
+  "authentication availability_zone flavor cloud_subnet security_group".split(" ").forEach(idWatch)
+
+  function idWatch(name) {
+    $scope.$watch('_' + name, function(value) {
+      if (value) {
+        $scope.arbitrationProfileModel[name + '_id'] = value.id;
+      }
+    });
+  }
 
   init();
 }]);

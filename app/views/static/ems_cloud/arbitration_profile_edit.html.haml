@@ -30,29 +30,20 @@
     %label.col-md-2.control-label{"for" => "authentication_id"}
       = _('Key Pair')
     .col-md-8
-      %select{"ng-model"    => "arbitrationProfileModel.authentication_id",
+      %select{"ng-model"    => "_authentication",
               "name"        => "authentication_id",
-              'ng-options'  => 'authentication.id as authentication.name for authentication in arbitrationProfileModel.authentications track by authentication.id',
+              'ng-options'  => 'authentication as authentication.name for authentication in authentications',
               'pf-select'   => true}
         %option{"value" => ""}
           = "<#{_('Choose')}>"
-
-      -#%select{"ng-init"     => "arbitrationProfileModel._authentication = {id: arbitrationProfileModel.authentication_id}",
-      -#        "ng-change"   => "arbitrationProfileModel.authentication_id = arbitrationProfileModel._authentication.id",
-      -#        "ng-model"    => "arbitrationProfileModel._authentication",
-      -#        "name"        => "authentication_id",
-      -#        'ng-options'  => 'authentication.id as authentication.name for authentication in arbitrationProfileModel.authentications track by authentication.id',
-      -#        'pf-select'   => true}
-        -#%option{"value" => ""}
-        -#  = "<#{_('Choose')}>"
 
   .form-group
     %label.col-md-2.control-label{"for" => "availability_zone_id"}
       = _('Availability Zone')
     .col-md-8
-      %select{"ng-model"    => "arbitrationProfileModel.availability_zone_id",
+      %select{"ng-model"    => "_availability_zone",
               "name"        => "availability_zone_id",
-              "ng-options"  => "availability_zone.id as availability_zone.name for availability_zone in arbitrationProfileModel.availability_zones track by availability_zone.id",
+              "ng-options"  => "availability_zone as availability_zone.name for availability_zone in availability_zones",
               'pf-select'   => true,
               "checkchange" => ""}
         %option{"value" => ""}
@@ -62,9 +53,9 @@
     %label.col-md-2.control-label{"for" => "flavor_id"}
       = _('Flavor')
     .col-md-8
-      %select{"ng-model"    => "arbitrationProfileModel.flavor_id",
+      %select{"ng-model"    => "_flavor",
               "name"        => "flavor_id",
-              "ng-options"  => "flavor.id as flavor.name for flavor in arbitrationProfileModel.flavors track by flavor.id",
+              "ng-options"  => "flavor as flavor.name for flavor in flavors",
               'pf-select'   => true,
               "checkchange" => ""}
         %option{"value" => ""}
@@ -74,10 +65,9 @@
     %label.col-md-2.control-label{"for" => "cloud_network_id"}
       = _('Cloud Network')
     .col-md-8
-      %select{"ng-model"    => "arbitrationProfileModel.cloud_network_id",
+      %select{"ng-model"    => "_cloud_network",
               "name"        => "cloud_network_id",
-              "ng-change"   => "cloudNetworkChanged(arbitrationProfileModel.cloud_network_id)",
-              "ng-options"  => "cloud_network.id as cloud_network.name for cloud_network in arbitrationProfileModel.cloud_networks track by cloud_network.id",
+              "ng-options"  => "cloud_network as cloud_network.name for cloud_network in cloud_networks",
               'pf-select'   => true,
               "checkchange" => ""}
         %option{"value" => ""}
@@ -87,10 +77,10 @@
     %label.col-md-2.control-label{"for" => "cloud_subnet_id"}
       = _('Cloud Subnet')
     .col-md-8
-      %select{"ng-model"    => "arbitrationProfileModel.cloud_subnet_id",
+      %select{"ng-model"    => "_cloud_subnet",
               "name"        => "cloud_subnet_id",
               "checkchange" => "",
-              "ng-options"  => "cloud_subnet.id as cloud_subnet.name for cloud_subnet in arbitrationProfileModel.cloud_subnets track by cloud_subnet.id",
+              "ng-options"  => "cloud_subnet as cloud_subnet.name for cloud_subnet in cloud_subnets",
               'pf-select'   => true}
         %option{"value" => ""}
           = "<#{_('Choose')}>"
@@ -99,9 +89,9 @@
     %label.col-md-2.control-label{"for" => "security_group_id"}
       = _('Security Group')
     .col-md-8
-      %select{"ng-model"    => "arbitrationProfileModel.security_group_id",
+      %select{"ng-model"    => "_security_group",
               "name"        => "security_group_id",
-              "ng-options"  => "security_group.id as security_group.name for security_group in arbitrationProfileModel.security_groups track by security_group.id",
+              "ng-options"  => "security_group as security_group.name for security_group in security_groups",
               'pf-select'   => true,
               "checkchange" => ""}
         %option{"value" => ""}
