@@ -305,11 +305,7 @@ module EmsRefresh::SaveInventoryContainer
     return if hashes.nil?
 
     ems.container_images.reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
+    deletes = []
 
     hashes.each do |h|
       h[:container_image_registry_id] = h[:container_image_registry][:id] unless h[:container_image_registry].nil?
