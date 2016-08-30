@@ -1,5 +1,6 @@
 class EmsMiddlewareController < ApplicationController
   include EmsCommon
+  include Mixins::EmsCommonAngular
 
   before_action :check_privileges
   before_action :get_session_data
@@ -18,7 +19,24 @@ class EmsMiddlewareController < ApplicationController
     redirect_to :action => 'show_list'
   end
 
+  def show_link(ems, options = {})
+    ems_middleware_path(ems.id, options)
+  end
+
+  def ems_path(*args)
+    ems_middleware_path(*args)
+  end
+
+  def new_ems_path
+    new_ems_middleware_path
+  end
+
   def listicon_image(item, _view)
     icon = item.decorate.try(:listicon_image)
   end
+
+  def restful?
+    true
+  end
+  public :restful?
 end
