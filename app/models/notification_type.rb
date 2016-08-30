@@ -21,7 +21,7 @@ class NotificationType < ApplicationRecord
   def self.seed
     seed_data.each do |t|
       rec = find_by_name(t[:name])
-      t[:expires_in] = $1.to_i.send($2).to_i if t[:expires_in] =~ /^(\d+) (minutes?|hours?|days?)$/
+      t[:expires_in] = t[:expires_in].to_i_with_method
       if rec.nil?
         create(t)
       else

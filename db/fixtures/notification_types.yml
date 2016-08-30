@@ -1,11 +1,11 @@
 ---
 - :name: vm_powered_off
   :message: Virtual Machine %{subject} has been powered off
-  :expires_in: 24 hours
+  :expires_in: 24.hours
   :level: :success
   :audience: tenant
 - :name: vm_powered_on
   :message: Virtual Machine %{subject} has been powered on
-  :expires_in: 24 hours
+  :expires_in: 24.hours
   :level: :success
   :audience: tenant
