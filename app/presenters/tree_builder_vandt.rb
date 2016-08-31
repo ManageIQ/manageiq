@@ -1,4 +1,6 @@
 class TreeBuilderVandt < TreeBuilder
+  include TreeBuilderArchived
+
   def tree_init_options(_tree_name)
     {:leaf => 'VmOrTemplate'}
   end
@@ -29,19 +31,6 @@ class TreeBuilderVandt < TreeBuilder
         {:id => "orph", :text => _("<Orphaned>"), :image => "currentstate-orphaned", :tip => _("Orphaned VMs and Templates")}
       ]
     end
-  end
-
-  # Handle custom tree nodes (object is a Hash)
-  def x_get_tree_custom_kids(object, count_only, _options)
-    objects = case object[:id]
-              when "orph" # Orphaned
-                Rbac.filtered(VmInfra.all_orphaned) +
-                Rbac.filtered(TemplateInfra.all_orphaned)
-              when "arch" # Archived
-                Rbac.filtered(VmInfra.all_archived) +
-                Rbac.filtered(TemplateInfra.all_archived)
-              end
-    count_only_or_objects(count_only, objects, "name")
   end
 
   def x_get_child_nodes(id)
