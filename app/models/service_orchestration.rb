@@ -48,7 +48,7 @@ class ServiceOrchestration < Service
 
   def build_stack_options_from_dialog(dialog_options)
     tenant_name = OptionConverter.get_tenant_name(dialog_options)
-    tenant_option = tenant_name ? {:tenant_name => tenant_name} : {}
+    tenant_option = tenant_name.blank? ? {} : {:tenant_name => tenant_name}
 
     converter = OptionConverter.get_converter(dialog_options || {}, orchestration_manager.class)
     converter.stack_create_options.merge(tenant_option)
