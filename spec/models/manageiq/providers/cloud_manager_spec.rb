@@ -186,6 +186,21 @@ describe EmsCloud do
           expect(tenant_ct_4.parent.name).to eq(ct_2.name)
           expect(tenant_ct_4.vm_or_templates).to match_array([vm_3, vm_4, vm_5])
         end
+
+        it "moves out tenant when CloudTenant does not exist under provider's tenant" do
+          ems_cloud.sync_cloud_tenants_with_tenants
+          expect_created_tenant_tree
+
+          ct_4_name = ct_4.name
+
+          ct_4.delete
+
+          ems_cloud.sync_cloud_tenants_with_tenants
+
+          tenant = Tenant.find_by(:name => ct_4_name)
+
+          expect(ems_cloud.source_tenant).to eq(tenant.parent)
+        end
       end
     end
   end
