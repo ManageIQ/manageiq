@@ -11,9 +11,9 @@ describe AggregationMixin do
                                                            :disk_capacity        => 40
                                                           )
                           )
-      end
+      end +
+      [FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware))]
                                 )
-
     expect(cluster.aggregate_cpu_speed).to eq(47_984) # 2999 cpu_speed * 8 cpu_total_cores * 2 hardwares
     expect(cluster.aggregate_disk_capacity).to eq(80)
   end
