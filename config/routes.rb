@@ -2814,7 +2814,11 @@ Vmdb::Application.routes.draw do
                          "/api(/:version)/#{collection_name}(/*c_suffix)",
                          action_for_collection(collection_name, verb))
       else
-        create_api_route(verb, "/api(/:version)/#{collection_name}(/:c_id)", action_for(verb))
+        if collection.options.include?(:subcollection) || collection.subcollections
+          create_api_route(verb, "/api(/:version)/#{collection_name}(/:c_id)", action_for(verb))
+        else
+          create_api_route(verb, "/api(/:version)/#{collection_name}(/:c_id)", action_for_collection(collection_name, verb))
+        end
       end
     end
 
