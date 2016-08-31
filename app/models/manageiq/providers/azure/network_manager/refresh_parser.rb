@@ -17,6 +17,7 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
     @ips               = ::Azure::Armrest::Network::IpAddressService.new(@config)
     @nis               = ::Azure::Armrest::Network::NetworkInterfaceService.new(@config)
     @nsg               = ::Azure::Armrest::Network::NetworkSecurityGroupService.new(@config)
+    @lbs               = ::Azure::Armrest::Network::LoadBalancerService.new(@config)
     @options           = options || {}
     @data              = {}
     @data_index        = {}
@@ -31,6 +32,10 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
     get_cloud_networks
     get_network_ports
     get_floating_ips
+    get_load_balancers
+    get_load_balancer_pools
+    get_load_balancer_listeners
+    get_load_balancer_health_checks
     _log.info("#{log_header}...Complete")
 
     @data
@@ -63,6 +68,10 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
     @floating_ips ||= gather_data_for_this_region(@ips)
   end
 
+  def load_balancers
+    @load_balancers ||= gather_data_for_this_region(@lbs)
+  end
+
   def get_cloud_networks
     cloud_networks = gather_data_for_this_region(@vns)
     process_collection(cloud_networks, :cloud_networks) { |cloud_network| parse_cloud_network(cloud_network) }
@@ -91,6 +100,131 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
 
   def get_floating_ips
     process_collection(floating_ips, :floating_ips) { |n| parse_floating_ip(n) }
+  end
+
+  def get_load_balancers
+    process_collection(load_balancers, :load_balancers) { |lb| parse_load_balancer(lb) }
+  end
+
+  def get_load_balancer_pools
+    @data[:load_balancer_pool_members] = []
+
+    load_balancers.each do |lb|
+      process_collection(lb.properties["backendAddressPools"], :load_balancer_pools) do |pool|
+        parse_load_balancer_pool(pool)
+      end
+    end
+  end
+
+  def get_load_balancer_listeners
+    load_balancers.each do |lb|
+      process_collection(lb.properties["loadBalancingRules"], :load_balancer_listeners) do |listener|
+        parse_load_balancer_listener(lb, listener)
+      end
+    end
+  end
+
+  def get_load_balancer_health_checks
+    load_balancers.each do |lb|
+      process_collection(lb.properties["probes"], :load_balancer_health_checks) do |health_check|
+        parse_load_balancer_health_check(lb, health_check)
+      end
+    end
+  end
+
+  def get_heath_check_listener_and_members(health_check)
+    health_check_members   = []
+    matched_listener       = nil
+
+    port     = health_check.properties["port"]
+    protocol = health_check.properties["protocol"]
+
+    health_check.properties["loadBalancingRules"].to_a.each do |health_check_listener|
+      matched_listener = @data.fetch_path(:load_balancer_listeners).detect do |listener|
+        listener[:ems_ref] == health_check_listener["id"]
+      end
+      if matched_listener
+        get_health_check_members(matched_listener, health_check_members)
+        break
+      end
+    end
+
+    return matched_listener, health_check_members
+  end
+
+  def get_health_check_members(matched_listener, health_check_members)
+    matched_listener[:load_balancer_listener_pools].each do |listener_pool|
+      listener_pool[:load_balancer_pool][:load_balancer_pool_member_pools].collect do |p|
+        health_check_members << parse_health_check_member(p[:load_balancer_pool_member])
+      end
+    end
+
+    health_check_members
+  end
+
+  def parse_load_balancer_pool(pool)
+    uid = pool.id
+
+    new_result = {
+      :type                            => self.class.load_balancer_pool_type,
+      :ems_ref                         => uid,
+      :name                            => pool.name,
+      :load_balancer_pool_member_pools => parse_load_balancer_pool_members(pool)
+    }
+
+    return uid, new_result
+  end
+
+  def parse_load_balancer_pool_members(pool)
+    load_balancer_pool_members = []
+
+    pool["properties"]["backendIPConfigurations"].to_a.each do |ipconfig|
+      uid      = ipconfig.id
+      nic_id   = @data_index.fetch_path(:nic_ipconfig_mapping, uid)
+      instance = @data_index.fetch_path(:network_ports, nic_id)[:device]
+
+      new_result = {
+        :type    => self.class.load_balancer_pool_member_type,
+        :ems_ref => uid,
+        :vm      => instance
+      }
+
+      store_member_in_data_hashes(uid, new_result)
+      load_balancer_pool_members << {:load_balancer_pool_member => new_result}
+    end
+    load_balancer_pool_members
+  end
+
+  def store_member_in_data_hashes(uid, member)
+    if @data_index.fetch_path(:load_balancer_pool_members, uid).blank?
+      @data_index.store_path(:load_balancer_pool_members, uid, member)
+      @data[:load_balancer_pool_members] << member
+    end
+  end
+
+  def parse_load_balancer_health_check(lb, health_check)
+    uid = health_check.id
+    health_check_listener, health_check_members = get_heath_check_listener_and_members(health_check)
+
+    new_result = {
+      :type                               => self.class.load_balancer_health_check_type,
+      :ems_ref                            => uid,
+      :protocol                           => health_check.properties["protocol"],
+      :port                               => health_check.properties["port"],
+      :interval                           => health_check.properties["intervalInSeconds"],
+      :url_path                           => health_check.properties["requestPath"],
+      :load_balancer                      => @data_index.fetch_path(:load_balancers, lb.id),
+      :load_balancer_listener             => health_check_listener,
+      :load_balancer_health_check_members => health_check_members
+    }
+
+    return uid, new_result
+  end
+
+  def parse_health_check_member(member)
+    {
+      :load_balancer_pool_member => @data_index.fetch_path(:load_balancer_pool_members, member[:ems_ref]),
+    }
   end
 
   def parse_cloud_network(cloud_network)
@@ -158,6 +292,38 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
     end
   end
 
+  def parse_load_balancer(lb)
+    name = lb.name
+    uid  = lb.id
+
+    new_result = {
+      :type    => self.class.load_balancer_type,
+      :ems_ref => uid,
+      :name    => name,
+    }
+
+    return uid, new_result
+  end
+
+  def parse_load_balancer_listener(lb, listener)
+    uid     = listener["id"]
+    pool_id = listener.properties["backendAddressPool"]["id"]
+    pool    = @data_index.fetch_path(:load_balancer_pools, pool_id)
+
+    new_result = {
+      :type                         => self.class.load_balancer_listener_type,
+      :ems_ref                      => uid,
+      :load_balancer_protocol       => listener.properties["protocol"],
+      :load_balancer_port           => listener.properties["backendPort"],
+      :instance_protocol            => listener.properties["protocol"],
+      :instance_port                => listener.properties["frontendPort"],
+      :load_balancer                => @data_index.fetch_path(:load_balancers, lb.id),
+      :load_balancer_listener_pools => [{:load_balancer_pool => pool }]
+    }
+
+    return uid, new_result
+  end
+
   def floating_ip_network_port_id(ip)
     # TODO(lsmola) NetworkManager, we need to model ems_ref in model CloudSubnetNetworkPort and relate floating
     # ip to that model
@@ -202,6 +368,10 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
       parse_cloud_subnet_network_port(x)
     end
 
+    network_port.properties.ip_configurations.each do |ipconfig|
+      @data_index.store_path(:nic_ipconfig_mapping, ipconfig.id, uid)
+    end
+
     vm_id  = resource_id_for_instance_id(network_port.properties.try(:virtual_machine).try(:id))
     device = parent_manager_fetch_path(:vms, vm_id)
 
@@ -224,6 +394,26 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
   end
 
   class << self
+    def load_balancer_type
+      ManageIQ::Providers::Azure::NetworkManager::LoadBalancer.name
+    end
+
+    def load_balancer_pool_type
+      ManageIQ::Providers::Azure::NetworkManager::LoadBalancerPool.name
+    end
+
+    def load_balancer_pool_member_type
+      ManageIQ::Providers::Azure::NetworkManager::LoadBalancerPoolMember.name
+    end
+
+    def load_balancer_listener_type
+      ManageIQ::Providers::Azure::NetworkManager::LoadBalancerListener.name
+    end
+
+    def load_balancer_health_check_type
+      ManageIQ::Providers::Azure::NetworkManager::LoadBalancerHealthCheck.name
+    end
+
     def security_group_type
       ManageIQ::Providers::Azure::NetworkManager::SecurityGroup.name
     end
