@@ -6,7 +6,8 @@ class ApiController < Api::BaseController
       :version     => @version,
       :versions    => entrypoint_versions,
       :settings    => user_settings,
-      :identity    => auth_identity
+      :identity    => auth_identity,
+      :server_info => server_info,
     }
     res[:authorization] = auth_authorization if attribute_selection.include?("authorization")
     res[:collections]   = entrypoint_collections
@@ -32,5 +33,13 @@ class ApiController < Api::BaseController
         :description => description
       }
     end
+  end
+
+  def server_info
+    {
+      :version   => vmdb_build_info(:version),
+      :build     => vmdb_build_info(:build),
+      :appliance => appliance_name,
+    }
   end
 end
