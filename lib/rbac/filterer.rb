@@ -349,13 +349,6 @@ module Rbac
       filtered_ids
     end
 
-    def scope_by_indirect_rbac(scope, rbac_filters, user, miq_group)
-      parent_class = rbac_class(scope)
-      filtered_ids = calc_filtered_ids(parent_class, rbac_filters, user, miq_group)
-
-      scope_by_parent_ids(parent_class, scope, filtered_ids)
-    end
-
     # @param parent_class [Class] Class of parent (e.g. Host)
     # @param klass [Class] Class of child node (e.g. Vm)
     # @param scope [] scope for active records (e.g. Vm.archived)
@@ -392,11 +385,6 @@ module Rbac
       scope.find_tags_by_grouping(filter, :ns => '*').reorder(nil)
     end
 
-    def scope_by_direct_rbac(scope, rbac_filters, user, miq_group)
-      filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group)
-      scope_by_ids(scope, filtered_ids)
-    end
-
     def scope_to_tenant(scope, user, miq_group)
       klass = scope.respond_to?(:klass) ? scope.klass : scope
       user_or_group = user || miq_group
@@ -417,9 +405,13 @@ module Rbac
       end
 
       if apply_rbac_to_class?(klass) # CLASSES_THAT_PARTICIPATE_IN_RBAC
-        scope = scope_by_direct_rbac(scope, rbac_filters, user, miq_group)
+        filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group)
+        scope = scope_by_ids(scope, filtered_ids)
       elsif apply_rbac_to_associated_class?(klass) # subclasses of MetricRollup or Metric
-        scope = scope_by_indirect_rbac(scope, rbac_filters, user, miq_group)
+        parent_class = rbac_class(scope)
+        filtered_ids = calc_filtered_ids(parent_class, rbac_filters, user, miq_group)
+
+        scope = scope_by_parent_ids(parent_class, scope, filtered_ids)
       elsif klass == User && user.try!(:self_service?)
         # Self service users searching for users only see themselves
         scope = scope.where(:id => user.id)
