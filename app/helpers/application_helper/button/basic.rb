@@ -46,9 +46,18 @@ class ApplicationHelper::Button::Basic < Hash
     self[:enabled] = !disabled? if self[:enabled].nil?
   end
 
+  def check_instance_variables
+    Array(self.class.instance_variables_required).each do |variable|
+      return false if instance_variable_get("#{variable}").nil?
+    end
+    true
+  end
+  private :check_instance_variables
+
   def skipped?
     return true unless role_allows_feature?
     return true if self.class.record_needed && @record.nil?
+    return true unless check_instance_variables
     calculate_properties
     !visible?
   end
@@ -64,12 +73,16 @@ class ApplicationHelper::Button::Basic < Hash
   end
 
   class << self
-    attr_reader :record_needed
+    attr_reader :record_needed, :instance_variables_required
 
     # Used to avoid rendering buttons dependent on `@record` instance variable
     # if the variable is not set
     def needs_record
       @record_needed = true
+    end
+
+    def needs(*instance_variables)
+      @instance_variables_required = instance_variables
     end
   end
 end

@@ -1,10 +1,11 @@
 class ApplicationHelper::Button::MiqRequestEdit < ApplicationHelper::Button::MiqRequest
-  needs_record
+  needs :@miq_request, :@showtype, :@record
 
-  def skip?
-    return true if super
-    return true if %w(ServiceReconfigureRequest ServiceTemplateProvisionRequest).include?(@miq_request.try(:type))
-    current_user.name != @record.requester_name || ["approved", "denied"].include?(@record.approval_state)
+  def visible?
+    return false unless super
+    return false if %w(ServiceReconfigureRequest ServiceTemplateProvisionRequest).include?(@miq_request.try(:type))
+    return false if current_user.name != @record.requester_name || ["approved", "denied"].include?(@record.approval_state)
+    true
   end
   delegate :current_user, :to => :@view_context
 end
