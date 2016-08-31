@@ -165,13 +165,18 @@ module MiqAeDatastore
   def self.reset_to_defaults
     raise "Datastore directory [#{DATASTORE_DIRECTORY}] not found" unless Dir.exist?(DATASTORE_DIRECTORY)
     saved_attrs = preserved_attrs_for_domains
-    Dir.glob(DATASTORE_DIRECTORY.join("*", MiqAeDomain::DOMAIN_YAML_FILENAME)).each do |domain_file|
-      domain_name = File.basename(File.dirname(domain_file))
+    default_domain_names.each do |domain_name|
       reset_domain(DATASTORE_DIRECTORY, domain_name, Tenant.root_tenant)
     end
 
     restore_attrs_for_domains(saved_attrs)
     reset_default_namespace
+  end
+
+  def self.default_domain_names
+    Dir.glob(DATASTORE_DIRECTORY.join("*", MiqAeDomain::DOMAIN_YAML_FILENAME)).collect do |domain_file|
+      File.basename(File.dirname(domain_file))
+    end
   end
 
   def self.seed
