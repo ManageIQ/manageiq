@@ -1854,6 +1854,11 @@ class VmOrTemplate < ApplicationRecord
     where(ORPHANED_CONDITIONS).to_a
   end
 
+  # where.not(ORPHANED_CONDITIONS).where.not(ARCHIVED_CONDITIONS)
+  def self.not_archived_nor_orphaned
+    where.not(:ems_id => null)
+  end
+
   # Stop certain charts from showing unless the subclass allows
   def non_generic_charts_available?
     false

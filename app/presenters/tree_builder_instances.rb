@@ -39,9 +39,8 @@ class TreeBuilderInstances < TreeBuilder
 
   # Get AvailabilityZone children count/array
   def x_get_tree_az_kids(object, count_only)
-    objects = Rbac.filtered(object.vms.order("name"))
-    objects = objects.reject { |obj| obj.archived? || obj.orphaned? } ## TODO: turn into a scope instead of ruby
-    count_only ? objects.length : objects
+    objects = Rbac.filtered(object.vms.not_archived_nor_orphaned)
+    count_only_or_objects(count_only, objects, "name")
   end
 
   include TreeBuilderArchived
