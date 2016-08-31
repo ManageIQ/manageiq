@@ -1,4 +1,13 @@
 class TopologyService
+  class << self
+    attr_reader :provider_class
+  end
+
+  def initialize(provider_id)
+    @provider_id = provider_id
+    @providers = retrieve_providers(TopologyService.provider_class, @provider_id)
+  end
+
   def retrieve_providers(provider_type, provider_id = nil)
     if provider_id
       retrieve_entity(provider_id, provider_type)

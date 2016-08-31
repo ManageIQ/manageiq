@@ -1,10 +1,7 @@
 class MiddlewareTopologyService < TopologyService
   include UiServiceMixin
 
-  def initialize(provider_id)
-    @provider_id = provider_id
-    @providers = retrieve_providers(ManageIQ::Providers::MiddlewareManager, @provider_id)
-  end
+  @provider_class = ManageIQ::Providers::MiddlewareManager
 
   def build_topology
     topo_items = {}

@@ -1,8 +1,5 @@
 class NetworkTopologyService < TopologyService
-  def initialize(provider_id)
-    @provider_id = provider_id
-    @providers = retrieve_providers(ManageIQ::Providers::NetworkManager, @provider_id)
-  end
+  @provider_class = ManageIQ::Providers::NetworkManager
 
   def entity_type(entity)
     if entity.kind_of?(CloudNetwork)
