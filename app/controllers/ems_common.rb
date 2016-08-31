@@ -291,9 +291,15 @@ module EmsCommon
   def update_button_cancel
     session[:edit] = nil  # clean out the saved info
     _model = model
-    javascript_redirect :action => @lastaction, :id => @ems.id, :display => session[:ems_display],
-                        :flash_msg => _("Edit of %{model} \"%{name}\" was cancelled by the user") %
-                        {:model => ui_lookup(:model => _model.to_s), :name => @ems.name}
+    flash = _("Edit of %{model} \"%{name}\" was cancelled by the user") %
+            {:model => ui_lookup(:model => _model.to_s), :name => @ems.name}
+    if restful_routed?(model)
+      javascript_redirect polymorphic_path(model.find(params[:id]), :escape => false, :load_edit_err => true,
+                                           :flash_msg => flash)
+    else
+      javascript_redirect :action => @lastaction, :id => @ems.id, :display => session[:ems_display],
+                          :flash_msg => flash
+    end
   end
   private :update_button_cancel
 
@@ -311,16 +317,25 @@ module EmsCommon
               {:model => ui_lookup(:model => model.to_s), :name => update_ems.name}
       AuditEvent.success(build_saved_audit(update_ems, @edit))
       session[:edit] = nil  # clean out the saved info
-      javascript_redirect :action => 'show', :id => @ems.id.to_s, :flash_msg => flash
+      if restful_routed?(model)
+        javascript_redirect polymorphic_path(model.find(params[:id]), :flash_msg => flash)
+      else
+        javascript_redirect :action => 'show', :id => @ems.id.to_s, :flash_msg => flash
+      end
       return
     else
       @edit[:errors].each { |msg| add_flash(msg, :error) }
       update_ems.errors.each do |field, msg|
         add_flash("#{field.to_s.capitalize} #{msg}", :error)
       end
+
+      breadcrumb_url = "/#{@table_name}/edit/#{@ems.id}"
+
+      breadcrumb_url = "/#{@table_name}/#{@ems.id}/edit" if restful_routed?(model)
+
       drop_breadcrumb(:name => _("Edit %{table} '%{name}'") % {:table => ui_lookup(:table => @table_name),
                                                                :name  => @ems.name},
-                      :url  => "/#{@table_name}/edit/#{@ems.id}")
+                      :url  => breadcrumb_url)
       @in_a_form = true
       session[:changed] = changed
       @changed = true
@@ -546,7 +561,6 @@ module EmsCommon
   def arbitration_profile_edit
     assert_privileges("arbitration_profile_edit")
     id = params[:show] ? params[:show] : find_checked_items.first
-    # rubocop:disable LineLength
     @arbitration_profile = id ? find_by_id_filtered(ArbitrationProfile, from_cid(id)) : ArbitrationProfile.new
     @refresh_partial = "arbitration_profile_edit"
     @redirect_id = @arbitration_profile.try(:id) || nil
