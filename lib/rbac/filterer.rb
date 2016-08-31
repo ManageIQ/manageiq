@@ -275,8 +275,7 @@ module Rbac
     # the associated application model.  See #rbac_class method
     #
     def apply_rbac_through_association?(klass)
-      return false if [Metric, MetricRollup, VimPerformanceDaily].include?(klass)
-      klass < MetricRollup || klass < Metric
+      klass != VimPerformanceDaily && (klass < MetricRollup || klass < Metric)
     end
 
     def safe_base_class(klass)
