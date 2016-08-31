@@ -162,7 +162,7 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :num_cpu,                              :type => :integer,    :uses => :hardware
   virtual_column :cpu_total_cores,                      :type => :integer,    :uses => :hardware
   virtual_column :cpu_cores_per_socket,                 :type => :integer,    :uses => :hardware
-  virtual_column :v_annotation,                         :type => :string,     :uses => :hardware
+  virtual_delegate :annotation, :to => :hardware, :prefix => "v", :allow_nil => true
   virtual_column :has_rdm_disk,                         :type => :boolean,    :uses => {:hardware => :disks}
   virtual_column :disks_aligned,                        :type => :string,     :uses => {:hardware => {:hard_disks => :partitions_aligned}}
 
@@ -253,11 +253,6 @@ class VmOrTemplate < ApplicationRecord
     end
 
     virtual_column m, :type => :string, :uses => :all_relationships
-  end
-
-  def v_annotation
-    return nil if hardware.nil?
-    hardware.annotation
   end
 
   include RelationshipMixin
