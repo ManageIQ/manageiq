@@ -91,18 +91,20 @@ module ManageIQ::Providers
           return os_resources.first
         end
 
+        $mw_log.warn "Found no OS resources for resource type #{os.path}"
         nil
       end
     end
 
     def os_for(feed)
       with_provider_connection do |connection|
-        resources = connection.inventory.list_resource_types(hawk_escape_id(feed))
-        oses = resources.select { |item| item.id == 'Operating System' }
-        unless oses.nil? || oses.empty?
-          return oses.first
+        resource_types = connection.inventory.list_resource_types(hawk_escape_id(feed))
+        os_types = resource_types.select { |item| item.id.include? 'Operating System' }
+        unless os_types.nil? || os_types.empty?
+          return os_types.first
         end
 
+        $mw_log.warn "Found no OS resource types for feed #{feed}"
         nil
       end
     end
