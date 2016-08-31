@@ -1,4 +1,4 @@
-describe ApplicationHelper::Button::PolicyCopy do
+describe ApplicationHelper::Button::PolicyButton do
   describe '#skip?' do
     it "that supports policy_copy will not be skipped" do
       view_context = setup_view_context_with_sandbox({})
@@ -7,7 +7,7 @@ describe ApplicationHelper::Button::PolicyCopy do
         view_context,
         {},
         {},
-        {:options   => {:feature => 'policy_copy', :condition => proc { false }}}
+        {:options   => {:feature => :some_feature?, :condition => proc { false }}}
       )
       expect(button.skip?).to be_falsey
     end
@@ -19,7 +19,7 @@ describe ApplicationHelper::Button::PolicyCopy do
         view_context,
         {},
         {},
-        {:options   => {:feature => 'policy_copy', :condition => proc { false }}}
+        {:options   => {:feature => :some_feature?, :condition => proc { false }}}
       )
       expect(button.skip?).to be_truthy
     end
