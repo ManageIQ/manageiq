@@ -982,8 +982,6 @@ class MiqExpression
       val = val.split(",") if val.kind_of?(String)
       v_arr = val.to_miq_a.flat_map { |v| "'#{v.to_s.strip}'" }.uniq.sort
       "[#{v_arr.join(",")}]"
-    when "raw"
-      val
     else
       val
     end
