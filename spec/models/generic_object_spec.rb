@@ -162,13 +162,60 @@ describe GenericObject do
   end
 
   describe 'property methods' do
+    let(:ws)   { double("MiqAeWorkspaceRuntime", :root => {"method_result" => "some_return_value"}) }
+    let(:user) { FactoryGirl.create(:user_with_group) }
+
+    before { go.ae_user_identity(user) }
+
     it 'sends defined method to automate' do
-      expect(go).to receive(:call_automate)
+      expect(MiqAeEngine).to receive(:deliver).and_return(ws)
       go.my_host
     end
 
     it 'raises an error for undefined method' do
       expect { go.not_defined_method }.to raise_error(NoMethodError)
+    end
+
+    it 'requires a user id' do
+      options = {
+        :user_id      => user.id,
+        :miq_group_id => user.current_group.id,
+        :tenant_id    => user.current_tenant.id
+      }
+      expect(MiqAeEngine).to receive(:deliver).with(hash_including(options)).and_return(ws)
+      go.my_host
+    end
+
+    context 'passes parameters to automate' do
+      let(:attrs) { {:method_name => 'my_host'} }
+
+      it 'multiple parameters' do
+        options = {:attrs => attrs.merge(:param_1 => 'param1', :param_2 => 'param2')}
+        expect(MiqAeEngine).to receive(:deliver).with(hash_including(options)).and_return(ws)
+        go.my_host('param1', 'param2')
+      end
+
+      it 'no parameter' do
+        expect(MiqAeEngine).to receive(:deliver).with(hash_including(:attrs => attrs)).and_return(ws)
+        go.my_host
+      end
+
+      it 'one array parameter' do
+        options = {:attrs => attrs.merge(:param_1 => %w(p1 p2))}
+        expect(MiqAeEngine).to receive(:deliver).with(hash_including(options)).and_return(ws)
+        go.my_host(%w(p1 p2))
+      end
+
+      it 'one hash parameter' do
+        options = {:attrs => attrs.merge(:param_1 => {:p1 => 1, :p2 => 2})}
+        expect(MiqAeEngine).to receive(:deliver).with(hash_including(options)).and_return(ws)
+        go.my_host(:p1 => 1, :p2 => 2)
+      end
+    end
+
+    it 'returns value from automate' do
+      allow(MiqAeEngine).to receive(:deliver).and_return(ws)
+      expect(go.my_host).to eq("some_return_value")
     end
   end
 end
