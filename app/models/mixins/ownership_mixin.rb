@@ -8,7 +8,21 @@ module OwnershipMixin
     virtual_column :evm_owner_email,                      :type => :string,     :uses => :evm_owner
     virtual_column :evm_owner_name,                       :type => :string,     :uses => :evm_owner
     virtual_column :evm_owner_userid,                     :type => :string,     :uses => :evm_owner
-    virtual_column :owned_by_current_user,                :type => :boolean,    :uses => :evm_owner_userid
+
+    # Determine whether the selected object is owned by the current user
+    # Resulting SQL:
+    #
+    #   ((SELECT (LOWER("users"."userid") = 'some_userid')
+    #     FROM "users"
+    #     WHERE "users"."id" = "THIS_MODELS_TABLE"."evm_owner_id"))
+    virtual_attribute :owned_by_current_user, :boolean, :arel => (lambda do |t|
+      user_table = User.arel_table
+      group_sel  = t.grouping(user_table[:userid].lower.eq(User.current_userid.to_s.try(:downcase)))
+      where_cond = user_table[:id].eq(arel_attribute(:evm_owner_id))
+
+      t.grouping(user_table.project(group_sel).where(where_cond))
+    end)
+
     virtual_column :owning_ldap_group,                    :type => :string,     :uses => :miq_group
 
     # Determine whether to return objects owned by the current user's miq_group
