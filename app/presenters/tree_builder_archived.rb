@@ -8,4 +8,11 @@ module TreeBuilderArchived
     objects = Rbac.filtered(klass.send(method))
     count_only ? objects.length : objects
   end
+
+  def x_get_tree_arch_orph_nodes(model_name)
+    [
+      {:id => "arch", :text => _("<Archived>"), :image => "currentstate-archived", :tip => _("Archived #{model_name}")},
+      {:id => "orph", :text => _("<Orphaned>"), :image => "currentstate-orphaned", :tip => _("Orphaned #{model_name}")}
+    ]
+  end
 end
