@@ -36,7 +36,7 @@ describe Metric::Common do
       res = metric.apply_time_profile(profile)
       expect(res).to be_falsey
     end
-    
+
     it "returns true if time profile were used for aggregation (and rollup record refer to it)" do
       profile = FactoryGirl.create(:time_profile,
                                    :description => "foo",
