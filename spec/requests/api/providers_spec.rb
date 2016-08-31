@@ -100,6 +100,22 @@ describe "Providers API" do
     }
   end
 
+  let(:custom_attributes) do
+    [{
+       "name"       => "expiration_date",
+       "value"      => "2016-09-07 14:32:08 +0300",
+       "field_type" => "Date"
+     },
+     {
+       "name"  => "expected_number_of_nodes",
+       "value" => 2
+     },
+     {
+       "name"  => "sales_force_acount",
+       "value" => "ADF231fdsaVRWQ1"
+     }]
+  end
+
   describe "Providers actions on Provider class" do
     let(:foreman_type) { ManageIQ::Providers::Foreman::Provider }
     let(:sample_foreman) do
@@ -154,6 +170,24 @@ describe "Providers API" do
       run_post(providers_url, sample_rhevm)
 
       expect(response).to have_http_status(:forbidden)
+    end
+
+    it "creates provider with custom attributes" do
+      api_basic_authorize collection_action_identifier(:providers, :create)
+      run_post(providers_url, sample_rhevm.merge!("custom_attributes" => custom_attributes))
+      provider = ExtManagementSystem.find_by(:name => "sample rhevm")
+
+      expect(provider.custom_attributes.count).to eq(3)
+
+      expect(CustomAttribute.find_by_name("expiration_date").serialized_value.class).to eq(Date)
+
+      expect(CustomAttribute.find_by_name("expected_number_of_nodes").serialized_value.class).to eq(Fixnum)
+
+      expect(CustomAttribute.find_by_name("sales_force_acount").serialized_value.class).to eq(String)
+
+      expect(CustomAttribute.where(:section => "metadata").count).to eq(3)
+
+      expect(response).to have_http_status(:success)
     end
 
     it "rejects provider creation with id specified" do
@@ -330,6 +364,21 @@ describe "Providers API" do
       run_post(providers_url, gen_request(:edit, "name" => "provider name", "href" => providers_url(999_999)))
 
       expect(response).to have_http_status(:forbidden)
+    end
+
+    it "edits a provider custom_attribute" do
+      api_basic_authorize collection_action_identifier(:providers, :edit)
+      provider = FactoryGirl.create(:ext_management_system, sample_rhevm)
+
+      expect(provider.custom_attributes.count).to eq(0)
+
+      run_post(providers_url, gen_request(:edit, "id" => provider.id, "custom_attributes" => custom_attributes))
+
+      expect(provider.custom_attributes.count).to eq(3)
+
+      expect(CustomAttribute.where(:section => "metadata").count).to eq(3)
+
+      expect(response).to have_http_status(:success)
     end
 
     it "rejects edits for invalid resources" do

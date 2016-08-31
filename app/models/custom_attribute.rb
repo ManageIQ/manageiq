@@ -1,4 +1,5 @@
 class CustomAttribute < ApplicationRecord
+  ALLOWED_API_FIELD_TYPES = %w(DateTime Time Date).freeze
   belongs_to :resource, :polymorphic => true
   serialize :serialized_value
 
