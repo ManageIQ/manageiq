@@ -12,9 +12,6 @@
   .col-md-12.col-lg-6
     %h3
       = _('VMs')
-    %table.admintable{:height => "75"}
-      %tbody
-        %tr
-          %td
-            - if @view
-              = render :partial => "layouts/gtl", :locals => {:view => @view}
+
+    - if @view
+      = render :partial => "layouts/gtl", :locals => {:view => @view}

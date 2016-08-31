@@ -41,14 +41,10 @@
   %hr
   %h3
     = _('Affected Items')
-  %table.admintable{:height => "75"}
-    %tbody
-      %tr
-        %td
-          - if @ownershipitems
-            - @embedded = true
-            - @gtl_type = settings(:views, :tagging)
-            = render :partial => "layouts/gtl"
+  - if @ownershipitems
+    - @embedded = true
+    - @gtl_type = settings(:views, :tagging)
+    = render :partial => "layouts/gtl"
 
   %div_for_paging{'ng-controller'           => "pagingDivButtonGroupController",
                   'paging_div_buttons_id'   => "angular_paging_div_buttons",
