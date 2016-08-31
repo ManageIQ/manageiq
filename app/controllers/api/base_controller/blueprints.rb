@@ -60,7 +60,7 @@ module Api
       end
 
       def service_dialog_options(bundle)
-        Dialog.find(parse_id(bundle["service_dialog"], :service_dialogs)) if bundle["service_catalog"]
+        Dialog.find(parse_id(bundle["service_dialog"], :service_dialogs)) if bundle["service_dialog"]
       end
     end
   end

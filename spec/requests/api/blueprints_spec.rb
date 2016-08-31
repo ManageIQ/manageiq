@@ -319,6 +319,7 @@ RSpec.describe "Blueprints API" do
       blueprint = FactoryGirl.create(:blueprint)
       original_service_template = FactoryGirl.create(:service_template)
       original_service_catalog = FactoryGirl.create(:service_template_catalog)
+      service_dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field)
       blueprint.create_bundle(:service_templates => [original_service_template],
                               :service_catalog   => original_service_catalog)
       api_basic_authorize action_identifier(:blueprints, :edit)
@@ -328,6 +329,9 @@ RSpec.describe "Blueprints API" do
         :action   => "edit",
         :resource => {
           :bundle => {
+            :service_dialog  => {
+              :id => service_dialog.id
+            },
             :service_catalog => nil
           }
         }
@@ -351,7 +355,10 @@ RSpec.describe "Blueprints API" do
         :action   => "edit",
         :resource => {
           :bundle => {
-            :service_dialog => nil
+            :service_catalog => {
+              :id => original_service_catalog.id
+            },
+            :service_dialog  => nil
           }
         }
       )
