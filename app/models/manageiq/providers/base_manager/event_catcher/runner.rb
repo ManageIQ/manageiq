@@ -158,6 +158,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
     end
 
     _log.info("#{log_prefix} Starting Event Monitor Thread")
+    byebug_term
 
     tid = Thread.new do
       begin

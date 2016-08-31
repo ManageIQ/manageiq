@@ -81,6 +81,7 @@ class ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Runner <
   end
 
   def event_to_hash(event, ems_id = nil)
+    byebug_term
     event.event_type = event.tags[TAG_EVENT_TYPE]
     if event.context
       event.message        = event.context['message'] # optional, prefer context message if provided
