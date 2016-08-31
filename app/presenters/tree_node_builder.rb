@@ -64,6 +64,7 @@ class TreeNodeBuilder
 
       generic_node(object.name, "vendor-#{object.image_name}.png", "#{ui_lookup(:model => prefix_model)}: #{object.name}")
     when ChargebackRate       then generic_node(object.description, "chargeback_rate.png")
+    when Classification       then classification_node
     when Compliance
       name = "<b>" + _("Compliance Check on: ") + "</b>" + format_timezone(object.timestamp, Time.zone, 'gtl')
       generic_node(name.html_safe, "#{object.compliant ? "check" : "x"}.png")
@@ -198,6 +199,7 @@ class TreeNodeBuilder
     }
     # Start with all nodes open unless expand is explicitly set to false
     @node[:expand] = options[:open_all].present? && options[:open_all] && options[:expand] != false
+    @node[:hideCheckbox] = options[:hideCheckbox] if options[:hideCheckbox].present?
     tooltip(tip)
   end
 
@@ -215,6 +217,11 @@ class TreeNodeBuilder
                    _("%{type} Storage Adapter: %{name}") % {:type => object.controller_type,
                                                             :name => object.device_name})
     end
+  end
+
+  def classification_node
+    options[:hideCheckbox] = true
+    generic_node(object.description, 'folder', _("Category: %{description}") % {:description => object.description})
   end
 
   def hash_node

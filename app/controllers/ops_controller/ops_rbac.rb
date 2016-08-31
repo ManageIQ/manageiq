@@ -910,7 +910,8 @@ module OpsController::OpsRbac
     [@group.get_managed_filters].flatten.each do |f|
       @filters[f.split("/")[-2] + "-" + f.split("/")[-1]] = f
     end
-    rbac_build_myco_tree                              # Build the MyCompanyTags tree for this user
+    rbac_build_myco_tree # Build the MyCompanyTags tree for this user
+    @tags_tree = TreeBuilderTags.new(:tags, :tags_tree, @sb, true, @edit, @filters, @group)
     @hac_tree = build_belongsto_tree(@belongsto.keys, false, false)  # Build the Hosts & Clusters tree for this user
     @vat_tree = build_belongsto_tree(@belongsto.keys, true, false)  # Build the VMs & Templates tree for this user
   end
@@ -1076,6 +1077,7 @@ module OpsController::OpsRbac
 
     @edit[:current] = copy_hash(@edit[:new])
     rbac_build_myco_tree                              # Build the MyCompanyTags tree for this user
+    @tags_tree = TreeBuilderTags.new(:tags, :tags_tree, @sb, true, @edit, @filters, @group)
     @hac_tree = build_belongsto_tree(@edit[:new][:belongsto].keys, false, false)  # Build the Hosts & Clusters tree for this user
     @vat_tree = build_belongsto_tree(@edit[:new][:belongsto].keys, true, false)  # Build the VMs & Templates tree for this user
   end

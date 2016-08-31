@@ -180,15 +180,8 @@
         = _("This user is limited to items with the selected tags.")
         %br/
         %br/
-        #myco_treebox{:style => "color:#000"}
-        = render(:partial => "layouts/tree",
-                 :locals  => {:tree_id           => "myco_treebox",
-                              :tree_name         => "myco_tree",
-                              :bs_tree           => @myco_tree,
-                              :oncheck           => @edit.nil? ? nil : "miqOnCheckUserFilters",
-                              :check_url         => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
-                              :highlight_changes => true,
-                              :checkboxes        => true})
+          miqDynatreeResetState('#{j_str @tags_tree.name}');
+        = render(:partial => 'shared/tree', :locals => {:tree => @tags_tree, :name => @tags_tree.name})
       = miq_tab_content('hosts_clusters') do
         %br/
         = _("This user is limited to the selected items and their children.")
