@@ -1,4 +1,6 @@
 class NetworkTopologyService < TopologyService
+  include UiServiceMixin
+
   @provider_class = ManageIQ::Providers::NetworkManager
 
   def entity_type(entity)
@@ -55,11 +57,6 @@ class NetworkTopologyService < TopologyService
     }
 
     populate_topology(topo_items, links, build_kinds, icons)
-  end
-
-  def provider_icon(provider_type)
-    file_name = 'svg/vendor-' + provider_type.to_s.underscore.downcase + '.svg'
-    ActionController::Base.helpers.image_path(file_name)
   end
 
   def entity_display_type(entity)
