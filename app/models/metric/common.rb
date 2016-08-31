@@ -44,19 +44,6 @@ module Metric::Common
     virtual_column :v_derived_cpu_total_cores_used, :type => :float
   end
 
-  def v_find_min_max(vcol)
-    interval, mode = vcol.to_s.split("_")[1..2]
-    col = vcol.to_s.split("_")[3..-1].join("_")
-
-    return nil unless interval == "daily" && capture_interval == 1.day
-
-    cond = ["resource_type = ? and resource_id = ? and capture_interval_name = 'hourly' and timestamp >= ? and timestamp < ?",
-            resource_type, resource_id, timestamp.to_date.to_s,  (timestamp + 1.day).to_date.to_s]
-    direction = mode == "min" ? "ASC" : "DESC"
-    rec = MetricRollup.where(cond).order("#{col} #{direction}").first
-    rec.nil? ? nil : rec.send(col)
-  end
-
   def v_derived_storage_used
     return nil if derived_storage_total.nil? || derived_storage_free.nil?
     derived_storage_total - derived_storage_free
