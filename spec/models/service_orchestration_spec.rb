@@ -61,6 +61,23 @@ describe ServiceOrchestration do
       expect(service_with_dialog_options.stack_options).to eq(dialog_options)
     end
 
+    context "cloud tenant option" do
+      it "parses a valid tenant option" do
+        dialog_options['dialog_tenant_name'] = 'abc'
+        expect(service_with_dialog_options.stack_options).to include(:tenant_name => 'abc')
+      end
+
+      it "excludes the tenant option when it is nil" do
+        dialog_options['dialog_tenant_name'] = nil
+        expect(service_with_dialog_options.stack_options).not_to include(:tenant_name)
+      end
+
+      it "excludes thetenant option when it is empty" do
+        dialog_options['dialog_tenant_name'] = ''
+        expect(service_with_dialog_options.stack_options).not_to include(:tenant_name)
+      end
+    end
+
     it "gets stack options from overridden values" do
       new_options = {"any_key" => "any_value"}
       service_with_dialog_options.stack_options = new_options
