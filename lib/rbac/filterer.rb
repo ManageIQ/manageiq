@@ -183,7 +183,7 @@ module Rbac
         scope = apply_scope(klass, scope)
 
         ids_clause = ["#{klass.table_name}.id IN (?)", target_ids] if klass.respond_to?(:table_name)
-      else # targets is a class_name, scope, class, or AASM class (VimPerformanceDaily in particular)
+      else # targets is a class_name, scope, class, or acts_as_ar_model class (VimPerformanceDaily in particular)
         targets = to_class(targets).all
         scope = apply_scope(targets, scope)
 
@@ -283,7 +283,10 @@ module Rbac
       klass = scope.respond_to?(:klass) ? scope.klass : scope
       return klass if apply_rbac_to_class?(klass)
       if apply_rbac_to_associated_class?(klass)
-        return klass.name[0..-12].constantize.base_class # e.g. VmPerformance => VmOrTemplate
+        # Strip "Performance" off class name and fetch base class
+        # e.g. HostPerformance => Host
+        #      VmPerformance   => VmOrTemplate
+        return klass.name[0..-12].constantize.base_class
       end
       nil
     end
@@ -417,16 +420,22 @@ module Rbac
       tenant_id_clause ? scope.where(tenant_id_clause) : scope
     end
 
+    ##
+    # Main scoping method
+    #
     def scope_targets(klass, scope, rbac_filters, user, miq_group)
+      # Results are scoped by tenant if the TenancyMixin is included in the class,
+      # with a few manual exceptions (User, Tenant). Note that the classes in
+      # TENANT_ACCESS_STRATEGY are a consolidated list of them.
       if klass.respond_to?(:scope_by_tenant?) && klass.scope_by_tenant?
         scope = scope_to_tenant(scope, user, miq_group)
       end
 
-      if apply_rbac_to_class?(klass)
+      if apply_rbac_to_class?(klass) # CLASSES_THAT_PARTICIPATE_IN_RBAC
         scope = scope_by_direct_rbac(scope, rbac_filters, user, miq_group)
-      elsif apply_rbac_to_associated_class?(klass)
+      elsif apply_rbac_to_associated_class?(klass) # subclasses of MetricRollup or Metric
         scope = scope_by_indirect_rbac(scope, rbac_filters, user, miq_group)
-      elsif apply_user_group_rbac_to_class?(klass, miq_group)
+      elsif apply_user_group_rbac_to_class?(klass, miq_group) # if (klass == User || Group) && they specify self_service
         scope = scope_by_user_group_rbac(scope, user, miq_group)
       else
         scope
