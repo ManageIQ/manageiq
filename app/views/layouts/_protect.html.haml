@@ -18,10 +18,7 @@
            :item => Dictionary.gettext(session[:pol_db].to_s, :type => :model, :notfound => :titleize, :plural => false),
            :items => Dictionary.gettext(session[:pol_db].to_s, :type => :model, :notfound => :titleize, :plural => true)}
     = n_("Policy changes will affect %{amount} %{item}", "Policy changes will affect %{amount} %{items}", @politems.length) % t
-  %table.admintable{:height => "75"}
-    %tbody
-      %tr
-        %td
-          - if @politems
-            - @embedded = true
-            = render :partial => "layouts/gtl"
+
+  - if @politems
+    - @embedded = true
+    = render :partial => "layouts/gtl"

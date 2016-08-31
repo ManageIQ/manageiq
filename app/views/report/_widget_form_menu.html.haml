@@ -1,17 +1,13 @@
 - url = url_for(:action => 'widget_form_field_changed', :id => "#{@widget.id || "new"}")
 %h3
   = _('Menu Shortcuts')
-%table.admintable
-  %tbody
-    %tr
-      %td.wider
-        = select_tag("add_shortcut",
-          options_for_select([["Add a Shortcut", nil]] + @edit[:avail_shortcuts], nil),
-          :disabled => @edit[:read_only],
-          :class    => "selectpicker")
-        :javascript
-          miqInitSelectPicker();
-          miqSelectPickerEvent("add_shortcut", "#{url}");
+= select_tag("add_shortcut",
+  options_for_select([["Add a Shortcut", nil]] + @edit[:avail_shortcuts], nil),
+  :disabled => @edit[:read_only],
+  :class    => "selectpicker")
+:javascript
+  miqInitSelectPicker();
+  miqSelectPickerEvent("add_shortcut", "#{url}");
 .row#modules
   .col-md-4#col1
     - @edit[:new][:shortcuts].each do |s_id, s_desc|
