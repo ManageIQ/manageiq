@@ -11,15 +11,9 @@ module MiqAeBuiltinMethodSpec
       end
     end
 
-    context 'on fresh class' do
-      before(:each) do
-        # Wipe builtins so the class is fresh to be used
-        described_class.instance_exec { @builtins = nil }
-      end
-
+    context 'with adding a custom method' do
       after(:each) do
-        # Wipe builtins so the class is fresh to be used
-        described_class.instance_exec { @builtins = nil }
+        described_class.remove_builtin(:foo)
       end
 
       it 'is present when defined' do
@@ -31,10 +25,7 @@ module MiqAeBuiltinMethodSpec
       end
 
       it 'raises an exception when unknown builtin invoked' do
-        described_class.builtin :foo do
-        end
-
-        expect { described_class.invoke_builtin(:oops, nil, nil) }.to raise_error(MiqAeException::MethodNotFound)
+        expect { described_class.invoke_builtin(:foo, nil, nil) }.to raise_error(MiqAeException::MethodNotFound)
       end
 
       it 'invokes builtin with no params' do

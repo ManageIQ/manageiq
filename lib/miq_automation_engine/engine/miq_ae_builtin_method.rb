@@ -76,6 +76,11 @@ module MiqAeEngine
         instance_exec(*meth_params, &meth)
       end
 
+      def remove_builtin(name)
+        @builtins ||= {}
+        @builtins.delete(name.to_s)
+      end
+
       # Returns a list of all defined builtins
       def builtins
         @builtins ||= {}
