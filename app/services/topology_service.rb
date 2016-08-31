@@ -4,8 +4,7 @@ class TopologyService
   end
 
   def initialize(provider_id)
-    @provider_id = provider_id
-    @providers = retrieve_providers(TopologyService.provider_class, @provider_id)
+    @providers = retrieve_providers(TopologyService.provider_class, provider_id)
   end
 
   def retrieve_providers(provider_type, provider_id = nil)
