@@ -1099,10 +1099,6 @@ describe Rbac::Filterer do
     end
   end
 
-  # -------------------------------
-  # find targets with rbac are split up into 4 types
-
-  # determine what to run
   it ".apply_rbac_to_class?" do
     expect(described_class.new.send(:apply_rbac_to_class?, Vm)).to be_truthy
     expect(described_class.new.send(:apply_rbac_to_class?, Rbac)).not_to be
@@ -1111,12 +1107,6 @@ describe Rbac::Filterer do
   it ".apply_rbac_to_associated_class?" do
     expect(described_class.new.send(:apply_rbac_to_associated_class?, HostMetric)).to be_truthy
     expect(described_class.new.send(:apply_rbac_to_associated_class?, Vm)).not_to be
-  end
-
-  it ".apply_user_group_rbac_to_class?" do
-    expect(described_class.new.send(:apply_user_group_rbac_to_class?, User, double("MiqGroup", :self_service? => true))).to be_truthy
-    expect(described_class.new.send(:apply_user_group_rbac_to_class?, User, double("MiqGroup", :self_service? => false))).not_to be_truthy
-    expect(described_class.new.send(:apply_user_group_rbac_to_class?, Vm, double("MiqGroup", :self_service? => true))).not_to be_truthy
   end
 
   # find_targets_with_direct_rbac(klass, scope, rbac_filters, find_options, user_or_group)

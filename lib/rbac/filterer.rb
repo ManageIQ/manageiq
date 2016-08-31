@@ -261,10 +261,6 @@ module Rbac
 
     private
 
-    def apply_user_group_rbac_to_class?(klass, miq_group)
-      [User, MiqGroup].include?(klass) && miq_group.try!(:self_service?)
-    end
-
     def apply_rbac_to_class?(klass)
       CLASSES_THAT_PARTICIPATE_IN_RBAC.include?(safe_base_class(klass).name)
     end
@@ -401,17 +397,6 @@ module Rbac
       scope_by_ids(scope, filtered_ids)
     end
 
-    def scope_by_user_group_rbac(scope, user, miq_group)
-      klass = scope.respond_to?(:klass) ? scope.klass : scope
-      if klass == User && user
-        scope.where(:id => user.id)
-      elsif klass == MiqGroup
-        scope.where(:id => miq_group.id)
-      else # no user security applied
-        scope
-      end
-    end
-
     def scope_to_tenant(scope, user, miq_group)
       klass = scope.respond_to?(:klass) ? scope.klass : scope
       user_or_group = user || miq_group
@@ -435,8 +420,12 @@ module Rbac
         scope = scope_by_direct_rbac(scope, rbac_filters, user, miq_group)
       elsif apply_rbac_to_associated_class?(klass) # subclasses of MetricRollup or Metric
         scope = scope_by_indirect_rbac(scope, rbac_filters, user, miq_group)
-      elsif apply_user_group_rbac_to_class?(klass, miq_group) # if (klass == User || Group) && they specify self_service
-        scope = scope_by_user_group_rbac(scope, user, miq_group)
+      elsif klass == User && user.try!(:self_service?)
+        # Self service users searching for users only see themselves
+        scope = scope.where(:id => user.id)
+      elsif klass == MiqGroup && miq_group.try!(:self_service?)
+        # Self Service users searching for groups only see their group
+        scope = scope.where(:id => miq_group.id)
       else
         scope
       end
