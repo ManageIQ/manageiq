@@ -261,10 +261,19 @@ module Rbac
 
     private
 
+    ##
+    # Determine if permissions should be applied directly via klass
+    # (klass directly participates in RBAC)
+    #
     def apply_rbac_directly?(klass)
       CLASSES_THAT_PARTICIPATE_IN_RBAC.include?(safe_base_class(klass).name)
     end
 
+    ##
+    # Determine if permissions should be applied via an associated parent class of klass
+    # If the klass is a metrics subclass, RBAC bases permissions checks on
+    # the associated application model.  See #rbac_class method
+    #
     def apply_rbac_through_association?(klass)
       return false if [Metric, MetricRollup, VimPerformanceDaily].include?(klass)
       klass < MetricRollup || klass < Metric
@@ -279,7 +288,8 @@ module Rbac
       klass = scope.respond_to?(:klass) ? scope.klass : scope
       return klass if apply_rbac_directly?(klass)
       if apply_rbac_through_association?(klass)
-        # Strip "Performance" off class name and fetch base class
+        # Strip "Performance" off class name, which is the associated model
+        # of that metric.
         # e.g. HostPerformance => Host
         #      VmPerformance   => VmOrTemplate
         return klass.name[0..-12].constantize.base_class
