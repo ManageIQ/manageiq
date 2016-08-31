@@ -1099,14 +1099,14 @@ describe Rbac::Filterer do
     end
   end
 
-  it ".apply_rbac_to_class?" do
-    expect(described_class.new.send(:apply_rbac_to_class?, Vm)).to be_truthy
-    expect(described_class.new.send(:apply_rbac_to_class?, Rbac)).not_to be
+  it ".apply_rbac_directly?" do
+    expect(described_class.new.send(:apply_rbac_directly?, Vm)).to be_truthy
+    expect(described_class.new.send(:apply_rbac_directly?, Rbac)).not_to be
   end
 
-  it ".apply_rbac_to_associated_class?" do
-    expect(described_class.new.send(:apply_rbac_to_associated_class?, HostMetric)).to be_truthy
-    expect(described_class.new.send(:apply_rbac_to_associated_class?, Vm)).not_to be
+  it ".apply_rbac_through_association?" do
+    expect(described_class.new.send(:apply_rbac_through_association?, HostMetric)).to be_truthy
+    expect(described_class.new.send(:apply_rbac_through_association?, Vm)).not_to be
   end
 
   # find_targets_with_direct_rbac(klass, scope, rbac_filters, find_options, user_or_group)

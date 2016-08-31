@@ -261,11 +261,11 @@ module Rbac
 
     private
 
-    def apply_rbac_to_class?(klass)
+    def apply_rbac_directly?(klass)
       CLASSES_THAT_PARTICIPATE_IN_RBAC.include?(safe_base_class(klass).name)
     end
 
-    def apply_rbac_to_associated_class?(klass)
+    def apply_rbac_through_association?(klass)
       return false if [Metric, MetricRollup, VimPerformanceDaily].include?(klass)
       klass < MetricRollup || klass < Metric
     end
@@ -277,8 +277,8 @@ module Rbac
 
     def rbac_class(scope)
       klass = scope.respond_to?(:klass) ? scope.klass : scope
-      return klass if apply_rbac_to_class?(klass)
-      if apply_rbac_to_associated_class?(klass)
+      return klass if apply_rbac_directly?(klass)
+      if apply_rbac_through_association?(klass)
         # Strip "Performance" off class name and fetch base class
         # e.g. HostPerformance => Host
         #      VmPerformance   => VmOrTemplate
@@ -404,14 +404,16 @@ module Rbac
         scope = scope_to_tenant(scope, user, miq_group)
       end
 
-      if apply_rbac_to_class?(klass) # CLASSES_THAT_PARTICIPATE_IN_RBAC
+      if apply_rbac_directly?(klass)
         filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group)
         scope = scope_by_ids(scope, filtered_ids)
-      elsif apply_rbac_to_associated_class?(klass) # subclasses of MetricRollup or Metric
-        parent_class = rbac_class(scope)
-        filtered_ids = calc_filtered_ids(parent_class, rbac_filters, user, miq_group)
+      elsif apply_rbac_through_association?(klass)
+        # if subclasses of MetricRollup or Metric, use the associated
+        # model to derive permissions from
+        associated_class = rbac_class(scope)
+        filtered_ids = calc_filtered_ids(associated_class, rbac_filters, user, miq_group)
 
-        scope = scope_by_parent_ids(parent_class, scope, filtered_ids)
+        scope = scope_by_parent_ids(associated_class, scope, filtered_ids)
       elsif klass == User && user.try!(:self_service?)
         # Self service users searching for users only see themselves
         scope = scope.where(:id => user.id)
