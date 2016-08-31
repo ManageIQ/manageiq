@@ -59,38 +59,7 @@ module Api
     #
     include_concern 'Generic'
 
-    include_concern 'Accounts'
     include_concern 'Authentication'
-    include_concern 'AutomationRequests'
-    include_concern 'Blueprints'
-    include_concern 'Categories'
-    include_concern 'CloudNetworks'
-    include_concern 'Conditions'
-    include_concern 'CustomAttributes'
-    include_concern 'Events'
-    include_concern 'Features'
-    include_concern 'Groups'
-    include_concern 'Hosts'
-    include_concern 'Policies'
-    include_concern 'PolicyActions'
-    include_concern 'Providers'
-    include_concern 'ProvisionRequests'
-    include_concern "Rates"
-    include_concern "Reports"
-    include_concern 'RequestTasks'
-    include_concern 'ResourceActions'
-    include_concern 'Roles'
-    include_concern 'ServiceDialogs'
-    include_concern 'ServiceOrders'
-    include_concern 'ServiceRequests'
-    include_concern 'Services'
-    include_concern 'ServiceTemplates'
-    include_concern 'Software'
-    include_concern 'Tags'
-    include_concern 'TenantQuotas'
-    include_concern 'Tenants'
-    include_concern 'Users'
-    include_concern 'Vms'
 
     #
     # Api Controller Hooks

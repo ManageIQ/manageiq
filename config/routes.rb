@@ -2789,10 +2789,6 @@ Vmdb::Application.routes.draw do
     }.freeze
   end
 
-  def action_for(verb)
-    "api/base##{API_ACTIONS[verb]}"
-  end
-
   def action_for_collection(collection_name, verb)
     "api/#{collection_name}##{API_ACTIONS[verb]}"
   end
@@ -2814,11 +2810,7 @@ Vmdb::Application.routes.draw do
                          "/api(/:version)/#{collection_name}(/*c_suffix)",
                          action_for_collection(collection_name, verb))
       else
-        if collection.options.include?(:subcollection) || collection.subcollections
-          create_api_route(verb, "/api(/:version)/#{collection_name}(/:c_id)", action_for(verb))
-        else
-          create_api_route(verb, "/api(/:version)/#{collection_name}(/:c_id)", action_for_collection(collection_name, verb))
-        end
+        create_api_route(verb, "/api(/:version)/#{collection_name}(/:c_id)", action_for_collection(collection_name, verb))
       end
     end
 
@@ -2826,7 +2818,7 @@ Vmdb::Application.routes.draw do
       Api::Settings.collections[subcollection_name].verbs.each do |verb|
         create_api_route(verb,
                          "/api(/:version)/#{collection_name}/:c_id/#{subcollection_name}(/:s_id)",
-                         action_for(verb))
+                         action_for_collection(collection_name, verb))
       end
     end
   end
