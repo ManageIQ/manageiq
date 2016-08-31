@@ -280,6 +280,7 @@ module MiqReport::Generator
           :filter           => conditions,
           :include_for_find => includes,
           :where_clause     => where_clause,
+          :skip_count       => true,
         )
       )
       results = Metric::Helper.remove_duplicate_timestamps(results)

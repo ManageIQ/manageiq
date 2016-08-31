@@ -129,6 +129,7 @@ module Rbac
     # @option options :offset       [Numeric] (default: no offset)
     # @option options :apply_limit_in_sql [Boolean]
     # @option options :ext_options
+    # @option options :skip_count   [Boolean] (default: false)
     # @return [Array<Array<Object>,Hash>] list of object and the associated search options
     #   Array<Object> list of object in the same order as input targets if possible
     # @option attrs :auth_count [Numeric]
@@ -212,11 +213,13 @@ module Rbac
       scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
       targets = scope
 
-      auth_count = attrs[:apply_limit_in_sql] && limit ? targets.except(:offset, :limit, :order).count(:all) : targets.length
+      unless options[:skip_counts]
+        auth_count = attrs[:apply_limit_in_sql] && limit ? targets.except(:offset, :limit, :order).count(:all) : targets.length
+      end
 
       if search_filter && targets && (!exp_attrs || !exp_attrs[:supported_by_sql])
         rejects     = targets.reject { |obj| matches_search_filters?(obj, search_filter, tz) }
-        auth_count -= rejects.length
+        auth_count -= rejects.length unless options[:skip_counts]
         targets -= rejects
       end
 
@@ -231,7 +234,7 @@ module Rbac
         targets = targets.sort_by { |a| target_ids.index(a.id) }
       end
 
-      attrs[:auth_count] = auth_count
+      attrs[:auth_count] = auth_count unless options[:skip_counts]
 
       return targets, attrs
     end
@@ -252,7 +255,7 @@ module Rbac
     end
 
     def filtered(objects, options = {})
-      Rbac.search(options.reverse_merge(:targets => objects)).first
+      Rbac.search(options.reverse_merge(:targets => objects, :skip_counts => true)).first
     end
 
     def filtered_object(object, options = {})
