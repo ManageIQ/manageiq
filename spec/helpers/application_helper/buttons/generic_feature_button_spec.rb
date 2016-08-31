@@ -1,5 +1,5 @@
 describe ApplicationHelper::Button::GenericFeatureButton do
-  describe '#skip?' do
+  describe '#visible?' do
     it "that supports feature :some_feature will not be skipped" do
       record = double
       allow(record).to receive(:supports_some_feature?).and_return(true)
@@ -10,7 +10,7 @@ describe ApplicationHelper::Button::GenericFeatureButton do
         {'record' => record},
         {:options => {:feature => :some_feature}}
       )
-      expect(button.skip?).to be_falsey
+      expect(button.visible?).to be_truthy
     end
 
     it "that dont support feature :some_feature will be skipped" do
@@ -23,7 +23,7 @@ describe ApplicationHelper::Button::GenericFeatureButton do
         {'record' => record},
         {:options => {:feature => :some_feature}}
       )
-      expect(button.skip?).to be_truthy
+      expect(button.visible?).to be_falsey
     end
   end
 end

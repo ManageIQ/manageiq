@@ -1,5 +1,5 @@
 describe ApplicationHelper::Button::VmRetire do
-  describe '#skip?' do
+  describe '#visible?' do
     context "when record is retireable" do
       before do
         @record = FactoryGirl.create(:vm_vmware)

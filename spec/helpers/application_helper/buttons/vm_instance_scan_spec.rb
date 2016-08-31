@@ -1,5 +1,5 @@
 describe ApplicationHelper::Button::VmInstanceScan do
-  describe '#skip?' do
+  describe '#visible?' do
     context "when record has proxy and is not orphaned nor archived" do
       before do
         @record = FactoryGirl.create(:vm_vmware)

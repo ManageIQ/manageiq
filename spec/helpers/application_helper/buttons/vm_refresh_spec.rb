@@ -1,5 +1,5 @@
 describe ApplicationHelper::Button::VmRefresh do
-  describe '#skip?' do
+  describe '#visible?' do
     context "when record has ext_management_system and host vmm_product is workstation" do
       before do
         @record = FactoryGirl.create(:vm_vmware)
