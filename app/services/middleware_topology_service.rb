@@ -20,7 +20,7 @@ class MiddlewareTopologyService < TopologyService
         :MiddlewareServers => {
           :MiddlewareDeployments => nil,
           :MiddlewareDatasources => nil,
-          :MiddlewareMessagings => nil,
+          :MiddlewareMessagings  => nil,
           :lives_on              => {:Host => nil}
         }}}
 
