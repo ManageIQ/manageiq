@@ -48,7 +48,7 @@ class TreeBuilderOpsSettings < TreeBuilderOps
       end.each do |z|
         objects.push(z) if z.adhoc.nil?
       end
-      count_only_or_objects(count_only, objects, nil)
+      count_only_or_objects(count_only, objects)
     when "sis"
       count_only_or_objects(count_only, ScanItemSet.all, "name")
     when "z"

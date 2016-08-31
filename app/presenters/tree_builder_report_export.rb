@@ -31,6 +31,6 @@ class TreeBuilderReportExport < TreeBuilder
        :text  => _('Widgets'),
        :image => 'report'}
     ]
-    count_only_or_objects(count_only, export_children, nil)
+    count_only_or_objects(count_only, export_children)
   end
 end

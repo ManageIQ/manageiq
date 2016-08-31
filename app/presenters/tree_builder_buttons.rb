@@ -25,7 +25,7 @@ class TreeBuilderButtons < TreeBuilderAeCustomization
     objects = CustomButtonSet.find_all_by_class_name(nodes[1])
     # add as first element of array
     objects.unshift(CustomButtonSet.new(:name => "[Unassigned Buttons]|ub-#{nodes[1]}", :description => "[Unassigned Buttons]"))
-    count_only_or_objects(count_only, objects, nil)
+    count_only_or_objects(count_only, objects)
   end
 
   def get_custom_buttons(object)

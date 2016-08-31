@@ -7,7 +7,7 @@ class TreeBuilderCatalogsClass < TreeBuilder
     objects = Rbac.filtered(ServiceTemplateCatalog.all).sort_by { |o| o.name.downcase }
     case options[:type]
     when :stcat
-      return count_only_or_objects(count_only, objects, nil)
+      return count_only_or_objects(count_only, objects)
     when :sandt
       return count_only_or_objects(count_only,
                                    objects.unshift(ServiceTemplateCatalog.new(:name        => 'Unassigned',

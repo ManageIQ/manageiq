@@ -117,30 +117,30 @@ describe TreeBuilder do
       a = FactoryGirl.create(:user_with_email)
       FactoryGirl.create(:user_with_email)
 
-      expect(builder.count_only_or_objects(true, User.none, nil)).to eq(0)
-      expect(builder.count_only_or_objects(true, User.where(:id => a.id), nil)).to eq(1)
-      expect(builder.count_only_or_objects(true, User.all, nil)).to eq(2)
-      expect(builder.count_only_or_objects(true, User.select('id, name'), nil)).to eq(2)
+      expect(builder.count_only_or_objects(true, User.none)).to eq(0)
+      expect(builder.count_only_or_objects(true, User.where(:id => a.id))).to eq(1)
+      expect(builder.count_only_or_objects(true, User.all)).to eq(2)
+      expect(builder.count_only_or_objects(true, User.select('id, name'))).to eq(2)
     end
 
     it 'counts things in an Array' do
-      expect(builder.count_only_or_objects(true, [], nil)).to eq(0)
-      expect(builder.count_only_or_objects(true, [:x], nil)).to eq(1)
-      expect(builder.count_only_or_objects(true, [:x, :y, :z, :z, :y], nil)).to eq(5)
+      expect(builder.count_only_or_objects(true, [])).to eq(0)
+      expect(builder.count_only_or_objects(true, [:x])).to eq(1)
+      expect(builder.count_only_or_objects(true, [:x, :y, :z, :z, :y])).to eq(5)
     end
 
     it 'returns a collection when not counting' do
       a = FactoryGirl.create(:user_with_email)
       b = FactoryGirl.create(:user_with_email)
 
-      expect(builder.count_only_or_objects(false, User.none, nil)).to eq([])
-      expect(builder.count_only_or_objects(false, User.where(:id => a.id), nil)).to eq([a])
-      expect(builder.count_only_or_objects(false, User.all, nil).sort).to eq([a, b].sort)
-      expect(builder.count_only_or_objects(false, User.select('id', 'name'), nil).sort).to eq([a, b].sort)
+      expect(builder.count_only_or_objects(false, User.none)).to eq([])
+      expect(builder.count_only_or_objects(false, User.where(:id => a.id))).to eq([a])
+      expect(builder.count_only_or_objects(false, User.all).sort).to eq([a, b].sort)
+      expect(builder.count_only_or_objects(false, User.select('id', 'name')).sort).to eq([a, b].sort)
 
-      expect(builder.count_only_or_objects(false, [], nil)).to eq([])
-      expect(builder.count_only_or_objects(false, [:x], nil)).to eq([:x])
-      expect(builder.count_only_or_objects(false, [:x, :y, :z, :z, :y], nil)).to eq([:x, :y, :z, :z, :y])
+      expect(builder.count_only_or_objects(false, [])).to eq([])
+      expect(builder.count_only_or_objects(false, [:x])).to eq([:x])
+      expect(builder.count_only_or_objects(false, [:x, :y, :z, :z, :y])).to eq([:x, :y, :z, :z, :y])
     end
 
     it 'sorts the collection' do
