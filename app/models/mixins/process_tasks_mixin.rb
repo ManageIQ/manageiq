@@ -50,8 +50,7 @@ module ProcessTasksMixin
     end
 
     def invoke_tasks_remote(options)
-      ids_by_region = options[:ids].group_by { |id| ApplicationRecord.id_to_region(id.to_i) }
-      ids_by_region.each do |region, ids|
+      ApplicationRecord.group_ids_by_region(options[:ids]).each do |region, ids|
         remote_options = options.merge(:ids => ids)
         hostname = MiqRegion.find_by_region(region).remote_ws_address
         if hostname.nil?
