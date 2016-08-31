@@ -198,11 +198,10 @@ class ProviderForemanController < ApplicationController
       replace_right_cell([:configuration_manager_providers])
     else
       @provider_cfgmgmt.errors.each do |field, msg|
-        @in_a_form = false
         @sb[:action] = nil
         add_flash("#{field.to_s.capitalize} #{msg}", :error)
       end
-      replace_right_cell
+      render_flash
     end
   end
 

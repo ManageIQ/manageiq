@@ -162,7 +162,7 @@ describe ProviderForemanController do
       provider2 = ManageIQ::Providers::Foreman::Provider.new(:name => "test2Foreman",
                                                              :url => "10.8.96.103", :zone => @zone)
       controller.instance_variable_set(:@provider_cfgmgmt, provider2)
-      expect(controller).to receive(:replace_right_cell).once
+      allow(controller).to receive(:render_flash)
       controller.save_provider_foreman
       expect(assigns(:flash_array).first[:message]).to include("Configuration_manager.name has already been taken")
     end
