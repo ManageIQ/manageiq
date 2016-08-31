@@ -72,6 +72,7 @@ module ManageIQ::Providers
       return unless supports_cloud_tenants?
       sync_root_tenant
       sync_tenants
+      sync_deleted_cloud_tenants
     end
 
     def sync_tenants
@@ -106,6 +107,19 @@ module ManageIQ::Providers
         cloud_tenant.update_source_tenant_associations
         cloud_tenant.save!
         $log.info("CloudTenant #{cloud_tenant.name} saved")
+      end
+    end
+
+    def sync_deleted_cloud_tenants
+      return unless source_tenant
+
+      source_tenant.descendants.each do |tenant|
+        next if tenant.source
+        next if tenant.parent == source_tenant # tenant is already under provider's tenant
+
+        # move tenant under the provider's tenant
+        $log.info("Moving out #{tenant.name} under provider's tenant #{source_tenant.name}")
+        tenant.update_attributes(:parent => source_tenant)
       end
     end
 
