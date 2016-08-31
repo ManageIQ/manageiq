@@ -1855,6 +1855,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   # where.not(ORPHANED_CONDITIONS).where.not(ARCHIVED_CONDITIONS)
+  NOT_ARCHIVED_NOR_OPRHANED_CONDITIONS = "vms.ems_id IS NOT NULL".freeze
   def self.not_archived_nor_orphaned
     where.not(:ems_id => null)
   end
