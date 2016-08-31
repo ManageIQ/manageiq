@@ -20,6 +20,18 @@ module UiServiceMixin
       :OpenshiftEnterprise     => {:type => "image", :icon => provider_icon(:OpenshiftEnterprise)},
       :Atomic                  => {:type => "image", :icon => provider_icon(:Atomic)},
       :AtomicEnterprise        => {:type => "image", :icon => provider_icon(:AtomicEnterprise)},
+      :CloudSubnet             => {:type => "glyph", :icon => "\uE909", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-network
+      :NetworkRouter           => {:type => "glyph", :icon => "\uE625", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-route
+      :SecurityGroup           => {:type => "glyph", :icon => "\uE903", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-cloud-security
+      :FloatingIp              => {:type => "glyph", :icon => "\uF041", :fontfamily => "FontAwesome"},             # fa-map-marker
+      :CloudNetwork            => {:type => "glyph", :icon => "\uE62c", :fontfamily => "IcoMoon"},
+      :CloudTenant             => {:type => "glyph", :icon => "\uE904", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-cloud-tenant
+      :LoadBalancer            => {:type => "glyph", :icon => "\uE608", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-load-balancer
+      :Tag                     => {:type => "glyph", :icon => "\uF02b", :fontfamily => "FontAwesome"},
+      :Openstack               => {:type => "image", :icon => provider_icon(:Openstack)},
+      :Amazon                  => {:type => "image", :icon => provider_icon(:Amazon)},
+      :Azure                   => {:type => "image", :icon => provider_icon(:Azure)},
+      :Google                  => {:type => "image", :icon => provider_icon(:Google)},
     }
   end
 

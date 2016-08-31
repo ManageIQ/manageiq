@@ -41,21 +41,6 @@ class NetworkTopologyService < TopologyService
       topo_items, links = build_recursive_topology(entity, entity_relationships[:NetworkManager], topo_items, links)
     end
 
-    icons = {:CloudSubnet   => {:type => "glyph", :icon => "\uE909", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-network
-             :NetworkRouter => {:type => "glyph", :icon => "\uE625", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-route
-             :SecurityGroup => {:type => "glyph", :icon => "\uE903", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-cloud-security
-             :FloatingIp    => {:type => "glyph", :icon => "\uF041", :fontfamily => "FontAwesome"},             # fa-map-marker
-             :CloudNetwork  => {:type => "glyph", :icon => "\uE62c", :fontfamily => "IcoMoon"},
-             :CloudTenant   => {:type => "glyph", :icon => "\uE904", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-cloud-tenant
-             :Vm            => {:type => "glyph", :icon => "\uE90f", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-virtual-machine
-             :LoadBalancer  => {:type => "glyph", :icon => "\uE608", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-load-balancer
-             :Tag           => {:type => "glyph", :icon => "\uF02b", :fontfamily => "FontAwesome"},
-             :Openstack     => {:type => "image", :icon => provider_icon(:Openstack)},
-             :Amazon        => {:type => "image", :icon => provider_icon(:Amazon)},
-             :Azure         => {:type => "image", :icon => provider_icon(:Azure)},
-             :Google        => {:type => "image", :icon => provider_icon(:Google)},
-    }
-
     populate_topology(topo_items, links, build_kinds, icons)
   end
 
