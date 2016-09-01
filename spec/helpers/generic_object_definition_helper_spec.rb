@@ -23,14 +23,10 @@ describe GenericObjectDefinitionHelper do
       allow(toolbar_builder).to receive(:call_by_class).with(
         ApplicationHelper::Toolbar::GenericObjectDefinition
       ).and_return("generic_object")
-
-      allow(toolbar_builder).to receive(:call_by_class).with(
-        ApplicationHelper::Toolbar::BlankView
-      ).and_return("blank_view")
     end
 
     it "collects the built toolbars" do
-      expect(subject.toolbar_from_hash).to eq(%w(xhistory generic_object blank_view))
+      expect(subject.toolbar_from_hash).to eq(%w(xhistory generic_object))
     end
   end
 end

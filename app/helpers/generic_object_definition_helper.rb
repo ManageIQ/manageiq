@@ -1,8 +1,7 @@
 module GenericObjectDefinitionHelper
   TOOLBAR_CLASSES = [
     ApplicationHelper::Toolbar::XHistory,
-    ApplicationHelper::Toolbar::GenericObjectDefinition,
-    ApplicationHelper::Toolbar::BlankView,
+    ApplicationHelper::Toolbar::GenericObjectDefinition
   ]
 
   def toolbar_from_hash
