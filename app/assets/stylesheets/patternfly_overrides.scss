@@ -553,3 +553,18 @@ body#dashboard {
 }
 
 /* end toolbar styling */
+
+.secondary-collapse-toggle-pf {
+  &:before {
+    content: '\f08d';
+  }
+  &.collapsed {
+    &:before {
+      content: '\f08d';
+      display: inline-block;
+      transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      -webkit-transform: rotate(45deg);
+    }
+  }
+}
