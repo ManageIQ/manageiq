@@ -1,8 +1,6 @@
-require_relative "menu_spec_helper"
-
-include MenuSpecHelper
-
 describe Menu::CustomLoader do
+  include Spec::Support::MenuHelper
+
   it "loads custom menu section" do
     temp_file = section_file
     begin
