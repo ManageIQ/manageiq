@@ -969,8 +969,8 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :intel_avx2              => true,
       :intel_turbo             => true,
       :ebs_optimized_available => true,
-      :enhanced_networking     => false,
-      :cluster_networking      => false,
+      :enhanced_networking     => true,
+      :cluster_networking      => true,
       :vpc_only                => false,
     },
   }
