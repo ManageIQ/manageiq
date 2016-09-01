@@ -22,9 +22,9 @@ ManageIQ.angular.app.controller('bootstrapTreeController', ['$http', '$scope', '
 
   var nodeSelectedCallback = function(_event, data) {
     if (data.id) {
-      $http.get('get_object_data/' + data.id).then(sendTreeClickedEvent);
+      $http.get('object_data/' + data.id).then(sendTreeClickedEvent);
     } else {
-      $http.get('get_all_object_data').then(sendRootTreeClickedEvent);
+      $http.get('all_object_data').then(sendRootTreeClickedEvent);
     }
   };
 

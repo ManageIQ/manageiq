@@ -24,19 +24,19 @@ class GenericObjectDefinitionController < ApplicationController
     render :layout => "application"
   end
 
-  def get_all_object_data
+  def all_object_data
     all_generic_object_definitions = GenericObjectDefinition.all.select(%w(id name description))
 
     render :json => all_generic_object_definitions.to_json
   end
 
-  def get_object_data
+  def object_data
     generic_object_definition = GenericObjectDefinition.find(params[:id])
 
     render :json => {:name => generic_object_definition.name, :description => generic_object_definition.description}
   end
 
-  def get_tree_data
+  def tree_data
     tree_data = TreeBuilderGenericObject.new.nodes
 
     render :json => {:tree_data => tree_data}

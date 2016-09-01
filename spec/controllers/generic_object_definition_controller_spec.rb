@@ -58,13 +58,13 @@ describe GenericObjectDefinitionController do
     end
   end
 
-  describe "#get_all_object_data" do
+  describe "#all_object_data" do
     before do
       @generic_object_definition = GenericObjectDefinition.create!(:name => "name", :description => "description")
     end
 
     it "returns all generic object definition ids, names, and descriptions in a json format" do
-      get :get_all_object_data
+      get :all_object_data
       expect(response.body).to eq([{
         :id          => @generic_object_definition.id,
         :name        => "name",
@@ -73,7 +73,7 @@ describe GenericObjectDefinitionController do
     end
   end
 
-  describe "#get_object_data" do
+  describe "#object_data" do
     let(:params) { {:id => @generic_object_definition.id} }
 
     before do
@@ -81,7 +81,7 @@ describe GenericObjectDefinitionController do
     end
 
     it "returns the name and description of the selected item in a json format" do
-      get :get_object_data, params
+      get :object_data, params
       expect(response.body).to eq({
         :name        => "name",
         :description => "description"
@@ -89,7 +89,7 @@ describe GenericObjectDefinitionController do
     end
   end
 
-  describe "#get_tree_data" do
+  describe "#tree_data" do
     let(:tree_builder_generic_object) { double("TreeBuilderGenericObject") }
 
     before do
@@ -98,7 +98,7 @@ describe GenericObjectDefinitionController do
     end
 
     it "returns the tree data" do
-      get :get_tree_data
+      get :tree_data
       expect(response.body).to eq({:tree_data => "the tree data"}.to_json)
     end
   end

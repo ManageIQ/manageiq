@@ -28,7 +28,7 @@ ManageIQ.angular.app.controller('genericObjectDefinitionFormController', ['$http
       sendDataWithRx({eventType: 'treeUpdated', response: JSON.parse(response.data.tree_data)});
     };
 
-    $http.get('get_tree_data').then(successCallback);
+    $http.get('tree_data').then(successCallback);
   };
 
   var hideAndClearForm = function() {

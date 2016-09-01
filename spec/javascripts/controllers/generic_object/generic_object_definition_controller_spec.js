@@ -31,7 +31,7 @@ describe('genericObjectDefinitionFormController', function() {
       }
     );
 
-    $httpBackend.whenGET('get_tree_data').respond({tree_data: JSON.stringify(treeData)});
+    $httpBackend.whenGET('tree_data').respond({tree_data: JSON.stringify(treeData)});
 
     $controller = _$controller_('genericObjectDefinitionFormController', {
       $scope: $scope,

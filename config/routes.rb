@@ -1629,10 +1629,10 @@ Vmdb::Application.routes.draw do
 
     :generic_object_definition => {
       :get => %w(
+        all_object_data
         explorer
-        get_all_object_data
-        get_object_data
-        get_tree_data
+        object_data
+        tree_data
       ),
       :post => %w(
         create

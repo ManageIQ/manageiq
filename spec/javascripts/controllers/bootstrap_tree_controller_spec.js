@@ -46,8 +46,8 @@ describe('bootstrapTreeController', function() {
       }
     });
 
-    $httpBackend.whenGET('get_object_data/123').respond({data: 'single item'});
-    $httpBackend.whenGET('get_all_object_data').respond({data: 'all items'});
+    $httpBackend.whenGET('object_data/123').respond({data: 'single item'});
+    $httpBackend.whenGET('all_object_data').respond({data: 'all items'});
 
     $controller = _$controller_('bootstrapTreeController', {
       $scope: $scope,
