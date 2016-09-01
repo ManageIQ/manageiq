@@ -644,6 +644,10 @@ module ReportController::Reports::Editor
       @refresh_partial = "form"
     elsif params.key?(:cb_groupby)
       @edit[:new][:cb_groupby] = params[:cb_groupby]
+      @refresh_div = "filter_div"
+      @refresh_partial = "form_filter"
+    elsif params.key?(:cb_groupby_tag)
+      @edit[:new][:cb_groupby_tag] = params[:cb_groupby_tag]
     elsif params[:cb_interval]
       @edit[:new][:cb_interval] = params[:cb_interval]
       @edit[:new][:cb_interval_size] = 1
@@ -1195,6 +1199,7 @@ module ReportController::Reports::Editor
       elsif @edit[:new][:cb_show_typ] == "entity"
         options[:provider_id] = @edit[:new][:cb_provider_id]
         options[:entity_id] = @edit[:new][:cb_entity_id]
+        options[:groupby_tag] = @edit[:new][:cb_groupby_tag]
       end
 
       rpt.db_options[:options] = options
@@ -1251,16 +1256,28 @@ module ReportController::Reports::Editor
     if rpt.db.starts_with?("Chargeback") # For chargeback, add in static fields
       rpt.cols = %w(start_date display_range)
       name_col = @edit[:new][:model].constantize.report_name_field
-      rpt.cols += [name_col]
+      tag_col = @edit[:new][:model].constantize.report_tag_field
       if @edit[:new][:cb_groupby] == "date"
+        rpt.cols += [name_col]
         rpt.col_order = ["display_range", name_col]
         rpt.sortby = ["start_date", name_col]
       elsif @edit[:new][:cb_groupby] == "vm"
+        rpt.cols += [name_col]
         rpt.col_order = [name_col, "display_range"]
         rpt.sortby = [name_col, "start_date"]
+      elsif @edit[:new][:cb_groupby] == "tag"
+        rpt.cols += [tag_col]
+        rpt.col_order = [tag_col, "display_range"]
+        rpt.sortby = [tag_col, "start_date"]
       end
       rpt.col_order.each do |c|
-        rpt.headers.push(Dictionary.gettext(c, :type => :column, :notfound => :titleize))
+        if c == tag_col
+          header = @edit[:cb_cats][@edit[:new][:cb_groupby_tag]]
+          rpt.headers.push(Dictionary.gettext(header, :type => :column, :notfound => :titleize))
+        else
+          rpt.headers.push(Dictionary.gettext(c, :type => :column, :notfound => :titleize))
+        end
+
         rpt.col_formats.push(nil) # No formatting needed on the static cols
       end
       rpt.col_options = @edit[:new][:model].constantize.report_col_options
@@ -1489,13 +1506,20 @@ module ReportController::Reports::Editor
         @edit[:new][:cb_show_typ] = "entity"
         @edit[:new][:cb_entity_id] = options[:entity_id]
         @edit[:new][:cb_provider_id] = options[:provider_id]
+        @edit[:new][:cb_groupby_tag] = options[:groupby_tag]
       end
 
       @edit[:new][:cb_model] = Chargeback.report_cb_model(@rpt.db)
       @edit[:new][:cb_interval] = options[:interval]
       @edit[:new][:cb_interval_size] = options[:interval_size]
       @edit[:new][:cb_end_interval_offset] = options[:end_interval_offset]
-      @edit[:new][:cb_groupby] = @rpt.sortby.nil? || @rpt.sortby.first == "start_date" ? "date" : "vm"
+      @edit[:new][:cb_groupby] = if @rpt.sortby.nil? || @rpt.sortby.first == "start_date"
+                                   "date"
+                                 elsif @edit[:new][:cb_groupby_tag].present?
+                                   "tag"
+                                 else
+                                   "vm"
+                                 end
     end
 
     # Only show chargeback users choice if an admin

@@ -235,4 +235,53 @@ describe ChargebackContainerProject do
       expect(subject.cpu_cores_used_cost).to eq(@cpu_usage_rate * @hourly_rate * @metric_size)
     end
   end
+
+  context "group results by tag" do
+    before do
+      @options[:interval] = "monthly"
+      @options[:entity_id] = nil
+      @options[:provider_id] = "all"
+      @options[:groupby_tag] = "environment"
+
+      tz = Metric::Helper.get_time_zone(@options[:ext_options])
+      ts = Time.now.in_time_zone(tz)
+      time     = ts.beginning_of_month.utc
+      end_time = ts.end_of_month.utc
+
+      while time < end_time
+        @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
+                                                      :timestamp                => time,
+                                                      :cpu_usage_rate_average   => @cpu_usage_rate,
+                                                      :derived_vm_numvcpus      => @cpu_count,
+                                                      :derived_memory_available => @memory_available,
+                                                      :derived_memory_used      => @memory_used,
+                                                      :net_usage_rate_average   => @net_usage_rate,
+                                                      :parent_ems_id            => @ems.id,
+                                                      :tag_names                => "environment/prod",
+                                                      :resource_name            => @project.name)
+
+        time += 12.hours
+      end
+      @metric_size = @project.metric_rollups.size
+    end
+
+    subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(@options).first.first }
+
+    it "cpu" do
+      cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_cores_used,
+                               :chargeback_rate_id => @cbr.id,
+                               :per_time           => "hourly")
+      cbt = FactoryGirl.create(:chargeback_tier,
+                               :chargeback_rate_detail_id => cbrd.id,
+                               :start                     => 0,
+                               :finish                    => Float::INFINITY,
+                               :fixed_rate                => 0.0,
+                               :variable_rate             => @hourly_rate.to_s)
+      cbrd.chargeback_tiers = [cbt]
+      cbrd.save
+      expect(subject.cpu_cores_used_metric).to eq(@cpu_usage_rate * @metric_size)
+      expect(subject.cpu_cores_used_cost).to eq(@cpu_usage_rate * @hourly_rate * @metric_size)
+      expect(subject.tag_name).to eq('Production')
+    end
+  end
 end

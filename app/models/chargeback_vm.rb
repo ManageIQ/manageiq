@@ -109,6 +109,10 @@ class ChargebackVm < Chargeback
     "vm_name"
   end
 
+  def self.report_tag_field
+    "tag_name"
+  end
+
   def self.report_col_options
     {
       "cpu_allocated_cost"       => {:grouping => [:total]},
