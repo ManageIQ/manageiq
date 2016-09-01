@@ -912,7 +912,7 @@ class MiqExpression
 
     if ops["tag"] && context_type != "hash"
       ref, val = value2tag(preprocess_managed_tag(ops["tag"]), ops["value"])
-      [ref ? "<exist ref=#{ref}>#{val}</exist>" : "<exist>#{val}</exist>"]
+      ["<exist ref=#{ref}>#{val}</exist>"]
     elsif ops["tag"] && context_type == "hash"
       # This is only for supporting reporting "display filters"
       # In the report object the tag value is actually the description and not the raw tag name.
@@ -945,7 +945,7 @@ class MiqExpression
       end
     elsif ops["count"]
       ref, count = value2tag(ops["count"])
-      field = ref ? "<count ref=#{ref}>#{count}</count>" : "<count>#{count}</count>"
+      field = "<count ref=#{ref}>#{count}</count>"
       [field, quote(ops["value"], "integer")]
     elsif ops["regkey"]
       if operator == "key exists"
