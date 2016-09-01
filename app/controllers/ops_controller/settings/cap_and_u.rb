@@ -108,7 +108,13 @@ module OpsController::Settings::CapAndU
                                          @edit[:new][:non_cl_hosts][i][:capture]])
               end
             end
-            value = positive == @edit[:new][:non_cl_hosts].size
+            value = if positive == @edit[:new][:non_cl_hosts].size
+                      true
+                    elsif positive == 0
+                      false
+                    else
+                      'unsure'
+                    end
             if @edit[:new][:non_cl_hosts] != @edit[:current][:non_cl_hosts]
               @changed_id_list.push(['xx-NonCluster', value])
             else
@@ -216,7 +222,6 @@ module OpsController::Settings::CapAndU
                                            :capture => h.perf_capture_enabled?}
       end
     end
-
     @cluster_tree = TreeBuilderClusters.new(:cluster,
                                             :cluster_tree,
                                             @sb,
@@ -280,7 +285,7 @@ module OpsController::Settings::CapAndU
             c[:capture] = params[:check] == "true"
           end
         else
-          @edit[:new][:non_cl_hosts].find(node_type[1].to_i).first[:capture] = params[:check] == "true"
+          @edit[:new][:non_cl_hosts].find { |x| x[:id] == node_type[1].to_i }[:capture] = params[:check] == "true"
         end
       end
       @edit[:new][:clusters].each do |c| # Check each cluster
