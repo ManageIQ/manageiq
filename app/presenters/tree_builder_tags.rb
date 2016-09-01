@@ -22,8 +22,6 @@ class TreeBuilderTags < TreeBuilder
     locals = super
     locals.merge!(:id_prefix      => 'myco_',
                   :check_url      => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
-                  #:onmousein      => "miqOnMouseInHostNet",
-                  #:onmouseout     => "miqOnMouseOutHostNet",
                   :oncheck        => @edit.nil? ? nil : "miqOnCheckUserFilters",
                   :disable_checks => @edit.nil?,
                   :checkboxes     => true,
