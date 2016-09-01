@@ -99,6 +99,4 @@ module OpsController::Settings::Upload
     @sb[:show_button] = (@sb[:good] && @sb[:good] > 0)
     redirect_to :action => 'explorer', :flash_msg => msg, :flash_error => err, :no_refresh => true
   end
-
-  private
 end
