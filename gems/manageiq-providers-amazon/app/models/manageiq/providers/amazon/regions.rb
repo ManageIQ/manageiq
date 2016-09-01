@@ -63,29 +63,34 @@ module ManageIQ
         }
       }
 
-      REGIONS_BY_HOSTNAME =
-        REGIONS.values.each_with_object({}) do |v, h|
+      def self.regions
+        REGIONS.except(*Array(Settings.ems.ems_amazon.try!(:disabled_regions)))
+      end
+
+      def self.regions_by_hostname
+        regions.values.each_with_object({}) do |v, h|
           h[v[:hostname]] = v
         end
+      end
 
       def self.all
-        REGIONS.values
+        regions.values
       end
 
       def self.names
-        REGIONS.keys
+        regions.keys
       end
 
       def self.hostnames
-        REGIONS_BY_HOSTNAME.keys
+        regions_by_hostname.keys
       end
 
       def self.find_by_name(name)
-        REGIONS[name]
+        regions[name]
       end
 
       def self.find_by_hostname(hostname)
-        REGIONS_BY_HOSTNAME[hostname]
+        regions_by_hostname[hostname]
       end
     end
   end
