@@ -12,7 +12,7 @@ module VmOrTemplate::Scanning
   # Subclasses need to override this method if they support SSA.
   included do
     supports_not :smartstate_analysis,
-                 :reason => _("Smartstate Analysis is not available for this type of VM or Template.")
+                 :reason => N_("Operation not supported.")
   end
 
   # Call the VmScan Job and raise a "request" event
