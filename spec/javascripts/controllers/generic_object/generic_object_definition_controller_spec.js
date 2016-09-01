@@ -214,7 +214,7 @@ describe('genericObjectDefinitionFormController', function() {
       });
 
       it('sends the tree data', function() {
-        expect(window.sendDataWithRx).toHaveBeenCalledWith({eventType: 'treeUpdated', data: treeData});
+        expect(window.sendDataWithRx).toHaveBeenCalledWith({eventType: 'treeUpdated', response: treeData});
       });
     });
   });

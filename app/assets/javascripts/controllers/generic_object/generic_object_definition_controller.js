@@ -25,7 +25,7 @@ ManageIQ.angular.app.controller('genericObjectDefinitionFormController', ['$http
 
   var addedGenericObject = function(data) {
     var successCallback = function(response) {
-      sendDataWithRx({eventType: 'treeUpdated', data: JSON.parse(response.data.tree_data)});
+      sendDataWithRx({eventType: 'treeUpdated', response: JSON.parse(response.data.tree_data)});
     };
 
     $http.get('get_tree_data').then(successCallback);
