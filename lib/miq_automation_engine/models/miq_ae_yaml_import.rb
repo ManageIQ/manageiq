@@ -113,6 +113,7 @@ class MiqAeYamlImport
     domain_yaml.delete_path('object', 'attributes', 'tenant_id') unless @restore
     domain_yaml.delete_path('object', 'attributes', 'priority')
     source_from_system(domain_yaml) if domain_yaml.has_key_path?('object', 'attributes', 'system')
+    enable_system_domains(domain_yaml) if domain_yaml.has_key_path?('object', 'attributes', 'source')
   end
 
   def source_from_system(domain_yaml)
@@ -121,6 +122,13 @@ class MiqAeYamlImport
       domain_yaml.store_path('object', 'attributes', 'source', MiqAeDomain::USER_LOCKED_SOURCE)
     else
       domain_yaml.store_path('object', 'attributes', 'source', MiqAeDomain::USER_SOURCE)
+    end
+  end
+
+  def enable_system_domains(domain_yaml)
+    source = domain_yaml.fetch_path('object', 'attributes', 'source')
+    if source == MiqAeDomain::SYSTEM_SOURCE
+      domain_yaml.store_path('object', 'attributes', 'enabled', true)
     end
   end
 
