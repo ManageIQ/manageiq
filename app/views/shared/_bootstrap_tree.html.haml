@@ -1,0 +1,6 @@
+#bootstrap-tree{:style => "padding-left: 17px; padding-right: 30px", "ng-controller" => "bootstrapTreeController"}
+
+:javascript
+  ManageIQ.angular.app.value('initialTreeData', JSON.parse('#{tree_data}'));
+
+  miq_bootstrap("#bootstrap-tree");
