@@ -23,28 +23,25 @@ class ServiceLoadBalancer
 
     def self.cloud_subnets(dialog_options)
       cloud_subnets = []
-      # dialog_options['dialog_cloud_subnets'].each do |vm_id|
-      vm_id = dialog_options['dialog_cloud_subnets']
-      cloud_subnets << CloudSubnet.find(vm_id).ems_ref
-      # end 
+      dialog_options['dialog_cloud_subnets'].split(",").each do |cloud_subnet_id|
+        cloud_subnets << CloudSubnet.find(cloud_subnet_id).ems_ref
+      end
       cloud_subnets
     end
 
     def self.security_groups(dialog_options)
       security_groups = []
-      # dialog_options['dialog_security_groups'].each do |vm_id|
-      vm_id = dialog_options['dialog_security_groups']
-      security_groups << SecurityGroup.find(vm_id).ems_ref
-      # end 
+      dialog_options['dialog_security_groups'].split(",").each do |security_group_id|
+        security_groups << SecurityGroup.find(security_group_id).ems_ref
+      end
       security_groups
     end
 
     def self.vms(dialog_options)
       vms = []
-      # dialog_options['dialog_vms'].each do |vm_id|
-      vm_id = dialog_options['dialog_vms']
-      vms << {:instance_id => Vm.find(vm_id).ems_ref}
-      # end
+      dialog_options['dialog_vms'].split(",").each do |vm_id|
+        vms << {:instance_id => Vm.find(vm_id).ems_ref}
+      end
       vms
     end
 
