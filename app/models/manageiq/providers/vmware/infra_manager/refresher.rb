@@ -257,9 +257,6 @@ module ManageIQ::Providers
       #
       # Inventory refresh for Reconfigure VM Task event
       #
-
-      public
-
       def self.reconfig_refresh(vm)
         new([vm]).reconfig_refresh
       end
