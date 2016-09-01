@@ -68,6 +68,18 @@
                             :class                => "selectpicker")
               :javascript
                 miqSelectPickerEvent('generic_subtype', '#{url}')
+    - if @edit[:new][:st_prov_type] == "generic_load_balancer"
+      - opts = [["<#{_('Choose')}>", nil]] + @edit[:new][:available_managers]
+      .form-group
+        %label.col-md-2.control-label
+          = _('Provider')
+        .col-md-8
+          = select_tag('manager_id',
+                       options_for_select(opts, @edit[:new][:manager_id]),
+                       "data-miq_sparkle_on" => true,
+                       :class               => "selectpicker")
+          :javascript
+            miqSelectPickerEvent('manager_id', '#{url}')
     - if @edit[:new][:st_prov_type] == "generic_orchestration"
       - opts = [["<#{_('Choose')}>", nil]] + @edit[:new][:available_templates]
       .form-group
