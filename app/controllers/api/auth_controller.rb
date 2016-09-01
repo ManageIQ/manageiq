@@ -20,7 +20,7 @@ module Api
     private
 
     def fetch_and_validate_requester_type
-      requester_type = params['requester_type']
+      requester_type = params['requester_type'] || 'api'
       Environment.user_token_service.validate_requester_type(requester_type)
       requester_type
     rescue => err

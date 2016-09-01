@@ -1,5 +1,6 @@
 module Api
   class UserTokenService
+    TYPES = %w(api ui).freeze
     # Additional Requester type token ttl's for authentication
     TYPE_TO_TTL_OVERRIDE = {'ui' => ::Settings.session.timeout}.freeze
 
@@ -29,11 +30,9 @@ module Api
     end
 
     def validate_requester_type(requester_type)
-      return unless requester_type
-      TYPE_TO_TTL_OVERRIDE.fetch(requester_type) do
-        requester_types = TYPE_TO_TTL_OVERRIDE.keys.join(', ')
-        raise "Invalid requester_type #{requester_type} specified, valid types are: #{requester_types}"
-      end
+      return if TYPES.include?(requester_type)
+      requester_types = TYPES.join(', ')
+      raise "Invalid requester_type #{requester_type} specified, valid types are: #{requester_types}"
     end
 
     private
