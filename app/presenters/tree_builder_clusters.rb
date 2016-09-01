@@ -30,13 +30,10 @@ class TreeBuilderClusters < TreeBuilder
   end
 
   def non_cluster_selected
-    i = 0
-    @root[:non_cl_hosts].each do |h|
-      i += 1 if h[:capture]
-    end
-    if @root[:non_cl_hosts].size == i
+    checked = @root[:non_cl_hosts].count { |item| item[:capture] }
+    if @root[:non_cl_hosts].size == checked
       true
-    elsif @root[:non_cl_hosts].empty?
+    elsif checked == 0
       false
     else
       'unsure'
@@ -65,7 +62,6 @@ class TreeBuilderClusters < TreeBuilder
       }
       if non_cluster_selected == 'unsure'
         node[:addClass] = 'cfme-no-cursor-node dynatree-partsel'
-        node[:select] = true
       end
       nodes.push(node)
     end
