@@ -14,6 +14,10 @@ require 'rspec/rails'
 require 'vcr'
 require 'cgi'
 
+# Fail tests that try to include stuff in `main`
+require_relative 'support/test_contamination'
+Spec::Support::TestContamination.setup
+
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
