@@ -1,6 +1,5 @@
 class EmsMiddlewareController < ApplicationController
   include EmsCommon
-  include Mixins::EmsCommonAngular
 
   before_action :check_privileges
   before_action :get_session_data
