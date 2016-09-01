@@ -63,4 +63,47 @@ describe ProcessTasksMixin do
       expect { test_class.process_tasks(:task => "bad_method", :ids => [1]) }.to raise_error(RuntimeError)
     end
   end
+
+  describe ".invoke_tasks_remote" do
+    let(:server)           { EvmSpecHelper.local_miq_server(:has_active_webservices => true) }
+    let(:region_seq_start) { ApplicationRecord.rails_sequence_start }
+    let(:test_options) do
+      {
+        :ids          => [region_seq_start, region_seq_start + 1, region_seq_start + 2],
+        :other_option => "some option"
+      }
+    end
+
+    before do
+      FactoryGirl.create(:miq_region, :region => server.region_number)
+    end
+
+    context "when the server has an ip address" do
+      before do
+        server.ipaddress = "192.0.2.1"
+        server.save!
+      end
+
+      it "calls invoke_api_tasks with the server ip and ids" do
+        expect(test_class).to receive(:invoke_api_tasks).with(server.ipaddress, test_options)
+        test_class.invoke_tasks_remote(test_options)
+      end
+
+      it "requeues invoke_tasks_remote when invoke_api_tasks fails" do
+        expect(test_class).to receive(:invoke_api_tasks).and_raise(RuntimeError)
+        test_class.invoke_tasks_remote(test_options)
+
+        message = MiqQueue.first
+
+        expect(message.class_name).to eq(test_class.name)
+        expect(message.method_name).to eq("invoke_tasks_remote")
+        expect(message.args).to eq([test_options])
+      end
+    end
+
+    it "does not call invoke_api_tasks if the server does not have an address" do
+      expect(test_class).not_to receive(:invoke_api_tasks)
+      test_class.invoke_tasks_remote(test_options)
+    end
+  end
 end
