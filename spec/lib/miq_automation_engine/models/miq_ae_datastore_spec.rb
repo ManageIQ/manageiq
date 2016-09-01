@@ -94,6 +94,10 @@ describe MiqAeDatastore do
     expect(MiqAeMethod.count).to         eq(3)
   end
 
+  it ".default_domain_names" do
+    expect(MiqAeDatastore.default_domain_names).to include("ManageIQ")
+  end
+
   it "temporary file cleanup for unsuccessful import" do
     fd = double(:original_filename => "dummy.zip", :read => "junk", :eof => true, :close => true)
     import_file = File.expand_path(File.join(Rails.root, "tmp/miq_automate_engine", "dummy.zip"))
