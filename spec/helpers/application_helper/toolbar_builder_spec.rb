@@ -2656,7 +2656,7 @@ describe ApplicationHelper do
     end
 
     context "when the toolbar to be built is a generic object toolbar" do
-      let(:toolbar_to_build) { ApplicationHelper::Toolbar::GenericObject }
+      let(:toolbar_to_build) { ApplicationHelper::Toolbar::GenericObjectDefinition }
 
       before do
         allow(Rbac).to receive(:role_allows?).and_return(true)
@@ -2664,7 +2664,7 @@ describe ApplicationHelper do
 
       it "includes the button group" do
         expect(_toolbar_builder.call_by_class(toolbar_to_build).first).to include(
-          :id    => "generic_object_choice",
+          :id    => "generic_object_definition_choice",
           :type  => :buttonSelect,
           :icon  => "fa fa-cog fa-lg",
           :title => "Configuration",
@@ -2674,7 +2674,7 @@ describe ApplicationHelper do
 
       it "includes the correct button items" do
         expect(_toolbar_builder.call_by_class(toolbar_to_build).first[:items].first).to include(
-          :id    => "generic_object_choice__generic_object_create",
+          :id    => "generic_object_definition_choice__generic_object_definition_create",
           :type  => :button,
           :icon  => "pficon pficon-add-circle-o fa-lg",
           :title => "Create a new Generic Object Definition",

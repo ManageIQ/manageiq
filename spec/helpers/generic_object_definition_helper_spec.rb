@@ -1,4 +1,4 @@
-class TestClass
+class GenericObjectHelperClass
   include GenericObjectDefinitionHelper
 
   def initialize(toolbar_builder)
@@ -12,7 +12,7 @@ end
 
 describe GenericObjectDefinitionHelper do
   let(:toolbar_builder) { double("ToolbarBuilder") }
-  let(:subject) { TestClass.new(toolbar_builder) }
+  let(:subject) { GenericObjectHelperClass.new(toolbar_builder) }
 
   describe "#toolbar_from_hash" do
     before do
