@@ -1,5 +1,4 @@
 values_hash = {}
-values_hash[nil] = '-- select a security_group from a list --'
 
 service = $evm.root.attributes["service_template"] || $evm.root.attributes["service"]
 if service.respond_to?(:load_balancer_manager) && service.load_balancer_manager
