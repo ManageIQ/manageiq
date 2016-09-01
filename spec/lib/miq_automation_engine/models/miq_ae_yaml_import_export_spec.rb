@@ -1,5 +1,3 @@
-include MiqAeYamlImportExportMixin
-
 describe MiqAeDatastore do
   before do
     @additional_columns = {'on_error'    => "call great gazoo",
@@ -197,8 +195,8 @@ describe MiqAeDatastore do
       end
 
       def assert_all_domains_imported(export_options, import_options)
-        export_model(ALL_DOMAINS, export_options)
-        reset_and_import(@export_dir, ALL_DOMAINS, import_options)
+        export_model(MiqAeYamlImportExportMixin::ALL_DOMAINS, export_options)
+        reset_and_import(@export_dir, MiqAeYamlImportExportMixin::ALL_DOMAINS, import_options)
         check_counts('dom'  => 2, 'ns'    => 6,  'class' => 8, 'inst'  => 20,
                      'meth' => 6, 'field' => 24, 'value' => 16)
       end
@@ -218,7 +216,7 @@ describe MiqAeDatastore do
       end
 
       def assert_single_domain_import(export_options, import_options)
-        export_model(ALL_DOMAINS, export_options)
+        export_model(MiqAeYamlImportExportMixin::ALL_DOMAINS, export_options)
         reset_and_import(@export_dir, @customer_domain.name, import_options)
         check_counts('dom'  => 1, 'ns'    => 3,  'class' => 4, 'inst'  => 10,
                      'meth' => 3, 'field' => 12, 'value' => 8)
@@ -564,8 +562,8 @@ describe MiqAeDatastore do
       import_options = {'zip_file' => @zip_file, 'restore' => true}
       export_options = {'zip_file' => @zip_file}
       @customer_domain.update_attributes(:enabled => true)
-      export_model(ALL_DOMAINS, export_options)
-      reset_and_import(@export_dir, ALL_DOMAINS, import_options)
+      export_model(MiqAeYamlImportExportMixin::ALL_DOMAINS, export_options)
+      reset_and_import(@export_dir, MiqAeYamlImportExportMixin::ALL_DOMAINS, import_options)
       expect(MiqAeDomain.find_by_fqname(@manageiq_domain.name, false).priority).to eql(0)
       cust_domain = MiqAeDomain.find_by_fqname(@customer_domain.name, false)
       expect(cust_domain.priority).to eql(1)
