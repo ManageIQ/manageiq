@@ -32,7 +32,7 @@ class TreeBuilderReportSavedReports < TreeBuilderReportReportsClass
     folder_ids.sort.each_with_index do |p|
       objects.push(:id => p[1], :text => p[0], :image => 'report', :tip => p[0])
     end
-    count_only_or_objects(count_only, objects, nil)
+    count_only_or_objects(count_only, objects)
   end
 
   def x_get_tree_custom_kids(object, count_only, _options)

@@ -39,7 +39,7 @@ class TreeBuilderReportReports < TreeBuilderReportReportsClass
       # load next level of folders when building the tree
       @tree_state.x_tree(options[:tree])[:open_nodes].push("xx-#{i}")
     end
-    count_only_or_objects(count_only, objects, nil)
+    count_only_or_objects(count_only, objects)
   end
 
   def x_get_tree_custom_kids(object, count_only, _options)
@@ -63,6 +63,6 @@ class TreeBuilderReportReports < TreeBuilderReportReportsClass
         break if count_only
       end
     end
-    count_only_or_objects(count_only, objects, nil)
+    count_only_or_objects(count_only, objects)
   end
 end

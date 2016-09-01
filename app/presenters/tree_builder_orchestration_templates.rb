@@ -52,6 +52,6 @@ class TreeBuilderOrchestrationTemplates < TreeBuilder
       "otvnf" => OrchestrationTemplateVnfd
     }
     objects = Rbac.filtered(classes[object[:id]].where(["orderable=?", true])).sort_by { |o| o.name.downcase }
-    count_only_or_objects(count_only, objects, nil)
+    count_only_or_objects(count_only, objects)
   end
 end

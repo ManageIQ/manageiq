@@ -23,7 +23,7 @@ class TreeBuilderOps < TreeBuilder
   def x_get_tree_roots(count_only, _options)
     region = MiqRegion.my_region
     objects = region.zones.sort_by { |z| z.name.downcase }
-    count_only_or_objects(count_only, objects, nil)
+    count_only_or_objects(count_only, objects)
   end
 
   def x_get_tree_lr_kids(object, count_only)

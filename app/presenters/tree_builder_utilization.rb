@@ -57,7 +57,7 @@ class TreeBuilderUtilization < TreeBuilderRegion
       when :vandt then x_get_tree_vandt_datacenter_kids(object)
       when :handc then x_get_tree_handc_datacenter_kids(object)
       end
-    count_only_or_objects(count_only, objects, nil)
+    count_only_or_objects(count_only, objects)
   end
 
   def x_get_tree_vandt_datacenter_kids(object)
@@ -100,7 +100,7 @@ class TreeBuilderUtilization < TreeBuilderRegion
       objects += rbac_filtered_sorted_objects(object.hosts, "name", :match_via_descendants => VmOrTemplate)
       objects += rbac_filtered_sorted_objects(object.vms_and_templates, "name")
     end
-    count_only_or_objects(count_only, objects, nil)
+    count_only_or_objects(count_only, objects)
   end
 
   def x_get_tree_cluster_kids(object, count_only)
@@ -110,6 +110,6 @@ class TreeBuilderUtilization < TreeBuilderRegion
       objects += rbac_filtered_sorted_objects(object.resource_pools, "name")
       objects += rbac_filtered_sorted_objects(object.vms, "name")
     end
-    count_only_or_objects(count_only, objects, nil)
+    count_only_or_objects(count_only, objects)
   end
 end

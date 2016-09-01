@@ -27,7 +27,7 @@ class TreeBuilderImages < TreeBuilder
       {:id => "arch", :text => _("<Archived>"), :image => "currentstate-archived", :tip => _("Archived Images")},
       {:id => "orph", :text => _("<Orphaned>"), :image => "currentstate-orphaned", :tip => _("Orphaned Images")}
     ]
-    count_only_or_objects(count_only, objects, nil)
+    count_only_or_objects(count_only, objects)
   end
 
   def x_get_tree_ems_kids(object, count_only)
