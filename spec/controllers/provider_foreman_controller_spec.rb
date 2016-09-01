@@ -230,6 +230,19 @@ describe ProviderForemanController do
       expect(response.status).to eq(200)
       expect(assigns(:flash_array).first[:message]).to include("Refresh Provider initiated for 1 provider (Foreman)")
     end
+
+    it "refreshes the provider when the configuration manager id is supplied" do
+      allow(controller).to receive(:replace_right_cell)
+      post :refresh, :params => { :id => @config_mgr.id }
+      expect(assigns(:flash_array).first[:message]).to include("Refresh Provider initiated for 1 provider")
+    end
+
+    it "it refreshes a provider when the configuration manager id is selected from a grid/tile" do
+      allow(controller).to receive(:replace_right_cell)
+      post :refresh, :params => { "check_#{ApplicationRecord.compress_id(@config_mgr.id)}"  => "1",
+                                  "check_#{ApplicationRecord.compress_id(@config_mgr2.id)}" => "1" }
+      expect(assigns(:flash_array).first[:message]).to include("Refresh Provider initiated for 2 providers")
+    end
   end
 
   context "#delete" do

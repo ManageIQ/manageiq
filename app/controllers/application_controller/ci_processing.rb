@@ -1715,15 +1715,15 @@ module ApplicationController::CiProcessing
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => controller_name)}, :error)
       else
         items.push(params[:id])
-        @single_delete = true if method == 'destroy' && !flash_errors?
       end
     else
       items = find_checked_items
-      if items.empty?
-        add_flash(_("No providers were selected for %{task}") % {:task  => display_name}, :error)
-      else
-        process_cfgmgr(items, method) unless items.empty? && !flash_errors?
-      end
+    end
+
+    if items.empty?
+      add_flash(_("No providers were selected for %{task}") % {:task  => display_name}, :error)
+    else
+      process_cfgmgr(items, method) unless items.empty? && !flash_errors?
     end
   end
 
