@@ -130,5 +130,14 @@ module ManageIQ::Providers
 
       ems_tenant.update_attributes!(:name => ems_tenant_name, :description => ems_tenant_name)
     end
+
+    def create_cloud_tenant(args)
+      cloud_tenant = CloudTenant.create_cloud_tenant(self, args[:name],
+                                                     :description => args[:description])
+
+      tenant = Tenant.find(args[:id])
+      tenant.source = cloud_tenant
+      tenant.save!
+    end
   end
 end
