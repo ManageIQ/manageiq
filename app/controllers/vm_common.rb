@@ -1652,14 +1652,14 @@ module VmCommon
       action = "evacuate_vm"
     when "associate_floating_ip"
       partial = "vm_common/associate_floating_ip"
-      header = _("Associating %{floating_ip} with %{model} \"%{name}\"") % {
-        :floating_ip => ui_lookup(:table => 'floating_ip'), :name => name, :model => ui_lookup(:table => table)
+      header = _("Associating Floating IP with %{model} \"%{name}\"") % {
+        :name => name, :model => ui_lookup(:table => table)
       }
       action = "associate_floating_ip_vm"
     when "disassociate_floating_ip"
       partial = "vm_common/disassociate_floating_ip"
-      header = _("Disassociating %{floating_ip} from %{model} \"%{name}\"") % {
-        :floating_ip => ui_lookup(:table => 'floating_ip'), :name => name, :model => ui_lookup(:table => table)
+      header = _("Disassociating Floating IP from %{model} \"%{name}\"") % {
+        :name => name, :model => ui_lookup(:table => table)
       }
       action = "disassociate_floating_ip_vm"
     when "clone", "migrate", "publish"

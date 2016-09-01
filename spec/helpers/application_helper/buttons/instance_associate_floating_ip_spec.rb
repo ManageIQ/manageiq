@@ -54,7 +54,7 @@ describe ApplicationHelper::Button::InstanceAssociateFloatingIp do
         view_context, {}, {"record" => vm}, {}
       )
       button.calculate_properties
-      expect(button[:title]).to eq("There are no Floating Ips available to this Instance.")
+      expect(button[:title]).to eq("There are no Floating IPs available to this Instance.")
     end
 
     it "when the action is available, the button has no error in the title" do

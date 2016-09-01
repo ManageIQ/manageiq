@@ -670,11 +670,9 @@ module ApplicationController::CiProcessing
         end
       end
     else
-      add_flash(_("Unable to associate %{floating_ip} with %{instance} \"%{name}\": %{details}") % {
-        :floating_ip => ui_lookup(:table => 'floating_ip'),
-        :instance    => ui_lookup(:table => 'vm_cloud'),
-        :name        => @record.name,
-        :details     => @record.unsupported_reason(:associate_floating_ip)}, :error)
+      add_flash(_("Unable to associate Floating IP with Instance \"%{name}\": %{details}") % {
+        :name    => @record.name,
+        :details => @record.unsupported_reason(:associate_floating_ip)}, :error)
     end
   end
   alias instance_associate_floating_ip associate_floating_ip_vms
@@ -709,35 +707,26 @@ module ApplicationController::CiProcessing
     @record = find_by_id_filtered(VmCloud, params[:id])
     case params[:button]
     when "cancel"
-      add_flash(_("Association of %{floating_ip} with %{instance} \"%{name}\" was cancelled by the user") % {
-        :floating_ip => ui_lookup(:table => "floating_ip"),
-        :instance    => ui_lookup(:table => "vm_cloud"),
-        :name        => @record.name})
+      add_flash(_("Association of Floating IP with Instance \"%{name}\" was cancelled by the user") % {:name => @record.name})
       @record = @sb[:action] = nil
     when "submit"
       if @record.supports_associate_floating_ip?
         floating_ip = params[:floating_ip]
         begin
           @record.associate_floating_ip(floating_ip)
-          add_flash(_("Associating %{floating_ip} %{address} with %{instance} \"%{name}\"") % {
-            :floating_ip => ui_lookup(:table => "floating_ip"),
-            :address     => floating_ip,
-            :instance    => ui_lookup(:table => 'vm_cloud'),
-            :name        => @record.name})
+          add_flash(_("Associating Floating IP %{address} with Instance \"%{name}\"") % {
+            :address => floating_ip,
+            :name    => @record.name})
         rescue => ex
-          add_flash(_("Unable to associate %{floating_ip} %{address} with %{instance} \"%{name}\": %{details}") % {
-            :floating_ip => ui_lookup(:table => "floating_ip"),
-            :address     => floating_ip,
-            :instance    => ui_lookup(:table => 'vm_cloud'),
-            :name        => @record.name,
-            :details     => get_error_message_from_fog(ex.to_s)}, :error)
+          add_flash(_("Unable to associate Floating IP %{address} with Instance \"%{name}\": %{details}") % {
+            :address => floating_ip,
+            :name    => @record.name,
+            :details => get_error_message_from_fog(ex.to_s)}, :error)
         end
       else
-        add_flash(_("Unable to associate %{floating_ip} with %{instance} \"%{name}\": %{details}") % {
-          :floating_ip => ui_lookup(:table => "floating_ip"),
-          :instance    => ui_lookup(:table => 'vm_cloud'),
-          :name        => @record.name,
-          :details     => @record.unsupported_reason(:associate_floating_ip)}, :error)
+        add_flash(_("Unable to associate Floating IP with Instance \"%{name}\": %{details}") % {
+          :name    => @record.name,
+          :details => @record.unsupported_reason(:associate_floating_ip)}, :error)
       end
       params[:id] = @record.id.to_s # reset id in params for show
       @record = nil
@@ -773,11 +762,9 @@ module ApplicationController::CiProcessing
         end
       end
     else
-      add_flash(_("Unable to disassociate %{floating_ip} from %{instance} \"%{name}\": %{details}") % {
-        :floating_ip => ui_lookup(:table => 'floating_ip'),
-        :instance    => ui_lookup(:table => 'vm_cloud'),
-        :name        => @record.name,
-        :details     => @record.unsupported_reason(:disassociate_floating_ip)}, :error)
+      add_flash(_("Unable to disassociate Floating IP from Instance \"%{name}\": %{details}") % {
+        :name    => @record.name,
+        :details => @record.unsupported_reason(:disassociate_floating_ip)}, :error)
     end
   end
   alias instance_disassociate_floating_ip disassociate_floating_ip_vms
@@ -814,35 +801,26 @@ module ApplicationController::CiProcessing
     @record = find_by_id_filtered(VmCloud, params[:id])
     case params[:button]
     when "cancel"
-      add_flash(_("Disassociation of %{floating_ip} from %{instance} \"%{name}\" was cancelled by the user") % {
-        :floating_ip => ui_lookup(:table => "floating_ip"),
-        :instance    => ui_lookup(:table => "vm_cloud"),
-        :name        => @record.name})
+      add_flash(_("Disassociation of Floating IP from Instance \"%{name}\" was cancelled by the user") % {:name => @record.name})
       @record = @sb[:action] = nil
     when "submit"
       if @record.supports_disassociate_floating_ip?
         floating_ip = params[:floating_ip]
         begin
           @record.disassociate_floating_ip(floating_ip)
-          add_flash(_("Disassociating %{floating_ip} %{address} from %{instance} \"%{name}\"") % {
-            :floating_ip => ui_lookup(:table => "floating_ip"),
-            :address     => floating_ip,
-            :instance    => ui_lookup(:table => 'vm_cloud'),
-            :name        => @record.name})
+          add_flash(_("Disassociating Floating IP %{address} from Instance \"%{name}\"") % {
+            :address => floating_ip,
+            :name    => @record.name})
         rescue => ex
-          add_flash(_("Unable to disassociate %{floating_ip} %{address} from %{instance} \"%{name}\": %{details}") % {
-            :floating_ip => ui_lookup(:table => "floating_ip"),
-            :address     => floating_ip,
-            :instance    => ui_lookup(:table => 'vm_cloud'),
-            :name        => @record.name,
-            :details     => get_error_message_from_fog(ex.to_s)}, :error)
+          add_flash(_("Unable to disassociate Floating IP %{address} from Instance \"%{name}\": %{details}") % {
+            :address => floating_ip,
+            :name    => @record.name,
+            :details => get_error_message_from_fog(ex.to_s)}, :error)
         end
       else
-        add_flash(_("Unable to disassociate %{floating_ip} from %{instance} \"%{name}\": %{details}") % {
-          :floating_ip => ui_lookup(:table => "floating_ip"),
-          :instance    => ui_lookup(:table => 'vm_cloud'),
-          :name        => @record.name,
-          :details     => @record.unsupported_reason(:disassociate_floating_ip)}, :error)
+        add_flash(_("Unable to disassociate Floating IP from Instance \"%{name}\": %{details}") % {
+          :name    => @record.name,
+          :details => @record.unsupported_reason(:disassociate_floating_ip)}, :error)
       end
       params[:id] = @record.id.to_s # reset id in params for show
       @record = nil
