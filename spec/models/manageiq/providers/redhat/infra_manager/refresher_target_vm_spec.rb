@@ -134,8 +134,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :orchestration_stack_id => nil,
       :retirement_requester   => nil,
       :resource_group_id      => nil,
-      :deprecated             => nil,
-      :storage_profile_id     => nil
+      :deprecated             => nil
     )
 
     expect(vm.ext_management_system).to eq(@ems)
@@ -218,9 +217,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :disk_type          => "thin",
       :storage_id         => storage.id,
       :backing_id         => nil,
-      :backing_type       => nil,
-      :storage_profile_id => nil,
-      :bootable           => false
+      :backing_type       => nil
     )
 
     expect(vm.hardware.guest_devices.size).to eq(1)
