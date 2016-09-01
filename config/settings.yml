@@ -1391,6 +1391,7 @@
       :memory_threshold: 300.megabytes
       :nice_delta: 3
       :orchestration_stack_retired_interval: 10.minutes
+      :load_balancer_retired_interval: 10.minutes
       :performance_collection_interval: 3.minutes
       :performance_collection_start_delay: 5.minutes
       :performance_realtime_purging_interval: 15.minutes
