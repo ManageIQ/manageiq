@@ -75,4 +75,20 @@ describe Menu::DefaultMenu do
       expect(menu).to eq(result)
     end
   end
+
+  describe "#automate_menu_section" do
+    let(:menu) { Menu::DefaultMenu }
+
+    it "contains the correct names" do
+      expect(menu.automate_menu_section.items.map(&:name)).to include(
+        "Explorer",
+        "Simulation",
+        "Customization",
+        "Generic Objects",
+        "Import / Export",
+        "Log",
+        "Requests"
+      )
+    end
+  end
 end

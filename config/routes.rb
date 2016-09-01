@@ -1627,6 +1627,18 @@ Vmdb::Application.routes.draw do
         save_post
     },
 
+    :generic_object => {
+      :get => %w(
+        explorer
+        get_all_object_data
+        get_object_data
+        get_tree_data
+      ),
+      :post => %w(
+        create
+      )
+    },
+
     :miq_ae_class             => {
       :get  => %w(
         explorer
