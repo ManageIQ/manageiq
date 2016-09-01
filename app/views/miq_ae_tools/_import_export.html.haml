@@ -67,7 +67,7 @@
 
   %hr
   %h3
-    = (t = _('Reset all Datastore custom classes and instances to default'))
+    = (t = _("Reset all components in the following domains: %{domains}") % {:domains => MiqAeDatastore.default_domain_names.join(', ')})
   = link_to(image_tag(image_path('toolbars/reset.png'),
                       :alt => t),
             {:action              => 'reset_datastore'},
