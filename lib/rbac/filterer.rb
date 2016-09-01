@@ -184,7 +184,7 @@ module Rbac
         scope = apply_scope(klass, scope)
 
         ids_clause = ["#{klass.table_name}.id IN (?)", target_ids] if klass.respond_to?(:table_name)
-      else # targets is a class_name, scope, class, or AASM class (VimPerformanceDaily in particular)
+      else # targets is a class_name, scope, class, or acts_as_ar_model class (VimPerformanceDaily in particular)
         targets = to_class(targets).all
         scope = apply_scope(targets, scope)
 
@@ -264,17 +264,21 @@ module Rbac
 
     private
 
-    def apply_user_group_rbac_to_class?(klass, miq_group)
-      [User, MiqGroup].include?(klass) && miq_group.try!(:self_service?)
-    end
-
-    def apply_rbac_to_class?(klass)
+    ##
+    # Determine if permissions should be applied directly via klass
+    # (klass directly participates in RBAC)
+    #
+    def apply_rbac_directly?(klass)
       CLASSES_THAT_PARTICIPATE_IN_RBAC.include?(safe_base_class(klass).name)
     end
 
-    def apply_rbac_to_associated_class?(klass)
-      return false if [Metric, MetricRollup, VimPerformanceDaily].include?(klass)
-      klass < MetricRollup || klass < Metric
+    ##
+    # Determine if permissions should be applied via an associated parent class of klass
+    # If the klass is a metrics subclass, RBAC bases permissions checks on
+    # the associated application model.  See #rbac_class method
+    #
+    def apply_rbac_through_association?(klass)
+      klass != VimPerformanceDaily && (klass < MetricRollup || klass < Metric)
     end
 
     def safe_base_class(klass)
@@ -284,9 +288,13 @@ module Rbac
 
     def rbac_class(scope)
       klass = scope.respond_to?(:klass) ? scope.klass : scope
-      return klass if apply_rbac_to_class?(klass)
-      if apply_rbac_to_associated_class?(klass)
-        return klass.name[0..-12].constantize.base_class # e.g. VmPerformance => VmOrTemplate
+      return klass if apply_rbac_directly?(klass)
+      if apply_rbac_through_association?(klass)
+        # Strip "Performance" off class name, which is the associated model
+        # of that metric.
+        # e.g. HostPerformance => Host
+        #      VmPerformance   => VmOrTemplate
+        return klass.name[0..-12].constantize.base_class
       end
       nil
     end
@@ -353,13 +361,6 @@ module Rbac
       filtered_ids
     end
 
-    def scope_by_indirect_rbac(scope, rbac_filters, user, miq_group)
-      parent_class = rbac_class(scope)
-      filtered_ids = calc_filtered_ids(parent_class, rbac_filters, user, miq_group)
-
-      scope_by_parent_ids(parent_class, scope, filtered_ids)
-    end
-
     # @param parent_class [Class] Class of parent (e.g. Host)
     # @param klass [Class] Class of child node (e.g. Vm)
     # @param scope [] scope for active records (e.g. Vm.archived)
@@ -396,22 +397,6 @@ module Rbac
       scope.find_tags_by_grouping(filter, :ns => '*').reorder(nil)
     end
 
-    def scope_by_direct_rbac(scope, rbac_filters, user, miq_group)
-      filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group)
-      scope_by_ids(scope, filtered_ids)
-    end
-
-    def scope_by_user_group_rbac(scope, user, miq_group)
-      klass = scope.respond_to?(:klass) ? scope.klass : scope
-      if klass == User && user
-        scope.where(:id => user.id)
-      elsif klass == MiqGroup
-        scope.where(:id => miq_group.id)
-      else # no user security applied
-        scope
-      end
-    end
-
     def scope_to_tenant(scope, user, miq_group)
       klass = scope.respond_to?(:klass) ? scope.klass : scope
       user_or_group = user || miq_group
@@ -420,17 +405,33 @@ module Rbac
       tenant_id_clause ? scope.where(tenant_id_clause) : scope
     end
 
+    ##
+    # Main scoping method
+    #
     def scope_targets(klass, scope, rbac_filters, user, miq_group)
+      # Results are scoped by tenant if the TenancyMixin is included in the class,
+      # with a few manual exceptions (User, Tenant). Note that the classes in
+      # TENANT_ACCESS_STRATEGY are a consolidated list of them.
       if klass.respond_to?(:scope_by_tenant?) && klass.scope_by_tenant?
         scope = scope_to_tenant(scope, user, miq_group)
       end
 
-      if apply_rbac_to_class?(klass)
-        scope = scope_by_direct_rbac(scope, rbac_filters, user, miq_group)
-      elsif apply_rbac_to_associated_class?(klass)
-        scope = scope_by_indirect_rbac(scope, rbac_filters, user, miq_group)
-      elsif apply_user_group_rbac_to_class?(klass, miq_group)
-        scope = scope_by_user_group_rbac(scope, user, miq_group)
+      if apply_rbac_directly?(klass)
+        filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group)
+        scope = scope_by_ids(scope, filtered_ids)
+      elsif apply_rbac_through_association?(klass)
+        # if subclasses of MetricRollup or Metric, use the associated
+        # model to derive permissions from
+        associated_class = rbac_class(scope)
+        filtered_ids = calc_filtered_ids(associated_class, rbac_filters, user, miq_group)
+
+        scope = scope_by_parent_ids(associated_class, scope, filtered_ids)
+      elsif klass == User && user.try!(:self_service?)
+        # Self service users searching for users only see themselves
+        scope = scope.where(:id => user.id)
+      elsif klass == MiqGroup && miq_group.try!(:self_service?)
+        # Self Service users searching for groups only see their group
+        scope = scope.where(:id => miq_group.id)
       else
         scope
       end
