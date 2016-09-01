@@ -58,4 +58,49 @@ module ManageIQ::Providers::Redhat::InfraManager::EventParser
     return nil unless data.respond_to?(:[])
     ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(data[:href])
   end
+
+  def self.parse_new_target(full_data, message, ems)
+    cluster = full_data[:cluster]
+    cluster_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(cluster[:href])
+
+    cluster_name = ems.with_provider_connection do |rhevm|
+      Ovirt::Cluster.find_by_href(rhevm, cluster_ref).try(:[], :name)
+    end
+
+    {
+      :ems_id         => ems.id,
+      :vm             => parse_new_vm(full_data[:vm], message),
+      :cluster        => parse_new_cluster(cluster_ref, cluster[:id], cluster_name),
+      :resource_pools => parse_new_rp(cluster[:id], cluster_name),
+      :folders        => parse_new_dc(full_data[:data_center])
+    }
+  end
+
+  def self.parse_new_vm(vm, message)
+    ems_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(vm[:href])
+
+    ManageIQ::Providers::Redhat::InfraManager::RefreshParser.create_vm_hash(
+      ems_ref.include?('/templates/'), ems_ref, vm[:id], message.split(/\s/)[1])
+  end
+
+  def self.parse_new_cluster(cluster_ref, cluster_id, cluster_name)
+    {
+      :ems_ref     => cluster_ref,
+      :ems_ref_obj => cluster_ref,
+      :uid_ems     => cluster_id,
+      :name        => cluster_name
+    }
+  end
+
+  def self.parse_new_rp(cluster_id, cluster_name)
+    {
+      :name       => "Default for Cluster #{cluster_name}",
+      :uid_ems    => "#{cluster_id}_respool",
+      :is_default => true,
+    }
+  end
+
+  def self.parse_new_dc(dc)
+    {:ems_ref => ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(dc[:href])}
+  end
 end

@@ -16,6 +16,7 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   include_concern :ApiIntegration
 
   supports :provisioning
+  supports :refresh_new_target
 
   def self.ems_type
     @ems_type ||= "rhevm".freeze

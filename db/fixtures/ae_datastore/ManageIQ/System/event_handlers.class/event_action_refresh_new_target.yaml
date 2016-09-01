@@ -4,9 +4,9 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: USER_ADD_VM
+    name: event_action_refresh_new_target
     inherits: 
     description: 
   fields:
-  - rel5:
-      value: "/System/event_handlers/event_action_refresh_new_target?target=src_vm"
+  - meth1:
+      value: event_action_refresh_new_target
