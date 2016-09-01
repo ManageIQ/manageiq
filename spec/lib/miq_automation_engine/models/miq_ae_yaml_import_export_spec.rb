@@ -11,6 +11,10 @@ describe MiqAeDatastore do
     @clear_default_password = 'little_secret'
     @clear_password = 'secret'
     @relations_value = "bedrock relations"
+    @domain_counts = {'dom' => 1, 'ns' => 3, 'class' => 4, 'inst' => 10,
+                             'meth' => 3, 'field' => 12, 'value' => 8}
+    @domain_counts_with_extra_items = {'dom' => 1, 'ns' => 4, 'class' => 5, 'inst' => 11,
+                             'meth' => 3, 'field' => 12, 'value' => 8}
     EvmSpecHelper.local_miq_server
     @tenant = Tenant.seed
     create_factory_data("manageiq", 0)
@@ -107,8 +111,7 @@ describe MiqAeDatastore do
     def assert_existing_exported_model(export_options, import_options)
       export_model(@manageiq_domain.name, export_options)
       reset_and_import(@export_dir, @manageiq_domain.name, import_options)
-      check_counts('dom'  => 1,  'ns'   => 3, 'class' => 4, 'inst'  => 10,
-                   'meth' => 3, 'field' => 12, 'value' => 8)
+      check_counts(@domain_counts)
     end
   end
 
@@ -217,11 +220,39 @@ describe MiqAeDatastore do
         assert_single_domain_import(options, options)
       end
 
+      it "import single domain, from yaml, no overwrite" do
+        options = {'yaml_file' => @yaml_file}
+        assert_single_domain_import(options, options)
+
+        add_extra_items_to_customer_domain
+        check_counts(@domain_counts_with_extra_items)
+
+        import(@export_dir, @customer_domain.name, options)
+        check_counts(@domain_counts_with_extra_items)
+      end
+
+      it "import single domain, from yaml, overwrite" do
+        options = {'yaml_file' => @yaml_file, 'overwrite' => true}
+        assert_single_domain_import(options, options)
+
+        add_extra_items_to_customer_domain
+        check_counts(@domain_counts_with_extra_items)
+
+        import(@export_dir, @customer_domain.name, options)
+        check_counts(@domain_counts)
+      end
+
+      def add_extra_items_to_customer_domain
+        @customer_domain = MiqAeDomain.find_by_name("customer")
+        n    = FactoryGirl.create(:miq_ae_namespace, :name => "bonus_namespace_2", :parent_id => @customer_domain.id)
+        n_c1 = FactoryGirl.create(:miq_ae_class, :name => "bonus_test_class_3", :namespace_id => n.id)
+        FactoryGirl.create(:miq_ae_instance, :name => "bonus_test_instance1", :class_id => n_c1.id)
+      end
+
       def assert_single_domain_import(export_options, import_options)
         export_model(ALL_DOMAINS, export_options)
         reset_and_import(@export_dir, @customer_domain.name, import_options)
-        check_counts('dom'  => 1, 'ns'    => 3,  'class' => 4, 'inst'  => 10,
-                     'meth' => 3, 'field' => 12, 'value' => 8)
+        check_counts(@domain_counts)
       end
     end
 
@@ -257,8 +288,7 @@ describe MiqAeDatastore do
     def assert_export_import_roundtrip(export_options, import_options)
       export_model(@manageiq_domain.name, export_options)
       reset_and_import(@export_dir, @manageiq_domain.name, import_options)
-      check_counts('dom'  => 1, 'ns'    => 3,  'class' => 4, 'inst'  => 10,
-                   'meth' => 3, 'field' => 12, 'value' => 8)
+      check_counts(@domain_counts)
       dom = MiqAeDomain.find_by_fqname(@manageiq_domain.name, false)
       expect(dom.source).to eq(MiqAeDomain::SYSTEM_SOURCE)
       expect(dom).to be_enabled
@@ -268,8 +298,7 @@ describe MiqAeDatastore do
       export_model(@manageiq_domain.name)
       expect(@manageiq_domain.priority).to equal(0)
       reset_and_import(@export_dir, @manageiq_domain.name)
-      check_counts('dom'  => 1,  'ns'   => 3,  'class' => 4, 'inst'  => 10,
-                   'meth' => 3, 'field' => 12, 'value' => 8)
+      check_counts(@domain_counts)
 
       ns = MiqAeNamespace.find_by_fqname(@manageiq_domain.name, false)
       expect(ns.priority).to equal(0)
@@ -320,8 +349,7 @@ describe MiqAeDatastore do
     def assert_export_as(export_options, import_options)
       export_model(@manageiq_domain.name, export_options)
       reset_and_import(@export_dir, @export_as, import_options)
-      check_counts('dom'  => 1, 'ns'    => 3,  'class' => 4, 'inst'  => 10,
-                   'meth' => 3, 'field' => 12, 'value' => 8)
+      check_counts(@domain_counts)
       expect(MiqAeDomain.find_by_fqname(@export_as)).not_to be_nil
     end
 
@@ -572,6 +600,14 @@ describe MiqAeDatastore do
       expect(cust_domain).to be_enabled
       expect(MiqAeNamespace.find_by_fqname('$', false)).not_to be_nil
     end
+  end
+
+  def import(import_dir, domain, options = {})
+    options = {'import_dir' => import_dir} if options.empty?
+    import_options = {'preview' => false,
+                      'tenant'  => @tenant,
+                      'mode'    => 'add'}.merge(options)
+    MiqAeImport.new(domain, import_options).import
   end
 
   def reset_and_import(import_dir, domain, options = {})

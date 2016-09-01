@@ -69,7 +69,7 @@ namespace :evm do
       puts "The following automate tasks are available"
       puts " Import          - Usage: rake evm:automate:import PREVIEW=true DOMAIN=domain_name " \
                                 "IMPORT_AS=new_domain_name IMPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename " \
-                                "SYSTEM=true|false ENABLED=true|false"
+                                "SYSTEM=true|false ENABLED=true|false OVERWRITE=true|false"
       puts " Export          - Usage: rake evm:automate:export DOMAIN=domain_name "  \
                                "EXPORT_AS=new_domain_name NAMESPACE=sample CLASS=methods EXPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename"
       puts " Backup          - Usage: rake evm:automate:backup BACKUP_ZIP_FILE=filename OVERWRITE=false"
@@ -134,10 +134,12 @@ namespace :evm do
         raise 'Preview must be true or false' unless %w{true false}.include?(preview)
         mode           = ENV['MODE'] ||= 'add'
         import_as      = ENV['IMPORT_AS']
+        overwrite      = (ENV['OVERWRITE'] ||= 'false').casecmp('true').zero?
         import_options = {'preview'   => (preview.to_s.downcase == 'true'),
                           'mode'      => mode.to_s.downcase,
                           'namespace' => ENV['NAMESPACE'],
                           'class'     => ENV['CLASS'],
+                          'overwrite' => overwrite,
                           'import_as' => import_as}
         if ENV['ZIP_FILE'].present?
           puts "Importing automate domain: #{ENV['DOMAIN']} from file #{ENV['ZIP_FILE']}"
