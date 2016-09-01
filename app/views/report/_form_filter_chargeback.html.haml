@@ -109,11 +109,23 @@
       = _('Group by')
     .col-md-8
       = select_tag("cb_groupby",
-        options_for_select([["#{_('Date')}", "date"], ["#{_('VM/Instance/Project')}", "vm"]], @edit[:new][:cb_groupby]),
+        options_for_select([["#{_('Date')}", "date"], ["#{_('VM/Instance/Project')}", "vm"], ["#{_('Tag')}", "tag"]], @edit[:new][:cb_groupby]),
         :class                 => "selectpicker")
       :javascript
         miqInitSelectPicker();
         miqSelectPickerEvent('cb_groupby', '#{url}', {beforeSend: true, complete: true});
+  - if @edit[:new][:cb_groupby] == "tag"
+    .form-group
+      %label.control-label.col-md-2
+        = _('Group by Tag')
+      .col-md-8
+        - opts = [["<#{_('Choose a Category')}>", nil]] + Array(@edit[:cb_cats].invert).sort_by { |a| a.first.downcase }
+        = select_tag("cb_groupby_tag",
+          options_for_select(opts, @edit[:new][:cb_groupby_tag]),
+          :class                 => "selectpicker")
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent('cb_groupby_tag', '#{url}', {beforeSend: true, complete: true});
 
 %h3
   = _('Chargeback Interval')
