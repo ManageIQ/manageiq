@@ -120,6 +120,26 @@ module OpsController::OpsRbac
         AuditEvent.success(build_saved_audit_hash(old_tenant_attributes, tenant, params[:button] == "add"))
         add_flash(_("%{model} \"%{name}\" was saved") %
                     {:model => tenant_type_title_string(params[:divisible] == "true"), :name => tenant.name})
+
+        if provider_tenant = tenant.provider_tenant
+          cloud_tenant_method = params[:id] == "new" ? 'create_cloud_tenant' : 'update_cloud_tenant'
+          cloud_tenant_args = tenant.slice(:id, :name, :description).symbolize_keys
+
+          parent_cloud_tenant = tenant.parent.source
+
+          unless parent_cloud_tenant == provider_tenant
+            cloud_tenant_args.merge!(:parent_id => parent_cloud_tenant.ems_ref)
+          end
+
+          tenant.queue_method_for_cloud_tenant(provider_tenant, cloud_tenant_method, cloud_tenant_args)
+
+          cloud_tenant_operation = params[:id]  == "new" ? "Creating" : "Updating"
+
+          add_flash(_("%{operation} of %{model} \"%{name}\" has been successfully queued for provider %{provider}") %
+                        {:model => tenant_type_title_string(params[:divisible] == "true"), :name => tenant.name,
+                         :provider => provider_tenant.source_tenant.name, :operation => cloud_tenant_operation})
+        end
+
         if params[:button] == "add"
           rbac_tenants_list
           rbac_get_info

@@ -319,6 +319,11 @@ class Tenant < ApplicationRecord
     data_tenant
   end
 
+  def provider_tenant
+    source_object = ancestors.try(:second).try(:source)
+    source_object && source_object.kind_of?(ManageIQ::Providers::CloudManager) ? source_object : nil
+  end
+
   ALLOWED_CLOUD_TENANT_QUEUE_METHODS = %w(create_cloud_tenant).freeze
 
   def queue_method_for_cloud_tenant(cloud_manager, method, params)
