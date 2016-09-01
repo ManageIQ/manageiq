@@ -1049,7 +1049,7 @@ class ApplicationController < ActionController::Base
     timed_out = PrivilegeCheckerService.new.user_session_timed_out?(session, current_user) if timed_out.nil?
     reset_session
 
-    session[:start_url] = request.url
+    session[:start_url] = request.url if request.method == "GET"
 
     respond_to do |format|
       format.html do
