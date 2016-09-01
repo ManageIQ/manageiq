@@ -65,7 +65,7 @@
                             = select_tag("#{field.id}", options_for_select([_("Option 1"), _("Option 2")]))
 
                           - if field.show_refresh_button?
-                            = button_tag('Refresh', :disabled => true)
+                            = button_tag(_('Refresh'), :disabled => true)
 
                         - else
                           - if field.values.length > 1

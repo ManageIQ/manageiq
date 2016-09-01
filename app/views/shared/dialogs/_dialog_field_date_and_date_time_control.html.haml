@@ -30,7 +30,7 @@
       });
 
   - if field.show_refresh_button?
-    = button_tag('Refresh', :id => "refresh-dynamic-date-#{field.id}", :class => "btn btn-default")
+    = button_tag(_('Refresh'), :id => "refresh-dynamic-date-#{field.id}", :class => "btn btn-default")
 
   :javascript
     $('#refresh-dynamic-date-#{field.id}').click(function() {

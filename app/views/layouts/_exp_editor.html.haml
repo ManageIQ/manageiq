@@ -12,7 +12,7 @@
       - if @edit[@expkey][:exp_idx] > 0
         %li
           = link_to(image_tag(image_path('toolbars/undo.png'),
-                              :alt => 'Undo the last change'),
+                              :alt => _('Undo the last change')),
                     {:action  => 'exp_button',
                      :pressed => 'undo'},
                     "data-miq_sparkle_on"  => true,
@@ -27,7 +27,7 @@
       - if @edit[@expkey][:exp_idx] < @edit[@expkey][:exp_array].length - 1
         %li
           = link_to(image_tag(image_path('toolbars/redo.png'),
-                              :alt => 'Re-apply the previous change'),
+                              :alt => _('Re-apply the previous change')),
                     {:action  => 'exp_button',
                      :pressed => 'redo'},
                     "data-miq_sparkle_on"  => true,

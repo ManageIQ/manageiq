@@ -43,23 +43,23 @@
       %td{:align => 'right'}
         #buttons_on
           - if @volume.id.nil?
-            = button_tag("Add",
+            = button_tag(_("Add"),
                          :class        => "btn btn-primary",
                          "ng-class"    => "{ disabled: angularForm.$invalid}",
                          "ng-disabled" => "angularForm.$invalid",
                          "ng-click"    => "addClicked()")
           - else
-            = button_tag("Save",
+            = button_tag(_("Save"),
                          :class        => "btn btn-primary",
                          "ng-click"    => "saveClicked()",
                          "ng-disabled" => "angularForm.$pristine || angularForm.$invalid",
                          "ng-class"    => "{ disabled: angularForm.$pristine || angularForm.$invalid}")
-            = button_tag("Reset",
+            = button_tag(_("Reset"),
                          :class        => "btn btn-primary",
                          "ng-click"    => "resetClicked()",
                          "ng-disabled" => "angularForm.$pristine",
                          "ng-class"    => "{ disabled: angularForm.$pristine}")
-          = button_tag("Cancel",
+          = button_tag(_("Cancel"),
                         :class     => "btn btn-default",
                         "ng-click" => "cancelClicked()")
 

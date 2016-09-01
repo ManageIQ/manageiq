@@ -129,7 +129,7 @@ module ApplicationHelper::Dialogs
 
   def add_options_unless_read_only(options_to_add, options_to_add_to, field)
     if field.read_only
-      options_to_add_to.merge!(:disabled => true, :title => "This element is disabled because it is read only")
+      options_to_add_to.merge!(:disabled => true, :title => _("This element is disabled because it is read only"))
     else
       options_to_add_to.merge!(options_to_add)
     end

@@ -9,7 +9,7 @@ module ApplicationHelper::AutomateImportExport
         :i,
         "",
         :class => ["fa", "fa-lg", "fa-question-circle"],
-        :title => "Please enable the git owner role in order to import git repositories"
+        :title => _("Please enable the git owner role in order to import git repositories")
       )
     end
   end

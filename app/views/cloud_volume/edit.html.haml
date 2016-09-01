@@ -18,17 +18,17 @@
     %tr
       %td{:align => 'right'}
         #buttons_on
-          = button_tag("Save",
+          = button_tag(_("Save"),
                        :class        => "btn btn-primary",
                        "ng-click"    => "saveClicked()",
                        "ng-disabled" => "angularForm.$pristine || angularForm.$invalid",
                        "ng-class"    => "{ disabled: cloudVolumeForm.$pristine || angularForm.$invalid}")
-          = button_tag("Reset",
+          = button_tag(_("Reset"),
                        :class        => "btn btn-primary",
                        "ng-click"    => "resetClicked()",
                        "ng-disabled" => "angularForm.$pristine",
                        "ng-class"    => "{ disabled: cloudVolumeForm.$pristine}")
-          = button_tag("Cancel",
+          = button_tag(_("Cancel"),
                         :class     => "btn btn-default",
                         "ng-click" => "cancelClicked()")
 

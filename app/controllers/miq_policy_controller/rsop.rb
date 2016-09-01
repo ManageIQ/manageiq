@@ -48,7 +48,7 @@ module MiqPolicyController::Rsop
       javascript_redirect :action => 'rsop'
     else  # No params, first time in
       @breadcrumbs = []
-      @accords = [{:name => "rsop", :title => "Options", :container => "rsop_options_div"}]
+      @accords = [{:name => "rsop", :title => _("Options"), :container => "rsop_options_div"}]
       session[:changed] = false
       @sb[:rsop] ||= {}   # Leave exising values
       rsop_put_objects_in_sb(find_filtered(ExtManagementSystem), :emss)
