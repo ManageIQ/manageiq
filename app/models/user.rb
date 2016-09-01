@@ -225,16 +225,6 @@ class User < ApplicationRecord
     in_my_region.find_by_userid("admin")
   end
 
-  private
-
-  def self.seed_file_name
-    @seed_file_name ||= Rails.root.join("db", "fixtures", "#{table_name}.yml")
-  end
-
-  def self.seed_data
-    File.exist?(seed_file_name) ? YAML.load_file(seed_file_name) : []
-  end
-
   def self.seed
     seed_data.each do |user_attributes|
       user_id = user_attributes[:userid]
@@ -286,4 +276,14 @@ class User < ApplicationRecord
   def self.with_current_user_groups
     current_user.admin_user? ? all : includes(:miq_groups).where(:miq_groups => {:id => current_user.miq_group_ids})
   end
+
+  def self.seed_file_name
+    @seed_file_name ||= Rails.root.join("db", "fixtures", "#{table_name}.yml")
+  end
+  private_class_method :seed_file_name
+
+  def self.seed_data
+    File.exist?(seed_file_name) ? YAML.load_file(seed_file_name) : []
+  end
+  private_class_method :seed_data
 end
