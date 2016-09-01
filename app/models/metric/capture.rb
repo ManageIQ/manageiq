@@ -107,8 +107,6 @@ module Metric::Capture
     MiqAlert.target_needs_realtime_capture?(target)
   end
 
-  private
-
   #
   # Capture entry points
   #
@@ -128,6 +126,7 @@ module Metric::Capture
       _log.info(msg)
     end
   end
+  private_class_method :perf_capture_health_check
 
   def self.calc_targets_by_rollup_parent(targets)
     # Collect realtime targets and group them by their rollup parent, e.g. {"EmsCluster:4"=>[Host:4], "EmsCluster:5"=>[Host:1, Host:2]}
@@ -147,6 +146,7 @@ module Metric::Capture
     end
     targets_by_rollup_parent
   end
+  private_class_method :calc_targets_by_rollup_parent
 
   def self.calc_tasks_by_rollup_parent(targets_by_rollup_parent)
     task_end_time           = Time.now.utc.iso8601
@@ -180,6 +180,7 @@ module Metric::Capture
 
     tasks_by_rollup_parent
   end
+  private_class_method :calc_tasks_by_rollup_parent
 
   def self.calc_target_options(zone, targets, targets_by_rollup_parent, tasks_by_rollup_parent)
     targets.each_with_object({}) do |target, all_options|
@@ -200,6 +201,7 @@ module Metric::Capture
       all_options[target] = options
     end
   end
+  private_class_method :calc_target_options
 
   def self.queue_captures(targets, target_options)
     # Queue the captures for each target
@@ -216,6 +218,7 @@ module Metric::Capture
       end
     end
   end
+  private_class_method :queue_captures
 
   def self.perf_target_to_interval_name(target)
     case target
@@ -224,6 +227,7 @@ module Metric::Capture
     when Storage then                                  "hourly"
     end
   end
+  private_class_method :perf_target_to_interval_name
 
   def self.minutes_ago(value)
     if value.kind_of?(Fixnum) # Default unit is minutes
@@ -234,4 +238,5 @@ module Metric::Capture
       value.to_i_with_method.seconds.ago.utc
     end
   end
+  private_class_method :minutes_ago
 end
