@@ -1,4 +1,4 @@
-class NetworkTopologyController < ApplicationController
+class NetworkTopologyController < TopologyController
   include TopologyMixin
   before_action :check_privileges
   before_action :get_session_data
@@ -17,11 +17,6 @@ class NetworkTopologyController < ApplicationController
 
   private
 
-  def get_session_data
-    @layout = "network_topology"
-  end
-
-  def generate_topology(provider_id)
-    NetworkTopologyService.new(provider_id).build_topology
-  end
+  @layout = "network_topology"
+  @service_class = NetworkTopologyService
 end

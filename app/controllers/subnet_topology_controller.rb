@@ -1,4 +1,4 @@
-class SubnetTopologyController < ApplicationController
+class SubnetTopologyController < TopologyController
   include TopologyMixin
 
   before_action :check_privileges
@@ -6,13 +6,6 @@ class SubnetTopologyController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
-  private
-
-  def get_session_data
-    @layout = "subnet_topology"
-  end
-
-  def generate_topology(provider_id)
-    SubnetTopologyService.new(provider_id).build_topology
-  end
+  @layout = "subnet_topology"
+  @service_class = SubnetTopologyService
 end
