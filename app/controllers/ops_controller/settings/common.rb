@@ -572,8 +572,7 @@ module OpsController::Settings::Common
     server_id, child = id.split('__')
 
     if server_id.include?('svr')
-      server_id.sub!('svr-', '')
-      from_cid(server_id)
+      server_id = from_cid(server_id.sub('svr-', ''))
     else
       server_id.sub!('xx-', '')
     end
