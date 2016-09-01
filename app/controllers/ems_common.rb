@@ -802,10 +802,12 @@ module EmsCommon
     @openstack_infra_providers = retrieve_openstack_infra_providers
     @openstack_security_protocols = retrieve_openstack_security_protocols
     @openstack_amqp_security_protocols = retrieve_openstack_amqp_security_protocols
+    @nuage_security_protocols = retrieve_nuage_security_protocols
     @scvmm_security_protocols = [[_('Basic (SSL)'), 'ssl'], ['Kerberos', 'kerberos']]
     @openstack_api_versions = retrieve_openstack_api_versions
     @vmware_cloud_api_versions = retrieve_vmware_cloud_api_versions
     @emstype_display = model.supported_types_and_descriptions_hash[@ems.emstype]
+    @nuage_api_versions = retrieve_nuage_api_versions
   end
 
   def retrieve_provider_regions
@@ -835,9 +837,17 @@ module EmsCommon
     [[_('SSL without validation'), 'ssl'], [_('SSL'), 'ssl-with-validation'], [_('Non-SSL'), 'non-ssl']]
   end
 
+  def retrieve_nuage_security_protocols
+    [[_('SSL without validation'), 'ssl'], [_('SSL'), 'ssl-with-validation'], [_('Non-SSL'), 'non-ssl']]
+  end
+
   def retrieve_openstack_amqp_security_protocols
     # OSP8 doesn't support SSL for AMQP
     [[_('Non-SSL'), 'non-ssl']]
+  end
+  
+  def retrieve_nuage_api_versions
+    [[_('Version 3.2'), 'v3_2'], [_('Version 4.0'), 'v4_0']]
   end
 
   # Get variables from edit form

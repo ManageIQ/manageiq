@@ -19,6 +19,7 @@ class NetworkTopologyService < TopologyService
     included_relations = [
       :tags,
       :cloud_subnets => [
+        :parent_cloud_subnet,
         :tags,
         :cloud_network => :tags,
         :vms => [
@@ -55,6 +56,7 @@ class NetworkTopologyService < TopologyService
              :Amazon        => {:type => "image", :icon => provider_icon(:Amazon)},
              :Azure         => {:type => "image", :icon => provider_icon(:Azure)},
              :Google        => {:type => "image", :icon => provider_icon(:Google)},
+             :Nuage         => {:type => "image", :icon => provider_icon(:Nuage_Network)},
     }
 
     populate_topology(topo_items, links, build_kinds, icons)
