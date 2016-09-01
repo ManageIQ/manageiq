@@ -6,6 +6,10 @@ class ApplicationHelper::ToolbarBuilder
     build_toolbar(toolbar_name)
   end
 
+  def call_by_class(toolbar_class)
+    build(toolbar_class)
+  end
+
   private
 
   delegate :request, :current_user, :to => :@view_context

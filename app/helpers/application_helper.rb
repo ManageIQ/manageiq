@@ -1214,8 +1214,21 @@ module ApplicationHelper
   end
 
   def x_gtl_view_tb_render?
-    no_gtl_view_buttons = %w(chargeback miq_ae_class miq_ae_customization miq_ae_tools miq_capacity_planning
-                             miq_capacity_utilization miq_policy miq_policy_rsop report ops provider_foreman pxe)
+    no_gtl_view_buttons = %w(
+      chargeback
+      generic_object
+      miq_ae_class
+      miq_ae_customization
+      miq_ae_tools
+      miq_capacity_planning
+      miq_capacity_utilization
+      miq_policy
+      miq_policy_rsop
+      ops
+      provider_foreman
+      pxe
+      report
+    )
     @record.nil? && @explorer && !no_gtl_view_buttons.include?(@layout)
   end
 
