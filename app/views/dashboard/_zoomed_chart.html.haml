@@ -6,7 +6,7 @@
     .card-pf-heading
       %h2.card-pf-title
         = h(widget.title)
-        %a{:title => "Close", :href => "#",
+        %a{:title => _("Close"), :href => "#",
             :onclick => "miqSparkle(false);$('#lightbox-panel').fadeOut(300);"}
           %i.fa.fa-close.pull-right
     .card-pf-body

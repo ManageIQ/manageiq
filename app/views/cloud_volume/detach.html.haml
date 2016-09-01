@@ -18,12 +18,12 @@
     %tr
       %td{:align => 'right'}
         #buttons_on
-          = button_tag("Detach",
+          = button_tag(_("Detach"),
                        :class        => "btn btn-primary",
                        "ng-click"    => "detachClicked()",
                        "ng-disabled" => "angularForm.$pristine || angularForm.$invalid",
                        "ng-class"    => "{ disabled: angularForm.$pristine || angularForm.$invalid}")
-          = button_tag("Cancel",
+          = button_tag(_("Cancel"),
                         :class     => "btn btn-default",
                         "ng-click" => "cancelDetachClicked()")
 

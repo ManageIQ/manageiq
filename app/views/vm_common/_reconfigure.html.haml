@@ -254,10 +254,10 @@
                      :alt       => _("Submit"),
                      "ng-click" => "submitClicked()",
                      "ng-show"  => "!((angularForm.$pristine && !cb_disks) || angularForm.$invalid || (!cb_memory && !cb_cpu && !cb_disks))")
-        = button_tag("Reset",
+        = button_tag(_("Reset"),
              :class        => "btn btn-default disabled",
-             :alt          => "Reset changes",
-             :title        => "Reset changes",
+             :alt          => _("Reset changes"),
+             :title        => _("Reset changes"),
              "ng-class"    => "{ disabled: angularForm.$pristine && !cb_disks}",
              "ng-click"    => "resetClicked()",
              "ng-disabled" => "angularForm.$pristine && !cb_disks",
