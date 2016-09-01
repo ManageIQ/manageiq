@@ -1686,7 +1686,7 @@ $(function () {
   $(window).on('resize', _.debounce(miqResetSizeTimer, 1000));
 
   check_for_ellipsis();
-  $().setupVerticalTertiaryNavigation(true);
+  $().setupVerticalNavigation(true);
 });
 
 function miqScrollToSelected(div_name) {

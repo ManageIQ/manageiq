@@ -370,12 +370,6 @@ iframe, .iframe {
   padding-right: 3px;
 }
 
-/* Adds padding between buttons when they wrap */
-
-.toolbar-pf .toolbar-pf-actions .form-group {
-  margin-bottom: 10px !important
-}
-
 /* sets width to auto for bootstrap-select */
 .selectWidth {
   width: auto !important;
@@ -533,7 +527,11 @@ body#dashboard {
 }
 
 .toolbar-pf .toolbar-pf-actions .form-group { /* adds padding between buttons when they wrap */
-  margin-bottom: 10px !important
+  margin-bottom: 10px;
+}
+
+.toolbar-pf-actions { /* removes double paddding resulting from ^ */
+  margin-bottom: 0px;
 }
 
 .toolbar-pf .form-group .btn,
@@ -558,3 +556,18 @@ body#dashboard {
 }
 
 /* end toolbar styling */
+
+.secondary-collapse-toggle-pf {
+  &:before {
+    content: '\f08d';
+  }
+  &.collapsed {
+    &:before {
+      content: '\f08d';
+      display: inline-block;
+      transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      -webkit-transform: rotate(45deg);
+    }
+  }
+}

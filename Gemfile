@@ -88,11 +88,11 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
   gem "jquery-hotkeys-rails"
   gem "jquery-rails",                 "~>4.1.1"
   gem "lodash-rails",                 "~>3.10.0"
+  gem "patternfly-sass",              "~>3.9.0"
   gem "sass-rails"
 
   # Modified gems (forked on Github)
   gem "jquery-rjs",                   "=0.1.1",                       :git => "git://github.com/amatsuda/jquery-rjs.git", :ref => "1288c09"
-  gem "patternfly-sass",                                              :git => "git://github.com/ManageIQ/patternfly-sass", :branch => "tertiary-3.7.0"
 end
 
 ### Start of gems excluded from the appliances.
