@@ -2,7 +2,7 @@ module GenericObjectDefinitionHelper
   TOOLBAR_CLASSES = [
     ApplicationHelper::Toolbar::XHistory,
     ApplicationHelper::Toolbar::GenericObjectDefinition
-  ]
+  ].freeze
 
   def toolbar_from_hash
     toolbar_builder = _toolbar_builder

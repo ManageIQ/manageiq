@@ -2663,17 +2663,17 @@ describe ApplicationHelper do
       end
 
       it "includes the button group" do
-        expect(_toolbar_builder.call_by_class(toolbar_to_build).first).to include({
+        expect(_toolbar_builder.call_by_class(toolbar_to_build).first).to include(
           :id    => "generic_object_choice",
           :type  => :buttonSelect,
           :icon  => "fa fa-cog fa-lg",
           :title => "Configuration",
           :text  => "Configuration"
-        })
+        )
       end
 
       it "includes the correct button items" do
-        expect(_toolbar_builder.call_by_class(toolbar_to_build).first[:items].first).to include({
+        expect(_toolbar_builder.call_by_class(toolbar_to_build).first[:items].first).to include(
           :id    => "generic_object_choice__generic_object_create",
           :type  => :button,
           :icon  => "pficon pficon-add-circle-o fa-lg",
@@ -2683,7 +2683,7 @@ describe ApplicationHelper do
             'function'      => 'sendDataWithRx',
             'function-data' => '{"eventType": "showAddForm"}'
           }
-        })
+        )
       end
     end
   end
