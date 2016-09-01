@@ -2,6 +2,101 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - as of Sprint 45 end 2016-08-22
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+45+Ending+Aug+22%2C+2016%22+label%3Aenhancement)
+
+- Automate
+  - Enhanced messaging for provisioning: Displayed elements
+    - ManageIQ Server name
+    - Name of VM/Service being provisioned
+    - Current Automate state machine step
+    - Status message
+    - Provision Task Message
+    - Retry count (when applicable)
+  - New method `taggable?` to programmatically determine if a Service Model class or instance is taggable.
+  - Generic Objects: Model updates
+    - Associations
+    - Tagging
+    - Service Methods: `add_to_service / remove_from_service`
+  - Git Automate support
+    - Branch/Tag support
+    - Contents are locked and can be copied to other domains for editing
+    - Editable properties
+      - Enabled/Disabled
+      - Priority
+      - Removal of Domain
+    - Dedicated Server Role to store the repository
+- Platform
+  - PostgreSQL High Availability
+    - Primary/Standby DB config in Appliance Console
+    - Database-only appliance config in Appliance Console
+    - Failover Monitor
+  - Tenancy
+    - Groundwork in preparation for supporting multiple entitlements
+    - ApplicationHelper#role_allows and User#role_allows? combined and moved to RBAC
+    - Post refresh hook to queue mapping of Cloud Tenants
+  - Database maintenance scripts added to appliance
+- Providers
+  - Containers: Models for container deployments
+  - Google Compute Engine
+    - Preemptible Instances
+    - Retirement support
+  - Hawkular    
+    - Alerts
+       - Link miq alerts and hawkular events on the provider
+       - Convert ManageIQ alerts/profiles to hawkular group triggers/members of group triggers
+       - Sync the provider when ManageIQ alerts and alert profiles are created/updated
+   - Added entities: Domains and Server Groups including their visualization in topology
+   - Datasource entity now has deletion operation
+   - Support more event types for datasource and deployment
+   - Cross linking to VMs added to topology
+  - Microsoft Azure: Added memory and disk utilization metrics
+  - OpenStack
+    - Host Aggregates
+    - Region Support
+  - Red Hat Enterprise Virtualization: Snapshot support
+  - VMware vSphere: Storage profiles
+- REST API
+  - Support for compressed ids in inbound requests
+  - CRUD support for Arbitration Rules
+- Service Broker
+  - Service Designer: Blueprint API is 90% done, edit and publish are still in development
+  - Arbitration Profiles
+      - Collection of pre-defined settings
+      - Work in conjunction with the Arbitration Engine
+  - Rules Engine: API completed
+- SmartState: Deployed new MiqDiskCache module for use with Microsoft Azure
+    - Scan time reduced from >20 minutes to <5 minutes
+    - Microsoft Azure backed read requests reduced from >7000 requests to <1000
+- User Interface
+  - I18n support for UI plugins
+  - Arbitration Profiles management for Service Broker
+  - Re-check Authentication button added to Provider list views
+  - Provisioning button added to the Templates & Images list and summary screens
+  - Subtype option added to Generic Catalog Items
+  - About modal added to OPS UI
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+45+Ending+Aug+22%2C+2016%22+label%3Aenhancement)
+
+- Performance: Page rendering performance
+  - Services -> Workloads -> All VMs page load time reduced from 93,770ms to 524ms (99%) with a test of 20,000 VMs
+- Platform
+  - Upgrade ruby 2.2.5 to 2.3.1
+  - Configure Rails web server - Puma or Thin
+    - Puma is still the default
+    - Planning on adding additional servers
+
+### [Fixes](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+45+Ending+Aug+22%2C+2016%22+label%3A"technical+debt")
+
+Notable fixes include:
+- Microsoft Azure: Fix proxy for template lookups
+- VMware vSphere: Block duplicate events
+- REST API
+  - Hide internal Tenant Groups from /api/groups
+  - Raise 403 Forbidden for deleting read-only groups
+  - API Request logging
+
 ## Unreleased - as of Sprint 44 end 2016-08-1
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+44+Ending+Aug+1%2C+2016%22+label%3Aenhancement)
@@ -579,7 +674,7 @@ and before subscription is enabled
   - Ability to report on Performance
   - Host Socket and Total VMs metrics
   - Watermark reports available out-of-the-box
-- Google Cloud Engine
+- Google Compute Engine
   - New Provider
   - Ability to validate authentication
 
