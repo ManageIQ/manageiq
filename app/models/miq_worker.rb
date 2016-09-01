@@ -503,8 +503,6 @@ class MiqWorker < ApplicationRecord
     {:guid => guid}
   end
 
-  protected
-
   def self.normalized_type
     @normalized_type ||= if parent == Object
                            name.sub(/^Miq/, '').underscore
@@ -521,4 +519,5 @@ class MiqWorker < ApplicationRecord
     delta = worker_settings[:nice_delta]
     delta.kind_of?(Integer) ? delta.to_s : "+10"
   end
+  private_class_method :nice_increment
 end
