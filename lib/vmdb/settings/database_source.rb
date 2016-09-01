@@ -3,25 +3,29 @@ module Vmdb
     class DatabaseSource
       include Vmdb::Logging
 
-      attr_reader :resource_instance, :settings_holder_class_name
+      attr_reader :settings_holder_class_name
 
-      # @param resource [MiqRegion, Zone, MiqServer] the resource
-      # @param class_name [Symbol] class name of object which provides access to SettingsChange for resource
+      # @param resource [MiqRegion, Zone, MiqServer, :my_server] the resource
+      #   If passed :my_server, then MiqServer.my_server will be dynamically called.
+      # @param class_name [String] class name of object which provides access to SettingsChange for resource
       #   possible values of class_name are {DatabaseSource::SETTINGS_HIERARCHY the setting hierarchy}
       #
       #   Example:
-      #   1. resource is instance of MiqServer and class_name is 'Zone', than settings will be loaded
+      #   1. resource is instance of MiqServer and class_name is 'Zone', then settings will be loaded
       #      from resource.zone.settings_changes
-      #   2. resource is instance of MiqServer and class_name is 'MiqRegion' than settings will be loaded
+      #   2. resource is instance of MiqServer and class_name is 'MiqRegion', then settings will be loaded
       #      from resource.miq_region.settings_changes
       def initialize(resource, class_name)
+        raise ArgumentError, "resource cannot be nil" if resource.nil?
+
         @resource_instance = resource
-        @settings_holder_class_name = class_name.to_sym
+        @settings_holder_class_name = class_name.to_s
       end
 
       def self.sources_for(resource)
         return [] if resource.nil?
-        hierarchy_index = SETTINGS_HIERARCHY.index(resource.class.name.to_sym)
+        resource_class = resource == :my_server ? "MiqServer" : resource.class.name
+        hierarchy_index = SETTINGS_HIERARCHY.index(resource_class)
         SETTINGS_HIERARCHY[0..hierarchy_index].collect do |class_name|
           new(resource, class_name)
         end
@@ -29,6 +33,10 @@ module Vmdb
 
       def self.parent_sources_for(resource)
         sources_for(resource)[0...-1]
+      end
+
+      def resource
+        @resource_instance == :my_server ? my_server : @resource_instance.reload
       end
 
       def load
@@ -46,16 +54,29 @@ module Vmdb
 
       private
 
-      METHODS_FOR_SETTINGS = %i(miq_region zone miq_server).freeze
-      SETTINGS_HIERARCHY = %i(MiqRegion Zone MiqServer).freeze
+      SETTINGS_HIERARCHY = %w(MiqRegion Zone MiqServer).freeze
 
       def settings_holder
-        return nil if resource_instance.nil?
-        resource_instance.reload
-        return resource_instance if resource_instance.class.name.to_sym == settings_holder_class_name
+        resource = self.resource
+        return nil if resource.nil?
+        return resource if resource.class.name == settings_holder_class_name
+        resource.public_send(settings_holder_class_name.underscore)
+      end
 
-        index = SETTINGS_HIERARCHY.index(settings_holder_class_name)
-        resource_instance.send(METHODS_FOR_SETTINGS[index])
+      # Since `#load` occurs very early in the boot process, we must ensure that
+      # we do not fail in cases where the database is not yet created, not yet
+      # available, or has not yet been seeded.
+      def my_server
+        resource_queryable? ? MiqServer.my_server(true) : nil
+      end
+
+      def resource_queryable?
+        database_connectivity? && SettingsChange.table_exists?
+      end
+
+      def database_connectivity?
+        conn = ActiveRecord::Base.connection rescue nil
+        conn && ActiveRecord::Base.connected?
       end
     end
   end

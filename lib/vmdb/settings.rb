@@ -13,7 +13,7 @@ module Vmdb
 
     def self.init
       ::Config.overwrite_arrays = true
-      reset_settings_constant(for_resource(my_server))
+      reset_settings_constant(for_resource(:my_server))
       on_reload
     end
 
@@ -153,24 +153,5 @@ module Vmdb
       end
     end
     private_class_method :apply_settings_changes
-
-    # Since `#load` occurs very early in the boot process, we must ensure that
-    # we do not fail in cases where the database is not yet created, not yet
-    # available, or has not yet been seeded.
-    def self.my_server
-      resource_queryable? ? MiqServer.my_server(true) : nil
-    end
-    private_class_method :my_server
-
-    def self.resource_queryable?
-      database_connectivity? && SettingsChange.table_exists?
-    end
-    private_class_method :resource_queryable?
-
-    def self.database_connectivity?
-      conn = ActiveRecord::Base.connection rescue nil
-      conn && ActiveRecord::Base.connected?
-    end
-    private_class_method :database_connectivity?
   end
 end

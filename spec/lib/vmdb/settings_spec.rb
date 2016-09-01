@@ -1,8 +1,4 @@
 describe Vmdb::Settings do
-  before do
-    skip "Affected by some global state change, needs fixing"
-  end
-
   describe ".on_reload" do
     it "is called on top-level ::Settings.reload!" do
       expect(described_class).to receive(:on_reload)
@@ -21,8 +17,6 @@ describe Vmdb::Settings do
     end
 
     context "dumping the settings to the log directory" do
-      after { ::Settings.reload! }
-
       it "writes them" do
         ::Settings.api.token_ttl = "1.minute"
         described_class.on_reload

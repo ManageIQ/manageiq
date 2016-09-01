@@ -1,12 +1,5 @@
 describe MiqServer do
-  describe ".seed" do
-    # Since MiqServer.seed replaces the global Settings, we need to undo
-    #   that to keep specs clean.
-    before { @orig_settings = ::Settings }
-    after  { Vmdb::Settings.send(:reset_settings_constant, @orig_settings) }
-
-    include_examples ".seed called multiple times"
-  end
+  include_examples ".seed called multiple times"
 
   it ".invoke_at_startups" do
     MiqRegion.seed
