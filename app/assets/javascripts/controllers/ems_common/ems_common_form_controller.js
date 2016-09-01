@@ -72,12 +72,12 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.zone                            = data.zone;
         $scope.emsCommonModel.emstype_vm                      = data.emstype_vm;
         $scope.emsCommonModel.openstack_infra_providers_exist = data.openstack_infra_providers_exist;
-        $scope.emsCommonModel.default_api_port                = '5000';
+        $scope.emsCommonModel.default_api_port                = '';
         $scope.emsCommonModel.amqp_api_port                   = '5672';
         $scope.emsCommonModel.hawkular_api_port               = '443';
         $scope.emsCommonModel.api_version                     = 'v2';
         $scope.emsCommonModel.ems_controller                  = data.ems_controller;
-        $scope.emsCommonModel.ems_controller == 'ems_container' ? $scope.emsCommonModel.default_api_port = '8443' : $scope.emsCommonModel.default_api_port = '5000';
+        $scope.emsCommonModel.ems_controller == 'ems_container' ? $scope.emsCommonModel.default_api_port = '8443' : $scope.emsCommonModel.default_api_port = '';
         $scope.emsCommonModel.default_auth_status             = data.default_auth_status;
         $scope.emsCommonModel.amqp_auth_status                = data.amqp_auth_status;
         $scope.emsCommonModel.service_account_auth_status     = data.service_account_auth_status;
@@ -108,7 +108,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
 
         $scope.emsCommonModel.provider_id                     = angular.isDefined(data.provider_id) ? data.provider_id.toString() : "";
 
-        $scope.emsCommonModel.default_api_port                = angular.isDefined(data.default_api_port) && data.default_api_port != '' ? data.default_api_port.toString() : '5000';
+        $scope.emsCommonModel.default_api_port                = angular.isDefined(data.default_api_port) && data.default_api_port != '' ? data.default_api_port.toString() : $scope.getDefaultApiPort($scope.emsCommonModel.emstype);
         $scope.emsCommonModel.amqp_api_port                   = angular.isDefined(data.amqp_api_port) && data.amqp_api_port != '' ? data.amqp_api_port.toString() : '5672';
         $scope.emsCommonModel.hawkular_api_port               = angular.isDefined(data.hawkular_api_port) && data.hawkular_api_port != '' ? data.hawkular_api_port.toString() : '443';
         $scope.emsCommonModel.metrics_api_port                = angular.isDefined(data.metrics_api_port) && data.metrics_api_port != '' ? data.metrics_api_port.toString() : '';
@@ -173,11 +173,11 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
 
   $scope.changeAuthTab = function(id) {
     $scope.currentTab = id;
-  }
+  };
 
   $scope.canValidateBasicInfo = function () {
     return $scope.isBasicInfoValid()
-  }
+  };
 
   $scope.isBasicInfoValid = function() {
     if(($scope.currentTab == "default" && $scope.emsCommonModel.emstype != "azure") &&
@@ -309,13 +309,14 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
     $scope.emsCommonModel.default_security_protocol = "";
     $scope.note = "";
     if ($scope.emsCommonModel.emstype === 'openstack' || $scope.emsCommonModel.emstype === 'openstack_infra') {
-      $scope.emsCommonModel.default_api_port = "5000";
+      $scope.emsCommonModel.default_api_port = $scope.getDefaultApiPort($scope.emsCommonModel.emstype);
       $scope.emsCommonModel.event_stream_selection = "ceilometer";
       $scope.emsCommonModel.amqp_security_protocol = 'non-ssl';
     } else if ($scope.emsCommonModel.emstype === 'scvmm' && $scope.emsCommonModel.default_security_protocol === 'kerberos'){
       $scope.note = $scope.realmNote;
     } else if ($scope.emsCommonModel.emstype === 'rhevm'){
       $scope.emsCommonModel.metrics_api_port = "5432";
+      $scope.emsCommonModel.default_api_port = $scope.getDefaultApiPort($scope.emsCommonModel.emstype);
     } else if ($scope.emsCommonModel.ems_controller === 'ems_container') {
       $scope.emsCommonModel.default_api_port = "8443";
     }
@@ -324,7 +325,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
   $scope.openstackSecurityProtocolChanged = function() {
     if ($scope.emsCommonModel.emstype === 'openstack' || $scope.emsCommonModel.emstype === 'openstack_infra') {
       if ($scope.emsCommonModel.default_security_protocol === 'non-ssl') {
-        $scope.emsCommonModel.default_api_port = "5000";
+        $scope.emsCommonModel.default_api_port = $scope.getDefaultApiPort($scope.emsCommonModel.emstype);
       } else {
         $scope.emsCommonModel.default_api_port = "13000";
       }
@@ -335,6 +336,15 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
     $scope.note = "";
     if ($scope.emsCommonModel.emstype === 'scvmm' && $scope.emsCommonModel.default_security_protocol === 'kerberos'){
       $scope.note = $scope.realmNote;
+    }
+  };
+
+  $scope.getDefaultApiPort = function(emstype) {
+    if( emstype=='openstack' || emstype === 'openstack_infra') {
+      return '5000';
+    }
+    else {
+      return '';
     }
   };
 
