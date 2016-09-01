@@ -192,7 +192,7 @@ module OpsController::Settings::CapAndU
       end
     end
     @edit[:current][:clusters].sort_by! { |c| c[:name] }
-    build_cl_hosts_tree(@edit[:current][:clusters])
+    build_cl_hosts_tree(@edit[:current][:clusters]) unless @edit[:current][:clusters].blank?
 
     @edit[:current][:storages] = []
     @st_recs = {}
@@ -205,7 +205,7 @@ module OpsController::Settings::CapAndU
                                       :store_type => s.store_type,
                                       :location   => s.location) # fields we need
     end
-    build_ds_tree(@edit[:current][:storages])
+    build_ds_tree(@edit[:current][:storages]) unless @edit[:current][:storages].blank?
     @edit[:new] = copy_hash(@edit[:current])
     session[:edit] = @edit
   end
