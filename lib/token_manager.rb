@@ -14,8 +14,7 @@ class TokenManager
 
   def gen_token(token_options = {})
     token = SecureRandom.hex(16)
-    token_ttl_config = token_options.delete(:token_ttl_config)
-    token_ttl = (token_ttl_config && @options[token_ttl_config]) ? @options[token_ttl_config] : @options[:token_ttl]
+    token_ttl = token_options.delete(:token_ttl_override) || @options[:token_ttl]
     token_data = {:token_ttl => token_ttl, :expires_on => Time.now.utc + token_ttl}
 
     token_store.write(token,
