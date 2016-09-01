@@ -1627,7 +1627,7 @@ Vmdb::Application.routes.draw do
         save_post
     },
 
-    :generic_object => {
+    :generic_object_definition => {
       :get => %w(
         explorer
         get_all_object_data

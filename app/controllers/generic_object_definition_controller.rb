@@ -1,4 +1,4 @@
-class GenericObjectController < ApplicationController
+class GenericObjectDefinitionController < ApplicationController
   include GenericObjectHelper
   before_action :check_privileges
 
