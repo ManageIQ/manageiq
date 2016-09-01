@@ -928,15 +928,15 @@ class MiqExpression
       if ops["field"] == "<count>"
         ["<count>", quote(ops["value"], "integer")]
       else
+        col_type = get_col_type(ops["field"]) || "string"
         case context_type
         when "hash"
-          ref = nil
           val = ops["field"].split(".").last.split("-").join(".")
+          fld = "<value type=#{col_type}>#{val}</value>"
         else
           ref, val = value2tag(ops["field"])
+          fld = "<value ref=#{ref}, type=#{col_type}>#{val}</value>"
         end
-        col_type = get_col_type(ops["field"]) || "string"
-        fld = ref ? "<value ref=#{ref}, type=#{col_type}>#{val}</value>" : "<value type=#{col_type}>#{val}</value>"
         if ["like", "not like", "starts with", "ends with", "includes", "regular expression matches", "regular expression does not match"].include?(operator)
           [fld, ops["value"]]
         else
