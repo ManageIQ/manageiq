@@ -661,7 +661,7 @@ class StorageController < ApplicationController
   end
 
   def breadcrumb_name(_model)
-    "#{ui_lookup(:ui_title => 'storage')} #{ui_lookup(:model => 'Storage')}"
+    _("Datastores")
   end
 
   def tagging_explorer_controller?

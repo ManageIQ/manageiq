@@ -33,18 +33,8 @@ class ProviderForemanController < ApplicationController
     end
   end
 
-  def self.model_to_cs_name(provmodel)
-    if provmodel.include?("ManageIQ::Providers::AnsibleTower")
-      ui_lookup(:ui_title => 'Ansible Tower Job Template')
-    end
-  end
-
   def model_to_name(provmodel)
     ProviderForemanController.model_to_name(provmodel)
-  end
-
-  def model_to_cs_name(provmodel)
-    ProviderForemanController.model_to_cs_name(provmodel)
   end
 
   def model_to_type_name(provmodel)
@@ -723,7 +713,7 @@ class ProviderForemanController < ApplicationController
     @listicon = "configuration_script"
     if x_active_tree == :configuration_scripts_tree
       options = {:model => model.to_s}
-      @right_cell_text = _("All %{title}") % {:title => model_to_cs_name(model)}
+      @right_cell_text = _("All Ansible Tower Job Templates")
       process_show_list(options)
     end
   end
