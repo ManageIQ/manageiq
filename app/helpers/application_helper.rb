@@ -1216,7 +1216,7 @@ module ApplicationHelper
   def x_gtl_view_tb_render?
     no_gtl_view_buttons = %w(
       chargeback
-      generic_object
+      generic_object_definition
       miq_ae_class
       miq_ae_customization
       miq_ae_tools

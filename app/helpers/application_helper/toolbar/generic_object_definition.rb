@@ -1,13 +1,13 @@
-class ApplicationHelper::Toolbar::GenericObject < ApplicationHelper::Toolbar::Basic
-  button_group('generic_object', [
+class ApplicationHelper::Toolbar::GenericObjectDefinition < ApplicationHelper::Toolbar::Basic
+  button_group('generic_object_definition', [
     select(
-      :generic_object_choice,
+      :generic_object_definition_choice,
       'fa fa-cog fa-lg',
       title = N_('Configuration'),
       title,
       :items => [
         button(
-          :generic_object_create,
+          :generic_object_definition_create,
           'pficon pficon-add-circle-o fa-lg',
           title = N_('Create a new Generic Object Definition'),
           title,

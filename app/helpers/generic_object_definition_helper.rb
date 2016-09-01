@@ -1,7 +1,7 @@
-module GenericObjectHelper
+module GenericObjectDefinitionHelper
   TOOLBAR_CLASSES = [
     ApplicationHelper::Toolbar::XHistory,
-    ApplicationHelper::Toolbar::GenericObject,
+    ApplicationHelper::Toolbar::GenericObjectDefinition,
     ApplicationHelper::Toolbar::BlankView,
   ]
 

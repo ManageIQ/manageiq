@@ -2082,16 +2082,16 @@
           :hidden: true
           :identifier: ab_button_simulate
 
-# Automate Generic Objects
-- :name: Generic Object
-  :description: Generic Objects
+# Automate Generic Object Definitions
+- :name: Generic Object Definition
+  :description: Generic Object Definitions
   :feature_type: node
-  :identifier: generic_object_explorer
+  :identifier: generic_object_definition_explorer
   :children:
-    - :name: Generic Object Create
-      :description: Generic Object Create
+    - :name: Generic Object Definition Create
+      :description: Generic Object Definition Create
       :feature_type: node
-      :identifier: generic_object_create
+      :identifier: generic_object_definition_create
 
 # Automate Import/Export
 - :name: Import/Export

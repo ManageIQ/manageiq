@@ -1,5 +1,5 @@
 class TestClass
-  include GenericObjectHelper
+  include GenericObjectDefinitionHelper
 
   def initialize(toolbar_builder)
     @toolbar_builder = toolbar_builder
@@ -10,7 +10,7 @@ class TestClass
   end
 end
 
-describe GenericObjectHelper do
+describe GenericObjectDefinitionHelper do
   let(:toolbar_builder) { double("ToolbarBuilder") }
   let(:subject) { TestClass.new(toolbar_builder) }
 
@@ -21,7 +21,7 @@ describe GenericObjectHelper do
       ).and_return("xhistory")
 
       allow(toolbar_builder).to receive(:call_by_class).with(
-        ApplicationHelper::Toolbar::GenericObject
+        ApplicationHelper::Toolbar::GenericObjectDefinition
       ).and_return("generic_object")
 
       allow(toolbar_builder).to receive(:call_by_class).with(

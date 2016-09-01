@@ -1708,7 +1708,7 @@ Datasources\" href=\"/ems_middleware/#{ems.id}?display=middleware_datasources\">
 
         %w(
           chargeback
-          generic_object
+          generic_object_definition
           miq_ae_class
           miq_ae_customization
           miq_ae_tools

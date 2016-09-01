@@ -39,9 +39,9 @@ describe GenericObjectDefinitionController do
 
     it "sets up the accords variable" do
       expect(assigns[:accords]).to eq([{
-        :name      => "generic_object_accordion",
-        :title     => "Generic Object definitions",
-        :container => "generic_object_accordion_accord"
+        :name      => "generic_object_definition_accordion",
+        :title     => "Generic Object Definitions",
+        :container => "generic_object_definition_accordion_accord"
       }])
     end
 
