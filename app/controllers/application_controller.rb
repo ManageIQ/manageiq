@@ -1939,7 +1939,7 @@ class ApplicationController < ActionController::Base
           templates = [params[:id]] if templates.blank?
 
           template = VmOrTemplate.find_by_id(from_cid(templates.first))
-          render_flash_not_applicable_to_model("provisioning") unless template.send("supports_provisioning?")
+          render_flash_not_applicable_to_model("provisioning") unless template.supports_provisioning?
           return if performed?
 
           @edit[:src_vm_id] = templates.first

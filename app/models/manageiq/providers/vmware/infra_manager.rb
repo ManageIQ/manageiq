@@ -17,6 +17,8 @@ module ManageIQ::Providers
 
     include VimConnectMixin
 
+    supports :provisioning
+
     before_save :stop_event_monitor_queue_on_change
     before_destroy :stop_event_monitor
 

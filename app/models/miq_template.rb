@@ -3,6 +3,8 @@ class MiqTemplate < VmOrTemplate
 
   include_concern 'Operations'
 
+  supports_not :provisioning
+
   def self.base_model
     MiqTemplate
   end
@@ -30,8 +32,4 @@ class MiqTemplate < VmOrTemplate
   end
 
   def active?; false; end
-
-  def supports_provisioning?
-    !ems_id.nil? && ExtManagementSystem.where(:id => ems_id).exists?
-  end
 end

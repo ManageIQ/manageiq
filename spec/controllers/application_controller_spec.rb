@@ -211,11 +211,11 @@ describe ApplicationController do
       expect(assigns(:flash_array).first[:message]).to include("does not apply to at least one of the selected")
     end
 
-    let(:ems)     { FactoryGirl.create(:ext_management_system) }
+    let(:ems)     { FactoryGirl.create(:ems_openstack) }
     let(:storage) { FactoryGirl.create(:storage) }
 
     it "sets provisioning data and skips pre provisioning dialog" do
-      template = FactoryGirl.create(:miq_template,
+      template = FactoryGirl.create(:template_openstack,
                                     :name                  => "template 1",
                                     :vendor                => "vmware",
                                     :location              => "template1.vmtx",
