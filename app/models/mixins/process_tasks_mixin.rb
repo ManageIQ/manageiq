@@ -1,3 +1,5 @@
+require 'manageiq-api-client'
+
 module ProcessTasksMixin
   extend ActiveSupport::Concern
 
@@ -52,14 +54,10 @@ module ProcessTasksMixin
     def invoke_tasks_remote(options)
       ApplicationRecord.group_ids_by_region(options[:ids]).each do |region, ids|
         remote_options = options.merge(:ids => ids)
-        hostname = MiqRegion.find_by_region(region).remote_ws_address
-        if hostname.nil?
-          $log.error("An error occurred while invoking remote tasks...The remote region [#{region}] does not have a web service address.")
-          next
-        end
 
         begin
-          invoke_api_tasks(hostname, remote_options)
+          remote_connection = api_client_connection_for_region(region, remote_options[:userid])
+          invoke_api_tasks(remote_connection, remote_options)
         rescue NotImplementedError => err
           $log.error("#{base_class.name} is not currently able to invoke tasks for remote regions")
           $log.log_backtrace(err)
@@ -88,10 +86,30 @@ module ProcessTasksMixin
       end
     end
 
-    # This should be overridden by any class including this module
-    # and expecting to be asked to invoke tasks for a remote region
-    def invoke_api_tasks(_hostname, _remote_options)
-      raise NotImplementedError
+    # Best guess at how the classes map to API collections and how the tasks map to actions
+    # Override as needed
+    def invoke_api_tasks(api_client, remote_options)
+      collection = base_class.table_name
+
+      remote_options[:ids].each do |id|
+        obj = api_client.send(collection).search(:filter => ["id=#{id}"]).first
+        _log.info("Invoking task #{remote_options[:task]} on collection #{collection} - object #{obj.id}")
+        # obj.send(task)
+      end
+    end
+
+    def api_client_connection_for_region(region, user)
+      hostname = MiqRegion.find_by_region(region).remote_ws_address
+      if hostname.nil?
+        $log.error("An error occurred while invoking remote tasks...The remote region [#{region}] does not have a web service address.")
+        return
+      end
+
+      ManageIQ::API::Client.new(
+        :url      => "https://#{hostname}",
+        :miqtoken => MiqRegion.api_system_auth_token_for_region(region, user),
+        :ssl      => {:verify => false}
+      )
     end
 
     # default: invoked by task, can be overridden
