@@ -25,6 +25,8 @@ function ErrorModalController($timeout) {
         $ctrl.data = m[1];
       }
     }
+
+    $ctrl.status = (err && err.status !== -1) ? err.status + " " + err.statusText : "Server not responding";
   };
 
   $ctrl.close = function() {
@@ -58,7 +60,7 @@ angular.module('miq.error', [])
       '                <strong>',
       '                  Status',
       '                </strong>',
-      '                {{$ctrl.error.status}} {{$ctrl.error.statusText}}',
+      '                {{$ctrl.status}}',
       '              </li>',
       '              <li>',
       '                <strong>',
