@@ -1,12 +1,11 @@
 module TreeBuilderArchived
   def x_get_tree_custom_kids(object, count_only, options)
     klass  = Object.const_get(options[:leaf])
-    method = case object[:id]
-             when "orph" then :all_orphaned
-             when "arch" then :all_archived
-             end
-    objects = Rbac.filtered(klass.send(method))
-    count_only ? objects.length : objects
+    objects = case object[:id]
+              when "orph" then klass.all_orphaned
+              when "arch" then klass.all_archived
+              end
+    count_only_or_objects_filtered(count_only, objects)
   end
 
   def x_get_tree_arch_orph_nodes(model_name)
