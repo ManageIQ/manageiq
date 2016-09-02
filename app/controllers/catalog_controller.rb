@@ -1463,11 +1463,7 @@ class CatalogController < ApplicationController
   def get_form_vars_load_balancer
     available_load_balancer_managers
     if params[:manager_id]
-      if params[:manager_id] == ""
-        @edit[:new][:manager_id] = nil
-      else
-        @edit[:new][:manager_id] = params[:manager_id]
-      end
+      @edit[:new][:manager_id] = (params[:manager_id] == "") ? nil : params[:manager_id]
     end
   end
 
