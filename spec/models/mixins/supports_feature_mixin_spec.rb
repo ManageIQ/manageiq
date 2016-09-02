@@ -1,5 +1,13 @@
 describe SupportsFeatureMixin do
   before do
+    stub_const('SupportsFeatureMixin::QUERYABLE_FEATURES',
+               SupportsFeatureMixin::QUERYABLE_FEATURES.merge(
+                 :publish => 'publish the post',
+                 :archive => 'archive the post',
+                 :fake    => 'fake it',
+                 :nuke    => 'nuke it'
+               ))
+
     stub_const('Post::Operations::Publishing', Module.new do
       extend ActiveSupport::Concern
 
@@ -67,6 +75,10 @@ describe SupportsFeatureMixin do
   context "for a supported feature" do
     it ".supports_feature? is true" do
       expect(Post.supports_publish?).to be true
+    end
+
+    it ".supports?(feature) is true" do
+      expect(Post.supports?(:publish)).to be true
     end
 
     it "#supports_feature? is true" do
@@ -182,6 +194,68 @@ describe SupportsFeatureMixin do
         expect(special_post.supports_fake?).to be true
         expect(special_post.unsupported_reason(:fake)).to be nil
       end
+    end
+  end
+
+  context "guards against unqueriable features" do
+    it "when defining a class with :supports_not" do
+      stub_const("MegaPost", Class.new)
+      expect do
+        class MegaPost
+          include SupportsFeatureMixin
+          supports_not :mega
+        end
+      end.to raise_error(SupportsFeatureMixin::UnknownFeatureError)
+    end
+
+    it "when defining a class with :supports" do
+      stub_const("MegaPost", Class.new)
+      expect do
+        class MegaPost
+          include SupportsFeatureMixin
+          supports :mega
+        end
+      end.to raise_error(SupportsFeatureMixin::UnknownFeatureError)
+    end
+
+    it "when querying a feature on the class" do
+      expect do
+        SpecialPost.supports?('mega')
+      end.to raise_error(SupportsFeatureMixin::UnknownFeatureError)
+    end
+
+    it "when querying a feature on the instance" do
+      expect do
+        SpecialPost.new.supports?('mega')
+      end.to raise_error(SupportsFeatureMixin::UnknownFeatureError)
+    end
+
+    it "when querying a reason on the class" do
+      expect do
+        SpecialPost.unsupported_reason(:mega)
+      end.to raise_error(SupportsFeatureMixin::UnknownFeatureError)
+    end
+
+    it "when querying a reason on the instance" do
+      expect do
+        SpecialPost.new.unsupported_reason(:mega)
+      end.to raise_error(SupportsFeatureMixin::UnknownFeatureError)
+    end
+  end
+
+  context "feature that is implicitly unsupported" do
+    it "class responds to supports_feature?" do
+      expect(Post.supports_nuke?).to be false
+    end
+
+    it "can be supported by the class" do
+      stub_const("NukeablePost", Class.new(SpecialPost) do
+        supports :nuke do
+          unsupported_reason_add(:nuke, "dont nuke the bribe") if bribe
+        end
+      end)
+      expect(NukeablePost.new(:bribe => true).supports_nuke?).to be false
+      expect(NukeablePost.new(:bribe => false).supports_nuke?).to be true
     end
   end
 end
