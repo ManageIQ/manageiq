@@ -19,15 +19,11 @@ class TreeBuilderVandt < TreeBuilder
   end
 
   def x_get_tree_roots(count_only, options)
-    objects = Rbac.filtered(EmsInfra.order("lower(name)"), :match_via_descendants => VmOrTemplate)
+    objects = count_only_or_objects_filtered(count_only, EmsInfra, "name", :match_via_descendants => VmOrTemplate)
+    objects.collect! { |o| TreeBuilderVmsAndTemplates.new(o, options.dup).tree } unless count_only
+    root_nodes = count_only_or_objects(count_only, x_get_tree_arch_orph_nodes("VMs and Templates"))
 
-    if count_only
-      objects.length + 2
-    else
-      objects = objects.to_a
-      objects.collect! { |o| TreeBuilderVmsAndTemplates.new(o, options.dup).tree } +
-        x_get_tree_arch_orph_nodes("VMs and Templates")
-    end
+    objects + root_nodes
   end
 
   # Handle custom tree nodes (object is a Hash)
