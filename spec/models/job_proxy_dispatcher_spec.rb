@@ -1,7 +1,6 @@
-require File.expand_path(File.join(File.dirname(__FILE__), 'job_proxy_dispatcher/job_proxy_dispatcher_helper'))
-include JobProxyDispatcherHelper
-
 describe JobProxyDispatcher do
+  include Spec::Support::JobProxyDispatcherHelper
+
   DISPATCH_ONLY = false
   if DISPATCH_ONLY
     NUM_VMS = 200

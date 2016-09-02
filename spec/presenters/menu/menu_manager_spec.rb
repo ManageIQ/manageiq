@@ -1,8 +1,6 @@
-require_relative "menu_spec_helper"
-
-include MenuSpecHelper
-
 describe Menu::Manager do
+  include Spec::Support::MenuHelper
+
   before :each do
     Singleton.__init__(Menu::CustomLoader)
     Singleton.__init__(Menu::Manager)
