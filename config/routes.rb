@@ -2774,8 +2774,8 @@ Vmdb::Application.routes.draw do
   # Semantic Versioning Regex for API, i.e. vMajor.minor.patch[-pre]
   API_VERSION_REGEX = /v[\d]+(\.[\da-zA-Z]+)*(\-[\da-zA-Z]+)?/ unless defined?(API_VERSION_REGEX)
 
-  namespace :api, :path => "api(/:version)" do
-    root :to => "/api#index", :format => 'json', :version => API_VERSION_REGEX
+  namespace :api, :path => "api(/:version)", :version => API_VERSION_REGEX do
+    root :to => "/api#index", :format => 'json'
 
     # OPTIONS requests for REST API pre-flight checks
     match '*path' => 'base#handle_options_request', :via => [:options]
@@ -2795,7 +2795,7 @@ Vmdb::Application.routes.draw do
     end
 
     def create_api_route(verb, url, action)
-      public_send(verb, url, :to => action, :format => "json", :version => API_VERSION_REGEX)
+      public_send(verb, url, :to => action, :format => "json")
     end
 
     Api::Settings.collections.each do |collection_name, collection|
