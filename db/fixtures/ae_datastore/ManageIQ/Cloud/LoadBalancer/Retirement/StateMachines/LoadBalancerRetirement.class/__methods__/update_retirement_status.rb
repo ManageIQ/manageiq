@@ -25,7 +25,7 @@ load_balancer = $evm.root['load_balancer']
 if $evm.root['ae_result'] == 'error'
   if step.downcase == 'startretirement'
     $evm.log("info", "Cannot continue because load_balancer is already retired or is being retired.")
-  else
-    load_balancer.retirement_state = 'error' if load_balancer
+  elsif load_balancer
+    load_balancer.retirement_state = 'error'
   end
 end

@@ -35,11 +35,11 @@ evm_owner_id = load_balancer.attributes['evm_owner_id']
 owner = nil
 owner = $evm.vmdb('user', evm_owner_id) unless evm_owner_id.nil?
 
-if owner
-  to = owner.email
-else
-  to = $evm.object['to_email_address']
-end
+to = if owner
+       owner.email
+     else
+       $evm.object['to_email_address']
+     end
 
 if event_type == "load_balancer_retire_warn"
 
