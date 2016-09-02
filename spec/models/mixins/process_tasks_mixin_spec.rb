@@ -99,6 +99,12 @@ describe ProcessTasksMixin do
         expect(message.method_name).to eq("invoke_tasks_remote")
         expect(message.args).to eq([test_options])
       end
+
+      it "does not requeue for a NotImplementedError" do
+        expect(test_class).to receive(:invoke_api_tasks).and_raise(NotImplementedError)
+        expect(MiqQueue).not_to receive(:put)
+        test_class.invoke_tasks_remote(test_options)
+      end
     end
 
     it "does not call invoke_api_tasks if the server does not have an address" do

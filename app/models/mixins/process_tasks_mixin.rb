@@ -60,6 +60,10 @@ module ProcessTasksMixin
 
         begin
           invoke_api_tasks(hostname, remote_options)
+        rescue NotImplementedError => err
+          $log.error("#{base_class.name} is not currently able to invoke tasks for remote regions")
+          $log.log_backtrace(err)
+          next
         rescue => err
           # Handle specific error case, until we can figure out how it occurs
           if err.class == ArgumentError && err.message == "cannot interpret as DNS name: nil"
