@@ -5,7 +5,7 @@ module Api
       # Primary Methods
       #
 
-      def show_generic
+      def show
         validate_api_action
         if @req.subcollection
           render_collection_type @req.subcollection.to_sym, @req.s_id, true
@@ -14,7 +14,7 @@ module Api
         end
       end
 
-      def update_generic
+      def update
         validate_api_action
         if @req.subcollection
           render_normal_update @req.collection.to_sym, update_collection(@req.subcollection.to_sym, @req.s_id, true)
@@ -23,7 +23,7 @@ module Api
         end
       end
 
-      def destroy_generic
+      def destroy
         validate_api_action
         if @req.subcollection
           delete_subcollection_resource @req.subcollection.to_sym, @req.s_id

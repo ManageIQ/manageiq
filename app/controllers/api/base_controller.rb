@@ -108,25 +108,5 @@ module Api
 
     before_action :parse_api_request, :log_api_request, :validate_api_request
     after_action :log_api_response
-
-    def redirect_api_request(method)
-      target_method = "#{method}_#{@req.collection || "entrypoint"}"
-      return send(target_method) if respond_to?(target_method)
-      target_method = "#{method}_generic"
-      return send(target_method) if respond_to?(target_method)
-      api_error_type(:not_found, "Unknown resource specified")
-    end
-
-    def show    # GET
-      redirect_api_request(:show)
-    end
-
-    def update  # POST, PUT, PATCH
-      redirect_api_request(:update)
-    end
-
-    def destroy # DELETE
-      redirect_api_request(:destroy)
-    end
   end
 end
