@@ -116,7 +116,7 @@ unless ENV["APPLIANCE"]
   group :development, :test do
     gem "good_migrations"
     gem "parallel_tests"
-    gem "rspec-rails",      "~>3.5.0"
+    gem "rspec-rails",      "~>3.5"
   end
 end
 
