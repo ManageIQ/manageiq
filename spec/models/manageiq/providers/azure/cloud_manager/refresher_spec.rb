@@ -47,6 +47,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     @ems.reload
   end
 
+<<<<<<< HEAD
   context "proxy support" do
     let(:proxy) { URI::HTTP.build(:host => 'localhost', :port => 8080) }
 
@@ -71,6 +72,33 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       end
     end
   end
+=======
+  # 9/9/16 - Commenting this out because it depends on a local proxy running.
+  # This will be done in a separate PR
+
+  # context "proxy support" do
+  #   let(:proxy) { URI::HTTP.build(:host => 'localhost', :port => 8080) }
+
+  #   2.times do
+  #     it "will perform a full refresh with a plain proxy enabled" do
+  #       allow(VMDB::Util).to receive(:http_proxy_uri).and_return(proxy)
+  #       setup_ems_and_cassette
+  #       expect(OrchestrationTemplate.count).to eql(3)
+  #     end
+  #   end
+
+  #   2.times do
+  #     it "will perform a full refresh with an authenticating proxy enabled" do
+  #       proxy.user = "foo"
+  #       proxy.password = "xxx"
+
+  #       allow(VMDB::Util).to receive(:http_proxy_uri).and_return(proxy)
+  #       setup_ems_and_cassette
+  #       expect(OrchestrationTemplate.count).to eql(3)
+  #     end
+  #   end
+  # end
+>>>>>>> spec tests for Azure load balancer refresh support
 
   it "will perform a full refresh" do
     2.times do # Run twice to verify that a second run with existing data does not change anything
@@ -89,6 +117,9 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       assert_specific_orchestration_template
       assert_specific_orchestration_stack
       assert_specific_nic_and_ip
+      assert_specific_load_balancers
+      assert_specific_load_balancer_listeners
+      assert_specific_load_balancer_health_checks
     end
   end
 
@@ -97,25 +128,25 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       :ext_management_system         => 2,
       :flavor                        => 63,
       :availability_zone             => 1,
-      :vm_or_template                => 9,
-      :vm                            => 8,
+      :vm_or_template                => 12,
+      :vm                            => 11,
       :miq_template                  => 1,
-      :disk                          => 8,
+      :disk                          => 11,
       :guest_device                  => 0,
-      :hardware                      => 9,
-      :network                       => 14,
-      :operating_system              => 8,
+      :hardware                      => 12,
+      :network                       => 20,
+      :operating_system              => 11,
       :relationship                  => 0,
-      :miq_queue                     => 10,
-      :orchestration_template        => 2,
-      :orchestration_stack           => 10,
-      :orchestration_stack_parameter => 138,
-      :orchestration_stack_output    => 7,
-      :orchestration_stack_resource  => 54,
-      :security_group                => 8,
-      :network_port                  => 10,
+      :miq_queue                     => 13,
+      :orchestration_template        => 3,
+      :orchestration_stack           => 17,
+      :orchestration_stack_parameter => 186,
+      :orchestration_stack_output    => 9,
+      :orchestration_stack_resource  => 76,
+      :security_group                => 10,
+      :network_port                  => 11,
       :cloud_network                 => 6,
-      :floating_ip                   => 10,
+      :floating_ip                   => 13,
       :network_router                => 0,
       :cloud_subnet                  => 6,
     }
@@ -170,7 +201,104 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     expect(@ems.miq_templates.size).to eq(expected_table_counts[:miq_template])
 
     expect(@ems.orchestration_stacks.size).to eql(expected_table_counts[:orchestration_stack])
-    expect(@ems.direct_orchestration_stacks.size).to eql(9)
+    expect(@ems.direct_orchestration_stacks.size).to eql(16)
+  end
+
+  def assert_specific_load_balancers
+    lb_ems_ref      = "/subscriptions/AZURE_SUBSCRIPTION_ID/"\
+                      "resourceGroups/miq-azure-test1/providers/Microsoft.Network/loadBalancers/rspec-lb1"
+
+    lb_pool_ems_ref = "/subscriptions/AZURE_SUBSCRIPTION_ID/"\
+                      "resourceGroups/miq-azure-test1/providers/Microsoft.Network/loadBalancers/"\
+                      "rspec-lb1/backendAddressPools/rspec-lb-pool"
+
+    @lb = ManageIQ::Providers::Azure::NetworkManager::LoadBalancer.where(
+      :name    => "rspec-lb1").first
+    @lb_no_members = ManageIQ::Providers::Azure::NetworkManager::LoadBalancer.where(
+      :name    => "rspec-lb2").first
+    @pool          = ManageIQ::Providers::Azure::NetworkManager::LoadBalancerPool.where(
+      :ems_ref => lb_pool_ems_ref).first
+
+    expect(@lb).to have_attributes(
+      "ems_ref"         => lb_ems_ref,
+      "name"            => "rspec-lb1",
+      "description"     => nil,
+      "cloud_tenant_id" => nil,
+      "type"            => "ManageIQ::Providers::Azure::NetworkManager::LoadBalancer")
+
+    expect(@lb.ext_management_system).to eq(@ems.network_manager)
+    expect(@lb.vms.count).to eq 2
+    expect(@lb.load_balancer_pools.first).to eq(@pool)
+    expect(@lb.load_balancer_pool_members.count).to eq 2
+    expect(@lb.load_balancer_pool_members.first.ext_management_system).to eq @ems.network_manager
+    expect(@lb.vms.first.ext_management_system).to eq @ems
+    expect(@lb.vms.collect(&:name).sort).to match_array ["rspec-lb-a", "rspec-lb-b"]
+    expect(@lb_no_members.load_balancer_pool_members.count).to eq 0
+  end
+
+  def assert_specific_load_balancer_listeners
+    lb_listener_ems_ref      = "/subscriptions/AZURE_SUBSCRIPTION_ID/resourceGroups/"\
+                               "miq-azure-test1/providers/Microsoft.Network/loadBalancers/rspec-lb1/"\
+                               "loadBalancingRules/rspec-lb1-rule"
+
+    lb_pool_member_1_ems_ref = "/subscriptions/AZURE_SUBSCRIPTION_ID/resourceGroups/"\
+                               "miq-azure-test1/providers/Microsoft.Network/networkInterfaces/rspec-lb-a670/"\
+                               "ipConfigurations/ipconfig1"
+
+    lb_pool_member_2_ems_ref = "/subscriptions/AZURE_SUBSCRIPTION_ID/resourceGroups/"\
+                               "miq-azure-test1/providers/Microsoft.Network/networkInterfaces/rspec-lb-b843/"\
+                               "ipConfigurations/ipconfig1"
+
+    @pool_member_1 = ManageIQ::Providers::Azure::NetworkManager::LoadBalancerPoolMember.where(
+      :ems_ref => lb_pool_member_1_ems_ref).first
+    @pool_member_2 = ManageIQ::Providers::Azure::NetworkManager::LoadBalancerPoolMember.where(
+      :ems_ref => lb_pool_member_2_ems_ref).first
+    @listener      = ManageIQ::Providers::Azure::NetworkManager::LoadBalancerListener.where(
+      :ems_ref => lb_listener_ems_ref).first
+
+    expect(@listener).to have_attributes(
+      "ems_ref"                  => lb_listener_ems_ref,
+      "name"                     => nil,
+      "description"              => nil,
+      "load_balancer_protocol"   => "Tcp",
+      "load_balancer_port_range" => 80...81,
+      "instance_protocol"        => "Tcp",
+      "instance_port_range"      => 80...81,
+      "cloud_tenant_id"          => nil,
+      "type"                     => "ManageIQ::Providers::Azure::NetworkManager::LoadBalancerListener"
+    )
+    expect(@listener.ext_management_system).to eq(@ems.network_manager)
+    expect(@lb.load_balancer_listeners).to eq [@listener]
+    expect(@listener.load_balancer_pools).to eq([@pool])
+    expect(@listener.load_balancer_pool_members.collect(&:ems_ref)).to match_array [lb_pool_member_1_ems_ref, lb_pool_member_2_ems_ref]
+
+    expect(@listener.vms.collect(&:name)).to match_array ["rspec-lb-a", "rspec-lb-b"]
+    expect(@lb_no_members.load_balancer_listeners.count).to eq 0
+  end
+
+  def assert_specific_load_balancer_health_checks
+    health_check_ems_ref = "/subscriptions/AZURE_SUBSCRIPTION_ID/resourceGroups/"\
+                           "miq-azure-test1/providers/Microsoft.Network/loadBalancers/rspec-lb1/"\
+                           "probes/rspec-lb-probe"
+
+    @health_check = ManageIQ::Providers::Azure::NetworkManager::LoadBalancerHealthCheck.where(
+      :ems_ref => health_check_ems_ref).first
+
+    expect(@health_check).to have_attributes(
+      "ems_ref"         => health_check_ems_ref,
+      "name"            => nil,
+      "protocol"        => "Http",
+      "port"            => 80,
+      "url_path"        => "/",
+      "interval"        => 5,
+      "cloud_tenant_id" => nil,
+      "type"            => "ManageIQ::Providers::Azure::NetworkManager::LoadBalancerHealthCheck"
+    )
+    expect(@listener.load_balancer_health_checks.first).to eq @health_check
+    expect(@health_check.load_balancer).to eq @lb
+    expect(@health_check.load_balancer_health_check_members.count).to eq 2
+    expect(@health_check.load_balancer_pool_members.count).to eq 2
+    expect(@lb_no_members.load_balancer_health_checks.count).to eq 1
   end
 
   def assert_specific_security_group
@@ -263,7 +391,8 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   end
 
   def assert_specific_vm_powered_on
-    vm = ManageIQ::Providers::Azure::CloudManager::Vm.where(:name => @device_name, :raw_power_state => "VM running").first
+    vm = ManageIQ::Providers::Azure::CloudManager::Vm.where(
+      :name => @device_name, :raw_power_state => "VM running").first
     vm_resource_id = "#{@subscription_id}\\#{@resource_group}\\microsoft.compute/virtualmachines\\#{@device_name}"
 
     expect(vm).to have_attributes(
@@ -316,8 +445,10 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
 
     expect(v.hardware.guest_devices.size).to eql(0)
     expect(v.hardware.nics.size).to eql(0)
-    floating_ip   = ManageIQ::Providers::Azure::NetworkManager::FloatingIp.where(:address => "40.87.56.124").first
-    cloud_network = ManageIQ::Providers::Azure::NetworkManager::CloudNetwork.where(:name => "miq-azure-test1").first
+    floating_ip   = ManageIQ::Providers::Azure::NetworkManager::FloatingIp.where(
+      :address => "40.117.236.43").first
+    cloud_network = ManageIQ::Providers::Azure::NetworkManager::CloudNetwork.where(
+      :name => "miq-azure-test1").first
     cloud_subnet  = cloud_network.cloud_subnets.first
     expect(v.floating_ip).to eql(floating_ip)
     expect(v.cloud_network).to eql(cloud_network)
@@ -331,7 +462,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     network = v.hardware.networks.where(:description => "public").first
     expect(network).to have_attributes(
       :description => "public",
-      :ipaddress   => "40.87.56.124",
+      :ipaddress   => "40.117.236.43",
       :hostname    => "ipconfig1"
     )
     network = v.hardware.networks.where(:description => "private").first
@@ -430,7 +561,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
                            "Microsoft.Compute/Images/miq-test-container/"\
                            "test-win2k12-img-osDisk.e17a95b0-f4fb-4196-93c5-0c8be7d5c536.vhd"
 
-    @template = ManageIQ::Providers::Azure::CloudManager::Template.first
+    @template = ManageIQ::Providers::Azure::CloudManager::Template.find_by(:ems_ref => template_resource_id)
 
     expect(@template).to have_attributes(
       :template              => true,
@@ -575,7 +706,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   def assert_specific_nic_and_ip
     nic_group  = 'miq-azure-test1' # EastUS
     ip_group   = 'miq-azure-test4' # Also EastUS
-    ip_address = '52.186.122.167'
+    ip_address = '40.76.50.201'
 
     nic_name = "/subscriptions/#{@subscription_id}/resourceGroups"\
                "/#{nic_group}/providers/Microsoft.Network"\

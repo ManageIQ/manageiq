@@ -314,9 +314,9 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
       :type                         => self.class.load_balancer_listener_type,
       :ems_ref                      => uid,
       :load_balancer_protocol       => listener.properties["protocol"],
-      :load_balancer_port           => listener.properties["backendPort"],
+      :load_balancer_port_range     => (listener.properties["backendPort"].to_i..listener.properties["backendPort"].to_i),
       :instance_protocol            => listener.properties["protocol"],
-      :instance_port                => listener.properties["frontendPort"],
+      :instance_port_range          => (listener.properties["frontendPort"].to_i..listener.properties["frontendPort"].to_i),
       :load_balancer                => @data_index.fetch_path(:load_balancers, lb.id),
       :load_balancer_listener_pools => [{:load_balancer_pool => pool }]
     }
