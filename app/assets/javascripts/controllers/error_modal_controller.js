@@ -1,7 +1,9 @@
 ErrorModalController.$inject = ['$timeout'];
 function ErrorModalController($timeout) {
   var $ctrl = this;
+  $ctrl.data = null;
   $ctrl.error = null;
+  $ctrl.isHtml = false;
 
   ManageIQ.angular.rxSubject.subscribe(function(event) {
     if ('serverError' in event) {
@@ -12,7 +14,17 @@ function ErrorModalController($timeout) {
   });
 
   $ctrl.show = function(err) {
+    $ctrl.data = err && err.data;
     $ctrl.error = err;
+    $ctrl.isHtml = err && err.headers && err.headers('content-type') && err.headers('content-type').match('text/html');
+
+    // special handling for our error screen
+    if ($ctrl.isHtml && $ctrl.data) {
+      var m = $ctrl.data.match(/<h2>\s*Error text:\s*<\/h2>\s*<br>\s*<h3>\s*(.*?)\s*<\/h3>/);
+      if (m) {
+        $ctrl.data = m[1];
+      }
+    }
   };
 
   $ctrl.close = function() {
@@ -58,7 +70,7 @@ angular.module('miq.error', [])
       '                <strong>',
       '                  Data',
       '                </strong>',
-      '                {{$ctrl.error.data}}',
+      '                {{$ctrl.data}}',
       '              </li>',
       '            </ul>',
       '          </div>',
