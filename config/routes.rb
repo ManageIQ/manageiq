@@ -2774,51 +2774,51 @@ Vmdb::Application.routes.draw do
   # Semantic Versioning Regex for API, i.e. vMajor.minor.patch[-pre]
   API_VERSION_REGEX = /v[\d]+(\.[\da-zA-Z]+)*(\-[\da-zA-Z]+)?/ unless defined?(API_VERSION_REGEX)
 
-  # OPTIONS requests for REST API pre-flight checks
-  match '/api/*path' => 'api/base#handle_options_request', :via => [:options]
+  namespace :api, :path => "api(/:version)" do
+    root :to => "/api#index", :format => 'json', :version => API_VERSION_REGEX
 
-  get '/api(/:version)' => 'api#index', :format => 'json', :version => API_VERSION_REGEX
+    # OPTIONS requests for REST API pre-flight checks
+    match '*path' => 'base#handle_options_request', :via => [:options]
 
-  unless defined?(API_ACTIONS)
-    API_ACTIONS = {
-      :get    => "show",
-      :post   => "update",
-      :put    => "update",
-      :patch  => "update",
-      :delete => "destroy"
-    }.freeze
-  end
-
-  def action_for_collection(collection_name, verb)
-    "api/#{collection_name}##{API_ACTIONS[verb]}"
-  end
-
-  def create_api_route(verb, url, action)
-    public_send(verb, url, :to => action, :format => "json", :version => API_VERSION_REGEX)
-  end
-
-  Api::Settings.collections.each do |collection_name, collection|
-    collection.verbs.each do |verb|
-      if collection.options.include?(:primary)
-        create_api_route(verb, "/api(/:version)/#{collection_name}", action_for_collection(collection_name, verb))
-      end
-
-      next unless collection.options.include?(:collection)
-
-      if collection.options.include?(:arbitrary_resource_path)
-        create_api_route(verb,
-                         "/api(/:version)/#{collection_name}(/*c_suffix)",
-                         action_for_collection(collection_name, verb))
-      else
-        create_api_route(verb, "/api(/:version)/#{collection_name}(/:c_id)", action_for_collection(collection_name, verb))
-      end
+    unless defined?(API_ACTIONS)
+      API_ACTIONS = {
+        :get    => "show",
+        :post   => "update",
+        :put    => "update",
+        :patch  => "update",
+        :delete => "destroy"
+      }.freeze
     end
 
-    Array(collection.subcollections).each do |subcollection_name|
-      Api::Settings.collections[subcollection_name].verbs.each do |verb|
-        create_api_route(verb,
-                         "/api(/:version)/#{collection_name}/:c_id/#{subcollection_name}(/:s_id)",
-                         action_for_collection(collection_name, verb))
+    def action_for_collection(collection_name, verb)
+      "#{collection_name}##{API_ACTIONS[verb]}"
+    end
+
+    def create_api_route(verb, url, action)
+      public_send(verb, url, :to => action, :format => "json", :version => API_VERSION_REGEX)
+    end
+
+    Api::Settings.collections.each do |collection_name, collection|
+      collection.verbs.each do |verb|
+        if collection.options.include?(:primary)
+          create_api_route(verb, collection_name, action_for_collection(collection_name, verb))
+        end
+
+        next unless collection.options.include?(:collection)
+
+        if collection.options.include?(:arbitrary_resource_path)
+          create_api_route(verb, "#{collection_name}(/*c_suffix)", action_for_collection(collection_name, verb))
+        else
+          create_api_route(verb, "#{collection_name}(/:c_id)", action_for_collection(collection_name, verb))
+        end
+      end
+
+      Array(collection.subcollections).each do |subcollection_name|
+        Api::Settings.collections[subcollection_name].verbs.each do |verb|
+          create_api_route(verb,
+                           "#{collection_name}/:c_id/#{subcollection_name}(/:s_id)",
+                           action_for_collection(collection_name, verb))
+        end
       end
     end
   end
