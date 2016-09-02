@@ -49,39 +49,6 @@ class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
     end
   end
 
-  def self.process_tasks(options)
-    raise _("No ids given to process_tasks") if options[:ids].blank?
-    if options[:task] == "refresh_ems"
-      refresh_ems(options[:ids])
-      create_audit_event(options)
-    else
-      options[:userid] ||= "system"
-      unknown_task_exception(options)
-      invoke_tasks_queue(options)
-    end
-  end
-
-  def self.create_audit_event(options)
-    msg = "'%{task}' initiated for %{amount} %{providers}" % {
-      :task      => options[:task],
-      :amount    => options[:ids].length,
-      :providers => Dictionary.gettext('providers',
-                                       :type      => :table,
-                                       :notfound  => :titleize,
-                                       :plural    => options[:ids].length > 1,
-                                       :translate => false)}
-    AuditEvent.success(:event        => options[:task],
-                       :target_class => base_class.name,
-                       :userid       => options[:userid],
-                       :message      => msg)
-  end
-
-  def self.unknown_task_exception(options)
-    unless instance_methods.collect(&:to_s).include?(options[:task])
-      raise _("Unknown task, %{options}") % {:options => options[:task]}
-    end
-  end
-
   def self.refresh_ems(provider_ids)
     EmsRefresh.queue_refresh(Array.wrap(provider_ids).collect { |id| [base_class, id] })
   end
