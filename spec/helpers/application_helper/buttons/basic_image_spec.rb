@@ -1,5 +1,5 @@
 describe ApplicationHelper::Button::BasicImage do
-  describe '#skip?' do
+  describe '#visible?' do
     context "in list of archived VMs" do
       before do
         allow(ApplicationHelper).to receive(:get_record_cls).and_return(nil)
@@ -9,7 +9,7 @@ describe ApplicationHelper::Button::BasicImage do
       it "will be skipped" do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'sb' => @sb}, {})
-        expect(button.skip?).to be_truthy
+        expect(button.visible?).to be_falsey
       end
     end
 
@@ -22,7 +22,7 @@ describe ApplicationHelper::Button::BasicImage do
       it "will be skipped" do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'sb' => @sb}, {})
-        expect(button.skip?).to be_truthy
+        expect(button.visible?).to be_falsey
       end
     end
   end

@@ -1,5 +1,5 @@
 describe ApplicationHelper::Button::VmPublish do
-  describe '#skip?' do
+  describe '#visible?' do
     it_behaves_like "when record is orphaned"
     it_behaves_like "when record is archived"
 
@@ -11,7 +11,7 @@ describe ApplicationHelper::Button::VmPublish do
       it "will be skipped" do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'record' => @record}, {})
-        expect(button.skip?).to be_truthy
+        expect(button.visible?).to be_falsey
       end
     end
 
@@ -24,7 +24,7 @@ describe ApplicationHelper::Button::VmPublish do
       it "will not be skipped" do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'record' => @record}, {})
-        expect(button.skip?).to be_falsey
+        expect(button.visible?).to be_truthy
       end
     end
   end

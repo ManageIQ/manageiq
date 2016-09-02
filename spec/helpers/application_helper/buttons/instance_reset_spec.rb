@@ -1,5 +1,5 @@
 describe ApplicationHelper::Button::InstanceReset do
-  describe '#skip?' do
+  describe '#visible?' do
     context "when record is resetable" do
       before do
         @record = FactoryGirl.create(:vm_openstack)

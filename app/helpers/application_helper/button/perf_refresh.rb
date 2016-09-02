@@ -3,7 +3,7 @@ class ApplicationHelper::Button::PerfRefresh < ApplicationHelper::Button::Basic
     self[:hidden] = false
   end
 
-  def skip?
-    !@perf_options[:typ] == "realtime"
+  def visible?
+    @perf_options[:typ] == "realtime"
   end
 end

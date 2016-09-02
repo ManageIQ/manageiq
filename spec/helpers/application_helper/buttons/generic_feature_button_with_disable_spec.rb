@@ -1,7 +1,7 @@
 describe ApplicationHelper::Button::GenericFeatureButtonWithDisable do
   [:start, :stop, :suspend, :reset, :reboot_guest,
    :collect_running_processes, :shutdown_guest].each do |feature|
-    describe '#skip?' do
+    describe '#visible?' do
       context "when vm supports feature #{feature}" do
         before do
           @record = FactoryGirl.create(:vm_vmware)
@@ -11,7 +11,7 @@ describe ApplicationHelper::Button::GenericFeatureButtonWithDisable do
         it "will not be skipped for this vm" do
           view_context = setup_view_context_with_sandbox({})
           button = described_class.new(view_context, {}, {'record' => @record}, {:options => {:feature => feature}})
-          expect(button.skip?).to be_falsey
+          expect(button.visible?).to be_truthy
         end
       end
 
@@ -24,7 +24,7 @@ describe ApplicationHelper::Button::GenericFeatureButtonWithDisable do
         it "will be skipped for this vm" do
           view_context = setup_view_context_with_sandbox({})
           button = described_class.new(view_context, {}, {'record' => @record}, {:options => {:feature => feature}})
-          expect(button.skip?).to be_truthy
+          expect(button.visible?).to be_falsey
         end
       end
     end

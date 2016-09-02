@@ -1,7 +1,7 @@
 class ApplicationHelper::Button::VmReconfigure < ApplicationHelper::Button::Basic
   needs_record
 
-  def skip?
-    !@record.reconfigurable?
+  def visible?
+    @record.reconfigurable?
   end
 end

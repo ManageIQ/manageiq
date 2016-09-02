@@ -1,5 +1,5 @@
 describe ApplicationHelper::Button::VmReconfigure do
-  describe '#skip?' do
+  describe '#visible?' do
     context "record is vmware vm" do
       before do
         @record = FactoryGirl.create(:vm_vmware)

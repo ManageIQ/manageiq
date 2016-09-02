@@ -12,10 +12,10 @@ class ApplicationHelper::Button::VmInstanceScan < ApplicationHelper::Button::Bas
     end
   end
 
-  def skip?
-    return false if @display == "instances"
-    !(@record.supports_smartstate_analysis? || @record.unsupported_reason(:smartstate_analysis)) ||
-      !@record.has_proxy?
+  def visible?
+    return true if @display == "instances"
+    (@record.supports_smartstate_analysis? || @record.unsupported_reason(:smartstate_analysis)) &&
+     @record.has_proxy?
   end
 
   def disabled?
