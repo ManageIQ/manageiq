@@ -1,5 +1,6 @@
 module ManageIQ::Providers::Openstack::CloudManager::Vm::Operations
   extend ActiveSupport::Concern
+
   include_concern 'Guest'
   include_concern 'Power'
   include_concern 'Relocation'

@@ -7,10 +7,6 @@ module Vm::Operations::Guest
     validate_unsupported("Standby Guest Operation")
   end
 
-  def validate_reboot_guest
-    validate_unsupported("Reboot Guest Operation")
-  end
-
   def validate_reset
     validate_unsupported("Reset Guest Operation")
   end

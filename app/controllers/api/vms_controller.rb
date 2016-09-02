@@ -235,8 +235,12 @@ module Api
     end
 
     def validate_vm_for_action(vm, action)
-      validation = vm.send("validate_#{action}")
-      action_result(validation[:available], validation[:message].to_s)
+      if vm.respond_to?("supports_#{action}?")
+        action_result(vm.public_send("supports_#{action}?"), vm.unsupported_reason(action.to_sym))
+      else
+        validation = vm.send("validate_#{action}")
+        action_result(validation[:available], validation[:message].to_s)
+      end
     end
 
     def validate_vm_for_remote_console(vm, protocol = nil)
