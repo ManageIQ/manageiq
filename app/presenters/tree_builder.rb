@@ -321,6 +321,10 @@ class TreeBuilder
     end
   end
 
+  def count_only_or_objects_filtered(count_only, objects, sort_by = nil, options = {}, &block)
+    count_only_or_objects(count_only, Rbac.filtered(objects, options), sort_by, &block)
+  end
+
   def assert_type(actual, expected)
     raise "#{self.class}: expected #{expected.inspect}, got #{actual.inspect}" unless actual == expected
   end

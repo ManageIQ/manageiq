@@ -1843,15 +1843,15 @@ class VmOrTemplate < ApplicationRecord
   end
 
   # Return all archived VMs
-  ARCHIVED_CONDITIONS = "vms.ems_id IS NULL AND vms.storage_id IS NULL"
+  ARCHIVED_CONDITIONS = "vms.ems_id IS NULL AND vms.storage_id IS NULL".freeze
   def self.all_archived
-    where(ARCHIVED_CONDITIONS).to_a
+    where(ARCHIVED_CONDITIONS)
   end
 
   # Return all orphaned VMs
-  ORPHANED_CONDITIONS = "vms.ems_id IS NULL AND vms.storage_id IS NOT NULL"
+  ORPHANED_CONDITIONS = "vms.ems_id IS NULL AND vms.storage_id IS NOT NULL".freeze
   def self.all_orphaned
-    where(ORPHANED_CONDITIONS).to_a
+    where(ORPHANED_CONDITIONS)
   end
 
   # where.not(ORPHANED_CONDITIONS).where.not(ARCHIVED_CONDITIONS)
