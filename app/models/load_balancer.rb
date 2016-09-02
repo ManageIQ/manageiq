@@ -48,10 +48,10 @@ class LoadBalancer < ApplicationRecord
                                              options)
     tenant = CloudTenant.find_by(:name => options[:tenant_name], :ems_id => load_balancer_manager.id)
 
-    klass.create(:name                   => load_balancer_name,
-                 :ems_ref                => ems_ref,
-                 :ext_management_system  => load_balancer_manager,
-                 :cloud_tenant           => tenant)
+    klass.create(:name                  => load_balancer_name,
+                 :ems_ref               => ems_ref,
+                 :ext_management_system => load_balancer_manager,
+                 :cloud_tenant          => tenant)
   end
 
   def self.load_balancer_class_factory(load_balancer_manager)
