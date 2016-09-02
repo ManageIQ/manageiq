@@ -14,7 +14,7 @@
 # - Refresh multiple providers            /api/providers                        action "refresh"
 #
 describe "Providers API" do
-  ENDPOINT_ATTRS = Api::BaseController::Providers::ENDPOINT_ATTRS
+  ENDPOINT_ATTRS = Api::ProvidersController::ENDPOINT_ATTRS
 
   let(:default_credentials) { {"userid" => "admin1", "password" => "password1"} }
   let(:metrics_credentials) { {"userid" => "admin2", "password" => "password2", "auth_type" => "metrics"} }
