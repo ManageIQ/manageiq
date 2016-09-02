@@ -67,11 +67,11 @@ module Vmdb
       # we do not fail in cases where the database is not yet created, not yet
       # available, or has not yet been seeded.
       def my_server
-        resource_queryable? ? MiqServer.my_server(true) : nil
+        resource_queryable? ? ::MiqServer.my_server(true) : nil
       end
 
       def resource_queryable?
-        database_connectivity? && SettingsChange.table_exists?
+        database_connectivity? && ::SettingsChange.table_exists?
       end
 
       def database_connectivity?
