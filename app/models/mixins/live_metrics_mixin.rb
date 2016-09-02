@@ -6,7 +6,7 @@ module LiveMetricsMixin
   class MetricValidationError < RuntimeError; end
 
   delegate :fetch_metrics_available, :to => :metrics_capture
-  delegate :collect_live_metric, :to => :metrics_capture
+  delegate :collect_live_metrics, :to => :metrics_capture
   delegate :collect_stats_metric, :to => :metrics_capture
 
   included do
@@ -18,23 +18,12 @@ module LiveMetricsMixin
       self.class.name.demodulize.underscore
     end
 
-    def collect_live_metrics(metrics, start_time, end_time, interval)
-      processed = Hash.new { |h, k| h[k] = {} }
-      metrics.each do |metric|
-        values = collect_live_metric(metric, start_time, end_time, interval)
-        processed.merge!(values) { |_k, old, new| old.merge(new) }
-      end
-      processed
-    end
-
     def metrics_available
       @metrics_available ||= fetch_metrics_available
     end
 
     def first_and_last_capture(interval_name = "realtime")
-      firsts, lasts = metrics_available.collect do |metric|
-        metrics_capture.first_and_last_capture(metric)
-      end.transpose
+      firsts, lasts = metrics_capture.first_and_last_capture_for_metrics(metrics_available)
       adjust_timestamps(firsts, lasts, interval_name)
     rescue => e
       _log.error("LiveMetrics unavailable for #{self.class.name} id: #{id}. #{e.message}")

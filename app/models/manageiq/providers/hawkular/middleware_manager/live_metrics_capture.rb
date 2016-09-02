@@ -35,6 +35,15 @@ module ManageIQ::Providers
       {:id => metric.id, :name => @supported_metrics[metric.type_id], :type => metric.type, :unit => metric.unit}
     end
 
+    def collect_live_metrics(metrics, start_time, end_time, interval)
+      processed = Hash.new { |h, k| h[k] = {} }
+      metrics.each do |metric|
+        values = collect_live_metric(metric, start_time, end_time, interval)
+        processed.merge!(values) { |_k, old, new| old.merge(new) }
+      end
+      processed
+    end
+
     def collect_live_metric(metric, start_time, end_time, interval)
       validate_metric(metric)
       starts = (start_time - interval).to_i.in_milliseconds
@@ -50,6 +59,13 @@ module ManageIQ::Providers
       ends = end_time.to_i.in_milliseconds
       bucket_duration = "#{interval}s"
       fetch_raw_metrics(metric[:id], metric[:type], starts, ends, bucket_duration)
+    end
+
+    def first_and_last_capture_for_metrics(metrics)
+      firsts, lasts = metrics.collect do |metric|
+        first_and_last_capture(metric)
+      end.transpose
+      [firsts, lasts]
     end
 
     def first_and_last_capture(metric)
