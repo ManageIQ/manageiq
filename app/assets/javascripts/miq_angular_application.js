@@ -15,16 +15,18 @@ function miqHttpInject(angular_app) {
       return $('meta[name=csrf-token]').attr('content');
     };
 
-    $httpProvider.interceptors.push(function($q) {
+    $httpProvider.interceptors.push(['$q', function($q) {
       return {
         responseError: function(err) {
-          add_flash("Server error", 'error');
-          console.error('Server returned an non-200 response', err.status, err);
+          sendDataWithRx({
+            serverError: err,
+          });
 
+          console.error('Server returned a non-200 response:', err.status, err.statusText, err);
           return $q.reject(err);
         },
       };
-    });
+    }]);
   }]);
 
   return angular_app;
