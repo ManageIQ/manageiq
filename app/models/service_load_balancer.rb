@@ -51,10 +51,6 @@ class ServiceLoadBalancer < Service
   end
 
   def direct_vms
-    # Loading all VMs, to make listing of the VMs under Service work, when we deal with nested load_balancers. A proper fix
-    # would be to use something like closure_tree, where we can build tree from the multiple classes. Then Service level
-    # MiqPreloader.preload_and_map(subtree, :direct_vms) will work also for nested load_balancers. Because in that case, nested
-    # load_balancers will be a part of the subtree.
     load_balancer.try(:vms) || []
   end
 

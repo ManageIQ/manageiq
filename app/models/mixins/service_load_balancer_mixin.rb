@@ -2,8 +2,8 @@ module ServiceLoadBalancerMixin
   extend ActiveSupport::Concern
 
   included do
-    has_many :load_balancer_managers,  :through => :service_resources, :source => :resource, :source_type => 'ExtManagementSystem'
-    has_many :load_balancers,  :through => :service_resources, :source => :resource, :source_type => 'LoadBalancer'
+    has_many :load_balancer_managers, :through => :service_resources, :source => :resource, :source_type => 'ExtManagementSystem'
+    has_many :load_balancers, :through => :service_resources, :source => :resource, :source_type => 'LoadBalancer'
     private :load_balancer_managers, :load_balancer_managers=
     private :load_balancers, :load_balancers=
   end
@@ -19,8 +19,4 @@ module ServiceLoadBalancerMixin
   def load_balancer
     load_balancers.take
   end
-
-  # def load_balancer=(load_balancer)
-  #   self.load_balancers = [load_balancer].compact
-  # end
 end
