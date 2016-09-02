@@ -23,11 +23,9 @@ module ProcessTasksMixin
     # Performs tasks received from the UI via the queue
     def invoke_tasks(options)
       local, remote = partition_ids_by_remote_region(options[:ids])
-      invoke_tasks_local(options.merge(:ids => local)) unless local.empty?
 
-      # TODO: invoke_tasks_remote currently is only implemented by VmOrTemplate.
-      # it can be refactored to be generalized like invoke_tasks_local
-      invoke_tasks_remote(options.merge(:ids => remote)) if remote.present? && respond_to?("invoke_tasks_remote")
+      invoke_tasks_local(options.merge(:ids => local)) if local.present?
+      invoke_tasks_remote(options.merge(:ids => remote)) if remote.present?
     end
 
     def invoke_tasks_local(options)
@@ -62,9 +60,7 @@ module ProcessTasksMixin
         end
 
         begin
-          raise _("SOAP services are no longer supported. Remote server operations are dependent on a REST client library.")
-          # client = VmdbwsClient.new(hostname)  FIXME: Replace with REST client library
-          client.vm_invoke_tasks(remote_options)
+          invoke_api_tasks(hostname, remote_options)
         rescue => err
           # Handle specific error case, until we can figure out how it occurs
           if err.class == ArgumentError && err.message == "cannot interpret as DNS name: nil"
@@ -87,6 +83,12 @@ module ProcessTasksMixin
         msg = "'#{options[:task]}' successfully initiated for remote VMs: #{ids.sort.inspect}"
         task_audit_event(:success, options, :message => msg)
       end
+    end
+
+    # This should be overridden by any class including this module
+    # and expecting to be asked to invoke tasks for a remote region
+    def invoke_api_tasks(_hostname, _remote_options)
+      raise NotImplementedError
     end
 
     # default: invoked by task, can be overridden
