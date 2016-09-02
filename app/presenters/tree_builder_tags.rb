@@ -38,13 +38,13 @@ class TreeBuilderTags < TreeBuilder
 
   def x_get_classification_kids(parent, count_only)
     kids = parent.entries.map do |kid|
-      kid_id = "#{parent.name}_#{kid.name}"
+      kid_id = "#{parent.name}-#{kid.name}"
       kid_class = if (@edit && @edit[:new][:filters][kid_id] == @edit[:current][:filters][kid_id]) || ![kid_id].include?(@filters) # Check new vs current
                     "cfme-no-cursor-node"       # No cursor pointer
                   else
                     "cfme-blue-node"            # Show node as different
                   end
-      parent[:expand] = true if (@edit && @edit[:new][:filters].key?(kid_id)) || (@filters && @filters.key?(kid_id))
+      #parent[:expand] = true if (@edit && @edit[:new][:filters].key?(kid_id)) || (@filters && @filters.key?(kid_id))
 
       {:id       => kid_id,
        :image    => 'tag',

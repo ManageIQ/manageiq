@@ -788,8 +788,7 @@ module OpsController::OpsRbac
     changed = (@edit[:new] != @edit[:current])
     bad = false
     if rec_type == "group"
-      bad ||= @edit[:new][:role].blank?
-      bad ||= @edit[:new][:group_tenant].blank?
+      bad = (@edit[:new][:role].blank? || @edit[:new][:group_tenant].blank?)
     end
 
     render :update do |page|
@@ -999,20 +998,20 @@ module OpsController::OpsRbac
     end
 
     if params[:check]                               # User checked/unchecked a tree node
-      if params[:tree_typ] == "myco"                # MyCompany tag checked
+      if params[:tree_typ] == "tags"                # MyCompany tag checked
         if params[:check] == "0"                    #   unchecked
-          @edit[:new][:filters].delete(params[:id].split('___').last)   #     Remove the tag from the filters array
+          @edit[:new][:filters].delete(params[:id].split('xx-').last)   #     Remove the tag from the filters array
         else                                        #   checked
-          cat, tag = params[:id].split('___').last.split("-")         #     Get the category and tag
-          @edit[:new][:filters][params[:id].split('___').last] = "/managed/#{cat}/#{tag}" # Put them in the hash
+          cat, tag = params[:id].split('xx-').last.split("-")         #     Get the category and tag
+          @edit[:new][:filters][params[:id].split('xx-').last] = "/managed/#{cat}/#{tag}" # Put them in the hash
         end
       else                                          # Belongsto tag checked
         if params[:check] == "0"                    #   unchecked
-          @edit[:new][:belongsto].delete(params[:id].split('___').last) #     Remove the tag from the belongsto hash
+          @edit[:new][:belongsto].delete(params[:id].split('xx-').last) #     Remove the tag from the belongsto hash
         else                                        #   checked
-          objc, objid = params[:id].split('___').last.split("_")      #     Get the object class and id
+          objc, objid = params[:id].split('xx-').last.split("_")      #     Get the object class and id
           tobj = objc.constantize.find(objid)       #     Get the record
-          @edit[:new][:belongsto][params[:id].split('___').last] = MiqFilter.object2belongsto(tobj) # Put the tag into the belongsto hash
+          @edit[:new][:belongsto][params[:id].split('xx-').last] = MiqFilter.object2belongsto(tobj) # Put the tag into the belongsto hash
         end
       end
     end
