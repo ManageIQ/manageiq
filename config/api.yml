@@ -773,7 +773,7 @@
     :collection_actions:
       :get:
       - :name: read
-        :identifier: chargeback_rates_show_list
+        :identifier: chargeback_rates
       :post:
       - :name: create
         :identifier: chargeback_rates_new
@@ -784,7 +784,7 @@
     :resource_actions:
       :get:
       - :name: read
-        :identifier: chargeback_rates_show
+        :identifier: chargeback_rates
       :post:
       - :name: edit
         :identifier: chargeback_rates_edit
