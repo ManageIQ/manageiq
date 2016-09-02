@@ -51,6 +51,44 @@ module ProcessTasksMixin
       end
     end
 
+    def invoke_tasks_remote(options)
+      ids_by_region = options[:ids].group_by { |id| ApplicationRecord.id_to_region(id.to_i) }
+      ids_by_region.each do |region, ids|
+        remote_options = options.merge(:ids => ids)
+        hostname = MiqRegion.find_by_region(region).remote_ws_address
+        if hostname.nil?
+          $log.error("An error occurred while invoking remote tasks...The remote region [#{region}] does not have a web service address.")
+          next
+        end
+
+        begin
+          raise _("SOAP services are no longer supported. Remote server operations are dependent on a REST client library.")
+          # client = VmdbwsClient.new(hostname)  FIXME: Replace with REST client library
+          client.vm_invoke_tasks(remote_options)
+        rescue => err
+          # Handle specific error case, until we can figure out how it occurs
+          if err.class == ArgumentError && err.message == "cannot interpret as DNS name: nil"
+            $log.error("An error occurred while invoking remote tasks...")
+            $log.log_backtrace(err)
+            next
+          end
+
+          $log.error("An error occurred while invoking remote tasks...Requeueing for 1 minute from now.")
+          $log.log_backtrace(err)
+          MiqQueue.put(
+            :class_name  => base_class.name,
+            :method_name => 'invoke_tasks_remote',
+            :args        => [remote_options],
+            :deliver_on  => Time.now.utc + 1.minute
+          )
+          next
+        end
+
+        msg = "'#{options[:task]}' successfully initiated for remote VMs: #{ids.sort.inspect}"
+        task_audit_event(:success, options, :message => msg)
+      end
+    end
+
     # default: invoked by task, can be overridden
     def task_invoked_by(_options)
       :task
