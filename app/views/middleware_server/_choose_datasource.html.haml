@@ -7,15 +7,21 @@
       %label.col-md-4.control-label{:for => "choose_datasource_input"}
         = _("Datasource:")
       .col-md-8
-        %select.form-control#chooose_datasource_input{"ng-model"    => "chooseDsModel.selectedDatasource",
+        %select.form-control#chooose_datasource_input{"name"        => "choose_datasource_input",
+                                                      "ng-model"    => "chooseDsModel.selectedDatasource",
                                                       "ng-options"  => "c.label for c in chooseDsModel.datasources",
                                                       "ng-required" => "true"}
+      .col-sm-2
+      .col-sm-10
+        %p.ng-error-messages{"ng-show" => "dsChooseForm.chooose_datasource_input.$error.required"}
+          = _("Required")
+
   .modal-footer
-    %button.btn.btn-default{:type          => "button",
-                            "ng-click"     =>"reset()",
-                            "data-dismiss" => "modal"}
+    %button.btn.btn-default.dialog-cancel-button{:type          => "button",
+                                                 "ng-click"     =>"reset()",
+                                                 "data-dismiss" => "modal"}
       = _("Cancel")
-    %button.btn.btn-primary{"ng-click"    => "addDatasourceChooseNext()",
-                            "ng-disabled" => "dsChooseForm.$invalid",
-                            :type         => "button"}
+    %button.btn.btn-primary{:type         => "button",
+                            "ng-click"    => "addDatasourceChooseNext()",
+                            "ng-disabled" => "dsChooseForm.$invalid"}
       = _("Next")

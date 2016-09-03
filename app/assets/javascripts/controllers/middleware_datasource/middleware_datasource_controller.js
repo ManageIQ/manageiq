@@ -1,14 +1,14 @@
-ManageIQ.angular.app.controller('middlewareAddDataSourceController', MiddlewareAddDataSourceCtrl);
+ManageIQ.angular.app.controller('mwAddDataSourceController', MwAddDataSourceCtrl);
 
-MiddlewareAddDataSourceCtrl.$inject = ['$scope', 'miqService'];
+MwAddDataSourceCtrl.$inject = ['$scope', 'miqService'];
 
-function MiddlewareAddDataSourceCtrl($scope, miqService) {
+function MwAddDataSourceCtrl($scope, miqService) {
 
   $scope.dsModel = {};
   $scope.dsModel.step = 'CHOOSE_DS';
 
   $scope.chooseDsModel = {};
-  $scope.chooseDsModel.selectedDatasource = '';
+  $scope.chooseDsModel.selectedDatasource;
   $scope.chooseDsModel.datasources = [
     {id : 'POSTGRES', label: 'Postgres'},
     {id: 'ORACLE', label: 'Oracle'},
@@ -28,7 +28,6 @@ function MiddlewareAddDataSourceCtrl($scope, miqService) {
   $scope.step2DsModel.driverClass = '';
   $scope.step2DsModel.majorVersion = 0;
   $scope.step2DsModel.minorVersion = 0;
-
 
   $scope.step3DsModel = {};
   $scope.step3DsModel.connectionUrl = '';

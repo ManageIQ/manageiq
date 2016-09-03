@@ -144,7 +144,7 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
           :data => {'toggle'        => 'modal',
                     'target'        => '#modal_ds_div',
                     'function'      => 'miqCallAngular',
-                    'function-data' => '{"name": "showListener", "args": []}'})
+                    'function-data' => '{"name": "showDatasourceListener", "args": []}'})
       ]
     ),
   ])

@@ -7,56 +7,70 @@
       %label.col-md-4.control-label{:for => "connection_url_input"}
         = _("Connection URL")
       .col-md-8
-        %input.form-control#connection_url_input{:type            => "textarea",
-                                                 "ng-required"    => "true",
+        %input.form-control#connection_url_input{:type          => "textarea",
+                                                 "name"         => "connection_url_input",
+                                                 "ng-required"  => "true",
                                                  "ng-minlength" => "10",
-                                                 "ng-model"       => "step3DsModel.connectionUrl"}
+                                                 "ng-model"     => "step3DsModel.connectionUrl"}
+
+      .col-sm-2
+      .col-sm-10
+        %p.ng-error-messages{"ng-show" => "step3Form.connection_url_input.$error.required"}
+          = _("Required")
+        %p.ng-error-messages{"ng-show" => "step3Form.connection_url_input.$error.minlength"}
+          = _("Minimum length is 10")
+
     .form-group
       %label.col-md-4.control-label{:for => "user_name_input"}
         = _("User Name")
       .col-md-8
         %input.form-control#user_name_input{:type          => "text",
+                                            "name"         => "user_name_input",
                                             "ng-required"  => "true",
-                                            "ng-minlength" => "10",
-                                            "placeholder"  => _("Enter JDBC Module name"),
+                                            "placeholder"  => _("Enter Username"),
                                             "ng-model"     => "step3DsModel.userName"}
+
+      .col-sm-2
+      .col-sm-10
+        %p.ng-error-messages{"ng-show" => "step3Form.user_name_input.$error.required"}
+          = _("Required")
 
     .form-group
       %label.col-md-4.control-label{:for => "jdbc_driver_class_input"}
         = _("Password")
       .col-md-8
         %input.form-control#password_input{:type          => "password",
-                                           "ng-required"  => "true",
-                                           "ng-minlength" => "5",
+                                           "name"         => "password_input",
                                            "placeholder"  => _("Enter Password"),
-                                           "ng-model"     => "step3dsModel.password"}
+                                           "ng-model"     => "step3DsModel.password"}
+
+      .col-sm-2
 
     .form-group
       %label.col-md-4.control-label{:for => "security_domain_input"}
         = _("Security Domain")
       .col-md-8
         %input.form-control#security_domain_input{:type          => "text",
-                                                  "ng-minlength" => "3",
                                                   "placeholder"  => _("Enter Security Domain"),
                                                   "ng-model"     => "step3DsModel.securityDomain"}
 
     .form-group
-      %label.col-md-4.control-label{:for => "minor_version_input"}
+      %label.col-md-4.control-label
       .col-md-8
-        %button.btn.btn-default{"ng-disabled" => "step3Form.$invalid",
-                                "ng-click"    => "addDataSourceTestConnection()",
-                                :type         => "button"}
+        %button.btn.btn-default{:type         => "button",
+                                "ng-disabled" => "step3Form.$invalid",
+                                "ng-click"    => "addDataSourceTestConnection()"}
           = _("Test Connection")
 
     .modal-footer
-      %button.btn.btn-default{:type          => "button",
-                              "ng-click"     =>"reset()",
-                              "data-dismiss" => "modal"}
+      %button.btn.btn-default.dialog-cancel-button{:type          => "button",
+                                                   "ng-click"     =>"reset()",
+                                                   "data-dismiss" => "modal"}
         = _("Cancel")
-      %button.btn.btn-default{:type          => "button",
-                              "ng-click"     =>"finishAddDatasourceBack()"}
+      %button.btn.btn-default{:type      => "button",
+                              "ng-click" =>"finishAddDatasourceBack()"}
         = _("Back")
-      %button.btn.btn-primary{"ng-click"    => "finishAddDatasource()",
-                              "ng-disabled" => "step3Form.$invalid",
-                              :type         => "button"}
+      %button.btn.btn-primary{:type         => "button",
+                              "ng-click"    => "finishAddDatasource()",
+                              "ng-disabled" => "step3Form.$invalid"}
         = _("Done")
