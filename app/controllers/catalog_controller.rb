@@ -1485,9 +1485,8 @@ class CatalogController < ApplicationController
   end
 
   def available_orchestration_managers_for_template_type(template_type)
-    return [] unless OrchestrationTemplate.subclasses.collect(&:name).include?(template_type.to_s)
-
-    template_type = template_type.constantize if template_type.kind_of?(String)
+    template_type = template_type.to_s.safe_constantize
+    return [] unless template_type && template_type < OrchestrationTemplate
 
     template_type.eligible_managers.collect { |m| [m.name, m.id] }.sort
   end
