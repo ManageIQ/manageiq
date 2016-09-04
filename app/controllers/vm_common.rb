@@ -627,11 +627,12 @@ module VmCommon
     @policy_options[:passed] = true
     @policy_options[:failed] = true
     @policy_simulation_tree = TreeBuilderPolicySimulation.new(:policy_simulation_tree,
-                                                              :policy_simulation, @sb,
+                                                              :policy_simulation,
+                                                              @sb,
                                                               true,
-                                                              @polArr,
-                                                              @record.name,
-                                                              @policy_options)
+                                                              :root      => @polArr,
+                                                              :root_name => @record.name,
+                                                              :options   => @policy_options)
     @edit = session[:edit] if session[:edit]
     if @edit && @edit[:explorer]
       if session[:policies].empty?
@@ -662,9 +663,9 @@ module VmCommon
                                                               :policy_simulation,
                                                               @sb,
                                                               true,
-                                                              @polArr,
-                                                              @record.name,
-                                                              @policy_options)
+                                                              :root      => @polArr,
+                                                              :root_name => @record.name,
+                                                              :options   => @policy_options)
     replace_main_div({:partial => "vm_common/policies"}, {:flash => true})
   end
 
@@ -677,9 +678,9 @@ module VmCommon
                                                               :policy_simulation,
                                                               @sb,
                                                               true,
-                                                              @polArr,
-                                                              @record.name,
-                                                              @policy_options)
+                                                              :root      => @polArr,
+                                                              :root_name => @record.name,
+                                                              :options   => @policy_options)
     replace_main_div({:partial => "vm_common/policies"}, {:flash => true})
   end
 
