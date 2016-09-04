@@ -7,6 +7,16 @@ class ApplicationHelper::Toolbar::EmsMiddlewaresCenter < ApplicationHelper::Tool
       t,
       :items => [
         button(
+          :ems_middleware_refresh,
+          'icon fa fa-refresh fa-lg',
+          N_('Refresh Items and Relationships for these Middleware Providers'),
+          N_('Refresh Items and Relationships'),
+          :confirm   => N_("Refresh Items and Relationships related to these Middleware Providers?"),
+          :enabled   => false,
+          :url_parms => "main_div",
+          :onwhen    => "1+"),
+        separator,
+        button(
           :ems_middleware_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New Middleware Provider'),
