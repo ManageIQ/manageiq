@@ -4,8 +4,8 @@ class TreeBuilderUtilization < TreeBuilderRegion
   has_kids_for EmsFolder, [:x_get_tree_folder_kids, :type]
   has_kids_for EmsCluster, [:x_get_tree_cluster_kids]
 
-  def initialize(name, type, sandbox, build = true, selected_node)
-    @selected_node = selected_node
+  def initialize(name, type, sandbox, build = true, **params)
+    @selected_node = params[:selected_node]
     super(name, type, sandbox, build)
   end
 
@@ -26,7 +26,7 @@ class TreeBuilderUtilization < TreeBuilderRegion
       icon  = :enterprise
     else
       title = _("CFME Region: %{region_description} [%{region}]") %
-                {:region_description => MiqRegion.my_region.description, :region => MiqRegion.my_region.region}
+              {:region_description => MiqRegion.my_region.description, :region => MiqRegion.my_region.region}
       icon  = :miq_region
     end
     [title, title, icon]
@@ -104,7 +104,7 @@ class TreeBuilderUtilization < TreeBuilderRegion
   end
 
   def x_get_tree_cluster_kids(object, count_only)
-    objects =  rbac_filtered_sorted_objects(object.hosts, "name")
+    objects = rbac_filtered_sorted_objects(object.hosts, "name")
     # FIXME: is the condition below ever false?
     unless [:bottlenecks, :utilization].include?(@type)
       objects += rbac_filtered_sorted_objects(object.resource_pools, "name")

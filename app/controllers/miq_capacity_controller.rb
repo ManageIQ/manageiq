@@ -764,10 +764,14 @@ class MiqCapacityController < ApplicationController
     selected_node = x_node(name)
     if type == :bottlenecks
       @right_cell_text = _("Bottlenecks Summary")
-      @bottlenecks_tree = TreeBuilderUtilization.new(name, type, @sb, true, selected_node)
+      @bottlenecks_tree = TreeBuilderUtilization.new(
+        name, type, @sb, true, :selected_node => selected_node
+      )
     else
       @right_cell_text = _("Utilization Summary")
-      @utilization_tree = TreeBuilderUtilization.new(name, type, @sb, true, selected_node)
+      @utilization_tree = TreeBuilderUtilization.new(
+        name, type, @sb, true, :selected_node => selected_node
+      )
     end
   end
 
