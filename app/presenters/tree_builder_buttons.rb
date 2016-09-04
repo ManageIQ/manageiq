@@ -17,14 +17,18 @@ class TreeBuilderButtons < TreeBuilderAeCustomization
     CustomButton.button_classes.each { |db| resolve[db] = ui_lookup(:model => db) }
     @sb[:target_classes] = resolve.invert
     resolve = Array(resolve.invert).sort
-    resolve.collect { |typ| {:id => "ab_#{typ[1]}", :text => typ[0], :image => buttons_node_image(typ[1]), :tip => typ[0]} }
+    resolve.collect do |typ|
+      {:id => "ab_#{typ[1]}", :text => typ[0], :image => buttons_node_image(typ[1]), :tip => typ[0]}
+    end
   end
 
   def x_get_tree_custom_kids(object, count_only, _options)
     nodes = object[:id].split('_')
     objects = CustomButtonSet.find_all_by_class_name(nodes[1])
     # add as first element of array
-    objects.unshift(CustomButtonSet.new(:name => "[Unassigned Buttons]|ub-#{nodes[1]}", :description => "[Unassigned Buttons]"))
+    objects.unshift(
+      CustomButtonSet.new(:name => "[Unassigned Buttons]|ub-#{nodes[1]}", :description => "[Unassigned Buttons]")
+    )
     count_only_or_objects(count_only, objects)
   end
 
@@ -36,21 +40,27 @@ class TreeBuilderButtons < TreeBuilderAeCustomization
     end
   end
 
+  def get_tree_aset_kids_for_nil_id(object, count_only)
+    count_only ? get_custom_buttons(object).count : get_custom_buttons(object).sort_by { |a| a.name.downcase }
+  end
+
+  def button_order?(object)
+    object[:set_data] && object[:set_data][:button_order]
+  end
+
   def x_get_tree_aset_kids(object, count_only)
-    if count_only
-      object.id.nil? ? get_custom_buttons(object).count : object.members.count
+    if object.id.nil?
+      get_tree_aset_kids_for_nil_id(object, count_only)
+    elsif count_only
+      object.members.count
     else
-      if object.id.nil?
-        get_custom_buttons(object).sort_by { |a| a.name.downcase }
-      else
-        # need to show button nodes in button order that they were saved in
-        button_order = object[:set_data] && object[:set_data][:button_order] ? object[:set_data][:button_order] : nil
-        objects = []
-        Array(button_order).each do |bidx|
-          object.members.each { |b| objects.push(b) if bidx == b.id && !objects.include?(b) }
-        end
-        objects
+      # need to show button nodes in button order that they were saved in
+      button_order = button_order? object ? object[:set_data][:button_order] : nil
+      objects = []
+      Array(button_order).each do |bidx|
+        object.members.each { |b| objects.push(b) if bidx == b.id && !objects.include?(b) }
       end
+      objects
     end
   end
 
