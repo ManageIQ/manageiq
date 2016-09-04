@@ -95,4 +95,49 @@ describe ManageIQ::Providers::Redhat::InfraManager do
       end
     end
   end
+
+  context "supported features" do
+    let(:ems) { FactoryGirl.create(:ems_redhat) }
+    let(:supported_api_versions) { [3, 4]  }
+    context "#process_api_features_support" do
+      before(:each) do
+        allow(described_class).to receive(:api_features).and_return({ 3 => ['feature1'], 4 => ['feature2'] })
+        described_class.process_api_features_support
+        allow(ems).to receive(:supported_api_versions).and_return(supported_api_versions)
+      end
+
+      context "no versions supported" do
+        let(:supported_api_versions) { [] }
+        it 'supports the reight features' do
+          expect(ems.supports_feature1?).to be_falsey
+          expect(ems.supports_feature2?).to be_falsey
+        end
+      end
+
+      context "version 3 supported" do
+        let(:supported_api_versions) { [3] }
+        it 'supports the reight features' do
+          expect(ems.supports_feature1?).to be_truthy
+          expect(ems.supports_feature2?).to be_falsey
+        end
+      end
+
+      context "version 4 supported" do
+        let(:supported_api_versions) { [4] }
+        it 'supports the reight features' do
+          expect(ems.supports_feature1?).to be_falsey
+          expect(ems.supports_feature2?).to be_truthy
+        end
+      end
+
+      context "all versions supported" do
+        let(:supported_api_versions) { [3, 4] }
+        it 'supports the reight features' do
+          expect(ems.supports_feature1?).to be_truthy
+          expect(ems.supports_feature2?).to be_truthy
+        end
+      end
+    end
+  end
 end
+

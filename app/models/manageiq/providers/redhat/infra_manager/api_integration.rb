@@ -1,8 +1,18 @@
 module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
   extend ActiveSupport::Concern
 
+  included do
+    process_api_features_support
+  end
+
+  def supported_features
+    @supported_features ||= supported_api_versions.collect{|version| self.class.api_features[version]}.flatten.uniq
+  end
+
   def connect(options = {})
     raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
+    version  = options[:version] || 3
+    raise "version #{version} of the api is not supported by the provider" unless supports_api_version?(version)
 
     # If there is API path stored in the endpoints table and use it:
     path = default_endpoint.path
@@ -13,7 +23,6 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     username = options[:user] || authentication_userid(options[:auth_type])
     password = options[:pass] || authentication_password(options[:auth_type])
     service  = options[:service] || "Service"
-    version  = options[:version] || 3
 
     # Create the underlying connection according to the version of the oVirt API requested by
     # the caller:
@@ -142,9 +151,9 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
 
   def history_database_name
     @history_database_name ||= begin
-      version = version_3_0? ? '3_0' : '>3_0'
-      self.class.history_database_name_for(version)
-    end
+                                 version = version_3_0? ? '3_0' : '>3_0'
+                                 self.class.history_database_name_for(version)
+                               end
   end
 
   def version_3_0?
@@ -170,6 +179,30 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
   end
 
   class_methods do
+
+    def api3_supported_features
+      []
+    end
+
+    def api4_supported_features
+      [:snapshots]
+    end
+
+    def api_features
+      { 3 => api3_supported_features, 4 => api4_supported_features }
+    end
+
+    def process_api_features_support
+      all_features = api_features.values.flatten.uniq
+      all_features.each do |feature|
+        supports feature do
+          unless supported_features.include?(feature)
+            unsupported_reason_add(feature, _("This feature is not supported by the api version of the provider"))
+          end
+        end
+      end
+    end
+
     # Connect to the engine using version 4 of the API and the `ovirt-engine-sdk` gem.
     def raw_connect_v4(server, port, path, username, password, service)
       require 'ovirtsdk4'
