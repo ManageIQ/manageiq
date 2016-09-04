@@ -10,6 +10,16 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
     end
   end
 
+  supports :reconfigure_disks do
+    if storage.blank?
+      unsupported_reason_add(:reconfigure_disks, _('storage is missing'))
+    elsif ext_management_system.blank?
+      unsupported_reason_add(:reconfigure_disks, _('The virtual machine is not associated with a provider'))
+    elsif !ext_management_system.supports_reconfigure_disks?
+      unsupported_reason_add(:reconfigure_disks, _('The provider does not support reconfigure disks'))
+    end
+  end
+
   POWER_STATES = {
     'up'        => 'on',
     'down'      => 'off',
