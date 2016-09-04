@@ -77,6 +77,9 @@ module ManageIQ::Providers
           next unless child.type_path.end_with?(hawk_escape_id('Domain WildFly Server'))
           @eaps << child
 
+          server_config = @ems.inventory_client.get_config_data_for_resource child.path
+          child.properties.merge! server_config['value'] unless server_config['value'].nil?
+
           server_name = parse_domain_server_name(child.id)
           server = parse_middleware_server(child, server_name)
 
