@@ -494,6 +494,7 @@ module EmsCommon
       #     scanemss if params[:pressed] == "scan"
       tag(model) if params[:pressed] == "#{@table_name}_tag"
       assign_policies(model) if params[:pressed] == "#{@table_name}_protect"
+      check_compliance(model) if params[:pressed] == "#{@table_name}_check_compliance"
       edit_record if params[:pressed] == "#{@table_name}_edit"
       if params[:pressed] == "#{@table_name}_timeline"
         @showtype = "timeline"
@@ -576,6 +577,36 @@ module EmsCommon
   def recheck_authentication(id = nil)
     @record = find_by_id_filtered(model, id || params[:id])
     @record.authentication_check_types_queue(@record.authentication_for_summary.pluck(:authtype), :save => true)
+  end
+
+  def check_compliance(model)
+    showlist = @lastaction == "show_list"
+    ids = showlist ? find_checked_items : find_current_item(model)
+
+    if ids.empty?
+      add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:models => model),
+                                                              :task  => "Compliance Check"}, :error)
+    else
+      process_check_compliance(model, ids)
+    end
+
+    showlist ? show_list : show
+    ids.count
+  end
+
+  def process_check_compliance(model, ids)
+    model.where(:id => ids).order("lower(name)").each do |entity|
+      begin
+        entity.check_compliance
+      rescue => bang
+        add_flash(_("%{model} \"%{name}\": Error during 'Check Compliance': ") %
+                    {:model => ui_lookup(:model => model),
+                     :name  => entity.name} << bang.message,
+                  :error) # Push msg and error flag
+      else
+        add_flash(_("\"%{record}\": Compliance check successfully initiated") % {:record => entity.name})
+      end
+    end
   end
 
   def arbitration_profile_edit
