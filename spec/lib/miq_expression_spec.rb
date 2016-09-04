@@ -1626,10 +1626,34 @@ describe MiqExpression do
 
   describe ".get_col_type" do
     subject { described_class.get_col_type(@field) }
+    let(:string_custom_attribute) do
+      FactoryGirl.create(:custom_attribute,
+                         :name          => "foo",
+                         :value         => "string",
+                         :resource_type => 'ExtManagementSystem')
+    end
+    let(:date_custom_attribute) do
+      FactoryGirl.create(:custom_attribute,
+                         :name          => "foo",
+                         :value         => DateTime.current,
+                         :resource_type => 'ExtManagementSystem')
+    end
 
     it "with model-field__with_pivot_table_suffix" do
       @field = "Vm-name__pv"
       expect(subject).to eq(described_class.get_col_type("Vm-name"))
+    end
+
+    it "with custom attribute without value_type" do
+      string_custom_attribute
+      @field = "ExtManagementSystem-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}foo"
+      expect(subject).to eq(:string)
+    end
+
+    it "with custom attribute with value_type" do
+      date_custom_attribute
+      @field = "ExtManagementSystem-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}foo"
+      expect(subject).to eq(:datetime)
     end
 
     it "with managed-field" do
