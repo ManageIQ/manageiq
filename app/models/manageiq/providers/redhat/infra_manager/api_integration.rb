@@ -1,6 +1,13 @@
 module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
-  def self.included(base)
-    base.extend ClassMethods
+
+  extend ActiveSupport::Concern
+
+  included do
+    process_api_features_support
+  end
+
+  def supported_features
+    @supported_features ||= supported_api_versions.collect{|version| self.class.api_features[version]}.flatten.uniq
   end
 
   def connect(options = {})
@@ -141,9 +148,9 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
 
   def history_database_name
     @history_database_name ||= begin
-      version = version_3_0? ? '3_0' : '>3_0'
-      self.class.history_database_name_for(version)
-    end
+                                 version = version_3_0? ? '3_0' : '>3_0'
+                                 self.class.history_database_name_for(version)
+                               end
   end
 
   def version_3_0?
@@ -158,70 +165,95 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
 
     @version_3_0
   end
-module ClassMethods
-  # Connect to the engine using version 4 of the API and the `ovirt-engine-sdk` gem.
-  def raw_connect_v4(server, port, path, username, password, service)
-    require 'ovirtsdk4'
+  
+  class_methods do
 
-    # Get the timeout from the configuration:
-    timeout, = ems_timeouts(:ems_redhat, service)
+    def api3_supported_features
+      []
+    end
 
-    # Create the connection:
-    OvirtSDK4::Connection.new(
-      :url      => "https://#{server}:#{port}#{path}",
-      :username => username,
-      :password => password,
-      :timeout  => timeout,
-      :insecure => true,
-      :log      => $rhevm_log,
-    )
-  end
+    def api4_supported_features 
+      [:reconfigure_vms, :snapshots]
+    end
 
-  # Connect to the engine using version 3 of the API and the `ovirt` gem.
-  def raw_connect_v3(server, port, path, username, password, service)
-    require 'ovirt'
-    require 'ovirt_provider/inventory/ovirt_inventory'
+    def api_features
+      { 3 => api3_supported_features, 4 => api4_supported_features }
+    end
 
-    Ovirt.logger = $rhevm_log
+    def process_api_features_support
+      all_features = api_features.values.flatten.uniq
+      all_features.each do |feature|
+        supports feature do
+          unless supported_features.include?(feature)
+            unsupported_reason_add(feature, _("This feature is not supported by the api version of the provider"))
+          end
+        end
+      end
+    end
 
-    params = {
-      :server     => server,
-      :port       => port.presence && port.to_i,
-      :path       => path,
-      :username   => username,
-      :password   => password,
-      :verify_ssl => false
-    }
+    # Connect to the engine using version 4 of the API and the `ovirt-engine-sdk` gem.
+    def raw_connect_v4(server, port, path, username, password, service)
+      require 'ovirtsdk4'
 
-    read_timeout, open_timeout = ems_timeouts(:ems_redhat, service)
-    params[:timeout]      = read_timeout if read_timeout
-    params[:open_timeout] = open_timeout if open_timeout
+      # Get the timeout from the configuration:
+      timeout, = ems_timeouts(:ems_redhat, service)
 
-    const = service == "Inventory" ? OvirtInventory : Ovirt.const_get(service)
-    const.new(params)
-  end
+      # Create the connection:
+      OvirtSDK4::Connection.new(
+        :url      => "https://#{server}:#{port}#{path}",
+        :username => username,
+        :password => password,
+        :timeout  => timeout,
+        :insecure => true,
+        :log      => $rhevm_log,
+      )
+    end
 
-  def history_database_name_for(api_version)
-    require 'ovirt_metrics'
-    case api_version
-    when '3_0'
-      OvirtMetrics::DEFAULT_HISTORY_DATABASE_NAME_3_0
-    else
-      OvirtMetrics::DEFAULT_HISTORY_DATABASE_NAME
+    # Connect to the engine using version 3 of the API and the `ovirt` gem.
+    def raw_connect_v3(server, port, path, username, password, service)
+      require 'ovirt'
+      require 'ovirt_provider/inventory/ovirt_inventory'
+
+      Ovirt.logger = $rhevm_log
+
+      params = {
+        :server     => server,
+        :port       => port.presence && port.to_i,
+        :path       => path,
+        :username   => username,
+        :password   => password,
+        :verify_ssl => false
+      }
+
+      read_timeout, open_timeout = ems_timeouts(:ems_redhat, service)
+      params[:timeout]      = read_timeout if read_timeout
+      params[:open_timeout] = open_timeout if open_timeout
+
+      const = service == "Inventory" ? OvirtInventory : Ovirt.const_get(service)
+      const.new(params)
+    end
+
+    def history_database_name_for(api_version)
+      require 'ovirt_metrics'
+      case api_version
+      when '3_0'
+        OvirtMetrics::DEFAULT_HISTORY_DATABASE_NAME_3_0
+      else
+        OvirtMetrics::DEFAULT_HISTORY_DATABASE_NAME
+      end
+    end
+
+    # Calculates an "ems_ref" from the "href" attribute provided by the oVirt REST API, removing the
+    # "/ovirt-engine/" prefix, as for historic reasons the "ems_ref" stored in the database does not
+    # contain it, it only contains the "/api" prefix which was used by older versions of the engine.
+    def make_ems_ref(href)
+      href && href.sub(%r{^/ovirt-engine/}, '/')
+    end
+
+    def extract_ems_ref_id(href)
+      href && href.split("/").last
     end
   end
-
-  # Calculates an "ems_ref" from the "href" attribute provided by the oVirt REST API, removing the
-  # "/ovirt-engine/" prefix, as for historic reasons the "ems_ref" stored in the database does not
-  # contain it, it only contains the "/api" prefix which was used by older versions of the engine.
-  def make_ems_ref(href)
-    href && href.sub(%r{^/ovirt-engine/}, '/')
-  end
-
-  def extract_ems_ref_id(href)
-    href && href.split("/").last
-  end
-end
   def supports_port?
     true
   end
