@@ -433,31 +433,27 @@ class ApplicationHelper::ToolbarChooser
   def center_toolbar_filename_classic
     # Original non vmx view code follows
     # toolbar buttons on sub-screens
-    if ((@lastaction == "show" && @view) ||
-        (@lastaction == "show" && @display != "main")) &&
-       !@layout.starts_with?("miq_request")
+    to_display = %w(availability_zones cloud_networks cloud_object_store_containers cloud_subnets
+                    cloud_tenants cloud_volumes ems_clusters flavors floating_ips hosts load_balancers
+                    network_ports network_routers orchestration_stacks resource_pools security_groups storages)
+    to_display_center = %w(stack_orchestration_template topology)
+    if @lastaction == 'show' && (@view || @display != 'main') && !@layout.starts_with?("miq_request")
       if @display == "vms" || @display == "all_vms"
         return "vm_infras_center_tb"
-      elsif @display == "ems_clusters"
-        return "ems_clusters_center_tb"
-      elsif @display == "hosts"
-        return "hosts_center_tb"
       elsif @display == "images"
         return "template_clouds_center_tb"
       elsif @display == "instances"
         return "vm_clouds_center_tb"
       elsif @display == "miq_templates"
         return "template_infras_center_tb"
-      elsif @display == "resource_pools"
-        return "resource_pools_center_tb"
-      elsif @display == "storages"
-        return "storages_center_tb"
-      elsif @display == "stack_orchestration_template"
-        return "stack_orchestration_template_center"
       elsif (@layout == "vm" || @layout == "host") && @display == "performance"
         return "#{@explorer ? "x_" : ""}vm_performance_tb"
       elsif @display == "dashboard"
         return "#{@layout}_center_tb"
+      elsif to_display.include?(@display)
+        return "#{@display}_center_tb"
+      elsif to_display_center.include?(@display)
+        return "#{@display}_center"
       end
     elsif @lastaction == "compare_miq" || @lastaction == "compare_compress"
       return "compare_center_tb"
