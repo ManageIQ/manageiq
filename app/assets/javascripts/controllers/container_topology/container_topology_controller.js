@@ -25,7 +25,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
       id = '/' + (/^\/[^\/]+\/(\d+)$/.exec(pathname)[1]);
     }
 
-    var url = '/ems_container/topology_data' + id;
+    var url = '/container_topology/data' + id;
 
     var currentSelectedKinds = $scope.kinds;
 
