@@ -9,7 +9,9 @@ class NetworkTopologyController < ApplicationController
     # all previous navigation should not be displayed in breadcrumbs as the user could arrive from
     # any other page in the application.
     @breadcrumbs.clear if params[:id].nil?
-    drop_breadcrumb(:name => _('Topology'), :url => '')
+    drop_breadcrumb(:name => _('Topology'), :url => "/network_topology/show/#{params[:id]}")
+    @lastaction = 'show'
+    @display = @showtype = 'topology'
   end
 
   def index
