@@ -486,8 +486,8 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    tree = TreeBuilderAeClass.new(name, type, @sb)
-    @automate_tree = TreeBuilderAeClass.new(name, type, @sb) if name == :automate_tree
+    tree = TreeBuilderAutomate.new(name, type, @sb)
+    @automate_tree = tree if name == :automate_tree
     tree
   end
 

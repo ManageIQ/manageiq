@@ -77,16 +77,9 @@ module AutomateTreeHelper
         @edit[:current][:selected] = @edit[:new][:selected].nil? ? "" : @edit[:new][:selected]
         unless @edit[:new][type].nil?
           @edit[:new][:selected] = @edit[:new][type]
-<<<<<<< 0a518f30ad327797c79ef829e9be767a24799af2
           if x_node(:automate_tree)
             page << "miqTreeActivateNodeSilently('automate_tree', '#{@edit[:new][:selected]}');"
           end
-=======
-        end
-        if x_node(:automate_tree)
-          page << "miqSetAETreeNodeSelectionClass('#{@edit[:new][:selected]}', '#{@edit[:current][:selected]}', #{validnode});"
-          page << "miqDynatreeActivateNodeSilently('automate_tree', '#{@edit[:new][:selected]}');"
->>>>>>> Convert Automate tree to use shared/tree
         end
       end
     end

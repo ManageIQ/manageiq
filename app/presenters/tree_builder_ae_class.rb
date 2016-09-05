@@ -23,17 +23,12 @@ class TreeBuilderAeClass < TreeBuilder
   private
 
   def tree_init_options(_tree_name)
-    {:leaf => "datastore", :lazy => true, :full_ids => false}
+    {:leaf => "datastore"}
   end
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix    => "",
-                  :onclick      => "miqOnClickSelectAETreeNode",
-                  :exp_tree     => false,
-                  :autoload     => true,
-                  :base_id      => "root",
-                  :highlighting => true)
+    locals.merge!(:autoload => true)
   end
 
   def root_options
