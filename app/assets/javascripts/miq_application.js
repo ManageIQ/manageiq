@@ -787,11 +787,7 @@ function miqCheckMaxLength(obj) {
     obj.value = obj.value.substring(0, ml);
   }
   if (counter) {
-    if (ManageIQ.browser != 'Explorer') {
-      $('#' + counter)[0].textContent = obj.value.length;
-    } else {
-      $('#' + counter).innerText = obj.value.length;
-    }
+    $('#' + counter).text(obj.value.length);
   }
 }
 
