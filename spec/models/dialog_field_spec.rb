@@ -143,4 +143,8 @@ describe DialogField do
       dialog_field.update_and_serialize_values
     end
   end
+
+  it "has default_value as an accessible attribute" do
+    expect(described_class.new).to have_attr_accessor(:default_value)
+  end
 end

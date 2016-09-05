@@ -1,13 +1,4 @@
 class DialogFieldDropDownList < DialogFieldSortedItem
-  def initialize_with_values(dialog_values)
-    if load_values_on_init?
-      raw_values
-      @value = value_from_dialog_fields(dialog_values) || default_value
-    else
-      @raw_values = initial_values
-    end
-  end
-
   def show_refresh_button?
     !!show_refresh_button
   end
