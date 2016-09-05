@@ -48,13 +48,15 @@
     .form-group
       %label.col-md-2.control-label{:valign => "top"}
         = field_hash[:description]
+        - len =  field_hash[:max_length] ? field_hash[:max_length] : MAX_NAME_LEN
         - if field_hash[:description] == "Provision on"
           (#{get_timezone_abbr(current_user)})
         - if @edit && @edit[:new] && [:vm_description].include?(field)
+          %br
           (
           %span#description_count
             = @edit[:new][:vm_description] ? @edit[:new][:vm_description].length : 0
-          \/ #{field_hash[:max_length]})
+          \/ #{len} )
         - if @edit && field_hash[:required] && field_hash[:display] == :edit
           *
       -# Text fields
@@ -84,14 +86,13 @@
                                    "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
             - elsif [:request_notes, :vm_description].include?(field)
               = text_area_tag(field_id, options[field],
-                              :maxlength                  => field_hash[:max_length],
+                              :maxlength                  => len,
                               :class                      => "form-control",
                               :size                       => "25x4",
                               :counter                    => "description_count",
                               "data-miq_check_max_length" => true,
                               "data-miq_observe"          => {:interval => '.5', :url => url}.to_json)
             - else
-              - len =  field_hash[:max_length] ? field_hash[:max_length] : MAX_NAME_LEN
               = text_field_tag(field_id, options[field],
                                :maxlength         => len,
                                :class             => "form-control",
