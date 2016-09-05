@@ -444,8 +444,6 @@ class ApplicationHelper::ToolbarBuilder
       else
         false
       end
-    else
-      !role_allows?(:feature => id)
     end
   end
 
@@ -660,8 +658,6 @@ class ApplicationHelper::ToolbarBuilder
       end
     when "Condition"
       case id
-      when "condition_edit"
-        return true unless role_allows?(:feature => "condition_edit")
       when "condition_copy"
         return true if x_active_tree != :condition_tree || !role_allows?(:feature => "condition_new")
       when "condition_delete"
@@ -681,13 +677,6 @@ class ApplicationHelper::ToolbarBuilder
       when "ab_group_edit", "ab_group_delete", "ab_button_new"
         return !role_allows_button_manipulation if x_active_tree == :sandt_tree
       end
-    when "MiqAction"
-      case id
-      when "action_edit"
-        return true unless role_allows?(:feature => "action_edit")
-      when "action_delete"
-        return true unless role_allows?(:feature => "action_delete")
-      end
     when "MiqAeClass", "MiqAeDomain", "MiqAeField", "MiqAeInstance", "MiqAeMethod", "MiqAeNamespace"
       return false if MIQ_AE_COPY_ACTIONS.include?(id) && User.current_tenant.any_editable_domains? && MiqAeDomain.any_unlocked?
       case id
@@ -705,22 +694,6 @@ class ApplicationHelper::ToolbarBuilder
         return true unless git_enabled?(@record) && MiqRegion.my_region.role_active?("git_owner")
       else
         return true unless editable_domain?(@record)
-      end
-    when "MiqAlert"
-      case id
-      when "alert_copy"
-        return true unless role_allows?(:feature => "alert_copy")
-      when "alert_edit"
-        return true unless role_allows?(:feature => "alert_edit")
-      when "alert_delete"
-        return true unless role_allows?(:feature => "alert_delete")
-      end
-    when "MiqAlertSet"
-      case id
-      when "alert_profile_edit"
-        return true unless role_allows?(:feature => "alert_profile_edit")
-      when "alert_profile_delete"
-        return true unless role_allows?(:feature => "alert_profile_delete")
       end
     when "MiqEventDefinition"
       case id
@@ -742,13 +715,6 @@ class ApplicationHelper::ToolbarBuilder
       when "policy_delete"
         return true if !role_allows?(:feature => "policy_delete") ||
                        x_active_tree != :policy_tree
-      end
-    when "MiqPolicySet"
-      case id
-      when "profile_edit"
-        return true unless role_allows?(:feature => "profile_edit")
-      when "profile_delete"
-        return true unless role_allows?(:feature => "profile_delete")
       end
     when "MiqRequest"
       # Don't hide certain buttons on AutomationRequest screen
@@ -809,11 +775,7 @@ class ApplicationHelper::ToolbarBuilder
         return !role_allows_button_manipulation
       when /^history_\d*/
         return false
-      else
-        return !role_allows?(:feature => id)
       end
-    when "OrchestrationTemplate", "OrchestrationTemplateCfn", "OrchestrationTemplateHot", "OrchestrationTemplateAzure", "OrchestrationTemplateVnfd"
-      return true unless role_allows?(:feature => id)
     when "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem", "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem"
       case id
       when "configured_system_provision"
@@ -823,14 +785,6 @@ class ApplicationHelper::ToolbarBuilder
       case id
       when "ab_group_new", "ab_button_new", "ab_group_reorder"
         return !role_allows_button_manipulation if x_active_tree == :sandt_tree
-      when "action_new"
-        return true unless role_allows?(:feature => "action_new")
-      when "alert_profile_new"
-        return true unless role_allows?(:feature => "alert_profile_new")
-      when "alert_new"
-        return true unless role_allows?(:feature => "alert_new")
-      when "condition_new"
-        return true unless role_allows?(:feature => "condition_new")
       when "log_download"
         return true if ["workers", "download_logs"].include?(@lastaction)
       when "log_collect"
@@ -839,10 +793,6 @@ class ApplicationHelper::ToolbarBuilder
         return true if ["workers", "download_logs"].include?(@lastaction)
       when "logdepot_edit"
         return true if ["workers", "evm_logs", "audit_logs"].include?(@lastaction)
-      when "policy_new"
-        return true unless role_allows?(:feature => "policy_new")
-      when "profile_new"
-        return true unless role_allows?(:feature => "profile_new")
       when "processmanager_restart"
         return true if ["download_logs", "evm_logs", "audit_logs"].include?(@lastaction)
       when "refresh_workers"
@@ -855,8 +805,6 @@ class ApplicationHelper::ToolbarBuilder
         return true unless @report
       when "timeline_txt"
         return true unless @report
-      else
-        return !role_allows?(:feature => id)
       end
     end
     false  # No reason to hide, allow the button to show
