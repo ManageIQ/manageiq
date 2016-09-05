@@ -57,33 +57,18 @@ class ChargebackContainerProject < Chargeback
 
     return [[]] if @projects.empty?
 
-    if @options[:groupby_tag]
-      @tag_hash = Classification.hash_all_by_type_and_name[@options[:groupby_tag]][:entry]
-    end
-
     build_results_for_report_chargeback(options)
   end
 
   def self.get_keys_and_extra_fields(perf, ts_key)
-    if @options[:groupby_tag].present?
-      tag = perf.tag_names.split("|").select { |x| x.starts_with?(@options[:groupby_tag]) }.first # 'department/*'
-      tag = tag.split('/').second unless tag.blank? # 'department/finance' -> 'finance'
-      classification = @tag_hash[tag]
-      classification_id = classification.present? ? classification.id : 'none'
-      key = "#{classification_id}_#{ts_key}"
-      extra_fields = {
-        "tag_name" => classification.present? ? classification.description : _('<Empty>'),
-      }
-    else
-      key = "#{perf.resource_id}_#{ts_key}"
-      extra_fields = {
-        "project_name"  => perf.resource_name,
-        "project_uid"   => perf.resource.ems_ref,
-        "provider_name" => perf.parent_ems.try(:name),
-        "provider_uid"  => perf.parent_ems.try(:guid),
-        "archived"      => perf.resource.archived? ? _("Yes") : _("No")
-      }
-    end
+    key = "#{perf.resource_id}_#{ts_key}"
+    extra_fields = {
+      "project_name"  => perf.resource_name,
+      "project_uid"   => perf.resource.ems_ref,
+      "provider_name" => perf.parent_ems.try(:name),
+      "provider_uid"  => perf.parent_ems.try(:guid),
+      "archived"      => perf.resource.archived? ? _("Yes") : _("No")
+    }
 
     [key, extra_fields]
   end
