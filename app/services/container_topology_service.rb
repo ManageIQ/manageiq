@@ -50,7 +50,7 @@ class ContainerTopologyService < TopologyService
     data.merge!(:status       => entity_status(entity),
                 :display_kind => entity_display_type(entity))
 
-    if entity.kind_of?(Host) || entity.kind_of?(Vm)
+    if (entity.kind_of?(Host) || entity.kind_of?(Vm)) && entity.ext_management_system.present?
       data.merge!(:provider => entity.ext_management_system.name)
     end
 
