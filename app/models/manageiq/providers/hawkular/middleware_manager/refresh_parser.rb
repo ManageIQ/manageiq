@@ -150,14 +150,15 @@ module ManageIQ::Providers
       end
 
       def fetch_availability
-        metric_ids = {}
+        resources_by_metric_id = {}
         @data[:middleware_deployments].each do |deployment|
           metric_id = @ems.build_metric_id('A', deployment, 'Deployment Status~Deployment Status')
-          metric_ids[metric_id] = deployment
+          resources_by_metric_id[metric_id] = deployment
         end
-        availabilities = @ems.metrics_client.avail.raw_data(metric_ids.keys, :limit => 1, :order => 'DESC')
-        availabilities.each do |availability|
-          metric_ids[availability['id']][:status] = process_availability(availability['data'].first)
+        unless resources_by_metric_id.empty?
+          availabilities = @ems.metrics_client.avail.raw_data(resources_by_metric_id.keys,
+                                                              :limit => 1, :order => 'DESC')
+          parse_availability availabilities, resources_by_metric_id
         end
       end
 
@@ -200,6 +201,17 @@ module ManageIQ::Providers
         else
           'Unknown'
         end
+      end
+
+      def parse_availability(availabilities, resources_by_metric_id)
+        processed_availabilities_ids = availabilities.map do |availability|
+          resources_by_metric_id[availability['id']][:status] = process_availability(availability['data'].first)
+          availability['id']
+        end
+        (resources_by_metric_id.keys - processed_availabilities_ids).each do |metric_id|
+          resources_by_metric_id[metric_id][:status] = process_availability nil
+        end
+        resources_by_metric_id
       end
 
       def parse_deployment(server, deployment)
