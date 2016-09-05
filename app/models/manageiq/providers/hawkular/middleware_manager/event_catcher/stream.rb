@@ -27,10 +27,12 @@ class ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Stream
   # would be more than one for the same millisecond, and that the query would be performed in the midst of
   # writes for the same ms. It may be a feasible scenario but I think it's unnecessary to handle it at this time.
   def fetch
-    @start_time ||= (Time.current - 1.minute).to_i * 1000
+    @start_time ||= 0 #(Time.current - 1.minute).to_i * 1000
     $mw_log.debug "Catching Events since [#{@start_time}]"
 
-    new_events = @alerts_client.list_events("startTime" => @start_time, "tags" => "miq.event_type|*", "thin" => true)
+    #new_events = @alerts_client.list_events("startTime" => @start_time, "tags" => "miq.event_type|*", "thin" => true)
+    new_events = @alerts_client.list_events("startTime" => @start_time, "thin" => true)
+    #byebug_term unless new_events.empty?
     @start_time = new_events.max_by(&:ctime).ctime + 1 unless new_events.empty? # add 1 ms to avoid dups with GTE filter
     new_events
   rescue => err

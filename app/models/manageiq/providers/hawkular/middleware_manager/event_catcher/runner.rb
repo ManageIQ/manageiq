@@ -38,6 +38,10 @@ class ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Runner <
     event_monitor_handle.start
     event_monitor_handle.each_batch do |events|
       event_monitor_running
+      #byebug_term
+      events.each do |e|
+        e.tags = {"miq.event_type" => "hawkular_event", "miq.resource_type" => "MiddlewareServer"}
+      end
       new_events = events.select { |e| whitelist?(e) }
       $mw_log.debug("#{log_prefix} Discarding events #{events - new_events}") if new_events.length < events.length
       if new_events.any?
@@ -54,6 +58,7 @@ class ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Runner <
   def process_event(event)
     $mw_log.debug "Processing Event #{event}"
     event_hash = event_to_hash(event, @cfg[:ems_id])
+    #byebug_term
 
     if blacklist?(event_hash[:event_type])
       $mw_log.debug "#{log_prefix} Filtering blacklisted event [#{event}]"
@@ -81,7 +86,7 @@ class ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Runner <
   end
 
   def event_to_hash(event, ems_id = nil)
-    byebug_term
+    #byebug_term
     event.event_type = event.tags[TAG_EVENT_TYPE]
     if event.context
       event.message        = event.context['message'] # optional, prefer context message if provided

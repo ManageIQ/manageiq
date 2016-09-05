@@ -18,14 +18,14 @@ class ManageIQ::Providers::Openshift::ContainerManager < ManageIQ::Providers::Co
   end
 
   def self.event_monitor_class
-    byebug_term
+    #byebug_term
     #ManageIQ::Providers::Openshift::ContainerManager::EventCatcher
     ManageIQ::Providers::Openshift::ContainerManager::EventCatcherHawkular
     #ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher
   end
 
   def alerts_client
-    byebug_term
+    #byebug_term
     connection = ManageIQ::Providers::Hawkular::MiddlewareManager.raw_connect(
       'mtayer-centos7-5.eng.lab.tlv.redhat.com', 8080, 'jdoe', 'password')
     connection.alerts
