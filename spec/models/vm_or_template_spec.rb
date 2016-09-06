@@ -743,4 +743,35 @@ describe VmOrTemplate do
       expect(vm.ems_cluster).not_to be_nil
     end
   end
+
+  describe "#all_archived" do
+    let(:ems) { FactoryGirl.build(:ext_management_system) }
+    it "works" do
+      FactoryGirl.create(:vm_or_template, :ext_management_system => ems)
+      arch = FactoryGirl.create(:vm_or_template)
+      FactoryGirl.create(:vm_or_template, :storage => FactoryGirl.create(:storage))
+
+      expect(VmOrTemplate.all_archived).to eq([arch])
+    end
+  end
+
+  describe "#all_orphaned" do
+    it "works" do
+      FactoryGirl.create(:vm_or_template, :ext_management_system => ems)
+      FactoryGirl.create(:vm_or_template)
+      orph = FactoryGirl.create(:vm_or_template, :storage => FactoryGirl.create(:storage))
+
+      expect(VmOrTemplate.all_orphaned).to eq([orph])
+    end
+  end
+
+  describe "#all_archived_or_orphaned" do
+    it "works" do
+      vm = FactoryGirl.create(:vm_or_template, :ext_management_system => ems)
+      FactoryGirl.create(:vm_or_template)
+      FactoryGirl.create(:vm_or_template, :storage => FactoryGirl.create(:storage))
+
+      expect(VmOrTemplate.not_archived_nor_orphaned).to eq([vm])
+    end
+  end
 end
