@@ -3,8 +3,6 @@ class TimeProfile < ApplicationRecord
   ALL_HOURS = (0...24).to_a.freeze
   DEFAULT_TZ = "UTC"
 
-  validates_uniqueness_of :description
-
   serialize :profile
   default_value_for :days,  ALL_DAYS
   default_value_for :hours, ALL_HOURS
