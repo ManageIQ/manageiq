@@ -1,0 +1,13 @@
+# Middleware Messaging daily performance chart layouts
+---
+- :title: Messages
+  :type: Line
+  :columns:
+  - mw_ms_delivering_count
+  - mw_ms_message_count
+  - mw_ms_messages_added
+
+- :title: Consumers
+  :type: Line
+  :columns:
+  - mw_ms_consumer_count
