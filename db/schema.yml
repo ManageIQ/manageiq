@@ -367,6 +367,10 @@ cloud_tenants:
 - updated_at
 - type
 - parent_id
+cloud_tenants_flavors:
+- id
+- cloud_tenant_id
+- flavor_id
 cloud_tenants_vms:
 - cloud_tenant_id
 - vm_id
@@ -1267,6 +1271,7 @@ flavors:
 - ephemeral_disk_count
 - root_disk_size
 - swap_disk_size
+- publicly_available
 floating_ips:
 - id
 - type

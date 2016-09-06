@@ -6,6 +6,7 @@ class Flavor < ApplicationRecord
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::CloudManager"
   has_many   :vms
+  has_and_belongs_to_many :cloud_tenants
 
   virtual_total :total_vms, :vms
 
