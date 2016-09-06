@@ -90,6 +90,8 @@ class Chargeback < ActsAsArModel
     end
 
     rates.each do |rate|
+      col_hash = {}
+
       rate.chargeback_rate_details.each do |r|
         cost_key         = "#{r.rate_name}_cost"
         metric_key       = "#{r.rate_name}_metric"
@@ -100,17 +102,16 @@ class Chargeback < ActsAsArModel
         metric = r.metric.nil? ? 0 : rec.send(r.metric) || 0
         cost   = r.cost(metric)
 
-        col_hash = {}
         unless (report_col_options.keys & [metric_key, cost_key]).empty?
           [metric_key, metric_group_key].each             { |col| col_hash[col] = metric }
           [cost_key,   cost_group_key, 'total_cost'].each { |col| col_hash[col] = cost }
         end
+      end
 
-        col_hash.each do |k, val|
-          next unless attribute_names.include?(k)
-          h[k] ||= 0
-          h[k] += val
-        end
+      col_hash.each do |k, val|
+        next unless attribute_names.include?(k)
+        h[k] ||= 0
+        h[k] += val
       end
     end
   end
