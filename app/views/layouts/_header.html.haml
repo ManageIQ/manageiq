@@ -1,5 +1,5 @@
 = render :partial => 'layouts/about_modal'
-%nav.navbar.navbar-pf-vertical
+%nav.navbar.navbar-pf-vertical{'ng-controller' => "headerController as vm"}
   .navbar-header
     %button{:type => "button", :class => "navbar-toggle"}
       %span.sr-only
@@ -11,6 +11,9 @@
       %img.navbar-brand-name{:src => image_path("brand.svg"), :alt => "ManageIQ"}
   %nav.collapse.navbar-collapse
     %ul.nav.navbar-nav.navbar-right.navbar-iconic
+      %li{:class => "drawer-pf-trigger dropdown"}
+        %a{:class => "nav-item-iconic drawer-pf-trigger-icon", "ng-click" => "vm.toggleNotificationsList()"}
+          %span{:title => _("Notifications"), "ng-class" => "{'fa fa-bell': vm.newNotifications, 'fa fa-bell-o': !vm.newNotifications}"}
       %li{:class => "dropdown brand-white-label #{current_tenant.logo? ? "whitelabeled" : ""}"}
       %li.dropdown
         %a{:class => "dropdown-toggle nav-item-iconic", :id => "dropdownMenu1",  "data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "true"}
@@ -31,6 +34,11 @@
 
   = render :partial => "layouts/spinner"
   = render :partial => "layouts/lightbox_panel"
+  = render :partial => "layouts/notifications_drawer"
+  = render :partial => "layouts/toast_list"
+
+:javascript
+  miq_bootstrap('.navbar.navbar-pf-vertical', 'ManageIQ.notifications');
 
 -# if set by controller, set up to run as JS after onload is done
 - if @miq_after_onload

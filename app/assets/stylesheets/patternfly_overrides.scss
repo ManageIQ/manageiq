@@ -568,3 +568,17 @@ body#dashboard {
     }
   }
 }
+
+// Notifications drawer positioning
+.drawer-pf {
+  bottom: 20px;
+  position: absolute;
+  top: 60px;
+  z-index: 950;
+  .panel-body {
+    margin: 0;
+  }
+}
+.drawer-pf.vertical-scroll {
+  right: 15px;
+}
