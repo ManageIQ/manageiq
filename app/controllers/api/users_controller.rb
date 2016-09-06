@@ -3,6 +3,8 @@ module Api
     INVALID_USER_ATTRS = %w(id href current_group_id settings).freeze # Cannot update other people's settings
     INVALID_SELF_USER_ATTRS = %w(id href current_group_id).freeze
 
+    skip_before_action :validate_api_action, :only => :update
+
     def update
       aname = @req.action
       if aname == "edit" && !api_user_role_allows?(aname) && update_target_is_api_user?
@@ -13,6 +15,7 @@ module Api
         end
         render_normal_update :users, update_collection(:users, @req.c_id)
       else
+        validate_api_action
         super
       end
     end

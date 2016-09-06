@@ -1,7 +1,6 @@
 module Api
   class SettingsController < BaseController
     def show
-      validate_api_action
       category = @req.c_id
       selected_sections =
         if category

@@ -1,7 +1,6 @@
 module Api
   class ContainerDeploymentsController < BaseController
     def show
-      validate_api_action
       if @req.c_id == "container_deployment_data"
         render_resource :container_deployments, :data => ContainerDeploymentService.new.all_data
       else

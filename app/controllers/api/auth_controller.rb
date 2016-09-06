@@ -1,5 +1,7 @@
 module Api
   class AuthController < BaseController
+    skip_before_action :validate_api_action
+
     def show
       requester_type = fetch_and_validate_requester_type
       token_service = Environment.user_token_service
