@@ -50,7 +50,16 @@
           :line_numbers            => true,
           :read_only               => true}
     - else
-      = @ae_method.data
+      .form-horizontal.static
+        .form-group
+          %label.col-md-2.control-label
+            - if @ae_method.location == 'builtin'
+              = _('Builtin to call')
+            - elsif @ae_method.location == 'uri'
+              = _('Method URI')
+          .col-md-8
+            %p.form-control-static
+              = @ae_method.data
     -# show inputs parameters grid if there are any inputs
     #params_div{:style => @record.inputs.empty? ? "display: none;" : ""}
       %hr

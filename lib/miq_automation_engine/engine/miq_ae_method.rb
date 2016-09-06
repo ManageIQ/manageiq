@@ -22,14 +22,16 @@ module MiqAeEngine
     end
 
     def self.invoke_builtin(aem, obj, inputs)
-      mname = "miq_#{aem.data.blank? ? aem.name.downcase : aem.data.downcase}"
-      raise  MiqAeException::MethodNotFound, "Built-In Method [#{mname}] does not exist" unless MiqAeBuiltinMethod.public_methods.collect(&:to_s).include?(mname)
+      mname = aem.data.blank? ? aem.name.downcase : aem.data.downcase
 
       # Create service, since built-in method may be calling things that assume there is one
       svc = MiqAeMethodService::MiqAeService.new(obj.workspace)
 
       begin
-        return MiqAeBuiltinMethod.send(mname, obj, inputs)
+        return MiqAeBuiltinMethod.invoke_builtin(mname, obj, inputs)
+      rescue MiqAeException::MethodNotFound
+        # In order for MethodNotFound to not become AbortInstantiation so the engine can handle it
+        raise
       rescue => err
         raise MiqAeException::AbortInstantiation, err.message
       ensure

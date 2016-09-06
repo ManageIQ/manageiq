@@ -3,7 +3,6 @@ module MiqAeEngine
   CLOUD          = 'cloud'.freeze
   UNKNOWN        = 'unknown'.freeze
 
-  # All Class Methods beginning with miq_ are callable from the engine
   class MiqAeBuiltinMethod
     ATTRIBUTE_LIST = %w(
       vm
@@ -15,7 +14,126 @@ module MiqAeEngine
       platform_category
     ).freeze
 
-    def self.miq_log_object(obj, _inputs)
+    class << self
+      DEFAULT_TYPE = :string
+
+      # Define a new builtin for use in automate models
+      #
+      # Use it similarly like you would define a method. Required values are expressed using
+      # arguments. Argument "obj" is considered to be the $evm.object. Any other argument is
+      # considered an input, where it will pull out the value from inputs hash based on the name.
+      # For backwards compatibility, argument "inputs" will receive all inputs.
+      #
+      # You can specify the input types using metadata (TODO: elaborate)
+      #
+      # ==== Attributes
+      #
+      # * +name+ - Name of the builtin. Symbol.
+      # * +metadata+ - Metadata. Hash.
+      #
+      # ==== Examples
+      #
+      #   # This one takes the $evm.object and pulls "foo" out of inputs
+      #   builtin :mybuiltin do |obj, foo|
+      #     do_something
+      #   end
+      def builtin(name, metadata = {}, &block)
+        @builtins ||= {}
+        $miq_ae_logger.warn("Overwriting builtin method #{name}") if @builtins.include?(name)
+        @builtins[name.to_s] = [block, metadata]
+      end
+
+      # Invokes a builtin on obj with inputs.
+      #
+      # Raises MiqAeException::MethodNotFound if the builtin was not found.
+      #
+      # ==== Attributes
+      #
+      # * +name+ - Name of the builtin to invoke. Symbol.
+      # * +obj+ - Object to invoke the builtin on.
+      # * +inputs+ - Inputs to pass to the method. Hash
+      def invoke_builtin(name, obj, inputs)
+        meth, metadata = get_builtin(name)
+        required_params = (metadata[:required] || []).collect(&:to_s)
+        # Detect missing required parameters
+        missing_required_params = required_params - inputs.keys
+        unless missing_required_params.empty?
+          raise MiqAeException::MethodParmMissing, "Built-In method [#{name}] requires parameters #{required_params.inspect}, but only #{missing_required_params.inspect} were passed"
+        end
+        # Taking only :opt, we do not care about :rest
+        meth_params = meth.parameters.select { |pt, _| pt == :opt } .collect do |_, param_name|
+          param_name = param_name.to_s
+          if param_name == 'obj'
+            obj
+          elsif param_name == 'inputs'
+            # Backwards compatibility
+            inputs
+          else
+            # Param is present or the param is not required so nil is placed in there
+            inputs[param_name]
+          end
+        end
+        instance_exec(*meth_params, &meth)
+      end
+
+      def remove_builtin(name)
+        @builtins ||= {}
+        @builtins.delete(name.to_s)
+      end
+
+      # Returns a list of all defined builtins
+      def builtins
+        @builtins ||= {}
+        @builtins.keys
+      end
+
+      # Checks whether any builtin with such name exists.
+      #
+      # ==== Attributes
+      #
+      # * +name+ - Name of the builtin to check. Symbol
+      def builtin?(name)
+        builtins.include?(name.to_s)
+      end
+
+      # Returns a list of known inputs that the builtin method takes
+      #
+      # The format of result is [[:inputname, :inputtype], ...]
+      #
+      # ==== Attributes
+      #
+      # * +name+ - Name of the builtin to check. Symbol
+      def builtin_inputs(name)
+        meth, meta = get_builtin(name)
+        types = meta[:types] || {}
+        meth.parameters.collect(&:last).reject { |m| m =~ /^obj|inputs$/ } .collect do |input|
+          [input, types[input] || DEFAULT_TYPE]
+        end
+      end
+
+      # Returns whether the builtin takes the "inputs" and therefore it is not detectable what
+      # inputs exactly does it take.
+      #
+      # ==== Attributes
+      #
+      # * +name+ - Name of the builtin to check. Symbol
+      def builtin_legacy_inputs?(name)
+        meth = get_builtin(name).first
+        !meth.parameters.collect(&:last).select { |m| m == :inputs } .empty?
+      end
+
+      private
+
+      def get_builtin(name)
+        name = name.to_s
+        raise MiqAeException::MethodNotFound, "Built-In Method [#{name}] does not exist" unless builtin?(name)
+        @builtins[name]
+      end
+    end
+
+    # Here you can define your builtins and also helper classmethods to support them
+
+    builtin :log_object do |obj|
       $miq_ae_logger.info("===========================================")
       $miq_ae_logger.info("Dumping Object")
 
@@ -24,38 +142,40 @@ module MiqAeEngine
       $miq_ae_logger.info("===========================================")
     end
 
-    def self.miq_log_workspace(obj, _inputs)
+    builtin :log_workspace do |obj|
       $miq_ae_logger.info("===========================================")
       $miq_ae_logger.info("Dumping Workspace")
       $miq_ae_logger.info(obj.workspace.to_expanded_xml)
       $miq_ae_logger.info("===========================================")
     end
 
-    def self.miq_send_email(_obj, inputs)
-      MiqAeMethodService::MiqAeServiceMethods.send_email(inputs["to"], inputs["from"], inputs["subject"], inputs["body"])
+    builtin :send_email do |to, from, subject, body|
+      MiqAeMethodService::MiqAeServiceMethods.send_email(to, from, subject, body)
     end
 
-    def self.miq_snmp_trap_v1(_obj, inputs)
+    builtin :snmp_trap_v1 do |inputs|
       MiqAeMethodService::MiqAeServiceMethods.snmp_trap_v1(inputs)
     end
 
-    def self.miq_snmp_trap_v2(_obj, inputs)
+    builtin :snmp_trap_v2 do |inputs|
       MiqAeMethodService::MiqAeServiceMethods.snmp_trap_v2(inputs)
     end
 
-    def self.miq_service_now_eccq_insert(_obj, inputs)
-      if inputs['payload'].nil?
-        MiqAeMethodService::MiqAeServiceMethods.service_now_eccq_insert(inputs['server'], inputs['username'], inputs['password'], inputs['agent'], inputs['queue'], inputs['topic'], inputs['name'], inputs['source'])
+    builtin :service_now_eccq_insert do |server, username, password, agent, queue, topic, name, source, payload|
+      if payload.nil?
+        MiqAeMethodService::MiqAeServiceMethods.service_now_eccq_insert(
+          server, username, password, agent, queue, topic, name, source)
       else
-        MiqAeMethodService::MiqAeServiceMethods.service_now_eccq_insert(inputs['server'], inputs['username'], inputs['password'], inputs['agent'], inputs['queue'], inputs['topic'], inputs['name'], inputs['source'], *(inputs['payload']))
+        MiqAeMethodService::MiqAeServiceMethods.service_now_eccq_insert(
+          server, username, password, agent, queue, topic, name, source, *payload)
       end
     end
 
-    def self.powershell(_obj, inputs)
-      MiqAeMethodService::MiqAeServiceMethods.powershell(inputs['script'], inputs['returns'])
+    builtin :powershell do |script, returns|
+      MiqAeMethodService::MiqAeServiceMethods.powershell(script, returns)
     end
 
-    def self.miq_parse_provider_category(obj, _inputs)
+    builtin :parse_provider_category do |obj|
       provider_category = nil
       ATTRIBUTE_LIST.detect { |attr| provider_category = category_for_key(obj, attr) }
       $miq_ae_logger.info("Setting provider_category to: #{provider_category}")
@@ -65,7 +185,7 @@ module MiqAeEngine
       prepend_vendor(obj)
     end
 
-    def self.miq_parse_automation_request(obj, _inputs)
+    builtin :parse_automation_request do |obj|
       obj['target_component'], obj['target_class'], obj['target_instance'] =
         case obj['request']
         when 'vm_provision'   then %w(VM   Lifecycle Provisioning)
@@ -80,7 +200,7 @@ module MiqAeEngine
       $miq_ae_logger.info("Target Class:<#{obj['target_class']}> Target Instance:<#{obj['target_instance']}>")
     end
 
-    def self.miq_host_and_storage_least_utilized(obj, _inputs)
+    builtin :host_and_storage_least_utilized do |obj|
       prov = obj.workspace.get_obj_from_path("/")['miq_provision']
       raise MiqAeException::MethodParmMissing, "Provision not specified" if prov.nil?
 
@@ -106,43 +226,47 @@ module MiqAeEngine
       ["host", "storage"].each { |k| obj[k] = result[k] } unless result.empty?
     end
 
-    def self.miq_event_action_refresh(obj, inputs)
-      event_object_from_workspace(obj).refresh(inputs['target'], false)
+    builtin :event_action_refresh do |obj, target|
+      event_object_from_workspace(obj).refresh(target, false)
     end
 
-    def self.miq_event_action_refresh_sync(obj, inputs)
-      event_object_from_workspace(obj).refresh(inputs['target'], true)
+    builtin :event_action_refresh_sync do |obj, target|
+      event_object_from_workspace(obj).refresh(target, true)
     end
 
-    def self.miq_event_action_policy(obj, inputs)
-      event_object_from_workspace(obj).policy(inputs['target'], inputs['policy_event'], inputs['param'])
+    builtin :event_action_refresh do |obj, target|
+      event_object_from_workspace(obj).refresh(target)
     end
 
-    def self.miq_event_action_scan(obj, inputs)
-      event_object_from_workspace(obj).scan(inputs['target'])
+    builtin :event_action_policy do |obj, target, policy_event, param|
+      event_object_from_workspace(obj).policy(target, policy_event, param)
     end
 
-    def self.miq_src_vm_as_template(obj, inputs)
-      event_object_from_workspace(obj).src_vm_as_template(inputs['flag'])
+    builtin :event_action_scan do |obj, target|
+      event_object_from_workspace(obj).scan(target)
     end
 
-    def self.miq_change_event_target_state(obj, inputs)
-      event_object_from_workspace(obj).change_event_target_state(inputs['target'], inputs['param'])
+    builtin :src_vm_as_template do |obj, flag|
+      event_object_from_workspace(obj).src_vm_as_template(flag)
     end
 
-    def self.miq_src_vm_destroy_all_snapshots(obj, _inputs)
+    builtin :change_event_target_state do |obj, target, param|
+      event_object_from_workspace(obj).change_event_target_state(target, param)
+    end
+
+    builtin :src_vm_destroy_all_snapshots do |obj|
       event_object_from_workspace(obj).src_vm_destroy_all_snapshots
     end
 
-    def self.miq_src_vm_disconnect_storage(obj, _inputs)
+    builtin :src_vm_disconnect_storage do |obj|
       event_object_from_workspace(obj).src_vm_disconnect_storage
     end
 
-    def self.miq_src_vm_refresh_on_reconfig(obj, _inputs)
+    builtin :src_vm_refresh_on_reconfig do |obj|
       event_object_from_workspace(obj).src_vm_refresh_on_reconfig
     end
 
-    def self.miq_event_enforce_policy(obj, _inputs)
+    builtin :event_enforce_policy do |obj|
       event_object_from_workspace(obj).process_evm_event
     end
 

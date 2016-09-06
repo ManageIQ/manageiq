@@ -32,6 +32,10 @@ class MiqAeMethod < ApplicationRecord
     AVAILABLE_SCOPES
   end
 
+  def self.available_builtins
+    MiqAeEngine::MiqAeBuiltinMethod.builtins
+  end
+
   # Validate the syntax of the passed in inline ruby code
   def self.validate_syntax(code_text)
     result = MiqSyntaxChecker.check(code_text)

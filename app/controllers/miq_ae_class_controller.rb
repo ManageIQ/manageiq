@@ -784,10 +784,13 @@ class MiqAeClassController < ApplicationController
     @edit[:new][:scope] = "instance"
     @edit[:new][:language] = "ruby"
     @edit[:new][:available_locations] = MiqAeMethod.available_locations
+    @edit[:new][:available_builtins] = MiqAeMethod.available_builtins
     @edit[:new][:location] = @ae_method.location.nil? ? "inline" : @ae_method.location
     @edit[:new][:data] = @ae_method.data.to_s
     if @edit[:new][:location] == "inline" && !@ae_method.data
       @edit[:new][:data] = MiqAeMethod.default_method_text
+    elsif @edit[:new][:location] == "builtin" && !@ae_method.data
+      @edit[:new][:data] = MiqAeMethod.available_builtins.sort.first
     end
     @edit[:default_verify_status] = @edit[:new][:location] == "inline" && @edit[:new][:data] && @edit[:new][:data] != ""
     @edit[:new][:fields] = @ae_method.inputs.collect do |input|
