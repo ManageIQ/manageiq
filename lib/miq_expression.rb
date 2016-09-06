@@ -1334,8 +1334,18 @@ class MiqExpression
 
     model = determine_model(model, parts)
     return nil if model.nil?
+    return custom_attribute_field_type(col) if col.include?("virtual_custom_attribute")
 
     col_type(model, col)
+  end
+
+  def self.custom_attribute_field_type(col)
+    begin
+      field_type = CustomAttribute.find_by_name(col.gsub("virtual_custom_attribute_", ""))[:field_type]
+      field_type.to_sym
+    rescue
+      :string
+    end
   end
 
   def self.col_type(model, col)
