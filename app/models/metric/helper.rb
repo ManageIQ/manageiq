@@ -120,7 +120,7 @@ module Metric::Helper
   end
 
   def self.remove_duplicate_timestamps(recs)
-    return recs if recs.empty? || recs.any? { |r| !r.kind_of?(Metric) || !r.kind_of?(MetricRollup) }
+    return recs if recs.empty? || !recs.all? { |r| r.kind_of?(Metric) || r.kind_of?(MetricRollup) }
 
     recs = recs.sort_by { |r| r.resource_type + r.resource_id.to_s + r.timestamp.iso8601 }
 
@@ -132,11 +132,11 @@ module Metric::Helper
         _log.warn("Multiple rows found for the same timestamp: [#{rec.timestamp}], ids: [#{rec.id}, #{last_rec.id}], resource and id: [#{rec.resource_type}:#{rec.resource_id}]")
 
         # Merge records with the same timestamp
-        last_rec.attributes.each { |a| last_rec[a] ||= rec[a] }
+        last_rec.attribute_names.each { |a| last_rec[a] ||= rec[a] }
       else
         ret << rec
+        last_rec = rec
       end
-      last_rec = rec
     end
   end
 
