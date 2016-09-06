@@ -61,6 +61,7 @@ MiqPassword.key_root = "#{RAILS_ROOT}/certs"
 # Load appliance_console libraries
 require 'appliance_console/utilities'
 require 'appliance_console/logging'
+require 'appliance_console/database_maintenance'
 require 'appliance_console/database_configuration'
 require 'appliance_console/internal_database_configuration'
 require 'appliance_console/external_database_configuration'
@@ -525,6 +526,18 @@ Static Network Configuration
 
         say("Failover Monitor Service configured successfully")
         press_any_key
+
+      when I18n.t("advanced_settings.db_maintenance")
+        say("#{selection}\n\n")
+        db_maintenance = ApplianceConsole::DatabaseMaintenance.new
+        if db_maintenance.ask_questions && db_maintenance.activate
+          say("Database maintenance configuration updated")
+          press_any_key
+        else
+          say("Database maintenance configuration unchanged")
+          press_any_key
+          raise MiqSignalError
+        end
 
       when I18n.t("advanced_settings.tmp_config")
         say("#{selection}\n\n")
