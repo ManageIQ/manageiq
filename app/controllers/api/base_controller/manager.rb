@@ -87,8 +87,6 @@ module Api
           "#{type}_#{action}_resource"
         else
           target = "#{action}_resource"
-          typed_target = "#{target}_#{type}"
-          return typed_target if respond_to?(typed_target)
           return target if respond_to?(target)
           collection_config.custom_actions?(type) ? "custom_action_resource" : "undefined_api_method"
         end

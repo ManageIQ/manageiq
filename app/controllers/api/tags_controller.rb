@@ -1,6 +1,6 @@
 module Api
   class TagsController < BaseController
-    def create_resource_tags(type, _id, data)
+    def create_resource(type, _id, data)
       assert_id_not_specified(data, type)
       category_data = data.delete("category") { {} }
       category = fetch_category(category_data)
@@ -17,7 +17,7 @@ module Api
       end
     end
 
-    def edit_resource_tags(type, id, data)
+    def edit_resource(type, id, data)
       klass = collection_class(type)
       tag = resource_search(id, type, klass)
       entry = Classification.find_by_tag_id(tag.id)
@@ -30,7 +30,7 @@ module Api
       entry.tag
     end
 
-    def delete_resource_tags(_type, id, _data = {})
+    def delete_resource(_type, id, _data = {})
       destroy_tag_and_classification(id)
       action_result(true, "tags id: #{id} deleting")
     rescue ActiveRecord::RecordNotFound

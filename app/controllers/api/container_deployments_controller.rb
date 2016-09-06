@@ -8,7 +8,7 @@ module Api
       end
     end
 
-    def create_resource_container_deployments(_type, _id, data)
+    def create_resource(_type, _id, data)
       deployment = ContainerDeployment.new
       deployment.create_deployment(data, @auth_user_obj)
     end

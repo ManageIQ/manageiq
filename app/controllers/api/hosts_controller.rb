@@ -8,7 +8,7 @@ module Api
     include Subcollections::PolicyProfiles
     include Subcollections::Tags
 
-    def edit_resource_hosts(type, id, data = {})
+    def edit_resource(type, id, data = {})
       credentials = data.delete(CREDENTIALS_ATTR)
       raise BadRequestError, "Cannot update non-credentials attributes of host resource" if data.any?
       resource_search(id, type, collection_class(:hosts)).tap do |host|

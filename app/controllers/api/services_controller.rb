@@ -4,7 +4,7 @@ module Api
     include Subcollections::Tags
     include Subcollections::Vms
 
-    def reconfigure_resource_services(type, id = nil, data = nil)
+    def reconfigure_resource(type, id = nil, data = nil)
       raise BadRequestError, "Must specify an id for Reconfiguring a #{type} resource" unless id
 
       api_action(type, id) do |klass|

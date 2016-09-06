@@ -10,7 +10,7 @@ module Api
       MiqGroup.non_tenant_groups.find(id)
     end
 
-    def create_resource_groups(_type, _id, data)
+    def create_resource(_type, _id, data)
       validate_group_data(data)
       parse_set_role(data)
       parse_set_tenant(data)
@@ -22,19 +22,19 @@ module Api
       group
     end
 
-    def edit_resource_groups(type, id, data)
+    def edit_resource(type, id, data)
       validate_group_data(data)
       parse_set_role(data)
       parse_set_tenant(data)
       group = resource_search(id, type, collection_class(:groups))
       parse_set_filters(data, :entitlement_id => group.entitlement.try(:id))
       raise Forbidden, "Cannot edit a read-only group" if group.read_only
-      edit_resource(type, id, data)
+      super
     end
 
-    def delete_resource_groups(type, id, data = {})
+    def delete_resource(type, id, data = {})
       raise Forbidden, "Cannot delete a read-only group" if MiqGroup.find(id).read_only?
-      delete_resource(type, id, data)
+      super
     end
 
     private

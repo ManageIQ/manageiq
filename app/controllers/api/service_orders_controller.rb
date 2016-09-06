@@ -2,19 +2,19 @@ module Api
   class ServiceOrdersController < BaseController
     include Subcollections::ServiceRequests
 
-    def create_resource_service_orders(type, id, data)
+    def create_resource(type, id, data)
       raise BadRequestError, "Can't create an ordered service order" if data["state"] == ServiceOrder::STATE_ORDERED
       service_requests = data.delete("service_requests")
       data["state"] ||= ServiceOrder::STATE_CART
       if service_requests.blank?
-        create_resource(type, id, data)
+        super
       else
         create_service_order_with_service_requests(service_requests)
         ServiceOrder.cart_for(@auth_user_obj)
       end
     end
 
-    def clear_resource_service_orders(type, id, _data)
+    def clear_resource(type, id, _data)
       service_order = resource_search(id, type, collection_class(type))
       begin
         service_order.clear
@@ -24,7 +24,7 @@ module Api
       service_order
     end
 
-    def order_resource_service_orders(type, id, _data)
+    def order_resource(type, id, _data)
       service_order = resource_search(id, type, collection_class(type))
       service_order.checkout
       service_order

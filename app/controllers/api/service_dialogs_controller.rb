@@ -24,7 +24,7 @@ module Api
       resource.content(service_template, resource_action)
     end
 
-    def refresh_dialog_fields_resource_service_dialogs(type, id = nil, data = nil)
+    def refresh_dialog_fields_resource(type, id = nil, data = nil)
       raise BadRequestError, "Must specify an id for Reconfiguring a #{type} resource" unless id
 
       api_action(type, id) do |klass|

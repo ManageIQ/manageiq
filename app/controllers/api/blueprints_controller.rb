@@ -7,7 +7,7 @@ module Api
       super
     end
 
-    def create_resource_blueprints(_type, _id, data)
+    def create_resource(_type, _id, data)
       attributes = data.except("bundle")
       blueprint = Blueprint.new(attributes)
       bundle = data["bundle"]
@@ -16,7 +16,7 @@ module Api
       blueprint
     end
 
-    def edit_resource_blueprints(type, id, data)
+    def edit_resource(type, id, data)
       attributes = data.except("bundle")
       blueprint = resource_search(id, type, Blueprint)
       blueprint.update!(attributes)
