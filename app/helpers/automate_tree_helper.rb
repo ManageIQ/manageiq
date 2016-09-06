@@ -70,8 +70,8 @@ module AutomateTreeHelper
         self.x_active_tree = :automate_tree
         page << javascript_show("ae_tree_select_div")
         page << javascript_show("blocker_div")
-        page << javascript_show("automate_tree_div")
-        page << "$('#automate_tree_div').addClass('modal fade in');"
+        page << javascript_show("automate_div")
+        page << "$('#automate_div').addClass('modal fade in');"
         @edit[:ae_tree_select] = true
         type = @edit[:ae_field_typ] || params[:typ]
         @edit[:current][:selected] = @edit[:new][:selected].nil? ? "" : @edit[:new][:selected]
