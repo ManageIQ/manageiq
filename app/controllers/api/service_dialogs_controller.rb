@@ -1,6 +1,6 @@
 module Api
   class ServiceDialogsController < BaseController
-    before_action :set_additional_attributes, :only => [:show]
+    before_action :set_additional_attributes, :only => [:index, :show]
 
     def refresh_dialog_fields_resource(type, id = nil, data = nil)
       raise BadRequestError, "Must specify an id for Reconfiguring a #{type} resource" unless id

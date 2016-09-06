@@ -5,6 +5,10 @@ module Api
       # Primary Methods
       #
 
+      def index
+        render_collection_type @req.subject.to_sym, @req.subject_id
+      end
+
       def show
         render_collection_type @req.subject.to_sym, @req.subject_id
       end
