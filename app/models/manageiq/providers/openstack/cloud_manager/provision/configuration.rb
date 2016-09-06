@@ -1,7 +1,8 @@
 module ManageIQ::Providers::Openstack::CloudManager::Provision::Configuration
   def associate_floating_ip(ip_address)
+    # TODO(lsmola) this should be moved to FloatingIp model
     destination.with_provider_object do |instance|
-      instance.associate_address(ip_address)
+      instance.associate_address(ip_address.address)
     end
   end
 

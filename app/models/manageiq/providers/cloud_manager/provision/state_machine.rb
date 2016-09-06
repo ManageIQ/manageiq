@@ -64,7 +64,7 @@ module ManageIQ::Providers::CloudManager::Provision::StateMachine
 
     if floating_ip
       _log.info("Associating floating IP address [#{floating_ip.address}] to #{for_destination}")
-      associate_floating_ip(floating_ip.address)
+      associate_floating_ip(floating_ip)
     end
 
     signal :post_create_destination
