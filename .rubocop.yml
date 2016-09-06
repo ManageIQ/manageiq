@@ -9,6 +9,7 @@ GlobalVars:
   - $audit_log
   - $api_log
   - $aws_log
+  - $azure_log
   - $fog_log
   - $log
   - $miq_ae_logger
