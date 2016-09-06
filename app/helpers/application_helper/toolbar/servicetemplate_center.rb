@@ -10,12 +10,16 @@ class ApplicationHelper::Toolbar::ServicetemplateCenter < ApplicationHelper::Too
           :ab_group_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a new Button Group'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::CatalogItemButton,
+        ),
         button(
           :ab_button_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a new Button'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::CatalogItemButton,
+        ),
         button(
           :catalogitem_edit,
           'pficon pficon-edit fa-lg',
