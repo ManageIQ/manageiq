@@ -1,0 +1,16 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: request_load_balancer_retire
+    inherits: 
+    description: 
+  fields:
+  - logical_event:
+      value: request_load_balancer_retire
+  - rel4:
+      value: "/System/Process/parse_provider_category"
+  - rel5:
+      value: "/${/#ae_provider_category}/LoadBalancer/Lifecycle/Retirement?load_balancer_id=${process#load_balancer_id}"
