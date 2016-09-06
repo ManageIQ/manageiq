@@ -199,12 +199,12 @@ describe ApplicationController do
       @edit = {:ownership_items => [@vm_or_template.id], :klass => VmOrTemplate, :new => {:user => nil}}
     end
 
-    it "lists all groups when (admin user is logged)" do
+    it "lists all non-tenant groups when (admin user is logged)" do
       login_as(admin_user)
       controller.instance_variable_set(:@edit, @edit)
       controller.ownership_build_screen
       groups = controller.instance_variable_get(:@groups)
-      expect(groups.count).to eq(MiqGroup.count)
+      expect(groups.count).to eq(MiqGroup.non_tenant_groups.count)
     end
 
     it "lists all users when (admin user is logged)" do
@@ -222,15 +222,6 @@ describe ApplicationController do
       users = controller.instance_variable_get(:@users)
       expected_ids = [great_grand_child_tenant.user_ids, grand_child_tenant.user_ids].flatten
       expect(expected_ids).to match_array(users.values(&:id).map(&:to_i))
-    end
-
-    it "lists all groups that are related to descendants tenats strategy" do
-      login_as(grand_child_user)
-      controller.instance_variable_set(:@edit, @edit)
-      controller.ownership_build_screen
-      groups = controller.instance_variable_get(:@groups)
-      expected_ids = [great_grand_child_tenant.miq_group_ids, grand_child_tenant.miq_group_ids].flatten
-      expect(expected_ids).to match_array(groups.values(&:id).map(&:to_i))
     end
   end
 end
