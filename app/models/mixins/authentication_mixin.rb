@@ -80,7 +80,7 @@ module AuthenticationMixin
 
   def required_credential_fields(type)
     case type.to_s
-    when "bearer"
+    when "bearer", "system_api"
       [:auth_key]
     when "hawkular"
       []
