@@ -7,11 +7,11 @@
   .form.horizontal
     .form-group
       - options = [["<#{_('Choose')}>"],
-        [_("By %s") % ui_lookup(:table => "ems_infras"), "ems"],
-        [_("By %s") % ui_lookup(:table => "ems_clusters"), "cluster"],
+        [_("By Providers"), "ems"],
+        [_("By Clusters / Deployment Roles"), "cluster"],
         [_("By Host"), "host"],
         [_("By Filter"), "filter"],
-        [_("All VMs"), "all"],]
+        [_("All VMs/Instances"), "all"],]
       = select_tag("filter_typ",
                     options_for_select(options, @sb[:planning][:options][:filter_typ]),
                     :disabled              => @sb[:planning][:options][:vm_mode] == :manual,
