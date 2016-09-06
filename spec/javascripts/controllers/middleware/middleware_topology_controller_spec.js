@@ -79,6 +79,17 @@ describe('middlewareTopologyController', function () {
     }
   };
 
+  var mw_messaging = {
+    id: "MiddlewareMessaging1",
+    item: {
+      "name": "JMS Topic [HawkularMetricData]",
+      "kind": "MiddlewareMessaging",
+      "miq_id": 1,
+      "status": "Unknown",
+      "display_kind": "MiddlewareMessaging"
+    }
+  };
+
   beforeEach(module('mwTopologyApp'));
 
   beforeEach(inject(function (_$httpBackend_, $rootScope, _$controller_, $location) {
@@ -108,7 +119,7 @@ describe('middlewareTopologyController', function () {
 
   describe('kinds contains all expected mw kinds', function () {
     it('in all main objects', function () {
-      expect(Object.keys(scope.kinds).length).toBe(7);
+      expect(Object.keys(scope.kinds).length).toBe(8);
       expect(scope.kinds["MiddlewareManager"]).toBeDefined();
       expect(scope.kinds["MiddlewareServer"]).toBeDefined();
       expect(scope.kinds["MiddlewareDeployment"]).toBeDefined();
@@ -116,6 +127,7 @@ describe('middlewareTopologyController', function () {
       expect(scope.kinds["Vm"]).toBeDefined();
       expect(scope.kinds["MiddlewareDomain"]).toBeDefined();
       expect(scope.kinds["MiddlewareServerGroup"]).toBeDefined();
+      expect(scope.kinds["MiddlewareMessaging"]).toBeDefined();
     });
   });
 
@@ -129,6 +141,7 @@ describe('middlewareTopologyController', function () {
       expect($controller.getIcon(vm).fontfamily).toEqual("PatternFlyIcons-webfont");
       expect($controller.getIcon(mw_domain).fontfamily).toEqual("FontAwesome");
       expect($controller.getIcon(mw_server_group).fontfamily).toEqual("FontAwesome");
+      expect($controller.getIcon(mw_messaging).fontfamily).toEqual("FontAwesome");
     });
   });
 
@@ -141,6 +154,7 @@ describe('middlewareTopologyController', function () {
       expect($controller.getCircleDimensions(vm)).toEqual({ x: 0, y: 9, height: 40, width: 40, r: 21 });
       expect($controller.getCircleDimensions(mw_domain)).toEqual({x: -9, y: -9, height: 18, width: 18, r: 17});
       expect($controller.getCircleDimensions(mw_server_group)).toEqual({x: -9, y: -9, height: 18, width: 18, r: 17});
+      expect($controller.getCircleDimensions(mw_messaging)).toEqual({x: -9, y: -9, height: 18, width: 18, r: 17});
     });
   });
 
@@ -153,6 +167,7 @@ describe('middlewareTopologyController', function () {
       expect($controller.getIcon(vm).type).toEqual("glyph");
       expect($controller.getIcon(mw_domain).type).toEqual("glyph");
       expect($controller.getIcon(mw_server_group).type).toEqual("glyph");
+      expect($controller.getIcon(mw_messaging).type).toEqual("glyph");
     });
   });
 

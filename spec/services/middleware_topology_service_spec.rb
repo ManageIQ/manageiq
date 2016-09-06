@@ -8,7 +8,7 @@ describe MiddlewareTopologyService do
   describe "#build_kinds" do
     it "creates the expected number of entity types" do
       supported_kinds = [:MiddlewareServer, :MiddlewareDeployment, :MiddlewareDatasource, :MiddlewareManager, :Vm,
-                         :MiddlewareDomain, :MiddlewareServerGroup]
+                         :MiddlewareDomain, :MiddlewareServerGroup, :MiddlewareMessaging]
       expect(middleware_topology_service.build_kinds.keys).to match_array(supported_kinds)
     end
   end
@@ -45,6 +45,13 @@ describe MiddlewareTopologyService do
                                                       :name                  => "ExampleDS",
                                                       :nativeid              => "Local~/subsystem=datasources/"\
                                                             "data-source=ExampleDS")
+
+      md_messaging = MiddlewareMessaging.create(:ext_management_system => ems_hawkular,
+                                                :middleware_server     => middleware_server,
+                                                :ems_ref               => long_id_2,
+                                                :name                  => "JMS Topic [HawkularMetricData]",
+                                                :nativeid              => "Local~/subsystem=messaging-"\
+                                                      "activemq/server=default/jms-topic=HawkularMetricData")
       expect(subject[:items]).to eq(
         "MiddlewareManager" + ems_hawkular.compressed_id.to_s              => {:name         => ems_hawkular.name,
                                                                                :status       => "Unknown",
@@ -77,9 +84,15 @@ describe MiddlewareTopologyService do
                                                                                :kind         => "MiddlewareDatasource",
                                                                                :display_kind => "MiddlewareDatasource",
                                                                                :miq_id       => mddlwr_datasource.id},
+
+        "MiddlewareMessaging" + md_messaging.compressed_id.to_s            => {:name         => md_messaging.name,
+                                                                               :status       => "Unknown",
+                                                                               :kind         => "MiddlewareMessaging",
+                                                                               :display_kind => "MiddlewareMessaging",
+                                                                               :miq_id       => md_messaging.id},
       )
 
-      expect(subject[:relations].size).to eq(4)
+      expect(subject[:relations].size).to eq(5)
       expect(subject[:relations]).to include(
         {:source => "MiddlewareManager" + ems_hawkular.compressed_id.to_s,
          :target => "MiddlewareServer" + middleware_server.compressed_id.to_s},
@@ -88,7 +101,9 @@ describe MiddlewareTopologyService do
         {:source => "MiddlewareServer" + middleware_server.compressed_id.to_s,
          :target => "MiddlewareDeployment" + middleware_deployment2.compressed_id.to_s},
         {:source => "MiddlewareServer" + middleware_server.compressed_id.to_s,
-         :target => "MiddlewareDatasource" + mddlwr_datasource.compressed_id.to_s}
+         :target => "MiddlewareDatasource" + mddlwr_datasource.compressed_id.to_s},
+        {:source => "MiddlewareServer" + middleware_server.compressed_id.to_s,
+         :target => "MiddlewareMessaging" + md_messaging.compressed_id.to_s}
       )
     end
   end
