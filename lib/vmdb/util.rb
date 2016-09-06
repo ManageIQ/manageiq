@@ -123,8 +123,6 @@ module VMDB
       zfile
     end
 
-    private
-
     # TODO: Make a class out of this so we don't have to pass around the zip.
     def self.add_zip_entry(zip, file_path, zfile)
       entry = zip_entry_from_path(file_path)
@@ -138,6 +136,7 @@ module VMDB
       end
       return entry, mtime
     end
+    private_class_method :add_zip_entry
 
     def self.zip_entry_from_path(path)
       rails_root_directories = Rails.root.to_s.split("/")
@@ -145,6 +144,7 @@ module VMDB
       entry = within_rails_root ? Pathname.new(path).relative_path_from(Rails.root).to_s : "ROOT#{path}"
       entry
     end
+    private_class_method :zip_entry_from_path
 
     def self.find_timestamp(handle)
       handle
@@ -154,5 +154,6 @@ module VMDB
         .reject(&:nil?)
         .first
     end
+    private_class_method :find_timestamp
   end
 end
