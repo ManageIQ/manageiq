@@ -17,6 +17,7 @@ class CloudTenant < ApplicationRecord
   has_many   :miq_templates
   has_many   :floating_ips
   has_many   :cloud_volumes
+  has_many   :cloud_volume_backups
   has_many   :cloud_volume_snapshots
   has_many   :cloud_object_store_containers
   has_many   :cloud_object_store_objects

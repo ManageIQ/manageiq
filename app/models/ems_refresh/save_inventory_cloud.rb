@@ -12,6 +12,7 @@
 #   - security_groups
 #     - firewall_rules
 #   - cloud_volumes
+#   - cloud_volume_backups
 #   - cloud_volume_snapshots
 #   - vms
 #     - storages (link)
@@ -54,6 +55,7 @@ module EmsRefresh::SaveInventoryCloud
       :orchestration_templates_catalog,
       :orchestration_stacks,
       :cloud_volumes,
+      :cloud_volume_backups,
       :cloud_volume_snapshots,
       :vms,
       :cloud_resource_quotas,
@@ -185,6 +187,27 @@ module EmsRefresh::SaveInventoryCloud
 
     save_inventory_multi(ems.cloud_volumes, hashes, deletes, [:ems_ref], nil, [:tenant, :availability_zone, :base_snapshot])
     store_ids_for_new_records(ems.cloud_volumes, hashes, :ems_ref)
+  end
+
+  def save_cloud_volume_backups_inventory(ems, hashes, target = nil)
+    target = ems if target.nil?
+
+    ems.cloud_volume_backups.reset
+    deletes = if target == ems
+                :use_association
+              else
+                []
+              end
+
+    hashes.each do |h|
+      h[:ems_id]          = ems.id
+      h[:cloud_volume_id] = h.fetch_path(:volume, :id)
+      h[:availability_zone_id] = h.fetch_path(:availability_zone, :id)
+    end
+
+    save_inventory_multi(ems.cloud_volume_backups, hashes, deletes, [:ems_ref], nil,
+                         [:tenant, :volume, :availability_zone])
+    store_ids_for_new_records(ems.cloud_volume_backups, hashes, :ems_ref)
   end
 
   def save_cloud_volume_snapshots_inventory(ems, hashes, target = nil)
