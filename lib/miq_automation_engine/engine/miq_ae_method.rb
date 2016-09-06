@@ -18,7 +18,7 @@ module MiqAeEngine
       fname = File.join(AE_METHODS_DIR, path)
       raise  MiqAeException::MethodNotFound, "Method [#{aem.data}] Not Found (fname=#{fname})" unless File.exist?(fname)
       cmd = "#{aem.language} #{fname}"
-      MiqAeEngine::MiqAeMethod.invoke_external(cmd, obj.workspace)
+      invoke_external(cmd, obj.workspace)
     end
 
     def self.invoke_builtin(aem, obj, inputs)
@@ -90,6 +90,7 @@ module MiqAeEngine
       end
       process_ruby_method_results(rc, msg)
     end
+    private_class_method :invoke_external
 
     MIQ_OK    = 0
     MIQ_WARN  = 4
