@@ -96,7 +96,7 @@ module ApplicationController::CiProcessing
     # need to do this only if 1 vm is selected and miq_group has been set for it
     group = record.miq_group if @ownership_items.length == 1
     @group = group ? group.id.to_s : nil
-    Rbac.filtered(MiqGroup).each { |g| @groups[g.description] = g.id.to_s }
+    Rbac.filtered(MiqGroup.non_tenant_groups).each { |g| @groups[g.description] = g.id.to_s }
 
     @user = @group = DONT_CHANGE_OWNER if @ownership_items.length > 1
 
