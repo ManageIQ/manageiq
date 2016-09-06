@@ -12,8 +12,8 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
     raise(MiqException::RemoteConsoleNotSupportedError, "#{protocol} remote console requires the vm to be running.") if options[:check_if_running] && state != "on"
   end
 
-  def remote_console_acquire_ticket(userid, protocol)
-    send("remote_console_#{protocol.to_s.downcase}_acquire_ticket", userid)
+  def remote_console_acquire_ticket(userid, protocol, originating_server)
+    send("remote_console_#{protocol.to_s.downcase}_acquire_ticket", userid, originating_server)
   end
 
   def remote_console_acquire_ticket_queue(protocol, userid)
@@ -29,7 +29,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
       :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',
       :zone        => my_zone,
-      :args        => [userid, protocol]
+      :args        => [userid, protocol, MiqServer.my_server.id]
     }
 
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
@@ -62,11 +62,16 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
   #
   # VNC
   #
-  def remote_console_html5_acquire_ticket(userid)
-    remote_console_vnc_acquire_ticket(userid)
+  def remote_console_html5_acquire_ticket(userid, originating_server)
+    remote_console_vnc_acquire_ticket(userid, originating_server)
   end
 
-  def remote_console_vnc_acquire_ticket(userid)
+  def is_local?(originating_server)
+    # MiqServer.my_server.id == originating_server
+    false
+  end
+
+  def remote_console_vnc_acquire_ticket(userid, originating_server)
     validate_remote_console_acquire_ticket("vnc")
 
     password     = SecureRandom.base64[0, 8] # Random password from the Base64 character set
@@ -89,16 +94,39 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
     end
     update_attributes(:vnc_port => host_port)
 
-    SystemConsole.where(:vm_id => id).each(&:destroy)
-    SystemConsole.create!(
-      :user       => User.find_by(:userid => userid),
-      :vm_id      => id,
-      :host_name  => host.address,
-      :port       => host_port,
-      :ssl        => false,
-      :protocol   => 'vnc',
-      :secret     => password,
-      :url_secret => SecureRandom.hex
-    ).connection_params
+    SystemConsole.force_vm_invalid_token(id)
+
+    console_args = {
+        :user       => User.find_by(:userid => userid),
+        :vm_id      => id,
+        :ssl        => false,
+        :protocol   => 'vnc',
+        :secret     => password,
+        :url_secret => SecureRandom.hex
+    }
+
+    _log.info "Originating server: #{originating_server}, local server: #{MiqServer.my_server.id}"
+    if is_local?(originating_server)
+      console_args.update(
+        :host_name  => host.address,
+        :port       => host_port,
+      )
+    else
+      SystemConsole.cleanup_proxy_processes
+      proxy_address, proxy_port, proxy_pid = SystemConsole.launch_proxy(host.address, host_port)
+      return nil if proxy_address.nil?
+
+      _log.info "Proxy server started: #{proxy_address}:#{proxy_port} <--> #{host.address}:#{host_port}"
+      _log.info "Proxy process PID: #{proxy_pid}"
+
+      console_args.update(
+        :host_name    => proxy_address,
+        :port         => proxy_port,
+        :proxy_status => 'proxy_running',
+        :proxy_pid    => proxy_pid
+      )
+    end
+
+    SystemConsole.create!(console_args).connection_params
   end
 end
