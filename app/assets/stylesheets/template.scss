@@ -61,6 +61,13 @@ ul.searchtoolbar  { margin: 0;padding: 2px 0 0 5px; width:100%;height: 30px;}
 .searchtoolbar li:hover { background: #aeaeae;}
 .searchtoolbar li img.dimmed { background: none;}
 
+/* Automate Specific */
+.checkall { padding: 0 0 7px 7px;} /*styling for automate (Check All) */
+
+#automate_treebox {height:350px; overflow-y: hidden !important;}
+
+/* End Automate Specific */
+
 /************ Hover Buttons ************/
 .rollover img, input.rollover { display:block;}
 .rollover img:hover, img.rollover:hover, input.rollover:hover, i.rollover:hover { background:#e4e4e4;}
