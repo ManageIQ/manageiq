@@ -579,31 +579,8 @@ module ApplicationHelper
     javascript_for_miq_button_visibility(changed)
   end
 
-  # Highlight tree nodes that have been changed
-  def javascript_for_tree_checkbox_clicked(tree_name)
-    tree_name_escaped = j_str(tree_name)
-    js_array = []
-    if params[:check] # Tree checkbox clicked?
-      # MyCompany tag checked or Belongsto checked
-      key = params[:tree_typ] == 'myco' ? :filters : :belongsto
-      future  = @edit[:new][key][params[:id].split('___').last]
-      current = @edit[:current][key][params[:id].split('___').last]
-      title_class = params[:tree_typ] == "vat" || params[:tree_typ] == "hac" ? 'cfme-no-cursor-node' : 'dynatree-title'
-      css_class = future == current ? title_class : 'cfme-blue-bold-node'
-      js_array << "$('##{tree_name_escaped}box').dynatree('getTree').getNodeByKey('#{params[:id].split('___').last}').data.addClass = '#{css_class}';"
-    end
-    # need to redraw the tree to change node colors
-    js_array << "tree = $('##{tree_name_escaped}box').dynatree('getTree');"
-    js_array << "tree.redraw();"
-    js_array.join("\n")
-  end
-
   def javascript_pf_toolbar_reload(div_id, toolbar)
     "sendDataWithRx({redrawToolbar: #{toolbar_from_hash.to_json}});"
-  end
-
-  def javascript_for_ae_node_selection(id, prev_id, select)
-    "miqSetAETreeNodeSelectionClass('#{id}', '#{prev_id}', '#{select ? true : false}');".html_safe
   end
   ############# End of methods that generate JS lines for render page blocks
 

@@ -17,12 +17,11 @@ class TreeBuilderClusters < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix                   => 'cluster_',
-                  :checkboxes                  => true,
-                  :onselect                    => "miqOnCheckCUFilters",
-                  :onclick                     => false,
-                  :check_url                   => "/ops/cu_collection_field_changed/",
-                  :open_close_all_on_dbl_click => true)
+    locals.merge!(:checkboxes        => true,
+                  :onselect          => "miqOnCheckCUFilters",
+                  :highlight_changes => true,
+                  :three_checks      => true,
+                  :check_url         => "/ops/cu_collection_field_changed/")
   end
 
   def root_options
@@ -36,33 +35,30 @@ class TreeBuilderClusters < TreeBuilder
     elsif checked == 0
       false
     else
-      'unsure'
+      'undefined'
     end
   end
 
   def x_get_tree_roots(count_only = false, _options)
     nodes = @root[:clusters].map do |node|
-      { :id       => node[:id].to_s,
-        :text     => node[:name],
-        :image    => 'cluster',
-        :tip      => node[:name],
-        :select   => node[:capture] != 'unsure' && node[:capture],
-        :addClass => node[:capture] == 'unsure' ? 'cfme-no-cursor-node dynatree-partsel' : 'cfme-no-cursor-node',
-        :children => @data[node[:id]][:ho_enabled] + @data[node[:id]][:ho_disabled]
+      { :id          => node[:id].to_s,
+        :text        => node[:name],
+        :image       => 'cluster',
+        :tip         => node[:name],
+        :select      => node[:capture],
+        :children    => @data[node[:id]][:ho_enabled] + @data[node[:id]][:ho_disabled],
+        :cfmeNoClick => true
       }
     end
     if @root[:non_cl_hosts].present?
-      node = {:id       => "NonCluster",
-              :text     => _("Non-clustered Hosts"),
-              :image    => 'host',
-              :tip      => _("Non-clustered Hosts"),
-              :select   => non_cluster_selected,
-              :addClass => 'cfme-no-cursor-node',
-              :children => @root[:non_cl_hosts]
+      node = {:id          => "NonCluster",
+              :text        => _("Non-clustered Hosts"),
+              :image       => 'host',
+              :tip         => _("Non-clustered Hosts"),
+              :select      => non_cluster_selected,
+              :children    => @root[:non_cl_hosts],
+              :cfmeNoClick => true
       }
-      if non_cluster_selected == 'unsure'
-        node[:addClass] = 'cfme-no-cursor-node dynatree-partsel'
-      end
       nodes.push(node)
     end
     count_only_or_objects(count_only, nodes)
@@ -74,13 +70,13 @@ class TreeBuilderClusters < TreeBuilder
       if @data[parent[:id].to_i]
         value = @data[parent[:id].to_i][:ho_disabled].include? node
       end
-      {:id       => "#{parent[:id]}_#{node[:id]}",
-       :text     => node[:name],
-       :tip      => _("Host: %{name}") % {:name => node[:name]},
-       :image    => 'host',
-       :select   => node.kind_of?(Hash) ? node[:capture] : !value,
-       :addClass => 'cfme-no-cursor-node',
-       :children => []}
+      {:id          => "#{parent[:id]}_#{node[:id]}",
+       :text        => node[:name],
+       :tip         => _("Host: %{name}") % {:name => node[:name]},
+       :image       => 'host',
+       :select      => node.kind_of?(Hash) ? node[:capture] : !value,
+       :cfmeNoClick => true,
+       :children    => []}
     end
     count_only_or_objects(count_only, nodes)
   end

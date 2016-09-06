@@ -32,20 +32,17 @@ class TreeBuilderDefaultFilters < TreeBuilder
   private
 
   def tree_init_options(_tree_name)
-    {:full_ids                    => true,
-     :add_root                    => false,
-     :lazy                        => false,
-     :open_close_all_on_dbl_click => true}
+    {:full_ids => true,
+     :add_root => false,
+     :lazy     => false}
   end
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix                   => 'df_',
-                  :open_close_all_on_dbl_click => true,
-                  :onclick                     => false,
-                  :check_url                   => "/configuration/filters_field_changed/",
-                  :onselect                    => "miqOnCheckSections",
-                  :checkboxes                  => true)
+    locals.merge!(:check_url         => "/configuration/filters_field_changed/",
+                  :onselect          => "miqOnCheckSections",
+                  :checkboxes        => true,
+                  :highlight_changes => true)
   end
 
   def root_options
@@ -58,7 +55,7 @@ class TreeBuilderDefaultFilters < TreeBuilder
        :text         => folder,
        :image        => "folder",
        :tip          => folder,
-       :style_class  => "cfme-no-cursor-node",
+       :cfmeNoClick  => true,
        :hideCheckbox => true}
     end
     count_only_or_objects(count_only, roots)
@@ -75,16 +72,17 @@ class TreeBuilderDefaultFilters < TreeBuilder
                    :text         => folder,
                    :image        => "folder",
                    :tip          => folder,
-                   :style_class  => "cfme-no-cursor-node",
+                   :cfmeNoClick  => true,
                    :hideCheckbox => true}
                 end
               else
                 kids.map do |kid|
-                  {:id     => kid[:id],
-                   :text   => kid[:description],
-                   :image  => 'filter',
-                   :tip    => kid[:description],
-                   :select => kid[:search_key] != "_hidden_"}
+                  {:id          => kid[:id],
+                   :text        => kid[:description],
+                   :image       => 'filter',
+                   :tip         => kid[:description],
+                   :cfmeNoClick => true,
+                   :select      => kid[:search_key] != "_hidden_"}
                 end
               end
     end

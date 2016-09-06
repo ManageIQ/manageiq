@@ -18,10 +18,7 @@ class TreeBuilderAutomateSimulationResults < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix     => "aesimulation_",
-                  :autoload      => false,
-                  :cfme_no_click => true,
-                  :onclick       => false)
+    locals.merge!(:autoload => false)
   end
 
   def root_options
@@ -73,12 +70,12 @@ class TreeBuilderAutomateSimulationResults < TreeBuilder
 
   def get_root_elements(el, idx)
     title = get_element_title(el)
-    object = {:id       => "e_#{idx}",
-              :text     => _(title).html_safe,
-              :image    => get_element_icon(el),
-              :tip      => _(title).html_safe,
-              :elements => el.each_element { |e| e },
-              :addClass => "cfme-no-cursor-node"
+    object = {:id          => "e_#{idx}",
+              :text        => _(title).html_safe,
+              :image       => get_element_icon(el),
+              :tip         => _(title).html_safe,
+              :elements    => el.each_element { |e| e },
+              :cfmeNoClick => true
              }
     object[:attributes] = el.attributes if title == el.name
     object
@@ -89,10 +86,10 @@ class TreeBuilderAutomateSimulationResults < TreeBuilder
     if parent[:attributes]
       parent[:attributes].each_with_index do |k, idx|
         object = {
-          :id       => "a_#{idx}",
-          :image    => "attribute",
-          :addClass => "cfme-no-cursor-node",
-          :text     => "#{k.first} <b>=</b> #{k.last}".html_safe
+          :id          => "a_#{idx}",
+          :image       => "attribute",
+          :cfmeNoClick => true,
+          :text        => "#{k.first} <b>=</b> #{k.last}".html_safe
         }
         kids.push(object)
       end

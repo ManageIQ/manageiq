@@ -11,10 +11,7 @@ class TreeBuilderPolicy < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(
-      :id_prefix => "po_",
-      :autoload  => true,
-    )
+    locals.merge!(:autoload => true)
   end
 
   def compliance_control_kids(mode)

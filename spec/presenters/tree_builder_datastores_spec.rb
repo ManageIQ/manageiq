@@ -24,7 +24,6 @@ describe TreeBuilderDatastores do
       expect(parent.first[:text]).to eq("<b>Datastore</b> [#{@datastore.first[:location]}]")
       expect(parent.first[:tip]).to eq("Datastore [#{@datastore.first[:location]}]")
       expect(parent.first[:image]).to eq('storage')
-      expect(parent.first[:addClass]).to eq('cfme-no-cursor-node')
     end
     it 'sets Host node correctly' do
       parent = @datastores_tree.send(:x_get_tree_roots, false, nil)
@@ -33,7 +32,7 @@ describe TreeBuilderDatastores do
       expect(kids.first[:tip]).to eq(@host[:name])
       expect(kids.first[:image]).to eq('host')
       expect(kids.first[:hideCheckbox]).to eq(true)
-      expect(kids.first[:addClass]).to eq("cfme-no-cursor-node")
+      expect(kids.first[:cfmeNoClick]).to eq(true)
       expect(kids.first[:children]).to eq([])
     end
   end

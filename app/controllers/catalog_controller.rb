@@ -1800,7 +1800,8 @@ class CatalogController < ApplicationController
     add_nodes = {:key      => existing_node,
                  :children => TreeBuilder.tree_add_child_nodes(@sb,
                                                                x_tree[:klass_name],
-                                                               existing_node)} if existing_node
+                                                               existing_node,
+                                                               controller_name)} if existing_node
     self.x_node = if params[:rec_id]
                     "stc-#{to_cid(record.service_template_catalog_id)}_st-#{to_cid(record.id)}"
                   elsif record.kind_of?(OrchestrationTemplate)

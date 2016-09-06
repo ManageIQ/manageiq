@@ -9,20 +9,11 @@
       = render(:partial => "layouts/dynatree",
         :locals         => {:tree_id => 'menu_roles_treebox',
           :tree_name                 => 'menu_roles_tree',
-          :json_tree                 => @menu_roles_tree,
-          :id_prefix                 => 'menu_roles_',
+          :bs_tree                   => @menu_roles_tree,
           :click_url                 => '/report/menu_editor/',
           :onclick                   => 'miqMenuEditor',
-          :div_width                 => '216px',
-          :div_height                => '328px',
-          :div_cursor                => 'hand',
-          :exp_tree                  => false,
-          :no_base_exp               => false,
-          :base_id                   => "b__Report Menus for #{session[:role_choice]}",
-          :highlighting              => true,
-          :cookie_id_prefix          => "edit_treeOpenStatex",
-          :tree_state                => true,
-          :multi_lines               => true})
+          :cookie_prefix             => "edit_",
+          :tree_state                => true})
 
       = render :partial => "report/menu_form1", :locals => {:folders => @grid_folders}
       = render :partial => "report/menu_form2"

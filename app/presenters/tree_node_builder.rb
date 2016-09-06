@@ -265,7 +265,7 @@ class TreeNodeBuilder
       :title => text,
       :icon  => node_icon(image)
     }
-    @node[:addClass] = "product-strikethru-node" unless enabled
+    @node[:addClass] = "striketrough" unless enabled
     @node[:expand] = true if options[:open_all]  # Start with all nodes open
     tooltip(tip)
   end
@@ -351,7 +351,7 @@ class TreeNodeBuilder
       tip  = _("%{server}: %{server_name} [%{server_id}] (current)") %
              {:server => ui_lookup(:model => object.class.to_s), :server_name => object.name, :server_id => object.id}
       tip += " (#{object.status})" if options[:tree] == :roles_by_server_tree
-      text = "<b class='dynatree-title'>#{ERB::Util.html_escape(tip)}</b>".html_safe
+      text = "<strong>#{ERB::Util.html_escape(tip)}</strong>".html_safe
     else
       tip  = "#{ui_lookup(:model => object.class.to_s)}: #{object.name} [#{object.id}]"
       tip += " (#{object.status})" if options[:tree] == :roles_by_server_tree
@@ -405,7 +405,7 @@ class TreeNodeBuilder
     if options[:is_current]
       tip  = _("%{zone}: %{zone_description} (current)") %
              {:zone => ui_lookup(:model => object.class.to_s), :zone_description => object.description}
-      text = "<b class='dynatree-title'>#{ERB::Util.html_escape(tip)}</b>".html_safe
+      text = "<strong>#{ERB::Util.html_escape(tip)}</strong>".html_safe
     else
       tip  = "#{ui_lookup(:model => object.class.to_s)}: #{object.description}"
       text = tip
@@ -414,8 +414,8 @@ class TreeNodeBuilder
   end
 
   def policy_profile_text
-    ["<b class='dynatree-title'>", ui_lookup(:model => object.towhat),
-     " ", object.mode.titleize, ":</b> ",
+    ["<strong>", ui_lookup(:model => object.towhat),
+     " ", object.mode.titleize, ":</strong> ",
      ERB::Util.html_escape(object.description)].join('').html_safe
   end
 
@@ -476,11 +476,10 @@ class TreeNodeBuilder
 
   def assigned_server_role_node(object)
     @node = {
-      :key      => build_object_id,
-      :addClass => "dynatree-title",
-      :title    => options[:tree] == :servers_by_role_tree ?
-        "#{Dictionary.gettext('MiqServer', :type => :model, :notfound => :titleize)}: #{object.name} [#{object.id}]" :
-        "Role: #{object.server_role.description}"
+      :key   => build_object_id,
+      :title => options[:tree] == :servers_by_role_tree ?
+        "<strong>#{_('Server')}: #{object.name} [#{object.id}]</strong>" :
+        "<strong>Role: #{object.server_role.description}</strong>"
     }
 
     if object.master_supported?
@@ -505,10 +504,10 @@ class TreeNodeBuilder
         @node[:icon] = ActionController::Base.helpers.image_path("100/off.png")
         @node[:title] += _(" (%{priority}unavailable)") % {:priority => priority}
       end
-      @node[:addClass] = "cfme-red-node" if object.priority == 1
+      @node[:addClass] = "red" if object.priority == 1
     end
     if @options[:parent_kls] == "Zone" && object.server_role.regional_role?
-      @node[:addClass] = "cfme-opacity-node"
+      @node[:addClass] = "opacity"
     end
     @node
   end

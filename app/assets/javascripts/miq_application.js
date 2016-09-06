@@ -65,7 +65,7 @@ function miqPrepRightCellForm(tree) {
     $('#adv_searchbox_div').hide();
   }
   $('#toolbar').hide();
-  $('#' + tree).dynatree('disable');
+  miqTreeObject(tree).disableAll({silent: true, keepState: true});
   miqDimDiv(tree + '_div', true);
 }
 
@@ -756,25 +756,6 @@ function miqSendOneTrans(url, observe) {
     return miqObserveRequest(url, { done: observe.done });
   } else {
     return miqJqueryRequest(url);
-  }
-}
-
-// this deletes the remembered treestate when called
-function miqClearTreeState(prefix) {
-  var to_remove = [];
-  var i;
-
-  if (prefix === undefined) {
-    prefix = 'treeOpenStatex';
-  }
-  for (i = 0; i < localStorage.length; i++) {
-    if (localStorage.key(i).match('^' + prefix)) {
-      to_remove.push(localStorage.key(i));
-    }
-  }
-
-  for (i = 0; i < to_remove.length; i++) {
-    localStorage.removeItem(to_remove[i]);
   }
 }
 

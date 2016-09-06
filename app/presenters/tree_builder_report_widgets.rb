@@ -6,7 +6,7 @@ class TreeBuilderReportWidgets < TreeBuilder
   end
 
   def set_locals_for_render
-    super.merge!(:id_prefix => 'widgets_', :autoload => true)
+    super.merge!(:autoload => true)
   end
 
   def root_options

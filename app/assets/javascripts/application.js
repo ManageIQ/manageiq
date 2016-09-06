@@ -54,9 +54,9 @@
 //= require bootstrap-hover-dropdown
 //= require bootstrap-switch
 //= require angular-bootstrap-switch
+//= require patternfly-bootstrap-treeview
 //= require jquery.observe_field
 //= require miq_ujs_bindings
-//= require dynatree/jquery.dynatree
 //= require miq_dynatree
 //= require codemirror
 //= require codemirror/mode/css/css

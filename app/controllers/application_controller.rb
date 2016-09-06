@@ -479,8 +479,9 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    tree = TreeBuilderAeClass.new(name, type, @sb)
-    @automate_tree = tree.tree_nodes if name == :automate_tree
+    node_builder = TreeBuilderAeClass.select_node_builder(controller_name, @sb[:action])
+    tree = TreeBuilderAeClass.new(name, type, @sb, true, :node_builder => node_builder)
+    @automate_tree = tree.locals_for_render[:bs_tree] if name == :automate_tree
     tree
   end
 
@@ -2216,9 +2217,9 @@ class ApplicationController < ActionController::Base
     @sb[:detail_sortdir] = @detail_sortdir
 
     @sb[:tree_hosts_hash] = nil if !%w(ems_folders descendant_vms).include?(params[:display]) &&
-                                   !%w(treesize tree_autoload_dynatree tree_autoload_quads).include?(params[:action])
+                                   !%w(treesize tree_autoload_dynatree).include?(params[:action])
     @sb[:tree_vms_hash] = nil if !%w(ems_folders descendant_vms).include?(params[:display]) &&
-                                 !%w(treesize tree_autoload_dynatree tree_autoload_quads).include?(params[:action])
+                                 !%w(treesize tree_autoload_dynatree).include?(params[:action])
 
     # Set/clear sandbox (@sb) per controller in the session object
     session[:sandboxes] ||= HashWithIndifferentAccess.new

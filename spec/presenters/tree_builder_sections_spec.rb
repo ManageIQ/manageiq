@@ -59,32 +59,32 @@ describe TreeBuilderSections do
     end
     it 'set locals for render correctly' do
       locals = @sections_tree.send(:set_locals_for_render)
-      expect(locals[:id_prefix]).to eq('all_sections_')
       expect(locals[:checkboxes]).to eq(true)
       expect(locals[:check_url]).to eq("/#{@controller_name}/sections_field_changed/")
-      expect(locals[:onclick]).to eq(false)
       expect(locals[:onselect]).to eq("miqOnCheckSections")
       expect(locals[:three_checks]).to eq(true)
     end
     it 'sets roots correctly' do
       roots = @sections_tree.send(:x_get_tree_roots, false)
-      expect(roots).to eq([{:id       => "group_Properties",
-                            :text     => "Properties",
-                            :tip      => "Properties",
-                            :image    => false,
-                            :select   => true,
-                            :children => [{:name => :_model_, :header => "Filesystem", :group => "Properties"}]}])
+      expect(roots).to eq([{:id          => "group_Properties",
+                            :text        => "Properties",
+                            :tip         => "Properties",
+                            :image       => false,
+                            :select      => true,
+                            :cfmeNoClick => true,
+                            :children    => [{:name => :_model_, :header => "Filesystem", :group => "Properties"}]}])
     end
 
     it 'sets children correctly' do
       root = @sections_tree.send(:x_get_tree_roots, false).first
       kids = @sections_tree.send(:x_get_tree_hash_kids, root, false)
-      expect(kids).to eq([{:id       => "group_Properties:_model_",
-                           :text     => "Filesystem",
-                           :tip      => "Filesystem",
-                           :image    => false,
-                           :select   => true,
-                           :children => []}])
+      expect(kids).to eq([{:id          => "group_Properties:_model_",
+                           :text        => "Filesystem",
+                           :tip         => "Filesystem",
+                           :image       => false,
+                           :cfmeNoClick => true,
+                           :select      => true,
+                           :children    => []}])
     end
   end
 end

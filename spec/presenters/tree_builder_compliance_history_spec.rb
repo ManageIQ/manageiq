@@ -48,10 +48,11 @@ describe TreeBuilderComplianceHistory do
       parents = @ch_tree.send(:x_get_tree_roots, false)
       parent = parents.find { |x| x.compliance_details == [] }
       kid = @ch_tree.send(:x_get_compliance_kids, parent, false).first
-      expect(kid).to eq(:id    => "#{parent.id}-nopol",
-                        :text  => "No Compliance Policies Found",
-                        :image => "#{parent.id}-nopol",
-                        :tip   => nil)
+      expect(kid).to eq(:id          => "#{parent.id}-nopol",
+                        :text        => "No Compliance Policies Found",
+                        :cfmeNoClick => true,
+                        :image       => "#{parent.id}-nopol",
+                        :tip         => nil)
       expect(kid).to be_a_kind_of(Hash)
       expect(@ch_tree.send(:x_get_tree_custom_kids, kid, true, {})).to eq(0)
     end

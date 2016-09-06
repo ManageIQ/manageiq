@@ -970,7 +970,6 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tl_chooser
         tree_autoload_dynatree
-        tree_autoload_quads
         wait_for_task
       ) +
                adv_search_post +
@@ -1009,7 +1008,6 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tl_chooser
         tree_autoload_dynatree
-        tree_autoload_quads
         update
         wait_for_task
         scaling

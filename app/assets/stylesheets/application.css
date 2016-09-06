@@ -4,6 +4,7 @@
  * the top of the compiled file, but it's generally better to create a new file per style scope.
  *
  *= require c3
+ *= require patternfly-bootstrap-treeview/dist/bootstrap-treeview.min.css
  *= require main
  *= require jquery.jqplot
  *= require automate_import_export

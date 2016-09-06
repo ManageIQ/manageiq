@@ -29,24 +29,27 @@ describe TreeBuilder do
   context "build_tree" do
     it "builds tree object and sets all settings and add nodes to tree object" do
       tree = TreeBuilderChargebackRates.new("cb_rates_tree", "cb_rates", {})
-      nodes = [{:key      => "root",
-                :children => [{:key     => "xx-Compute",
-                               :title   => "Compute",
-                               :icon    => ActionController::Base.helpers.image_path('100/hardware-processor.png'),
-                               :expand  => true,
-                               :tooltip => "Compute"},
-                              {:key     => "xx-Storage",
-                               :title   => "Storage",
-                               :icon    => ActionController::Base.helpers.image_path('100/hardware-disk.png'),
-                               :expand  => true,
-                               :tooltip => "Storage"}],
-                :expand   => true,
-                :title    => "Rates",
-                :tooltip  => "Rates",
-                :icon     => ActionController::Base.helpers.image_path('100/folder.png')
+      nodes = [{'key'     => "root",
+                'nodes'   => [{'key'     => "xx-Compute",
+                               'tooltip' => "Compute",
+                               'image'   => ActionController::Base.helpers.image_path('100/hardware-processor.png'),
+                               'state'   => { 'expanded' => true },
+                               'text'    => "Compute",
+                               'class'   => ''},
+                              {'key'     => "xx-Storage",
+                               'tooltip' => "Storage",
+                               'image'   => ActionController::Base.helpers.image_path('100/hardware-disk.png'),
+                               'state'   => { 'expanded' => true },
+                               'text'    => "Storage",
+                               'class'   => ''}],
+                'state'   => { 'expanded' => true },
+                'text'    => "Rates",
+                'tooltip' => "Rates",
+                'class'   => '',
+                'image'   => ActionController::Base.helpers.image_path('100/folder.png')
               }]
-      tree.locals_for_render.key?(:json_tree)
-      expect(tree.locals_for_render[:json_tree]).to eq(nodes.to_json)
+      tree.locals_for_render.key?(:bs_tree)
+      expect(JSON.parse(tree.locals_for_render[:bs_tree])).to eq(nodes)
     end
   end
 
@@ -80,7 +83,7 @@ describe TreeBuilder do
     end
 
     it "descendants can set their own root_options" do
-      expect(tree.tree_nodes).to match(/"title":\s*"Foo"/)
+      expect(tree.tree_nodes).to match(/"text":\s*"Foo"/)
     end
   end
 

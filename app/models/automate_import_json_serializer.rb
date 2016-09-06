@@ -9,14 +9,15 @@ class AutomateImportJsonSerializer
 
     domain_array = domains.collect do |domain|
       {
-        :title    => File.dirname(domain),
-        :key      => File.dirname(domain),
-        :icon     => ActionController::Base.helpers.image_path('100/ae_domain.png'),
-        :children => children(ae_import, File.dirname(domain))
+        :text       => File.dirname(domain),
+        :key        => File.dirname(domain),
+        :image      => ActionController::Base.helpers.image_path('100/ae_domain.png'),
+        :nodes      => children(ae_import, File.dirname(domain)),
+        :selectable => false
       }
     end
 
-    {:children => domain_array}.to_json
+    domain_array.to_json
   end
 
   private
@@ -29,10 +30,11 @@ class AutomateImportJsonSerializer
     ae_import.namespace_files(domain_or_namespace_name).collect do |namespace|
       namespace_name = File.dirname(namespace)
       {
-        :title    => namespace_name.split("/").last,
-        :key      => namespace_name.split("/")[1..-1].join("/"),
-        :icon     => ActionController::Base.helpers.image_path('100/ae_namespace.png'),
-        :children => children(ae_import, namespace_name)
+        :text       => namespace_name.split("/").last,
+        :key        => namespace_name.split("/")[1..-1].join("/"),
+        :image      => ActionController::Base.helpers.image_path('100/ae_namespace.png'),
+        :nodes      => children(ae_import, namespace_name),
+        :selectable => false
       }
     end
   end
@@ -41,9 +43,10 @@ class AutomateImportJsonSerializer
     ae_import.class_files(domain_or_namespace_name).collect do |klass|
       class_name = File.dirname(klass)
       {
-        :title => class_name.split("/").last,
-        :key   => class_name.split("/")[1..-1].join("/"),
-        :icon  => ActionController::Base.helpers.image_path('100/ae_class.png')
+        :text       => class_name.split("/").last,
+        :key        => class_name.split("/")[1..-1].join("/"),
+        :image      => ActionController::Base.helpers.image_path('100/ae_class.png'),
+        :selectable => false
       }
     end
   end

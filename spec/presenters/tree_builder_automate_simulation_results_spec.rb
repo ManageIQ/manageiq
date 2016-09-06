@@ -11,13 +11,12 @@ describe TreeBuilderAutomateSimulationResults do
 
     it 'sets attribute nodes correctly' do
       nodes = @ae_simulation_tree.send(:x_get_tree_roots, false)
-      tree_data = {
-                    :id       => "e_1",
-                    :text     => "ManageIQ/SYSTEM <b>/</b> PROCESS <b>/</b> Automation",
-                    :image    => "q",
-                    :tip      => "ManageIQ/SYSTEM <b>/</b> PROCESS <b>/</b> Automation",
-                    :elements => [],
-                    :addClass => "cfme-no-cursor-node"
+      tree_data = {:id          => "e_1",
+                   :text        => "ManageIQ/SYSTEM <b>/</b> PROCESS <b>/</b> Automation",
+                   :image       => "q",
+                   :tip         => "ManageIQ/SYSTEM <b>/</b> PROCESS <b>/</b> Automation",
+                   :elements    => [],
+                   :cfmeNoClick => true
                   }
       expect(nodes).to include(tree_data)
     end

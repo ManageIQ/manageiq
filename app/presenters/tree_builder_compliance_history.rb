@@ -24,14 +24,6 @@ class TreeBuilderComplianceHistory < TreeBuilder
      :lazy     => false}
   end
 
-  def set_locals_for_render
-    locals = super
-    locals.merge!(:id_prefix                   => 'h_',
-                  :cfme_no_click               => true,
-                  :open_close_all_on_dbl_click => true,
-                  :onclick                     => false)
-  end
-
   def root_options
     []
   end
@@ -43,10 +35,11 @@ class TreeBuilderComplianceHistory < TreeBuilder
   def x_get_compliance_kids(parent, count_only)
     kids = []
     if parent.compliance_details.empty?
-      kid = {:id    => "#{parent.id}-nopol",
-             :text  => _("No Compliance Policies Found"),
-             :image => "#{parent.id}-nopol",
-             :tip   => nil}
+      kid = {:id          => "#{parent.id}-nopol",
+             :text        => _("No Compliance Policies Found"),
+             :image       => "#{parent.id}-nopol",
+             :tip         => nil,
+             :cfmeNoClick => true}
       kids.push(kid)
     else
       # node must be unique
@@ -63,10 +56,11 @@ class TreeBuilderComplianceHistory < TreeBuilder
     grandpa = model.constantize.find_by(:id => from_cid(id))
     grandpa.compliance_details.order("miq_policy_desc, condition_desc").each do |node|
       next unless node.miq_policy_id == parent.miq_policy_id
-      n = {:id    => "#{parent.id}-p_#{node.miq_policy_id}",
-           :text  => "<b>" + _("Condition: ") + "</b>" + node.condition_desc,
-           :image => node.condition_result ? "check" : "x",
-           :tip   => nil}
+      n = {:id          => "#{parent.id}-p_#{node.miq_policy_id}",
+           :text        => "<b>" + _("Condition: ") + "</b>" + node.condition_desc,
+           :image       => node.condition_result ? "check" : "x",
+           :tip         => nil,
+           :cfmeNoClick => true}
       kids.push(n)
     end
     count_only_or_objects(count_only, kids)

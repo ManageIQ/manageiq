@@ -1,65 +1,46 @@
 /* global DoNav miqClearTreeState miqDomElementExists miqJqueryRequest miqSetButtons miqSparkle */
 
+function miqTreeObject(tree) {
+  return $('#' + tree + 'box').treeview(true);
+}
+
+function miqTreeFindNodeByKey(tree, key) {
+  return miqTreeObject(tree).getNodes().find(function (node) {
+    if (node.key == key) {
+      return node;
+    }
+  });
+}
+
 // Functions used by CFME for the dynatree control
 
 // OnCheck handler for the checkboxes in tree
 function miqOnCheckHandler(node) {
-  var url = ManageIQ.dynatree.checkUrl + node.data.key + '?check=' + (node.isSelected() ? '0' : '1');
+  var url = ManageIQ.dynatree.checkUrl + node.key + '?check=' + (node.state.checked ? '1' : '0');
   miqJqueryRequest(url);
 }
 
-// Expand/collapse all children on double click
-function miqOnDblClickExpand(node, _event) {
-  var exp = !node.isExpanded();
-  node.expand(exp);
-  node.visit(function (n) {
-    n.expand(exp);
-  });
-}
-
 function miqAddNodeChildren(treename, key, selected_node, children) {
-  var pnode = $("#" + treename + "box").dynatree('getTree').getNodeByKey(key);
-  pnode.addChild(children);
+  var node = miqTreeFindNodeByKey(treename, key);
+  miqTreeObject(treename).addNode(children, node);
   miqDynatreeActivateNodeSilently(treename, selected_node);
 }
 
 function miqDynatreeResetState(treename) {
+  // FIXME: this is probably not enough, keeping the original dynatree code in comments for the future
+  miqTreeClearState(treename);
+  /*
   var key = 'treeOpenStatex' + treename ;
   delete localStorage[key + '-active'];
   delete localStorage[key + '-expand'];
   delete localStorage[key + '-focus'];
   delete localStorage[key + '-select'];
+  */
 }
 
 function miqRemoveNodeChildren(treename, key) {
-  var pnode = $("#" + treename + "box").dynatree('getTree').getNodeByKey(key);
-  pnode.removeChildren();
-}
-
-// Get children of a tree node via ajax for autoload
-function miqOnLazyReadGetNodeChildren(node, tree, controller) {
-  node.appendAjax({
-    url: "/" + controller + "/tree_autoload_dynatree",
-    type: 'post',
-    data: {
-      id: node.data.key, // Optional url arguments
-      tree: tree,
-      mode: "all"
-    },
-    success: function (node) {
-      if ([ "cluster_dc_tree", "dc_tree", "rp_dc_tree", "vt_tree" ].indexOf(tree) >= 0 ) {
-        // need to bind hover event to lazy loaded nodes
-        miqBindHoverEvent(tree);
-        var url = '/' + controller + '/tree_autoload_quads?id=' + node.data.key;
-        miqJqueryRequest(url, {beforeSend: true});
-      }
-    },
-    error: function (_node, request) {
-      if (request.status == 401) {
-        window.location.href = "/?timeout=true";
-      }
-    }
-  });
+  var node = miqTreeFindNodeByKey(treename, key);
+  miqTreeObject(treename).removeNode(node);
 }
 
 function miqMenuEditor(id) {
@@ -71,19 +52,6 @@ function miqMenuEditor(id) {
       no_encoding: true
     });
   }
-}
-
-// Bind hover events to the tree's <a> tags
-function miqBindHoverEvent(tree_name) {
-  var node_id;
-
-  $("#" + tree_name + "box a").hover(function (event) {
-    var node = $.ui.dynatree.getNode(this);
-    node_id = miqOnMouseInHostNet(node.data.key, event);
-  }, function () {
-    var node = $.ui.dynatree.getNode(this);
-    miqOnMouseOutHostNet(node.data.key, node_id);
-  });
 }
 
 // OnClick handler to run tree_select server method
@@ -102,33 +70,34 @@ function miqOnClickSelectDlgEditTreeNode(id) {
 // Activate and focus on a node within a tree given the node's key
 function miqDynatreeActivateNode(tree, key) {
   miqSparkle(true);
-  var node = $("#" + tree + "box").dynatree('getTree').getNodeByKey(key);
+  var node = miqTreeFindNodeByKey(tree, key);
   if (node) {
-    // Only try to activate node if it is in the tree
-    if (node.isActive()) {
-      $("#" + tree + "box").dynatree('getTree').reactivate();
-    } else {
-      node.activate();
-    }
-    node.focus();
+    miqTreeObject(tree).selectNode(node);
+    node.$el.focus();
   }
 }
 
 // Activate silently (no onActivate event) and focus on a node within a tree given the node's key
 function miqDynatreeActivateNodeSilently(tree, key) {
-  var node = $("#" + tree + "box").dynatree('getTree').getNodeByKey(key);
-  if (node) { // Only try to activate node if it is in the tree
-    node.activateSilently();
-    node.expand();
-    node.focus();
+  var node = miqTreeFindNodeByKey(tree, key);
+  if (node) {
+    miqTreeObject(tree).selectNode(node, {silent: true });
+    miqTreeObject(tree).expandNode(node);
+    node.$el.focus();
   }
+}
+
+// Activate a node silently and fire the activation event manually
+function miqTreeForceActivateNode(tree, key) {
+  miqDynatreeActivateNodeSilently(tree, key);
+  miqTreeObject(tree).options.onNodeSelected(0, miqTreeFindNodeByKey(tree, key));
 }
 
 // OnClick handler for catgories Tree
 function miqOnClickProvLdapOus(id) {
-  var node = $("#ldap_ous_treebox").dynatree("getTree").getNodeByKey(id);
-  node.expand();
-  node._activate(false, true);
+  var node = miqTreeFindNodeByKey('ldap_ous_tree', id);
+  miqTreeObject('ldap_ous_tree').expandNode(node);
+
   if (id.split('_-_').length > 1) {
     miqJqueryRequest(ManageIQ.dynatree.clickUrl + '?ou_id=' + id);
     return true;
@@ -137,78 +106,27 @@ function miqOnClickProvLdapOus(id) {
 
 // expand all parent nodes of selected node on initial load
 function miqExpandParentNodes(treename, selected_node) {
-  var node = $("#" + treename + "box").dynatree("getTree").getNodeByKey(selected_node);
-  node.makeVisible();
-}
-
-function miqDynatreeSelectNode(treename, key, value) {
-    var node;
-    if (_.isString(key)) {
-        node = $("#" + treename + "box").dynatree('getTree').getNodeByKey(key);
-    } else {
-        node = $.ui.dynatree.getNode(key);
-    }
-    node._select(value);
-}
-
-function miqDynatreeNodeAddClass(treename, key, klass) {
-  var node;
-  if (_.isString(key)) {
-    node = $("#" + treename + "box").dynatree('getTree').getNodeByKey(key);
-  } else {
-    node = $.ui.dynatree.getNode(key);
-  }
+  var node = miqTreeFindNodeByKey(treename, selected_node);
   if (node) {
-    node.data.addClass = klass;
-    node.render();
-  } else {
-    console.debug('cannot find node for key: ' + key);
+    miqTreeObject(treename).revealNode(node, {silent: true});
   }
-}
-
-function miqDynatreeNodeRemoveClass(treename, key) {
-  var node;
-  if (_.isString(key)) {
-    node = $("#" + treename + "box").dynatree('getTree').getNodeByKey(key);
-  } else {
-    node = $.ui.dynatree.getNode(key);
-  }
-  node.data.addClass = "";
-  node.render();
 }
 
 // OnCheck handler for the tags trees
 function miqOnCheckProvTags(node, treename) {
-  var tree = $("#" + treename + "box").dynatree("getTree");
-  var parent_key = node.data.cfme_parent_key;
-  var selectedNodes = tree.getSelectedNodes();
-  var all_checked = $.map(selectedNodes, function (node) {
-    return node.data.key;
+  var tree = miqTreeObject(treename);
+  // Allow only one node among siblings to be checked
+  if (node.state.checked) {
+    var siblings = $.grep(tree.getParents(node)[0].nodes, function (item) {
+      return item.key !== node.key;
+    });
+    tree.uncheckNode(siblings, {silent: true });
+  }
+
+  var all_checked = tree.getChecked().map(function (item) {
+    return item.key;
   });
 
-  // need to add or delete the node manually in all_checked array
-  // node select transaction is run after AJAX response comes back
-  // when treestate is set to true
-  if (node.isSelected()) {
-    var idx = all_checked.indexOf(node.data.key);
-    all_checked.splice(idx, 1);
-  } else {
-    all_checked.push(node.data.key);
-  }
-
-  for (var i = 0; i < all_checked.length; i++) {
-    var selected_node = $("#" + treename + "box").dynatree("getTree").getNodeByKey(all_checked[i]);
-    var selected_node_parent_key = selected_node.data.cfme_parent_key;
-    if (typeof parent_key != "undefined") {
-      // only keep the key that came in for a single value tag category
-      // delete previously selected keys from the single value category before sending them up
-      if (selected_node_parent_key == parent_key && node.data.key != all_checked[i]) {
-        var idx = all_checked.indexOf(all_checked[i]);
-        all_checked.splice(idx, 1);
-        selected_node._select(false);
-      }
-    }
-  }
   miqJqueryRequest(ManageIQ.dynatree.checkUrl + '?ids_checked=' + all_checked);
   return true;
 }
@@ -241,68 +159,27 @@ function miqOnClickSelectOptimizeTreeNode(id) {
 
 // delete specific dynatree cookies
 function miqDeleteDynatreeCookies(tree_prefix) {
-  miqClearTreeState(tree_prefix);
+  miqTreeClearState(tree_prefix);
 }
 
 // toggle expand/collapse all nodes in tree
 function miqDynatreeToggleExpand(treename, expand_mode) {
-  $("#" + treename + "box").dynatree("getRoot").visit(function (node) {
-    node.expand(expand_mode);
-  });
+  expand_mode ? miqTreeObject(treename).expandAll() : miqTreeObject(treename).collapseAll();
 }
 
 // OnCheck handler for the Protect screen
 function miqOnCheckProtect(node, _treename) {
-  var ppid = node.data.key.split('_').pop();
-  var url = ManageIQ.dynatree.checkUrl + ppid + '?check=' + Number(!node.isSelected());
+  var ppid = node.key.split('_').pop();
+  var url = ManageIQ.dynatree.checkUrl + ppid + '?check=' + Number(!node.state.selected);
   miqJqueryRequest(url);
   return true;
 }
 
 // OnClick handler for the VM Snapshot Tree
 function miqOnClickSnapshotTree(id) {
-  var tree = $("#" + 'snapshot_tree' + "box").dynatree("getTree");
-  tree.getRoot().visit(function(node){miqDynatreeNodeRemoveClass('snapshot_tree', node);})
-  miqDynatreeNodeAddClass('snapshot_tree', id, "dynatree-cfme-active")
   var pieces = id.split(/-/);
   var shortId = pieces[pieces.length - 1]
   miqJqueryRequest('/' + ManageIQ.controller + '/snap_pressed/' + shortId, {beforeSend: true, complete: true});
-  return true;
-}
-
-// Show the hidden quad icon div when mousing over VMs in the Host Network tree
-function miqOnMouseInHostNet(id, event) {
-  var nid = hoverNodeId(id);
-  if (nid) {
-    var top = $(event.target).position().top;
-    $("#" + nid).css({ top: top + "px" }).show(); // Set quad top location
-    // $("#" + nid).show(); // Show the quad div
-    return nid; // return current node id
-  }
-}
-
-// For Host Network tree, clear selection and hide previously shown quad icon div
-function miqOnMouseOutHostNet(id, node_id) {
-  if (hoverNodeId(id)) {
-    // div id exists
-    if (node_id) {
-      $("#" + node_id).hide(); // Hide the quad div
-    }
-  }
-  return true;
-}
-
-function hoverNodeId(id) {
-  var ids = id.split('_'); // Break apart the node ids
-  var nid = ids[ids.length - 1]; // Get the last part of the node id
-  var leftNid = nid.split('-')[0];
-  var rightNid = nid.split('-')[1];
-  if (typeof rightNid !== 'undefined' && rightNid.match(/\dr\d+/)) {
-    nid = sprintf("%s-%s%012d", leftNid, rightNid.split('r')[0], rightNid.split('r')[1]);
-  }
-  return ((leftNid == 'v' || // Check for VM node
-           leftNid == 'h') && // or Host node
-          miqDomElementExists(nid)) ? nid : false;
 }
 
 // OnClick handler for Host Network Tree
@@ -351,77 +228,55 @@ function miqOnClickTagCat(id) {
 
 // OnClick handler for Genealogy Tree
 function miqOnClickGenealogyTree(id) {
-  if (hoverNodeId(id)[0] === 'v') {
+  if (id[1] === 'v') {
     miqJqueryRequest(ManageIQ.dynatree.clickUrl + id, {beforeSend: true, complete: true});
   }
 }
 
 // OnCheck handler for the SmartProxy Affinity tree
 function miqOnClickSmartProxyAffinityCheck(node) {
-  if (node.isSelected())
-    var checked = '0';  // If node was selected, now unchecking
-  else
-    var checked = '1';
-  miqJqueryRequest(ManageIQ.dynatree.checkUrl + node.data.key + '?check=' + checked);
+  var checked = node.state.checked ? '1' : '0';
+  miqJqueryRequest(ManageIQ.dynatree.checkUrl + node.key + '?check=' + checked);
 }
 
 function miqGetChecked(node, treename) {
   var count = 0;
-  var tree = $("#" + treename + "box").dynatree("getTree");
-  var selectedNodes = tree.getSelectedNodes();
-  var selectedKeys = $.map(selectedNodes, function (checkedNode) {
-    return checkedNode.data.key;
+  var tree = miqTreeObject(treename);
+  // Map the selected nodes into an array of keys
+  var selectedKeys = tree.getChecked().map(function (item) {
+    return item.key;
   });
-  if (!node.isSelected()) {
-    // Indicates that the current node is checked
-    selectedKeys.push(node.data.key);
-  } else if (node.isSelected()) {
-    // Indicates that the current node is unchecked
-    var index = selectedKeys.indexOf(node.data.key);
-    if (index > -1) {
-      selectedKeys.splice(index, 1);
-    }
-  }
-  count = selectedKeys.length;
-  miqSetButtons(count, "center_tb");
-  if (count) {
+  // Activate toolbar items according to the selection
+  miqSetButtons(selectedKeys.length, 'center_tb');
+  // Inform the backend about the checkbox changes
+  if (selectedKeys.length > 0) {
     miqJqueryRequest(ManageIQ.dynatree.checkUrl + '?all_checked=' + selectedKeys, {beforeSend: true, complete: true});
   }
 }
 
 function miqCheckAll(cb, treename) {
-  $("#" + treename + "box").dynatree("getRoot").visit(function (node) {
-    // calling _select to avoid onclick event when check all is clicked
-    node._select(cb.checked);
-  });
-  var tree = $("#" + treename + "box").dynatree("getTree");
-  var selectedNodes = tree.getSelectedNodes();
-  var selectedKeys = $.map(selectedNodes, function (node) {
-    return node.data.key;
-  });
-
-  var count = selectedKeys.length;
-  miqSetButtons(count, "center_tb");
-
-  if (count > 0) {
-    var url = ManageIQ.dynatree.checkUrl + '?check_all=' + cb.checked + '&all_checked=' + selectedKeys;
-    miqJqueryRequest(url);
+  var tree = miqTreeObject(treename);
+  // Set the checkboxes according to the master checkbox
+  if (cb.checked) {
+    tree.checkAll({silent: true});
+  } else {
+    tree.uncheckAll({silent: true});
   }
-  return true;
+  // Map the selected nodes into an array of keys
+  var selectedKeys = tree.getChecked().map(function (item) {
+    return item.key;
+  });
+  // Activate toolbar items according to the selection
+  miqSetButtons(selectedKeys.length, 'center_tb');
+  // Inform the backend about the checkbox changes
+  if (selectedKeys.length > 0) {
+    miqJqueryRequest(ManageIQ.dynatree.checkUrl + '?check_all=' + cb.checked + '&all_checked=' + selectedKeys);
+  }
 }
 
 function miqDynatreeExpandNode(treename, key) {
-  var node = $("#" + treename + "box").dynatree('getTree').getNodeByKey(key);
-  node.expand(true);
-}
-
-function miqOnDblClickNoBaseExpand(node, _event) {
-  if (!node.getParent().data.title) {
-    return;
-  }
-
-  var exp = !node.isExpanded();
-  node.expand(exp);
+  var node = miqTreeFindNodeByKey(treename, key);
+  miqTreeObject(treename).expandNode(node);
 }
 
 // OnClick handler for Server Roles Tree
@@ -439,21 +294,17 @@ function miqOnClickServerRoles(id) {
 // OnCheck handler for the belongsto tagging trees on the user edit screen
 function miqOnCheckUserFilters(node, tree_name) {
   var tree_typ = tree_name.split('_')[0];
-  var checked = Number(!node.isSelected());
-  var url = ManageIQ.dynatree.checkUrl + node.data.key + "?check=" + checked + "&tree_typ=" + tree_typ;
+  var checked = Number(!node.state.selected);
+  var url = ManageIQ.dynatree.checkUrl + node.key + "?check=" + checked + "&tree_typ=" + tree_typ;
   miqJqueryRequest(url);
   return true;
 }
 
 // OnCheck handler for Check All checkbox on C&U collection trees
 function miqCheckCUAll(cb, treename) {
-  $("#" + treename + "box").dynatree("getRoot").visit(function (node) {
-    // calling _select to avoid onclick event when check all is clicked
-    node._select(cb.checked);
-  });
+  cb.checked ? miqTreeObject(treename).checkAll({silent: true}) : miqTreeObject(treename).uncheckAll({silent: true});
   var url = ManageIQ.dynatree.checkUrl + '?check_all=' + cb.checked + '&tree_name=' + treename;
   miqJqueryRequest(url);
-  return true;
 }
 
 // OnCheck handler for the C&U collection trees
@@ -546,15 +397,6 @@ function miqMenuChangeRow(action, elem) {
   return false;
 }
 
-function miqSetAETreeNodeSelectionClass(id, prevId, bValidNode) {
-  if (prevId && $('#' + prevId).length) {
-    miqDynatreeNodeRemoveClass("automate_tree", prevId);
-  }
-  if (bValidNode == "true" && $('#' + id).length) {
-    miqDynatreeNodeAddClass("automate_tree", id, "ae-valid-node");
-  }
-}
-
 function miqSquashToggle(treeName) {
   if (ManageIQ.tree.expandAll) {
     $('#squash_button i').attr('class', 'fa fa-minus-square-o fa-lg');
@@ -600,6 +442,52 @@ function miqTreeEventSafeEval(func) {
   }
 }
 
+function miqTreeOnNodeChecked(options, node) {
+  if (options.oncheck) {
+    miqTreeEventSafeEval(options.oncheck)(node, options.tree_name);
+  } else if (options.onselect) {
+    var selectedKeys = miqTreeObject(options.tree_name).getChecked().map(function (node) {
+      return node.key;
+    });
+    miqTreeEventSafeEval(options.onselect)(options.tree_name, node.key, node.state.checked, selectedKeys);
+  }
+}
+
+function miqTreeState(tree, node, state) {
+  // Initialize the session storage object
+  var persist = JSON.parse(sessionStorage.getItem('tree_state_' + tree));
+  if (!persist) {
+    persist = {};
+  }
+
+  if (state === undefined) {
+    // No third argument, return the stored value or undefined
+    return persist[node];
+  } else {
+    // Save the third argument as the new node state
+    persist[node] = state;
+    sessionStorage.setItem('tree_state_' + tree, JSON.stringify(persist));
+  }
+};
+
+function miqTreeClearState(tree) {
+  if (tree === undefined) {
+    // Clear all tree state objects
+    var to_remove = [];
+    for (i = 0; i < sessionStorage.length; i++) {
+      if (sessionStorage.key(i).match('^tree_state_')) {
+        to_remove.push(sessionStorage.key(i));
+      }
+    }
+    for (i = 0; i < to_remove.length; i++) {
+      sessionStorage.removeItem(to_remove[i]);
+    }
+  } else {
+    // Clear the state of one specific tree
+    sessionStorage.removeItem('tree_state_' + tree);
+  }
+}
+
 function miqInitDynatree(options, tree) {
   if (options.check_url) {
     ManageIQ.dynatree.checkUrl = options.check_url;
@@ -613,116 +501,118 @@ function miqInitDynatree(options, tree) {
     miqDeleteDynatreeCookies();
   }
 
-  $('#' + options.tree_id).dynatree({
-    title: options.tree_name,
-    imagePath: '',
-    generateIds: true,
-    idPrefix: options.id_prefix,
-    children: tree,
-    cookieId: options.cookie_id,
-    cookie: {
-      path: '/'
-    },
-    onDblClick: function (node, event) {
-      if (options.no_base_exp) {
-        miqOnDblClickNoBaseExpand(node, event);
-      }
-      if (options.open_close_all_on_dbl_click) {
-        miqOnDblClickExpand(node, event);
-      }
-    },
-    minExpandLevel: options.min_expand_level,
-    checkbox: options.checkboxes,
-    selectMode: options.select_mode,
-    persist: options.tree_state,
-    onClick: function(node, event) {
-      var event_type = node.getEventTargetType(event);
+  // Pre-process partially checkbox state for parent nodes
+  if (options.post_check && options.hierarchical_check) {
+    var nodes = [];
+    var stack = tree.slice(0);
 
-      if (options.onclick || options.disable_checks || options.oncheck) {
-        if (event_type != 'expander' && node.data.cfmeNoClick) return false;
-        if (options.onclick) {
-          if (event_type == 'icon' || event_type == 'title' || event.target.localName == 'img') {
-            if(options.click_url) {
-              if (node.isActive()) miqTreeEventSafeEval(options.onclick)(node.data.key);
-              return;
-            } else {
-              if (miqCheckForChanges() == false) {
-                this.activeNode.focus();
-                return false;
-              } else {
-                if (node.isActive()) miqTreeEventSafeEval(options.onclick)(node.data.key);
-                return;
-              }
-            }
-          }
-        }
-        if (options.disable_checks || options.oncheck) {
-          if (event_type == 'checkbox') {
-            if (options.disable_checks) {
-              return false;
-            } else if (options.oncheck) {
-              miqTreeEventSafeEval(options.oncheck)(node, options.tree_name);
-              return;
-            }
-          }
+    // Collect nodes
+    while (stack.length > 0) {
+      var node = stack.pop();
+      nodes.push(node);
 
-          if (event_type != 'expander') return false;
-        }
-      } else if (options.no_click && event_type != 'expander') {
-        return false;
-      }
-    },
-    onSelect: function(flag, node) {
-      if (options.onselect) {
-        var selectedNodes = node.tree.getSelectedNodes();
-        var selectedKeys = $.map(selectedNodes, function(node) {
-          return node.data.key;
+      if (node.nodes) {
+        node.nodes.forEach(function (child) {
+          if (child.nodes) {
+            stack.push(child);
+          }
         });
-        miqTreeEventSafeEval(options.onselect)(options.tree_name, node.data.key, flag, selectedKeys);
       }
-    },
-    onActivate: function(node) {
+    }
+
+    // Process nodes
+    while (nodes.length > 0) {
+      var node = nodes.pop();
+      if (!node.state) node.state = {};
+      node.state.checked = node.nodes.map(function(node) {
+        return node.state ? node.state.checked : false;
+      }).reduce(function (acc, curr) {
+        return (acc === curr) ? acc : 'undefined';
+      });
+    }
+  }
+
+  $('#' + options.tree_id).treeview({
+    data:                 tree,
+    showImage:            true,
+    preventUnselect:      true,
+    showCheckbox:         options.checkboxes,
+    hierarchicalCheck:    options.hierarchical_check,
+    highlightChanges:     options.highlight_changes,
+    levels:               options.min_expand_level,
+    expandIcon:           'fa fa-fw fa-angle-right',
+    collapseIcon:         'fa fa-fw fa-angle-down',
+    loadingIcon:          'fa fa-fw fa-spinner fa-pulse',
+    checkedIcon:          'fa fa-fw fa-check-square-o',
+    uncheckedIcon:        'fa fa-fw fa-square-o',
+    partiallyCheckedIcon: 'fa fa-fw fa-check-square',
+    checkboxFirst:        true,
+    showBorders:          false,
+    onNodeSelected:       function (event, node) {
       if (options.onclick) {
-        miqTreeEventSafeEval(options.onclick)(node.data.key);
+        if(options.click_url) {
+          miqTreeEventSafeEval(options.onclick)(node.key);
+        } else {
+          if (miqCheckForChanges() == false) {
+            node.$el.focus();
+          } else {
+            miqTreeEventSafeEval(options.onclick)(node.key);
+          }
+        }
       }
     },
-    onExpand: function(node) {
-      if(options.onclick || options.disable_checks || options.oncheck) {
-        miqBindHoverEvent(options.tree_name);
-      }
+    onNodeChecked:        function (event, node) {
+      miqTreeOnNodeChecked(options, node);
     },
-    onLazyRead: function(node) {
-      if(options.autoload) {
-        miqOnLazyReadGetNodeChildren(node, options.tree_name, options.controller);
-      }
+    onNodeUnchecked:      function (event, node) {
+      miqTreeOnNodeChecked(options, node);
     },
-    onPostInit: function(isReloading, isError) {
-      if (options.silent_activate) {
-        miqDynatreeActivateNodeSilently(options.tree_name, options.select_node);
-      }
+    onNodeExpanded:       function (event, node) {
+      if (options.tree_state) miqTreeState(options.cookie_id, node.key, true);
     },
-    debugLevel: 0
+    onNodeCollapsed:      function (event, node) {
+      if (options.tree_state) miqTreeState(options.cookie_id, node.key, false);
+    },
+    lazyLoad:             function (node, display) {
+      if (options.autoload) {
+        $.ajax({
+          url:  '/' + options.controller + '/tree_autoload_dynatree',
+          type: 'post',
+          data: {
+            id: node.key,
+            tree: options.tree_name,
+            mode: 'all'
+          }
+        }).success(display).error(function (data) {
+          console.log(data);
+        });
+      }
+    }
   });
+
+  if (options.silent_activate) {
+    miqExpandParentNodes(options.tree_name, options.select_node);
+    miqDynatreeActivateNodeSilently(options.tree_name, options.select_node);
+  }
 
   if (options.reselect_node) {
     miqDynatreeActivateNodeSilently(options.tree_name, options.reselect_node);
   }
 
   if (options.expand_parent_nodes) {
-    miqExpandParentNodes(options.tree_name, options.expand_parent_nodes);
+    miqExpandParentNodes(options.tree_name, options.select_node);
   }
 
   if (options.add_nodes) {
-    miqAddNodeChildren(
-      options.active_tree,
-      options.add_node_key,
-      options.select_node,
-      options.children
-    );
+    miqAddNodeChildren(options.active_tree, options.add_node_key, options.select_node, options.children);
   }
 
-  if (options.onhover) {
-    miqBindHoverEvent(options.tree_name);
+  // Tree state persistence correction after the tree is completely loaded
+  if (options.tree_state) {
+    miqTreeObject(options.tree_name).getNodes().forEach(function (node) {
+      if (miqTreeState(options.cookie_id, node.key) === !node.state.expanded) {
+        miqTreeObject(options.tree_name).toggleNodeExpanded(node);
+      }
+    });
   }
-
 }

@@ -7,10 +7,7 @@ class TreeBuilderCondition < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(
-      :id_prefix => "co_",
-      :autoload  => true,
-    )
+    locals.merge!(:autoload => true)
   end
 
   # level 0 - root

@@ -45,19 +45,7 @@
             %p.form-control-static
               = h(item[:description])
 - when "network"
-  .row
-    .col-md-10
-      = render :partial => "network_tree"
-    .col-md-2.hidden-sm.hidden-xs
-      - @tree_vms.each do |v|
-        %div{:id => "v-#{v.id}", :style => "display: none; z-index: 10; width: 72px; height: 72px; padding: 0 0 0 0; position: absolute;"}
-          %div{:style => "margin-left: -78px;"}
-            = render_quadicon(v, :mode => :icon, :size => 72, :typ => :listnav)
-            %div
-              %center{:style => "color: #000;"}
-                = h(v.product_name)
-                %br
-                = h(v.service_pack)
+  = render :partial => "network_tree"
 
 - when "storage_adapters"
   %table{:style => "height: 100px;"}

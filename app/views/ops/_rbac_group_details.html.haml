@@ -182,15 +182,13 @@
         %br/
         #myco_treebox{:style => "color:#000"}
         = render(:partial => "layouts/dynatree",
-                 :locals  => {:tree_id        => "myco_treebox",
-                              :tree_name      => "myco_tree",
-                              :json_tree      => @myco_tree,
-                              :onmousein      => "miqOnMouseInHostNet",
-                              :onmouseout     => "miqOnMouseOutHostNet",
-                              :oncheck        => @edit.nil? ? nil : "miqOnCheckUserFilters",
-                              :disable_checks => @edit.nil?,
-                              :check_url      => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
-                              :checkboxes     => true})
+                 :locals  => {:tree_id           => "myco_treebox",
+                              :tree_name         => "myco_tree",
+                              :bs_tree           => @myco_tree,
+                              :oncheck           => @edit.nil? ? nil : "miqOnCheckUserFilters",
+                              :check_url         => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
+                              :highlight_changes => true,
+                              :checkboxes        => true})
       = miq_tab_content('hosts_clusters') do
         %br/
         = _("This user is limited to the selected items and their children.")
@@ -198,15 +196,13 @@
         %br/
         #hac_treebox{:style => "color:#000"}
         = render(:partial => "layouts/dynatree",
-                 :locals  => {:tree_id        => "hac_treebox",
-                              :tree_name      => "hac_tree",
-                              :json_tree      => @hac_tree,
-                              :onmousein      => "miqOnMouseInHostNet",
-                              :onmouseout     => "miqOnMouseOutHostNet",
-                              :oncheck        => @edit.nil? ? nil : "miqOnCheckUserFilters",
-                              :disable_checks => @edit.nil?,
-                              :check_url      => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
-                              :checkboxes     => true})
+                 :locals  => {:tree_id           => "hac_treebox",
+                              :tree_name         => "hac_tree",
+                              :bs_tree           => @hac_tree,
+                              :oncheck           => @edit.nil? ? nil : "miqOnCheckUserFilters",
+                              :check_url         => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
+                              :highlight_changes => true,
+                              :checkboxes        => true})
       = miq_tab_content('vms_templates') do
         %br/
         = _("This user is limited to the selected folders and their children.")
@@ -214,15 +210,13 @@
         %br/
         #vat_treebox{:style => "color:#000"}
         = render(:partial => "layouts/dynatree",
-                 :locals  => {:tree_id        => "vat_treebox",
-                              :tree_name      => "vat_tree",
-                              :json_tree      => @vat_tree,
-                              :onmousein      => "miqOnMouseInHostNet",
-                              :onmouseout     => "miqOnMouseOutHostNet",
-                              :oncheck        => @edit.nil? ? nil : "miqOnCheckUserFilters",
-                              :disable_checks => @edit.nil?,
-                              :check_url      => "/ops/rbac_group_field_changed/#{@group.id || "new"}___",
-                              :checkboxes     => true})
+                 :locals  => {:tree_id           => "vat_treebox",
+                              :tree_name         => "vat_tree",
+                              :bs_tree           => @vat_tree,
+                              :oncheck           => @edit.nil? ? nil : "miqOnCheckUserFilters",
+                              :check_url         => "/ops/rbac_group_field_changed/#{@group.id || "new"}___",
+                              :highlight_changes => true,
+                              :checkboxes        => true})
 :javascript
   miq_tabs_init('#rbac_group_tabs');
 %script{:type => "text/javascript"}

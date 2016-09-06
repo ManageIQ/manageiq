@@ -17,11 +17,6 @@ module ApplicationController::PolicySupport
       changed = (@edit[:new] != @edit[:current])
       render :update do |page|
         page << javascript_prologue
-        if @edit[:new][profile_id] == @edit[:current][profile_id]
-          page << "miqDynatreeNodeAddClass('protect', 'xx-policy_profile_#{profile_id}','dynatree-title')"
-        else
-          page << "miqDynatreeNodeAddClass('protect', 'xx-policy_profile_#{profile_id}', 'cfme-blue-bold-node')"
-        end
         if changed != session[:changed]
           session[:changed] = changed
           page << javascript_for_miq_button_visibility(changed)

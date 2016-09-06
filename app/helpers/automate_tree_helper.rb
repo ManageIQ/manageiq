@@ -73,18 +73,13 @@ module AutomateTreeHelper
         page << javascript_show("automate_tree_div")
         page << "$('#automate_tree_div').addClass('modal fade in');"
         @edit[:ae_tree_select] = true
-        type =  @edit[:ae_field_typ] || params[:typ]
-        validnode = true
+        type = @edit[:ae_field_typ] || params[:typ]
         @edit[:current][:selected] = @edit[:new][:selected].nil? ? "" : @edit[:new][:selected]
-        if @edit[:new][type].nil?
-          @edit[:new][:selected] = "root"
-          validnode = false
-        else
+        unless @edit[:new][type].nil?
           @edit[:new][:selected] = @edit[:new][type]
-        end
-        if x_node(:automate_tree)
-          page << javascript_for_ae_node_selection(@edit[:new][:selected], @edit[:current][:selected], validnode)
-          page << "miqDynatreeActivateNodeSilently('automate_tree', '#{@edit[:new][:selected]}');"
+          if x_node(:automate_tree)
+            page << "miqDynatreeActivateNodeSilently('automate_tree', '#{@edit[:new][:selected]}');"
+          end
         end
       end
     end
@@ -100,14 +95,11 @@ module AutomateTreeHelper
     end
 
     @edit[:new][edit_key] = @edit[edit_key] if @edit[:new][edit_key].nil?
-    validnode = false
     @edit[:current][:selected] = @edit[:new][:selected].nil? ? "" : @edit[:new][:selected]
     @edit[:new][:selected] = params[:id]
 
     if record
-      validnode = true
-      @edit[:automate_tree_selected_path] =
-          controller_name == "miq_ae_class" ? record.fqname_sans_domain : record.fqname
+      @edit[:automate_tree_selected_path] = controller_name == "miq_ae_class" ? record.fqname_sans_domain : record.fqname
       # save selected id in edit until save button is pressed
       @edit[:active_id] = params[:id]
       @changed = @edit[:new][edit_key] != @edit[:automate_tree_selected_path]
@@ -117,7 +109,6 @@ module AutomateTreeHelper
       page << javascript_prologue
       page << javascript_for_miq_button_visibility(@changed, 'automate')
       @changed ? page << javascript_enable_field(inc_domain_chk) : page << javascript_disable_field(inc_domain_chk)
-      page << javascript_for_ae_node_selection(@edit[:new][:selected], @edit[:current][:selected], validnode)
     end
   end
 end

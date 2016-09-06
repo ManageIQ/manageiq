@@ -14,7 +14,7 @@ module JsHelper
     bool_str = (!!lock).to_s
     element = "#{tree_var}_div"
     "
-      $('##{j_str(tree_var)}box').dynatree('#{lock ? 'disable' : 'enable'}');
+      miqTreeObject('#{j_str(tree_var)}').#{lock ? 'disable' : 'enable'}All({silent: true, keepState: true});
       #{javascript_dim(element, bool_str)}
     ".html_safe
   end

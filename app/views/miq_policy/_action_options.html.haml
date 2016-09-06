@@ -71,12 +71,9 @@
           = render(:partial => "layouts/dynatree",
             :locals         => {:tree_id   => "action_tags_treebox",
               :tree_name                   => "action_tags_tree",
-              :json_tree                   => @cat_tree,
+              :bs_tree                     => @cat_tree,
               :click_url                   => "/miq_policy/action_tag_pressed/",
-              :onclick                     => "miqOnClickTagCat",
-              :enable_tree_images          => false,
-              :exp_tree                    => false,
-              :open_close_all_on_dbl_click => true})
+              :onclick                     => "miqOnClickTagCat"})
   - when "create_snapshot"
     %h3
       = _("Snapshot Settings")
