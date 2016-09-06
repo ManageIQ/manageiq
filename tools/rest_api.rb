@@ -72,67 +72,97 @@ class RestApi
       data
     end
 
-    def run
-      data      = ""
-      path      = ""
-      params    = {}
+    def script_filename(scriptdir, filename)
+      filename = filename && filename.strip
+      return if filename.nil? || filename == ""
+      filename = "api_#{filename}" unless filename =~ /^api_/
+      filename = "#{filename}.rb" unless filename =~ /\.rb$/
+      File.join(scriptdir, filename)
+    end
 
+    def parse
       opts = Trollop.options do
         version "#{API_CMD} #{VERSION} - ManageIQ REST API Access Script"
         banner <<-EOS
-      #{version}
+#{version}
 
-      Usage: #{API_CMD} [options] <action> [parameters] [resource]
+Usage:
 
-                  action - is the action to use for the request, i.e. get, post, patch, edit ...
+  #{API_CMD} [options] <action> [parameters] [resource]
 
-                  [parameters] include: #{API_PARAMETERS.join(", ")}
-                               specify --help for additional help
+       <action>     request action i.e.: #{ACTIONS.join(", ")}
+       [parameters] optional query parameters i.e.: #{API_PARAMETERS.join(", ")}
+       [resource]   optional resource e.g.: vms, services
 
-                  [resource] - is the optional resource i.e. services
+  #{API_CMD} [options] vi|edit [script]
 
-             #{API_CMD} [options] vi|edit [script]
+       Edit api_*.rb script
 
-                  Edit optional api_* scripts. script names must be specified without the
-                  api_ prefix or .rb suffix. Edits this script if not specified.
+  #{API_CMD} [options] run script [method]
 
-             #{API_CMD} [options] run script [method]
+       Run api_*.rb script
 
-                  Run optional api_* scripts
+  #{API_CMD} [options] ls
 
-             #{API_CMD} [options] ls
+       List api_*.rb scripts
 
-                  List optional api_* scripts (without the api_ prefix)
-
-      #{API_CMD} options are:
-      EOS
+Options:
+EOS
         opt :verbose,    "Verbose mode, show details of the communication",
             :default => false,                    :short => '-v'
-        opt :apiversion, "Version of the API to access",
-            :default => "",                       :short => '-V'
-        opt :url,        "Base URL of Appliance to access",
+        opt :apiversion, "API Version to access (default: none specified)",
+            :type => :string,                     :short => '-V'
+        opt :url,        "Base URL of Appliance",
             :default => "http://localhost:3000",  :short => '-l'
-        opt :user,       "User to authenticate as",
+        opt :user,       "User for authentication",
             :default => "admin",                  :short => '-u'
-        opt :group,      "User group to authorize as",
-            :default => "",                       :short => '-g'
-        opt :password,   "Password for user specified to authenticate as",
+        opt :group,      "User group for authorization",
+            :type => :string,                     :short => '-g'
+        opt :password,   "Password for user authentication",
             :default => "smartvm",                :short => '-p'
-        opt :token,      "Token to use for authentication instead of user/password",
-            :default => "",                       :short => '-t'
+        opt :token,      "Token for authentication. Used instead of user and password",
+            :type => :string,                     :short => '-t'
         opt :miqtoken,   "Token to use for system authentication",
             :default => "",                       :short => '-m'
-        opt :format,     "How to format Json, pretty|none",
+        opt :format,     "Json format. i.e.: pretty|none",
             :default => "pretty",                 :short => '-f'
-        opt :inputfile,  "File to use as input to the POST/PUT/PATCH methods",
-            :default => "",                       :short => '-i'
-        opt :scriptdir,  "Directory where optional api_* scripts live",
+        opt :inputfile,  "File containing data used by POST, PUT, or PATCH",
+            :type => :string,                     :short => '-i'
+        opt :scriptdir,  "Directory for api_* scripts",
             :default => SCRIPTDIR,                :short => '-s'
         stop_on SUB_COMMANDS
       end
 
-      unless opts[:inputfile].empty?
-        Trollop.die :inputfile, "File specified #{opts[:inputfile]} does not exist" unless File.exist?(opts[:inputfile])
+      opts[:action] = ARGV.shift
+
+      case(opts[:action])
+      when "edit"
+      when "vi"
+        opts[:api_script] = script_filename(scriptdir, ARGV.shift)
+      when "run"
+        opts[:api_script] = script_filename(scriptdir, ARGV.shift)
+        opts[:method] = ARGV.shift
+      else
+        api_params = Trollop.options do
+          norm_options  = {:type => :string}
+          multi_options = {:type => :string, :multi => true}
+          API_PARAMETERS.each { |p| opt p.intern, p, (MULTI_PARAMS.include?(p) ? multi_options.dup : norm_options.dup) }
+        end
+        params = {}
+        API_PARAMETERS.each { |param| params[param] = api_params[param.intern] unless api_params[param.intern].nil? }
+
+        opts[:resource] = ARGV.shift
+        opts[:method] = METHODS[opts[:action]]
+        opts[:params] = params
+      end
+
+      opts
+    end
+
+    def validate(opts)
+      action = opts[:action]
+      if opts[:inputfile] && !File.exist?(opts[:inputfile])
+        Trollop.die :inputfile, "File specified #{opts[:inputfile]} does not exist"
       end
 
       begin
@@ -141,120 +171,74 @@ class RestApi
         Trollop.die :url, "Invalid URL syntax specified #{opts[:url]}"
       end
 
-      action = ARGV.shift
       Trollop.die "Must specify an action" if action.nil?
 
       if SCRIPTDIR_ACTIONS.include?(action)
         msg_exit("Script directory #{opts[:scriptdir]} does not exist") unless File.directory?(opts[:scriptdir])
       end
 
-      if action == "ls"
-        d = Dir.open(opts[:scriptdir])
-        d.each do |file|
-          p = file.scan(/^api_(.*)\.rb/)
-          puts p unless p.nil?
-        end
-        d.close
-        exit 0
-      end
-
-      if action == "vi" || action == "edit"
-        api_script = ARGV.shift
-        api_script_file = if api_script.nil? || api_script == ""
-                            File.expand_path($PROGRAM_NAME)
-                          else
-                            File.join(opts[:scriptdir], "api_#{api_script}.rb")
-                          end
-        ed_cmd = "vi"
-        ed_cmd = ENV["EDITOR"] if action == "edit" && ENV["EDITOR"]
-        cmd = "#{ed_cmd} #{api_script_file}"
-        system(cmd)
-        exit 0
-      end
-
       if action == "run"
-        script = ARGV.shift
-        method = ARGV.shift
-        msg_exit("Must specify a script to run.") if script.nil?
-        api_script = "#{opts[:scriptdir]}/api_#{script}.rb"
-        msg_exit("Script file #{api_script} does not exist") unless File.exist?(api_script)
-      else
-        api_params = Trollop.options do
-          norm_options  = {:default => ""}
-          multi_options = {:default => "", :multi => true}
-          API_PARAMETERS.each { |p| opt p.intern, p, (MULTI_PARAMS.include?(p) ? multi_options.dup : norm_options.dup) }
-        end
-        API_PARAMETERS.each { |param| params[param] = api_params[param.intern] unless api_params[param.intern].empty? }
+        msg_exit("Must specify a script to run.") unless opts[:api_script]
+        msg_exit("Script file #{opts[:api_script]} does not exist") unless File.exist?(opts[:api_script])
       end
 
-      if action != "run"
-        resource = ARGV.shift
+      msg_exit("Unsupported action #{action} specified") if !%w(run vi edit).include?(opts[:method]) && action.nil?
+      msg_exit("Action #{action} requires data to be specified") if METHODS_NEEDING_DATA.include?(opts[:method]) && opts[:data].nil?
+    end
 
-        resource = "/" + resource             if resource && resource[0] != "/"
-        resource = resource.gsub(PREFIX, '')  unless resource.nil?
+    def parse_data
+      opts[:inputfile].nil? ? prompt_get_data : File.read(opts[:inputfile])
+    end
 
-        method = METHODS[action]
-        msg_exit("Unsupported action #{action} specified") if method.nil?
+    def run
+      opts = parse
+      opts[:data] = parse_data if METHODS_NEEDING_DATA.include?(opts[:method])
+      validate(opts)
 
-        if METHODS_NEEDING_DATA.include?(method)
-          data = opts[:inputfile].empty? ? prompt_get_data : File.read(opts[:inputfile])
-
-          msg_exit("Action #{action} requires data to be specified") if data.empty?
-        end
-      end
-
-      conn = Faraday.new(:url => opts[:url], :ssl => {:verify => false}) do |faraday|
-        faraday.request(:url_encoded)               # form-encode POST params
-        faraday.response(:logger) if opts[:verbose] # log requests to STDOUT
-        faraday.use FaradayMiddleware::FollowRedirects, :limit => 3, :standards_compliant => true
-        faraday.adapter(Faraday.default_adapter)    # make requests with Net::HTTP
-        faraday.basic_auth(opts[:user], opts[:password]) if opts[:token].empty? && opts[:miqtoken].empty?
-      end
-
-      if action == "run"
-        puts "Loading #{api_script}"
-        require api_script
-        as = ApiScript.new(CTYPE, conn)
-        puts "Running #{api_script} with method #{method} ..."
-        method.nil? ? as.run : as.run(method)
+      case opts[:action]
+      when "ls"
+        run_ls(opts[:scriptdir])
+        exit 0
+      when "vi", "edit"
+        run_vi(opts[:action], opts[:api_script])
+        exit 0
+      when "run"
+        conn = create_connection(opts)
+        run_script(conn, opts)
         exit
+      else
+        conn = create_connection(opts)
+        success = run_method(conn, opts)
+        exit success ? 0 : 1
       end
+    end
 
+    def run_method(conn, opts)
       path = PREFIX.dup
-      path << "/v#{opts[:apiversion]}" unless opts[:apiversion].empty?
+      path << "/v#{opts[:apiversion]}" unless opts[:apiversion].nil?
 
       collection = ""
       item = ""
-      unless resource.nil?
+      if (resource = opts[:resource])
+        resource = "/" + resource if resource[0] != "/"
+        opts[:resource] = resource = resource.gsub(PREFIX, '')
         path << resource
         rscan = resource.scan(%r{[^/]+})
         collection, item = rscan[0..1]
       end
 
-      if opts[:verbose]
-        puts SEP
-        puts "Connection Endpoint: #{opts[:url]}"
-        puts "Action:              #{action}"
-        puts "HTTP Method:         #{method}"
-        puts "Resource:            #{resource}"
-        puts "Collection:          #{collection}"
-        puts "Item:                #{item}"
-        puts "Parameters:"
-        params.keys.each { |k| puts "#{' ' * 21}#{k} = #{params[k]}" }
-        puts "Path:                #{path}"
-        puts "Data:                #{data}"
-      end
+      print_options(opts, collection, item, path) if opts[:verbose]
 
       begin
-        response = conn.send(method) do |req|
+        response = conn.send(opts[:method]) do |req|
           req.url path
           req.headers[:content_type]  = CTYPE
           req.headers[:accept]        = CTYPE
-          req.headers['X-MIQ-Group']  = opts[:group] unless opts[:group].empty?
-          req.headers['X-MIQ-Token']  = opts[:miqtoken] unless opts[:miqtoken].empty?
-          req.headers['X-Auth-Token'] = opts[:token] unless opts[:token].empty?
-          req.params.merge!(params)
-          req.body = data if METHODS_NEEDING_DATA.include?(method)
+          req.headers['X-MIQ-Group']  = opts[:group] unless opts[:group].nil?
+          req.headers['X-MIQ-Token']  = opts[:miqtoken] unless opts[:miqtoken].nil?
+          req.headers['X-Auth-Token'] = opts[:token] unless opts[:token].nil?
+          req.params.merge!(opts[:params])
+          req.body = opts[:data] if METHODS_NEEDING_DATA.include?(opts[:method])
         end
       rescue => e
         msg_exit("\nFailed to connect to #{opts[:url]} - #{e}")
@@ -278,7 +262,55 @@ class RestApi
         end
       end
 
-      exit response.status >= 400 ? 1 : 0
+      response < 400
+    end
+
+    def run_ls(scriptdir)
+      d = Dir.open(scriptdir)
+      d.each do |file|
+        p = file.scan(/^api_(.*)\.rb/)
+        puts p unless p.nil?
+      end
+      d.close
+    end
+
+    def run_vi(ed_cmd, api_script)
+      api_script_file = api_script || File.expand_path($PROGRAM_NAME)
+      ed_cmd = ed_cmd == "edit" && ENV["EDITOR"] ? ENV["EDITOR"] : "vi"
+      cmd = "#{ed_cmd} #{api_script_file}"
+      system(cmd)
+    end
+
+    def create_connection(opts)
+      Faraday.new(:url => opts[:url], :ssl => {:verify => false}) do |faraday|
+        faraday.request(:url_encoded)               # form-encode POST params
+        faraday.response(:logger) if opts[:verbose] # log requests to STDOUT
+        faraday.use FaradayMiddleware::FollowRedirects, :limit => 3, :standards_compliant => true
+        faraday.adapter(Faraday.default_adapter)    # make requests with Net::HTTP
+        faraday.basic_auth(opts[:user], opts[:password]) if opts[:token].nil?
+      end
+    end
+
+    def run_script(conn, opts)
+      puts "Loading #{opts[:api_script]}"
+      require opts[:api_script]
+      as = ApiScript.new(CTYPE, conn)
+      puts "Running #{opts[:api_script]} with method #{method} ..."
+      opts[:method].nil? ? as.run : as.run(opts[:method])
+    end
+
+    def print_options(opts, collection, item, path)
+      puts SEP
+      puts "Connection Endpoint: #{opts[:url]}"
+      puts "Action:              #{opts[:action]}"
+      puts "HTTP Method:         #{opts[:method]}"
+      puts "Resource:            #{opts[:resource]}"
+      puts "Collection:          #{collection}"
+      puts "Item:                #{item}"
+      puts "Parameters:"
+      opts[:params].keys.each { |k| puts "#{' ' * 21}#{k} = #{opts[:params][k]}" }
+      puts "Path:                #{path}"
+      puts "Data:                #{opts[:data]}"
     end
   end
 end
