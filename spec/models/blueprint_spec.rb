@@ -208,6 +208,25 @@ describe Blueprint do
       end
     end
   end
+
+  describe "#publish" do
+    it "copies resources at publishing" do
+      bundle = subject.create_bundle(:service_templates => [catalog_vm_provisioning],
+                                     :service_dialog    => dialog,
+                                     :service_catalog   => catalog)
+
+      changes = subject.publish("new bundle name")
+      expect(subject.published?).to be_truthy
+      expect(changes["service_templates"]).to include(catalog_vm_provisioning.id)
+      expect(changes["service_dialog"]).to include(dialog.id)
+      expect(bundle.name).to eq("new bundle name")
+      expect(subject.bundle).to eq(bundle)
+      expect(Dialog.count).to eq(2)
+      expect(ServiceTemplate.count).to eq(3)
+      expect(ServiceResource.count).to eq(3)
+      expect(ResourceAction.count).to eq(6)
+    end
+  end
 end
 
 def add_and_save_service(p, c)
