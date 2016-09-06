@@ -3458,10 +3458,10 @@
     :feature_type: admin
     :identifier: middleware_deployment_admin
     :children:
-    - :name: Remove
-      :description: Remove Middleware Deployment
+    - :name: Undeploy
+      :description: Undeploy Middleware Deployment
       :feature_type: admin
-      :identifier: middleware_deployment_delete
+      :identifier: middleware_deployment_remove
     - :name: Edit
       :description: Edit a Middleware Deployment
       :feature_type: admin
@@ -3479,22 +3479,22 @@
       :description: Edit Tags of Middleware Deployments
       :feature_type: control
       :identifier: middleware_deployment_tag
-    - :name: Stop middleware deployment
-      :description: Stop Middleware deployment
+    - :name: Disable middleware deployment
+      :description: Disable Middleware deployment
       :feature_type: admin
-      :identifier: middleware_deployment_stop
-    - :name: Start middleware deployment
-      :description: StartMiddleware deployment
+      :identifier: middleware_deployment_disable
+    - :name: Enable middleware deployment
+      :description: Enable Middleware deployment
       :feature_type: admin
-      :identifier: middleware_deployment_start
+      :identifier: middleware_deployment_enable
     - :name: Undeploy middleware deployment
       :description: Undeploy Middleware deployment
       :feature_type: admin
       :identifier: middleware_deployment_undeploy
-    - :name: Redeploy middleware deployment
-      :description: Redeploy Middleware deployment
+    - :name: Restart middleware deployment
+      :description: Restart Middleware deployment
       :feature_type: admin
-      :identifier: middleware_deployment_redeploy
+      :identifier: middleware_deployment_restart
 
 # Middleware Datasource
 - :name: Middleware Datasource

@@ -8,17 +8,17 @@ class MiddlewareDeploymentController < ApplicationController
   after_action :set_session_data
 
   OPERATIONS = {
-    :middleware_deployment_redeploy => {:op   => :redeploy_middleware_deployment,
-                                        :hawk => N_('Not redeploying deployment'),
-                                        :msg  => N_('Redeployment initiated for selected deployment(s)')
+    :middleware_deployment_restart  => {:op   => :restart_middleware_deployment,
+                                        :hawk => N_('Not restarting deployment'),
+                                        :msg  => N_('Restart initiated for selected deployment(s)')
     },
-    :middleware_deployment_stop     => {:op   => :stop_middleware_deployment,
-                                        :hawk => N_('Not stopping deployment'),
-                                        :msg  => N_('Stop initiated for selected deployment(s)')
+    :middleware_deployment_disable  => {:op   => :disable_middleware_deployment,
+                                        :hawk => N_('Not disabling deployment'),
+                                        :msg  => N_('Disable initiated for selected deployment(s)')
     },
-    :middleware_deployment_start    => {:op   => :start_middleware_deployment,
-                                        :hawk => N_('Not starting deployment'),
-                                        :msg  => N_('Start initiated for selected deployment(s)')
+    :middleware_deployment_enable   => {:op   => :enable_middleware_deployment,
+                                        :hawk => N_('Not enabling deployment'),
+                                        :msg  => N_('Enable initiated for selected deployment(s)')
     },
     :middleware_deployment_undeploy => {:op   => :undeploy_middleware_deployment,
                                         :hawk => N_('Not undeploying deployment'),

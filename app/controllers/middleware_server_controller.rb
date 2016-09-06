@@ -62,6 +62,7 @@ class MiddlewareServerController < ApplicationController
       params[:file] = {
         :file         => params["file"],
         :enabled      => params["enabled"],
+        :force_deploy => params["forceDeploy"],
         :runtime_name => params["runtimeName"]
       }
       run_server_operation(OPERATIONS.fetch(:middleware_add_deployment), selected_server)

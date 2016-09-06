@@ -10,6 +10,7 @@ function MwAddDeploymentController($scope, $http, miqService) {
     fd.append('file', data.filePath);
     fd.append('id', data.serverId);
     fd.append('enabled', data.enableDeployment);
+    fd.append('forceDeploy', data.forceDeploy);
     fd.append('runtimeName', data.runtimeName);
     $http.post('/middleware_server/add_deployment', fd, {
       transformRequest: angular.identity,
