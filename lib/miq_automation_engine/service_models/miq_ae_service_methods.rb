@@ -147,17 +147,17 @@ module MiqAeMethodService
       MiqAeServiceModelBase.wrap_results(AutomationRequest.create_request(options, user, auto_approve))
     end
 
-    private
-
     def self.service_now_drb_undumped
       _log.info "Entered"
       [SnsHash, SnsArray].each { |klass| drb_undumped(klass) }
     end
+    private_class_method :service_now_drb_undumped
 
     def self.drb_undumped(klass)
       _log.info "Entered: klass=#{klass.name}"
       klass.include(DRbUndumped) unless klass.ancestors.include?(DRbUndumped)
     end
+    private_class_method :drb_undumped
 
     def self.ar_method
       yield
@@ -168,6 +168,7 @@ module MiqAeMethodService
     ensure
       ActiveRecord::Base.connection_pool.release_connection rescue nil
     end
+    private_class_method :ar_method
 
     def self.service_now_task_service(service, server, username, password, *params)
       log_prefix = "[#{service.underscore}]"
@@ -194,5 +195,6 @@ module MiqAeMethodService
         raise
       end
     end
+    private_class_method :service_now_task_service
   end
 end
