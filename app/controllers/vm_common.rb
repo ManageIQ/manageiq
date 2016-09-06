@@ -1242,9 +1242,10 @@ module VmCommon
     else      # Get list of child VMs of this node
       options = {:model => model}
       if x_node == "root"
-        # TODO: potential to move this into a model with a scope built into it
-        options[:where_clause] =
-          ["vms.type IN (?)", ManageIQ::Providers::InfraManager::Vm.subclasses.collect(&:name) + ManageIQ::Providers::InfraManager::Template.subclasses.collect(&:name)] if x_active_tree == :vandt_tree
+        if x_active_tree == :vandt_tree
+          klass = ManageIQ::Providers::InfraManager::VmOrTemplate
+          options[:where_clause] = ["vms.type IN (?)", klass.vm_descendants.collect(&:name)]
+        end
         process_show_list(options)  # Get all VMs & Templates
         # :model=>ui_lookup(:models=>"VmOrTemplate"))
         # TODO: Change ui_lookup/dictionary to handle VmOrTemplate, returning VMs And Templates
@@ -1255,8 +1256,10 @@ module VmCommon
                            end
       else
         if TreeBuilder.get_model_for_prefix(@nodetype) == "Hash"
-          options[:where_clause] =
-            ["vms.type IN (?)", ManageIQ::Providers::InfraManager::Vm.subclasses.collect(&:name) + ManageIQ::Providers::InfraManager::Template.subclasses.collect(&:name)] if x_active_tree == :vandt_tree
+          if x_active_tree == :vandt_tree
+            klass = ManageIQ::Providers::InfraManager::VmOrTemplate
+            options[:where_clause] = ["vms.type IN (?)", klass.vm_descendants.collect(&:name)]
+          end
           if id == "orph"
             options[:where_clause] = MiqExpression.merge_where_clauses(options[:where_clause], VmOrTemplate::ORPHANED_CONDITIONS)
             process_show_list(options)

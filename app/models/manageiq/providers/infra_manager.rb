@@ -3,6 +3,7 @@ module ManageIQ::Providers
     require_nested :Template
     require_nested :ProvisionWorkflow
     require_nested :Vm
+    require_nested :VmOrTemplate
 
     include AvailabilityMixin
 

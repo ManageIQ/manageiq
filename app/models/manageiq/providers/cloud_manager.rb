@@ -7,6 +7,7 @@ module ManageIQ::Providers
     require_nested :ProvisionWorkflow
     require_nested :Vm
     require_nested :OrchestrationStack
+    require_nested :VmOrTemplate
 
     class << model_name
       define_method(:route_key) { "ems_clouds" }
