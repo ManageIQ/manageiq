@@ -7,7 +7,12 @@ module SupportsFeatureMixin
   #     supports :publish
   #     supports_not :fake, :reason => 'We keep it real'
   #     supports :archive do
-  #       unsupported_reason_add(:archive, 'Its too good') if featured?
+  #         unsupported_reason_add(:archive, 'Its too good') if featured?
+  #     end
+  #     supports :featureXYZ, :someCondition do |someCondition|
+  #       if someCondition
+  #         unsupported_reason_add(:featureXYZ, 'Quite unfortunate this is not supported') if someBooleanVariable?
+  #       end
   #     end
   #   end
   #
@@ -26,6 +31,8 @@ module SupportsFeatureMixin
   #   Post.supports_fake?                          # => false
   #   Post.supports_archive?                       # => true
   #   Post.new(featured: true).supports_archive?   # => false
+  #   Post.new(someBooleanVariable: true).supports_featureXYZ?(true)  # => false
+  #   Post.new(someBooleanVariable: true).supports_featureXYZ?(false)  # => true
   #
   # To get a reason why a feature is unsupported use the +unsupported_reason+ method
   # Note: Because providing a reason for an unsupported feature is optional, you should
@@ -73,8 +80,8 @@ module SupportsFeatureMixin
       unsupported[feature]
     end
 
-    def supports(feature, &block)
-      send(:define_supports_methods, feature, true, &block)
+    def supports(feature, *args, &block)
+      send(:define_supports_methods, feature, true, *args, &block)
     end
 
     def supports_not(feature, reason: nil)
@@ -93,13 +100,12 @@ module SupportsFeatureMixin
       unsupported[feature] = reason
     end
 
-    def define_supports_methods(feature, is_supported, reason = nil, &block)
+    def define_supports_methods(feature, is_supported, reason = nil, *args, &block)
       method_name = "supports_#{feature}?"
-
       define_method(method_name) do
         unsupported.delete(feature)
         if block_given?
-          instance_eval(&block)
+          instance_exec(*args, &block)
         else
           unsupported[feature] = reason unless is_supported
         end
