@@ -123,8 +123,6 @@ class EvmDatabaseOps
     PostgresAdmin.start(DEFAULT_OPTS)
   end
 
-  private
-
   def self.upload(connect_opts, local_file, destination_file)
     MiqGenericMountSession.in_depot_session(connect_opts) { |session| session.upload(local_file, destination_file) }
     destination_file
@@ -139,4 +137,5 @@ class EvmDatabaseOps
     time_suffix  = Time.now.utc.strftime("%Y%m%d_%H%M%S")
     "#{BACKUP_TMP_FILE}_#{time_suffix}"
   end
+  private_class_method :backup_file_name
 end

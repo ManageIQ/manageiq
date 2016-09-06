@@ -47,8 +47,6 @@ module MiqEnvironment
       "rails"
     end
 
-    private
-
     def self.supports_command?(cmd)
       return false unless EVM_KNOWN_COMMANDS.include?(cmd)
       require "runcmd"
