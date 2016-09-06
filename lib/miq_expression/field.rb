@@ -82,6 +82,10 @@ class MiqExpression::Field
     )
   end
 
+  def column_type
+    target.type_for_attribute(column).type
+  end
+
   private
 
   class WhereExtractionVisitor < Arel::Visitors::PostgreSQL
@@ -126,9 +130,5 @@ class MiqExpression::Field
 
   def arel_attribute
     target.arel_attribute(column)
-  end
-
-  def column_type
-    target.type_for_attribute(column).type
   end
 end

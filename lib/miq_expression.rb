@@ -443,28 +443,27 @@ class MiqExpression
     operator = exp.keys.first
     case operator.downcase
     when "equal", "=", "<", ">", ">=", "<=", "!="
-      col_type = get_col_type(exp[operator]["field"]) if exp[operator]["field"]
       operands = operands2rubyvalue(operator, exp[operator], context_type)
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
     when "before"
-      col_type = get_col_type(exp[operator]["field"]) if exp[operator]["field"]
+      field = Field.parse(exp[operator]["field"])
       col_name = exp[operator]["field"]
       col_ruby, = operands2rubyvalue(operator, {"field" => col_name}, context_type)
-      val = RelativeDatetime.normalize(exp[operator]["value"], tz, "beginning", col_type == :date)
-      clause = if col_type == :date
-                 "val=#{col_ruby}; !val.nil? && val.to_date < #{quote(val, col_type)}"
+      val = RelativeDatetime.normalize(exp[operator]["value"], tz, "beginning", field.date?)
+      clause = if field.date?
+                 "val=#{col_ruby}; !val.nil? && val.to_date < #{quote(val, field.column_type)}"
                else
-                 "val=#{col_ruby}; !val.nil? && val.to_time < #{quote(val, col_type)}"
+                 "val=#{col_ruby}; !val.nil? && val.to_time < #{quote(val, field.column_type)}"
                end
     when "after"
-      col_type = get_col_type(exp[operator]["field"]) if exp[operator]["field"]
+      field = Field.parse(exp[operator]["field"])
       col_name = exp[operator]["field"]
       col_ruby, = operands2rubyvalue(operator, {"field" => col_name}, context_type)
-      val = RelativeDatetime.normalize(exp[operator]["value"], tz, "end", col_type == :date)
-      clause = if col_type == :date
-                 "val=#{col_ruby}; !val.nil? && val.to_date > #{quote(val, col_type)}"
+      val = RelativeDatetime.normalize(exp[operator]["value"], tz, "end", field.date?)
+      clause = if field.date?
+                 "val=#{col_ruby}; !val.nil? && val.to_date > #{quote(val, field.column_type)}"
                else
-                 "val=#{col_ruby}; !val.nil? && val.to_time > #{quote(val, col_type)}"
+                 "val=#{col_ruby}; !val.nil? && val.to_time > #{quote(val, field.column_type)}"
                end
     when "includes all"
       operands = operands2rubyvalue(operator, exp[operator], context_type)
@@ -519,42 +518,42 @@ class MiqExpression
     when "value exists"
       clause = operands2rubyvalue(operator, exp[operator], context_type)
     when "is"
+      field = Field.parse(exp[operator]["field"])
       col_name = exp[operator]["field"]
-      col_ruby, dummy = operands2rubyvalue(operator, {"field" => col_name}, context_type)
-      col_type = get_col_type(col_name)
+      col_ruby, = operands2rubyvalue(operator, {"field" => col_name}, context_type)
       value = exp[operator]["value"]
-      start_val = RelativeDatetime.normalize(value, tz, "beginning", col_type == :date)
-      end_val = RelativeDatetime.normalize(value, tz, "end", col_type == :date)
-      if col_type == :date
+      start_val = RelativeDatetime.normalize(value, tz, "beginning", field.date?)
+      end_val = RelativeDatetime.normalize(value, tz, "end", field.date?)
+      if field.date?
         if RelativeDatetime.relative?(value)
-          start_val = quote(start_val, col_type)
-          end_val   = quote(end_val, col_type)
+          start_val = quote(start_val, field.column_type)
+          end_val   = quote(end_val, field.column_type)
           clause    = "val=#{col_ruby}; !val.nil? && val.to_date >= #{start_val} && val.to_date <= #{end_val}"
         else
-          value  = quote(start_val, col_type)
+          value  = quote(start_val, field.column_type)
           clause = "val=#{col_ruby}; !val.nil? && val.to_date == #{value}"
         end
       else
-        start_val = quote(start_val, col_type)
-        end_val   = quote(end_val, col_type)
+        start_val = quote(start_val, field.column_type)
+        end_val   = quote(end_val, field.column_type)
         clause    = "val=#{col_ruby}; !val.nil? && val.to_time >= #{start_val} && val.to_time <= #{end_val}"
       end
     when "from"
+      field = Field.parse(exp[operator]["field"])
       col_name = exp[operator]["field"]
-      col_ruby, dummy = operands2rubyvalue(operator, {"field" => col_name}, context_type)
-      col_type = get_col_type(col_name)
+      col_ruby, = operands2rubyvalue(operator, {"field" => col_name}, context_type)
 
       start_val, end_val = exp[operator]["value"]
-      start_val = RelativeDatetime.normalize(start_val, tz, "beginning", col_type == :date)
-      end_val = RelativeDatetime.normalize(end_val, tz, "end", col_type == :date)
-      if col_type == :date
-        start_val = quote(start_val, col_type)
-        end_val   = quote(end_val, col_type)
+      start_val = RelativeDatetime.normalize(start_val, tz, "beginning", field.date?)
+      end_val = RelativeDatetime.normalize(end_val, tz, "end", field.date?)
+      if field.date?
+        start_val = quote(start_val, field.column_type)
+        end_val   = quote(end_val, field.column_type)
 
         clause = "val=#{col_ruby}; !val.nil? && val.to_date >= #{start_val} && val.to_date <= #{end_val}"
       else
-        start_val = quote(start_val, col_type)
-        end_val   = quote(end_val, col_type)
+        start_val = quote(start_val, field.column_type)
+        end_val   = quote(end_val, field.column_type)
 
         clause = "val=#{col_ruby}; !val.nil? && val.to_time >= #{start_val} && val.to_time <= #{end_val}"
       end
