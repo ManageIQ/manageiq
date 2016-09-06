@@ -21,7 +21,7 @@ describe('containerTopologyController', function() {
       scope = $rootScope.$new();
 
       $httpBackend = _$httpBackend_;
-      $httpBackend.when('GET','/ems_container/topology_data/1').respond(mock_data);
+      $httpBackend.when('GET','/container_topology/data/1').respond(mock_data);
       $controller = _$controller_('containerTopologyController',
           {$scope: scope});
       $httpBackend.flush();
@@ -71,5 +71,4 @@ describe('containerTopologyController', function() {
         expect($controller.getDimensions(replicator)).toEqual({ x: -1, y: 8, r: 17 });
       });
     });
-    
 });
