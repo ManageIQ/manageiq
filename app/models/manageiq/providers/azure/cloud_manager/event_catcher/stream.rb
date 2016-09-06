@@ -2,12 +2,10 @@ class ManageIQ::Providers::Azure::CloudManager::EventCatcher::Stream
   #
   # Creates an event monitor
   #
-  def initialize(client_id, client_key, azure_region, tenant_id)
-    @client_id         = client_id
-    @client_key        = client_key
-    @tenant_id         = tenant_id
-    @azure_region      = azure_region
+  def initialize(ems)
+    @ems = ems
     @collecting_events = false
+    @since = nil
   end
 
   # Start capturing events
@@ -62,11 +60,8 @@ class ManageIQ::Providers::Azure::CloudManager::EventCatcher::Stream
   end
 
   def create_event_service
-    conf = Azure::Armrest::ArmrestService.configure(
-      :client_id  => @client_id,
-      :client_key => @client_key,
-      :tenant_id  => @tenant_id
-    )
-    Azure::Armrest::Insights::EventService.new(conf)
+    @ems.with_provider_connection do |conf|
+      Azure::Armrest::Insights::EventService.new(conf)
+    end
   end
 end
