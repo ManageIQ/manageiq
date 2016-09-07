@@ -58,7 +58,14 @@ class ApplicationController < ActionController::Base
   before_action :get_global_session_data, :except => [:resize_layout, :window_sizes, :authenticate]
   before_action :set_user_time_zone, :except => [:window_sizes]
   before_action :set_gettext_locale, :except => [:window_sizes]
+  before_action :allow_websocket
   after_action :set_global_session_data, :except => [:resize_layout, :window_sizes]
+
+  def allow_websocket
+    proto = request.ssl? ? 'wss' : 'ws'
+    override_content_security_policy_directives(:connect_src => ["'self'", "#{proto}://#{request.env['HTTP_HOST']}"])
+  end
+  private :allow_websocket
 
   def reset_toolbar
     @toolbars = {}
