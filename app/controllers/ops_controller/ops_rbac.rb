@@ -999,11 +999,13 @@ module OpsController::OpsRbac
 
     if params[:check]                               # User checked/unchecked a tree node
       if params[:tree_typ] == "tags"                # MyCompany tag checked
+        cat, tag = params[:id].split('cl-').last.split("_xx-")         #     Get the category and tag
+        cat_name = Classification.find_by(:id => from_cid(cat)).name
+        tag_name = Classification.find_by(:id => tag).name
         if params[:check] == "0"                    #   unchecked
-          @edit[:new][:filters].delete(params[:id].split('xx-').last)   #     Remove the tag from the filters array
+          @edit[:new][:filters].delete("/managed/#{cat_name}/#{tag_name}")   #     Remove the tag from the filters array
         else                                        #   checked
-          cat, tag = params[:id].split('xx-').last.split("-")         #     Get the category and tag
-          @edit[:new][:filters][params[:id].split('xx-').last] = "/managed/#{cat}/#{tag}" # Put them in the hash
+          @edit[:new][:filters]["#{cat_name}-#{tag_name}"] = "/managed/#{cat_name}/#{tag_name}" # Put them in the hash
         end
       else                                          # Belongsto tag checked
         if params[:check] == "0"                    #   unchecked

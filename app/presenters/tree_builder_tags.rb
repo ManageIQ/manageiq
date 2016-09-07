@@ -1,6 +1,6 @@
 class TreeBuilderTags < TreeBuilder
   has_kids_for Classification, [:x_get_classification_kids]
-  #TODO delete?
+
   def initialize(name, type, sandbox, build, edit, filters, group)
     @edit = edit
     @filters = filters
@@ -8,6 +8,7 @@ class TreeBuilderTags < TreeBuilder
     @categories = Classification.categories.collect { |c| c unless !c.show || ["folder_path_blue", "folder_path_yellow"].include?(c.name) }.compact
     @categories.sort_by! { |c| c.description.downcase }
     super(name, type, sandbox, true)
+    @tree_state.x_tree(name)[:open_nodes] = []
   end
 
   private
@@ -18,12 +19,20 @@ class TreeBuilderTags < TreeBuilder
      :lazy     => false}
   end
 
+  def has_selected_kid(category)
+    open = false
+      category.entries.each do |entry|
+        kid_id = "#{category.name}-#{entry.name}"
+        open = true if (@edit && @edit[:new][:filters].key?(kid_id)) || (@filters && @filters.key?(kid_id))
+      end
+    open
+  end
+
   def set_locals_for_render
     locals = super
     locals.merge!(:id_prefix      => 'myco_',
                   :check_url      => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
                   :oncheck        => @edit.nil? ? nil : "miqOnCheckUserFilters",
-                  :disable_checks => @edit.nil?,
                   :checkboxes     => true,
                   :onclick        => false)
   end
@@ -33,6 +42,9 @@ class TreeBuilderTags < TreeBuilder
   end
 
   def x_get_tree_roots(count_only = false, _options)
+    @categories.each do |c|
+      open_node("cl-#{to_cid(c.id)}") if has_selected_kid(c)
+    end
     count_only_or_objects(count_only, @categories)
   end
 
@@ -44,15 +56,17 @@ class TreeBuilderTags < TreeBuilder
                   else
                     "cfme-blue-node"            # Show node as different
                   end
-      #parent[:expand] = true if (@edit && @edit[:new][:filters].key?(kid_id)) || (@filters && @filters.key?(kid_id))
-
-      {:id       => kid_id,
+      select = false
+          if (@edit && @edit[:new][:filters].key?(kid_id)) || (@filters && @filters.key?(kid_id))
+            select = true
+          end
+      {:id       => kid.id,
        :image    => 'tag',
        :text     => kid.description,
        :tooltip  => _("Tag: %{description}") % {:description => kid.description},
-       :select   => (@edit && @edit[:new][:filters].key?(kid_id)) || (@filters && @filters.key?(kid_id)),
-       :addClass => kid_class,
-       :children => []}
+       :select   => select,
+       :cfmeNoClick  => true,
+       :addClass => kid_class}
     end
     count_only_or_objects(count_only, kids)
   end
