@@ -19,6 +19,11 @@ module Api
         delete_custom_attribute(object, ca)
       end
 
+      def delete_resource_custom_attributes(parent, _type, id, data)
+        ca = find_custom_attribute(parent, id, data)
+        delete_custom_attribute(parent, ca)
+      end
+
       private
 
       def add_custom_attribute(object, data)

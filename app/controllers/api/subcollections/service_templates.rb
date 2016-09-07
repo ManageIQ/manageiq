@@ -48,6 +48,10 @@ module Api
         end
       end
 
+      def delete_resource_service_templates(_parent, type, id, data)
+        delete_resource(type, id, data)
+      end
+
       private
 
       def service_template_ident(st)
