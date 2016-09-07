@@ -140,6 +140,35 @@ describe Compliance do
         subject { template }
         include_examples ".check_compliance"
       end
+
+      context "no condition" do
+        let(:policy) do
+          FactoryGirl.create(:miq_policy,
+                             :mode       => 'compliance',
+                             :towhat     => 'Vm',
+                             :expression => MiqExpression.new("=" => {"field" => "Vm-retired", "value" => "true"}),
+                             :active     => true)
+        end
+        let(:policy_set) { FactoryGirl.create(:miq_policy_set) }
+        let(:event_definition) { MiqEventDefinition.find_by_name("vm_compliance_check") }
+
+        before do
+          policy.sync_events([FactoryGirl.create(:miq_event_definition, :name => "vm_compliance_check")])
+          policy_set.add_member(policy)
+          ems_vmware.add_policy(policy_set)
+        end
+
+        it "compliant" do
+          vm1.update_attributes(:retired => true)
+          expect(MiqEvent).to receive(:raise_evm_event_queue).with(vm1, "vm_compliance_passed")
+          expect(Compliance.check_compliance(vm1)).to be_truthy
+          expect(vm1.compliances.last.compliant).to be_truthy
+        end
+
+        it "non-compliant" do
+          expect(Compliance.check_compliance(vm1)).to be_nil
+        end
+      end
     end
   end
 
