@@ -185,4 +185,8 @@ class Chargeback < ActsAsArModel
   def self.db_is_chargeback?(db)
     db && db.safe_constantize < Chargeback
   end
+
+  def self.report_tag_field
+    "tag_name"
+  end
 end # class Chargeback

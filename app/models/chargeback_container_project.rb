@@ -44,20 +44,20 @@ class ChargebackContainerProject < Chargeback
     project_id = options[:entity_id]
     filter_tag = options[:tag]
 
-    @project_ids = if filter_tag.present?
-                     # Get all ids of tagged projects
-                     ContainerProject.find_tagged_with(:all => filter_tag, :ns => "*").pluck(:id)
-                   elsif provider_id == "all"
-                     ContainerProject.all.pluck(:id)
-                   elsif provider_id.present? && project_id == "all"
-                     ContainerProject.where('ems_id = ? or old_ems_id = ?', provider_id, provider_id).pluck(:id)
-                   elsif project_id.present?
-                     [project_id.to_i]
-                   elsif project_id.nil? && provider_id.nil? && filter_tag.nil?
-                     raise "must provide option :entity_id, provider_id or tag"
-                   end
+    @projects = if filter_tag.present?
+                  # Get all ids of tagged projects
+                  ContainerProject.find_tagged_with(:all => filter_tag, :ns => "*")
+                elsif provider_id == "all"
+                  ContainerProject.all
+                elsif provider_id.present? && project_id == "all"
+                  ContainerProject.where('ems_id = ? or old_ems_id = ?', provider_id, provider_id)
+                elsif project_id.present?
+                  ContainerProject.where(:id => project_id)
+                elsif project_id.nil? && provider_id.nil? && filter_tag.nil?
+                  raise "must provide option :entity_id, provider_id or tag"
+                end
 
-    return [[]] if @project_ids.empty?
+    return [[]] if @projects.empty?
 
     if @options[:groupby_tag]
       @tag_hash = Classification.hash_all_by_type_and_name[@options[:groupby_tag]][:entry]
@@ -91,15 +91,11 @@ class ChargebackContainerProject < Chargeback
   end
 
   def self.where_clause(records, _options)
-    records.where(:resource_type => ContainerProject.name, :resource_id => @project_ids)
+    records.where(:resource_type => ContainerProject.name, :resource_id => @projects.select(:id))
   end
 
   def self.report_name_field
     "project_name"
-  end
-
-  def self.report_tag_field
-    "tag_name"
   end
 
   def self.report_col_options
@@ -117,5 +113,9 @@ class ChargebackContainerProject < Chargeback
       "net_io_used_metric"    => {:grouping => [:total]},
       "total_cost"            => {:grouping => [:total]}
     }
+  end
+
+  def tags
+    ContainerProject.includes(:tags).find_by_ems_ref(project_uid).try(:tags).to_a
   end
 end # class Chargeback
