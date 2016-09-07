@@ -16,7 +16,7 @@ module ManageIQ
               h[entity[:name].singularize] = client.send("get_#{entity[:name]}")
             rescue KubeException => e
               raise e if entity[:default].nil?
-              $log.error("Unexpected Exception during refresh: #{e}")
+              $log.warn("Unexpected Exception during refresh: #{e}")
               h[entity[:name].singularize] = entity[:default]
             end
           end
