@@ -86,10 +86,6 @@ module Api
                          :only => [:show, :update, :destroy, :handle_options_request, :options]
     end
 
-    def version_config
-      Settings.version
-    end
-
     def collection_config
       @collection_config ||= CollectionConfig.new
     end

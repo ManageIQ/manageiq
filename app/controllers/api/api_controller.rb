@@ -18,7 +18,7 @@ module Api
     private
 
     def entrypoint_versions
-      version_config[:definitions].select(&:ident).collect do |version_specification|
+      Settings.version.definitions.select(&:ident).collect do |version_specification|
         {
           :name => version_specification[:name],
           :href => "#{@req.api_prefix}/#{version_specification[:ident]}"
