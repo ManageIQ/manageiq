@@ -12,9 +12,6 @@ module Api
     #
     ID_ATTRS = %w(href id)
 
-    #
-    # Support for REST API
-    #
     include_concern 'Parameters'
     include_concern 'Parser'
     include_concern 'Manager'
@@ -48,9 +45,6 @@ module Api
     before_action :validate_response_format, :except => [:destroy]
     after_action :log_api_response
 
-    #
-    # Api Controller Hooks
-    #
     respond_to :json
     rescue_from_api_errors
 
