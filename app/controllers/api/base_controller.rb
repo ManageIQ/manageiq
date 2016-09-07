@@ -5,6 +5,13 @@ module Api
   Initializer.new.go
 
   class BaseController < ApplicationController
+    TAG_NAMESPACE = "/managed"
+
+    #
+    # Attributes used for identification
+    #
+    ID_ATTRS = %w(href id)
+
     #
     # Support for REST API
     #
@@ -56,13 +63,6 @@ module Api
     #
     respond_to :json
     rescue_from_api_errors
-
-    TAG_NAMESPACE = "/managed"
-
-    #
-    # Attributes used for identification
-    #
-    ID_ATTRS = %w(href id)
 
     def collection_config
       @collection_config ||= CollectionConfig.new
