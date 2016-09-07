@@ -540,6 +540,18 @@
         :identifier: instance_guest_restart
       - :name: reset
         :identifier: instance_reset
+  :notifications:
+    :description: User's past notifications
+    :options:
+    - :collection
+    :verbs: *gp
+    :klass: NotificationRecipient
+    :collection_actions:
+      :post:
+      - :name: mark_as_seen
+    :resource_actions:
+      :post:
+      - :name: mark_as_seen
   :pictures:
     :description: Pictures
     :options:
