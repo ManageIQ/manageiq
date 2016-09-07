@@ -106,7 +106,7 @@ module Api
       @api_config      = VMDB::Config.new("vmdb").config[@module.to_sym] || {}
     end
 
-    before_action :parse_api_request, :log_api_request, :validate_api_request
+    before_action :parse_api_request, :log_api_request, :validate_api_request, :validate_api_action
     after_action :log_api_response
   end
 end

@@ -6,7 +6,6 @@ module Api
       #
 
       def show
-        validate_api_action
         if @req.subcollection
           render_collection_type @req.subcollection.to_sym, @req.s_id, true
         else
@@ -15,7 +14,6 @@ module Api
       end
 
       def update
-        validate_api_action
         if @req.subcollection
           render_normal_update @req.collection.to_sym, update_collection(@req.subcollection.to_sym, @req.s_id, true)
         else
@@ -24,7 +22,6 @@ module Api
       end
 
       def destroy
-        validate_api_action
         if @req.subcollection
           delete_subcollection_resource @req.subcollection.to_sym, @req.s_id
         else
