@@ -812,8 +812,6 @@ class ApplicationHelper::ToolbarBuilder
       else
         return !role_allows?(:feature => id)
       end
-    when "OrchestrationTemplate", "OrchestrationTemplateCfn", "OrchestrationTemplateHot", "OrchestrationTemplateAzure", "OrchestrationTemplateVnfd"
-      return true unless role_allows?(:feature => id)
     when "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem", "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem"
       case id
       when "configured_system_provision"
