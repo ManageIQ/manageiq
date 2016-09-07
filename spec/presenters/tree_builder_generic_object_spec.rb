@@ -11,8 +11,8 @@ describe TreeBuilderGenericObject do
     it "returns a json tree with a root node" do
       result = JSON.parse(tree_builder.nodes)
       expect(result.first).to include(
-        "text" => "Generic Object Definitions",
-        "href" => "#generic-object-definitions-root",
+        "text" => "Generic Objects",
+        "href" => "#generic-objects-root",
         "tags" => ["4"]
       )
     end

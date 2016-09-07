@@ -49,6 +49,6 @@ class GenericObjectController < ApplicationController
                                                   :role_any    => true,
                                                   :name        => :generic_object_explorer,
                                                   :accord_name => "generic_object_definition_accordion",
-                                                  :title       => _("Generic Object Definitions"))]
+                                                  :title       => _("Generic Objects"))]
   end
 end

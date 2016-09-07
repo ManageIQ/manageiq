@@ -13,8 +13,8 @@ class TreeBuilderGenericObject
     end
 
     [{
-      :text  => 'Generic Object Definitions',
-      :href  => '#generic-object-definitions-root',
+      :text  => 'Generic Objects',
+      :href  => '#generic-objects-root',
       :tags  => ['4'],
       :nodes => children
     }].to_json
