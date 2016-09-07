@@ -43,9 +43,9 @@ module Api
 
     def server_info
       {
-        :version   => vmdb_build_info(:version),
-        :build     => vmdb_build_info(:build),
-        :appliance => appliance_name,
+        :version   => Vmdb::Appliance.VERSION,
+        :build     => Vmdb::Appliance.BUILD,
+        :appliance => MiqServer.my_server.name,
       }
     end
 
