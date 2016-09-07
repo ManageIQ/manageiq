@@ -1,10 +1,10 @@
-%div{"id" => "miq-notifications-drawer-container", 'ng-controller' => "notificationsDrawerController as vm"}
+#miq-notifications-drawer-container{'ng-controller' => "notificationsDrawerController as vm"}
   %div{"pf-notification-drawer" => "",
        "id" => "miq-notifications-drawer",
        "drawer-hidden" => "!vm.notificationsDrawerShown",
-       "drawer-title" => "Notifications",
+       "drawer-title" => _("Notifications"),
        "allow-expand" => "true",
-       "action-button-title" => "Mark All Read",
+       "action-button-title" => _("Mark All Read"),
        "action-button-callback" => "vm.markAllRead",
        "notification-groups" => "vm.notificationGroups",
        "heading-include" => "/static/notification_drawer/notification-heading.html",
