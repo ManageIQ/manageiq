@@ -76,6 +76,7 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   # Connect to the engine using version 3 of the API and the `ovirt` gem.
   def self.raw_connect_v3(server, port, path, username, password, service)
     require 'ovirt'
+    require 'ovirt_provider/inventory/ovirt_inventory'
 
     Ovirt.logger = $rhevm_log
 
@@ -92,7 +93,8 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     params[:timeout]      = read_timeout if read_timeout
     params[:open_timeout] = open_timeout if open_timeout
 
-    Ovirt.const_get(service).new(params)
+    const = service == "Inventory" ? OvirtInventory : Ovirt.const_get(service)
+    const.new(params)
   end
 
   def connect(options = {})
@@ -275,7 +277,34 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
 
       rhevm_vm.cpu_topology = cpu_options if cpu_options.present?
     end
+
+    # Removing disks
+    remove_disks(spec["disksRemove"], vm) if spec["disksRemove"]
+
+    # Adding disks
+    add_disks(spec["disksAdd"], vm) if spec["disksAdd"]
+
     _log.info("#{log_header} Completed.")
+  end
+
+  def add_disks(add_disks_spec, vm)
+    ems_storage_uid = add_disks_spec["ems_storage_uid"]
+    with_disk_attachments_service(vm) do |service|
+      add_disks_spec["disks"].each { |disk_spec| service.add(prepare_disk(disk_spec, ems_storage_uid)) }
+    end
+  end
+
+  def prepare_disk(disk_spec, ems_storage_uid)
+    {
+      :bootable  => disk_spec["bootable"],
+      :interface => "VIRTIO",
+      :disk      => {
+        :provisioned_size => disk_spec["disk_size_in_mb"].to_i * 1024 * 1024,
+        :sparse           => disk_spec["thin_provisioned"],
+        :format           => disk_spec["format"],
+        :storage_domain   => {:id => ems_storage_uid}
+      }
+    }
   end
 
   # RHEVM requires that the memory of the VM will be bigger or equal to the reserved memory at any given time.
@@ -291,10 +320,29 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     end
   end
 
+  def remove_disks(disks, vm)
+    with_disk_attachments_service(vm) do |service|
+      disks.each { |disk_id| service.attachment_service(disk_id).remove }
+    end
+  end
+
+  # Adding disks is supported only by API version 4.0
+  def with_disk_attachments_service(vm)
+    connection = connect(:version => 4)
+    service = connection.system_service.vms_service.vm_service(vm.uid_ems).disk_attachments_service
+    yield service
+  ensure
+    connection.close
+  end
+
   # Calculates an "ems_ref" from the "href" attribute provided by the oVirt REST API, removing the
   # "/ovirt-engine/" prefix, as for historic reasons the "ems_ref" stored in the database does not
   # contain it, it only contains the "/api" prefix which was used by older versions of the engine.
   def self.make_ems_ref(href)
     href && href.sub(%r{^/ovirt-engine/}, '/')
+  end
+
+  def self.extract_ems_ref_id(href)
+    href && href.split("/").last
   end
 end

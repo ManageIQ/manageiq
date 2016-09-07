@@ -27,29 +27,29 @@
           %td{:align => "right"}
             #buttons
               - if @sb[:conflict]
-                = button_tag("Commit",
+                = button_tag(_("Commit"),
                              :class => "btn btn-primary disabled",
-                             :title => "Resolve conflicts to import the file",
-                             :alt   => "Resolve conflicts to import the file")
+                             :title => _("Resolve conflicts to import the file"),
+                             :alt   => _("Resolve conflicts to import the file"))
               - else
-                = link_to('Commit',
+                = link_to(_('Commit'),
                          {:action => "import",
                           :commit => "import",
                           :import_file_upload_id => @import_file_upload_id},
                          :class                  => "btn btn-primary",
-                         :alt                    => "Commit Import",
+                         :alt                    => _("Commit Import"),
                          "data-miq_sparkle_on"   => true,
                          "data-miq_sparkle_off"  => true,
                          :remote                 => true,
                          "data-method"           => :post,
-                         :title                  => "Commit Import")
+                         :title                  => _("Commit Import"))
 
-              = link_to('Cancel',
+              = link_to(_('Cancel'),
                         {:action                => "import",
                          :commit                => "cancel",
                          :import_file_upload_id => @import_file_upload_id},
                         :class        => "btn btn-default",
-                        :alt          => "Cancel Changes",
+                        :alt          => _("Cancel Changes"),
                         :remote       => true,
                         "data-method" => :post,
-                        :title        => "Cancel Import")
+                        :title        => _("Cancel Import"))

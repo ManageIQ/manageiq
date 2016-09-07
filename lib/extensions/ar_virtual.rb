@@ -70,7 +70,7 @@ module VirtualDelegates
       unless options.kind_of?(Hash) && options[:to]
         raise ArgumentError, 'Delegation needs an association. Supply an options hash with a :to key as the last argument (e.g. delegate :hello, to: :greeter).'
       end
-      delegate(*methods, options)
+      delegate(*methods, options.except(:arel, :uses))
 
       # put method entry per method name.
       # This better supports reloading of the class and changing the definitions
@@ -85,33 +85,64 @@ module VirtualDelegates
 
     private
 
-    # @option :methods :to
-    # @option :methods :prefix
-    def define_virtual_delegate(methods, options)
+    # define virtual_attribute for delegates
+    #
+    # this is called at schema load time (and not at class definition time)
+    #
+    # @param  method_name [Symbol] name of the attribute on the source class to be defined
+    # @param  col [Symbol] name of the attribute on the associated class to be referenced
+    # @option options :to [Symbol] name of the association from the source class to be referenced
+    # @option options :arel [Proc] (optional and not common)
+    # @option options :uses [Array|Symbol|Hash] sql includes hash. (default: to)
+    def define_virtual_delegate(method_name, col, options)
       unless (to = options[:to]) && (to_ref = reflection_with_virtual(to.to_s))
         raise ArgumentError, 'Delegation needs an association. Supply an options hash with a :to key as the last argument (e.g. delegate :hello, to: :greeter).'
       end
 
-      prefix = options[:prefix]
-      method_prefix = virtual_delegate_name_prefix(prefix, to)
-
       to_model = to_ref.klass
-      methods.each do |col|
-        col = col.to_s
-        type = to_model.type_for_attribute(col)
-        raise "unknown attribute #{to_model.name}##{col} referenced in #{name}" unless type
-        arel = virtual_delegate_arel(col, to, to_model, to_ref)
-        define_virtual_attribute "#{method_prefix}#{col}", type, :uses => to, :arel => arel
-      end
+      col = col.to_s
+      type = to_model.type_for_attribute(col)
+      raise "unknown attribute #{to_model.name}##{col} referenced in #{name}" unless type
+      arel = virtual_delegate_arel(col, to, to_model, to_ref)
+      define_virtual_attribute method_name, type, :uses => (options[:uses] || to), :arel => arel
     end
 
     def virtual_delegate_name_prefix(prefix, to)
       "#{prefix == true ? to : prefix}_" if prefix
     end
 
+    # @param col [String] attribute name
+    # @param to [Symbol] association name of targeted association
+    # @param to_model [Class] association class of targeted association
+    # @param to_ref [Association] association from source class to target association
+    # @return [Proc] lambda to return arel that selects the attribute in a sub-query
+    # @return [Nil] if the attribute (col) can not be represented in sql.
+    #
+    # To generate a proc, the following cases must happen:
+    #   - the column has sql (virtual_column with arel OR real sql attribute)
+    #   - the association has sql representation (a real association has sql)
+    #   - the association is to a single record (has_one or belongs_to)
+    #
+    # example
+    #
+    #   for the given class definition:
+    #
+    #     class Vm
+    #       belongs_to :hosts #, :foreign_key => :host_id, :primary_key => :id
+    #       virtual_delegate :name, :to => :host, :prefix => true, :allow_nil => true
+    #     end
+    #
+    #   The virtual_delegate calls:
+    #
+    #     virtual_delegate_arel("name", :host, Host, Vm.hostreflection_with_virtual(:host))
+    #
+    #   which will return will return arel to produce:
+    #
+    #     SELECT "hosts"."name" FROM "hosts" WHERE "hosts"."id" = "vms"."host_id"
+
     def virtual_delegate_arel(col, to, to_model, to_ref)
-      # column has sql and the association is reachable via sql
-      # no way to propagate sql over a virtual association
+      # ensure the column has sql and the association is reachable via sql
+      # There is currently no way to propagate sql over a virtual association
       if to_model.arel_attribute(col) && reflect_on_association(to)
         if to_ref.macro == :has_one
           lambda do |t|
@@ -220,7 +251,7 @@ module VirtualAttributes
       end
 
       virtual_delegates_to_define.each do |method_name, (method, options)|
-        define_virtual_delegate([method], options)
+        define_virtual_delegate(method_name, method, options)
       end
     end
 

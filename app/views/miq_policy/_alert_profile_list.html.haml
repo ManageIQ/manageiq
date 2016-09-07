@@ -12,7 +12,7 @@
         %tbody
           - @alert_profiles.each do |ap|
             %tr{:title => _("View this Alert Profile"),
-              :onclick => "miqDynatreeActivateNode('alert_profile_tree', 'xx-#{ap.mode}_ap-#{to_cid(ap.id)}');"}
+              :onclick => "miqTreeActivateNode('alert_profile_tree', 'xx-#{ap.mode}_ap-#{to_cid(ap.id)}');"}
               %td.narrow
                 %img{:src => image_path('100/miq_alert_profile.png')}
               %td

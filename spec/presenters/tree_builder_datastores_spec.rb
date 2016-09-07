@@ -32,7 +32,7 @@ describe TreeBuilderDatastores do
       expect(kids.first[:tip]).to eq(@host[:name])
       expect(kids.first[:image]).to eq('host')
       expect(kids.first[:hideCheckbox]).to eq(true)
-      expect(kids.first[:style_class]).to eq("cfme-no-cursor-node")
+      expect(kids.first[:cfmeNoClick]).to eq(true)
       expect(kids.first[:children]).to eq([])
     end
   end

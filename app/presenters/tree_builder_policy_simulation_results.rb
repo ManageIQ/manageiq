@@ -17,11 +17,7 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix                   => "rsop_",
-                  :autoload                    => true,
-                  :cfme_no_click               => true,
-                  :onclick                     => false,
-                  :open_close_all_on_dbl_click => true,)
+    locals.merge!(:autoload => true)
   end
 
   def root_options
@@ -42,57 +38,63 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
 
   def vm_nodes(data)
     data.sort_by! { |a| a[:name].downcase }.map do |node|
-      {:id       => node[:id],
-       :text     => "<strong>VM:</strong> #{node[:name]}".html_safe,
-       :image    => 'vm',
-       :profiles => node[:profiles]}
+      {:id          => node[:id],
+       :text        => "<strong>VM:</strong> #{node[:name]}".html_safe,
+       :image       => 'vm',
+       :profiles    => node[:profiles],
+       :cfmeNoClick => true}
     end
   end
 
   def profile_nodes(data)
     data.sort_by! { |a| a[:description].downcase }.map do |node|
-      {:id       => node[:id],
-       :text     => "<strong>#{_('Profile:')}</strong> #{node[:description]}".html_safe,
-       :image    => node_icon(node[:result]),
-       :policies => node[:policies]}
+      {:id          => node[:id],
+       :text        => "<strong>#{_('Profile:')}</strong> #{node[:description]}".html_safe,
+       :image       => node_icon(node[:result]),
+       :policies    => node[:policies],
+       :cfmeNoClick => true}
     end
   end
 
   def policy_nodes(data)
     data.sort_by! { |a| a[:description].downcase }.map do |node|
       active_caption = node[:active] ? "" : _(" (Inactive)")
-      {:id         => node['id'],
-       :text       => "<strong>#{_('Policy')}#{active_caption}:</strong> #{node[:description]}".html_safe,
-       :image      => node_icon(node[:result]),
-       :conditions => node[:conditions],
-       :actions    => node[:actions],
-       :scope      => node[:scope]}
+      {:id          => node['id'],
+       :text        => "<strong>#{_('Policy')}#{active_caption}:</strong> #{node[:description]}".html_safe,
+       :image       => node_icon(node[:result]),
+       :conditions  => node[:conditions],
+       :actions     => node[:actions],
+       :scope       => node[:scope],
+       :cfmeNoClick => true}
     end
   end
 
   def action_nodes(data)
     data.map do |node|
-      {:id    => node[:id],
-       :text  => "<strong>#{_('Action:')}</strong> #{node[:description]}".html_safe,
-       :image => node_icon(node[:result])}
+      {:id          => node[:id],
+       :text        => "<strong>#{_('Action:')}</strong> #{node[:description]}".html_safe,
+       :image       => node_icon(node[:result]),
+       :cfmeNoClick => true}
     end
   end
 
   def condition_nodes(data)
     data.map do |node|
-      {:id         => node[:id],
-       :text       => "<strong>#{_('Condition:')}</strong> #{node[:description]}".html_safe,
-       :image      => node_icon(node[:result]),
-       :expression => node[:expression]}
+      {:id          => node[:id],
+       :text        => "<strong>#{_('Condition:')}</strong> #{node[:description]}".html_safe,
+       :image       => node_icon(node[:result]),
+       :expression  => node[:expression],
+       :cfmeNoClick => true}
     end
   end
 
   def scope_node(data)
     name, tip = exp_build_string(data)
-    {:id    => nil,
-     :text  => "<strong>#{_('Scope:')}</strong> <span class='ws-wrap'>#{name}".html_safe,
-     :tip   => tip.html_safe,
-     :image => node_icon(data[:result])}
+    {:id          => nil,
+     :text        => "<strong>#{_('Scope:')}</strong> <span class='ws-wrap'>#{name}".html_safe,
+     :tip         => tip.html_safe,
+     :image       => node_icon(data[:result]),
+     :cfmeNoClick => true}
   end
 
   def expression_node(data)
@@ -105,10 +107,11 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
             else
               'na'
             end
-    {:id    => nil,
-     :text  => "<strong>#{_('Expression:')}</strong> <span class='ws-wrap'>#{name}".html_safe,
-     :tip   => tip.html_safe,
-     :image => image}
+    {:id          => nil,
+     :text        => "<strong>#{_('Expression:')}</strong> <span class='ws-wrap'>#{name}".html_safe,
+     :tip         => tip.html_safe,
+     :image       => image,
+     :cfmeNoClick => true}
   end
 
   def x_get_tree_roots(count_only = false, _options = nil)

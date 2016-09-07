@@ -2,13 +2,14 @@ class OpsController
   class RbacTree
     include CompressedIds
 
-    def self.build(role, role_features)
-      new(role, role_features).build
+    def self.build(role, role_features, edit)
+      new(role, role_features, edit).build
     end
 
-    def initialize(role, role_features)
+    def initialize(role, role_features, edit)
       @role = role
       @role_features = role_features
+      @edit = edit
     end
 
     def remove_accords_suffix(name)
@@ -23,10 +24,12 @@ class OpsController
     def build_section(section, parent_checked)
       kids = []
       node = {
-        :key     => "#{@role.id ? to_cid(@role.id) : "new"}___tab_#{section.id}",
-        :icon    => ActionController::Base.helpers.image_path('100/feature_node.png'),
-        :title   => _(section.name),
-        :tooltip => _("%{title} Main Tab") % {:title => section.name},
+        :key         => "#{@role.id ? to_cid(@role.id) : "new"}___tab_#{section.id}",
+        :icon        => ActionController::Base.helpers.image_path('100/feature_node.png'),
+        :title       => _(section.name),
+        :tooltip     => _("%{title} Main Tab") % {:title => section.name},
+        :checkable   => @edit,
+        :cfmeNoClick => true
       }
 
       section.items.each do |item|
@@ -46,6 +49,15 @@ class OpsController
       node[:select] = parent_checked || all_checked(kids)
       node[:children] = kids
 
+      checked = kids.count { |kid| kid[:select] }
+      if checked == kids.length
+        node[:select] = true
+      elsif checked == 0
+        node[:select] = false
+      else
+        node[:select] = 'undefined'
+      end
+
       node
     end
 
@@ -53,23 +65,26 @@ class OpsController
       root_feature = MiqProductFeature.feature_root
       root = MiqProductFeature.feature_details(root_feature)
       root_node = {
-        :key      => "#{@role.id ? to_cid(@role.id) : "new"}__#{root_feature}",
-        :icon     => ActionController::Base.helpers.image_path('100/feature_node.png'),
-        :title    => _(root[:name]),
-        :tooltip  => _(root[:description]) || _(root[:name]),
-        :addClass => "cfme-cursor-default",
-        :expand   => true,
-        :select   => @role_features.include?(root_feature)
+        :key         => "#{@role.id ? to_cid(@role.id) : "new"}__#{root_feature}",
+        :icon        => ActionController::Base.helpers.image_path('100/feature_node.png'),
+        :title       => _(root[:name]),
+        :tooltip     => _(root[:description]) || _(root[:name]),
+        :expand      => true,
+        :cfmeNoClick => true,
+        :select      => @role_features.include?(root_feature),
+        :checkable   => @edit
       }
 
       top_nodes = []
       @all_vm_node = {
-        :key      => "#{@role.id ? to_cid(@role.id) : "new"}___tab_all_vm_rules",
-        :icon     => ActionController::Base.helpers.image_path('100/feature_node.png'),
-        :title    => t = _("Access Rules for all Virtual Machines"),
-        :tooltip  => t,
-        :children => [],
-        :select   => root_node[:select]
+        :key         => "#{@role.id ? to_cid(@role.id) : "new"}___tab_all_vm_rules",
+        :icon        => ActionController::Base.helpers.image_path('100/feature_node.png'),
+        :title       => t = _("Access Rules for all Virtual Machines"),
+        :tooltip     => t,
+        :children    => [],
+        :cfmeNoClick => true,
+        :select      => root_node[:select],
+        :checkable   => @edit
       }
       rbac_features_tree_add_node("all_vm_rules", root_node[:key], @all_vm_node[:select])
 
@@ -83,6 +98,15 @@ class OpsController
       end
       top_nodes << @all_vm_node
 
+      checked = top_nodes.count { |kid| kid[:select] }
+      if checked == top_nodes.length
+        root_node[:select] = true
+      elsif checked == 0
+        root_node[:select] = false
+      else
+        root_node[:select] = 'undefined'
+      end
+
       root_node[:children] = top_nodes
       root_node
     end
@@ -93,10 +117,12 @@ class OpsController
 
       kids = []
       node = {
-        :key     => "#{@role.id ? to_cid(@role.id) : "new"}__#{feature}",
-        :icon    => ActionController::Base.helpers.image_path("100/feature_#{details[:feature_type]}.png"),
-        :title   => _(details[:name]),
-        :tooltip => _(details[:description]) || _(details[:name])
+        :key         => "#{@role.id ? to_cid(@role.id) : "new"}__#{feature}",
+        :icon        => ActionController::Base.helpers.image_path("100/feature_#{details[:feature_type]}.png"),
+        :title       => _(details[:name]),
+        :tooltip     => _(details[:description]) || _(details[:name]),
+        :checkable   => @edit,
+        :cfmeNoClick => true
       }
       node[:hideCheckbox] = true if details[:protected]
 

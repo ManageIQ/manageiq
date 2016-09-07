@@ -25,60 +25,57 @@
       %hr
 
     - if @edit
-      %p{:class => "legend"}= _("Policy Selection")
-      %table.admintable
+      %h3= _("Policy Selection")
+      %table#formtest.form{:width => "100%"}
         %tr
+          %td{:align => "left"}= _("Available Policies:")
           %td
-            %table#formtest.form{:width => "100%"}
-              %tr
-                %td{:align => "left"}= _("Available Policies:")
-                %td
-                %td.widthed{:align => "left"}= _("Profile Policies:")
-              %tr
-                %td{:align => "left", :class => "widthed", :valign => "top"}
-                  %span#choices_chosen_div
-                    = select_tag('choices_chosen[]',
-                      options_for_select(@edit[:choices].sort),
-                      :multiple => true,
-                      :class    => "widthed",
-                      :size     => 8,
-                      :id       => "choices_chosen")
-                  %p
-                %td{:width => "20", :valign => "middle"}
-                  - t = _("Move selected Policies into this Profile")
-                  = link_to(image_tag(image_path('toolbars/right.png'), :border => "0", :class  => "rollover small", :alt => t),
-                    {:action => 'profile_edit', :button => 'move_right', :id => @profile},
-                    "data-miq_sparkle_on"  => true,
-                    "data-miq_sparkle_off" => true,
-                    "data-submit"          => 'choices_chosen_div',
-                    :remote                => true,
-                    "data-method"          => :post,
-                    :title                 => t)
-                  - t = _("Remove all Policies from this Profile")
-                  = link_to(image_tag(image_path('toolbars/allleft.png'), :border => "0", :class  => "rollover small", :alt => t),
-                    {:action => 'profile_edit', :button => 'move_allleft', :id => @profile},
-                    "data-miq_sparkle_on"  => true,
-                    "data-miq_sparkle_off" => true,
-                    :remote                => true,
-                    "data-method"          => :post,
-                    :title                 => t)
-                  - t = _("Remove selected Policies from this Profile")
-                  = link_to(image_tag(image_path('toolbars/left.png'), :border => "0", :class  => "rollover small", :alt => t),
-                    {:action => 'profile_edit', :button => 'move_left', :id => @profile},
-                    "data-miq_sparkle_on"  => true,
-                    "data-miq_sparkle_off" => true,
-                    "data-submit"          => 'members_chosen_div',
-                    :remote                => true,
-                    "data-method"          => :post,
-                    :title                 => t)
-                %td{:align => "right", :valign => "top"}
-                  %span#members_chosen_div
-                    = select_tag('members_chosen[]',
-                      options_for_select(@edit[:new][:policies].sort),
-                      :multiple => true,
-                      :class    => "widthed",
-                      :size     => 8,
-                      :id       => "members_chosen")
+          %td.widthed{:align => "left"}= _("Profile Policies:")
+        %tr
+          %td{:align => "left", :class => "widthed", :valign => "top"}
+            %span#choices_chosen_div
+              = select_tag('choices_chosen[]',
+                options_for_select(@edit[:choices].sort),
+                :multiple => true,
+                :class    => "widthed",
+                :size     => 8,
+                :id       => "choices_chosen")
+            %p
+          %td{:width => "20", :valign => "middle"}
+            - t = _("Move selected Policies into this Profile")
+            = link_to(image_tag(image_path('toolbars/right.png'), :border => "0", :class  => "rollover small", :alt => t),
+              {:action => 'profile_edit', :button => 'move_right', :id => @profile},
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-submit"          => 'choices_chosen_div',
+              :remote                => true,
+              "data-method"          => :post,
+              :title                 => t)
+            - t = _("Remove all Policies from this Profile")
+            = link_to(image_tag(image_path('toolbars/allleft.png'), :border => "0", :class  => "rollover small", :alt => t),
+              {:action => 'profile_edit', :button => 'move_allleft', :id => @profile},
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              :remote                => true,
+              "data-method"          => :post,
+              :title                 => t)
+            - t = _("Remove selected Policies from this Profile")
+            = link_to(image_tag(image_path('toolbars/left.png'), :border => "0", :class  => "rollover small", :alt => t),
+              {:action => 'profile_edit', :button => 'move_left', :id => @profile},
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-submit"          => 'members_chosen_div',
+              :remote                => true,
+              "data-method"          => :post,
+              :title                 => t)
+          %td{:align => "right", :valign => "top"}
+            %span#members_chosen_div
+              = select_tag('members_chosen[]',
+                options_for_select(@edit[:new][:policies].sort),
+                :multiple => true,
+                :class    => "widthed",
+                :size     => 8,
+                :id       => "members_chosen")
       %hr
     - else
       %h3= _("Policies")
@@ -89,7 +86,7 @@
           %tbody
             - @profile_policies.each do |p|
               %tr{:title => _("View this %{model} Policy") % {:model => ui_lookup(:model => p.towhat)},
-                :onclick => "miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}_p-#{to_cid(p.id)}');"}
+                :onclick => "miqTreeActivateNode('#{x_active_tree}', '#{x_node}_p-#{to_cid(p.id)}');"}
                 %td.narrow
                   %img{:src => image_path("100/miq_policy_#{p.towhat.downcase + (p.active ? '' : '_inactive')}.png")}
                 %td

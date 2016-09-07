@@ -42,97 +42,93 @@
       - else
         %h3= _("Order of Actions if ALL Conditions are True")
         - if @edit
-          %table.admintable
-            %tbody
-              %tr
-                %td
-                  %table#formtest.form{:width => "100%"}
-                    %tr
-                      %td{:align => "left"}= _('Available Actions:')
-                      %td
-                      %td.widthed{:align => "left"}= _(' Selected Actions:')
-                    %tr
-                      %td.widthed{:align => "left", :valign => "top"}
-                        %span#choices_chosen_true_div
-                          = select_tag('choices_chosen_true[]',
-                            options_for_select(@edit[:choices_true].sort),
-                            :multiple => true,
-                            :class    => "widthed",
-                            :size     => 8,
-                            :id       => "choices_chosen_true")
-                        %p
-                      %td{:width => "20", :valign => "middle"}
-                        - t = _("Move selected Actions into this Event")
-                        = link_to(image_tag(image_path('toolbars/right.png'), :class => "rollover small", :alt => t),
-                          {:action => 'event_edit', :button => 'true_right', :id => @event},
-                          "data-miq_sparkle_on"  => true,
-                          "data-miq_sparkle_off" => true,
-                          "data-submit"          => 'choices_chosen_true_div',
-                          :remote                => true,
-                          "data-method"          => :post,
-                          :title                 => t)
-                        - t = _("Remove all Actions from this Event")
-                        = link_to(image_tag(image_path('toolbars/allleft.png'), :class => "rollover small", :alt => t),
-                          {:action => 'event_edit', :button => 'true_allleft', :id => @event},
-                          "data-miq_sparkle_on"  => true,
-                          "data-miq_sparkle_off" => true,
-                          :remote                => true,
-                          "data-method"          => :post,
-                          :title                 => t)
-                        - t = _("Remove selected Actions from this Event")
-                        = link_to(image_tag(image_path('toolbars/left.png'), :class => "rollover small", :alt => t),
-                          {:action => 'event_edit', :button => 'true_left', :id => @event},
-                          "data-miq_sparkle_on"  => true,
-                          "data-miq_sparkle_off" => true,
-                          "data-submit"          => 'members_chosen_true_div',
-                          :remote                => true,
-                          "data-method"          => :post,
-                          :title                 => t)
-                      %td{:align => "right", :valign => "top"}
-                        %span#members_chosen_true_div
-                          = select_tag('members_chosen_true[]',
-                            options_for_select(@edit[:new][:actions_true], @true_selected),
-                            :multiple => true,
-                            :class    => "widthed",
-                            :size     => 8,
-                            :id       => "members_chosen_true")
-                      %td{:width => "20", :valign => "middle"}
-                        - t = _("Move selected Action up")
-                        = link_to(image_tag(image_path('toolbars/up.png'), :class => "rollover small", :alt => t),
-                          {:action => 'event_edit', :button  => 'true_up', :id => @event},
-                          "data-miq_sparkle_on"  => true,
-                          "data-miq_sparkle_off" => true,
-                          "data-submit"          => 'members_chosen_true_div',
-                          :remote                => true,
-                          "data-method"          => :post,
-                          :title                 => t)
-                        - t = _("Move selected Action down")
-                        = link_to(image_tag(image_path('toolbars/down.png'), :class => "rollover small", :alt => t),
-                          {:action => 'event_edit', :button => 'true_down', :id => @event},
-                          "data-miq_sparkle_on"  => true,
-                          "data-miq_sparkle_off" => true,
-                          "data-submit"          => 'members_chosen_true_div',
-                          :remote                => true,
-                          "data-method"          => :post,
-                          :title                 => t)
-                        - t = _("Set selected Actions to Synchronous")
-                        = link_to(image_tag(image_path('toolbars/syncr.png'), :class => "rollover small", :alt => t),
-                          {:action => 'event_edit', :button => 'true_sync', :id => @event},
-                          "data-miq_sparkle_on"  => true,
-                          "data-miq_sparkle_off" => true,
-                          "data-submit"          => 'members_chosen_true_div',
-                          :remote                => true,
-                          "data-method"          => :post,
-                          :title                 => t)
-                        - t = _("Set selected Actions to Asynchronous")
-                        = link_to(image_tag(image_path('toolbars/asyncr.png'), :class => "rollover small", :alt => t),
-                          {:action => 'event_edit', :button => 'true_async', :id => @event},
-                          "data-miq_sparkle_on"  => true,
-                          "data-miq_sparkle_off" => true,
-                          "data-submit"          => 'members_chosen_true_div',
-                          :remote                => true,
-                          "data-method"          => :post,
-                          :title                 => t)
+          %table#formtest.form{:width => "100%"}
+            %tr
+              %td{:align => "left"}= _('Available Actions:')
+              %td
+              %td.widthed{:align => "left"}= _(' Selected Actions:')
+            %tr
+              %td.widthed{:align => "left", :valign => "top"}
+                %span#choices_chosen_true_div
+                  = select_tag('choices_chosen_true[]',
+                    options_for_select(@edit[:choices_true].sort),
+                    :multiple => true,
+                    :class    => "widthed",
+                    :size     => 8,
+                    :id       => "choices_chosen_true")
+                %p
+              %td{:width => "20", :valign => "middle"}
+                - t = _("Move selected Actions into this Event")
+                = link_to(image_tag(image_path('toolbars/right.png'), :class => "rollover small", :alt => t),
+                  {:action => 'event_edit', :button => 'true_right', :id => @event},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  "data-submit"          => 'choices_chosen_true_div',
+                  :remote                => true,
+                  "data-method"          => :post,
+                  :title                 => t)
+                - t = _("Remove all Actions from this Event")
+                = link_to(image_tag(image_path('toolbars/allleft.png'), :class => "rollover small", :alt => t),
+                  {:action => 'event_edit', :button => 'true_allleft', :id => @event},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  :remote                => true,
+                  "data-method"          => :post,
+                  :title                 => t)
+                - t = _("Remove selected Actions from this Event")
+                = link_to(image_tag(image_path('toolbars/left.png'), :class => "rollover small", :alt => t),
+                  {:action => 'event_edit', :button => 'true_left', :id => @event},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  "data-submit"          => 'members_chosen_true_div',
+                  :remote                => true,
+                  "data-method"          => :post,
+                  :title                 => t)
+              %td{:align => "right", :valign => "top"}
+                %span#members_chosen_true_div
+                  = select_tag('members_chosen_true[]',
+                    options_for_select(@edit[:new][:actions_true], @true_selected),
+                    :multiple => true,
+                    :class    => "widthed",
+                    :size     => 8,
+                    :id       => "members_chosen_true")
+              %td{:width => "20", :valign => "middle"}
+                - t = _("Move selected Action up")
+                = link_to(image_tag(image_path('toolbars/up.png'), :class => "rollover small", :alt => t),
+                  {:action => 'event_edit', :button  => 'true_up', :id => @event},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  "data-submit"          => 'members_chosen_true_div',
+                  :remote                => true,
+                  "data-method"          => :post,
+                  :title                 => t)
+                - t = _("Move selected Action down")
+                = link_to(image_tag(image_path('toolbars/down.png'), :class => "rollover small", :alt => t),
+                  {:action => 'event_edit', :button => 'true_down', :id => @event},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  "data-submit"          => 'members_chosen_true_div',
+                  :remote                => true,
+                  "data-method"          => :post,
+                  :title                 => t)
+                - t = _("Set selected Actions to Synchronous")
+                = link_to(image_tag(image_path('toolbars/syncr.png'), :class => "rollover small", :alt => t),
+                  {:action => 'event_edit', :button => 'true_sync', :id => @event},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  "data-submit"          => 'members_chosen_true_div',
+                  :remote                => true,
+                  "data-method"          => :post,
+                  :title                 => t)
+                - t = _("Set selected Actions to Asynchronous")
+                = link_to(image_tag(image_path('toolbars/asyncr.png'), :class => "rollover small", :alt => t),
+                  {:action => 'event_edit', :button => 'true_async', :id => @event},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  "data-submit"          => 'members_chosen_true_div',
+                  :remote                => true,
+                  "data-method"          => :post,
+                  :title                 => t)
           %hr
         - else
           - if @event_true_actions.empty?
@@ -149,7 +145,7 @@
                 - @event_true_actions.each do |a|
                   - id = "a-#{to_cid(a.id)}"
                   - t = remote_function(:url => "/miq_policy/x_show/#{id}?accord=action")
-                  - f = "miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}_#{id}');"
+                  - f = "miqTreeActivateNode('#{x_active_tree}', '#{x_node}_#{id}');"
                   %tr{:title => _("View this Event Action"),
                     :onclick => (x_active_tree == :action_tree) ? t : f}
                     %td.narrow
@@ -164,103 +160,99 @@
 
         %h3= _("Order of Actions if ANY Conditions are False")
         - if @edit
-          %table.admintable
-            %tbody
-              %tr
-                %td
-                  %table#formtest.form{:width => "100%"}
-                    %tr
-                      %td{:align => "left"}= _("Available Actions:")
-                      %td
-                      %td.widthed{:align => "left"}= _(" Selected Actions:")
-                    %tr
-                      %td.widthed{:align => "left", :valign => "top"}
-                        %span#choices_chosen_false_div
-                          = select_tag('choices_chosen_false[]',
-                            options_for_select(@edit[:choices_false].sort),
-                            :multiple => true,
-                            :class    => "widthed",
-                            :size     => 8,
-                            :id       => "choices_chosen_false")
-                        %p
-                      %td{:width => "20", :valign => "middle"}
-                        - t = "Move selected Actions into this Event"
-                        = link_to(image_tag(image_path('toolbars/right.png'), :class => "rollover small", :alt => t),
-                          {:action => 'event_edit', :button => 'false_right', :id => @event},
-                          "data-miq_sparkle_on"  => true,
-                          "data-miq_sparkle_off" => true,
-                          "data-submit"          => 'choices_chosen_false_div',
-                          :remote                => true,
-                          "data-method"          => :post,
-                          :title                 => t)
+          %table#formtest.form{:width => "100%"}
+            %tr
+              %td{:align => "left"}= _("Available Actions:")
+              %td
+              %td.widthed{:align => "left"}= _(" Selected Actions:")
+            %tr
+              %td.widthed{:align => "left", :valign => "top"}
+                %span#choices_chosen_false_div
+                  = select_tag('choices_chosen_false[]',
+                    options_for_select(@edit[:choices_false].sort),
+                    :multiple => true,
+                    :class    => "widthed",
+                    :size     => 8,
+                    :id       => "choices_chosen_false")
+                %p
+              %td{:width => "20", :valign => "middle"}
+                - t = "Move selected Actions into this Event"
+                = link_to(image_tag(image_path('toolbars/right.png'), :class => "rollover small", :alt => t),
+                  {:action => 'event_edit', :button => 'false_right', :id => @event},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  "data-submit"          => 'choices_chosen_false_div',
+                  :remote                => true,
+                  "data-method"          => :post,
+                  :title                 => t)
 
-                        - t = "Remove all Policies from this Profile"
-                        = link_to(image_tag(image_path('toolbars/allleft.png'), :class => "rollover small", :alt => t),
-                          {:action => 'event_edit', :button => 'false_allleft', :id => @event},
-                          "data-miq_sparkle_on"  => true,
-                          "data-miq_sparkle_off" => true,
-                          :remote                => true,
-                          "data-method"          => :post,
-                          :title                 => t)
+                - t = "Remove all Policies from this Profile"
+                = link_to(image_tag(image_path('toolbars/allleft.png'), :class => "rollover small", :alt => t),
+                  {:action => 'event_edit', :button => 'false_allleft', :id => @event},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  :remote                => true,
+                  "data-method"          => :post,
+                  :title                 => t)
 
-                        - t = "Remove selected Actions from this Event"
-                        = link_to(image_tag(image_path('toolbars/left.png'), :class => "rollover small", :alt => t),
-                          {:action => 'event_edit', :button => 'false_left', :id => @event},
-                          "data-miq_sparkle_on"  => true,
-                          "data-miq_sparkle_off" => true,
-                          "data-submit"          => 'members_chosen_false_div',
-                          :remote                => true,
-                          "data-method"          => :post,
-                          :title                 => t)
+                - t = "Remove selected Actions from this Event"
+                = link_to(image_tag(image_path('toolbars/left.png'), :class => "rollover small", :alt => t),
+                  {:action => 'event_edit', :button => 'false_left', :id => @event},
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  "data-submit"          => 'members_chosen_false_div',
+                  :remote                => true,
+                  "data-method"          => :post,
+                  :title                 => t)
 
-                      %td{:align => "right", :valign => "top"}
-                        %span#members_chosen_false_div
-                          = select_tag('members_chosen_false[]',
-                            options_for_select(@edit[:new][:actions_false], @false_selected),
-                            :multiple => true,
-                            :class    => "widthed",
-                            :size     => 8,
-                            :id       => "members_chosen_false")
-                      %td{:width => "20", :valign => "middle"}
-                        - t = "Move selected Action up"
-                        = link_to(image_tag(image_path('toolbars/up.png'), :class => "rollover small", :alt => t),
-                        {:action => 'event_edit', :button => 'false_up', :id => @event},
-                        "data-miq_sparkle_on"  => true,
-                        "data-miq_sparkle_off" => true,
-                        "data-submit"          => 'members_chosen_false_div',
-                        :remote                => true,
-                        "data-method"          => :post,
-                        :title                 => t)
+              %td{:align => "right", :valign => "top"}
+                %span#members_chosen_false_div
+                  = select_tag('members_chosen_false[]',
+                    options_for_select(@edit[:new][:actions_false], @false_selected),
+                    :multiple => true,
+                    :class    => "widthed",
+                    :size     => 8,
+                    :id       => "members_chosen_false")
+              %td{:width => "20", :valign => "middle"}
+                - t = "Move selected Action up"
+                = link_to(image_tag(image_path('toolbars/up.png'), :class => "rollover small", :alt => t),
+                {:action => 'event_edit', :button => 'false_up', :id => @event},
+                "data-miq_sparkle_on"  => true,
+                "data-miq_sparkle_off" => true,
+                "data-submit"          => 'members_chosen_false_div',
+                :remote                => true,
+                "data-method"          => :post,
+                :title                 => t)
 
-                        - t = "Move selected Action down"
-                        = link_to(image_tag(image_path('toolbars/down.png'), :class => "rollover small", :alt => t),
-                        {:action => 'event_edit', :button => 'false_down', :id => @event},
-                        "data-miq_sparkle_on"  => true,
-                        "data-miq_sparkle_off" => true,
-                        "data-submit"          => 'members_chosen_false_div',
-                        :remote                => true,
-                        "data-method"          => :post,
-                        :title                 => t)
+                - t = "Move selected Action down"
+                = link_to(image_tag(image_path('toolbars/down.png'), :class => "rollover small", :alt => t),
+                {:action => 'event_edit', :button => 'false_down', :id => @event},
+                "data-miq_sparkle_on"  => true,
+                "data-miq_sparkle_off" => true,
+                "data-submit"          => 'members_chosen_false_div',
+                :remote                => true,
+                "data-method"          => :post,
+                :title                 => t)
 
-                        - t = "Set selected Actions to Synchronous"
-                        = link_to(image_tag(image_path('toolbars/syncr.png'), :class => "rollover small", :alt => t),
-                        {:action => 'event_edit', :button => 'false_sync', :id => @event},
-                        "data-miq_sparkle_on"  => true,
-                        "data-miq_sparkle_off" => true,
-                        "data-submit"          => 'members_chosen_false_div',
-                        :remote                => true,
-                        "data-method"          => :post,
-                        :title                 => t)
+                - t = "Set selected Actions to Synchronous"
+                = link_to(image_tag(image_path('toolbars/syncr.png'), :class => "rollover small", :alt => t),
+                {:action => 'event_edit', :button => 'false_sync', :id => @event},
+                "data-miq_sparkle_on"  => true,
+                "data-miq_sparkle_off" => true,
+                "data-submit"          => 'members_chosen_false_div',
+                :remote                => true,
+                "data-method"          => :post,
+                :title                 => t)
 
-                        - t = "Set selected Actions to Asynchronous"
-                        = link_to(image_tag(image_path('toolbars/asyncr.png'), :class => "rollover small",  :alt => t),
-                        {:action => 'event_edit', :button => 'false_async', :id => @event},
-                        "data-miq_sparkle_on"  => true,
-                        "data-miq_sparkle_off" => true,
-                        "data-submit"          => 'members_chosen_false_div',
-                        :remote                => true,
-                        "data-method"          => :post,
-                        :title                 => t)
+                - t = "Set selected Actions to Asynchronous"
+                = link_to(image_tag(image_path('toolbars/asyncr.png'), :class => "rollover small",  :alt => t),
+                {:action => 'event_edit', :button => 'false_async', :id => @event},
+                "data-miq_sparkle_on"  => true,
+                "data-miq_sparkle_off" => true,
+                "data-submit"          => 'members_chosen_false_div',
+                :remote                => true,
+                "data-method"          => :post,
+                :title                 => t)
         - else
           - if @event_false_actions.empty?
             = render :partial => 'layouts/info_msg', :locals => {:message => _("This Event has no false Actions.")}
@@ -276,7 +268,7 @@
                 - @event_false_actions.each do |a|
                   - id = "a-#{to_cid(a.id)}"
                   - t = remote_function(:url => "/miq_policy/x_show/#{id}?accord=action")
-                  - f = "miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}_#{id}');"
+                  - f = "miqTreeActivateNode('#{x_active_tree}', '#{x_node}_#{id}');"
                   %tr{:title => _("View this Event Action"),
                      :onclick => (x_active_tree == :action_tree) ? t : f}
                     %td.narrow

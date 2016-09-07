@@ -27,7 +27,7 @@ describe TreeBuilderReportSavedReports do
           # there is calling of x_get_tree_roots
           tree = TreeBuilderReportSavedReports.new('savedreports_tree', 'savedreports', {})
 
-          saved_reports_in_tree = JSON.parse(tree.tree_nodes).first['children']
+          saved_reports_in_tree = JSON.parse(tree.tree_nodes).first['nodes']
 
           displayed_report_ids = saved_reports_in_tree.map do |saved_report|
             from_cid(saved_report["key"].gsub("xx-", ""))

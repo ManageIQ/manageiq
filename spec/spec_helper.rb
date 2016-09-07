@@ -14,6 +14,10 @@ require 'rspec/rails'
 require 'vcr'
 require 'cgi'
 
+# Fail tests that try to include stuff in `main`
+require_relative 'support/test_contamination'
+Spec::Support::TestContamination.setup
+
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
@@ -97,8 +101,8 @@ RSpec.configure do |config|
 
   config.before(:each, :rest_api => true) { init_api_spec_env }
 
-  config.after(:each) do
-    EvmSpecHelper.clear_caches
+  config.around(:each) do |example|
+    EvmSpecHelper.clear_caches { example.run }
   end
 
   if ENV["TRAVIS"] && ENV["TEST_SUITE"] == "vmdb"

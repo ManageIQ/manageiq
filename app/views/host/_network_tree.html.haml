@@ -1,6 +1,6 @@
 -# Network or Storage Adpater Tree
 - if x_active_tree == :sa_tree
-  %div{:class => "cfme-no-cursor-node"}
+  %div
     = render(:partial => 'shared/tree', :locals => {:tree => @sa_tree, :name => @sa_tree.name.to_s})
 - else
   %div{:id => "#{session[:tree_name]}box", :style => "width: 100%"}

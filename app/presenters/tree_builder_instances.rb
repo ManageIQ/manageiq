@@ -2,6 +2,8 @@ class TreeBuilderInstances < TreeBuilder
   has_kids_for AvailabilityZone, [:x_get_tree_az_kids]
   has_kids_for ExtManagementSystem, [:x_get_tree_ems_kids]
 
+  include TreeBuilderArchived
+
   def tree_init_options(_tree_name)
     {
       :leaf => 'VmCloud'
@@ -13,7 +15,6 @@ class TreeBuilderInstances < TreeBuilder
     locals.merge!(
       :tree_id   => "instances_treebox",
       :tree_name => "instances_tree",
-      :id_prefix => "instances_",
       :autoload  => true
     )
   end
@@ -23,12 +24,9 @@ class TreeBuilderInstances < TreeBuilder
   end
 
   def x_get_tree_roots(count_only, _options)
-    objects = Rbac.filtered(EmsCloud.order("lower(name)"), :match_via_descendants => VmCloud)
-    objects += [
-      {:id => "arch", :text => _("<Archived>"), :image => "currentstate-archived", :tip => _("Archived Instances")},
-      {:id => "orph", :text => _("<Orphaned>"), :image => "currentstate-orphaned", :tip => _("Orphaned Instances")}
-    ]
-    count_only_or_objects(count_only, objects, nil)
+    objects = Rbac.filtered(EmsCloud.order("lower(name)"), :match_via_descendants => VmCloud) +
+              x_get_tree_arch_orph_nodes("Instances")
+    count_only_or_objects(count_only, objects)
   end
 
   def x_get_tree_ems_kids(object, count_only)
@@ -39,10 +37,7 @@ class TreeBuilderInstances < TreeBuilder
 
   # Get AvailabilityZone children count/array
   def x_get_tree_az_kids(object, count_only)
-    objects = Rbac.filtered(object.vms.order("name"))
-    objects = objects.reject { |obj| obj.archived? || obj.orphaned? } ## TODO: turn into a scope instead of ruby
-    count_only ? objects.length : objects
+    objects = Rbac.filtered(object.vms.not_archived_nor_orphaned)
+    count_only_or_objects(count_only, objects, "name")
   end
-
-  include TreeBuilderArchived
 end

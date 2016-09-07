@@ -5,7 +5,7 @@
     = render :partial => 'layouts/info_msg', :locals => {:message => _("No Policy Profiles available.")}
   - else
     :javascript
-      miqDynatreeResetState('#{j_str @protect_tree.name}');
+      miqTreeResetState('#{j_str @protect_tree.name}');
     = render(:partial => 'shared/tree', :locals => {:tree => @protect_tree, :name => @protect_tree.name})
   %br
   - if @politems.length > 1
@@ -18,10 +18,7 @@
            :item => Dictionary.gettext(session[:pol_db].to_s, :type => :model, :notfound => :titleize, :plural => false),
            :items => Dictionary.gettext(session[:pol_db].to_s, :type => :model, :notfound => :titleize, :plural => true)}
     = n_("Policy changes will affect %{amount} %{item}", "Policy changes will affect %{amount} %{items}", @politems.length) % t
-  %table.admintable{:height => "75"}
-    %tbody
-      %tr
-        %td
-          - if @politems
-            - @embedded = true
-            = render :partial => "layouts/gtl"
+
+  - if @politems
+    - @embedded = true
+    = render :partial => "layouts/gtl"

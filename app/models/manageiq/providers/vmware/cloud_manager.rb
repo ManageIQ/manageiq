@@ -8,6 +8,13 @@ class ManageIQ::Providers::Vmware::CloudManager < ManageIQ::Providers::CloudMana
   require_nested :Vm
 
   include ManageIQ::Providers::Vmware::ManagerAuthMixin
+  include HasNetworkManagerMixin
+
+  before_validation :ensure_managers
+
+  def ensure_network_manager
+    build_network_manager(:type => 'ManageIQ::Providers::Vmware::NetworkManager') unless network_manager
+  end
 
   def self.ems_type
     @ems_type ||= "vmware_cloud".freeze

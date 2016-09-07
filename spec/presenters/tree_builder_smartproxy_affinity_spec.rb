@@ -39,7 +39,6 @@ describe TreeBuilderSmartproxyAffinity do
     end
     it 'set locals for render correctly' do
       locals = @smartproxy_affinity_tree.send(:set_locals_for_render)
-      expect(locals[:id_prefix]).to eq('smartproxy_affinity_')
       expect(locals[:checkboxes]).to eq(true)
       expect(locals[:check_url]).to eq('/ops/smartproxy_affinity_field_changed/')
       expect(locals[:onclick]).to eq(false)
@@ -55,26 +54,30 @@ describe TreeBuilderSmartproxyAffinity do
       kids2 = @smartproxy_affinity_tree.send(:x_get_server_kids, @svr2, false)
       expect(kids1.size).to eq(2)
       expect(kids2.size).to eq(2)
-      expect(kids1.first).to eq(:id       => "#{@svr1[:id]}__host",
-                                :image    => "host",
-                                :parent   => @svr1,
-                                :text     => "Host / Nodes",
-                                :children => @selected_zone.send('host'.pluralize).sort_by(&:name))
-      expect(kids2.first).to eq(:id       => "#{@svr2[:id]}__host",
-                                :image    => "host",
-                                :parent   => @svr2,
-                                :text     => "Host / Nodes",
-                                :children => @selected_zone.send('host'.pluralize).sort_by(&:name))
-      expect(kids1.last).to eq(:id       => "#{@svr1[:id]}__storage",
-                               :image    => "storage",
-                               :parent   => @svr1,
-                               :text     => "Datastores",
-                               :children => @selected_zone.send('storage'.pluralize).sort_by(&:name))
-      expect(kids2.last).to eq(:id       => "#{@svr2[:id]}__storage",
-                               :image    => "storage",
-                               :parent   => @svr2,
-                               :text     => "Datastores",
-                               :children => @selected_zone.send('storage'.pluralize).sort_by(&:name))
+      expect(kids1.first).to eq(:id          => "#{@svr1[:id]}__host",
+                                :image       => "host",
+                                :parent      => @svr1,
+                                :text        => "Host / Nodes",
+                                :cfmeNoClick => true,
+                                :children    => @selected_zone.send('host'.pluralize).sort_by(&:name))
+      expect(kids2.first).to eq(:id          => "#{@svr2[:id]}__host",
+                                :image       => "host",
+                                :parent      => @svr2,
+                                :text        => "Host / Nodes",
+                                :cfmeNoClick => true,
+                                :children    => @selected_zone.send('host'.pluralize).sort_by(&:name))
+      expect(kids1.last).to eq(:id          => "#{@svr1[:id]}__storage",
+                               :image       => "storage",
+                               :parent      => @svr1,
+                               :text        => "Datastores",
+                               :cfmeNoClick => true,
+                               :children    => @selected_zone.send('storage'.pluralize).sort_by(&:name))
+      expect(kids2.last).to eq(:id          => "#{@svr2[:id]}__storage",
+                               :image       => "storage",
+                               :parent      => @svr2,
+                               :text        => "Datastores",
+                               :cfmeNoClick => true,
+                               :children    => @selected_zone.send('storage'.pluralize).sort_by(&:name))
     end
 
     it 'sets Datastores kids correctly' do

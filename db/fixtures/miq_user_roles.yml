@@ -33,6 +33,7 @@
   - ems_infra
   - container_dashboard
   - ems_container
+  - ems_container_deployment
   - configuration_job
   - container_project
   - container_route
@@ -184,7 +185,7 @@
   - vm_infra_explorer
   - vm_vnc_console
   - vm_vmrc_console
-  - vm_cockpit
+  - cockpit_console
   - vm_perf
   - vm_policy_sim
   - vm_show
@@ -292,7 +293,7 @@
   - vm_infra_explorer
   - vm_vnc_console
   - vm_vmrc_console
-  - vm_cockpit
+  - cockpit_console
   - vm_perf
   - vm_show
   - vm_show_list
@@ -332,7 +333,7 @@
   - vm_infra_explorer
   - vm_vnc_console
   - vm_vmrc_console
-  - vm_cockpit
+  - cockpit_console
   - vm_drift
   - vm_edit
   - vm_refresh
@@ -468,7 +469,7 @@
   - vm_infra_explorer
   - vm_vnc_console
   - vm_vmrc_console
-  - vm_cockpit
+  - cockpit_console
   - vm_drift
   - vm_edit
   - vm_perf
@@ -669,7 +670,7 @@
   - vm_infra_explorer
   - vm_vnc_console
   - vm_vmrc_console
-  - vm_cockpit
+  - cockpit_console
   - vm_compare
   - vm_drift
   - vm_perf
@@ -759,7 +760,7 @@
   - vm_infra_explorer
   - vm_vnc_console
   - vm_vmrc_console
-  - vm_cockpit
+  - cockpit_console
   - vm_compare
   - vm_drift
   - vm_perf
@@ -872,7 +873,7 @@
   - vm_timeline
   - vm_vmrc_console
   - vm_vnc_console
-  - vm_cockpit
+  - cockpit_console
 
 - :name: EvmRole-vm_user
   :read_only: true
@@ -930,7 +931,7 @@
   - vm_timeline
   - vm_vmrc_console
   - vm_vnc_console
-  - vm_cockpit
+  - cockpit_console
 
 - :name: EvmRole-tenant_administrator
   :read_only: true

@@ -5,9 +5,10 @@ class OvirtEventMonitor
 
   def inventory
     require 'ovirt'
+    require 'ovirt_provider/inventory/ovirt_inventory'
     Ovirt.logger = $rhevm_log if $rhevm_log
 
-    @inventory ||= Ovirt::Inventory.new(@options)
+    @inventory ||= OvirtInventory.new(@options)
   end
 
   def start

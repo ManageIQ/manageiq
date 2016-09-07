@@ -528,7 +528,7 @@ class CatalogController < ApplicationController
       page << "$('##{ae_tree_key}').prop('title', '#{@edit[:new][ae_tree_key]}');"
       @edit[:ae_tree_select] = false
       page << javascript_for_miq_button_visibility(@changed)
-      page << "miqDynatreeActivateNodeSilently('automate_tree', 'root');"
+      page << "miqTreeActivateNodeSilently('automate_tree', 'root');"
       page << "miqSparkle(false);"
     end
     session[:edit] = @edit
@@ -1485,9 +1485,8 @@ class CatalogController < ApplicationController
   end
 
   def available_orchestration_managers_for_template_type(template_type)
-    return [] unless OrchestrationTemplate.subclasses.collect(&:name).include?(template_type.to_s)
-
-    template_type = template_type.constantize if template_type.kind_of?(String)
+    template_type = template_type.to_s.safe_constantize
+    return [] unless template_type && template_type < OrchestrationTemplate
 
     template_type.eligible_managers.collect { |m| [m.name, m.id] }.sort
   end
@@ -1801,7 +1800,8 @@ class CatalogController < ApplicationController
     add_nodes = {:key      => existing_node,
                  :children => TreeBuilder.tree_add_child_nodes(@sb,
                                                                x_tree[:klass_name],
-                                                               existing_node)} if existing_node
+                                                               existing_node,
+                                                               controller_name)} if existing_node
     self.x_node = if params[:rec_id]
                     "stc-#{to_cid(record.service_template_catalog_id)}_st-#{to_cid(record.id)}"
                   elsif record.kind_of?(OrchestrationTemplate)

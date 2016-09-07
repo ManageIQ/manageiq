@@ -3,6 +3,7 @@ require 'log4r'
 require 'ostruct'
 require 'MiqVm/MiqVm'
 require 'ovirt'
+require 'ovirt_provider/inventory/ovirt_inventory'
 Ovirt.logger = $rhevm_log if $rhevm_log
 
 RHEVM_SERVER        = raise "please define RHEVM_SERVER"
@@ -25,7 +26,7 @@ $log = toplog if $log.nil?
 
 begin
 
-  $rhevm = Ovirt::Inventory.new(
+  $rhevm = OvirtInventory.new(
     :server     => RHEVM_SERVER,
     :port       => RHEVM_PORT,
     :domain     => RHEVM_DOMAIN,

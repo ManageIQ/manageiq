@@ -4,8 +4,7 @@ describe Notification, :type => :model do
     context 'successful' do
       let(:tenant) { FactoryGirl.create(:tenant) }
       let(:vm) { FactoryGirl.create(:vm, :tenant => tenant) }
-      let(:tenant_group) { FactoryGirl.create(:miq_group, :tenant => tenant) }
-      let!(:user) { FactoryGirl.create(:user, :miq_groups => [tenant_group]) }
+      let!(:user) { FactoryGirl.create(:user_with_group, :tenant => tenant) }
       let(:notification_type) { :vm_powered_on }
 
       it 'creates a new notification along with recipients' do

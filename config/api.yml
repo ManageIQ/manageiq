@@ -540,6 +540,18 @@
         :identifier: instance_guest_restart
       - :name: reset
         :identifier: instance_reset
+  :notifications:
+    :description: User's past notifications
+    :options:
+    - :collection
+    :verbs: *gp
+    :klass: NotificationRecipient
+    :collection_actions:
+      :post:
+      - :name: mark_as_seen
+    :resource_actions:
+      :post:
+      - :name: mark_as_seen
   :pictures:
     :description: Pictures
     :options:
@@ -773,7 +785,7 @@
     :collection_actions:
       :get:
       - :name: read
-        :identifier: chargeback_rates_show_list
+        :identifier: chargeback_rates
       :post:
       - :name: create
         :identifier: chargeback_rates_new
@@ -784,7 +796,7 @@
     :resource_actions:
       :get:
       - :name: read
-        :identifier: chargeback_rates_show
+        :identifier: chargeback_rates
       :post:
       - :name: edit
         :identifier: chargeback_rates_edit
@@ -1285,24 +1297,24 @@
       - :name: read
         :identifier: ops_settings
       :post:
-        - :name: create
-          :identifier: ops_settings
-        - :name: edit
-          :identifier: ops_settings
-        - :name: delete
-          :identifier: ops_settings
+      - :name: create
+        :identifier: ops_settings
+      - :name: edit
+        :identifier: ops_settings
+      - :name: delete
+        :identifier: ops_settings
     :resource_actions:
       :get:
       - :name: read
         :identifier: ops_settings
       :post:
-        - :name: edit
-          :identifier: ops_settings
-        - :name: delete
-          :identifier: ops_settings
+      - :name: edit
+        :identifier: ops_settings
+      - :name: delete
+        :identifier: ops_settings
       :delete:
-        - :name: delete
-          :identifier: ops_settings
+      - :name: delete
+        :identifier: ops_settings
     :subcollection_actions:
       :post:
       - :name: create
@@ -1724,6 +1736,7 @@
     :identifier: miq_cloud_networks
     :options:
     - :collection
+    - :subcollection
     :verbs: *g
     :klass: CloudNetwork
     :collection_actions:

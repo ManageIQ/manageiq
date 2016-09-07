@@ -94,7 +94,7 @@ class MiqLdap
       return selected_host if selected_host
     end
 
-    raise Net::LDAP::LdapError.new("unable to establish a connection to server")
+    raise Net::LDAP::Error.new("unable to establish a connection to server")
   end
 
   def bind(username, password)
@@ -214,7 +214,7 @@ class MiqLdap
             ref_res = handle._search(opts.merge(:base => dn), seen)
             _log.debug("Referral: #{ref}, returned [#{ref_res.length}] objects")
             res += ref_res
-          rescue Net::LDAP::LdapError => err
+          rescue Net::LDAP::Error => err
             _log.warn("Unable to chase referral [#{ref}] because #{err.message}")
           end
         end

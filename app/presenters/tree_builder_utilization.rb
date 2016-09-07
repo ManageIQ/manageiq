@@ -4,8 +4,8 @@ class TreeBuilderUtilization < TreeBuilderRegion
   has_kids_for EmsFolder, [:x_get_tree_folder_kids, :type]
   has_kids_for EmsCluster, [:x_get_tree_cluster_kids]
 
-  def initialize(name, type, sandbox, build = true, selected_node)
-    @selected_node = selected_node
+  def initialize(name, type, sandbox, build = true, **params)
+    @selected_node = params[:selected_node]
     super(name, type, sandbox, build)
   end
 
@@ -13,11 +13,9 @@ class TreeBuilderUtilization < TreeBuilderRegion
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix                   => @name == :utilization_tree ? 'utilization_' : 'bottlenecks_',
-                  :onclick                     => "miqOnClickSelectOptimizeTreeNode",
-                  :select_node                 => @selected_node.to_s,
-                  :open_close_all_on_dbl_click => true,
-                  :tree_state                  => true)
+    locals.merge!(:onclick     => "miqOnClickSelectOptimizeTreeNode",
+                  :select_node => @selected_node.to_s,
+                  :tree_state  => true)
   end
 
   def root_options
@@ -26,7 +24,7 @@ class TreeBuilderUtilization < TreeBuilderRegion
       icon  = :enterprise
     else
       title = _("CFME Region: %{region_description} [%{region}]") %
-                {:region_description => MiqRegion.my_region.description, :region => MiqRegion.my_region.region}
+              {:region_description => MiqRegion.my_region.description, :region => MiqRegion.my_region.region}
       icon  = :miq_region
     end
     [title, title, icon]
@@ -57,7 +55,7 @@ class TreeBuilderUtilization < TreeBuilderRegion
       when :vandt then x_get_tree_vandt_datacenter_kids(object)
       when :handc then x_get_tree_handc_datacenter_kids(object)
       end
-    count_only_or_objects(count_only, objects, nil)
+    count_only_or_objects(count_only, objects)
   end
 
   def x_get_tree_vandt_datacenter_kids(object)
@@ -100,16 +98,16 @@ class TreeBuilderUtilization < TreeBuilderRegion
       objects += rbac_filtered_sorted_objects(object.hosts, "name", :match_via_descendants => VmOrTemplate)
       objects += rbac_filtered_sorted_objects(object.vms_and_templates, "name")
     end
-    count_only_or_objects(count_only, objects, nil)
+    count_only_or_objects(count_only, objects)
   end
 
   def x_get_tree_cluster_kids(object, count_only)
-    objects =  rbac_filtered_sorted_objects(object.hosts, "name")
+    objects = rbac_filtered_sorted_objects(object.hosts, "name")
     # FIXME: is the condition below ever false?
     unless [:bottlenecks, :utilization].include?(@type)
       objects += rbac_filtered_sorted_objects(object.resource_pools, "name")
       objects += rbac_filtered_sorted_objects(object.vms, "name")
     end
-    count_only_or_objects(count_only, objects, nil)
+    count_only_or_objects(count_only, objects)
   end
 end

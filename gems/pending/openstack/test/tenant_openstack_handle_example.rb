@@ -24,6 +24,7 @@ ACCESSORS = [
   ['Compute', 'addresses',                              nil],
   ['Image',   'images',                                 nil],
   ['Volume',  'volumes',                                nil],
+  ['Volume',  'list_backups',                           nil],
   ['Volume',  'list_snapshots',                         nil],
   ['Volume',  'quotas_for_accessible_tenants',          nil],
   ['Storage', 'directories',                            nil],

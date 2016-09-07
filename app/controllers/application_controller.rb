@@ -58,7 +58,14 @@ class ApplicationController < ActionController::Base
   before_action :get_global_session_data, :except => [:resize_layout, :window_sizes, :authenticate]
   before_action :set_user_time_zone, :except => [:window_sizes]
   before_action :set_gettext_locale, :except => [:window_sizes]
+  before_action :allow_websocket
   after_action :set_global_session_data, :except => [:resize_layout, :window_sizes]
+
+  def allow_websocket
+    proto = request.ssl? ? 'wss' : 'ws'
+    override_content_security_policy_directives(:connect_src => ["'self'", "#{proto}://#{request.env['HTTP_HOST']}"])
+  end
+  private :allow_websocket
 
   def reset_toolbar
     @toolbars = {}
@@ -479,8 +486,9 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    tree = TreeBuilderAeClass.new(name, type, @sb)
-    @automate_tree = tree.tree_nodes if name == :automate_tree
+    node_builder = TreeBuilderAeClass.select_node_builder(controller_name, @sb[:action])
+    tree = TreeBuilderAeClass.new(name, type, @sb, true, :node_builder => node_builder)
+    @automate_tree = tree.locals_for_render[:bs_tree] if name == :automate_tree
     tree
   end
 
@@ -639,7 +647,12 @@ class ApplicationController < ActionController::Base
       else
         redirect_to_action = lastaction
       end
-      javascript_redirect :action => redirect_to_action, :id => params[:id], :escape => false, :load_edit_err => true
+      model = self.class.model
+      if restful_routed?(model)
+        javascript_redirect polymorphic_path(model.find(params[:id]), :escape => false, :load_edit_err => true)
+      else
+        javascript_redirect :action => redirect_to_action, :id => params[:id], :escape => false, :load_edit_err => true
+      end
     else
       redirect_to :action => lastaction, :id => params[:id], :escape => false
     end
@@ -1032,7 +1045,7 @@ class ApplicationController < ActionController::Base
     timed_out = PrivilegeCheckerService.new.user_session_timed_out?(session, current_user) if timed_out.nil?
     reset_session
 
-    session[:start_url] = request.url
+    session[:start_url] = request.url if request.method == "GET"
 
     respond_to do |format|
       format.html do
@@ -1678,6 +1691,8 @@ class ApplicationController < ActionController::Base
         javascript_redirect edit_ems_infra_path(params[:id])
       elsif params[:pressed] == "ems_container_edit" && params[:id]
         javascript_redirect edit_ems_container_path(params[:id])
+      elsif params[:pressed] == "ems_middleware_edit" && params[:id]
+        javascript_redirect edit_ems_middleware_path(params[:id])
       elsif %w(arbitration_profile_edit arbitration_profile_new).include?(params[:pressed]) && params[:id]
         javascript_redirect :action => @refresh_partial, :id => params[:id], :show => @redirect_id
       else
@@ -1920,7 +1935,7 @@ class ApplicationController < ActionController::Base
     when "ems_network", "cloud_network", "cloud_subnet", "network_router", "security_group", "floating_ip", "load_balancer"
       session[:tab_url][:net] = inbound_url if %w(show show_list).include?(action_name)
     when "ems_middleware", "middleware_server", "middleware_deployment", "middleware_datasource",
-         "middleware_topology", "middleware_domain", "middleware_server_group"
+         "middleware_topology", "middleware_domain", "middleware_server_group", "middleware_messaging"
       session[:tab_url][:mdl] = inbound_url if %w(show show_list).include?(action_name)
     when "miq_request"
       session[:tab_url][:svc] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "vm"
@@ -2209,9 +2224,9 @@ class ApplicationController < ActionController::Base
     @sb[:detail_sortdir] = @detail_sortdir
 
     @sb[:tree_hosts_hash] = nil if !%w(ems_folders descendant_vms).include?(params[:display]) &&
-                                   !%w(treesize tree_autoload_dynatree tree_autoload_quads).include?(params[:action])
+                                   !%w(treesize tree_autoload).include?(params[:action])
     @sb[:tree_vms_hash] = nil if !%w(ems_folders descendant_vms).include?(params[:display]) &&
-                                 !%w(treesize tree_autoload_dynatree tree_autoload_quads).include?(params[:action])
+                                 !%w(treesize tree_autoload).include?(params[:action])
 
     # Set/clear sandbox (@sb) per controller in the session object
     session[:sandboxes] ||= HashWithIndifferentAccess.new

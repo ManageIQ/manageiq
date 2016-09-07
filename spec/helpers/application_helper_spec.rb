@@ -772,9 +772,8 @@ describe ApplicationHelper do
     subject { helper.javascript_pf_toolbar_reload(test_tab, 'foobar') }
 
     it "returns javascript to reload toolbar" do
-      expect(helper).to receive(:buttons_to_html).and_return('foobar')
-      is_expected.to include("$('##{test_tab}').html('foobar');")
-      is_expected.to include("miqInitToolbars();")
+      expect(helper).to receive(:toolbar_from_hash).and_return('foobar')
+      is_expected.to include("sendDataWithRx({redrawToolbar: \"foobar\"});")
     end
   end
 
@@ -1661,7 +1660,8 @@ describe ApplicationHelper do
         allow(helper).to receive_messages(:controller_name => "ems_middleware")
         ems = FactoryGirl.create(:ems_hawkular)
         MiddlewareDatasource.create(:ext_management_system => ems, :name => "Test Middleware")
-        expect(helper.multiple_relationship_link(ems, "middleware_datasource")).to eq("<li><a title=\"Show Middleware Datasources\" href=\"/ems_middleware/show/#{ems.id}?display=middleware_datasources\">Middleware Datasources (1)</a></li>")
+        expect(helper.multiple_relationship_link(ems, "middleware_datasource")).to eq("<li><a title=\"Show Middleware \
+Datasources\" href=\"/ems_middleware/#{ems.id}?display=middleware_datasources\">Middleware Datasources (1)</a></li>")
       end
     end
   end

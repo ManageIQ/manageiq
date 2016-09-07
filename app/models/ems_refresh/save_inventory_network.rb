@@ -72,7 +72,6 @@ module EmsRefresh::SaveInventoryNetwork
                 []
               end
 
-    # TODO(lsmola) can be removed when refresh of all providers is moved under network provider
     hashes.each do |h|
       %i(cloud_tenant orchestration_stack).each do |relation|
         h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
@@ -111,7 +110,6 @@ module EmsRefresh::SaveInventoryNetwork
   end
 
   def save_cloud_subnets_inventory(network, hashes)
-    # TODO(lsmola) can be removed when refresh of all providers is moved under network provider
     hashes.each do |h|
       %i(availability_zone parent_cloud_subnet).each do |relation|
         h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
@@ -136,7 +134,6 @@ module EmsRefresh::SaveInventoryNetwork
                 []
               end
 
-    # TODO(lsmola) can be removed when refresh of all providers is moved under network provider
     hashes.each do |h|
       %i(cloud_tenant cloud_network orchestration_stack network_group).each do |relation|
         h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
@@ -213,7 +210,6 @@ module EmsRefresh::SaveInventoryNetwork
                 []
               end
 
-    # TODO(lsmola) can be removed when refresh of all providers is moved under network provider
     hashes.each do |h|
       %i(cloud_tenant cloud_network network_group).each do |relation|
         h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
@@ -259,7 +255,7 @@ module EmsRefresh::SaveInventoryNetwork
         h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
       end
 
-      h[:security_groups] = h.fetch_path(:security_groups).map { |x| x[:_object] } if h.fetch_path(:security_groups, 0, :_object)
+      h[:security_groups] = (h.fetch_path(:security_groups) || []).map { |x| x.try(:[], :_object) }.compact.uniq
     end
 
     save_inventory_multi(ems.network_ports, hashes, deletes, [:ems_ref], :cloud_subnet_network_ports)

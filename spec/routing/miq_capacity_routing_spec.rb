@@ -69,9 +69,9 @@ describe MiqCapacityController do
     end
   end
 
-  describe "#tree_autoload_dynatree" do
+  describe "#tree_autoload" do
     it "routes with POST" do
-      expect(post("/miq_capacity/tree_autoload_dynatree")).to route_to("miq_capacity#tree_autoload_dynatree")
+      expect(post("/miq_capacity/tree_autoload")).to route_to("miq_capacity#tree_autoload")
     end
   end
 

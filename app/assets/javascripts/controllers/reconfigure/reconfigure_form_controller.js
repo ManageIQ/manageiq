@@ -13,6 +13,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
         hdUnit:                  'MB',
         cb_dependent:            true,
         addEnabled:              false,
+        cb_bootable:             false,
         vmAddDisks:              [],
         vmRemoveDisks:           []
       };
@@ -156,7 +157,8 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
           $scope.reconfigureModel.vmAddDisks.push({disk_size_in_mb: dsize,
                                                    persistent: dmode,
                                                    thin_provisioned: dtype,
-                                                   dependent: $scope.reconfigureModel.vmdisks[disk].cb_dependent});
+                                                   dependent: $scope.reconfigureModel.vmdisks[disk].cb_dependent,
+                                                   bootable: $scope.reconfigureModel.vmdisks[disk].cb_bootable});
         }
       }
     };
@@ -168,6 +170,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
       $scope.reconfigureModel.hdUnit = 'MB';
       $scope.reconfigureModel.cb_dependent = true;
       $scope.reconfigureModel.addEnabled = false;
+      $scope.reconfigureModel.cb_bootable = false;
     };
 
     $scope.addDisk = function() {
@@ -177,6 +180,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
                                             hdSize: $scope.reconfigureModel.hdSize,
                                             hdUnit: $scope.reconfigureModel.hdUnit,
                                             cb_dependent: $scope.reconfigureModel.cb_dependent,
+                                            cb_bootable: $scope.reconfigureModel.cb_bootable,
                                             add_remove: 'add'});
       $scope.resetAddValues();
 
@@ -216,6 +220,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
           if ($scope.reconfigureModel.vmdisks[disk]['add_remove'] === 'remove') {
             $scope.reconfigureModel.vmdisks[disk]['add_remove'] = '';
             $scope.reconfigureModel.vmdisks[disk]['cb_deletebacking'] = false;
+            $scope.reconfigureModel.vmdisks[disk]['cb_bootable'] = false;
           } else if ($scope.reconfigureModel.vmdisks[disk]['add_remove'] === 'add') {
             var index = $scope.reconfigureModel.vmdisks.indexOf(vmDisk);
             $scope.reconfigureModel.vmdisks.splice(index, 1);

@@ -48,13 +48,15 @@
     .form-group
       %label.col-md-2.control-label{:valign => "top"}
         = field_hash[:description]
+        - len =  field_hash[:max_length] ? field_hash[:max_length] : MAX_NAME_LEN
         - if field_hash[:description] == "Provision on"
           (#{get_timezone_abbr(current_user)})
         - if @edit && @edit[:new] && [:vm_description].include?(field)
+          %br
           (
           %span#description_count
             = @edit[:new][:vm_description] ? @edit[:new][:vm_description].length : 0
-          \/ #{field_hash[:max_length]})
+          \/ #{len} )
         - if @edit && field_hash[:required] && field_hash[:display] == :edit
           *
       -# Text fields
@@ -84,14 +86,13 @@
                                    "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
             - elsif [:request_notes, :vm_description].include?(field)
               = text_area_tag(field_id, options[field],
-                              :maxlength                  => field_hash[:max_length],
+                              :maxlength                  => len,
                               :class                      => "form-control",
                               :size                       => "25x4",
                               :counter                    => "description_count",
                               "data-miq_check_max_length" => true,
                               "data-miq_observe"          => {:interval => '.5', :url => url}.to_json)
             - else
-              - len =  field_hash[:max_length] ? field_hash[:max_length] : MAX_NAME_LEN
               = text_field_tag(field_id, options[field],
                                :maxlength         => len,
                                :class             => "form-control",
@@ -182,7 +183,7 @@
             :readonly => "readonly",
             :style    => "width: 600px; height: 250px;")
       - elsif [:ldap_ous].include?(field)
-        -# dynatree control for tags fields
+        -# tree control for tags fields
         .col-md-8
           %div{:id => "ldap_ous_treebox", :style => "color:#000; overflow: hidden;"}
           - if @edit && @edit[:req_id]
@@ -191,14 +192,14 @@
             - click = @miq_request.id
           - else
             - click = 'new'
-          = render(:partial => "layouts/dynatree",
-                   :locals  => {:tree_id            => "ldap_ous_treebox",
-                                :tree_name          => session[:tree_name],
-                                :json_tree          => @ldap_ous_tree,
-                                :onclick            => "miqOnClickProvLdapOus",
-                                :click_url          => "/miq_request/prov_field_changed/#{click}",
-                                :cookie_id_prefix   => "prov_trees",
-                                :tree_state         => true})
+          = render(:partial => "layouts/tree",
+                   :locals  => {:tree_id       => "ldap_ous_treebox",
+                                :tree_name     => session[:tree_name],
+                                :bs_tree       => @ldap_ous_tree,
+                                :onclick       => "miqOnClickProvLdapOus",
+                                :click_url     => "/miq_request/prov_field_changed/#{click}",
+                                :cookie_prefix => "prov_",
+                                :tree_state    => true})
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
             -# Display notes if available
             = field_hash[:notes]
@@ -291,7 +292,7 @@
             -# Display notes if available
             = field_hash[:notes]
       - elsif [:tag_ids, :vm_tags].include?(field)
-        -# dynatree control for tags fields
+        -# tree control for tags fields
         .col-md-8
           %div{:id => "all_tags_treebox", :style => "color:#000; overflow: hidden;"}
           - if @edit && @edit[:req_id]
@@ -300,19 +301,15 @@
             - check = @miq_request.id
           - else
             - check = 'new'
-          = render(:partial => "layouts/dynatree",
-                   :locals => {:tree_id                     => "all_tags_treebox",
-                               :tree_name                   => "all_tags_tree",
-                               :json_tree                   => @all_tags_tree,
-                               :oncheck                     => "miqOnCheckProvTags",
-                               :check_url                   => "/miq_request/prov_field_changed/#{check}",
-                               :exp_tree                    => @edit ? false : true,
-                               :no_tree_lines               => true,
-                               :multi_lines                 => true,
-                               :checkboxes                  => true,
-                               :open_close_all_on_dbl_click => true,
-                               :cookie_id_prefix            => "prov_trees",
-                               :tree_state                  => true})
+          = render(:partial => "layouts/tree",
+                   :locals => {:tree_id       => "all_tags_treebox",
+                               :tree_name     => "all_tags_tree",
+                               :bs_tree       => @all_tags_tree,
+                               :oncheck       => "miqOnCheckProvTags",
+                               :check_url     => "/miq_request/prov_field_changed/#{check}",
+                               :checkboxes    => true,
+                               :cookie_prefix => "prov_trees",
+                               :tree_state    => true})
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
             -# Display notes if available
             = field_hash[:notes]

@@ -199,9 +199,9 @@ module MiqPolicyController::AlertProfiles
           @assign[:new][:assign_to].ends_with?("-tags") ? "Tags" : ui_lookup(:tables => @assign[:new][:assign_to]),
           "folder_open.png",
           "",
-          :style_class  => "cfme-no-cursor-node",
-          :expand       => true,
-          :hideCheckbox => true
+          :cfme_no_click => true,
+          :expand        => true,
+          :hideCheckbox  => true
         )
         root_node[:children] = []
         @objects.sort_by { |o| (o.name.presence || o.description).downcase }.each do |o|
@@ -218,17 +218,26 @@ module MiqPolicyController::AlertProfiles
           end
           node = TreeNodeBuilder.generic_tree_node(
             o.id,
-            (o.name.presence || o.description),
+            choose_node_identifier(o),
             icon,
             "",
-            :select => @assign[:new][:objects].include?(o.id) # Check if tag is assigned
+            :cfme_no_click => true,
+            :select        => @assign[:new][:objects].include?(o.id) # Check if tag is assigned
           )
           root_node[:children].push(node)
         end
-        tree = root_node.to_json
+        tree = TreeBuilder.convert_bs_tree(root_node).to_json
       end
     end
     tree
+  end
+
+  def choose_node_identifier(o)
+    identifier = (o.name.presence || o.description)
+    if o.kind_of?(MiddlewareServer)
+      identifier += "-" + o.hostname
+    end
+    identifier
   end
 
   def alert_profile_build_edit_screen

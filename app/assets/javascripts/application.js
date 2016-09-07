@@ -5,7 +5,6 @@
 //= require jquery
 //= require jquery_overrides
 //= require i18n
-//= require tertiary-nav
 //= require patternfly
 //= require jquery-ujs
 //= require angular
@@ -18,6 +17,7 @@
 //= require moment-timezone
 //= require sprintf
 //= require numeral
+//= require cable
 //= require miq_api
 //= require rxjs/dist/rx.all
 //= require miq_angular_application
@@ -55,10 +55,10 @@
 //= require bootstrap-hover-dropdown
 //= require bootstrap-switch
 //= require angular-bootstrap-switch
+//= require patternfly-bootstrap-treeview
 //= require jquery.observe_field
 //= require miq_ujs_bindings
-//= require dynatree/jquery.dynatree
-//= require miq_dynatree
+//= require miq_tree
 //= require codemirror
 //= require codemirror/mode/css/css
 //= require codemirror/mode/htmlmixed/htmlmixed

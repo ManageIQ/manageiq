@@ -3,15 +3,11 @@
   %h3
     = _('Sample Dashboard')
   - if @in_a_form
-    %table.admintable
-      %tbody
-        %tr
-          %td.wider
-            - combo_url = "/report/db_form_field_changed/#{@db.id || 'new'}"
-            #form-group
-              = select_tag('widget',
-                  options_for_select(@widgets_options, @edit[:new][:widget].to_s),
-                  :class => "selectpicker")
+    - combo_url = "/report/db_form_field_changed/#{@db.id || 'new'}"
+    #form-group
+      = select_tag('widget',
+          options_for_select(@widgets_options, @edit[:new][:widget].to_s),
+          :class => "selectpicker")
   .row#modules
     .col-md-4#col1{:class => @in_a_form ? 'db_widgets_target' : ''}
       - edit[:new][:col1].each do |w|

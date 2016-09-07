@@ -28,11 +28,7 @@ class TreeBuilderDatacenter < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix                   => "dc_",
-                  :autoload                    => true,
-                  :url                         => '/vm/show/',
-                  :open_close_all_on_dbl_click => true,
-                  :onclick                     => 'miqOnClickHostNet',)
+    locals.merge!(:autoload => true, :url => '/vm/show/', :onclick => 'miqOnClickHostNet')
   end
 
   def root_options

@@ -9,9 +9,8 @@ module ApplianceConsole
 
     REPMGR_CONFIG = '/etc/repmgr.conf'.freeze
 
-    attr_accessor :cluster_name, :node_number,
-                  :database_name, :database_user, :database_password,
-                  :primary_host, :standby_host
+    attr_accessor :cluster_name, :node_number, :database_name, :database_user,
+                  :database_password, :primary_host
 
     def ask_for_unique_cluster_node_number
       self.node_number = ask_for_integer("number uniquely identifying this node in the replication cluster")
@@ -22,7 +21,7 @@ module ApplianceConsole
       self.primary_host = ask_for_ip_or_hostname("primary database hostname or IP address", primary_host)
     end
 
-    def confirm(including_standby_host = nil)
+    def confirm
       clear_screen
       say(<<-EOL)
 Replication Server Configuration
@@ -33,9 +32,6 @@ Replication Server Configuration
         Cluster Database Password:  "********"
         Cluster Primary Host:       #{primary_host}
         EOL
-      say("        Standby Host:               #{standby_host}") unless including_standby_host.nil?
-
-      agree("Apply this Replication Server Configuration? (Y/N): ")
     end
 
     def repmgr_configured?

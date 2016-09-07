@@ -23,11 +23,9 @@ module ProcessTasksMixin
     # Performs tasks received from the UI via the queue
     def invoke_tasks(options)
       local, remote = partition_ids_by_remote_region(options[:ids])
-      invoke_tasks_local(options.merge(:ids => local)) unless local.empty?
 
-      # TODO: invoke_tasks_remote currently is only implemented by VmOrTemplate.
-      # it can be refactored to be generalized like invoke_tasks_local
-      invoke_tasks_remote(options.merge(:ids => remote)) if remote.present? && respond_to?("invoke_tasks_remote")
+      invoke_tasks_local(options.merge(:ids => local)) if local.present?
+      invoke_tasks_remote(options.merge(:ids => remote)) if remote.present?
     end
 
     def invoke_tasks_local(options)
@@ -49,6 +47,51 @@ module ProcessTasksMixin
         task_audit_event(:success, options, :target_id => instance.id, :message => msg)
         task.update_status("Queued", "Ok", "Task has been queued") if task
       end
+    end
+
+    def invoke_tasks_remote(options)
+      ApplicationRecord.group_ids_by_region(options[:ids]).each do |region, ids|
+        remote_options = options.merge(:ids => ids)
+        hostname = MiqRegion.find_by_region(region).remote_ws_address
+        if hostname.nil?
+          $log.error("An error occurred while invoking remote tasks...The remote region [#{region}] does not have a web service address.")
+          next
+        end
+
+        begin
+          invoke_api_tasks(hostname, remote_options)
+        rescue NotImplementedError => err
+          $log.error("#{base_class.name} is not currently able to invoke tasks for remote regions")
+          $log.log_backtrace(err)
+          next
+        rescue => err
+          # Handle specific error case, until we can figure out how it occurs
+          if err.class == ArgumentError && err.message == "cannot interpret as DNS name: nil"
+            $log.error("An error occurred while invoking remote tasks...")
+            $log.log_backtrace(err)
+            next
+          end
+
+          $log.error("An error occurred while invoking remote tasks...Requeueing for 1 minute from now.")
+          $log.log_backtrace(err)
+          MiqQueue.put(
+            :class_name  => base_class.name,
+            :method_name => 'invoke_tasks_remote',
+            :args        => [remote_options],
+            :deliver_on  => Time.now.utc + 1.minute
+          )
+          next
+        end
+
+        msg = "'#{options[:task]}' successfully initiated for remote VMs: #{ids.sort.inspect}"
+        task_audit_event(:success, options, :message => msg)
+      end
+    end
+
+    # This should be overridden by any class including this module
+    # and expecting to be asked to invoke tasks for a remote region
+    def invoke_api_tasks(_hostname, _remote_options)
+      raise NotImplementedError
     end
 
     # default: invoked by task, can be overridden

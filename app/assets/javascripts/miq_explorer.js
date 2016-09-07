@@ -22,9 +22,10 @@ ManageIQ.explorer.buildCalendar = function(options) {
   miqBuildCalendar();
 };
 
-ManageIQ.explorer.lock_tree = function(tree, lock) {
-  $('#' + tree + 'box').dynatree(lock ? 'disable' : 'enable');
-  miqDimDiv('#' + tree + '_div', lock);
+ManageIQ.explorer.lock_tree = function(tree_name, lock) {
+  var tree = miqTreeObject(tree_name);
+  lock ? tree.disableAll({silent: true, keepState: true}) : tree.enableAll();
+  miqDimDiv('#' + tree_name + '_div', lock);
 };
 
 ManageIQ.explorer.clearSearchToggle = function(show) {
@@ -114,7 +115,7 @@ ManageIQ.explorer.processReplaceRightCell = function(data) {
 
   ManageIQ.explorer.miqButtons(data);
 
-  if (_.isString(data.clearTreeCookies)) { miqDeleteDynatreeCookies(data.clearTreeCookies); }
+  if (_.isString(data.clearTreeCookies)) { miqDeleteTreeCookies(data.clearTreeCookies); }
 
   if (_.isString(data.accordionSwap)) {
     miqAccordionSwap('#accordion .panel-collapse.collapse.in', '#' + data.accordionSwap + '_accord');
@@ -135,11 +136,8 @@ ManageIQ.explorer.processReplaceRightCell = function(data) {
 
 
   if (!_.isUndefined(data.deleteNode)) {
-    var del_node = $('#' + data.deleteNode.activeTree + 'box')
-      .dynatree('getTree')
-      .getNodeByKey(data.deleteNode.node);
-
-    del_node.remove();
+    var del_node = miqTreeFindNodeByKey(data.deleteNode.activeTree, data.deleteNode.node)
+    miqTreeObject(data.deleteNode.activeTree).deleteNode(del_node);
   }
 
   if (_.isString(data.dashboardUrl)) {
@@ -199,7 +197,8 @@ ManageIQ.explorer.processReplaceRightCell = function(data) {
   ManageIQ.record = data.record;
 
   if (!_.isUndefined(data.activateNode)) {
-    miqDynatreeActivateNodeSilently(data.activateNode.activeTree, data.activateNode.osf);
+    miqExpandParentNodes(data.activateNode.activeTree, data.activateNode.osf);
+    miqTreeActivateNodeSilently(data.activateNode.activeTree, data.activateNode.osf);
   }
 
   if (_.isObject(data.lockTrees)) {

@@ -6,6 +6,7 @@ class VmOrTemplate < ApplicationRecord
   include NewWithTypeStiMixin
   include ScanningMixin
   include SupportsFeatureMixin
+  include VirtualTotalMixin
 
   self.table_name = 'vms'
 
@@ -32,6 +33,8 @@ class VmOrTemplate < ApplicationRecord
   include AvailabilityMixin
 
   supports_not :retire
+  supports_not :associate_floating_ip
+  supports_not :disassociate_floating_ip
 
   has_many :ems_custom_attributes, -> { where(:source => 'VC') }, :as => :resource, :dependent => :destroy,
            :class_name => "CustomAttribute"
@@ -145,8 +148,6 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :v_owning_blue_folder_path,            :type => :string,     :uses => :all_relationships
   virtual_column :v_datastore_path,                     :type => :string,     :uses => :storage
   virtual_column :thin_provisioned,                     :type => :boolean,    :uses => {:hardware => :disks}
-  virtual_column :used_disk_storage,                    :type => :integer,    :uses => {:hardware => :disks}
-  virtual_column :allocated_disk_storage,               :type => :integer,    :uses => {:hardware => :disks}
   virtual_column :provisioned_storage,                  :type => :integer,    :uses => [:allocated_disk_storage, :mem_cpu]
   virtual_column :used_storage,                         :type => :integer,    :uses => [:used_disk_storage, :mem_cpu]
   virtual_column :used_storage_by_state,                :type => :integer,    :uses => :used_storage
@@ -161,7 +162,7 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :num_cpu,                              :type => :integer,    :uses => :hardware
   virtual_column :cpu_total_cores,                      :type => :integer,    :uses => :hardware
   virtual_column :cpu_cores_per_socket,                 :type => :integer,    :uses => :hardware
-  virtual_column :v_annotation,                         :type => :string,     :uses => :hardware
+  virtual_delegate :annotation, :to => :hardware, :prefix => "v", :allow_nil => true
   virtual_column :has_rdm_disk,                         :type => :boolean,    :uses => {:hardware => :disks}
   virtual_column :disks_aligned,                        :type => :string,     :uses => {:hardware => {:hard_disks => :partitions_aligned}}
 
@@ -252,11 +253,6 @@ class VmOrTemplate < ApplicationRecord
     end
 
     virtual_column m, :type => :string, :uses => :all_relationships
-  end
-
-  def v_annotation
-    return nil if hardware.nil?
-    hardware.annotation
   end
 
   include RelationshipMixin
@@ -475,44 +471,6 @@ class VmOrTemplate < ApplicationRecord
       :role         => role,
       :expires_on   => POWER_OPS.include?(options[:task]) ? powerops_expiration : nil
     )
-  end
-
-  def self.invoke_tasks_remote(options)
-    ids_by_region = options[:ids].group_by { |id| ApplicationRecord.id_to_region(id.to_i) }
-    ids_by_region.each do |region, ids|
-      remote_options = options.merge(:ids => ids)
-      hostname = MiqRegion.find_by_region(region).remote_ws_address
-      if hostname.nil?
-        $log.error("An error occurred while invoking remote tasks...The remote region [#{region}] does not have a web service address.")
-        next
-      end
-
-      begin
-        raise _("SOAP services are no longer supported. Remote server operations are dependent on a REST client library.")
-        # client = VmdbwsClient.new(hostname)  FIXME: Replace with REST client library
-        client.vm_invoke_tasks(remote_options)
-      rescue => err
-        # Handle specific error case, until we can figure out how it occurs
-        if err.class == ArgumentError && err.message == "cannot interpret as DNS name: nil"
-          $log.error("An error occurred while invoking remote tasks...")
-          $log.log_backtrace(err)
-          next
-        end
-
-        $log.error("An error occurred while invoking remote tasks...Requeueing for 1 minute from now.")
-        $log.log_backtrace(err)
-        MiqQueue.put(
-          :class_name  => base_class.name,
-          :method_name => 'invoke_tasks_remote',
-          :args        => [remote_options],
-          :deliver_on  => Time.now.utc + 1.minute
-        )
-        next
-      end
-
-      msg = "'#{options[:task]}' successfully initiated for remote VMs: #{ids.sort.inspect}"
-      task_audit_event(:success, options, :message => msg)
-    end
   end
 
   def scan_data_current?
@@ -1591,7 +1549,8 @@ class VmOrTemplate < ApplicationRecord
   # Hardware Disks/Memory storage methods
   #
 
-  delegate :allocated_disk_storage, :used_disk_storage, :to => :hardware, :allow_nil => true
+  virtual_delegate :allocated_disk_storage, :used_disk_storage,
+                   :to => :hardware, :allow_nil => true, :uses => {:hardware => :disks}
 
   def provisioned_storage
     allocated_disk_storage.to_i + ram_size_in_bytes
@@ -1846,15 +1805,21 @@ class VmOrTemplate < ApplicationRecord
   end
 
   # Return all archived VMs
-  ARCHIVED_CONDITIONS = "vms.ems_id IS NULL AND vms.storage_id IS NULL"
+  ARCHIVED_CONDITIONS = "vms.ems_id IS NULL AND vms.storage_id IS NULL".freeze
   def self.all_archived
-    where(ARCHIVED_CONDITIONS).to_a
+    where(ARCHIVED_CONDITIONS)
   end
 
   # Return all orphaned VMs
-  ORPHANED_CONDITIONS = "vms.ems_id IS NULL AND vms.storage_id IS NOT NULL"
+  ORPHANED_CONDITIONS = "vms.ems_id IS NULL AND vms.storage_id IS NOT NULL".freeze
   def self.all_orphaned
-    where(ORPHANED_CONDITIONS).to_a
+    where(ORPHANED_CONDITIONS)
+  end
+
+  # where.not(ORPHANED_CONDITIONS).where.not(ARCHIVED_CONDITIONS)
+  NOT_ARCHIVED_NOR_OPRHANED_CONDITIONS = "vms.ems_id IS NOT NULL".freeze
+  def self.not_archived_nor_orphaned
+    where.not(:ems_id => nil)
   end
 
   # Stop certain charts from showing unless the subclass allows

@@ -21,6 +21,8 @@ module MiqAeMethodService
     include MiqAeMethodService::MiqAeServiceModelLegacy
     include MiqAeMethodService::MiqAeServiceVmdb
 
+    attr_accessor :logger
+
     @@id_hash = {}
     @@current = []
 
@@ -42,14 +44,24 @@ module MiqAeMethodService
       @@current.delete(obj)
     end
 
-    def initialize(ws)
+    def initialize(ws, inputs = {}, body = nil, logger = $miq_ae_logger)
       @drb_server_references = []
-      @inputs                = {}
+      @inputs                = inputs
       @workspace             = ws
       @preamble_lines        = 0
       @body                  = []
+      self.body              = body if body
       @persist_state_hash    = ws.persist_state_hash
+      @logger                = logger
       self.class.add(self)
+    end
+
+    def stdout
+      @stdout ||= Vmdb::Loggers::IoLogger.new(logger, :info, "Method STDOUT:")
+    end
+
+    def stderr
+      @stderr ||= Vmdb::Loggers::IoLogger.new(logger, :error, "Method STDERR:")
     end
 
     def destroy

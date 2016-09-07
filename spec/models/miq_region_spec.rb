@@ -147,4 +147,43 @@ describe MiqRegion do
       expect(described_class.replication_type = :global).to eq :global
     end
   end
+
+  describe "#generate_auth_key" do
+    let(:remote_region) { FactoryGirl.create(:miq_region) }
+    let(:remote_key)    { "this is the encryption key!" }
+
+    before { EvmSpecHelper.create_guid_miq_server_zone }
+
+    it "stores an authentication key" do
+      require 'net/scp'
+      host     = "remote-region.example.com"
+      password = "mypassword"
+      user     = "admin"
+
+      expect(Net::SCP).to receive(:download!)
+        .with(host, user, "/var/www/miq/vmdb/certs/v2_key", nil, :ssh => {:password => password})
+        .and_return(remote_key)
+
+      remote_region.generate_auth_key(user, password, host)
+
+      expect(remote_region.authentication_token("system_api")).to eq(remote_key)
+    end
+  end
+
+  describe "#api_system_auth_token" do
+    let(:region) { FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number) }
+
+    it "generates the token correctly" do
+      user = "admin"
+      server = FactoryGirl.create(:miq_server, :has_active_webservices => true)
+      expect(region).to receive(:authentication_token).and_return(File.read(RAILS_ROOT.join("certs/v2_key")))
+
+      token = region.api_system_auth_token(user)
+      token_hash = YAML.load(MiqPassword.decrypt(token))
+
+      expect(token_hash[:server_guid]).to eq(server.guid)
+      expect(token_hash[:userid]).to eq(user)
+      expect(token_hash[:timestamp]).to be > 5.minutes.ago.utc
+    end
+  end
 end

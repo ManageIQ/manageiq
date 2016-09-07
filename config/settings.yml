@@ -976,6 +976,7 @@
     :purge_window_size: 1000
 :product:
   :maindb: ExtManagementSystem
+  :container_deployment_wizard: false
 :replication:
   :exclude_tables:
     - ar_internal_metadata
@@ -1052,6 +1053,9 @@
     - miq_widgets
     - miq_widget_contents
     - miq_workers
+    - notifications
+    - notification_recipients
+    - notification_types
     - rss_feeds
     - scan_items
     - schema_migrations
@@ -1339,6 +1343,7 @@
         :ems_refresh_worker_redhat: {}
         :ems_refresh_worker_vmware: {}
         :ems_refresh_worker_vmware_cloud: {}
+        :ems_refresh_worker_vmware_cloud_network: {}
       :event_handler:
         :cpu_usage_threshold: 0.percent
         :nice_delta: 7

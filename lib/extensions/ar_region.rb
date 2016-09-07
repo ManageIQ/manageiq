@@ -124,6 +124,10 @@ module ArRegion
       ids.partition { |id| self.id_in_current_region?(id) }
     end
 
+    def group_ids_by_region(ids)
+      ids.group_by { |id| id_to_region(id) }
+    end
+
     def region_number_from_sequence
       return unless connection.data_source_exists?("miq_databases")
       id_to_region(connection.select_value("SELECT last_value FROM miq_databases_id_seq"))

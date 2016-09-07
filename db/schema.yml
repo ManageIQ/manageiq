@@ -372,6 +372,21 @@ cloud_tenants_vms:
 - cloud_tenant_id
 - vm_id
 - id
+cloud_volume_backups:
+- id
+- ems_id
+- type
+- name
+- description
+- ems_ref
+- status
+- creation_time
+- size
+- object_count
+- is_incremental
+- has_dependent_backups
+- cloud_volume_id
+- availability_zone_id
 cloud_volume_snapshots:
 - id
 - type
@@ -1041,6 +1056,7 @@ disks:
 - backing_id
 - backing_type
 - storage_profile_id
+- bootable
 drift_states:
 - id
 - timestamp
@@ -4567,6 +4583,18 @@ middleware_domains:
 - ems_id
 - created_at
 - updated_at
+middleware_messagings:
+- id
+- name
+- ems_ref
+- nativeid
+- feed
+- server_id
+- properties
+- ems_id
+- messaging_type
+- created_at
+- updated_at
 middleware_server_groups:
 - id
 - name
@@ -6442,6 +6470,8 @@ tenants:
 - description
 - use_config_for_attributes
 - default_miq_group_id
+- source_type
+- source_id
 time_profiles:
 - id
 - description

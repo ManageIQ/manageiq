@@ -27,6 +27,11 @@ module ApplianceConsole
       confirm
     end
 
+    def confirm
+      super
+      agree("Apply this Replication Server Configuration? (Y/N): ")
+    end
+
     def activate
       say("Configuring Primary Replication Server...")
       generate_cluster_name &&

@@ -65,7 +65,7 @@ function miqPrepRightCellForm(tree) {
     $('#adv_searchbox_div').hide();
   }
   $('#toolbar').hide();
-  $('#' + tree).dynatree('disable');
+  miqTreeObject(tree).disableAll({silent: true, keepState: true});
   miqDimDiv(tree + '_div', true);
 }
 
@@ -759,25 +759,6 @@ function miqSendOneTrans(url, observe) {
   }
 }
 
-// this deletes the remembered treestate when called
-function miqClearTreeState(prefix) {
-  var to_remove = [];
-  var i;
-
-  if (prefix === undefined) {
-    prefix = 'treeOpenStatex';
-  }
-  for (i = 0; i < localStorage.length; i++) {
-    if (localStorage.key(i).match('^' + prefix)) {
-      to_remove.push(localStorage.key(i));
-    }
-  }
-
-  for (i = 0; i < to_remove.length; i++) {
-    localStorage.removeItem(to_remove[i]);
-  }
-}
-
 // Check max length on a text area and set remaining chars
 function miqCheckMaxLength(obj) {
   var ml = obj.getAttribute ? parseInt(obj.getAttribute("maxlength"), 10) : "";
@@ -787,11 +768,7 @@ function miqCheckMaxLength(obj) {
     obj.value = obj.value.substring(0, ml);
   }
   if (counter) {
-    if (ManageIQ.browser != 'Explorer') {
-      $('#' + counter)[0].textContent = obj.value.length;
-    } else {
-      $('#' + counter).innerText = obj.value.length;
-    }
+    $('#' + counter).text(obj.value.length);
   }
 }
 
@@ -821,6 +798,9 @@ function miqAjaxAuth(url) {
   }
 
   API.login(credentials.login, credentials.password)
+  .then(function() {
+    return API.ws_init();
+  })
   .then(function() {
     // API login ok, now do the normal one
     miqJqueryRequest(url || '/dashboard/authenticate', {
@@ -1686,7 +1666,7 @@ $(function () {
   $(window).on('resize', _.debounce(miqResetSizeTimer, 1000));
 
   check_for_ellipsis();
-  $().setupVerticalTertiaryNavigation(true);
+  $().setupVerticalNavigation(true);
 });
 
 function miqScrollToSelected(div_name) {

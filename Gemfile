@@ -10,6 +10,7 @@ end
 
 # Unmodified gems
 gem "activerecord-session_store",     "~>1.0.0"
+gem "actioncable",                    "~>5.0.0"
 gem "acts_as_list",                   "~>0.7.2"
 gem "acts_as_tree",                   "~>2.1.0" # acts_as_tree needs to be required so that it loads before ancestry
 gem "ancestry",                       "~>2.1.0",       :require => false
@@ -22,7 +23,7 @@ gem "default_value_for",              "~>3.0.2"
 gem "elif",                           "=0.1.0",        :require => false
 gem "fast_gettext",                   "~>1.2.0"
 gem "fog-google",                     "~>0.3.0",       :require => false
-gem "fog-vcloud-director",            "~>0.1.3",       :require => false
+gem "fog-vcloud-director",            "~>0.1.5",       :require => false
 gem "gettext_i18n_rails",             "~>1.7.2"
 gem "gettext_i18n_rails_js",          "~>1.1.0"
 gem "google-api-client",              "~>0.8.6",       :require => false
@@ -43,8 +44,8 @@ gem "omniauth",                       "~>1.3.1",       :require => false
 gem "omniauth-google-oauth2",         "~>0.2.6"
 gem "open4",                          "~>1.3.0",       :require => false
 gem "outfielding-jqplot-rails",       "= 1.0.8"
-gem "ovirt-engine-sdk",               "~>4.0.0.alpha", :require => false # Required by the oVirt provider
-gem "ovirt_metrics",                  "~>1.2.0",       :require => false
+gem "ovirt-engine-sdk",               "~>4.0.0",       :require => false # Required by the oVirt provider
+gem "ovirt_metrics",                  "~>1.3.0",       :require => false
 gem "paperclip",                      "~>4.3.0"
 gem "puma",                           "~>3.3.0"
 gem "rails",                          "~>5.0.0"
@@ -54,7 +55,7 @@ gem "recursive-open-struct",          "~>1.0.0"
 gem "responders",                     "~>2.0"
 gem "ruby-dbus" # For external auth
 gem "ruby-progressbar",               "~>1.7.0",       :require => false
-gem "ruby_parser",                    "~>3.7",         :require => false
+gem "ruby_parser",                    "~>3.8",         :require => false
 gem "rufus-scheduler",                "~>3.1.3",       :require => false
 gem "rugged",                         "~>0.23.0",      :require => false
 gem "secure_headers",                 "~>3.0.0"
@@ -88,11 +89,12 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
   gem "jquery-hotkeys-rails"
   gem "jquery-rails",                 "~>4.1.1"
   gem "lodash-rails",                 "~>3.10.0"
+  gem "patternfly-sass",              "~>3.10.0"
   gem "sass-rails"
+  gem "coffee-rails"
 
   # Modified gems (forked on Github)
   gem "jquery-rjs",                   "=0.1.1",                       :git => "git://github.com/amatsuda/jquery-rjs.git", :ref => "1288c09"
-  gem "patternfly-sass",                                              :git => "git://github.com/ManageIQ/patternfly-sass", :branch => "tertiary-3.7.0"
 end
 
 ### Start of gems excluded from the appliances.
@@ -107,7 +109,7 @@ unless ENV["APPLIANCE"]
   end
 
   group :test do
-    gem "brakeman",         "~>3.1.0",  :require => false
+    gem "brakeman",         "~>3.3",    :require => false
     gem "capybara",         "~>2.5.0",  :require => false
     gem "factory_girl",     "~>4.5.0",  :require => false
     gem "sqlite3",                      :require => false

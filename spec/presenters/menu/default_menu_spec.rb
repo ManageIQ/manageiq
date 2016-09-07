@@ -1,8 +1,6 @@
-require_relative "menu_spec_helper"
-
-include MenuSpecHelper
-
 describe Menu::DefaultMenu do
+  include Spec::Support::MenuHelper
+
   context 'default_menu' do
     it "does not call gettext translations" do
       expect(Menu::DefaultMenu).not_to receive(:ui_lookup).with(any_args)

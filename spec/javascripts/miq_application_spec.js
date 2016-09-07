@@ -414,7 +414,13 @@ describe('miq_application.js', function() {
     });
 
     it("sets beforeSend & complete options using data-miq_sparkle_on & data-miq_sparkle_off", function() {
-      var html = '<select class="selectpicker bs-select-hidden" id="miq-select-picker-1" name="miq-select-picker-1" data-miq_sparkle_on="true" data-miq_sparkle_off="true"><option value="one">1</option> <option value="two" selected="selected">2</option></select>';
+      var html = [
+        '<select class="selectpicker" id="miq-select-picker-1" name="miq-select-picker-1" data-miq_sparkle_on="true" data-miq_sparkle_off="true">',
+        '  <option value="one">1</option>',
+        '  <option value="two" selected="selected">2</option>',
+        '</select>',
+      ].join("\n");
+
       setFixtures(html);
       spyOn(window, 'miqObserveRequest');
       spyOn(_, 'debounce').and.callFake(function(fn, opts) {

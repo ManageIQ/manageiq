@@ -84,13 +84,13 @@ module MiqAeEngine
 
       ENV['MIQ_TOKEN'] = ws.guid unless ws.nil?
 
-      rc, msg, final_stderr = run_method(*cmd)
+      rc, msg = run_method(*cmd)
       if ws
         ws.reload
         ws.setters.each { |uri, value| workspace.varset(uri, value) } unless ws.setters.nil?
         ws.delete
       end
-      process_ruby_method_results(rc, msg, final_stderr)
+      process_ruby_method_results(rc, msg)
     end
 
     MIQ_OK    = 0
@@ -123,7 +123,7 @@ module MiqAeEngine
       end
     end
 
-    def self.process_ruby_method_results(rc, msg, stderr)
+    def self.process_ruby_method_results(rc, msg)
       case rc
       when MIQ_OK
         $miq_ae_logger.info(msg)
@@ -134,7 +134,7 @@ module MiqAeEngine
       when MIQ_ABORT
         raise MiqAeException::AbortInstantiation, msg
       else
-        raise MiqAeException::UnknownMethodRc, msg, stderr
+        raise MiqAeException::UnknownMethodRc, msg
       end
       rc
     end
@@ -152,9 +152,9 @@ module MiqAeEngine
         obj.workspace.invoker ||= MiqAeEngine::DrbRemoteInvoker.new(obj.workspace)
         obj.workspace.invoker.with_server(inputs, aem.data) do |code|
           $miq_ae_logger.info("<AEMethod [#{aem.fqname}]> Starting ")
-          rc, msg, stderr = run_ruby_method(code)
+          rc, msg = run_ruby_method(code)
           $miq_ae_logger.info("<AEMethod [#{aem.fqname}]> Ending")
-          process_ruby_method_results(rc, msg, stderr)
+          process_ruby_method_results(rc, msg)
         end
       end
     end
@@ -162,7 +162,6 @@ module MiqAeEngine
     def self.run_method(cmd)
       require 'open4'
       rc = nil
-      final_stderr = []
       threads = []
       method_pid = nil
       begin
@@ -174,11 +173,7 @@ module MiqAeEngine
             stdout.each_line { |msg| $miq_ae_logger.info "Method STDOUT: #{msg.strip}" }
           end
           threads << Thread.new do
-            stderr.each_line do |msg|
-              msg = msg.chomp
-              final_stderr << msg
-              $miq_ae_logger.error "Method STDERR: #{msg}"
-            end
+            stderr.each_line { |msg| $miq_ae_logger.error "Method STDERR: #{msg.strip}" }
           end
           threads.each(&:join)
         end
@@ -193,7 +188,7 @@ module MiqAeEngine
       ensure
         cleanup(method_pid, threads)
       end
-      return rc, msg, final_stderr.presence
+      return rc, msg
     end
 
     def self.cleanup(method_pid, threads)

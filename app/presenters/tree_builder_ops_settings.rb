@@ -10,10 +10,7 @@ class TreeBuilderOpsSettings < TreeBuilderOps
 
   def set_locals_for_render
     locals = super
-    locals.merge!(
-      :id_prefix => "settings_",
-      :autoload  => true
-    )
+    locals.merge!(:autoload => true)
   end
 
   def root_options
@@ -48,7 +45,7 @@ class TreeBuilderOpsSettings < TreeBuilderOps
       end.each do |z|
         objects.push(z) if z.adhoc.nil?
       end
-      count_only_or_objects(count_only, objects, nil)
+      count_only_or_objects(count_only, objects)
     when "sis"
       count_only_or_objects(count_only, ScanItemSet.all, "name")
     when "z"

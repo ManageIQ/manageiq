@@ -372,10 +372,10 @@
       :description: Refresh Cloud Providers
       :feature_type: control
       :identifier: ems_cloud_refresh
-    - :name: Re-check Authentication Status 
+    - :name: Re-check Authentication Status
       :description: Re-check Authentication Status of Cloud Providers
       :feature_type: control
-      :identifier: ems_cloud_recheck_auth_status 
+      :identifier: ems_cloud_recheck_auth_status
   - :name: Modify
     :description: Modify Cloud Providers
     :feature_type: admin
@@ -3299,6 +3299,10 @@
       :description: Add a Containers Provider
       :feature_type: admin
       :identifier: ems_container_new
+    - :name: deploy
+      :description: Deploy a New Containers Provider
+      :feature_type: admin
+      :identifier: ems_container_deployment
 
 # EmsMiddleware
 - :name: Providers
@@ -3346,8 +3350,7 @@
     :identifier: ems_middleware_admin
     :children:
     - :name: Remove
-      :description: Remove Middleware Provider720709
-      
+      :description: Remove Middleware Providers
       :feature_type: admin
       :identifier: ems_middleware_delete
     - :name: Edit
@@ -3459,10 +3462,10 @@
     :feature_type: admin
     :identifier: middleware_deployment_admin
     :children:
-    - :name: Remove
-      :description: Remove Middleware Deployment
+    - :name: Undeploy
+      :description: Undeploy Middleware Deployment
       :feature_type: admin
-      :identifier: middleware_deployment_delete
+      :identifier: middleware_deployment_remove
     - :name: Edit
       :description: Edit a Middleware Deployment
       :feature_type: admin
@@ -3480,22 +3483,22 @@
       :description: Edit Tags of Middleware Deployments
       :feature_type: control
       :identifier: middleware_deployment_tag
-    - :name: Stop middleware deployment
-      :description: Stop Middleware deployment
+    - :name: Disable middleware deployment
+      :description: Disable Middleware deployment
       :feature_type: admin
-      :identifier: middleware_deployment_stop
-    - :name: Start middleware deployment
-      :description: StartMiddleware deployment
+      :identifier: middleware_deployment_disable
+    - :name: Enable middleware deployment
+      :description: Enable Middleware deployment
       :feature_type: admin
-      :identifier: middleware_deployment_start
+      :identifier: middleware_deployment_enable
     - :name: Undeploy middleware deployment
       :description: Undeploy Middleware deployment
       :feature_type: admin
       :identifier: middleware_deployment_undeploy
-    - :name: Redeploy middleware deployment
-      :description: Redeploy Middleware deployment
+    - :name: Restart middleware deployment
+      :description: Restart Middleware deployment
       :feature_type: admin
-      :identifier: middleware_deployment_redeploy
+      :identifier: middleware_deployment_restart
 
 # Middleware Datasource
 - :name: Middleware Datasource
@@ -3604,6 +3607,35 @@
       :description: Edit Tags of Middleware Server Groups
       :feature_type: control
       :identifier: middleware_server_group_tag
+
+# Middleware Messaging
+- :name: Middleware Messaging
+  :description: Everything under Middleware Messaging
+  :feature_type: node
+  :identifier: middleware_messaging
+  :children:
+  - :name: View
+    :description: View Middleware Messaging
+    :feature_type: view
+    :identifier: middleware_messaging_view
+    :children:
+    - :name: List
+      :description: Display Lists of Middleware Messaging
+      :feature_type: view
+      :identifier: middleware_messaging_show_list
+    - :name: Show
+      :description: Display Individual Middleware Messaging
+      :feature_type: view
+      :identifier: middleware_messaging_show
+  - :name: Operate
+    :description: Perform Operations on Middleware Messaging
+    :feature_type: control
+    :identifier: middleware_messaging_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Middleware Messaging
+      :feature_type: control
+      :identifier: middleware_messaging_tag
 
 # EmsNetwork
 - :name: Network Providers
@@ -4721,6 +4753,14 @@
         :description: Evacuate Instance
         :feature_type: control
         :identifier: instance_evacuate
+      - :name: Associate Floating IP
+        :description: Associate Floating IP with Instance
+        :feature_type: control
+        :identifier: instance_associate_floating_ip
+      - :name: Disassociate Floating IP
+        :description: Disassociate Floating IP from Instance
+        :feature_type: control
+        :identifier: instance_disassociate_floating_ip
     - :name: Modify
       :description: Modify Instances
       :feature_type: admin
@@ -4957,7 +4997,7 @@
       - :name: Cockpit Console
         :description: Open the Cockpit console for VMs
         :feature_type: control
-        :identifier: vm_cockpit
+        :identifier: cockpit_console
       - :name: Edit Tags
         :description: Edit VM Tags
         :feature_type: control

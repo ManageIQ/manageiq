@@ -119,7 +119,8 @@
       "MiddlewareManager": true,
       "Vm": true,
       "MiddlewareServer": true,
-      "MiddlewareServerGroup": true
+      "MiddlewareServerGroup": true,
+      "MiddlewareMessaging": true
     },
     "icons": {
       "ContainerReplicator": {
@@ -185,6 +186,11 @@
       "MiddlewareDomain": {
         "type": "glyph",
         "icon": "",
+        "fontfamily": "FontAwesome"
+      },
+      "MiddlewareMessaging": {
+        "type": "glyph",
+        "icon": "",
         "fontfamily": "FontAwesome"
       },
       "MiddlewareServerGroup": {

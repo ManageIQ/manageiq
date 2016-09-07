@@ -77,4 +77,7 @@ FactoryGirl.define do
 
   factory :ansible_tower_job, :class => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job" do
   end
+
+  factory :orchestration_stack_vmware_cloud, :parent => :orchestration_stack, :class => "ManageIQ::Providers::Vmware::CloudManager::OrchestrationStack" do
+  end
 end

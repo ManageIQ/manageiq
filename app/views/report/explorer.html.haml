@@ -7,12 +7,12 @@
   function miqReportAfterOnload() {
   - if @right_cell_div == "role_list"
     - if role_allows?(:feature => "miq_report_menu_editor")
-      miqDynatreeActivateNode('roles_tree','#{x_node}');
+      miqTreeForceActivateNode('roles_tree','#{x_node}');
       - if x_node.split('-').length > 1
         = javascript_hide("menu_div1")
         = javascript_show("menu_div3")
   - else
-    miqDynatreeActivateNode('#{x_active_tree}', '#{x_node}')
+    miqTreeForceActivateNode('#{x_active_tree}', '#{x_node}')
   };
   var miq_after_onload = "miqReportAfterOnload();"
 

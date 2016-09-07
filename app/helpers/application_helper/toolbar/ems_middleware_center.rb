@@ -17,8 +17,7 @@ class ApplicationHelper::Toolbar::EmsMiddlewareCenter < ApplicationHelper::Toolb
           :ems_middleware_edit,
           'pficon pficon-edit fa-lg',
           t = N_('Edit this Middleware Provider'),
-          t,
-          :url => "/edit"),
+          t),
         button(
           :ems_middleware_delete,
           'pficon pficon-delete fa-lg',
@@ -41,7 +40,6 @@ class ApplicationHelper::Toolbar::EmsMiddlewareCenter < ApplicationHelper::Toolb
           'product product-timeline fa-lg',
           N_('Show Timelines for this Middleware Provider'),
           N_('Timelines'),
-          :url       => "/show",
           :url_parms => "?display=timeline"),
       ]
     ),

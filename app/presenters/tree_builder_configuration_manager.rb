@@ -12,7 +12,7 @@ class TreeBuilderConfigurationManager < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix => 'pt_', :autoload => true)
+    locals.merge!(:autoload => true)
   end
 
   def root_options
@@ -34,7 +34,7 @@ class TreeBuilderConfigurationManager < TreeBuilder
                  :image         => "folder",
                  :tip           => _("Ansible Tower Providers"),
                  :load_children => true)
-    count_only_or_objects(count_only, objects, nil)
+    count_only_or_objects(count_only, objects)
   end
 
   def x_get_tree_cmat_kids(object, count_only)
@@ -65,9 +65,7 @@ class TreeBuilderConfigurationManager < TreeBuilder
       unassigned_configuration_profile =
         [ConfigurationProfile.new(:name       => "Unassigned Profiles Group|#{unassigned_id}",
                                   :manager_id => configuration_manager_id)]
-      unassigned_configuration_profile_objs = count_only_or_objects(count_only,
-                                                                    unassigned_configuration_profile,
-                                                                    nil)
+      unassigned_configuration_profile_objs = count_only_or_objects(count_only, unassigned_configuration_profile)
     end
 
     if unassigned_configuration_profile_objs.nil?

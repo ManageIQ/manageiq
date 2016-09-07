@@ -67,6 +67,7 @@ module ManageIQ::Providers
       get_images
       get_servers
       get_volumes
+      get_backups
       get_snapshots
       get_object_store
       get_cloud_services
@@ -133,7 +134,7 @@ module ManageIQ::Providers
     end
 
     def get_host_aggregates
-      host_aggregates = safe_list { @connection.aggregates }
+      host_aggregates = safe_list { @connection.aggregates.all }
       process_collection(host_aggregates, :host_aggregates) { |ha| parse_host_aggregate(ha) }
     end
 
@@ -158,6 +159,13 @@ module ManageIQ::Providers
 
     def get_volumes
       process_collection(volumes, :cloud_volumes) { |volume| parse_volume(volume) }
+    end
+
+    def get_backups
+      return unless @volume_service.name == :cinder
+      # backups don't support pagination in juno or kilo
+      process_collection(@volume_service.list_backups_detailed.body["backups"],
+                         :cloud_volume_backups) { |backup| parse_backup(backup) }
     end
 
     def get_snapshots
@@ -391,6 +399,28 @@ module ManageIQ::Providers
       return volume.display_description if volume.respond_to?(:display_description)
       # Cinder v2
       return volume.description
+    end
+
+    def parse_backup(backup)
+      uid = backup['id']
+      new_result = {
+        :ems_ref               => uid,
+        :type                  => "ManageIQ::Providers::Openstack::CloudManager::CloudVolumeBackup",
+        # Supporting both Cinder v1 and Cinder v2
+        :name                  => backup['display_name'] || backup['name'],
+        :status                => backup['status'],
+        :creation_time         => backup['created_at'],
+        # Supporting both Cinder v1 and Cinder v2
+        :description           => backup['display_description'] || backup['description'],
+        :size                  => backup['size'].to_i.gigabytes,
+        :object_count          => backup['object_count'].to_i,
+        :is_incremental        => backup['is_incremental'],
+        :has_dependent_backups => backup['has_dependent_backups'],
+        :availability_zone     => @data_index.fetch_path(:availability_zones,
+                                                         "volume-" + backup['availability_zone'] || "null_az"),
+        :volume                => @data_index.fetch_path(:cloud_volumes, backup['volume_id'])
+      }
+      return uid, new_result
     end
 
     def parse_snapshot(snap)

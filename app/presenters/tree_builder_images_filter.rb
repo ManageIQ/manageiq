@@ -8,7 +8,6 @@ class TreeBuilderImagesFilter < TreeBuilderVmsFilter
     locals.merge!(
       :tree_id   => "images_filter_treebox",
       :tree_name => "images_filter_tree",
-      :id_prefix => "imf_",
       :autoload  => false
     )
   end

@@ -1,6 +1,8 @@
 class TreeBuilderImages < TreeBuilder
   has_kids_for ExtManagementSystem, [:x_get_tree_ems_kids]
 
+  include TreeBuilderArchived
+
   def tree_init_options(_tree_name)
     {
       :leaf => "ManageIQ::Providers::CloudManager::Template"
@@ -12,7 +14,6 @@ class TreeBuilderImages < TreeBuilder
     locals.merge!(
       :tree_id   => "images_treebox",
       :tree_name => "images_tree",
-      :id_prefix => "images_",
       :autoload  => true
     )
   end
@@ -22,18 +23,13 @@ class TreeBuilderImages < TreeBuilder
   end
 
   def x_get_tree_roots(count_only, _options)
-    objects = Rbac.filtered(EmsCloud.order("lower(name)"), :match_via_descendants => TemplateCloud)
-    objects += [
-      {:id => "arch", :text => _("<Archived>"), :image => "currentstate-archived", :tip => _("Archived Images")},
-      {:id => "orph", :text => _("<Orphaned>"), :image => "currentstate-orphaned", :tip => _("Orphaned Images")}
-    ]
-    count_only_or_objects(count_only, objects, nil)
+    objects = Rbac.filtered(EmsCloud.order("lower(name)"), :match_via_descendants => TemplateCloud) +
+              x_get_tree_arch_orph_nodes("Images")
+    count_only_or_objects(count_only, objects)
   end
 
   def x_get_tree_ems_kids(object, count_only)
     objects = Rbac.filtered(object.miq_templates.order("name"))
     count_only ? objects.length : objects
   end
-
-  include TreeBuilderArchived
 end

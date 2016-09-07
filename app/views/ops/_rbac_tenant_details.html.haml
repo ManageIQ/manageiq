@@ -19,7 +19,7 @@
       .form-group
         %label.control-label.col-md-2
           = _("Parent")
-        .col-md-8.pointer{:onclick => "miqDynatreeActivateNode('rbac_tree', 'tn-#{to_cid(parent.id)}');",
+        .col-md-8.pointer{:onclick => "miqTreeActivateNode('rbac_tree', 'tn-#{to_cid(parent.id)}');",
           :title   => _("View Parent Tenant")}
           = h(parent.name)
     .form-group
@@ -30,7 +30,7 @@
           - @tenant.miq_groups.non_tenant_groups.sort_by { |group| group.name.downcase }.each do |g|
             - if role_allows?(:feature => "rbac_group_show")
               - params = {:class   => "pointer",
-                          :onclick => "miqDynatreeActivateNode('rbac_tree', 'g-#{to_cid(g.id)}');",
+                          :onclick => "miqTreeActivateNode('rbac_tree', 'g-#{to_cid(g.id)}');",
                           :title   => _("View this Group")}
             - else
               - params = {}
@@ -47,7 +47,7 @@
         %th= _("Name")
         %tbody
           - all_subtenants.each do |tenant|
-            %tr{:onclick => "miqDynatreeActivateNode('rbac_tree', 'tn-#{to_cid(tenant.id)}');",
+            %tr{:onclick => "miqTreeActivateNode('rbac_tree', 'tn-#{to_cid(tenant.id)}');",
               :title => _("Click to view child Tenant")}
               %td.narrow
                 %ul.icons.list-unstyled
@@ -63,7 +63,7 @@
         %th= _("Name")
         %tbody
           - all_subprojects.each do |tenant|
-            %tr{:onclick => "miqDynatreeActivateNode('rbac_tree', 'tn-#{to_cid(tenant.id)}');",
+            %tr{:onclick => "miqTreeActivateNode('rbac_tree', 'tn-#{to_cid(tenant.id)}');",
               :title => _("Click to view child TenantProject")}
               %td.narrow
                 %ul.icons.list-unstyled

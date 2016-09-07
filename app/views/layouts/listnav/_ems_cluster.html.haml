@@ -42,7 +42,7 @@
             :count        => @record.total_direct_vms,
             :record_id    => @record.id,
             :display      => "vms",
-            :title        => ("Show VMs in this %{cluster_title}, but not in Resource Pools below") % {:cluster_title => cluster_title})
+            :title        => _("Show VMs in this %{cluster_title}, but not in Resource Pools below") % {:cluster_title => cluster_title})
         - if role_allows?(:feature => "vm_show_list")
           = li_link(:text => _("All VMs"),
             :count        => @record.total_vms,

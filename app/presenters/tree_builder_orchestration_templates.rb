@@ -8,10 +8,7 @@ class TreeBuilderOrchestrationTemplates < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(
-      :id_prefix => 'ot_',
-      :autoload  => 'true'
-    )
+    locals.merge!(:autoload => 'true')
   end
 
   def root_options
@@ -52,6 +49,6 @@ class TreeBuilderOrchestrationTemplates < TreeBuilder
       "otvnf" => OrchestrationTemplateVnfd
     }
     objects = Rbac.filtered(classes[object[:id]].where(["orderable=?", true])).sort_by { |o| o.name.downcase }
-    count_only_or_objects(count_only, objects, nil)
+    count_only_or_objects(count_only, objects)
   end
 end

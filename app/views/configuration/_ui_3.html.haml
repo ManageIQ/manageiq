@@ -12,7 +12,7 @@
     - tree_id = "#{@df_tree.name}box"
     %br{:style => "line-height: 2.5em"}
     :javascript
-      miqDynatreeResetState('#{j_str @df_tree.name}');
+      miqTreeResetState('#{j_str @df_tree.name}');
     %div{:id => "#{tree_id}", :style => "color:#000; height:100%"}
       = render(:partial => 'shared/tree', :locals => {:tree => @df_tree, :name => @df_tree.name})
 

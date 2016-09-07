@@ -6,7 +6,7 @@ class TreeBuilderReportWidgets < TreeBuilder
   end
 
   def set_locals_for_render
-    super.merge!(:id_prefix => 'widgets_', :autoload => true)
+    super.merge!(:autoload => true)
   end
 
   def root_options
@@ -16,7 +16,7 @@ class TreeBuilderReportWidgets < TreeBuilder
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     objects = WIDGET_TYPES.collect { |k, v| {:id => k, :text => _(v), :image => 'folder', :tip => _(v)} }
-    count_only_or_objects(count_only, objects, nil)
+    count_only_or_objects(count_only, objects)
   end
 
   def x_get_tree_custom_kids(object, count_only, _options)

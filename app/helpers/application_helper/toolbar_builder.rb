@@ -107,10 +107,12 @@ class ApplicationHelper::ToolbarBuilder
       :data    => input[:data]
     )
 
-    button[:enabled]   = input[:enabled]
-    button[:title]     = input[:title]   unless input[:title].blank?
-    button[:text]      = input[:text]    unless input[:text].blank?
-    button[:confirm]   = input[:confirm] unless input[:confirm].blank?
+    button[:enabled] = input[:enabled]
+    %i(title text confirm).each do |key|
+      unless input[key].blank?
+        button[key] = button.localized(key, input[key])
+      end
+    end
     button[:url_parms] = update_url_parms(safer_eval(input[:url_parms])) unless input[:url_parms].blank?
 
     if input[:popup] # special behavior: button opens window_url in a new window
@@ -125,7 +127,9 @@ class ApplicationHelper::ToolbarBuilder
     dis_title = build_toolbar_disable_button(button[:child_id] || button[:id])
     if dis_title
       button[:enabled] = false
-      button[:title]   = dis_title if dis_title.kind_of? String
+      if dis_title.kind_of? String
+        button[:title] = button.localized(:title, dis_title)
+      end
     end
     button
   end
@@ -141,10 +145,11 @@ class ApplicationHelper::ToolbarBuilder
     @sep_needed = true unless button_hide
     props = toolbar_button(
       bgi,
-      :id     => bgi[:id],
-      :type   => :button,
-      :img    => "#{get_image(bgi[:image], bgi[:id]) ? get_image(bgi[:image], bgi[:id]) : bgi[:id]}.png",
-      :imgdis => "#{bgi[:image] || bgi[:id]}.png",
+      :id      => bgi[:id],
+      :type    => :button,
+      :img     => img = "#{get_image(bgi[:image], bgi[:id]) ? get_image(bgi[:image], bgi[:id]) : bgi[:id]}.png",
+      :img_url => ActionController::Base.helpers.image_path("toolbars/#{img}"),
+      :imgdis  => "#{bgi[:image] || bgi[:id]}.png",
     )
 
     # set pdf button to be hidden if graphical summary screen is set by default
@@ -713,7 +718,7 @@ class ApplicationHelper::ToolbarBuilder
       when "miq_ae_domain_delete", "miq_ae_domain_edit"
         return true unless @record.editable_properties?
       when "miq_ae_namespace_edit"
-        return true unless @record.editable_contents?
+        return true unless editable_domain?(@record)
       when "miq_ae_instance_copy", "miq_ae_method_copy"
         return false unless editable_domain?(@record)
       when "miq_ae_git_refresh"

@@ -10,6 +10,7 @@ module ManageIQ::Providers
     require_nested :LiveMetricsCapture
     require_nested :MiddlewareDeployment
     require_nested :MiddlewareDatasource
+    require_nested :MiddlewareMessaging
     require_nested :MiddlewareServer
     require_nested :RefreshParser
     require_nested :RefreshWorker
@@ -25,6 +26,7 @@ module ManageIQ::Providers
     has_many :middleware_servers, :foreign_key => :ems_id, :dependent => :destroy
     has_many :middleware_deployments, :foreign_key => :ems_id, :dependent => :destroy
     has_many :middleware_datasources, :foreign_key => :ems_id, :dependent => :destroy
+    has_many :middleware_messagings, :foreign_key => :ems_id, :dependent => :destroy
 
     attr_accessor :client
 
@@ -91,18 +93,20 @@ module ManageIQ::Providers
           return os_resources.first
         end
 
+        $mw_log.warn "Found no OS resources for resource type #{os.path}"
         nil
       end
     end
 
     def os_for(feed)
       with_provider_connection do |connection|
-        resources = connection.inventory.list_resource_types(hawk_escape_id(feed))
-        oses = resources.select { |item| item.id == 'Operating System' }
-        unless oses.nil? || oses.empty?
-          return oses.first
+        resource_types = connection.inventory.list_resource_types(hawk_escape_id(feed))
+        os_types = resource_types.select { |item| item.id.include? 'Operating System' }
+        unless os_types.nil? || os_types.empty?
+          return os_types.first
         end
 
+        $mw_log.warn "Found no OS resource types for feed #{feed}"
         nil
       end
     end
@@ -131,9 +135,9 @@ module ManageIQ::Providers
       end
     end
 
-    def child_resources(resource_path)
+    def child_resources(resource_path, recursive = false)
       with_provider_connection do |connection|
-        connection.inventory.list_child_resources(resource_path)
+        connection.inventory.list_child_resources(resource_path, recursive)
       end
     end
 
@@ -165,32 +169,6 @@ module ManageIQ::Providers
 
     def stop_middleware_server(ems_ref)
       run_generic_operation(:Shutdown, ems_ref)
-    end
-
-    def stop_middleware_deployment(ems_ref, _name)
-      run_generic_operation(:Undeploy, ems_ref)
-    end
-
-    def start_middleware_deployment(ems_ref, _name)
-      run_generic_operation(:Deploy, ems_ref)
-    end
-
-    def undeploy_middleware_deployment(ems_ref, name)
-      with_provider_connection do |connection|
-        deployment_data = {
-          :resource_path   => ems_ref.to_s,
-          :deployment_name => name
-        }
-
-        connection.operations(true).remove_deployment(deployment_data) do |on|
-          on.success do |data|
-            _log.debug "Success on websocket-operation #{data}"
-          end
-          on.failure do |error|
-            _log.error 'error callback was called, reason: ' + error.to_s
-          end
-        end
-      end
     end
 
     def restart_middleware_server(ems_ref)
@@ -225,28 +203,94 @@ module ManageIQ::Providers
       ::Hawkular::Alerts::AlertsClient.new(url, credentials)
     end
 
-    def redeploy_middleware_deployment(ems_ref, _name)
-      run_generic_operation(:Redeploy, ems_ref)
-    end
-
     def add_middleware_deployment(ems_ref, hash)
       with_provider_connection do |connection|
         deployment_data = {
           :enabled               => hash[:file]["enabled"],
+          :force_deploy          => hash[:file]["force_deploy"],
           :destination_file_name => hash[:file]["runtime_name"] || hash[:file]["file"].original_filename,
           :binary_content        => hash[:file]["file"].read,
           :resource_path         => ems_ref.to_s
         }
 
-        actual_data = {}
         connection.operations(true).add_deployment(deployment_data) do |on|
           on.success do |data|
             _log.debug "Success on websocket-operation #{data}"
-            actual_data[:data] = data
           end
           on.failure do |error|
-            actual_data[:data] = {}
-            actual_data[:error] = error
+            _log.error 'error callback was called, reason: ' + error.to_s
+          end
+        end
+      end
+    end
+
+    def undeploy_middleware_deployment(ems_ref, deployment_name)
+      with_provider_connection do |connection|
+        deployment_data = {
+          :resource_path   => ems_ref.to_s,
+          :deployment_name => deployment_name,
+          :remove_content  => true
+        }
+
+        connection.operations(true).undeploy(deployment_data) do |on|
+          on.success do |data|
+            _log.debug "Success on websocket-operation #{data}"
+          end
+          on.failure do |error|
+            _log.error 'error callback was called, reason: ' + error.to_s
+          end
+        end
+      end
+    end
+
+    def disable_middleware_deployment(ems_ref, deployment_name)
+      with_provider_connection do |connection|
+        deployment_data = {
+          :resource_path   => ems_ref.to_s,
+          :deployment_name => deployment_name
+        }
+
+        connection.operations(true).disable_deployment(deployment_data) do |on|
+          on.success do |data|
+            _log.debug "Success on websocket-operation #{data}"
+          end
+          on.failure do |error|
+            _log.error 'error callback was called, reason: ' + error.to_s
+          end
+        end
+      end
+    end
+
+    def enable_middleware_deployment(ems_ref, deployment_name)
+      with_provider_connection do |connection|
+        deployment_data = {
+          :resource_path   => ems_ref.to_s,
+          :deployment_name => deployment_name
+        }
+
+        connection.operations(true).enable_deployment(deployment_data) do |on|
+          on.success do |data|
+            _log.debug "Success on websocket-operation #{data}"
+          end
+          on.failure do |error|
+            _log.error 'error callback was called, reason: ' + error.to_s
+          end
+        end
+      end
+    end
+
+    def restart_middleware_deployment(ems_ref, deployment_name)
+      with_provider_connection do |connection|
+        deployment_data = {
+          :resource_path   => ems_ref.to_s,
+          :deployment_name => deployment_name
+        }
+
+        connection.operations(true).restart_deployment(deployment_data) do |on|
+          on.success do |data|
+            _log.debug "Success on websocket-operation #{data}"
+          end
+          on.failure do |error|
             _log.error 'error callback was called, reason: ' + error.to_s
           end
         end

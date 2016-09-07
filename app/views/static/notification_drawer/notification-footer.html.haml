@@ -1,0 +1,7 @@
+.drawer-pf-action
+  %a.btn.btn-link.btn-block{"role" => "button",
+    "ng-class" => "{'disabled': !notificationGroup.notifications || notificationGroup.notifications.length === 0}",
+    "ng-click" => "customScope.clearAllNotifications(notificationGroup)"}
+    %span.pficon.pficon-close
+    %span
+      = _("Clear All")

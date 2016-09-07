@@ -69,91 +69,6 @@ module OpsController::Settings::CapAndU
       page.replace_html(@refresh_div, :partial => @refresh_partial) if @refresh_div
       page << "$('#clusters_div').#{params[:all_clusters] == 'true' ? "hide" : "show"}()" if params[:all_clusters]
       page << "$('#storages_div').#{params[:all_storages] == 'true' ? "hide" : "show"}()" if params[:all_storages]
-      if params[:id] || params[:check_all]
-        if params[:tree_name] == "datastore"
-          # change nodes to blue if they were changed during current edit session
-          @changed_id_list   = []
-          # change ids back to black if change during current session is reverted back
-          @unchanged_id_list = []
-          @edit[:new][:storages].each_with_index do |s, i|
-            datastore_id = "xx-#{s[:id]}"
-            if @edit[:new][:storages][i][:capture] != @edit[:current][:storages][i][:capture]
-              @changed_id_list.push(datastore_id)
-            elsif datastore_id == params[:id] || params[:check_all]
-              @unchanged_id_list.push(datastore_id)
-            end
-          end
-          @changed_id_list.each do |item|
-            page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}',
-                                                  '#{j_str(item)}',
-                                                  'cfme-blue-bold-node');"
-          end
-          @unchanged_id_list.each do |item|
-            page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}',
-                                                  '#{j_str(item)}',
-                                                  'dynatree-title');"
-          end
-        else
-          @changed_id_list   = []
-          @unchanged_id_list = []
-          if @edit[:current][:non_cl_hosts].present?
-            positive = 0
-            @edit[:new][:non_cl_hosts].each_with_index do |h, i|
-              positive += 1 if h[:capture]
-              if @edit[:new][:non_cl_hosts][i] != @edit[:current][:non_cl_hosts][i]
-                @changed_id_list.push(["xx-NonCluster_#{@edit[:new][:non_cl_hosts][i][:id]}",
-                                       @edit[:new][:non_cl_hosts][i][:capture]])
-              else
-                @unchanged_id_list.push(["xx-NonCluster_#{@edit[:new][:non_cl_hosts][i][:id]}",
-                                         @edit[:new][:non_cl_hosts][i][:capture]])
-              end
-            end
-            value = positive == @edit[:new][:non_cl_hosts].size
-            if @edit[:new][:non_cl_hosts] != @edit[:current][:non_cl_hosts]
-              @changed_id_list.push(['xx-NonCluster', value])
-            else
-              @unchanged_id_list.push(['xx-NonCluster', value])
-            end
-          end
-          @edit[:new][:clusters].each_with_index do |c, i|
-            cluster_id = "xx-#{c[:id]}"
-            if @edit[:new][:clusters][i][:capture] != @edit[:current][:clusters][i][:capture]
-              @changed_id_list.push([cluster_id, @edit[:new][:clusters][i][:capture]])
-            else
-              @unchanged_id_list.push([cluster_id, @edit[:current][:clusters][i][:capture]])
-            end
-            @edit[:new][c[:id]].each_with_index do |host, j|
-              host_id = "#{cluster_id}_#{host[:id]}"
-              if @edit[:new][c[:id]][j][:capture] != @edit[:current][c[:id]][j][:capture]
-                @changed_id_list.push([host_id, @edit[:new][c[:id]][j][:capture]])
-              else
-                @unchanged_id_list.push([host_id, @edit[:current][c[:id]][j][:capture]])
-              end
-            end
-          end
-          @changed_id_list.each do |item|
-            if item[1] == 'unsure'
-              page << "miqDynatreeSelectNode('#{j_str(params[:tree_name])}', '#{j_str(item[0])}', false)"
-              page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}',
-                                                  '#{j_str(item[0])}',
-                                                  'miq-dynatree-partsel-blue');"
-            else
-              page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}',
-                                                  '#{j_str(item[0])}',
-                                                  'cfme-blue-bold-node');"
-              page << "miqDynatreeSelectNode('#{j_str(params[:tree_name])}', '#{j_str(item[0])}', #{j_str(!!item[1])})"
-            end
-          end
-          @unchanged_id_list.each do |item|
-            if item[1] == 'unsure'
-              page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}','#{j_str(item[0])}','dynatree-partsel');"
-            else
-              page << "miqDynatreeNodeAddClass('#{j_str(params[:tree_name])}','#{j_str(item[0])}','dynatree-title');"
-              page << "miqDynatreeSelectNode('#{j_str(params[:tree_name])}', '#{j_str(item[0])}', #{j_str(!!item[1])})"
-            end
-          end
-        end
-      end
       page << javascript_for_miq_button_visibility(@changed)
     end
   end
@@ -196,8 +111,8 @@ module OpsController::Settings::CapAndU
       count = 0
       @edit[:current][c.id].each do |host|
         unless host[:capture]
-          count += 1          # checking if all hosts are unchecked then cluster capture will be false else unsure
-          flg = (count == @edit[:current][c.id].length) ? false : "unsure"
+          count += 1 # checking if all hosts are unchecked then cluster capture will be false else undefined
+          flg = (count == @edit[:current][c.id].length) ? false : "undefined"
         end
         @edit[:current][:clusters][j][:capture] = flg
       end
@@ -214,8 +129,11 @@ module OpsController::Settings::CapAndU
                                            :capture => h.perf_capture_enabled?}
       end
     end
-
-    @cluster_tree = TreeBuilderClusters.new(:cluster, :cluster_tree, @sb, true, @edit[:current])
+    @cluster_tree = TreeBuilderClusters.new(:cluster,
+                                            :cluster_tree,
+                                            @sb,
+                                            true,
+                                            @edit[:current]) unless @edit[:current][:clusters].blank?
     @edit[:current][:storages] = []
     @st_recs = {}
     Storage.in_my_region.includes(:taggings, :tags, :hosts).select(:id, :name, :store_type, :location)
@@ -227,7 +145,11 @@ module OpsController::Settings::CapAndU
                                       :store_type => s.store_type,
                                       :location   => s.location) # fields we need
     end
-    @datastore_tree = TreeBuilderDatastores.new(:datastore, :datastore_tree, @sb, true, @edit[:current][:storages])
+    @datastore_tree = TreeBuilderDatastores.new(:datastore,
+                                                :datastore_tree,
+                                                @sb,
+                                                true,
+                                                @edit[:current][:storages]) unless @edit[:current][:storages].blank?
     @edit[:new] = copy_hash(@edit[:current])
     session[:edit] = @edit
   end
@@ -270,7 +192,7 @@ module OpsController::Settings::CapAndU
             c[:capture] = params[:check] == "true"
           end
         else
-          @edit[:new][:non_cl_hosts].find(node_type[1].to_i).first[:capture] = params[:check] == "true"
+          @edit[:new][:non_cl_hosts].find { |x| x[:id] == node_type[1].to_i }[:capture] = params[:check] == "true"
         end
       end
       @edit[:new][:clusters].each do |c| # Check each cluster
@@ -292,8 +214,8 @@ module OpsController::Settings::CapAndU
           count = 0
           @edit[:new][c[:id]].each do |h|
             unless h[:capture]
-              count += 1 # checking if all hosts are unchecked then cluster capture will be false else unsure
-              flg = (count == @edit[:new][c[:id]].length) ? false : "unsure"
+              count += 1 # checking if all hosts are unchecked then cluster capture will be false else undefined
+              flg = (count == @edit[:new][c[:id]].length) ? false : "undefined"
             end
             c[:capture] = flg
           end

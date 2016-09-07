@@ -7,107 +7,53 @@ class TokenManager
   RESTRICTED_OPTIONS = [:expires_on]
   DEFAULT_NS         = "default"
 
-  @token_caches = {}    # Hash of Memory/Dalli Store Caches, Keyed by namespace
-  @config       = {:token_ttl => 10.minutes}    # Token expiration managed in seconds
-
-  def initialize(*args)
-    self.class.class_initialize(*args)
+  def initialize(namespace = DEFAULT_NS, options = {})
+    @namespace = namespace
+    @options = {:token_ttl => 10.minutes}.merge(options)
   end
 
-  def self.class_initialize(name = DEFAULT_NS, options = {})
-    configure(name, options)
-  end
-
-  def self.new(name = DEFAULT_NS, options = {})
-    class_initialize(name, options)
-    @instance ||= super
-  end
-
-  delegate :configure, :gen_token, :reset_token, :token_set_info, :token_get_info, :token_valid?, :invalidate_token, :to => self
-
-  def self.configure(_namespace, options = {})
-    @config.merge!(options)
-  end
-
-  def self.gen_token(namespace, token_options = {})
-    ts = global_token_store(namespace)
+  def gen_token(token_options = {})
     token = SecureRandom.hex(16)
-    token_ttl_config = token_options.delete(:token_ttl_config)
-    token_ttl = (token_ttl_config && @config[token_ttl_config]) ? @config[token_ttl_config] : @config[:token_ttl]
+    token_ttl = token_options.delete(:token_ttl_override) || @options[:token_ttl]
     token_data = {:token_ttl => token_ttl, :expires_on => Time.now.utc + token_ttl}
 
-    ts.write(token,
-             token_data.merge!(prune_token_options(token_options)),
-             :expires_in => @config[:token_ttl])
+    token_store.write(token,
+                      token_data.merge!(prune_token_options(token_options)),
+                      :expires_in => @options[:token_ttl])
     token
   end
 
-  def self.reset_token(namespace, token)
-    ts = global_token_store(namespace)
-    token_data = ts.read(token)
+  def reset_token(token)
+    token_data = token_store.read(token)
     return {} if token_data.nil?
 
     token_ttl = token_data[:token_ttl]
-    ts.write(token,
-             token_data.merge!(:expires_on => Time.now.utc + token_ttl),
-             :expires_in => token_ttl)
+    token_store.write(token,
+                      token_data.merge!(:expires_on => Time.now.utc + token_ttl),
+                      :expires_in => token_ttl)
   end
 
-  def self.token_set_info(namespace, token, token_options = {})
-    ts = global_token_store(namespace)
-    token_data = ts.read(token)
-    return {} if token_data.nil?
+  def token_get_info(token, what = nil)
+    return {} unless token_valid?(token)
 
-    ts.write(token, token_data.merge!(prune_token_options(token_options)))
+    what.nil? ? token_store.read(token) : token_store.read(token)[what]
   end
 
-  def self.token_get_info(namespace, token, what = nil)
-    ts = global_token_store(namespace)
-    return {} unless token_valid?(namespace, token)
-
-    what.nil? ? ts.read(token) : ts.read(token)[what]
+  def token_valid?(token)
+    !token_store.read(token).nil?
   end
 
-  def self.token_valid?(namespace, token)
-    !global_token_store(namespace).read(token).nil?
-  end
-
-  def self.invalidate_token(namespace, token)
-    global_token_store(namespace).delete(token)
+  def invalidate_token(token)
+    token_store.delete(token)
   end
 
   private
 
-  def self.global_token_store(namespace)
-    @token_caches[namespace] ||= begin
-      if test_environment?
-        require 'active_support/cache/memory_store'
-        ActiveSupport::Cache::MemoryStore.new(cache_store_options(namespace))
-      else
-        require 'active_support/cache/dalli_store'
-        memcache_server = VMDB::Config.new("vmdb").config[:session][:memcache_server] || "127.0.0.1:11221"
-        ActiveSupport::Cache::DalliStore.new(memcache_server, cache_store_options(namespace))
-      end
-    end
+  def token_store
+    TokenStore.acquire(@namespace, @options[:token_ttl])
   end
-  private_class_method :global_token_store
 
-  def self.cache_store_options(namespace)
-    {
-      :namespace  => "MIQ:TOKENS:#{namespace.upcase}",
-      :threadsafe => true,
-      :expires_in => @config[:token_ttl]
-    }
-  end
-  private_class_method :cache_store_options
-
-  def self.test_environment?
-    !Rails.env.development? && !Rails.env.production?
-  end
-  private_class_method :test_environment?
-
-  def self.prune_token_options(token_options = {})
+  def prune_token_options(token_options = {})
     token_options.except(*RESTRICTED_OPTIONS)
   end
-  private_class_method :prune_token_options
 end

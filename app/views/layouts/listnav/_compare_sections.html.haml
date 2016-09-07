@@ -81,7 +81,7 @@
 
   = miq_accordion_panel(@lastaction == "drift" ? _("Drift Sections") : _("Comparison Sections"), true, "sections") do
     :javascript
-      miqDynatreeResetState('#{j_str @sections_tree.name}');
+      miqTreeResetState('#{j_str @sections_tree.name}');
     = render(:partial => 'shared/tree', :locals => {:tree => @sections_tree, :name => @sections_tree.name})
   .spacer
   = link_to(_('Apply'),

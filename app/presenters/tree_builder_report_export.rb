@@ -11,10 +11,7 @@ class TreeBuilderReportExport < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(
-      :id_prefix => 'export_',
-      :autoload  => true
-    )
+    locals.merge!(:autoload => true)
   end
 
   def root_options
@@ -31,6 +28,6 @@ class TreeBuilderReportExport < TreeBuilder
        :text  => _('Widgets'),
        :image => 'report'}
     ]
-    count_only_or_objects(count_only, export_children, nil)
+    count_only_or_objects(count_only, export_children)
   end
 end

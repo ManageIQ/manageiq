@@ -36,4 +36,18 @@ RSpec.describe "API entrypoint" do
     collection_names = response.parsed_body['collections'].map { |c| c['name'] }
     expect(collection_names).to eq(collection_names.sort)
   end
+
+  it "returns server_info" do
+    api_basic_authorize
+
+    run_get entrypoint_url
+
+    expect(response.parsed_body).to include(
+      "server_info" => a_hash_including(
+        "version"   => Vmdb::Appliance.VERSION,
+        "build"     => Vmdb::Appliance.BUILD,
+        "appliance" => MiqServer.my_server.name
+      )
+    )
+  end
 end

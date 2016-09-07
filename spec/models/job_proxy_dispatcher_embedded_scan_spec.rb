@@ -1,7 +1,6 @@
-module JobProxyDispatcherEmbeddedScanSpec
+describe "JobProxyDispatcherEmbeddedScanSpec" do
   describe "dispatch embedded" do
-    require File.expand_path(File.join(File.dirname(__FILE__), 'job_proxy_dispatcher/job_proxy_dispatcher_helper'))
-    include JobProxyDispatcherHelper
+    include Spec::Support::JobProxyDispatcherHelper
 
     NUM_VMS = 5
     NUM_REPO_VMS = 0

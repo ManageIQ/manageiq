@@ -494,6 +494,13 @@ describe QuadiconHelper do
         FactoryGirl.create(:vm_vmware)
       end
 
+      it "renders the full name in the title tag" do
+        long_name = "A really long truncatable name"
+        row.name = long_name
+        label = helper.render_quadicon_text(item, row)
+        expect(label).to match(/title=\"#{long_name}\"/)
+      end
+
       it 'renders a link with the row evm_display_name if set' do
         row = Ruport::Data::Record.new(
           "id"               => rand(9999),

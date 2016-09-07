@@ -7,10 +7,7 @@ class TreeBuilderStoragePod < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(
-      :id_prefix => "dsc_",
-      :autoload  => true
-    )
+    locals.merge!(:autoload => true)
   end
 
   def root_options
@@ -29,7 +26,7 @@ class TreeBuilderStoragePod < TreeBuilder
                    :tip           => item[:description],
                    :load_children => true)
     end
-    count_only_or_objects(count_only, objects, nil)
+    count_only_or_objects(count_only, objects)
   end
 
   def x_get_tree_custom_kids(object, count_only, type)
@@ -38,6 +35,6 @@ class TreeBuilderStoragePod < TreeBuilder
     if(dsc.size > 0)
       objects = dsc.first.storages
     end
-    count_only_or_objects(count_only, objects, nil)
+    count_only_or_objects(count_only, objects)
   end
 end

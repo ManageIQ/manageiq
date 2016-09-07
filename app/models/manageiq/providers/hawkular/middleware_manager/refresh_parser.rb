@@ -77,6 +77,9 @@ module ManageIQ::Providers
           next unless child.type_path.end_with?(hawk_escape_id('Domain WildFly Server'))
           @eaps << child
 
+          server_config = @ems.inventory_client.get_config_data_for_resource child.path
+          child.properties.merge! server_config['value'] unless server_config['value'].nil?
+
           server_name = parse_domain_server_name(child.id)
           server = parse_middleware_server(child, server_name)
 
@@ -136,9 +139,10 @@ module ManageIQ::Providers
       def fetch_server_entities
         @data[:middleware_deployments] = []
         @data[:middleware_datasources] = []
+        @data[:middleware_messagings] = []
         @eaps.map do |eap|
-          @ems.child_resources(eap.path).map do |child|
-            next unless child.type_path.end_with?('Deployment', 'Datasource')
+          @ems.child_resources(eap.path, true).map do |child|
+            next unless child.type_path.end_with?('Deployment', 'Datasource', 'JMS%20Topic', 'JMS%20Queue')
             server = @data_index.fetch_path(:middleware_servers, :by_ems_ref, eap.path)
             process_server_entity(server, child)
           end
@@ -146,14 +150,15 @@ module ManageIQ::Providers
       end
 
       def fetch_availability
-        metric_ids = {}
+        resources_by_metric_id = {}
         @data[:middleware_deployments].each do |deployment|
           metric_id = @ems.build_metric_id('A', deployment, 'Deployment Status~Deployment Status')
-          metric_ids[metric_id] = deployment
+          resources_by_metric_id[metric_id] = deployment
         end
-        availabilities = @ems.metrics_client.avail.raw_data(metric_ids.keys, :limit => 1, :order => 'DESC')
-        availabilities.each do |availability|
-          metric_ids[availability['id']][:status] = process_availability(availability['data'].first)
+        unless resources_by_metric_id.empty?
+          availabilities = @ems.metrics_client.avail.raw_data(resources_by_metric_id.keys,
+                                                              :limit => 1, :order => 'DESC')
+          parse_availability availabilities, resources_by_metric_id
         end
       end
 
@@ -166,11 +171,22 @@ module ManageIQ::Providers
         parse_datasource(server, datasource, config)
       end
 
+      def process_messaging(server, messaging)
+        wildfly_res_id = hawk_escape_id server[:nativeid]
+        messaging_res_id = hawk_escape_id messaging.id
+        resource_path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id      => server[:feed],
+                                                                 :resource_ids => [wildfly_res_id, messaging_res_id])
+        config = @ems.inventory_client.get_config_data_for_resource(resource_path.to_s)
+        parse_messaging(server, messaging, config)
+      end
+
       def process_server_entity(server, entity)
         if entity.type_path.end_with?('Deployment')
           @data[:middleware_deployments] << parse_deployment(server, entity)
-        else
+        elsif entity.type_path.end_with?('Datasource')
           @data[:middleware_datasources] << process_datasource(server, entity)
+        else
+          @data[:middleware_messagings] << process_messaging(server, entity)
         end
       end
 
@@ -187,12 +203,35 @@ module ManageIQ::Providers
         end
       end
 
+      def parse_availability(availabilities, resources_by_metric_id)
+        processed_availabilities_ids = availabilities.map do |availability|
+          resources_by_metric_id[availability['id']][:status] = process_availability(availability['data'].first)
+          availability['id']
+        end
+        (resources_by_metric_id.keys - processed_availabilities_ids).each do |metric_id|
+          resources_by_metric_id[metric_id][:status] = process_availability nil
+        end
+        resources_by_metric_id
+      end
+
       def parse_deployment(server, deployment)
         specific = {
           :name              => parse_deployment_name(deployment.id),
           :middleware_server => server,
         }
         parse_base_item(deployment).merge(specific)
+      end
+
+      def parse_messaging(server, messaging, config)
+        specific = {
+          :name              => messaging.name,
+          :middleware_server => server,
+          :messaging_type    => messaging.to_h['type']['name']
+        }
+        if !config.empty? && !config['value'].empty? && config['value'].respond_to?(:except)
+          specific[:properties] = config['value'].except('Username', 'Password')
+        end
+        parse_base_item(messaging).merge(specific)
       end
 
       def parse_datasource(server, datasource, config)

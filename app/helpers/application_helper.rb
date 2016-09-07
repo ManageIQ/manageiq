@@ -228,6 +228,9 @@ module ApplicationHelper
       if controller == "ems_container" && action == "show"
         return ems_containers_path
       end
+      if controller == "ems_middleware" && action == "show"
+        return ems_middlewares_path
+      end
       if parent && parent.class.base_model.to_s == "MiqCimInstance" && ["CimBaseStorageExtent", "SniaLocalFileSystem"].include?(view.db)
         return url_for(:controller => controller, :action => action, :id => parent.id) + "?show="
       else
@@ -460,7 +463,7 @@ module ApplicationHelper
     elsif layout == "ops"
       title += _(": Configuration")
     elsif layout == "provider_foreman"
-      title += ": #{ui_lookup(:ui_title => "foreman")} #{ui_lookup(:model => "ExtManagementSystem")}"
+      title += _(": Configuration Management")
     elsif layout == "pxe"
       title += _(": PXE")
     elsif layout == "explorer"
@@ -576,34 +579,8 @@ module ApplicationHelper
     javascript_for_miq_button_visibility(changed)
   end
 
-  # Highlight tree nodes that have been changed
-  def javascript_for_tree_checkbox_clicked(tree_name)
-    tree_name_escaped = j_str(tree_name)
-    js_array = []
-    if params[:check] # Tree checkbox clicked?
-      # MyCompany tag checked or Belongsto checked
-      key = params[:tree_typ] == 'myco' ? :filters : :belongsto
-      future  = @edit[:new][key][params[:id].split('___').last]
-      current = @edit[:current][key][params[:id].split('___').last]
-      title_class = params[:tree_typ] == "vat" || params[:tree_typ] == "hac" ? 'cfme-no-cursor-node' : 'dynatree-title'
-      css_class = future == current ? title_class : 'cfme-blue-bold-node'
-      js_array << "$('##{tree_name_escaped}box').dynatree('getTree').getNodeByKey('#{params[:id].split('___').last}').data.addClass = '#{css_class}';"
-    end
-    # need to redraw the tree to change node colors
-    js_array << "tree = $('##{tree_name_escaped}box').dynatree('getTree');"
-    js_array << "tree.redraw();"
-    js_array.join("\n")
-  end
-
   def javascript_pf_toolbar_reload(div_id, toolbar)
-    out = []
-    out << javascript_update_element(div_id, buttons_to_html(toolbar))
-    out << "miqInitToolbars();"
-    out.join('')
-  end
-
-  def javascript_for_ae_node_selection(id, prev_id, select)
-    "miqSetAETreeNodeSelectionClass('#{id}', '#{prev_id}', '#{select ? true : false}');".html_safe
+    "sendDataWithRx({redrawToolbar: #{toolbar_from_hash.to_json}});"
   end
   ############# End of methods that generate JS lines for render page blocks
 
@@ -1125,7 +1102,7 @@ module ApplicationHelper
                         container_topology container_dashboard middleware_topology persistent_volume container_build
                         container_node container_service ems_cloud ems_cluster ems_container ems_infra event
                         ems_middleware middleware_server middleware_deployment middleware_datasource
-                        middleware_domain middleware_server_group
+                        middleware_domain middleware_server_group middleware_messaging
                         ems_network security_group floating_ip cloud_subnet network_router network_topology network_port cloud_network
                         load_balancer
                         flavor host miq_schedule miq_template offline ontap_file_share
@@ -1170,9 +1147,8 @@ module ApplicationHelper
          container_project container_replicator container_image container_image_registry container_build
          ems_infra host miq_template offline orchestration_stack persistent_volume ems_middleware
          middleware_server middleware_deployment middleware_datasource middleware_domain middleware_server_group
-         ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
-         load_balancer
-         resource_pool retired service templates vm configuration_job).include?(@layout) && !@in_a_form
+         middleware_messaging ems_network security_group floating_ip cloud_subnet network_router network_port
+         cloud_network resource_pool retired service templates vm configuration_job).include?(@layout) && !@in_a_form
       "show_list"
     elsif @compare
       "compare_sections"
@@ -1185,7 +1161,7 @@ module ApplicationHelper
              container_route container_project container_replicator container_image container_image_registry
              container_build container_node container_service persistent_volume ems_cloud ems_container ems_cluster ems_infra
              ems_middleware middleware_server middleware_deployment middleware_datasource middleware_domain
-             middleware_server_group flavor
+             middleware_messaging middleware_server_group flavor
              ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
              load_balancer
              host miq_schedule miq_template policy ontap_file_share ontap_logical_disk

@@ -47,7 +47,7 @@
               - @role.miq_groups.sort_by { |a| a.description.downcase }.each do |g|
                 - if role_allows?(:feature => "rbac_group_show")
                   - params = {:class   => "pointer",
-                              :onclick => "miqDynatreeActivateNode('rbac_tree', 'g-#{to_cid(g.id)}');",
+                              :onclick => "miqTreeActivateNode('rbac_tree', 'g-#{to_cid(g.id)}');",
                               :title   => _("View this Group")}
                 - else
                   - params = {}
@@ -61,15 +61,13 @@
         = _("Product Features (Read Only)")
       %h3
       #features_treebox{:style => "width:100%;height:100%;color:#000"}
-      = render(:partial => "layouts/dynatree",
+      = render(:partial => "layouts/tree",
                :locals  => {:tree_id        => "features_treebox",
                             :tree_name      => "features_tree",
-                            :json_tree      => @features_tree,
+                            :bs_tree        => @features_tree,
                             :checkboxes     => true,
                             :three_checks   => true,
                             :check_url      => "/ops/rbac_role_field_changed/",
-                            :disable_checks => @edit.nil?,
-                            :oncheck        => @edit.nil? ? nil : "miqOnCheckHandler",
-                            :open_close_all_on_dbl_click => true})
+                            :oncheck        => @edit.nil? ? nil : "miqOnCheckHandler"})
       &nbsp;&nbsp;*
       = _("Double click a feature to open/close all children.")

@@ -12,6 +12,10 @@ class Blueprint < ApplicationRecord
     service_templates.find { |st| st.parent_services.blank? }
   end
 
+  def published?
+    status == 'published'
+  end
+
   # The new blueprint is saved before returning
   def deep_copy(new_attributes = {})
     self.class.transaction do
@@ -36,12 +40,8 @@ class Blueprint < ApplicationRecord
         :service_type => 'composite'
       )
       add_catalog_items(new_bundle, options[:service_templates]) if options.key?(:service_templates)
+      add_entry_points(new_bundle, options[:entry_points], options[:service_dialog])
       new_bundle.service_template_catalog = options[:service_catalog]
-
-      if options.key?(:service_dialog)
-        new_dialog = options[:service_dialog].deep_copy(:label => random_dialog_name(name)).tap(&:save!)
-      end
-      add_entry_points(new_bundle, options[:entry_points], new_dialog)
 
       new_bundle.save!
       reload.bundle
@@ -63,14 +63,26 @@ class Blueprint < ApplicationRecord
   end
 
   def content
-    return {} unless bundle
-    result = bundle.as_json.dup
-    result["service_templates"] = bundle.descendants.map(&:as_json)
-    result["service_catalog"] = bundle.service_template_catalog.as_json
-    provision_action = bundle.resource_actions.find_by(:action => "Provision")
-    result["service_dialog"] = provision_action.dialog.as_json if provision_action
-    result["automate_entrypoints"] = bundle.resource_actions.map(&:as_json)
-    result
+    the_bundle = bundle
+    return {} unless the_bundle
+    the_bundle.as_json.tap do |result|
+      result["service_templates"] = the_bundle.descendants.map(&:as_json)
+      result["service_catalog"] = the_bundle.service_template_catalog.as_json
+      provision_action = the_bundle.resource_actions.find_by(:action => "Provision")
+      result["service_dialog"] = provision_action.dialog.as_json if provision_action
+      result["automate_entrypoints"] = the_bundle.resource_actions.map(&:as_json)
+    end
+  end
+
+  def publish(bundle_name = nil)
+    publish_bundle.tap do
+      the_bundle = bundle
+      the_bundle.name = bundle_name if bundle_name
+      the_bundle.display = true # visible for ordering service
+      the_bundle.save!
+
+      update_attributes(:status => 'published')
+    end
   end
 
   private
@@ -142,26 +154,18 @@ class Blueprint < ApplicationRecord
     new_template.save!
   end
 
-  def add_catalog_items(new_bundle, catalog_items)
-    catalog_items.each do |item|
-      new_bundle.add_resource(copy_service_template(self, item, false))
-    end
+  def add_catalog_items(the_bundle, catalog_items)
+    catalog_items.each { |item| the_bundle.add_resource(item) }
+  end
+
+  def remove_catalog_items(the_bundle, catalog_items)
+    catalog_items.each { |item| the_bundle.remove_resource(item) }
   end
 
   def update_catalog_items(the_bundle, catalog_items)
-    existing_ids = the_bundle.service_templates.collect(&:id)
-    catalog_items.each do |item|
-      unless existing_ids.delete(item.id)
-        # new item
-        add_catalog_items(the_bundle, [item])
-      end
-    end
-
-    # remove items
-    ServiceTemplate.where(:id => existing_ids).each do |remaining_item|
-      the_bundle.remove_resource(remaining_item)
-      remaining_item.destroy!
-    end
+    existing_items = the_bundle.service_templates.all
+    add_catalog_items(the_bundle, catalog_items - existing_items)
+    remove_catalog_items(the_bundle, existing_items - catalog_items)
   end
 
   def add_entry_points(new_bundle, entry_points, dialog)
@@ -177,12 +181,17 @@ class Blueprint < ApplicationRecord
 
   def update_entry_points(the_bundle, entry_points)
     existing_actions = the_bundle.resource_actions
+
+    existing_actions.each do |action|
+      action.destroy unless entry_points.key?(action.action)
+    end
+
     entry_points.each do |key, value|
       action = existing_actions.find_by(:action => key)
       if action
-        action.update_attribute(:fqname, value)
+        action.update_attributes(:fqname => value)
       else
-        existing_actions.build(:action => key, :fqname => value, :dialog => existing_actions.first.dialog)
+        existing_actions.build(:action => key, :fqname => value, :dialog => existing_actions.first.try(:dialog))
       end
     end
   end
@@ -191,12 +200,8 @@ class Blueprint < ApplicationRecord
     existing_actions = the_bundle.resource_actions
     return if existing_actions.blank?
 
-    existing_dialog = bundle.dialogs.first
-    return existing_dialog if input_dialog.try(:id) == existing_dialog.try(:id)
-
-    new_dialog = input_dialog ? input_dialog.deep_copy(:label => random_dialog_name(name)).tap(&:save!) : nil
-    existing_actions.update_all(:dialog_id => new_dialog.try(:id))
-    existing_dialog.destroy if existing_dialog
+    # input_dialog could be nil in order to remove the existing association
+    existing_actions.update_all(:dialog_id => input_dialog.try(:id))
   end
 
   def duplicate_custom_buttons(old_template, new_template)
@@ -208,6 +213,36 @@ class Blueprint < ApplicationRecord
   def duplicate_custom_button_sets(old_template, new_template)
     old_template.custom_button_sets.each do |old_button_set|
       old_button_set.deep_copy(:owner => new_template)
+    end
+  end
+
+  def publish_bundle
+    # A mapping of what has been copied when publishing the blueprint
+    {
+      "service_dialog"    => publish_resource_actions,
+      "service_templates" => publish_service_resources
+    }
+    # TODO: publish custom_buttons and custom_button_sets
+  end
+
+  def publish_resource_actions
+    dialog_map = bundle.resource_actions.each_with_object({}) do |action, hash|
+      action.dialog = ensure_new_dialog(hash, action.dialog)
+    end
+    dialog_map.update(dialog_map) { |_key, val| val.id }
+  end
+
+  def publish_service_resources
+    bundle.service_resources.each_with_object({}) do |sr, changes|
+      resource = sr.resource
+      if resource.kind_of?(ServiceTemplate)
+        old_id = resource.id
+        sr.resource = copy_service_template(self, resource)
+        changes[old_id] = sr.resource.id
+      elsif !provider_resource?(resource)
+        sr.resource = resource.dup.tap(&:save!)
+      end
+      sr.save!
     end
   end
 end

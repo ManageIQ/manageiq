@@ -5,6 +5,7 @@ class ChargebackContainerProject < Chargeback
     :interval_name         => :string,
     :display_range         => :string,
     :project_name          => :string,
+    :tag_name              => :string,
     :project_uid           => :string,
     :provider_name         => :string,
     :provider_uid          => :string,
@@ -35,52 +36,60 @@ class ChargebackContainerProject < Chargeback
     #   :chargeback_type => detail | summary
     #   :entity_id => 1/2/3.../all rails id of entity
 
-    # Find ContainerGroups belonging to projects according to any of these:
+    # Find ContainerProjects according to any of these:
+    @options = options
     provider_id = options[:provider_id]
     project_id = options[:entity_id]
-    tag = options[:tag]
+    filter_tag = options[:tag]
 
-    @groups = if tag.present?
-                # Get all groups belonging to tagged projects
-                project_ids = ContainerProject.find_tagged_with(:all => tag, :ns => "*").select(:id)
-                ContainerGroup.where(:container_project_id => project_ids).or(ContainerGroup.where(:old_container_project_id => project_ids))
-              elsif provider_id == "all"
-                ContainerGroup.all
-              elsif provider_id.present? && project_id == "all"
-                ContainerGroup.where('ems_id = ? or old_ems_id = ?', provider_id, provider_id)
-              elsif project_id.present?
-                ContainerGroup.where('container_project_id = ? or old_container_project_id = ?', project_id, project_id)
-              else
-                raise "must provide option :entity_id, provider_id or tag" if project_id.nil? && provider_id.nil? && tag.nil?
-              end
+    @projects = if filter_tag.present?
+                  # Get all ids of tagged projects
+                  ContainerProject.find_tagged_with(:all => filter_tag, :ns => "*")
+                elsif provider_id == "all"
+                  ContainerProject.all
+                elsif provider_id.present? && project_id == "all"
+                  ContainerProject.where('ems_id = ? or old_ems_id = ?', provider_id, provider_id)
+                elsif project_id.present?
+                  ContainerProject.where(:id => project_id)
+                elsif project_id.nil? && provider_id.nil? && filter_tag.nil?
+                  raise "must provide option :entity_id, provider_id or tag"
+                end
 
-    @groups = @groups.includes(:container_project, :old_container_project)
-    return [[]] if @groups.empty?
+    return [[]] if @projects.empty?
 
-    @data_index = {}
-    @groups.each do |g|
-      @data_index.store_path(:container_project, :by_group_id, g.id, g.container_project || g.old_container_project)
+    if @options[:groupby_tag]
+      @tag_hash = Classification.hash_all_by_type_and_name[@options[:groupby_tag]][:entry]
     end
 
     build_results_for_report_chargeback(options)
   end
 
   def self.get_keys_and_extra_fields(perf, ts_key)
-    project = @data_index.fetch_path(:container_project, :by_group_id, perf.resource_id)
-    key = "#{project.id}_#{ts_key}"
-    extra_fields = {
-      "project_name"  => project.name,
-      "project_uid"   => project.ems_ref,
-      "provider_name" => perf.parent_ems.name,
-      "provider_uid"  => perf.parent_ems.guid,
-      "archived"      => project.archived? ? _("Yes") : _("No")
-    }
+    if @options[:groupby_tag].present?
+      tag = perf.tag_names.split("|").select { |x| x.starts_with?(@options[:groupby_tag]) }.first # 'department/*'
+      tag = tag.split('/').second unless tag.blank? # 'department/finance' -> 'finance'
+      classification = @tag_hash[tag]
+      classification_id = classification.present? ? classification.id : 'none'
+      key = "#{classification_id}_#{ts_key}"
+      extra_fields = {
+        "tag_name" => classification.present? ? classification.description : _('<Empty>'),
+      }
+    else
+      key = "#{perf.resource_id}_#{ts_key}"
+      extra_fields = {
+        "project_name"  => perf.resource_name,
+        "project_uid"   => perf.resource.ems_ref,
+        "provider_name" => perf.parent_ems.try(:name),
+        "provider_uid"  => perf.parent_ems.try(:guid),
+        "archived"      => perf.resource.archived? ? _("Yes") : _("No")
+      }
+    end
 
     [key, extra_fields]
   end
 
   def self.where_clause(records, _options)
-    records.where(:resource_type => ContainerGroup.name, :resource_id => @groups.pluck(:id))
+    records.where(:resource_type => ContainerProject.name, :resource_id => @projects.select(:id))
   end
 
   def self.report_name_field
@@ -100,5 +109,9 @@ class ChargebackContainerProject < Chargeback
       "net_io_used_metric"    => {:grouping => [:total]},
       "total_cost"            => {:grouping => [:total]}
     }
+  end
+
+  def tags
+    ContainerProject.includes(:tags).find_by_ems_ref(project_uid).try(:tags).to_a
   end
 end # class Chargeback

@@ -67,10 +67,6 @@ describe TreeBuilderDefaultFilters do
       tree_options = @default_filters_tree.send(:tree_init_options, :df)
       expect(tree_options[:lazy]).to eq(false)
     end
-    it 'is not lazy' do
-      locals = @default_filters_tree.send(:set_locals_for_render)
-      expect(locals[:id_prefix]).to eq('df_')
-    end
     it 'has no root' do
       tree_options = @default_filters_tree.send(:tree_init_options, :df)
       root = @default_filters_tree.send(:root_options)
@@ -82,7 +78,7 @@ describe TreeBuilderDefaultFilters do
       kids.each do |kid|
         expect(kid[:image]).to eq('folder')
         expect(kid[:hideCheckbox]).to eq(true)
-        expect(kid[:style_class]).to eq("cfme-no-cursor-node")
+        expect(kid[:cfmeNoClick]).to eq(true)
       end
     end
     it 'returns filter or folder as folder kids' do
@@ -98,7 +94,7 @@ describe TreeBuilderDefaultFilters do
             kids.each do |kid|
               expect(kid[:image]).to eq('folder')
               expect(kid[:hideCheckbox]).to eq(true)
-              expect(kid[:style_class]).to eq("cfme-no-cursor-node")
+              expect(kid[:cfmeNoClick]).to eq(true)
               grandkids = @default_filters_tree.send(:x_get_tree_hash_kids, kid, false)
               grandkids.each_with_index do |grandkid, index|
                 expect(grandkid[:image]).to eq('filter')

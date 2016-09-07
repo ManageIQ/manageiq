@@ -1,0 +1,22 @@
+.treeview > .list-group {
+  .list-group-item {
+    // these 3 lines will be pushed into patternfly
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    &.striketrough {
+      text-decoration: line-through;
+    }
+    &.red {
+      color: red;
+    }
+    &.opacity {
+      opacity: 0.4;
+      filter: alpha(opacity=40);
+    }
+    &.no-cursor {
+      cursor: default;
+    }
+  }
+}

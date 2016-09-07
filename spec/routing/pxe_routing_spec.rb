@@ -135,9 +135,9 @@ describe PxeController do
     end
   end
 
-  describe "#tree_autoload_dynatree" do
+  describe "#tree_autoload" do
     it "routes with POST" do
-      expect(post("/pxe/tree_autoload_dynatree")).to route_to("pxe#tree_autoload_dynatree")
+      expect(post("/pxe/tree_autoload")).to route_to("pxe#tree_autoload")
     end
   end
 

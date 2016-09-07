@@ -5,6 +5,7 @@ class ChargebackVm < Chargeback
     :interval_name            => :string,
     :display_range            => :string,
     :vm_name                  => :string,
+    :vm_uid                   => :string,
     :owner_name               => :string,
     :provider_name            => :string,
     :provider_uid             => :string,
@@ -89,8 +90,13 @@ class ChargebackVm < Chargeback
     key = "#{perf.resource_id}_#{ts_key}"
     @vm_owners[perf.resource_id] ||= perf.resource.evm_owner_name
 
-    extra_fields = {"vm_name" => perf.resource_name, "owner_name" => @vm_owners[perf.resource_id],
-                    "provider_name" => perf.parent_ems.name, "provider_uid" => perf.parent_ems.guid}
+    extra_fields = {
+      "vm_name"       => perf.resource_name,
+      "vm_uid"        => perf.resource.ems_ref,
+      "owner_name"    => @vm_owners[perf.resource_id],
+      "provider_name" => perf.parent_ems.try(:name),
+      "provider_uid"  => perf.parent_ems.try(:guid)
+    }
 
     [key, extra_fields]
   end
@@ -144,5 +150,9 @@ class ChargebackVm < Chargeback
       "storage_used_metric"      => {:grouping => [:total]},
       "total_cost"               => {:grouping => [:total]}
     }
+  end
+
+  def tags
+    Vm.includes(:tags).find_by_ems_ref(vm_uid).try(:tags).to_a
   end
 end # class Chargeback

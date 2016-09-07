@@ -61,6 +61,7 @@ MiqPassword.key_root = "#{RAILS_ROOT}/certs"
 # Load appliance_console libraries
 require 'appliance_console/utilities'
 require 'appliance_console/logging'
+require 'appliance_console/database_maintenance'
 require 'appliance_console/database_configuration'
 require 'appliance_console/internal_database_configuration'
 require 'appliance_console/external_database_configuration'
@@ -490,6 +491,50 @@ Static Network Configuration
         else
           say("Database Replication not configured")
           Logging.logger.info("Database Replication not configured")
+          press_any_key
+          raise MiqSignalError
+        end
+      when I18n.t("advanced_settings.failover_monitor")
+        say("#{selection}\n\n")
+
+        options = {
+          "Start Database Failover Monitor" => "start",
+          "Stop Database Failover Monitor"  => "stop"
+        }
+
+        action = ask_with_menu("Failover Monitor Configuration", options)
+        failover_service = LinuxAdmin::Service.new("evm-failover-monitor")
+
+        begin
+          case action
+          when "start"
+            Logging.logger.info("Starting and enabling evm-failover-monitor service")
+            failover_service.enable.start
+          when "stop"
+            Logging.logger.info("Stopping and disabling evm-failover-monitor service")
+            failover_service.disable.stop
+          end
+        rescue AwesomeSpawn::CommandResultError => e
+          say("Failed to configure failover monitor")
+          Logging.logger.error("Failed to configure evm-failover-monitor service")
+          say(e.result.output)
+          say(e.result.error)
+          say("")
+          press_any_key
+          raise MiqSignalError
+        end
+
+        say("Failover Monitor Service configured successfully")
+        press_any_key
+
+      when I18n.t("advanced_settings.db_maintenance")
+        say("#{selection}\n\n")
+        db_maintenance = ApplianceConsole::DatabaseMaintenance.new
+        if db_maintenance.ask_questions && db_maintenance.activate
+          say("Database maintenance configuration updated")
+          press_any_key
+        else
+          say("Database maintenance configuration unchanged")
           press_any_key
           raise MiqSignalError
         end

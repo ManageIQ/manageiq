@@ -130,7 +130,7 @@ class TreeBuilder
     end
   end
 
-  # Get the children of a dynatree node that is being expanded (autoloaded)
+  # Get the children of a tree node that is being expanded (autoloaded)
   def x_get_child_nodes(id)
     parents = [] # FIXME: parent ids should be provided on autoload as well
 
@@ -140,7 +140,7 @@ class TreeBuilder
     open_node(id)
 
     x_get_tree_objects(object, @tree_state.x_tree(@name), false, parents).map do |o|
-      x_build_node_dynatree(o, id, @tree_state.x_tree(@name))
+      x_build_node_tree(o, id, @tree_state.x_tree(@name))
     end
   end
 
@@ -179,11 +179,45 @@ class TreeBuilder
     build_tree
   end
 
+  # FIXME: temporary conversion, needs to be moved into the generation
+  def self.convert_bs_tree(nodes)
+    return [] if nodes.nil?
+    nodes = [nodes] if nodes.kind_of?(Hash)
+    stack = nodes.dup
+    while stack.any?
+      node = stack.pop
+      stack += node[:children] if node.key?(:children)
+      node[:image] = node.delete(:icon) if node.key?(:icon) && node[:icon].start_with?('/')
+      node[:text] = node.delete(:title) if node.key?(:title)
+      node[:nodes] = node.delete(:children) if node.key?(:children)
+      node[:lazyLoad] = node.delete(:isLazy) if node.key?(:isLazy)
+      node[:state] = {}
+      node[:state][:expanded] = node.delete(:expand) if node.key?(:expand)
+      node[:state][:checked] = node.delete(:select) if node.key?(:select)
+      node[:state][:selected] = node.delete(:highlighted) if node.key?(:highlighted)
+      node[:selectable] = !node.delete(:cfmeNoClick) if node.key?(:cfmeNoClick)
+      node[:class] = ''
+      node[:class] = node.delete(:addClass) if node.key?(:addClass)
+      node[:class] = node[:class].split(' ').push('no-cursor').join(' ') if node[:selectable] == false
+    end
+    nodes
+  end
+
+  # Add child nodes to the active tree below node 'id'
+  def self.tree_add_child_nodes(sandbox, klass_name, id, controller)
+    args = [sandbox[:active_tree].to_s, sandbox[:active_tree].to_s.sub(/_tree$/, ''), sandbox, false]
+    if klass_name == 'TreeBuilderAeClass'
+      args << { :node_builder => TreeBuilderAeClass.select_node_builder(controller, sandbox[:action]) }
+    end
+    tree = klass_name.constantize.new(*args)
+    tree.x_get_child_nodes(id)
+  end
+
   private
 
   def build_tree
     # FIXME: we have the options -- no need to reload from @sb
-    tree_nodes = x_build_dynatree(@tree_state.x_tree(@name))
+    tree_nodes = x_build_tree(@tree_state.x_tree(@name))
     active_node_set(tree_nodes)
     set_nodes(tree_nodes)
   end
@@ -197,6 +231,7 @@ class TreeBuilder
   def set_nodes(nodes)
     # Add the root node even if it is not set
     add_root_node(nodes) if @options.fetch(:add_root, :true)
+    @bs_tree = self.class.convert_bs_tree(nodes).to_json
     @tree_nodes = nodes.to_json
     @locals_for_render = set_locals_for_render
   end
@@ -224,18 +259,12 @@ class TreeBuilder
 
   def set_locals_for_render
     {
-      :tree_id      => "#{@name}box",
-      :tree_name    => @name.to_s,
-      :json_tree    => @tree_nodes,
-      :onclick      => "miqOnClickSelectTreeNode",
-      :id_prefix    => "#{@name}_",
-      :base_id      => "root",
-      :no_base_exp  => true,
-      :exp_tree     => false,
-      :highlighting => true,
-      :tree_state   => true,
-      :multi_lines  => true,
-      :checkboxes   => false,
+      :tree_id    => "#{@name}box",
+      :tree_name  => @name.to_s,
+      :bs_tree    => @bs_tree,
+      :onclick    => "miqOnClickSelectTreeNode",
+      :tree_state => true,
+      :checkboxes => false
     }
   end
 
@@ -247,7 +276,7 @@ class TreeBuilder
   # :add_root               # If true, put a root node at the top
   # :full_ids               # stack parent id on top of each node id
   # :lazy                   # set if tree is lazy
-  def x_build_dynatree(options)
+  def x_build_tree(options)
     children = x_get_tree_objects(nil, options, false, [])
 
     child_nodes = children.map do |child|
@@ -255,7 +284,7 @@ class TreeBuilder
       if child.kind_of?(Hash) && child.key?(:title) && child.key?(:key) && child.key?(:icon)
         child
       else
-        x_build_node_dynatree(child, nil, options)
+        x_build_node_tree(child, nil, options)
       end
     end
     return child_nodes unless options[:add_root]
@@ -300,7 +329,7 @@ class TreeBuilder
   end
 
   # Called with object, tree node parent id, tree options
-  def x_build_node_dynatree(object, pid, options)
+  def x_build_node_tree(object, pid, options)
     x_build_node(object, pid, options)
   end
 
@@ -321,6 +350,10 @@ class TreeBuilder
     end
   end
 
+  def count_only_or_objects_filtered(count_only, objects, sort_by = nil, options = {}, &block)
+    count_only_or_objects(count_only, Rbac.filtered(objects, options), sort_by, &block)
+  end
+
   def assert_type(actual, expected)
     raise "#{self.class}: expected #{expected.inspect}, got #{actual.inspect}" unless actual == expected
   end
@@ -332,14 +365,6 @@ class TreeBuilder
 
   def get_vmdb_config
     @vmdb_config ||= VMDB::Config.new("vmdb").config
-  end
-
-  # Add child nodes to the active tree below node 'id'
-  def self.tree_add_child_nodes(sandbox, klass_name, id)
-    tree = klass_name.constantize.new(sandbox[:active_tree].to_s,
-                                      sandbox[:active_tree].to_s.sub(/_tree$/, ''),
-                                      sandbox, false)
-    tree.x_get_child_nodes(id)
   end
 
   # Tree node prefixes for generic explorers

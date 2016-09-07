@@ -17,11 +17,7 @@ class TreeBuilderSnapshots < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix                   => "snap_",
-                  :autoload                    => true,
-                  :onclick                     => 'miqOnClickSnapshotTree',
-                  :exp_tree                    => true,
-                  :open_close_all_on_dbl_click => true)
+    locals.merge!(:autoload => true, :onclick => 'miqOnClickSnapshotTree',)
   end
 
   def root_options

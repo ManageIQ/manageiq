@@ -21,7 +21,7 @@ module ResourceFeeder
         klass      = options[:class] || resources.first.class
         new_record = klass.new
       else
-        options[:feed] = {:title => "Empty", :link => "http://example.com"}
+        options[:feed] = {:title => _("Empty"), :link => "http://example.com"}
       end
 
       options[:feed][:title] ||= klass.name.pluralize

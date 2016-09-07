@@ -5,8 +5,8 @@ class ApplicationHelper::Button::VmRetire < ApplicationHelper::Button::Basic
     self[:enabled] = !(self[:title] = N_("VM is already retired") if disabled?)
   end
 
-  def skip?
-    !@record.supports_retire?
+  def visible?
+    @record.supports_retire?
   end
 
   def disabled?

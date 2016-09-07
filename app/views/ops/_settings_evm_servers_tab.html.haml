@@ -69,7 +69,7 @@
       %table.table.table-striped.table-bordered.table-hover
         %tbody
           - @servers.sort_by(&:id).each do |s|
-            %tr{:onclick => "miqDynatreeActivateNode('settings_tree', 'svr-#{to_cid(s.id)}');", :title => _("View this MiqServer")}
+            %tr{:onclick => "miqTreeActivateNode('settings_tree', 'svr-#{to_cid(s.id)}');", :title => _("View this MiqServer")}
               %td.narrow
                 %img{:src => image_path('100/miq_server.png')}/
               %td

@@ -55,6 +55,7 @@ bin/*
 # config/
 config/apache
 config/database.yml*
+config/cable.yml
 config/vmdb.yml.db
 
 config/initializers/*.local.rb
@@ -114,9 +115,6 @@ public/stylesheets/jmaki-2fixed-right-sidebars.css
 public/stylesheets/jmaki-3column-footer.css
 public/stylesheets/jmaki-standard-no-sidebars.css
 public/stylesheets/jmaki-standard-right-sidebar.css
-
-# spec/
-spec/replication/util/data/darga_migrations
 
 # tmp/
 tmp/*

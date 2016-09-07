@@ -164,7 +164,7 @@ describe ProviderForemanController do
       provider2 = ManageIQ::Providers::Foreman::Provider.new(:name => "test2Foreman",
                                                              :url => "10.8.96.103", :zone => @zone)
       controller.instance_variable_set(:@provider_cfgmgmt, provider2)
-      expect(controller).to receive(:replace_right_cell).once
+      allow(controller).to receive(:render_flash)
       controller.save_provider_foreman
       expect(assigns(:flash_array).first[:message]).to include("Configuration_manager.name has already been taken")
     end
@@ -231,6 +231,19 @@ describe ProviderForemanController do
       post :refresh, :params => {:miq_grid_checks => @config_mgr.id}
       expect(response.status).to eq(200)
       expect(assigns(:flash_array).first[:message]).to include("Refresh Provider initiated for 1 provider (Foreman)")
+    end
+
+    it "refreshes the provider when the configuration manager id is supplied" do
+      allow(controller).to receive(:replace_right_cell)
+      post :refresh, :params => { :id => @config_mgr.id }
+      expect(assigns(:flash_array).first[:message]).to include("Refresh Provider initiated for 1 provider")
+    end
+
+    it "it refreshes a provider when the configuration manager id is selected from a grid/tile" do
+      allow(controller).to receive(:replace_right_cell)
+      post :refresh, :params => { "check_#{ApplicationRecord.compress_id(@config_mgr.id)}"  => "1",
+                                  "check_#{ApplicationRecord.compress_id(@config_mgr2.id)}" => "1" }
+      expect(assigns(:flash_array).first[:message]).to include("Refresh Provider initiated for 2 providers")
     end
   end
 
@@ -679,7 +692,7 @@ describe ProviderForemanController do
   def find_treenode_for_foreman_provider(provider)
     key = ems_key_for_provider(provider)
     tree = JSON.parse(controller.instance_variable_get(:@configuration_manager_providers_tree))
-    tree[0]['children'][0]['children'].find { |c| c['key'] == key } unless tree[0]['children'][0]['children'].nil?
+    tree[0]['nodes'][0]['nodes'].find { |c| c['key'] == key } unless tree[0]['nodes'][0]['nodes'].nil?
   end
 
   def ems_key_for_provider(provider)

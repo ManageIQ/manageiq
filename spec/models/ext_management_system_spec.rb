@@ -32,7 +32,7 @@ describe ExtManagementSystem do
       "hawkular"                    => "Hawkular",
       "kubernetes"                  => "Kubernetes",
       "openshift"                   => "OpenShift Origin",
-      "openshift_enterprise"        => "OpenShift Enterprise",
+      "openshift_enterprise"        => "OpenShift Container Platform",
       "openstack"                   => "OpenStack",
       "openstack_infra"             => "OpenStack Platform Director",
       "openstack_network"           => "OpenStack Network",
@@ -41,6 +41,7 @@ describe ExtManagementSystem do
       "scvmm"                       => "Microsoft System Center VMM",
       "vmwarews"                    => "VMware vCenter",
       "vmware_cloud"                => "VMware vCloud",
+      "vmware_cloud_network"        => "VMware Cloud Network",
     }
   end
 

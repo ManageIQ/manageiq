@@ -2,18 +2,24 @@ require 'config'
 require_dependency 'patches/config_patch'
 require_dependency 'vmdb/settings/database_source'
 require_dependency 'vmdb/settings/hash_differ'
+require_dependency 'vmdb/settings/walker'
 
 module Vmdb
   class Settings
-    # if you change, please also change over in tools/fix_auth/models.rb
-    PASSWORD_FIELDS = %i(bind_pwd password amazon_secret).to_set.freeze
+    PASSWORD_FIELDS = Vmdb::Settings::Walker::PASSWORD_FIELDS
+    DUMP_LOG_FILE   = Rails.root.join("log/last_settings.txt").freeze
 
     cattr_accessor :last_loaded
 
     def self.init
       ::Config.overwrite_arrays = true
-      reset_settings_constant(for_resource(my_server))
+      reset_settings_constant(for_resource(:my_server))
+      on_reload
+    end
+
+    def self.on_reload
       self.last_loaded = Time.now.utc
+      dump_to_log_directory(::Settings)
     end
 
     def self.reload!
@@ -21,23 +27,8 @@ module Vmdb
       activate
     end
 
-    # if you change, please also change over in tools/fix_auth/auth_config_model.rb
     def self.walk(settings = ::Settings, path = [], &block)
-      settings.each do |key, value|
-        new_path = path.dup << key
-
-        yield key, value, new_path, settings
-
-        case value
-        when settings.class
-          walk(value, new_path, &block)
-        when Array
-          value.each_with_index do |v, i|
-            walk(v, new_path.dup << i, &block) if v.kind_of?(settings.class)
-          end
-        end
-      end
-      settings
+      Walker.walk(settings, path, &block)
     end
 
     def self.activate
@@ -71,15 +62,19 @@ module Vmdb
     end
 
     def self.mask_passwords!(settings)
-      walk_passwords(settings) { |k, _v, h| h[k] = "********" }
+      Walker.mask_passwords!(settings)
     end
 
     def self.decrypt_passwords!(settings)
-      walk_passwords(settings) { |k, v, h| h[k] = MiqPassword.try_decrypt(v) }
+      Walker.decrypt_passwords!(settings)
     end
 
     def self.encrypt_passwords!(settings)
-      walk_passwords(settings) { |k, v, h| h[k] = MiqPassword.try_encrypt(v) }
+      Walker.encrypt_passwords!(settings)
+    end
+
+    def self.dump_to_log_directory(settings)
+      DUMP_LOG_FILE.write(mask_passwords!(settings.to_hash).to_yaml)
     end
 
     def self.build_template
@@ -142,13 +137,6 @@ module Vmdb
     end
     private_class_method :reset_settings_constant
 
-    def self.walk_passwords(settings)
-      walk(settings) do |key, value, _path, owning|
-        yield(key, value, owning) if value.present? && PASSWORD_FIELDS.include?(key.to_sym)
-      end
-    end
-    private_class_method :walk_passwords
-
     def self.apply_settings_changes(resource, deltas)
       resource.transaction do
         index = resource.settings_changes.index_by(&:key)
@@ -165,24 +153,5 @@ module Vmdb
       end
     end
     private_class_method :apply_settings_changes
-
-    # Since `#load` occurs very early in the boot process, we must ensure that
-    # we do not fail in cases where the database is not yet created, not yet
-    # available, or has not yet been seeded.
-    def self.my_server
-      resource_queryable? ? MiqServer.my_server(true) : nil
-    end
-    private_class_method :my_server
-
-    def self.resource_queryable?
-      database_connectivity? && SettingsChange.table_exists?
-    end
-    private_class_method :resource_queryable?
-
-    def self.database_connectivity?
-      conn = ActiveRecord::Base.connection rescue nil
-      conn && ActiveRecord::Base.connected?
-    end
-    private_class_method :database_connectivity?
   end
 end

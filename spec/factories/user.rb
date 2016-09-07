@@ -5,6 +5,7 @@ FactoryGirl.define do
       role nil
       # e.g.: "miq_request_approval"
       features nil
+      tenant { Tenant.seed }
     end
 
     sequence(:userid) { |s| "user#{s}" }
@@ -17,7 +18,7 @@ FactoryGirl.define do
       if e.miq_groups.blank? && (e.role || e.features)
         u.miq_groups = [
           (e.role && MiqGroup.find_by_description("EvmGroup-#{e.role}")) ||
-          FactoryGirl.create(:miq_group, :features => e.features, :role => e.role)
+          FactoryGirl.create(:miq_group, :features => e.features, :role => e.role, :tenant => e.tenant)
         ]
       end
     end
@@ -32,10 +33,6 @@ FactoryGirl.define do
   end
 
   factory :user_with_group, :parent => :user do
-    transient do
-      tenant { Tenant.seed }
-    end
-
     miq_groups { FactoryGirl.build_list(:miq_group, 1, :tenant => tenant) }
   end
 

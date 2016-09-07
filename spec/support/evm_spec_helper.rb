@@ -12,8 +12,21 @@ Rails.logger.level = env_level
 module EvmSpecHelper
   extend RSpec::Mocks::ExampleMethods
 
+  module EmsMetadataHelper
+    def self.vmware_nested_folders(ems)
+      datacenters = FactoryGirl.create(:ems_folder, :name => 'Datacenters').tap { |x| x.parent = ems }
+      nested = FactoryGirl.create(:ems_folder, :name => 'nested').tap { |x| x.parent = datacenters }
+      testing = FactoryGirl.create(:ems_folder, :name => 'testing').tap { |x| x.parent = nested }
+      FactoryGirl.create(:datacenter).tap { |x| x.parent = testing }
+    end
+  end
+
   # Clear all EVM caches
   def self.clear_caches
+    @settings_loaded = Vmdb::Settings.last_loaded
+
+    yield if block_given?
+  ensure
     Module.clear_all_cache_with_timeout if Module.respond_to?(:clear_all_cache_with_timeout)
 
     clear_instance_variables(MiqEnvironment::Command)
@@ -22,6 +35,8 @@ module EvmSpecHelper
 
     # Clear the thread local variable to prevent test contamination
     User.current_user = nil if defined?(User) && User.respond_to?(:current_user=)
+
+    ::Settings.reload! if @settings_loaded != Vmdb::Settings.last_loaded
   end
 
   def self.clear_instance_variables(instance)

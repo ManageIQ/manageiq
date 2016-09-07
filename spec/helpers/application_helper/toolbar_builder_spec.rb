@@ -2476,6 +2476,7 @@ describe ApplicationHelper do
       }
       @tb_buttons = {}
       @button = {:id => "custom_#{btn_num}"}
+      @button = ApplicationHelper::Button::Basic.new(nil, nil, {}, {:id => "custom_#{btn_num}"})
       allow_any_instance_of(Object).to receive(:query_string).and_return("")
       allow_message_expectations_on_nil
     end
@@ -2514,6 +2515,34 @@ describe ApplicationHelper do
       it "when input[:onwhen] exists" do
         @input[:onwhen] = '1+'
         expect(subject).to have_key(:onwhen)
+      end
+    end
+
+    context "internationalization" do
+      it "does translation of text title and confirm strings" do
+        %i(text title confirm).each do |key|
+          @input[key] = 'Configuration' # common button string, translated into Japanese
+        end
+        FastGettext.locale = 'ja'
+        apply_common_props(@button, @input)
+        %i(text title confirm).each do |key|
+          expect(@button[key]).not_to match('Configuration')
+        end
+        FastGettext.locale = 'en'
+      end
+
+      it "does delayed translation of text title and confirm strings" do
+        %i(text title confirm).each do |key|
+          @input[key] = proc do
+            _("Add New %{model}") % {:model => 'Model'}
+          end
+        end
+        FastGettext.locale = 'ja'
+        apply_common_props(@button, @input)
+        %i(text title confirm).each do |key|
+          expect(@button[key]).not_to match('Add New Model')
+        end
+        FastGettext.locale = 'en'
       end
     end
   end
@@ -2634,8 +2663,8 @@ describe ApplicationHelper do
       user = FactoryGirl.create(:user_with_group)
       login_as user
       @domain = FactoryGirl.create(:miq_ae_domain)
-      namespace = FactoryGirl.create(:miq_ae_namespace, :name => "test1", :parent => @domain)
-      @record = FactoryGirl.create(:miq_ae_class, :name => "test_class", :namespace_id => namespace.id)
+      @namespace = FactoryGirl.create(:miq_ae_namespace, :name => "test1", :parent => @domain)
+      @record = FactoryGirl.create(:miq_ae_class, :name => "test_class", :namespace_id => @namespace.id)
     end
 
     it "Enables buttons for Unlocked domain" do
@@ -2698,6 +2727,11 @@ describe ApplicationHelper do
       )
 
       expect(build_toolbar_hide_button('miq_ae_method_copy')).to be_falsey
+    end
+
+    it "Enables miq_ae_namespace_edit for Unlocked domain" do
+      @record = @namespace
+      expect(build_toolbar_hide_button('miq_ae_namespace_edit')).to be_falsey
     end
 
     def role_allows?(_)

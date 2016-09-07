@@ -10,8 +10,8 @@
       %table.table.table-striped.table-bordered.table-hover
         %tbody
           - @events.each do |e|
-            %tr{:title => ("View this Event"),
-              :onclick => "miqDynatreeActivateNode('event_tree', 'ev-#{to_cid(e.id)}');"}
+            %tr{:title => _("View this Event"),
+              :onclick => "miqTreeActivateNode('event_tree', 'ev-#{to_cid(e.id)}');"}
               %td.narrow
                 %img{:src => image_path("100/event-#{e.name}.png")}
               %td

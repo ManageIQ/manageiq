@@ -129,7 +129,7 @@ module OpsHelper::TextualSummary
         :value    => typ == :rows ? number_with_delimiter(row.latest_hourly_metric.send(typ.to_s), :delimeter => ',') :
                                  number_to_human_size(row.latest_hourly_metric.send(typ.to_s), :precision => 1),
         :explorer => true,
-        :link     => "miqDynatreeActivateNode('vmdb_tree', 'tb-#{to_cid(@sb[:vmdb_tables][row.name])}');"
+        :link     => "miqTreeActivateNode('vmdb_tree', 'tb-#{to_cid(@sb[:vmdb_tables][row.name])}');"
       }
     end
   end

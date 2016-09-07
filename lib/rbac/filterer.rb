@@ -48,14 +48,20 @@ module Rbac
       Storage
     )
 
+    # key: descendant::klass
+    # value:
+    #   if it is a symbol/method_name:
+    #     descendant.send(method_name) ==> klass
+    #   if it is an array [klass_id, descendant_id]
+    #     klass.where(klass_id => descendant.select(descendant_id))
     MATCH_VIA_DESCENDANT_RELATIONSHIPS = {
-      "VmOrTemplate::ExtManagementSystem"      => :ext_management_system,
-      "VmOrTemplate::Host"                     => :host,
-      "VmOrTemplate::EmsCluster"               => :ems_cluster,
+      "VmOrTemplate::ExtManagementSystem"      => [:id, :ems_id],
+      "VmOrTemplate::Host"                     => [:id, :host_id],
+      "VmOrTemplate::EmsCluster"               => [:id, :ems_cluster_id],
       "VmOrTemplate::EmsFolder"                => :parent_blue_folders,
       "VmOrTemplate::ResourcePool"             => :resource_pool,
       "ConfiguredSystem::ExtManagementSystem"  => :ext_management_system,
-      "ConfiguredSystem::ConfigurationProfile" => :configuration_profile
+      "ConfiguredSystem::ConfigurationProfile" => [:id, :configuration_profile_id],
     }
 
     # These classes should accept any of the relationship_mixin methods including:
@@ -123,6 +129,7 @@ module Rbac
     # @option options :offset       [Numeric] (default: no offset)
     # @option options :apply_limit_in_sql [Boolean]
     # @option options :ext_options
+    # @option options :skip_count   [Boolean] (default: false)
     # @return [Array<Array<Object>,Hash>] list of object and the associated search options
     #   Array<Object> list of object in the same order as input targets if possible
     # @option attrs :auth_count [Numeric]
@@ -177,7 +184,7 @@ module Rbac
         scope = apply_scope(klass, scope)
 
         ids_clause = ["#{klass.table_name}.id IN (?)", target_ids] if klass.respond_to?(:table_name)
-      else # targets is a class_name, scope, class, or AASM class (VimPerformanceDaily in particular)
+      else # targets is a class_name, scope, class, or acts_as_ar_model class (VimPerformanceDaily in particular)
         targets = to_class(targets).all
         scope = apply_scope(targets, scope)
 
@@ -206,11 +213,13 @@ module Rbac
       scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
       targets = scope
 
-      auth_count = attrs[:apply_limit_in_sql] && limit ? targets.except(:offset, :limit, :order).count(:all) : targets.length
+      unless options[:skip_counts]
+        auth_count = attrs[:apply_limit_in_sql] && limit ? targets.except(:offset, :limit, :order).count(:all) : targets.length
+      end
 
       if search_filter && targets && (!exp_attrs || !exp_attrs[:supported_by_sql])
         rejects     = targets.reject { |obj| matches_search_filters?(obj, search_filter, tz) }
-        auth_count -= rejects.length
+        auth_count -= rejects.length unless options[:skip_counts]
         targets -= rejects
       end
 
@@ -225,7 +234,7 @@ module Rbac
         targets = targets.sort_by { |a| target_ids.index(a.id) }
       end
 
-      attrs[:auth_count] = auth_count
+      attrs[:auth_count] = auth_count unless options[:skip_counts]
 
       return targets, attrs
     end
@@ -246,7 +255,7 @@ module Rbac
     end
 
     def filtered(objects, options = {})
-      Rbac.search(options.reverse_merge(:targets => objects)).first
+      Rbac.search(options.reverse_merge(:targets => objects, :skip_counts => true)).first
     end
 
     def filtered_object(object, options = {})
@@ -255,17 +264,21 @@ module Rbac
 
     private
 
-    def apply_user_group_rbac_to_class?(klass, miq_group)
-      [User, MiqGroup].include?(klass) && miq_group.try!(:self_service?)
-    end
-
-    def apply_rbac_to_class?(klass)
+    ##
+    # Determine if permissions should be applied directly via klass
+    # (klass directly participates in RBAC)
+    #
+    def apply_rbac_directly?(klass)
       CLASSES_THAT_PARTICIPATE_IN_RBAC.include?(safe_base_class(klass).name)
     end
 
-    def apply_rbac_to_associated_class?(klass)
-      return false if [Metric, MetricRollup, VimPerformanceDaily].include?(klass)
-      klass < MetricRollup || klass < Metric
+    ##
+    # Determine if permissions should be applied via an associated parent class of klass
+    # If the klass is a metrics subclass, RBAC bases permissions checks on
+    # the associated application model.  See #rbac_class method
+    #
+    def apply_rbac_through_association?(klass)
+      klass != VimPerformanceDaily && (klass < MetricRollup || klass < Metric)
     end
 
     def safe_base_class(klass)
@@ -275,9 +288,13 @@ module Rbac
 
     def rbac_class(scope)
       klass = scope.respond_to?(:klass) ? scope.klass : scope
-      return klass if apply_rbac_to_class?(klass)
-      if apply_rbac_to_associated_class?(klass)
-        return klass.name[0..-12].constantize.base_class # e.g. VmPerformance => VmOrTemplate
+      return klass if apply_rbac_directly?(klass)
+      if apply_rbac_through_association?(klass)
+        # Strip "Performance" off class name, which is the associated model
+        # of that metric.
+        # e.g. HostPerformance => Host
+        #      VmPerformance   => VmOrTemplate
+        return klass.name[0..-12].constantize.base_class
       end
       nil
     end
@@ -344,13 +361,6 @@ module Rbac
       filtered_ids
     end
 
-    def scope_by_indirect_rbac(scope, rbac_filters, user, miq_group)
-      parent_class = rbac_class(scope)
-      filtered_ids = calc_filtered_ids(parent_class, rbac_filters, user, miq_group)
-
-      scope_by_parent_ids(parent_class, scope, filtered_ids)
-    end
-
     # @param parent_class [Class] Class of parent (e.g. Host)
     # @param klass [Class] Class of child node (e.g. Vm)
     # @param scope [] scope for active records (e.g. Vm.archived)
@@ -387,22 +397,6 @@ module Rbac
       scope.find_tags_by_grouping(filter, :ns => '*').reorder(nil)
     end
 
-    def scope_by_direct_rbac(scope, rbac_filters, user, miq_group)
-      filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group)
-      scope_by_ids(scope, filtered_ids)
-    end
-
-    def scope_by_user_group_rbac(scope, user, miq_group)
-      klass = scope.respond_to?(:klass) ? scope.klass : scope
-      if klass == User && user
-        scope.where(:id => user.id)
-      elsif klass == MiqGroup
-        scope.where(:id => miq_group.id)
-      else # no user security applied
-        scope
-      end
-    end
-
     def scope_to_tenant(scope, user, miq_group)
       klass = scope.respond_to?(:klass) ? scope.klass : scope
       user_or_group = user || miq_group
@@ -411,17 +405,33 @@ module Rbac
       tenant_id_clause ? scope.where(tenant_id_clause) : scope
     end
 
+    ##
+    # Main scoping method
+    #
     def scope_targets(klass, scope, rbac_filters, user, miq_group)
+      # Results are scoped by tenant if the TenancyMixin is included in the class,
+      # with a few manual exceptions (User, Tenant). Note that the classes in
+      # TENANT_ACCESS_STRATEGY are a consolidated list of them.
       if klass.respond_to?(:scope_by_tenant?) && klass.scope_by_tenant?
         scope = scope_to_tenant(scope, user, miq_group)
       end
 
-      if apply_rbac_to_class?(klass)
-        scope = scope_by_direct_rbac(scope, rbac_filters, user, miq_group)
-      elsif apply_rbac_to_associated_class?(klass)
-        scope = scope_by_indirect_rbac(scope, rbac_filters, user, miq_group)
-      elsif apply_user_group_rbac_to_class?(klass, miq_group)
-        scope = scope_by_user_group_rbac(scope, user, miq_group)
+      if apply_rbac_directly?(klass)
+        filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group)
+        scope = scope_by_ids(scope, filtered_ids)
+      elsif apply_rbac_through_association?(klass)
+        # if subclasses of MetricRollup or Metric, use the associated
+        # model to derive permissions from
+        associated_class = rbac_class(scope)
+        filtered_ids = calc_filtered_ids(associated_class, rbac_filters, user, miq_group)
+
+        scope = scope_by_parent_ids(associated_class, scope, filtered_ids)
+      elsif klass == User && user.try!(:self_service?)
+        # Self service users searching for users only see themselves
+        scope = scope.where(:id => user.id)
+      elsif klass == MiqGroup && miq_group.try!(:self_service?)
+        # Self Service users searching for groups only see their group
+        scope = scope.where(:id => miq_group.id)
       else
         scope
       end
@@ -464,8 +474,13 @@ module Rbac
     def matches_via_descendants(klass, descendant_klass, options)
       if descendant_klass && (method_name = lookup_method_for_descendant_class(klass, descendant_klass))
         descendants = filtered(descendant_klass, options)
-        MiqPreloader.preload(descendants, method_name)
-        descendants.flat_map { |object| object.send(method_name) }.grep(klass).uniq
+        if method_name.kind_of?(Array)
+          klass_id, descendant_id = method_name
+          klass.where(klass_id => descendants.select(descendant_id)).distinct
+        else
+          MiqPreloader.preload(descendants, method_name)
+          descendants.flat_map { |object| object.send(method_name) }.grep(klass).uniq
+        end
       end
     end
 

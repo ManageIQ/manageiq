@@ -5,9 +5,12 @@ class GenericObject < ApplicationRecord
 
   validates :name, :presence => true
 
-  delegate :property_attribute_defined?, :property_association_defined?,
-           :property_defined?, :type_cast, :defined_property_associations,
-           :defined_property_associations, :to => :generic_object_definition, :allow_nil => true
+  delegate :property_attribute_defined?,
+           :property_defined?,
+           :type_cast,
+           :defined_property_associations, :property_association_defined?,
+           :defined_property_methods, :property_method_defined?,
+           :to => :generic_object_definition, :allow_nil => true
 
   def initialize(attributes = {})
     # generic_object_definition will be set first since hash iteration is based on the order of key insertion
@@ -39,6 +42,7 @@ class GenericObject < ApplicationRecord
 
     attributes_as_string += ["attributes: #{property_attributes}"]
     attributes_as_string += ["associations: #{defined_property_associations.keys}"]
+    attributes_as_string += ["methods: #{defined_property_methods}"]
 
     prefix = Kernel.instance_method(:inspect).bind(self).call.split(' ', 2).first
     "#{prefix} #{attributes_as_string.join(", ")}>"
@@ -59,8 +63,14 @@ class GenericObject < ApplicationRecord
 
   def method_missing(method_name, *args)
     m = method_name.to_s.chomp("=")
-    super unless property_defined?(m)
-    method_name.to_s.end_with?('=') ? property_setter(m, args.first) : property_getter(m)
+
+    return call_automate(m, *args) if property_method_defined?(m)
+
+    if property_attribute_defined?(m) || property_association_defined?(m)
+      return method_name.to_s.end_with?('=') ? property_setter(m, args.first) : property_getter(m)
+    end
+
+    super
   end
 
   def respond_to_missing?(method_name, _include_private = false)
@@ -83,5 +93,8 @@ class GenericObject < ApplicationRecord
       end
 
     self.properties = properties.merge(name => val)
+  end
+
+  def call_automate(method_name, options = {}, q_options = {})
   end
 end

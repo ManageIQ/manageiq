@@ -2,6 +2,10 @@ class TreeBuilderNetwork < TreeBuilder
   has_kids_for Lan, [:x_get_tree_lan_kids]
   has_kids_for Switch, [:x_get_tree_switch_kids]
 
+  def node_builder
+    TreeNodeBuilderNetwork
+  end
+
   def initialize(name, type, sandbox, build = true, root = nil, vm_kids = [])
     sandbox[:network_root] = TreeBuilder.build_node_id(root) if root
     @tree_vms = vm_kids
@@ -21,17 +25,11 @@ class TreeBuilderNetwork < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix                   => 'h_',
-                  :autoload                    => true,
-                  :click_url                   => "/vm/show/",
-                  :onclick                     => "miqOnClickHostNet",
-                  :onmousein                   => "miqOnMouseInHostNet",
-                  :onmouseout                  => "miqOnMouseOutHostNet",
-                  :open_close_all_on_dbl_click => true)
+    locals.merge!(:autoload => true, :click_url => "/vm/show/", :onclick => "miqOnClickHostNet")
   end
 
   def root_options
-    [@root.name, _("Host: %{name}") % {:name => @root.name}, 'host']
+    [@root.name, _("Host: %{name}") % {:name => @root.name}, 'host', :cfmeNoClick => true]
   end
 
   def x_get_tree_roots(count_only = false, _options)

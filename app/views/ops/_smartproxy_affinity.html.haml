@@ -7,5 +7,5 @@
       = _("No Servers with the SmartProxy role are in Zone: \"%{zone_description}\"") % {:zone_description => @selected_zone.description}
 - else
   :javascript
-    miqDynatreeResetState('#{j_str @smartproxy_affinity_tree.name}');
+    miqTreeResetState('#{j_str @smartproxy_affinity_tree.name}');
   = render(:partial => 'shared/tree', :locals => {:tree => @smartproxy_affinity_tree, :name => @smartproxy_affinity_tree.name})

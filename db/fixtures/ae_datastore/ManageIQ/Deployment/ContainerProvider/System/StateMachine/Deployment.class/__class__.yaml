@@ -28,7 +28,7 @@ object:
       condition: 
       on_entry: 
       on_exit: 
-      on_error: 
+      on_error: cleanup
       max_retries: 
       max_time: 
   - field:
@@ -48,7 +48,7 @@ object:
       condition: 
       on_entry: 
       on_exit: 
-      on_error: 
+      on_error: cleanup
       max_retries: '100'
       max_time: 
   - field:
@@ -68,7 +68,7 @@ object:
       condition: 
       on_entry: 
       on_exit: 
-      on_error: 
+      on_error: cleanup
       max_retries: '100'
       max_time: 
   - field:
@@ -88,7 +88,7 @@ object:
       condition: 
       on_entry: 
       on_exit: 
-      on_error: 
+      on_error: cleanup
       max_retries: 
       max_time: 
   - field:
@@ -108,35 +108,15 @@ object:
       condition: 
       on_entry: 
       on_exit: 
-      on_error: 
+      on_error: cleanup
       max_retries: 
-      max_time: 
-  - field:
-      aetype: state
-      name: create_ansible_inventory
-      display_name: 
-      datatype: string
-      priority: 6
-      owner: 
-      default_value: METHOD::create_ansible_inventory
-      substitute: true
-      message: create
-      visibility: 
-      collect: 
-      scope: 
-      description: 
-      condition: 
-      on_entry: 
-      on_exit: 
-      on_error: 
-      max_retries: 
-      max_time: 
+      max_time:
   - field:
       aetype: state
       name: master_pre_deployment
       display_name: 
       datatype: string
-      priority: 7
+      priority: 6
       owner: 
       default_value: METHOD::pre_deployment
       substitute: true
@@ -148,15 +128,15 @@ object:
       condition: 
       on_entry: 
       on_exit: 
-      on_error: 
+      on_error: cleanup
       max_retries: 
       max_time: 
   - field:
       aetype: state
       name: ansible_deployment
       display_name: 
-      datatype: string
-      priority: 8
+      datatype: 
+      priority: 7
       owner: 
       default_value: METHOD::deployment
       substitute: true
@@ -168,15 +148,15 @@ object:
       condition: 
       on_entry: 
       on_exit: 
-      on_error: 
+      on_error: cleanup
       max_retries: 
       max_time: 
   - field:
       aetype: state
       name: add_provider
       display_name: 
-      datatype: string
-      priority: 9
+      datatype: 
+      priority: 8
       owner: 
       default_value: METHOD::add_provider
       substitute: true
@@ -188,15 +168,15 @@ object:
       condition: 
       on_entry: 
       on_exit: 
-      on_error: 
+      on_error: cleanup
       max_retries: 
       max_time: 
   - field:
       aetype: state
       name: clean_up
       display_name: 
-      datatype: string
-      priority: 10
+      datatype: 
+      priority: 9
       owner: 
       default_value: METHOD::cleanup
       substitute: true

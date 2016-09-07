@@ -95,7 +95,7 @@ describe CatalogController do
   end
 
   context "#atomic_st_edit" do
-    it "Atomic Service Template and it's valid Resource Actions are saved" do
+    it "Atomic Service Template and its valid Resource Actions are saved" do
       controller.instance_variable_set(:@sb, {})
       controller.instance_variable_set(:@_params, :button => "save")
       st = FactoryGirl.create(:service_template)
@@ -127,7 +127,7 @@ describe CatalogController do
       end
     end
 
-    it "Atomic Service Template and it's invalid Resource Actions are not saved" do
+    it "Atomic Service Template and its invalid Resource Actions are not saved" do
       controller.instance_variable_set(:@_response, ActionDispatch::TestResponse.new)
       controller.instance_variable_set(:@sb, {})
       controller.instance_variable_set(:@_params, :button => 'save')

@@ -9,10 +9,7 @@ class TreeBuilderAlertProfile < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(
-      :id_prefix => "ap_",
-      :autoload  => true,
-    )
+    locals.merge!(:autoload => true)
   end
 
   def alert_profile_kinds

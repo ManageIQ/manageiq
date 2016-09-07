@@ -11,10 +11,7 @@ class TreeBuilderContainers < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(
-      :id_prefix => "container_",
-      :autoload  => true
-    )
+    locals.merge!(:autoload => true)
   end
 
   # level 0 - root
@@ -34,7 +31,7 @@ class TreeBuilderContainers < TreeBuilder
         :cfmeNoClick => true
       }
     end
-    count_only_or_objects(count_only, list, nil)
+    count_only_or_objects(count_only, list)
   end
 
   # level 2 - containers

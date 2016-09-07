@@ -122,6 +122,8 @@ describe "Authentication API" do
   end
 
   context "Token Based Authentication" do
+    let(:ui_token_ttl) { VMDB::Config.new("vmdb").config[:session][:timeout].to_i_with_method }
+
     it "gets a token based identifier" do
       api_basic_authorize
 
@@ -165,10 +167,10 @@ describe "Authentication API" do
       token_expires_on = response.parsed_body["expires_on"]
 
       tm = TokenManager.new("api")
-      token_info = tm.token_get_info("api", auth_token)
+      token_info = tm.token_get_info(auth_token)
       expect(token_info[:expires_on].utc.iso8601).to eq(token_expires_on)
 
-      expect_any_instance_of(TokenManager).to receive(:reset_token).with("api", auth_token)
+      expect_any_instance_of(TokenManager).to receive(:reset_token).with(auth_token)
       run_get entrypoint_url, :headers => {"auth_token" => auth_token}
 
       expect(response).to have_http_status(:ok)
@@ -197,7 +199,6 @@ describe "Authentication API" do
     it "gets a token based identifier with a UI based token_ttl" do
       api_basic_authorize
 
-      ui_token_ttl = VMDB::Config.new("vmdb").config[:session][:timeout].to_i_with_method
       run_get auth_url, :requester_type => "ui"
 
       expect(response).to have_http_status(:ok)
@@ -212,8 +213,29 @@ describe "Authentication API" do
 
       auth_token = response.parsed_body["auth_token"]
 
-      expect_any_instance_of(TokenManager).to receive(:invalidate_token).with("api", auth_token)
+      expect_any_instance_of(TokenManager).to receive(:invalidate_token).with(auth_token)
       run_delete auth_url, "auth_token" => auth_token
+    end
+
+    context 'Tokens for Web Sockets' do
+      it 'gets a UI based token_ttl when requesting token for web sockets' do
+        api_basic_authorize
+
+        run_get auth_url, :requester_type => 'ws'
+        expect(response).to have_http_status(:ok)
+        expect_result_to_have_keys(%w(auth_token token_ttl expires_on))
+        expect(response.parsed_body["token_ttl"]).to eq(ui_token_ttl)
+      end
+
+      it 'cannot authorize user to api based on token that is dedicated for web sockets' do
+        api_basic_authorize
+        run_get auth_url, :requester_type => 'ws'
+        ws_token = response.parsed_body["auth_token"]
+
+        run_get entrypoint_url, :headers => {'auth_token' => ws_token}
+
+        expect(response).to have_http_status(:unauthorized)
+      end
     end
   end
 

@@ -106,13 +106,14 @@ module EmsClusterHelper::TextualSummary
     {:label => _("Total Configured Memory"),
      :value => _("%{number} (Virtual to Real Ratio: %{ratio})") %
        {:number => number_to_human_size(@record.aggregate_vm_memory.megabytes, :precision => 2),
-        :ratio  => @record.v_ram_vr_ratio}}
+        :ratio  => @record.v_ram_vr_ratio.round(2)}}
   end
 
   def textual_aggregate_vm_cpus
     {:label => _("Total Configured CPUs"),
      :value => _("%{number} (Virtual to Real Ratio: %{ratio})") %
-       {:number => number_with_delimiter(@record.aggregate_vm_cpus), :ratio => @record.v_cpu_vr_ratio}}
+       {:number => number_with_delimiter(@record.aggregate_vm_cpus),
+        :ratio  => @record.v_cpu_vr_ratio.round(2)}}
   end
 
   def textual_ems

@@ -5,14 +5,6 @@ class TreeBuilderChargebackAssignments < TreeBuilder
     {:open_all => true, :full_ids => true, :leaf => "ChargebackRate"}
   end
 
-  def set_locals_for_render
-    locals = super
-    temp = {
-      :id_prefix      => "cba_",
-    }
-    locals.merge!(temp)
-  end
-
   def root_options
     [t = _("Assignments"), t]
   end

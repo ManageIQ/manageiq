@@ -39,8 +39,8 @@ describe ContainerDeployment do
 ansible_config: "/usr/share/atomic-openshift-utils/ansible.cfg"
 ansible_log_path: "/tmp/ansible.log"
 ansible_inventory_path: "/tmp/inventroy.yaml"
-ansible_ssh_user: root
 deployment:
+  ansible_ssh_user: root
   hosts:
   - connect_to: 37.142.68.50
     roles:

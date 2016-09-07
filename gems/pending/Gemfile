@@ -17,8 +17,8 @@ gem "excon",                   "~>0.40",            :require => false
 gem "ezcrypto",                "=0.7",              :require => false
 gem "ffi",                     "~>1.9.3",           :require => false
 gem "ffi-vix_disk_lib",        "~>1.0.2",           :require => false  # used by lib/VixDiskLib
-gem "fog-openstack",           "=0.1.11",           :require => false
-gem "hawkular-client",         "=2.4.0",            :require => false
+gem "fog-openstack",           "=0.1.12",           :require => false
+gem "hawkular-client",         "=2.6.0",            :require => false
 gem "httpclient",              "~>2.7.1",           :require => false
 gem "image-inspector-client",  "~>1.0.3",           :require => false
 gem "iniparse",                                     :require => false
@@ -33,7 +33,8 @@ gem "net-sftp",                "~>2.1.2",           :require => false
 gem "nokogiri",                "~>1.6.8",           :require => false
 gem "openscap",                "~>0.4.3",           :require => false
 gem "openshift_client",        "=1.2.0",            :require => false
-gem "ovirt",                   "~>0.11.0",          :require => false
+gem "ovirt",                   "~>0.13.0",          :require => false
+gem "parallel",                "~>1.9",             :require => false # For OvirtInventory
 gem "pg",                      "~>0.18.2",          :require => false
 gem "pg-dsn_parser",           "~>0.1.0",           :require => false
 gem "psych",                   "~>2.0.12"
@@ -81,6 +82,7 @@ unless ENV['APPLIANCE']
     gem "camcorder",                    :require => false
     gem "coveralls",                    :require => false
     gem "jasmine",       "~>2.4.0",     :require => false
+    gem "jasmine-core",  "~>2.4.0",     :require => false
     gem "phantomjs",     "=1.9.8.0",    :require => false
     gem "rspec",         "~>3.5.0",     :require => false
     gem "test-unit",                    :require => false

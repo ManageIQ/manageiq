@@ -1,4 +1,3 @@
-include MiqAeYamlImportExportMixin
 describe MiqAeClassCompareFields do
   before do
     @domain = 'SPEC_DOMAIN'

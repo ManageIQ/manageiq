@@ -51,6 +51,22 @@ describe "AR Regions extension" do
     expect(base_class.uncompress_id("2r5")).to eq(25)
   end
 
+  describe ".group_ids_by_region" do
+    it "works with integer ids" do
+      one_region = [1, 2, 3, 4]
+      expect(base_class.group_ids_by_region(one_region)).to eq(0 => [1, 2, 3, 4])
+      multiple_regions = [1, 2, 991, 992]
+      expect(base_class.group_ids_by_region(multiple_regions)).to eq(0 => [1, 2], 99 => [991, 992])
+    end
+
+    it "works with string ids" do
+      one_region_string = %w(1 2 3 4)
+      expect(base_class.group_ids_by_region(one_region_string)).to eq(0 => %w(1 2 3 4))
+      multiple_regions_string = %w(1 2 991 992)
+      expect(base_class.group_ids_by_region(multiple_regions_string)).to eq(0 => %w(1 2), 99 => %w(991 992))
+    end
+  end
+
   context "with some records" do
     before(:each) do
       # Add dummy records until the ids line up with the @rails_sequence_factor

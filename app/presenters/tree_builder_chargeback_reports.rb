@@ -7,11 +7,7 @@ class TreeBuilderChargebackReports < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    temp = {
-      :id_prefix => "cbrpt_",
-      :autoload  => true
-    }
-    locals.merge!(temp)
+    locals.merge!(:autoload => true)
   end
 
   def root_options

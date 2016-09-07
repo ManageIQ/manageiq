@@ -29,24 +29,27 @@ describe TreeBuilder do
   context "build_tree" do
     it "builds tree object and sets all settings and add nodes to tree object" do
       tree = TreeBuilderChargebackRates.new("cb_rates_tree", "cb_rates", {})
-      nodes = [{:key      => "root",
-                :children => [{:key     => "xx-Compute",
-                               :title   => "Compute",
-                               :icon    => ActionController::Base.helpers.image_path('100/hardware-processor.png'),
-                               :expand  => true,
-                               :tooltip => "Compute"},
-                              {:key     => "xx-Storage",
-                               :title   => "Storage",
-                               :icon    => ActionController::Base.helpers.image_path('100/hardware-disk.png'),
-                               :expand  => true,
-                               :tooltip => "Storage"}],
-                :expand   => true,
-                :title    => "Rates",
-                :tooltip  => "Rates",
-                :icon     => ActionController::Base.helpers.image_path('100/folder.png')
+      nodes = [{'key'     => "root",
+                'nodes'   => [{'key'     => "xx-Compute",
+                               'tooltip' => "Compute",
+                               'image'   => ActionController::Base.helpers.image_path('100/hardware-processor.png'),
+                               'state'   => { 'expanded' => true },
+                               'text'    => "Compute",
+                               'class'   => ''},
+                              {'key'     => "xx-Storage",
+                               'tooltip' => "Storage",
+                               'image'   => ActionController::Base.helpers.image_path('100/hardware-disk.png'),
+                               'state'   => { 'expanded' => true },
+                               'text'    => "Storage",
+                               'class'   => ''}],
+                'state'   => { 'expanded' => true },
+                'text'    => "Rates",
+                'tooltip' => "Rates",
+                'class'   => '',
+                'image'   => ActionController::Base.helpers.image_path('100/folder.png')
               }]
-      tree.locals_for_render.key?(:json_tree)
-      expect(tree.locals_for_render[:json_tree]).to eq(nodes.to_json)
+      tree.locals_for_render.key?(:bs_tree)
+      expect(JSON.parse(tree.locals_for_render[:bs_tree])).to eq(nodes)
     end
   end
 
@@ -80,7 +83,7 @@ describe TreeBuilder do
     end
 
     it "descendants can set their own root_options" do
-      expect(tree.tree_nodes).to match(/"title":\s*"Foo"/)
+      expect(tree.tree_nodes).to match(/"text":\s*"Foo"/)
     end
   end
 
@@ -117,30 +120,30 @@ describe TreeBuilder do
       a = FactoryGirl.create(:user_with_email)
       FactoryGirl.create(:user_with_email)
 
-      expect(builder.count_only_or_objects(true, User.none, nil)).to eq(0)
-      expect(builder.count_only_or_objects(true, User.where(:id => a.id), nil)).to eq(1)
-      expect(builder.count_only_or_objects(true, User.all, nil)).to eq(2)
-      expect(builder.count_only_or_objects(true, User.select('id, name'), nil)).to eq(2)
+      expect(builder.count_only_or_objects(true, User.none)).to eq(0)
+      expect(builder.count_only_or_objects(true, User.where(:id => a.id))).to eq(1)
+      expect(builder.count_only_or_objects(true, User.all)).to eq(2)
+      expect(builder.count_only_or_objects(true, User.select('id, name'))).to eq(2)
     end
 
     it 'counts things in an Array' do
-      expect(builder.count_only_or_objects(true, [], nil)).to eq(0)
-      expect(builder.count_only_or_objects(true, [:x], nil)).to eq(1)
-      expect(builder.count_only_or_objects(true, [:x, :y, :z, :z, :y], nil)).to eq(5)
+      expect(builder.count_only_or_objects(true, [])).to eq(0)
+      expect(builder.count_only_or_objects(true, [:x])).to eq(1)
+      expect(builder.count_only_or_objects(true, [:x, :y, :z, :z, :y])).to eq(5)
     end
 
     it 'returns a collection when not counting' do
       a = FactoryGirl.create(:user_with_email)
       b = FactoryGirl.create(:user_with_email)
 
-      expect(builder.count_only_or_objects(false, User.none, nil)).to eq([])
-      expect(builder.count_only_or_objects(false, User.where(:id => a.id), nil)).to eq([a])
-      expect(builder.count_only_or_objects(false, User.all, nil).sort).to eq([a, b].sort)
-      expect(builder.count_only_or_objects(false, User.select('id', 'name'), nil).sort).to eq([a, b].sort)
+      expect(builder.count_only_or_objects(false, User.none)).to eq([])
+      expect(builder.count_only_or_objects(false, User.where(:id => a.id))).to eq([a])
+      expect(builder.count_only_or_objects(false, User.all).sort).to eq([a, b].sort)
+      expect(builder.count_only_or_objects(false, User.select('id', 'name')).sort).to eq([a, b].sort)
 
-      expect(builder.count_only_or_objects(false, [], nil)).to eq([])
-      expect(builder.count_only_or_objects(false, [:x], nil)).to eq([:x])
-      expect(builder.count_only_or_objects(false, [:x, :y, :z, :z, :y], nil)).to eq([:x, :y, :z, :z, :y])
+      expect(builder.count_only_or_objects(false, [])).to eq([])
+      expect(builder.count_only_or_objects(false, [:x])).to eq([:x])
+      expect(builder.count_only_or_objects(false, [:x, :y, :z, :z, :y])).to eq([:x, :y, :z, :z, :y])
     end
 
     it 'sorts the collection' do

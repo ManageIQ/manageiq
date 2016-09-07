@@ -814,7 +814,7 @@ module OpsController::Diagnostics
         page.replace("diagnostics_tree_div", :partial => "tree", :locals => {:name => "diagnostics_tree"})
         nodes = x_node.split("-")
         nodes.pop
-        page << "miqDynatreeActivateNodeSilently('<%= x_active_tree %>', '<%= x_node %>');"
+        page << "miqTreeActivateNodeSilently('<%= x_active_tree %>', '<%= x_node %>');"
       end
       if params[:action] == "x_button"
         kls = x_node.split("-").first == "z" ? Zone : MiqServer

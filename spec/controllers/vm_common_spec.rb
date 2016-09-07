@@ -27,7 +27,7 @@ describe VmOrTemplateController do
 
     it "when snapshot is selected center toolbars are replaced" do
       post :snap_pressed, :params => { :id => @snapshot.id }
-      expect(response.body).to include("center_tb")
+      expect(response.body).to include("sendDataWithRx({redrawToolbar:")
       expect(assigns(:flash_array)).to be_blank
     end
 

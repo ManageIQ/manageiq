@@ -5,6 +5,7 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
   require_nested :CloudResourceQuota
   require_nested :CloudTenant
   require_nested :CloudVolume
+  require_nested :CloudVolumeBackup
   require_nested :CloudVolumeSnapshot
   require_nested :EventCatcher
   require_nested :EventParser

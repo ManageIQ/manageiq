@@ -1,25 +1,35 @@
 #!/usr/bin/env ruby
 require 'pathname'
+require 'English'
 
 # path to your application root.
-APP_ROOT = Pathname.new File.expand_path('../../',  __FILE__)
+APP_ROOT = Pathname.new File.expand_path('../../', __FILE__)
+
+def execute(cmd)
+  system(cmd)
+  result = $CHILD_STATUS
+  unless result.success?
+    puts "ERROR: Command failed: #{cmd}"
+    exit result.exitstatus
+  end
+end
 
 Dir.chdir APP_ROOT do
   puts "== Installing dependencies =="
-  system "bundle update"
-  system "bower update --allow-root -F --config.analytics=false"
+  execute "bundle update"
+  execute "bower update --allow-root -F --config.analytics=false"
 
   puts "\n== Migrating database =="
-  system "bin/rake db:migrate"
+  execute "bin/rake db:migrate"
 
   puts "\n== Seeding database =="
-  system "bin/rake db:seed GOOD_MIGRATIONS=skip"
+  execute "bin/rake db:seed GOOD_MIGRATIONS=skip"
 
   puts "\n== Resetting tests =="
-  system "bin/rake test:vmdb:setup"
+  execute "bin/rake test:vmdb:setup"
 
   unless ENV["SKIP_AUTOMATE_RESET"]
     puts "\n== Resetting Automate Domains =="
-    system "bin/rake evm:automate:reset"
+    execute "bin/rake evm:automate:reset"
   end
 end

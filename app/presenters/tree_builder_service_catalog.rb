@@ -10,10 +10,7 @@ class TreeBuilderServiceCatalog < TreeBuilderCatalogsClass
 
   def set_locals_for_render
     locals = super
-    locals.merge!(
-      :id_prefix => 'svccat_',
-      :autoload  => 'true',
-    )
+    locals.merge!(:autoload => true)
   end
 
   def root_options

@@ -20,9 +20,9 @@ module ReportController::Menus
     menu_set_form_vars if ["explorer", "tree_select", "x_history"].include?(params[:action])
     @in_a_form = true
     if @menu_lastaction != "menu_editor"
-      @menu_roles_tree = build_menu_tree(@edit[:new])
+      @menu_roles_tree = TreeBuilder.convert_bs_tree(build_menu_tree(@edit[:new])).to_json
     else
-      @menu_roles_tree = build_menu_tree(@rpt_menu) # changing rpt_menu if changes have been commited to show updated tree with changes
+      @menu_roles_tree = TreeBuilder.convert_bs_tree(build_menu_tree(@rpt_menu)).to_json # changing rpt_menu if changes have been commited to show updated tree with changes
     end
     @sb[:role_list_flag] = true if params[:id]
 
@@ -209,7 +209,7 @@ module ReportController::Menus
       get_tree_data
       replace_right_cell(:menu_edit_action => "menu_reset")
     elsif params[:button] == "default"
-      @menu_roles_tree = build_report_listnav("reports", "menu", "default")
+      @menu_roles_tree = TreeBuilder.convert_bs_tree(build_report_listnav("reports", "menu", "default")).to_json
       @edit[:new]               = copy_array(@rpt_menu)
       @menu_lastaction          = "default"
       add_flash(_("Report Menu set to default"), :warning)
@@ -417,7 +417,7 @@ module ReportController::Menus
       end
     end
     base_node[:children] = @tree
-    menu_roles_tree = base_node.to_json unless base_node.nil? || base_node.empty?
+    menu_roles_tree = base_node unless base_node.nil? || base_node.empty?
     menu_roles_tree
   end
 

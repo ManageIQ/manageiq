@@ -1,6 +1,10 @@
 class ArbitrationProfile < ArbitrationRecord
   default_scope { where(:profile => true) }
 
+  def self.base_model
+    ArbitrationProfile
+  end
+
   validates :ext_management_system, :presence => true
   validates :name, :presence => true
   validate :falsify_all_others, :if => :default_profile_changed?

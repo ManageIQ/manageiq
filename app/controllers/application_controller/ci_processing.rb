@@ -96,7 +96,7 @@ module ApplicationController::CiProcessing
     # need to do this only if 1 vm is selected and miq_group has been set for it
     group = record.miq_group if @ownership_items.length == 1
     @group = group ? group.id.to_s : nil
-    Rbac.filtered(MiqGroup).each { |g| @groups[g.description] = g.id.to_s }
+    Rbac.filtered(MiqGroup.non_tenant_groups).each { |g| @groups[g.description] = g.id.to_s }
 
     @user = @group = DONT_CHANGE_OWNER if @ownership_items.length > 1
 
@@ -1117,6 +1117,7 @@ module ApplicationController::CiProcessing
     @client_id = ""
     @client_key = ""
     @azure_tenant_id = ""
+    @subscription = ""
     if session[:type] == "hosts"
       @discover_type = Host.host_discovery_types
     elsif session[:type] == "ems"
@@ -1173,6 +1174,7 @@ module ApplicationController::CiProcessing
         @client_id = params[:client_id] if params[:client_id]
         @client_key = params[:client_key] if params[:client_key]
         @azure_tenant_id = params[:azure_tenant_id] if params[:azure_tenant_id]
+        @subscription = params[:subscription] if params[:subscription]
 
         if @client_id == "" || @client_key == "" || @azure_tenant_id == ""
           add_flash(_("Client ID, Client Key and Azure Tenant ID are required"), :error)
@@ -1217,7 +1219,7 @@ module ApplicationController::CiProcessing
               ems.supports_discovery? && ems.ems_type == params[:discover_type_selected]
             end
             if cloud_manager.ems_type == 'azure'
-              cloud_manager.discover_queue(@client_id, @client_key, @azure_tenant_id)
+              cloud_manager.discover_queue(@client_id, @client_key, @azure_tenant_id, @subscription)
             else
               cloud_manager.discover_queue(@userid, @password)
             end
@@ -1495,12 +1497,13 @@ module ApplicationController::CiProcessing
     @reconfigureitems.first.hardware.disks.each do |disk|
       next if disk.device_type != 'disk'
       dsize, dunit = reconfigure_calculations(disk.size / (1024 * 1024))
-      vmdisks << {:hdFilename => disk.filename,
-                  :hdType     => disk.disk_type,
-                  :hdMode     => disk.mode,
-                  :hdSize     => dsize,
-                  :hdUnit     => dunit,
-                  :add_remove => ''}
+      vmdisks << {:hdFilename  => disk.filename,
+                  :hdType      => disk.disk_type,
+                  :hdMode      => disk.mode,
+                  :hdSize      => dsize,
+                  :hdUnit      => dunit,
+                  :add_remove  => '',
+                  :cb_bootable => disk.bootable}
     end
 
     {:objectIds              => @reconfigure_items,
@@ -1556,6 +1559,7 @@ module ApplicationController::CiProcessing
                       :hdSize       => adsize.to_s,
                       :hdUnit       => adunit,
                       :cb_dependent => disk[:dependent],
+                      :cb_bootable  => disk[:bootable],
                       :add_remove   => 'add'}
         end
       end
@@ -1581,6 +1585,7 @@ module ApplicationController::CiProcessing
                       :hdSize         => dsize.to_s,
                       :hdUnit         => dunit.to_s,
                       :delete_backing => delbacking,
+                      :cb_bootable    => disk.bootable,
                       :add_remove     => removing}
         end
       end
@@ -1713,15 +1718,15 @@ module ApplicationController::CiProcessing
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => controller_name)}, :error)
       else
         items.push(params[:id])
-        @single_delete = true if method == 'destroy' && !flash_errors?
       end
     else
       items = find_checked_items
-      if items.empty?
-        add_flash(_("No providers were selected for %{task}") % {:task  => display_name}, :error)
-      else
-        process_cfgmgr(items, method) unless items.empty? && !flash_errors?
-      end
+    end
+
+    if items.empty?
+      add_flash(_("No providers were selected for %{task}") % {:task  => display_name}, :error)
+    else
+      process_cfgmgr(items, method) unless items.empty? && !flash_errors?
     end
   end
 
