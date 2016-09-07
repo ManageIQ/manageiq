@@ -1,4 +1,5 @@
-miqHttpInject(angular.module('ManageIQ.notifications')).controller('toastListController', ToastListCtrl);
+angular.module('ManageIQ.notifications')
+  .controller('toastListController', ToastListCtrl);
 
 ToastListCtrl.$inject = ['$scope', 'eventNotifications', '$timeout'];
 
@@ -31,4 +32,3 @@ function ToastListCtrl($scope, eventNotifications, $timeout) {
 
   refresh();
 }
-

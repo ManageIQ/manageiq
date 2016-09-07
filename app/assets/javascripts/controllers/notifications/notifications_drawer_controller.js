@@ -1,4 +1,4 @@
-miqHttpInject(angular.module('ManageIQ.notifications'))
+angular.module('ManageIQ.notifications')
   .controller('notificationsDrawerController', NotificationsDrawerCtrl);
 
 NotificationsDrawerCtrl.$inject = ['$scope', 'eventNotifications', '$timeout'];
@@ -132,4 +132,3 @@ function NotificationsDrawerCtrl($scope, eventNotifications, $timeout) {
 
   refresh();
 }
-
