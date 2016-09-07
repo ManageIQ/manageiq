@@ -118,7 +118,7 @@ class MiqServer < ApplicationRecord
     MiqEvent.raise_evm_event(self, "evm_server_start")
 
     msg = "Server starting in #{self.class.startup_mode} mode."
-    _log.info("#{msg}")
+    _log.info(msg)
     puts "** #{msg}"
 
     starting_server_record
@@ -265,7 +265,7 @@ class MiqServer < ApplicationRecord
     unless self.is_deleteable?
       msg = @error_message
       @error_message = nil
-      _log.error("#{msg}")
+      _log.error(msg)
       raise _(msg)
     end
   end
@@ -354,7 +354,7 @@ class MiqServer < ApplicationRecord
     # A SystemExit would be caught below, so we need to explicitly rescue/raise.
     raise
   rescue Exception => err
-    _log.error("#{err.message}")
+    _log.error(err.message)
     _log.log_backtrace(err)
 
     begin

@@ -23,9 +23,9 @@ class RssFeed < ApplicationRecord
 
     options = {
       :feed => {
-        :title       => "#{title}",
+        :title       => title.to_s,
         :link        => "#{host_url}#{link}",
-        :description => "#{description}"
+        :description => description.to_s
       },
       :item => {
         :title       => proc { |rec| RssFeed.eval_item_attr(self.options[:item_title], rec) },

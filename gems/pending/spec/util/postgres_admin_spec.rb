@@ -15,7 +15,7 @@ describe PostgresAdmin do
      %w(template_directory APPLIANCE_TEMPLATE_DIRECTORY /some/path      true),
 
     ].each do |method, var, value, pathname_required|
-      it "#{method}" do
+      it method.to_s do
         ENV[var] = value
         result = described_class.public_send(method)
         if pathname_required

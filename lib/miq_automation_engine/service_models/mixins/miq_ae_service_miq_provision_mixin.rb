@@ -57,7 +57,7 @@ module MiqAeServiceMiqProvisionMixin
   end
 
   def set_vlan(vlan)
-    set_option(:vlan, ["#{vlan}", "#{vlan}"])
+    set_option(:vlan, [vlan.to_s, vlan.to_s])
   end
 
   def get_folder_paths

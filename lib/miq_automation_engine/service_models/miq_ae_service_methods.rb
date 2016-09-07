@@ -121,7 +121,7 @@ module MiqAeMethodService
       $log.error hserr.backtrace.join("\n")
       raise
     rescue => err
-      _log.error "#{err}"
+      _log.error err.to_s
       $log.error err.backtrace.join("\n")
       raise
     end

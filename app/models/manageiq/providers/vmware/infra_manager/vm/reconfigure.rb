@@ -206,7 +206,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure
       _log.info "#{property} was set to #{value} (#{value.class})"
       obj.send("#{property}=", value)
     else
-      value = obj.send("#{property}")
+      value = obj.send(property.to_s)
       if value.nil?
         _log.info "#{property} was NOT set due to nil"
       else

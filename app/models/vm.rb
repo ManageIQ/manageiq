@@ -65,7 +65,7 @@ class Vm < VmOrTemplate
     pl = {}
     check = validate_collect_running_processes
     unless check[:message].nil?
-      _log.warn "#{check[:message]}"
+      _log.warn check[:message].to_s
       return pl
     end
 
@@ -79,7 +79,7 @@ class Vm < VmOrTemplate
           wmi = WMIHelper.connectServer(ipaddr, *cred)
           pl = MiqProcess.process_list_all(wmi) unless wmi.nil?
         rescue => wmi_err
-          _log.warn "#{wmi_err}"
+          _log.warn wmi_err.to_s
         end
         _log.info "Running processes for VM:[#{id}:#{name}]  Count:[#{pl.length}]"
       end

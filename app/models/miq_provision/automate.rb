@@ -144,7 +144,7 @@ module MiqProvision::Automate
           :deliver_on  => Time.now.utc + interval
         )
         message = "Request [#{ae_message}] has been re-queued for processing in #{interval} seconds"
-        _log.info("#{message}")
+        _log.info(message)
         update_and_notify_parent(:state => "queued", :status => "Ok", :message => message)
         return false
       end

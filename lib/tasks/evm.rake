@@ -1,4 +1,4 @@
-$:.push("#{File.dirname(__FILE__)}")
+$:.push(File.dirname(__FILE__))
 require 'evm_application'
 
 namespace :evm do

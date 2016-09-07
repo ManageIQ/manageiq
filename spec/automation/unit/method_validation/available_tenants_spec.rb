@@ -6,7 +6,7 @@ describe "Available_Tenants Method Validation" do
 
   context "workspace has no service template" do
     it "provides only default value to the tenant list" do
-      ws = MiqAeEngine.instantiate("#{@ins}", user)
+      ws = MiqAeEngine.instantiate(@ins.to_s, user)
       expect(ws.root["values"]).to eq(nil => "<default>")
     end
   end

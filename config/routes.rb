@@ -2824,7 +2824,7 @@ Vmdb::Application.routes.draw do
   controller_routes.each do |controller_name, controller_actions|
     # Default route with no action to controller's index action
     unless [:ems_cloud, :ems_infra, :ems_container, :ems_middleware].include?(controller_name)
-      match "#{controller_name}", :controller => controller_name, :action => :index, :via => :get
+      match controller_name.to_s, :controller => controller_name, :action => :index, :via => :get
     end
 
     # One-by-one get/post routes for defined controllers

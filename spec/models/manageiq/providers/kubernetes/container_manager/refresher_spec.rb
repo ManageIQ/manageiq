@@ -21,7 +21,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
 
   it "will perform a full refresh on k8s" do
     2.times do # Run twice to verify that a second run with existing data does not change anything
-      VCR.use_cassette("#{described_class.name.underscore}") do # , :record => :new_episodes) do
+      VCR.use_cassette(described_class.name.underscore) do # , :record => :new_episodes) do
         EmsRefresh.refresh(@ems)
       end
       @ems.reload

@@ -271,7 +271,7 @@ describe ExtManagementSystem do
 
     %w(total_vms_on total_vms_off total_vms_unknown total_vms_never total_vms_suspended).each do |vcol|
       it "should have virtual column #{vcol} " do
-        expect(described_class).to have_virtual_column "#{vcol}", :integer
+        expect(described_class).to have_virtual_column vcol.to_s, :integer
       end
     end
 

@@ -134,7 +134,7 @@ class VmScan < Job
             when :smartProxy, :skipped then "Request to log snapshot user event with EMS timed out."
             else "Request to create snapshot timed out"
             end
-      _log.error("#{msg}")
+      _log.error(msg)
       signal(:abort, msg, "error")
     end
   end
@@ -177,12 +177,12 @@ class VmScan < Job
       vm.scan_metadata(options[:categories], "taskid" => jobid, "host" => host, "args" => [YAML.dump(scan_args)])
     rescue Timeout::Error
       message = "timed out attempting to scan, aborting"
-      _log.error("#{message}")
+      _log.error(message)
       signal(:abort, message, "error")
       return
     rescue => message
-      _log.error("#{message}")
-      _log.error("#{message.backtrace.join("\n")}")
+      _log.error(message.to_s)
+      _log.error(message.backtrace.join("\n"))
       signal(:abort, message.message, "error")
     end
 
@@ -246,11 +246,11 @@ class VmScan < Job
             delete_snapshot(mor)
           end
         rescue => err
-          _log.error("#{err}")
+          _log.error(err.to_s)
           return
         rescue Timeout::Error
           msg = "Request to delete snapshot timed out"
-          _log.error("#{msg}")
+          _log.error(msg)
         end
 
         unless options[:snapshot] == :smartProxy
@@ -281,11 +281,11 @@ class VmScan < Job
                       )
     rescue Timeout::Error
       message = "timed out attempting to synchronize, aborting"
-      _log.error("#{message}")
+      _log.error(message)
       signal(:abort, message, "error")
       return
     rescue => message
-      _log.error("#{message}")
+      _log.error(message.to_s)
       signal(:abort, message.message, "error")
       return
     end
@@ -325,7 +325,7 @@ class VmScan < Job
           end
           unless request_docs.empty? || (request_docs.length != all_docs.length)
             message = "scan operation yielded no data. aborting"
-            _log.error("#{message}")
+            _log.error(message)
             signal(:abort, message, "error")
           else
             _log.info("sending :finish")
@@ -395,7 +395,7 @@ class VmScan < Job
                   {:table => ui_lookup(:table => "ext_management_systems")}
         end
       rescue => err
-        _log.error("#{err.message}")
+        _log.error(err.message)
         _log.debug err.backtrace.join("\n")
       end
     else

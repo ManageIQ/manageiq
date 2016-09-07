@@ -392,7 +392,7 @@ describe VmOrTemplate do
     [:template_vmware, :vm_vmware].each do |vm_or_template|
       let(:instance) { FactoryGirl.create(vm_or_template) }
 
-      it "#{vm_or_template.to_s.classify}" do
+      it vm_or_template.to_s.classify do
         expect(EmsRefresh).to receive(:queue_refresh).with([[VmOrTemplate, instance.id]])
 
         instance.class.refresh_ems(instance.id)

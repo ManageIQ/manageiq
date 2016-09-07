@@ -353,7 +353,7 @@ class VmOrTemplate < ApplicationRecord
       data  = event.attributes["full_data"]
       prevented = data.fetch_path(:policy, :prevented) if data
     end
-    prevented ? _log.info("#{event.attributes["message"]}") : send(*action)
+    prevented ? _log.info(event.attributes["message"].to_s) : send(*action)
   end
 
   def enforce_policy(event, inputs = {}, options = {})

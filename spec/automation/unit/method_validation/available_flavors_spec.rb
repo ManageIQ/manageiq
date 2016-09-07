@@ -7,7 +7,7 @@ describe "Available_Flavors Method Validation" do
 
   context "workspace has no service template" do
     it "provides only default value to the flavor list" do
-      ws = MiqAeEngine.instantiate("#{@ins}", user)
+      ws = MiqAeEngine.instantiate(@ins.to_s, user)
       expect(ws.root["values"]).to eq(nil => default_desc)
       expect(ws.root["default_value"]).to be_nil
     end

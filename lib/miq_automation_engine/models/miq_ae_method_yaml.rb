@@ -10,7 +10,7 @@ class MiqAeMethodYaml
   def define_instance_variables
     @ae_method_obj['object']['attributes'].each do |k, v|
       instance_variable_set("@#{k}", v)
-      singleton_class.class_eval { attr_accessor "#{k}" }
+      singleton_class.class_eval { attr_accessor k.to_s }
       send("#{k}=", v)
     end
   end

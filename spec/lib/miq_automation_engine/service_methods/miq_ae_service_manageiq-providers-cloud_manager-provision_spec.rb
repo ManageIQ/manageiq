@@ -35,7 +35,7 @@ module MiqAeServiceManageIQ_Providers_CloudManager_ProvisionSpec
           end
 
           %w(template clone_to_vm).each do |provision_type|
-            it "#{provision_type}" do
+            it provision_type.to_s do
               @miq_provision.update_attributes(:provision_type => provision_type)
               expect(ae_svc_prov.target_type).to eq('vm')
             end

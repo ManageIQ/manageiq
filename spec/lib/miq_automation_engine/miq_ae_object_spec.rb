@@ -63,7 +63,7 @@ describe MiqAeEngine::MiqAeObject do
   end
 
   it "#process_args_as_attributes with a hash with an object reference" do
-    result = @miq_obj.process_args_as_attributes("VmOrTemplate::vm" => "#{@vm.id}")
+    result = @miq_obj.process_args_as_attributes("VmOrTemplate::vm" => @vm.id.to_s)
     expect(result["vm_id"]).to eq(@vm.id.to_s)
     expect(result["vm"]).to be_kind_of(MiqAeMethodService::MiqAeServiceVmOrTemplate)
   end

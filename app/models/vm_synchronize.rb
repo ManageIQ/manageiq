@@ -23,11 +23,11 @@ class VmSynchronize < Job
       vm.sync_metadata(options[:categories], "taskid" => jobid, "host" => host)
     rescue Timeout::Error
       message = "timed out attempting to synchronize, aborting"
-      _log.error("#{message}")
+      _log.error(message)
       signal(:abort, message, "error")
       return
     rescue => message
-      _log.error("#{message}")
+      _log.error(message.to_s)
       signal(:abort, message.message, "error")
     end
 
@@ -59,7 +59,7 @@ class VmSynchronize < Job
           end
           unless request_docs.empty? || (request_docs.length != all_docs.length)
             message = "synchronize operation yielded no data. aborting"
-            _log.error("#{message}")
+            _log.error(message)
             signal(:abort, message, "error")
           else
             _log.info("sending :finish")

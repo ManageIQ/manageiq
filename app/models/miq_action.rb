@@ -257,7 +257,7 @@ class MiqAction < ApplicationRecord
         # ${Object.method}
         if what == "object"
           if method == "type"
-            subst = "#{rec.class}"
+            subst = rec.class.to_s
           elsif method == "ems" && rec.respond_to?(:ext_management_system)
             ems = rec.ext_management_system
             subst = "vCenter #{ems.hostname}/#{ems.ipaddress}" unless ems.nil?

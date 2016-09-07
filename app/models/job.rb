@@ -130,7 +130,7 @@ class Job < ApplicationRecord
 
   def process_error(*args)
     message, status = args
-    _log.error "#{message}"
+    _log.error message.to_s
     set_status(message, status, 1)
   end
 
@@ -183,7 +183,7 @@ class Job < ApplicationRecord
           job.timeout!
         end
     rescue Exception
-      _log.error("#{$!}")
+      _log.error($!.to_s)
     end
   end
 

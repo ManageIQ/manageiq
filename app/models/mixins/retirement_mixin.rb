@@ -95,7 +95,7 @@ module RetirementMixin
 
   def raise_retire_audit_event(message)
     event_name = "#{retirement_event_prefix}_scheduled_to_retire"
-    _log.info("#{message}")
+    _log.info(message.to_s)
     raise_audit_event(event_name, message)
   end
 

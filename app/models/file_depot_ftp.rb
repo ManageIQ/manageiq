@@ -20,7 +20,7 @@ class FileDepotFtp < FileDepot
         upload(file.local_file, destination_file)
       rescue => err
         msg = "Error '#{err.message.chomp}', writing to FTP: [#{uri}], Username: [#{authentication_userid}]"
-        _log.error("#{msg}")
+        _log.error(msg)
         raise _("Error '%{message}', writing to FTP: [%{uri}], Username: [%{id}]") % {:message => err.message.chomp,
                                                                                       :uri     => uri,
                                                                                       :id      => authentication_userid}

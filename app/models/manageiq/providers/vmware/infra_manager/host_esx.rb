@@ -118,14 +118,14 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
     rescue SocketError, Errno::EHOSTUNREACH, Errno::ENETUNREACH => err
       raise MiqException::MiqUnreachableError, err.message
     rescue Handsoap::Fault => err
-      _log.warn("#{err.inspect}")
+      _log.warn(err.inspect)
       if err.respond_to?(:reason)
         raise MiqException::MiqInvalidCredentialsError, err.reason if err.reason =~ /Authorize Exception|incorrect user name or password/
         raise err.reason
       end
       raise err.message
     rescue Exception => err
-      _log.warn("#{err.inspect}")
+      _log.warn(err.inspect)
       raise "Unexpected response returned from system, see log for details"
     else
       true

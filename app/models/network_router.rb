@@ -29,11 +29,11 @@ class NetworkRouter < ApplicationRecord
 
   # Define all getters and setters for extra_attributes related virtual columns
   %i(external_gateway_info distributed routes high_availability).each do |action|
-    define_method("#{action.to_s}=") do |value|
+    define_method("#{action}=") do |value|
       extra_attributes_save(action, value)
     end
 
-    define_method("#{action.to_s}") do
+    define_method(action) do
       extra_attributes_load(action)
     end
   end

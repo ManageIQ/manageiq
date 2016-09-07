@@ -235,7 +235,7 @@ class NetappRemoteService < StorageManager
         agent.connect
         agent.update_metrics(statistic_time)
       rescue Exception => err
-        _log.warn "#{err}"
+        _log.warn err.to_s
         $log.warn err.backtrace.join("\n")
         next
       ensure
@@ -257,7 +257,7 @@ class NetappRemoteService < StorageManager
       begin
         agent.rollup_hourly_metrics(rollup_time)
       rescue Exception => err
-        _log.warn "#{err}"
+        _log.warn err.to_s
         $log.warn err.backtrace.join("\n")
         next
       ensure
@@ -295,7 +295,7 @@ class NetappRemoteService < StorageManager
       begin
         agent.rollup_daily_metrics(rollup_time, time_profile)
       rescue Exception => err
-        _log.warn "#{err}"
+        _log.warn err.to_s
         $log.warn err.backtrace.join("\n")
         next
       ensure
@@ -531,10 +531,10 @@ class NetappRemoteService < StorageManager
       volume_list_info
       disconnect
     rescue NetAppManageability::Error, NameError, Errno::ETIMEDOUT, Errno::ENETUNREACH
-      _log.warn("#{$!.inspect}")
+      _log.warn($!.inspect)
       raise $!.message
     rescue Exception
-      _log.warn("#{$!.inspect}")
+      _log.warn($!.inspect)
       raise _("Unexpected response returned from %{table}, see log for details") %
               {:table => ui_lookup(:table => "storage_managers")}
     else

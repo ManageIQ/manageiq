@@ -21,7 +21,7 @@ shared_examples "custom_report_with_custom_attributes" do |base_report, custom_a
       :rpt_type  => "Custom",
       :db        => base_report == "Host" ? "Host" : "ManageIQ::Providers::InfraManager::Vm",
       :cols      => %w(name),
-      :include   => {"#{custom_attributes_field}" => {"columns" => %w(name value)}},
+      :include   => {custom_attributes_field.to_s => {"columns" => %w(name value)}},
       :col_order => %w(miq_custom_attributes.name miq_custom_attributes.value name),
       :headers   => ["EVM Custom Attribute Name", "EVM Custom Attribute Value", "Name"],
       :order     => "Ascending",

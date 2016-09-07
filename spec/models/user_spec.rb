@@ -323,7 +323,7 @@ describe User do
 
     %w(allocated_memory allocated_vcpu allocated_storage provisioned_storage).each do |vcol|
       it "should have virtual column #{vcol} " do
-        expect(described_class).to have_virtual_column "#{vcol}", :integer
+        expect(described_class).to have_virtual_column vcol.to_s, :integer
       end
     end
   end

@@ -119,7 +119,7 @@ module MiqAeEngine
 
       if ws.nil? || ws.root.nil?
         message = "Error delivering #{options[:attrs].inspect} for object [#{object_name}] with state [#{state}] to Automate: Empty Workspace"
-        _log.error("#{message}")
+        _log.error(message)
         return nil
       end
 
@@ -138,12 +138,12 @@ module MiqAeEngine
           options[:ae_state_previous] = YAML.dump(ws.current_state_info) unless ws.current_state_info.empty?
 
           message = "Requeuing #{options.inspect} for object [#{object_name}] with state [#{options[:state]}] to Automate for delivery in [#{ae_retry_interval}] seconds"
-          _log.info("#{message}")
+          _log.info(message)
           deliver_queue(options, :deliver_on => deliver_on)
         else
           if ae_result.casecmp('error').zero?
             message = "Error delivering #{options[:attrs].inspect} for object [#{object_name}] with state [#{state}] to Automate: #{ws.root['ae_message']}"
-            _log.error("#{message}")
+            _log.error(message)
           end
           MiqAeEvent.process_result(ae_result, automate_attrs) if options[:instance_name].to_s.casecmp('EVENT').zero?
         end
@@ -152,7 +152,7 @@ module MiqAeEngine
       return ws
     rescue MiqAeException::Error => err
       message = "Error delivering #{automate_attrs.inspect} for object [#{object_name}] with state [#{state}] to Automate: #{err.message}"
-      _log.error("#{message}")
+      _log.error(message)
     ensure
       vmdb_object.after_ae_delivery(ae_result.to_s.downcase) if vmdb_object.respond_to?(:after_ae_delivery)
     end
@@ -212,7 +212,7 @@ module MiqAeEngine
 
   def self.create_automation_attribute_key(object, attr_name = nil)
     klass_name  = create_automation_attribute_class_name(object)
-    return "#{klass_name}" if automation_attribute_is_array?(klass_name)
+    return klass_name.to_s if automation_attribute_is_array?(klass_name)
     attr_name ||= create_automation_attribute_name(object)
     "#{klass_name}::#{attr_name}"
   end
