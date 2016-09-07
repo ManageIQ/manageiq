@@ -5,9 +5,10 @@ module ManageIQ::Providers
     def initialize(target)
       @target = target
       @ems = @target.ext_management_system
-      @gauges = @ems.metrics_client.gauges
-      @counters = @ems.metrics_client.counters
-      @avail = @ems.metrics_client.avail
+      @metrics_client = @ems.metrics_client
+      @gauges = @metrics_client.gauges
+      @counters = @metrics_client.counters
+      @avail = @metrics_client.avail
       @included_children = @target.included_children
       @supported_metrics = @target.supported_metrics
     end
@@ -36,29 +37,48 @@ module ManageIQ::Providers
     end
 
     def collect_live_metrics(metrics, start_time, end_time, interval)
-      processed = Hash.new { |h, k| h[k] = {} }
+      gauge_ids = []
+      counter_ids = []
+      avail_ids = []
+      metrics_ids_map = {}
       metrics.each do |metric|
-        values = collect_live_metric(metric, start_time, end_time, interval)
-        processed.merge!(values) { |_k, old, new| old.merge(new) }
+        metric_id = metric[:id]
+        case metric[:type]
+        when "GAUGE"        then gauge_ids.push(metric_id)
+        when "COUNTER"      then counter_ids.push(metric_id)
+        when "AVAILABILITY" then avail_ids.push(metric_id)
+        end
+        metrics_ids_map[metric_id] = metric[:name]
       end
-      processed
-    end
-
-    def collect_live_metric(metric, start_time, end_time, interval)
-      validate_metric(metric)
       starts = (start_time - interval).to_i.in_milliseconds
       ends = end_time.to_i.in_milliseconds + 1
       bucket_duration = "#{interval}s"
-      metrics = fetch_metrics(metric[:id], metric[:type], starts, ends, bucket_duration)
-      process_data(metric, metrics)
+      raw_stats = @metrics_client.query_stats(:gauge_ids       => gauge_ids,
+                                              :counter_ids     => counter_ids,
+                                              :avail_ids       => avail_ids,
+                                              :rates           => true,
+                                              :starts          => starts,
+                                              :ends            => ends,
+                                              :bucket_duration => bucket_duration)
+      process_stats(metrics_ids_map, raw_stats)
     end
 
-    def collect_stats_metric(metric, start_time, end_time, interval)
-      validate_metric(metric)
-      starts = start_time.to_i.in_milliseconds
-      ends = end_time.to_i.in_milliseconds
-      bucket_duration = "#{interval}s"
-      fetch_raw_metrics(metric[:id], metric[:type], starts, ends, bucket_duration)
+    def process_stats(metrics_ids_map, raw_stats)
+      processed = Hash.new { |h, k| h[k] = {} }
+      %w(availability gauge counter_rate).each do |type|
+        next unless raw_stats.key?(type)
+        raw_data = raw_stats[type]
+        raw_data.each do |metric_id, buckets|
+          metric_name = metrics_ids_map[metric_id]
+          norm_data = sort_and_normalize(buckets)
+          norm_data.each do |bucket|
+            timestamp = Time.at(bucket['start'] / 1.in_milliseconds).utc.to_i
+            value = type == 'availability' ? bucket['uptimeRatio'] : bucket['avg']
+            processed.store_path(timestamp, metric_name, value)
+          end
+        end
+      end
+      processed
     end
 
     def first_and_last_capture_for_metrics(metrics)
@@ -85,27 +105,8 @@ module ManageIQ::Providers
     end
 
     def min_max_timestamps(client, metric_id)
-      min = client.get_data(metric_id, :starts => 0, :limit => 1, :order => 'ASC')
-      max = client.get_data(metric_id, :starts => 0, :limit => 1, :order => 'DESC')
-      [min[0]['timestamp'], max[0]['timestamp']]
-    end
-
-    def fetch_metrics(metric_id, metric_type, starts, ends, bucket_duration)
-      sort_and_normalize(fetch_raw_metrics(metric_id, metric_type, starts, ends, bucket_duration))
-    end
-
-    def fetch_raw_metrics(metric_id, metric_type, starts, ends, bucket_duration)
-      data = case metric_type
-             when "GAUGE"
-               @gauges.get_data(metric_id, :starts => starts, :ends => ends, :bucketDuration => bucket_duration)
-             when "COUNTER"
-               @counters.get_rate(metric_id, :starts => starts, :ends => ends, :bucket_duration => bucket_duration)
-             when "AVAILABILITY"
-               @avail.get_data(metric_id, :starts => starts, :ends => ends, :bucketDuration => bucket_duration)
-             else
-               raise MetricValidationError, "Validation error: unknown type #{metric_type}"
-             end
-      data
+      metric_def = client.get(metric_id)
+      [metric_def.json['minTimestamp'], metric_def.json['maxTimestamp']]
     end
 
     def sort_and_normalize(data)
@@ -113,14 +114,6 @@ module ManageIQ::Providers
       # as it's still in progress.
       norm_data = (data.sort_by { |x| x['start'] }).slice(0..-2)
       norm_data.reject { |x| x.values.include?('NaN') }
-    end
-
-    def process_data(metric, data)
-      data.each_with_object({}) do |x, processed|
-        timestamp = Time.at(x['start'] / 1.in_milliseconds).utc.to_i
-        value = metric[:type] == 'AVAILABILITY' ? x['uptimeRatio'] : x['avg']
-        processed.store_path(timestamp, metric[:name], value)
-      end
     end
 
     private
