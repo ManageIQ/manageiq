@@ -72,7 +72,7 @@ module Api
 
       def new_custom_attribute(data)
         name = data["name"].to_s.strip
-        raise Api::BaseController::BadRequestError, "Must specify a name for a custom attribute to be added" if name.blank?
+        raise BadRequestError, "Must specify a name for a custom attribute to be added" if name.blank?
         CustomAttribute.new(:name    => name,
                             :value   => data["value"],
                             :source  => data["source"].blank? ? "EVM" : data["source"],

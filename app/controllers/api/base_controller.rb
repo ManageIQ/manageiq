@@ -8,12 +8,6 @@ module Api
     skip_before_action :get_global_session_data
     skip_after_action :set_global_session_data
 
-    class AuthenticationError < StandardError; end
-    class Forbidden < StandardError; end
-    class BadRequestError < StandardError; end
-    class NotFound < StandardError; end
-    class UnsupportedMediaTypeError < StandardError; end
-
     def handle_options_request
       head(:ok)
     end
@@ -27,18 +21,18 @@ module Api
 
     # Order *Must* be from most generic to most specific
     ERROR_MAPPING = {
-      StandardError                             => :internal_server_error,
-      NoMethodError                             => :internal_server_error,
-      ActiveRecord::RecordNotFound              => :not_found,
-      ActiveRecord::StatementInvalid            => :bad_request,
-      JSON::ParserError                         => :bad_request,
-      MultiJson::LoadError                      => :bad_request,
-      MiqException::MiqEVMLoginError            => :unauthorized,
-      BaseController::AuthenticationError       => :unauthorized,
-      BaseController::Forbidden                 => :forbidden,
-      BaseController::BadRequestError           => :bad_request,
-      BaseController::NotFound                  => :not_found,
-      BaseController::UnsupportedMediaTypeError => :unsupported_media_type
+      StandardError                  => :internal_server_error,
+      NoMethodError                  => :internal_server_error,
+      ActiveRecord::RecordNotFound   => :not_found,
+      ActiveRecord::StatementInvalid => :bad_request,
+      JSON::ParserError              => :bad_request,
+      MultiJson::LoadError           => :bad_request,
+      MiqException::MiqEVMLoginError => :unauthorized,
+      AuthenticationError            => :unauthorized,
+      Forbidden                      => :forbidden,
+      BadRequestError                => :bad_request,
+      NotFound                       => :not_found,
+      UnsupportedMediaTypeError      => :unsupported_media_type
     }
 
     #
