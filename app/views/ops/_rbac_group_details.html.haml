@@ -37,7 +37,7 @@
           - if @group.miq_user_role
             - if role_allows?(:feature => "rbac_role_show")
               - params = {:class   => "pointer",
-                          :onclick => "miqDynatreeActivateNode('rbac_tree', 'ur-#{to_cid(@group.miq_user_role.id)}');",
+                          :onclick => "miqTreeActivateNode('rbac_tree', 'ur-#{to_cid(@group.miq_user_role.id)}');",
                           :title   => _("View this Role")}
             - else
               - params = {}
@@ -60,7 +60,7 @@
             - params = {:class => "product product-#{tenant.divisible ? "tenant" : "project"}"}
             - if role_allows?(:feature => "rbac_tenant_show")
               - params[:class] = "#{params[:class]} pointer"
-              - params.merge!({:onclick => "miqDynatreeActivateNode('rbac_tree', 'tn-#{to_cid(tenant.id)}');",
+              - params.merge!({:onclick => "miqTreeActivateNode('rbac_tree', 'tn-#{to_cid(tenant.id)}');",
                                :title   => tenant.divisible ? _("View this Tenant") : _("View this Project")})
             %i{params}
             = h(tenant.name)
@@ -79,7 +79,7 @@
           - @group.users.sort_by { |a| a.name.downcase }.each do |u|
             - if role_allows?(:feature => "rbac_user_show")
               - params = {:class   => "pointer",
-                          :onclick => "miqDynatreeActivateNode('rbac_tree', 'u-#{to_cid(u.id)}');",
+                          :onclick => "miqTreeActivateNode('rbac_tree', 'u-#{to_cid(u.id)}');",
                           :title   => _("View this User")}
             - else
               - params = {}

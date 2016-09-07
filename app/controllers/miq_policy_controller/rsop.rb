@@ -140,12 +140,12 @@ module MiqPolicyController::Rsop
       page << javascript_prologue
       if params[:action] == "rsop_toggle"
         if @sb[:rsop][:open] == true
-          page << "miqDynatreeToggleExpand('rsop_tree', true);"
+          page << "miqTreeToggleExpand('rsop_tree', true);"
         else
-          page << "miqDynatreeToggleExpand('rsop_tree', false)"
-          page << "miqDynatreeActivateNodeSilently('rsop_tree', 'rsoproot');"
+          page << "miqTreeToggleExpand('rsop_tree', false)"
+          page << "miqTreeActivateNodeSilently('rsop_tree', 'rsoproot');"
           @sb[:rsop][:results].each do |r|
-            page << "miqDynatreeExpandNode('rsop_tree', 'rsoproot-v_#{r[:id]}');"
+            page << "miqTreeExpandNode('rsop_tree', 'rsoproot-v_#{r[:id]}');"
           end
         end
       else

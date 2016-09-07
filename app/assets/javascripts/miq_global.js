@@ -10,10 +10,6 @@ if (! window.ManageIQ) {
     browser: null, // browser name
     controller: null, // stored controller, used to build URL
     changes: null, // indicate if there are unsaved changes
-    dynatree: {
-      clickUrl: null,
-      checkUrl: null,
-    },
     editor: null, // instance of CodeMirror editor
     timelineFilter: null, //
     toolbars: null, // toolbars
@@ -70,6 +66,8 @@ if (! window.ManageIQ) {
     },
     tree: {
       expandAll: true,
+      clickUrl: null,
+      checkUrl: null
     },
     gridChecks: [], // list of checked checkboxes in current list grid
     observe: { // keeping track of data-miq_observe requests

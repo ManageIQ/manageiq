@@ -25,7 +25,7 @@
         %table.table.table-striped.table-bordered.table-hover
           %tbody
             - @sb[:menu].invert.each do |pp|
-              %tr{:title => _("View this Profile"), :onclick => "miqDynatreeActivateNode('#{@sb[:active_tree]}', 'g-#{to_cid(pp[1])}');"}
+              %tr{:title => _("View this Profile"), :onclick => "miqTreeActivateNode('#{@sb[:active_tree]}', 'g-#{to_cid(pp[1])}');"}
                 %td.narrow
                   %ul.icons.list-unstyled
                     %li
@@ -38,4 +38,4 @@
 -# clear selection in menu tree in right cell
 - if @sb[:trees][:roles_tree][:active_node] != "root" && params[:action] != "menu_editor"
   :javascript
-    miqDynatreeActivateNodeSilently("menu_roles_tree", "b__#{_('Report Menus for')} #{session[:role_choice]}")
+    miqTreeActivateNodeSilently("menu_roles_tree", "b__#{_('Report Menus for')} #{session[:role_choice]}")

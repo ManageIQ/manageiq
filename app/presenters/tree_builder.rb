@@ -130,7 +130,7 @@ class TreeBuilder
     end
   end
 
-  # Get the children of a dynatree node that is being expanded (autoloaded)
+  # Get the children of a tree node that is being expanded (autoloaded)
   def x_get_child_nodes(id)
     parents = [] # FIXME: parent ids should be provided on autoload as well
 

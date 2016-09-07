@@ -5,7 +5,7 @@
     = render :partial => 'layouts/info_msg', :locals => {:message => _("No Policy Profiles available.")}
   - else
     :javascript
-      miqDynatreeResetState('#{j_str @protect_tree.name}');
+      miqTreeResetState('#{j_str @protect_tree.name}');
     = render(:partial => 'shared/tree', :locals => {:tree => @protect_tree, :name => @protect_tree.name})
   %br
   - if @politems.length > 1

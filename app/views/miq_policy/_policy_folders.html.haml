@@ -24,7 +24,7 @@
           - model_name = f.split[0..-2].join.camelize(:lower)
           - type = f.split[-1].downcase
           - click = "#{type}_xx-#{type}-#{model_name}"
-        %tr{:onclick => "miqDynatreeActivateNode('policy_tree', 'xx-#{click}');", :title => _("Open Folder")}
+        %tr{:onclick => "miqTreeActivateNode('policy_tree', 'xx-#{click}');", :title => _("Open Folder")}
           %td.narrow
             %img{:src => image_path("100/#{model_name.underscore}.png")}
           %td

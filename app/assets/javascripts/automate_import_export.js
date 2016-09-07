@@ -9,7 +9,7 @@ var Automate = {
     $.getJSON("automate_json?import_file_upload_id=" + importFileUploadId)
       .done(function(rows_json) {
         Automate.addDomainOptions(rows_json);
-        Automate.setupInitialDynatree(rows_json);
+        Automate.setupInitialTree(rows_json);
 
         $('select.importing-domains').change(function() {
           Automate.importingDomainsChangeHandler(rows_json);
@@ -86,7 +86,7 @@ var Automate = {
     $('select.importing-domains').selectpicker('refresh');
   },
 
-  setupInitialDynatree: function(domains) {
+  setupInitialTree: function(domains) {
     $('.domain-tree').treeview({
       data:              domains[0].nodes,
       levels:            1,

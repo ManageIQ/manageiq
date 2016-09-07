@@ -78,7 +78,7 @@ module AutomateTreeHelper
         unless @edit[:new][type].nil?
           @edit[:new][:selected] = @edit[:new][type]
           if x_node(:automate_tree)
-            page << "miqDynatreeActivateNodeSilently('automate_tree', '#{@edit[:new][:selected]}');"
+            page << "miqTreeActivateNodeSilently('automate_tree', '#{@edit[:new][:selected]}');"
           end
         end
       end

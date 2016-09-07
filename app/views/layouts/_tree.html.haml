@@ -44,7 +44,7 @@
              :children           => Hash.new(@add_nodes).fetch(x_active_tree, {}).fetch(:children, nil)}
 
 :javascript
-  miqInitDynatree(#{options.to_json.html_safe}, #{bs_tree.html_safe})
+  miqInitTree(#{options.to_json.html_safe}, #{bs_tree.html_safe})
 
 - if session[:group_changed]
   - session[:group_changed] = false

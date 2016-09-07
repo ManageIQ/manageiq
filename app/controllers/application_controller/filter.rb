@@ -969,7 +969,7 @@ module ApplicationController::Filter
 
     render :update do |page|
       page << javascript_prologue
-      page << "miqDynatreeActivateNodeSilently('#{x_active_tree}', '#{x_node}');" if @edit[:in_explorer]
+      page << "miqTreeActivateNodeSilently('#{x_active_tree}', '#{x_node}');" if @edit[:in_explorer]
       page << "$('#quicksearchbox').modal('hide');"
       page << "miqSparkle(false);"
     end

@@ -152,7 +152,7 @@ class MiqAeCustomizationController < ApplicationController
       render :update do |page|
         page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        page << "miqDynatreeActivateNodeSilently('#{x_active_tree}', '#{x_node}');"
+        page << "miqTreeActivateNodeSilently('#{x_active_tree}', '#{x_node}');"
         page << "miqSparkle(false);"
       end
     end
