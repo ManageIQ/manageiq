@@ -250,6 +250,7 @@ class MiqExpression
     'VmOrTemplate'                                => 'vm',
     'ManageIQ::Providers::CloudManager::Vm'       => 'vm',
     'ManageIQ::Providers::InfraManager::Vm'       => 'vm',
+    'ContainerProject'                            => 'container_project'
   }
   EXCLUDE_FROM_RELATS = {
     "ManageIQ::Providers::CloudManager" => ["hosts", "ems_clusters", "resource_pools"]
@@ -1212,8 +1213,10 @@ class MiqExpression
       @reporting_available_fields[model.to_s] ||= {}
       @reporting_available_fields[model.to_s][interval.to_s] ||= MiqExpression.model_details(model, :include_model => false, :include_tags => true, :interval => interval)
     elsif Chargeback.db_is_chargeback?(model)
+      cb_model = Chargeback.report_cb_model(model)
       @reporting_available_fields[model.to_s] ||=
-        MiqExpression.model_details(model, :include_model => false, :include_tags => true).select { |c| c.last.ends_with?(*ReportController::Reports::Editor::CHARGEBACK_ALLOWED_FIELD_SUFFIXES) }
+        MiqExpression.model_details(model, :include_model => false, :include_tags => true).select { |c| c.last.ends_with?(*ReportController::Reports::Editor::CHARGEBACK_ALLOWED_FIELD_SUFFIXES) } +
+        MiqExpression.tag_details(cb_model, model, {})
     else
       @reporting_available_fields[model.to_s] ||= MiqExpression.model_details(model, :include_model => false, :include_tags => true)
     end
