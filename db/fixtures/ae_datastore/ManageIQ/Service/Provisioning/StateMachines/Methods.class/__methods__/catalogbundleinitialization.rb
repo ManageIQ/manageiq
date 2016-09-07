@@ -7,7 +7,7 @@
 # Important - The dialog_parser automate method has to run prior to this in order to populate the dialog information.
 #
 def log_and_update_message(level, msg, update_message = false)
-  $evm.log(level, "#{msg}")
+  $evm.log(level, msg.to_s)
   @task.message = msg if @task && (update_message || level == 'error')
 end
 
@@ -23,12 +23,12 @@ def create_tags(category, single_value, tag)
     log_and_update_message(:info, "Category #{category_name} doesn't exist, creating category")
     $evm.execute('category_create', :name         => category_name,
                                     :single_value => single_value,
-                                    :description  => "#{category}")
+                                    :description  => category.to_s)
   end
   # if the tag exists else create it
   unless $evm.execute('tag_exists?', category_name, tag_name)
     log_and_update_message(:info, "Adding new tag #{tag_name} in Category #{category_name}")
-    $evm.execute('tag_create', category_name, :name => tag_name, :description => "#{tag}")
+    $evm.execute('tag_create', category_name, :name => tag_name, :description => tag.to_s)
   end
   log_and_update_message(:info, "Processing create_tags...Complete", true)
 end
@@ -104,6 +104,6 @@ begin
 
 rescue => err
   log_and_update_message(:error, "[#{err}]\n#{err.backtrace.join("\n")}")
-  @task.finished("#{err}") if @task
+  @task.finished(err.to_s) if @task
   exit MIQ_ABORT
 end

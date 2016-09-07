@@ -23,7 +23,7 @@ def emailresults(vmname, current_host, target_host)
   body += "<br><br>"
   body += "Thank You,"
   body += "<br><br>"
-  body += "#{signature}"
+  body += signature.to_s
   body += "<br>"
 
   $evm.log("info", "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")

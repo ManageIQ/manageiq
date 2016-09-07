@@ -48,7 +48,7 @@ if vm_name.blank? || vm_name == 'changeme'
   derived_name = "#{vm_name}$n{3}"
 else
   if number_of_vms_being_provisioned == 1
-    derived_name = "#{vm_name}"
+    derived_name = vm_name.to_s
   else
     derived_name = "#{vm_name}$n{3}"
   end

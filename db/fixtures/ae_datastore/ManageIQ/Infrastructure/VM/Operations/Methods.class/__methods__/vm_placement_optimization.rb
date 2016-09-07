@@ -32,7 +32,7 @@ def emailresults(vmname, target_host, vm_host, vmotion, event_type)
   body += "<br><br>"
   body += "Thank You,"
   body += "<br><br>"
-  body += "#{signature}"
+  body += signature.to_s
   body += "<br>"
 
   $evm.log("info", "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
