@@ -3,7 +3,7 @@ raise "Ruby versions less than 2.2.2 are unsupported!" if RUBY_VERSION < "2.2.2"
 # VMDB specific gems
 #
 
-gem "rails",                           "~>5.0.0"
+gem "rails",                           "~>5.0.0", ">= 5.0.0.1"
 gem "rails-controller-testing",        :require => false
 gem "activerecord-session_store",      "~>1.0.0"
 gem "websocket-driver",                "~>0.6.3"
