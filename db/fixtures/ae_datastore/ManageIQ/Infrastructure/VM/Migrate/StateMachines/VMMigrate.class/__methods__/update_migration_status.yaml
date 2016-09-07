@@ -14,7 +14,7 @@ object:
       aetype: 
       name: status
       display_name: 
-      datatype: 
+      datatype: string
       priority: 1
       owner: 
       default_value: 

@@ -14,7 +14,7 @@ object:
       aetype: 
       name: target
       display_name: 
-      datatype: 
+      datatype: string
       priority: 1
       owner: 
       default_value: 
@@ -34,7 +34,7 @@ object:
       aetype: 
       name: param
       display_name: 
-      datatype: 
+      datatype: string
       priority: 2
       owner: 
       default_value: 
