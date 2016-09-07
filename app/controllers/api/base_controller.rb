@@ -5,6 +5,23 @@ module Api
   Initializer.new.go
 
   class BaseController < ApplicationController
+    #
+    # Support for REST API
+    #
+    include_concern 'Parameters'
+    include_concern 'Parser'
+    include_concern 'Manager'
+    include_concern 'Action'
+    include_concern 'Logger'
+    include_concern 'ErrorHandler'
+    include_concern 'Normalizer'
+    include_concern 'Renderer'
+    include_concern 'Results'
+    include_concern 'Generic'
+    include_concern 'Authentication'
+    include CompressedIds
+    extend ErrorHandler::ClassMethods
+
     skip_before_action :get_global_session_data
     skip_after_action :set_global_session_data
 
@@ -20,24 +37,8 @@ module Api
     end
 
     #
-    # Support for REST API
-    #
-    include_concern 'Parameters'
-    include_concern 'Parser'
-    include_concern 'Manager'
-    include_concern 'Action'
-    include_concern 'Logger'
-    include_concern 'ErrorHandler'
-    include_concern 'Normalizer'
-    include_concern 'Renderer'
-    include_concern 'Results'
-    include_concern 'Generic'
-    include_concern 'Authentication'
-
-    #
     # Api Controller Hooks
     #
-    extend ErrorHandler::ClassMethods
     respond_to :json
     rescue_from_api_errors
     prepend_before_action :require_api_user_or_token, :except => [:handle_options_request]
