@@ -19,22 +19,6 @@ module Api
       headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, PATCH, OPTIONS'
     end
 
-    # Order *Must* be from most generic to most specific
-    ERROR_MAPPING = {
-      StandardError                  => :internal_server_error,
-      NoMethodError                  => :internal_server_error,
-      ActiveRecord::RecordNotFound   => :not_found,
-      ActiveRecord::StatementInvalid => :bad_request,
-      JSON::ParserError              => :bad_request,
-      MultiJson::LoadError           => :bad_request,
-      MiqException::MiqEVMLoginError => :unauthorized,
-      AuthenticationError            => :unauthorized,
-      Forbidden                      => :forbidden,
-      BadRequestError                => :bad_request,
-      NotFound                       => :not_found,
-      UnsupportedMediaTypeError      => :unsupported_media_type
-    }
-
     #
     # Support for REST API
     #
