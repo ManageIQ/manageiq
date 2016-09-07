@@ -94,8 +94,12 @@ module ApplianceConsole
       ask_for_integer(prompt, (0..23))
     end
 
-    def ask_for_day_number(prompt)
+    def ask_for_week_day_number(prompt)
       ask_for_integer(prompt, (0..6))
+    end
+
+    def ask_for_month_day_number(prompt)
+      ask_for_integer(prompt, (1..31))
     end
 
     def ask_for_many(prompt, collective = nil, default = nil, max_length = 255, max_count = 6)

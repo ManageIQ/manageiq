@@ -508,23 +508,39 @@ describe ApplianceConsole::Prompts do
     end
   end
 
-  describe "#ask_for_day_number" do
+  describe "#ask_for_week_day_number" do
     it "supports 0 as Sunday" do
       say "0"
-      expect(subject.ask_for_day_number("prompt")).to eq(0)
+      expect(subject.ask_for_week_day_number("prompt")).to eq(0)
     end
 
     it "should only accept an integer" do
       error = "Please provide an integer"
       say %w(no words 2)
-      expect(subject.ask_for_day_number("prompt")).to eq(2)
+      expect(subject.ask_for_week_day_number("prompt")).to eq(2)
       expect_heard ["Enter the prompt: ", error, prompt + error, prompt]
     end
 
     it "should ensure valid response" do
       error = "Your answer isn't within the expected range (included in 0..6)."
       say %w(99 9 2)
-      expect(subject.ask_for_day_number("prompt")).to eq(2)
+      expect(subject.ask_for_week_day_number("prompt")).to eq(2)
+      expect_heard ["Enter the prompt: ", error, prompt + error, prompt]
+    end
+  end
+
+  describe "#ask_for_month_day_number" do
+    it "should only accept an integer" do
+      error = "Please provide an integer"
+      say %w(no words 2)
+      expect(subject.ask_for_month_day_number("prompt")).to eq(2)
+      expect_heard ["Enter the prompt: ", error, prompt + error, prompt]
+    end
+
+    it "should ensure valid response" do
+      error = "Your answer isn't within the expected range (included in 1..31)."
+      say %w(0 32 30)
+      expect(subject.ask_for_month_day_number("prompt")).to eq(30)
       expect_heard ["Enter the prompt: ", error, prompt + error, prompt]
     end
   end
