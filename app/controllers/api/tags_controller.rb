@@ -10,7 +10,7 @@ module Api
       end
       begin
         entry = category.add_entry(data)
-        raise BadRequestError, "#{entry.errors.full_messages.join(', ')}" unless entry.valid?
+        raise BadRequestError, entry.errors.full_messages.join(', ') unless entry.valid?
         entry.tag
       rescue => err
         raise BadRequestError, "Could not create a new tag - #{err}"

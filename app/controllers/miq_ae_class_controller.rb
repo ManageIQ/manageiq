@@ -444,8 +444,8 @@ class MiqAeClassController < ApplicationController
       end
       srow = root.add_element("row", "id" => "#{cls}-#{to_cid(kids.id)}", "style" => "border-bottom: 1px solid #CCCCCC;color:black; text-align: center")
       srow.add_element("cell").text = "0" # Checkbox column unchecked
-      srow.add_element("cell", "image" => "blank.png", "title" => "#{cls}", "style" => "border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;").text = REXML::CData.new("<ul class='icons list-unstyled'><li><span class='#{glyphicon}' alt='#{cls}' title='#{cls}'></span></li></ul>")
-      srow.add_element("cell", "image" => "blank.png", "title" => "#{rec_name}", "style" => "border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;").text = rec_name
+      srow.add_element("cell", "image" => "blank.png", "title" => cls.to_s, "style" => "border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;").text = REXML::CData.new("<ul class='icons list-unstyled'><li><span class='#{glyphicon}' alt='#{cls}' title='#{cls}'></span></li></ul>")
+      srow.add_element("cell", "image" => "blank.png", "title" => rec_name.to_s, "style" => "border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;").text = rec_name
     end
     xml.to_s
   end
@@ -1743,14 +1743,14 @@ class MiqAeClassController < ApplicationController
       res = @edit[:typ].copy(options)
     rescue StandardError => bang
       add_flash(_("Error during '%{record} copy': %{error_message}") %
-        {:record => ui_lookup(:model => "#{@edit[:typ]}"), :error_message => bang.message}, :error)
+        {:record => ui_lookup(:model => @edit[:typ].to_s), :error_message => bang.message}, :error)
       render :update do |page|
         page << javascript_prologue
         page.replace("flash_msg_div_copy", :partial => "layouts/flash_msg", :locals  => {:div_num => "_copy"})
       end
     else
       model = @edit[:selected_items].count > 1 ? :models : :model
-      add_flash(_("Copy selected %{record} was saved") % {:record => ui_lookup(model => "#{@edit[:typ]}")})
+      add_flash(_("Copy selected %{record} was saved") % {:record => ui_lookup(model => @edit[:typ].to_s)})
       @record = res.kind_of?(Array) ? @edit[:typ].find_by_id(res.first) : res
       self.x_node = "#{TreeBuilder.get_prefix_for_model(@edit[:typ])}-#{to_cid(@record.id)}"
       @in_a_form = @changed = session[:changed] = false
@@ -1775,7 +1775,7 @@ class MiqAeClassController < ApplicationController
     @record = session[:edit][:typ].find_by_id(session[:edit][:rec_id])
     model = @edit[:selected_items].count > 1 ? :models : :model
     @sb[:action] = session[:edit] = nil # clean out the saved info
-    add_flash(_("Copy %{record} was cancelled by the user") % {:record => ui_lookup(model => "#{@edit[:typ]}")})
+    add_flash(_("Copy %{record} was cancelled by the user") % {:record => ui_lookup(model => @edit[:typ].to_s)})
     @in_a_form = false
     replace_right_cell
   end

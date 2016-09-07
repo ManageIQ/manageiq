@@ -423,7 +423,7 @@ module ReportController::Dashboards
                 when "menu"
                   "fa fa-share-square-o"
                 end
-        @widgets_options.push([w.title, w.id, {"data-icon" => "#{image}"}])
+        @widgets_options.push([w.title, w.id, {"data-icon" => image.to_s}])
       end
     end
     @widgets_options

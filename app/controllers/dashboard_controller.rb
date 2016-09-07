@@ -187,7 +187,7 @@ class DashboardController < ApplicationController
           :id    => w.id,
           :type  => :button,
           :text  => w.title,
-          :image => "#{image}",
+          :image => image.to_s,
           :title => tip
         }
       end

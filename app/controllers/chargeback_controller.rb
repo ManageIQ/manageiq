@@ -102,11 +102,11 @@ class ChargebackController < ApplicationController
     assert_privileges(params[:pressed]) if params[:pressed]
     case params[:button]
     when "cancel"
-      add_flash("#{params[:id] ?
+      add_flash((params[:id] ?
         _("Edit of %{model} \"%{name}\" was cancelled by the user") %
           {:model => ui_lookup(:model => "ChargebackRate"), :name => session[:edit][:new][:description]} :
         _("Add of new %{model} was cancelled by the user") %
-          {:model => ui_lookup(:model => "ChargebackRate")}}")
+          {:model => ui_lookup(:model => "ChargebackRate")}).to_s)
       get_node_info(x_node)
       @edit = session[:edit] = nil  # clean out the saved info
       session[:changed] =  false

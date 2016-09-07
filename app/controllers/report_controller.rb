@@ -806,7 +806,7 @@ class ReportController < ApplicationController
       presenter.replace(:flash_msg_div_menu_list, r[:partial => "layouts/flash_msg", :locals => {:div_num => "_menu_list"}]) if @flash_array
       if @refresh_div
         presenter.hide(:flash_msg_div_menu_list)
-        presenter.replace("#{@refresh_div}", r[:partial => @refresh_partial, :locals => {:action_url => "menu_update"}])
+        presenter.replace(@refresh_div.to_s, r[:partial => @refresh_partial, :locals => {:action_url => "menu_update"}])
         presenter.hide(:menu_div1)
         if params[:pressed] == "commit"
           presenter.show(:menu_div3).hide(:menu_div2)

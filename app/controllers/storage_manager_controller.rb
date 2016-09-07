@@ -114,7 +114,7 @@ class StorageManagerController < ApplicationController
       begin
         verify_sm.verify_credentials
       rescue StandardError => bang
-        add_flash("#{bang}", :error)
+        add_flash(bang.to_s, :error)
       else
         add_flash(_("Credential validation was successful"))
       end
@@ -201,7 +201,7 @@ class StorageManagerController < ApplicationController
       begin
         verify_sm.verify_credentials
       rescue StandardError => bang
-        add_flash("#{bang}", :error)
+        add_flash(bang.to_s, :error)
       else
         add_flash(_("Credential validation was successful"))
       end

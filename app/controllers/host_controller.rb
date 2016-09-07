@@ -295,7 +295,7 @@ class HostController < ApplicationController
       begin
         verify_host.verify_credentials(params[:type])
       rescue StandardError => bang
-        add_flash("#{bang}", :error)
+        add_flash(bang.to_s, :error)
       else
         add_flash(_("Credential validation was successful"))
       end
@@ -418,7 +418,7 @@ class HostController < ApplicationController
         end
         return
       rescue StandardError => bang
-        add_flash("#{bang}", :error)
+        add_flash(bang.to_s, :error)
       else
         add_flash(_("Credential validation was successful"))
       end

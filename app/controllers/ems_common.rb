@@ -967,7 +967,7 @@ module EmsCommon
          :models => ui_lookup(:tables => @table_name)})
       AuditEvent.success(:userid => session[:userid], :event => "#{@table_name}_#{task}",
           :message => _("'%{task}' successfully initiated for %{table}") %
-            {:task => task, :table => pluralize(emss.length, "#{ui_lookup(:tables => @table_name)}")},
+            {:task => task, :table => pluralize(emss.length, ui_lookup(:tables => @table_name).to_s)},
           :target_class => model.to_s)
     elsif task == "destroy"
       model.where(:id => emss).order("lower(name)").each do |ems|

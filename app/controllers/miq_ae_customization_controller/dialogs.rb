@@ -525,13 +525,13 @@ module MiqAeCustomizationController::Dialogs
       page << javascript_for_miq_button_visibility(changed)
 
       # replace select tag of default values
-      url = url_for(:action => 'dialog_form_field_changed', :id => "#{@record.id || "new"}")
+      url = url_for(:action => 'dialog_form_field_changed', :id => (@record.id.to_s || "new"))
       none =  [['<None>', nil]]
       values = key[:values].empty? ? none : none + key[:values].collect(&:reverse)
       selected = @edit[:field_default_value]
       page << "$('#field_default_value').next('.bootstrap-select').remove();"
       page.replace("field_default_value",
-                   :text => "#{select_tag('field_default_value', options_for_select(values, selected), 'data-miq_observe' => {:interval => '.5', :url => url}.to_json)}")
+                   :text => select_tag('field_default_value', options_for_select(values, selected), 'data-miq_observe' => {:interval => '.5', :url => url}.to_json).to_s)
       page << "$('#field_default_value').selectpicker();"
     end
   end
@@ -565,7 +565,7 @@ module MiqAeCustomizationController::Dialogs
       page << javascript_for_miq_button_visibility(changed)
 
       # replace select tag of default values
-      url = url_for(:action => 'dialog_form_field_changed', :id => "#{@record.id || "new"}")
+      url = url_for(:action => 'dialog_form_field_changed', :id => (@record.id.to_s || "new"))
       none =  [['<None>', nil]]
       values = key[:values].empty? ? none : none + key[:values].collect(&:reverse)
       selected = @edit[:field_default_value]
@@ -785,7 +785,7 @@ module MiqAeCustomizationController::Dialogs
 
     base_node = TreeNodeBuilder.generic_tree_node(
       "root",
-      "#{@edit[:new][:label] || _('[New Dialog]')}",
+      (@edit[:new][:label].to_s || _('[New Dialog]')),
       "dialog.png",
       @edit[:new][:description] || @edit[:new][:label],
       :expand => true

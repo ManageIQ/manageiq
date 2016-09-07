@@ -6,14 +6,14 @@ module ChartingHelper
                          :action     => options[:action] || 'render_chart',
                          :width      => options[:width],
                          :height     => options[:height],
-                         :rand       => "#{rand(999_999_999)}"),
+                         :rand       => rand(999_999_999)).to_s,
                  options.slice(:id, :bgcolor, :width, :height))
     when :jqplot
       jqplot_remote(url_for(:controller => a_controller,
                             :action     => options[:action] || 'render_chart',
                             :width      => options[:width],
                             :height     => options[:height],
-                            :rand       => "#{rand(999_999_999)}"),
+                            :rand       => rand(999_999_999)).to_s,
                     options.slice(:id, :bgcolor, :width, :height))
     when :c3
       c3chart_remote(url_for(:controller => a_controller,

@@ -155,7 +155,7 @@ module ApplicationController::ReportDownloads
     @report_only = true
     @showtype    = @display
     run_time     = Time.now
-    klass        = ui_lookup(:model => "#{@record.class}")
+    klass        = ui_lookup(:model => @record.class.name)
 
     @options = {
       :page_layout => "portrait",

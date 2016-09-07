@@ -328,7 +328,7 @@ describe HostController do
                               :ext_management_system => FactoryGirl.create(:ems_openstack_infra),
                               :storage               => FactoryGirl.create(:storage)
                              )
-      controller.instance_variable_set(:@_params, :miq_grid_checks => "#{vm.id}")
+      controller.instance_variable_set(:@_params, :miq_grid_checks => vm.id.to_s)
       expect(controller).to receive(:process_objects)
       controller.send(:vm_button_operation, 'scan', "Smartstate Analysis")
     end

@@ -1151,7 +1151,7 @@ module VmCommon
     existing_node = nil                     # Init var
 
     if record.orphaned? || record.archived?
-      parents = [{:type => "x", :id => "#{record.orphaned ? "orph" : "arch"}"}]
+      parents = [{:type => "x", :id => (record.orphaned ? "orph" : "arch")}]
     else
       if x_active_tree == :instances_tree
         parents = record.kind_of?(ManageIQ::Providers::CloudManager::Vm) && record.availability_zone ? [record.availability_zone] : [record.ext_management_system]
@@ -1224,7 +1224,7 @@ module VmCommon
           @breadcrumbs.clear
           drop_breadcrumb({:name => breadcrumb_name(model), :url => "/#{controller_name}/explorer"}, false)
         end
-        @right_cell_text = _("%{model} \"%{name}\"") % {:name => @record.name, :model => "#{ui_lookup(:model => model && model != "VmOrTemplate" ? model : TreeBuilder.get_model_for_prefix(@nodetype))}"}
+        @right_cell_text = _("%{model} \"%{name}\"") % {:name => @record.name, :model => (ui_lookup(:model => model && model != "VmOrTemplate" ? model : TreeBuilder.get_model_for_prefix(@nodetype))).to_s}
       end
     else      # Get list of child VMs of this node
       options = {:model => model}
@@ -1273,7 +1273,7 @@ module VmCommon
                              end
         else
           rec = TreeBuilder.get_model_for_prefix(@nodetype).constantize.find(from_cid(id))
-          options.merge!({:association => "#{@nodetype == "az" ? "vms" : "all_vms_and_templates"}", :parent => rec})
+          options.merge!({:association => (@nodetype == "az" ? "vms" : "all_vms_and_templates"), :parent => rec})
           options[:where_clause] = MiqExpression.merge_where_clauses(
             options[:where_clause], VmOrTemplate::NOT_ARCHIVED_NOR_OPRHANED_CONDITIONS
           )
