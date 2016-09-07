@@ -27,10 +27,16 @@ module ManageIQ::Providers
 
     def convert_to_group_trigger(miq_alert)
       eval_method = miq_alert[:conditions][:eval_method]
-      firing_match = case eval_method
-                     when "mw_heap_used", "mw_non_heap_used" then 'ANY'
-                     else 'ALL'
-                     end
+      firing_match = 'ALL'
+      # Storing prefixes for Hawkular Metrics integration
+      # These prefixes are used by alert_profile_manager.rb on member triggers creation
+      context = { 'dataId.hm.type' => 'gauge', 'dataId.hm.prefix' => 'hm_g_' }
+      case eval_method
+      when "mw_heap_used", "mw_non_heap_used"
+        firing_match = 'ANY'
+      when "mw_accumulated_gc_duration"
+        context = { 'dataId.hm.type' => 'counter', 'dataId.hm.prefix' => 'hm_c_' }
+      end
       ::Hawkular::Alerts::Trigger.new('id'          => "MiQ-#{miq_alert[:id]}",
                                       'name'        => miq_alert[:description],
                                       'description' => miq_alert[:description],
@@ -38,6 +44,7 @@ module ManageIQ::Providers
                                       'type'        => :GROUP,
                                       'eventType'   => :EVENT,
                                       'firingMatch' => firing_match,
+                                      'context'     => context,
                                       'tags'        => {
                                         'miq.event_type'    => 'hawkular_event',
                                         'miq.resource_type' => miq_alert[:based_on]

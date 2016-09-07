@@ -99,10 +99,11 @@ module ManageIQ::Providers
 
     def calculate_member_data_id_map(server, group_trigger)
       data_id_map = {}
+      prefix = group_trigger.context['dataId.hm.prefix'].nil? ? '' : group_trigger.context['dataId.hm.prefix']
       group_trigger.conditions.each do |condition|
-        data_id_map[condition.data_id] = "MI~R~[#{server.feed}/#{server.nativeid}]~MT~#{condition.data_id}"
+        data_id_map[condition.data_id] = "#{prefix}MI~R~[#{server.feed}/#{server.nativeid}]~MT~#{condition.data_id}"
         unless condition.data2_id.nil?
-          data_id_map[condition.data2_id] = "MI~R~[#{server.feed}/#{server.nativeid}]~MT~#{condition.data2_id}"
+          data_id_map[condition.data2_id] = "#{prefix}MI~R~[#{server.feed}/#{server.nativeid}]~MT~#{condition.data2_id}"
         end
       end
       data_id_map
