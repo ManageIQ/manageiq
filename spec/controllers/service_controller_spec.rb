@@ -53,7 +53,7 @@ describe ServiceController do
   context "#service_delete" do
     it "replaces right cell after service is deleted" do
       service = FactoryGirl.create(:service)
-      allow(controller).to receive(:x_build_dynatree)
+      allow(controller).to receive(:x_build_tree)
       controller.instance_variable_set(:@settings, {})
       controller.instance_variable_set(:@sb, {})
       controller.instance_variable_set(:@_params, :id => service.id)

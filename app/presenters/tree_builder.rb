@@ -140,7 +140,7 @@ class TreeBuilder
     open_node(id)
 
     x_get_tree_objects(object, @tree_state.x_tree(@name), false, parents).map do |o|
-      x_build_node_dynatree(o, id, @tree_state.x_tree(@name))
+      x_build_node_tree(o, id, @tree_state.x_tree(@name))
     end
   end
 
@@ -217,7 +217,7 @@ class TreeBuilder
 
   def build_tree
     # FIXME: we have the options -- no need to reload from @sb
-    tree_nodes = x_build_dynatree(@tree_state.x_tree(@name))
+    tree_nodes = x_build_tree(@tree_state.x_tree(@name))
     active_node_set(tree_nodes)
     set_nodes(tree_nodes)
   end
@@ -276,7 +276,7 @@ class TreeBuilder
   # :add_root               # If true, put a root node at the top
   # :full_ids               # stack parent id on top of each node id
   # :lazy                   # set if tree is lazy
-  def x_build_dynatree(options)
+  def x_build_tree(options)
     children = x_get_tree_objects(nil, options, false, [])
 
     child_nodes = children.map do |child|
@@ -284,7 +284,7 @@ class TreeBuilder
       if child.kind_of?(Hash) && child.key?(:title) && child.key?(:key) && child.key?(:icon)
         child
       else
-        x_build_node_dynatree(child, nil, options)
+        x_build_node_tree(child, nil, options)
       end
     end
     return child_nodes unless options[:add_root]
@@ -329,7 +329,7 @@ class TreeBuilder
   end
 
   # Called with object, tree node parent id, tree options
-  def x_build_node_dynatree(object, pid, options)
+  def x_build_node_tree(object, pid, options)
     x_build_node(object, pid, options)
   end
 
