@@ -976,6 +976,7 @@
     :purge_window_size: 1000
 :product:
   :maindb: ExtManagementSystem
+  :container_deployment_wizard: false
 :replication:
   :exclude_tables:
     - ar_internal_metadata
