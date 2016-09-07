@@ -22,10 +22,14 @@ db: LiveMetric
 # Columns to fetch from the main table
 cols:
 - timestamp
-- mw_ms_delivering_count
-- mw_ms_message_count
-- mw_ms_messages_added
-- mw_ms_consumer_count
+- mw_ms_topic_delivering_count
+- mw_ms_topic_durable_message_count
+- mw_ms_topic_durable_suscription_count
+- mw_ms_topic_message_count
+- mw_ms_topic_message_added
+- mw_ms_topic_non_durable_message_count
+- mw_ms_topic_non_durable_suscription_count
+- mw_ms_topic_suscription_count
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -33,18 +37,26 @@ include:
 # Order of columns (from all tables)
 col_order:
 - timestamp
-- mw_ms_delivering_count
-- mw_ms_message_count
-- mw_ms_messages_added
-- mw_ms_consumer_count
+- mw_ms_topic_delivering_count
+- mw_ms_topic_durable_message_count
+- mw_ms_topic_durable_suscription_count
+- mw_ms_topic_message_count
+- mw_ms_topic_message_added
+- mw_ms_topic_non_durable_message_count
+- mw_ms_topic_non_durable_suscription_count
+- mw_ms_topic_suscription_count
 
 # Column titles, in order
 headers:
 - Date/Time
 - Delivering Message Count
-- Message Count
+- Durable Message Count
+- Durable Suscription Count
+- Messages Count
 - Messages Added
-- Consumers Count
+- Non Durable Messages Dount
+- Non Durable Suscription Count
+- Suscription Count
 
 # Condition expression for search filtering
 conditions:
@@ -72,10 +84,14 @@ group: n
 graph:
   :type: Line
   :columns:
-    - mw_ms_delivering_count
-    - mw_ms_message_count
-    - mw_ms_messages_added
-    - mw_ms_consumer_count
+    - mw_ms_topic_delivering_count
+    - mw_ms_topic_durable_message_count
+    - mw_ms_topic_durable_suscription_count
+    - mw_ms_topic_message_count
+    - mw_ms_topic_message_added
+    - mw_ms_topic_non_durable_message_count
+    - mw_ms_topic_non_durable_suscription_count
+    - mw_ms_topic_suscription_count
 # Dimensions of graph (1 or 2)
 #   Note: specifying 2 for a single dimension graph may not return expected results
 dims:

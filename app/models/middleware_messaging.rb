@@ -10,4 +10,15 @@ class MiddlewareMessaging < ApplicationRecord
     @metrics_capture ||= ManageIQ::Providers::Hawkular::MiddlewareManager::LiveMetricsCapture.new(self)
   end
 
+  def live_metrics_name
+    "#{self.class.name.demodulize.underscore}_#{messaging_type.parameterize(:separator => '_')}"
+  end
+
+  def chart_report_name
+    "#{self.class.name.demodulize.underscore}_#{messaging_type.parameterize(:separator => '_')}"
+  end
+
+  def chart_layout_path
+    "#{self.class.name.gsub(/::/, '_')}_#{messaging_type.parameterize(:separator => '_')}"
+  end
 end

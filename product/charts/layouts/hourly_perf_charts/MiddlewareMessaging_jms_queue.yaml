@@ -3,11 +3,11 @@
 - :title: Messages
   :type: Line
   :columns:
-  - mw_ms_delivering_count
-  - mw_ms_message_count
-  - mw_ms_messages_added
+  - mw_ms_queue_delivering_count
+  - mw_ms_queue_message_count
+  - mw_ms_queue_messages_added
 
 - :title: Consumers
   :type: Line
   :columns:
-  - mw_ms_consumer_count
+  - mw_ms_queue_consumer_count

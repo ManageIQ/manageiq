@@ -96,7 +96,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
       "Datasource Pool Metrics~Average Creation Time" => "mw_ds_average_creation_time",
       "Datasource Pool Metrics~Max Wait Time"         => "mw_ds_max_wait_time"
     }.freeze
-    supported_metrics = MiddlewareDatasource.supported_metrics
+    supported_metrics = ds.supported_metrics
     expected_metrics.each { |k, v| expect(supported_metrics[k]).to eq(v) }
   end
 end

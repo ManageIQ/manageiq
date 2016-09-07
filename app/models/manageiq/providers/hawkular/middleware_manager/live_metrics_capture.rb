@@ -8,8 +8,8 @@ module ManageIQ::Providers
       @gauges = @ems.metrics_client.gauges
       @counters = @ems.metrics_client.counters
       @avail = @ems.metrics_client.avail
-      @included_children = @target.class.included_children
-      @supported_metrics = @target.class.supported_metrics
+      @included_children = @target.included_children
+      @supported_metrics = @target.supported_metrics
     end
 
     def fetch_metrics_available

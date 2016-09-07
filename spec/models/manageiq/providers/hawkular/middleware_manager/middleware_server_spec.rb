@@ -100,7 +100,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
   end
 
   it "#supported_metrics" do
-    supported_metrics = MiddlewareServer.supported_metrics
+    supported_metrics = eap.supported_metrics
     expected_metrics.each { |k, v| expect(supported_metrics[k]).to eq(v) }
   end
 
