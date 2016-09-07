@@ -135,7 +135,7 @@ object:
       aetype: state
       name: ansible_deployment
       display_name: 
-      datatype: 
+      datatype: string
       priority: 7
       owner: 
       default_value: METHOD::deployment
@@ -155,7 +155,7 @@ object:
       aetype: state
       name: add_provider
       display_name: 
-      datatype: 
+      datatype: string
       priority: 8
       owner: 
       default_value: METHOD::add_provider
@@ -175,7 +175,7 @@ object:
       aetype: state
       name: clean_up
       display_name: 
-      datatype: 
+      datatype: string
       priority: 9
       owner: 
       default_value: METHOD::cleanup

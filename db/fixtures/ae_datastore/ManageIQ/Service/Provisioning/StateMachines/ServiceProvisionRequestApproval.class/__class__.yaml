@@ -15,7 +15,7 @@ object:
       aetype: attribute
       name: approval_type
       display_name: 
-      datatype: 
+      datatype: string
       priority: 1
       owner: 
       default_value: auto

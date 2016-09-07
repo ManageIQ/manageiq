@@ -14,7 +14,7 @@ object:
       aetype: 
       name: object
       display_name: 
-      datatype: 
+      datatype: string
       priority: 1
       owner: 
       default_value: 
@@ -34,7 +34,7 @@ object:
       aetype: 
       name: message
       display_name: 
-      datatype: 
+      datatype: string
       priority: 2
       owner: 
       default_value: 

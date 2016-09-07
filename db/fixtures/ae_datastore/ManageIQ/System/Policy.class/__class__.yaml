@@ -15,7 +15,7 @@ object:
       aetype: assertion
       name: guard
       display_name: 
-      datatype: 
+      datatype: string
       priority: 1
       owner: 
       default_value: 
@@ -35,7 +35,7 @@ object:
       aetype: attribute
       name: logical_event
       display_name: 
-      datatype: 
+      datatype: string
       priority: 2
       owner: 
       default_value: 
@@ -55,7 +55,7 @@ object:
       aetype: method
       name: on_entry
       display_name: 
-      datatype: 
+      datatype: string
       priority: 8
       owner: 
       default_value: 
@@ -75,7 +75,7 @@ object:
       aetype: relationship
       name: rel1
       display_name: 
-      datatype: 
+      datatype: string
       priority: 9
       owner: 
       default_value: 
@@ -95,7 +95,7 @@ object:
       aetype: method
       name: meth1
       display_name: 
-      datatype: 
+      datatype: string
       priority: 10
       owner: 
       default_value: 
@@ -115,7 +115,7 @@ object:
       aetype: relationship
       name: rel2
       display_name: 
-      datatype: 
+      datatype: string
       priority: 11
       owner: 
       default_value: 
@@ -135,7 +135,7 @@ object:
       aetype: method
       name: meth2
       display_name: 
-      datatype: 
+      datatype: string
       priority: 12
       owner: 
       default_value: 
@@ -155,7 +155,7 @@ object:
       aetype: relationship
       name: rel3
       display_name: 
-      datatype: 
+      datatype: string
       priority: 13
       owner: 
       default_value: 
@@ -175,7 +175,7 @@ object:
       aetype: method
       name: meth3
       display_name: 
-      datatype: 
+      datatype: string
       priority: 14
       owner: 
       default_value: 
@@ -195,7 +195,7 @@ object:
       aetype: relationship
       name: rel4
       display_name: 
-      datatype: 
+      datatype: string
       priority: 15
       owner: 
       default_value: 
@@ -215,7 +215,7 @@ object:
       aetype: method
       name: meth4
       display_name: 
-      datatype: 
+      datatype: string
       priority: 16
       owner: 
       default_value: 
@@ -235,7 +235,7 @@ object:
       aetype: relationship
       name: rel5
       display_name: 
-      datatype: 
+      datatype: string
       priority: 17
       owner: 
       default_value: 
@@ -255,7 +255,7 @@ object:
       aetype: method
       name: meth5
       display_name: 
-      datatype: 
+      datatype: string
       priority: 18
       owner: 
       default_value: 
@@ -275,7 +275,7 @@ object:
       aetype: relationship
       name: rel6
       display_name: 
-      datatype: 
+      datatype: string
       priority: 19
       owner: 
       default_value: 
@@ -295,7 +295,7 @@ object:
       aetype: method
       name: meth6
       display_name: 
-      datatype: 
+      datatype: string
       priority: 20
       owner: 
       default_value: 
@@ -315,7 +315,7 @@ object:
       aetype: relationship
       name: rel7
       display_name: 
-      datatype: 
+      datatype: string
       priority: 21
       owner: 
       default_value: 
@@ -335,7 +335,7 @@ object:
       aetype: method
       name: meth7
       display_name: 
-      datatype: 
+      datatype: string
       priority: 22
       owner: 
       default_value: 
@@ -355,7 +355,7 @@ object:
       aetype: relationship
       name: rel8
       display_name: 
-      datatype: 
+      datatype: string
       priority: 23
       owner: 
       default_value: 
@@ -375,7 +375,7 @@ object:
       aetype: method
       name: meth8
       display_name: 
-      datatype: 
+      datatype: string
       priority: 24
       owner: 
       default_value: 
@@ -395,7 +395,7 @@ object:
       aetype: relationship
       name: rel9
       display_name: 
-      datatype: 
+      datatype: string
       priority: 25
       owner: 
       default_value: 
@@ -415,7 +415,7 @@ object:
       aetype: method
       name: on_exit
       display_name: 
-      datatype: 
+      datatype: string
       priority: 26
       owner: 
       default_value: 
