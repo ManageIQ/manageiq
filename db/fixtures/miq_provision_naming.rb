@@ -20,7 +20,7 @@ module MiqProvisionNaming
     #   Single VM: Pass name from dialog through without modifying
     #   Multi-VM : Append 3 digit sequence number to the end of the name from the dialog
     if number_of_vms_being_provisioned == 1
-      "#{vm_name}"
+      vm_name.to_s
     else
       "#{vm_name}$n{3}"
     end

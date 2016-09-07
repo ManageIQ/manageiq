@@ -34,7 +34,7 @@ def emailresults(vm_culprit, host_culprit, host_culprit_type, host_culprit_perce
   body += "<br><br>"
   body += "Thank You,"
   body += "<br><br>"
-  body += "#{signature}"
+  body += signature.to_s
   body += "<br>"
 
   # Send email
