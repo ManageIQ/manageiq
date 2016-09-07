@@ -97,6 +97,7 @@ module Api
           raise BadRequestError, "Must specify an id for retiring a #{type} resource"
         end
       end
+      alias generic_retire_resource retire_resource
 
       def custom_action_resource(type, id, data = nil)
         action = @req.action.downcase

@@ -351,7 +351,7 @@ module Api
     def retire_vm(vm, id, data)
       desc = "#{vm_ident(vm)} retiring"
       desc << " on #{data['date']}" if Hash(data)['date'].present?
-      method(:retire_resource).super_method.call(:vms, id, data)
+      generic_retire_resource(:vms, id, data)
       action_result(true, desc)
     rescue => err
       action_result(false, err.to_s)
