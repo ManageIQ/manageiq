@@ -35,12 +35,12 @@ describe TreeNodeBuilder do
     it 'is blue folder when type is :vat' do
       object = FactoryGirl.build(:ems_folder)
       node = TreeNodeBuilderDatacenter.build(object, nil, {:type => :vat})
-      expect(node[:icon]).to eq(ActionController::Base.helpers.image_path("100/#{"blue_folder.png"}"))
+      expect(node[:icon]).to eq(ActionController::Base.helpers.image_path("100/blue_folder.png"))
     end
     it 'is normal folder when type is not :vat' do
       object = FactoryGirl.build(:ems_folder)
       node = TreeNodeBuilderDatacenter.build(object, nil, {})
-      expect(node[:icon]).to eq(ActionController::Base.helpers.image_path("100/#{"folder.png"}"))
+      expect(node[:icon]).to eq(ActionController::Base.helpers.image_path("100/folder.png"))
     end
   end
 end

@@ -23,7 +23,7 @@ class AtomFeedTest < MiniTest::Unit::TestCase
       assert_select 'entry', 5 do
         assert_select 'title', :text => 'feed title (title)'
         assert_select "content[type='html']", '&lt;p&gt;feed description (description)&lt;/p&gt;'
-        assert_select 'id', "tag:#{request.host_with_port},#{@records.first.created_at.xmlschema}:#{'http://example.com/posts/1'}"
+        assert_select 'id', "tag:#{request.host_with_port},#{@records.first.created_at.xmlschema}:http://example.com/posts/1"
         assert_select 'published', @records.first.created_at.xmlschema
         assert_select 'updated', @records.first.created_at.xmlschema
         assert_select 'link' do
