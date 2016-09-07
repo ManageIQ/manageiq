@@ -53,12 +53,7 @@ module Api
     include_concern 'Normalizer'
     include_concern 'Renderer'
     include_concern 'Results'
-
-    #
-    # Support for API Collections
-    #
     include_concern 'Generic'
-
     include_concern 'Authentication'
 
     #
