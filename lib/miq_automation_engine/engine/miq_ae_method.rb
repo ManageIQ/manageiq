@@ -18,7 +18,7 @@ module MiqAeEngine
       fname = File.join(AE_METHODS_DIR, path)
       raise  MiqAeException::MethodNotFound, "Method [#{aem.data}] Not Found (fname=#{fname})" unless File.exist?(fname)
       cmd = "#{aem.language} #{fname}"
-      MiqAeEngine::MiqAeMethod.invoke_external(cmd, obj.workspace)
+      invoke_external(cmd, obj.workspace)
     end
 
     def self.invoke_builtin(aem, obj, inputs)
@@ -67,8 +67,6 @@ module MiqAeEngine
       nil
     end
 
-    private
-
     def self.invoke_external(cmd, workspace, serialize_workspace = false)
       ws = nil
 
@@ -92,6 +90,7 @@ module MiqAeEngine
       end
       process_ruby_method_results(rc, msg)
     end
+    private_class_method :invoke_external
 
     MIQ_OK    = 0
     MIQ_WARN  = 4
@@ -101,6 +100,7 @@ module MiqAeEngine
     def self.open_transactions_threshold
       @open_transactions_threshold ||= Rails.env.test? ? 1 : 0
     end
+    private_class_method :open_transactions_threshold
 
     def self.verbose_rc(rc)
       case rc
@@ -111,6 +111,7 @@ module MiqAeEngine
       else                "Unknown RC: [#{rc}]"
       end
     end
+    private_class_method :verbose_rc
 
     def self.run_ruby_method(*code)
       ActiveRecord::Base.connection_pool.release_connection
@@ -122,6 +123,7 @@ module MiqAeEngine
         end
       end
     end
+    private_class_method :run_ruby_method
 
     def self.process_ruby_method_results(rc, msg)
       case rc
@@ -138,6 +140,7 @@ module MiqAeEngine
       end
       rc
     end
+    private_class_method :process_ruby_method_results
 
     def self.ruby_method_runnable?(aem)
       return false if aem.data.blank?
@@ -146,6 +149,7 @@ module MiqAeEngine
 
       true
     end
+    private_class_method :ruby_method_runnable?
 
     def self.invoke_inline_ruby(aem, obj, inputs)
       if ruby_method_runnable?(aem)
@@ -158,6 +162,7 @@ module MiqAeEngine
         end
       end
     end
+    private_class_method :invoke_inline_ruby
 
     def self.run_method(cmd)
       require 'open4'
@@ -190,6 +195,7 @@ module MiqAeEngine
       end
       return rc, msg
     end
+    private_class_method :run_method
 
     def self.cleanup(method_pid, threads)
       if method_pid
@@ -203,5 +209,6 @@ module MiqAeEngine
       end
       threads.each(&:exit)
     end
+    private_class_method :cleanup
   end
 end

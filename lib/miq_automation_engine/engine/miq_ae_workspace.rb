@@ -6,7 +6,7 @@ module MiqAeEngine
     include UuidMixin
 
     def self.evmget(token, uri)
-      MiqAeWorkspace.workspace_from_token(token).evmget(uri)
+      workspace_from_token(token).evmget(uri)
     end
 
     def evmget(uri)
@@ -14,7 +14,7 @@ module MiqAeEngine
     end
 
     def self.evmset(token, uri, value)
-      MiqAeWorkspace.workspace_from_token(token).evmset(uri, value)
+      workspace_from_token(token).evmset(uri, value)
     end
 
     def evmset(uri, value)
@@ -25,13 +25,12 @@ module MiqAeEngine
       end
     end
 
-    private
-
     def self.workspace_from_token(token)
       ws = MiqAeWorkspace.find_by_guid(token)
       raise MiqAeException::WorkspaceNotFound, "Workspace Not Found for token=[#{token}]" if ws.nil?
       ws
     end
+    private_class_method(:workspace_from_token)
   end
 
   class MiqAeWorkspaceRuntime

@@ -1,5 +1,5 @@
 describe MiqAeEngine::MiqAeMethod do
-  context ".invoke_inline_ruby" do
+  context ".invoke_inline_ruby(private)" do
     it "writes to the logger immediately" do
       script = <<-EOS
         puts 'Hi from puts'
@@ -58,7 +58,7 @@ describe MiqAeEngine::MiqAeMethod do
       expect($miq_ae_logger).to receive(:info).with("<AEMethod [fqname]> Ending").ordered
       expect($miq_ae_logger).to receive(:info).with("Method exited with rc=MIQ_OK").ordered
 
-      expect(described_class.invoke_inline_ruby(aem, obj, inputs)).to eq(0)
+      expect(described_class.send(:invoke_inline_ruby, aem, obj, inputs)).to eq(0)
 
       expect(logger_stub.expected_messages).to eq([])
     end
