@@ -415,11 +415,7 @@ module OpsController::Diagnostics
     else
       add_flash(_("Database Garbage Collection successfully initiated"))
     end
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_divdatabase", :partial => "layouts/flash_msg", :locals => {:div_num => "database"})
-      page << "miqSparkle(false);"
-    end
+    render_flash
   end
 
   # to delete orphaned records for user that was delete from db
