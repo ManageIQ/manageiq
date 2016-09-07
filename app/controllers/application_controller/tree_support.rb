@@ -31,7 +31,7 @@ module ApplicationController::TreeSupport
     end
   end
 
-  def tree_autoload_dynatree
+  def tree_autoload
     @edit ||= session[:edit] # Remember any previous @edit
     nodes = tree_add_child_nodes(params[:id])
     render :json => TreeBuilder.convert_bs_tree(nodes)

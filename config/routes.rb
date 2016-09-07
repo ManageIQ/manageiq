@@ -232,7 +232,7 @@ Vmdb::Application.routes.draw do
         st_upload_image
         svc_catalog_provision
         tag_edit_form_field_changed
-        tree_autoload_dynatree
+        tree_autoload
         tree_select
         x_button
         x_history
@@ -264,7 +264,7 @@ Vmdb::Application.routes.draw do
         cb_tier_add
         cb_tier_remove
         saved_report_paging
-        tree_autoload_dynatree
+        tree_autoload
         tree_select
         x_button
         x_show
@@ -460,7 +460,7 @@ Vmdb::Application.routes.draw do
         timeprofile_delete
         timeprofile_field_changed
         timeprofile_update
-        tree_autoload_dynatree
+        tree_autoload
         update
         view_selected
       )
@@ -488,7 +488,7 @@ Vmdb::Application.routes.draw do
         wait_for_task
         quick_search
         reload
-        tree_autoload_dynatree
+        tree_autoload
         tree_select
         container_tag
         tag_edit_form_field_changed
@@ -969,7 +969,7 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tagging_edit
         tl_chooser
-        tree_autoload_dynatree
+        tree_autoload
         wait_for_task
       ) +
                adv_search_post +
@@ -1007,7 +1007,7 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tagging_edit
         tl_chooser
-        tree_autoload_dynatree
+        tree_autoload
         update
         wait_for_task
         scaling
@@ -1581,7 +1581,7 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tagging_edit
         tl_chooser
-        tree_autoload_dynatree
+        tree_autoload
         update
         users
         wait_for_task
@@ -1629,7 +1629,7 @@ Vmdb::Application.routes.draw do
         refresh_git_domain
         reload
         tree_select
-        tree_autoload_dynatree
+        tree_autoload
         update
         update_fields
         update_instance
@@ -1674,7 +1674,7 @@ Vmdb::Application.routes.draw do
         old_dialogs_update
         reload
         resolve
-        tree_autoload_dynatree
+        tree_autoload
         tree_select
         upload_import_file
         x_button
@@ -1727,7 +1727,7 @@ Vmdb::Application.routes.draw do
         planning
         planning_option_changed
         reload
-        tree_autoload_dynatree
+        tree_autoload
         util_chart_chooser
         wait_for_task
       )
@@ -1778,7 +1778,7 @@ Vmdb::Application.routes.draw do
         rsop_option_changed
         rsop_show_options
         rsop_toggle
-        tree_autoload_dynatree
+        tree_autoload
         tree_select
         upload
         wait_for_task
@@ -2072,7 +2072,7 @@ Vmdb::Application.routes.draw do
         smartproxy_affinity_field_changed
         tag_edit_form_field_changed
         tl_chooser
-        tree_autoload_dynatree
+        tree_autoload
         tree_select
         update
         upload_csv
@@ -2165,7 +2165,7 @@ Vmdb::Application.routes.draw do
         tagging
         tagging_edit
         tag_edit_form_field_changed
-        tree_autoload_dynatree
+        tree_autoload
         tree_select
         configscript_service_dialog_submit
         cs_form_field_changed
@@ -2203,7 +2203,7 @@ Vmdb::Application.routes.draw do
         template_create_update
         template_form_field_changed
         template_list
-        tree_autoload_dynatree
+        tree_autoload
         tree_select
         x_button
         x_history
@@ -2225,7 +2225,7 @@ Vmdb::Application.routes.draw do
         sample_chart
         sample_timeline
         send_report_data
-        tree_autoload_dynatree
+        tree_autoload
         tree_select
       ),
       :post => %w(
@@ -2256,7 +2256,7 @@ Vmdb::Application.routes.draw do
         schedule_form_field_changed
         show_preview
         show_saved
-        tree_autoload_dynatree
+        tree_autoload
         tree_select
         upload
         upload_widget_import_file
@@ -2292,7 +2292,7 @@ Vmdb::Application.routes.draw do
         show_list
         tagging_edit
         tag_edit_form_field_changed
-        tree_autoload_dynatree
+        tree_autoload
         quick_search
       ) +
                adv_search_post +
@@ -2323,7 +2323,7 @@ Vmdb::Application.routes.draw do
         service_edit
         service_tag
         tag_edit_form_field_changed
-        tree_autoload_dynatree
+        tree_autoload
         tree_select
         x_button
         x_history
@@ -2382,7 +2382,7 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tagging
         tagging_edit
-        tree_autoload_dynatree
+        tree_autoload
         tree_select
         vm_misc_files
         vm_ram_files
@@ -2462,7 +2462,7 @@ Vmdb::Application.routes.draw do
         right_size
         set_checked_items
         show_list
-        tree_autoload_dynatree
+        tree_autoload
         vmtree_selected
         ownership_update
       ) +
@@ -2544,7 +2544,7 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
         tl_chooser
-        tree_autoload_dynatree
+        tree_autoload
         tree_select
         users
         vm_pre_prov
@@ -2635,7 +2635,7 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
         tl_chooser
-        tree_autoload_dynatree
+        tree_autoload
         tree_select
         users
         vmrc_console

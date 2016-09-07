@@ -135,9 +135,9 @@ describe MiqAeClassController do
     end
   end
 
-  describe "#tree_autoload_dynatree" do
+  describe "#tree_autoload" do
     it "routes with POST" do
-      expect(post("/miq_ae_class/tree_autoload_dynatree")).to route_to("miq_ae_class#tree_autoload_dynatree")
+      expect(post("/miq_ae_class/tree_autoload")).to route_to("miq_ae_class#tree_autoload")
     end
   end
 

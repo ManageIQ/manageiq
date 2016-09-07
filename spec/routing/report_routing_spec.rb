@@ -265,10 +265,10 @@ describe "routes for ReportController" do
     end
   end
 
-  describe "#tree_autoload_dynatree" do
+  describe "#tree_autoload" do
     it "routes with POST" do
-      expect(post("/report/tree_autoload_dynatree"))
-        .to route_to("report#tree_autoload_dynatree")
+      expect(post("/report/tree_autoload"))
+        .to route_to("report#tree_autoload")
     end
   end
 

@@ -11,11 +11,11 @@ shared_examples_for "A controller that has explorer routes" do
     end
   end
 
-  describe '#tree_autoload_dynatree' do
+  describe '#tree_autoload' do
     it 'routes with POST' do
       expect(
-        post("/#{controller_name}/tree_autoload_dynatree")
-      ).to route_to("#{controller_name}#tree_autoload_dynatree")
+        post("/#{controller_name}/tree_autoload")
+      ).to route_to("#{controller_name}#tree_autoload")
     end
   end
 

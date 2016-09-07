@@ -463,7 +463,7 @@ class ProviderForemanController < ApplicationController
     render :layout => "application"
   end
 
-  def tree_autoload_dynatree
+  def tree_autoload
     @view ||= session[:view]
     super
   end

@@ -574,7 +574,7 @@ function miqInitTree(options, tree) {
     lazyLoad:             function (node, display) {
       if (options.autoload) {
         $.ajax({
-          url:  '/' + options.controller + '/tree_autoload_dynatree',
+          url:  '/' + options.controller + '/tree_autoload',
           type: 'post',
           data: {
             id: node.key,

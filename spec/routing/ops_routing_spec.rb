@@ -96,7 +96,7 @@ describe "routing for OpsController" do
     smartproxy_affinity_field_changed
     tag_edit_form_field_changed
     tl_chooser
-    tree_autoload_dynatree
+    tree_autoload
     tree_select
     update
     upload_csv
