@@ -1,6 +1,7 @@
 module Api
   class ServiceOrdersController < BaseController
     include Subcollections::ServiceRequests
+    USER_CART_ID = 'cart'.freeze
 
     def create_resource_service_orders(type, id, data)
       raise BadRequestError, "Can't create an ordered service order" if data["state"] == ServiceOrder::STATE_ORDERED
@@ -30,8 +31,12 @@ module Api
       service_order
     end
 
+    def validate_id(id, klass)
+      id == USER_CART_ID || super(id, klass)
+    end
+
     def find_service_orders(id)
-      if id == "cart"
+      if id == USER_CART_ID
         ServiceOrder.cart_for(@auth_user_obj)
       else
         ServiceOrder.find_for_user(@auth_user_obj, id)
