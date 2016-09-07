@@ -528,10 +528,6 @@ class ApplicationHelper::ToolbarBuilder
     return true if id == 'miq_request_edit' &&
                    %w(ServiceReconfigureRequest ServiceTemplateProvisionRequest).include?(@miq_request.try(:type))
 
-    # hide power management buttons for Openstack::InfraManager
-    return true if %w(host_standby host_shutdown host_reboot host_start host_stop host_reset).include?(id) &&
-                   @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
-
     # hide compliance check and comparison buttons rendered for orchestration stack instances
     return true if @record.kind_of?(OrchestrationStack) && @display == "instances" &&
                    %w(instance_check_compliance instance_compare).include?(id)
@@ -683,22 +679,6 @@ class ApplicationHelper::ToolbarBuilder
       case id
       when "ab_group_edit", "ab_group_delete", "ab_button_new"
         return !role_allows_button_manipulation if x_active_tree == :sandt_tree
-      end
-    when "Host"
-      case id
-      when "host_protect"
-        return true unless @record.smart?
-      when "host_refresh"
-        return true unless @record.is_refreshable?
-      when "host_scan"
-        return true unless @record.is_scannable?
-      when "host_shutdown", "host_standby", "host_reboot",
-          "host_enter_maint_mode", "host_exit_maint_mode",
-          "host_start", "host_stop", "host_reset"
-        btn_id = id.split("_")[1..-1].join("_")
-        return true unless @record.is_available?(btn_id.to_sym)
-      when "perf_refresh", "perf_reload", "vm_perf_refresh", "vm_perf_reload"
-        return true unless @perf_options[:typ] == "realtime"
       end
     when "MiqAction"
       case id
@@ -1015,18 +995,10 @@ class ApplicationHelper::ToolbarBuilder
         return N_("This Host can not be provisioned because the MAC address is not known") unless @record.mac_address
         count = PxeServer.all.size
         return N_("No PXE Servers are available for Host provisioning") if count <= 0
-      when "host_refresh"
-        return @record.is_refreshable_now_error_message unless @record.is_refreshable_now?
-      when "host_scan"
-        return @record.is_scannable_now_error_message unless @record.is_scannable_now?
       when "host_timeline"
         unless @record.has_events? || @record.has_events?(:policy_events)
           return N_("No Timeline data has been collected for this Host")
         end
-      when "host_shutdown"
-        return @record.is_available_now_error_message(:shutdown) if @record.is_available_now_error_message(:shutdown)
-      when "host_restart"
-        return @record.is_available_now_error_message(:reboot) if @record.is_available_now_error_message(:reboot)
       end
     when "Container"
       case id
