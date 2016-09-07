@@ -305,3 +305,7 @@ namespace :evm do
 end
 
 Rake::Task["db:migrate"].enhance(["evm:db:environmentlegacykey"])
+
+Rake::Task["db:reset"].enhance do
+  warn "Caution: You ran db:reset which resets the DB from schema.rb. You probably want to re-run all the migrations with the current ruby/rails versions, so run bin/rake evm:db:reset instead."
+end
