@@ -16,9 +16,19 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager do
         :ems_kubernetes,
         :hostname        => 'hostname',
         :authentications => [
-          FactoryGirl.build(:authentication, :authtype => 'bearer', :auth_key => 'valid-token')
+          FactoryGirl.build(:authentication, :authtype => 'bearer', :auth_key => 'valid-token'),
+          FactoryGirl.build(:authentication, :authtype => 'hawkular')
         ]
       )
+    end
+
+    it "checks for the right credential fields" do
+      expect(@ems.required_credential_fields(:bearer)).to eq([:auth_key])
+    end
+
+    it "checks for missing_credentials" do
+      expect(@ems.missing_credentials?(:bearer)).to be_falsey
+      expect(@ems.missing_credentials?(:hawkular)).to be_truthy
     end
 
     it ".scan_entity_create" do

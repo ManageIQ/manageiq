@@ -292,6 +292,10 @@ class MiqRegion < ApplicationRecord
     end
   end
 
+  def required_credential_fields(_type)
+    [:auth_key]
+  end
+
   def self.api_system_auth_token_for_region(region_id, user)
     find_by_region(region_id).api_system_auth_token(user)
   end

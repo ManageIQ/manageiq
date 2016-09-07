@@ -78,15 +78,8 @@ module AuthenticationMixin
     authentication_component(type, :service_account)
   end
 
-  def required_credential_fields(type)
-    case type.to_s
-    when "bearer", "system_api"
-      [:auth_key]
-    when "hawkular"
-      []
-    else
-      [:userid]
-    end
+  def required_credential_fields(_type)
+    [:userid]
   end
 
   def has_credentials?(type = nil)
