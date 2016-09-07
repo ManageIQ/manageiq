@@ -192,7 +192,7 @@
             - click = @miq_request.id
           - else
             - click = 'new'
-          = render(:partial => "layouts/dynatree",
+          = render(:partial => "layouts/tree",
                    :locals  => {:tree_id       => "ldap_ous_treebox",
                                 :tree_name     => session[:tree_name],
                                 :bs_tree       => @ldap_ous_tree,
@@ -301,7 +301,7 @@
             - check = @miq_request.id
           - else
             - check = 'new'
-          = render(:partial => "layouts/dynatree",
+          = render(:partial => "layouts/tree",
                    :locals => {:tree_id       => "all_tags_treebox",
                                :tree_name     => "all_tags_tree",
                                :bs_tree       => @all_tags_tree,

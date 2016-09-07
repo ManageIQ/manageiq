@@ -36,7 +36,7 @@
       = _('Selections')
     - if @assign[:obj_tree]
       #obj_treebox{:style => "width: 100%; color: #000;"}
-      = render(:partial => "layouts/dynatree",
+      = render(:partial => "layouts/tree",
         :locals         => {:tree_id    => "obj_treebox",
           :tree_name                    => "obj_tree",
           :bs_tree                      => @assign[:obj_tree],
