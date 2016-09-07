@@ -14,6 +14,5 @@ module MiqAeMethodService
     expose :update_load_balancer
     expose :load_balancer
     expose :build_load_balancer_options_from_dialog
-    expose :post_provision_configure
   end
 end
