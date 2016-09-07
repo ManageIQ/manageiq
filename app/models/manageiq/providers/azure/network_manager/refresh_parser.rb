@@ -201,7 +201,7 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
 
   def parse_network_port(network_port)
     uid                        = network_port.id
-    cloud_subnet_network_ports = network_port.properties.ip_configurations.map do |x|
+    cloud_subnet_network_ports = network_port.properties.ip_configurations.slice(0..0).map do |x|
       parse_cloud_subnet_network_port(x)
     end
 

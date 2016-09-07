@@ -212,7 +212,7 @@ module ManageIQ::Providers
 
     def parse_network_port(network_port)
       uid                        = network_port.id
-      cloud_subnet_network_ports = network_port.fixed_ips.map { |x| parse_cloud_subnet_network_port(x) }
+      cloud_subnet_network_ports = network_port.fixed_ips.slice(0..0).map { |x| parse_cloud_subnet_network_port(x) }
       device                     = find_device_object(network_port)
       security_groups            = network_port.security_groups.blank? ? [] : network_port.security_groups.map do |x|
         @data_index.fetch_path(:security_groups, x)
