@@ -1,4 +1,7 @@
 %fieldset
+  - scan_id = "#{@scan.id || 'new'}"
+  - url = url_for(:action => 'ap_edit',
+                  :id     => scan_id)
   %h3= _("Registry Entry")
   %table.table.table-striped.table-bordered.table-hover
     %thead
@@ -19,9 +22,13 @@
       - else
         %tr#new_tr
           %td
-            = image_submit_tag(image_path('toolbars/import.png'),
-              :class => "rollover small",
-              :name => "accept", :alt => _("Add this entry"), :title => _("Add this entry"), :item_type => "registry", :id => "#{@scan.id || "new"}")
+            %button.btn.btn-default{:title => _("Add this entry"),
+              "data-submit"         => 'ap_form_div',
+              "data-miq_sparkle_on" => true,
+              :remote               => true,
+              "data-method"         => :post,
+              'data-click_url'      => {:url => "#{url}?accept=accept"}.to_json}
+              %i.pficon.pficon-import.fa-lg
           %td
             = _("HKLM")
           %td
