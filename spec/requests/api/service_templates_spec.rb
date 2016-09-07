@@ -158,5 +158,17 @@ describe "Service Templates API" do
       expect { st1.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { st2.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
+
+    it "can delete a service template through its nested URI" do
+      service_catalog = FactoryGirl.create(:service_template_catalog)
+      service_template = FactoryGirl.create(:service_template, :service_template_catalog => service_catalog)
+      api_basic_authorize action_identifier(:service_templates, :delete, :subresource_actions, :delete)
+
+      expect do
+        run_delete("#{service_catalogs_url(service_catalog.id)}/service_templates/#{service_template.id}")
+      end.to change(ServiceTemplate, :count).by(-1)
+
+      expect(response).to have_http_status(:no_content)
+    end
   end
 end
