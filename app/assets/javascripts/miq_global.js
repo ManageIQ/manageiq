@@ -6,6 +6,7 @@ if (! window.ManageIQ) {
       app: null, // angular application
       scope: null,  // helper scope, pending refactor
       rxSubject: null,  // an observable
+      eventNotificationsData: null, // used by the notification drawer
     },
     browser: null, // browser name
     controller: null, // stored controller, used to build URL

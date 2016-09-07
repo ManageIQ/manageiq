@@ -1,4 +1,9 @@
-miqHttpInject(angular.module('ManageIQ.notifications')).service('eventNotifications', ["$timeout", function($timeout) {
+angular.module('miq.notifications')
+  .service('eventNotifications', eventNotifications);
+
+eventNotifications.$inject = ['$timeout'];
+
+function eventNotifications($timeout) {
   if (!ManageIQ.angular.eventNotificationsData) {
     ManageIQ.angular.eventNotificationsData = {
       state: {
@@ -9,7 +14,7 @@ miqHttpInject(angular.module('ManageIQ.notifications')).service('eventNotificati
       },
       toastDelay: 8 * 1000,
       observerCallbacks: []
-    }
+    };
   }
 
   // psudo constants
@@ -261,4 +266,4 @@ miqHttpInject(angular.module('ManageIQ.notifications')).service('eventNotificati
   };
 
   this.doReset();
-}]);
+}
