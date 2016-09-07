@@ -80,7 +80,7 @@ describe StorageController do
         command = button.split('_', 2)[1]
         allow_any_instance_of(Host).to receive(:is_available?).with(command).and_return(true)
 
-        controller.instance_variable_set(:@_params, :pressed => button, :miq_grid_checks => "#{host.id}")
+        controller.instance_variable_set(:@_params, :pressed => button, :miq_grid_checks => host.id.to_s)
         controller.instance_variable_set(:@lastaction, "show_list")
         allow(controller).to receive(:show_list)
         expect(controller).to receive(:render)

@@ -1023,8 +1023,8 @@ module ApplicationController::Compare
       :indent     => 0,
       :parent     => nil,
       :section    => true,
-      :exp_id     => "#{section[:name]}",
-      :_collapsed => collapsed_state("#{section[:name]}")
+      :exp_id     => section[:name].to_s,
+      :_collapsed => collapsed_state(section[:name].to_s)
     }
     row.merge!(drift_section_data_cols(view, section))
     @section_parent_id = @rows.length
@@ -1172,7 +1172,7 @@ module ApplicationController::Compare
 
   def drift_record_field_compressed(view, section, record, field)
     basval = ""
-    row = {:col0 => "#{field[:header]}"}
+    row = {:col0 => field[:header].to_s}
 
     view.ids.each_with_index do |id, idx|
       match_condition = view.results[view.ids[0]][section[:name]][record].nil? &&
@@ -1181,7 +1181,7 @@ module ApplicationController::Compare
       if !view.results[id][section[:name]][record].nil? && # Record exists
          !view.results[id][section[:name]][record][field[:name]].nil?      # Field exists
 
-        val = "#{view.results[id][section[:name]][record][field[:name]][:_value_]}"
+        val = view.results[id][section[:name]][record][field[:name]][:_value_].to_s
         row.merge!(drift_record_field_exists_compressed(idx, match_condition, val))
       else
         val = view.results[id][section[:name]].include?(record) ? "Found" : "Missing"
@@ -1193,7 +1193,7 @@ module ApplicationController::Compare
   end
 
   def drift_record_field_expanded(view, section, record, field)
-    row = {:col0 => "#{field[:header]}"}
+    row = {:col0 => field[:header].to_s}
 
     view.ids.each_with_index do |id, idx|
       if !view.results[id][section[:name]][record].nil? && !view.results[id][section[:name]][record][field[:name]].nil?
@@ -1203,7 +1203,7 @@ module ApplicationController::Compare
                           view.results[view.ids[idx - 1]][section[:name]][record][field[:name]][:_value_].to_s ==
                           view.results[id][section[:name]][record][field[:name]][:_value_].to_s
 
-        val = "#{view.results[id][section[:name]][record][field[:name]][:_value_]}"
+        val = view.results[id][section[:name]][record][field[:name]][:_value_].to_s
         row.merge!(drift_record_field_exists_expanded(idx, match_condition, val))
       else
         match_condition = !view.results[view.ids[0]][section[:name]][record].nil? &&
@@ -1294,9 +1294,9 @@ module ApplicationController::Compare
   end
 
   def drift_add_section_field_compressed(view, section, field)
-    row = {:col0 => "#{field[:header]}"}
+    row = {:col0 => field[:header].to_s}
     view.ids.each_with_index do |id, idx|
-      val = "#{view.results[id][section[:name]][field[:name]][:_value_]}"
+      val = view.results[id][section[:name]][field[:name]][:_value_].to_s
       if !view.results[id][section[:name]][field[:name]].nil? && idx == 0     # On base object
         row.merge!(drift_add_same_image(idx, val))
       elsif !view.results[id][section[:name]].nil? && !view.results[id][section[:name]][field[:name]].nil?
@@ -1318,17 +1318,17 @@ module ApplicationController::Compare
     row = {:col0 => field[:header]}
     view.ids.each_with_index do |id, idx|
       if !view.results[id][section[:name]][field[:name]].nil? && idx == 0       # On base object
-        col = "#{view.results[id][section[:name]][field[:name]][:_value_]}"
+        col = view.results[id][section[:name]][field[:name]][:_value_].to_s
         img_bkg = "cell-stripe"
         row.merge!(drift_add_txt_col(idx, col, img_bkg))
       elsif !view.results[id][section[:name]].nil? && !view.results[id][section[:name]][field[:name]].nil?
         if view.results[id][section[:name]][field[:name]][:_match_]
-          col = "#{view.results[id][section[:name]][field[:name]][:_value_]}"
+          col = view.results[id][section[:name]][field[:name]][:_value_].to_s
           img_bkg = "cell-bkg-plain-no-shade"
           row.merge!(drift_add_txt_col(idx, col, img_bkg))
         else
           @same = false
-          col = "#{view.results[id][section[:name]][field[:name]][:_value_]}"
+          col = view.results[id][section[:name]][field[:name]][:_value_].to_s
           img_bkg = "cell-bkg-plain-mark-txt-no-shade"
           row.merge!(drift_add_txt_col(idx, col, img_bkg))
         end
@@ -1584,8 +1584,8 @@ module ApplicationController::Compare
       :indent     => 0,
       :parent     => nil,
       :section    => true,
-      :exp_id     => "#{section[:name]}",
-      :_collapsed => collapsed_state("#{section[:name]}")
+      :exp_id     => section[:name].to_s,
+      :_collapsed => collapsed_state(section[:name].to_s)
     }
     row.merge!(compare_section_data_cols(view, section, records))
 

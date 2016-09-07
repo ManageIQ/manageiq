@@ -347,7 +347,7 @@ class MiqTaskController < ApplicationController
 
     cond = add_to_condition(cond, *build_query_for_state(opts)) if opts[:state_choice] != "all"
 
-    cond[0] = "#{cond[0].join(" AND ")}"
+    cond[0] = cond[0].join(" AND ")
     cond.flatten
   end
 

@@ -37,7 +37,7 @@ module OpsController::Settings::AnalysisProfiles
         @file = [] if @file.nil?
         @file_stats = {}
         for i in 0...a[:definition]["stats"].length
-          @file_stats["#{a[:definition]["stats"][i]["target"]}"] = a[:definition]["stats"][i]["content"] ? a[:definition]["stats"][i]["content"] : false
+          @file_stats[a[:definition]["stats"][i]["target"].to_s] = a[:definition]["stats"][i]["content"] ? a[:definition]["stats"][i]["content"] : false
           @file.push(a[:definition]["stats"][i]["target"])
         end
       when "registry"

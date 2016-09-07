@@ -15,7 +15,7 @@ describe MiqAeCustomizationController do
 
         controller.instance_variable_set(:@sb,
                                          :trees       => {
-                                           :dlg_tree => {:active_node => "#{dialog.id}"}
+                                           :dlg_tree => {:active_node => dialog.id.to_s}
                                          },
                                          :active_tree => :dlg_tree)
         session[:settings] = {:display   => {:locale => 'default'}}

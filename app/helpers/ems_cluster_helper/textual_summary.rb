@@ -86,7 +86,7 @@ module EmsClusterHelper::TextualSummary
   end
 
   def textual_aggregate_cpu_speed
-    {:label => _("Total CPU Resources"), :value => "#{mhz_to_human_size(@record.aggregate_cpu_speed)}"}
+    {:label => _("Total CPU Resources"), :value => mhz_to_human_size(@record.aggregate_cpu_speed).to_s}
   end
 
   def textual_aggregate_memory

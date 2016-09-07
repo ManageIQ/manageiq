@@ -77,7 +77,7 @@ RSpec.describe "reports API" do
     expect_result_resources_to_include_hrefs(
       "resources",
       [
-        "#{results_url(result.id)}"
+        results_url(result.id).to_s
       ]
     )
     expect(response).to have_http_status(:ok)
@@ -161,7 +161,7 @@ RSpec.describe "reports API" do
 
       expect do
         api_basic_authorize action_identifier(:reports, :run)
-        run_post "#{reports_url(report.id)}", :action => "run"
+        run_post reports_url(report.id).to_s, :action => "run"
       end.to change(MiqReportResult, :count).by(1)
       expect_single_action_result(
         :href    => reports_url(report.id),
@@ -268,7 +268,7 @@ RSpec.describe "reports API" do
 
       expect do
         api_basic_authorize
-        run_post "#{reports_url(report.id)}", :action => "run"
+        run_post reports_url(report.id).to_s, :action => "run"
       end.not_to change(MiqReportResult, :count)
       expect(response).to have_http_status(:forbidden)
     end

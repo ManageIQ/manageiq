@@ -548,7 +548,7 @@ module ApplicationController::MiqRequestMethods
     @edit[:wf].get_dialog_order.each do |d|
       @edit[:wf].get_all_fields(d, false).each do |_f, field|
         unless field[:error].blank?
-          @error_div ||= "#{d}"
+          @error_div ||= d.to_s
           add_flash(field[:error], :error)
         end
       end
@@ -560,7 +560,7 @@ module ApplicationController::MiqRequestMethods
       @edit[:wf].get_all_fields(d, false).each do |_f, field|
         @edit[:wf].validate(@edit[:new])
         unless field[:error].nil?
-          @error_div ||= "#{d}"
+          @error_div ||= d.to_s
           add_flash(field[:error], :error)
         end
       end
@@ -748,8 +748,8 @@ module ApplicationController::MiqRequestMethods
     if @options[:schedule_time]
       @options[:schedule_time] = format_timezone(@options[:schedule_time], Time.zone, "raw")
       @options[:start_date] = "#{@options[:schedule_time].month}/#{@options[:schedule_time].day}/#{@options[:schedule_time].year}"  # Set the start date
-      @options[:start_hour] = "#{@options[:schedule_time].hour}"
-      @options[:start_min] = "#{@options[:schedule_time].min}"
+      @options[:start_hour] = @options[:schedule_time].hour.to_s
+      @options[:start_min] = @options[:schedule_time].min.to_s
     end
     drop_breadcrumb(:name => @miq_request.description.to_s.split(' submitted')[0], :url => "/miq_request/show/#{@miq_request.id}")
     if @miq_request.workflow_class
@@ -812,8 +812,8 @@ module ApplicationController::MiqRequestMethods
         @edit[:new][:schedule_time] = format_timezone(@edit[:new][:schedule_time], Time.zone, "raw")
         @edit[:new][:start_date] = "#{@edit[:new][:schedule_time].month}/#{@edit[:new][:schedule_time].day}/#{@edit[:new][:schedule_time].year}" # Set the start date
         if params[:id]
-          @edit[:new][:start_hour] = "#{@edit[:new][:schedule_time].hour}"
-          @edit[:new][:start_min] = "#{@edit[:new][:schedule_time].min}"
+          @edit[:new][:start_hour] = @edit[:new][:schedule_time].hour.to_s
+          @edit[:new][:start_min] = @edit[:new][:schedule_time].min.to_s
         else
           @edit[:new][:start_hour] = "00"
           @edit[:new][:start_min] = "00"

@@ -143,7 +143,7 @@ module OpsController::Settings::Ldap
       begin
         ldap_server.verify_credentials
       rescue StandardError => bang
-        add_flash("#{bang}", :error)
+        add_flash(bang.to_s, :error)
       else
         add_flash(_("Credential validation was successful"))
       end

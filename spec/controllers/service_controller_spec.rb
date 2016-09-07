@@ -11,7 +11,7 @@ describe ServiceController do
       controller.instance_variable_set(:@record, svc)
       controller.instance_variable_set(:@sb,
                                        :trees       => {
-                                         :svcs_tree => {:active_node => "#{svc.id}"}
+                                         :svcs_tree => {:active_node => svc.id.to_s}
                                        },
                                        :active_tree => :svcs_tree
                                       )

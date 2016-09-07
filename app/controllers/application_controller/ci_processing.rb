@@ -676,7 +676,7 @@ module ApplicationController::CiProcessing
       replace_right_cell if @orig_action == "x_history"
     else
       if role_allows?(:feature => "vm_right_size")
-        javascript_redirect :controller => "#{rec_cls}", :action => 'right_size', :id => recs[0], :escape => false # redirect to build the ownership screen
+        javascript_redirect :controller => rec_cls.to_s, :action => 'right_size', :id => recs[0], :escape => false # redirect to build the ownership screen
       else
         head :ok
       end
@@ -1469,7 +1469,7 @@ module ApplicationController::CiProcessing
       @refresh_partial = "vm_common/reconfigure"
     else
       if role_allows?(:feature => "vm_reconfigure")
-        javascript_redirect :controller => "#{rec_cls}", :action => 'reconfigure', :req_id => @request_id, :rec_ids => @reconfigure_items, :escape => false # redirect to build the ownership screen
+        javascript_redirect :controller => rec_cls.to_s, :action => 'reconfigure', :req_id => @request_id, :rec_ids => @reconfigure_items, :escape => false # redirect to build the ownership screen
       else
         head :ok
       end

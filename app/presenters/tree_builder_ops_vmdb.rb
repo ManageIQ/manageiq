@@ -48,7 +48,7 @@ class TreeBuilderOpsVmdb < TreeBuilderOps
       @tree_state.x_tree(@name)[:open_nodes].push("xx-#{to_cid(object.id.to_s)}") unless @tree_state.x_tree(@name)[:open_nodes].include?("xx-#{to_cid(object.id.to_s)}")
       [
         {
-          :id            => "#{to_cid(object.id.to_s)}",
+          :id            => to_cid(object.id.to_s).to_s,
           :text          => _("Indexes"),
           :image         => "folder",
           :tip           => _("Indexes"),

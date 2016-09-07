@@ -111,11 +111,11 @@ module HostHelper::TextualSummary
   end
 
   def textual_ipaddress
-    {:label => _("IP Address"), :value => "#{@record.ipaddress}"}
+    {:label => _("IP Address"), :value => @record.ipaddress.to_s}
   end
 
   def textual_ipmi_ipaddress
-    {:label => _("IPMI IP Address"), :value => "#{@record.ipmi_address}"}
+    {:label => _("IPMI IP Address"), :value => @record.ipmi_address.to_s}
   end
 
   def textual_custom_1

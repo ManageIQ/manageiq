@@ -167,12 +167,12 @@ class OpsController < ApplicationController
       @scan = @edit[:scan]
       case params[:tab].split("_")[0]
       when "new"
-        redirect_to(:action => "ap_new", :tab => params[:tab], :id => "#{@scan.id || "new"}")
+        redirect_to(:action => "ap_new", :tab => params[:tab], :id => (@scan.id.to_s || "new"))
       when "edit"
-        redirect_to(:action => "ap_edit", :tab => params[:tab], :id => "#{@scan.id || "new"}")
+        redirect_to(:action => "ap_edit", :tab => params[:tab], :id => (@scan.id.to_s || "new"))
       else
         @sb[:miq_tab] = "new#{params[:tab]}"
-        redirect_to(:action => "ap_edit", :tab => "edit#{params[:tab]}", :id => "#{@scan.id || "new"}")
+        redirect_to(:action => "ap_edit", :tab => "edit#{params[:tab]}", :id => (@scan.id.to_s || "new"))
       end
     else
       @sb[:active_tab] = params[:tab_id] || new_tab_id
@@ -456,7 +456,7 @@ class OpsController < ApplicationController
     existing_node = nil                     # Init var
 
     parent_rec = VmdbTableEvm.find_by_id(@record.vmdb_table_id)
-    parents = [parent_rec, {:id => "#{@record.vmdb_table_id}"}]
+    parents = [parent_rec, {:id => @record.vmdb_table_id.to_s}]
     # Go up thru the parents and find the highest level unopened, mark all as opened along the way
     # Skip if no parents or parent already open
     unless parents.empty? || x_tree[:open_nodes].include?(x_build_node_id(parents.last))

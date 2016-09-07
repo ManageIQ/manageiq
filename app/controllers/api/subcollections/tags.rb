@@ -23,7 +23,7 @@ module Api
 
       def tags_create_resource(parent, _type, _id, data)
         entry = parent.add_entry(data)
-        raise BadRequestError, "#{entry.errors.full_messages.join(', ')}" unless entry.valid?
+        raise BadRequestError, entry.errors.full_messages.join(', ') unless entry.valid?
         entry.tag
       rescue => err
         raise BadRequestError, "Could not create a new tag - #{err}"

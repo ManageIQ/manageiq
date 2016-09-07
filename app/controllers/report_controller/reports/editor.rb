@@ -293,9 +293,9 @@ module ReportController::Reports::Editor
       4.times { |i| end_array.push(["#{pluralize(i + 1, "week")} ago", (i + 1).weeks.to_s]) }
       5.times { |i| end_array.push(["#{pluralize(i + 2, "month")} ago", (i + 1).months.to_s]) }
       start_array = []
-      6.times { |i| start_array.push(["#{pluralize(i + 1, "day")}", (i + 1).days.to_s]) }
-      4.times { |i| start_array.push(["#{pluralize(i + 1, "week")}", (i + 1).weeks.to_s]) }
-      5.times { |i| start_array.push(["#{pluralize(i + 2, "month")}", (i + 1).months.to_s]) }
+      6.times { |i| start_array.push([pluralize(i + 1, "day").to_s, (i + 1).days.to_s]) }
+      4.times { |i| start_array.push([pluralize(i + 1, "week").to_s, (i + 1).weeks.to_s]) }
+      5.times { |i| start_array.push([pluralize(i + 2, "month").to_s, (i + 1).months.to_s]) }
       @edit[:new][:perf_end] ||= "0"
       @edit[:new][:perf_start] ||= 1.day.to_s
     when "daily"
@@ -306,9 +306,9 @@ module ReportController::Reports::Editor
       3.times  { |i| end_array.push(["#{pluralize((i + 1), "week")} ago", ((i + 1).weeks - 1.day).to_s]) }
       6.times  { |i| end_array.push(["#{pluralize((i + 1), "month")} ago", ((i + 1).months - 1.day).to_s]) }
       start_array = []
-      5.times  { |i| start_array.push(["#{pluralize(i + 2, "day")}", (i + 2).days.to_s]) }
-      3.times  { |i| start_array.push(["#{pluralize((i + 1), "week")}", (i + 1).weeks.to_s]) }
-      11.times { |i| start_array.push(["#{pluralize((i + 1), "month")}", (i + 1).months.to_s]) }
+      5.times  { |i| start_array.push([pluralize(i + 2, "day").to_s, (i + 2).days.to_s]) }
+      3.times  { |i| start_array.push([pluralize((i + 1), "week").to_s, (i + 1).weeks.to_s]) }
+      11.times { |i| start_array.push([pluralize((i + 1), "month").to_s, (i + 1).months.to_s]) }
       start_array.push(["1 year", 1.year.to_i.to_s])  # For some reason, 1.year is a float, so use to_i to get rid of decimals
       @edit[:new][:perf_end] ||= "0"
       @edit[:new][:perf_start] ||= 2.days.to_s

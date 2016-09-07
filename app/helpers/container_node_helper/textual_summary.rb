@@ -79,7 +79,7 @@ module ContainerNodeHelper::TextualSummary
     {
       :label => _("Underlying %{name}") % {:name => lives_on_entity_name},
       :image => "vendor-#{lives_on_ems.image_name}",
-      :value => "#{@record.lives_on.name}",
+      :value => @record.lives_on.name.to_s,
       :link  => url_for(
         :action     => 'show',
         :controller => 'vm_or_template',
