@@ -100,8 +100,6 @@ class MiqSnmp
     AVAILABLE_TYPES_HASH.keys
   end
 
-  private
-
   def self.create_var_bind_list(object_list, base = nil)
     vars = []
     object_list.each do |tuple|
@@ -114,6 +112,7 @@ class MiqSnmp
     end
     vars
   end
+  private_class_method :create_var_bind_list
 
   def self.subst_oid(oid, base = nil)
     oid = oid.strip
@@ -144,12 +143,15 @@ class MiqSnmp
 
     oid
   end
+  private_class_method :subst_oid
 
   def self.system_uptime
     (Time.now.utc - MiqServer.my_server.started_on.utc) * 100
   end
+  private_class_method :system_uptime
 
   def self.agent_address
     VMDB::Config.new("vmdb").get(:server, :host)
   end
+  private_class_method :agent_address
 end

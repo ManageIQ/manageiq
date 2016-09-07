@@ -63,7 +63,7 @@ describe Metric::Capture do
       expect(Metric::Capture._log).to receive(:info).with(/2 "realtime" captures on the queue.*oldest:.*recent:/)
       expect(Metric::Capture._log).to receive(:info).with(/0 "hourly" captures on the queue/)
       expect(Metric::Capture._log).to receive(:info).with(/0 "historical" captures on the queue/)
-      described_class.perf_capture_health_check(miq_server.zone)
+      described_class.send(:perf_capture_health_check, miq_server.zone)
     end
   end
 

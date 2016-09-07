@@ -69,8 +69,6 @@ module NumberHelper
     nil
   end
 
-  private
-
   def self.handling_negatives(number)
     return nil if number.nil?
     number = Float(number)
