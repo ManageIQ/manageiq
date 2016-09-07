@@ -48,6 +48,12 @@ module Api
     before_action :validate_response_format, :except => [:destroy]
     after_action :log_api_response
 
+    #
+    # Api Controller Hooks
+    #
+    respond_to :json
+    rescue_from_api_errors
+
     def handle_options_request
       head(:ok)
     end
@@ -57,12 +63,6 @@ module Api
       headers['Access-Control-Allow-Headers'] = 'origin, content-type, authorization, x-auth-token'
       headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, PATCH, OPTIONS'
     end
-
-    #
-    # Api Controller Hooks
-    #
-    respond_to :json
-    rescue_from_api_errors
 
     def collection_config
       @collection_config ||= CollectionConfig.new
