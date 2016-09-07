@@ -1157,14 +1157,14 @@ module ApplicationHelper
 
   def render_listnav_filename
     if @lastaction == "show_list" && !session[:menu_click] &&
-      %w(auth_key_pair_cloud cloud_object_store_container cloud_object_store_object cloud_volume cloud_volume_snapshot
-         container_node container_service ems_container container_group ems_cloud ems_cluster container_route
-         container_project container_replicator container_image container_image_registry container_build
-         ems_infra host miq_template offline orchestration_stack persistent_volume ems_middleware
-         middleware_server middleware_deployment middleware_datasource middleware_domain middleware_server_group
-         middleware_messaging ems_network security_group floating_ip cloud_subnet network_router network_port
-         cloud_network resource_pool retired service storage templates vm
-         configuration_job).include?(@layout) && !@in_a_form
+       %w(auth_key_pair_cloud availability_zone cloud_object_store_container cloud_object_store_object cloud_tenant
+          cloud_volume cloud_volume_snapshot container_node container_service ems_container container_group ems_cloud
+          ems_cluster container_route container_project container_replicator container_image container_image_registry
+          container_build ems_infra flavor host miq_template offline orchestration_stack persistent_volume
+          ems_middleware middleware_server middleware_deployment middleware_datasource middleware_domain
+          middleware_server_group middleware_messaging ems_network security_group floating_ip cloud_subnet
+          network_router network_port cloud_network resource_pool retired service storage templates vm
+          configuration_job).include?(@layout) && !@in_a_form
       "show_list"
     elsif @compare
       "compare_sections"

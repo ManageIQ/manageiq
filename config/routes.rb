@@ -166,6 +166,7 @@ Vmdb::Application.routes.draw do
                compare_get,
       :post => %w(
         button
+        listnav_search_selected
         quick_search
         sections_field_changed
         show
@@ -174,7 +175,7 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tl_chooser
         wait_for_task
-      ) + adv_search_post + compare_post + exp_post + perf_post
+      ) + adv_search_post + compare_post + exp_post + perf_post + save_post
     },
 
     :catalog                  => {
@@ -344,6 +345,7 @@ Vmdb::Application.routes.draw do
                compare_get,
       :post => %w(
         button
+        listnav_search_selected
         protect
         quick_search
         sections_field_changed
@@ -353,7 +355,7 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         update
       ) +
-               compare_post + adv_search_post + exp_post
+               compare_post + adv_search_post + exp_post + save_post
     },
 
     :cloud_object_store_object => {
@@ -1524,6 +1526,7 @@ Vmdb::Application.routes.draw do
                compare_get,
       :post => %w(
         button
+        listnav_search_selected
         quick_search
         sections_field_changed
         show
@@ -1533,7 +1536,8 @@ Vmdb::Application.routes.draw do
       ) +
                adv_search_post +
                compare_post +
-               exp_post
+               exp_post +
+               save_post
     },
 
     :host                     => {
