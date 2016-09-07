@@ -16,6 +16,13 @@ class Blueprint < ApplicationRecord
     status == 'published'
   end
 
+  def readonly?
+    return true if super
+
+    # with this implementation we still allow to modify status.
+    published? unless status_changed?
+  end
+
   # The new blueprint is saved before returning
   def deep_copy(new_attributes = {})
     self.class.transaction do

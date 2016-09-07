@@ -88,7 +88,8 @@ describe Dialog do
     end
 
     it "destroy with resource_action association" do
-      resource_action = FactoryGirl.create(:resource_action, :action => "Provision", :dialog => @dialog)
+      FactoryGirl.create(:resource_action, :action => "Provision", :dialog => @dialog)
+      @dialog.reload
       expect { @dialog.destroy }
         .to raise_error(RuntimeError, /Dialog cannot be deleted.*connected to other components/)
       expect(Dialog.count).to eq(1)

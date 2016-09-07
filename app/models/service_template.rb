@@ -45,6 +45,11 @@ class ServiceTemplate < ApplicationRecord
   virtual_has_one :custom_actions, :class_name => "Hash"
   virtual_has_one :custom_action_buttons, :class_name => "Array"
 
+  def readonly?
+    return true if super
+    blueprint.try(:published?)
+  end
+
   def children
     service_templates
   end

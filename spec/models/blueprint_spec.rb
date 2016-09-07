@@ -8,8 +8,6 @@ describe Blueprint do
   let(:dialog)                     { FactoryGirl.create(:dialog_with_tab_and_group_and_field) }
   let(:direct_custom_button)       { FactoryGirl.create(:custom_button, :applies_to => catalog_bundle) }
   let(:provision_request_template) { FactoryGirl.create(:miq_provision_request_template, :requester => admin, :src_vm_id => vm_template.id) }
-  let(:resource_action_1)          { FactoryGirl.create(:resource_action, :dialog => dialog) }
-  let(:resource_action_2)          { FactoryGirl.create(:resource_action, :dialog => dialog) }
   let(:vm_template)                { FactoryGirl.create(:template) }
 
   let(:catalog_vm_provisioning) do
@@ -37,14 +35,16 @@ describe Blueprint do
 
   context 'blueprint with a bundle' do
     before do
-      subject.update_attributes(:status => 'published')
       catalog_vm_provisioning.update_attributes(:blueprint => subject)
       catalog_orchestration.update_attributes(:blueprint => subject)
-      catalog_bundle.resource_actions = [resource_action_1, resource_action_2]
+      catalog_bundle.resource_actions.build(:action => 'Provision', :fqname => 'a/b/c', :dialog => dialog)
+      catalog_bundle.resource_actions.build(:action => 'Retirement', :fqname => 'x/y/z', :dialog => dialog)
+      catalog_bundle.save!
       add_and_save_service(catalog_bundle, catalog_vm_provisioning)
       add_and_save_service(catalog_bundle, catalog_orchestration)
       direct_custom_button
       catalog_bundle.custom_button_sets << custom_button_set.tap { |cbs| cbs.add_member(button_in_a_set) }
+      subject.update_attributes(:status => 'published')
     end
 
     describe '#bundle' do
@@ -76,6 +76,46 @@ describe Blueprint do
         expect(new_service_template.custom_buttons).to_not                            include(direct_custom_button)
         expect(new_service_template.custom_button_sets).to_not                        include(custom_button_set)
         expect(new_service_template.custom_button_sets.first.custom_buttons).to_not   include(button_in_a_set)
+      end
+    end
+
+    describe "#readonly?" do
+      it "prevents a blueprint from being modified" do
+        expect { subject.update_attributes(:name => 'another') }.to raise_error(ActiveRecord::ReadOnlyRecord)
+      end
+
+      it "prevents a service template from being modified" do
+        expect { catalog_orchestration.update_attributes(:name => 'ttt') }.to raise_error(ActiveRecord::ReadOnlyRecord)
+        expect { subject.bundle.update_attributes(:name => 'bp2') }.to raise_error(ActiveRecord::ReadOnlyRecord)
+      end
+
+      it "prevents a dialog from being modified" do
+        dialog.reload
+        expect { dialog.update_attributes(:name => 'ddd') }.to raise_error(ActiveRecord::ReadOnlyRecord)
+      end
+
+      it "prevents a resource action from being modified" do
+        expect do
+          ResourceAction.create(:action => 'test', :resource => subject.bundle, :dialog => dialog)
+        end.to raise_error(ActiveRecord::ReadOnlyRecord)
+
+        expect do
+          subject.bundle.resource_actions.first.update_attributes(:action => 'Test')
+        end.to raise_error(ActiveRecord::ReadOnlyRecord)
+
+        expect do
+          subject.bundle.resource_actions.first.destroy
+        end.to raise_error(ActiveRecord::ReadOnlyRecord)
+      end
+
+      it "prevents a service resource from being modified" do
+        expect do
+          ServiceResource.create(:service_template => subject.bundle)
+        end.to raise_error(ActiveRecord::ReadOnlyRecord)
+
+        expect do
+          subject.bundle.service_resources.first.update_attributes(:resource => vm_template)
+        end.to raise_error(ActiveRecord::ReadOnlyRecord)
       end
     end
   end

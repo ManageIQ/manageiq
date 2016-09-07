@@ -4,6 +4,11 @@ class ResourceAction < ApplicationRecord
 
   serialize  :ae_attributes, Hash
 
+  def readonly?
+    return true if super
+    resource.readonly? if resource.kind_of?(ServiceTemplate)
+  end
+
   def automate_queue_hash(target, override_attrs, user)
     if target.nil?
       override_values = {}

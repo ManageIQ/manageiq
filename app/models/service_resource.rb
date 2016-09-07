@@ -12,6 +12,12 @@ class ServiceResource < ApplicationRecord
   virtual_column :resource_name,        :type => :string
   virtual_column :resource_description, :type => :string
 
+  def readonly?
+    return true if super
+
+    service_template.try(:readonly?)
+  end
+
   def resource_name
     virtual_column_resource_value(:name).to_s
   end
