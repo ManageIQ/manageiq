@@ -55,7 +55,7 @@ module Api
 
         def c_id
           id = @params[:c_id] || c_path_parts[1]
-          id =~ /\A[0-9]/ ? from_cid(id) : id
+          cid?(id) ? from_cid(id) : id
         end
 
         def subcollection
@@ -63,7 +63,8 @@ module Api
         end
 
         def s_id
-          from_cid(@params[:s_id] || c_path_parts[3])
+          id = @params[:s_id] || c_path_parts[3]
+          cid?(id) ? from_cid(id) : id
         end
 
         def expand?(what)

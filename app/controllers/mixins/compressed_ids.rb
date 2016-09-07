@@ -11,4 +11,8 @@ module CompressedIds
   def from_cid(cid)
     ApplicationRecord.uncompress_id(cid)
   end
+
+  def cid?(cid)
+    ApplicationRecord.compressed_id?(cid)
+  end
 end
