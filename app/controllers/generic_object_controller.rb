@@ -1,5 +1,5 @@
-class GenericObjectDefinitionController < ApplicationController
-  include GenericObjectDefinitionHelper
+class GenericObjectController < ApplicationController
+  include GenericObjectHelper
   before_action :check_privileges
 
   def create
@@ -45,9 +45,9 @@ class GenericObjectDefinitionController < ApplicationController
   private
 
   def features
-    [ApplicationController::Feature.new_with_hash(:role        => "generic_object_definition_explorer",
+    [ApplicationController::Feature.new_with_hash(:role        => "generic_object_explorer",
                                                   :role_any    => true,
-                                                  :name        => :generic_object_definition_explorer,
+                                                  :name        => :generic_object_explorer,
                                                   :accord_name => "generic_object_definition_accordion",
                                                   :title       => _("Generic Object Definitions"))]
   end

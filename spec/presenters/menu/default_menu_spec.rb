@@ -84,7 +84,7 @@ describe Menu::DefaultMenu do
         "Explorer",
         "Simulation",
         "Customization",
-        "Generic Object Definitions",
+        "Generic Objects",
         "Import / Export",
         "Log",
         "Requests"

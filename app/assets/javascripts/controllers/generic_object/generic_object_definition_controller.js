@@ -37,9 +37,8 @@ ManageIQ.angular.app.controller('genericObjectDefinitionFormController', ['$http
   };
 
   var showSelectedItem = function(response) {
-    var modelData = response;
-    $scope.genericObjectDefinitionModel.name = modelData.name;
-    $scope.genericObjectDefinitionModel.description = modelData.description;
+    $scope.genericObjectDefinitionModel.name = response.name;
+    $scope.genericObjectDefinitionModel.description = response.description;
     $scope.showAddForm = false;
     $scope.showSingleItem = true;
     miqService.sparkleOff();

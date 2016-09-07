@@ -1,4 +1,4 @@
-describe GenericObjectDefinitionController do
+describe GenericObjectController do
   include_context "valid session"
 
   before do

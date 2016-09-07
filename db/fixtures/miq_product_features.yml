@@ -2082,11 +2082,11 @@
           :hidden: true
           :identifier: ab_button_simulate
 
-# Automate Generic Object Definitions
-- :name: Generic Object Definition
-  :description: Generic Object Definitions
+# Automate Generic Objects
+- :name: Generic Object
+  :description: Generic Objects
   :feature_type: node
-  :identifier: generic_object_definition_explorer
+  :identifier: generic_object_explorer
   :children:
     - :name: Generic Object Definition Create
       :description: Generic Object Definition Create

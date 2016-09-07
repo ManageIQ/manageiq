@@ -1,5 +1,5 @@
 class GenericObjectHelperClass
-  include GenericObjectDefinitionHelper
+  include GenericObjectHelper
 
   def initialize(toolbar_builder)
     @toolbar_builder = toolbar_builder
@@ -10,7 +10,7 @@ class GenericObjectHelperClass
   end
 end
 
-describe GenericObjectDefinitionHelper do
+describe GenericObjectHelper do
   let(:toolbar_builder) { double("ToolbarBuilder") }
   let(:subject) { GenericObjectHelperClass.new(toolbar_builder) }
 

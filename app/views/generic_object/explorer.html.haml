@@ -1,13 +1,16 @@
 #generic-object-div{"ng-controller" => "genericObjectDefinitionFormController"}
   #main_div.generic-object-main-div{"ng-hide" => "showAddForm"}
     .all-items{"ng-hide" => "showSingleItem"}
-      %h4 Generic Object Definitions
+      %h4
+        = _("Generic Object Definitions")
 
       %table.table.table-striped.table-bordered.table-hover.table-clickable.table-checkable
         %thead
           %tr
-            %th Name
-            %th Description
+            %th
+              = _("Name")
+            %th
+              = _("Description")
         %tbody
           %tr{"ng-repeat" => "definition in genericObjectList", "ng-click" => "listObjectClicked(definition.name)"}
             %td {{ definition.name }}
@@ -17,7 +20,7 @@
       .row
         .col-md-2
           %p
-            Name
+            = _("Name")
         .col-md-8
           %p.generic-object-definition-name
             {{ genericObjectDefinitionModel.name }}
@@ -25,7 +28,7 @@
       .row
         .col-md-2
           %p
-            Description
+            = _("Description")
         .col-md-8
           %p.generic-object-definition-description
             {{ genericObjectDefinitionModel.description }}
@@ -35,14 +38,14 @@
     .row
       .col-md-2
         %p
-          Name
+          = _("Name")
       .col-md-8
         %input.generic-object-definition-name{"ng-model" => "genericObjectDefinitionModel.name"}
 
     .row
       .col-md-2
         %p
-          Description
+          = _("Description")
       .col-md-8
         %input.generic-object-definition-description{"ng-model" => "genericObjectDefinitionModel.description"}
 
