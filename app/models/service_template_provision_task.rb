@@ -81,12 +81,12 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   def do_request
     if miq_request_tasks.size.zero?
       message = "Service does not have children processes"
-      _log.info("#{message}")
+      _log.info(message)
       update_and_notify_parent(:state => 'provisioned', :message => message)
     else
       miq_request_tasks.each(&:deliver_to_automate)
       message = "Service Provision started"
-      _log.info("#{message}")
+      _log.info(message)
       update_and_notify_parent(:message => message)
       queue_post_provision
     end

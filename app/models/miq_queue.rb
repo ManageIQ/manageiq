@@ -122,7 +122,7 @@ class MiqQueue < ApplicationRecord
     end
 
     msg = MiqQueue.create!(options)
-    _log.info("#{MiqQueue.format_full_log_msg(msg)}")
+    _log.info(MiqQueue.format_full_log_msg(msg))
     msg
   end
 

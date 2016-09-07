@@ -1625,7 +1625,7 @@ module ManageIQ::Providers
 
           # Process each Firewall Rule
           data['rule'].each do |rule|
-            rule_string = rule['endPort'].nil? ? "#{rule['port']}" : "#{rule['port']}-#{rule['endPort']}"
+            rule_string = rule['endPort'].nil? ? rule['port'].to_s : "#{rule['port']}-#{rule['endPort']}"
             rule_string << " (#{rule['protocol']}-#{rule['direction']})"
             result << {
               :name          => "#{data['key']} #{rule_string}",

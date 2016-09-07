@@ -125,11 +125,10 @@ class MiqSmisAgent < StorageManager
       # this seems to be due to some strange interaction between WBEM and Rails.
       # This is only a problem in the verify failure case.
       #
-      _log.warn("#{$!.inspect}")
+      _log.warn($!.inspect)
       raise $!.message
     rescue Exception
-      _log.warn("#{$!.inspect}")
-      # $log.info $!.backtrace.join("\n")
+      _log.warn($!.inspect)
       raise _("Unexpected response returned from %{table}, see log for details") %
               {:table => ui_lookup(:table => "ext_management_systems")}
     else
@@ -159,7 +158,7 @@ class MiqSmisAgent < StorageManager
         agent.connect
         agent.update_stats
       rescue Exception => err
-        _log.warn "#{err}"
+        _log.warn err.to_s
         $log.warn err.backtrace.join("\n")
         next
       ensure
@@ -175,7 +174,7 @@ class MiqSmisAgent < StorageManager
       begin
         spRn = @conn.GetInstance(me.obj_name, :LocalNamespacePath => me.namespace, :PropertyList => ['HealthState', 'OperationalStatus'])
       rescue Exception => err
-        _log.error "#{err}"
+        _log.error err.to_s
         _log.error "obj_name: #{me.obj_name}"
         next
       end
@@ -206,7 +205,7 @@ class MiqSmisAgent < StorageManager
         agent.connect
         agent.update_status
       rescue Exception => err
-        _log.warn "#{err}"
+        _log.warn err.to_s
         $log.warn err.backtrace.join("\n")
         next
       ensure

@@ -209,7 +209,7 @@ class MSRegHive
     if nkHash[:type_display] == :SUB
       level += 1
       if fqName.nil?
-        fqName = "#{nkHash[:keyname].chomp}"
+        fqName = nkHash[:keyname].chomp
       else
         fqName += "\\#{nkHash[:keyname].chomp}"
       end

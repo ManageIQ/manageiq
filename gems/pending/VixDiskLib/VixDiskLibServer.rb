@@ -53,7 +53,7 @@ class VDDKFactory
   end
 
   def shut_down_service(msg)
-    $vim_log.info "#{msg}"
+    $vim_log.info msg.to_s
     VdlWrapper.__exit__ if @started
     @running = true
     $vim_log.info "VdlWrapper.__exit__ finished"
@@ -108,7 +108,7 @@ begin
   # Now write the URI used back to the parent (client) process to let it know which port was selected.
   #
   IO.open(3, 'w') do |uri_writer|
-    uri_writer.write "#{uri_used}"
+    uri_writer.write uri_used.to_s
   end
 
   proc_reader = IO.open(4, 'r')

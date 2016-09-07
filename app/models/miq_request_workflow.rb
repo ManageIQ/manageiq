@@ -890,7 +890,7 @@ class MiqRequestWorkflow
 
   def get_ems_folders(folder, dh = {}, full_path = "")
     if folder.evm_object_class == :EmsFolder && !folder.hidden
-      full_path += full_path.blank? ? "#{folder.name}" : " / #{folder.name}"
+      full_path += full_path.blank? ? folder.name.to_s : " / #{folder.name}"
       dh[folder.id] = full_path unless folder.type == "Datacenter"
     end
 
@@ -906,7 +906,7 @@ class MiqRequestWorkflow
     if node.kind_of?(XmlHash::Element)
       folder = node.attributes[:object]
       if node.name == :ResourcePool
-        full_path += full_path.blank? ? "#{folder.name}" : " / #{folder.name}"
+        full_path += full_path.blank? ? folder.name.to_s : " / #{folder.name}"
         dh[folder.id] = full_path
       end
     end

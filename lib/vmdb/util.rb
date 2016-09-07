@@ -90,7 +90,7 @@ module VMDB
           return start_time, end_time
         end
       rescue Exception => e
-        _log.error "#{e}"
+        _log.error e.to_s
         return []
       end
     end

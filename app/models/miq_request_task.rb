@@ -186,7 +186,7 @@ class MiqRequestTask < ApplicationRecord
 
     begin
       message = "#{request_class::TASK_DESCRIPTION} initiated"
-      _log.info("#{message}")
+      _log.info(message)
       update_and_notify_parent(:message => message)
 
       # Process the request

@@ -357,7 +357,7 @@ module ScanningMixin
         end
       end
     rescue => syncErr
-      _log.error "#{syncErr}"
+      _log.error syncErr.to_s
       _log.debug { syncErr.backtrace.join("\n") }
     ensure
       if bb

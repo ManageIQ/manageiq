@@ -45,7 +45,7 @@ module ReportFormatter
     # report building methods
     def build_document_header
       super
-      type = c3_convert_type("#{mri.graph[:type]}")
+      type = c3_convert_type(mri.graph[:type].to_s)
       mri.chart = {
         :miqChart => type,
         :data     => {:columns => [], :names => {}},

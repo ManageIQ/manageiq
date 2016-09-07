@@ -242,7 +242,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Customization
       end
       obj.send("#{property}=", pwd_hash)
     else
-      value = obj.send("#{property}")
+      value = obj.send(property.to_s)
       if value.nil?
         _log.info "#{pwd_type} password was NOT set"
       else

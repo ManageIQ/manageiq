@@ -192,7 +192,7 @@ module ReportFormatter
       output << "</table>"
 
       if mri.filter_summary
-        output << "#{mri.filter_summary}"
+        output << mri.filter_summary.to_s
       end
 
       #     output << "<div class='clr'></div>"

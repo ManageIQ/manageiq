@@ -520,7 +520,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
         end
       rescue Exception => err
         msg = "Error adjusting schedules: #{err.message}"
-        _log.error("#{msg}")
+        _log.error(msg)
         _log.log_backtrace(err)
         do_exit("#{msg}. Restarting.", 1)
       end
@@ -549,7 +549,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       rescue ActiveRecord::StatementInvalid, SystemExit
         raise
       rescue Exception => err
-        _log.error("#{err.message}")
+        _log.error(err.message)
         _log.log_backtrace(err)
       end
       Thread.pass

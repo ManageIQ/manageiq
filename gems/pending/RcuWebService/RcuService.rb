@@ -114,12 +114,12 @@ class RcuService < Handsoap::Service
       obj.each do |k, v|
         if v.kind_of? Array
           v.each do |av|
-            node.add "#{k}" do |i|
+            node.add k.to_s do |i|
               marshalObj(i, av)
             end
           end
         else
-          node.add "#{k}" do |i|
+          node.add k.to_s do |i|
             marshalObj(i, v)
           end
         end

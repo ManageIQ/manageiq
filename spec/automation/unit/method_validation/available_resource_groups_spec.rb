@@ -7,7 +7,7 @@ describe "Available_Resource_Groups Method Validation" do
 
   context "workspace has no service template" do
     it "provides only default value to the resource group list" do
-      ws = MiqAeEngine.instantiate("#{@ins}", user)
+      ws = MiqAeEngine.instantiate(@ins.to_s, user)
       expect(ws.root["values"]).to eq(nil => default_desc)
     end
   end

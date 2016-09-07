@@ -44,7 +44,7 @@ module ManageIQ::Providers::CloudManager::Provision::StateMachine
 
     status_message = "completed; post provision work queued" if clone_status
     message = "Clone of #{clone_direction} is #{status_message}"
-    _log.info("#{message}")
+    _log.info(message)
     update_and_notify_parent(:message => message)
 
     if clone_status

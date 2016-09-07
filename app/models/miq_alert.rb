@@ -539,7 +539,7 @@ class MiqAlert < ApplicationRecord
     begin
       result = MiqAeEvent.eval_alert_expression(target, aevent)
     rescue => err
-      _log.error("#{err.message}")
+      _log.error(err.message)
       result = false
     end
     result

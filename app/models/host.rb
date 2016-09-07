@@ -355,7 +355,7 @@ class Host < ApplicationRecord
       data  = event.attributes["full_data"]
       prevented = data.fetch_path(:policy, :prevented) if data
     end
-    prevented ? _log.info("#{event.attributes["message"]}") : send(*action)
+    prevented ? _log.info((event.attributes["message"]).to_s) : send(*action)
   end
 
   def ipmi_power_on
@@ -809,7 +809,7 @@ class Host < ApplicationRecord
     rescue Net::SSH::HostKeyMismatch
       raise # Re-raise the error so the UI can prompt the user to allow the keys to be reset.
     rescue Exception => err
-      _log.warn("#{err.inspect}")
+      _log.warn(err.inspect)
       raise MiqException::MiqHostError, _("Unexpected response returned from system, see log for details")
     else
       true

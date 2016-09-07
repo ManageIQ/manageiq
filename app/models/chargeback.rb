@@ -143,7 +143,7 @@ class Chargeback < ActsAsArModel
     when "monthly"
       s_ts = ts.beginning_of_month
       e_ts = ts.end_of_month
-      [s_ts, e_ts, "#{s_ts.strftime("%b %Y")}"]
+      [s_ts, e_ts, s_ts.strftime("%b %Y")]
     else
       raise _("interval '%{interval}' is not supported") % {:interval => interval}
     end

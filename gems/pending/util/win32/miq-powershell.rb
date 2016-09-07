@@ -78,7 +78,7 @@ module MiqPowerShell
     node = xml.find_first("//*/Property[@Name=\"Message\"]") if node.nil? || node.text.to_s.strip.empty?
     err_msg << "#{node.text} " unless node.nil?
     node = xml.find_first("//*/Property[@Name=\"PositionMessage\"]")
-    err_msg << "#{node.text}" unless node.nil?
+    err_msg << node.text.to_s unless node.nil?
     raise err_msg
   end
 

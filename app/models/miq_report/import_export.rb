@@ -40,7 +40,7 @@ module MiqReport::ImportExport
         rep = MiqReport.new(report)
         result = {:message => "Imported Report: [#{report["name"]}]", :level => :info, :status => :add}
       end
-      _log.info("#{msg}")
+      _log.info(msg)
 
       if options[:save] && result[:status].in?([:add, :update])
         rep.save!

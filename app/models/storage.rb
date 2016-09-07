@@ -272,7 +272,7 @@ class Storage < ApplicationRecord
     end
 
     if scan_complete?(miq_task)
-      _log.info "#{scan_complete_message(miq_task)}"
+      _log.info scan_complete_message(miq_task).to_s
       return
     end
 
@@ -540,7 +540,7 @@ class Storage < ApplicationRecord
     hosts = active_hosts_with_authentication_status_ok_in_zone(MiqServer.my_zone)
     if hosts.empty?
       message = "There are no active Hosts with valid credentials connected to Storage: [#{name}] in Zone: [#{MiqServer.my_zone}]."
-      _log.warn "#{message}"
+      _log.warn message
       raise MiqException::MiqUnreachableStorage,
             _("There are no active Hosts with valid credentials connected to Storage: [%{name}] in Zone: [%{zone}].") %
               {:name => name, :zone => MiqServer.my_zone}

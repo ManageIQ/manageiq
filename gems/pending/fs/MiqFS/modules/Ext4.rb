@@ -226,7 +226,7 @@ module Ext4
       dirObj = ifs_getDir(dir, miqfs)
       dirEnt = dirObj.nil? ? nil : dirObj.findEntry(fname)
     rescue RuntimeError => err
-      $log.error "#{err.message}" if $log
+      $log.error err.message.to_s if $log
       dirEnt = nil
     end
 

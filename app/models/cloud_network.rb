@@ -27,11 +27,11 @@ class CloudNetwork < ApplicationRecord
 
   # Define all getters and setters for extra_attributes related virtual columns
   %i(maximum_transmission_unit port_security_enabled).each do |action|
-	  define_method("#{action.to_s}=") do |value|
+	  define_method("#{action}=") do |value|
       extra_attributes_save(action, value)
     end
 
-    define_method("#{action.to_s}") do
+    define_method(action) do
       extra_attributes_load(action)
     end
   end

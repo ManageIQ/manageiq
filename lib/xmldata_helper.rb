@@ -14,7 +14,7 @@ class XmlData < ActiveRecord::Base
     _log.info "request received from ems id: #{emsId}"
     handler = EventXmlHandler.new
     Document.parse_stream(data, handler)
-    $log.debug "#{handler.result.inspect}"
+    $log.debug handler.result.inspect
 
     handler.result.each { |event| eval "VmwareEmsEvent.#{event[:type]}(event)" }
   end

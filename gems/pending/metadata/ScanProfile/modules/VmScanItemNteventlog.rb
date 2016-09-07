@@ -19,7 +19,7 @@ module VmScanItemNteventlog
             ntevent = Win32EventLog.new(vm.rootTrees[0])
             ntevent.readAllLogs(d['content'])
           rescue MiqException::NtEventLogFormat
-            $log.warn "#{$!}"
+            $log.warn $!.to_s
           rescue => err
             $log.error "Win32EventLog: #{err}"
             $log.error err.backtrace.join("\n")
