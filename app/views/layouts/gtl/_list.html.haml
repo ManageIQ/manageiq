@@ -248,7 +248,6 @@
                     - click = remote_function(:loading  => "miqSparkle(true);",
                                               :complete => "miqSparkle(false);",
                                               :url      => {:action => 'x_show', :id => "xx-#{typ}_-#{to_cid(row['id'])}"})
-                    -#- click = "miqTreeActivateNode('widgets_tree', 'xx-#{typ}_-#{to_cid(row['id'])}');"
                   - when "IsoDatastore"
                     - click = "miqTreeActivateNode('iso_datastores_tree', 'isd-#{to_cid(row['id'])}');"
                   - when "PxeServer"

@@ -10,12 +10,12 @@
     - else
       %table.table.table-striped.table-bordered.table-hover
         %tbody
-          - @profiles.each do |pp|
+          - @profiles.each do |profile|
             %tr{:title => _("View this Profile"),
-              :onclick => "miqTreeActivateNode('policy_profile_tree', 'pp-#{to_cid(pp.id)}');"}
+              :onclick => "miqTreeActivateNode('policy_profile_tree', 'profile-#{to_cid(profile.id)}');"}
               %td.narrow
-                %img{:src => image_path("100/policy_profile#{pp.active? ? '' : '_inactive'}.png")}
+                %img{:src => image_path("100/policy_profile#{profile.active? ? '' : '_inactive'}.png")}
               %td
-                = pp.description
+                = profile.description
 - else
   = render :partial => "profile_details"
