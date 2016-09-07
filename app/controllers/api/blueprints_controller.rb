@@ -16,9 +16,9 @@ module Api
       blueprint
     end
 
-    def edit_resource_blueprints(_type, id, data)
+    def edit_resource_blueprints(type, id, data)
       attributes = data.except("bundle")
-      blueprint = Blueprint.find(id)
+      blueprint = resource_search(id, type, Blueprint)
       blueprint.update!(attributes)
       bundle = data["bundle"]
       update_bundle(blueprint, bundle) if bundle
@@ -48,7 +48,7 @@ module Api
         options[:service_dialog] = service_dialog_options(bundle)
       end
       options[:service_templates] = bundle.fetch("service_templates", []).collect do |st|
-        ServiceTemplate.find(parse_id(st, :service_templates))
+        resource_search(parse_id(st, :service_templates), :service_templates, ServiceTemplate)
       end
       options[:entry_points] = bundle["automate_entrypoints"] if bundle["automate_entrypoints"]
       options
@@ -56,12 +56,15 @@ module Api
 
     def service_catalog_options(bundle)
       if bundle["service_catalog"]
-        ServiceTemplateCatalog.find(parse_id(bundle["service_catalog"], :service_catalogs))
+        resource_search(parse_id(bundle["service_catalog"], :service_catalogs),
+                        :service_catalogs, ServiceTemplateCatalog)
       end
     end
 
     def service_dialog_options(bundle)
-      Dialog.find(parse_id(bundle["service_dialog"], :service_dialogs)) if bundle["service_dialog"]
+      if bundle["service_dialog"]
+        resource_search(parse_id(bundle["service_dialog"], :service_dialogs), :service_dialogs, Dialog)
+      end
     end
   end
 end
