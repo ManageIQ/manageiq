@@ -13,7 +13,7 @@
  *= require miq_timeline
  *= require angular-patternfly-sass/dist/styles/angular-patternfly
  *= require schedule_editor
- *= require miq_dynatree
+ *= require miq_tree
  *= require codemirror
  *= require codemirror/theme/eclipse
  *= require jqplot

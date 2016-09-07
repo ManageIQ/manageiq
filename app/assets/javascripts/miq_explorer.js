@@ -115,7 +115,7 @@ ManageIQ.explorer.processReplaceRightCell = function(data) {
 
   ManageIQ.explorer.miqButtons(data);
 
-  if (_.isString(data.clearTreeCookies)) { miqDeleteDynatreeCookies(data.clearTreeCookies); }
+  if (_.isString(data.clearTreeCookies)) { miqDeleteTreeCookies(data.clearTreeCookies); }
 
   if (_.isString(data.accordionSwap)) {
     miqAccordionSwap('#accordion .panel-collapse.collapse.in', '#' + data.accordionSwap + '_accord');
@@ -198,7 +198,7 @@ ManageIQ.explorer.processReplaceRightCell = function(data) {
 
   if (!_.isUndefined(data.activateNode)) {
     miqExpandParentNodes(data.activateNode.activeTree, data.activateNode.osf);
-    miqDynatreeActivateNodeSilently(data.activateNode.activeTree, data.activateNode.osf);
+    miqTreeActivateNodeSilently(data.activateNode.activeTree, data.activateNode.osf);
   }
 
   if (_.isObject(data.lockTrees)) {

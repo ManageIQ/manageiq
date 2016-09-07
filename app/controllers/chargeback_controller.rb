@@ -801,7 +801,7 @@ class ChargebackController < ApplicationController
 
     # FIXME
     #  if params[:action].ends_with?("_delete")
-    #    page << "miqDynatreeActivateNodeSilently('#{x_active_tree.to_s}', '<%= x_node %>');"
+    #    page << "miqTreeActivateNodeSilently('#{x_active_tree.to_s}', '<%= x_node %>');"
     #  end
     # presenter[:select_node] = x_node if params[:action].ends_with?("_delete")
     presenter[:osf_node] = x_node

@@ -9,13 +9,13 @@ module ApplicationController::TreeSupport
       if session[:squash_open] == false
         page << "$('#squash_img i').attr('class','fa fa-angle-double-up fa-lg')"
         page << "$('#squash_img').prop('title', 'Collapse All')"
-        page << "miqDynatreeToggleExpand('#{j_str(session[:tree_name])}', true)"
+        page << "miqTreeToggleExpand('#{j_str(session[:tree_name])}', true)"
         session[:squash_open] = true
       else
         page << "$('#squash_img i').attr('class','fa fa-angle-double-down fa-lg')"
         page << "$('#squash_img').prop('title', 'Expand All')"
-        page << "miqDynatreeToggleExpand('#{j_str(session[:tree_name])}', false);"
-        page << "miqDynatreeActivateNodeSilently('#{j_str(session[:tree_name])}', '#{item}');"
+        page << "miqTreeToggleExpand('#{j_str(session[:tree_name])}', false);"
+        page << "miqTreeActivateNodeSilently('#{j_str(session[:tree_name])}', '#{item}');"
         session[:squash_open] = false
       end
     end
@@ -31,7 +31,7 @@ module ApplicationController::TreeSupport
     end
   end
 
-  def tree_autoload_dynatree
+  def tree_autoload
     @edit ||= session[:edit] # Remember any previous @edit
     nodes = tree_add_child_nodes(params[:id])
     render :json => TreeBuilder.convert_bs_tree(nodes)

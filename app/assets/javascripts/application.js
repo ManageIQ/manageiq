@@ -57,7 +57,7 @@
 //= require patternfly-bootstrap-treeview
 //= require jquery.observe_field
 //= require miq_ujs_bindings
-//= require miq_dynatree
+//= require miq_tree
 //= require codemirror
 //= require codemirror/mode/css/css
 //= require codemirror/mode/htmlmixed/htmlmixed

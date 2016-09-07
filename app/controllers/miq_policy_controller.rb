@@ -510,7 +510,7 @@ class MiqPolicyController < ApplicationController
 
     r = proc { |opts| render_to_string(opts) }
 
-    # With dynatree, simply replace the tree partials to reload the trees
+    # Simply replace the tree partials to reload the trees
     replace_trees.each do |name|
       case name
       when :policy_profile

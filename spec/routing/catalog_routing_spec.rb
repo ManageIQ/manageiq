@@ -66,7 +66,7 @@ describe 'routes for CatalogController' do
     st_upload_image
     svc_catalog_provision
     tag_edit_form_field_changed
-    tree_autoload_dynatree
+    tree_autoload
     tree_select
     x_button
     x_history

@@ -5,7 +5,7 @@
       %tbody
         - @folders.each do |f|
           %tr{:title => _("View Condition"),
-            :onclick => "miqDynatreeActivateNode('condition_tree', 'xx-#{f.camelize(:lower)}');"}
+            :onclick => "miqTreeActivateNode('condition_tree', 'xx-#{f.camelize(:lower)}');"}
             %td.narrow
               %img{:src => image_path("100/#{f.underscore}.png")}
             %td
