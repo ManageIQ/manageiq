@@ -138,8 +138,7 @@ class ApplicationHelper::ToolbarBuilder
     button_hide = build_toolbar_hide_button(bgi[:id])
     if button_hide
       # These buttons need to be present even if hidden as we show/hide them dynamically
-      return nil unless %w(perf_refresh perf_reload vm_perf_refresh vm_perf_reload
-                           timeline_txt timeline_csv timeline_pdf).include?(bgi[:id])
+      return nil unless %w(timeline_txt timeline_csv timeline_pdf).include?(bgi[:id])
     end
 
     @sep_needed = true unless button_hide
