@@ -1,4 +1,4 @@
-angular.module('ManageIQ.notifications')
+angular.module('miq.notifications')
   .controller('toastListController', ToastListCtrl);
 
 ToastListCtrl.$inject = ['$scope', 'eventNotifications', '$timeout'];

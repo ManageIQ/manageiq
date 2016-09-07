@@ -1,5 +1,5 @@
 = render :partial => 'layouts/about_modal'
-%nav.navbar.navbar-pf-vertical{'ng-controller' => "headerController as vm"}
+%nav.navbar.navbar-pf-vertical#notification-app{'ng-controller' => "headerController as vm"}
   .navbar-header
     %button{:type => "button", :class => "navbar-toggle"}
       %span.sr-only
@@ -38,7 +38,7 @@
   = render :partial => "layouts/toast_list"
 
 :javascript
-  miq_bootstrap('.navbar.navbar-pf-vertical', 'ManageIQ.notifications');
+  miq_bootstrap('#notification-app', 'miq.notifications');
 
 -# if set by controller, set up to run as JS after onload is done
 - if @miq_after_onload

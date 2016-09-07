@@ -1,4 +1,4 @@
-angular.module('ManageIQ.notifications')
+angular.module('miq.notifications')
   .controller('headerController', HeaderCtrl);
 
 HeaderCtrl.$inject = ['$scope', 'eventNotifications', '$timeout'];

@@ -1,4 +1,4 @@
-angular.module('ManageIQ.notifications')
+angular.module('miq.notifications')
   .service('eventNotifications', eventNotifications);
 
 eventNotifications.$inject = ['$timeout'];

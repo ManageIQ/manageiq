@@ -1,4 +1,4 @@
-angular.module('ManageIQ.notifications')
+angular.module('miq.notifications')
   .controller('notificationsDrawerController', NotificationsDrawerCtrl);
 
 NotificationsDrawerCtrl.$inject = ['$scope', 'eventNotifications', '$timeout'];
