@@ -55,4 +55,9 @@ describe ManageIQ::Providers::Vmware::CloudManager do
         MiqException::MiqInvalidCredentialsError, 'Login failed due to a bad username or password.')
     end
   end
+
+  it "doesn't support vm_destroy" do
+    expect(@ems.respond_to?(:vm_destroy)).to eq(false)
+    expect(@ems.supports_vm_destroy?).to eq(false)
+  end
 end
