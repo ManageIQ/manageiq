@@ -86,25 +86,12 @@ module Api
                          :only => [:show, :update, :destroy, :handle_options_request, :options]
     end
 
-    def base_config
-      Settings.base
-    end
-
     def version_config
       Settings.version
     end
 
     def collection_config
       @collection_config ||= CollectionConfig.new
-    end
-
-    def initialize
-      @module          = base_config[:module]
-      @name            = base_config[:name]
-      @description     = base_config[:description]
-      @version         = base_config[:version]
-      @prefix          = "/#{@module}"
-      @api_config      = VMDB::Config.new("vmdb").config[@module.to_sym] || {}
     end
 
     before_action :parse_api_request, :log_api_request, :validate_api_request

@@ -2,9 +2,9 @@ module Api
   class ApiController < Api::BaseController
     def index
       res = {
-        :name        => @name,
-        :description => @description,
-        :version     => @version,
+        :name        => Settings.base.name,
+        :description => Settings.base.description,
+        :version     => Settings.base.version,
         :versions    => entrypoint_versions,
         :settings    => user_settings,
         :identity    => auth_identity,
