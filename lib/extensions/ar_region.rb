@@ -4,6 +4,9 @@ module ArRegion
   extend ActiveSupport::Concern
 
   DEFAULT_RAILS_SEQUENCE_FACTOR = 1_000_000_000_000
+  COMPRESSED_ID_SEPARATOR = 'r'.freeze
+  CID_OR_ID_MATCHER = "\\d+?#{COMPRESSED_ID_SEPARATOR}?\\d+".freeze
+  RE_COMPRESSED_ID = /^(\d+)#{COMPRESSED_ID_SEPARATOR}(\d+)$/
 
   included do
     cache_with_timeout(:id_to_miq_region) { Hash.new }
@@ -93,8 +96,6 @@ module ArRegion
     # ID compression
     #
 
-    COMPRESSED_ID_SEPARATOR = 'r'
-    RE_COMPRESSED_ID = /^(\d+)#{COMPRESSED_ID_SEPARATOR}(\d+)$/
     def compressed_id?(id)
       id.to_s =~ RE_COMPRESSED_ID
     end
