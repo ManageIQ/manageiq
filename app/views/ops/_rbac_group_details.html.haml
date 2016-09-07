@@ -60,8 +60,8 @@
             - params = {:class => "product product-#{tenant.divisible ? "tenant" : "project"}"}
             - if role_allows?(:feature => "rbac_tenant_show")
               - params[:class] = "#{params[:class]} pointer"
-              - params.merge!({:onclick => "miqTreeActivateNode('rbac_tree', 'tn-#{to_cid(tenant.id)}');",
-                               :title   => tenant.divisible ? _("View this Tenant") : _("View this Project")})
+              - params[:onclick] = "miqTreeActivateNode('rbac_tree', 'tn-#{to_cid(tenant.id)}');",
+              - params[:title] = tenant.divisible ? _("View this Tenant") : _("View this Project")
             %i{params}
             = h(tenant.name)
         - else

@@ -14,6 +14,6 @@
               :tree_name                  => "dialog_edit_tree",
               :bs_tree                    => @dialog_edit_tree,
               :onclick                    => "miqOnClickSelectDlgEditTreeNode",
-              :select_node                => "#{x_node(:dialog_edit_tree)}",
+              :select_node                => x_node(:dialog_edit_tree).to_s,
               :tree_state                 => true,
               :cookie_prefix              => "edit_"})
