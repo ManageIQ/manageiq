@@ -34,6 +34,7 @@ class TreeBuilderTags < TreeBuilder
                   :check_url      => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
                   :oncheck        => @edit.nil? ? nil : "miqOnCheckUserFilters",
                   :checkboxes     => true,
+                  :highlight_changes => true,
                   :onclick        => false)
   end
 
@@ -51,11 +52,6 @@ class TreeBuilderTags < TreeBuilder
   def x_get_classification_kids(parent, count_only)
     kids = parent.entries.map do |kid|
       kid_id = "#{parent.name}-#{kid.name}"
-      kid_class = if (@edit && @edit[:new][:filters][kid_id] == @edit[:current][:filters][kid_id]) || ![kid_id].include?(@filters) # Check new vs current
-                    "cfme-no-cursor-node"       # No cursor pointer
-                  else
-                    "cfme-blue-node"            # Show node as different
-                  end
       select = false
           if (@edit && @edit[:new][:filters].key?(kid_id)) || (@filters && @filters.key?(kid_id))
             select = true
@@ -65,8 +61,7 @@ class TreeBuilderTags < TreeBuilder
        :text     => kid.description,
        :tooltip  => _("Tag: %{description}") % {:description => kid.description},
        :select   => select,
-       :cfmeNoClick  => true,
-       :addClass => kid_class}
+       :cfmeNoClick  => @edit.nil?}
     end
     count_only_or_objects(count_only, kids)
   end

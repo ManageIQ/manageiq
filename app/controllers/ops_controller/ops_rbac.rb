@@ -1003,7 +1003,7 @@ module OpsController::OpsRbac
         cat_name = Classification.find_by(:id => from_cid(cat)).name
         tag_name = Classification.find_by(:id => tag).name
         if params[:check] == "0"                    #   unchecked
-          @edit[:new][:filters].delete("/managed/#{cat_name}/#{tag_name}")   #     Remove the tag from the filters array
+          @edit[:new][:filters].except!("#{cat_name}-#{tag_name}")   #     Remove the tag from the filters array
         else                                        #   checked
           @edit[:new][:filters]["#{cat_name}-#{tag_name}"] = "/managed/#{cat_name}/#{tag_name}" # Put them in the hash
         end

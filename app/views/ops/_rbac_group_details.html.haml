@@ -181,7 +181,7 @@
         %br/
         %br/
         :javascript
-          miqDynatreeResetState('#{j_str @tags_tree.name}');
+          miqTreeResetState('#{j_str @tags_tree.name}');
         = render(:partial => 'shared/tree', :locals => {:tree => @tags_tree, :name => @tags_tree.name})
       = miq_tab_content('hosts_clusters') do
         %br/
