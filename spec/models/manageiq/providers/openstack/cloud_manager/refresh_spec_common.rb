@@ -74,7 +74,6 @@ module Openstack
       expect(CloudNetwork.count).to                      eq network_data.networks.count
       expect(CloudSubnet.count).to                       eq network_data.subnets.count
       expect(NetworkRouter.count).to                     eq network_data.routers.count
-      expect(CloudVolume.count).to                       eq volumes_count
       expect(VmOrTemplate.count).to                      eq vms_count + images_count
       expect(MiqTemplate.count).to                       eq images_count
       expect(Disk.count).to                              eq disks_count
@@ -90,16 +89,10 @@ module Openstack
       # Just check that queue is not empty
       expect(MiqQueue.count).to            be > 0
 
-      if volume_snapshot_pagination_bug
-        expect(CloudVolumeSnapshot.count).to be > 0
-      else
-        expect(CloudVolumeSnapshot.count).to eq volume_snapshots_count
-      end
     end
 
     def assert_with_skips
       # skips configured modules
-      expect(CloudVolume.count).to eq 0
 
       # .. but other things are still present:
       expect(Disk.count).to       eq disks_count(false)
@@ -122,7 +115,6 @@ module Openstack
       assert_routers
       assert_specific_routers
       assert_specific_volumes
-      assert_specific_volume_snapshots
       assert_specific_directories
       assert_specific_templates
       assert_specific_stacks
@@ -237,7 +229,7 @@ module Openstack
     end
 
     def assert_table_counts
-      expect(ExtManagementSystem.count).to               eq 2 # Can this be not hardcoded?
+      expect(ExtManagementSystem.count).to               eq 3 # Can this be not hardcoded? self/network/cinder
       expect(Flavor.count).to                            eq compute_data.flavors.count
       expect(AvailabilityZone.count).to                  eq availability_zones_count
       expect(FloatingIp.count).to                        eq network_data.floating_ips.sum
@@ -247,7 +239,6 @@ module Openstack
       expect(CloudNetwork.count).to                      eq network_data.networks.count
       expect(CloudSubnet.count).to                       eq network_data.subnets.count
       expect(NetworkRouter.count).to                     eq network_data.routers.count
-      expect(CloudVolume.count).to                       eq volumes_count
       expect(VmOrTemplate.count).to                      eq vms_count + images_count
       expect(Vm.count).to                                eq vms_count
       expect(MiqTemplate.count).to                       eq images_count
@@ -270,11 +261,6 @@ module Openstack
       expect(CloudService.count).to        be > 0
       expect(CloudResourceQuota.count).to  be > 0
 
-      if volume_snapshot_pagination_bug
-        expect(CloudVolumeSnapshot.count).to be > 0
-      else
-        expect(CloudVolumeSnapshot.count).to eq volume_snapshots_count
-      end
     end
 
     def assert_table_counts_orchestration
@@ -586,13 +572,6 @@ module Openstack
       # assert_objects_with_hashes(volumes, volume_data.volumes)
     end
 
-    def assert_specific_volume_snapshots
-      return if volume_snapshot_pagination_bug
-      volume_snapshots = CloudVolumeSnapshot.all
-      defined_volume_snapshots = volume_data.volume_snapshots
-
-      assert_objects_with_hashes(volume_snapshots, defined_volume_snapshots, {}, {}, [:description])
-    end
 
     def assert_specific_directories
       return unless storage_supported?

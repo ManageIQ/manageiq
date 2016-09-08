@@ -2,11 +2,11 @@
 #
 #
 module ManageIQ::Providers
-  class StorageManager::CinderStorageManager::RefreshParser < ManageIQ::Providers::CloudManager::RefreshParser
-    include ManageIQ::Providers::StorageManager::CinderStorageManager::RefreshHelperMethods
+  class StorageManager::CinderManager::RefreshParser < ManageIQ::Providers::CloudManager::RefreshParser
+    include ManageIQ::Providers::StorageManager::CinderManager::RefreshHelperMethods
     include Vmdb::Logging
 
-    attr_accessor :data, :parser
+    attr_accessor :data
 
     def self.ems_inv_to_hashes(ems, options = nil)
       new(ems, options).ems_inv_to_hashes
@@ -20,8 +20,7 @@ module ManageIQ::Providers
       @data_index        = {}
 
         
-      @cinder_handle     = ems.cinder_handle
-      @cinder_service    = @cinder_handle.cinder_service
+      @cinder_service    = ems.parent_manager.cinder_service
     end
 
     def ems_inv_to_hashes

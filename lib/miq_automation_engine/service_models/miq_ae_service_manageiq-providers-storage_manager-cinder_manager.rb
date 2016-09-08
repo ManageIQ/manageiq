@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_StorageManager_CinderManager < MiqAeServiceManageIQ_Providers_StorageManager
+  end
+end

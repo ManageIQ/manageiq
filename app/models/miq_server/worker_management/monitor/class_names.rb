@@ -33,8 +33,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Openstack::CloudManager::RefreshWorker
     ManageIQ::Providers::Openstack::NetworkManager::RefreshWorker
     ManageIQ::Providers::Openstack::InfraManager::RefreshWorker
-    ManageIQ::Providers::StorageManager::CinderStorageManager::RefreshWorker
-    ManageIQ::Providers::StorageManager::SwiftStorageManager::RefreshWorker
+    ManageIQ::Providers::StorageManager::CinderManager::RefreshWorker
     ManageIQ::Providers::Vmware::CloudManager::RefreshWorker
     ManageIQ::Providers::Vmware::NetworkManager::RefreshWorker
     ManageIQ::Providers::Vmware::InfraManager::RefreshWorker
@@ -50,8 +49,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Openstack::CloudManager::EventCatcher
     ManageIQ::Providers::Openstack::NetworkManager::EventCatcher
     ManageIQ::Providers::Openstack::InfraManager::EventCatcher
-    ManageIQ::Providers::StorageManager::CinderStorageManager::EventCatcher
-    ManageIQ::Providers::StorageManager::SwiftStorageManager::EventCatcher
+    ManageIQ::Providers::StorageManager::CinderManager::EventCatcher
     ManageIQ::Providers::Vmware::InfraManager::EventCatcher
     MiqEventHandler
     MiqGenericWorker
@@ -108,8 +106,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Openstack::CloudManager::RefreshWorker
     ManageIQ::Providers::Openstack::NetworkManager::RefreshWorker
     ManageIQ::Providers::Openstack::InfraManager::RefreshWorker
-    ManageIQ::Providers::StorageManager::CinderStorageManager::RefreshWorker
-    ManageIQ::Providers::StorageManager::SwiftStorageManager::RefreshWorker
+    ManageIQ::Providers::StorageManager::CinderManager::RefreshWorker
     ManageIQ::Providers::Vmware::CloudManager::RefreshWorker
     ManageIQ::Providers::Vmware::NetworkManager::RefreshWorker
     ManageIQ::Providers::Vmware::InfraManager::RefreshWorker
@@ -124,8 +121,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Openstack::CloudManager::EventCatcher
     ManageIQ::Providers::Openstack::NetworkManager::EventCatcher
     ManageIQ::Providers::Openstack::InfraManager::EventCatcher
-    ManageIQ::Providers::StorageManager::CinderStorageManager::EventCatcher
-    ManageIQ::Providers::StorageManager::SwiftStorageManager::EventCatcher
+    ManageIQ::Providers::StorageManager::CinderManager::EventCatcher
     ManageIQ::Providers::Amazon::CloudManager::EventCatcher
     ManageIQ::Providers::Azure::CloudManager::EventCatcher
     ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher

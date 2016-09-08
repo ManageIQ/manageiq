@@ -2,7 +2,7 @@
 # TODO: (hsong) duplicate with ManageIQ::Providers::NetworkManager::EventParser
 #                   and ManageIQ::Providers::InfraManager::EventParser
 #
-module ManageIQ::Providers::StorageManager::CinderStorageManager::EventParser
+module ManageIQ::Providers::StorageManager::CinderManager::EventParser
   def self.event_to_hash(event, ems_id)
     log_header = "ems_id: [#{ems_id}] " unless ems_id.nil?
 

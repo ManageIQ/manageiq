@@ -11,6 +11,7 @@ module ManageIQ::Providers
     def save_inventory(ems, target, hashes)
       super
       EmsRefresh.queue_refresh(ems.network_manager)
+      EmsRefresh.queue_refresh(ems.cinder_manager)
     end
 
     def post_process_refresh_classes

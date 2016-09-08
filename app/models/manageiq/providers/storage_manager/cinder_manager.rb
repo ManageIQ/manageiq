@@ -1,11 +1,9 @@
 #
 #
-# TODO (hsong) Storage Manager
 #
 #
 
-
-class ManageIQ::Providers::StorageManager::CinderStorageManager < ManageIQ::Providers::StorageManager 
+class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::StorageManager 
   require_nested :EventCatcher
   require_nested :EventParser
   require_nested :RefreshParser
@@ -23,6 +21,7 @@ class ManageIQ::Providers::StorageManager::CinderStorageManager < ManageIQ::Prov
            :authentications,
            :authentication_for_summary,
            :zone,
+           :cinder_service,
            :connect,
            :verify_credentials,
            :with_provider_connection,
@@ -34,12 +33,12 @@ class ManageIQ::Providers::StorageManager::CinderStorageManager < ManageIQ::Prov
            :to        => :parent_manager,
            :allow_nil => true
 
-  supports :cinder_storage do
+  supports :cinder_service do
     if self.parent_manager
-      unsupported_reason_add(:cinder_storage, self.parent_manager.unsupported_reason(:cinder_storage)) unless 
-        self.parent_manager.supports_cinder_serive?
+      unsupported_reason_add(:cinder_service, self.parent_manager.unsupported_reason(:cinder_service)) unless 
+        self.parent_manager.supports_cinder_service?
     else
-      unsupported_reason_add(:cinder_storage, _('no parent_manager to ems'))
+      unsupported_reason_add(:cinder_service, _('no parent_manager to ems'))
     end
   end
 
@@ -49,23 +48,11 @@ class ManageIQ::Providers::StorageManager::CinderStorageManager < ManageIQ::Prov
   end
 
   def self.ems_type
-    @ems_type ||= "cinder_storage".freeze
+    @ems_type ||= "cinder_".freeze
   end
 
   def self.description
-    @description ||= "Cinder Storage".freeze
-  end
-
-  def get_cinder_service
-    # TODO: place to handle the case without parent_manager
-    self.parent_manager.nil? ? nil : connect(:service => "Volume")
-  end
-
-  #
-  # TODO: add logic to check from parent_manager
-  #
-  def supports_cinder_storage
-    true
+    @description ||= "Cinder ".freeze
   end
 
   def supports_api_version?
@@ -81,6 +68,6 @@ class ManageIQ::Providers::StorageManager::CinderStorageManager < ManageIQ::Prov
   end
 
   def self.event_monitor_class
-    ManageIQ::Providers::StorageManager::CinderStorageManager::EventCatcher
+    ManageIQ::Providers::StorageManager::CinderManager::EventCatcher
   end
 end

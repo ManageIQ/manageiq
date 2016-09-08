@@ -66,19 +66,12 @@ module ManageIQ::Providers
       # get_hosts
       get_images
       get_servers
-      # TODO: change spec to remove this
-      #
-      get_volumes
-      get_backups
-      get_snapshots
-      #
       get_object_store
       get_cloud_services
 
       $fog_log.info("#{log_header}...Complete")
 
       link_vm_genealogy
-      link_storage_associations
       filter_unused_disabled_flavors
 
       @data
@@ -110,12 +103,6 @@ module ManageIQ::Providers
 
     def availability_zones
       @availability_zones ||= availability_zones_compute + availability_zones_volume
-    end
-
-    def volumes
-      # TODO: support volumes through :nova as well?
-      return [] unless @volume_service.name == :cinder
-      @volumes ||= @volume_service.handled_list(:volumes)
     end
 
     def get_flavors
@@ -160,24 +147,6 @@ module ManageIQ::Providers
       process_collection(kps, :key_pairs) { |kp| parse_key_pair(kp) }
     end
 
-    def get_volumes
-      process_collection(volumes, :cloud_volumes) { |volume| parse_volume(volume) }
-    end
-
-    def get_backups
-      return unless @volume_service.name == :cinder
-      # backups don't support pagination in juno or kilo
-      process_collection(@volume_service.list_backups_detailed.body["backups"],
-                         :cloud_volume_backups) { |backup| parse_backup(backup) }
-    end
-
-    def get_snapshots
-      return unless @volume_service.name == :cinder
-      process_collection(@volume_service.handled_list(:list_snapshots_detailed,
-                                                      :__request_body_index => "snapshots"),
-                         :cloud_volume_snapshots) { |snap| parse_snapshot(snap) }
-    end
-
     def get_servers
       openstack_infra_hosts = @ems.provider.try(:infra_ems).try(:hosts)
       process_collection(servers, :vms) { |server| parse_server(server, openstack_infra_hosts) }
@@ -202,18 +171,6 @@ module ManageIQ::Providers
         parent_vm = @data_index.fetch_path(:vms, parent_vm_uid)
         vm[:parent_vm] = parent_vm unless parent_vm.nil?
       end
-    end
-
-    def link_storage_associations
-      @data[:cloud_volumes].each do |cv|
-        #
-        # Associations between volumes and the snapshots on which
-        # they are based, if any.
-        #
-        base_snapshot_uid = cv.delete(:snapshot_uid)
-        base_snapshot = @data_index.fetch_path(:cloud_volume_snapshots, base_snapshot_uid)
-        cv[:base_snapshot] = base_snapshot unless base_snapshot.nil?
-      end if @data[:cloud_volumes]
     end
 
     def parse_flavor(flavor)
