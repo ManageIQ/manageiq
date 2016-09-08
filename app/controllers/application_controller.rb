@@ -61,6 +61,10 @@ class ApplicationController < ActionController::Base
   before_action :allow_websocket
   after_action :set_global_session_data, :except => [:resize_layout, :window_sizes]
 
+  def local_request?
+    Rails.env.development? || Rails.env.test?
+  end
+
   def allow_websocket
     proto = request.ssl? ? 'wss' : 'ws'
     override_content_security_policy_directives(:connect_src => ["'self'", "#{proto}://#{request.env['HTTP_HOST']}"])
