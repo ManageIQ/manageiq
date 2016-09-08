@@ -21,6 +21,8 @@ class ManageIQ::Providers::Vmware::InfraManager
           filtered_data[:folder], filtered_data[:dc], filtered_data[:cluster], filtered_data[:host_res] =
             ems_metadata_inv_by_host_inv(host_data, vm_data)
           filtered_data[:rp] = rp_inv_by_host_inv(host_data)
+          filtered_data[:storage_profile], filtered_data[:storage_profile_datastore], filtered_data[:storage_profile_entity] =
+            storage_profile_inv_by_host_inv(host_data, vm_data)
 
           # Also collect any RPs that are parents of the filtered VMs in case this Host is on a Cluster
           filtered_data[:rp].merge!(rp_metadata_inv_by_vm_inv(vm_data))
@@ -37,6 +39,8 @@ class ManageIQ::Providers::Vmware::InfraManager
           filtered_data[:folder], filtered_data[:dc], filtered_data[:cluster], filtered_data[:host_res] =
             ems_metadata_inv_by_vm_inv(vm_data)
           filtered_data[:rp] = rp_metadata_inv_by_vm_inv(vm_data)
+          filtered_data[:storage_profile], filtered_data[:storage_profile_datastore], filtered_data[:storage_profile_entity] =
+            storage_profile_inv_by_vm_inv(vm_data)
         end
 
       end
@@ -159,6 +163,10 @@ class ManageIQ::Providers::Vmware::InfraManager
       rp_inv
     end
 
+    def storage_profile_inv_by_host_inv(_host_inv, vm_inv)
+      storage_profile_inv_by_vm_inv(vm_inv)
+    end
+
     def host_inv_by_vm_inv(vm_inv)
       host_inv = {}
       return host_inv if @vc_data[:host].empty?
@@ -224,6 +232,36 @@ class ManageIQ::Providers::Vmware::InfraManager
         end
       end
       rp_inv
+    end
+
+    def storage_profile_inv_by_vm_inv(vm_inv)
+      storage_profile_inv           = {}
+      storage_profile_datastore_inv = {}
+      storage_profile_entity_inv    = {}
+
+      storage_profiles    = @vc_data[:storage_profile] || {}
+      matching_hubs       = @vc_data[:storage_profile_datastore] || {}
+      associated_entities = @vc_data[:storage_profile_entity] || {}
+
+      vm_refs = vm_inv.keys
+
+      associated_entities.each do |profile_id, profile_entities|
+        entities = profile_entities.to_a.select do |entity|
+          # An associated entity can either be a vm ref e.g.: 'vm-123'
+          # or a disk ref e.g.: 'vm-123:2000'
+          associated_vm = entity.key.split(':').first
+
+          vm_refs.include?(associated_vm)
+        end
+
+        next if entities.empty?
+
+        storage_profile_inv[profile_id]           = storage_profiles[profile_id]
+        storage_profile_datastore_inv[profile_id] = matching_hubs[profile_id]
+        storage_profile_entity_inv[profile_id]    = entities
+      end
+
+      return storage_profile_inv, storage_profile_datastore_inv, storage_profile_entity_inv
     end
 
     ### Helper methods for collection methods
