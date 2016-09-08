@@ -28,7 +28,10 @@ module LoadBalancerHelper::TextualSummary
 
   def textual_listeners
     @record.load_balancer_listeners.map do |x|
-      "Load Balancer #{x.load_balancer_protocol}:#{x.load_balancer_port}, Instance #{x.instance_protocol}:#{x.instance_port}"
+      "Load Balancer"\
+        " #{LoadBalancerHelper.display_protocol_port_range(x.load_balancer_protocol, x.load_balancer_port_range)}"\
+        ", Instance"\
+        " #{LoadBalancerHelper.display_protocol_port_range(x.instance_protocol, x.instance_port_range)}"
     end.join(" | ") if @record.load_balancer_listeners
   end
 
