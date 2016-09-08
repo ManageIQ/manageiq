@@ -50,6 +50,7 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
       assert_specific_orchestration_stack
       assert_table_counts
       assert_ems
+      assert_specific_vdc
       assert_specific_template
       assert_specific_vm_powered_on
       assert_specific_vm_powered_off
@@ -60,32 +61,32 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
   def assert_table_counts
     expect(ExtManagementSystem.count).to eq(2) # cloud_manager + network_manager
     expect(Flavor.count).to eq(0)
-    expect(AvailabilityZone.count).to eq(0)
+    expect(AvailabilityZone.count).to eq(1)
     expect(FloatingIp.count).to eq(0)
     expect(AuthPrivateKey.count).to eq(0)
     expect(CloudNetwork.count).to eq(0)
     expect(CloudSubnet.count).to eq(0)
-    expect(OrchestrationTemplate.count).to eq(3)
-    expect(OrchestrationStack.count).to eq(4)
+    expect(OrchestrationTemplate.count).to eq(4)
+    expect(OrchestrationStack.count).to eq(3)
     expect(OrchestrationStackParameter.count).to eq(0)
     expect(OrchestrationStackOutput.count).to eq(0)
     expect(OrchestrationStackResource.count).to eq(0)
     expect(SecurityGroup.count).to eq(0)
     expect(FirewallRule.count).to eq(0)
-    expect(VmOrTemplate.count).to eq(9)
-    expect(Vm.count).to eq(6)
-    expect(MiqTemplate.count).to eq(3)
+    expect(VmOrTemplate.count).to eq(8)
+    expect(Vm.count).to eq(3)
+    expect(MiqTemplate.count).to eq(5)
 
     expect(CustomAttribute.count).to eq(0)
-    expect(Disk.count).to eq(6)
+    expect(Disk.count).to eq(3)
     expect(GuestDevice.count).to eq(0)
-    expect(Hardware.count).to eq(6)
-    expect(OperatingSystem.count).to eq(6)
+    expect(Hardware.count).to eq(3)
+    expect(OperatingSystem.count).to eq(3)
     expect(Snapshot.count).to eq(0)
     expect(SystemService.count).to eq(0)
 
     expect(Relationship.count).to eq(0)
-    expect(MiqQueue.count).to eq(10) # 8 + cloud_refresh + network_refresh
+    expect(MiqQueue.count).to eq(9)
   end
 
   def assert_ems
@@ -95,28 +96,38 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
     )
 
     expect(@ems.flavors.size).to eq(0)
-    expect(@ems.availability_zones.size).to eq(0)
+    expect(@ems.availability_zones.size).to eq(1)
     expect(@ems.floating_ips.count).to eq(0)
     expect(@ems.key_pairs.size).to eq(0)
     expect(@ems.cloud_networks.count).to eq(0)
     expect(@ems.security_groups.count).to eq(0)
-    expect(@ems.vms_and_templates.size).to eq(9)
-    expect(@ems.vms.size).to eq(6)
-    expect(@ems.miq_templates.size).to eq(3)
-    expect(@ems.orchestration_stacks.size).to eq(4)
-    expect(@ems.orchestration_templates.size).to eq(3)
+    expect(@ems.vms_and_templates.size).to eq(8)
+    expect(@ems.vms.size).to eq(3)
+    expect(@ems.miq_templates.size).to eq(5)
+    expect(@ems.orchestration_stacks.size).to eq(3)
+    expect(@ems.orchestration_templates.size).to eq(4)
 
-    expect(@ems.direct_orchestration_stacks.size).to eq(4)
+    expect(@ems.direct_orchestration_stacks.size).to eq(3)
+  end
+
+  def assert_specific_vdc
+    @vdc = ManageIQ::Providers::Vmware::CloudManager::AvailabilityZone.where(:name => "MIQDev-Default-vCD-DualSiteStorage-PAYG").first
+    expect(@vdc).to have_attributes(
+      :ems_id  => @ems.id,
+      :name    => "MIQDev-Default-vCD-DualSiteStorage-PAYG",
+      :ems_ref => "89ade969-1dc4-4156-abad-e29f79511676",
+      :type    => "ManageIQ::Providers::Vmware::CloudManager::AvailabilityZone"
+    )
   end
 
   def assert_specific_template
-    @template = ManageIQ::Providers::Vmware::CloudManager::Template.where(:name => "Small VM").first
+    @template = ManageIQ::Providers::Vmware::CloudManager::Template.where(:name => "CentOS7").first
     expect(@template).not_to be_nil
     expect(@template).to have_attributes(
       :template              => true,
-      :ems_ref               => "vm-2ef97da4-7b83-4d92-9cbc-a3df64eeca92",
+      :ems_ref               => "vm-857551b6-380c-44d0-ab34-9d144866f0b4",
       :ems_ref_obj           => nil,
-      :uid_ems               => "vm-2ef97da4-7b83-4d92-9cbc-a3df64eeca92",
+      :uid_ems               => "vm-857551b6-380c-44d0-ab34-9d144866f0b4",
       :vendor                => "vmware",
       :power_state           => "never",
       :publicly_available    => false,
@@ -145,12 +156,12 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
   end
 
   def assert_specific_vm_powered_on
-    v = ManageIQ::Providers::Vmware::CloudManager::Vm.find_by(:name => "DSL-rspec")
+    v = ManageIQ::Providers::Vmware::CloudManager::Vm.find_by(:name => "spec1-vm1")
     expect(v).to have_attributes(
       :template              => false,
-      :ems_ref               => "vm-224dbb24-9639-4d97-8d36-801e7ccce7e9",
+      :ems_ref               => "vm-f9ceb77c-b9d9-400c-8c06-72c785e884af",
       :ems_ref_obj           => nil,
-      :uid_ems               => "vm-224dbb24-9639-4d97-8d36-801e7ccce7e9",
+      :uid_ems               => "vm-f9ceb77c-b9d9-400c-8c06-72c785e884af",
       :vendor                => "vmware",
       :power_state           => "on",
       :location              => "unknown",
@@ -181,7 +192,7 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
     expect(v.security_groups.size).to eq(0)
 
     expect(v.operating_system).to have_attributes(
-      :product_name => "Debian GNU/Linux 4 (32-bit)",
+      :product_name => "CentOS 4/5/6/7 (64-bit)",
     )
     expect(v.custom_attributes.size).to eq(0)
     expect(v.snapshots.size).to eq(0)
@@ -189,14 +200,14 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
     expect(v.hardware).to have_attributes(
       :config_version       => nil,
       :virtual_hw_version   => nil,
-      :guest_os             => "Debian GNU/Linux 4 (32-bit)",
-      :guest_os_full_name   => "Debian GNU/Linux 4 (32-bit)",
-      :cpu_sockets          => 1,
+      :guest_os             => "CentOS 4/5/6/7 (64-bit)",
+      :guest_os_full_name   => "CentOS 4/5/6/7 (64-bit)",
+      :cpu_sockets          => 2,
       :bios                 => nil,
       :bios_location        => nil,
       :time_sync            => nil,
       :annotation           => nil,
-      :memory_mb            => 256,
+      :memory_mb            => 2048,
       :host_id              => nil,
       :cpu_speed            => nil,
       :cpu_type             => nil,
@@ -207,12 +218,12 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
       :cpu_usage            => nil,
       :memory_usage         => nil,
       :cpu_cores_per_socket => 1,
-      :cpu_total_cores      => 1,
+      :cpu_total_cores      => 2,
       :vmotion_enabled      => nil,
       :disk_free_space      => nil,
-      :disk_capacity        => 268_435_456,
+      :disk_capacity        => 17_179_869_184,
       :memory_console       => nil,
-      :bitness              => 32,
+      :bitness              => 64,
       :virtualization_type  => nil,
       :root_device_type     => nil,
     )
@@ -221,20 +232,20 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
     expect(v.hardware.disks.first).to have_attributes(
       :device_name     => "Hard disk 1",
       :device_type     => "disk",
-      :controller_type => "IDE Controller",
-      :size            => 268_435_456,
+      :controller_type => "SCSI Controller",
+      :size            => 17_179_869_184,
     )
     expect(v.hardware.guest_devices.size).to eq(0)
     expect(v.hardware.nics.size).to eq(0)
   end
 
   def assert_specific_vm_powered_off
-    v = ManageIQ::Providers::Vmware::CloudManager::Vm.find_by(:name => "TTYL-rspec")
+    v = ManageIQ::Providers::Vmware::CloudManager::Vm.find_by(:name => "spec2-vm1")
     expect(v).to have_attributes(
       :template              => false,
-      :ems_ref               => "vm-6844a379-61be-4652-817a-f14bb5f09512",
+      :ems_ref               => "vm-a28be0c0-d70d-4047-92f8-fc217bbaa7f6",
       :ems_ref_obj           => nil,
-      :uid_ems               => "vm-6844a379-61be-4652-817a-f14bb5f09512",
+      :uid_ems               => "vm-a28be0c0-d70d-4047-92f8-fc217bbaa7f6",
       :vendor                => "vmware",
       :power_state           => "off",
       :location              => "unknown",
@@ -265,7 +276,7 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
     expect(v.security_groups.size).to eq(0)
 
     expect(v.operating_system).to have_attributes(
-      :product_name => "Other Linux (32-bit)",
+      :product_name => "CentOS 4/5/6/7 (64-bit)",
     )
 
     expect(v.custom_attributes.size).to eq(0)
@@ -274,14 +285,14 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
     expect(v.hardware).to have_attributes(
       :config_version       => nil,
       :virtual_hw_version   => nil,
-      :guest_os             => "Other Linux (32-bit)",
-      :guest_os_full_name   => "Other Linux (32-bit)",
-      :cpu_sockets          => 1,
+      :guest_os             => "CentOS 4/5/6/7 (64-bit)",
+      :guest_os_full_name   => "CentOS 4/5/6/7 (64-bit)",
+      :cpu_sockets          => 2,
       :bios                 => nil,
       :bios_location        => nil,
       :time_sync            => nil,
       :annotation           => nil,
-      :memory_mb            => 32,
+      :memory_mb            => 2048,
       :host_id              => nil,
       :cpu_speed            => nil,
       :cpu_type             => nil,
@@ -292,12 +303,12 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
       :cpu_usage            => nil,
       :memory_usage         => nil,
       :cpu_cores_per_socket => 1,
-      :cpu_total_cores      => 1,
+      :cpu_total_cores      => 2,
       :vmotion_enabled      => nil,
       :disk_free_space      => nil,
-      :disk_capacity        => 33_554_432,
+      :disk_capacity        => 17_179_869_184,
       :memory_console       => nil,
-      :bitness              => 32,
+      :bitness              => 64,
       :virtualization_type  => nil,
       :root_device_type     => nil,
     )
@@ -306,8 +317,8 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
     expect(v.hardware.disks.first).to have_attributes(
       :device_name     => "Hard disk 1",
       :device_type     => "disk",
-      :controller_type => "IDE Controller",
-      :size            => 33_554_432,
+      :controller_type => "SCSI Controller",
+      :size            => 17_179_869_184,
     )
     expect(v.hardware.guest_devices.size).to eq(0)
     expect(v.hardware.nics.size).to eq(0)
@@ -315,26 +326,26 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
 
   def assert_specific_orchestration_stack
     @orchestration_stack1 = ManageIQ::Providers::Vmware::CloudManager::OrchestrationStack
-                            .find_by(:name => "DSL-rspec")
+                            .find_by(:name => "spec-1")
     @orchestration_stack2 = ManageIQ::Providers::Vmware::CloudManager::OrchestrationStack
-                            .find_by(:name => "TTYL-rspec")
-    vm1 = ManageIQ::Providers::Vmware::CloudManager::Vm.find_by(:name => "DSL-rspec")
-    vm2 = ManageIQ::Providers::Vmware::CloudManager::Vm.find_by(:name => "TTYL-rspec")
+                            .find_by(:name => "spec2")
+    vm1 = ManageIQ::Providers::Vmware::CloudManager::Vm.find_by(:name => "spec1-vm1")
+    vm2 = ManageIQ::Providers::Vmware::CloudManager::Vm.find_by(:name => "spec2-vm1")
 
     expect(vm1.orchestration_stack).to eq(@orchestration_stack1)
     expect(vm2.orchestration_stack).to eq(@orchestration_stack2)
   end
 
   def assert_specific_orchestration_template
-    @template = ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate.where(:name => "DSL-Linux-template").first
+    @template = ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate.where(:name => "vApp_CentOS_and_msWin").first
     expect(@template).not_to be_nil
     expect(@template).to have_attributes(
-      :ems_ref   => "vappTemplate-44b686fb-d4bf-4ec4-b3fb-6554008f1868",
+      :ems_ref   => "vappTemplate-a19bdc8f-88fa-4dd6-8436-486590353ed5",
       :orderable => false,
     )
 
     expect(@template.ems_id).to eq(@ems.id)
     expect(@template.content.include?('ovf:Envelope')).to be_truthy
-    expect(@template.md5).to eq('48650e81c6433bd2a788766b382aaa5a')
+    expect(@template.md5).to eq('729bfcafe52065bdee376931efe104d9')
   end
 end
