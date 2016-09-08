@@ -72,16 +72,11 @@
     });
   };
 
-  API.ws_destroy = function() {
-    document.cookie = 'ws_token=; path=/ws/notifications; Max-Age=0;'
-  };
-
   API.logout = function() {
     if (sessionStorage.miq_token) {
       API.delete('/api/auth');
     }
 
-    API.ws_destroy();
     delete sessionStorage.miq_token;
   };
 
@@ -97,13 +92,6 @@
     return function() {
       clearInterval(id);
     };
-  };
-
-  API.ws_init = function() {
-    return API.get('/api/auth?requester_type=ws').then(function(response) {
-      API.ws_destroy();
-      document.cookie = 'ws_token=' + response.auth_token + '; path=/ws/notifications';
-    });
   };
 
   window.API = API;

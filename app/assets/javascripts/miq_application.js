@@ -799,9 +799,6 @@ function miqAjaxAuth(url) {
 
   API.login(credentials.login, credentials.password)
   .then(function() {
-    return API.ws_init();
-  })
-  .then(function() {
     // API login ok, now do the normal one
     miqJqueryRequest(url || '/dashboard/authenticate', {
       beforeSend: true,

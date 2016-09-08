@@ -44,7 +44,6 @@
         ManageIQ.browser = "#{j browser_info(:name_ui)}";
         ManageIQ.controller = "#{j controller_name}";
         API.autorenew();
-        miqInitNotifications();
 
     - id = %w(configuration policy).include?(@layout) ? @config_tab : @layout
     %body{:id => id, :onload => is_browser_ie? ? '' : 'miqOnLoad();', 'data-controller' => controller_name}
