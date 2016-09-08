@@ -289,6 +289,16 @@
           :required: true
           :display: :edit
           :data_type: :integer
+        :is_preemptible:
+          :values:
+            false: 0
+            true: 1
+          :description: Preemptible
+          :help: "A <a target=\"_blank\" href=\"https://cloud.google.com/compute/docs/instances/preemptible\">preemptible VM</a> will run for at most 24 hours and may be prematurely-terminated."
+          :required: false
+          :display: :edit
+          :default: false
+          :data_type: :boolean
       :display: :show
   :dialog_order:
   - :requester

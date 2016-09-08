@@ -17,6 +17,12 @@ module ManageIQ::Providers::Google::CloudManager::Provision::Cloning
     clone_options[:disks]        = [boot_disk]
     clone_options[:machine_type] = instance_type.ems_ref
     clone_options[:zone_name]    = dest_availability_zone.ems_ref
+    clone_options[:preemptible]  = get_option(:is_preemptible)
+    # fog-google specifies a default value that's incompatible with
+    # :preemptible; until this is fixed we need to be explicit about the host
+    # behavior on maintenance
+    # issue: https://github.com/fog/fog-google/issues/136
+    clone_options[:on_host_maintenance] = "TERMINATE" if clone_options[:preemptible]
 
     clone_options
   end
