@@ -1,5 +1,5 @@
 #utilization_summary_div
-  = render :partial => "layouts/flash_msg", :locals => {:div_num => "1"}
+  = render :partial => "layouts/flash_msg"
   - if @sb[:util] && @sb[:util][:trend_rpt] && @sb[:util][:summary]
     = render :partial => "utilization_options", :locals  => {:cap_type => "summ"}
     = render(:partial => "layouts/perf_charts",
