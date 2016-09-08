@@ -200,3 +200,7 @@ containerreplicator_compliance_check,Replicator Compliance Check,Default,complia
 containerreplicator_compliance_passed,Replicator Compliance Passed,Default,compliance
 containerreplicator_compliance_failed,Replicator Compliance Failed,Default,compliance
 
+#
+# Configuration
+#
+configured_system_provisioned,System Provisioned by Configuration Manager,Default,vm_process
