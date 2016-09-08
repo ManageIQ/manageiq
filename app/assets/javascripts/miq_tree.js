@@ -292,7 +292,7 @@ function miqOnClickServerRoles(id) {
 // OnCheck handler for the belongsto tagging trees on the user edit screen
 function miqOnCheckUserFilters(node, tree_name) {
   var tree_typ = tree_name.split('_')[0];
-  var checked = Number(!node.state.selected);
+  var checked = Number(node.state.checked);
   var url = ManageIQ.tree.checkUrl + node.key + "?check=" + checked + "&tree_typ=" + tree_typ;
   miqJqueryRequest(url);
   return true;
