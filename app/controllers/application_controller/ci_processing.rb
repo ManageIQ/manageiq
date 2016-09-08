@@ -1183,8 +1183,8 @@ module ApplicationController::CiProcessing
         @azure_tenant_id = params[:azure_tenant_id] if params[:azure_tenant_id]
         @subscription = params[:subscription] if params[:subscription]
 
-        if @client_id == "" || @client_key == "" || @azure_tenant_id == ""
-          add_flash(_("Client ID, Client Key and Azure Tenant ID are required"), :error)
+        if @client_id == "" || @client_key == "" || @azure_tenant_id == "" || @subscription == ""
+          add_flash(_("Client ID, Client Key, Azure Tenant ID and Subscription ID are required"), :error)
           render :action => 'discover'
           return
         end
