@@ -10,7 +10,6 @@ end
 
 # Unmodified gems
 gem "activerecord-session_store",     "~>1.0.0"
-gem "actioncable",                    "~>5.0.0"
 gem "acts_as_list",                   "~>0.7.2"
 gem "acts_as_tree",                   "~>2.1.0" # acts_as_tree needs to be required so that it loads before ancestry
 gem "ancestry",                       "~>2.1.0",       :require => false
@@ -91,7 +90,6 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
   gem "lodash-rails",                 "~>3.10.0"
   gem "patternfly-sass",              "~>3.10.0"
   gem "sass-rails"
-  gem "coffee-rails"
 
   # Modified gems (forked on Github)
   gem "jquery-rjs",                   "=0.1.1",                       :git => "git://github.com/amatsuda/jquery-rjs.git", :ref => "1288c09"

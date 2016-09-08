@@ -7,7 +7,6 @@ require 'action_view/railtie'
 require 'action_mailer/railtie'
 require 'active_job/railtie'
 require 'sprockets/railtie'
-require 'action_cable/engine'
 
 if defined?(Bundler)
   Bundler.require(*Rails.groups(:assets => %w(development test)), :ui_dependencies)

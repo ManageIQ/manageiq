@@ -39,14 +39,10 @@ class WebsocketServer
 
   def call(env)
     if WebSocket::Driver.websocket?(env)
+      exp = %r{^/ws/console/([a-zA-Z0-9]+)/?$}.match(env['REQUEST_URI'])
+      return not_found if exp.nil?
 
-      if env['REQUEST_URI'] =~ %r{^/ws/notifications}
-        ActionCable.server.call(env)
-      else
-        exp = %r{^/ws/console/([a-zA-Z0-9]+)/?$}.match(env['REQUEST_URI'])
-        return not_found if exp.nil?
-        init_proxy(env, exp[1])
-      end
+      init_proxy(env, exp[1])
 
       [-1, {}, []]
     else

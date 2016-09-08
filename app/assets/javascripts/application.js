@@ -17,7 +17,6 @@
 //= require moment-timezone
 //= require sprintf
 //= require numeral
-//= require cable
 //= require miq_api
 //= require rxjs/dist/rx.all
 //= require miq_angular_application
