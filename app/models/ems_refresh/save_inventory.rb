@@ -8,7 +8,6 @@ module EmsRefresh::SaveInventory
     when ManageIQ::Providers::NetworkManager                       then save_ems_network_inventory(ems, hashes, target)
     when ManageIQ::Providers::StorageManager::CinderStorageManager then save_ems_cloud_inventory(ems, hashes, target)
     when ManageIQ::Providers::StorageManager::SwiftStorageManager  then save_ems_cloud_inventory(ems, hashes, target)
-    when ManageIQ::Providers::SwiftStorageManager                  then save_ems_cloud_inventory(ems, hashes, target)
     when ManageIQ::Providers::MiddlewareManager                    then save_ems_middleware_inventory(ems, hashes, target)
     end
   end

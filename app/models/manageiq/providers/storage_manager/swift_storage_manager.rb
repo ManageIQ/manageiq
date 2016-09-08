@@ -12,6 +12,8 @@ class ManageIQ::Providers::StorageManager::SwiftStorageManager < ManageIQ::Provi
   require_nested :RefreshWorker
   require_nested :Refresher
 
+  has_many :cloud_object_store_containers, :foreign_key => :ems_id, :dependent => :destroy
+  has_many :cloud_object_store_objects,    :foreign_key => :ems_id, :dependent => :destroy
 
   # Auth and endpoints delegations, editing of this type of manager must be disabled
   delegate :authentication_check,
