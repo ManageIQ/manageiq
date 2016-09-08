@@ -117,13 +117,17 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   end
 
   def verify_credentials_for_rhevm(options = {})
-    connect(options).api
-  rescue URI::InvalidURIError
-    raise "Invalid URI specified for RHEV server."
-  rescue SocketError => err
-    raise "Error occurred attempted to connect to RHEV server.", err
-  rescue => err
-    raise MiqException::MiqEVMLoginError, err
+    with_provider_connection(options, &:api)
+  rescue SocketError, Errno::EHOSTUNREACH, Errno::ENETUNREACH
+    _log.warn($ERROR_INFO)
+    raise MiqException::MiqUnreachableError, $ERROR_INFO
+  rescue Ovirt::MissingResourceError, URI::InvalidURIError
+    raise MiqException::MiqUnreachableError, "Invalid URI specified for the server."
+  rescue RestClient::Unauthorized
+    raise MiqException::MiqInvalidCredentialsError, "Incorrect user name or password."
+  rescue
+    _log.error("Error while verifying credentials #{$ERROR_INFO}")
+    raise MiqException::MiqEVMLoginError, $ERROR_INFO
   end
 
   def rhevm_metrics_connect_options(options = {})
