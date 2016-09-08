@@ -252,6 +252,7 @@ module OpenstackHandle
       connect(:service => "Volume", :tenant_name => tenant_name)
     end
     alias_method :connect_volume, :volume_service
+    alias_method :cinder_service, :volume_service
 
     def detect_volume_service(tenant_name = nil)
       detect_service("Volume", tenant_name)

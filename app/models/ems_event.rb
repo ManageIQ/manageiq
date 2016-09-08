@@ -76,6 +76,14 @@ class EmsEvent < EventStream
     add(ems_id, ManageIQ::Providers::Openstack::NetworkManager::EventParser.event_to_hash(event, ems_id))
   end
 
+  def self.add_swift_storage(ems_id, event)
+    add(ems_id, ManageIQ::Providers::StorageManager::SwiftStorageManager::EventParser.event_to_hash(event, ems_id))
+  end
+
+  def self.add_cinder_storage(ems_id, event)
+    add(ems_id, ManageIQ::Providers::StorageManager::CinderStorageManager::EventParser.event_to_hash(event, ems_id))
+  end
+
   def self.add_openstack_infra(ems_id, event)
     add(ems_id, ManageIQ::Providers::Openstack::InfraManager::EventParser.event_to_hash(event, ems_id))
   end

@@ -1274,6 +1274,10 @@
         :poll: 1.seconds
       :event_catcher_openshift_enterprise:
         :poll: 1.seconds
+      :event_catcher_atomic_enterprise:
+        :poll: 1.seconds
+      :event_catcher_cinder_storage:
+        :poll: 10.seconds
     :queue_worker_base:
       :defaults:
         :cpu_usage_threshold: 100.percent
@@ -1334,6 +1338,8 @@
         :ems_refresh_worker_vmware: {}
         :ems_refresh_worker_vmware_cloud: {}
         :ems_refresh_worker_vmware_cloud_network: {}
+        :ems_refresh_worker_cinder_storage: {}
+        :ems_refresh_worker_swift_storage: {}
       :event_handler:
         :cpu_usage_threshold: 0.percent
         :nice_delta: 7

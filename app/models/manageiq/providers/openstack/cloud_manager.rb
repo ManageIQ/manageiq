@@ -22,6 +22,8 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
   require_nested :RefreshWorker
   require_nested :Template
   require_nested :Vm
+  require_relative '../storage_manager/cinder_storage_manager'
+  require_relative '../storage_manager/swift_storage_manager'
 
   include ManageIQ::Providers::Openstack::ManagerMixin
 
@@ -34,10 +36,19 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
     end
   end
 
-  before_validation :ensure_managers
+  before_validation :ensure_managers,
+                    :ensure_storage_managers
 
   def ensure_network_manager
     build_network_manager(:type => 'ManageIQ::Providers::Openstack::NetworkManager') unless network_manager
+  end
+
+  def ensure_cinder_storage_manager
+    build_cinder_storage_manager(:type => 'ManageIQ::Providers::StorageManager::CinderStorageManager') unless cinder_storage_manager
+  end
+
+  def supports_cloud_tenants?
+    true
   end
 
   def self.ems_type
