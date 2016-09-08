@@ -2861,6 +2861,7 @@ Vmdb::Application.routes.draw do
   match "/auth/:provider/callback" => "sessions#create", :via => :get
 
   if Rails.env.development? && defined?(Rails::Server)
+    mount ActionCable.server => '/ws/notifications'
     mount WebsocketServer.new(:logger => Logger.new(STDOUT)) => '/ws'
   end
   # rubocop:enable MultilineOperationIndentation
