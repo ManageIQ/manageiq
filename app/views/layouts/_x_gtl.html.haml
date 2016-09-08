@@ -2,7 +2,7 @@
 - rec_display          = ""
 - no_rec_display       = "display:none"
 - @ajax_paging_buttons = true
-
+= render :partial => "layouts/angular/gtl"
 #gtl_div
   - view ||= @view
   - table = view.sub_table ? view.sub_table : view.table unless view.nil?

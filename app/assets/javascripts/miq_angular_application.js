@@ -10,6 +10,10 @@ miqHttpInject(ManageIQ.angular.app);
 
 ManageIQ.angular.rxSubject = new Rx.Subject();
 
+ManageIQ.constants = {
+  gtlList: 'generate_gtl'
+};
+
 function miqHttpInject(angular_app) {
   angular_app.config(['$httpProvider', function($httpProvider) {
     $httpProvider.defaults.headers.common['X-Angular-Request'] = true;

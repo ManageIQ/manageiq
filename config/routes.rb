@@ -1,6 +1,11 @@
 Vmdb::Application.routes.draw do
   # rubocop:disable AlignHash
   # rubocop:disable MultilineOperationIndentation
+  # default routes for each controller
+  default_routes = %w(
+    generate_gtl
+  )
+
   # grouped routes
   adv_search_post = %w(
     adv_search_button
@@ -3205,6 +3210,12 @@ Vmdb::Application.routes.draw do
       :ems_cloud, :ems_infra, :ems_container, :ems_middleware, :ems_datawarehouse, :ems_network
     ].include?(controller_name)
       match controller_name.to_s, :controller => controller_name, :action => :index, :via => :get
+    end
+
+    default_routes.each do |action_name|
+      get "#{controller_name}/#{action_name}(/:id)",
+          :action     => action_name,
+          :controller => controller_name
     end
 
     # One-by-one get/post routes for defined controllers

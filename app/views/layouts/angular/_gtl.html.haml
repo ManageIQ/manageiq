@@ -1,0 +1,33 @@
+#miq-gtl-view{"ng-controller" => "miqGtlContoller as gtlCtrl"}
+  %miq-tile-view{"ng-if"            => "gtlCtrl.gtlType === 'grid' || gtlCtrl.gtlType === 'tile'",
+                 "settings"         => "gtlCtrl.settings",
+                 "per-page"         => "gtlCtrl.perPage",
+                 "rows"             => "gtlCtrl.filteredRows",
+                 "on-row-click"     => "gtlCtrl.onItemClicked(item)",
+                 "on-sort"          => "gtlCtrl.onSort(headerId, isAscending)",
+                 "on-item-selected" => "gtlCtrl.onItemSelect(item, isSelected)",
+                 "load-more-items"  => "gtlCtrl.onLoadNext(start, perPage)",
+                 "columns"          => "gtlCtrl.gtlData.cols",
+                 "type"             => "gtlCtrl.gtlType === 'grid' ? 'small' : 'big'"}
+  %miq-data-table{"ng-if"            =>"gtlCtrl.gtlType === 'list'",
+                  "settings"         => "gtlCtrl.settings",
+                  "per-page"         => "gtlCtrl.perPage",
+                  "rows"             => "gtlCtrl.filteredRows",
+                  "on-row-click"     => "gtlCtrl.onItemClicked(item)",
+                  "on-sort"          => "gtlCtrl.onSort(headerId, isAscending)",
+                  "load-more-items"  => "gtlCtrl.onLoadNext(start, perPage)",
+                  "on-item-selected" => "gtlCtrl.onItemSelect(item, isSelected)",
+                  "columns"          => "gtlCtrl.gtlData.cols"}
+:javascript
+  miq_bootstrap('#miq-gtl-view', 'ManageIQ.gtl');
+  sendDataWithRx({initController: {
+    name: 'miqGtlContoller',
+    data: {
+      modelName: '#{@display.nil? ? controller.class.model.to_s.tableize : @display}',
+      activeTree: '#{x_active_tree}',
+      gtlType: '#{@gtl_type}',
+      currId: '#{params[:id]}',
+      sortColIdx: '#{@sortcol}',
+      sortDir: '#{@sortdir}'
+    }
+  }});

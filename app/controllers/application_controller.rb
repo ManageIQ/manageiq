@@ -246,6 +246,31 @@ class ApplicationController < ActionController::Base
   end
   private :initiate_wait_for_task
 
+  def generate_gtl
+    options = {:all_pages => true}
+    if params[:active_tree]
+      model_view = vm_model_from_active_tree(params[:active_tree].to_sym)
+      options.merge!(get_node_info(x_node))
+    elsif params[:model]
+      model_view = params[:model].singularize.classify.constantize
+    end
+
+    if model_view.nil?
+      model_view = controller_to_model
+    end
+
+    if params[:model_id]
+      options[:parent] = identify_record(params[:model_id])
+    end
+
+    @edit = session[:edit]
+    current_view, settings = get_view(model_view, options)
+    render :json => {
+      :settings => settings,
+      :data => view_to_hash(current_view)
+    }
+  end
+
   def event_logs
     @record = identify_record(params[:id])
     @view = session[:view]                  # Restore the view from the session to get column names for the display
@@ -863,7 +888,11 @@ class ApplicationController < ActionController::Base
     # Add table elements
     table = view.sub_table ? view.sub_table : view.table
     table.data.each do |row|
-      new_row = {:id => list_row_id(row), :cells => []}
+      new_row = {
+        :id => list_row_id(row),
+        :cells => [],
+        :quadicon => view_context.render_quadicon(@targets_hash[row.id])
+      }
       root[:rows] << new_row
 
       if has_checkbox
@@ -873,9 +902,10 @@ class ApplicationController < ActionController::Base
       # Generate html for the list icon
       if has_listicon
         item = listicon_item(view, row['id'])
-
+        image = listicon_image(item, view)
+        new_row[:img_url] = ActionController::Base.helpers.image_path("#{listicon_image(item, view)}")
         new_row[:cells] << {:title => _('View this item'),
-                            :image => listicon_image(item, view),
+                            :image => image,
                             :icon  => listicon_icon(item)}
       end
 

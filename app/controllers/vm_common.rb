@@ -1362,6 +1362,7 @@ module VmCommon
         @right_cell_text += _(" (Names with \"%{search_text}\")") % {:search_text => @search_text}
       end
     end
+    options
   end
 
   # Replace the right cell of the explorer
