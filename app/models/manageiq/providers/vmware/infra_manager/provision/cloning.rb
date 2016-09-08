@@ -64,9 +64,8 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
 
     host_dc = dest_host.parent_datacenter || dest_host.ems_cluster.parent_datacenter
 
-    # Pick 'Discovered virtual machine' or its parent folder in the destination datacenter
-    vm_folder = "#{host_dc.folder_path}/vm"
-    find_folder("#{vm_folder}/Discovered virtual machine", host_dc) || find_folder(vm_folder, host_dc)
+    # Pick the parent folder in the destination datacenter
+    find_folder("#{host_dc.folder_path}/vm", host_dc)
   end
 
   def find_folder(folder_path, datacenter)

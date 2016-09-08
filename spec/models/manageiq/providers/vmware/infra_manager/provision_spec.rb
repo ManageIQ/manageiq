@@ -147,14 +147,6 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
           FactoryGirl.create(:ems_folder, :name => 'vm', :ems_id => @ems.id).tap { |v| v.parent = dc }
         end
 
-        let(:discovered_vm_folder) do
-          FactoryGirl.create(:ems_folder, :name => 'Discovered virtual machine', :ems_id => @ems.id).tap { |f| f.parent = vm_folder }
-        end
-
-        let(:discovered_vm_folder_nested) do
-          FactoryGirl.create(:ems_folder, :name => 'Discovered virtual machine', :ems_id => @ems.id).tap { |f| f.parent = vm_folder_nested }
-        end
-
         let(:dest_host_nested) do
           FactoryGirl.create(:host_vmware, :ext_management_system => @ems).tap { |h| h.parent = dc_nested }
         end
@@ -168,18 +160,10 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
           expect(@vm_prov.dest_folder).to eq(user_folder)
         end
 
-        it "uses 'Discoverd virtual machine' folder in destination host" do
-          discovered_vm_folder
-          @vm_prov.options[:dest_host] = [dest_host.id, dest_host.name]
-          expect(@vm_prov.dest_folder).to eq(discovered_vm_folder)
-        end
-
-        it "uses a nested 'Discovered virtual machine' folder in destination host" do
-          discovered_vm_folder_nested
+        it "correctly locates a nested folder in destination host" do
           @vm_prov.options[:dest_host] = [dest_host_nested.id, dest_host_nested.name]
           parent_datacenter = dest_host_nested.parent_datacenter
           expect(parent_datacenter.folder_path).to eq("Datacenters/nested/testing/#{parent_datacenter.name}")
-          expect(@vm_prov.dest_folder).to eq(discovered_vm_folder_nested)
         end
 
         it "uses vm folder in destination host" do
