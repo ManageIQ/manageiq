@@ -1,14 +1,22 @@
 class TopologyService
-  def retrieve_providers(provider_type, provider_id = nil)
+  class << self
+    attr_reader :provider_class
+  end
+
+  def initialize(provider_id)
+    @providers = retrieve_providers(provider_id)
+  end
+
+  def retrieve_providers(provider_id = nil)
     if provider_id
-      retrieve_entity(provider_id, provider_type)
+      retrieve_entity(provider_id)
     else  # provider id is empty when the topology is generated for all the providers together
-      provider_type.all
+      self.class.provider_class.all
     end
   end
 
-  def retrieve_entity(entity_id, entity_type)
-    entity_type.where(:id => entity_id)
+  def retrieve_entity(entity_id)
+    self.class.provider_class.where(:id => entity_id)
   end
 
   def build_link(source, target)
