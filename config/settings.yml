@@ -97,6 +97,8 @@
       :read_timeout: 1.hour
   :ems_kubernetes:
     :miq_namespace: management-infra
+  :ems_amazon:
+    :disabled_regions: []
 :ems_events:
   :history:
     :keep_ems_events: 6.months
