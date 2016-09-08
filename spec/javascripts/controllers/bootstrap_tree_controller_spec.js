@@ -1,5 +1,6 @@
 describe('bootstrapTreeController', function() {
   var treeUpdateCallback, cancelClickCallback, deselectTreeNodeCallback, singleItemSelectedCallback;
+  var allNodes, innerNode;
   var onNodeSelectedCallback = function() {};
 
   beforeEach(module('ManageIQ'));
@@ -34,16 +35,18 @@ describe('bootstrapTreeController', function() {
 
     var treeData = {tree: 'data'};
     var railsControllerName = 'railsController';
+    allNodes = {nodes: [innerNode]};
+    innerNode = {text: 'nodeName'};
 
-    spyOn($.fn, 'treeview').and.callFake(function(options, nodeId) {
+    spyOn($.fn, 'treeview').and.callFake(function(options, node) {
       if (options.onNodeSelected) {
         onNodeSelectedCallback = options.onNodeSelected;
       }
       if (options === 'getSelected') {
         return 'all nodes';
       }
-      if (options === 'getNode' && nodeId === 0) {
-        return {nodes: [{text: 'nodeName', nodeId: 42}]};
+      if (options === 'getNodes') {
+        return [allNodes];
       }
     });
 
@@ -76,7 +79,7 @@ describe('bootstrapTreeController', function() {
     });
 
     it('selects the root node', function() {
-      expect($.fn.treeview).toHaveBeenCalledWith('selectNode', 0);
+      expect($.fn.treeview).toHaveBeenCalledWith('selectNode', allNodes);
     });
 
     it('uses the correct selector', function() {
@@ -156,7 +159,7 @@ describe('bootstrapTreeController', function() {
       });
 
       it('selects the root node', function() {
-        expect($.fn.treeview).toHaveBeenCalledWith('selectNode', 0);
+        expect($.fn.treeview).toHaveBeenCalledWith('selectNode', allNodes);
       });
 
       it('uses the correct selector', function() {
@@ -189,11 +192,11 @@ describe('bootstrapTreeController', function() {
         });
 
         it('gets the root node', function() {
-          expect($.fn.treeview).toHaveBeenCalledWith('getNode', 0);
+          expect($.fn.treeview).toHaveBeenCalledWith('getNodes');
         });
 
         it('finds the selected node from the list of all nodes', function() {
-          expect($.fn.treeview).toHaveBeenCalledWith('selectNode', 42);
+          expect($.fn.treeview).toHaveBeenCalledWith('selectNode', innerNode);
         });
       });
 
@@ -203,11 +206,11 @@ describe('bootstrapTreeController', function() {
         });
 
         it('gets the root node', function() {
-          expect($.fn.treeview).toHaveBeenCalledWith('getNode', 0);
+          expect($.fn.treeview).toHaveBeenCalledWith('getNodes');
         });
 
         it('does not select the node', function() {
-          expect($.fn.treeview).not.toHaveBeenCalledWith('selectNode', 42);
+          expect($.fn.treeview).not.toHaveBeenCalledWith('selectNode', innerNode);
         });
       });
     });

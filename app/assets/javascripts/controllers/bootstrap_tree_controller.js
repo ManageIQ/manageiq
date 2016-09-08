@@ -1,7 +1,8 @@
 ManageIQ.angular.app.controller('bootstrapTreeController', ['$http', '$scope', 'bootstrapTreeSubscriptionService', 'initialTreeData', 'railsControllerName', function($http, $scope, bootstrapTreeSubscriptionService, initialTreeData, railsControllerName) {
   var init = function() {
     updateTree(initialTreeData);
-    $('#bootstrap-tree').treeview('selectNode', 0);
+    $scope.rootNode = $('#bootstrap-tree').treeview('getNodes')[0];
+    $('#bootstrap-tree').treeview('selectNode', $scope.rootNode);
 
     bootstrapTreeSubscriptionService.subscribeToTreeUpdates(updateTree);
     bootstrapTreeSubscriptionService.subscribeToCancelClicks(selectRootNode);
@@ -42,16 +43,15 @@ ManageIQ.angular.app.controller('bootstrapTreeController', ['$http', '$scope', '
   };
 
   var selectSingleNode = function(response) {
-    var rootNode = $('#bootstrap-tree').treeview('getNode', 0);
-    angular.forEach(rootNode.nodes, function(node) {
+    angular.forEach($scope.rootNode.nodes, function(node) {
       if (node.text === response) {
-        $('#bootstrap-tree').treeview('selectNode', node.nodeId);
+        $('#bootstrap-tree').treeview('selectNode', node);
       }
     });
   };
 
   var selectRootNode = function() {
-    $('#bootstrap-tree').treeview('selectNode', 0);
+    $('#bootstrap-tree').treeview('selectNode', $scope.rootNode);
   };
 
   init();
