@@ -1,6 +1,6 @@
-include Spec::Support::AutomationHelper
-
 describe "catalog/_form.html.haml" do
+  include Spec::Support::AutomationHelper
+  
   before do
     set_controller_for_view("catalog")
     set_controller_for_view_to_be_nonrestful
