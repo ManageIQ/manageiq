@@ -228,6 +228,10 @@ module Api
         service_request.each { |key, value| workflow.set_value(key, value) } if service_request.present?
         workflow
       end
+
+      def validate_id(id, klass)
+        raise NotFound, "Invalid #{klass} id #{id} specified" unless id.kind_of?(Integer) || id =~ /\A\d+\z/
+      end
     end
   end
 end

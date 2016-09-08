@@ -178,6 +178,7 @@ module Api
       private
 
       def resource_search(id, type, klass)
+        validate_id(id, klass)
         target = respond_to?("find_#{type}") ? public_send("find_#{type}", id) : klass.find(id)
         res = Rbac.filtered_object(target, :user => @auth_user_obj, :class => klass)
         raise Forbidden, "Access to the resource #{type}/#{id} is forbidden" unless res

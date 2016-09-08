@@ -1,6 +1,8 @@
 module Api
   class BaseController
     module Parser
+      include CompressedIds
+
       def parse_api_request
         @req = RequestAdapter.new(request, params)
       end
@@ -97,7 +99,7 @@ module Api
       end
 
       def href_id(href, collection)
-        href.match(%r{^.*/#{collection}/([0-9r]+)$}) && Regexp.last_match(1) if href.present?
+        href.match(%r{^.*/#{collection}/(#{CID_OR_ID_MATCHER})$}) && Regexp.last_match(1) if href.present?
       end
 
       def parse_by_attr(resource, type, attr_list)

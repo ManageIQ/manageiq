@@ -43,7 +43,7 @@ module Api
         return klass.find_by_guid(guid) if guid.present?
 
         href = data["href"]
-        href.match(%r{^.*/#{collection}/[0-9r]+$}) ? klass.find(from_cid(href.split('/').last)) : {}
+        href.match(%r{^.*/#{collection}/#{CID_OR_ID_MATCHER}$}) ? klass.find(from_cid(href.split('/').last)) : {}
       end
 
       def policy_subcollection_action(ctype, policy)
