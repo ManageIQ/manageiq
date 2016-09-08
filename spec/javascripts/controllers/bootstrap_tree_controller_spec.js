@@ -33,6 +33,7 @@ describe('bootstrapTreeController', function() {
     );
 
     var treeData = {tree: 'data'};
+    var railsControllerName = 'railsController';
 
     spyOn($.fn, 'treeview').and.callFake(function(options, nodeId) {
       if (options.onNodeSelected) {
@@ -46,12 +47,13 @@ describe('bootstrapTreeController', function() {
       }
     });
 
-    $httpBackend.whenGET('object_data/123').respond({data: 'single item'});
-    $httpBackend.whenGET('all_object_data').respond({data: 'all items'});
+    $httpBackend.whenGET('/railsController/object_data/123').respond({data: 'single item'});
+    $httpBackend.whenGET('/railsController/all_object_data').respond({data: 'all items'});
 
     $controller = _$controller_('bootstrapTreeController', {
       $scope: $scope,
       initialTreeData: treeData,
+      railsControllerName: railsControllerName,
       bootstrapTreeSubscriptionService: bootstrapTreeSubscriptionService
     });
   }));
