@@ -13,14 +13,12 @@ ManageIQ.angular.app.controller('genericObjectDefinitionFormController', ['$http
   var showAddForm = function(_response) {
     $scope.clearForm();
     $scope.showAddForm = true;
-    $scope.$apply();
     sendDataWithRx({eventType: 'deselectTreeNodes'});
   };
 
   var showAllItems = function(response) {
     $scope.genericObjectList = response;
     $scope.showSingleItem = false;
-    $scope.$apply();
   };
 
   var addedGenericObject = function(data) {
@@ -42,7 +40,6 @@ ManageIQ.angular.app.controller('genericObjectDefinitionFormController', ['$http
     $scope.showAddForm = false;
     $scope.showSingleItem = true;
     miqService.sparkleOff();
-    $scope.$apply();
   };
 
   $scope.clearForm = function() {

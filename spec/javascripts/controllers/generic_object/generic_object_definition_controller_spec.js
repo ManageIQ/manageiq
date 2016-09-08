@@ -13,7 +13,6 @@ describe('genericObjectDefinitionFormController', function() {
 
     spyOn(window, 'sendDataWithRx');
     spyOn(miqService, 'sparkleOff');
-    spyOn($scope, '$apply');
 
     spyOn(genericObjectSubscriptionService, 'subscribeToShowAddForm').and.callFake(
       function(callback) {
@@ -95,10 +94,6 @@ describe('genericObjectDefinitionFormController', function() {
         expect($scope.showAddForm).toEqual(true);
       });
 
-      it('calls apply on the scope', function() {
-        expect($scope.$apply).toHaveBeenCalled();
-      });
-
       it('sends an event', function() {
         expect(window.sendDataWithRx).toHaveBeenCalledWith({eventType: 'deselectTreeNodes'});
       });
@@ -130,10 +125,6 @@ describe('genericObjectDefinitionFormController', function() {
       it('turns the sparkle off', function() {
         expect(miqService.sparkleOff).toHaveBeenCalled();
       });
-
-      it('calls apply on the scope', function() {
-        expect($scope.$apply).toHaveBeenCalled();
-      });
     });
 
     describe('initialization rootTreeClickCallback', function() {
@@ -149,10 +140,6 @@ describe('genericObjectDefinitionFormController', function() {
 
       it('sets showSingleItem to false', function() {
         expect($scope.showSingleItem).toEqual(false);
-      });
-
-      it('calls apply on the scope', function() {
-        expect($scope.$apply).toHaveBeenCalled();
       });
     });
   });

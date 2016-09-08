@@ -1,19 +1,25 @@
 describe('subscriptionService', function() {
   var testService;
+  var $timeout;
   var loadedReactionFunction;
 
   var test = {callback: function() {}};
 
   beforeEach(module('ManageIQ'));
 
-  beforeEach(inject(function(subscriptionService) {
+  beforeEach(inject(function(_$timeout_, subscriptionService) {
     testService = subscriptionService;
+    $timeout = _$timeout_;
 
     spyOn(test, 'callback');
     spyOn(ManageIQ.angular.rxSubject, 'subscribe').and.callFake(function(callback) {
       loadedReactionFunction = callback;
     });
   }));
+
+  afterEach(function() {
+    $timeout.verifyNoPendingTasks();
+  });
 
   describe('#subscribeToEventType', function() {
     beforeEach(function() {
@@ -28,6 +34,7 @@ describe('subscriptionService', function() {
       describe('when the event type matches the event type passed in', function() {
         beforeEach(function() {
           loadedReactionFunction({eventType: 'someEvent', response: 'the data'});
+          $timeout.flush();
         });
 
         it('calls the reaction function with the data', function() {
