@@ -508,6 +508,11 @@ body#dashboard {
   }
 }
 
+/* custom modal class for Entry Point (creates scrollable area) */
+#automate_treebox {
+  height: 350px !important;
+  overflow-y: auto !important;
+}
 /* scrollable */
 .scrollable {
   overflow: auto;
