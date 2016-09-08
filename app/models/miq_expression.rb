@@ -82,6 +82,8 @@ class MiqExpression
     containers
     container_groups
     container_projects
+    container_images
+    container_nodes
     customization_scripts
     customization_script_media
     customization_script_ptables
