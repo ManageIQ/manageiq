@@ -69,6 +69,7 @@ gem "websocket-driver",               "~>0.6.3"
 
 # Modified gems (forked on Github)
 gem "foreman_api_client",             ">=0.1.0",   :require => false, :git => "https://github.com/ManageIQ/foreman_api_client.git", :branch => "master"
+gem "query_relation",                              :require => false, :git => "https://github.com/ManageIQ/query_relation.git", :branch => "master"
 gem "ruport",                         "=1.7.0",                       :git => "https://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-3"
 gem "ziya",                           "=2.3.0",    :require => false, :git => "https://github.com/ManageIQ/ziya.git", :tag => "v2.3.0-3"
 
