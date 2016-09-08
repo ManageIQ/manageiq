@@ -2,130 +2,71 @@
 %script{:type => "text/javascript"}
   -# commented this to, for a workaround to close any open bubble from previous timeline when switching between timelines
   -# var tl;
+  var element, timeline;
   - load_tl_now ||= false
-  ManageIQ.timelineFilter = #{!! @timeline_filter};
   function miqLoadTL() {
-  var eventSource = new Timeline.DefaultEventSource();
-  -# Following works around a issue that causes timeline to not show any events in IE
-  - if !is_browser_ie? && tl_json
-    var miq_tl_data = #{tl_json.html_safe};
-  - if bands[0][:decorate]
-    //var theme = Timeline.ClassicTheme.create();
-    var theme = Timeline.getDefaultTheme();
-    // changing timeline outer band color to be dark and inner to be lighter
-    theme.ether.backgroundColors.unshift("#c9c9c9");
-    theme.ether.backgroundColors[1] = theme.ether.backgroundColors[0];
-    var d = Timeline.DateTime.parseGregorianDateTime("#{bands[0][:center_position]}")
-
-  var bandInfos = [
-  -# Create the bandInfos array elements from the bands array
-  - bands.each_with_index do |band, idx|
-    Timeline.createBandInfo({
-    showEventText: #{band[:text]},
-    - if band[:height]
-      trackHeight: #{band[:height]},
-    - if band[:decorate]
-      date:  d,
-      theme: theme,
-
-    -# START of TIMELINE TIMEZONE Code
-    -# commented/uncomment line 241 elmt.appendChild(divTime); in bundle.js to remove/show timestamp at the bottom of timeline bubble
-    -# END of TIMELINE TIMEZONE Code
-
-    - if band[:gap]
-      trackGap: #{band[:gap]},
-
-    eventSource:    eventSource,
-    width:          "#{band[:width]}%",
-    intervalUnit:   Timeline.DateTime.#{band[:unit].upcase},
-    intervalPixels: #{band[:pixels]}
-    - if idx == bands.length - 1
-      })
-    - else
-      }),
-  ];
-
-  -# For each band, set up the sync with the band above
-  - bands.each_index do |idx|
-    - if idx > 0
-      bandInfos[#{idx}].syncWith = #{idx - 1};
-      bandInfos[#{idx}].highlight = true;
-      bandInfos[#{idx}].eventPainter.setLayout(bandInfos[#{idx - 1}].eventPainter.getLayout());
-  - if bands[0][:decorate]
-    -# highlighting filtered events text in specified color
-    bandInfos[0].eventPainter = new Timeline.ThumbnailEventPainter({
-    theme:              theme,
-    trackHeight:        1,
-    trackOffset:        10,
-    labelWidth:         140,
-    thumbnailWidth:     26,
-    thumbnailHeight:    20
-    });
-
-    -# highlighting band in diff color for specified timeframe
-    bandInfos[0].decorators = [
-    new Timeline.SpanHighlightDecorator({
-    startDate:  "#{bands[0][:st_time]}",
-    endDate:    "#{bands[0][:end_time]}",
-    startLabel: "=>",
-    endLabel:   "<=",
-    color:      "#FFFEDE",
-    opacity:    70,
-    theme:      theme
-    })
-    ];
-    bandInfos[1].decorators = [
-    new Timeline.SpanHighlightDecorator({
-    startDate:  "#{bands[0][:st_time]}",
-    endDate:    "#{bands[0][:end_time]}",
-    startLabel: "=>",
-    endLabel:   "<=",
-    color:      "#FFFEDE",
-    opacity:    70,
-    theme:      theme
-    })
-    ];
-
-  -# workaround to close any open bubble from previous timeline when switching between timelines
-  if (typeof tl != 'undefined'){
-  for (var i = 0; i < tl.getBandCount(); i++) {
-  tl.getBand(i).closeBubble();
-  }
-  }
-  tl = Timeline.create($('#miq_timeline')[0], bandInfos, Timeline.HORIZONTAL);
-  - if bands[0][:center_position]
-    -# to align daily/hourly timeline in center
-    tl.getBand(0).setCenterVisibleDate(Timeline.DateTime.parseGregorianDateTime("#{bands[0][:center_position]}"));
-  - else
-    tl.getBand(0).setCenterVisibleDate(Timeline.DateTime.parseGregorianDateTime("#{position_time}"));
-  -# Following works around a issue that causes timeline to not show any events in IE
-  - if is_browser_ie? || !tl_json
-    Timeline.loadXML('#{url_for(:action => data_action)}', function(xml, url) { eventSource.loadXML(xml, url); });
-  - else
-    eventSource.loadJSON(miq_tl_data, document.location.href);
+  console.log('called load tl');
+  //var myData = {"events":[{"start":"2015-05-01T11:46:13.000Z","title":"ManageIQ-TripleO","description":"<b>Event Type:</b> USER_FAILED_CHANGE_DISK_VM<br/><b>Event Source:</b> RHEVM<br/><b>Provider:</b> <a href=\"/ems_infra/1r8\">rhevm.demo.cmbu.redhat.com</a><br/><b>Message:</b> Failed to change disk in VM ManageIQ-TripleO (Host: bldr16cc05.core.cmbu.redhat.com, User: admin).<br/><b>Cluster:</b> <a href=\"/ems_cluster/show/1r10\">Raleigh</a><br/><b>Source Host:</b> <a href=\"/host/show/1r9\">bldr16cc05.core.cmbu.redhat.com</a><br/><b>Source VM:</b> <a href=\"/vm/show/1r2194\">ManageIQ-TripleO</a><br/><b>Provider User Name:</b> admin@internal<br/><b>Date Time:</b> 2015-05-07 23:46:13 FJT"}]};
+  var json = [ { "name":"Powered Events", "data":[{"date": "2016-04-05T15:07:37.374Z", "details": {"event": "<b>Event Type:</b> USER_FAILED_CHANGE_DISK_VM<br/><b>Event Source:</b> RHEVM<br/><b>Provider:</b> <a href=\"/ems_infra/1r8\">rhevm.demo.cmbu.redhat.com</a><br/><b>Message:</b> Failed to change disk in VM ManageIQ-TripleO (Host: bldr16cc05.core.cmbu.redhat.com, User: admin).<br/><b>Cluster:</b> <a href=\"/ems_cluster/show/1r10\">Raleigh</a><br/><b>Source Host:</b> <a href=\"/host/show/1r9\">bldr16cc05.core.cmbu.redhat.com</a><br/><b>Source VM:</b> <a href=\"/vm/show/1r2194\">ManageIQ-TripleO</a><br/><b>Provider User Name:</b> admin@internal<br/><b>Date Time:</b> 2015-05-07 23:46:13 FJT"}}, {"date": "2016-04-08T15:07:37.374Z", "details": {"event": "vmPowerOn", "object": "vmName"}}, {"date": "2016-04-15T21:04:16.247Z", "details": {"event": "vmPowerOn", "object": "vmName"}}, {"date": "2016-04-22T09:39:26.155Z", "details": {"event": "vmPowerOn", "object": "vmName"}},  {"date": "2016-04-06T09:56:00.311Z", "details": {"event": "vmPowerOn", "object": "vmName"}}]}, { "name":"Network Events", "data":[{"date": "2016-04-09T12:07:37.374Z", "details": {"event": "vmPowerOn", "object": "vmName"}}]}, { "name":"Policy Events", "data":[{"date": "2016-04-08T12:07:37.374Z", "details": {"event": "vmPowerOn", "object": "vmName"}}]}, { "name":"System Events", "data":[{"date": "2016-04-10T12:07:37.374Z", "details": {"event": "vmPowerOn", "object": "vmName"}}]}];
+  var data = [],
+  -#var json = #{tl_json.html_safe},
+  -#start = new Date(#{@tl_options.date.start}),
+  -#end = new Date(#{@tl_options.date.end}),
+  //start = new Date('2016-04-04T04:25:27.663Z'),
+  start = new Date(ManageIQ.calendar.calDateFrom),
+  end = new Date(ManageIQ.calendar.calDateTo),
+  //end = new Date('2016-05-02T13:59:06.818Z'),
+  one_hour = 60 * 60 * 1000,
+  one_day = 24 * 60 * 60 * 1000,
+  one_week = one_day * 7,
+  one_month = one_day * 30,
+  six_months = one_month * 6;
+  console.log(ManageIQ.calendar.calDateFrom);
+  console.log(ManageIQ.calendar.calDateTo);
+  console.log(start);
+  console.log(end);
+  - if tl_json
+    -#console.log('tl-json' + #{tl_json});
+    //var json = #{tl_json.html_safe};
+    for (var x in json) {
+    data[x] = {};
+    data[x].name = json[x].name;
+    data[x].data = [];
+    for (var y in json[x].data) {
+    data[x].data.push({});
+    data[x].data[y].date = new Date(json[x].data[y].date);
+    data[x].data[y].details = json[x].data[y].details;
+    }
+    data[x].display = true;
+    }
+    timeline = d3.chart.timeline().end(end).start(start).minScale(1).maxScale(720);
+    element = d3.select(chart_placeholder).append('div').datum(data);
+    timeline(element);
   }
 
-  var resizeTimerID = null;
-  function miqResizeTL() {
-  if (resizeTimerID == null) {
-  resizeTimerID = window.setTimeout(function() {
-  resizeTimerID = null;
-  tl.layout();
-  }, 500);
+  $(window).on('resize', function() {
+  if(timeline && timeline.constructor && timeline.call && timeline.apply) {
+  timeline(element);
+  $('[data-toggle="tooltip"]').tooltip({
+  'container': 'body',
+  'placement': 'top',
+  'html': true,
+  'delay': {
+  "show": 500,
+  "hide": 100
   }
+  });
   }
-
+  });
   - if load_tl_now
+    console.log('controller: 1');
     miqLoadTL();
   - elsif request.xml_http_request?
     -# Is this an Ajax request?
     -# Executing this method from application.js to fix IE initial load issue
+    console.log('controller: 2');
     miqLoadTL();
-    - if @timeline_filter
-      performFiltering(tl, [0,1]);
 
-
-
--# START of TIMELINE TIMEZONE Code
--# "* Times displayed are in #{get_timezone_offset(current_user, true)} #{get_timezone_abbr(current_user)} time"
--# END of TIMELINE TIMEZONE Code
+    -# START of TIMELINE TIMEZONE Code
+    -# "* Times displayed are in #{get_timezone_offset(current_user, true)} #{get_timezone_abbr(current_user)} time"
+    -# END of TIMELINE TIMEZONE Code
