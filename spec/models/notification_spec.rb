@@ -7,11 +7,12 @@ describe Notification, :type => :model do
       let!(:user) { FactoryGirl.create(:user_with_group, :tenant => tenant) }
       let(:notification_type) { :vm_powered_on }
 
+      subject { Notification.create(:type => notification_type, :subject => vm) }
+
       it 'creates a new notification along with recipients' do
-        n = Notification.create(:type => notification_type, :subject => vm)
-        expect(n.notification_type.name).to eq(notification_type.to_s)
-        expect(n.subject).to eq(vm)
-        expect(n.recipients).to match_array([user])
+        expect(subject.notification_type.name).to eq(notification_type.to_s)
+        expect(subject.subject).to eq(vm)
+        expect(subject.recipients).to match_array([user])
         expect(user.notifications.count).to eq(1)
         expect(user.unseen_notifications.count).to eq(1)
       end
