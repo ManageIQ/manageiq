@@ -530,24 +530,9 @@ body#dashboard {
 /* error modal */
 
 .error-modal-miq {
-  &.modal-content,
-  & > .modal-header {
-    background-color: #f2dede;
-    color: #c00;
-  }
-
-  &.modal-content {
-    border-color: red;
-  }
-
-  & .fields { // .product-versions-pf
-    margin-bottom: 30px;
-    margin-top: 30px;
-    li {
-      strong {
-        margin-right: 10px;
-      }
-    }
+  & .error-icon {
+    font-size: xx-large;
+    margin-top: 16px;
   }
 }
 
