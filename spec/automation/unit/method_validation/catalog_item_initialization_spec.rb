@@ -8,7 +8,7 @@ describe "CatalogItemInitialization Automate Method" do
     build_model
   end
 
-  def create_request_and_tasks(dialog_options = {})
+  def create_request_and_tasks(dialog_options = {:dialog => {}})
     @request = build_service_template_request("top", @user, dialog_options)
     service_template_stubs
     request_stubs
