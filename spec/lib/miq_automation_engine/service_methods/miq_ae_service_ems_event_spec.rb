@@ -171,10 +171,8 @@ describe MiqAeMethodService::MiqAeServiceEmsEvent do
     end
   end
 
-  %w(disconnect_storage refresh_on_reconfig).each do |method|
-    it "#src_vm_#{method}" do
-      expect_any_instance_of(VmOrTemplate).to receive(method.to_sym).once
-      @service_event.send("src_vm_#{method}")
-    end
+  it "#src_vm_disconnect_storage" do
+    expect_any_instance_of(VmOrTemplate).to receive("disconnect_storage".to_sym).once
+    @service_event.src_vm_disconnect_storage
   end
 end

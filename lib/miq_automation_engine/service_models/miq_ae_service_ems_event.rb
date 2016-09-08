@@ -27,9 +27,5 @@ module MiqAeMethodService
     def src_vm_disconnect_storage
       ar_method { @object.src_vm_disconnect_storage }
     end
-
-    def src_vm_refresh_on_reconfig
-      ar_method { @object.src_vm_refresh_on_reconfig }
-    end
   end
 end
