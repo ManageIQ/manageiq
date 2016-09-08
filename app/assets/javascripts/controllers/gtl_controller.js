@@ -18,13 +18,13 @@
       value: 10,
       hidden: false,
       items: [
-        {text: 5, value: 5, hidden: false, enabled: true},
-        {text: 10, value: 10, hidden: false, enabled: true},
-        {text: 20, value: 20, hidden: false, enabled: true},
-        {text: 50, value: 50, hidden: false, enabled: true},
-        {text: 100, value: 100, hidden: false, enabled: true},
-        {text: 1000, value: 1000, hidden: false, enabled: true},
-        {text: __('All'), value: -1, hidden: false, enabled: true},
+        {id: 'per_page_5', text: 5, value: 5, hidden: false, enabled: true},
+        {id: 'per_page_10', text: 10, value: 10, hidden: false, enabled: true},
+        {id: 'per_page_20', text: 20, value: 20, hidden: false, enabled: true},
+        {id: 'per_page_50', text: 50, value: 50, hidden: false, enabled: true},
+        {id: 'per_page_100', text: 100, value: 100, hidden: false, enabled: true},
+        {id: 'per_page_1000', text: 1000, value: 1000, hidden: false, enabled: true},
+        {id: 'per_page_all', text: __('All'), value: -1, hidden: false, enabled: true},
       ]
     };
   }
