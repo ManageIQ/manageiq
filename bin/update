@@ -30,9 +30,4 @@ Dir.chdir APP_ROOT do
 
   puts "\n== Migrating test database =="
   execute "RAILS_ENV=test bin/rake db:migrate"
-
-  unless ENV["SKIP_AUTOMATE_RESET"]
-    puts "\n== Resetting Automate Domains =="
-    execute "bin/rake evm:automate:reset"
-  end
 end
