@@ -168,7 +168,7 @@ function miqTreeToggleExpand(treename, expand_mode) {
 // OnCheck handler for the Protect screen
 function miqOnCheckProtect(node, _treename) {
   var ppid = node.key.split('_').pop();
-  var url = ManageIQ.tree.checkUrl + ppid + '?check=' + Number(!node.state.selected);
+  var url = ManageIQ.tree.checkUrl + ppid + '?check=' + Number(node.state.checked);
   miqJqueryRequest(url);
   return true;
 }
