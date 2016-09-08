@@ -5,7 +5,7 @@ module Api
     include Subcollections::Tags
     include Subcollections::Quotas
 
-    def create_resource_tenants(_type, _id, data)
+    def create_resource(_type, _id, data)
       bad_attrs = data_includes_invalid_attrs(data)
       if bad_attrs.present?
         raise BadRequestError,
@@ -19,13 +19,13 @@ module Api
       tenant
     end
 
-    def edit_resource_tenants(type, id, data)
+    def edit_resource(type, id, data)
       bad_attrs = data_includes_invalid_attrs(data)
       if bad_attrs.present?
         raise BadRequestError, "Attributes #{bad_attrs} should not be specified for updating a tenant resource"
       end
       parse_set_parent(data)
-      edit_resource(type, id, data)
+      super
     end
 
     private

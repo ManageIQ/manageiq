@@ -3,7 +3,7 @@ module Api
     include Subcollections::RequestTasks
     include Subcollections::Tasks
 
-    def approve_resource_service_requests(type, id, data)
+    def approve_resource(type, id, data)
       raise "Must specify a reason for approving a service request" unless data["reason"].present?
       api_action(type, id) do |klass|
         provreq = resource_search(id, type, klass)
@@ -14,7 +14,7 @@ module Api
       action_result(false, err.to_s)
     end
 
-    def deny_resource_service_requests(type, id, data)
+    def deny_resource(type, id, data)
       raise "Must specify a reason for denying a service request" unless data["reason"].present?
       api_action(type, id) do |klass|
         provreq = resource_search(id, type, klass)

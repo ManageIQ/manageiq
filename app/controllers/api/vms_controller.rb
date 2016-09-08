@@ -7,7 +7,7 @@ module Api
     include Subcollections::CustomAttributes
     include Subcollections::Software
 
-    def start_resource_vms(type, id = nil, _data = nil)
+    def start_resource(type, id = nil, _data = nil)
       raise BadRequestError, "Must specify an id for starting a #{type} resource" unless id
 
       api_action(type, id) do |klass|
@@ -20,7 +20,7 @@ module Api
       end
     end
 
-    def stop_resource_vms(type, id = nil, _data = nil)
+    def stop_resource(type, id = nil, _data = nil)
       raise BadRequestError, "Must specify an id for stopping a #{type} resource" unless id
 
       api_action(type, id) do |klass|
@@ -33,7 +33,7 @@ module Api
       end
     end
 
-    def suspend_resource_vms(type, id = nil, _data = nil)
+    def suspend_resource(type, id = nil, _data = nil)
       raise BadRequestError, "Must specify an id for suspending a #{type} resource" unless id
 
       api_action(type, id) do |klass|
@@ -46,7 +46,7 @@ module Api
       end
     end
 
-    def pause_resource_vms(type, id = nil, _data = nil)
+    def pause_resource(type, id = nil, _data = nil)
       raise BadRequestError, "Must specify an id for pausing a #{type} resource" unless id
 
       api_action(type, id) do |klass|
@@ -59,7 +59,7 @@ module Api
       end
     end
 
-    def shelve_resource_vms(type, id = nil, _data = nil)
+    def shelve_resource(type, id = nil, _data = nil)
       raise BadRequestError, "Must specify an id for shelving a #{type} resource" unless id
 
       api_action(type, id) do |klass|
@@ -72,7 +72,7 @@ module Api
       end
     end
 
-    def shelve_offload_resource_vms(type, id = nil, _data = nil)
+    def shelve_offload_resource(type, id = nil, _data = nil)
       raise BadRequestError, "Must specify an id for shelve-offloading a #{type} resource" unless id
 
       api_action(type, id) do |klass|
@@ -85,7 +85,7 @@ module Api
       end
     end
 
-    def delete_resource_vms(type, id = nil, _data = nil)
+    def delete_resource(type, id = nil, _data = nil)
       raise BadRequestError, "Must specify an id for deleting a #{type} resource" unless id
 
       api_action(type, id) do |klass|
@@ -96,7 +96,7 @@ module Api
       end
     end
 
-    def set_owner_resource_vms(type, id = nil, data = nil)
+    def set_owner_resource(type, id = nil, data = nil)
       raise BadRequestError, "Must specify an id for setting the owner of a #{type} resource" unless id
 
       owner = data.blank? ? "" : data["owner"].strip
@@ -110,7 +110,7 @@ module Api
       end
     end
 
-    def add_lifecycle_event_resource_vms(type, id = nil, data = nil)
+    def add_lifecycle_event_resource(type, id = nil, data = nil)
       raise BadRequestError, "Must specify an id for adding a Lifecycle Event to a #{type} resource" unless id
 
       api_action(type, id) do |klass|
@@ -121,7 +121,7 @@ module Api
       end
     end
 
-    def scan_resource_vms(type, id = nil, _data = nil)
+    def scan_resource(type, id = nil, _data = nil)
       raise BadRequestError, "Must specify an id for scanning a #{type} resource" unless id
 
       api_action(type, id) do |klass|
@@ -134,7 +134,7 @@ module Api
       end
     end
 
-    def add_event_resource_vms(type, id = nil, data = nil)
+    def add_event_resource(type, id = nil, data = nil)
       raise BadRequestError, "Must specify an id for adding an event to a #{type} resource" unless id
 
       data ||= {}
@@ -147,7 +147,7 @@ module Api
       end
     end
 
-    def retire_resource_vms(type, id = nil, data = nil)
+    def retire_resource(type, id = nil, data = nil)
       raise BadRequestError, "Must specify an id for retiring a #{type} resource" unless id
 
       api_action(type, id) do |klass|
@@ -157,7 +157,7 @@ module Api
       end
     end
 
-    def reset_resource_vms(type, id = nil, _data = nil)
+    def reset_resource(type, id = nil, _data = nil)
       raise BadRequestError, "Must specify an id for resetting a #{type} resource" unless id
 
       api_action(type, id) do |klass|
@@ -170,7 +170,7 @@ module Api
       end
     end
 
-    def reboot_guest_resource_vms(type, id = nil, _data = nil)
+    def reboot_guest_resource(type, id = nil, _data = nil)
       raise BadRequestError, "Must specify an id for rebooting a #{type} resource" unless id
 
       api_action(type, id) do |klass|
@@ -183,7 +183,7 @@ module Api
       end
     end
 
-    def shutdown_guest_resource_vms(type, id = nil, _data = nil)
+    def shutdown_guest_resource(type, id = nil, _data = nil)
       raise BadRequestError, "Must specify an id for shutting down a #{type} resource" unless id
 
       api_action(type, id) do |klass|
@@ -196,7 +196,7 @@ module Api
       end
     end
 
-    def refresh_resource_vms(type, id = nil, _data = nil)
+    def refresh_resource(type, id = nil, _data = nil)
       raise BadRequestError, "Must specify an id for refreshing a #{type} resource" unless id
 
       api_action(type, id) do |klass|
@@ -206,7 +206,7 @@ module Api
       end
     end
 
-    def request_console_resource_vms(type, id = nil, data = nil)
+    def request_console_resource(type, id = nil, data = nil)
       raise BadRequestError, "Must specify an id for requesting a console for a #{type} resource" unless id
 
       # NOTE:
@@ -351,7 +351,7 @@ module Api
     def retire_vm(vm, id, data)
       desc = "#{vm_ident(vm)} retiring"
       desc << " on #{data['date']}" if Hash(data)['date'].present?
-      retire_resource(:vms, id, data)
+      generic_retire_resource(:vms, id, data)
       action_result(true, desc)
     rescue => err
       action_result(false, err.to_s)

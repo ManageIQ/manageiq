@@ -1,6 +1,6 @@
 module Api
   class ArbitrationProfilesController < BaseController
-    def create_resource_arbitration_profiles(_type, _id, data)
+    def create_resource(_type, _id, data)
       validate_profile_data(data)
       attributes = build_arbitration_attributes(data)
       arbitration_profile = collection_class(:arbitration_profiles).create(attributes)
@@ -8,10 +8,10 @@ module Api
       arbitration_profile
     end
 
-    def edit_resource_arbitration_profiles(type, id, data)
+    def edit_resource(type, id, data)
       validate_profile_data(data)
       attributes = build_arbitration_attributes(data)
-      edit_resource(type, id, attributes)
+      super(type, id, attributes)
     end
 
     private

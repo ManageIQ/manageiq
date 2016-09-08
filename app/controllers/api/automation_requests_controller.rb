@@ -3,7 +3,7 @@ module Api
     include Subcollections::RequestTasks
     include Subcollections::Tasks
 
-    def create_resource_automation_requests(type, _id, data)
+    def create_resource(type, _id, data)
       assert_id_not_specified(data, type)
 
       version_str = data["version"] || "1.1"
@@ -14,7 +14,7 @@ module Api
       AutomationRequest.create_from_ws(version_str, @auth_user_obj, uri_parts, parameters, requester)
     end
 
-    def approve_resource_automation_requests(type, id, data)
+    def approve_resource(type, id, data)
       raise "Must specify a reason for approving an automation request" unless data["reason"].present?
       api_action(type, id) do |klass|
         request = resource_search(id, type, klass)
@@ -25,7 +25,7 @@ module Api
       action_result(false, err.to_s)
     end
 
-    def deny_resource_automation_requests(type, id, data)
+    def deny_resource(type, id, data)
       raise "Must specify a reason for denying an automation request" unless data["reason"].present?
       api_action(type, id) do |klass|
         request = resource_search(id, type, klass)

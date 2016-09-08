@@ -7,15 +7,15 @@ module Api
       super
     end
 
-    def edit_resource_categories(type, id, data = {})
+    def edit_resource(type, id, data = {})
       raise BaseController::Forbidden if Category.find(id).read_only?
       request_additional_attributes
-      edit_resource(type, id, data)
+      super
     end
 
-    def delete_resource_categories(type, id, data = {})
+    def delete_resource(type, id, data = {})
       raise BaseController::Forbidden if Category.find(id).read_only?
-      delete_resource(type, id, data)
+      super
     end
 
     private

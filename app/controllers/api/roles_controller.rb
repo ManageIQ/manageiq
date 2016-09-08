@@ -2,7 +2,7 @@ module Api
   class RolesController < BaseController
     include Subcollections::Features
 
-    def create_resource_roles(type, _id = nil, data = {})
+    def create_resource(type, _id = nil, data = {})
       assert_id_not_specified(data, type)
 
       # Can't create a read-only role (reserved for out-of-box roles)
@@ -22,7 +22,7 @@ module Api
       raise err
     end
 
-    def edit_resource_roles(type, id = nil, data = {})
+    def edit_resource(type, id = nil, data = {})
       unless id
         raise BadRequestError, "Must specify an id for editing a #{type} resource"
       end

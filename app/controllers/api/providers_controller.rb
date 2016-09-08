@@ -14,13 +14,13 @@ module Api
     include Subcollections::Tags
     include Subcollections::CloudNetworks
 
-    def create_resource_providers(type, _id, data = {})
+    def create_resource(type, _id, data = {})
       assert_id_not_specified(data, type)
 
       create_provider(data)
     end
 
-    def edit_resource_providers(type, id = nil, data = {})
+    def edit_resource(type, id = nil, data = {})
       raise BadRequestError, "Must specify an id for editing a #{type} resource" unless id
       raise BadRequestError, "Provider type cannot be updated" if data.key?(TYPE_ATTR)
 
@@ -28,7 +28,7 @@ module Api
       edit_provider(provider, data)
     end
 
-    def refresh_resource_providers(type, id = nil, _data = nil)
+    def refresh_resource(type, id = nil, _data = nil)
       raise BadRequestError, "Must specify an id for refreshing a #{type} resource" unless id
 
       api_action(type, id) do |klass|
@@ -39,7 +39,7 @@ module Api
       end
     end
 
-    def delete_resource_providers(type, id = nil, _data = nil)
+    def delete_resource(type, id = nil, _data = nil)
       raise BadRequestError, "Must specify an id for deleting a #{type} resource" unless id
 
       api_action(type, id) do |klass|
