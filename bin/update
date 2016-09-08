@@ -28,8 +28,8 @@ Dir.chdir APP_ROOT do
   puts "\n== Seeding database =="
   execute "bin/rake db:seed GOOD_MIGRATIONS=skip"
 
-  puts "\n== Resetting tests =="
-  execute "bin/rake test:vmdb:setup"
+  puts "\n== Migrating test database =="
+  execute "RAILS_ENV=test bin/rake db:migrate"
 
   unless ENV["SKIP_AUTOMATE_RESET"]
     puts "\n== Resetting Automate Domains =="
