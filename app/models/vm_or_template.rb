@@ -619,7 +619,6 @@ class VmOrTemplate < ApplicationRecord
                     # local
                     else
                       raise _("path, '%{path}', is malformed") % {:path => path}
-                      path
                     end
     return storage_name, (relative_path.empty? ? "/" : relative_path)
   end

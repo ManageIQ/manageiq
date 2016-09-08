@@ -487,7 +487,10 @@ module QcowDisk
       case partial_header['version']
       when 1
         raise "QCOW Version 1 is not supported"
-        QCOW_HEADER_V1.decode(file_handle.read(SIZEOF_QCOW_HEADER_V1))
+
+        # Commented out for now to avoid unreachable code
+        #
+        # QCOW_HEADER_V1.decode(file_handle.read(SIZEOF_QCOW_HEADER_V1))
       when 2
         h = QCOW_HEADER_V2.decode(file_handle.read(SIZEOF_QCOW_HEADER_V2))
         # TODO: Handle Encryption

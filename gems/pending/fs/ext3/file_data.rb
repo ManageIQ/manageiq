@@ -59,7 +59,10 @@ module Ext3
 
     def write(buf, _len = buf.length)
       raise "Ext3::FileData.write: Write functionality is not yet supported on Ext3."
-      @dirty = true
+
+      # Commented out for now to avoid unreachable code
+      #
+      # @dirty = true
     end
 
     private
