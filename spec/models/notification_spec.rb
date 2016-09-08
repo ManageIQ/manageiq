@@ -16,6 +16,11 @@ describe Notification, :type => :model do
         expect(user.notifications.count).to eq(1)
         expect(user.unseen_notifications.count).to eq(1)
       end
+
+      it 'broadcasts the message through ActionCable' do
+        expect_any_instance_of(ActionCable::Server::Base).to receive(:broadcast)
+        subject # force the creation of the db object
+      end
     end
   end
 end
