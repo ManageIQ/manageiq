@@ -186,4 +186,12 @@ describe MiqRegion do
       expect(token_hash[:timestamp]).to be > 5.minutes.ago.utc
     end
   end
+
+  describe "#required_credential_fields" do
+    let(:region) { FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number) }
+
+    it "checks the right credential fields" do
+      expect(region.required_credential_fields(:system_api)).to eq([:auth_key])
+    end
+  end
 end
