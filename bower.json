@@ -51,11 +51,16 @@
     "rx-angular": "rx.angular#^1.1.3",
     "manageiq-ui-components": "~0.0.7",
     "patternfly-bootstrap-treeview": "~2.1.0",
-    "jquery": "~2.1.4"
+    "jquery": "~2.1.4",
+    "patternfly-timeline": "b56e3f0157e9c1dce026f62fc586f1d75ef3bba5"
   },
   "resolutions": {
     "moment": ">=2.9.0",
     "d3": "~3.5.0",
-    "patternfly-bootstrap-treeview": "~2.1.0"
+    "patternfly-bootstrap-treeview": "~2.1.0",
+    "bootstrap-select": "~1.10.0",
+    "bootstrap-touchspin": "~3.1.1",
+    "bootstrap-datepicker": "~1.6.4",
+    "datatables-colreorder": "~1.3.2"
   }
 }
