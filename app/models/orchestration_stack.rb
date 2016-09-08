@@ -31,6 +31,7 @@ class OrchestrationStack < ApplicationRecord
   virtual_has_many :vms, :class_name => "ManageIQ::Providers::CloudManager::Vm"
   virtual_has_many :security_groups
   virtual_has_many :cloud_networks
+  virtual_has_many :orchestration_stacks
 
   virtual_total :total_vms, :vms
   virtual_total :total_security_groups, :security_groups
@@ -39,6 +40,10 @@ class OrchestrationStack < ApplicationRecord
   alias_method :orchestration_stack_parameters, :parameters
   alias_method :orchestration_stack_outputs,    :outputs
   alias_method :orchestration_stack_resources,  :resources
+
+  def orchestration_stacks
+    children
+  end
 
   def direct_service
     direct_services.first
