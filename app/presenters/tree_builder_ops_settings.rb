@@ -37,15 +37,10 @@ class TreeBuilderOpsSettings < TreeBuilderOps
   def x_get_tree_custom_kids(object, count_only, _options)
     case object[:id]
     when "l"
-      count_only_or_objects(count_only, LdapRegion.all, "name.to_s")
+      count_only_or_objects(count_only, LdapRegion.all, "name")
     when "msc"
-      objects = []
-      MiqSchedule.where("prod_default != 'system' or prod_default is null").to_a.sort do |a, b|
-        a.name.downcase <=> b.name.downcase
-      end.each do |z|
-        objects.push(z) if z.adhoc.nil?
-      end
-      count_only_or_objects(count_only, objects)
+      objects = MiqSchedule.where("(prod_default != 'system' or prod_default is null) AND adhoc is null")
+      count_only_or_objects(count_only, objects, "name")
     when "sis"
       count_only_or_objects(count_only, ScanItemSet.all, "name")
     when "z"
