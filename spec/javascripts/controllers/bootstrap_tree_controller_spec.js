@@ -83,7 +83,7 @@ describe('bootstrapTreeController', function() {
     });
 
     it('uses the correct selector', function() {
-      expect($.fn.treeview.calls.mostRecent().object.selector).toEqual('#bootstrap-tree');
+      expect($.fn.treeview.calls.mostRecent().object.selector).toEqual('#bootstrap-tree-left-nav');
     });
 
     it('subscribes to tree updates', function() {
@@ -149,7 +149,7 @@ describe('bootstrapTreeController', function() {
       });
 
       it('uses the correct selector', function() {
-        expect($.fn.treeview.calls.mostRecent().object.selector).toEqual('#bootstrap-tree');
+        expect($.fn.treeview.calls.mostRecent().object.selector).toEqual('#bootstrap-tree-left-nav');
       });
     });
 
@@ -163,7 +163,7 @@ describe('bootstrapTreeController', function() {
       });
 
       it('uses the correct selector', function() {
-        expect($.fn.treeview.calls.mostRecent().object.selector).toEqual('#bootstrap-tree');
+        expect($.fn.treeview.calls.mostRecent().object.selector).toEqual('#bootstrap-tree-left-nav');
       });
     });
 
@@ -181,7 +181,7 @@ describe('bootstrapTreeController', function() {
       });
 
       it('uses the correct selector', function() {
-        expect($.fn.treeview.calls.mostRecent().object.selector).toEqual('#bootstrap-tree');
+        expect($.fn.treeview.calls.mostRecent().object.selector).toEqual('#bootstrap-tree-left-nav');
       });
     });
 
@@ -189,10 +189,6 @@ describe('bootstrapTreeController', function() {
       describe('when the node text is equal to the response', function() {
         beforeEach(function() {
           singleItemSelectedCallback('nodeName');
-        });
-
-        it('gets the root node', function() {
-          expect($.fn.treeview).toHaveBeenCalledWith('getNodes');
         });
 
         it('finds the selected node from the list of all nodes', function() {

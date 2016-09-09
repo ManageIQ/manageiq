@@ -1,8 +1,8 @@
 ManageIQ.angular.app.controller('bootstrapTreeController', ['$http', '$scope', 'bootstrapTreeSubscriptionService', 'initialTreeData', 'railsControllerName', function($http, $scope, bootstrapTreeSubscriptionService, initialTreeData, railsControllerName) {
   var init = function() {
     updateTree(initialTreeData);
-    $scope.rootNode = $('#bootstrap-tree').treeview('getNodes')[0];
-    $('#bootstrap-tree').treeview('selectNode', $scope.rootNode);
+    $scope.rootNode = $('#bootstrap-tree-left-nav').treeview('getNodes')[0];
+    $('#bootstrap-tree-left-nav').treeview('selectNode', $scope.rootNode);
 
     bootstrapTreeSubscriptionService.subscribeToTreeUpdates(updateTree);
     bootstrapTreeSubscriptionService.subscribeToCancelClicks(selectRootNode);
@@ -11,7 +11,7 @@ ManageIQ.angular.app.controller('bootstrapTreeController', ['$http', '$scope', '
   };
 
   var updateTree = function(data) {
-    $('#bootstrap-tree').treeview({
+    $('#bootstrap-tree-left-nav').treeview({
       collapseIcon: 'fa fa-angle-down',
       data: data,
       expandIcon: 'fa fa-angle-right',
@@ -38,20 +38,17 @@ ManageIQ.angular.app.controller('bootstrapTreeController', ['$http', '$scope', '
   };
 
   var unselectAllNodes = function(_response) {
-    var selectedNodes = $('#bootstrap-tree').treeview('getSelected');
-    $('#bootstrap-tree').treeview('unselectNode', selectedNodes);
+    var selectedNodes = $('#bootstrap-tree-left-nav').treeview('getSelected');
+    $('#bootstrap-tree-left-nav').treeview('unselectNode', selectedNodes);
   };
 
   var selectSingleNode = function(response) {
-    angular.forEach($scope.rootNode.nodes, function(node) {
-      if (node.text === response) {
-        $('#bootstrap-tree').treeview('selectNode', node);
-      }
-    });
+    var node = _.find($scope.rootNode.nodes, {text: response});
+    $('#bootstrap-tree-left-nav').treeview('selectNode', node);
   };
 
   var selectRootNode = function() {
-    $('#bootstrap-tree').treeview('selectNode', $scope.rootNode);
+    $('#bootstrap-tree-left-nav').treeview('selectNode', $scope.rootNode);
   };
 
   init();
