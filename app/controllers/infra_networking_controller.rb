@@ -27,7 +27,8 @@ class InfraNetworkingController < ApplicationController
   end
 
   def show(id = nil)
-    return if perfmenu_click?
+    return if perfmenu_click
+    @explorer = true
     @display = params[:display] || "main" unless control_selected?
     @record = @switch = find_record( Switch, id || params[:id])
     return if record_no_longer_exists?(@switch)
@@ -524,159 +525,34 @@ class InfraNetworkingController < ApplicationController
   def set_right_cell_vars
     name = @record ? @record.name.to_s.gsub(/'/, "\\\\'") : "" # If record, get escaped name
     table = request.parameters["controller"]
-    case @sb[:action]
-      when "attach"
-        partial = "vm_common/attach"
-        header = _("Attach Cloud Volume to %{model} \"%{name}\"") % {:name => name, :model => ui_lookup(:table => table)}
-        action = "attach_volume"
-      when "detach"
-        partial = "vm_common/detach"
-        header = _("Detach Cloud Volume from %{model} \"%{name}\"") % {
-          :name  => name,
-          :model => ui_lookup(:table => table)
-        }
-        action = "detach_volume"
-      when "compare", "drift"
-        partial = "layouts/compare"
-        if @sb[:action] == "compare"
-          header = _("Compare %{vm_or_template}") % {:vm_or_template => ui_lookup(:model => @sb[:compare_db])}
-        else
-          header = _("Drift for %{vm_or_template} \"%{name}\"") %
-            {:name => name, :vm_or_template => ui_lookup(:model => @sb[:compare_db])}
-        end
-        action = nil
-      when "live_migrate"
-        partial = "vm_common/live_migrate"
-        header = _("Live Migrating %{model} \"%{name}\"") % {:name => name, :model => ui_lookup(:table => table)}
-        action = "live_migrate_vm"
-      when "evacuate"
-        partial = "vm_common/evacuate"
-        header = _("Evacuating %{model} \"%{name}\"") % {:name => name, :model => ui_lookup(:table => table)}
-        action = "evacuate_vm"
-      when "clone", "migrate", "publish"
-        partial = "miq_request/prov_edit"
-        task_headers = {"clone"   => _("Clone %{vm_or_template}"),
-                        "migrate" => _("Migrate %{vm_or_template}"),
-                        "publish" => _("Publish %{vm_or_template}")}
-        header = task_headers[@sb[:action]] % {:vm_or_template => ui_lookup(:table => table)}
-        action = "prov_edit"
-      when "dialog_provision"
-        partial = "shared/dialogs/dialog_provision"
-        header = @right_cell_text
-        action = "dialog_form_button_pressed"
-      when "edit"
-        partial = "vm_common/form"
-        header = _("Editing %{vm_or_template} \"%{name}\"") %
-          {:name => name, :vm_or_template => ui_lookup(:table => table)}
-        action = "edit_vm"
-      when "evm_relationship"
-        partial = "vm_common/evm_relationship"
-        header = _("Edit CFME Server Relationship for %{vm_or_template} \"%{name}\"") %
-          {:vm_or_template => ui_lookup(:table => table), :name => name}
-        action = "evm_relationship_update"
-      when "miq_request_new"
-        partial = "miq_request/pre_prov"
-        typ = request.parameters[:controller] == "vm_cloud" ? "an #{ui_lookup(:table => "template_cloud")}" : "a #{ui_lookup(:table => "template_infra")}"
-        header = _("Provision %{vm_or_template} - Select %{typ}") %
-          {:vm_or_template => ui_lookup(:tables => table), :typ => typ}
-        action = "pre_prov"
-      when "pre_prov"
-        partial = "miq_request/prov_edit"
-        header = _("Provision %{vms_or_templates}") % {:vms_or_templates => ui_lookup(:tables => table)}
-        action = "pre_prov_continue"
-      when "pre_prov_continue"
-        partial = "miq_request/prov_edit"
-        header = _("Provision %{vms_or_templates}") % {:vms_or_templates => ui_lookup(:tables => table)}
-        action = "prov_edit"
-      when "ownership"
-        partial = "shared/views/ownership"
-        header = _("Set Ownership for %{vms_or_templates}") % {:vms_or_templates => ui_lookup(:table => table)}
-        action = "ownership_update"
-      when "performance"
-        partial = "layouts/performance"
-        header = _("Capacity & Utilization data for %{vm_or_template} \"%{name}\"") %
-          {:vm_or_template => ui_lookup(:table => table), :name => name}
-        x_history_add_item(:id => x_node, :text => header, :button => params[:pressed], :display => params[:display])
-        action = nil
-      when "policy_sim"
-        if params[:action] == "policies"
-          partial = "vm_common/policies"
-          header = _("%{vm_or_template} Policy Simulation") % {:vm_or_template => ui_lookup(:table => table)}
-          action = nil
-        else
-          partial = "layouts/policy_sim"
-          header = _("%{vm_or_template} Policy Simulation") % {:vm_or_template => ui_lookup(:table => table)}
-          action = nil
-        end
-      when "protect"
-        partial = "layouts/protect"
-        header = _("%{vm_or_template} Policy Assignment") % {:vm_or_template => ui_lookup(:table => table)}
-        action = "protect"
-      when "reconfigure"
-        partial = "vm_common/reconfigure"
-        header = _("Reconfigure %{vm_or_template}") % {:vm_or_template => ui_lookup(:table => table)}
-        action = "reconfigure_update"
-      when "resize"
-        partial = "vm_common/resize"
-        header = _("Reconfiguring %{vm_or_template} \"%{name}\"") %
-          {:vm_or_template => ui_lookup(:table => table), :name => name}
-        action = "resize_vm"
-      when "retire"
-        partial = "shared/views/retire"
-        header = _("Set/Remove retirement date for %{vm_or_template}") % {:vm_or_template => ui_lookup(:table => table)}
-        action = "retire"
-      when "right_size"
-        partial = "vm_common/right_size"
-        header = _("Right Size Recommendation for %{vm_or_template} \"%{name}\"") %
-          {:vm_or_template => ui_lookup(:table => table), :name => name}
-        action = nil
-      when "tag"
-        partial = "layouts/tagging"
-        header = _("Edit Tags for %{vm_or_template}") % {:vm_or_template => ui_lookup(:table => table)}
-        action = "tagging_edit"
-      when "snapshot_add"
-        partial = "vm_common/snap"
-        header = _("Adding a new %{snapshot}") % {:snapshot => ui_lookup(:model => "Snapshot")}
-        action = "snap_vm"
-      when "timeline"
-        partial = "layouts/tl_show"
-        header = _("Timelines for %{virtual_machine} \"%{name}\"") %
-          {:virtual_machine => ui_lookup(:table => table), :name => name}
-        x_history_add_item(:id => x_node, :text => header, :button => params[:pressed])
-        action = nil
-      else
-        # now take care of links on summary screen
-        if ["details", "ontap_storage_volumes", "ontap_file_shares", "ontap_logical_disks", "ontap_storage_systems"].include?(@showtype)
-          partial = "layouts/x_gtl"
-        elsif @showtype == "item"
-          partial = "layouts/item"
-        elsif @showtype == "drift_history"
-          partial = "layouts/#{@showtype}"
-        else
-          partial = "#{@showtype == "compliance_history" ? "shared/views" : "vm_common"}/#{@showtype}"
-        end
-        if @showtype == "item"
-          header = _("%{action} \"%{item_name}\" for %{vm_or_template} \"%{name}\"") % {
-            :vm_or_template => ui_lookup(:table => table),
-            :name           => name,
-            :item_name      => @item.kind_of?(ScanHistory) ? @item.started_on.to_s : @item.name,
-            :action         => action_type(@sb[:action], 1)
-          }
-          x_history_add_item(:id => x_node, :text => header, :action => @sb[:action], :item => @item.id)
-        else
-          header = _("\"%{action}\" for %{vm_or_template} \"%{name}\"") % {
-            :vm_or_template => ui_lookup(:table => table),
-            :name           => name,
-            :action         => action_type(@sb[:action], 2)
-          }
-          if @display && @display != "main"
-            x_history_add_item(:id => x_node, :text => header, :display => @display)
-          else
-            x_history_add_item(:id => x_node, :text => header, :action => @sb[:action]) if @sb[:action] != "drift_history"
-          end
-        end
-        action = nil
+    if ["details"].include?(@showtype)
+      partial = "layouts/x_gtl"
+    elsif @showtype == "item"
+      partial = "layouts/item"
+    else
+      partial = "#{@showtype}"
     end
+    if @showtype == "item"
+      header = _("%{action} \"%{item_name}\" for %{switch} \"%{name}\"") % {
+        :switch         => ui_lookup(:table => table),
+        :name           => name,
+        :item_name      => @item.name,
+        :action         => action_type(@sb[:action], 1)
+      }
+      x_history_add_item(:id => x_node, :text => header, :action => @sb[:action], :item => @item.id)
+    else
+      header = _("\"%{action}\" for %{switch} \"%{name}\"") % {
+        :vm_or_template => ui_lookup(:table => table),
+        :name           => name,
+        :action         => action_type(@sb[:action], 2)
+      }
+      if @display && @display != "main"
+        x_history_add_item(:id => x_node, :text => header, :display => @display)
+      else
+        x_history_add_item(:id => x_node, :text => header, :action => @sb[:action]) if @sb[:action] != "drift_history"
+      end
+    end
+    action = nil
     return partial, action, header
   end
 
@@ -724,6 +600,15 @@ class InfraNetworkingController < ApplicationController
                                     :locals  => {:controller => 'infra_networking'}])
     else
       presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
+    end
+  end
+
+  def action_type(type, amount)
+    case type
+      when "hosts"
+        n_("Host", "Hosts", amount)
+      else
+        amount > 1 ? type.titleize : type.titleize.singularize
     end
   end
 

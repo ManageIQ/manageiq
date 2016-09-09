@@ -1317,6 +1317,7 @@ module ApplicationController::CiProcessing
       drop_breadcrumb(:name => _("%{name} (Hosts)") % {:name => @record.name},
                       :url  => "/#{@db}/hosts/#{@record.id}")
       @listicon = "host"
+      @explorer = true
       show_details(Account, :association => "hosts")
     end
   end
