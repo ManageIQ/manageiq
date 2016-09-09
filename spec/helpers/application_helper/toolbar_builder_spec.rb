@@ -2646,12 +2646,12 @@ describe ApplicationHelper do
     end
   end
 
-  describe "#call_by_class" do
+  describe "#build_by_class" do
     context "when the toolbar to be built is a blank view" do
       let(:toolbar_to_build) { ApplicationHelper::Toolbar::BlankView }
 
       it "returns nil" do
-        expect(_toolbar_builder.call_by_class(toolbar_to_build)).to be_nil
+        expect(_toolbar_builder.build_by_class(toolbar_to_build)).to be_nil
       end
     end
 
@@ -2663,7 +2663,7 @@ describe ApplicationHelper do
       end
 
       it "includes the button group" do
-        expect(_toolbar_builder.call_by_class(toolbar_to_build).first).to include(
+        expect(_toolbar_builder.build_by_class(toolbar_to_build).first).to include(
           :id    => "generic_object_definition_choice",
           :type  => :buttonSelect,
           :icon  => "fa fa-cog fa-lg",
@@ -2673,7 +2673,7 @@ describe ApplicationHelper do
       end
 
       it "includes the correct button items" do
-        expect(_toolbar_builder.call_by_class(toolbar_to_build).first[:items].first).to include(
+        expect(_toolbar_builder.build_by_class(toolbar_to_build).first[:items].first).to include(
           :id    => "generic_object_definition_choice__generic_object_definition_create",
           :type  => :button,
           :icon  => "pficon pficon-add-circle-o fa-lg",

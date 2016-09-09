@@ -16,11 +16,11 @@ describe GenericObjectHelper do
 
   describe "#toolbar_from_hash" do
     before do
-      allow(toolbar_builder).to receive(:call_by_class).with(
+      allow(toolbar_builder).to receive(:build_by_class).with(
         ApplicationHelper::Toolbar::XHistory
       ).and_return("xhistory")
 
-      allow(toolbar_builder).to receive(:call_by_class).with(
+      allow(toolbar_builder).to receive(:build_by_class).with(
         ApplicationHelper::Toolbar::GenericObjectDefinition
       ).and_return("generic_object")
     end

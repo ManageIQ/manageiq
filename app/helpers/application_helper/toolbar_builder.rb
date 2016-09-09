@@ -6,8 +6,31 @@ class ApplicationHelper::ToolbarBuilder
     build_toolbar(toolbar_name)
   end
 
-  def call_by_class(toolbar_class)
-    build(toolbar_class)
+  def build_by_class(toolbar_class)
+    @toolbar = []
+    @groups_added = []
+    @sep_needed = false
+    @sep_added = false
+
+    toolbar_class.definition.each_with_index do |(name, group), group_index|
+      next if group_skipped?(name)
+
+      @sep_added = false
+      @groups_added.push(group_index)
+      case group
+      when ApplicationHelper::Toolbar::Group
+        group.buttons.each do |bgi|
+          build_button(bgi, group_index)
+        end
+      when ApplicationHelper::Toolbar::Custom
+        rendered_html = group.render(@view_context).tr('\'', '"')
+        group[:args][:html] = ERB::Util.html_escape(rendered_html).html_safe
+        @toolbar << group
+      end
+    end
+
+    @toolbar = nil if @toolbar.empty?
+    @toolbar
   end
 
   private
@@ -43,8 +66,8 @@ class ApplicationHelper::ToolbarBuilder
   end
 
   def build_toolbar(tb_name)
-    toolbar = tb_name == "custom_buttons_tb" ? build_custom_buttons_toolbar(@record) : generic_toolbar(tb_name)
-    build(toolbar)
+    toolbar_class = tb_name == "custom_buttons_tb" ? build_custom_buttons_toolbar(@record) : generic_toolbar(tb_name)
+    build_by_class(toolbar_class)
   end
 
   def toolbar_button(inputs, props)
@@ -215,33 +238,6 @@ class ApplicationHelper::ToolbarBuilder
       !name.starts_with?("instance_") && !name.starts_with?("image_")) &&
        !%w(record_summary summary_main summary_download tree_main
        x_edit_view_tb history_main ems_container_dashboard).include?(name)
-  end
-
-  def build(toolbar)
-    @toolbar = []
-    @groups_added = []
-    @sep_needed = false
-    @sep_added = false
-
-    toolbar.definition.each_with_index do |(name, group), group_index|
-      next if group_skipped?(name)
-
-      @sep_added = false
-      @groups_added.push(group_index)
-      case group
-      when ApplicationHelper::Toolbar::Group
-        group.buttons.each do |bgi|
-          build_button(bgi, group_index)
-        end
-      when ApplicationHelper::Toolbar::Custom
-        rendered_html = group.render(@view_context).tr('\'', '"')
-        group[:args][:html] = ERB::Util.html_escape(rendered_html).html_safe
-        @toolbar << group
-      end
-    end
-
-    @toolbar = nil if @toolbar.empty?
-    @toolbar
   end
 
   def create_custom_button_hash(input, record, options = {})
