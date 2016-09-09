@@ -54,6 +54,7 @@ class TreeBuilderConfigurationManager < TreeBuilder
     assigned_configuration_profile_objs + unassigned_configuration_profile_objs
   end
 
+  # Note: a lot of logic / queries to determine if should display menu item
   def fetch_unassigned_configuration_profile_objects(count_only, configuration_manager_id)
     unprovisioned_configured_systems = ConfiguredSystem.where(:configuration_profile_id => nil,
                                                               :manager_id               => configuration_manager_id)
@@ -64,13 +65,8 @@ class TreeBuilderConfigurationManager < TreeBuilder
       unassigned_configuration_profile =
         [ConfigurationProfile.new(:name       => "Unassigned Profiles Group|#{unassigned_id}",
                                   :manager_id => configuration_manager_id)]
-      unassigned_configuration_profile_objs = count_only_or_objects(count_only, unassigned_configuration_profile)
     end
-
-    if unassigned_configuration_profile_objs.nil?
-      count_only ? unassigned_configuration_profile_objs = 0 : unassigned_configuration_profile_objs = []
-    end
-    unassigned_configuration_profile_objs
+    count_only_or_objects(count_only, unassigned_configuration_profile || [])
   end
 
   def x_get_tree_cpf_kids(object, count_only)
