@@ -266,7 +266,8 @@ class AutomateHash
 
   def provision_options
     find_request_options
-    @provision_options.options.dup.merge!(:request_type => @provision_options.request_type)
+    opts = @provision_options.options.dup.merge!(:request_type => @provision_options.request_type)
+    if_pxe_image?(opts) ? strip_out_pxe_klass(opts) : opts
   end
 
   def dialog
@@ -286,6 +287,16 @@ class AutomateHash
   end
 
   private
+
+  def if_pxe_image?(opts)
+    opts[:pxe_image_id] && opts[:pxe_image_id][0].match("::")
+  end
+
+  def strip_out_pxe_klass(opts)
+    stripped_value = opts[:pxe_image_id][0].split("::")
+    opts[:pxe_image_id][0] = stripped_value.last.to_i
+    opts
+  end
 
   def build_url
     @url ||= begin
