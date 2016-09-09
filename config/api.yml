@@ -74,11 +74,14 @@
     :identifier: availability_zone
     :options:
     - :collection
-    :verbs: *g
+    :verbs: *gp
     :klass: AvailabilityZone
     :collection_actions:
       :get:
       - :name: read
+        :identifier: availability_zone_show_list
+      :post:
+      - :name: query
         :identifier: availability_zone_show_list
     :resource_actions:
       :get:
@@ -97,6 +100,8 @@
       - :name: read
         :identifier: blueprint_show_list
       :post:
+      - :name: query
+        :identifier: blueprint_show_list
       - :name: create
         :identifier: blueprint_new
       - :name: edit
@@ -138,6 +143,8 @@
       - :name: read
         :identifier: ops_settings
       :post:
+      - :name: query
+        :identifier: ops_settings
       - :name: edit
         :identifier: ops_settings
       - :name: create
@@ -176,6 +183,8 @@
       - :name: read
         :identifier: chargeback
       :post:
+      - :name: query
+        :identifier: chargeback
       - :name: create
         :identifier: chargeback_rates_new
       - :name: edit
@@ -206,6 +215,8 @@
       - :name: read
         :identifier: container_deployment_show
       :post:
+      - :name: query
+        :identifier: container_deployment_show
       - :name: create
         :identifier: container_deployment_create
     :resource_actions:
@@ -242,6 +253,8 @@
       - :name: read
         :identifier: ems_cluster_show_list
       :post:
+      - :name: query
+        :identifier: ems_cluster_show_list
       - :name: delete
         :identifier: ems_cluster_delete
         :disabled: true
@@ -276,11 +289,14 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *g
+    :verbs: *gp
     :klass: Condition
     :collection_actions:
       :get:
       - :name: read
+        :identifier: condition
+      :post:
+      - :name: query
         :identifier: condition
     :resource_actions:
       :get:
@@ -300,6 +316,8 @@
       - :name: read
         :identifier: storage_show_list
       :post:
+      - :name: query
+        :identifier: storage_show_list
       - :name: delete
         :identifier: storage_delete
         :disabled: true
@@ -322,11 +340,14 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *g
+    :verbs: *gp
     :klass: MiqEventDefinition
     :collection_actions:
       :get:
       - :name: read
+        :identifier: event
+      :post:
+      - :name: query
         :identifier: event
     :resource_actions:
       :get:
@@ -349,11 +370,14 @@
     :identifier: flavor
     :options:
     - :collection
-    :verbs: *g
+    :verbs: *gp
     :klass: Flavor
     :collection_actions:
       :get:
       - :name: read
+        :identifier: flavor_show_list
+      :post:
+      - :name: query
         :identifier: flavor_show_list
     :resource_actions:
       :get:
@@ -373,6 +397,8 @@
       - :name: read
         :identifier: rbac_group_show_list
       :post:
+      - :name: query
+        :identifier: rbac_group_show_list
       - :name: create
         :identifier: rbac_group_add
       - :name: edit
@@ -413,6 +439,8 @@
       - :name: read
         :identifier: host_show_list
       :post:
+      - :name: query
+        :identifier: host_show_list
       - :name: add
         :identifier: host_new
         :disabled: true
@@ -503,6 +531,8 @@
       - :name: read
         :identifier: instance_show_list
       :post:
+      - :name: query
+        :identifier: instance_show_list
       - :name: terminate
         :identifier: instance_terminate
       - :name: stop
@@ -575,6 +605,8 @@
       - :name: read
         :identifier: policy_show_list
       :post:
+      - :name: query
+        :identifier: policy_show_list
       - :name: add
         :identifier: policy_new
         :disabled: true
@@ -612,11 +644,14 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *g
+    :verbs: *gp
     :klass: MiqAction
     :collection_actions:
       :get:
       - :name: read
+        :identifier: control_explorer_view
+      :post:
+      - :name: query
         :identifier: control_explorer_view
     :resource_actions:
       :get:
@@ -637,6 +672,8 @@
       - :name: read
         :identifier: profile_show_list
       :post:
+      - :name: query
+        :identifier: profile_show_list
       - :name: add
         :identifier: profile_new
         :disabled: true
@@ -685,6 +722,8 @@
       - :name: read
         :identifier: ems_infra_show_list
       :post:
+      - :name: query
+        :identifier: ems_infra_show_list
       - :name: create
         :identifier: ems_infra_new
       - :name: edit
@@ -734,11 +773,14 @@
     :identifier: miq_ae_customization_explorer
     :options:
     - :collection
-    :verbs: *g
+    :verbs: *gp
     :klass: MiqDialog
     :collection_actions:
       :get:
       - :name: read
+        :identifier: miq_ae_customization_explorer
+      :post:
+      - :name: query
         :identifier: miq_ae_customization_explorer
     :resource_actions:
       :get:
@@ -759,6 +801,8 @@
       - :name: read
         :identifier: miq_request_show_list
       :post:
+      - :name: query
+        :identifier: miq_request_show_list
       - :name: create
         :identifier: vm_miq_request_new
       - :name: approve
@@ -787,6 +831,8 @@
       - :name: read
         :identifier: chargeback_rates
       :post:
+      - :name: query
+        :identifier: chargeback_rates
       - :name: create
         :identifier: chargeback_rates_new
       - :name: edit
@@ -843,11 +889,14 @@
     :identifier: miq_request
     :options:
     - :collection
-    :verbs: *g
+    :verbs: *gp
     :klass: MiqRequest
     :collection_actions:
       :get:
       - :name: read
+        :identifier: miq_request_show_list
+      :post:
+      - :name: query
         :identifier: miq_request_show_list
     :resource_actions:
       :get:
@@ -875,6 +924,8 @@
       - :name: read
         :identifier: resource_pool_show_list
       :post:
+      - :name: query
+        :identifier: resource_pool_show_list
       - :name: delete
         :identifier: resource_pool_delete
         :disabled: true
@@ -909,11 +960,14 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *g
+    :verbs: *gp
     :klass: MiqReportResult
     :collection_actions:
       :get:
       - :name: read
+        :identifier: miq_report_view
+      :post:
+      - :name: query
         :identifier: miq_report_view
     :resource_actions:
       :get:
@@ -924,7 +978,7 @@
     :identifier: miq_report_reports
     :options:
     - :subcollection
-    :verbs: *g
+    :verbs: *gp
     :klass: MiqSchedule
     :collection_actions:
       :get:
@@ -948,6 +1002,8 @@
       - :name: read
         :identifier: rbac_role_show_list
       :post:
+      - :name: query
+        :identifier: rbac_role_show_list
       - :name: create
         :identifier: rbac_role_add
       - :name: add
@@ -973,11 +1029,14 @@
     :identifier: security_group
     :options:
     - :collection
-    :verbs: *g
+    :verbs: *gp
     :klass: SecurityGroup
     :collection_actions:
       :get:
       - :name: read
+        :identifier: security_group_show_list
+      :post:
+      - :name: query
         :identifier: security_group_show_list
     :resource_actions:
       :get:
@@ -1003,6 +1062,8 @@
       - :name: read
         :identifier: svc_catalog_provision
       :post:
+      - :name: query
+        :identifier: svc_catalog_provision
       - :name: create
         :identifier: st_catalog_new
       - :name: add
@@ -1036,6 +1097,8 @@
       - :name: read
         :identifier: miq_ae_customization_explorer
       :post:
+      - :name: query
+        :identifier: miq_ae_customization_explorer
       - :name: refresh_dialog_fields
         :identifier: svc_catalog_provision
     :resource_actions:
@@ -1059,6 +1122,8 @@
       - :name: read
         :identifier: svc_catalog_provision
       :post:
+      - :name: query
+        :identifier: svc_catalog_provision
       - :name: create
         :identifier: svc_catalog_provision
       - :name: edit
@@ -1097,6 +1162,8 @@
       - :name: read
         :identifier: miq_request_view
       :post:
+      - :name: query
+        :identifier: miq_request_view
       - :name: approve
         :identifier: miq_request_approval
       - :name: deny
@@ -1146,6 +1213,8 @@
       - :name: read
         :identifier: svc_catalog_provision
       :post:
+      - :name: query
+        :identifier: svc_catalog_provision
       - :name: edit
         :identifier: catalogitem_edit
       - :name: delete
@@ -1214,6 +1283,8 @@
       - :name: read
         :identifier: service_view
       :post:
+      - :name: query
+        :identifier: service_view
       - :name: edit
         :identifier: service_edit
       - :name: retire
@@ -1297,6 +1368,8 @@
       - :name: read
         :identifier: ops_settings
       :post:
+      - :name: query
+        :identifier: ops_settings
       - :name: create
         :identifier: ops_settings
       - :name: edit
@@ -1333,11 +1406,14 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *g
+    :verbs: *gp
     :klass: MiqTask
     :collection_actions:
       :get:
       - :name: read
+        :identifier: tasks_view
+      :post:
+      - :name: query
         :identifier: tasks_view
     :resource_actions:
       :get:
@@ -1359,6 +1435,8 @@
       - :name: read
         :identifier: miq_template_show_list
       :post:
+      - :name: query
+        :identifier: miq_template_show_list
       - :name: refresh
         :identifier: miq_template_refresh
         :disabled: true
@@ -1422,6 +1500,8 @@
       - :name: read
         :identifier: rbac_tenant_show_list
       :post:
+      - :name: query
+        :identifier: rbac_tenant_show_list
       - :name: create
         :identifier: rbac_tenant_add
       - :name: edit
@@ -1468,6 +1548,8 @@
       - :name: read
         :identifier: rbac_tenant_manage_quotas
       :post:
+      - :name: query
+        :identifier: rbac_tenant_manage_quotas
       - :name: create
         :identifier: rbac_tenant_manage_quotas
       - :name: edit
@@ -1503,6 +1585,8 @@
       - :name: read
         :identifier: rbac_user_show_list
       :post:
+      - :name: query
+        :identifier: rbac_user_show_list
       - :name: create
         :identifier: rbac_user_add
       - :name: edit
@@ -1546,6 +1630,8 @@
       - :name: read
         :identifier: vm_show_list
       :post:
+      - :name: query
+        :identifier: vm_show_list
       - :name: add
         :identifier: vm_miq_request_new
         :disabled: true
@@ -1670,19 +1756,24 @@
     :identifier: zone
     :options:
     - :collection
-    :verbs: *g
+    :verbs: *gp
     :klass: Zone
     :collection_actions:
       :get:
       - :name: read
         :identifier: zone
       :post:
+      - :name: query
+        :identifier: zone
       - :name: add
         :identifier: zone_new
+        :disabled: true
       - :name: edit
         :identifier: zone_edit
+        :disabled: true
       - :name: delete
         :identifier: zone_delete
+        :disabled: true
     :resource_actions:
       :get:
       - :name: read
@@ -1690,19 +1781,24 @@
       :post:
       - :name: edit
         :identifier: zone_edit
+        :disabled: true
       :delete:
       - :name: delete
         :identifier: zone_delete
+        :disabled: true
   :virtual_templates:
     :description: Virtual Templates
     :identifier: miq_virtual_template
     :options:
     - :collection
-    :verbs: *g
+    :verbs: *gp
     :klass: ManageIQ::Providers::CloudManager::VirtualTemplate
     :collection_actions:
       :get:
       - :name: read
+        :identifier: virtual_template_show
+      :post:
+      - :name: query
         :identifier: virtual_template_show
   :arbitration_profiles:
     :description: Arbitration Profiles
@@ -1716,6 +1812,8 @@
       - :name: read
         :identifier: arbitration_profile_show
       :post:
+      - :name: query
+        :identifier: arbitration_profile_show
       - :name: create
         :identifier: arbitration_profile_new
       - :name: edit
@@ -1737,11 +1835,14 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *g
+    :verbs: *gp
     :klass: CloudNetwork
     :collection_actions:
       :get:
       - :name: read
+        :identifier: miq_cloud_networks_view
+      :post:
+      - :name: query
         :identifier: miq_cloud_networks_view
   :arbitration_settings:
     :description: Arbitration Settings
@@ -1755,6 +1856,8 @@
       - :name: read
         :identifier: show_arbitration_setting
       :post:
+      - :name: query
+        :identifier: show_arbitration_setting
       - :name: create
         :identifier: create_arbitration_setting
       - :name: edit
@@ -1782,6 +1885,8 @@
       - :name: read
         :identifier: arbitration_rule_show_list
       :post:
+      - :name: query
+        :identifier: arbitration_rule_show_list
       - :name: create
         :identifier: arbitration_rule_new
       - :name: delete

@@ -59,6 +59,17 @@ module Api
 
       alias_method :create_resource, :add_resource
 
+      def query_resource(type, id, _data)
+        resource = resource_search(id, type, collection_class(type))
+        opts = {
+          :name             => type.to_s,
+          :is_subcollection => false,
+          :resource_actions => "resource_actions_#{type}",
+          :expand_resources => true
+        }
+        resource_to_jbuilder(type, type, resource, opts).attributes!
+      end
+
       def edit_resource(type, id, data)
         klass = collection_class(type)
         resource = resource_search(id, type, klass)
