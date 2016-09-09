@@ -3,6 +3,7 @@ module MiqProvisionMixin
     # Infrastructure
     "Host"                                           => [:hosts,                   :placement_host_name],
     "Storage"                                        => [:storages,                :placement_ds_name],
+    "StorageProfile"                                 => [:storage_profiles,        :placement_storage_profile],
     "EmsCluster"                                     => [:clusters,                :placement_cluster_name],
     "ResourcePool"                                   => [:resource_pools,          :placement_rp_name],
     "EmsFolder"                                      => [:folders,                 :placement_folder_name],
