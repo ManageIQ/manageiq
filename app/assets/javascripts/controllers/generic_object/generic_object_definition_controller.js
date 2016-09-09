@@ -21,7 +21,7 @@ ManageIQ.angular.app.controller('genericObjectDefinitionFormController', ['$http
     $scope.showSingleItem = false;
   };
 
-  var addedGenericObject = function(data) {
+  var addedGenericObject = function(_data) {
     var successCallback = function(response) {
       sendDataWithRx({eventType: 'treeUpdated', response: JSON.parse(response.data.tree_data)});
     };
@@ -56,13 +56,7 @@ ManageIQ.angular.app.controller('genericObjectDefinitionFormController', ['$http
   $scope.addClicked = function() {
     var data = $scope.genericObjectDefinitionModel;
 
-    miqService.jqueryRequest('create', {
-      data: data,
-      dataType: 'json',
-      beforeSend: true,
-      complete: true,
-      done: addedGenericObject
-    });
+    $http.post('create', data).then(addedGenericObject);
   };
 
   $scope.cancelClicked = function() {

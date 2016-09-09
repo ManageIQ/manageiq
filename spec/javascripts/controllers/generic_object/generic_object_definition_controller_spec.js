@@ -31,6 +31,7 @@ describe('genericObjectDefinitionFormController', function() {
     );
 
     $httpBackend.whenGET('tree_data').respond({tree_data: JSON.stringify(treeData)});
+    $httpBackend.whenPOST('create').respond({message: "success"});
 
     $controller = _$controller_('genericObjectDefinitionFormController', {
       $scope: $scope,
@@ -180,29 +181,11 @@ describe('genericObjectDefinitionFormController', function() {
       });
 
       $scope.addClicked();
+      $httpBackend.flush();
     });
 
-    it('makes a jquery request with the generic object definition model data', function() {
-      expect(miqService.jqueryRequest).toHaveBeenCalledWith('create', {
-        data: {name: 'name', description: 'description'},
-        dataType: 'json',
-        beforeSend: true,
-        complete: true,
-        done: loadedDoneFunction
-      });
-    });
-
-    describe('#addClicked done function', function() {
-      var data = {};
-
-      beforeEach(function() {
-        loadedDoneFunction(data);
-        $httpBackend.flush();
-      });
-
-      it('sends the tree data', function() {
-        expect(window.sendDataWithRx).toHaveBeenCalledWith({eventType: 'treeUpdated', response: treeData});
-      });
+    it('sends the tree data', function() {
+      expect(window.sendDataWithRx).toHaveBeenCalledWith({eventType: 'treeUpdated', response: treeData});
     });
   });
 
