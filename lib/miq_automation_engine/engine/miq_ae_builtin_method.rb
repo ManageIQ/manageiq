@@ -138,10 +138,6 @@ module MiqAeEngine
       event_object_from_workspace(obj).src_vm_disconnect_storage
     end
 
-    def self.miq_src_vm_refresh_on_reconfig(obj, _inputs)
-      event_object_from_workspace(obj).src_vm_refresh_on_reconfig
-    end
-
     def self.miq_event_enforce_policy(obj, _inputs)
       event_object_from_workspace(obj).process_evm_event
     end

@@ -79,10 +79,6 @@ class EmsEvent
       call("src_vm", "disconnect_storage")
     end
 
-    def src_vm_refresh_on_reconfig
-      call("src_vm", "refresh_on_reconfig")
-    end
-
     private
 
     def parse_policy_parameters(target_str, policy_event, param)
