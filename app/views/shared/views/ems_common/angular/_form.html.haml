@@ -81,10 +81,13 @@
                             "ng-model"                => "emsCommonModel.azure_tenant_id",
                             "required"                => "",
                             "checkchange"             => "",
+                            "ng-pattern"              => "/^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$/",
                             "prefix"                  => "default",
                             "reset-validation-status" => "default_auth_status"}
         %span.help-block{"ng-show" => "angularForm.azure_tenant_id.$error.required"}
           = _("Required")
+        %span.help-block{"ng-show" => "angularForm.azure_tenant_id.$error.pattern"}
+          = _("Invalid input format, please enter a GUID")
 
     .form-group{"ng-class" => "{'has-error': angularForm.subscription.$invalid}", "ng-if" => "emsCommonModel.emstype != '' && emsCommonModel.emstype == 'azure'"}
       %label.col-md-2.control-label{"for" => "ems_subscription"}
@@ -96,7 +99,10 @@
                             "ng-model"                => "emsCommonModel.subscription",
                             "checkchange"             => "",
                             "prefix"                  => "default",
+                            "ng-pattern"              => "/^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$/",
                             "reset-validation-status" => "default_auth_status"}
+        %span.help-block{"ng-show" => "angularForm.subscription.$error.pattern"}
+          = _("Invalid input format, please enter a GUID")
 
     .form-group{"ng-class" => "{'has-error': angularForm.api_version.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra'"}
       %label.col-md-2.control-label{"for" => "ems_api_version"}
@@ -219,6 +225,7 @@
                               :validate_url           => @ems.id ? "update" : "create",
                               :id                     => @ems.id || "new",
                               :basic_info_needed      => true,
+                              :guid_regex             => "/^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$/",
                               :userid_label           => _("Client ID"),
                               :password_label         => _("Client Key"),
                               :verify_label           => _("Confirm Client Key"),
