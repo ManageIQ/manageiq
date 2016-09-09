@@ -1,0 +1,2291 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/inventory/status
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '234'
+      Date:
+      - Fri, 09 Sep 2016 16:13:33 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "Implementation-Version" : "0.18.0.Final",
+          "Built-From-Git-SHA1" : "be1107e48907ebc1d8de4dc571275edd9daf0424",
+          "Inventory-Implementation" : "org.hawkular.inventory.impl.tinkerpop.TinkerpopInventory",
+          "Initialized" : "true"
+        }
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 16:13:33 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/status
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '133'
+      Date:
+      - Fri, 09 Sep 2016 16:13:33 GMT
+    body:
+      encoding: UTF-8
+      string: '{"MetricsService":"STARTED","Implementation-Version":"0.18.3.Final","Built-From-Git-SHA1":"38ea6c2a1e33ed1024684084812ad2ad5730fb76"}'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 16:13:33 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/inventory/traversal/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~Local~/rl;incorporates/type=m?sort=id
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 16:13:33 GMT
+      X-Total-Count:
+      - "-1"
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '3'
+      Link:
+      - <http://hservices.torii.gva.redhat.com/hawkular/inventory/traversal/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~Local~/rl;incorporates/type=m?sort=id>;
+        rel="current"
+    body:
+      encoding: ASCII-8BIT
+      string: "[ ]"
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 16:13:33 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/inventory/traversal/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~/r;Local~/rl;incorporates/type=m?sort=id
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 16:24:45 GMT
+      X-Total-Count:
+      - "-1"
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '3'
+      Link:
+      - <http://hservices.torii.gva.redhat.com/hawkular/inventory/traversal/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~/r;Local~/rl;incorporates/type=m?sort=id>;
+        rel="current"
+    body:
+      encoding: ASCII-8BIT
+      string: "[ ]"
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 16:24:45 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/inventory/traversal/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ/rl;incorporates/type=m?sort=id
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 16:29:58 GMT
+      X-Total-Count:
+      - '5'
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '6287'
+      Link:
+      - <http://hservices.torii.gva.redhat.com/hawkular/inventory/traversal/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ/rl;incorporates/type=m?sort=id>;
+        rel="current"
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        [ {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ%5D~MT~JMS%20Queue%20Metrics~Consumer%20Count",
+          "name" : "Consumer Count",
+          "identityHash" : "a6f6a1b6b9f48c27bcffd4d0517b089e38ed99c",
+          "contentHash" : "d2e3b177e4e54deb3c1c8a543186d07599219c",
+          "syncHash" : "a5bc3d224318c34efb6a6fc5f6f508f35b7473",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Queue%20Metrics~Consumer%20Count",
+            "name" : "Consumer Count",
+            "identityHash" : "f9156787a21d62acb79c4535d0f031e6260ba",
+            "contentHash" : "9da36885f35f7acb9cb53c5846fccbadc21a70",
+            "syncHash" : "74eaf326d2f5e6cc2c3e33792997feb21153a9de",
+            "unit" : "NONE",
+            "metricDataType" : "gauge",
+            "collectionInterval" : 30,
+            "type" : "GAUGE",
+            "id" : "JMS Queue Metrics~Consumer Count"
+          },
+          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS Queue Metrics~Consumer Count"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ%5D~MT~JMS%20Queue%20Metrics~Delivering%20Count",
+          "name" : "Delivering Count",
+          "identityHash" : "e42a8ddfdb4ded1418a98667c461bea21864254",
+          "contentHash" : "f7621349f85555c9a6d5a79eb842f6cfa1cb76",
+          "syncHash" : "82a3f04846cabe88e115cba3b1ec187925c87b85",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Queue%20Metrics~Delivering%20Count",
+            "name" : "Delivering Count",
+            "identityHash" : "36ede6b05fb7921c8bc9351763c81e429ca73f",
+            "contentHash" : "f1d49137e5fb38fe24849554f1934e49ea13345b",
+            "syncHash" : "e622df938bc1c043bfdcb97dede0f4178bb66789",
+            "unit" : "NONE",
+            "metricDataType" : "gauge",
+            "collectionInterval" : 30,
+            "type" : "GAUGE",
+            "id" : "JMS Queue Metrics~Delivering Count"
+          },
+          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS Queue Metrics~Delivering Count"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ%5D~MT~JMS%20Queue%20Metrics~Message%20Count",
+          "name" : "Message Count",
+          "identityHash" : "882f27aef5b91871239eadc911f01476d074da1",
+          "contentHash" : "aa623b9d472de908691c72135b4ce9d7320e4d1",
+          "syncHash" : "d92adb77736a98816b67ef78bfb931c26f76d50",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Queue%20Metrics~Message%20Count",
+            "name" : "Message Count",
+            "identityHash" : "375b56311438fed7e62946404bad9ed82c77886c",
+            "contentHash" : "6d5d9d439beb2dbddc45fa7824a1ae3a5c3e27",
+            "syncHash" : "302340244bdd959171fa232d25a14317f18d10dd",
+            "unit" : "NONE",
+            "metricDataType" : "gauge",
+            "collectionInterval" : 30,
+            "type" : "GAUGE",
+            "id" : "JMS Queue Metrics~Message Count"
+          },
+          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS Queue Metrics~Message Count"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ%5D~MT~JMS%20Queue%20Metrics~Messages%20Added",
+          "name" : "Messages Added",
+          "identityHash" : "e99c236e8092dddd93d92e3f6765d996ede5",
+          "contentHash" : "fb254971dbcaafdbd75e495fb3866dc71ef58b4a",
+          "syncHash" : "c43a3816748072f33bf6319cb6f127e373dfce1",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Queue%20Metrics~Messages%20Added",
+            "name" : "Messages Added",
+            "identityHash" : "41549a7046d41118cd97823f404a835f8f457472",
+            "contentHash" : "8d4cba225679582c3fa3d9c84e97ad0aaa4474",
+            "syncHash" : "2093667f74e57af7c07c7a1c543b31a9624137c4",
+            "unit" : "NONE",
+            "metricDataType" : "counter",
+            "collectionInterval" : 30,
+            "type" : "COUNTER",
+            "id" : "JMS Queue Metrics~Messages Added"
+          },
+          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS Queue Metrics~Messages Added"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ%5D~MT~JMS%20Queue%20Metrics~Scheduled%20Count",
+          "name" : "Scheduled Count",
+          "identityHash" : "49d9c7bc8f9c1884903014b0fbddd2af189912b8",
+          "contentHash" : "ccb5b21296683655598858722afb3973689afe4",
+          "syncHash" : "602b10ac9580fab51ba6d3b16015e4e76014e23e",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Queue%20Metrics~Scheduled%20Count",
+            "name" : "Scheduled Count",
+            "identityHash" : "6fc1b71420d02de59849ddfd2f65b2f41b81223",
+            "contentHash" : "e542875924c82fbf4c1815b086da8561495ef2",
+            "syncHash" : "753342e5b3c793b093335d7d82ace1e6fee2d9fc",
+            "unit" : "NONE",
+            "metricDataType" : "gauge",
+            "collectionInterval" : 30,
+            "type" : "GAUGE",
+            "id" : "JMS Queue Metrics~Scheduled Count"
+          },
+          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS Queue Metrics~Scheduled Count"
+        } ]
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 16:29:58 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Consumer%20Count/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 16:30:41 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '343'
+    body:
+      encoding: UTF-8
+      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 16:30:41 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Delivering%20Count/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 16:30:41 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '343'
+    body:
+      encoding: UTF-8
+      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 16:30:41 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Message%20Count/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 16:30:41 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '343'
+    body:
+      encoding: UTF-8
+      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 16:30:41 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Messages%20Added/rate/stats?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 16:30:41 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '343'
+    body:
+      encoding: UTF-8
+      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 16:30:41 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Scheduled%20Count/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 16:30:41 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '343'
+    body:
+      encoding: UTF-8
+      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 16:30:41 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Consumer%20Count/raw/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 16:37:10 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473121693058,"value":0.0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 16:37:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Consumer%20Count/raw/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 16:37:10 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473439014000,"value":0.0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 16:37:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Delivering%20Count/raw/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 16:37:10 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473121693017,"value":0.0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 16:37:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Delivering%20Count/raw/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 16:37:10 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473439014000,"value":0.0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 16:37:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Message%20Count/raw/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 16:37:10 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473121693063,"value":0.0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 16:37:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Message%20Count/raw/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 16:37:10 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473439014001,"value":0.0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 16:37:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Messages%20Added/raw/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 16:37:10 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '39'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473121693053,"value":0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 16:37:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Messages%20Added/raw/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 16:37:10 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '39'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473439014001,"value":0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 16:37:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Scheduled%20Count/raw/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 16:37:10 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473121693013,"value":0.0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 16:37:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Scheduled%20Count/raw/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 16:37:10 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473439014002,"value":0.0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 16:37:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/inventory/traversal/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData/rl;incorporates/type=m?sort=id
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:09 GMT
+      X-Total-Count:
+      - '8'
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '10681'
+      Link:
+      - <http://hservices.torii.gva.redhat.com/hawkular/inventory/traversal/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertData/rl;incorporates/type=m?sort=id>;
+        rel="current"
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        [ {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertData/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Delivering%20Count",
+          "name" : "Delivering Count",
+          "identityHash" : "e1f5625bcbee1e5dcc18826474eb299b9bcf1936",
+          "contentHash" : "42e628dc1eba8faf9bd6f414cb7bcb41b58712",
+          "syncHash" : "122a87c8a4a20bba92b1ddcc454a8b87a55b9f",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Topic%20Metrics~Delivering%20Count",
+            "name" : "Delivering Count",
+            "identityHash" : "e375ababfea5ab8b1d03a9cbaa8b8cfa364ea2",
+            "contentHash" : "f1d49137e5fb38fe24849554f1934e49ea13345b",
+            "syncHash" : "cd4ecd576ab2e8ce9c49f074af3d96b2a3f2868e",
+            "unit" : "NONE",
+            "metricDataType" : "gauge",
+            "collectionInterval" : 30,
+            "type" : "GAUGE",
+            "id" : "JMS Topic Metrics~Delivering Count"
+          },
+          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS Topic Metrics~Delivering Count"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertData/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Durable%20Message%20Count",
+          "name" : "Durable Message Count",
+          "identityHash" : "944bf95f16d858dfef3dfb149a9d475a1188af5",
+          "contentHash" : "c7bf4f894218d1a2bb79f64386aa637b545",
+          "syncHash" : "c4424e9ca43a54f5db8e4e27d1a742205d546b",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Topic%20Metrics~Durable%20Message%20Count",
+            "name" : "Durable Message Count",
+            "identityHash" : "a4ffcbdbc0d9454b4f2fab245babe8ca0d9af66",
+            "contentHash" : "13f03fa6dcdc15dcd692f577ab5c7aba6486e2b",
+            "syncHash" : "a1a2d782b4f48722f3e324adf57651ff01948af",
+            "unit" : "NONE",
+            "metricDataType" : "gauge",
+            "collectionInterval" : 30,
+            "type" : "GAUGE",
+            "id" : "JMS Topic Metrics~Durable Message Count"
+          },
+          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS Topic Metrics~Durable Message Count"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertData/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Durable%20Subscription%20Count",
+          "name" : "Durable Subscription Count",
+          "identityHash" : "3453779342d93c2291d8bc7c49d625ca9ff3c96",
+          "contentHash" : "7e52e0d7739dd0b9fd81dd468e2b24233f33bc8d",
+          "syncHash" : "9d81e555271485cca0adf48b81ea0a140ce2532",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Topic%20Metrics~Durable%20Subscription%20Count",
+            "name" : "Durable Subscription Count",
+            "identityHash" : "2bbe6ab97bd6baef99f0126d0d07fe517e5fc",
+            "contentHash" : "3de9c4d163938ffae2243ca2725cfeda533a4895",
+            "syncHash" : "10f51b9ca5f169c5ca4540d0ca618f971705b54",
+            "unit" : "NONE",
+            "metricDataType" : "gauge",
+            "collectionInterval" : 30,
+            "type" : "GAUGE",
+            "id" : "JMS Topic Metrics~Durable Subscription Count"
+          },
+          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS Topic Metrics~Durable Subscription Count"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertData/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Message%20Count",
+          "name" : "Message Count",
+          "identityHash" : "ba77a823a5e23319ee2f5f7c25825fb3b38822e",
+          "contentHash" : "d55e7ddb4e919795742fade925f3bf2d7202dcd",
+          "syncHash" : "a97a3989ac4c00cad364aa3184f9267971c53",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Topic%20Metrics~Message%20Count",
+            "name" : "Message Count",
+            "identityHash" : "619a546cff112a6cce3498f798e6962539439fed",
+            "contentHash" : "6d5d9d439beb2dbddc45fa7824a1ae3a5c3e27",
+            "syncHash" : "4758942b1166c918ca7a05db0f66749634c6590",
+            "unit" : "NONE",
+            "metricDataType" : "gauge",
+            "collectionInterval" : 30,
+            "type" : "GAUGE",
+            "id" : "JMS Topic Metrics~Message Count"
+          },
+          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS Topic Metrics~Message Count"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertData/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Messages%20Added",
+          "name" : "Messages Added",
+          "identityHash" : "7c6fa7b3f38785b9b0489d7e6b5f4de2c2d909c",
+          "contentHash" : "f4da7764959786de5362b5cd7b96a9e2f64bd",
+          "syncHash" : "8d4d7f2598e19a36b96153b88f145974599c6d91",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Topic%20Metrics~Messages%20Added",
+            "name" : "Messages Added",
+            "identityHash" : "4f8626b2e267335f76d3962efa3967efe178872",
+            "contentHash" : "8d4cba225679582c3fa3d9c84e97ad0aaa4474",
+            "syncHash" : "f4aeb19a2e1f8586225241f58b92128a6454ac",
+            "unit" : "NONE",
+            "metricDataType" : "counter",
+            "collectionInterval" : 30,
+            "type" : "COUNTER",
+            "id" : "JMS Topic Metrics~Messages Added"
+          },
+          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS Topic Metrics~Messages Added"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertData/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Non-Durable%20Message%20Count",
+          "name" : "Non-Durable Message Count",
+          "identityHash" : "c9fbde7aac3eead17d9263eb74bb3fe45749dd6",
+          "contentHash" : "319381cd2cd28e502b17c0674d98574891192ec7",
+          "syncHash" : "d5d6e673486027c94b2797031c1860a21725e",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Topic%20Metrics~Non-Durable%20Message%20Count",
+            "name" : "Non-Durable Message Count",
+            "identityHash" : "db381ba734f43fd41afaca6a40d2e787d1e3e67d",
+            "contentHash" : "84974139be7cad7e1aed155edf1515855b42b",
+            "syncHash" : "7164924348d3c86be4c6feff2c6388337bf9a4a",
+            "unit" : "NONE",
+            "metricDataType" : "gauge",
+            "collectionInterval" : 30,
+            "type" : "GAUGE",
+            "id" : "JMS Topic Metrics~Non-Durable Message Count"
+          },
+          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS Topic Metrics~Non-Durable Message Count"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertData/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Non-Durable%20Subscription%20Count",
+          "name" : "Non-Durable Subscription Count",
+          "identityHash" : "9290b3275e61e8babdda2aff0f8ba9f38ae839f",
+          "contentHash" : "d97385a24550f44a8c3f17f96a49c551159042",
+          "syncHash" : "9cbc8f9a3f5c16db469065e11f4562671d68890",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Topic%20Metrics~Non-Durable%20Subscription%20Count",
+            "name" : "Non-Durable Subscription Count",
+            "identityHash" : "b718f61324c96e2ae9e6769640be6292829ab38d",
+            "contentHash" : "7db7d4ac8dc12213f88f50424387867aa1d82",
+            "syncHash" : "2425c85090ebf5882e811047a6bb54335b6c4a",
+            "unit" : "NONE",
+            "metricDataType" : "gauge",
+            "collectionInterval" : 30,
+            "type" : "GAUGE",
+            "id" : "JMS Topic Metrics~Non-Durable Subscription Count"
+          },
+          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS Topic Metrics~Non-Durable Subscription Count"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertData/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Subscription%20Count",
+          "name" : "Subscription Count",
+          "identityHash" : "c15f449111c8de499adbd69e5c2d7923c7ec13",
+          "contentHash" : "6e337573ff52e4418aa82e5367e83a7566fba896",
+          "syncHash" : "50d6d717733d7bb56ddbe87da259ef5ad76d043",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Topic%20Metrics~Subscription%20Count",
+            "name" : "Subscription Count",
+            "identityHash" : "2d1c9df25429a71e7c8422371fd01b4bba2165",
+            "contentHash" : "7e5e127fd7781159fb2fbdf377c8ec95db7113fe",
+            "syncHash" : "c85bc92be7456187d1bb443f39040d0cada2c99",
+            "unit" : "NONE",
+            "metricDataType" : "gauge",
+            "collectionInterval" : 30,
+            "type" : "GAUGE",
+            "id" : "JMS Topic Metrics~Subscription Count"
+          },
+          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS Topic Metrics~Subscription Count"
+        } ]
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:09 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Delivering%20Count/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:09 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '343'
+    body:
+      encoding: UTF-8
+      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:09 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Durable%20Message%20Count/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:09 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '343'
+    body:
+      encoding: UTF-8
+      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:09 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Durable%20Subscription%20Count/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:09 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '343'
+    body:
+      encoding: UTF-8
+      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:09 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Message%20Count/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:09 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '343'
+    body:
+      encoding: UTF-8
+      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:09 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Messages%20Added/rate/stats?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:09 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '343'
+    body:
+      encoding: UTF-8
+      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:09 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Non-Durable%20Message%20Count/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:09 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '343'
+    body:
+      encoding: UTF-8
+      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:09 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Non-Durable%20Subscription%20Count/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:09 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '343'
+    body:
+      encoding: UTF-8
+      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:09 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Subscription%20Count/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:09 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '343'
+    body:
+      encoding: UTF-8
+      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:09 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Delivering%20Count/raw/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:09 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473121693061,"value":0.0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:09 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Delivering%20Count/raw/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:09 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473444346001,"value":0.0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:09 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Durable%20Message%20Count/raw/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:09 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473121693064,"value":0.0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:09 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Durable%20Message%20Count/raw/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:09 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473444346002,"value":0.0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:09 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Durable%20Subscription%20Count/raw/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:09 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473121693049,"value":0.0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:09 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Durable%20Subscription%20Count/raw/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:09 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473444346002,"value":0.0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:09 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Message%20Count/raw/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:09 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473121693034,"value":0.0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Message%20Count/raw/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:10 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473444346001,"value":0.0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Messages%20Added/raw/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:10 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '39'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473121693052,"value":0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Messages%20Added/raw/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:10 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '39'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473444346001,"value":0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Non-Durable%20Message%20Count/raw/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:10 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473121693054,"value":0.0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Non-Durable%20Message%20Count/raw/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:10 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473444346001,"value":0.0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Non-Durable%20Subscription%20Count/raw/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:10 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473121693037,"value":1.0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Non-Durable%20Subscription%20Count/raw/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:10 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473444346001,"value":1.0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Subscription%20Count/raw/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:10 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473121693061,"value":1.0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Subscription%20Count/raw/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 09 Sep 2016 18:06:10 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1473444349001,"value":1.0}]'
+    http_version:
+  recorded_at: Fri, 09 Sep 2016 18:06:10 GMT
+recorded_with: VCR 3.0.3
