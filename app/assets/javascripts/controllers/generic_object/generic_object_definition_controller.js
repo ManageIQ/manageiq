@@ -19,6 +19,7 @@ ManageIQ.angular.app.controller('genericObjectDefinitionFormController', ['$http
   var showAllItems = function(response) {
     $scope.genericObjectList = response;
     $scope.showSingleItem = false;
+    $scope.showAddForm = false;
   };
 
   var addedGenericObject = function(_data) {

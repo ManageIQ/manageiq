@@ -142,6 +142,10 @@ describe('genericObjectDefinitionFormController', function() {
       it('sets showSingleItem to false', function() {
         expect($scope.showSingleItem).toEqual(false);
       });
+
+      it('sets showAddForm to false', function() {
+        expect($scope.showAddForm).toEqual(false);
+      });
     });
   });
 
