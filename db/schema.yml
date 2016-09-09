@@ -1680,6 +1680,12 @@ load_balancers:
 - created_at
 - updated_at
 - type
+- retired
+- retires_on
+- retirement_warn
+- retirement_last_warn
+- retirement_state
+- retirement_requester
 log_files:
 - id
 - name
