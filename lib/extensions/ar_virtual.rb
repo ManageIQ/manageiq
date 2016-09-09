@@ -66,17 +66,34 @@ module VirtualDelegates
     #
 
     def virtual_delegate(*methods)
-      options = methods.pop
-      unless options.kind_of?(Hash) && options[:to]
+      options = methods.extract_options!
+      unless (to = options[:to])
         raise ArgumentError, 'Delegation needs an association. Supply an options hash with a :to key as the last argument (e.g. delegate :hello, to: :greeter).'
       end
-      delegate(*methods, options.except(:arel, :uses))
+
+      to = to.to_s
+      if to.include?(".") && methods.size > 1
+        raise ArgumentError, 'Delegation only supports specifying a method name when defining a single virtual method'
+      end
+
+      if to.count(".") > 1
+        raise ArgumentError, 'Delegation needs a single association. Supply an option hash with a :to key with only 1 period (e.g. delegate :hello, to: "greeter.greeting")'
+      end
+
+      allow_nil = options[:allow_nil]
+      default = options[:default]
 
       # put method entry per method name.
       # This better supports reloading of the class and changing the definitions
       methods.each do |method|
-        method_prefix = virtual_delegate_name_prefix(options[:prefix], options[:to])
+        method_prefix = virtual_delegate_name_prefix(options[:prefix], to)
         method_name = "#{method_prefix}#{method}"
+        if to.include?(".") # to => "target.method"
+          to, method = to.split(".")
+          options[:to] = to
+        end
+
+        define_delegate(method_name, method, :to => to, :allow_nil => allow_nil, :default => default)
 
         self.virtual_delegates_to_define =
           virtual_delegates_to_define.merge(method_name => [method, options])
@@ -105,6 +122,51 @@ module VirtualDelegates
       raise "unknown attribute #{to_model.name}##{col} referenced in #{name}" unless type
       arel = virtual_delegate_arel(col, to, to_model, to_ref)
       define_virtual_attribute method_name, type, :uses => (options[:uses] || to), :arel => arel
+    end
+
+    # see activesupport module/delegation.rb
+    def define_delegate(method_name, method, to: nil, allow_nil: nil, default: nil)
+      location = caller_locations(2, 1).first
+      file, line = location.path, location.lineno
+
+      # Attribute writer methods only accept one argument. Makes sure []=
+      # methods still accept two arguments.
+      definition = (method =~ /[^\]]=$/) ? 'arg' : '*args, &block'
+      default = default ? " || #{default.inspect}" : nil
+      # The following generated method calls the target exactly once, storing
+      # the returned value in a dummy variable.
+      #
+      # Reason is twofold: On one hand doing less calls is in general better.
+      # On the other hand it could be that the target has side-effects,
+      # whereas conceptually, from the user point of view, the delegator should
+      # be doing one call.
+      if allow_nil
+        method_def = [
+          "def #{method_name}(#{definition})",
+          "_ = #{to}",
+          "if !_.nil? || nil.respond_to?(:#{method})",
+          "  _.#{method}(#{definition})",
+          "end#{default}",
+          "end"
+        ].join ';'
+      else
+        exception = %(raise DelegationError, "#{self}##{method_name} delegated to #{to}.#{method}, but #{to} is nil: \#{self.inspect}")
+
+        method_def = [
+          "def #{method_name}(#{definition})",
+          " _ = #{to}",
+          "  _.#{method}(#{definition})#{default}",
+          "rescue NoMethodError => e",
+          "  if _.nil? && e.name == :#{method}",
+          "    #{exception}",
+          "  else",
+          "    raise",
+          "  end",
+          "end"
+        ].join ';'
+      end
+
+      module_eval(method_def, file, line)
     end
 
     def virtual_delegate_name_prefix(prefix, to)
