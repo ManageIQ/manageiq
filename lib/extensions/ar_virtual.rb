@@ -134,11 +134,11 @@ module VirtualDelegates
     #
     #   The virtual_delegate calls:
     #
-    #     virtual_delegate_arel("name", :host, Host, Vm.hostreflection_with_virtual(:host))
+    #     virtual_delegate_arel("name", :host, Host, Vm.reflection_with_virtual(:host))
     #
-    #   which will return will return arel to produce:
+    #   which will return [a lambda that produces arel that produces] sql
     #
-    #     SELECT "hosts"."name" FROM "hosts" WHERE "hosts"."id" = "vms"."host_id"
+    #     (SELECT "hosts"."name" FROM "hosts" WHERE "hosts"."id" = "vms"."host_id")
 
     def virtual_delegate_arel(col, to, to_model, to_ref)
       # ensure the column has sql and the association is reachable via sql
@@ -147,18 +147,106 @@ module VirtualDelegates
         if to_ref.macro == :has_one
           lambda do |t|
             src_model_id = arel_attribute(to_ref.association_primary_key, t)
-            to_model_id = to_model.arel_attribute(to_ref.foreign_key)
-            Arel.sql("(#{to_model.select(to_model.arel_attribute(col)).where(to_model_id.eq(src_model_id)).to_sql})")
+            VirtualDelegates.select_from_alias(to_model, to_ref, col, to_ref.foreign_key, src_model_id)
           end
         elsif to_ref.macro == :belongs_to
           lambda do |t|
-            src_model_id = arel_attribute(to_ref.association_foreign_key, t)
-            to_model_id = to_model.arel_attribute(to_ref.active_record_primary_key)
-            Arel.sql("(#{to_model.select(to_model.arel_attribute(col)).where(to_model_id.eq(src_model_id)).to_sql})")
+            src_model_id = arel_attribute(to_ref.foreign_key, t)
+            VirtualDelegates.select_from_alias(to_model, to_ref, col, to_ref.active_record_primary_key, src_model_id)
           end
         end
       end
     end
+  end
+
+  # select_from_alias: helper method for virtual_delegate_arel to construct the sql
+  # see also virtual_delegate_arel
+  #
+  # @param to_model [Class] association class of targeted association
+  # @param to_ref [Association] association from source class to target association
+  # @param col [String] attribute name
+  # @param to_model_col_name [String]
+  # @param src_model_id [Arel::Attribute]
+  # @return [Arel::Node] Arel representing the sql for this join
+  #
+  # example
+  #
+  #   for the given belongs_to class definition:
+  #
+  #     class Vm
+  #       belongs_to :hosts #, :foreign_key => :host_id, :primary_key => :id
+  #       virtual_delegate :name, :to => :host, :prefix => true, :allow_nil => true
+  #     end
+  #
+  #   The virtual_delegate calls:
+  #
+  #     virtual_delegate_arel("name", :host, Host, Vm.reflection_with_virtual(:host))
+  #
+  #   which calls:
+  #
+  #     select_from_alias(Host, Vm, "name", "id", Vm.arel_table[:host_id])
+  #
+  #   which produces the sql:
+  #
+  #     SELECT to_model[col] from to_model where to_model[to_model_col_name] = src_model_table[:src_model_id]
+  #     (SELECT "hosts"."name" FROM "hosts" WHERE "hosts"."id" = "vms"."host_id")
+  #
+  #   ----
+  #
+  #   for the given has_one class definition
+  #
+  #     class Host
+  #       has_one :hardware
+  #       virtual_delegate :name, :to => :hardware, :prefix => true, :allow_nil => true
+  #     end
+  #
+  #   The virtual_delegate calls:
+  #
+  #     virtual_delegate_arel("name", :hardware, Hardware, Host.reflection_with_virtual(:hardware))
+  #
+  #   which at runtime will call select_from_alias:
+  #
+  #     select_from_alias(Hardware, Host, "name", "host_id", Host.arel_table[:id])
+  #
+  #   which produces the sql (ala arel):
+  #
+  #     #select to_model[col] from to_model where to_model[to_model_col_name] = src_model_table[:src_model_id]
+  #     (SELECT "hardwares"."name" FROM "hardwares" WHERE "hardwares"."host_id" = "hosts"."id")
+  #
+  #   ----
+  #
+  #   for the given self join class definition:
+  #
+  #     class Vm
+  #       belongs_to :src_template, :class => Vm
+  #       virtual_delegate :name, :to => :src_template, :prefix => true, :allow_nil => true
+  #     end
+  #
+  #   The virtual_delegate calls:
+  #
+  #     virtual_delegate_arel("name", :src_template, Vm, Vm.reflection_with_virtual(:src_template))
+  #
+  #   which calls:
+  #
+  #     select_from_alias(Vm, Vm, "name", "src_template_id", Vm.arel_table[:id])
+  #
+  #   which produces the sql:
+  #
+  #     #select to_model[col] from to_model where to_model[to_model_col_name] = src_model_table[:src_model_id]
+  #     (SELECT "vms_ss"."name" FROM "vms" AS "vms_ss" WHERE "vms_ss"."id" = "vms"."src_template_id")
+  #
+
+  def self.select_from_alias(to_model, to_ref, col, to_model_col_name, src_model_id)
+    to_table = to_model.arel_table
+    # if a self join, alias the second table to a different name
+    if to_model.table_name == to_ref.table_name
+      # use a dup to not modify the primary table in the model
+      to_table = to_model.arel_table.dup
+      # use a table alias to not conflict with table name in the primary query
+      to_table.table_alias = "#{to_model.table_name}_ss"
+    end
+    to_model_id = to_model.arel_attribute(to_model_col_name, to_table)
+    Arel.sql("(#{to_table.project(to_model.arel_attribute(col, to_table)).where(to_model_id.eq(src_model_id)).to_sql})")
   end
 end
 
