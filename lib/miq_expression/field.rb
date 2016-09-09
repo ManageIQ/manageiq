@@ -2,14 +2,19 @@ class MiqExpression::Field
   FIELD_REGEX = /
 (?<model_name>([[:upper:]][[:alnum:]]*(::)?)+)
 \.?(?<associations>[a-z_\.]+)*
--(?<column>[a-z]+(_[[:alnum:]]+)*)
+-
+(?:
+  (?<virtual_custom_column>#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}.*)|
+  (?<column>[a-z]+(_[[:alnum:]]+)*)
+)
 /x
 
   ParseError = Class.new(StandardError)
 
   def self.parse(field)
     match = FIELD_REGEX.match(field) or raise ParseError, field
-    new(match[:model_name].constantize, match[:associations].to_s.split("."), match[:column])
+    column = match[:virtual_custom_column] || match[:column]
+    new(match[:model_name].constantize, match[:associations].to_s.split("."), column)
   end
 
   attr_reader :model, :associations, :column
