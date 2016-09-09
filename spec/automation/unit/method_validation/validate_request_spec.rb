@@ -1,5 +1,5 @@
 describe "Auto Approval Request Validation" do
-  include Spec::Support::QuotaHelper
+  include QuotaHelper
   let(:ws) { MiqAeEngine.instantiate("/System/Request/Call_Method?#{method}&#{args}&#{@value}", @user) }
   let(:method) do
     "namespace=/ManageIQ/Cloud/VM/Provisioning/StateMachines&class=ProvisionRequestApproval&method=validate_request"
