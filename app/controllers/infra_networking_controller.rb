@@ -259,6 +259,7 @@ class InfraNetworkingController < ApplicationController
 
   def tree_autoload_dynatree
     @view ||= session[:view]
+    x_tree_init(:infra_networking_tree, :infra_networking, nil)
     super
   end
 
