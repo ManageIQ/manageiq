@@ -32,9 +32,14 @@ APP_ROOT = Pathname.new File.expand_path('../../', __FILE__)
 
 Dir.chdir APP_ROOT do
   puts "== Installing dependencies =="
+
+  # Run bower in a thread and continue to do the non-js stuff
+  bower_thread = Thread.new do
+    execute "bower install --allow-root -F --config.analytics=false"
+  end
+
   execute "gem install bundler --conservative"
   execute "bundle check || bundle install"
-  execute "bower install --allow-root -F --config.analytics=false"
 
   puts "\n== Copying sample files =="
   unless File.exist?("config/database.yml")
@@ -66,4 +71,5 @@ Dir.chdir APP_ROOT do
     puts "\n== Preparing tests =="
     execute "bin/rake test:vmdb:setup"
   end
+  bower_thread.join
 end
