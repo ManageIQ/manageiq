@@ -89,7 +89,7 @@ describe VMDB::Util do
 
     def self.assert_zip_entry_from_path(expected_entry, path)
       it "#{path} => #{expected_entry}" do
-        expect(described_class.zip_entry_from_path(path)).to eq(expected_entry)
+        expect(described_class.send(:zip_entry_from_path, path)).to eq(expected_entry)
       end
     end
 
@@ -101,7 +101,7 @@ describe VMDB::Util do
     assert_zip_entry_from_path("GUID", "/var/www/miq/vmdb/GUID")
   end
 
-  it ".add_zip_entry" do
+  it ".add_zip_entry(private)" do
     require 'zip/zipfilesystem'
     file  = "/var/log/messages.log"
     entry = "ROOT/var/log/messages.log"
@@ -115,7 +115,7 @@ describe VMDB::Util do
     expect(zip).to receive(:add).with(zip_entry, file)
     zip_file = double
 
-    expect(described_class.add_zip_entry(zip, file, zip_file)).to eq([entry, mtime])
+    expect(described_class.send(:add_zip_entry, zip, file, zip_file)).to eq([entry, mtime])
   end
 
   it ".get_evm_log_for_date" do

@@ -107,8 +107,6 @@ module Vmdb
       end
     end
 
-    private
-
     def self.get_build
       build_file = File.join(File.expand_path(Rails.root), "BUILD")
 
@@ -122,6 +120,7 @@ module Vmdb
 
       build
     end
+    private_class_method :get_build
 
     def self.get_network
       retVal = {}
@@ -135,6 +134,7 @@ module Vmdb
 
       retVal
     end
+    private_class_method :get_network
 
     def self.installed_rpms
       File.open(log_dir.join("package_list_rpm.txt"), "a") do |file|
@@ -144,6 +144,7 @@ module Vmdb
         end
       end
     end
+    private_class_method :installed_rpms
 
     def self.installed_gems
       File.open(log_dir.join("gem_list.txt"), "a") do |file|
@@ -151,10 +152,12 @@ module Vmdb
         file.puts `gem list`
       end
     end
+    private_class_method :installed_gems
 
     def self.log_dir
       Pathname.new("/var/www/miq/vmdb/log")
     end
+    private_class_method :log_dir
 
     def self.init_diagnostics
       @diags ||= [
@@ -172,5 +175,6 @@ module Vmdb
         {:cmd => -> { installed_rpms },                                               :msg => "Installed RPMs" },
       ]
     end
+    private_class_method :init_diagnostics
   end
 end

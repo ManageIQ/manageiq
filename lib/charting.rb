@@ -23,8 +23,6 @@ class Charting
     @instance ||= new
   end
 
-  private
-
   def self.new
     self == Charting ? detect_available_plugin.new : super
   end

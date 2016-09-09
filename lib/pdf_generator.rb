@@ -29,11 +29,10 @@ class PdfGenerator
     self.class.available?
   end
 
-  private
-
   def self.detect_available_generator
     self.subclasses.detect(&:available?) || NullPdfGenerator
   end
+  private_class_method :detect_available_generator
 
   def self.sanitize_html(html_string)
     # strip out bad attachment_fu URLs
@@ -41,11 +40,13 @@ class PdfGenerator
     html_string.gsub('.com:/', '.com/')
       .gsub(/src=["'](\S+)\?\d*["']/i, 'src="\1"')
   end
+  private_class_method :sanitize_html
 
   def self.stylesheet_file_path(stylesheet)
     # Determine path relative to Rails.public_path
     "/../app/assets/stylesheets/#{stylesheet}.css"
   end
+  private_class_method :stylesheet_file_path
 end
 
 # Dynamically load all plugins
