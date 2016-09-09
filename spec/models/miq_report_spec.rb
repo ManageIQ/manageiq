@@ -81,16 +81,16 @@ describe MiqReport do
 
   context "report with virtual dynamic custom attributes" do
     let(:options)              { {:targets_hash => true, :userid => "admin"} }
-    let(:custom_column_key_1)  { 'ATTR_Name_1' }
-    let(:custom_column_key_2)  { 'ATTR_Name_2' }
+    let(:custom_column_key_1)  { 'kubernetes.io/hostname' }
+    let(:custom_column_key_2)  { 'manageiq.org' }
     let(:custom_column_key_3)  { 'ATTR_Name_3' }
     let(:custom_column_value)  { 'value1' }
     let(:user)                 { FactoryGirl.create(:user_with_group) }
     let(:ems)                  { FactoryGirl.create(:ems_vmware) }
     let!(:vm_1)                { FactoryGirl.create(:vm_vmware) }
     let!(:vm_2)                { FactoryGirl.create(:vm_vmware, :retired => false, :ext_management_system => ems) }
-    let(:virtual_column_key_1) { "#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}ATTR_Name_1" }
-    let(:virtual_column_key_2) { "#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}ATTR_Name_2" }
+    let(:virtual_column_key_1) { "#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}kubernetes.io/hostname" }
+    let(:virtual_column_key_2) { "#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}manageiq.org" }
     let(:virtual_column_key_3) { "#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}ATTR_Name_3" }
     let(:miq_task)             { FactoryGirl.create(:miq_task) }
 
@@ -111,9 +111,9 @@ describe MiqReport do
       MiqReport.new(
         :name => "Custom VM report", :title => "Custom VM report", :rpt_group => "Custom", :rpt_type => "Custom",
         :db        => "ManageIQ::Providers::InfraManager::Vm",
-        :cols      => %w(name virtual_custom_attribute_ATTR_Name_1 virtual_custom_attribute_ATTR_Name_2),
+        :cols      => %w(name virtual_custom_attribute_kubernetes.io/hostname virtual_custom_attribute_manageiq.org),
         :include   => {:custom_attributes => {}},
-        :col_order => %w(name virtual_custom_attribute_ATTR_Name_1 virtual_custom_attribute_ATTR_Name_2),
+        :col_order => %w(name virtual_custom_attribute_kubernetes.io/hostname virtual_custom_attribute_manageiq.org),
         :headers   => ["Name", custom_column_key_1, custom_column_key_1],
         :order     => "Ascending"
       )
@@ -151,6 +151,7 @@ describe MiqReport do
       end
 
       expected_results = ["name" => vm_1.name, virtual_column_key_1 => custom_column_value, virtual_column_key_2 => nil]
+
       expect(report_result).to match_array(expected_results)
     end
 
