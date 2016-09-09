@@ -214,20 +214,20 @@ var Automate = {
       if ($(event.currentTarget).val() === "Branch") {
         $('.git-branch-group').show();
         $('.git-tag-group').hide();
-        $('.git-branch-or-tag').val($('.git-branches').val());
-      } else {
+        $('.git-branch-or-tag').val($('.git-branches select').val());
+      } else if ($(event.currentTarget).val() === "Tag") {
         $('.git-branch-group').hide();
         $('.git-tag-group').show();
-        $('.git-branch-or-tag').val($('.git-tags').val());
+        $('.git-branch-or-tag').val($('.git-tags select').val());
       }
     });
 
     $('.git-branches').on('change', function(event) {
-      $('.git-branch-or-tag').val($(event.currentTarget).val());
+      $('.git-branch-or-tag').val($('.git-branches select').val());
     });
 
     $('.git-tags').on('change', function(event) {
-      $('.git-branch-or-tag').val($(event.currentTarget).val());
+      $('.git-branch-or-tag').val($('.git-tags select').val());
     });
   }
 };
