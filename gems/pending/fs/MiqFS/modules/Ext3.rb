@@ -237,18 +237,21 @@ module Ext3
   # Create a directory entry.
   def ifs_putFile(p, miqfs = nil)
     raise "Write functionality is not yet supported on Ext3."
-    # If this is being called from a FileObject instance, then MiqFS owns contained instance members.
-    # If this is being called from an Ext3 module method, then self owns contained instance members.
-    miqfs = self if miqfs.nil?
 
-    # Preprocess path.
-    p = unnormalizePath(p)
-    dir, fil = File.split(p)
+    # Commented out for now to avoid unreachable code
+    #
+    # # If this is being called from a FileObject instance, then MiqFS owns contained instance members.
+    # # If this is being called from an Ext3 module method, then self owns contained instance members.
+    # miqfs = self if miqfs.nil?
 
-    # Parent directory must exist.
-    dirObj = ifs_getDir(dir, miqfs)
-    return nil if dir.nil?
-    dirObj.createFile(fil)
+    # # Preprocess path.
+    # p = unnormalizePath(p)
+    # dir, fil = File.split(p)
+
+    # # Parent directory must exist.
+    # dirObj = ifs_getDir(dir, miqfs)
+    # return nil if dir.nil?
+    # dirObj.createFile(fil)
   end
 
   # Return a Directory object for a path.
