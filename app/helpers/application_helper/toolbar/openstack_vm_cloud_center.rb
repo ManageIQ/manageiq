@@ -42,6 +42,7 @@ class ApplicationHelper::Toolbar::OpenstackVmCloudCenter < ApplicationHelper::To
           'pficon pficon-edit fa-lg',
           t = N_('Edit Management Engine Relationship'),
           t),
+        separator,
         button(
           :instance_attach,
           'pficon pficon-volume fa-lg',
@@ -53,7 +54,18 @@ class ApplicationHelper::Toolbar::OpenstackVmCloudCenter < ApplicationHelper::To
           t = N_('Detach a Cloud Volume from this Instance'),
           t,
           :klass => ApplicationHelper::Button::InstanceDetach),
-        separator,
+        button(
+          :instance_associate_floating_ip,
+          'fa fa-map-marker fa-lg',
+          t = N_('Associate a Floating IP with this Instance'),
+          t,
+          :klass => ApplicationHelper::Button::InstanceAssociateFloatingIp),
+        button(
+          :instance_disassociate_floating_ip,
+          'fa fa-map-marker fa-lg',
+          t = N_('Disassociate a Floating IP from this Instance'),
+          t,
+          :klass => ApplicationHelper::Button::InstanceDisassociateFloatingIp),
         button(
           :instance_resize,
           'pficon pficon-edit fa-lg',
