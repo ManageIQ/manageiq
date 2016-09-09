@@ -1124,6 +1124,7 @@ module ApplicationController::CiProcessing
     @client_id = ""
     @client_key = ""
     @azure_tenant_id = ""
+    @subscription = ""
     if session[:type] == "hosts"
       @discover_type = Host.host_discovery_types
     elsif session[:type] == "ems"
@@ -1180,6 +1181,7 @@ module ApplicationController::CiProcessing
         @client_id = params[:client_id] if params[:client_id]
         @client_key = params[:client_key] if params[:client_key]
         @azure_tenant_id = params[:azure_tenant_id] if params[:azure_tenant_id]
+        @subscription = params[:subscription] if params[:subscription]
 
         if @client_id == "" || @client_key == "" || @azure_tenant_id == ""
           add_flash(_("Client ID, Client Key and Azure Tenant ID are required"), :error)
@@ -1221,7 +1223,7 @@ module ApplicationController::CiProcessing
             Host.discoverByIpRange(from_ip, to_ip, options)
           else
             if params[:discover_type_selected] == ExtManagementSystem.ems_cloud_discovery_types['azure']
-              ManageIQ::Providers::Azure::CloudManager.discover_queue(@client_id, @client_key, @azure_tenant_id)
+              ManageIQ::Providers::Azure::CloudManager.discover_queue(@client_id, @client_key, @azure_tenant_id, @subscription)
             else
               ManageIQ::Providers::Amazon::CloudManager.discover_queue(@userid, @password)
             end
