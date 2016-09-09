@@ -23,6 +23,9 @@ describe VirtualFields do
 
       require 'ostruct'
       class TestClass < TestClassBase
+        def self.connection
+          TestClassBase.connection
+        end
         belongs_to :ref1, :class_name => 'TestClass', :foreign_key => :col1
       end
     end
@@ -453,6 +456,105 @@ describe VirtualFields do
         context "with column" do
           it("as string") { expect(TestClass.virtual_attribute?("col1")).not_to be_truthy }
           it("as symbol") { expect(TestClass.virtual_attribute?(:col1)).not_to  be_truthy }
+        end
+      end
+    end
+
+    describe ".attribute_supported_by_sql?" do
+      it "supports real columns" do
+        expect(TestClass.attribute_supported_by_sql?(:col1)).to be_truthy
+      end
+
+      it "supports aliases" do
+        TestClass.alias_attribute :col2, :col1
+
+        expect(TestClass.attribute_supported_by_sql?(:col2)).to be_truthy
+      end
+
+      it "does not support virtual columns" do
+        class TestClass
+          virtual_attribute :col2, :integer
+          def col2
+            col1
+          end
+        end
+        expect(TestClass.attribute_supported_by_sql?(:col2)).to be_falsey
+      end
+
+      it "supports virtual columns with arel" do
+        class TestClass
+          virtual_attribute :col2, :integer, :arel => (-> (t) { t.grouping(t.class.arel_attribute(:col1)) })
+          def col2
+            col1
+          end
+        end
+        expect(TestClass.attribute_supported_by_sql?(:col2)).to be_truthy
+      end
+
+      it "supports delegates" do
+        TestClass.virtual_delegate :col1, :prefix => 'parent', :to => :ref1
+
+        expect(TestClass.attribute_supported_by_sql?(:parent_col1)).to be_truthy
+      end
+    end
+
+    describe ".virtual_delegate" do
+      # double purposing col1. It has an actual value in the child class
+      let(:parent) { TestClass.create(:id => 1, :col1 => 4) }
+
+      it "delegates to parent" do
+        TestClass.virtual_delegate :col1, :prefix => 'parent', :to => :ref1
+        tc = TestClass.new(:id => 2, :ref1 => parent)
+        expect(tc.parent_col1).to eq(4)
+      end
+
+      it "delegates to nil parent" do
+        TestClass.virtual_delegate :col1, :prefix => 'parent', :to => :ref1, :allow_nil => true
+        tc = TestClass.new(:id => 2)
+        expect(tc.parent_col1).to be_nil
+      end
+
+      it "defines parent virtual attribute" do
+        TestClass.virtual_delegate :col1, :prefix => 'parent', :to => :ref1
+        expect(TestClass.virtual_attribute_names).to include("parent_col1")
+      end
+
+      it "delegates to parent (sql)" do
+        TestClass.virtual_delegate :col1, :prefix => 'parent', :to => :ref1
+        TestClass.create(:id => 2, :ref1 => parent)
+        tcs = TestClass.all.select(:id, :col1, TestClass.arel_attribute(:parent_col1).as("x"))
+        expect(tcs.map(&:x)).to match_array([nil, 4])
+      end
+
+      context "with has_one :parent" do
+        before do
+          TestClass.has_one :ref2, :class_name => 'TestClass', :foreign_key => :col1, :inverse_of => :ref1
+        end
+        # child.col1 will be getting parent's (aka tc's) id
+        let(:child) { TestClass.create(:id => 1) }
+
+        it "delegates to child" do
+          TestClass.virtual_delegate :col1, :prefix => 'child', :to => :ref2
+          tc = TestClass.create(:id => 2, :ref2 => child)
+          expect(tc.child_col1).to eq(2)
+        end
+
+        it "delegates to nil child" do
+          TestClass.virtual_delegate :col1, :prefix => 'child', :to => :ref2, :allow_nil => true
+          tc = TestClass.new(:id => 2)
+          expect(tc.child_col1).to be_nil
+        end
+
+        it "defines child virtual attribute" do
+          TestClass.virtual_delegate :col1, :prefix => 'child', :to => :ref2
+          expect(TestClass.virtual_attribute_names).to include("child_col1")
+        end
+
+        it "delegates to child (sql)" do
+          TestClass.virtual_delegate :col1, :prefix => 'child', :to => :ref2
+          TestClass.create(:id => 2, :ref2 => child)
+          tcs = TestClass.all.select(:id, :col1, TestClass.arel_attribute(:child_col1).as("x"))
+          expect(tcs.map(&:x)).to match_array([nil, 2])
         end
       end
     end
