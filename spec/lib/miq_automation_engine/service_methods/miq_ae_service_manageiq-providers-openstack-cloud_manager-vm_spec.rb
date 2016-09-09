@@ -1,7 +1,7 @@
-module MiqAeServiceVmVmwareSpec
-  describe MiqAeMethodService::MiqAeServiceUser do
+module MiqAeServiceVmOpenstackSpec
+  describe MiqAeMethodService::MiqAeServiceManageIQ_Providers_Openstack_CloudManager_Vm do
     let(:vm)         { FactoryGirl.create(:vm_openstack) }
-    let(:service_vm) { MiqAeMethodService::MiqAeServiceManageIQ_Providers_Openstack_CloudManager_Vm.find(vm.id) }
+    let(:service_vm) { described_class.find(vm.id) }
 
     before do
       allow_any_instance_of(Vm).to receive(:my_zone).and_return('default')
@@ -13,12 +13,6 @@ module MiqAeServiceVmVmwareSpec
         :role        => 'ems_operations',
         :task_id     => nil
       }
-
-      $_miq_worker_current_msg = FactoryGirl.build(:miq_queue, :task_id => '1234')
-    end
-
-    after do
-      $_miq_worker_current_msg = nil
     end
 
     it "#attach_volume" do
