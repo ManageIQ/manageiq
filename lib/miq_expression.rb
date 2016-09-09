@@ -1001,8 +1001,17 @@ class MiqExpression
     tag
   end
 
-  def self.value2tag(tag, val = nil)
-    model, *values = tag.to_s.gsub(/[\.-]/, "/").split("/") # replace model path ".", column name "-" with "/"
+  # example:
+  # convert "MiqGroup.vms.host-disconnected" to
+  # ["MiqGroup", ["vms", "host", "disconnected"]]
+  def self.model_and_attributes_from(attribute_with_model)
+    # replace model path ".", column name "-" with "/"
+    model, *values = attribute_with_model.to_s.gsub(/[\.-]/, "/").split("/")
+    [model, values]
+  end
+
+  def self.value2tag(attribute_with_model, val = nil)
+    model, *values = model_and_attributes_from(attribute_with_model)
 
     case values.first
     when "user_tag"
