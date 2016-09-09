@@ -16,10 +16,7 @@ end
 
 Dir.chdir APP_ROOT do
   puts "== Installing dependencies =="
-  execute('gem install bundler --conservative')
-
-  # Swallow non-zero bundle check exit codes and run install
-  system('bundle check') || execute('bundle install')
+  execute "bundle update"
   execute "bower update --allow-root -F --config.analytics=false"
 
   puts "\n== Migrating database =="
@@ -28,6 +25,11 @@ Dir.chdir APP_ROOT do
   puts "\n== Seeding database =="
   execute "bin/rake db:seed GOOD_MIGRATIONS=skip"
 
-  puts "\n== Migrating test database =="
-  execute "RAILS_ENV=test bin/rake db:migrate"
+  puts "\n== Resetting tests =="
+  execute "bin/rake test:vmdb:setup"
+
+  unless ENV["SKIP_AUTOMATE_RESET"]
+    puts "\n== Resetting Automate Domains =="
+    execute "bin/rake evm:automate:reset"
+  end
 end
