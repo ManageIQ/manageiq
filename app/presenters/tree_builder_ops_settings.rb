@@ -26,7 +26,7 @@ class TreeBuilderOpsSettings < TreeBuilderOps
       {:id => "sis", :text => _("Analysis Profiles"), :image => "scan_item_set", :tip => _("Analysis Profiles")},
       {:id => "z", :text => _("Zones"), :image => "zone", :tip => _("Zones")}
     ]
-    if get_vmdb_config[:product][:new_ldap]
+    if Settings.product.new_ldap
       objects.push(:id => "l", :text => _("LDAP"), :image => "ldap", :tip => _("LDAP"))
     end
     objects.push(:id => "msc", :text => _("Schedules"), :image => "miq_schedule", :tip => _("Schedules"))

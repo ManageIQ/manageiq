@@ -363,10 +363,6 @@ class TreeBuilder
     open_nodes.push(id) unless open_nodes.include?(id)
   end
 
-  def get_vmdb_config
-    @vmdb_config ||= VMDB::Config.new("vmdb").config
-  end
-
   # Tree node prefixes for generic explorers
   X_TREE_NODE_PREFIXES = {
     "a"   => "MiqAction",
