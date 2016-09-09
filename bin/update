@@ -32,4 +32,9 @@ Dir.chdir APP_ROOT do
     puts "\n== Resetting Automate Domains =="
     execute "bin/rake evm:automate:reset"
   end
+
+  if ENV['RAILS_ENV'] == 'production'
+    puts "\n== Recompiling assets =="
+    execute "bin/rake evm:compile_assets"
+  end
 end
