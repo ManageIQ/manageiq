@@ -168,7 +168,7 @@ function miqTreeToggleExpand(treename, expand_mode) {
 // OnCheck handler for the Protect screen
 function miqOnCheckProtect(node, _treename) {
   var ppid = node.key.split('_').pop();
-  var url = ManageIQ.tree.checkUrl + ppid + '?check=' + Number(!node.state.selected);
+  var url = ManageIQ.tree.checkUrl + ppid + '?check=' + Number(node.state.checked);
   miqJqueryRequest(url);
   return true;
 }
@@ -292,7 +292,7 @@ function miqOnClickServerRoles(id) {
 // OnCheck handler for the belongsto tagging trees on the user edit screen
 function miqOnCheckUserFilters(node, tree_name) {
   var tree_typ = tree_name.split('_')[0];
-  var checked = Number(!node.state.selected);
+  var checked = Number(node.state.checked);
   var url = ManageIQ.tree.checkUrl + node.key + "?check=" + checked + "&tree_typ=" + tree_typ;
   miqJqueryRequest(url);
   return true;
