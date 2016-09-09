@@ -43,8 +43,7 @@ class TreeBuilderConfigurationManagerConfiguredSystems < TreeBuilder
   end
 
   def x_get_tree_custom_kids(object, count_only, options)
-    objects = x_get_search_results(object, options[:leaf])
-    count_only ? objects.length : objects
+    count_only_or_objects(count_only, x_get_search_results(object, options[:leaf]))
   end
 
   def x_get_search_results(object, leaf)

@@ -38,7 +38,7 @@ class TreeBuilderOrchestrationTemplates < TreeBuilder
        :image => "orchestration_template_vnfd",
        :tip   => _("VNF Templates")}
     ]
-    count_only ? children.length : children
+    count_only_or_objects(count_only, children)
   end
 
   def x_get_tree_custom_kids(object, count_only, _options)

@@ -29,7 +29,7 @@ class TreeBuilderImages < TreeBuilder
   end
 
   def x_get_tree_ems_kids(object, count_only)
-    objects = Rbac.filtered(object.miq_templates.order("name"))
-    count_only ? objects.length : objects
+    objects = Rbac.filtered(object.miq_templates)
+    count_only_or_objects(count_only, objects, "name")
   end
 end

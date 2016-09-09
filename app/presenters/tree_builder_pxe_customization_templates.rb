@@ -21,7 +21,7 @@ class TreeBuilderPxeCustomizationTemplates < TreeBuilder
     items = PxeImageType.all
     if count_only
       # add +1 for customization spec folder thats used to show system templates
-      items.length + 1
+      items.size + 1
     else
       objects = []
       objects.push(:id    => "xx-system",
