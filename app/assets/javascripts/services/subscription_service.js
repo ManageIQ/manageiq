@@ -2,7 +2,9 @@ ManageIQ.angular.app.service('subscriptionService', ['$timeout', function($timeo
   this.subscribeToEventType = function(eventType, callback) {
     ManageIQ.angular.rxSubject.subscribe(function(event) {
       if (event.eventType === eventType) {
-        $timeout(callback(event.response));
+        $timeout(function() {
+          callback(event.response);
+        });
       }
     });
   };
