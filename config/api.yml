@@ -47,6 +47,21 @@
     :options:
     - :primary
     :verbs: *gd
+  :automate:
+    :description: Automate
+    :options:
+    - :arbitrary_resource_path
+    - :collection
+    :verbs: *g
+    :klass: MiqAeDomain
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: miq_ae_domain_view
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: miq_ae_domain_view
   :automation_requests:
     :description: Automation Requests
     :options:

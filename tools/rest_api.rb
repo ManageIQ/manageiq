@@ -44,6 +44,7 @@ class RestApi
     SCRIPTDIR_ACTIONS    = %w(ls run).freeze
     SUB_COMMANDS         = ACTIONS + %w(edit vi) + SCRIPTDIR_ACTIONS
     API_PARAMETERS       = %w(expand attributes decorators limit offset
+                              depth search_options
                               sort_by sort_order sort_options
                               filter by_tag provider_class requester_type).freeze
 
