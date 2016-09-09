@@ -16,8 +16,13 @@ end
 
 Dir.chdir APP_ROOT do
   puts "== Installing dependencies =="
+
+  # Run bower in a thread and continue to do the non-js stuff
+  bower_thread = Thread.new do
+    execute "bower update --allow-root -F --config.analytics=false"
+  end
+
   execute "bundle update"
-  execute "bower update --allow-root -F --config.analytics=false"
 
   puts "\n== Migrating database =="
   execute "bin/rake db:migrate"
@@ -32,6 +37,9 @@ Dir.chdir APP_ROOT do
     puts "\n== Resetting Automate Domains =="
     execute "bin/rake evm:automate:reset"
   end
+
+  # Make sure bower is done before compiling assets
+  bower_thread.join
 
   if ENV['RAILS_ENV'] == 'production'
     puts "\n== Recompiling assets =="
