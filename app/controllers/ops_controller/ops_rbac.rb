@@ -34,6 +34,14 @@ module OpsController::OpsRbac
   end
 
   def rbac_user_copy
+    user = User.find(from_cid(params[:miq_grid_checks]))
+    if rbac_user_copy_restriction?(user)
+      rbac_restricted_user_copy_flash(user)
+    end
+    if @flash_array
+      javascript_flash
+      return
+    end
     assert_privileges("rbac_user_copy")
     rbac_edit_reset('copy', 'user', User)
   end
@@ -559,12 +567,20 @@ module OpsController::OpsRbac
     ["admin", session[:userid]].include?(user.userid)
   end
 
+  def rbac_user_copy_restriction?(user)
+    user.super_admin_user?
+  end
+
   def rbac_restricted_user_delete_flash(user)
-    if user.userid == "admin"
+    if user.super_admin_user?
       add_flash(_("Default %{model} \"%{name}\" cannot be deleted") % {:model => ui_lookup(:model => "User"), :name => user.name}, :error)
     elsif user.userid == session[:userid]
       add_flash(_("Current %{model} \"%{name}\" cannot be deleted") % {:model => ui_lookup(:model => "User"), :name => user.name}, :error)
     end
+  end
+
+  def rbac_restricted_user_copy_flash(user)
+    add_flash(_("Default %{model} \"%{name}\" cannot be copied") % {:model => ui_lookup(:model => "User"), :name => user.name}, :error)
   end
 
   def rbac_edit_tags_reset(tagging)
