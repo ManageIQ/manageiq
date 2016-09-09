@@ -38,23 +38,23 @@ class TreeBuilderConfigurationManager < TreeBuilder
   end
 
   def x_get_tree_cmat_kids(object, count_only)
-    count_only_or_objects(count_only,
-                          Rbac.filtered(ManageIQ::Providers::ConfigurationManager::InventoryGroup.where(:ems_id => object[:id]),
-                                        :match_via_descendants => ConfiguredSystem), "name")
+    count_only_or_objects_filtered(count_only,
+                                   ManageIQ::Providers::ConfigurationManager::InventoryGroup.where(:ems_id => object[:id]),
+                                   "name", :match_via_descendants => ConfiguredSystem)
   end
 
   def x_get_tree_cmf_kids(object, count_only)
     assigned_configuration_profile_objs =
-      count_only_or_objects(count_only,
-                            Rbac.filtered(ConfigurationProfile.where(:manager_id => object[:id]),
-                                          :match_via_descendants => ConfiguredSystem),
-                            "name")
+      count_only_or_objects_filtered(count_only,
+                                     ConfigurationProfile.where(:manager_id => object[:id]),
+                                     "name", :match_via_descendants => ConfiguredSystem)
     unassigned_configuration_profile_objs =
       fetch_unassigned_configuration_profile_objects(count_only, object[:id])
 
     assigned_configuration_profile_objs + unassigned_configuration_profile_objs
   end
 
+  # Note: a lot of logic / queries to determine if should display menu item
   def fetch_unassigned_configuration_profile_objects(count_only, configuration_manager_id)
     unprovisioned_configured_systems = ConfiguredSystem.where(:configuration_profile_id => nil,
                                                               :manager_id               => configuration_manager_id)
@@ -65,38 +65,29 @@ class TreeBuilderConfigurationManager < TreeBuilder
       unassigned_configuration_profile =
         [ConfigurationProfile.new(:name       => "Unassigned Profiles Group|#{unassigned_id}",
                                   :manager_id => configuration_manager_id)]
-      unassigned_configuration_profile_objs = count_only_or_objects(count_only, unassigned_configuration_profile)
     end
-
-    if unassigned_configuration_profile_objs.nil?
-      count_only ? unassigned_configuration_profile_objs = 0 : unassigned_configuration_profile_objs = []
-    end
-    unassigned_configuration_profile_objs
+    count_only_or_objects(count_only, unassigned_configuration_profile || [])
   end
 
   def x_get_tree_cpf_kids(object, count_only)
-    count_only_or_objects(count_only,
-                          Rbac.filtered(ConfiguredSystem.where(:configuration_profile_id => object[:id],
-                                                               :manager_id               => object[:manager_id]),
-                                        :match_via_descendants => ConfiguredSystem),
-                          "hostname")
+    count_only_or_objects_filtered(count_only,
+                                   ConfiguredSystem.where(:configuration_profile_id => object[:id],
+                                                          :manager_id               => object[:manager_id]),
+                                   "hostname", :match_via_descendants => ConfiguredSystem)
   end
 
   def x_get_tree_igf_kids(object, count_only)
-    count_only_or_objects(count_only,
-                          Rbac.filtered(ConfiguredSystem.where(:inventory_root_group_id=> object[:id]),
-                                        :match_via_descendants => ConfiguredSystem),
-                          "hostname")
+    count_only_or_objects_filtered(count_only,
+                                   ConfiguredSystem.where(:inventory_root_group_id=> object[:id]),
+                                   "hostname", :match_via_descendants => ConfiguredSystem)
   end
 
   def x_get_tree_custom_kids(object_hash, count_only, _options)
     objects =
       case object_hash[:id]
-      when "fr" then Rbac.filtered(ManageIQ::Providers::Foreman::ConfigurationManager.order("lower(name)"),
-                                   :match_via_descendants => ConfiguredSystem)
-      when "at" then Rbac.filtered(ManageIQ::Providers::AnsibleTower::ConfigurationManager.order("lower(name)"),
-                                   :match_via_descendants => ConfiguredSystem)
+      when "fr" then ManageIQ::Providers::Foreman::ConfigurationManager
+      when "at" then ManageIQ::Providers::AnsibleTower::ConfigurationManager
       end
-    count_only_or_objects(count_only, objects, "name")
+    count_only_or_objects_filtered(count_only, objects, "name", :match_via_descendants => ConfiguredSystem)
   end
 end

@@ -55,6 +55,6 @@ class TreeBuilderReportDashboards < TreeBuilder
     else
       objects = copy_array(widgetsets.to_a)
     end
-    count_only ? objects.count : objects.sort_by { |a| a.name.to_s.downcase }
+    count_only_or_objects(count_only, objects, :name)
   end
 end

@@ -21,7 +21,7 @@ class TreeBuilderPxeCustomizationTemplates < TreeBuilder
     items = PxeImageType.all
     if count_only
       # add +1 for customization spec folder thats used to show system templates
-      items.length + 1
+      items.size + 1
     else
       objects = []
       objects.push(:id    => "xx-system",
@@ -45,12 +45,12 @@ class TreeBuilderPxeCustomizationTemplates < TreeBuilder
     if nodes[1] == "system" || nodes[2] == "system"
       # root node was clicked or if folder node was clicked
       # System templates
-      objects = CustomizationTemplate.where(:pxe_image_type_id => nil)
+      pxe_img_id = nil
     else
       # root node was clicked or if folder node was clicked
-      pxe_img = PxeImageType.find_by_id(from_cid(get_pxe_image_id(nodes)))
-      objects = CustomizationTemplate.where(:pxe_image_type_id => pxe_img.id)
+      pxe_img_id = from_cid(get_pxe_image_id(nodes))
     end
+    objects = CustomizationTemplate.where(:pxe_image_type_id => pxe_img_id)
     count_only_or_objects(count_only, objects, "name")
   end
 end

@@ -24,20 +24,17 @@ class TreeBuilderInstances < TreeBuilder
   end
 
   def x_get_tree_roots(count_only, _options)
-    objects = Rbac.filtered(EmsCloud.order("lower(name)"), :match_via_descendants => VmCloud) +
-              x_get_tree_arch_orph_nodes("Instances")
-    count_only_or_objects(count_only, objects)
+    count_only_or_objects_filtered(count_only, EmsCloud, "name", :match_via_descendants => VmCloud) +
+      count_only_or_objects(count_only, x_get_tree_arch_orph_nodes("Instances"))
   end
 
   def x_get_tree_ems_kids(object, count_only)
-    objects = Rbac.filtered(object.availability_zones.order("name")) +
-              Rbac.filtered(object.vms.where(:availability_zone_id => nil).order("name"))
-    count_only ? objects.length : objects
+    count_only_or_objects_filtered(count_only, object.availability_zones, "name") +
+      count_only_or_objects_filtered(object.vms.where(:availability_zone_id => nil), "name")
   end
 
   # Get AvailabilityZone children count/array
   def x_get_tree_az_kids(object, count_only)
-    objects = Rbac.filtered(object.vms.not_archived_nor_orphaned)
-    count_only_or_objects(count_only, objects, "name")
+    count_only_or_objects_filtered(count_only, object.vms.not_archived_nor_orphaned, "name")
   end
 end

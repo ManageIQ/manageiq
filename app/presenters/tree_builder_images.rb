@@ -23,13 +23,11 @@ class TreeBuilderImages < TreeBuilder
   end
 
   def x_get_tree_roots(count_only, _options)
-    objects = Rbac.filtered(EmsCloud.order("lower(name)"), :match_via_descendants => TemplateCloud) +
-              x_get_tree_arch_orph_nodes("Images")
-    count_only_or_objects(count_only, objects)
+    count_only_or_objects_filtered(count_only, EmsCloud, "name", :match_via_descendants => TemplateCloud) +
+      count_only_or_objects(count_only, x_get_tree_arch_orph_nodes("Images"))
   end
 
   def x_get_tree_ems_kids(object, count_only)
-    objects = Rbac.filtered(object.miq_templates.order("name"))
-    count_only ? objects.length : objects
+    count_only_or_objects_filtered(count_only, object.miq_templates, "name")
   end
 end

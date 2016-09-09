@@ -38,7 +38,7 @@ class TreeBuilderOrchestrationTemplates < TreeBuilder
        :image => "orchestration_template_vnfd",
        :tip   => _("VNF Templates")}
     ]
-    count_only ? children.length : children
+    count_only_or_objects(count_only, children)
   end
 
   def x_get_tree_custom_kids(object, count_only, _options)
@@ -48,7 +48,6 @@ class TreeBuilderOrchestrationTemplates < TreeBuilder
       "otazu" => OrchestrationTemplateAzure,
       "otvnf" => OrchestrationTemplateVnfd
     }
-    objects = Rbac.filtered(classes[object[:id]].where(["orderable=?", true])).sort_by { |o| o.name.downcase }
-    count_only_or_objects(count_only, objects)
+    count_only_or_objects_filtered(count_only, classes[object[:id]].where(["orderable=?", true]), "name")
   end
 end
