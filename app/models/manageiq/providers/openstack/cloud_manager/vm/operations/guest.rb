@@ -6,10 +6,11 @@ module ManageIQ::Providers::Openstack::CloudManager::Vm::Operations::Guest
       unsupported_reason_add(:reboot_guest, unsupported_reason(:control)) unless supports_control?
       unsupported_reason_add(:reboot_guest, _("The VM is not powered on")) unless current_state == "on"
     end
-  end
 
-  def validate_reset
-    validate_vm_control_powered_on
+    supports :reset do
+      unsupported_reason_add(:reset, unsupported_reason(:control)) unless supports_control?
+      unsupported_reason_add(:reset, _("The VM is not powered on")) unless current_state == "on"
+    end
   end
 
   def raw_reboot_guest

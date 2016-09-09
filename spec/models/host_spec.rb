@@ -594,9 +594,9 @@ describe Host do
       end
     end
 
-    describe "#validate_reset" do
-      it "returns available true" do
-        expect(host_with_ipmi.validate_reset).to eq(:available => true, :message => nil)
+    describe "#supports_reset" do
+      it "returns true for supports_reset?" do
+        expect(host_with_ipmi.supports_reset?).to be_truthy
       end
     end
   end

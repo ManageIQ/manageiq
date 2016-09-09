@@ -11,10 +11,6 @@ module Vm::Operations::Guest
     validate_unsupported("Standby Guest Operation")
   end
 
-  def validate_reset
-    validate_unsupported("Reset Guest Operation")
-  end
-
   def raw_shutdown_guest
     unless has_active_ems?
       raise _("VM has no %{table}, unable to shutdown guest OS") %

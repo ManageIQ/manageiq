@@ -179,6 +179,14 @@ class Host < ApplicationRecord
   before_create :make_smart
   after_save    :process_events
 
+  supports :reset do
+    unsupported_reason_add(:reset, _("The Host is not configured for IPMI")) if ipmi_address.blank?
+    unsupported_reason_add(:reset, _("The Host has no IPMI credentials")) if authentication_type(:ipmi).nil?
+    if authentication_userid(:ipmi).blank? || authentication_password(:ipmi).blank?
+      unsupported_reason_add(:reset, _("The Host has invalid IPMI credentials"))
+    end
+  end
+
   def self.include_descendant_classes_in_expressions?
     true
   end
@@ -254,10 +262,6 @@ class Host < ApplicationRecord
 
   def validate_stop
     validate_ipmi('on')
-  end
-
-  def validate_reset
-    validate_ipmi
   end
 
   def validate_ipmi(pstate = nil)
@@ -361,11 +365,10 @@ class Host < ApplicationRecord
   end
 
   def reset
-    msg = validate_reset
-    if msg[:available]
+    if supports_reset?
       check_policy_prevent("request_host_reset", "ipmi_power_reset")
     else
-      _log.warn("Cannot stop because <#{msg[:message]}>")
+      _log.warn("Cannot stop because <#{unsupported_reason(:reset)}>")
     end
   end
 

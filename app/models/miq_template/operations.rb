@@ -25,10 +25,6 @@ module MiqTemplate::Operations
     validate_invalid_for_template(_("Standby Guest Operation"))
   end
 
-  def validate_reset
-    validate_invalid_for_template(_("Reset Operation"))
-  end
-
   private
 
   def validate_invalid_for_template(message_prefix)
