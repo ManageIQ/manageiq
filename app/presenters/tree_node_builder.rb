@@ -220,8 +220,9 @@ class TreeNodeBuilder
   end
 
   def classification_node
-    options[:hideCheckbox] = true
     generic_node(object.description, 'folder', _("Category: %{description}") % {:description => object.description})
+    @node[:cfmeNoClick] = true
+    @node[:hideCheckbox] = true
   end
 
   def hash_node
@@ -240,6 +241,7 @@ class TreeNodeBuilder
     @node[:hideCheckbox] = true if object.key?(:hideCheckbox)
     @node[:select] = object[:select] if object.key?(:select)
     @node[:addClass] = object[:addClass] if object.key?(:addClass)
+    @node[:checkable] = object[:checkable] if object.key?(:checkable)
 
     # FIXME: check the following
     # TODO: With dynatree, unless folders are open, we can't jump to a child node until it has been visible once

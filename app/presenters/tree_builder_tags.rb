@@ -35,6 +35,7 @@ class TreeBuilderTags < TreeBuilder
                   :oncheck        => @edit.nil? ? nil : "miqOnCheckUserFilters",
                   :checkboxes     => true,
                   :highlight_changes => true,
+                  :cfmeNoClick  => true,
                   :onclick        => false)
   end
 
@@ -59,9 +60,10 @@ class TreeBuilderTags < TreeBuilder
       {:id       => kid.id,
        :image    => 'tag',
        :text     => kid.description,
+       :checkable   => @edit.present?,
        :tooltip  => _("Tag: %{description}") % {:description => kid.description},
-       :select   => select,
-       :cfmeNoClick  => @edit.nil?}
+       :cfmeNoClick => true,
+       :select   => select}
     end
     count_only_or_objects(count_only, kids)
   end
