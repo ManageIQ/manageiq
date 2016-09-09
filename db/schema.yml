@@ -356,6 +356,10 @@ cloud_subnets_network_ports:
 - cloud_subnet_id
 - network_port_id
 - address
+cloud_tenant_flavors:
+- id
+- cloud_tenant_id
+- flavor_id
 cloud_tenants:
 - id
 - name
@@ -367,10 +371,6 @@ cloud_tenants:
 - updated_at
 - type
 - parent_id
-cloud_tenants_flavors:
-- id
-- cloud_tenant_id
-- flavor_id
 cloud_tenants_vms:
 - cloud_tenant_id
 - vm_id
