@@ -33,14 +33,16 @@ module Vmdb
       apply_config_value(config, $scvmm_log, :level_scvmm, :level_scvmm_in_evm)
       apply_config_value(config, $api_log,   :level_api,   :level_api_in_evm)
       apply_config_value(config, $fog_log,   :level_fog,   :level_fog_in_evm)
+      apply_config_value(config, $azure_log, :level_azure, :level_azure_in_evm)
     end
 
     private
 
     def self.create_loggers
       if ENV.key?("CI")
-        $log     = $rails_log = $audit_log = $fog_log = $policy_log = $vim_log = $rhevm_log = Vmdb.null_logger
-        $aws_log = $kube_log = $mw_log = $scvmm_log = $api_log = $miq_ae_logger = $websocket_log = Vmdb.null_logger
+        $log       = $rails_log = $audit_log = $fog_log = $policy_log = $vim_log = $rhevm_log = Vmdb.null_logger
+        $aws_log   = $kube_log = $mw_log = $scvmm_log = $api_log = $miq_ae_logger = $websocket_log = Vmdb.null_logger
+        $azure_log = Vmdb.null_logger
       else
         path_dir = Rails.root.join("log")
 
@@ -55,6 +57,7 @@ module Vmdb
         $kube_log      = MirroredLogger.new(path_dir.join("kubernetes.log"), "<KUBERNETES> ")
         $mw_log        = MirroredLogger.new(path_dir.join("middleware.log"), "<MIDDLEWARE> ")
         $scvmm_log     = MirroredLogger.new(path_dir.join("scvmm.log"),      "<SCVMM> ")
+        $azure_log     = MirroredLogger.new(path_dir.join("azure.log"),      "<AZURE> ")
         $api_log       = MirroredLogger.new(path_dir.join("api.log"),        "<API> ")
         $websocket_log = MirroredLogger.new(path_dir.join("websocket.log"),  "<WEBSOCKET> ")
         $miq_ae_logger = MirroredLogger.new(path_dir.join("automation.log"), "<AutomationEngine> ")

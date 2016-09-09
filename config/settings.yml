@@ -933,6 +933,8 @@
   :level_rails: info
   :level_aws: info
   :level_aws_in_evm: error
+  :level_azure: warn
+  :level_azure_in_evm: error
   :level_mw: info
   :level_mw_in_evm: error
   :level_kube: info
