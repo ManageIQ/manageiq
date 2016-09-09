@@ -188,8 +188,13 @@ module ActsAsTaggable
 
   def vtag_list(options = {})
     ns = Tag.get_namespace(options)
+    origin_ns = ns
+
+    prefix = CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX
+    ns, attribute_without_prefix = ns.split(prefix) if origin_ns.include?(prefix)
 
     predicate = ns.split("/")[2..-1] # throw away /virtual
+    predicate.push("#{prefix}#{attribute_without_prefix}") if origin_ns.include?(prefix)
 
     # p "ns: [#{ns}]"
     # p "predicate: [#{predicate.inspect}]"
