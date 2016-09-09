@@ -1,13 +1,15 @@
 class TreeBuilderTags < TreeBuilder
   has_kids_for Classification, [:x_get_classification_kids]
 
-  def initialize(name, type, sandbox, build, edit, filters, group)
-    @edit = edit
-    @filters = filters
-    @group = group
-    @categories = Classification.categories.collect { |c| c unless !c.show || ["folder_path_blue", "folder_path_yellow"].include?(c.name) }.compact
+  def initialize(name, type, sandbox, build, params)
+    @edit = params[:edit]
+    @filters = params[:filters]
+    @group = params[:group]
+    @categories = Classification.categories.collect do |c|
+      c unless !c.show || %w(folder_path_blue folder_path_yellow).include?(c.name)
+    end.compact
     @categories.sort_by! { |c| c.description.downcase }
-    super(name, type, sandbox, true)
+    super(name, type, sandbox, build)
     @tree_state.x_tree(name)[:open_nodes] = []
   end
 
@@ -19,33 +21,32 @@ class TreeBuilderTags < TreeBuilder
      :lazy     => false}
   end
 
-  def has_selected_kid(category)
-    open = false
-      category.entries.each do |entry|
-        kid_id = "#{category.name}-#{entry.name}"
-        open = true if (@edit && @edit[:new][:filters].key?(kid_id)) || (@filters && @filters.key?(kid_id))
-      end
-    open
+  def contain_selected_kid(category)
+    category.entries.any? do |entry|
+      path = "#{category.name}-#{entry.name}"
+      (@edit && @edit[:new][:filters].key?(path)) || (@filters && @filters.key?(path))
+    end
   end
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix      => 'myco_',
-                  :check_url      => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
-                  :oncheck        => @edit.nil? ? nil : "miqOnCheckUserFilters",
-                  :checkboxes     => true,
+    locals.merge!(:id_prefix         => 'tags_',
+                  :check_url         => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
+                  :oncheck           => @edit.nil? ? nil : "miqOnCheckUserFilters",
+                  :checkboxes        => true,
                   :highlight_changes => true,
-                  :cfmeNoClick  => true,
-                  :onclick        => false)
+                  :cfmeNoClick       => true,
+                  :onclick           => false)
   end
 
   def root_options
     []
   end
 
-  def x_get_tree_roots(count_only = false, _options)
+  def x_get_tree_roots(count_only, _options)
+    # open node if at least one of his kids is selected
     @categories.each do |c|
-      open_node("cl-#{to_cid(c.id)}") if has_selected_kid(c)
+      open_node("cl-#{to_cid(c.id)}") if contain_selected_kid(c)
     end
     count_only_or_objects(count_only, @categories)
   end
@@ -54,16 +55,16 @@ class TreeBuilderTags < TreeBuilder
     kids = parent.entries.map do |kid|
       kid_id = "#{parent.name}-#{kid.name}"
       select = false
-          if (@edit && @edit[:new][:filters].key?(kid_id)) || (@filters && @filters.key?(kid_id))
-            select = true
-          end
-      {:id       => kid.id,
-       :image    => 'tag',
-       :text     => kid.description,
+      if (@edit && @edit[:new][:filters].key?(kid_id)) || (@filters && @filters.key?(kid_id))
+        select = true
+      end
+      {:id          => kid.id,
+       :image       => 'tag',
+       :text        => kid.description,
        :checkable   => @edit.present?,
-       :tooltip  => _("Tag: %{description}") % {:description => kid.description},
+       :tooltip     => _("Tag: %{description}") % {:description => kid.description},
        :cfmeNoClick => true,
-       :select   => select}
+       :select      => select}
     end
     count_only_or_objects(count_only, kids)
   end

@@ -180,8 +180,6 @@
         = _("This user is limited to items with the selected tags.")
         %br/
         %br/
-        :javascript
-          miqTreeResetState('#{j_str @tags_tree.name}');
         = render(:partial => 'shared/tree', :locals => {:tree => @tags_tree, :name => @tags_tree.name})
       = miq_tab_content('hosts_clusters') do
         %br/

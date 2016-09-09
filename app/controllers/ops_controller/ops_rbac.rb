@@ -909,7 +909,11 @@ module OpsController::OpsRbac
     [@group.get_managed_filters].flatten.each do |f|
       @filters[f.split("/")[-2] + "-" + f.split("/")[-1]] = f
     end
-    @tags_tree = TreeBuilderTags.new(:tags, :tags_tree, @sb, true, @edit, @filters, @group)
+    @tags_tree = TreeBuilderTags.new(:tags,
+                                     :tags_tree,
+                                     @sb,
+                                     true,
+                                     {:edit => @edit, :filters => @filters, :group => @group})
     @hac_tree = build_belongsto_tree(@belongsto.keys, false, false)  # Build the Hosts & Clusters tree for this user
     @vat_tree = build_belongsto_tree(@belongsto.keys, true, false)  # Build the VMs & Templates tree for this user
   end
@@ -999,21 +1003,21 @@ module OpsController::OpsRbac
 
     if params[:check]                               # User checked/unchecked a tree node
       if params[:tree_typ] == "tags"                # MyCompany tag checked
-        cat, tag = params[:id].split('cl-').last.split("_xx-")         #     Get the category and tag
+        cat, tag = params[:id].split('cl-').last.split("_xx-") # Get the category and tag
         cat_name = Classification.find_by(:id => from_cid(cat)).name
         tag_name = Classification.find_by(:id => tag).name
         if params[:check] == "0"                    #   unchecked
-          @edit[:new][:filters].except!("#{cat_name}-#{tag_name}")   #     Remove the tag from the filters array
+          @edit[:new][:filters].except!("#{cat_name}-#{tag_name}") # Remove the tag from the filters array
         else                                        #   checked
           @edit[:new][:filters]["#{cat_name}-#{tag_name}"] = "/managed/#{cat_name}/#{tag_name}" # Put them in the hash
         end
       else                                          # Belongsto tag checked
         if params[:check] == "0"                    #   unchecked
-          @edit[:new][:belongsto].delete(params[:id].split('xx-').last) #     Remove the tag from the belongsto hash
+          @edit[:new][:belongsto].delete(params[:id].split('___').last) #     Remove the tag from the belongsto hash
         else                                        #   checked
-          objc, objid = params[:id].split('xx-').last.split("_")      #     Get the object class and id
+          objc, objid = params[:id].split('___').last.split("_")      #     Get the object class and id
           tobj = objc.constantize.find(objid)       #     Get the record
-          @edit[:new][:belongsto][params[:id].split('xx-').last] = MiqFilter.object2belongsto(tobj) # Put the tag into the belongsto hash
+          @edit[:new][:belongsto][params[:id].split('___').last] = MiqFilter.object2belongsto(tobj) # Put the tag into the belongsto hash
         end
       end
     end
@@ -1075,11 +1079,15 @@ module OpsController::OpsRbac
     @edit[:new][:group_tenant] = @group.tenant_id
 
     @edit[:current] = copy_hash(@edit[:new])
-    @tags_tree = TreeBuilderTags.new(:tags, :tags_tree, @sb, true, @edit, @filters, @group)
+    @tags_tree = TreeBuilderTags.new(:tags,
+                                     :tags_tree,
+                                     @sb,
+                                     true,
+                                     {:edit => @edit, :filters => @filters, :group => @group})
     @hac_tree = build_belongsto_tree(@edit[:new][:belongsto].keys, false, false)  # Build the Hosts & Clusters tree for this user
     @vat_tree = build_belongsto_tree(@edit[:new][:belongsto].keys, true, false)  # Build the VMs & Templates tree for this user
   end
-  
+
   # Set group record variables to new values
   def rbac_group_set_record_vars(group)
     role = MiqUserRole.find_by_id(@edit[:new][:role])
