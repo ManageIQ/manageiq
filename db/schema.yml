@@ -50,7 +50,6 @@ arbitration_profiles:
 - profile
 arbitration_rules:
 - id
-- name
 - description
 - operation
 - arbitration_profile_id

@@ -25,9 +25,9 @@ RSpec.describe 'Arbitration Rule API' do
   context 'arbitration rules create' do
     let(:request_body) do
       {
-        'name'       => 'admin rule',
-        'operation'  => 'inject',
-        'expression' => {
+        'description' => 'admin rule',
+        'operation'   => 'inject',
+        'expression'  => {
           'EQUAL' => {
             'field' => 'User-userid',
             'value' => 'admin'
@@ -67,7 +67,7 @@ RSpec.describe 'Arbitration Rule API' do
     it 'rejects edit without an appropriate role' do
       api_basic_authorize
 
-      run_post(arbitration_rules_url(rule.id), gen_request(:edit, :name => 'edited name'))
+      run_post(arbitration_rules_url(rule.id), gen_request(:edit, :description => 'edited description'))
 
       expect(response).to have_http_status(:forbidden)
     end
@@ -76,8 +76,8 @@ RSpec.describe 'Arbitration Rule API' do
       api_basic_authorize collection_action_identifier(:arbitration_rules, :edit)
 
       expect do
-        run_post(arbitration_rules_url(rule.id), gen_request(:edit, :name => 'edited name'))
-      end.to change { rule.reload.name }.to('edited name')
+        run_post(arbitration_rules_url(rule.id), gen_request(:edit, :description => 'edited description'))
+      end.to change { rule.reload.description }.to('edited description')
     end
   end
 
