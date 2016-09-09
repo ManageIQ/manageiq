@@ -186,6 +186,7 @@ class VmOrTemplate < ApplicationRecord
   virtual_delegate :name, :to => :ems_cluster, :prefix => true, :allow_nil => true
   virtual_delegate :vmm_product, :to => :host, :prefix => :v_host, :allow_nil => true
   virtual_delegate :v_pct_free_disk_space, :v_pct_used_disk_space, :to => :hardware, :allow_nil => true
+  delegate :connect_lans, :disconnect_lans, :to => :hardware, :allow_nil => true
 
   before_validation :set_tenant_from_group
 
@@ -692,29 +693,6 @@ class VmOrTemplate < ApplicationRecord
 
       # Also disconnect any nics from their lans
       disconnect_lans
-    end
-  end
-
-  def connect_lans(lans)
-    unless lans.blank? || hardware.nil?
-      hardware.nics.each do |n|
-        # TODO: Use a different field here
-        #   model is temporarily being used here to transfer the name of the
-        #   lan to which this nic is connected.  If model ends up being an
-        #   otherwise used field, this will need to change
-        n.lan = lans.find { |l| l.name == n.model }
-        n.model = nil
-        n.save
-      end
-    end
-  end
-
-  def disconnect_lans
-    unless hardware.nil?
-      hardware.nics.each do |n|
-        n.lan = nil
-        n.save
-      end
     end
   end
 

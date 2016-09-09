@@ -134,6 +134,26 @@ class Hardware < ApplicationRecord
     end
   end
 
+  def connect_lans(lans)
+    return if lans.blank?
+    nics.each do |n|
+      # TODO: Use a different field here
+      #   model is temporarily being used here to transfer the name of the
+      #   lan to which this nic is connected.  If model ends up being an
+      #   otherwise used field, this will need to change
+      n.lan = lans.find { |l| l.name == n.model }
+      n.model = nil
+      n.save
+    end
+  end
+
+  def disconnect_lans
+    nics.each do |n|
+      n.lan = nil
+      n.save
+    end
+  end
+
   def m_controller(_parent, xmlNode, deletes)
     # $log.info("Adding controller XML elements for [#{xmlNode.attributes["type"]}]")
     xmlNode.each_element do |e|
