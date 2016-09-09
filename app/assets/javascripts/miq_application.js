@@ -1540,7 +1540,7 @@ function miqWidgetToolbarClick(_e) {
 
 function miqInitAccordions() {
   var height = $('#left_div').height() - $('#toolbar').outerHeight();
-  var panel = $('.panel-heading').outerHeight();
+  var panel = $('#left_div .panel-heading').outerHeight();
   var count = $('#accordion:visible > .panel .panel-body').length;
   $('#accordion:visible > .panel .panel-body').each(function (_k, v) {
     $(v).css('max-height', (height - count * panel) + 'px');

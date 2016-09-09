@@ -587,3 +587,10 @@ body#dashboard {
 .drawer-pf.vertical-scroll {
   right: 15px;
 }
+
+// Panel in sidebar doesn't need bottom margin
+.sidebar-pf-left {
+  .panel-group {
+    margin-bottom: 0px;
+  }
+}
