@@ -1,4 +1,4 @@
-/* global dialogFieldRefresh jqplot_bind_events miqBrowserDetect miqExpressionPrefill miqGridCheckAll miqGridGetCheckedRows miqLoadTL miqMenu miqValueStylePrefill performFiltering miq_after_onload */
+/* global dialogFieldRefresh jqplot_bind_events miqBrowserDetect miqExpressionPrefill miqGridCheckAll miqGridGetCheckedRows miqLoadTL miqMenu miqValueStylePrefill performFiltering */
 
 // MIQ specific JS functions
 
@@ -44,9 +44,8 @@ function miqOnLoad() {
   }
 
   // Run MIQ after onload code if present
-  // FIXME: miq_after_onload -> move under ManageIQ
-  if (typeof miq_after_onload == "string") {
-    eval(miq_after_onload);
+  if (typeof ManageIQ.afterOnload == "string") {
+    eval(ManageIQ.afterOnload);
   }
 
   // Focus on search box, if it's there and allows focus

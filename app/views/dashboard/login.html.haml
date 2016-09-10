@@ -137,10 +137,10 @@
   - if auto_login != false
     - if ext_auth?(:saml_enabled)
       :javascript
-        var miq_after_onload = "$('#saml_login').click()";
+        ManageIQ.afterOnload = "$('#saml_login').click()";
     - else
       :javascript
-        var miq_after_onload = "$('#sso_login').click()";
+        ManageIQ.afterOnload = "$('#sso_login').click()";
 - elsif @user_name  # If user name is pre-populated by the server, press the Login button automatically
   :javascript
-    var miq_after_onload = "$('#login').click()";
+    ManageIQ.afterOnload = "$('#login').click()";
