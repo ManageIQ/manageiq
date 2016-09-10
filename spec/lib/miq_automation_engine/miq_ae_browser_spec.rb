@@ -1,7 +1,8 @@
-include AutomationSpecHelper
 module MiqAeBrowserSpec
   include MiqAeEngine
   describe MiqAeBrowser do
+    include Spec::Support::AutomationHelper
+
     before(:each) do
       MiqAeDatastore.reset
       @composition_fields = { "title" => { :aetype => "attribute", :datatype => "string" } }
