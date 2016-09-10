@@ -57,11 +57,11 @@ module JsHelper
   end
 
   def javascript_show_if_exists(element)
-    "if (miqDomElementExists('#{j_str(element)}')) #{javascript_show(element)}".html_safe
+    "if ($('##{j_str(element)}').length) #{javascript_show(element)}".html_safe
   end
 
   def javascript_hide_if_exists(element)
-    "if (miqDomElementExists('#{j_str(element)}')) #{javascript_hide(element)}".html_safe
+    "if ($('##{j_str(element)}').length) #{javascript_hide(element)}".html_safe
   end
 
   def jquery_pulsate_element(element)

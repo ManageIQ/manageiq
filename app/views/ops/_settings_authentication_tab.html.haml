@@ -269,6 +269,6 @@
     %hr/
   %script{:type => "text/javascript"}
     - if @edit[:new][:authentication][:user_type] == "samaccountname"
-      if (miqDomElementExists('user_type_base')) $('#user_type_base').hide();
+      if ($('#user_type_base').length) $('#user_type_base').hide();
     - else
-      if (miqDomElementExists('user_type_samaccountname')) $('#user_type_samaccountname').hide();
+      if ($('#user_type_samaccountname').length) $('#user_type_samaccountname').hide();

@@ -7,11 +7,11 @@ describe JsHelper do
 
   context '#set_element_visible' do
     it 'returns js to hide element' do
-      expect(set_element_visible('foo', false)).to eq("if (miqDomElementExists('foo')) $('\#foo').hide();")
+      expect(set_element_visible('foo', false)).to eq("if ($('#foo').length) $('\#foo').hide();")
     end
 
     it 'returns js to show element' do
-      expect(set_element_visible('foo', true)).to eq("if (miqDomElementExists('foo')) $('\#foo').show();")
+      expect(set_element_visible('foo', true)).to eq("if ($('#foo').length) $('\#foo').show();")
     end
   end
 
@@ -77,13 +77,13 @@ describe JsHelper do
 
   context '#javascript_show_if_exists' do
     it 'returns js to check for the existence of an element and show the element if it exists' do
-      expect(javascript_show_if_exists('foo')).to eq("if (miqDomElementExists('foo')) $('#foo').show();")
+      expect(javascript_show_if_exists('foo')).to eq("if ($('#foo').length) $('#foo').show();")
     end
   end
 
   context '#javascript_hide_if_exists' do
     it 'returns js to check for the existence of an element and hide the element if it exists' do
-      expect(javascript_hide_if_exists('foo')).to eq("if (miqDomElementExists('foo')) $('#foo').hide();")
+      expect(javascript_hide_if_exists('foo')).to eq("if ($('#foo').length) $('#foo').hide();")
     end
   end
 
