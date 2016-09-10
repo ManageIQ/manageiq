@@ -8,14 +8,14 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Operations::Guest
   end
 
   def validate_standby_guest
-    validate_vm_control_powered_on
+    {:available => supports_vm_control_powered_on?, :message => unsupported_reason(:vm_control_powered_on)}
   end
 
   def validate_reboot_guest
-    validate_vm_control_powered_on
+    {:available => supports_vm_control_powered_on?, :message => unsupported_reason(:vm_control_powered_on)}
   end
 
   def validate_reset
-    validate_vm_control_powered_on
+    {:available => supports_vm_control_powered_on?, :message => unsupported_reason(:vm_control_powered_on)}
   end
 end

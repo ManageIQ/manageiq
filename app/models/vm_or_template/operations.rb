@@ -112,26 +112,29 @@ module VmOrTemplate::Operations
             end
       unsupported_reason_add(:control, msg) if msg
     end
+
+    supports :vm_control_powered_on do
+      unless supports_control?
+        unsupported_reason_add(:vm_control_powered_on, unsupported_reason(:control))
+      end
+      unless current_state == "on"
+        unsupported_reason_add(:vm_control_powered_on, _("The VM is not powered on"))
+      end
+    end
+
+    supports :vm_control_not_powered_on do
+      unless supports_control?
+        unsupported_reason_add(:vm_control_not_powered_on, unsupported_reason(:control))
+      end
+      if current_state == "on"
+        unsupported_reason_add(:vm_control_not_powered_on, _("The VM is powered on"))
+      end
+    end
   end
 
   def validate_terminate
     return {:available => false, :message => 'The VM is terminated'} if self.terminated?
     {:available => true, :message => nil}
-  end
-
-  def validate_vm_control_powered_on
-    validate_vm_control_power_state(true)
-  end
-
-  def validate_vm_control_not_powered_on
-    validate_vm_control_power_state(false)
-  end
-
-  def validate_vm_control_power_state(check_powered_on)
-    msg = validate_vm_control
-    return {:available => msg[0], :message => msg[1]} unless msg.nil?
-    return {:available => true,   :message => nil}  if current_state.send(check_powered_on ? "==" : "!=", "on")
-    {:available => false,  :message => "The VM is#{" not" if check_powered_on} powered on"}
   end
 
   def validate_unsupported(message_prefix)
