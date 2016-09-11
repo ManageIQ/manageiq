@@ -1206,7 +1206,7 @@ module ApplicationHelper
   end
 
   def explorer_controller?
-    %w(vm_cloud vm_infra vm_or_template).include?(controller_name)
+    %w(vm_cloud vm_infra vm_or_template infra_networking).include?(controller_name)
   end
 
   def vm_quad_link_attributes(record)

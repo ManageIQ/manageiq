@@ -1048,11 +1048,7 @@ module ApplicationController::CiProcessing
                              :dbname      => "#{@db}item")  # Get the records into a view & paginator
 
     if @explorer # In explorer?
-      if controller == 'infra_networking'
-        refresh_partial = "infra_networking/#{@showtype}"
-        else
-          @refresh_partial = "vm_common/#{@showtype}"
-      end
+      @refresh_partial = "vm_common/#{@showtype}"
       replace_right_cell
     else
       # Came in from outside, use RJS to redraw gtl partial
@@ -1308,16 +1304,15 @@ module ApplicationController::CiProcessing
       id = params[:show] ? params[:show] : params[:x_show]
       @item = @record.hosts.find(from_cid(id))
       drop_breadcrumb(:name => _("%{name} (Hosts)") % {:name => @record.name},
-                      :url  => "/#{@db}/hosts/#{@record.id}?page=#{@current_page}")
-      drop_breadcrumb(:name => @item.name, :url => "/#{@db}/show/#{@record.id}?show=#{@item.id}")
+                      :url  => "/#{request.parameters[:controller]}/hosts/#{@record.id}?page=#{@current_page}")
+      drop_breadcrumb(:name => @item.name, :url => "/#{request.parameters[:controller]}/show/#{@record.id}?show=#{@item.id}")
       @group_names = @item.groups
       @view = get_db_view(Account, :association => "hosts")
       show_item
     else
       drop_breadcrumb(:name => _("%{name} (Hosts)") % {:name => @record.name},
-                      :url  => "/#{@db}/hosts/#{@record.id}")
+                      :url  => "/#{request.parameters[:controller]}/hosts/#{@record.id}")
       @listicon = "host"
-      @explorer = true
       show_details(Account, :association => "hosts")
     end
   end

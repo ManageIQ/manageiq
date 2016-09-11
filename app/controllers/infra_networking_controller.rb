@@ -260,7 +260,7 @@ class InfraNetworkingController < ApplicationController
 
   def tree_autoload_dynatree
     @view ||= session[:view]
-    x_tree_init(:infra_networking_tree, :infra_networking, nil)
+    x_tree_init(:infra_networking_tree, :infra_networking, Switch)
     super
   end
 
@@ -493,36 +493,103 @@ class InfraNetworkingController < ApplicationController
     render :json => presenter.for_render
   end
 
-  def replace_right_cell(replace_trees = [], action = nil)
-    return if @in_a_form
+  def replace_right_cell(action = nil, presenter = nil)
     @explorer = true
-
     @sb[:action] = action unless action.nil?
     if @sb[:action] || params[:display]
       partial, action, @right_cell_text = set_right_cell_vars # Set partial name, action and cell header
     end
-    @in_a_form = false
 
-    trees = {}
-    if replace_trees
-      trees[:infra_networking_tree] = build_infra_networking_tree(:infra_networking,
-                                                                  :infra_networking_tree) if replace_trees.include?(:infra_networking_tree)
+    if !@in_a_form && !@sb[:action]
+      get_node_info(x_node)
+      # set @delete_node since we don't rebuild vm tree
+      @delete_node = params[:id] if @replace_trees  # get_node_info might set this
+      type, _id = parse_nodetype_and_id(x_node)
+
+      record_showing = type && ["Switch"].include?(TreeBuilder.get_model_for_prefix(type))
+      c_tb = build_toolbar(center_toolbar_filename)
+      h_tb = build_toolbar("x_history_tb") unless @in_a_form
     end
-    record_showing = leaf_record
-    presenter, r = rendering_objects
-    update_partials(record_showing, presenter, r)
-    replace_search_box(presenter, r)
-    handle_bottom_cell(presenter, r)
-    replace_trees_by_presenter(presenter, trees)
-    rebuild_toolbars(record_showing, presenter)
+
+    # Build presenter to render the JS command for the tree update
+    presenter ||= ExplorerPresenter.new(
+      :active_tree => x_active_tree,
+      :delete_node => @delete_node,      # Remove a new node from the tree
+    )
+
+    r = proc { |opts| render_to_string(opts) }
+
+    partial_locals = {}
+    if record_showing
+      presenter.hide(:form_buttons_div)
+      presenter.update(:main_div, r[:partial => "main"])
+    elsif @sb[:action] || params[:display]
+      if partial == 'layouts/x_gtl'
+        partial_locals[:action_url]  = @lastaction
+        presenter[:parent_id]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
+        presenter[:parent_class] = params[:controller] # Set parent class for URL also
+      end
+      presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
+    else
+      presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
+    end
+
+    # Replace the searchbox
+    presenter.replace(:adv_searchbox_div, r[
+                                          :partial => 'layouts/x_adv_searchbox',
+                                          :locals  => {:nameonly => ([:images_tree, :instances_tree, :vandt_tree].include?(x_active_tree))}
+                                        ])
+
+    presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
+
+    # Handle bottom cell
+    if @pages || @in_a_form
+      if @pages && !@in_a_form
+        if @sb[:action] && @record  # Came in from an action link
+          presenter.update(:paging_div, r[
+                                        :partial => 'layouts/x_pagingcontrols',
+                                        :locals  => {
+                                          :action_url    => @sb[:action],
+                                          :action_method => @sb[:action], # FIXME: action method and url the same?!
+                                          :action_id     => @record.id
+                                        }
+                                      ])
+        else
+          presenter.update(:paging_div, r[:partial => 'layouts/x_pagingcontrols'])
+        end
+        presenter.hide(:form_buttons_div).show(:pc_div_1)
+      elsif @in_a_form
+        presenter.hide(:pc_div_1).show(:form_buttons_div)
+      end
+      presenter.show(:paging_div)
+    else
+      presenter.hide(:paging_div)
+    end
+
     presenter[:right_cell_text] = @right_cell_text
+
+    presenter.reload_toolbars(:history => h_tb, :center => c_tb)
+
+    presenter.set_visibility(h_tb.present?, :toolbar)
+
+    presenter[:record_id] = @record ? @record.id : nil
+
+    # Hide/show searchbox depending on if a list is showing
+    presenter.set_visibility(!(@record || @in_a_form), :adv_searchbox_div)
+    presenter[:clear_search_toggle] = clear_search_status
+
     presenter[:osf_node] = x_node  # Open, select, and focus on this node
+
+    presenter.hide(:blocker_div) unless @edit && @edit[:adv_search_open]
+    presenter[:hide_modal] = true
+    presenter.lock_tree(x_active_tree, @in_a_form && @edit)
 
     render :json => presenter.for_render
   end
 
   # set partial name and cell header for edit screens
   def set_right_cell_vars
+    @sb[:action] = params[:action]
     name = @record ? @record.name.to_s.gsub(/'/, "\\\\'") : "" # If record, get escaped name
     table = request.parameters["controller"]
     if ["details"].include?(@showtype)
@@ -542,7 +609,7 @@ class InfraNetworkingController < ApplicationController
       x_history_add_item(:id => x_node, :text => header, :action => @sb[:action], :item => @item.id)
     else
       header = _("\"%{action}\" for %{switch} \"%{name}\"") % {
-        :vm_or_template => ui_lookup(:table => table),
+        :switch => ui_lookup(:table => table),
         :name           => name,
         :action         => action_type(@sb[:action], 2)
       }
@@ -609,6 +676,71 @@ class InfraNetworkingController < ApplicationController
         n_("Host", "Hosts", amount)
       else
         amount > 1 ? type.titleize : type.titleize.singularize
+    end
+  end
+
+  # Build the switch detail gtl view
+  def show_details(db, options = {})  # Pass in the db, parent vm is in @vm
+    association = options[:association]
+    conditions  = options[:conditions]
+    # generate the grid/tile/list url to come back here when gtl buttons are pressed
+    @gtl_url       = "/infra_networking/#{@listicon.pluralize}/#{@record.id}?"
+    @showtype      = "details"
+    @display       = "main"
+    @no_checkboxes = @no_checkboxes.nil? || @no_checkboxes
+    @showlinks     = true
+
+    @view, @pages = get_view(db,
+                             :parent      => @record,
+                             :association => association,
+                             :conditions  => conditions,
+                             :dbname      => "#{@db}item")  # Get the records into a view & paginator
+
+    if @explorer # In explorer?
+      @refresh_partial = "#{@showtype}"
+      replace_right_cell
+    else
+      # Came in from outside, use RJS to redraw gtl partial
+      if params[:ppsetting] || params[:entry] || params[:sort_choice]
+        replace_gtl_main_div
+      elsif request.xml_http_request?
+        # reload toolbars - AJAX request
+        c_tb = build_toolbar(center_toolbar_filename)
+        render :update do |page|
+          page << javascript_prologue
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          page.replace_html("main_div", :partial => "show") # Replace main div area contents
+          page << javascript_pf_toolbar_reload('center_tb', c_tb)
+          page.replace_html("paging_div",
+                            :partial => 'layouts/pagingcontrols',
+                            :locals  => {:pages      => @pages,
+                                         :action_url => @lastaction,
+                                         :db         => @view.db,
+                                         :headers    => @view.headers})
+        end
+      else
+        render :action => "show"
+      end
+    end
+  end
+
+  # show a single item from a detail list
+  def show_item
+    @showtype = "item"
+    if @explorer
+      @refresh_partial = "layouts/#{@showtype}"
+      replace_right_cell
+    elsif request.xml_http_request?
+      # reload toolbars - AJAX request
+      c_tb = build_toolbar(center_toolbar_filename)
+      render :update do |page|
+        page << javascript_prologue
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace_html("main_div", :partial => "show") # Replace the main div area contents
+        page << javascript_pf_toolbar_reload('center_tb', c_tb)
+      end
+    else
+      render :action => "show"
     end
   end
 
