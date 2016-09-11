@@ -3,6 +3,9 @@ set -v
 echo "gem: --no-ri --no-rdoc --no-document" > ~/.gemrc
 travis_retry gem install bundler -v ">= 1.11.1"
 
+# disable warnings for git based gems over git:// protocol
+bundle config git.allow_insecure true
+
 if [[ -n "${GEM}" ]] ; then
   cd gems/${GEM}
 else
