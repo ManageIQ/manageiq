@@ -10,7 +10,7 @@ shared_examples "logs_collect" do |type|
       :active_tab       => "diagnostics_roles_servers"
     }
     controller.instance_variable_set(:@sb, sb_hash)
-    allow(MiqServer).to receive(:my_server).with(true).and_return(server)
+    allow(MiqServer).to receive(:my_server).and_return(server)
   end
 
   it "not running" do

@@ -24,7 +24,7 @@ describe TreeBuilderSmartproxyAffinity do
       @svr2.vm_scan_storage_affinity = [@storage2]
 
       allow_any_instance_of(MiqServer).to receive_messages(:is_a_proxy? => true)
-      allow(MiqServer).to receive(:my_server).with(true).and_return(OpenStruct.new('id' => 0, :name => 'name'))
+      allow(MiqServer).to receive(:my_server).and_return(OpenStruct.new('id' => 0, :name => 'name'))
 
       @smartproxy_affinity_tree = TreeBuilderSmartproxyAffinity.new(:smartproxy_affinity,
                                                                     :smartproxy_affinity_tree,
