@@ -911,6 +911,7 @@ custom_attributes:
 - description
 - value_interpolated
 - unique_name
+- serialized_value
 custom_buttons:
 - id
 - guid
