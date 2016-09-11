@@ -249,7 +249,7 @@ module ApplicationController::Performance
     cmd, model, typ = params[:menu_click].split("_").first.split("-")
 
     # Swap in 'Instances' for 'VMs' in AZ breadcrumbs (poor man's cloud/infra split hack)
-    bc_model = request.parameters['controller'] == 'availability_zone' && model == 'VMs' ? 'Instances' : model
+    bc_model = ['availability_zone', 'host_aggregate'].include?(request.parameters['controller']) && model == 'VMs' ? 'Instances' : model
 
     report = @sb[:chart_reports].kind_of?(Array) ? @sb[:chart_reports][chart_idx] : @sb[:chart_reports]
     data_row = report.table.data[data_idx]
@@ -567,7 +567,7 @@ module ApplicationController::Performance
       @perf_options[:model] = @perf_record.kind_of?(MiqCimInstance) ? @perf_record.class.to_s : @perf_record.class.base_class.to_s
     end
     @perf_options[:rt_minutes] ||= 15.minutes
-    @perf_options[:cats] ||= perf_build_cats(@perf_options[:model]) if ["EmsCluster", "Host", "Storage", "AvailabilityZone"].include?(@perf_options[:model])
+    @perf_options[:cats] ||= perf_build_cats(@perf_options[:model]) if ["EmsCluster", "Host", "Storage", "AvailabilityZone", "HostAggregate"].include?(@perf_options[:model])
     if ["Storage"].include?(@perf_options[:model]) && @perf_options[:typ] == "Daily"
       @perf_options[:vmtypes] ||= [["<All>", "<All>"],
                                    ["Managed/Registered", "registered"],
@@ -697,7 +697,7 @@ module ApplicationController::Performance
                             to_dt,
                             interval_type]
       else  # Doing VIM performance on a normal CI
-        suffix = @perf_record.kind_of?(AvailabilityZone) ? "_cloud" : "" # Get special cloud version with 'Instances' headers
+        suffix = (@perf_record.kind_of?(AvailabilityZone) || @perf_record.kind_of?(HostAggregate)) ? "_cloud" : "" # Get special cloud version with 'Instances' headers
         rpt = perf_get_chart_rpt("vim_perf_#{interval_type}#{suffix}")
         rpt.where_clause =  ["resource_type = ? and resource_id = ? and timestamp >= ? and timestamp <= ? and capture_interval_name = ?",
                              @perf_options[:model],
@@ -1473,7 +1473,7 @@ module ApplicationController::Performance
     cats.delete_if { |c| c.read_only? || c.entries.length == 0 }                    # Remove categories that are read only or have no entries
     ret_cats = {"<None>" => "<None>"}                                               # Classifications hash for chooser
     case model
-    when "Host", "Storage", "AvailabilityZone"
+    when "Host", "Storage", "AvailabilityZone", "HostAggregate"
       cats.each { |c| ret_cats["Vm:" + c.name] = "VM " + c.description }            # Add VM categories to the hash
     when "EmsCluster"
       cats.each { |c| ret_cats["Host:" + c.name] = "Host " + c.description }        # Add VM categories to the hash

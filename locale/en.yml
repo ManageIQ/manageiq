@@ -33,6 +33,8 @@ en:
       userid: Username
       availability_zone:
         total_vms: Total Instances
+      host_aggregate:
+        total_vms: Total Instances
 
       ems_cloud:
         total_miq_templates: Total Images
@@ -681,6 +683,7 @@ en:
     model:
       AuditEvent:               EVM Audit Event
       AvailabilityZone:         Availability Zone
+      HostAggregate:            Host Aggregate
       ChargebackVm:             Chargeback for Vms
       ChargebackContainerProject: Chargeback for Projects
       ChargebackRate:           Chargeback Rate
@@ -883,6 +886,7 @@ en:
       auth_key_pair_cloud:         Key Pair
       auth_key_pair_clouds:        Key Pairs
       availability_zone:           Availability Zone
+      host_aggregate:              Host Aggregate
       base_snapshot:               Base Snapshot
       based_volumes:               Cloud Volumes Based on Snapshot
       cdroms:                      CD/DVD Drives

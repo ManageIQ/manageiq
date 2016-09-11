@@ -9,8 +9,8 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(ems_infra network_manager availability_zones cloud_tenants flavors security_groups
-       instances images orchestration_stacks storage_managers)
+    %i(ems_infra network_manager availability_zones host_aggregates cloud_tenants flavors
+       security_groups instances images orchestration_stacks storage_managers)
   end
 
   def textual_group_configuration_relationships
@@ -113,6 +113,10 @@ module EmsCloudHelper::TextualSummary
 
   def textual_availability_zones
     @record.availability_zones
+  end
+
+  def textual_host_aggregates
+    @record.host_aggregates
   end
 
   def textual_cloud_tenants

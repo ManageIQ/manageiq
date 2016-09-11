@@ -787,8 +787,8 @@ module ApplicationHelper
   end
 
   def display_adv_search?
-    %w(auth_key_pair_cloud availability_zone cloud_object_store_container cloud_tenant cloud_volume
-       container_group container_node container_service
+    %w(auth_key_pair_cloud availability_zone host_aggregate cloud_object_store_container
+       cloud_tenant cloud_volume container_group container_node container_service
        container_route container_project container_replicator container_image
        container_image_registry persistent_volume container_build
        ems_container vm miq_template offline retired templates
@@ -1110,7 +1110,7 @@ module ApplicationHelper
     "#{@options[:page_size] || "US-Legal"} #{@options[:page_layout]}"
   end
 
-  GTL_VIEW_LAYOUTS = %w(action availability_zone auth_key_pair_cloud
+  GTL_VIEW_LAYOUTS = %w(action availability_zone host_aggregate auth_key_pair_cloud
                         cim_base_storage_extent ems_storage cloud_object_store_container
                         cloud_object_store_object cloud_tenant cloud_volume cloud_volume_snapshot
                         configuration_job condition container_group container_route container_project
@@ -1173,7 +1173,7 @@ module ApplicationHelper
       "explorer"
     elsif %w(offline retired templates vm vm_cloud vm_or_template).include?(@layout)
       "vm"
-    elsif %w(action auth_key_pair_cloud availability_zone cim_base_storage_extent cloud_object_store_container
+    elsif %w(action auth_key_pair_cloud availability_zone host_aggregate cim_base_storage_extent cloud_object_store_container
              cloud_object_store_object cloud_tenant cloud_volume cloud_volume_snapshot condition container_group
              container_route container_project container_replicator container_image container_image_registry
              container_build container_node container_service persistent_volume ems_cloud ems_container ems_cluster ems_infra
@@ -1189,13 +1189,13 @@ module ApplicationHelper
   end
 
   def show_adv_search?
-    show_search = %w(auth_key_pair_cloud availability_zone cim_base_storage_extent cloud_object_store_container
-                     cloud_tenant cloud_volume cloud_volume_snapshot container_group container_node container_service
-                     container_route container_project container_replicator container_image container_image_registry
-                     persistent_volume container_build ems_middleware middleware_server middleware_domain
-                     middleware_messaging middleware_deployment middleware_datasource
-                     ems_cloud ems_cluster ems_container ems_infra flavor host miq_template offline
-                     ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
+    show_search = %w(auth_key_pair_cloud availability_zone host_aggregate cim_base_storage_extent
+                     cloud_object_store_container cloud_tenant cloud_volume cloud_volume_snapshot container_group
+                     container_node container_service container_route container_project container_replicator
+                     container_image container_image_registry persistent_volume container_build ems_middleware
+                     middleware_server middleware_domain middleware_messaging middleware_deployment
+                     middleware_datasource ems_cloud ems_cluster ems_container ems_infra flavor host miq_template
+                     offline ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
                      ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
                      ems_storage load_balancer
                      orchestration_stack resource_pool retired service configuration_job

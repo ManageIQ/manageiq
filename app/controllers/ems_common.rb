@@ -89,6 +89,7 @@ module EmsCommon
       'container_projects'            => [ContainerProject,       _('Container Projects')],
       'container_image_registries'    => [ContainerImageRegistry, _('Container Image Registries')],
       'availability_zones'            => [AvailabilityZone,       _('Availability Zones')],
+      'host_aggregates'               => [HostAggregate,          _('Host Aggregates')],
       'middleware_servers'            => [MiddlewareServer,       _('Middleware Servers')],
       'middleware_deployments'        => [MiddlewareDeployment,   _('Middleware Deployments')],
       'middleware_datasources'        => [MiddlewareDatasource,   _('Middleware Datasources')],
