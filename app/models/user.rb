@@ -69,7 +69,7 @@ class User < ApplicationRecord
     {table_name => {:id => users_ids}}
   end
 
-  def self.in_region
+  def self.in_my_region_column
     where(:region => my_region_number)
   end
 
@@ -78,15 +78,15 @@ class User < ApplicationRecord
   end
 
   def self.find_by_userid(userid)
-    in_region.find_by(:userid => userid)
+    in_my_region_column.find_by(:userid => userid)
   end
 
   def self.find_by_userid!(userid)
-    in_region.find_by!(:userid => userid)
+    in_my_region_column.find_by!(:userid => userid)
   end
 
   def self.find_by_email(email)
-    in_region.find_by(:email => email)
+    in_my_region_column.find_by(:email => email)
   end
 
   # find a user by lowercase email
