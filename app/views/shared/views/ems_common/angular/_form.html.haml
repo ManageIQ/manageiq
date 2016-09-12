@@ -81,12 +81,12 @@
                             "ng-model"                => "emsCommonModel.azure_tenant_id",
                             "required"                => "",
                             "checkchange"             => "",
-                            "ng-pattern"              => "/^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$/",
+                            "is-uuid"                 => 4,
                             "prefix"                  => "default",
                             "reset-validation-status" => "default_auth_status"}
         %span.help-block{"ng-show" => "angularForm.azure_tenant_id.$error.required"}
           = _("Required")
-        %span.help-block{"ng-show" => "angularForm.azure_tenant_id.$error.pattern"}
+        %span.help-block{"ng-show" => "angularForm.azure_tenant_id.$error.isUuid"}
           = _("Invalid input format, please enter a GUID")
 
     .form-group{"ng-class" => "{'has-error': angularForm.subscription.$invalid}", "ng-if" => "emsCommonModel.emstype != '' && emsCommonModel.emstype == 'azure'"}
@@ -99,9 +99,9 @@
                             "ng-model"                => "emsCommonModel.subscription",
                             "checkchange"             => "",
                             "prefix"                  => "default",
-                            "ng-pattern"              => "/^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$/",
+                            "is-uuid"                 => 4,
                             "reset-validation-status" => "default_auth_status"}
-        %span.help-block{"ng-show" => "angularForm.subscription.$error.pattern"}
+        %span.help-block{"ng-show" => "angularForm.subscription.$error.isUuid"}
           = _("Invalid input format, please enter a GUID")
 
     .form-group{"ng-class" => "{'has-error': angularForm.api_version.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra'"}
