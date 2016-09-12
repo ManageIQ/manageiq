@@ -409,7 +409,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     expect(dvswitch).to have_attributes(
       :uid_ems           => 'dvs-119',
       :name              => 'DC1_DVS',
-      :ports             => 0,
+      :ports             => 26,
       :allow_promiscuous => nil,
       :forged_transmits  => nil,
       :mac_changes       => nil,
