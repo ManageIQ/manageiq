@@ -225,7 +225,7 @@
                               :validate_url           => @ems.id ? "update" : "create",
                               :id                     => @ems.id || "new",
                               :basic_info_needed      => true,
-                              :guid_regex             => "/^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$/",
+                              :guid_regex             => true,
                               :userid_label           => _("Client ID"),
                               :password_label         => _("Client Key"),
                               :verify_label           => _("Confirm Client Key"),
