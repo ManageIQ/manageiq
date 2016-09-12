@@ -377,6 +377,7 @@ module VimPropMaps
       :props    => [
         'config.uplinkPortgroup',
         'config.defaultPortConfig',
+        'config.numPorts',
         'summary.name',
         'summary.uuid',
         'summary.host',
@@ -527,6 +528,7 @@ module VimPropMaps
       :props    => [
         'config.uplinkPortgroup',
         'config.defaultPortConfig',
+        'config.numPorts',
         'summary.name',
         'summary.uuid',
         'summary.host',
