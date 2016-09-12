@@ -67,19 +67,19 @@ module Menu
         clusters_name = hybrid_name(EmsCluster, N_("Clusters"), N_("Deployment Roles"), N_("Clusters / Deployment Roles"))
 
         Menu::Section.new(:inf, N_("Infrastructure"), 'fa fa-plus fa-2x', [
-          Menu::Item.new('ems_infra',        N_('Providers'),        'ems_infra',        {:feature => 'ems_infra_show_list'},     '/ems_infra'),
-          Menu::Item.new('ems_cluster',      clusters_name,          'ems_cluster',      {:feature => 'ems_cluster_show_list'},   '/ems_cluster'),
-          Menu::Item.new('host',             hosts_name,             'host',             {:feature => 'host_show_list'},          '/host'),
-          Menu::Item.new('vm_infra',         N_('Virtual Machines'), 'vm_infra_explorer',
-                         {:feature => 'vm_infra_explorer', :any => true},
-                         '/vm_infra/explorer'),
-          Menu::Item.new('resource_pool',    N_('Resource Pools'),   'resource_pool',    {:feature => 'resource_pool_show_list'}, '/resource_pool'),
-          Menu::Item.new('storage',          deferred_ui_lookup(:tables => 'storages'),
-                         'storage',       {:feature => 'storage_show_list'},       '/storage'),
-          Menu::Item.new('pxe',              N_('PXE'),              'pxe',              {:feature => 'pxe', :any => true},           '/pxe/explorer'),
-          Menu::Item.new('infra_networking', N_('Networking'),       'infra_networking', {:feature => 'infra_networking', :any => true}, '/infra_networking/explorer'),
-          Menu::Item.new('miq_request_host', N_('Requests'),         nil,                {:feature => 'miq_request_show_list'},       '/miq_request?typ=host'),
-        ])
+                                Menu::Item.new('ems_infra',        N_('Providers'),        'ems_infra',        {:feature => 'ems_infra_show_list'},     '/ems_infra'),
+                                Menu::Item.new('ems_cluster',      clusters_name,          'ems_cluster',      {:feature => 'ems_cluster_show_list'},   '/ems_cluster'),
+                                Menu::Item.new('host',             hosts_name,             'host',             {:feature => 'host_show_list'},          '/host'),
+                                Menu::Item.new('vm_infra',         N_('Virtual Machines'), 'vm_infra_explorer',
+                                               {:feature => 'vm_infra_explorer', :any => true},
+                                               '/vm_infra/explorer'),
+                                Menu::Item.new('resource_pool',    N_('Resource Pools'),   'resource_pool',    {:feature => 'resource_pool_show_list'}, '/resource_pool'),
+                                Menu::Item.new('storage',          deferred_ui_lookup(:tables => 'storages'),
+                                               'storage',       {:feature => 'storage_show_list'},       '/storage'),
+                                Menu::Item.new('pxe',              N_('PXE'),              'pxe',              {:feature => 'pxe', :any => true},           '/pxe/explorer'),
+                                Menu::Item.new('infra_networking', N_('Networking'),       'infra_networking', {:feature => 'infra_networking', :any => true}, '/infra_networking/explorer'),
+                                Menu::Item.new('miq_request_host', N_('Requests'),         nil,                {:feature => 'miq_request_show_list'},       '/miq_request?typ=host'),
+                              ])
       end
 
       def hybrid_name(klass, name1, name2, name3)

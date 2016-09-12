@@ -17,20 +17,15 @@ class InfraNetworkingController < ApplicationController
     redirect_to :action => 'explorer', :flash_msg => @flash_array ? @flash_array[0][:message] : nil
   end
 
-
   def index
     redirect_to :action => 'explorer'
-  end
-
-  def show_list_old
-    redirect_to :action => 'explorer', :flash_msg => @flash_array.try(:fetch_path, 0, :message)
   end
 
   def show(id = nil)
     return if perfmenu_click
     @explorer = true
     @display = params[:display] || "main" unless control_selected?
-    @record = @switch = find_record( Switch, id || params[:id])
+    @record = @switch = find_record(Switch, id || params[:id])
     return if record_no_longer_exists?(@switch)
 
     if !@explorer && @display == "main"
@@ -71,63 +66,6 @@ class InfraNetworkingController < ApplicationController
     @lastaction = "show"
   end
 
-  def button
-    @edit = session[:edit]                                  # Restore @edit for adv search box
-    params[:display] = @display if ["hosts"].include?(@display)  # Were we displaying sub-items
-
-    if params[:pressed].starts_with?("host_")
-      scanhosts if params[:pressed] == "host_scan"
-      analyze_check_compliance_hosts if params[:pressed] == "host_analyze_check_compliance"
-      check_compliance_hosts if params[:pressed] == "host_check_compliance"
-      refreshhosts if params[:pressed] == "host_refresh"
-      tag(Host) if params[:pressed] == "host_tag"
-      assign_policies(Host) if params[:pressed] == "host_protect"
-      comparemiq  if params[:pressed] == "host_compare"
-      edit_record  if params[:pressed] == "host_edit"
-      deletehosts if params[:pressed] == "host_delete"
-
-      pfx = pfx_for_vm_button_pressed(params[:pressed])
-      # Handle Host power buttons
-      if ["host_shutdown", "host_reboot", "host_standby", "host_enter_maint_mode", "host_exit_maint_mode",
-          "host_start", "host_stop", "host_reset"].include?(params[:pressed])
-        powerbutton_hosts(params[:pressed].split("_")[1..-1].join("_")) # Handle specific power button
-      else
-        process_vm_buttons(pfx)
-        return if ["host_tag", "#{pfx}_policy_sim", "host_scan", "host_refresh", "host_protect",
-                   "host_compare", "#{pfx}_compare", "#{pfx}_drift", "#{pfx}_tag", "#{pfx}_retire",
-                   "#{pfx}_protect", "#{pfx}_ownership", "#{pfx}_right_size",
-                   "#{pfx}_reconfigure"].include?(params[:pressed]) &&
-          @flash_array.nil?   # Some other screen is showing, so return
-
-        unless ["host_edit", "#{pfx}_edit", "#{pfx}_miq_request_new", "#{pfx}_clone", "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
-          @refresh_div = "main_div"
-          @refresh_partial = "layouts/gtl"
-          show
-        end
-      end
-    else
-      @refresh_div = "main_div" # Default div for button.rjs to refresh
-    end
-
-    if !@flash_array && !@refresh_partial # if no button handler ran, show not implemented msg
-      add_flash(_("Button not yet implemented"), :error)
-      @refresh_partial = "layouts/flash_msg"
-      @refresh_div = "flash_msg_div"
-    elsif @flash_array && @lastaction == "show"
-      @switch = @record = identify_record(params[:id])
-      @refresh_partial = "layouts/flash_msg"
-      @refresh_div = "flash_msg_div"
-    end
-
-    if params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone", "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
-      render_or_redirect_partial(pfx)
-    else
-      if @refresh_div == "main_div" && @lastaction == "show_list"
-        replace_gtl_main_div
-      end
-    end
-  end
-
   def tree_select
     @lastaction = "explorer"
     @sb[:action] = nil
@@ -165,7 +103,7 @@ class InfraNetworkingController < ApplicationController
     if x_node == "root"
       listnav_search_selected(0)
     else
-      @nodetype, id = parse_nodetype_and_id(valid_active_node(x_node))
+      @nodetype, _ = parse_nodetype_and_id(valid_active_node(x_node))
     end
   end
 
@@ -178,32 +116,32 @@ class InfraNetworkingController < ApplicationController
           redirect_to :action => "explorer"
           return
         end
-        params[:id] = x_build_node_id(@record)  # Get the tree node id
+        params[:id] = x_build_node_id(@record) # Get the tree node id
         tree_select
       end
-      format.html do                # HTML, redirect to explorer
+      format.html do # HTML, redirect to explorer
         tree_node_id = TreeBuilder.build_node_id(@record)
         session[:exp_parms] = {:id => tree_node_id}
         redirect_to :action => "explorer"
       end
-      format.any { head :not_found }  # Anything else, just send 404
+      format.any { head :not_found } # Anything else, just send 404
     end
   end
 
   def tree_record
     @record =
       case x_active_tree
-        when :infra_networking_tree then infra_networking_tree_rec
+      when :infra_networking_tree then infra_networking_tree_rec
       end
   end
 
   def infra_networking_tree_rec
     nodes = x_node.split('-')
     case nodes.first
-      when "root", 'e' then find_record(ExtManagementSystem, params[:id])
-      when "h" then find_record(Host, params[:id])
-      when "c"   then find_record(Cluster, params[:id])
-      when "sw" then find_record(Switch, params[:id])
+    when "root", 'e' then find_record(ExtManagementSystem, params[:id])
+    when "h"  then find_record(Host, params[:id])
+    when "c"  then find_record(Cluster, params[:id])
+    when "sw" then find_record(Switch, params[:id])
     end
   end
 
@@ -221,7 +159,7 @@ class InfraNetworkingController < ApplicationController
     end
 
     if @record.kind_of?(Switch)
-      rec_cls = "#{@record.class.to_s}"
+      rec_cls = @record.class.to_s
     end
     return unless %w(download_pdf main).include?(@display)
     @showtype     = "main"
@@ -268,7 +206,6 @@ class InfraNetworkingController < ApplicationController
 
   private ###########
 
-
   def hosts_list
     condition         = nil
     label             = _("%{name} (All %{titles})" % {:name => @switch.name, :titles => title_for_hosts})
@@ -278,15 +215,15 @@ class InfraNetworkingController < ApplicationController
     host_service_group_name = params[:host_service_group_name]
     if host_service_group_name
       case params[:status]
-        when 'running'
-          hosts_filter =  @switch.host_ids_with_running_service_group(host_service_group_name)
-          label        = _("Hosts with running %{name}") % {:name => host_service_group_name}
-        when 'failed'
-          hosts_filter =  @switch.host_ids_with_failed_service_group(host_service_group_name)
-          label        = _("Hosts with failed %{name}") % {:name => host_service_group_name}
-        when 'all'
-          hosts_filter = @switch.host_ids_with_service_group(host_service_group_name)
-          label        = _("All %{titles} with %{name}") % {:titles => title_for_hosts, :name => host_service_group_name}
+      when 'running'
+        hosts_filter = @switch.host_ids_with_running_service_group(host_service_group_name)
+        label        = _("Hosts with running %{name}") % {:name => host_service_group_name}
+      when 'failed'
+        hosts_filter = @switch.host_ids_with_failed_service_group(host_service_group_name)
+        label        = _("Hosts with failed %{name}") % {:name => host_service_group_name}
+      when 'all'
+        hosts_filter = @switch.host_ids_with_service_group(host_service_group_name)
+        label        = _("All %{titles} with %{name}") % {:titles => title_for_hosts, :name => host_service_group_name}
       end
 
       if hosts_filter
@@ -304,7 +241,7 @@ class InfraNetworkingController < ApplicationController
       get_node_info("root")
     else
       show_record(from_cid(id))
-      model_string = ui_lookup(:model => @record.class.to_s)
+      model_string = ui_lookup(:model => ((model ||= @record.class).to_s))
       @right_cell_text = _("%{model} \"%{name}\"") % {:name => @record.name, :model => model_string}
     end
   end
@@ -322,7 +259,7 @@ class InfraNetworkingController < ApplicationController
   def build_infra_networking_tree(type, name)
     tree = case name
            when :infra_networking_tree
-               TreeBuilderConfigurationManager.new(name, type, @sb)
+             TreeBuilderConfigurationManager.new(name, type, @sb)
            end
     instance_variable_set :"@#{name}", tree.tree_nodes
     tree
@@ -357,12 +294,12 @@ class InfraNetworkingController < ApplicationController
     end
     @right_cell_text += @edit[:adv_search_applied][:text] if x_tree && @edit && @edit[:adv_search_applied]
 
-    if @edit && @edit.fetch_path(:adv_search_applied, :qs_exp) # If qs is active, save it in history
+    if @edit && @edit.fetch_path(:adv_search_applied, :qs_exp) #If qs is active, save it in history
       x_history_add_item(:id     => x_node,
                          :qs_exp => @edit[:adv_search_applied][:qs_exp],
                          :text   => @right_cell_text)
     else
-      x_history_add_item(:id => treenodeid, :text => @right_cell_text)  # Add to history pulldown array
+      x_history_add_item(:id => treenodeid, :text => @right_cell_text) #Add to history pulldown array
     end
   end
 
@@ -406,7 +343,7 @@ class InfraNetworkingController < ApplicationController
     else
       @no_checkboxes = true
       hosts = @cluster_record.hosts
-      switch_ids = hosts.collect{|host| host.switches.pluck(:id)}
+      switch_ids = hosts.collect{ |host| host.switches.pluck(:id) }
       options = {:model => "Switch", :where_clause => ["shared = true and id in(?)", switch_ids.flatten.uniq]}
       process_show_list(options)
       @showtype        = 'main'
@@ -414,7 +351,6 @@ class InfraNetworkingController < ApplicationController
       @right_cell_text = _("Switches for %{model} \"%{name}\"") % {:model => model, :name => @cluster_record.name}
     end
   end
-
 
   def provider_switches_list(id, model)
     @record = @provider_record = find_record(model, id) if model
@@ -425,7 +361,7 @@ class InfraNetworkingController < ApplicationController
     else
       @no_checkboxes = true
       hosts = Host.where(:ems_id => @provider_record.id)
-      switch_ids = hosts.collect{|host| host.switches.pluck(:id)}
+      switch_ids = hosts.collect{ |host| host.switches.pluck(:id) }
       options = {:model => "Switch", :where_clause => ["shared = true and id in(?)", switch_ids.flatten.uniq]}
       process_show_list(options)
       @showtype        = 'main'
@@ -505,7 +441,7 @@ class InfraNetworkingController < ApplicationController
     if !@in_a_form && !@sb[:action]
       get_node_info(x_node)
       # set @delete_node since we don't rebuild vm tree
-      @delete_node = params[:id] if @replace_trees  # get_node_info might set this
+      @delete_node = params[:id] if @replace_trees # get_node_info might set this
       type, _id = parse_nodetype_and_id(x_node)
 
       record_showing = type && ["Switch"].include?(TreeBuilder.get_model_for_prefix(type))
@@ -516,7 +452,7 @@ class InfraNetworkingController < ApplicationController
     # Build presenter to render the JS command for the tree update
     presenter ||= ExplorerPresenter.new(
       :active_tree => x_active_tree,
-      :delete_node => @delete_node,      # Remove a new node from the tree
+      :delete_node => @delete_node, # Remove a new node from the tree
     )
 
     r = proc { |opts| render_to_string(opts) }
@@ -547,7 +483,7 @@ class InfraNetworkingController < ApplicationController
     # Handle bottom cell
     if @pages || @in_a_form
       if @pages && !@in_a_form
-        if @sb[:action] && @record  # Came in from an action link
+        if @sb[:action] && @record # Came in from an action link
           presenter.update(:paging_div, r[
                                         :partial => 'layouts/x_pagingcontrols',
                                         :locals  => {
@@ -580,7 +516,7 @@ class InfraNetworkingController < ApplicationController
     presenter.set_visibility(!(@record || @in_a_form), :adv_searchbox_div)
     presenter[:clear_search_toggle] = clear_search_status
 
-    presenter[:osf_node] = x_node  # Open, select, and focus on this node
+    presenter[:osf_node] = x_node # Open, select, and focus on this node
 
     presenter.hide(:blocker_div) unless @edit && @edit[:adv_search_open]
     presenter[:hide_modal] = true
@@ -594,19 +530,19 @@ class InfraNetworkingController < ApplicationController
     @sb[:action] = params[:action]
     name = @record ? @record.name.to_s.gsub(/'/, "\\\\'") : "" # If record, get escaped name
     table = 'switch'
-    if ["details"].include?(@showtype)
-      partial = "layouts/x_gtl"
-    elsif @showtype == "item"
-      partial = "layouts/item"
-    else
-      partial = "#{@showtype}"
-    end
+    partial = if ["details"].include?(@showtype)
+                "layouts/x_gtl"
+              elsif @showtype == "item"
+                "layouts/item"
+              else
+                @showtype.to_s
+              end
     if @showtype == "item"
       header = _("%{action} \"%{item_name}\" for %{switch} \"%{name}\"") % {
-        :switch         => ui_lookup(:table => table),
-        :name           => name,
-        :item_name      => @item.name,
-        :action         => action_type(@sb[:action], 1)
+        :switch    => ui_lookup(:table => table),
+        :name      => name,
+        :item_name => @item.name,
+        :action    => action_type(@sb[:action], 1)
       }
       x_history_add_item(:id => x_node, :text => header, :action => @sb[:action], :item => @item.id)
     else
@@ -617,14 +553,13 @@ class InfraNetworkingController < ApplicationController
       }
       if @display && @display != "main"
         x_history_add_item(:id => x_node, :text => header, :display => @display)
-      else
-        x_history_add_item(:id => x_node, :text => header, :action => @sb[:action]) if @sb[:action] != "drift_history"
+      elsif @sb[:action] != "drift_history"
+        x_history_add_item(:id => x_node, :text => header, :action => @sb[:action])
       end
     end
     action = nil
     return partial, action, header
   end
-
 
   def leaf_record
     get_node_info(x_node)
@@ -632,7 +567,6 @@ class InfraNetworkingController < ApplicationController
     type, _id = parse_nodetype_and_id(x_node)
     type && %w(Switch).include?(TreeBuilder.get_model_for_prefix(type))
   end
-
 
   def dvswitch_record?(node = x_node)
     type, _id = node.split("-")
@@ -674,15 +608,15 @@ class InfraNetworkingController < ApplicationController
 
   def action_type(type, amount)
     case type
-      when "hosts"
-        n_("Host", "Hosts", amount)
-      else
-        amount > 1 ? type.titleize : type.titleize.singularize
+    when "hosts"
+      n_("Host", "Hosts", amount)
+    else
+      amount > 1 ? type.titleize : type.titleize.singularize
     end
   end
 
   # Build the switch detail gtl view
-  def show_details(db, options = {})  # Pass in the db, parent vm is in @vm
+  def show_details(db, options = {}) #Pass in the db, parent vm is in @vm
     association = options[:association]
     conditions  = options[:conditions]
     # generate the grid/tile/list url to come back here when gtl buttons are pressed
@@ -696,33 +630,30 @@ class InfraNetworkingController < ApplicationController
                              :parent      => @record,
                              :association => association,
                              :conditions  => conditions,
-                             :dbname      => "#{@db}item")  # Get the records into a view & paginator
+                             :dbname      => "#{@db}item") # Get the records into a view & paginator
 
     if @explorer # In explorer?
-      @refresh_partial = "#{@showtype}"
+      @refresh_partial = @showtype.to_s
       replace_right_cell
-    else
-      # Came in from outside, use RJS to redraw gtl partial
-      if params[:ppsetting] || params[:entry] || params[:sort_choice]
+    elsif params[:ppsetting] || params[:entry] || params[:sort_choice]
         replace_gtl_main_div
-      elsif request.xml_http_request?
-        # reload toolbars - AJAX request
-        c_tb = build_toolbar(center_toolbar_filename)
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-          page.replace_html("main_div", :partial => "show") # Replace main div area contents
-          page << javascript_pf_toolbar_reload('center_tb', c_tb)
-          page.replace_html("paging_div",
-                            :partial => 'layouts/pagingcontrols',
-                            :locals  => {:pages      => @pages,
-                                         :action_url => @lastaction,
-                                         :db         => @view.db,
-                                         :headers    => @view.headers})
-        end
-      else
-        render :action => "show"
+    elsif request.xml_http_request?
+      # reload toolbars - AJAX request
+      c_tb = build_toolbar(center_toolbar_filename)
+      render :update do |page|
+        page << javascript_prologue
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace_html("main_div", :partial => "show") # Replace main div area contents
+        page << javascript_pf_toolbar_reload('center_tb', c_tb)
+        page.replace_html("paging_div",
+                          :partial => 'layouts/pagingcontrols',
+                          :locals  => {:pages      => @pages,
+                                       :action_url => @lastaction,
+                                       :db         => @view.db,
+                                       :headers    => @view.headers})
       end
+    else
+      render :action => "show"
     end
   end
 
@@ -811,7 +742,7 @@ class InfraNetworkingController < ApplicationController
   end
 
   def display_adv_searchbox
-    !(@infra_networking_record || @in_a_form )
+    !(@infra_networking_record || @in_a_form)
   end
 
   def clear_flash_msg
@@ -819,7 +750,7 @@ class InfraNetworkingController < ApplicationController
   end
 
   def breadcrumb_name(_model)
-    "#{ui_lookup(:model => 'Switch')}"
+    ui_lookup(:model => 'Switch').to_s
   end
 
   def list_row_id(row)

@@ -15,23 +15,17 @@ module InfraNetworkingHelper::TextualSummary
     %i(tags)
   end
 
-    #
+  #
   # Items
   #
-
-  def textual_switch_type
-    {:label => _("%{switch} Type") % {:switch=> ui_lookup(:table => "switches")}, :value => @record.shared}
-  end
-
   def textual_hosts
     num = @record.number_of(:hosts)
     h = {:label => title_for_hosts, :image => "host", :value => num}
     if num > 0 && role_allows?(:feature => "host_show_list")
       h = {:label => title_for_hosts, :image => "host", :value => num}
       h[:explorer] = true
-      h[:link]  = url_for(:action => 'hosts', :id => @record, :db => 'switch')
+      h[:link] = url_for(:action => 'hosts', :id => @record, :db => 'switch')
     end
     h
   end
 end
-

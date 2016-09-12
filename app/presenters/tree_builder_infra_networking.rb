@@ -1,7 +1,6 @@
 class TreeBuilderInfraNetworking < TreeBuilder
   has_kids_for ManageIQ::Providers::Vmware::InfraManager, [:x_get_tree_provider_kids]
   has_kids_for EmsCluster, [:x_get_tree_cluster_kids]
-  #has_kids_for Host, [:x_get_tree_host_kids]
   has_kids_for Switch, [:x_get_tree_switch_kids]
   has_kids_for EmsFolder, [:x_get_tree_folder_kids]
 
@@ -41,8 +40,7 @@ class TreeBuilderInfraNetworking < TreeBuilder
 
   def x_get_tree_cluster_kids(object, count_only)
     hosts = object.hosts
-    switch_ids = hosts.collect{|host| host.switches.pluck(:id)}
-    switch_ids = hosts.collect{|host| host.switches.pluck(:id)}
+    switch_ids = hosts.collect { |host| host.switches.pluck(:id) }
     count_only_or_objects(count_only, Rbac.filtered(Switch, :where_clause => ["shared = true and id in(?)", switch_ids.flatten.uniq]))
   end
 
@@ -54,8 +52,8 @@ class TreeBuilderInfraNetworking < TreeBuilder
 
   def x_get_tree_switch_kids(object, count_only)
     objects = count_only_or_objects(count_only,
-                          object.lans.sort,
-                          "name")
+                                    object.lans.sort,
+                                    "name")
     objects.each do |item|
       item[:load_children => true]
       item[:cfmeNoClick => true]
