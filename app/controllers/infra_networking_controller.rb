@@ -854,12 +854,5 @@ class InfraNetworkingController < ApplicationController
   end
 
   def set_session_data
-    session[:switch_lastaction]   = @lastaction
-    session[:switch_showtype]     = @showtype
-    session[:switch_display]      = @display unless @display.nil?
-  end
-
-  def breadcrumb_name(model)
-    ui_lookup(:models => model || self.class.model.name)
   end
 end
