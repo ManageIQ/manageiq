@@ -50,7 +50,17 @@ ManageIQ.explorer.process = function(data) {
     case 'buttons':
       ManageIQ.explorer.processButtons(data);
       break;
+    case 'window':
+      ManageIQ.explorer.processWindow(data);
+      break;
   }
+};
+
+ManageIQ.explorer.processWindow = function(data) {
+  if (_.isString(data.openUrl)) {
+    window.open(data.openUrl);
+  }
+  ManageIQ.explorer.spinnerOff(data);
 };
 
 ManageIQ.explorer.processButtons = function(data) {
