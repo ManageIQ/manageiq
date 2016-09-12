@@ -1279,6 +1279,7 @@ module ApplicationController::CiProcessing
       drop_breadcrumb(:name => _("%{name} (Users)") % {:name => @record.name},
                       :url  => "/#{@db}/users/#{@record.id}?page=#{@current_page}")
       drop_breadcrumb(:name => @item.name, :url => "/#{@db}/show/#{@record.id}?show=#{@item.id}")
+      @group_names = @item.groups
       @view = get_db_view(Account, :association => "users")
       show_item
     else
