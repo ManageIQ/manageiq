@@ -2803,30 +2803,26 @@ Vmdb::Application.routes.draw do
       "#{collection_name}##{API_ACTIONS[verb]}"
     end
 
-    def create_api_route(verb, url, action)
-      public_send(verb, url, :to => action)
-    end
-
     Api::Settings.collections.each do |collection_name, collection|
       collection.verbs.each do |verb|
         if collection.options.include?(:primary)
-          create_api_route(verb, collection_name, action_for_collection(collection_name, verb))
+          match(collection_name, :to => action_for_collection(collection_name, verb), :via => verb)
         end
 
         next unless collection.options.include?(:collection)
 
         if collection.options.include?(:arbitrary_resource_path)
-          create_api_route(verb, "#{collection_name}(/*c_suffix)", action_for_collection(collection_name, verb))
+          match "#{collection_name}/(*c_suffix)", :to => action_for_collection(collection_name, verb), :via => verb
         else
-          create_api_route(verb, "#{collection_name}(/:c_id)", action_for_collection(collection_name, verb))
+          match "#{collection_name}(/:c_id)", :to => action_for_collection(collection_name, verb), :via => verb
         end
       end
 
       Array(collection.subcollections).each do |subcollection_name|
         Api::Settings.collections[subcollection_name].verbs.each do |verb|
-          create_api_route(verb,
-                           "#{collection_name}/:c_id/#{subcollection_name}(/:s_id)",
-                           action_for_collection(collection_name, verb))
+          match("#{collection_name}/:c_id/#{subcollection_name}(/:s_id)",
+                :to => action_for_collection(collection_name, verb),
+                :via => verb)
         end
       end
     end
