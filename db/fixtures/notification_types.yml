@@ -1,11 +1,36 @@
 ---
-- :name: vm_powered_off
-  :message: Virtual Machine %{subject} has been powered off
-  :expires_in: 24.hours
+- :name: host_provisioned
+  :message: Host %{subject} has been provisioned.
+  :expires_in: 7.days
   :level: :success
   :audience: tenant
-- :name: vm_powered_on
-  :message: Virtual Machine %{subject} has been powered on
-  :expires_in: 24.hours
+- :name: service_provisioned
+  :message: Service %{subject} has been provisioned.
+  :expires_in: 7.days
   :level: :success
+  :audience: tenant
+- :name: service_retired
+  :message: Service %{subject} has been retired.
+  :expires_in: 7.days
+  :level: :success
+  :audience: tenant
+- :name: vm_provisioned
+  :message: Virtual Machine %{subject} has been provisioned.
+  :expires_in: 7.days
+  :level: :success
+  :audience: tenant
+- :name: vm_retired
+  :message: Virtual Machine %{subject} has been retired.
+  :expires_in: 7.days
+  :level: :success
+  :audience: tenant
+- :name: request_approved
+  :message: Request %{subject} has been approved.
+  :expires_in: 14.days
+  :level: :success
+  :audience: tenant
+- :name: request_denied
+  :message: Request %{subject} has been denied.
+  :expires_in: 14.days
+  :level: :warning
   :audience: tenant
