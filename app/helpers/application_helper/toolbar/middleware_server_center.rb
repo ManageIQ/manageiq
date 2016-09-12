@@ -110,4 +110,23 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
       ]
     ),
   ])
+  button_group('middleware_server_jdbc_drivers', [
+    select(
+      :middleware_server_jdbc_drivers_choice,
+      'fa fa-plug fa-lg',
+      t = N_('JDBC Drivers'),
+      t,
+      :items => [
+        button(
+          :middleware_jdbc_driver_new,
+          'fa fa-plug fa-lg',
+          N_('Add a new Middleware JDBC Driver'),
+          N_('Add JDBC Driver'),
+          :data => {'toggle'        => 'modal',
+                    'target'        => '#modal_jdbc_div',
+                    'function'      => 'miqCallAngular',
+                    'function-data' => '{"name": "showJdbcDriverListener", "args": []}'})
+      ]
+    ),
+  ])
 end

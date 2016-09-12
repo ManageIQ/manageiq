@@ -45,6 +45,12 @@ class MiddlewareServerController < ApplicationController
                                     :hawk  => N_('Not deploying to Hawkular server'),
                                     :msg   => N_('Deployment initiated for selected server(s)'),
                                     :param => :file
+    },
+    :middleware_add_jdbcdriver  => {:op    => :add_middleware_jdbc_driver,
+                                    :skip  => false,
+                                    :hawk  => N_('Not installing new JDBC Driver to Hawkular server'),
+                                    :msg   => N_('New JDBC Driver installed for selected server(s)'),
+                                    :param => :driver
     }
   }.freeze
 
@@ -70,6 +76,25 @@ class MiddlewareServerController < ApplicationController
         :status => :success, :msg => _("Deployment \"%s\" has been initiated on this server.") % deployment_name
       }
     end
+  end
+
+  def add_jdbc_driver
+    selected_server = identify_selected_entities
+
+    params[:driver] = {
+      :file                 => params["file"],
+      :driver_name          => params["driverName"],
+      :driver_jar_name      => params["driverJarName"],
+      :module_name          => params["moduleName"],
+      :driver_class         => params["driverClass"],
+      :driver_major_version => params["majorVersion"],
+      :driver_minor_version => params["minorVersion"]
+    }
+
+    run_server_operation(OPERATIONS.fetch(:middleware_add_jdbcdriver), selected_server)
+    render :json => {
+      :status => :success, :msg => _("JDBC Driver \"%s\" has been installed on this server.") % params["driverName"]
+    }
   end
 
   def show
