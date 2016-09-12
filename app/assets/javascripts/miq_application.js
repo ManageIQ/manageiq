@@ -8,7 +8,7 @@ function miqOnLoad() {
   ManageIQ.widget.dashboardUrl = "dashboard/widget_dd_done";
 
   // Initialize the dashboard column sortables
-  if ($('#col1').length) {
+  if (miqDomElementExists('col1')) {
     miqInitDashboardCols();
   }
 
@@ -34,7 +34,7 @@ function miqOnLoad() {
   }
 
   // Initialize the dashboard widget pulldown
-  if ($('#widget_select_div').length) {
+  if (miqDomElementExists('widget_select_div')) {
     miqInitWidgetPulldown();
   }
 
@@ -49,7 +49,7 @@ function miqOnLoad() {
   }
 
   // Focus on search box, if it's there and allows focus
-  if ($('#search_text').length) {
+  if (miqDomElementExists('search_text')) {
     try {
       $('#search_text').focus();
     } catch (_e) {}
@@ -60,7 +60,7 @@ function miqOnLoad() {
 }
 
 function miqPrepRightCellForm(tree) {
-  if ($('#adv_searchbox_div').length) {
+  if (miqDomElementExists('adv_searchbox_div')) {
     $('#adv_searchbox_div').hide();
   }
   $('#toolbar').hide();
@@ -200,7 +200,7 @@ function miqCalendarDateConversion(server_offset) {
 
 // Get user's time zone offset
 function miqGetTZO() {
-  if ($('#user_TZO').length) {
+  if (miqDomElementExists('user_TZO')) {
     $('#user_TZO').val(moment().utcOffset() / 60);
   }
 }
@@ -209,13 +209,13 @@ function miqGetTZO() {
 function miqGetBrowserInfo() {
   var bd = miqBrowserDetect();
 
-  if ($('#browser_name').length) {
+  if (miqDomElementExists('browser_name')) {
     $('#browser_name').val(bd.browser);
   }
-  if ($('#browser_version').length) {
+  if (miqDomElementExists('browser_version')) {
     $('#browser_version').val(bd.version);
   }
-  if ($('#browser_os').length) {
+  if (miqDomElementExists('browser_os')) {
     $('#browser_os').val(bd.OS);
   }
 }
@@ -249,17 +249,17 @@ function miqSparkle(status) {
 }
 
 function miqSparkleOn() {
-  if ($('#advsearchModal').length &&
+  if (miqDomElementExists('advsearchModal') &&
       ($('#advsearchModal').hasClass('modal fade in'))) {
-    if ($('#searching_spinner_center').length) {
+    if (miqDomElementExists('searching_spinner_center')) {
       miqSearchSpinner(true);
     }
     miqSpinner(false);
-    if ($('#notification').length) {
+    if (miqDomElementExists('notification')) {
       $('#notification').hide();
     }
   } else {
-    if ($('#notification').length) {
+    if (miqDomElementExists('notification')) {
       $('#notification').show();
     }
     miqSpinner(true);
@@ -268,13 +268,13 @@ function miqSparkleOn() {
 
 function miqSparkleOff() {
   miqSpinner(false);
-  if ($('#searching_spinner_center').length) {
+  if (miqDomElementExists('searching_spinner_center')) {
     miqSearchSpinner(false);
   }
-  if ($('#notification').length) {
+  if (miqDomElementExists('notification')) {
     $('#notification').hide();
   }
-  if ($('#rep_notification').length) {
+  if (miqDomElementExists('rep_notification')) {
     $('#rep_notification').hide();
   }
 }
@@ -300,10 +300,10 @@ function miqCheckForChanges() {
       }
       return answer;
     }
-  } else if ((($('#buttons_on').length &&
+  } else if (((miqDomElementExists('buttons_on') &&
                $('#buttons_on').is(":visible")) ||
               ManageIQ.changes !== null) &&
-             !$('#ignore_form_changes').length) {
+             !miqDomElementExists('ignore_form_changes')) {
     return confirm(__("Abandon changes?"));
   }
   // use default browser reaction for onclick
@@ -326,26 +326,26 @@ function miqButtons(h_or_s, prefix) {
 // Hide/show form validate buttons
 function miqValidateButtons(h_or_s, prefix) {
   prefix = (prefix == null) ? "" : prefix;
-  var on_id = '#' + prefix + 'validate_buttons_on';
-  var off_id = '#' + prefix + 'validate_buttons_off';
+  var buttonsOnId = prefix + 'validate_buttons_on';
+  var buttonsOffId = prefix + 'validate_buttons_off';
 
-  if ($('#flash_msg_div').length) {
+  if (miqDomElementExists('flash_msg_div')) {
     $('flash_msg_div').hide();
   }
 
   if (h_or_s == "show") {
-    if ($(on_id).length) {
-      $(on_id).show();
+    if (miqDomElementExists(buttonsOnId)) {
+      $('#' + buttonsOnId).show();
     }
-    if ($(off_id).length) {
-      $(off_id).hide();
+    if (miqDomElementExists(buttonsOffId)) {
+      $('#' + buttonsOffId).hide();
     }
   } else {
-    if ($(off_id).length) {
-      $(off_id).show();
+    if (miqDomElementExists(buttonsOffId)) {
+      $('#' + buttonsOffId).show();
     }
-    if ($(on_id).length) {
-      $(on_id).hide();
+    if (miqDomElementExists(buttonsOnId)) {
+      $('#' + buttonsOnId).hide();
     }
   }
 }
@@ -371,7 +371,7 @@ function toggleConvertButtonToLink(button, url, toggle) {
 // update all checkboxes on a form when the masterToggle checkbox is changed
 // parms: button_div=<id of div with buttons to update>
 function miqUpdateAllCheckboxes(button_div) {
-  if (! $('#masterToggle').length)
+  if (!miqDomElementExists('masterToggle'))
     return;
 
   var state = $('#masterToggle').prop('checked');
@@ -490,9 +490,9 @@ function miqResetSizeTimer() {
   }
 
   // Adjust certain elements, if present
-  if ($('#list_grid').length) {
+  if (miqDomElementExists('list_grid')) {
     $('#list_grid').css({height: h + 'px'});
-  } else if ($('#logview').length) {
+  } else if (miqDomElementExists('logview')) {
     $('#logview').css({height: h + 'px'});
   }
 
@@ -659,7 +659,7 @@ function miqBuildChartMenuEx(col, row, _value, category, series, chart_set, char
 
 // Handle chart context menu clicks
 function miqChartMenuClick(itemId) {
-  if ($('#menu_div').length) {
+  if (miqDomElementExists('menu_div')) {
     $('#menu_div').hide();
   }
   if (itemId != "cancel") {
@@ -697,7 +697,7 @@ function miqAjaxButton(url, serialize_fields) {
   if (typeof serialize_fields == "undefined") {
     serialize_fields = false;
   }
-  if ($('#notification').length) {
+  if (miqDomElementExists('notification')) {
     $('#notification').show();
   }
 
@@ -884,27 +884,27 @@ function add_flash(msg, level, options) {
 function miqEnableLoginFields(enabled) {
   $('#user_name').prop('readonly', !enabled);
   $('#user_password').prop('readonly', !enabled);
-  if ($('#user_new_password').length) {
+  if (miqDomElementExists('user_new_password')) {
     $('#user_new_password').prop('readonly', !enabled);
   }
-  if ($('#user_verify_password').length) {
+  if (miqDomElementExists('user_verify_password')) {
     $('#user_verify_password').prop('readonly', !enabled);
   }
 }
 
 // Initialize dashboard column jQuery sortables
 function miqInitDashboardCols() {
-  if ($('#col1').length) {
+  if (miqDomElementExists('col1')) {
     $('#col1').sortable({connectWith: '#col2, #col3', handle: ".sortable-handle"});
     $('#col1').off('sortupdate');
     $('#col1').on('sortupdate', miqDropComplete);
   }
-  if ($('#col2').length) {
+  if (miqDomElementExists('col2')) {
     $('#col2').sortable({connectWith: '#col1, #col3', handle: ".sortable-handle"});
     $('#col2').off('sortupdate');
     $('#col2').on('sortupdate', miqDropComplete);
   }
-  if ($('#col3').length) {
+  if (miqDomElementExists('col3')) {
     $('#col3').sortable({connectWith: '#col1, #col2', handle: ".sortable-handle"});
     $('#col3').off('sortupdate');
     $('#col3').on('sortupdate', miqDropComplete);

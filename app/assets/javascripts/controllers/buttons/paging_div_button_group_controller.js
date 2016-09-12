@@ -46,7 +46,7 @@ ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'mi
       var compiledEnabledSave = $compile(enabledSaveHtml)($scope);
 
       $timeout(function () {
-        if (angular.element(document.getElementById('save_enabled')).length == 0) {
+        if (!miqDomElementExists('save_enabled')) {
           angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledEnabledSave);
         }
       });
@@ -62,11 +62,11 @@ ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'mi
       var compiledEnabledSave = $compile(enabledSaveHtml)($scope);
 
       $timeout(function () {
-        if (angular.element(document.getElementById('save_disabled')).length == 0) {
+        if (!miqDomElementExists('save_disabled')) {
           angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledDisabledSave);
         }
 
-        if (angular.element(document.getElementById('save_enabled')).length == 0) {
+        if (!miqDomElementExists('save_enabled')) {
           angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledEnabledSave);
         }
       });
@@ -81,7 +81,7 @@ ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'mi
     var compiledReset = $compile(resetHtml)($scope);
 
     $timeout(function () {
-      if (angular.element(document.getElementById('reset_enabled_disabled')).length == 0) {
+      if (!miqDomElementExists('reset_enabled_disabled')) {
         angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledReset);
       }
     });
@@ -93,7 +93,7 @@ ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'mi
     var compiledCancel = $compile(cancelHtml)($scope);
 
     $timeout(function () {
-      if (angular.element(document.getElementById('cancel_enabled')).length == 0) {
+      if (!miqDomElementExists('cancel_enabled')) {
         angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledCancel);
       }
     });
