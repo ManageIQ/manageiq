@@ -319,7 +319,7 @@ module ApplicationHelper
     when "User", "Group", "Patch", "GuestApplication"
       controller = "vm"
       action = @lastaction
-    when "Host"
+    when "Host" && action == 'x_show'
       controller = "infra_networking"
       action = @lastaction
     when "MiqReportResult"
