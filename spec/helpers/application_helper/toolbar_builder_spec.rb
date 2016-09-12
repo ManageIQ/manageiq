@@ -358,10 +358,8 @@ describe ApplicationHelper do
     end
 
     ["ems_cluster_protect", "ext_management_system_protect",
-     "host_analyze_check_compliance", "host_check_compliance", "host_protect",
-     "host_shutdown", "host_reboot", "host_standby",
+     "host_analyze_check_compliance", "host_check_compliance",
      "host_enter_maint_mode", "host_exit_maint_mode",
-     "host_start", "host_stop", "host_reset",
      "repo_protect",
      "resource_pool_protect",
      "vm_check_compliance",
@@ -773,88 +771,6 @@ describe ApplicationHelper do
 
         it "and lastaction = drift_history" do
           expect(subject).to be_falsey
-        end
-      end
-
-      context "and id = host_protect" do
-        before do
-          @id = 'host_protect'
-          allow(@record).to receive_messages(:smart? => false)
-        end
-
-        it "and record is not smart" do
-          expect(subject).to be_truthy
-        end
-
-        it "and record is smart" do
-          allow(@record).to receive_messages(:smart? => true)
-          expect(subject).to be_falsey
-        end
-      end
-
-      context "and id = host_refresh" do
-        before do
-          @id = 'host_refresh'
-          allow(@record).to receive_messages(:is_refreshable? => false)
-        end
-
-        it "and record is not refreshable" do
-          expect(subject).to be_truthy
-        end
-
-        it "and record is refreshable" do
-          allow(@record).to receive_messages(:is_refreshable? => true)
-          expect(subject).to be_falsey
-        end
-      end
-
-      context "and id = host_scan" do
-        before { @id = 'host_scan' }
-
-        it "and record is not scannable" do
-          allow(@record).to receive_messages(:is_scannable? => false)
-          expect(subject).to be_truthy
-        end
-
-        it "and record is scannable" do
-          allow(@record).to receive_messages(:is_scannable? => true)
-          expect(subject).to be_falsey
-        end
-      end
-
-      ["host_shutdown", "host_standby", "host_reboot", "host_enter_maint_mode", "host_exit_maint_mode", "host_start", "host_stop", "host_reset"].each do |id|
-        context "and id = #{id}" do
-          before do
-            @id = id
-            allow(@record).to receive_messages(:is_available? => false)
-          end
-
-          it "and record is not available" do
-            expect(subject).to be_truthy
-          end
-
-          it "and record is available" do
-            allow(@record).to receive_messages(:is_available? => true)
-            expect(subject).to be_falsey
-          end
-        end
-      end
-
-      ["perf_refresh", "perf_reload", "vm_perf_refresh", "vm_perf_reload"].each do |id|
-        context "and id = #{id}" do
-          before do
-            @id = id
-            @perf_options = {:typ => "realtime"}
-          end
-
-          it "and @perf_options[:typ] != 'realtime'" do
-            @perf_options = {:typ => "Daily"}
-            expect(subject).to be_truthy
-          end
-
-          it "and @perf_options[:typ] = 'realtime'" do
-            expect(subject).to be_falsey
-          end
         end
       end
     end
@@ -1721,35 +1637,6 @@ describe ApplicationHelper do
         it_behaves_like 'default case'
       end
 
-      context "and id = host_refresh" do
-        before do
-          @id = "host_refresh"
-          allow(@record).to receive_messages(:is_refreshable_now? => true)
-        end
-        it "when not configured for refresh" do
-          message = "Host not configured for refresh"
-          allow(@record).to receive_messages(:is_refreshable_now_error_message => message, :is_refreshable_now? => false)
-          expect(subject).to eq(message)
-        end
-
-        it_behaves_like 'default case'
-      end
-
-      context "and id = host_scan" do
-        before do
-          @id = "host_scan"
-          allow(@record).to receive_messages(:is_scannable_now? => true)
-        end
-
-        it "when not scannable now" do
-          message = "Provide credentials for IPMI"
-          allow(@record).to receive_messages(:is_scannable_now? => false, :is_scannable_now_error_message => message)
-          expect(subject).to eq(message)
-        end
-
-        it_behaves_like 'default case'
-      end
-
       context "and id = host_timeline" do
         before do
           @id = "host_timeline"
@@ -1757,25 +1644,6 @@ describe ApplicationHelper do
         end
 
         it_behaves_like 'record without ems events and policy events', "No Timeline data has been collected for this Host"
-        it_behaves_like 'default case'
-      end
-
-      context "and id = host_shutdown" do
-        before do
-          @id = "host_shutdown"
-          allow(@record).to receive_messages(:is_available_now_error_message => false)
-        end
-        it_behaves_like 'record with error message', 'shutdown'
-        it_behaves_like 'default case'
-      end
-
-      context "and id = host_restart" do
-        before do
-          @id = "host_restart"
-          allow(@record).to receive_messages(:is_available_now_error_message => false)
-        end
-
-        it_behaves_like 'record with error message', 'reboot'
         it_behaves_like 'default case'
       end
     end
@@ -2133,8 +2001,8 @@ describe ApplicationHelper do
         end
       end
 
-      # This is practically a copy paste from the VMWare tests, wasted lots of time trying ot make shared example but 
-      # unfortunately it kept failing on travis while passing localy, also causing other tests to fail from totaly 
+      # This is practically a copy paste from the VMWare tests, wasted lots of time trying ot make shared example but
+      # unfortunately it kept failing on travis while passing localy, also causing other tests to fail from totaly
       # diffrent parts of the project. This is not nice but I can't spend more time on trying to figure it out.
       context "RHEV snapshot buttons" do
         before do
