@@ -1,6 +1,7 @@
 module MiqAePathSpec
-  include MiqAeEngine
   describe MiqAePath do
+    include MiqAeEngine
+
     context "#to_s" do
       it "handles empty path" do
         path = MiqAePath.new
