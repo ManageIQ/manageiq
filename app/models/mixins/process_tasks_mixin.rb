@@ -89,7 +89,7 @@ module ProcessTasksMixin
     # Best guess at how the classes map to API collections and how the tasks map to actions
     # Override as needed
     def invoke_api_tasks(api_client, remote_options)
-      collection = base_class.table_name
+      collection = Api.model_to_collection(self.class)
 
       remote_options[:ids].each do |id|
         obj = api_client.send(collection).search(:filter => ["id=#{id}"]).first
