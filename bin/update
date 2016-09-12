@@ -50,4 +50,7 @@ chdir APP_ROOT do
     puts "\n== Recompiling assets =="
     system! "bin/rake evm:compile_assets"
   end
+
+  puts "\n== Removing old logs and tempfiles =="
+  system! 'bin/rake log:clear tmp:clear'
 end
