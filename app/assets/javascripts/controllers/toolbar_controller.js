@@ -123,7 +123,8 @@
  */
   ToolbarController.prototype.onViewClick = function(item, $event) {
     if (item.url.indexOf('/') === 0) {
-      var tail = (ManageIQ.record.recordId) ? ManageIQ.record.recordId : '';
+      var tail = (ManageIQ.record.recordId) ? '/' + ManageIQ.record.recordId : '';
+
       location.replace('/' + ManageIQ.controller + item.url + tail + item.url_parms);
     } else {
       miqToolbarOnClick.bind($event.delegateTarget)($event);
