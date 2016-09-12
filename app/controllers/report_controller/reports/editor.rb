@@ -1255,7 +1255,8 @@ module ReportController::Reports::Editor
         @edit[:new][:sortby2].split("__").first :
         @edit[:new][:sortby2]
 
-    if field.include?(".")                            # Has a period, so it's an include
+    # Has a period, so it's an include
+    if field.include?(".") && !field.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
       tables = field.split("-")[0].split(".")[1..-1]  # Get the list of tables from before the hyphen
       inc_hash = rpt.include                          # Start at the main hash
       tables.each_with_index do |table, idx|
