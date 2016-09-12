@@ -35,33 +35,33 @@
                                                                 "tooltip-append-to-body" => "true",
                                                                 "tooltip-popup-delay"    => "500",
                                                                 "tooltip-placement"      => "bottom",
-                                                                "tooltip"                => "{{notification.message}}"}
-        {{notification.message}}
+                                                                "tooltip"                => "{{notification.data.message}}"}
+        {{notification.data.message}}
     .col-md-4.col-sm-3{"ng-if" => "notificationGroup.notificationType == 'task'"}
       .drawer-pf-notification-info.expanded-info{"ng-click" => "customScope.markRead(notification, notificationGroup)"}
         %span.info-title
           = _("Started:")
         %span.date
-          {{notification.startTime | date:'MM/dd/yyyy'}}
+          {{notification.data.startTime | date:'MM/dd/yyyy'}}
         %span.time
-          {{notification.startTime | date:'h:mm:ss a'}}
-      .progress{"ng-if" => "notification.inProgress"}
-        .progress-bar.progress-bar-info{"ng-style" => "{ width: notification.percentComplete + '%' }",
-                                        :tooltip   => "{{notification.percentComplete}} #{_("% Complete")}"}
+          {{notification.data.startTime | date:'h:mm:ss a'}}
+      .progress{"ng-if" => "notification.data.inProgress"}
+        .progress-bar.progress-bar-info{"ng-style" => "{ width: notification.data.percentComplete + '%' }",
+                                        :tooltip   => "{{notification.data.percentComplete}} #{_("% Complete")}"}
     .col-md-4.col-sm-3{"ng-if" => "notificationGroup.notificationType == 'task'"}
       .drawer-pf-notification-info{"ng-click" => "customScope.markRead(notification, notificationGroup)"}
         %span.info-title
           = _("Completed:")
         %span.date
-          {{notification.endTime | date:'MM/dd/yyyy'}}
+          {{notification.data.endTime | date:'MM/dd/yyyy'}}
         %span.time
-          {{notification.endTime | date:'h:mm:ss a'}}
+          {{notification.data.endTime | date:'h:mm:ss a'}}
     .col-sm-6{"ng-if" => "notificationGroup.notificationType == 'event'"}
       .drawer-pf-notification-info{"ng-click" => "customScope.markRead(notification, notificationGroup)"}
         %span.date
-          {{notification.timeStamp | date:'MM/dd/yyyy'}}
+          {{notification.data.timeStamp | date:'MM/dd/yyyy'}}
         %span.time
-          {{notification.timeStamp | date:'h:mm:ss a'}}
+          {{notification.data.timeStamp | date:'h:mm:ss a'}}
       .pull-right.dropdown-kebab-pf
         %button.btn.btn-link.dropdown-toggle{:type      => "button",
                                              "ng-click" => "customScope.clearNotification(notification, notificationGroup)"}
