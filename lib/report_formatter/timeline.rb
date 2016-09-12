@@ -26,6 +26,7 @@ module ReportFormatter
         tl_xml = MiqXml.load("<data/>")
       else
         @events = []
+        @events_data = []
       end
       tlfield = mri.timeline[:field].split("-") # Split the table and field
       if tlfield.first.include?(".")                    # If table has a period (from a sub table)
@@ -33,8 +34,18 @@ module ReportFormatter
       else
         col = tlfield.last                             # Not a subtable, just grab the field name
       end
-      mri.table.data.each_with_index do |row, _d_idx|
+      new_event_type = current_event_type = ""
+      mri.table.data.sort_by(&:event_type).each_with_index do |row, _d_idx|
+        mri.rpt_options[:categories].each do |category, options|
+          current_event_type = options[:display_name] if options[:event_groups].include?(row.event_type)
+        end
+
         tl_event(tl_xml ? tl_xml : nil, row, col)   # Add this row to the tl event xml
+        if new_event_type != current_event_type
+          @events.push({:name => current_event_type, :data => [@events_data]})
+          new_event_type = current_event_type
+          @events_data = []
+        end
       end
       #     START of TIMELINE TIMEZONE Code
       mri.extras[:tl_position] ||= format_timezone(Time.now, tz, 'raw') # If position not set, default to now
@@ -42,7 +53,7 @@ module ReportFormatter
       if mri.extras[:browser_name] == "explorer" || mri.extras[:tl_preview]
         output << tl_xml.to_s
       else
-        output << {:events => @events}.to_json
+        output << @events.to_json
       end
     end
 
@@ -94,12 +105,12 @@ module ReportFormatter
           e_title = rec[:name]
           e_icon = ActionController::Base.helpers.image_path("timeline/vendor-#{rec.vendor.downcase}.png")
           e_image = ActionController::Base.helpers.image_path("100/os-#{rec.os_image_name.downcase}.png")
-          e_text = "&lt;a href='/vm/show/#{rec.id}'&gt;#{e_title}&lt;/a&gt;"
+          e_text = "&lt;a href=/vm/show/#{rec.id}&gt;#{e_title}&lt;/a&gt;"
         when "Host"
           e_title = rec[:name]
           e_icon = ActionController::Base.helpers.image_path("timeline/vendor-#{rec.vmm_vendor_display.downcase}.png")
           e_image = ActionController::Base.helpers.image_path("100/os-#{rec.os_image_name.downcase}.png")
-          e_text = "&lt;a href='/host/show/#{rec.id}'&gt;#{e_title}&lt;/a&gt;"
+          e_text = "&lt;a href=/host/show/#{rec.id}&gt;#{e_title}&lt;/a&gt;"
         when "EventStream"
           ems_cloud = false
           if rec[:ems_id] && ExtManagementSystem.exists?(rec[:ems_id])
@@ -154,7 +165,7 @@ module ReportFormatter
           # e_icon = "/images/100/vendor-ec2.png"
           e_text = e_title
           unless rec.target_id.nil?
-            e_text += "<br/>&lt;a href='/#{Dictionary.gettext(rec.target_class, :type => :model, :notfound => :titleize).downcase}/show/#{to_cid(rec.target_id)}'&gt;<b> #{Dictionary.gettext(rec.target_class, :type => :model, :notfound => :titleize)}:</b> #{rec.target_name}&lt;/a&gt;"
+            e_text += "<br/>&lt;a href=/#{Dictionary.gettext(rec.target_class, :type => :model, :notfound => :titleize).downcase}/show/#{to_cid(rec.target_id)}&gt;<b> #{Dictionary.gettext(rec.target_class, :type => :model, :notfound => :titleize)}:</b> #{rec.target_name}&lt;/a&gt;"
           end
 
           assigned_profiles = {}
@@ -167,7 +178,7 @@ module ReportFormatter
           unless rec.event_type.nil?
             e_text += "<br/><b>Assigned Profiles:</b> "
             assigned_profiles.each_with_index do |p, i|
-              e_text += "&lt;a href='/miq_policy/explorer?profile=#{p[0]}'&gt;<b> #{p[1]}&lt;/a&gt;"
+              e_text += "&lt;a href=/miq_policy/explorer?profile=#{p[0]}&gt;<b> #{p[1]}&lt;/a&gt;"
               if assigned_profiles.length > 1 && i < assigned_profiles.length
                 e_text += ", "
               end
@@ -236,8 +247,8 @@ module ReportFormatter
                                                            "image" => e_image)
         event.text = e_text
       else
-        @events.push("start"       => format_timezone(row[col], tz, 'view').to_time,
-                     "title"       => CGI.escapeHTML(e_title.length < 20 ? e_title : e_title[0...17] + "..."),
+        @events_data.push("start"       => format_timezone(row[col], tz, 'view').to_time,
+                     "title"       => e_title.length < 20 ? e_title : e_title[0...17] + "...",
                      "icon"        => e_icon,
                      "image"       => e_image,
                      "description" => e_text)

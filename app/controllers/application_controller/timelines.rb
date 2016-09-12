@@ -8,11 +8,11 @@ module ApplicationController::Timelines
     @tl_options.date.update_from_params(params)
 
     # set variables for type of timeline is selected
-    if params[:tl_show]
-      @tl_options[:tl_show] = params[:tl_show]
-      tl_gen_timeline_data
-      return unless @timeline
-    end
+    # if params[:tl_show] && @tl_options[:tl_show] != params[:tl_show]
+    #   @tl_options[:tl_show] = params[:tl_show]
+    #   tl_gen_timeline_data
+    #   return unless @timeline
+    # end
 
     if @tl_options.management_events?
       @tl_options.mngt.update_from_params(params)
@@ -20,10 +20,10 @@ module ApplicationController::Timelines
       @tl_options.policy.update_from_params(params)
     end
 
-    if @tl_options.management_events? && !@tl_options.mngt.event_filter_any?
+    if @tl_options.management_events? && @tl_options.mngt.categories.blank?
       add_flash(_("At least one filter must be selected"), :warning)
     elsif @tl_options.policy_events?
-      if @tl_options.policy.event_filter_any?
+      unless @tl_options.policy.categories.blank?
         tl_build_timeline('n')
       else
         add_flash(_("At least one filter must be selected"), :warning)
@@ -38,20 +38,20 @@ module ApplicationController::Timelines
     render :update do |page|
       page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page.replace("tl_options_div", :partial => "layouts/tl_options")
+      # page.replace("tl_options_div", :partial => "layouts/tl_options")
       page.replace("tl_div", :partial => "layouts/tl_detail")
       page << "ManageIQ.calendar.calDateFrom = new Date(#{@tl_options.date.start});" unless @tl_options.date.start.nil?
       page << "ManageIQ.calendar.calDateTo = new Date(#{@tl_options.date.end});" unless @tl_options.date.end.nil?
       page << 'miqBuildCalendar();'
-      if @tl_options.management_events?
-        page << "$('#filter1').val('#{@tl_options.mngt.fltr1}');"
-        page << "$('#filter2').val('#{@tl_options.mngt.fltr2}');"
-        page << "$('#filter3').val('#{@tl_options.mngt.fltr3}');"
-      else
-        @tl_options.policy.events.sort.each_with_index do |_e, i|
-          page << "$('#filter#{i}').val('#{@tl_options.policy.fltr(i)}');"
-        end
-      end
+      # if @tl_options.management_events?
+      #   page << "$('#filter1').val('#{@tl_options.mngt.fltr1}');"
+      #   page << "$('#filter2').val('#{@tl_options.mngt.fltr2}');"
+      #   page << "$('#filter3').val('#{@tl_options.mngt.fltr3}');"
+      # else
+      #   @tl_options.policy.events.sort.each_with_index do |_e, i|
+      #     page << "$('#filter#{i}').val('#{@tl_options.policy.fltr(i)}');"
+      #   end
+      # end
       page << "miqSparkle(false);"
       # page << 'performFiltering(tl, [0,1]);'
     end
@@ -166,9 +166,9 @@ module ApplicationController::Timelines
       end
     else
       @tl_options.mngt.level = "critical" if @tl_options.mngt.level.nil?
-      if @tl_options.mngt.filter1.nil?
-        @tl_options.mngt.filter1 = "Power Activity"
-      end
+      # if @tl_options.mngt.filter1.nil?
+      #   @tl_options.mngt.filter1 = "Power Activity"
+      # end
     end
   end
 
@@ -252,6 +252,8 @@ module ApplicationController::Timelines
       params2 = where_clause.slice(1, where_clause.length - 1)
       params = params.concat(params2)
       @report.where_clause = [cond, *params]
+      @report.rpt_options ||= {}
+      @report.rpt_options[:categories] = @tl_options.mngt.categories
       @title = @report.title
     end
   end

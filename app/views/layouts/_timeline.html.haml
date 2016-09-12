@@ -7,19 +7,21 @@
   function miqLoadTL() {
   console.log('called load tl');
   //var myData = {"events":[{"start":"2015-05-01T11:46:13.000Z","title":"ManageIQ-TripleO","description":"<b>Event Type:</b> USER_FAILED_CHANGE_DISK_VM<br/><b>Event Source:</b> RHEVM<br/><b>Provider:</b> <a href=\"/ems_infra/1r8\">rhevm.demo.cmbu.redhat.com</a><br/><b>Message:</b> Failed to change disk in VM ManageIQ-TripleO (Host: bldr16cc05.core.cmbu.redhat.com, User: admin).<br/><b>Cluster:</b> <a href=\"/ems_cluster/show/1r10\">Raleigh</a><br/><b>Source Host:</b> <a href=\"/host/show/1r9\">bldr16cc05.core.cmbu.redhat.com</a><br/><b>Source VM:</b> <a href=\"/vm/show/1r2194\">ManageIQ-TripleO</a><br/><b>Provider User Name:</b> admin@internal<br/><b>Date Time:</b> 2015-05-07 23:46:13 FJT"}]};
-  var json = [ { "name":"Powered Events", "data":[{"date": "2016-04-05T15:07:37.374Z", "details": {"event": "<b>Event Type:</b> USER_FAILED_CHANGE_DISK_VM<br/><b>Event Source:</b> RHEVM<br/><b>Provider:</b> <a href=\"/ems_infra/1r8\">rhevm.demo.cmbu.redhat.com</a><br/><b>Message:</b> Failed to change disk in VM ManageIQ-TripleO (Host: bldr16cc05.core.cmbu.redhat.com, User: admin).<br/><b>Cluster:</b> <a href=\"/ems_cluster/show/1r10\">Raleigh</a><br/><b>Source Host:</b> <a href=\"/host/show/1r9\">bldr16cc05.core.cmbu.redhat.com</a><br/><b>Source VM:</b> <a href=\"/vm/show/1r2194\">ManageIQ-TripleO</a><br/><b>Provider User Name:</b> admin@internal<br/><b>Date Time:</b> 2015-05-07 23:46:13 FJT"}}, {"date": "2016-04-08T15:07:37.374Z", "details": {"event": "vmPowerOn", "object": "vmName"}}, {"date": "2016-04-15T21:04:16.247Z", "details": {"event": "vmPowerOn", "object": "vmName"}}, {"date": "2016-04-22T09:39:26.155Z", "details": {"event": "vmPowerOn", "object": "vmName"}},  {"date": "2016-04-06T09:56:00.311Z", "details": {"event": "vmPowerOn", "object": "vmName"}}]}, { "name":"Network Events", "data":[{"date": "2016-04-09T12:07:37.374Z", "details": {"event": "vmPowerOn", "object": "vmName"}}]}, { "name":"Policy Events", "data":[{"date": "2016-04-08T12:07:37.374Z", "details": {"event": "vmPowerOn", "object": "vmName"}}]}, { "name":"System Events", "data":[{"date": "2016-04-10T12:07:37.374Z", "details": {"event": "vmPowerOn", "object": "vmName"}}]}];
-  var data = [],
-  -#var json = #{tl_json.html_safe},
+  //var json = [ { "name":"Powered Events", "data":[{"date": "2016-04-05T15:07:37.374Z", "details": {"event": "<b>Event Type:</b> USER_FAILED_CHANGE_DISK_VM<br/><b>Event Source:</b> RHEVM<br/><b>Provider:</b> <a href=\"/ems_infra/1r8\">rhevm.demo.cmbu.redhat.com</a><br/><b>Message:</b> Failed to change disk in VM ManageIQ-TripleO (Host: bldr16cc05.core.cmbu.redhat.com, User: admin).<br/><b>Cluster:</b> <a href=\"/ems_cluster/show/1r10\">Raleigh</a><br/><b>Source Host:</b> <a href=\"/host/show/1r9\">bldr16cc05.core.cmbu.redhat.com</a><br/><b>Source VM:</b> <a href=\"/vm/show/1r2194\">ManageIQ-TripleO</a><br/><b>Provider User Name:</b> admin@internal<br/><b>Date Time:</b> 2015-05-07 23:46:13 FJT"}}, {"date": "2016-04-08T15:07:37.374Z", "details": {"event": "vmPowerOn", "object": "vmName"}}, {"date": "2016-04-15T21:04:16.247Z", "details": {"event": "vmPowerOn", "object": "vmName"}}, {"date": "2016-04-22T09:39:26.155Z", "details": {"event": "vmPowerOn", "object": "vmName"}},  {"date": "2016-04-06T09:56:00.311Z", "details": {"event": "vmPowerOn", "object": "vmName"}}]}, { "name":"Network Events", "data":[{"date": "2016-04-09T12:07:37.374Z", "details": {"event": "vmPowerOn", "object": "vmName"}}]}, { "name":"Policy Events", "data":[{"date": "2016-04-08T12:07:37.374Z", "details": {"event": "vmPowerOn", "object": "vmName"}}]}, { "name":"System Events", "data":[{"date": "2016-04-10T12:07:37.374Z", "details": {"event": "vmPowerOn", "object": "vmName"}}]}];
+  var data = [];
+  var json = JSON.parse('#{tl_json}'.replace(/&quot;/g, '"'))
+
+  console.log(json);
   -#start = new Date(#{@tl_options.date.start}),
   -#end = new Date(#{@tl_options.date.end}),
   //start = new Date('2016-04-04T04:25:27.663Z'),
-  start = new Date(ManageIQ.calendar.calDateFrom),
-  end = new Date(ManageIQ.calendar.calDateTo),
+  start = new Date(ManageIQ.calendar.calDateFrom);
+  end = new Date(ManageIQ.calendar.calDateTo);
   //end = new Date('2016-05-02T13:59:06.818Z'),
-  one_hour = 60 * 60 * 1000,
-  one_day = 24 * 60 * 60 * 1000,
-  one_week = one_day * 7,
-  one_month = one_day * 30,
+  one_hour = 60 * 60 * 1000;
+  one_day = 24 * 60 * 60 * 1000;
+  one_week = one_day * 7;
+  one_month = one_day * 30;
   six_months = one_month * 6;
   console.log(ManageIQ.calendar.calDateFrom);
   console.log(ManageIQ.calendar.calDateTo);
@@ -43,6 +45,7 @@
     element = d3.select(chart_placeholder).append('div').datum(data);
     timeline(element);
   }
+  // end if miqLoadTL
 
   $(window).on('resize', function() {
   if(timeline && timeline.constructor && timeline.call && timeline.apply) {
@@ -58,15 +61,5 @@
   });
   }
   });
-  - if load_tl_now
-    console.log('controller: 1');
-    miqLoadTL();
-  - elsif request.xml_http_request?
-    -# Is this an Ajax request?
-    -# Executing this method from application.js to fix IE initial load issue
-    console.log('controller: 2');
-    miqLoadTL();
 
-    -# START of TIMELINE TIMEZONE Code
-    -# "* Times displayed are in #{get_timezone_offset(current_user, true)} #{get_timezone_abbr(current_user)} time"
-    -# END of TIMELINE TIMEZONE Code
+  miqLoadTL();

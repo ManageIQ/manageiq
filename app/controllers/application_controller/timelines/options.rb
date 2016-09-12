@@ -33,35 +33,17 @@ module ApplicationController::Timelines
 
   ManagementEventsOptions = Struct.new(
     :level,
-    :filter1,
-    :filter2,
-    :filter3
+    :categories,
   ) do
     def update_from_params(params)
-      self.filter1 = params[:tl_fl_grp1] if params[:tl_fl_grp1]
-      self.filter2 = params[:tl_fl_grp2] if params[:tl_fl_grp2]
-      self.filter3 = params[:tl_fl_grp3] if params[:tl_fl_grp3]
-      # if pull down values have been switched
-      self.filter1 = '' if (filter1 == filter2 || filter1 == filter3) && !params[:tl_fl_grp1]
-      self.filter2 = '' if (filter2 == filter3 || filter2 == filter1) && !params[:tl_fl_grp2]
-      self.filter3 = '' if (filter3 == filter2 || filter3 == filter1) && !params[:tl_fl_grp3]
-      self.level = params[:tl_fl_typ] if params[:tl_fl_typ]
-    end
-
-    def fltr1
-      filter1.blank? ? '' : build_filter(events[filter1])
-    end
-
-    def fltr2
-      filter2.blank? ? '' : build_filter(events[filter2])
-    end
-
-    def fltr3
-      filter3.blank? ? '' : build_filter(events[filter3])
-    end
-
-    def event_filter_any?
-      [filter1, filter2, filter3].any? { |f| !f.blank? }
+      self.level = params[:tl_fl_typ] == "critical" ? :critical : :detail
+      self.categories = {}
+      if params[:tl_categories]
+        params[:tl_categories].each do |category|
+          self.categories[events[category]] = {:display_name => category}
+          self.categories[events[category]][:event_groups] = event_groups[events[category]][level]
+        end
+      end
     end
 
     def events
@@ -73,21 +55,8 @@ module ApplicationController::Timelines
 
     def event_set
       event_set = []
-      if !filter1.blank? || !filter2.blank? || !filter3.blank?
-        unless filter1.blank?
-          event_set.push(event_groups[events[filter1]][level.to_sym]) if events[filter1]
-          event_set.push(event_groups[events[filter1]][:detail]) if level == 'detail'
-        end
-        unless filter2.blank?
-          event_set.push(event_groups[events[filter2]][level.to_sym]) if events[filter2]
-          event_set.push(event_groups[events[filter2]][:detail]) if level == 'detail'
-        end
-        unless filter3.blank?
-          event_set.push(event_groups[events[filter3]][level.to_sym]) if events[filter3]
-          event_set.push(event_groups[events[filter3]][:detail]) if level == 'detail'
-        end
-      else
-        event_set.push(event_groups[:power][level.to_sym])
+      self.categories.each do |category|
+        event_set.push(category.last[:event_groups])
       end
       event_set
     end
@@ -139,10 +108,6 @@ module ApplicationController::Timelines
           applied_filters.delete(e)
         end
       end
-    end
-
-    def event_filter_any?
-      filters.any? { |f| !f.blank? }
     end
 
     def events

@@ -28,8 +28,8 @@ ManageIQ.angular.app.controller('timelineOptionsController', ['$http', '$scope',
 
         // process selections
         // todo - pass array for groups instead of individual options
-        $scope.reportModel.tl_fl_grp2 = 'Configuration/Reconfiguration';
-        $scope.reportModel.tl_fl_grp3 = 'Creation/Addition';
+//         $scope.reportModel.tl_fl_grp2 = 'Configuration/Reconfiguration';
+//         $scope.reportModel.tl_fl_grp3 = 'Creation/Addition';
 
 
         if($scope.reportModel.tl_timerange === 'one_hour' || $scope.reportModel.tl_timerange === 'one_day') {
