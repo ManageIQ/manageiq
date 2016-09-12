@@ -90,12 +90,7 @@ module VmCommon
     vm = identify_record(params[:id], VmOrTemplate)
 
     if vm.supports_launch_cockpit?
-      url = vm.cockpit_url
-      render :update do |page|
-        page << javascript_prologue
-        page << "miqSparkle(false);"
-        page << "window.open('#{url}');"
-      end
+      open_window(vm.cockpit_url)
     else
       add_flash(vm.unsupported_reason(:launch_cockpit))
       javascript_flash
@@ -1128,20 +1123,20 @@ module VmCommon
     unless miq_task.results_ready?
       add_flash(_("Console access failed: %{message}") % {:message => miq_task.message}, :error)
     end
-    render :update do |page|
-      page << javascript_prologue
-      if @flash_array
+    if @flash_array
+      render :update do |page|
+        page << javascript_prologue
         page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
         page << "miqSparkle(false);"
-      else # open a window to show a VNC or VMWare console
-        console_action = console_type == 'html5' ? 'launch_html5_console' : 'launch_vmware_console'
-        page << "miqSparkle(false);"
-        if miq_task.task_results[:remote_url]
-          page << "window.open('#{miq_task.task_results[:remote_url]}');"
-        else
-          page << "window.open('#{url_for(miq_task.task_results.merge(:controller => controller_name, :action => console_action, :id => j(params[:id])))}');"
-        end
       end
+    else # open a window to show a VNC or VMWare console
+      url = if miq_task.task_results[:remote_url]
+              miq_task.task_results[:remote_url]
+            else
+              console_action = console_type == 'html5' ? 'launch_html5_console' : 'launch_vmware_console'
+              url_for(miq_task.task_results.merge(:controller => controller_name, :action => console_action, :id => j(params[:id])))
+            end
+      open_window(url)
     end
   end
 
