@@ -131,7 +131,7 @@ describe "Services API" do
 
   describe "Services retirement" do
     def format_retirement_date(time)
-      time.strftime("%Y-%m-%d")
+      time.in_time_zone('UTC').strftime("%Y-%m-%dT%H:%M:%SZ")
     end
 
     it "rejects requests without appropriate role" do
