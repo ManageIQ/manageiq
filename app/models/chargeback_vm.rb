@@ -102,12 +102,11 @@ class ChargebackVm < Chargeback
   end
 
   def self.where_clause(records, options)
+    scope = records.where(:resource_type => "VmOrTemplate")
     if options[:tag] && (@report_user.nil? || !@report_user.self_service?)
-      records.where(:resource_type => "VmOrTemplate")
-          .where.not(:resource_id => nil)
-          .for_tag_names(options[:tag].split("/")[2..-1])
+      scope.where.not(:resource_id => nil).for_tag_names(options[:tag].split("/")[2..-1])
     else
-      records.where(:resource_type => "VmOrTemplate", :resource_id => @vm_owners.keys)
+      scope.where(:resource_id => @vm_owners.keys)
     end
   end
 
