@@ -40,6 +40,13 @@ class OrchestrationStackController < ApplicationController
                       :url  => "/orchestration_stack/show/#{@orchestration_stack.id}?display=#{@display}")
       @view, @pages = get_view(ManageIQ::Providers::CloudManager::Vm, :parent => @orchestration_stack)
       @showtype = @display
+    when "children"
+      title = ui_lookup(:tables => "orchestration_stack")
+      kls   = OrchestrationStack
+      drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @orchestration_stack.name, :title => title},
+                      :url  => "/orchestration_stack/show/#{@orchestration_stack.id}?display=#{@display}")
+      @view, @pages = get_view(kls, :parent => @orchestration_stack)
+      @showtype = @display
     when "security_groups"
       title = ui_lookup(:tables => "security_group")
       kls   = SecurityGroup
