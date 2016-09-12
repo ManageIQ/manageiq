@@ -76,6 +76,13 @@ class ChargebackVm < Chargeback
         raise MiqException::Error, "Unable to find tenant '#{options[:tenant_id]}'"
       end
       vms = tenant.vms
+    elsif options[:service_id]
+      service = Service.find(options[:service_id])
+      if service.nil?
+        _log.error("Unable to find service '#{options[:service_id]}'. Calculating chargeback costs aborted.")
+        raise MiqException::Error, "Unable to find service '#{options[:service_id]}'"
+      end
+      vms = service.vms
     else
       raise _("must provide options :owner or :tag")
     end
