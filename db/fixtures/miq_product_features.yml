@@ -1348,17 +1348,17 @@
     - :name: Download CSV Format
       :description: Download Report in CSV Format
       :feature_type: admin
-      :hidden: false
+      :hidden: true
       :identifier: chargeback_download_csv
     - :name: Download PDF Format
       :description: Download Report in PDF Format
       :feature_type: admin
-      :hidden: false
+      :hidden: true
       :identifier: chargeback_download_pdf
     - :name: Download Text Format
       :description: Download Report in Text Format
       :feature_type: admin
-      :hidden: false
+      :hidden: true
       :identifier: chargeback_download_text
   - :name: Rates
     :description: Rates Accordion
@@ -4741,17 +4741,17 @@
         - :name: Download CSV Format
           :description: Download Report in CSV Format
           :feature_type: admin
-          :hidden: false
+          :hidden: true
           :identifier: compare_download_csv
         - :name: Download PDF Format
           :description: Download Report in PDF Format
           :feature_type: admin
-          :hidden: false
+          :hidden: true
           :identifier: compare_download_pdf
         - :name: Download Text Format
           :description: Download Report in Text Format
           :feature_type: admin
-          :hidden: false
+          :hidden: true
           :identifier: compare_download_text
       - :name: Drift
         :description: Display Instances Drift
