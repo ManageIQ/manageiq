@@ -249,11 +249,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
                                "miq-azure-test1/providers/Microsoft.Network/networkInterfaces/rspec-lb-b843/"\
                                "ipConfigurations/ipconfig1"
 
-    @pool_member_1 = ManageIQ::Providers::Azure::NetworkManager::LoadBalancerPoolMember.where(
-      :ems_ref => lb_pool_member_1_ems_ref).first
-    @pool_member_2 = ManageIQ::Providers::Azure::NetworkManager::LoadBalancerPoolMember.where(
-      :ems_ref => lb_pool_member_2_ems_ref).first
-    @listener      = ManageIQ::Providers::Azure::NetworkManager::LoadBalancerListener.where(
+    @listener = ManageIQ::Providers::Azure::NetworkManager::LoadBalancerListener.where(
       :ems_ref => lb_listener_ems_ref).first
 
     expect(@listener).to have_attributes(
@@ -270,9 +266,10 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     expect(@listener.ext_management_system).to eq(@ems.network_manager)
     expect(@lb.load_balancer_listeners).to eq [@listener]
     expect(@listener.load_balancer_pools).to eq([@pool])
-    expect(@listener.load_balancer_pool_members.collect(&:ems_ref)).to match_array [lb_pool_member_1_ems_ref, lb_pool_member_2_ems_ref]
+    expect(@listener.load_balancer_pool_members.collect(&:ems_ref).sort)
+      .to match_array [lb_pool_member_1_ems_ref, lb_pool_member_2_ems_ref]
 
-    expect(@listener.vms.collect(&:name)).to match_array ["rspec-lb-a", "rspec-lb-b"]
+    expect(@listener.vms.collect(&:name).sort).to match_array ["rspec-lb-a", "rspec-lb-b"]
     expect(@lb_no_members.load_balancer_listeners.count).to eq 0
   end
 

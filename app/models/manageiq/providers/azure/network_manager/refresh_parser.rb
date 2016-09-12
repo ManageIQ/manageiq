@@ -136,9 +136,6 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
     health_check_members   = []
     matched_listener       = nil
 
-    port     = health_check.properties["port"]
-    protocol = health_check.properties["protocol"]
-
     health_check.properties["loadBalancingRules"].to_a.each do |health_check_listener|
       matched_listener = @data.fetch_path(:load_balancer_listeners).detect do |listener|
         listener[:ems_ref] == health_check_listener["id"]
@@ -306,17 +303,19 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
   end
 
   def parse_load_balancer_listener(lb, listener)
-    uid     = listener["id"]
-    pool_id = listener.properties["backendAddressPool"]["id"]
-    pool    = @data_index.fetch_path(:load_balancer_pools, pool_id)
+    uid           = listener["id"]
+    pool_id       = listener.properties["backendAddressPool"]["id"]
+    pool          = @data_index.fetch_path(:load_balancer_pools, pool_id)
+    backend_port  = listener.properties["backendPort"].to_i
+    frontend_port = listener.properties["frontendPort"].to_i
 
     new_result = {
       :type                         => self.class.load_balancer_listener_type,
       :ems_ref                      => uid,
       :load_balancer_protocol       => listener.properties["protocol"],
-      :load_balancer_port_range     => (listener.properties["backendPort"].to_i..listener.properties["backendPort"].to_i),
+      :load_balancer_port_range     => (backend_port..backend_port),
       :instance_protocol            => listener.properties["protocol"],
-      :instance_port_range          => (listener.properties["frontendPort"].to_i..listener.properties["frontendPort"].to_i),
+      :instance_port_range          => (frontend_port..frontend_port),
       :load_balancer                => @data_index.fetch_path(:load_balancers, lb.id),
       :load_balancer_listener_pools => [{:load_balancer_pool => pool }]
     }
