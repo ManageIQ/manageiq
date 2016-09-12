@@ -59,8 +59,7 @@ Dir.chdir APP_ROOT do
   end
 
   puts "\n== Removing old logs and tempfiles =="
-  execute "find log/ -type 'f' | xargs rm"
-  execute "rm -rf tmp/cache"
+  execute 'bin/rails log:clear tmp:clear'
 
   if options[:do_tests]
     puts "\n== Preparing tests =="
