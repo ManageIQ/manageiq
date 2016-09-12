@@ -14,7 +14,7 @@ class MiqAeNamespace < ApplicationRecord
 
   validates_presence_of   :name
   validates_format_of     :name, :with    => /\A[\w\.\-\$]+\z/i,
-                                 :message => N_("only alpha numeric and _ . - $ characters are allowed")
+                                 :message => N_("may contain only alphanumeric and _ . - $ characters")
   validates_uniqueness_of :name, :scope => :parent_id
 
   def self.find_by_fqname(fqname, include_classes = true)

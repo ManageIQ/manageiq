@@ -9,7 +9,7 @@ class MiqAeInstance < ApplicationRecord
   validates_uniqueness_of :name, :case_sensitive => false, :scope => :class_id
   validates_presence_of   :name
   validates_format_of     :name, :with    => /\A[\w.-]+\z/i,
-                                 :message => N_("only alpha numeric and _ . - characters are allowed")
+                                 :message => N_("may contain only alphanumeric and _ . - characters")
 
   include ReportableMixin
 
