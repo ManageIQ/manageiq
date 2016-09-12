@@ -29,17 +29,17 @@ chdir APP_ROOT do
   system! 'bundle update'
 
   puts "\n== Updating database =="
-  system! 'bin/rake db:migrate'
+  system! 'bin/rails db:migrate'
 
   puts "\n== Seeding database =="
-  system! "bin/rake db:seed GOOD_MIGRATIONS=skip"
+  system! "bin/rails db:seed GOOD_MIGRATIONS=skip"
 
   puts "\n== Resetting tests =="
-  system! "bin/rake test:vmdb:setup"
+  system! "bin/rails test:vmdb:setup"
 
   unless ENV["SKIP_AUTOMATE_RESET"]
     puts "\n== Resetting Automate Domains =="
-    system! "bin/rake evm:automate:reset"
+    system! "bin/rails evm:automate:reset"
   end
 
   # Make sure bower is done before compiling assets
@@ -48,9 +48,9 @@ chdir APP_ROOT do
 
   if ENV['RAILS_ENV'] == 'production'
     puts "\n== Recompiling assets =="
-    system! "bin/rake evm:compile_assets"
+    system! "bin/rails evm:compile_assets"
   end
 
   puts "\n== Removing old logs and tempfiles =="
-  system! 'bin/rake log:clear tmp:clear'
+  system! 'bin/rails log:clear tmp:clear'
 end
