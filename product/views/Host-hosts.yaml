@@ -12,23 +12,6 @@
 title: Hosts
 
 # Menu name
-name: Hosts
-
-# Main DB table report is based on
-#
-# This is an MIQ Report configuration file
-#   Single value parameters are specified as:
-#     single_value_parm: value
-#   Multiple value parameters are specified as:
-#     multi_value_parm:
-#       - value 1
-#       - value 2
-#
-
-# Report title
-title: Hosts
-
-# Menu name
 name: Host
 
 # Main DB table report is based on

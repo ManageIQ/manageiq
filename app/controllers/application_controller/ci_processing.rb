@@ -1279,7 +1279,6 @@ module ApplicationController::CiProcessing
       drop_breadcrumb(:name => _("%{name} (Users)") % {:name => @record.name},
                       :url  => "/#{@db}/users/#{@record.id}?page=#{@current_page}")
       drop_breadcrumb(:name => @item.name, :url => "/#{@db}/show/#{@record.id}?show=#{@item.id}")
-      @group_names = @item.groups
       @view = get_db_view(Account, :association => "users")
       show_item
     else
@@ -1293,6 +1292,7 @@ module ApplicationController::CiProcessing
   def hosts
     @explorer = true if request.xml_http_request? && explorer_controller? # Ajax request means in explorer
     @db = params[:db] ? params[:db] : request.parameters[:controller]
+    @db = 'switch' if @db == 'infra_networking'
     session[:db] = @db unless @db.nil?
     @db = session[:db] unless session[:db].nil?
     get_record(@db)
@@ -1306,8 +1306,7 @@ module ApplicationController::CiProcessing
       drop_breadcrumb(:name => _("%{name} (Hosts)") % {:name => @record.name},
                       :url  => "/#{request.parameters[:controller]}/hosts/#{@record.id}?page=#{@current_page}")
       drop_breadcrumb(:name => @item.name, :url => "/#{request.parameters[:controller]}/show/#{@record.id}?show=#{@item.id}")
-      @group_names = @item.groups
-      @view = get_db_view(Account, :association => "hosts")
+      @view = get_db_view(Host)
       show_item
     else
       drop_breadcrumb(:name => _("%{name} (Hosts)") % {:name => @record.name},

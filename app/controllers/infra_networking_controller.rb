@@ -524,6 +524,14 @@ class InfraNetworkingController < ApplicationController
     if record_showing
       presenter.hide(:form_buttons_div)
       presenter.update(:main_div, r[:partial => "main"])
+    elsif @sb[:action] || params[:display]
+      partial_locals = {:controller =>'infra_networking'}
+      if partial == 'layouts/x_gtl'
+        partial_locals[:action_url]  = @lastaction
+        presenter[:parent_id]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
+        presenter[:parent_class] = params[:controller] # Set parent class for URL also
+      end
+      presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
     else
       presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
     end
@@ -531,7 +539,7 @@ class InfraNetworkingController < ApplicationController
     # Replace the searchbox
     presenter.replace(:adv_searchbox_div, r[
                                           :partial => 'layouts/x_adv_searchbox',
-                                          :locals  => {:nameonly => ([:images_tree, :instances_tree, :vandt_tree].include?(x_active_tree))}
+                                          :locals  => {:nameonly => ([:infra_networking_tree].include?(x_active_tree))}
                                         ])
 
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
@@ -585,7 +593,7 @@ class InfraNetworkingController < ApplicationController
   def set_right_cell_vars
     @sb[:action] = params[:action]
     name = @record ? @record.name.to_s.gsub(/'/, "\\\\'") : "" # If record, get escaped name
-    table = request.parameters["controller"]
+    table = 'switch'
     if ["details"].include?(@showtype)
       partial = "layouts/x_gtl"
     elsif @showtype == "item"
