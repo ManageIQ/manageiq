@@ -29,6 +29,18 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
     ::CloudTenant.where(:id => vms.collect(&:cloud_tenant_id).uniq)
   end
 
+  # TODO(aveselov) Added 3 empty methods here because 'entity' inside 'build_recursive_topology' calls for these methods.
+  # Work still in progress, but at least it makes a topology visible for rhos undercloud.
+
+  def load_balancers
+  end
+
+  def cloud_tenant
+  end
+
+  def security_groups
+  end
+
   def ssh_users_and_passwords
     user_auth_key, auth_key = auth_user_keypair
     user_password, password = auth_user_pwd
