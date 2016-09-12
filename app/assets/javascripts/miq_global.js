@@ -2,6 +2,7 @@
 if (! window.ManageIQ) {
   window.ManageIQ = {
     actionUrl: null, // action URL used in JS function miqGridSort
+    afterOnload: null, // JS code to be evaluated after onload
     angular: {
       app: null, // angular application
       scope: null,  // helper scope, pending refactor

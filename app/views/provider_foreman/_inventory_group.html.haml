@@ -9,7 +9,7 @@
       - if @sb[:active_tab] == "configured_systems"
         = render :partial => "layouts/x_gtl"
         :javascript
-          var miq_after_onload = "if (miqDomElementExists('adv_searchbox_div')) $('#adv_searchbox_div').show();"
+          ManageIQ.afterOnload = "if (miqDomElementExists('adv_searchbox_div')) $('#adv_searchbox_div').show();"
     = miq_tab_content('summary', @sb[:active_tab]) do
       - if @sb[:active_tab] == "summary"
         = render :partial => "main_inventory_group"

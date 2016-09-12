@@ -6,7 +6,7 @@
   - elsif @showtype == "performance"
     = render(:partial => "layouts/performance")
     :javascript
-      var miq_after_onload = "miqAsyncAjax('#{url_for(:action => @ajax_action, :id => @record)}');"
+      ManageIQ.afterOnload = "miqAsyncAjax('#{url_for(:action => @ajax_action, :id => @record)}');"
   - elsif @display == "show_statistics"
     = render(:partial => "layouts/show_statistics")
   - elsif @showtype == "download_pdf"

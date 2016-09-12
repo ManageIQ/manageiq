@@ -17,5 +17,5 @@
   - if @sb[:center_tb_filename].nil? || @sb[:center_tb_filename] == "blank_view_tb"
     $('#toolbar').hide();
   };
-  var miq_after_onload = "miqOpsAfterOnload();"
+  ManageIQ.afterOnload = "miqOpsAfterOnload();"
 
