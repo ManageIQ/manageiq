@@ -59,7 +59,7 @@ module ProcessTasksMixin
           remote_connection = api_client_connection_for_region(region, remote_options[:userid])
           invoke_api_tasks(remote_connection, remote_options)
         rescue NotImplementedError => err
-          $log.error("#{base_class.name} is not currently able to invoke tasks for remote regions")
+          $log.error("#{name} is not currently able to invoke tasks for remote regions")
           $log.log_backtrace(err)
           next
         rescue => err
@@ -73,7 +73,7 @@ module ProcessTasksMixin
           $log.error("An error occurred while invoking remote tasks...Requeueing for 1 minute from now.")
           $log.log_backtrace(err)
           MiqQueue.put(
-            :class_name  => base_class.name,
+            :class_name  => name,
             :method_name => 'invoke_tasks_remote',
             :args        => [remote_options],
             :deliver_on  => Time.now.utc + 1.minute
@@ -89,7 +89,11 @@ module ProcessTasksMixin
     # Best guess at how the classes map to API collections and how the tasks map to actions
     # Override as needed
     def invoke_api_tasks(api_client, remote_options)
-      collection = Api.model_to_collection(self.class)
+      collection = Api.model_to_collection(name)
+      unless collection
+        _log.error("No API entpoint found for class #{name}")
+        raise NotImplementedError
+      end
 
       remote_options[:ids].each do |id|
         obj = api_client.send(collection).search(:filter => ["id=#{id}"]).first
