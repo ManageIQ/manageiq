@@ -30,7 +30,7 @@ class TreeBuilderInstances < TreeBuilder
 
   def x_get_tree_ems_kids(object, count_only)
     count_only_or_objects_filtered(count_only, object.availability_zones, "name") +
-      count_only_or_objects_filtered(object.vms.where(:availability_zone_id => nil), "name")
+      count_only_or_objects_filtered(count_only, object.vms.where(:availability_zone_id => nil), "name")
   end
 
   # Get AvailabilityZone children count/array
