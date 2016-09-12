@@ -793,7 +793,8 @@ module ApplicationHelper
        container_route container_project container_replicator container_image
        container_image_registry persistent_volume container_build
        ems_container vm miq_template offline retired templates
-       host service storage ems_cloud ems_cluster flavor
+       ems_middleware middleware_server middleware_domain middleware_messaging middleware_deployment
+       middleware_datasource host service storage ems_cloud ems_cluster flavor
        ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
        load_balancer
        resource_pool ems_infra ontap_storage_system ontap_storage_volume
@@ -1176,7 +1177,8 @@ module ApplicationHelper
   def show_adv_search?
     show_search = %w(availability_zone cim_base_storage_extent cloud_volume cloud_volume_snapshot container_group container_node container_service
                      container_route container_project container_replicator container_image container_image_registry
-                     persistent_volume container_build
+                     persistent_volume container_build ems_middleware middleware_server middleware_domain
+                     middleware_messaging middleware_deployment middleware_datasource
                      ems_cloud ems_cluster ems_container ems_infra flavor host miq_template offline
                      ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
                      ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network

@@ -1281,7 +1281,8 @@ Vmdb::Application.routes.draw do
         wait_for_task
         tagging_edit
         tag_edit_form_field_changed
-      )
+      ) +
+      adv_search_post
     },
 
     :ems_network              => {
