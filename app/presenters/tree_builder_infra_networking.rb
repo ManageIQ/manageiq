@@ -31,7 +31,6 @@ class TreeBuilderInfraNetworking < TreeBuilder
     count_only_or_objects(count_only, objects)
   end
 
-
   def x_get_tree_provider_kids(object, count_only)
     count_only_or_objects(count_only,
                           Rbac.filtered(EmsCluster.where(:ems_id => object[:id])),

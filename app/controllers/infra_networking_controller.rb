@@ -103,7 +103,7 @@ class InfraNetworkingController < ApplicationController
     if x_node == "root"
       listnav_search_selected(0)
     else
-      @nodetype, _ = parse_nodetype_and_id(valid_active_node(x_node))
+      @nodetype, = parse_nodetype_and_id(valid_active_node(x_node))
     end
   end
 
@@ -111,7 +111,7 @@ class InfraNetworkingController < ApplicationController
     @explorer = true
     @storage = @record = identify_record(params[:id], Switch)
     respond_to do |format|
-      format.js do                  # AJAX, select the node
+      format.js do # AJAX, select the node
         unless @record
           redirect_to :action => "explorer"
           return
@@ -241,7 +241,7 @@ class InfraNetworkingController < ApplicationController
       get_node_info("root")
     else
       show_record(from_cid(id))
-      model_string = ui_lookup(:model => ((model ||= @record.class).to_s))
+      model_string = ui_lookup(:model => (model ? model : @record.class).to_s)
       @right_cell_text = _("%{model} \"%{name}\"") % {:name => @record.name, :model => model_string}
     end
   end
@@ -294,12 +294,12 @@ class InfraNetworkingController < ApplicationController
     end
     @right_cell_text += @edit[:adv_search_applied][:text] if x_tree && @edit && @edit[:adv_search_applied]
 
-    if @edit && @edit.fetch_path(:adv_search_applied, :qs_exp) #If qs is active, save it in history
+    if @edit && @edit.fetch_path(:adv_search_applied, :qs_exp) # If qs is active, save it in history
       x_history_add_item(:id     => x_node,
                          :qs_exp => @edit[:adv_search_applied][:qs_exp],
                          :text   => @right_cell_text)
     else
-      x_history_add_item(:id => treenodeid, :text => @right_cell_text) #Add to history pulldown array
+      x_history_add_item(:id => treenodeid, :text => @right_cell_text) # Add to history pulldown array
     end
   end
 
@@ -343,7 +343,7 @@ class InfraNetworkingController < ApplicationController
     else
       @no_checkboxes = true
       hosts = @cluster_record.hosts
-      switch_ids = hosts.collect{ |host| host.switches.pluck(:id) }
+      switch_ids = hosts.collect { |host| host.switches.pluck(:id) }
       options = {:model => "Switch", :where_clause => ["shared = true and id in(?)", switch_ids.flatten.uniq]}
       process_show_list(options)
       @showtype        = 'main'
@@ -361,7 +361,7 @@ class InfraNetworkingController < ApplicationController
     else
       @no_checkboxes = true
       hosts = Host.where(:ems_id => @provider_record.id)
-      switch_ids = hosts.collect{ |host| host.switches.pluck(:id) }
+      switch_ids = hosts.collect { |host| host.switches.pluck(:id) }
       options = {:model => "Switch", :where_clause => ["shared = true and id in(?)", switch_ids.flatten.uniq]}
       process_show_list(options)
       @showtype        = 'main'
@@ -435,7 +435,7 @@ class InfraNetworkingController < ApplicationController
     @explorer = true
     @sb[:action] = action unless action.nil?
     if @sb[:action] || params[:display]
-      partial, action, @right_cell_text = set_right_cell_vars # Set partial name, action and cell header
+      partial, _, @right_cell_text = set_right_cell_vars # Set partial name, action and cell header
     end
 
     if !@in_a_form && !@sb[:action]
@@ -463,8 +463,8 @@ class InfraNetworkingController < ApplicationController
     elsif @sb[:action] || params[:display]
       partial_locals = {:controller =>'infra_networking'}
       if partial == 'layouts/x_gtl'
-        partial_locals[:action_url]  = @lastaction
-        presenter[:parent_id]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
+        partial_locals[:action_url] = @lastaction
+        presenter[:parent_id] = @record.id # Set parent rec id for JS function miqGridSort to build URL
         presenter[:parent_class] = params[:controller] # Set parent class for URL also
       end
       presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
@@ -475,7 +475,7 @@ class InfraNetworkingController < ApplicationController
     # Replace the searchbox
     presenter.replace(:adv_searchbox_div, r[
                                           :partial => 'layouts/x_adv_searchbox',
-                                          :locals  => {:nameonly => ([:infra_networking_tree].include?(x_active_tree))}
+                                          :locals  => {:nameonly => [:infra_networking_tree].include?(x_active_tree)}
                                         ])
 
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
@@ -548,8 +548,8 @@ class InfraNetworkingController < ApplicationController
     else
       header = _("\"%{action}\" for %{switch} \"%{name}\"") % {
         :switch => ui_lookup(:table => table),
-        :name           => name,
-        :action         => action_type(@sb[:action], 2)
+        :name   => name,
+        :action => action_type(@sb[:action], 2)
       }
       if @display && @display != "main"
         x_history_add_item(:id => x_node, :text => header, :display => @display)
@@ -616,7 +616,7 @@ class InfraNetworkingController < ApplicationController
   end
 
   # Build the switch detail gtl view
-  def show_details(db, options = {}) #Pass in the db, parent vm is in @vm
+  def show_details(db, options = {}) # Pass in the db, parent vm is in @vm
     association = options[:association]
     conditions  = options[:conditions]
     # generate the grid/tile/list url to come back here when gtl buttons are pressed
@@ -636,7 +636,7 @@ class InfraNetworkingController < ApplicationController
       @refresh_partial = @showtype.to_s
       replace_right_cell
     elsif params[:ppsetting] || params[:entry] || params[:sort_choice]
-        replace_gtl_main_div
+      replace_gtl_main_div
     elsif request.xml_http_request?
       # reload toolbars - AJAX request
       c_tb = build_toolbar(center_toolbar_filename)
