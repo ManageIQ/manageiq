@@ -319,6 +319,9 @@ module ApplicationHelper
     when "User", "Group", "Patch", "GuestApplication"
       controller = "vm"
       action = @lastaction
+    when "Host"
+      controller = "infra_networking"
+      action = @lastaction
     when "MiqReportResult"
       controller = "report"
       action = "show_saved"

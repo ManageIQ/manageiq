@@ -34,6 +34,9 @@ name: Host
 # Main DB table report is based on
 db: Host
 
+# Subset of main table records by association
+scoped_association: hosts
+
 # Columns to fetch from the main table
 cols:
 - name
@@ -49,14 +52,6 @@ cols:
 - last_scan_on
 - region_description
 
-# Included tables (joined, has_one, has_many) and columns
-include:
-
-# Included tables and columns for query performance
-include_for_find:
-  :ext_management_system: {}
-  :compliances: {}
-  :tags: {}
 
 # Order of columns (from all tables)
 col_order:

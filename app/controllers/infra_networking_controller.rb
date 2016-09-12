@@ -130,6 +130,8 @@ class InfraNetworkingController < ApplicationController
 
   def tree_select
     @lastaction = "explorer"
+    @sb[:action] = nil
+
     @flash_array = nil
     self.x_active_tree = params[:tree] if params[:tree]
     self.x_node = params[:id]
@@ -519,17 +521,9 @@ class InfraNetworkingController < ApplicationController
 
     r = proc { |opts| render_to_string(opts) }
 
-    partial_locals = {}
     if record_showing
       presenter.hide(:form_buttons_div)
       presenter.update(:main_div, r[:partial => "main"])
-    elsif @sb[:action] || params[:display]
-      if partial == 'layouts/x_gtl'
-        partial_locals[:action_url]  = @lastaction
-        presenter[:parent_id]    = @record.id           # Set parent rec id for JS function miqGridSort to build URL
-        presenter[:parent_class] = params[:controller] # Set parent class for URL also
-      end
-      presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
     else
       presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
     end
@@ -852,10 +846,20 @@ class InfraNetworkingController < ApplicationController
   end
 
   def get_session_data
-    @title  = _("Providers")
-    @layout = controller_name
+    @title          = _("Networking")
+    @layout         = controller_name
+    @lastaction     = session[:switch_lastaction]
+    @showtype       = session[:switch_showtype]
+    @display        = session[:switch_display]
   end
 
   def set_session_data
+    session[:switch_lastaction]   = @lastaction
+    session[:switch_showtype]     = @showtype
+    session[:switch_display]      = @display unless @display.nil?
+  end
+
+  def breadcrumb_name(model)
+    ui_lookup(:models => model || self.class.model.name)
   end
 end

@@ -1313,7 +1313,7 @@ module ApplicationController::CiProcessing
       drop_breadcrumb(:name => _("%{name} (Hosts)") % {:name => @record.name},
                       :url  => "/#{request.parameters[:controller]}/hosts/#{@record.id}")
       @listicon = "host"
-      show_details(Account, :association => "hosts")
+      show_details(Host, :association => "hosts")
     end
   end
 
