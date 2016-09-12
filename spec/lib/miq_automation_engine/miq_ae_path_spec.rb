@@ -1,34 +1,32 @@
-describe MiqAePath do
-  include MiqAeEngine
-
+describe MiqAeEngine::MiqAePath do
   context "#to_s" do
     it "handles empty path" do
-      path = MiqAePath.new
+      path = described_class.new
       expect(path.to_s).to eq("")
     end
 
     it "handles single namespace" do
-      path = MiqAePath.new(:ae_namespace => "NAMESPACE")
+      path = described_class.new(:ae_namespace => "NAMESPACE")
       expect(path.to_s).to eq("/NAMESPACE//")
     end
 
     it "handles compound namespace" do
-      path = MiqAePath.new(:ae_namespace => "NAMESPACE/FOO")
+      path = described_class.new(:ae_namespace => "NAMESPACE/FOO")
       expect(path.to_s).to eq("/NAMESPACE/FOO//")
     end
 
     it "handles namespace and class" do
-      path = MiqAePath.new(:ae_namespace => "NAMESPACE", :ae_class => "CLASS")
+      path = described_class.new(:ae_namespace => "NAMESPACE", :ae_class => "CLASS")
       expect(path.to_s).to eq("/NAMESPACE/CLASS/")
     end
 
     it "handles namespace, class and instance" do
-      path = MiqAePath.new(:ae_namespace => "NAMESPACE", :ae_class => "CLASS", :ae_instance => "INSTANCE")
+      path = described_class.new(:ae_namespace => "NAMESPACE", :ae_class => "CLASS", :ae_instance => "INSTANCE")
       expect(path.to_s).to eq("/NAMESPACE/CLASS/INSTANCE")
     end
 
     it "handles namespace, class, instance and attribute" do
-      path = MiqAePath.new(:ae_namespace => "NAMESPACE", :ae_class => "CLASS", :ae_instance => "INSTANCE", :ae_attribute => "ATTRIBUTE")
+      path = described_class.new(:ae_namespace => "NAMESPACE", :ae_class => "CLASS", :ae_instance => "INSTANCE", :ae_attribute => "ATTRIBUTE")
       expect(path.to_s).to eq("/NAMESPACE/CLASS/INSTANCE/ATTRIBUTE")
     end
   end
@@ -43,8 +41,8 @@ describe MiqAePath do
       :ae_instance  => ae_instance
     }
 
-    path = MiqAePath.build(parts)
-    expect(path).to be_kind_of MiqAePath
+    path = described_class.build(parts)
+    expect(path).to be_kind_of described_class
     expect(path.ae_namespace).to eq(ae_namespace)
     expect(path.ae_class).to eq(ae_class)
     expect(path.ae_instance).to eq(ae_instance)
@@ -60,10 +58,10 @@ describe MiqAePath do
       :ae_instance  => ae_instance
     }
 
-    path_string = MiqAePath.new(parts).to_s
-    path = MiqAePath.parse(path_string)
+    path_string = described_class.new(parts).to_s
+    path = described_class.parse(path_string)
 
-    expect(path).to be_kind_of MiqAePath
+    expect(path).to be_kind_of described_class
     expect(path.ae_namespace).to eq(ae_namespace)
     expect(path.ae_class).to eq(ae_class)
     expect(path.ae_instance).to eq(ae_instance)
@@ -83,8 +81,8 @@ describe MiqAePath do
     end
 
     def assert_split(parts, assertions = parts, method_options = {})
-      path = MiqAePath.new(parts).to_s
-      n, c, i, a = MiqAePath.split(path, method_options)
+      path = described_class.new(parts).to_s
+      n, c, i, a = described_class.split(path, method_options)
 
       expect(n).to eq(assertions[:ae_namespace])
       expect(c).to eq(assertions[:ae_class])
