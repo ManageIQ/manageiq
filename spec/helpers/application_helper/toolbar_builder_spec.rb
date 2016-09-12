@@ -68,6 +68,7 @@ describe ApplicationHelper do
           :title     => CGI.escapeHTML(@button1.description.to_s),
           :text      => escaped_button1_text,
           :enabled   => true,
+          :klass     => ApplicationHelper::Button::ButtonWithoutRbackCheck,
           :url       => "button",
           :url_parms => "?id=#{subject.id}&button_id=#{@button1.id}&cls=#{subject.class.name}&pressed=custom_button&desc=#{escaped_button1_text}"
         }
@@ -95,6 +96,7 @@ describe ApplicationHelper do
           :title     => CGI.escapeHTML(@button1.description.to_s),
           :text      => escaped_button1_text,
           :enabled   => true,
+          :klass     => ApplicationHelper::Button::ButtonWithoutRbackCheck,
           :url       => "button",
           :url_parms => "?id=#{subject.id}&button_id=#{@button1.id}&cls=#{subject.class.name}&pressed=custom_button&desc=#{escaped_button1_text}"
         }
@@ -2133,8 +2135,8 @@ describe ApplicationHelper do
         end
       end
 
-      # This is practically a copy paste from the VMWare tests, wasted lots of time trying ot make shared example but 
-      # unfortunately it kept failing on travis while passing localy, also causing other tests to fail from totaly 
+      # This is practically a copy paste from the VMWare tests, wasted lots of time trying ot make shared example but
+      # unfortunately it kept failing on travis while passing localy, also causing other tests to fail from totaly
       # diffrent parts of the project. This is not nice but I can't spend more time on trying to figure it out.
       context "RHEV snapshot buttons" do
         before do
