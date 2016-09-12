@@ -2802,9 +2802,7 @@ Vmdb::Application.routes.draw do
     Api::Settings.collections.each do |collection_name, collection|
       controller collection_name, :path => collection_name do
         collection.verbs.each do |verb|
-          if collection.options.include?(:primary)
-            root :action => API_ACTIONS[verb], :via => verb
-          end
+          root :action => API_ACTIONS[verb], :via => verb if collection.options.include?(:primary)
 
           next unless collection.options.include?(:collection)
 
@@ -2817,9 +2815,7 @@ Vmdb::Application.routes.draw do
 
         Array(collection.subcollections).each do |subcollection_name|
           Api::Settings.collections[subcollection_name].verbs.each do |verb|
-            match("/:c_id/#{subcollection_name}(/:s_id)",
-                  :action => API_ACTIONS[verb],
-                  :via => verb)
+            match("/:c_id/#{subcollection_name}(/:s_id)", :action => API_ACTIONS[verb], :via => verb)
           end
         end
       end
