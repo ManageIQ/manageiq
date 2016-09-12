@@ -39,9 +39,6 @@ module ManageIQ::Providers
     include HasNetworkManagerMixin
     include HasManyOrchestrationStackMixin
 
-    supports_not :discovery
-    supports_not :cloud_tenant_mapping
-
     # Development helper method for Rails console for opening a browser to the EMS.
     #
     # This method is NOT meant to be called from production code.

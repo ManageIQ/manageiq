@@ -3,8 +3,6 @@ class MiqTemplate < VmOrTemplate
 
   include_concern 'Operations'
 
-  supports_not :provisioning
-
   def self.base_model
     MiqTemplate
   end

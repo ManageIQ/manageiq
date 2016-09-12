@@ -32,10 +32,6 @@ class VmOrTemplate < ApplicationRecord
 
   include AvailabilityMixin
 
-  supports_not :retire
-  supports_not :associate_floating_ip
-  supports_not :disassociate_floating_ip
-
   has_many :ems_custom_attributes, -> { where(:source => 'VC') }, :as => :resource, :dependent => :destroy,
            :class_name => "CustomAttribute"
   has_many :counterparts, :as => :counterpart, :class_name => "ConfiguredSystem", :dependent => :nullify
@@ -132,8 +128,6 @@ class VmOrTemplate < ApplicationRecord
   belongs_to                :tenant
 
   acts_as_miq_taggable
-
-  supports_not :resize
 
   virtual_column :is_evm_appliance,                     :type => :boolean,    :uses => :miq_server
   virtual_column :os_image_name,                        :type => :string,     :uses => [:operating_system, :hardware]
