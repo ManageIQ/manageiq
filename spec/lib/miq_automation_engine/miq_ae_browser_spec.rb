@@ -37,7 +37,7 @@ describe MiqAeBrowser do
                        :ae_fields => learning_fields, :ae_methods => {}, :ae_instances => learning_instances)
 
     @user = FactoryGirl.create(:user_with_group)
-    @browser = MiqAeBrowser.new(@user)
+    @browser = described_class.new(@user)
   end
 
   it "can query root base object" do
