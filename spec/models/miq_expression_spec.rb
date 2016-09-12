@@ -171,7 +171,7 @@ describe MiqExpression do
       context_type:
       exp:
         CONTAINS:
-          field: MiqGroup.vms-uncommitted_storage
+          field: MiqGroup.vms-disconnected
           value: "false"
       '
 
@@ -1780,16 +1780,15 @@ describe MiqExpression do
 
   describe ".get_col_info" do
     it "return column info for model-virtual field" do
-      field = "VmInfra-uncommitted_storage"
+      field = "VmInfra-archived"
       col_info = described_class.get_col_info(field)
       expect(col_info).to match(
-        :data_type                      => :integer,
+        :data_type                      => :boolean,
         :excluded_by_preprocess_options => false,
-        :format_sub_type                => :bytes,
+        :format_sub_type                => :boolean,
         :include                        => {},
         :tag                            => false,
         :virtual_column                 => true,
-        :sql_support                    => false,
         :virtual_reflection             => false
       )
     end
@@ -1803,7 +1802,6 @@ describe MiqExpression do
         :include                        => {},
         :tag                            => true,
         :virtual_column                 => false,
-        :sql_support                    => true,
         :virtual_reflection             => false
       )
     end
@@ -1817,7 +1815,6 @@ describe MiqExpression do
         :include                        => {},
         :tag                            => true,
         :virtual_column                 => false,
-        :sql_support                    => true,
         :virtual_reflection             => false
       )
     end
@@ -1831,7 +1828,6 @@ describe MiqExpression do
         :include                        => {},
         :tag                            => true,
         :virtual_column                 => false,
-        :sql_support                    => true,
         :virtual_reflection             => false
       )
     end
@@ -1846,7 +1842,6 @@ describe MiqExpression do
         :include                        => {},
         :tag                            => false,
         :virtual_column                 => false,
-        :sql_support                    => true,
         :virtual_reflection             => false
       )
     end
@@ -1861,27 +1856,11 @@ describe MiqExpression do
         :include                        => {:guest_applications => {}},
         :tag                            => false,
         :virtual_column                 => false,
-        :sql_support                    => true,
         :virtual_reflection             => false
       )
     end
 
-    it "return column info for model.virtualassociation..virtualassociation-field (with sql)" do
-      field = "ManageIQ::Providers::InfraManager::Vm.service.user.vms-uncommitted_storage"
-      col_info = described_class.get_col_info(field)
-      expect(col_info).to match(
-        :data_type                      => :integer,
-        :excluded_by_preprocess_options => false,
-        :format_sub_type                => :bytes,
-        :include                        => {},
-        :tag                            => false,
-        :virtual_column                 => true,
-        :sql_support                    => false,
-        :virtual_reflection             => true
-      )
-    end
-
-    it "return column info for model.virtualassociation..virtualassociation-field (with sql)" do
+    it "return column info for model.virtualassociation..virtualassociation-field" do
       field = "ManageIQ::Providers::InfraManager::Vm.service.user.vms-active"
       col_info = described_class.get_col_info(field)
       expect(col_info).to match(
@@ -1891,7 +1870,6 @@ describe MiqExpression do
         :include                        => {},
         :tag                            => false,
         :virtual_column                 => true,
-        :sql_support                    => true,
         :virtual_reflection             => true
       )
     end
@@ -2005,14 +1983,8 @@ describe MiqExpression do
       expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(false)
     end
 
-    it "supports sql for model.association-virtualfield (with arel)" do
-      field = "Host.vms.archived"
-      expression = {"=" => {"field" => field, "value" => "true"}}
-      expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(false)
-    end
-
-    it "does not supports sql for model.association-virtualfield (no arel)" do
-      field = "ManageIQ::Providers::InfraManager::Vm.storage-v_used_space"
+    it "returns false for model.association-virtualfield" do
+      field = "ManageIQ::Providers::InfraManager::Vm.storage-v_used_space_percent_of_total"
       expression = {">=" => {"field" => field, "value" => "50"}}
       expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(false)
     end
@@ -2047,14 +2019,8 @@ describe MiqExpression do
   end
 
   describe "#field_in_sql?" do
-    it "returns true for model.virtualfield (with sql)" do
+    it "returns false for model.virtualfield" do
       field = "ManageIQ::Providers::InfraManager::Vm-archived"
-      expression = {"=" => {"field" => field, "value" => "true"}}
-      expect(described_class.new(expression).field_in_sql?(field)).to eq(true)
-    end
-
-    it "returns false for model.virtualfield (with no sql)" do
-      field = "ManageIQ::Providers::InfraManager::Vm-uncommitted_storage"
       expression = {"=" => {"field" => field, "value" => "true"}}
       expect(described_class.new(expression).field_in_sql?(field)).to eq(false)
     end
