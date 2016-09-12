@@ -11,7 +11,7 @@ class MiqAeMethod < ApplicationRecord
   validates_presence_of   :name, :scope
   validates_uniqueness_of :name, :case_sensitive => false, :scope => [:class_id, :scope]
   validates_format_of     :name, :with    => /\A[\w]+\z/i,
-                                 :message => N_("only alpha numeric and _ characters are allowed")
+                                 :message => N_("may contain only alphanumeric and _ characters")
 
   AVAILABLE_LANGUAGES  = ["ruby", "perl"]  # someday, add sh, perl, python, tcl and any other scripting language
   validates_inclusion_of  :language,  :in => AVAILABLE_LANGUAGES

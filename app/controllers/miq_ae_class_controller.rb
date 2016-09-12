@@ -622,7 +622,6 @@ class MiqAeClassController < ApplicationController
       rescue StandardError => bang
         add_flash(_("Error during 'save': %{error_message}") % {:error_message => bang.message}, :error)
         @in_a_form = true
-        flash_validation_errors(@ae_inst)
         render :update do |page|
           page << javascript_prologue
           if @sb[:row_selected]
@@ -681,7 +680,6 @@ class MiqAeClassController < ApplicationController
       rescue StandardError => bang
         add_flash(_("Error during 'add': %{message}") % {:message => bang.message}, :error)
         @in_a_form = true
-        flash_validation_errors(add_aeinst)
         render :update do |page|
           page << javascript_prologue
           page.replace("flash_msg_div_class_instances", :partial => "layouts/flash_msg", :locals => {:div_num => "_class_instances"})
@@ -1076,7 +1074,6 @@ class MiqAeClassController < ApplicationController
         end  # end of transaction
       rescue StandardError => bang
         add_flash(_("Error during 'save': %{error_message}") % {:error_message => bang.message}, :error)
-        flash_validation_errors(ae_class)
         session[:changed] = @changed = true
         render :update do |page|
           page << javascript_prologue
@@ -1174,7 +1171,6 @@ class MiqAeClassController < ApplicationController
         end  # end of transaction
       rescue StandardError => bang
         add_flash(_("Error during 'save': %{error_message}") % {:error_message => bang.message}, :error)
-        flash_validation_errors(ae_method)
         session[:changed] = @changed
         @changed = true
         render :update do |page|
@@ -1288,7 +1284,6 @@ class MiqAeClassController < ApplicationController
         end
       rescue StandardError => bang
         add_flash(_("Error during 'add': %{error_message}") % {:error_message => bang.message}, :error)
-        flash_validation_errors(add_aemethod)
         @in_a_form = true
         render :update do |page|
           page << javascript_prologue
