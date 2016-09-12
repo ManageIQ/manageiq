@@ -2799,30 +2799,26 @@ Vmdb::Application.routes.draw do
       }.freeze
     end
 
-    def action_for_collection(verb)
-      API_ACTIONS[verb]
-    end
-
     Api::Settings.collections.each do |collection_name, collection|
       controller collection_name, :path => collection_name do
         collection.verbs.each do |verb|
           if collection.options.include?(:primary)
-            root :action => action_for_collection(verb), :via => verb
+            root :action => API_ACTIONS[verb], :via => verb
           end
 
           next unless collection.options.include?(:collection)
 
           if collection.options.include?(:arbitrary_resource_path)
-            match "(/*c_suffix)", :action => action_for_collection(verb), :via => verb
+            match "(/*c_suffix)", :action => API_ACTIONS[verb], :via => verb
           else
-            match "(/:c_id)", :action => action_for_collection(verb), :via => verb
+            match "(/:c_id)", :action => API_ACTIONS[verb], :via => verb
           end
         end
 
         Array(collection.subcollections).each do |subcollection_name|
           Api::Settings.collections[subcollection_name].verbs.each do |verb|
             match("/:c_id/#{subcollection_name}(/:s_id)",
-                  :action => action_for_collection(verb),
+                  :action => API_ACTIONS[verb],
                   :via => verb)
           end
         end
