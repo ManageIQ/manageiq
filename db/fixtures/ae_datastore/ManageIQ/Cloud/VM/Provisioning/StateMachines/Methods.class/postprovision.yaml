@@ -12,3 +12,5 @@ object:
       value: amazon_PostProvision
   - openstack_meth1:
       value: openstack_PostProvision
+  - azure_meth1:
+      value: PostProvision
