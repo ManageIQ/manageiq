@@ -55,13 +55,13 @@ chdir APP_ROOT do
     # it invokes the db:setup rake task which creates the db from the
     # schema (and seeds it), but doesn't run through migrations.
     puts "\n== Preparing database =="
-    system! "bin/rake db:create"
+    system! "bin/rails db:create"
 
     puts "\n== Migrating database =="
-    system! "bin/rake db:migrate"
+    system! "bin/rails db:migrate"
 
     puts "\n== Seeding database =="
-    system! "bin/rake db:seed GOOD_MIGRATIONS=skip"
+    system! "bin/rails db:seed GOOD_MIGRATIONS=skip"
   end
 
   puts "\n== Removing old logs and tempfiles =="
@@ -69,7 +69,7 @@ chdir APP_ROOT do
 
   if options[:do_tests]
     puts "\n== Preparing tests =="
-    system! "bin/rake test:vmdb:setup"
+    system! "bin/rails test:vmdb:setup"
   end
   bower_thread.join
   puts "Done running `bower update`."
