@@ -1043,6 +1043,11 @@ class ApplicationController < ActionController::Base
     else
       @title = new_bc [:name] # Set the title to be the new breadcrumb
     end
+
+    # Modify user feedback for quick searches when not found
+    unless @search_text.blank?
+      @title += _(" (Names with \"%{search_text}\")") % {:search_text => @search_text}
+    end
   end
 
   def handle_invalid_session(timed_out = nil)
