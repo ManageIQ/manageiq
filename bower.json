@@ -22,6 +22,7 @@
     "angular-mocks": "^1.5.3",
     "angular-patternfly-sass": "3.10.0",
     "angular-sanitize": "^1.5.3",
+    "angular.validators": "^4.4.2",
     "bootstrap-filestyle": "^1.2.1",
     "bootstrap-hover-dropdown": "^2.0.11",
     "jquery.observe_field": "himdel/jquery.observe_field#^0.1.0",
