@@ -7,40 +7,6 @@ describe InfraNetworkingController do
   let(:cluster) { FactoryGirl.create(:cluster, :name => 'test_cluster') }
   before { stub_user(:features => :all) }
 
-  context "#button" do
-    it "when Host Analyze then Check Compliance is pressed" do
-      controller.instance_variable_set(:@_params, :pressed => "host_analyze_check_compliance")
-      allow(controller).to receive(:show)
-      expect(controller).to receive(:analyze_check_compliance_hosts)
-      controller.button
-      expect(controller.send(:flash_errors?)).not_to be_truthy
-    end
-
-    {"host_standby"  => "Enter Standby Mode",
-     "host_shutdown" => "Shut Down",
-     "host_reboot"   => "Restart",
-     "host_start"    => "Power On",
-     "host_stop"     => "Power Off",
-     "host_reset"    => "Reset"
-    }.each do |button, description|
-      it "when Host #{description} button is pressed" do
-        login_as FactoryGirl.create(:user, :features => button)
-
-        host = FactoryGirl.create(:host)
-        command = button.split('_', 2)[1]
-        allow_any_instance_of(Host).to receive(:is_available?).with(command).and_return(true)
-
-        controller.instance_variable_set(:@_params, :pressed => button, :miq_grid_checks => host.id.to_s)
-        controller.instance_variable_set(:@lastaction, "show_list")
-        allow(controller).to receive(:show_list)
-        controller.button
-        flash_messages = assigns(:flash_array)
-        expect(flash_messages.first[:message]).to include("successfully initiated")
-        expect(flash_messages.first[:level]).to eq(:success)
-      end
-    end
-  end
-
   context 'render_views' do
     render_views
 
