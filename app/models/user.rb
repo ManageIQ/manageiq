@@ -73,10 +73,6 @@ class User < ApplicationRecord
     where(:region => my_region_number)
   end
 
-  def self.in_my_region
-    where(:id => region_to_range(my_region_number))
-  end
-
   def self.find_by_userid(userid)
     in_my_region_column.find_by(:userid => userid)
   end
