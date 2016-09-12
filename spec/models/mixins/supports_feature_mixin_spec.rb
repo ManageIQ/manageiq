@@ -243,6 +243,24 @@ describe SupportsFeatureMixin do
     end
   end
 
+  context "can be queried for features" do
+    it "that are known on the class" do
+      expect(Post.feature_known?("fake")).to be true
+    end
+
+    it "that are unknown on the class" do
+      expect(Post.feature_known?("lobotomize")).to be false
+    end
+
+    it "that are known on the instance" do
+      expect(Post.new.feature_known?("fake")).to be true
+    end
+
+    it "that are unknown on the instance" do
+      expect(Post.new.feature_known?("lobotomize")).to be false
+    end
+  end
+
   context "feature that is implicitly unsupported" do
     it "class responds to supports_feature?" do
       expect(Post.supports_nuke?).to be false
