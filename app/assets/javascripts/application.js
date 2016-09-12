@@ -12,6 +12,7 @@
 //= require angular-ui-bootstrap
 //= require angular-ui-bootstrap-tpls
 //= require angular-sanitize
+//= require angular.validators
 //= require moment
 //= require moment-strftime/build/moment-strftime.min
 //= require moment-timezone
@@ -82,3 +83,4 @@
 // Bower packages
 //= require manageiq-ui-components/dist/js/ui-components
 //= require rx-angular/dist/rx.angular
+
