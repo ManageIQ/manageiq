@@ -64,13 +64,14 @@ chdir APP_ROOT do
     system! "bin/rails db:seed GOOD_MIGRATIONS=skip"
   end
 
-  puts "\n== Removing old logs and tempfiles =="
-  system! 'bin/rails log:clear tmp:clear'
-
   if options[:do_tests]
     puts "\n== Preparing tests =="
     system! "bin/rails test:vmdb:setup"
   end
+
   bower_thread.join
   puts "Done running `bower update`."
+
+  puts "\n== Removing old logs and tempfiles =="
+  system! 'bin/rails log:clear tmp:clear'
 end
