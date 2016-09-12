@@ -46,6 +46,25 @@ describe ReportController do
         allow(controller).to receive(:build_edit_screen) # Don't actually build the edit screen
       end
 
+      describe "#add_field_to_col_order" do
+        let(:miq_report)               { FactoryGirl.create(:miq_report, :cols => [], :col_order => []) }
+        let(:base_model)               { "Vm" }
+        let(:virtual_custom_attribute) { "virtual_custom_attribute_kubernetes.io/hostname" }
+
+        before do
+          @edit = assigns(:edit)
+          @edit[:new][:sortby1] = S1 # Set an initial sort by col
+          @edit[:new][:sortby2] = S2 # Set no second sort col
+          @edit[:new][:pivot] = ReportController::PivotOptions.new
+          controller.instance_variable_set(:@edit, @edit)
+        end
+
+        it "fills report by passed column" do
+          controller.send(:add_field_to_col_order, miq_report, "#{base_model}-#{virtual_custom_attribute}")
+          expect(miq_report.cols.first).to eq(virtual_custom_attribute)
+        end
+      end
+
       context "handle report fields" do
         it "sets pdf page size" do
           ps = "US-Legal"
