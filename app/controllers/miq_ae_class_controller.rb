@@ -828,7 +828,7 @@ class MiqAeClassController < ApplicationController
     end
     render :update do |page|
       page << javascript_prologue
-      page << "if (miqDomElementExists('cls_method_data')){"
+      page << "if ($('#cls_method_data').length){"
       page.replace("flash_msg_div_class_methods", :partial => "layouts/flash_msg", :locals => {:div_num => "_class_methods"})
       page << "var ta = document.getElementById('cls_method_data');"
       page << "} else {"

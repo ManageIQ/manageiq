@@ -166,7 +166,7 @@ ManageIQ.explorer.processReplaceRightCell = function(data) {
 
   if (_.isObject(data.setVisibility))
     _.forEach(data.setVisibility, function (visible, element) {
-      if ( miqDomElementExists(element) ) {
+      if ($('#' + element).length) {
         if ( visible ) {
           $('#' + element).show()
         } else {

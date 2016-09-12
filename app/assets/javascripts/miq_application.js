@@ -447,7 +447,8 @@ function miqButtonOnWhen(button, onwhen, count) {
 
 // Set the buttons in a div based on the count of checked items passed in
 function miqSetButtons(count, button_div) {
-  if (!miqDomElementExists(button_div)) {
+  // return if there are is no button on the page
+  if (!$('#' + button_div).length) {
     return
   }
 
@@ -1235,10 +1236,6 @@ function miqJqueryRequest(url, options) {
   });
 }
 
-function miqDomElementExists(element) {
-  return $('#' + element).length;
-}
-
 function miqSerializeForm(element) {
   return $('#' + element).find('input,select,textarea').serialize().replace(/%0D%0A/g, '%0A');
 }
@@ -1256,7 +1253,8 @@ function miqInitSelectPicker() {
 }
 
 function miqInitCodemirror(options) {
-  if (! miqDomElementExists(options.text_area_id)) {
+  // return if there are is no textarea on the page
+  if (!$('#' + options.text_area_id).length) {
     return;
   }
 

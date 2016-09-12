@@ -1,4 +1,4 @@
-/* global DoNav miqClearTreeState miqDomElementExists miqJqueryRequest miqSetButtons miqSparkle */
+/* global DoNav miqClearTreeState miqJqueryRequest miqSetButtons miqSparkle */
 
 function miqTreeObject(tree) {
   return $('#' + tree + 'box').treeview(true);

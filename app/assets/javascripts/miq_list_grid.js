@@ -1,4 +1,4 @@
-/* global DoNav miqDomElementExists miqJqueryRequest miqSetButtons miqUpdateButtons */
+/* global DoNav miqJqueryRequest miqSetButtons miqUpdateButtons */
 
 // Handle row click (ajax or normal html trans)
 function miqRowClick(row_id, row_url, row_url_ajax) {
