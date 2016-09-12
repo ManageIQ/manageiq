@@ -1168,6 +1168,8 @@ module ApplicationController::CiProcessing
       @vm = @record = identify_record(params[:id], VmOrTemplate)
     elsif db == "ems_cloud"
       @ems = @record = identify_record(params[:id], EmsCloud)
+    elsif db == "switch"
+      @switch = @record = identify_record(params[:id], Switch)
     end
   end
 
@@ -1285,6 +1287,33 @@ module ApplicationController::CiProcessing
                       :url  => "/#{@db}/users/#{@record.id}")
       @listicon = "user"
       show_details(Account, :association => "users")
+    end
+  end
+
+  def hosts
+    @explorer = true if request.xml_http_request? && explorer_controller? # Ajax request means in explorer
+    @db = params[:db] ? params[:db] : request.parameters[:controller]
+    @db = 'switch' if @db == 'infra_networking'
+    session[:db] = @db unless @db.nil?
+    @db = session[:db] unless session[:db].nil?
+    get_record(@db)
+    @sb[:action] = params[:action]
+    return if record_no_longer_exists?(@record)
+
+    @lastaction = "hosts"
+    if !params[:show].nil? || !params[:x_show].nil?
+      id = params[:show] ? params[:show] : params[:x_show]
+      @item = @record.hosts.find(from_cid(id))
+      drop_breadcrumb(:name => _("%{name} (Hosts)") % {:name => @record.name},
+                      :url  => "/#{request.parameters[:controller]}/hosts/#{@record.id}?page=#{@current_page}")
+      drop_breadcrumb(:name => @item.name, :url => "/#{request.parameters[:controller]}/show/#{@record.id}?show=#{@item.id}")
+      @view = get_db_view(Host)
+      show_item
+    else
+      drop_breadcrumb(:name => _("%{name} (Hosts)") % {:name => @record.name},
+                      :url  => "/#{request.parameters[:controller]}/hosts/#{@record.id}")
+      @listicon = "host"
+      show_details(Host, :association => "hosts")
     end
   end
 

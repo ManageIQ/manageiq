@@ -319,6 +319,9 @@ module ApplicationHelper
     when "User", "Group", "Patch", "GuestApplication"
       controller = "vm"
       action = @lastaction
+    when "Host" && action == 'x_show'
+      controller = "infra_networking"
+      action = @lastaction
     when "MiqReportResult"
       controller = "report"
       action = "show_saved"
@@ -1206,7 +1209,7 @@ module ApplicationHelper
   end
 
   def explorer_controller?
-    %w(vm_cloud vm_infra vm_or_template).include?(controller_name)
+    %w(vm_cloud vm_infra vm_or_template infra_networking).include?(controller_name)
   end
 
   def vm_quad_link_attributes(record)

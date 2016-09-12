@@ -53,6 +53,7 @@
   - middleware_datasource
   - middleware_topology
   - host
+  - infra_networking
   - job_all_smartproxy
   - job_my_smartproxy
   - miq_ae_class_explorer

@@ -30,6 +30,8 @@ class TreeBuilder
     when :vms_filter       then TreeBuilderVmsFilter
     when :templates_filter then TreeBuilderTemplateFilter
 
+    when :infra_networking then TreeBuilderInfraNetworking
+
     when :instances        then TreeBuilderInstances
     when :images           then TreeBuilderImages
     when :instances_filter then TreeBuilderInstancesFilter
