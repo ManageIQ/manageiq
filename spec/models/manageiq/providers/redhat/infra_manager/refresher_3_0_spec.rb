@@ -151,10 +151,10 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
 
     expect(@host.operating_system).to have_attributes(
       :name         => "192.168.252.119", # TODO: ?????
-      :product_name => "linux",
+      :product_name => "rhel",
       :version      => nil,
       :build_number => nil,
-      :product_type => nil
+      :product_type => "linux"
     )
 
     expect(@host.system_services.size).to eq(0)
