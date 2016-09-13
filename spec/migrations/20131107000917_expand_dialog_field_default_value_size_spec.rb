@@ -2,7 +2,7 @@ require_migration
 
 describe ExpandDialogFieldDefaultValueSize do
   let(:dialog_field_stub) { migration_stub(:DialogField) }
-  let(:reserve_stub)      { MigrationSpecStubs.reserved_stub }
+  let(:reserve_stub)      { Spec::Support::MigrationStubs.reserved_stub }
 
   migration_context :up do
     it "should convert default_value to text type" do

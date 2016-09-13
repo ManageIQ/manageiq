@@ -2,7 +2,7 @@ require_migration
 
 describe EnhanceFirewallRulesForNeutronNetworking do
   let(:firewall_rule_stub) { migration_stub(:FirewallRule) }
-  let(:reserve_stub)       { MigrationSpecStubs.reserved_stub }
+  let(:reserve_stub)       { Spec::Support::MigrationStubs.reserved_stub }
 
   migration_context :up do
     it "Migrates Reserves data to columns on FirewallRule" do
