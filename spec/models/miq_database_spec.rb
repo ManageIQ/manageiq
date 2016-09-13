@@ -1,4 +1,8 @@
 describe MiqDatabase do
+  before do
+    FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
+  end
+
   context ".seed" do
     include_examples ".seed called multiple times"
 

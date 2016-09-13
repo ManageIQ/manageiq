@@ -32,11 +32,23 @@ class MiqDatabase < ApplicationRecord
   end
 
   def self.registration_default_value_for_update_repo_name
-    "cf-me-5.6-for-rhel-7-rpms rhel-server-rhscl-7-rpms"
+    names = Settings.product.default_update_repo_names
+    return names.join(" ") if names
   end
 
   def update_repo_names
-    update_repo_name.split
+    Settings.product.update_repo_names
+  end
+
+  def update_repo_name
+    names = Settings.product.update_repo_names
+    return names.join(" ") if names
+  end
+
+  def update_repo_name=(repos)
+    return unless repos
+    hash = {:product => {:update_repo_names => repos.split}}
+    Vmdb::Settings.save!(MiqRegion.my_region, hash)
   end
 
   def self.seed
