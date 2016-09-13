@@ -5481,3 +5481,7 @@
       :description: Remove Blueprint
       :feature_type: admin
       :identifier: blueprint_delete
+    - :name: Publish
+      :description: Publish Blueprint
+      :feature_type: admin
+      :identifier: blueprint_publish
