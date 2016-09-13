@@ -55,6 +55,85 @@ describe ChargebackVm do
     expect { ChargebackVm.build_results_for_report_ChargebackVm(@options) }.not_to raise_error
   end
 
+  context "by service" do
+    before(:each) do
+      @options[:interval] = "monthly"
+
+      tz = Metric::Helper.get_time_zone(@options[:ext_options])
+      ts = Time.now.in_time_zone(tz)
+      time     = ts.beginning_of_month.utc
+      end_time = ts.end_of_month.utc
+
+      @vm2 = FactoryGirl.create(:vm_vmware, :name => "test_vm 2", :evm_owner => @admin)
+
+      while time < end_time
+        [@vm1, @vm2].each do |vm|
+          vm.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
+                                                  :timestamp                         => time,
+                                                  :cpu_usagemhz_rate_average         => @cpu_usagemhz_rate,
+                                                  :derived_vm_numvcpus               => @cpu_count,
+                                                  :derived_memory_available          => @memory_available,
+                                                  :derived_memory_used               => @memory_used,
+                                                  :disk_usage_rate_average           => @disk_usage_rate,
+                                                  :net_usage_rate_average            => @net_usage_rate,
+                                                  :derived_vm_used_disk_storage      => @vm_used_disk_storage.gigabytes,
+                                                  :derived_vm_allocated_disk_storage => @vm_allocated_disk_storage.gigabytes,
+                                                  :tag_names                         => "environment/prod",
+                                                  :parent_host_id                    => @host1.id,
+                                                  :parent_ems_cluster_id             => @ems_cluster.id,
+                                                  :parent_ems_id                     => @ems.id,
+                                                  :parent_storage_id                 => @storage.id,
+                                                  :resource_name                     => @vm1.name,
+                                                 )
+        end
+
+        time += 12.hours
+      end
+
+      @service = FactoryGirl.create(:service)
+      @service << @vm1
+      @service.save
+
+      cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_used,
+                               :chargeback_rate_id => @cbr.id,
+                               :per_time           => "hourly"
+                              )
+      cbt = FactoryGirl.create(:chargeback_tier,
+                               :chargeback_rate_detail_id => cbrd.id,
+                               :start                     => 0,
+                               :finish                    => Float::INFINITY,
+                               :fixed_rate                => 0.0,
+                               :variable_rate             => @hourly_rate.to_s
+                              )
+      cbrd.chargeback_tiers = [cbt]
+      cbrd.save
+      cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_allocated,
+                               :chargeback_rate_id => @cbr.id,
+                               :per_time           => "hourly"
+                              )
+      cbt = FactoryGirl.create(:chargeback_tier,
+                               :chargeback_rate_detail_id => cbrd.id,
+                               :start                     => 0,
+                               :finish                    => Float::INFINITY,
+                               :fixed_rate                => 0.0,
+                               :variable_rate             => @count_hourly_rate.to_s
+                              )
+      cbrd.chargeback_tiers = [cbt]
+      cbrd.save
+
+      @options.merge!(:interval_size => 4,
+                      :ext_options   => {:tz => "Eastern Time (US & Canada)"},
+                      :service_id    => @service.id
+                     )
+    end
+
+    it "only includes VMs belonging to service in results" do
+      result = described_class.build_results_for_report_ChargebackVm(@options)
+      expect(result).not_to be_nil
+      expect(result.first.all? { |r| r.vm_name == "test_vm" })
+    end
+  end
+
   context "Daily" do
     before  do
       @options[:interval] = "daily"

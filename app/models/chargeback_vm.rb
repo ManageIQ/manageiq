@@ -76,6 +76,13 @@ class ChargebackVm < Chargeback
         raise MiqException::Error, "Unable to find tenant '#{options[:tenant_id]}'"
       end
       vms = tenant.vms
+    elsif options[:service_id]
+      service = Service.find(options[:service_id])
+      if service.nil?
+        _log.error("Unable to find service '#{options[:service_id]}'. Calculating chargeback costs aborted.")
+        raise MiqException::Error, "Unable to find service '#{options[:service_id]}'"
+      end
+      vms = service.vms
     else
       raise _("must provide options :owner or :tag")
     end
@@ -102,12 +109,11 @@ class ChargebackVm < Chargeback
   end
 
   def self.where_clause(records, options)
+    scope = records.where(:resource_type => "VmOrTemplate")
     if options[:tag] && (@report_user.nil? || !@report_user.self_service?)
-      records.where(:resource_type => "VmOrTemplate")
-          .where.not(:resource_id => nil)
-          .for_tag_names(options[:tag].split("/")[2..-1])
+      scope.where.not(:resource_id => nil).for_tag_names(options[:tag].split("/")[2..-1])
     else
-      records.where(:resource_type => "VmOrTemplate", :resource_id => @vm_owners.keys)
+      scope.where(:resource_id => @vm_owners.keys)
     end
   end
 
