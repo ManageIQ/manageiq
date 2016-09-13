@@ -59,7 +59,7 @@ Dir.chdir APP_ROOT do
   end
 
   puts "\n== Removing old logs and tempfiles =="
-  execute "find log/ -type 'f' | xargs rm"
+  execute "find log/ -type 'f' ! -name '.gitkeep' | xargs rm"
   execute "rm -rf tmp/cache"
 
   if options[:do_tests]
