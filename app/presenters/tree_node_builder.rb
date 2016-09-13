@@ -138,7 +138,7 @@ class TreeNodeBuilder
     when PxeImageType         then generic_node(object.name, "pxeimagetype.png")
     when PxeServer            then generic_node(object.name, "pxeserver.png")
     when ScanItemSet          then generic_node(object.name, "scan_item_set.png")
-    when Service              then generic_node(object.name, object.picture ? "../../../pictures/#{object.picture.basename}" : "service.png")
+    when Service              then generic_node(object.name, object.picture ? "/pictures/#{object.picture.basename}" : "service.png")
     when ServiceResource      then generic_node(object.resource_name, object.resource_type == "VmOrTemplate" ? "vm.png" : "service_template.png")
     when ServerRole           then server_role_node(object)
     when ServiceTemplate      then service_template_node
@@ -186,7 +186,11 @@ class TreeNodeBuilder
   end
 
   def node_icon(icon)
-    ActionController::Base.helpers.image_path("100/#{icon}")
+    if icon.start_with?("/")
+      icon
+    else
+      ActionController::Base.helpers.image_path("100/#{icon}")
+    end
   end
 
   def generic_node(text, image, tip = nil)
