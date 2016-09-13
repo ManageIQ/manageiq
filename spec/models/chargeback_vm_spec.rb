@@ -695,4 +695,74 @@ describe ChargebackVm do
       expect(extra_fields.second).to eq(expected_fields)
     end
   end
+
+  context "Group by tags" do
+    before  do
+      @options[:interval] = "monthly"
+      @options[:groupby_tag] = "environment"
+
+      tz = Metric::Helper.get_time_zone(@options[:ext_options])
+      ts = Time.now.in_time_zone(tz)
+      time     = ts.beginning_of_month.utc
+      end_time = ts.end_of_month.utc
+
+      while time < end_time
+        @vm1.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
+                                                  :timestamp                         => time,
+                                                  :cpu_usagemhz_rate_average         => @cpu_usagemhz_rate,
+                                                  :derived_vm_numvcpus               => @cpu_count,
+                                                  :derived_memory_available          => @memory_available,
+                                                  :derived_memory_used               => @memory_used,
+                                                  :disk_usage_rate_average           => @disk_usage_rate,
+                                                  :net_usage_rate_average            => @net_usage_rate,
+                                                  :derived_vm_used_disk_storage      => @vm_used_disk_storage.gigabytes,
+                                                  :derived_vm_allocated_disk_storage => @vm_allocated_disk_storage.gigabytes,
+                                                  :tag_names                         => "environment/prod",
+                                                  :parent_host_id                    => @host1.id,
+                                                  :parent_ems_cluster_id             => @ems_cluster.id,
+                                                  :parent_ems_id                     => @ems.id,
+                                                  :parent_storage_id                 => @storage.id,
+                                                  :resource_name                     => @vm1.name,
+        )
+        time += 12.hour
+      end
+      @metric_size = @vm1.metric_rollups.size
+    end
+
+    subject { ChargebackVm.build_results_for_report_ChargebackVm(@options).first.first }
+
+    it "cpu" do
+      cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_used,
+                               :chargeback_rate_id => @cbr.id,
+                               :per_time           => "hourly"
+      )
+      cbt = FactoryGirl.create(:chargeback_tier,
+                               :chargeback_rate_detail_id => cbrd.id,
+                               :start                     => 0,
+                               :finish                    => Float::INFINITY,
+                               :fixed_rate                => 0.0,
+                               :variable_rate             => @hourly_rate.to_s
+      )
+      cbrd.chargeback_tiers = [cbt]
+      cbrd.save
+      cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_allocated,
+                               :chargeback_rate_id => @cbr.id,
+                               :per_time           => "hourly"
+      )
+      cbt = FactoryGirl.create(:chargeback_tier,
+                               :chargeback_rate_detail_id => cbrd.id,
+                               :start                     => 0,
+                               :finish                    => Float::INFINITY,
+                               :fixed_rate                => 0.0,
+                               :variable_rate             => @count_hourly_rate.to_s
+      )
+      cbrd.chargeback_tiers = [cbt]
+      cbrd.save
+
+      expect(subject.cpu_allocated_metric).to eq(@cpu_count * @metric_size)
+      expect(subject.cpu_used_metric).to eq(@cpu_usagemhz_rate * @metric_size)
+      expect(subject.cpu_metric).to eq(subject.cpu_allocated_metric + subject.cpu_used_metric)
+      expect(subject.tag_name).to eq('Production')
+    end
+  end
 end
