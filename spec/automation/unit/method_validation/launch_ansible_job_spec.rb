@@ -1,5 +1,4 @@
 require Rails.root.join('db/fixtures/ae_datastore/ManageIQ/ConfigurationManagement/AnsibleTower/Operations/StateMachines/Job.class/__methods__/launch_ansible_job').to_s
-require Rails.root.join('spec/support/miq_ae_mock_service').to_s
 
 describe LaunchAnsibleJob do
   let(:job_class) { MiqAeMethodService::MiqAeServiceManageIQ_Providers_AnsibleTower_ConfigurationManager_Job }
@@ -19,7 +18,7 @@ describe LaunchAnsibleJob do
   let(:ext_vars) { {} }
   let(:job_args) { {:extra_vars => ext_vars} }
 
-  let(:service) { MiqAeMockService.new(root_object) }
+  let(:service) { Spec::Support::MiqAeMockService.new(root_object) }
 
   let(:ems) do
     FactoryGirl.create(:ems_amazon_with_authentication)
@@ -129,7 +128,7 @@ describe LaunchAnsibleJob do
     ext_vars['name'] = 'fred'
     root = Spec::Support::MiqAeMockObject.new(:job_template_name => job_template.name)
     root[:miq_provision] = svc_provision
-    service = MiqAeMockService.new(root)
+    service = Spec::Support::MiqAeMockService.new(root)
     service.object = root
     expect(job_class).to receive(:create_job).once.with(anything, job_args).and_return(svc_job)
     LaunchAnsibleJob.new(service).main

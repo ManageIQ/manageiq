@@ -1,5 +1,4 @@
 require Rails.root.join('db/fixtures/ae_datastore/ManageIQ/ConfigurationManagement/AnsibleTower/Operations/StateMachines/Job.class/__methods__/wait_for_ip').to_s
-require Rails.root.join('spec/support/miq_ae_mock_service').to_s
 
 describe WaitForIP do
   let(:user) { FactoryGirl.create(:user_with_group) }
@@ -9,7 +8,7 @@ describe WaitForIP do
   let(:ip_addr) { ['1.1.1.1'] }
   let(:svc_job) { job_class.find(job.id) }
   let(:root_object) { Spec::Support::MiqAeMockObject.new }
-  let(:service) { MiqAeMockService.new(root_object) }
+  let(:service) { Spec::Support::MiqAeMockService.new(root_object) }
 
   it "#main - ok" do
     root_object['vm'] = svc_vm
