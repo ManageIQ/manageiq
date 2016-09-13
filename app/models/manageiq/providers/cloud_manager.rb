@@ -40,6 +40,7 @@ module ManageIQ::Providers
     include HasManyOrchestrationStackMixin
 
     supports_not :discovery
+    supports_not :cloud_tenant_mapping
 
     # Development helper method for Rails console for opening a browser to the EMS.
     #
@@ -66,12 +67,8 @@ module ManageIQ::Providers
       end
     end
 
-    def supports_cloud_tenants?
-      false
-    end
-
     def sync_cloud_tenants_with_tenants
-      return unless supports_cloud_tenants?
+      return unless supports_cloud_tenant_mapping?
       sync_root_tenant
       sync_tenants
       sync_deleted_cloud_tenants
