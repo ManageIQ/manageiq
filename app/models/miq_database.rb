@@ -14,7 +14,7 @@ class MiqDatabase < ApplicationRecord
   encrypt_column  :csrf_secret_token
   encrypt_column  :session_secret_token
 
-  validates_presence_of :session_secret_token, :csrf_secret_token, :update_repo_name
+  validates_presence_of :session_secret_token, :csrf_secret_token
 
   default_values REGISTRATION_DEFAULT_VALUES
 
