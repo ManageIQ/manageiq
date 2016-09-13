@@ -63,9 +63,9 @@ RSpec.configure do |config|
     metadata[:type] ||= :automation
   end
 
-  config.extend  MigrationSpecHelper::DSL
-  config.include MigrationSpecHelper, :migrations => :up
-  config.include MigrationSpecHelper, :migrations => :down
+  config.extend  Spec::Support::MigrationHelper::DSL
+  config.include Spec::Support::MigrationHelper, :migrations => :up
+  config.include Spec::Support::MigrationHelper, :migrations => :down
 
   config.include Spec::Support::ApiHelper, :rest_api => true
   config.include Spec::Support::AuthRequestHelper, :type => :request
