@@ -686,4 +686,60 @@ describe "Providers API" do
       expect_results_to_match_hash("results", [failed_auth_action(p1.id), failed_auth_action(p2.id)])
     end
   end
+
+  describe 'Providers import VM' do
+    let(:provider)      { FactoryGirl.create(:ems_redhat, sample_rhevm) }
+    let(:provider_url)  { providers_url(provider.id) }
+
+    let(:vm)            { FactoryGirl.create(:vm_vmware) }
+    let(:vm_url)        { vms_url(vm.id) }
+
+    let(:cluster)       { FactoryGirl.create(:ems_cluster) }
+    let(:cluster_url)   { clusters_url(cluster.id) }
+
+    let(:storage)       { FactoryGirl.create(:storage) }
+    let(:storage_url)   { data_stores_url(storage.id) }
+
+    NAME = 'new_vm_name'.freeze
+
+    def gen_import_request
+      gen_request(
+        :import_vm,
+        :source => { :href => vm_url },
+        :target => {
+          :name       => NAME,
+          :cluster    => { :href => cluster_url },
+          :data_store => { :href => storage_url },
+          :sparse     => true
+        }
+      )
+    end
+
+    it 'rejects import without appropriate role' do
+      api_basic_authorize
+
+      run_post(provider_url, gen_import_request)
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'enqueues a correct import request' do
+      api_basic_authorize action_identifier(:providers, :import_vm)
+
+      run_post(provider_url, gen_import_request)
+
+      expect_single_action_result(:success => true, :task => true)
+      queue_jobs = MiqQueue.where(:method_name => 'import_vm',
+                                  :class_name  => 'ManageIQ::Providers::Redhat::InfraManager',
+                                  :instance_id => provider.id)
+      expected_args = [vm.id,
+                       {
+                         :name       => NAME,
+                         :cluster_id => cluster.id,
+                         :storage_id => storage.id,
+                         :sparse     => true
+                       }]
+      expect(queue_jobs).to contain_exactly(an_object_having_attributes(:args => expected_args))
+    end
+  end
 end
