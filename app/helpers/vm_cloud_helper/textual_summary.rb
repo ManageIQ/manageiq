@@ -18,7 +18,7 @@ module VmCloudHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(name region server description ipaddress mac_address custom_1 container preemptible tools_status load_balancer_health_check_state osinfo architecture advanced_settings resources guid virtualization_type root_device_type)
+    %i(name region server description ipaddress mac_address custom_1 container preemptible tools_status load_balancer_health_check_state osinfo architecture advanced_settings resources guid virtualization_type root_device_type ems_ref)
   end
 
   def textual_group_security
@@ -302,5 +302,10 @@ module VmCloudHelper::TextualSummary
     rd_type = @record.hardware.try!(:root_device_type)
     return nil if rd_type.blank?
     {:label => _("Root Device Type"), :value => rd_type.to_s}
+  end
+
+  def textual_ems_ref
+    return nil if @record.ems_ref.blank?
+    {:label => _("ID within Provider"), :value => @record.ems_ref}
   end
 end
