@@ -955,25 +955,6 @@ describe ApplicationHelper do
       end
     end
 
-    context "when with MiqAlert" do
-      before do
-        @record = MiqAlert.new
-        @layout = "miq_policy"
-      end
-
-      it "alert_copy don't hide if RBAC allows" do
-        stub_user(:features => :all)
-        @id = "alert_copy"
-        expect(subject).to be_falsey
-      end
-
-      it "alert_copy hide if RBAC denies" do
-        stub_user(:features => :none)
-        @id = "alert_copy"
-        expect(subject).to be_truthy
-      end
-    end
-
     context "when with MiqServer" do
       before do
         @record = MiqServer.new
