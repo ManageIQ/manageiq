@@ -1,15 +1,11 @@
 class ApplicationHelper::Button::VmRetire < ApplicationHelper::Button::Basic
   needs_record
 
-  def calculate_properties
-    self[:enabled] = !(self[:title] = N_("VM is already retired") if disabled?)
-  end
-
   def visible?
     @record.supports_retire?
   end
 
   def disabled?
-    @record.retired
+    false
   end
 end

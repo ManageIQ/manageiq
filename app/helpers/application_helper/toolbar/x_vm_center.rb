@@ -138,7 +138,7 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           t = N_('Retire this VM'),
           t,
           :confirm => N_("Retire this VM?"),
-          :klass => ApplicationHelper::Button::VmRetire),
+          :klass => ApplicationHelper::Button::VmRetireNow),
       ]
     ),
   ])
