@@ -57,6 +57,7 @@ module SupportsFeatureMixin
   QUERYABLE_FEATURES = {
     :associate_floating_ip    => 'Associate a Floating IP',
     :control                  => 'Basic control operations', # FIXME: this is just a internal helper and should be refactored
+    :cloud_tenant_mapping     => 'CloudTenant mapping',
     :delete                   => 'Deletion',
     :disassociate_floating_ip => 'Disassociate a Floating IP',
     :discovery                => 'Discovery of Managers for a Provider',
