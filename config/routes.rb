@@ -2816,7 +2816,7 @@ Vmdb::Application.routes.draw do
   API_VERSION_REGEX = /v[\d]+(\.[\da-zA-Z]+)*(\-[\da-zA-Z]+)?/ unless defined?(API_VERSION_REGEX)
 
   namespace :api, :path => "api(/:version)", :version => API_VERSION_REGEX, :defaults => {:format => "json"} do
-    root :to => "/api#index"
+    root :to => "api#index"
 
     # OPTIONS requests for REST API pre-flight checks
     match '*path' => 'base#handle_options_request', :via => [:options]
