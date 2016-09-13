@@ -19,7 +19,7 @@ class MiqWidget::ReportContent < MiqWidget::ContentGeneration
     tz ||= user_or_group.get_timezone if user_or_group.respond_to?(:get_timezone)
 
     body = user_or_group.with_a_timezone(tz) do
-      if report.rpt_options.fetch_path(:summary, :hide_detail_rows) || false
+      if report.rpt_options.fetch_path(:summary, :hide_detail_rows)
         report.rpt_options[:group_limit] = row_count
         report.build_html_rows.join
       else
