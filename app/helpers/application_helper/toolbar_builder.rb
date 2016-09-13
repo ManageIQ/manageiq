@@ -250,6 +250,7 @@ class ApplicationHelper::ToolbarBuilder
       :icon      => "product product-custom-#{input[:image]} fa-lg",
       :title     => input[:description].to_s,
       :enabled   => options[:enabled],
+      :klass     => ApplicationHelper::Button::ButtonWithoutRbackCheck,
       :url       => "button",
       :url_parms => "?id=#{record.id}&button_id=#{button_id}&cls=#{record.class}&pressed=custom_button&desc=#{button_name}"
     }

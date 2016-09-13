@@ -1386,6 +1386,22 @@
     :description: Reports Accordion
     :feature_type: node
     :identifier: chargeback_reports
+    :children:
+    - :name: Download CSV Format
+      :description: Download Report in CSV Format
+      :feature_type: admin
+      :hidden: true
+      :identifier: chargeback_download_csv
+    - :name: Download PDF Format
+      :description: Download Report in PDF Format
+      :feature_type: admin
+      :hidden: true
+      :identifier: chargeback_download_pdf
+    - :name: Download Text Format
+      :description: Download Report in Text Format
+      :feature_type: admin
+      :hidden: true
+      :identifier: chargeback_download_text
   - :name: Rates
     :description: Rates Accordion
     :feature_type: node
@@ -3201,6 +3217,87 @@
     :feature_type: view
     :hidden: true
     :identifier: perf_reload
+  - :name: View Grid
+    :description: View Grid
+    :feature_type: admin
+    :hidden: true
+    :identifier: view_grid
+  - :name: View Tile
+    :description: View Tile
+    :feature_type: admin
+    :hidden: true
+    :identifier: view_tile
+  - :name: View List
+    :description: View List
+    :feature_type: admin
+    :hidden: true
+    :identifier: view_list
+  - :name: View Dashboard
+    :description: View Dashboard
+    :feature_type: admin
+    :hidden: true
+    :identifier: view_dashboard
+  - :name: View Summary
+    :description: View Summary
+    :feature_type: admin
+    :hidden: true
+    :identifier: view_summary
+  - :name: View Topology
+    :description: View Topology
+    :feature_type: admin
+    :hidden: true
+    :identifier: view_topology
+  - :name: Download CSV Format
+    :description: Download in CSV Format
+    :feature_type: admin
+    :hidden: true
+    :identifier: download_csv
+  - :name: Download PDF Format
+    :description: Download in PDF Format
+    :feature_type: admin
+    :hidden: true
+    :identifier: download_pdf
+  - :name: Download Text Format
+    :description: Download in Text Format
+    :feature_type: admin
+    :hidden: true
+    :identifier: download_text
+  - :name: Download View
+    :description: Download View
+    :feature_type: admin
+    :hidden: true
+    :identifier: download_view
+  - :name: VM Download PDF
+    :description: VM Download PDF
+    :feature_type: admin
+    :hidden: true
+    :identifier: vm_download_pdf
+  - :name: Tree Large
+    :description: Tree Large
+    :feature_type: admin
+    :hidden: true
+    :identifier: tree_large
+  - :name: Tree Small
+    :description: Tree Small
+    :feature_type: admin
+    :hidden: true
+    :identifier: tree_small
+  - :name: Download CSV Format
+    :description: Download in CSV Format
+    :feature_type: admin
+    :hidden: true
+    :identifier: miq_capacity_download_csv
+  - :name: Download PDF Format
+    :description: Download in PDF Format
+    :feature_type: admin
+    :hidden: true
+    :identifier: miq_capacity_download_pdf
+  - :name: Download Text Format
+    :description: Download in Text Format
+    :feature_type: admin
+    :hidden: true
+    :identifier: miq_capacity_download_text
+
 
 # OrchestrationStack
 - :name: Orchestration Stacks
@@ -4686,6 +4783,22 @@
         :description: Compare multiple Instances
         :feature_type: view
         :identifier: instance_compare
+        :children:
+        - :name: Download CSV Format
+          :description: Download Report in CSV Format
+          :feature_type: admin
+          :hidden: true
+          :identifier: compare_download_csv
+        - :name: Download PDF Format
+          :description: Download Report in PDF Format
+          :feature_type: admin
+          :hidden: true
+          :identifier: compare_download_pdf
+        - :name: Download Text Format
+          :description: Download Report in Text Format
+          :feature_type: admin
+          :hidden: true
+          :identifier: compare_download_text
       - :name: Drift
         :description: Display Instances Drift
         :feature_type: view

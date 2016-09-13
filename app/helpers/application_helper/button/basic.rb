@@ -12,6 +12,16 @@ class ApplicationHelper::Button::Basic < Hash
     end
   end
 
+  def role_allows_feature?
+    # for select buttons RBAC is checked only for nested buttons
+    return true if self[:type] == :buttonSelect
+    # for each button in select checks RBAC, self[:child_id] represents the
+    # button id for buttons inside select
+    return role_allows?(:feature => self[:child_id]) unless self[:child_id].nil?
+    # check RBAC on separate button
+    role_allows?(:feature => self[:id])
+  end
+
   # Return content under key such as :text or :confirm run through gettext or
   # evalated in the context of controller variables and helper methods.
   def localized(key, value = nil)
@@ -35,6 +45,7 @@ class ApplicationHelper::Button::Basic < Hash
   end
 
   def skipped?
+    return true unless role_allows_feature?
     return true if self.class.record_needed && @record.nil?
     calculate_properties
     !visible?
@@ -50,6 +61,7 @@ class ApplicationHelper::Button::Basic < Hash
     false
   end
 
+  delegate :role_allows?, :to => :@view_context
 
   class << self
     attr_reader :record_needed
