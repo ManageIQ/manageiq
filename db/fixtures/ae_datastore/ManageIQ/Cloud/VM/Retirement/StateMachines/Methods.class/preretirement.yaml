@@ -13,6 +13,6 @@ object:
   - amazon_meth1:
       value: amazon_pre_retirement
   - azure_meth1:
-      value: azure_pre_retirement
+      value: pre_retirement
   - google_meth1:
       value: pre_retirement
