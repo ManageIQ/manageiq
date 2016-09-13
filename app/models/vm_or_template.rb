@@ -1118,19 +1118,6 @@ class VmOrTemplate < ApplicationRecord
     EmsRefresh.refresh(self)
   end
 
-  def refresh_on_reconfig
-    unless ext_management_system
-      raise _("No %{table} defined") % {:table => ui_lookup(:table => "ext_management_systems")}
-    end
-    unless ext_management_system.has_credentials?
-      raise _("No %{table} credentials defined") % {:table => ui_lookup(:table => "ext_management_systems")}
-    end
-    unless ext_management_system.authentication_status_ok?
-      raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "ext_management_systems")}
-    end
-    EmsRefresh.reconfig_refresh(self)
-  end
-
   def self.post_refresh_ems(ems_id, update_start_time)
     update_start_time = update_start_time.utc
     ems = ExtManagementSystem.find(ems_id)
