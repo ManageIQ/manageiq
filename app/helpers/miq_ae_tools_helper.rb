@@ -1,4 +1,4 @@
-module ApplicationHelper::AutomateImportExport
+module MiqAeToolsHelper
   def git_import_button_enabled?
     MiqRegion.my_region.role_active?("git_owner")
   end
