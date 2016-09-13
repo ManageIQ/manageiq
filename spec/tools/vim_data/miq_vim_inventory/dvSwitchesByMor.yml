@@ -8,6 +8,10 @@
     MOR: *1
     config: !ruby/hash-with-ivars:VimHash
       elements:
+        numPorts: !ruby/string:VimString
+          str: '26'
+          xsiType: :SOAP::SOAPInt
+          vimType:
         uplinkPortgroup: !ruby/array:VimArray
           internal:
           - !ruby/string:VimString

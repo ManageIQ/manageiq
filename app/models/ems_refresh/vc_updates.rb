@@ -181,6 +181,7 @@ module EmsRefresh::VcUpdates
       "MOR",
       "config.uplinkPortgroup",
       "config.defaultPortConfig",
+      "config.numPorts",
       "summary.name",
       "summary.uuid",
       "summary.host",
