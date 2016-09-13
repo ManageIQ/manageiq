@@ -18,7 +18,7 @@ module ApiSpecHelper
 
   def run_get(url, options = {})
     headers = options.delete(:headers) || {}
-    get url, :params => options.stringify_keys, :headers => update_headers(headers)
+    get url, :params => options, :headers => update_headers(headers)
   end
 
   def run_post(url, body = {}, headers = {})
