@@ -12,9 +12,9 @@ describe LaunchAnsibleJob do
   let(:ip_addr) { '1.1.1.1' }
   let(:job) { FactoryGirl.create(:ansible_tower_job) }
   let(:svc_job) { job_class.find(job.id) }
-  let(:current_object) { MiqAeMockObject.new('a' => 1, 'b' => 2) }
-  let(:root_object) { MiqAeMockObject.new('param1' => "x=X", 'param2' => "y=Y") }
-  let(:middle_object) { MiqAeMockObject.new('a' => 1, 'b' => 2) }
+  let(:current_object) { Spec::Support::MiqAeMockObject.new('a' => 1, 'b' => 2) }
+  let(:root_object) { Spec::Support::MiqAeMockObject.new('param1' => "x=X", 'param2' => "y=Y") }
+  let(:middle_object) { Spec::Support::MiqAeMockObject.new('a' => 1, 'b' => 2) }
 
   let(:ext_vars) { {} }
   let(:job_args) { {:extra_vars => ext_vars} }
@@ -49,7 +49,7 @@ describe LaunchAnsibleJob do
     ext_vars['x'] = 'X'
     ext_vars['y'] = 'Y'
     root_object['vm'] = svc_vm
-    current_object = MiqAeMockObject.new(:job_template_name => job_template.name)
+    current_object = Spec::Support::MiqAeMockObject.new(:job_template_name => job_template.name)
     current_object.parent = root_object
     service.object = current_object
     job_args[:limit] = vm.name
@@ -62,7 +62,7 @@ describe LaunchAnsibleJob do
     ext_vars['x'] = 'X'
     ext_vars['y'] = 'Y'
     root_object['vm'] = svc_vm
-    current_object = MiqAeMockObject.new(:job_template_id => job_template.id)
+    current_object = Spec::Support::MiqAeMockObject.new(:job_template_id => job_template.id)
     current_object.parent = root_object
     service.object = current_object
     job_args[:limit] = vm.name
@@ -75,7 +75,7 @@ describe LaunchAnsibleJob do
     ext_vars['x'] = 'X'
     ext_vars['y'] = 'Y'
     root_object['vm'] = svc_vm
-    current_object = MiqAeMockObject.new(:job_template => svc_job_template)
+    current_object = Spec::Support::MiqAeMockObject.new(:job_template => svc_job_template)
     current_object.parent = root_object
     service.object = current_object
     job_args[:limit] = vm.name
@@ -90,7 +90,7 @@ describe LaunchAnsibleJob do
     ext_vars['x'] = '1'
     ext_vars['y'] = '2'
     job_args[:limit] = vm.name
-    current_object = MiqAeMockObject.new('param1' => 'x=1', 'param2' => 'y=2')
+    current_object = Spec::Support::MiqAeMockObject.new('param1' => 'x=1', 'param2' => 'y=2')
     current_object.parent = root_object
     service.object = current_object
     expect(job_class).to receive(:create_job).once.with(anything, job_args).and_return(svc_job)
@@ -104,7 +104,7 @@ describe LaunchAnsibleJob do
     ext_vars['x'] = '1'
     ext_vars['y'] = '2'
     job_args[:limit] = vm.name
-    current_object = MiqAeMockObject.new('dialog_param_x' => '1', 'dialog_param_y' => '2')
+    current_object = Spec::Support::MiqAeMockObject.new('dialog_param_x' => '1', 'dialog_param_y' => '2')
     current_object.parent = root_object
     service.object = current_object
     expect(job_class).to receive(:create_job).once.with(anything, job_args).and_return(svc_job)
@@ -116,7 +116,7 @@ describe LaunchAnsibleJob do
     root_object[:job_template_name] = job_template.name
     ext_vars['x'] = '1'
     ext_vars['y'] = '2'
-    current_object = MiqAeMockObject.new('param1' => 'x=1', 'param2' => 'y=2')
+    current_object = Spec::Support::MiqAeMockObject.new('param1' => 'x=1', 'param2' => 'y=2')
     current_object.parent = root_object
     service.object = current_object
     expect(job_class).to receive(:create_job).once.with(anything, job_args).and_return(svc_job)
@@ -127,7 +127,7 @@ describe LaunchAnsibleJob do
   it "get dialog parameters" do
     prov_options[:dialog_param_name] = 'fred'
     ext_vars['name'] = 'fred'
-    root = MiqAeMockObject.new(:job_template_name => job_template.name)
+    root = Spec::Support::MiqAeMockObject.new(:job_template_name => job_template.name)
     root[:miq_provision] = svc_provision
     service = MiqAeMockService.new(root)
     service.object = root

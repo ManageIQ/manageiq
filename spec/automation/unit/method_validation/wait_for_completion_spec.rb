@@ -12,7 +12,7 @@ describe WaitForCompletion do
   let(:job) { FactoryGirl.create(:ansible_tower_job) }
   let(:svc_job) { job_class.find(job.id) }
   let(:persist_state_hash) { {:ansible_job_id => svc_job.id} }
-  let(:service) { MiqAeMockService.new(MiqAeMockObject.new({}), persist_state_hash) }
+  let(:service) { MiqAeMockService.new(Spec::Support::MiqAeMockObject.new({}), persist_state_hash) }
 
   it "job status successful" do
     expect_any_instance_of(job_class).to receive(:normalized_live_status).with(no_args).and_return(%w(create_complete ok))

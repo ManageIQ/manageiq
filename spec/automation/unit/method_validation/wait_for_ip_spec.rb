@@ -8,7 +8,7 @@ describe WaitForIP do
   let(:svc_vm) { klass.find(vm.id) }
   let(:ip_addr) { ['1.1.1.1'] }
   let(:svc_job) { job_class.find(job.id) }
-  let(:root_object) { MiqAeMockObject.new }
+  let(:root_object) { Spec::Support::MiqAeMockObject.new }
   let(:service) { MiqAeMockService.new(root_object) }
 
   it "#main - ok" do
