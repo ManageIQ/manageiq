@@ -4,7 +4,7 @@ module MiqAeToolsHelper
   end
 
   def git_import_submit_help
-    unless MiqRegion.my_region.role_active?("git_owner")
+    unless git_import_button_enabled?
       content_tag(
         :i,
         "",
