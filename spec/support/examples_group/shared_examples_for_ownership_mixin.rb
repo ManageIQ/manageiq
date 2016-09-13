@@ -5,7 +5,7 @@ shared_examples "miq ownership" do
   # as the `include_example`'s current context, so more likely than not, it
   # will be included in other tests that aren't part of this example group.
   context "includes mixin:  miq ownership" do
-    include ArelSpecHelper
+    include Spec::Support::ArelHelper
 
     let(:user) { User.where(:userid => "ownership_user").first }
 

@@ -1,5 +1,5 @@
 describe Hardware do
-  include ArelSpecHelper
+  include Spec::Support::ArelHelper
   let(:vm) { FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware)) }
   let(:template) { FactoryGirl.create(:template_vmware, :hardware => FactoryGirl.create(:hardware)) }
   let(:host) { FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware)) }
