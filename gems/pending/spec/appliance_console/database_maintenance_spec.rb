@@ -1,103 +1,118 @@
-require "appliance_console/prompts"
 require "appliance_console/database_maintenance"
-require "fileutils"
-require "tempfile"
-require "tmpdir"
 
 describe ApplianceConsole::DatabaseMaintenance do
-  DIRNAME = File.dirname(__FILE__).freeze
-
-  before do
-    allow(subject).to receive(:say)
-  end
+  SPEC_NAME = File.basename(__FILE__).split(".rb").first.freeze
 
   describe "#ask_questions" do
     before do
-      allow(subject).to receive(:say)
-      allow(subject).to receive(:clear_screen)
-      allow(subject).to receive(:agree)
+      @confirmed = double(SPEC_NAME, :confirm => true)
+      @not_confirmed = double(SPEC_NAME, :confirm => false)
     end
 
-    context "when an hourly cron job does not exist" do
+    context "when hourly is confirmed and periodic is not confirmed" do
       before do
-        test_hourly_cron = "#{Dir.tmpdir}/miq-pg-maintenance-hourly.cron"
-        stub_const("ApplianceConsole::DatabaseMaintenance::HOURLY_CRON", test_hourly_cron)
+        expect(ApplianceConsole::DatabaseMaintenanceHourly).to receive(:new).and_return(@confirmed)
+        expect(ApplianceConsole::DatabaseMaintenancePeriodic).to receive(:new).and_return(@not_confirmed)
+        allow(subject).to receive(:clear_screen)
       end
 
-      it "returns true when configure is confirmed" do
-        expect(subject).to receive(:agree).with(/configure database maintenance/i).and_return(true)
-        expect(subject.ask_questions).to be true
-      end
-
-      it "returns false when configure is not confirmed" do
-        expect(subject).to receive(:agree).with(/configure database maintenance/i).and_return(false)
-        expect(subject.ask_questions).to be false
+      it "returns true" do
+        expect(subject.ask_questions).to eq(true)
       end
     end
 
-    context "when an hourly cron job does exist" do
+    context "when hourly is not confirmed and periodic is confirmed" do
       before do
-        @test_hourly_cron = Tempfile.new(subject.class.name.split("::").last.downcase)
-        stub_const("ApplianceConsole::DatabaseMaintenance::HOURLY_CRON", @test_hourly_cron.path)
+        allow(ApplianceConsole::DatabaseMaintenanceHourly).to receive(:new).and_return(@not_confirmed)
+        allow(ApplianceConsole::DatabaseMaintenancePeriodic).to receive(:new).and_return(@confirmed)
+        allow(subject).to receive(:clear_screen)
       end
 
-      after do
-        FileUtils.rm_f(@test_hourly_cron.path)
+      it "returns true" do
+        expect(subject.ask_questions).to eq(true)
+      end
+    end
+
+    context "when both hourly and periodic are confirmed" do
+      before do
+        allow(ApplianceConsole::DatabaseMaintenanceHourly).to receive(:new).and_return(@confirmed)
+        allow(ApplianceConsole::DatabaseMaintenancePeriodic).to receive(:new).and_return(@confirmed)
+        allow(subject).to receive(:clear_screen)
       end
 
-      it "returns true when un-configure is confirmed" do
-        expect(subject).to receive(:agree).with(/un-configure/i).and_return(true)
-        expect(subject.ask_questions).to be true
+      it "returns true" do
+        expect(subject.ask_questions).to eq(true)
+      end
+    end
+
+    context "when both hourly and periodic are not confirmed" do
+      before do
+        allow(ApplianceConsole::DatabaseMaintenanceHourly).to receive(:new).and_return(@not_confirmed)
+        allow(ApplianceConsole::DatabaseMaintenancePeriodic).to receive(:new).and_return(@not_confirmed)
+        allow(subject).to receive(:clear_screen)
       end
 
-      it "returns false when un-configure is not confirmed" do
-        expect(subject).to receive(:agree).with(/un-configure/i).and_return(false)
-        expect(subject.ask_questions).to be false
+      it "returns false" do
+        expect(subject.ask_questions).to eq(false)
       end
     end
   end
 
   describe "#activate" do
-    context "when an hourly cron job does not exist" do
+    before do
+      @executed = double(SPEC_NAME, :activate => true)
+      @not_executed = double(SPEC_NAME, :activate => false)
+    end
+
+    context "when hourly is executed and periodic is not executed" do
       before do
-        @test_hourly_cron = "#{Dir.tmpdir}/miq-pg-maintenance-hourly.cron"
-        stub_const("ApplianceConsole::DatabaseMaintenance::HOURLY_CRON", @test_hourly_cron)
+        expect(ApplianceConsole::DatabaseMaintenanceHourly).to receive(:new).and_return(@executed)
+        expect(ApplianceConsole::DatabaseMaintenancePeriodic).to receive(:new).and_return(@not_executed)
+        allow(subject).to receive(:say)
+        allow(subject).to receive(:clear_screen)
       end
 
-      after do
-        FileUtils.rm_f(@test_hourly_cron)
-      end
-
-      let(:expected_cron_file) do
-        <<-EOT.strip_heredoc
-          #!/bin/sh
-          /usr/bin/hourly_reindex_metrics_tables
-          /usr/bin/hourly_reindex_miq_queue_table
-          /usr/bin/hourly_reindex_miq_workers_table
-          exit 0
-        EOT
-      end
-
-      it "adds a new hourly cron job" do
-        expect(FileUtils).to receive(:chmod).with(0755, @test_hourly_cron)
-        subject.activate
-        expect(File.read(@test_hourly_cron)).to eq(expected_cron_file)
+      it "returns true" do
+        expect(subject.activate).to eq(true)
       end
     end
 
-    context "when an hourly cron job does exist" do
+    context "when hourly is not executed and periodic is executed" do
       before do
-        @test_hourly_cron = Tempfile.new(subject.class.name.split("::").last.downcase)
-        stub_const("ApplianceConsole::DatabaseMaintenance::HOURLY_CRON", @test_hourly_cron.path)
+        allow(ApplianceConsole::DatabaseMaintenanceHourly).to receive(:new).and_return(@not_executed)
+        allow(ApplianceConsole::DatabaseMaintenancePeriodic).to receive(:new).and_return(@executed)
+        allow(subject).to receive(:say)
+        allow(subject).to receive(:clear_screen)
       end
 
-      after do
-        FileUtils.rm_f(@test_hourly_cron.path)
+      it "returns true" do
+        expect(subject.activate).to eq(true)
+      end
+    end
+
+    context "when both hourly and periodic are executed" do
+      before do
+        allow(ApplianceConsole::DatabaseMaintenanceHourly).to receive(:new).and_return(@executed)
+        allow(ApplianceConsole::DatabaseMaintenancePeriodic).to receive(:new).and_return(@executed)
+        allow(subject).to receive(:say)
+        allow(subject).to receive(:clear_screen)
       end
 
-      it "removes the existing hourly cron job" do
-        subject.activate
-        expect(File.exist?(@test_hourly_cron.path)).to eq(false)
+      it "returns true" do
+        expect(subject.activate).to eq(true)
+      end
+    end
+
+    context "when neither hourly or periodic are executed" do
+      before do
+        allow(ApplianceConsole::DatabaseMaintenanceHourly).to receive(:new).and_return(@not_executed)
+        allow(ApplianceConsole::DatabaseMaintenancePeriodic).to receive(:new).and_return(@not_executed)
+        allow(subject).to receive(:say)
+        allow(subject).to receive(:clear_screen)
+      end
+
+      it "returns false" do
+        expect(subject.activate).to eq(false)
       end
     end
   end
