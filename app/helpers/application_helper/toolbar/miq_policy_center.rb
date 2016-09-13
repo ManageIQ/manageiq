@@ -12,7 +12,7 @@ class ApplicationHelper::Toolbar::MiqPolicyCenter < ApplicationHelper::Toolbar::
           t = N_('Edit Basic Info, Scope, and Notes'),
           t,
           :url_parms => "?typ=basic",
-          :klass     => ApplicationHelper::Button::PolicyButton,
+          :klass     => ApplicationHelper::Button::PolicyEdit,
           :options   => {:feature => 'policy_edit'}),
         button(
           :policy_copy,
@@ -32,7 +32,7 @@ class ApplicationHelper::Toolbar::MiqPolicyCenter < ApplicationHelper::Toolbar::
                         end,
           :url_parms => "main_div",
           :klass     => ApplicationHelper::Button::PolicyCopy,
-          :options   => {:feature => 'policy_copy', :condition => proc { x_active_tree != :policy_tree }}),
+          :options   => {:feature => 'policy_copy'}),
         button(
           :policy_delete,
           'pficon pficon-delete fa-lg',
@@ -43,14 +43,14 @@ class ApplicationHelper::Toolbar::MiqPolicyCenter < ApplicationHelper::Toolbar::
           :url_parms => "main_div",
           :klass     => ApplicationHelper::Button::PolicyDelete,
           :confirm   => proc { _("Are you sure you want to delete this %{policy_type} Policy?") % {:policy_type => ui_lookup(:model => @policy.towhat)} },
-          :options   => {:feature => 'policy_copy', :condition => proc { x_active_tree != :policy_tree }}),
+          :options   => {:feature => 'policy_delete'}),
         button(
           :condition_edit,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Create a new Condition assigned to this Policy'),
           t,
           :url_parms => "?typ=new",
-          :klass     => ApplicationHelper::Button::PolicyButton,
+          :klass     => ApplicationHelper::Button::PolicyEdit,
           :options   => {:feature => 'condition_edit'}),
         button(
           :policy_edit_conditions,
@@ -58,16 +58,16 @@ class ApplicationHelper::Toolbar::MiqPolicyCenter < ApplicationHelper::Toolbar::
           t = N_('Edit this Policy\'s Condition assignments'),
           t,
           :url_parms => "?typ=conditions",
-          :klass     => ApplicationHelper::Button::PolicyButton,
-          :options   => {:feature => 'policy_edit_conditions', :condition => proc { !role_allows?(:feature => "policy_edit") }}),
+          :klass     => ApplicationHelper::Button::PolicyEditConditions,
+          :options   => {:feature => 'policy_edit_conditions'}),
         button(
           :policy_edit_events,
           'pficon pficon-edit fa-lg',
           t = N_('Edit this Policy\'s Event assignments'),
           t,
           :url_parms => "?typ=events",
-          :klass     => ApplicationHelper::Button::PolicyButton,
-          :options   => {:feature => 'policy_edit', :condition => proc { @policy.mode == "compliance" }}),
+          :klass     => ApplicationHelper::Button::PolicyEditEvents,
+          :options   => {:feature => 'policy_edit'}),
       ]
     ),
   ])

@@ -3,8 +3,4 @@ class ApplicationHelper::Button::Separator < ApplicationHelper::Button::ButtonWi
     super(nil, nil, {}, props)
     self[:type] = :separator
   end
-
-  def check_rbac?
-    true
-  end
 end
