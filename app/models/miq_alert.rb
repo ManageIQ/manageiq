@@ -20,6 +20,7 @@ class MiqAlert < ApplicationRecord
     ExtManagementSystem
     MiqServer
     MiddlewareServer
+    ContainerManager
   )
 
   def self.base_tables
@@ -438,6 +439,11 @@ class MiqAlert < ApplicationRecord
         :options => [
           {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<=", "="]},
           {:name => :value_mw_garbage_collector, :description => _("Duration Per Minute (ms)"), :numeric => true}
+        ]},
+
+      {:name => "hwk_docker_storage_usage", :description => _("Docker Storage Space Precentage"), :db => ["ContainerManager"], :responds_to_events => "hawkular_event",
+        :options => [
+          {:name => :value_mw_greater_than, :description => _("< (%)"), :numeric => true}
         ]}
     ]
   end
