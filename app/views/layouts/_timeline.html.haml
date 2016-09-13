@@ -7,8 +7,6 @@
   function miqLoadTL() {
   console.log('called load tl');
   var data = [];
-  //var json = JSON.parse('#{tl_json.to_s}');
-  - puts "XXXXXXXX #{tl_json.inspect}"
   var json = JSON.parse('#{tl_json}'.replace(/&quot;/g, '"'))
 
   console.log(json);

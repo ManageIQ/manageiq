@@ -42,7 +42,12 @@ module ReportFormatter
 
         tl_event(tl_xml ? tl_xml : nil, row, col)   # Add this row to the tl event xml
         if new_event_type != current_event_type
-          @events.push({:name => current_event_type, :data => [@events_data]})
+          event = @events.select {|i| i[:name] == current_event_type }
+          unless event.blank?
+            event[0][:data].push(@events_data).flatten
+          else
+            @events.push({:name => current_event_type, :data => [@events_data]})
+          end
           new_event_type = current_event_type
           @events_data = []
         end
