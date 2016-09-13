@@ -3,7 +3,20 @@ module ManageIQ::Providers
     require 'hawkular/hawkular_client'
 
     def initialize(ems)
-      @alerts_client = ems.connect.alerts
+      @alerts_client = fake_client.alerts
+    end
+
+    def fake_client
+      entrypoint = URI::HTTP.build(:host => 'mtayer-centos7-7.eng.lab.tlv.redhat.com', :port => '8080').to_s
+      credentials = {
+        :username => 'jdoe',
+        :password => 'password'
+      }
+      options = {
+        :tenant => 'hawkular'
+      }
+      ::Hawkular::Client.new(:entrypoint => entrypoint, :credentials => credentials, :options => options)
+
     end
 
     def process_alert(operation, miq_alert)
@@ -57,6 +70,7 @@ module ManageIQ::Providers
       case eval_method
       when "mw_accumulated_gc_duration"       then generate_mw_gc_condition(eval_method, options)
       when "mw_heap_used", "mw_non_heap_used" then generate_mw_jvm_conditions(eval_method, options)
+      when "hwk_docker_storage_usage" then generate_hwk_docker_storage_conditions(options)
       end
     end
 
@@ -88,6 +102,16 @@ module ManageIQ::Providers
       c.operator = operator
       c.data2_multiplier = data2_multiplier
       c
+    end
+
+    def generate_hwk_docker_storage_conditions(options)
+      c = ::Hawkular::Alerts::Trigger::Condition.new({})
+      c.trigger_mode = :FIRING
+      c.data_id = "docker.storage.data.space.percent_available"
+      c.type = :THRESHOLD
+      c.operator = :LT
+      c.threshold = options[:value_mw_greater_than].to_i
+      ::Hawkular::Alerts::Trigger::GroupConditionsInfo.new([c])
     end
 
     def convert_operator(op)

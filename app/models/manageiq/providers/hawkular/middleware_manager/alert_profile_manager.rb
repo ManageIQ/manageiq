@@ -3,8 +3,22 @@ module ManageIQ::Providers
     require 'hawkular/hawkular_client'
 
     def initialize(ems)
-      @alerts_client = ems.connect.alerts
+      @alerts_client = fake_client.alerts
     end
+
+    def fake_client
+      entrypoint = URI::HTTP.build(:host => 'mtayer-centos7-7.eng.lab.tlv.redhat.com', :port => '8080').to_s
+      credentials = {
+        :username => 'jdoe',
+        :password => 'password'
+      }
+      options = {
+        :tenant => 'hawkular'
+      }
+      ::Hawkular::Client.new(:entrypoint => entrypoint, :credentials => credentials, :options => options)
+
+    end
+
 
     def process_alert_profile(operation, miq_alert_profile)
       profile_id = miq_alert_profile[:id]
@@ -87,12 +101,12 @@ module ManageIQ::Providers
     end
 
     def create_new_member(group_trigger, member_id)
-      server = MiddlewareServer.find(member_id)
+      server = ExtManagementSystem.find(member_id)
       new_member = ::Hawkular::Alerts::Trigger::GroupMemberInfo.new
       new_member.group_id = group_trigger.id
       new_member.member_id = "#{group_trigger.id}-#{member_id}"
       new_member.member_name = "#{group_trigger.name} for #{server.name}"
-      new_member.member_context = {'resource_path' => server.ems_ref.to_s}
+      new_member.member_context = {'resource_path' => server.name}
       new_member.data_id_map = calculate_member_data_id_map(server, group_trigger)
       @alerts_client.create_member_trigger(new_member)
     end
@@ -101,7 +115,7 @@ module ManageIQ::Providers
       data_id_map = {}
       prefix = group_trigger.context['dataId.hm.prefix'].nil? ? '' : group_trigger.context['dataId.hm.prefix']
       group_trigger.conditions.each do |condition|
-        data_id_map[condition.data_id] = "#{prefix}MI~R~[#{server.feed}/#{server.nativeid}]~MT~#{condition.data_id}"
+        data_id_map[condition.data_id] = "#{condition.data_id}"
         unless condition.data2_id.nil?
           data_id_map[condition.data2_id] = "#{prefix}MI~R~[#{server.feed}/#{server.nativeid}]~MT~#{condition.data2_id}"
         end

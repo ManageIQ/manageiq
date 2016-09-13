@@ -358,7 +358,7 @@ module MiqPolicyController::AlertProfiles
   end
 
   def alert_profile_sync_provider(old_alerts = nil, new_alerts = nil)
-    if @alert_profile.mode == "MiddlewareServer"
+    if %w(ContainerManager MiddlewareServer).include?(@alert_profile.mode)
       if old_alerts.nil? && new_alerts.nil?
         operation = :update_assignments
         old_alerts = new_alerts = @alert_profile.miq_alerts.collect(&:id)

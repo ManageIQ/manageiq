@@ -338,7 +338,7 @@ module ManageIQ::Providers
         :conditions  => alert[:expression],
         :based_on    => alert[:db]
       }
-      MiddlewareManager.find_each { |m| m.alert_manager.process_alert(operation, miq_alert) }
+      ManageIQ::Providers::Hawkular::MiddlewareManager::AlertManager.new(nil).process_alert(operation, miq_alert)
     end
 
     def self.update_alert_profile(*args)
@@ -350,9 +350,7 @@ module ManageIQ::Providers
         :old_assignments_ids => process_old_assignments_ids(alert_profile_arg[:old_assignments]),
         :new_assignments_ids => process_new_assignments_ids(alert_profile_arg[:new_assignments])
       }
-      MiddlewareManager.find_each do |m|
-        m.alert_profile_manager.process_alert_profile(alert_profile_arg[:operation], miq_alert_profile)
-      end
+      ManageIQ::Providers::Hawkular::MiddlewareManager::AlertProfileManager.new(nil).process_alert_profile(alert_profile_arg[:operation], miq_alert_profile)
     end
 
     def alert_manager
