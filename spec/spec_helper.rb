@@ -67,7 +67,7 @@ RSpec.configure do |config|
   config.include MigrationSpecHelper, :migrations => :up
   config.include MigrationSpecHelper, :migrations => :down
 
-  config.include ApiSpecHelper,     :rest_api => true
+  config.include Spec::Support::ApiHelper, :rest_api => true
   config.include AuthRequestHelper, :type => :request
   config.define_derived_metadata(:file_path => /spec\/requests\/api/) do |metadata|
     metadata[:aggregate_failures] = true
