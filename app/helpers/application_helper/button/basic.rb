@@ -15,9 +15,11 @@ class ApplicationHelper::Button::Basic < Hash
   def role_allows_feature?
     # for select buttons RBAC is checked only for nested buttons
     return true if self[:type] == :buttonSelect
+    # for each button in select checks RBAC, self[:child_id] represents the
+    # button id for buttons inside select
     return role_allows?(:feature => self[:child_id]) unless self[:child_id].nil?
-    return role_allows?(:feature => self[:id]) if self[:items].blank?
-    false
+    # check RBAC on separate button
+    role_allows?(:feature => self[:id])
   end
 
   # Return content under key such as :text or :confirm run through gettext or
