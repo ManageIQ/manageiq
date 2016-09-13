@@ -76,7 +76,7 @@ RSpec.configure do |config|
 
   config.include Spec::Support::AuthHelper, :type => :helper
 
-  config.include PresenterSpecHelper, :type => :presenter
+  config.include Spec::Support::PresenterHelper, :type => :presenter
   config.define_derived_metadata(:file_path => /spec\/presenters/) do |metadata|
     metadata[:type] ||= :presenter
   end
