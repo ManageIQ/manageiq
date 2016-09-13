@@ -12,6 +12,7 @@ class ChargebackContainerProject < Chargeback
     :archived              => :string,
     :cpu_cores_used_cost   => :float,
     :cpu_cores_used_metric => :float,
+    :fixed_compute_metric  => :integer,
     :fixed_compute_1_cost  => :float,
     :fixed_compute_2_cost  => :float,
     :fixed_2_cost          => :float,
@@ -100,6 +101,7 @@ class ChargebackContainerProject < Chargeback
     {
       "cpu_cores_used_cost"   => {:grouping => [:total]},
       "cpu_cores_used_metric" => {:grouping => [:total]},
+      "fixed_compute_metric"  => {:grouping => [:total]},
       "fixed_compute_1_cost"  => {:grouping => [:total]},
       "fixed_compute_2_cost"  => {:grouping => [:total]},
       "fixed_cost"            => {:grouping => [:total]},
