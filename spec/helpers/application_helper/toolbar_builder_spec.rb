@@ -2103,7 +2103,7 @@ describe ApplicationHelper do
       let(:server) { double("MiqServer", :logon_status => :ready) }
       let(:user)   { FactoryGirl.create(:user_admin) }
       before do
-        allow(MiqServer).to receive(:my_server).with(true).and_return(server)
+        allow(MiqServer).to receive(:my_server).and_return(server)
 
         @id = "miq_request_delete"
         login_as user

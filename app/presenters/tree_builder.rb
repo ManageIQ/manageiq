@@ -302,9 +302,8 @@ class TreeBuilder
   def x_build_node(object, pid, options)    # Called with object, tree node parent id, tree options
     parents = pid.to_s.split('_')
 
-    options[:is_current] =
-        ((object.kind_of?(MiqServer) && MiqServer.my_server(true).id == object.id) ||
-         (object.kind_of?(Zone) && MiqServer.my_server(true).my_zone == object.name))
+    options[:is_current] = ((object.kind_of?(MiqServer) && MiqServer.my_server.id == object.id) ||
+                             (object.kind_of?(Zone) && MiqServer.my_server.my_zone == object.name))
 
     node = x_build_single_node(object, pid, options)
 
