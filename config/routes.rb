@@ -1276,13 +1276,17 @@ Vmdb::Application.routes.draw do
         button
         show
         show_list
+        quick_search
+        listnav_search_selected
         tl_chooser
         update
         wait_for_task
         tagging_edit
         tag_edit_form_field_changed
       ) +
-      adv_search_post
+        adv_search_post +
+        exp_post +
+        save_post
     },
 
     :ems_network              => {
