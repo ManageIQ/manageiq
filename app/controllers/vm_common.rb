@@ -90,7 +90,7 @@ module VmCommon
     vm = identify_record(params[:id], VmOrTemplate)
 
     if vm.supports_launch_cockpit?
-      open_window(vm.cockpit_url)
+      javascript_open_window(vm.cockpit_url)
     else
       add_flash(vm.unsupported_reason(:launch_cockpit))
       javascript_flash
@@ -1136,7 +1136,7 @@ module VmCommon
               console_action = console_type == 'html5' ? 'launch_html5_console' : 'launch_vmware_console'
               url_for(miq_task.task_results.merge(:controller => controller_name, :action => console_action, :id => j(params[:id])))
             end
-      open_window(url)
+      javascript_open_window(url)
     end
   end
 
