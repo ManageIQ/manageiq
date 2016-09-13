@@ -1,4 +1,29 @@
 class ApplicationHelper::Toolbar::CloudSubnetCenter < ApplicationHelper::Toolbar::Basic
+  button_group('cloud_subnet_vmdb', [
+    select(
+      :cloud_subnet_vmdb_choice,
+      'fa fa-cog fa-lg',
+      t = N_('Configuration'),
+      t,
+      :items => [
+        button(
+          :cloud_subnet_edit,
+          'pficon pficon-edit fa-lg',
+          t = N_('Edit this Cloud Subnet'),
+          t,
+          :url_parms => 'main_div'
+        ),
+        button(
+          :cloud_subnet_delete,
+          'pficon pficon-delete fa-lg',
+          t = N_('Delete this Cloud Subnet'),
+          t,
+          :url_parms => 'main_div',
+          :confirm   => N_('Warning: This Cloud Subnet and ALL of its components will be removed!')
+        ),
+      ]
+    )])
+
   button_group('cloud_subnet_policy', [
     select(
       :cloud_subnet_policy_choice,

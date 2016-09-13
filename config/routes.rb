@@ -1381,7 +1381,10 @@ Vmdb::Application.routes.draw do
     :cloud_subnet             => {
       :get  => %w(
         download_data
+        cloud_subnet_form_fields
+        edit
         index
+        new
         show
         show_list
         tagging_edit
@@ -1389,12 +1392,16 @@ Vmdb::Application.routes.draw do
         compare_get,
       :post => %w(
         button
+        create
+        dynamic_checkbox_refresh
+        form_field_changed
+        listnav_search_selected
         quick_search
         show
         show_list
-        listnav_search_selected
         tag_edit_form_field_changed
         tagging_edit
+        update
       ) +
         adv_search_post +
         compare_post +
