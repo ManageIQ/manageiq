@@ -38,12 +38,31 @@ def override_service_attribute(dialogs_options_hash, attr_name)
 
   log_and_update_message(:info, "Processing override_attribute for #{service_attr_name}...", true)
   attr_value = dialogs_options_hash.fetch(service_attr_name, nil)
-  attr_value = "#{@service.name}-#{Time.now.strftime('%Y%m%d-%H%M%S')}" if attr_name == 'name' && attr_value.nil?
+  attr_value = "#{@service.name}-#{Time.zone.now.strftime('%Y%m%d-%H%M%S')}" if attr_name == 'name' && attr_value.nil?
 
   log_and_update_message(:info, "Setting service attribute: #{attr_name} to: #{attr_value}")
   @service.send("#{attr_name}=", attr_value)
 
   log_and_update_message(:info, "Processing override_attribute for #{service_attr_name}...Complete", true)
+end
+
+def override_service_retirement_date(dialog_options_hash, _attr_name)
+  new_service_retirement_date = dialog_options_hash.fetch(:service_retirement_date, nil)
+  log_and_update_message(:info, "Processing dialog_options_hash: #{dialog_options_hash.inspect}", true)
+  return if new_service_retirement_date.blank?
+
+  log_and_update_message(:info, "Processing override_service_retirement_date: #{new_service_retirement_date}", true)
+  @service.retires_on = new_service_retirement_date
+  log_and_update_message(:info, "Processing override_service_retirement_date...Complete", true)
+end
+
+def override_service_retirement_warn_days(dialog_options_hash, _attr_name)
+  new_service_retirement_warn_days = dialog_options_hash.fetch(:service_retirement_warn_days, nil)
+  return if new_service_retirement_warn_days.blank?
+
+  log_and_update_message(:info, "Processing service_retirement_warn: #{new_service_retirement_warn_days}", true)
+  @service.retirement_warn = new_service_retirement_warn_days
+  log_and_update_message(:info, "Processing override_service_retirement_warn_days...Complete", true)
 end
 
 def process_tag(tag_category, tag_value)
@@ -98,6 +117,8 @@ begin
   unless dialog_options_hash.blank?
     override_service_attribute(dialog_options_hash.fetch(0, {}), "name")
     override_service_attribute(dialog_options_hash.fetch(0, {}), "description")
+    override_service_retirement_date(dialog_options_hash.fetch(0, {}), "service_retirement_date")
+    override_service_retirement_warn_days(dialog_options_hash.fetch(0, {}), "service_retirement_warn_days")
   end
 
   tag_service(dialog_tags_hash) unless dialog_tags_hash.blank?

@@ -40,11 +40,31 @@ end
 def override_service_name(dialog_options_hash)
   log_and_update_message(:info, "Processing override_service_name...", true)
   new_service_name = dialog_options_hash.fetch(:service_name, nil)
-  new_service_name = "#{@service.name}-#{Time.now.strftime('%Y%m%d-%H%M%S')}" if new_service_name.blank?
+  new_service_name = "#{@service.name}-#{Time.zone.now.strftime('%Y%m%d-%H%M%S')}" if new_service_name.blank?
 
   log_and_update_message(:info, "Service name: #{new_service_name}")
   @service.name = new_service_name
   log_and_update_message(:info, "Processing override_service_name...Complete", true)
+end
+
+def override_service_retirement_date(dialog_options_hash)
+  new_service_retirement_date = dialog_options_hash.fetch(:service_retirement_date, nil)
+  return if new_service_retirement_date.blank?
+
+  log_and_update_message(:info, "Processing override_service_retirement_date...", true)
+  log_and_update_message(:info, "Service retirement date: #{new_service_retirement_date}")
+  @service.retires_on = new_service_retirement_date
+  log_and_update_message(:info, "Processing override_service_retirement_date...Complete", true)
+end
+
+def override_service_retirement_warn_days(dialog_options_hash)
+  new_service_retirement_warn_days = dialog_options_hash.fetch(:service_retirement_warn_days, nil)
+  return if new_service_retirement_warn_days.blank?
+
+  log_and_update_message(:info, "Processing override_service_retirement_warn_days...", true)
+  log_and_update_message(:info, "Service retirement warn days: #{new_service_retirement_warn_days}")
+  @service.retirement_warn = new_service_retirement_warn_days
+  log_and_update_message(:info, "Processing override_service_retirement_warn_days...Complete", true)
 end
 
 def override_service_description(dialog_options_hash)
@@ -114,8 +134,8 @@ def service_item_dialog_values(dialogs_options_hash)
 end
 
 def service_item_tag_values(dialogs_tags_hash)
-  merged_tags_hash         = Hash.new { |h, k| h[k] = {} }
-  provision_index = determine_provision_index
+  merged_tags_hash = Hash.new { |h, k| h[k] = {} }
+  provision_index  = determine_provision_index
 
   # merge dialog_tag_0 stuff with current build
   if dialogs_tags_hash[0].nil?
@@ -247,6 +267,8 @@ begin
   unless dialog_options_hash.blank?
     override_service_name(dialog_options_hash)
     override_service_description(dialog_options_hash)
+    override_service_retirement_date(dialog_options_hash)
+    override_service_retirement_warn_days(dialog_options_hash)
   end
 
   unless dialog_tags_hash.blank?

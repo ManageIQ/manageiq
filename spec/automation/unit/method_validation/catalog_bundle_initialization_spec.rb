@@ -16,19 +16,20 @@ describe "CatalogBundleInitialization Automate Method" do
   end
 
   def build_model
-    model = {"top"         => {:type          => 'composite',
-                               :children      => %w(vm_service1 vm_service2),
-                               :child_options => {'vm_service1' => {:provision_index => 0},
-                                                  'vm_service2' => {:provision_index => 1}}},
-             "vm_service1" => {:type    => 'atomic',
-                               :request => {:src_vm_id => @src_vm.id,
+    model = {
+      "top"         => {:type          => 'composite',
+                        :children      => %w(vm_service1 vm_service2),
+                        :child_options => {'vm_service1' => {:provision_index => 0},
+                                           'vm_service2' => {:provision_index => 1}}},
+      "vm_service1" => {:type    => 'atomic',
+                        :request => {:src_vm_id => @src_vm.id,
                                             :number_of_vms => 1, :requester => @user}
                               },
-             "vm_service2" => {:type    => 'atomic',
-                               :request => {:src_vm_id => @src_vm.id,
+      "vm_service2" => {:type    => 'atomic',
+                        :request => {:src_vm_id => @src_vm.id,
                                             :number_of_vms => 1, :requester => @user}
                               }
-            }
+    }
     build_service_template_tree(model)
   end
 
@@ -50,17 +51,23 @@ describe "CatalogBundleInitialization Automate Method" do
     before do
       @service_name = "Fred"
       @service_description = "My Favorite Service"
-      @dialog_hash = {'dialog_option_1_service_name'        => 'one',
-                      'dialog_option_2_service_name'        => 'two',
-                      'dialog_option_0_service_name'        => @service_name,
-                      'dialog_option_0_service_description' => @service_description,
-                      'dialog_tag_0_tracker'                => 'gps',
-                      'dialog_tag_1_location'               => 'BOM',
-                      'dialog_tag_2_location'               => 'EWR'}
-      @parsed_dialog_options_hash = {1 => {:service_name => "one"},
-                                     2 => {:service_name => "two"},
-                                     0 => {:service_name        => @service_name,
-                                           :service_description => @service_description}}
+      @service_retirement_date = "2016-08-08"
+      @service_retirement_warn_days = 9
+      @dialog_hash = {'dialog_option_1_service_name'                 => 'one',
+                      'dialog_option_2_service_name'                 => 'two',
+                      'dialog_option_0_service_name'                 => @service_name,
+                      'dialog_option_0_service_description'          => @service_description,
+                      'dialog_option_0_service_retirement_date'      => @service_retirement_date,
+                      'dialog_option_0_service_retirement_warn_days' => @service_retirement_warn_days,
+                      'dialog_tag_0_tracker'                         => 'gps',
+                      'dialog_tag_1_location'                        => 'BOM',
+                      'dialog_tag_2_location'                        => 'EWR'}
+      @parsed_dialog_options_hash = {1 => {:service_name                 => "one"},
+                                     2 => {:service_name                 => "two"},
+                                     0 => {:service_name                 => @service_name,
+                                           :service_retirement_date      => @service_retirement_date,
+                                           :service_retirement_warn_days => @service_retirement_warn_days,
+                                           :service_description          => @service_description}}
       @parsed_dialog_tags_hash = {1 => {:location => "BOM"},
                                   2 => {:location => "EWR"},
                                   0 => {:tracker => "gps"}}
@@ -68,10 +75,13 @@ describe "CatalogBundleInitialization Automate Method" do
 
     def check_svc_attrs
       @stp.reload
-      service = @stp.destination
-      expect(service.description).to eql(@service_description)
-      expect(service.name).to eql(@service_name)
-      expect(service.tags[0].name).to eql('/managed/tracker/gps')
+      expect(@stp.destination).to have_attributes(
+        :description     => @service_description,
+        :name            => @service_name,
+        :retires_on      => @service_retirement_date.to_date,
+        :retirement_warn => @service_retirement_warn_days,
+      )
+      expect(@stp.destination.tags.first.name).to eq('/managed/tracker/gps')
     end
 
     def process_stp(options)
