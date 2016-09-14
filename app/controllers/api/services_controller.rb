@@ -30,7 +30,6 @@ module Api
     def build_service_attributes(data)
       attributes                           = data.dup
       attributes['orchestration_manager']  = fetch_ext_management_system(data['orchestration_manager']) if data['orchestration_manager']
-      attributes['configuration_manager']  = fetch_ext_management_system(data['configuration_manager']) if data['configuration_manager']
       attributes['orchestration_template'] = fetch_orchestration_template(data['orchestration_template']) if data['orchestration_template']
       attributes['job_template']           = fetch_configuration_script(data['job_template']) if data['job_template']
       # A nasty bug in Rack, a query_parser's normalize_params method can handle only 100 keys total in payload data
