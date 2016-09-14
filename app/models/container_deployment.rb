@@ -81,7 +81,7 @@ deployment_type=openshift-enterprise
 rhsub_user=#{rhsm_auth.userid}
 rhsub_pass=#{rhsm_auth.password}
 rhsub_pool=#{rhsm_auth.rhsm_sku}
-ansible_sudo=true
+ansible_become=true
 
 [nodes]
 #{needed_subscription_addresses.join("\n")}
