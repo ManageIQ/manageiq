@@ -192,12 +192,14 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
     expect(v.snapshots.size).to eq(1)
 
     expect(v.hardware).to have_attributes(
-      :guest_os           => "Unknown",
-      :guest_os_full_name => "Unknown",
-      :bios               => "2c67139b-76e1-40fd-896f-407ee9efc447",
-      :cpu_total_cores    => 1,
-      :annotation         => nil,
-      :memory_mb          => 512
+      :guest_os             => "Unknown",
+      :guest_os_full_name   => "Unknown",
+      :bios                 => "2c67139b-76e1-40fd-896f-407ee9efc447",
+      :cpu_total_cores      => 1,
+      :cpu_sockets          => 1,
+      :cpu_cores_per_socket => 1,
+      :annotation           => nil,
+      :memory_mb            => 512
     )
 
     expect(v.hardware.disks.size).to eq(1)
