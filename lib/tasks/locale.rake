@@ -125,7 +125,7 @@ namespace :locale do
     require 'gettext_i18n_rails/model_attributes_finder'
     require_relative 'model_attribute_override.rb'
 
-    attributes_file = 'config/locales/model_attributes.rb'
+    attributes_file = 'locale/model_attributes.rb'
     File.unlink(attributes_file) if File.exist?(attributes_file)
 
     Rake::Task['gettext:store_model_attributes'].invoke
