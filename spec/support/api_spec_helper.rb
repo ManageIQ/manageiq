@@ -6,34 +6,32 @@ require 'bcrypt'
 require 'json'
 
 module ApiSpecHelper
-  def default_headers
-    headers = {
+  def request_headers
+    @request_headers ||= {
       "Content-Type" => "application/json",
       "Accept"       => "application/json"
     }
-    headers["HTTP_AUTHORIZATION"] = @http_authorization if @http_authorization
-    headers
   end
 
   def run_get(url, options = {})
     headers = options.delete(:headers) || {}
-    get url, :params => options, :headers => default_headers.merge(headers)
+    get url, :params => options, :headers => request_headers.merge(headers)
   end
 
   def run_post(url, body = {}, headers = {})
-    post url, :headers => default_headers.merge(headers).merge('RAW_POST_DATA' => body.to_json)
+    post url, :headers => request_headers.merge(headers).merge('RAW_POST_DATA' => body.to_json)
   end
 
   def run_put(url, body = {}, headers = {})
-    put url, :headers => default_headers.merge(headers).merge('RAW_POST_DATA' => body.to_json)
+    put url, :headers => request_headers.merge(headers).merge('RAW_POST_DATA' => body.to_json)
   end
 
   def run_patch(url, body = {}, headers = {})
-    patch url, :headers => default_headers.merge(headers).merge('RAW_POST_DATA' => body.to_json)
+    patch url, :headers => request_headers.merge(headers).merge('RAW_POST_DATA' => body.to_json)
   end
 
   def run_delete(url, headers = {})
-    delete url, :headers => default_headers.merge(headers)
+    delete url, :headers => request_headers.merge(headers)
   end
 
   def resources_include_suffix?(resources, key, suffix)
@@ -98,7 +96,7 @@ module ApiSpecHelper
   end
 
   def basic_authorize(user, password)
-    @http_authorization = ActionController::HttpAuthentication::Basic.encode_credentials(user, password)
+    request_headers["HTTP_AUTHORIZATION"] = ActionController::HttpAuthentication::Basic.encode_credentials(user, password)
   end
 
   def update_user_role(role, *identifiers)
