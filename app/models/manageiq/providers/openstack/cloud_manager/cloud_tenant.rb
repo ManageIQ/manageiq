@@ -4,4 +4,7 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudTenant < ::CloudTenant
                           :join_table              => "cloud_tenants_vms",
                           :association_foreign_key => "vm_id",
                           :class_name              => "ManageIQ::Providers::Openstack::CloudManager::Template"
+
+  has_many :private_networks,
+           :class_name => "ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private"
 end
