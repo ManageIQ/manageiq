@@ -5,7 +5,7 @@ module ArRegion
 
   DEFAULT_RAILS_SEQUENCE_FACTOR = 1_000_000_000_000
   COMPRESSED_ID_SEPARATOR = 'r'.freeze
-  CID_OR_ID_MATCHER = "\\d+?#{COMPRESSED_ID_SEPARATOR}?\\d+".freeze
+  CID_OR_ID_MATCHER = "\\d+?(#{COMPRESSED_ID_SEPARATOR}\\d+)?".freeze
   RE_COMPRESSED_ID = /^(\d+)#{COMPRESSED_ID_SEPARATOR}(\d+)$/
 
   included do
