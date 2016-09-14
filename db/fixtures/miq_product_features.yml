@@ -357,6 +357,10 @@
         :description: Set Retirement Date for Services
         :feature_type: control
         :identifier: service_retire
+      - :name: Create Services
+        :description: Create Services
+        :feature_type: control
+        :identifier: service_create
       - :name: Retire Services
         :description: Retire Services
         :feature_type: control
