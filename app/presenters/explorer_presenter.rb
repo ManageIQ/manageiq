@@ -72,7 +72,8 @@ class ExplorerPresenter
       :exp                  => {},
       :osf_node             => '',
       :show_miq_buttons     => false,
-      :load_chart           => nil
+      :load_chart           => nil,
+      :open_window          => nil,
     }.update(options)
   end
 
@@ -146,6 +147,10 @@ class ExplorerPresenter
     self
   end
 
+  def self.open_window(url)
+    new(:mode => 'window', :open_url => url)
+  end
+
   def []=(key, value)
     @options[key] = value
   end
@@ -159,6 +164,7 @@ class ExplorerPresenter
     when 'main_div' then for_render_main_div
     when 'flash'    then for_render_flash
     when 'buttons'  then for_render_buttons
+    when 'window'   then for_render_window
     else for_render_default
     end
   end
@@ -168,6 +174,13 @@ class ExplorerPresenter
   def for_render_flash
     data = {:explorer => 'flash'}
     data[:replacePartials] = @options[:replace_partials]
+    data
+  end
+
+  def for_render_window
+    data = {:explorer => 'window'}
+    data[:openUrl] = @options[:open_url]
+    data[:spinnerOff] = true if @options[:spinner_off]
     data
   end
 

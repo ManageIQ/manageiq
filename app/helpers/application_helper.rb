@@ -1055,6 +1055,12 @@ module ApplicationHelper
       render_to_string(:partial => "layouts/flash_msg")).for_render
   end
 
+  def javascript_open_window(url)
+    ex = ExplorerPresenter.open_window(url)
+    ex.spinner_off
+    render :json => ex.for_render
+  end
+
   # this keeps the main_div wrapping tag, replaces only the inside
   def replace_main_div(args, options = {})
     ex = ExplorerPresenter.main_div.update('main_div', render_to_string(args))

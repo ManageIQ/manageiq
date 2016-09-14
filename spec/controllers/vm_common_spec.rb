@@ -105,7 +105,7 @@ describe VmOrTemplateController do
 
       it 'renders javascript to open a popup' do
         allow(controller).to receive(:params).and_return(:task_id => task.id)
-        expect(subject).to include("window.open('/vm_or_template/launch_html5_console?#{task_results.to_query}');")
+        expect(subject).to match(%r{openUrl.*/vm_or_template/launch_html5_console\?#{task_results.to_query}"})
       end
     end
 
@@ -115,7 +115,7 @@ describe VmOrTemplateController do
 
       it 'renders javascript to open a popup' do
         expect(controller).to receive(:params).and_return(:task_id => task.id)
-        expect(subject).to include("window.open('#{url}');")
+        expect(subject).to include("openUrl\":\"#{url}\"")
       end
     end
   end
