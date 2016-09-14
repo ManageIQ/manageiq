@@ -12,7 +12,10 @@ class DynamicDialogFieldValueProcessor
     )
 
     dialog_field.normalize_automate_values(workspace.root.attributes)
-  rescue
+  rescue => e
+    $log.error "DynamicDialogFieldValueProcessor: error getting value from automate #{e.message}"
+    $log.error e.backtrace.join("\n")
+
     dialog_field.script_error_values
   end
 end
