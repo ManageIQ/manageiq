@@ -59,14 +59,4 @@ describe AddIdPrimaryKeyToJoinTables do
       end
     end
   end
-
-  migration_context :down do
-    it "recreates the composite primary key" do
-      migrate
-
-      described_class::JOIN_TABLES.each do |table|
-        expect(connection.primary_keys(table).count).to eq(2)
-      end
-    end
-  end
 end
