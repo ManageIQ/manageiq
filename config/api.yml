@@ -108,6 +108,8 @@
         :identifier: blueprint_edit
       - :name: delete
         :identifier: blueprint_delete
+      - :name: publish
+        :identifier: blueprint_publish
       :delete:
       - :name: delete
         :identifier: blueprint_delete
@@ -120,6 +122,8 @@
         :identifier: blueprint_edit
       - :name: delete
         :identifier: blueprint_delete
+      - :name: publish
+        :identifier: blueprint_publish
       :delete:
       - :name: delete
         :identifier: blueprint_delete

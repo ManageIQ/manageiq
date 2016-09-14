@@ -254,6 +254,33 @@ RSpec.describe "Blueprints API" do
 
       expect(response).to have_http_status(:forbidden)
     end
+
+    it "can publish multiple blueprints" do
+      blueprint1, blueprint2 = FactoryGirl.create_list(:blueprint, 2)
+      service_template = FactoryGirl.create(:service_template)
+      service_catalog = FactoryGirl.create(:service_template_catalog)
+      service_dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field)
+      blueprint1.create_bundle(:service_templates => [service_template],
+                               :service_dialog    => service_dialog,
+                               :service_catalog   => service_catalog)
+      blueprint2.create_bundle(:service_templates => [service_template],
+                               :service_dialog    => service_dialog,
+                               :service_catalog   => service_catalog)
+
+      api_basic_authorize collection_action_identifier(:blueprints, :publish)
+
+      run_post(blueprints_url, :action => "publish", :resources => [{:id => blueprint1.id}, {:id => blueprint2.id}])
+
+      expected = {
+        "results" => a_collection_containing_exactly(
+          a_hash_including("id" => blueprint1.id, "status" => "published"),
+          a_hash_including("id" => blueprint2.id, "status" => "published")
+        )
+      }
+
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
   end
 
   describe "POST /api/blueprints/:id" do
@@ -364,6 +391,27 @@ RSpec.describe "Blueprints API" do
       )
 
       expect(blueprint.reload.bundle.dialogs).to eq([])
+    end
+
+    it "publishes a single blueprint" do
+      blueprint = FactoryGirl.create(:blueprint)
+      service_template = FactoryGirl.create(:service_template)
+      service_catalog = FactoryGirl.create(:service_template_catalog)
+      service_dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field)
+      blueprint.create_bundle(:service_templates => [service_template],
+                              :service_dialog    => service_dialog,
+                              :service_catalog   => service_catalog)
+      api_basic_authorize action_identifier(:blueprints, :publish)
+
+      run_post(blueprints_url(blueprint.id), :action => "publish")
+
+      expected = {
+        "id"     => blueprint.id,
+        "status" => "published"
+      }
+
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
     end
   end
 

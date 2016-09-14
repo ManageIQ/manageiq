@@ -25,6 +25,12 @@ module Api
       blueprint
     end
 
+    def publish_resource(type, id, data)
+      blueprint = resource_search(id, type, Blueprint)
+      blueprint.publish(data['bundle_name'])
+      blueprint
+    end
+
     private
 
     def create_bundle(blueprint, bundle)
