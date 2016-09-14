@@ -93,9 +93,14 @@ module Api
         return nil if resource.blank?
 
         href_id = href_id(resource["href"], collection)
-        return href_id if href_id.present?
-
-        resource["id"].kind_of?(Integer) ? resource["id"] : nil
+        case
+        when href_id.present?
+          href_id
+        when resource["id"].kind_of?(Integer)
+          resource["id"]
+        when cid?(resource["id"])
+          from_cid(resource["id"])
+        end
       end
 
       def href_id(href, collection)
