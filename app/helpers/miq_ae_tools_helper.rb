@@ -1,10 +1,10 @@
-module ApplicationHelper::AutomateImportExport
+module MiqAeToolsHelper
   def git_import_button_enabled?
     MiqRegion.my_region.role_active?("git_owner")
   end
 
   def git_import_submit_help
-    unless MiqRegion.my_region.role_active?("git_owner")
+    unless git_import_button_enabled?
       content_tag(
         :i,
         "",

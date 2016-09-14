@@ -1,4 +1,4 @@
-describe ApplicationHelper::AutomateImportExport do
+describe MiqAeToolsHelper do
   describe "#git_import_button_enabled?" do
     let(:my_region) { double("MiqRegion") }
 
