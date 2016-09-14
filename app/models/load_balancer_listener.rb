@@ -8,6 +8,7 @@ class LoadBalancerListener < ApplicationRecord
   belongs_to :cloud_tenant
   belongs_to :load_balancer
 
+  has_many :load_balancer_health_checks, :dependent => :destroy
   has_many :load_balancer_listener_pools, :dependent => :destroy
   has_many :load_balancer_pools, :through => :load_balancer_listener_pools
   has_many :load_balancer_pool_members, -> { distinct }, :through => :load_balancer_pools
