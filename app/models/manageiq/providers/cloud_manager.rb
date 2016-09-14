@@ -36,6 +36,7 @@ module ManageIQ::Providers
 
     validates_presence_of :zone
 
+    include StorageManagerMixin
     include HasNetworkManagerMixin
     include HasManyOrchestrationStackMixin
 

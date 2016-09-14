@@ -23,8 +23,6 @@
 #       - guest_devices
 #     - custom_attributes
 #     - snapshots
-#   - cloud_object_store_containers
-#     - cloud_object_store_objects
 #   - cloud_services
 #
 
@@ -68,7 +66,6 @@ module EmsRefresh::SaveInventoryCloud
     # Save and link other subsections
     save_child_inventory(ems, hashes, child_keys, target)
 
-    link_volumes_to_base_snapshots(hashes[:cloud_volumes]) if hashes.key?(:cloud_volumes)
     link_parents_to_cloud_tenant(hashes[:cloud_tenants]) if hashes.key?(:cloud_tenants)
 
     ems.save!
@@ -255,45 +252,6 @@ module EmsRefresh::SaveInventoryCloud
     mapped_ids.each do |parent_id, ids|
       CloudTenant.where(:id => ids).update_all(:parent_id => parent_id)
     end
-  end
-
-  def save_cloud_object_store_containers_inventory(ems, hashes, target = nil)
-    target = ems if target.nil?
-
-    ems.cloud_object_store_containers.reset
-    deletes = if (target == ems)
-                :use_association
-              else
-                []
-              end
-
-    hashes.each do |h|
-      h[:ems_id]          = ems.id
-      h[:cloud_tenant_id] = h.fetch_path(:tenant, :id)
-    end
-
-    save_inventory_multi(ems.cloud_object_store_containers, hashes, deletes, [:ems_ref], nil, :tenant)
-    store_ids_for_new_records(ems.cloud_object_store_containers, hashes, :ems_ref)
-  end
-
-  def save_cloud_object_store_objects_inventory(ems, hashes, target = nil)
-    target = ems if target.nil?
-
-    ems.cloud_object_store_objects.reset
-    deletes = if (target == ems)
-                :use_association
-              else
-                []
-              end
-
-    hashes.each do |h|
-      h[:ems_id]                          = ems.id
-      h[:cloud_tenant_id]                 = h.fetch_path(:tenant, :id)
-      h[:cloud_object_store_container_id] = h.fetch_path(:container, :id)
-    end
-
-    save_inventory_multi(ems.cloud_object_store_objects, hashes, deletes, [:ems_ref], nil, [:tenant, :container])
-    store_ids_for_new_records(ems.cloud_object_store_objects, hashes, :ems_ref)
   end
 
   def save_resource_groups_inventory(ems, hashes, target = nil)

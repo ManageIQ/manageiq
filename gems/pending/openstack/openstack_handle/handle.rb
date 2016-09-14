@@ -256,6 +256,7 @@ module OpenstackHandle
       connect(:service => "Volume", :tenant_name => tenant_name)
     end
     alias_method :connect_volume, :volume_service
+    alias_method :cinder_service, :volume_service
 
     def detect_volume_service(tenant_name = nil)
       detect_service("Volume", tenant_name)
@@ -265,6 +266,7 @@ module OpenstackHandle
       connect(:service => "Storage", :tenant_name => tenant_name)
     end
     alias_method :connect_storage, :storage_service
+    alias_method :swift_service,   :storage_service
 
     def detect_storage_service(tenant_name = nil)
       detect_service("Storage", tenant_name)

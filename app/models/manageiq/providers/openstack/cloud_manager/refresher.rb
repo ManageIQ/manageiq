@@ -12,6 +12,7 @@ module ManageIQ::Providers
       super
       EmsRefresh.queue_refresh(ems.network_manager)
       EmsRefresh.queue_refresh(ems.cinder_manager)
+      EmsRefresh.queue_refresh(ems.swift_manager)
     end
 
     def post_process_refresh_classes
