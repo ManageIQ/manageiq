@@ -319,6 +319,27 @@ class Tenant < ApplicationRecord
     data_tenant
   end
 
+  def provider_tenant
+    source_object = ancestors.try(:second).try(:source)
+    source_object && source_object.kind_of?(ManageIQ::Providers::CloudManager) ? source_object : nil
+  end
+
+  ALLOWED_CLOUD_TENANT_QUEUE_METHODS = %w(create_cloud_tenant).freeze
+
+  def queue_method_for_cloud_tenant(cloud_manager, method, params)
+    return unless ALLOWED_CLOUD_TENANT_QUEUE_METHODS.include?(method)
+
+    MiqQueue.put_or_update(
+      :queue_name  => MiqEmsRefreshWorker.queue_name_for_ems(cloud_manager),
+      :class_name  => cloud_manager.class,
+      :instance_id => cloud_manager.id,
+      :method_name => method,
+      :args        => params,
+      :zone        => cloud_manager.my_zone
+    )
+
+    EmsRefresh.queue_refresh(cloud_manager)
+  end
   private
 
   # when a root tenant has an attribute with a nil value,

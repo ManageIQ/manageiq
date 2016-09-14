@@ -72,4 +72,23 @@ class CloudTenant < ApplicationRecord
       :zone        => ems.my_zone
     ) if ems.supports_cloud_tenant_mapping?
   end
+
+  def self.create_cloud_tenant(cloud_manager, cloud_tenant_name, options = {})
+    klass = orchestration_stack_class_factory(cloud_manager)
+
+    ems_ref, parent_ref = klass.raw_create_cloud_tenant(cloud_manager, cloud_tenant_name, options)
+
+    parent_id = CloudTenant.find_by(:ems_ref => parent_ref).try(:id)
+
+    klass.create(:name => cloud_tenant_name, :description => options[:description], :ems_ref => ems_ref,
+                 :ext_management_system => cloud_manager, :parent_id => parent_id)
+  end
+
+  def self.orchestration_stack_class_factory(cloud_manager)
+    "#{cloud_manager.class.name}::#{name}".constantize
+  end
+
+  def self.raw_create_cloud_tenant(_cloud_manager, _cloud_tenant_name, _options)
+    raise NotImplementedError, _("raw_create_cloud_tenant must be implemented in a subclass")
+  end
 end
