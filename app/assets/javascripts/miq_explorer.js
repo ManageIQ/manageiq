@@ -73,6 +73,8 @@ ManageIQ.explorer.processReplaceMainDiv = function(data) {
 
 ManageIQ.explorer.processFlash = function(data) {
   ManageIQ.explorer.replacePartials(data);
+  ManageIQ.explorer.spinnerOff(data);
+  ManageIQ.explorer.scrollTop(data);
 };
 
 ManageIQ.explorer.replacePartials = function(data) {
@@ -94,6 +96,13 @@ ManageIQ.explorer.updatePartials = function(data) {
 ManageIQ.explorer.spinnerOff = function(data) {
   if (data.spinnerOff) {
     miqSparkle(false);
+  }
+};
+
+
+ManageIQ.explorer.scrollTop = function(data) {
+  if (data.scrollTop) {
+    $('#main_div').scrollTop(0);
   }
 };
 
@@ -185,7 +194,7 @@ ManageIQ.explorer.processReplaceRightCell = function(data) {
       }
     });
 
-  $('#main_div').scrollTop(0);
+  ManageIQ.explorer.scrollTop(data);
 
   if (_.isString(data.rightCellText)) {
     $('h1#explorer_title > span#explorer_title_text')

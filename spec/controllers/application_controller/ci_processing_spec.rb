@@ -354,7 +354,7 @@ describe ServiceController do
                                     :storage               => FactoryGirl.create(:storage)
                                    )
       controller.instance_variable_set(:@_params, :miq_grid_checks => "#{vm.id}, #{template.id}")
-      expect(controller).to receive(:render_flash_and_scroll)
+      expect(controller).to receive(:javascript_flash)
       controller.send(:vm_button_operation, 'retire_now', "Retirement")
       expect(response.status).to eq(200)
     end

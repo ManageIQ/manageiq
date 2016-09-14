@@ -194,7 +194,7 @@ module ApplicationController::CiProcessing
        VmOrTemplate.find(vms).any? { |vm| !vm.supports_retire? }
       add_flash(_("Set Retirement Date does not apply to selected %{model}") %
         {:model => ui_lookup(:table => "miq_template")}, :error)
-      render_flash_and_scroll
+      javascript_flash(:scroll_top => true)
       return
     end
     # check to see if coming from show_list or drilled into vms from another CI
@@ -852,7 +852,7 @@ module ApplicationController::CiProcessing
       if VmOrTemplate.includes_template?(recs)
         add_flash(_("Right-Size Recommendations does not apply to selected %{model}") %
           {:model => ui_lookup(:table => "miq_template")}, :error)
-        render_flash_and_scroll
+        javascript_flash(:scroll_top => true)
         return
       end
     end
@@ -1662,18 +1662,18 @@ module ApplicationController::CiProcessing
     if recs.length < 1
       add_flash(_("One or more %{model} must be selected to Reconfigure") %
         {:model => Dictionary.gettext(db.to_s, :type => :model, :notfound => :titleize, :plural => true)}, :error)
-      render_flash_and_scroll
+      javascript_flash(:scroll_top => true)
       return
     else
       if VmOrTemplate.includes_template?(recs)
         add_flash(_("Reconfigure does not apply because you selected at least one %{model}") %
           {:model => ui_lookup(:table => "miq_template")}, :error)
-        render_flash_and_scroll
+        javascript_flash(:scroll_top => true)
         return
       end
       unless VmOrTemplate.reconfigurable?(recs)
         add_flash(_("Reconfigure does not apply because you selected at least one un-reconfigurable VM"), :error)
-        render_flash_and_scroll
+        javascript_flash(:scroll_top => true)
         return
       end
       @reconfigure_items = recs.collect(&:to_i)
@@ -1837,7 +1837,7 @@ module ApplicationController::CiProcessing
          VmOrTemplate.find(vms).any? { |vm| !vm.supports_retire? }
         add_flash(_("Retire does not apply to selected %{model}") %
           {:model => ui_lookup(:table => "miq_template")}, :error)
-        render_flash_and_scroll
+        javascript_flash(:scroll_top => true)
         return
       end
 
