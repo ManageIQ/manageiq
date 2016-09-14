@@ -5305,6 +5305,7 @@ network_ports:
 - binding_host_id
 - binding_virtual_interface_type
 - extra_attributes
+- source
 network_ports_security_groups:
 - network_port_id
 - security_group_id
