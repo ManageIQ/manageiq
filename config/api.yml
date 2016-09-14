@@ -1289,6 +1289,8 @@
       :post:
       - :name: query
         :identifier: service_view
+      - :name: create
+        :identifier: service_create
       - :name: edit
         :identifier: service_edit
       - :name: retire
@@ -1848,6 +1850,34 @@
       :post:
       - :name: query
         :identifier: miq_cloud_networks_view
+  :orchestration_templates:
+    :description: Orchestration Template
+    :identifier: orchestration_templates_accord
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *gpppd
+    :klass: OrchestrationTemplate
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: orchestration_templates_view
+      :post:
+      - :name: create
+        :identifier: orchestration_template_add
+      - :name: edit
+        :identifier: orchestration_template_edit
+      - :name: delete
+        :identifier: orchestration_template_remove
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: orchestration_template_edit
+      - :name: delete
+        :identifier: orchestration_template_remove
+      :delete:
+      - :name: delete
+        :identifier: orchestration_template_remove
   :arbitration_settings:
     :description: Arbitration Settings
     :identifier: miq_arbitration_settings
