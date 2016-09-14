@@ -23,6 +23,12 @@ module OpenstackHandle
                 "in provider: #{@os_handle.address}. Message=#{err.message}"
       _log.warn err.backtrace.join("\n")
       []
+    rescue Excon::Errors::Unauthorized => err
+      # It can happen user doesn't have rights to read some tenant, in that case log warning but continue refresh
+      _log.warn "Unauthorized to read the project: #{@os_handle.project_name}, for collection "\
+                "type: #{collection_type}, in provider: #{@os_handle.address}. Message=#{err.message}"
+      _log.warn err.backtrace.join("\n")
+      []
     rescue Excon::Errors::NotFound => err
       # It can happen that some data do not exist anymore, in that case log warning but continue refresh
       _log.warn "Data not found in project: #{@os_handle.project_name}, for collection type: #{collection_type}, "\
