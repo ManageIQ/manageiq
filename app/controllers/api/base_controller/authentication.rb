@@ -102,7 +102,7 @@ module Api
           "name"        => details[:name],
           "description" => details[:description]
         }
-        collection, method, action = collection_config.what_refers_to_feature(ident_str)
+        collection, method, action = CollectionConfig.what_refers_to_feature(ident_str)
         collections = CollectionConfig.names_for_feature(ident_str)
         res["href"] = "#{@req.api_prefix}/#{collections.first}" if collections.one?
         res["action"] = api_action_details(collection, method, action) if collection.present?

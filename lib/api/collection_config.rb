@@ -17,6 +17,25 @@ module Api
       ApiConfig.collections.detect { |_, spec| spec[:klass] == resource_klass.name }.try(:first)
     end
 
+    def self.what_refers_to_feature(product_feature_name)
+      referenced_identifiers[product_feature_name]
+    end
+
+    def self.referenced_identifiers
+      @referenced_identifiers ||= @cfg.each_with_object({}) do |(collection, cspec), result|
+        next unless cspec[:collection_actions].present?
+        cspec[:collection_actions].each do |method, action_definitions|
+          next unless action_definitions.present?
+          action_definitions.each do |action|
+            identifier = action[:identifier]
+            next if action[:disabled] || result.key?(identifier)
+            result[identifier] = [collection, method, action]
+          end
+        end
+      end
+    end
+    private_class_method :referenced_identifiers
+
     def initialize
       @cfg = ApiConfig.collections
     end
@@ -82,29 +101,9 @@ module Api
       self[collection_name][:klass].try(:constantize)
     end
 
-    def what_refers_to_feature(product_feature_name)
-      referenced_identifiers[product_feature_name]
-    end
-
     def collections_with_description
       @cfg.each_with_object({}) do |(collection, cspec), result|
         result[collection] = cspec[:description] if cspec[:options].include?(:collection)
-      end
-    end
-
-    private
-
-    def referenced_identifiers
-      @referenced_identifiers ||= @cfg.each_with_object({}) do |(collection, cspec), result|
-        next unless cspec[:collection_actions].present?
-        cspec[:collection_actions].each do |method, action_definitions|
-          next unless action_definitions.present?
-          action_definitions.each do |action|
-            identifier = action[:identifier]
-            next if action[:disabled] || result.key?(identifier)
-            result[identifier] = [collection, method, action]
-          end
-        end
       end
     end
   end
