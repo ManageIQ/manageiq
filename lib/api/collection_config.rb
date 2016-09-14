@@ -21,6 +21,12 @@ module Api
       referenced_identifiers[product_feature_name]
     end
 
+    def self.collections_with_description
+      ApiConfig.collections.each_with_object({}) do |(collection, cspec), result|
+        result[collection] = cspec[:description] if cspec[:options].include?(:collection)
+      end
+    end
+
     def self.referenced_identifiers
       @referenced_identifiers ||= @cfg.each_with_object({}) do |(collection, cspec), result|
         next unless cspec[:collection_actions].present?
@@ -99,12 +105,6 @@ module Api
 
     def klass(collection_name)
       self[collection_name][:klass].try(:constantize)
-    end
-
-    def collections_with_description
-      @cfg.each_with_object({}) do |(collection, cspec), result|
-        result[collection] = cspec[:description] if cspec[:options].include?(:collection)
-      end
     end
   end
 end
