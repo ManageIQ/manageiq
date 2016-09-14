@@ -181,9 +181,7 @@ module MiqAeCustomizationController::Dialogs
       replace_right_cell(x_node, [:dialog_edit])
 
     else
-      render_flash do |page|
-        page << "miqSparkle(false);"
-      end
+      javascript_flash(:spinner_off => true)
     end
   end
 

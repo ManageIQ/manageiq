@@ -410,11 +410,17 @@ class ApplicationController < ActionController::Base
   protected
 
   def render_flash(add_flash_text = nil, severity = nil)
-    add_flash(add_flash_text, severity) if add_flash_text
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      yield(page) if block_given?
+    # if block is given, we fallback to RJS
+    if block_given?
+      add_flash(add_flash_text, severity) if add_flash_text
+      render :update do |page|
+        page << javascript_prologue
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        yield(page)
+      end
+    # w/o a block we use JSON based flash
+    else
+      javascript_flash(:text => add_flash_text, :severity => severity)
     end
   end
 
