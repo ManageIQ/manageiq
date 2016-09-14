@@ -1,5 +1,18 @@
 module Api
   class CollectionConfig
+    def self.names_for_feature(product_feature_name)
+      names_for_features[product_feature_name]
+    end
+
+    def self.names_for_features
+      @names_for_features ||= ApiConfig.collections.each_with_object(Hash.new { |h, k| h[k] = [] }) do |(collection, cspec), result|
+        ident = cspec[:identifier]
+        next unless ident
+        result[ident] << collection
+      end
+    end
+    private_class_method :names_for_features
+
     def initialize
       @cfg = ApiConfig.collections
     end
@@ -61,10 +74,6 @@ module Api
       typed_subcollection_actions(collection_name, subcollection_name).try(:fetch_path, method.to_sym)
     end
 
-    def names_for_feature(product_feature_name)
-      names_for_features[product_feature_name]
-    end
-
     def klass(collection_name)
       self[collection_name][:klass].try(:constantize)
     end
@@ -84,14 +93,6 @@ module Api
     end
 
     private
-
-    def names_for_features
-      @names_for_features ||= @cfg.each_with_object(Hash.new { |h, k| h[k] = [] }) do |(collection, cspec), result|
-        ident = cspec[:identifier]
-        next unless ident
-        result[ident] << collection
-      end
-    end
 
     def referenced_identifiers
       @referenced_identifiers ||= @cfg.each_with_object({}) do |(collection, cspec), result|
