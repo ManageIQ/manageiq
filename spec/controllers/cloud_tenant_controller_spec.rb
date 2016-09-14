@@ -88,4 +88,66 @@ describe CloudTenantController do
       end
     end
   end
+
+  describe "#create" do
+    before do
+      stub_user(:features => :all)
+      EvmSpecHelper.create_guid_miq_server_zone
+      @ems = FactoryGirl.create(:ems_openstack)
+      @tenant = FactoryGirl.create(:cloud_tenant_openstack)
+    end
+
+    it "builds create screen" do
+      post :button, :params => { :pressed => "cloud_tenant_new", :format => :js }
+      expect(assigns(:flash_array)).to be_nil
+    end
+
+    it "creates a cloud tenant" do
+      allow(ManageIQ::Providers::Openstack::CloudManager::CloudTenant)
+        .to receive(:raw_create_cloud_tenant).and_return(@tenant)
+      post :create, :params => { :button => "add", :format => :js, :name => 'foo', :ems_id => @ems.id }
+      expect(controller.send(:flash_errors?)).to be_falsey
+      expect(assigns(:flash_array).first[:message]).to include("Creating Cloud Tenant")
+      expect(assigns(:edit)).to be_nil
+    end
+  end
+
+  describe "#edit" do
+    before do
+      stub_user(:features => :all)
+      EvmSpecHelper.create_guid_miq_server_zone
+      @tenant = FactoryGirl.create(:cloud_tenant_openstack)
+    end
+
+    it "builds edit screen" do
+      post :button, :params => { :pressed => "cloud_tenant_edit", :format => :js, :id => @tenant.id }
+      expect(assigns(:flash_array)).to be_nil
+    end
+
+    it "updates itself" do
+      allow_any_instance_of(ManageIQ::Providers::Openstack::CloudManager::CloudTenant)
+        .to receive(:raw_update_cloud_tenant)
+      session[:breadcrumbs] = [{:url => "cloud_tenant/show/#{@tenant.id}"}, 'placeholder']
+      post :update, :params => { :button => "save", :format => :js, :id => @tenant.id }
+      expect(controller.send(:flash_errors?)).to be_falsey
+      expect(assigns(:flash_array).first[:message]).to include("Updating Cloud Tenant")
+      expect(assigns(:edit)).to be_nil
+    end
+  end
+
+  describe "#delete" do
+    before do
+      stub_user(:features => :all)
+      EvmSpecHelper.create_guid_miq_server_zone
+      @tenant = FactoryGirl.create(:cloud_tenant_openstack)
+    end
+
+    it "deletes itself" do
+      allow_any_instance_of(ManageIQ::Providers::Openstack::CloudManager::CloudTenant)
+        .to receive(:raw_delete_cloud_tenant)
+      post :button, :params => { :id => @tenant.id, :pressed => "cloud_tenant_delete", :format => :js }
+      expect(controller.send(:flash_errors?)).to be_falsey
+      expect(assigns(:flash_array).first[:message]).to include("Delete initiated for 1 Cloud Tenant")
+    end
+  end
 end

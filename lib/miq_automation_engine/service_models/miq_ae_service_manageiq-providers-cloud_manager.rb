@@ -13,5 +13,9 @@ module MiqAeMethodService
     expose :cloud_resource_quotas,  :association => true
     expose :orchestration_stacks,   :association => true
     expose :host_aggregates,        :association => true
+
+    def create_cloud_tenant(create_options, options = {})
+      sync_or_async_ems_operation(options[:sync], "create_cloud_tenant", [create_options])
+    end
   end
 end

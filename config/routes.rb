@@ -357,9 +357,11 @@ Vmdb::Application.routes.draw do
 
     :cloud_tenant             => {
       :get => %w(
+        cloud_tenant_form_fields
         download_data
         edit
         index
+        new
         protect
         show
         show_list
@@ -369,6 +371,7 @@ Vmdb::Application.routes.draw do
       :post => %w(
         button
         listnav_search_selected
+        create
         protect
         quick_search
         sections_field_changed

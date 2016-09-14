@@ -33,6 +33,43 @@ class CloudTenant < ApplicationRecord
 
   virtual_total :total_vms, :vms
 
+  def self.class_by_ems(ext_management_system)
+    ext_management_system && ext_management_system.class::CloudTenant
+  end
+
+  def self.create_cloud_tenant(ext_management_system, options = {})
+    raise ArgumentError, _("ext_management_system cannot be nil") if ext_management_system.nil?
+
+    klass = class_by_ems(ext_management_system)
+
+    created_cloud_tenant = klass.raw_create_cloud_tenant(ext_management_system, options)
+
+    klass.create(
+      :name                  => created_cloud_tenant[:name],
+      :ems_ref               => created_cloud_tenant[:ems_ref],
+      :ext_management_system => ext_management_system)
+  end
+
+  def self.raw_create_cloud_tenant(_ext_management_system, _options = {})
+    raise NotImplementedError, _("raw_create_cloud_tenant must be implemented in a subclass")
+  end
+
+  def update_cloud_tenant(options = {})
+    raw_update_cloud_tenant(options)
+  end
+
+  def raw_update_cloud_tenant(_options = {})
+    raise NotImplementedError, _("raw_update_cloud_tenant must be implemented in a subclass")
+  end
+
+  def delete_cloud_tenant
+    raw_delete_cloud_tenant
+  end
+
+  def raw_delete_cloud_tenant
+    raise NotImplementedError, _("raw_delete_cloud_tenant must be implemented in a subclass")
+  end
+
   def all_cloud_networks
     direct_cloud_networks + shared_cloud_networks
   end
