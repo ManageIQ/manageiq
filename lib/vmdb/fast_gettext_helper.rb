@@ -25,7 +25,7 @@ module Vmdb
 
     def self.supported_locales
       # Format of YAML file is expected to be as follows
-      #  and match the directory names in config/locales
+      #  and match the directory names in locale/
       #
       # ---
       # - en
