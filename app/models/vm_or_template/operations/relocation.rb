@@ -1,11 +1,4 @@
 module VmOrTemplate::Operations::Relocation
-  extend ActiveSupport::Concern
-
-  included do
-    supports_not :live_migrate, :reason => N_("Operation not supported.")
-    supports_not :evacuate, :reason => N_("Operation not supported.")
-  end
-
   def raw_live_migrate(_options = nil)
     raise NotImplementedError, _("raw_live_migrate must be implemented in a subclass")
   end
