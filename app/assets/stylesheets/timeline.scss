@@ -12,16 +12,25 @@
   padding-left: 10px;
 }
 
+.timeline-container {
+  padding-top: 20px;
+}
+
 .timeline-date-box {
   padding-top: 5px;
 }
 
 .timeline-date-input {
-  padding-left: 10px;
+  padding-left: 8px;
   width: 200px;
 }
 
 .timeline-pivot-input {
-  padding-left: 3px;
+  padding-left: 8px;
   width: 223px !important;
+}
+
+.timeline-container > .popover {
+  max-width: 100%;
+  width: 300px;
 }

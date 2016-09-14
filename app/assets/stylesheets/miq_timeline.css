@@ -99,7 +99,6 @@
 }
 .timeline-container {
     position: relative !important;
-    overflow: hidden !important;
 }
 .timeline-copyright {
     position: absolute !important;

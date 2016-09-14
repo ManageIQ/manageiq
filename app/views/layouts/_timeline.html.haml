@@ -5,11 +5,8 @@
   var element, timeline;
   - load_tl_now ||= false
   function miqLoadTL() {
-  console.log('called load tl');
   var data = [];
   var json = JSON.parse('#{tl_json}'.replace(/&quot;/g, '"'))
-
-  console.log(json);
   start = new Date(ManageIQ.calendar.calDateFrom);
   end = new Date(ManageIQ.calendar.calDateTo);
   one_hour = 60 * 60 * 1000;
@@ -17,10 +14,6 @@
   one_week = one_day * 7;
   one_month = one_day * 30;
   six_months = one_month * 6;
-  console.log(ManageIQ.calendar.calDateFrom);
-  console.log(ManageIQ.calendar.calDateTo);
-  console.log(start);
-  console.log(end);
   - if tl_json
     -#console.log('tl-json' + #{tl_json});
     //var json = #{tl_json.html_safe};
@@ -32,7 +25,6 @@
     var timelinedata = json[x].data[0];
     for (var y in timelinedata) {
     data[x].data.push({});
-    console.log(timelinedata);
     data[x].data[y].date = new Date(timelinedata[y].start);
     data[x].data[y].details = {};
     data[x].data[y].details.event = timelinedata[y].description;
@@ -40,25 +32,128 @@
     data[x].display = true;
     }
     }
-    timeline = d3.chart.timeline().end(end).start(start).minScale(1).maxScale(720);
+    var today = new Date();
+    timeline = d3.chart.timeline().end(today).start(today - one_week).minScale(one_week/one_month).maxScale(one_week/one_hour).eventGrouping(360000).labelWidth(170).eventPopover(handlePopover).eventZoom(handleZoomEvent).eventClick(eventClick);
     element = d3.select(chart_placeholder).append('div').datum(data);
+    if(timeline && timeline.constructor && timeline.call && timeline.apply) {
     timeline(element);
+    }
+
+    $('[data-toggle="popover"]').popover({
+    'container': '#tl_div',
+    'placement': 'top',
+    'html': true
+    });
   }
   // end if miqLoadTL
 
-  $(window).on('resize', function() {
+  function handlePopover(element) {
+  var popover = '';
+  if(element.hasOwnProperty("events")) {
+  popover = 'Group of ' + element.events.length + 'events';
+  } else {
+  for (var i in element.details) {
+  popover = popover + element.details[i];
+  }
+  }
+  return popover;
+  }
+
+  function handleZoomEvent() {
+  //var zoomDate = timeline.Zoom.scales.x.domain()[1];
+  //console.log(zoomDate);
+  //$('#dateinput input').val('')
+  //$('#range_selector input').val('');
+  -#$('#pivot_selector').selectpicker('val', '');
+  }
+  // maybe rename to wireup timeline or something similar
+  function createTooltip() {
   if(timeline && timeline.constructor && timeline.call && timeline.apply) {
   timeline(element);
-  $('[data-toggle="tooltip"]').tooltip({
-  'container': 'body',
-  'placement': 'top',
-  'html': true,
-  'delay': {
-  "show": 500,
-  "hide": 1000
   }
+  $('[data-toggle="popover"]').popover({
+  'container': '#tl_div',
+  'placement': 'top',
+  'html': true
   });
   }
+
+  function eventClick(el) {
+  var table = '<table class="table table-striped table-bordered">';
+  console.log(el);
+  if(el.hasOwnProperty("events")) {
+  table = table + '<thead>This is a group of ' + el.events.length + ' events starting on '+ el.date.toLocaleString() + '</thead><tbody>';
+  table = table + '<tr><th>Date</th><th>Event</th></tr>'
+  for (var i = 0; i < el.events.length; i++) {
+  table = table + '<tr><td>' + el.events[i].date.toLocaleString() + ' </td> ';
+  for (var j in el.events[i].details) {
+  table = table +'<td> ' + el.events[i].details[j] + ' </td> ';
+  }
+  table = table + '</tr>'
+  }
+  table = table + '</tbody>';
+  } else {
+  table = table + 'Date: ' + el.date.toLocaleString()+ '<br>';
+  for (var i in el.details) {
+  table = table + el.details[i] + '<br>';
+  }
+  }
+  $('#legend').html(table);
+  }
+
+  function zoomFilter() {
+  if(!(timeline && timeline.constructor && timeline.call && timeline.apply)) return;
+
+  var range = $('#range_selector').val(),
+  pivot = $('#pivot_selector').val(),
+  selectedDay = $('#dateinput').datepicker("getDate"),
+  days = 0;
+
+  if(!range || !pivot || !selectedDay) return;
+
+  // process selections
+  switch (range) {
+  case 'one_hour':
+  case 'one_day':
+  days = 1;
+  break;
+  case 'one_week':
+  days = 7;
+  break;
+  case 'one_month':
+  days = 30;
+  break;
+  }
+  var startDate = moment(selectedDay), endDate = moment(selectedDay);
+  if(pivot === "starting") {
+  endDate.add(days, 'days');
+  } else if(pivot === "centered") {
+  var dayCalculation = Math.ceil(days/2);
+  startDate.subtract(dayCalculation, 'days');
+  endDate.add(dayCalculation, 'days');
+  } else  {
+  startDate.subtract(days, 'days');
+  }
+  timeline.Zoom.zoomFilter(startDate.toDate(), endDate.toDate());
+  }
+
+  $(window).on('resize', createTooltip);
+
+  $('#range_selector').on('changed.bs.select', function(event, clickedIndex, newValue, oldValue) {
+  zoomFilter();
   });
 
+  $('#pivot_selector').on('changed.bs.select', function(event, clickedIndex, newValue, oldValue) {
+  zoomFilter();
+  });
+
+  $('#dateinput').datepicker({
+  autoclose: true,
+  todayBtn: "linked",
+  todayHighlight: true
+  });
+  $('#dateinput').on('changeDate', zoomFilter);
+  $('#dateinput').datepicker('setDate', new Date());
+  $('#range_selector').selectpicker('val', 'one_week');
+  $('#pivot_selector').selectpicker('val', 'ending');
   miqLoadTL();

@@ -1,10 +1,45 @@
-#tl_div
-  -#- if @report && @report.table && @report.table.data.blank?
-  -#- elsif @report
-  %fieldset
-    #chart_placeholder{:style => 'position: relative'}
-    = render(:partial => 'layouts/timeline',
-      :locals         => {:tl_json          =>  @tl_json || {},
-                          :data_action      => "timeline_data"})
+#tl_div.timeline-container
+  - if @report && @report.table && @report.table.data.blank?
+  - elsif @report
+    %fieldset
+      .row
+        .col-sm-12
+          .form-group
+            = select_tag("tl_range",
+                        options_for_select([[_("1 Hour"), "one_hour"],
+                                            [_("1 Day"), "one_day"],
+                                            [_("1 Week"), "one_week"],
+                                            [_("1 Month"), "one_month"]], nil),
+                        'id'                          => 'range_selector',
+                        'selectpicker-for-select-tag' => '',
+                        :class                        => 'selectpicker pull-left')
+            :javascript
+              miqInitSelectPicker();
+            = select_tag("tl_timepivot",
+                        options_for_select([[_("centered"), "centered"],
+                                            [_("starting"), "starting"],
+                                            [_("ending"), "ending"]], nil),
+                        'selectpicker-for-select-tag' => '',
+                        :id                          => 'pivot_selector',
+                        :class                        => 'selectpicker pull-left timeline-pivot-input')
+            :javascript
+              miqInitSelectPicker();
+            #dateinput.input-group.date.timeline-date-input
+              %input{:type             => "text",
+                     :id               => "datepicker",
+                     :name             => "datepicker",
+                     "datepicker-init" => "",
+                     :language         => FastGettext.locale,
+                     :checkchange      => "",
+                     :class            => "form-control bootstrap-datepicker",
+                     :readonly         => true}
+              %span.input-group-addon
+                %span.fa.fa-calendar
+
+      #chart_placeholder{:style => 'position: relative'}
+      = render(:partial => 'layouts/timeline',
+        :locals         => {:tl_json          =>  @tl_json || {},
+                            :data_action      => "timeline_data"})
+      #legend
     -#- if @report.filter_summary
     -#  = @report.filter_summary

@@ -42,49 +42,28 @@
                     :class                        => 'selectpicker category-selector')
                 %span{'ng-if' => 'reportModel.tl_show === "timeline"', 'class' => 'timeline-option'}
                   %label
-                    = _("Show Detailed Events")
                     %input{:type         => 'checkbox',
                             :name         => 'showDetailedEvents',
                             'ng-model'    => 'reportModel.showDetailedEvents'}
+                    = _("Show Detailed Events")
                 %span{'ng-if' => 'reportModel.tl_show !== "timeline"', 'class' => 'timeline-option'}
                   %label
-                    = _("Show Successful Events")
                     %input{:type         => 'checkbox',
                             :name         => 'showSuccessfulEvents',
                             'ng-model'    => 'reportModel.showSuccessfulEvents'}
+                    = _("Show Successful Events")
                   %label{'class' => 'timeline-option'}
-                    = _("Show Failed Events")
                     %input{:type         => 'checkbox',
                             :name         => 'showFailedEvents',
                             'ng-model'    => 'reportModel.showFailedEvents'}
-              %div{'class' => 'timeline-date-box'}
-                = select_tag("tl_range",
-                  options_for_select([[_("1 Hour"), "one_hour"],
-                                      [_("1 Day"), "one_day"],
-                                      [_("1 Week"), "one_week"],
-                                      [_("1 Month"), "one_month"]], nil),
-                  'ng-model'                    => 'reportModel.tl_timerange',
-                  "selectpicker-for-select-tag" => '',
-                  :class                        => 'selectpicker pull-left')
-                = select_tag("tl_timepivot",
-                  options_for_select([[_("centered"), "centered"],
-                                      [_("starting"), "starting"],
-                                      [_("ending"), "ending"]], nil),
-                  'ng-model'                    => 'reportModel.tl_timepivot',
-                  "selectpicker-for-select-tag" => '',
-                  :class                        => 'selectpicker pull-left timeline-pivot-input')
-                %input{'pf-datepicker' => '',
-                      'options' => 'dateOptions',
-                      'date'    => 'reportModel.tl_date',
-                      'class'   => 'pull-right timeline-date-input'}
+                    = _("Show Failed Events")
             %div{'class' => 'pull-right'}
               .btn.btn-default{'ng-click'    => 'applyButtonClicked()',
                               'ng-disabled' => 'reportModel.tl_categories.length === 0'}
                 = _("Apply")
 
-    = _("* Dates/Times on this page are based on time zone: %{time_zone}.") % {:time_zone => session[:user_tz]}
-
 :javascript
   ManageIQ.angular.app.value('recordId', '#{@record.id}');
   ManageIQ.angular.app.value('url', '#{url}');
+  ManageIQ.angular.app.value('categories', '#{@tl_options.mngt.events.keys.sort}');
   miq_bootstrap('#form_div');

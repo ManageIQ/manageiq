@@ -1,4 +1,4 @@
-ManageIQ.angular.app.controller('timelineOptionsController', ['$http', '$scope', 'miqService', 'url', function($http, $scope, miqService, url) {
+ManageIQ.angular.app.controller('timelineOptionsController', ['$http', '$scope', 'miqService', 'url', 'categories', function($http, $scope, miqService, url, categories) {
     var init = function() {
         $scope.reportModel = {
             tl_show: 'timeline',
@@ -14,6 +14,7 @@ ManageIQ.angular.app.controller('timelineOptionsController', ['$http', '$scope',
             todayHighlight: true
         };
         ManageIQ.angular.scope = $scope;
+        $scope.availableCategories = categories;
         $scope.applyButtonClicked();
     };
 
@@ -35,7 +36,7 @@ ManageIQ.angular.app.controller('timelineOptionsController', ['$http', '$scope',
             if($scope.reportModel.tl_timerange === 'one_week') {
                 $scope.reportModel.tl_days = 7;
             } else {
-                $scope.reportModel.tl_days = 31;
+                $scope.reportModel.tl_days = 30;
             }
         }
 
