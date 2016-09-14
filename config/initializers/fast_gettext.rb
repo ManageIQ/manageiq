@@ -4,6 +4,7 @@ begin
   # enabled must want a flood of racc/yydebug output. As we're actually
   # trying to debug something other than their parser, we need to
   # temporarily force it off while we load stuff.
+  I18n.load_path += Dir[Rails.root.join('locale', '*.yml')]
   Vmdb::FastGettextHelper.register_locales
   Vmdb::FastGettextHelper.register_human_localenames
   gettext_options = %w(--sort-by-msgid --location --no-wrap)
