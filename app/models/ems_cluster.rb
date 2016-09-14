@@ -190,7 +190,10 @@ class EmsCluster < ApplicationRecord
 
   # All RPs under this Cluster and all child RPs
   def all_resource_pools
-    descendants(:of_type => 'ResourcePool')[1..-1].sort_by { |r| r.name.downcase }
+    # descendants typically returns the default_rp first but sporadically it
+    # will not due to a bug in the ancestry gem, this means we cannot simply
+    # drop the first value and need to check is_default
+    descendants(:of_type => 'ResourcePool').select { |r| !r.is_default }.sort_by { |r| r.name.downcase }
   end
 
   def all_resource_pools_with_default
