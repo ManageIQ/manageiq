@@ -13,18 +13,38 @@ shared_examples "miq ownership" do
       build_ownership_users_and_groups
     end
 
+    describe ".owning_ldap_group" do
+      before { User.current_user = user }
+
+      context "when miq_group is in the ldap group" do
+        it "returns description" do
+          column = "owning_ldap_group"
+          query  = described_class.where(:name => 'in_ldap')
+          expect(virtual_column_sql_value(query, column)).to eq(user.current_group.description)
+        end
+      end
+
+      context "when miq_group is not in the ldap group" do
+        it "returns no description" do
+          column = "owning_ldap_group"
+          query  = described_class.where(:name => 'no_group')
+          expect(virtual_column_sql_value(query, column)).to be_nil
+        end
+      end
+    end
+
     describe ".owned_by_current_ldap_group" do
       before { User.current_user = user }
 
       it "usable as arel" do
         group_name = user.current_group.description.downcase
         sql        = <<-SQL.strip_heredoc.split("\n").join(' ')
-                       SELECT (LOWER("miq_groups"."description") = '#{group_name}')
-                       FROM "miq_groups"
-                       WHERE "miq_groups"."id" = "#{described_class.table_name}"."miq_group_id"
+                       LOWER((SELECT "miq_groups_ss"."description"
+                       FROM "miq_groups" "miq_groups_ss"
+                       WHERE "miq_groups_ss"."id" = "#{described_class.table_name}"."miq_group_id")) = '#{group_name}'
                      SQL
         attribute  = described_class.arel_attribute(:owned_by_current_ldap_group)
-        expect(stringify_arel(attribute)).to eq ["((#{sql}))"]
+        expect(stringify_arel(attribute)).to eq ["(#{sql})"]
       end
 
       context "when miq_group is in the ldap group" do

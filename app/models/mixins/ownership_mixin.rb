@@ -25,29 +25,26 @@ module OwnershipMixin
       t.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:evm_owner_userid)]).eq(userid))
     end)
 
-    virtual_column :owning_ldap_group,                    :type => :string,     :uses => :miq_group
+    virtual_delegate :owning_ldap_group, :to => "miq_group.description", :allow_nil => true
 
     # Determine whether to return objects owned by the current user's miq_group
     # or not.
     #
     # Resulting SQL:
     #
-    #   ((SELECT (LOWER("miq_groups"."description") = 'some_miq_group')
-    #     FROM "miq_groups"
-    #     WHERE "miq_groups"."id" = "THIS_MODELS_TABLE"."miq_group_id"))
+    #   (LOWER((SELECT "miq_groups"."description"
+    #           FROM "miq_groups"
+    #           WHERE "miq_groups"."id" = "THIS_MODELS_TABLE"."miq_group_id")) = 'some_miq_group')
     #
     # Will result in the following when used with MiqExpression:
     #
-    #   WHERE (((SELECT (LOWER("miq_groups"."description") = 'some_miq_group')
-    #            FROM "miq_groups"
-    #            WHERE "miq_groups"."id" = "THIS_MODELS_TABLE"."miq_group_id")) = 'true')
+    #   WHERE (LOWER((SELECT "miq_groups"."description"
+    #                 FROM "miq_groups"
+    #                 WHERE "miq_groups"."id" = "THIS_MODELS_TABLE"."miq_group_id")) = 'some_miq_group') = 'true'
     virtual_attribute :owned_by_current_ldap_group, :boolean, :arel => (lambda do |t|
-      group_tbl  = MiqGroup.arel_table
       ldap_group = User.current_user.try(:ldap_group).to_s.downcase
-      group_sel  = t.grouping(group_tbl[:description].lower.eq(ldap_group))
-      where_cond = group_tbl[:id].eq(arel_attribute(:miq_group_id))
 
-      t.grouping(group_tbl.project(group_sel).where(where_cond))
+      t.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:owning_ldap_group)]).eq(ldap_group))
     end)
   end
 
@@ -93,10 +90,6 @@ module OwnershipMixin
 
   def owned_by_current_user
     User.current_userid && evm_owner_userid && User.current_userid.downcase == evm_owner_userid.downcase
-  end
-
-  def owning_ldap_group
-    miq_group.try(:description)
   end
 
   def owned_by_current_ldap_group
