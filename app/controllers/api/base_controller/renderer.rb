@@ -96,7 +96,7 @@ module Api
 
         rclass = resource.class
         if collection_class(type) != rclass
-          matched_type = collection_config.name_for_klass(rclass)
+          matched_type = CollectionConfig.name_for_klass(rclass)
         end
         matched_type || reftype
       end

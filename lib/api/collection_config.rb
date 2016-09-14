@@ -13,6 +13,10 @@ module Api
     end
     private_class_method :names_for_features
 
+    def self.name_for_klass(resource_klass)
+      ApiConfig.collections.detect { |_, spec| spec[:klass] == resource_klass.name }.try(:first)
+    end
+
     def initialize
       @cfg = ApiConfig.collections
     end
@@ -76,10 +80,6 @@ module Api
 
     def klass(collection_name)
       self[collection_name][:klass].try(:constantize)
-    end
-
-    def name_for_klass(resource_klass)
-      @cfg.detect { |_, spec| spec[:klass] == resource_klass.name }.try(:first)
     end
 
     def what_refers_to_feature(product_feature_name)

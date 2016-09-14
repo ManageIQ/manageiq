@@ -139,9 +139,7 @@ describe ProcessTasksMixin do
       let(:api_collection)  { double("ManageIQ::API::Client collection") }
 
       before do
-        api_config = double("Api::CollectionConfig")
-        expect(Api::CollectionConfig).to receive(:new).and_return(api_config)
-        expect(api_config).to receive(:name_for_klass).and_return(collection_name)
+        expect(Api::CollectionConfig).to receive(:name_for_klass).and_return(collection_name)
         expect(api_connection).to receive(collection_name).and_return(api_collection)
       end
 
