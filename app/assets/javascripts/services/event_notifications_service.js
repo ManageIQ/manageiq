@@ -153,6 +153,7 @@ function eventNotifications($timeout) {
   this.markRead = function(notification, group) {
     if (notification) {
       notification.unread = false;
+      this.removeToast(notification);
     }
     if (group) {
       updateUnreadCount(group);
@@ -180,8 +181,10 @@ function eventNotifications($timeout) {
 
   this.markAllRead = function(group) {
     if (group) {
+      var _this = this;
       group.notifications.forEach(function(notification) {
         notification.unread = false;
+        _this.removeToast(notification);
       });
       group.unreadCount = 0;
       updateUnreadCount();
@@ -203,6 +206,10 @@ function eventNotifications($timeout) {
   this.clear = function(notification, group) {
     var index;
 
+    if (notification) {
+      this.removeToast(notification);
+    }
+
     if (!group) {
       group = state.groups.find(function(nextGroup) {
         return notification.notificationType === nextGroup.notificationType;
@@ -221,6 +228,10 @@ function eventNotifications($timeout) {
 
   this.clearAll = function(group) {
     if (group) {
+      var _this = this;
+      group.notifications.forEach(function(notification) {
+        _this.removeToast(notification);
+      });
       group.notifications = [];
       updateUnreadCount(group);
       notifyObservers();
@@ -231,8 +242,8 @@ function eventNotifications($timeout) {
     var index = state.toastNotifications.indexOf(notification);
     if (index > -1) {
       state.toastNotifications.splice(index, 1);
+      notifyObservers();
     }
-    notifyObservers();
   };
 
   this.showToast = function(notification, persist) {
