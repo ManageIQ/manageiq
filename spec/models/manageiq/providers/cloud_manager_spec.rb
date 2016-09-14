@@ -204,4 +204,9 @@ describe EmsCloud do
       end
     end
   end
+
+  it 'supports vm_destroy' do
+    expect(described_class.supports_vm_destroy?).to eq(true)
+    expect(ManageIQ::Providers::Vmware::CloudManager.supports_vm_destroy?).to eq(true)
+  end
 end
