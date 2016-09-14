@@ -47,7 +47,6 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     @ems.reload
   end
 
-<<<<<<< HEAD
   context "proxy support" do
     let(:proxy) { URI::HTTP.build(:host => 'localhost', :port => 8080) }
 
@@ -55,7 +54,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       it "will perform a full refresh with a plain proxy enabled" do
         allow(VMDB::Util).to receive(:http_proxy_uri).and_return(proxy)
         setup_ems_and_cassette
-        expect(OrchestrationTemplate.count).to eql(2)
+        expect(OrchestrationTemplate.count).to eql(3)
         assert_specific_orchestration_template
       end
     end
@@ -67,38 +66,11 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
 
         allow(VMDB::Util).to receive(:http_proxy_uri).and_return(proxy)
         setup_ems_and_cassette
-        expect(OrchestrationTemplate.count).to eql(2)
+        expect(OrchestrationTemplate.count).to eql(3)
         assert_specific_orchestration_template
       end
     end
   end
-=======
-  # 9/9/16 - Commenting this out because it depends on a local proxy running.
-  # This will be done in a separate PR
-
-  # context "proxy support" do
-  #   let(:proxy) { URI::HTTP.build(:host => 'localhost', :port => 8080) }
-
-  #   2.times do
-  #     it "will perform a full refresh with a plain proxy enabled" do
-  #       allow(VMDB::Util).to receive(:http_proxy_uri).and_return(proxy)
-  #       setup_ems_and_cassette
-  #       expect(OrchestrationTemplate.count).to eql(3)
-  #     end
-  #   end
-
-  #   2.times do
-  #     it "will perform a full refresh with an authenticating proxy enabled" do
-  #       proxy.user = "foo"
-  #       proxy.password = "xxx"
-
-  #       allow(VMDB::Util).to receive(:http_proxy_uri).and_return(proxy)
-  #       setup_ems_and_cassette
-  #       expect(OrchestrationTemplate.count).to eql(3)
-  #     end
-  #   end
-  # end
->>>>>>> spec tests for Azure load balancer refresh support
 
   it "will perform a full refresh" do
     2.times do # Run twice to verify that a second run with existing data does not change anything
