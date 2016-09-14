@@ -30,6 +30,18 @@ describe "AR Regions extension" do
     expect(base_class.compressed_id?("2r5")).to be_truthy
   end
 
+  describe 'CID_OR_ID_MATCHER' do
+    subject { /^#{ArRegion::CID_OR_ID_MATCHER}$/ }
+    it { is_expected.to match('1') }
+    it { is_expected.to match('100023') }
+    it { is_expected.to match('1r23') }
+    it { is_expected.to match('10r10') }
+    it { is_expected.not_to match('hello') }
+    it { is_expected.not_to match('r1') }
+    it { is_expected.not_to match('1r') }
+    it { is_expected.not_to match('1rr1') }
+  end
+
   it ".split_id" do
     expect(base_class.split_id(5)).to eq([0, 5])
     expect(base_class.split_id(15)).to eq([1, 5])
