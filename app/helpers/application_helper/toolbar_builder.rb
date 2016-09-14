@@ -1077,11 +1077,6 @@ class ApplicationHelper::ToolbarBuilder
       when "orchestration_stack_retire_now"
         return N_("Orchestration Stack is already retired") if @record.retired == true
       end
-    when "OrchestrationTemplateCfn", "OrchestrationTemplateHot", "OrchestrationTemplateAzure", "OrchestrationTemplateVnfd"
-      case id
-      when "orchestration_template_remove"
-        return N_("Read-only Orchestration Template cannot be deleted") if @record.in_use?
-      end
     when "Service"
       case id
       when "service_retire_now"
