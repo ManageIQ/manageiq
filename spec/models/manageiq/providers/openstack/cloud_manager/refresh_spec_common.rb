@@ -5,7 +5,6 @@ require 'tools/environment_builders/openstack/services/image/data'
 require 'tools/environment_builders/openstack/services/network/data/neutron'
 require 'tools/environment_builders/openstack/services/network/data/nova'
 require 'tools/environment_builders/openstack/services/orchestration/data'
-require 'tools/environment_builders/openstack/services/storage/data'
 require 'tools/environment_builders/openstack/services/volume/data'
 
 require_relative 'refresh_spec_environments'
@@ -34,8 +33,6 @@ module Openstack
       allow_any_instance_of(Fog::Orchestration::OpenStack::Stack).to receive(:parameters).and_raise(not_found)
       allow_any_instance_of(Fog::Orchestration::OpenStack::Stack).to receive(:template).and_raise(not_found)
 
-      # Error in directory relation
-      allow_any_instance_of(Fog::Storage::OpenStack::Directory).to receive(:files).and_raise(not_found)
 
       # Error in Availability zones list
       allow_any_instance_of(Fog::Compute::OpenStack::Real).to receive(:availability_zones).and_raise(forbidden)
@@ -69,14 +66,13 @@ module Openstack
       # We have broken flavor list, but there is fallback for private flavors using get, which will collect used flavors
       expect(Flavor.count).to              eq 2
 
-      expect(ExtManagementSystem.count).to               eq 3 # Can this be not hardcoded?
+      expect(ExtManagementSystem.count).to               eq 4 # Can this be not hardcoded?
       expect(security_groups_without_defaults.count).to  eq security_groups_count
       expect(firewall_without_defaults.count).to         eq firewall_rules_count
       expect(FloatingIp.count).to                        eq network_data.floating_ips.sum
       expect(CloudNetwork.count).to                      eq network_data.networks.count
       expect(CloudSubnet.count).to                       eq network_data.subnets.count
       expect(NetworkRouter.count).to                     eq network_data.routers.count
-      expect(CloudVolume.count).to                       eq volumes_count
       expect(VmOrTemplate.count).to                      eq vms_count + images_count
       expect(MiqTemplate.count).to                       eq images_count
       expect(Disk.count).to                              eq disks_count
@@ -127,9 +123,6 @@ module Openstack
       # Assert table counts as last, just for sure. First we compare Hashes of data, so we see the diffs
       assert_table_counts
       assert_table_counts_orchestration
-      #
-      # TODO: remove by swift spec test
-      # assert_table_counts_storage
     end
 
     def volumes_count
@@ -276,13 +269,6 @@ module Openstack
         expect(OrchestrationStackResource.count).to eq stack_resources_count
         expect(OrchestrationStackOutput.count).to   eq stack_outputs_count
         expect(OrchestrationTemplate.count).to      eq stack_templates_count
-      end
-    end
-
-    def assert_table_counts_storage
-      if storage_supported?
-        expect(CloudObjectStoreContainer.count).to eq storage_data.directories.count
-        expect(CloudObjectStoreObject.count).to    eq storage_data.files.count
       end
     end
 
@@ -578,24 +564,6 @@ module Openstack
       # assert_objects_with_hashes(volumes, volume_data.volumes)
     end
 
-
-    def assert_specific_directories
-      return unless storage_supported?
-
-      directories = CloudObjectStoreContainer.all
-      assert_objects_with_hashes(directories, storage_data.directories)
-
-      directories.each do |directory|
-        files = directory.cloud_object_store_objects
-        next if files.blank?
-
-        assert_objects_with_hashes(files, storage_data.files(directory.key))
-        files.each do |file|
-          expect(file.content_length).to be > 0
-          expect(file.ems_ref).to        eq file.key
-        end
-      end
-    end
 
     def assert_templates
       # Ignoring shelved VMs, which are generating Image of the same name with suffix ''-shelved'

@@ -34,10 +34,6 @@ module Openstack
       @volume_data ||= Openstack::Services::Volume::Data.new
     end
 
-    def storage_data
-      @storage_data ||= Openstack::Services::Storage::Data.new
-    end
-
     def with_cassette(version, ems)
       ems.reload
       # Caching OpenStack info between runs causes the tests to fail with:
