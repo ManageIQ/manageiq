@@ -731,8 +731,16 @@ function miqAjax(url, serialize_fields) {
 }
 
 // Function to generate an Ajax request for EVM async processing
-function miqAsyncAjax(url) {
-  miqJqueryRequest(url, {beforeSend: true});
+function miqAsyncAjax(url, serialize_fields) {
+  var data = undefined;
+
+  if (serialize_fields === true) {
+    data = miqSerializeForm('form_div');
+  } else if (serialize_fields) {  // object or possibly FormData
+    data = serialize_fields;
+  }
+
+  miqJqueryRequest(url, {beforeSend: true, data: data});
 }
 
 ManageIQ.oneTransition.oneTrans = 0;

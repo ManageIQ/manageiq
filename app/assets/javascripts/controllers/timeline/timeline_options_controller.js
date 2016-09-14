@@ -72,7 +72,7 @@ ManageIQ.angular.app.controller('timelineOptionsController', ['$http', '$scope',
             }
         }
         miqService.sparkleOn();
-        miqService.miqAjaxButton(url, miqService.serializeModel($scope.reportModel));
+        miqService.miqAsyncAjaxButton(url, miqService.serializeModel($scope.reportModel));
     };
 
     init();
