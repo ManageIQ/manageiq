@@ -196,17 +196,43 @@ describe ExtManagementSystem do
     end
   end
 
-  context "with multiple endpoints using default authtype" do
+  context "with multiple endpoints using explicit authtype" do
     let(:ems) do
       FactoryGirl.build(:ems_openshift,
                         :connection_configurations => [{:endpoint       => {:role     => "default",
                                                                             :hostname => "openshift.example.org"},
                                                         :authentication => {:role     => "bearer",
+                                                                            :auth_key => "SomeSecret"}},
+                                                       {:endpoint       => {:role     => "hawkular",
+                                                                            :hostname => "openshift.example.org"},
+                                                        :authentication => {:role     => "hawkular",
                                                                             :auth_key => "SomeSecret"}}])
     end
 
     it "will contain the bearer authentication as default" do
       expect(ems.connection_configuration_by_role("default").authentication.authtype).to eq("bearer")
+    end
+    it "will contain the hawkular authentication as hawkular" do
+      expect(ems.connection_configuration_by_role("hawkular").authentication.authtype).to eq("hawkular")
+    end
+  end
+
+  context "with multiple endpoints using implicit default authtype" do
+    let(:ems) do
+      FactoryGirl.build(:ems_openshift,
+                        :connection_configurations => [{:endpoint       => {:role     => "default",
+                                                                            :hostname => "openshift.example.org"},
+                                                        :authentication => {:auth_key => "SomeSecret"}},
+                                                       {:endpoint       => {:role     => "hawkular",
+                                                                            :hostname => "openshift.example.org"},
+                                                        :authentication => {:auth_key => "SomeSecret"}}])
+    end
+
+    it "will contain the default authentication (bearer) for default endpoint" do
+      expect(ems.connection_configuration_by_role("default").authentication.authtype).to eq("bearer")
+    end
+    it "will contain the hawkular authentication for the hawkular endpoint" do
+      expect(ems.connection_configuration_by_role("hawkular").authentication.authtype).to eq("hawkular")
     end
   end
 

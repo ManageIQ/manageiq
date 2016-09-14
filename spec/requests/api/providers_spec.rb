@@ -66,6 +66,19 @@ describe "Providers API" do
       }
     }
   end
+  let(:updated_connection) do
+    {
+      "endpoint"       => {
+        "role"     => "default",
+        "hostname" => "sample_openshift_multi_end_point.provider.com",
+        "port"     => "8443"
+      },
+      "authentication" => {
+        "role"     => "bearer",
+        "auth_key" => SecureRandom.hex
+      }
+    }
+  end
   let(:hawkular_connection) do
     {
       "endpoint"       => {
@@ -338,6 +351,45 @@ describe "Providers API" do
       expect_single_resource_query("id" => provider.id, "name" => "updated vmware")
       expect(provider.reload.name).to eq("updated vmware")
       expect(provider.authentication_userid).to eq("superadmin")
+    end
+
+    it "does not schedule a new credentials check if endpoint does not change" do
+      api_basic_authorize collection_action_identifier(:providers, :edit)
+
+      provider = FactoryGirl.create(:ext_management_system, sample_openshift_multi_end_point)
+      MiqQueue.where(:method_name => "authentication_check_types",
+                     :class_name  => "ExtManagementSystem",
+                     :instance_id => provider.id).delete_all
+
+      run_post(providers_url(provider.id), gen_request(:edit,
+                                                       "connection_configurations" => [default_connection,
+                                                                                       hawkular_connection]))
+
+      queue_jobs = MiqQueue.where(:method_name => "authentication_check_types",
+                                  :class_name  => "ExtManagementSystem",
+                                  :instance_id => provider.id)
+      expect(queue_jobs).to be
+      expect(queue_jobs.length).to eq(0)
+    end
+
+    it "schedules a new credentials check if endpoint change" do
+      api_basic_authorize collection_action_identifier(:providers, :edit)
+
+      provider = FactoryGirl.create(:ext_management_system, sample_openshift_multi_end_point)
+      MiqQueue.where(:method_name => "authentication_check_types",
+                     :class_name  => "ExtManagementSystem",
+                     :instance_id => provider.id).delete_all
+
+      run_post(providers_url(provider.id), gen_request(:edit,
+                                                       "connection_configurations" => [updated_connection,
+                                                                                       hawkular_connection]))
+
+      queue_jobs = MiqQueue.where(:method_name => "authentication_check_types",
+                                  :class_name  => "ExtManagementSystem",
+                                  :instance_id => provider.id)
+      expect(queue_jobs).to be
+      expect(queue_jobs.length).to eq(1)
+      expect(queue_jobs[0].args[0][0]).to eq(:bearer)
     end
 
     it "supports additions of credentials" do

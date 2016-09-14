@@ -309,7 +309,9 @@ class ExtManagementSystem < ApplicationRecord
       connection.delete(:authentication)
     else
       unless connection[:authentication].key?(:role)
-        connection[:authentication][:role] ||= "default"
+        endpoint_role = connection[:endpoint][:role]
+        authentication_role = endpoint_role == "default" ? default_authentication_type.to_s : endpoint_role
+        connection[:authentication][:role] ||= authentication_role
       end
     end
 
