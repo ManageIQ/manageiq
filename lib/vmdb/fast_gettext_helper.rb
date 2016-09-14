@@ -25,7 +25,7 @@ module Vmdb
 
     def self.supported_locales
       # Format of YAML file is expected to be as follows
-      #  and match the directory names in config/locales
+      #  and match the directory names in locale/
       #
       # ---
       # - en
@@ -50,7 +50,7 @@ module Vmdb
     end
 
     def self.locale_path
-      @locale_path ||= Rails.root.join("config/locales")
+      @locale_path ||= Rails.root.join("locale")
     end
 
     def self.register_locales
