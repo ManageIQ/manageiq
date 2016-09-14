@@ -314,18 +314,21 @@ module ManageIQ::Providers::Microsoft
     end
 
     def process_vm_hardware(vm)
-      p = vm[:Properties][:Props]
+      p    = vm[:Properties][:Props]
+      cpus = p[:CPUCount]
 
       {
-        :cpu_total_cores    => p[:CPUCount],
-        :guest_os           => p[:OperatingSystem][:Props][:Name],
-        :guest_os_full_name => p[:OperatingSystem][:Props][:Name],
-        :memory_mb          => normalize_blank_property_num(p[:Memory]),
-        :cpu_type           => normalize_blank_property_str(p[:CPUType]),
-        :disks              => process_disks(p),
-        :networks           => process_hostname_and_ip(vm),
-        :guest_devices      => process_vm_guest_devices(vm),
-        :bios               => p[:BiosGuid]
+        :cpu_sockets          => cpus,
+        :cpu_cores_per_socket => 1,
+        :cpu_total_cores      => cpus,
+        :guest_os             => p[:OperatingSystem][:Props][:Name],
+        :guest_os_full_name   => p[:OperatingSystem][:Props][:Name],
+        :memory_mb            => normalize_blank_property_num(p[:Memory]),
+        :cpu_type             => normalize_blank_property_str(p[:CPUType]),
+        :disks                => process_disks(p),
+        :networks             => process_hostname_and_ip(vm),
+        :guest_devices        => process_vm_guest_devices(vm),
+        :bios                 => p[:BiosGuid]
       }
     end
 
