@@ -2831,34 +2831,24 @@ Vmdb::Application.routes.draw do
       }.freeze
     end
 
-    def action_for_collection(collection_name, verb)
-      "#{collection_name}##{API_ACTIONS[verb]}"
-    end
-
-    def create_api_route(verb, url, action)
-      public_send(verb, url, :to => action)
-    end
-
     Api::Settings.collections.each do |collection_name, collection|
-      collection.verbs.each do |verb|
-        if collection.options.include?(:primary)
-          create_api_route(verb, collection_name, action_for_collection(collection_name, verb))
+      controller collection_name, :path => collection_name do
+        collection.verbs.each do |verb|
+          root :action => API_ACTIONS[verb], :via => verb if collection.options.include?(:primary)
+
+          next unless collection.options.include?(:collection)
+
+          if collection.options.include?(:arbitrary_resource_path)
+            match "(/*c_suffix)", :action => API_ACTIONS[verb], :via => verb
+          else
+            match "(/:c_id)", :action => API_ACTIONS[verb], :via => verb
+          end
         end
 
-        next unless collection.options.include?(:collection)
-
-        if collection.options.include?(:arbitrary_resource_path)
-          create_api_route(verb, "#{collection_name}(/*c_suffix)", action_for_collection(collection_name, verb))
-        else
-          create_api_route(verb, "#{collection_name}(/:c_id)", action_for_collection(collection_name, verb))
-        end
-      end
-
-      Array(collection.subcollections).each do |subcollection_name|
-        Api::Settings.collections[subcollection_name].verbs.each do |verb|
-          create_api_route(verb,
-                           "#{collection_name}/:c_id/#{subcollection_name}(/:s_id)",
-                           action_for_collection(collection_name, verb))
+        Array(collection.subcollections).each do |subcollection_name|
+          Api::Settings.collections[subcollection_name].verbs.each do |verb|
+            match("/:c_id/#{subcollection_name}(/:s_id)", :action => API_ACTIONS[verb], :via => verb)
+          end
         end
       end
     end
