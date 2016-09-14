@@ -116,7 +116,7 @@ class ContainerController < ApplicationController
     session.delete(:exp_parms)
     @in_a_form = false
     render :layout => "application"
-    process_show_list
+    process_show_list(:where_clause => 'containers.deleted_on IS NULL')
   end
 
   def identify_container(id = nil)
