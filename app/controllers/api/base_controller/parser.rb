@@ -93,13 +93,20 @@ module Api
         return nil if resource.blank?
 
         href_id = href_id(resource["href"], collection)
-        return from_cid(href_id) if href_id.present?
-
-        resource["id"].kind_of?(Integer) ? resource["id"] : nil
+        case
+        when href_id.present?
+          href_id
+        when resource["id"].kind_of?(Integer)
+          resource["id"]
+        when cid?(resource["id"])
+          from_cid(resource["id"])
+        end
       end
 
       def href_id(href, collection)
-        href.match(%r{^.*/#{collection}/(#{CID_OR_ID_MATCHER})$}) && Regexp.last_match(1) if href.present?
+        if href.present? && href.match(%r{^.*/#{collection}/(#{CID_OR_ID_MATCHER})$})
+          from_cid(Regexp.last_match(1))
+        end
       end
 
       def parse_by_attr(resource, type, attr_list)
