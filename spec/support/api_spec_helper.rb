@@ -6,35 +6,34 @@ require 'bcrypt'
 require 'json'
 
 module ApiSpecHelper
-  DEF_HEADERS = {
-    "Content-Type" => "application/json",
-    "Accept"       => "application/json"
-  }
-
-  def update_headers(headers)
-    headers.merge!("HTTP_AUTHORIZATION" => @http_authorization) if @http_authorization
-    headers.merge(DEF_HEADERS)
+  def default_headers
+    headers = {
+      "Content-Type" => "application/json",
+      "Accept"       => "application/json"
+    }
+    headers["HTTP_AUTHORIZATION"] = @http_authorization if @http_authorization
+    headers
   end
 
   def run_get(url, options = {})
     headers = options.delete(:headers) || {}
-    get url, :params => options, :headers => update_headers(headers)
+    get url, :params => options, :headers => default_headers.merge(headers)
   end
 
   def run_post(url, body = {}, headers = {})
-    post url, :headers => update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
+    post url, :headers => default_headers.merge(headers).merge('RAW_POST_DATA' => body.to_json)
   end
 
   def run_put(url, body = {}, headers = {})
-    put url, :headers => update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
+    put url, :headers => default_headers.merge(headers).merge('RAW_POST_DATA' => body.to_json)
   end
 
   def run_patch(url, body = {}, headers = {})
-    patch url, :headers => update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
+    patch url, :headers => default_headers.merge(headers).merge('RAW_POST_DATA' => body.to_json)
   end
 
   def run_delete(url, headers = {})
-    delete url, :headers => update_headers(headers)
+    delete url, :headers => default_headers.merge(headers)
   end
 
   def resources_include_suffix?(resources, key, suffix)
