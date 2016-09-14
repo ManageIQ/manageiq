@@ -7,7 +7,7 @@ namespace :locale do
     ]
     no_plurals = %w(NFS OS) # strings which we don't want to create automatic plurals for
 
-    dict = YAML.load(File.open(Rails.root.join("config/locales/en.yml")))["en"]["dictionary"]
+    dict = YAML.load(File.open(Rails.root.join("locale/en.yml")))["en"]["dictionary"]
     dict.keys.each do |tree|
       next unless %w(column model table).include?(tree) # subtrees of interest
 
