@@ -116,6 +116,9 @@ RSpec.configure do |config|
     config.backtrace_exclusion_patterns << %r{/lib\d*/ruby/[0-9]}
     config.backtrace_exclusion_patterns << %r{/gems/[0-9][^/]+/gems/}
   end
+
+  config.backtrace_exclusion_patterns << %r{/spec/spec_helper}
+  config.backtrace_exclusion_patterns << %r{/spec/support/evm_spec_helper}
 end
 
 VCR.configure do |c|
