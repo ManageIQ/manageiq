@@ -17,7 +17,7 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm
     end
 
     def remote_console_acquire_ticket(_userid, _console_type)
-      url = ext_management_system.with_provider_connection(:service => "Compute") do |con|
+      url = ext_management_system.with_provider_connection({:service => "Compute", :tenant_name => cloud_tenant.name}) do |con|
         response = con.get_vnc_console(ems_ref, 'novnc')
         return nil if response.body.fetch_path('console', 'type') != 'novnc'
         response.body.fetch_path('console', 'url')
