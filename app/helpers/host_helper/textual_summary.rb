@@ -53,9 +53,14 @@ module HostHelper::TextualSummary
     textual_openstack_nova_scheduler if @record.openstack_host?
   end
 
-  def textual_group_openstack_status
+  def textual_group_openstack_service_status
     return nil unless @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager::Host)
     textual_generate_openstack_status
+  end
+
+  def textual_group_openstack_hardware_status
+    return nil unless @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager::Host)
+    %i(introspected provision_state)
   end
 
   #
@@ -504,6 +509,14 @@ module HostHelper::TextualSummary
       :enabled_cnt  => @record.cloud_services.where(:scheduling_disabled => false).count,
       :disabled_cnt => @record.cloud_services.where(:scheduling_disabled => true).count
     }
+  end
+
+  def textual_introspected
+    {:label => _("Introspected"), :value => @record.hardware.introspected}
+  end
+
+  def textual_provision_state
+    {:label => _("Provisioning State"), :value => @record.hardware.provision_state}
   end
 
   def host_title
