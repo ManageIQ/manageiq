@@ -913,7 +913,7 @@ module OpsController::OpsRbac
                                      :tags_tree,
                                      @sb,
                                      true,
-                                     {:edit => @edit, :filters => @filters, :group => @group})
+                                     :edit => @edit, :filters => @filters, :group => @group)
     @hac_tree = build_belongsto_tree(@belongsto.keys, false, false)  # Build the Hosts & Clusters tree for this user
     @vat_tree = build_belongsto_tree(@belongsto.keys, true, false)  # Build the VMs & Templates tree for this user
   end
@@ -1083,7 +1083,7 @@ module OpsController::OpsRbac
                                      :tags_tree,
                                      @sb,
                                      true,
-                                     {:edit => @edit, :filters => @filters, :group => @group})
+                                     :edit => @edit, :filters => @filters, :group => @group)
     @hac_tree = build_belongsto_tree(@edit[:new][:belongsto].keys, false, false)  # Build the Hosts & Clusters tree for this user
     @vat_tree = build_belongsto_tree(@edit[:new][:belongsto].keys, true, false)  # Build the VMs & Templates tree for this user
   end

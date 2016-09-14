@@ -30,7 +30,7 @@ describe TreeBuilderTags do
       locals = @tags_tree.send(:set_locals_for_render)
       expect(locals[:id_prefix]).to eq('tags_')
       expect(locals[:checkboxes]).to eq(true)
-      expect(locals[:check_url]).to eq("ops/rbac_group_field_changed/#{@group.id || "new"}___")
+      expect(locals[:check_url]).to eq("/ops/rbac_group_field_changed/#{@group.id || "new"}___")
       expect(locals[:highlight_changes]).to eq(true)
       expect(locals[:oncheck]).to eq(nil)
       expect(locals[:cfmeNoClick]).to eq(true)
@@ -44,7 +44,7 @@ describe TreeBuilderTags do
       expect(roots).to eq([])
     end
     it 'sets first level nodes correctly' do
-      roots = @tags_tree.send(:x_get_tree_roots, false)
+      roots = @tags_tree.send(:x_get_tree_roots, false, nil)
       expect(roots).to eq([@folder_selected, @folder_not_selected].sort_by! { |c| c.description.downcase })
     end
     it 'sets second level nodes correctly' do

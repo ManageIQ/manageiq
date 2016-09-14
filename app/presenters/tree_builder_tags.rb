@@ -5,9 +5,9 @@ class TreeBuilderTags < TreeBuilder
     @edit = params[:edit]
     @filters = params[:filters]
     @group = params[:group]
-    @categories = Classification.categories.collect do |c|
-      c unless !c.show || %w(folder_path_blue folder_path_yellow).include?(c.name)
-    end.compact
+    @categories = Classification.categories.find_all do |c|
+      c if c.show || !%w(folder_path_blue folder_path_yellow).include?(c.name)
+    end
     @categories.sort_by! { |c| c.description.downcase }
     super(name, type, sandbox, build)
     @tree_state.x_tree(name)[:open_nodes] = []
@@ -31,7 +31,7 @@ class TreeBuilderTags < TreeBuilder
   def set_locals_for_render
     locals = super
     locals.merge!(:id_prefix         => 'tags_',
-                  :check_url         => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
+                  :check_url         => "/ops/rbac_group_field_changed/#{@group.id || "new"}___",
                   :oncheck           => @edit.nil? ? nil : "miqOnCheckUserFilters",
                   :checkboxes        => true,
                   :highlight_changes => true,
@@ -54,10 +54,7 @@ class TreeBuilderTags < TreeBuilder
   def x_get_classification_kids(parent, count_only)
     kids = parent.entries.map do |kid|
       kid_id = "#{parent.name}-#{kid.name}"
-      select = false
-      if (@edit && @edit[:new][:filters].key?(kid_id)) || (@filters && @filters.key?(kid_id))
-        select = true
-      end
+      select = (@edit && @edit.fetch_path(:new, :filters, kid_id)) || (@filters && @filters.key?(kid_id))
       {:id          => kid.id,
        :image       => 'tag',
        :text        => kid.description,
