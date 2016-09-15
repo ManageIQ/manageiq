@@ -116,7 +116,7 @@ class Host < ApplicationRecord
 
   virtual_column :os_image_name,                :type => :string,      :uses => [:operating_system, :hardware]
   virtual_column :platform,                     :type => :string,      :uses => [:operating_system, :hardware]
-  virtual_column :v_owning_cluster,             :type => :string,      :uses => :ems_cluster
+  virtual_delegate :v_owning_cluster, :to => "ems_cluster.name", :allow_nil => true, :default => ""
   virtual_column :v_owning_datacenter,          :type => :string,      :uses => :all_relationships
   virtual_column :v_owning_folder,              :type => :string,      :uses => :all_relationships
   virtual_column :total_vcpus,                  :type => :integer,     :uses => :cpu_total_cores
@@ -1501,12 +1501,7 @@ class Host < ApplicationRecord
     end
   end
 
-  # Virtual columns for owning cluster, folder and datacenter
-  def v_owning_cluster
-    o = owning_cluster
-    o ? o.name : ""
-  end
-
+  # Virtual columns for folder and datacenter
   def v_owning_folder
     o = owning_folder
     o ? o.name : ""

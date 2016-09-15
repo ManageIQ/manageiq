@@ -408,4 +408,16 @@ describe Host do
       expect(h.v_annotation).to eq("the annotation")
     end
   end
+
+  describe "#v_owning_cluster" do
+    it "handles nil" do
+      h = FactoryGirl.build(:host)
+      expect(h.v_owning_cluster).to eq("")
+    end
+
+    it "delegates" do
+      h = FactoryGirl.build(:host, :ems_cluster => FactoryGirl.build(:ems_cluster, :name => "the cluster"))
+      expect(h.v_owning_cluster).to eq("the cluster")
+    end
+  end
 end
