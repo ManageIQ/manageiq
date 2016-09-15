@@ -32,11 +32,12 @@ module Api
       attributes['orchestration_manager']  = fetch_ext_management_system(data['orchestration_manager']) if data['orchestration_manager']
       attributes['orchestration_template'] = fetch_orchestration_template(data['orchestration_template']) if data['orchestration_template']
       attributes['job_template']           = fetch_configuration_script(data['job_template']) if data['job_template']
-      # A nasty bug in Rack, a query_parser's normalize_params method can handle only 100 keys total in payload data
-      # since it converts it all to array and process it recursively with max depth 100. For now, we can hide the
-      # data from Rack with to_yaml. But normalize_params needs to be rewritten to cycles instead of recursion.
-      attributes['job_options']            = YAML.load(data['job_options']) if data['job_options']
       attributes['parent']                 = fetch_service(data['parent_service']) if data['parent_service']
+      if data['job_options']
+        # AnsibleTowerClient needs the keys to be symbols
+        attributes['job_options'][:limit]      ||= data['job_options'].delete('limit')
+        attributes['job_options'][:extra_vars] ||= data['job_options'].delete('extra_vars')
+      end
       attributes.delete('parent_service')
       attributes
     end
