@@ -898,7 +898,7 @@ describe QuadiconHelper do
     end
 
     let(:item) { FactoryGirl.create(:configuration_manager_foreman) }
-    subject(:single_quad) { helper.render_single_quad_quadicon(item, :mode => :icon) }
+    subject(:single_quad) { helper.render_single_quad_quadicon(item, :mode => :icon, :size => 72) }
 
     context "when @listicon is nil" do
       include_examples :has_base_single
