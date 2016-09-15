@@ -2,6 +2,103 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - as of Sprint 46 end 2016-09-12
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+46+Ending+Sep+12%2C+2016%22+label%3Aenhancement)
+
+- Automate
+  - Import Rake task `OVERWRITE` argument: Setting  `OVERWRITE=true` removes the target domain prior to import
+  - New `extend_retires_on` method: Used by Automate methods to set a retirement date to specified number of days from today, or from a future date.
+  - Service model updates
+    - MiqAeServiceHardware
+    - MiqAeServicePartition
+    - MiqAeServiceVolume
+- Platform
+  - Centralized Administration
+    - Server to server authentication
+    - Invoke tasks on remote regions
+    - Leverage new API client (WIP)
+  - Chargeback
+    - Support for generating chargeback for services
+    - Will be used in Service UI for showing the cost of a service
+  - Database Maintenance
+    - Hourly reindex: High Churn Tables
+    - Periodic full vacuum
+    - Configure in appliance console
+  - Notification Backend
+    - Model for asynchronous notifications
+    - Authentication token generation for web sockets
+    - API for notification drawer
+  - PostgreSQL High Availability
+    - DB Cluster - Primary, Standbys
+    - Uses [repmgr](http://www.repmgr.org/) (replication)
+    - Failover
+      - Primary to Standby
+      - Appliance connects to new primary DB
+  - Tenancy: Mapping Cloud Tenants to ManageIQ Tenants
+    - Post refresh hook on OpenStack provider
+    - Create provider base tenant under a root tenant
+    - Cloud Tenant tree generated under provider base tenant
+    - Create / Update / Delete
+- Providers
+  - Containers
+    - Reports: Pods for images per project, Pods per node
+    - Deployment wizard
+  - Google Compute Engine: Provision Preemptible VMs
+  - Hawkular  
+    - JMS support (entities, topology)
+    - Reports for Transactions (in App servers)
+    - Support micro-lifecycle for Middleware-deployments
+    - Middleware provider now uses restful routes
+  - Microsoft Azure
+    - Handle new events: Create Security Group, VM Capture
+    - Provider-specific logging
+  - Networking
+    - Allow port ranges for Load Balancers
+    - Load Balancer user interface
+  - OpenStack
+    - Collect inventory for cloud volume backups
+    - Show topology for undercloud
+    - Associate/Disassociate Floating IPs
+  - Red Hat Enterprise Virtualization
+    - Get Host OS version and type
+    - Disk Management in VM Reconfigure
+  - VMware: Filter Storage by Profile
+  - vCloud
+    - Collect status of vCloud Orchestration Stacks
+    - Add Network Manager
+    - Collect networking inventory
+- REST API
+  - Token manager supports for web sockets
+  - Added querying for cockpit support
+  - Added support for Bulk queries
+  - Added support for UI notification drawer
+  - API entrypoint returns details about the appliance via server_info
+  - Blueprint updates now supports removal of the Service Catalog or Service Dialog from a Blueprint
+- Service Broker: Service UI (name change from Self Service UI)
+  - Renamed due to expanding number of use cases
+  - Adding in Arbitration Rules UI
+- User Interface
+  - Added mandatory Subscription field to Microsoft Azure Discovery screen
+  - Added Notifications Drawer and Toast Notifications List
+  - Added support for vSphere Distributed Switches
+  - Added support to show child/parent relations of Orchestration Stacks
+  - Added Middleware Messaging entities to topology chart
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+46+Ending+Sep+12%2C+2016%22+label%3Aenhancement)
+
+- Automate: Description for Datastore Reset action now includes list of target domains
+- Performance
+  - Page rendering
+    - Compute -> Infrastructure -> Virtual Machines: 9% faster, 32% fewer rows tested on 3k active vms and 3k archived vms
+    - Services -> My Services: 60% faster, 98% fewer queries, 32% fewer db rows returned
+  - `Ownershipmixin`
+    - Filtering now done in SQL
+    - 99.5% faster (93.8s -> 0.5s) testing
+      - VMs / All VMs / VMs I Own
+      - VMs / All VMs / VMs in My LDAP Group
+- User Interface: Dynatree replaced with bootstrap-treeview
+
 ## Unreleased - as of Sprint 45 end 2016-08-22
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+45+Ending+Aug+22%2C+2016%22+label%3Aenhancement)
