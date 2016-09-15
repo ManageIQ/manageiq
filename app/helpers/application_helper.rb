@@ -1125,11 +1125,12 @@ module ApplicationHelper
   end
 
   def polymorphic_path_redirect(model, args)
-    id = args[:id] || params[:id]
+    args[:record] ? record = args[:record] : record = model.find(args[:id] || params[:id])
+    args.delete(:record)
     args.delete(:id)
     render :update do |page|
       page << javascript_prologue
-      page.redirect_to polymorphic_path(model.find(id), args)
+      page.redirect_to polymorphic_path(record, args)
     end
   end
 
