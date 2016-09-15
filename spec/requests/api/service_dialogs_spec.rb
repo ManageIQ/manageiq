@@ -87,6 +87,14 @@ describe "Service Dialogs API" do
       expect_query_result(:service_dialogs, dialogs.count, dialogs.count)
       expect_result_resources_to_include_data("resources", "label" => dialogs.pluck(:label))
     end
+
+    it "queries service dialogs content with the template and related resource action specified" do
+      expect_any_instance_of(Dialog).to receive(:content).with(template, ra1)
+
+      run_get "#{service_templates_url(template.id)}/service_dialogs/#{dialog1.id}", :attributes => "content"
+
+      expect(response).to have_http_status(:ok)
+    end
   end
 
   describe "Service Dialogs refresh dialog fields" do
