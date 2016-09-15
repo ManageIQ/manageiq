@@ -1,6 +1,6 @@
 - url = url_for(:action => 'planning_option_changed')
 #planning_summary_div
-  = render :partial => "layouts/flash_msg", :locals => {:div_num => "1"}
+  = render :partial => "layouts/flash_msg"
   - if @perf_record
     %h3= _('Display Options')
     %dl.dl-horizontal
