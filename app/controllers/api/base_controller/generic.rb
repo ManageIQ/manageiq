@@ -6,11 +6,24 @@ module Api
       #
 
       def index
-        render_collection_type @req.subject.to_sym, @req.subject_id
+        klass = collection_class(@req.subject.to_sym)
+        res = collection_search(@req.subcollection?, @req.subject.to_sym, klass)
+        opts = {
+          :name             => @req.subject,
+          :is_subcollection => @req.subcollection?,
+          :expand_actions   => true,
+          :count            => klass.count,
+          :expand_resources => @req.expand?(:resources),
+          :subcount         => res.length
+        }
+
+        render_collection(@req.subject.to_sym, res, opts)
       end
 
       def show
-        render_collection_type @req.subject.to_sym, @req.subject_id
+        klass = collection_class(@req.subject.to_sym)
+        opts  = {:name => @req.subject, :is_subcollection => @req.subcollection?, :expand_actions => true}
+        render_resource(@req.subject.to_sym, resource_search(@req.subject_id, @req.subject.to_sym, klass), opts)
       end
 
       def update
