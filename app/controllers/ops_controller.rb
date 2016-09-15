@@ -382,6 +382,9 @@ class OpsController < ApplicationController
       elsif @sb[:active_tab] == "settings_co_categories" && @in_a_form
         action_url = "category_edit"
         record_id = @category.try(:id)
+      elsif @sb[:active_tab] == "settings_label_tag_mapping" && @in_a_form
+        action_url = "label_tag_mapping_edit"
+        record_id = @lt_map.try(:id)
       elsif @sb[:active_tab] == 'settings_rhn_edit'
         locals[:no_cancel] = false
         action_url = "settings_update"
@@ -545,6 +548,14 @@ class OpsController < ApplicationController
         @right_cell_text = _("Adding a new Category")
       else
         @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name => @category.description, :model => "Category"}
+      end
+    when "ltme" # label tag mapping edit
+      # when editing/adding label tag mapping in settings tree
+      presenter.update(:settings_label_tag_mapping, r[:partial => "label_tag_mapping_form"])
+      if !@lt_map
+        @right_cell_text = _("Adding a new Mapping")
+      else
+        @right_cell_text = _("Editing tag mapping from label \"%{name}\"") % {:name  => @lt_map.label_name}
       end
     when "sie"        # scanitemset edit
       #  editing/adding scanitem in settings tree

@@ -60,6 +60,8 @@
             = _("Import Tags")
           = miq_tab_header("settings_import", @sb[:active_tab]) do
             = _("Import Variables")
+          = miq_tab_header("settings_label_tag_mapping", @sb[:active_tab]) do
+            = _("Map Tags")
           = miq_tab_header("settings_rhn", @sb[:active_tab]) do
             = _("Red Hat Updates")
           = miq_tab_header("settings_replication", @sb[:active_tab]) do
@@ -77,6 +79,8 @@
             = render :partial => "settings_import_tags_tab"
           = miq_tab_content("settings_import", @sb[:active_tab]) do
             = render :partial => "settings_import_tab"
+          = miq_tab_content("settings_label_tag_mapping", @sb[:active_tab]) do
+            = render :partial => "settings_label_tag_mapping_tab"
           = miq_tab_content("settings_rhn", @sb[:active_tab]) do
             = render :partial => "settings_rhn_tab"
           = miq_tab_content("settings_replication", @sb[:active_tab]) do
