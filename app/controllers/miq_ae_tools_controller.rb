@@ -35,7 +35,7 @@ class MiqAeToolsController < ApplicationController
   def log
     @breadcrumbs = []
     @log = $miq_ae_logger.contents if $miq_ae_logger
-    add_flash(_("Logs for this CFME Server are not available for viewing"), :warning) if @log.blank?
+    add_flash(_("Logs for this ManageIQ Server are not available for viewing"), :warning) if @log.blank?
     @lastaction = "log"
     @layout = "miq_ae_logs"
     @msg_title = "AE"
@@ -47,7 +47,7 @@ class MiqAeToolsController < ApplicationController
   def refresh_log
     assert_privileges("refresh_log")
     @log = $miq_ae_logger.contents if $miq_ae_logger
-    add_flash(_("Logs for this CFME Server are not available for viewing"), :warning) if @log.blank?
+    add_flash(_("Logs for this ManageIQ Server are not available for viewing"), :warning) if @log.blank?
     replace_main_div :partial => "layouts/log_viewer",
                      :locals  => {:legend_text => _("Last 1000 lines from the Automation log")}
   end

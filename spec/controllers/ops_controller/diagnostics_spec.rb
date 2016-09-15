@@ -141,7 +141,7 @@ describe OpsController do
       post :restart_server
 
       expect(response.body).to include("flash_msg_div")
-      expect(response.body).to include("CFME Appliance restart initiated successfully")
+      expect(response.body).to include("ManageIQ Appliance restart initiated successfully")
     end
 
     it "#delete_server returns successful message" do

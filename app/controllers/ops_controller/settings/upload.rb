@@ -86,7 +86,7 @@ module OpsController::Settings::Upload
           msg = _("No valid import records were found, please upload another file")
           err = true
         else
-          msg = _("Press the Apply button to import the good records into the CFME database")
+          msg = _("Press the Apply button to import the good records into the ManageIQ database")
           err = false
           @sb[:good] = imp.stats[:good]
           @sb[:imports] = imp

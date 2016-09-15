@@ -959,8 +959,8 @@ module EmsCommon
 
     if task == "refresh_ems"
       model.refresh_ems(emss, true)
-      add_flash(n_("%{task} initiated for %{count} %{model} from the CFME Database",
-                   "%{task} initiated for %{count} %{models} from the CFME Database", emss.length) % \
+      add_flash(n_("%{task} initiated for %{count} %{model} from the ManageIQ Database",
+                   "%{task} initiated for %{count} %{models} from the ManageIQ Database", emss.length) % \
         {:task   => task_name(task).gsub("Ems", ui_lookup(:tables => @table_name)),
          :count  => emss.length,
          :model  => ui_lookup(:table => @table_name),
@@ -981,8 +981,8 @@ module EmsCommon
         AuditEvent.success(audit)
       end
       model.destroy_queue(emss)
-      add_flash(n_("Delete initiated for %{count} %{model} from the CFME Database",
-                   "Delete initiated for %{count} %{models} from the CFME Database", emss.length) %
+      add_flash(n_("Delete initiated for %{count} %{model} from the ManageIQ Database",
+                   "Delete initiated for %{count} %{models} from the ManageIQ Database", emss.length) %
         {:count  => emss.length,
          :model  => ui_lookup(:table => @table_name),
          :models => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
@@ -1033,8 +1033,8 @@ module EmsCommon
         add_flash(_("No %{record} were selected for deletion") % {:record => ui_lookup(:table => @table_name)}, :error)
       end
       process_emss(emss, "destroy") unless emss.empty?
-      add_flash(n_("Delete initiated for %{count} %{model} from the CFME Database",
-                   "Delete initiated for %{count} %{models} from the CFME Database", emss.length) %
+      add_flash(n_("Delete initiated for %{count} %{model} from the ManageIQ Database",
+                   "Delete initiated for %{count} %{models} from the ManageIQ Database", emss.length) %
         {:count  => emss.length,
          :model  => ui_lookup(:table => @table_name),
          :models => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
@@ -1065,8 +1065,8 @@ module EmsCommon
         add_flash(_("No %{model} were selected for scanning") % {:model => ui_lookup(:table => @table_name)}, :error)
       end
       process_emss(emss, "scan")  unless emss.empty?
-      add_flash(n_("Analysis initiated for %{count} %{model} from the CFME Database",
-                   "Analysis initiated for %{count} %{models} from the CFME Database", emss.length) %
+      add_flash(n_("Analysis initiated for %{count} %{model} from the ManageIQ Database",
+                   "Analysis initiated for %{count} %{models} from the ManageIQ Database", emss.length) %
         {:count  => emss.length,
          :model  => ui_lookup(:table => @table_name),
          :models => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
@@ -1079,8 +1079,8 @@ module EmsCommon
         emss.push(params[:id])
       end
       process_emss(emss, "scan")  unless emss.empty?
-      add_flash(n_("Analysis initiated for %{count} %{model} from the CFME Database",
-                   "Analysis initiated for %{count} %{models} from the CFME Database", emss.length) %
+      add_flash(n_("Analysis initiated for %{count} %{model} from the ManageIQ Database",
+                   "Analysis initiated for %{count} %{models} from the ManageIQ Database", emss.length) %
         {:count  => emss.length,
          :model  => ui_lookup(:table => @table_name),
          :models => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
@@ -1104,8 +1104,8 @@ module EmsCommon
         add_flash(_("No %{model} were selected for refresh") % {:model => ui_lookup(:table => @table_name)}, :error)
       end
       process_emss(emss, "refresh_ems") unless emss.empty?
-      add_flash(n_("Refresh initiated for %{count} %{model} from the CFME Database",
-                   "Refresh initiated for %{count} %{models} from the CFME Database", emss.length) %
+      add_flash(n_("Refresh initiated for %{count} %{model} from the ManageIQ Database",
+                   "Refresh initiated for %{count} %{models} from the ManageIQ Database", emss.length) %
         {:count  => emss.length,
          :model  => ui_lookup(:table => @table_name),
          :models => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
@@ -1118,8 +1118,8 @@ module EmsCommon
         emss.push(params[:id])
       end
       process_emss(emss, "refresh_ems") unless emss.empty?
-      add_flash(n_("Refresh initiated for %{count} %{model} from the CFME Database",
-                   "Refresh initiated for %{count} %{models} from the CFME Database", emss.length) %
+      add_flash(n_("Refresh initiated for %{count} %{model} from the ManageIQ Database",
+                   "Refresh initiated for %{count} %{models} from the ManageIQ Database", emss.length) %
         {:count  => emss.length,
          :model  => ui_lookup(:table => @table_name),
          :models => ui_lookup(:tables => @table_name)}) if @flash_array.nil?

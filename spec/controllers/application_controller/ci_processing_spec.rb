@@ -371,7 +371,7 @@ describe ServiceController do
       controller.send(:vm_button_operation, 'retire_now', "Retirement")
       expect(response.status).to eq(200)
       expect(assigns(:flash_array).first[:message]).to \
-        include("Retirement initiated for 1 VM and Instance from the CFME Database")
+        include("Retirement initiated for 1 VM and Instance from the ManageIQ Database")
     end
 
     it "should continue to retire a service and does not render flash message 'xxx does not apply xxx' " do
@@ -388,7 +388,7 @@ describe ServiceController do
       controller.send(:vm_button_operation, 'retire_now', "Retirement")
       expect(response.status).to eq(200)
       expect(assigns(:flash_array).first[:message]).to \
-        include("Retirement initiated for 1 Service from the CFME Database")
+        include("Retirement initiated for 1 Service from the ManageIQ Database")
     end
   end
 end

@@ -33,7 +33,7 @@ module OpsController::Diagnostics
                :target_class => "MiqServer",
                :userid       => session[:userid]}
       AuditEvent.success(audit)
-      add_flash(_("CFME Appliance restart initiated successfully"))
+      add_flash(_("ManageIQ Appliance restart initiated successfully"))
     end
     render :update do |page|
       page << javascript_prologue
@@ -206,7 +206,7 @@ module OpsController::Diagnostics
     assert_privileges("refresh_log")
     @log = $log.contents(120, 1000)
     @selected_server = MiqServer.find(from_cid(x_node.split("-").last).to_i)
-    add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
+    add_flash(_("Logs for this ManageIQ Server are not available for viewing"), :warning)  if @log.blank?
     render :update do |page|
       page << javascript_prologue
       page.replace_html("diagnostics_evm_log", :partial => "diagnostics_evm_log_tab")
@@ -218,7 +218,7 @@ module OpsController::Diagnostics
     assert_privileges("refresh_audit_log")
     @log = $audit_log.contents(nil, 1000)
     @selected_server = MiqServer.find(from_cid(x_node.split("-").last).to_i)
-    add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
+    add_flash(_("Logs for this ManageIQ Server are not available for viewing"), :warning)  if @log.blank?
     render :update do |page|
       page << javascript_prologue
       page.replace_html("diagnostics_audit_log", :partial => "diagnostics_audit_log_tab")
@@ -230,7 +230,7 @@ module OpsController::Diagnostics
     assert_privileges("refresh_production_log")
     @log = $rails_log.contents(nil, 1000)
     @selected_server = MiqServer.find(from_cid(x_node.split("-").last).to_i)
-    add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
+    add_flash(_("Logs for this ManageIQ Server are not available for viewing"), :warning)  if @log.blank?
     render :update do |page|
       page << javascript_prologue
       page.replace_html("diagnostics_production_log", :partial => "diagnostics_production_log_tab")
@@ -654,7 +654,7 @@ module OpsController::Diagnostics
       rescue StandardError => bang
         add_flash(_("Log collection error returned: %{error_message}") % {:error_message => bang.message}, :error)
       else
-        add_flash(_("Log collection for CFME %{object_type} %{name} has been initiated") % {:object_type => klass.name, :name => instance.display_name})
+        add_flash(_("Log collection for ManageIQ %{object_type} %{name} has been initiated") % {:object_type => klass.name, :name => instance.display_name})
       end
     end
     get_node_info(x_node)
@@ -764,7 +764,7 @@ module OpsController::Diagnostics
         add_flash(bang, :error)
       else
         priority = asr.priority == 1 ? "primary" : (asr.priority == 2 ? "secondary" : "normal")
-        add_flash(_("CFME Server \"%{name}\" set as %{priority} for Role \"%{role_description}\"") % {:name => asr.miq_server.name, :priority => priority, :role_description => asr.server_role.description})
+        add_flash(_("ManageIQ Server \"%{name}\" set as %{priority} for Role \"%{role_description}\"") % {:name => asr.miq_server.name, :priority => priority, :role_description => asr.server_role.description})
       end
     end
     refresh_screen
@@ -782,7 +782,7 @@ module OpsController::Diagnostics
         add_flash(bang, :error)
       else
         priority = asr.priority == 1 ? "primary" : (asr.priority == 2 ? "secondary" : "normal")
-        add_flash(_("CFME Server \"%{name}\" set as %{priority} for Role \"%{role_description}\"") % {:name => asr.miq_server.name, :priority => priority, :role_description => asr.server_role.description})
+        add_flash(_("ManageIQ Server \"%{name}\" set as %{priority} for Role \"%{role_description}\"") % {:name => asr.miq_server.name, :priority => priority, :role_description => asr.server_role.description})
       end
     end
     refresh_screen
@@ -900,19 +900,19 @@ module OpsController::Diagnostics
       if @sb[:selected_server_id] == my_server_id
         if @sb[:active_tab] == "diagnostics_evm_log"
           @log = $log.contents(120, 1000)
-          add_flash(_("Logs for this CFME Server are not available for viewing"), :warning) if @log.blank?
-          @msg_title = _("CFME")
+          add_flash(_("Logs for this ManageIQ Server are not available for viewing"), :warning) if @log.blank?
+          @msg_title = _("ManageIQ")
           @refresh_action = "refresh_log"
           @download_action = "fetch_log"
         elsif @sb[:active_tab] == "diagnostics_audit_log"
           @log = $audit_log.contents(nil, 1000)
-          add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
+          add_flash(_("Logs for this ManageIQ Server are not available for viewing"), :warning)  if @log.blank?
           @msg_title = _("Audit")
           @refresh_action = "refresh_audit_log"
           @download_action = "fetch_audit_log"
         elsif @sb[:active_tab] == "diagnostics_production_log"
           @log = $rails_log.contents(nil, 1000)
-          add_flash(_("Logs for this CFME Server are not available for viewing"), :warning)  if @log.blank?
+          add_flash(_("Logs for this ManageIQ Server are not available for viewing"), :warning)  if @log.blank?
           @msg_title = @sb[:rails_log]
           @refresh_action = "refresh_production_log"
           @download_action = "fetch_production_log"

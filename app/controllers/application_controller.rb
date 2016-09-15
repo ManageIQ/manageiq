@@ -637,7 +637,7 @@ class ApplicationController < ActionController::Base
   end
 
   def report_edit_aborted(lastaction)
-    add_flash(_("Edit aborted!  CFME does not support the browser's back button or access from multiple tabs or windows of the same browser.  Please close any duplicate sessions before proceeding."), :error)
+    add_flash(_("Edit aborted!  ManageIQ does not support the browser's back button or access from multiple tabs or windows of the same browser.  Please close any duplicate sessions before proceeding."), :error)
     session[:flash_msgs] = @flash_array.dup
     if request.xml_http_request?  # Is this an Ajax request?
       if lastaction == "configuration"
@@ -1399,12 +1399,12 @@ class ApplicationController < ActionController::Base
       end
     end
     if success_count > 0
-      add_flash(n_("Successfully deleted Saved Report from the CFME Database",
-                   "Successfully deleted Saved Reports from the CFME Database", success_count))
+      add_flash(n_("Successfully deleted Saved Report from the ManageIQ Database",
+                   "Successfully deleted Saved Reports from the ManageIQ Database", success_count))
     end
     if failure_count > 0
-      add_flash(n_("Error during Saved Report delete from the CFME Database",
-                   "Error during Saved Reports delete from the CFME Database", failure_count))
+      add_flash(n_("Error during Saved Report delete from the ManageIQ Database",
+                   "Error during Saved Reports delete from the ManageIQ Database", failure_count))
     end
   end
 

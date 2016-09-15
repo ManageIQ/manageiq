@@ -1918,8 +1918,8 @@ module ApplicationController::CiProcessing
   rescue => err
     add_flash(_("Error during '%{task}': %{error_message}") % {:task => task, :error_message => err.message}, :error)
   else
-    add_flash(n_("%{task} initiated for %{number} %{model} from the CFME Database",
-                 "%{task} initiated for %{number} %{models} from the CFME Database", objs.length) %
+    add_flash(n_("%{task} initiated for %{number} %{model} from the ManageIQ Database",
+                 "%{task} initiated for %{number} %{models} from the ManageIQ Database", objs.length) %
       {:task   => display_name ? display_name.titleize : task_name(task),
        :number => objs.length,
        :model  => ui_lookup(:model => klass.to_s),
@@ -2307,8 +2307,8 @@ module ApplicationController::CiProcessing
     case task
     when "refresh_ems"
       Host.refresh_ems(hosts)
-      add_flash(n_("%{task} initiated for %{count} Host from the CFME Database",
-                   "%{task} initiated for %{count} Hosts from the CFME Database", hosts.length) % \
+      add_flash(n_("%{task} initiated for %{count} Host from the ManageIQ Database",
+                   "%{task} initiated for %{count} Hosts from the ManageIQ Database", hosts.length) % \
         {:task  => (display_name || task_name(task)),
          :count => hosts.length})
       AuditEvent.success(:userid => session[:userid], :event => "host_#{task}",
@@ -2528,8 +2528,8 @@ module ApplicationController::CiProcessing
         AuditEvent.success(audit)
       end
       Storage.destroy_queue(storages)
-      add_flash(n_("Delete initiated for Datastore from the CFME Database",
-                   "Delete initiated for Datastores from the CFME Database", storages.length))
+      add_flash(n_("Delete initiated for Datastore from the ManageIQ Database",
+                   "Delete initiated for Datastores from the ManageIQ Database", storages.length))
     else
       Storage.where(:id => storages).order("lower(name)").each do |storage|
         storage_name = storage.name
@@ -2676,8 +2676,8 @@ module ApplicationController::CiProcessing
           {:model => ui_lookup(:tables => model_name)}, :error)
       end
       send(destroy_method, elements, "destroy") unless elements.empty?
-      add_flash(n_("Delete initiated for %{count} %{model} from the CFME Database",
-                   "Delete initiated for %{count} %{models} from the CFME Database", elements.length) %
+      add_flash(n_("Delete initiated for %{count} %{model} from the ManageIQ Database",
+                   "Delete initiated for %{count} %{models} from the ManageIQ Database", elements.length) %
         {:count  => elements.length,
          :model  => ui_lookup(:table => model_name),
          :models => ui_lookup(:tables => model_name)}) unless flash_errors?

@@ -23,7 +23,7 @@ class TreeBuilderUtilization < TreeBuilderRegion
       title = _("Enterprise")
       icon  = :enterprise
     else
-      title = _("CFME Region: %{region_description} [%{region}]") %
+      title = _("ManageIQ Region: %{region_description} [%{region}]") %
               {:region_description => MiqRegion.my_region.description, :region => MiqRegion.my_region.region}
       icon  = :miq_region
     end
