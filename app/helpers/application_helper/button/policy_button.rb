@@ -1,4 +1,4 @@
-class ApplicationHelper::Button::PolicyButton < ApplicationHelper::Button::ReadOnly
+class ApplicationHelper::Button::PolicyButton < ApplicationHelper::Button::Basic
 
   def initialize(view_context, view_binding, instance_data, props)
     super
