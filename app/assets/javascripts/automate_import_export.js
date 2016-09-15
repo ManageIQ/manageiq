@@ -208,6 +208,10 @@ var Automate = {
     });
   },
 
+  setUpDefaultGitBranchOrTagValue: function() {
+    $('.git-branch-or-tag').val($('select.git-branches').val());
+  },
+
   setUpGitRefreshClickHandlers: function() {
     $('.git-branch-or-tag-select').on('change', function(event) {
       event.preventDefault();

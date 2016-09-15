@@ -30,7 +30,7 @@
     miqInitSelectPicker();
 
     Automate.setUpGitRefreshClickHandlers();
+    Automate.setUpDefaultGitBranchOrTagValue();
 
-    $('.git-branch-or-tag').val($('select.git-branches').val());
     miqButtons('show');
   });

@@ -1,4 +1,24 @@
 describe('Automate', function() {
+  describe('#setUpDefaultGitBranchOrTagValue', function() {
+    beforeEach(function() {
+      var html = '';
+      html += '<input type="hidden" class="git-branch-or-tag"></input>';
+      html += '<select class="git-branches">';
+      html += '  <option value="1">Branch 1</option>';
+      html += '  <option value="2" selected="selected">Branch 2</option>';
+      html += '</select>';
+      html += '<div class="git-branches"></div>';
+      html += '';
+      setFixtures(html);
+    });
+
+    it('ensures the selected value from the branches select tag is set on the hidden input', function() {
+      expect($('.git-branch-or-tag').val()).toEqual('');
+      Automate.setUpDefaultGitBranchOrTagValue();
+      expect($('.git-branch-or-tag').val()).toEqual('2');
+    });
+  });
+
   describe('#setUpGitRefreshClickHandlers', function() {
     beforeEach(function() {
       var html = '';
