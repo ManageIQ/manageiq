@@ -2387,7 +2387,7 @@ class ApplicationController < ActionController::Base
     add_flash(_("%{task} does not apply to at least one of the selected %{model}") %
                 {:model => model_type,
                  :task  => type.split.map(&:capitalize).join(' ')}, :error)
-    render_flash_and_scroll if @explorer
+    javascript_flash(:scroll_top => true) if @explorer
   end
 
   def set_gettext_locale
