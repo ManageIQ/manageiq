@@ -1684,3 +1684,11 @@ function miqUncompressedId(id) {
 }
 
 function queryParam(name) { return QS(window.location.href).get(name); }
+
+function miqFormatNotification(text, bindings) {
+  var str = __(text);
+  _.each(bindings, function (value, key) {
+    str = str.replace(new RegExp('%{' + key + '}', 'g'), value.text);
+  });
+  return str;
+}
