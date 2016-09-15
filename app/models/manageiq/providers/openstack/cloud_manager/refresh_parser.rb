@@ -66,12 +66,16 @@ module ManageIQ::Providers
       # get_hosts
       get_images
       get_servers
+      get_volumes
+      get_backups
+      get_snapshots
       get_object_store
       get_cloud_services
 
       $fog_log.info("#{log_header}...Complete")
 
       link_vm_genealogy
+      link_storage_associations
       filter_unused_disabled_flavors
 
       @data
@@ -103,6 +107,27 @@ module ManageIQ::Providers
 
     def availability_zones
       @availability_zones ||= availability_zones_compute + availability_zones_volume
+    end
+
+    # TODO: remove eventually
+    def get_volumes
+      return unless @ems.cinder_manager
+      ManageIQ::Providers::StorageManager::CinderManager::RefreshParser.new(@ems.cinder_manager).get_volumes
+    end
+
+    def get_backups
+      return unless @ems.cinder_manager
+      ManageIQ::Providers::StorageManager::CinderManager::RefreshParser.new(@ems.cinder_manager).get_backups
+    end
+
+    def get_snapshots
+      return unless @ems.cinder_manager
+      ManageIQ::Providers::StorageManager::CinderManager::RefreshParser.new(@ems.cinder_manager).get_snapshots
+    end
+
+    def link_storage_associations
+      return unless @ems.cinder_manager
+      ManageIQ::Providers::StorageManager::CinderManager::RefreshParser.new(@ems.cinder_manager).link_storage_associations
     end
 
     def get_flavors

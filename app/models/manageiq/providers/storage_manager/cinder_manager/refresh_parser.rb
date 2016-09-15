@@ -60,5 +60,17 @@ module ManageIQ::Providers
 
     end
 
+    def link_storage_associations
+      @data[:cloud_volumes].each do |cv|
+        #
+        # Associations between volumes and the snapshots on which
+        # they are based, if any.
+        #
+        base_snapshot_uid = cv.delete(:snapshot_uid)
+        base_snapshot = @data_index.fetch_path(:cloud_volume_snapshots, base_snapshot_uid)
+        cv[:base_snapshot] = base_snapshot unless base_snapshot.nil?
+      end if @data[:cloud_volumes]
+    end
+
   end
 end
