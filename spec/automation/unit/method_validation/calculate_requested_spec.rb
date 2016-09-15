@@ -51,5 +51,11 @@ describe "Quota Validation" do
       ws = run_automate_method(vm_attrs)
       check_results(ws.root['quota_requested'], 10.gigabytes, 4, 1, 1024)
     end
+
+    it "microsoft calculate_requested" do
+      setup_model("microsoft")
+      ws = run_automate_method(vm_attrs)
+      check_results(ws.root['quota_requested'], 512.megabytes, 2, 1, 1.gigabytes)
+    end
   end
 end

@@ -110,7 +110,7 @@ end
 def requested_number_of_cpus(args_hash)
   cpu_in_request = get_option_value(args_hash[:resource], :number_of_sockets) *
                    get_option_value(args_hash[:resource], :cores_per_socket)
-  cpu_in_request = get_option_value(args_hash[:resource], args_hash[:number_of_cpus]) if cpu_in_request.zero?
+  cpu_in_request = get_option_value(args_hash[:resource], :number_of_cpus) if cpu_in_request.zero?
   args_hash[:prov_value] = args_hash[:number_of_vms] * cpu_in_request
   request_hash_value(args_hash)
 end
