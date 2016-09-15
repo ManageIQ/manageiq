@@ -455,38 +455,18 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       .then(function success(data) {
         $scope.$apply(function() {
           if(data.level == "error") {
-            if ($scope.authType === "default") {
-              $scope.emsCommonModel.default_auth_status = false;
-            } else if ($scope.authType === "amqp") {
-              $scope.emsCommonModel.amqp_auth_status = false;
-            } else if ($scope.authType === "service_account") {
-              $scope.emsCommonModel.service_account_auth_status = false;
-            } else if ($scope.authType === "metrics") {
-              $scope.emsCommonModel.metrics_auth_status = false;
-            } else if ($scope.authType === "ssh_keypair") {
-              $scope.emsCommonModel.ssh_keypair_auth_status = false;
-            } else if ($scope.authType === "hawkular") {
-              $scope.emsCommonModel.hawkular_auth_status = false;
-            }
+            $scope.updateAuthStatus(false);
           } else {
-            if ($scope.authType === "default") {
-              $scope.emsCommonModel.default_auth_status = true;
-            } else if ($scope.authType === "amqp") {
-              $scope.emsCommonModel.amqp_auth_status = true;
-            } else if ($scope.authType === "service_account") {
-              $scope.emsCommonModel.service_account_auth_status = true;
-            } else if ($scope.authType === "metrics") {
-              $scope.emsCommonModel.metrics_auth_status = true;
-            } else if ($scope.authType === "ssh_keypair") {
-              $scope.emsCommonModel.ssh_keypair_auth_status = true;
-            } else if ($scope.authType === "hawkular") {
-              $scope.emsCommonModel.hawkular_auth_status = true;
-            }
+            $scope.updateAuthStatus(true);
           }
           miqService.miqFlash(data.level, data.message);
           miqSparkleOff();
         });
       });
+  };
+
+  $scope.updateAuthStatus = function(updatedValue) {
+    $scope.angularForm[$scope.authType + '_auth_status'].$setViewValue(updatedValue);
   };
 
   $scope.radioSelectionChanged = function() {
