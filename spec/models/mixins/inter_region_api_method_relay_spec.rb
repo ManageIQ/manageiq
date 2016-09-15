@@ -1,11 +1,9 @@
 describe InterRegionApiMethodRelay do
   let(:collection_name) { :test_class_collection }
-  let(:api_config)      { double("Api::CollectionConfig") }
 
   context "with a valid class definition" do
     let!(:test_class) do
-      allow(Api::CollectionConfig).to receive(:new).and_return(api_config)
-      allow(api_config).to receive(:name_for_klass).and_return(collection_name)
+      allow(Api::CollectionConfig).to receive(:name_for_klass).and_return(collection_name)
 
       Class.new do
         extend InterRegionApiMethodRelay
@@ -314,8 +312,7 @@ describe InterRegionApiMethodRelay do
       end
 
       it "raises a ArgumentError if no block is defined" do
-        allow(Api::CollectionConfig).to receive(:new).and_return(api_config)
-        allow(api_config).to receive(:name_for_klass).and_return(collection_name)
+        allow(Api::CollectionConfig).to receive(:name_for_klass).and_return(collection_name)
         expect {
           Class.new do
             extend InterRegionApiMethodRelay

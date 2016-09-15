@@ -42,69 +42,76 @@ module Api
     end
     private_class_method :referenced_identifiers
 
-    def initialize
-      @cfg = ApiConfig.collections
+    def initialize(config)
+      @config = config
     end
 
-    def [](collection_name)
-      @cfg[collection_name.to_sym]
+    def method_missing(method_name, *args, &block)
+      config.public_send(method_name, *args, &block)
     end
 
-    def option?(collection_name, option_name)
-      self[collection_name][:options].include?(option_name) if self[collection_name]
+    def respond_to_missing?(method_name, include_private = false)
+      super || config.respond_to?(method_name, include_private)
     end
 
-    def collection?(collection_name)
-      option?(collection_name, :collection)
+    def option?(option_name)
+      config.options.include?(option_name)
     end
 
-    def custom_actions?(collection_name)
-      option?(collection_name, :custom_actions)
+    def collection?
+      option?(:collection)
     end
 
-    def primary?(collection_name)
-      option?(collection_name, :primary)
+    def custom_actions?
+      option?(:custom_actions)
     end
 
-    def show?(collection_name)
-      option?(collection_name, :show)
+    def primary?
+      option?(:primary)
     end
 
-    def show_as_collection?(collection_name)
-      option?(collection_name, :show_as_collection)
+    def show?
+      option?(:show)
     end
 
-    def supports_http_method?(collection_name, method)
-      Array(self[collection_name][:verbs]).include?(method)
+    def show_as_collection?
+      option?(:show_as_collection)
     end
 
-    def subcollections(collection_name)
-      Array(self[collection_name][:subcollections])
+    def supports_http_method?(method)
+      Array(config.verbs).include?(method)
     end
 
-    def subcollection?(collection_name, subcollection_name)
-      subcollections(collection_name).include?(subcollection_name.to_sym)
+    def subcollections
+      Array(config.subcollections)
     end
 
-    def subcollection_denied?(collection_name, subcollection_name)
-      self[collection_name][:subcollections] &&
-        !self[collection_name][:subcollections].include?(subcollection_name.to_sym)
+    def subcollection?(subcollection_name)
+      subcollections.include?(subcollection_name.to_sym)
     end
 
-    def typed_collection_actions(collection_name, target)
-      self[collection_name]["#{target}_actions".to_sym]
+    def subcollection_denied?(subcollection_name)
+      config.subcollections && !subcollection?(subcollection_name)
     end
 
-    def typed_subcollection_actions(collection_name, subcollection_name)
-      self[collection_name]["#{subcollection_name}_subcollection_actions".to_sym]
+    def typed_collection_actions(target)
+      config["#{target}_actions".to_sym]
     end
 
-    def typed_subcollection_action(collection_name, subcollection_name, method)
-      typed_subcollection_actions(collection_name, subcollection_name).try(:fetch_path, method.to_sym)
+    def typed_subcollection_actions(subcollection_name)
+      config["#{subcollection_name}_subcollection_actions".to_sym]
     end
 
-    def klass(collection_name)
-      self[collection_name][:klass].try(:constantize)
+    def typed_subcollection_action(subcollection_name, method)
+      typed_subcollection_actions(subcollection_name).try(:fetch_path, method.to_sym)
     end
+
+    def klass
+      config.klass.try(:constantize)
+    end
+
+    private
+
+    attr_reader :config
   end
 end

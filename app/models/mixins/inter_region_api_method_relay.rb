@@ -84,7 +84,7 @@ module InterRegionApiMethodRelay
   private
 
   def collection_for_class
-    collection_name = Api::CollectionConfig.new.name_for_klass(self)
+    collection_name = Api::CollectionConfig.name_for_klass(self)
     unless collection_name
       _log.error("No API endpoint found for class #{name}")
       raise NotImplementedError, "No API endpoint found for class #{name}"

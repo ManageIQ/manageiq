@@ -24,7 +24,7 @@ module Api
         # Method Validation for the collection or sub-collection specified
         if cname && ctype
           mname = @req.method
-          unless collection_config.supports_http_method?(cname, mname) || mname == :options
+          unless ApiConfig.collections[cname].supports_http_method?(mname) || mname == :options
             raise BadRequestError, "Unsupported HTTP Method #{mname} for the #{ctype} #{cname} specified"
           end
         end
@@ -112,7 +112,7 @@ module Api
       def parse_by_attr(resource, type, attr_list = [])
         klass = collection_class(type)
         attr_list |= %w(guid) if klass.attribute_method?(:guid)
-        attr_list |= String(collection_config[type].identifying_attrs).split(",")
+        attr_list |= String(ApiConfig.collections[type].identifying_attrs).split(",")
         objs = attr_list.map { |attr| klass.find_by(attr => resource[attr]) if resource[attr] }.compact
         objs.collect(&:id).first
       end
@@ -217,7 +217,7 @@ module Api
                         else
                           [@req.subcollection || @req.collection, request_type_target.last]
                         end
-        aspec = collection_config.typed_collection_actions(cname, target)
+        aspec = ApiConfig.collections[cname].typed_collection_actions(target)
         return if method_name == :get && aspec.nil?
         action_hash = fetch_action_hash(aspec, method_name, action_name)
         raise BadRequestError, "Disabled action #{action_name}" if action_hash[:disabled]
@@ -237,12 +237,12 @@ module Api
       def validate_post_api_action(cname, mname, type, target)
         aname = @req.action
 
-        aspec = collection_config.typed_collection_actions(cname, target)
+        aspec = ApiConfig.collections[cname].typed_collection_actions(target)
         raise BadRequestError, "No actions are supported for #{cname} #{type}" unless aspec
 
         action_hash = fetch_action_hash(aspec, mname, aname)
         if action_hash.blank?
-          unless type == :resource && collection_config.custom_actions?(cname)
+          unless type == :resource && ApiConfig.collections[cname].custom_actions?
             raise BadRequestError, "Unsupported Action #{aname} for the #{cname} #{type} specified"
           end
         end
@@ -262,13 +262,13 @@ module Api
         if @req.collection
           cname = @req.collection
           ctype = "Collection"
-          raise BadRequestError, "Unsupported #{ctype} #{cname} specified" unless collection_config[cname]
-          if collection_config.primary?(cname)
+          raise BadRequestError, "Unsupported #{ctype} #{cname} specified" unless ApiConfig.collections[cname]
+          if ApiConfig.collections[cname].primary?
             if "#{@req.c_id}#{@req.subcollection}#{@req.s_id}".present?
               raise BadRequestError, "Invalid request for #{ctype} #{cname} specified"
             end
           else
-            raise BadRequestError, "Unsupported #{ctype} #{cname} specified" unless collection_config.collection?(cname)
+            raise BadRequestError, "Unsupported #{ctype} #{cname} specified" unless ApiConfig.collections[cname].collection?
           end
           [cname, ctype]
         end
@@ -279,7 +279,7 @@ module Api
         if cname && @req.subcollection
           return [cname, ctype] if collection_option?(:arbitrary_resource_path)
           ctype = "Sub-Collection"
-          unless collection_config.subcollection?(cname, @req.subcollection)
+          unless ApiConfig.collections[cname].subcollection?(@req.subcollection)
             raise BadRequestError, "Unsupported #{ctype} #{@req.subcollection} specified"
           end
           cname = @req.subcollection
@@ -289,9 +289,9 @@ module Api
 
       def validate_post_api_action_as_subcollection(cname, mname, aname)
         return if cname == @req.collection
-        return if collection_config.subcollection_denied?(@req.collection, cname)
+        return if ApiConfig.collections[@req.collection].subcollection_denied?(cname)
 
-        aspec = collection_config.typed_subcollection_actions(@req.collection, cname)
+        aspec = ApiConfig.collections[@req.collection].typed_subcollection_actions(cname)
         return unless aspec
 
         action_hash = fetch_action_hash(aspec, mname, aname)
@@ -308,7 +308,7 @@ module Api
       end
 
       def collection_option?(option)
-        collection_config.option?(@req.collection, option) if @req.collection
+        ApiConfig.collections[@req.collection].option?(option) if @req.collection
       end
 
       def assert_id_not_specified(data, type)

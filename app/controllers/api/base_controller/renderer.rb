@@ -62,7 +62,7 @@ module Api
               end
             end
           end
-          cspec = collection_config[type]
+          cspec = ApiConfig.collections[type]
           aspecs = gen_action_spec_for_collections(type, cspec, opts[:is_subcollection], reftype) if cspec
           add_actions(json, aspecs, reftype)
         end
@@ -187,7 +187,7 @@ module Api
       # Let's expand subcollections for objects if asked for
       #
       def expand_subcollections(json, type, resource)
-        collection_config.subcollections(type).each do |sc|
+        ApiConfig.collections[type].subcollections.each do |sc|
           target = "#{sc}_query_resource"
           next unless expand_subcollection?(sc, target)
           if Array(attribute_selection).include?(sc.to_s)
@@ -198,7 +198,7 @@ module Api
       end
 
       def expand_subcollection?(sc, target)
-        respond_to?(target) && (@req.expand?(sc) || collection_config.show?(sc))
+        respond_to?(target) && (@req.expand?(sc) || ApiConfig.collections[sc].show?)
       end
 
       #
@@ -304,7 +304,7 @@ module Api
         return unless render_actions(resource)
 
         href   = json.attributes!["href"]
-        cspec = collection_config[type]
+        cspec = ApiConfig.collections[type]
         aspecs = gen_action_spec_for_resources(cspec, opts[:is_subcollection], href, resource) if cspec
         add_actions(json, aspecs, type)
       end
@@ -318,7 +318,7 @@ module Api
       end
 
       def expand_resource_custom_actions(resource, json, type)
-        return unless render_actions(resource) && collection_config.custom_actions?(type)
+        return unless render_actions(resource) && ApiConfig.collections[type].try(:custom_actions?)
 
         href = json.attributes!["href"]
         json.actions do |js|
@@ -348,7 +348,7 @@ module Api
       # Let's expand a subcollection
       #
       def expand_subcollection(json, sc, sctype, subresources)
-        if collection_config.show_as_collection?(sc)
+        if ApiConfig.collections[sc].show_as_collection?
           copts = {
             :count            => subresources.length,
             :is_subcollection => true,
@@ -402,7 +402,7 @@ module Api
 
       def fetch_typed_subcollection_actions(method, is_subcollection)
         return unless is_subcollection
-        collection_config.typed_subcollection_action(@req.collection, @req.subcollection, method)
+        ApiConfig.collections[@req.collection].typed_subcollection_action(@req.subcollection, method)
       end
 
       def api_user_role_allows?(action_identifier)
