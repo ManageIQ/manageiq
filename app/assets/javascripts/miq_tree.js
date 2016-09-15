@@ -496,6 +496,7 @@ function miqTreeClearState(tree) {
 }
 
 function miqInitTree(options, tree) {
+  console.log(tree);
   if (options.check_url) {
     ManageIQ.tree.checkUrl = options.check_url;
   }
