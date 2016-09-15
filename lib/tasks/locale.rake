@@ -133,6 +133,18 @@ namespace :locale do
     FileUtils.mv(attributes_file, 'config/model_attributes.rb')
   end
 
+  desc "Run store_model_attributes task in i18n environment"
+  task "run_store_model_attributes" do
+    system({"RAILS_ENV" => "i18n"}, "bundle exec rake locale:store_model_attributes")
+  end
+
+  desc "Update ManageIQ gettext catalogs"
+  task "update" => ["run_store_model_attributes", "store_dictionary_strings", "extract_yaml_strings", "gettext:find"] do
+    Dir["locale/**/*.edit.po", "locale/**/*.po.time_stamp"].each do |file|
+      File.unlink(file)
+    end
+  end
+
   desc "Extract plugin strings - execute as: rake locale:plugin:find[plugin_name]"
   task "plugin:find", :engine do |_, args|
     unless args.has_key?(:engine)
