@@ -31,7 +31,7 @@ module Api
       end
 
       def api_config
-        @api_config ||= VMDB::Config.new("vmdb").config[Settings.base.module.to_sym] || {}
+        ::Settings[Settings.base.module.to_sym]
       end
 
       def auth_identity
