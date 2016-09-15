@@ -700,22 +700,6 @@ class ApplicationHelper::ToolbarBuilder
       when "event_edit"
         return true if x_active_tree == :event_tree || !role_allows?(:feature => "event_edit")
       end
-    when "MiqPolicy"
-      case id
-      when "condition_edit", "policy_edit", "policy_edit_conditions"
-        return true unless role_allows?(:feature => "policy_edit")
-      when "policy_edit_conditions"
-        return true unless role_allows?(:feature => "policy_edit_conditions")
-      when "policy_edit_events"
-        return true if !role_allows?(:feature => "policy_edit") ||
-                       @policy.mode == "compliance"
-      when "policy_copy"
-        return true if !role_allows?(:feature => "policy_copy") ||
-                       x_active_tree != :policy_tree
-      when "policy_delete"
-        return true if !role_allows?(:feature => "policy_delete") ||
-                       x_active_tree != :policy_tree
-      end
     when "MiqRequest"
       # Don't hide certain buttons on AutomationRequest screen
       return true if @record.resource_type == "AutomationRequest" &&
@@ -1015,11 +999,6 @@ class ApplicationHelper::ToolbarBuilder
       when "alert_delete"
         return N_("Alerts that belong to Alert Profiles can not be deleted") unless @record.memberof.empty?
         return N_("Alerts referenced by Actions can not be deleted") unless @record.owning_miq_actions.empty?
-      end
-    when "MiqPolicy"
-      case id
-      when "policy_delete"
-        return N_("Policies that belong to Profiles can not be deleted") unless @policy.memberof.empty?
       end
     when "MiqRequest"
       case id
