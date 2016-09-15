@@ -116,11 +116,10 @@ module VirtualDelegates
         raise ArgumentError, 'Delegation needs an association. Supply an options hash with a :to key as the last argument (e.g. delegate :hello, to: :greeter).'
       end
 
-      to_model = to_ref.klass
       col = col.to_s
-      type = to_model.type_for_attribute(col)
-      raise "unknown attribute #{to_model.name}##{col} referenced in #{name}" unless type
-      arel = virtual_delegate_arel(col, to, to_model, to_ref)
+      type = to_ref.klass.type_for_attribute(col)
+      raise "unknown attribute #{to}##{col} referenced in #{name}" unless type
+      arel = virtual_delegate_arel(col, to_ref)
       define_virtual_attribute method_name, type, :uses => (options[:uses] || to), :arel => arel
     end
 
@@ -174,8 +173,6 @@ module VirtualDelegates
     end
 
     # @param col [String] attribute name
-    # @param to [Symbol] association name of targeted association
-    # @param to_model [Class] association class of targeted association
     # @param to_ref [Association] association from source class to target association
     # @return [Proc] lambda to return arel that selects the attribute in a sub-query
     # @return [Nil] if the attribute (col) can not be represented in sql.
@@ -187,10 +184,10 @@ module VirtualDelegates
     #
     #   See select_from_alias for examples
 
-    def virtual_delegate_arel(col, to, to_model, to_ref)
+    def virtual_delegate_arel(col, to_ref)
       # ensure the column has sql and the association is reachable via sql
       # There is currently no way to propagate sql over a virtual association
-      if to_model.arel_attribute(col) && reflect_on_association(to)
+      if to_ref.klass.arel_attribute(col) && reflect_on_association(to_ref.name)
         if to_ref.macro == :has_one
           lambda do |t|
             src_model_id = arel_attribute(to_ref.association_primary_key, t)
@@ -226,7 +223,7 @@ module VirtualDelegates
   #
   #   The virtual_delegate calls:
   #
-  #     virtual_delegate_arel("name", :host, Host, Vm.reflection_with_virtual(:host))
+  #     virtual_delegate_arel("name", Vm.reflection_with_virtual(:host))
   #
   #   which calls:
   #
@@ -248,7 +245,7 @@ module VirtualDelegates
   #
   #   The virtual_delegate calls:
   #
-  #     virtual_delegate_arel("name", :hardware, Hardware, Host.reflection_with_virtual(:hardware))
+  #     virtual_delegate_arel("name", Host.reflection_with_virtual(:hardware))
   #
   #   which at runtime will call select_from_alias:
   #
@@ -270,7 +267,7 @@ module VirtualDelegates
   #
   #   The virtual_delegate calls:
   #
-  #     virtual_delegate_arel("name", :src_template, Vm, Vm.reflection_with_virtual(:src_template))
+  #     virtual_delegate_arel("name", Vm.reflection_with_virtual(:src_template))
   #
   #   which calls:
   #
