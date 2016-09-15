@@ -12,6 +12,21 @@ module Api
       render_resource :automate, :name => "automate", :subcount => resources.count, :resources => resources
     end
 
+    def git_refresh_resource(type, id = nil, data = nil)
+      api_action(type, id) do |klass|
+        unless MiqRegion.my_region.role_active?("git_owner")
+          return action_result(false, 'Please enable the git owner role in order to import git repositories')
+        end
+        domain = resource_search(id, type, klass)
+        unless domain.git_repository
+          return action_result(false, "Domain [id=#{id}] did not originate from git repository")
+        end
+        ref = data[:ref] || domain.ref
+        GitBasedDomainImportService.new.import(domain.git_repository.id, ref, current_tenant.id)
+        action_result(true, 'Domain refreshed from git repository')
+      end
+    end
+
     private
 
     def ae_search_options
@@ -25,6 +40,10 @@ module Api
       search_options = {:depth => depth, :serialize => true}
       search_options[:state_machines] = true if search_option?(:state_machines)
       search_options
+    end
+
+    def current_tenant
+      @auth_user_obj.current_tenant || Tenant.default_tenant
     end
   end
 end
