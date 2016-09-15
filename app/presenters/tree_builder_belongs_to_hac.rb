@@ -1,11 +1,11 @@
-class TreeBuilderBelongsTo < TreeBuilder
+class TreeBuilderBelongsToHac < TreeBuilder
   has_kids_for ExtManagementSystem, [:x_get_kids_provider]
   has_kids_for Datacenter, [:x_get_tree_datacenter_kids, :type]
   has_kids_for EmsCluster, [:x_get_tree_cluster_kids]
   has_kids_for ResourcePool, [:x_get_resource_pool_kids]
 
   def node_builder
-    TreeNodeBuilderBelongsTo
+    TreeNodeBuilderBelongsToHac
   end
 
   def initialize(name, type, sandbox, build = true, params)
@@ -54,7 +54,7 @@ class TreeBuilderBelongsTo < TreeBuilder
   def x_get_tree_datacenter_kids(parent, count_only = false, _type)
     kids = []
     parent.folders.each do |child|
-      if child.kind_of?(EmsFolder) && child.name == "host" && parent.kind_of?(Datacenter)
+      if child.kind_of?(EmsFolder) && child.name == "host"
         kids.concat(child.folders_only)
         kids.concat(child.clusters)
         kids.concat(child.hosts)

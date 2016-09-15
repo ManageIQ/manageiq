@@ -934,8 +934,15 @@ module OpsController::OpsRbac
                                      true,
                                      :edit => @edit, :filters => @filters, :group => @group)
     rbac_build_myco_tree                              # Build the MyCompanyTags tree for this user
+<<<<<<< 9d5c6dfb465384292d1c68b9b022c712dd626428
     @hac_tree = TreeBuilderBelongsTo.new(:hac, :hac_tree, @sb, true, {:edit => @edit, :filters => @filters, :group => @group})
     @vat_tree = build_belongsto_tree(@belongsto.keys, true, false)  # Build the VMs & Templates tree for this user
+=======
+    @hac_tree = TreeBuilderBelongsToHac.new(:hac, :hac_tree, @sb, true, :edit => @edit, :filters => @filters, :group => @group)
+    #build_belongsto_tree(@belongsto.keys, false, false)  # Build the Hosts & Clusters tree for this user
+    @vat_tree = TreeBuilderBelongsToVat.new(:vat, :vat_tree, @sb, true, :edit => @edit, :filters => @filters, :group => @group)
+      #build_belongsto_tree(@belongsto.keys, true, false)  # Build the VMs & Templates tree for this user
+>>>>>>> Vm/Template tree is generated
   end
 
   def rbac_role_get_details(id)
@@ -1102,8 +1109,15 @@ module OpsController::OpsRbac
                                      true,
                                      :edit => @edit, :filters => @filters, :group => @group)
     rbac_build_myco_tree                              # Build the MyCompanyTags tree for this user
+<<<<<<< 9d5c6dfb465384292d1c68b9b022c712dd626428
     @hac_tree = TreeBuilderBelongsTo.new(:hac, :hac_tree, @sb, true, :edit => @edit, :group => @group)
     @vat_tree = build_belongsto_tree(@edit[:new][:belongsto].keys, true, false)  # Build the VMs & Templates tree for this user
+=======
+    @hac_tree = TreeBuilderBelongsToHac.new(:hac, :hac_tree, @sb, true, :edit => @edit, :group => @group)
+    #build_belongsto_tree(@edit[:new][:belongsto].keys, false, false)  # Build the Hosts & Clusters tree for this user
+    @vat_tree = TreeBuilderBelongsToVat.new(:vat, :vat_tree, @sb, true, :edit => @edit, :group => @group)
+      #build_belongsto_tree(@edit[:new][:belongsto].keys, true, false)  # Build the VMs & Templates tree for this user
+>>>>>>> Vm/Template tree is generated
   end
 
   # Set group record variables to new values
