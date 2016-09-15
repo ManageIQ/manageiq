@@ -624,6 +624,24 @@ describe MiqExpression do
   end
 
   describe "#to_ruby" do
+    it "generates the SQL for a < expression" do
+      actual = described_class.new("<" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}).to_ruby
+      expected = "<value ref=vm, type=integer>/virtual/hardware/cpu_sockets</value> < 2"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the SQL for a <= expression" do
+      actual = described_class.new("<=" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}).to_ruby
+      expected = "<value ref=vm, type=integer>/virtual/hardware/cpu_sockets</value> <= 2"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the SQL for a != expression" do
+      actual = described_class.new("!=" => {"field" => "Vm-name", "value" => "foo"}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> != \"foo\""
+      expect(actual).to eq(expected)
+    end
+
     it "detects value empty array" do
       exp = MiqExpression.new("INCLUDES" => {"field" => "Vm-name", "value" => "[]"})
       expect(exp.to_ruby).to eq("<value ref=vm, type=string>/virtual/name</value> =~ /\\[\\]/")
