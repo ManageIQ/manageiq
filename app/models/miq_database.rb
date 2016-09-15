@@ -32,17 +32,15 @@ class MiqDatabase < ApplicationRecord
   end
 
   def self.registration_default_value_for_update_repo_name
-    names = Settings.product.default_update_repo_names
-    return names.join(" ") if names
+    Vmdb::Settings.template_settings.product.update_repo_names.to_a.join(" ")
   end
 
   def update_repo_names
-    Settings.product.update_repo_names
+    Settings.product.update_repo_names.to_a
   end
 
   def update_repo_name
-    names = Settings.product.update_repo_names
-    return names.join(" ") if names
+    update_repo_names.join(" ")
   end
 
   def update_repo_name=(repos)
