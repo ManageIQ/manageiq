@@ -2,7 +2,7 @@
 %h3= _('Fields')
 #instance_fields_div
   - if !@in_a_form
-    = render :partial => "layouts/flash_msg", :locals => {:div_num => "_instance_fields"}
+    = render :partial => "layouts/flash_msg"
 
     %table#instance_fields_grid.table.table-striped.table-bordered
       %thead
@@ -48,5 +48,5 @@
 
   - else
     #form_div
-      = render :partial => "layouts/flash_msg", :locals => {:div_num => "_instance_fields"}
+      = render :partial => "layouts/flash_msg"
       = render :partial => "instance_form", :locals => {:prefix => ""}

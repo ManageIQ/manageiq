@@ -3,7 +3,7 @@
     - unless @version_messages.blank?
       - @version_messages.each do |msg|
         = render :partial => 'layouts/info_msg', :locals => {:message => msg}
-    = render :partial => "layouts/flash_msg", :locals => {:div_num => "_ns_list"}
+    = render :partial => "layouts/flash_msg"
     %table#ns_list_grid.table.table-striped.table-bordered.table-hover.table-clickable.table-checkable
       %thead
         %th.narrow
@@ -37,7 +37,7 @@
 
   - else
     - url = url_for(:action => 'form_ns_field_changed', :id => "#{@ae_ns.id || 'new'}")
-    = render :partial => "layouts/flash_msg", :locals => {:div_num => "_ns_list"}
+    = render :partial => "layouts/flash_msg"
     #form_ns_div
       %h3
         = _('Info')

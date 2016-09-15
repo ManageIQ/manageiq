@@ -1,5 +1,5 @@
 - url = url_for(:action => 'form_copy_objects_field_changed', :id => @edit[:rec_id])
-= render :partial => "layouts/flash_msg", :locals => {:div_num => "_copy"}
+= render :partial => "layouts/flash_msg"
 #form_div
   = hidden_div_if(!@edit[:new][:namespace], :id => "ae_tree_select_div") do
     = render(:partial => 'layouts/ae_tree_select', :locals => {:entry_point => "Namespace"})
