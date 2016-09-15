@@ -1116,7 +1116,9 @@ module ApplicationHelper
   end
 
   def javascript_redirect(args)
-    if args.class == Hash && args[:action] == 'show' && restful_routed?(self.class.model)
+    # there's no model for ResourceController - defaulting to traditional routing
+    model = self.class.model rescue nil
+    if model && args.class == Hash && args[:action] == 'show' && restful_routed?(model)
       args.delete(:action)
       polymorphic_path_redirect(model, args)
     else
