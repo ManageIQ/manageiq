@@ -713,6 +713,15 @@ container_images:
 - last_scan_attempt_on
 - digest
 - registered_on
+- architecture
+- author
+- command
+- entrypoint
+- docker_version
+- exposed_ports
+- environment_variables
+- size
+- created_on
 - old_ems_id
 - deleted_on
 container_label_tag_mappings:
