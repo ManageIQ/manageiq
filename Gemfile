@@ -8,9 +8,6 @@ gem "rails-controller-testing",        :require => false
 gem "activerecord-session_store",      "~>1.0.0"
 gem "websocket-driver",                "~>0.6.3"
 
-gem "config",                          "~>1.1.0", :git => "git://github.com/ManageIQ/config.git", :branch => "overwrite_arrays"
-gem "deep_merge",                      "~>1.0.1", :git => "git://github.com/ManageIQ/deep_merge.git", :branch => "overwrite_arrays"
-
 # Local gems
 path "gems/" do
   gem "manageiq_foreman", :require => false
@@ -75,6 +72,7 @@ gem "ruby-dbus"
 gem "ancestry",                       "~>2.1.0",   :require => false
 gem "ansible_tower_client",           "~>0.3.2",   :require => false
 gem "aws-sdk",                        "~>2.2.19",  :require => false
+gem "config",                         "~>1.3.0",   :require => false
 gem "dalli",                          "~>2.7.4",   :require => false
 gem "elif",                           "=0.1.0",    :require => false
 gem "google-api-client",              "~>0.8.6",   :require => false
