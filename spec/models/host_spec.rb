@@ -396,4 +396,16 @@ describe Host do
       expect(Host.attribute_supported_by_sql?(:v_total_miq_templates)).to be true
     end
   end
+
+  describe "#v_annotation" do
+    it "handles nil" do
+      h = FactoryGirl.build(:host)
+      expect(h.v_annotation).to be_nil
+    end
+
+    it "delegates" do
+      h = FactoryGirl.build(:host, :hardware => FactoryGirl.build(:hardware, :annotation => "the annotation"))
+      expect(h.v_annotation).to eq("the annotation")
+    end
+  end
 end

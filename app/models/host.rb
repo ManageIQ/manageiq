@@ -140,7 +140,7 @@ class Host < ApplicationRecord
   virtual_column :enabled_run_level_5_services, :type => :string_set,  :uses => :host_services
   virtual_column :enabled_run_level_6_services, :type => :string_set,  :uses => :host_services
   virtual_column :last_scan_on,                 :type => :time,        :uses => :last_drift_state_timestamp
-  virtual_column :v_annotation,                 :type => :string,      :uses => :hardware
+  virtual_delegate :annotation, :to => :hardware, :prefix => "v", :allow_nil => true
   virtual_column :vmm_vendor_display,           :type => :string
   virtual_column :ipmi_enabled,                 :type => :boolean
 
@@ -191,10 +191,6 @@ class Host < ApplicationRecord
 
   def authentication_check_role
     'smartstate'
-  end
-
-  def v_annotation
-    hardware.try(:annotation)
   end
 
   def my_zone
