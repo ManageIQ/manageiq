@@ -26,6 +26,14 @@ class Dialog < ApplicationRecord
     end
   end
 
+  def readonly?
+    return true if super
+    resource_actions.each do |action|
+      return true if action.readonly?
+    end
+    false
+  end
+
   def each_dialog_field(&block)
     dialog_fields.each(&block)
   end
