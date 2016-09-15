@@ -3,13 +3,14 @@ describe('Automate', function() {
     beforeEach(function() {
       var html = '';
       html += '<input type="hidden" class="git-branch-or-tag"></input>';
-      html += '<select class="git-branches">';
+      html += '<select class="git-branches selectpicker">';
       html += '  <option value="1">Branch 1</option>';
       html += '  <option value="2" selected="selected">Branch 2</option>';
       html += '</select>';
-      html += '<div class="git-branches"></div>';
       html += '';
       setFixtures(html);
+
+      miqInitSelectPicker();
     });
 
     it('ensures the selected value from the branches select tag is set on the hidden input', function() {
@@ -29,18 +30,18 @@ describe('Automate', function() {
       html += '<div class="git-branch-group"></div>';
       html += '<div class="git-tag-group"></div>';
       html += '<input type="hidden" class="git-branch-or-tag"></input>';
-      html += '<select class="git-branches">';
+      html += '<select class="git-branches selectpicker">';
       html += '  <option value="1">Branch 1</option>';
       html += '  <option value="2" selected="selected">Branch 2</option>';
       html += '</select>';
-      html += '<select class="git-tags">';
+      html += '<select class="git-tags selectpicker">';
       html += '  <option value="1" selected="selected">Tag 1</option>';
       html += '  <option value="2">Tag 2</option>';
       html += '</select>';
-      html += '<div class="git-branches"></div>';
-      html += '<div class="git-tags"></div>';
       html += '';
       setFixtures(html);
+
+      miqInitSelectPicker();
 
       Automate.setUpGitRefreshClickHandlers();
     });
