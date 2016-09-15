@@ -1058,6 +1058,7 @@ dialogs:
 - created_at
 - updated_at
 - label
+- blueprint_id
 direct_configuration_profiles_configuration_tags:
 - configuration_profile_id
 - configuration_tag_id
