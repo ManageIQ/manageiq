@@ -82,7 +82,9 @@ class ApplicationHelper::Toolbar::MiqTemplateCenter < ApplicationHelper::Toolbar
           :miq_template_clone,
           'product product-clone fa-lg',
           t = N_('Clone this Template'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::GenericFeatureButton,
+          :options => {:feature => :clone}),
       ]
     ),
   ])
