@@ -1,7 +1,7 @@
 silence_warnings { ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.const_set("DIALOGS_VIA_AUTOMATE", false) }
 
 describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
-  include WorkflowSpecHelper
+  include Spec::Support::WorkflowHelper
 
   let(:admin)    { FactoryGirl.create(:user_with_group) }
   let(:template) { FactoryGirl.create(:template_vmware) }

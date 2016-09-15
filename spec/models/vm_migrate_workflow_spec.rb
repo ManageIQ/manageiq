@@ -1,5 +1,5 @@
 describe VmMigrateWorkflow do
-  include WorkflowSpecHelper
+  include Spec::Support::WorkflowHelper
   let(:admin) { FactoryGirl.create(:user_with_group) }
   let(:ems) { FactoryGirl.create(:ems_vmware) }
   let(:vm) { FactoryGirl.create(:vm_vmware, :name => 'My VM', :ext_management_system => ems) }
