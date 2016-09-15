@@ -25,7 +25,7 @@ module Api
         if @req.subcollection
           delete_subcollection_resource @req.subcollection.to_sym, @req.s_id
         else
-          send(target_resource_method(false, @req.collection.to_sym, :delete), @req.collection.to_sym, @req.c_id)
+          delete_resource(@req.collection.to_sym, @req.c_id)
         end
         render_normal_destroy
       end
