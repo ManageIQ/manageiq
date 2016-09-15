@@ -9,5 +9,9 @@ module ManageIQ::Providers::Inflector::Methods
     def provider_name
       ManageIQ::Providers::Inflector.provider_name(self)
     end
+
+    def manager_type
+      ManageIQ::Providers::Inflector.manager_type(self)
+    end
   end
 end
