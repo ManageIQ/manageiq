@@ -5,7 +5,7 @@
 
 RSpec::Matchers.define :exceed_query_limit do |expected|
   match do |block|
-    @query_count = QueryCounter.count(&block)
+    @query_count = Spec::Support::QueryCounter.count(&block)
     @query_count > expected
   end
 
