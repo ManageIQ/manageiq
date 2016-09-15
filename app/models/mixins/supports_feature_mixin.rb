@@ -30,11 +30,8 @@ module SupportsFeatureMixin
   #   Post.new(featured: true).supports_archive?   # => false
   #
   # To get a reason why a feature is unsupported use the +unsupported_reason+ method
-  # Note: Because providing a reason for an unsupported feature is optional, you should
-  #       not rely on checking the reason to be nil for a feature to be unsupported.
-  #       You have to use +supports_feature?+
   #
-  #   Post.unsupported_reason(:publish)                     # => nil
+  #   Post.unsupported_reason(:publish)                     # => "Feature not supported"
   #   Post.unsupported_reason(:fake)                        # => "We keep it real"
   #   Post.new(featured: true).unsupported_reason(:archive) # => "Its too good"
   #
@@ -90,6 +87,10 @@ module SupportsFeatureMixin
     end
   end
 
+  def self.reason_or_default(reason)
+    reason.present? ? reason : _("Feature not supported")
+  end
+
   # query instance for the reason why the feature is unsupported
   def unsupported_reason(feature)
     SupportsFeatureMixin.guard_queryable_feature(feature)
@@ -107,9 +108,9 @@ module SupportsFeatureMixin
 
   # used inside a +supports+ block to add a reason why the feature is not supported
   # just adding a reason will make the feature unsupported
-  def unsupported_reason_add(feature, reason)
+  def unsupported_reason_add(feature, reason = nil)
     SupportsFeatureMixin.guard_queryable_feature(feature)
-    unsupported[feature] = reason
+    unsupported[feature] = SupportsFeatureMixin.reason_or_default(reason)
   end
 
   def unsupported
@@ -120,20 +121,20 @@ module SupportsFeatureMixin
     # This is the DSL used a class level to define what is supported
     def supports(feature, &block)
       SupportsFeatureMixin.guard_queryable_feature(feature)
-      send(:define_supports_methods, feature, true, &block)
+      define_supports_feature_methods(feature, &block)
     end
 
     # supports_not does not take a block, because its never supported
     # and not conditionally supported
     def supports_not(feature, reason: nil)
       SupportsFeatureMixin.guard_queryable_feature(feature)
-      send(:define_supports_methods, feature, false, reason)
+      define_supports_feature_methods(feature, :is_supported => false, :reason => reason)
     end
 
     # query the class if the feature is supported or not
     def supports?(feature)
       SupportsFeatureMixin.guard_queryable_feature(feature)
-      send("supports_#{feature}?")
+      public_send("supports_#{feature}?")
     end
 
     # query the class for the reason why something is unsupported
@@ -151,13 +152,13 @@ module SupportsFeatureMixin
       @unsupported ||= Concurrent::Hash.new
     end
 
-    # use this for making an instance not support a feature
-    def unsupported_reason_add(feature, reason)
+    # use this for making a class not support a feature
+    def unsupported_reason_add(feature, reason = nil)
       SupportsFeatureMixin.guard_queryable_feature(feature)
-      unsupported[feature] = reason
+      unsupported[feature] = SupportsFeatureMixin.reason_or_default(reason)
     end
 
-    def define_supports_methods(feature, is_supported, reason = nil, &block)
+    def define_supports_feature_methods(feature, is_supported: true, reason: nil, &block)
       method_name = "supports_#{feature}?"
 
       # defines the method on the instance
@@ -166,7 +167,7 @@ module SupportsFeatureMixin
         if block_given?
           instance_eval(&block)
         else
-          unsupported[feature] = reason unless is_supported
+          unsupported_reason_add(feature, reason) unless is_supported
         end
         !unsupported.key?(feature)
       end
@@ -175,7 +176,7 @@ module SupportsFeatureMixin
       define_singleton_method(method_name) do
         unsupported.delete(feature)
         # TODO: durandom - make reason evaluate in class context, to e.g. include the name of a subclass (.to_proc?)
-        unsupported[feature] = reason unless is_supported
+        unsupported_reason_add(feature, reason) unless is_supported
         !unsupported.key?(feature)
       end
     end

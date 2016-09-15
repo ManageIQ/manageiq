@@ -121,12 +121,12 @@ describe SupportsFeatureMixin do
       expect(Post.new.supports_delete?).to be false
     end
 
-    it "#unsupported_reason(:feature) returns no reason" do
-      expect(Post.new.unsupported_reason(:delete)).to be_nil
+    it "#unsupported_reason(:feature) returns some default reason" do
+      expect(Post.new.unsupported_reason(:delete)).not_to be_blank
     end
 
     it ".unsupported_reason(:feature) returns no reason" do
-      expect(Post.unsupported_reason(:delete)).to be_nil
+      expect(Post.unsupported_reason(:delete)).not_to be_blank
     end
   end
 
