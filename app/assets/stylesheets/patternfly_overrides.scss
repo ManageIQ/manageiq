@@ -568,7 +568,7 @@ body#dashboard {
 
 /* end toolbar styling */
 
-.secondary-collapse-toggle-pf {
+.secondary-collapse-toggle-pf, .tertiary-collapse-toggle-pf {
   &:before {
     content: '\f08d';
   }
