@@ -55,7 +55,7 @@ class TreeBuilderButtons < TreeBuilderAeCustomization
       object.members.count
     else
       # need to show button nodes in button order that they were saved in
-      button_order = button_order? object ? object[:set_data][:button_order] : nil
+      button_order = button_order?(object) ? object[:set_data][:button_order] : nil
       objects = []
       Array(button_order).each do |bidx|
         object.members.each { |b| objects.push(b) if bidx == b.id && !objects.include?(b) }
