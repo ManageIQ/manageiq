@@ -578,14 +578,16 @@
     :description: User's past notifications
     :options:
     - :collection
-    :verbs: *gp
+    :verbs: *gpd
     :klass: NotificationRecipient
     :collection_actions:
       :post:
       - :name: mark_as_seen
+      - :name: delete
     :resource_actions:
       :post:
       - :name: mark_as_seen
+      - :name: delete
   :pictures:
     :description: Pictures
     :options:
