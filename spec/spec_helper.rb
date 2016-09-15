@@ -50,7 +50,7 @@ RSpec.configure do |config|
   end
 
   config.include Spec::Support::AuthHelper, :type => :view
-  config.include ViewSpecHelper, :type => :view
+  config.include Spec::Support::ViewHelper, :type => :view
   config.include UiConstants,    :type => :view
 
   config.include Spec::Support::ControllerHelper, :type => :controller
