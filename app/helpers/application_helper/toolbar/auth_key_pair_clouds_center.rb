@@ -30,7 +30,8 @@ class ApplicationHelper::Toolbar::AuthKeyPairCloudsCenter < ApplicationHelper::T
           :auth_key_pair_cloud_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a new Key Pair'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::AuthKeyPairCloudCreate),
         separator,
         button(
           :auth_key_pair_cloud_delete,
