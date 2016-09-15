@@ -75,6 +75,7 @@ ManageIQ.explorer.processFlash = function(data) {
   ManageIQ.explorer.replacePartials(data);
   ManageIQ.explorer.spinnerOff(data);
   ManageIQ.explorer.scrollTop(data);
+  ManageIQ.explorer.focus(data);
 };
 
 ManageIQ.explorer.replacePartials = function(data) {
@@ -109,6 +110,13 @@ ManageIQ.explorer.scrollTop = function(data) {
 ManageIQ.explorer.miqButtons = function(data) {
   miqButtons(data.showMiqButtons ? 'show' : 'hide');
 };
+
+ManageIQ.explorer.focus = function(data) {
+  if (_.isString(data.focus)) {
+    var element = $('#' + data.focus);
+    if ( element.length ) element.focus();
+  }
+}
 
 ManageIQ.explorer.processReplaceRightCell = function(data) {
   /* variables for the expression editor */
@@ -235,10 +243,7 @@ ManageIQ.explorer.processReplaceRightCell = function(data) {
   if (data.resetOneTrans) { ManageIQ.oneTransition.oneTrans = 0; }
   if (data.oneTransIE) { ManageIQ.oneTransition.IEButtonPressed = true; }
 
-  if (_.isString(data.focus)) {
-    var element = $('#' + data.focus);
-    if ( element.length ) element.focus();
-  }
+  ManageIQ.explorer.focus(data);
 
   if (!_.isUndefined(data.clearSearch)) {
     ManageIQ.explorer.clearSearchToggle(data.clearSearch);

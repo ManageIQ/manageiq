@@ -477,9 +477,7 @@ module MiqAeCustomizationController::Dialogs
       if entry_value != "" && entry_description != ""
         if key[:values].include?([params["entry"]["value"], params["entry"]["description"]])
           add_flash(_("%{field} '%{value}' is already in use") % {:field => params["entry"]["description"], :value => params["entry"]["value"]}, :error)
-          render_flash do |page|
-            page << "$('#entry_value').focus();"
-          end
+          javascript_flash(:focus => 'entry_value')
           return
         else
           key[:values].push([params["entry"]["value"], params["entry"]["description"]])
@@ -488,9 +486,7 @@ module MiqAeCustomizationController::Dialogs
       else
         add_flash(_("Value and Description fields can't be blank"), :error)
         focus_field = entry_value == "" ? "entry_value" : "entry_description"
-        render_flash do |page|
-          page << "$('##{focus_field}').focus();"
-        end
+        javascript_flash(:focus => focus_field)
         return
       end
     else
@@ -499,9 +495,7 @@ module MiqAeCustomizationController::Dialogs
            entry[1] == params["entry"]["description"]
           add_flash(_("%{field} '%{value}' is already in use") % {:field => params["entry"]["description"], :value => params["entry"]["value"]}, :error)
 
-          render_flash do |page|
-            page << "$('#entry_value').focus();"
-          end
+          javascript_flash(:focus => 'entry_value')
           return
         else
           if i == params["entry"]["id"].to_i
