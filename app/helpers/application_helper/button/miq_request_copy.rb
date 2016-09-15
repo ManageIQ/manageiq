@@ -1,5 +1,5 @@
 class ApplicationHelper::Button::MiqRequestCopy < ApplicationHelper::Button::MiqRequest
-  needs :@miq_request, :@showtype, :@record
+  needs :@showtype, :@record
 
   def visible?
     return false unless super

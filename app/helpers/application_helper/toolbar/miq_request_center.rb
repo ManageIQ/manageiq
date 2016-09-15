@@ -5,13 +5,15 @@ class ApplicationHelper::Toolbar::MiqRequestCenter < ApplicationHelper::Toolbar:
       'fa fa-files-o fa-lg',
       N_('Copy original Request'),
       nil,
-      :klass     => ApplicationHelper::Button::MiqRequestCopy),
+      :klass     => ApplicationHelper::Button::MiqRequestCopy,
+      :options   => {:feature => 'miq_request_copy'}),
     button(
       :miq_request_edit,
       'pficon pficon-edit fa-lg',
       N_('Edit the original Request'),
       nil,
-      :klass     => ApplicationHelper::Button::MiqRequestEdit),
+      :klass     => ApplicationHelper::Button::MiqRequestEdit,
+      :options   => {:feature => 'miq_request_edit'}),
     button(
       :miq_request_delete,
       'pficon pficon-delete fa-lg',
@@ -33,6 +35,7 @@ class ApplicationHelper::Toolbar::MiqRequestCenter < ApplicationHelper::Toolbar:
       N_('Approve this Request'),
       nil,
       :klass     => ApplicationHelper::Button::MiqRequestApproval,
+      :options   => {:feature => 'miq_request_copy'},
       :url       => "/stamp",
       :url_parms => "?typ=a"),
     button(
@@ -41,6 +44,7 @@ class ApplicationHelper::Toolbar::MiqRequestCenter < ApplicationHelper::Toolbar:
       N_('Deny this Request'),
       nil,
       :klass     => ApplicationHelper::Button::MiqRequestApproval,
+      :options   => {:feature => 'miq_request_copy'},
       :url       => "/stamp",
       :url_parms => "?typ=d"),
   ])

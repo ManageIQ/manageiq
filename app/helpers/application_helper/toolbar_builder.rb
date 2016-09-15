@@ -522,11 +522,6 @@ class ApplicationHelper::ToolbarBuilder
     return true if %w(container_build_edit container_build_delete container_build_new).include?(id) &&
                    (@record.kind_of?(ContainerBuild) || @record.nil?)
 
-    # hide edit button for MiqRequest instances of type ServiceReconfigureRequest/ServiceTemplateProvisionRequest
-    # TODO: extend .is_available? support via refactoring task to cover this scenario
-    #return true if id == 'miq_request_edit' &&
-    #               %w(ServiceReconfigureRequest ServiceTemplateProvisionRequest).include?(@miq_request.try(:type))
-
     # hide compliance check and comparison buttons rendered for orchestration stack instances
     return true if @record.kind_of?(OrchestrationStack) && @display == "instances" &&
                    %w(instance_check_compliance instance_compare).include?(id)
@@ -604,9 +599,6 @@ class ApplicationHelper::ToolbarBuilder
                     @tabform == "ui_4"
 
     return false if id.starts_with?("miq_capacity_") && @sb[:active_tab] == "report"
-
-    # hide button if id is approve/deny and miq_request_approval feature is not allowed.
-    # return true if !role_allows?(:feature => "miq_request_approval") && ["miq_request_approve", "miq_request_deny"].include?(id)
 
     # don't check for feature RBAC if id is miq_request_approve/deny
     unless %w(miq_policy catalogs).include?(@layout)
@@ -689,22 +681,6 @@ class ApplicationHelper::ToolbarBuilder
       case id
       when "event_edit"
         return true if x_active_tree == :event_tree || !role_allows?(:feature => "event_edit")
-      end
-    when "MiqPolicy"
-      case id
-      when "condition_edit", "policy_edit", "policy_edit_conditions"
-        return true unless role_allows?(:feature => "policy_edit")
-      when "policy_edit_conditions"
-        return true unless role_allows?(:feature => "policy_edit_conditions")
-      when "policy_edit_events"
-        return true if !role_allows?(:feature => "policy_edit") ||
-                       @policy.mode == "compliance"
-      when "policy_copy"
-        return true if !role_allows?(:feature => "policy_copy") ||
-                       x_active_tree != :policy_tree
-      when "policy_delete"
-        return true if !role_allows?(:feature => "policy_delete") ||
-                       x_active_tree != :policy_tree
       end
     when "MiqServer", "MiqRegion"
       case id
