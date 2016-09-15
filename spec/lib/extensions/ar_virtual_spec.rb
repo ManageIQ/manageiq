@@ -19,6 +19,11 @@ describe VirtualFields do
         create_table :test_classes do |t|
           t.integer :col1
         end
+
+        create_table :test_other_classes do |t|
+          t.integer :ocol1
+          t.string  :ostr
+        end
       end
 
       require 'ostruct'
@@ -551,6 +556,48 @@ describe VirtualFields do
           TestClass.create(:id => 2, :ref2 => child)
           tcs = TestClass.all.select(:id, :col1, TestClass.arel_attribute(:child_col1).as("x"))
           expect(tcs.map(&:x)).to match_array([nil, 2])
+        end
+
+        # this may fail in the future as our way of building queries may change
+        # just want to make sure it changed due to intentional changes
+        it "uses table alias for subquery" do
+          TestClass.virtual_delegate :col1, :prefix => 'child', :to => :ref2
+          sql = TestClass.all.select(:id, :col1, TestClass.arel_attribute(:child_col1).as("x")).to_sql
+          expect(sql).to match(/"test_classes_[^"]*"."col1"/i)
+        end
+      end
+
+      context "with relation in foreign table" do
+        before(:each) do
+          class TestOtherClass < ActiveRecord::Base
+            def self.connection
+              TestClassBase.connection
+            end
+            belongs_to :oref1, :class_name => 'TestClass', :foreign_key => :ocol1
+
+            include VirtualFields
+          end
+        end
+
+        after(:each) do
+          TestOtherClass.remove_connection
+          Object.send(:remove_const, :TestOtherClass)
+        end
+
+        it "delegates to another table" do
+          TestOtherClass.virtual_delegate :col1, :to => :oref1
+          TestOtherClass.create(:id => 4, :oref1 => TestClass.create(:id => 3))
+          TestOtherClass.create(:id => 3, :oref1 => TestClass.create(:id => 2, :col1 => 99))
+          tcs = TestOtherClass.all.select(:id, :ocol1, TestOtherClass.arel_attribute(:col1).as("x"))
+          expect(tcs.map(&:x)).to match_array([nil, 99])
+        end
+
+        # this may fail in the future as our way of building queries may change
+        # just want to make sure it changed due to intentional changes
+        it "delegates to another table without alias" do
+          TestOtherClass.virtual_delegate :col1, :to => :oref1
+          sql = TestOtherClass.all.select(:id, :ocol1, TestOtherClass.arel_attribute(:col1).as("x")).to_sql
+          expect(sql).to match(/"test_classes"."col1"/i)
         end
       end
     end
