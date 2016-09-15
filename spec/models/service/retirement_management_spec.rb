@@ -105,7 +105,7 @@ describe "Service Retirement Management" do
     @service.finish_retirement
     @service.reload
     expect(@service.retired).to be_truthy
-    expect(@service.retires_on).to eq(Date.today)
+    expect(@service.retires_on).to be_between(Time.zone.now - 1.hour, Time.zone.now + 1.second)
     expect(@service.retirement_state).to eq("retired")
   end
 

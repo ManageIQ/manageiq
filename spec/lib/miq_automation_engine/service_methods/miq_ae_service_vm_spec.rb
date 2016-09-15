@@ -124,7 +124,7 @@ module MiqAeServiceVmSpec
       service_vm.finish_retirement
 
       expect(service_vm.retired).to be_truthy
-      expect(service_vm.retires_on).to eq(Date.today)
+      expect(service_vm.retires_on).to be_between(Time.zone.now - 1.hour, Time.zone.now + 1.second)
       expect(service_vm.retirement_state).to eq("retired")
     end
 
