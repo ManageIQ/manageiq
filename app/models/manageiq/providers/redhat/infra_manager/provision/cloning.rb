@@ -59,7 +59,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Cloning
   def start_clone(clone_options)
     source.with_provider_object do |rhevm_template|
       vm = rhevm_template.create_vm(clone_options)
-      phase_context[:new_vm_ems_ref] = vm[:href]
+      phase_context[:new_vm_ems_ref] = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(vm[:href])
       phase_context[:clone_task_ref] = vm.creation_status_link
     end
   end
