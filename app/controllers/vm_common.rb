@@ -1344,7 +1344,7 @@ module VmCommon
          @record && # Showing a record
          !@in_a_form && # Not in a form
          x_active_tree.to_s !~ /_filter_tree$/ # Not in a filter tree; FIXME: create some property on trees for this
-        add_nodes = open_parent_nodes(@record) # Open the parent nodes of selected record, if not open
+        add_nodes = TreeBuilder.convert_bs_tree(open_parent_nodes(@record)).first # Open the parent nodes of selected record, if not open
       end
     end
 

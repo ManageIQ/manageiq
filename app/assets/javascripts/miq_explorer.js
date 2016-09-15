@@ -141,7 +141,7 @@ ManageIQ.explorer.processReplaceRightCell = function(data) {
     miqAddNodeChildren(data.addNodes.activeTree,
                        data.addNodes.key,
                        data.addNodes.osf,
-                       data.addNodes.children);
+                       data.addNodes.nodes);
   }
 
 

@@ -20,6 +20,9 @@ function miqOnCheckHandler(node) {
 
 function miqAddNodeChildren(treename, key, selected_node, children) {
   var node = miqTreeFindNodeByKey(treename, key);
+  if (node.lazyLoad) {
+    node.lazyLoad = false;
+  }
   miqTreeObject(treename).addNode(children, node);
   miqTreeActivateNodeSilently(treename, selected_node);
 }
