@@ -1116,6 +1116,24 @@ module ApplicationHelper
   end
 
   def javascript_redirect(args)
+    if args.class == Hash && args[:action] == 'show' && restful_routed?(self.class.model)
+      args.delete(:action)
+      polymorphic_path_redirect(model, args)
+    else
+      non_polymorphic_path_redirect(args)
+    end
+  end
+
+  def polymorphic_path_redirect(model, args)
+    id = args[:id] || params[:id]
+    args.delete(:id)
+    render :update do |page|
+      page << javascript_prologue
+      page.redirect_to polymorphic_path(model.find(id), args)
+    end
+  end
+
+  def non_polymorphic_path_redirect(args)
     render :update do |page|
       page << javascript_prologue
       page.redirect_to args
