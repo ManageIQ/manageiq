@@ -206,7 +206,7 @@ module OpsController::Diagnostics
     assert_privileges("refresh_log")
     @log = $log.contents(120, 1000)
     @selected_server = MiqServer.find(from_cid(x_node.split("-").last).to_i)
-    add_flash(_("Logs for this ManageIQ Server are not available for viewing"), :warning)  if @log.blank?
+    add_flash(_("Logs for this ManageIQ Server are not available for viewing"), :warning) if @log.blank?
     render :update do |page|
       page << javascript_prologue
       page.replace_html("diagnostics_evm_log", :partial => "diagnostics_evm_log_tab")
@@ -218,7 +218,7 @@ module OpsController::Diagnostics
     assert_privileges("refresh_audit_log")
     @log = $audit_log.contents(nil, 1000)
     @selected_server = MiqServer.find(from_cid(x_node.split("-").last).to_i)
-    add_flash(_("Logs for this ManageIQ Server are not available for viewing"), :warning)  if @log.blank?
+    add_flash(_("Logs for this ManageIQ Server are not available for viewing"), :warning) if @log.blank?
     render :update do |page|
       page << javascript_prologue
       page.replace_html("diagnostics_audit_log", :partial => "diagnostics_audit_log_tab")
@@ -230,7 +230,7 @@ module OpsController::Diagnostics
     assert_privileges("refresh_production_log")
     @log = $rails_log.contents(nil, 1000)
     @selected_server = MiqServer.find(from_cid(x_node.split("-").last).to_i)
-    add_flash(_("Logs for this ManageIQ Server are not available for viewing"), :warning)  if @log.blank?
+    add_flash(_("Logs for this ManageIQ Server are not available for viewing"), :warning) if @log.blank?
     render :update do |page|
       page << javascript_prologue
       page.replace_html("diagnostics_production_log", :partial => "diagnostics_production_log_tab")
@@ -906,13 +906,13 @@ module OpsController::Diagnostics
           @download_action = "fetch_log"
         elsif @sb[:active_tab] == "diagnostics_audit_log"
           @log = $audit_log.contents(nil, 1000)
-          add_flash(_("Logs for this ManageIQ Server are not available for viewing"), :warning)  if @log.blank?
+          add_flash(_("Logs for this ManageIQ Server are not available for viewing"), :warning) if @log.blank?
           @msg_title = _("Audit")
           @refresh_action = "refresh_audit_log"
           @download_action = "fetch_audit_log"
         elsif @sb[:active_tab] == "diagnostics_production_log"
           @log = $rails_log.contents(nil, 1000)
-          add_flash(_("Logs for this ManageIQ Server are not available for viewing"), :warning)  if @log.blank?
+          add_flash(_("Logs for this ManageIQ Server are not available for viewing"), :warning) if @log.blank?
           @msg_title = @sb[:rails_log]
           @refresh_action = "refresh_production_log"
           @download_action = "fetch_production_log"
