@@ -111,7 +111,7 @@
     - if default_button
       = button_tag(_('Default'),
         :class   => "btn btn-default",
-        :alt     => t = _("Reset All menus to CFME defaults"),
+        :alt     => t = _("Reset All menus to ManageIQ defaults"),
         :title   => t,
         :onclick => "miqAjaxButton('#{url_for(:action => "menu_update", :button => "default")}');")
     - unless no_cancel
@@ -142,7 +142,7 @@
     - if default_button
       = button_tag(_('Default'),
         :class   => "btn btn-default",
-        :alt     => t = _("Reset All menus to CFME defaults"),
+        :alt     => t = _("Reset All menus to ManageIQ defaults"),
         :title   => t,
         :onclick => "miqAjaxButton('#{url_for(:action => "menu_update", :button => "default")}');")
 

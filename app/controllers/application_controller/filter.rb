@@ -110,7 +110,7 @@ module ApplicationController::Filter
         exp_set_fields(@edit[:edit_exp])
       rescue StandardError => bang
         @exp_atom_errors = [_("There is an error in the selected expression element, perhaps it was imported or edited manually."),
-                            _("This element should be removed and recreated or you can report the error to your CFME administrator."),
+                            _("This element should be removed and recreated or you can report the error to your ManageIQ administrator."),
                             _("Error details: %{message}") % {:message => bang}]
       end
       @edit[@expkey][:exp_token] = token

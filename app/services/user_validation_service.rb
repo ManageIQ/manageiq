@@ -83,11 +83,11 @@ class UserValidationService
                                        :action        => 'explorer',
                                        :flash_warning => true,
                                        :no_refresh    => true,
-                                       :flash_msg     => _("The CFME Server is still starting, you have been redirected to the diagnostics page for problem determination"),
+                                       :flash_msg     => _("The ManageIQ Server is still starting, you have been redirected to the diagnostics page for problem determination"),
                                        :escape        => false)
                         )
     else
-      ValidateResult.new(:fail, _("The CFME Server is still starting. If this message persists, please contact your CFME administrator."))
+      ValidateResult.new(:fail, _("The ManageIQ Server is still starting. If this message persists, please contact your ManageIQ administrator."))
     end
   end
 

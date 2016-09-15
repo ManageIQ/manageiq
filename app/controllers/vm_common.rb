@@ -1665,7 +1665,7 @@ module VmCommon
       action = "edit_vm"
     when "evm_relationship"
       partial = "vm_common/evm_relationship"
-      header = _("Edit CFME Server Relationship for %{vm_or_template} \"%{name}\"") %
+      header = _("Edit ManageIQ Server Relationship for %{vm_or_template} \"%{name}\"") %
         {:vm_or_template => ui_lookup(:table => table), :name => name}
       action = "evm_relationship_update"
     when "miq_request_new"

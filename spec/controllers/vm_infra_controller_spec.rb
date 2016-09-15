@@ -287,42 +287,42 @@ describe VmInfraController do
     post :x_button, :params => { :pressed => 'vm_guest_shutdown', :id => vm_vmware.id }
     expect(response.status).to eq(200)
 
-    expect(response.body).to include('Shutdown Guest initiated for 1 VM and Instance from the CFME Database')
+    expect(response.body).to include('Shutdown Guest initiated for 1 VM and Instance from the ManageIQ Database')
   end
 
   it 'can Restart Guest' do
     post :x_button, :params => { :pressed => 'vm_guest_restart', :id => vm_vmware.id }
     expect(response.status).to eq(200)
 
-    expect(response.body).to include('Restart Guest initiated for 1 VM and Instance from the CFME Database')
+    expect(response.body).to include('Restart Guest initiated for 1 VM and Instance from the ManageIQ Database')
   end
 
   it 'can Power On VM' do
     post :x_button, :params => { :pressed => 'vm_start', :id => vm_vmware.id }
     expect(response.status).to eq(200)
 
-    expect(response.body).to include('Start initiated for 1 VM and Instance from the CFME Database')
+    expect(response.body).to include('Start initiated for 1 VM and Instance from the ManageIQ Database')
   end
 
   it 'can Power Off VM' do
     post :x_button, :params => { :pressed => 'vm_stop', :id => vm_vmware.id }
     expect(response.status).to eq(200)
 
-    expect(response.body).to include('Stop initiated for 1 VM and Instance from the CFME Database')
+    expect(response.body).to include('Stop initiated for 1 VM and Instance from the ManageIQ Database')
   end
 
   it 'can Suspend VM' do
     post :x_button, :params => { :pressed => 'vm_suspend', :id => vm_vmware.id }
     expect(response.status).to eq(200)
 
-    expect(response.body).to include('Suspend initiated for 1 VM and Instance from the CFME Database')
+    expect(response.body).to include('Suspend initiated for 1 VM and Instance from the ManageIQ Database')
   end
 
   it 'can Reset VM' do
     post :x_button, :params => { :pressed => 'vm_reset', :id => vm_vmware.id }
     expect(response.status).to eq(200)
 
-    expect(response.body).to include('Reset initiated for 1 VM and Instance from the CFME Database')
+    expect(response.body).to include('Reset initiated for 1 VM and Instance from the ManageIQ Database')
   end
 
   it 'can run Utilization' do
