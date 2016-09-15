@@ -764,7 +764,6 @@ en:
       ManageIQ::Providers::Azure::CloudManager:                             Cloud Provider (Microsoft Azure)
       ManageIQ::Providers::Vmware::CloudManage:                             Cloud Provider (VMware vCloud)
       ManageIQ::Providers::Azure::NetworkManager::CloudNetwork:             Cloud Network (Microsoft Azure)
-      ManageIQ::Providers::Atomic::ContainerManager:                        Container Provider (Atomic)
       ManageIQ::Providers::Kubernetes::ContainerManager:                    Container Provider (Kubernetes)
       ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup:    Pod (Kubernetes)
       ManageIQ::Providers::Openshift::ContainerManager:                     Container Provider (OpenShift Origin)

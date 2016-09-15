@@ -19,8 +19,6 @@ describe ExtManagementSystem do
   let(:all_types_and_descriptions) do
     {
       "ansible_tower_configuration" => "Ansible Tower Configuration",
-      "atomic"                      => "Atomic",
-      "atomic_enterprise"           => "Atomic Enterprise",
       "azure"                       => "Azure",
       "azure_network"               => "Azure Network",
       "ec2"                         => "Amazon EC2",
@@ -66,10 +64,6 @@ describe ExtManagementSystem do
 
     it "permissions.tmpl.yml should contain all EMS types" do
       types = YAML.load_file(Rails.root.join("config/permissions.tmpl.yml"))
-      # atomic is no longer in the list of permissions, because they should be faded out
-      # and new container managers should be openshift. Until they are fully removed from the
-      # codebase: https://github.com/ManageIQ/manageiq/issues/8612
-      types += %w(ems-type:atomic ems-type:atomic_enterprise)
       stub_vmdb_permission_store_with_types(types) do
         expect(described_class.supported_types_and_descriptions_hash).to eq(all_types_and_descriptions)
       end
