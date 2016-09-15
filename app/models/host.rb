@@ -119,11 +119,10 @@ class Host < ApplicationRecord
   virtual_delegate :v_owning_cluster, :to => "ems_cluster.name", :allow_nil => true, :default => ""
   virtual_column :v_owning_datacenter,          :type => :string,      :uses => :all_relationships
   virtual_column :v_owning_folder,              :type => :string,      :uses => :all_relationships
-  virtual_column :total_vcpus,                  :type => :integer,     :uses => :cpu_total_cores
-  virtual_column :num_cpu,                      :type => :integer,     :uses => :hardware
-  virtual_column :cpu_total_cores,              :type => :integer,     :uses => :hardware
-  virtual_column :cpu_cores_per_socket,         :type => :integer,     :uses => :hardware
-  virtual_column :ram_size,                     :type => :integer
+  virtual_delegate :cpu_total_cores, :cpu_cores_per_socket, :to => :hardware, :allow_nil => true, :default => 0
+  virtual_delegate :num_cpu,     :to => "hardware.cpu_sockets",        :allow_nil => true, :default => 0
+  virtual_delegate :total_vcpus, :to => "hardware.cpu_total_cores",    :allow_nil => true, :default => 0
+  virtual_delegate :ram_size,    :to => "hardware.memory_mb",          :allow_nil => true, :default => 0
   virtual_column :enabled_inbound_ports,        :type => :numeric_set  # The following are not set to use anything
   virtual_column :enabled_outbound_ports,       :type => :numeric_set  # because get_ports ends up re-querying the
   virtual_column :enabled_udp_inbound_ports,    :type => :numeric_set  # database anyway.
@@ -1329,11 +1328,6 @@ class Host < ApplicationRecord
     ram_size - current_memory_usage
   end
 
-  def ram_size
-    return 0 if hardware.nil?
-    hardware.memory_mb.to_i
-  end
-
   def firewall_rules
     return [] if operating_system.nil?
     operating_system.firewall_rules
@@ -1665,28 +1659,12 @@ class Host < ApplicationRecord
     vms.inject(0) { |t, vm| t + (vm.memory_reserve || 0) }
   end
 
-  def total_vcpus
-    cpu_total_cores || 0
-  end
-
   def vcpus_per_core
     cores = total_vcpus
     return 0 if cores == 0
 
     total_vm_vcpus = vms.inject(0) { |t, vm| t += (vm.num_cpu || 0) }
     (total_vm_vcpus / cores)
-  end
-
-  def num_cpu
-    hardware.nil? ? 0 : hardware.cpu_sockets
-  end
-
-  def cpu_total_cores
-    hardware.nil? ? 0 : hardware.cpu_total_cores
-  end
-
-  def cpu_cores_per_socket
-    hardware.nil? ? 0 : hardware.cpu_cores_per_socket
   end
 
   def domain
