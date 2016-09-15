@@ -1274,6 +1274,7 @@ Vmdb::Application.routes.draw do
       compare_get,
       :post => %w(
         button
+        perf_chart_chooser
         show
         show_list
         tl_chooser

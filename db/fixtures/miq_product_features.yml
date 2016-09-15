@@ -3766,6 +3766,10 @@
       :description: Display Individual Middleware Messaging
       :feature_type: view
       :identifier: middleware_messaging_show
+    - :name: Utilization
+      :description: Show Capacity & Utilization data of Middleware Messaging
+      :feature_type: view
+      :identifier: middleware_messaging_perf
   - :name: Operate
     :description: Perform Operations on Middleware Messaging
     :feature_type: control
