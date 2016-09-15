@@ -713,6 +713,8 @@ container_images:
 - last_scan_attempt_on
 - digest
 - registered_on
+- old_ems_id
+- deleted_on
 container_label_tag_mappings:
 - id
 - labeled_resource_type
