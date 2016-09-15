@@ -86,8 +86,11 @@ module ProcessTasksMixin
       end
     end
 
-    # Best guess at how the classes map to API collections and how the tasks map to actions
-    # Override as needed
+    # Override as needed to handle differences between API actions and method names
+    def action_for_task(task)
+      task
+    end
+
     def invoke_api_tasks(api_client, remote_options)
       collection = Api.model_to_collection(name)
       unless collection
@@ -95,10 +98,11 @@ module ProcessTasksMixin
         raise NotImplementedError
       end
 
+      action = action_for_task(remote_options[:task])
       remote_options[:ids].each do |id|
         obj = api_client.send(collection).search(:filter => ["id=#{id}"]).first
-        _log.info("Invoking task #{remote_options[:task]} on collection #{collection} - object #{obj.id}")
-        # obj.send(task)
+        _log.info("Invoking task #{action} on collection #{collection} - object #{obj.id}")
+        # obj.send(action_for_task(action))
       end
     end
 
