@@ -9,7 +9,7 @@ describe ArbitrationSetting do
 
       context 'seeding again' do
         it 'should not create new records' do
-          expect { ArbitrationSetting.count }.not_to change(ArbitrationSetting, :count)
+          expect { ArbitrationSetting.seed }.not_to change(ArbitrationSetting, :count)
         end
       end
     end
