@@ -48,6 +48,8 @@ arbitration_profiles:
 - default_profile
 - type
 - profile
+- created_at
+- updated_at
 arbitration_rules:
 - id
 - description
