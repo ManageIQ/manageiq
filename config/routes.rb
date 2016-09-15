@@ -2833,7 +2833,7 @@ Vmdb::Application.routes.draw do
     end
 
     Api::Settings.collections.each do |collection_name, collection|
-      controller collection_name, :path => collection_name do
+      scope collection_name, :controller => collection_name do
         collection.verbs.each do |verb|
           root :action => API_ACTIONS[verb], :via => verb if collection.options.include?(:primary)
 
