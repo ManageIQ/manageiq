@@ -693,8 +693,6 @@ class ApplicationHelper::ToolbarBuilder
       end
     when "MiqTemplate"
       case id
-      when "miq_template_policy_sim", "miq_template_protect"
-        return true if @record.host && @record.host.vmm_product.downcase == "workstation"
       when "miq_template_refresh"
         return true if @record && !@record.ext_management_system && !(@record.host && @record.host.vmm_product.downcase == "workstation")
       when "miq_template_scan", "image_scan"

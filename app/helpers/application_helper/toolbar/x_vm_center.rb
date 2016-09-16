@@ -78,13 +78,13 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           'pficon pficon-edit fa-lg',
           N_('Manage Policies for this VM'),
           N_('Manage Policies'),
-          :klass => ApplicationHelper::Button::VmPolicy),
+          :klass => ApplicationHelper::Button::VmTemplatePolicy),
         button(
           :vm_policy_sim,
           'fa fa-play-circle-o fa-lg',
           N_('View Policy Simulation for this VM'),
           N_('Policy Simulation'),
-          :klass => ApplicationHelper::Button::VmPolicy),
+          :klass => ApplicationHelper::Button::VmTemplatePolicy),
         button(
           :vm_tag,
           'pficon pficon-edit fa-lg',

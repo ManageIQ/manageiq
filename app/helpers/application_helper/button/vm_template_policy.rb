@@ -1,4 +1,4 @@
-class ApplicationHelper::Button::VmPolicy < ApplicationHelper::Button::Basic
+class ApplicationHelper::Button::VmTemplatePolicy < ApplicationHelper::Button::Basic
   needs :@record
 
   def visible?
