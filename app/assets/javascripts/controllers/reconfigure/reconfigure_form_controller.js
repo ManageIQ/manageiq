@@ -236,23 +236,21 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
         $scope.cb_disks = false;
     };
 
-    var reconfigureEditButtonClicked = function(buttonName, serializeFields) {
+    var reconfigureEditButtonClicked = function(buttonName) {
       miqService.sparkleOn();
       var url = 'reconfigure_update/' + reconfigureFormId + '?button=' + buttonName;
-      if (serializeFields === undefined) {
-        miqService.miqAjaxButton(url);
-      } else {
-        miqService.miqAjaxButton(url, {objectIds:              $scope.objectIds,
-                                       cb_memory:              $scope.cb_memory,
-                                       cb_cpu:                 $scope.cb_cpu,
-                                       memory:                 $scope.reconfigureModel.memory,
-                                       memory_type:            $scope.reconfigureModel.memory_type,
-                                       socket_count:           $scope.reconfigureModel.socket_count,
-                                       cores_per_socket_count: $scope.reconfigureModel.cores_per_socket_count,
-                                       vmAddDisks:             $scope.reconfigureModel.vmAddDisks,
-                                       vmRemoveDisks:          $scope.reconfigureModel.vmRemoveDisks
-                                      });
-      }
+
+      miqService.miqAjaxButton(url, {
+        objectIds:              $scope.objectIds,
+        cb_memory:              $scope.cb_memory,
+        cb_cpu:                 $scope.cb_cpu,
+        memory:                 $scope.reconfigureModel.memory,
+        memory_type:            $scope.reconfigureModel.memory_type,
+        socket_count:           $scope.reconfigureModel.socket_count,
+        cores_per_socket_count: $scope.reconfigureModel.cores_per_socket_count,
+        vmAddDisks:             $scope.reconfigureModel.vmAddDisks,
+        vmRemoveDisks:          $scope.reconfigureModel.vmRemoveDisks,
+      });
     };
 
     $scope.cancelClicked = function() {
@@ -277,7 +275,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
 
     $scope.submitClicked = function() {
       // change memory value based ontype
-      reconfigureEditButtonClicked('submit', true);
+      reconfigureEditButtonClicked('submit');
       $scope.angularForm.$setPristine(true);
     };
 
