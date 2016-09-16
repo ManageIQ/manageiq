@@ -92,11 +92,6 @@ RSpec.describe MiqExpression::Field do
   end
 
   describe "#date?" do
-    it "returns true for fields of column type :date" do
-      field = described_class.new(Vm, [], "retires_on")
-      expect(field).to be_date
-    end
-
     it "returns false for fields of column type other than :date" do
       field = described_class.new(Vm, [], "name")
       expect(field).not_to be_date

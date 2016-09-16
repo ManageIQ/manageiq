@@ -947,8 +947,8 @@ describe "Vms API" do
 
     it "in the future" do
       api_basic_authorize action_identifier(:vms, :retire)
-      date = 2.weeks.from_now.to_date
-      run_post(vm_url, gen_request(:retire, :date => date.strftime("%m/%d/%Y")))
+      date = 2.weeks.from_now
+      run_post(vm_url, gen_request(:retire, :date => date.iso8601))
 
       expect_single_action_result(:success => true, :message => /#{vm.id}.* retiring/i, :href => :vm_url)
     end

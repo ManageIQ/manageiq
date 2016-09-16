@@ -276,18 +276,21 @@ module ApplicationController::CiProcessing
         if params[:retire_date].blank?
           t = nil
           w = nil
+
           if session[:retire_items].length == 1
             flash = _("Retirement date removed")
           else
             flash = _("Retirement dates removed")
           end
         else
-          t = params[:retire_date]
+          t = params[:retire_date].in_time_zone
           w = params[:retire_warn].to_i
+
+          ts = t.strftime("%x %R %Z")
           if session[:retire_items].length == 1
-            flash = _("Retirement date set to %{date}") % {:date => params[:retire_date]}
+            flash = _("Retirement date set to %{date}") % {:date => ts}
           else
-            flash = _("Retirement dates set to %{date}") % {:date => params[:retire_date]}
+            flash = _("Retirement dates set to %{date}") % {:date => ts}
           end
         end
         kls.retire(session[:retire_items], :date => t, :warn => w) # Call the model to retire the VM(s)
