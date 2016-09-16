@@ -89,13 +89,12 @@ class MiqRequestWorkflow
     if request
       update_request(request, values, requester)
     else
+      set_request_values(values)
       create_request(values, requester, auto_approve)
     end
   end
 
   def create_request(values, _requester = nil, auto_approve = false)
-    set_request_values(values)
-
     request = request_class.create(:options => values, :requester => @requester, :request_type => request_type.to_s)
     begin
       request.save!  # Force validation errors to raise now
