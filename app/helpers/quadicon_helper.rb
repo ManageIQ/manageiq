@@ -608,9 +608,8 @@ module QuadiconHelper
     size = options[:size]
     output = []
 
-    width = size == 150 ? 54 : 35
-    output << flobj_img_simple(width, "#{size}/base-single.png")
-    output << flobj_img_simple(width * 1.8, "100/#{@listicon}.png", "e#{size}")
+    output << flobj_img_simple(size, "#{size}/base-single.png")
+    output << flobj_img_simple(size * 1.8, "100/#{@listicon}.png", "e#{size}")
 
     unless options[:typ] == :listnav
       title = case @listicon
