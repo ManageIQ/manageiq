@@ -19,12 +19,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     false
   end
 
-  def create_request(values, requester, auto_approve = false)
-    update_selected_storage_names(values)
-    super
-  end
-
-  def update_request(request, values, requester)
+  def make_request(request, values, requester = nil, auto_approve = false)
     update_selected_storage_names(values)
     super
   end
