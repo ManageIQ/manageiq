@@ -83,6 +83,8 @@ class MiqRequestWorkflow
   def make_request(request, values, requester = nil, auto_approve = false)
     return false unless validate(values)
     password_helper(values, true)
+    # Ensure that tags selected in the pre-dialog get applied to the request
+    values[:vm_tags] = (values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags]).uniq if @values.try(:[], :pre_dialog_vm_tags).present?
 
     if request
       update_request(request, values, requester)
@@ -119,9 +121,6 @@ class MiqRequestWorkflow
 
   def update_request(request, values, _requester = nil)
     request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
-
-    # Ensure that tags selected in the pre-dialog get applied to the request
-    values[:vm_tags] = (values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags]).uniq  unless @values[:pre_dialog_vm_tags].blank?
 
     request.update_attribute(:options, request.options.merge(values))
     request.set_description(true)
@@ -772,8 +771,6 @@ class MiqRequestWorkflow
   end
 
   def set_request_values(values)
-    # Ensure that tags selected in the pre-dialog get applied to the request
-    values[:vm_tags] = (values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags]).uniq unless @values.nil? || @values[:pre_dialog_vm_tags].blank?
     values[:requester_group] ||= @requester.current_group.description
     email = values[:owner_email]
     if email.present? && values[:owner_group].blank?
