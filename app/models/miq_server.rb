@@ -51,18 +51,15 @@ class MiqServer < ApplicationRecord
   end
 
   def self.atStartup
-    configuration  = VMDB::Config.new("vmdb")
-    starting_roles = configuration.config.fetch_path(:server, :role)
+    starting_roles = ::Settings.server.role
 
     # Change the database role to database_operations
-    roles = configuration.config.fetch_path(:server, :role)
+    roles = starting_roles.dup
     if roles.gsub!(/\bdatabase\b/, 'database_operations')
-      configuration.config.store_path(:server, :role, roles)
+      ::Settings.save!(MiqServer.my_server, :server => {:role => roles})
+      ::Settings.reload!
     end
-
-    roles = configuration.config.fetch_path(:server, :role)
-    configuration.save
-
+    
     # Roles Changed!
     if roles != starting_roles
       # tell the server to pick up the role change
@@ -186,8 +183,6 @@ class MiqServer < ApplicationRecord
     check_migrations_up_to_date
     Vmdb::Settings.activate
 
-    config = VMDB::Config.new("vmdb")
-
     server = my_server(true)
     server_hash = {}
     config_hash = {}
@@ -248,7 +243,7 @@ class MiqServer < ApplicationRecord
 
     EvmDatabase.seed_last
 
-    start_memcached(config)
+    start_memcached
     prep_apache_proxying
     server.start
     server.monitor_loop
@@ -506,7 +501,7 @@ class MiqServer < ApplicationRecord
 
   def logon_status
     return :ready if self.started?
-    started_on < (Time.now.utc - get_config("vmdb").config[:server][:startup_timeout]) ? :timed_out_starting : status.to_sym
+    started_on < (Time.now.utc - ::Settings.server.startup_timeout) ? :timed_out_starting : status.to_sym
   end
 
   def logon_status_details
@@ -602,7 +597,7 @@ class MiqServer < ApplicationRecord
   end
 
   def server_timezone
-    get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC"
+    ::Settings.server['timezone'] || "UTC"
   end
 
   def tenant_identity
