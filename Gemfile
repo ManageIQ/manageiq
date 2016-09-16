@@ -86,7 +86,7 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
   # Unmodified gems
   gem "angular-ui-bootstrap-rails",   "~>0.13.0"
   gem "jquery-hotkeys-rails"
-  gem "jquery-rails",                 "~>4.1.1"
+  gem "jquery-rails",                 "~>4.2.1"
   gem "lodash-rails",                 "~>3.10.0"
   gem "patternfly-sass",              "~>3.11.0"
   gem "sass-rails"
