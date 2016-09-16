@@ -733,7 +733,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       raise _("Provision failed for the following reasons:\n%{errors}") % {:errors => errors.join("\n")}
     end
 
-    p.create_request(values, nil, auto_approve)
+    p.make_request(nil, values, nil, auto_approve)
   end
 
   def ws_template_fields(values, fields, ws_values)
@@ -935,7 +935,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     values[:ws_ems_custom_attributes] = p.ws_values(options.ems_custom_attributes, :parse_ws_string, :modify_key_name => false)
     values[:ws_miq_custom_attributes] = p.ws_values(options.miq_custom_attributes, :parse_ws_string, :modify_key_name => false)
 
-    p.create_request(values, nil, values[:auto_approve]).tap do |request|
+    p.make_request(nil, values, nil, values[:auto_approve]).tap do |request|
       p.raise_validate_errors if request == false
     end
   rescue => err

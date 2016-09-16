@@ -241,7 +241,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     values[:ws_ems_custom_attributes] = p.ws_values(options.ems_custom_attributes, :parse_ws_string, :modify_key_name => false)
     values[:ws_miq_custom_attributes] = p.ws_values(options.miq_custom_attributes, :parse_ws_string, :modify_key_name => false)
 
-    p.create_request(values, nil, values[:auto_approve]).tap do |request|
+    p.make_request(nil, values, nil, values[:auto_approve]).tap do |request|
       p.raise_validate_errors if request == false
     end
   rescue => err
