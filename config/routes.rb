@@ -2364,6 +2364,12 @@ Vmdb::Application.routes.draw do
                save_post
     },
 
+    :restful_redirect => {
+      :get => %w(
+        index
+      )
+    },
+
     :service                  => {
       :get  => %w(
         download_data
