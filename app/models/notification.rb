@@ -30,10 +30,15 @@ class Notification < ApplicationRecord
   end
 
   def text_bindings
-    h = {}
-    h[:initiator] = { :text => initiator.name } if initiator
-    h[:subject] = { :text => subject.name } if subject
-    h[:cause] = { :text => cause.name } if cause
-    h
+    [:initiator, :subject, :cause].each_with_object({}) do |key, result|
+      value = public_send(key)
+      result[key] = {
+        :link => {
+          :id    => value.id,
+          :model => value.class.name,
+        },
+        :text => value.name
+      } if value
+    end
   end
 end
