@@ -1,5 +1,10 @@
+#!/usr/bin/env ruby
+require File.expand_path("../config/environment", __dir__)
+
 if ARGV.empty?
-  puts "USAGE: #{__FILE__} server_id settings_path_separated_by_a_/ value [settings_path_separated_by_a_/ value]"
+  puts "USAGE:   #{__FILE__} server_id settings_path_separated_by_a_/ value [settings_path_separated_by_a_/ value]"
+  puts "Example: #{__FILE__} 2 smtp/authentication plain smtp/host gt123"
+
   exit 0
 end
 
