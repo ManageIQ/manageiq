@@ -5,12 +5,16 @@ describe ApplicationHelper::Button::PolicyDelete do
       described_class.new(
         view_context,
         {},
-        {},
+        {'record' => @record},
         {:options   => {:feature => 'policy_delete'}}
       )
     end
 
     let(:view_context) { setup_view_context_with_sandbox({}) }
+
+    before do
+      @record = FactoryGirl.create(:miq_policy)
+    end
 
     it "that supports policy_copy will not be skipped" do
       allow(button).to receive(:role_allows_feature?).and_return(true)
