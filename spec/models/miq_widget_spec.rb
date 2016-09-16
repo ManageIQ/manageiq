@@ -415,6 +415,9 @@ describe MiqWidget do
       ws.add_member(@widget)
 
       expect_any_instance_of(MiqWidget).to receive(:generate_content).with("MiqGroup", @group2.name, nil, ["Eastern Time (US & Canada)", "UTC"])
+
+      stub_server_settings(:server, :timezone => "Eastern Time (US & Canada)")
+
       @widget.queue_generate_content
       expect(MiqQueue.where(@q_options).count).to eq(0)
     end

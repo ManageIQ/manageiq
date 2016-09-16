@@ -18,6 +18,6 @@ def stub_server_configuration(config, config_name = "vmdb")
   allow(VMDB::Config).to receive(:new).with(config_name) { configuration }
 end
 
-def stub_server_settings(top_key, hash)
-  allow(::Settings).to receive(top_key).and_return(hash)
+def stub_server_settings(top_key, value)
+  allow(::Settings).to receive(top_key).and_return(value)
 end

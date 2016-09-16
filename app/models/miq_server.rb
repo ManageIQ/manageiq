@@ -59,7 +59,7 @@ class MiqServer < ApplicationRecord
       ::Settings.save!(MiqServer.my_server, :server => {:role => roles})
       ::Settings.reload!
     end
-    
+
     # Roles Changed!
     if roles != starting_roles
       # tell the server to pick up the role change
