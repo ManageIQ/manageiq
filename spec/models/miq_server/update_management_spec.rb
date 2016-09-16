@@ -1,10 +1,15 @@
 describe MiqServer do
   before do
-    MiqDatabase.seed
     _, @server, = EvmSpecHelper.create_guid_miq_server_zone
   end
 
-  let(:database)    { MiqDatabase.first }
+  let!(:database) do
+    FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
+    db = MiqDatabase.seed
+    db.update_repo_name = "repo-1 repo-2"
+    db
+  end
+
   let(:reg_system)  { LinuxAdmin::RegistrationSystem }
   let(:yum)         { LinuxAdmin::Yum }
 
@@ -161,7 +166,7 @@ describe MiqServer do
     expect(reg_system).to receive(:enable_repo).twice
 
     @server.enable_repos
-    expect(@server.upgrade_message).to eq("enabling rhel-server-rhscl-7-rpms")
+    expect(@server.upgrade_message).to eq("enabling repo-2")
   end
 
   it "#check_updates" do
@@ -171,7 +176,7 @@ describe MiqServer do
 
     @server.check_updates
 
-    expect(database.cfme_version_available).to eq("3.1")
+    expect(database.reload.cfme_version_available).to eq("3.1")
   end
 
   context "#apply_updates" do
@@ -217,6 +222,7 @@ describe MiqServer do
   context "#cfme_available_update" do
     before do
       @server.update_attribute(:version, "1.2.3.4")
+      MiqServer.my_server_clear_cache
     end
 
     it "with nil version available" do

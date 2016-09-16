@@ -4888,7 +4888,6 @@ miq_databases:
 - postgres_update_available
 - session_secret_token
 - csrf_secret_token
-- update_repo_name
 - registration_organization_display_name
 miq_dialogs:
 - id
