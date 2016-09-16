@@ -171,6 +171,7 @@ module EmsRefresh::SaveInventoryCloud
   def save_cloud_volumes_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
+    return unless ems.cloud_volumes
     ems.cloud_volumes.reset
     deletes = if (target == ems)
                 :use_association
@@ -192,6 +193,7 @@ module EmsRefresh::SaveInventoryCloud
   def save_cloud_volume_backups_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
+    return unless ems.cloud_volume_backups
     ems.cloud_volume_backups.reset
     deletes = if target == ems
                 :use_association
@@ -213,6 +215,7 @@ module EmsRefresh::SaveInventoryCloud
   def save_cloud_volume_snapshots_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
+    return unless ems.cloud_volume_snapshots
     ems.cloud_volume_snapshots.reset
     deletes = if (target == ems)
                 :use_association

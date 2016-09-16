@@ -39,7 +39,7 @@ describe ExtManagementSystem do
       "scvmm"                       => "Microsoft System Center VMM",
       "vmwarews"                    => "VMware vCenter",
       "vmware_cloud"                => "VMware vCloud",
-      "vmware_cloud_network"        => "VMware Cloud Network",
+      "cinder_"                     => "Cinder ",
     }
   end
 
@@ -335,7 +335,8 @@ describe ExtManagementSystem do
         next if [ManageIQ::Providers::Openstack::NetworkManager,
                  ManageIQ::Providers::Amazon::NetworkManager,
                  ManageIQ::Providers::Azure::NetworkManager,
-                 ManageIQ::Providers::Google::NetworkManager].include? ems
+                 ManageIQ::Providers::Google::NetworkManager,
+                 ManageIQ::Providers::StorageManager::CinderManager].include? ems
         t = ems.name.underscore
 
         context t do
@@ -393,7 +394,8 @@ describe ExtManagementSystem do
         next if [ManageIQ::Providers::Openstack::NetworkManager,
                  ManageIQ::Providers::Amazon::NetworkManager,
                  ManageIQ::Providers::Azure::NetworkManager,
-                 ManageIQ::Providers::Google::NetworkManager].include? ems
+                 ManageIQ::Providers::Google::NetworkManager,
+                 ManageIQ::Providers::StorageManager::CinderManager].include? ems
 
         context t do
           it "duplicate name" do

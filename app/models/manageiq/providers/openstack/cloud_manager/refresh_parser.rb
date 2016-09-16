@@ -110,6 +110,11 @@ module ManageIQ::Providers
     end
 
     # TODO: remove eventually
+    def volumes
+      return unless @ems.cinder_manager
+      ManageIQ::Providers::StorageManager::CinderManager::RefreshParser.new(@ems.cinder_manager).volumes
+    end
+
     def get_volumes
       return unless @ems.cinder_manager
       ManageIQ::Providers::StorageManager::CinderManager::RefreshParser.new(@ems.cinder_manager).get_volumes
