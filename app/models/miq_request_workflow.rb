@@ -81,6 +81,9 @@ class MiqRequestWorkflow
 
   # Helper method when not using workflow
   def make_request(request, values, requester = nil, auto_approve = false)
+    return false unless validate(values)
+    password_helper(values, true)
+
     if request
       update_request(request, values, requester)
     else
@@ -89,10 +92,7 @@ class MiqRequestWorkflow
   end
 
   def create_request(values, _requester = nil, auto_approve = false)
-    return false unless validate(values)
-
     set_request_values(values)
-    password_helper(values, true)
 
     request = request_class.create(:options => values, :requester => @requester, :request_type => request_type.to_s)
     begin
@@ -120,12 +120,8 @@ class MiqRequestWorkflow
   def update_request(request, values, _requester = nil)
     request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
 
-    return false unless validate(values)
-
     # Ensure that tags selected in the pre-dialog get applied to the request
     values[:vm_tags] = (values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags]).uniq  unless @values[:pre_dialog_vm_tags].blank?
-
-    password_helper(values, true)
 
     request.update_attribute(:options, request.options.merge(values))
     request.set_description(true)
