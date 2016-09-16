@@ -208,26 +208,30 @@ var Automate = {
     });
   },
 
+  setUpDefaultGitBranchOrTagValue: function() {
+    $('.git-branch-or-tag').val($('select.git-branches').val());
+  },
+
   setUpGitRefreshClickHandlers: function() {
     $('.git-branch-or-tag-select').on('change', function(event) {
       event.preventDefault();
       if ($(event.currentTarget).val() === "Branch") {
         $('.git-branch-group').show();
         $('.git-tag-group').hide();
-        $('.git-branch-or-tag').val($('.git-branches select').val());
+        $('.git-branch-or-tag').val($('select.git-branches').val());
       } else if ($(event.currentTarget).val() === "Tag") {
         $('.git-branch-group').hide();
         $('.git-tag-group').show();
-        $('.git-branch-or-tag').val($('.git-tags select').val());
+        $('.git-branch-or-tag').val($('select.git-tags').val());
       }
     });
 
-    $('.git-branches').on('change', function(event) {
-      $('.git-branch-or-tag').val($('.git-branches select').val());
+    $('select.git-branches').on('change', function(event) {
+      $('.git-branch-or-tag').val($('select.git-branches').val());
     });
 
-    $('.git-tags').on('change', function(event) {
-      $('.git-branch-or-tag').val($('.git-tags select').val());
+    $('select.git-tags').on('change', function(event) {
+      $('.git-branch-or-tag').val($('select.git-tags').val());
     });
   }
 };
