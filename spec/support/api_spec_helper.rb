@@ -6,47 +6,32 @@ require 'bcrypt'
 require 'json'
 
 module ApiSpecHelper
-  HEADER_ALIASES = {
-    "auth_token" => "HTTP_X_AUTH_TOKEN",
-    "miq_token"  => "HTTP_X_MIQ_TOKEN",
-    "miq_group"  => "HTTP_X_MIQ_GROUP"
-  }
-
-  DEF_HEADERS = {
-    "Content-Type" => "application/json",
-    "Accept"       => "application/json"
-  }
-
-  def update_headers(headers)
-    HEADER_ALIASES.keys.each do |k|
-      if headers.key?(k)
-        headers[HEADER_ALIASES[k]] = headers[k]
-        headers.delete(k)
-      end
-    end
-    headers.merge!("HTTP_AUTHORIZATION" => @http_authorization) if @http_authorization
-    headers.merge(DEF_HEADERS)
+  def request_headers
+    @request_headers ||= {
+      "Content-Type" => "application/json",
+      "Accept"       => "application/json"
+    }
   end
 
   def run_get(url, options = {})
     headers = options.delete(:headers) || {}
-    get url, :params => options.stringify_keys, :headers => update_headers(headers)
+    get url, :params => options, :headers => request_headers.merge(headers)
   end
 
   def run_post(url, body = {}, headers = {})
-    post url, :headers => update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
+    post url, :params => body.to_json, :headers => request_headers.merge(headers)
   end
 
   def run_put(url, body = {}, headers = {})
-    put url, :headers => update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
+    put url, :params => body.to_json, :headers => request_headers.merge(headers)
   end
 
   def run_patch(url, body = {}, headers = {})
-    patch url, :headers => update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
+    patch url, :params => body.to_json, :headers => request_headers.merge(headers)
   end
 
   def run_delete(url, headers = {})
-    delete url, :headers => update_headers(headers)
+    delete url, :headers => request_headers.merge(headers)
   end
 
   def resources_include_suffix?(resources, key, suffix)
@@ -111,7 +96,7 @@ module ApiSpecHelper
   end
 
   def basic_authorize(user, password)
-    @http_authorization = ActionController::HttpAuthentication::Basic.encode_credentials(user, password)
+    request_headers["HTTP_AUTHORIZATION"] = ActionController::HttpAuthentication::Basic.encode_credentials(user, password)
   end
 
   def update_user_role(role, *identifiers)
