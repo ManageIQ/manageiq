@@ -49,7 +49,7 @@ ManageIQ.angular.app.controller('providerForemanFormController', ['$http', '$sco
 
           $scope.providerForemanModel.log_userid   = data.log_userid;
 
-          if($scope.providerForemanModel.log_userid != '') {
+          if ($scope.providerForemanModel.log_userid !== '') {
             $scope.providerForemanModel.log_password = $scope.providerForemanModel.log_verify = miqService.storedPasswordPlaceholder;
           }
 
@@ -72,15 +72,11 @@ ManageIQ.angular.app.controller('providerForemanFormController', ['$http', '$sco
         $scope.angularForm.log_verify.$valid;
     };
 
-    var providerForemanEditButtonClicked = function(buttonName, serializeFields) {
-      miqService.sparkleOn();
+    var providerForemanEditButtonClicked = function(buttonName, data) {
       var url = '/provider_foreman/edit/' + providerForemanFormId + '?button=' + buttonName;
-      if (serializeFields === undefined) {
-        miqService.miqAjaxButton(url);
-      } else {
-        // FIXME: true => object
-        miqService.miqAjaxButton(url, true);
-      }
+
+      miqService.sparkleOn();
+      miqService.miqAjaxButton(url, data);
     };
 
     $scope.cancelClicked = function() {
@@ -96,13 +92,11 @@ ManageIQ.angular.app.controller('providerForemanFormController', ['$http', '$sco
     };
 
     $scope.saveClicked = function() {
-      providerForemanEditButtonClicked('save', true);
+      providerForemanEditButtonClicked('save', $scope.providerForemanModel);
       $scope.angularForm.$setPristine(true);
     };
 
-    $scope.addClicked = function() {
-      $scope.saveClicked();
-    };
+    $scope.addClicked = $scope.saveClicked;
 
     init();
 }]);
