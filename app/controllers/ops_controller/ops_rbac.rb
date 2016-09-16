@@ -939,7 +939,7 @@ module OpsController::OpsRbac
     @vat_tree = build_belongsto_tree(@belongsto.keys, true, false)  # Build the VMs & Templates tree for this user
 =======
     @hac_tree = TreeBuilderBelongsToHac.new(:hac, :hac_tree, @sb, true, :edit => @edit, :filters => @filters, :group => @group)
-    #build_belongsto_tree(@belongsto.keys, false, false)  # Build the Hosts & Clusters tree for this user
+    #build_belongsto_tree(@belongsto.keys, false, false)  # Build the Hosts & Clusters tree for this user no edit
     @vat_tree = TreeBuilderBelongsToVat.new(:vat, :vat_tree, @sb, true, :edit => @edit, :filters => @filters, :group => @group)
       #build_belongsto_tree(@belongsto.keys, true, false)  # Build the VMs & Templates tree for this user
 >>>>>>> Vm/Template tree is generated

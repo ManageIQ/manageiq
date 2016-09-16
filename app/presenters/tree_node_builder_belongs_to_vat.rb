@@ -18,4 +18,9 @@ class TreeNodeBuilderBelongsToVat < TreeNodeBuilder
     @node[:hideCheckbox] = true
   end
 
+  def generic_node(text, image, tip = nil)
+    super
+    @node[:cfmeNoClick]  = true
+    @node[:checkable] = options[:checkable] if options.key?('checkable')
+  end
 end

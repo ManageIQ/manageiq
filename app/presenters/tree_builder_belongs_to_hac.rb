@@ -11,25 +11,24 @@ class TreeBuilderBelongsToHac < TreeBuilder
   def initialize(name, type, sandbox, build = true, params)
     @edit = params[:edit]
     @group = params[:group]
+    # need to remove tree info 
+    TreeState.new(sandbox).remove_tree(name)
     super(name, type, sandbox, build = true)
-    @tree_state.x_tree(name)[:checkable] = @edit.present?
-
   end
 
   private
 
   def tree_init_options(_tree_name)
-    {:full_ids => true, :add_root => false, :lazy => false}
+    {:full_ids => true, :add_root => false, :lazy => false, :checkable => @edit.present?}
   end
 
   def set_locals_for_render
     locals = super
     locals.merge!(locals.merge!(:id_prefix         => 'vat_',
                                 :check_url         => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
-                                :oncheck           => @edit.nil? ? nil : "miqOnCheckUserFilters",
+                                :oncheck           => @edit ? "miqOnCheckUserFilters" : nil,
                                 :checkboxes        => true,
                                 :highlight_changes => true,
-                                :cfmeNoClick       => true,
                                 :onclick           => false))
   end
 
@@ -70,5 +69,5 @@ class TreeBuilderBelongsToHac < TreeBuilder
   def x_get_resource_pool_kids(parent, count_only)
     count_only_or_objects(count_only, parent.is_default? ? parent.resource_pools : [])
   end
-
 end
+

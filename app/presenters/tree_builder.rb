@@ -167,7 +167,8 @@ class TreeBuilder
         :leaf       => @options[:leaf],
         :add_root   => true,
         :open_nodes => [],
-        :lazy       => true
+        :lazy       => true,
+        :checkable => false
       )
     )
   end

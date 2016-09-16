@@ -10,4 +10,8 @@ class TreeState
     return false if @sb.has_key_path?(:trees, name)
     @sb.store_path(:trees, name, tree_params)
   end
+
+  def remove_tree(name)
+    @sb[:trees].delete(name)
+  end
 end
