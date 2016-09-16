@@ -229,7 +229,7 @@ class ExplorerPresenter
       :activeTree => @options[:active_tree],
       :key        => @options[:add_nodes][:key],
       :osf        => @options[:osf_node],
-      :children   => @options[:add_nodes][:children],
+      :nodes      => @options[:add_nodes][:nodes],
       :remove     => !!@options[:remove_nodes],
     } if @options[:add_nodes]
 
