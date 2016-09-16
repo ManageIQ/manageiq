@@ -1,6 +1,8 @@
 class ApplicationHelper::Button::Basic < Hash
   include ActionView::Helpers::TextHelper
 
+  delegate :role_allows?, :to => :@view_context
+
   def initialize(view_context, view_binding, instance_data, props)
     @view_context  = view_context
     @view_binding  = view_binding
@@ -60,8 +62,6 @@ class ApplicationHelper::Button::Basic < Hash
   def disabled?
     false
   end
-
-  delegate :role_allows?, :to => :@view_context
 
   class << self
     attr_reader :record_needed

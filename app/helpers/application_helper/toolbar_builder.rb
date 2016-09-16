@@ -667,16 +667,6 @@ class ApplicationHelper::ToolbarBuilder
       when "condition_remove"
         return true if x_active_tree == :condition_tree || !role_allows?(:feature => "condition_delete")
       end
-    when "CustomButton"
-      case id
-      when "ab_button_edit", "ab_button_delete", "ab_button_simulate"
-        return !role_allows_button_manipulation if x_active_tree == :sandt_tree
-      end
-    when "CustomButtonSet"
-      case id
-      when "ab_group_edit", "ab_group_delete", "ab_button_new"
-        return !role_allows_button_manipulation if x_active_tree == :sandt_tree
-      end
     when "MiqAeClass", "MiqAeDomain", "MiqAeField", "MiqAeInstance", "MiqAeMethod", "MiqAeNamespace"
       return false if MIQ_AE_COPY_ACTIONS.include?(id) && User.current_tenant.any_editable_domains? && MiqAeDomain.any_unlocked?
       case id
@@ -753,13 +743,6 @@ class ApplicationHelper::ToolbarBuilder
       when "server_delete", "role_start", "role_suspend", "promote_server", "demote_server"
         return true
       end
-    when "ServiceTemplate"
-      case id
-      when "ab_group_new", "ab_button_new"
-        return !role_allows_button_manipulation
-      when /^history_\d*/
-        return false
-      end
     when "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem", "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem"
       case id
       when "configured_system_provision"
@@ -767,8 +750,6 @@ class ApplicationHelper::ToolbarBuilder
       end
     when "NilClass"
       case id
-      when "ab_group_new", "ab_button_new", "ab_group_reorder"
-        return !role_allows_button_manipulation if x_active_tree == :sandt_tree
       when "log_download"
         return true if ["workers", "download_logs"].include?(@lastaction)
       when "log_collect"
@@ -792,12 +773,6 @@ class ApplicationHelper::ToolbarBuilder
       end
     end
     false  # No reason to hide, allow the button to show
-  end
-
-  def role_allows_button_manipulation
-    %w(catalogitem_new catalogitem_edit atomic_catalogitem_new atomic_catalogitem_edit).any? do |feature|
-      role_allows?(:feature => feature)
-    end
   end
 
   # Determine if a button should be disabled
