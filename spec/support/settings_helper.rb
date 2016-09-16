@@ -17,3 +17,7 @@ def stub_server_configuration(config, config_name = "vmdb")
   configuration = double(:config => config.deep_symbolize_keys)
   allow(VMDB::Config).to receive(:new).with(config_name) { configuration }
 end
+
+def stub_server_settings(top_key, hash)
+  allow(::Settings).to receive(top_key).and_return(hash)
+end
