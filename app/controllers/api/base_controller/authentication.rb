@@ -14,7 +14,7 @@ module Api
         else
           authenticate_options = {
             :require_user => true,
-            :timeout      => api_config.authentication_timeout.to_i_with_method
+            :timeout      => ::Settings.api.authentication_timeout.to_i_with_method
           }
 
           if (user = authenticate_with_http_basic { |u, p| User.authenticate(u, p, request, authenticate_options) })
@@ -28,10 +28,6 @@ module Api
           end
         end
         log_api_auth
-      end
-
-      def api_config
-        ::Settings[Settings.base.module.to_sym]
       end
 
       def auth_identity
