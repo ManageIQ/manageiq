@@ -14,9 +14,13 @@ function ErrorModalController($timeout) {
   });
 
   $ctrl.show = function(err) {
-    $ctrl.data = err && err.data;
+    if (!err || !_.isObject(err)) {
+      return;
+    }
+
+    $ctrl.data = err.data;
     $ctrl.error = err;
-    $ctrl.isHtml = err && err.headers && err.headers('content-type') && err.headers('content-type').match('text/html');
+    $ctrl.isHtml = err.headers && err.headers('content-type') && err.headers('content-type').match('text/html');
 
     // special handling for our error screen
     if ($ctrl.isHtml && $ctrl.data) {
@@ -26,7 +30,7 @@ function ErrorModalController($timeout) {
       }
     }
 
-    $ctrl.status = (err && err.status !== -1) ? err.status + " " + err.statusText : "Server not responding";
+    $ctrl.status = (err.status !== -1) ? err.status + " " + err.statusText : "Server not responding";
   };
 
   $ctrl.close = function() {
@@ -79,7 +83,7 @@ angular.module('miq.error', [])
       '          </div>',
       '        </div>',
       '        <div class="modal-footer">',
-      '          <button type="button" class="btn btn-default" ng-click="$ctrl.close()">Close</button>',
+      '          <button type="button" class="btn btn-primary" ng-click="$ctrl.close()">Close</button>',
       '        </div>',
       '      </div>',
       '    </div>',
