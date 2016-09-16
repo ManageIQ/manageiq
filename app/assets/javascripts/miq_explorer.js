@@ -73,6 +73,9 @@ ManageIQ.explorer.processReplaceMainDiv = function(data) {
 
 ManageIQ.explorer.processFlash = function(data) {
   ManageIQ.explorer.replacePartials(data);
+  ManageIQ.explorer.spinnerOff(data);
+  ManageIQ.explorer.scrollTop(data);
+  ManageIQ.explorer.focus(data);
 };
 
 ManageIQ.explorer.replacePartials = function(data) {
@@ -97,9 +100,23 @@ ManageIQ.explorer.spinnerOff = function(data) {
   }
 };
 
+
+ManageIQ.explorer.scrollTop = function(data) {
+  if (data.scrollTop) {
+    $('#main_div').scrollTop(0);
+  }
+};
+
 ManageIQ.explorer.miqButtons = function(data) {
   miqButtons(data.showMiqButtons ? 'show' : 'hide');
 };
+
+ManageIQ.explorer.focus = function(data) {
+  if (_.isString(data.focus)) {
+    var element = $('#' + data.focus);
+    if ( element.length ) element.focus();
+  }
+}
 
 ManageIQ.explorer.processReplaceRightCell = function(data) {
   /* variables for the expression editor */
@@ -185,7 +202,7 @@ ManageIQ.explorer.processReplaceRightCell = function(data) {
       }
     });
 
-  $('#main_div').scrollTop(0);
+  ManageIQ.explorer.scrollTop(data);
 
   if (_.isString(data.rightCellText)) {
     $('h1#explorer_title > span#explorer_title_text')
@@ -226,10 +243,7 @@ ManageIQ.explorer.processReplaceRightCell = function(data) {
   if (data.resetOneTrans) { ManageIQ.oneTransition.oneTrans = 0; }
   if (data.oneTransIE) { ManageIQ.oneTransition.IEButtonPressed = true; }
 
-  if (_.isString(data.focus)) {
-    var element = $('#' + data.focus);
-    if ( element.length ) element.focus();
-  }
+  ManageIQ.explorer.focus(data);
 
   if (!_.isUndefined(data.clearSearch)) {
     ManageIQ.explorer.clearSearchToggle(data.clearSearch);

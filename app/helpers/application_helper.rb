@@ -1048,10 +1048,16 @@ module ApplicationHelper
     end
   end
 
-  def javascript_flash
-    render :json => ExplorerPresenter.flash.replace(
-      'flash_msg_div',
-      render_to_string(:partial => "layouts/flash_msg")).for_render
+  def javascript_flash(**args)
+    add_flash(args[:text], args[:severity]) if args[:text].present?
+
+    ex = ExplorerPresenter.flash.replace('flash_msg_div',
+                                         render_to_string(:partial => "layouts/flash_msg"))
+    ex.scroll_top if args[:scroll_top]
+    ex.spinner_off if args[:spinner_off]
+    ex.focus(args[:focus]) if args[:focus]
+
+    render :json => ex.for_render
   end
 
   def javascript_open_window(url)

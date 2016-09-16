@@ -50,11 +50,10 @@ class CloudVolumeController < ApplicationController
       checked_volume_id = get_checked_volume_id(params)
       @volume = find_by_id_filtered(CloudVolume, checked_volume_id)
       if @volume.attachments.empty?
-        add_flash(_("%{volume} \"%{volume_name}\" is not attached to any %{instances}") % {
-          :volume      => ui_lookup(:table => 'cloud_volume'),
-          :volume_name => @volume.name,
-          :instances   => ui_lookup(:tables => 'vm_cloud')}, :error)
-        render_flash
+        render_flash(_("%{volume} \"%{volume_name}\" is not attached to any %{instances}") % {
+                     :volume      => ui_lookup(:table => 'cloud_volume'),
+                     :volume_name => @volume.name,
+                     :instances   => ui_lookup(:tables => 'vm_cloud')}, :error)
       else
         javascript_redirect :action => "detach", :id => checked_volume_id
       end

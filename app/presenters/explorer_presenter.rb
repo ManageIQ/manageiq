@@ -102,6 +102,11 @@ class ExplorerPresenter
     self
   end
 
+  def scroll_top
+    @options[:scroll_top] = true
+    self
+  end
+
   def load_chart(chart_data)
     @options[:load_chart] = chart_data
     self
@@ -174,6 +179,9 @@ class ExplorerPresenter
   def for_render_flash
     data = {:explorer => 'flash'}
     data[:replacePartials] = @options[:replace_partials]
+    data[:spinnerOff] = true if @options[:spinner_off]
+    data[:scrollTop] = true if @options[:scroll_top]
+    data[:focus] = @options[:focus] if @options[:focus]
     data
   end
 
@@ -202,7 +210,7 @@ class ExplorerPresenter
   end
 
   def for_render_default
-    data = {:explorer => 'replace_right_cell'}
+    data = {:explorer => 'replace_right_cell', :scrollTop => true}
 
     if @options[:exp].present?
       data.store_path(:expEditor, :first, :type,   @options[:exp][:val1_type]) if @options[:exp][:val1_type]

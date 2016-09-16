@@ -410,24 +410,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def render_flash(add_flash_text = nil, severity = nil)
-    add_flash(add_flash_text, severity) if add_flash_text
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      yield(page) if block_given?
-    end
-  end
-
-  def render_flash_and_scroll(*args)
-    render_flash(*args) do |page|
-      page << '$("#main_div").scrollTop(0);'
-    end
-  end
-
-  def render_flash_and_stop_sparkle(*args)
-    render_flash(*args) do |page|
-      page << "miqSparkle(false);"
-    end
+    javascript_flash(:text => add_flash_text, :severity => severity)
   end
 
   def tagging_explorer_controller?
@@ -2393,7 +2376,7 @@ class ApplicationController < ActionController::Base
     add_flash(_("%{task} does not apply to at least one of the selected %{model}") %
                 {:model => model_type,
                  :task  => type.split.map(&:capitalize).join(' ')}, :error)
-    render_flash_and_scroll if @explorer
+    javascript_flash(:scroll_top => true) if @explorer
   end
 
   def set_gettext_locale

@@ -12,7 +12,7 @@ class ContainerNodeController < ApplicationController
     if node.ipaddress
       javascript_open_window(node.cockpit_url)
     else
-      render_flash_and_stop_sparkle(node.unsupported_reason(:launch_cockpit), :error)
+      javascript_flash(:text => node.unsupported_reason(:launch_cockpit), :severity => :error, :spinner_off => true)
     end
   end
 end

@@ -92,7 +92,7 @@ module VmCommon
     if vm.supports_launch_cockpit?
       javascript_open_window(vm.cockpit_url)
     else
-      render_flash_and_stop_sparkle(vm.unsupported_reason(:launch_cockpit), :error)
+      javascript_flash(:text => vm.unsupported_reason(:launch_cockpit), :severity => :error, :spinner_off => true)
     end
   end
 
