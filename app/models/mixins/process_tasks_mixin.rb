@@ -99,10 +99,17 @@ module ProcessTasksMixin
       end
 
       action = action_for_task(remote_options[:task])
-      remote_options[:ids].each do |id|
-        obj = api_client.send(collection).search(:filter => ["id=#{id}"]).first
-        _log.info("Invoking task #{action} on collection #{collection} - object #{obj.id}")
-        # obj.send(action_for_task(action))
+      post_args = remote_options[:args]
+
+      if remote_options[:ids].present?
+        resource_ids.each do |id|
+          obj = api_client.send(collection).search(:filter => ["id=#{id}"]).first
+          _log.info("Invoking task #{action} on collection #{collection}, object #{obj.id}, with args #{post_args}")
+          # obj.send(action_for_task(action, post_args))
+        end
+      else
+        _log.info("Invoking task #{action} on collection #{collection}, with args #{post_args}")
+        # api_client.send(collection).send(action, post_args)
       end
     end
 
