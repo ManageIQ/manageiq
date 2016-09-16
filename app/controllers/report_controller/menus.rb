@@ -48,10 +48,7 @@ module ReportController::Menus
     params[:typ] == "delete" ?
       add_flash(_("Can not delete folder, one or more reports in the selected folder are not owned by your group"), :warning) :
       add_flash(_("Double Click on 'New Folder' to edit"), :warning)
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div_menu_list", :partial => "layouts/flash_msg", :locals => {:div_num => "_menu_list"})
-    end
+    render_flash_and_stop_sparkle
   end
 
   # AJAX driven routine to check for changes in ANY field on the user form
