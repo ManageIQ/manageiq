@@ -18,11 +18,13 @@ describe "Automate API" do
       run_get automate_url
 
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to a_hash_including(
+      expect(response.parsed_body).to include(
         "name"      => "automate",
         "subcount"  => 2,
-        "resources" => match_array([a_hash_including("name" => "Custom",   "fqname" => "/Custom"),
-                                    a_hash_including("name" => "ManageIQ", "fqname" => "/ManageIQ")])
+        "resources" => a_collection_containing_exactly(
+          a_hash_including("name" => "Custom",   "fqname" => "/Custom"),
+          a_hash_including("name" => "ManageIQ", "fqname" => "/ManageIQ")
+        )
       )
     end
 
@@ -32,7 +34,7 @@ describe "Automate API" do
       run_get automate_url("custom")
 
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body["resources"]).to match_array(
+      expect(response.parsed_body["resources"]).to match(
         [a_hash_including("name" => "Custom", "fqname" => "/Custom")]
       )
     end

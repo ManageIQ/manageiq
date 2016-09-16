@@ -8,15 +8,11 @@ module Api
         raise BadRequestError, err.to_s
       end
       attributes = params['attributes'] ? %w(fqname) | params['attributes'].to_s.split(',') : nil
-      resources = resources.collect { |resource| filter_ae_resource(resource, attributes) } if attributes
+      resources = resources.collect { |resource| resource.slice(*attributes) } if attributes.present?
       render_resource :automate, :name => "automate", :subcount => resources.count, :resources => resources
     end
 
     private
-
-    def filter_ae_resource(resource, attributes = nil)
-      attributes.blank? ? resource : resource.slice(*attributes)
-    end
 
     def ae_search_options
       # For /api/automate (discovering domains, scope is 1 if unspecified)
