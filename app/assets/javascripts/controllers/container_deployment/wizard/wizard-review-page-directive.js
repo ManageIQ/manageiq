@@ -7,7 +7,7 @@ angular.module('miq.wizard').directive('miqWizardReviewPage', function() {
       wizardData: "="
     },
     require: '^miq-wizard',
-    templateUrl: '/static/wizard-review-page.html',
+    templateUrl: 'static/wizard-review-page.html',
     controller: ['$scope', function($scope) {
       $scope.toggleShowReviewDetails = function (step) {
         if (step.showReviewDetails === true) {
