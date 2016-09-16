@@ -6253,6 +6253,12 @@ server_roles:
 - max_concurrent
 - external_failover
 - role_scope
+service_connections:
+- id
+- service_bundle_id
+- service_template_a_id
+- service_template_b_id
+- properties
 service_orders:
 - id
 - name
