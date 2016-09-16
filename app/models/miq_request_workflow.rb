@@ -94,8 +94,6 @@ class MiqRequestWorkflow
     set_request_values(values)
     password_helper(values, true)
 
-    yield if block_given?
-
     request = request_class.create(:options => values, :requester => @requester, :request_type => request_type.to_s)
     begin
       request.save!  # Force validation errors to raise now
@@ -128,8 +126,6 @@ class MiqRequestWorkflow
     values[:vm_tags] = (values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags]).uniq  unless @values[:pre_dialog_vm_tags].blank?
 
     password_helper(values, true)
-
-    yield if block_given?
 
     request.update_attribute(:options, request.options.merge(values))
     request.set_description(true)
