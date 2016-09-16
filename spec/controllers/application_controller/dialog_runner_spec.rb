@@ -1,5 +1,3 @@
-require "support/controller_spec_helper"
-
 describe CatalogController do
   describe "#dialog_field_changed" do
     include_context "valid session"

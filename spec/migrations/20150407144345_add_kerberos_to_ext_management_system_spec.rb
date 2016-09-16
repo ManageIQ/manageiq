@@ -1,7 +1,7 @@
 require_migration
 
 describe AddKerberosToExtManagementSystem do
-  let(:reserve_stub) { MigrationSpecStubs.reserved_stub }
+  let(:reserve_stub) { Spec::Support::MigrationStubs.reserved_stub }
   let(:ems_stub)     { migration_stub(:ExtManagementSystem) }
 
   migration_context :up do

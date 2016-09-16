@@ -5,8 +5,7 @@ module MiqAeServiceServiceTemplateProvisionRequestSpec
     end
 
     before(:each) do
-      MiqAutomateHelper.create_service_model_method('SPEC_DOMAIN', 'EVM',
-                                                    'AUTOMATE', 'test1', 'test')
+      Spec::Support::MiqAutomateHelper.create_service_model_method('SPEC_DOMAIN', 'EVM', 'AUTOMATE', 'test1', 'test')
       @ae_method     = ::MiqAeMethod.first
       @ae_result_key = 'foo'
       @user          = FactoryGirl.create(:user_with_group, :name => 'Fred Flintstone',  :userid => 'fred')

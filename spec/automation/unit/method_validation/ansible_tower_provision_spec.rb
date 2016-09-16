@@ -1,5 +1,4 @@
 require Rails.root.join('db/fixtures/ae_datastore/ManageIQ/ConfigurationManagement/AnsibleTower/Service/Provisioning/StateMachines/Provision.class/__methods__/provision').to_s
-require Rails.root.join('spec/support/miq_ae_mock_service').to_s
 
 describe AnsibleTowerProvision do
   let(:admin) { FactoryGirl.create(:user_admin) }
@@ -11,8 +10,8 @@ describe AnsibleTowerProvision do
   let(:job) { FactoryGirl.create(:ansible_tower_job) }
   let(:task) { FactoryGirl.create(:service_template_provision_task, :destination => service_ansible_tower, :miq_request => request) }
   let(:svc_task) { MiqAeMethodService::MiqAeServiceServiceTemplateProvisionTask.find(task.id) }
-  let(:root_object) { MiqAeMockObject.new('service_template_provision_task' => svc_task) }
-  let(:ae_service) { MiqAeMockService.new(root_object) }
+  let(:root_object) { Spec::Support::MiqAeMockObject.new('service_template_provision_task' => svc_task) }
+  let(:ae_service) { Spec::Support::MiqAeMockService.new(root_object) }
 
   it "launches an Ansible Tower job" do
     expect(job_class).to receive(:create_job).and_return(job)

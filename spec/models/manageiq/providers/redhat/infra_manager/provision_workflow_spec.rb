@@ -1,5 +1,5 @@
 describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
-  include WorkflowSpecHelper
+  include Spec::Support::WorkflowHelper
 
   let(:admin)    { FactoryGirl.create(:user_with_group) }
   let(:ems)      { FactoryGirl.create(:ems_redhat) }

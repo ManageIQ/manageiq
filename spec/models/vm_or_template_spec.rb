@@ -1,5 +1,5 @@
 describe VmOrTemplate do
-  include ArelSpecHelper
+  include Spec::Support::ArelHelper
 
   let(:vm)      { FactoryGirl.create(:vm_or_template) }
   let(:ems)     { FactoryGirl.create(:ext_management_system) }

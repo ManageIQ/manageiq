@@ -1,5 +1,5 @@
 describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
-  include WorkflowSpecHelper
+  include Spec::Support::WorkflowHelper
 
   let(:admin)    { FactoryGirl.create(:user_with_group) }
   let(:provider) do

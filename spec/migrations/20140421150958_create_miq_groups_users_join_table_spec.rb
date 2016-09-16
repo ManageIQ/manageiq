@@ -4,7 +4,7 @@ describe CreateMiqGroupsUsersJoinTable do
   migration_context :up do
     let(:user_stub)       { migration_stub(:User) }
     let(:join_table_stub) { migration_stub(:MiqGroupsUsers) }
-    let(:reserve_stub)    { MigrationSpecStubs.reserved_stub }
+    let(:reserve_stub)    { Spec::Support::MigrationStubs.reserved_stub }
 
     it "migrates eligible_miq_group_ids from reserved column" do
       user = user_stub.create!

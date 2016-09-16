@@ -1,5 +1,5 @@
 module MiqProvision::StateMachineSpecHelper
-  include MiqRequestTaskHelper
+  include Spec::Support::MiqRequestTaskHelper
 
   def test_prepare_provision
     call_method

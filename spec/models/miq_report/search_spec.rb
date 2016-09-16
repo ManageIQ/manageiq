@@ -1,5 +1,5 @@
 describe MiqReport do
-  include ArelSpecHelper
+  include Spec::Support::ArelHelper
 
   context "::Search" do
     before(:each) do

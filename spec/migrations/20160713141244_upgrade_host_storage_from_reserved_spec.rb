@@ -1,7 +1,7 @@
 require_migration
 
 describe UpgradeHostStorageFromReserved do
-  let(:reserve_stub)      { MigrationSpecStubs.reserved_stub }
+  let(:reserve_stub)      { Spec::Support::MigrationStubs.reserved_stub }
   let(:host_storage_stub) { migration_stub(:HostStorage) }
 
   migration_context :up do

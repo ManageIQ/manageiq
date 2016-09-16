@@ -2,7 +2,8 @@ silence_warnings { MiqHostProvisionWorkflow.const_set("DIALOGS_VIA_AUTOMATE", fa
 
 describe MiqHostProvisionWorkflow do
   let(:user) { FactoryGirl.create(:user_with_group) }
-  include WorkflowSpecHelper
+  include Spec::Support::WorkflowHelper
+
   context "seeded" do
     context "After setup," do
       before(:each) do

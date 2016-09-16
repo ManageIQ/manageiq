@@ -1,5 +1,3 @@
-require "support/controller_spec_helper"
-
 describe MiqRequestController do
   describe "#dialog_partial_for_workflow" do
     before do

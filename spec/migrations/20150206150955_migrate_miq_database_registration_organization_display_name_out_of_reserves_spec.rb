@@ -2,7 +2,7 @@ require_migration
 
 describe MigrateMiqDatabaseRegistrationOrganizationDisplayNameOutOfReserves do
   let(:db_stub)      { migration_stub(:MiqDatabase) }
-  let(:reserve_stub) { MigrationSpecStubs.reserved_stub }
+  let(:reserve_stub) { Spec::Support::MigrationStubs.reserved_stub }
 
   migration_context :up do
     it "Migrates :registration_organization_display_name from Reserves table to new column on MiqDatabase" do

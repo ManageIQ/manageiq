@@ -23,7 +23,7 @@ module MiqAeServiceSpec
                      {:name => 'var2', :type => 'attribute',
                                :priority => 3}
                     ]
-      MiqAutomateHelper.create_dummy_method(identifiers, fields)
+      Spec::Support::MiqAutomateHelper.create_dummy_method(identifiers, fields)
     end
 
     def create_inaccessible_domain

@@ -49,13 +49,13 @@ RSpec.configure do |config|
     metadata[:type] ||= :model
   end
 
-  config.include AuthHelper,     :type => :view
-  config.include ViewSpecHelper, :type => :view
+  config.include Spec::Support::AuthHelper, :type => :view
+  config.include Spec::Support::ViewHelper, :type => :view
   config.include UiConstants,    :type => :view
 
-  config.include ControllerSpecHelper, :type => :controller
+  config.include Spec::Support::ControllerHelper, :type => :controller
   config.include UiConstants,          :type => :controller
-  config.include AuthHelper,           :type => :controller
+  config.include Spec::Support::AuthHelper, :type => :controller
 
   config.include Spec::Support::AutomationHelper, :type => :automation
   config.include AutomationExampleGroup, :type => :automation
@@ -63,26 +63,26 @@ RSpec.configure do |config|
     metadata[:type] ||= :automation
   end
 
-  config.extend  MigrationSpecHelper::DSL
-  config.include MigrationSpecHelper, :migrations => :up
-  config.include MigrationSpecHelper, :migrations => :down
+  config.extend  Spec::Support::MigrationHelper::DSL
+  config.include Spec::Support::MigrationHelper, :migrations => :up
+  config.include Spec::Support::MigrationHelper, :migrations => :down
 
-  config.include ApiSpecHelper,     :rest_api => true
-  config.include AuthRequestHelper, :type => :request
+  config.include Spec::Support::ApiHelper, :rest_api => true
+  config.include Spec::Support::AuthRequestHelper, :type => :request
   config.define_derived_metadata(:file_path => /spec\/requests\/api/) do |metadata|
     metadata[:aggregate_failures] = true
     metadata[:rest_api] = true
   end
 
-  config.include AuthHelper,  :type => :helper
+  config.include Spec::Support::AuthHelper, :type => :helper
 
-  config.include PresenterSpecHelper, :type => :presenter
+  config.include Spec::Support::PresenterHelper, :type => :presenter
   config.define_derived_metadata(:file_path => /spec\/presenters/) do |metadata|
     metadata[:type] ||= :presenter
   end
 
-  config.include RakeTaskExampleGroup, :type => :rake_task
-  config.include ButtonSpecHelper, :type => :button
+  config.include Spec::Support::RakeTaskExampleGroup, :type => :rake_task
+  config.include Spec::Support::ButtonHelper, :type => :button
   config.define_derived_metadata(:file_path => /spec\/helpers\/application_helper\/buttons/) do |metadata|
     metadata[:type] = :button
   end
