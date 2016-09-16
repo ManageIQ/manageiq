@@ -34,6 +34,7 @@ Dir.chdir APP_ROOT do
   puts "== Installing dependencies =="
 
   # Run bower in a thread and continue to do the non-js stuff
+  puts "Updating bower assets in parallel..."
   bower_thread = Thread.new do
     execute "bower install --allow-root -F --silent --config.analytics=false"
   end
@@ -71,4 +72,5 @@ Dir.chdir APP_ROOT do
     execute "bin/rake test:vmdb:setup"
   end
   bower_thread.join
+  puts "Done running `bower update`."
 end
