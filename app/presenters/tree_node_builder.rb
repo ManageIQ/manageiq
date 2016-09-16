@@ -245,6 +245,10 @@ class TreeNodeBuilder
     generic_node(object.name, "host.png", "#{ui_lookup(:table => "host")}: #{object.name}")
   end
 
+  def resource_pool_node
+    generic_node(object.name, object.vapp ? "vapp.png" : "resource_pool.png")
+  end
+
   def hash_node
     text = object[:text]
     text = text.kind_of?(Proc) ? text.call : _(text)

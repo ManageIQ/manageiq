@@ -934,15 +934,10 @@ module OpsController::OpsRbac
                                      true,
                                      :edit => @edit, :filters => @filters, :group => @group)
     rbac_build_myco_tree                              # Build the MyCompanyTags tree for this user
-<<<<<<< 9d5c6dfb465384292d1c68b9b022c712dd626428
-    @hac_tree = TreeBuilderBelongsTo.new(:hac, :hac_tree, @sb, true, {:edit => @edit, :filters => @filters, :group => @group})
-    @vat_tree = build_belongsto_tree(@belongsto.keys, true, false)  # Build the VMs & Templates tree for this user
-=======
-    @hac_tree = TreeBuilderBelongsToHac.new(:hac, :hac_tree, @sb, true, :edit => @edit, :filters => @filters, :group => @group)
+    @hac_tree = TreeBuilderBelongsToHac.new(:hac, :hac_tree, @sb, true, :edit => @edit, :filters => @filters, :group => @group, :selected => @belongsto.keys)
     #build_belongsto_tree(@belongsto.keys, false, false)  # Build the Hosts & Clusters tree for this user no edit
-    @vat_tree = TreeBuilderBelongsToVat.new(:vat, :vat_tree, @sb, true, :edit => @edit, :filters => @filters, :group => @group)
+    @vat_tree = TreeBuilderBelongsToVat.new(:vat, :vat_tree, @sb, true, :edit => @edit, :filters => @filters, :group => @group, :selected => @belongsto.keys)
       #build_belongsto_tree(@belongsto.keys, true, false)  # Build the VMs & Templates tree for this user
->>>>>>> Vm/Template tree is generated
   end
 
   def rbac_role_get_details(id)
@@ -1041,12 +1036,13 @@ module OpsController::OpsRbac
           @edit[:new][:filters]["#{cat_name}-#{tag_name}"] = "/managed/#{cat_name}/#{tag_name}" # Put them in the hash
         end
       else                                          # Belongsto tag checked
+        class_prefix, id = params[:id].split('_').last.split('-')
+        klass = TreeBuilder.get_model_for_prefix(class_prefix)
         if params[:check] == "0"                    #   unchecked
-          @edit[:new][:belongsto].delete(params[:id].split('___').last) #     Remove the tag from the belongsto hash
-        else                                        #   checked
-          objc, objid = params[:id].split('___').last.split("_")      #     Get the object class and id
-          tobj = objc.constantize.find(objid)       #     Get the record
-          @edit[:new][:belongsto][params[:id].split('___').last] = MiqFilter.object2belongsto(tobj) # Put the tag into the belongsto hash
+          @edit[:new][:belongsto].delete("#{klass}_#{from_cid(id)}") #     Remove the tag from the belongsto hash
+        else
+          object = klass.constantize.find(from_cid(id))
+          @edit[:new][:belongsto]["#{klass}_#{from_cid(id)}"] = MiqFilter.object2belongsto(object) # Put the tag into the belongsto hash
         end
       end
     end
@@ -1109,15 +1105,10 @@ module OpsController::OpsRbac
                                      true,
                                      :edit => @edit, :filters => @filters, :group => @group)
     rbac_build_myco_tree                              # Build the MyCompanyTags tree for this user
-<<<<<<< 9d5c6dfb465384292d1c68b9b022c712dd626428
-    @hac_tree = TreeBuilderBelongsTo.new(:hac, :hac_tree, @sb, true, :edit => @edit, :group => @group)
-    @vat_tree = build_belongsto_tree(@edit[:new][:belongsto].keys, true, false)  # Build the VMs & Templates tree for this user
-=======
-    @hac_tree = TreeBuilderBelongsToHac.new(:hac, :hac_tree, @sb, true, :edit => @edit, :group => @group)
+    @hac_tree = TreeBuilderBelongsToHac.new(:hac, :hac_tree, @sb, true, :edit => @edit, :group => @group, :selected => @edit[:new][:belongsto].keys)
     #build_belongsto_tree(@edit[:new][:belongsto].keys, false, false)  # Build the Hosts & Clusters tree for this user
-    @vat_tree = TreeBuilderBelongsToVat.new(:vat, :vat_tree, @sb, true, :edit => @edit, :group => @group)
+    @vat_tree = TreeBuilderBelongsToVat.new(:vat, :vat_tree, @sb, true, :edit => @edit, :group => @group, :selected => @edit[:new][:belongsto].keys)
       #build_belongsto_tree(@edit[:new][:belongsto].keys, true, false)  # Build the VMs & Templates tree for this user
->>>>>>> Vm/Template tree is generated
   end
 
   # Set group record variables to new values
