@@ -8,7 +8,7 @@ class Dialog < ApplicationRecord
   validate :validate_children
 
   include DialogMixin
-  has_many   :resource_actions
+  has_many :resource_actions
   virtual_has_one :content, :class_name => "Hash"
 
   before_destroy          :reject_if_has_resource_actions
@@ -18,20 +18,16 @@ class Dialog < ApplicationRecord
 
   attr_accessor :target_resource
 
+  belongs_to :blueprint
+
+  delegate :readonly?, :to => :blueprint, :allow_nil => true
+
   def self.seed
     dialog_import_service = DialogImportService.new
 
     Dir.glob(ALL_YAML_FILES).each do |file|
       dialog_import_service.import_all_service_dialogs_from_yaml_file(file)
     end
-  end
-
-  def readonly?
-    return true if super
-    resource_actions.each do |action|
-      return true if action.readonly?
-    end
-    false
   end
 
   def each_dialog_field(&block)

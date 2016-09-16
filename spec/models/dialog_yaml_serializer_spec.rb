@@ -21,12 +21,13 @@ describe DialogYamlSerializer do
     let(:dialogs) { [dialog] }
 
     let(:expected_data) do
-      {
-        "description" => description,
-        "buttons"     => buttons,
-        "label"       => label,
-        "dialog_tabs" => ["serialized_dialog1", "serialized_dialog2"],
-      }
+      [{
+        "description"  => description,
+        "buttons"      => buttons,
+        "label"        => label,
+        "blueprint_id" => nil,
+        "dialog_tabs"  => ["serialized_dialog1", "serialized_dialog2"],
+      }]
     end
 
     before do
@@ -35,7 +36,7 @@ describe DialogYamlSerializer do
     end
 
     it "serializes the dialog" do
-      expect(YAML.load(dialog_yaml_serializer.serialize(dialogs))).to include(expected_data)
+      expect(YAML.load(dialog_yaml_serializer.serialize(dialogs))).to eq(expected_data)
     end
   end
 end
