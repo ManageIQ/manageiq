@@ -1,5 +1,3 @@
-require 'hamlit-rails'
-
 module Spec
   module Support
     module ViewHelper
