@@ -53,11 +53,7 @@ class OntapFileShareController < CimInstanceController
     if role_allows?(:feature => "#{area}_tag")
       javascript_redirect :action => 'create_ds'
     else
-      render :update do |page|
-        page << javascript_prologue
-        add_flash(_("The user is not authorized for this task or item."), :error)
-        page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
-      end
+      render_flash(_("The user is not authorized for this task or item."), :error)
     end
   end
 
@@ -87,10 +83,7 @@ class OntapFileShareController < CimInstanceController
       sfs.errors.each do |field, msg|
         add_flash("#{field.to_s.capitalize} #{msg}", :error)
       end
-      render :update do |page|
-        page << javascript_prologue
-        page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     end
   end
 

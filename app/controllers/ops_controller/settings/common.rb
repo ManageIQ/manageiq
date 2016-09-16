@@ -217,12 +217,7 @@ module OpsController::Settings::Common
         add_flash(_("Replication configuration save was successful"))
       end
     end
-
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page << "miqSparkle(false);"
-    end
+    javascript_flash(:spinner_off => true)
   end
 
   def pglogical_validate_subscription
