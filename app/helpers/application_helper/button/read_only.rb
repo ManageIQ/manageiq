@@ -1,4 +1,6 @@
 class ApplicationHelper::Button::ReadOnly < ApplicationHelper::Button::Basic
+  needs_record
+
   def disabled?
     @record.read_only
   end
