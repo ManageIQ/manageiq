@@ -111,7 +111,7 @@ module Api
 
       def parse_by_attr(resource, type, attr_list)
         klass = collection_class(type)
-        objs = attr_list.map { |attr| klass.send("find_by_#{attr}", resource[attr]) if resource[attr] }.compact
+        objs = attr_list.map { |attr| klass.find_by(attr => resource[attr]) if resource[attr] }.compact
         objs.collect(&:id).first
       end
 
