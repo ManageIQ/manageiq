@@ -35,7 +35,7 @@ Dir.chdir APP_ROOT do
 
   # Run bower in a thread and continue to do the non-js stuff
   bower_thread = Thread.new do
-    execute "bower install --allow-root -F --config.analytics=false"
+    execute "bower install --allow-root -F --silent --config.analytics=false"
   end
 
   execute "gem install bundler --conservative"
