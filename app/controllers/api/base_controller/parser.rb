@@ -72,15 +72,11 @@ module Api
       def parse_href(href)
         if href
           path = href.match(/^http/) ? URI.parse(href).path.sub(/\/*$/, '') : href
-          path = "#{prefix}/#{path}" unless path.match(prefix)
+          path = "/api/#{path}" unless path.match("/api")
           path = path.sub(/\/*$/, '')
           return href_collection_id(path)
         end
         [nil, nil]
-      end
-
-      def prefix
-        @prefix ||= "/#{Settings.base.module}"
       end
 
       def href_collection_id(path)
