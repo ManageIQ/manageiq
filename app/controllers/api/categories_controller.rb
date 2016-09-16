@@ -2,14 +2,10 @@ module Api
   class CategoriesController < BaseController
     include Subcollections::Tags
 
-    def show
-      request_additional_attributes
-      super
-    end
+    before_action :set_additional_attributes, :only => [:show, :update]
 
     def edit_resource(type, id, data = {})
       raise BaseController::Forbidden if Category.find(id).read_only?
-      request_additional_attributes
       super
     end
 
@@ -20,7 +16,7 @@ module Api
 
     private
 
-    def request_additional_attributes
+    def set_additional_attributes
       @additional_attributes = %w(name)
     end
   end
