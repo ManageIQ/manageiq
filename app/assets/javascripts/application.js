@@ -11,6 +11,7 @@
 //= require angular-patternfly-sass/dist/angular-patternfly
 //= require angular-ui-bootstrap
 //= require angular-ui-bootstrap-tpls
+//= require angular-rails-templates
 //= require angular-sanitize
 //= require angular.validators
 //= require moment
@@ -26,6 +27,7 @@
 //= require_tree ./controllers/
 //= require_tree ./directives/
 //= require_tree ./services/
+//= require_tree ../templates
 //= require d3
 //= require c3
 //= require lodash
