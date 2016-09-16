@@ -68,7 +68,7 @@ module RetirementMixin
       self.retires_on = date
 
       if date
-        message += " is scheduled to retire on: [#{retires_on}]"
+        message += " is scheduled to retire on: [#{retires_on.strftime("%x %R %Z")}]"
       else
         message += " is no longer scheduled to retire"
       end
@@ -115,7 +115,7 @@ module RetirementMixin
   def retire_now(requester = nil)
     if retired
       return if retired_validated?
-      _log.info("#{retirement_object_title}: [#{name}], Retires On: [#{retires_on}], was previously retired, but currently #{retired_invalid_reason}")
+      _log.info("#{retirement_object_title}: [#{name}], Retires On: [#{retires_on.strftime("%x %R %Z")}], was previously retired, but currently #{retired_invalid_reason}")
     else
       update_attributes(:retirement_requester => requester)
       event_name = "request_#{retirement_event_prefix}_retire"
@@ -132,7 +132,7 @@ module RetirementMixin
     raise _("%{name} already retired") % {:name => name} if retired?
     $log.info("Finishing Retirement for [#{name}]")
     update_attributes(:retires_on => Time.zone.now, :retired => true, :retirement_state => "retired")
-    message = "#{self.class.base_model.name}: [#{name}], Retires On: [#{retires_on}], has been retired"
+    message = "#{self.class.base_model.name}: [#{name}], Retires On: [#{retires_on.strftime("%x %R %Z")}], has been retired"
     $log.info("Calling audit event for: #{message} ")
     raise_audit_event(retired_event_name, message)
     $log.info("Called audit event for: #{message} ")
