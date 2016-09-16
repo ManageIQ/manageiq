@@ -31,7 +31,6 @@ gem "google-api-client",              "~>0.8.6",       :require => false
 gem "hamlit",                         "~>2.0.0",       :require => false
 gem "hamlit-rails",                   "~>0.1.0"
 gem "hashie",                         ">=3.4.6",       :require => false
-gem "high_voltage",                   "~>2.4.0"
 gem "htauth",                         "2.0.0",         :require => false
 gem "inifile",                        "~>3.0",         :require => false
 gem "jbuilder",                       "~>2.5.0" # For the REST API
@@ -86,6 +85,7 @@ end
 group :ui_dependencies do # Added to Bundler.require in config/application.rb
   # Unmodified gems
   gem "angular-ui-bootstrap-rails",   "~>0.13.0"
+  gem "angular-rails-templates",      "~>1.0.2"
   gem "jquery-hotkeys-rails"
   gem "jquery-rails",                 "~>4.1.1"
   gem "lodash-rails",                 "~>3.10.0"
