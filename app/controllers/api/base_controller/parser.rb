@@ -223,7 +223,7 @@ module Api
         action_hash = fetch_action_hash(aspec, method_name, action_name)
         raise BadRequestError, "Disabled action #{action_name}" if action_hash[:disabled]
         unless api_user_role_allows?(action_hash[:identifier])
-          raise Forbidden, "Use of the #{action_name} action is forbidden"
+          raise ForbiddenError, "Use of the #{action_name} action is forbidden"
         end
       end
 
@@ -250,7 +250,9 @@ module Api
 
         if action_hash.present?
           raise BadRequestError, "Disabled Action #{aname} for the #{cname} #{type} specified" if action_hash[:disabled]
-          raise Forbidden, "Use of Action #{aname} is forbidden" unless api_user_role_allows?(action_hash[:identifier])
+          unless api_user_role_allows?(action_hash[:identifier])
+            raise ForbiddenError, "Use of Action #{aname} is forbidden"
+          end
         end
 
         validate_post_api_action_as_subcollection(cname, mname, aname)
@@ -298,7 +300,7 @@ module Api
         raise BadRequestError, "Disabled Action #{aname} for the #{cname} sub-collection" if action_hash[:disabled]
 
         unless api_user_role_allows?(action_hash[:identifier])
-          raise Forbidden, "Use of Action #{aname} for the #{cname} sub-collection is forbidden"
+          raise ForbiddenError, "Use of Action #{aname} for the #{cname} sub-collection is forbidden"
         end
       end
 

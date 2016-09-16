@@ -4,7 +4,7 @@ module Api
       category = @req.c_id
       selected_sections =
         if category
-          raise NotFound, "Settings category #{category} not found" unless exposed_settings.include?(category)
+          raise NotFoundError, "Settings category #{category} not found" unless exposed_settings.include?(category)
           category
         else
           exposed_settings

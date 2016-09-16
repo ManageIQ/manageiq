@@ -11,9 +11,9 @@ module Api
         MultiJson::LoadError           => :bad_request,
         MiqException::MiqEVMLoginError => :unauthorized,
         AuthenticationError            => :unauthorized,
-        Forbidden                      => :forbidden,
+        ForbiddenError                 => :forbidden,
         BadRequestError                => :bad_request,
-        NotFound                       => :not_found,
+        NotFoundError                  => :not_found,
         UnsupportedMediaTypeError      => :unsupported_media_type
       }
 
