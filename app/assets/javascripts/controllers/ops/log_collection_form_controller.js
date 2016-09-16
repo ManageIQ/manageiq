@@ -57,7 +57,7 @@ ManageIQ.angular.app.controller('logCollectionFormController', ['$http', '$scope
   $scope.logProtocolChanged = function() {
     $scope.$broadcast('setNewRecord');
 
-    if(miqDBBackupService.knownProtocolsList.indexOf($scope.logCollectionModel.log_protocol) == -1 &&
+    if (miqDBBackupService.knownProtocolsList.indexOf($scope.logCollectionModel.log_protocol) == -1 &&
        $scope.logCollectionModel.log_protocol != '') {
       var url = $scope.logProtocolChangedUrl;
       miqService.sparkleOn();
@@ -73,14 +73,11 @@ ManageIQ.angular.app.controller('logCollectionFormController', ['$http', '$scope
   };
 
   $scope.isBasicInfoValid = function() {
-    if($scope.angularForm.depot_name.$valid &&
+    return $scope.angularForm.depot_name.$valid &&
       $scope.angularForm.uri.$valid &&
       $scope.angularForm.log_userid.$valid &&
       $scope.angularForm.log_password.$valid &&
-      $scope.angularForm.log_verify.$valid)
-      return true;
-    else
-      return false;
+      $scope.angularForm.log_verify.$valid;
   };
 
   $scope.saveClicked = function() {
@@ -90,7 +87,8 @@ ManageIQ.angular.app.controller('logCollectionFormController', ['$http', '$scope
     if (moreUrlParams) {
       url += '&' + decodeURIComponent(moreUrlParams);
     }
-    miqService.miqAjaxButton(url, false);
+    // FIXME this is even worse, we send everything in the query string
+    miqService.miqAjaxButton(url);
     $scope.angularForm.$setPristine(true);
   };
 
@@ -104,16 +102,14 @@ ManageIQ.angular.app.controller('logCollectionFormController', ['$http', '$scope
   $scope.cancelClicked = function() {
     miqService.sparkleOn();
     var url = $scope.saveUrl + serverId + '?button=cancel';
+    // FIXME true with cancel!? probably nil
     miqService.miqAjaxButton(url, true);
     $scope.angularForm.$setPristine(true);
   };
 
   $scope.canValidateBasicInfo = function () {
-    if ($scope.isBasicInfoValid())
-      return true;
-    else
-      return false;
-  }
+    return $scope.isBasicInfoValid();
+  };
 
   init();
 }]);

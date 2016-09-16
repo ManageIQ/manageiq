@@ -42,7 +42,7 @@ ManageIQ.angular.app.controller('ownershipFormController', ['$http', '$scope', '
       miqService.miqAjaxButton(url, {
         objectIds: $scope.objectIds,
         user:  $scope.ownershipModel.user,
-        group: $scope.ownershipModel.group
+        group: $scope.ownershipModel.group,
       });
     }
   };

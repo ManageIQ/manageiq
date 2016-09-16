@@ -24,7 +24,7 @@ ManageIQ.angular.app.controller('cloudVolumeFormController', ['$http', '$scope',
   $scope.addClicked = function() {
     miqService.sparkleOn();
     var url = 'create/new' + '?button=add';
-    miqService.miqAjaxButton(url, true);
+    miqService.miqAjaxButton(url, true);  // FIXME
   };
 
   $scope.cancelClicked = function() {
@@ -40,19 +40,19 @@ ManageIQ.angular.app.controller('cloudVolumeFormController', ['$http', '$scope',
   $scope.saveClicked = function() {
     miqService.sparkleOn();
     var url = '/cloud_volume/update/' + cloudVolumeFormId + '?button=save';
-    miqService.miqAjaxButton(url, true);
+    miqService.miqAjaxButton(url, true);  // FIXME
   };
 
   $scope.attachClicked = function() {
     miqService.sparkleOn();
     var url = '/cloud_volume/attach_volume/' + cloudVolumeFormId + '?button=attach';
-    miqService.miqAjaxButton(url, true);
+    miqService.miqAjaxButton(url, true);  // FIXME
   };
 
   $scope.detachClicked = function() {
     miqService.sparkleOn();
     var url = '/cloud_volume/detach_volume/' + cloudVolumeFormId + '?button=detach';
-    miqService.miqAjaxButton(url, true);
+    miqService.miqAjaxButton(url, true);  // FIXME
   };
 
   $scope.cancelAttachClicked = function() {

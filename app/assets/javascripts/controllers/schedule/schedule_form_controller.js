@@ -134,7 +134,8 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
     if (serializeFields === undefined) {
       miqService.miqAjaxButton(url);
     } else {
-      miqService.miqAjaxButton(url, serializeFields);
+      // FIXME
+      miqService.miqAjaxButton(url, true);
     }
   };
 

@@ -22,11 +22,11 @@ ManageIQ.angular.app.controller('serviceFormController', ['$http', '$scope', 'se
       });
     };
 
-    var serviceEditButtonClicked = function(buttonName, serializeFields) {
+    var serviceEditButtonClicked = function(buttonName, data) {
       miqService.sparkleOn();
       var url = '/service/service_edit/' + serviceFormId + '?button=' + buttonName;
 
-      miqService.miqAjaxButton(url, serializeFields);
+      miqService.miqAjaxButton(url, data);
     };
 
     $scope.cancelClicked = function() {
@@ -42,6 +42,7 @@ ManageIQ.angular.app.controller('serviceFormController', ['$http', '$scope', 'se
     };
 
     $scope.saveClicked = function() {
+      // FIXME data should not be true but an object
       serviceEditButtonClicked('save', true);
       $scope.angularForm.$setPristine(true);
     };

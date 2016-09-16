@@ -104,7 +104,7 @@ ManageIQ.angular.app.controller('hostFormController', ['$http', '$scope', '$attr
   $scope.addClicked = function() {
     miqService.sparkleOn();
     var url = 'create/new' + '?button=add';
-    miqService.miqAjaxButton(url, true);
+    miqService.miqAjaxButton(url, true);  // FIXME
   };
 
   $scope.cancelClicked = function() {
@@ -126,7 +126,7 @@ ManageIQ.angular.app.controller('hostFormController', ['$http', '$scope', '$attr
     } else {
       var url = $scope.updateUrl + hostFormId + '?button=save';
     }
-    miqService.miqAjaxButton(url, true);
+    miqService.miqAjaxButton(url, true);  // FIXME
   };
 
   $scope.resetClicked = function() {
@@ -167,18 +167,12 @@ ManageIQ.angular.app.controller('hostFormController', ['$http', '$scope', '$attr
   };
 
   $scope.canValidate = function () {
-    if ($scope.isBasicInfoValid() && $scope.validateFieldsDirty())
-      return true;
-    else
-      return false;
-  }
+    return $scope.isBasicInfoValid() && $scope.validateFieldsDirty();
+  };
 
   $scope.canValidateBasicInfo = function () {
-    if ($scope.isBasicInfoValid())
-      return true;
-    else
-      return false;
-  }
+    return $scope.isBasicInfoValid();
+  };
 
   $scope.validateFieldsDirty = function () {
     if(($scope.currentTab == "default") &&
@@ -205,9 +199,10 @@ ManageIQ.angular.app.controller('hostFormController', ['$http', '$scope', '$attr
       $scope.angularForm.ipmi_password.$dirty &&
       $scope.angularForm.ipmi_verify.$dirty)) {
       return true;
-    } else
+    } else {
       return false;
-  }
+    }
+  };
 
   init();
 }]);

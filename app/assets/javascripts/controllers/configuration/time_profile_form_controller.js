@@ -186,9 +186,9 @@ ManageIQ.angular.app.controller('timeProfileFormController', ['$http', '$scope',
     var timeProfileModelObj = angular.copy($scope.timeProfileModel);
     delete timeProfileModelObj.profile_tz;
     var moreUrlParams = $.param(miqService.serializeModel(timeProfileModelObj));
-    if(moreUrlParams)
+    if (moreUrlParams)
       url += '&' + decodeURIComponent(moreUrlParams);
-    miqService.miqAjaxButton(url, true);
+    miqService.miqAjaxButton(url, true);  // FIXME - a lot!
   };
 
   $scope.cancelClicked = function() {

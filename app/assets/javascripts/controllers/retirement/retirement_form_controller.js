@@ -2,7 +2,7 @@ ManageIQ.angular.app.controller('retirementFormController', ['$http', '$scope', 
   $scope.objectIds = objectIds;
   $scope.retirementInfo = {
     retirementDate: null,
-    retirementWarning: ''
+    retirementWarning: '',
   };
   $scope.datepickerStartDate = new Date();
   $scope.modelCopy = _.extend({}, $scope.retirementInfo);

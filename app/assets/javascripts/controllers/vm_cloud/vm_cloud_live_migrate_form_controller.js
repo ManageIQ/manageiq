@@ -30,6 +30,6 @@ ManageIQ.angular.app.controller('vmCloudLiveMigrateFormController', ['$http', '$
   $scope.submitClicked = function() {
     miqService.sparkleOn();
     var url = '/vm_cloud/live_migrate_vm/' + vmCloudLiveMigrateFormId + '?button=submit';
-    miqService.miqAjaxButton(url, true);
+    miqService.miqAjaxButton(url, true);  // FIXME
   };
 }]);

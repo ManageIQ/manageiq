@@ -47,7 +47,7 @@ ManageIQ.angular.app.controller('tenantFormController', ['$http', '$scope', 'ten
       if (serializeFields === undefined) {
         miqService.miqAjaxButton(url);
       } else {
-        miqService.miqAjaxButton(url, serializeFields);
+        miqService.miqAjaxButton(url, true);  // FIXME
       }
     };
 

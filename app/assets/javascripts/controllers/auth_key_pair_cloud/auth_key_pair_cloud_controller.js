@@ -34,16 +34,17 @@ ManageIQ.angular.app.controller('keyPairCloudFormController', ['$http', '$scope'
 
         var url = '/auth_key_pair_cloud/create/' + keyPairFormId + '?button=' + buttonName;
         $scope.keyPairModel.ems_id = $scope.keyPairModel.ems.id;
-        if(serializeFields) {
-            miqService.miqAjaxButton(url, miqService.serializeModel($scope.keyPairModel));
+        if (serializeFields) {
+          // FIXME serializeModel should be useless here, except for maybe angular.copy?
+          miqService.miqAjaxButton(url, miqService.serializeModel($scope.keyPairModel));
         } else {
-            miqService.miqAjaxButton(url, false);
+          miqService.miqAjaxButton(url);
         }
         miqService.sparkleOff();
     };
 
     $scope.cancelClicked = function() {
-        keyPairEditButtonClicked('cancel', false);
+        keyPairEditButtonClicked('cancel');
         $scope.angularForm.$setPristine(true);
     };
 
