@@ -2881,9 +2881,6 @@ Vmdb::Application.routes.draw do
     end
   end
 
-  # pure-angular templates
-  get '/static/*id' => 'static#show', :format => false
-
   # ping response for load balancing
   get '/ping' => 'ping#index'
 
