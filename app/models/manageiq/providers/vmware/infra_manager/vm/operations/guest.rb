@@ -6,14 +6,15 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Operations::Guest
       unsupported_reason_add(:reboot_guest, unsupported_reason(:control)) unless supports_control?
       unsupported_reason_add(:reboot_guest, _("The VM is not powered on")) unless current_state == "on"
     end
-  end
 
-  def validate_shutdown_guest
-    msg = validate_vm_control
-    return {:available => msg[0], :message => msg[1]} unless msg.nil?
-    return {:available => true, :message => ''} if tools_status && tools_status == 'toolsNotInstalled'
-    return {:available => true, :message => nil} if current_state == 'on'
-    {:available => false, :message => 'The VM is not powered on'}
+    supports :shutdown_guest do
+      unsupported_reason_add(:shutdown_guest, unsupported_reason(:control)) unless supports_control?
+      unless tools_status && tools_status == 'toolsNotInstalled'
+        if current_state != "on"
+          unsupported_reason_add(:shutdown_guest, _("The VM is not powered on"))
+        end
+      end
+    end
   end
 
   def validate_standby_guest

@@ -88,6 +88,7 @@ module SupportsFeatureMixin
     :retire                     => 'Retirement',
     :smartstate_analysis        => 'Smartstate Analaysis',
     :snapshots                  => 'Snapshots',
+    :shutdown_guest             => 'Shutdown Guest Operation',
     :terminate                  => 'Terminate a VM',
     :update_aggregate           => 'Host Aggregate Update',
     :refresh_network_interfaces => 'Refresh Network Interfaces for a Host',
