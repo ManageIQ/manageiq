@@ -25,8 +25,9 @@ ManageIQ.angular.app.controller('retirementFormController', ['$http', '$scope', 
 
   $scope.saveClicked = function() {
     miqService.sparkleOn();
-    miqService.miqAjaxButton('retire?button=save',
-                             {'retire_date': $scope.retirementInfo.retirementDate,
-                              'retire_warn': $scope.retirementInfo.retirementWarning});
+    miqService.miqAjaxButton('retire?button=save', {
+      retire_date: $scope.retirementInfo.retirementDate,
+      retire_warn: $scope.retirementInfo.retirementWarning,
+    });
   };
 }]);
