@@ -1,7 +1,6 @@
 describe Tenant do
   include_examples ".seed called multiple times"
 
-  let(:config) { {} }
   let(:tenant) { described_class.new(:domain => 'x.com', :parent => default_tenant) }
 
   let(:default_tenant) do
@@ -11,10 +10,6 @@ describe Tenant do
 
   let(:root_tenant) do
     Tenant.seed
-  end
-
-  before do
-    stub_server_configuration(config)
   end
 
   describe "#default_tenant" do
@@ -135,8 +130,6 @@ describe Tenant do
   end
 
   describe "#name" do
-    let(:config) { {:server => {:company => "settings"}} }
-
     it "has default name" do
       expect(tenant.name).to eq("My Company")
     end
@@ -169,6 +162,7 @@ describe Tenant do
 
     context "for root_tenants" do
       it "reads settings" do
+        stub_server_settings(:server, :company => "settings")
         expect(root_tenant.name).to eq("settings")
       end
 
@@ -206,13 +200,13 @@ describe Tenant do
     end
 
     it "has no logo for root_tenant" do
+      stub_server_settings(:server, {})
       expect(root_tenant.logo.url).to match(/missing/)
     end
 
     context "with server configurations" do
-      let(:config) { {:server => {:custom_logo => true}} }
-
       it "uses configurations value for root_tenant" do
+        stub_server_settings(:server, :custom_logo => true)
         expect(root_tenant.logo.url).to eq("/uploads/custom_logo.png")
       end
 
@@ -253,9 +247,8 @@ describe Tenant do
       end
 
       context "#with custom_logo configuration" do
-        let(:config) { {:server => {:custom_logo => true}} }
-
         it "knows there is a logo from configuration" do
+          stub_server_settings(:server, :custom_logo => true)
           expect(root_tenant).to be_logo
         end
 
@@ -318,9 +311,8 @@ describe Tenant do
     end
 
     context "with custom login logo configuration" do
-      let(:config) { {:server => {:custom_login_logo => true}} }
-
       it "has custom login logo" do
+        stub_server_settings(:server, :custom_login_logo => true)
         expect(root_tenant.login_logo.url).to match(/custom_login_logo.png/)
       end
     end
@@ -348,6 +340,7 @@ describe Tenant do
 
   context "#validate_only_one_root" do
     it "allows child tenants" do
+      stub_server_settings(:server, {})
       root_tenant.children.create!
     end
 
@@ -835,7 +828,9 @@ describe Tenant do
   end
 
   describe ".tenant_and_project_names" do
-    let(:config) { {:server => {:company => "root"}} }
+    before do
+      stub_server_settings(:server, :company => "root")
+    end
 
     # root
     #   ten1
