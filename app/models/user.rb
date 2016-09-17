@@ -17,6 +17,7 @@ class User < ApplicationRecord
   has_many   :miq_widget_sets, :as => :owner, :dependent => :destroy
   has_many   :miq_reports, :dependent => :nullify
   has_many   :service_orders, :dependent => :nullify
+  has_many   :owned_shares, :class_name => 'Share', :foreign_key => 'sharer_id'
   has_many   :notification_recipients, :dependent => :delete_all
   has_many   :notifications, :through => :notification_recipients
   has_many   :unseen_notification_recipients, -> { unseen }, :class_name => 'NotificationRecipient'
