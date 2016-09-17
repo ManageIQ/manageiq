@@ -330,7 +330,7 @@ describe ManageIQ::Providers::Vmware::CloudManager::Refresher do
     expect(@template).not_to be_nil
     expect(@template).to have_attributes(
       :ems_ref   => "vappTemplate-44b686fb-d4bf-4ec4-b3fb-6554008f1868",
-      :orderable => false,
+      :orderable => true,
     )
 
     expect(@template.ems_id).to eq(@ems.id)
