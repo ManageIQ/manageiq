@@ -13,7 +13,7 @@ describe TreeBuilderSnapshots do
                                     :children    => [snapshot_kid])
       snapshot_kid.parent_id = snapshot.id
       @record = FactoryGirl.create(:vm_infra, :snapshots => [snapshot])
-      @s_tree = TreeBuilderSnapshots.new(:snapshot_tree, :snapshot, {}, true, @record)
+      @s_tree = TreeBuilderSnapshots.new(:snapshot_tree, :snapshot, {}, true, :root => @record)
     end
     it 'sets root correctly' do
       root = @s_tree.send(:root_options)
