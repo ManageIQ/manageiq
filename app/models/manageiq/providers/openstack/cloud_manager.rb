@@ -27,9 +27,11 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
 
   supports :provisioning
   supports :cloud_tenant_mapping do
-    unless defined?(self.class.parent::CloudManager::CloudTenant)
-      reason = _("Tenant mapping is supported only when CloudTenant exists on the CloudManager")
-      unsupported_reason_add(:cloud_tenant_mapping, reason)
+    if defined?(self.class.parent::CloudManager::CloudTenant) && !tenant_mapping_enabled?
+      unsupported_reason_add(:cloud_tenant_mapping, _("Tenant mapping is disabled on the Provider"))
+    elsif !defined?(self.class.parent::CloudManager::CloudTenant)
+      unsupported_reason_add(:cloud_tenant_mapping, _("Tenant mapping is supported only when CloudTenant exists "\
+                                                      "on the CloudManager"))
     end
   end
 
