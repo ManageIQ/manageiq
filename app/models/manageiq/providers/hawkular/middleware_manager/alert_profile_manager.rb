@@ -2,8 +2,8 @@ module ManageIQ::Providers
   class Hawkular::MiddlewareManager::AlertProfileManager
     require 'hawkular/hawkular_client'
 
-    def initialize(ems)
-      @alerts_client = ems.connect.alerts
+    def initialize(alerts_client)
+      @alerts_client = alerts_client
     end
 
     def process_alert_profile(operation, miq_alert_profile)

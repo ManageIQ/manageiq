@@ -356,11 +356,11 @@ module ManageIQ::Providers
     end
 
     def alert_manager
-      @alert_manager ||= ManageIQ::Providers::Hawkular::MiddlewareManager::AlertManager.new(self)
+      @alert_manager ||= ManageIQ::Providers::Hawkular::MiddlewareManager::AlertManager.new(alerts_client)
     end
 
     def alert_profile_manager
-      @alert_profile_manager ||= ManageIQ::Providers::Hawkular::MiddlewareManager::AlertProfileManager.new(self)
+      @alert_profile_manager ||= ManageIQ::Providers::Hawkular::MiddlewareManager::AlertProfileManager.new(alerts_client)
     end
 
     private
