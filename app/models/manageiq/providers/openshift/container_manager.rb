@@ -25,7 +25,7 @@ class ManageIQ::Providers::Openshift::ContainerManager < ManageIQ::Providers::Co
   end
 
   def alerts_client
-    #byebug_term
+    # TODO: this always creates new connection.  Middleware seems to cache one connection.
     connection = ManageIQ::Providers::Hawkular::MiddlewareManager.raw_connect(
       ENV['HAWKULAR_HOST'] || 'localhost', (ENV['HAWKULAR_PORT'] || 8080).to_i,
       ENV['HAKULAR_USER'] || 'jdoe', ENV['HAWKULAR_PASSWORD'] || 'password')
