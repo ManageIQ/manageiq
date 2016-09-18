@@ -7,7 +7,7 @@ module ManageIQ::Providers
     end
 
     def fake_client
-      entrypoint = URI::HTTP.build(:host => 'mtayer-centos7-7.eng.lab.tlv.redhat.com', :port => '8080').to_s
+      entrypoint = URI::HTTP.build(:host => ENV['HAWKULAR_HOST'] || 'localhost', :port => 8080).to_s
       credentials = {
         :username => 'jdoe',
         :password => 'password'

@@ -27,7 +27,8 @@ class ManageIQ::Providers::Openshift::ContainerManager < ManageIQ::Providers::Co
   def alerts_client
     #byebug_term
     connection = ManageIQ::Providers::Hawkular::MiddlewareManager.raw_connect(
-      'mtayer-centos7-5.eng.lab.tlv.redhat.com', 8080, 'jdoe', 'password')
+      ENV['HAWKULAR_HOST'] || 'localhost', (ENV['HAWKULAR_PORT'] || 8080).to_i,
+      ENV['HAKULAR_USER'] || 'jdoe', ENV['HAWKULAR_PASSWORD'] || 'password')
     connection.alerts
   end
 
