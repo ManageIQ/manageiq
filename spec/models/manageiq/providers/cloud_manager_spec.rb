@@ -27,8 +27,25 @@ describe EmsCloud do
   end
 
   context "OpenStack CloudTenant Mapping" do
+    let(:ems_cloud) { FactoryGirl.create(:ems_openstack, :tenant_mapping_enabled => true) }
+    let(:ems_infra) { FactoryGirl.create(:ext_management_system) }
+
+    describe "#supports_cloud_tenant_mapping" do
+      it "supports tenant mapping if the provider has CloudTenant relation and mapping is enabled" do
+        expect(ems_cloud.supports_cloud_tenant_mapping?).to be_truthy
+      end
+
+      it "doesn't supports tenant mapping if the provider has CloudTenant relation and mapping is disabled" do
+        ems_cloud.tenant_mapping_enabled = false
+        expect(ems_cloud.supports_cloud_tenant_mapping?).to be_falsey
+      end
+
+      it "doesn't supports tenant mapping if the provider has not CloudTenant relation" do
+        expect(ems_infra.supports_cloud_tenant_mapping?).to be_falsey
+      end
+    end
+
     describe "#sync_cloud_tenants_with_tenants" do
-      let(:ems_cloud)       { FactoryGirl.create(:ems_openstack) }
       let!(:default_tenant) { Tenant.seed }
       let(:name_of_created_tenant) do
         "#{ManageIQ::Providers::Openstack::CloudManager.description} Cloud Provider #{ems_cloud.name}"
