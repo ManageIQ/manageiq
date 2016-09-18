@@ -22,5 +22,8 @@
               .pull-left.expand
                 = value[:value]
               .pull-right
+            - elsif (value.kind_of? Hash)
+              .actions_td
+                = value[:value]
             - else
               = value

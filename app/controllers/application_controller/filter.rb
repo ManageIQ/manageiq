@@ -998,6 +998,19 @@ module ApplicationController::Filter
   end
 
   private
+  # Popup/open the quick search box
+  def ack_show
+    @exp_token           = nil
+    @ack_show = true
+
+    render :update do |page|
+      page << javascript_prologue
+      page.replace(:user_input_filter, :partial => "layouts/user_input_filter")
+      page << "$('#advsearchModal').modal('hide');"
+      page << "$('#quicksearchbox').modal('show');"
+      page << "miqSparkle(false);"
+    end
+  end
 
   # Popup/open the quick search box
   def quick_search_show
