@@ -377,10 +377,17 @@ describe Tenant do
   end
 
   context "#ensure_can_be_destroyed" do
+    let(:tenant)       { FactoryGirl.create(:tenant) }
+    let(:cloud_tenant) { FactoryGirl.create(:cloud_tenant) }
+
     it "wouldn't delete tenant with groups associated" do
-      tenant = FactoryGirl.create(:tenant)
       FactoryGirl.create(:miq_group, :tenant => tenant)
       expect { tenant.destroy! }.to raise_error(RuntimeError, /A tenant with groups.*cannot be deleted/)
+    end
+
+    it "does not delete tenant created by tenant mapping process" do
+      tenant.source = cloud_tenant
+      expect { tenant.destroy! }.to raise_error(RuntimeError, /A tenant created by tenant mapping cannot be deleted/)
     end
   end
 
