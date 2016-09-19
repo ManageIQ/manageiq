@@ -16,7 +16,7 @@ class TreeBuilderOpsSettings < TreeBuilderOps
   def root_options
     region = MiqRegion.my_region
     title =  _("ManageIQ Region: %{region_description} [%{region}]") % {:region_description => region.description,
-                                                                    :region             => region.region}
+                                                                        :region             => region.region}
     [title, title, :miq_region]
   end
 
