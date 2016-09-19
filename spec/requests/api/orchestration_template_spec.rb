@@ -102,7 +102,7 @@ RSpec.describe 'Orchestration Template API' do
     it 'supports single orchestration_template delete' do
       api_basic_authorize collection_action_identifier(:orchestration_templates, :delete)
 
-      cfn =FactoryGirl.create(:orchestration_template_cfn_with_content)
+      cfn = FactoryGirl.create(:orchestration_template_cfn_with_content)
 
       api_basic_authorize collection_action_identifier(:orchestration_templates, :delete)
 

@@ -28,11 +28,15 @@ module Api
     private
 
     def build_service_attributes(data)
-      attributes                           = data.dup
-      attributes['orchestration_manager']  = fetch_ext_management_system(data['orchestration_manager']) if data['orchestration_manager']
-      attributes['orchestration_template'] = fetch_orchestration_template(data['orchestration_template']) if data['orchestration_template']
-      attributes['job_template']           = fetch_configuration_script(data['job_template']) if data['job_template']
-      attributes['parent']                 = fetch_service(data['parent_service']) if data['parent_service']
+      attributes                 = data.dup
+      attributes['job_template'] = fetch_configuration_script(data['job_template']) if data['job_template']
+      attributes['parent']       = fetch_service(data['parent_service']) if data['parent_service']
+      if data['orchestration_manager']
+        attributes['orchestration_manager'] = fetch_ext_management_system(data['orchestration_manager'])
+      end
+      if data['orchestration_template']
+        attributes['orchestration_template'] = fetch_orchestration_template(data['orchestration_template'])
+      end
       if data['job_options']
         # AnsibleTowerClient needs the keys to be symbols
         attributes['job_options'][:limit]      ||= data['job_options'].delete('limit')

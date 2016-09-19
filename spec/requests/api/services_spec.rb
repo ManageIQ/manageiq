@@ -62,7 +62,7 @@ describe "Services API" do
                                     {"name" => "svc_new_2"}])
     end
   end
-  
+
   describe "Services edit" do
     it "rejects requests without appropriate role" do
       api_basic_authorize

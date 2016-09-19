@@ -4,7 +4,7 @@ module Api
       klass    = collection_class(type)
       resource = resource_search(id, type, klass)
       super
-      resource.raw_destroy if resource.is_a?(OrchestrationTemplateVnfd)
+      resource.raw_destroy if resource.kind_of?(OrchestrationTemplateVnfd)
     end
   end
 end
