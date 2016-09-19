@@ -1,7 +1,7 @@
 class ManageIQ::Providers::Openshift::ContainerManager < ManageIQ::Providers::ContainerManager
   include ManageIQ::Providers::Openshift::ContainerManagerMixin
 
-  require_nested :EventCatcher
+  #require_nested :EventCatcher
   require_nested :EventCatcherHawkular
   require_nested :EventParser
   require_nested :MetricsCollectorWorker
