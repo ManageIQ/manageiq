@@ -236,7 +236,14 @@ table.table-hover tbody tr:nth-child(even).no-hover:hover td {
 
 /* summary screen formatting */
 
-table .label {display: table-cell;width: 20% !important; min-width: 200px; font: normal 12px OpenSansSemibold,Arial,Helvetica,sans-serif;cursor: default;color: #333; text-align: left;}
+table .label {
+  display: table-cell;
+  width: 20% !important;
+  min-width: 200px;
+  font: normal 12px OpenSansSemibold,Arial,Helvetica,sans-serif;
+  cursor: default;
+  text-align: left;
+}
 
 table.table.table-selectable tbody tr.selected td {
   background-color: $link-color;

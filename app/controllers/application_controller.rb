@@ -925,6 +925,10 @@ class ApplicationController < ActionController::Base
           celltext = Dictionary.gettext(row[col], :type => :model, :notfound => :titleize)
         when 'approval_state'
           celltext = _(PROV_STATES[row[col]])
+        when "result"
+          new_row[:cells] << {:span => result_span_class(row[col]), :text => row[col].titleize}
+        when "severity"
+          new_row[:cells] << {:span => severity_span_class(row[col]), :text => row[col].titleize}
         when 'state'
           celltext = row[col].titleize
         when 'hardware.bitness'
@@ -937,7 +941,7 @@ class ApplicationController < ActionController::Base
           celltext = format_col_for_display(view, row, col, celltz || tz)
         end
 
-        new_row[:cells] << {:text => celltext}
+        new_row[:cells] << {:text => celltext} if celltext
       end
 
       if @row_button # Show a button in the last col
@@ -949,6 +953,28 @@ class ApplicationController < ActionController::Base
     end
 
     root
+  end
+
+  def result_span_class(value)
+    case value.downcase
+    when "pass"
+      "label label-success"
+    when "fail"
+      "label label-danger"
+    else
+      "label label-primary"
+    end
+  end
+
+  def severity_span_class(value)
+    case value.downcase
+    when "high"
+      "label label-danger"
+    when "medium"
+      "label label-warning"
+    else
+      "label label-primary"
+    end
   end
 
   def calculate_pct_img(val)
