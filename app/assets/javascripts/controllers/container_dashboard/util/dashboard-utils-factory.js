@@ -2,7 +2,7 @@ angular.module('miq.util').factory('dashboardUtilsFactory', function() {
   var createProvidersStatus = function() {
     return {
       title: __("Providers"),
-      count: 0,
+      count: '-',
       notifications: []
     };
   };
@@ -10,7 +10,7 @@ angular.module('miq.util').factory('dashboardUtilsFactory', function() {
     return {
       title: __("Nodes"),
       iconClass: "pficon pficon-container-node",
-      count: 0,
+      count: '-',
       notification: {}
     };
   };
@@ -18,7 +18,7 @@ angular.module('miq.util').factory('dashboardUtilsFactory', function() {
     return {
       title: __("Containers"),
       iconClass: "fa fa-cube",
-      count: 0,
+      count: '-',
       notification: {}
     };
   };
@@ -26,7 +26,7 @@ angular.module('miq.util').factory('dashboardUtilsFactory', function() {
     return {
       title:  __("Registries"),
       iconClass: "pficon pficon-registry",
-      count: 0,
+      count: '-',
       notification: {}
     };
   };
@@ -34,7 +34,7 @@ angular.module('miq.util').factory('dashboardUtilsFactory', function() {
     return {
       title: __("Projects"),
       iconClass: "pficon pficon-project",
-      count: 0,
+      count: '-',
       notification: {}
     };
   };
@@ -42,7 +42,7 @@ angular.module('miq.util').factory('dashboardUtilsFactory', function() {
     return {
       title: __("Pods"),
       iconClass: "fa fa-cubes",
-      count: 0,
+      count: '-',
       notification: {}
     };
   };
@@ -50,7 +50,7 @@ angular.module('miq.util').factory('dashboardUtilsFactory', function() {
     return {
       title: __("Services"),
       iconClass: "pficon pficon-service",
-      count: 0,
+      count: '-',
       notification: {}
     };
   };
@@ -58,7 +58,7 @@ angular.module('miq.util').factory('dashboardUtilsFactory', function() {
     return {
       title: __("Images"),
       iconClass: "pficon pficon-image",
-      count: 0,
+      count: '-',
       notification: {}
     };
   };
@@ -66,7 +66,7 @@ angular.module('miq.util').factory('dashboardUtilsFactory', function() {
     return {
       title: __("Routes"),
       iconClass: "pficon pficon-route",
-      count: 0,
+      count: '-',
       notification: {}
     };
   };
