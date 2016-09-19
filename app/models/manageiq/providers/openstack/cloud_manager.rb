@@ -24,6 +24,7 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
   require_nested :Vm
   require_relative '../storage_manager/cinder_manager'
 
+  include StorageManagerMixin
   include ManageIQ::Providers::Openstack::ManagerMixin
 
   supports :provisioning
