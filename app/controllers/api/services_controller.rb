@@ -44,11 +44,6 @@ module Api
 
     def validate_service_data(data)
       assert_id_not_specified(data, 'service')
-
-      @collection_klasses = {:ext_management_systems  => ExtManagementSystem,
-                             :services                => Service,
-                             :configuration_scripts   => ConfigurationScript,
-                             :orchestration_templates => OrchestrationTemplate}
     end
 
     def validate_service(service)
@@ -61,25 +56,25 @@ module Api
     def fetch_ext_management_system(data)
       orchestration_manager_id = parse_id(data, :orchestration_manager)
       raise BadRequestError, 'Missing ExtManagementSystem identifier id' if orchestration_manager_id.nil?
-      resource_search(orchestration_manager_id, :ext_management_systems, collection_class(:ext_management_systems))
+      resource_search(orchestration_manager_id, :ext_management_systems, ExtManagementSystem)
     end
 
     def fetch_service(data)
       service_id = parse_id(data, :service)
       raise BadRequestError, 'Missing Service identifier id' if service_id.nil?
-      resource_search(service_id, :services, collection_class(:services))
+      resource_search(service_id, :services, Service)
     end
 
     def fetch_orchestration_template(data)
       orchestration_template_id = parse_id(data, :orchestration_template)
       raise BadRequestError, 'Missing OrchestrationTemplate identifier id' if orchestration_template_id.nil?
-      resource_search(orchestration_template_id, :orchestration_templates, collection_class(:orchestration_templates))
+      resource_search(orchestration_template_id, :orchestration_templates, OrchestrationTemplate)
     end
 
     def fetch_configuration_script(data)
       configuration_script_id = parse_id(data, :configuration_script)
       raise BadRequestError, 'Missing ConfigurationScript identifier id' if configuration_script_id.nil?
-      resource_search(configuration_script_id, :configuration_scripts, collection_class(:configuration_scripts))
+      resource_search(configuration_script_id, :configuration_scripts, ConfigurationScript)
     end
 
     def service_ident(svc)
