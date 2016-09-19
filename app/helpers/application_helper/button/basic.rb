@@ -47,10 +47,7 @@ class ApplicationHelper::Button::Basic < Hash
   end
 
   def check_instance_variables
-    Array(self.class.instance_variables_required).each do |variable|
-      return false if instance_variable_get("#{variable}").nil?
-    end
-    true
+    self.class.instance_variables_required.to_a.all? { |variable| !instance_variable_get("#{variable}").nil? }
   end
   private :check_instance_variables
 
