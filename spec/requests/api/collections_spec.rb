@@ -27,12 +27,18 @@ describe "Rest API Collections" do
 
     obj = id.nil? ? klass.first : klass.find(id)
     url = send("#{collection}_url", obj.id)
-    run_post(collection_url, gen_request(:query, [{"id" => obj.id}, {"href" => url}]))
+    attr_list = String(Api::Settings.collections[collection].parsed_by_attrs).split(",")
+    attr_list |= %w(guid) if klass.attribute_method?(:guid)
+    resources = [{"id" => obj.id}, {"href" => url}]
+    attr_list.each { |attr| resources << {attr => obj.public_send(attr)} }
+
+    run_post(collection_url, gen_request(:query, resources))
 
     expect(response).to have_http_status(:ok)
-    expect(response.parsed_body["results"]).to match_array(
-      [a_hash_including("id" => obj.id, "href" => a_string_matching(url)),
-       a_hash_including("id" => obj.id, "href" => a_string_matching(url))])
+    expect(response.parsed_body["results"].size).to eq(resources.size)
+    response.parsed_body["results"].each do |resource|
+      expect(resource).to match(a_hash_including("id" => obj.id, "href" => a_string_matching(url)))
+    end
   end
 
   context "Collections" do
