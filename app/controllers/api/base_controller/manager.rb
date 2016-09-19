@@ -108,12 +108,7 @@ module Api
       end
 
       def json_body_resource
-        resource = @req.json_body["resource"]
-        unless resource
-          resource = @req.json_body.dup
-          resource.delete("action")
-        end
-        resource
+        @req.json_body["resource"] || @req.json_body.except("action")
       end
 
       def update_one_collection(is_subcollection, target, type, id, resource)
