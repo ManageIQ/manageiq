@@ -136,7 +136,7 @@ describe OpsController do
       before do
         MiqDatabase.seed
         MiqRegion.seed
-        EvmSpecHelper.create_guid_miq_server_zone
+        EvmSpecHelper.local_miq_server(:zone => Zone.seed)
       end
 
       it "won't render form buttons after rhn settings submission" do

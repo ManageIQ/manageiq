@@ -1,6 +1,6 @@
 describe MiqServer do
   before do
-    _, @server, = EvmSpecHelper.create_guid_miq_server_zone
+    @server = EvmSpecHelper.local_miq_server(:zone => Zone.seed)
   end
 
   let!(:database) do
