@@ -23,9 +23,12 @@
             = _('Name / Description')
           .col-md-8
             #{@record.name} / #{@record.description}
-            = check_box_tag("display", true, @record.display, :disabled => true)
-            &nbsp;
+        .form-group
+          %label.col-md-2.control-label
             = _('Display in Catalog')
+          .col-md-8
+            &nbsp;
+            = check_box_tag("display", true, @record.display, :disabled => true)
         - if @record.display
           .form-group
             %label.col-md-2.control-label
