@@ -607,10 +607,10 @@
     :collection_actions:
       :get:
       - :name: read
-        :identifier: policy_show_list
+        :identifier: policy_view
       :post:
       - :name: query
-        :identifier: policy_show_list
+        :identifier: policy_view
       - :name: add
         :identifier: policy_new
         :disabled: true
@@ -623,7 +623,7 @@
     :resource_actions:
       :get:
       - :name: read
-        :identifier: policy_show
+        :identifier: policy_view
       :post:
       - :name: edit
         :identifier: policy_edit

@@ -1494,6 +1494,10 @@
     :hidden: true
     :identifier: policy
     :children:
+    - :name: View
+      :description: View Policies
+      :feature_type: view
+      :identifier: policy_view
     - :name: Modify
       :description: Modify Policies
       :feature_type: admin
