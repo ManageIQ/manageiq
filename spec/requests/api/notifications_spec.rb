@@ -4,6 +4,7 @@ describe 'Notifications API' do
   let(:foreign_notification) { FactoryGirl.create(:notification, :initiator => foreign_user) }
   let(:notification_recipient) { notification.notification_recipients.first }
   let(:notification_url) { notifications_url(notification_recipient.id) }
+  let(:foreign_notification_url) { notifications_url(foreign_notification.notification_recipient_ids.first) }
 
   describe 'notification create' do
     it 'is not supported' do
@@ -24,11 +25,53 @@ describe 'Notifications API' do
   end
 
   describe 'notification delete' do
-    it 'is not supported' do
-      api_basic_authorize
+    context 'on resource' do
+      it 'deletes notification using POST' do
+        api_basic_authorize
 
-      run_post(notifications_url, gen_request(:delete, :href => notification_url))
-      expect_bad_request(/Unsupported Action delete/i)
+        run_post(notification_url, gen_request(:delete))
+        expect(response).to have_http_status(:ok)
+        expect_single_action_result(:success => true, :href => :notification_url)
+        expect { notification_recipient.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it 'deletes notification using DELETE' do
+        api_basic_authorize
+
+        run_delete(notification_url)
+        expect(response).to have_http_status(:no_content)
+        expect { notification_recipient.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context 'on collection' do
+      it 'rejects on notification that is not owned by current user' do
+        api_basic_authorize
+
+        run_post(notifications_url, gen_request(:delete, :href => foreign_notification_url))
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it 'deletes single' do
+        api_basic_authorize
+
+        run_post(notifications_url, gen_request(:delete, :href => notification_url))
+        expect(response).to have_http_status(:ok)
+        expect_results_to_match_hash('results', [{'success' => true, 'href' => notification_url}])
+        expect { notification_recipient.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      let(:notification2) { FactoryGirl.create(:notification, :initiator => @user) }
+      let(:notification2_recipient) { notification2.notification_recipients.first }
+      let(:notification2_url) { notifications_url(notification2_recipient.id) }
+
+      it 'deletes multiple' do
+        api_basic_authorize
+        run_post(notifications_url, gen_request(:delete, [{:href => notification_url}, {:href => notification2_url}]))
+        expect(response).to have_http_status(:ok)
+        expect { notification_recipient.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { notification2_recipient.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
     end
   end
 
@@ -37,7 +80,7 @@ describe 'Notifications API' do
     it 'rejects on notification that is not owned by current user' do
       api_basic_authorize
 
-      run_post(notifications_url(foreign_notification.notification_recipient_ids.first), gen_request(:mark_as_seen))
+      run_post(foreign_notification_url, gen_request(:mark_as_seen))
       expect(response).to have_http_status(:not_found)
     end
 
