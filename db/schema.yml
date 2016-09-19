@@ -4771,6 +4771,7 @@ miq_ae_namespaces:
 - ref_type
 - last_import_on
 - source
+- top_level_namespace
 miq_ae_values:
 - id
 - instance_id
