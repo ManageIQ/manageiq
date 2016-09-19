@@ -5137,6 +5137,10 @@
         :description: Suspend VM
         :feature_type: control
         :identifier: vm_suspend
+      - :name: Pause
+        :description: Pause VM
+        :feature_type: control
+        :identifier: vm_pause
       - :name: Reset
         :description: Reset VM
         :feature_type: control
