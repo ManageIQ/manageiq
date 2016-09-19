@@ -26,6 +26,9 @@ class MiqTask < ApplicationRecord
   before_validation :initialize_attributes, :on => :create
 
   virtual_has_one :task_results
+  virtual_attribute :state_or_status, :string, :arel => (lambda do |t|
+    t.grouping(Arel::Nodes::Case.new(t[:state]).when(STATE_FINISHED).then(t[:status]).else(t[:state]))
+  end)
 
   def self.status_ok?(status)
     status.casecmp(STATUS_OK) == 0
@@ -138,21 +141,12 @@ class MiqTask < ApplicationRecord
     update_attributes(:state => STATE_FINISHED)
   end
 
+  def state_or_status
+    state == STATE_FINISHED ? status : state
+  end
+
   def human_status
-    case state
-    when STATE_INITIALIZED then "Initialized"
-    when STATE_QUEUED      then "Queued"
-    when STATE_ACTIVE      then "Running"
-    when STATE_FINISHED
-      case status
-      when STATUS_OK      then "Complete"
-      when STATUS_WARNING then "Finished with Warnings"
-      when STATUS_ERROR   then "Error"
-      when STATUS_TIMEOUT then "Timed Out"
-      else raise _("Unknown status of: %{task_status}") % {:task_status => status.inspect}
-      end
-    else raise _("Unknown state of: %{task_status}") % {:task_status => state.inspect}
-    end
+    self.class.human_status(state_or_status)
   end
 
   def results_ready?
@@ -269,6 +263,20 @@ class MiqTask < ApplicationRecord
       :args        => [ids],
       :zone        => MiqServer.my_zone
     )
+  end
+
+  def self.human_status(state_or_status)
+    case state_or_status
+    when STATE_INITIALIZED then "Initialized"
+    when STATE_QUEUED      then "Queued"
+    when STATE_ACTIVE      then "Running"
+    # STATE_FINISHED:
+    when STATUS_OK         then "Complete"
+    when STATUS_WARNING    then "Finished with Warnings"
+    when STATUS_ERROR      then "Error"
+    when STATUS_TIMEOUT    then "Timed Out"
+    else "Unknown"
+    end
   end
 
   private
