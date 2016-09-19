@@ -5,12 +5,10 @@
   = render :partial => "layouts/flash_msg"
   - if @report && @report.table && @report.table.data.blank?
   - elsif @report
-    #miq_timeline{:style => "height: 500px; border: 1px solid #aaa;"}
-    = render(:partial => "layouts/timeline",
-      :locals  => {:bands => @report.timeline[:bands],
-        :tl_json => @tl_json.to_s.html_safe,
-        :data_action => "timeline_data",
-        :position_time => session[:tl_position]})
+    #chart_placeholder{:style => 'position: relative'}
+    = render(:partial => 'layouts/timeline',
+        :locals         => {:tl_json          =>  @tl_json || {},
+                            :data_action      => "timeline_data"})
     - if @report.filter_summary
       = @report.filter_summary
   - else

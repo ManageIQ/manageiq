@@ -35,22 +35,27 @@ module ReportFormatter
         col = tlfield.last                             # Not a subtable, just grab the field name
       end
       new_event_type = current_event_type = ""
-      mri.table.data.sort_by(&:event_type).each_with_index do |row, _d_idx|
-        mri.rpt_options[:categories].each do |category, options|
-          current_event_type = options[:display_name] if options[:event_groups].include?(row.event_type)
-        end
 
-        tl_event(tl_xml ? tl_xml : nil, row, col)   # Add this row to the tl event xml
-        if new_event_type != current_event_type
-          event = @events.select {|i| i[:name] == current_event_type }
-          unless event.blank?
-            event[0][:data].push(@events_data).flatten
-          else
-            @events.push({:name => current_event_type, :data => [@events_data]})
+      if mri.db == "EventStream" || mri.db == "PolicyEvent"
+        mri.table.data.sort_by(&:event_type).each_with_index do |row, _d_idx|
+          mri.rpt_options[:categories].each do |category, options|
+            current_event_type = options[:display_name] if options[:event_groups].include?(row.event_type)
+            @events.push({:name => options[:display_name], :data => []}) if @events.blank? || @events.select {|i| i[:name] == options[:display_name] }.blank?
           end
-          new_event_type = current_event_type
-          @events_data = []
+
+          tl_event(tl_xml ? tl_xml : nil, row, col)   # Add this row to the tl event xml
+          if new_event_type != current_event_type
+            event = @events.select {|i| i[:name] == current_event_type }
+            event[0][:data].push(@events_data).flatten
+            new_event_type = current_event_type
+            @events_data = []
+          end
         end
+      else
+        mri.table.data.each_with_index do |row, _d_idx|
+          tl_event(tl_xml ? tl_xml : nil, row, col)   # Add this row to the tl event xml
+        end
+        @events.push({:data => [@events_data]})
       end
       #     START of TIMELINE TIMEZONE Code
       mri.extras[:tl_position] ||= format_timezone(Time.now, tz, 'raw') # If position not set, default to now
