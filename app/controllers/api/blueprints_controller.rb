@@ -2,10 +2,7 @@ module Api
   class BlueprintsController < BaseController
     include Subcollections::Tags
 
-    def show
-      @additional_attributes = %w(content)
-      super
-    end
+    before_action :set_additional_attributes, :only => [:show]
 
     def create_resource(_type, _id, data)
       attributes = data.except("bundle")
@@ -32,6 +29,10 @@ module Api
     end
 
     private
+
+    def set_additional_attributes
+      @additional_attributes = %w(content)
+    end
 
     def create_bundle(blueprint, bundle)
       blueprint.create_bundle(deserialize_bundle(bundle))

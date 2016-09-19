@@ -1,9 +1,6 @@
 module Api
   class ServiceDialogsController < BaseController
-    def show
-      @additional_attributes = %w(content) if attribute_selection == "all"
-      super
-    end
+    before_action :set_additional_attributes, :only => [:show]
 
     def refresh_dialog_fields_resource(type, id = nil, data = nil)
       raise BadRequestError, "Must specify an id for Reconfiguring a #{type} resource" unless id
@@ -17,6 +14,10 @@ module Api
     end
 
     private
+
+    def set_additional_attributes
+      @additional_attributes = %w(content) if attribute_selection == "all"
+    end
 
     def refresh_dialog_fields_service_dialog(service_dialog, data)
       data ||= {}

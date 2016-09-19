@@ -5,12 +5,7 @@ module Api
     include Subcollections::Results
     include Subcollections::Schedules
 
-    def show
-      if @req.subcollection == "results" && (@req.s_id || @req.expand?(:resources)) && attribute_selection == "all"
-        @additional_attributes = %w(result_set)
-      end
-      super
-    end
+    before_action :set_additional_attributes, :only => [:show]
 
     def run_resource(_type, id, _data)
       report = MiqReport.find(id)
@@ -46,6 +41,12 @@ module Api
     end
 
     private
+
+    def set_additional_attributes
+      if @req.subcollection == "results" && (@req.s_id || @req.expand?(:resources)) && attribute_selection == "all"
+        @additional_attributes = %w(result_set)
+      end
+    end
 
     def schedule_reports(report, type, id, data)
       desc = "scheduling of report #{report.id}"

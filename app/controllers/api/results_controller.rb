@@ -1,8 +1,11 @@
 module Api
   class ResultsController < BaseController
-    def show
+    before_action :set_additional_attributes, :only => [:show]
+
+    private
+
+    def set_additional_attributes
       @additional_attributes = %w(result_set)
-      super
     end
   end
 end
