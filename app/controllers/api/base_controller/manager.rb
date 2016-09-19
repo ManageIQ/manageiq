@@ -63,7 +63,7 @@ module Api
             patched_attrs[attr] = nil if action == "remove"
           end
         end
-        send(target_resource_method(false, type, "edit"), type, id, patched_attrs)
+        edit_resource(type, id, patched_attrs)
       end
 
       def delete_subcollection_resource(type, id = nil)
