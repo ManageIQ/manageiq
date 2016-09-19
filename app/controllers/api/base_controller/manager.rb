@@ -30,7 +30,7 @@ module Api
       end
 
       def put_resource(type, id)
-        send(target_resource_method(false, type, "edit"), type, id, @req.json_body)
+        edit_resource(type, id, @req.json_body)
       end
 
       #
