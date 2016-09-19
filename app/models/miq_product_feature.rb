@@ -2,6 +2,8 @@ class MiqProductFeature < ApplicationRecord
   acts_as_tree
 
   has_and_belongs_to_many :miq_user_roles, :join_table => :miq_roles_features
+  has_many :miq_product_features_shares
+  has_many :shares, :through => :miq_product_features_shares
 
   validates_presence_of   :identifier
   validates_uniqueness_of :identifier
