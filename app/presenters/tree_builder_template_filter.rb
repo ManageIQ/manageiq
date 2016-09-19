@@ -11,4 +11,8 @@ class TreeBuilderTemplateFilter < TreeBuilderVmsFilter
       :autoload  => false
     )
   end
+
+  def root_options
+    [_("All Templates"), _("All of the Templates that I can see")]
+  end
 end
