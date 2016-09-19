@@ -11,7 +11,8 @@ class ApplicationHelper::Toolbar::MiqTemplateCenter < ApplicationHelper::Toolbar
           'fa fa-refresh fa-lg',
           N_('Refresh relationships and power states for all items related to this Template'),
           N_('Refresh Relationships and Power States'),
-          :confirm => N_("Refresh relationships and power states for all items related to this Template?")),
+          :confirm => N_("Refresh relationships and power states for all items related to this Template?"),
+          :klass => ApplicationHelper::Button::TemplateRefresh),
         button(
           :miq_template_scan,
           'fa fa-search fa-lg',
