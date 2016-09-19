@@ -19,6 +19,9 @@ class ContainerImage < ApplicationRecord
   has_one :openscap_result, :dependent => :destroy
   has_many :openscap_rule_results, :through => :openscap_result
 
+  serialize :exposed_ports, Hash
+  serialize :environment_variables, Hash
+
   # Needed for scanning & tagging action
   delegate :my_zone, :to => :ext_management_system
 
