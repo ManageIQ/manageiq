@@ -17,7 +17,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
 
     # Create the underlying connection according to the version of the oVirt API requested by
     # the caller:
-    connect_method = version == 4 ? :raw_connect_v4 : :raw_connect_v3
+    connect_method = "raw_connect_v#{version}".to_sym
     connection = self.class.public_send(connect_method, server, port, path, username, password, service)
 
     # Copy the API path to the endpoints table:
@@ -30,12 +30,12 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     true
   end
 
-  def supported_auth_types
-    %w(default metrics)
+  def supports_api_version?(version)
+    supported_api_versions.include?(version)
   end
 
-  def supports_authentication?(authtype)
-    supported_auth_types.include?(authtype.to_s)
+  def supported_auth_types
+    %w(default metrics)
   end
 
   def rhevm_service
