@@ -1659,9 +1659,9 @@
       - :name: suspend
         :identifier: vm_suspend
       - :name: shelve
-        :identifier: vm_shelve
+        :identifier: instance_shelve
       - :name: shelve_offload
-        :identifier: vm_shelve_offload
+        :identifier: instance_shelve_offload
       - :name: pause
         :identifier: vm_pause
       - :name: request_console
@@ -1703,9 +1703,9 @@
       - :name: suspend
         :identifier: vm_suspend
       - :name: shelve
-        :identifier: vm_shelve
+        :identifier: instance_shelve
       - :name: shelve_offload
-        :identifier: vm_shelve_offload
+        :identifier: instance_shelve_offload
       - :name: pause
         :identifier: vm_pause
       - :name: request_console
