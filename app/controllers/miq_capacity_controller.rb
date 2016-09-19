@@ -165,7 +165,7 @@ class MiqCapacityController < ApplicationController
   private :planning_wizard_get_vms_records
 
   def planning_wizard_get_vms(filter_type, filter_value)
-    vms = planning_wizard_get_vms_records(filter_type, filter_value)
+    vms = Rbac.filtered(planning_wizard_get_vms_records(filter_type, filter_value))
     vms.each_with_object({}) do |v, h|
       description = v.ext_management_system ? "#{v.ext_management_system.name}:#{v.name}" : v.name
       h[v.id.to_s] = description
