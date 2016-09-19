@@ -1,5 +1,5 @@
 class ApplicationHelper::Button::MiqRequest < ApplicationHelper::Button::GenericFeatureButton
-  needs_record
+  needs :@record
 
   def visible?
     return false if @record.resource_type == "AutomationRequest" &&
