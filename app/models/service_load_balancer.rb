@@ -1,6 +1,9 @@
 class ServiceLoadBalancer < Service
   include ServiceLoadBalancerMixin
-  include ServiceLoadBalancerOptionsMixin
+  include ServiceOrchestrationOptionsMixin
+
+  alias_method :load_balancer_options, :stack_options
+  alias_method :load_balancer_options=, :stack_options=
 
   # read from DB or parse from dialog
   def load_balancer_name
@@ -39,6 +42,10 @@ class ServiceLoadBalancer < Service
 
   def load_balancer
     @load_balancer ||= service_resources.find { |sr| sr.resource.kind_of?(LoadBalancer) }.try(:resource)
+  end
+
+  def build_stack_create_options
+    build_load_balancer_options_from_dialog(get_option(:dialog))
   end
 
   def build_load_balancer_options_from_dialog(dialog_options)
