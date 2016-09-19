@@ -6,6 +6,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       openstack_infra_providers_exist: false,
       provider_id: '',
       zone: '',
+      tenant_mapping_enabled: false,
       hostname: '',
       default_hostname: '',
       amqp_hostname: '',
@@ -72,6 +73,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       miqService.sparkleOn();
       $http.get($scope.formFieldsUrl + emsCommonFormId).success(function(data) {
         $scope.emsCommonModel.zone                            = data.zone;
+        $scope.emsCommonModel.tenant_mapping_enabled          = data.tenant_mapping_enabled;
         $scope.emsCommonModel.emstype_vm                      = data.emstype_vm;
         $scope.emsCommonModel.openstack_infra_providers_exist = data.openstack_infra_providers_exist;
         $scope.emsCommonModel.default_api_port                = '';
@@ -99,6 +101,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.name                            = data.name;
         $scope.emsCommonModel.emstype                         = data.emstype;
         $scope.emsCommonModel.zone                            = data.zone;
+        $scope.emsCommonModel.tenant_mapping_enabled          = data.tenant_mapping_enabled;
         $scope.emsCommonModel.hostname                        = data.hostname;
         $scope.emsCommonModel.default_hostname                = data.default_hostname;
         $scope.emsCommonModel.amqp_hostname                   = data.amqp_hostname;
@@ -307,6 +310,9 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       $scope.emsCommonModel.default_api_port = $scope.getDefaultApiPort($scope.emsCommonModel.emstype);
       $scope.emsCommonModel.event_stream_selection = "ceilometer";
       $scope.emsCommonModel.amqp_security_protocol = 'non-ssl';
+      if ($scope.emsCommonModel.emstype === 'openstack') {
+        $scope.emsCommonModel.tenant_mapping_enabled = false;
+      }
     } else if ($scope.emsCommonModel.emstype === 'scvmm' && $scope.emsCommonModel.default_security_protocol === 'kerberos') {
       $scope.note = $scope.realmNote;
     } else if ($scope.emsCommonModel.emstype === 'rhevm') {

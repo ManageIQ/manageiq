@@ -211,6 +211,7 @@ module Mixins
       render :json => {:name                            => @ems.name,
                        :emstype                         => @ems.emstype,
                        :zone                            => zone,
+                       :tenant_mapping_enabled          => @ems.tenant_mapping_enabled == true,
                        :provider_id                     => @ems.provider_id ? @ems.provider_id : "",
                        :hostname                        => @ems.hostname,
                        :default_hostname                => default_hostname,
@@ -308,12 +309,13 @@ module Mixins
     end
 
     def set_ems_record_vars(ems, mode = nil)
-      ems.name              = params[:name].strip if params[:name]
-      ems.provider_region   = params[:provider_region]
-      ems.api_version       = params[:api_version].strip if params[:api_version]
-      ems.provider_id       = params[:provider_id]
-      ems.zone              = Zone.find_by_name(params[:zone])
-      ems.security_protocol = params[:default_security_protocol].strip if params[:default_security_protocol]
+      ems.name                   = params[:name].strip if params[:name]
+      ems.provider_region        = params[:provider_region]
+      ems.api_version            = params[:api_version].strip if params[:api_version]
+      ems.provider_id            = params[:provider_id]
+      ems.zone                   = Zone.find_by_name(params[:zone])
+      ems.tenant_mapping_enabled = params[:tenant_mapping_enabled] == "on" if ems.class.supports_cloud_tenant_mapping?
+      ems.security_protocol      = params[:default_security_protocol].strip if params[:default_security_protocol]
 
       hostname = params[:default_hostname].strip if params[:default_hostname]
       port = params[:default_api_port].strip if params[:default_api_port]
@@ -478,6 +480,9 @@ module Mixins
         :provider_id           => ems.provider_id,
         :zone                  => ems.zone
       }
+
+      @edit[:current][:tenant_mapping_enabled] = ems.tenant_mapping_enabled if ems.class.supports_cloud_tenant_mapping?
+
       @edit[:new] = {:name                  => params[:name],
                      :provider_region       => params[:provider_region],
                      :hostname              => params[:hostname],
@@ -489,6 +494,8 @@ module Mixins
                      :provider_id           => params[:provider_id],
                      :zone                  => params[:zone]
       }
+
+      @edit[:new][:tenant_mapping_enabled] = params[:tenant_mapping_enabled] if ems.class.supports_cloud_tenant_mapping?
     end
   end
 end
