@@ -22,6 +22,7 @@ module ApplicationController::Tags
   alias_method :service_tag, :tagging_edit
   alias_method :container_tag, :tagging_edit
   alias_method :storage_tag, :tagging_edit
+  alias_method :infra_networking_tag, :tagging_edit
 
   # New classification category chosen on the classify screen
   def classify_new_cat
