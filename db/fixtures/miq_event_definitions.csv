@@ -163,6 +163,7 @@ service_stopped,Service Stopped,Default,service_process
 #
 # Container Operations
 #
+request_containerimage_scan,Container Image Analysis Request,Default,container_operations
 containerimage_scan_complete,Container Image Analysis Complete,Default,container_operations
 containerimage_created,Container Image Discovered,Default,container_operations
 containerimage_compliance_check,Container Image Compliance Check,Default,compliance

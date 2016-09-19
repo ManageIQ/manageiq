@@ -62,7 +62,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
 
     it "#initialize" do
       image = FactoryGirl.create(:container_image, :ext_management_system => @ems)
-      job = @ems.scan_job_create(image.class.name, image.id)
+      job = @ems.raw_scan_job_create(image)
       expect(job).to have_attributes(
         :dispatch_status => "pending",
         :state           => "waiting_to_start",
@@ -101,7 +101,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
         @job.signal(:data, '<summary><syncmetadata></syncmetadata></summary>')
       end
 
-      @job = @image.scan
+      @job = @ems.raw_scan_job_create(@image)
       allow(MiqQueue).to receive(:put_unless_exists) do |args|
         @job.signal(*args[:args])
       end

@@ -189,7 +189,7 @@ describe MiqAction do
     let(:container_image) { FactoryGirl.create(:container_image) }
     let(:container_image_registry) { FactoryGirl.create(:container_image_registry) }
     let(:event) { FactoryGirl.create(:miq_event_definition, :name => "whatever") }
-    let(:event_loop) { FactoryGirl.create(:miq_event_definition, :name => "request_container_image_scan") }
+    let(:event_loop) { FactoryGirl.create(:miq_event_definition, :name => "request_containerimage_scan") }
     let(:action) { FactoryGirl.create(:miq_action, :name => "container_image_analyze") }
 
     it "scans container images" do

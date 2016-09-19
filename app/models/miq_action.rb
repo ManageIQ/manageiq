@@ -713,8 +713,7 @@ class MiqAction < ApplicationRecord
       return
     end
 
-    # This event does not yes exists but better be on the safe side
-    if inputs[:event].name == "request_container_image_scan"
+    if inputs[:event].name == "request_containerimage_scan"
       MiqPolicy.logger.warn("MIQ(#{__method__}): Invoking action [#{action.description}] for event"\
                             " [#{inputs[:event].description}] would cause infinite loop, skipping")
       return
