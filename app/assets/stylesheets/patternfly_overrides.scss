@@ -527,6 +527,15 @@ body#dashboard {
   overflow: auto;
 }
 
+/* error modal */
+
+.error-modal-miq {
+  & .error-icon {
+    font-size: xx-large;
+    margin-top: 16px;
+  }
+}
+
 /* begin toolbar styling (to be moved to the ui-components repo) */
 
 .toolbar-pf .form-group { /*compensates for filter-pf not being implemented */

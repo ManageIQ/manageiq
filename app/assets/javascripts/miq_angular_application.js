@@ -14,6 +14,19 @@ function miqHttpInject(angular_app) {
     $httpProvider.defaults.headers.common['X-CSRF-Token'] = function() {
       return $('meta[name=csrf-token]').attr('content');
     };
+
+    $httpProvider.interceptors.push(['$q', function($q) {
+      return {
+        responseError: function(err) {
+          sendDataWithRx({
+            serverError: err,
+          });
+
+          console.error('Server returned a non-200 response:', err.status, err.statusText, err);
+          return $q.reject(err);
+        },
+      };
+    }]);
   }]);
 
   return angular_app;
