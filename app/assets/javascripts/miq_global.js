@@ -76,5 +76,9 @@ if (! window.ManageIQ) {
       processing: false, // is a request currently being processed?
       queue: [], // a queue of pending requests
     },
+    qe: {
+      autofocus: 0, // counter of pending autofocus fields
+      debounce: 0, // counter of pending debounce calls
+    },
   };
 }
