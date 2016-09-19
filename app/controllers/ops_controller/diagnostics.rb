@@ -35,11 +35,7 @@ module OpsController::Diagnostics
       AuditEvent.success(audit)
       add_flash(_("ManageIQ Appliance restart initiated successfully"))
     end
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page << "miqSparkle(false);"
-    end
+    javascript_flash(:spinner_off => true)
   end
 
   def pm_restart_workers
@@ -108,11 +104,7 @@ module OpsController::Diagnostics
       pfx = @sb[:active_tab] == "diagnostics_collect_logs" ? "logdepot" : "dbbackup"
       id = params[:id] ? params[:id] : "new"
       if @flash_array
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-          page << "miqSparkle(false);"
-        end
+        javascript_flash(:spinner_off => true)
         return
       end
 
@@ -160,11 +152,7 @@ module OpsController::Diagnostics
       else
         add_flash(_("Log Depot Settings were validated"))
       end
-
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg", :locals => {:div_num => ""})
-      end
+      javascript_flash(:spinner_off => true)
     when nil # Reset or first time in
       @in_a_form = true
       replace_right_cell("log_depot_edit")
@@ -440,11 +428,7 @@ module OpsController::Diagnostics
   rescue StandardError => bang
     add_flash(_("Error during Orphaned Records delete for user %{id}: %{message}") % {:id      => params[:userid],
                                                                                       :message => bang.message}, :error)
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page << "miqSparkle(false);"
-    end
+    javascript_flash(:spinner_off => true)
   else
     audit = {:event        => "orphaned_record_delete",
              :message      => _("Orphaned Records deleted for userid [%{number}]") % {:number => params[:userid]},

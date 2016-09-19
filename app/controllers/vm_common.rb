@@ -1123,11 +1123,7 @@ module VmCommon
       add_flash(_("Console access failed: %{message}") % {:message => miq_task.message}, :error)
     end
     if @flash_array
-      render :update do |page|
-        page << javascript_prologue
-        page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
-        page << "miqSparkle(false);"
-      end
+      javascript_flash(:spinner_off => true)
     else # open a window to show a VNC or VMWare console
       url = if miq_task.task_results[:remote_url]
               miq_task.task_results[:remote_url]

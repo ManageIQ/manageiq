@@ -528,22 +528,14 @@ module ApplicationController::Performance
     end
 
     msg ? add_flash(msg, :warning) : add_flash(_("Unknown error has occurred"), :error)
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page << "miqSparkle(false);"
-    end
+    javascript_flash(:spinner_off => true)
   end
 
   # Send error message if record is found and authorized, else return the record
   def perf_menu_record_valid(model, id, resource_name)
     rec = find_by_model_and_id_check_rbac(model, id, resource_name)
     unless @flash_array.blank?
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        page << "miqSparkle(false);"
-      end
+      javascript_flash(:spinner_off => true)
       return false
     end
     rec  # Record is found and authorized
