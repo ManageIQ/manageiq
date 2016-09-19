@@ -549,8 +549,8 @@ describe VirtualFields do
         it "delegates to child (sql)" do
           TestClass.virtual_delegate :col1, :prefix => 'child', :to => :ref2
           TestClass.create(:id => 2, :ref2 => child)
-          tcs = TestClass.all.select(:id, :col1, TestClass.arel_attribute(:child_col1).as("x"))
-          expect(tcs.map(&:x)).to match_array([nil, 2])
+          tcs = TestClass.all.select(:id, :col1, TestClass.arel_attribute(:child_col1).as("child_col1")).to_a
+          expect { expect(tcs.map(&:child_col1)).to match_array([nil, 2]) }.to match_query_limit_of(0)
         end
       end
     end
