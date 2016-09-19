@@ -1,4 +1,16 @@
 describe MiqExpression do
+  context "virtual custom attributes" do
+    let(:virtual_custom_attribute) { "virtual_custom_attribute_attribute" }
+    let(:klass)                    { Vm }
+    let(:vm)                       { FactoryGirl.create(:vm) }
+
+    it "automatically loads virtual custom attributes from MiqExpression on class" do
+      expect do
+        MiqExpression.new("EQUAL" => {"field" => "#{klass}-#{virtual_custom_attribute}", "value" => "foo"})
+      end.to change { vm.respond_to?(virtual_custom_attribute) }.from(false).to(true)
+    end
+  end
+
   describe "#to_sql" do
     it "generates the SQL for an EQUAL expression" do
       sql, * = MiqExpression.new("EQUAL" => {"field" => "Vm-name", "value" => "foo"}).to_sql
