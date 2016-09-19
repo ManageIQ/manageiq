@@ -39,6 +39,12 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     true
   end
 
+  def supported_api_versions
+    with_provider_connection do |connection|
+      connection.supported_api_versions
+    end
+  end
+
   def supports_api_version?(version)
     supported_api_versions.include?(version)
   end
