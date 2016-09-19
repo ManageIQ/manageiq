@@ -30,7 +30,6 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
         EmsRefresh.refresh(@ems.network_manager)
         EmsRefresh.refresh(@ems.cinder_manager)
       end
-      end
 
       assert_with_skips
     end
