@@ -2,7 +2,6 @@ class MiqRegion < ApplicationRecord
   has_many :metrics,        :as => :resource # Destroy will be handled by purger
   has_many :metric_rollups, :as => :resource # Destroy will be handled by purger
   has_many :vim_performance_states, :as => :resource # Destroy will be handled by purger
-  has_many :settings_changes, :as => :resource, :dependent => :destroy
 
   virtual_has_many :database_backups,       :class_name => "DatabaseBackup"
   virtual_has_many :ext_management_systems, :class_name => "ExtManagementSystem"
@@ -25,6 +24,7 @@ class MiqRegion < ApplicationRecord
   include UuidMixin
   include NamingSequenceMixin
   include AggregationMixin
+  include ConfigurationManagementMixin
 
   include MiqPolicyMixin
   include Metric::CiMixin
@@ -67,6 +67,10 @@ class MiqRegion < ApplicationRecord
 
   def miq_servers
     MiqServer.in_region(region_number)
+  end
+
+  def servers_for_settings_reload
+    miq_servers.where(:status => "started")
   end
 
   def active_miq_servers
