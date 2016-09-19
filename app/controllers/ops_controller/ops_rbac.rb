@@ -34,7 +34,10 @@ module OpsController::OpsRbac
   end
 
   def rbac_user_copy
-    user = User.find(from_cid(params[:miq_grid_checks]))
+    # get users id either from gtl check or detail id
+    user_id = params[:miq_grid_checks].present? ? params[:miq_grid_checks] : params[:id]
+    user = User.find(from_cid(user_id))
+    # check if it is allowed to copy the user
     if rbac_user_copy_restriction?(user)
       rbac_restricted_user_copy_flash(user)
     end
