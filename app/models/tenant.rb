@@ -24,6 +24,21 @@ class Tenant < ApplicationRecord
   has_many :service_template_catalogs
   has_many :service_templates
 
+  has_many :cloud_networks
+  has_many :cloud_subnets
+  has_many :cloud_object_store_containers
+  has_many :cloud_object_store_objects
+  has_many :cloud_resource_quotas
+  has_many :cloud_volumes
+  has_many :cloud_volume_backups
+  has_many :cloud_volume_snapshots
+  has_many :floating_ips
+  has_many :network_ports
+  has_many :network_routers
+  has_many :security_groups
+  has_many :tenant_flavors, :dependent => :destroy
+  has_many :flavors, :through => :tenant_flavors
+
   has_many :tenant_quotas
   has_many :miq_groups
   has_many :users, :through => :miq_groups

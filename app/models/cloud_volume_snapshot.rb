@@ -6,6 +6,7 @@ class CloudVolumeSnapshot < ApplicationRecord
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::CloudManager"
   belongs_to :cloud_tenant
+  belongs_to :tenant
   belongs_to :cloud_volume
   has_many   :based_volumes, :class_name => 'CloudVolume'
 

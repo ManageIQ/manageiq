@@ -7,6 +7,7 @@ class CloudSubnet < ApplicationRecord
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::NetworkManager"
   belongs_to :cloud_network
   belongs_to :cloud_tenant
+  belongs_to :tenant
   belongs_to :availability_zone
   belongs_to :network_group
   belongs_to :network_router
