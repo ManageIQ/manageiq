@@ -54,7 +54,7 @@ module Openstack
 
     def assert_with_errors
       expect(OrchestrationStack.count).to          eq orchestration_data.stacks.count
-      expect(OrchestrationStackParameter.count).to eq 0
+      expect(OrchestrationStackParameter.count).to eq 1
       expect(OrchestrationStackResource.count).to  eq 0
       expect(OrchestrationStackOutput.count).to    eq 0
       expect(OrchestrationTemplate.count).to       eq 0
@@ -67,7 +67,7 @@ module Openstack
       # We have broken flavor list, but there is fallback for private flavors using get, which will collect used flavors
       expect(Flavor.count).to              eq 2
 
-      expect(ExtManagementSystem.count).to               eq 2 # Can this be not hardcoded?
+      expect(ExtManagementSystem.count).to               eq 3 # Can this be not hardcoded?
       expect(security_groups_without_defaults.count).to  eq security_groups_count
       expect(firewall_without_defaults.count).to         eq firewall_rules_count
       expect(FloatingIp.count).to                        eq network_data.floating_ips.sum
@@ -187,8 +187,8 @@ module Openstack
     end
 
     def stack_templates_count
-      # we have one template for now
-      1
+      # we have two template for now
+      2
     end
 
     def all_vms_and_stacks
@@ -216,10 +216,11 @@ module Openstack
       # Count only disks that have size bigger that 0
       disks_count = (flavor[:disk] > 0 ? 1 : 0) + (flavor[:ephemeral] > 0 ? 1 : 0) + (flavor[:swap] > 0 ? 1 : 0)
 
-      if with_volumes && vm_or_stack[:__block_devices]
-        disks_count +=
-          vm_or_stack[:__block_devices].count { |d| d[:destination_type] == 'volume' && d[:boot_index] != 0 }
-      end
+      # May need after linkage is done
+      #if with_volumes && vm_or_stack[:__block_devices]
+      #  disks_count +=
+      #    vm_or_stack[:__block_devices].count { |d| d[:destination_type] == 'volume' && d[:boot_index] != 0 }
+      #end
 
       disks_count
     end

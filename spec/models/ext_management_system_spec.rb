@@ -39,6 +39,7 @@ describe ExtManagementSystem do
       "scvmm"                       => "Microsoft System Center VMM",
       "vmwarews"                    => "VMware vCenter",
       "vmware_cloud"                => "VMware vCloud",
+      "vmware_cloud_network"        => "VMware vCloud Network",
       "cinder_"                     => "Cinder ",
     }
   end

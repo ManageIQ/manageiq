@@ -13,6 +13,8 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
       with_cassette(@environment, @ems) do
         EmsRefresh.refresh(@ems)
         EmsRefresh.refresh(@ems.network_manager)
+        EmsRefresh.refresh(@ems.cinder_manager)
+      end
       end
 
       assert_common
@@ -20,16 +22,13 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
   end
 
   context "when configured with skips" do
-    before(:each) do
-      stub_settings(
-        :ems_refresh => {:openstack => {:inventory_ignore => [:cloud_volumes, :cloud_volume_snapshots]}}
-      )
-    end
 
     it "will not parse the ignored items" do
       with_cassette(@environment, @ems) do
         EmsRefresh.refresh(@ems)
         EmsRefresh.refresh(@ems.network_manager)
+        EmsRefresh.refresh(@ems.cinder_manager)
+      end
       end
 
       assert_with_skips
@@ -43,6 +42,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
       with_cassette('kilo_with_errors', @ems) do
         EmsRefresh.refresh(@ems)
         EmsRefresh.refresh(@ems.network_manager)
+        EmsRefresh.refresh(@ems.cinder_manager)
       end
 
       assert_with_errors
