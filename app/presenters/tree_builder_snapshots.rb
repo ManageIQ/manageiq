@@ -3,9 +3,9 @@ class TreeBuilderSnapshots < TreeBuilder
 
   attr_reader :selected_node
 
-  def initialize(name, type, sandbox, build = true, root = nil, selected_node = nil)
-    @record = root
-    @selected_node = selected_node.present? ? id(selected_node) : nil
+  def initialize(name, type, sandbox, build = true, **params)
+    @record = params[:root]
+    @selected_node = params.key?(:selected_node) ? id(params[:selected_node]) : nil
     super(name, type, sandbox, build)
   end
 
@@ -24,7 +24,7 @@ class TreeBuilderSnapshots < TreeBuilder
     [@record.name, @record.name, 'vm', {:cfmeNoClick => true}]
   end
 
-  def x_get_tree_roots(count_only = false, _options)
+  def x_get_tree_roots(count_only = false, _options = {})
     root_kid = @record.snapshots.present? ? [@record.snapshots.find { |x| x.parent_id.nil? }] : []
     open_node("sn-#{to_cid(root_kid.first.id)}") if root_kid.present?
     count_only_or_objects(count_only, root_kid)
