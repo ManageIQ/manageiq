@@ -46,8 +46,7 @@ class MiqDatabase < ApplicationRecord
   def update_repo_name=(repos)
     return unless repos
     hash = {:product => {:update_repo_names => repos.split}}
-    Vmdb::Settings.save!(MiqRegion.my_region, hash)
-    Settings.reload!
+    MiqRegion.my_region.add_settings_for_resource(hash)
   end
 
   def self.seed
