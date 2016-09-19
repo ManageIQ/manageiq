@@ -32,14 +32,15 @@ class GenericObjectDefinition < ApplicationRecord
   end
 
   FEATURES.each do |feature|
-    define_method("defined_property_#{feature}s") do
+    define_method("property_#{feature}s") do
       return errors[:properties] if properties_changed? && !valid?
       properties["#{feature}s".to_sym]
     end
 
     define_method("property_#{feature}_defined?") do |attr|
-      return defined_property_methods.include?(attr.to_s) if feature == 'method'
-      send("defined_property_#{feature}s").try(:key?, attr.to_s)
+      attr = attr.to_s
+      return property_methods.include?(attr) if feature == 'method'
+      send("property_#{feature}s").key?(attr)
     end
   end
 
@@ -53,7 +54,7 @@ class GenericObjectDefinition < ApplicationRecord
   end
 
   def type_cast(attr, value)
-    TYPE_MAP.fetch(defined_property_attributes[attr]).cast(value)
+    TYPE_MAP.fetch(property_attributes[attr]).cast(value)
   end
 
   def properties=(props)
@@ -64,7 +65,7 @@ class GenericObjectDefinition < ApplicationRecord
   private
 
   def get_associations(attr, values)
-    defined_property_associations[attr].constantize.where(:id => values).to_a
+    property_associations[attr].constantize.where(:id => values).to_a
   end
 
   def normalize_property_attributes
