@@ -18,3 +18,6 @@ disk:
   :isArray: true
 transform:
   :type: :SOAP::SOAPString
+profile:
+  :type: :VirtualMachineProfileSpec
+  :isArray: true
