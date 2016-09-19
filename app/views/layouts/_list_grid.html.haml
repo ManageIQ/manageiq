@@ -72,6 +72,9 @@
                                       :title   => cell[:title],
                                       :alt     => cell[:title]}
                 = cell[:text]
+            - elsif cell[:span]
+              %span{:class => "#{cell[:span]}"}
+                = cell[:text]
             - else
               - if cell[:icon]
                 %i{:class => cell[:icon], :title => cell[:title]}
