@@ -1806,7 +1806,7 @@
         :identifier: virtual_template_show
   :arbitration_profiles:
     :description: Arbitration Profiles
-    :identifier: miq_arbitration_profile
+    :identifier: ems_cloud_admin
     :options:
     - :collection
     :verbs: *gpppd
