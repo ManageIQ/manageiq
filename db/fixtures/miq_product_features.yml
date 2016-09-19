@@ -1466,6 +1466,10 @@
     :hidden: true
     :identifier: policy_profile
     :children:
+    - :name: View
+      :description: View Policy Profiles
+      :feature_type: view
+      :identifier: policy_profile_view
     - :name: Modify
       :description: Modify Policy Profiles
       :feature_type: admin

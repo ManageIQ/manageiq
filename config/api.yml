@@ -674,10 +674,10 @@
     :collection_actions:
       :get:
       - :name: read
-        :identifier: profile_show_list
+        :identifier: policy_profile_view
       :post:
       - :name: query
-        :identifier: profile_show_list
+        :identifier: policy_profile_view
       - :name: add
         :identifier: profile_new
         :disabled: true
@@ -690,7 +690,7 @@
     :resource_actions:
       :get:
       - :name: read
-        :identifier: profile_show
+        :identifier: policy_profile_view
       :post:
       - :name: edit
         :identifier: profile_edit
