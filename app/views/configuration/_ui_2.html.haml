@@ -63,14 +63,14 @@
           %fieldset
             %h3
               = _('VM Visibility')
-              .form-group
-                %label.col-md-8.control-label
-                  = _("Visibility of VMs in trees, Warning: May cause performance issues. So better set it to no.")
-                .col-md-3
-                  = check_box_tag("display_vms",
-                                  '1',
-                                  @edit[:new][:display_vms],
-                                  :data => {:on_text => 'Yes', :off_text => 'No'})
+            .form-group
+              %label.col-md-8.control-label
+                = _("Set visibility of VMs in trees. Warning: Showing VMs may cause performance issues. So better set it to no.")
+              .col-md-3
+                = check_box_tag("display_vms",
+                                 '1',
+                                 @edit[:new][:display_vms],
+                                 :data => {:on_text => 'Yes', :off_text => 'No'})
                 :javascript
                   miqInitBootstrapSwitch("display_vms", "#{url}")
       .col-md-12.col-lg-6
