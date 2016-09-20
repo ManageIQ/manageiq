@@ -624,10 +624,10 @@
     :collection_actions:
       :get:
       - :name: read
-        :identifier: policy_show_list
+        :identifier: policy_view
       :post:
       - :name: query
-        :identifier: policy_show_list
+        :identifier: policy_view
       - :name: add
         :identifier: policy_new
         :disabled: true
@@ -640,7 +640,7 @@
     :resource_actions:
       :get:
       - :name: read
-        :identifier: policy_show
+        :identifier: policy_view
       :post:
       - :name: edit
         :identifier: policy_edit
@@ -691,10 +691,10 @@
     :collection_actions:
       :get:
       - :name: read
-        :identifier: profile_show_list
+        :identifier: policy_profile_view
       :post:
       - :name: query
-        :identifier: profile_show_list
+        :identifier: policy_profile_view
       - :name: add
         :identifier: profile_new
         :disabled: true
@@ -707,7 +707,7 @@
     :resource_actions:
       :get:
       - :name: read
-        :identifier: profile_show
+        :identifier: policy_profile_view
       :post:
       - :name: edit
         :identifier: profile_edit
@@ -1676,9 +1676,9 @@
       - :name: suspend
         :identifier: vm_suspend
       - :name: shelve
-        :identifier: vm_shelve
+        :identifier: instance_shelve
       - :name: shelve_offload
-        :identifier: vm_shelve_offload
+        :identifier: instance_shelve_offload
       - :name: pause
         :identifier: vm_pause
       - :name: request_console
@@ -1720,9 +1720,9 @@
       - :name: suspend
         :identifier: vm_suspend
       - :name: shelve
-        :identifier: vm_shelve
+        :identifier: instance_shelve
       - :name: shelve_offload
-        :identifier: vm_shelve_offload
+        :identifier: instance_shelve_offload
       - :name: pause
         :identifier: vm_pause
       - :name: request_console
@@ -1823,7 +1823,7 @@
         :identifier: virtual_template_show
   :arbitration_profiles:
     :description: Arbitration Profiles
-    :identifier: miq_arbitration_profile
+    :identifier: ems_cloud_admin
     :options:
     - :collection
     :verbs: *gpppd
