@@ -77,6 +77,15 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
     raise MiqException::MiqVolumeBackupRestoreError, e.to_s, e.backtrace
   end
 
+  def create_volume_snapshot(options)
+    ManageIQ::Providers::Openstack::CloudManager::CloudVolumeSnapshot.create_volume_snapshot(self, options)
+  end
+
+  def create_volume_snapshot_queue(userid, options)
+    ManageIQ::Providers::Openstack::CloudManager::CloudVolumeSnapshot
+      .create_volume_snapshot_queue(userid, self, options)
+  end
+
   def provider_object(connection)
     connection.volumes.get(ems_ref)
   end
