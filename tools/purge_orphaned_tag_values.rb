@@ -7,8 +7,8 @@ opts = Trollop.options do
   opt :search_window, "Window of records to scan when finding orpahns", :default => 1000
   opt :delete_window, "Window of orphaned records to delete at once",   :default => 50
 end
-Trollop.die :search_window, "must be a number grater than 0" if opts[:search_window] <= 0
-Trollop.die :delete_window, "must be a number grater than 0" if opts[:delete_window] <= 0
+Trollop.die :search_window, "must be a number greater than 0" if opts[:search_window] <= 0
+Trollop.die :delete_window, "must be a number greater than 0" if opts[:delete_window] <= 0
 
 def log(msg)
   $log.info "MIQ(#{__FILE__}) #{msg}"

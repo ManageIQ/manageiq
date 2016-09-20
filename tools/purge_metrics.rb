@@ -16,7 +16,7 @@ Trollop.die :mode,     "must be one of #{MODES.join(", ")}" unless MODES.include
 Trollop.die :realtime, "must be a number with method (e.g. 4.hours)"  unless opts[:realtime].number_with_method?
 Trollop.die :hourly,   "must be a number with method (e.g. 6.months)" unless opts[:hourly].number_with_method?
 Trollop.die :daily,    "must be a number with method (e.g. 6.months)" unless opts[:daily].number_with_method?
-Trollop.die :window,   "must be a number grater than 0" if opts[:window] <= 0
+Trollop.die :window,   "must be a number greater than 0" if opts[:window] <= 0
 
 def log(msg)
   $log.info "MIQ(#{__FILE__}) #{msg}"
