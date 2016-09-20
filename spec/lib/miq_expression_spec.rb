@@ -2183,9 +2183,9 @@ describe MiqExpression do
     end
 
     it "supports sql for model.association-virtualfield (with arel)" do
-      field = "Host.vms.archived"
+      field = "Host.vms-archived"
       expression = {"=" => {"field" => field, "value" => "true"}}
-      expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(false)
+      expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(true)
     end
 
     it "does not supports sql for model.association-virtualfield (no arel)" do
