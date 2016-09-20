@@ -30,15 +30,16 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
     raise MiqException::MiqProvisionError, "A VM with name: [#{dest_name}] already exists" if source.ext_management_system.vms.where(:name => dest_name).any?
 
     clone_options = {
-      :name          => dest_name,
-      :cluster       => dest_cluster,
-      :host          => dest_host,
-      :datastore     => dest_datastore,
-      :folder        => dest_folder,
-      :pool          => dest_resource_pool,
-      :config        => build_config_spec,
-      :customization => build_customization_spec,
-      :transform     => build_transform_spec
+      :name            => dest_name,
+      :cluster         => dest_cluster,
+      :host            => dest_host,
+      :datastore       => dest_datastore,
+      :folder          => dest_folder,
+      :pool            => dest_resource_pool,
+      :storage_profile => dest_storage_profile,
+      :config          => build_config_spec,
+      :customization   => build_customization_spec,
+      :transform       => build_transform_spec
     }
 
     # Determine if we are doing a linked-clone provision
@@ -56,6 +57,11 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
     return resource_pool unless resource_pool.nil?
 
     dest_cluster.try(:default_resource_pool) || dest_host.default_resource_pool
+  end
+
+  def dest_storage_profile
+    storage_profile_id = get_option(:placement_storage_profile)
+    StorageProfile.find_by(:id => storage_profile_id) unless storage_profile_id.nil?
   end
 
   def dest_folder
@@ -111,7 +117,8 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
       vim_clone_options[key] = ci.ems_ref_obj
     end
 
-    vim_clone_options[:datastore] = datastore_ems_ref(clone_options)
+    vim_clone_options[:datastore]       = datastore_ems_ref(clone_options)
+    vim_clone_options[:storage_profile] = build_storage_profile(clone_options[:storage_profile]) unless clone_options[:storage_profile].nil?
 
     task_mor = clone_vm(vim_clone_options)
     _log.info("Provisioning completed for [#{vim_clone_options[:name]}] from source [#{source.name}]") if MiqProvision::CLONE_SYNCHRONOUS
@@ -134,6 +141,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
         csl.disk         = vim_clone_options[:disk]       if vim_clone_options[:disk]
         csl.transform    = vim_clone_options[:transform]  if vim_clone_options[:transform]
         csl.diskMoveType = VimString.new('createNewChildDiskBacking', "VirtualMachineRelocateDiskMoveOptions") if vim_clone_options[:linked_clone] == true
+        csl.profile      = vim_clone_options[:storage_profile] if vim_clone_options[:storage_profile]
       end
     end
 
@@ -177,6 +185,14 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
     case get_option(:disk_format)
     when 'thin'  then VimString.new('sparse', "VirtualMachineRelocateTransformation")
     when 'thick' then VimString.new('flat', "VirtualMachineRelocateTransformation")
+    end
+  end
+
+  def build_storage_profile(storage_profile)
+    VimArray.new('ArrayOfVirtualMachineProfileSpec') do |vm_profile_spec_array|
+      vm_profile_spec_array << VimHash.new('VirtualMachineDefinedProfileSpec') do |vm_profile_spec|
+        vm_profile_spec.profileId = storage_profile.ems_ref
+      end
     end
   end
 end
