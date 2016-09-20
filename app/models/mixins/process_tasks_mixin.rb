@@ -128,6 +128,7 @@ module ProcessTasksMixin
         :ssl      => {:verify => false}
       )
     end
+    private :api_client_connection_for_region
 
     # default: invoked by task, can be overridden
     def task_invoked_by(_options)
