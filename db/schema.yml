@@ -6484,6 +6484,9 @@ system_consoles:
 - user_id
 - created_at
 - updated_at
+- url
+- proxy_pid
+- proxy_status
 system_services:
 - id
 - name
