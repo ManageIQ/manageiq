@@ -597,7 +597,7 @@ class MiqServer < ApplicationRecord
   end
 
   def server_timezone
-    ::Settings.server['timezone'] || "UTC"
+    ::Settings.server.timezone || "UTC"
   end
 
   def tenant_identity
