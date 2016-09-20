@@ -8,7 +8,7 @@
                                'data-save-url'                       => "/#{controller_name}/log_depot_edit/",
                                'data-log-protocol-changed-url'       => "/#{controller_name}/log_protocol_changed/",
                                :novalidate                           => 1}
-  = render :partial => "layouts/flash_msg", :locals => {:div_num => div_num}
+  = render :partial => "layouts/flash_msg"
 
   %h3
     = _("Editing Log Depot Settings for %{class}: %{display}") % {:class   => Dictionary.gettext(@record.class.name,

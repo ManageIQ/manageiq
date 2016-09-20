@@ -87,7 +87,7 @@ module ReportController::Reports
       add_flash(_("Report cannot be deleted if it's being used by one or more Widgets"), :error)
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div_report_list", :partial => "layouts/flash_msg", :locals => {:div_num => "_report_list"})
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     else
       begin
@@ -100,7 +100,7 @@ module ReportController::Reports
                     {:model => ui_lookup(:model => "MiqReport"), :name => rpt_name, :message =>  bang.message}, :error)
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div_report_list", :partial => "layouts/flash_msg", :locals => {:div_num => "_report_list"})
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
       else

@@ -149,7 +149,7 @@ module OpsController::Settings::Ldap
       end
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div_entries", :partial => "layouts/flash_msg", :locals => {:div_num => "entries"})
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     elsif params[:button] == "cancel"
       @ldap_domain = session[:edit][:ldap_domain] if session[:edit] && session[:edit][:ldap_domain]
@@ -209,7 +209,7 @@ module OpsController::Settings::Ldap
           add_flash(_("Hostname is required"), :error)
           render :update do |page|
             page << javascript_prologue
-            page.replace("flash_msg_div_entries", :partial => "layouts/flash_msg", :locals => {:div_num => "entries"})
+            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           end
           return
         else

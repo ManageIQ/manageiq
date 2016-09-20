@@ -2,7 +2,7 @@
   - if x_node.split('-')[0] == "aec" || params[:pressed] || %w(field_select field_accept field_delete).include?(params[:action])
     - if !@in_a_form_fields
       / Show Schema
-      = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_class_fields"}
+      = render :partial => "layouts/flash_msg"
       %h3= _('Schema')
       - if @ae_class.ae_fields.present?
         %table.table.table-striped.table-bordered
@@ -47,7 +47,7 @@
       - obs = {:interval => '.5', :url => url}.to_json
       / Edit Schema
       #form_div
-        = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_class_fields"}
+        = render :partial => "layouts/flash_msg"
         %h3= _('Schema')
         %table.table.table-striped.table-bordered
           %thead

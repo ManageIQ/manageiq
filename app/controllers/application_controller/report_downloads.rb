@@ -64,12 +64,7 @@ module ApplicationController::ReportDownloads
       add_flash(_("Report generation returned: Status [%{status}] Message [%{message}]") % {:status => miq_task.status, :message => miq_task.message}, :error)
       render :update do |page|
         page << javascript_prologue
-        page << "if (miqDomElementExists('flash_msg_div_report_list')){"
-        page.replace("flash_msg_div_report_list", :partial => "layouts/flash_msg",
-                                                  :locals  => {:div_num => "_report_list"})
-        page << "} else {"
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        page << "}"
         page << "miqSparkle(false);"
       end
     else

@@ -361,17 +361,14 @@ class ApplicationController < ActionController::Base
       if @sb[:active_tab] == "diagnostics_database"
         # coming from diagnostics/database tab
         pfx = "dbbackup"
-        flash_div_num = "database"
       end
     else
       if session[:edit] && session[:edit].key?(:pxe_id)
         # add/edit pxe server
         pfx = "pxe"
-        flash_div_num = ""
       else
         # add/edit dbbackup schedule
         pfx = "schedule"
-        flash_div_num = ""
       end
     end
 
@@ -403,7 +400,7 @@ class ApplicationController < ActionController::Base
     @changed = (@edit[:new] != @edit[:current]) if pfx == "pxe"
     render :update do |page|
       page << javascript_prologue
-      page.replace("flash_msg_div#{flash_div_num}", :partial => "layouts/flash_msg", :locals => {:div_num => flash_div_num})
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
     end
   end
 
