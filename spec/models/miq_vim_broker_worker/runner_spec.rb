@@ -175,7 +175,7 @@ describe MiqVimBrokerWorker::Runner do
       @miq_vim_broker = double('miq_vim_broker')
       @vim_handle     = double('vim_handle')
       @vim_broker_worker.instance_variable_set(:@vim_broker_server, @miq_vim_broker)
-      expect(@miq_vim_broker).to receive(:getMiqVim).once.with(@ems.address, *@ems.auth_user_pwd).and_return(@vim_handle)
+      expect(@miq_vim_broker).to receive(:getMiqVim).once.with(@ems.hostname, *@ems.auth_user_pwd).and_return(@vim_handle)
       expect(@vim_handle).to receive(:disconnect).once
       @vim_broker_worker.preload(@ems)
     end
@@ -208,7 +208,7 @@ describe MiqVimBrokerWorker::Runner do
         it "will handle queued Vm updates properly" do
           vm = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems)
           event = {
-            :server       => @ems.address,
+            :server       => @ems.hostname,
             :username     => @ems.authentication_userid,
             :objType      => "VirtualMachine",
             :op           => "update",
@@ -230,7 +230,7 @@ describe MiqVimBrokerWorker::Runner do
         it "will handle queued Host updates properly" do
           host = FactoryGirl.create(:host_with_ref, :ext_management_system => @ems)
           event = {
-            :server       => @ems.address,
+            :server       => @ems.hostname,
             :username     => @ems.authentication_userid,
             :objType      => "HostSystem",
             :op           => "update",
@@ -251,7 +251,7 @@ describe MiqVimBrokerWorker::Runner do
 
         it "will ignore updates to unknown properties" do
           vm = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems)
-          @vim_broker_worker.instance_variable_get(:@queue).enq(:server       => @ems.address,
+          @vim_broker_worker.instance_variable_get(:@queue).enq(:server       => @ems.hostname,
                                                                 :username     => @ems.authentication_userid,
                                                                 :objType      => "VirtualMachine",
                                                                 :op           => "update",
@@ -268,7 +268,7 @@ describe MiqVimBrokerWorker::Runner do
           @vim_broker_worker.instance_variable_set(:@exclude_props, "VirtualMachine" => {"summary.runtime.powerState" => nil})
 
           vm = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems)
-          @vim_broker_worker.instance_variable_get(:@queue).enq(:server       => @ems.address,
+          @vim_broker_worker.instance_variable_get(:@queue).enq(:server       => @ems.hostname,
                                                                 :username     => @ems.authentication_userid,
                                                                 :objType      => "VirtualMachine",
                                                                 :op           => "update",
@@ -301,7 +301,7 @@ describe MiqVimBrokerWorker::Runner do
           vm2  = FactoryGirl.create(:vm_with_ref, :ext_management_system => ems2)
 
           event = {
-            :server       => ems2.address,
+            :server       => ems2.hostname,
             :username     => ems2.authentication_userid,
             :objType      => "VirtualMachine",
             :op           => "update",
@@ -322,7 +322,7 @@ describe MiqVimBrokerWorker::Runner do
 
         it "will reconnect to an EMS" do
           event = {
-            :server   => @ems.address,
+            :server   => @ems.hostname,
             :username => @ems.authentication_userid,
             :op       => "MiqVimRemoved",
             :error    => "Connection timed out",
@@ -338,7 +338,7 @@ describe MiqVimBrokerWorker::Runner do
           ems_2 = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone_2)
 
           event = {
-            :server   => ems_2.address,
+            :server   => ems_2.hostname,
             :username => ems_2.authentication_userid,
             :op       => "MiqVimRemoved",
           }

@@ -8,7 +8,7 @@ class MiqFaultTolerantVim
 
     @erec     = options[:ems]
     auth_type = options[:auth_type] || :ws
-    ip        = options[:ip] || @erec.address
+    ip        = options[:ip] || @erec.hostname
     user      = options[:user] || @erec.authentication_userid(auth_type)
     pass      = options[:pass] || @erec.authentication_password(auth_type)
     @ems      = [ip, user, pass]

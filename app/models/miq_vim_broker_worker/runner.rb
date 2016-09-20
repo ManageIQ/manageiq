@@ -66,7 +66,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
       $log.log_hashes(@exclude_props)
     end
 
-    @ems_ids_for_notify = MiqVimBrokerWorker.emses_to_monitor.each_with_object({}) { |e, h| h[[e.address, e.authentication_userid]] = e.id }
+    @ems_ids_for_notify = MiqVimBrokerWorker.emses_to_monitor.each_with_object({}) { |e, h| h[[e.hostname, e.authentication_userid]] = e.id }
 
     # Set notify method at the class level for new connections, and at the
     #   instance level for existing connections.
@@ -281,7 +281,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
   end
 
   def preload(ems)
-    vim = @vim_broker_server.getMiqVim(ems.address, *ems.auth_user_pwd)
+    vim = @vim_broker_server.getMiqVim(ems.hostname, *ems.auth_user_pwd)
   ensure
     vim.disconnect rescue nil
   end
