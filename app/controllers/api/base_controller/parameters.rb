@@ -100,6 +100,14 @@ module Api
         params['by_tag']
       end
 
+      def search_options
+        params['search_options'].to_s.split(",")
+      end
+
+      def search_option?(what)
+        search_options.map(&:downcase).include?(what.to_s)
+      end
+
       def decorator_selection
         params['decorators'].to_s.split(",")
       end

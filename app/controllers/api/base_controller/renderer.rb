@@ -371,6 +371,7 @@ module Api
       end
 
       def physical_attribute_selection(resource)
+        return [] if resource.kind_of?(Hash)
         physical_attributes = @req.attributes.select { |attr| attr_physical?(resource, attr) }
         physical_attributes.present? ? ID_ATTRS | physical_attributes : []
       end
