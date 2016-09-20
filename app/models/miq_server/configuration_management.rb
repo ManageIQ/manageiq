@@ -1,9 +1,6 @@
 module MiqServer::ConfigurationManagement
   extend ActiveSupport::Concern
-
-  included do
-    has_many :settings_changes, :as => :resource, :dependent => :destroy
-  end
+  include ConfigurationManagementMixin
 
   def get_config(type = "vmdb")
     if is_local?
@@ -15,17 +12,11 @@ module MiqServer::ConfigurationManagement
 
   def set_config(config)
     config = config.config if config.respond_to?(:config)
-    Vmdb::Settings.save!(self, config)
-
-    # Reload the settings immediately for this worker. This is typically a UI
-    #   worker making the change, who will need to see the changes right away.
-    reload_settings
-    # Reload the settings for all workers on the server whether local or remote.
-    enqueue_for_server('reload_settings') if started?
+    add_settings_for_resource(config)
   end
 
-  def reload_settings
-    Vmdb::Settings.reload! if is_local?
+  def servers_for_settings_reload
+    [self]
   end
 
   # Callback from VMDB::Config::Activator#activate when the configuration has
