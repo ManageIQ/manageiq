@@ -1,8 +1,8 @@
-include AutomationSpecHelper
 require 'drb'
 module MiqAeServiceModelSpec
   include MiqAeEngine
   describe MiqAeMethodService::MiqAeServiceVmOrTemplate do
+    include Spec::Support::AutomationHelper
     before do
       vm11
       vm21

@@ -58,7 +58,7 @@ module MiqAeMethodService
       self.body              = body if body
       @persist_state_hash    = ws.persist_state_hash
       @logger                = logger
-      self.class.disable_rbac
+      ws.disable_rbac
       self.class.add(self)
     end
 
