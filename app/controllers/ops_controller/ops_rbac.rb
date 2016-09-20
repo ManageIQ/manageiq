@@ -959,17 +959,17 @@ module OpsController::OpsRbac
   # Set form variables for role edit
   def rbac_user_set_form_vars
     @edit = {}
-    @edit[:user_id] = @record.id if @sb[:typ] != "copy"
+    @edit[:user_id] = @record.id unless @sb[:typ] == "copy"
     @user = @sb[:typ] == "copy" ? @record.dup : @record # Save a shadow copy of the record if record is being copied
     @edit[:new] = {}
     @edit[:current] = {}
     @edit[:key] = "rbac_user_edit__#{@edit[:user_id] || "new"}"
 
     @edit[:new][:name] = @user.name
-    @edit[:new][:userid] = @user.userid
+    @edit[:new][:userid] = @user.userid unless @sb[:typ] == "copy"
     @edit[:new][:email] = @user.email.to_s
-    @edit[:new][:password] = @user.password
-    @edit[:new][:verify] = @user.password
+    @edit[:new][:password] = @user.password unless @sb[:typ] == "copy"
+    @edit[:new][:verify] = @user.password unless @sb[:typ] == "copy"
 
     @edit[:groups] = MiqGroup.non_tenant_groups.sort_by { |g| g.description.downcase }.collect { |g| [g.description, g.id] }
     @edit[:new][:group] = @user.current_group ? @user.current_group.id : nil
