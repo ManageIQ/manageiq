@@ -42,15 +42,16 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   def hourly(rate)
-    case per_time
-    when "hourly"  then rate
-    when "daily"   then rate / 24
-    when "weekly"  then rate / 24 / 7
-    when "monthly" then rate / 24 / 30
-    when "yearly"  then rate / 24 / 365
-    else raise "rate time unit of '#{per_time}' not supported"
-    end
+    hourly_rate = case per_time
+                  when "hourly"  then rate
+                  when "daily"   then rate / 24
+                  when "weekly"  then rate / 24 / 7
+                  when "monthly" then rate / 24 / 30
+                  when "yearly"  then rate / 24 / 365
+                  else raise "rate time unit of '#{per_time}' not supported"
+                  end
 
+    rate_adjustment(hourly_rate)
   end
 
   # Scale the rate in the unit difine by user to the default unit of the metric
