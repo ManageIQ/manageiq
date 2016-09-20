@@ -58,7 +58,7 @@ describe "Providers API" do
       "endpoint"       => {
         "role"     => "default",
         "hostname" => "sample_openshift_multi_end_point.provider.com",
-        "port"     => "8443"
+        "port"     => 8444
       },
       "authentication" => {
         "role"     => "bearer",
@@ -271,6 +271,10 @@ describe "Providers API" do
         connection["endpoint"]["hostname"]
       end
 
+      def port(connection)
+        connection["endpoint"]["port"]
+      end
+
       def token(connection)
         connection["authentication"]["auth_key"]
       end
@@ -292,6 +296,7 @@ describe "Providers API" do
 
       expect(provider.hostname).to eq(hostname(default_connection))
       expect(provider.authentication_token).to eq(token(default_connection))
+      expect(provider.port).to eq(port(default_connection))
       expect(provider.connection_configurations.hawkular.endpoint.hostname).to eq(hostname(hawkular_connection))
       expect(provider.connection_configurations.hawkular.authentication.auth_key).to eq(token(hawkular_connection))
     end
