@@ -119,7 +119,7 @@ module ProcessTasksMixin
       hostname = MiqRegion.find_by_region(region).remote_ws_address
       if hostname.nil?
         $log.error("An error occurred while invoking remote tasks...The remote region [#{region}] does not have a web service address.")
-        return
+        raise "Failed to establish API connection to region #{region}"
       end
 
       ManageIQ::API::Client.new(
