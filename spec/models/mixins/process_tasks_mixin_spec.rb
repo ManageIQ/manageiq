@@ -134,4 +134,75 @@ describe ProcessTasksMixin do
       expect(message.args).to eq([test_options])
     end
   end
+
+  describe ".invoke_api_tasks" do
+    it "raises NotImplementedError when called on a class with no API collection" do
+      expect { test_class.invoke_api_tasks(double("api_client"), {}) }.to raise_error(NotImplementedError)
+    end
+
+    context "with a valid class name" do
+      let(:collection_name) { :test_class_collection }
+      let(:api_connection)    { double("ManageIQ::API::Client connection") }
+      let(:api_collection)    { double("ManageIQ::API::Client collection") }
+
+      before do
+        expect(Api).to receive(:model_to_collection).and_return(collection_name)
+        expect(api_connection).to receive(collection_name).and_return(api_collection)
+      end
+
+      context "when not passed resource ids" do
+        it "calls the action on the collection" do
+          options = {
+            :task => "the_task",
+            :args => {:many => ["arguments"], :go => "here"}
+          }
+          expect(api_collection).to receive(:the_task).with(options[:args])
+
+          test_class.invoke_api_tasks(api_connection, options)
+        end
+
+        it "uses an empty hash for the args if they are not in the options" do
+          options = {
+            :task => "the_task"
+          }
+          expect(api_collection).to receive(:the_task).with({})
+
+          test_class.invoke_api_tasks(api_connection, options)
+        end
+      end
+
+      context "when passed resource ids" do
+        let(:resource0)     { double("resource0", :id => 0) }
+        let(:resource1)     { double("resource1", :id => 1) }
+
+        before do
+          expect(api_collection).to receive(:where).with(:id => 0).and_return([resource0])
+          expect(api_collection).to receive(:where).with(:id => 1).and_return([resource1])
+        end
+
+        it "executes the task on each resource" do
+          options = {
+            :ids  => [0, 1],
+            :task => "the_task",
+            :args => {:some => "args"}
+          }
+          expect(resource0).to receive(:the_task).with(options[:args])
+          expect(resource1).to receive(:the_task).with(options[:args])
+
+          test_class.invoke_api_tasks(api_connection, options)
+        end
+
+        it "uses an empty hash for the args if they are not in the options" do
+          options = {
+            :ids  => [0, 1],
+            :task => "the_task"
+          }
+          expect(resource0).to receive(:the_task).with({})
+          expect(resource1).to receive(:the_task).with({})
+
+          test_class.invoke_api_tasks(api_connection, options)
+        end
+      end
+    end
+  end
 end
