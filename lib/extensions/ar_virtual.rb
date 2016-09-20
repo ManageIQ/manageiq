@@ -150,7 +150,7 @@ module VirtualDelegates
           "end"
         ].join ';'
       else
-        exception = %(raise DelegationError, "#{self}##{method_name} delegated to #{to}.#{method}, but #{to} is nil: \#{self.inspect}")
+        exception = %(raise Module::DelegationError, "#{self}##{method_name} delegated to #{to}.#{method}, but #{to} is nil: \#{self.inspect}")
 
         method_def = [
           "def #{method_name}(#{definition})",
