@@ -54,7 +54,7 @@ module Openstack
 
     def assert_with_errors
       expect(OrchestrationStack.count).to          eq orchestration_data.stacks.count
-      expect(OrchestrationStackParameter.count).to eq 1
+      expect(OrchestrationStackParameter.count).to eq 0
       expect(OrchestrationStackResource.count).to  eq 0
       expect(OrchestrationStackOutput.count).to    eq 0
       expect(OrchestrationTemplate.count).to       eq 0
@@ -115,7 +115,6 @@ module Openstack
       assert_routers
       assert_specific_routers
       assert_specific_volumes
-      assert_specific_directories
       assert_specific_templates
       assert_specific_stacks
       assert_specific_vms
