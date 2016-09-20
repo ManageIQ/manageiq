@@ -79,4 +79,33 @@ describe ManageIQ::Providers::Redhat::InfraManager::RefreshParser do
       ])
     end
   end
+
+  context "#extract_host_os_name" do
+    it "should extract the host OS name from os element" do
+      host_inv = {
+        :type => "some_os_type",
+        :os   => {
+          :type => "expected_os_type"
+        }
+      }
+      result = ManageIQ::Providers::Redhat::InfraManager::RefreshParser.extract_host_os_name(host_inv)
+      expect(result).to eq("expected_os_type")
+    end
+
+    it "should extract the host OS name from type element" do
+      host_inv = {
+        :type => "some_os_type",
+      }
+      result = ManageIQ::Providers::Redhat::InfraManager::RefreshParser.extract_host_os_name(host_inv)
+      expect(result).to eq("some_os_type")
+    end
+
+    it "should call #extract_host_os_name as part of host OS parsing" do
+      host_inv = {
+        :type => "some_os_type",
+      }
+      expect(ManageIQ::Providers::Redhat::InfraManager::RefreshParser).to receive(:extract_host_os_name)
+      ManageIQ::Providers::Redhat::InfraManager::RefreshParser.host_inv_to_os_hash(host_inv, "")
+    end
+  end
 end

@@ -354,14 +354,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
 
   def self.extract_host_os_name(host_inv)
     host_os = host_inv[:os]
-    name = host_os && host_os[:type]
-    if name
-      os_full_version = extract_host_os_full_version(host_os)
-      name = "#{name} - #{os_full_version}" if os_full_version
-    else
-      name = host_inv[:type]
-    end
-    name
+    host_os && host_os[:type] || host_inv[:type]
   end
 
   def self.vm_inv_to_hashes(inv, _storage_inv, storage_uids, cluster_uids, host_uids, lan_uids)
