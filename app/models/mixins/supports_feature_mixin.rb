@@ -84,15 +84,43 @@ module SupportsFeatureMixin
     :terminate                => 'Terminate a VM'
   }.freeze
 
-  # Whenever this mixin is included we define all features as unsupported by default.
-  # This way we can query for every feature
   included do
     QUERYABLE_FEATURES.keys.each do |feature|
-      supports_not(feature)
+      method_name = "supports_#{feature}?"
+
+      # defines the method on the instance
+      define_method(method_name) do
+        supports?(feature)
+      end
+
+      # defines the method on the class
+      define_singleton_method(method_name) do
+        supports?(feature)
+      end
     end
   end
 
   class UnknownFeatureError < StandardError; end
+
+  class FeatureDefinition
+    def initialize(supported: false, block: nil, unsupported_reason: nil)
+      @supported = supported
+      @block = block
+      @unsupported_reason = unsupported_reason
+    end
+
+    def supported?
+      @supported
+    end
+
+    def unsupported_reason
+      SupportsFeatureMixin.reason_or_default(@unsupported_reason) unless supported?
+    end
+
+    def block
+      @block
+    end
+  end
 
   def self.guard_queryable_feature(feature)
     unless QUERYABLE_FEATURES.key?(feature.to_sym)
@@ -100,7 +128,7 @@ module SupportsFeatureMixin
     end
   end
 
-  def self.reason_or_default(reason)
+  def self.reason_or_default(reason = nil)
     reason.present? ? reason : _("Feature not available/supported")
   end
 
@@ -108,14 +136,25 @@ module SupportsFeatureMixin
   def unsupported_reason(feature)
     SupportsFeatureMixin.guard_queryable_feature(feature)
     feature = feature.to_sym
-    public_send("supports_#{feature}?") unless unsupported.key?(feature)
+    supports?(feature) unless unsupported.key?(feature)
     unsupported[feature]
   end
 
   # query the instance if the feature is supported or not
   def supports?(feature)
     SupportsFeatureMixin.guard_queryable_feature(feature)
-    public_send("supports_#{feature}?")
+
+    feature = feature.to_sym
+    feature_definition = self.class.feature_definition_for(feature)
+    if feature_definition.supported?
+      unsupported.delete(feature)
+      if feature_definition.block
+        instance_eval(&feature_definition.block)
+      end
+    else
+      unsupported_reason_add(feature, feature_definition.unsupported_reason)
+    end
+    !unsupported.key?(feature)
   end
 
   # query the instance if a feature is generally known
@@ -141,28 +180,26 @@ module SupportsFeatureMixin
     # This is the DSL used a class level to define what is supported
     def supports(feature, &block)
       SupportsFeatureMixin.guard_queryable_feature(feature)
-      define_supports_feature_methods(feature, &block)
+      supported_feature_definitions[feature.to_sym] = FeatureDefinition.new(supported: true, block: block)
     end
 
     # supports_not does not take a block, because its never supported
     # and not conditionally supported
     def supports_not(feature, reason: nil)
       SupportsFeatureMixin.guard_queryable_feature(feature)
-      define_supports_feature_methods(feature, :is_supported => false, :reason => reason)
+      supported_feature_definitions[feature.to_sym] = FeatureDefinition.new(unsupported_reason: reason)
     end
 
     # query the class if the feature is supported or not
     def supports?(feature)
       SupportsFeatureMixin.guard_queryable_feature(feature)
-      public_send("supports_#{feature}?")
+      feature_definition_for(feature).supported?
     end
 
     # query the class for the reason why something is unsupported
     def unsupported_reason(feature)
       SupportsFeatureMixin.guard_queryable_feature(feature)
-      feature = feature.to_sym
-      public_send("supports_#{feature}?") unless unsupported.key?(feature)
-      unsupported[feature]
+      feature_definition_for(feature).unsupported_reason
     end
 
     # query the class if a feature is generally known
@@ -170,43 +207,23 @@ module SupportsFeatureMixin
       SupportsFeatureMixin::QUERYABLE_FEATURES.key?(feature.to_sym)
     end
 
+    def feature_definition_for(feature)
+      feature = feature.to_sym
+      feature_definition = nil
+      ancestors.detect do |ancestor|
+        feature_definition = ancestor.try(:supported_feature_definition, feature)
+      end
+      feature_definition || FeatureDefinition.new
+    end
+
+    def supported_feature_definition(feature)
+      supported_feature_definitions[feature]
+    end
+
     private
 
-    def unsupported
-      # This is a class variable and it might be modified during runtime
-      # because we dont eager load all classes at boot time, so it needs to be thread safe
-      @unsupported ||= Concurrent::Hash.new
-    end
-
-    # use this for making a class not support a feature
-    def unsupported_reason_add(feature, reason = nil)
-      SupportsFeatureMixin.guard_queryable_feature(feature)
-      feature = feature.to_sym
-      unsupported[feature] = SupportsFeatureMixin.reason_or_default(reason)
-    end
-
-    def define_supports_feature_methods(feature, is_supported: true, reason: nil, &block)
-      method_name = "supports_#{feature}?"
-      feature = feature.to_sym
-
-      # defines the method on the instance
-      define_method(method_name) do
-        unsupported.delete(feature)
-        if block_given?
-          instance_eval(&block)
-        else
-          unsupported_reason_add(feature, reason) unless is_supported
-        end
-        !unsupported.key?(feature)
-      end
-
-      # defines the method on the class
-      define_singleton_method(method_name) do
-        unsupported.delete(feature)
-        # TODO: durandom - make reason evaluate in class context, to e.g. include the name of a subclass (.to_proc?)
-        unsupported_reason_add(feature, reason) unless is_supported
-        !unsupported.key?(feature)
-      end
+    def supported_feature_definitions
+      @supported_feature_definitions ||= Concurrent::Hash.new
     end
   end
 end
