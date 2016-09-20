@@ -92,24 +92,25 @@ module ProcessTasksMixin
     end
 
     def invoke_api_tasks(api_client, remote_options)
-      collection = Api.model_to_collection(name)
-      unless collection
+      collection_name = Api.model_to_collection(name)
+      unless collection_name
         _log.error("No API entpoint found for class #{name}")
         raise NotImplementedError
       end
 
-      action = action_for_task(remote_options[:task])
-      post_args = remote_options[:args]
+      collection = api_client.send(collection_name)
+      action     = action_for_task(remote_options[:task])
+      post_args  = remote_options[:args]
 
       if remote_options[:ids].present?
         resource_ids.each do |id|
-          obj = api_client.send(collection).search(:filter => ["id=#{id}"]).first
-          _log.info("Invoking task #{action} on collection #{collection}, object #{obj.id}, with args #{post_args}")
-          # obj.send(action_for_task(action, post_args))
+          obj = collection.search(:filter => ["id=#{id}"]).first
+          _log.info("Invoking task #{action} on collection #{collection_name}, object #{obj.id}, with args #{post_args}")
+          obj.send(action_for_task(action, post_args))
         end
       else
-        _log.info("Invoking task #{action} on collection #{collection}, with args #{post_args}")
-        # api_client.send(collection).send(action, post_args)
+        _log.info("Invoking task #{action} on collection #{collection_name}, with args #{post_args}")
+        collection.send(action, post_args)
       end
     end
 
