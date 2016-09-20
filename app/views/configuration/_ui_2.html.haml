@@ -1,3 +1,4 @@
+- url = url_for(:action => "view_selected")
 = render :partial => "layouts/flash_msg"
 
 #tab_div
@@ -59,6 +60,19 @@
                   = ui_lookup(:tables => table_view_name)
                 .col-md-8
                   %ul.list-inline= render_view_buttons(resource, @edit[:new][:views][resource])
+          %fieldset
+            %h3
+              = _('VM Visibility')
+              .form-group
+                %label.col-md-8.control-label
+                  = _("Visibility of VMs in trees, Warning: May cause performance issues. So better set it to no.")
+                .col-md-3
+                  = check_box_tag("display_vms",
+                                  '1',
+                                  @edit[:new][:display_vms],
+                                  :data => {:on_text => 'Yes', :off_text => 'No'})
+                :javascript
+                  miqInitBootstrapSwitch("display_vms", "#{url}")
       .col-md-12.col-lg-6
         - if has_any_role?(%w(ems_middleware_show_list middleware_server_show_list middleware_deployment_show_list middleware_datasource_show_list middleware_domain_show_list middleware_server_group_show_list middleware_messaging_show_list))
           %fieldset

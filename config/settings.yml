@@ -1186,6 +1186,8 @@
     :purge_window_size: 1000
 :ui:
   :mark_translated_strings: false
+  :tree:
+    :display_vms: false
 :webservices:
   :consume_protocol: https
   :contactwith: ipaddress
