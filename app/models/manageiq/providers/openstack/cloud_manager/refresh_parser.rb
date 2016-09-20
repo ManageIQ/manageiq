@@ -66,7 +66,9 @@ module ManageIQ::Providers
       # get_hosts
       get_images
       get_servers
-      get_object_store
+
+      # TODO: remove by swift spec test 
+      #get_object_store
       get_cloud_services
 
       $fog_log.info("#{log_header}...Complete")

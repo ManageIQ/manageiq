@@ -1,6 +1,4 @@
 #
-# TODO: (hsong) 
-#
 module ManageIQ::Providers
   class StorageManager::CinderManager::Refresher < ManageIQ::Providers::BaseManager::Refresher
     include ::EmsRefresh::Refreshers::EmsRefresherMixin

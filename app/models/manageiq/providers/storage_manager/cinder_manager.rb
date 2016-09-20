@@ -48,7 +48,7 @@ class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::
   end
 
   def self.ems_type
-    @ems_type ||= "cinder_".freeze
+    @ems_type ||= "cinder".freeze
   end
 
   def self.description
