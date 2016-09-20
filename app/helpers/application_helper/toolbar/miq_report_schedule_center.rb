@@ -21,7 +21,7 @@ class ApplicationHelper::Toolbar::MiqReportScheduleCenter < ApplicationHelper::T
         separator,
         button(
           :miq_report_schedule_run_now,
-          'fa fa-cog fa-lg',
+          'fa fa-play-circle-o fa-lg',
           t = N_('Queue up this Schedule to run now'),
           t),
       ]

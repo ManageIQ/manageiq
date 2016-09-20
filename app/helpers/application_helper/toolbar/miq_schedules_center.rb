@@ -47,7 +47,7 @@ class ApplicationHelper::Toolbar::MiqSchedulesCenter < ApplicationHelper::Toolba
         separator,
         button(
           :schedule_run_now,
-          'fa fa-cog fa-lg',
+          'fa fa-play-circle-o fa-lg',
           t = N_('Queue up selected Schedules to run now'),
           t,
           :url_parms => "main_div",
