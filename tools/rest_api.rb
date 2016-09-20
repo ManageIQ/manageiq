@@ -24,14 +24,15 @@ class RestApi
 
   class Cli
     METHODS = {
-      "get"    => "get",
-      "put"    => "put",
-      "post"   => "post",
-      "patch"  => "patch",
-      "edit"   => "post",
-      "create" => "post",
-      "update" => "post",
-      "delete" => "delete",
+      "get"     => "get",
+      "put"     => "put",
+      "post"    => "post",
+      "patch"   => "patch",
+      "edit"    => "post",
+      "create"  => "post",
+      "update"  => "post",
+      "delete"  => "delete",
+      "options" => "options",
     }.freeze
 
     SEP       = ("_" * 60).freeze
@@ -247,8 +248,7 @@ class RestApi
       end
 
       begin
-        response = conn.send(method) do |req|
-          req.url path
+        response = conn.run_request(method.to_sym, path, nil, nil) do |req|
           req.headers[:content_type]  = CTYPE
           req.headers[:accept]        = CTYPE
           req.headers['X-MIQ-Group']  = opts[:group] unless opts[:group].empty?
