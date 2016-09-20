@@ -58,6 +58,7 @@ module Openstack
       expect(OrchestrationStackResource.count).to  eq 0
       expect(OrchestrationStackOutput.count).to    eq 0
       expect(OrchestrationTemplate.count).to       eq 0
+      expect(CloudObjectStoreContainer.count).to   eq storage_data.directories.count
       expect(CloudObjectStoreObject.count).to      eq 0
       expect(CloudResourceQuota.count).to          eq 0
       expect(AuthPrivateKey.count).to              eq 0
@@ -123,6 +124,7 @@ module Openstack
       # Assert table counts as last, just for sure. First we compare Hashes of data, so we see the diffs
       assert_table_counts
       assert_table_counts_orchestration
+      assert_table_counts_storage
     end
 
     def volumes_count
