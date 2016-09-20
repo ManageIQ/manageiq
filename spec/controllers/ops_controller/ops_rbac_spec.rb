@@ -198,8 +198,7 @@ describe OpsController do
                                          :use_config_for_attributes => "on"
                                         )
         controller.send(:tenant_set_record_vars, @tenant)
-
-        stub_server_settings(:server, :company => "Settings Company Name")
+        stub_settings(:server => {:company => "Settings Company Name"})
         expect(@tenant.name).to eq "Settings Company Name"
       end
 

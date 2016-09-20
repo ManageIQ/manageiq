@@ -162,7 +162,7 @@ describe Tenant do
 
     context "for root_tenants" do
       it "reads settings" do
-        stub_server_settings(:server, :company => "settings")
+        stub_settings(:server => {:company => "settings"})
         expect(root_tenant.name).to eq("settings")
       end
 
@@ -200,13 +200,13 @@ describe Tenant do
     end
 
     it "has no logo for root_tenant" do
-      stub_server_settings(:server, {})
+      stub_settings(:server => {})
       expect(root_tenant.logo.url).to match(/missing/)
     end
 
     context "with server configurations" do
       it "uses configurations value for root_tenant" do
-        stub_server_settings(:server, :custom_logo => true)
+        stub_settings(:server => {:custom_logo => true})
         expect(root_tenant.logo.url).to eq("/uploads/custom_logo.png")
       end
 
@@ -248,7 +248,7 @@ describe Tenant do
 
       context "#with custom_logo configuration" do
         it "knows there is a logo from configuration" do
-          stub_server_settings(:server, :custom_logo => true)
+          stub_settings(:server => {:custom_logo => true})
           expect(root_tenant).to be_logo
         end
 
@@ -312,7 +312,7 @@ describe Tenant do
 
     context "with custom login logo configuration" do
       it "has custom login logo" do
-        stub_server_settings(:server, :custom_login_logo => true)
+        stub_settings(:server => {:custom_login_logo => true})
         expect(root_tenant.login_logo.url).to match(/custom_login_logo.png/)
       end
     end
@@ -340,7 +340,7 @@ describe Tenant do
 
   context "#validate_only_one_root" do
     it "allows child tenants" do
-      stub_server_settings(:server, {})
+      stub_settings(:server => {})
       root_tenant.children.create!
     end
 
@@ -829,7 +829,7 @@ describe Tenant do
 
   describe ".tenant_and_project_names" do
     before do
-      stub_server_settings(:server, :company => "root")
+      stub_settings(:server => {:company => "root"})
     end
 
     # root
