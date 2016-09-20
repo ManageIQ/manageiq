@@ -56,7 +56,7 @@ RSpec.describe "Blueprints API" do
         :service_catalog      => {},
         :service_dialog       => {},
         :automate_entrypoints => {},
-        :ChartDataModel       => {}
+        :chart_data_model     => {}
       }
 
       run_post(blueprints_url, :name => "foo", :description => "bar", :ui_properties => ui_properties)
@@ -70,7 +70,7 @@ RSpec.describe "Blueprints API" do
               "service_catalog"      => {},
               "service_dialog"       => {},
               "automate_entrypoints" => {},
-              "ChartDataModel"       => {}
+              "chart_data_model"     => {}
             }
           )
         ]
@@ -115,7 +115,7 @@ RSpec.describe "Blueprints API" do
         :service_catalog      => {},
         :service_dialog       => {},
         :automate_entrypoints => {},
-        :ChartDataModel       => {}
+        :chart_data_model     => {}
       }
 
       run_post(
@@ -250,7 +250,6 @@ RSpec.describe "Blueprints API" do
     it "publishes a single blueprint" do
       pending("update to Blueprint#publish")
       blueprint = FactoryGirl.create(:blueprint)
-
       api_basic_authorize action_identifier(:blueprints, :publish)
 
       run_post(blueprints_url(blueprint.id), :action => "publish")

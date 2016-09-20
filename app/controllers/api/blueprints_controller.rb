@@ -5,7 +5,7 @@ module Api
     before_action :set_additional_attributes, :only => [:show]
 
     def create_resource(_type, _id, data)
-      raise BadRequestError unless data['ui_properties']
+      raise BadRequestError, 'Failed to create Blueprint - ui_properties cannot be empty' unless data['ui_properties']
       validate_ui_properties(data['ui_properties'])
       Blueprint.create!(data)
     end
@@ -26,14 +26,16 @@ module Api
     private
 
     def validate_ui_properties(ui_properties)
-      raise BadRequestError unless ui_properties.key?('service_catalog') &&
-                                   ui_properties.key?('service_dialog') &&
-                                   ui_properties.key?('automate_entrypoints') && ui_properties.key?('ChartDataModel')
+      unless ui_properties.key?('service_catalog') && ui_properties.key?('service_dialog') &&
+             ui_properties.key?('automate_entrypoints') && ui_properties.key?('chart_data_model')
+        raise BadRequestError,
+              'Failed to create Blueprint - ' \
+              'ui_properties must include service_catalog, service_dialog, automate_entrypoints, and chart_data_model'
+      end
     end
 
     def set_additional_attributes
       @additional_attributes = %w(content)
     end
-
   end
 end
