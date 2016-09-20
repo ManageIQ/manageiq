@@ -1679,7 +1679,7 @@ Datasources\" href=\"/ems_middleware/#{ems.id}?display=middleware_datasources\">
   end
 
   describe "#x_gtl_view_tb_render?" do
-    class TestClass
+    class XGtlViewTbRenderTestClass
       include ApplicationHelper
 
       def initialize(record, explorer, layout)
@@ -1689,7 +1689,7 @@ Datasources\" href=\"/ems_middleware/#{ems.id}?display=middleware_datasources\">
       end
     end
 
-    let(:subject) { TestClass.new(record, explorer, layout) }
+    let(:subject) { XGtlViewTbRenderTestClass.new(record, explorer, layout) }
 
     context "when record is nil" do
       let(:record) { nil }
