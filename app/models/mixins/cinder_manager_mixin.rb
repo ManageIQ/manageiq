@@ -1,4 +1,4 @@
-module ManageIQ::Providers::StorageManager::StorageManagerMixin
+module CinderManagerMixin
   extend ActiveSupport::Concern
 
   included do
