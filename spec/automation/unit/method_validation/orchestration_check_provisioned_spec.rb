@@ -50,11 +50,14 @@ describe "Orchestration check_provisioned Method Validation" do
   end
 
   it "waits the refresh to complete" do
+    allow_any_instance_of(ServiceOrchestration)
+      .to receive(:orchestration_stack) { FactoryGirl.build(:orchestration_stack_amazon) }
     expect(ws_with_refresh_started.root['ae_result']).to eq("retry")
   end
 
   it "completes check_provisioned step when refresh is done" do
-    ems_amazon.update_attributes(:last_refresh_date => Time.now + 100)
+    allow_any_instance_of(ServiceOrchestration)
+      .to receive(:orchestration_stack) { FactoryGirl.create(:orchestration_stack_amazon, :status => "success") }
     expect(ws_with_refresh_started.root['ae_result']).to eq(deploy_result)
   end
 end
