@@ -239,6 +239,13 @@ module MiqServer::RoleManagement
         elsif delta > 0
           delta.times do
             if inactive.length > 0
+              # We need to sort by:
+              #   * priority (some roles have 'affinity' to run on a specific server)
+              #   * by the number of active roles on a server
+              inactive = inactive.sort_by do |server, priority|
+                [priority, server.reload.active_roles.size]
+              end
+
               s, p = inactive.shift
               s.activate_roles(role_name)
               active << [s, p]
@@ -249,6 +256,12 @@ module MiqServer::RoleManagement
 
         active.each do |s, p|
           if (inactive.length > 0) && (p > inactive.first.last)
+
+            # Sort again by priority, then active roles
+            inactive = inactive.sort_by do |server, priority|
+              [priority, server.reload.active_roles.size]
+            end
+
             s2, p2 = inactive.shift
             _log.info("Migrating Role <#{role_name}> Active on Server <#{s.name}> with Priority <#{p}> to Server <#{s2.name}> with Priority <#{p2}>")
             s.deactivate_roles(role_name)
