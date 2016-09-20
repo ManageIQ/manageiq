@@ -194,7 +194,6 @@ class MiqWorker < ApplicationRecord
         classes.each do |c|
           section = section[c]
           raise _("Missing config section %{section_name}") % {:section_name => c} if section.nil?
-          #byebug_term if section.nil?
           defaults = section[:defaults]
           settings.merge!(defaults) unless defaults.nil?
         end

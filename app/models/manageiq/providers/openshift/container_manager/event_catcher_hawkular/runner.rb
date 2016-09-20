@@ -38,7 +38,6 @@ class ManageIQ::Providers::Openshift::ContainerManager::EventCatcherHawkular::Ru
     event_monitor_handle.start
     event_monitor_handle.each_batch do |events|
       event_monitor_running
-      #byebug_term
       events.each do |e|
         e.tags = {"miq.event_type" => "hawkular_event", "miq.resource_type" => "MiddlewareServer"}
       end
@@ -58,7 +57,6 @@ class ManageIQ::Providers::Openshift::ContainerManager::EventCatcherHawkular::Ru
   def process_event(event)
     $mw_log.debug "Processing Event #{event}"
     event_hash = event_to_hash(event, @cfg[:ems_id])
-    #byebug_term
 
     if blacklist?(event_hash[:event_type])
       $mw_log.debug "#{log_prefix} Filtering blacklisted event [#{event}]"
@@ -86,7 +84,6 @@ class ManageIQ::Providers::Openshift::ContainerManager::EventCatcherHawkular::Ru
   end
 
   def event_to_hash(event, ems_id = nil)
-    #byebug_term
     event.event_type = event.tags[TAG_EVENT_TYPE]
     if event.context
       event.message        = event.context['message'] # optional, prefer context message if provided

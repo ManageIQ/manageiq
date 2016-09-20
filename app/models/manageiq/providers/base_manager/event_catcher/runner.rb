@@ -161,7 +161,6 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
 
     tid = Thread.new do
       begin
-        #byebug_term
         monitor_events
       rescue EventCatcherHandledException
         Thread.exit

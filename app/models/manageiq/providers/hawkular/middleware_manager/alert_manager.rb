@@ -7,7 +7,6 @@ module ManageIQ::Providers
     end
 
     def process_alert(operation, miq_alert)
-      #byebug_term
       group_trigger = convert_to_group_trigger(miq_alert)
       group_conditions = convert_to_group_conditions(miq_alert)
       case operation

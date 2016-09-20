@@ -32,7 +32,6 @@ class ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Stream
 
     #new_events = @alerts_client.list_events("startTime" => @start_time, "tags" => "miq.event_type|*", "thin" => true)
     new_events = @alerts_client.list_events("startTime" => @start_time, "thin" => true)
-    #byebug_term unless new_events.empty?
     @start_time = new_events.max_by(&:ctime).ctime + 1 unless new_events.empty? # add 1 ms to avoid dups with GTE filter
     new_events
   rescue => err

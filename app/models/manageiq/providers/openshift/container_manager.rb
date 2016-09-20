@@ -18,7 +18,6 @@ class ManageIQ::Providers::Openshift::ContainerManager < ManageIQ::Providers::Co
   end
 
   def self.event_monitor_class
-    #byebug_term
     #ManageIQ::Providers::Openshift::ContainerManager::EventCatcher
     ManageIQ::Providers::Openshift::ContainerManager::EventCatcherHawkular
     #ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher
@@ -37,7 +36,6 @@ class ManageIQ::Providers::Openshift::ContainerManager < ManageIQ::Providers::Co
   end
 
   def evaluate_alert(alert_id, event)
-    #byebug_term
     s_start = event.full_data.index("id=\"") + 4
     s_end = event.full_data.index("\"", s_start + 4) - 1
     event_id = event.full_data[s_start..s_end]

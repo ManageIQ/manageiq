@@ -7,7 +7,6 @@ module ManageIQ::Providers
     end
 
     def process_alert_profile(operation, miq_alert_profile)
-      #byebug_term
       profile_id = miq_alert_profile[:id]
       old_alerts_ids = miq_alert_profile[:old_alerts_ids]
       new_alerts_ids = miq_alert_profile[:new_alerts_ids]

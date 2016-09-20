@@ -546,7 +546,6 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def start_event_monitor
-    #byebug_term
     return if event_monitor_class.nil?
     event_monitor_class.start_worker_for_ems(self)
   end
