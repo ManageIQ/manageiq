@@ -342,7 +342,8 @@ class Tenant < ApplicationRecord
   end
 
   def get_vmdb_config
-    _log.debug("Tenant#get_vmdb_config is deprecated.  Prefer using Settings directly.")
+    Vmdb::Deprecation.deprecation_warning("Tenant#get_vmdb_config",
+                                          "Prefer using ::Settings directly.", caller)
     @vmdb_config ||= VMDB::Config.new("vmdb").config
   end
 
