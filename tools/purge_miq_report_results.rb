@@ -1,15 +1,16 @@
+require File.expand_path('../config/environment', __dir__)
+require 'trollop'
+
 MODES = %w(count purge)
 
-require 'trollop'
-ARGV.shift if ARGV[0] == '--'
+ARGV.shift if ARGV[0] == '--' # if invoked with rails runner
 opts = Trollop.options do
-  banner "Purge miq_report_results records.\n\nUsage: rails runner #{$0} [-- options]\n\nOptions:\n\t"
+  banner "Purge miq_report_results records.\n\nUsage: ruby #{$0} [options]\n\nOptions:\n\t"
   opt :mode,      "Mode (#{MODES.join(", ")})",          :default => "count"
   opt :window,    "Window of records to delete at once", :default => 100
   opt :date,      "Range of reports to keep by date (default: VMDB configuration)",     :type => :string
   opt :remaining, "Number of results to keep per report (default: VMDB configuration)", :type => :int
 end
-Trollop.die "script must be run with bin/rails runner"    unless Object.const_defined?(:Rails)
 Trollop.die :mode,   "must be one of #{MODES.join(", ")}" unless MODES.include?(opts[:mode])
 Trollop.die :window, "must be a number greater than 0"    if opts[:window] <= 0
 if opts[:remaining_given]

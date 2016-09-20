@@ -1,3 +1,4 @@
+require File.expand_path('../config/environment', __dir__)
 require 'trollop'
 require 'rest-client'
 #
@@ -9,16 +10,10 @@ require 'rest-client'
 #
 #
 
-PROGRAM_STRING = "rails runner #{$PROGRAM_NAME}".freeze
-
-unless Object.const_defined?(:Rails)
-  print "\nScript must be run with bin/rails runner\n"
-  print "\ne.g. #{PROGRAM_STRING} -- --help\n\n"
-  exit
-end
+PROGRAM_STRING = "ruby #{$PROGRAM_NAME}".freeze
 
 if ARGV.empty?
-  print "\n#{PROGRAM_STRING} -- --help\n\n"
+  print "\n#{PROGRAM_STRING} --help\n\n"
   exit
 end
 
@@ -46,7 +41,7 @@ Show a list of 5 recent requests
 
   #{PROGRAM_STRING} --last-requests
 
-Help! #{PROGRAM_STRING} -- --help
+Help! #{PROGRAM_STRING} --help
 
 Usage: #{PROGRAM_STRING} [--options]\n\nOptions:\n\t
 

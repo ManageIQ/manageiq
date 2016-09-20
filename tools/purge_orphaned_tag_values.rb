@@ -1,13 +1,14 @@
+require File.expand_path('../config/environment', __dir__)
 require 'trollop'
-ARGV.shift if ARGV[0] == '--'
+
+ARGV.shift if ARGV[0] == '--' # if invoked with rails runner
 opts = Trollop.options do
-  banner "Purge orphaned vim_performance_tag_values records.\n\nUsage: rails runner #{$0} [-- options]\n\nOptions:\n\t"
+  banner "Purge orphaned vim_performance_tag_values records.\n\nUsage: ruby #{$0} [options]\n\nOptions:\n\t"
   opt :search_window, "Window of records to scan when finding orpahns", :default => 1000
   opt :delete_window, "Window of orphaned records to delete at once",   :default => 50
 end
-Trollop.die "script must be run with bin/rails runner" unless Object.const_defined?(:Rails)
-Trollop.die :search_window, "must be a number grater than 0" if opts[:search_window] <= 0
-Trollop.die :delete_window, "must be a number grater than 0" if opts[:delete_window] <= 0
+Trollop.die :search_window, "must be a number greater than 0" if opts[:search_window] <= 0
+Trollop.die :delete_window, "must be a number greater than 0" if opts[:delete_window] <= 0
 
 def log(msg)
   $log.info "MIQ(#{__FILE__}) #{msg}"
