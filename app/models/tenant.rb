@@ -31,6 +31,7 @@ class Tenant < ApplicationRecord
   has_many :miq_requests, :dependent => :destroy
   has_many :miq_request_tasks, :dependent => :destroy
   has_many :services, :dependent => :destroy
+  has_many :shares
 
   belongs_to :default_miq_group, :class_name => "MiqGroup", :dependent => :destroy
   belongs_to :source, :polymorphic => true

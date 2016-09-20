@@ -4991,6 +4991,10 @@ miq_product_features:
 - created_at
 - updated_at
 - hidden
+miq_product_features_shares:
+- id
+- miq_product_feature_id
+- share_id
 miq_queue:
 - id
 - target_id
@@ -6358,6 +6362,15 @@ settings_changes:
 - resource_id
 - key
 - value
+- created_at
+- updated_at
+shares:
+- id
+- resource_type
+- resource_id
+- tenant_id
+- user_id
+- allow_tenant_inheritance
 - created_at
 - updated_at
 snapshots:
