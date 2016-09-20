@@ -262,8 +262,12 @@ describe SupportsFeatureMixin do
   end
 
   context "feature that is implicitly unsupported" do
-    it "class responds to supports_feature?" do
+    it "is unsupported by a class" do
       expect(Post.supports_nuke?).to be false
+    end
+
+    it "is unsupported by an instance of the class" do
+      expect(Post.new.supports_nuke?).to be false
     end
 
     it "can be supported by the class" do
@@ -274,6 +278,35 @@ describe SupportsFeatureMixin do
       end)
       expect(NukeablePost.new(:bribe => true).supports_nuke?).to be false
       expect(NukeablePost.new(:bribe => false).supports_nuke?).to be true
+    end
+  end
+
+  context 'included in a module' do
+    before do
+      stub_const('MyModule', Module.new do
+        include SupportsFeatureMixin
+        supports_not :publish  # supported in base class Post
+        supports :fake do      # unsupported in base class Post
+          unsupported_reason_add(:fake, "We never fake")
+        end
+      end)
+      stub_const('SomePost', Class.new(Post) do
+        include MyModule
+      end)
+    end
+
+    it "does not affect undefined features" do
+      expect(SomePost.new.supports_delete?).to be false
+      expect(SomePost.supports_delete?).to be false
+    end
+
+    it "overrides features defined on the class with those in the module" do
+      expect(SomePost.new.supports_publish?).to be false
+      expect(SomePost.supports_publish?).to be false
+
+      expect(SomePost.supports_fake?).to be true
+      expect(SomePost.new.supports_fake?).to be false
+      expect(SomePost.new.unsupported_reason(:fake)).to eq('We never fake')
     end
   end
 end
