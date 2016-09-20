@@ -75,7 +75,7 @@ module Vmdb
     private_class_method :configure_external_loggers
 
     def self.apply_config_value(config, logger, key, mirror_key = nil)
-      return if logger == Vmdb.null_logger
+      return if logger.kind_of?(Vmdb::Loggers::NullLogger)
       apply_config_value_logged(config, logger, :level, key)
       apply_config_value_logged(config, logger, :mirror_level, mirror_key) if mirror_key
     end

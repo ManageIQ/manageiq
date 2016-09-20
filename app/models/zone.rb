@@ -14,7 +14,6 @@ class Zone < ApplicationRecord
   has_many :storage_managers
   has_many :ldap_regions
   has_many :providers
-  has_many :settings_changes, :as => :resource, :dependent => :destroy
 
   virtual_has_many :hosts,              :uses => {:ext_management_systems => :hosts}
   virtual_has_many :active_miq_servers, :class_name => "MiqServer"
@@ -27,9 +26,14 @@ class Zone < ApplicationRecord
 
   include Metric::CiMixin
   include AggregationMixin
+  include ConfigurationManagementMixin
 
   def active_miq_servers
     MiqServer.active_miq_servers.where(:zone_id => id)
+  end
+
+  def servers_for_settings_reload
+    miq_servers.where(:status => "started")
   end
 
   def find_master_server
