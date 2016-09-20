@@ -56,11 +56,11 @@ class MiqServer < ApplicationRecord
     # Change the database role to database_operations
     roles = starting_roles.dup
     if roles.gsub!(/\bdatabase\b/, 'database_operations')
-      ::Settings.save!(MiqServer.my_server, :server => {:role => roles})
-      ::Settings.reload!
+      MiqServer.my_server.set_config(:server => {:role => roles})
     end
 
     # Roles Changed!
+    roles = ::Settings.server.role
     if roles != starting_roles
       # tell the server to pick up the role change
       server = MiqServer.my_server
