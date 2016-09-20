@@ -102,6 +102,10 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
   it "#supported_metrics" do
     supported_metrics = eap.supported_metrics
     expected_metrics.each { |k, v| expect(supported_metrics[k]).to eq(v) }
+
+    _model, model_config = MiddlewareServer.live_metrics_config.first
+    supported_metrics = model_config['supported_metrics']
+    expected_metrics.each { |k, v| expect(supported_metrics[k]).to eq(v) }
   end
 
   it "#metrics_available" do

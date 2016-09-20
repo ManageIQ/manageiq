@@ -98,5 +98,9 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
     }.freeze
     supported_metrics = ds.supported_metrics
     expected_metrics.each { |k, v| expect(supported_metrics[k]).to eq(v) }
+
+    _model, model_config = MiddlewareDatasource.live_metrics_config.first
+    supported_metrics = model_config['supported_metrics']
+    expected_metrics.each { |k, v| expect(supported_metrics[k]).to eq(v) }
   end
 end

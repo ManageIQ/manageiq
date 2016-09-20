@@ -21,4 +21,8 @@ class MiddlewareMessaging < ApplicationRecord
   def chart_layout_path
     "#{self.class.name.gsub(/::/, '_')}_#{messaging_type.parameterize(:separator => '_')}"
   end
+
+  def self.supported_models
+    @supported_models ||= %w(queue topic).collect { |model| name.demodulize.underscore + "_jms_#{model}" }
+  end
 end

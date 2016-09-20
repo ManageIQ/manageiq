@@ -60,10 +60,14 @@ module ManageIQ::Providers
       end
     end
 
+    def mw_server_metrics_by_column
+      MiddlewareServer.live_metrics_config['middleware_server']['supported_metrics_by_column']
+    end
+
     def generate_mw_gc_condition(eval_method, options)
       c = ::Hawkular::Alerts::Trigger::Condition.new({})
       c.trigger_mode = :FIRING
-      c.data_id = MiddlewareServer.supported_metrics_by_column[eval_method]
+      c.data_id = mw_server_metrics_by_column[eval_method]
       c.type = :RATE
       c.operator = convert_operator(options[:mw_operator])
       c.threshold = options[:value_mw_garbage_collector].to_i
@@ -71,8 +75,8 @@ module ManageIQ::Providers
     end
 
     def generate_mw_jvm_conditions(eval_method, options)
-      data_id = MiddlewareServer.supported_metrics_by_column[eval_method]
-      data2_id = MiddlewareServer.supported_metrics_by_column["mw_heap_max"]
+      data_id = mw_server_metrics_by_column[eval_method]
+      data2_id = mw_server_metrics_by_column["mw_heap_max"]
       c = []
       c[0] = generate_mw_compare_condition(data_id, data2_id, :GT, options[:value_mw_greater_than].to_f / 100)
       c[1] = generate_mw_compare_condition(data_id, data2_id, :LT, options[:value_mw_less_than].to_f / 100)
