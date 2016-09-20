@@ -1,10 +1,10 @@
+require File.expand_path('../config/environment', __dir__)
 require 'io/console'
 
 def usage
   <<-USAGE
     Usage:
-      `bin/rails r tools/db_ping_remote.rb <host> <port> <username> [database] [adapter]`
-      Must be executed from the rails root directory
+      `ruby tools/db_ping_remote.rb <host> <port> <username> [database] [adapter]`
 
       host, port, username, and password are required
       database and adapter will be defaulted to the local configuration if not provided

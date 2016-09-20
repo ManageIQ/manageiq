@@ -1,16 +1,17 @@
+require File.expand_path('../config/environment', __dir__)
+require 'trollop'
+
 MODES = %w(count purge)
 
-require 'trollop'
-ARGV.shift if ARGV[0] == '--'
+ARGV.shift if ARGV[0] == '--' # if invoked with rails runner
 opts = Trollop.options do
-  banner "Purge metrics records.\n\nUsage: rails runner #{$0} [-- options]\n\nOptions:\n\t"
+  banner "Purge metrics records.\n\nUsage: ruby #{$0} [options]\n\nOptions:\n\t"
   opt :mode,     "Mode (#{MODES.join(", ")})", :default => "count"
   opt :realtime, "Realtime range", :default => "4.hours"
   opt :hourly,   "Hourly range",   :default => "6.months"
   opt :daily,    "Daily range",    :default => "6.months"
   opt :window,   "Window of records to delete at once", :default => 1000
 end
-Trollop.die "script must be run with bin/rails runner" unless Object.const_defined?(:Rails)
 Trollop.die :mode,     "must be one of #{MODES.join(", ")}" unless MODES.include?(opts[:mode])
 Trollop.die :realtime, "must be a number with method (e.g. 4.hours)"  unless opts[:realtime].number_with_method?
 Trollop.die :hourly,   "must be a number with method (e.g. 6.months)" unless opts[:hourly].number_with_method?
