@@ -98,15 +98,16 @@ module ProcessTasksMixin
         raise NotImplementedError
       end
 
-      collection = api_client.send(collection_name)
-      action     = action_for_task(remote_options[:task])
-      post_args  = remote_options[:args]
+      collection   = api_client.send(collection_name)
+      action       = action_for_task(remote_options[:task])
+      post_args    = remote_options[:args] || {}
+      resource_ids = remote_options[:ids]
 
-      if remote_options[:ids].present?
+      if resource_ids.present?
         resource_ids.each do |id|
-          obj = collection.search(:filter => ["id=#{id}"]).first
+          obj = collection.search(:first, :where => {:id => id})
           _log.info("Invoking task #{action} on collection #{collection_name}, object #{obj.id}, with args #{post_args}")
-          obj.send(action_for_task(action, post_args))
+          obj.send(action, post_args)
         end
       else
         _log.info("Invoking task #{action} on collection #{collection_name}, with args #{post_args}")
