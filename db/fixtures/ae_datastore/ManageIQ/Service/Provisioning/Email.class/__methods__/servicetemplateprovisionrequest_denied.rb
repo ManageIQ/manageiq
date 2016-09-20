@@ -21,15 +21,13 @@ def reason
 end
 
 def approver_href(appliance)
-  body = " <a href='https://#{appliance}/miq_request/show/#{@miq_request.id}'</a>"
-  body
+  " <a href='https://#{appliance}/miq_request/show/#{@miq_request.id}'</a>"
 end
 
 def approver_denied_text(requester_email, msg, reason)
   body = "<br>A service request received from #{requester_email} was denied."
   body += "<br><br>#{msg}."
   body += "<br><br>Approvers notes: #{reason}"
-  body
 end
 
 def approver_text(appliance, msg, requester_email)
@@ -39,7 +37,6 @@ def approver_text(appliance, msg, requester_email)
   body += approver_href(appliance)
   body += "<br><br> Thank you,"
   body += "<br> #{signature}"
-  body
 end
 
 def requester_email_address
@@ -62,7 +59,6 @@ end
 def requester_href(appliance)
   body = "<a href='https://#{appliance}/miq_request/show/#{@miq_request.id}'"
   body += ">https://#{appliance}/miq_request/show/#{@miq_request.id}</a>"
-  body
 end
 
 def requester_text(appliance, msg)
@@ -73,7 +69,6 @@ def requester_text(appliance, msg)
   body += requester_href(appliance)
   body += "<br><br> Thank you,"
   body += "<br> #{signature}"
-  body
 end
 
 def email_requester(appliance, msg)
