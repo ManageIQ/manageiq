@@ -310,15 +310,11 @@ module ManageIQ::Providers
           :resource_path        => ems_ref.to_s
         }
 
-        actual_data = {}
         connection.operations(true).add_jdbc_driver(driver_data) do |on|
           on.success do |data|
             _log.debug "Success on websocket-operation #{data}"
-            actual_data[:data] = data
           end
           on.failure do |error|
-            actual_data[:data] = {}
-            actual_data[:error] = error
             _log.error 'error callback was called, reason: ' + error.to_s
           end
         end

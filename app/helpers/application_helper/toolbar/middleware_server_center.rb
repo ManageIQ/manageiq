@@ -118,7 +118,7 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
       t,
       :items => [
         button(
-          :middleware_jdbc_driver_new,
+          :middleware_jdbc_driver_add,
           'fa fa-plug fa-lg',
           N_('Add a new Middleware JDBC Driver'),
           N_('Add JDBC Driver'),

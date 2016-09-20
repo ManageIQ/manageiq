@@ -97,12 +97,9 @@ function MwServerController($scope, miqService) {
   // Add JDBC Driver
   /////////////////////////////////////////////////////////////////////////
 
-  $scope.jdbcDriverModel = {};
-  $scope.jdbcDriverModel.serverId = angular.element('#server_id').val();
-
   $scope.showJdbcDriverListener = function () {
-    $scope.jdbcDriverModel.showDeployModal = true;
     $scope.resetJdbcDriverForm();
+    $scope.jdbcDriverModel.showDeployModal = true;
   };
 
   $scope.resetJdbcDriverForm = function () {
