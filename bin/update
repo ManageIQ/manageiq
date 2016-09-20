@@ -1,42 +1,45 @@
 #!/usr/bin/env ruby
 require 'pathname'
-require 'English'
+require 'fileutils'
+include FileUtils
 
 # path to your application root.
 APP_ROOT = Pathname.new File.expand_path('../../', __FILE__)
 
-def execute(cmd)
-  system(cmd)
-  result = $CHILD_STATUS
-  unless result.success?
-    puts "ERROR: Command failed: #{cmd}"
-    exit result.exitstatus
-  end
+def system!(*args)
+  system(*args) || abort("\n== Command #{args} failed ==")
 end
 
-Dir.chdir APP_ROOT do
-  puts "== Installing dependencies =="
+chdir APP_ROOT do
+  # This script is a way to update your development environment automatically.
+  # Add necessary update steps to this file.
 
+  puts '== Installing dependencies =='
   # Run bower in a thread and continue to do the non-js stuff
   puts "Updating bower assets in parallel..."
   bower_thread = Thread.new do
-    execute "bower update --allow-root -F --silent --config.analytics=false"
+    system! "bower update --allow-root -F --silent --config.analytics=false"
   end
+  system! 'gem install bundler --conservative'
 
-  execute "bundle update"
+  # TODO: This unlocks your dependencies and installs all updates.
+  # From: https://github.com/ManageIQ/manageiq/pull/11137
+  # It should be system('bundle check') || system!('bundle install').
+  # If we need a "reset all the things" script, we should call it bin/reset.
+  system! 'bundle update'
 
-  puts "\n== Migrating database =="
-  execute "bin/rake db:migrate"
+  puts "\n== Updating database =="
+  system! 'bin/rails db:migrate'
 
   puts "\n== Seeding database =="
-  execute "bin/rake db:seed GOOD_MIGRATIONS=skip"
+  system! "bin/rails db:seed GOOD_MIGRATIONS=skip"
 
   puts "\n== Resetting tests =="
-  execute "bin/rake test:vmdb:setup"
+  system! "bin/rails test:vmdb:setup"
 
   unless ENV["SKIP_AUTOMATE_RESET"]
     puts "\n== Resetting Automate Domains =="
-    execute "bin/rake evm:automate:reset"
+    system! "bin/rails evm:automate:reset"
   end
 
   # Make sure bower is done before compiling assets
@@ -45,6 +48,9 @@ Dir.chdir APP_ROOT do
 
   if ENV['RAILS_ENV'] == 'production'
     puts "\n== Recompiling assets =="
-    execute "bin/rake evm:compile_assets"
+    system! "bin/rails evm:compile_assets"
   end
+
+  puts "\n== Removing old logs and tempfiles =="
+  system! 'bin/rails log:clear tmp:clear'
 end
