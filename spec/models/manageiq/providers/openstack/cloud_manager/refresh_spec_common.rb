@@ -243,6 +243,7 @@ module Openstack
       expect(CloudNetwork.count).to                      eq network_data.networks.count
       expect(CloudSubnet.count).to                       eq network_data.subnets.count
       expect(NetworkRouter.count).to                     eq network_data.routers.count
+      expect(CloudVolume.count).to                       eq volumes_count
       expect(VmOrTemplate.count).to                      eq vms_count + images_count
       expect(Vm.count).to                                eq vms_count
       expect(MiqTemplate.count).to                       eq images_count
