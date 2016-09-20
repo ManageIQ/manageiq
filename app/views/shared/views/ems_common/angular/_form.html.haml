@@ -181,6 +181,17 @@
                        "checkchange"                 => "",
                        "required"                    => "",
                        "selectpicker-for-select-tag" => "")
+    .form-group{"ng-if" => "emsCommonModel.emstype == 'openstack'"}
+      %label.control-label.col-md-2{"for" => "ems_tenant_mapping_enabled"}
+        = _('Tenant Mapping Enabled')
+      .col-md-8
+        %input{"bs-switch"   => "",
+               :data         => {:on_text => 'Yes', :off_text => 'No', :size => 'mini'},
+               "type"        => "checkbox",
+               "id"          => "ems_tenant_mapping_enabled",
+               "name"        => "tenant_mapping_enabled",
+               "checkchange" => "true",
+               "ng-model"    => "emsCommonModel.tenant_mapping_enabled"}
 
     .form-group{"ng-class" => "{'has-error': angularForm.host_default_vnc_port_start.$invalid}", "ng-if" => "emsCommonModel.emstype_vm"}
       %label.col-md-2.control-label{"for" => "ems_vnc_start_port"}

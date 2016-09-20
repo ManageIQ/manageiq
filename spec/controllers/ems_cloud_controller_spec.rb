@@ -165,6 +165,45 @@ describe EmsCloudController do
       expect(response.body).to include('"name":"foo_openstack"')
     end
 
+    let(:openstack_form_params) do
+      {"button"                 => "add",
+       "default_hostname"       => "host_openstack",
+       "name"                   => "foo_openstack",
+       "emstype"                => "openstack",
+       "tenant_mapping_enabled" => "on",
+       "provider_region"        => "",
+       "default_port"           => "5000",
+       "zone"                   => zone.name,
+       "default_userid"         => "foo",
+       "default_password"       => "[FILTERED]",
+       "default_verify"         => "[FILTERED]"}
+    end
+
+    it "creates openstack cloud manager with attributes from form" do
+      post :create, :params => openstack_form_params
+
+      openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => "foo_openstack").first
+
+      expect(openstack.zone.name).to eq(zone.name)
+      expect(openstack.name).to eq("foo_openstack")
+      expect(openstack.emstype).to eq("openstack")
+      expect(openstack.tenant_mapping_enabled).to be_truthy
+      expect(openstack.provider_region).to eq("")
+    end
+
+    it "updates openstack cloud manager's attribute tenant_mapping_enabled" do
+      post :create, :params => openstack_form_params
+
+      openstack = ManageIQ::Providers::Openstack::CloudManager.where(:name => "foo_openstack").first
+      openstack_form_params[:id] = openstack.id
+      openstack_form_params[:button] = "save"
+      openstack_form_params[:tenant_mapping_enabled] = "off"
+
+      post :update, :params => openstack_form_params
+
+      expect(openstack.reload.tenant_mapping_enabled).to be_falsey
+    end
+
     it 'strips whitespace from name, hostname and api_port form fields on create' do
       post :create, :params => {
         "button"           => "add",
