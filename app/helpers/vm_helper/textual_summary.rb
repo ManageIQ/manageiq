@@ -216,7 +216,7 @@ module VmHelper::TextualSummary
   end
 
   def textual_cluster
-    cluster = @record.host.try(:ems_cluster)
+    cluster = @record.try(:ems_cluster)
     return nil if cluster.nil?
     h = {:label => title_for_cluster, :image => "ems_cluster", :value => (cluster.nil? ? _("None") : cluster.name)}
     if cluster && role_allows?(:feature => "ems_cluster_show")
