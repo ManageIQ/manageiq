@@ -227,7 +227,8 @@ class EmsEvent < EventStream
 
     target_type = "src_vm_or_template"  if target_type == "src_vm"
     target_type = "dest_vm_or_template" if target_type == "dest_vm"
-    target_type = "middleware_server"   if event.event_type == "hawkular_event"
+    return ExtManagementSystem.last if event.event_type == "hawkular_event"
+    #target_type = "middleware_server"   if event.event_type == "hawkular_event"
 
     event.send(target_type)
   end
