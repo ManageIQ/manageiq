@@ -69,12 +69,18 @@ module MiqAeEngine
       Thread.current.thread_variable_get(:current_workspace)
     end
 
+    def self.clear_stored_workspace
+      self.current = nil
+    end
+
     def self.instantiate(uri, user, attrs = {})
       workspace = MiqAeWorkspaceRuntime.new(attrs)
       self.current = workspace
       workspace.instantiate(uri, user, nil)
       workspace
     rescue MiqAeException
+    ensure
+      clear_stored_workspace
     end
 
     DATASTORE_CACHE = true
