@@ -29,6 +29,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
     raise MiqException::MiqProvisionError, "Provision Request's Destination VM Name=[#{dest_name}] cannot be blank" if dest_name.blank?
     raise MiqException::MiqProvisionError, "A VM with name: [#{dest_name}] already exists" if source.ext_management_system.vms.where(:name => dest_name).any?
     raise MiqException::MiqProvisionError, "Neither Cluster nor Host selected for [#{dest_name}]" if dest_host.nil? && dest_cluster.nil?
+    raise MiqException::MiqProvisionError, "A Host must be selected on a non-DRS enabled cluster" if dest_host.nil? && !dest_cluster.drs_enabled
 
     clone_options = {
       :name          => dest_name,
