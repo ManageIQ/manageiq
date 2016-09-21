@@ -53,9 +53,14 @@
           :javascript
             $(":file").filestyle({icon: false, placeholder: _("No file chosen")});
         .modal-footer
-          %button.btn.btn-default{:type => "button", "data-dismiss" => "modal"}
-            = _("Cancel")
-          %button.btn.btn-primary{"ng-disabled" => "!deployAddModel.filePath",
-                                  "ng-click"    => "addDeployment()",
-                                  :type         => "button"}
-            = _("Deploy")
+          %button.btn.btn-default{:type          => "button",
+                                  :alt           => (t = _("Cancel")),
+                                  :title         => t,
+                                  "data-dismiss" => "modal"}
+            = t
+          %button.btn.btn-primary{:type         => "button",
+                                  :alt          => (t = _("Deploy")),
+                                  :title        => t,
+                                  "ng-disabled" => "!deployAddModel.filePath",
+                                  "ng-click"    => "addDeployment()"}
+            = t
