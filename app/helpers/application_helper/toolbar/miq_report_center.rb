@@ -2,7 +2,7 @@ class ApplicationHelper::Toolbar::MiqReportCenter < ApplicationHelper::Toolbar::
   button_group('report_run', [
     button(
       :miq_report_run,
-      'fa fa-cog fa-lg',
+      'fa fa-play-circle-o fa-lg',
       N_('Queue this Report to be generated'),
       N_('Queue')),
   ])
