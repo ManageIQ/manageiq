@@ -742,9 +742,9 @@ class VmOrTemplate < ApplicationRecord
     parent_blue_folders.any? { |f| f == folder }
   end
 
-  def parent_blue_folder_path
+  def parent_blue_folder_path(*args)
     f = parent_blue_folder
-    f.nil? ? "" : f.folder_path
+    f.nil? ? "" : f.folder_path(*args)
   end
   alias_method :owning_blue_folder_path, :parent_blue_folder_path
 
@@ -760,9 +760,9 @@ class VmOrTemplate < ApplicationRecord
   end
   alias_method :parent_yellow_folders, :parent_folders
 
-  def parent_folder_path
+  def parent_folder_path(*args)
     f = parent_folder
-    f.nil? ? "" : f.folder_path
+    f.nil? ? "" : f.folder_path(*args)
   end
   alias_method :owning_folder_path, :parent_folder_path
   alias_method :parent_yellow_folder_path, :parent_folder_path
