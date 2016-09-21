@@ -105,12 +105,19 @@ module MiddlewareCommonMixin
     end
   end
 
+  def skip_operation?(item_record, operation_info)
+    provider_name = 'Hawkular'
+    if operation_info.fetch(:skip)
+      item_record.try(:product) == provider_name || item_record.try(:middleware_server).try(:product) == provider_name
+    end
+  end
+
   def run_operation_batch(operation_info, items)
     operation_triggered = false
     items.split(/,/).each do |item|
       item_record = identify_record item
-      if item_record.has_attribute?('product') && item_record.product == 'Hawkular' && operation_info.fetch(:skip)
-        add_flash(_("Not %{hawkular_info} the provider") % {:hawkular_info => operation_info.fetch(:hawk)})
+      if skip_operation?(item_record, operation_info)
+        add_flash(_("Not %{hawkular_info} the provider itself") % {:hawkular_info => operation_info.fetch(:hawk)})
       else
         run_operation_on_record(operation_info, item_record)
         operation_triggered = true
