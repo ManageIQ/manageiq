@@ -1,4 +1,9 @@
 class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
+
+  belongs_to :availability_zone,
+             #:foreign_key => :availability_zone_id,
+             :class_name => "ManageIQ::Providers::Openstack::CloudManager::AvailabilityZoneVolume"
+
   include_concern 'Operations'
 
   include SupportsFeatureMixin

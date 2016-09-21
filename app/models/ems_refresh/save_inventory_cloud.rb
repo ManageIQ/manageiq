@@ -49,6 +49,7 @@ module EmsRefresh::SaveInventoryCloud
       :cloud_tenants,
       :flavors,
       :availability_zones,
+      :availability_zone_volumes,
       :host_aggregates,
       :key_pairs,
       :orchestration_templates,
@@ -109,6 +110,20 @@ module EmsRefresh::SaveInventoryCloud
 
     save_inventory_multi(ems.availability_zones, hashes, deletes, [:ems_ref])
     store_ids_for_new_records(ems.availability_zones, hashes, :ems_ref)
+  end
+
+  def save_availability_zone_volumes_inventory(ems, hashes, target = nil)
+    target = ems if target.nil?
+
+    ems.availability_zone_volumes.reset
+    deletes = if (target == ems)
+                :use_association
+              else
+                []
+              end
+
+    save_inventory_multi(ems.availability_zone_volumes, hashes, deletes, [:ems_ref])
+    store_ids_for_new_records(ems.availability_zone_volumes, hashes, :ems_ref)
   end
 
   def save_host_aggregates_inventory(ems, hashes, target = nil)

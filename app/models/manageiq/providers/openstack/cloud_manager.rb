@@ -2,6 +2,7 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
   require_nested :AuthKeyPair
   require_nested :AvailabilityZone
   require_nested :AvailabilityZoneNull
+  require_nested :AvailabilityZoneVolume
   require_nested :CloudResourceQuota
   require_nested :CloudTenant
   require_nested :CloudVolume
@@ -32,6 +33,11 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
   include CinderManagerMixin
   include SwiftManagerMixin
   include ManageIQ::Providers::Openstack::ManagerMixin
+
+  has_many :availability_zones, :foreign_key => :ems_id,
+           :class_name => "ManageIQ::Providers::Openstack::CloudManager::AvailabilityZone", :dependent => :destroy
+  has_many :availability_zone_volumes, :foreign_key => :ems_id,
+           :class_name => "ManageIQ::Providers::Openstack::CloudManager::AvailabilityZoneVolume", :dependent => :destroy
 
   supports :provisioning
   supports :cloud_tenant_mapping do
