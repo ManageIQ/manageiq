@@ -38,7 +38,9 @@ class WebsocketServer
   end
 
   def call(env)
-    if WebSocket::Driver.websocket?(env)
+    proto = Rack::Request.new(env).ssl? ? 'https' : 'http'
+    # Same-origin policy checking for WebSockets
+    if WebSocket::Driver.websocket?(env) && env['HTTP_ORIGIN'] == "#{proto}://#{env['HTTP_HOST']}"
 
       # ActionCable causes live reload crashes
       if env['REQUEST_URI'] =~ %r{^/ws/notifications}

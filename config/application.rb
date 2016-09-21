@@ -64,6 +64,11 @@ module Vmdb
     # Set the manifest file name so that we are sure it gets overwritten on updates
     config.assets.manifest = Rails.root.join("public/assets/.sprockets-manifest.json").to_s
 
+    # Disable ActionCable's request forgery protection
+    # This is basically matching a set of allowed origins which is not good for us
+    # Our own origin-host forgery protection is implemented in lib/websocket_server.rb
+    Rails.application.config.action_cable.disable_request_forgery_protection = true
+
     # Customize any additional options below...
 
     # HACK: By default, Rails.configuration.eager_load_paths contains all of the directories
