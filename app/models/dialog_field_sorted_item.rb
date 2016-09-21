@@ -57,9 +57,24 @@ class DialogFieldSortedItem < DialogField
   end
 
   def trigger_automate_value_updates
-    @default_value = nil if dynamic
+    self.default_value = nil if dynamic
     @raw_values = nil
     raw_values
+  end
+
+  def refresh_json_value(checked_value)
+    self.default_value = nil
+    @raw_values = nil
+
+    refreshed_values = values
+
+    @value = if refreshed_values.collect { |value_pair| value_pair[0].to_s }.include?(checked_value)
+               checked_value
+             else
+               default_value
+             end
+
+    {:refreshed_values => refreshed_values, :checked_value => @value, :read_only => read_only?, :visible => visible?}
   end
 
   private
@@ -77,15 +92,20 @@ class DialogFieldSortedItem < DialogField
 
   def raw_values
     @raw_values ||= dynamic ? values_from_automate : self[:values].to_miq_a
-    unless @raw_values.collect { |value_pair| value_pair[0] }.include?(@default_value)
-      @default_value = sort_data(@raw_values).first.first
+    unless @raw_values.collect { |value_pair| value_pair[0] }.include?(default_value)
+      self.default_value = sort_data(@raw_values).first.first
     end
-    self.value ||= @default_value
+    self.value ||= default_value
 
     @raw_values
   end
 
   def initial_values
     [[nil, "<None>"]]
+  end
+
+  def load_values_on_init?
+    return true unless show_refresh_button
+    load_values_on_init
   end
 end
