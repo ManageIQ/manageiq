@@ -4,13 +4,17 @@ describe TreeBuilderServices do
   it "generates tree" do
     create_deep_tree
 
-    expect(root_nodes).to eq([@service])
-    expect(kid_nodes(@service)).to match_array([@service_c1, @service_c2])
-    expect(kid_nodes(@service_c1)).to match_array([@service_c11, @service_c12])
-    expect(kid_nodes(@service_c12)).to match_array([@service_c121])
-    expect(kid_nodes(@service_c11)).to be_blank
-    expect(kid_nodes(@service_c121)).to be_blank
-    expect(kid_nodes(@service_c2)).to be_blank
+    expect(root_nodes).to eq(
+      @service => {
+        @service_c1 => {
+          @service_c11 => {},
+          @service_c12 => {
+            @service_c121 => {}
+          }
+        },
+        @service_c2 => {}
+      }
+    )
   end
 
   private
