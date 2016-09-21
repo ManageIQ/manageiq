@@ -15,7 +15,7 @@ module Api
         BadRequestError                => :bad_request,
         NotFoundError                  => :not_found,
         UnsupportedMediaTypeError      => :unsupported_media_type
-      }
+      }.freeze
 
       #
       # Class Methods

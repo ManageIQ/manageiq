@@ -5,12 +5,12 @@ module Api
   Initializer.new.go
 
   class BaseController < ApplicationController
-    TAG_NAMESPACE = "/managed"
+    TAG_NAMESPACE = "/managed".freeze
 
     #
     # Attributes used for identification
     #
-    ID_ATTRS = %w(href id)
+    ID_ATTRS = %w(href id).freeze
 
     include_concern 'Parameters'
     include_concern 'Parser'
