@@ -56,7 +56,7 @@ module EmsRefresh::SaveInventoryCinder
     target = ems if target.nil?
 
     ems.cloud_volumes.reset
-    deletes = if (target == ems)
+    deletes = if target == ems
                 :use_association
               else
                 []
@@ -69,7 +69,8 @@ module EmsRefresh::SaveInventoryCinder
       # Defer setting :cloud_volume_snapshot_id until after snapshots are saved.
     end
 
-    save_inventory_multi(ems.cloud_volumes, hashes, deletes, [:ems_ref], nil, [:tenant, :availability_zone, :base_snapshot])
+    save_inventory_multi(ems.cloud_volumes, hashes, deletes, [:ems_ref], 
+                         nil, [:tenant, :availability_zone, :base_snapshot])
     store_ids_for_new_records(ems.cloud_volumes, hashes, :ems_ref)
   end
 
@@ -98,7 +99,7 @@ module EmsRefresh::SaveInventoryCinder
     target = ems if target.nil?
 
     ems.cloud_volume_snapshots.reset
-    deletes = if (target == ems)
+    deletes = if target == ems
                 :use_association
               else
                 []
@@ -124,6 +125,4 @@ module EmsRefresh::SaveInventoryCinder
       CloudVolume.where(:id => volids).update_all(:cloud_volume_snapshot_id => bsid)
     end
   end
-
-
 end

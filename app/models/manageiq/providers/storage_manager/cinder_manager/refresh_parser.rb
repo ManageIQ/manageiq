@@ -13,13 +13,12 @@ module ManageIQ::Providers
     end
 
     def initialize(ems, options = nil)
-
       @ems               = ems
       @connection        = ems.connect
+      @options           = options || {}
       @data              = {}
       @data_index        = {}
 
-        
       @cinder_service    = ems.parent_manager.cinder_service
     end
 
@@ -57,7 +56,6 @@ module ManageIQ::Providers
       process_collection(@cinder_service.handled_list(:list_backups_detailed,
                                                       :__request_body_index => "backups"),
                          :cloud_volume_backups) { |backup| parse_backup(backup) }
-
     end
 
     def parse_backup(backup)
@@ -76,7 +74,7 @@ module ManageIQ::Providers
         :is_incremental        => backup['is_incremental'],
         :has_dependent_backups => backup['has_dependent_backups'],
         :availability_zone     => @data_index.fetch_path(:availability_zones,
-              "volume-" + backup['availability_zone'] || "null_az"),
+                                    "volume-" + backup['availability_zone'] || "null_az"),
         :volume                => @data_index.fetch_path(:cloud_volumes, backup['volume_id'])
       }
       return uid, new_result
@@ -117,7 +115,8 @@ module ManageIQ::Providers
         :snapshot_uid      => volume.snapshot_id,
         :size              => volume.size.to_i.gigabytes,
         :tenant            => @data_index.fetch_path(:cloud_tenants, volume.tenant_id),
-        :availability_zone => @data_index.fetch_path(:availability_zones, "volume-" + volume.availability_zone || "null_az"),
+        :availability_zone => @data_index.fetch_path(:availability_zones, 
+                                    "volume-" + volume.availability_zone || "null_az"),
       }
 
       volume.attachments.each do |a|
@@ -152,18 +151,14 @@ module ManageIQ::Providers
     end
 
     def volume_name(volume)
-      # Cinder v1
-      return volume.display_name if volume.respond_to?(:display_name)
-      # Cinder v2
-      return volume.name
-    end 
+      # Cinder v1 : Cinder v2
+      return volume.respond_to?(:display_name) ? volume.display_name : volume.name
+    end
 
     def volume_description(volume)
-      # Cinder v1
-      return volume.display_description if volume.respond_to?(:display_description)
-      # Cinder v2
-      return volume.description
-    end 
+      # Cinder v1 : Cinder v2
+      return volume.respond_to?(:display_description) ? volume.display_description :  volume.description
+    end
 
     def add_instance_disk(disks, size, location, name, controller_type)
       if size >= 0
@@ -191,6 +186,5 @@ module ManageIQ::Providers
         cv[:base_snapshot] = base_snapshot unless base_snapshot.nil?
       end if @data[:cloud_volumes]
     end
-
   end
 end

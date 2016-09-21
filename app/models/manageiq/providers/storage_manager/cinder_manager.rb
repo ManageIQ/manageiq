@@ -1,9 +1,7 @@
 #
 #
-#
-#
 
-class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::StorageManager 
+class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::StorageManager
   require_nested :EventCatcher
   require_nested :EventParser
   require_nested :RefreshParser
@@ -34,14 +32,13 @@ class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::
            :allow_nil => true
 
   supports :cinder_service do
-    if self.parent_manager
-      unsupported_reason_add(:cinder_service, self.parent_manager.unsupported_reason(:cinder_service)) unless 
-        self.parent_manager.supports_cinder_service?
+    if parent_manager
+      unsupported_reason_add(:cinder_service, parent_manager.unsupported_reason(:cinder_service)) unless
+        parent_manager.supports_cinder_service?
     else
       unsupported_reason_add(:cinder_service, _('no parent_manager to ems'))
     end
   end
-
 
   def self.hostname_required?
     false

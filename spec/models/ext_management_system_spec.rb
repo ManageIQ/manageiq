@@ -40,7 +40,7 @@ describe ExtManagementSystem do
       "vmwarews"                    => "VMware vCenter",
       "vmware_cloud"                => "VMware vCloud",
       "vmware_cloud_network"        => "VMware Cloud Network",
-      "cinder"                     => "Cinder ",
+      "cinder"                      => "Cinder ",
     }
   end
 

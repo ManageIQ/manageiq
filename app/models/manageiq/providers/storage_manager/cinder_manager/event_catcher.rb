@@ -8,5 +8,4 @@ class ManageIQ::Providers::StorageManager::CinderManager::EventCatcher < ::MiqEv
   def self.settings_name
     :event_catcher_cinder
   end
-
 end
