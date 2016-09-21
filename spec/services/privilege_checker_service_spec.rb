@@ -36,7 +36,7 @@ describe PrivilegeCheckerService do
         let(:server) { double("MiqServer", :logon_status => logon_status) }
 
         before do
-          allow(MiqServer).to receive(:my_server).with(true).and_return(server)
+          allow(MiqServer).to receive(:my_server).and_return(server)
         end
 
         context "when the server is not ready" do
