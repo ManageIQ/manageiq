@@ -4,9 +4,10 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::StateMachine
   end
 
   def determine_placement
-    host, datastore = placement
+    host, cluster, datastore = placement
 
-    options[:dest_host]    = [host.id, host.name] if host
+    options[:dest_host]    = [host.id, host.name]       if host
+    options[:dest_cluster] = [cluster.id, cluster.name] if cluster
     options[:dest_storage] = [datastore.id, datastore.name]
     signal :start_clone_task
   end

@@ -12,7 +12,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Netw
         vim_net_adapter = template_networks[idx]
 
         if net[:is_dvs] == true
-          #build_config_spec_dvs(net, vim_net_adapter, vmcs)
+          #TODO build_config_spec_dvs(net, vim_net_adapter, vmcs)
         else
           build_config_spec_vlan(net, vim_net_adapter, vmcs)
         end

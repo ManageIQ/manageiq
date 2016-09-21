@@ -28,6 +28,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
   def prepare_for_clone_task
     raise MiqException::MiqProvisionError, "Provision Request's Destination VM Name=[#{dest_name}] cannot be blank" if dest_name.blank?
     raise MiqException::MiqProvisionError, "A VM with name: [#{dest_name}] already exists" if source.ext_management_system.vms.where(:name => dest_name).any?
+    raise MiqException::MiqProvisionError, "Neither Cluster nor Host selected for [#{dest_name}]" if dest_host.nil? && dest_cluster.nil?
 
     clone_options = {
       :name          => dest_name,
@@ -48,11 +49,6 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
     validate_customization_spec(clone_options[:customization])
 
     clone_options
-  end
-
-  def dest_cluster
-    cluster_id = get_option(:placement_cluster_name)
-    EmsCluster.find(cluster_id) unless cluster_id.nil?
   end
 
   def dest_resource_pool
@@ -84,7 +80,8 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
     _log.info("Provisioning [#{source.name}] to [#{clone_options[:name]}]")
     _log.info("Source Template:            [#{source.name}]")
     _log.info("Destination VM Name:        [#{clone_options[:name]}]")
-    _log.info("Destination Host:           [#{clone_options[:host].name} (#{clone_options[:host].ems_ref})]") if clone_options[:host]
+    _log.info("Destination Cluster:        [#{clone_options[:cluster].name} (#{clone_options[:cluster].ems_ref})]")   if clone_options[:cluster]
+    _log.info("Destination Host:           [#{clone_options[:host].name} (#{clone_options[:host].ems_ref})]")         if clone_options[:host]
     _log.info("Destination Datastore:      [#{clone_options[:datastore].name} (#{clone_options[:datastore].ems_ref})]")
     _log.info("Destination Folder:         [#{clone_options[:folder].name}] (#{clone_options[:folder].ems_ref})")
     _log.info("Destination Resource Pool:  [#{clone_options[:pool].name} (#{clone_options[:pool].ems_ref})]")
