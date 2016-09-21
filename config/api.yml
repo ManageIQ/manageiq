@@ -1111,7 +1111,7 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *gp
+    :verbs: *gpd
     :klass: Dialog
     :collection_actions:
       :get:
@@ -1122,6 +1122,8 @@
         :identifier: miq_ae_customization_explorer
       - :name: refresh_dialog_fields
         :identifier: svc_catalog_provision
+      - :name: delete
+        :identifier: dialog_delete
     :resource_actions:
       :get:
       - :name: read
@@ -1129,6 +1131,11 @@
       :post:
       - :name: refresh_dialog_fields
         :identifier: svc_catalog_provision
+      - :name: delete
+        :identifier: dialog_delete
+      :delete:
+      - :name: delete
+        :identifier: dialog_delete
   :service_orders:
     :description: Service Orders
     :identifier: svc_catalog_provision
