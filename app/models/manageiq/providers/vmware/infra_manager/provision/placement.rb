@@ -32,8 +32,8 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Placement
 
   def selected_placement_obj(key, klass)
     klass.find_by(:id => get_option(key)).tap do |obj|
-      raise MiqException::MiqProvisionError, "Destination #{key} not provided" unless obj
-      _log.info("Using selected #{key} : [#{obj.name}] id : [#{obj.id}]")
+      #raise MiqException::MiqProvisionError, "Destination #{key} not provided" unless obj
+      _log.info("Using selected #{key} : [#{obj.name}] id : [#{obj.id}]") if obj
     end
   end
 end
