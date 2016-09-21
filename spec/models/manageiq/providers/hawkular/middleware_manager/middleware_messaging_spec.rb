@@ -1,5 +1,5 @@
 require_relative 'hawkular_helper'
-# VCR Cassettes: Hawkular Services 0.0.8.Final-SNAPSHOT (commit 0b50b06025641fa83128bb13de3a3eff8d37bb8b)
+# VCR Cassettes: Hawkular Services 0.0.13.Final-SNAPSHOT (commit ec8f713d4ece69f5f312b95a228776eab4f86f62)
 
 describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareMessaging do
   vcr_cassete_name = described_class.name.underscore.to_s
@@ -82,6 +82,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareMessaging d
         interval = 3600
         VCR.use_cassette(vcr_cassete_name,
                          :allow_unused_http_interactions => true,
+                         :match_requests_on              => [:method, :uri, :body],
                          :decode_compressed_response     => true) do # , :record => :new_episodes) do
           metrics_available = ms.metrics_available
           metrics_data = ms.collect_live_metrics(metrics_available, start_time, end_time, interval)
@@ -96,6 +97,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareMessaging d
         interval = 3600
         VCR.use_cassette(vcr_cassete_name,
                          :allow_unused_http_interactions => true,
+                         :match_requests_on              => [:method, :uri, :body],
                          :decode_compressed_response     => true) do # , :record => :new_episodes) do
           metrics_available = ms.metrics_available
           expect(metrics_available.size).to be > 3

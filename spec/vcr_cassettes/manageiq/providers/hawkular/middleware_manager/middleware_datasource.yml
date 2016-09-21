@@ -23,9 +23,9 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:52:05 GMT
+      - Thu, 15 Sep 2016 20:36:28 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -38,13 +38,13 @@ http_interactions:
       encoding: ASCII-8BIT
       string: |-
         {
-          "Implementation-Version" : "0.17.3.Final",
-          "Built-From-Git-SHA1" : "144a571ea8f3a819737c2937ccc0492d8a116bb4",
+          "Implementation-Version" : "0.18.0.Final",
+          "Built-From-Git-SHA1" : "be1107e48907ebc1d8de4dc571275edd9daf0424",
           "Inventory-Implementation" : "org.hawkular.inventory.impl.tinkerpop.TinkerpopInventory",
           "Initialized" : "true"
         }
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:52:05 GMT
+  recorded_at: Thu, 15 Sep 2016 20:36:28 GMT
 - request:
     method: get
     uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/status
@@ -68,9 +68,9 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:52:05 GMT
+      - Thu, 15 Sep 2016 20:36:28 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -81,9 +81,9 @@ http_interactions:
       - Undertow/1
     body:
       encoding: UTF-8
-      string: '{"MetricsService":"STARTED","Implementation-Version":"0.18.0.Final","Built-From-Git-SHA1":"d5281e70603719809bdada72249b9330b22ebf96"}'
+      string: '{"MetricsService":"STARTED","Implementation-Version":"0.19.2.Final","Built-From-Git-SHA1":"ae0e942d65c180d23e4f2791a86b21915b04a334"}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:52:05 GMT
+  recorded_at: Thu, 15 Sep 2016 20:36:28 GMT
 - request:
     method: get
     uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/inventory/traversal/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem=datasources%2Fdata-source=ExampleDS/rl;incorporates/type=m?sort=id
@@ -107,13 +107,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:52:06 GMT
+      - Thu, 15 Sep 2016 20:36:28 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '19130'
+      - '31338'
       Connection:
       - keep-alive
       Expires:
@@ -133,323 +133,626 @@ http_interactions:
       encoding: ASCII-8BIT
       string: |-
         [ {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20JDBC%20Metrics~Prepared%20Statement%20Cache%20Access%20Count",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20JDBC%20Metrics~Prepared%20Statement%20Cache%20Access%20Count",
           "name" : "Prepared Statement Cache Access Count",
+          "identityHash" : "59e3a9493a50fffbd6bfcb2712f62ccef1f5f6cb",
+          "contentHash" : "3fc5189baa4499e095ce9c8a9ad66ed4a264b",
+          "syncHash" : "5ea3fb792808bb4d863d3592e5ebd4f6f3043b2",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20JDBC%20Metrics~Prepared%20Statement%20Cache%20Access%20Count",
             "name" : "Prepared Statement Cache Access Count",
+            "identityHash" : "23ebe568db6f52b17846c444f15932c79f78511",
+            "contentHash" : "6cdce13a4e91d36c4836f31cea7857842b2b63af",
+            "syncHash" : "a832fef5bd7b3fecd3db112ebfa1faa45c916e60",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 600,
+            "type" : "GAUGE",
             "id" : "Datasource JDBC Metrics~Prepared Statement Cache Access Count"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource JDBC Metrics~Prepared Statement Cache Access Count"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20JDBC%20Metrics~Prepared%20Statement%20Cache%20Add%20Count",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20JDBC%20Metrics~Prepared%20Statement%20Cache%20Add%20Count",
           "name" : "Prepared Statement Cache Add Count",
+          "identityHash" : "ed1352bf1153361efa803af5573a77717ccf4c",
+          "contentHash" : "bf31ab7783f57e7d1f5cafc74bf633737ea2cb1",
+          "syncHash" : "c77fdaaa24b6a724364dfec2c97216574cfc323",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20JDBC%20Metrics~Prepared%20Statement%20Cache%20Add%20Count",
             "name" : "Prepared Statement Cache Add Count",
+            "identityHash" : "4968d388605964fae5a92c72e4372174b51365c",
+            "contentHash" : "f932acc59659b497f29c6103edd7c887a591d",
+            "syncHash" : "c2d22b7e501d747d17c9c1c0fd7de5111e5089a6",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 600,
+            "type" : "GAUGE",
             "id" : "Datasource JDBC Metrics~Prepared Statement Cache Add Count"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource JDBC Metrics~Prepared Statement Cache Add Count"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20JDBC%20Metrics~Prepared%20Statement%20Cache%20Current%20Size",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20JDBC%20Metrics~Prepared%20Statement%20Cache%20Current%20Size",
           "name" : "Prepared Statement Cache Current Size",
+          "identityHash" : "ff4de52e81fbc16e9236a486628f88aa545fe8",
+          "contentHash" : "548d9c5ab9eaf1629b5ca432baeb361ef3ed6f",
+          "syncHash" : "f4c69cae472eb8839fcf4aa8ad7e70ea9d8750a3",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20JDBC%20Metrics~Prepared%20Statement%20Cache%20Current%20Size",
             "name" : "Prepared Statement Cache Current Size",
+            "identityHash" : "f74f115f7e11da9dad9987d7a616bee1339bc1f",
+            "contentHash" : "654b1dc4af83629516bbc1ecdda18c3cbc1fcf1",
+            "syncHash" : "cf634eba47bcfdbfe98fc9b6be268461c6ea7",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 600,
+            "type" : "GAUGE",
             "id" : "Datasource JDBC Metrics~Prepared Statement Cache Current Size"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource JDBC Metrics~Prepared Statement Cache Current Size"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20JDBC%20Metrics~Prepared%20Statement%20Cache%20Delete%20Count",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20JDBC%20Metrics~Prepared%20Statement%20Cache%20Delete%20Count",
           "name" : "Prepared Statement Cache Delete Count",
+          "identityHash" : "605a24f5e419c5cd7540b419d3caa881e536eff5",
+          "contentHash" : "e221e8de92747d4fd1a70e4cc96bb9b4e40744a",
+          "syncHash" : "8e05785ee587d7b3649d4bc2a39f1c2c96452",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20JDBC%20Metrics~Prepared%20Statement%20Cache%20Delete%20Count",
             "name" : "Prepared Statement Cache Delete Count",
+            "identityHash" : "6cca794bea731a28ef21f4162b934f89f594a59c",
+            "contentHash" : "d7778286ff745411df6ad49aba19a4a8454099",
+            "syncHash" : "3064177d5f9e614f0927ba91999e716796543",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 600,
+            "type" : "GAUGE",
             "id" : "Datasource JDBC Metrics~Prepared Statement Cache Delete Count"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource JDBC Metrics~Prepared Statement Cache Delete Count"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20JDBC%20Metrics~Prepared%20Statement%20Cache%20Hit%20Count",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20JDBC%20Metrics~Prepared%20Statement%20Cache%20Hit%20Count",
           "name" : "Prepared Statement Cache Hit Count",
+          "identityHash" : "87d018668fa0d5a51f982d864287e8da3af63ad4",
+          "contentHash" : "53be6e379a2eb85dbb9ad27d8924a11f57f759",
+          "syncHash" : "d3f6ff6b6af74c49d5cd4fa1e6437aaaaadb6",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20JDBC%20Metrics~Prepared%20Statement%20Cache%20Hit%20Count",
             "name" : "Prepared Statement Cache Hit Count",
+            "identityHash" : "bbfe3a3a6f0c857dd20105c21a3583215bb1ff6",
+            "contentHash" : "9e199ecef69098c3e25f6395f9d8691f2957e41",
+            "syncHash" : "53f36fffd3130878dfd0637a253a19843e85a",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 600,
+            "type" : "GAUGE",
             "id" : "Datasource JDBC Metrics~Prepared Statement Cache Hit Count"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource JDBC Metrics~Prepared Statement Cache Hit Count"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20JDBC%20Metrics~Prepared%20Statement%20Cache%20Miss%20Count",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20JDBC%20Metrics~Prepared%20Statement%20Cache%20Miss%20Count",
           "name" : "Prepared Statement Cache Miss Count",
+          "identityHash" : "208df459ef7826ff20edbae33c2ffd52e9f8cfda",
+          "contentHash" : "9d31f7fdffda93f7cf64732aa29cacb9c9a48f8",
+          "syncHash" : "df8f82d38dc674bd8540c9d6711e7bc5ef",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20JDBC%20Metrics~Prepared%20Statement%20Cache%20Miss%20Count",
             "name" : "Prepared Statement Cache Miss Count",
+            "identityHash" : "b8a0f5782c83e8e4621cde1a9708b1cef9f8041",
+            "contentHash" : "b5e6afd292af2be27f383063a068f51c6a93c931",
+            "syncHash" : "5370a07920b28de5791cc812020eb5e97ed83bc",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 600,
+            "type" : "GAUGE",
             "id" : "Datasource JDBC Metrics~Prepared Statement Cache Miss Count"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource JDBC Metrics~Prepared Statement Cache Miss Count"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Active%20Count",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Active%20Count",
           "name" : "Active Count",
+          "identityHash" : "9c8ad644f3339cc78c1cd09bb5949480cf391d",
+          "contentHash" : "4c2329b482e5d330cea18feaee917b595b3dfcf",
+          "syncHash" : "268ec1e2a138a49e30ab7c94f550bfe9a85895",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20Pool%20Metrics~Active%20Count",
             "name" : "Active Count",
+            "identityHash" : "618466f7c5ba51b3a4cfbebd181983739b287b",
+            "contentHash" : "1440c095948bcb4923c0dca1d7f52537b59c8f6",
+            "syncHash" : "905714c1485b9ff294d4a89d628a0d8cc1f551",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 30,
+            "type" : "GAUGE",
             "id" : "Datasource Pool Metrics~Active Count"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource Pool Metrics~Active Count"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Available%20Count",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Available%20Count",
           "name" : "Available Count",
+          "identityHash" : "cab149814b92f7659fa88060b7879a77fb1ce6ad",
+          "contentHash" : "9ad9841a44d2232d407b749c0a82f98a9a1814a",
+          "syncHash" : "83a67ae46fca95781e4fbab81a535648af468199",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20Pool%20Metrics~Available%20Count",
             "name" : "Available Count",
+            "identityHash" : "8cde6c3fac5b49da59c13b1f75fdc64488f90f7",
+            "contentHash" : "8f58625621178f98916cabfb7a7a5c09d538d5",
+            "syncHash" : "1829d0194b4320498428da493503c8616f16f85",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 30,
+            "type" : "GAUGE",
             "id" : "Datasource Pool Metrics~Available Count"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource Pool Metrics~Available Count"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Average%20Blocking%20Time",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Average%20Blocking%20Time",
           "name" : "Average Blocking Time",
+          "identityHash" : "fbdaeb85a07fd0879adb5238ae672683c4b0ce3a",
+          "contentHash" : "6b29c99fc82167452b31da4cedc3ba9382fa8326",
+          "syncHash" : "c284c9b9e9b2d48f1e8eec12d1727f4a56a6fc0",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20Pool%20Metrics~Average%20Blocking%20Time",
             "name" : "Average Blocking Time",
+            "identityHash" : "1cf4767a72f5a12d3726ed37d8a3b3a5028d70",
+            "contentHash" : "9335ea9d7555a653a13e842d4236e722ffc9c7f",
+            "syncHash" : "51424a59c73a501085591d786be9dd2a1a4d70",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 600,
+            "type" : "GAUGE",
             "id" : "Datasource Pool Metrics~Average Blocking Time"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource Pool Metrics~Average Blocking Time"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Average%20Creation%20Time",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Average%20Creation%20Time",
           "name" : "Average Creation Time",
+          "identityHash" : "91b4b9628726bdfb4e5cf6e06947695f5a",
+          "contentHash" : "31b2fa6e368937a0e98ae0cec8c311ceeb6abb",
+          "syncHash" : "9b44a3ac3fa250d98c312363f8f38b13dc1a579",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20Pool%20Metrics~Average%20Creation%20Time",
             "name" : "Average Creation Time",
+            "identityHash" : "d37beaba7174897dcf392ee284567fcd21b092",
+            "contentHash" : "771813422edbfa93e7b75822fa922b7e4af2cc7",
+            "syncHash" : "99c9fad83efcf13c81e747f69bc12da5693b055",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 30,
+            "type" : "GAUGE",
             "id" : "Datasource Pool Metrics~Average Creation Time"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource Pool Metrics~Average Creation Time"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Average%20Get%20Time",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Average%20Get%20Time",
           "name" : "Average Get Time",
+          "identityHash" : "3e94f0b8d39b12beff9b216c399f2c37322d3",
+          "contentHash" : "8f17d103875244adbf135d579242a6ca8bba3",
+          "syncHash" : "7a877c31419ba9c368f85553f657060438aea35",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20Pool%20Metrics~Average%20Get%20Time",
             "name" : "Average Get Time",
+            "identityHash" : "20c7902c49b19bc97162e8ca17ebe62dad4d1ff",
+            "contentHash" : "1a265beff1c4b82721fb70d5ccbcda33e2c623c3",
+            "syncHash" : "1245bda1edbea5c04ff281f8d3e37ea0b44bfe42",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 30,
+            "type" : "GAUGE",
             "id" : "Datasource Pool Metrics~Average Get Time"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource Pool Metrics~Average Get Time"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Blocking%20Failure%20Count",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Blocking%20Failure%20Count",
           "name" : "Blocking Failure Count",
+          "identityHash" : "1753f8b5058519b5ff641ddbcf2583599b34d53",
+          "contentHash" : "6a22e76874b34dc4e4b34e4b14981c605ab3978b",
+          "syncHash" : "687f90dbe6e57b92378033206559fe498e7076c5",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20Pool%20Metrics~Blocking%20Failure%20Count",
             "name" : "Blocking Failure Count",
+            "identityHash" : "74be1a84128a299d7a09b938287d51c75ec12",
+            "contentHash" : "1897b1674f8ccdfafd7647a97637ed88d1c9ae47",
+            "syncHash" : "a527736e309194cb4dff8a48f26b417a75df5563",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 600,
+            "type" : "GAUGE",
             "id" : "Datasource Pool Metrics~Blocking Failure Count"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource Pool Metrics~Blocking Failure Count"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Created%20Count",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Created%20Count",
           "name" : "Created Count",
+          "identityHash" : "5a9b6b27e65ef7fd3b95bd99e5fc9819f394be",
+          "contentHash" : "81bb16b44b396b45f2b92dea834f20d32018e022",
+          "syncHash" : "b0df177d6d5be6288a18b7289ce6d6e4a5ae1",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20Pool%20Metrics~Created%20Count",
             "name" : "Created Count",
+            "identityHash" : "324f82c7bede83c8f9ac5e0c4db1637259ff73",
+            "contentHash" : "f19ef2554ae5b8ee78a2105826698ebbc6afe9ff",
+            "syncHash" : "279a34a48dca7e47209976a06cd786bc8a033b",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 600,
+            "type" : "GAUGE",
             "id" : "Datasource Pool Metrics~Created Count"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource Pool Metrics~Created Count"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Destroyed%20Count",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Destroyed%20Count",
           "name" : "Destroyed Count",
+          "identityHash" : "b2fda1558d724d9883b99da9b7267ad2dfb415d",
+          "contentHash" : "e783fb8d99ce531a52cee5c150495b917fe12f51",
+          "syncHash" : "73bec2c09e6eecdda06398796e5515e782cc75",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20Pool%20Metrics~Destroyed%20Count",
             "name" : "Destroyed Count",
+            "identityHash" : "87f3c2434743e715935d382af6266e5e6d66d469",
+            "contentHash" : "45d422636c5888cbc59e62966c8983a73c1650a5",
+            "syncHash" : "14c0a72967bd5dff90b52056f6b47cbc7d917655",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 600,
+            "type" : "GAUGE",
             "id" : "Datasource Pool Metrics~Destroyed Count"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource Pool Metrics~Destroyed Count"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Idle%20Count",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Idle%20Count",
           "name" : "Idle Count",
+          "identityHash" : "d29ce22537be84a60581836841ada85302c2363",
+          "contentHash" : "d2c947b7e027e63489c8ec97def1cd426d7031",
+          "syncHash" : "b262fb047ca63076e684c29197a91df47bfdff",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20Pool%20Metrics~Idle%20Count",
             "name" : "Idle Count",
+            "identityHash" : "6ba232119aae831f0fc9559fd753ce7fce69f21",
+            "contentHash" : "d5898f4ce66818a1acab3557c19caa9d5425465",
+            "syncHash" : "aa4e74cfe6c35a531fbb87ba9ed2f407685847f",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 600,
+            "type" : "GAUGE",
             "id" : "Datasource Pool Metrics~Idle Count"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource Pool Metrics~Idle Count"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~In%20Use%20Count",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~In%20Use%20Count",
           "name" : "In Use Count",
+          "identityHash" : "b274573d182e89e5d85d3253cb6bce65f3ee99",
+          "contentHash" : "fdce9d2a4abd52c7803e386d17ddbb41c69ee5",
+          "syncHash" : "7c7e36fb2e53e4465df3b09a8b90fd5818f5c4b9",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20Pool%20Metrics~In%20Use%20Count",
             "name" : "In Use Count",
+            "identityHash" : "8314efb84866539834be4fdedd8cba86dffcdf",
+            "contentHash" : "782fa0c6403352a049684201322e7378483b",
+            "syncHash" : "6995aa24b2d9aacbf712e29c7d841a5cd9c3124d",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 30,
+            "type" : "GAUGE",
             "id" : "Datasource Pool Metrics~In Use Count"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource Pool Metrics~In Use Count"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Max%20Creation%20Time",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Max%20Creation%20Time",
           "name" : "Max Creation Time",
+          "identityHash" : "14cda99ae4c6bf6a77c2869d7e5c5f81326023f8",
+          "contentHash" : "21e6e2d2f34c66cb83b8f0588f889197650e8d",
+          "syncHash" : "2df8a35fe65814d2c49eff6623fcca3f0e413",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20Pool%20Metrics~Max%20Creation%20Time",
             "name" : "Max Creation Time",
+            "identityHash" : "d64864108b263182f32a5f64cda7637ae288b24",
+            "contentHash" : "9a98ac7e206f17588848fc79ba89b0543b576",
+            "syncHash" : "bb9e74b9c884a402b88f1594c73465dcaac75a",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 600,
+            "type" : "GAUGE",
             "id" : "Datasource Pool Metrics~Max Creation Time"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource Pool Metrics~Max Creation Time"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Max%20Get%20Time",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Max%20Get%20Time",
           "name" : "Max Get Time",
+          "identityHash" : "52f7828ec9aa9287d932c4e52fcde1a9194b2ce",
+          "contentHash" : "1c33df7d767b4a757fafa8ad481c4b6895b98b2",
+          "syncHash" : "18c3763994ecb69ca6c2b9aa75d67e48e140",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20Pool%20Metrics~Max%20Get%20Time",
             "name" : "Max Get Time",
+            "identityHash" : "ac18a27bd1f463fce93157b990169aa0f896366",
+            "contentHash" : "32c49f81bd6edce41b8cef96f6639f357d85a347",
+            "syncHash" : "e987e13884cf697526d71b42d37449fa4dc871ce",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 600,
+            "type" : "GAUGE",
             "id" : "Datasource Pool Metrics~Max Get Time"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource Pool Metrics~Max Get Time"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Max%20Used%20Count",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Max%20Used%20Count",
           "name" : "Max Used Count",
+          "identityHash" : "1f4782c5571c87b729be91e258af1aee1a5ce22b",
+          "contentHash" : "88e3983d119cb3e12563d1d55e8671dd30e87894",
+          "syncHash" : "219b2cc186785686c3ab3f475fc5fa5274d58a14",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20Pool%20Metrics~Max%20Used%20Count",
             "name" : "Max Used Count",
+            "identityHash" : "48b4fd8514a162ee442d04faa1329794cfa14d",
+            "contentHash" : "92ade5164e11469143db5e38e0d8dfec18a370a6",
+            "syncHash" : "60d3675b5fcd305ad1a7e11f5979bfca24d81887",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 600,
+            "type" : "GAUGE",
             "id" : "Datasource Pool Metrics~Max Used Count"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource Pool Metrics~Max Used Count"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Max%20Wait%20Count",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Max%20Wait%20Count",
           "name" : "Max Wait Count",
+          "identityHash" : "9ea5229030ec3652c2f2b66d45b6fc2babd0a2ba",
+          "contentHash" : "e8e98ee49bc8b69611b72fbea182f01a3a45dcfd",
+          "syncHash" : "8cd234c670c122bc862442ccadc36864d1be533f",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20Pool%20Metrics~Max%20Wait%20Count",
             "name" : "Max Wait Count",
+            "identityHash" : "95f46d183b573db9571950bb1a5fd7427615a",
+            "contentHash" : "f0b888f0fa581d183d9c5757b2bc01162892",
+            "syncHash" : "85ba938d6c1c83e7f82cee9aaca379933829660",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 600,
+            "type" : "GAUGE",
             "id" : "Datasource Pool Metrics~Max Wait Count"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource Pool Metrics~Max Wait Count"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Max%20Wait%20Time",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Max%20Wait%20Time",
           "name" : "Max Wait Time",
+          "identityHash" : "17a53c654ae4963c6ada8cfb6394fc63751daa",
+          "contentHash" : "63da11becb8b7f80b2797339a6bc9be74e5e794",
+          "syncHash" : "f29c1fdc688e79778967c7c023c16c61f32d22",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20Pool%20Metrics~Max%20Wait%20Time",
             "name" : "Max Wait Time",
+            "identityHash" : "f36e0dffc4255a7863606fe88907d839d9edc",
+            "contentHash" : "4af06cfcbd509a1b319727b858edc86d44253f3",
+            "syncHash" : "58ef9f129dc80368fd471bc55edf6b99fae3b9d",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 600,
+            "type" : "GAUGE",
             "id" : "Datasource Pool Metrics~Max Wait Time"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource Pool Metrics~Max Wait Time"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Timed%20Out",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Timed%20Out",
           "name" : "Timed Out",
+          "identityHash" : "9a208421d66cacf7d8c996015355e6723ea84bf",
+          "contentHash" : "5aedfb616e019b7e28a3371a67a436b016ed40",
+          "syncHash" : "ed40101adb7463e146739a48457ce68c737e1997",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20Pool%20Metrics~Timed%20Out",
             "name" : "Timed Out",
+            "identityHash" : "ad28789d5c06a73cd50455f1c20aaaa7a82259",
+            "contentHash" : "a841ed369c186516c27c3de4f6d8478b7d377cd4",
+            "syncHash" : "fef73d88fe20ec55c8fe4b87afba4798d507972",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 30,
+            "type" : "GAUGE",
             "id" : "Datasource Pool Metrics~Timed Out"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource Pool Metrics~Timed Out"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Total%20Blocking%20Time",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Total%20Blocking%20Time",
           "name" : "Total Blocking Time",
+          "identityHash" : "13f540c992ddf1d429739b6a12ad95bcbc4218",
+          "contentHash" : "2faa3dccdf6d5367e4c2233f25fa2f5a86b5752c",
+          "syncHash" : "4640e41d97eff6ba64b9b02397f9c7fdd5c5",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20Pool%20Metrics~Total%20Blocking%20Time",
             "name" : "Total Blocking Time",
+            "identityHash" : "a817d8533639bd1f71a70c9aefad040aacdd7cb",
+            "contentHash" : "575e379e8d89e7f9388f0ea70cf01a6af921f2",
+            "syncHash" : "906bbd80808aa180425246c8c91dca52a3a946a0",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 600,
+            "type" : "GAUGE",
             "id" : "Datasource Pool Metrics~Total Blocking Time"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource Pool Metrics~Total Blocking Time"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Total%20Creation%20Time",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Total%20Creation%20Time",
           "name" : "Total Creation Time",
+          "identityHash" : "6cee5453bcf1865b12d9c804029f91cc8174836",
+          "contentHash" : "e0a5c71bcc4064d010cbe61fa897d63871bb87b2",
+          "syncHash" : "31ea761bf61d1e2a60821377c42256630baf32f",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20Pool%20Metrics~Total%20Creation%20Time",
             "name" : "Total Creation Time",
+            "identityHash" : "47a62ab81c57f6b0b3cb81813acafba042615570",
+            "contentHash" : "65b5c0c08715aa8ccfc4e1af465e82c4fac446",
+            "syncHash" : "25218f6c1c24c549536f7f2cfaa16caf1b7d655",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 600,
+            "type" : "GAUGE",
             "id" : "Datasource Pool Metrics~Total Creation Time"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource Pool Metrics~Total Creation Time"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Total%20Get%20Time",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Total%20Get%20Time",
           "name" : "Total Get Time",
+          "identityHash" : "7afc2eb88b71f71a329b44d71e1e0eacbb266cf",
+          "contentHash" : "488ad2c65a230fa9aaa229433b2a5f6e94ceefe",
+          "syncHash" : "80ecb85d54b77f02c641fa59054d6e1201ebb3a",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20Pool%20Metrics~Total%20Get%20Time",
             "name" : "Total Get Time",
+            "identityHash" : "cb116e6bfac01b7c478b9cb5729b63c052bdf498",
+            "contentHash" : "532218e6368fecf9361d3da1ee86043d35f66a8",
+            "syncHash" : "81d7839c291817eceec02dd1a1629677c17570",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 600,
+            "type" : "GAUGE",
             "id" : "Datasource Pool Metrics~Total Get Time"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource Pool Metrics~Total Get Time"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Wait%20Count",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS%5D~MT~Datasource%20Pool%20Metrics~Wait%20Count",
           "name" : "Wait Count",
+          "identityHash" : "ca8fa944f75dbf9e41a2d6a868043d9f6b97675",
+          "contentHash" : "37511083f39f7baaf1f88cc95c1fc2427e38629",
+          "syncHash" : "6855c0a66c3996dfb97063a1c4ba9d6697c0f224",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Datasource%20Pool%20Metrics~Wait%20Count",
             "name" : "Wait Count",
+            "identityHash" : "9cd2d0e9e1657b87fcc5fb85481a93f8ebbd63c",
+            "contentHash" : "3851b2f0234e4834fd6c9d70b927c48dd26fe97",
+            "syncHash" : "acaba59355b7b799eafb7f916d23797318598529",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 600,
+            "type" : "GAUGE",
             "id" : "Datasource Pool Metrics~Wait Count"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource Pool Metrics~Wait Count"
         } ]
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:52:06 GMT
+  recorded_at: Thu, 15 Sep 2016 20:36:28 GMT
+- request:
+    method: post
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/metrics/stats/query
+    body:
+      encoding: UTF-8
+      string: '{"metrics":{"gauge":["MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Available Count","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Average Creation Time","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Average Get Time","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~In Use Count","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Max Wait Time","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Timed Out"],"counter":[],"availability":[]},"start":1473962400000,"end":1473976800001,"bucketDuration":"3600s","types":["gauge","gauge_rate","counter","counter_rate","availability"]}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1028'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.1
+      Date:
+      - Thu, 15 Sep 2016 20:36:28 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '5944'
+      Connection:
+      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Pragma:
+      - no-cache
+    body:
+      encoding: UTF-8
+      string: '{"gauge":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Timed Out":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":71,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Average Get Time":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":71,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Max Wait Time":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":3,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Average Creation Time":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":71,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Available Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":71,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~In Use Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":71,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]},"gauge_rate":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Timed Out":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":70,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Average Get Time":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":70,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Max Wait Time":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":2,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Average Creation Time":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":70,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Available Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":70,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~In Use Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":70,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]}}'
+    http_version: 
+  recorded_at: Thu, 15 Sep 2016 20:36:28 GMT
+- request:
+    method: post
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/metrics/stats/query
+    body:
+      encoding: UTF-8
+      string: '{"metrics":{"gauge":["MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Available Count","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Average Creation Time","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Average Get Time"],"counter":[],"availability":[]},"start":1473962400000,"end":1473976800001,"bucketDuration":"3600s","types":["gauge","gauge_rate","counter","counter_rate","availability"]}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '619'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.1
+      Date:
+      - Thu, 15 Sep 2016 20:36:29 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '3004'
+      Connection:
+      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Pragma:
+      - no-cache
+    body:
+      encoding: UTF-8
+      string: '{"gauge":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Average Get Time":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":71,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Average Creation Time":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":71,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Available Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":71,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]},"gauge_rate":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Average Get Time":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":70,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Average Creation Time":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":70,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Available Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":70,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]}}'
+    http_version: 
+  recorded_at: Thu, 15 Sep 2016 20:36:29 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~Available%20Count/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~Available%20Count
     body:
       encoding: US-ASCII
       string: ''
@@ -470,13 +773,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:52:06 GMT
+      - Thu, 15 Sep 2016 20:36:29 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '259'
       Connection:
       - keep-alive
       Expires:
@@ -489,12 +792,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Available Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969658101,"maxTimestamp":1473971783001}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:52:06 GMT
+  recorded_at: Thu, 15 Sep 2016 20:36:29 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~Average%20Creation%20Time/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~Average%20Creation%20Time
     body:
       encoding: US-ASCII
       string: ''
@@ -515,13 +819,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:52:06 GMT
+      - Thu, 15 Sep 2016 20:36:29 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '265'
       Connection:
       - keep-alive
       Expires:
@@ -534,12 +838,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Average Creation Time","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969658103,"maxTimestamp":1473971783001}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:52:06 GMT
+  recorded_at: Thu, 15 Sep 2016 20:36:29 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~Average%20Get%20Time/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~Average%20Get%20Time
     body:
       encoding: US-ASCII
       string: ''
@@ -560,13 +865,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:52:06 GMT
+      - Thu, 15 Sep 2016 20:36:29 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '260'
       Connection:
       - keep-alive
       Expires:
@@ -579,12 +884,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Average Get Time","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969658139,"maxTimestamp":1473971783001}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:52:06 GMT
+  recorded_at: Thu, 15 Sep 2016 20:36:29 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~Available%20Count/raw/?limit=1&order=ASC&start=0
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~In%20Use%20Count
     body:
       encoding: US-ASCII
       string: ''
@@ -605,13 +911,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:52:07 GMT
+      - Thu, 15 Sep 2016 20:36:29 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '41'
+      - '256'
       Connection:
       - keep-alive
       Expires:
@@ -624,12 +930,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1470233678131,"value":0.0}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~In Use Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969658103,"maxTimestamp":1473971783001}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:52:07 GMT
+  recorded_at: Thu, 15 Sep 2016 20:36:29 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~Available%20Count/raw/?limit=1&order=DESC&start=0
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~Max%20Wait%20Time
     body:
       encoding: US-ASCII
       string: ''
@@ -650,13 +957,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:52:07 GMT
+      - Thu, 15 Sep 2016 20:36:30 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '41'
+      - '257'
       Connection:
       - keep-alive
       Expires:
@@ -669,12 +976,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1470239512015,"value":0.0}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Max Wait Time","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473970228004,"maxTimestamp":1473971429002}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:52:07 GMT
+  recorded_at: Thu, 15 Sep 2016 20:36:30 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~Average%20Creation%20Time/raw/?limit=1&order=ASC&start=0
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~Timed%20Out
     body:
       encoding: US-ASCII
       string: ''
@@ -695,13 +1003,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:52:07 GMT
+      - Thu, 15 Sep 2016 20:36:30 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '41'
+      - '253'
       Connection:
       - keep-alive
       Expires:
@@ -714,547 +1022,8 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1470233678212,"value":0.0}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=datasources/data-source=ExampleDS]~MT~Datasource
+        Pool Metrics~Timed Out","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969658111,"maxTimestamp":1473971783001}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:52:07 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~Average%20Creation%20Time/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:52:07 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '41'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470239512003,"value":0.0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:52:07 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~Average%20Get%20Time/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:52:07 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '41'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233678241,"value":0.0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:52:07 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~Average%20Get%20Time/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:52:08 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '41'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470239512005,"value":0.0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:52:08 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~In%20Use%20Count/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:52:08 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '41'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233678212,"value":0.0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:52:08 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~In%20Use%20Count/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:52:08 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '41'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470239512015,"value":0.0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:52:08 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~Max%20Wait%20Time/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:52:08 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '41'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470234248030,"value":0.0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:52:08 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~Max%20Wait%20Time/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:52:09 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '41'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470239463001,"value":0.0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:52:09 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~Timed%20Out/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:52:09 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '41'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233678215,"value":0.0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:52:09 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~Timed%20Out/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:52:09 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '41'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470239512006,"value":0.0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:52:09 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~In%20Use%20Count/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:52:09 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '343'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:52:09 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~Max%20Wait%20Time/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:52:09 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '343'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:52:09 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=datasources%2Fdata-source=ExampleDS%5D~MT~Datasource%20Pool%20Metrics~Timed%20Out/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:52:10 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '343'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:52:10 GMT
+  recorded_at: Thu, 15 Sep 2016 20:36:30 GMT
 recorded_with: VCR 3.0.3

@@ -23,9 +23,9 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:39 GMT
+      - Thu, 15 Sep 2016 20:32:55 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -38,13 +38,13 @@ http_interactions:
       encoding: ASCII-8BIT
       string: |-
         {
-          "Implementation-Version" : "0.17.3.Final",
-          "Built-From-Git-SHA1" : "144a571ea8f3a819737c2937ccc0492d8a116bb4",
+          "Implementation-Version" : "0.18.0.Final",
+          "Built-From-Git-SHA1" : "be1107e48907ebc1d8de4dc571275edd9daf0424",
           "Inventory-Implementation" : "org.hawkular.inventory.impl.tinkerpop.TinkerpopInventory",
           "Initialized" : "true"
         }
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:39 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:55 GMT
 - request:
     method: get
     uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/status
@@ -68,9 +68,9 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:39 GMT
+      - Thu, 15 Sep 2016 20:32:55 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -81,9 +81,9 @@ http_interactions:
       - Undertow/1
     body:
       encoding: UTF-8
-      string: '{"MetricsService":"STARTED","Implementation-Version":"0.18.0.Final","Built-From-Git-SHA1":"d5281e70603719809bdada72249b9330b22ebf96"}'
+      string: '{"MetricsService":"STARTED","Implementation-Version":"0.19.2.Final","Built-From-Git-SHA1":"ae0e942d65c180d23e4f2791a86b21915b04a334"}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:39 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:55 GMT
 - request:
     method: get
     uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/inventory/traversal/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/rl;incorporates/type=m?sort=id
@@ -107,13 +107,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:39 GMT
+      - Thu, 15 Sep 2016 20:32:55 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '9321'
+      - '15043'
       Connection:
       - keep-alive
       Expires:
@@ -133,176 +133,274 @@ http_interactions:
       encoding: ASCII-8BIT
       string: |-
         [ {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;AI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~AT~Server%20Availability~Server%20Availability",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/m;AI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~AT~Server%20Availability~Server%20Availability",
           "name" : "Server Availability",
+          "identityHash" : "1d502c9fc01620743cb6fb305f2aa4f08ae441bc",
+          "contentHash" : "4ce691c1ce3e5411edeb37b15ced52d5541f52d",
+          "syncHash" : "e2b0db338596fee6fb9639eb1ee09c64dffa881c",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Server%20Availability~Server%20Availability",
             "name" : "Server Availability",
+            "identityHash" : "69beedc2b0c5cf2f3d0484b9c1aa9e4cdcf93",
+            "contentHash" : "6a4899a2f3f17eebaa41bc8535b1d55b177ed5",
+            "syncHash" : "eb1bd0737685952db2cf013326b98647edcd63",
             "unit" : "NONE",
-            "type" : "AVAILABILITY",
+            "metricDataType" : "availability",
             "collectionInterval" : 30,
+            "type" : "AVAILABILITY",
             "id" : "Server Availability~Server Availability"
           },
           "id" : "AI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~AT~Server Availability~Server Availability"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions",
           "name" : "Aggregated Active Web Sessions",
+          "identityHash" : "ee7e1dd9da315bae3c96574deae6ee9f58bc31d",
+          "contentHash" : "62603865ec3f7fd71afead9c158f1d14236df",
+          "syncHash" : "a65396fb655b2294d58ea814f4c3198d232ef35c",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions",
             "name" : "Aggregated Active Web Sessions",
+            "identityHash" : "a82dc495957628db4b96ca5c44213ce023c792b9",
+            "contentHash" : "88e4867ae0184f34569819856ef88bb38ea9aae9",
+            "syncHash" : "6b1c76b1e4a9992a683545ebafc0e56126b193",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 60,
+            "type" : "GAUGE",
             "id" : "WildFly Aggregated Web Metrics~Aggregated Active Web Sessions"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Active Web Sessions"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions",
           "name" : "Aggregated Expired Web Sessions",
+          "identityHash" : "a1e13f83eda163447d44d9dd5158f93972810b3",
+          "contentHash" : "56374cd876fc90a88534db819b8e33e54be04cb2",
+          "syncHash" : "e1de2eea4bb8b8259c0f21547ac19eb66e899fe",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions",
             "name" : "Aggregated Expired Web Sessions",
+            "identityHash" : "3c806e8b625362b37f972a3594448c4aa8b3",
+            "contentHash" : "bd247d141335fa56390bfa0c0995f24ae165b2b",
+            "syncHash" : "54e69020815b906bcb73c54c6010cbd84add36",
             "unit" : "NONE",
-            "type" : "COUNTER",
+            "metricDataType" : "counter",
             "collectionInterval" : 60,
+            "type" : "COUNTER",
             "id" : "WildFly Aggregated Web Metrics~Aggregated Expired Web Sessions"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Expired Web Sessions"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions",
           "name" : "Aggregated Max Active Web Sessions",
+          "identityHash" : "4a2564c394f4588d44b9fec2afda0f5ddc71b6e",
+          "contentHash" : "ae3bf24047179781b328575fce182d13a7beb2",
+          "syncHash" : "4bf77323bd2e89b3246fc8d7188319b53d2056",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions",
             "name" : "Aggregated Max Active Web Sessions",
+            "identityHash" : "a677b62ab5ec7632a32af8b6ef08aef813fd1f",
+            "contentHash" : "a560e51958ebf61f4f37754cc7e1ee5869e333",
+            "syncHash" : "1c61862e0772babfc11e1f95f1c3edbfb27b3d",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 60,
+            "type" : "GAUGE",
             "id" : "WildFly Aggregated Web Metrics~Aggregated Max Active Web Sessions"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Max Active Web Sessions"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions",
           "name" : "Aggregated Rejected Web Sessions",
+          "identityHash" : "a275812a16ebee5be767b1b443ed4c9f85a45c5",
+          "contentHash" : "58fa80cdcea701bed1f4de6b8a2cc7a405435",
+          "syncHash" : "bb9e953e0c7cf5a48f505dec23809dfa0c285",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions",
             "name" : "Aggregated Rejected Web Sessions",
+            "identityHash" : "6af37a7acb8c6eab4818313a281748152896534",
+            "contentHash" : "107223a5fe4b16b12392f9ede6d2dd10994ff524",
+            "syncHash" : "50358eca9a532cb082cd72edb7324da4f9d0f8",
             "unit" : "NONE",
-            "type" : "COUNTER",
+            "metricDataType" : "counter",
             "collectionInterval" : 60,
+            "type" : "COUNTER",
             "id" : "WildFly Aggregated Web Metrics~Aggregated Rejected Web Sessions"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Rejected Web Sessions"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count",
           "name" : "Aggregated Servlet Request Count",
+          "identityHash" : "339fece623b7ebd8ee9c5ad8834d36a640f1c0b4",
+          "contentHash" : "aaa2782e0becc24343c4fbb312f15b94fdd7",
+          "syncHash" : "b45f23bdd9ed1d71be4b6ea9bfbb4a64ad83780",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count",
             "name" : "Aggregated Servlet Request Count",
+            "identityHash" : "95556b3b6367d481ebfd12997646e08fef9291e0",
+            "contentHash" : "4f89e6ab45a9794aa0bd7bba471d6a7871eaaf0",
+            "syncHash" : "646d76523bcdaaf6548d387ac7a88687579b",
             "unit" : "NONE",
-            "type" : "COUNTER",
+            "metricDataType" : "counter",
             "collectionInterval" : 60,
+            "type" : "COUNTER",
             "id" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Count"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Servlet Request Count"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time",
           "name" : "Aggregated Servlet Request Time",
+          "identityHash" : "e81f37ad5479f0f9efe3ad7e24f1dfbf1e2b76",
+          "contentHash" : "364912e7da607fcc532b318878fe44b046e7cd7b",
+          "syncHash" : "dcfa65e97425c3fcfbe25172bcfd486ed15c42d",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time",
             "name" : "Aggregated Servlet Request Time",
+            "identityHash" : "f949025e0087974acae8cffab1598344932f6c",
+            "contentHash" : "55b3cfa06b2937e82fc8e74518ddadf053c6a7c",
+            "syncHash" : "eec1ac08579cb734ab54333bccc76823cf4e9a4",
             "unit" : "NONE",
-            "type" : "COUNTER",
+            "metricDataType" : "counter",
             "collectionInterval" : 60,
+            "type" : "COUNTER",
             "id" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Time"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Servlet Request Time"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration",
           "name" : "Accumulated GC Duration",
+          "identityHash" : "b129afde345829c9d3e3ffbb48efca47ee4f1d3",
+          "contentHash" : "7dcb944427c62da2736c3cf1788be0c541627482",
+          "syncHash" : "27a6e7b38e54be8703ec26e7b7f96d4175d7d97",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration",
             "name" : "Accumulated GC Duration",
+            "identityHash" : "44916cf1eae6344af4cd0b2a562c5328562c3",
+            "contentHash" : "cd04579e9872d6862ae42e5f8e1229a8e7b9ba6",
+            "syncHash" : "123d4b01743235951bdf260c798c2588f14fbc7",
             "unit" : "MILLISECONDS",
-            "type" : "COUNTER",
+            "metricDataType" : "counter",
             "collectionInterval" : 60,
+            "type" : "COUNTER",
             "id" : "WildFly Memory Metrics~Accumulated GC Duration"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly Memory Metrics~Accumulated GC Duration"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed",
           "name" : "Heap Committed",
+          "identityHash" : "b8d0e8ced2c56f13f93b95c1bbf4325f401a564c",
+          "contentHash" : "6f686c26c4f0fabbae675e2999de75ebdb51d52a",
+          "syncHash" : "c237af86662ed8f03b1410f891f88e45b4a211",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;WildFly%20Memory%20Metrics~Heap%20Committed",
             "name" : "Heap Committed",
+            "identityHash" : "405253f87a6e98aabe2d7a4a524f5796d9d97e",
+            "contentHash" : "96a160b6c8ec81a1964ff9f0b9dca147317b21a",
+            "syncHash" : "b049eb1726fbdc58089e94fe1b3891cb65a434",
             "unit" : "BYTES",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 60,
+            "type" : "GAUGE",
             "id" : "WildFly Memory Metrics~Heap Committed"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly Memory Metrics~Heap Committed"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max",
           "name" : "Heap Max",
+          "identityHash" : "2bff5e8aaa7e6838f15319eee50f9add236c56",
+          "contentHash" : "7eab9a30196aed7729e5701f7b876fe12b3d397",
+          "syncHash" : "9664d8f2ee2289b14b19ff737513f9644ea643",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;WildFly%20Memory%20Metrics~Heap%20Max",
             "name" : "Heap Max",
+            "identityHash" : "a84cf574232510897e26b98fd9ea5702a95dfc7",
+            "contentHash" : "728cfde41d561e2aaad7badd041fbc62d4a1c9",
+            "syncHash" : "44a1cd5b39203f7b034e1399975e1de2199b95",
             "unit" : "BYTES",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 60,
+            "type" : "GAUGE",
             "id" : "WildFly Memory Metrics~Heap Max"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly Memory Metrics~Heap Max"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used",
           "name" : "Heap Used",
+          "identityHash" : "1b68ee6f142166d21c6fe1df23c7a894a877113a",
+          "contentHash" : "e1f21db27a9c18a30fdd7d892ebc4803c5ae3d",
+          "syncHash" : "3d75d259c5716daf7bfa9c44f9ceeea638f117",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;WildFly%20Memory%20Metrics~Heap%20Used",
             "name" : "Heap Used",
+            "identityHash" : "3be5b5fdabed925ac46fdc6d8295e34bbd3147a",
+            "contentHash" : "1ac7446e374bc0c67d6a7787b89f451f71eff61",
+            "syncHash" : "820ff72eadae9a6554fc7950b46da92ee9f16d",
             "unit" : "BYTES",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 30,
+            "type" : "GAUGE",
             "id" : "WildFly Memory Metrics~Heap Used"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly Memory Metrics~Heap Used"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed",
           "name" : "NonHeap Committed",
+          "identityHash" : "71733868110cf8122407128a09250b2e681bc",
+          "contentHash" : "9d9c2bf396db6a8e503a9363458d8272fa3982",
+          "syncHash" : "7ff9143e52efe3da27bd5eead8f61448af5acbe",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;WildFly%20Memory%20Metrics~NonHeap%20Committed",
             "name" : "NonHeap Committed",
+            "identityHash" : "55d9f8e5b0a3b5d0af3fd3bac67b08b186c68b5",
+            "contentHash" : "b87567f24e6deedacaba3d810624a6e8644987",
+            "syncHash" : "734029e2cc5177c5ebaea4cafaaaaa5497ddf8e8",
             "unit" : "BYTES",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 60,
+            "type" : "GAUGE",
             "id" : "WildFly Memory Metrics~NonHeap Committed"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly Memory Metrics~NonHeap Committed"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used",
           "name" : "NonHeap Used",
+          "identityHash" : "16117ac1cad1514b23f3fe6fff945c8c07af8f7",
+          "contentHash" : "e3915f3be39ff9e155fdea9d889519ca5afef53",
+          "syncHash" : "cc93aea8c1dfc2aa33e395a69848ca41554abbc",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;WildFly%20Memory%20Metrics~NonHeap%20Used",
             "name" : "NonHeap Used",
+            "identityHash" : "c785eddfb0f0baa1e832fc38485d686e2297497",
+            "contentHash" : "1663603b791828d87ea15380a4aca4df5cf79a70",
+            "syncHash" : "155d5a8c1deeb60d8328f343f42c94b5dacd31a",
             "unit" : "BYTES",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 30,
+            "type" : "GAUGE",
             "id" : "WildFly Memory Metrics~NonHeap Used"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly Memory Metrics~NonHeap Used"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count",
           "name" : "Thread Count",
+          "identityHash" : "cf9ecd5b21b7bd843d16f3bf2d9229e3571f",
+          "contentHash" : "ae2cd9c20c9d99230fa26ecc132bb7d63bf4685",
+          "syncHash" : "d39862199066df12dff6c96c431399685d57454c",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;WildFly%20Threading%20Metrics~Thread%20Count",
             "name" : "Thread Count",
+            "identityHash" : "1e41cf1c2b3c07e23983a3789c91bdc6f1cc88",
+            "contentHash" : "9525f2c2cef2aba67d34f9a621c050bde82f",
+            "syncHash" : "627b90d1abece6e1e365951ce374eff5abb99fb",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 120,
+            "type" : "GAUGE",
             "id" : "WildFly Threading Metrics~Thread Count"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly Threading Metrics~Thread Count"
         } ]
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:39 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:55 GMT
 - request:
     method: get
     uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/inventory/traversal/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/type=r
@@ -326,13 +424,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:39 GMT
+      - Thu, 15 Sep 2016 20:32:55 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '8831'
+      - '11391'
       Connection:
       - keep-alive
       Expires:
@@ -352,214 +450,233 @@ http_interactions:
       encoding: ASCII-8BIT
       string: |-
         [ {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS",
-          "properties" : {
-            "__identityHash" : "e5bba7c6c22ec4591bff4532ca14e989d1498c4"
-          },
-          "name" : "Datasource [ExampleDS]",
-          "identityHash" : "e5bba7c6c22ec4591bff4532ca14e989d1498c4",
-          "type" : {
-            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Datasource",
-            "name" : "Datasource",
-            "identityHash" : "b3291af08b396960f425871b493b6d9ee97e339f",
-            "id" : "Datasource"
-          },
-          "id" : "Local~/subsystem=datasources/data-source=ExampleDS"
-        }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fjdbc-driver%3Dh2",
-          "properties" : {
-            "__identityHash" : "8552bea1e08fc66573fff8b1a3645fb845a107d"
-          },
-          "name" : "JDBC Driver [h2]",
-          "identityHash" : "8552bea1e08fc66573fff8b1a3645fb845a107d",
-          "type" : {
-            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;JDBC%20Driver",
-            "name" : "JDBC Driver",
-            "id" : "JDBC Driver"
-          },
-          "id" : "Local~/subsystem=datasources/jdbc-driver=h2"
-        }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-command-gateway-war.war",
-          "properties" : {
-            "__identityHash" : "145efc8c7d6ce8c93167dd4956a3c1cbc6d0d1a"
-          },
-          "name" : "Deployment [hawkular-command-gateway-war.war]",
-          "identityHash" : "145efc8c7d6ce8c93167dd4956a3c1cbc6d0d1a",
-          "type" : {
-            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Deployment",
-            "name" : "Deployment",
-            "identityHash" : "183e79e0462c1f2fc866ba71f5db64c477b5dc",
-            "id" : "Deployment"
-          },
-          "id" : "Local~/deployment=hawkular-command-gateway-war.war"
-        }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-metrics-component.war",
-          "properties" : {
-            "__identityHash" : "eff2441b1d32b22a2428bec8fe59452ef5711e"
-          },
-          "name" : "Deployment [hawkular-metrics-component.war]",
-          "identityHash" : "eff2441b1d32b22a2428bec8fe59452ef5711e",
-          "type" : {
-            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Deployment",
-            "name" : "Deployment",
-            "identityHash" : "183e79e0462c1f2fc866ba71f5db64c477b5dc",
-            "id" : "Deployment"
-          },
-          "id" : "Local~/deployment=hawkular-metrics-component.war"
-        }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-actions-email.war",
-          "properties" : {
-            "__identityHash" : "f07118ef62f45788dba5d01a38b13fe33115785e"
-          },
-          "name" : "Deployment [hawkular-alerts-actions-email.war]",
-          "identityHash" : "f07118ef62f45788dba5d01a38b13fe33115785e",
-          "type" : {
-            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Deployment",
-            "name" : "Deployment",
-            "identityHash" : "183e79e0462c1f2fc866ba71f5db64c477b5dc",
-            "id" : "Deployment"
-          },
-          "id" : "Local~/deployment=hawkular-alerts-actions-email.war"
-        }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-wildfly-agent-download.war",
-          "properties" : {
-            "__identityHash" : "10181e9ef78b953ed93eb67f0d270de8dd5cce4"
-          },
-          "name" : "Deployment [hawkular-wildfly-agent-download.war]",
-          "identityHash" : "10181e9ef78b953ed93eb67f0d270de8dd5cce4",
-          "type" : {
-            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Deployment",
-            "name" : "Deployment",
-            "identityHash" : "183e79e0462c1f2fc866ba71f5db64c477b5dc",
-            "id" : "Deployment"
-          },
-          "id" : "Local~/deployment=hawkular-wildfly-agent-download.war"
-        }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war",
-          "properties" : {
-            "__identityHash" : "3fbe2fcdf21d9886257438b2aeb957825d6ffe"
-          },
-          "name" : "Deployment [hawkular-alerts-rest.war]",
-          "identityHash" : "3fbe2fcdf21d9886257438b2aeb957825d6ffe",
-          "type" : {
-            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Deployment",
-            "name" : "Deployment",
-            "identityHash" : "183e79e0462c1f2fc866ba71f5db64c477b5dc",
-            "id" : "Deployment"
-          },
-          "id" : "Local~/deployment=hawkular-alerts-rest.war"
-        }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-inventory-dist.war",
-          "properties" : {
-            "__identityHash" : "fe13b87cf8edfcd191a6d5169c3f376ac6b5d6"
-          },
-          "name" : "Deployment [hawkular-inventory-dist.war]",
-          "identityHash" : "fe13b87cf8edfcd191a6d5169c3f376ac6b5d6",
-          "type" : {
-            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Deployment",
-            "name" : "Deployment",
-            "identityHash" : "183e79e0462c1f2fc866ba71f5db64c477b5dc",
-            "id" : "Deployment"
-          },
-          "id" : "Local~/deployment=hawkular-inventory-dist.war"
-        }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-status.war",
-          "properties" : {
-            "__identityHash" : "1f10909debc744e659b8d4469384c361beae915b"
-          },
-          "name" : "Deployment [hawkular-status.war]",
-          "identityHash" : "1f10909debc744e659b8d4469384c361beae915b",
-          "type" : {
-            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Deployment",
-            "name" : "Deployment",
-            "identityHash" : "183e79e0462c1f2fc866ba71f5db64c477b5dc",
-            "id" : "Deployment"
-          },
-          "id" : "Local~/deployment=hawkular-status.war"
-        }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-rest-api.war",
-          "properties" : {
-            "__identityHash" : "5e7b52b93528c8c79c67eacd73723464c9755b9b"
-          },
-          "name" : "Deployment [hawkular-rest-api.war]",
-          "identityHash" : "5e7b52b93528c8c79c67eacd73723464c9755b9b",
-          "type" : {
-            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Deployment",
-            "name" : "Deployment",
-            "identityHash" : "183e79e0462c1f2fc866ba71f5db64c477b5dc",
-            "id" : "Deployment"
-          },
-          "id" : "Local~/deployment=hawkular-rest-api.war"
-        }, {
           "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dtransactions",
-          "properties" : {
-            "__identityHash" : "a3c9e6acf121df96fea6e5fcca9e846d8c9622"
-          },
           "name" : "Transaction Manager",
-          "identityHash" : "a3c9e6acf121df96fea6e5fcca9e846d8c9622",
+          "identityHash" : "8bd7e3e24ba8ac33263937baf05627ffd5ae49ed",
+          "contentHash" : "a6c39bff42bb3c59cb2a9df90bd9ba46ecfd4c",
+          "syncHash" : "85893145425b7f95de3c7f554430b6d884eb39d0",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Transaction%20Manager",
             "name" : "Transaction Manager",
+            "identityHash" : "2c82df7330b7ae48c43ae5413f9b8857f24a85f",
+            "contentHash" : "46c527a46c609bf03a66b2b9d8e091838a28107",
+            "syncHash" : "af0db9d805244129d4b12e8d4c5167ad52c2ca1",
             "id" : "Transaction Manager"
           },
           "id" : "Local~/subsystem=transactions"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault",
-          "properties" : {
-            "__identityHash" : "233999a3ffee0102f2acf833534625a196f74"
-          },
-          "name" : "Messaging Server [default]",
-          "identityHash" : "233999a3ffee0102f2acf833534625a196f74",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dinfinispan",
+          "name" : "Infinispan",
+          "identityHash" : "57cd52919b5e6d90fb1836791fd9684bfbc12c",
+          "contentHash" : "87f6d31913ce5af34bde86aa383aa81d9958a",
+          "syncHash" : "203fddb4de8ea11548e541c1b5763acfba2d475e",
           "type" : {
-            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Messaging%20Server",
-            "name" : "Messaging Server",
-            "id" : "Messaging Server"
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Infinispan",
+            "name" : "Infinispan",
+            "identityHash" : "a02a9a0121b9fe564ef869e72765e7f1c56b2a",
+            "contentHash" : "acbd2d38de78a774e94c399a2922ae46bea3783",
+            "syncHash" : "4daf646564159dbdc4ec5b5c8f9ba62a0ffb6",
+            "id" : "Infinispan"
           },
-          "id" : "Local~/subsystem=messaging-activemq/server=default"
+          "id" : "Local~/subsystem=infinispan"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dhawkular-wildfly-agent",
-          "properties" : {
-            "__identityHash" : "d9c07665258f43c5b0204259d342c8cb16f3ac"
-          },
-          "name" : "Hawkular WildFly Agent",
-          "identityHash" : "d9c07665258f43c5b0204259d342c8cb16f3ac",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-actions-email.war",
+          "name" : "Deployment [hawkular-alerts-actions-email.war]",
+          "identityHash" : "a9b1cf774915801d655fca56119b3dc89b2fe0",
+          "contentHash" : "c9e46694a372af5d839b126e4f8e9eaf7f2146a",
+          "syncHash" : "eacad469b6937b25e6c3e7eb7d248dc27951894f",
           "type" : {
-            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Hawkular%20WildFly%20Agent",
-            "name" : "Hawkular WildFly Agent",
-            "identityHash" : "1d7fbc312f708afc4643812f2772e7aabf283328",
-            "id" : "Hawkular WildFly Agent"
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "433a72aff3f116d4831031c9adc839488d4cff6",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "336a21703883542262d3965ec37209a1b7453b8",
+            "id" : "Deployment"
           },
-          "id" : "Local~/subsystem=hawkular-wildfly-agent"
+          "id" : "Local~/deployment=hawkular-alerts-actions-email.war"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS",
+          "name" : "Datasource [ExampleDS]",
+          "identityHash" : "402cbe9551cc2c147322a72e8296e65d0b02c36",
+          "contentHash" : "b58b567684c11abcad41d4c9987f5ab7dcc91e9b",
+          "syncHash" : "18f7ab1d970adb79feb3ec871e171899438f9",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Datasource",
+            "name" : "Datasource",
+            "identityHash" : "b3291af08b396960f425871b493b6d9ee97e339f",
+            "contentHash" : "546c2a207bd841a0c2d94a6ae8a87371c36ffa9f",
+            "syncHash" : "f65ba261ef70efe3812e95a9ecb68d4fb6f3157",
+            "id" : "Datasource"
+          },
+          "id" : "Local~/subsystem=datasources/data-source=ExampleDS"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-metrics-component.war",
+          "name" : "Deployment [hawkular-metrics-component.war]",
+          "identityHash" : "baa3a411c33baf3ad41d26b6faed4e989ee6389d",
+          "contentHash" : "e37c6946d156e34663ccd46773d91ac55b61",
+          "syncHash" : "328392ea6aec26cd72cfdf83f967abce6e12ffee",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "433a72aff3f116d4831031c9adc839488d4cff6",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "336a21703883542262d3965ec37209a1b7453b8",
+            "id" : "Deployment"
+          },
+          "id" : "Local~/deployment=hawkular-metrics-component.war"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-status.war",
+          "name" : "Deployment [hawkular-status.war]",
+          "identityHash" : "0457d586018f7d1b8b35219622dc62dd38f15f",
+          "contentHash" : "6dc4efef84b9a54a70f61074934b7c853a1e17a",
+          "syncHash" : "8c315b6e3e50c53b8a07ad98fd01969f26391ad",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "433a72aff3f116d4831031c9adc839488d4cff6",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "336a21703883542262d3965ec37209a1b7453b8",
+            "id" : "Deployment"
+          },
+          "id" : "Local~/deployment=hawkular-status.war"
         }, {
           "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsocket-binding-group%3Dstandard-sockets",
-          "properties" : {
-            "__identityHash" : "46b11f1b4da1bc4144e436565576d64353a8f7"
-          },
           "name" : "Socket Binding Group [standard-sockets]",
-          "identityHash" : "46b11f1b4da1bc4144e436565576d64353a8f7",
+          "identityHash" : "4eda43c1f9584bafa3598cc13128852512f7a",
+          "contentHash" : "57c78c644c2360bfc5251e501570bbc27b1f5466",
+          "syncHash" : "d5cf7eb9916446faf84aebbc6267ca4e6b59598",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Socket%20Binding%20Group",
             "name" : "Socket Binding Group",
             "identityHash" : "689259496c606a774ff8d4288893cf656230642d",
+            "contentHash" : "cb6167f7e9aabb8464bef22c93e8e16f6365ea3",
+            "syncHash" : "50a5241e87dab3c4b71cad0632ac8f13395e69",
             "id" : "Socket Binding Group"
           },
           "id" : "Local~/socket-binding-group=standard-sockets"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dinfinispan",
-          "properties" : {
-            "__identityHash" : "693fc87bc7a8fba877b299f333f86b67ff644a3c"
-          },
-          "name" : "Infinispan",
-          "identityHash" : "693fc87bc7a8fba877b299f333f86b67ff644a3c",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dhawkular-wildfly-agent",
+          "name" : "Hawkular WildFly Agent",
+          "identityHash" : "d9c07665258f43c5b0204259d342c8cb16f3ac",
+          "contentHash" : "fba7866bc34d2ba1ed776115ad9eceb79b6e1c",
+          "syncHash" : "8793bb7095a6da432b3b53773e66d7b02cc7",
           "type" : {
-            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Infinispan",
-            "name" : "Infinispan",
-            "id" : "Infinispan"
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Hawkular%20WildFly%20Agent",
+            "name" : "Hawkular WildFly Agent",
+            "identityHash" : "3f3074f6ccbc1d5aa93ef70b46860249b2ac755",
+            "contentHash" : "5631a1c89f7b7a5f5adcd5c8555cd43dcfe588",
+            "syncHash" : "f368b5149662f5a59c6e77b33a1f6beee35c5f0",
+            "id" : "Hawkular WildFly Agent"
           },
-          "id" : "Local~/subsystem=infinispan"
+          "id" : "Local~/subsystem=hawkular-wildfly-agent"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault",
+          "name" : "Messaging Server [default]",
+          "identityHash" : "2d969d55da1df457eaf44533a74c22af92258a9",
+          "contentHash" : "e4e99f5c774164440fdc28a9037ffdf7262a9f8",
+          "syncHash" : "9c5e74f1d82729c85c63455b070e2c17880dd63",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Messaging%20Server",
+            "name" : "Messaging Server",
+            "identityHash" : "c21e2c4be8b952d760ef3929652e304bd951ac4e",
+            "contentHash" : "333ae92fb6535ccf71d18badfd388f14a441d0",
+            "syncHash" : "35896341e6bfb41fe41e262adfe462dd854ada88",
+            "id" : "Messaging Server"
+          },
+          "id" : "Local~/subsystem=messaging-activemq/server=default"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-inventory-dist.war",
+          "name" : "Deployment [hawkular-inventory-dist.war]",
+          "identityHash" : "947bb65c0ccea5772fdb917d1524793f0ea47",
+          "contentHash" : "417c20bda5537eb48b72cc26a72d0a6c0b3cbe5",
+          "syncHash" : "a77ab1de67a62b466f2f0838ffed5b57a4fa17",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "433a72aff3f116d4831031c9adc839488d4cff6",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "336a21703883542262d3965ec37209a1b7453b8",
+            "id" : "Deployment"
+          },
+          "id" : "Local~/deployment=hawkular-inventory-dist.war"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fjdbc-driver%3Dh2",
+          "name" : "JDBC Driver [h2]",
+          "identityHash" : "8552bea1e08fc66573fff8b1a3645fb845a107d",
+          "contentHash" : "8bcc62c8866ea8f4667c8e881cb848896ef63fa",
+          "syncHash" : "3a11f1aae220d43d6fbaae9187193f680b86c8",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;JDBC%20Driver",
+            "name" : "JDBC Driver",
+            "identityHash" : "f9eaf22c8dff1416a34eb4d26a4bc6a99c46af2",
+            "contentHash" : "3f1b769e6846f49e2d5cfc55b8fe7a58e2742f2",
+            "syncHash" : "fa298d5f329ae7313f8648b70c0a4816a2734e0",
+            "id" : "JDBC Driver"
+          },
+          "id" : "Local~/subsystem=datasources/jdbc-driver=h2"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war",
+          "name" : "Deployment [hawkular-alerts-rest.war]",
+          "identityHash" : "1bc966c2f37010556534bc877adbdc8ebed4be31",
+          "contentHash" : "9d248c86d3673fcd56d63bd7bc3c2f2bfd0b3f0",
+          "syncHash" : "cd9bc265aa97aaa1fa48d53c32f97620e6c6c5",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "433a72aff3f116d4831031c9adc839488d4cff6",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "336a21703883542262d3965ec37209a1b7453b8",
+            "id" : "Deployment"
+          },
+          "id" : "Local~/deployment=hawkular-alerts-rest.war"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-rest-api.war",
+          "name" : "Deployment [hawkular-rest-api.war]",
+          "identityHash" : "1e761a2a7451ecacb76a7438a43e58593ac040",
+          "contentHash" : "2bfba7848683914b7dc337df6a9e9a299d10f4",
+          "syncHash" : "961cc0f929682f167b935058b8b7b3316d6c9fc0",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "433a72aff3f116d4831031c9adc839488d4cff6",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "336a21703883542262d3965ec37209a1b7453b8",
+            "id" : "Deployment"
+          },
+          "id" : "Local~/deployment=hawkular-rest-api.war"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-command-gateway-war.war",
+          "name" : "Deployment [hawkular-command-gateway-war.war]",
+          "identityHash" : "969b1f2527f36e78e0de6b7d8661bb57fae8751a",
+          "contentHash" : "3d65bb3dceb1e32f1289d923e51a926271e0d723",
+          "syncHash" : "b4a0a1d6a42b9830fafda3cbcc1d5ffd33da1a6",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "433a72aff3f116d4831031c9adc839488d4cff6",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "336a21703883542262d3965ec37209a1b7453b8",
+            "id" : "Deployment"
+          },
+          "id" : "Local~/deployment=hawkular-command-gateway-war.war"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-wildfly-agent-download.war",
+          "name" : "Deployment [hawkular-wildfly-agent-download.war]",
+          "identityHash" : "a217424f497ade3fdad3755ceb837b6a4b7f3a25",
+          "contentHash" : "e0784bf0dd411af714d5b85a98ffaaf9a612b24",
+          "syncHash" : "1524d6c2afcb8be4c68fe32dfb27dddeb5c7bed1",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "433a72aff3f116d4831031c9adc839488d4cff6",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "336a21703883542262d3965ec37209a1b7453b8",
+            "id" : "Deployment"
+          },
+          "id" : "Local~/deployment=hawkular-wildfly-agent-download.war"
         } ]
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:39 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:55 GMT
 - request:
     method: get
     uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/inventory/traversal/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem=transactions/rl;incorporates/type=m?sort=id
@@ -583,13 +700,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:40 GMT
+      - Thu, 15 Sep 2016 20:32:55 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '6572'
+      - '10593'
       Connection:
       - keep-alive
       Expires:
@@ -609,2012 +726,188 @@ http_interactions:
       encoding: ASCII-8BIT
       string: |-
         [ {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Aborted%20Transactions",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dtransactions/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Aborted%20Transactions",
           "name" : "Number of Aborted Transactions",
+          "identityHash" : "41333f883841728520de3b22121ba68916499afb",
+          "contentHash" : "928849d47b5a4443b7c5a2bef1f3e088d3896c",
+          "syncHash" : "9e745ccc4472d8b43e26f29f4db93e9a56592f",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Transactions%20Metrics~Number%20of%20Aborted%20Transactions",
             "name" : "Number of Aborted Transactions",
+            "identityHash" : "25b4b8fa5058306e80e0295168425d6fb75f6a3",
+            "contentHash" : "324f20e3e19c5a974a3519bf2e945d4df282d18",
+            "syncHash" : "5b85256d5073ebb688285fcf38ffc3757312fb14",
             "unit" : "NONE",
-            "type" : "COUNTER",
+            "metricDataType" : "counter",
             "collectionInterval" : 30,
+            "type" : "COUNTER",
             "id" : "Transactions Metrics~Number of Aborted Transactions"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Aborted Transactions"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Application%20Rollbacks",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dtransactions/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Application%20Rollbacks",
           "name" : "Number of Application Rollbacks",
+          "identityHash" : "6f95602b88d619582e29484d61fdfc71c75ee",
+          "contentHash" : "37c7fdb0c4ad8697e3246f30775cea37a83626",
+          "syncHash" : "9749f0b265af74f25078cbf54f5693b72fe2dab8",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Transactions%20Metrics~Number%20of%20Application%20Rollbacks",
             "name" : "Number of Application Rollbacks",
+            "identityHash" : "fc99f879312f15bc555d30d12ddd4cf3b81b2285",
+            "contentHash" : "41ab516fd331cca3617f9a72ddcaf360916bb0",
+            "syncHash" : "cac045e4947b696669637a7236a2d81be9376d6",
             "unit" : "NONE",
-            "type" : "COUNTER",
+            "metricDataType" : "counter",
             "collectionInterval" : 30,
+            "type" : "COUNTER",
             "id" : "Transactions Metrics~Number of Application Rollbacks"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Application Rollbacks"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Committed%20Transactions",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dtransactions/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Committed%20Transactions",
           "name" : "Number of Committed Transactions",
+          "identityHash" : "7ac31e1f54381f8380e794b4e7fc140947a918",
+          "contentHash" : "13ee254add7cac7af1b0a4fce9532b3559138bb6",
+          "syncHash" : "9f63aea6d92d6641052c6322397e5e7f463df1b",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Transactions%20Metrics~Number%20of%20Committed%20Transactions",
             "name" : "Number of Committed Transactions",
+            "identityHash" : "fe60974feaf3aa227d639192b114f116274ae4b2",
+            "contentHash" : "819b528fbb771a42f7589357863bb0ecac836d",
+            "syncHash" : "c1a44c4628cbb111315543e75ced6c4c93c1a865",
             "unit" : "NONE",
-            "type" : "COUNTER",
+            "metricDataType" : "counter",
             "collectionInterval" : 30,
+            "type" : "COUNTER",
             "id" : "Transactions Metrics~Number of Committed Transactions"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Committed Transactions"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Heuristics",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dtransactions/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Heuristics",
           "name" : "Number of Heuristics",
+          "identityHash" : "e99b9be0c9957e2a4623e2198910ef085659c",
+          "contentHash" : "9f5e04ca174ade12581ca74f76335ad268bbb",
+          "syncHash" : "ca9595259e6d4a3ec215d992e8e7cb9961ebb5",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Transactions%20Metrics~Number%20of%20Heuristics",
             "name" : "Number of Heuristics",
+            "identityHash" : "e9dc6c8454d533e67b609a8a411ce24c7a4a2b69",
+            "contentHash" : "30eed77291308df6ff95a52927956b3e80f79c4",
+            "syncHash" : "46855fdf95f6cdd513d27ec9a117d76f8a1c5",
             "unit" : "NONE",
-            "type" : "COUNTER",
+            "metricDataType" : "counter",
             "collectionInterval" : 30,
+            "type" : "COUNTER",
             "id" : "Transactions Metrics~Number of Heuristics"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Heuristics"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20In-Flight%20Transactions",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dtransactions/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20In-Flight%20Transactions",
           "name" : "Number of In-Flight Transactions",
+          "identityHash" : "aef67636e27c2238cd18feada6d9dbde0381747",
+          "contentHash" : "b336de4fb7e36b5d1a937214cc710fd7fb9e2b7",
+          "syncHash" : "ef47ba9329eadcec907e4027ea9a137eac51",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Transactions%20Metrics~Number%20of%20In-Flight%20Transactions",
             "name" : "Number of In-Flight Transactions",
+            "identityHash" : "deb940deaf6f7c6db1bd23c1673ca4f19394b4d",
+            "contentHash" : "527db78b676bbd3f9c64fb4d78590dcf040523",
+            "syncHash" : "82bca9e625bcdbad61739a3ef1b3b6bc430d92e",
             "unit" : "NONE",
-            "type" : "GAUGE",
+            "metricDataType" : "gauge",
             "collectionInterval" : 30,
+            "type" : "GAUGE",
             "id" : "Transactions Metrics~Number of In-Flight Transactions"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of In-Flight Transactions"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Nested%20Transactions",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dtransactions/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Nested%20Transactions",
           "name" : "Number of Nested Transactions",
+          "identityHash" : "4750435293464f954babd4241d9941bcf4385e29",
+          "contentHash" : "133baa2e68cf0a7a67a44986e6e67babc9c2ca8",
+          "syncHash" : "bb9a8eb2aa64b6cb0c3fe13ab9699d7e54be246",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Transactions%20Metrics~Number%20of%20Nested%20Transactions",
             "name" : "Number of Nested Transactions",
+            "identityHash" : "6a43c18b6984c4a5b6642f6e38d25d9ce66e2",
+            "contentHash" : "1faed81946d487c8e685f83e72828437474151d",
+            "syncHash" : "a6f948b7c89d2262fc2f6455d9ebab184926a763",
             "unit" : "NONE",
-            "type" : "COUNTER",
+            "metricDataType" : "counter",
             "collectionInterval" : 30,
+            "type" : "COUNTER",
             "id" : "Transactions Metrics~Number of Nested Transactions"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Nested Transactions"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Resource%20Rollbacks",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dtransactions/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Resource%20Rollbacks",
           "name" : "Number of Resource Rollbacks",
+          "identityHash" : "d50204e60c2e9494fbfefe7b62589de9fdd3bd",
+          "contentHash" : "52a76d45f52daf311c39b5e9e1dbb4d44dbb1cea",
+          "syncHash" : "73d9fd8f8fa51fe3c1476b99b91fcb43c7d113e8",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Transactions%20Metrics~Number%20of%20Resource%20Rollbacks",
             "name" : "Number of Resource Rollbacks",
+            "identityHash" : "2a1e4fb6d47babebfd5e92b377d5b15e8bcce54",
+            "contentHash" : "d1245161e5275bcf905bf4f71ae2b5438de5721d",
+            "syncHash" : "dc4a72bb07931599b97cc4ddcafbef54e9742c",
             "unit" : "NONE",
-            "type" : "COUNTER",
+            "metricDataType" : "counter",
             "collectionInterval" : 30,
+            "type" : "COUNTER",
             "id" : "Transactions Metrics~Number of Resource Rollbacks"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Resource Rollbacks"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Timed%20Out%20Transactions",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dtransactions/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Timed%20Out%20Transactions",
           "name" : "Number of Timed Out Transactions",
+          "identityHash" : "3257a07e9f24887fcfd15bce88bd3a83ee9db161",
+          "contentHash" : "4aa4c0b164d1b1b1d81c58654d1d53fc95ed9fb",
+          "syncHash" : "26c2c797d813bbbffd83d3b43131c3793a564ecc",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Transactions%20Metrics~Number%20of%20Timed%20Out%20Transactions",
             "name" : "Number of Timed Out Transactions",
+            "identityHash" : "489a7f12f69723b83099d4111f8fea767a0",
+            "contentHash" : "ae21ed96a0db63d1186ac8725a23756d29293c92",
+            "syncHash" : "929acca49fa2b6bbecdd7c13b91eac4276d9c9e",
             "unit" : "NONE",
-            "type" : "COUNTER",
+            "metricDataType" : "counter",
             "collectionInterval" : 30,
+            "type" : "COUNTER",
             "id" : "Transactions Metrics~Number of Timed Out Transactions"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Timed Out Transactions"
         }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Transactions",
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dtransactions/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dtransactions%5D~MT~Transactions%20Metrics~Number%20of%20Transactions",
           "name" : "Number of Transactions",
+          "identityHash" : "1440a88fdd3119ecd8fbfd61f288ef6b43e56c7",
+          "contentHash" : "9f70db841b4d76472f42e096cc3d962f4dc474a",
+          "syncHash" : "2247ade85dffc9edbf3283108cb4e091b8cbac63",
           "type" : {
             "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;Transactions%20Metrics~Number%20of%20Transactions",
             "name" : "Number of Transactions",
+            "identityHash" : "affa229994b569b825e763d3b4194a613520dbb3",
+            "contentHash" : "f970c5cc615d1fc61bda0d5de5b99673c7b6e5",
+            "syncHash" : "95faf082886e8b438c6cdff540276d84bdbb57da",
             "unit" : "NONE",
-            "type" : "COUNTER",
+            "metricDataType" : "counter",
             "collectionInterval" : 30,
+            "type" : "COUNTER",
             "id" : "Transactions Metrics~Number of Transactions"
           },
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions Metrics~Number of Transactions"
         } ]
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:40 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:55 GMT
 - request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/availability/AI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~AT~Server%20Availability~Server%20Availability/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:40 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '42'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233678006,"value":"up"}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:40 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/availability/AI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~AT~Server%20Availability~Server%20Availability/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:40 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '42'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470238960002,"value":"up"}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:40 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:40 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '41'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233708186,"value":0.0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:40 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:40 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '41'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470238928028,"value":0.0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:40 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:41 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233708037,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:41 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:41 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470238928005,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:41 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:41 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '42'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233708141,"value":-8.0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:41 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:41 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '42'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470238928017,"value":-8.0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:41 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:42 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233708089,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:42 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:42 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470238928014,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:42 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:42 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233708082,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:42 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:42 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470238928011,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:42 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:42 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233708145,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:42 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:43 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470238928025,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:43 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:43 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '42'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233708059,"value":9967}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:43 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:43 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '43'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470238928006,"value":10277}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:43 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:43 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '50'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233708090,"value":4.32013312E8}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:43 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:43 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '50'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470238928014,"value":4.29391872E8}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:43 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:44 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '50'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233708003,"value":4.77626368E8}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:44 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:44 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '50'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470238928001,"value":4.77626368E8}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:44 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:44 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '50'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233678240,"value":2.47408216E8}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:44 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:44 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '49'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470238939002,"value":3.1214516E8}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:44 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:44 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '50'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233708004,"value":2.75644416E8}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:45 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:45 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '50'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470238928001,"value":2.91766272E8}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:45 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:45 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '50'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233678238,"value":2.58525288E8}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:45 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:45 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '50'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470238939001,"value":2.74561392E8}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:45 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:45 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '43'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233768018,"value":745.0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:45 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:46 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '43'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470238864021,"value":723.0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:46 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Aborted%20Transactions/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:46 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233678214,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:46 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Aborted%20Transactions/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:46 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470238939003,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:46 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Application%20Rollbacks/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:46 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233678214,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:46 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Application%20Rollbacks/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:46 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470238939002,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:46 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Committed%20Transactions/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:47 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233678215,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:47 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Committed%20Transactions/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:47 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470238939003,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:47 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Heuristics/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:47 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233678018,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:47 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Heuristics/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:47 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470238939003,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:47 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20In-Flight%20Transactions/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:47 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '41'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233678242,"value":0.0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:47 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20In-Flight%20Transactions/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:48 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '41'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470238939005,"value":0.0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:48 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Nested%20Transactions/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:48 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233678260,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:48 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Nested%20Transactions/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:48 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470238939004,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:48 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Resource%20Rollbacks/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:48 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233678240,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:48 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Resource%20Rollbacks/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:48 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
+    method: post
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/metrics/stats/query
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1470238939002,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:49 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Timed%20Out%20Transactions/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
+      string: '{"metrics":{"gauge":["MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Active Web Sessions","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Max Active Web Sessions"],"counter":["MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Expired Web Sessions"],"availability":[]},"start":1473962400000,"end":1473976800001,"bucketDuration":"3600s","types":["gauge","gauge_rate","counter","counter_rate","availability"]}'
     headers:
       Accept:
       - application/json
@@ -2624,66 +917,23 @@ http_interactions:
       - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
       Hawkular-Tenant:
       - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:49 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470233678258,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:49 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Timed%20Out%20Transactions/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
+      - '553'
   response:
     status:
       code: 200
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:49 GMT
+      - Thu, 15 Sep 2016 20:32:56 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '39'
+      - '2910'
       Connection:
       - keep-alive
       Expires:
@@ -2696,60 +946,43 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1470238939004,"value":0}]'
+      string: '{"gauge":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Max Active Web Sessions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":-8.0,"avg":-8.0,"median":-8.0,"max":-8.0,"sum":-256.0,"samples":32,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Active Web Sessions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":32,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]},"counter_rate":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Expired Web Sessions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":31,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]},"gauge_rate":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Max Active Web Sessions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":31,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Active Web Sessions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":31,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]},"counter":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Expired Web Sessions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":32,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]}}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:49 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:56 GMT
 - request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Transactions/raw/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:49 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
+    method: post
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/metrics/stats/query
     body:
       encoding: UTF-8
-      string: '[{"timestamp":1470233678236,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:49 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Transactions/raw/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
+      string: '{"metrics":{"gauge":["MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Active Web Sessions","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Max Active Web Sessions","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~Heap Committed","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~Heap Max","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~Heap Used","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~NonHeap Committed","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~NonHeap Used","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Threading Metrics~Thread Count","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of In-Flight Transactions"],"counter":["MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Expired Web Sessions","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Rejected Web Sessions","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Servlet Request Count","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Servlet Request Time","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~Accumulated GC Duration","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Aborted Transactions","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Application Rollbacks","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Committed Transactions","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Heuristics","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Nested Transactions","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Resource Rollbacks","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Timed Out Transactions","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Transactions"],"availability":[]},"start":1473962400000,"end":1473976800001,"bucketDuration":"3600s","types":["gauge","gauge_rate","counter","counter_rate","availability"]}'
     headers:
       Accept:
       - application/json
@@ -2759,66 +992,23 @@ http_interactions:
       - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
       Hawkular-Tenant:
       - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.6.3
-      Date:
-      - Wed, 03 Aug 2016 15:42:49 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '39'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '[{"timestamp":1470238939002,"value":0}]'
-    http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:49 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/availability/AI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~AT~Server%20Availability~Server%20Availability/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
+      - '2745'
   response:
     status:
       code: 200
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:50 GMT
+      - Thu, 15 Sep 2016 20:32:56 GMT
       Content-Type:
       - application/json
-      Content-Length:
-      - '343'
+      Transfer-Encoding:
+      - chunked
       Connection:
       - keep-alive
       Expires:
@@ -2831,12 +1021,56 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"gauge":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~Heap Max":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":4.77626368E8,"avg":4.77626368E8,"median":4.77626368E8,"max":4.77626368E8,"sum":1.5284043776E10,"samples":32,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~NonHeap Used":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":2.5287956E8,"avg":2.768875588571428E8,"median":2.794718427852383E8,"max":2.86484768E8,"sum":1.7443916208E10,"samples":63,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~NonHeap Committed":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":2.69877248E8,"avg":2.9494272E8,"median":2.980271483151957E8,"max":3.0375936E8,"sum":9.43816704E9,"samples":32,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~Heap Used":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":1.79945768E8,"avg":2.3960116609523806E8,"median":2.3551960134732437E8,"max":3.17967648E8,"sum":1.5094873464E10,"samples":63,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~Heap Committed":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":3.81157376E8,"avg":3.9452672000000006E8,"median":3.9539750188481176E8,"max":4.00031744E8,"sum":1.262485504E10,"samples":32,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Threading Metrics~Thread Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":690.0,"avg":690.625,"median":690.0383333333334,"max":693.0,"sum":11050.0,"samples":16,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Max Active Web Sessions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":-8.0,"avg":-8.0,"median":-8.0,"max":-8.0,"sum":-256.0,"samples":32,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of In-Flight Transactions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":63,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Active Web Sessions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":32,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]},"counter_rate":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Expired Web Sessions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":31,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~Accumulated GC Duration":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":26.999550007499874,"avg":70.47075323864199,"median":47.133015163382936,"max":368.86455293616183,"sum":2184.593350397902,"samples":31,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Resource Rollbacks":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":62,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Application Rollbacks":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":62,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Transactions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":62,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Aborted Transactions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":62,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Committed Transactions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":62,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Heuristics":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":62,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Timed Out Transactions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":62,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Servlet Request Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":31,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Nested Transactions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":62,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Rejected Web Sessions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":31,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Servlet Request Time":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":31,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]},"gauge_rate":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~Heap Max":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":31,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~NonHeap Used":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":-3402976.0,"avg":1049913.0535896583,"median":358943.12320453575,"max":1.5083690322580645E7,"sum":6.509460932255882E7,"samples":62,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~NonHeap Committed":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":1081292.8284267,"median":499787.0893583565,"max":8257948.897444872,"sum":3.3520077681227695E7,"samples":31,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~Heap Used":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":-1.40578656E8,"avg":2626303.3078855686,"median":-7.99734143291996E7,"max":1.86584592E8,"sum":1.6283080508890525E8,"samples":62,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Threading Metrics~Thread Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":-1.5000750037501875,"avg":-0.03290950531788682,"median":-0.10393384535847076,"max":0.9999583350693722,"sum":-0.49364257976830217,"samples":15,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~Heap Committed":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":-1.8875626375091672E7,"avg":-228755.04332938924,"median":139677.86680234445,"max":7735396.721311475,"sum":-7091406.343211068,"samples":31,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Max Active Web Sessions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":31,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of In-Flight Transactions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":62,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Active Web Sessions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":31,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]},"counter":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Expired Web Sessions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":32,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Resource Rollbacks":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":63,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~Accumulated GC Duration":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":7859.0,"avg":8948.5625,"median":8845.0343081325,"max":10062.0,"sum":286354.0,"samples":32,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Application Rollbacks":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":63,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Transactions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":63,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Aborted Transactions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":63,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Committed Transactions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":63,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Heuristics":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":63,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Timed Out Transactions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":63,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Servlet Request Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":32,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Nested Transactions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":63,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Rejected Web Sessions":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":32,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Servlet Request Time":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":32,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]}}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:50 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:56 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions
     body:
       encoding: US-ASCII
       string: ''
@@ -2857,13 +1091,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:50 GMT
+      - Thu, 15 Sep 2016 20:32:56 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '238'
       Connection:
       - keep-alive
       Expires:
@@ -2876,12 +1110,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Active Web Sessions","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969688026,"maxTimestamp":1473971565014}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:50 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:56 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions/rate/stats?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions
     body:
       encoding: US-ASCII
       string: ''
@@ -2902,13 +1137,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:50 GMT
+      - Thu, 15 Sep 2016 20:32:57 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '241'
       Connection:
       - keep-alive
       Expires:
@@ -2921,12 +1156,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Expired Web Sessions","dataRetention":7,"type":"counter","tenantId":"hawkular","minTimestamp":1473969688048,"maxTimestamp":1473971565003}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:50 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:57 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions
     body:
       encoding: US-ASCII
       string: ''
@@ -2947,13 +1183,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:50 GMT
+      - Thu, 15 Sep 2016 20:32:57 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '242'
       Connection:
       - keep-alive
       Expires:
@@ -2966,12 +1202,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Max Active Web Sessions","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969688018,"maxTimestamp":1473971565010}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:51 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:57 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions/rate/stats?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions
     body:
       encoding: US-ASCII
       string: ''
@@ -2992,13 +1229,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:51 GMT
+      - Thu, 15 Sep 2016 20:32:57 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '242'
       Connection:
       - keep-alive
       Expires:
@@ -3011,12 +1248,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Rejected Web Sessions","dataRetention":7,"type":"counter","tenantId":"hawkular","minTimestamp":1473969688053,"maxTimestamp":1473971565009}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:51 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:57 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count/rate/stats?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count
     body:
       encoding: US-ASCII
       string: ''
@@ -3037,13 +1275,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:51 GMT
+      - Thu, 15 Sep 2016 20:32:57 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '242'
       Connection:
       - keep-alive
       Expires:
@@ -3056,12 +1294,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Servlet Request Count","dataRetention":7,"type":"counter","tenantId":"hawkular","minTimestamp":1473969688024,"maxTimestamp":1473971565006}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:51 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:57 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time/rate/stats?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time
     body:
       encoding: US-ASCII
       string: ''
@@ -3082,13 +1321,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:51 GMT
+      - Thu, 15 Sep 2016 20:32:57 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '241'
       Connection:
       - keep-alive
       Expires:
@@ -3101,12 +1340,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Aggregated Web Metrics~Aggregated Servlet Request Time","dataRetention":7,"type":"counter","tenantId":"hawkular","minTimestamp":1473969688037,"maxTimestamp":1473971565012}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:51 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:57 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration/rate/stats?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration
     body:
       encoding: US-ASCII
       string: ''
@@ -3127,13 +1367,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:51 GMT
+      - Thu, 15 Sep 2016 20:32:57 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '225'
       Connection:
       - keep-alive
       Expires:
@@ -3146,12 +1386,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~Accumulated GC Duration","dataRetention":7,"type":"counter","tenantId":"hawkular","minTimestamp":1473969688006,"maxTimestamp":1473971565004}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:51 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:57 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed
     body:
       encoding: US-ASCII
       string: ''
@@ -3172,13 +1413,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:52 GMT
+      - Thu, 15 Sep 2016 20:32:58 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '214'
       Connection:
       - keep-alive
       Expires:
@@ -3191,12 +1432,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~Heap Committed","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969688024,"maxTimestamp":1473971565009}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:52 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:58 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max
     body:
       encoding: US-ASCII
       string: ''
@@ -3217,13 +1459,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:52 GMT
+      - Thu, 15 Sep 2016 20:32:58 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '208'
       Connection:
       - keep-alive
       Expires:
@@ -3236,12 +1478,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~Heap Max","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969688039,"maxTimestamp":1473971565001}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:52 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:58 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used
     body:
       encoding: US-ASCII
       string: ''
@@ -3262,13 +1505,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:52 GMT
+      - Thu, 15 Sep 2016 20:32:58 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '209'
       Connection:
       - keep-alive
       Expires:
@@ -3281,12 +1524,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~Heap Used","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969658138,"maxTimestamp":1473971560002}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:52 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:58 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed
     body:
       encoding: US-ASCII
       string: ''
@@ -3307,13 +1551,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:52 GMT
+      - Thu, 15 Sep 2016 20:32:58 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '217'
       Connection:
       - keep-alive
       Expires:
@@ -3326,12 +1570,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~NonHeap Committed","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969688040,"maxTimestamp":1473971565001}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:52 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:58 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used
     body:
       encoding: US-ASCII
       string: ''
@@ -3352,13 +1597,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:52 GMT
+      - Thu, 15 Sep 2016 20:32:58 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '212'
       Connection:
       - keep-alive
       Expires:
@@ -3371,12 +1616,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Memory Metrics~NonHeap Used","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969658136,"maxTimestamp":1473971560001}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:52 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:58 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count
     body:
       encoding: US-ASCII
       string: ''
@@ -3397,13 +1643,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:53 GMT
+      - Thu, 15 Sep 2016 20:32:58 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '215'
       Connection:
       - keep-alive
       Expires:
@@ -3416,12 +1662,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~~]~MT~WildFly
+        Threading Metrics~Thread Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969748013,"maxTimestamp":1473971556008}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:53 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:58 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Aborted%20Transactions/rate/stats?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Aborted%20Transactions
     body:
       encoding: US-ASCII
       string: ''
@@ -3442,13 +1689,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:53 GMT
+      - Thu, 15 Sep 2016 20:32:59 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '252'
       Connection:
       - keep-alive
       Expires:
@@ -3461,12 +1708,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Aborted Transactions","dataRetention":7,"type":"counter","tenantId":"hawkular","minTimestamp":1473969658110,"maxTimestamp":1473971560002}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:53 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:59 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Application%20Rollbacks/rate/stats?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Application%20Rollbacks
     body:
       encoding: US-ASCII
       string: ''
@@ -3487,13 +1735,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:53 GMT
+      - Thu, 15 Sep 2016 20:32:59 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '253'
       Connection:
       - keep-alive
       Expires:
@@ -3506,12 +1754,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Application Rollbacks","dataRetention":7,"type":"counter","tenantId":"hawkular","minTimestamp":1473969658110,"maxTimestamp":1473971560002}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:53 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:59 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Committed%20Transactions/rate/stats?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Committed%20Transactions
     body:
       encoding: US-ASCII
       string: ''
@@ -3532,13 +1781,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:53 GMT
+      - Thu, 15 Sep 2016 20:32:59 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '254'
       Connection:
       - keep-alive
       Expires:
@@ -3551,12 +1800,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Committed Transactions","dataRetention":7,"type":"counter","tenantId":"hawkular","minTimestamp":1473969658110,"maxTimestamp":1473971560002}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:53 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:59 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Heuristics/rate/stats?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Heuristics
     body:
       encoding: US-ASCII
       string: ''
@@ -3577,13 +1827,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:53 GMT
+      - Thu, 15 Sep 2016 20:32:59 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '242'
       Connection:
       - keep-alive
       Expires:
@@ -3596,12 +1846,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Heuristics","dataRetention":7,"type":"counter","tenantId":"hawkular","minTimestamp":1473969658056,"maxTimestamp":1473971560003}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:53 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:59 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20In-Flight%20Transactions/stats/?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20In-Flight%20Transactions
     body:
       encoding: US-ASCII
       string: ''
@@ -3622,13 +1873,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:54 GMT
+      - Thu, 15 Sep 2016 20:32:59 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '252'
       Connection:
       - keep-alive
       Expires:
@@ -3641,12 +1892,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of In-Flight Transactions","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969658141,"maxTimestamp":1473971560004}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:54 GMT
+  recorded_at: Thu, 15 Sep 2016 20:32:59 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Nested%20Transactions/rate/stats?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Nested%20Transactions
     body:
       encoding: US-ASCII
       string: ''
@@ -3667,13 +1919,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:54 GMT
+      - Thu, 15 Sep 2016 20:33:00 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '251'
       Connection:
       - keep-alive
       Expires:
@@ -3686,12 +1938,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Nested Transactions","dataRetention":7,"type":"counter","tenantId":"hawkular","minTimestamp":1473969658148,"maxTimestamp":1473971560003}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:54 GMT
+  recorded_at: Thu, 15 Sep 2016 20:33:00 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Resource%20Rollbacks/rate/stats?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Resource%20Rollbacks
     body:
       encoding: US-ASCII
       string: ''
@@ -3712,13 +1965,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:54 GMT
+      - Thu, 15 Sep 2016 20:33:00 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '250'
       Connection:
       - keep-alive
       Expires:
@@ -3731,12 +1984,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Resource Rollbacks","dataRetention":7,"type":"counter","tenantId":"hawkular","minTimestamp":1473969658138,"maxTimestamp":1473971560002}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:54 GMT
+  recorded_at: Thu, 15 Sep 2016 20:33:00 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Timed%20Out%20Transactions/rate/stats?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Timed%20Out%20Transactions
     body:
       encoding: US-ASCII
       string: ''
@@ -3757,13 +2011,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:54 GMT
+      - Thu, 15 Sep 2016 20:33:00 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '254'
       Connection:
       - keep-alive
       Expires:
@@ -3776,12 +2030,13 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Timed Out Transactions","dataRetention":7,"type":"counter","tenantId":"hawkular","minTimestamp":1473969658147,"maxTimestamp":1473971560003}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:54 GMT
+  recorded_at: Thu, 15 Sep 2016 20:33:00 GMT
 - request:
     method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Transactions/rate/stats?bucketDuration=3600s&end=1470222000001&start=1470204000000
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=transactions%5D~MT~Transactions%20Metrics~Number%20of%20Transactions
     body:
       encoding: US-ASCII
       string: ''
@@ -3802,13 +2057,13 @@ http_interactions:
       message: OK
     headers:
       Server:
-      - nginx/1.6.3
+      - nginx/1.10.1
       Date:
-      - Wed, 03 Aug 2016 15:42:54 GMT
+      - Thu, 15 Sep 2016 20:33:00 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '343'
+      - '244'
       Connection:
       - keep-alive
       Expires:
@@ -3821,7 +2076,8 @@ http_interactions:
       - no-cache
     body:
       encoding: UTF-8
-      string: '[{"start":1470204000000,"end":1470207600000,"empty":true},{"start":1470207600000,"end":1470211200000,"empty":true},{"start":1470211200000,"end":1470214800000,"empty":true},{"start":1470214800000,"end":1470218400000,"empty":true},{"start":1470218400000,"end":1470222000000,"empty":true},{"start":1470222000000,"end":1470225600000,"empty":true}]'
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=transactions]~MT~Transactions
+        Metrics~Number of Transactions","dataRetention":7,"type":"counter","tenantId":"hawkular","minTimestamp":1473969658114,"maxTimestamp":1473971560002}'
     http_version: 
-  recorded_at: Wed, 03 Aug 2016 15:42:55 GMT
+  recorded_at: Thu, 15 Sep 2016 20:33:00 GMT
 recorded_with: VCR 3.0.3
