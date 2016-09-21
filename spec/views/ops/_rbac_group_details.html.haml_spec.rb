@@ -12,6 +12,12 @@ describe 'ops/_rbac_group_details.html.haml' do
       @group = FactoryGirl.create(:miq_group, :description => 'flintstones')
       allow(view).to receive(:current_tenant).and_return(Tenant.seed)
       allow(view).to receive(:session).and_return(:assigned_filters => [])
+      FactoryGirl.create(:classification, :name => 'folder_selected', :show => true)
+      @tags_tree = TreeBuilderTags.new(:tag,
+                                       :tag_tree,
+                                       {},
+                                       true,
+                                       :edit => {}, :filters => {}, :group => @group)
     end
 
     it 'should show "Look up groups" checkbox and label for auth mode ldap' do

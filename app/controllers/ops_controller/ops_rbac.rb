@@ -807,8 +807,7 @@ module OpsController::OpsRbac
     changed = (@edit[:new] != @edit[:current])
     bad = false
     if rec_type == "group"
-      bad ||= @edit[:new][:role].blank?
-      bad ||= @edit[:new][:group_tenant].blank?
+      bad = (@edit[:new][:role].blank? || @edit[:new][:group_tenant].blank?)
     end
 
     render :update do |page|
@@ -929,7 +928,11 @@ module OpsController::OpsRbac
     [@group.get_managed_filters].flatten.each do |f|
       @filters[f.split("/")[-2] + "-" + f.split("/")[-1]] = f
     end
-    rbac_build_myco_tree                              # Build the MyCompanyTags tree for this user
+    @tags_tree = TreeBuilderTags.new(:tags,
+                                     :tags_tree,
+                                     @sb,
+                                     true,
+                                     :edit => @edit, :filters => @filters, :group => @group)
     @hac_tree = build_belongsto_tree(@belongsto.keys, false, false)  # Build the Hosts & Clusters tree for this user
     @vat_tree = build_belongsto_tree(@belongsto.keys, true, false)  # Build the VMs & Templates tree for this user
   end
@@ -1018,12 +1021,14 @@ module OpsController::OpsRbac
     end
 
     if params[:check]                               # User checked/unchecked a tree node
-      if params[:tree_typ] == "myco"                # MyCompany tag checked
+      if params[:tree_typ] == "tags"                # MyCompany tag checked
+        cat, tag = params[:id].split('cl-').last.split("_xx-") # Get the category and tag
+        cat_name = Classification.find_by(:id => from_cid(cat)).name
+        tag_name = Classification.find_by(:id => tag).name
         if params[:check] == "0"                    #   unchecked
-          @edit[:new][:filters].delete(params[:id].split('___').last)   #     Remove the tag from the filters array
+          @edit[:new][:filters].except!("#{cat_name}-#{tag_name}") # Remove the tag from the filters array
         else                                        #   checked
-          cat, tag = params[:id].split('___').last.split("-")         #     Get the category and tag
-          @edit[:new][:filters][params[:id].split('___').last] = "/managed/#{cat}/#{tag}" # Put them in the hash
+          @edit[:new][:filters]["#{cat_name}-#{tag_name}"] = "/managed/#{cat_name}/#{tag_name}" # Put them in the hash
         end
       else                                          # Belongsto tag checked
         if params[:check] == "0"                    #   unchecked
@@ -1066,7 +1071,6 @@ module OpsController::OpsRbac
       @edit[:new][:belongsto][bobj.class.to_s + "_" + bobj.id.to_s] = b # Store in hash as <class>_<id> string
     end
 
-    #   user_build_myco_tree                              # Build the MyCompanyTags tree for this user
     #   user_build_belongsto_tree                         # Build the Hosts & Clusters tree for this user
     #   user_build_belongsto_tree(true)                   # Build the VMs & Templates tree for this user
 
@@ -1094,43 +1098,13 @@ module OpsController::OpsRbac
     @edit[:new][:group_tenant] = @group.tenant_id
 
     @edit[:current] = copy_hash(@edit[:new])
-    rbac_build_myco_tree                              # Build the MyCompanyTags tree for this user
+    @tags_tree = TreeBuilderTags.new(:tags,
+                                     :tags_tree,
+                                     @sb,
+                                     true,
+                                     :edit => @edit, :filters => @filters, :group => @group)
     @hac_tree = build_belongsto_tree(@edit[:new][:belongsto].keys, false, false)  # Build the Hosts & Clusters tree for this user
     @vat_tree = build_belongsto_tree(@edit[:new][:belongsto].keys, true, false)  # Build the VMs & Templates tree for this user
-  end
-
-  # Build the MyCompany Tags tree
-  def rbac_build_myco_tree
-    cats = []                            # Array of categories
-    categories = Classification.categories.collect { |c| c unless !c.show || ["folder_path_blue", "folder_path_yellow"].include?(c.name) }.compact
-    categories.sort_by { |c| c.description.downcase }.each do |category|
-      kids_checked = false
-      cat_node = {}
-      cat_node[:key] = category.name
-      cat_node[:title] = category.description
-      cat_node[:tooltip] =  _("Category: %{description}") % {:description => category.description}
-      cat_node[:icon] = ActionController::Base.helpers.image_path('100/folder.png')
-      cat_node[:hideCheckbox] = true
-      cat_node[:cfmeNoClick] = true
-      cat_kids = []
-      category.entries.sort_by { |e| e.description.downcase }.each do |tag|
-        tag_node = {}
-        tag_node[:key] = [category.name, tag.name].join("-")
-        tag_node[:title] = tag.description
-        # tag_node[:checkable] = @edit.nil?
-        tag_node[:cfmeNoClick] = true
-        tag_node[:checkable] = !@edit.nil?
-        tag_node[:tooltip] =  _("Tag: %{description}") % {:description => tag.description}
-        tag_node[:icon] = ActionController::Base.helpers.image_path('100/tag.png')
-        tag_node[:select] = true if (@edit && @edit[:new][:filters].key?(tag_node[:key])) || (@filters && @filters.key?(tag_node[:key])) # Check if tag is assigned
-        kids_checked = true if tag_node[:select] == true
-        cat_kids.push(tag_node)
-      end
-      cat_node[:children] = cat_kids unless cat_kids.empty?
-      cat_node[:expand] = true if kids_checked
-      cats.push(cat_node) unless cat_kids.empty?
-    end
-    @myco_tree = TreeBuilder.convert_bs_tree(cats).to_json # Add cats node array to root of tree
   end
 
   # Set group record variables to new values

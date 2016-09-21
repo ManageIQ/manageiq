@@ -64,6 +64,7 @@ class TreeNodeBuilder
 
       generic_node(object.name, "vendor-#{object.image_name}.png", "#{ui_lookup(:model => prefix_model)}: #{object.name}")
     when ChargebackRate       then generic_node(object.description, "chargeback_rate.png")
+    when Classification       then classification_node
     when Compliance
       name = "<b>" + _("Compliance Check on: ") + "</b>" + format_timezone(object.timestamp, Time.zone, 'gtl')
       generic_node(name.html_safe, "#{object.compliant ? "check" : "x"}.png")
@@ -198,6 +199,7 @@ class TreeNodeBuilder
     }
     # Start with all nodes open unless expand is explicitly set to false
     @node[:expand] = options[:open_all].present? && options[:open_all] && options[:expand] != false
+    @node[:hideCheckbox] = options[:hideCheckbox] if options[:hideCheckbox].present?
     tooltip(tip)
   end
 
@@ -217,6 +219,12 @@ class TreeNodeBuilder
     end
   end
 
+  def classification_node
+    generic_node(object.description, 'folder', _("Category: %{description}") % {:description => object.description})
+    @node[:cfmeNoClick] = true
+    @node[:hideCheckbox] = true
+  end
+
   def hash_node
     text = object[:text]
     text = text.kind_of?(Proc) ? text.call : _(text)
@@ -233,6 +241,7 @@ class TreeNodeBuilder
     @node[:hideCheckbox] = true if object.key?(:hideCheckbox)
     @node[:select] = object[:select] if object.key?(:select)
     @node[:addClass] = object[:addClass] if object.key?(:addClass)
+    @node[:checkable] = object[:checkable] if object.key?(:checkable)
 
     # FIXME: check the following
     # TODO: With dynatree, unless folders are open, we can't jump to a child node until it has been visible once

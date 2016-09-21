@@ -408,6 +408,7 @@ class TreeBuilder
     "az"  => "AvailabilityZone",
     "azu" => "OrchestrationTemplateAzure",
     "at"  => "ManageIQ::Providers::AnsibleTower::ConfigurationManager",
+    "cl"  => "Classification",
     "cf " => "ConfigurationScript",
     "cnt" => "Container",
     "co"  => "Condition",
