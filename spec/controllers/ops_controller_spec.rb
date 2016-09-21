@@ -45,9 +45,6 @@ describe OpsController do
     expect(response.status).to eq(200)
   end
 
-  #  def rbac_user_edit
-  #
-  # def rbac_user_set_record_vars(user)
   describe 'rbac_user_edit' do
     before do
       ApplicationController.handle_exceptions = true

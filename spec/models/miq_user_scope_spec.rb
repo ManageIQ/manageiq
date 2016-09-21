@@ -120,7 +120,6 @@ describe MiqUserScope do
     it "should correctly merge belongsto filters" do
       filters = @scope.get_filters(:class => Vm, :feature_type => :view)
       expect(filters[:belongsto]).to eq(["/belongsto/ExtManagementSystem|VC1", "/belongsto/ExtManagementSystem|VC4", "/belongsto/ExtManagementSystem|VC4/EmsFolder|Datacenters/EmsFolder|Prod/EmsFolder|vm/EmsFolder|Discovered virtual machine"])
-      # filters[:belongsto].should == ["/belongsto/ExtManagementSystem|VC1", "/belongsto/ExtManagementSystem|VC4"]
     end
 
     it "should correctly merge expression filters" do

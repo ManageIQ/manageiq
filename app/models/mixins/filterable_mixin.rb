@@ -10,7 +10,6 @@ module FilterableMixin
 
     if db.respond_to?(:find_tags_by_grouping) && !mfilters.empty?
       recs = db.where(:id => id).find_tags_by_grouping(mfilters, :ns => "*").first
-      # result = false if recs.nil?
       return false if recs.nil?
     end
 
