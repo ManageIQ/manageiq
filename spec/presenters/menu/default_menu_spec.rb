@@ -78,17 +78,41 @@ describe Menu::DefaultMenu do
 
   describe "#automate_menu_section" do
     let(:menu) { Menu::DefaultMenu }
+    let(:configuration) { double(:config => {:product => {:generic_object => product_setting}}) }
 
-    it "contains the correct names" do
-      expect(menu.automate_menu_section.items.map(&:name)).to include(
-        "Explorer",
-        "Simulation",
-        "Customization",
-        "Generic Objects",
-        "Import / Export",
-        "Log",
-        "Requests"
-      )
+    before do
+      allow(VMDB::Config).to receive(:new).with("vmdb").and_return(configuration)
+    end
+
+    context "when the configuration generic object product setting is set to true" do
+      let(:product_setting) { true }
+
+      it "contains the generic objects item" do
+        expect(menu.automate_menu_section.items.map(&:name)).to include(
+          "Explorer",
+          "Simulation",
+          "Customization",
+          "Generic Objects",
+          "Import / Export",
+          "Log",
+          "Requests"
+        )
+      end
+    end
+
+    context "when the configuration generic object product setting is not true" do
+      let(:product_setting) { "potato" }
+
+      it "does not contain the generic objects item" do
+        expect(menu.automate_menu_section.items.map(&:name)).to include(
+          "Explorer",
+          "Simulation",
+          "Customization",
+          "Import / Export",
+          "Log",
+          "Requests"
+        )
+      end
     end
   end
 end
