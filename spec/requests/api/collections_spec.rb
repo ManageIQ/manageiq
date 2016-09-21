@@ -27,7 +27,7 @@ describe "Rest API Collections" do
 
     obj = id.nil? ? klass.first : klass.find(id)
     url = send("#{collection}_url", obj.id)
-    attr_list = String(Api::Settings.collections[collection].parsed_by_attrs).split(",")
+    attr_list = String(Api::Settings.collections[collection].identifying_attrs).split(",")
     attr_list |= %w(guid) if klass.attribute_method?(:guid)
     resources = [{"id" => obj.id}, {"href" => url}]
     attr_list.each { |attr| resources << {attr => obj.public_send(attr)} }
@@ -36,9 +36,11 @@ describe "Rest API Collections" do
 
     expect(response).to have_http_status(:ok)
     expect(response.parsed_body["results"].size).to eq(resources.size)
-    response.parsed_body["results"].each do |resource|
-      expect(resource).to match(a_hash_including("id" => obj.id, "href" => a_string_matching(url)))
-    end
+    expect(response.parsed_body).to include(
+      "results" => all(
+        a_hash_including("id" => obj.id, "href" => a_string_matching(url))
+      )
+    )
   end
 
   context "Collections" do
@@ -485,6 +487,16 @@ describe "Rest API Collections" do
     it "bulk query Vms" do
       FactoryGirl.create(:vm_vmware)
       test_collection_bulk_query(:vms, vms_url, Vm)
+    end
+
+    it "bulk query Vms with invalid guid fails" do
+      FactoryGirl.create(:vm_vmware)
+      api_basic_authorize collection_action_identifier(:vms, :query)
+
+      run_post(vms_url, gen_request(:query, [{"guid" => "B999999D"}]))
+
+      expect(response.parsed_body).to include_error_with_message("Invalid vms resource specified - guid=B999999D")
+      expect(response).to have_http_status(:not_found)
     end
 
     it "bulk query Zones" do

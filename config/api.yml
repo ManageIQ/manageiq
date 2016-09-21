@@ -394,7 +394,7 @@
     - :collection
     :verbs: *gpppd
     :klass: MiqGroup
-    :parsed_by_attrs: description
+    :identifying_attrs: description
     :subcollections:
     - :tags
     :collection_actions:
@@ -1002,7 +1002,7 @@
     - :collection
     :verbs: *gpd
     :klass: MiqUserRole
-    :parsed_by_attrs: name
+    :identifying_attrs: name
     :subcollections:
     - :features
     :collection_actions:
@@ -1371,7 +1371,7 @@
     - :subcollection
     :verbs: *gpd
     :klass: Tag
-    :parsed_by_attrs: name
+    :identifying_attrs: name
     :collection_actions:
       :get:
       - :name: read
@@ -1587,7 +1587,7 @@
     - :collection
     :verbs: *gpppd
     :klass: User
-    :parsed_by_attrs: name,userid
+    :identifying_attrs: name,userid
     :subcollections:
     - :tags
     :collection_actions:

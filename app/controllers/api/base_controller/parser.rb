@@ -112,7 +112,7 @@ module Api
       def parse_by_attr(resource, type, attr_list = [])
         klass = collection_class(type)
         attr_list |= %w(guid) if klass.attribute_method?(:guid)
-        attr_list |= String(collection_config[type].parsed_by_attrs).split(",")
+        attr_list |= String(collection_config[type].identifying_attrs).split(",")
         objs = attr_list.map { |attr| klass.find_by(attr => resource[attr]) if resource[attr] }.compact
         objs.collect(&:id).first
       end
