@@ -83,12 +83,7 @@ ManageIQ.angular.app.controller('logCollectionFormController', ['$http', '$scope
   $scope.saveClicked = function() {
     miqService.sparkleOn();
     var url = $scope.saveUrl + serverId + '?button=save';
-    var moreUrlParams = $.param(miqService.serializeModel($scope.logCollectionModel));
-    if (moreUrlParams) {
-      url += '&' + decodeURIComponent(moreUrlParams);
-    }
-    // FIXME this is even worse, we send everything in the query string
-    miqService.miqAjaxButton(url);
+    miqService.miqAjaxButton(url, $scope.logCollectionModel);
     $scope.angularForm.$setPristine(true);
   };
 
@@ -102,8 +97,7 @@ ManageIQ.angular.app.controller('logCollectionFormController', ['$http', '$scope
   $scope.cancelClicked = function() {
     miqService.sparkleOn();
     var url = $scope.saveUrl + serverId + '?button=cancel';
-    // FIXME true with cancel!? probably nil
-    miqService.miqAjaxButton(url, true);
+    miqService.miqAjaxButton(url);
     $scope.angularForm.$setPristine(true);
   };
 
