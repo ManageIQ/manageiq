@@ -68,12 +68,8 @@ module MiqReport::Generator
 
     @table2class[table] ||= begin
       case table.to_sym
-      # when :users, :groups
-      #   "Account"
       when :ports, :nics, :storage_adapters
         "GuestDevice"
-      # when :system_services, :win32_services, :kernel_drivers, :filesystem_drivers, :linux_initprocesses, :host_services
-      #   "SystemService"
       when :"<compare>"
         self.class.name
       else
