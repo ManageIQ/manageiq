@@ -1542,9 +1542,14 @@ function miqInitAccordions() {
   var panel = $('#left_div .panel-heading').outerHeight();
   var count = $('#accordion:visible > .panel .panel-body').length;
   $('#accordion:visible > .panel .panel-body').each(function (_k, v) {
-    $(v).css('max-height', (height - count * panel) + 'px');
-    $(v).css('overflow-y', 'auto')
-    $(v).css('overflow-x', 'hidden')
+    if (window.matchMedia("(max-width: 768px)").matches) {
+      $(v).css('max-height', '');
+      $(v).css('overflow-y', 'none');
+    } else {
+      $(v).css('max-height', (height - count * panel) + 'px');
+      $(v).css('overflow-y', 'auto');
+    }
+    $(v).css('overflow-x', 'hidden');
   });
 }
 
