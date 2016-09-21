@@ -9,8 +9,10 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_group_relationships
+    # TODO: cloud_volumes temporarily not displayed until Cinder Manager UI changes
+    # fully implemented.  This avoids an exception trying to display the Openstack Provider
     %i(ems_infra network_manager availability_zones cloud_tenants flavors security_groups
-       instances images orchestration_stacks cloud_volumes cloud_object_store_containers)
+       instances images orchestration_stacks cloud_object_store_containers)
   end
 
   def textual_group_configuration_relationships
