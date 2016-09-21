@@ -21,3 +21,44 @@ if (typeof _ !== 'undefined' && typeof _.debounce !== 'undefined') {
     return new_debounced_func;
   }
 }
+
+ManageIQ.qe.xpath = function(root, xpath) {
+  if (root == null) {
+     root = document;
+  }
+  return document.evaluate(xpath, root, null,
+    XPathResult.ANY_UNORDERED_NODE_TYPE, null).singleNodeValue;
+};
+
+ManageIQ.qe.isHidden = function(el) {
+  if (el === null) {
+    return true;
+  }
+  return el.offsetParent === null;
+};
+
+ManageIQ.qe.setAngularJsValue = function (el, value) {
+  var angular_elem = angular.element(elem);
+  var $parse = angular_elem.injector().get('$parse');
+  var getter = $parse(elem.getAttribute('ng-model'));
+  var setter = getter.assign;
+  angular_elem.scope().$apply(function($scope) { setter($scope, value); });
+};
+
+ManageIQ.qe.checkAll = function() {
+  return (ManageIQ.qe.autofocus == 0) && (ManageIQ.qe.debounce == 0);
+};
+
+ManageIQ.qe.inFlight = function() {
+  return {
+    jquery:     jQuery.active,
+    prototype:  (typeof Ajax === "undefined") ? 0 : Ajax.activeRequestCount,
+    miq:        window.miqAjaxTimers,
+    spinner:    (!ManageIQ.qe.isHidden(document.getElementById("spinner_div"))) &&
+                  ManageIQ.qe.isHidden(document.getElementById("lightbox_div")),
+    document:   document.readyState,
+    autofocus:  ManageIQ.qe.autofocus,
+    debounce:   ManageIQ.qe.debounce,
+    checkAll:   ManageIQ.qe.checkAll(),
+  };
+};
