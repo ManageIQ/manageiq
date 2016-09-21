@@ -183,7 +183,7 @@ describe "Providers API" do
       ems = ExtManagementSystem.find(provider_id)
       expect(ems.authentications.size).to eq(1)
       ENDPOINT_ATTRS.each do |attr|
-        expect(ems.send(attr)).to eq(sample_openshift[attr])
+        expect(ems.send(attr)).to eq(sample_openshift[attr]) if sample_openshift.key? attr
       end
     end
 
