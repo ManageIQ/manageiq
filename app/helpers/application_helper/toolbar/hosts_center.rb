@@ -33,6 +33,12 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           :enabled   => false,
           :onwhen    => "2+"),
         button(
+          :host_register_nodes,
+          'pficon pficon-add-circle-o fa-lg',
+          t = N_('Register Nodes'),
+          t,
+          :url       => "/register_nodes"),
+        button(
           :host_discover,
           'fa fa-search fa-lg',
           t = N_('Discover items'),
