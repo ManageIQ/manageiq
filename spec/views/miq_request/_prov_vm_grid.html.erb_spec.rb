@@ -39,13 +39,13 @@ describe 'miq_request/_prov_vm_grid.html.haml' do
       allow(@vm).to receive(:ext_management_system)
       allow(@vm).to receive(:cloud_tenant).and_return(cloud_tenant)
 
-      edit = {:req_id => 'foo',
-              :new => {},
-              :wf => FactoryGirl.create(:miq_provision_workflow,:requester => admin_user),
+      edit = {:req_id     => 'foo',
+              :new        => {},
+              :wf         => FactoryGirl.create(:miq_provision_workflow, :requester => admin_user),
               :vm_sortcol => 'name',
               :vm_sortdir => 'ASC',
               :vm_columns => %w(name),
-              :vm_headers => {:name => 'Name',
+              :vm_headers => {:name          => 'Name',
                               'cloud_tenant' => true}
       }
       view.instance_variable_set(:@edit, edit)
