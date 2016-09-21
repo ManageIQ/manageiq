@@ -1352,10 +1352,7 @@
         :ems_refresh_worker_vmware_cloud: {}
         :ems_refresh_worker_vmware_cloud_network: {}
         :ems_refresh_worker_cinder: {}
-<<<<<<< cc8f5228f72faf7efcb58755cef06269e41b2f73
-=======
         :ems_refresh_worker_swift: {}
->>>>>>> Initial Checkin of StorageManager::SwiftManager
       :event_handler:
         :cpu_usage_threshold: 0.percent
         :nice_delta: 7

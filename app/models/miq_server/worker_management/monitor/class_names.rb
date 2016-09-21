@@ -51,7 +51,6 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Openstack::NetworkManager::EventCatcher
     ManageIQ::Providers::Openstack::InfraManager::EventCatcher
     ManageIQ::Providers::StorageManager::CinderManager::EventCatcher
-    ManageIQ::Providers::StorageManager::SwiftManager::EventCatcher
     ManageIQ::Providers::Vmware::InfraManager::EventCatcher
     MiqEventHandler
     MiqGenericWorker
@@ -125,7 +124,6 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Openstack::NetworkManager::EventCatcher
     ManageIQ::Providers::Openstack::InfraManager::EventCatcher
     ManageIQ::Providers::StorageManager::CinderManager::EventCatcher
-    ManageIQ::Providers::StorageManager::SwiftManager::EventCatcher
     ManageIQ::Providers::Amazon::CloudManager::EventCatcher
     ManageIQ::Providers::Azure::CloudManager::EventCatcher
     ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher

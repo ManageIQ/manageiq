@@ -1,6 +1,4 @@
 class ManageIQ::Providers::StorageManager::SwiftManager < ManageIQ::Providers::StorageManager
-  require_nested :EventCatcher
-  require_nested :EventParser
   require_nested :RefreshParser
   require_nested :RefreshWorker
   require_nested :Refresher
@@ -14,7 +12,7 @@ class ManageIQ::Providers::StorageManager::SwiftManager < ManageIQ::Providers::S
            :authentications,
            :authentication_for_summary,
            :zone,
-           :swift_handle,
+           :swift_service,
            :connect,
            :verify_credentials,
            :with_provider_connection,
@@ -27,9 +25,9 @@ class ManageIQ::Providers::StorageManager::SwiftManager < ManageIQ::Providers::S
            :allow_nil => true
 
   supports :swift_service do
-    if self.parent_manager
-      unsupported_reason_add(:swift_service, self.parent_manager.unsupported_reason(:swift_service)) unless
-        self.parent_manager.supports_swift_service?
+    if parent_manager
+      unsupported_reason_add(:swift_service, parent_manager.unsupported_reason(:swift_service)) unless
+        parent_manager.supports_swift_service?
     else
       unsupported_reason_add(:swift_service, _('no parent_manager to ems'))
     end
@@ -40,15 +38,15 @@ class ManageIQ::Providers::StorageManager::SwiftManager < ManageIQ::Providers::S
   end
 
   def self.ems_type
-    @ems_type ||= "swift_".freeze
+    @ems_type ||= "swift".freeze
   end
 
   def self.description
     @description ||= "Swift ".freeze
   end
 
-  def get_swift_service
-    self.parent_manager.nil? ? nil : connect(:service => "Storage")
+  def description
+    @description ||= "Swift ".freeze
   end
 
   def supports_api_version?

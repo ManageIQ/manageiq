@@ -26,6 +26,7 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
   require_relative '../storage_manager/swift_manager'
 
   include CinderManagerMixin
+  include SwiftManagerMixin
   include ManageIQ::Providers::Openstack::ManagerMixin
 
   supports :provisioning
@@ -38,9 +39,11 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
     end
   end
   supports :cinder_service
+  supports :swift_service
 
   before_validation :ensure_managers,
-                    :ensure_storage_managers
+                    :ensure_cinder_managers,
+                    :ensure_swift_managers
 
   def ensure_network_manager
     build_network_manager(:type => 'ManageIQ::Providers::Openstack::NetworkManager') unless network_manager
@@ -61,6 +64,11 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
   def cinder_service
     vs = openstack_handle.detect_volume_service
     vs.name == :cinder ? vs : nil
+  end
+
+  def swift_service
+    vs = openstack_handle.detect_storage_service
+    vs.name == :swift ? vs : nil
   end
 
   def self.ems_type
