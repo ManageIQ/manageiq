@@ -236,13 +236,14 @@ table.table-hover tbody tr:nth-child(even).no-hover:hover td {
 
 /* summary screen formatting */
 
-table .label {
+.table-summary-screen .label {
   display: table-cell;
   width: 20% !important;
   padding-top: 6px;
   min-width: 200px;
   font: normal 12px OpenSansSemibold,Arial,Helvetica,sans-serif;
   cursor: default;
+  color: #333;
   text-align: left;
 }
 
