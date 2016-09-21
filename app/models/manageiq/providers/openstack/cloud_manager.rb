@@ -22,7 +22,9 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
   require_nested :RefreshWorker
   require_nested :Template
   require_nested :Vm
+  require_relative '../storage_manager/cinder_manager'
 
+  include CinderManagerMixin
   include ManageIQ::Providers::Openstack::ManagerMixin
 
   supports :provisioning
@@ -34,11 +36,26 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
                                                       "on the CloudManager"))
     end
   end
+  supports :cinder_service
 
-  before_validation :ensure_managers
+  before_validation :ensure_managers,
+                    :ensure_storage_managers
 
   def ensure_network_manager
     build_network_manager(:type => 'ManageIQ::Providers::Openstack::NetworkManager') unless network_manager
+  end
+
+  def ensure_cinder_manager
+    build_cinder_manager(:type => 'ManageIQ::Providers::StorageManager::CinderManager') unless cinder_manager
+  end
+
+  def supports_cloud_tenants?
+    true
+  end
+
+  def cinder_service
+    vs = openstack_handle.detect_volume_service
+    vs.name == :cinder ? vs : nil
   end
 
   def self.ems_type
@@ -89,6 +106,10 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
 
   def supports_provider_id?
     true
+  end
+
+  def supports_cinder_service?
+    openstack_handle.detect_volume_service.name == :cinder
   end
 
   def supports_authentication?(authtype)

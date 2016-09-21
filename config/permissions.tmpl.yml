@@ -35,3 +35,4 @@
 - ems-type:vmware_cloud
 - ems-type:vmware_cloud_network
 - ems-type:nuage_network
+- ems-type:cinder
