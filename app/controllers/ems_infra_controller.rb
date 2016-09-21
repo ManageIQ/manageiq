@@ -111,6 +111,59 @@ class EmsInfraController < ApplicationController
     end
   end
 
+  def register_nodes
+    assert_privileges("host_register_nodes")
+    redirect_to ems_infra_path(params[:id], :display => "hosts") if params[:cancel]
+
+    # Hiding the toolbars
+    @in_a_form = true
+    drop_breadcrumb(:name => _("Register Nodes"), :url => "/ems_infra/register_nodes")
+
+    @infra = ManageIQ::Providers::Openstack::InfraManager.find(params[:id])
+
+    if params[:register]
+      if params[:nodes_json].nil? || params[:nodes_json][:file].nil?
+        log_and_flash_message(_("Please select a JSON file containing the nodes you would like to register."))
+        return
+      end
+
+      begin
+        uploaded_file = params[:nodes_json][:file]
+        nodes_json = parse_json(uploaded_file)
+        if nodes_json.nil?
+          log_and_flash_message(_("JSON file format is incorrect, missing 'nodes'."))
+        end
+      rescue => ex
+        log_and_flash_message(_("Cannot parse JSON file: %{message}") %
+                                  {:message => ex})
+      end
+
+      if nodes_json
+        begin
+          @infra.workflow_service
+        rescue => ex
+          log_and_flash_message(_("Cannot connect to workflow service: %{message}") %
+                                    {:message => ex})
+          return
+        end
+        begin
+          state, response = @infra.register_nodes(nodes_json)
+        rescue => ex
+          log_and_flash_message(_("Error executing register nodes workflow: %{message}") %
+                                    {:message => ex})
+          return
+        end
+        if state == "SUCCESS"
+          redirect_to ems_infra_path(params[:id],
+                                     :display   => "hosts",
+                                     :flash_msg => _("Nodes were added successfully. Refresh queued."))
+        else
+          log_and_flash_message(_("Unable to add nodes: %{error}") % {:error => response})
+        end
+      end
+    end
+  end
+
   def ems_infra_form_fields
     ems_form_fields
   end
@@ -208,4 +261,8 @@ class EmsInfraController < ApplicationController
     true
   end
   public :restful?
+
+  def parse_json(uploaded_file)
+    JSON.parse(uploaded_file.read)["nodes"]
+  end
 end
