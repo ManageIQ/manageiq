@@ -58,8 +58,9 @@ module SupportsFeatureMixin
   extend ActiveSupport::Concern
 
   QUERYABLE_FEATURES = {
-    :associate_floating_ip        => 'Associate a Floating IP',
-    :control                      => 'Basic control operations', # FIXME: this is just a internal helper and should be refactored
+    :associate_floating_ip    => 'Associate a Floating IP',
+    # FIXME: this is just a internal helper and should be refactored
+    :control                      => 'Basic control operations',
     :cloud_tenant_mapping         => 'CloudTenant mapping',
     :backup_create                => 'CloudVolume backup creation',
     :backup_restore               => 'CloudVolume backup restore',
@@ -81,7 +82,8 @@ module SupportsFeatureMixin
     :resize                       => 'Resizing',
     :retire                       => 'Retirement',
     :smartstate_analysis          => 'Smartstate Analaysis',
-    :terminate                => 'Terminate a VM'
+    :snapshots                    => 'Snapshots',
+    :terminate                    => 'Terminate a VM',
   }.freeze
 
   # Whenever this mixin is included we define all features as unsupported by default.

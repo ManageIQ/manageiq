@@ -19,7 +19,7 @@ describe ManageIQ::Providers::Redhat::InfraManager do
 
     it "rhevm_metrics_connect_options fetches configuration and allows overrides" do
       expect(ems.rhevm_metrics_connect_options[:host]).to eq("some.thing.tld")
-      expect(ems.rhevm_metrics_connect_options({:hostname => "different.tld"})[:host])
+      expect(ems.rhevm_metrics_connect_options(:hostname => "different.tld")[:host])
         .to eq("different.tld")
     end
   end
@@ -80,28 +80,85 @@ describe ManageIQ::Providers::Redhat::InfraManager do
   end
 
   context "api versions" do
-    let(:ems) { FactoryGirl.create(:ems_redhat) }
+    require 'ovirtsdk4'
+    let(:ems) { FactoryGirl.create(:ems_redhat_with_authentication) }
+    subject(:supported_api_versions) { ems.supported_api_versions }
     context "#supported_api_versions" do
-      it "returns the supported api versions" do
-        expect(ems.supported_api_versions).to match_array([3])
+      before(:each) do
+        Rails.cache.delete(ems.cache_key)
+        Rails.cache.write(ems.cache_key, cached_api_versions)
+      end
+
+      context "when no cached supported_api_versions" do
+        let(:cached_api_versions) { nil }
+        it 'calls the OvirtSDK4::Probe.probe' do
+          expect(OvirtSDK4::Probe).to receive(:probe).and_return([])
+          supported_api_versions
+        end
+
+        it 'properly parses ProbeResults' do
+          allow(OvirtSDK4::Probe).to receive(:probe)
+            .and_return([OvirtSDK4::ProbeResult.new(:version => '3'),
+                         OvirtSDK4::ProbeResult.new(:version => '4')])
+          expect(supported_api_versions).to match_array(%w(3 4))
+        end
+      end
+
+      context "when cache of supported_api_versions is stale" do
+        let(:cached_api_versions) do
+          {
+            :created_at => Time.now.utc,
+            :value      => [3]
+          }
+        end
+
+        before(:each) do
+          allow(ems).to receive(:last_refresh_date)
+            .and_return(cached_api_versions[:created_at] + 1.day)
+        end
+
+        it 'calls the OvirtSDK4::Probe.probe' do
+          expect(OvirtSDK4::Probe).to receive(:probe).and_return([])
+          supported_api_versions
+        end
+      end
+
+      context "when cache of supported_api_versions available" do
+        let(:cached_api_versions) do
+          {
+            :created_at => Time.now.utc,
+            :value      => [3]
+          }
+        end
+
+        before(:each) do
+          allow(ems).to receive(:last_refresh_date)
+            .and_return(cached_api_versions[:created_at] - 1.day)
+        end
+
+        it 'returns from cache' do
+          expect(supported_api_versions).to match_array([3])
+        end
       end
     end
 
-    context "#supports_api_version?" do
+    describe "#supports_the_api_version?" do
       it "returns the supported api versions" do
         allow(ems).to receive(:supported_api_versions).and_return([3])
-        expect(ems.supports_api_version?(3)).to eq(true)
-        expect(ems.supports_api_version?(6)).to eq(false)
+        expect(ems.supports_the_api_version?(3)).to eq(true)
+        expect(ems.supports_the_api_version?(6)).to eq(false)
       end
     end
   end
 
   context "supported features" do
     let(:ems) { FactoryGirl.create(:ems_redhat) }
-    let(:supported_api_versions) { [3, 4]  }
+    let(:supported_api_versions) { [3, 4] }
     context "#process_api_features_support" do
       before(:each) do
-        allow(described_class).to receive(:api_features).and_return({ 3 => ['feature1', 'feature3'], 4 => ['feature2', 'feature3'] })
+        allow(SupportsFeatureMixin).to receive(:guard_queryable_feature).and_return(true)
+        allow(described_class).to receive(:api_features)
+          .and_return(3 => %w(feature1 feature3), 4 => %w(feature2 feature3))
         described_class.process_api_features_support
         allow(ems).to receive(:supported_api_versions).and_return(supported_api_versions)
       end
@@ -144,4 +201,3 @@ describe ManageIQ::Providers::Redhat::InfraManager do
     end
   end
 end
-

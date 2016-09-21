@@ -1,21 +1,24 @@
 module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
   extend ActiveSupport::Concern
 
+  require 'ovirtsdk4'
+
   included do
     process_api_features_support
   end
 
   def supported_features
-    @supported_features ||= supported_api_versions.collect{|version| self.class.api_features[version]}.flatten.uniq
+    @supported_features ||= supported_api_versions.collect { |version| self.class.api_features[version] }.flatten.uniq
   end
 
   def connect(options = {})
     raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
-    version  = options[:version] || 3
-    raise "version #{version} of the api is not supported by the provider" unless supports_api_version?(version)
-
+    version = options[:version] || 3
+    unless options[:skip_supported_api_validation] || supports_the_api_version?(version)
+      raise "version #{version} of the api is not supported by the provider"
+    end
     # If there is API path stored in the endpoints table and use it:
-    path = default_endpoint.path
+    path = options[:path] || default_endpoint.path
     _log.info("Using stored API path '#{path}'.") unless path.blank?
 
     server   = options[:ip] || address
@@ -40,17 +43,35 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
   end
 
   def supported_api_versions
-    with_provider_connection do |connection|
-      connection.supported_api_versions
-    end
+    supported_api_versions_from_cache
   end
 
-  def supports_api_version?(version)
+  def supported_api_versions_from_cache
+    Cacher.new(cache_key).fetch_fresh(last_refresh_date) { supported_api_verions_from_sdk }
+  end
+
+  def cache_key
+    "REDHAT_EMS_CACHE_KEY_#{id}"
+  end
+
+  def supported_api_verions_from_sdk
+    username = authentication_userid(:basic)
+    password = authentication_password(:basic)
+    probe_args = { :hostname => hostname, :port => port, :username => username, :password => password }
+    probe_results = OvirtSDK4::Probe.probe(probe_args)
+    probe_results.map(&:version) if probe_results
+  end
+
+  def supports_the_api_version?(version)
     supported_api_versions.include?(version)
   end
 
   def supported_auth_types
     %w(default metrics)
+  end
+
+  def supports_authentication?(authtype)
+    supported_auth_types.include?(authtype.to_s)
   end
 
   def rhevm_service
@@ -185,7 +206,6 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
   end
 
   class_methods do
-
     def api3_supported_features
       []
     end
@@ -210,7 +230,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     end
 
     # Connect to the engine using version 4 of the API and the `ovirt-engine-sdk` gem.
-    def raw_connect_v4(server, port, path, username, password, service)
+    def raw_connect_v4(server, port, path, username, password, service, scheme = 'https')
       require 'ovirtsdk4'
 
       # Get the timeout from the configuration:
@@ -218,7 +238,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
 
       # Create the connection:
       OvirtSDK4::Connection.new(
-        :url      => "https://#{server}:#{port}#{path}",
+        :url      => "#{scheme}://#{server}:#{port}#{path}",
         :username => username,
         :password => password,
         :timeout  => timeout,
@@ -270,6 +290,32 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
 
     def extract_ems_ref_id(href)
       href && href.split("/").last
+    end
+  end
+
+  class Cacher
+    attr_reader :key
+
+    def initialize(key)
+      @key = key
+    end
+
+    def fetch_fresh(last_refresh_time)
+      force = stale_cache?(last_refresh_time)
+      res = Rails.cache.fetch(key, force: force) { build_entry { yield } }
+      res[:value]
+    end
+
+    private
+
+    def build_entry
+      {:created_at => Time.now.utc, :value => yield}
+    end
+
+    def stale_cache?(last_refresh_time)
+      current_val = Rails.cache.read(key)
+      return true unless current_val && current_val[:created_at] && last_refresh_time
+      last_refresh_time > current_val[:created_at]
     end
   end
 end
