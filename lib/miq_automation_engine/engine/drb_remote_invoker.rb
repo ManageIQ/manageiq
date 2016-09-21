@@ -32,7 +32,7 @@ module MiqAeEngine
     def setup
       require 'drb/timeridconv'
       global_id_conv = DRb::TimerIdConv.new(drb_cache_timeout)
-      drb_front = MiqAeMethodService::MiqAeServiceFront.new
+      drb_front = MiqAeMethodService::MiqAeServiceFront.new(@workspace)
       self.drb_server = DRb::DRbServer.new("druby://127.0.0.1:0", drb_front, :idconv => global_id_conv)
     end
 
