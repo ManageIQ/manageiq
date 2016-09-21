@@ -716,6 +716,27 @@ class VmOrTemplate < ApplicationRecord
     end
   end
 
+  # Return a list of parent compute resources (Resource Pool/Host/Cluster)
+  def parent_resources(options = {})
+    with_relationship_type('ems_metadata') do
+      path = []
+
+      # Can't use ancestors on VM because of multiple parents, so start with the VM's
+      # resource pool (first component of the host&clusters view)
+      rp = parent(:of_type => "ResourcePool")
+      unless rp.nil?
+        path = rp.ancestors(:except_type => ExtManagementSystem) + [rp]
+        path.reject! { |p| p.respond_to?(:hidden?) && p.hidden? } if options[:exclude_hidden_objects]
+      end
+
+      path
+    end
+  end
+
+  def parent_resources_path(options = {})
+    parent_resources(options).collect(&:name).join('/')
+  end
+
   # Parent rp, folder and dc methods
   # TODO: Replace all with ancestors lookup once multiple parents is sorted out
   def parent_resource_pool
