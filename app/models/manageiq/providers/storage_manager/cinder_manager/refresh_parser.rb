@@ -28,8 +28,8 @@ module ManageIQ::Providers
       $fog_log.info("#{log_header}...")
       get_volumes
       get_snapshots
-      # TODO: volume backups
-      #get_backups
+      # TODO: volume backup
+      # get_backups
 
       $fog_log.info("#{log_header}...Complete")
 
@@ -74,7 +74,7 @@ module ManageIQ::Providers
         :is_incremental        => backup['is_incremental'],
         :has_dependent_backups => backup['has_dependent_backups'],
         :availability_zone     => @data_index.fetch_path(:availability_zones,
-                                    "volume-" + backup['availability_zone'] || "null_az"),
+                                  "volume-" + backup['availability_zone'] || "null_az"),
         :volume                => @data_index.fetch_path(:cloud_volumes, backup['volume_id'])
       }
       return uid, new_result
@@ -115,8 +115,8 @@ module ManageIQ::Providers
         :snapshot_uid      => volume.snapshot_id,
         :size              => volume.size.to_i.gigabytes,
         :tenant            => @data_index.fetch_path(:cloud_tenants, volume.tenant_id),
-        :availability_zone => @data_index.fetch_path(:availability_zones, 
-                                    "volume-" + volume.availability_zone || "null_az"),
+        :availability_zone => @data_index.fetch_path(:availability_zones,
+                              "volume-" + volume.availability_zone || "null_az"),
       }
 
       volume.attachments.each do |a|
@@ -152,12 +152,12 @@ module ManageIQ::Providers
 
     def volume_name(volume)
       # Cinder v1 : Cinder v2
-      return volume.respond_to?(:display_name) ? volume.display_name : volume.name
+      volume.respond_to?(:display_name) ? volume.display_name : volume.name
     end
 
     def volume_description(volume)
       # Cinder v1 : Cinder v2
-      return volume.respond_to?(:display_description) ? volume.display_description :  volume.description
+      volume.respond_to?(:display_description) ? volume.display_description : volume.description
     end
 
     def add_instance_disk(disks, size, location, name, controller_type)

@@ -59,8 +59,8 @@ module Openstack
       expect(OrchestrationStackOutput.count).to    eq 0
       expect(OrchestrationTemplate.count).to       eq 0
 
-      # TODO: remove by swift spec test 
-      #expect(CloudObjectStoreContainer.count).to   eq storage_data.directories.count
+      # TODO: remove by swift spec test
+      # expect(CloudObjectStoreContainer.count).to   eq storage_data.directories.count
       expect(CloudObjectStoreObject.count).to      eq 0
       expect(CloudResourceQuota.count).to          eq 0
       expect(AuthPrivateKey.count).to              eq 0
@@ -128,8 +128,8 @@ module Openstack
       assert_table_counts
       assert_table_counts_orchestration
       #
-      # TODO: remove by swift spec test 
-      #assert_table_counts_storage
+      # TODO: remove by swift spec test
+      # assert_table_counts_storage
     end
 
     def volumes_count
@@ -221,10 +221,10 @@ module Openstack
       disks_count = (flavor[:disk] > 0 ? 1 : 0) + (flavor[:ephemeral] > 0 ? 1 : 0) + (flavor[:swap] > 0 ? 1 : 0)
 
       # May need after linkage is done
-      #if with_volumes && vm_or_stack[:__block_devices]
-      #  disks_count +=
-      #    vm_or_stack[:__block_devices].count { |d| d[:destination_type] == 'volume' && d[:boot_index] != 0 }
-      #end
+      # if with_volumes && vm_or_stack[:__block_devices]
+      #   disks_count +=
+      #     vm_or_stack[:__block_devices].count { |d| d[:destination_type] == 'volume' && d[:boot_index] != 0 }
+      # end
 
       disks_count
     end

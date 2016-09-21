@@ -69,7 +69,7 @@ module EmsRefresh::SaveInventoryCinder
       # Defer setting :cloud_volume_snapshot_id until after snapshots are saved.
     end
 
-    save_inventory_multi(ems.cloud_volumes, hashes, deletes, [:ems_ref], 
+    save_inventory_multi(ems.cloud_volumes, hashes, deletes, [:ems_ref],
                          nil, [:tenant, :availability_zone, :base_snapshot])
     store_ids_for_new_records(ems.cloud_volumes, hashes, :ems_ref)
   end
