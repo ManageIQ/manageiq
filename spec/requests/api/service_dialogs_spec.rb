@@ -62,6 +62,49 @@ describe "Service Dialogs API" do
 
       expect_result_to_have_only_keys(%w(href id label))
     end
+
+    context 'Delete Service Dialogs' do
+      it 'DELETE /api/service_dialogs/:id' do
+        dialog = FactoryGirl.create(:dialog)
+        api_basic_authorize collection_action_identifier(:service_dialogs, :delete)
+
+        expect do
+          run_delete(service_dialogs_url(dialog.id))
+        end.to change(Dialog, :count).by(-1)
+        expect(response).to have_http_status(:no_content)
+      end
+
+      it 'POST /api/service_dialogs/:id deletes a single service dialog' do
+        dialog = FactoryGirl.create(:dialog)
+        api_basic_authorize collection_action_identifier(:service_dialogs, :delete)
+
+        expect do
+          run_post(service_dialogs_url(dialog.id), 'action' => 'delete')
+        end.to change(Dialog, :count).by(-1)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'POST /api/service_dialogs deletes a single service dialog' do
+        dialog = FactoryGirl.create(:dialog)
+        api_basic_authorize collection_action_identifier(:service_dialogs, :delete)
+
+        expect do
+          run_post(service_dialogs_url, 'action' => 'delete', 'resources' => [{ 'id' => dialog.id }])
+        end.to change(Dialog, :count).by(-1)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'POST /api/service_dialogs deletes multiple service dialogs' do
+        dialog_a, dialog_b = FactoryGirl.create_list(:dialog, 2)
+        api_basic_authorize collection_action_identifier(:service_dialogs, :delete)
+
+        expect do
+          run_post(service_dialogs_url, 'action'    => 'delete',
+                                        'resources' => [{'id' => dialog_a.id}, {'id' => dialog_b.id}])
+        end.to change(Dialog, :count).by(-2)
+        expect(response).to have_http_status(:ok)
+      end
+    end
   end
 
   context "Service Dialogs subcollection" do
