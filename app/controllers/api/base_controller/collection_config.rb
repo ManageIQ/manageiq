@@ -67,7 +67,7 @@ module Api
       end
 
       def klass(collection_name)
-        self[collection_name][:klass].constantize
+        self[collection_name][:klass].try(:constantize)
       end
 
       def name_for_klass(resource_klass)

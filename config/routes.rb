@@ -2820,7 +2820,7 @@ Vmdb::Application.routes.draw do
     root :to => "api#index"
 
     # OPTIONS requests for REST API pre-flight checks
-    match '*path' => 'base#handle_options_request', :via => [:options]
+    match '/' => 'base#handle_options_request', :via => :options
 
     unless defined?(API_ACTIONS)
       API_ACTIONS = {
@@ -2828,11 +2828,15 @@ Vmdb::Application.routes.draw do
         :post   => "update",
         :put    => "update",
         :patch  => "update",
-        :delete => "destroy"
+        :delete => "destroy",
+        :options => "options"
       }.freeze
     end
 
     Api::Settings.collections.each do |collection_name, collection|
+      # OPTIONS action for each collection
+      match collection_name.to_s, :controller => collection_name, :action => :options, :via => :options
+
       scope collection_name, :controller => collection_name do
         collection.verbs.each do |verb|
           root :action => API_ACTIONS[verb], :via => verb if collection.options.include?(:primary)

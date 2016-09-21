@@ -360,7 +360,7 @@ describe "Querying" do
       Classification.classify(vm1, "department", "finance")
       Classification.classify(vm3, "department", "finance")
 
-      run_get vms_url, :expand  => "resources", :by_tag => "/department/finance"
+      run_get vms_url, :expand => "resources", :by_tag => "/department/finance"
 
       expect_query_result(:vms, 2, 3)
       expect_result_resources_to_include_data("resources", "name" => [vm1.name, vm3.name])
@@ -494,6 +494,21 @@ describe "Querying" do
 
       expect(response).to have_http_status(:ok)
       expect_result_to_have_only_keys(%w(id href name disconnected))
+    end
+  end
+
+  describe 'OPTIONS /api/vms' do
+    it 'returns the options information' do
+      api_basic_authorize
+      expected = {
+        'attributes'         => (Vm.attribute_names - Vm.virtual_attribute_names).sort.as_json,
+        'virtual_attributes' => Vm.virtual_attribute_names.sort.as_json,
+        'relationships'      => (Vm.reflections.keys | Vm.virtual_reflections.keys.collect(&:to_s)).sort,
+        'data'               => {}
+      }
+      run_options(vms_url)
+      expect(response.parsed_body).to eq(expected)
+      expect(response.headers['Access-Control-Allow-Methods']).to include('OPTIONS')
     end
   end
 end

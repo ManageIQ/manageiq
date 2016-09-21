@@ -54,7 +54,7 @@ module Api
           normalize_time(value)
         elsif Environment.normalized_attributes[:url].key?(attr.to_s)
           normalize_url(value)
-        elsif Environment.normalized_attributes[:encrypted].key?(attr.to_s) || attr.to_s.include?("password")
+        elsif encrypted_attribute?(attr)
           normalize_encrypted
         elsif Environment.normalized_attributes[:resource].key?(attr.to_s)
           normalize_resource(value)
@@ -98,6 +98,13 @@ module Api
       #
       def normalize_resource(value)
         value.to_s.starts_with?("/") ? "#{@req.base}#{value}" : value
+      end
+
+      #
+      # Let's determine if an attribute is encrypted
+      #
+      def encrypted_attribute?(attr)
+        Environment.normalized_attributes[:encrypted].key?(attr.to_s) || attr.to_s.include?('password')
       end
 
       #
