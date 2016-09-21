@@ -4,7 +4,10 @@ module Api
       validate_profile_data(data)
       attributes = build_arbitration_attributes(data)
       arbitration_profile = ArbitrationProfile.create(attributes)
-      raise BadRequestError, arbitration_profile.errors.full_messages.join(', ') unless arbitration_profile.valid?
+      unless arbitration_profile.valid?
+        raise BadRequestError,
+              "Failed to add new arbitration profile - #{arbitration_profile.errors.full_messages.join(', ')}"
+      end
       arbitration_profile
     end
 
