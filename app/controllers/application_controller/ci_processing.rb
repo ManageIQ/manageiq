@@ -2321,14 +2321,19 @@ module ApplicationController::CiProcessing
           :target_class => "Host")
     when "destroy"
       each_host(hosts, task_name) do |host|
-        audit = {:event        => "host_record_delete_initiated",
-                 :message      => "[#{host.name}] Record delete initiated",
-                 :target_id    => host.id,
-                 :target_class => "Host",
-                 :userid       => session[:userid]}
-        AuditEvent.success(audit)
+        validation = host.validate_destroy
+        if !validation[:available]
+          add_flash(validation[:message], :error)
+        else
+          audit = {:event        => "host_record_delete_initiated",
+                   :message      => "[#{host.name}] Record delete initiated",
+                   :target_id    => host.id,
+                   :target_class => "Host",
+                   :userid       => session[:userid]}
+          AuditEvent.success(audit)
+          host.destroy_queue
+        end
       end
-      Host.destroy_queue(hosts)
     when "scan"
       each_host(hosts, task_name) do |host|
         if host.respond_to?(:scan)
