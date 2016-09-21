@@ -141,33 +141,33 @@ module VirtualDelegates
       # whereas conceptually, from the user point of view, the delegator should
       # be doing one call.
       if allow_nil
-        method_def = [
-          "def #{method_name}(#{definition})",
-          "return self[:#{method_name}] if has_attribute?(:#{method_name})",
-          "_ = #{to}",
-          "if !_.nil? || nil.respond_to?(:#{method})",
-          "  _.#{method}(#{definition})",
-          "end#{default}",
-          "end"
-        ].join ';'
+        method_def = <<-METHOD
+          def #{method_name}(#{definition})
+            return self[:#{method_name}] if has_attribute?(:#{method_name})
+            _ = #{to}
+            if !_.nil? || nil.respond_to?(:#{method})
+              _.#{method}(#{definition})
+            end#{default}
+          end
+        METHOD
       else
         exception = %(raise Module::DelegationError, "#{self}##{method_name} delegated to #{to}.#{method}, but #{to} is nil: \#{self.inspect}")
 
-        method_def = [
-          "def #{method_name}(#{definition})",
-          "return self[:#{method_name}] if has_attribute?(:#{method_name})",
-          " _ = #{to}",
-          "  _.#{method}(#{definition})#{default}",
-          "rescue NoMethodError => e",
-          "  if _.nil? && e.name == :#{method}",
-          "    #{exception}",
-          "  else",
-          "    raise",
-          "  end",
-          "end"
-        ].join ';'
+        method_def = <<-METHOD
+          def #{method_name}(#{definition})
+            return self[:#{method_name}] if has_attribute?(:#{method_name})
+            _ = #{to}
+            _.#{method}(#{definition})#{default}
+          rescue NoMethodError => e
+            if _.nil? && e.name == :#{method}
+              #{exception}
+            else
+              raise
+            end
+          end
+        METHOD
       end
-
+      method_def = method_def.split("\n").map(&:strip).join ';'
       module_eval(method_def, file, line)
     end
 
