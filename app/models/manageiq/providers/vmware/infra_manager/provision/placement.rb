@@ -15,9 +15,16 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Placement
 
   def manual_placement
     _log.info("Manual placement...")
-    return selected_placement_obj(:placement_host_name, Host),
-           selected_placement_obj(:placement_cluster_name, EmsCluster),
-           selected_placement_obj(:placement_ds_name, Storage)
+
+    host      = selected_placement_obj(:placement_host_name, Host)
+    cluster   = selected_placement_obj(:placement_cluster_name, EmsCluster)
+    datastore = selected_placement_obj(:placement_ds_name, Storage)
+
+    if host && cluster.nil?
+      cluster = host.ems_cluster
+    end
+
+    return host, cluster, datastore
   end
 
   def automatic_placement
