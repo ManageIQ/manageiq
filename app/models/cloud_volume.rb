@@ -29,6 +29,25 @@ class CloudVolume < ApplicationRecord
     ext_management_system && ext_management_system.class::CloudVolume
   end
 
+  def self.queue_create_volume(ext_management_system, options = {})
+    task_opts = {
+      :action => "creating volume #{ext_management_system.inspect} #{options.inspect} for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => self.class.name,
+      #:instance_id => id,
+      :method_name => 'create_volume',
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => my_zone,
+      :args        => [userid, options]
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   def self.create_volume(ext_management_system, options = {})
     raise ArgumentError, _("ext_management_system cannot be nil") if ext_management_system.nil?
 
