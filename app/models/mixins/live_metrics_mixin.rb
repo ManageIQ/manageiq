@@ -41,34 +41,40 @@ module LiveMetricsMixin
     end
 
     def included_children
-      self.class.live_metrics_config ||= {}
-      self.class.live_metrics_config[live_metrics_name] ||= load_live_metrics_config
       self.class.live_metrics_config[live_metrics_name]['included_children']
     end
 
     def supported_metrics
-      self.class.live_metrics_config ||= {}
-      self.class.live_metrics_config[live_metrics_name] ||= load_live_metrics_config
       self.class.live_metrics_config[live_metrics_name]['supported_metrics']
     end
 
     def supported_metrics_by_column
-      self.class.supported_metrics_by_column ||= {}
-      self.class.supported_metrics_by_column[live_metrics_name] ||= supported_metrics.invert
+      self.class.live_metrics_config[live_metrics_name]['supported_metrics_by_column']
+    end
+  end
+
+  module ClassMethods
+    def supported_models
+      @supported_models ||= [name.demodulize.underscore]
     end
 
-    def load_live_metrics_config
-      live_metrics_file = File.join(LIVE_METRICS_DIR, "#{live_metrics_name}.yaml")
+    def live_metrics_config
+      @live_metrics_config ||= {}
+      supported_models.each do |model_name|
+        @live_metrics_config[model_name] ||= load_live_metrics_config(model_name)
+        @live_metrics_config[model_name]['supported_metrics_by_column'] =
+          @live_metrics_config[model_name]['supported_metrics'].invert
+      end
+      @live_metrics_config
+    end
+
+    def load_live_metrics_config(config_file)
+      live_metrics_file = File.join(LIVE_METRICS_DIR, "#{config_file}.yaml")
       live_metrics_config = File.exist?(live_metrics_file) ? YAML.load_file(live_metrics_file) : {}
       if live_metrics_config['supported_metrics']
         live_metrics_config['supported_metrics'] = live_metrics_config['supported_metrics'].reduce({}, :merge)
       end
       live_metrics_config
     end
-  end
-
-  module ClassMethods
-    attr_accessor :live_metrics_config
-    attr_accessor :supported_metrics_by_column
   end
 end

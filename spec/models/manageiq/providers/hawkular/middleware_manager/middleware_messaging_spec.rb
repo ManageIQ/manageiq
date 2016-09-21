@@ -124,6 +124,10 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareMessaging d
       it "#supported_metrics for #{ms_model}" do
         supported_metrics = ms.supported_metrics
         expected_metrics.each { |k, v| expect(supported_metrics[k]).to eq(v) }
+
+        model_config = MiddlewareMessaging.live_metrics_config["middleware_messaging_jms_#{ms_model}"]
+        supported_metrics = model_config['supported_metrics']
+        expected_metrics.each { |k, v| expect(supported_metrics[k]).to eq(v) }
       end
     end
   end
