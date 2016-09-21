@@ -5,12 +5,7 @@ dynamicType:
 dynamicProperty:
   :type: :DynamicProperty
   :isArray: true
-diskId:
-  :type: :SOAP::SOAPInt
-datastore:
-  :type: :ManagedObjectReference
-diskMoveType:
+profileId:
   :type: :SOAP::SOAPString
-profile:
-  :type: :VirtualMachineProfileSpec
-  :isArray: true
+profileData:
+  :type: :VirtualMachineProfileRawData

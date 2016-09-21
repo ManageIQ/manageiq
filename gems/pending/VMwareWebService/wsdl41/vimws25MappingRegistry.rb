@@ -34626,7 +34626,10 @@
       ["ftInfo", "VimWs25::FaultToleranceConfigInfo", [0, 1]],
       ["vAppConfigRemoved", "SOAP::SOAPBoolean", [0, 1]],
       ["vAssertsEnabled", "SOAP::SOAPBoolean", [0, 1]],
-      ["changeTrackingEnabled", "SOAP::SOAPBoolean", [0, 1]]
+      ["changeTrackingEnabled", "SOAP::SOAPBoolean", [0, 1]],
+
+      # vmProfile added from VIM 5.5
+      ["vmProfile", "VimWs25::VirtualMachineProfileSpec[]", [0, nil]]
     ]
   )
 
@@ -34741,6 +34744,20 @@
       ["defaultSuspendType", "SOAP::SOAPString", [0, 1]],
       ["defaultResetType", "SOAP::SOAPString", [0, 1]],
       ["standbyAction", "SOAP::SOAPString", [0, 1]]
+    ]
+  )
+
+  # VirtualMachineDefinedProfileSpec added from VIM 5.5
+  EncodedRegistry.register(
+    :class => VimWs25::VirtualMachineDefinedProfileSpec,
+    :schema_ns => "urn:vim25",
+    :schema_type => "VirtualMachineDefinedProfileSpec",
+    :schema_basetype => XSD::QName.new("urn:vim25", "VirtualMachineProfileSpec"),
+    :schema_element => [
+      ["dynamicType", "SOAP::SOAPString", [0, 1]],
+      ["dynamicProperty", "VimWs25::DynamicProperty[]", [0, nil]],
+      ["profileId", "SOAP::SOAPString"],
+      ["profileData", "VimWs25::VirtualMachineProfileRawData", [0, 1]]
     ]
   )
 
@@ -35351,6 +35368,42 @@
     { :type => XSD::QName.new("urn:vim25", "VirtualMachinePciPassthroughInfo") }
   )
 
+  # VirtualMachineProfileRawData added from VIM 5.5
+  EncodedRegistry.register(
+    :class => VimWs25::VirtualMachineProfileRawData,
+    :schema_ns => "urn:vim25",
+    :schema_type => "VirtualMachineProfileRawData",
+    :schema_basetype => XSD::QName.new("urn:vim25", "DynamicData"),
+    :schema_element => [
+      ["dynamicType", "SOAP::SOAPString", [0, 1]],
+      ["dynamicProperty", "VimWs25::DynamicProperty[]", [0, nil]],
+      ["extensionKey", "SOAP::SOAPString"],
+      ["objectData", "SOAP::SOAPString", [0, 1]]
+    ]
+  )
+
+  # VirtualMachineProfileSpec added from VIM 5.5
+  EncodedRegistry.register(
+    :class => VimWs25::VirtualMachineProfileSpec,
+    :schema_ns => "urn:vim25",
+    :schema_type => "VirtualMachineProfileSpec",
+    :schema_basetype => XSD::QName.new("urn:vim25", "DynamicData"),
+    :schema_element => [
+      ["dynamicType", "SOAP::SOAPString", [0, 1]],
+      ["dynamicProperty", "VimWs25::DynamicProperty[]", [0, nil]]
+    ]
+  )
+
+  # ArrayOfVirtualMachineProfileSpec added from VIM 5.5
+  EncodedRegistry.register(
+    :class => VimWs25::ArrayOfVirtualMachineProfileSpec,
+    :schema_ns => "urn:vim25",
+    :schema_type => "ArrayOfVirtualMachineProfileSpec",
+    :schema_element => [
+      ["virtualMachineProfileSpec", ["VimWs25::VirtualMachineProfileSpec[]", XSD::QName.new("urn:vim25", "VirtualMachineProfileSpec")], [0, nil]]
+    ]
+  )
+
   EncodedRegistry.register(
     :class => VimWs25::VirtualMachineQuestionInfo,
     :schema_ns => "urn:vim25",
@@ -35374,7 +35427,10 @@
       ["dynamicProperty", "VimWs25::DynamicProperty[]", [0, nil]],
       ["diskId", "SOAP::SOAPInt"],
       ["datastore", "VimWs25::ManagedObjectReference"],
-      ["diskMoveType", "SOAP::SOAPString", [0, 1]]
+      ["diskMoveType", "SOAP::SOAPString", [0, 1]],
+
+      # profile added from VIM 5.5
+      ["profile", "VimWs25::VirtualMachineProfileSpec[]", [0, nil]]
     ]
   )
 
@@ -35397,7 +35453,10 @@
       ["pool", "VimWs25::ManagedObjectReference", [0, 1]],
       ["host", "VimWs25::ManagedObjectReference", [0, 1]],
       ["disk", "VimWs25::VirtualMachineRelocateSpecDiskLocator[]", [0, nil]],
-      ["transform", "SOAP::SOAPString", [0, 1]]
+      ["transform", "SOAP::SOAPString", [0, 1]],
+
+      # profile added from VIM 5.5
+      ["profile", "VimWs25::VirtualMachineProfileSpec[]", [0, nil]]
     ]
   )
 
@@ -77314,7 +77373,10 @@
       ["ftInfo", "VimWs25::FaultToleranceConfigInfo", [0, 1]],
       ["vAppConfigRemoved", "SOAP::SOAPBoolean", [0, 1]],
       ["vAssertsEnabled", "SOAP::SOAPBoolean", [0, 1]],
-      ["changeTrackingEnabled", "SOAP::SOAPBoolean", [0, 1]]
+      ["changeTrackingEnabled", "SOAP::SOAPBoolean", [0, 1]],
+
+      # vmProfile added from VIM 5.5
+      ["vmProfile", "VimWs25::VirtualMachineProfileSpec[]", [0, nil]]
     ]
   )
 
@@ -77439,6 +77501,20 @@
       ["defaultSuspendType", "SOAP::SOAPString", [0, 1]],
       ["defaultResetType", "SOAP::SOAPString", [0, 1]],
       ["standbyAction", "SOAP::SOAPString", [0, 1]]
+    ]
+  )
+
+  # VirtualMachineDefinedProfileSpec added from VIM 5.5
+  LiteralRegistry.register(
+    :class => VimWs25::VirtualMachineDefinedProfileSpec,
+    :schema_ns => "urn:vim25",
+    :schema_type => "VirtualMachineDefinedProfileSpec",
+    :schema_basetype => XSD::QName.new("urn:vim25", "VirtualMachineProfileSpec"),
+    :schema_element => [
+      ["dynamicType", "SOAP::SOAPString", [0, 1]],
+      ["dynamicProperty", "VimWs25::DynamicProperty[]", [0, nil]],
+      ["profileId", "SOAP::SOAPString"],
+      ["profileData", "VimWs25::VirtualMachineProfileRawData", [0, 1]]
     ]
   )
 
@@ -78120,6 +78196,42 @@
     ]
   )
 
+  # VirtualMachineProfileRawData added from VIM 5.5
+  LiteralRegistry.register(
+    :class => VimWs25::VirtualMachineProfileRawData,
+    :schema_ns => "urn:vim25",
+    :schema_type => "VirtualMachineProfileRawData",
+    :schema_basetype => XSD::QName.new("urn:vim25", "DynamicData"),
+    :schema_element => [
+      ["dynamicType", "SOAP::SOAPString", [0, 1]],
+      ["dynamicProperty", "VimWs25::DynamicProperty[]", [0, nil]],
+      ["extensionKey", "SOAP::SOAPString"],
+      ["objectData", "SOAP::SOAPString", [0, 1]]
+    ]
+  )
+
+  # VirtualMachineProfileSpec added from VIM 5.5
+  LiteralRegistry.register(
+    :class => VimWs25::VirtualMachineProfileSpec,
+    :schema_ns => "urn:vim25",
+    :schema_type => "VirtualMachineProfileSpec",
+    :schema_basetype => XSD::QName.new("urn:vim25", "DynamicData"),
+    :schema_element => [
+      ["dynamicType", "SOAP::SOAPString", [0, 1]],
+      ["dynamicProperty", "VimWs25::DynamicProperty[]", [0, nil]]
+    ]
+  )
+
+  # ArrayOfVirtualMachineProfileSpec added from VIM 5.5
+  LiteralRegistry.register(
+    :class => VimWs25::ArrayOfVirtualMachineProfileSpec,
+    :schema_ns => "urn:vim25",
+    :schema_type => "ArrayOfVirtualMachineProfileSpec",
+    :schema_element => [
+      ["virtualMachineProfileSpec", ["VimWs25::VirtualMachineProfileSpec[]", XSD::QName.new("urn:vim25", "VirtualMachineProfileSpec")], [0, nil]]
+    ]
+  )
+
   LiteralRegistry.register(
     :class => VimWs25::VirtualMachineQuestionInfo,
     :schema_ns => "urn:vim25",
@@ -78145,7 +78257,10 @@
       ["dynamicProperty", "VimWs25::DynamicProperty[]", [0, nil]],
       ["diskId", "SOAP::SOAPInt"],
       ["datastore", "VimWs25::ManagedObjectReference"],
-      ["diskMoveType", "SOAP::SOAPString", [0, 1]]
+      ["diskMoveType", "SOAP::SOAPString", [0, 1]],
+
+      # profile added from VIM 5.5
+      ["profile", "VimWs25::VirtualMachineProfileSpec[]", [0, nil]]
     ]
   )
 
@@ -78171,7 +78286,10 @@
       ["pool", "VimWs25::ManagedObjectReference", [0, 1]],
       ["host", "VimWs25::ManagedObjectReference", [0, 1]],
       ["disk", "VimWs25::VirtualMachineRelocateSpecDiskLocator[]", [0, nil]],
-      ["transform", "SOAP::SOAPString", [0, 1]]
+      ["transform", "SOAP::SOAPString", [0, 1]],
+
+      # profile added from VIM 5.5
+      ["profile", "VimWs25::VirtualMachineProfileSpec[]", [0, nil]]
     ]
   )
 

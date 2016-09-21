@@ -96,3 +96,6 @@ vAssertsEnabled:
   :type: :SOAP::SOAPBoolean
 changeTrackingEnabled:
   :type: :SOAP::SOAPBoolean
+vmProfile:
+  :type: :VirtualMachineProfileSpec
+  :isArray: true
