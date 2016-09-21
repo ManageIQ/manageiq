@@ -194,9 +194,8 @@ class CloudSubnetController < ApplicationController
       })
 
     when "save"
-      form_params
       begin
-        @subnet.save
+        @subnet.update_subnet(form_params)
         add_flash(_("Updating Subnet \"%{name}\"") % {
           :model => ui_lookup(:table => 'cloud_subnet'),
           :name  => @subnet.name
@@ -220,7 +219,7 @@ class CloudSubnetController < ApplicationController
 
   def form_params
     params[:ip_version] ||= "4"
-    params[:dhcp_enabled] ||= true
+    params[:dhcp_enabled] ||= false
     options = {}
     options[:name] = params[:name] if params[:name]
     options[:ems_id] = params[:ems_id] if params[:ems_id]

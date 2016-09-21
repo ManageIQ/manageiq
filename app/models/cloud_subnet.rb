@@ -81,6 +81,14 @@ class CloudSubnet < ApplicationRecord
     raise NotImplementedError, _("raw_delete_subnet must be implemented in a subclass")
   end
 
+  def raw_update_subnet(_options = {})
+    raise NotImplementedError, _("raw_update_subnet must be implemented in a subclass")
+  end
+
+  def update_subnet(options = {})
+    raw_update_subnet(options) unless options.empty?
+  end
+
   private
 
   def extra_attributes_save(key, value)

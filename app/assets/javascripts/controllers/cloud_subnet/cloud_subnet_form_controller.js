@@ -9,6 +9,7 @@ ManageIQ.angular.app.controller('cloudSubnetFormController', ['$http', '$scope',
 
   if (cloudSubnetFormId == 'new') {
     $scope.cloudSubnetModel.name = "";
+    $scope.newRecord = true;
   } else {
     miqService.sparkleOn();
 
