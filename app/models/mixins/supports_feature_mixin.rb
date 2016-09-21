@@ -35,6 +35,12 @@ module SupportsFeatureMixin
   #   Post.unsupported_reason(:fake)                        # => "We keep it real"
   #   Post.new(featured: true).unsupported_reason(:archive) # => "Its too good"
   #
+  # To query for known features you can ask the class or the instance via +feature_known?+
+  #
+  #   Post.feature_known?('fake')     # => true
+  #   Post.new.feature_known?(:fake)  # => true
+  #   Post.new.feature_known?(:alert) # => false
+  #
   # If you include this concern in a Module that gets included by the Model
   # you have to extend that model with +ActiveSupport::Concern+ and wrap the
   # +supports+ calls in an +included+ block. This is also true for modules in between!
@@ -82,7 +88,7 @@ module SupportsFeatureMixin
   class UnknownFeatureError < StandardError; end
 
   def self.guard_queryable_feature(feature)
-    unless QUERYABLE_FEATURES.key?(feature.to_s.to_sym)
+    unless QUERYABLE_FEATURES.key?(feature.to_sym)
       raise UnknownFeatureError, "Feature ':#{feature}' is unknown to SupportsFeatureMixin."
     end
   end
@@ -94,6 +100,7 @@ module SupportsFeatureMixin
   # query instance for the reason why the feature is unsupported
   def unsupported_reason(feature)
     SupportsFeatureMixin.guard_queryable_feature(feature)
+    feature = feature.to_sym
     public_send("supports_#{feature}?") unless unsupported.key?(feature)
     unsupported[feature]
   end
@@ -104,12 +111,18 @@ module SupportsFeatureMixin
     public_send("supports_#{feature}?")
   end
 
+  # query the instance if a feature is generally known
+  def feature_known?(feature)
+    self.class.feature_known?(feature)
+  end
+
   private
 
   # used inside a +supports+ block to add a reason why the feature is not supported
   # just adding a reason will make the feature unsupported
   def unsupported_reason_add(feature, reason = nil)
     SupportsFeatureMixin.guard_queryable_feature(feature)
+    feature = feature.to_sym
     unsupported[feature] = SupportsFeatureMixin.reason_or_default(reason)
   end
 
@@ -140,8 +153,14 @@ module SupportsFeatureMixin
     # query the class for the reason why something is unsupported
     def unsupported_reason(feature)
       SupportsFeatureMixin.guard_queryable_feature(feature)
+      feature = feature.to_sym
       public_send("supports_#{feature}?") unless unsupported.key?(feature)
       unsupported[feature]
+    end
+
+    # query the class if a feature is generally known
+    def feature_known?(feature)
+      SupportsFeatureMixin::QUERYABLE_FEATURES.key?(feature.to_sym)
     end
 
     private
@@ -155,11 +174,13 @@ module SupportsFeatureMixin
     # use this for making a class not support a feature
     def unsupported_reason_add(feature, reason = nil)
       SupportsFeatureMixin.guard_queryable_feature(feature)
+      feature = feature.to_sym
       unsupported[feature] = SupportsFeatureMixin.reason_or_default(reason)
     end
 
     def define_supports_feature_methods(feature, is_supported: true, reason: nil, &block)
       method_name = "supports_#{feature}?"
+      feature = feature.to_sym
 
       # defines the method on the instance
       define_method(method_name) do
