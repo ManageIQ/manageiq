@@ -22,6 +22,7 @@ class ApplicationHelper::Toolbar::XHistory < ApplicationHelper::Toolbar::Basic
       'fa fa-repeat fa-lg',
       N_('Reload current display'),
       nil,
-      :url => "reload"),
+      :url => "reload",
+      :klass => ApplicationHelper::Button::ButtonWithoutRbacCheck),
   ])
 end

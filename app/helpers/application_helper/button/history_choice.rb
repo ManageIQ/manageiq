@@ -1,4 +1,4 @@
-class ApplicationHelper::Button::HistoryChoice < ApplicationHelper::Button::Basic
+class ApplicationHelper::Button::HistoryChoice < ApplicationHelper::Button::ButtonWithoutRbacCheck
   def calculate_properties
     super
     # Show disabled history button if no history
