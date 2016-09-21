@@ -65,7 +65,7 @@ module ReportController::Widgets
         params[:id] = @widget.id.to_s   # reset id in params for show
         # Build the filter expression and attach widget to schedule filter
         exp = {}
-        exp["="] = {"field" => "MiqWidget.id", "value" => @widget.id}
+        exp["="] = {"field" => "MiqWidget-id", "value" => @widget.id}
         @edit[:schedule].filter = MiqExpression.new(exp)
         @edit[:schedule].save
         @edit = session[:edit] = nil    # clean out the saved info
