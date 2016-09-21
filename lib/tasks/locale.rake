@@ -175,5 +175,9 @@ namespace :locale do
                                 :ignore_fuzzy   => true,
                                 :report_warning => false)
     Rake::Task['gettext:find'].invoke
+
+    Dir["#{@engine.root}/locale/**/*.edit.po", "#{@engine.root}/locale/**/*.po.time_stamp"].each do |file|
+      File.unlink(file)
+    end
   end
 end
