@@ -8,6 +8,7 @@ class Notification < ApplicationRecord
 
   accepts_nested_attributes_for :notification_recipients
   before_create :set_notification_recipients
+  after_commit :emit_message, :on => :create
 
   serialize :options, Hash
   default_value_for(:options) { Hash.new }
@@ -26,6 +27,12 @@ class Notification < ApplicationRecord
   end
 
   private
+
+  def emit_message
+    notification_recipients.pluck(:user_id).each do |user|
+      ActionCable.server.broadcast("notifications_#{user}", to_h)
+    end
+  end
 
   def set_notification_recipients
     subscribers = notification_type.subscriber_ids(subject, initiator)
