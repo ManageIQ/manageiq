@@ -557,7 +557,7 @@ class MiqWidget < ApplicationRecord
       :name         => title,
       :description  => description,
       :sched_action => {:method => "generate_widget"},
-      :filter       => MiqExpression.new("=" => {"field" => "MiqWidget.id", "value" => id}),
+      :filter       => MiqExpression.new("=" => {"field" => "MiqWidget-id", "value" => id}),
       :towhat       => self.class.name,
       :run_at       => {
         :interval   => {:value => value, :unit  => unit},

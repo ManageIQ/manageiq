@@ -60,7 +60,7 @@ module ReportController::Schedules
     @schedule.towhat = "MiqReport"
     if @sb[:tree_typ] == "reports"
       exp                   = {}
-      exp["="]              = {"field" => "MiqReport.id", "value" => @sb[:miq_report_id]}
+      exp["="]              = {"field" => "MiqReport-id", "value" => @sb[:miq_report_id]}
       @_params.delete :id   # incase add schedule button was pressed from report show screen.
       @schedule.filter      = MiqExpression.new(exp)
       miq_report            = MiqReport.find(@sb[:miq_report_id])
@@ -486,7 +486,7 @@ module ReportController::Schedules
 
     unless !@edit[:new][:repfilter] || @edit[:new][:repfilter] == ""
       record = MiqReport.find(@edit[:new][:repfilter].to_i)
-      exp["="] = {"field" => "MiqReport.id", "value" => record.id} if record
+      exp["="] = {"field" => "MiqReport-id", "value" => record.id} if record
       schedule.filter = MiqExpression.new(exp)
     end
   end

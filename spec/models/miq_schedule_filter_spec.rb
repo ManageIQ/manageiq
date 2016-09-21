@@ -46,7 +46,7 @@ describe "MiqSchedule Filter" do
         @report_schedule = FactoryGirl.create(:miq_schedule,
                                               :towhat       => "MiqReport",
                                               :sched_action => {:method => "run_report"},
-                                              :filter       => MiqExpression.new("=" => {"field" => "MiqReport.id", "value" => @report.id})
+                                              :filter       => MiqExpression.new("=" => {"field" => "MiqReport-id", "value" => @report.id})
                                              )
       end
 

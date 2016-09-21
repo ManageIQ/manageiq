@@ -104,7 +104,7 @@ RSpec.describe "reports API" do
     report = FactoryGirl.create(:miq_report)
 
     exp = {}
-    exp["="] = {"field" => "MiqReport.id", "value" => report.id}
+    exp["="] = {"field" => "MiqReport-id", "value" => report.id}
     exp = MiqExpression.new(exp)
 
     schedule_1 = FactoryGirl.create(:miq_schedule, :filter => exp)
@@ -127,7 +127,7 @@ RSpec.describe "reports API" do
     report = FactoryGirl.create(:miq_report)
 
     exp = {}
-    exp["="] = {"field" => "MiqReport.id", "value" => report.id}
+    exp["="] = {"field" => "MiqReport-id", "value" => report.id}
     exp = MiqExpression.new(exp)
 
     schedule = FactoryGirl.create(:miq_schedule, :name => 'unit_test', :filter => exp)
