@@ -47,6 +47,8 @@ class ManageIQ::Providers::Vmware::CloudManager::RefreshParser < ManageIQ::Provi
     @inv[:orgs].each do |org|
       @inv[:vdcs] += org.vdcs.all
     end
+
+    process_collection(@inv[:vdcs], :availability_zones) { |vdc| parse_vdc(vdc) }
   end
 
   def get_vapps
@@ -91,6 +93,18 @@ class ManageIQ::Providers::Vmware::CloudManager::RefreshParser < ManageIQ::Provi
     end
 
     process_collection(@inv[:images], :vms) { |image_obj| parse_image(image_obj[:image], image_obj[:is_published]) }
+  end
+
+  def parse_vdc(vdc)
+    id = vdc.id
+
+    new_result = {
+      :type    => "ManageIQ::Providers::Vmware::CloudManager::AvailabilityZone",
+      :ems_ref => id,
+      :name    => vdc.name
+    }
+
+    return id, new_result
   end
 
   def parse_vm(vm)
