@@ -450,4 +450,25 @@ describe('miq_application.js', function() {
       expect(miqUncompressedId('999r123456789012')).toEqual('999123456789012');
     });
   });
+
+  describe('miqFormatNotification', function () {
+    context('single placeholder', function () {
+      it('replaces placeholders with bindings', function () {
+        expect(miqFormatNotification('¯\_%{dude}_/¯', {dude: { text: '(ツ)' }})).toEqual('¯\_(ツ)_/¯');
+      });
+    });
+
+    context('multiple placeholders', function () {
+      it('replaces placeholders with bindings', function () {
+        expect(miqFormatNotification('%{dude}︵ %{table}', {dude: { text: '(╯°□°）╯' }, table: {text: '┻━┻'}})).toEqual('(╯°□°）╯︵ ┻━┻');
+      });
+    });
+
+    context('same placeholder multiple times', function () {
+      it('replaces placeholders with bindings', function () {
+        expect(miqFormatNotification('( %{eye}▽%{eye})/', {eye: { text: 'ﾟ' }})).toEqual('( ﾟ▽ﾟ)/');
+      });
+    });
+  });
 });
+

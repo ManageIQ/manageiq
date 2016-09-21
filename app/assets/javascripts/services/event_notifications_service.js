@@ -46,16 +46,15 @@ function eventNotifications($timeout) {
     });
   };
 
-  this.doReset = function() {
+  this.doReset = function(seed) {
     state.groups.splice(0, state.groups.length);
-    state.groups.push(
-      {
-        notificationType: this.EVENT_NOTIFICATION,
-        heading: __("Events"),
-        unreadCount: 0,
-        notifications: []
-      }
-    );
+    var events = {
+      notificationType: this.EVENT_NOTIFICATION,
+      heading: __("Events"),
+      unreadCount: 0,
+      notifications: []
+    }
+    state.groups.push(events);
     state.groups.push(
       {
         notificationType: this.TASK_NOTIFICATION,
@@ -66,6 +65,32 @@ function eventNotifications($timeout) {
     );
     state.unreadNotifications = false;
     state.toastNotifications = [];
+
+    if (seed) {
+      var _this = this;
+
+      API.get('/api/notifications?expand=resources&attributes=details')
+      .then(function (data) {
+        data.resources.forEach(function(resource) {
+          var msg = miqFormatNotification(resource.details.text, resource.details.bindings);
+          events.notifications.splice(0, 0, {
+            id: resource.id,
+            notificationType: _this.EVENT_NOTIFICATION,
+            unread: !resource.seen,
+            type: resource.details.level,
+            message: msg,
+            data: {
+              message: msg
+            },
+            href: resource.href,
+            timeStamp: resource.details.created_at
+          });
+        });
+
+        updateUnreadCount(events);
+        notifyObservers();
+      });
+    }
   };
 
   this.registerObserverCallback = function(callback){
@@ -154,6 +179,9 @@ function eventNotifications($timeout) {
     if (notification) {
       notification.unread = false;
       this.removeToast(notification);
+      if (notification.href) {
+        API.post(notification.href, {action: 'mark_as_seen'});
+      }
     }
     if (group) {
       updateUnreadCount(group);
@@ -182,10 +210,14 @@ function eventNotifications($timeout) {
   this.markAllRead = function(group) {
     if (group) {
       var _this = this;
-      group.notifications.forEach(function(notification) {
+      var resources = group.notifications.map(function(notification) {
         notification.unread = false;
         _this.removeToast(notification);
-      });
+        return { href: notification.href };
+      }).filter(function (notification) { return notification.href });
+      if (resources.length > 0) {
+        API.post('/api/notifications', {action: 'mark_as_seen', resources: resources});
+      }
       group.unreadCount = 0;
       updateUnreadCount();
     }
@@ -208,6 +240,9 @@ function eventNotifications($timeout) {
 
     if (notification) {
       this.removeToast(notification);
+      if (notification.href) {
+        API.delete(notification.href);
+      }
     }
 
     if (!group) {
@@ -229,9 +264,13 @@ function eventNotifications($timeout) {
   this.clearAll = function(group) {
     if (group) {
       var _this = this;
-      group.notifications.forEach(function(notification) {
+      var resources = group.notifications.map(function(notification) {
         _this.removeToast(notification);
-      });
+        return { href: notification.href };
+      }).filter(function (notification) { return notification.href });
+      if (resources.length > 0) {
+        API.post('/api/notifications', {action: 'delete', resources: resources});
+      }
       group.notifications = [];
       updateUnreadCount(group);
       notifyObservers();
@@ -276,5 +315,5 @@ function eventNotifications($timeout) {
     this.removeToast(notification);
   };
 
-  this.doReset();
+  this.doReset(true);
 }
