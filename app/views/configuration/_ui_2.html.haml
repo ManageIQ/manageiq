@@ -69,7 +69,7 @@
               .col-md-3
                 = check_box_tag("display_vms",
                                  '1',
-                                 @edit[:new][:display_vms],
+                                 @edit[:new][:display][:display_vms],
                                  :data => {:on_text => 'Yes', :off_text => 'No'})
                 :javascript
                   miqInitBootstrapSwitch("display_vms", "#{url}")

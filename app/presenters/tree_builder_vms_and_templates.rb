@@ -51,7 +51,7 @@ class TreeBuilderVmsAndTemplates < FullTreeBuilder
   end
 
   def prune_rbac(tree)
-    if User.current_user.settings[:display_vms]
+    if User.current_user.settings.fetch_path(:display, :display_vms)
       allowed_vm_ids = Set.new(Rbac.filtered(@root_ems.vms).pluck(:id))
       prune_folders_via_vms(tree, allowed_vm_ids)
     else

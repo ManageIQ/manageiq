@@ -121,7 +121,7 @@ class ConfigurationController < ApplicationController
     # ui2 form
     return unless load_edit("config_edit__ui2", "configuration")
     @edit[:new][:views][VIEW_RESOURCES[params[:resource]]] = params[:view] # Capture the new view setting
-    @edit[:new][:display_vms] = params[:display_vms] == 'true' if params.key?(:display_vms)
+    @edit[:new][:display][:display_vms] = params[:display_vms] == 'true' if params.key?(:display_vms)
     session[:changed] = (@edit[:new] != @edit[:current])
     @changed = session[:changed]
     render :update do |page|
@@ -198,9 +198,6 @@ class ConfigurationController < ApplicationController
       when "ui_2"                                                 # Visual tab
         @settings.merge!(@edit[:new])                                   # Apply the new saved settings
         prune_old_settings(@settings)
-        if Settings.ui.tree.display_vms != @edit[:new][:display_vms]
-          Settings.ui.tree.display_vms = @edit[:new][:display_vms]
-        end
         if current_user
           settings = merge_settings(current_user.settings, @settings)
           current_user.update_attributes(:settings => settings)
@@ -548,7 +545,6 @@ class ConfigurationController < ApplicationController
         :current => init_settings,
         :key     => 'config_edit__ui2',
       }
-      @edit[:current][:display_vms] = Settings.ui.tree.display_vms
     when 'ui_3'
       filters = MiqSearch.where(:search_type => "default")
       current = filters.map do |filter|
@@ -617,7 +613,7 @@ class ConfigurationController < ApplicationController
     when "ui_2"                                               # Visual Settings tab
       @edit[:new][:display][:compare] = params[:display][:compare] if !params[:display].nil? && !params[:display][:compare].nil?
       @edit[:new][:display][:drift] = params[:display][:drift] if !params[:display].nil? && !params[:display][:drift].nil?
-      @edit[:new][:display_vms] = params[:display_vms] unless params.key?(:display_vms)
+      @edit[:new][:display][:display_vms] = params[:display_vms] unless params.fetch_path(:display_vms)
     when "ui_3"                                               # Visual Settings tab
       @edit[:new][:display][:compare] = params[:display][:compare] if !params[:display].nil? && !params[:display][:compare].nil?
       @edit[:new][:display][:drift] = params[:display][:drift] if !params[:display].nil? && !params[:display][:drift].nil?
