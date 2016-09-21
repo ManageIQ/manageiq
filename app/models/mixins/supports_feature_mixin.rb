@@ -81,6 +81,9 @@ module SupportsFeatureMixin
     :resize                       => 'Resizing',
     :retire                       => 'Retirement',
     :smartstate_analysis          => 'Smartstate Analaysis',
+    :reconfigure              => 'Reconfiguration',
+    :reconfigure_vms          => 'Reconfigure Virtual Machines',
+    :snapshots                => 'Snapshots'
   }.freeze
 
   # Whenever this mixin is included we define all features as unsupported by default.

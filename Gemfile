@@ -45,7 +45,8 @@ gem "omniauth",                       "~>1.3.1",       :require => false
 gem "omniauth-google-oauth2",         "~>0.2.6"
 gem "open4",                          "~>1.3.0",       :require => false
 gem "outfielding-jqplot-rails",       "= 1.0.8"
-gem "ovirt-engine-sdk",               "~>4.0.0",       :require => false # Required by the oVirt provider
+#gem "ovirt-engine-sdk",               git: "git@github.com:borod108/ovirt-engine-sdk-ruby.git" #{}"~>4.0.0",       :require => false # Required by the oVirt provider
+gem "ovirt-engine-sdk",               ">= 4.1.0.alpha1", :path => '~/git/ovirt-engine-sdk-ruby/sdk', :require => false 
 gem "ovirt_metrics",                  "~>1.3.0",       :require => false
 gem "paperclip",                      "~>4.3.0"
 gem "puma",                           "~>3.3.0"

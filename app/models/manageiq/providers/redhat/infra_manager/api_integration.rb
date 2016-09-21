@@ -11,11 +11,12 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
 
   def connect(options = {})
     raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
-    version  = options[:version] || 3
-    raise "version #{version} of the api is not supported by the provider" unless supports_api_version?(version)
-
+    version = options[:version] || 3
+    unless options[:skip_supported_api_validation] || supports_api_version?(version)
+      raise "version #{version} of the api is not supported by the provider"
+    end
     # If there is API path stored in the endpoints table and use it:
-    path = default_endpoint.path
+    path = options[:path] || default_endpoint.path
     _log.info("Using stored API path '#{path}'.") unless path.blank?
 
     server   = options[:ip] || address
@@ -40,8 +41,8 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
   end
 
   def supported_api_versions
-    with_provider_connection do |connection|
-      connection.supported_api_versions
+    with_provider_connection(:path => '', :version => 4, :skip_supported_api_validation => true) do |connection|
+      OvirtSDK4::Probe.probe(connection)
     end
   end
 
@@ -210,7 +211,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     end
 
     # Connect to the engine using version 4 of the API and the `ovirt-engine-sdk` gem.
-    def raw_connect_v4(server, port, path, username, password, service)
+    def raw_connect_v4(server, port, path, username, password, service, scheme = 'https')
       require 'ovirtsdk4'
 
       # Get the timeout from the configuration:
@@ -218,7 +219,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
 
       # Create the connection:
       OvirtSDK4::Connection.new(
-        :url      => "https://#{server}:#{port}#{path}",
+        :url      => "#{scheme}://#{server}:#{port}#{path}",
         :username => username,
         :password => password,
         :timeout  => timeout,
