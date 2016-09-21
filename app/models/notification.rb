@@ -9,6 +9,9 @@ class Notification < ApplicationRecord
   accepts_nested_attributes_for :notification_recipients
   before_create :set_notification_recipients
 
+  serialize :options, Hash
+  default_value_for(:options) { Hash.new }
+
   def type=(typ)
     self.notification_type = NotificationType.find_by_name!(typ)
   end
