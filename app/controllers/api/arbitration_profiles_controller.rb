@@ -3,8 +3,11 @@ module Api
     def create_resource(_type, _id, data)
       validate_profile_data(data)
       attributes = build_arbitration_attributes(data)
-      arbitration_profile = collection_class(:arbitration_profiles).create(attributes)
-      validate_profile(arbitration_profile)
+      arbitration_profile = ArbitrationProfile.create(attributes)
+      unless arbitration_profile.valid?
+        raise BadRequestError,
+              "Failed to add new arbitration profile - #{arbitration_profile.errors.full_messages.join(', ')}"
+      end
       arbitration_profile
     end
 
@@ -33,13 +36,6 @@ module Api
       if data.key?('provider') && data.key?('ext_management_system')
         raise BadRequestError, 'Only one of provider or ext_management_system may be specified'
       end
-    end
-  end
-
-  def validate_profile(profile)
-    if profile.invalid?
-      raise BadRequestError, "Failed to add new arbitration profile -
-            #{profile.errors.full_messages.join(', ')}"
     end
   end
 end
