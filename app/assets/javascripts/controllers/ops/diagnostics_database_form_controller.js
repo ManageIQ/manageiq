@@ -43,10 +43,11 @@ ManageIQ.angular.app.controller('diagnosticsDatabaseFormController', ['$http', '
       $scope.diagnosticsDatabaseModel.uri_prefix = data.uri_prefix;
       $scope.diagnosticsDatabaseModel.log_userid = data.log_userid;
 
-      if($scope.diagnosticsDatabaseModel.uri_prefix == 'nfs')
+      if ($scope.diagnosticsDatabaseModel.uri_prefix == 'nfs') {
         $scope.diagnosticsDatabaseModel.log_protocol = 'Network File System';
-      else
+      } else {
         $scope.diagnosticsDatabaseModel.log_protocol = 'Samba';
+      }
 
       $scope.diagnosticsDatabaseModel.action_typ = 'db_backup';
 
@@ -77,9 +78,7 @@ ManageIQ.angular.app.controller('diagnosticsDatabaseFormController', ['$http', '
   $scope.submitButtonClicked = function(confirm_msg) {
     if (confirm(confirm_msg)) {
       miqService.sparkleOn();
-      var url = $scope.submitUrl;
-      // FIXME
-      miqService.miqAjaxButton(url, true);
+      miqService.miqAjaxButton($scope.submitUrl, $scope.diagnosticsDatabaseModel);
     }
   };
 
@@ -89,7 +88,7 @@ ManageIQ.angular.app.controller('diagnosticsDatabaseFormController', ['$http', '
 
   $scope.logProtocolChanged = function() {
     $scope.diagnosticsDatabaseModel.backup_schedule_type = '';
-    if($scope.logProtocolSelected()) {
+    if ($scope.logProtocolSelected()) {
       $scope.$broadcast('setNewRecord');
       $scope.$broadcast('reactiveFocus');
       miqDBBackupService.logProtocolChanged($scope.diagnosticsDatabaseModel);
