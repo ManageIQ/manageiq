@@ -23,6 +23,6 @@ class ApplicationHelper::Toolbar::XHistory < ApplicationHelper::Toolbar::Basic
       N_('Reload current display'),
       nil,
       :url => "reload",
-      :klass => ApplicationHelper::Button::ButtonWithoutRbackCheck),
+      :klass => ApplicationHelper::Button::ButtonWithoutRbacCheck),
   ])
 end
