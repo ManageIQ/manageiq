@@ -75,5 +75,16 @@ describe('toolbarController', function () {
        expect(middleware_toolbar_list !== $controller.toolbarItems).toBeTruthy();
      });
    });
+   
+   describe('event data toolbar', function() {
+     beforeEach(function() {
+       spyOn($controller, 'onUpdateItem');
+       $controller.initObject(JSON.stringify([[{id: 'someButton', hidden: false, type: 'button'}]]));
+     })
 
+     it('should call update toolbar', function() {
+       ManageIQ.angular.rxSubject.onNext({update: 'someButton', type: 'hidden', value: true})
+       expect($controller.onUpdateItem).toHaveBeenCalled();
+     })
+   });
 });
