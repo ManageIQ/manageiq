@@ -87,7 +87,7 @@ class MiqRequestWorkflow
     values[:vm_tags] = (values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags]).uniq if @values.try(:[], :pre_dialog_vm_tags).present?
 
     if request
-      update_request(request, values, requester)
+      MiqRequest.update_request(request, values, @requester)
     else
       set_request_values(values)
       create_request(values, requester, auto_approve)
@@ -115,18 +115,6 @@ class MiqRequestWorkflow
       request.reload if auto_approve
     end
 
-    request
-  end
-
-  def update_request(request, values, _requester = nil)
-    request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
-
-    request.update_attribute(:options, request.options.merge(values))
-    request.set_description(true)
-
-    request.log_request_success(@requester, :updated)
-
-    request.call_automate_event_queue("request_updated")
     request
   end
 
