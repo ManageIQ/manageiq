@@ -8,14 +8,6 @@ unless dependencies.detect { |d| d.name == "manageiq-providers-amazon" }
   gem "manageiq-providers-amazon", :git => "https://github.com/ManageIQ/manageiq-providers-amazon", :branch => "master"
 end
 
-unless dependencies.detect { |d| d.name == "xclarity_client" }
-  gem "xclarity_client", :git => "git://github.com/juliancheal/xclarity_client", :branch => "master"
-end
-
-unless dependencies.detect { |d| d.name == "manageiq-providers-lenovo" }
-  gem "manageiq-providers-lenovo", :git => "git://github.com/juliancheal/manageiq-providers-lenovo", :branch => "master"
-end
-
 # Unmodified gems
 gem "activerecord-session_store",     "~>1.0.0"
 gem "actioncable",                    "~>5.0.0"
