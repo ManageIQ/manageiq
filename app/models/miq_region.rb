@@ -276,6 +276,10 @@ class MiqRegion < ApplicationRecord
     true
   end
 
+  def auth_key_configured?
+    authentication_token("system_api").present?
+  end
+
   def api_system_auth_token(userid)
     region_v2_key = authentication_token("system_api")
 

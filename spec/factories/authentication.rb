@@ -106,4 +106,13 @@ FactoryGirl.define do
   factory :authentication_redhat_metric, :parent => :authentication do
     authtype "metrics"
   end
+
+  factory :auth_token do
+    type "AuthToken"
+  end
+
+  factory :api_auth_token, :parent => :auth_token do
+    name     "API Auth Token"
+    authtype "system_api"
+  end
 end
