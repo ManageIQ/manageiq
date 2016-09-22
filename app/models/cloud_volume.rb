@@ -5,8 +5,9 @@ class CloudVolume < ApplicationRecord
   include ProviderObjectMixin
   include AsyncDeleteMixin
   include AvailabilityMixin
+  include SupportsFeatureMixin
 
-  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::CloudManager"
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::StorageManager"
   belongs_to :availability_zone
   belongs_to :cloud_tenant
   belongs_to :base_snapshot, :class_name => 'CloudVolumeSnapshot', :foreign_key => :cloud_volume_snapshot_id
@@ -17,6 +18,14 @@ class CloudVolume < ApplicationRecord
   has_many   :vms, :through => :hardwares, :foreign_key => :vm_or_template_id
 
   acts_as_miq_taggable
+
+  supports :cloud_volume_backup_create do
+    unsupported_reason_add(:cloud_volume_backup_create, _("Backup unsupported")) unless validate_backup_create
+  end
+
+  supports :cloud_volume_backup_restore do
+    unsupported_reason_add(:cloud_volume_backup_restore, _("Backup unsupported")) unless validate_backup_restore
+  end
 
   def self.available
     joins("LEFT OUTER JOIN disks ON disks.backing_id = cloud_volumes.id")
@@ -79,5 +88,29 @@ class CloudVolume < ApplicationRecord
 
   def raw_delete_volume
     raise NotImplementedError, _("raw_delete_volume must be implemented in a subclass")
+  end
+
+  def backup_create(options = {})
+    raw_backup_create(options)
+  end
+
+  def validate_backup_create
+    false
+  end
+
+  def raw_backup_create(_options = {})
+    raise NotImplementedError, _("raw_backup_create must be implemented in a subclass")
+  end
+
+  def backup_restore(backup_id)
+    raw_backup_restore(backup_id)
+  end
+
+  def validate_backup_restore
+    false
+  end
+
+  def raw_backup_restore(_backup_id)
+    raise NotImplementedError, _("raw_backup_restore must be implemented in a subclass")
   end
 end

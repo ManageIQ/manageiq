@@ -7,6 +7,22 @@ class ApplicationHelper::Toolbar::CloudVolumeCenter < ApplicationHelper::Toolbar
                    t,
                    :items => [
                      button(
+                       :cloud_volume_backup_create,
+                       'pficon pficon-volume fa-lg',
+                       t = N_('Create a Backup of this Cloud Volume'),
+                       t,
+                       :klass     => ApplicationHelper::Button::VolumeBackupCreate,
+                       :url_parms => 'main_div'
+                     ),
+                     button(
+                       :cloud_volume_backup_restore,
+                       'pficon pficon-volume fa-lg',
+                       t = N_('Restore from a Backup of this Cloud Volume'),
+                       t,
+                       :klass     => ApplicationHelper::Button::VolumeBackupRestore,
+                       :url_parms => 'main_div'
+                     ),
+                     button(
                        :cloud_volume_attach,
                        'pficon pficon-volume fa-lg',
                        t = N_('Attach this Cloud Volume to an Instance'),

@@ -58,24 +58,26 @@ module SupportsFeatureMixin
   extend ActiveSupport::Concern
 
   QUERYABLE_FEATURES = {
-    :associate_floating_ip    => 'Associate a Floating IP',
-    :control                  => 'Basic control operations', # FIXME: this is just a internal helper and should be refactored
-    :cloud_tenant_mapping     => 'CloudTenant mapping',
-    :cinder_service           => 'Cinder storage service',
-    :delete                   => 'Deletion',
-    :disassociate_floating_ip => 'Disassociate a Floating IP',
-    :discovery                => 'Discovery of Managers for a Provider',
-    :evacuate                 => 'Evacuation',
-    :events                   => 'Query for events',
-    :launch_cockpit           => 'Launch Cockpit UI',
-    :live_migrate             => 'Live Migration',
-    :migrate                  => 'Migration',
-    :provisioning             => 'Provisioning',
-    :reconfigure              => 'Reconfiguration',
-    :regions                  => 'Regions of a Provider',
-    :resize                   => 'Resizing',
-    :retire                   => 'Retirement',
-    :smartstate_analysis      => 'Smartstate Analaysis',
+    :associate_floating_ip        => 'Associate a Floating IP',
+    :control                      => 'Basic control operations', # FIXME: this is just a internal helper and should be refactored
+    :cloud_tenant_mapping         => 'CloudTenant mapping',
+    :cloud_volume_backup_create   => 'CloudVolume backup creation',
+    :cloud_volume_backup_restore  => 'CloudVolume backup restore',
+    :cinder_service               => 'Cinder storage service',
+    :delete                       => 'Deletion',
+    :disassociate_floating_ip     => 'Disassociate a Floating IP',
+    :discovery                    => 'Discovery of Managers for a Provider',
+    :evacuate                     => 'Evacuation',
+    :events                       => 'Query for events',
+    :launch_cockpit               => 'Launch Cockpit UI',
+    :live_migrate                 => 'Live Migration',
+    :migrate                      => 'Migration',
+    :provisioning                 => 'Provisioning',
+    :reconfigure                  => 'Reconfiguration',
+    :regions                      => 'Regions of a Provider',
+    :resize                       => 'Resizing',
+    :retire                       => 'Retirement',
+    :smartstate_analysis          => 'Smartstate Analaysis',
   }.freeze
 
   # Whenever this mixin is included we define all features as unsupported by default.
