@@ -566,6 +566,8 @@ module OpsController::OpsRbac
     divisible ? ui_lookup(:model => "Tenant") : _("Project")
   end
 
+  # super administrator user with `userid` == "admin" can not be deleted
+  # and user can not delete himself
   def rbac_user_delete_restriction?(user)
     ["admin", session[:userid]].include?(user.userid)
   end
@@ -675,23 +677,26 @@ module OpsController::OpsRbac
 
     case operation
     when "new"
-      @record = klass.new                 # New record
+      # create new record
+      @record = klass.new
       if key == :role
         @record.miq_product_features = [MiqProductFeature.find_by_identifier(MiqProductFeature.feature_root)]
       end
     when "copy"
-      @record = record.clone                # Copy existing record
+      # copy existing record
+      @record = record.clone
       case key
       when :user
-        @record.current_group        = record.current_group
+        @record.current_group = record.current_group
       when :group
-        @record.miq_user_role        = record.miq_user_role
+        @record.miq_user_role = record.miq_user_role
       when :role
         @record.miq_product_features = @record_features = record.miq_product_features
         @record.read_only            = false
       end
     else
-      @record = record                      # Use existing record
+      # use existing record
+      @record = record
     end
     @sb[:typ] = operation
     send("rbac_#{what}_set_form_vars")
@@ -957,7 +962,7 @@ module OpsController::OpsRbac
     @edit[:new] = {}
     @edit[:current] = {}
     @edit[:key] = "rbac_user_edit__#{@edit[:user_id] || "new"}"
-
+    # prefill form fields for edit and copy action
     @edit[:new][:name] = @user.name
     @edit[:new][:userid] = @user.userid unless @sb[:typ] == "copy"
     @edit[:new][:email] = @user.email.to_s
@@ -1055,15 +1060,12 @@ module OpsController::OpsRbac
     @edit[:new][:filters] = {}
     @edit[:new][:belongsto] = {}
     @edit[:ldap_groups_by_user] = []
-
     @edit[:new][:description] = @group.description
-    #   @edit[:new][:role] = @group.miq_user_role.id
 
     # Build the managed filters hash
     [@group.get_managed_filters].flatten.each do |f|
       @edit[:new][:filters][f.split("/")[-2] + "-" + f.split("/")[-1]] = f
     end
-
     # Build the belongsto filters hash
     @group.get_belongsto_filters.each do |b|            # Go thru the belongsto tags
       bobj = MiqFilter.belongsto2object(b)            # Convert to an object
@@ -1071,17 +1073,14 @@ module OpsController::OpsRbac
       @edit[:new][:belongsto][bobj.class.to_s + "_" + bobj.id.to_s] = b # Store in hash as <class>_<id> string
     end
 
-    #   user_build_belongsto_tree                         # Build the Hosts & Clusters tree for this user
-    #   user_build_belongsto_tree(true)                   # Build the VMs & Templates tree for this user
-
+    # Build roles hash
     all_roles = MiqUserRole.all
     @edit[:roles] = {}
     @edit[:roles]["<Choose a Role>"] = nil if @record.id.nil?
     all_roles.each do |r|
       @edit[:roles][r.name] = r.id
     end
-
-    if @group.miq_user_role.nil?              # If adding, set to first role
+    if @group.miq_user_role.nil? # If adding, set to first role
       @edit[:new][:role] = @edit[:roles][@edit[:roles].keys.sort[0]]
     else
       @edit[:new][:role] = @group.miq_user_role.id
