@@ -33,28 +33,26 @@
           %p.generic-object-definition-description
             {{ genericObjectDefinitionModel.description }}
 
-  %form#generic-object-form{"name"          => "angularForm",
-                            "ng-show"       => "showAddForm"}
-    .row
-      .col-md-10
-        %h4
-          = _("Create a new Generic Object Definition")
+  .form-horizontal{"ng-show" => "showAddForm"}
+    %form#generic-object-form{"name"          => "angularForm"}
+      .form-group
+        .col-md-10
+          %h4
+            = _("Create a new Generic Object Definition")
 
-    .row
-      .col-md-2
-        %p
+      .form-group
+        %label.col-md-2.control-label{"for" => "generic-object-definition-name"}
           = _("Name")
-      .col-md-8
-        %input.generic-object-definition-name{"ng-model" => "genericObjectDefinitionModel.name"}
+        .col-md-8
+          %input.generic-object-definition-name{"ng-model" => "genericObjectDefinitionModel.name"}
 
-    .row
-      .col-md-2
-        %p
+      .form-group
+        %label.col-md-2.control-label{"for" => "generic-object-definition-description"}
           = _("Description")
-      .col-md-8
-        %input.generic-object-definition-description{"ng-model" => "genericObjectDefinitionModel.description"}
+        .col-md-8
+          %input.generic-object-definition-description{"ng-model" => "genericObjectDefinitionModel.description"}
 
-    = render :partial => 'layouts/angular/x_edit_buttons_angular'
+      = render :partial => 'layouts/angular/x_edit_buttons_angular'
 
 :javascript
   miq_bootstrap('#generic-object-div');
