@@ -110,6 +110,15 @@ module Api
     before_action :parse_api_request, :log_api_request, :validate_api_request
     before_action :validate_api_action, :except => [:options]
     before_action :log_request_initiated, :only => [:handle_options_request]
+    before_action :validate_response_format, :except => [:destroy]
     after_action :log_api_response
+
+    private
+
+    def validate_response_format
+      accept = request.headers["Accept"]
+      return if accept.blank? || accept.include?("json") || accept.include?("*/*")
+      raise UnsupportedMediaTypeError, "Invalid Response Format #{accept} requested"
+    end
   end
 end

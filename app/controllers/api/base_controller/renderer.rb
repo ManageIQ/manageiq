@@ -30,7 +30,6 @@ module Api
       # Helper proc to render a collection
       #
       def render_collection(type, resources, opts = {})
-        validate_response_format
         render :json => collection_to_jbuilder(type, gen_reftype(type, opts), resources, opts).target!
       end
 
@@ -38,7 +37,6 @@ module Api
       # Helper proc to render a single resource
       #
       def render_resource(type, resource, opts = {})
-        validate_response_format
         render :json => resource_to_jbuilder(type, gen_reftype(type, opts), resource, opts).target!
       end
 
@@ -156,15 +154,6 @@ module Api
       #
       def render_normal_update(type, res = {})
         render_resource type, res
-      end
-
-      #
-      # Return the response format requested, i.e. :json or raise an error
-      #
-      def validate_response_format
-        accept = request.headers["Accept"]
-        return :json if accept.blank? || accept.include?("json") || accept.include?("*/*")
-        raise UnsupportedMediaTypeError, "Invalid Response Format #{accept} requested"
       end
 
       #
