@@ -4,6 +4,14 @@ module Api
     include Subcollections::Tags
     include Subcollections::Vms
 
+    def create_resource(_type, _id, data)
+      validate_service_data(data)
+      attributes = build_service_attributes(data)
+      service    = collection_class(:services).create(attributes)
+      validate_service(service)
+      service
+    end
+
     def reconfigure_resource(type, id = nil, data = nil)
       raise BadRequestError, "Must specify an id for Reconfiguring a #{type} resource" unless id
 
@@ -18,6 +26,60 @@ module Api
     end
 
     private
+
+    def build_service_attributes(data)
+      attributes                 = data.dup
+      attributes['job_template'] = fetch_configuration_script(data['job_template']) if data['job_template']
+      attributes['parent']       = fetch_service(data['parent_service']) if data['parent_service']
+      if data['orchestration_manager']
+        attributes['orchestration_manager'] = fetch_ext_management_system(data['orchestration_manager'])
+      end
+      if data['orchestration_template']
+        attributes['orchestration_template'] = fetch_orchestration_template(data['orchestration_template'])
+      end
+      if data['job_options']
+        # AnsibleTowerClient needs the keys to be symbols
+        attributes['job_options'][:limit]      ||= data['job_options'].delete('limit')
+        attributes['job_options'][:extra_vars] ||= data['job_options'].delete('extra_vars')
+      end
+      attributes.delete('parent_service')
+      attributes
+    end
+
+    def validate_service_data(data)
+      assert_id_not_specified(data, 'service')
+    end
+
+    def validate_service(service)
+      if service.invalid?
+        raise BadRequestError, "Failed to add new service -
+            #{service.errors.full_messages.join(', ')}"
+      end
+    end
+
+    def fetch_ext_management_system(data)
+      orchestration_manager_id = parse_id(data, :orchestration_manager)
+      raise BadRequestError, 'Missing ExtManagementSystem identifier id' if orchestration_manager_id.nil?
+      resource_search(orchestration_manager_id, :ext_management_systems, ExtManagementSystem)
+    end
+
+    def fetch_service(data)
+      service_id = parse_id(data, :service)
+      raise BadRequestError, 'Missing Service identifier id' if service_id.nil?
+      resource_search(service_id, :services, Service)
+    end
+
+    def fetch_orchestration_template(data)
+      orchestration_template_id = parse_id(data, :orchestration_template)
+      raise BadRequestError, 'Missing OrchestrationTemplate identifier id' if orchestration_template_id.nil?
+      resource_search(orchestration_template_id, :orchestration_templates, OrchestrationTemplate)
+    end
+
+    def fetch_configuration_script(data)
+      configuration_script_id = parse_id(data, :configuration_script)
+      raise BadRequestError, 'Missing ConfigurationScript identifier id' if configuration_script_id.nil?
+      resource_search(configuration_script_id, :configuration_scripts, ConfigurationScript)
+    end
 
     def service_ident(svc)
       "Service id:#{svc.id} name:'#{svc.name}'"
