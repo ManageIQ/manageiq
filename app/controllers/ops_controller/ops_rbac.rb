@@ -674,7 +674,6 @@ module OpsController::OpsRbac
       javascript_flash
       return
     end
-
     case operation
     when "new"
       # create new record
@@ -691,15 +690,20 @@ module OpsController::OpsRbac
       when :group
         @record.miq_user_role = record.miq_user_role
       when :role
-        @record.miq_product_features = @record_features = record.miq_product_features
-        @record.read_only            = false
+        @record.miq_product_features = record.miq_product_features
+        @record.read_only = false
       end
     else
       # use existing record
       @record = record
     end
     @sb[:typ] = operation
-    send("rbac_#{what}_set_form_vars")
+    # set form fields according to what is copied
+    case key
+    when :user  then rbac_user_set_form_vars
+    when :group then rbac_group_set_form_vars
+    when :role  then rbac_role_set_form_vars
+    end
     @in_a_form = true
     session[:changed] = false
     add_flash(_("All changes have been reset"), :warning)  if params[:button] == "reset"
@@ -720,21 +724,27 @@ module OpsController::OpsRbac
 
     return unless load_edit("rbac_#{what}_edit__#{id}", "replace_cell__explorer")
 
-    record = case key
-             when :role  then @edit[:role_id] ? MiqUserRole.find_by_id(@edit[:role_id]) : MiqUserRole.new
-             when :group then @edit[:group_id] ? MiqGroup.find_by_id(@edit[:group_id]) : MiqGroup.new
-             when :user  then @edit[:user_id] ? User.find_by_id(@edit[:user_id]) : User.new
-             end
-
-    send("rbac_#{what}_validate?")
-    send("rbac_#{what}_set_record_vars", record)
+    case key
+    when :user
+      rbac_user_validate?
+      rbac_user_set_record_vars(
+        record = @edit[:user_id] ? User.find_by_id(@edit[:user_id]) : User.new)
+    when :group then
+      rbac_group_validate?
+      rbac_group_set_record_vars(
+        record = @edit[:group_id] ? MiqGroup.find_by_id(@edit[:group_id]) : MiqGroup.new)
+    when :role  then
+      rbac_role_validate?
+      rbac_role_set_record_vars(
+        record = @edit[:user_id] ? User.find_by_id(@edit[:user_id]) : User.new)
+    end
 
     if record.valid? && !flash_errors? && record.save
       set_role_features(record) if what == "role"
       AuditEvent.success(build_saved_audit(record, add_pressed))
       subkey = (key == :group) ? :description : :name
       add_flash(_("%{model} \"%{name}\" was saved") % {:model => what.titleize, :name => @edit[:new][subkey]})
-      @edit = session[:edit] = nil  # clean out the saved info
+      @edit = session[:edit] = nil # clean out the saved info
       if add_pressed
         suffix = case rbac_suffix
                  when "group"         then "g"
@@ -950,28 +960,34 @@ module OpsController::OpsRbac
   end
 
   def rbac_build_features_tree
-    @role = @sb[:typ] == "copy" ? @record.dup : @record if @role.nil?     # if on edit screen use @record
+    @role = @sb[:typ] == "copy" ? @record.dup : @record if @role.nil? # if on edit screen use @record
     TreeBuilder.convert_bs_tree(OpsController::RbacTree.build(@role, @role_features, !@edit.nil?)).to_json
   end
 
   # Set form variables for role edit
   def rbac_user_set_form_vars
-    @edit = {}
-    @edit[:user_id] = @record.id unless @sb[:typ] == "copy"
-    @user = @sb[:typ] == "copy" ? @record.dup : @record # Save a shadow copy of the record if record is being copied
-    @edit[:new] = {}
-    @edit[:current] = {}
+    copy = @sb[:typ] == "copy"
+    # save a shadow copy of the record if record is being copied
+    @user = copy ? @record.dup : @record
+    @edit = {:new => {}, :current => {}}
+    @edit[:user_id] = @record.id unless copy
     @edit[:key] = "rbac_user_edit__#{@edit[:user_id] || "new"}"
     # prefill form fields for edit and copy action
-    @edit[:new][:name] = @user.name
-    @edit[:new][:userid] = @user.userid unless @sb[:typ] == "copy"
-    @edit[:new][:email] = @user.email.to_s
-    @edit[:new][:password] = @user.password unless @sb[:typ] == "copy"
-    @edit[:new][:verify] = @user.password unless @sb[:typ] == "copy"
-
+    @edit[:new].merge!({
+      :name => @user.userid,
+      :email => @user.email,
+      :group => @user.current_group ? @user.current_group.id : nil,
+    })
+    unless copy
+      @edit[:new].merge!({
+        :userid => @user.userid,
+        :password => @user.password,
+        :verify => @user.password,
+      })
+    end
+    # load all user groups
     @edit[:groups] = MiqGroup.non_tenant_groups.sort_by { |g| g.description.downcase }.collect { |g| [g.description, g.id] }
-    @edit[:new][:group] = @user.current_group ? @user.current_group.id : nil
-
+    # store current state of the new users information
     @edit[:current] = copy_hash(@edit[:new])
   end
 
