@@ -101,6 +101,16 @@ describe "Providers API" do
   end
 
   describe "Providers actions on Provider class" do
+    let(:foreman_type) { ManageIQ::Providers::Foreman::Provider }
+    let(:sample_foreman) do
+      {
+        :name        => 'my-foreman',
+        :type        => foreman_type.to_s,
+        :credentials => {:userid => 'admin', :password => 'changeme'},
+        :url         => 'https://foreman.example.com'
+      }
+    end
+
     it "rejects requests with invalid provider_class" do
       api_basic_authorize
 
@@ -118,6 +128,22 @@ describe "Providers API" do
       klass = Provider
       expect_query_result(:providers, klass.count, klass.count)
       expect_result_resources_to_include_data("resources", "name" => klass.pluck(:name))
+    end
+
+    it 'creates valid foreman provider' do
+      api_basic_authorize collection_action_identifier(:providers, :create)
+
+      # TODO: provider_class in params, when supported (https://github.com/brynary/rack-test/issues/150)
+      run_post(providers_url + '?provider_class=provider', gen_request(:create, sample_foreman))
+
+      expect(response).to have_http_status(:ok)
+
+      provider_id = response.parsed_body["results"].first["id"]
+      expect(foreman_type.exists?(provider_id)).to be_truthy
+      provider = foreman_type.find(provider_id)
+      [:name, :type, :url].each do |item|
+        expect(provider.send(item)).to eq(sample_foreman[item])
+      end
     end
   end
 
