@@ -525,14 +525,6 @@ class Host < ApplicationRecord
     OperatingSystem.platform(self)
   end
 
-  def product_name
-    operating_system.nil? ? "" : operating_system.product_name
-  end
-
-  def service_pack
-    operating_system.nil? ? "" : operating_system.service_pack
-  end
-
   def arch
     if vmm_product.to_s.include?('ESX')
       return 'x86_64' if vmm_version.to_i >= 4
