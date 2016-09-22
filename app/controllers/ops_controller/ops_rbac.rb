@@ -1068,15 +1068,19 @@ module OpsController::OpsRbac
   # Set form variables for user add/edit
   def rbac_group_set_form_vars
     @assigned_filters = []
-    @edit = {}
     @group = @record
+    @edit = {
+      :new => {
+        :filters => {},
+        :belongsto => {},
+        :description => @group.description,
+      },
+      :ldap_groups_by_user => [],
+      :projects_tenants => [],
+      :roles => {},
+    }
     @edit[:group_id] = @record.id
-    @edit[:new] = {}
     @edit[:key] = "rbac_group_edit__#{@edit[:group_id] || "new"}"
-    @edit[:new][:filters] = {}
-    @edit[:new][:belongsto] = {}
-    @edit[:ldap_groups_by_user] = []
-    @edit[:new][:description] = @group.description
 
     # Build the managed filters hash
     [@group.get_managed_filters].flatten.each do |f|
@@ -1090,10 +1094,8 @@ module OpsController::OpsRbac
     end
 
     # Build roles hash
-    all_roles = MiqUserRole.all
-    @edit[:roles] = {}
     @edit[:roles]["<Choose a Role>"] = nil if @record.id.nil?
-    all_roles.each do |r|
+    MiqUserRole.all.each do |r|
       @edit[:roles][r.name] = r.id
     end
     if @group.miq_user_role.nil? # If adding, set to first role
@@ -1102,7 +1104,6 @@ module OpsController::OpsRbac
       @edit[:new][:role] = @group.miq_user_role.id
     end
 
-    @edit[:projects_tenants] = []
     all_tenants, all_projects = Tenant.tenant_and_project_names
     @edit[:projects_tenants].push(["", [[_("<Choose a Project/Tenant>"),
                                          :selected => _("<Choose a Project/Tenant>"),
