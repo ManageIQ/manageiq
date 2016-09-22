@@ -195,7 +195,8 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
         end
 
         it "uses the resource pool from the cluster" do
-          @vm_prov.options[:dest_host] = [dest_host_with_cluster.id, dest_host_with_cluster.name]
+          @vm_prov.options[:dest_host]    = [dest_host_with_cluster.id, dest_host_with_cluster.name]
+          @vm_prov.options[:dest_cluster] = [cluster.id, cluster.name]
           expect(@vm_prov.dest_resource_pool).to eq(cluster.default_resource_pool)
         end
 
@@ -211,9 +212,13 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
           storage = FactoryGirl.create(:storage_nfs, :ems_ref => ds_mor, :ems_ref_obj => ds_mor)
 
           Array.new(2) do |i|
+            cluster_mor = "cluster-#{i}"
+            cluster     = FactoryGirl.create(:ems_cluster, :ems_ref => cluster_mor)
+
             host_mor = "host-#{i}"
             host_props = {
               :ext_management_system => @ems,
+              :ems_cluster           => cluster,
               :ems_ref               => host_mor,
               :ems_ref_obj           => host_mor
             }
@@ -247,6 +252,34 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
             :customization => nil,
             :linked_clone  => nil,
             :host          => dest_host_mor,
+            :datastore     => dest_datastore_mor
+          }
+
+          allow(@vm_prov).to receive(:clone_vm).with(expected_vim_clone_opts).and_return(task_mor)
+
+          result = @vm_prov.start_clone clone_opts
+          expect(result).to eq(task_mor)
+        end
+
+        it "uses the right ems_ref when given a cluster" do
+          dest_cluster_mor   = "cluster-1"
+          dest_datastore_mor = "datastore-1"
+          task_mor           = "task-1"
+
+          clone_opts = {
+            :name      => @target_vm_name,
+            :cluster   => EmsCluster.find_by(:ems_ref => dest_cluster_mor),
+            :datastore => Storage.first
+          }
+
+          expected_vim_clone_opts = {
+            :name          => @target_vm_name,
+            :wait          => false,
+            :template      => false,
+            :transform     => nil,
+            :config        => nil,
+            :customization => nil,
+            :linked_clone  => nil,
             :datastore     => dest_datastore_mor
           }
 

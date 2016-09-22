@@ -107,13 +107,22 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
 
     [:transform, :config, :customization, :linked_clone].each { |key| vim_clone_options[key] = clone_options[key] }
 
-    [:folder, :host, :datastore, :pool, :snapshot].each do |key|
+    [:folder, :host, :pool, :snapshot].each do |key|
       ci = clone_options[key]
       next if ci.nil?
       vim_clone_options[key] = ci.ems_ref_obj
     end
 
-    #TODO lookup a host in the cluster vim_clone_options[:datastore] = clone_options[:host].host_storages.find_by(:storage_id => clone_options[:datastore].id).ems_ref
+    host_ids = if clone_options[:host]
+                 clone_options[:host].id
+               else
+                 clone_options[:cluster].hosts.pluck(:id)
+               end
+
+    # Find a host in the cluster that has this storage mounted to get the right ems_ref for this
+    # datastore in the datacenter
+    datastore = HostStorage.find_by(:storage_id => clone_options[:datastore].id, :host_id => host_ids)
+    vim_clone_options[:datastore] = datastore.ems_ref if datastore
 
     task_mor = clone_vm(vim_clone_options)
     _log.info("Provisioning completed for [#{vim_clone_options[:name]}] from source [#{source.name}]") if MiqProvision::CLONE_SYNCHRONOUS
