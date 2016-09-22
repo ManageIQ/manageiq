@@ -45,6 +45,8 @@ module Mixins
                  :name  => update_ems.name}
         construct_edit_for_audit(update_ems)
         AuditEvent.success(build_saved_audit(update_ems, @edit))
+        update_ems.authentication_check_types_queue(update_ems.authentication_for_summary.pluck(:authtype),
+                                                    :save => true)
         ems_path = ems_path(update_ems, :flash_msg => flash)
         render :update do |page|
           page << javascript_prologue
