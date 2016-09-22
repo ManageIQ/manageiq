@@ -15,6 +15,7 @@ class VimPerformanceState < ApplicationRecord
     :parent_ems_id,
     :parent_ems_cluster_id,
     :tag_names,
+    :image_tag_names,
     :numvcpus,
     :total_cpu,
     :total_mem,
@@ -65,6 +66,7 @@ class VimPerformanceState < ApplicationRecord
     state.vm_used_disk_storage = capture_vm_disk_storage(obj, :used_disk)
     state.vm_allocated_disk_storage = capture_vm_disk_storage(obj, :allocated_disk)
     state.tag_names = capture_tag_names(obj)
+    state.image_tag_names = capture_image_tag_names(obj)
     state.host_sockets = capture_host_sockets(obj)
     state.save
 
@@ -207,6 +209,11 @@ class VimPerformanceState < ApplicationRecord
 
   def self.capture_tag_names(obj)
     obj.tag_list(:ns => "/managed").split.join("|")
+  end
+
+  def self.capture_image_tag_names(obj)
+    return '' unless obj.respond_to?(:container_image) && obj.container_image.present?
+    obj.container_image.tag_list(:ns => "/managed").split.join("|")
   end
 
   def self.capture_vm_disk_storage(obj, field)
