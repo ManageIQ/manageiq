@@ -280,18 +280,26 @@ module VirtualDelegates
   #
 
   def self.select_from_alias(to_ref, col, to_model_col_name, src_model_id)
-    to_model = to_ref.klass
-    to_table = to_model.arel_table
+    to_table = select_from_alias_table(to_ref.klass, src_model_id.relation)
+    to_model_id = to_ref.klass.arel_attribute(to_model_col_name, to_table)
+    to_column = to_ref.klass.arel_attribute(col, to_table)
+    Arel.sql("(#{to_table.project(to_column).where(to_model_id.eq(src_model_id)).to_sql})")
+  end
+
+  # determine table reference to use for a sub query
+  #
+  # typically to_table is just the table used for the to_ref
+  # but if it is a self join, then it will also have an alias
+  def self.select_from_alias_table(to_klass, src_relation)
+    to_table = to_klass.arel_table
     # if a self join, alias the second table to a different name
-    if to_table.table_name == src_model_id.relation.table_name
+    if to_table.table_name == src_relation.table_name
       # use a dup to not modify the primary table in the model
       to_table = to_table.dup
       # use a table alias to not conflict with table name in the primary query
       to_table.table_alias = "#{to_table.table_name}_sub"
     end
-    # to_table will give the table name (alias) when creating the fully qualified to_model_id string
-    to_model_id = to_model.arel_attribute(to_model_col_name, to_table)
-    Arel.sql("(#{to_table.project(to_model.arel_attribute(col, to_table)).where(to_model_id.eq(src_model_id)).to_sql})")
+    to_table
   end
 end
 
