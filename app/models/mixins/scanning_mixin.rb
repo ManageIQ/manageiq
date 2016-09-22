@@ -104,7 +104,6 @@ module ScanningMixin
       MiqEvent.add_elements(self, xml_node)
     end
     # Update the last sync time if we did something
-    # self.last_sync_on = Time.new.utc  if updated == true
     self.last_sync_on = Time.at(xml_node.root.attributes["created_on"].to_i).utc if updated == true && xml_node.root.attributes["created_on"]
     save
     hardware.save if self.respond_to?(:hardware) && !hardware.nil?

@@ -27,8 +27,6 @@ module VmOrTemplate::Scanning
       :sync_key     => guid,
     }.merge(options)
     options[:zone] = ext_management_system.my_zone unless ext_management_system.nil?
-    # options = {:agent_id => myhost.id, :agent_class => myhost.class.to_s}.merge!(options) unless myhost.nil?
-    # self.vm_state.power_state == "on" ? options[:force_snapshot] = true : options[:force_snapshot] = false
 
     _log.info "NAME [#{options[:name]}] SCAN [#{options[:categories].inspect}] [#{options[:categories].class}]"
 
