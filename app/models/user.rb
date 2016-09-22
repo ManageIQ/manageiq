@@ -1,7 +1,6 @@
 class User < ApplicationRecord
   include RelationshipMixin
   acts_as_miq_taggable
-  include RegionMixin
   has_secure_password
   include CustomAttributeMixin
   include ActiveVmAggregationMixin
@@ -36,7 +35,7 @@ class User < ApplicationRecord
   delegate   :super_admin_user?, :admin_user?, :self_service?, :limited_self_service?,
              :to => :miq_user_role, :allow_nil => true
 
-  validates_presence_of   :name, :userid, :region
+  validates_presence_of   :name, :userid
   validates :userid, :uniqueness => {:conditions => -> { in_my_region } }
   validates_format_of     :email, :with => /\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i,
     :allow_nil => true, :message => "must be a valid email address"
