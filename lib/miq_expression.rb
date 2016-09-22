@@ -2,6 +2,8 @@ class MiqExpression
   require_nested :Tag
   include Vmdb::Logging
   attr_accessor :exp, :context_type, :preprocess_options
+  ALLOWED_OPERATORS_EXPRESSION_AS_VALUE = %w(= > >= < <= !=)
+
 
   BASE_TABLES = %w(
     AuditEvent
@@ -947,6 +949,11 @@ class MiqExpression
   end
 
   def self.quote(val, typ)
+    if Field.valid_field?(val)
+      ref, value = value2tag(val)
+      col_type = get_col_type(val) || "string"
+      return ref ? "<value ref=#{ref}, type=#{col_type}>#{value}</value>" : "<value type=#{col_type}>#{value}</value>"
+    end
     case typ.to_s
     when "string", "text", "boolean", nil
       # escape any embedded single quotes, etc. - needs to be able to handle even values with trailing backslash
@@ -1606,27 +1613,34 @@ class MiqExpression
 
   def to_arel(exp, tz)
     operator = exp.keys.first
-
     field = Field.parse(exp[operator]["field"]) if exp[operator].kind_of?(Hash) && exp[operator]["field"]
+    if ALLOWED_OPERATORS_EXPRESSION_AS_VALUE.include?(operator) && Field.valid_field?(exp[operator]["value"])
+      value_field = Field.parse(exp[operator]["value"]).arel_attribute if exp[operator].kind_of?(Hash) && exp[operator]["value"]
+    elsif ALLOWED_OPERATORS_EXPRESSION_AS_VALUE.include?(operator)
+      value_field = exp[operator]["value"]
+    end
+
     case operator.downcase
-    when "equal", "="
+    when "equal"
       field.eq(exp[operator]["value"])
+    when "="
+      field.eq(value_field)
     when ">"
-      field.gt(exp[operator]["value"])
+      field.gt(value_field)
     when "after"
       value = RelativeDatetime.normalize(exp[operator]["value"], tz, "end", field.date?)
       field.gt(value)
     when ">="
-      field.gteq(exp[operator]["value"])
+      field.gteq(value_field)
     when "<"
-      field.lt(exp[operator]["value"])
+      field.lt(value_field)
     when "before"
       value = RelativeDatetime.normalize(exp[operator]["value"], tz, "beginning", field.date?)
       field.lt(value)
     when "<="
-      field.lteq(exp[operator]["value"])
+      field.lteq(value_field)
     when "!="
-      field.not_eq(exp[operator]["value"])
+      field.not_eq(value_field)
     when "like", "includes"
       field.matches("%#{exp[operator]["value"]}%")
     when "starts with"
