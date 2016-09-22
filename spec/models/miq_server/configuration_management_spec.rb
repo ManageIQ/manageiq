@@ -36,6 +36,19 @@ describe MiqServer, "::ConfigurationManagement" do
     end
   end
 
+  describe "#reload_settings" do
+    let(:miq_server) { EvmSpecHelper.local_miq_server }
+
+    it "reloads the new changes into the settings for the resource" do
+      Vmdb::Settings.save!(miq_server, :some_test_setting => 2)
+      expect(Settings.some_test_setting).to be_nil
+
+      miq_server.reload_settings
+
+      expect(Settings.some_test_setting).to eq(2)
+    end
+  end
+
   context "ConfigurationManagementMixin" do
     let(:miq_server) { FactoryGirl.create(:miq_server) }
 
