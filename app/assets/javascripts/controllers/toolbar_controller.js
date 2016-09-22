@@ -143,9 +143,12 @@
   }
 
   ToolbarController.prototype.onUpdateItem = function(updateData) {
-    _.find(_.flatten(this.toolbarItems), {id: updateData.update})[updateData.type] = updateData.value;
-    if(!this.$scope.$$phase) {
-      this.$scope.$digest();
+    var toolbarItem = _.find(_.flatten(this.toolbarItems), {id: updateData.update});
+    if (toolbarItem && toolbarItem.hasOwnProperty(updateData.type)) {
+      toolbarItem[updateData.type] = updateData.value;
+      if(!this.$scope.$$phase) {
+        this.$scope.$digest();
+      }
     }
   }
 
