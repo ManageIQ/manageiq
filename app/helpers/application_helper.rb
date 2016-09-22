@@ -788,7 +788,8 @@ module ApplicationHelper
   end
 
   def display_adv_search?
-    %w(availability_zone cloud_volume container_group container_node container_service
+    %w(auth_key_pair_cloud availability_zone cloud_object_store_container cloud_tenant cloud_volume
+       container_group container_node container_service
        container_route container_project container_replicator container_image
        container_image_registry persistent_volume container_build
        ems_container vm miq_template offline retired templates
@@ -1185,7 +1186,8 @@ module ApplicationHelper
   end
 
   def show_adv_search?
-    show_search = %w(availability_zone cim_base_storage_extent cloud_volume cloud_volume_snapshot container_group container_node container_service
+    show_search = %w(auth_key_pair_cloud availability_zone cim_base_storage_extent cloud_object_store_container
+                     cloud_tenant cloud_volume cloud_volume_snapshot container_group container_node container_service
                      container_route container_project container_replicator container_image container_image_registry
                      persistent_volume container_build
                      ems_cloud ems_cluster ems_container ems_infra flavor host miq_template offline

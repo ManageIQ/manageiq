@@ -345,6 +345,7 @@ Vmdb::Application.routes.draw do
       :post => %w(
         button
         protect
+        quick_search
         sections_field_changed
         show
         show_list
@@ -352,7 +353,7 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         update
       ) +
-               compare_post
+               compare_post + adv_search_post + exp_post
     },
 
     :cloud_object_store_object => {
