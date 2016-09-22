@@ -404,12 +404,12 @@ module Fat32
         LFN_NAME_COMPONENTS.each {|comp|
           chStart = (ent_num - 1) * CHARS_PER_LFN + comp[LFN_NC_OFFSET]
           if chStart > name.length
-            ent["#{comp[LFN_NC_HASHNAME]}"] = "\377" * (comp[LFN_NC_LENGTH] * 2)
+            ent["#{comp[LFN_NC_HASHNAME]}"] = "\377".b * (comp[LFN_NC_LENGTH] * 2)
           else
             ptName = name[chStart, comp[LFN_NC_LENGTH]]
             ptName.Utf8ToUnicode!
             if ptName.length < comp[LFN_NC_LENGTH] * 2
-              ptName += "\377" * (comp[LFN_NC_LENGTH] * 2 - ptName.length)
+              ptName += "\377".b * (comp[LFN_NC_LENGTH] * 2 - ptName.length)
             end
             ent["#{comp[LFN_NC_HASHNAME]}"] = ptName
           end
