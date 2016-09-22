@@ -11,7 +11,7 @@ class MiqRequest < ApplicationRecord
 
   alias_attribute :state, :request_state
 
-  serialize   :options, Hash
+  serialize :options, Hash
 
   default_value_for(:message)       { |r| "#{r.class::TASK_DESCRIPTION} - Request Created" }
   default_value_for :options,       {}
@@ -147,9 +147,8 @@ class MiqRequest < ApplicationRecord
     MiqAeEvent.raise_evm_event(event_name, self, build_request_event(event_name))
     _log.info("Raised  event [#{event_name}] to Automate")
   rescue MiqAeException::Error => err
-    message = _("Error returned from %{name} event processing in Automate: %{error_message}") %
-                {:name => event_name, :error_message => err.message}
-    raise
+    raise err, _("Error returned from %{name} event processing in Automate: %{error_message}") %
+               { :name => event_name, :error_message => err.message }
   end
 
   def call_automate_event_sync(event_name)
@@ -158,9 +157,8 @@ class MiqRequest < ApplicationRecord
     _log.info("Raised event [#{event_name}] to Automate")
     return ws
   rescue MiqAeException::Error => err
-    message = _("Error returned from %{name} event processing in Automate: %{error_message}") %
-                {:name => event_name, :error_message => err.message}
-    raise
+    raise err, _("Error returned from %{name} event processing in Automate: %{error_message}") %
+               { :name => event_name, :error_message => err.message }
   end
 
   def automate_event_failed?(event_name)
