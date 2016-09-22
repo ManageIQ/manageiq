@@ -1031,14 +1031,14 @@ module OpsController::OpsRbac
       move_cols_up   if params[:button] == "up"
       move_cols_down if params[:button] == "down"
     else
-      @edit[:new][:description]  = params[:ldap_groups_user]  if params[:ldap_groups_user]
-      @edit[:new][:description]  = params[:description]       if params[:description]
-      @edit[:new][:role]         = params[:group_role]        if params[:group_role]
-      @edit[:new][:group_tenant] = params[:group_tenant].to_i if params[:group_tenant]
-      @edit[:new][:lookup]       = (params[:lookup] == "1")   if params[:lookup]
-      @edit[:new][:user]         = params[:user]              if params[:user]
-      @edit[:new][:user_id]      = params[:user_id]           if params[:user_id]
-      @edit[:new][:user_pwd]     = params[:password]          if params[:password]
+      @edit[:new][:ldap_groups_user] = params[:ldap_groups_user]  if params[:ldap_groups_user]
+      @edit[:new][:description]      = params[:description]       if params[:description]
+      @edit[:new][:role]             = params[:group_role]        if params[:group_role]
+      @edit[:new][:group_tenant]     = params[:group_tenant].to_i if params[:group_tenant]
+      @edit[:new][:lookup]           = (params[:lookup] == "1")   if params[:lookup]
+      @edit[:new][:user]             = params[:user]              if params[:user]
+      @edit[:new][:user_id]          = params[:user_id]           if params[:user_id]
+      @edit[:new][:user_pwd]         = params[:password]          if params[:password]
     end
 
     if params[:check]                               # User checked/unchecked a tree node
