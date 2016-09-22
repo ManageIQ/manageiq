@@ -1855,7 +1855,6 @@
     :identifier: orchestration_templates_accord
     :options:
     - :collection
-    - :subcollection
     :verbs: *gpppd
     :klass: OrchestrationTemplate
     :collection_actions:
