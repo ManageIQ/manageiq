@@ -14,6 +14,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
         EmsRefresh.refresh(@ems)
         EmsRefresh.refresh(@ems.network_manager)
         EmsRefresh.refresh(@ems.cinder_manager)
+        EmsRefresh.refresh(@ems.swift_manager)
       end
 
       assert_common
@@ -27,6 +28,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
         EmsRefresh.refresh(@ems)
         EmsRefresh.refresh(@ems.network_manager)
         EmsRefresh.refresh(@ems.cinder_manager)
+        EmsRefresh.refresh(@ems.swift_manager)
       end
 
       assert_with_skips
@@ -54,6 +56,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
         EmsRefresh.refresh(@ems)
         EmsRefresh.refresh(@ems.network_manager)
         EmsRefresh.refresh(@ems.cinder_manager)
+        EmsRefresh.refresh(@ems.swift_manager)
       end
 
       ManageIQ::Providers::Openstack::CloudManager::Vm.all.each do |vm|
