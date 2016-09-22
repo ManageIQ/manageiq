@@ -254,6 +254,44 @@ module EmsRefresh::SaveInventoryCloud
     end
   end
 
+  def save_cloud_object_store_containers_inventory(ems, hashes, target = nil)
+    target = ems if target.nil?
+
+    ems.cloud_object_store_containers.reset
+    deletes = if target == ems
+                :use_association
+              else
+                []
+              end
+
+    hashes.each do |h|
+      h[:ems_id]          = ems.id
+      h[:cloud_tenant_id] = h.fetch_path(:tenant, :id)
+    end
+
+    save_inventory_multi(ems.cloud_object_store_containers, hashes, deletes, [:ems_ref], nil, :tenant)
+    store_ids_for_new_records(ems.cloud_object_store_containers, hashes, :ems_ref)
+  end
+
+  def save_cloud_object_store_objects_inventory(ems, hashes, target = nil)
+    target = ems if target.nil?
+
+    ems.cloud_object_store_objects.reset
+    deletes = if target == ems
+                :use_association
+              else
+                []
+              end
+
+    hashes.each do |h|
+      h[:ems_id]                          = ems.id
+      h[:cloud_tenant_id]                 = h.fetch_path(:tenant, :id)
+      h[:cloud_object_store_container_id] = h.fetch_path(:container, :id)
+    end
+
+    save_inventory_multi(ems.cloud_object_store_objects, hashes, deletes, [:ems_ref], nil, [:tenant, :container])
+    store_ids_for_new_records(ems.cloud_object_store_objects, hashes, :ems_ref)
+  end
   def save_resource_groups_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 

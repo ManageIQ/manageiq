@@ -40,7 +40,11 @@ module EmsRefresh::SaveInventorySwift
     ems
   end
 
-  def save_cloud_object_store_containers_inventory(ems, hashes, target = nil)
+  def save_swift_child_inventory(obj, hashes, child_keys, *args)
+    child_keys.each { |k| send("save_swift_#{k}_inventory", obj, hashes[k], *args) if hashes.key?(k) }
+  end
+
+  def save_swift_cloud_object_store_containers_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
     ems.cloud_object_store_containers.reset
@@ -59,7 +63,7 @@ module EmsRefresh::SaveInventorySwift
     store_ids_for_new_records(ems.cloud_object_store_containers, hashes, :ems_ref)
   end
 
-  def save_cloud_object_store_objects_inventory(ems, hashes, target = nil)
+  def save_swift_cloud_object_store_objects_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
     ems.cloud_object_store_objects.reset
