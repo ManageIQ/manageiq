@@ -37,7 +37,7 @@ class User < ApplicationRecord
              :to => :miq_user_role, :allow_nil => true
 
   validates_presence_of   :name, :userid, :region
-  validates_uniqueness_of :userid, :scope => :region
+  validates :userid, :uniqueness => {:conditions => -> { in_my_region } }
   validates_format_of     :email, :with => /\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i,
     :allow_nil => true, :message => "must be a valid email address"
   validates_inclusion_of  :current_group, :in => proc { |u| u.miq_groups }, :allow_nil => true
@@ -69,20 +69,16 @@ class User < ApplicationRecord
     {table_name => {:id => users_ids}}
   end
 
-  def self.in_my_region_column
-    where(:region => my_region_number)
-  end
-
   def self.find_by_userid(userid)
-    in_my_region_column.find_by(:userid => userid)
+    in_my_region.find_by(:userid => userid)
   end
 
   def self.find_by_userid!(userid)
-    in_my_region_column.find_by!(:userid => userid)
+    in_my_region.find_by!(:userid => userid)
   end
 
   def self.find_by_email(email)
-    in_my_region_column.find_by(:email => email)
+    in_my_region.find_by(:email => email)
   end
 
   # find a user by lowercase email
