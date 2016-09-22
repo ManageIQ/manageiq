@@ -62,6 +62,12 @@ class CloudVolumeController < ApplicationController
       javascript_redirect :action => "edit", :id => checked_volume_id
     elsif params[:pressed] == "cloud_volume_new"
       javascript_redirect :action => "new"
+    elsif params[:pressed] == "cloud_volume_backup_create"
+      checked_volume_id = get_checked_volume_id(params)
+      javascript_redirect :action => "backup_new", :id => checked_volume_id
+    elsif params[:pressed] == "cloud_volume_backup_restore"
+      checked_volume_id = get_checked_volume_id(params)
+      javascript_redirect :action => "backup_select", :id => checked_volume_id
     elsif !flash_errors? && @refresh_div == "main_div" && @lastaction == "show_list"
       replace_gtl_main_div
     elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
@@ -419,6 +425,96 @@ class CloudVolumeController < ApplicationController
         add_flash(_("The selected %{model} was deleted") % {:model => ui_lookup(:table => "cloud_volume")})
       end
     end
+  end
+
+  def backup_new
+    assert_privileges("cloud_volume_backup_create")
+    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @in_a_form = true
+    drop_breadcrumb(
+      :name => _("Create Backup for %{model} \"%{name}\"") % {:model => ui_lookup(:table => 'cloud_volume'), :name => @volume.name},
+      :url  => "/cloud_volume/backup_new/#{@volume.id}"
+    )
+  end
+
+  def backup_create
+    assert_privileges("cloud_volume_backup_create")
+    @volume = find_by_id_filtered(CloudVolume, params[:id])
+
+    case params[:button]
+    when "cancel"
+      cancel_action(_("Backup of %{model} \"%{name}\" was cancelled by the user") % {
+        :model => ui_lookup(:table => 'cloud_volume'),
+        :name  => @volume.name
+      })
+
+    when "create"
+      options = {}
+      options[:name] = params[:backup_name] if params[:backup_name]
+      options[:incremental] = true if params[:incremental]
+      begin
+        @volume.backup_create(options)
+        add_flash(_("Creating backup for %{model} \"%{name}\"") % {
+          :model => ui_lookup(:table => 'cloud_volume'),
+          :name  => @volume.name
+        })
+      rescue => ex
+        add_flash(_("Unable to create backup for %{model} \"%{name}\": %{details}") % {
+          :model   => ui_lookup(:table => 'cloud_volume'),
+          :name    => @volume.name,
+          :details => ex
+        }, :error)
+      end
+    end
+    @breadcrumbs.pop if @breadcrumbs
+    session[:edit] = nil
+    session[:flash_msgs] = @flash_array.dup if @flash_array
+    javascript_redirect :action => "show", :id => @volume.id
+  end
+
+  def backup_select
+    assert_privileges("cloud_volume_backup_restore")
+    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @backup_choices = {}
+    @volume.cloud_volume_backups.each { |backup| @backup_choices[backup.name] = backup.id }
+    @in_a_form = true
+    drop_breadcrumb(
+      :name => _("Restore %{model} \"%{name}\" from a Backup") % {:model => ui_lookup(:table => 'cloud_volume'), :name => @volume.name},
+      :url  => "/cloud_volume/backup_select/#{@volume.id}"
+    )
+  end
+
+  def backup_restore
+    assert_privileges("cloud_volume_backup_restore")
+    @volume = find_by_id_filtered(CloudVolume, params[:id])
+
+    case params[:button]
+    when "cancel"
+      cancel_action(_("Restore of %{model} \"%{name}\" was cancelled by the user") % {
+        :model => ui_lookup(:table => 'cloud_volume'),
+        :name  => @volume.name
+      })
+
+    when "restore"
+      begin
+        @backup = find_by_id_filtered(CloudVolumeBackup, params[:backup_id])
+        @volume.backup_restore(@backup.ems_ref)
+        add_flash(_("Restoring %{model} \"%{name}\" from backup") % {
+                    :model => ui_lookup(:table => 'cloud_volume'),
+                    :name  => @volume.name
+                  })
+      rescue => ex
+        add_flash(_("Unable to restore %{model} \"%{name}\" from backup: %{details}") % {
+                    :model   => ui_lookup(:table => 'cloud_volume'),
+                    :name    => @volume.name,
+                    :details => ex
+                  }, :error)
+      end
+    end
+    @breadcrumbs.pop if @breadcrumbs
+    session[:edit] = nil
+    session[:flash_msgs] = @flash_array.dup if @flash_array
+    javascript_redirect :action => "show", :id => @volume.id
   end
 
   private
