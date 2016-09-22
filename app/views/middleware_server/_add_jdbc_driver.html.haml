@@ -8,8 +8,7 @@
                              "aria-describedby" => "modal",
                              "aria-hidden"      => "true",
                              "data-keyboard"    => "false",
-                             "data-backdrop"    => "static",
-                             :style             => "display: none"}
+                             "data-backdrop"    => "static"}
     .modal-dialog.modal-md
       .modal-content#jdbc_add_div
         .modal-header
@@ -42,19 +41,12 @@
                                                          "name"         => "jdbc_driver_name_input",
                                                          "ng-disabled"  => "!jdbcDriverModel.filePath",
                                                          "ng-required"  => "true",
-                                                         "ng-minlength" => "4",
-                                                         "ng-maxlength" => "100",
                                                          "placeholder"  => _("Enter JDBC Driver name"),
                                                          "ng-model"     => "jdbcDriverModel.driverName"}
             .col-sm-2
             .col-sm-10
               %p.ng-error-messages{"ng-show" => "jdbcAddForm.jdbc_driver_name_input.$dirty && jdbcAddForm.jdbc_driver_name_input.$error.required"}
                 = _("Required")
-              %p.ng-error-messages{"ng-show" => "jdbcAddForm.jdbc_driver_name_input.$dirty && jdbcAddForm.jdbc_driver_name_input.$error.minlength"}
-                = _("Minimum length is 4")
-              %p.ng-error-messages{"ng-show" => "jdbcAddForm.jdbc_driver_name_input.$dirty && jdbcAddForm.jdbc_driver_name_input.$error.maxlength"}
-                = _("Maximum length is 100")
-
 
           .form-group
             %label.col-md-4.control-label{:for => "jdbc_module_name_input"}
@@ -64,8 +56,6 @@
                                                           "name"         => "jdbc_module_name_input",
                                                           "ng-disabled"  => "!jdbcDriverModel.filePath",
                                                           "ng-required"  => "true",
-                                                          "ng-minlength" => "6",
-                                                          "ng-maxlength" => "256",
                                                           "placeholder"  => _("Enter JDBC Module name"),
                                                           "ng-model"     => "jdbcDriverModel.moduleName"}
 
@@ -73,11 +63,6 @@
             .col-sm-10
               %p.ng-error-messages{"ng-show" => "jdbcAddForm.jdbc_module_name_input.$dirty && jdbcAddForm.jdbc_module_name_input.$error.required"}
                 = _("Required")
-              %p.ng-error-messages{"ng-show" => "jdbcAddForm.jdbc_module_name_input.$dirty && jdbcAddForm.jdbc_module_name_input.$error.minlength"}
-                = _("minimum length is 6")
-              %p.ng-error-messages{"ng-show" => "jdbcAddForm.jdbc_module_name_input.$dirty && jdbcAddForm.jdbc_module_name_input.$error.maxlength"}
-                = _("Maximum length is 256")
-
 
           .form-group
             %label.col-md-4.control-label{:for => "jdbc_driver_class_input"}
@@ -87,8 +72,6 @@
                                                           "name"         => "jdbc_driver_class_input",
                                                           "ng-disabled"  => "!jdbcDriverModel.filePath",
                                                           "ng-required"  => "true",
-                                                          "ng-minlength" => "6",
-                                                          "ng-maxlength" => "256",
                                                           "placeholder"  => _("Enter JDBC Driver Class"),
                                                           "ng-model"     => "jdbcDriverModel.driverClass"}
 
@@ -96,12 +79,8 @@
             .col-sm-10
               %p.ng-error-messages{"ng-show" => "jdbcAddForm.jdbc_driver_class_input.$dirty && jdbcAddForm.jdbc_driver_class_input.$error.required"}
                 = _("Required")
-              %p.ng-error-messages{"ng-show" => "jdbcAddForm.jdbc_driver_class_input.$dirty && jdbcAddForm.jdbc_driver_class_input.$error.minlength"}
-                = _("minimum length is 6")
-              %p.ng-error-messages{"ng-show" => "jdbcAddForm.jdbc_driver_class_input.$dirty && jdbcAddForm.jdbc_driver_class_input.$error.maxlength"}
-                = _("Maximum length is 256")
 
-          .form-group{"ng-if" => false}
+          .form-group
             %label.col-md-4.control-label{:for => "major_version_input"}
               = _("Major Version")
             .col-md-8
@@ -111,7 +90,7 @@
                                                       "placeholder" => _("Enter Major Version"),
                                                       "ng-model"    => "jdbcDriverModel.majorVersion"}
 
-          .form-group{"ng-if" => false}
+          .form-group
             %label.col-md-4.control-label{:for => "minor_version_input"}
               = _("Minor Version")
             .col-md-8
