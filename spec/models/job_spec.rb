@@ -242,11 +242,6 @@ describe Job do
 
           assert_queue_message
         end
-
-        # it "should deliver message without error" do
-        #   Host.any_instance.stub(:miq_proxy).and_return(@miq_server)
-        #   lambda { MiqQueue.first.deliver }.should_not raise_error
-        # end
       end
     end
 

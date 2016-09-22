@@ -100,7 +100,6 @@ describe VmdbIndex do
       @evm_index.rollup_metrics(interval_name, rollup_date)
 
       rollup_record = @evm_index.vmdb_metrics.where(:capture_interval_name => 'daily').first
-      # rollup_record = Metrics::Finders.find_all_by_range(@index, Time.gm(2012, 8, 14, 00, 00, 01), Time.gm(2012, 8, 14, 23, 59, 59), interval_name)
 
       expect(rollup_record).not_to be_nil
       expect(rollup_record.rows).to eq(227)

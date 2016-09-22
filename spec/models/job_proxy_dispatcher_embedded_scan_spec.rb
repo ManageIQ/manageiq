@@ -62,7 +62,6 @@ describe "JobProxyDispatcherEmbeddedScanSpec" do
       context "and a scan job for each vm" do
         before(:each) do
           allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
-          # JobProxyDispatcher.stub(:start_job_on_proxy).and_return(nil)
 
           @jobs = @vms.collect(&:scan)
         end

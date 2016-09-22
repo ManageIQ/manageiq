@@ -172,9 +172,6 @@ describe MiqUserRole do
     expect(MiqUserRole.count).to eq(1)
   end
 
-  # SUPER_ADMIN_ROLE_NAME = "EvmRole-super_administrator"
-  # ADMIN_ROLE_NAME       = "EvmRole-administrator"
-
   describe "#super_admin_user?" do
     it "detects super admin" do
       expect(FactoryGirl.build(:miq_user_role, :role => "super_administrator")).to be_super_admin_user

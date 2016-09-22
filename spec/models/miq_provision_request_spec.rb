@@ -124,7 +124,6 @@ describe MiqProvisionRequest do
           prov_options = {:number_of_vms => [2, '2'], :owner_email => 'tester@miq.com', :vm_memory => ['1024', '1024'], :number_of_cpus => [2, '2']}
           @pr2 = FactoryGirl.create(:miq_provision_request, :requester => user, :src_vm_id => vm_template.id, :options => prov_options)
 
-          #:requests_by_group
           stats = @pr.check_quota(:requests_by_owner)
           expect(stats).to be_kind_of(Hash)
 

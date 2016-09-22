@@ -6,7 +6,6 @@ describe MiqReportResult do
   end
 
   it "#_async_generate_result" do
-    #user = FactoryGirl.create(:user_with_group)
     task = FactoryGirl.create(:miq_task)
     EvmSpecHelper.local_miq_server
     report = MiqReport.create(
