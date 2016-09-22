@@ -12,7 +12,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Netw
         vim_net_adapter = template_networks[idx]
 
         if net[:is_dvs] == true
-          #TODO build_config_spec_dvs(net, vim_net_adapter, vmcs)
+          build_config_spec_dvs(net, vim_net_adapter, vmcs)
         else
           build_config_spec_vlan(net, vim_net_adapter, vmcs)
         end
@@ -65,40 +65,37 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Netw
   end
 
   def build_config_spec_dvs(network, vnicDev, vmcs)
-    source.with_provider_connection do |vim|
-      operation = vnicDev.nil? ? VirtualDeviceConfigSpecOperation::Add : VirtualDeviceConfigSpecOperation::Edit
-      add_device_config_spec(vmcs, operation) do |vdcs|
-        vdcs.device = vnicDev || create_vlan_device(network)
-        _log.info "Setting target network device to Device Name:<#{network[:network]}>  Device:<#{vdcs.device.inspect}>"
+    # A DistributedVirtualPortgroup name is unique in a datacenter so look for a Lan with this name
+    # on all switches in the cluster
+    hosts = dest_cluster.try(:hosts) || dest_host
+    lan = Lan.find_by(:name => network[:network], :switch_id => HostSwitch.where(:host_id => hosts).pluck(:switch_id))
 
-        #
-        # Change the port group of the target VM.
-        #
+    raise MiqException::MiqProvisionError, "Port group [#{network[:network]}] is not available on target" if lan.nil?
+    _log.info("portgroupName: #{lan.name}, portgroupKey: #{lan.uid_ems}, switchUuid: #{lan.switch.switch_uuid}")
 
-        vdcs.device.backing = VimHash.new('VirtualEthernetCardDistributedVirtualPortBackingInfo') do |vecdvpbi|
-          vecdvpbi.port = VimHash.new('DistributedVirtualSwitchPortConnection') do |dvspc|
-            #
-            # Get the DVS info for a given host.
-            #
-            dvs = vim.queryDvsConfigTarget(vim.sic.dvSwitchManager, dest_host.ems_ref_obj, nil)
-            dpg = vim.applyFilter(dvs.distributedVirtualPortgroup, 'uplinkPortgroup' => 'false').detect { |nupg| URI.decode(nupg.portgroupName) == network[:network] }
+    operation = vnicDev.nil? ? VirtualDeviceConfigSpecOperation::Add : VirtualDeviceConfigSpecOperation::Edit
+    add_device_config_spec(vmcs, operation) do |vdcs|
+      vdcs.device = vnicDev || create_vlan_device(network)
+      _log.info "Setting target network device to Device Name:<#{network[:network]}>  Device:<#{vdcs.device.inspect}>"
 
-            raise MiqException::MiqProvisionError, "Port group [#{network[:network]}] is not available on target host [#{dest_host.name}]" if dpg.nil?
-            _log.info("portgroupName: #{dpg.portgroupName}, portgroupKey: #{dpg.portgroupKey}, switchUuid: #{dpg.switchUuid}")
+      #
+      # Change the port group of the target VM.
+      #
 
-            dvspc.switchUuid   = dpg.switchUuid
-            dvspc.portgroupKey = dpg.portgroupKey
-          end
+      vdcs.device.backing = VimHash.new('VirtualEthernetCardDistributedVirtualPortBackingInfo') do |vecdvpbi|
+        vecdvpbi.port = VimHash.new('DistributedVirtualSwitchPortConnection') do |dvspc|
+          dvspc.switchUuid   = lan.switch.switch_uuid
+          dvspc.portgroupKey = lan.uid_ems
         end
+      end
 
-        #
-        # Manually assign MAC address to target VM.
-        #
-        mac_addr = network[:mac_address]
-        unless mac_addr.blank?
-          vdcs.device.macAddress = mac_addr
-          vdcs.device.addressType = 'Manual'
-        end
+      #
+      # Manually assign MAC address to target VM.
+      #
+      mac_addr = network[:mac_address]
+      unless mac_addr.blank?
+        vdcs.device.macAddress = mac_addr
+        vdcs.device.addressType = 'Manual'
       end
     end
   end
