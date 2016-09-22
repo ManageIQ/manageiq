@@ -342,7 +342,12 @@ module Fat32
       pre_name = ""; hashNames = %w(name name2 name3)
       hashNames.each {|name|
         n = ent["#{name}"]
-        pre_name += n.gsub(/\377/, "").UnicodeToUtf8.gsub(/\000/, "")
+
+        # Regexp.new options used below:
+        #   nil (default options: not case insensitive, extended, multiline, etc.)
+        #   'n' - No encoding on the regexp
+        regex = Regexp.new('\377', nil, 'n')
+        pre_name += n.gsub(regex, "").UnicodeToUtf8.gsub(/\000/, "")
       }
       return pre_name
     end
