@@ -10,6 +10,8 @@
 - when 'miq_policy'
   - tree = @trees["#{name}_tree".to_sym]
   = render :partial => "shared/tree", :locals => {:tree => tree, :name => tree.name.to_s}
+- when 'generic_object'
+  = render :partial => "shared/bootstrap_tree", :locals => {:tree_data => @trees}
 - else
   - tree = @trees.length == 1 ? @trees.first : @trees.detect { |t| t.type == name.to_sym }
   = render :partial => 'shared/tree', :locals  => {:tree => tree, :name => tree.name.to_s}
