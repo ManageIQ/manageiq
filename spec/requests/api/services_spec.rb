@@ -1,6 +1,8 @@
 #
 # Rest API Request Tests - Services specs
 #
+# - Create service              /api/services/        action "create"
+#
 # - Edit service                /api/services/:id     action "edit"
 # - Edit service via PUT        /api/services/:id     PUT
 # - Edit service via PATCH      /api/services/:id     PATCH
@@ -24,6 +26,42 @@ describe "Services API" do
   let(:svc)  { FactoryGirl.create(:service, :name => "svc",  :description => "svc description")  }
   let(:svc1) { FactoryGirl.create(:service, :name => "svc1", :description => "svc1 description") }
   let(:svc2) { FactoryGirl.create(:service, :name => "svc2", :description => "svc2 description") }
+
+  describe "Services create" do
+    it "rejects requests without appropriate role" do
+      api_basic_authorize
+
+      run_post(services_url, gen_request(:create, "name" => "svc_new_1"))
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "supports creates of single resource" do
+      api_basic_authorize collection_action_identifier(:services, :create)
+
+      expect do
+        run_post(services_url, gen_request(:create, "name" => "svc_new_1"))
+      end.to change(Service, :count).by(1)
+
+      expect(response).to have_http_status(:ok)
+      expect_results_to_match_hash("results", [{"name" => "svc_new_1"}])
+    end
+
+    it "supports creates of multiple resources" do
+      api_basic_authorize collection_action_identifier(:services, :create)
+
+      expect do
+        run_post(services_url, gen_request(:create,
+                                           [{"name" => "svc_new_1"},
+                                            {"name" => "svc_new_2"}]))
+      end.to change(Service, :count).by(2)
+
+      expect(response).to have_http_status(:ok)
+      expect_results_to_match_hash("results",
+                                   [{"name" => "svc_new_1"},
+                                    {"name" => "svc_new_2"}])
+    end
+  end
 
   describe "Services edit" do
     it "rejects requests without appropriate role" do
