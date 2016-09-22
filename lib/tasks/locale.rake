@@ -73,6 +73,7 @@ namespace :locale do
     yamls = {
       "db/fixtures/miq_product_features.*" => %w(name description),
       "db/fixtures/miq_report_formats.*"   => %w(description),
+      "db/fixtures/notification_types.*"   => %w(message),
       "product/timelines/miq_reports/*.*"  => %w(title name headers),
       "product/views/*.*"                  => %w(title name headers)
     }
