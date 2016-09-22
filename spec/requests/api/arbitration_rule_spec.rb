@@ -23,11 +23,13 @@ RSpec.describe 'Arbitration Rule API' do
   end
 
   context 'arbitration rules create' do
+    let(:profile) { FactoryGirl.create(:arbitration_profile) }
     let(:request_body) do
       {
-        'description' => 'admin rule',
-        'operation'   => 'inject',
-        'expression'  => {
+        'description'            => 'admin rule',
+        'operation'              => 'inject',
+        'arbitration_profile_id' => profile.id,
+        'expression'             => {
           'EQUAL' => {
             'field' => 'User-userid',
             'value' => 'admin'
