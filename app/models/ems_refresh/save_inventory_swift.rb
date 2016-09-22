@@ -44,7 +44,7 @@ module EmsRefresh::SaveInventorySwift
     target = ems if target.nil?
 
     ems.cloud_object_store_containers.reset
-    deletes = if (target == ems)
+    deletes = if target == ems
                 :use_association
               else
                 []
@@ -63,7 +63,7 @@ module EmsRefresh::SaveInventorySwift
     target = ems if target.nil?
 
     ems.cloud_object_store_objects.reset
-    deletes = if (target == ems)
+    deletes = if target == ems
                 :use_association
               else
                 []

@@ -23,14 +23,14 @@ module ManageIQ::Providers
       log_header = "MIQ(#{self.class.name}.#{__method__}) Collecting data for EMS name: [#{@ems.name}] id: [#{@ems.id}]"
 
       $fog_log.info("#{log_header}...")
-      get_object_store
+      object_store
 
       $fog_log.info("#{log_header}...Complete")
 
       @data
     end
 
-    def get_object_store
+    def object_store
       return if @swift_service.blank? || @swift_service.name != :swift
 
       @swift_service.handled_list(:directories).each do |dir|
@@ -67,12 +67,12 @@ module ManageIQ::Providers
         :tenant         => @data_index.fetch_path(:cloud_tenants, tenant.id)
       }
       content = get_object_content(obj)
-      new_result.merge!(:content => content) if content
+      new_result[:content] = content if content
 
       return uid, new_result
     end
 
-    def get_object_content(obj)
+    def get_object_content(_obj)
       # By default we don't want to fetch content of objects, redefine in parser as needed
       nil
     end
