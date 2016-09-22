@@ -28,8 +28,7 @@ module ManageIQ::Providers
       $fog_log.info("#{log_header}...")
       get_volumes
       get_snapshots
-      # TODO: volume backup
-      # get_backups
+      get_backups
 
       $fog_log.info("#{log_header}...Complete")
 
@@ -53,8 +52,7 @@ module ManageIQ::Providers
     end
 
     def get_backups
-      process_collection(@cinder_service.handled_list(:list_backups_detailed,
-                                                      :__request_body_index => "backups"),
+      process_collection(@cinder_service.list_backups_detailed.body["backups"],
                          :cloud_volume_backups) { |backup| parse_backup(backup) }
     end
 
