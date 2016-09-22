@@ -28,4 +28,23 @@ describe ManageIQ::Providers::Redhat::InfraManager::Vm::Operations::Snapshot do
       vm.raw_create_snapshot(nil, "snap_desc", true)
     end
   end
+
+  describe 'supported above api v4' do
+    let(:ems) { FactoryGirl.create(:ems_redhat_with_authentication) }
+    let(:vm)  { FactoryGirl.create(:vm_redhat, :ext_management_system => ems) }
+    let(:supported_api_versions) { [] }
+    before(:each) do
+      allow(ems).to receive(:supported_api_versions).and_return(supported_api_versions)
+    end
+    subject { vm.supports_snapshots? }
+    context 'when engine supports v4 api' do
+      let(:supported_api_versions) { [4] }
+      it { is_expected.to be_truthy }
+    end
+
+    context 'when engine does not support v4 api' do
+      let(:supported_api_versions) { [3] }
+      it { is_expected.to be_falsey }
+    end
+  end
 end
