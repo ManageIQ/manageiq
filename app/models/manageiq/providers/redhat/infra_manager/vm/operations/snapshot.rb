@@ -21,10 +21,6 @@ module ManageIQ::Providers::Redhat::InfraManager::Vm::Operations::Snapshot
     end
   end
 
-  def supports_snapshots?
-    true
-  end
-
   def snapshot_name_optional?
     true
   end
