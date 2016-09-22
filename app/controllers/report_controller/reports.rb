@@ -128,18 +128,18 @@ module ReportController::Reports
   end
 
   def sample_timeline
-    tl_xml = MiqXml.load("<data/>")
-    tl_event(tl_xml, format_timezone(Time.now, "UTC", nil), "Now", "red")
-    tl_event(tl_xml, format_timezone(Time.now - 5.seconds, "UTC", nil), "5 Seconds Ago")
-    tl_event(tl_xml, format_timezone(Time.now - 1.minute, "UTC", nil), "1 Minute Ago")
-    tl_event(tl_xml, format_timezone(Time.now - 5.minutes, "UTC", nil), "5 Minutes Ago")
-    tl_event(tl_xml, format_timezone(Time.now - 1.hour, "UTC", nil), "1 Hour Ago")
-    tl_event(tl_xml, format_timezone(Time.now - 1.day, "UTC", nil), "Yesterday")
-    tl_event(tl_xml, format_timezone(Time.now - 1.week, "UTC", nil), "Last Week")
-    tl_event(tl_xml, format_timezone(Time.now - 1.month, "UTC", nil), "Last Month")
-    tl_event(tl_xml, format_timezone(Time.now - 3.months, "UTC", nil), "3 Months Ago")
-    tl_event(tl_xml, format_timezone(Time.now - 1.year, "UTC", nil), "Last Year")
-    render :xml => tl_xml.to_s
+    @events_data = []
+    @events_data.push(tl_event(format_timezone(Time.now, "UTC", nil), "Now", "red"))
+    @events_data.push(tl_event(format_timezone(Time.now - 5.seconds, "UTC", nil), "5 Seconds Ago"))
+    @events_data.push(tl_event(format_timezone(Time.now - 1.minute, "UTC", nil), "1 Minute Ago"))
+    @events_data.push(tl_event(format_timezone(Time.now - 5.minutes, "UTC", nil), "5 Minutes Ago"))
+    @events_data.push(tl_event(format_timezone(Time.now - 1.hour, "UTC", nil), "1 Hour Ago"))
+    @events_data.push(tl_event(format_timezone(Time.now - 1.day, "UTC", nil), "Yesterday"))
+    @events_data.push(tl_event(format_timezone(Time.now - 1.week, "UTC", nil), "Last Week"))
+    @events_data.push(tl_event(format_timezone(Time.now - 1.month, "UTC", nil), "Last Month"))
+    @events_data.push(tl_event(format_timezone(Time.now - 3.months, "UTC", nil), "3 Months Ago"))
+    @events_data.push(tl_event(format_timezone(Time.now - 1.year, "UTC", nil), "Last Year"))
+    [{:data => [@events_data]}].to_json
   end
 
   def preview_timeline
@@ -203,19 +203,13 @@ module ReportController::Reports
 
   private
 
-  def tl_event(tl, tl_time, tl_text, tl_color = nil)
-    event = tl.root.add_element("event",
-                                "start" => tl_time,
-                                #                                       "end" => Time.now,
-                                #                                       "isDuration" => "true",
-                                "title" => tl_text,
-                                #         "icon"=>"/images/16/16-event-vm_snapshot.png",
-                                "icon"  => ActionController::Base.helpers.image_path("16/blue-circle.png"),
-                                #         "image"=>"/images/64/64-snapshot.png",
-                                "color" => tl_color
-                               # "image"=>"/images/64/64-vendor-#{vm.vendor.downcase}.png"
-                               )
-    event.text = tl_text
+  def tl_event(tl_time, tl_text, tl_color = nil)
+    {"start" => tl_time,
+     "title" => tl_text,
+     "description" => tl_text,
+     "icon"  => ActionController::Base.helpers.image_path("16/blue-circle.png"),
+     "color" => tl_color
+    }
   end
 
   def menu_repname_update(old_name, new_name)

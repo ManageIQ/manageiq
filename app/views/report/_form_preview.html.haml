@@ -4,12 +4,11 @@
       %fieldset
         %h3
           = _('Timeline Preview (up to 50 rows)')
-        #miq_timeline{:style => "height: 500px; border: 1px solid #aaa;"}
+        #chart_placeholder{:style => 'position: relative'}
         = render(:partial => "layouts/timeline",
-          :locals         => {:bands => @edit[:new][:tl_bands],
-            :load_tl_now             => true,
-            :data_action             => "preview_timeline",
-            :position_time           => @edit[:tl_position]})
+                 :locals  => {:tl_json       => @edit[:tl_xml],
+                              :data_action   => "preview_timeline",
+                              :position_time => @edit[:tl_position]})
     - unless @edit[:zgraph_xml].nil?
       %fieldset
         %h3

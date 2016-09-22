@@ -16,42 +16,6 @@
             :javascript
               miqInitSelectPicker();
               miqSelectPickerEvent('chosen_tl', '#{url}', {beforeSend: true, complete: true});
-        - if @tl_field != NOTHING_STRING
-          .form-group
-            %label.control-label.col-md-2
-              = _('First band unit')
-            .col-md-8
-              = select_tag('chosen_unit1',
-                options_for_select(@units1, @edit[:unit1]),
-                :multiple              => false,
-                :class                 => "selectpicker")
-              :javascript
-                miqInitSelectPicker();
-                miqSelectPickerEvent('chosen_unit1', '#{url}', {beforeSend: true, complete: true});
-          - if @edit[:unit1] != BAND_UNITS.last
-            .form-group
-              %label.control-label.col-md-2
-                = _('Second band unit')
-              .col-md-8
-                = select_tag('chosen_unit2',
-                  options_for_select([NOTHING_STRING] + @units2, @edit[:unit2]),
-                  :multiple              => false,
-                  :class                 => "selectpicker")
-                :javascript
-                  miqInitSelectPicker();
-                  miqSelectPickerEvent('chosen_unit2', '#{url}', {beforeSend: true, complete: true});
-            - if @edit[:new][:tl_bands].length > 1 && @edit[:unit2] != BAND_UNITS.last
-              .form-group
-                %label.control-label.col-md-2
-                  = _('Third band unit')
-                .col-md-8
-                  = select_tag('chosen_unit3',
-                    options_for_select([NOTHING_STRING] + @units3, @edit[:unit3]),
-                    :multiple              => false,
-                    :class                 => "selectpicker")
-                  :javascript
-                    miqInitSelectPicker();
-                    miqSelectPickerEvent('chosen_unit3', '#{url}', {beforeSend: true, complete: true});
     .col-md-12.col-lg-6
       - if @tl_field != NOTHING_STRING
         .form-horizontal
@@ -66,23 +30,3 @@
               :javascript
                 miqInitSelectPicker();
                 miqSelectPickerEvent('chosen_position', '#{url}', {beforeSend: true, complete: true});
-          .form-group
-            %label.control-label.col-md-2
-              = _('Show events from last')
-            - if @edit[:new][:tl_last_unit] != SHOWALL_STRING
-              .col-md-8
-                = select_tag('chosen_last_time',
-                  options_for_select(@tl_last_time_choices, @edit[:new][:tl_last_time]),
-                  :multiple              => false,
-                  :class                 => "selectpicker")
-                :javascript
-                  miqInitSelectPicker();
-                  miqSelectPickerEvent('chosen_last_time', '#{url}', {beforeSend: true, complete: true});
-            .col-md-8
-              = select_tag('chosen_last_unit',
-                options_for_select([SHOWALL_STRING] + @edit[:tl_last_units], @edit[:new][:tl_last_unit]),
-                :multiple              => false,
-                :class                 => "selectpicker")
-              :javascript
-                miqInitSelectPicker();
-                miqSelectPickerEvent('chosen_last_unit', '#{url}', {beforeSend: true, complete: true});

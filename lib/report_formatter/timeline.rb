@@ -22,7 +22,7 @@ module ReportFormatter
 
       mri.extras ||= {} # Create hash to store :tl_position setting
 
-      if mri.extras[:browser_name] == "explorer" || mri.extras[:tl_preview]
+      if mri.extras[:browser_name] == "explorer"
         tl_xml = MiqXml.load("<data/>")
       else
         @events = []
@@ -60,7 +60,7 @@ module ReportFormatter
       #     START of TIMELINE TIMEZONE Code
       mri.extras[:tl_position] ||= format_timezone(Time.now, tz, 'raw') # If position not set, default to now
       #     END of TIMELINE TIMEZONE Code
-      if mri.extras[:browser_name] == "explorer" || mri.extras[:tl_preview]
+      if mri.extras[:browser_name] == "explorer"
         output << tl_xml.to_s
       else
         output << @events.to_json
@@ -247,7 +247,7 @@ module ReportFormatter
       e_text = e_text.chomp('<br/>')
 
       # Add the event to the timeline
-      if mri.extras[:browser_name] == "explorer" || mri.extras[:tl_preview]
+      if mri.extras[:browser_name] == "explorer"
         event = tl_xml.root.add_element("event",           "start" => format_timezone(row[col], "UTC", nil),
                                                            #         "end" => Time.now,
                                                            #         "isDuration" => "true",

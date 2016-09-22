@@ -7,7 +7,5 @@
       .default_timeline { width: 400px; height: 250px; }
     #chart_placeholder{:style => 'position: relative'}
     = render(:partial => "layouts/timeline",
-      :locals         => {:bands => @edit[:new][:tl_bands],
-        :load_tl_now             => true,
-        :data_action             => "sample_timeline",
-        :position_time           => @position_time})
+      :locals         => {:tl_json       => @tl_json,
+                          :position_time => @position_time})
