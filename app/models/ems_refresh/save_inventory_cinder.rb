@@ -4,15 +4,7 @@
 #   - cloud_volumes
 #   - cloud_volume_backups
 #   - cloud_volume_snapshots
-#   - vms
-#     - storages (link)
-#     - security_groups (link)
-#     - operating_system
-#     - hardware
-#       - disks
-#       - guest_devices
-#     - custom_attributes
-#     - snapshots
+#   - backing_links
 #
 
 module EmsRefresh::SaveInventoryCinder
@@ -36,13 +28,13 @@ module EmsRefresh::SaveInventoryCinder
       :cloud_volumes,
       :cloud_volume_backups,
       :cloud_volume_snapshots,
-      :vms,
+      :backing_links
     ]
 
     # Save and link other subsections
-    save_child_inventory(ems, hashes, child_keys, target)
+    save_cinder_child_inventory(ems, hashes, child_keys, target)
 
-    link_volumes_to_base_snapshots(hashes[:cloud_volumes]) if hashes.key?(:cloud_volumes)
+    link_cinder_volumes_to_base_snapshots(hashes[:cloud_volumes]) if hashes.key?(:cloud_volumes)
 
     ems.save!
     hashes[:id] = ems.id
@@ -52,7 +44,7 @@ module EmsRefresh::SaveInventoryCinder
     ems
   end
 
-  def save_cloud_volumes_inventory(ems, hashes, target = nil)
+  def save_cinder_cloud_volumes_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
     ems.cloud_volumes.reset
@@ -63,9 +55,8 @@ module EmsRefresh::SaveInventoryCinder
               end
 
     hashes.each do |h|
-      h[:ems_id]               = ems.id
-      h[:cloud_tenant_id]      = h.fetch_path(:tenant, :id)
-      h[:availability_zone_id] = h.fetch_path(:availability_zone, :id)
+      h.delete(:api_obj) # Used by cross linkers, no longer needed.
+      h[:ems_id] = ems.id
       # Defer setting :cloud_volume_snapshot_id until after snapshots are saved.
     end
 
@@ -74,7 +65,7 @@ module EmsRefresh::SaveInventoryCinder
     store_ids_for_new_records(ems.cloud_volumes, hashes, :ems_ref)
   end
 
-  def save_cloud_volume_backups_inventory(ems, hashes, target = nil)
+  def save_cinder_cloud_volume_backups_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
     ems.cloud_volume_backups.reset
@@ -85,6 +76,7 @@ module EmsRefresh::SaveInventoryCinder
               end
 
     hashes.each do |h|
+      h.delete(:api_obj) # Used by cross linkers, no longer needed.
       h[:ems_id]          = ems.id
       h[:cloud_volume_id] = h.fetch_path(:volume, :id)
       h[:availability_zone_id] = h.fetch_path(:availability_zone, :id)
@@ -95,7 +87,7 @@ module EmsRefresh::SaveInventoryCinder
     store_ids_for_new_records(ems.cloud_volume_backups, hashes, :ems_ref)
   end
 
-  def save_cloud_volume_snapshots_inventory(ems, hashes, target = nil)
+  def save_cinder_cloud_volume_snapshots_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
     ems.cloud_volume_snapshots.reset
@@ -106,8 +98,9 @@ module EmsRefresh::SaveInventoryCinder
               end
 
     hashes.each do |h|
+      h.delete(:api_obj) # Used by cross linkers, no longer needed.
       h[:ems_id]          = ems.id
-      h[:cloud_tenant_id] = h.fetch_path(:tenant, :id)
+      # h[:cloud_tenant_id] = h.fetch_path(:tenant, :id)
       h[:cloud_volume_id] = h.fetch_path(:volume, :id)
     end
 
@@ -115,7 +108,27 @@ module EmsRefresh::SaveInventoryCinder
     store_ids_for_new_records(ems.cloud_volume_snapshots, hashes, :ems_ref)
   end
 
-  def link_volumes_to_base_snapshots(hashes)
+  def save_cinder_backing_links_inventory(_ems, hashes, _target)
+    hashes.each do |dh|
+      dh[:backing_id]   = dh[:backing_volume][:id]
+      dh[:backing_type] = 'CloudVolume'
+
+      # Existing disk, update attributes.
+      if dh.has_key?(:id)
+        unless (disk = Disk.where(:id => dh[:id]))
+          _log.warn "Expected disk not found, id = #{dh[:id]}"
+          next
+        end
+        disk.update(dh.except(:id, :backing_volume))
+        next
+      end
+
+      # New disk, create entry.
+      Disk.create(dh.except(:backing_volume))
+    end
+  end
+
+  def link_cinder_volumes_to_base_snapshots(hashes)
     base_snapshot_to_volume = hashes.each_with_object({}) do |h, bsh|
       next unless (base_snapshot = h[:base_snapshot])
       (bsh[base_snapshot[:id]] ||= []) << h[:id]
@@ -124,5 +137,9 @@ module EmsRefresh::SaveInventoryCinder
     base_snapshot_to_volume.each do |bsid, volids|
       CloudVolume.where(:id => volids).update_all(:cloud_volume_snapshot_id => bsid)
     end
+  end
+
+  def save_cinder_child_inventory(obj, hashes, child_keys, *args)
+    child_keys.each { |k| send("save_cinder_#{k}_inventory", obj, hashes[k], *args) if hashes.key?(k) }
   end
 end
