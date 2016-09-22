@@ -105,6 +105,7 @@ module ApplicationController::Buttons
       @edit[:new][:target_attr_name] = params[:target_attr_name] if params[:target_attr_name]
       @edit[:new][:name] = params[:name] if params[:name]
       @edit[:new][:display] = params[:display] == "1" if params[:display]
+      @edit[:new][:open_url] = params[:open_url] == "1" if params[:open_url]
       @edit[:new][:description] = params[:description] if params[:description]
       @edit[:new][:button_image] = params[:button_image].to_i if params[:button_image]
       @edit[:new][:dialog_id] = params[:dialog_id] if params[:dialog_id]
@@ -760,6 +761,7 @@ module ApplicationController::Buttons
       button[:options][:button_image] = @edit[:new][:button_image]
     end
     button[:options][:display] = @edit[:new][:display]
+    button[:options][:open_url] = @edit[:new][:open_url]
     button.visibility ||= {}
     if @edit[:new][:visibility_typ] == "role"
       roles = []
@@ -843,6 +845,7 @@ module ApplicationController::Buttons
     @edit[:new][:description] = @custom_button.description
     @edit[:new][:button_image] = @custom_button.options && @custom_button.options[:button_image] ? @custom_button.options[:button_image] : ""
     @edit[:new][:display] = @custom_button.options && @custom_button.options.key?(:display) ? @custom_button.options[:display] : true
+    @edit[:new][:open_url] = @custom_button.options && @custom_button.options.key?(:open_url) ? @custom_button.options[:open_url] : false
     @edit[:new][:object_message] = @custom_button.uri_message || "create"
     @edit[:new][:instance_name] ||= "Request"
     @edit[:current] = copy_hash(@edit[:new])
