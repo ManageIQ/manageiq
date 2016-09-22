@@ -49,17 +49,13 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     super(message, [:request_type, :source_type, :target_type], extra_attrs)
   end
 
-  def create_request(values, _requester = nil, auto_approve = false)
+  def make_request(request, values, requester = nil, auto_approve = false)
     if @running_pre_dialog == true
       continue_request(values)
       password_helper(values, true)
       return nil
-    else
-      super
     end
-  end
 
-  def make_request(request, values, requester = nil, auto_approve = false)
     if request
       request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
       request.src_vm_id = get_value(values[:src_vm_id])
