@@ -15,6 +15,10 @@ module MiqServer::ConfigurationManagement
     add_settings_for_resource(config)
   end
 
+  def reload_settings
+    Vmdb::Settings.reload! if is_local?
+  end
+
   def servers_for_settings_reload
     [self]
   end
