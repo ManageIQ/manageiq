@@ -279,7 +279,7 @@ module VirtualDelegates
   #   which produces the sql:
   #
   #     #select to_model[col] from to_model where to_model[to_model_col_name] = src_model_table[:src_model_id]
-  #     (SELECT "vms_ss"."name" FROM "vms" AS "vms_ss" WHERE "vms_ss"."id" = "vms"."src_template_id")
+  #     (SELECT "vms_sub"."name" FROM "vms" AS "vms_ss" WHERE "vms_ss"."id" = "vms"."src_template_id")
   #
 
   def self.select_from_alias(to_ref, col, to_model_col_name, src_model_id)
@@ -288,9 +288,9 @@ module VirtualDelegates
     # if a self join, alias the second table to a different name
     if to_table.table_name == src_model_id.relation.table_name
       # use a dup to not modify the primary table in the model
-      to_table = to_model.arel_table.dup
+      to_table = to_table.dup
       # use a table alias to not conflict with table name in the primary query
-      to_table.table_alias = "#{to_model.table_name}_ss"
+      to_table.table_alias = "#{to_table.table_name}_sub"
     end
     # to_table will give the table name (alias) when creating the fully qualified to_model_id string
     to_model_id = to_model.arel_attribute(to_model_col_name, to_table)
