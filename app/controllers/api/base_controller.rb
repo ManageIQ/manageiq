@@ -52,6 +52,14 @@ module Api
       head(:ok)
     end
 
+    private
+
+    def validate_response_format
+      accept = request.headers["Accept"]
+      return if accept.blank? || accept.include?("json") || accept.include?("*/*")
+      raise UnsupportedMediaTypeError, "Invalid Response Format #{accept} requested"
+    end
+
     def set_access_control_headers
       headers['Access-Control-Allow-Origin'] = '*'
       headers['Access-Control-Allow-Headers'] = 'origin, content-type, authorization, x-auth-token'
@@ -60,14 +68,6 @@ module Api
 
     def collection_config
       @collection_config ||= CollectionConfig.new
-    end
-
-    private
-
-    def validate_response_format
-      accept = request.headers["Accept"]
-      return if accept.blank? || accept.include?("json") || accept.include?("*/*")
-      raise UnsupportedMediaTypeError, "Invalid Response Format #{accept} requested"
     end
   end
 end
