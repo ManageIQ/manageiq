@@ -92,7 +92,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Provision do
 
     context "#no cpu limit or reservation set" do
       before do
-        @options[:number_of_cpus] = 2
+        @options[:number_of_sockets] = 2
         @options[:cpu_limit]      = nil
         @options[:cpu_reserve]    = nil
       end
@@ -106,7 +106,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Provision do
       before do
         @options[:cpu_limit]      = 40
         @options[:cpu_reserve]    = nil
-        @options[:number_of_cpus] = 2
+        @options[:number_of_sockets] = 2
       end
 
       it "set vm" do
@@ -118,7 +118,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Provision do
       before do
         @options[:cpu_reserve]    = 15
         @options[:cpu_limit]      = nil
-        @options[:number_of_cpus] = 2
+        @options[:number_of_sockets] = 2
       end
 
       it "set vm" do

@@ -64,7 +64,7 @@ module ManageIQ::Providers::Microsoft::InfraManager::Provision::Cloning
   end
 
   def cpu_count
-    get_option(:number_of_cpus)
+    get_option(:number_of_sockets)
   end
 
   def dynamic_mem_min
