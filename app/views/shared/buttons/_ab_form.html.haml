@@ -48,13 +48,9 @@
       %label.control-label.col-md-2
         = _('Button Image')
       .col-md-8
-        #form-group
-          = select_tag('button_image',
+        = select_tag('button_image',
                         options_for_select([[_("No Image"), nil]] + @edit[:new][:button_images], @edit[:new][:button_image].to_s),
                         :class => "selectpicker")
-          :javascript
-            miqInitSelectPicker();
-            miqSelectPickerEvent('button_image', '#{url}')
     .form-group
       %label.control-label.col-md-2
         = _('Dialog')
@@ -63,9 +59,12 @@
                       options_for_select(([[_("<None>"), nil]]) + Array(@edit[:new][:available_dialogs].invert).sort_by { |a| a.first.downcase }, @edit[:new][:dialog_id]),
                       "data-miq_sparkle_on" => true,
                       :class => "selectpicker")
-        :javascript
-          miqInitSelectPicker();
-          miqSelectPickerEvent('dialog_id', '#{url}')
+    .form-group
+      %label.control-label.col-md-2
+        = _('Open URL')
+      .col-md-8
+        = check_box_tag("open_url", "1", @edit[:new][:open_url],
+                               "data-miq_observe_checkbox" => {:interval => '.5', :url => url}.to_json)
 
   = render(:partial => "layouts/ae_resolve_options",
     :locals         => {:resolve => @edit,
@@ -77,3 +76,4 @@
 :javascript
   miqInitSelectPicker();
   miqSelectPickerEvent("button_image", "#{url}")
+  miqSelectPickerEvent('dialog_id', '#{url}')
