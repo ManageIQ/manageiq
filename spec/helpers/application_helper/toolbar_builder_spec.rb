@@ -2645,4 +2645,46 @@ describe ApplicationHelper do
       expect(remove_btn[:enabled]).to eq(false)
     end
   end
+
+  describe "#build_by_class" do
+    context "when the toolbar to be built is a blank view" do
+      let(:toolbar_to_build) { ApplicationHelper::Toolbar::BlankView }
+
+      it "returns nil" do
+        expect(_toolbar_builder.build_by_class(toolbar_to_build)).to be_nil
+      end
+    end
+
+    context "when the toolbar to be built is a generic object toolbar" do
+      let(:toolbar_to_build) { ApplicationHelper::Toolbar::GenericObjectDefinition }
+
+      before do
+        allow(Rbac).to receive(:role_allows?).and_return(true)
+      end
+
+      it "includes the button group" do
+        expect(_toolbar_builder.build_by_class(toolbar_to_build).first).to include(
+          :id    => "generic_object_definition_choice",
+          :type  => :buttonSelect,
+          :icon  => "fa fa-cog fa-lg",
+          :title => "Configuration",
+          :text  => "Configuration"
+        )
+      end
+
+      it "includes the correct button items" do
+        expect(_toolbar_builder.build_by_class(toolbar_to_build).first[:items].first).to include(
+          :id    => "generic_object_definition_choice__generic_object_definition_create",
+          :type  => :button,
+          :icon  => "pficon pficon-add-circle-o fa-lg",
+          :title => "Create a new Generic Object Definition",
+          :text  => "Create a new Generic Object Definition",
+          :data  => {
+            'function'      => 'sendDataWithRx',
+            'function-data' => '{"eventType": "showAddForm"}'
+          }
+        )
+      end
+    end
+  end
 end
