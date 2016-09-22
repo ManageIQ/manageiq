@@ -114,7 +114,7 @@ module EmsRefresh::SaveInventoryCinder
       dh[:backing_type] = 'CloudVolume'
 
       # Existing disk, update attributes.
-      if dh.has_key?(:id)
+      if dh.key?(:id)
         unless (disk = Disk.where(:id => dh[:id]))
           _log.warn "Expected disk not found, id = #{dh[:id]}"
           next

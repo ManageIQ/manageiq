@@ -5,7 +5,7 @@ module ManageIQ::Providers
 end
 
 module ManageIQ::Providers::StorageManager::CinderManager::RefreshParser::CrossLinkers
-	def self.cross_link(ems, data)
+  def self.cross_link(ems, data)
     parent_manager = ems.parent_manager
     _log.warn "Manager does not have a parent." unless parent_manager
 

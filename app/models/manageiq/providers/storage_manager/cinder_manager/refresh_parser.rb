@@ -105,18 +105,18 @@ module ManageIQ::Providers
 
       uid = volume.id
       new_result = {
-        :api_obj           => volume,
-        :ems_ref           => uid,
+        :api_obj       => volume,
+        :ems_ref       => uid,
         # TODO: has its own CloudVolume?
-        :type              => "ManageIQ::Providers::Openstack::CloudManager::CloudVolume",
-        :name              => volume_name(volume),
-        :status            => volume.status,
-        :bootable          => volume.attributes['bootable'],
-        :creation_time     => volume.created_at,
-        :description       => volume_description(volume),
-        :volume_type       => volume.volume_type,
-        :snapshot_uid      => volume.snapshot_id,
-        :size              => volume.size.to_i.gigabytes
+        :type          => "ManageIQ::Providers::Openstack::CloudManager::CloudVolume",
+        :name          => volume_name(volume),
+        :status        => volume.status,
+        :bootable      => volume.attributes['bootable'],
+        :creation_time => volume.created_at,
+        :description   => volume_description(volume),
+        :volume_type   => volume.volume_type,
+        :snapshot_uid  => volume.snapshot_id,
+        :size          => volume.size.to_i.gigabytes
       }
       return uid, new_result
     end
