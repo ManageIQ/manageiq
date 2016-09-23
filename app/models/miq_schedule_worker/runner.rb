@@ -166,6 +166,12 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue :orchestration_stack_retirement_check
     end
 
+    # Schedule - Check for Retired Load Balancers
+    every = worker_setting_or_default(:load_balancer_retired_interval)
+    @schedules[:scheduler] << system_schedule_every(every, :first_in => every) do
+      enqueue :load_balancer_retirement_check
+    end
+
     # Schedule - Periodic validation of authentications
     every = worker_setting_or_default(:authentication_check_interval, 1.day)
     @schedules[:scheduler] << system_schedule_every(every, :first_in => every) do
