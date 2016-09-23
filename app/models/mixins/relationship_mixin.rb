@@ -162,19 +162,19 @@ module RelationshipMixin
 
   # Returns the relationship of the root of the tree the record is in
   def root_rel(*_args)
-    rel = relationship
-    rel.nil? ? nil : rel.root # TODO: Should this return nil or init_relationship or Relationship.new?
+    rel = relationship.try!(:root)
+    # micro-optimization: if the relationship is us, "load" the resource
+    rel.resource = self if rel && rel.resource_id == id && rel.resource_type == self.class.base_class.name.to_s
+    rel || relationship_for_isolated_root
   end
 
   # Returns the root of the tree the record is in, self for a root node
   def root(*args)
-    return self if self.is_root?(*args)
     Relationship.resource(root_rel(*args))
   end
 
   # Returns the id of the root of the tree the record is in
   def root_id(*args)
-    return [self.class.base_class.name, id] if self.is_root?(*args)
     Relationship.resource_pair(root_rel(*args))
   end
 
@@ -480,7 +480,7 @@ module RelationshipMixin
   def fulltree_rels_arranged(*args)
     options = args.extract_options!
     root_id = relationship.try(:root_id)
-    return {Relationship.new(:resource => self) => {}} if root_id.nil?
+    return {relationship_for_isolated_root => {}} if root_id.nil?
     rels = Relationship.subtree_of(root_id).arrange
     Relationship.filter_arranged_rels_by_resource_type(rels, options)
   end

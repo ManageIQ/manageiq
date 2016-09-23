@@ -283,18 +283,41 @@ describe RelationshipMixin do
 
   describe "#root" do
     it "is self with with no relationships" do
-      nodes = host.with_relationship_type(test_rel_type, &:root)
-      expect(nodes).to eq(host)
+      host # execute the query
+      expect do
+        nodes = host.with_relationship_type(test_rel_type, &:root)
+        expect(nodes).to eq(host)
+      end.to match_query_limit_of(1) # lookup the relationship node
     end
 
     it "is a self with a tree's root node" do
-      nodes = vms[0].with_relationship_type(test_rel_type, &:root)
-      expect(nodes).to eq(vms[0])
+      vms # execute the lookup query
+      expect do
+        nodes = vms[0].with_relationship_type(test_rel_type, &:root)
+        expect(nodes).to eq(vms[0])
+      end.to match_query_limit_of(1) # lookup the relationship node
     end
 
     it "is a parent with a tree's child node" do
       nodes = vms[7].with_relationship_type(test_rel_type, &:root)
       expect(nodes).to eq(vms[0])
+    end
+  end
+
+  describe "#root_id" do
+    it "is self with with no relationships" do
+      nodes = host.with_relationship_type(test_rel_type, &:root_id)
+      expect(nodes).to eq(["Host", host.id])
+    end
+
+    it "is a self with a tree's root node" do
+      nodes = vms[0].with_relationship_type(test_rel_type, &:root_id)
+      expect(nodes).to eq(["VmOrTemplate", vms[0].id])
+    end
+
+    it "is a parent with a tree's child node" do
+      nodes = vms[7].with_relationship_type(test_rel_type, &:root_id)
+      expect(nodes).to eq(["VmOrTemplate", vms[0].id])
     end
   end
 
