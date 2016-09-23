@@ -109,28 +109,27 @@ module Api
         end
       end
 
-      def parse_by_attr(resource, type, attr_list)
+      def parse_by_attr(resource, type, attr_list = [])
         klass = collection_class(type)
+        attr_list |= %w(guid) if klass.attribute_method?(:guid)
+        attr_list |= String(collection_config[type].identifying_attrs).split(",")
         objs = attr_list.map { |attr| klass.find_by(attr => resource[attr]) if resource[attr] }.compact
         objs.collect(&:id).first
       end
 
       def parse_owner(resource)
         return nil if resource.blank?
-        owner_id = parse_id(resource, :users)
-        owner_id ? owner_id : parse_by_attr(resource, :users, %w(name userid))
+        parse_id(resource, :users) || parse_by_attr(resource, :users)
       end
 
       def parse_group(resource)
         return nil if resource.blank?
-        group_id = parse_id(resource, :groups)
-        group_id ? group_id : parse_by_attr(resource, :groups, %w(description))
+        parse_id(resource, :groups) || parse_by_attr(resource, :groups)
       end
 
       def parse_role(resource)
         return nil if resource.blank?
-        role_id = parse_id(resource, :roles)
-        role_id ? role_id : parse_by_attr(resource, :roles, %w(name))
+        parse_id(resource, :roles) || parse_by_attr(resource, :roles)
       end
 
       def parse_tenant(resource)

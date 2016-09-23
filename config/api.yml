@@ -409,6 +409,7 @@
     - :collection
     :verbs: *gpppd
     :klass: MiqGroup
+    :identifying_attrs: description
     :subcollections:
     - :tags
     :collection_actions:
@@ -1016,6 +1017,7 @@
     - :collection
     :verbs: *gpd
     :klass: MiqUserRole
+    :identifying_attrs: name
     :subcollections:
     - :features
     :collection_actions:
@@ -1393,6 +1395,7 @@
     - :subcollection
     :verbs: *gpd
     :klass: Tag
+    :identifying_attrs: name
     :collection_actions:
       :get:
       - :name: read
@@ -1608,6 +1611,7 @@
     - :collection
     :verbs: *gpppd
     :klass: User
+    :identifying_attrs: name,userid
     :subcollections:
     - :tags
     :collection_actions:
