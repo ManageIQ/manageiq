@@ -603,7 +603,7 @@ module ApplicationController::Filter
   private :adv_search_new
 
   def adv_search_set_details(search, type, user=nil)
-    search.update_attributes!(
+    search.update_attributes(
       :search_key => user,
       :name => "#{type == "global" ? "global" : "user_#{user}"}_#{@edit[:new_search_name]}",
       :search_type => type
