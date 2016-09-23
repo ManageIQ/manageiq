@@ -66,7 +66,7 @@ module Api
       def query_resource(type, id, data)
         unless id
           data_spec = data.collect { |key, val| "#{key}=#{val}" }.join(", ")
-          raise NotFound, "Invalid #{type} resource specified - #{data_spec}"
+          raise NotFoundError, "Invalid #{type} resource specified - #{data_spec}"
         end
         resource = resource_search(id, type, collection_class(type))
         opts = {
