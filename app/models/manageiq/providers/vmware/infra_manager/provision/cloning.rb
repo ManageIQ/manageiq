@@ -60,6 +60,10 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
   end
 
   def dest_storage_profile
+    # Storage Profiles were added in vSphere 5.5 so make sure we
+    # don't send newer api types to an older vCenter
+    return nil if source.ext_management_system.api_version < '5.5'
+
     storage_profile_id = get_option(:placement_storage_profile)
     StorageProfile.find_by(:id => storage_profile_id) unless storage_profile_id.nil?
   end
