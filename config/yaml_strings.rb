@@ -65,7 +65,9 @@ _("Templates Accordion")
 # TRANSLATORS: file: product/views/CloudSubnet.yaml
 # TRANSLATORS: file: product/views/CloudTenant.yaml
 # TRANSLATORS: file: product/views/Flavor.yaml
+# TRANSLATORS: file: product/views/LoadBalancer.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
 # TRANSLATORS: file: product/views/MiqAeInstance.yaml
@@ -88,11 +90,48 @@ _("Images by Provider Accordion")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Instances Accordion")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
+# TRANSLATORS: file: product/views/ContainerProject.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template.yaml
 _("Images")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Images Accordion")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Networking")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Everything under Networking")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("View")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("View Networking Elements")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("List")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Display Lists of Networking Elements")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Show")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Display Individual Networking Elements")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Modify")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Modify Networking Element")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Remove")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Remove Networks")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Edit")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Edit Network")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Operate")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Perform Operations on Networking Elements")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Edit Tags")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Edit Tags for Networking Elements")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 # TRANSLATORS: file: product/views/AutomationRequest.yaml
 # TRANSLATORS: file: product/views/MiqRequest.yaml
@@ -100,15 +139,9 @@ _("Requests")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Everything under Requests")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("View")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("View Requests")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("List")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Display Lists of Requests")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Show")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Display Individual Requests")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -116,15 +149,11 @@ _("Reload")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Reload Requests")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Operate")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Perform Operations on Requests")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Approve and Deny")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Approve and Deny Requests")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Modify")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Requests")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -135,8 +164,6 @@ _("Copy a Request")
 _("Delete")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Delete Requests")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Edit")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Request")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -174,8 +201,6 @@ _("Add Atomic Catalog Item")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Perform Operations on Catalog Items")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Edit Tags")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Catalog Items Tags")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Service Catalogs")
@@ -196,8 +221,6 @@ _("Everything under Catalogs Accordion")
 _("View Catalogs")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Catalog")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Catalog")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Remove Catalog")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -254,8 +277,6 @@ _("Edit Services")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Remove Services")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Services")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Set Ownership")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Set Ownership of VMs")
@@ -272,6 +293,8 @@ _("Set Retirement Date")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Set Retirement Date for Services")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Create Services")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Retire Services")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
@@ -284,6 +307,14 @@ _("View Cloud Providers")
 _("Display Lists of Cloud Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Display Individual Cloud Providers")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Arbitration Profiles List")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Display Lists of Arbitration Profiles")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Arbitration Profile Show")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Display Individual Arbitration Profiles")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Timeline")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -311,8 +342,6 @@ _("Re-check Authentication Status of Cloud Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Cloud Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Remove Cloud Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Cloud Provider")
@@ -320,6 +349,12 @@ _("Edit a Cloud Provider")
 _("Add")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Add a Cloud Provider")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Add Arbitration Profile")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Edit Arbitration Profile")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Remove Arbitration Profile")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Availability Zones")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -640,6 +675,10 @@ _("Provision Hosts / Nodes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Request to Provision Hosts / Nodes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Register Hosts / Nodes")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Register new Hosts / Nodes")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 # TRANSLATORS: file: product/views/ResourcePool.yaml
 _("Resource Pools")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -897,6 +936,8 @@ _("Policy Profiles")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Everything under Policy Profiles Accordion")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("View Policy Profiles")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Policy Profiles")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Add a Policy Profile")
@@ -910,6 +951,8 @@ _("Edit a Policy Profile")
 _("Policies")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Everything under Policies Accordion")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("View Policies")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Policies")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1028,6 +1071,8 @@ _("Delete Automate Domain")
 _("Priority Order")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Priority Order of Domains")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Refresh Git-based domain")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Lock/Unlock")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1181,6 +1226,12 @@ _("Delete Buttons")
 _("Simulate")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Simulate using Button details")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Generic Object")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Generic Objects")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Generic Object Definition Create")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Automate Import/Export")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1677,6 +1728,30 @@ _("Initiate refresh of recent C&U data")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Reload charts")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("View Grid")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("View Tile")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("View List")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("View Summary")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("View Topology")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Download in CSV Format")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Download in PDF Format")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Download in Text Format")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Download View")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("VM Download PDF")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Tree Large")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Tree Small")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Orchestration Stacks")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Everything under Orchestration Stacks")
@@ -1689,7 +1764,7 @@ _("Display Individual Orchestration Stacks")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Orchestration Stacks")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Orchestration Stacks")
+_("Remove Orchestration Stack")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Orchestration Stack")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1735,11 +1810,15 @@ _("Container Deployment Create")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Containers Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Containers Providers")
+_("Remove Containers Provider")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Containers Provider")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Add a Containers Provider")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("deploy")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Deploy a New Containers Provider")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
@@ -1758,6 +1837,8 @@ _("Display Timelines for Middleware Providers")
 _("Perform Operations on Middleware Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Refresh Middleware Providers")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Re-check Authentication Status of Middleware Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Tags of Middleware Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1829,7 +1910,9 @@ _("Display Individual Middleware Deployments")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Middleware Deployments")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Middleware Deployments")
+_("Undeploy")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Undeploy Middleware Deployment")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Middleware Deployment")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1839,13 +1922,21 @@ _("Perform Operations on Middleware Deployments")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Tags of Middleware Deployments")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Disable middleware deployment")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Disable Middleware deployment")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Enable middleware deployment")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Enable Middleware deployment")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Undeploy middleware deployment")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Undeploy Middleware deployment")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Redeploy middleware deployment")
+_("Restart middleware deployment")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Redeploy Middleware deployment")
+_("Restart Middleware deployment")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Middleware Datasource")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1870,6 +1961,51 @@ _("Add a Middleware Datasource")
 _("Perform Operations on Middleware Datasources")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Tags of Middleware Datasources")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Middleware Domain")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Everything under Middleware Domain")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("View Middleware Domains")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Display Lists of Middleware Domains")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Display Individual Middleware Domains")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Perform Operations on Middleware Domains")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Edit Tags of Middleware Domains")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Middleware Server Group")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Everything under Middleware Server Group")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("View Middleware Server Groups")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Display Lists of Middleware Server Groups")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Display Individual Middleware Server Groups")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Perform Operations on Middleware Server Groups")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Edit Tags of Middleware Server Groups")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+# TRANSLATORS: file: product/views/MiddlewareMessaging.yaml
+_("Middleware Messaging")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Everything under Middleware Messaging")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("View Middleware Messaging")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Display Lists of Middleware Messaging")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Display Individual Middleware Messaging")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Show Capacity & Utilization data of Middleware Messaging")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Perform Operations on Middleware Messaging")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Edit Tags of Middleware Messaging")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
 _("Network Providers")
@@ -1896,12 +2032,13 @@ _("Refresh Network Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Network Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Network Providers")
+_("Remove Network Provider")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Network Provider")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Add a Network Provider")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
 # TRANSLATORS: file: product/views/OrchestrationStack.yaml
 _("Security Groups")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1932,6 +2069,7 @@ _("Perform Operations on Floating IPs")
 _("Edit Tags of Floating IP")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 # TRANSLATORS: file: product/views/CloudNetwork.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
 # TRANSLATORS: file: product/views/OrchestrationStack.yaml
 _("Cloud Networks")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1993,6 +2131,20 @@ _("Perform Operations on Network Routers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Tags of Network Router")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Load Balancers")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Everything under Load Balancers")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("View Load Balancers")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Display Lists of Load Balancers")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Display Individual Load Balancers")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Perform Operations on Load Balancers")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Edit Tags of Load Balancer")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 # TRANSLATORS: file: product/views/ContainerGroup.yaml
 # TRANSLATORS: file: product/views/ContainerProject.yaml
 # TRANSLATORS: file: product/views/ContainerService.yaml
@@ -2012,7 +2164,7 @@ _("Show Capacity & Utilization data of Pods")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Pods")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Pods")
+_("Remove Pod")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Pod")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2021,6 +2173,10 @@ _("Add a Pod")
 _("Perform Operations on Pods")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Tags of Pods")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Manage Policies of Pods")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Check Compliance of Last Known Configuration")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Nodes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2048,6 +2204,8 @@ _("Perform Operations on Container Nodes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Tags of Container Nodes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Manage Policies of Container Nodes")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 # TRANSLATORS: file: product/views/ContainerReplicator.yaml
 _("Replicators")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2063,7 +2221,7 @@ _("Show Capacity & Utilization data of Replicators")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Display Timelines for container Replicators")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Container Replicators")
+_("Remove Container Replicator")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Container Replicator")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2072,6 +2230,8 @@ _("Add a Container Replicator")
 _("Perform Operations on Container Replicators")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Tags of Container Replicators")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Manage Policies of Container Replicators")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Everything under Container Images")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2089,8 +2249,6 @@ _("Manage Policies of Container Images")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Perform SmartState Analysis on Containers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Check Compliance of Last Known Configuration")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Registries")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Everything under Container Image Registries")
@@ -2103,7 +2261,7 @@ _("Display Individual Container Image Registries")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Container Image Registries")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Container Image Registries")
+_("Remove Container Image Registry")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Container Image Registry")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2125,7 +2283,7 @@ _("Display Individual Persistent Volume")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Persistent Volumes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Persistent Volumes")
+_("Remove Persistent Volume")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Persistent Volume")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2235,8 +2393,6 @@ _("Modify Containers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Remove Container")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Containers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Container")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Container")
@@ -2281,7 +2437,7 @@ _("Modify Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Remove Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Proviers")
+_("Remove Provier")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Provider")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2309,6 +2465,26 @@ _("View Ansible Tower Job Templates")
 _("Create Service Dialog")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Job Templates Tags")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Configuration Jobs")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Everything under Configuration Jobs")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("View Configuration Jobs")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Display Lists of Configuration Jobs")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Display Individual Configuration Jobs")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Modify Configuration Job")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Remove Configuration Job")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Edit Configuration Job")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Perform Operations on Configuration Jobs")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Edit Tags of Configuration Jobs")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("All VM and Instance Access Rules")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2368,10 +2544,6 @@ _("Shelve Offload Instance")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Reset Instance")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Shutdown Guest")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Shutdown the Guest OS on Instances")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Restart Guest")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Restart the Guest OS on Instances")
@@ -2396,7 +2568,13 @@ _("Detach Volume from Instance")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Evacuate Instance")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Evacate Instance")
+_("Associate Floating IP")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Associate Floating IP with Instance")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Disassociate Floating IP")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Disassociate Floating IP from Instance")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Instances")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2404,7 +2582,7 @@ _("Provision Instances")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Request to Provision Instances")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Instances")
+_("Remove Instance")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Instance")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2444,9 +2622,13 @@ _("Edit Image Tags")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Images")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Images")
+_("Remove Image")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Image")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Provision Instances from Images")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Request to Provision Instances from Images")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("VM Access Rules")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2490,7 +2672,11 @@ _("Power Off VM")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Suspend VM")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Pause VM")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Reset VM")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Shutdown Guest")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Shutdown the Guest OS on VMs")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2507,6 +2693,10 @@ _("Open a web-based VNC console for VMs")
 _("Console using VMRC")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Open a web-based VMRC console for VMs")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Cockpit Console")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Open the Cockpit console for VMs")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit VM Tags")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2526,7 +2716,7 @@ _("Migrate VMs")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Migrate VMs to another Host/Datastore")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove VMs from the VMDB")
+_("Remove VM")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a VM")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2608,8 +2798,6 @@ _("Virtual Templates")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Everything for Virtual Templates")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Create Virtual Template")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Show Virtual Templates")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Virtual Templates")
@@ -2635,6 +2823,62 @@ _("Delete Snapshots on Templates")
 _("Delete All Existing Snapshots on Templates")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Revert to selected snapshot on Templates")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Get Cloud Networks")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Show Cloud Networks")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Arbitration Settings")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Get and Edit Arbitration Settings")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Show Arbitration Settings")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Create Arbitration Settings")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Create Arbitration Setting")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Edit Arbitration Settings")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Delete Arbitration Settings")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Arbitration Rules")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("All functions for Arbitration Rules")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Show Arbitration List")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Show Arbitration Rule list")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Create Arbitration Rule")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Delete Arbitration Rule")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Edit Arbitration Rule")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Blueprints")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("All Blueprint Access Rules")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("View Blueprint")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("List Blueprint")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Show Blueprint")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Edit Blueprint Tags")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Modify Blueprint")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Add Blueprint")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Edit Blueprint")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Remove Blueprint")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Publish")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Publish Blueprint")
 # TRANSLATORS: file: db/fixtures/miq_report_formats.yml
 _("Suffixed Bytes (B, KB, MB, GB)")
 # TRANSLATORS: file: db/fixtures/miq_report_formats.yml
@@ -2739,6 +2983,10 @@ _("String Truncated to 50 Characters with Elipses (...)")
 _("Convert Numbers Larger than 1.0e+15 to Exponential Form")
 # TRANSLATORS: file: db/fixtures/miq_report_formats.yml
 _("Human readable model name")
+# TRANSLATORS: file: db/fixtures/notification_types.yml
+_("Virtual Machine %{subject} has been powered off")
+# TRANSLATORS: file: db/fixtures/notification_types.yml
+_("Virtual Machine %{subject} has been powered on")
 # TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
 _("Timeline All Policy Events")
 # TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
@@ -2780,10 +3028,12 @@ _("Event Source")
 # TRANSLATORS: file: product/views/ContainerReplicator.yaml
 # TRANSLATORS: file: product/views/ContainerRoute.yaml
 # TRANSLATORS: file: product/views/ContainerService.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Template.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Vm.yaml
+# TRANSLATORS: file: product/views/MiddlewareDomain.yaml
 # TRANSLATORS: file: product/views/MiddlewareServer.yaml
 # TRANSLATORS: file: product/views/OrchestrationStack.yaml
 # TRANSLATORS: file: product/views/PersistentVolume.yaml
@@ -2799,6 +3049,7 @@ _("Provider")
 _("Message")
 # TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
 # TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
+# TRANSLATORS: file: product/views/Host-hosts.yaml
 # TRANSLATORS: file: product/views/Host.yaml
 # TRANSLATORS: file: product/views/InstanceOrImage.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Template.yaml
@@ -2872,7 +3123,9 @@ _("Time Stamp")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfiguredSystem.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
@@ -2894,6 +3147,7 @@ _("Type")
 # TRANSLATORS: file: product/views/Account-groups.yaml
 # TRANSLATORS: file: product/views/Account-users.yaml
 # TRANSLATORS: file: product/views/AdvancedSetting.yaml
+# TRANSLATORS: file: product/views/ArbitrationProfile.yaml
 # TRANSLATORS: file: product/views/AvailabilityZone.yaml
 # TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
 # TRANSLATORS: file: product/views/CimStorageExtent.yaml
@@ -2922,13 +3176,16 @@ _("Type")
 # TRANSLATORS: file: product/views/Flavor.yaml
 # TRANSLATORS: file: product/views/Group.yaml
 # TRANSLATORS: file: product/views/GuestApplication.yaml
+# TRANSLATORS: file: product/views/Host-hosts.yaml
 # TRANSLATORS: file: product/views/Host.yaml
 # TRANSLATORS: file: product/views/InstanceOrImage.yaml
 # TRANSLATORS: file: product/views/IsoDatastore.yaml
 # TRANSLATORS: file: product/views/LdapRegion.yaml
+# TRANSLATORS: file: product/views/LoadBalancer.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_AuthKeyPair.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template-all_vms_and_templates.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-all_vms_and_templates.yaml
@@ -2993,6 +3250,7 @@ _("Type")
 # TRANSLATORS: file: product/views/StorageFile-vm_misc_files.yaml
 # TRANSLATORS: file: product/views/StorageFile-vm_ram_files.yaml
 # TRANSLATORS: file: product/views/StorageManager.yaml
+# TRANSLATORS: file: product/views/Switch.yaml
 # TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
 # TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
 # TRANSLATORS: file: product/views/SystemService-linux_initprocesses.yaml
@@ -3025,6 +3283,7 @@ _("Last Refreshed On")
 # TRANSLATORS: file: product/views/ConfigurationProfile.yaml
 _("ConfigurationProfile")
 # TRANSLATORS: file: product/views/AdvancedSetting.yaml
+# TRANSLATORS: file: product/views/ArbitrationProfile.yaml
 # TRANSLATORS: file: product/views/AutomationRequest.yaml
 # TRANSLATORS: file: product/views/ChargebackRate.yaml
 # TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
@@ -3036,6 +3295,7 @@ _("ConfigurationProfile")
 # TRANSLATORS: file: product/views/Dialog.yaml
 # TRANSLATORS: file: product/views/GuestApplication.yaml
 # TRANSLATORS: file: product/views/LdapRegion.yaml
+# TRANSLATORS: file: product/views/LoadBalancer.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript.yaml
 # TRANSLATORS: file: product/views/MiqAction.yaml
 # TRANSLATORS: file: product/views/MiqActionSet.yaml
@@ -3103,6 +3363,7 @@ _("Zone")
 # TRANSLATORS: file: product/views/CimStorageExtent.yaml
 # TRANSLATORS: file: product/views/ConfigurationProfile.yaml
 # TRANSLATORS: file: product/views/EmsCluster.yaml
+# TRANSLATORS: file: product/views/Host-hosts.yaml
 # TRANSLATORS: file: product/views/Host.yaml
 # TRANSLATORS: file: product/views/InstanceOrImage.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
@@ -3138,6 +3399,8 @@ _("Deployment Name")
 # TRANSLATORS: file: product/views/CloudVolumeSnapshot-cloud_volume_snapshots.yaml
 # TRANSLATORS: file: product/views/CloudVolumeSnapshot.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
 # TRANSLATORS: file: product/views/MiddlewareDeployment.yaml
@@ -3156,6 +3419,7 @@ _("Deployment Name")
 _("Status")
 # TRANSLATORS: file: product/views/MiddlewareDatasource.yaml
 # TRANSLATORS: file: product/views/MiddlewareDeployment.yaml
+# TRANSLATORS: file: product/views/MiddlewareMessaging.yaml
 # TRANSLATORS: file: product/views/VmdbDatabaseConnection.yaml
 _("Server")
 # TRANSLATORS: file: product/views/MiddlewareDatasource.yaml
@@ -3216,6 +3480,7 @@ _("ImageRegistries")
 # TRANSLATORS: file: product/views/ContainerImageRegistry.yaml
 _("ContainerImageRegistry")
 # TRANSLATORS: file: product/views/ContainerImageRegistry.yaml
+# TRANSLATORS: file: product/views/Host-hosts.yaml
 # TRANSLATORS: file: product/views/Host.yaml
 # TRANSLATORS: file: product/views/InstanceOrImage.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Template.yaml
@@ -3274,6 +3539,7 @@ _("Default")
 # TRANSLATORS: file: product/views/VmOrTemplate-all_vms_and_templates.yaml
 # TRANSLATORS: file: product/views/VmOrTemplate.yaml
 _("Datastore")
+# TRANSLATORS: file: product/views/Host-hosts.yaml
 # TRANSLATORS: file: product/views/Host.yaml
 # TRANSLATORS: file: product/views/InstanceOrImage.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template-all_vms_and_templates.yaml
@@ -3319,6 +3585,7 @@ _("Total Snapshots")
 # TRANSLATORS: file: product/views/VmOrTemplate.yaml
 _("Allocated Size")
 # TRANSLATORS: file: product/views/EmsCluster.yaml
+# TRANSLATORS: file: product/views/Host-hosts.yaml
 # TRANSLATORS: file: product/views/Host.yaml
 # TRANSLATORS: file: product/views/InstanceOrImage.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template-all_vms_and_templates.yaml
@@ -3339,6 +3606,40 @@ _("Allocated Size")
 # TRANSLATORS: file: product/views/VmOrTemplate-all_vms_and_templates.yaml
 # TRANSLATORS: file: product/views/VmOrTemplate.yaml
 _("Last Analysis Time")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
+_("Ansible Tower Jobs")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
+_("Ansible Tower Job")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
+_("Template Name")
+# TRANSLATORS: file: product/views/ContainerImage.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
+_("Id")
+# TRANSLATORS: file: product/views/AutomationRequest.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
+# TRANSLATORS: file: product/views/MiqRequest.yaml
+# TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
+# TRANSLATORS: file: product/views/OrchestrationTemplateAzure.yaml
+# TRANSLATORS: file: product/views/OrchestrationTemplateCfn.yaml
+# TRANSLATORS: file: product/views/OrchestrationTemplateHot.yaml
+# TRANSLATORS: file: product/views/OrchestrationTemplateVnfd.yaml
+# TRANSLATORS: file: product/views/ResourcePool.yaml
+# TRANSLATORS: file: product/views/Service.yaml
+# TRANSLATORS: file: product/views/ServiceTemplate.yaml
+# TRANSLATORS: file: product/views/Vsc.yaml
+_("Created On")
+# TRANSLATORS: file: product/views/ChargebackRate.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
+# TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
+# TRANSLATORS: file: product/views/OrchestrationTemplateAzure.yaml
+# TRANSLATORS: file: product/views/OrchestrationTemplateCfn.yaml
+# TRANSLATORS: file: product/views/OrchestrationTemplateHot.yaml
+# TRANSLATORS: file: product/views/OrchestrationTemplateVnfd.yaml
+# TRANSLATORS: file: product/views/ResourcePool.yaml
+# TRANSLATORS: file: product/views/Vsc.yaml
+_("Updated On")
 # TRANSLATORS: file: product/views/CloudObjectStoreContainer-cloud_object_store_containers.yaml
 # TRANSLATORS: file: product/views/CloudObjectStoreContainer.yaml
 # TRANSLATORS: file: product/views/CloudObjectStoreObject-cloud_object_store_objects.yaml
@@ -3401,6 +3702,19 @@ _("Processor Cores Per Socket")
 # TRANSLATORS: file: product/views/Vm-VmReconfigureRequest.yaml
 # TRANSLATORS: file: product/views/Vm__restricted.yaml
 _("Memory")
+# TRANSLATORS: file: product/views/MiddlewareServerGroup.yaml
+_("Middleware Server Groups")
+# TRANSLATORS: file: product/views/MiddlewareServerGroup.yaml
+_("Server Group Name")
+# TRANSLATORS: file: product/views/MiddlewareDomain.yaml
+# TRANSLATORS: file: product/views/MiddlewareServer.yaml
+# TRANSLATORS: file: product/views/MiddlewareServerGroup.yaml
+_("Feed")
+# TRANSLATORS: file: product/views/MiddlewareDomain.yaml
+# TRANSLATORS: file: product/views/MiddlewareServerGroup.yaml
+_("Domain Name")
+# TRANSLATORS: file: product/views/MiddlewareServerGroup.yaml
+_("Profile")
 # TRANSLATORS: file: product/views/AdvancedSetting.yaml
 _("AdvancedSetting")
 # TRANSLATORS: file: product/views/AdvancedSetting.yaml
@@ -3445,6 +3759,17 @@ _("Last Modified Time")
 # TRANSLATORS: file: product/views/VmOrTemplate-all_vms_and_templates.yaml
 # TRANSLATORS: file: product/views/VmOrTemplate.yaml
 _("VMs and Templates")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
+# TRANSLATORS: file: product/views/OrchestrationStack.yaml
+_("Orchestration Stack")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
+# TRANSLATORS: file: product/views/OrchestrationStack.yaml
+_("OrchestrationStack")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
+# TRANSLATORS: file: product/views/OrchestrationStack.yaml
+_("Status Reason")
+# TRANSLATORS: file: product/views/MiddlewareDomain.yaml
+_("Middleware Domains")
 # TRANSLATORS: file: product/views/Storage.yaml
 # TRANSLATORS: file: product/views/StorageCluster.yaml
 _("Store Type")
@@ -3497,29 +3822,19 @@ _("Direction")
 _("Datastore VM Snapshot Files")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript.yaml
 _("Job Templates")
-# TRANSLATORS: file: product/views/AutomationRequest.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript.yaml
-# TRANSLATORS: file: product/views/MiqRequest.yaml
-# TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
-# TRANSLATORS: file: product/views/OrchestrationTemplateAzure.yaml
-# TRANSLATORS: file: product/views/OrchestrationTemplateCfn.yaml
-# TRANSLATORS: file: product/views/OrchestrationTemplateHot.yaml
-# TRANSLATORS: file: product/views/OrchestrationTemplateVnfd.yaml
-# TRANSLATORS: file: product/views/ResourcePool.yaml
-# TRANSLATORS: file: product/views/Service.yaml
-# TRANSLATORS: file: product/views/ServiceTemplate.yaml
-# TRANSLATORS: file: product/views/Vsc.yaml
-_("Created On")
-# TRANSLATORS: file: product/views/ChargebackRate.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript.yaml
-# TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
-# TRANSLATORS: file: product/views/OrchestrationTemplateAzure.yaml
-# TRANSLATORS: file: product/views/OrchestrationTemplateCfn.yaml
-# TRANSLATORS: file: product/views/OrchestrationTemplateHot.yaml
-# TRANSLATORS: file: product/views/OrchestrationTemplateVnfd.yaml
-# TRANSLATORS: file: product/views/ResourcePool.yaml
-# TRANSLATORS: file: product/views/Vsc.yaml
-_("Updated On")
+# TRANSLATORS: file: product/views/ArbitrationProfile.yaml
+_("ArbitrationProfiles")
+# TRANSLATORS: file: product/views/LoadBalancer.yaml
+_("Load Balancer")
+# TRANSLATORS: file: product/views/LoadBalancer.yaml
+_("LoadBalancer")
+# TRANSLATORS: file: product/views/CloudNetwork.yaml
+# TRANSLATORS: file: product/views/CloudSubnet.yaml
+# TRANSLATORS: file: product/views/FloatingIp.yaml
+# TRANSLATORS: file: product/views/LoadBalancer.yaml
+# TRANSLATORS: file: product/views/NetworkPort.yaml
+# TRANSLATORS: file: product/views/NetworkRouter.yaml
+_("Network Provider")
 # TRANSLATORS: file: product/views/FloatingIp.yaml
 _("Floating Ip")
 # TRANSLATORS: file: product/views/FloatingIp.yaml
@@ -3528,12 +3843,6 @@ _("FloatingIp")
 _("Fixed Address")
 # TRANSLATORS: file: product/views/FloatingIp.yaml
 _("Instance name")
-# TRANSLATORS: file: product/views/CloudNetwork.yaml
-# TRANSLATORS: file: product/views/CloudSubnet.yaml
-# TRANSLATORS: file: product/views/FloatingIp.yaml
-# TRANSLATORS: file: product/views/NetworkPort.yaml
-# TRANSLATORS: file: product/views/NetworkRouter.yaml
-_("Network Provider")
 # TRANSLATORS: file: product/views/SecurityGroup.yaml
 _("Security Group")
 # TRANSLATORS: file: product/views/SecurityGroup.yaml
@@ -3568,12 +3877,14 @@ _("Owner Message")
 # TRANSLATORS: file: product/views/ProductUpdate.yaml
 _("EVM Server Maintenance")
 # TRANSLATORS: file: product/views/GuestApplication.yaml
+# TRANSLATORS: file: product/views/Host-hosts.yaml
 # TRANSLATORS: file: product/views/Host.yaml
 # TRANSLATORS: file: product/views/MiqServer.yaml
 # TRANSLATORS: file: product/views/ProductUpdate.yaml
 _("Version")
 # TRANSLATORS: file: product/views/ProductUpdate.yaml
 _("Update Type")
+# TRANSLATORS: file: product/views/Host-hosts.yaml
 # TRANSLATORS: file: product/views/Host.yaml
 # TRANSLATORS: file: product/views/MiqServer.yaml
 # TRANSLATORS: file: product/views/ProductUpdate.yaml
@@ -3581,6 +3892,7 @@ _("Update Type")
 _("Build")
 # TRANSLATORS: file: product/views/ProductUpdate.yaml
 _("Component")
+# TRANSLATORS: file: product/views/Host-hosts.yaml
 # TRANSLATORS: file: product/views/Host.yaml
 # TRANSLATORS: file: product/views/ProductUpdate.yaml
 _("Platform")
@@ -3639,6 +3951,7 @@ _("Discovered IP Address")
 _("EVM Zone")
 # TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
 # TRANSLATORS: file: product/views/EmsCluster.yaml
+# TRANSLATORS: file: product/views/Host-hosts.yaml
 # TRANSLATORS: file: product/views/Host.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
 # TRANSLATORS: file: product/views/OntapFileShare.yaml
@@ -3647,18 +3960,22 @@ _("EVM Zone")
 # TRANSLATORS: file: product/views/OntapStorageVolume.yaml
 # TRANSLATORS: file: product/views/SniaLocalFileSystem.yaml
 _("Hosts")
+# TRANSLATORS: file: product/views/Host-hosts.yaml
 # TRANSLATORS: file: product/views/Host.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
 # TRANSLATORS: file: product/views/MiqServer.yaml
 _("IP Address")
+# TRANSLATORS: file: product/views/Host-hosts.yaml
 # TRANSLATORS: file: product/views/Host.yaml
 # TRANSLATORS: file: product/views/ResourcePool.yaml
 # TRANSLATORS: file: product/views/Service.yaml
 _("Total VMs")
+# TRANSLATORS: file: product/views/Host-hosts.yaml
 # TRANSLATORS: file: product/views/Host.yaml
 # TRANSLATORS: file: product/views/ResourcePool.yaml
 _("Total Templates")
+# TRANSLATORS: file: product/views/Host-hosts.yaml
 # TRANSLATORS: file: product/views/Host.yaml
 _("IPMI Enabled")
 # TRANSLATORS: file: product/views/ServiceCatalog.yaml
@@ -3733,6 +4050,8 @@ _("Provisions")
 # TRANSLATORS: file: product/views/MiqRequest.yaml
 # TRANSLATORS: file: product/views/ServerBuild.yaml
 _("Last Message")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm.yaml
+_("Load Balancer Status")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
 _("Containers Providers")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
@@ -3860,6 +4179,10 @@ _("Expires")
 # TRANSLATORS: file: product/views/Account-users.yaml
 # TRANSLATORS: file: product/views/User.yaml
 _("Last Logon")
+# TRANSLATORS: file: product/views/MiddlewareMessaging.yaml
+_("Messaging Name")
+# TRANSLATORS: file: product/views/MiddlewareMessaging.yaml
+_("Messaging Type")
 # TRANSLATORS: file: product/views/ChargebackRate.yaml
 _("Chargeback Rates")
 # TRANSLATORS: file: product/views/StorageFile-disk_files.yaml
@@ -4000,8 +4323,6 @@ _("Middleware Servers")
 _("Server Name")
 # TRANSLATORS: file: product/views/MiddlewareServer.yaml
 _("Product")
-# TRANSLATORS: file: product/views/MiddlewareServer.yaml
-_("Feed")
 # TRANSLATORS: file: product/views/OntapFileShare.yaml
 _("Snia File Share")
 # TRANSLATORS: file: product/views/OntapFileShare.yaml
@@ -4159,12 +4480,6 @@ _("Last Heartbeat")
 _("Memory Size")
 # TRANSLATORS: file: product/views/MiqWorker.yaml
 _("CPU Percent")
-# TRANSLATORS: file: product/views/OrchestrationStack.yaml
-_("Orchestration Stack")
-# TRANSLATORS: file: product/views/OrchestrationStack.yaml
-_("OrchestrationStack")
-# TRANSLATORS: file: product/views/OrchestrationStack.yaml
-_("Status Reason")
 # TRANSLATORS: file: product/views/CloudService.yaml
 _("Scheduling Disabled")
 # TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
@@ -4194,6 +4509,14 @@ _("Depend on Group")
 # TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
 # TRANSLATORS: file: product/views/SystemService-win32_services.yaml
 _("Object Name")
+# TRANSLATORS: file: product/views/Switch.yaml
+_("Switches")
+# TRANSLATORS: file: product/views/Switch.yaml
+_("Ports")
+# TRANSLATORS: file: product/views/Switch.yaml
+_("UUID")
+# TRANSLATORS: file: product/views/Switch.yaml
+_("Shared")
 # TRANSLATORS: file: product/views/MiqAlert.yaml
 _("Based On")
 # TRANSLATORS: file: product/views/MiqAlert.yaml
@@ -4354,8 +4677,6 @@ _("Total Configuration Profiles")
 _("Container Images")
 # TRANSLATORS: file: product/views/ContainerImage.yaml
 _("ContainerImage")
-# TRANSLATORS: file: product/views/ContainerImage.yaml
-_("Id")
 # TRANSLATORS: file: product/views/ContainerImage.yaml
 _("Image Registry")
 # TRANSLATORS: file: product/views/Filesystem.yaml
