@@ -44,6 +44,10 @@ class MiqScheduleWorker::Jobs
     queue_work_on_each_zone(:class_name  => "OrchestrationStack", :method_name => "retirement_check")
   end
 
+  def load_balancer_retirement_check
+    queue_work_on_each_zone(:class_name  => "LoadBalancer", :method_name => "retirement_check")
+  end
+
   def host_authentication_check_schedule
     queue_work_on_each_zone(:class_name  => "Host", :method_name => "authentication_check_schedule")
   end

@@ -103,6 +103,13 @@ module MiqException
   class MiqOrchestrationDeleteError < Error; end
   class MiqOrchestrationStackNotExistError < Error; end
 
+  class MiqLoadBalancerProvisionError < Error; end
+  class MiqLoadBalancerStatusError < Error; end
+  class MiqLoadBalancerValidationError < Error; end
+  class MiqLoadBalancerUpdateError < Error; end
+  class MiqLoadBalancerDeleteError < Error; end
+  class MiqLoadBalancerNotExistError < Error; end
+
   class MiqVolumeValidationError < Error; end
   class MiqVolumeCreateError < Error; end
   class MiqVolumeUpdateError < Error; end
