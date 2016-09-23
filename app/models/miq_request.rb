@@ -454,9 +454,12 @@ class MiqRequest < ApplicationRecord
 
     log_request_success(requester, :created)
 
-    call_automate_event_queue("request_created")
-    approve(requester, "Auto-Approved") if auto_approve
-    reload if auto_approve
+    if process_on_create?
+      call_automate_event_queue("request_created")
+      approve(requester, "Auto-Approved") if auto_approve
+      reload if auto_approve
+    end
+
     self
   end
 

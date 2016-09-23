@@ -104,18 +104,7 @@ class MiqRequestWorkflow
       return request
     end
 
-    request.set_description
-
-    request.log_request_success(@requester, :created)
-
-    if request.process_on_create?
-      # TODO: address auto-approve potential issue
-      request.call_automate_event_queue("request_created")
-      request.approve(@requester, "Auto-Approved") if auto_approve == true
-      request.reload if auto_approve
-    end
-
-    request
+    request.post_create(auto_approve)
   end
 
   def init_from_dialog(init_values)
