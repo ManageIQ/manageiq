@@ -612,3 +612,13 @@ body#dashboard {
     margin-bottom: 0px;
   }
 }
+
+table .label {  // Adds margin to the label to vertically align with text
+  margin-top: 3px;
+}
+
+//  openSCAP result styling
+
+.label-low-severity {
+  background-color: $color-low-severity;
+}
