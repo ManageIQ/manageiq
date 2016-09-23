@@ -63,8 +63,7 @@ module ReportHelper
       5.times  { |i| start_array.push([pluralize(i + 2, 'day').to_s, (i + 2).days.to_s]) }
       3.times  { |i| start_array.push([pluralize((i + 1), 'week').to_s, (i + 1).weeks.to_s]) }
       11.times { |i| start_array.push([pluralize((i + 1), 'month').to_s, (i + 1).months.to_s]) }
-      # For some reason, 1.year is a float, so use to_i to get rid of decimals
-      start_array.push(['1 year', 1.year.to_i.to_s])
+      start_array.push(['1 year', 1.year.to_s])
     end
     start_array
   end
