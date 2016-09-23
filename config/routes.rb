@@ -423,6 +423,28 @@ Vmdb::Application.routes.draw do
     :cloud_volume_snapshot    => {
       :get  => %w(
         download_data
+        index
+        show
+        show_list
+        tagging_edit
+        tag_edit_form_field_changed
+      ) + compare_get,
+      :post => %w(
+        button
+        dynamic_checkbox_refresh
+        form_field_changed
+        listnav_search_selected
+        quick_search
+        show
+        show_list
+        tagging_edit
+        tag_edit_form_field_changed
+      ) + compare_post + adv_search_post + exp_post + save_post
+    },
+
+    :cloud_volume_backup    => {
+      :get  => %w(
+        download_data
         edit
         index
         new
