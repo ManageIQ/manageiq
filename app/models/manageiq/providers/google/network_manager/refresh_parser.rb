@@ -194,11 +194,11 @@ module ManageIQ::Providers
           protocol      = fw_allowed["IPProtocol"].upcase
           allowed_ports = fw_allowed["ports"].to_a.first
 
-          unless allowed_ports.nil?
-            from_port, to_port = allowed_ports.split("-", 2)
-          else
+          if allowed_ports.nil?
             # The ICMP protocol doesn't have ports so set to -1
             from_port = to_port = -1
+          else
+            from_port, to_port = allowed_ports.split("-", 2)
           end
 
           new_result = {
