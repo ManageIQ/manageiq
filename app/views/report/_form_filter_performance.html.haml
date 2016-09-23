@@ -18,7 +18,7 @@
         miqSelectPickerEvent('chosen_end', '#{url}')
       = _('going back')
       = select_tag('chosen_start',
-        options_for_select(@edit[:start_array], @edit[:new][:perf_start]),
+        options_for_select(filter_performance_start_options, @edit[:new][:perf_start]),
         :multiple => false,
         :class => "selectpicker")
       :javascript

@@ -52,6 +52,23 @@ module ReportHelper
     end
   end
 
+  def filter_performance_start_options
+    start_array = []
+    case @edit[:new][:perf_interval]
+    when 'hourly'
+      6.times { |i| start_array.push([pluralize(i + 1, 'day').to_s, (i + 1).days.to_s]) }
+      4.times { |i| start_array.push([pluralize(i + 1, 'week').to_s, (i + 1).weeks.to_s]) }
+      5.times { |i| start_array.push([pluralize(i + 2, 'month').to_s, (i + 1).months.to_s]) }
+    when 'daily'
+      5.times  { |i| start_array.push([pluralize(i + 2, 'day').to_s, (i + 2).days.to_s]) }
+      3.times  { |i| start_array.push([pluralize((i + 1), 'week').to_s, (i + 1).weeks.to_s]) }
+      11.times { |i| start_array.push([pluralize((i + 1), 'month').to_s, (i + 1).months.to_s]) }
+      # For some reason, 1.year is a float, so use to_i to get rid of decimals
+      start_array.push(['1 year', 1.year.to_i.to_s])
+    end
+    start_array
+  end
+
   # We allow value-based charts when we have aggregations or
   # simple charts w/o summary.
   def chart_mode_values_allowed?
