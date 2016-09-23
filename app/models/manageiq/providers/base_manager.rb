@@ -17,5 +17,15 @@ module ManageIQ::Providers
     def refresher
       self.class::Refresher
     end
+
+    def http_proxy_uri
+      proxy = VMDB::Util.http_proxy_uri(emstype.to_s.to_sym)
+
+      unless proxy
+        proxy = VMDB::Util.http_proxy_uri
+      end
+
+      proxy
+    end
   end
 end
