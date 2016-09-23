@@ -80,8 +80,8 @@ class InfraNetworkingController < ApplicationController
     params[:page] = @current_page if @current_page.nil? # Save current page for list refresh
     @refresh_div = "main_div" # Default div for button.rjs to refresh
     case params[:pressed]
-      when "infra_networking_tag"
-        tag(Switch)
+    when "infra_networking_tag"
+      tag(Switch)
     end
     return if %w(infra_networking_tag).include?(params[:pressed]) && @flash_array.nil? # Tag screen showing, so return
 
@@ -245,7 +245,6 @@ class InfraNetworkingController < ApplicationController
     tagging_edit('Switch', false)
     render_tagging_form
   end
-
 
   private ###########
 
@@ -461,7 +460,7 @@ class InfraNetworkingController < ApplicationController
       partial, _, @right_cell_text = set_right_cell_vars # Set partial name, action and cell header
     end
 
-    if params[:action] == 'x_button'&& params[:pressed] == 'infra_networking_tag'
+    if params[:action] == 'x_button' && params[:pressed] == 'infra_networking_tag'
       tagging
       return
     end

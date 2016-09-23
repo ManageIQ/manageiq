@@ -13,5 +13,5 @@ class ApplicationHelper::Toolbar::InfraNetworkingCenter < ApplicationHelper::Too
                                                  N_('Edit Tags')),
                                              ]
                                            ),
-                                         ])
+                                        ])
 end

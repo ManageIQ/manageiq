@@ -9,7 +9,7 @@ class ApplicationHelper::Toolbar::InfraNetworkingsCenter < ApplicationHelper::To
                                             :onwhen  => "1+",
                                             :items   => [
                                               button(
-                                                 :infra_networking_tag,
+                                                :infra_networking_tag,
                                                 'pficon pficon-edit fa-lg',
                                                 N_('Edit Tags for the selected Network Elements'),
                                                 N_('Edit Tags'),
