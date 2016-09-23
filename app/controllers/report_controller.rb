@@ -797,15 +797,15 @@ class ReportController < ApplicationController
       # set changed to true if menu has been set to default
       session[:changed] = @sb[:menu_default] ? true : (@edit[:new] != @edit[:current])
     elsif nodetype == "menu_edit_reports"
-      presenter.replace(:flash_msg_div_menu_list, r[:partial => "layouts/flash_msg", :locals => {:div_num => "_menu_list"}]) if @flash_array
+      presenter.replace(:flash_msg_div, r[:partial => "layouts/flash_msg"]) if @flash_array
       presenter.show(:menu_div1)
       presenter[:element_updates][:menu_roles_treebox] = {:class => 'disabled', :add => true}
       presenter.replace(:menu_div2, r[:partial => "menu_form2"])
       presenter.hide(:menu_div1, :menu_div3).show(:menu_div2)
     elsif nodetype == "menu_commit_reports"
-      presenter.replace(:flash_msg_div_menu_list, r[:partial => "layouts/flash_msg", :locals => {:div_num => "_menu_list"}]) if @flash_array
+      presenter.replace(:flash_msg_div, r[:partial => "layouts/flash_msg"]) if @flash_array
       if @refresh_div
-        presenter.hide(:flash_msg_div_menu_list)
+        presenter.hide(:flash_msg_div)
         presenter.replace(@refresh_div.to_s, r[:partial => @refresh_partial, :locals => {:action_url => "menu_update"}])
         presenter.hide(:menu_div1)
         if params[:pressed] == "commit"
@@ -816,7 +816,7 @@ class ReportController < ApplicationController
       elsif !@flash_array
         presenter.replace(:menu_roles_div, r[:partial => "role_list"])
         if params[:pressed] == "commit"
-          presenter.hide(:flash_msg_div_menu_list).show(:menu_div3).hide(:menu_div1, :menu_div2)
+          presenter.hide(:flash_msg_div).show(:menu_div3).hide(:menu_div1, :menu_div2)
         else
           presenter.hide(:menu_div1, :menu_div3).show(:menu_div2)
         end
@@ -825,10 +825,9 @@ class ReportController < ApplicationController
     elsif nodetype == 'menu_commit_folders'
       # Hide flash_msg if it's being shown from New folder add event
       if flash_errors?
-        presenter.replace(:flash_msg_div_menu_list, r[:partial => 'layouts/flash_msg',
-                                                                   :locals  => {:div_num => '_menu_list'}])
+        presenter.replace(:flash_msg_div, r[:partial => 'layouts/flash_msg'])
       else
-        presenter.hide(:flash_msg_div_menu_list)
+        presenter.hide(:flash_msg_div)
       end
 
       if @sb[:tree_err]
@@ -840,7 +839,7 @@ class ReportController < ApplicationController
       end
       @sb[:tree_err] = false
     elsif nodetype == 'menu_discard_folders' || nodetype == 'menu_discard_reports'
-      presenter.replace(:flash_msg_div_menu_list, r[:partial => 'layouts/flash_msg', :locals => {:div_num => '_menu_list'}])
+      presenter.replace(:flash_msg_div, r[:partial => 'layouts/flash_msg'])
       presenter.replace(:menu_div1,               r[:partial => 'menu_form1', :locals => {:folders => @grid_folders}])
       presenter.hide(:menu_div1, :menu_div2).show(:menu_div3)
       presenter[:element_updates][:menu_roles_treebox] = {:class => 'disabled', :remove => true}
