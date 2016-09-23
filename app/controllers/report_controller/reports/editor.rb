@@ -281,7 +281,7 @@ module ReportController::Reports::Editor
     end
   end
 
-  def build_perf_interval_arrays
+  def ensure_perf_interval_defaults
     case @edit[:new][:perf_interval]
     when "hourly"
       @edit[:new][:perf_end] ||= "0"
@@ -519,7 +519,7 @@ module ReportController::Reports::Editor
         @edit[:new][:perf_interval] ||= "daily"                 # Default to Daily
         @edit[:new][:perf_avgs] ||= "time_interval"
         @edit[:new][:tz] = session[:user_tz]
-        build_perf_interval_arrays # Build the start and end arrays for the performance interval chooser
+        ensure_perf_interval_defaults
       end
       if Chargeback.db_is_chargeback?(@edit[:new][:model])
         @edit[:new][:cb_model] = Chargeback.report_cb_model(@edit[:new][:model])
@@ -553,12 +553,11 @@ module ReportController::Reports::Editor
           @edit[:percent_col] = false
           @edit[:new][:perf_limit_val] = nil
         end
-        build_perf_interval_arrays # Build the start and end arrays for the performance interval chooser
+        ensure_perf_interval_defaults
         @edit[:limit_cols] = VimPerformanceTrend.trend_limit_cols(@edit[:new][:perf_trend_db], @edit[:new][:perf_trend_col], @edit[:new][:perf_interval])
       end
       @refresh_div = "columns_div"
       @refresh_partial = "form_columns"
-      # build_perf_interval_arrays  # Build the start and end arrays for the performance interval chooser
       # @edit[:limit_cols] = VimPerformanceTrend.trend_limit_cols(@edit[:new][:perf_trend_db], @edit[:new][:perf_trend_col], @edit[:new][:perf_interval])
     elsif params[:chosen_limit_col]
       if params[:chosen_limit_col] == "<None>"
@@ -585,7 +584,7 @@ module ReportController::Reports::Editor
       @edit[:new][:perf_interval] = params[:chosen_interval]
       @edit[:new][:perf_start] = nil  # Clear start/end offsets
       @edit[:new][:perf_end] = nil
-      build_perf_interval_arrays # Build the start and end arrays for the performance interval chooser
+      ensure_perf_interval_defaults
       reset_report_col_fields
       @refresh_div = "form_div"
       @refresh_partial = "form"
@@ -1431,9 +1430,8 @@ module ReportController::Reports::Editor
       @edit[:limit_cols] = VimPerformanceTrend.trend_limit_cols(@edit[:new][:perf_trend_db], @edit[:new][:perf_trend_col], @edit[:new][:perf_interval])
     end
 
-    # Build performance interval select arrays, if needed
     if [:performance, :trend].include?(model_report_type(@rpt.db))
-      build_perf_interval_arrays # Build the start and end arrays for the performance interval chooser
+      ensure_perf_interval_defaults
     end
 
     expkey = :record_filter
