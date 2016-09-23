@@ -7,7 +7,7 @@ module Api
       end
 
       def service_templates_assign_resource(object, type, id = nil, _data = nil)
-        raise Api::BaseController::BadRequestError, "Must specify an id for Assigning a #{type} resource" unless id
+        raise BadRequestError, "Must specify an id for Assigning a #{type} resource" unless id
 
         service_template_subcollection_action(type, id) do |st|
           api_log_info("Assigning #{service_template_ident(st)}")
@@ -17,7 +17,7 @@ module Api
       end
 
       def service_templates_unassign_resource(object, type, id = nil, _data = nil)
-        raise Api::BaseController::BadRequestError, "Must specify an id for Unassigning a #{type} resource" unless id
+        raise BadRequestError, "Must specify an id for Unassigning a #{type} resource" unless id
 
         service_template_subcollection_action(type, id) do |st|
           api_log_info("Unassigning #{service_template_ident(st)}")
@@ -33,13 +33,13 @@ module Api
         request_result = workflow.submit_request
         errors = request_result[:errors]
         if errors.present?
-          raise Api::BaseController::BadRequestError, "Failed to order #{service_template_ident(service_template)} - #{errors.join(", ")}"
+          raise BadRequestError, "Failed to order #{service_template_ident(service_template)} - #{errors.join(", ")}"
         end
         request_result[:request]
       end
 
       def service_templates_refresh_dialog_fields_resource(object, type, id = nil, data = nil)
-        raise Api::BaseController::BadRequestError, "Must specify an id for Refreshing dialog fields of a #{type} resource" unless id
+        raise BadRequestError, "Must specify an id for Refreshing dialog fields of a #{type} resource" unless id
 
         service_template_subcollection_action(type, id) do |st|
           api_log_info("Refreshing dialog fields for #{service_template_ident(st)}")

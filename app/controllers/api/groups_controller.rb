@@ -28,12 +28,12 @@ module Api
       parse_set_tenant(data)
       group = resource_search(id, type, collection_class(:groups))
       parse_set_filters(data, :entitlement_id => group.entitlement.try(:id))
-      raise Forbidden, "Cannot edit a read-only group" if group.read_only
+      raise ForbiddenError, "Cannot edit a read-only group" if group.read_only
       super
     end
 
     def delete_resource(type, id, data = {})
-      raise Forbidden, "Cannot delete a read-only group" if MiqGroup.find(id).read_only?
+      raise ForbiddenError, "Cannot delete a read-only group" if MiqGroup.find(id).read_only?
       super
     end
 

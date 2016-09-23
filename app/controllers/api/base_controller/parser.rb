@@ -13,7 +13,7 @@ module Api
         # API Version Validation
         if @req.version
           vname = @req.version
-          unless version_config[:definitions].collect { |vent| vent[:name] }.include?(vname)
+          unless Settings.version.definitions.collect { |vent| vent[:name] }.include?(vname)
             raise BadRequestError, "Unsupported API Version #{vname} specified"
           end
         end
@@ -72,7 +72,7 @@ module Api
       def parse_href(href)
         if href
           path = href.match(/^http/) ? URI.parse(href).path.sub(/\/*$/, '') : href
-          path = "#{@prefix}/#{path}" unless path.match(@prefix)
+          path = "/api/#{path}" unless path.match("/api")
           path = path.sub(/\/*$/, '')
           return href_collection_id(path)
         end
@@ -81,7 +81,7 @@ module Api
 
       def href_collection_id(path)
         path_array = path.split('/')
-        cidx = path_array[2] && path_array[2].match(version_config[:regex]) ? 3 : 2
+        cidx = path_array[2] && path_array[2].match(Settings.version.regex) ? 3 : 2
 
         collection, c_id    = path_array[cidx..cidx + 1]
         subcollection, s_id = path_array[cidx + 2..cidx + 3]
@@ -223,7 +223,7 @@ module Api
         action_hash = fetch_action_hash(aspec, method_name, action_name)
         raise BadRequestError, "Disabled action #{action_name}" if action_hash[:disabled]
         unless api_user_role_allows?(action_hash[:identifier])
-          raise Forbidden, "Use of the #{action_name} action is forbidden"
+          raise ForbiddenError, "Use of the #{action_name} action is forbidden"
         end
       end
 
@@ -250,7 +250,9 @@ module Api
 
         if action_hash.present?
           raise BadRequestError, "Disabled Action #{aname} for the #{cname} #{type} specified" if action_hash[:disabled]
-          raise Forbidden, "Use of Action #{aname} is forbidden" unless api_user_role_allows?(action_hash[:identifier])
+          unless api_user_role_allows?(action_hash[:identifier])
+            raise ForbiddenError, "Use of Action #{aname} is forbidden"
+          end
         end
 
         validate_post_api_action_as_subcollection(cname, mname, aname)
@@ -298,7 +300,7 @@ module Api
         raise BadRequestError, "Disabled Action #{aname} for the #{cname} sub-collection" if action_hash[:disabled]
 
         unless api_user_role_allows?(action_hash[:identifier])
-          raise Forbidden, "Use of Action #{aname} for the #{cname} sub-collection is forbidden"
+          raise ForbiddenError, "Use of Action #{aname} for the #{cname} sub-collection is forbidden"
         end
       end
 
