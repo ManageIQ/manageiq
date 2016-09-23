@@ -528,3 +528,13 @@ body#dashboard {
   overflow-y: auto;
   overflow-x: hidden;
 }
+
+table .label {  // Adds margin to the label to vertically align with text
+  margin-top: 3px;
+}
+
+//  openSCAP result styling
+
+.label-low-severity {
+  background-color: $color-low-severity;
+}

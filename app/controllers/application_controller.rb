@@ -958,22 +958,22 @@ class ApplicationController < ActionController::Base
   def result_span_class(value)
     case value.downcase
     when "pass"
-      "label label-success"
+      "label label-success center-block"
     when "fail"
-      "label label-danger"
+      "label label-danger center-block"
     else
-      "label label-primary"
+      "label label-primary center-block"
     end
   end
 
   def severity_span_class(value)
     case value.downcase
     when "high"
-      "label label-danger"
+      "label label-danger center-block"
     when "medium"
-      "label label-warning"
+      "label label-warning center-block"
     else
-      "label label-primary"
+      "label label-low-severity center-block"
     end
   end
 
