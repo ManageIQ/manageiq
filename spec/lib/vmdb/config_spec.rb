@@ -3,10 +3,10 @@ describe VMDB::Config do
   let(:enc_pass) { MiqPassword.encrypt(password) }
 
   it ".get_file" do
-    stub_settings(:http_proxy => {:host => "proxy.example.com", :user => "user", :password => password, :port => 80})
+    stub_settings(:http_proxy => {:default => {:host => "proxy.example.com", :user => "user", :password => password, :port => 80}})
 
     expect(VMDB::Config.get_file).to eq(
-      "---\n:http_proxy:\n  :host: proxy.example.com\n  :user: user\n  :password: #{enc_pass}\n  :port: 80\n"
+      "---\n:http_proxy:\n  :default:\n    :host: proxy.example.com\n    :user: user\n    :password: #{enc_pass}\n    :port: 80\n"
     )
   end
 

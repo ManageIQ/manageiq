@@ -1,7 +1,18 @@
 module VMDB
   module Util
-    def self.http_proxy_uri
-      proxy = VMDB::Config.new("vmdb").config[:http_proxy] || {}
+    def self.http_proxy_uri(proxy_config = :default)
+      # TODO: (julian) This looks really messy. Need to make it look nicer.
+
+      vmdb_proxy = VMDB::Config.new("vmdb").config[:http_proxy]
+
+      return nil unless vmdb_proxy
+
+      if vmdb_proxy[proxy_config].nil?
+        $log.warn("Could not find proxy setting for #{proxy_config}")
+      end
+
+      proxy = vmdb_proxy[proxy_config] || vmdb_proxy
+
       return nil unless proxy[:host]
       proxy = proxy.dup
 
