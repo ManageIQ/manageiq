@@ -591,7 +591,7 @@
       - :name: reset
         :identifier: instance_reset
   :notifications:
-    :description: User's past notifications
+    :description: "User's past notifications"
     :options:
     - :collection
     :verbs: *gpd
@@ -1963,4 +1963,3 @@
       :delete:
       - :name: edit
         :identifier: arbitration_rule_delete
-
