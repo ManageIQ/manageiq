@@ -148,7 +148,7 @@ module EmsRefresh::SaveInventoryNetwork
 
     # Reset the source_security_group_id for the firewall rules after all
     #   security groups have been saved and ids obtained.
-    firewall_rule_hashes = hashes.collect { |h| h[:firewall_rules] }.flatten.index_by { |h| h[:id] }
+    firewall_rule_hashes = hashes.collect { |h| h[:firewall_rules] }.flatten.compact.index_by { |h| h[:id] }
     firewall_rules       = ems.security_groups.collect(&:firewall_rules).flatten
     firewall_rules.each do |fr|
       fr_hash = firewall_rule_hashes[fr.id] || {}

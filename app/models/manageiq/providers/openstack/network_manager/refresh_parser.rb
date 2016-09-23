@@ -282,7 +282,7 @@ module ManageIQ::Providers
         :allocation_pools               => subnet.allocation_pools,
         :host_routes                    => subnet.host_routes,
         :ip_version                     => subnet.ip_version,
-        :subnetpool_id                  => subnet.attributes["subnetpool_id"],
+        :parent_cloud_subnet            => subnet.attributes["vsd_managed"] ? CloudSubnet.find_by(:ems_ref => subnet.attributes["vsd_id"]) : nil,
       }
     end
 
