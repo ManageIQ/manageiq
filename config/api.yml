@@ -590,7 +590,7 @@
       - :name: reset
         :identifier: instance_reset
   :notifications:
-    :description: User's past notifications
+    :description: "User's past notifications"
     :options:
     - :collection
     :verbs: *gpd
