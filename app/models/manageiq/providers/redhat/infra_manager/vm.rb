@@ -4,8 +4,6 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
   include_concern 'Reconfigure'
   include_concern 'ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared'
 
-  supports_not :migrate, :reason => _("Migrate operation is not supported.")
-
   POWER_STATES = {
     'up'        => 'on',
     'down'      => 'off',
