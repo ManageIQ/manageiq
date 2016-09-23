@@ -1157,7 +1157,7 @@ module ApplicationHelper
          ems_infra host miq_template offline orchestration_stack persistent_volume ems_middleware
          middleware_server middleware_deployment
          ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
-         resource_pool retired service templates vm configuration_job).include?(@layout) && !@in_a_form
+         resource_pool retired service storage templates vm configuration_job).include?(@layout) && !@in_a_form
       "show_list"
     elsif @compare
       "compare_sections"
