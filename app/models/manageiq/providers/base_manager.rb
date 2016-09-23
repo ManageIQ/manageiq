@@ -19,13 +19,7 @@ module ManageIQ::Providers
     end
 
     def http_proxy_uri
-      proxy = VMDB::Util.http_proxy_uri(emstype.to_s.to_sym)
-
-      unless proxy
-        proxy = VMDB::Util.http_proxy_uri
-      end
-
-      proxy
+      VMDB::Util.http_proxy_uri(emstype.try(:to_sym)) || VMDB::Util.http_proxy_uri
     end
   end
 end
