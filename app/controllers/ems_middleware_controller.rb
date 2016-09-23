@@ -38,5 +38,10 @@ class EmsMiddlewareController < ApplicationController
   def restful?
     true
   end
+
+  def ems_middleware_form_fields
+    ems_form_fields
+  end
+
   public :restful?
 end
