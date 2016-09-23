@@ -29,6 +29,32 @@ describe Blueprint do
     FactoryGirl.create(:service_template, :name => 'Service Template Bundle', :display => true, :blueprint => subject)
   end
 
+  let(:tags) do
+    FactoryGirl.create(:classification_department_with_tags)
+    Classification.categories.first.entries.collect(&:tag)
+  end
+
+  let(:ui_properties) do
+    {
+      "service_catalog"      => {"id" => catalog.id},
+      "service_dialog"       => {"id" => dialog.id},
+      "automate_entrypoints" => {"Reconfigure" => "x/y/z", "Provision" => "a/b/c" },
+      "chart_data_model"     => {
+        "nodes" => [
+          {"id" => catalog_vm_provisioning.id, "tags" => [{"id" => tags[0].id}, {"id" => tags[1].id}]},
+          {
+            "id"              => nil,
+            "name"            => "my new generic vm",
+            "generic_subtype" => "vm",
+            "tags"            => [{"id" => tags[0].id}, {"id" => tags[1].id}],
+            "service_type"    => 'atomic',
+            "prov_type"       => 'generic',
+          }
+        ]
+      }
+    }
+  end
+
   it 'is taggable' do
     expect(subject).to respond_to(:tag_with)
   end
@@ -251,21 +277,32 @@ describe Blueprint do
   end
 
   describe "#publish" do
-    it "copies resources at publishing" do
-      bundle = subject.create_bundle(:service_templates => [catalog_vm_provisioning],
-                                     :service_dialog    => dialog,
-                                     :service_catalog   => catalog)
+    before do
+      subject.ui_properties = ui_properties
 
-      changes = subject.publish("new bundle name")
+      Classification.classify_by_tag(subject, tags[0].name)
+    end
+
+    it "creates a bundle based on ui_properties" do
+      bundle = subject.publish
       expect(subject.published?).to be_truthy
-      expect(changes["service_templates"]).to include(catalog_vm_provisioning.id)
-      expect(changes["service_dialog"]).to include(dialog.id)
-      expect(bundle.name).to eq("new bundle name")
-      expect(subject.bundle).to eq(bundle)
+      expect(bundle.name).to eq(subject.name)
       expect(Dialog.count).to eq(2)
-      expect(ServiceTemplate.count).to eq(3)
-      expect(ServiceResource.count).to eq(3)
-      expect(ResourceAction.count).to eq(6)
+      expect(bundle.display).to be_truthy
+      expect(bundle.composite?).to be_truthy
+      expect(bundle.tags).to eq([tags[0]])
+      expect(bundle.service_template_catalog).to eq(catalog)
+      expect(bundle.descendants.first.tags).to include(tags[0], tags[1])
+      expect(bundle.descendants.last.name).to eq('my new generic vm')
+      expect(bundle.descendants.last.tags).to include(tags[0], tags[1])
+      expect(bundle.dialogs.first.blueprint).to eq(subject)
+
+      prov = bundle.resource_actions.find_by(:action => 'Provision')
+      expect(prov.ae_uri).to eq('/a/b/c')
+
+      reconfig = bundle.resource_actions.find_by(:action => 'Reconfigure')
+      expect(reconfig.ae_uri).to eq('/x/y/z')
+      expect(reconfig.dialog).to eq(prov.dialog)
     end
   end
 end
