@@ -43,7 +43,7 @@ module ManageIQ::Providers::Google::ManagerMixin
         :google_project         => google_project,
         :google_json_key_string => google_json_key,
         :app_name               => I18n.t("product.name"),
-        :app_version            => Vmdb::Appliance.VERSION
+        :app_version            => Vmdb::Appliance.VERSION,
       }
 
       case options[:service]

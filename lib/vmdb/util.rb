@@ -10,7 +10,7 @@ module VMDB
         $log.warn("Could not find proxy setting for #{proxy_config}")
       end
 
-      proxy = vmdb_proxy[proxy_config] || {}
+      proxy = vmdb_proxy[proxy_config] || vmdb_proxy
 
       return nil unless proxy[:host]
       proxy = proxy.dup
