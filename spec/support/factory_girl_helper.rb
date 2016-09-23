@@ -20,4 +20,8 @@ end
 require 'factory_girl'
 # in case we are running as an engine, the factories are located in the dummy app
 FactoryGirl.definition_file_paths << 'spec/manageiq/spec/factories'
+# also add factories from provider gems until miq codebase does not use any provider specific factories anymore
+Rails::Engine.subclasses.select { |e| e.name.starts_with?("ManageIQ::Providers") }.each do |engine|
+  FactoryGirl.definition_file_paths << File.join(engine.root, 'spec', 'factories')
+end
 FactoryGirl.find_definitions
