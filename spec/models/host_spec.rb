@@ -396,4 +396,78 @@ describe Host do
       expect(Host.attribute_supported_by_sql?(:v_total_miq_templates)).to be true
     end
   end
+
+  describe "#v_annotation" do
+    it "handles nil" do
+      h = FactoryGirl.build(:host)
+      expect(h.v_annotation).to be_nil
+    end
+
+    it "delegates" do
+      h = FactoryGirl.build(:host, :hardware => FactoryGirl.build(:hardware, :annotation => "the annotation"))
+      expect(h.v_annotation).to eq("the annotation")
+    end
+  end
+
+  describe "#v_owning_cluster" do
+    it "handles nil" do
+      h = FactoryGirl.build(:host)
+      expect(h.v_owning_cluster).to eq("")
+    end
+
+    it "delegates" do
+      h = FactoryGirl.build(:host, :ems_cluster => FactoryGirl.build(:ems_cluster, :name => "the cluster"))
+      expect(h.v_owning_cluster).to eq("the cluster")
+    end
+  end
+
+  describe "#ram_size" do
+    it "handles nil" do
+      h = FactoryGirl.build(:host)
+      expect(h.ram_size).to eq(0)
+    end
+
+    it "delegates" do
+      h = FactoryGirl.build(:host, :hardware => FactoryGirl.build(:hardware, :memory_mb => 100))
+      expect(h.ram_size).to eq(100)
+    end
+  end
+
+  describe "#cpu_total_cores", "#total_vcpus" do
+    it "handles nil" do
+      h = FactoryGirl.build(:host)
+      expect(h.cpu_total_cores).to eq(0)
+      expect(h.total_vcpus).to eq(0)
+    end
+
+    it "delegates" do
+      h = FactoryGirl.build(:host, :hardware => FactoryGirl.build(:hardware, :cpu_total_cores => 4))
+      expect(h.cpu_total_cores).to eq(4)
+      expect(h.total_vcpus).to eq(4)
+    end
+  end
+
+  describe "#num_cpu" do
+    it "handles nil" do
+      h = FactoryGirl.build(:host)
+      expect(h.num_cpu).to eq(0)
+    end
+
+    it "delegates" do
+      h = FactoryGirl.build(:host, :hardware => FactoryGirl.build(:hardware, :cpu_sockets => 3))
+      expect(h.num_cpu).to eq(3)
+    end
+  end
+
+  describe "#cpu_cores_per_socket" do
+    it "handles nil" do
+      h = FactoryGirl.build(:host)
+      expect(h.cpu_cores_per_socket).to eq(0)
+    end
+
+    it "delegates" do
+      h = FactoryGirl.build(:host, :hardware => FactoryGirl.build(:hardware, :cpu_cores_per_socket => 4))
+      expect(h.cpu_cores_per_socket).to eq(4)
+    end
+  end
 end
