@@ -399,6 +399,10 @@ module Mixins
         hawkular_endpoint = {:role => :hawkular, :hostname => hawkular_hostname, :port => hawkular_api_port}
       end
 
+      if ems.kind_of?(ManageIQ::Providers::Hawkular::MiddlewareManager)
+        default_endpoint = {:role => :default, :hostname => hostname, :port => port}
+      end
+
       endpoints = {:default     => default_endpoint,
                    :ceilometer  => ceilometer_endpoint,
                    :amqp        => amqp_endpoint,
