@@ -14,6 +14,9 @@ class ManageIQ::Providers::Openstack::NetworkManager < ManageIQ::Providers::Netw
   require_nested :SecurityGroup
 
   include ManageIQ::Providers::Openstack::ManagerMixin
+  include SupportsFeatureMixin
+
+  supports :create_network_router
 
   has_many :public_networks,  :foreign_key => :ems_id, :dependent => :destroy,
            :class_name => "ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Public"
@@ -86,5 +89,26 @@ class ManageIQ::Providers::Openstack::NetworkManager < ManageIQ::Providers::Netw
 
   def self.event_monitor_class
     ManageIQ::Providers::Openstack::NetworkManager::EventCatcher
+  end
+
+  def create_network_router(options)
+    NetworkRouter.create_network_router(self, options)
+  end
+
+  def create_network_router_queue(userid, options = {})
+    task_opts = {
+      :action => "creating Network Router for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'create_network_router',
+      :instance_id => id,
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => my_zone,
+      :args        => [options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 end

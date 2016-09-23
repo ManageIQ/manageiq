@@ -31,5 +31,13 @@ module MiqAeServiceCloudNetworkSpec
     it "#private_networks" do
       expect(described_class.instance_methods).to include(:private_networks)
     end
+
+    it "#raw_update_network_router" do
+      expect(described_class.instance_methods).to include(:raw_update_network_router)
+    end
+
+    it "#raw_delete_network_router" do
+      expect(described_class.instance_methods).to include(:raw_delete_network_router)
+    end
   end
 end

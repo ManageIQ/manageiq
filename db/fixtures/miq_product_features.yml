@@ -4227,6 +4227,24 @@
       :description: Edit Tags of Network Router
       :feature_type: control
       :identifier: network_router_tag
+  - :name: Modify
+    :description: Modify Routers
+    :feature_type: admin
+    :identifier: network_router_admin
+    :children:
+    - :name: Add
+      :description: Add a Router
+      :feature_type: admin
+      :identifier: network_router_new
+    - :name: Edit
+      :description: Edit a Router
+      :feature_type: admin
+      :identifier: network_router_edit
+    - :name: Remove
+      :description: Remove Routers
+      :feature_type: admin
+      :identifier: network_router_delete
+
 
 # Load Balancer
 - :name: Load Balancers
