@@ -899,10 +899,21 @@
 :host_scan:
   :queue_timeout: 20.minutes
 :http_proxy:
-  :host:
-  :password:
-  :port:
-  :user:
+  :default:
+    :host:
+    :password:
+    :port:
+    :user:
+  :azure:
+    :host:
+    :password:
+    :port:
+    :user:
+  :ec2:
+    :host:
+    :password:
+    :port:
+    :user:
 :ldap_synchronization:
   :ldap_synchronization_schedule: "0 2 * * *"
 :log:

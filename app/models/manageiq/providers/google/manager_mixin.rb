@@ -26,7 +26,7 @@ module ManageIQ::Providers::Google::ManagerMixin
     raise MiqException::MiqHostError, "No credentials defined" if missing_credentials?(options[:auth_type])
 
     auth_token = authentication_token(options[:auth_type])
-    self.class.raw_connect(project, auth_token, options)
+    self.class.raw_connect(project, auth_token, options, options[:proxy_uri] || http_proxy_uri)
   end
 
   def gce
@@ -34,7 +34,8 @@ module ManageIQ::Providers::Google::ManagerMixin
   end
 
   module ClassMethods
-    def raw_connect(google_project, google_json_key, options)
+    # TODO: (julian) add proxy_uri back in once supported.
+    def raw_connect(google_project, google_json_key, options, _proxy_uri = nil)
       require 'fog/google'
 
       config = {
