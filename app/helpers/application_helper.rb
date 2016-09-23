@@ -798,7 +798,7 @@ module ApplicationHelper
        load_balancer
        resource_pool ems_infra ontap_storage_system ontap_storage_volume
        ontap_file_share snia_local_file_system ontap_logical_disk
-       orchestration_stack cim_base_storage_extent storage storage_manager configuration_job).include?(@layout)
+       orchestration_stack cim_base_storage_extent storage_manager configuration_job).include?(@layout)
   end
 
   # Do we show or hide the clear_search link in the list view title
