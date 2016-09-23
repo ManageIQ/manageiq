@@ -776,6 +776,7 @@ class InfraNetworkingController < ApplicationController
     clear_flash_msg
     presenter, r = rendering_objects
     update_tagging_partials(presenter, r)
+    presenter[:right_cell_text] = @right_cell_text
     rebuild_toolbars(false, presenter)
     handle_bottom_cell(presenter, r)
 
