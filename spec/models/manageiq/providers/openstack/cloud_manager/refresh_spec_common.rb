@@ -79,7 +79,7 @@ module Openstack
       expect(CloudVolume.count).to                       eq volumes_count
       expect(VmOrTemplate.count).to                      eq vms_count + images_count
       expect(MiqTemplate.count).to                       eq images_count
-      expect(Disk.count).to                              eq disks_count + 2 # disks_count doesn't account for attached volumes
+      expect(Disk.count).to                              eq disks_count
       expect(Hardware.count).to                          eq vms_count + images_count
       expect(Vm.count).to                                eq vms_count
       expect(OperatingSystem.count).to                   eq 0
@@ -98,7 +98,7 @@ module Openstack
       # skips configured modules
 
       # .. but other things are still present:
-      expect(Disk.count).to       eq disks_count(false) + 2 # disks_count doesn't account for attached volumes
+      expect(Disk.count).to       eq disks_count(true)
       expect(FloatingIp.count).to eq network_data.floating_ips.sum
     end
 
@@ -221,10 +221,10 @@ module Openstack
       disks_count = (flavor[:disk] > 0 ? 1 : 0) + (flavor[:ephemeral] > 0 ? 1 : 0) + (flavor[:swap] > 0 ? 1 : 0)
 
       # May need after linkage is done
-      # if with_volumes && vm_or_stack[:__block_devices]
-      #   disks_count +=
-      #     vm_or_stack[:__block_devices].count { |d| d[:destination_type] == 'volume' && d[:boot_index] != 0 }
-      # end
+      if with_volumes && vm_or_stack[:__block_devices]
+        disks_count +=
+          vm_or_stack[:__block_devices].count { |d| d[:destination_type] == 'volume' && d[:boot_index] != 0 }
+      end
 
       disks_count
     end
@@ -248,7 +248,7 @@ module Openstack
       expect(VmOrTemplate.count).to                      eq vms_count + images_count
       expect(Vm.count).to                                eq vms_count
       expect(MiqTemplate.count).to                       eq images_count
-      expect(Disk.count).to                              eq disks_count + 2 # disks_count doesn't account for attached volumes
+      expect(Disk.count).to                              eq disks_count
       # One hardware per each VM
       expect(Hardware.count).to                          eq vms_count + images_count
       # TODO(lsmola) 2 networks per each floatingip assigned, it's kinda weird now, will replace with
