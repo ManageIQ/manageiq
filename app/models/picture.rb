@@ -1,6 +1,10 @@
 class Picture < ApplicationRecord
   has_one :binary_blob, :as => :resource, :dependent => :destroy, :autosave => true
 
+  validates :extension,
+            :inclusion => { :in => %w(png jpg), :message => 'must be a png or jpg' },
+            :if        => :extension
+
   virtual_has_one :image_href, :class_name => "String"
 
   URL_ROOT          = Rails.root.join("public").to_s

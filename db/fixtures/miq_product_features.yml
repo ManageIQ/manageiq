@@ -1457,6 +1457,17 @@
   :feature_type: node
   :identifier: rss
 
+# Pictures
+- :name: Pictures
+  :description: Everything under Pictures
+  :feature_type: admin
+  :identifier: pictures
+  :children:
+  - :name: Create new Picture
+    :description: Create a new picture
+    :feature_type: admin
+    :identifier: picture_new
+
 # Policy
 - :name: Explorer
   :description: Control Explorer

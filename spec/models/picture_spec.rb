@@ -13,10 +13,24 @@ describe Picture do
   end
 
   context "#extension" do
+    it "accepts only png or jpb" do
+      expect(subject.extension).to be_nil
+      subject.extension = "foo"
+
+      expect(subject.valid?).to be_falsey
+      expect(subject.errors.messages).to eq(:extension =>['must be a png or jpg'])
+
+      subject.extension = "png"
+      expect(subject.valid?).to be_truthy
+
+      subject.extension = "jpg"
+      expect(subject.valid?).to be_truthy
+    end
+
     it "on new record" do
       expect(subject.extension).to be_nil
-      ext = "foo"
-      subject.extension         = ext.dup
+      ext = "png"
+      subject.extension = ext.dup
       expect(subject.extension).to eq(ext)
 
       subject.save
@@ -33,8 +47,8 @@ describe Picture do
 
       subject.reload
       expect(subject.extension).to be_nil
-      ext = "foo"
-      subject.extension         = ext.dup
+      ext = "jpg"
+      subject.extension = ext.dup
       expect(subject.extension).to eq(ext)
 
       subject.save

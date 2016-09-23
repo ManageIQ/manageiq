@@ -61,4 +61,35 @@ describe "Pictures" do
       expect_result_to_include_picture_href(service_request.id)
     end
   end
+
+  describe 'POST /api/pictures' do
+    it 'rejects create without an appropriate role' do
+      api_basic_authorize
+
+      run_post pictures_url, :extension => 'png', :content => 'content'
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'creates a new picture' do
+      api_basic_authorize collection_action_identifier(:pictures, :create)
+
+      expect do
+        run_post pictures_url, :extension => 'png', :content => 'content'
+      end.to change(Picture, :count).by(1)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'creates multiple pictures' do
+      api_basic_authorize collection_action_identifier(:pictures, :create)
+
+      expect do
+        run_post(pictures_url, gen_request(:create, [
+                                             {:extension => 'png', :content => 'content'},
+                                             {:extension => 'jpg', :content => 'content'}
+                                           ]))
+      end.to change(Picture, :count).by(2)
+      expect(response).to have_http_status(:ok)
+    end
+  end
 end
