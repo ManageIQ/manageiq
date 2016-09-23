@@ -1,5 +1,9 @@
 class CloudSubnet < ApplicationRecord
+  include_concern 'Operations'
+
   include NewWithTypeStiMixin
+  include ProviderObjectMixin
+  include AsyncDeleteMixin
   include VirtualTotalMixin
 
   acts_as_miq_taggable
@@ -45,6 +49,45 @@ class CloudSubnet < ApplicationRecord
   virtual_column :dns_nameservers_show, :type => :string, :uses => :dns_nameservers
 
   virtual_total :total_vms, :vms, :uses => :vms
+
+  def self.class_by_ems(ext_management_system)
+    # TODO: use a factory on ExtManagementSystem side to return correct class for each provider
+    ext_management_system && ext_management_system.class::CloudSubnet
+  end
+
+  def self.create_subnet(ext_management_system, options = {})
+    raise ArgumentError, _("ext_management_system cannot be nil") if ext_management_system.nil?
+
+    klass = class_by_ems(ext_management_system)
+    klass.raw_create_subnet(ext_management_system, options)
+  end
+
+  def self.validate_create_subnet(ext_management_system)
+    klass = class_by_ems(ext_management_system)
+    return klass.validate_create_subnet(ext_management_system) if ext_management_system &&
+                                                                  klass.respond_to?(:validate_create_subnet)
+    validate_unsupported("Create Subnet Operation")
+  end
+
+  def delete_subnet
+    raw_delete_subnet
+  end
+
+  def validate_delete_subnet
+    validate_unsupported("Delete Subnet Operation")
+  end
+
+  def raw_delete_subnet
+    raise NotImplementedError, _("raw_delete_subnet must be implemented in a subclass")
+  end
+
+  def raw_update_subnet(_options = {})
+    raise NotImplementedError, _("raw_update_subnet must be implemented in a subclass")
+  end
+
+  def update_subnet(options = {})
+    raw_update_subnet(options) unless options.empty?
+  end
 
   private
 
