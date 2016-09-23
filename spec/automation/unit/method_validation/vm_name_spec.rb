@@ -1,11 +1,9 @@
-require "spec_helper"
 require Rails.root.join('db/fixtures/ae_datastore/ManageIQ/Cloud/VM/Provisioning/Naming.class/__methods__/vmname').to_s
-require Rails.root.join('spec/support/miq_ae_mock_service').to_s
 
 describe VmName do
   let(:provision) { MiqProvision.new }
-  let(:root_object) { MiqAeMockObject.new.tap { |ro| ro["miq_provision"] = provision } }
-  let(:service) { MiqAeMockService.new(root_object).tap { |s| s.object = {'vm_prefix' => "abc"} } }
+  let(:root_object) { Spec::Support::MiqAeMockObject.new.tap { |ro| ro["miq_provision"] = provision } }
+  let(:service) { Spec::Support::MiqAeMockService.new(root_object).tap { |s| s.object = {'vm_prefix' => "abc"} } }
   let(:classification) { FactoryGirl.create(:classification, :tag => tag, :name => "environment") }
   let(:classification2) do
     FactoryGirl.create(:classification,
