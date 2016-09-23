@@ -356,9 +356,6 @@ module ManageIQ::Providers
         :flavor              => flavor,
         :availability_zone   => @data_index.fetch_path(:availability_zones, server.availability_zone.blank? ? "null_az" : "compute-" + server.availability_zone),
         :key_pairs           => [@data_index.fetch_path(:key_pairs, server.key_name)].compact,
-        # TODO(lsmola) moving this under has_many :security_groups, :through => :network_port will require changing
-        # saving code and refresh of all providers
-        :security_groups     => server.security_groups.collect { |sg| child_manager_fetch_path(:security_groups, sg.id) }.compact,
         :cloud_tenant        => @data_index.fetch_path(:cloud_tenants, server.tenant_id),
         :orchestration_stack => @data_index.fetch_path(:orchestration_stacks, @resource_to_stack[uid])
       }
