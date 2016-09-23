@@ -110,6 +110,15 @@ class CloudVolumeController < ApplicationController
       )
       @view, @pages = get_view(kls, :parent => @volume, :association => :cloud_volume_snapshots)
       @showtype = @display
+    when "cloud_volume_backups"
+      title = ui_lookup(:tables => 'cloud_volume_backups')
+      kls   = CloudVolumeBackup
+      drop_breadcrumb(
+        :name => _("%{name} (All %{children})") % {:name => @volume.name, :children => title},
+        :url  => "/cloud_volume/show/#{@volume.id}?display=cloud_volume_backups"
+      )
+      @view, @pages = get_view(kls, :parent => @volume, :association => :cloud_volume_backups)
+      @showtype = @display
     when "instances"
       title = ui_lookup(:tables => "vm_cloud")
       kls   = ManageIQ::Providers::CloudManager::Vm
