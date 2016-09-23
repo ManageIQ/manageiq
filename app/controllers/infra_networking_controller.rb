@@ -505,7 +505,7 @@ class InfraNetworkingController < ApplicationController
     handle_bottom_cell(presenter, r)
     rebuild_toolbars(record_showing, presenter)
     presenter[:right_cell_text] = @right_cell_text
-    presenter[:osf_node] = x_node  # Open, select, and focus on this node
+    presenter[:osf_node] = x_node # Open, select, and focus on this node
 
     render :json => presenter.for_render
   end

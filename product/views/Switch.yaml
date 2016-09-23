@@ -22,21 +22,18 @@ cols:
 - name
 - ports
 - switch_uuid
-- shared
 
 # Order of columns (from all tables)
 col_order: 
 - name
 - ports
 - switch_uuid
-- shared
 
 # Column titles, in order
 headers:
 - Name
 - Ports
 - UUID
-- Shared
 
 # Condition(s) string for the SQL query
 conditions: 
