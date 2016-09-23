@@ -446,14 +446,18 @@ class MiqRequest < ApplicationRecord
                   :request_type => request_types.first)
     request.save!
 
-    request.set_description
+    request.post_create(auto_approve)
+  end
 
-    request.log_request_success(requester, :created)
+  def post_create(auto_approve)
+    set_description
 
-    request.call_automate_event_queue("request_created")
-    request.approve(requester, "Auto-Approved") if auto_approve
-    request.reload if auto_approve
-    request
+    log_request_success(requester, :created)
+
+    call_automate_event_queue("request_created")
+    approve(requester, "Auto-Approved") if auto_approve
+    reload if auto_approve
+    self
   end
 
   # Helper method when not using workflow
