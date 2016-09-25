@@ -1011,7 +1011,7 @@ module ApplicationHelper
     test_layout = @layout
     # FIXME: exception behavior to remove
     test_layout = 'my_tasks' if %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout)
-    test_layout = 'cloud_volume' if @layout == 'cloud_volume_snapshot'
+    test_layout = 'cloud_volume' if @layout == 'cloud_volume_snapshot' || @layout == 'cloud_volume_backup'
     test_layout = 'cloud_object_store_container' if @layout == 'cloud_object_store_object'
 
     Menu::Manager.item_in_section?(test_layout, nav_id) ? 'active' : nil
@@ -1111,7 +1111,7 @@ module ApplicationHelper
 
   GTL_VIEW_LAYOUTS = %w(action availability_zone auth_key_pair_cloud
                         cim_base_storage_extent cloud_object_store_container
-                        cloud_object_store_object cloud_tenant cloud_volume cloud_volume_snapshot
+                        cloud_object_store_object cloud_tenant cloud_volume cloud_volume_backup cloud_volume_snapshot
                         configuration_job condition container_group container_route container_project
                         container_replicator container_image container_image_registry
                         container_topology container_dashboard middleware_topology persistent_volume container_build
@@ -1157,7 +1157,7 @@ module ApplicationHelper
 
   def render_listnav_filename
     if @lastaction == "show_list" && !session[:menu_click] &&
-      %w(auth_key_pair_cloud cloud_object_store_container cloud_object_store_object cloud_volume cloud_volume_snapshot
+      %w(auth_key_pair_cloud cloud_object_store_container cloud_object_store_object cloud_volume cloud_volume_backup cloud_volume_snapshot
          container_node container_service ems_container container_group ems_cloud ems_cluster container_route
          container_project container_replicator container_image container_image_registry container_build
          ems_infra host miq_template offline orchestration_stack persistent_volume ems_middleware
@@ -1173,7 +1173,7 @@ module ApplicationHelper
     elsif %w(offline retired templates vm vm_cloud vm_or_template).include?(@layout)
       "vm"
     elsif %w(action auth_key_pair_cloud availability_zone cim_base_storage_extent cloud_object_store_container
-             cloud_object_store_object cloud_tenant cloud_volume cloud_volume_snapshot condition container_group
+             cloud_object_store_object cloud_tenant cloud_volume cloud_volume_backup cloud_volume_snapshot condition container_group
              container_route container_project container_replicator container_image container_image_registry
              container_build container_node container_service persistent_volume ems_cloud ems_container ems_cluster ems_infra
              ems_middleware middleware_server middleware_deployment middleware_datasource middleware_domain
@@ -1189,7 +1189,7 @@ module ApplicationHelper
 
   def show_adv_search?
     show_search = %w(auth_key_pair_cloud availability_zone cim_base_storage_extent cloud_object_store_container
-                     cloud_tenant cloud_volume cloud_volume_snapshot container_group container_node container_service
+                     cloud_tenant cloud_volume cloud_volume_backup cloud_volume_snapshot container_group container_node container_service
                      container_route container_project container_replicator container_image container_image_registry
                      persistent_volume container_build ems_middleware middleware_server middleware_domain
                      middleware_messaging middleware_deployment middleware_datasource

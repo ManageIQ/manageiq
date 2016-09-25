@@ -28,8 +28,7 @@ module ManageIQ::Providers
       $fog_log.info("#{log_header}...")
       get_volumes
       get_snapshots
-      # TODO: volume backup
-      # get_backups
+      get_backups
 
       $fog_log.info("#{log_header}...Complete")
 
@@ -53,13 +52,13 @@ module ManageIQ::Providers
     end
 
     def get_backups
-      process_collection(@cinder_service.handled_list(:list_backups_detailed,
-                                                      :__request_body_index => "backups"),
+      process_collection(@cinder_service.list_backups_detailed.body["backups"],
                          :cloud_volume_backups) { |backup| parse_backup(backup) }
     end
 
     def parse_backup(backup)
       uid = backup['id']
+      az = backup['availability_zone'].nil? ? "null_az" : "volume-" + backup['availability_zone']
       new_result = {
         :ems_ref               => uid,
         :type                  => "ManageIQ::Providers::Openstack::CloudManager::CloudVolumeBackup",
@@ -73,8 +72,7 @@ module ManageIQ::Providers
         :object_count          => backup['object_count'].to_i,
         :is_incremental        => backup['is_incremental'],
         :has_dependent_backups => backup['has_dependent_backups'],
-        :availability_zone     => @data_index.fetch_path(:availability_zones,
-                                  "volume-" + backup['availability_zone'] || "null_az"),
+        :availability_zone     => @data_index.fetch_path(:availability_zones, az),
         :volume                => @data_index.fetch_path(:cloud_volumes, backup['volume_id'])
       }
       return uid, new_result

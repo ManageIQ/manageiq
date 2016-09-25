@@ -625,6 +625,14 @@
       :description: Edit a Volume
       :feature_type: admin
       :identifier: cloud_volume_edit
+    - :name: Create a Backup
+      :description: Create a Volume Backup
+      :feature_type: admin
+      :identifier: cloud_volume_backup_create
+    - :name: Restore from a Backup
+      :description: Restore from a Volume Backup
+      :feature_type: admin
+      :identifier: cloud_volume_backup_restore
     - :name: Attach
       :description: Attach a Volume
       :feature_type: admin
@@ -708,6 +716,35 @@
       :description: Edit Tags of Snapshots
       :feature_type: control
       :identifier: cloud_volume_snapshot_tag
+
+# CloudVolumeBackup
+- :name: Cloud Volume Backups
+  :description: Everything under Cloud Volume Backups
+  :feature_type: node
+  :identifier: cloud_volume_backup
+  :children:
+  - :name: View
+    :description: View Backups
+    :feature_type: view
+    :identifier: cloud_volume_backup_view
+    :children:
+    - :name: List
+      :description: Display Lists of Backups
+      :feature_type: view
+      :identifier: cloud_volume_backup_show_list
+    - :name: Show
+      :description: Display Individual Backups
+      :feature_type: view
+      :identifier: cloud_volume_backup_show
+  - :name: Operate
+    :description: Perform Operations on Backups
+    :feature_type: control
+    :identifier: cloud_volume_backup_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Backups
+      :feature_type: control
+      :identifier: cloud_volume_backup_tag
 
 # Flavor
 - :name: Flavors

@@ -67,6 +67,30 @@ ManageIQ.angular.app.controller('cloudVolumeFormController', ['$http', '$scope',
     miqService.miqAjaxButton(url);
   };
 
+  $scope.backupCreateClicked = function() {
+    miqService.sparkleOn();
+    var url = '/cloud_volume/backup_create/' + cloudVolumeFormId + '?button=create';
+    miqService.miqAjaxButton(url, true);
+  };
+
+  $scope.cancelBackupCreateClicked = function() {
+    miqService.sparkleOn();
+    var url = '/cloud_volume/backup_create/' + cloudVolumeFormId + '?button=cancel';
+    miqService.miqAjaxButton(url);
+  };
+
+  $scope.backupRestoreClicked = function() {
+    miqService.sparkleOn();
+    var url = '/cloud_volume/backup_restore/' + cloudVolumeFormId + '?button=restore';
+    miqService.miqAjaxButton(url, true);
+  };
+
+  $scope.cancelBackupRestoreClicked = function() {
+    miqService.sparkleOn();
+    var url = '/cloud_volume/backup_restore/' + cloudVolumeFormId + '?button=cancel';
+    miqService.miqAjaxButton(url);
+  };
+
   $scope.resetClicked = function() {
     $scope.cloudVolumeModel = angular.copy( $scope.modelCopy );
     $scope.angularForm.$setPristine(true);

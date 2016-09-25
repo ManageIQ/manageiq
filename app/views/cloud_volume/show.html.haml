@@ -1,4 +1,4 @@
-- if %w(cloud_volume_snapshots instances).include?(@display)
+- if %w(cloud_volume_backups cloud_volume_snapshots instances).include?(@display)
   = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@volume.id}"}
 - else
   - if @showtype == "item"
