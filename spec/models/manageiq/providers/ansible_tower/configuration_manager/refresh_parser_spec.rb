@@ -33,7 +33,7 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshParser 
       :type                 => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem",
       :virtual_instance_ref => "vmwareVm-1",
     )
-    expect(parser.instance_variable_get(:@data)[:configured_systems].last).to have_attributes(
+    expect(parser.instance_variable_get(:@data)[:configured_systems].last).to include(
       :counterpart          => vm,
       :virtual_instance_ref => "vmwareVm-2"
     )

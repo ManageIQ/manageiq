@@ -31,7 +31,7 @@ describe "azure best fit" do
     resource_group
     ws.root
 
-    expect(miq_provision.reload.options).to have_attributes(
+    expect(miq_provision.reload.options).to include(
       :cloud_network  => [cloud_network.id,  cloud_network.name],
       :cloud_subnet   => [cloud_subnet.id,   cloud_subnet.name],
       :resource_group => [resource_group.id, resource_group.name],
