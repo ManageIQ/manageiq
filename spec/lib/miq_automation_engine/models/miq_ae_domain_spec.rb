@@ -282,8 +282,8 @@ describe MiqAeDomain do
     let(:git_import) { instance_double('MiqAeYamlImportGitfs') }
     let(:info) { {'commit_time' => commit_time, 'commit_message' => commit_message, 'commit_sha' => commit_sha} }
     let(:new_info) { {'commit_time' => commit_time_new, 'commit_message' => "BB-8", 'commit_sha' => "def"} }
-    let(:commit_hash) do
-      {'commit_message' => commit_message, 'commit_time' => commit_time,
+    let(:expected_commit_hash) do
+      {'commit_message' => commit_message, 'commit_time' => be_same_time_as(commit_time),
        'commit_sha' => commit_sha, 'ref' => branch_name, 'ref_type' => MiqAeDomain::BRANCH}
     end
 
