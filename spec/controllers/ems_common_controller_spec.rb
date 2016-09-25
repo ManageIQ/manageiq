@@ -191,6 +191,12 @@ describe EmsContainerController do
           expect(@ems.authentication_token("bearer")).to eq('valid-token')
           expect(@ems.authentication_type("default")).to be_nil
           expect(@ems.hostname).to eq('10.10.10.11')
+
+          controller.remove_instance_variable(:@_params)
+          controller.instance_variable_set(:@_params, :name => 'EMS 3', :default_userid => '_')
+          controller.send(:set_ems_record_vars, @ems)
+          expect(@ems.authentication_token("bearer")).to eq('valid-token')
+          expect(@ems.authentication_type("default")).to be_nil
         end
 
         it "when adding kubernetes EMS" do
