@@ -2,7 +2,6 @@ class DialogField < ApplicationRecord
   include NewWithTypeStiMixin
   attr_accessor :value
   attr_accessor :dialog
-  attr_accessor :default_value
 
   belongs_to :dialog_group
   has_one :resource_action, :as => :resource, :dependent => :destroy
@@ -77,7 +76,7 @@ class DialogField < ApplicationRecord
   end
 
   def initialize_with_values(dialog_values)
-    @value = value_from_dialog_fields(dialog_values) || get_default_value
+    @value = value_from_dialog_fields(dialog_values) || default_value
   end
 
   def update_values(_dialog_values)
@@ -132,10 +131,6 @@ class DialogField < ApplicationRecord
 
   def value_from_dialog_fields(dialog_values)
     dialog_values[automate_key_name] || dialog_values[name]
-  end
-
-  def get_default_value
-    default_value
   end
 
   def values_from_automate
