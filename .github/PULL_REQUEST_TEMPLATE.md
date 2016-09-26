@@ -5,11 +5,13 @@ Guidelines:
 * Provide as much context/info in the description as necessary to get the reviewer up to the same domain knowledge level as yourself
 * Keep code changes as short as possible and implementing a single feature/fix/refactoring, when possible
 
-## Links [Optional]
+Links [Optional]
+----------------
 
 * http://documentation.for/library/that/I/am/adding
 * [PR relevant issue or pull_request](#123)
 
-## Steps for Testing/QA [Optional]
+Steps for Testing/QA [Optional]
+-------------------------------
 
 If there are any manual steps that you would like the reviewer(s) to take to verify your changes, please describe in detail the steps to reproduce the features added by the pull request, or the bug before and after the change.
