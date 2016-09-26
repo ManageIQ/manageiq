@@ -1,8 +1,6 @@
 #
 # Calling order for EmsCloud
 # - ems
-#   - cloud_volumes
-#   - cloud_volume_snapshots
 #   - cloud_object_store_containers
 #     - cloud_object_store_objects
 #

@@ -52,8 +52,6 @@ module ManageIQ::Providers::Openstack::ManagerMixin
       osh
     end
   end
-  alias :cinder_handle :openstack_handle
-  alias :swift_handle  :openstack_handle
 
   def reset_openstack_handle
     @openstack_handle = nil
