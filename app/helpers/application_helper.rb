@@ -834,7 +834,7 @@ module ApplicationHelper
   end
 
   def pressed2model_action(pressed)
-    pressed =~ /^(ems_cluster|miq_template)_(.*)$/ ? [$1, $2] : pressed.split('_', 2)
+    pressed =~ /^(ems_cluster|miq_template|infra_networking)_(.*)$/ ? [$1, $2] : pressed.split('_', 2)
   end
 
   def model_for_ems(record)

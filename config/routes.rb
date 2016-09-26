@@ -1618,6 +1618,7 @@ Vmdb::Application.routes.draw do
         index
         show
         show_list
+        tagging
         tagging_edit
         x_show
       ),
@@ -1631,15 +1632,18 @@ Vmdb::Application.routes.draw do
         show
         show_list
         tag_edit_form_field_changed
+        tagging
         tagging_edit
         tree_select
         tree_autoload
+        x_button
         x_show
         x_search_by_name
       ) +
         adv_search_post +
         exp_post +
-        save_post
+        save_post +
+        x_post
     },
 
     :generic_object => {

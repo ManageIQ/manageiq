@@ -101,6 +101,8 @@ class ApplicationHelper::ToolbarChooser
         end
       elsif @layout == "provider_foreman" && [:configuration_manager_providers_tree, :cs_filter_tree, :configuration_scripts_tree].include?(x_active_tree)
         return center_toolbar_filename_configuration_manager_providers
+      elsif [:infra_networking_tree].include?(x_active_tree)
+        return center_toolbar_filename_infra_networking
       else
         if x_active_tree == :ae_tree
           return center_toolbar_filename_automate
@@ -513,6 +515,11 @@ class ApplicationHelper::ToolbarChooser
     end
   end
 
+  def center_toolbar_filename_infra_networking
+    nodes = x_node.split('-')
+    infra_networking_tree_center_tb(nodes)
+  end
+
   def configuration_manager_providers_tree_center_tb(nodes)
     case nodes.first
     when "root"     then  "provider_foreman_center_tb"
@@ -540,6 +547,14 @@ class ApplicationHelper::ToolbarChooser
       "configuration_scripts_center_tb"
     else
       "configuration_script_center_tb"
+    end
+  end
+
+  def infra_networking_tree_center_tb(nodes)
+    if %w(root e h c).include?(nodes.first)
+      "infra_networkings_center_tb"
+    else
+      "infra_networking_center_tb"
     end
   end
 
