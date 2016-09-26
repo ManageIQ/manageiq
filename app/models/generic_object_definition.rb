@@ -63,6 +63,44 @@ class GenericObjectDefinition < ApplicationRecord
     super
   end
 
+  def add_property_attribute(name, type)
+    properties[:attributes][name.to_s] = type.to_sym
+    save
+  end
+
+  def delete_property_attribute(name)
+    transaction do
+      properties[:attributes].delete(name.to_s)
+      save!
+
+      generic_objects.find_each { |o| o.delete_property(name) }
+    end
+  end
+
+  def add_property_association(name, type)
+    properties[:associations][name.to_s] = type.to_s.classify
+    save
+  end
+
+  def delete_property_association(name)
+    transaction do
+      properties[:associations].delete(name.to_s)
+      save!
+
+      generic_objects.find_each { |o| o.delete_property(name) }
+    end
+  end
+
+  def add_property_method(name)
+    properties[:methods] << name.to_s unless properties[:methods].include?(name.to_s)
+    save
+  end
+
+  def delete_property_method(name)
+    properties[:methods].delete(name.to_s)
+    save
+  end
+
   private
 
   def get_objects_of_association(attr, values)

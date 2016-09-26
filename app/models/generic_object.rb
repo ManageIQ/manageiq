@@ -26,13 +26,40 @@ class GenericObject < ApplicationRecord
         raise ActiveModel::UnknownAttributeError.new(self, k)
       end
     end
-    options.each { |k, v| property_setter(k.to_s, v) }
+    options.each { |k, v| property_setter(k, v) }
   end
 
   def property_attributes
     properties.select { |k, _| property_attribute_defined?(k) }.each_with_object({}) do |(k, _), h|
       h[k] = property_getter(k)
     end
+  end
+
+  def delete_property(name)
+    properties.delete(name.to_s)
+    save!
+  end
+
+  def add_to_property_association(name, objs)
+    objs = [objs] unless objs.kind_of?(Array)
+    name = name.to_s
+    properties[name] ||= []
+
+    klass = property_associations[name].constantize
+    selected = objs.select { |obj| obj.kind_of?(klass) }
+    properties[name] = (properties[name] + selected.pluck(:id)).uniq if selected
+    save
+  end
+
+  def delete_from_property_association(name, objs)
+    objs = [objs] unless objs.kind_of?(Array)
+    name = name.to_s
+    properties[name] ||= []
+
+    klass = property_associations[name].constantize
+    selected = objs.select { |obj| obj.kind_of?(klass) }
+    properties[name] = properties[name] - selected.pluck(:id)
+    save
   end
 
   def inspect
@@ -83,6 +110,7 @@ class GenericObject < ApplicationRecord
   end
 
   def property_setter(name, value)
+    name = name.to_s
     val =
       if property_attribute_defined?(name)
         # property attribute is of single value, for now

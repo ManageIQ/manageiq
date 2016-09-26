@@ -149,7 +149,7 @@ describe GenericObject do
       expect(go_assoc.reload.vms.count).to eq(2)
     end
 
-    it 'skips non-exist object when retrieving from DB' do
+    it 'skips non-existing object when retrieving from DB' do
       vm2.destroy
       expect(go_assoc.vms.count).to eq(1)
     end
