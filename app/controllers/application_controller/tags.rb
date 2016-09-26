@@ -22,6 +22,7 @@ module ApplicationController::Tags
   alias_method :service_tag, :tagging_edit
   alias_method :container_tag, :tagging_edit
   alias_method :storage_tag, :tagging_edit
+  alias_method :infra_networking_tag, :tagging_edit
 
   # New classification category chosen on the classify screen
   def classify_new_cat
@@ -393,5 +394,19 @@ module ApplicationController::Tags
       array << a.description
     end
     session[:mytags] = rec.tagged_with(:cat => session[:userid])    # Start with the first items tags
+  end
+
+  def locals_for_tagging
+    {:action_url   => 'tagging',
+     :multi_record => true,
+     :record_id    => @sb[:rec_id] || @edit[:object_ids] && @edit[:object_ids][0]
+    }
+  end
+
+  def update_tagging_partials(presenter, r)
+    presenter.update(:main_div, r[:partial => 'layouts/tagging',
+                                  :locals  => locals_for_tagging])
+    presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons',
+                                          :locals  => locals_for_tagging])
   end
 end
