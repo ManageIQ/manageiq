@@ -60,8 +60,8 @@ module Api
               json.href normalize_href(reftype, resource["id"])
             end
           end
-          aspecs = get_aspecs(type, :collection,
-                              :is_subcollection => opts[:is_subcollection], :ref => reftype)
+          cspec = collection_config[type]
+          aspecs = gen_action_spec_for_collections(type, cspec, opts[:is_subcollection], reftype) if cspec
           add_actions(json, aspecs, reftype)
         end
       end
@@ -97,18 +97,6 @@ module Api
           matched_type = collection_config.name_for_klass(rclass)
         end
         matched_type || reftype
-      end
-
-      #
-      # type is the collection type we need to get actions specifications for
-      # item_type is :collection or :resource
-      #
-      # opts[:is_subcollection] is true if accessing as subcollection or subresource
-      # opts[:ref] is how to identify item, either the reftype of the collection or href of resource
-      # opts[:resource] is the object to get action specs for the specific resource
-      #
-      def get_aspecs(type, item_type, opts = {})
-        gen_action_specs(type, item_type, opts[:is_subcollection], opts[:ref], opts[:resource])
       end
 
       #
@@ -311,8 +299,8 @@ module Api
         return unless render_actions(resource)
 
         href   = json.attributes!["href"]
-        aspecs = get_aspecs(type, :resource,
-                            :is_subcollection => opts[:is_subcollection], :ref => href, :resource => resource)
+        cspec = collection_config[type]
+        aspecs = gen_action_spec_for_resources(cspec, opts[:is_subcollection], href, resource) if cspec
         add_actions(json, aspecs, type)
       end
 
@@ -371,24 +359,6 @@ module Api
                 js.child! { |jsc| jsc.href normalize_href(sctype, scr["id"]) }
               end
             end
-          end
-        end
-      end
-
-      #
-      # Let's create the action specs for the different collections
-      #
-      # type is :collection or :resource
-      # subcollection set to true, if accessing collection or resource as subcollection
-      # href is the optional href for the action specs, required for resources
-      #
-      def gen_action_specs(collection, type, is_subcollection, href = nil, resource = nil)
-        cspec = collection_config[collection]
-        if cspec
-          if type == :collection
-            gen_action_spec_for_collections(collection, cspec, is_subcollection, href)
-          else
-            gen_action_spec_for_resources(cspec, is_subcollection, href, resource)
           end
         end
       end
