@@ -108,19 +108,9 @@ module MiqReport::Generator
           result[:tags] = {}
         else
           assoc_reflection = klass.reflect_on_association(k)
-          assoc_klass = assoc_reflection.nil? ? nil : (assoc_reflection.options[:polymorphic] ? k : assoc_reflection.klass)
+          assoc_klass = (assoc_reflection.options[:polymorphic] ? k : assoc_reflection.klass) if assoc_reflection
 
-          if v.nil? || v["include"].blank?
-            result[k] = {}
-          elsif assoc_klass
-            result[k] = include_as_hash(v["include"], assoc_klass, nil)
-          end
-
-          if assoc_klass && assoc_klass.respond_to?(:virtual_attribute?) && v["columns"]
-            v["columns"].each do |c|
-              result[k][c.to_sym] = {} if assoc_klass.virtual_attribute?(c) && !assoc_klass.attribute_supported_by_sql?(c)
-            end
-          end
+          result[k] = include_as_hash(v && v["include"], assoc_klass, v && v["columns"])
         end
       end
     elsif includes.kind_of?(Array)
