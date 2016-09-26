@@ -750,10 +750,8 @@ class MiqRequestWorkflow
 
   def request_class
     req_class = self.class.request_class
-    if get_value(@values[:service_template_request]) == true
-      req_class = (req_class.name + "Template").constantize
-    end
-    req_class
+    return req_class unless get_value(@values[:service_template_request]) == true
+    (req_class.name + "Template").constantize
   end
 
   def self.request_class
@@ -920,13 +918,10 @@ class MiqRequestWorkflow
 
   def find_hosts_for_respool(item, ems_src = nil)
     hosts = find_class_above_ci(item, Host, ems_src)
-    if hosts.blank?
-      cluster = find_cluster_above_ci(item)
-      hosts = find_hosts_under_ci(cluster)
-    else
-      hosts = [hosts]
-    end
-    hosts
+    return [hosts] unless hosts.blank?
+
+    cluster = find_cluster_above_ci(item)
+    find_hosts_under_ci(cluster)
   end
 
   def find_cluster_above_ci(item, ems_src = nil)
