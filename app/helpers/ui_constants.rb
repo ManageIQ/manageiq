@@ -193,6 +193,7 @@ module UiConstants
       :cloudobjectstoreobject                   => "list",
       :cloudtenant                              => "list",
       :cloudvolume                              => "list",
+      :cloudvolumebackup                        => "list",
       :cloudvolumesnapshot                      => "list",
       :drift                                    => "expanded",
       :drift_mode                               => "details",
