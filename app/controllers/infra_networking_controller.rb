@@ -783,20 +783,6 @@ class InfraNetworkingController < ApplicationController
     render :json => presenter.for_render
   end
 
-  def locals_for_tagging
-    {:action_url   => 'tagging',
-     :multi_record => true,
-     :record_id    => @sb[:rec_id] || @edit[:object_ids] && @edit[:object_ids][0]
-    }
-  end
-
-  def update_tagging_partials(presenter, r)
-    presenter.update(:main_div, r[:partial => 'layouts/tagging',
-                                  :locals  => locals_for_tagging])
-    presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons',
-                                          :locals  => locals_for_tagging])
-  end
-
   def get_session_data
     @title          = _("Networking")
     @layout         = controller_name

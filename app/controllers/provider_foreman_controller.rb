@@ -1024,24 +1024,10 @@ class ProviderForemanController < ApplicationController
                    :verify_ssl => params[:verify_ssl]}
   end
 
-  def locals_for_tagging
-    {:action_url   => 'tagging',
-     :multi_record => true,
-     :record_id    => @sb[:rec_id] || @edit[:object_ids] && @edit[:object_ids][0]
-    }
-  end
-
   def locals_for_service_dialog
     {:action_url => 'service_dialog',
      :record_id  => @sb[:rec_id] || @edit[:object_ids] && @edit[:object_ids][0]
     }
-  end
-
-  def update_tagging_partials(presenter, r)
-    presenter.update(:main_div, r[:partial => 'layouts/tagging',
-                                  :locals  => locals_for_tagging])
-    presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons',
-                                          :locals  => locals_for_tagging])
   end
 
   def update_service_dialog_partials(presenter, r)
