@@ -211,7 +211,7 @@ module OpsController::Settings::Common
       begin
         MiqRegion.replication_type = replication_type
       rescue StandardError => bang
-        add_flash(_("Error during replication configuration save: ") %
+        add_flash(_("Error during replication configuration save: %{message}") %
                     {:message => bang.message}, :error)
       else
         add_flash(_("Replication configuration save was successful"))
