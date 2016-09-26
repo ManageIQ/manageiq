@@ -176,6 +176,19 @@ describe MiqAeDatastore do
     end
   end
 
+  context "domain_only_attributes" do
+    it "namespace should not contain domain only attributes" do
+      domain_only_attrs = %w(source top_level_namespace)
+      export_model(@manageiq_domain.name)
+      namespace_file = File.join(@export_dir, @manageiq_domain.name, @aen1.name, '__namespace__.yaml')
+      data = YAML.load_file(namespace_file)
+      hash = data.fetch_path('object', 'attributes')
+      domain_only_attrs.each do |attr|
+        expect(hash.key?(attr)).to be_falsey
+      end
+    end
+  end
+
   context "export import roundtrip" do
     context "export all domains" do
       before do
