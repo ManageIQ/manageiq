@@ -560,8 +560,7 @@ class MiqRequestWorkflow
   end
 
   def values_less_then(options)
-    results = {}
-    options[:values].each { |k, v| results[k.to_i_with_method] = v }
+    results = options[:values].transform_keys(&:to_i_with_method)
     field, include_equals = options[:field], options[:include_equals]
     max_value = field.nil? ? options[:value].to_i_with_method : get_value(@values[field]).to_i_with_method
     return results if max_value <= 0
@@ -1222,13 +1221,11 @@ class MiqRequestWorkflow
       rails_logger("host_to_folder for host #{h.name}", 1)
       result
     end.compact
-    folders = {}
-    datacenters.each do |dc|
+    datacenters.each_with_object({}) do |dc, folders|
       rails_logger("host_to_folder for dc #{dc.name}", 0)
       folders.merge!(get_ems_folders(dc))
       rails_logger("host_to_folder for dc #{dc.name}", 1)
     end
-    folders
   end
 
   def cluster_to_folder(src)
@@ -1236,18 +1233,14 @@ class MiqRequestWorkflow
     return nil if src[:cluster].nil?
     sources = [src[:cluster]]
     datacenters = sources.collect { |h| find_datacenter_for_ci(h) }.compact
-    folders = {}
-    datacenters.each { |dc| folders.merge!(get_ems_folders(dc)) }
-    folders
+    datacenters.each_with_object({}) { |dc, folders| folders.merge!(get_ems_folders(dc)) }
   end
 
   def respool_to_folder(src)
     return nil if src[:respool].nil?
     sources = [src[:respool]]
     datacenters = sources.collect { |h| find_datacenter_for_ci(h) }.compact
-    folders = {}
-    datacenters.each { |dc| folders.merge!(get_ems_folders(dc)) }
-    folders
+    datacenters.each_with_object({}) { |dc, folders| folders.merge!(get_ems_folders(dc)) }
   end
 
   def set_ws_field_value(values, key, data, dialog_name, dlg_fields)
