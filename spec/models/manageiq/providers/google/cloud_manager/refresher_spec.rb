@@ -33,6 +33,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       assert_specific_cloud_network
       assert_specific_cloud_subnet
       assert_specific_floating_ips
+      assert_specific_load_balancer
       assert_specific_security_group
       assert_specific_flavor
       assert_specific_custom_flavor
@@ -52,16 +53,20 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :ext_management_system         => 2,
       :flavor                        => 19,
       :availability_zone             => 15,
-      :vm_or_template                => 574,
+      :vm_or_template                => 611,
       :vm                            => 5,
-      :miq_template                  => 569,
+      :miq_template                  => 606,
       :disk                          => 5,
       :guest_device                  => 0,
       :hardware                      => 5,
+      :load_balancer                 => 1,
+      :load_balancer_listener        => 1,
+      :load_balancer_pool            => 1,
+      :load_balancer_pool_member     => 2,
       :network                       => 0,
-      :operating_system              => 574,
+      :operating_system              => 611,
       :relationship                  => 10,
-      :miq_queue                     => 575,
+      :miq_queue                     => 612,
       :orchestration_template        => 0,
       :orchestration_stack           => 0,
       :orchestration_stack_parameter => 0,
@@ -88,6 +93,10 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :disk                          => Disk.count,
       :guest_device                  => GuestDevice.count,
       :hardware                      => Hardware.count,
+      :load_balancer                 => LoadBalancer.count,
+      :load_balancer_listener        => LoadBalancerListener.count,
+      :load_balancer_pool            => LoadBalancerPool.count,
+      :load_balancer_pool_member     => LoadBalancerPoolMember.count,
       :network                       => Network.count,
       :operating_system              => OperatingSystem.count,
       :relationship                  => Relationship.count,
@@ -181,6 +190,32 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
     unassigned_floating_ip = FloatingIp.where(:address => "104.196.55.145").first
     expect(unassigned_floating_ip.vm).to eql(nil)
     expect(unassigned_floating_ip.network_port).to eql(nil)
+  end
+
+  def assert_specific_load_balancer
+    @lb = LoadBalancer.where(:name => "foo-lb-forwarding-rule").first
+
+    expect(@lb).to have_attributes(
+      :name    => "foo-lb-forwarding-rule",
+      :ems_ref => "1778652908557222005",
+      :type    => "ManageIQ::Providers::Google::NetworkManager::LoadBalancer"
+    )
+    expect(@lb.load_balancer_listeners.first).to have_attributes(
+      :name                     => "foo-lb-forwarding-rule",
+      :ems_ref                  => "1778652908557222005",
+      :type                     => "ManageIQ::Providers::Google::NetworkManager::LoadBalancerListener",
+      :load_balancer_protocol   => "TCP",
+      :instance_protocol        => "TCP",
+      :load_balancer_port_range => 61000...61002,
+      :instance_port_range      => 61000...61002
+    )
+    expect(@lb.load_balancer_pools.first).to have_attributes(
+      :name    => "foo-lb",
+      :ems_ref => "7341375068641214585",
+      :type    => "ManageIQ::Providers::Google::NetworkManager::LoadBalancerPool",
+    )
+    expect(@lb.load_balancer_pool_members.map { |m| m.vm.name }).to \
+      include("instance-custom-machine-type").and include("wheezy")
   end
 
   def assert_specific_security_group
