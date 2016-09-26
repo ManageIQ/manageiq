@@ -13,6 +13,6 @@ if stack
     $evm.set_state_var('stack_exists_in_provider', true)
   else
     $evm.log('info', "Stack <#{stack.name}> no longer exists in provider:<#{ems.try(:name)}>")
-    $evm.set_state_var('stack_existes_in_provider', false)
+    $evm.set_state_var('stack_exists_in_provider', false)
   end
 end
