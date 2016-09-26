@@ -90,21 +90,10 @@ class MiqRequestWorkflow
       MiqRequest.update_request(request, values, @requester)
     else
       set_request_values(values)
-      create_request(values, requester, auto_approve)
+      req = request_class.new(:options => values, :requester => @requester, :request_type => request_type.to_s)
+      return req unless req.valid? # TODO: CatalogController#atomic_req_submit is the only one that enumerates over the errors
+      request_class.create_request(values, @requester, request_type.to_s)
     end
-  end
-
-  def create_request(values, _requester = nil, auto_approve = false)
-    request = request_class.create(:options => values, :requester => @requester, :request_type => request_type.to_s)
-    begin
-      request.save!  # Force validation errors to raise now
-    rescue => err
-      _log.error "[#{err}]"
-      $log.error err.backtrace.join("\n")
-      return request
-    end
-
-    request.post_create(auto_approve)
   end
 
   def init_from_dialog(init_values)
