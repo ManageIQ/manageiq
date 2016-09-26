@@ -18,7 +18,8 @@ class GenericObjectDefinition < ApplicationRecord
   validates :name, :presence => true, :uniqueness => true
   validate  :validate_property_attributes,
             :validate_property_associations,
-            :validate_property_name_unique
+            :validate_property_name_unique,
+            :validate_supported_property_features
 
   before_validation :set_default_properties
   before_validation :normalize_property_attributes,
@@ -109,6 +110,12 @@ class GenericObjectDefinition < ApplicationRecord
     all = properties[:attributes].keys + properties[:associations].keys + properties[:methods]
     common = all.group_by(&:to_s).select { |_k, v| v.size > 1 }.collect(&:first)
     errors[:properties] << "property name has to be unique: [#{common.join(",")}]" unless common.blank?
+  end
+
+  def validate_supported_property_features
+    if properties.keys.any? { |f| !f.to_s.singularize.in?(FEATURES) }
+      errors[:properties] << "only these features are supported: [#{FEATURES.join(", ")}]"
+    end
   end
 
   def check_not_in_use
