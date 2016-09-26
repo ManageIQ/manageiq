@@ -94,9 +94,9 @@ module MiqReport::Generator
   end
 
   def include_as_hash(includes = include, klass = nil)
+    result = {}
     if klass.nil?
       klass = db_class
-      result = {}
       if cols && klass.respond_to?(:virtual_attribute?)
         cols.each do |c|
           result[c.to_sym] = {} if klass.virtual_attribute?(c) && !klass.attribute_supported_by_sql?(c)
@@ -105,7 +105,6 @@ module MiqReport::Generator
     end
 
     if includes.kind_of?(Hash)
-      result ||= {}
       includes.each do |k, v|
         k = k.to_sym
         if k == :managed
@@ -128,7 +127,6 @@ module MiqReport::Generator
         end
       end
     elsif includes.kind_of?(Array)
-      result ||= {}
       includes.each { |i| result[i.to_sym] = {} }
     end
 
