@@ -46,14 +46,18 @@ class ApplicationHelper::Button::Basic < Hash
     self[:enabled] = !disabled? if self[:enabled].nil?
   end
 
-  def check_instance_variables
-    self.class.instance_variables_required.to_a.all? { |variable| !instance_variable_get("#{variable}").nil? }
+  # Check if all instance variables for that button works with are set and
+  # are not `nil`
+  def all_instance_variables_set
+    self.class.instance_variables_required.to_a.all? do |instance_variable|
+      instance_variable_get("#{instance_variable}").present?
+    end
   end
-  private :check_instance_variables
+  private :all_instance_variables_set
 
   def skipped?
     return true unless role_allows_feature?
-    return true unless check_instance_variables
+    return true unless all_instance_variables_set
     calculate_properties
     !visible?
   end
