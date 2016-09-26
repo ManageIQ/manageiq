@@ -58,26 +58,28 @@ module SupportsFeatureMixin
   extend ActiveSupport::Concern
 
   QUERYABLE_FEATURES = {
-    :associate_floating_ip    => 'Associate a Floating IP',
-    :control                  => 'Basic control operations', # FIXME: this is just a internal helper and should be refactored
-    :cloud_tenant_mapping     => 'CloudTenant mapping',
-    :cinder_service           => 'Cinder storage service',
-    :swift_service            => 'Swift storage service',
-    :delete                   => 'Deletion',
-    :disassociate_floating_ip => 'Disassociate a Floating IP',
-    :discovery                => 'Discovery of Managers for a Provider',
-    :evacuate                 => 'Evacuation',
-    :events                   => 'Query for events',
-    :launch_cockpit           => 'Launch Cockpit UI',
-    :live_migrate             => 'Live Migration',
-    :migrate                  => 'Migration',
-    :provisioning             => 'Provisioning',
-    :reboot_guest             => 'Reboot Guest Operation',
-    :reconfigure              => 'Reconfiguration',
-    :regions                  => 'Regions of a Provider',
-    :resize                   => 'Resizing',
-    :retire                   => 'Retirement',
-    :smartstate_analysis      => 'Smartstate Analaysis',
+    :associate_floating_ip        => 'Associate a Floating IP',
+    :control                      => 'Basic control operations', # FIXME: this is just a internal helper and should be refactored
+    :cloud_tenant_mapping         => 'CloudTenant mapping',
+    :backup_create                => 'CloudVolume backup creation',
+    :backup_restore               => 'CloudVolume backup restore',
+    :cinder_service               => 'Cinder storage service',
+    :swift_service                => 'Swift storage service',
+    :delete                       => 'Deletion',
+    :disassociate_floating_ip     => 'Disassociate a Floating IP',
+    :discovery                    => 'Discovery of Managers for a Provider',
+    :evacuate                     => 'Evacuation',
+    :events                       => 'Query for events',
+    :launch_cockpit               => 'Launch Cockpit UI',
+    :live_migrate                 => 'Live Migration',
+    :migrate                      => 'Migration',
+    :provisioning                 => 'Provisioning',
+    :reboot_guest                 => 'Reboot Guest Operation',
+    :reconfigure                  => 'Reconfiguration',
+    :regions                      => 'Regions of a Provider',
+    :resize                       => 'Resizing',
+    :retire                       => 'Retirement',
+    :smartstate_analysis          => 'Smartstate Analaysis',
   }.freeze
 
   # Whenever this mixin is included we define all features as unsupported by default.

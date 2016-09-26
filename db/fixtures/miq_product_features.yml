@@ -625,6 +625,14 @@
       :description: Edit a Volume
       :feature_type: admin
       :identifier: cloud_volume_edit
+    - :name: Create a Backup
+      :description: Create a Volume Backup
+      :feature_type: admin
+      :identifier: cloud_volume_backup_create
+    - :name: Restore from a Backup
+      :description: Restore from a Volume Backup
+      :feature_type: admin
+      :identifier: cloud_volume_backup_restore
     - :name: Attach
       :description: Attach a Volume
       :feature_type: admin
