@@ -682,9 +682,7 @@ class MiqRequestWorkflow
             "Dialog cannot be found.  Name:[%{name}]  Type:[%{type}]" % {:name => @values[:miq_request_dialog_name],
                                                                          :type => self.class.base_model.name}
     end
-    prov_dialogs = d.content
-
-    prov_dialogs
+    d.content
   end
 
   def get_pre_dialogs
