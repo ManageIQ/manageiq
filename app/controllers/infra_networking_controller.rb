@@ -22,7 +22,6 @@ class InfraNetworkingController < ApplicationController
   end
 
   def show(id = nil)
-    return if perfmenu_click
     @explorer = true
     @display = params[:display] || "main" unless control_selected?
     @record = @switch = find_record(Switch, id || params[:id])
@@ -60,10 +59,47 @@ class InfraNetworkingController < ApplicationController
       drop_breadcrumb(:name => _("%{name} (All Registered Hosts)") % {:name => @record.name},
                       :url  => "/infra_networking/x_show/#{@record.id}?display=hosts")
       @showtype = "hosts"
-    when "download_pdf"
-      set_summary_pdf_data
+    when "download_pdf", "main"
+      get_tagdata(@configuration_job)
+      drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @record..name},
+                      :url  => "/infra_networking/show/#{@record.id}")
+      @showtype = "main"
+      set_summary_pdf_data if %w(download_pdf).include?(@display)
     end
     @lastaction = "show"
+  end
+
+  def tagging_explorer_controller?
+    @explorer
+  end
+
+  def button
+    @edit = session[:edit] # Restore @edit for adv search box
+    params[:page] = @current_page if @current_page.nil? # Save current page for list refresh
+
+    params[:page] = @current_page if @current_page.nil? # Save current page for list refresh
+    @refresh_div = "main_div" # Default div for button.rjs to refresh
+    case params[:pressed]
+    when "infra_networking_tag"
+      tag(Switch)
+    end
+    return if %w(infra_networking_tag).include?(params[:pressed]) && @flash_array.nil? # Tag screen showing, so return
+
+    if @flash_array.nil? && !@refresh_partial # if no button handler ran, show not implemented msg
+      add_flash(_("Button not yet implemented"), :error)
+      @refresh_partial = "layouts/flash_msg"
+      @refresh_div = "flash_msg_div"
+    elsif @flash_array && @lastaction == "show"
+      @configuration_job = @record = identify_record(params[:id])
+      @refresh_partial = "layouts/flash_msg"
+      @refresh_div = "flash_msg_div"
+    end
+
+    if @refresh_div == "main_div" && @lastaction == "show_list"
+      replace_gtl_main_div
+    else
+      render_flash
+    end
   end
 
   def tree_select
@@ -109,7 +145,7 @@ class InfraNetworkingController < ApplicationController
 
   def x_show
     @explorer = true
-    @storage = @record = identify_record(params[:id], Switch)
+    @switch = @record = identify_record(params[:id], Switch)
     respond_to do |format|
       format.js do # AJAX, select the node
         unless @record
@@ -204,13 +240,18 @@ class InfraNetworkingController < ApplicationController
     super
   end
 
+  def tagging
+    assert_privileges("infra_networking_tag")
+    tagging_edit('Switch', false)
+    render_tagging_form
+  end
+
   private ###########
 
   def hosts_list
     condition         = nil
     label             = _("%{name} (All %{titles})" % {:name => @switch.name, :titles => title_for_hosts})
     breadcrumb_suffix = ""
-    @no_checkboxes = true
 
     host_service_group_name = params[:host_service_group_name]
     if host_service_group_name
@@ -307,7 +348,6 @@ class InfraNetworkingController < ApplicationController
     return dvswitch_node(id, model) if id
     if x_active_tree == :infra_networking_tree
       options = {:model => "Switch", :where_clause => ["shared = true"]}
-      @no_checkboxes = true
       @right_cell_text = _("All %{title}") % {:title => model_to_name(model)}
       process_show_list(options)
     end
@@ -325,7 +365,6 @@ class InfraNetworkingController < ApplicationController
       self.x_node = "root"
       get_node_info("root")
     else
-      @no_checkboxes = true
       options = {:model => "Switch", :where_clause => ["shared = true and id in(?)", @host_record.switches.pluck(:id)]}
       process_show_list(options)
       @showtype        = 'main'
@@ -341,7 +380,6 @@ class InfraNetworkingController < ApplicationController
       self.x_node = "root"
       get_node_info("root")
     else
-      @no_checkboxes = true
       hosts = @cluster_record.hosts
       switch_ids = hosts.collect { |host| host.switches.pluck(:id) }
       options = {:model => "Switch", :where_clause => ["shared = true and id in(?)", switch_ids.flatten.uniq]}
@@ -359,7 +397,6 @@ class InfraNetworkingController < ApplicationController
       self.x_node = "root"
       get_node_info("root")
     else
-      @no_checkboxes = true
       hosts = Host.where(:ems_id => @provider_record.id)
       switch_ids = hosts.collect { |host| host.switches.pluck(:id) }
       options = {:model => "Switch", :where_clause => ["shared = true and id in(?)", switch_ids.flatten.uniq]}
@@ -379,7 +416,6 @@ class InfraNetworkingController < ApplicationController
   def default_node
     return unless x_node == "root"
     options = {:model => "Switch", :where_clause => ["shared = true"]}
-    @no_checkboxes = true
     process_show_list(options)
     @right_cell_text = _("All Switches")
   end
@@ -397,20 +433,6 @@ class InfraNetworkingController < ApplicationController
     presenter, r = rendering_objects
     @in_a_form = true
     presenter.update(:main_div, r[:partial => 'form', :locals => {:controller => 'infra_networking'}])
-    update_title(presenter)
-    rebuild_toolbars(false, presenter)
-    handle_bottom_cell(presenter, r)
-
-    render :json => presenter.for_render
-  end
-
-  def render_tagging_form
-    return if %w(cancel save).include?(params[:button])
-    @in_a_form = true
-    @right_cell_text = _("Edit Tags")
-    clear_flash_msg
-    presenter, r = rendering_objects
-    update_tagging_partials(presenter, r)
     update_title(presenter)
     rebuild_toolbars(false, presenter)
     handle_bottom_cell(presenter, r)
@@ -437,6 +459,13 @@ class InfraNetworkingController < ApplicationController
     if @sb[:action] || params[:display]
       partial, _, @right_cell_text = set_right_cell_vars # Set partial name, action and cell header
     end
+
+    if params[:action] == 'x_button' && params[:pressed] == 'infra_networking_tag'
+      tagging
+      return
+    end
+
+    return if @in_a_form
 
     if !@in_a_form && !@sb[:action]
       get_node_info(x_node)
@@ -472,55 +501,11 @@ class InfraNetworkingController < ApplicationController
       presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
     end
 
-    # Replace the searchbox
-    presenter.replace(:adv_searchbox_div, r[
-                                          :partial => 'layouts/x_adv_searchbox',
-                                          :locals  => {:nameonly => [:infra_networking_tree].include?(x_active_tree)}
-                                        ])
-
-    presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
-
-    # Handle bottom cell
-    if @pages || @in_a_form
-      if @pages && !@in_a_form
-        if @sb[:action] && @record # Came in from an action link
-          presenter.update(:paging_div, r[
-                                        :partial => 'layouts/x_pagingcontrols',
-                                        :locals  => {
-                                          :action_url    => @sb[:action],
-                                          :action_method => @sb[:action], # FIXME: action method and url the same?!
-                                          :action_id     => @record.id
-                                        }
-                                      ])
-        else
-          presenter.update(:paging_div, r[:partial => 'layouts/x_pagingcontrols'])
-        end
-        presenter.hide(:form_buttons_div).show(:pc_div_1)
-      elsif @in_a_form
-        presenter.hide(:pc_div_1).show(:form_buttons_div)
-      end
-      presenter.show(:paging_div)
-    else
-      presenter.hide(:paging_div)
-    end
-
+    replace_search_box(presenter, r)
+    handle_bottom_cell(presenter, r)
+    rebuild_toolbars(record_showing, presenter)
     presenter[:right_cell_text] = @right_cell_text
-
-    presenter.reload_toolbars(:history => h_tb, :center => c_tb)
-
-    presenter.set_visibility(h_tb.present?, :toolbar)
-
-    presenter[:record_id] = @record ? @record.id : nil
-
-    # Hide/show searchbox depending on if a list is showing
-    presenter.set_visibility(!(@record || @in_a_form), :adv_searchbox_div)
-    presenter[:clear_search_toggle] = clear_search_status
-
     presenter[:osf_node] = x_node # Open, select, and focus on this node
-
-    presenter.hide(:blocker_div) unless @edit && @edit[:adv_search_open]
-    presenter[:hide_modal] = true
-    presenter.lock_tree(x_active_tree, @in_a_form && @edit)
 
     render :json => presenter.for_render
   end
@@ -597,6 +582,7 @@ class InfraNetworkingController < ApplicationController
 
   def update_partials(record_showing, presenter, r)
     if record_showing && valid_switch_record?(@record)
+      get_tagdata(@record)
       presenter.hide(:form_buttons_div)
       path_dir = "infra_networking"
       presenter.update(:main_div, r[:partial => "#{path_dir}/main",
@@ -710,9 +696,8 @@ class InfraNetworkingController < ApplicationController
   end
 
   def rebuild_toolbars(record_showing, presenter)
-    center_tb = "blank_view_tb"
     if !@in_a_form && !@sb[:action]
-      center_tb ||= center_toolbar_filename
+      center_tb = center_toolbar_filename
       c_tb = build_toolbar(center_tb)
 
       v_tb = if record_showing
@@ -782,6 +767,20 @@ class InfraNetworkingController < ApplicationController
   def set_root_node
     self.x_node = "root"
     get_node_info(x_node)
+  end
+
+  def render_tagging_form
+    return if %w(cancel save).include?(params[:button])
+    @in_a_form = true
+    @right_cell_text = _("Edit Tags")
+    clear_flash_msg
+    presenter, r = rendering_objects
+    update_tagging_partials(presenter, r)
+    presenter[:right_cell_text] = @right_cell_text
+    rebuild_toolbars(false, presenter)
+    handle_bottom_cell(presenter, r)
+
+    render :json => presenter.for_render
   end
 
   def get_session_data
