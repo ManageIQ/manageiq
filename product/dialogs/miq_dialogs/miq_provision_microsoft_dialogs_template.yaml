@@ -449,7 +449,7 @@
           :display: :edit
           :data_type: :integer
           :notes_display: :show
-        :number_of_cpus:
+        :number_of_sockets:
           :values:
             1: "1"
             2: "2"
