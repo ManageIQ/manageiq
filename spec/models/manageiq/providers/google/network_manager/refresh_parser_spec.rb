@@ -118,7 +118,7 @@ describe ManageIQ::Providers::Google::NetworkManager::RefreshParser do
     )
   end
 
-  describe '#parse_port_range' do
+  describe '::parse_port_range' do
     it 'treats a single port as a single port range' do
       expect(described_class.parse_port_range("80")).to eql(80..80)
     end
@@ -132,7 +132,7 @@ describe ManageIQ::Providers::Google::NetworkManager::RefreshParser do
     end
   end
 
-  describe 'described_class#parse_vm_link' do
+  describe '::parse_vm_link' do
     it 'does not match invalid link urls' do
       expect(described_class.parse_vm_link("")).to eql(nil)
       expect(
@@ -156,30 +156,22 @@ describe ManageIQ::Providers::Google::NetworkManager::RefreshParser do
   private
 
   def set_forwarding_rules(connection, items)
-    allow(connection).to receive(:forwarding_rules) { forwarding_rules_collection(items) }
+    allow(connection).to receive(:forwarding_rules) { fog_collection(items) }
   end
 
   def set_target_pools(connection, items)
-    allow(connection).to receive(:target_pools) { target_pools_collection(items) }
+    allow(connection).to receive(:target_pools) { fog_collection(items) }
   end
 
-  def forwarding_rules_collection(items)
-    fog_collection(items, :name)
-  end
-
-  def target_pools_collection(items)
-    fog_collection(items, :name)
-  end
-
-  def fog_collection(items, get_key = nil)
+  def fog_collection(items)
     collection = double
     allow(collection).to receive(:to_a) { items }
     allow(collection).to receive(:all) { items }
     allow(collection).to receive(:select) { items.select }
-    # allow lookup via get with the get_key
+    # allow lookup via get with the :name key
     items.each do |item|
-      allow(collection).to receive(:get).with(item.send(get_key)) { item }
-    end unless get_key.nil?
+      allow(collection).to receive(:get).with(item.send(:name)) { item }
+    end
 
     collection
   end

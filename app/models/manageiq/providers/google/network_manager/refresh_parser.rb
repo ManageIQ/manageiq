@@ -27,8 +27,6 @@ module ManageIQ::Providers
         get_security_groups
         get_network_ports
         get_floating_ips
-
-        # Note these load balancer methods must be called in this order
         get_load_balancers
         get_load_balancer_pools
         get_load_balancer_listeners
