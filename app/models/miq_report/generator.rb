@@ -93,14 +93,11 @@ module MiqReport::Generator
     end
   end
 
-  def include_as_hash(includes = include, klass = nil)
+  def include_as_hash(includes = include, klass = db_class, klass_cols = cols)
     result = {}
-    if klass.nil?
-      klass = db_class
-      if cols && klass.respond_to?(:virtual_attribute?)
-        cols.each do |c|
-          result[c.to_sym] = {} if klass.virtual_attribute?(c) && !klass.attribute_supported_by_sql?(c)
-        end
+    if klass_cols && klass && klass.respond_to?(:virtual_attribute?)
+      klass_cols.each do |c|
+        result[c.to_sym] = {} if klass.virtual_attribute?(c) && !klass.attribute_supported_by_sql?(c)
       end
     end
 
@@ -116,7 +113,7 @@ module MiqReport::Generator
           if v.nil? || v["include"].blank?
             result[k] = {}
           elsif assoc_klass
-            result[k] = include_as_hash(v["include"], assoc_klass)
+            result[k] = include_as_hash(v["include"], assoc_klass, nil)
           end
 
           if assoc_klass && assoc_klass.respond_to?(:virtual_attribute?) && v["columns"]
