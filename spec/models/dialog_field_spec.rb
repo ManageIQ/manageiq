@@ -175,7 +175,7 @@ describe DialogField do
     end
   end
 
-  it "has default_value as an accessible attribute" do
-    expect(described_class.new).to have_attr_accessor(:default_value)
+  it "does not use attr_accessor for default_value" do
+    expect(described_class.new(:default_value => "test")[:default_value]).to eq("test")
   end
 end
