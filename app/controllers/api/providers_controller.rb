@@ -51,18 +51,26 @@ module Api
       end
     end
 
+    def custom_attributes_edit_resource(object, type, id, data = nil)
+      formatted_data = format_provider_custom_attributes(data)
+      super(object, type, id, formatted_data)
+    end
+
+    def custom_attributes_add_resource(object, type, id, data = nil)
+      formatted_data = format_provider_custom_attributes(data)
+      super(object, type, id, formatted_data)
+    end
+
     private
 
-    def update_provider_custom_attributes(provider, custom_attributes)
-      custom_attributes.each do |attribute|
-        if CustomAttribute::ALLOWED_API_FIELD_TYPES.include? attribute["field_type"]
-          attribute["value"] = attribute["field_type"].safe_constantize.parse(attribute["value"])
-        end
-        attribute["section"] = "metadata"
-        custom_attributes_add_resource(provider, nil, nil, attribute)
+    def format_provider_custom_attributes(attribute)
+      if CustomAttribute::ALLOWED_API_VALUE_TYPES.include? attribute["field_type"]
+        attribute["value"] = attribute.delete("field_type").safe_constantize.parse(attribute["value"])
       end
+      attribute["section"] = "metadata" unless @req.action == "edit"
+      attribute
     rescue => err
-      raise BadRequestError, "Could not update the provider custom attributes - #{err}"
+      raise BadRequestError, "Invalid provider custom attributes specified - #{err}"
     end
 
     def provider_ident(provider)
@@ -85,11 +93,9 @@ module Api
 
     def create_provider(data)
       provider_klass = fetch_provider_klass(collection_class(:providers), data)
-      custom_attributes = data.delete("custom_attributes")
       create_data    = fetch_provider_data(provider_klass, data, :requires_zone => true)
       provider       = provider_klass.create!(create_data)
       update_provider_authentication(provider, data)
-      update_provider_custom_attributes(provider, custom_attributes) if custom_attributes
       provider
     rescue => err
       provider.destroy if provider
@@ -97,10 +103,8 @@ module Api
     end
 
     def edit_provider(provider, data)
-      custom_attributes = data.delete("custom_attributes")
       update_data = fetch_provider_data(provider.class, data)
       provider.update_attributes(update_data) if update_data.present?
-      update_provider_custom_attributes(provider, custom_attributes) if custom_attributes
       update_provider_authentication(provider, data)
       provider
     rescue => err
