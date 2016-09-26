@@ -433,8 +433,7 @@ class MiqRequestWorkflow
   end
 
   def get_value(data)
-    return data.first if data.kind_of?(Array)
-    data
+    data.kind_of?(Array) ? data.first : data
   end
 
   def set_or_default_field_values(values)
