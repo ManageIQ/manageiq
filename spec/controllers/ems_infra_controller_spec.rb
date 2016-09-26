@@ -234,7 +234,7 @@ describe EmsInfraController do
     end
   end
 
-  describe "#register_nodes" do
+  describe "#register_and_configure_nodes" do
     before do
       stub_user(:features => :all)
       @ems = FactoryGirl.create(:ems_openstack_infra_with_stack_and_compute_nodes)
@@ -249,7 +249,7 @@ describe EmsInfraController do
       allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager)
         .to receive(:workflow_service).and_return([])
       allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager)
-        .to receive(:register_nodes).and_return("SUCCESS")
+        .to receive(:register_and_configure_nodes).and_return("SUCCESS")
       post :register_nodes, :params => {:id => @ems.id, :nodes_json => @nodes_example, :register => 1}
       expect(controller.send(:flash_errors?)).to be_falsey
       expect(response.body).to include("redirected")
@@ -270,7 +270,7 @@ describe EmsInfraController do
       post :register_nodes, :params => {:id => @ems.id, :nodes_json => @nodes_example, :register => 1}
       expect(controller.send(:flash_errors?)).to be_truthy
       flash_messages = assigns(:flash_array)
-      message = _("Error executing register nodes workflow")
+      message = _("Error executing register and configure workflows")
       expect(flash_messages.first[:message]).to include(message)
     end
 

@@ -126,7 +126,7 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
     openstack_handle.detect_workflow_service
   end
 
-  def register_nodes(nodes_json)
+  def register_and_configure_nodes(nodes_json)
     connection = openstack_handle.detect_workflow_service
     workflow = "tripleo.baremetal.v1.register_or_update"
     input = { :nodes_json => nodes_json }
@@ -141,6 +141,13 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
     end
 
     EmsRefresh.queue_refresh(@infra) if state == "SUCCESS"
+
+    # Configures boot image for all manageable nodes.
+    # It would be preferred to only configure the nodes that were just added, but
+    # we don't know the uuids from the response. The uuids are available in Zaqar.
+    # Once we add support for reading Zaqar, we can change this to be more
+    # selective.
+    connection.create_execution("tripleo.baremetal.v1.configure_manageable_nodes")
 
     [state, response.body.to_s]
   end
