@@ -92,7 +92,8 @@ class MiqRequestWorkflow
       set_request_values(values)
       req = request_class.new(:options => values, :requester => @requester, :request_type => request_type.to_s)
       return req unless req.valid? # TODO: CatalogController#atomic_req_submit is the only one that enumerates over the errors
-      request_class.create_request(values, @requester, request_type.to_s)
+      values[:__request_type__] = request_type.to_s.presence # Pass this along to MiqRequest#create_request
+      request_class.create_request(values, @requester, auto_approve)
     end
   end
 

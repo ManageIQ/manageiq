@@ -441,9 +441,10 @@ class MiqRequest < ApplicationRecord
 
   def self.create_request(values, requester, auto_approve = false)
     values[:src_ids] = values[:src_ids].to_miq_a unless values[:src_ids].nil?
+    request_type = values.delete(:__request_type__) || request_types.first
     request = new(:options      => values,
                   :requester    => requester,
-                  :request_type => request_types.first)
+                  :request_type => request_type)
     request.save!
 
     request.post_create(auto_approve)
