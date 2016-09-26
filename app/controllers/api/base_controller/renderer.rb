@@ -6,12 +6,7 @@ module Api
       #
       def render_collection_type(type, id, is_subcollection = false)
         klass = collection_class(type)
-        opts  = {
-          :name               => type.to_s,
-          :is_subcollection   => is_subcollection,
-          :resource_actions   => "resource_actions_#{type}",
-          :collection_actions => "collection_actions_#{type}"
-        }
+        opts  = {:name => type.to_s, :is_subcollection => is_subcollection}
         if id
           render_resource type, resource_search(id, type, klass), opts
         else
@@ -65,7 +60,7 @@ module Api
               json.href normalize_href(reftype, resource["id"])
             end
           end
-          aspecs = get_aspecs(type, opts[:collection_actions], :collection,
+          aspecs = get_aspecs(type, :collection,
                               :is_subcollection => opts[:is_subcollection], :ref => reftype)
           add_actions(json, aspecs, reftype)
         end
@@ -106,23 +101,14 @@ module Api
 
       #
       # type is the collection type we need to get actions specifications for
-      # typed_actions is the optional type specific method to return actions
       # item_type is :collection or :resource
       #
       # opts[:is_subcollection] is true if accessing as subcollection or subresource
       # opts[:ref] is how to identify item, either the reftype of the collection or href of resource
       # opts[:resource] is the object to get action specs for the specific resource
       #
-      def get_aspecs(type, typed_actions, item_type, opts = {})
-        aspecs = []
-        if typed_actions
-          aspecs = if respond_to?(typed_actions)
-                     send(typed_actions, opts[:is_subcollection], opts[:ref])
-                   else
-                     gen_action_specs(type, item_type, opts[:is_subcollection], opts[:ref], opts[:resource])
-                   end
-        end
-        aspecs
+      def get_aspecs(type, item_type, opts = {})
+        gen_action_specs(type, item_type, opts[:is_subcollection], opts[:ref], opts[:resource])
       end
 
       #
@@ -325,7 +311,7 @@ module Api
         return unless render_actions(resource)
 
         href   = json.attributes!["href"]
-        aspecs = get_aspecs(type, opts[:resource_actions], :resource,
+        aspecs = get_aspecs(type, :resource,
                             :is_subcollection => opts[:is_subcollection], :ref => href, :resource => resource)
         add_actions(json, aspecs, type)
       end
