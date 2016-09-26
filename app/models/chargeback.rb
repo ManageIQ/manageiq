@@ -55,14 +55,16 @@ class Chargeback < ActsAsArModel
           if data[key].nil?
             start_ts, end_ts, display_range = get_time_range(perf, interval, tz)
             data[key] = {
-              "start_date"    => start_ts,
-              "end_date"      => end_ts,
-              "display_range" => display_range,
-              "interval_name" => interval,
+              "start_date"       => start_ts,
+              "end_date"         => end_ts,
+              "display_range"    => display_range,
+              "interval_name"    => interval,
+              "chargeback_rates" => ''
             }.merge(extra_fields)
           end
 
           rates_to_apply = cb.get_rates(perf)
+          data[key]["chargeback_rates"] = (data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)).uniq.join(', ')
           calculate_costs(perf, data[key], rates_to_apply)
         end
       end
