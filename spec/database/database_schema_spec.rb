@@ -1,5 +1,5 @@
-describe "database" do
-  describe "foreign keys" do
+describe "Database" do
+  describe "foreign key constraints" do
     let(:query) do
       <<-SQL
         SELECT
@@ -14,13 +14,13 @@ describe "database" do
     it "should not exist" do
       message = ""
       ActiveRecord::Base.connection.select_all(query).each do |fk|
-        message << "Foreign Key #{fk["constraint_name"]} on table #{fk["table_name"]} should be removed\n"
+        message << "Foreign key constraint #{fk["constraint_name"]} on table #{fk["table_name"]} should be removed\n"
       end
       raise message unless message.empty?
     end
   end
 
-  describe "_id column types" do
+  describe "_id columns" do
     let(:query) do
       <<-SQL
         SELECT
@@ -34,7 +34,7 @@ describe "database" do
       SQL
     end
 
-    it "should be bigint" do
+    it "should be of type bigint" do
       message = ""
       ActiveRecord::Base.connection.select_all(query).each do |col|
         message << "Column #{col["column_name"]} in table #{col["table_name"]} is either named improperly (_id is reserved for actual id columns) or needs to be of type bigint\n"
