@@ -51,7 +51,7 @@ class GenericObjectDefinition < ApplicationRecord
 
   def property_getter(attr, val)
     return type_cast(attr, val) if property_attribute_defined?(attr)
-    return get_associations(attr, val) if property_association_defined?(attr)
+    return get_objects_of_association(attr, val) if property_association_defined?(attr)
   end
 
   def type_cast(attr, value)
@@ -65,7 +65,7 @@ class GenericObjectDefinition < ApplicationRecord
 
   private
 
-  def get_associations(attr, values)
+  def get_objects_of_association(attr, values)
     property_associations[attr].constantize.where(:id => values).to_a
   end
 
