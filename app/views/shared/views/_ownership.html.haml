@@ -46,9 +46,12 @@
     - @gtl_type = settings(:views, :tagging)
     = render :partial => "layouts/gtl"
 
-  %div_for_paging{'ng-controller'           => "pagingDivButtonGroupController",
-                  'paging_div_buttons_id'   => "angular_paging_div_buttons",
-                  'paging_div_buttons_type' => "Save"}
+    %div_for_paging{'ng-controller'                  => "pagingDivButtonGroupController",
+                  'paging_div_buttons_state_enabled' => true,
+                  'paging_div_buttons_id'            => "angular_paging_div_buttons",
+                  'paging_div_buttons_type'          => "Save"}
+  - unless @explorer
+    = render :partial => "layouts/angular/x_edit_buttons_angular"
 
 :javascript
   ManageIQ.angular.app.value('ownershipFormId', '#{"ownership"}');

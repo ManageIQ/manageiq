@@ -15,13 +15,13 @@ module ApplicationController::CiProcessing
     assert_privileges(params[:pressed])
 
     # check to see if coming from show_list or drilled into vms from another CI
-    if request.parameters[:controller] == "vm" || ["all_vms", "vms", "instances", "images"].include?(params[:display])
-      rec_cls = "vm"
-    elsif ["miq_templates", "images"].include?(params[:display]) || params[:pressed].starts_with?("miq_template_")
-      rec_cls = "miq_template"
-    else
-      rec_cls = request.parameters[:controller]
-    end
+    controller = if request.parameters[:controller] == "vm" || ["all_vms", "vms", "instances", "images"].include?(params[:display])
+                   "vm"
+                 elsif ["miq_templates", "images"].include?(params[:display]) || params[:pressed].starts_with?("miq_template_")
+                   "miq_template"
+                 else
+                   request.parameters[:controller]
+                 end
     recs = []
     if !session[:checked_items].nil? && @lastaction == "set_checked_items"
       recs = session[:checked_items]
@@ -46,7 +46,8 @@ module ApplicationController::CiProcessing
       ownership
     else
       if role_allows?(:feature => "vm_ownership")
-        javascript_redirect :controller => rec_cls.to_s, :action => 'ownership', :recs => @ownership_items # redirect to build the ownership screen
+        drop_breadcrumb(:name => _("Set Ownership"), :url => "/vm_common/ownership")
+        javascript_redirect :controller => rec_cls.to_s, :action => 'ownership', :rec_ids => @ownership_items, :escape => false  # redirect to build the ownership screen
       else
         head :ok
       end
@@ -71,9 +72,14 @@ module ApplicationController::CiProcessing
 
   # Assign/unassign ownership to a set of objects
   def ownership
-    build_ownership_info
-    drop_breadcrumb(:name => _("Set Ownership"), :url => "/vm_common/ownership")
+    @sb[:explorer] = true if @explorer
     @in_a_form = @ownershipedit = true
+    drop_breadcrumb(:name => _("Set Ownership"), :url => "/vm_common/ownership")
+    if params[:rec_ids]
+      @ownership_items = params[:rec_ids]
+    end
+    @ownershipitems = Vm.find(@ownership_items).sort_by(&:name) # Get the db records
+    build_ownership_info
     build_targets_hash(@ownershipitems)
     if @sb[:explorer]
       @refresh_partial = "shared/views/ownership"
