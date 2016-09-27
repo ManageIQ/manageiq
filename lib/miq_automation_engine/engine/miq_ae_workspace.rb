@@ -60,6 +60,7 @@ module MiqAeEngine
     end
 
     def self.instantiate(uri, user, attrs = {})
+      User.current_user = user
       workspace = MiqAeWorkspaceRuntime.new(attrs)
       workspace.instantiate(uri, user, nil)
       workspace
