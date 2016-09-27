@@ -18,50 +18,50 @@ module Service::Aggregation
   end
 
   def aggregate_direct_vm_cpus
-    direct_vms.inject(0) { |aggregate, vm| aggregate += vm.cpu_total_cores.to_i }
+    direct_vms.inject(0) { |aggregate, vm| aggregate + vm.cpu_total_cores.to_i }
   end
 
   def aggregate_direct_vm_memory
-    direct_vms.inject(0) { |aggregate, vm| aggregate += vm.ram_size.to_i }
+    direct_vms.inject(0) { |aggregate, vm| aggregate + vm.ram_size.to_i }
   end
 
   def aggregate_direct_vm_disk_count
-    direct_vms.inject(0) { |aggregate, vm| aggregate += vm.num_disks.to_i }
+    direct_vms.inject(0) { |aggregate, vm| aggregate + vm.num_disks.to_i }
   end
 
   def aggregate_direct_vm_disk_space_allocated
-    direct_vms.inject(0) { |aggregate, vm| aggregate += vm.allocated_disk_storage.to_i }
+    direct_vms.inject(0) { |aggregate, vm| aggregate + vm.allocated_disk_storage.to_i }
   end
 
   def aggregate_direct_vm_disk_space_used
-    direct_vms.inject(0) { |aggregate, vm| aggregate += vm.used_disk_storage.to_i }
+    direct_vms.inject(0) { |aggregate, vm| aggregate + vm.used_disk_storage.to_i }
   end
 
   def aggregate_direct_vm_memory_on_disk
-    direct_vms.inject(0) { |aggregate, vm| aggregate += vm.ram_size_in_bytes_by_state.to_i }
+    direct_vms.inject(0) { |aggregate, vm| aggregate + vm.ram_size_in_bytes_by_state.to_i }
   end
 
   def aggregate_all_vm_cpus
-    all_vms.inject(0) { |aggregate, vm| aggregate += vm.cpu_total_cores.to_i }
+    all_vms.inject(0) { |aggregate, vm| aggregate + vm.cpu_total_cores.to_i }
   end
 
   def aggregate_all_vm_memory
-    all_vms.inject(0) { |aggregate, vm| aggregate += vm.ram_size.to_i }
+    all_vms.inject(0) { |aggregate, vm| aggregate + vm.ram_size.to_i }
   end
 
   def aggregate_all_vm_disk_count
-    all_vms.inject(0) { |aggregate, vm| aggregate += vm.num_disks.to_i }
+    all_vms.inject(0) { |aggregate, vm| aggregate + vm.num_disks.to_i }
   end
 
   def aggregate_all_vm_disk_space_allocated
-    all_vms.inject(0) { |aggregate, vm| aggregate += vm.allocated_disk_storage.to_i }
+    all_vms.inject(0) { |aggregate, vm| aggregate + vm.allocated_disk_storage.to_i }
   end
 
   def aggregate_all_vm_disk_space_used
-    all_vms.inject(0) { |aggregate, vm| aggregate += vm.used_disk_storage.to_i }
+    all_vms.inject(0) { |aggregate, vm| aggregate + vm.used_disk_storage.to_i }
   end
 
   def aggregate_all_vm_memory_on_disk
-    all_vms.inject(0) { |aggregate, vm| aggregate += vm.ram_size_in_bytes_by_state.to_i }
+    all_vms.inject(0) { |aggregate, vm| aggregate + vm.ram_size_in_bytes_by_state.to_i }
   end
 end
