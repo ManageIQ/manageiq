@@ -41,9 +41,6 @@ Vmdb::Application.configure do
   # on accessibility issues.
   config.assets.precompile << 'tota11y.js'
 
-  # Raise exceptions in transactional callbacks
-  config.active_record.raise_in_transactional_callbacks = true
-
   # Customize any additional options below...
 
   # Do not include all helpers for all views
