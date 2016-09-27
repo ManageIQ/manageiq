@@ -15,7 +15,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
 
     context "VMware provisioning" do
       before(:each) do
-        @ems         = FactoryGirl.create(:ems_vmware_with_authentication)
+        @ems         = FactoryGirl.create(:ems_vmware_with_authentication, :api_version => '6.0')
         @vm_template = FactoryGirl.create(:template_vmware, :name => "template1", :ext_management_system => @ems, :operating_system => @os, :cpu_limit => -1, :cpu_reserve => 0)
         @vm          = FactoryGirl.create(:vm_vmware, :name => "vm1", :location => "abc/def.vmx")
         @pr          = FactoryGirl.create(:miq_provision_request, :requester => @admin, :src_vm_id => @vm_template.id)
@@ -203,6 +203,26 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
         it "uses the resource pool from destination host" do
           @vm_prov.options[:dest_host] = [dest_host.id, dest_host.name]
           expect(@vm_prov.dest_resource_pool).to eq(dest_host.default_resource_pool)
+        end
+      end
+
+      context "#dest_storage_profile" do
+        let(:storage_profile) { FactoryGirl.create(:storage_profile, :name => "Gold") }
+
+        it "returns nil if no placement_storage_profile is given" do
+          @vm_prov.options[:placement_storage_profile] = nil
+          expect(@vm_prov.dest_storage_profile).to be_nil
+        end
+
+        it "returns nil if ems api_version < 5.5" do
+          @vm_prov.source.ext_management_system.api_version = '5.1'
+          @vm_prov.options[:placement_storage_profile] = [storage_profile.id, storage_profile.name]
+          expect(@vm_prov.dest_storage_profile).to be_nil
+        end
+
+        it "returns a storage profile" do
+          @vm_prov.options[:placement_storage_profile] = [storage_profile.id, storage_profile.name]
+          expect(@vm_prov.dest_storage_profile).to eq(storage_profile)
         end
       end
 
