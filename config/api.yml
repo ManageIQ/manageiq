@@ -52,7 +52,7 @@
     :options:
     - :arbitrary_resource_path
     - :collection
-    :verbs: *g
+    :verbs: *gp
     :klass: MiqAeDomain
     :collection_actions:
       :get:
@@ -62,6 +62,9 @@
       :get:
       - :name: read
         :identifier: miq_ae_domain_view
+      :post:
+      - :name: git_refresh
+        :identifier: miq_ae_git_refresh
   :automation_requests:
     :description: Automation Requests
     :options:
