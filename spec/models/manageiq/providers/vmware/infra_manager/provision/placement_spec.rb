@@ -5,7 +5,8 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
       template = FactoryGirl.create(:template_vmware, :ext_management_system => ems)
       vm       = FactoryGirl.create(:vm_vmware)
       @storage = FactoryGirl.create(:storage)
-      @host    = FactoryGirl.create(:host, :ext_management_system => ems, :storages => [@storage])
+      @cluster = FactoryGirl.create(:ems_cluster)
+      @host    = FactoryGirl.create(:host, :ext_management_system => ems, :storages => [@storage], :ems_cluster => @cluster)
       options  = {:src_vm_id => template.id}
 
       @task = FactoryGirl.create(:miq_provision_vmware, :source       => template,
@@ -21,7 +22,13 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
       expect { @task.send(:placement) }.to raise_error(MiqException::MiqProvisionError)
     end
 
-    it "#manual_placement" do
+    it "#manual_placement without host or cluster raises error" do
+      @task.options[:placement_ds_name]   = @storage.id
+      @task.options[:placement_auto]      = false
+      expect { @task.send(:placement) }.to raise_error(MiqException::MiqProvisionError)
+    end
+
+    it "#manual_placement with host and datastore" do
       @task.options[:placement_host_name] = @host.id
       @task.options[:placement_ds_name]   = @storage.id
       @task.options[:placement_auto]      = false
@@ -43,8 +50,9 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
     end
 
     def check
-      host, storage = @task.send(:placement)
+      host, cluster, storage = @task.send(:placement)
       expect(host).to eql(@host)
+      expect(cluster).to eql(@cluster)
       expect(storage).to eql(@storage)
     end
   end
