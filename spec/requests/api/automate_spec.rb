@@ -98,7 +98,7 @@ describe "Automate API" do
 
     it 'fails to refresh git when the region misses git_owner role' do
       api_basic_authorize action_identifier(:automate, :git_refresh)
-      expect(MiqRegion).to receive(:my_region).and_return(double(:role_active? => false))
+      expect(GitBasedDomainImportService).to receive(:available?).and_return(false)
 
       run_post(automate_url(git_domain.id), gen_request(:git_refresh))
       expect_single_action_result(:success => false,
@@ -108,7 +108,7 @@ describe "Automate API" do
     context 'with proper git_owner role' do
       let(:non_git_domain) { FactoryGirl.create(:miq_ae_domain) }
       before do
-        expect(MiqRegion).to receive(:my_region).and_return(double(:role_active? => true))
+        expect(GitBasedDomainImportService).to receive(:available?).and_return(true)
       end
 
       it 'fails to refresh when domain did not originate from git' do

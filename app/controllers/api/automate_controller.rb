@@ -14,7 +14,7 @@ module Api
 
     def git_refresh_resource(type, id = nil, data = nil)
       api_action(type, id) do |klass|
-        unless MiqRegion.my_region.role_active?("git_owner")
+        unless GitBasedDomainImportService.available?
           return action_result(false, 'Please enable the git owner role in order to import git repositories')
         end
         domain = resource_search(id, type, klass)
