@@ -476,6 +476,8 @@ module EmsCommon
       arbitration_profile_edit if params[:pressed] == "arbitration_profile_new"
       arbitration_profile_edit if params[:pressed] == "arbitration_profile_edit"
       arbitration_profile_delete if params[:pressed] == "arbitration_profile_delete"
+      show_alerts if params[:pressed] == "ems_container_alerts"
+
       refreshemss if params[:pressed] == "#{@table_name}_refresh"
       #     scanemss if params[:pressed] == "scan"
       tag(model) if params[:pressed] == "#{@table_name}_tag"
@@ -538,10 +540,9 @@ module EmsCommon
                 @flash_array.nil? # Tag screen showing, so return
       check_if_button_is_implemented
     end
-
     if !@flash_array.nil? && params[:pressed] == "#{@table_name}_delete" && @single_delete
       javascript_redirect :action => 'show_list', :flash_msg => @flash_array[0][:message] # redirect to build the retire screen
-    elsif params[:pressed].ends_with?("_edit") || ["arbitration_profile_new", "#{pfx}_miq_request_new", "#{pfx}_clone",
+    elsif params[:pressed].ends_with?("_edit") || params[:pressed].include?("ems_container_alerts") || ["arbitration_profile_new", "#{pfx}_miq_request_new", "#{pfx}_clone",
                                                    "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
       render_or_redirect_partial(pfx)
     else

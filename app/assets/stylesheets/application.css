@@ -28,3 +28,14 @@
  *= require service_dialogs
  *= require xml_display
 */
+
+
+#alert_ack_message
+{
+    height: 100px;
+    width: 80%;
+    text-align: left;
+
+}
+
+

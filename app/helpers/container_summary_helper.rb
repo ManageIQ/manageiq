@@ -160,6 +160,37 @@ module ContainerSummaryHelper
     textual_link(@record.parent)
   end
 
+  def textual_group_alerts
+    labels = [_("Host group"), _("Issue"),_("Severity"), _("Last change"), _("Age"), _("Acked")]
+    h = {:labels => labels}
+    result_array = []
+    @records.each do |record|
+      record.miq_alert_statuses.each do |alert_status|
+        result_array << [record.name, alert_status.miq_alert.description, alert_status.severity, alert_status.evaluated_on.to_datetime, distance_of_time_in_words(alert_status.evaluated_on.to_time - Time.now), {:value => alert_status.user_id.nil? ? "No" : "Yes"}]
+      end
+    end
+    h[:values] = result_array
+    h
+  end
+
+  def textual_group_alerts_summary
+    labels = [_("Host group"), _("Disaster"), _("High"), _("Average"), _("Warning	"), _("Information"), _("Not classified")]
+    h = {:labels => labels}
+    result_array = []
+    @records.each do |record|
+        result_array << [record.name,
+                         record.miq_alert_statuses.where(:severity => "Disaster").count,
+                         record.miq_alert_statuses.where(:severity => "High").count,
+                         record.miq_alert_statuses.where(:severity => "Average").count,
+                         record.miq_alert_statuses.where(:severity => "Warning").count,
+                         record.miq_alert_statuses.where(:severity => "Information").count,
+                         record.miq_alert_statuses.where(:severity => "Not classified").count
+        ]
+    end
+    h[:values] = result_array
+    h
+  end
+
   def textual_tags
     label = _("%{name} Tags") % {:name => session[:customer_name]}
     h = {:label => label}

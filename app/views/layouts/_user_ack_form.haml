@@ -1,0 +1,25 @@
+#user_ack_form{:style => "display: none"}
+  .modal-dialog.modal-lg
+    .modal-content
+      .modal-header
+        %button.close{"data-dismiss" => "modal"}
+          %span{"aria-hidden" => "true"}
+            &times;
+          %span.sr-only
+            Close
+        %span
+          Ack Alert
+      .modal-body
+        = text_field_tag("alert_ack_message", nil, :maxlength => 500)
+      .modal-footer
+        #buttons
+          %span#quick_search_buttons_off
+
+:javascript
+  $(function(){
+    $('#alert_ack_message').off("click");
+    $('#quicksearchbox').on('click', '[data-dismiss="modal"]', function() {
+      miqJqueryRequest("quick_search?button=cancel", {beforeSend: true});
+      return true;
+    });
+  });
