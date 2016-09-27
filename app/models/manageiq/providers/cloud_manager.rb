@@ -74,18 +74,18 @@ module ManageIQ::Providers
     def sync_tenants
       reload
 
-      $log.info("Syncing CloudTenant with Tenants...")
+      _log.info("Syncing CloudTenant with Tenants...")
 
       CloudTenant.with_ext_management_system(id).walk_tree do |cloud_tenant, _|
         tenant_params = {:name => cloud_tenant.name, :description => cloud_tenant.name}
 
         if cloud_tenant.source_tenant
-          $log.info("CloudTenant #{cloud_tenant.name} has tenant #{cloud_tenant.source_tenant.name}")
-          $log.info("Updating Tenant #{cloud_tenant.source_tenant.name} with parameters: #{tenant_params.inspect}")
+          _log.info("CloudTenant #{cloud_tenant.name} has tenant #{cloud_tenant.source_tenant.name}")
+          _log.info("Updating Tenant #{cloud_tenant.source_tenant.name} with parameters: #{tenant_params.inspect}")
           cloud_tenant.source_tenant.update(tenant_params)
         else
-          $log.info("CloudTenant #{cloud_tenant.name} has no tenant")
-          $log.info("Creating Tenant with parameters: #{tenant_params.inspect}")
+          _log.info("CloudTenant #{cloud_tenant.name} has no tenant")
+          _log.info("Creating Tenant with parameters: #{tenant_params.inspect}")
 
           # first level of CloudTenants does not have parents - in that case
           # source_tenant from EmsCloud is used - this is tenant which is representing
@@ -93,16 +93,16 @@ module ManageIQ::Providers
           # if it is not first level of cloud tenant
           # there is existing parent of CloudTenant and his related tenant is taken
           tenant_parent = cloud_tenant.parent.try(:source_tenant) || source_tenant
-          $log.info("and with parent #{tenant_parent.name}")
+          _log.info("and with parent #{tenant_parent.name}")
           tenant_params[:parent] = tenant_parent
           tenant_params[:source] = cloud_tenant
           cloud_tenant.source_tenant = Tenant.new(tenant_params)
-          $log.info("New Tenant #{cloud_tenant.source_tenant.name} created")
+          _log.info("New Tenant #{cloud_tenant.source_tenant.name} created")
         end
 
         cloud_tenant.update_source_tenant_associations
         cloud_tenant.save!
-        $log.info("CloudTenant #{cloud_tenant.name} saved")
+        _log.info("CloudTenant #{cloud_tenant.name} saved")
       end
     end
 
@@ -114,7 +114,7 @@ module ManageIQ::Providers
         next if tenant.parent == source_tenant # tenant is already under provider's tenant
 
         # move tenant under the provider's tenant
-        $log.info("Moving out #{tenant.name} under provider's tenant #{source_tenant.name}")
+        _log.info("Moving out #{tenant.name} under provider's tenant #{source_tenant.name}")
         tenant.update_attributes(:parent => source_tenant)
       end
     end
