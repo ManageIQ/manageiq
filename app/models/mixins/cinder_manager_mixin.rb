@@ -18,7 +18,7 @@ module CinderManagerMixin
 
     private
 
-    def ensure_storage_managers
+    def ensure_cinder_managers
       ensure_cinder_manager
       cinder_manager.name            = "#{name} Cinder Manager"
       cinder_manager.zone_id         = zone_id

@@ -59,8 +59,7 @@ module Openstack
       expect(OrchestrationStackOutput.count).to    eq 0
       expect(OrchestrationTemplate.count).to       eq 0
 
-      # TODO: remove by swift spec test
-      # expect(CloudObjectStoreContainer.count).to   eq storage_data.directories.count
+      expect(CloudObjectStoreContainer.count).to   eq storage_data.directories.count
       expect(CloudObjectStoreObject.count).to      eq 0
       expect(CloudResourceQuota.count).to          eq 0
       expect(AuthPrivateKey.count).to              eq 0
@@ -69,7 +68,7 @@ module Openstack
       # We have broken flavor list, but there is fallback for private flavors using get, which will collect used flavors
       expect(Flavor.count).to              eq 2
 
-      expect(ExtManagementSystem.count).to               eq 3 # Can this be not hardcoded?
+      expect(ExtManagementSystem.count).to               eq 4 # Can this be not hardcoded?
       expect(security_groups_without_defaults.count).to  eq security_groups_count
       expect(firewall_without_defaults.count).to         eq firewall_rules_count
       expect(FloatingIp.count).to                        eq network_data.floating_ips.sum
@@ -127,9 +126,7 @@ module Openstack
       # Assert table counts as last, just for sure. First we compare Hashes of data, so we see the diffs
       assert_table_counts
       assert_table_counts_orchestration
-      #
-      # TODO: remove by swift spec test
-      # assert_table_counts_storage
+      assert_table_counts_storage
     end
 
     def volumes_count
@@ -234,7 +231,7 @@ module Openstack
     end
 
     def assert_table_counts
-      expect(ExtManagementSystem.count).to               eq 3 # Can this be not hardcoded? self/network/cinder
+      expect(ExtManagementSystem.count).to               eq 4 # Can this be not hardcoded? self/network/cinder/swift
       expect(Flavor.count).to                            eq compute_data.flavors.count
       expect(AvailabilityZone.count).to                  eq availability_zones_count
       expect(FloatingIp.count).to                        eq network_data.floating_ips.sum
@@ -281,7 +278,8 @@ module Openstack
 
     def assert_table_counts_storage
       if storage_supported?
-        expect(CloudObjectStoreContainer.count).to eq storage_data.directories.count
+        volumes_backup = CloudObjectStoreContainer.where({ key: "volumes_backup" })
+        expect(CloudObjectStoreContainer.count).to eq storage_data.directories.count + volumes_backup.count
         expect(CloudObjectStoreObject.count).to    eq storage_data.files.count
       end
     end
