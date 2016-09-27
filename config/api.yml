@@ -1332,6 +1332,12 @@
         :identifier: service_ownership
       - :name: delete
         :identifier: service_delete
+      - :name: start
+        :identifier: service_admin
+      - :name: stop
+        :identifier: service_admin
+      - :name: suspend
+        :identifier: service_admin
     :resource_actions:
       :get:
       - :name: read
@@ -1347,6 +1353,12 @@
         :identifier: service_reconfigure
         :options:
         - :validate_action
+      - :name: start
+        :identifier: service_admin
+      - :name: stop
+        :identifier: service_admin
+      - :name: suspend
+        :identifier: service_admin
       :delete:
       - :name: delete
         :identifier: service_delete
