@@ -52,6 +52,10 @@ class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::
     @description ||= "Cinder ".freeze
   end
 
+  def description
+    @description ||= "Cinder ".freeze
+  end
+
   def supports_api_version?
     true
   end

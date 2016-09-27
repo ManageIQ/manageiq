@@ -41,6 +41,7 @@ describe ExtManagementSystem do
       "vmware_cloud"                => "VMware vCloud",
       "vmware_cloud_network"        => "VMware Cloud Network",
       "cinder"                      => "Cinder ",
+      "swift"                       => "Swift ",
     }
   end
 
@@ -337,7 +338,8 @@ describe ExtManagementSystem do
                  ManageIQ::Providers::Amazon::NetworkManager,
                  ManageIQ::Providers::Azure::NetworkManager,
                  ManageIQ::Providers::Google::NetworkManager,
-                 ManageIQ::Providers::StorageManager::CinderManager].include? ems
+                 ManageIQ::Providers::StorageManager::CinderManager,
+                 ManageIQ::Providers::StorageManager::SwiftManager].include? ems
         t = ems.name.underscore
 
         context t do
@@ -396,7 +398,8 @@ describe ExtManagementSystem do
                  ManageIQ::Providers::Amazon::NetworkManager,
                  ManageIQ::Providers::Azure::NetworkManager,
                  ManageIQ::Providers::Google::NetworkManager,
-                 ManageIQ::Providers::StorageManager::CinderManager].include? ems
+                 ManageIQ::Providers::StorageManager::CinderManager,
+                 ManageIQ::Providers::StorageManager::SwiftManager].include? ems
 
         context t do
           it "duplicate name" do
