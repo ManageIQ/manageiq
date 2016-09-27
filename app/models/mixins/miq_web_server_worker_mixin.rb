@@ -20,8 +20,6 @@ module MiqWebServerWorkerMixin
     end
 
     def preload_for_worker_role
-      require 'hamlit-rails'
-
       # Make these constants globally available
       ::UiConstants
 
