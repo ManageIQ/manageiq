@@ -46,9 +46,6 @@ Vmdb::Application.configure do
   config.middleware.delete ::ActionDispatch::ShowExceptions
   config.middleware.delete ::ActionDispatch::DebugExceptions
 
-  # Raise exceptions in transactional callbacks
-  config.active_record.raise_in_transactional_callbacks = true
-
   # Customize any additional options below...
 
   # Do not include all helpers for all views
