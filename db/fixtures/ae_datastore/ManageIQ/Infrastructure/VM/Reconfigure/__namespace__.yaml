@@ -6,6 +6,5 @@ object:
     name: Reconfigure
     description: 
     display_name: 
-    system: 
     priority: 
     enabled: 

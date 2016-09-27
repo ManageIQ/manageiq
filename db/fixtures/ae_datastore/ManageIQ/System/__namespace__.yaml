@@ -6,6 +6,5 @@ object:
     name: System
     description: 
     display_name: 
-    system: 
     priority: 
     enabled: 

@@ -6,6 +6,5 @@ object:
     name: MiqEvent
     description: 
     display_name: 
-    system: 
     priority: 
     enabled: 
