@@ -281,6 +281,12 @@ class MiqRegion < ApplicationRecord
     authentication_token(AUTHENTICATION_TYPE).present?
   end
 
+  def remove_auth_config
+    if authentication_token(AUTHENTICATION_TYPE).present?
+      authentication_delete(AUTHENTICATION_TYPE)
+    end
+  end
+
   def api_system_auth_token(userid)
     region_v2_key = authentication_token(AUTHENTICATION_TYPE)
 

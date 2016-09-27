@@ -1,0 +1,22 @@
+.modal-header
+  %h1 Generate Authorization Key For An Appliance in the Region
+%form{:name => "authkey_modal_form", "ng-submit" => "submitForm()"}
+  .modal-body
+    / Host
+    .form-group
+      %label Host
+      %input.form-control{:name => "ssh_host", "ng-model" => "ssh_host", :type => "text"}
+        %p.help-block{"ng-show" => "authkey_modal_form.ssh_host.$invalid  !authkey_modal_form.ssh_host.$pristine"} SSH host is required.
+      / User
+      .form-group
+        %label User
+        %input.form-control{:name => "ssh_user", "ng-model" => "ssh_user", :type => "text"}
+          %p.help-block{"ng-show" => "authkey_modal_form.ssh_user.$invalid  !authkey_modal_form.ssh_user.$pristine"} SSH user is required.
+        / Password
+        .form-group
+          %label Password
+          %input.form-control{:name => "ssh_password", "ng-model" => "ssh_password", :type => "text"}
+            %p.help-block{"ng-show" => "authkey_modal_form.ssh_password.$invalid  !authkey_modal_form.ssh_password.$pristine"} SSH password is required.
+        .modal-footer
+          %button.btn.btn-primary{"ng-disabled" => "authkey_modal_form.$invalid", :type => "submit"} Submit
+          %button.btn.btn-warning{"ng-click" => "cancelForm()"} Cancel

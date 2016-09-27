@@ -179,6 +179,13 @@ module OpsController::Settings::Common
     replication_type = MiqRegion.replication_type
     subscriptions = replication_type == :global ? PglogicalSubscription.all : []
     subscriptions = get_subscriptions_array(subscriptions) unless subscriptions.empty?
+    if replication_type == :global
+      subscriptions.each do |h|
+        region = MiqRegion.where(:region => h['provider_region']).first
+        h.merge!(:auth_key_configured => region && region.auth_key_configured? ? _('Enabled') : _("Disabled"))
+      end
+    end
+
     render :json => {
       :replication_type => replication_type,
       :subscriptions    => subscriptions
@@ -231,6 +238,36 @@ module OpsController::Settings::Common
       end
     end
     javascript_flash
+  end
+
+
+  def enable_central_admin
+    replication_type = MiqRegion.replication_type
+    provider_region = @_params[:provider_region]
+    if replication_type == :global
+      region = MiqRegion.where(:region => provider_region).first
+      if region
+        region.generate_auth_key_queue(@_params[:ssh_user], @_params[:ssh_password], @_params[:ssh_host])
+        add_flash(_("Enable Central Admin has been successfully initiated"))
+      else
+        add_flash(_("Region Not found"), :error)
+      end
+    end
+    javascript_flash
+  end
+
+  def disable_central_admin
+    replication_type = MiqRegion.replication_type
+    provider_region = @_params[:provider_region]
+    if replication_type == :global
+      region = MiqRegion.where(:region => provider_region).first
+      if region
+        region.remove_auth_config
+        add_flash(_("Central Admin has been disabled"))
+      else
+        add_flash(_("Region Not found"), :error)
+      end
+    end
   end
 
   private
