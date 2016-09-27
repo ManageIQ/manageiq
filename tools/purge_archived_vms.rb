@@ -16,7 +16,11 @@ else
   $log.warn "Will delete any matching records." unless REPORT_ONLY
 end
 
-Vm.find_in_batches(:conditions => ["vms.updated_on IS NULL OR vms.updated_on < ?", ARCHIVE_CUTOFF], :include => [:ext_management_system, :storage]) do |vms|
+query = Vm.where(:updated_on => nil)
+          .or(Vm.where("updated_on < ?", ARCHIVE_CUTOFF))
+          .includes(:ext_management_system, :storage)
+
+query.find_in_batches do |vms|
   vms.each do |vm|
     begin
       if vm.archived?
