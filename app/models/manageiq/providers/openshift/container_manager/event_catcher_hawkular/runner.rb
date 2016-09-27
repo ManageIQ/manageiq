@@ -1,4 +1,4 @@
-class ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Runner <
+class ManageIQ::Providers::Openshift::ContainerManager::EventCatcherHawkular::Runner <
   ManageIQ::Providers::BaseManager::EventCatcher::Runner
 
   TAG_EVENT_TYPE    = "miq.event_type".freeze # required by fetch

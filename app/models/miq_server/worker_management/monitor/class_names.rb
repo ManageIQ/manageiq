@@ -43,7 +43,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher
     ManageIQ::Providers::Google::CloudManager::EventCatcher
     ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcher
-    ManageIQ::Providers::Openshift::ContainerManager::EventCatcher
+    ManageIQ::Providers::Openshift::ContainerManager::EventCatcherHawkular
     ManageIQ::Providers::OpenshiftEnterprise::ContainerManager::EventCatcher
     ManageIQ::Providers::Redhat::InfraManager::EventCatcher
     ManageIQ::Providers::Openstack::CloudManager::EventCatcher
@@ -127,8 +127,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher
     ManageIQ::Providers::Google::CloudManager::EventCatcher
     ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcher
-    ManageIQ::Providers::Openshift::ContainerManager::EventCatcher
-    ManageIQ::Providers::OpenshiftEnterprise::ContainerManager::EventCatcher
+    ManageIQ::Providers::Openshift::ContainerManager::EventCatcherHawkular
     MiqUiWorker
     MiqWebsocketWorker
   ).freeze

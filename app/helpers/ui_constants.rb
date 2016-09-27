@@ -496,6 +496,9 @@ module UiConstants
     "enterprise"        => _("The Enterprise"),
     "middleware_server" => _("Selected %{tables}") % {:tables => ui_lookup(:tables => "middleware_server")}
   }
+  ASSIGN_TOS["ContainerManager"] = {
+    "ext_management_system"     => _("Selected Container Providers")
+  }
 
   # This set of assignments was created for chargeback_rates
   ASSIGN_TOS[:chargeback_storage] = ASSIGN_TOS["Storage"]

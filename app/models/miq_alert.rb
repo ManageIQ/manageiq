@@ -20,6 +20,7 @@ class MiqAlert < ApplicationRecord
     ExtManagementSystem
     MiqServer
     MiddlewareServer
+    ContainerManager
   )
 
   def self.base_tables
@@ -75,6 +76,9 @@ class MiqAlert < ApplicationRecord
     # Get all assigned, enabled alerts based on target class and event
     cond = "enabled = ? AND db = ?"
     args = [true, target.class.base_model.name]
+    if target.class == ManageIQ::Providers::Openshift::ContainerManager
+      args = [true, "ContainerManager"]
+    end
     key  = "#{target.class.base_model.name}_#{target.id}"
 
     unless event.nil?
@@ -438,6 +442,11 @@ class MiqAlert < ApplicationRecord
         :options => [
           {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<=", "="]},
           {:name => :value_mw_garbage_collector, :description => _("Duration Per Minute (ms)"), :numeric => true}
+        ]},
+
+      {:name => "hwk_docker_storage_usage", :description => _("Docker Storage Space Precentage"), :db => ["ContainerManager"], :responds_to_events => "hawkular_event",
+        :options => [
+          {:name => :value_mw_greater_than, :description => _("< (%)"), :numeric => true}
         ]}
     ]
   end
@@ -546,7 +555,8 @@ class MiqAlert < ApplicationRecord
   end
 
   def evaluate_internal(target, _inputs = {})
-    if target.class.name == 'MiddlewareServer'
+    if target.class.name == 'MiddlewareServer' || target.class.name == "ManageIQ::Providers::Openshift::ContainerManager"
+
       method = "evaluate_middleware"
       options = _inputs[:ems_event]
     else

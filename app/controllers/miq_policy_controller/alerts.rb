@@ -665,7 +665,7 @@ module MiqPolicyController::Alerts
   end
 
   def alert_sync_provider(operation)
-    if @alert.db == "MiddlewareServer"
+    if %w(ContainerManager MiddlewareServer).include?(@alert.db)
       MiqQueue.put(
         :class_name  => "ManageIQ::Providers::Hawkular::MiddlewareManager",
         :method_name => "update_alert",
