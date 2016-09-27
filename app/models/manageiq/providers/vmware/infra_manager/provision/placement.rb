@@ -4,11 +4,17 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Placement
   protected
 
   def placement
-    if get_option(:placement_auto) == true
+    host, cluster, datastore = if get_option(:placement_auto) == true
       automatic_placement
     else
       manual_placement
     end
+
+    raise MiqException::MiqProvisionError, "Destination placement_ds_name not provided" if datastore.nil?
+    raise MiqException::MiqProvisionError, "Destination placement_host_name and placement_cluster_name not provided" if host.nil? && cluster.nil?
+    raise MiqException::MiqProvisionError, "A Host must be selected on a non-DRS enabled cluster" if host.nil? && !cluster.drs_enabled
+
+    return host, cluster, datastore
   end
 
   private
@@ -19,9 +25,6 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Placement
     host      = selected_placement_obj(:placement_host_name, Host)
     cluster   = selected_placement_obj(:placement_cluster_name, EmsCluster)
     datastore = selected_placement_obj(:placement_ds_name, Storage)
-
-    raise MiqException::MiqProvisionError, "Destination placement_ds_name not provided" if datastore.nil?
-    raise MiqException::MiqProvisionError, "Destination placement_host_name and placement_cluster_name not provided" if host.nil? && cluster.nil?
 
     if host && cluster.nil?
       cluster = host.ems_cluster
