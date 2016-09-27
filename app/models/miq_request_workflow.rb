@@ -990,7 +990,7 @@ class MiqRequestWorkflow
     key_id = "#{key}_id".to_sym
     result[key_id] = get_value(@values[dialog_key])
     result[key_id] = nil if result[key_id] == 0
-    result[key] = ci_to_hash_struct(klass.find_by_id(result[key_id])) unless result[key_id].nil?
+    result[key] = ci_to_hash_struct(klass.find_by(:id => result[key_id])) unless result[key_id].nil?
   end
 
   def ci_to_hash_struct(ci)
@@ -1033,7 +1033,7 @@ class MiqRequestWorkflow
   def load_ar_obj(ci)
     return load_ar_objs(ci) if ci.kind_of?(Array)
     return ci unless ci.kind_of?(MiqHashStruct)
-    ci.evm_object_class.to_s.camelize.constantize.find_by_id(ci.id)
+    ci.evm_object_class.to_s.camelize.constantize.find_by(:id => ci.id)
   end
 
   def load_ar_objs(ci)
@@ -1366,11 +1366,11 @@ class MiqRequestWorkflow
   def get_image_by_type(image_type)
     klass, id = get_value(@values[image_type]).to_s.split('::')
     return nil if id.blank?
-    klass.constantize.find_by_id(id)
+    klass.constantize.find_by(:id => id)
   end
 
   def get_pxe_server
-    PxeServer.find_by_id(get_value(@values[:pxe_server_id]))
+    PxeServer.find_by(:id => get_value(@values[:pxe_server_id]))
   end
 
   def allowed_pxe_servers(_options = {})
@@ -1406,7 +1406,7 @@ class MiqRequestWorkflow
   end
 
   def get_iso_images
-    template = VmOrTemplate.find_by_id(get_value(@values[:src_vm_id]))
+    template = VmOrTemplate.find_by(:id => get_value(@values[:src_vm_id]))
     template.try(:ext_management_system).try(:iso_datastore).try(:iso_images) || []
   end
 
