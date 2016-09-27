@@ -1,10 +1,20 @@
 #
 # Description: provide the dynamic list content from available resource groups
 #
-az_list = {nil => "<select>"}
+az_list = {}
 service = $evm.root.attributes["service_template"] || $evm.root.attributes["service"]
 if service.respond_to?(:orchestration_manager) && service.orchestration_manager
   service.orchestration_manager.availability_zones.each { |t| az_list[t.ems_ref] = t.name }
+end
+
+default_value = nil
+case az_list.length
+when 0
+  az_list = {nil => "<none>"}
+when 1
+  default_value = az_list.keys.first
+else
+  az_list[nil] = "<select>"
 end
 
 dialog_field = $evm.object
@@ -22,4 +32,4 @@ dialog_field["data_type"] = "string"
 dialog_field["required"] = "true"
 
 dialog_field["values"] = az_list
-dialog_field["default_value"] = nil
+dialog_field["default_value"] = default_value
