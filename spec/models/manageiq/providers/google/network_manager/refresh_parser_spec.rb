@@ -14,108 +14,129 @@ describe ManageIQ::Providers::Google::NetworkManager::RefreshParser do
   # resorting to VCR casettes.
   let(:connection) { double }
 
-  before(:example) do
-    allow(ems).to receive(:connect) { connection }
-    # Install some reasonable defaults, with all collections being empty.
-    allow(connection).to receive(:project) { ems.project }
-    allow(connection).to receive(:networks) { fog_collection([]) }
-    allow(connection).to receive(:firewalls) { fog_collection([]) }
-    allow(connection).to receive(:servers) { fog_collection([]) }
-    allow(connection).to receive(:addresses) { fog_collection([]) }
-    allow(connection).to receive(:forwarding_rules) { fog_collection([]) }
-    allow(connection).to receive(:target_pools) { fog_collection([]) }
-  end
-
-  it 'returns properly-structured hash on empty project' do
-    hashes = described_class.new(ems).ems_inv_to_hashes
-
-    expect(hashes).to eql(
-      :cloud_networks             => [],
-      :floating_ips               => [],
-      :load_balancer_listeners    => [],
-      :load_balancers             => [],
-      :load_balancer_pools        => [],
-      :load_balancer_pool_members => [],
-      :network_ports              => [],
-      :security_groups            => []
-    )
-  end
-
-  it 'returns a load balancer listener from a forwarding rule' do
-    set_forwarding_rules(
-      connection,
-      [
-        instance_double(
-          "Fog::Compute::Google::ForwardingRule",
-          :id          => "some-id",
-          :name        => "my-forwarding-rule",
-          :ip_protocol => "TCP",
-          :port_range  => "8080-8090",
-          :target      => "https://www.googleapis.com/compute/v1/projects/#{ems.project}/regions/#{az.name}/targetPools/my-tp"
-        )
-      ]
-    )
-    set_target_pools(
-      connection,
-      [
-        instance_double(
-          "Fog::Compute::Google::TargetPool",
-          :id            => "some-target-pool-id",
-          :name          => "my-tp",
-          :self_link     => "https://www.googleapis.com/compute/v1/projects/#{ems.project}/regions/#{az.name}/targetPools/my-tp",
-          :health_checks => nil,
-          :instances     => [
-            "https://www.googleapis.com/compute/v1/projects/#{ems.project}/zones/#{az.name}/instances/#{vm.name}"]
-        )
-      ]
-    )
-
-    # Because we linked to a VM instance in the target pool, let's make sure to
-    # associate an id with the link so that our returned result understands the
-    # association.
-    allow(connection).to receive(:get_server).with(vm.name, vm.availability_zone.name) do
-      { :body => { "id" => vm.ems_ref } }
+  context 'google project is empty of resources' do
+    subject { described_class.new(ems).ems_inv_to_hashes }
+    before do
+      allow(ems).to receive(:connect) { connection }
+      # Install some reasonable defaults, with all collections being empty.
+      allow(connection).to receive(:project) { ems.project }
+      allow(connection).to receive(:networks) { fog_collection([]) }
+      allow(connection).to receive(:firewalls) { fog_collection([]) }
+      allow(connection).to receive(:servers) { fog_collection([]) }
+      allow(connection).to receive(:addresses) { fog_collection([]) }
+      allow(connection).to receive(:forwarding_rules) { fog_collection([]) }
+      allow(connection).to receive(:target_pools) { fog_collection([]) }
     end
 
-    hashes = described_class.new(ems).ems_inv_to_hashes
+    describe "#ems_inv_to_hashes" do
+      it 'returns properly-structured hash' do
+        expect(subject).to eql(
+          :cloud_networks             => [],
+          :floating_ips               => [],
+          :load_balancer_listeners    => [],
+          :load_balancers             => [],
+          :load_balancer_pools        => [],
+          :load_balancer_pool_members => [],
+          :network_ports              => [],
+          :security_groups            => []
+        )
+      end
+    end
+  end
 
-    expect(hashes[:load_balancers]).to eql(
-      [
-        :type    => "ManageIQ::Providers::Google::NetworkManager::LoadBalancer",
-        :ems_ref => "some-id",
-        :name    => "my-forwarding-rule"
-      ]
-    )
-    expect(hashes[:load_balancer_listeners]).to eql(
-      [
-        :name                         => "my-forwarding-rule",
-        :type                         => "ManageIQ::Providers::Google::NetworkManager::LoadBalancerListener",
-        :ems_ref                      => "some-id",
-        :load_balancer_protocol       => "TCP",
-        :instance_protocol            => "TCP",
-        :load_balancer_port_range     => (8080..8090),
-        :instance_port_range          => (8080..8090),
-        :load_balancer                => hashes[:load_balancers][0],
-        :load_balancer_listener_pools => [
-          :load_balancer_pool         => hashes[:load_balancer_pools][0]
-        ]
-      ]
-    )
-    expect(hashes[:load_balancer_pools]).to eql(
-      [
-        :type                            => "ManageIQ::Providers::Google::NetworkManager::LoadBalancerPool",
-        :ems_ref                         => "some-target-pool-id",
-        :name                            => "my-tp",
-        :load_balancer_pool_member_pools => [
-          :load_balancer_pool_member => {
-            :type    => "ManageIQ::Providers::Google::NetworkManager::LoadBalancerPoolMember",
-            :ems_ref => Digest::MD5.base64digest(
-              "https://www.googleapis.com/compute/v1/projects/#{ems.project}/zones/#{az.name}/instances/#{vm.name}"),
-            :vm      => vm
-          }
-        ]
-      ]
-    )
+  context 'google project contains a forwarding rule with a backend service of two vms' do
+    subject { described_class.new(ems).ems_inv_to_hashes }
+
+    before do
+      allow(ems).to receive(:connect) { connection }
+      allow(connection).to receive(:project) { ems.project }
+      allow(connection).to receive(:networks) { fog_collection([]) }
+      allow(connection).to receive(:firewalls) { fog_collection([]) }
+      allow(connection).to receive(:servers) { fog_collection([]) }
+      allow(connection).to receive(:addresses) { fog_collection([]) }
+      allow(connection).to receive(:forwarding_rules) do
+        fog_collection(
+          [
+            instance_double(
+              "Fog::Compute::Google::ForwardingRule",
+              :id          => "some-id",
+              :name        => "my-forwarding-rule",
+              :ip_protocol => "TCP",
+              :port_range  => "8080-8090",
+              :target      => "https://www.googleapis.com/compute/v1/projects/#{ems.project}/regions/#{az.name}/targetPools/my-tp"
+            )
+          ])
+      end
+      allow(connection).to receive(:target_pools) do
+        fog_collection(
+          [
+            instance_double(
+              "Fog::Compute::Google::TargetPool",
+              :id            => "some-target-pool-id",
+              :name          => "my-tp",
+              :self_link     => "https://www.googleapis.com/compute/v1/projects/#{ems.project}/regions/#{az.name}/targetPools/my-tp",
+              :health_checks => nil,
+              :instances     => [
+                "https://www.googleapis.com/compute/v1/projects/#{ems.project}/zones/#{az.name}/instances/#{vm.name}"]
+            )
+          ])
+      end
+
+      # Because we linked to a VM instance in the target pool, let's make sure to
+      # associate an id with the link so that our returned result understands the
+      # association.
+      allow(connection).to receive(:get_server).with(vm.name, vm.availability_zone.name) do
+        { :body => { "id" => vm.ems_ref } }
+      end
+    end
+
+    describe "#ems_inv_to_hashes" do
+      it "returns a load balancer" do
+        expect(subject[:load_balancers]).to eql(
+          [
+            :type    => "ManageIQ::Providers::Google::NetworkManager::LoadBalancer",
+            :ems_ref => "some-id",
+            :name    => "my-forwarding-rule"
+          ]
+        )
+      end
+
+      it "returns a load balancer listener" do
+        expect(subject[:load_balancer_listeners]).to eql(
+          [
+            :name                         => "my-forwarding-rule",
+            :type                         => "ManageIQ::Providers::Google::NetworkManager::LoadBalancerListener",
+            :ems_ref                      => "some-id",
+            :load_balancer_protocol       => "TCP",
+            :instance_protocol            => "TCP",
+            :load_balancer_port_range     => (8080..8090),
+            :instance_port_range          => (8080..8090),
+            :load_balancer                => subject[:load_balancers][0],
+            :load_balancer_listener_pools => [
+              :load_balancer_pool         => subject[:load_balancer_pools][0]
+            ]
+          ]
+        )
+      end
+
+      it "returns a load balancer pool" do
+        expect(subject[:load_balancer_pools]).to eql(
+          [
+            :type                            => "ManageIQ::Providers::Google::NetworkManager::LoadBalancerPool",
+            :ems_ref                         => "some-target-pool-id",
+            :name                            => "my-tp",
+            :load_balancer_pool_member_pools => [
+              :load_balancer_pool_member => {
+                :type    => "ManageIQ::Providers::Google::NetworkManager::LoadBalancerPoolMember",
+                :ems_ref => Digest::MD5.base64digest(
+                  "https://www.googleapis.com/compute/v1/projects/#{ems.project}/zones/#{az.name}/instances/#{vm.name}"),
+                :vm      => vm
+              }
+            ]
+          ]
+        )
+      end
+    end
   end
 
   describe '::parse_port_range' do
@@ -151,16 +172,6 @@ describe ManageIQ::Providers::Google::NetworkManager::RefreshParser do
         :instance => "baz"
       )
     end
-  end
-
-  private
-
-  def set_forwarding_rules(connection, items)
-    allow(connection).to receive(:forwarding_rules) { fog_collection(items) }
-  end
-
-  def set_target_pools(connection, items)
-    allow(connection).to receive(:target_pools) { fog_collection(items) }
   end
 
   def fog_collection(items)

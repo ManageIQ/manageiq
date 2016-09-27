@@ -193,14 +193,14 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
   end
 
   def assert_specific_load_balancer
-    @lb = LoadBalancer.where(:name => "foo-lb-forwarding-rule").first
+    lb = LoadBalancer.where(:name => "foo-lb-forwarding-rule").first
 
-    expect(@lb).to have_attributes(
+    expect(lb).to have_attributes(
       :name    => "foo-lb-forwarding-rule",
       :ems_ref => "1778652908557222005",
       :type    => "ManageIQ::Providers::Google::NetworkManager::LoadBalancer"
     )
-    expect(@lb.load_balancer_listeners.first).to have_attributes(
+    expect(lb.load_balancer_listeners.first).to have_attributes(
       :name                     => "foo-lb-forwarding-rule",
       :ems_ref                  => "1778652908557222005",
       :type                     => "ManageIQ::Providers::Google::NetworkManager::LoadBalancerListener",
@@ -209,13 +209,13 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :load_balancer_port_range => 61000...61002,
       :instance_port_range      => 61000...61002
     )
-    expect(@lb.load_balancer_pools.first).to have_attributes(
+    expect(lb.load_balancer_pools.first).to have_attributes(
       :name    => "foo-lb",
       :ems_ref => "7341375068641214585",
       :type    => "ManageIQ::Providers::Google::NetworkManager::LoadBalancerPool",
     )
-    expect(@lb.load_balancer_pool_members.map { |m| m.vm.name }).to \
-      include("instance-custom-machine-type").and include("wheezy")
+    expect(lb.load_balancer_pool_members.map { |m| m.vm.name })
+      .to include("instance-custom-machine-type").and include("wheezy")
   end
 
   def assert_specific_security_group
