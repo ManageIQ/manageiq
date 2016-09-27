@@ -1,12 +1,7 @@
 module Api
   class AutomateController < BaseController
     def show
-      ae_browser = MiqAeBrowser.new(@auth_user_obj)
-      begin
-        resources = ae_browser.search(@req.c_suffix, ae_search_options)
-      rescue => err
-        raise BadRequestError, err.to_s
-      end
+      resources = collection_search
       attributes = params['attributes'] ? %w(fqname) | params['attributes'].to_s.split(',') : nil
       resources = resources.collect { |resource| resource.slice(*attributes) } if attributes.present?
       render_resource :automate, :name => "automate", :subcount => resources.count, :resources => resources
@@ -28,6 +23,15 @@ module Api
     end
 
     private
+
+    def collection_search
+      ae_browser = MiqAeBrowser.new(@auth_user_obj)
+      begin
+        ae_browser.search(@req.c_suffix, ae_search_options)
+      rescue => err
+        raise BadRequestError, err.to_s
+      end
+    end
 
     def ae_search_options
       # For /api/automate (discovering domains, scope is 1 if unspecified)
