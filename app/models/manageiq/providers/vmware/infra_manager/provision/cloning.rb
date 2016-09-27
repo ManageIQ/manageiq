@@ -113,16 +113,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
       vim_clone_options[key] = ci.ems_ref_obj
     end
 
-    host_ids = if clone_options[:host]
-                 clone_options[:host].id
-               else
-                 clone_options[:cluster].hosts.pluck(:id)
-               end
-
-    # Find a host in the cluster that has this storage mounted to get the right ems_ref for this
-    # datastore in the datacenter
-    datastore = HostStorage.find_by(:storage_id => clone_options[:datastore].id, :host_id => host_ids)
-    vim_clone_options[:datastore] = datastore.ems_ref if datastore
+    vim_clone_options[:datastore] = datastore_ems_ref(clone_options)
 
     task_mor = clone_vm(vim_clone_options)
     _log.info("Provisioning completed for [#{vim_clone_options[:name]}] from source [#{source.name}]") if MiqProvision::CLONE_SYNCHRONOUS
@@ -155,6 +146,20 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
     end
 
     task_mor
+  end
+
+  def datastore_ems_ref(clone_opts)
+    host_ids = if clone_opts[:host]
+                 clone_opts[:host].id
+               else
+                 clone_opts[:cluster].hosts.pluck(:id)
+               end
+
+    # Find a host in the cluster that has this storage mounted to get the right ems_ref for this
+    # datastore in the datacenter
+    datastore = HostStorage.find_by(:storage_id => clone_opts[:datastore].id, :host_id => host_ids)
+
+    datastore.try(:ems_ref)
   end
 
   def get_selected_snapshot
