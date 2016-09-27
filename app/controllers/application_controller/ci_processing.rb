@@ -46,7 +46,8 @@ module ApplicationController::CiProcessing
       ownership
     else
       if role_allows?(:feature => "vm_ownership")
-        javascript_redirect :controller => controller, :action => 'ownership', :recs => @ownership_items # redirect to build the ownership screen
+        drop_breadcrumb(:name => _("Set Ownership"), :url => "/vm_common/ownership")
+        javascript_redirect :controller => rec_cls.to_s, :action => 'ownership', :rec_ids => @ownership_items, :escape => false  # redirect to build the ownership screen
       else
         head :ok
       end
@@ -71,9 +72,14 @@ module ApplicationController::CiProcessing
 
   # Assign/unassign ownership to a set of objects
   def ownership
-    build_ownership_info
-    drop_breadcrumb(:name => _("Set Ownership"), :url => "/vm_common/ownership")
+    @sb[:explorer] = true if @explorer
     @in_a_form = @ownershipedit = true
+    drop_breadcrumb(:name => _("Set Ownership"), :url => "/vm_common/ownership")
+    if params[:rec_ids]
+      @ownership_items = params[:rec_ids]
+    end
+    @ownershipitems = Vm.find(@ownership_items).sort_by(&:name) # Get the db records
+    build_ownership_info
     build_targets_hash(@ownershipitems)
     if @sb[:explorer]
       @refresh_partial = "shared/views/ownership"
