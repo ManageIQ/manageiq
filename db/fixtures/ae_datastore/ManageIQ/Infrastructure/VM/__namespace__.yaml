@@ -6,6 +6,5 @@ object:
     name: VM
     description: 
     display_name: 
-    system: 
     priority: 
     enabled: 

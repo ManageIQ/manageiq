@@ -6,6 +6,5 @@ object:
     name: Migrate
     description: 
     display_name: 
-    system: 
     priority: 
     enabled: 

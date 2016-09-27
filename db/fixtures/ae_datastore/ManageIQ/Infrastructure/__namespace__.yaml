@@ -6,6 +6,5 @@ object:
     name: Infrastructure
     description: 
     display_name: 
-    system: 
     priority: 
     enabled: 

@@ -6,6 +6,5 @@ object:
     name: Configured_System
     description: 
     display_name: 
-    system: 
     priority: 
     enabled: 

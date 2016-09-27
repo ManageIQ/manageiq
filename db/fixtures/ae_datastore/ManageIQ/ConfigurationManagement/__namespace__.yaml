@@ -6,6 +6,5 @@ object:
     name: ConfigurationManagement
     description: 
     display_name: 
-    system: 
     priority: 
     enabled: 
