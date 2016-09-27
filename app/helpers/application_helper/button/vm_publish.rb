@@ -1,5 +1,5 @@
 class ApplicationHelper::Button::VmPublish < ApplicationHelper::Button::Basic
-  needs_record
+  needs :@record
 
   def visible?
     @record.is_available?(:publish) && !@is_redhat

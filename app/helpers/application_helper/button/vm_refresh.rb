@@ -1,5 +1,5 @@
 class ApplicationHelper::Button::VmRefresh < ApplicationHelper::Button::Basic
-  needs_record
+  needs :@record
 
   def visible?
     @record.ext_management_system ||

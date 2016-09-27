@@ -1,5 +1,5 @@
 class ApplicationHelper::Button::OrchestrationTemplateEditRemove < ApplicationHelper::Button::Basic
-  needs_record
+  needs :@record
 
   def disabled?
     @record.in_use?

@@ -1,5 +1,5 @@
 class ApplicationHelper::Button::VmInstanceScan < ApplicationHelper::Button::Basic
-  needs_record
+  needs :@record
 
   def calculate_properties
     super

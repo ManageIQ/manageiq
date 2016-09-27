@@ -1,5 +1,5 @@
 class ApplicationHelper::Button::HostProtect < ApplicationHelper::Button::Basic
-  needs_record
+  needs :@record
 
   def visible?
     @record.smart?
