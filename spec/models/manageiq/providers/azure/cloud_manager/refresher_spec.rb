@@ -177,10 +177,10 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   end
 
   def assert_specific_load_balancers
-    lb_ems_ref      = "/subscriptions/AZURE_SUBSCRIPTION_ID/"\
+    lb_ems_ref      = "/subscriptions/#{@subscription_id}/"\
                       "resourceGroups/miq-azure-test1/providers/Microsoft.Network/loadBalancers/rspec-lb1"
 
-    lb_pool_ems_ref = "/subscriptions/AZURE_SUBSCRIPTION_ID/"\
+    lb_pool_ems_ref = "/subscriptions/#{@subscription_id}/"\
                       "resourceGroups/miq-azure-test1/providers/Microsoft.Network/loadBalancers/"\
                       "rspec-lb1/backendAddressPools/rspec-lb-pool"
 
@@ -209,15 +209,15 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   end
 
   def assert_specific_load_balancer_listeners
-    lb_listener_ems_ref      = "/subscriptions/AZURE_SUBSCRIPTION_ID/resourceGroups/"\
+    lb_listener_ems_ref      = "/subscriptions/#{@subscription_id}/resourceGroups/"\
                                "miq-azure-test1/providers/Microsoft.Network/loadBalancers/rspec-lb1/"\
                                "loadBalancingRules/rspec-lb1-rule"
 
-    lb_pool_member_1_ems_ref = "/subscriptions/AZURE_SUBSCRIPTION_ID/resourceGroups/"\
+    lb_pool_member_1_ems_ref = "/subscriptions/#{@subscription_id}/resourceGroups/"\
                                "miq-azure-test1/providers/Microsoft.Network/networkInterfaces/rspec-lb-a670/"\
                                "ipConfigurations/ipconfig1"
 
-    lb_pool_member_2_ems_ref = "/subscriptions/AZURE_SUBSCRIPTION_ID/resourceGroups/"\
+    lb_pool_member_2_ems_ref = "/subscriptions/#{@subscription_id}/resourceGroups/"\
                                "miq-azure-test1/providers/Microsoft.Network/networkInterfaces/rspec-lb-b843/"\
                                "ipConfigurations/ipconfig1"
 
@@ -246,7 +246,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   end
 
   def assert_specific_load_balancer_health_checks
-    health_check_ems_ref = "/subscriptions/AZURE_SUBSCRIPTION_ID/resourceGroups/"\
+    health_check_ems_ref = "/subscriptions/#{@subscription_id}/resourceGroups/"\
                            "miq-azure-test1/providers/Microsoft.Network/loadBalancers/rspec-lb1/"\
                            "probes/rspec-lb-probe"
 
