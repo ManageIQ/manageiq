@@ -64,13 +64,15 @@
             %h3
               = _('VM Visibility')
             .form-group
-              %label.col-md-8.control-label
-                = _("Set visibility of VMs in trees. Warning: Showing VMs may cause performance issues. So better set it to no.")
-              .col-md-3
+              %label.col-md-3.control-label
+                = _("Show VMs in Explorer tree.")
+              .col-md-6
                 = check_box_tag("display_vms",
                                  '1',
                                  @edit[:new][:display][:display_vms],
                                  :data => {:on_text => 'Yes', :off_text => 'No'})
+                .note
+                  = _("Warning: Enabling this option may cause performance issues in large environments (i.e. thousands of VMs)")
                 :javascript
                   miqInitBootstrapSwitch("display_vms", "#{url}")
       .col-md-12.col-lg-6
