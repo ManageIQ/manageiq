@@ -5,7 +5,7 @@
   - verify_title_on = "Validate the credentials by logging into the Server"
   - verify_title_off ||= _("Server information, Username and matching password fields are needed to perform verification of credentials")
 - if controller.send(:restful?)
-  - validate = "validateClicked($event, '#{valtype}', '#{url_for(:action => validate_url, :id => id, :type => valtype, :button => "validate")}', true)"
+  - validate = "validateClicked($event, '#{valtype}', true)"
 - else
   - validate = "validateClicked('#{url_for(:action => validate_url, :id => id, :type => valtype, :button => "validate")}')"
 %div{"ng-show" => ng_show, "ng-controller" => "buttonGroupController"}

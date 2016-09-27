@@ -751,7 +751,7 @@ function miqRESTAjaxButton(url, button, dataType, data) {
     else {
       formData = $(form).serialize();
     }
-    return miqJqueryRequest(form.action, {
+    return miqJqueryRequest(url, {
       beforeSend: true,
       complete: true,
       data: formData,
