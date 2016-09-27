@@ -99,12 +99,12 @@ module ManageIQ::Providers
       yield
     rescue Excon::Errors::Forbidden => err
       # It can happen user doesn't have rights to read some tenant, in that case log warning but continue refresh
-      _log.warn "Forbidden response code returned in provider: #{@swift_handle.address}. Message=#{err.message}"
+      _log.warn "Forbidden response code returned in provider: #{@ems.address}. Message=#{err.message}"
       _log.warn err.backtrace.join("\n")
       nil
     rescue Excon::Errors::NotFound => err
       # It can happen that some data do not exist anymore,, in that case log warning but continue refresh
-      _log.warn "Not Found response code returned in provider: #{@swift_handle.address}. Message=#{err.message}"
+      _log.warn "Not Found response code returned in provider: #{@ems.address}. Message=#{err.message}"
       _log.warn err.backtrace.join("\n")
       nil
     end
