@@ -28,7 +28,7 @@ module EmsRefresh::SaveInventorySwift
     ]
 
     # Save and link other subsections
-    save_child_inventory(ems, hashes, child_keys, target)
+    save_swift_child_inventory(ems, hashes, child_keys, target)
 
     ems.save!
     hashes[:id] = ems.id
