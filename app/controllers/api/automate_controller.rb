@@ -1,10 +1,14 @@
 module Api
   class AutomateController < BaseController
     def show
-      resources = collection_search
-      attributes = params['attributes'] ? %w(fqname) | params['attributes'].to_s.split(',') : nil
-      resources = resources.collect { |resource| resource.slice(*attributes) } if attributes.present?
-      render_resource :automate, :name => "automate", :subcount => resources.count, :resources => resources
+      if browser_requested?
+        resources = collection_search
+        attributes = params['attributes'] ? %w(fqname) | params['attributes'].to_s.split(',') : nil
+        resources = resources.collect { |resource| resource.slice(*attributes) } if attributes.present?
+        render_resource :automate, :name => "automate", :subcount => resources.count, :resources => resources
+      else
+        super
+      end
     end
 
     def git_refresh_resource(type, id = nil, data = nil)
@@ -23,6 +27,10 @@ module Api
     end
 
     private
+
+    def browser_requested?
+      @req.c_suffix !~ /^#{CID_OR_ID_MATCHER}$/
+    end
 
     def collection_search
       ae_browser = MiqAeBrowser.new(@auth_user_obj)

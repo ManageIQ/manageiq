@@ -2,7 +2,21 @@
 # REST API Request Tests - /api/automate
 #
 describe "Automate API" do
-  context "Automate Queries" do
+  context 'Crud-like queries' do
+    let(:domain) { FactoryGirl.create(:miq_ae_domain) }
+
+    it 'reads single resource' do
+      api_basic_authorize action_identifier(:automate, :read, :resource_actions, :get)
+
+      run_get automate_url(domain.id)
+
+      expect_single_resource_query('href' => automate_url(domain.id),
+                                   'id'   => domain.id,
+                                   'name' => domain.name)
+    end
+  end
+
+  context 'Browser-like queries' do
     before(:each) do
       MiqAeDatastore.reset
       FactoryGirl.create(:miq_ae_domain, :name => "ManageIQ", :tenant_id => @group.tenant.id)
