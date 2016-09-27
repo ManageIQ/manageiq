@@ -17,4 +17,8 @@ class GitBasedDomainImportService
     domain = MiqAeDomain.import_git_repo(options)
     domain.update_attribute(:enabled, true)
   end
+
+  def self.available?
+    MiqRegion.my_region.role_active?("git_owner")
+  end
 end
