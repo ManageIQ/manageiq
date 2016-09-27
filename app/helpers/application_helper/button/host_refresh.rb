@@ -1,5 +1,5 @@
 class ApplicationHelper::Button::HostRefresh < ApplicationHelper::Button::Basic
-  needs_record
+  needs :@record
 
   def visible?
     @record.is_refreshable?

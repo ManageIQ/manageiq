@@ -1,5 +1,5 @@
 class ApplicationHelper::Button::InstanceReset < ApplicationHelper::Button::Basic
-  needs_record
+  needs :@record
 
   def visible?
     return true if @display == "instances"
