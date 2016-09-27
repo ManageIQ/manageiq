@@ -144,6 +144,16 @@ describe "Automate API" do
                                     :href    => automate_url(git_domain.id)
                                    )
       end
+      it 'refreshes domain from git_repository specified by name' do
+        api_basic_authorize action_identifier(:automate, :git_refresh)
+
+        expect_any_instance_of(GitBasedDomainImportService).to receive(:import)
+        run_post(automate_url(git_domain.name), gen_request(:git_refresh))
+        expect_single_action_result(:success => true,
+                                    :message => 'Domain refreshed from git repository',
+                                    :href    => automate_url(git_domain.name)
+                                   )
+      end
     end
   end
 end

@@ -32,6 +32,16 @@ module Api
       @req.c_suffix !~ /^#{CID_OR_ID_MATCHER}$/
     end
 
+    def resource_search(id, type, klass)
+      if browser_requested?
+        domains = collection_search
+        raise "Ambiguous #{@req.c_suffix} domain specification, please use id" if domains.count != 1
+        super(domains.first["id"], type, klass)
+      else
+        super
+      end
+    end
+
     def collection_search
       ae_browser = MiqAeBrowser.new(@auth_user_obj)
       begin
