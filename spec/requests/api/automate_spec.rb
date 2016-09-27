@@ -85,4 +85,51 @@ describe "Automate API" do
       expect(response.parsed_body["resources"]).to match_array([{"name" => "System", "fqname" => "/Custom/System"}])
     end
   end
+
+  describe 'git_refresh action' do
+    let(:git_domain) { FactoryGirl.create(:miq_ae_git_domain) }
+    it 'forbids access for users without proper permissions' do
+      api_basic_authorize
+
+      run_post(automate_url(git_domain.id), gen_request(:git_refresh))
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'fails to refresh git when the region misses git_owner role' do
+      api_basic_authorize action_identifier(:automate, :git_refresh)
+      expect(MiqRegion).to receive(:my_region).and_return(double(:role_active? => false))
+
+      run_post(automate_url(git_domain.id), gen_request(:git_refresh))
+      expect_single_action_result(:success => false,
+                                  :message => 'Please enable the git owner role in order to import git repositories')
+    end
+
+    context 'with proper git_owner role' do
+      let(:non_git_domain) { FactoryGirl.create(:miq_ae_domain) }
+      before do
+        expect(MiqRegion).to receive(:my_region).and_return(double(:role_active? => true))
+      end
+
+      it 'fails to refresh when domain did not originate from git' do
+        api_basic_authorize action_identifier(:automate, :git_refresh)
+
+        run_post(automate_url(non_git_domain.id), gen_request(:git_refresh))
+        expect_single_action_result(:success => false,
+                                    :message => "Domain [id=#{non_git_domain.id}] did not originate from git repository"
+                                   )
+      end
+
+      it 'refreshes domain from git_repository' do
+        api_basic_authorize action_identifier(:automate, :git_refresh)
+
+        expect_any_instance_of(GitBasedDomainImportService).to receive(:import)
+        run_post(automate_url(git_domain.id), gen_request(:git_refresh))
+        expect_single_action_result(:success => true,
+                                    :message => 'Domain refreshed from git repository',
+                                    :href    => automate_url(git_domain.id)
+                                   )
+      end
+    end
+  end
 end
