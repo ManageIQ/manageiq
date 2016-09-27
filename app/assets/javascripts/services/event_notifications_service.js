@@ -28,6 +28,7 @@ function eventNotifications($timeout) {
 
   var state = ManageIQ.angular.eventNotificationsData.state;
   var observerCallbacks = ManageIQ.angular.eventNotificationsData.observerCallbacks;
+  var _this = this;
 
   var updateUnreadCount = function(group) {
     if (group) {
@@ -67,8 +68,6 @@ function eventNotifications($timeout) {
     state.toastNotifications = [];
 
     if (seed) {
-      var _this = this;
-
       API.get('/api/notifications?expand=resources&attributes=details')
       .then(function (data) {
         data.resources.forEach(function(resource) {
@@ -121,6 +120,7 @@ function eventNotifications($timeout) {
       type: type,
       message: message,
       data: notificationData,
+      href: id ? '/api/notifications/' + id : undefined,
       timeStamp: (new Date()).getTime()
     };
 
@@ -209,7 +209,6 @@ function eventNotifications($timeout) {
 
   this.markAllRead = function(group) {
     if (group) {
-      var _this = this;
       var resources = group.notifications.map(function(notification) {
         notification.unread = false;
         _this.removeToast(notification);
@@ -263,7 +262,6 @@ function eventNotifications($timeout) {
 
   this.clearAll = function(group) {
     if (group) {
-      var _this = this;
       var resources = group.notifications.map(function(notification) {
         _this.removeToast(notification);
         return { href: notification.href };
@@ -316,4 +314,11 @@ function eventNotifications($timeout) {
   };
 
   this.doReset(true);
+
+  ManageIQ.angular.rxSubject.subscribe(function (data) {
+    if (data.notification) {
+      var msg = miqFormatNotification(data.notification.text, data.notification.bindings);
+      _this.add('event', data.notification.level, msg, {message: msg}, data.notification.id);
+    }
+  });
 }

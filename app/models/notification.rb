@@ -29,8 +29,8 @@ class Notification < ApplicationRecord
   private
 
   def emit_message
-    notification_recipients.pluck(:user_id).each do |user|
-      ActionCable.server.broadcast("notifications_#{user}", to_h)
+    notification_recipients.pluck(:id, :user_id).each do |id, user|
+      ActionCable.server.broadcast("notifications_#{user}", to_h.merge!(:id => id))
     end
   end
 
