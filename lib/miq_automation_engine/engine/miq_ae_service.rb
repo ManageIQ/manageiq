@@ -58,8 +58,11 @@ module MiqAeMethodService
       self.body              = body if body
       @persist_state_hash    = ws.persist_state_hash
       @logger                = logger
+      ws.disable_rbac
       self.class.add(self)
     end
+
+    delegate :enable_rbac, :disable_rbac, :rbac_enabled?, :to =>  :@workspace
 
     def stdout
       @stdout ||= Vmdb::Loggers::IoLogger.new(logger, :info, "Method STDOUT:")
