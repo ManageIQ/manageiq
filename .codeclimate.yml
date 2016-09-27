@@ -53,6 +53,7 @@ exclude_paths:
 - gems/pending/spec/
 - gems/pending/test/
 - "gems/pending/**/test/"
+- gems/pending/metadata/linux/test/Packages
 - gems/pending/metadata/linux/test/tc_LinuxUtils.rb
 - gems/pending/VMwareWebService/wsdl41/vimws25MappingRegistry.rb
 - public/javascripts/timeline/*
