@@ -59,8 +59,7 @@ module Openstack
       expect(OrchestrationStackOutput.count).to    eq 0
       expect(OrchestrationTemplate.count).to       eq 0
 
-      # TODO: remove by swift spec test
-      # expect(CloudObjectStoreContainer.count).to   eq storage_data.directories.count
+      expect(CloudObjectStoreContainer.count).to   eq storage_data.directories.count
       expect(CloudObjectStoreObject.count).to      eq 0
       expect(CloudResourceQuota.count).to          eq 0
       expect(AuthPrivateKey.count).to              eq 0
@@ -279,7 +278,8 @@ module Openstack
 
     def assert_table_counts_storage
       if storage_supported?
-        expect(CloudObjectStoreContainer.count).to eq storage_data.directories.count
+        volumes_backup = CloudObjectStoreContainer.where({ key: "volumes_backup" })
+        expect(CloudObjectStoreContainer.count).to eq storage_data.directories.count + volumes_backup.count
         expect(CloudObjectStoreObject.count).to    eq storage_data.files.count
       end
     end
