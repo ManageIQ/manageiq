@@ -43,20 +43,20 @@ ratings:
 # exclude_paths key.
 
 exclude_paths:
-- "app/assets/javascripts/dhtmlx*/*"
-- "app/assets/javascripts/dynatree*/*"
-- "app/assets/javascripts/SlickGrid*/*"
-- "gems/pending/spec/*"
-- "gems/pending/test/*"
-- "gems/pending/*/test/*"
-- "public/javascripts/timeline/*"
-- "spec/*"
-- "test/*"
-- "spa_ui/self_service/client/**/*.spec.js"
-- "spa_ui/self_service/client/test-helpers/*"
-- "spa_ui/self_service/gulp/*"
-- "spa_ui/self_service/gulpfile.js"
-- "spa_ui/self_service/karma.conf.js"
-- "spa_ui/self_service/bower_components/*"
-- "spa_ui/self_service/node_modules/*"
-- "spa_ui/self_service/.tmp/*"
+- .git/*
+- app/assets/javascripts/dhtmlx*/*
+- config/dictionary_strings.rb
+- config/model_attributes.rb
+- config/yaml_strings.rb
+- db/schema.rb
+- db/migrate/20130923182042_collapsed_initial_migration.rb
+- gems/pending/spec/
+- gems/pending/test/*
+- gems/pending/*/test/*
+- gems/pending/metadata/linux/test/tc_LinuxUtils.rb
+- gems/pending/VMwareWebService/wsdl41/vimws25MappingRegistry.rb
+- public/javascripts/timeline/*
+- spec/*
+- test/*
+- tmp/*
+- vendor/assets/*
