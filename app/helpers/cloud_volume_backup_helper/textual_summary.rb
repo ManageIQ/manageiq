@@ -8,7 +8,7 @@ module CloudVolumeBackupHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(ems cloud_volume cloud_tenant)
+    %i(parent_ems_cloud ems_storage cloud_volume cloud_tenant)
   end
 
   def textual_status
@@ -23,7 +23,11 @@ module CloudVolumeBackupHelper::TextualSummary
     textual_link(@record.cloud_volume)
   end
 
-  def textual_ems
+  def textual_parent_ems_cloud
+    @record.ext_management_system.try(:parent_manager)
+  end
+
+  def textual_ems_storage
     textual_link(@record.ext_management_system)
   end
 
