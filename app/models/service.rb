@@ -233,4 +233,40 @@ class Service < ApplicationRecord
     user = User.super_admin.tap { |u| u.current_group = miq_group } if user.nil? || !user.miq_group_ids.include?(miq_group_id)
     user
   end
+
+  def self.queue_chargeback_reports(options = {})
+    Service.all.each do |s|
+      s.queue_chargeback_report_generation(options) unless s.vms.empty?
+    end
+  end
+
+  def chargeback_report_name
+    "Chargeback-#{name}"
+  end
+
+  def generate_chargeback_report(options = {})
+    _log.info "Generation of chargeback report for service #{name} started..."
+    MiqReportResult.where(:name => chargeback_report_name).destroy_all
+
+    yaml = YAML.load_file(File.join(Rails.root, "product/chargeback/Chargeback.yaml"))
+    yaml["db_options"][:options][:service_id] = id
+    yaml["title"] = chargeback_report_name
+    report = MiqReport.new(yaml)
+    report.queue_generate_table(options)
+    _log.info "Report #{chargeback_report_name} generated"
+  end
+
+  def queue_chargeback_report_generation(options = {})
+    MiqQueue.put(
+      :queue_name  => "Services",
+      :role        => "reporting",
+      :class_name  => self.class.name,
+      :instance_id => id,
+      :method_name => "generate_chargeback_report",
+      :server_guid => guid,
+      :priority    => MiqQueue::NORMAL_PRIORITY,
+      :args        => options
+    )
+    _log.info "Added to queue: generate_chargeback_report for service #{name}"
+  end
 end
