@@ -54,9 +54,8 @@ def email_approver(appliance)
 end
 
 def requester_href(appliance)
-  body += "<a href='https://#{appliance}/miq_request/show/#{@miq_request.id}'>"
+  body = "<a href='https://#{appliance}/miq_request/show/#{@miq_request.id}'>"
   body += "https://#{appliance}/miq_request/show/#{@miq_request.id}</a>"
-  body
 end
 
 def requester_text(appliance)
@@ -66,7 +65,6 @@ def requester_text(appliance)
   body += requester_href(appliance)
   body += "<br><br> Thank you,"
   body += "<br> #{signature}"
-  body
 end
 
 def email_requester(appliance)
