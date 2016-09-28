@@ -97,7 +97,7 @@ module Openstack
       # skips configured modules
 
       # .. but other things are still present:
-      expect(Disk.count).to       eq disks_count(false)
+      expect(Disk.count).to       eq disks_count(true)
       expect(FloatingIp.count).to eq network_data.floating_ips.sum
     end
 
@@ -218,10 +218,10 @@ module Openstack
       disks_count = (flavor[:disk] > 0 ? 1 : 0) + (flavor[:ephemeral] > 0 ? 1 : 0) + (flavor[:swap] > 0 ? 1 : 0)
 
       # May need after linkage is done
-      # if with_volumes && vm_or_stack[:__block_devices]
-      #   disks_count +=
-      #     vm_or_stack[:__block_devices].count { |d| d[:destination_type] == 'volume' && d[:boot_index] != 0 }
-      # end
+      if with_volumes && vm_or_stack[:__block_devices]
+        disks_count +=
+          vm_or_stack[:__block_devices].count { |d| d[:destination_type] == 'volume' && d[:boot_index] != 0 }
+      end
 
       disks_count
     end
