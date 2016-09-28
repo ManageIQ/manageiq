@@ -2,7 +2,9 @@ module DrbRemoteInvokerSpec
   include MiqAeEngine
   describe MiqAeEngine::DrbRemoteInvoker do
     it "setup/teardown drb_for_ruby_method clears DRb threads" do
-      invoker = described_class.new(double("workspace", :persist_state_hash => {}))
+      workspace = double("workspace", :persist_state_hash => {})
+      allow(workspace).to receive(:disable_rbac).with(no_args)
+      invoker = described_class.new(workspace)
 
       timer_thread = nil
 
