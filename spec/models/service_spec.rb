@@ -241,6 +241,63 @@ describe Service do
     end
   end
 
+  context "Chargeback report generation" do
+    before do
+      @vm = FactoryGirl.create(:vm_vmware)
+      @vm_1 = FactoryGirl.create(:vm_vmware)
+
+      @service = FactoryGirl.create(:service)
+      @service.name = "Test_Service_1"
+      @service_c1 = FactoryGirl.create(:service, :service => @service)
+      @service_c1.name = "Test_Service_2"
+      @service << @vm
+      @service_c1 << @vm_1
+      @service.save
+      @service_c1.save
+    end
+
+    describe ".queue_chargeback_reports" do
+      it "queue request to generate chargeback report for each service" do
+        expect(MiqQueue).to receive(:put).twice
+        described_class.queue_chargeback_reports
+      end
+    end
+
+    describe "#chargeback_report_name" do
+      it "creates chargeback report's name" do
+        expect(@service.chargeback_report_name).to eq "Chargeback-Test_Service_1"
+        expect(@service_c1.chargeback_report_name).to eq "Chargeback-Test_Service_2"
+      end
+    end
+
+    describe "#queue_chargeback_report_generation" do
+      it "queue request to generate chargeback report" do
+        expect(MiqQueue).to receive(:put) do |args|
+          expect(args).to have_attributes(:class_name  => described_class.name,
+                                          :method_name => "generate_chargeback_report",
+                                          :args        => {:report_source => "Test Run"})
+        end
+        @service.queue_chargeback_report_generation(:report_source => "Test Run")
+      end
+    end
+
+    describe "#generate_chargeback_report" do
+      it "delete existing chargeback report result for service before generating new one" do
+        allow(YAML).to receive(:load_file).and_return("db_options" => {:options => {}})
+
+        FactoryGirl.create(:miq_chargeback_report_result, :name => @service.chargeback_report_name)
+        expect(MiqReportResult.count).to eq 1
+
+        report = double("MiqReport")
+        allow(MiqReport).to receive(:new).and_return(report)
+
+        expect(report).to receive(:queue_generate_table)
+        @service.generate_chargeback_report
+        expect(MiqReportResult.count).to eq 0
+      end
+    end
+  end
+
   describe "#children" do
     it "returns children" do
       create_deep_tree
