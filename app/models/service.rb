@@ -2,6 +2,9 @@ require 'ancestry'
 
 class Service < ApplicationRecord
   DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS = 120
+  ACTION_RESPONSE = { "Power On"    => :start, "Power Off" => :stop, "Shutdown" => :stop, "Suspend" => :suspend,
+                      "Do Nothing"  => nil
+                    }.freeze
 
   include VirtualTotalMixin
 
@@ -177,10 +180,7 @@ class Service < ApplicationRecord
     method = "#{requested}_action"
     response = service_resource.try(method)
 
-    action_response = { "Power On"    => :start, "Power Off" => :stop, "Shutdown" => :stop, "Suspend" => :suspend,
-                        "Do Nothing"  => nil
-                      }
-    response.nil? ? requested : action_response[response]
+    response.nil? ? requested : ACTION_RESPONSE[response]
   end
 
   def validate_reconfigure
