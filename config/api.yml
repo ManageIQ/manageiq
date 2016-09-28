@@ -63,7 +63,7 @@
       - :name: read
         :identifier: miq_ae_domain_view
       :post:
-      - :name: git_refresh
+      - :name: refresh_from_source
         :identifier: miq_ae_git_refresh
   :automation_requests:
     :description: Automation Requests
