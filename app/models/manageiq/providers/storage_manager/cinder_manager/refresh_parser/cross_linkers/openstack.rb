@@ -28,7 +28,7 @@ module ManageIQ::Providers::StorageManager::CinderManager::RefreshParser::CrossL
     end
 
     def link_volume_to_tenant(volume_hash, api_obj)
-      tenant = @parent_ems.cloud_tenants.try(:where, :ems_ref => api_obj.tenant_id).try(:first)
+      tenant = @parent_ems.cloud_tenants.where(:ems_ref => api_obj.tenant_id).first
       unless tenant
         _log.info "EMS: #{@parent_ems.name}, tenant not found: #{api_obj.tenant_id}"
         return
@@ -40,7 +40,7 @@ module ManageIQ::Providers::StorageManager::CinderManager::RefreshParser::CrossL
 
     def link_volume_to_availability_zone(volume_hash, api_obj)
       az_ref = "volume-#{api_obj.availability_zone}"
-      availability_zone = @parent_ems.availability_zones.try(:where, :ems_ref => az_ref).try(:first)
+      availability_zone = @parent_ems.availability_zones.where(:ems_ref => az_ref).first
       unless availability_zone
         _log.info "EMS: #{@parent_ems.name}, availability zone not found: #{az_ref}"
         return
@@ -52,7 +52,7 @@ module ManageIQ::Providers::StorageManager::CinderManager::RefreshParser::CrossL
 
     def link_snapshot_to_tenant(snapshot_hash, api_obj)
       tenant_ref = api_obj['os-extended-snapshot-attributes:project_id']
-      tenant = @parent_ems.cloud_tenants.try(:where, :ems_ref => tenant_ref).try(:first)
+      tenant = @parent_ems.cloud_tenants.where(:ems_ref => tenant_ref).first
       unless tenant
         _log.info "EMS: #{@parent_ems.name}, tenant not found: #{tenant_ref}"
         return

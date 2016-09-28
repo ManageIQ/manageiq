@@ -1,10 +1,8 @@
-#
-#
-#
-require_relative "refresh_parser/cross_linkers/cross_linkers.rb"
 
 module ManageIQ::Providers
   class StorageManager::CinderManager::RefreshParser < ManageIQ::Providers::CloudManager::RefreshParser
+    require_nested "CrossLinkers"
+
     include ManageIQ::Providers::StorageManager::CinderManager::RefreshHelperMethods
     include Vmdb::Logging
 
@@ -64,7 +62,6 @@ module ManageIQ::Providers
     def parse_backup(backup)
       uid = backup['id']
       new_result = {
-        :api_obj               => backup,
         :ems_ref               => uid,
         :type                  => "ManageIQ::Providers::Openstack::CloudManager::CloudVolumeBackup",
         # Supporting both Cinder v1 and Cinder v2
@@ -77,7 +74,10 @@ module ManageIQ::Providers
         :object_count          => backup['object_count'].to_i,
         :is_incremental        => backup['is_incremental'],
         :has_dependent_backups => backup['has_dependent_backups'],
-        :volume                => @data_index.fetch_path(:cloud_volumes, backup['volume_id'])
+        :volume                => @data_index.fetch_path(:cloud_volumes, backup['volume_id']),
+
+        # Temporarily add the object from the API to the hash - for the cross-linkers.
+        :api_obj               => backup
       }
       return uid, new_result
     end
@@ -85,7 +85,6 @@ module ManageIQ::Providers
     def parse_snapshot(snap)
       uid = snap['id']
       new_result = {
-        :api_obj       => snap,
         :ems_ref       => uid,
         :type          => "ManageIQ::Providers::Openstack::CloudManager::CloudVolumeSnapshot",
         # Supporting both Cinder v1 and Cinder v2
@@ -95,7 +94,10 @@ module ManageIQ::Providers
         # Supporting both Cinder v1 and Cinder v2
         :description   => snap['display_description'] || snap['description'],
         :size          => snap['size'].to_i.gigabytes,
-        :volume        => @data_index.fetch_path(:cloud_volumes, snap['volume_id'])
+        :volume        => @data_index.fetch_path(:cloud_volumes, snap['volume_id']),
+
+        # Temporarily add the object from the API to the hash - for the cross-linkers.
+        :api_obj       => snap
       }
       return uid, new_result
     end
@@ -105,7 +107,6 @@ module ManageIQ::Providers
 
       uid = volume.id
       new_result = {
-        :api_obj       => volume,
         :ems_ref       => uid,
         # TODO: has its own CloudVolume?
         :type          => "ManageIQ::Providers::Openstack::CloudManager::CloudVolume",
@@ -116,7 +117,10 @@ module ManageIQ::Providers
         :description   => volume_description(volume),
         :volume_type   => volume.volume_type,
         :snapshot_uid  => volume.snapshot_id,
-        :size          => volume.size.to_i.gigabytes
+        :size          => volume.size.to_i.gigabytes,
+
+        # Temporarily add the object from the API to the hash - for the cross-linkers.
+        :api_obj       => volume
       }
       return uid, new_result
     end

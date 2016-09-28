@@ -100,7 +100,6 @@ module EmsRefresh::SaveInventoryCinder
     hashes.each do |h|
       h.delete(:api_obj) # Used by cross linkers, no longer needed.
       h[:ems_id]          = ems.id
-      # h[:cloud_tenant_id] = h.fetch_path(:tenant, :id)
       h[:cloud_volume_id] = h.fetch_path(:volume, :id)
     end
 
@@ -115,7 +114,7 @@ module EmsRefresh::SaveInventoryCinder
 
       # Existing disk, update attributes.
       if dh.key?(:id)
-        unless (disk = Disk.where(:id => dh[:id]))
+        unless (disk = Disk.where(:id => dh[:id]).first)
           _log.warn "Expected disk not found, id = #{dh[:id]}"
           next
         end
