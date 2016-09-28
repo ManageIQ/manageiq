@@ -113,8 +113,7 @@ class TreeNodeBuilder
     when MiqAeNamespace       then node_with_display_name("ae_namespace.png")
     when MiqAlertSet          then generic_node(object.description, "miq_alert_profile.png")
     when MiqReport            then generic_node(object.name, "report.png")
-    when MiqReportResult      then miq_report_node(format_timezone(object.last_run_on, Time.zone, 'gtl'),
-                                                   get_rr_status_image(object), object.name, object.status.downcase)
+    when MiqReportResult      then miq_report_node(object.last_run_on, object.name, object.status)
     when MiqSchedule          then generic_node(object.name, "miq_schedule.png")
     when MiqScsiLun           then generic_node(object.canonical_name,
                                                 "lun.png",
@@ -168,8 +167,8 @@ class TreeNodeBuilder
 
   private
 
-  def get_rr_status_image(rec)
-    case rec.status.downcase
+  def get_rr_status_image(status)
+    case status
     when 'error'    then 'report_result_error.png'
     when 'finished' then 'report_result_completed.png'
     when 'running'  then 'report_result_running.png'
@@ -467,10 +466,11 @@ class TreeNodeBuilder
     end
   end
 
-  def miq_report_node(text, image, name, status)
-    if text == "" && (status == "queued" || status == "running")
-      expand = false
-      expand = true if options[:open_all]
+  def miq_report_node(last_run_on, name, status)
+    status = status.downcase
+    image = get_rr_status_image(status)
+    if last_run_on.nil? && (status == "queued" || status == "running")
+      expand = !!options[:open_all]
 
       @node = TreeNodeBuilder.generic_tree_node(
         build_object_id,
@@ -479,10 +479,11 @@ class TreeNodeBuilder
         _("Generating Report for - %{report_name}") % {:report_name => name},
         :expand => expand
       )
-    elsif text == "" && status == "error"
+    elsif last_run_on.nil? && status == "error"
       generic_node(_("Error Generating Report"), image,
         _("Error Generating Report for %{report_name}") % {:report_name => name})
     else
+      text = format_timezone(last_run_on, Time.zone, 'gtl')
       generic_node(text, image)
     end
   end
