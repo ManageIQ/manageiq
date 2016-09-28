@@ -203,6 +203,32 @@ module ManageIQ::Providers
       ::Hawkular::Alerts::AlertsClient.new(url, credentials)
     end
 
+    def add_middleware_datasource(ems_ref, hash)
+      with_provider_connection do |connection|
+        datasource_data = {
+          :resourcePath   => ems_ref.to_s,
+          :datasourceName => hash[:datasource]["datasourceName"],
+          :xaDatasource   => hash[:datasource]["xaDatasource"],
+          :jndiName       => hash[:datasource]["jndiName"],
+          :driverName     => hash[:datasource]["driverName"],
+          :driverClass    => hash[:datasource]["driverClass"],
+          :connectionUrl  => hash[:datasource]["connectionUrl"],
+          :userName       => hash[:datasource]["userName"],
+          :password       => hash[:datasource]["password"],
+          :securityDomain => hash[:datasource]["securityDomain"]
+        }
+
+        connection.operations(true).add_datasource(datasource_data) do |on|
+          on.success do |data|
+            _log.debug "Success on websocket-operation #{data}"
+          end
+          on.failure do |error|
+            _log.error 'error callback was called, reason: ' + error.to_s
+          end
+        end
+      end
+    end
+
     def add_middleware_deployment(ems_ref, hash)
       with_provider_connection do |connection|
         deployment_data = {

@@ -55,7 +55,7 @@ class MiddlewareServerController < ApplicationController
                                     :skip  => false,
                                     :hawk  => N_('Not adding new datasource to Hawkular server'),
                                     :msg   => N_('New datasource initiated for selected server(s)'),
-                                    :param => :file
+                                    :param => :datasource
     }
   }.freeze
 
@@ -103,11 +103,28 @@ class MiddlewareServerController < ApplicationController
   end
 
   def add_datasource
-    # @todo: fill in with operation logic for 'add datasource'
+    datasource_name = params["datasourceName"]
+    selected_server = identify_selected_entities
+    existing_datasource = MiddlewareDatasource.find_by(:name => datasource_name, :server_id => selected_server)
 
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+    if existing_datasource
+      render :json => {
+        :status => :warn, :msg => _("Datasource \"%s\" already exists on this server.") % datasource_name
+      }
+    else
+      params[:datasource] = {
+        :datasourceName => datasource_name,
+        :xaDatasource   => params["xaDatasource"],
+        :jndiName       => params["jndiName"],
+        :driverName     => params["driverName"],
+        :driverClass    => params["driverClass"],
+        :connectionUrl  => params["connectionUrl"]
+      }
+
+      run_server_operation(OPERATIONS.fetch(:middleware_add_datasource), selected_server)
+      render :json => {
+        :status => :success, :msg => _("Datasource \"%s\" has been installed on this server.") % params["datasource"]
+      }
     end
   end
 
