@@ -390,8 +390,7 @@ class MiqRequestWorkflow
   end
 
   def get_value(data)
-    return data.first if data.kind_of?(Array)
-    data
+    data.kind_of?(Array) ? data.first : data
   end
 
   def set_or_default_field_values(values)
@@ -518,8 +517,7 @@ class MiqRequestWorkflow
   end
 
   def values_less_then(options)
-    results = {}
-    options[:values].each { |k, v| results[k.to_i_with_method] = v }
+    results = options[:values].transform_keys(&:to_i_with_method)
     field, include_equals = options[:field], options[:include_equals]
     max_value = field.nil? ? options[:value].to_i_with_method : get_value(@values[field]).to_i_with_method
     return results if max_value <= 0
@@ -640,9 +638,7 @@ class MiqRequestWorkflow
             "Dialog cannot be found.  Name:[%{name}]  Type:[%{type}]" % {:name => @values[:miq_request_dialog_name],
                                                                          :type => self.class.base_model.name}
     end
-    prov_dialogs = d.content
-
-    prov_dialogs
+    d.content
   end
 
   def get_pre_dialogs
@@ -710,10 +706,8 @@ class MiqRequestWorkflow
 
   def request_class
     req_class = self.class.request_class
-    if get_value(@values[:service_template_request]) == true
-      req_class = (req_class.name + "Template").constantize
-    end
-    req_class
+    return req_class unless get_value(@values[:service_template_request]) == true
+    (req_class.name + "Template").constantize
   end
 
   def self.request_class
@@ -878,13 +872,10 @@ class MiqRequestWorkflow
 
   def find_hosts_for_respool(item, ems_src = nil)
     hosts = find_class_above_ci(item, Host, ems_src)
-    if hosts.blank?
-      cluster = find_cluster_above_ci(item)
-      hosts = find_hosts_under_ci(cluster)
-    else
-      hosts = [hosts]
-    end
-    hosts
+    return [hosts] unless hosts.blank?
+
+    cluster = find_cluster_above_ci(item)
+    find_hosts_under_ci(cluster)
   end
 
   def find_cluster_above_ci(item, ems_src = nil)
@@ -954,7 +945,7 @@ class MiqRequestWorkflow
     key_id = "#{key}_id".to_sym
     result[key_id] = get_value(@values[dialog_key])
     result[key_id] = nil if result[key_id] == 0
-    result[key] = ci_to_hash_struct(klass.find_by_id(result[key_id])) unless result[key_id].nil?
+    result[key] = ci_to_hash_struct(klass.find_by(:id => result[key_id])) unless result[key_id].nil?
   end
 
   def ci_to_hash_struct(ci)
@@ -997,7 +988,7 @@ class MiqRequestWorkflow
   def load_ar_obj(ci)
     return load_ar_objs(ci) if ci.kind_of?(Array)
     return ci unless ci.kind_of?(MiqHashStruct)
-    ci.evm_object_class.to_s.camelize.constantize.find_by_id(ci.id)
+    ci.evm_object_class.to_s.camelize.constantize.find_by(:id => ci.id)
   end
 
   def load_ar_objs(ci)
@@ -1185,13 +1176,11 @@ class MiqRequestWorkflow
       rails_logger("host_to_folder for host #{h.name}", 1)
       result
     end.compact
-    folders = {}
-    datacenters.each do |dc|
+    datacenters.each_with_object({}) do |dc, folders|
       rails_logger("host_to_folder for dc #{dc.name}", 0)
       folders.merge!(get_ems_folders(dc))
       rails_logger("host_to_folder for dc #{dc.name}", 1)
     end
-    folders
   end
 
   def cluster_to_folder(src)
@@ -1199,18 +1188,14 @@ class MiqRequestWorkflow
     return nil if src[:cluster].nil?
     sources = [src[:cluster]]
     datacenters = sources.collect { |h| find_datacenter_for_ci(h) }.compact
-    folders = {}
-    datacenters.each { |dc| folders.merge!(get_ems_folders(dc)) }
-    folders
+    datacenters.each_with_object({}) { |dc, folders| folders.merge!(get_ems_folders(dc)) }
   end
 
   def respool_to_folder(src)
     return nil if src[:respool].nil?
     sources = [src[:respool]]
     datacenters = sources.collect { |h| find_datacenter_for_ci(h) }.compact
-    folders = {}
-    datacenters.each { |dc| folders.merge!(get_ems_folders(dc)) }
-    folders
+    datacenters.each_with_object({}) { |dc, folders| folders.merge!(get_ems_folders(dc)) }
   end
 
   def set_ws_field_value(values, key, data, dialog_name, dlg_fields)
@@ -1336,11 +1321,11 @@ class MiqRequestWorkflow
   def get_image_by_type(image_type)
     klass, id = get_value(@values[image_type]).to_s.split('::')
     return nil if id.blank?
-    klass.constantize.find_by_id(id)
+    klass.constantize.find_by(:id => id)
   end
 
   def get_pxe_server
-    PxeServer.find_by_id(get_value(@values[:pxe_server_id]))
+    PxeServer.find_by(:id => get_value(@values[:pxe_server_id]))
   end
 
   def allowed_pxe_servers(_options = {})
@@ -1376,7 +1361,7 @@ class MiqRequestWorkflow
   end
 
   def get_iso_images
-    template = VmOrTemplate.find_by_id(get_value(@values[:src_vm_id]))
+    template = VmOrTemplate.find_by(:id => get_value(@values[:src_vm_id]))
     template.try(:ext_management_system).try(:iso_datastore).try(:iso_images) || []
   end
 
