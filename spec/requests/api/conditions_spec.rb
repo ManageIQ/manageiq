@@ -18,6 +18,116 @@ describe "Conditions API" do
     resource.conditions = Condition.all
   end
 
+  context "Condition CRUD" do
+    let(:sample_condition) do
+      {
+        :name        => "name",
+        :description => "description",
+        :expression  => {"=" => {"field" => "ContainerImage-architecture", "value" => "dsa"}},
+        :towhat      => "ExtManagementSystem",
+        :modifier    => "allow"
+      }
+    end
+    let(:condition) { FactoryGirl.create(:condition) }
+    let(:condition_url) { conditions_url(condition.id) }
+    let(:conditions) { FactoryGirl.create_list(:condition, 2) }
+
+    it "forbids access to create condition without an appropriate role" do
+      api_basic_authorize
+
+      run_post(conditions_url, sample_condition)
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "forbids access to edit condition without an appropriate role" do
+      api_basic_authorize
+
+      run_post(conditions_url(condition.id), gen_request(:edit, "description" => "change"))
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "forbids access to delete condition without an appropriate role" do
+      condition
+      api_basic_authorize
+
+      run_post(conditions_url, gen_request(:delete, "name" => condition.name, "href" => condition_url))
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "forbids access to read condition without an appropriate role" do
+      condition
+      api_basic_authorize
+
+      run_get conditions_url
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "creates new condition" do
+      api_basic_authorize collection_action_identifier(:conditions, :create)
+      run_post(conditions_url, sample_condition)
+
+      expect(response).to have_http_status(:ok)
+
+      condition_id = response.parsed_body["results"].first["id"]
+
+      expect(Condition.exists?(condition_id)).to be_truthy
+    end
+
+    it "creates new conditions" do
+      api_basic_authorize collection_action_identifier(:conditions, :create)
+      run_post(conditions_url, gen_request(:create, [sample_condition,
+                                                     sample_condition.merge(:name => "foo", :description => "bar")]))
+      expect(response).to have_http_status(:ok)
+
+      expect(response.parsed_body["results"].count).to eq(2)
+    end
+
+    it "deletes condition" do
+      api_basic_authorize collection_action_identifier(:conditions, :delete)
+      run_post(conditions_url, gen_request(:delete, "name" => condition.name, "href" => condition_url))
+
+      expect(response).to have_http_status(:ok)
+
+      expect(Condition.exists?(condition.id)).to be_falsey
+    end
+
+    it "deletes conditions" do
+      api_basic_authorize collection_action_identifier(:conditions, :delete)
+      run_post(conditions_url, gen_request(:delete, [{"name" => conditions.first.name,
+                                                      "href" => conditions_url(conditions.first.id)},
+                                                     {"name" => conditions.second.name,
+                                                      "href" => conditions_url(conditions.second.id)}]))
+
+      expect(response).to have_http_status(:ok)
+
+      expect(response.parsed_body["results"].count).to eq(2)
+    end
+
+    it "edits condition" do
+      api_basic_authorize collection_action_identifier(:conditions, :edit)
+      run_post(conditions_url(condition.id), gen_request(:edit, "description" => "change"))
+
+      expect(response).to have_http_status(:ok)
+
+      expect(Condition.find(condition.id).description).to eq("change")
+    end
+
+    it "edits conditions" do
+      api_basic_authorize collection_action_identifier(:conditions, :edit)
+      run_post(conditions_url, gen_request(:edit, [{"id" => conditions.first.id, "description" => "change"},
+                                                   {"id" => conditions.second.id, "description" => "change2"}]))
+      expect(response).to have_http_status(:ok)
+
+      expect(response.parsed_body["results"].count).to eq(2)
+
+      expect(Condition.pluck(:description)).to eq(%w(change change2))
+    end
+  end
+
   context "Condition collection" do
     it "query invalid collection" do
       api_basic_authorize collection_action_identifier(:conditions, :read, :get)
