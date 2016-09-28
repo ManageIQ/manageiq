@@ -71,7 +71,7 @@ module ApplianceConsole
 
     def initialize_postgresql
       log_and_feedback(__method__) do
-        prep_database_mount_point
+        prep_data_directory
         run_initdb
         relabel_postgresql_dir
         configure_postgres
@@ -94,6 +94,10 @@ module ApplianceConsole
     end
 
     private
+
+    def mount_point
+      Pathname.new(ENV.fetch("APPLIANCE_PG_MOUNT_POINT"))
+    end
 
     def copy_template(src, src_dir = self.class.postgresql_template, dest_dir = PostgresAdmin.data_directory)
       full_src = src_dir.join(src)
@@ -137,16 +141,16 @@ module ApplianceConsole
       # TODO: should this be moved into LinuxAdmin?
       FileUtils.rm_rf(PostgresAdmin.data_directory)
       FileUtils.mkdir_p(PostgresAdmin.data_directory)
-      AwesomeSpawn.run!("mount", :params => {"-t" => PostgresAdmin.database_disk_filesystem, nil => [@logical_volume.path, PostgresAdmin.data_directory]})
+      AwesomeSpawn.run!("mount", :params => {"-t" => PostgresAdmin.database_disk_filesystem, nil => [@logical_volume.path, mount_point]})
     end
 
     def update_fstab
       fstab = LinuxAdmin::FSTab.instance
-      return if fstab.entries.find { |e| e.mount_point == PostgresAdmin.data_directory }
+      return if fstab.entries.find { |e| e.mount_point == mount_point }
 
       entry = LinuxAdmin::FSTabEntry.new(
         :device        => @logical_volume.path,
-        :mount_point   => PostgresAdmin.data_directory,
+        :mount_point   => mount_point,
         :fs_type       => PostgresAdmin.database_disk_filesystem,
         :mount_options => "rw,noatime",
         :dumpable      => 0,
@@ -157,8 +161,9 @@ module ApplianceConsole
       fstab.write!  # Test this more, whitespace is removed
     end
 
-    def prep_database_mount_point
+    def prep_data_directory
       # initdb will fail if the database directory is not empty or not owned by the PostgresAdmin.user
+      # May need to create the data dir here?
       FileUtils.chown_R(PostgresAdmin.user, PostgresAdmin.user, PostgresAdmin.data_directory)
       FileUtils.rm_rf(PostgresAdmin.data_directory.join("pg_log"))
       FileUtils.rm_rf(PostgresAdmin.data_directory.join("lost+found"))
@@ -191,7 +196,7 @@ module ApplianceConsole
     end
 
     def relabel_postgresql_dir
-      AwesomeSpawn.run!("/sbin/restorecon -R -v #{PostgresAdmin.data_directory}")
+      AwesomeSpawn.run!("/sbin/restorecon -R -v #{mount_point}")
     end
   end
 end
