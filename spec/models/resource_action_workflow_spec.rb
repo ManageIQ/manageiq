@@ -70,7 +70,7 @@ describe ResourceActionWorkflow do
 
         it "creates requests" do
           EvmSpecHelper.local_miq_server
-          expect(subject).to receive(:create_request).and_call_original
+          expect(subject).to receive(:make_request).and_call_original
           expect(AuditEvent).to receive(:success).with(
             :event        => "service_reconfigure_request_created",
             :target_class => "Service",
@@ -90,7 +90,7 @@ describe ResourceActionWorkflow do
 
         it "calls automate" do
           EvmSpecHelper.local_miq_server
-          expect(subject).not_to receive(:create_request)
+          expect(subject).not_to receive(:make_request)
           expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog).and_call_original
           expect(MiqAeEngine).to receive(:deliver_queue) # calls into automate
           expect(AuditEvent).not_to receive(:success)
@@ -108,7 +108,7 @@ describe ResourceActionWorkflow do
         end
 
         it "calls automate" do
-          expect(subject).not_to receive(:create_request)
+          expect(subject).not_to receive(:make_request)
           expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog)
 
           subject.submit_request

@@ -301,7 +301,7 @@ describe MiqProvisionVirtWorkflow do
     end
   end
 
-  context '#update_request' do
+  context '#make_request (update)' do
     let(:template) do
       FactoryGirl.create(
         :template_vmware,
@@ -309,8 +309,8 @@ describe MiqProvisionVirtWorkflow do
       )
     end
     let(:values)  { {:src_vm_id => [template.id, template.name]} }
-    let(:request) { workflow.create_request(:src_vm_id => [999, 'old_template']) }
-    before { workflow.update_request(request, values) }
+    let(:request) { workflow.make_request(nil, :src_vm_id => [999, 'old_template']) }
+    before { workflow.make_request(request, values) }
 
     it 'updates options' do
       expect(request.options).to include(values)

@@ -49,19 +49,18 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     super(message, [:request_type, :source_type, :target_type], extra_attrs)
   end
 
-  def create_request(values, _requester = nil, auto_approve = false)
+  def make_request(request, values, requester = nil, auto_approve = false)
     if @running_pre_dialog == true
       continue_request(values)
       password_helper(values, true)
       return nil
-    else
-      super
     end
-  end
 
-  def update_request(request, values, _requester = nil)
-    request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
-    request.src_vm_id = get_value(values[:src_vm_id])
+    if request
+      request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
+      request.src_vm_id = get_value(values[:src_vm_id])
+    end
+
     super
   end
 
@@ -733,7 +732,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       raise _("Provision failed for the following reasons:\n%{errors}") % {:errors => errors.join("\n")}
     end
 
-    p.create_request(values, nil, auto_approve)
+    p.make_request(nil, values, nil, auto_approve)
   end
 
   def ws_template_fields(values, fields, ws_values)
@@ -935,7 +934,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     values[:ws_ems_custom_attributes] = p.ws_values(options.ems_custom_attributes, :parse_ws_string, :modify_key_name => false)
     values[:ws_miq_custom_attributes] = p.ws_values(options.miq_custom_attributes, :parse_ws_string, :modify_key_name => false)
 
-    p.create_request(values, nil, values[:auto_approve]).tap do |request|
+    p.make_request(nil, values, nil, values[:auto_approve]).tap do |request|
       p.raise_validate_errors if request == false
     end
   rescue => err
