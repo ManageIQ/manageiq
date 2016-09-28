@@ -58,6 +58,7 @@ module ManageIQ::Providers
 
     def parse_backup(backup)
       uid = backup['id']
+      az = backup['availability_zone'].nil? ? "null_az" : backup['availability_zone']
       new_result = {
         :ems_ref               => uid,
         :type                  => "ManageIQ::Providers::Openstack::CloudManager::CloudVolumeBackup",
@@ -71,8 +72,7 @@ module ManageIQ::Providers
         :object_count          => backup['object_count'].to_i,
         :is_incremental        => backup['is_incremental'],
         :has_dependent_backups => backup['has_dependent_backups'],
-        :availability_zone     => @data_index.fetch_path(:availability_zones,
-                                  "volume-" + backup['availability_zone'] || "null_az"),
+        :availability_zone     => "volume-" + az,
         :volume                => @data_index.fetch_path(:cloud_volumes, backup['volume_id'])
       }
       return uid, new_result
