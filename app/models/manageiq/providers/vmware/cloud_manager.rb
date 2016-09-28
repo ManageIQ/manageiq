@@ -1,5 +1,6 @@
 class ManageIQ::Providers::Vmware::CloudManager < ManageIQ::Providers::CloudManager
   require_nested :AvailabilityZone
+  require_nested :OrchestrationServiceOptionConverter
   require_nested :OrchestrationStack
   require_nested :OrchestrationTemplate
   require_nested :EventCatcher
