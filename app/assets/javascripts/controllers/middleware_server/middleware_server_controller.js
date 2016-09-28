@@ -32,7 +32,7 @@ function MwServerController($scope, miqService) {
         operation = event.operation,
         timeout = event.timeout;
 
-    $scope.paramsModel = {};
+    $scope.paramsModel = $scope.paramsModel || {};
     if (eventType == 'mwServerOps'  && operation) {
       $scope.paramsModel.serverId = angular.element('#mw_param_server_id').val();
       $scope.paramsModel.operation = operation;
