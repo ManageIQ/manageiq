@@ -1,4 +1,4 @@
-module ManageIQ::Providers::Vmware::EventCatcherMixin
+module ManageIQ::Providers::Vmware::CloudManager::EventCatcherMixin
 
   def event_monitor_handle
     unless @event_monitor_handle
@@ -45,8 +45,8 @@ module ManageIQ::Providers::Vmware::EventCatcherMixin
   def stop_event_monitor
     @event_monitor_handle.stop unless @event_monitor_handle.nil?
   rescue StandardException => err
-    _log.warn("#{log_prefix} Event Monitor Stop errored because [#{err.message}]")
-    _log.warn("#{log_prefix} Error details: [#{err.details}]")
+    _log.warn("Event Monitor Stop errored because [#{err.message}]")
+    _log.warn("Error details: [#{err.details}]")
     _log.log_backtrace(err)
   ensure
     reset_event_monitor_handle
@@ -54,9 +54,9 @@ module ManageIQ::Providers::Vmware::EventCatcherMixin
 
   def process_event(event)
     if filtered_events.include?(event.type)
-      _log.info "#{log_prefix} Skipping caught event [#{event.type}]"
+      _log.info "Skipping caught event [#{event.type}]"
     else
-      _log.info "#{log_prefix} Caught event [#{event.type}]"
+      _log.info "Caught event [#{event.type}]"
       add_to_worker_queue(event)
     end
   end

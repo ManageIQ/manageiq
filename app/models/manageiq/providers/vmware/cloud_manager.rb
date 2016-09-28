@@ -11,7 +11,7 @@ class ManageIQ::Providers::Vmware::CloudManager < ManageIQ::Providers::CloudMana
   require_nested :Vm
 
   include ManageIQ::Providers::Vmware::ManagerAuthMixin
-  include ManageIQ::Providers::Vmware::ManagerEventsMixin
+  include ManageIQ::Providers::Vmware::CloudManager::ManagerEventsMixin
   include HasNetworkManagerMixin
 
   before_validation :ensure_managers

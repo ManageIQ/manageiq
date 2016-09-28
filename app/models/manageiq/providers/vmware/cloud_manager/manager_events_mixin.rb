@@ -1,4 +1,4 @@
-module ManageIQ::Providers::Vmware::ManagerEventsMixin
+module ManageIQ::Providers::Vmware::CloudManager::ManagerEventsMixin
   extend ActiveSupport::Concern
 
   def event_monitor_options
