@@ -109,14 +109,10 @@ function MwAddDataSourceCtrl($scope, $http, $q, miqService) {
       'securityDomain': $scope.step3DsModel.securityDomain
     };
 
-    console.dir(payload);
-
     $http.post('/middleware_server/add_datasource', angular.toJson(payload))
       .then(
         function (response) { // success
           var data = response.data;
-
-          console.log(data);
 
           if (data.status === 'ok') {
             deferred.resolve(data.msg);
@@ -134,6 +130,4 @@ function MwAddDataSourceCtrl($scope, $http, $q, miqService) {
       });
     return deferred.promise;
   }
-
-
 }
