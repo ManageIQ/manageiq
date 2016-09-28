@@ -1,4 +1,5 @@
 class Hardware < ApplicationRecord
+  include VirtualTotalMixin
   belongs_to  :vm_or_template
   belongs_to  :vm,            :foreign_key => :vm_or_template_id
   belongs_to  :miq_template,  :foreign_key => :vm_or_template_id
@@ -25,8 +26,8 @@ class Hardware < ApplicationRecord
   virtual_column :ipaddresses,   :type => :string_set, :uses => :networks
   virtual_column :hostnames,     :type => :string_set, :uses => :networks
   virtual_column :mac_addresses, :type => :string_set, :uses => :nics
-  virtual_attribute :used_disk_storage,      :integer, :uses => :disks
-  virtual_attribute :allocated_disk_storage, :integer, :uses => :disks
+  virtual_aggregate :used_disk_storage,      :disks, :sum, :used_disk_storage
+  virtual_aggregate :allocated_disk_storage, :disks, :sum, :size
 
   def ipaddresses
     @ipaddresses ||= networks.collect(&:ipaddress).compact.uniq
@@ -117,22 +118,6 @@ class Hardware < ApplicationRecord
       Arel::Nodes::NamedFunction.new("CAST", [t[:disk_free_space].as("float")]),
       t[:disk_capacity]) * -100 + 100)
   end)
-
-  def allocated_disk_storage
-    if disks.loaded?
-      disks.blank? ? nil : disks.inject(0) { |t, d| t + d.size.to_i }
-    else
-      disks.sum('coalesce(size, 0)')
-    end
-  end
-
-  def used_disk_storage
-    if disks.loaded?
-      disks.blank? ? nil : disks.inject(0) { |t, d| t + (d.size_on_disk || d.size).to_i }
-    else
-      disks.sum('coalesce(size_on_disk, size, 0)')
-    end
-  end
 
   def connect_lans(lans)
     return if lans.blank?
