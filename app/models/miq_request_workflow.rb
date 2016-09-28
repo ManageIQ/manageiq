@@ -81,63 +81,20 @@ class MiqRequestWorkflow
 
   # Helper method when not using workflow
   def make_request(request, values, requester = nil, auto_approve = false)
-    if request
-      update_request(request, values, requester)
-    else
-      create_request(values, requester, auto_approve)
-    end
-  end
-
-  def create_request(values, _requester = nil, auto_approve = false)
     return false unless validate(values)
-
-    set_request_values(values)
     password_helper(values, true)
-
-    yield if block_given?
-
-    request = request_class.create(:options => values, :requester => @requester, :request_type => request_type.to_s)
-    begin
-      request.save!  # Force validation errors to raise now
-    rescue => err
-      _log.error "[#{err}]"
-      $log.error err.backtrace.join("\n")
-      return request
-    end
-
-    request.set_description
-
-    request.log_request_success(@requester, :created)
-
-    if request.process_on_create?
-      # TODO: address auto-approve potential issue
-      request.call_automate_event_queue("request_created")
-      request.approve(@requester, "Auto-Approved") if auto_approve == true
-      request.reload if auto_approve
-    end
-
-    request
-  end
-
-  def update_request(request, values, _requester = nil)
-    request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
-
-    return false unless validate(values)
-
     # Ensure that tags selected in the pre-dialog get applied to the request
-    values[:vm_tags] = (values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags]).uniq  unless @values[:pre_dialog_vm_tags].blank?
+    values[:vm_tags] = (values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags]).uniq if @values.try(:[], :pre_dialog_vm_tags).present?
 
-    password_helper(values, true)
-
-    yield if block_given?
-
-    request.update_attribute(:options, request.options.merge(values))
-    request.set_description(true)
-
-    request.log_request_success(@requester, :updated)
-
-    request.call_automate_event_queue("request_updated")
-    request
+    if request
+      MiqRequest.update_request(request, values, @requester)
+    else
+      set_request_values(values)
+      req = request_class.new(:options => values, :requester => @requester, :request_type => request_type.to_s)
+      return req unless req.valid? # TODO: CatalogController#atomic_req_submit is the only one that enumerates over the errors
+      values[:__request_type__] = request_type.to_s.presence # Pass this along to MiqRequest#create_request
+      request_class.create_request(values, @requester, auto_approve)
+    end
   end
 
   def init_from_dialog(init_values)
@@ -780,8 +737,6 @@ class MiqRequestWorkflow
   end
 
   def set_request_values(values)
-    # Ensure that tags selected in the pre-dialog get applied to the request
-    values[:vm_tags] = (values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags]).uniq unless @values.nil? || @values[:pre_dialog_vm_tags].blank?
     values[:requester_group] ||= @requester.current_group.description
     email = values[:owner_email]
     if email.present? && values[:owner_group].blank?

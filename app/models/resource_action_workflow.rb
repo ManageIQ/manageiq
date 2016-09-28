@@ -46,7 +46,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   end
 
   def generate_request(state, values)
-    create_request(values).tap do |request|
+    make_request(nil, values).tap do |request|
       process_service_order(request, state) if request
     end
   end
