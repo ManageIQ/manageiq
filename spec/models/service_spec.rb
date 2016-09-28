@@ -377,6 +377,7 @@ describe Service do
 
       it "returns :stop for Shutdown, Power Off" do
         expect(service.service_action(:stop, service_resource_power_off)).to eq(:stop)
+        expect(service.service_action(:stop, service_resource_shutdown)).to eq(:stop)
       end
 
       it "returns nil for Do Nothing" do
