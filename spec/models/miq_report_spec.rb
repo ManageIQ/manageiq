@@ -760,4 +760,28 @@ describe MiqReport do
       expect(report.sort_col).to eq(0)
     end
   end
+
+  describe ".cols" do
+    it "loads given value" do
+      report = MiqReport.new(
+        :cols      => %w(name)
+      )
+      expect(report.cols).to eq(%w(name))
+    end
+
+    it "falls back to col_order" do
+      report = MiqReport.new(
+        :col_order => %w(miq_custom_attributes.name miq_custom_attributes.value name)
+      )
+      expect(report.cols).to eq(%w(name))
+    end
+
+    it "allows manipulation" do
+      report = MiqReport.new(
+        :col_order => %w(miq_custom_attributes.name miq_custom_attributes.value name),
+      )
+      report.cols << "name2"
+      expect(report.cols).to eq(%w(name name2))
+    end
+  end
 end
