@@ -2,17 +2,24 @@ module ManageIQ::Providers::Vmware::ManagerAuthMixin
   extend ActiveSupport::Concern
 
   def verify_credentials(auth_type = nil, options = {})
+    auth_type ||= 'default'
     raise MiqException::MiqHostError, "No credentials defined" if missing_credentials?(auth_type)
 
-    begin
-      with_provider_connection(options.merge(:auth_type => auth_type)) do |vcd|
-        vcd.organizations.all
-      end
-    rescue => err
-      miq_exception = translate_exception(err)
-
-      _log.error("Error Class=#{err.class.name}, Message=#{err.message}")
-      raise miq_exception
+    options[:auth_type] = auth_type
+    case auth_type.to_s
+      when 'default' then
+        begin
+          with_provider_connection(options) do |vcd|
+            vcd.organizations.all
+          end
+        rescue => err
+          miq_exception = translate_exception(err)
+          _log.error("Error Class=#{err.class.name}, Message=#{err.message}")
+          raise miq_exception
+        end
+      when 'amqp' then verify_amqp_credentials(options)
+      else
+        raise "Invalid Vmware vCloud Authentication Type: #{auth_type.inspect}"
     end
 
     true
