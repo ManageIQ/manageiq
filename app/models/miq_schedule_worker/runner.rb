@@ -74,6 +74,13 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     _log.error("#{err.class} for schedule_every with #{args.inspect}.  Called from: #{caller[1]}.")
   end
 
+  def system_schedule_at(*args, &block)
+    raise ArgumentError if args.first.nil?
+    @system_scheduler.schedule_at(*args, &block)
+  rescue ArgumentError => err
+    _log.error("#{err.class} for schedule_at with #{args.inspect}.  Called from: #{caller[1]}.")
+  end
+
   def schedules_for_all_roles
     # These schedules need to be run on all servers regardless of the server's role
     @schedules[:all] ||= []
@@ -228,6 +235,18 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       @schedules[:scheduler] << system_schedule_every(every, :first_in => every) do
         enqueue [:ems_refresh_timer, klass]
       end
+    end
+
+    # run chargeback generation 5 minute after server start-up and every 24 hours after that
+    start_delay = worker_setting_or_default(:chargeback_generation_start_delay, 5.minutes)
+    @schedules[:scheduler] << system_schedule_at(Time.current + start_delay) do
+      enqueue [:generate_chargeback_for_service, :report_source => "Initial run"]
+    end
+    every = worker_setting_or_default(:chargeback_generation_interval, 1.day)
+    at = worker_setting_or_default(:chargeback_generation_time_utc, "01:00:00")
+    time_at = Time.current.strftime("%Y-%m-%d #{at} UTC").to_time(:utc)
+    @schedules[:scheduler] << system_schedule_every(every, :first_at => time_at, :discard_past => true) do
+      enqueue [:generate_chargeback_for_service, :report_source => "Daily scheduler"]
     end
   end
 
