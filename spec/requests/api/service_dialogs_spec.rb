@@ -198,27 +198,25 @@ describe "Service Dialogs API" do
       {
         :description => 'Dialog',
         :label       => 'dialog_label',
-        :content     => {
-          :dialog_tabs => [
-            {
-              :description   => 'Dialog tab',
-              :position      => 0,
-              :label         => 'dialog_tab_label',
-              :dialog_groups => [
-                {
-                  :description   => 'Dialog group',
-                  :label         => 'group_label',
-                  :dialog_fields => [
-                    {
-                      :name  => 'A dialog field',
-                      :label => 'dialog_field_label'
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
+        :dialog_tabs => [
+          {
+            :description   => 'Dialog tab',
+            :position      => 0,
+            :label         => 'dialog_tab_label',
+            :dialog_groups => [
+              {
+                :description   => 'Dialog group',
+                :label         => 'group_label',
+                :dialog_fields => [
+                  {
+                    :name  => 'A dialog field',
+                    :label => 'dialog_field_label'
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       }
     end
 
@@ -282,27 +280,25 @@ describe "Service Dialogs API" do
       dialog_request_2 = {
         :description => 'Dialog 2',
         :label       => 'dialog_2_label',
-        :content     => {
-          :dialog_tabs => [
-            {
-              :description   => 'Dialog 2 tab',
-              :position      => 0,
-              :label         => 'dialog_2_label',
-              :dialog_groups => [
-                {
-                  :description   => 'a new dialog group',
-                  :label         => 'dialog_2_group_label',
-                  :dialog_fields => [
-                    {
-                      :name  => 'a new dialog field',
-                      :label => 'dialog_field_label'
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
+        :dialog_tabs => [
+          {
+            :description   => 'Dialog 2 tab',
+            :position      => 0,
+            :label         => 'dialog_2_label',
+            :dialog_groups => [
+              {
+                :description   => 'a new dialog group',
+                :label         => 'dialog_2_group_label',
+                :dialog_fields => [
+                  {
+                    :name  => 'a new dialog field',
+                    :label => 'dialog_field_label'
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       }
 
       expected = {

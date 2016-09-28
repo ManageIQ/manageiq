@@ -14,12 +14,11 @@ module Api
     end
 
     def create_resource(_type, _id, data)
-      service_dialog = Dialog.create(data.except('content'))
-      create_dialog_content(data['content'], service_dialog)
+      dialog_importer = DialogImportService.new
+      service_dialog = dialog_importer.import_from_json(data)
       unless service_dialog.valid?
         raise BadRequestError, "Failed to add new service dialog - #{service_dialog.errors.full_messages.join(', ')}"
       end
-      service_dialog.save!
       service_dialog
     end
 
@@ -53,30 +52,6 @@ module Api
 
     def service_dialog_ident(service_dialog)
       "Service Dialog id:#{service_dialog.id} label:'#{service_dialog.label}'"
-    end
-
-    def create_dialog_content(contents, dialog)
-      contents['dialog_tabs'].each { |tab_content| create_dialog_tab(tab_content, dialog) }
-    end
-
-    def create_dialog_tab(tab_content, dialog)
-      DialogTab.create(tab_content.except('dialog_groups')).tap do |new_tab|
-        dialog.dialog_tabs << new_tab
-        tab_content['dialog_groups'].each { |group_content| create_dialog_group(group_content, new_tab) }
-      end
-    end
-
-    def create_dialog_group(group_contents, tab)
-      DialogGroup.create(group_contents.except('dialog_fields')).tap do |new_group|
-        tab.dialog_groups << new_group
-        group_contents['dialog_fields'].each { |field_contents| create_dialog_field(field_contents, new_group) }
-      end
-    end
-
-    def create_dialog_field(field_contents, group)
-      DialogField.create(field_contents).tap do |new_field|
-        group.dialog_fields << new_field
-      end
     end
   end
 end
