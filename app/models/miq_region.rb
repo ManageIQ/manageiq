@@ -40,6 +40,7 @@ class MiqRegion < ApplicationRecord
   alias_method :all_storages,           :storages
 
   PERF_ROLLUP_CHILDREN = [:ext_management_systems, :storages]
+  AUTHENTICATION_TYPE  = "system_api".freeze
 
   def database_backups
     DatabaseBackup.in_region(region_number)
@@ -267,7 +268,7 @@ class MiqRegion < ApplicationRecord
     auth.auth_key = key
     auth.name = "Region #{region} API Key"
     auth.resource = self
-    auth.authtype = "system_api"
+    auth.authtype = AUTHENTICATION_TYPE
     auth.save!
   end
 
@@ -276,8 +277,12 @@ class MiqRegion < ApplicationRecord
     true
   end
 
+  def auth_key_configured?
+    authentication_token(AUTHENTICATION_TYPE).present?
+  end
+
   def api_system_auth_token(userid)
-    region_v2_key = authentication_token("system_api")
+    region_v2_key = authentication_token(AUTHENTICATION_TYPE)
 
     token_hash = {
       :server_guid => remote_ws_miq_server.guid,
