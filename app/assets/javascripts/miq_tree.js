@@ -133,6 +133,7 @@ function miqOnCheckProvTags(node, treename) {
 }
 
 function miqOnClickSelectAETreeNode(id) {
+  miqTreeExpandNode('automate_tree', id);
   miqJqueryRequest('/' + ManageIQ.controller + '/ae_tree_select/?id=' + id + '&tree=automate_tree');
 }
 
