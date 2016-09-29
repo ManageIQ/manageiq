@@ -25,6 +25,11 @@ class PgLogicalRaw
     connection.enable_extension("pglogical_origin") if connection.postgresql_version < 90_500
   end
 
+  def disable
+    connection.disable_extension("pglogical")
+    connection.disable_extension("pglogical_origin") if connection.postgresql_version < 90_500
+  end
+
   # Monitoring
   #
 
