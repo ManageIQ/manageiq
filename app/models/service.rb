@@ -2,9 +2,14 @@ require 'ancestry'
 
 class Service < ApplicationRecord
   DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS = 120
-  ACTION_RESPONSE = { "Power On"    => :start, "Power Off" => :stop, "Shutdown" => :stop, "Suspend" => :suspend,
-                      "Do Nothing"  => nil
-                    }.freeze
+
+  ACTION_RESPONSE = {
+    "Power On"   => :start,
+    "Power Off"  => :stop,
+    "Shutdown"   => :shutdown_guest,
+    "Suspend"    => :suspend,
+    "Do Nothing" => nil
+  }.freeze
 
   include VirtualTotalMixin
 

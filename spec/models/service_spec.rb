@@ -375,9 +375,13 @@ describe Service do
         expect(service.service_action(:start, service_resource_power)).to eq(:start)
       end
 
-      it "returns :stop for Shutdown, Power Off" do
+      it "returns :stop for Power Off" do
         expect(service.service_action(:stop, service_resource_power_off)).to eq(:stop)
-        expect(service.service_action(:stop, service_resource_shutdown)).to eq(:stop)
+      end
+
+      it "returns :shutdown_guest for Shutdown" do
+        expect(service.service_action(:stop, service_resource_power_off)).to eq(:stop)
+        expect(service.service_action(:stop, service_resource_shutdown)).to eq(:shutdown_guest)
       end
 
       it "returns nil for Do Nothing" do
