@@ -24,15 +24,6 @@ class ManageIQ::Providers::StorageManager::SwiftManager < ManageIQ::Providers::S
            :to        => :parent_manager,
            :allow_nil => true
 
-  supports :swift_service do
-    if parent_manager
-      unsupported_reason_add(:swift_service, parent_manager.unsupported_reason(:swift_service)) unless
-        parent_manager.supports_swift_service?
-    else
-      unsupported_reason_add(:swift_service, _('no parent_manager to ems'))
-    end
-  end
-
   def self.hostname_required?
     false
   end
@@ -47,6 +38,14 @@ class ManageIQ::Providers::StorageManager::SwiftManager < ManageIQ::Providers::S
 
   def description
     @description ||= "Swift ".freeze
+  end
+
+  def cinder_service_available?
+    false
+  end
+
+  def swift_service_available?
+    parent_manager && parent_manager.swift_service_available? ? true : false
   end
 
   def supports_api_version?

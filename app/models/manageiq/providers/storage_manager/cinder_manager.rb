@@ -31,15 +31,6 @@ class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::
            :to        => :parent_manager,
            :allow_nil => true
 
-  supports :cinder_service do
-    if parent_manager
-      unsupported_reason_add(:cinder_service, parent_manager.unsupported_reason(:cinder_service)) unless
-        parent_manager.supports_cinder_service?
-    else
-      unsupported_reason_add(:cinder_service, _('no parent_manager to ems'))
-    end
-  end
-
   def self.hostname_required?
     false
   end
@@ -54,6 +45,14 @@ class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::
 
   def description
     @description ||= "Cinder ".freeze
+  end
+
+  def cinder_service_available?
+    parent_manager && parent_manager.cinder_service_available? ? true : false
+  end
+
+  def swift_service_available?
+    false
   end
 
   def supports_api_version?

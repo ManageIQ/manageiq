@@ -42,8 +42,6 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
                                                       "on the CloudManager"))
     end
   end
-  supports :cinder_service
-  supports :swift_service
   supports :create_host_aggregate
 
   before_validation :ensure_managers,
@@ -132,11 +130,11 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
     true
   end
 
-  def supports_cinder_service?
+  def cinder_service_available?
     openstack_handle.detect_volume_service.name == :cinder
   end
 
-  def supports_swift_service?
+  def swift_service_available?
     openstack_handle.detect_storage_service.name == :swift
   end
 
