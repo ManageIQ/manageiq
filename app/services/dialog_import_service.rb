@@ -63,6 +63,7 @@ class DialogImportService
   end
 
   def import_from_json(dialog)
+    @dialog_import_validator.determine_json_validity(dialog)
     create_or_update_dialog(dialog)
   end
 

@@ -2,6 +2,7 @@ class DialogImportValidator
   class ImportNonYamlError < StandardError; end
   class InvalidDialogFieldTypeError < StandardError; end
   class ParsedNonDialogYamlError < StandardError; end
+  class ParsedNonDialogJsonError < StandardError; end
 
   def determine_validity(import_file_upload)
     potential_dialogs = YAML.load(import_file_upload.uploaded_content)
@@ -10,12 +11,22 @@ class DialogImportValidator
     raise ImportNonYamlError
   end
 
+  def determine_json_validity(dialog)
+    validate_dialog(dialog)
+  rescue ParsedNonDialogYamlError
+    raise ParsedNonDialogJsonError, 'Not a valid JSON dialog'
+  end
+
   private
+
+  def validate_dialog(dialog)
+    raise ParsedNonDialogYamlError unless dialog["dialog_tabs"]
+    check_dialog_tabs_for_validity(dialog["dialog_tabs"])
+  end
 
   def check_dialogs_for_validity(dialogs)
     dialogs.each do |dialog|
-      raise ParsedNonDialogYamlError unless dialog["dialog_tabs"]
-      check_dialog_tabs_for_validity(dialog["dialog_tabs"])
+      validate_dialog(dialog)
     end
   end
 

@@ -320,5 +320,27 @@ describe "Service Dialogs API" do
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
     end
+
+    it 'returns dialog import service errors' do
+      api_basic_authorize collection_action_identifier(:service_dialogs, :create)
+      invalid_request = {
+        'description' => 'Dialog',
+        'label'       => 'a_dialog'
+      }
+
+      expected = {
+        'error' => a_hash_including(
+          'kind'    => 'bad_request',
+          'message' => 'Not a valid JSON dialog',
+          'klass'   => 'Api::BadRequestError'
+        )
+      }
+
+      expect do
+        run_post(service_dialogs_url, invalid_request)
+      end.to change(Dialog, :count).by(0)
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:bad_request)
+    end
   end
 end

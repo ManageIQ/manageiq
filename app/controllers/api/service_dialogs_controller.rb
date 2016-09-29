@@ -15,11 +15,9 @@ module Api
 
     def create_resource(_type, _id, data)
       dialog_importer = DialogImportService.new
-      service_dialog = dialog_importer.import_from_json(data)
-      unless service_dialog.valid?
-        raise BadRequestError, "Failed to add new service dialog - #{service_dialog.errors.full_messages.join(', ')}"
-      end
-      service_dialog
+      dialog_importer.import_from_json(data)
+    rescue => e
+      raise BadRequestError, e.message
     end
 
     private
