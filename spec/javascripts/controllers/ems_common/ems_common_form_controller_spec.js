@@ -43,6 +43,10 @@ describe('emsCommonFormController', function() {
       $httpBackend.flush();
     }));
 
+    it('sets actionUrl to createUrl', function () {
+      expect($scope.actionUrl).toEqual($scope.createUrl);
+    });
+
     it('sets the name to blank', function () {
       expect($scope.emsCommonModel.name).toEqual('');
     });
@@ -102,6 +106,10 @@ describe('emsCommonFormController', function() {
         });
       $httpBackend.flush();
     }));
+
+    it('sets actionUrl to updateUrl', function () {
+      expect($scope.actionUrl).toEqual($scope.updateUrl);
+    });
 
     it('sets the name to the Amazon EC2 Cloud Provider', function () {
       expect($scope.emsCommonModel.name).toEqual('amz');
