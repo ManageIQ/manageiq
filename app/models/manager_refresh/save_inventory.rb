@@ -20,10 +20,10 @@ module ManagerRefresh
 
         if dto_collection.saveable?(hashes)
           save_dto_inventory_multi(parent.send(key),
-                               dto_collection,
-                               :use_association,
-                               dto_collection.manager_ref,
-                               key)
+                                   dto_collection,
+                                   :use_association,
+                                   dto_collection.manager_ref,
+                                   key)
           store_ids_for_new_dto_records(parent.send(key), dto_collection, dto_collection.manager_ref)
           dto_collection.saved = true
         else
@@ -32,10 +32,10 @@ module ManagerRefresh
           end
 
           save_dto_inventory_multi(parent.send(key),
-                               dto_collection,
-                               :use_association,
-                               dto_collection.manager_ref,
-                               key)
+                                   dto_collection,
+                                   :use_association,
+                                   dto_collection.manager_ref,
+                                   key)
           store_ids_for_new_dto_records(parent.send(key), dto_collection, dto_collection.manager_ref)
           dto_collection.saved = true
         end

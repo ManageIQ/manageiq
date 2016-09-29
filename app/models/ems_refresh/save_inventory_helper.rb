@@ -33,6 +33,52 @@ module EmsRefresh::SaveInventoryHelper
     end
   end
 
+  def store_ids_for_new_dto_records(records, hashes, keys)
+    keys = Array(keys)
+    hashes.each do |h|
+      h = h.is_a?(::Dto) ? h.attributes : h
+      r = records.detect { |r| keys.all? { |k| r.send(k) == r.class.type_for_attribute(k.to_s).cast(h[k]) } }
+      h[:id]      = r.id
+      h[:_object] = r
+    end
+  end
+
+  def save_dto_inventory_multi(association, hashes, deletes, find_key, child_keys = [], extra_keys = [], disconnect = false)
+    association.reset
+
+    if deletes == :use_association
+      deletes = association
+    elsif deletes.respond_to?(:reload) && deletes.loaded?
+      deletes.reload
+    end
+    deletes = deletes.to_a
+
+    child_keys = Array.wrap(child_keys)
+    remove_keys = Array.wrap(extra_keys) + child_keys
+
+    record_index = TypedIndex.new(association, find_key)
+
+    new_records = []
+    hashes.each do |h|
+      h = h.is_a?(::Dto) ? h.attributes : h
+      save_inventory_with_findkey(association, h.except(*remove_keys), deletes, new_records, record_index)
+    end
+
+    # Delete the items no longer found
+    unless deletes.blank?
+      type = association.proxy_association.reflection.name
+      _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
+      disconnect ? deletes.each(&:disconnect_inv) : association.delete(deletes)
+    end
+
+    # Add the new items
+    begin
+      association.push(new_records)
+    rescue
+      new_records.each &:save
+    end
+  end
+
   def save_inventory_multi(association, hashes, deletes, find_key, child_keys = [], extra_keys = [], disconnect = false)
     association.reset
 
