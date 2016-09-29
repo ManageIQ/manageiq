@@ -5,7 +5,11 @@ describe ApplicationHelper::Button::GenericFeatureButtonWithDisable do
       context "when vm supports feature #{feature}" do
         before do
           @record = FactoryGirl.create(:vm_vmware)
-          allow(@record).to receive(:is_available?).with(feature).and_return(true)
+          if @record.respond_to?("supports_#{feature}?")
+            allow(@record).to receive("supports_#{feature}?").and_return(true)
+          else
+            allow(@record).to receive(:is_available?).with(feature).and_return(true)
+          end
         end
 
         it "will not be skipped for this vm" do
