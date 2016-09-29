@@ -163,7 +163,7 @@ module ApplianceConsole
 
     def prep_data_directory
       # initdb will fail if the database directory is not empty or not owned by the PostgresAdmin.user
-      # May need to create the data dir here?
+      FileUtils.mkdir(PostgresAdmin.data_directory) unless Dir.exist?(PostgresAdmin.data_directory)
       FileUtils.chown_R(PostgresAdmin.user, PostgresAdmin.user, PostgresAdmin.data_directory)
       FileUtils.rm_rf(PostgresAdmin.data_directory.join("pg_log"))
       FileUtils.rm_rf(PostgresAdmin.data_directory.join("lost+found"))
