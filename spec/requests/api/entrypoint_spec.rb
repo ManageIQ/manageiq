@@ -50,4 +50,20 @@ RSpec.describe "API entrypoint" do
       )
     )
   end
+
+  it "returns product_info" do
+    api_basic_authorize
+
+    run_get entrypoint_url
+
+    expect(response.parsed_body).to include(
+      "product_info" => a_hash_including(
+        "name"                 => I18n.t("product.name"),
+        "name_full"            => I18n.t("product.name_full"),
+        "copyright"            => I18n.t("product.copyright"),
+        "support_website"      => I18n.t("product.support_website"),
+        "support_website_text" => I18n.t("product.support_website_text"),
+      )
+    )
+  end
 end
