@@ -134,6 +134,7 @@ class TreeNodeBuilder
     when OrchestrationTemplateHot then generic_node(object.name, "orchestration_template_hot.png")
     when OrchestrationTemplateAzure then generic_node(object.name, "orchestration_template_azure.png")
     when OrchestrationTemplateVnfd then generic_node(object.name, "orchestration_template_vnfd.png")
+    when ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate then generic_node(object.name, "orchestration_template_vapp.png")
     when PxeImage             then generic_node(object.name, object.default_for_windows ? "win32service.png" : "pxeimage.png")
     when WindowsImage         then generic_node(object.name, "os-windows_generic.png")
     when PxeImageType         then generic_node(object.name, "pxeimagetype.png")
