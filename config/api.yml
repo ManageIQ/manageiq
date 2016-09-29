@@ -611,8 +611,12 @@
     :description: Pictures
     :options:
     - :collection
-    :verbs: *g
+    :verbs: *gp
     :klass: Picture
+    :collection_actions:
+      :post:
+      - :name: create
+        :identifier: picture_new
   :policies:
     :description: Policies
     :identifier: policy
