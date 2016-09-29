@@ -47,7 +47,7 @@ ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'mi
 
       $timeout(function () {
         if (!miqDomElementExists('save_enabled')) {
-          angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledEnabledSave);
+          $('#' + $attrs.pagingDivButtonsId).append(compiledEnabledSave);
         }
       });
     } else {
@@ -63,11 +63,11 @@ ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'mi
 
       $timeout(function () {
         if (!miqDomElementExists('save_disabled')) {
-          angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledDisabledSave);
+          $('#' + $attrs.pagingDivButtonsId).append(compiledDisabledSave);
         }
 
         if (!miqDomElementExists('save_enabled')) {
-          angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledEnabledSave);
+          $('#' + $attrs.pagingDivButtonsId).append(compiledEnabledSave);
         }
       });
     }
@@ -82,7 +82,7 @@ ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'mi
 
     $timeout(function () {
       if (!miqDomElementExists('reset_enabled_disabled')) {
-        angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledReset);
+        $('#' + $attrs.pagingDivButtonsId).append(compiledReset);
       }
     });
   };
@@ -94,7 +94,7 @@ ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'mi
 
     $timeout(function () {
       if (!miqDomElementExists('cancel_enabled')) {
-        angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledCancel);
+        $('#' + $attrs.pagingDivButtonsId).append(compiledCancel);
       }
     });
   };
