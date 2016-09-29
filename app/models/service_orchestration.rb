@@ -25,8 +25,9 @@ class ServiceOrchestration < Service
   end
 
   def deploy_orchestration_stack
+    creation_options = stack_options
     @orchestration_stack = ManageIQ::Providers::CloudManager::OrchestrationStack.create_stack(
-      orchestration_manager, stack_name, orchestration_template, stack_options)
+      orchestration_manager, stack_name, orchestration_template, creation_options)
   ensure
     # create options may never be saved before unless they were overridden
     save_create_options
@@ -99,17 +100,31 @@ class ServiceOrchestration < Service
   end
 
   def build_stack_create_options
-    # manager from dialog_options overrides the one copied from service_template
     dialog_options = options[:dialog] || {}
-    manager_from_dialog = OptionConverter.get_manager(dialog_options)
-    self.orchestration_manager = manager_from_dialog if manager_from_dialog
-    raise _("orchestration manager was not set") if orchestration_manager.nil?
-
-    # orchestration template from dialog_options overrides the one copied from service_template
-    template_from_dialog = OptionConverter.get_template(dialog_options)
-    self.orchestration_template = template_from_dialog if template_from_dialog
+    pick_orchestration_manager(dialog_options)
+    pick_orchestration_template(dialog_options)
 
     build_stack_options_from_dialog(dialog_options)
+  end
+
+  # The order to pick the orchestration manager and template
+  # 1. The ones directly set through setter
+  # 2. The ones set through dialog options
+  # 3. The ones copied from service_template
+  def pick_orchestration_manager(dialog_options)
+    if orchestration_manager == service_template.orchestration_manager
+      manager_from_dialog = OptionConverter.get_manager(dialog_options)
+      self.orchestration_manager = manager_from_dialog if manager_from_dialog
+    end
+    raise _("orchestration manager was not set") if orchestration_manager.nil?
+  end
+
+  def pick_orchestration_template(dialog_options)
+    if orchestration_template == service_template.orchestration_template
+      template_from_dialog = OptionConverter.get_template(dialog_options)
+      self.orchestration_template = template_from_dialog if template_from_dialog
+    end
+    raise _("orchestration template was not set") if orchestration_template.nil?
   end
 
   def save_create_options
