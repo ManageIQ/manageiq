@@ -35,8 +35,6 @@ function MwAddDataSourceCtrl($scope, $http, $q, miqService) {
   $scope.step2DsModel.jdbcDriverName = '';
   $scope.step2DsModel.jdbcModuleName = '';
   $scope.step2DsModel.driverClass = '';
-  $scope.step2DsModel.majorVersion = 0;
-  $scope.step2DsModel.minorVersion = 0;
 
   $scope.step3DsModel = {};
   $scope.step3DsModel.connectionUrl = '';
@@ -95,9 +93,6 @@ function MwAddDataSourceCtrl($scope, $http, $q, miqService) {
     $scope.step2DsModel.jdbcDriverName = '';
     $scope.step2DsModel.jdbcModuleName = '';
     $scope.step2DsModel.driverClass = '';
-    $scope.step2DsModel.majorVersion = 0;
-    $scope.step2DsModel.minorVersion = 0;
-
     $scope.step3DsModel.connectionUrl = '';
     $scope.step3DsModel.userName = '';
     $scope.step3DsModel.password = '';

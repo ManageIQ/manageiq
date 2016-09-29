@@ -58,35 +58,6 @@
         %p.ng-error-messages{"ng-show" => "step2Form.jdbc_driver_class_input.$error.maxlength"}
           = _("Maximum length is 256")
 
-    .form-group
-      %label.col-md-4.control-label{:for => "major_version_input"}
-        = _("Major Version")
-      .col-md-8
-        %input.form-control#major_version_input{:type          => "number",
-                                                "name"         => "major_version_input",
-                                                "ng-required"  => "true",
-                                                "placeholder"  => _("Enter Major Version"),
-                                                "ng-model"     => "step2DsModel.majorVersion"}
-
-      .col-sm-2
-      .col-sm-10
-        %p.ng-error-messages{"ng-show" => "step2Form.major_version_input.$error.required"}
-          = _("Required")
-
-    .form-group
-      %label.col-md-4.control-label{:for => "minor_version_input"}
-        = _("Minor Version")
-      .col-md-8
-        %input.form-control#minor_version_input{:type          => "number",
-                                                "name"         => "minor_version_input",
-                                                "ng-required"  => "true",
-                                                "placeholder"  => _("Enter Minor Version"),
-                                                "ng-model"     => "step2DsModel.minorVersion"}
-
-      .col-sm-2
-      .col-sm-10
-        %p.ng-error-messages{"ng-show" => "step2Form.minor_version_input.$error.required"}
-          = _("Required")
 
     .modal-footer
       %button.btn.btn-default.dialog-cancel-button{:type          => "button",
