@@ -20,6 +20,5 @@ module ManageIQ::Providers
     def swift_service_available?
       raise NotImplementedError, _("swift_service_available? must be implemented in a subclass")
     end
-
   end
 end
