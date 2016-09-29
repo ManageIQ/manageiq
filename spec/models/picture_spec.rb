@@ -13,17 +13,20 @@ describe Picture do
   end
 
   context "#extension" do
-    it "accepts only png or jpb" do
+    it "accepts only png, jpg, or svg" do
       expect(subject.extension).to be_nil
       subject.extension = "foo"
 
       expect(subject.valid?).to be_falsey
-      expect(subject.errors.messages).to eq(:extension =>['must be a png or jpg'])
+      expect(subject.errors.messages).to eq(:extension =>['must be a png, jpg, or svg'])
 
       subject.extension = "png"
       expect(subject.valid?).to be_truthy
 
       subject.extension = "jpg"
+      expect(subject.valid?).to be_truthy
+
+      subject.extension = "svg"
       expect(subject.valid?).to be_truthy
     end
 

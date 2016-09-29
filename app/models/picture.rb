@@ -2,7 +2,7 @@ class Picture < ApplicationRecord
   has_one :binary_blob, :as => :resource, :dependent => :destroy, :autosave => true
 
   validates :extension,
-            :inclusion => { :in => %w(png jpg), :message => 'must be a png or jpg' },
+            :inclusion => { :in => %w(png jpg svg), :message => 'must be a png, jpg, or svg' },
             :if        => :extension
 
   virtual_has_one :image_href, :class_name => "String"
