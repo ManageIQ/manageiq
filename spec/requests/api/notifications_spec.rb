@@ -72,6 +72,21 @@ describe 'Notifications API' do
         expect { notification_recipient.reload }.to raise_error(ActiveRecord::RecordNotFound)
         expect { notification2_recipient.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
+
+      context 'compressed id' do
+        let(:notification_id) { ApplicationRecord.compress_id(notification_recipient.id) }
+        it 'deletes notifications specified by compressed id in href' do
+          api_basic_authorize
+          run_post(notifications_url, gen_request(:delete, :href => notifications_url(notification_id)))
+          expect(response).to have_http_status(:ok)
+        end
+
+        it 'deletes notifications specified by compressed id' do
+          api_basic_authorize
+          run_post(notifications_url, gen_request(:delete, :id => notification_id))
+          expect(response).to have_http_status(:ok)
+        end
+      end
     end
   end
 
