@@ -290,4 +290,63 @@ describe MiqTask do
       expect(@miq_task.results_ready?).to be_truthy
     end
   end
+
+  describe "human_status" do
+    subject { MiqTask.new }
+
+    context "when state is nil" do
+      it "raises an error" do
+        expect { subject.human_status }.to raise_error(RuntimeError)
+      end
+    end
+
+    context "when state is STATE_INITIALIZED" do
+      it "returns 'Initialized'" do
+        subject.state = MiqTask::STATE_INITIALIZED
+        expect(subject.human_status).to eq('Initialized')
+      end
+    end
+
+    context "when state is STATE_QUEUED" do
+      it "returns 'Queued'" do
+        subject.state = MiqTask::STATE_QUEUED
+        expect(subject.human_status).to eq('Queued')
+      end
+    end
+
+    context "when state is STATE_ACTIVE" do
+      it "returns 'Running'" do
+        subject.state = MiqTask::STATE_ACTIVE
+        expect(subject.human_status).to eq('Running')
+      end
+    end
+
+    context "when state is STATE_FINISHED" do
+      subject { MiqTask.new :state => MiqTask::STATE_FINISHED }
+
+      it "raises an error when status is nil" do
+        expect { subject.human_status }.to raise_error(RuntimeError)
+      end
+
+      it "returns 'Complete' when status is 'Ok'" do
+        subject.status = MiqTask::STATUS_OK
+        expect(subject.human_status).to eq('Complete')
+      end
+
+      it "returns 'Finished with Warnings' when status is 'Warn'" do
+        subject.status = MiqTask::STATUS_WARNING
+        expect(subject.human_status).to eq('Finished with Warnings')
+      end
+
+      it "returns 'Error' when status is 'Error'" do
+        subject.status = MiqTask::STATUS_ERROR
+        expect(subject.human_status).to eq('Error')
+      end
+
+      it "returns 'Timed Out' when status is 'Timeout'" do
+        subject.status = MiqTask::STATUS_TIMEOUT
+        expect(subject.human_status).to eq('Timed Out')
+      end
+    end
+  end
 end
