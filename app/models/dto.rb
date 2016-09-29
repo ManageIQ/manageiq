@@ -23,6 +23,8 @@ class Dto
     data.transform_values! do |value|
       if value.is_a? ::DtoLazy
         value.load
+      elsif value.kind_of? Array && value.any? { |x| x.is_a? ::DtoLazy }
+        value.compact.map { |x| x.load }.compact
       else
         value
       end
