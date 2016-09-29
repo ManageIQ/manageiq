@@ -99,7 +99,7 @@ describe DialogImportValidator do
       it 'raises a ParsedNonDialogJsonError' do
         expect do
           dialog_import_validator.determine_json_validity(json_content)
-        end.to raise_error(DialogImportValidator::ParsedNonDialogJsonError)
+        end.to raise_error(DialogImportValidator::ParsedNonDialogError)
       end
     end
   end

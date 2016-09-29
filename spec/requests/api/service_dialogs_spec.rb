@@ -194,6 +194,7 @@ describe "Service Dialogs API" do
   end
 
   context 'Creates service dialogs' do
+    let(:second_dialog) { FactoryGirl.create(:dialog) }
     let(:dialog_request) do
       {
         :description => 'Dialog',
@@ -331,7 +332,7 @@ describe "Service Dialogs API" do
       expected = {
         'error' => a_hash_including(
           'kind'    => 'bad_request',
-          'message' => 'Not a valid JSON dialog',
+          'message' => a_string_including('Failed to create a new dialog - Not a valid JSON dialog'),
           'klass'   => 'Api::BadRequestError'
         )
       }

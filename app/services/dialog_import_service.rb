@@ -62,9 +62,12 @@ class DialogImportService
     queue_deletion(import_file_upload.id)
   end
 
-  def import_from_json(dialog)
+  def import(dialog)
     @dialog_import_validator.determine_json_validity(dialog)
-    create_or_update_dialog(dialog)
+    new_dialog = Dialog.create(dialog.except('dialog_tabs'))
+    new_dialog.update_attributes(dialog.merge('dialog_tabs' => build_dialog_tabs(dialog)))
+    raise ActiveRecord::RecordInvalid, new_dialog unless new_dialog.valid?
+    new_dialog
   end
 
   private
@@ -78,16 +81,11 @@ class DialogImportService
   def import_from_dialogs(dialogs)
     raise ParsedNonDialogYamlError if dialogs.empty?
     dialogs.each do |dialog|
-      create_or_update_dialog(dialog)
+      new_or_existing_dialog = Dialog.where(:label => dialog["label"]).first_or_create
+      new_or_existing_dialog.update_attributes(dialog.merge("dialog_tabs" => build_dialog_tabs(dialog)))
     end
   rescue DialogFieldImporter::InvalidDialogFieldTypeError
     raise
-  end
-
-  def create_or_update_dialog(dialog)
-    new_or_existing_dialog = Dialog.where(:label => dialog["label"]).first_or_create
-    new_or_existing_dialog.update_attributes(dialog.merge("dialog_tabs" => build_dialog_tabs(dialog)))
-    new_or_existing_dialog
   end
 
   def build_dialog_tabs(dialog)
