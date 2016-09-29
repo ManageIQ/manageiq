@@ -44,10 +44,11 @@ class CatalogController < ApplicationController
   }.freeze
 
   ORCHESTRATION_TEMPLATES_NODES = {
-    'OrchestrationTemplateCfn'   => "otcfn",
-    'OrchestrationTemplateHot'   => "othot",
-    'OrchestrationTemplateAzure' => "otazu",
-    'OrchestrationTemplateVnfd'  => "otvnf"
+    'OrchestrationTemplateCfn'                                         => "otcfn",
+    'OrchestrationTemplateHot'                                         => "othot",
+    'OrchestrationTemplateAzure'                                       => "otazu",
+    'OrchestrationTemplateVnfd'                                        => "otvnf",
+    'ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate' => "otvap"
   }.freeze
 
   def x_button
@@ -1096,7 +1097,7 @@ class CatalogController < ApplicationController
   def ot_add_submit_save
     assert_privileges("orchestration_template_add")
     load_edit("ot_add__new", "replace_cell__explorer")
-    if !%w(OrchestrationTemplateHot OrchestrationTemplateCfn OrchestrationTemplateAzure OrchestrationTemplateVnfd).include?(@edit[:new][:type])
+    if !%w(OrchestrationTemplateHot OrchestrationTemplateCfn OrchestrationTemplateAzure OrchestrationTemplateVnfd ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate).include?(@edit[:new][:type])
       render_flash(_("\"%{type}\" is not a valid Orchestration Template type") % {:type => @edit[:new][:type]}, :error)
     elsif params[:content].nil? || params[:content].strip == ""
       render_flash(_("Error during Orchestration Template creation: new template content cannot be empty"), :error)
@@ -1696,7 +1697,7 @@ class CatalogController < ApplicationController
             process_show_list(options)
           end
           @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => typ)}
-        elsif ["xx-otcfn", "xx-othot", "xx-otazu", "xx-otvnf"].include?(x_node)
+        elsif ["xx-otcfn", "xx-othot", "xx-otazu", "xx-otvnf", "xx-otvap"].include?(x_node)
           typ = node_name_to_template_name(x_node)
           @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => typ)}
           options = {:model        => typ.constantize,
