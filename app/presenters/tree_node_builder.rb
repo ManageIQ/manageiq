@@ -114,7 +114,9 @@ class TreeNodeBuilder
     when MiqAlertSet          then generic_node(object.description, "miq_alert_profile.png")
     when MiqReport            then generic_node(object.name, "report.png")
     when MiqReportResult      then miq_report_node(format_timezone(object.last_run_on, Time.zone, 'gtl'),
-                                                   get_rr_status_image(object), object.name, object.status.downcase)
+                                                   get_rr_status_image(object),
+                                                   object.name,
+                                                   object.get_status.downcase)
     when MiqSchedule          then generic_node(object.name, "miq_schedule.png")
     when MiqScsiLun           then generic_node(object.canonical_name,
                                                 "lun.png",
@@ -169,7 +171,7 @@ class TreeNodeBuilder
   private
 
   def get_rr_status_image(rec)
-    case rec.status.downcase
+    case rec.get_status.downcase
     when 'error'    then 'report_result_error.png'
     when 'finished' then 'report_result_completed.png'
     when 'running'  then 'report_result_running.png'
