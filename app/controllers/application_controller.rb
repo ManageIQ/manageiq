@@ -473,7 +473,8 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    tree = TreeBuilderAutomate.new(name, type, @sb)
+    tree_klass = name == :ae_tree ? TreeBuilderAeClass : TreeBuilderAutomate
+    tree = tree_klass.new(name, type, @sb)
     @automate_tree = tree if name == :automate_tree
     tree
   end
