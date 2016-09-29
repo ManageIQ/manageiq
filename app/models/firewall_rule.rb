@@ -4,8 +4,8 @@ class FirewallRule < ApplicationRecord
 
   include DtoMixin
   dto_dependencies :security_groups
-  dto_manager_ref :source_security_group
-  dto_attributes :direction, :host_protocol, :port, :end_port, :source_ip_range
+  dto_manager_ref :resource, :source_security_group, :direction, :host_protocol, :port, :end_port, :source_ip_range
+  dto_attributes :resource, :source_security_group, :direction, :host_protocol, :port, :end_port, :source_ip_range
 
   def operating_system
     resource.kind_of?(OperatingSystem) ? resource : nil
