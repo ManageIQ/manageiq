@@ -131,16 +131,39 @@ describe Service do
       expect(@service.group_has_resources?(0)).to be_falsey
     end
 
+    it "last_index" do
+      @service.add_resource(Vm.first, :group_idx => 1, :start_delay => 60)
+      expect(@service.last_index).to eq 1
+    end
+
     it "start" do
+      @service.add_resource(Vm.first, :group_idx => 0, :start_delay => 60)
       expect(MiqEvent).to receive(:raise_evm_event).with(@service, :request_service_start)
+      expect(@service).to receive(:queue_group_action).with(:start, 0, 1, 60)
 
       @service.start
     end
 
     it "stop" do
+      @service.add_resource(Vm.first, :group_idx => 1, :stop_delay => 60)
       expect(MiqEvent).to receive(:raise_evm_event).with(@service, :request_service_stop)
+      expect(@service).to receive(:queue_group_action).with(:stop, 1, -1, 60)
 
       @service.stop
+    end
+
+    it "suspend" do
+      @service.add_resource(Vm.first, :group_idx => 1, :stop_delay => 60)
+      expect(@service).to receive(:queue_group_action).with(:suspend, 1, -1, 60)
+
+      @service.suspend
+    end
+
+    it "shutdown_guest" do
+      @service.add_resource(Vm.first, :group_idx => 1, :stop_delay => 60)
+      expect(@service).to receive(:queue_group_action).with(:shutdown_guest, 1, -1, 60)
+
+      @service.shutdown_guest
     end
 
     context "with VM resources" do
