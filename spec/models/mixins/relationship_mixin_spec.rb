@@ -6,6 +6,8 @@ describe RelationshipMixin do
   #             8 9
   let(:vms_rel_tree) { {0 => [{1 => [3, 4]}, {2 => [5, 6, {7 => [8, 9]}]}]} }
   let(:vms) { build_relationship_tree(vms_rel_tree) }
+  # host with no tree
+  let(:host) { FactoryGirl.create(:host) }
 
   context "tree with relationship" do
     it "#with_relationship_type and #relationship_type" do
@@ -251,22 +253,6 @@ describe RelationshipMixin do
     end
   end
 
-  context "tree with no relationships" do
-    before(:each) { @host = FactoryGirl.create(:host) }
-
-    it('#root') { expect(@host.root).to eq(@host) }
-
-    it('#ancestors')   { expect(@host.ancestors).to eq([]) }
-    it('#path')        { expect(@host.path).to eq([@host]) }
-    it('#descendants') { expect(@host.descendants).to eq([]) }
-    it('#subtree')     { expect(@host.subtree).to eq([@host]) }
-    it('#fulltree')    { expect(@host.fulltree).to eq([@host]) }
-
-    it('#descendants_arranged') { expect(@host.descendants_arranged).to eq({}) }
-    it('#subtree_arranged')     { expect(@host.subtree_arranged).to eq({@host => {}}) }
-    it('#fulltree_arranged')    { expect(@host.fulltree_arranged).to eq({@host => {}}) }
-  end
-
   context "tree with relationship type 'ems_metadata'" do
     let(:vms) { build_relationship_tree(vms_rel_tree, "ems_metadata") }
 
@@ -295,15 +281,485 @@ describe RelationshipMixin do
     end
   end
 
+  describe "#root" do
+    it "is self with with no relationships" do
+      host # execute the query
+      expect do
+        nodes = host.with_relationship_type(test_rel_type, &:root)
+        expect(nodes).to eq(host)
+      end.to match_query_limit_of(1) # lookup the relationship node
+    end
+
+    it "is a self with a tree's root node" do
+      vms # execute the lookup query
+      expect do
+        nodes = vms[0].with_relationship_type(test_rel_type, &:root)
+        expect(nodes).to eq(vms[0])
+      end.to match_query_limit_of(1) # lookup the relationship node
+    end
+
+    it "is a parent with a tree's child node" do
+      nodes = vms[7].with_relationship_type(test_rel_type, &:root)
+      expect(nodes).to eq(vms[0])
+    end
+  end
+
+  describe "#root_id" do
+    it "is self with with no relationships" do
+      nodes = host.with_relationship_type(test_rel_type, &:root_id)
+      expect(nodes).to eq(["Host", host.id])
+    end
+
+    it "is a self with a tree's root node" do
+      nodes = vms[0].with_relationship_type(test_rel_type, &:root_id)
+      expect(nodes).to eq(["VmOrTemplate", vms[0].id])
+    end
+
+    it "is a parent with a tree's child node" do
+      nodes = vms[7].with_relationship_type(test_rel_type, &:root_id)
+      expect(nodes).to eq(["VmOrTemplate", vms[0].id])
+    end
+  end
+
+  # VMs override path, so we will work with host trees
+  describe "#path" do
+    it "is self with with no relationships" do
+      nodes = host.with_relationship_type(test_rel_type, &:path)
+      expect(nodes).to eq([host])
+    end
+
+    it "is a self with a tree's root node" do
+      hosts = build_relationship_tree({0 => [1, 2]}, test_rel_type, :host_vmware)
+      nodes = hosts[0].with_relationship_type(test_rel_type, &:path)
+      expect(nodes).to eq([hosts[0]])
+    end
+
+    it "is a parent with a tree's child node" do
+      hosts = build_relationship_tree({0 => [{1 => [3, 4]}, 2]}, test_rel_type, :host_vmware)
+      nodes = hosts[3].with_relationship_type(test_rel_type, &:path)
+      expect(nodes).to eq([hosts[0], hosts[1], hosts[3]])
+    end
+  end
+
+  describe "#path_id" do
+    it "is self with with no relationships" do
+      nodes = host.with_relationship_type(test_rel_type, &:path_ids)
+      expect(nodes).to eq([["Host", host.id]])
+    end
+
+    it "is a self with a tree's root node" do
+      hosts = build_relationship_tree({0 => [1, 2]}, test_rel_type, :host_vmware)
+      nodes = hosts[0].with_relationship_type(test_rel_type, &:path_ids)
+      expect(nodes).to eq([["Host", hosts[0].id]])
+    end
+
+    it "is a parent with a tree's child node" do
+      hosts = build_relationship_tree({0 => [{1 => [3, 4]}, 2]}, test_rel_type, :host_vmware)
+      nodes = hosts[3].with_relationship_type(test_rel_type, &:path_ids)
+      expect(nodes).to eq([["Host", hosts[0].id], ["Host", hosts[1].id], ["Host", hosts[3].id]])
+    end
+  end
+
+  describe "#path_count" do
+    it "is self with with no relationships" do
+      nodes = host.with_relationship_type(test_rel_type, &:path_count)
+      expect(nodes).to eq(1)
+    end
+
+    it "is a self with a tree's root node" do
+      hosts = build_relationship_tree({0 => [1, 2]}, test_rel_type, :host_vmware)
+      nodes = hosts[0].with_relationship_type(test_rel_type, &:path_count)
+      expect(nodes).to eq(1)
+    end
+
+    it "is a parent with a tree's child node" do
+      hosts = build_relationship_tree({0 => [{1 => [3, 4]}, 2]}, test_rel_type, :host_vmware)
+      nodes = hosts[3].with_relationship_type(test_rel_type, &:path_count)
+      expect(nodes).to eq(3)
+    end
+  end
+
+  describe "#ancestors" do
+    it "is empty with with no relationships" do
+      nodes = host.with_relationship_type(test_rel_type, &:ancestors)
+      expect(nodes).to eq([])
+    end
+
+    it "is empty with a tree's root node" do
+      nodes = vms[0].with_relationship_type(test_rel_type, &:ancestors)
+      expect(nodes).to eq([])
+    end
+
+    it "is an ancestor with child nodes" do
+      nodes = vms[7].with_relationship_type(test_rel_type, &:ancestors)
+      expect(nodes).to eq([vms[0], vms[2]])
+    end
+  end
+
+  describe "#subtree" do
+    it "is self with with no relationships" do
+      nodes = host.with_relationship_type(test_rel_type, &:subtree)
+      expect(nodes).to eq([host])
+    end
+
+    it "is the tree with a tree's root node" do
+      nodes = vms[0].with_relationship_type(test_rel_type, &:subtree)
+      expect(nodes).to match_array(vms.values)
+    end
+
+    it "is a subtree with a tree's child node" do
+      nodes = vms[2].with_relationship_type(test_rel_type, &:subtree)
+      expect(nodes).to match_array([vms[2], vms[5], vms[6], vms[7], vms[8], vms[9]])
+    end
+  end
+
+  describe "#subtree_arranged" do
+    it "is self with with no relationships" do
+      nodes = host.with_relationship_type(test_rel_type, &:subtree_arranged)
+      expect(nodes).to eq(host => {})
+    end
+
+    it "is the tree with a tree's root node" do
+      nodes = vms[0].with_relationship_type(test_rel_type, &:subtree_arranged)
+      expect(nodes).to eq(
+        vms[0] => {
+          vms[1] => {
+            vms[3] => {},
+            vms[4] => {}
+          },
+          vms[2] => {
+            vms[5] => {},
+            vms[6] => {},
+            vms[7] => {
+              vms[8] => {},
+              vms[9] => {}
+            }
+          }
+        }
+      )
+    end
+
+    it "is a subtree with a tree's child node" do
+      nodes = vms[2].with_relationship_type(test_rel_type, &:subtree_arranged)
+      expect(nodes).to eq(
+        vms[2] => {
+          vms[5] => {},
+          vms[6] => {},
+          vms[7] => {
+            vms[8] => {},
+            vms[9] => {}
+          }
+        }
+      )
+    end
+  end
+
+  describe "#subtree_ids" do
+    it "is self with with no relationships" do
+      nodes = host.with_relationship_type(test_rel_type, &:subtree_ids)
+      expect(nodes).to eq([["Host", host.id]])
+    end
+
+    it "is the tree with a tree's root node" do
+      nodes = vms[0].with_relationship_type(test_rel_type, &:subtree_ids)
+      expect(nodes).to match_array(vms.values.map { |vm| ["VmOrTemplate", vm.id] })
+    end
+
+    it "is a subtree with a tree's child node" do
+      nodes = vms[2].with_relationship_type(test_rel_type, &:subtree_ids)
+      expect(nodes).to match_array(
+        [["VmOrTemplate", vms[2].id], ["VmOrTemplate", vms[5].id], ["VmOrTemplate", vms[6].id],
+         ["VmOrTemplate", vms[7].id], ["VmOrTemplate", vms[8].id], ["VmOrTemplate", vms[9].id]]
+      )
+    end
+  end
+
+  describe "#subtree_ids_arranged" do
+    it "is self with with no relationships" do
+      nodes = host.with_relationship_type(test_rel_type, &:subtree_ids_arranged)
+      expect(nodes).to eq([host.class.name, host.id] => {})
+    end
+
+    it "is the tree with a tree's root node" do
+      nodes = vms[0].with_relationship_type(test_rel_type, &:subtree_ids_arranged)
+      expect(nodes).to eq(
+        ["VmOrTemplate", vms[0].id] => {
+          ["VmOrTemplate", vms[1].id] => {
+            ["VmOrTemplate", vms[3].id] => {},
+            ["VmOrTemplate", vms[4].id] => {}
+          },
+          ["VmOrTemplate", vms[2].id] => {
+            ["VmOrTemplate", vms[5].id] => {},
+            ["VmOrTemplate", vms[6].id] => {},
+            ["VmOrTemplate", vms[7].id] => {
+              ["VmOrTemplate", vms[8].id] => {},
+              ["VmOrTemplate", vms[9].id] => {}
+            }
+          }
+        }
+      )
+    end
+
+    it "is a subtree with a tree's child node" do
+      nodes = vms[2].with_relationship_type(test_rel_type, &:subtree_ids_arranged)
+      expect(nodes).to eq(
+        ["VmOrTemplate", vms[2].id] => {
+          ["VmOrTemplate", vms[5].id] => {},
+          ["VmOrTemplate", vms[6].id] => {},
+          ["VmOrTemplate", vms[7].id] => {
+            ["VmOrTemplate", vms[8].id] => {},
+            ["VmOrTemplate", vms[9].id] => {}
+          }
+        }
+      )
+    end
+  end
+
+  describe "#subtree_count" do
+    it "is 1 with with no relationships" do
+      nodes = host.with_relationship_type(test_rel_type, &:subtree_count)
+      expect(nodes).to eq(1)
+    end
+
+    it "is the tree with a tree's root node" do
+      nodes = vms[0].with_relationship_type(test_rel_type, &:subtree_count)
+      expect(nodes).to eq(10)
+    end
+
+    it "is a subtree with a tree's child node" do
+      nodes = vms[2].with_relationship_type(test_rel_type, &:subtree_count)
+      expect(nodes).to eq(6)
+    end
+  end
+
+  describe "#descendants" do
+    it "is empty with with no relationships" do
+      nodes = host.with_relationship_type(test_rel_type, &:descendants)
+      expect(nodes).to eq([])
+    end
+
+    it "is the tree with a tree's root node" do
+      nodes = vms[0].with_relationship_type(test_rel_type, &:descendants)
+      expect(nodes).to match_array([vms[1], vms[3], vms[4], vms[2], vms[5], vms[6], vms[7], vms[8], vms[9]])
+    end
+
+    it "is a subtree with a tree's child node" do
+      nodes = vms[2].with_relationship_type(test_rel_type, &:descendants)
+      expect(nodes).to match_array([vms[5], vms[6], vms[7], vms[8], vms[9]])
+    end
+  end
+
+  describe "#descendants_arranged" do
+    it "is empty with with no relationships" do
+      nodes = host.with_relationship_type(test_rel_type, &:descendants_arranged)
+      expect(nodes).to eq({})
+    end
+
+    it "is the tree with a tree's root node" do
+      nodes = vms[0].with_relationship_type(test_rel_type, &:descendants_arranged)
+      expect(nodes).to eq(
+        vms[1] => {
+          vms[3] => {},
+          vms[4] => {}
+        },
+        vms[2] => {
+          vms[5] => {},
+          vms[6] => {},
+          vms[7] => {
+            vms[8] => {},
+            vms[9] => {}
+          }
+        }
+      )
+    end
+
+    it "is a subtree with a tree's child node" do
+      nodes = vms[2].with_relationship_type(test_rel_type, &:descendants_arranged)
+      expect(nodes).to eq(
+        vms[5] => {},
+        vms[6] => {},
+        vms[7] => {
+          vms[8] => {},
+          vms[9] => {}
+        }
+      )
+    end
+  end
+
+  describe "#descendant_ids_arranged" do
+    it "is empty with with no relationships" do
+      nodes = host.with_relationship_type(test_rel_type, &:descendant_ids_arranged)
+      expect(nodes).to eq({})
+    end
+
+    it "is the tree with a tree's root node" do
+      nodes = vms[0].with_relationship_type(test_rel_type, &:descendant_ids_arranged)
+      expect(nodes).to eq(
+        ["VmOrTemplate", vms[1].id] => {
+          ["VmOrTemplate", vms[3].id] => {},
+          ["VmOrTemplate", vms[4].id] => {}
+        },
+        ["VmOrTemplate", vms[2].id] => {
+          ["VmOrTemplate", vms[5].id] => {},
+          ["VmOrTemplate", vms[6].id] => {},
+          ["VmOrTemplate", vms[7].id] => {
+            ["VmOrTemplate", vms[8].id] => {},
+            ["VmOrTemplate", vms[9].id] => {}
+          }
+        }
+      )
+    end
+
+    it "is a subtree with a tree's child node" do
+      nodes = vms[2].with_relationship_type(test_rel_type, &:descendant_ids_arranged)
+      expect(nodes).to eq(
+        ["VmOrTemplate", vms[5].id] => {},
+        ["VmOrTemplate", vms[6].id] => {},
+        ["VmOrTemplate", vms[7].id] => {
+          ["VmOrTemplate", vms[8].id] => {},
+          ["VmOrTemplate", vms[9].id] => {}
+        }
+      )
+    end
+  end
+
+  describe "#fulltree" do
+    it "is self with with no relationships" do
+      nodes = host.with_relationship_type(test_rel_type, &:fulltree)
+      expect(nodes).to eq([host])
+    end
+
+    it "is the tree with a tree's root node" do
+      nodes = vms[0].with_relationship_type(test_rel_type, &:fulltree)
+      expect(nodes).to match_array([vms[0], vms[1], vms[3], vms[4], vms[2], vms[5], vms[6], vms[7], vms[8], vms[9]])
+    end
+
+    it "is the full tree with a tree's child node" do
+      nodes = vms[8].with_relationship_type(test_rel_type, &:fulltree)
+      expect(nodes).to match_array([vms[0], vms[1], vms[3], vms[4], vms[2], vms[5], vms[6], vms[7], vms[8], vms[9]])
+    end
+  end
+
+  describe "#fulltree_arranged" do
+    it "is self with with no relationships" do
+      nodes = host.with_relationship_type(test_rel_type, &:fulltree_arranged)
+      expect(nodes).to eq(host => {})
+    end
+
+    it "is the tree with a tree's root node" do
+      nodes = vms[0].with_relationship_type(test_rel_type, &:fulltree_arranged)
+      expect(nodes).to eq(
+        vms[0] => {
+          vms[1] => {
+            vms[3] => {},
+            vms[4] => {}
+          },
+          vms[2] => {
+            vms[5] => {},
+            vms[6] => {},
+            vms[7] => {
+              vms[8] => {},
+              vms[9] => {}
+            }
+          }
+        }
+      )
+    end
+
+    it "is the full tree with a tree's child node" do
+      nodes = vms[8].with_relationship_type(test_rel_type, &:fulltree_arranged)
+      expect(nodes).to eq(
+        vms[0] => {
+          vms[1] => {
+            vms[3] => {},
+            vms[4] => {}
+          },
+          vms[2] => {
+            vms[5] => {},
+            vms[6] => {},
+            vms[7] => {
+              vms[8] => {},
+              vms[9] => {}
+            }
+          }
+        }
+      )
+    end
+  end
+
+  describe "#fulltree_ids_arranged" do
+    it "is self with with no relationships" do
+      nodes = host.with_relationship_type(test_rel_type, &:fulltree_ids_arranged)
+      expect(nodes).to eq([host.class.name, host.id] => {})
+    end
+
+    it "is the full tree with a tree's root node" do
+      nodes = vms[0].with_relationship_type(test_rel_type, &:fulltree_ids_arranged)
+      expect(nodes).to eq(
+        ["VmOrTemplate", vms[0].id] => {
+          ["VmOrTemplate", vms[1].id] => {
+            ["VmOrTemplate", vms[3].id] => {},
+            ["VmOrTemplate", vms[4].id] => {}
+          },
+          ["VmOrTemplate", vms[2].id] => {
+            ["VmOrTemplate", vms[5].id] => {},
+            ["VmOrTemplate", vms[6].id] => {},
+            ["VmOrTemplate", vms[7].id] => {
+              ["VmOrTemplate", vms[8].id] => {},
+              ["VmOrTemplate", vms[9].id] => {}
+            }
+          }
+        }
+      )
+    end
+
+    it "is the full tree with a tree's child node" do
+      nodes = vms[8].with_relationship_type(test_rel_type, &:fulltree_ids_arranged)
+      expect(nodes).to eq(
+        ["VmOrTemplate", vms[0].id] => {
+          ["VmOrTemplate", vms[1].id] => {
+            ["VmOrTemplate", vms[3].id] => {},
+            ["VmOrTemplate", vms[4].id] => {}
+          },
+          ["VmOrTemplate", vms[2].id] => {
+            ["VmOrTemplate", vms[5].id] => {},
+            ["VmOrTemplate", vms[6].id] => {},
+            ["VmOrTemplate", vms[7].id] => {
+              ["VmOrTemplate", vms[8].id] => {},
+              ["VmOrTemplate", vms[9].id] => {}
+            }
+          }
+        }
+      )
+    end
+  end
+
+  describe "#fulltree_count" do
+    it "is self with with no relationships" do
+      nodes = host.with_relationship_type(test_rel_type, &:fulltree_count)
+      expect(nodes).to eq(1)
+    end
+
+    it "is the tree with a tree's root node" do
+      nodes = vms[0].with_relationship_type(test_rel_type, &:fulltree_count)
+      expect(nodes).to eq(10)
+    end
+
+    it "is the full tree with a tree's child node" do
+      nodes = vms[8].with_relationship_type(test_rel_type, &:fulltree_count)
+      expect(nodes).to eq(10)
+    end
+  end
+
   protected
 
-  def build_relationship_tree(tree, rel_type = test_rel_type)
+  def build_relationship_tree(tree, rel_type = test_rel_type, base_factory = :vm_vmware)
     # temp list of the relationships
     # allows easy access while building
     # can map to the resource to return all the resources created
     rels = Hash.new do |hash, key|
-      hash[key] = FactoryGirl.create(:relationship_vm_vmware,
-                                     :resource     => FactoryGirl.create(:vm_vmware),
+      hash[key] = FactoryGirl.create(:relationship,
+                                     :resource     => FactoryGirl.create(base_factory),
                                      :relationship => rel_type)
     end
 

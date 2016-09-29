@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :relationship do
-    resource_type  "VmOrTemplate"
+    # passed in resource will determine resource_type
   end
 
   factory :relationship_vm_vmware, :parent => :relationship do
