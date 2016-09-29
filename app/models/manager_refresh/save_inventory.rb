@@ -22,29 +22,27 @@ module ManagerRefresh
         return if dto_collection.saved?
 
         if dto_collection.saveable?(hashes)
-          save_dto_inventory_multi(parent.send(key),
-                                   dto_collection,
-                                   :use_association,
-                                   dto_collection.manager_ref,
-                                   key)
-          store_ids_for_new_dto_records(parent.send(key), dto_collection, dto_collection.manager_ref)
-          dto_collection.saved = true
+          save_dto_inventory(parent, key, dto_collection)
         else
           dto_collection.dependencies.each do |dependency_key|
             save_collection(parent, dependency_key, hashes[dependency_key], hashes)
           end
 
-          save_dto_inventory_multi(parent.send(key),
-                                   dto_collection,
-                                   :use_association,
-                                   dto_collection.manager_ref,
-                                   key)
-          store_ids_for_new_dto_records(parent.send(key), dto_collection, dto_collection.manager_ref)
-          dto_collection.saved = true
+          save_dto_inventory(parent, key, dto_collection)
         end
       end
 
       private
+      def save_dto_inventory(parent, key, dto_collection)
+        save_dto_inventory_multi(parent.send(key),
+                                 dto_collection,
+                                 :use_association,
+                                 dto_collection.manager_ref,
+                                 key)
+        store_ids_for_new_dto_records(parent.send(key), dto_collection, dto_collection.manager_ref)
+        dto_collection.saved = true
+      end
+
       def log_header(ems)
         "EMS: [#{ems.name}], id: [#{ems.id}]"
       end
