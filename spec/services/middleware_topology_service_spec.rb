@@ -4,6 +4,10 @@ describe MiddlewareTopologyService do
   let(:long_id_1) { "#{long_id_0}/r;Local~%2Fdeployment=hawkular-command-gateway-war.war" }
   let(:long_id_2) { "#{long_id_0}/r;Local~%2Fdeployment=hawkular-wildfly-agent-download.war" }
   let(:long_id_3) { "#{long_id_0}/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS" }
+  let(:long_id_4) { "Local~/deployment=hawkular-wildfly-agent-download.war" }
+  let(:long_id_5) { "Local~/deployment=hawkular-command-gateway-war.war" }
+  let(:long_id_6) { "Local~/subsystem=datasources/data-source=ExampleDS" }
+  let(:long_id_7) { "Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularMetricData" }
 
   describe "#build_kinds" do
     it "creates the expected number of entity types" do
@@ -17,7 +21,7 @@ describe MiddlewareTopologyService do
     subject { middleware_topology_service.build_topology }
 
     let(:ems_hawkular) { FactoryGirl.create(:ems_hawkular) }
-    let(:middleware_server) do
+    let(:mw_server) do
       FactoryGirl.create(:hawkular_middleware_server,
                          :name                  => 'Local',
                          :feed                  => '70c798a0-6985-4f8a-a525-012d8d28e8a3',
@@ -29,81 +33,83 @@ describe MiddlewareTopologyService do
     it "topology contains the expected structure and content" do
       allow(middleware_topology_service).to receive(:retrieve_providers).and_return([ems_hawkular])
 
-      middleware_deployment1 = MiddlewareDeployment.create(:ext_management_system => ems_hawkular, :middleware_server => middleware_server,
-                                                           :ems_ref               => long_id_2,
-                                                           :name                  => "hawkular-wildfly-agent-download.war",
-                                                           :nativeid              => "Local~/deployment=hawkular-wildfly-agent-download.war")
+      mw_deployment1 = MiddlewareDeployment.create(:ext_management_system => ems_hawkular,
+                                                   :middleware_server     => mw_server,
+                                                   :ems_ref               => long_id_2,
+                                                   :name                  => "hawkular-wildfly-agent-download.war",
+                                                   :nativeid              => long_id_4)
 
-      middleware_deployment2 = MiddlewareDeployment.create(:ext_management_system => ems_hawkular, :middleware_server => middleware_server,
-                                                           :ems_ref               => long_id_1,
-                                                           :name                  => "hawkular-command-gateway-war.war",
-                                                           :nativeid              => "Local~/deployment=hawkular-command-gateway-war.war")
+      mw_deployment2 = MiddlewareDeployment.create(:ext_management_system => ems_hawkular,
+                                                   :middleware_server     => mw_server,
+                                                   :ems_ref               => long_id_1,
+                                                   :name                  => "hawkular-command-gateway-war.war",
+                                                   :nativeid              => long_id_5)
 
-      mddlwr_datasource = MiddlewareDatasource.create(:ext_management_system => ems_hawkular,
-                                                      :middleware_server     => middleware_server,
-                                                      :ems_ref               => long_id_3,
-                                                      :name                  => "ExampleDS",
-                                                      :nativeid              => "Local~/subsystem=datasources/"\
-                                                            "data-source=ExampleDS")
+      mw_datasource = MiddlewareDatasource.create(:ext_management_system => ems_hawkular,
+                                                  :middleware_server     => mw_server,
+                                                  :ems_ref               => long_id_3,
+                                                  :name                  => "ExampleDS",
+                                                  :nativeid              => long_id_6)
 
-      md_messaging = MiddlewareMessaging.create(:ext_management_system => ems_hawkular,
-                                                :middleware_server     => middleware_server,
+      mw_messaging = MiddlewareMessaging.create(:ext_management_system => ems_hawkular,
+                                                :middleware_server     => mw_server,
                                                 :ems_ref               => long_id_2,
                                                 :name                  => "JMS Topic [HawkularMetricData]",
-                                                :nativeid              => "Local~/subsystem=messaging-"\
-                                                      "activemq/server=default/jms-topic=HawkularMetricData")
+                                                :nativeid              => long_id_7)
+
       expect(subject[:items]).to eq(
-        "MiddlewareManager" + ems_hawkular.compressed_id.to_s              => {:name         => ems_hawkular.name,
-                                                                               :status       => "Unknown",
-                                                                               :kind         => "MiddlewareManager",
-                                                                               :display_kind => "Hawkular",
-                                                                               :miq_id       => ems_hawkular.id,
-                                                                               :icon         => "vendor-hawkular"},
+        "MiddlewareManager" + ems_hawkular.compressed_id.to_s      => {:name         => ems_hawkular.name,
+                                                                       :status       => "Unknown",
+                                                                       :kind         => "MiddlewareManager",
+                                                                       :display_kind => "Hawkular",
+                                                                       :miq_id       => ems_hawkular.id,
+                                                                       :icon         => "vendor-hawkular"},
 
-        "MiddlewareServer" + middleware_server.compressed_id.to_s          => {:name         => middleware_server.name,
-                                                                               :status       => "Unknown",
-                                                                               :kind         => "MiddlewareServer",
-                                                                               :display_kind => "MiddlewareServer",
-                                                                               :miq_id       => middleware_server.id,
-                                                                               :icon         => "vendor-wildfly"},
+        "MiddlewareServer" + mw_server.compressed_id.to_s          => {:name         => mw_server.name,
+                                                                       :status       => "Unknown",
+                                                                       :kind         => "MiddlewareServer",
+                                                                       :display_kind => "MiddlewareServer",
+                                                                       :miq_id       => mw_server.id,
+                                                                       :icon         => "vendor-wildfly"},
 
-        "MiddlewareDeployment" + middleware_deployment1.compressed_id.to_s => {:name         => middleware_deployment1.name,
-                                                                               :status       => "Unknown",
-                                                                               :kind         => "MiddlewareDeployment",
-                                                                               :display_kind => "MiddlewareDeploymentWar",
-                                                                               :miq_id       => middleware_deployment1.id},
+        "MiddlewareDeployment" + mw_deployment1.compressed_id.to_s => {:name         => mw_deployment1.name,
+                                                                       :status       => "Unknown",
+                                                                       :kind         => "MiddlewareDeployment",
+                                                                       :display_kind => "MiddlewareDeploymentWar",
+                                                                       :miq_id       => mw_deployment1.id},
 
-        "MiddlewareDeployment" + middleware_deployment2.compressed_id.to_s => {:name         => middleware_deployment2.name,
-                                                                               :status       => "Unknown",
-                                                                               :kind         => "MiddlewareDeployment",
-                                                                               :display_kind => "MiddlewareDeploymentWar",
-                                                                               :miq_id       => middleware_deployment2.id},
+        "MiddlewareDeployment" + mw_deployment2.compressed_id.to_s => {:name         => mw_deployment2.name,
+                                                                       :status       => "Unknown",
+                                                                       :kind         => "MiddlewareDeployment",
+                                                                       :display_kind => "MiddlewareDeploymentWar",
+                                                                       :miq_id       => mw_deployment2.id},
 
-        "MiddlewareDatasource" + mddlwr_datasource.compressed_id.to_s      => {:name         => mddlwr_datasource.name,
-                                                                               :status       => "Unknown",
-                                                                               :kind         => "MiddlewareDatasource",
-                                                                               :display_kind => "MiddlewareDatasource",
-                                                                               :miq_id       => mddlwr_datasource.id},
+        "MiddlewareDatasource" + mw_datasource.compressed_id.to_s  => {:name         => mw_datasource.name,
+                                                                       :status       => "Unknown",
+                                                                       :kind         => "MiddlewareDatasource",
+                                                                       :display_kind => "MiddlewareDatasource",
+                                                                       :miq_id       => mw_datasource.id},
 
-        "MiddlewareMessaging" + md_messaging.compressed_id.to_s            => {:name         => md_messaging.name,
-                                                                               :status       => "Unknown",
-                                                                               :kind         => "MiddlewareMessaging",
-                                                                               :display_kind => "MiddlewareMessaging",
-                                                                               :miq_id       => md_messaging.id},
+        "MiddlewareMessaging" + mw_messaging.compressed_id.to_s    => {:name         => mw_messaging.name,
+                                                                       :status       => "Unknown",
+                                                                       :kind         => "MiddlewareMessaging",
+                                                                       :display_kind => "MiddlewareMessaging",
+                                                                       :miq_id       => mw_messaging.id},
+
       )
 
       expect(subject[:relations].size).to eq(5)
       expect(subject[:relations]).to include(
         {:source => "MiddlewareManager" + ems_hawkular.compressed_id.to_s,
-         :target => "MiddlewareServer" + middleware_server.compressed_id.to_s},
-        {:source => "MiddlewareServer" + middleware_server.compressed_id.to_s,
-         :target => "MiddlewareDeployment" + middleware_deployment1.compressed_id.to_s},
-        {:source => "MiddlewareServer" + middleware_server.compressed_id.to_s,
-         :target => "MiddlewareDeployment" + middleware_deployment2.compressed_id.to_s},
-        {:source => "MiddlewareServer" + middleware_server.compressed_id.to_s,
-         :target => "MiddlewareDatasource" + mddlwr_datasource.compressed_id.to_s},
-        {:source => "MiddlewareServer" + middleware_server.compressed_id.to_s,
-         :target => "MiddlewareMessaging" + md_messaging.compressed_id.to_s}
+         :target => "MiddlewareServer" + mw_server.compressed_id.to_s},
+        {:source => "MiddlewareServer" + mw_server.compressed_id.to_s,
+         :target => "MiddlewareDeployment" + mw_deployment1.compressed_id.to_s},
+        {:source => "MiddlewareServer" + mw_server.compressed_id.to_s,
+         :target => "MiddlewareDeployment" + mw_deployment2.compressed_id.to_s},
+        {:source => "MiddlewareServer" + mw_server.compressed_id.to_s,
+         :target => "MiddlewareDatasource" + mw_datasource.compressed_id.to_s},
+        {:source => "MiddlewareServer" + mw_server.compressed_id.to_s,
+         :target => "MiddlewareMessaging" + mw_messaging.compressed_id.to_s}
       )
     end
   end
