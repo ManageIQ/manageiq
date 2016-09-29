@@ -55,7 +55,10 @@ class MiqAeYamlImport
       @domain_name = directory.split("/").last
       import_domain(directory, @domain_name)
     end
-    MiqAeDatastore.reset_default_namespace if @restore && !@preview
+    if @restore && !@preview
+      MiqAeDatastore.reset_default_namespace
+      MiqAeDomain.reset_priorities
+    end
     domains
   end
 
