@@ -168,6 +168,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         miqService.sparkleOff();
       });
     }
+    $scope.actionUrl = $scope.newRecord ? $scope.createUrl : $scope.updateUrl;
     $scope.currentTab = "default";
   };
 
@@ -452,7 +453,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
 
   $scope.validateClicked = function($event, authType, formSubmit) {
     $scope.authType = authType;
-    miqService.validateWithREST($event, authType, $scope.updateUrl, formSubmit)
+    miqService.validateWithREST($event, authType, $scope.actionUrl, formSubmit)
       .then(function success(data) {
         $scope.$apply(function() {
           if(data.level == "error") {
