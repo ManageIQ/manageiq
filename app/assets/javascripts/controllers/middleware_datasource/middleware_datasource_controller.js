@@ -45,11 +45,20 @@ function MwAddDataSourceCtrl($scope, $http, $q, miqService) {
   $scope.step3DsModel.securityDomain = '';
 
   $scope.addDatasourceChooseNext = function() {
+    var dsSelection = $scope.chooseDsModel.selectedDatasource;
     $scope.dsModel.step = 'STEP1';
+    console.log('DS Selection: ' + dsSelection);
+    $scope.step1DsModel.datasourceName = dsSelection.name;
+    $scope.step1DsModel.jndiName = dsSelection.jndiName;
   };
 
   $scope.addDatasourceStep1Next = function() {
+    var dsSelection = $scope.chooseDsModel.selectedDatasource;
     $scope.dsModel.step = 'STEP2';
+
+    $scope.step2DsModel.jdbcDriverName = dsSelection.driverName;
+    $scope.step2DsModel.jdbcModuleName = dsSelection.driverModuleName;
+    $scope.step2DsModel.driverClass = dsSelection.driverClass;
   };
 
   $scope.addDatasourceStep1Back = function() {
@@ -57,7 +66,9 @@ function MwAddDataSourceCtrl($scope, $http, $q, miqService) {
   };
 
   $scope.addDatasourceStep2Next = function() {
+    var dsSelection = $scope.chooseDsModel.selectedDatasource;
     $scope.dsModel.step = 'STEP3';
+    $scope.step3DsModel.connectionUrl = determineConnectionUrl(dsSelection);
   };
 
   $scope.addDatasourceStep2Back = function() {
@@ -91,6 +102,33 @@ function MwAddDataSourceCtrl($scope, $http, $q, miqService) {
     $scope.step3DsModel.userName = '';
     $scope.step3DsModel.password = '';
     $scope.step3DsModel.securityDomain = '';
+  };
+
+  var determineConnectionUrl = function (dsSelection) {
+    var datasource = dsSelection.id;
+    var driverName = dsSelection.driverName;
+    var PREFIX = 'jdbc:';
+    var driverUrl = '';
+
+    if(datasource == 'POSTGRES'){
+     driverUrl = PREFIX + driverName + '://localhost:5432/postgresdb';
+    }else if(datasource == 'H2'){
+      driverUrl = PREFIX + driverName + ':mem:test;DB_CLOSE_DELAY=-1';
+    }else if(datasource == 'MSSQL'){
+      driverUrl = PREFIX + driverName + '://localhost:1433;DatabaseName=MyDatabase';
+    }else if(datasource == 'ORACLE'){
+      driverUrl = PREFIX + driverName + ':thin:@localhost:1521:orcalesid';
+    }else if(datasource == 'DB2'){
+      driverUrl = PREFIX + driverName + '://postgresdb';
+    }else if(datasource == 'Sybase'){
+      driverUrl = PREFIX + driverName + ':Tds:localhost:5000/mydatabase?JCONNECT_VERSION=6';
+    }else if(datasource == 'MYSQL'){
+      driverUrl = PREFIX + driverName + '://localhost:3306/mysqldb';
+    }else {
+      driverUrl = 'error - invalid datasource type: ' + datasource;
+      console.warn(driverUrl);
+    }
+    return driverUrl;
   };
 
   var submitJson = function submitJson() {
