@@ -86,6 +86,8 @@ module Vmdb
     config.autoload_paths << Rails.root.join("app", "controllers", "mixins")
     config.autoload_paths << Rails.root.join("lib")
 
+    config.autoload_once_paths << Rails.root.join("lib", "vmdb", "console_methods.rb")
+
     # config.eager_load_paths accepts an array of paths from which Rails will eager load on boot if cache classes is enabled.
     # Defaults to every folder in the app directory of the application.
 
