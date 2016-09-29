@@ -106,6 +106,8 @@ module Openstack
 
       assert_ems
       assert_flavors
+      assert_public_flavor_tenant_mapping
+      assert_private_flavor_tenant_mapping
       assert_specific_az
       assert_availability_zone_null
       assert_specific_tenant
@@ -339,6 +341,18 @@ module Openstack
         expect(flavor.description).to           eq nil
         expect(flavor.ephemeral_disk_count).to  eq expected_ephemeral_disk_count
       end
+    end
+
+    def assert_public_flavor_tenant_mapping
+      @other_flavors = ManageIQ::Providers::Openstack::CloudManager::Flavor.where(:publicly_available => true)
+      @other_flavors.each do |f|
+        expect(f.cloud_tenants.length).to eq CloudTenant.count
+      end
+    end
+
+    def assert_private_flavor_tenant_mapping
+      @private_flavor = ManageIQ::Providers::Openstack::CloudManager::Flavor.where(:publicly_available => false).first
+      expect(@private_flavor.cloud_tenants.length).to eq 1
     end
 
     def assert_specific_az

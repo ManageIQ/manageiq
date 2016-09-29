@@ -6,6 +6,7 @@ module ManageIQ::Providers
     include ManageIQ::Providers::Openstack::RefreshParserCommon::HelperMethods
     include ManageIQ::Providers::Openstack::RefreshParserCommon::Images
     include ManageIQ::Providers::Openstack::RefreshParserCommon::Objects
+    include ManageIQ::Providers::Openstack::RefreshParserCommon::Flavors
     include ManageIQ::Providers::Openstack::RefreshParserCommon::OrchestrationStacks
 
     def self.ems_inv_to_hashes(ems, options = nil)
@@ -54,10 +55,10 @@ module ManageIQ::Providers
 
       $fog_log.info("#{log_header}...")
       # The order of the below methods does matter, because there are inner dependencies of the data!
+      get_tenants
       get_flavors
       get_availability_zones
       get_host_aggregates
-      get_tenants
       get_quotas
       get_key_pairs
       load_orchestration_stacks
@@ -104,14 +105,10 @@ module ManageIQ::Providers
       @availability_zones ||= availability_zones_compute + availability_zones_volume
     end
 
-    def get_flavors
-      flavors = @connection.handled_list(:flavors)
-      process_collection(flavors, :flavors) { |flavor| parse_flavor(flavor) }
-    end
-
-    def get_private_flavor(id)
-      private_flavor = safe_get { @connection.flavors.get(id) }
-      process_collection([private_flavor], :flavors) { |flavor| parse_flavor(flavor) } if private_flavor
+    def volumes
+      # TODO: support volumes through :nova as well?
+      return [] unless @volume_service.name == :cinder
+      @volumes ||= @volume_service.handled_list(:volumes)
     end
 
     def get_availability_zones
@@ -172,29 +169,16 @@ module ManageIQ::Providers
       end
     end
 
-    def parse_flavor(flavor)
-      uid = flavor.id
-
-      new_result = {
-        :type                 => "ManageIQ::Providers::Openstack::CloudManager::Flavor",
-        :ems_ref              => uid,
-        :name                 => flavor.name,
-        :enabled              => !flavor.disabled,
-        :cpus                 => flavor.vcpus,
-        :memory               => flavor.ram.megabytes,
-        :root_disk_size       => flavor.disk.to_i.gigabytes,
-        :swap_disk_size       => flavor.swap.to_i.megabytes,
-        :ephemeral_disk_size  => flavor.ephemeral.nil? ? nil : flavor.ephemeral.to_i.gigabytes,
-        :ephemeral_disk_count => if flavor.ephemeral.nil?
-                                   nil
-                                 elsif flavor.ephemeral.to_i > 0
-                                   1
-                                 else
-                                   0
-                                 end
-      }
-
-      return uid, new_result
+    def link_storage_associations
+      @data[:cloud_volumes].each do |cv|
+        #
+        # Associations between volumes and the snapshots on which
+        # they are based, if any.
+        #
+        base_snapshot_uid = cv.delete(:snapshot_uid)
+        base_snapshot = @data_index.fetch_path(:cloud_volume_snapshots, base_snapshot_uid)
+        cv[:base_snapshot] = base_snapshot unless base_snapshot.nil?
+      end if @data[:cloud_volumes]
     end
 
     def parse_availability_zone(az, service_name)
