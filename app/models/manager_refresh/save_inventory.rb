@@ -15,7 +15,10 @@ module ManagerRefresh
       end
 
       def save_collection(parent, key, dto_collection, hashes)
-        return if dto_collection.is_a? Array
+        unless dto_collection.is_a? ::DtoCollection
+          raise "A ManagerRefresh::SaveInventory needs a DtoCollection object, it got: #{dto_collection.inspect}"
+        end
+
         return if dto_collection.saved?
 
         if dto_collection.saveable?(hashes)
