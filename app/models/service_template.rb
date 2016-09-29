@@ -134,7 +134,10 @@ class ServiceTemplate < ApplicationRecord
       svc.add_resource(sr.resource, nh) unless sr.resource.nil?
     end
 
-    parent_svc.add_resource!(svc) unless parent_svc.nil?
+    if parent_svc
+      service_resource = ServiceResource.find_by(:id => service_task.options[:service_resource_id])
+      parent_svc.add_resource!(svc, service_resource)
+    end
 
     svc.save
     svc

@@ -157,6 +157,20 @@ describe ServiceTemplate do
       expect(sub_svc).to include(@svc_d)
     end
 
+    it "should add_resource! only if a parent_svc exists" do
+      sub_svc = instance_double("service_task", :options => {:dialog => {}})
+      parent_svc = instance_double("service_task", :options => {:dialog => {}})
+      expect(parent_svc).to receive(:add_resource!).once
+
+      @svc_a.create_service(sub_svc, parent_svc)
+    end
+
+    it "should not call add_resource! if no parent_svc exists" do
+      sub_svc = instance_double("service_task", :options => {:dialog => {}})
+      expect(sub_svc).to receive(:add_resource!).never
+
+      @svc_a.create_service(sub_svc)
+    end
     it "should return all parent services for a service" do
       add_and_save_service(@svc_a, @svc_b)
       add_and_save_service(@svc_a, @svc_c)
