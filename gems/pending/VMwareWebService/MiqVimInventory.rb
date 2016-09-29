@@ -1489,6 +1489,23 @@ class MiqVimInventory < MiqVimClientBase
     hs
   end
 
+  def hostSystemsStorageDevice(hostMors, selSpec = nil)
+    propPath = if selSpec
+      selSpecToPropPath(selSpec)
+    else
+      "config.storageDevice"
+    end
+
+    sd = {}
+    getMoPropMulti(hostMors, propPath).each do |res|
+      sd[res['MOR']] = res
+    end
+
+    sd = applySelector(sd, selSpec) if selSpec
+
+    sd
+  end
+
   def addHostSystem(hsMor)
     @cacheLock.synchronize(:EX) do
       addObjByMor(hsMor)
