@@ -3,6 +3,14 @@ require 'ancestry'
 class Service < ApplicationRecord
   DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS = 120
 
+  ACTION_RESPONSE = {
+    "Power On"   => :start,
+    "Power Off"  => :stop,
+    "Shutdown"   => :shutdown_guest,
+    "Suspend"    => :suspend,
+    "Do Nothing" => nil
+  }.freeze
+
   include VirtualTotalMixin
 
   has_ancestry :orphan_strategy => :destroy
@@ -133,12 +141,15 @@ class Service < ApplicationRecord
     each_group_resource(group_idx) do |svc_rsc|
       begin
         rsc = svc_rsc.resource
+        rsc_action = service_action(action, svc_rsc)
         rsc_name =  "#{rsc.class.name}:#{rsc.id}" + (rsc.respond_to?(:name) ? ":#{rsc.name}" : "")
-        if rsc.respond_to?(action)
-          _log.info "Processing action <#{action}> for Service:<#{name}:#{id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>"
-          rsc.send(action)
+        if rsc_action.nil?
+          _log.info "Not Processing action for Service:<#{name}:#{id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>"
+        elsif rsc.respond_to?(rsc_action)
+          _log.info "Processing action <#{rsc_action}> for Service:<#{name}:#{id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>"
+          rsc.send(rsc_action)
         else
-          _log.info "Skipping action <#{action}> for Service:<#{name}:#{id}>, RSC:<#{rsc.class.name}:#{rsc.id}> in Group Idx:<#{group_idx}>"
+          _log.info "Skipping action <#{rsc_action}> for Service:<#{name}:#{id}>, RSC:<#{rsc.class.name}:#{rsc.id}> in Group Idx:<#{group_idx}>"
         end
       rescue => err
         _log.error "Error while processing Service:<#{name}> Group Idx:<#{group_idx}>  Resource<#{rsc_name}>.  Message:<#{err}>"
@@ -168,6 +179,13 @@ class Service < ApplicationRecord
     nh[:zone] = first_vm.ext_management_system.zone.name unless first_vm.nil?
     MiqQueue.put(nh)
     true
+  end
+
+  def service_action(requested, service_resource)
+    method = "#{requested}_action"
+    response = service_resource.try(method)
+
+    response.nil? ? requested : ACTION_RESPONSE[response]
   end
 
   def validate_reconfigure
