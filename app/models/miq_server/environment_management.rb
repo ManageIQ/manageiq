@@ -134,7 +134,7 @@ module MiqServer::EnvironmentManagement
                          when '/var/log/audit'   then 'evm_server_var_log_audit_disk_high_usage'
                          when '/var/www/miq_tmp' then 'evm_server_miq_tmp_disk_high_usage'
                          when '/tmp'             then 'evm_server_tmp_disk_high_usage'
-                         when %r{pgsql/data}     then 'evm_server_db_disk_high_usage'
+                         when %r{lib/pgsql}      then 'evm_server_db_disk_high_usage'
                          end
 
       next unless disk_usage_event
