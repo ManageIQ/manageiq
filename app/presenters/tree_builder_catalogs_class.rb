@@ -25,20 +25,23 @@ class TreeBuilderCatalogsClass < TreeBuilder
     end
   end
 
+  def get_tree_aset_kids_for_nil_id(object, count_only)
+    count_only ? get_custom_buttons(object).count : get_custom_buttons(object).sort_by { |a| a.name.downcase }
+  end
+
+  def button_order?(object)
+    object[:set_data] && object[:set_data][:button_order]
+  end
+
   def x_get_tree_aset_kids(object, count_only)
-    if count_only
-      object.id.nil? ? get_custom_buttons(object).count : object.members.count
+    if object.id.nil?
+      get_tree_aset_kids_for_nil_id(object, count_only)
+    elsif count_only
+      object.members.count
     else
-      if object.id.nil?
-        get_custom_buttons(object).sort_by { |a| a.name.downcase }
-      else
-        # need to show button nodes in button order that they were saved in
-        button_order = object[:set_data] && object[:set_data][:button_order] ? object[:set_data][:button_order] : nil
-        objects = []
-        Array(button_order).each do |bidx|
-          object.members.each { |b| objects.push(b) if bidx == b.id && !objects.include?(b) }
-        end
-        objects
+      button_order = button_order?(object) ? object[:set_data][:button_order] : nil
+      Array(button_order).each_with_object([]) do |bidx, arr|
+        object.members.each { |b| arr.push(b) if bidx == b.id && !objects.include?(b) }
       end
     end
   end
