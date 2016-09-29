@@ -44,7 +44,6 @@
                                            "placeholder"  => _("Enter Password"),
                                            "ng-model"     => "step3DsModel.password"}
 
-      .col-sm-2
 
     .form-group
       %label.col-md-4.control-label{:for => "security_domain_input"}
@@ -53,14 +52,6 @@
         %input.form-control#security_domain_input{:type          => "text",
                                                   "placeholder"  => _("Enter Security Domain"),
                                                   "ng-model"     => "step3DsModel.securityDomain"}
-
-    .form-group
-      %label.col-md-4.control-label
-      .col-md-8
-        %button.btn.btn-default{:type         => "button",
-                                "ng-disabled" => "step3Form.$invalid",
-                                "ng-click"    => "addDataSourceTestConnection()"}
-          = _("Test Connection")
 
     .modal-footer
       %button.btn.btn-default.dialog-cancel-button{:type          => "button",
@@ -73,4 +64,4 @@
       %button.btn.btn-primary{:type         => "button",
                               "ng-click"    => "finishAddDatasource()",
                               "ng-disabled" => "step3Form.$invalid"}
-        = _("Done")
+        = _("Finish")
