@@ -239,6 +239,7 @@ table.table-hover tbody tr:nth-child(even).no-hover:hover td {
 table .label {
   display: table-cell;
   width: 20% !important;
+  padding-top: 6px;
   min-width: 200px;
   font: normal 12px OpenSansSemibold,Arial,Helvetica,sans-serif;
   cursor: default;

@@ -2,7 +2,7 @@
 - case @display
 - when "devices"
   - unless @devices.empty?
-    %table.table.table-bordered.table-striped
+    %table.table.table-bordered.table-striped.table-summary-screen
       %thead
         %tr
           %th{:colspan => "2"}= _('Devices')
@@ -16,7 +16,7 @@
               = h(item[:description])
 - when "os_info"
   - if @osinfo
-    %table.table.table-bordered.table-striped
+    %table.table.table-bordered.table-striped.table-summary-screen
       %thead
         %tr
           %th{:colspan => "2"}= _('Basic Information')
@@ -52,7 +52,7 @@
 
 - when "hv_info"
   - if @vmminfo
-    %table.table.table-bordered.table-striped
+    %table.table.table-bordered.table-striped.table-summary-screen
       %thead
         %tr
           %th{:colspan => "2"}= _('Basic Information')
@@ -65,7 +65,7 @@
               = h(item[:description])
 
     %hr
-    %table.table.table-bordered.table-striped
+    %table.table.table-bordered.table-striped.table-summary-screen
       %thead
         %tr
           %th{:colspan => "2"}= _('Devices')
@@ -104,7 +104,7 @@
 - when "networks"
   - if @vmminfo
     - @record.hardware.networks.each do |adapter|
-      %table.table.table-bordered.table-striped
+      %table.table.table-bordered.table-striped.table-summary-screen
         %thead
           %tr
             %th{:colspan => "2"}= _('Network Adapter')
@@ -123,7 +123,7 @@
               %td
                 = adapter.send(sym)
 - when "resources_info"
-  %table.table.table-bordered.table-striped
+  %table.table.table-bordered.table-striped.table-summary-screen
     %thead
       %tr
         %th{:colspan => "2"}= _('Account Policies')
