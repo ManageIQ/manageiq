@@ -187,6 +187,7 @@ module MiqAeEngine
         method_pid = nil
         threads = []
       rescue => err
+        STDERR.puts "** AUTOMATE ** Method exec failed because #{err.class}:#{err.message}" if ENV.key?("CI")
         $miq_ae_logger.error("Method exec failed because (#{err.class}:#{err.message})")
         rc = MIQ_ABORT
         msg = "Method execution failed"
