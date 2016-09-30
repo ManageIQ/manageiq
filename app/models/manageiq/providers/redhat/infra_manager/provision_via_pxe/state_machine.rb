@@ -2,7 +2,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ProvisionViaPxe::StateMachine
   def configure_destination
     signal :create_pxe_configuration_file
   end
-  
+
   def customize_destination
     if destination_image_locked?
       _log.info("Destination image locked; re-queuing")
@@ -14,7 +14,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ProvisionViaPxe::StateMachine
       configure_container
       signal :create_pxe_configuration_file
     end
-  end  
+  end
 
   def create_pxe_configuration_file
     message = "Generating PXE and Customization Files on PXE Server"
