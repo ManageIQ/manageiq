@@ -70,7 +70,9 @@ module EmsCommon
     {
       "instances"                     => [ManageIQ::Providers::CloudManager::Vm, _("Instances")],
       "images"                        => [ManageIQ::Providers::CloudManager::Template, _("Images")],
-      "storage_managers"              => [ManageIQ::Providers::StorageManager, _("Storage Managers"), :storage_managers],
+      "storage_managers"              => [ManageIQ::Providers::StorageManager,
+                                          _("Storage Managers"),
+                                          :storage_managers],
       "miq_templates"                 => [MiqTemplate,            _("Templates")],
       "vms"                           => [Vm,                     _("VMs")],
       "orchestration_stacks"          => [OrchestrationStack,     _("Stacks")],

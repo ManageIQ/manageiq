@@ -1173,13 +1173,13 @@ module ApplicationHelper
     elsif %w(offline retired templates vm vm_cloud vm_or_template).include?(@layout)
       "vm"
     elsif %w(action auth_key_pair_cloud availability_zone cim_base_storage_extent cloud_object_store_container
-             ems_storage cloud_object_store_object cloud_tenant cloud_volume cloud_volume_snapshot condition container_group
+             cloud_object_store_object cloud_tenant cloud_volume cloud_volume_snapshot condition container_group
              container_route container_project container_replicator container_image container_image_registry
              container_build container_node container_service persistent_volume ems_cloud ems_container ems_cluster ems_infra
              ems_middleware middleware_server middleware_deployment middleware_datasource middleware_domain
              middleware_messaging middleware_server_group flavor
              ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
-             load_balancer
+             load_balancer ems_storage
              host miq_schedule miq_template policy ontap_file_share ontap_logical_disk
              ontap_storage_system ontap_storage_volume orchestration_stack resource_pool configuration_job
              scan_profile service snia_local_file_system storage_manager timeline).include?(@layout)

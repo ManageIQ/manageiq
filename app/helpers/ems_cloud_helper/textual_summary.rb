@@ -111,7 +111,6 @@ module EmsCloudHelper::TextualSummary
     h
   end
 
-
   def textual_availability_zones
     @record.availability_zones
   end
