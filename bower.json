@@ -50,9 +50,9 @@
     "rxjs": "^4.1.0",
     "rx-angular": "rx.angular#^1.1.3",
     "manageiq-ui-components": "~0.0.7",
-    "patternfly-timeline": "f27f0e9b30ac82007059a408a55ec9474eb24724",
-    "patternfly-bootstrap-treeview": "~2.1.0"
-    "jquery": "~2.1.4",
+    "patternfly-timeline": "~1.0.1",
+    "patternfly-bootstrap-treeview": "~2.1.0",
+    "jquery": "~2.1.4"
   },
   "resolutions": {
     "moment": ">=2.9.0",

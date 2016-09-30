@@ -17,10 +17,8 @@ module ApplicationController::Timelines
     if @tl_options.management_events? && @tl_options.mngt.categories.blank?
       # add_flash(_("At least one filter must be selected"), :warning)
     elsif @tl_options.policy_events?
-      unless @tl_options.policy.categories.blank?
+      if @tl_options.policy.categories.blank?
         tl_build_timeline('n')
-      else
-        # add_flash(_("At least one filter must be selected"), :warning)
       end
     else
       tl_gen_timeline_data(refresh = "n")

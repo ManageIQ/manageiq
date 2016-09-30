@@ -5,7 +5,7 @@
   var element, timeline;
   function miqLoadTL() {
   var data = [];
-  var json = JSON.parse('#{tl_json}'.replace(/&quot;/g, '"'))
+  var json = JSON.parse('#{tl_json}'.replace(/&quot;/g, '"'));
   start = new Date(ManageIQ.calendar.calDateFrom);
   end = new Date(ManageIQ.calendar.calDateTo);
   one_hour = 60 * 60 * 1000;
@@ -14,7 +14,6 @@
   one_month = one_day * 30;
   six_months = one_month * 6;
   - if tl_json
-    -#console.log('tl-json' + #{tl_json});
     //var json = #{tl_json.html_safe};
     for (var x in json) {
     data[x] = {};
@@ -32,7 +31,11 @@
     }
     }
     var today = new Date();
-    timeline = d3.chart.timeline().end(today).start(today - one_week).minScale(one_week/one_month).maxScale(one_week/one_hour).eventGrouping(360000).labelWidth(170).eventPopover(handlePopover).eventClick(eventClick);
+    timeline = d3.chart.timeline().end(today).start(today - one_week)
+    \.minScale(one_week/one_month)
+    \.maxScale(one_week/one_hour)
+    \.eventGrouping(360000).labelWidth(170)
+    \.eventPopover(handlePopover).eventClick(eventClick);
     element = d3.select(chart_placeholder).append('div').datum(data);
     if(timeline && timeline.constructor && timeline.call && timeline.apply) {
     timeline(element);
