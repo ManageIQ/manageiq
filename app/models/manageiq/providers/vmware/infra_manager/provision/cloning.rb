@@ -69,8 +69,8 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
   end
 
   def dest_folder
-    folder_id = get_option(:placement_folder_name)
-    return EmsFolder.find_by(:id => folder_id) if folder_id
+    ems_folder = EmsFolder.find_by(:id => get_option(:placement_folder_name))
+    return ems_folder if ems_folder
 
     dc = dest_cluster.try(:parent_datacenter) || dest_host.parent_datacenter
 
