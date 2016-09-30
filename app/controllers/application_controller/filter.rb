@@ -43,8 +43,8 @@ module ApplicationController::Filter
       end
     when "discard"
       # Copy back the latest expression or empty expression, if nil
-      @edit[@expkey].delete(:val1)
-      @edit[@expkey].delete(:val2)
+      @edit[@expkey].val1 = nil
+      @edit[@expkey].val2 = nil
       @edit[@expkey][:expression] = @edit[:new][@expkey].nil? ? {"???" => "???"} : copy_hash(@edit[:new][@expkey])
       @edit.delete(:edit_exp)
     else
@@ -352,14 +352,14 @@ module ApplicationController::Filter
               end
           @edit[@expkey][:alias] = a.strip
         else
-          @edit[@expkey].delete(:alias)
+          @edit[@expkey].alias = nil
         end
       end
 
       # Check the alias field
       if params.key?(:alias) && params[:alias] != @edit[@expkey][:alias].to_s # Did the value change?
         if params[:alias].strip.blank?
-          @edit[@expkey].delete(:alias)
+          @edit[@expkey].alias = nil
         else
           @edit[@expkey][:alias] = params[:alias]
         end
@@ -552,7 +552,7 @@ module ApplicationController::Filter
 
     adv_search_set_text                                                 # Set search text filter suffix
     @edit[:adv_search_applied][:exp] = @edit[:new][@expkey]             # Save the expression to be applied
-    @edit[@expkey].delete(:exp_token)                                   # Remove any existing atom being edited
+    @edit[@expkey].exp_token = nil                                      # Remove any existing atom being edited
     @edit[:adv_search_open] = false                                     # Close the adv search box
     session[:adv_search] ||= {}                                         # Create/reuse the adv search hash
     session[:adv_search][@edit[@expkey][:exp_model]] = copy_hash(@edit) # Save by model name in settings
@@ -573,7 +573,7 @@ module ApplicationController::Filter
   def load_default_search(id)
     @edit ||= {}
     @expkey = :expression                                             # Reset to use default expression key
-    @edit[@expkey] ||= {}                                       # Create hash for this expression, if needed
+    @edit[@expkey] ||= Expression.new
     @edit[@expkey][:expression] = []                           # Store exps in an array
     @edit[:new] = {}
     @edit[:new][@expkey] = @edit[@expkey][:expression]                # Copy to new exp
@@ -591,7 +591,7 @@ module ApplicationController::Filter
       @edit[:adv_search_applied] = {}
       adv_search_set_text # Set search text filter suffix
       @edit[:adv_search_applied][:exp] = copy_hash(@edit[:new][@expkey])    # Save the expression to be applied
-      @edit[@expkey].delete(:exp_token)                             # Remove any existing atom being edited
+      @edit[@expkey].exp_token = nil                                        # Remove any existing atom being edited
     end
     @edit[:adv_search_open] = false                               # Close the adv search box
   end
@@ -735,7 +735,7 @@ module ApplicationController::Filter
       adv_search_set_text # Set search text filter suffix
       @edit[:selected] = true
       @edit[:adv_search_applied][:exp] = @edit[:new][@expkey]   # Save the expression to be applied
-      @edit[@expkey].delete(:exp_token)                         # Remove any existing atom being edited
+      @edit[@expkey].exp_token = nil                            # Remove any existing atom being edited
       @edit[:adv_search_open] = false                           # Close the adv search box
       if MiqExpression.quick_search?(@edit[:adv_search_applied][:exp])
         quick_search_show
@@ -1501,7 +1501,7 @@ module ApplicationController::Filter
       @edit.delete(:exp_token)                                          # Remove any existing atom being edited
     else                                                                # Create new exp fields
       @edit = {}
-      @edit[@expkey] ||= {}                                       # Create hash for this expression, if needed
+      @edit[@expkey] ||= Expression.new
       @edit[@expkey][:expression] = []                           # Store exps in an array
       @edit[@expkey][:exp_idx] = 0                                      # Start at first exp
       @edit[@expkey][:expression] = {"???" => "???"}                      # Set as new exp element

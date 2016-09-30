@@ -36,19 +36,27 @@ describe ApplicationController, "::Filter" do
       expect(exp.inspect).to eq(exp2.inspect)
     end
 
+    let(:expression) do
+      ApplicationController::Filter::Expression.new.tap do |e|
+        e.val1 = {}
+        e.val2 = {}
+        e.expression = {}
+      end
+    end
+
     it "removes tokens if present" do
       exp = {'???' => '???'}
-      edit = {:expression => {:val1 => {}, :val2 => {}, :expression => exp}, :edit_exp => exp}
+      edit = {:expression => expression, :edit_exp => exp}
       edit[:new] = {:expression => {:test => "foo", :token => 1}}
       session[:edit] = edit
       controller.instance_variable_set(:@_params, :pressed => "discard")
       controller.instance_variable_set(:@expkey, :expression)
       expect(controller).to receive(:render)
       controller.send(:exp_button)
-      expect(session[:edit][:expression]).not_to include(:val1)
-      expect(session[:edit][:expression]).not_to include(:val2)
+      expect(session[:edit][:expression].val1).to be_nil
+      expect(session[:edit][:expression].val2).to be_nil
       expect(session[:edit]).not_to include(:edit_exp)
-      expect(session[:edit][:expression][:expression]).to eq(edit[:new][:expression])
+      expect(session[:edit][:expression].expression).to eq(edit[:new][:expression])
     end
   end
 
@@ -82,8 +90,9 @@ describe ApplicationController, "::Filter" do
       user_search2
 
       session[:userid] = user.userid
+      expression = ApplicationController::Filter::Expression.new.tap { |e| e.exp_model = 'Vm' }
       controller.instance_variable_set(:@expkey, :expression)
-      controller.instance_variable_set(:@edit, :expression => {:exp_model => "Vm"})
+      controller.instance_variable_set(:@edit, :expression => expression)
     end
 
     it "with global searches" do
