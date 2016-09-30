@@ -258,7 +258,6 @@ class Service < ApplicationRecord
 
   def queue_chargeback_report_generation(options = {})
     MiqQueue.put(
-      :queue_name  => "Services",
       :role        => "reporting",
       :class_name  => self.class.name,
       :instance_id => id,
