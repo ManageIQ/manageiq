@@ -4,8 +4,19 @@ module MiqServer::StatusManagement
   extend ActiveSupport::Concern
 
   def status_update
+    assign_attributes(system_status)
     assign_attributes(process_status)
     save!
+  end
+
+  def system_status
+    sys = MiqSystem.memory
+    {
+      :system_memory_free => sys.fetch(:MemFree, 0),
+      :system_memory_used => sys.fetch(:MemTotal, 0) - sys.fetch(:MemFree, 0),
+      :system_swap_free   => sys.fetch(:SwapFree, 0),
+      :system_swap_used   => sys.fetch(:SwapTotal, 0) - sys.fetch(:SwapFree, 0)
+    }
   end
 
   def process_status
