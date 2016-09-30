@@ -11,22 +11,19 @@ class DialogImportValidator
     raise ImportNonYamlError
   end
 
-  def determine_json_validity(dialog)
-    validate_dialog(dialog)
+  def determine_dialog_validity(dialog)
+    raise ParsedNonDialogError unless dialog['dialog_tabs']
+    check_dialog_tabs_for_validity(dialog['dialog_tabs'])
   rescue ParsedNonDialogYamlError
-    raise ParsedNonDialogError, 'Not a valid JSON dialog'
+    raise ParsedNonDialogError, 'Not a valid dialog'
   end
 
   private
 
-  def validate_dialog(dialog)
-    raise ParsedNonDialogYamlError unless dialog["dialog_tabs"]
-    check_dialog_tabs_for_validity(dialog["dialog_tabs"])
-  end
-
   def check_dialogs_for_validity(dialogs)
     dialogs.each do |dialog|
-      validate_dialog(dialog)
+      raise ParsedNonDialogYamlError unless dialog["dialog_tabs"]
+      check_dialog_tabs_for_validity(dialog["dialog_tabs"])
     end
   end
 

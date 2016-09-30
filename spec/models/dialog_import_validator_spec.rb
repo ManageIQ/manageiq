@@ -89,16 +89,16 @@ describe DialogImportValidator do
     end
 
     context 'when json does not represent dialogs' do
-      let(:json_content) do
+      let(:dialog_content) do
         {
           'description' => 'Dialog',
           'label'       => 'a_dialog'
         }
       end
 
-      it 'raises a ParsedNonDialogJsonError' do
+      it 'raises a ParsedNonDialogError' do
         expect do
-          dialog_import_validator.determine_json_validity(json_content)
+          dialog_import_validator.determine_dialog_validity(dialog_content)
         end.to raise_error(DialogImportValidator::ParsedNonDialogError)
       end
     end

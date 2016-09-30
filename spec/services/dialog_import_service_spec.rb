@@ -356,7 +356,7 @@ describe DialogImportService do
   context '#import' do
     include_context "DialogImportService dialog setup"
     before do
-      allow(dialog_import_validator).to receive(:determine_json_validity).with(dialogs.first).and_return(true)
+      allow(dialog_import_validator).to receive(:determine_dialog_validity).with(dialogs.first).and_return(true)
     end
 
     it 'creates a new dialog with valid input' do

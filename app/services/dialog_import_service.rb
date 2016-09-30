@@ -63,7 +63,7 @@ class DialogImportService
   end
 
   def import(dialog)
-    @dialog_import_validator.determine_json_validity(dialog)
+    @dialog_import_validator.determine_dialog_validity(dialog)
     new_dialog = Dialog.create(dialog.except('dialog_tabs'))
     new_dialog.update_attributes(dialog.merge('dialog_tabs' => build_dialog_tabs(dialog)))
     raise ActiveRecord::RecordInvalid, new_dialog unless new_dialog.valid?

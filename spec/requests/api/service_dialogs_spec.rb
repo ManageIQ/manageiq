@@ -332,7 +332,7 @@ describe "Service Dialogs API" do
       expected = {
         'error' => a_hash_including(
           'kind'    => 'bad_request',
-          'message' => a_string_including('Failed to create a new dialog - Not a valid JSON dialog'),
+          'message' => a_string_including('Failed to create a new dialog'),
           'klass'   => 'Api::BadRequestError'
         )
       }
