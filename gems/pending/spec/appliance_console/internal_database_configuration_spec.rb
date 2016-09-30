@@ -66,8 +66,10 @@ describe ApplianceConsole::InternalDatabaseConfiguration do
   end
 
   context "#update_fstab (private)" do
+    let(:pg_mount_point) { "/var/lib/pgsql" }
+
     before do
-      allow(PostgresAdmin).to receive_messages(:data_directory => "/var/lib/pgsql")
+      allow(ENV).to receive(:fetch).with("APPLIANCE_PG_MOUNT_POINT").and_return(pg_mount_point)
     end
 
     it "adds database disk entry" do
@@ -85,7 +87,7 @@ describe ApplianceConsole::InternalDatabaseConfiguration do
 
     it "skips update if mount point is in fstab" do
       fstab = double
-      allow(fstab).to receive_messages(:entries => [double(:mount_point => PostgresAdmin.data_directory)])
+      allow(fstab).to receive_messages(:entries => [double(:mount_point => Pathname.new(pg_mount_point))])
       expect(fstab).to receive(:write!).never
       allow(LinuxAdmin::FSTab).to receive_messages(:instance => fstab)
       expect(fstab.entries.count).to eq(1)

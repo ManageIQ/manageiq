@@ -85,6 +85,14 @@ class PostgresAdmin
     result.match(/^\s+([0-9]+)\n/)[1].to_i
   end
 
+  def self.prep_data_directory
+    # initdb will fail if the database directory is not empty or not owned by the PostgresAdmin.user
+    FileUtils.mkdir(PostgresAdmin.data_directory) unless Dir.exist?(PostgresAdmin.data_directory)
+    FileUtils.chown_R(PostgresAdmin.user, PostgresAdmin.user, PostgresAdmin.data_directory)
+    FileUtils.rm_rf(PostgresAdmin.data_directory.join("pg_log"))
+    FileUtils.rm_rf(PostgresAdmin.data_directory.join("lost+found"))
+  end
+
   def self.backup(opts)
     before_backup(opts)
     backup_pg_compress(opts)
