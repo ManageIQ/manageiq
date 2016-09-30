@@ -162,31 +162,23 @@ module ManageIQ::Providers
         end
       end
 
-      def process_datasource(server, datasource)
-        wildfly_res_id = hawk_escape_id server[:nativeid]
-        datasource_res_id = hawk_escape_id datasource.id
-        resource_path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id      => server[:feed],
-                                                                 :resource_ids => [wildfly_res_id, datasource_res_id])
+      def process_entity_with_config(server, entity, continuation)
+        entity_id = hawk_escape_id entity.id
+        server_path = ::Hawkular::Inventory::CanonicalPath.parse(server[:ems_ref])
+        resource_ids = server_path.resource_ids << entity_id
+        resource_path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id      => server_path.feed_id,
+                                                                 :resource_ids => resource_ids)
         config = @ems.inventory_client.get_config_data_for_resource(resource_path.to_s)
-        parse_datasource(server, datasource, config)
-      end
-
-      def process_messaging(server, messaging)
-        wildfly_res_id = hawk_escape_id server[:nativeid]
-        messaging_res_id = hawk_escape_id messaging.id
-        resource_path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id      => server[:feed],
-                                                                 :resource_ids => [wildfly_res_id, messaging_res_id])
-        config = @ems.inventory_client.get_config_data_for_resource(resource_path.to_s)
-        parse_messaging(server, messaging, config)
+        send(continuation, server, entity, config)
       end
 
       def process_server_entity(server, entity)
         if entity.type_path.end_with?('Deployment')
           @data[:middleware_deployments] << parse_deployment(server, entity)
         elsif entity.type_path.end_with?('Datasource')
-          @data[:middleware_datasources] << process_datasource(server, entity)
+          @data[:middleware_datasources] << process_entity_with_config(server, entity, :parse_datasource)
         else
-          @data[:middleware_messagings] << process_messaging(server, entity)
+          @data[:middleware_messagings] << process_entity_with_config(server, entity, :parse_messaging)
         end
       end
 
