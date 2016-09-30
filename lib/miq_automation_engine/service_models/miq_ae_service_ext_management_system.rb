@@ -1,5 +1,8 @@
 module MiqAeMethodService
   class MiqAeServiceExtManagementSystem < MiqAeServiceModelBase
+    require_relative "mixins/miq_ae_service_inflector_mixin"
+    include MiqAeServiceInflectorMixin
+
     expose :storages,             :association => true
     expose :hosts,                :association => true
     expose :vms,                  :association => true

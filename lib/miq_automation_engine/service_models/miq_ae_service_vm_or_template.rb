@@ -4,6 +4,8 @@ module MiqAeMethodService
     include MiqAeServiceEmsOperationsMixin
     require_relative "mixins/miq_ae_service_retirement_mixin"
     include MiqAeServiceRetirementMixin
+    require_relative "mixins/miq_ae_service_inflector_mixin"
+    include MiqAeServiceInflectorMixin
 
     expose :ext_management_system, :association => true
     expose :storage,               :association => true
