@@ -16,10 +16,20 @@ module SwiftManagerMixin
     private
 
     def ensure_swift_managers
-      ensure_swift_manager
+      created = ensure_swift_manager
       swift_manager.name            = "#{name} Swift Manager"
       swift_manager.zone_id         = zone_id
       swift_manager.provider_region = provider_region
+
+      return true unless created
+
+      swift_manager.save
+      swift_manager.reload
+      _log.debug "swift_manager.id = #{swift_manager.id}"
+
+      CloudObjectStoreContainer.where(:ems_id => id).update(:ems_id => swift_manager.id)
+      CloudObjectStoreObject.where(:ems_id => id).update(:ems_id => swift_manager.id)
+      true
     end
   end
 end
