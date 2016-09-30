@@ -21,7 +21,7 @@ ManageIQ.angular.app.service('miqService', ['$timeout', '$document', function($t
   };
 
   this.miqAsyncAjaxButton = function(url, serializeFields) {
-    miqAsyncAjax(url, serializeFields);
+    miqJqueryRequest(url, {beforeSend: true, data: serializeFields});
   };
 
   this.restAjaxButton = function(url, button, dataType, data) {

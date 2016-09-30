@@ -22,12 +22,8 @@ module ReportFormatter
 
       mri.extras ||= {} # Create hash to store :tl_position setting
 
-      if mri.extras[:browser_name] == "explorer"
-        tl_xml = MiqXml.load("<data/>")
-      else
-        @events = []
-        @events_data = []
-      end
+      @events = []
+      @events_data = []
       tlfield = mri.timeline[:field].split("-") # Split the table and field
       if tlfield.first.include?(".")                    # If table has a period (from a sub table)
         col = tlfield.first.split(".").last + "." + tlfield.last  # use subtable.field
@@ -38,33 +34,32 @@ module ReportFormatter
 
       if mri.db == "EventStream" || mri.db == "PolicyEvent"
         mri.table.data.sort_by(&:event_type).each_with_index do |row, _d_idx|
-          mri.rpt_options[:categories].each do |category, options|
+          mri.rpt_options[:categories].each do |_, options|
             current_event_type = options[:display_name] if options[:event_groups].include?(row.event_type)
-            @events.push({:name => options[:display_name], :data => []}) if @events.blank? || @events.select {|i| i[:name] == options[:display_name] }.blank?
+            @events.push(:name => options[:display_name],
+                         :data => []) if @events.blank? ||
+                                         @events.select { |i| i[:name] == options[:display_name] }.blank?
           end
 
-          tl_event(tl_xml ? tl_xml : nil, row, col)   # Add this row to the tl event xml
-          if new_event_type != current_event_type
-            event = @events.select {|i| i[:name] == current_event_type }
-            event[0][:data].push(@events_data).flatten
-            new_event_type = current_event_type
-            @events_data = []
-          end
+          tl_event(row, col)   # Add this row to the tl event xml
+
+          next if new_event_type == current_event_type
+
+          event = @events.select { |i| i[:name] == current_event_type }
+          event[0][:data].push(@events_data).flatten
+          new_event_type = current_event_type
+          @events_data = []
         end
       else
         mri.table.data.each_with_index do |row, _d_idx|
-          tl_event(tl_xml ? tl_xml : nil, row, col)   # Add this row to the tl event xml
+          tl_event(row, col)   # Add this row to the tl event xml
         end
-        @events.push({:data => [@events_data]})
+        @events.push(:data => [@events_data])
       end
       #     START of TIMELINE TIMEZONE Code
       mri.extras[:tl_position] ||= format_timezone(Time.now, tz, 'raw') # If position not set, default to now
       #     END of TIMELINE TIMEZONE Code
-      if mri.extras[:browser_name] == "explorer"
-        output << tl_xml.to_s
-      else
-        output << @events.to_json
-      end
+      output << @events.to_json
     end
 
     # Methods to convert record id (id, fixnum, 12000000000056) to/from compressed id (cid, string, "12c56")
@@ -73,7 +68,7 @@ module ReportFormatter
       ApplicationRecord.compress_id(id)
     end
 
-    def tl_event(tl_xml, row, col)
+    def tl_event(row, col)
       mri = options.mri
       tz = mri.get_time_zone(Time.zone.name)
       etime = row[col]
@@ -221,7 +216,8 @@ module ReportFormatter
       headers = copy_array(mri.headers)
       i = col_order.rindex(field.last)
       if i.nil?
-        # Adding a check incase timeline field came in with model/table in front of them i.e. PolicyEvent.miq_policy_sets-created_on
+        # Adding a check incase timeline field came in with model/table in front of them
+        # i.e. PolicyEvent.miq_policy_sets-created_on
         field_with_prefix = "#{field.first.split('.').last}.#{field.last}"
         i = col_order.rindex(field_with_prefix)
         col_order.delete(field_with_prefix)
@@ -242,27 +238,16 @@ module ReportFormatter
       e_text = ''
       col_order.each_with_index do |co, co_idx|
         val = tl_message.message_html(co)
-        e_text += "<b>#{headers[co_idx]}:</b> #{val}<br/>" unless val.to_s.empty? || co == "id"
+        e_text += "<b>#{headers[co_idx]}:</b>&nbsp;#{val}<br/>" unless val.to_s.empty? || co == "id"
       end
       e_text = e_text.chomp('<br/>')
 
       # Add the event to the timeline
-      if mri.extras[:browser_name] == "explorer"
-        event = tl_xml.root.add_element("event",           "start" => format_timezone(row[col], "UTC", nil),
-                                                           #         "end" => Time.now,
-                                                           #         "isDuration" => "true",
-                                                           "title" => CGI.escapeHTML(e_title.length < 20 ? e_title : e_title[0...17] + "..."),
-                                                           "icon"  => e_icon,
-                                                           #         "color"=>tl_color
-                                                           "image" => e_image)
-        event.text = e_text
-      else
-        @events_data.push("start"       => format_timezone(row[col], tz, 'view').to_time,
-                     "title"       => e_title.length < 20 ? e_title : e_title[0...17] + "...",
-                     "icon"        => e_icon,
-                     "image"       => e_image,
-                     "description" => e_text)
-      end
+      @events_data.push("start"       => format_timezone(row[col], tz, 'view'),
+                        "title"       => e_title.length < 20 ? e_title : e_title[0...17] + "...",
+                        "icon"        => e_icon,
+                        "image"       => e_image,
+                        "description" => e_text)
     end
 
     def bubble_icon(rec)

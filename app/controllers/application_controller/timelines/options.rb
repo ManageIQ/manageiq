@@ -40,8 +40,8 @@ module ApplicationController::Timelines
       self.categories = {}
       if params[:tl_categories]
         params[:tl_categories].each do |category|
-          self.categories[events[category]] = {:display_name => category}
-          self.categories[events[category]][:event_groups] = event_groups[events[category]][level]
+          categories[events[category]] = {:display_name => category}
+          categories[events[category]][:event_groups] = event_groups[events[category]][level]
         end
       end
     end
@@ -55,7 +55,7 @@ module ApplicationController::Timelines
 
     def event_set
       event_set = []
-      self.categories.each do |category|
+      categories.each do |category|
         event_set.push(category.last[:event_groups])
       end
       event_set
@@ -85,7 +85,7 @@ module ApplicationController::Timelines
     def update_from_params(params)
       self.result = if params[:showSuccessfulEvents] == "true" && params[:showFailedEvents] == "true"
                       "both"
-                    elsif params[:showSuccessfulEvents]== "true"
+                    elsif params[:showSuccessfulEvents] == "true"
                       "success"
                     elsif params[:showFailedEvents] == "true"
                       "failure"
@@ -94,7 +94,7 @@ module ApplicationController::Timelines
       self.categories = {}
       if params[:tl_categories]
         params[:tl_categories].each do |category|
-          self.categories[events[category]] = {:display_name => category}
+          categories[events[category]] = {:display_name => category}
         end
       end
     end

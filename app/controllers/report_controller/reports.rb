@@ -129,16 +129,17 @@ module ReportController::Reports
 
   def sample_timeline
     @events_data = []
-    @events_data.push(tl_event(format_timezone(Time.now, "UTC", nil), "Now", "red"))
-    @events_data.push(tl_event(format_timezone(Time.now - 5.seconds, "UTC", nil), "5 Seconds Ago"))
-    @events_data.push(tl_event(format_timezone(Time.now - 1.minute, "UTC", nil), "1 Minute Ago"))
-    @events_data.push(tl_event(format_timezone(Time.now - 5.minutes, "UTC", nil), "5 Minutes Ago"))
-    @events_data.push(tl_event(format_timezone(Time.now - 1.hour, "UTC", nil), "1 Hour Ago"))
-    @events_data.push(tl_event(format_timezone(Time.now - 1.day, "UTC", nil), "Yesterday"))
-    @events_data.push(tl_event(format_timezone(Time.now - 1.week, "UTC", nil), "Last Week"))
-    @events_data.push(tl_event(format_timezone(Time.now - 1.month, "UTC", nil), "Last Month"))
-    @events_data.push(tl_event(format_timezone(Time.now - 3.months, "UTC", nil), "3 Months Ago"))
-    @events_data.push(tl_event(format_timezone(Time.now - 1.year, "UTC", nil), "Last Year"))
+    time = Time.zone.now
+    @events_data.push(tl_event(format_timezone(time, "UTC", nil), "Now", "red"))
+    @events_data.push(tl_event(format_timezone(time - 5.seconds, "UTC", nil), "5 Seconds Ago"))
+    @events_data.push(tl_event(format_timezone(time - 1.minute, "UTC", nil), "1 Minute Ago"))
+    @events_data.push(tl_event(format_timezone(time - 5.minutes, "UTC", nil), "5 Minutes Ago"))
+    @events_data.push(tl_event(format_timezone(time - 1.hour, "UTC", nil), "1 Hour Ago"))
+    @events_data.push(tl_event(format_timezone(time - 1.day, "UTC", nil), "Yesterday"))
+    @events_data.push(tl_event(format_timezone(time - 1.week, "UTC", nil), "Last Week"))
+    @events_data.push(tl_event(format_timezone(time - 1.month, "UTC", nil), "Last Month"))
+    @events_data.push(tl_event(format_timezone(time - 3.months, "UTC", nil), "3 Months Ago"))
+    @events_data.push(tl_event(format_timezone(time - 1.year, "UTC", nil), "Last Year"))
     [{:data => [@events_data]}].to_json
   end
 
@@ -204,11 +205,11 @@ module ReportController::Reports
   private
 
   def tl_event(tl_time, tl_text, tl_color = nil)
-    {"start" => tl_time,
-     "title" => tl_text,
+    {"start"       => tl_time,
+     "title"       => tl_text,
      "description" => tl_text,
-     "icon"  => ActionController::Base.helpers.image_path("16/blue-circle.png"),
-     "color" => tl_color
+     "icon"        => ActionController::Base.helpers.image_path("16/blue-circle.png"),
+     "color"       => tl_color
     }
   end
 
