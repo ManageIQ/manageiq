@@ -583,14 +583,16 @@ module MiqPolicyController::Alerts
       unless value_greater_than && is_integer?(value_greater_than)
         add_flash(_(template_error % [">", non, an_integer]), :error)
       end
-      unless value_greater_than.to_i.between?(0, 100)
+      value_greater_than = value_greater_than.to_i
+      unless value_greater_than.between?(0, 100)
         add_flash(_(template_error % [">", non, between]), :error)
       end
       value_less_than = @edit.fetch_path(:new, :expression, :options, :value_mw_less_than)
       unless value_less_than && is_integer?(value_less_than)
         add_flash(_(template_error % ["<", non, an_integer]), :error)
       end
-      unless value_less_than.to_i.between?(0, 100)
+      value_less_than = value_less_than.to_i
+      unless value_less_than.between?(0, 100)
         add_flash(_(template_error % ["<", non, between]), :error)
       end
       if value_less_than && value_greater_than && (value_less_than >= value_greater_than)
