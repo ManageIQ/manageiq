@@ -29,8 +29,8 @@ describe OrchestrationTemplateHot do
   end
 
   def assert_db_group(group)
-    expect(group.label).to eq("DB parameters")
-    expect(group.description).to eq("Database related parameters")
+    expect(group.label).to be_nil
+    expect(group.description).to be_nil
 
     assert_hidden_length_patterns(group.parameters[0])
     assert_min_max_value(group.parameters[1])

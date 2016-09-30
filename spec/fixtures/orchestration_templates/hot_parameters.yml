@@ -9,9 +9,7 @@ parameter_groups:
   - flavor
   - image_id
   - cartridges
-- label: DB parameters
-  description: Database related parameters
-  parameters:
+- parameters:
   - admin_pass
   - db_port
   - metadata
