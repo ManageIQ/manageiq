@@ -45,7 +45,6 @@ function MwAddDataSourceCtrl($scope, $http, $q, miqService) {
   $scope.addDatasourceChooseNext = function() {
     var dsSelection = $scope.chooseDsModel.selectedDatasource;
     $scope.dsModel.step = 'STEP1';
-    console.log('DS Selection: ' + dsSelection);
     $scope.step1DsModel.datasourceName = dsSelection.name;
     $scope.step1DsModel.jndiName = dsSelection.jndiName;
   };
@@ -83,6 +82,9 @@ function MwAddDataSourceCtrl($scope, $http, $q, miqService) {
   };
 
   $scope.reset = function() {
+    angular.element("#modal_ds_div").modal('hide');
+    $scope.dsAddForm.$setPristine();
+
     $scope.dsModel.step = 'CHOOSE_DS';
 
     $scope.chooseDsModel.selectedDatasource = '';
