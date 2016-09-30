@@ -22,8 +22,6 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
   require_nested :RefreshWorker
   require_nested :Template
   require_nested :Vm
-  require_relative '../storage_manager/cinder_manager'
-  require_relative '../storage_manager/swift_manager'
 
   include CinderManagerMixin
   include SwiftManagerMixin

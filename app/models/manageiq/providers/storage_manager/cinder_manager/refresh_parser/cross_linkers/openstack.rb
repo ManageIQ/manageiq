@@ -25,10 +25,16 @@ module ManageIQ::Providers::StorageManager::CinderManager::RefreshParser::CrossL
 
         link_snapshot_to_tenant(snapshot_hash, api_obj)
       end
+
+      @data[:cloud_volume_backups].each do |backup_hash|
+        api_obj = backup_hash[:api_obj]
+
+        link_backup_to_availability_zone(backup_hash, api_obj)
+      end
     end
 
     def link_volume_to_tenant(volume_hash, api_obj)
-      tenant = @parent_ems.cloud_tenants.where(:ems_ref => api_obj.tenant_id).first
+      tenant = @parent_ems.cloud_tenants.detect { |t| t.ems_ref == api_obj.tenant_id }
       unless tenant
         _log.info "EMS: #{@parent_ems.name}, tenant not found: #{api_obj.tenant_id}"
         return
@@ -39,8 +45,8 @@ module ManageIQ::Providers::StorageManager::CinderManager::RefreshParser::CrossL
     end
 
     def link_volume_to_availability_zone(volume_hash, api_obj)
-      az_ref = "volume-#{api_obj.availability_zone}"
-      availability_zone = @parent_ems.availability_zones.where(:ems_ref => az_ref).first
+      az_ref = api_obj.availability_zone ? "volume-#{api_obj.availability_zone}" : "null_az"
+      availability_zone = @parent_ems.availability_zones.detect { |az| az.ems_ref == az_ref }
       unless availability_zone
         _log.info "EMS: #{@parent_ems.name}, availability zone not found: #{az_ref}"
         return
@@ -52,7 +58,7 @@ module ManageIQ::Providers::StorageManager::CinderManager::RefreshParser::CrossL
 
     def link_snapshot_to_tenant(snapshot_hash, api_obj)
       tenant_ref = api_obj['os-extended-snapshot-attributes:project_id']
-      tenant = @parent_ems.cloud_tenants.where(:ems_ref => tenant_ref).first
+      tenant = @parent_ems.cloud_tenants.detect { |t| t.ems_ref == tenant_ref }
       unless tenant
         _log.info "EMS: #{@parent_ems.name}, tenant not found: #{tenant_ref}"
         return
@@ -60,6 +66,18 @@ module ManageIQ::Providers::StorageManager::CinderManager::RefreshParser::CrossL
       _log.debug "Found tenant: #{tenant_ref}, id = #{tenant.id}"
 
       snapshot_hash[:cloud_tenant_id] = tenant.id
+    end
+
+    def link_backup_to_availability_zone(backup_hash, api_obj)
+      az_ref = api_obj['availability_zone'] ? "volume-#{api_obj['availability_zone']}" : "null_az"
+      availability_zone = @parent_ems.availability_zones.detect { |az| az.ems_ref == az_ref }
+      unless availability_zone
+        _log.info "EMS: #{@parent_ems.name}, availability zone not found: #{az_ref}"
+        return
+      end
+      _log.debug "Found availability zone: #{az_ref}, id = #{availability_zone.id}"
+
+      backup_hash[:availability_zone_id] = availability_zone.id
     end
 
     def link_volume_to_disk(volume_hash, api_obj)
@@ -74,7 +92,7 @@ module ManageIQ::Providers::StorageManager::CinderManager::RefreshParser::CrossL
 
         dev = File.basename(a['device'])
 
-        vm = @parent_ems.vms.where(:ems_ref => a['server_id']).first
+        vm = @parent_ems.vms.detect { |v| v.ems_ref == a['server_id'] }
         unless vm
           _log.warn "VM referenced by backing volume not found."
           next
