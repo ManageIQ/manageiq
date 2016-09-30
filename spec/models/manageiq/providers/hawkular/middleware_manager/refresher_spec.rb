@@ -25,16 +25,17 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
     expect(@ems_hawkular.middleware_datasources.count).to be > 0
     expect(@ems_hawkular.middleware_messagings.count).to be > 0
     expect(@ems_hawkular.middleware_deployments.first).to have_attributes(:status => 'Enabled')
-    assert_specific_datasource
+    assert_specific_datasource('Local~/subsystem=datasources/data-source=ExampleDS')
+    assert_specific_datasource('Local~/host=master/server=server-one/subsystem=datasources/data-source=ExampleDS')
     assert_specific_server_group(domain)
     assert_specific_domain
   end
 
-  def assert_specific_datasource
-    datasource = @ems_hawkular.middleware_datasources.find_by_name('Datasource [ExampleDS]')
+  def assert_specific_datasource(nativeid)
+    datasource = @ems_hawkular.middleware_datasources.find_by_nativeid(nativeid)
     expect(datasource).to have_attributes(
       :name     => 'Datasource [ExampleDS]',
-      :nativeid => 'Local~/subsystem=datasources/data-source=ExampleDS'
+      :nativeid => nativeid
     )
     expect(datasource.properties).not_to be_nil
     expect(datasource.properties).to have_attributes(
