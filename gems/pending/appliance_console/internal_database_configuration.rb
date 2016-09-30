@@ -71,7 +71,7 @@ module ApplianceConsole
 
     def initialize_postgresql
       log_and_feedback(__method__) do
-        prep_data_directory
+        PostgresAdmin.prep_data_directory
         run_initdb
         relabel_postgresql_dir
         configure_postgres
@@ -159,14 +159,6 @@ module ApplianceConsole
 
       fstab.entries << entry
       fstab.write!  # Test this more, whitespace is removed
-    end
-
-    def prep_data_directory
-      # initdb will fail if the database directory is not empty or not owned by the PostgresAdmin.user
-      FileUtils.mkdir(PostgresAdmin.data_directory) unless Dir.exist?(PostgresAdmin.data_directory)
-      FileUtils.chown_R(PostgresAdmin.user, PostgresAdmin.user, PostgresAdmin.data_directory)
-      FileUtils.rm_rf(PostgresAdmin.data_directory.join("pg_log"))
-      FileUtils.rm_rf(PostgresAdmin.data_directory.join("lost+found"))
     end
 
     def run_initdb
