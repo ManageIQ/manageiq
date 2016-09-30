@@ -8,14 +8,19 @@ module VmCommon
     params[:page] = @current_page unless @current_page.nil?   # Save current page for list refresh
     @refresh_div = "main_div" # Default div for button.rjs to refresh
 
-    custom_buttons                if params[:pressed] == "custom_button"
-    perf_chart_chooser            if params[:pressed] == "perf_reload"
-    perf_refresh_data             if params[:pressed] == "perf_refresh"
-    remove_service                if params[:pressed] == "remove_service"
-
-    return if ["custom_button"].include?(params[:pressed])    # custom button screen, so return, let custom_buttons method handle everything
-    # VM sub-screen is showing, so return
-    return if ["perf_reload"].include?(params[:pressed]) && @flash_array.nil?
+    case params[:pressed]
+    when 'custom_button'
+      custom_buttons
+      return
+    when 'perf_reload'
+      perf_chart_chooser
+      # VM sub-screen is showing, so return
+      return if @flash_array.nil?
+    when 'perf_refresh'
+      perf_refresh_data
+    when 'remove_service'
+      remove_service
+    end
 
     if @flash_array.nil? # if no button handler ran, show not implemented msg
       add_flash(_("Button not yet implemented"), :error)
