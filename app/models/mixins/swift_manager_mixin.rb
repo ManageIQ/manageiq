@@ -23,12 +23,16 @@ module SwiftManagerMixin
 
       return true unless created
 
-      swift_manager.save
-      swift_manager.reload
-      _log.debug "swift_manager.id = #{swift_manager.id}"
+      begin
+        swift_manager.save
+        swift_manager.reload
+        _log.debug "swift_manager.id = #{swift_manager.id}"
 
-      CloudObjectStoreContainer.where(:ems_id => id).update(:ems_id => swift_manager.id)
-      CloudObjectStoreObject.where(:ems_id => id).update(:ems_id => swift_manager.id)
+        CloudObjectStoreContainer.where(:ems_id => id).update(:ems_id => swift_manager.id)
+        CloudObjectStoreObject.where(:ems_id => id).update(:ems_id => swift_manager.id)
+      rescue ActiveRecord::RecordNotFound
+        # In case parent manager is not valid, let its validation fail.
+      end
       true
     end
   end

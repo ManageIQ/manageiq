@@ -26,13 +26,17 @@ module CinderManagerMixin
 
       return true unless created
 
-      cinder_manager.save
-      cinder_manager.reload
-      _log.debug "cinder_manager.id = #{cinder_manager.id}"
+      begin
+        cinder_manager.save
+        cinder_manager.reload
+        _log.debug "cinder_manager.id = #{cinder_manager.id}"
 
-      CloudVolume.where(:ems_id => id).update(:ems_id => cinder_manager.id)
-      CloudVolumeBackup.where(:ems_id => id).update(:ems_id => cinder_manager.id)
-      CloudVolumeSnapshot.where(:ems_id => id).update(:ems_id => cinder_manager.id)
+        CloudVolume.where(:ems_id => id).update(:ems_id => cinder_manager.id)
+        CloudVolumeBackup.where(:ems_id => id).update(:ems_id => cinder_manager.id)
+        CloudVolumeSnapshot.where(:ems_id => id).update(:ems_id => cinder_manager.id)
+      rescue ActiveRecord::RecordNotFound
+        # In case parent manager is not valid, let its validation fail.
+      end
       true
     end
   end
