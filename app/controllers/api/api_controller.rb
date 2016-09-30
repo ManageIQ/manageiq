@@ -1,5 +1,9 @@
 module Api
   class ApiController < Api::BaseController
+    def options
+      head(:ok)
+    end
+
     def index
       res = {
         :name         => Settings.base.name,
