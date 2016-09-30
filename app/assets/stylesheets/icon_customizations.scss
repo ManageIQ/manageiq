@@ -260,6 +260,12 @@ span[class^="product-"], span[class*=" product-"], // i & span tags prevent conf
 .product-load_balancer:before {
   content: "\e637";
 }
+.product-server-group:before { // remove when Patternfly is updated with this icon
+  content: "\e638";
+}
+.product-domain:before { // remove when Patternfly is updated with this icon
+  content: "\e639";
+}
 
 /* define  colors */
 .product-custom-1:before {
