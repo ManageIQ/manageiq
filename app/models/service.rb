@@ -119,22 +119,26 @@ class Service < ApplicationRecord
     all_vms
   end
 
+  def last_index
+    @last_index ||= last_group_index
+  end
+
   def start
     raise_request_start_event
-    queue_group_action(:start)
+    queue_group_action(:start, 0, 1, delay_for_action(0, :start))
   end
 
   def stop
     raise_request_stop_event
-    queue_group_action(:stop, last_group_index, -1)
+    queue_group_action(:stop, last_index, -1, delay_for_action(last_index, :stop))
   end
 
   def suspend
-    queue_group_action(:suspend, last_group_index, -1)
+    queue_group_action(:suspend, last_index, -1, delay_for_action(last_index, :stop))
   end
 
   def shutdown_guest
-    queue_group_action(:shutdown_guest, last_group_index, -1)
+    queue_group_action(:shutdown_guest, last_index, -1, delay_for_action(last_index, :stop))
   end
 
   def process_group_action(action, group_idx, direction)
@@ -165,7 +169,7 @@ class Service < ApplicationRecord
     end
   end
 
-  def queue_group_action(action, group_idx = 0, direction = 1, deliver_delay = 0)
+  def queue_group_action(action, group_idx, direction, deliver_delay)
     nh = {
       :class_name  => self.class.name,
       :instance_id => id,
