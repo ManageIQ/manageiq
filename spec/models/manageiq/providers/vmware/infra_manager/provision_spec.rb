@@ -15,7 +15,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
 
     context "VMware provisioning" do
       before(:each) do
-        @ems         = FactoryGirl.create(:ems_vmware_with_authentication)
+        @ems         = FactoryGirl.create(:ems_vmware_with_authentication, :api_version => '6.0')
         @vm_template = FactoryGirl.create(:template_vmware, :name => "template1", :ext_management_system => @ems, :operating_system => @os, :cpu_limit => -1, :cpu_reserve => 0)
         @vm          = FactoryGirl.create(:vm_vmware, :name => "vm1", :location => "abc/def.vmx")
         @pr          = FactoryGirl.create(:miq_provision_request, :requester => @admin, :src_vm_id => @vm_template.id)
@@ -195,7 +195,8 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
         end
 
         it "uses the resource pool from the cluster" do
-          @vm_prov.options[:dest_host] = [dest_host_with_cluster.id, dest_host_with_cluster.name]
+          @vm_prov.options[:dest_host]    = [dest_host_with_cluster.id, dest_host_with_cluster.name]
+          @vm_prov.options[:dest_cluster] = [cluster.id, cluster.name]
           expect(@vm_prov.dest_resource_pool).to eq(cluster.default_resource_pool)
         end
 
@@ -205,15 +206,39 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
         end
       end
 
+      context "#dest_storage_profile" do
+        let(:storage_profile) { FactoryGirl.create(:storage_profile, :name => "Gold") }
+
+        it "returns nil if no placement_storage_profile is given" do
+          @vm_prov.options[:placement_storage_profile] = nil
+          expect(@vm_prov.dest_storage_profile).to be_nil
+        end
+
+        it "returns nil if ems api_version < 5.5" do
+          @vm_prov.source.ext_management_system.api_version = '5.1'
+          @vm_prov.options[:placement_storage_profile] = [storage_profile.id, storage_profile.name]
+          expect(@vm_prov.dest_storage_profile).to be_nil
+        end
+
+        it "returns a storage profile" do
+          @vm_prov.options[:placement_storage_profile] = [storage_profile.id, storage_profile.name]
+          expect(@vm_prov.dest_storage_profile).to eq(storage_profile)
+        end
+      end
+
       context "#start_clone" do
         before(:each) do
           ds_mor = "datastore-0"
           storage = FactoryGirl.create(:storage_nfs, :ems_ref => ds_mor, :ems_ref_obj => ds_mor)
 
           Array.new(2) do |i|
+            cluster_mor = "cluster-#{i}"
+            cluster     = FactoryGirl.create(:ems_cluster, :ems_ref => cluster_mor)
+
             host_mor = "host-#{i}"
             host_props = {
               :ext_management_system => @ems,
+              :ems_cluster           => cluster,
               :ems_ref               => host_mor,
               :ems_ref_obj           => host_mor
             }
@@ -247,6 +272,34 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
             :customization => nil,
             :linked_clone  => nil,
             :host          => dest_host_mor,
+            :datastore     => dest_datastore_mor
+          }
+
+          allow(@vm_prov).to receive(:clone_vm).with(expected_vim_clone_opts).and_return(task_mor)
+
+          result = @vm_prov.start_clone clone_opts
+          expect(result).to eq(task_mor)
+        end
+
+        it "uses the right ems_ref when given a cluster" do
+          dest_cluster_mor   = "cluster-1"
+          dest_datastore_mor = "datastore-1"
+          task_mor           = "task-1"
+
+          clone_opts = {
+            :name      => @target_vm_name,
+            :cluster   => EmsCluster.find_by(:ems_ref => dest_cluster_mor),
+            :datastore => Storage.first
+          }
+
+          expected_vim_clone_opts = {
+            :name          => @target_vm_name,
+            :wait          => false,
+            :template      => false,
+            :transform     => nil,
+            :config        => nil,
+            :customization => nil,
+            :linked_clone  => nil,
             :datastore     => dest_datastore_mor
           }
 

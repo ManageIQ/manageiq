@@ -52,6 +52,7 @@ class MiqPglogical
     return unless provider?
     pglogical.replication_set_drop(REPLICATION_SET_NAME)
     drop_node
+    pglogical.disable
   end
 
   # Lists the tables currently being replicated by pglogical

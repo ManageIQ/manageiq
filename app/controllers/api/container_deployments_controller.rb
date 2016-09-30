@@ -1,16 +1,12 @@
 module Api
   class ContainerDeploymentsController < BaseController
-    def show
-      if @req.c_id == "container_deployment_data"
-        render_resource :container_deployments, :data => ContainerDeploymentService.new.all_data
-      else
-        super
-      end
-    end
-
     def create_resource(_type, _id, data)
       deployment = ContainerDeployment.new
       deployment.create_deployment(data, @auth_user_obj)
+    end
+
+    def options
+      render_options(:container_deployments, ContainerDeploymentService.new.all_data)
     end
   end
 end

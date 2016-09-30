@@ -83,6 +83,11 @@ class MiqReport < ApplicationRecord
     q
   end
 
+  # NOTE: this can by dynamically manipulated
+  def cols
+    self[:cols] ||= (self[:col_order] || []).reject { |x| x.include?(".") }
+  end
+
   def view_filter_columns
     col_order.collect { |c| [headers[col_order.index(c)], c] }
   end

@@ -1308,6 +1308,7 @@ class MiqExpression
 
     model = determine_model(model, parts)
     return nil if model.nil?
+    return Field.parse(field).column_type if col.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
 
     col_type(model, col)
   end

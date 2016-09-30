@@ -6,6 +6,5 @@ object:
     name: Operations
     description: 
     display_name: 
-    system: 
     priority: 
     enabled: 

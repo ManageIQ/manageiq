@@ -4,9 +4,6 @@ var miqInitNotifications = function () {
   var cable = ActionCable.createConsumer('/ws/notifications');
 
   var notifications = cable.subscriptions.create("NotificationChannel", {
-    connected: function () {
-      console.log("Cable client connected!");
-    },
     disconnected: function () {
       var _this = this;
       // Try to request a new ws_token if disconnected, reconnecting will happen automatically
@@ -17,7 +14,7 @@ var miqInitNotifications = function () {
       });
     },
     received: function (data) {
-      console.log("Cable message received:", data);
+      sendDataWithRx({notification: data});
     }
   });
 }

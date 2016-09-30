@@ -12,6 +12,12 @@ describe "ar_pglogical extension" do
     end
   end
 
+  describe "#enabled?" do
+    it "detects that the extensions are not enabled" do
+      expect(connection.pglogical.enabled?).to be false
+    end
+  end
+
   context "with the extensions enabled" do
     let(:node_name) { "test-node" }
     let(:node_dsn)  { "host=host.example.com dbname=vmdb_test" }
@@ -23,6 +29,13 @@ describe "ar_pglogical extension" do
     describe "#enabled?" do
       it "detects that the extensions are enabled" do
         expect(connection.pglogical.enabled?).to be true
+      end
+    end
+
+    describe "#disable" do
+      it "disables the pglogical extension" do
+        connection.pglogical.disable
+        expect(connection.extensions).not_to include("pglogical")
       end
     end
 

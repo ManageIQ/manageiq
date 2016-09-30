@@ -700,7 +700,7 @@ module OpsController::Diagnostics
       rescue StandardError => bang
         add_flash(bang, :error)
       else
-        add_flash(_("Suspend successfully initiated"), :error)
+        add_flash(_("Suspend successfully initiated"))
       end
     end
     refresh_screen

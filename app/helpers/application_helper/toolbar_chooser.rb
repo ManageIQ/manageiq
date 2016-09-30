@@ -215,7 +215,7 @@ class ApplicationHelper::ToolbarChooser
         return "services_center_tb"
       end
     elsif x_active_tree == :ot_tree
-      if %w(root xx-otcfn xx-othot xx-otazu xx-otvnf).include?(x_node)
+      if %w(root xx-otcfn xx-othot xx-otazu xx-otvnf xx-otvap).include?(x_node)
         return "orchestration_templates_center_tb"
       else
         return "orchestration_template_center_tb"
@@ -439,7 +439,8 @@ class ApplicationHelper::ToolbarChooser
     # toolbar buttons on sub-screens
     to_display = %w(availability_zones cloud_networks cloud_object_store_containers cloud_subnets
                     cloud_tenants cloud_volumes ems_clusters flavors floating_ips hosts load_balancers
-                    network_ports network_routers orchestration_stacks resource_pools security_groups storages)
+                    network_ports network_routers orchestration_stacks resource_pools security_groups storages
+                    middleware_deployments middleware_datasources middleware_messagings middleware_servers)
     to_display_center = %w(stack_orchestration_template topology)
     if @lastaction == 'show' && (@view || @display != 'main') && !@layout.starts_with?("miq_request")
       if @display == "vms" || @display == "all_vms"

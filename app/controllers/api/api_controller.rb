@@ -2,13 +2,14 @@ module Api
   class ApiController < Api::BaseController
     def index
       res = {
-        :name        => Settings.base.name,
-        :description => Settings.base.description,
-        :version     => Settings.base.version,
-        :versions    => entrypoint_versions,
-        :settings    => user_settings,
-        :identity    => auth_identity,
-        :server_info => server_info,
+        :name         => Settings.base.name,
+        :description  => Settings.base.description,
+        :version      => Settings.base.version,
+        :versions     => entrypoint_versions,
+        :settings     => user_settings,
+        :identity     => auth_identity,
+        :server_info  => server_info,
+        :product_info => product_info
       }
       res[:authorization] = auth_authorization if attribute_selection.include?("authorization")
       res[:collections]   = entrypoint_collections
@@ -41,6 +42,16 @@ module Api
         :version   => vmdb_build_info(:version),
         :build     => vmdb_build_info(:build),
         :appliance => appliance_name,
+      }
+    end
+
+    def product_info
+      {
+        :name                 => I18n.t("product.name"),
+        :name_full            => I18n.t("product.name_full"),
+        :copyright            => I18n.t("product.copyright"),
+        :support_website      => I18n.t("product.support_website"),
+        :support_website_text => I18n.t("product.support_website_text"),
       }
     end
   end

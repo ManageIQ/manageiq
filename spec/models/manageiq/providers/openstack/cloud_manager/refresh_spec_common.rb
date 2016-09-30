@@ -59,8 +59,7 @@ module Openstack
       expect(OrchestrationStackOutput.count).to    eq 0
       expect(OrchestrationTemplate.count).to       eq 0
 
-      # TODO: remove by swift spec test
-      # expect(CloudObjectStoreContainer.count).to   eq storage_data.directories.count
+      expect(CloudObjectStoreContainer.count).to   eq storage_data.directories.count
       expect(CloudObjectStoreObject.count).to      eq 0
       expect(CloudResourceQuota.count).to          eq 0
       expect(AuthPrivateKey.count).to              eq 0
@@ -69,7 +68,7 @@ module Openstack
       # We have broken flavor list, but there is fallback for private flavors using get, which will collect used flavors
       expect(Flavor.count).to              eq 2
 
-      expect(ExtManagementSystem.count).to               eq 3 # Can this be not hardcoded?
+      expect(ExtManagementSystem.count).to               eq 4 # Can this be not hardcoded?
       expect(security_groups_without_defaults.count).to  eq security_groups_count
       expect(firewall_without_defaults.count).to         eq firewall_rules_count
       expect(FloatingIp.count).to                        eq network_data.floating_ips.sum
@@ -98,7 +97,7 @@ module Openstack
       # skips configured modules
 
       # .. but other things are still present:
-      expect(Disk.count).to       eq disks_count(false)
+      expect(Disk.count).to       eq disks_count(true)
       expect(FloatingIp.count).to eq network_data.floating_ips.sum
     end
 
@@ -107,6 +106,8 @@ module Openstack
 
       assert_ems
       assert_flavors
+      assert_public_flavor_tenant_mapping
+      assert_private_flavor_tenant_mapping
       assert_specific_az
       assert_availability_zone_null
       assert_specific_tenant
@@ -127,9 +128,7 @@ module Openstack
       # Assert table counts as last, just for sure. First we compare Hashes of data, so we see the diffs
       assert_table_counts
       assert_table_counts_orchestration
-      #
-      # TODO: remove by swift spec test
-      # assert_table_counts_storage
+      assert_table_counts_storage
     end
 
     def volumes_count
@@ -221,10 +220,10 @@ module Openstack
       disks_count = (flavor[:disk] > 0 ? 1 : 0) + (flavor[:ephemeral] > 0 ? 1 : 0) + (flavor[:swap] > 0 ? 1 : 0)
 
       # May need after linkage is done
-      # if with_volumes && vm_or_stack[:__block_devices]
-      #   disks_count +=
-      #     vm_or_stack[:__block_devices].count { |d| d[:destination_type] == 'volume' && d[:boot_index] != 0 }
-      # end
+      if with_volumes && vm_or_stack[:__block_devices]
+        disks_count +=
+          vm_or_stack[:__block_devices].count { |d| d[:destination_type] == 'volume' && d[:boot_index] != 0 }
+      end
 
       disks_count
     end
@@ -234,7 +233,7 @@ module Openstack
     end
 
     def assert_table_counts
-      expect(ExtManagementSystem.count).to               eq 3 # Can this be not hardcoded? self/network/cinder
+      expect(ExtManagementSystem.count).to               eq 4 # Can this be not hardcoded? self/network/cinder/swift
       expect(Flavor.count).to                            eq compute_data.flavors.count
       expect(AvailabilityZone.count).to                  eq availability_zones_count
       expect(FloatingIp.count).to                        eq network_data.floating_ips.sum
@@ -281,7 +280,8 @@ module Openstack
 
     def assert_table_counts_storage
       if storage_supported?
-        expect(CloudObjectStoreContainer.count).to eq storage_data.directories.count
+        volumes_backup = CloudObjectStoreContainer.where({ key: "volumes_backup" })
+        expect(CloudObjectStoreContainer.count).to eq storage_data.directories.count + volumes_backup.count
         expect(CloudObjectStoreObject.count).to    eq storage_data.files.count
       end
     end
@@ -341,6 +341,18 @@ module Openstack
         expect(flavor.description).to           eq nil
         expect(flavor.ephemeral_disk_count).to  eq expected_ephemeral_disk_count
       end
+    end
+
+    def assert_public_flavor_tenant_mapping
+      @other_flavors = ManageIQ::Providers::Openstack::CloudManager::Flavor.where(:publicly_available => true)
+      @other_flavors.each do |f|
+        expect(f.cloud_tenants.length).to eq CloudTenant.count
+      end
+    end
+
+    def assert_private_flavor_tenant_mapping
+      @private_flavor = ManageIQ::Providers::Openstack::CloudManager::Flavor.where(:publicly_available => false).first
+      expect(@private_flavor.cloud_tenants.length).to eq 1
     end
 
     def assert_specific_az

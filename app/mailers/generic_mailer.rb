@@ -1,4 +1,4 @@
-require 'hamlit-rails'
+require 'hamlit'
 class GenericMailer < ActionMailer::Base
   include Vmdb::Logging
 

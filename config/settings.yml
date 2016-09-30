@@ -1231,6 +1231,13 @@
         :flooding_monitor_enabled: true
         :poll: 1.seconds
         :ems_event_max_wait: 60
+      :event_catcher_vmware_cloud:
+        :poll: 15.seconds
+        :duration: 10.seconds
+        :capacity: 50
+        :amqp_port: 5672
+        :amqp_heartbeat: 30
+        :amqp_recovery_attempts: 4
       :event_catcher_openstack:
         :poll: 15.seconds
         :topics:
@@ -1288,6 +1295,8 @@
       :event_catcher_atomic_enterprise:
         :poll: 1.seconds
       :event_catcher_cinder:
+        :poll: 10.seconds
+      :event_catcher_swift:
         :poll: 10.seconds
     :queue_worker_base:
       :defaults:
@@ -1350,6 +1359,7 @@
         :ems_refresh_worker_vmware_cloud: {}
         :ems_refresh_worker_vmware_cloud_network: {}
         :ems_refresh_worker_cinder: {}
+        :ems_refresh_worker_swift: {}
       :event_handler:
         :cpu_usage_threshold: 0.percent
         :nice_delta: 7

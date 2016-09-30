@@ -8,7 +8,7 @@ describe TreeBuilderContainers do
     MiqRegion.seed
     EvmSpecHelper.local_miq_server
 
-    @container_group = FactoryGirl.create(:container_group, :name => "Container group", :id => 42)
+    @container_group = FactoryGirl.create(:container_group, :name => "Pod", :id => 42)
     @tagged_container = FactoryGirl.create(:container,
                                            :name            => "Tagged Container",
                                            :tags            => [tag],

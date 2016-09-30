@@ -6,6 +6,5 @@ object:
     name: Control
     description: 
     display_name: 
-    system: 
     priority: 
     enabled: 

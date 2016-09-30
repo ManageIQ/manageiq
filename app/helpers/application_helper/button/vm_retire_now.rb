@@ -1,5 +1,5 @@
 class ApplicationHelper::Button::VmRetireNow < ApplicationHelper::Button::Basic
-  needs_record
+  needs :@record
 
   def calculate_properties
     super

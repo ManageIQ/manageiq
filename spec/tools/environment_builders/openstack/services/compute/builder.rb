@@ -176,8 +176,16 @@ module Openstack
         end
 
         def find_or_create_flavors
-          @data.flavors.each do |flavor|
-            @flavors << find_or_create(@service.flavors, flavor)
+          @data.flavors.each do |flavor_data|
+            flavor = find_or_create(@service.flavors, flavor_data)
+            unless flavor_data[:is_public]
+              begin
+                @service.add_flavor_access(flavor.id, @project.id)
+              rescue Excon::Error::Conflict
+                puts "Access already exists for flavor #{flavor.name} and project #{@project.name}."
+              end
+            end
+            @flavors << flavor
           end
         end
 

@@ -78,7 +78,7 @@ module EmsCommon
       'containers'                    => [Container,              _('Containers')],
       'container_replicators'         => [ContainerReplicator,    _('Container Replicators')],
       'container_nodes'               => [ContainerNode,          _('Container Nodes')],
-      'container_groups'              => [ContainerGroup,         _('Container Groups')],
+      'container_groups'              => [ContainerGroup,         _('Pods')],
       'container_services'            => [ContainerService,       _('Container Services')],
       'container_images'              => [ContainerImage,         _('Container Images')],
       'container_routes'              => [ContainerRoute,         _('Container Routes')],

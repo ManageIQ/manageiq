@@ -62,6 +62,7 @@ module SupportsFeatureMixin
     :control                  => 'Basic control operations', # FIXME: this is just a internal helper and should be refactored
     :cloud_tenant_mapping     => 'CloudTenant mapping',
     :cinder_service           => 'Cinder storage service',
+    :swift_service            => 'Swift storage service',
     :delete                   => 'Deletion',
     :disassociate_floating_ip => 'Disassociate a Floating IP',
     :discovery                => 'Discovery of Managers for a Provider',
@@ -71,6 +72,7 @@ module SupportsFeatureMixin
     :live_migrate             => 'Live Migration',
     :migrate                  => 'Migration',
     :provisioning             => 'Provisioning',
+    :reboot_guest             => 'Reboot Guest Operation',
     :reconfigure              => 'Reconfiguration',
     :regions                  => 'Regions of a Provider',
     :resize                   => 'Resizing',
@@ -95,7 +97,7 @@ module SupportsFeatureMixin
   end
 
   def self.reason_or_default(reason)
-    reason.present? ? reason : _("Feature not supported")
+    reason.present? ? reason : _("Feature not available/supported")
   end
 
   # query instance for the reason why the feature is unsupported

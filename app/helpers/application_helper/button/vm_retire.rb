@@ -1,5 +1,5 @@
 class ApplicationHelper::Button::VmRetire < ApplicationHelper::Button::Basic
-  needs_record
+  needs :@record
 
   def visible?
     @record.supports_retire?

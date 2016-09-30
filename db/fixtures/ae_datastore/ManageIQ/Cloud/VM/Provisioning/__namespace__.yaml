@@ -6,6 +6,5 @@ object:
     name: Provisioning
     description: 
     display_name: 
-    system: 
     priority: 
     enabled: 

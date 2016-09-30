@@ -207,7 +207,7 @@ class ManageIQ::Providers::Vmware::CloudManager::RefreshParser < ManageIQ::Provi
       :ems_ref     => uid,
       :name        => vapp_template.name,
       :description => vapp_template.description,
-      :orderable   => false,
+      :orderable   => true,
       :content     => content,
       # By default #save_orchestration_templates_inventory does not set the EMS
       # ID because templates are not EMS specific. We are setting the EMS

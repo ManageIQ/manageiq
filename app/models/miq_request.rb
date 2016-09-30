@@ -441,19 +441,24 @@ class MiqRequest < ApplicationRecord
 
   def self.create_request(values, requester, auto_approve = false)
     values[:src_ids] = values[:src_ids].to_miq_a unless values[:src_ids].nil?
-    request = new(:options      => values,
-                  :requester    => requester,
-                  :request_type => request_types.first)
-    request.save!
+    request_type = values.delete(:__request_type__) || request_types.first
+    request = create!(:options => values, :requester => requester, :request_type => request_type)
 
-    request.set_description
+    request.post_create(auto_approve)
+  end
 
-    request.log_request_success(requester, :created)
+  def post_create(auto_approve)
+    set_description
 
-    request.call_automate_event_queue("request_created")
-    request.approve(requester, "Auto-Approved") if auto_approve
-    request.reload if auto_approve
-    request
+    log_request_success(requester, :created)
+
+    if process_on_create?
+      call_automate_event_queue("request_created")
+      approve(requester, "Auto-Approved") if auto_approve
+      reload if auto_approve
+    end
+
+    self
   end
 
   # Helper method when not using workflow

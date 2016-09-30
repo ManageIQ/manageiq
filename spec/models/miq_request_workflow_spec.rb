@@ -390,29 +390,29 @@ describe MiqRequestWorkflow do
     end
   end
 
-  context "#create_request" do
+  context "#make_request (create)" do
     it "sets requester_group" do
       values = {}
-      request = workflow.create_request(values)
+      request = workflow.make_request(nil, values)
       expect(request.options[:requester_group]).to eq(workflow.requester.miq_group_description)
     end
 
     it "doesnt set owner_group" do
       values = {}
-      request = workflow.create_request(values)
+      request = workflow.make_request(nil, values)
       expect(request.options[:owner_group]).not_to be
     end
 
     it "handles bad owner email" do
       values = {:owner_email => "bogus"}
-      request = workflow.create_request(values)
+      request = workflow.make_request(nil, values)
       expect(request.options[:owner_group]).not_to be
     end
 
     it "sets owner group" do
       owner = FactoryGirl.create(:user_with_email, :miq_groups => [FactoryGirl.create(:miq_group)])
       values = {:owner_email => owner.email}
-      request = workflow.create_request(values)
+      request = workflow.make_request(nil, values)
       expect(request.options[:owner_email]).to eq(owner.email)
       expect(request.options[:owner_group]).to eq(owner.current_group.description)
     end

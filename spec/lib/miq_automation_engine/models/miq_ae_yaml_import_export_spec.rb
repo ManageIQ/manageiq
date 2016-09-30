@@ -15,7 +15,7 @@ describe MiqAeDatastore do
                              'meth' => 3, 'field' => 12, 'value' => 8}
     EvmSpecHelper.local_miq_server
     @tenant = Tenant.seed
-    create_factory_data("manageiq", 0)
+    create_factory_data("manageiq", 0, MiqAeDomain::SYSTEM_SOURCE)
     setup_export_dir
     set_manageiq_values
   end
@@ -192,7 +192,7 @@ describe MiqAeDatastore do
   context "export import roundtrip" do
     context "export all domains" do
       before do
-        create_factory_data("customer", 1)
+        create_factory_data("customer", 1, MiqAeDomain::USER_SOURCE)
         set_customer_values
       end
 
@@ -258,6 +258,21 @@ describe MiqAeDatastore do
         n    = FactoryGirl.create(:miq_ae_namespace, :name => "bonus_namespace_2", :parent_id => @customer_domain.id)
         n_c1 = FactoryGirl.create(:miq_ae_class, :name => "bonus_test_class_3", :namespace_id => n.id)
         FactoryGirl.create(:miq_ae_instance, :name => "bonus_test_instance1", :class_id => n_c1.id)
+      end
+
+      it "import single user domain" do
+        options = {'yaml_file' => @yaml_file}
+        assert_single_domain_import(options, options)
+        dom = MiqAeDomain.find_by_fqname(@customer_domain.name, false)
+        expect(dom).not_to be_enabled
+      end
+
+      it "import single system domain" do
+        options = {'yaml_file' => @yaml_file}
+        @customer_domain.update_attributes(:source => MiqAeDomain::SYSTEM_SOURCE)
+        assert_single_domain_import(options, options)
+        dom = MiqAeDomain.find_by_fqname(@customer_domain.name, false)
+        expect(dom).to be_enabled
       end
 
       def assert_single_domain_import(export_options, import_options)
@@ -595,7 +610,7 @@ describe MiqAeDatastore do
 
   context 'backup and restore' do
     before do
-      create_factory_data('customer', 16)
+      create_factory_data('customer', 16, MiqAeDomain::USER_SOURCE)
       set_customer_values
     end
 
@@ -716,8 +731,8 @@ describe MiqAeDatastore do
                  'value'         => 'test_input_value')
   end
 
-  def create_factory_data(domain_name, priority)
-    domain   = FactoryGirl.create(:miq_ae_domain_enabled, :name => domain_name,                :priority => priority)
+  def create_factory_data(domain_name, priority, source = MiqAeDomain::USER_SOURCE)
+    domain   = FactoryGirl.create(:miq_ae_domain_enabled, :name => domain_name, :source => source, :priority => priority)
     n1       = FactoryGirl.create(:miq_ae_namespace, :name => "#{domain_name}_namespace_1",    :parent_id => domain.id)
     n1_c1    = FactoryGirl.create(:miq_ae_class,     :name => "#{domain_name}_test_class_1",   :namespace_id => n1.id)
     n1_1     = FactoryGirl.create(:miq_ae_namespace, :name => "#{domain_name}_namespace_1_1",  :parent_id => n1.id)

@@ -347,6 +347,50 @@ describe Service do
     end
   end
 
+  describe "#service_action" do
+    let(:service) { FactoryGirl.create(:service) }
+    let(:service_resource_nil) { double(:service_resource) }
+    let(:service_resource_power) do
+      instance_double("ServiceResource", :start_action => "Power On",
+                                         :stop_action  => "Suspend")
+    end
+    let(:service_resource_power_off) { instance_double("ServiceResource", :stop_action => "Power Off") }
+    let(:service_resource_shutdown) { instance_double("ServiceResource", :stop_action => "Shutdown") }
+    let(:service_resource_nothing) do
+      instance_double("ServiceResource", :start_action => "Do Nothing",
+                                         :stop_action  => "Do Nothing")
+    end
+
+    context "service_resource start_action stop_action is nil" do
+      it "returns the original action" do
+        expect(service.service_action(:start, service_resource_nil)).to eq(:start)
+        expect(service.service_action(:suspend, service_resource_nil)).to eq(:suspend)
+        expect(service.service_action(:stop, service_resource_nil)).to eq(:stop)
+        expect(service.service_action(nil, service_resource_nil)).to eq(nil)
+      end
+    end
+
+    context "service_resource start_action stop_action is not nil" do
+      it "returns :start for 'Power On'" do
+        expect(service.service_action(:start, service_resource_power)).to eq(:start)
+      end
+
+      it "returns :stop for Power Off" do
+        expect(service.service_action(:stop, service_resource_power_off)).to eq(:stop)
+      end
+
+      it "returns :shutdown_guest for Shutdown" do
+        expect(service.service_action(:stop, service_resource_power_off)).to eq(:stop)
+        expect(service.service_action(:stop, service_resource_shutdown)).to eq(:shutdown_guest)
+      end
+
+      it "returns nil for Do Nothing" do
+        expect(service.service_action(:stop, service_resource_nothing)).to be_nil
+        expect(service.service_action(:start, service_resource_nothing)).to be_nil
+      end
+    end
+  end
+
   def create_deep_tree
     @service      = FactoryGirl.create(:service)
     @service_c1   = FactoryGirl.create(:service, :service => @service)

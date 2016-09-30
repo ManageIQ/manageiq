@@ -6568,7 +6568,6 @@ users:
 - settings
 - lastlogon
 - lastlogoff
-- region
 - current_group_id
 - first_name
 - last_name
