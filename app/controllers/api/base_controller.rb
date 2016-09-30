@@ -48,10 +48,6 @@ module Api
     respond_to :json
     rescue_from_api_errors
 
-    def handle_options_request
-      head(:ok)
-    end
-
     private
 
     def validate_response_format

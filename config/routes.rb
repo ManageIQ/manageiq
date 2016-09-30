@@ -2849,9 +2849,7 @@ Vmdb::Application.routes.draw do
 
   namespace :api, :path => "api(/:version)", :version => API_VERSION_REGEX, :defaults => {:format => "json"} do
     root :to => "api#index"
-
-    # OPTIONS requests for REST API pre-flight checks
-    match '/' => 'base#handle_options_request', :via => :options
+    match "/", :to => "api#options", :via => :options
 
     unless defined?(API_ACTIONS)
       API_ACTIONS = {
