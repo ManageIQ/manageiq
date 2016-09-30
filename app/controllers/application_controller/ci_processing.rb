@@ -11,7 +11,7 @@ module ApplicationController::CiProcessing
   end
 
   # Set Ownership selected db records
-  def set_ownership(klass = "VmOrTemplate")
+  def set_ownership
     assert_privileges(params[:pressed])
 
     # check to see if coming from show_list or drilled into vms from another CI

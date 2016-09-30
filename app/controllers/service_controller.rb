@@ -25,7 +25,7 @@ class ServiceController < ApplicationController
 
     send_action = SERVICE_X_BUTTON_ALLOWED_ACTIONS[action]
 
-    if [:service_ownership, :service_tag].include?(send_action)
+    if :service_tag == send_action
       send(send_action, 'Service')
     else
       send(send_action)
