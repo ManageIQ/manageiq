@@ -27,12 +27,6 @@
             :display       => "cloud_tenants",
             :tables        => "cloud_tenant",
             :controller    => "ems_cloud")
-        - if role_allows?(:feature => "cloud_volume_show_list")
-          = li_link(:count => @record.number_of(:cloud_volumes),
-            :record        => @record,
-            :display       => "cloud_volumes",
-            :tables        => "cloud_volume",
-            :controller    => "ems_cloud")
         - if role_allows?(:feature => "flavor_show_list")
           = li_link(:count => @record.number_of(:flavors),
             :record        => @record,
@@ -60,8 +54,3 @@
             :record        => @record,
             :display       => 'orchestration_stacks',
             :tables        => 'orchestration_stack')
-        - if role_allows?(:feature => "cloud_object_store_container_show_list")
-          = li_link(:count => @record.number_of(:cloud_object_store_containers),
-            :record        => @record,
-            :display       => 'cloud_object_store_containers',
-            :tables        => 'cloud_object_store_container')

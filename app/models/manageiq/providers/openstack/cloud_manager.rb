@@ -23,6 +23,12 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
   require_nested :Template
   require_nested :Vm
 
+  has_many :storage_managers,
+           :foreign_key => :parent_ems_id,
+           :class_name  => "ManageIQ::Providers::StorageManager",
+           :autosave    => true,
+           :dependent   => :destroy
+
   include CinderManagerMixin
   include SwiftManagerMixin
   include ManageIQ::Providers::Openstack::ManagerMixin

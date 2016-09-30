@@ -8,7 +8,7 @@ module CloudVolumeSnapshotHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(ems cloud_volume based_volumes cloud_tenant)
+    %i(parent_ems_cloud ems cloud_volume based_volumes cloud_tenant)
   end
 
   def textual_size
@@ -29,6 +29,10 @@ module CloudVolumeSnapshotHelper::TextualSummary
 
   def textual_cloud_volume
     textual_link(@record.cloud_volume)
+  end
+
+  def textual_parent_ems_cloud
+    @record.ext_management_system.try(:parent_manager)
   end
 
   def textual_ems

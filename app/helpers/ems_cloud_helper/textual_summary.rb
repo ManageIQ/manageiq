@@ -9,10 +9,8 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_group_relationships
-    # TODO: cloud_volumes temporarily not displayed until Cinder Manager UI changes
-    # fully implemented.  This avoids an exception trying to display the Openstack Provider
     %i(ems_infra network_manager availability_zones cloud_tenants flavors security_groups
-       instances images orchestration_stacks cloud_object_store_containers)
+       instances images orchestration_stacks storage_managers)
   end
 
   def textual_group_configuration_relationships
@@ -102,27 +100,24 @@ module EmsCloudHelper::TextualSummary
     textual_link(@record.ext_management_system.try(:network_manager))
   end
 
+  def textual_storage_managers
+    label            = _("Storage Managers")
+    num              = @ems.number_of(:storage_managers)
+    h                = {:label => label, :image => "storage_manager", :value => num}
+    if num > 0 && role_allows?(:feature => "ems_storage_show_list")
+      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:link] = ems_cloud_path(@ems.id, :display => 'storage_managers')
+    end
+    h
+  end
+
+
   def textual_availability_zones
     @record.availability_zones
   end
 
   def textual_cloud_tenants
     @record.cloud_tenants
-  end
-
-  def textual_cloud_volumes
-    @record.cloud_volumes
-  end
-
-  def textual_cloud_object_store_containers
-    label = ui_lookup(:tables => "cloud_object_store_container")
-    num = @ems.number_of(:cloud_object_store_containers)
-    h = {:label => label, :image => "cloud_object_store_container", :value => num}
-    if num > 0 && role_allows?(:feature => "cloud_object_store_container_show_list")
-      h[:link] = ems_cloud_path(@ems.id, :display => 'cloud_object_store_containers')
-      h[:title] = _("Show all %{label}") % {:label => label}
-    end
-    h
   end
 
   def textual_orchestration_stacks

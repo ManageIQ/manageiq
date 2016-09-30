@@ -689,7 +689,7 @@ module ApplicationHelper
   ]
   # Return a blank tb if a placeholder is needed for AJAX explorer screens, return nil if no custom toolbar to be shown
   def custom_toolbar_filename
-    if %w(ems_cloud ems_cluster ems_infra host miq_template storage ems_network cloud_tenant).include?(@layout) # Classic CIs
+    if %w(ems_cloud ems_cluster ems_infra host miq_template storage ems_storage ems_network cloud_tenant).include?(@layout) # Classic CIs
       return "custom_buttons_tb" if @record && @lastaction == "show" && @display == "main"
     end
 
@@ -796,6 +796,7 @@ module ApplicationHelper
        middleware_datasource host service storage ems_cloud ems_cluster flavor
        ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
        load_balancer
+       ems_storage cloud_volume cloud_object_store_container
        resource_pool ems_infra ontap_storage_system ontap_storage_volume
        ontap_file_share snia_local_file_system ontap_logical_disk
        orchestration_stack cim_base_storage_extent storage_manager configuration_job).include?(@layout)
@@ -1109,7 +1110,7 @@ module ApplicationHelper
   end
 
   GTL_VIEW_LAYOUTS = %w(action availability_zone auth_key_pair_cloud
-                        cim_base_storage_extent cloud_object_store_container
+                        cim_base_storage_extent ems_storage cloud_object_store_container
                         cloud_object_store_object cloud_tenant cloud_volume cloud_volume_snapshot
                         configuration_job condition container_group container_route container_project
                         container_replicator container_image container_image_registry
@@ -1162,7 +1163,7 @@ module ApplicationHelper
           container_build ems_infra flavor host miq_template offline orchestration_stack persistent_volume
           ems_middleware middleware_server middleware_deployment middleware_datasource middleware_domain
           middleware_server_group middleware_messaging ems_network security_group floating_ip cloud_subnet
-          network_router network_port cloud_network resource_pool retired service storage templates vm
+          network_router network_port cloud_network resource_pool retired service storage templates vm ems_storage
           configuration_job).include?(@layout) && !@in_a_form
       "show_list"
     elsif @compare
@@ -1172,7 +1173,7 @@ module ApplicationHelper
     elsif %w(offline retired templates vm vm_cloud vm_or_template).include?(@layout)
       "vm"
     elsif %w(action auth_key_pair_cloud availability_zone cim_base_storage_extent cloud_object_store_container
-             cloud_object_store_object cloud_tenant cloud_volume cloud_volume_snapshot condition container_group
+             ems_storage cloud_object_store_object cloud_tenant cloud_volume cloud_volume_snapshot condition container_group
              container_route container_project container_replicator container_image container_image_registry
              container_build container_node container_service persistent_volume ems_cloud ems_container ems_cluster ems_infra
              ems_middleware middleware_server middleware_deployment middleware_datasource middleware_domain
@@ -1195,7 +1196,7 @@ module ApplicationHelper
                      ems_cloud ems_cluster ems_container ems_infra flavor host miq_template offline
                      ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
                      ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
-                     load_balancer
+                     ems_storage load_balancer
                      orchestration_stack resource_pool retired service configuration_job
                      snia_local_file_system storage_manager templates vm)
     (@lastaction == "show_list" && !session[:menu_click] && show_search.include?(@layout) && !@in_a_form) ||

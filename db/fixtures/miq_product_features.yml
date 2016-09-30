@@ -5561,3 +5561,65 @@
       :description: Publish Blueprint
       :feature_type: admin
       :identifier: blueprint_publish
+
+# EmsStorage
+- :name: Storage Providers
+  :description: Everything under Storage Providers
+  :feature_type: node
+  :identifier: ems_storage
+  :children:
+  - :name: View
+    :description: View Storage Providers
+    :feature_type: view
+    :identifier: ems_storage_view
+    :children:
+    - :name: List
+      :description: Display Lists of Storage Providers
+      :feature_type: view
+      :identifier: ems_storage_show_list
+    - :name: Show
+      :description: Display Individual Storage Providers
+      :feature_type: view
+      :identifier: ems_storage_show
+    - :name: Timeline
+      :description: Display Timelines for Storage Providers
+      :feature_type: view
+      :identifier: ems_storage_timeline
+  - :name: Operate
+    :description: Perform Operations on Storage Providers
+    :feature_type: control
+    :identifier: ems_storage_control
+    :children:
+    - :name: Discover
+      :description: Discover Storage Providers
+      :feature_type: control
+      :identifier: ems_storage_discover
+    - :name: Edit Tags
+      :description: Edit Tags of Storage Providers
+      :feature_type: control
+      :identifier: ems_storage_tag
+    - :name: Manage Policies
+      :description: Manage Policies of Storage Providers
+      :feature_type: control
+      :identifier: ems_storage_protect
+    - :name: Refresh
+      :description: Refresh Storage Providers
+      :feature_type: control
+      :identifier: ems_storage_refresh
+  - :name: Modify
+    :description: Modify Storage Providers
+    :feature_type: admin
+    :identifier: ems_storage_admin
+    :children:
+    - :name: Remove
+      :description: Remove Storage Provider
+      :feature_type: admin
+      :identifier: ems_storage_delete
+    - :name: Edit
+      :description: Edit a Storage Provider
+      :feature_type: admin
+      :identifier: ems_storage_edit
+    - :name: Add
+      :description: Add a Storage Provider
+      :feature_type: admin
+      :identifier: ems_storage_new
