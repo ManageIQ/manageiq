@@ -79,7 +79,7 @@ class ServiceOrchestration < Service
   # This is called when provision is completed and stack is added to VMDB through a refresh
   def post_provision_configure
     add_stack_to_resource
-
+    link_orchestration_template
     assign_vms_owner
   end
 
@@ -91,6 +91,12 @@ class ServiceOrchestration < Service
       :ems_id  => options.fetch_path(:orchestration_stack, 'ems_id')
     )
     add_resource!(@orchestration_stack) if @orchestration_stack
+  end
+
+  def link_orchestration_template
+    # some orchestration stacks do not have associations with their templates in their provider, we can link them here
+    return if @orchestration_stack.nil? || @orchestration_stack.orchestration_template
+    @orchestration_stack.update_attributes(:orchestration_template => orchestration_template)
   end
 
   def assign_vms_owner
