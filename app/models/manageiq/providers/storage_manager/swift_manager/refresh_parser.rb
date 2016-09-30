@@ -27,6 +27,9 @@ module ManageIQ::Providers
 
       $fog_log.info("#{log_header}...Complete")
 
+      CrossLinkers.cross_link(@ems, @data)
+      cleanup
+
       @data
     end
 
@@ -49,7 +52,9 @@ module ManageIQ::Providers
         :key          => container.key,
         :object_count => container.count,
         :bytes        => container.bytes,
-        :tenant       => @data_index.fetch_path(:cloud_tenants, tenant.id)
+
+        # Temporarily add the tenant ID - for the cross-linkers.
+        :tenant_id    => tenant.id # Because tenant comes from container.
       }
       return uid, new_result
     end
@@ -64,7 +69,9 @@ module ManageIQ::Providers
         :key            => obj.key,
         :content_type   => obj.content_type,
         :container      => container,
-        :tenant         => @data_index.fetch_path(:cloud_tenants, tenant.id)
+
+        # Temporarily add the tenant ID - for the cross-linkers.
+        :tenant_id      => tenant.id # Because tenant comes from container.
       }
       content = get_object_content(obj)
       new_result[:content] = content if content
@@ -113,6 +120,11 @@ module ManageIQ::Providers
 
     def safe_list(&block)
       safe_call(&block) || []
+    end
+
+    def cleanup
+      @data[:cloud_object_store_containers].each { |c| c.delete(:tenant_id) }
+      @data[:cloud_object_store_objects].each    { |c| c.delete(:tenant_id) }
     end
   end
 end
