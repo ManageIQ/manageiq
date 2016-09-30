@@ -42,8 +42,7 @@ ManageIQ.angular.app.controller('serviceFormController', ['$http', '$scope', 'se
     };
 
     $scope.saveClicked = function() {
-      // FIXME data should not be true but an object
-      serviceEditButtonClicked('save', true);
+      serviceEditButtonClicked('save', $scope.serviceModel);
       $scope.angularForm.$setPristine(true);
     };
 
