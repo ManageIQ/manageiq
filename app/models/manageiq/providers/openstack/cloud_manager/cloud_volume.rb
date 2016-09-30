@@ -1,6 +1,11 @@
 class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
   include_concern 'Operations'
 
+  include SupportsFeatureMixin
+
+  supports :backup_create
+  supports :backup_restore
+
   def self.validate_create_volume(ext_management_system)
     validate_volume(ext_management_system)
   end
@@ -51,11 +56,36 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
     raise MiqException::MiqVolumeDeleteError, e.to_s, e.backtrace
   end
 
+  def backup_create(options)
+    options.merge!(:volume_id => ems_ref)
+    with_provider_connection do |service|
+      backup = service.backups.new(options)
+      backup.save
+    end
+  rescue => e
+    _log.error "backup=[#{name}], error: #{e}"
+    raise MiqException::MiqVolumeBackupCreateError, e.to_s, e.backtrace
+  end
+
+  def backup_restore(backup_id)
+    with_provider_connection do |service|
+      backup = service.backups.get(backup_id)
+      backup.restore(ems_ref)
+    end
+  rescue => e
+    _log.error "volume=[#{name}], error: #{e}"
+    raise MiqException::MiqVolumeBackupRestoreError, e.to_s, e.backtrace
+  end
+
   def provider_object(connection)
     connection.volumes.get(ems_ref)
   end
 
   def with_provider_object
+    super(cinder_connection_options)
+  end
+
+  def with_provider_connection
     super(cinder_connection_options)
   end
 

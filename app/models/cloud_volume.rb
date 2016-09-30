@@ -5,6 +5,7 @@ class CloudVolume < ApplicationRecord
   include ProviderObjectMixin
   include AsyncDeleteMixin
   include AvailabilityMixin
+  include SupportsFeatureMixin
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ExtManagementSystem"
   belongs_to :availability_zone
@@ -80,4 +81,5 @@ class CloudVolume < ApplicationRecord
   def raw_delete_volume
     raise NotImplementedError, _("raw_delete_volume must be implemented in a subclass")
   end
+
 end
