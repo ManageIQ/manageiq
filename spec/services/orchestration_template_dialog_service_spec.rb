@@ -3,6 +3,7 @@ describe OrchestrationTemplateDialogService do
   let(:template_hot)   { FactoryGirl.create(:orchestration_template_hot_with_content) }
   let(:template_azure) { FactoryGirl.create(:orchestration_template_azure_with_content) }
   let(:empty_template) { FactoryGirl.create(:orchestration_template_cfn) }
+  let(:template_vapp)  { FactoryGirl.create(:orchestration_template_vmware_cloud) }
 
   describe "#create_dialog" do
     it "creates a dialog from hot template with stack basic info and parameters" do
@@ -32,6 +33,16 @@ describe OrchestrationTemplateDialogService do
       tabs = dialog.dialog_tabs
       assert_tab_attributes(tabs[0])
       assert_aws_openstack_stack_group(tabs[0].dialog_groups[0])
+    end
+
+    it "creates a dialog from VMware vCloud vApp template with stack basic info and parameters" do
+      dialog = dialog_service.create_dialog("test", template_vapp)
+
+      tabs = dialog.dialog_tabs
+      assert_tab_attributes(tabs[0])
+      expect(tabs[0].dialog_groups.size).to eq(2)
+      assert_vmware_cloud_stack_group(tabs[0].dialog_groups[0])
+      assert_vmware_cloud_parameters_group(tabs[0].dialog_groups[1])
     end
   end
 
@@ -88,6 +99,35 @@ describe OrchestrationTemplateDialogService do
                    ["Incremental", "Incremental (Default)"]]
     assert_field(fields[4], DialogFieldDropDownList, :name => "deploy_mode", :values => mode_values)
     expect(fields[4].default_value).to eq("Incremental")
+  end
+
+  def assert_vmware_cloud_stack_group(group)
+    expect(group).to have_attributes(
+      :label   => "Options",
+      :display => "edit",
+    )
+
+    fields = group.dialog_fields
+    expect(fields.size).to eq(3)
+
+    expect(fields[0].resource_action.fqname).to eq("/Cloud/Orchestration/Operations/Methods/Available_Tenants")
+    assert_field(fields[0], DialogFieldDropDownList, :name => "tenant_name",       :dynamic => true)
+    assert_field(fields[1], DialogFieldTextBox,      :name => "stack_name",        :validator_rule => '^[A-Za-z][A-Za-z0-9\-]*$')
+    expect(fields[2].resource_action.fqname).to eq("/Cloud/Orchestration/Operations/Methods/Available_Availability_Zones")
+    assert_field(fields[2], DialogFieldDropDownList, :name => "availability_zone", :dynamic => true)
+  end
+
+  def assert_vmware_cloud_parameters_group(group)
+    expect(group).to have_attributes(
+      :label   => "vApp Parameters",
+      :display => "edit",
+    )
+
+    fields = group.dialog_fields
+    expect(fields.size).to eq(2)
+
+    assert_field(fields[0], DialogFieldDropDownList, :name => "param_deploy",  :default_value => "yes", :values => [%w(no no), %w(yes yes)])
+    assert_field(fields[1], DialogFieldDropDownList, :name => "param_powerOn", :default_value => "no", :values => [%w(no no), %w(yes yes)])
   end
 
   def assert_field(field, clss, attributes)
