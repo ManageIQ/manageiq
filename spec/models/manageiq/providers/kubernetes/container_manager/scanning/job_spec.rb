@@ -166,12 +166,12 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
       expect(pod[:spec][:containers][0][:command]).to include(
         "--dockercfg=" + described_class::INSPECTOR_ADMIN_SECRET_PATH + secret_name + "/.dockercfg")
       expect(pod[:spec][:containers][0][:volumeMounts]).to include(
-        Kubeclient::Pod.new(
+        Kubeclient::Resource.new(
           :name      => "inspector-admin-secret",
           :mountPath => described_class::INSPECTOR_ADMIN_SECRET_PATH + secret_name,
           :readOnly  => true))
       expect(pod[:spec][:volumes]).to include(
-        Kubeclient::Pod.new(
+        Kubeclient::Resource.new(
           :name   => "inspector-admin-secret",
           :secret => {:secretName => secret_name}))
     end

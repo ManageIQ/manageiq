@@ -22,7 +22,7 @@ gem "hawkular-client",         "=2.7.0",            :require => false
 gem "httpclient",              "~>2.7.1",           :require => false
 gem "image-inspector-client",  "~>1.0.3",           :require => false
 gem "iniparse",                                     :require => false
-gem "kubeclient",              "=1.2.0",            :require => false
+gem "kubeclient",              "=2.1.0",            :require => false
 gem "linux_admin",             "~>0.18.0",          :require => false
 gem "log4r",                   "=1.1.8",            :require => false
 gem "memoist",                 "~>0.14.0",          :require => false
@@ -32,7 +32,6 @@ gem "net-scp",                 "~>1.2.1",           :require => false
 gem "net-sftp",                "~>2.1.2",           :require => false
 gem "nokogiri",                "~>1.6.8",           :require => false
 gem "openscap",                "~>0.4.3",           :require => false
-gem "openshift_client",        "=1.2.0",            :require => false
 gem "ovirt",                   "~>0.13.0",          :require => false
 gem "parallel",                "~>1.9",             :require => false # For OvirtInventory
 gem "pg",                      "~>0.18.2",          :require => false

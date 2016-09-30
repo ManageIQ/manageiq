@@ -32,10 +32,10 @@ module ManageIQ::Providers::Openshift::ContainerManagerMixin
     end
 
     def openshift_connect(hostname, port, options)
-      require 'openshift_client'
+      require 'kubeclient'
 
-      OpenshiftClient::Client.new(
-        raw_api_endpoint(hostname, port),
+      Kubeclient::Client.new(
+        raw_api_endpoint(hostname, port, '/oapi'),
         api_version,
         :ssl_options    => { :verify_ssl => verify_ssl_mode },
         :auth_options   => kubernetes_auth_options(options),
