@@ -76,6 +76,10 @@ ManageIQ.explorer.processFlash = function(data) {
   ManageIQ.explorer.spinnerOff(data);
   ManageIQ.explorer.scrollTop(data);
   ManageIQ.explorer.focus(data);
+
+  if (!_.isUndefined(data.activateNode)) {
+    miqTreeActivateNode(data.activateNode.tree, data.activateNode.node);
+  }
 };
 
 ManageIQ.explorer.replacePartials = function(data) {

@@ -1079,7 +1079,7 @@ module VmCommon
       add_flash(_("User is not authorized to view %{model} \"%{name}\"") %
         {:model => ui_lookup(:model => @record.class.base_model.to_s), :name => @record.name},
                 :error) unless flash_errors?
-      render :partial => "shared/tree_select_error", :locals => {:options => {:select_node => x_node}}
+      javascript_flash(:spinner_off => true, :activate_node => {:tree => x_active_tree.to_s, :node => x_node})
     end
   end
 
