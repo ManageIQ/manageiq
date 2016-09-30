@@ -632,12 +632,14 @@ function miqBuildChartMenuEx(col, row, _value, category, series, chart_set, char
   chartmenu_el.empty();
 
   if (chart_data[chart_index].menu != null && chart_data[chart_index].menu.length) {
-    var rowcolchart_index = "_" + row + "-" + col + "-" + chart_index;
-
+    var row_col_chart_index = {
+      row: row,
+      column: col,
+      chart_index: chart_index,
+    };
     for (var i = 0; i < chart_data[chart_index].menu.length; i++) {
-      var menu_id = chart_data[chart_index].menu[i].split(":")[0] + rowcolchart_index;
-      var pid = menu_id.split("-")[0];
-
+      row_col_chart_index['chart_name'] = chart_data[chart_index].menu[i].split(":")[0];
+      var pid = row_col_chart_index['chart_name'].split("-")[0];
       if (chartmenu_el.find('#' + pid).length == 0) {
         chartmenu_el.append("<li class='dropdown-submenu'>" +
           "<a tabindex='-1' href='#'>" + pid + "</a>" +
@@ -647,8 +649,7 @@ function miqBuildChartMenuEx(col, row, _value, category, series, chart_set, char
       var menu_title = chart_data[chart_index].menu[i].split(":")[1];
       menu_title = menu_title.replace("<series>", series);
       menu_title = menu_title.replace("<category>", category);
-      $("#" + pid).append("<li><a id='" + menu_id +
-        "' href='#' onclick='miqChartMenuClick(this.id)'>" + menu_title + "</a></li>");
+      $("#" + pid).append("<li><a id='"+btoa(JSON.stringify(row_col_chart_index))+"' href='#' onclick='miqChartMenuClick(this.id)'>" + menu_title + "</a></li>");
     }
 
     chartmenu_el.css({'left': ManageIQ.mouse.x, 'top': ManageIQ.mouse.y});
@@ -1665,7 +1666,7 @@ function chartData(type, data, data2) {
       data.tooltip.format =  { title: function (x) { return tooltips[x]; }}
     }
   }
- var ret = _.defaultsDeep({}, data, config, data2);
+  var ret = _.defaultsDeep({}, data, config, data2);
   return ret;
 }
 
