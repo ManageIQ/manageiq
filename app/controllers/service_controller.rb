@@ -24,12 +24,7 @@ class ServiceController < ApplicationController
       SERVICE_X_BUTTON_ALLOWED_ACTIONS.key?(action)
 
     send_action = SERVICE_X_BUTTON_ALLOWED_ACTIONS[action]
-
-    if :service_tag == send_action
-      send(send_action, 'Service')
-    else
-      send(send_action)
-    end
+    send(send_action)
     send_action
   end
   private :whitelisted_action

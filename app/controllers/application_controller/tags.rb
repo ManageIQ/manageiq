@@ -15,11 +15,15 @@ module ApplicationController::Tags
       tagging_edit_tags_reset
     end
   end
+
+  def service_tag
+    tagging_edit('Service')
+  end
+
   alias_method :image_tag, :tagging_edit
   alias_method :instance_tag, :tagging_edit
   alias_method :vm_tag, :tagging_edit
   alias_method :miq_template_tag, :tagging_edit
-  alias_method :service_tag, :tagging_edit
   alias_method :container_tag, :tagging_edit
   alias_method :storage_tag, :tagging_edit
   alias_method :infra_networking_tag, :tagging_edit
