@@ -110,7 +110,7 @@ describe OrchestrationTemplateDialogService do
 
   def assert_parameter_group2(group)
     expect(group).to have_attributes(
-      :label   => "DB parameters",
+      :label   => "Parameter Group2",
       :display => "edit",
     )
 

@@ -46,7 +46,7 @@ class OrchestrationTemplateDialogService
 
     tab.dialog_groups.build(
       :display  => "edit",
-      :label    => parameter_group.label,
+      :label    => parameter_group.label || "Parameter Group#{position}",
       :position => position
     ).tap do |dialog_group|
       parameter_group.parameters.each_with_index { |param, index| add_parameter_field(param, dialog_group, index) }
