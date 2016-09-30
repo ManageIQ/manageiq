@@ -61,6 +61,8 @@ module SupportsFeatureMixin
     :associate_floating_ip    => 'Associate a Floating IP',
     :control                  => 'Basic control operations', # FIXME: this is just a internal helper and should be refactored
     :cloud_tenant_mapping     => 'CloudTenant mapping',
+    :backup_create            => 'CloudVolume backup creation',
+    :backup_restore           => 'CloudVolume backup restore',
     :cinder_service           => 'Cinder storage service',
     :swift_service            => 'Swift storage service',
     :delete                   => 'Deletion',
