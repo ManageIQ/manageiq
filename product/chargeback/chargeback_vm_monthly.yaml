@@ -1,5 +1,5 @@
 ---
-title: Chargeback
+title: Chargeback_Vm_Monthly
 rpt_group: Custom
 rpt_type: Custom
 priority: 
@@ -67,9 +67,9 @@ template_type: report
 db_options:
   :rpt_type: ChargebackVm
   :options:
-    :interval: weekly
-    :interval_size: 4
-    :end_interval_offset: 1
+    :interval: monthly
+    :interval_size: 1
+    :end_interval_offset: 0
 col_formats:
 - 
 - 

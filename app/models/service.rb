@@ -248,7 +248,7 @@ class Service < ApplicationRecord
     _log.info "Generation of chargeback report for service #{name} started..."
     MiqReportResult.where(:name => chargeback_report_name).destroy_all
 
-    yaml = YAML.load_file(File.join(Rails.root, "product/chargeback/Chargeback.yaml"))
+    yaml = YAML.load_file(File.join(Rails.root, "product/chargeback/chargeback_vm_monthly.yaml"))
     yaml["db_options"][:options][:service_id] = id
     yaml["title"] = chargeback_report_name
     report = MiqReport.new(yaml)
@@ -262,7 +262,6 @@ class Service < ApplicationRecord
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "generate_chargeback_report",
-      :server_guid => guid,
       :priority    => MiqQueue::NORMAL_PRIORITY,
       :args        => options
     )
