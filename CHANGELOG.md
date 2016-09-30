@@ -2,6 +2,171 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - as of Sprint 47 end 2016-10-03
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+47+Ending+Oct+3%2C+2016%22+label%3Aenhancement)
+
+- Automate
+  - Provisioning
+    - Filter networks and floating_ips for OpenStack provisioning
+    - Added Google pre and post provisioning methods
+    - Enabled support for vApp provisioning service
+    - Backend support to enable VMware provisioning through selection of a DRS-enabled cluster instead of a host
+    - Set VM storage profile in provisioning
+  - Services
+    - Log properly dynamic dialog field script error
+    - Back-end support for Power Operations on Services
+      - Service Items: Pass start/stop commands to associated resources.
+      - Service Bundles: Honor bundle resource configuration for start/stop actions
+  - Added top_level_namespace to miq_ae_namespace model to support filtering for pluggable providers
+  - Created service_connections table to support connecting services together along with metadata
+  - Generic Objects
+    - Process Generic Object method call via automate
+    - Methods content stored in Automate
+    - Generic Object Definition model contains the method name only (Parameters defined in automate)
+    - Methods can return data to caller
+    - Methods can be overridden by domain ordering
+- Platform
+  - Centralized Administration
+    - VM power operations
+    - VM retirement
+    - Leverages new ManageIQ API Client gem
+  - Chargeback
+    - Generate monthly report for a Service
+Instance method on Service class
+    - Daily schedule generates report for each Service
+    - Enables SUI display of Service costs over last 30 days
+    - Containers
+      - Added image tag names for Containers in vim performance state.
+      - Added a 'fixed_compute_metric' column to chargeback
+      - Added rate assigning by tags to container images
+      - Chargeback vm group by tag
+  - Notifications
+    - Dynamic substitution in notification messages
+    - Generate for Lifecycle events
+  - Tenancy
+    - Mapping Cloud Tenants to ManageIQ Tenants
+      - Prevent deleting mapped tenants from cloud provider
+      - Added checkbox "Tenant Mapping Enabled" to Openstack Manager
+    - Ad hoc sharing of resources across tenants
+      - Backend modeling completed
+      - Implementation in progress
+- Providers
+  - Core
+    - Override default http proxy
+    - Default reasons for supported features
+    - Known features are discoverable
+    - Every known feature is unsupported by default
+    - `supports :reboot_guest`
+  - Generate a csv of features supported across all models
+  - Containers
+    - Allow policies to prevent Container image scans
+    - Chargeback rates based on container image tags
+    - Keep pod-container relationship after disconnection
+  - Google Compute Engine: Load Balancer refresh
+  - Middleware (Hawkular)
+    - Change labels in middleware topology
+    - Added "Server State" into Middleware Server Details
+    - Enabled search for Middleware entities
+    - Users can add Middleware Datasources and JDBC Drivers
+    - Metrics for JMS Topics and Queues
+  - Microsoft Cloud (Azure)
+    - Load Balancer inventory collection for Azure
+    - Pagination support in armrest gem
+  - Microsoft Infrastructure (SCVMM)
+    - Set CPU sockets and cores per socket
+  - Network
+    - Nuage policy groups added
+    - Load balancer service type actions for reconfigure, retirement, provisioning
+    - UI for creating subnets
+  - OpenStack
+    - Add hardware state for Hosts
+    - Map Flavors to Cloud Tenants during Openstack Cloud refresh
+    - Cinder backup/restore actions added to model
+    - UI to register Ironic nodes through Mistral
+  - Red Hat Enterprise Virtualization
+    - Report manufacturer and product info for RHEVM hosts
+  - Storage
+    - New Swift Storage Manager
+    - New Cinder Storage Manager
+    - Initial User Interface support for Storage Managers
+  - VMware Cloud
+    - Cloud orchestration stack operation: Create and delete stack
+    - Collect virtual datacenters as availability zones
+    - Event Catcher
+  - VMware Infrastructure: Datastores are filtered by Storage Profiles in provisioning
+- REST API
+  - Version bumped to 2.3.0 in preparation for Euwe release
+  - New /api/automate primary collection
+  - Enhanced to return additional product information for the About modal
+  - Bulk queries now support referencing resources by attributes
+  - Added ability to delete one’s own notifications
+  - Publish Blueprint API
+  - Update Blueprint API to store bundle info in ui_properties
+  - CRUD for Service create and orchestration template
+  - Api for refreshing automate domain from git
+  - Allow compressed IDs in resource references
+- Service UI
+  - Create picture
+  - Generic requests OPTION method
+  - Delete dialogs API
+  - Updated the “update” API for blueprints to be more efficient
+  - Cockpit integration
+  - Added About modal
+- SmartState
+  - Containers: Settings for proxy environment variables
+- User Interface
+  - Add GUID validation for certain Azure fields in Cloud Provider screen
+  - OpenStack: Register new Ironic nodes through Mistral
+  - Timelines resdesigned
+  - vSphere Distributed Switches tagging
+  - Patternfly Labels for OpenSCAP Results
+  - Operations UI Notifications
+
+
+
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+47+Ending+Oct+3%2C+2016%22+label%3Aenhancement)
+
+- Automate:
+  - Changed Automate import to enable system domains
+  - Google schema changes in Cloud Provision Method class
+- Performance: Do not reload miq server in tree builder
+- Providers: vSphere Host storage device inventory collection improvements
+- REST API: Update API CLI to support the HTTP OPTIONS method.
+- User Interface
+  - Updated PatternFly to v3.11.0
+  - Summary Screen styling updates
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+47+Ending+Oct+3%2C+2016%22+label%3bugs)
+
+Notable fixes include:
+
+- Automate
+  - Fixed problem with request_pending email method
+  - Set User.current_user in Automation Engine to fix issue where provisioning resources were not being assigned to the correct tenant
+- Platform
+  - Use correct adjustment in chargeback reports
+  - Replication: Fix typo prevention full error message
+  - Tenancy: User friendly tenant names
+- Providers
+    - Openstack: Catch unauthorized exception in refresh
+    - Middleware: Fix operation timeout parameter fetch
+    - Red Hat Enterprise Virtualization: Access VM Cluster relationship correctly
+- Provisioning: VMware Infrastructure: sysprep_product_id field is no longer required
+- REST API
+  - API: Fix creation of Foreman provider
+  - Ensure api config references only valid miq_product_features
+- SmartState: Update logging and job error message when getting the service account for Containers
+- User Interface
+  - Add missing Searchbar and Advanced Search button
+  - Containers: Download to PDF/CSV/Text - don't download deleted containers
+  - Allow bring VM out of retirement from detail page
+  - Inconsitent menues in Middleware Views
+  - Save Authentication status on a Save
+  - User friendly tenant names
+  - RBAC:List only those VMs that the user has access to in planning
+
 ## Unreleased - as of Sprint 46 end 2016-09-12
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+46+Ending+Sep+12%2C+2016%22+label%3Aenhancement)
