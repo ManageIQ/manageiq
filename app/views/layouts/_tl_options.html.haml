@@ -47,16 +47,43 @@
                             'ng-model'    => 'reportModel.showDetailedEvents'}
                     = _("Show Detailed Events")
                 %span{'ng-if' => 'reportModel.tl_show !== "timeline"', 'class' => 'timeline-option'}
-                  %label
-                    %input{:type         => 'checkbox',
-                            :name         => 'showSuccessfulEvents',
-                            'ng-model'    => 'reportModel.showSuccessfulEvents'}
-                    = _("Show Successful Events")
-                  %label{'class' => 'timeline-option'}
-                    %input{:type         => 'checkbox',
-                            :name         => 'showFailedEvents',
-                            'ng-model'    => 'reportModel.showFailedEvents'}
-                    = _("Show Failed Events")
+                  %label.radio
+                    %input{"ng-model" => "reportModel.tl_result", :type => "radio", :value => "success"}
+                    = _("Successful Events")
+                  %label.radio
+                    %input{"ng-model" => "reportModel.tl_result", :type => "radio", :value => "failure"}
+                    = _("Failed Events")
+                  %label.radio
+                    %input{"ng-model" => "reportModel.tl_result", :type => "radio", :value => "both"}
+                    = _("Both")
+                  -#%label
+              %div{'class' => 'timeline-date-box'}
+                -#%div{"pf-input-class" => "miq-touchspin-input-class",
+                -#      :required        => ""}
+                .input-group.bootstrap-touchspin.timeline-stepper.pull-left
+                  %span.input-group-btn
+                    %button.btn.btn-default.bootstrap-touchspin-down{"ng-click" => "countDecrement()", :type => "button"} -
+                  %input.timeline-range-input.bootstrap-touchspin.form-control{"ng-model" => "reportModel.tl_range_count", :readonly => "readonly", :type => "text"}
+                  %span.input-group-btn
+                    %button.btn.btn-default.bootstrap-touchspin-up{"ng-click" => "countIncrement()", :type => "button"} +
+                = select_tag("tl_range",
+                  options_for_select([[_("Days"), "days"],
+                                      [_("Weeks"), "weeks"],
+                                      [_("Months"), "months"]], nil),
+                  'ng-model'                    => 'reportModel.tl_timerange',
+                  "selectpicker-for-select-tag" => '',
+                  :class                        => 'selectpicker pull-left')
+                = select_tag("tl_timepivot",
+                  options_for_select([[_("centered"), "centered"],
+                                      [_("starting"), "starting"],
+                                      [_("ending"), "ending"]], nil),
+                  'ng-model'                    => 'reportModel.tl_timepivot',
+                  "selectpicker-for-select-tag" => '',
+                  :class                        => 'selectpicker pull-left timeline-pivot-input')
+                %input{'pf-datepicker' => '',
+                      'options' => 'dateOptions',
+                      'date'    => 'reportModel.tl_date',
+                      'class'   => 'pull-righto timeline-date-input'}
             %div{'class' => 'pull-right'}
               .btn.btn-default{'ng-click'    => 'applyButtonClicked()',
                               'ng-disabled' => 'reportModel.tl_categories.length === 0'}

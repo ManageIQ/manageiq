@@ -3,8 +3,10 @@ ManageIQ.angular.app.controller('timelineOptionsController', ['$http', '$scope',
         $scope.reportModel = {
             tl_show: 'timeline',
             tl_categories: ['Power Activity'],
-            tl_timerange: 'one_week',
+            tl_timerange: 'weeks',
             tl_timepivot: 'ending',
+            tl_result: 'success',
+            tl_range_count: 1,
             tl_date: new Date(ManageIQ.calendar.calDateTo)
         };
 
@@ -15,57 +17,60 @@ ManageIQ.angular.app.controller('timelineOptionsController', ['$http', '$scope',
         };
         ManageIQ.angular.scope = $scope;
         $scope.availableCategories = categories;
-        $scope.applyButtonClicked();
     };
 
     $scope.eventTypeUpdated = function() {
         $scope.reportModel.tl_categories = [];
     };
 
+    $scope.countDecrement = function() {
+        if($scope.reportModel.tl_range_count > 1) {
+            $scope.reportModel.tl_range_count--;
+        }
+    };
+
+    $scope.countIncrement = function() {
+        $scope.reportModel.tl_range_count++;
+    };
+
     $scope.applyButtonClicked = function() {
         if($scope.reportModel.tl_categories.length === 0) {
             return;
         }
-
+        
         // process selections
-        if($scope.reportModel.tl_timerange === 'one_hour' || $scope.reportModel.tl_timerange === 'one_day') {
+        if($scope.reportModel.tl_timerange === 'days') {
             $scope.reportModel.tl_typ = 'Hourly';
-            $scope.reportModel.tl_days = 1;
+            $scope.reportModel.tl_days = $scope.reportModel.tl_range_count;
         } else {
             $scope.reportModel.tl_typ = 'Daily';
-            if($scope.reportModel.tl_timerange === 'one_week') {
-                $scope.reportModel.tl_days = 7;
+            if($scope.reportModel.tl_timerange === 'weeks') {
+                $scope.reportModel.tl_days = $scope.reportModel.tl_range_count * 7;
             } else {
-                $scope.reportModel.tl_days = 30;
+                $scope.reportModel.tl_days = $scope.reportModel.tl_range_count * 30;
             }
         }
 
-        var startDate = moment(ManageIQ.calendar.calDateFrom);
-        var endDate = moment(ManageIQ.calendar.calDateTo);
-        $scope.reportModel.tl_days = endDate.diff(startDate, 'days');
-        $scope.reportModel.miq_date = ManageIQ.calendar.calDateTo;
-        // Calculate miq_date based on user's selection
-        /*
-        var selectedDay = moment($scope.reportModel.tl_date);
+        var selectedDay = moment($scope.reportModel.tl_date),
+            startDay = selectedDay.clone(),
+            endDay = selectedDay.clone();
+
         if($scope.reportModel.tl_timepivot === "starting") {
-            $scope.reportModel.miq_date = selectedDay.add($scope.reportModel.tl_days, 'days').format('MM/DD/YYYY');
+            endDay.add($scope.reportModel.tl_days, 'days').toDate();
+            $scope.reportModel.miq_date = endDay.format('MM/DD/YYYY');
         } else if($scope.reportModel.tl_timepivot === "centered") {
             var enddays = Math.ceil($scope.reportModel.tl_days/2);
-            $scope.reportModel.miq_date = selectedDay.add(enddays, 'days').format('MM/DD/YYYY');
-        }  else if($scope.reportModel.tl_timepivot === "ending") {
-            $scope.reportModel.miq_date = selectedDay.format('MM/DD/YYYY');
-        }
-        */
+            startDay.subtract(enddays, 'days').toDate();
+            endDay.add(enddays, 'days').toDate();
+            $scope.reportModel.miq_date = endDay.format('MM/DD/YYYY');
 
-        if($scope.reportModel.tl_show !== 'timeline') {
-            if($scope.reportModel.showSuccessfulEvents && $scope.reportModel.showFailedEvents) {
-                $scope.reportModel.tl_result = 'both';
-            } else if($scope.reportModel.showFailedEvents) {
-                $scope.reportModel.tl_result = 'failure';
-            } else {
-                $scope.reportModel.tl_result = 'success';
-            }
-        } else {
+        }  else if($scope.reportModel.tl_timepivot === "ending") {
+            startDay.subtract($scope.reportModel.tl_days, 'days');
+            $scope.reportModel.miq_date = endDay.format('MM/DD/YYYY');
+        }
+        ManageIQ.calendar.calDateFrom = startDay.toDate();
+        ManageIQ.calendar.calDateTo = endDay.toDate();
+        if($scope.reportModel.tl_show === 'timeline') {
             if($scope.reportModel.showDetailedEvents) {
                 $scope.reportModel.tl_fl_typ = 'detail';
             } else {

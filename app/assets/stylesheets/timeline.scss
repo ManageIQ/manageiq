@@ -9,7 +9,15 @@
 }
 
 .timeline-option {
-  padding-left: 10px;
+  display: inline-block;
+  margin-left: 30px;
+}
+
+.timeline-option .radio {
+  display: inline-block;
+  width: 150px;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .timeline-container {
@@ -21,7 +29,7 @@
 }
 
 .timeline-date-input {
-  padding-left: 8px;
+  padding-left: 16px;
   width: 200px;
 }
 
@@ -33,4 +41,28 @@
 .timeline-container > .popover {
   max-width: 100%;
   width: 300px;
+}
+
+.timeline-stepper {
+  width: 75px;
+  margin-left: 10px;
+}
+
+.timeline-range-input {
+  text-align: center;
+  width: 50px;
+}
+
+.timeline-stepper .btn {
+  margin-left: 0px !important;
+}
+
+.timeline-empty-state {
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px
+}
+
+.timeline-info {
+  padding-bottom: 10px;
 }
