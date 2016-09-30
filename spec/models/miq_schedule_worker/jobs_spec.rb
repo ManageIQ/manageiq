@@ -37,4 +37,16 @@ describe MiqScheduleWorker::Jobs do
       end
     end
   end
+
+  describe "#generate_chargeback_for_service" do
+    it "queue request to generate Chargeback reports for each service" do
+      allow(MiqServer).to receive(:my_zone)
+      described_class.new.generate_chargeback_for_service(:report_source => "Rspec - Chargeback reports queue")
+      expect(MiqQueue.first).to have_attributes(
+        :class_name  => "Service",
+        :method_name => "queue_chargeback_reports",
+        :args        => [{:report_source => "Rspec - Chargeback reports queue"}]
+      )
+    end
+  end
 end

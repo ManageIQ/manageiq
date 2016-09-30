@@ -143,7 +143,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       ) { enqueue :miq_server_resync_rhn_mirror }
     end
   end
-  
+
   def schedules_for_scheduler_role
     # These schedules need to run only once in a zone per interval, so let the single scheduler role handle them
     return unless @active_roles.include?("scheduler")
