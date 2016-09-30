@@ -143,7 +143,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       ) { enqueue :miq_server_resync_rhn_mirror }
     end
   end
-
+  
   def schedules_for_scheduler_role
     # These schedules need to run only once in a zone per interval, so let the single scheduler role handle them
     return unless @active_roles.include?("scheduler")
@@ -237,15 +237,25 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       end
     end
 
-    # run chargeback generation 5 minute after server start-up and every 24 hours after that
+    # run chargeback generation after server start-up
+    schedule_chargeback_report_for_service_once
+    # run run chargeback generation every day at specific time
+    schedule_chargeback_report_for_service_daily
+  end
+
+  def schedule_chargeback_report_for_service_once
     start_delay = worker_setting_or_default(:chargeback_generation_start_delay, 5.minutes)
     @schedules[:scheduler] << system_schedule_at(Time.current + start_delay) do
-      enqueue [:generate_chargeback_for_service, :report_source => "Initial run"]
+      enqueue [:generate_chargeback_for_service, :report_source => "Autogeneration after start-up"]
     end
+  end
+
+  def schedule_chargeback_report_for_service_daily
     every = worker_setting_or_default(:chargeback_generation_interval, 1.day)
     at = worker_setting_or_default(:chargeback_generation_time_utc, "01:00:00")
-    time_at = Time.current.strftime("%Y-%m-%d #{at} UTC").to_time(:utc)
-    @schedules[:scheduler] << system_schedule_every(every, :first_at => time_at, :discard_past => true) do
+    time_at = Time.current.strftime("%Y-%m-%d #{at}").to_time(:utc)
+    time_at += 1.day if time_at < Time.current + 1.hour
+    @schedules[:scheduler] << system_schedule_every(every, :first_at => time_at) do
       enqueue [:generate_chargeback_for_service, :report_source => "Daily scheduler"]
     end
   end
