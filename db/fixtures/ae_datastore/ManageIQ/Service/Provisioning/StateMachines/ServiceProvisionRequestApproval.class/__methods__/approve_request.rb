@@ -8,4 +8,7 @@ approval_type = $evm.object['approval_type'].downcase
 if approval_type == 'auto'
   $evm.log("info", "AUTO-APPROVING")
   $evm.root["miq_request"].approve("admin", "Auto-Approved")
+else
+  $evm.log("info", "Not Auto-Approved")
+  exit MIQ_ABORT
 end
