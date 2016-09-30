@@ -27,10 +27,10 @@ class ResourceSharer
   # @param features - The product features to be associated with the share. Features must
   #   be a subset of the user's accessible miq_product_features or :all if you wish to
   #   share all the user's accessible features. Defaults to :all.
-  def initialize(attributes={})
-    attributes = attributes.reverse_merge(:features => :all)
-    if attributes[:user] && attributes[:features] == :all
-      attributes[:features] = attributes[:user].miq_user_role.miq_product_features
+  def initialize(args={})
+    args = args.reverse_merge(:features => :all)
+    if args[:user] && args[:features] == :all
+      args[:features] = args[:user].miq_user_role.miq_product_features
     end
     super
   end
