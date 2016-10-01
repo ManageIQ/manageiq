@@ -54,7 +54,7 @@ module EmsRefresh::SaveInventorySwift
 
     hashes.each do |h|
       h[:ems_id]          = ems.id
-      h[:cloud_tenant_id] = h.fetch_path(:tenant, :id)
+      # h[:cloud_tenant_id] = h.fetch_path(:tenant, :id) # TODO: add "unless h[:cloud_tenant_id]" so can be common?
     end
 
     save_inventory_multi(ems.cloud_object_store_containers, hashes, deletes, [:ems_ref], nil, :tenant)
@@ -73,7 +73,7 @@ module EmsRefresh::SaveInventorySwift
 
     hashes.each do |h|
       h[:ems_id]                          = ems.id
-      h[:cloud_tenant_id]                 = h.fetch_path(:tenant, :id)
+      # h[:cloud_tenant_id]                 = h.fetch_path(:tenant, :id) # TODO: add "unless h[:cloud_tenant_id]" so can be common?
       h[:cloud_object_store_container_id] = h.fetch_path(:container, :id)
     end
 

@@ -34,6 +34,7 @@ module ManageIQ::Providers
 
       link_storage_associations
       CrossLinkers.cross_link(@ems, @data)
+      cleanup
 
       @data
     end
@@ -58,9 +59,12 @@ module ManageIQ::Providers
     end
 
     def parse_backup(backup)
+      _log.debug "backup['size'] = #{backup['size']}"
+      _log.debug "backup['size'].to_i.gigabytes = #{backup['size'].to_i.gigabytes}"
       uid = backup['id']
       new_result = {
         :ems_ref               => uid,
+        # TODO: These classes should not be OpenStack specific, but rather Cinder-specific.
         :type                  => "ManageIQ::Providers::Openstack::CloudManager::CloudVolumeBackup",
         # Supporting both Cinder v1 and Cinder v2
         :name                  => backup['display_name'] || backup['name'],
@@ -84,6 +88,7 @@ module ManageIQ::Providers
       uid = snap['id']
       new_result = {
         :ems_ref       => uid,
+        # TODO: These classes should not be OpenStack specific, but rather Cinder-specific.
         :type          => "ManageIQ::Providers::Openstack::CloudManager::CloudVolumeSnapshot",
         # Supporting both Cinder v1 and Cinder v2
         :name          => snap['display_name'] || snap['name'],
@@ -107,6 +112,7 @@ module ManageIQ::Providers
       new_result = {
         :ems_ref       => uid,
         # TODO: has its own CloudVolume?
+        # TODO: These classes should not be OpenStack specific, but rather Cinder-specific.
         :type          => "ManageIQ::Providers::Openstack::CloudManager::CloudVolume",
         :name          => volume_name(volume),
         :status        => volume.status,
@@ -143,6 +149,12 @@ module ManageIQ::Providers
         base_snapshot = @data_index.fetch_path(:cloud_volume_snapshots, base_snapshot_uid)
         cv[:base_snapshot] = base_snapshot unless base_snapshot.nil?
       end if @data[:cloud_volumes]
+    end
+
+    def cleanup
+      @data[:cloud_volumes].each          { |c| c.delete(:api_obj) }
+      @data[:cloud_volume_snapshots].each { |c| c.delete(:api_obj) }
+      @data[:cloud_volume_backups].each   { |c| c.delete(:api_obj) }
     end
   end
 end
