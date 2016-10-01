@@ -14,7 +14,7 @@ describe ApplicationController, "#Timezone" do
       end
 
       it "without a system default" do
-        stub_settings({})
+        stub_settings(:server => {})
         expect(subject.get_timezone_offset).to eq(0.hours)
       end
     end
@@ -50,7 +50,7 @@ describe ApplicationController, "#Timezone" do
 
         it "without a system default" do
           user = FactoryGirl.create(:user)
-          stub_settings({})
+          stub_settings(:server => {})
 
           expect(subject.get_timezone_offset(user)).to eq(0.hours)
         end
