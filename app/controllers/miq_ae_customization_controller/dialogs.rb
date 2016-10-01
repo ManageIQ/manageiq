@@ -863,11 +863,6 @@ module MiqAeCustomizationController::Dialogs
       @edit[field_key] = key[param_key] = params[field_key] if params[field_key]
     end
 
-    copy_checkbox_field_param = proc do |param_key|
-      field_key = ('field_' + param_key.to_s).to_sym
-      @edit[field_key] = key[param_key] = params[field_key].to_s == '1' if params[field_key].present?
-    end
-
     [:label, :name, :description].each { |key| copy_field_param.call(key) }
 
     # new dropdown/radio is being added set default options OR if existing field type has been changed to dropdown/radio
@@ -890,15 +885,11 @@ module MiqAeCustomizationController::Dialogs
     @edit[:field_values] ||= key[:values] = []
 
     copy_field_param.call(:entry_point)
-    copy_checkbox_field_param.call(:load_on_init)
-    copy_checkbox_field_param.call(:show_refresh_button)
-    copy_checkbox_field_param.call(:past_dates)
-    copy_checkbox_field_param.call(:reconfigurable)
-    copy_checkbox_field_param.call(:dynamic)
-    copy_checkbox_field_param.call(:visible)
-    copy_checkbox_field_param.call(:read_only)
-    copy_checkbox_field_param.call(:auto_refresh)
-    copy_checkbox_field_param.call(:trigger_auto_refresh)
+    [:load_on_init, :show_refresh_button, :past_dates, :reconfigurable, :dynamic, :visible, :read_only, :auto_refresh,
+     :trigger_auto_refresh].each do |param_key| # save checkbox fields in session
+      field_key = ('field_' + param_key.to_s).to_sym
+      @edit[field_key] = key[param_key] = params[field_key].to_s == '1' if params[field_key].present?
+    end
 
     [:data_typ, :required, :sort_by, :sort_by, :sort_order].each { |key| copy_field_param.call(key) }
 
