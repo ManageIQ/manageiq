@@ -190,13 +190,6 @@ describe MiqScheduleWorker::Runner do
           end
         end
 
-        context "#system_schedule_at" do
-          it "catches an error on nil first arg" do
-            expect($log).to receive(:error).once
-            @schedule_worker.system_schedule_at(nil) {}
-          end
-        end
-
         context "calling check_roles_changed" do
           before(:each) do
             # MiqScheduleWorker::Runner.any_instance.stub(:schedules_for_scheduler_role)
@@ -550,22 +543,6 @@ describe MiqScheduleWorker::Runner do
             @schedule_worker.instance_variable_set(:@active_roles, ["scheduler"])
             allow(@schedule_worker).to receive(:worker_settings).and_return(:ems_events_purge_interval => 1.day)
             @schedule_worker.instance_variable_set(:@schedules, :scheduler => [])
-          end
-
-          describe "#schedule_chargeback_report_for_service_once" do
-            it "queues initial generation of Chargeback report for each service" do
-              job = @schedule_worker.schedule_chargeback_report_for_service_once[0]
-              expect(job).to be_kind_of(Rufus::Scheduler::AtJob)
-              job.call
-              @schedule_worker.do_work
-              expect(MiqQueue.count).to eq 1
-              queue = MiqQueue.first
-              expect(queue.method_name).to eq "queue_chargeback_reports"
-              expect(queue.class_name).to eq "Service"
-              expect(queue.args[0][:report_source]).to eq "Autogeneration after start-up"
-              MiqQueue.delete_all
-              job.unschedule
-            end
           end
 
           describe "#schedule_chargeback_report_for_service_daily" do

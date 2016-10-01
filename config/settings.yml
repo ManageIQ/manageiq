@@ -1426,7 +1426,6 @@
       :vm_retired_interval: 10.minutes
       :chargeback_generation_time_utc: 01:00:00
       :chargeback_generation_interval: 1.day
-      :chargeback_generation_start_delay: 5.minutes
     :smis_refresh_worker:
       :memory_threshold: 1.gigabytes
       :nice_delta: 3
