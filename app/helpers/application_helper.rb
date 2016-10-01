@@ -426,7 +426,6 @@ module ApplicationHelper
                                                                :include_model   => true,
                                                                :include_my_tags => use_mytags,
                                                                :userid          => session[:userid])
-    @exp_available_tags
   end
 
   # Replacing calls to VMDB::Config.new in the views/controllers
