@@ -192,13 +192,13 @@ describe OpsController do
         allow(MiqServer).to receive(:my_server).and_return(server)
       end
 
-      it "saves name in record when use_config_attributes is false" do
+      it "saves name in record when use_config_attributes is true" do
         controller.instance_variable_set(:@_params,
                                          :divisible                 => true,
                                          :use_config_for_attributes => "on"
                                         )
         controller.send(:tenant_set_record_vars, @tenant)
-        stub_server_configuration(:server => { :company => "Settings Company Name"})
+        stub_settings(:server => {:company => "Settings Company Name"})
         expect(@tenant.name).to eq "Settings Company Name"
       end
 
