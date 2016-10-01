@@ -328,7 +328,7 @@ class Tenant < ApplicationRecord
   # @return the attribute value
   def tenant_attribute(attr_name, setting_name)
     if use_config_for_attributes?
-      ret = get_vmdb_config.fetch_path(:server, setting_name)
+      ret = ::Settings.server[setting_name]
       block_given? ? yield(ret) : ret
     else
       self[attr_name]
@@ -343,6 +343,8 @@ class Tenant < ApplicationRecord
   end
 
   def get_vmdb_config
+    Vmdb::Deprecation.deprecation_warning("Tenant#get_vmdb_config",
+                                          "Prefer using ::Settings directly.", caller)
     @vmdb_config ||= VMDB::Config.new("vmdb").config
   end
 
