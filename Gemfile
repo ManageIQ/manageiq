@@ -93,7 +93,7 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
   gem "coffee-rails"
 
   # Modified gems (forked on Github)
-  gem "jquery-rjs",                   "=0.1.1",                       :git => "https://github.com/amatsuda/jquery-rjs.git", :ref => "1288c09"
+  gem "jquery-rjs",                   "=0.1.1",                       :git => "https://github.com/ManageIQ/jquery-rjs.git", :tag => "v0.1.1-1"
 end
 
 ### Start of gems excluded from the appliances.
