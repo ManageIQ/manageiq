@@ -618,15 +618,12 @@ class MiqPolicyController < ApplicationController
     when 'co'
       # Set the JS types and titles vars if value fields are showing (needed because 2 expression editors are present)
       if @edit && @edit[@expkey]
-        set_exp_val = proc do |val|
-          if @edit[@expkey][val]  # if an expression with value 1 is showing
-            presenter[:exp] = {}
-            presenter[:exp]["#{val}_type".to_sym]  = @edit[@expkey][val][:type].to_s if @edit[@expkey][val][:type]
-            presenter[:exp]["#{val}_title".to_sym] = @edit[@expkey][val][:title]     if @edit[@expkey][val][:title]
-          end
+        [:val1, :val2].each do |val|
+          next unless @edit[@expkey][val] # unless an expression with value 1 is showing
+          presenter[:exp] = {}
+          presenter[:exp]["#{val}_type".to_sym]  = @edit[@expkey][val][:type].to_s if @edit[@expkey][val][:type]
+          presenter[:exp]["#{val}_title".to_sym] = @edit[@expkey][val][:title]     if @edit[@expkey][val][:title]
         end
-        set_exp_val.call(:val1)
-        set_exp_val.call(:val2)
       end
       presenter.update(:main_div, r[:partial => 'condition_details', :locals => {:read_only => true}])
       right_cell_text = if @condition.id.blank?
