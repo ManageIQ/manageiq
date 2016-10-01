@@ -22,8 +22,6 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
   require_nested :RefreshWorker
   require_nested :Template
   require_nested :Vm
-  require_relative '../storage_manager/cinder_manager'
-  require_relative '../storage_manager/swift_manager'
 
   include CinderManagerMixin
   include SwiftManagerMixin
@@ -50,11 +48,15 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
   end
 
   def ensure_cinder_manager
-    build_cinder_manager(:type => 'ManageIQ::Providers::StorageManager::CinderManager') unless cinder_manager
+    return false if cinder_manager
+    build_cinder_manager(:type => 'ManageIQ::Providers::StorageManager::CinderManager')
+    true
   end
 
   def ensure_swift_manager
-    build_swift_manager(:type => 'ManageIQ::Providers::StorageManager::SwiftManager') unless swift_manager
+    return false if swift_manager
+    build_swift_manager(:type => 'ManageIQ::Providers::StorageManager::SwiftManager')
+    true
   end
 
   def supports_cloud_tenants?

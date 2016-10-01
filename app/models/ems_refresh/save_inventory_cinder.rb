@@ -55,7 +55,6 @@ module EmsRefresh::SaveInventoryCinder
               end
 
     hashes.each do |h|
-      h.delete(:api_obj) # Used by cross linkers, no longer needed.
       h[:ems_id] = ems.id
       # Defer setting :cloud_volume_snapshot_id until after snapshots are saved.
     end
@@ -76,10 +75,8 @@ module EmsRefresh::SaveInventoryCinder
               end
 
     hashes.each do |h|
-      h.delete(:api_obj) # Used by cross linkers, no longer needed.
       h[:ems_id]          = ems.id
       h[:cloud_volume_id] = h.fetch_path(:volume, :id)
-      h[:availability_zone_id] = h.fetch_path(:availability_zone, :id)
     end
 
     save_inventory_multi(ems.cloud_volume_backups, hashes, deletes, [:ems_ref], nil,
@@ -98,7 +95,6 @@ module EmsRefresh::SaveInventoryCinder
               end
 
     hashes.each do |h|
-      h.delete(:api_obj) # Used by cross linkers, no longer needed.
       h[:ems_id]          = ems.id
       h[:cloud_volume_id] = h.fetch_path(:volume, :id)
     end
