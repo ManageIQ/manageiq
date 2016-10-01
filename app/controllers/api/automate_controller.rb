@@ -12,7 +12,7 @@ module Api
       render_resource :automate, :name => "automate", :subcount => resources.count, :resources => resources
     end
 
-    def git_refresh_resource(type, id = nil, data = nil)
+    def refresh_from_source_resource(type, id = nil, data = nil)
       api_action(type, id) do |klass|
         unless GitBasedDomainImportService.available?
           return action_result(false, 'Please enable the git owner role in order to import git repositories')
