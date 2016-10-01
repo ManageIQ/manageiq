@@ -180,12 +180,16 @@ module Menu
                          'cloud_object_store_container',
                          {:feature => 'cloud_object_store_container_show_list'},
                          '/cloud_object_store_container'),
-          netapp_enabled ? netapp_storage_menu_section : nil
+          netapp_enabled ? netapp_storage_menu_section : empty_menu_section
                          ])
       end
 
+      def empty_menu_section
+        Menu::Section.new(nil, nil, nil, nil)
+      end
+
       def netapp_storage_menu_section
-        Menu::Section.new(:sto, N_("NetApp"), 'fa fa-plus fa-2x', [
+        Menu::Section.new(:nap, N_("NetApp"), 'fa fa-plus fa-2x', [
           Menu::Item.new('ontap_storage_system', deferred_ui_lookup(:tables => 'ontap_storage_system'), 'ontap_storage_system', {:feature => 'ontap_storage_system_show_list'}, '/ontap_storage_system'),
           Menu::Item.new('ontap_logical_disk',   deferred_ui_lookup(:tables => 'ontap_logical_disk'),   'ontap_logical_disk',   {:feature => 'ontap_logical_disk_show_list'},   '/ontap_logical_disk'),
           Menu::Item.new('ontap_storage_volume', deferred_ui_lookup(:tables => 'ontap_storage_volume'), 'ontap_storage_volume', {:feature => 'ontap_storage_volume_show_list'}, '/ontap_storage_volume'),
