@@ -83,8 +83,7 @@ module ArRegion
 
     def split_id(id)
       return [my_region_number, nil] if id.nil?
-      id = uncompress_id(id) if compressed_id?(id)
-      id = id.to_i
+      id = uncompress_id(id)
 
       region_number = id_to_region(id)
       short_id      = (region_number == 0) ? id : id % (region_number * rails_sequence_factor)
@@ -97,7 +96,7 @@ module ArRegion
     #
 
     def compressed_id?(id)
-      id.to_s =~ RE_COMPRESSED_ID
+      id.to_s =~ /^#{CID_OR_ID_MATCHER}$/
     end
 
     def compress_id(id)
