@@ -71,13 +71,13 @@ module MiqServer::EnvironmentManagement
       _log.info "Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], detailed version: [#{ActiveRecord::Base.connection.detailed_database_version}]" if ActiveRecord::Base.connection.respond_to?(:detailed_database_version)
     end
 
-    def start_memcached(cfg = VMDB::Config.new('vmdb'))
+    def start_memcached
       # TODO: Need to periodically check the memcached instance to see if it's up, and bounce it and notify the UiWorkers to re-connect
-      return unless cfg.config.fetch_path(:server, :session_store).to_s == 'cache'
+      return unless ::Settings.server.session_store.to_s == 'cache'
       return unless MiqEnvironment::Command.supports_memcached?
       require "#{Rails.root}/lib/miq_memcached" unless Object.const_defined?(:MiqMemcached)
-      svr, port = cfg.config.fetch_path(:session, :memcache_server).to_s.split(":")
-      opts = cfg.config.fetch_path(:session, :memcache_server_opts).to_s
+      _svr, port = ::Settings.session.memcache_server.to_s.split(":")
+      opts = ::Settings.session.memcache_server_opts.to_s
       MiqMemcached::Control.restart!(:port => port, :options => opts)
       _log.info("Status: #{MiqMemcached::Control.status[1]}")
     end
