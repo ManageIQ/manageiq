@@ -57,9 +57,17 @@ module EmsRefresh::SaveInventoryMiddleware
               end
 
     hashes.each do |h|
-      nativeid = h.fetch_path(:middleware_server_group, :nativeid)
-      h[:server_group_id] = MiddlewareServerGroup.find_by_nativeid(nativeid).try(:id) unless nativeid.nil?
+      server_group_id = h.fetch_path(:middleware_server_group, :id)
+      if server_group_id.nil?
+        nativeid = h.fetch_path(:middleware_server_group, :nativeid)
+        server_group_id = MiddlewareServerGroup.where('nativeid' => nativeid)
+                                               .order('created_at')
+                                               .try(:last)
+                                               .try(:id) unless nativeid.nil?
+      end
+      h[:server_group_id] = server_group_id unless server_group_id.nil?
     end
+
     save_inventory_multi(ems.middleware_servers, hashes, deletes, [:ems_ref], nil,
                          [:middleware_server_group])
     store_ids_for_new_records(ems.middleware_servers, hashes, :ems_ref)
