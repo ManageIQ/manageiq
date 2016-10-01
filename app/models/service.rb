@@ -241,19 +241,22 @@ class Service < ApplicationRecord
   end
 
   def chargeback_report_name
-    "Chargeback-#{name}"
+    "Chargeback-Vm-Monthly-#{name}"
   end
 
   def generate_chargeback_report(options = {})
     _log.info "Generation of chargeback report for service #{name} started..."
     MiqReportResult.where(:name => chargeback_report_name).destroy_all
+    report = MiqReport.new(chargeback_yaml)
+    report.queue_generate_table(options)
+    _log.info "Report #{chargeback_report_name} generated"
+  end
 
+  def chargeback_yaml
     yaml = YAML.load_file(File.join(Rails.root, "product/chargeback/chargeback_vm_monthly.yaml"))
     yaml["db_options"][:options][:service_id] = id
     yaml["title"] = chargeback_report_name
-    report = MiqReport.new(yaml)
-    report.queue_generate_table(options)
-    _log.info "Report #{chargeback_report_name} generated"
+    yaml
   end
 
   def queue_chargeback_report_generation(options = {})

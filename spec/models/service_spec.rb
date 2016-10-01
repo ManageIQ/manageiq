@@ -218,7 +218,6 @@ describe Service do
         expect(@service.next_group_index(0, -1)).to be_nil
       end
 
-
       it "should not allow the same VM to be added to more than one services" do
         vm = Vm.first
         @service.save
@@ -265,8 +264,8 @@ describe Service do
 
     describe "#chargeback_report_name" do
       it "creates chargeback report's name" do
-        expect(@service.chargeback_report_name).to eq "Chargeback-Test_Service_1"
-        expect(@service_c1.chargeback_report_name).to eq "Chargeback-Test_Service_2"
+        expect(@service.chargeback_report_name).to eq "Chargeback-Vm-Monthly-Test_Service_1"
+        expect(@service_c1.chargeback_report_name).to eq "Chargeback-Vm-Monthly-Test_Service_2"
       end
     end
 
@@ -283,17 +282,36 @@ describe Service do
 
     describe "#generate_chargeback_report" do
       it "delete existing chargeback report result for service before generating new one" do
-        allow(YAML).to receive(:load_file).and_return("db_options" => {:options => {}})
-
         FactoryGirl.create(:miq_chargeback_report_result, :name => @service.chargeback_report_name)
         expect(MiqReportResult.count).to eq 1
 
         report = double("MiqReport")
         allow(MiqReport).to receive(:new).and_return(report)
-
         expect(report).to receive(:queue_generate_table)
+
         @service.generate_chargeback_report
         expect(MiqReportResult.count).to eq 0
+      end
+
+      it "loads report template and initiate generation" do
+        EvmSpecHelper.local_miq_server
+        @service.generate_chargeback_report
+        expect(MiqReportResult.count).to eq 1
+        expect(MiqReportResult.first.name).to eq @service.chargeback_report_name
+      end
+    end
+
+    describe "#chargeback_yaml" do
+      it "loads chargeback report template" do
+        @user = FactoryGirl.create(:user_with_group)
+        report_yaml = @service.chargeback_yaml
+
+        report = MiqReport.new(report_yaml)
+        allow(Chargeback).to receive(:build_results_for_report_chargeback)
+        report.generate_table(:userid => @user.userid)
+        cols_from_data = report.table.column_names.to_set
+        cols_from_yaml = report_yaml['col_order'].to_set
+        expect(cols_from_yaml).to be_subset(cols_from_data)
       end
     end
   end
