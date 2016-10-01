@@ -67,6 +67,23 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
     raise MiqException::MiqVolumeBackupCreateError, e.to_s, e.backtrace
   end
 
+  def backup_create_queue(userid, options = {})
+    task_opts = {
+      :action => "creating Cloud Volume Backup for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'backup_create',
+      :instance_id => id,
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => [options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   def backup_restore(backup_id)
     with_provider_connection do |service|
       backup = service.backups.get(backup_id)
@@ -75,6 +92,23 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
   rescue => e
     _log.error "volume=[#{name}], error: #{e}"
     raise MiqException::MiqVolumeBackupRestoreError, e.to_s, e.backtrace
+  end
+
+  def backup_restore_queue(userid, backup_id)
+    task_opts = {
+      :action => "restoring Cloud Volume from Backup for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'backup_restore',
+      :instance_id => id,
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => [backup_id]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
   def create_volume_snapshot(options)
