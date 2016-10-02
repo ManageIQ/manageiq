@@ -1947,7 +1947,7 @@ class ApplicationController < ActionController::Base
       session[:tab_url][:svc] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
     when "availability_zone", "host_aggregate", "ems_cloud", "flavor", "vm_cloud", "orchestration_stack"
       session[:tab_url][:compute] = session[:tab_url][:clo] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
-    when "ems_cluster", "ems_infra", "host", "pxe", "resource_pool", "storage", "vm_infra"
+    when "ems_cluster", "ems_infra", "ems_infra_dashboard","host", "pxe", "resource_pool", "storage", "vm_infra"
       session[:tab_url][:compute] = session[:tab_url][:inf] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
     when "container", "container_group", "container_node", "container_service", "ems_container",
          "container_route", "container_project", "container_replicator", "persistent_volume",
