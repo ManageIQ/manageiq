@@ -1601,6 +1601,11 @@ module ReportController::Reports::Editor
                 _("A specific #{ui_lookup(:model => @edit[:new][:cb_model])} or all must be selected")
               end
             end
+
+      if @edit[:new][:cb_groupby] == "tag" && !@edit[:new][:cb_groupby_tag].present?
+        msg = _('A Group by Tag must be selected')
+      end
+
       if msg
         add_flash(msg, :error)
         active_tab = 'edit_3'

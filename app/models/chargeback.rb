@@ -276,7 +276,7 @@ class Chargeback < ActsAsArModel
     rpt.col_order.each do |c|
       if c == tag_col
         header = edit[:cb_cats][edit[:new][:cb_groupby_tag]]
-        rpt.headers.push(Dictionary.gettext(header, :type => :column, :notfound => :titleize))
+        rpt.headers.push(Dictionary.gettext(header, :type => :column, :notfound => :titleize)) if header
       else
         rpt.headers.push(Dictionary.gettext(c, :type => :column, :notfound => :titleize))
       end
