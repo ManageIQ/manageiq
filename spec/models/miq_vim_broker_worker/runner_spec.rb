@@ -3,7 +3,6 @@ require 'MiqVimBroker'
 
 describe MiqVimBrokerWorker::Runner do
   before(:each) do
-    _guid_2, _server_2, @zone_2 = EvmSpecHelper.create_guid_miq_server_zone
     guid, server, @zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)
     other_ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)
@@ -13,9 +12,6 @@ describe MiqVimBrokerWorker::Runner do
     @worker_record = FactoryGirl.create(:miq_vim_broker_worker, :guid => @worker_guid, :miq_server_id => server.id)
     @drb_uri = "drb://127.0.0.1:12345"
     allow(DRb).to receive(:uri).and_return(@drb_uri)
-    allow_any_instance_of(described_class).to receive(:sync_active_roles)
-    allow_any_instance_of(described_class).to receive(:sync_config)
-    allow_any_instance_of(described_class).to receive(:set_connection_pool_size)
     allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive(:authentication_check).and_return([true, ""])
     allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive(:authentication_status_ok?).and_return(true)
   end
@@ -25,6 +21,8 @@ describe MiqVimBrokerWorker::Runner do
     expect_any_instance_of(described_class).to receive(:reset_broker_update_notification).once
     expect_any_instance_of(described_class).to receive(:reset_broker_update_sleep_interval).once
     vim_broker_worker = described_class.new(:guid => @worker_guid)
+    vim_broker_worker.worker_initialization
+    vim_broker_worker.after_initialize
 
     expect(vim_broker_worker.instance_variable_get(:@initial_emses_to_monitor)).to match_array @zone.ext_management_systems
 
@@ -37,6 +35,8 @@ describe MiqVimBrokerWorker::Runner do
     before(:each) do
       expect_any_instance_of(described_class).to receive(:after_initialize).once
       @vim_broker_worker = described_class.new(:guid => @worker_guid)
+      @vim_broker_worker.after_initialize
+      @vim_broker_worker.worker_initialization
       allow(@vim_broker_worker).to receive(:worker_settings).and_return(
         :vim_broker_worker_max_wait => 60, :vim_broker_worker_max_objects => 250)
     end
@@ -335,7 +335,7 @@ describe MiqVimBrokerWorker::Runner do
         end
 
         it "will not reconnect to an EMS in another zone" do
-          ems_2 = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone_2)
+          ems_2 = FactoryGirl.create(:ems_vmware_with_authentication, :zone => FactoryGirl.create(:zone))
 
           event = {
             :server   => ems_2.address,

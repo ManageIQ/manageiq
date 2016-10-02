@@ -47,17 +47,13 @@ class MiqWorker::Runner
     $log ||= Rails.logger
 
     @server = MiqServer.my_server(true)
-
-    worker_initialization
-    after_initialize
-
-    @worker.release_db_connection if @worker.respond_to?(:release_db_connection)
   end
 
   def worker_initialization
     starting_worker_record
-    set_process_title
+  end
 
+  def startup_configuration_tasks
     # Sync the config and roles early since heartbeats and logging require the configuration
     sync_active_roles
     sync_config
@@ -124,6 +120,9 @@ class MiqWorker::Runner
   end
 
   def start
+    worker_initialization
+    startup_configuration_tasks
+    after_initialize
     prepare
     run
 
@@ -142,6 +141,9 @@ class MiqWorker::Runner
   end
 
   def prepare
+    set_process_title
+    @worker.release_db_connection if @worker.respond_to?(:release_db_connection)
+
     ObjectSpace.garbage_collect
     started_worker_record
     do_wait_for_worker_monitor if self.class.wait_for_worker_monitor?

@@ -8,11 +8,9 @@ describe MiqScheduleWorker::Runner do
       @worker = FactoryGirl.create(:miq_schedule_worker, :guid => worker_guid, :miq_server_id => @miq_server.id)
 
       allow_any_instance_of(MiqScheduleWorker::Runner).to receive(:initialize_rufus)
-      allow_any_instance_of(MiqScheduleWorker::Runner).to receive(:sync_active_roles)
-      allow_any_instance_of(MiqScheduleWorker::Runner).to receive(:sync_config)
-      allow_any_instance_of(MiqScheduleWorker::Runner).to receive(:set_connection_pool_size)
 
       @schedule_worker = MiqScheduleWorker::Runner.new(:guid => worker_guid)
+      @schedule_worker.after_initialize
     end
 
     context "with a stuck dispatch in each zone" do
