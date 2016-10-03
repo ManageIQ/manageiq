@@ -297,6 +297,30 @@ module ManageIQ::Providers
       end
     end
 
+    def add_middleware_jdbc_driver(ems_ref, hash)
+      with_provider_connection do |connection|
+        driver_data = {
+          :driver_name          => hash[:driver]["driver_name"],
+          :driver_jar_name      => hash[:driver]["driver_jar_name"] || hash[:driver]["file"].original_filename,
+          :module_name          => hash[:driver]["module_name"],
+          :driver_class         => hash[:driver]["driver_class"],
+          :driver_major_version => hash[:driver]["driver_major_version"],
+          :driver_minor_version => hash[:driver]["driver_minor_version"],
+          :binary_content       => hash[:driver]["file"].read,
+          :resource_path        => ems_ref.to_s
+        }
+
+        connection.operations(true).add_jdbc_driver(driver_data) do |on|
+          on.success do |data|
+            _log.debug "Success on websocket-operation #{data}"
+          end
+          on.failure do |error|
+            _log.error 'error callback was called, reason: ' + error.to_s
+          end
+        end
+      end
+    end
+
     def remove_middleware_datasource(ems_ref)
       run_specific_operation('RemoveDatasource', ems_ref)
     end

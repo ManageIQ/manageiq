@@ -92,6 +92,34 @@ function MwServerController($scope, miqService) {
     miqService.sparkleOn();
     $scope.$broadcast('mwAddDeploymentEvent', $scope.deployAddModel);
   };
+
+  /////////////////////////////////////////////////////////////////////////
+  // Add JDBC Driver
+  /////////////////////////////////////////////////////////////////////////
+
+  $scope.showJdbcDriverListener = function () {
+    $scope.resetJdbcDriverForm();
+    $scope.jdbcDriverModel.showDeployModal = true;
+  };
+
+  $scope.resetJdbcDriverForm = function () {
+    $scope.jdbcDriverModel = {};
+    $scope.jdbcDriverModel.serverId = angular.element('#server_id').val();
+    angular.element('#jdbc_add_div :file#jdbc_driver_file').val('');
+    angular.element('#jdbc_add_div input[type="text"]:disabled').val('');
+    $scope.$broadcast('mwAddJdbcDriverReset');
+  };
+
+  $scope.$watch('jdbcDriverModel.filePath', function(newValue) {
+    if (newValue) {
+      $scope.jdbcDriverModel.driverJarName = newValue.name;
+    }
+  });
+
+  $scope.addJdbcDriver = function () {
+    miqService.sparkleOn();
+    $scope.$broadcast('mwAddJdbcDriverEvent', $scope.jdbcDriverModel);
+  };
 }
 
 ManageIQ.angular.app.controller('mwServerOpsController', MwServerOpsController);

@@ -3623,6 +3623,10 @@
       :description: Add middleware deployment
       :feature_type: admin
       :identifier: middleware_deployment_add
+    - :name: Add middleware jdbc driver
+      :description: Add middleware jdbc driver
+      :feature_type: admin
+      :identifier: middleware_jdbc_driver_add
 
 # MiddlewareDeployment
 - :name: Middleware Deployment
