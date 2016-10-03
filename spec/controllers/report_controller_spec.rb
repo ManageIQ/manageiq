@@ -135,8 +135,6 @@ describe ReportController do
           expect(edit_new[:perf_interval]).to eq("daily")
           expect(edit_new[:perf_avgs]).to eq("time_interval")
           expect(edit_new[:tz]).to eq(session[:user_tz])
-          expect(assigns(:edit)[:start_array]).to be_an_instance_of(Array)
-          expect(assigns(:edit)[:end_array]).to be_an_instance_of(Array)
           expect(assigns(:refresh_div)).to eq("form_div")
           expect(assigns(:refresh_partial)).to eq("form")
         end
@@ -172,8 +170,6 @@ describe ReportController do
           expect(edit_new[:perf_target_pct1]).to eq(100)
           expect(edit_new[:perf_limit_val]).to be_nil
           expect(edit[:percent_col]).to be_falsey
-          expect(edit[:start_array]).to be_an_instance_of(Array)
-          expect(edit[:end_array]).to be_an_instance_of(Array)
           expect(assigns(:refresh_div)).to eq("columns_div")
           expect(assigns(:refresh_partial)).to eq("form_columns")
         end
@@ -193,8 +189,6 @@ describe ReportController do
           expect(edit_new[:perf_limit_val]).to eq(100)
           expect(edit_new[:perf_limit_col]).to be_nil
           expect(edit[:percent_col]).to be_truthy
-          expect(edit[:start_array]).to be_an_instance_of(Array)
-          expect(edit[:end_array]).to be_an_instance_of(Array)
           expect(assigns(:refresh_div)).to eq("columns_div")
           expect(assigns(:refresh_partial)).to eq("form_columns")
         end
@@ -271,8 +265,6 @@ describe ReportController do
           expect(edit_new[:perf_interval]).to eq(perf_int)
           expect(edit_new[:perf_start]).to eq(1.day.to_s)
           expect(edit_new[:perf_end]).to eq("0")
-          expect(edit[:start_array]).to be_an_instance_of(Array)
-          expect(edit[:end_array]).to be_an_instance_of(Array)
           expect(assigns(:refresh_div)).to eq("form_div")
           expect(assigns(:refresh_partial)).to eq("form")
         end

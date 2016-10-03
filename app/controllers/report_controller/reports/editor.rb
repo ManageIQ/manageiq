@@ -281,40 +281,15 @@ module ReportController::Reports::Editor
     end
   end
 
-  # Create the arrays for the start/end interval pulldowns
-  def build_perf_interval_arrays(interval)
-    case interval
+  def ensure_perf_interval_defaults
+    case @edit[:new][:perf_interval]
     when "hourly"
-      end_array = [
-        ["Today", "0"],
-        ["Yesterday", 1.day.to_s]
-      ]
-      5.times { |i| end_array.push(["#{i + 2} days ago", (i + 2).days.to_s]) }
-      4.times { |i| end_array.push(["#{pluralize(i + 1, "week")} ago", (i + 1).weeks.to_s]) }
-      5.times { |i| end_array.push(["#{pluralize(i + 2, "month")} ago", (i + 1).months.to_s]) }
-      start_array = []
-      6.times { |i| start_array.push([pluralize(i + 1, "day").to_s, (i + 1).days.to_s]) }
-      4.times { |i| start_array.push([pluralize(i + 1, "week").to_s, (i + 1).weeks.to_s]) }
-      5.times { |i| start_array.push([pluralize(i + 2, "month").to_s, (i + 1).months.to_s]) }
       @edit[:new][:perf_end] ||= "0"
       @edit[:new][:perf_start] ||= 1.day.to_s
     when "daily"
-      end_array = [
-        ["Yesterday", "0"]    # Start with yesterday, since we only allow full 24 hour days in daily trending
-      ]
-      5.times  { |i| end_array.push(["#{i + 2} days ago", (i + 1).days.to_s]) }
-      3.times  { |i| end_array.push(["#{pluralize((i + 1), "week")} ago", ((i + 1).weeks - 1.day).to_s]) }
-      6.times  { |i| end_array.push(["#{pluralize((i + 1), "month")} ago", ((i + 1).months - 1.day).to_s]) }
-      start_array = []
-      5.times  { |i| start_array.push([pluralize(i + 2, "day").to_s, (i + 2).days.to_s]) }
-      3.times  { |i| start_array.push([pluralize((i + 1), "week").to_s, (i + 1).weeks.to_s]) }
-      11.times { |i| start_array.push([pluralize((i + 1), "month").to_s, (i + 1).months.to_s]) }
-      start_array.push(["1 year", 1.year.to_i.to_s])  # For some reason, 1.year is a float, so use to_i to get rid of decimals
       @edit[:new][:perf_end] ||= "0"
       @edit[:new][:perf_start] ||= 2.days.to_s
     end
-    @edit[:start_array] = start_array
-    @edit[:end_array] = end_array
   end
 
   # This method figures out what to put in each band unit pulldown array
@@ -544,7 +519,7 @@ module ReportController::Reports::Editor
         @edit[:new][:perf_interval] ||= "daily"                 # Default to Daily
         @edit[:new][:perf_avgs] ||= "time_interval"
         @edit[:new][:tz] = session[:user_tz]
-        build_perf_interval_arrays(@edit[:new][:perf_interval]) # Build the start and end arrays for the performance interval chooser
+        ensure_perf_interval_defaults
       end
       if Chargeback.db_is_chargeback?(@edit[:new][:model])
         @edit[:new][:cb_model] = Chargeback.report_cb_model(@edit[:new][:model])
@@ -578,12 +553,11 @@ module ReportController::Reports::Editor
           @edit[:percent_col] = false
           @edit[:new][:perf_limit_val] = nil
         end
-        build_perf_interval_arrays(@edit[:new][:perf_interval]) # Build the start and end arrays for the performance interval chooser
+        ensure_perf_interval_defaults
         @edit[:limit_cols] = VimPerformanceTrend.trend_limit_cols(@edit[:new][:perf_trend_db], @edit[:new][:perf_trend_col], @edit[:new][:perf_interval])
       end
       @refresh_div = "columns_div"
       @refresh_partial = "form_columns"
-      # build_perf_interval_arrays(@edit[:new][:perf_interval])  # Build the start and end arrays for the performance interval chooser
       # @edit[:limit_cols] = VimPerformanceTrend.trend_limit_cols(@edit[:new][:perf_trend_db], @edit[:new][:perf_trend_col], @edit[:new][:perf_interval])
     elsif params[:chosen_limit_col]
       if params[:chosen_limit_col] == "<None>"
@@ -610,7 +584,7 @@ module ReportController::Reports::Editor
       @edit[:new][:perf_interval] = params[:chosen_interval]
       @edit[:new][:perf_start] = nil  # Clear start/end offsets
       @edit[:new][:perf_end] = nil
-      build_perf_interval_arrays(@edit[:new][:perf_interval]) # Build the start and end arrays for the performance interval chooser
+      ensure_perf_interval_defaults
       reset_report_col_fields
       @refresh_div = "form_div"
       @refresh_partial = "form"
@@ -1456,9 +1430,8 @@ module ReportController::Reports::Editor
       @edit[:limit_cols] = VimPerformanceTrend.trend_limit_cols(@edit[:new][:perf_trend_db], @edit[:new][:perf_trend_col], @edit[:new][:perf_interval])
     end
 
-    # Build performance interval select arrays, if needed
     if [:performance, :trend].include?(model_report_type(@rpt.db))
-      build_perf_interval_arrays(@edit[:new][:perf_interval]) # Build the start and end arrays for the performance interval chooser
+      ensure_perf_interval_defaults
     end
 
     expkey = :record_filter
