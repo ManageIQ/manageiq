@@ -41,11 +41,11 @@
 
 
     .form-group
-      %label.col-md-4.control-label{:for => "jdbc_driver_class_input"}
+      %label.col-md-4.control-label{:for => "jdbc_ds_driver_class_input"}
         = _("Driver Class")
       .col-md-8
-        %input.form-control#jdbc_driver_class_input{:type          => "text",
-                                                    "name"         => "jdbc_driver_class_input",
+        %input.form-control#jdbc_ds_driver_input{:type          => "text",
+                                                    "name"         => "jdbc_ds_driver_input",
                                                     "ng-required"  => "true",
                                                     "ng-maxlength" => "256",
                                                     "placeholder"  => _("Enter JDBC Driver Class"),
@@ -53,9 +53,9 @@
 
       .col-sm-2
       .col-sm-10
-        %p.ng-error-messages{"ng-show" => "step2Form.jdbc_driver_class_input.$error.required"}
+        %p.ng-error-messages{"ng-show" => "step2Form.jdbc_ds_driver_input.$error.required"}
           = _("Required")
-        %p.ng-error-messages{"ng-show" => "step2Form.jdbc_driver_class_input.$error.maxlength"}
+        %p.ng-error-messages{"ng-show" => "step2Form.jdbc_ds_driver_input.$error.maxlength"}
           = _("Maximum length is 256")
 
 
