@@ -52,6 +52,7 @@ class VmOrTemplate < ApplicationRecord
   }
 
   POWER_OPS = %w(start stop suspend reset shutdown_guest standby_guest reboot_guest)
+  REMOTE_REGION_TASKS = POWER_OPS + %w(retire_now)
 
   validates_presence_of     :name, :location
   validates                 :vendor, :inclusion => {:in => VENDOR_TYPES.keys}
@@ -467,6 +468,15 @@ class VmOrTemplate < ApplicationRecord
       :role         => role,
       :expires_on   => POWER_OPS.include?(options[:task]) ? powerops_expiration : nil
     )
+  end
+
+  def self.action_for_task(task)
+    case task
+    when "retire_now"
+      "retire"
+    else
+      task
+    end
   end
 
   def scan_data_current?
