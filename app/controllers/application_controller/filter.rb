@@ -680,6 +680,7 @@ module ApplicationController::Filter
         s = MiqSearch.find(@edit[@expkey][:exp_chosen_search].to_s)
         @edit[:new][@expkey] = s.filter.exp
         @edit[@expkey][:selected] = @edit[@expkey][:exp_last_loaded] = {:id => s.id, :name => s.name, :description => s.description, :typ => s.search_type}       # Save the last search loaded
+        @edit[:search_type] = s[:search_type] == 'global' ? 'global' : nil
       elsif @edit[@expkey][:exp_chosen_report]
         r = MiqReport.find(@edit[@expkey][:exp_chosen_report].to_s)
         @edit[:new][@expkey] = r.conditions.exp
@@ -769,7 +770,7 @@ module ApplicationController::Filter
       @edit[:adv_search_report] = nil                           # Clear the report name
       @edit[@expkey][:selected] = nil                           # Clear selected search
     elsif params[:button] == "save"
-      @edit[:search_type] = nil
+      @edit[:search_type] = nil unless @edit.key?(:search_type)
     end
 
     if ["delete", "saveit"].include?(params[:button])
