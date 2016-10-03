@@ -4,6 +4,7 @@ class ChargebackContainerProject < Chargeback
     :end_date              => :datetime,
     :interval_name         => :string,
     :display_range         => :string,
+    :chargeback_rates      => :string,
     :project_name          => :string,
     :tag_name              => :string,
     :project_uid           => :string,
