@@ -129,11 +129,11 @@ describe ProcessTasksMixin do
     it "requeues if the server does not have an address" do
       test_class.invoke_tasks_remote(test_options)
 
-      message = MiqQueue.first
-
-      expect(message.class_name).to eq(test_class.name)
-      expect(message.method_name).to eq("invoke_tasks_remote")
-      expect(message.args).to eq([test_options])
+      expect(MiqQueue.first).to have_attributes(
+        :class_name  => test_class.name,
+        :method_name => "invoke_tasks_remote",
+        :args        => [test_options]
+      )
     end
   end
 
@@ -144,8 +144,8 @@ describe ProcessTasksMixin do
 
     context "with a valid class name" do
       let(:collection_name) { :test_class_collection }
-      let(:api_connection)    { double("ManageIQ::API::Client connection") }
-      let(:api_collection)    { double("ManageIQ::API::Client collection") }
+      let(:api_connection)  { double("ManageIQ::API::Client connection") }
+      let(:api_collection)  { double("ManageIQ::API::Client collection") }
 
       before do
         api_config = double("Api::CollectionConfig")
