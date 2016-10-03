@@ -244,7 +244,7 @@ class MiqAeClassController < ApplicationController
   def build_and_add_nodes(parents)
     existing_node = find_existing_node(parents)
     return nil if existing_node.nil?
-    children = TreeBuilder.tree_add_child_nodes(@sb, x_tree[:klass_name], existing_node, controller_name)
+    children = tree_add_child_nodes(existing_node)
     # set x_node after building tree nodes so parent node of new nodes can be selected in the tree.
     unless params[:action] == "x_show"
       if @record.kind_of?(MiqAeClass)
@@ -253,7 +253,7 @@ class MiqAeClassController < ApplicationController
         self.x_node = "aec-#{to_cid(@record.class_id)}"
       end
     end
-    {:key => existing_node, :children => children}
+    {:key => existing_node, :nodes => children}
   end
 
   def find_existing_node(parents)
