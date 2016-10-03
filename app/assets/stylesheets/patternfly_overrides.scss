@@ -593,6 +593,26 @@ body#dashboard {
   }
 }
 
+// Navbar item badge position and color
+.navbar-pf-vertical .nav .nav-item-iconic {
+  &.drawer-pf-trigger-icon {
+    width: 40px;
+  }
+  .badge {
+    position: relative;
+    top: -23px;
+    right : -10px;
+    margin: 0px;
+    min-width: 13px;
+    background-color: #0088ce;
+  }
+}
+
+// Toast notifications positioning
+.toast-notifications-list-pf {
+  top: 65px
+}
+
 // Notifications drawer positioning
 .drawer-pf {
   bottom: 20px;
