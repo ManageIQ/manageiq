@@ -140,15 +140,9 @@ module OpsController::Settings::Common
           end
         end
       when 'settings_workers'
-        if @edit[:default_verify_status] != session[:log_depot_default_verify_status]
-          session[:log_depot_default_verify_status] = @edit[:default_verify_status]
-          verb = @edit[:default_verify_status] ? 'show' : 'hide'
-          page << "miqValidateButtons('#{verb}', 'default_');"
-        end
         if @edit[:new].config[:workers][:worker_base][:ui_worker][:count] != @edit[:current].config[:workers][:worker_base][:ui_worker][:count]
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
-        page.replace_html('pwd_note', @edit[:default_verify_status] ? '' : _("* Passwords don't match."))
       end
 
       page << javascript_for_miq_button_visibility(@changed || @login_text_changed)
@@ -483,9 +477,6 @@ module OpsController::Settings::Common
       end
     elsif @sb[:active_tab] == "settings_workers" &&
           x_node.split("-").first != "z"
-      unless @edit[:default_verify_status]
-        add_flash(_("Password/Verify Password do not match"), :error)
-      end
       unless @flash_array.nil?
         session[:changed] = @changed = true
         javascript_flash
