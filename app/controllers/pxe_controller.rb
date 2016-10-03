@@ -37,8 +37,9 @@ class PxeController < ApplicationController
   def x_button
     @sb[:action] = action = params[:pressed]
 
-    raise ActionController::RoutingError.new('invalid button action') unless
-      PXE_X_BUTTON_ALLOWED_ACTIONS.key?(action)
+    unless PXE_X_BUTTON_ALLOWED_ACTIONS.key?(action)
+      raise ActionController::RoutingError, _('invalid button action')
+    end
 
     send(PXE_X_BUTTON_ALLOWED_ACTIONS[action])
   end

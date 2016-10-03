@@ -71,8 +71,11 @@ class MiqAeClassController < ApplicationController
 
   def x_button
     @sb[:action] = action = params[:pressed]
-    raise ActionController::RoutingError, _("Invalid button action.") unless
-        AE_X_BUTTON_ALLOWED_ACTIONS.key?(action)
+
+    unless AE_X_BUTTON_ALLOWED_ACTIONS.key?(action)
+      raise ActionController::RoutingError, _('invalid button action')
+    end
+
     send(AE_X_BUTTON_ALLOWED_ACTIONS[action])
   end
 

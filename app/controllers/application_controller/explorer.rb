@@ -68,9 +68,9 @@ module ApplicationController::Explorer
     raise ActionController::RoutingError.new('invalid button action') unless
       allowed_models.include?(model)
 
-    # guard this 'router' by matching against a list of allowed actions
-    raise ActionController::RoutingError.new('invalid button action') unless
-      X_BUTTON_ALLOWED_ACTIONS.key?(action)
+    unless X_BUTTON_ALLOWED_ACTIONS.key?(action)
+      raise ActionController::RoutingError, _('invalid button action')
+    end
 
     @explorer = true
 

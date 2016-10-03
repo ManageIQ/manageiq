@@ -128,7 +128,10 @@ class MiqPolicyController < ApplicationController
   def x_button
     action = params[:pressed]
 
-    raise ActionController::RoutingError, _('invalid button action') unless POLICY_X_BUTTON_ALLOWED_ACTIONS.key?(action)
+    unless POLICY_X_BUTTON_ALLOWED_ACTIONS.key?(action)
+      raise ActionController::RoutingError, _('invalid button action')
+    end
+
     send(POLICY_X_BUTTON_ALLOWED_ACTIONS[action])
   end
 

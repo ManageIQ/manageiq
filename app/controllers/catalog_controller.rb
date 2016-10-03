@@ -56,7 +56,6 @@ class CatalogController < ApplicationController
     @sb[:action] = action = params[:pressed]
     @sb[:applies_to_class] = 'ServiceTemplate'
 
-    # guard this 'router' by matching against a list of allowed actions
     unless CATALOG_X_BUTTON_ALLOWED_ACTIONS.key?(action)
       raise ActionController::RoutingError, _('invalid button action')
     end

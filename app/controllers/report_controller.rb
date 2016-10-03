@@ -58,8 +58,9 @@ class ReportController < ApplicationController
   def x_button
     @sb[:action] = action = params[:pressed]
 
-    raise ActionController::RoutingError.new('invalid button action') unless
-      REPORT_X_BUTTON_ALLOWED_ACTIONS.key?(action)
+    unless REPORT_X_BUTTON_ALLOWED_ACTIONS.key?(action)
+      raise ActionController::RoutingError, _('invalid button action')
+    end
 
     send(REPORT_X_BUTTON_ALLOWED_ACTIONS[action])
   end
