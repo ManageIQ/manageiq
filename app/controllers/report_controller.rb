@@ -56,12 +56,7 @@ class ReportController < ApplicationController
 
   # handle buttons pressed on the center buttons toolbar
   def x_button
-    @sb[:action] = action = params[:pressed]
-
-    raise ActionController::RoutingError.new('invalid button action') unless
-      REPORT_X_BUTTON_ALLOWED_ACTIONS.key?(action)
-
-    send(REPORT_X_BUTTON_ALLOWED_ACTIONS[action])
+    generic_x_button(REPORT_X_BUTTON_ALLOWED_ACTIONS)
   end
 
   def upload

@@ -126,10 +126,7 @@ class MiqPolicyController < ApplicationController
   }.freeze
 
   def x_button
-    action = params[:pressed]
-
-    raise ActionController::RoutingError, _('invalid button action') unless POLICY_X_BUTTON_ALLOWED_ACTIONS.key?(action)
-    send(POLICY_X_BUTTON_ALLOWED_ACTIONS[action])
+    generic_x_button(POLICY_X_BUTTON_ALLOWED_ACTIONS)
   end
 
   # Send the zipped up logs and zip files

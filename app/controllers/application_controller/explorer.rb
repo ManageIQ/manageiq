@@ -68,9 +68,9 @@ module ApplicationController::Explorer
     raise ActionController::RoutingError.new('invalid button action') unless
       allowed_models.include?(model)
 
-    # guard this 'router' by matching against a list of allowed actions
-    raise ActionController::RoutingError.new('invalid button action') unless
-      X_BUTTON_ALLOWED_ACTIONS.key?(action)
+    unless X_BUTTON_ALLOWED_ACTIONS.key?(action)
+      raise ActionController::RoutingError, _('invalid button action')
+    end
 
     @explorer = true
 
@@ -139,6 +139,16 @@ module ApplicationController::Explorer
   end
 
   private ############################
+
+  def generic_x_button(whitelist)
+    @sb[:action] = action = params[:pressed]
+
+    unless whitelist.key?(action)
+      raise ActionController::RoutingError, _('invalid button action')
+    end
+
+    send(whitelist[action])
+  end
 
   # Add an item to the tree history array
   def x_history_add_item(options)
