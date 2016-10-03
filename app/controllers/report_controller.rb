@@ -623,8 +623,7 @@ class ReportController < ApplicationController
       end
     end
 
-    add_nodes = {:key      => existing_node,
-                 :children => tree_add_child_nodes(existing_node)} if existing_node
+    add_nodes = {:key => existing_node, :nodes => tree_add_child_nodes(existing_node)} if existing_node
     self.x_node = params[:id]
     add_nodes
   end
