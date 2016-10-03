@@ -3,26 +3,8 @@ describe ReportController do
     context "#set_form_vars" do
       let(:user) { stub_user(:features => :all) }
 
-      it "check existence of cb_owner_id key" do
-        rep = FactoryGirl.create(
-          :miq_report,
-          :db         => "ChargebackVm",
-          :db_options => {:options => {:owner => user.userid}},
-          :col_order  => ["name"],
-          :headers    => ["Name"]
-        )
-        controller.instance_variable_set(:@rpt, rep)
-        controller.send(:set_form_vars)
-        new_hash = assigns(:edit)[:new]
-        expect(new_hash).to have_key(:cb_owner_id)
-        expect(new_hash[:cb_owner_id]).to eq(user.userid)
-      end
-
-      it "should save the selected time zone with a chargeback report" do
-        ApplicationController.handle_exceptions = true
-
-        rep = FactoryGirl.create(
-          :miq_report,
+      let(:chargeback_report) do
+        FactoryGirl.create(:miq_report,
           :db         => "ChargebackVm",
           :name       => 'name',
           :title      => 'title',
@@ -31,9 +13,11 @@ describe ReportController do
           :headers    => ["Name"],
           :tz         => nil
         )
+      end
 
-        edit = {
-          :rpt_id  => rep.id,
+      let(:report_edit_options) do
+        {
+          :rpt_id  => chargeback_report.id,
           :new     => {
             :model  => "ChargebackVm",
             :name   => 'name',
@@ -43,9 +27,9 @@ describe ReportController do
           },
           :current => {}
         }
-        controller.instance_variable_set(:@edit, edit)
-        session[:edit] = assigns(:edit)
+      end
 
+      before do
         allow(User).to receive(:server_timezone).and_return("UTC")
 
         allow(controller).to receive(:check_privileges).and_return(true)
@@ -56,12 +40,27 @@ describe ReportController do
         allow(controller).to receive(:build_edit_screen)
         allow(controller).to receive(:get_all_widgets)
         allow(controller).to receive(:replace_right_cell)
+      end
 
-        post :miq_report_edit, :params => { :id => rep.id, :button => 'save' }
+      it "check existence of cb_owner_id key" do
+        controller.instance_variable_set(:@rpt, chargeback_report)
+        controller.send(:set_form_vars)
+        new_hash = assigns(:edit)[:new]
+        expect(new_hash).to have_key(:cb_owner_id)
+        expect(new_hash[:cb_owner_id]).to eq(user.userid)
+      end
 
-        rep.reload
+      it "should save the selected tim e zone with a chargeback report" do
+        ApplicationController.handle_exceptions = true
 
-        expect(rep.tz).to eq("Eastern Time (US & Canada)")
+        controller.instance_variable_set(:@edit, report_edit_options)
+        session[:edit] = assigns(:edit)
+
+        post :miq_report_edit, :params => { :id => chargeback_report.id, :button => 'save' }
+
+        chargeback_report.reload
+
+        expect(chargeback_report.tz).to eq("Eastern Time (US & Canada)")
       end
 
       describe '#reportable_models' do
