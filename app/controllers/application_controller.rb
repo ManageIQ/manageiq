@@ -232,6 +232,10 @@ class ApplicationController < ActionController::Base
   end
   private :browser_refresh_task
 
+  #
+  # :task_id => id of task to wait for
+  # :action  => 'action_to_call' -- action to be called when the task finishes
+  #
   def initiate_wait_for_task(options = {})
     task_id = options[:task_id]
     session[:async] ||= {}
@@ -240,6 +244,9 @@ class ApplicationController < ActionController::Base
 
     session[:async][:params]           = copy_hash(params)  # Save the incoming parms
     session[:async][:params][:task_id] = task_id
+
+    # override method to be called, when the task is done
+    session[:async][:params][:action] = options[:action] if options.key?(:action)
 
     browser_refresh_task(task_id)
   end
