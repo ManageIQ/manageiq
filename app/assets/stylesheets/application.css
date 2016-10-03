@@ -11,6 +11,7 @@
  *= require dialog_fields
  *= require angular
  *= require miq_timeline
+ *= require notifications
  *= require angular-patternfly-sass/dist/styles/angular-patternfly
  *= require schedule_editor
  *= require miq_tree
