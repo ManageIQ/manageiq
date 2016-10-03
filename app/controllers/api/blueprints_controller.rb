@@ -6,7 +6,11 @@ module Api
 
     def publish_resource(type, id, data)
       blueprint = resource_search(id, type, Blueprint)
-      blueprint.publish(data['bundle_name'])
+      begin
+        blueprint.publish(data['bundle_name'])
+      rescue => err
+        raise BadRequestError, "Failed to publish blueprint - #{err}"
+      end
       blueprint
     end
 

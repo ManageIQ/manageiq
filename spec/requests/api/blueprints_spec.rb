@@ -262,6 +262,23 @@ RSpec.describe "Blueprints API" do
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
     end
+
+    it "fails appropriately if a blueprint publish raises" do
+      blueprint = FactoryGirl.create(:blueprint)
+      api_basic_authorize action_identifier(:blueprints, :publish)
+
+      run_post(blueprints_url(blueprint.id), :action => "publish")
+
+      expected = {
+        "error" => a_hash_including(
+          "kind"    => "bad_request",
+          "message" => a_string_matching(/Failed to publish blueprint - /i),
+        )
+      }
+
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:bad_request)
+    end
   end
 
   describe "DELETE /api/blueprints/:id" do
