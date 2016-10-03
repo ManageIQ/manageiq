@@ -37,10 +37,6 @@ function NotificationsDrawerCtrl($scope, eventNotifications, $timeout) {
     });
   };
 
-  vm.markAllRead = function (group) {
-    eventNotifications.markAllRead(group);
-  };
-
   var updatePosition = function() {
     var hasVerticalScrollbar,
         scrollContent = angular.element('#main-content'),
@@ -110,7 +106,7 @@ function NotificationsDrawerCtrl($scope, eventNotifications, $timeout) {
         retClass = "pficon pficon-error-circle-o";
       } else if (notification.data.type == 'warning') {
         retClass = "pficon pficon-warning-triangle-o";
-      } else if ((notification.data.type == 'success') || (notification.data.type == 'success')) {
+      } else if ((notification.data.type == 'success') || (notification.data.type == 'ok')) {
         retClass = "pficon pficon-ok";
       }
     }
@@ -126,6 +122,9 @@ function NotificationsDrawerCtrl($scope, eventNotifications, $timeout) {
     eventNotifications.clear(notification, group);
   };
 
+  vm.customScope.markAllRead = function(group) {
+    eventNotifications.markAllRead(group);
+  };
   vm.customScope.clearAllNotifications = function(group) {
     eventNotifications.clearAll(group);
   };

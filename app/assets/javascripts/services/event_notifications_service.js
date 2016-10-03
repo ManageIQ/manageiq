@@ -24,7 +24,7 @@ function eventNotifications($timeout) {
   this.ERROR = 'danger';
   this.WARNING = 'warning';
   this.INFO = 'info';
-  this.SUCCESS = 'ok';
+  this.SUCCESS = 'success';
 
   var state = ManageIQ.angular.eventNotificationsData.state;
   var observerCallbacks = ManageIQ.angular.eventNotificationsData.observerCallbacks;
