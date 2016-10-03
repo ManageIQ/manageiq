@@ -33,12 +33,12 @@ module ApplicationController::TreeSupport
 
   def tree_autoload
     @edit ||= session[:edit] # Remember any previous @edit
-    nodes = tree_add_child_nodes(params[:id])
-    render :json => TreeBuilder.convert_bs_tree(nodes)
+    render :json => tree_add_child_nodes(params[:id])
   end
 
   def tree_add_child_nodes(id)
-    TreeBuilder.tree_add_child_nodes(@sb, x_tree[:klass_name], id, controller_name)
+    nodes = TreeBuilder.tree_add_child_nodes(@sb, x_tree[:klass_name], id, controller_name)
+    TreeBuilder.convert_bs_tree(nodes)
   end
 
   private ############################
