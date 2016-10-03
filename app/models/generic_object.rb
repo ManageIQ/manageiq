@@ -48,6 +48,14 @@ class GenericObject < ApplicationRecord
     "#{prefix} #{attributes_as_string.join(", ")}>"
   end
 
+  def ae_user_identity(*args)
+    @user, @group, @tenant = *args
+    raise "A user is required to send calls to automate." unless @user
+
+    @group  ||= @user.current_group
+    @tenant ||= @user.current_tenant
+  end
+
   private
 
   # The properties column contains raw data that are converted during read/write.
@@ -95,6 +103,25 @@ class GenericObject < ApplicationRecord
     self.properties = properties.merge(name => val)
   end
 
-  def call_automate(method_name, options = {}, q_options = {})
+  # the method parameters are passed into automate as a hash: {:param_1 => param_1, :param_2 => param_2}
+  # the return value from automate is in $evm.root['method_result']
+  def call_automate(method_name, *args)
+    raise "A user is required to send [#{method_name}] to automate." unless @user
+
+    attrs = { :method_name => method_name }
+    args.each_with_index { |item, idx| attrs["param_#{idx + 1}".to_sym] = item }
+
+    options = {
+      :object_type   => self.class.name,
+      :object_id     => id,
+      :instance_name => 'GenericObject',
+      :user_id       => @user.id,
+      :miq_group_id  => @group.id,
+      :tenant_id     => @tenant.id,
+      :attrs         => attrs
+    }
+
+    ws = MiqAeEngine.deliver(options)
+    ws.root['method_result']
   end
 end
