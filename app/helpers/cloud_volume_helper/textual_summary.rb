@@ -8,7 +8,7 @@ module CloudVolumeHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(ems availability_zone cloud_tenant base_snapshot cloud_volume_snapshots attachments)
+    %i(parent_ems_cloud ems availability_zone cloud_tenant base_snapshot cloud_volume_snapshots attachments)
   end
 
   def textual_size
@@ -17,6 +17,10 @@ module CloudVolumeHelper::TextualSummary
 
   def textual_bootable
     @record.bootable.to_s
+  end
+
+  def textual_parent_ems_cloud
+    @record.ext_management_system.try(:parent_manager)
   end
 
   def textual_ems

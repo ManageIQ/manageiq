@@ -13,8 +13,8 @@
         - if role_allows?(:feature => "ems_cloud_show") && @record.ext_management_system
           %li
             = link_to(_("%{model}: %{name}") % {:model => ui_lookup(:table => "ext_management_system"), :name => @record.ext_management_system.name},
-              ems_cloud_path(@record.ext_management_system.id),
-              :title => _("Show this Snapshot's parent %{parent}") % {:parent => ui_lookup(:table => "ems_cloud")})
+              ems_storage_path(@record.ext_management_system.id),
+              :title => _("Show this Snapshot's parent %{parent}") % {:parent => ui_lookup(:table => "ems_storage")})
         - if role_allows?(:feature => "cloud_volume_show") && @record.cloud_volume
           %li
             = link_to(_("%{model}: %{name}") % {:model => ui_lookup(:table => "cloud_volume"), :name => @record.cloud_volume.name},
