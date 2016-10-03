@@ -280,10 +280,14 @@ module MiqAeEngine
     end
 
     def load_array_objects_from_string(objects_str)
-      objects_str.split(',').collect do |o|
-        klass, str_value = o.split(CLASS_SEPARATOR)
-        value = MiqAeObject.convert_value_based_on_datatype(str_value, klass)
-        value if value.kind_of?(MiqAeMethodService::MiqAeServiceModelBase)
+      objects_str.split(',').collect do |element|
+        if element.include?(CLASS_SEPARATOR)
+          klass, str_value = element.split(CLASS_SEPARATOR)
+          value = MiqAeObject.convert_value_based_on_datatype(str_value, klass)
+          value if value.kind_of?(MiqAeMethodService::MiqAeServiceModelBase)
+        else
+          element.presence
+        end
       end.compact
     end
 

@@ -106,6 +106,17 @@ describe MiqAeEngine::MiqAeObject do
     expect(result["my_objects"].length).to eq(3)
   end
 
+  it "#process_args_as_attributes with an array containing strings" do
+    result = @miq_obj.process_args_as_attributes("Array::my_values" => "abc,xyz,,1")
+    expect(result["my_values"]).to eq(%w(abc xyz 1))
+  end
+
+  it "#process_args_as_attributes with an array containing string and objects" do
+    result = @miq_obj.process_args_as_attributes("Array::my_values" => "abc,VmOrTemplate::#{@vm.id}")
+    expect(result["my_values"].first).to eq("abc")
+    expect(result["my_values"].second).to be_kind_of(MiqAeMethodService::MiqAeServiceVmOrTemplate)
+  end
+
   it "disabled inheritance" do
     @user = FactoryGirl.create(:user_with_group)
     create_state_ae_model(:name => 'LUIGI', :ae_class => 'CLASS1', :ae_namespace => 'A/C', :instance_name => 'FRED')
