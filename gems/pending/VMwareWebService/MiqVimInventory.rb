@@ -1490,17 +1490,7 @@ class MiqVimInventory < MiqVimClientBase
   end
 
   def hostSystemsStorageDevice(hostMors, selSpec = nil)
-    propPath = if selSpec
-      selSpecToPropPath(selSpec)
-    else
-      "config.storageDevice"
-    end
-
-    sd = {}
-    getMoPropMulti(hostMors, propPath).each do |res|
-      sd[res['MOR']] = res
-    end
-
+    sd = getMoPropMulti(hostMors, "config.storageDevice")
     sd = applySelector(sd, selSpec) if selSpec
 
     sd

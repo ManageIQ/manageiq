@@ -159,10 +159,10 @@ module ManageIQ::Providers
         retrieve_from_vc(ems, cleanup_callback) do
           _log.info("#{log_header} Retrieving Storage Device inventory for [#{host_mors.length}] hosts...")
 
-          @vi.hostSystemsStorageDevice(host_mors, :ems_refresh_host_scsi).each do |mor, sd|
-            next if mor.nil? || sd.nil?
+          @vi.hostSystemsStorageDevice(host_mors, :ems_refresh_host_scsi).to_miq_a.each do |sd|
+            next if sd.nil? || sd['MOR'].nil?
 
-            data = @vc_data.fetch_path(:host, mor)
+            data = @vc_data.fetch_path(:host, sd['MOR'])
             next if data.nil?
 
             data.store_path('config', 'storageDevice', sd.fetch_path('config', 'storageDevice'))
