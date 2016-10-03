@@ -4,6 +4,7 @@ class ChargebackVm < Chargeback
     :end_date                 => :datetime,
     :interval_name            => :string,
     :display_range            => :string,
+    :chargeback_rates         => :string,
     :vm_name                  => :string,
     :tag_name                 => :string,
     :vm_uid                   => :string,
