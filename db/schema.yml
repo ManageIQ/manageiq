@@ -5219,6 +5219,10 @@ miq_servers:
 - log_file_depot_id
 - proportional_set_size
 - has_active_websocket
+- system_memory_free
+- system_memory_used
+- system_swap_free
+- system_swap_used
 miq_sets:
 - id
 - name
