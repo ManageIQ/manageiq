@@ -698,38 +698,6 @@ describe ReportController do
           controller.send(:gfv_timeline)
           edit = assigns(:edit)
           expect(edit[:new][:tl_field]).to eq(NOTHING_STRING)
-          expect(edit[:unit1]).to eq(NOTHING_STRING)
-          expect(edit[:unit2]).to eq(NOTHING_STRING)
-          expect(edit[:unit3]).to eq(NOTHING_STRING)
-        end
-
-        it "sets first, second, and third band units" do
-          unit1 = "Hour"
-          controller.instance_variable_set(:@_params, :chosen_unit1 => unit1)
-          controller.send(:gfv_timeline)
-          edit = assigns(:edit)
-          expect(edit[:unit1]).to eq(unit1)
-          expect(edit[:new][:tl_bands][0][:unit]).to eq(unit1)
-          expect(assigns(:refresh_div)).to eq("tl_settings_div")
-          expect(assigns(:refresh_partial)).to eq("form_tl_settings")
-
-          unit2 = "Day"
-          controller.instance_variable_set(:@_params, :chosen_unit2 => unit2)
-          controller.send(:gfv_timeline)
-          edit = assigns(:edit)
-          expect(edit[:unit2]).to eq(unit2)
-          expect(edit[:new][:tl_bands][1][:unit]).to eq(unit2)
-          expect(assigns(:refresh_div)).to eq("tl_settings_div")
-          expect(assigns(:refresh_partial)).to eq("form_tl_settings")
-
-          unit3 = "Week"
-          controller.instance_variable_set(:@_params, :chosen_unit3 => unit3)
-          controller.send(:gfv_timeline)
-          edit = assigns(:edit)
-          expect(edit[:unit3]).to eq(unit3)
-          expect(edit[:new][:tl_bands][2][:unit]).to eq(unit3)
-          expect(assigns(:refresh_div)).to eq("tl_settings_div")
-          expect(assigns(:refresh_partial)).to eq("form_tl_settings")
         end
 
         it "sets event to position at" do
@@ -740,25 +708,6 @@ describe ReportController do
           expect(assigns(:tl_changed)).to be_truthy
         end
 
-        it "sets show event from last (unit)" do
-          unit = "Minutes"
-          controller.instance_variable_set(:@_params, :chosen_last_unit => unit)
-          controller.send(:gfv_timeline)
-          edit_new = assigns(:edit)[:new]
-          expect(edit_new[:tl_last_unit]).to eq(unit)
-          expect(edit_new[:tl_last_time]).to be_nil
-          expect(assigns(:refresh_div)).to eq("tl_settings_div")
-          expect(assigns(:refresh_partial)).to eq("form_tl_settings")
-          expect(assigns(:tl_repaint)).to be_truthy
-        end
-
-        it "sets show event from last (value)" do
-          val = "10"
-          controller.instance_variable_set(:@_params, {:chosen_last_time => val})
-          controller.send(:gfv_timeline)
-          expect(assigns(:edit)[:new][:tl_last_time]).to eq(val)
-          expect(assigns(:tl_repaint)).to be_truthy
-        end
       end
     end
   end

@@ -380,7 +380,6 @@ module UiConstants
   NOTHING_STRING = "<<< Nothing >>>"
   SHOWALL_STRING = "<<< Show All >>>"
   MAX_REPORT_COLUMNS = 100      # Default maximum number of columns in a report
-  BAND_UNITS = ["Second", "Minute", "Hour", "Day", "Week", "Month", "Year", "Decade"]
   GRAPH_MAX_COUNT = 10
 
   TREND_MODEL = "VimPerformanceTrend"   # Performance trend model name requiring special processing

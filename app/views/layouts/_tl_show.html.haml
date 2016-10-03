@@ -6,3 +6,5 @@
 = render :partial => "layouts/flash_msg"
 = render :partial => "layouts/tl_options"
 = render :partial => 'layouts/tl_detail'
+
+= _("* Dates/Times on this page are based on time zone: %{time_zone}.") % {:time_zone => session[:user_tz]}

@@ -248,19 +248,7 @@ module ReportController::Reports::Editor
         @position_time = format_timezone(Time.now - 1.year, "UTC", nil)
       end
       @timeline = true if @tl_field != NOTHING_STRING
-      build_timeline_units
-      @tl_last_time_choices = case @edit[:new][:tl_last_unit]
-                              when "Minutes" then Array.new(12) { |t| (t * 5 + 5).to_s }
-                              when "Hours"   then Array.new(24) { |t| (t + 1).to_s }
-                              when "Days"    then Array.new(31) { |t| (t + 1).to_s }
-                              when "Weeks"   then Array.new(4)  { |t| (t + 1).to_s }
-                              when "Months"  then Array.new(12) { |t| (t + 1).to_s }
-                              when "Years"   then Array.new(10) { |t| (t + 1).to_s }
-                              end
-      if @edit[:new][:tl_last_time].nil? && @edit[:new][:tl_last_unit] != SHOWALL_STRING
-        @edit[:new][:tl_last_time] = @tl_last_time_choices.first
-      end
-
+      @tl_json = sample_timeline
     when "7"  # Preview
       # generate preview report when
     end
@@ -289,19 +277,6 @@ module ReportController::Reports::Editor
     when "daily"
       @edit[:new][:perf_end] ||= "0"
       @edit[:new][:perf_start] ||= 2.days.to_s
-    end
-  end
-
-  # This method figures out what to put in each band unit pulldown array
-  def build_timeline_units
-    unless @edit[:new][:tl_bands].blank?
-      split1  = BAND_UNITS.join(" ").split(@edit[:unit2]).first # Split on the second band unit
-      @units1 = split1.split(" ")                               # Grab the units before the second band
-      split2  = BAND_UNITS.join(" ").split(@edit[:unit1]).last    # Split on the first band unit
-      split3  = split2.split(@edit[:unit3])                     # Split the rest on the 3rd unit
-      @units2 = split3.first.split(" ")                         # Grab the first part for the 2nd unit
-      split4  = BAND_UNITS.join(" ").split(@edit[:unit2])       # Split on the second band unit
-      @units3 = split4.last.split(" ")                          # Grab the last part for the 3rd unit
     end
   end
 
@@ -808,66 +783,9 @@ module ReportController::Reports::Editor
         @tl_repaint = true
       end
       @edit[:new][:tl_field] = params[:chosen_tl]
-      if params[:chosen_tl] == NOTHING_STRING   # If clearing the timeline field
-        @edit[:new][:tl_bands] = []      # Clear the bands
-        @edit[:unit1] = NOTHING_STRING
-        @edit[:unit2] = NOTHING_STRING
-        @edit[:unit3] = NOTHING_STRING
-      else
-        if @edit[:new][:tl_bands].blank?        # If the bands are blank
-          @edit[:unit1] = BAND_UNITS[1]
-          @edit[:new][:tl_bands] =  [           # Create default first band
-            {:width => 100, :gap => 0.0, :text => true, :unit => BAND_UNITS[1], :pixels => 100}
-          ]
-        end
-      end
     elsif params[:chosen_position] && params[:chosen_position] != @edit[:new][:tl_position]
       @tl_changed = true
       @edit[:new][:tl_position] = params[:chosen_position]
-    elsif params[:chosen_last_unit] && params[:chosen_last_unit] != @edit[:new][:tl_last_unit]
-      @refresh_div = "tl_settings_div"
-      @refresh_partial = "form_tl_settings"
-      @tl_repaint = true
-      @edit[:new][:tl_last_unit] = params[:chosen_last_unit]
-      @edit[:new][:tl_last_time] = nil  # Clear out the last time numeric choice
-    elsif params[:chosen_last_time] && params[:chosen_last_time] != @edit[:new][:tl_last_time]
-      @tl_repaint = true
-      @edit[:new][:tl_last_time] = params[:chosen_last_time]
-    elsif params[:chosen_unit1] && params[:chosen_unit1] != @edit[:unit1]
-      @refresh_div = "tl_settings_div"
-      @refresh_partial = "form_tl_settings"
-      @edit[:unit1] = params[:chosen_unit1]
-      @edit[:new][:tl_bands][0][:unit] =  params[:chosen_unit1]
-    elsif params[:chosen_unit2] && params[:chosen_unit2] != @edit[:unit2]
-      @refresh_div = "tl_settings_div"
-      @refresh_partial = "form_tl_settings"
-      @tl_changed = true
-      @edit[:unit2] = params[:chosen_unit2]
-      if @edit[:unit2] == NOTHING_STRING
-        @edit[:unit3] = NOTHING_STRING                        # Clear the 3rd band unit value
-        @edit[:new][:tl_bands] = [@edit[:new][:tl_bands][0]]  # Remove the 2nd and 3rd bands
-        @edit[:new][:tl_bands][0][:width] = 100
-      elsif @edit[:new][:tl_bands].length < 2
-        @edit[:new][:tl_bands][0][:width] = 70
-        @edit[:new][:tl_bands].push(:width => 30, :height => 0.6, :gap => 0.1, :text => false, :unit => params[:chosen_unit2], :pixels => 200)
-      else
-        @edit[:new][:tl_bands][1][:unit] =  params[:chosen_unit2]
-      end
-    elsif params[:chosen_unit3] && params[:chosen_unit3] != @edit[:unit3]
-      @refresh_div = "tl_settings_div"
-      @refresh_partial = "form_tl_settings"
-      @tl_changed = true
-      @edit[:unit3] = params[:chosen_unit3]
-      if @edit[:unit3] == NOTHING_STRING
-        @edit[:new][:tl_bands] = @edit[:new][:tl_bands][0..1] # Remove the 3rd band
-        @edit[:new][:tl_bands][1][:width] = 30
-      elsif @edit[:new][:tl_bands].length < 3
-        @edit[:new][:tl_bands][0][:width] = 70
-        @edit[:new][:tl_bands][1][:width] = 20
-        @edit[:new][:tl_bands].push(:width => 10, :height => 0.3, :gap => 0.1, :text => false, :unit => params[:chosen_unit3], :pixels => 200)
-      else
-        @edit[:new][:tl_bands][2][:unit] =  params[:chosen_unit3]
-      end
     end
   end
 
@@ -934,15 +852,6 @@ module ReportController::Reports::Editor
           end
           if @edit[:new][:sortby1] && nf.last == @edit[:new][:sortby2].split("__").first  # If deleting the second sort field
             @edit[:new][:sortby2] = NOTHING_STRING
-          end
-
-          # Clear out timeline options
-          if nf.last == @edit[:new][:tl_field]        # If deleting the timeline field
-            @edit[:new][:tl_field] = NOTHING_STRING
-            @edit[:unit1] = NOTHING_STRING
-            @edit[:unit2] = NOTHING_STRING
-            @edit[:unit3] = NOTHING_STRING
-            @edit[:new][:tl_bands] = []
           end
 
           @edit[:new][:col_options].delete(field_to_col(nf.last)) # Remove this column from the col_options hash
@@ -1091,13 +1000,6 @@ module ReportController::Reports::Editor
       rpt.timeline = Hash.new
       rpt.timeline[:field] = @edit[:new][:tl_field]
       rpt.timeline[:position] = @edit[:new][:tl_position]
-      rpt.timeline[:bands] = @edit[:new][:tl_bands]
-      if @edit[:new][:tl_last_unit] == SHOWALL_STRING
-        rpt.timeline[:last_unit] = rpt.timeline[:last_time] = nil
-      else
-        rpt.timeline[:last_unit] = @edit[:new][:tl_last_unit]
-        rpt.timeline[:last_time] = @edit[:new][:tl_last_time]
-      end
     end
 
     # Set the line break group field
@@ -1460,28 +1362,11 @@ module ReportController::Reports::Editor
     @edit[:new][:display_filter] = @edit[expkey][:expression] if @edit[:new][:display_filter].nil?              # Copy to new exp
 
     # Get timeline fields
-    @edit[:tl_last_units] = []
-    BAND_UNITS[1..-2].each { |u| @edit[:tl_last_units].push u.pluralize }
-    @edit[:unit1]              = NOTHING_STRING # Default units and tl field to nothing
-    @edit[:unit2]              = NOTHING_STRING
-    @edit[:unit3]              = NOTHING_STRING
     @edit[:new][:tl_field]     = NOTHING_STRING
     @edit[:new][:tl_position]  = "Last"
-    @edit[:new][:tl_last_unit] = SHOWALL_STRING
-    @edit[:new][:tl_last_time] = nil
     if @rpt.timeline.kind_of?(Hash)    # Timeline has any data
       @edit[:new][:tl_field]     = @rpt.timeline[:field]     unless @rpt.timeline[:field].blank?
       @edit[:new][:tl_position]  = @rpt.timeline[:position]  unless @rpt.timeline[:position].blank?
-      @edit[:new][:tl_last_unit] = @rpt.timeline[:last_unit] unless @rpt.timeline[:last_unit].blank?
-      @edit[:new][:tl_last_time] = @rpt.timeline[:last_time] unless @rpt.timeline[:last_time].blank?
-      @edit[:new][:tl_bands]     = @rpt.timeline[:bands]
-      unless @rpt.timeline[:bands].blank?
-        @edit[:unit1] = @rpt.timeline[:bands][0][:unit].capitalize
-        @edit[:unit2] = @rpt.timeline[:bands][1][:unit].capitalize if @rpt.timeline[:bands].length > 1
-        @edit[:unit3] = @rpt.timeline[:bands][2][:unit].capitalize if @rpt.timeline[:bands].length > 2
-      end
-    else
-      @edit[:new][:tl_bands] = []
     end
 
     # Get the pdf page size, if present
