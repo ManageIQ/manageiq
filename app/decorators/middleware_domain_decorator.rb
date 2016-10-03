@@ -3,11 +3,11 @@ class MiddlewareDomainDecorator < Draper::Decorator
   include MiddlewareDecoratorMixin
 
   def fonticon
-    'fa fa-exchange'.freeze
+    'domain'.freeze
   end
 
   # Determine the icon
   def item_image
-    'placeholder'
+    'middleware_domain'
   end
 end
