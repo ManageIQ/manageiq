@@ -6,6 +6,7 @@
                               'data-db-backup-form-field-changed-url' => "/#{controller_name}/db_backup_form_field_changed/",
                               'data-submit-url'                       => "/#{controller_name}/db_backup/"}
   - if @sb[:active_tab] == "diagnostics_database"
+    = render :partial => "layouts/flash_msg"
     %h3
       = _("Basic Info")
   .form-group
@@ -36,9 +37,6 @@
   %hr/
   %h3
     = _("Run a Database Backup Now")
-  - if @sb[:active_tab] == "diagnostics_database"
-    -# created div with different name so database validation flash message can be shown in it's own box
-    = render :partial => "layouts/flash_msg"
   %hr
   %h3
     = _("Backup Schedules")
@@ -118,7 +116,7 @@
           - submit = button_tag(_("Submit"), :class => "btn btn-primary", :alt => caption)
 
           = link_to(submit, {:action => 'db_gc_collection'},
-            "data-miq_sparkle_on" => true,
+            "data-miq_sparkle_off" => true,
             :confirm              => _("Are you sure you want to Run Database Garbage Collection Now?"),
             :remote               => true,
             'data-method'         => :post,
