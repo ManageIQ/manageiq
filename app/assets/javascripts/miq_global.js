@@ -78,7 +78,8 @@ if (! window.ManageIQ) {
     },
     qe: {
       autofocus: 0, // counter of pending autofocus fields
-      debounce: 0, // counter of pending debounce calls
+      debounced: {}, // running debounces
+      debounce_counter: 1,
     },
   };
 }
