@@ -54,7 +54,7 @@ class ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow < ::MiqPro
     # We want only non external networks to be connectable directly to the Vm
     return {} unless (src_obj = provider_or_tenant_object)
 
-    src_obj.private_networks.each_with_object({}) do |cn, hash|
+    src_obj.all_private_networks.each_with_object({}) do |cn, hash|
       hash[cn.id] = cn.cidr.blank? ? cn.name : "#{cn.name} (#{cn.cidr})"
     end
   end
