@@ -36,6 +36,10 @@ module Api
                          :only => [:show, :update, :destroy, :handle_options_request, :options]
     end
     skip_before_action :get_global_session_data
+    skip_before_action :reset_toolbar
+    skip_before_action :set_session_tenant
+    skip_before_action :set_user_time_zone
+    skip_before_action :allow_websocket
     skip_after_action :set_global_session_data
     before_action :set_access_control_headers
     prepend_before_action :require_api_user_or_token, :except => [:handle_options_request]
