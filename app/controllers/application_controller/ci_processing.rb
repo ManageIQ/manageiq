@@ -1909,7 +1909,7 @@ module ApplicationController::CiProcessing
       objs, _objs_out_reg = filter_ids_in_region(objs, "Service")
       klass = Service
     when "VmOrTemplate"
-      objs, _objs_out_reg = filter_ids_in_region(objs, "VM") unless VmOrTemplate::POWER_OPS.include?(task)
+      objs, _objs_out_reg = filter_ids_in_region(objs, "VM") unless VmOrTemplate::REMOTE_REGION_TASKS.include?(task)
       klass = Vm
     end
 
