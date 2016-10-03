@@ -98,7 +98,7 @@
                   Infrastructure
                   %a
                     %span.fa.fa-close{"aria-hidden" => "true", "ng-click" => "removeInfrastructure(node)"}
-                %a.label.label-default{"ng-if" => "!node.master || !node.node || !node.storage || !node.loadBalancer || !node.dns || !node.etcd || !node.infrastructure", "popover-placement" => "right", "popover-template" => "'/static/deploy_containers_provider/deploy-provider-add-roles-popover.html'", "popover-trigger" => "focus", :tabindex => "0", :type => "button"}
+                %a.label.label-default{"ng-if" => "!node.master || !node.node || !node.storage || !node.loadBalancer || !node.dns || !node.etcd || !node.infrastructure", "popover-placement" => "right", "popover-template" => "'static/deploy_containers_provider/deploy-provider-add-roles-popover.html'", "popover-trigger" => "focus", :tabindex => "0", :type => "button"}
                   %span.fa.fa-plus{"aria-hidden" => "true"}
     .table-footer
       .badge{:tooltip => "{{mastersWarning}}", "tooltip-placement" => "right"}

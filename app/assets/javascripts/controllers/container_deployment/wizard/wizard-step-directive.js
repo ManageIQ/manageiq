@@ -24,7 +24,7 @@ angular.module('miq.wizard').directive('miqWizardStep', function() {
       reviewTemplate: '@?'
     },
     require: '^miq-wizard',
-    templateUrl: '/static/wizard-step.html',
+    templateUrl: 'static/wizard-step.html',
     controller: ['$scope', '$timeout', function($scope, $timeout) {
       var firstRun = true;
       $scope.steps = [];

@@ -3,7 +3,8 @@ ManageIQ.angular.app = angular.module('ManageIQ', [
   'patternfly',
   'frapontillo.bootstrap-switch',
   'angular.validators',
-  'miq.api'
+  'miq.api',
+  'templates'
 ]);
 miqHttpInject(ManageIQ.angular.app);
 
