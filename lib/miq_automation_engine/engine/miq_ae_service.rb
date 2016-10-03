@@ -237,6 +237,48 @@ module MiqAeMethodService
       raise MiqAeException::MethodNotFound, err.message
     end
 
+    def notification_subject(values_hash)
+      subject = values_hash[:subject] || @workspace.ae_user
+      (ar_object(subject) || subject).tap do |object|
+        raise ArgumentError, "Subject must be a valid Active Record object" unless object.kind_of?(ActiveRecord::Base)
+      end
+    end
+
+    def ar_object(svc_obj)
+      if svc_obj.kind_of?(MiqAeMethodService::MiqAeServiceModelBase)
+        svc_obj.instance_variable_get('@object')
+      end
+    end
+
+    def notification_type(values_hash)
+      type = values_hash[:type].present? ? values_hash[:type].to_sym : default_notification_type(values_hash)
+      type.tap do |t|
+        _log.info("Validating Notification type: #{t}")
+        valid_type = NotificationType.find_by_name(t)
+        raise ArgumentError, "Invalid notification type specified" unless valid_type
+      end
+    end
+
+    def create_notification(values_hash = {})
+      create_notification!(values_hash)
+    rescue
+      return nil
+    end
+
+    def create_notification!(values_hash = {})
+      options = {}
+      type = notification_type(values_hash)
+      subject = notification_subject(values_hash)
+      options[:message] = values_hash[:message] if values_hash[:message].present?
+      User.current_user = @workspace.ae_user
+
+      _log.info("Calling Create Notification with type: #{type} subject: #{subject} options: #{options.inspect}")
+      MiqAeServiceModelBase.wrap_results(Notification.create!(:type      => type,
+                                                              :subject   => subject,
+                                                              :options   => options,
+                                                              :initiator => @workspace.ae_user))
+    end
+
     def instance_exists?(path)
       _log.info "<< path=#{path.inspect}"
       __find_instance_from_path(path) ? true : false
@@ -366,8 +408,14 @@ module MiqAeMethodService
       $log.warn "domain=#{dom} : is not viewable"
       false
     end
-  end
 
+    def default_notification_type(values_hash)
+      level = values_hash[:level] || "info"
+      audience = values_hash[:audience] || "user"
+      _log.info("Generic notification type level: #{level} audience: #{audience}")
+      "automate_#{audience}_#{level}".downcase.to_sym
+    end
+  end
 
   class MiqAeServiceObject
     include MiqAeMethodService::MiqAeServiceObjectCommon
