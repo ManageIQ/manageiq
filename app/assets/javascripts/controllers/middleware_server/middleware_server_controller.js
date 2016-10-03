@@ -8,13 +8,14 @@ MwServerController.$inject = ['$scope', 'miqService' ];
  * We are now using Rx.js Observables instead of miqCallAngular, for sending configurable
  * data from miq buttons.
  * This is the parent controller for the page that is bootstrapped,
- * interacting with the page via $scope and then $broadcast events down to the sub
+ * interacting with the page via $scope and then 'sendDataWithRx' events down to the sub
  * controllers to handle them in isolation.
  *
  * Controller Hierarchy is:
  * - MwServerController
  * -- MwServerOpsController
  * -- MwAddDeploymentController
+ * -- MwAddDatasourceController
  * -- *Any other controllers (more coming...)
  *
  * This is certainly not ideal, but allows us to use multiple controllers on a page.
@@ -71,6 +72,10 @@ function MwServerController($scope, miqService) {
   $scope.showDeployListener = function () {
     $scope.deployAddModel.showDeployModal = true;
     $scope.resetDeployForm();
+  };
+
+  $scope.showDatasourceListener = function () {
+    // just here to 'Button not implemented'
   };
 
   $scope.resetDeployForm = function () {

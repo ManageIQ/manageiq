@@ -50,6 +50,12 @@ class MiddlewareServerController < ApplicationController
                                     :skip  => false,
                                     :msg   => N_('JDBC Driver installation'),
                                     :param => :driver
+    },
+    :middleware_add_datasource  => {:op    => :add_middleware_datasource,
+                                    :skip  => false,
+                                    :hawk  => N_('Not adding new datasource to Hawkular server'),
+                                    :msg   => N_('New datasource initiated for selected server(s)'),
+                                    :param => :datasource
     }
   }.freeze
 
@@ -94,6 +100,32 @@ class MiddlewareServerController < ApplicationController
     render :json => {
       :status => :success, :msg => _("JDBC Driver \"%s\" has been installed on this server.") % params["driverName"]
     }
+  end
+
+  def add_datasource
+    datasource_name = params["datasourceName"]
+    selected_server = identify_selected_entities
+    existing_datasource = MiddlewareDatasource.find_by(:name => datasource_name, :server_id => selected_server)
+
+    if existing_datasource
+      render :json => {
+        :status => :warn, :msg => _("Datasource \"%s\" already exists on this server.") % datasource_name
+      }
+    else
+      params[:datasource] = {
+        :datasourceName => datasource_name,
+        :xaDatasource   => params["xaDatasource"],
+        :jndiName       => params["jndiName"],
+        :driverName     => params["driverName"],
+        :driverClass    => params["driverClass"],
+        :connectionUrl  => params["connectionUrl"]
+      }
+
+      run_server_operation(OPERATIONS.fetch(:middleware_add_datasource), selected_server)
+      render :json => {
+        :status => :success, :msg => _("Datasource \"%s\" has been installed on this server.") % params["datasource"]
+      }
+    end
   end
 
   def show
