@@ -12,7 +12,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
     raise(MiqException::RemoteConsoleNotSupportedError, "#{protocol} remote console requires the vm to be running.") if options[:check_if_running] && state != "on"
   end
 
-  def remote_console_acquire_ticket(userid, protocol, originating_server)
+  def remote_console_acquire_ticket(userid, originating_server, protocol)
     send("remote_console_#{protocol.to_s.downcase}_acquire_ticket", userid, originating_server)
   end
 
@@ -29,7 +29,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
       :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',
       :zone        => my_zone,
-      :args        => [userid, protocol, MiqServer.my_server.id]
+      :args        => [userid, MiqServer.my_server.id, protocol]
     }
 
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
@@ -66,11 +66,6 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
     remote_console_vnc_acquire_ticket(userid, originating_server)
   end
 
-  def is_local?(originating_server)
-    # MiqServer.my_server.id == originating_server
-    false
-  end
-
   def remote_console_vnc_acquire_ticket(userid, originating_server)
     validate_remote_console_acquire_ticket("vnc")
 
@@ -97,36 +92,15 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
     SystemConsole.force_vm_invalid_token(id)
 
     console_args = {
-        :user       => User.find_by(:userid => userid),
-        :vm_id      => id,
-        :ssl        => false,
-        :protocol   => 'vnc',
-        :secret     => password,
-        :url_secret => SecureRandom.hex
+      :user       => User.find_by(:userid => userid),
+      :vm_id      => id,
+      :ssl        => false,
+      :protocol   => 'vnc',
+      :secret     => password,
+      :url_secret => SecureRandom.hex
     }
+    host_address = host.address
 
-    _log.info "Originating server: #{originating_server}, local server: #{MiqServer.my_server.id}"
-    if is_local?(originating_server)
-      console_args.update(
-        :host_name  => host.address,
-        :port       => host_port,
-      )
-    else
-      SystemConsole.cleanup_proxy_processes
-      proxy_address, proxy_port, proxy_pid = SystemConsole.launch_proxy(host.address, host_port)
-      return nil if proxy_address.nil?
-
-      _log.info "Proxy server started: #{proxy_address}:#{proxy_port} <--> #{host.address}:#{host_port}"
-      _log.info "Proxy process PID: #{proxy_pid}"
-
-      console_args.update(
-        :host_name    => proxy_address,
-        :port         => proxy_port,
-        :proxy_status => 'proxy_running',
-        :proxy_pid    => proxy_pid
-      )
-    end
-
-    SystemConsole.create!(console_args).connection_params
+    SystemConsole.launch_proxy_if_is_local(console_args, originating_server, host_address, host_port)
   end
 end
