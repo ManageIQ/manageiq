@@ -1,5 +1,5 @@
 module ReportFormatter
-  class ReportText < Ruport::Formatter
+  class ReportText < Ruport::Formatter::Text
     renders :text, :for => ReportRenderer
 
     # determines the text widths for each column.
@@ -60,7 +60,8 @@ module ReportFormatter
       @hr = hr
 
       unless mri.title.nil? # generate title line, if present
-        output << @hr
+        output << fit_to_width(@hr)
+
         temp_title = mri.title
         temp_title << " (" << mri.report_run_time.to_s << ")" unless mri.report_run_time.nil?
         t = temp_title.center(@line_len - 2)
@@ -167,7 +168,7 @@ module ReportFormatter
       mri = options.mri
       tz = mri.get_time_zone(Time.zone.name)
       if !mri.user_categories.blank? || !mri.categories.blank? || !mri.conditions.nil? || !mri.display_filter.nil?
-        output << @hr
+        output << fit_to_width(@hr)
         unless mri.user_categories.blank?
           user_filters = mri.user_categories.flatten
           unless user_filters.blank?
@@ -236,13 +237,13 @@ module ReportFormatter
         end
       end
 
-      output << @hr
+      output << fit_to_width(@hr)
       # Label footer with last run on time of selected report or current time for other downloads
       last_run_on = mri.rpt_options && mri.rpt_options[:last_run_on] || Time.zone.now
       cr = format_timezone(last_run_on, tz).to_s
       f = cr.center(@line_len - 2)
       output << fit_to_width("|#{f}|" + CRLF)
-      output << @hr
+      output << fit_to_width(@hr)
     end
 
     # Generates the horizontal rule by calculating the total table width and
@@ -250,31 +251,13 @@ module ReportFormatter
     #
     #   "+------------------+"
     def hr
-      mri = options.mri
-      if mri.table.column_names.include?("id")  # Use 1 less column if "id" is present
-        @line_len = @max_col_width.inject((mri.table.data[0].to_miq_a.length - 1) * 3) { |s, e| s + e } + 1
-        "+" + "-" * (@line_len - 2) + "+" + CRLF
+      columns = options.mri.table.column_names
+      if columns.include?("id") # Use 1 less column if "id" is present
+        @line_len = @max_col_width.inject((columns.length - 1) * 3) { |s, e| s + e } + 1
       else
-        @line_len = @max_col_width.inject((mri.table.data[0].to_miq_a.length) * 3) { |s, e| s + e } + 1
-        "+" + "-" * (@line_len - 2) + "+" + CRLF
+        @line_len = @max_col_width.inject(columns.length * 3) { |s, e| s + e }
       end
-    end
-
-    # Returns table_width if specified.
-    #
-    # Otherwise, uses SystemExtensions to determine terminal width.
-    def width
-      options.table_width || @line_len
-    end
-
-    # Truncates a string so that it does not exceed Text#width
-    def fit_to_width(s)
-      # workaround for Rails setting terminal_width to 1
-      width < 2 ? max_width = @line_len : max_width = width
-
-      s.split(CRLF).each do |r|
-        r.gsub!(/\A.{#{max_width + 1},}/) { |m| m[0, max_width - 2] + ">>" }
-      end.join(CRLF) + CRLF
+      "+" + "-" * (@line_len - 2) + "+" + CRLF
     end
   end
 end
