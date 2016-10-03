@@ -88,7 +88,7 @@ class EmsInfraDashboardService
     # Get latest hourly rollup for each node.
     cluster_ids = @ems.ems_clusters if @ems.present?
     metrics = MetricRollup.latest_rollups(EmsCluster.name, cluster_ids)
-    metrics = metrics.where('timestamp > ?', 1000.day.ago.utc).includes(:resource)
+    metrics = metrics.where('timestamp > ?', 1.day.ago.utc).includes(:resource)
     metrics = metrics.includes(:resource => [:ext_management_system]) unless @ems.present?
 
     cluster_cpu_usage = []
@@ -164,6 +164,6 @@ class EmsInfraDashboardService
 
     @daily_metrics ||= Metric::Helper.find_for_interval_name('daily', tp)
                                      .where(:resource => (@ems || ManageIQ::Providers::InfraManager.all))
-                                     .where('timestamp > ?', 3000.days.ago.utc).order('timestamp')
+                                     .where('timestamp > ?', 30.days.ago.utc).order('timestamp')
   end
 end
