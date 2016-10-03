@@ -27,7 +27,7 @@ class ApplicationHelper::Toolbar::EmsStoragesCenter < ApplicationHelper::Toolbar
                        :onwhen    => "1+"),
                    ]
                  ),
-  ])
+               ])
   button_group('ems_storage_policy', [
                  select(
                    :ems_storage_policy_choice,
