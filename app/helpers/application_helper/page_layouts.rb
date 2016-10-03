@@ -67,8 +67,9 @@ module ApplicationHelper::PageLayouts
        (@layout == 'vm' && controller.action_name == 'edit') ||
        (@layout == "report" && ["new", "create", "edit", "copy", "update", "explorer"].include?(controller.action_name))
       return false
-    elsif ['container_dashboard', 'dashboard', 'ems_infra_dashboard'].include?(@layout) || ['dashboard', 'topology'].include?(@showtype)
-      # Dashboard tabs are located in taskbar because they are otherwise hidden behind the taskbar regardless of z-index -->
+    elsif %w(container_dashboard dashboard ems_infra_dashboard).include?(@layout) ||
+          %w(dashboard topology).include?(@showtype)
+      # Dashboard tabs are located in taskbar because they are otherwise hidden behind the taskbar regardless of z-index
       return false
     end
     true

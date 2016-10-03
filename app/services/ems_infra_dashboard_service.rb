@@ -10,42 +10,43 @@ class EmsInfraDashboardService
 
   def all_data
     {
-      :providers_link         => get_url_to_entity(:ems_infra),
-      :status                 => status,
-      :providers              => providers,
-      :heatmaps               => heatmaps,
-      :ems_utilization        => ems_utilization,
+      :providers_link  => get_url_to_entity(:ems_infra),
+      :status          => status,
+      :providers       => providers,
+      :heatmaps        => heatmaps,
+      :ems_utilization => ems_utilization,
     }.compact
   end
 
   def status
     {
-      :ems_clusters      => {
+      :ems_clusters  => {
         :count        => @ems.present? ? @ems.ems_clusters.count : EmsCluster.count,
         :errorCount   => 0,
         :warningCount => 0,
         :href         => get_url_to_entity(:ems_cluster)
       },
-      :hosts => {
+      :hosts         => {
         :count        => @ems.present? ? @ems.hosts.count : Host.where.not(:ext_management_system => nil).count,
         :errorCount   => 0,
         :warningCount => 0,
         :href         => get_url_to_entity(:host)
       },
-      :datastores => {
+      :datastores    => {
         :count        => @ems.present? ? @ems.storages.count : Storage.count,
         :errorCount   => 0,
         :warningCount => 0,
         :href         => get_url_to_entity(:storage)
       },
-      :vms   => {
+      :vms           => {
         :count        => @ems.present? ? @ems.vms.count : VmInfra.where.not(:ext_management_system => nil).count,
         :errorCount   => 0,
         :warningCount => 0,
         :href         => get_url_to_entity(:vm)
       },
-      :miq_templates       => {
-        :count        => @ems.present? ? @ems.miq_templates.count : MiqTemplate.where.not(:ext_management_system => nil).count,
+      :miq_templates => {
+        :count        => @ems.present? ?
+          @ems.miq_templates.count : MiqTemplate.where.not(:ext_management_system => nil).count,
         :errorCount   => 0,
         :warningCount => 0,
         :href         => get_url_to_entity(:miq_template)
@@ -103,7 +104,8 @@ class EmsInfraDashboardService
         :node     => m.resource.name,
         :provider => provider_name,
         :total    => m.derived_vm_numvcpus.present? ? m.derived_vm_numvcpus.round : nil,
-        :percent  => m.cpu_usage_rate_average.present? ? (m.cpu_usage_rate_average / 100.0).round(CPU_USAGE_PRECISION) : nil # pf accepts fractions 90% = 0.90
+        :percent  => m.cpu_usage_rate_average.present? ?
+          (m.cpu_usage_rate_average / 100.0).round(CPU_USAGE_PRECISION) : nil # pf accepts fractions 90% = 0.90
       }
 
       cluster_memory_usage << {
@@ -111,7 +113,8 @@ class EmsInfraDashboardService
         :node     => m.resource.name,
         :provider => m.resource.ext_management_system.name,
         :total    => m.derived_memory_available.present? ? m.derived_memory_available.round : nil,
-        :percent  => m.mem_usage_absolute_average.present? ? (m.mem_usage_absolute_average / 100.0).round(CPU_USAGE_PRECISION) : nil # pf accepts fractions 90% = 0.90
+        :percent  => m.mem_usage_absolute_average.present? ?
+          (m.mem_usage_absolute_average / 100.0).round(CPU_USAGE_PRECISION) : nil # pf accepts fractions 90% = 0.90
       }
     end
 

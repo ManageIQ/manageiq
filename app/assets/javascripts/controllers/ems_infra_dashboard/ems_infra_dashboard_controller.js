@@ -1,18 +1,18 @@
 /* global miqHttpInject */
 
 miqHttpInject(angular.module('emsInfraDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.charts', 'miq.card', 'miq.util']))
-  .controller('emsInfraDashboardController', ['$scope', 'dashboardUtilsFactory', 'chartsMixin', '$http', '$interval', '$window',
-    function($scope, dashboardUtilsFactory, chartsMixin, $http, $interval, $window) {
+  .controller('emsInfraDashboardController', ['$scope', 'infraDashboardUtilsFactory', 'infraChartsMixin', '$http', '$interval', '$window',
+    function($scope, infraDashboardUtilsFactory, infraChartsMixin, $http, $interval, $window) {
       document.getElementById("center_div").className += " miq-body";
 
       // Obj-status cards init
       $scope.objectStatus = {
-        providers:     dashboardUtilsFactory.createProvidersStatus(),
-        ems_clusters:  dashboardUtilsFactory.createClustersStatus(),
-        hosts:         dashboardUtilsFactory.createHostsStatus(),
-        datastores:    dashboardUtilsFactory.createDatastoresStatus(),
-        vms:           dashboardUtilsFactory.createVmsStatus(),
-        miq_templates: dashboardUtilsFactory.createMiqTemplatesStatus(),
+        providers:     infraDashboardUtilsFactory.createProvidersIcon(),
+        ems_clusters:  infraDashboardUtilsFactory.createClustersStatus(),
+        hosts:         infraDashboardUtilsFactory.createHostsStatus(),
+        datastores:    infraDashboardUtilsFactory.createDatastoresStatus(),
+        vms:           infraDashboardUtilsFactory.createVmsStatus(),
+        miq_templates: infraDashboardUtilsFactory.createMiqTemplatesStatus(),
       };
 
       $scope.loadingDone = false;
@@ -31,22 +31,22 @@ miqHttpInject(angular.module('emsInfraDashboard', ['ui.bootstrap', 'patternfly',
       };
 
       $scope.heatmaps = [$scope.clusterCpuUsage, $scope.clusterMemoryUsage];
-      $scope.clusterHeatMapUsageLegendLabels = chartsMixin.clusterHeatMapUsageLegendLabels;
-      $scope.dashboardHeatmapChartHeight = chartsMixin.dashboardHeatmapChartHeight;
+      $scope.clusterHeatMapUsageLegendLabels = infraChartsMixin.clusterHeatMapUsageLegendLabels;
+      $scope.dashboardHeatmapChartHeight = infraChartsMixin.dashboardHeatmapChartHeight;
 
       // cluster Utilization
-      $scope.cpuUsageConfig = chartsMixin.chartConfig.cpuUsageConfig;
+      $scope.cpuUsageConfig = infraChartsMixin.chartConfig.cpuUsageConfig;
       $scope.cpuUsageSparklineConfig = {
-        tooltipFn: chartsMixin.dailyTimeTooltip,
+        tooltipFn: infraChartsMixin.dailyTimeTooltip,
         chartId: 'cpuSparklineChart'
       };
       $scope.cpuUsageDonutConfig = {
         chartId: 'cpuDonutChart',
         thresholds: { 'warning': '60', 'error': '90' },
       };
-      $scope.memoryUsageConfig = chartsMixin.chartConfig.memoryUsageConfig;
+      $scope.memoryUsageConfig = infraChartsMixin.chartConfig.memoryUsageConfig;
       $scope.memoryUsageSparklineConfig = {
-        tooltipFn: chartsMixin.dailyTimeTooltip,
+        tooltipFn: infraChartsMixin.dailyTimeTooltip,
         chartId: 'memorySparklineChart'
       };
       $scope.memoryUsageDonutConfig = {
@@ -95,26 +95,26 @@ miqHttpInject(angular.module('emsInfraDashboard', ['ui.bootstrap', 'patternfly',
             }
           }
 
-          dashboardUtilsFactory.updateStatus($scope.objectStatus.ems_clusters, data.status.ems_clusters);
-          dashboardUtilsFactory.updateStatus($scope.objectStatus.hosts, data.status.hosts);
-          dashboardUtilsFactory.updateStatus($scope.objectStatus.datastores, data.status.datastores);
-          dashboardUtilsFactory.updateStatus($scope.objectStatus.vms, data.status.vms);
-          dashboardUtilsFactory.updateStatus($scope.objectStatus.miq_templates, data.status.miq_templates);
+          infraDashboardUtilsFactory.updateStatus($scope.objectStatus.ems_clusters, data.status.ems_clusters);
+          infraDashboardUtilsFactory.updateStatus($scope.objectStatus.hosts, data.status.hosts);
+          infraDashboardUtilsFactory.updateStatus($scope.objectStatus.datastores, data.status.datastores);
+          infraDashboardUtilsFactory.updateStatus($scope.objectStatus.vms, data.status.vms);
+          infraDashboardUtilsFactory.updateStatus($scope.objectStatus.miq_templates, data.status.miq_templates);
 
           // cluster utilization donut
-          $scope.cpuUsageData = chartsMixin.processUtilizationData(data.ems_utilization.cpu,
+          $scope.cpuUsageData = infraChartsMixin.processUtilizationData(data.ems_utilization.cpu,
                                                                    "dates",
                                                                    $scope.cpuUsageConfig.units);
-          $scope.memoryUsageData = chartsMixin.processUtilizationData(data.ems_utilization.mem,
+          $scope.memoryUsageData = infraChartsMixin.processUtilizationData(data.ems_utilization.mem,
                                                                       "dates",
                                                                       $scope.memoryUsageConfig.units);
 
           // Heatmaps
-          $scope.clusterCpuUsage = chartsMixin.processHeatmapData($scope.clusterCpuUsage, data.heatmaps.clusterCpuUsage);
+          $scope.clusterCpuUsage = infraChartsMixin.processHeatmapData($scope.clusterCpuUsage, data.heatmaps.clusterCpuUsage);
           $scope.clusterCpuUsage.loadingDone = true;
 
           $scope.clusterMemoryUsage =
-            chartsMixin.processHeatmapData($scope.clusterMemoryUsage, data.heatmaps.clusterMemoryUsage);
+            infraChartsMixin.processHeatmapData($scope.clusterMemoryUsage, data.heatmaps.clusterMemoryUsage);
           $scope.clusterMemoryUsage.loadingDone = true;
 
           // Trend lines data

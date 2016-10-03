@@ -1116,8 +1116,8 @@ module ApplicationHelper
                         configuration_job condition container_group container_route container_project
                         container_replicator container_image container_image_registry
                         container_topology container_dashboard ems_infra_dashboard middleware_topology persistent_volume
-                        container_build container_node container_service ems_cloud ems_cluster ems_container ems_infra event
-                        ems_middleware middleware_server middleware_deployment middleware_datasource
+                        container_build container_node container_service ems_cloud ems_cluster ems_container ems_infra
+                        event ems_middleware middleware_server middleware_deployment middleware_datasource
                         middleware_domain middleware_server_group middleware_messaging
                         ems_network security_group floating_ip cloud_subnet network_router network_topology network_port cloud_network
                         load_balancer

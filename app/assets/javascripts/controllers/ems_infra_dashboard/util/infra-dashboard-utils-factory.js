@@ -1,5 +1,5 @@
-angular.module('miq.util').factory('dashboardUtilsFactory', function() {
-  var createProvidersStatus = function() {
+angular.module('miq.util').factory('infraDashboardUtilsFactory', function() {
+  var createProvidersIcon = function() {
     return {
       title: __("Providers"),
       count: 0,
@@ -76,7 +76,7 @@ angular.module('miq.util').factory('dashboardUtilsFactory', function() {
   };
   return {
     parseDate: parseDate,
-    createProvidersStatus: createProvidersStatus,
+    createProvidersIcon: createProvidersIcon,
     createClustersStatus: createClustersStatus,
     createDatastoresStatus: createDatastoresStatus,
     createHostsStatus: createHostsStatus,

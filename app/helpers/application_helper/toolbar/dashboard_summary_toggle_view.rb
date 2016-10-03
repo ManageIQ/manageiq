@@ -21,6 +21,6 @@ class ApplicationHelper::Toolbar::DashboardSummaryToggleView < ApplicationHelper
       nil,
       :url       => "/",
       :url_parms => "?display=topology",
-      :klass => ApplicationHelper::Button::TopologyFeatureButton)
+      :klass     => ApplicationHelper::Button::TopologyFeatureButton)
   ])
 end
