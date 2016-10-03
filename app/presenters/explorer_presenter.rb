@@ -97,6 +97,11 @@ class ExplorerPresenter
     self
   end
 
+  def activate_tree_node(options)
+    @options[:activate_node] = options
+    self
+  end
+
   def spinner_off
     @options[:spinner_off] = true
     self
@@ -182,6 +187,7 @@ class ExplorerPresenter
     data[:spinnerOff] = true if @options[:spinner_off]
     data[:scrollTop] = true if @options[:scroll_top]
     data[:focus] = @options[:focus] if @options[:focus]
+    data[:activateNode] = @options[:activate_node] if @options[:activate_node]
     data
   end
 

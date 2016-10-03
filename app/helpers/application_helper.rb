@@ -1058,6 +1058,7 @@ module ApplicationHelper
     ex.scroll_top if args[:scroll_top]
     ex.spinner_off if args[:spinner_off]
     ex.focus(args[:focus]) if args[:focus]
+    ex.activate_tree_node(args[:activate_node]) if args[:activate_node]
 
     render :json => ex.for_render
   end

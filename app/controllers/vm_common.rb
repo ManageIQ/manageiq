@@ -48,7 +48,7 @@ module VmCommon
         replace_gtl_main_div
       else
         if @refresh_div == "flash_msg_div"
-          render :partial => "shared/ajax/flash_msg_replace"
+          javascript_flash(:spinner_off => true)
         else
           options
           partial_replace(@refresh_div, "vm_common/#{@refresh_partial}")
@@ -565,7 +565,7 @@ module VmCommon
         drop_breadcrumb(:name => _("Snapshot VM '%{name}'") % {:name => @record.name}, :url => "/vm_common/snap")
         if session[:edit] && session[:edit][:explorer]
           @edit = session[:edit]    # saving it to use in next transaction
-          render :partial => "shared/ajax/flash_msg_replace"
+          javascript_flash(:spinner_off => true)
         else
           render :action => "snap"
         end
@@ -805,7 +805,7 @@ module VmCommon
       end
     else
       add_flash(_("Button not yet implemented"), :error)
-      render :partial => "shared/ajax/flash_msg_replace"
+      javascript_flash(:spinner_off => true)
     end
   end
 
@@ -1079,7 +1079,7 @@ module VmCommon
       add_flash(_("User is not authorized to view %{model} \"%{name}\"") %
         {:model => ui_lookup(:model => @record.class.base_model.to_s), :name => @record.name},
                 :error) unless flash_errors?
-      render :partial => "shared/tree_select_error", :locals => {:options => {:select_node => x_node}}
+      javascript_flash(:spinner_off => true, :activate_node => {:tree => x_active_tree.to_s, :node => x_node})
     end
   end
 
@@ -1106,7 +1106,7 @@ module VmCommon
         ems.validate_remote_console_vmrc_support
       rescue MiqException::RemoteConsoleNotSupportedError => e
         add_flash(_("Console access failed: %{message}") % {:message => e.message}, :error)
-        render :partial => "shared/ajax/flash_msg_replace"
+        javascript_flash(:spinner_off => true)
         return
       end
     end
@@ -1116,7 +1116,7 @@ module VmCommon
                 {:id => task_id.inspect}, :error) unless task_id.kind_of?(Fixnum)
 
     if @flash_array
-      render :partial => "shared/ajax/flash_msg_replace"
+      javascript_flash(:spinner_off => true)
     else
       initiate_wait_for_task(:task_id => task_id)
     end
