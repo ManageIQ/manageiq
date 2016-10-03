@@ -35,13 +35,7 @@ class PxeController < ApplicationController
   }.freeze
 
   def x_button
-    @sb[:action] = action = params[:pressed]
-
-    unless PXE_X_BUTTON_ALLOWED_ACTIONS.key?(action)
-      raise ActionController::RoutingError, _('invalid button action')
-    end
-
-    send(PXE_X_BUTTON_ALLOWED_ACTIONS[action])
+    generic_x_button(PXE_X_BUTTON_ALLOWED_ACTIONS)
   end
 
   def accordion_select

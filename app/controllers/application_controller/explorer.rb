@@ -140,6 +140,16 @@ module ApplicationController::Explorer
 
   private ############################
 
+  def generic_x_button(whitelist)
+    @sb[:action] = action = params[:pressed]
+
+    unless whitelist.key?(action)
+      raise ActionController::RoutingError, _('invalid button action')
+    end
+
+    send(whitelist[action])
+  end
+
   # Add an item to the tree history array
   def x_history_add_item(options)
     x_tree_history.delete_if do |item|

@@ -53,14 +53,8 @@ class CatalogController < ApplicationController
 
   def x_button
     # setting this here so it can be used in the common code
-    @sb[:action] = action = params[:pressed]
     @sb[:applies_to_class] = 'ServiceTemplate'
-
-    unless CATALOG_X_BUTTON_ALLOWED_ACTIONS.key?(action)
-      raise ActionController::RoutingError, _('invalid button action')
-    end
-
-    send(CATALOG_X_BUTTON_ALLOWED_ACTIONS[action])
+    generic_x_button(CATALOG_X_BUTTON_ALLOWED_ACTIONS)
   end
 
   def servicetemplate_edit

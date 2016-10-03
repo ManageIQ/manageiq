@@ -70,13 +70,7 @@ class MiqAeClassController < ApplicationController
   }.freeze
 
   def x_button
-    @sb[:action] = action = params[:pressed]
-
-    unless AE_X_BUTTON_ALLOWED_ACTIONS.key?(action)
-      raise ActionController::RoutingError, _('invalid button action')
-    end
-
-    send(AE_X_BUTTON_ALLOWED_ACTIONS[action])
+    generic_x_button(AE_X_BUTTON_ALLOWED_ACTIONS)
   end
 
   def explorer
