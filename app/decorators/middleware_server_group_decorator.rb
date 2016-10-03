@@ -3,11 +3,11 @@ class MiddlewareServerGroupDecorator < Draper::Decorator
   include MiddlewareDecoratorMixin
 
   def fonticon
-    'fa fa-exchange'.freeze
+    'server-group'.freeze
   end
 
   # Determine the icon
   def item_image
-    'placeholder'
+    'middleware_server_group'
   end
 end
