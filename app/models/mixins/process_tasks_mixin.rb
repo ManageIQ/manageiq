@@ -103,7 +103,7 @@ module ProcessTasksMixin
 
       if resource_ids.present?
         resource_ids.each do |id|
-          obj = collection.where(:id => id).first
+          obj = collection.find(id)
           _log.info("Invoking task #{action} on collection #{collection_name}, object #{obj.id}, with args #{post_args}")
           obj.send(action, post_args)
         end

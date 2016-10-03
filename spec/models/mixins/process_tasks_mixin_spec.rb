@@ -180,8 +180,8 @@ describe ProcessTasksMixin do
         let(:resource1)     { double("resource1", :id => 1) }
 
         before do
-          expect(api_collection).to receive(:where).with(:id => 0).and_return([resource0])
-          expect(api_collection).to receive(:where).with(:id => 1).and_return([resource1])
+          expect(api_collection).to receive(:find).with(0).and_return(resource0)
+          expect(api_collection).to receive(:find).with(1).and_return(resource1)
         end
 
         it "executes the task on each resource" do
