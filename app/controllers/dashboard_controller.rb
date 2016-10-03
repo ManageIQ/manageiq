@@ -541,19 +541,20 @@ class DashboardController < ApplicationController
         'timeline_csv' => "CSV"
       }
       center_tb_buttons['timeline_pdf'] = "PDF" if PdfGenerator.available?
-      if @report
-        page << javascript_highlight("report_#{@report.id}_link", true)
-        status = @report.table.data.length == 0 ? :disabled : :enabled
+      # if @report
+      #   page << javascript_highlight("report_#{@report.id}_link", true)
+      #   status = @report.table.data.length == 0 ? :disabled : :enabled
+      #
+      #   center_tb_buttons.each do |button_id, typ|
+      #     page << "ManageIQ.toolbars.showItem('#center_tb', '#{button_id}');"
+      #     page << tl_toggle_button_enablement(button_id, status, typ)
+      #   end
+      # else
+      #   center_tb_buttons.keys.each do |button_id|
+      #     page << "ManageIQ.toolbars.hideItem('#center_tb', '#{button_id}');"
+      #   end
+      # end
 
-        center_tb_buttons.each do |button_id, typ|
-          page << "ManageIQ.toolbars.showItem('#center_tb', '#{button_id}');"
-          page << tl_toggle_button_enablement(button_id, status, typ)
-        end
-      else
-        center_tb_buttons.keys.each do |button_id|
-          page << "ManageIQ.toolbars.hideItem('#center_tb', '#{button_id}');"
-        end
-      end
       page.replace("tl_div", :partial => "dashboard/tl_detail")
       page << "miqSparkle(false);"
       session[:last_rpt_id] = @report ? @report.id : nil  # Remember rpt record id to turn off later

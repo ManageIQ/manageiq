@@ -1,143 +1,95 @@
 - url = url_for(:action => 'tl_chooser', :id => @record.id)
+
 #tl_options_div
-  - if @timeline
-    %h3
-      - if @record != @tl_record
-        = _("Options %{model}: %{name}") % {:model => ui_lookup(:model => @tl_record.class.to_s), :name => @tl_record.name}
-      - else
-        = _("Options")
-    .form-horizontal
-      .form-group
-        %label.control-label.col-md-2
-          = _("Show")
-        .col-md-8
-          = select_tag("tl_show",
-            options_for_select(ApplicationController::Timelines::SELECT_EVENT_TYPE, @tl_options[:tl_show]),
-            :class                => "selectpicker")
-          :javascript
-            miqInitSelectPicker();
-            miqSelectPickerEvent('tl_show', '#{url}', {beforeSend: true})
-      %hr
-      .form-group
-        %label.control-label.col-md-2
-          = _("Interval")
-        .col-md-8
-          = select_tag("tl_typ",
-            options_for_select([[_("Hourly"), "Hourly"], [_("Daily"), "Daily"]], @tl_options.date.typ),
-            :class                => "selectpicker")
-          :javascript
-            miqInitSelectPicker();
-            miqSelectPickerEvent('tl_typ', '#{url}', {beforeSend: true})
-      .form-group
-        %label.control-label.col-md-2
-          = _("Date")
-        .col-md-8
-          - v = h(@tl_options.date.typ == 'Hourly' ? @tl_options.date.hourly : @tl_options.date.daily)
-          = datepicker_input_tag("miq_date_1", v,
-            :readonly               => "true",
-            "data-miq_sparkle_on"   => true,
-            "data-miq_observe_date" => {:url => url}.to_json)
-      - if @tl_options.date.typ == 'Hourly'
-        %span#day_span{:style => "display: none;"}
-      - else
-        %span#day_span
-          .form-group
-            %label.control-label.col-md-2
-              = _("Show")
-            .col-md-8
-              = select_tag("tl_days",
-                options_for_select((2..31).to_a, @tl_options.date.days.to_i),
-                :class                => "selectpicker")
-              :javascript
-                miqInitSelectPicker();
-                miqSelectPickerEvent('tl_days', '#{url}', {beforeSend: true})
-              = _("days back")
-      %hr
-    - if @tl_options.policy_events?
-      .form-horizontal
-        .form-group
-          %label.control-label.col-md-2
-            = _("Result")
-          .col-md-8
-            = select_tag("tl_result",
-              options_for_select(ApplicationController::Timelines::SELECT_RESULT_TYPE, @tl_options.policy.result),
-              :class                => "selectpicker")
-            :javascript
-              miqInitSelectPicker();
-              miqSelectPickerEvent('tl_result', '#{url}', {beforeSend: true})
-        .form-group
-          %label.control-label.col-md-2
-            = _("Event Type")
-          .col-md-8
-            = check_box_tag("tl_fl_grp_all", "1", @tl_options.policy.filters_all,
-              "data-miq_sparkle_on"       => true,
-              "data-miq_observe_checkbox" => {:url => url}.to_json)
-            = _("(Check All)")
-        .form-group
-          %label.control-label.col-md-2
-          .col-md-8
-            - @tl_options.policy.events.keys.sort.each_with_index do |e, i|
+  %form#form_div{:name           => 'angularForm',
+                 'ng-controller' => 'timelineOptionsController',
+                 'ng-show'       => 'afterGet',
+                 :novalidate     => true}
+    - if @timeline
+      %h3
+        - if @record != @tl_record
+          = _("Options %{model}: %{name}") % {:model => ui_lookup(:model => @tl_record.class.to_s), :name => @tl_record.name}
+        - else
+          = _("Options")
+      .toolbar-pf
+        .row
+          .col-sm-12.toolbar-pf-actions.timeline-toolbar
+            .form-group
+              %div
+                = select_tag("tl_show",
+                  options_for_select(ApplicationController::Timelines::SELECT_EVENT_TYPE, nil),
+                  'ng-model'                    => 'reportModel.tl_show',
+                  "selectpicker-for-select-tag" => '',
+                  :class                        => 'selectpicker',
+                  'ng-change'                   => 'eventTypeUpdated()')
+                %span{'ng-if' => 'reportModel.tl_show === "timeline"'}
+                  = select_tag("tl_category_management",
+                    options_for_select(@tl_options.mngt.events.keys.sort, nil),
+                    'ng-model'                    => 'reportModel.tl_categories',
+                    "selectpicker-for-select-tag" => '',
+                    'data-live-search'            => 'true',
+                    'data-actions-box'            => 'true',
+                    'multiple'                    => '',
+                    :class                        => 'selectpicker category-selector')
+                %span{'ng-if' => 'reportModel.tl_show !== "timeline"'}
+                  = select_tag("tl_category_policy",
+                    options_for_select(@tl_options.policy.events.keys.sort, nil),
+                    'ng-model'                    => 'reportModel.tl_categories',
+                    "selectpicker-for-select-tag" => '',
+                    'data-live-search'            => 'true',
+                    'data-actions-box'            => 'true',
+                    'multiple'                    => '',
+                    :class                        => 'selectpicker category-selector')
+                %span{'ng-if' => 'reportModel.tl_show === "timeline"', 'class' => 'timeline-option'}
+                  %label
+                    %input{:type         => 'checkbox',
+                            :name         => 'showDetailedEvents',
+                            'ng-model'    => 'reportModel.showDetailedEvents'}
+                    = _("Show Detailed Events")
+                %span{'ng-if' => 'reportModel.tl_show !== "timeline"', 'class' => 'timeline-option'}
+                  %label.radio
+                    %input{"ng-model" => "reportModel.tl_result", :type => "radio", :value => "success"}
+                    = _("Successful Events")
+                  %label.radio
+                    %input{"ng-model" => "reportModel.tl_result", :type => "radio", :value => "failure"}
+                    = _("Failed Events")
+                  %label.radio
+                    %input{"ng-model" => "reportModel.tl_result", :type => "radio", :value => "both"}
+                    = _("Both")
+              %div{'class' => 'timeline-date-box'}
+                .input-group.bootstrap-touchspin.timeline-stepper.pull-left
+                  %span.input-group-btn
+                    %button.btn.btn-default.bootstrap-touchspin-down{"ng-click" => "countDecrement()", :type => "button"} -
+                  %input.timeline-range-input.bootstrap-touchspin.form-control{"ng-model" => "reportModel.tl_range_count",
+                                                                                :readonly => "readonly",
+                                                                                :type     => "text"}
+                  %span.input-group-btn
+                    %button.btn.btn-default.bootstrap-touchspin-up{"ng-click" => "countIncrement()", :type => "button"} +
+                = select_tag("tl_range",
+                  options_for_select([[_("Days"), "days"],
+                                      [_("Weeks"), "weeks"],
+                                      [_("Months"), "months"]], nil),
+                  'ng-model'                    => 'reportModel.tl_timerange',
+                  "selectpicker-for-select-tag" => '',
+                  :class                        => 'selectpicker pull-left')
+                = select_tag("tl_timepivot",
+                  options_for_select([[_("centered"), "centered"],
+                                      [_("starting"), "starting"],
+                                      [_("ending"), "ending"]], nil),
+                  'ng-model'                    => 'reportModel.tl_timepivot',
+                  "selectpicker-for-select-tag" => '',
+                  :class                        => 'selectpicker pull-left timeline-pivot-input')
+                %input{'pf-datepicker' => '',
+                      'options' => 'dateOptions',
+                      'date'    => 'reportModel.tl_date',
+                      'class'   => 'pull-righto timeline-date-input'}
+            %div{'class' => 'pull-right'}
+              .btn.btn-default{'ng-click'    => 'applyButtonClicked()',
+                              'ng-disabled' => 'reportModel.tl_categories.length === 0'}
+                = _("Apply")
 
-              %div{:style => "padding: 0px 5px 0px 0px; float: left; color: #{ApplicationController::Timelines::EVENT_COLORS[i]}"}
-                = check_box_tag("tl_fl_grp#{i + 1}__#{e}", "1", @tl_options.policy.applied_filters.include?(e),
-                  "data-miq_sparkle_on"       => true,
-                  "data-miq_observe_checkbox" => {:url => url}.to_json)
-                = h(e)
-        .form-group
-          .col-md-8
-          .col-md-8
-          .col-md-8
-          .col-md-8
-          .col-md-8
-      %form#hiddenForm
-        - @tl_options.policy.events.length.times do |i|
-          %input{:type => "hidden", :name => "filter#{i}", :id => "filter#{i}", :value => @tl_options.policy.fltr(i)}
-
-    - else
-      .form-horizontal
-        .form-group
-          %label.control-label.col-md-2
-            = _("Level")
-          .col-md-8
-            = select_tag("tl_fl_typ",
-              options_for_select([[_("Summary"), "critical"], [_("Detail"), "detail"]], @tl_options.mngt.level),
-              :class                => "selectpicker")
-            :javascript
-              miqInitSelectPicker();
-              miqSelectPickerEvent('tl_fl_typ', '#{url}', {beforeSend: true})
-        .form-group
-          %label.control-label.col-md-2
-            = _("Event Groups")
-          .col-md-8
-            = select_tag("tl_fl_grp1",
-              options_for_select([["<#{_('NONE')}> ", ""]] + @tl_options.mngt.events.keys.sort, @tl_options.mngt.filter1),
-              :class                => "selectpicker")
-            .bootstrap-select{:style => "border-bottom: 6px solid #CD051C;"}
-            :javascript
-              miqInitSelectPicker();
-              miqSelectPickerEvent('tl_fl_grp1', '#{url}', {beforeSend: true})
-        .form-group
-          %label.control-label.col-md-2
-          .col-md-8
-            = select_tag("tl_fl_grp2",
-              options_for_select([["<#{_('NONE')}> ", ""]] + @tl_options.mngt.events.keys.sort, @tl_options.mngt.filter2),
-              :class                => "selectpicker")
-            .bootstrap-select{:style => "border-bottom: 6px solid #005C25;"}
-            :javascript
-              miqInitSelectPicker();
-              miqSelectPickerEvent('tl_fl_grp2', '#{url}', {beforeSend: true})
-        .form-group
-          %label.control-label.col-md-2
-          .col-md-8
-            = select_tag("tl_fl_grp3",
-              options_for_select([["<#{_('NONE')}> ", ""]] + @tl_options.mngt.events.keys.sort, @tl_options.mngt.filter3),
-              :class                => "selectpicker")
-            .bootstrap-select{:style => "border-bottom: 6px solid #035CB1;"}
-            :javascript
-              miqInitSelectPicker();
-              miqSelectPickerEvent('tl_fl_grp3', '#{url}', {beforeSend: true})
-      %form#hiddenForm
-        %input#filter1{:type => "hidden", :name => "filter1", :value => @tl_options.mngt.fltr1}
-        %input#filter2{:type => "hidden", :name => "filter2", :value => @tl_options.mngt.fltr2}
-        %input#filter3{:type => "hidden", :name => "filter3", :value => @tl_options.mngt.fltr3}
-    = _("* Dates/Times on this page are based on time zone: %{time_zone}.") % {:time_zone => session[:user_tz]}
+:javascript
+  ManageIQ.angular.app.value('recordId', '#{@record.id}');
+  ManageIQ.angular.app.value('url', '#{url}');
+  ManageIQ.angular.app.value('categories', '#{@tl_options.mngt.events.keys.sort}');
+  miq_bootstrap('#form_div');

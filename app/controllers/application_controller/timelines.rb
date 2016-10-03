@@ -5,14 +5,8 @@ module ApplicationController::Timelines
   def tl_chooser
     @record = identify_tl_or_perf_record
     @tl_record = @record.kind_of?(MiqServer) ? @record.vm : @record # Use related server vm record
+    @tl_options.tl_show = params[:tl_show] ? params[:tl_show] : "timeline"
     @tl_options.date.update_from_params(params)
-
-    # set variables for type of timeline is selected
-    if params[:tl_show]
-      @tl_options[:tl_show] = params[:tl_show]
-      tl_gen_timeline_data
-      return unless @timeline
-    end
 
     if @tl_options.management_events?
       @tl_options.mngt.update_from_params(params)
@@ -20,13 +14,11 @@ module ApplicationController::Timelines
       @tl_options.policy.update_from_params(params)
     end
 
-    if @tl_options.management_events? && !@tl_options.mngt.event_filter_any?
-      add_flash(_("At least one filter must be selected"), :warning)
+    if @tl_options.management_events? && @tl_options.mngt.categories.blank?
+      # add_flash(_("At least one filter must be selected"), :warning)
     elsif @tl_options.policy_events?
-      if @tl_options.policy.event_filter_any?
+      if @tl_options.policy.categories.blank?
         tl_build_timeline('n')
-      else
-        add_flash(_("At least one filter must be selected"), :warning)
       end
     else
       tl_gen_timeline_data(refresh = "n")
@@ -38,22 +30,11 @@ module ApplicationController::Timelines
     render :update do |page|
       page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page.replace("tl_options_div", :partial => "layouts/tl_options")
       page.replace("tl_div", :partial => "layouts/tl_detail")
       page << "ManageIQ.calendar.calDateFrom = new Date(#{@tl_options.date.start});" unless @tl_options.date.start.nil?
       page << "ManageIQ.calendar.calDateTo = new Date(#{@tl_options.date.end});" unless @tl_options.date.end.nil?
       page << 'miqBuildCalendar();'
-      if @tl_options.management_events?
-        page << "$('#filter1').val('#{@tl_options.mngt.fltr1}');"
-        page << "$('#filter2').val('#{@tl_options.mngt.fltr2}');"
-        page << "$('#filter3').val('#{@tl_options.mngt.fltr3}');"
-      else
-        @tl_options.policy.events.sort.each_with_index do |_e, i|
-          page << "$('#filter#{i}').val('#{@tl_options.policy.fltr(i)}');"
-        end
-      end
       page << "miqSparkle(false);"
-      # page << 'performFiltering(tl, [0,1]);'
     end
   end
 
@@ -146,7 +127,7 @@ module ApplicationController::Timelines
       @tl_options.date.days = '7'
       @tl_options[:model] = @tl_record.class.base_class.to_s
       @tl_options[:tl_show] = "timeline"
-      @tl_options.policy.filters = []
+      @tl_options.policy.categories = []
     end
     sdate, edate = @tl_record.first_and_last_event(@tl_options.evt_type)
     @tl_options.date.update_start_end(sdate, edate)
@@ -154,21 +135,21 @@ module ApplicationController::Timelines
     if @tl_options.policy_events?
       @tl_options.policy.result ||= "both"
 
-      @tl_options.policy.applied_filters ||= []
-      if @tl_options.policy.applied_filters.blank?
-        @tl_options.policy.applied_filters.push("VM Operation")
+      @tl_options.policy.categories ||= []
+      if @tl_options.policy.categories.blank?
+        @tl_options.policy.categories.push("VM Operation")
         # had to set this here because if it this is preselected in cboxes, it doesnt send the params back for this cb to tl_chooser
         @tl_options.policy.events.keys.sort.each_with_index do |e, i|
           if e == "VM Operation"
-            @tl_options.policy.filters[i] = e
+            @tl_options.policy.categories[i] = e
           end
         end
       end
     else
       @tl_options.mngt.level = "critical" if @tl_options.mngt.level.nil?
-      if @tl_options.mngt.filter1.nil?
-        @tl_options.mngt.filter1 = "Power Activity"
-      end
+      # if @tl_options.mngt.filter1.nil?
+      #   @tl_options.mngt.filter1 = "Power Activity"
+      # end
     end
   end
 
@@ -189,13 +170,6 @@ module ApplicationController::Timelines
         #        @report.timeline[:bands][0][:st_time] = st_time.strftime("%b %d %Y 00:00:00 GMT")
         #        @report.timeline[:bands][0][:end_time] = end_time.strftime("%b %d %Y 23:59:00 GMT")
         tz = @report.tz ? @report.tz : Time.zone
-        @report.timeline[:bands][0][:center_position] = format_timezone(Time.gm(yy, mm, dd, 21, 00, 00), tz, "tl")
-        @report.timeline[:bands][0][:st_time] = format_timezone(st_time, tz, "tl")
-        @report.timeline[:bands][0][:end_time] = format_timezone(end_time, tz, "tl")
-        #        END of TIMELINE TIMEZONE Code
-        @report.timeline[:bands][0][:pixels] = 1000 / 6
-        @report.timeline[:bands][0][:decorate] = true
-        @report.timeline[:bands][0][:hourly] = true
       when "Daily"
         tl_rpt = @tl_options.management_events? ? "tl_events_daily" : "tl_policy_events_daily"
         @report = tl_get_rpt(tl_rpt)
@@ -204,20 +178,6 @@ module ApplicationController::Timelines
         from_dt = create_time_in_utc("#{from.year}-#{from.month}-#{from.day} 00:00:00", session[:user_tz])  # Get tz 12am in user's time zone
         mm, dd, yy = @tl_options.date.daily.split("/")
         to_dt = create_time_in_utc("#{yy}-#{mm}-#{dd} 23:59:59", session[:user_tz]) # Get tz 11pm in user's time zone
-        @report.timeline[:bands][0][:decorate] = true
-        st_time = Time.gm(from.year, from.month, from.day, 00, 00, 00)
-        end_time = Time.gm(yy, mm, dd, 23, 59, 00)
-        mid = Date.parse(to_dt.to_s) - 2      # calculating mid position to align timeline in center
-        #       START of TIMELINE TIMEZONE Code
-        #       @report.timeline[:bands][0][:center_position] = Time.gm(mid.year,mid.month,mid.day,12,00,00)
-        #       @report.timeline[:bands][0][:st_time] = st_time.strftime("%b %d %Y 00:00:00 GMT")
-        #       @report.timeline[:bands][0][:end_time] = end_time.strftime("%b %d %Y 23:59:00 GMT")
-        tz = @report.tz ? @report.tz : Time.zone
-        @report.timeline[:bands][0][:center_position] = format_timezone(Time.gm(mid.year, mid.month, mid.day, 12, 00, 00), tz, "tl")
-        @report.timeline[:bands][0][:st_time] = format_timezone(st_time, tz, "tl")
-        @report.timeline[:bands][0][:end_time] = format_timezone(end_time, tz, "tl")
-        #       END of TIMELINE TIMEZONE Code
-        @report.timeline[:bands][0][:pixels] = 1000 / 6
       end
 
       temp_clause = @tl_record.event_where_clause(@tl_options.evt_type)
@@ -252,6 +212,8 @@ module ApplicationController::Timelines
       params2 = where_clause.slice(1, where_clause.length - 1)
       params = params.concat(params2)
       @report.where_clause = [cond, *params]
+      @report.rpt_options ||= {}
+      @report.rpt_options[:categories] = @tl_options.mngt.categories
       @title = @report.title
     end
   end

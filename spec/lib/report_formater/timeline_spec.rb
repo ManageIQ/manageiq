@@ -46,7 +46,7 @@ describe ReportFormatter::TimelineMessage do
              :ems_container => true,
              :time_zone     => nil}
     tests = {'event_type'                 => 'test timeline',
-             'ext_management_system.name' => '<a href="/ems_container/42">test timeline</a>',
+             'ext_management_system.name' => '<a href=/ems_container/42>test timeline</a>',
              'container_node_name'        => ''}
 
     tests.each do |column, href|
@@ -72,7 +72,7 @@ describe ReportFormatter::TimelineMessage do
              :time_zone     => nil}
     tests = {'event_type'                 => 'test timeline',
              'ext_management_system.name' => '',
-             'src_vm_name'                => '<a href="/vm/show/42">test timeline</a>'}
+             'src_vm_name'                => '<a href=/vm/show/42>test timeline</a>'}
 
     tests.each do |column, href|
       it "Evaluate column #{column} content" do
@@ -95,7 +95,7 @@ describe ReportFormatter::TimelineMessage do
     end
 
     tests = {'event_type'    => 'MemoryUsage',
-             'resource_name' => '<a href="/ems_cluster/show/42">Test Cluster</a>'}
+             'resource_name' => '<a href=/ems_cluster/show/42>Test Cluster</a>'}
 
     tests.each do |column, href|
       it "Evaluate column #{column} content" do
