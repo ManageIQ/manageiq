@@ -11,6 +11,37 @@ class ChargebackRateDetail < ApplicationRecord
 
   FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric).freeze
 
+  def max_of_metric_from(metric_rollup_records)
+    metric_rollup_records.map(&metric.to_sym).max
+  end
+
+  def avg_of_metric_from(metric_rollup_records)
+    record_count = metric_rollup_records.count
+    metric_sum = metric_rollup_records.sum(&metric.to_sym)
+    metric_sum / record_count
+  end
+
+  def metric_value_by(metric_rollup_records)
+    return 1.0 if fixed?
+
+    metric_rollups_without_nils = metric_rollup_records.select { |x| x.send(metric.to_sym).present? }
+    return 0 if metric_rollups_without_nils.empty?
+    return max_of_metric_from(metric_rollups_without_nils) if allocated?
+    return avg_of_metric_from(metric_rollups_without_nils) if used?
+  end
+
+  def used?
+    source == "used"
+  end
+
+  def allocated?
+    source == "allocated"
+  end
+
+  def fixed?
+    group == "fixed"
+  end
+
   # Set the rates according to the tiers
   def find_rate(value)
     fixed_rate = 0.0
@@ -36,9 +67,12 @@ class ChargebackRateDetail < ApplicationRecord
 
   def cost(value)
     return 0.0 unless self.enabled?
-    value = 1 if group == 'fixed'
+
+    value = 1.0 if fixed?
+
     (fixed_rate, variable_rate) = find_rate(value)
-    hourly(fixed_rate) + hourly(variable_rate) * value
+
+    hourly(fixed_rate) +  hourly(variable_rate) * value
   end
 
   def hourly(rate)
