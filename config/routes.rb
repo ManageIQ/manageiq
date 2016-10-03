@@ -1924,6 +1924,49 @@ Vmdb::Application.routes.draw do
                ownership_post
     },
 
+    :ems_storage              => {
+      :get  => %w(
+        dialog_load
+        download_data
+        edit
+        ems_storage_form_fields
+        index
+        new
+        protect
+        show
+        show_list
+        tagging_edit
+        tag_edit_form_field_changed
+      ) +
+        compare_get,
+      :post => %w(
+        button
+        create
+        dynamic_checkbox_refresh
+        dynamic_list_refresh
+        dynamic_radio_button_refresh
+        dynamic_text_box_refresh
+        form_field_changed
+        listnav_search_selected
+        protect
+        provider_type_field_changed
+        quick_search
+        sections_field_changed
+        show
+        show_list
+        tag_edit_form_field_changed
+        tagging_edit
+        tl_chooser
+        update
+        wait_for_task
+      ) +
+        adv_search_post +
+        compare_post +
+        dialog_runner_post +
+        exp_post +
+        save_post
+    },
+
     :ontap_file_share         => {
       :get  => %w(
         cim_base_storage_extents

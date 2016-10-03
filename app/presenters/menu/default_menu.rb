@@ -49,16 +49,10 @@ module Menu
           Menu::Item.new('ems_cloud',           N_('Providers'),           'ems_cloud',                 {:feature => 'ems_cloud_show_list'},                     '/ems_cloud'),
           Menu::Item.new('availability_zone',   N_('Availability Zones'),  'availability_zone',         {:feature => 'availability_zone_show_list'},             '/availability_zone'),
           Menu::Item.new('cloud_tenant',        N_('Tenants'),             'cloud_tenant',              {:feature => 'cloud_tenant_show_list'},                  '/cloud_tenant'),
-          Menu::Item.new('cloud_volume',        N_('Volumes'),             'cloud_volume',              {:feature => 'cloud_volume_show_list'},                  '/cloud_volume'),
           Menu::Item.new('flavor',              N_('Flavors'),             'flavor',                    {:feature => 'flavor_show_list'},                        '/flavor'),
           Menu::Item.new('vm_cloud',            N_('Instances'),           'vm_cloud_explorer',         {:feature => 'vm_cloud_explorer', :any => true}, '/vm_cloud/explorer'),
           Menu::Item.new('orchestration_stack', N_('Stacks'),              'orchestration_stack',       {:feature => 'orchestration_stack_show_list'},           '/orchestration_stack'),
           Menu::Item.new('auth_key_pair_cloud', N_('Key Pairs'),           'auth_key_pair_cloud',       {:feature => 'auth_key_pair_cloud_show_list'},           '/auth_key_pair_cloud'),
-          Menu::Item.new('cloud_object_store_container',
-                         N_('Object Stores'),
-                         'cloud_object_store_container',
-                         {:feature => 'cloud_object_store_container_show_list'},
-                         '/cloud_object_store_container')
         ])
       end
 
@@ -169,7 +163,33 @@ module Menu
       end
 
       def storage_menu_section
+        netapp_enabled = VMDB::Config.new("vmdb").config[:product][:storage]
         Menu::Section.new(:sto, N_("Storage"), 'fa fa-database fa-2x', [
+                            Menu::Item.new('ems_storage',
+                                           N_('Storage Providers'),
+                                           'ems_storage',
+                                           {:feature => 'ems_storage_show_list'},
+                                           '/ems_storage'),
+                            Menu::Item.new('cloud_volume',
+                                           N_('Volumes'),
+                                           'cloud_volume',
+                                           {:feature => 'cloud_volume_show_list'},
+                                           '/cloud_volume'),
+                            Menu::Item.new('cloud_object_store_container',
+                                           N_('Object Stores'),
+                                           'cloud_object_store_container',
+                                           {:feature => 'cloud_object_store_container_show_list'},
+                                           '/cloud_object_store_container'),
+                            netapp_enabled ? netapp_storage_menu_section : empty_menu_section
+                          ])
+      end
+
+      def empty_menu_section
+        Menu::Section.new(nil, nil, nil, nil)
+      end
+
+      def netapp_storage_menu_section
+        Menu::Section.new(:nap, N_("NetApp"), 'fa fa-plus fa-2x', [
           Menu::Item.new('ontap_storage_system', deferred_ui_lookup(:tables => 'ontap_storage_system'), 'ontap_storage_system', {:feature => 'ontap_storage_system_show_list'}, '/ontap_storage_system'),
           Menu::Item.new('ontap_logical_disk',   deferred_ui_lookup(:tables => 'ontap_logical_disk'),   'ontap_logical_disk',   {:feature => 'ontap_logical_disk_show_list'},   '/ontap_logical_disk'),
           Menu::Item.new('ontap_storage_volume', deferred_ui_lookup(:tables => 'ontap_storage_volume'), 'ontap_storage_volume', {:feature => 'ontap_storage_volume_show_list'}, '/ontap_storage_volume'),
@@ -221,9 +241,8 @@ module Menu
       end
 
       def default_menu
-        storage_enabled = VMDB::Config.new("vmdb").config[:product][:storage]
         [cloud_inteligence_menu_section, services_menu_section, compute_menu_section, configuration_menu_section,
-         network_menu_section, middleware_menu_section, storage_enabled ? storage_menu_section : nil,
+         network_menu_section, middleware_menu_section, storage_menu_section,
          control_menu_section, automate_menu_section, optimize_menu_section, settings_menu_section].compact
       end
     end

@@ -6,7 +6,15 @@ module CloudObjectStoreObjectHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(ems cloud_tenant cloud_object_store_container)
+    %i(parent_ems_cloud ems cloud_tenant cloud_object_store_container)
+  end
+
+  def textual_parent_ems_cloud
+    @record.ext_management_system.try(:parent_manager)
+  end
+
+  def textual_ems
+    textual_link(@record.ext_management_system)
   end
 
   def textual_key

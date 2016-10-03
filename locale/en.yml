@@ -793,6 +793,9 @@ en:
       ManageIQ::Providers::Amazon::NetworkManager::NetworkPort:             Network Port (Amazon)
       ManageIQ::Providers::Azure::NetworkManager::NetworkPort:              Network Port (Microsoft Azure)
       ManageIQ::Providers::Openstack::NetworkManager::NetworkPort:          Network Port (OpenStack)
+      ManageIQ::Providers::StorageManager:                                  Storage Manager
+      ManageIQ::Providers::StorageManager::CinderManager:                   Storage Manager (Cinder)
+      ManageIQ::Providers::StorageManager::SwiftManager:                    Storage Manager (Swift)
       MiddlewareDatasource:     Middleware Datasource
       MiddlewareDomain:         Middleware Domain
       MiddlewareMessaging:      Middleware Messaging
@@ -938,6 +941,7 @@ en:
       ems_middlewares:             Middleware Providers
       evm_server:                  EVM Server
       ems_network:                 Network Provider
+      ems_storage:                 Storage Provider
       middleware_server:           Middleware Server
       middleware_servers:          Middleware Servers
       middleware_datasource:       Middleware Datasource

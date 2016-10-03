@@ -5,7 +5,7 @@
   - arr.concat(%w(security_groups floating_ips cloud_subnets network_routers network_ports cloud_networks))
   - arr.concat(%w(load_balancers))
   - arr.concat(%w(cloud_tenants ems_clusters flavors resource_group hosts instances images miq_templates cloud_volumes))
-  - arr.concat(%w(cloud_volume_snapshots orchestration_stacks vms storages miq_proxies persistent_volumes cloud_object_store_containers))
+  - arr.concat(%w(storage_managers cloud_volume_snapshots orchestration_stacks vms storages miq_proxies persistent_volumes cloud_object_store_containers))
   - if arr.include?(@display) && @showtype != "compare"
     = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@ems.id}"}
   - elsif @showtype == "details"
