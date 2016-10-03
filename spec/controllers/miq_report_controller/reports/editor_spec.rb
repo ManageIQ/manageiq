@@ -63,6 +63,22 @@ describe ReportController do
         expect(chargeback_report.tz).to eq("Eastern Time (US & Canada)")
       end
 
+      it "should save the 'Tag Group' option" do
+        ApplicationController.handle_exceptions = true
+
+        report_edit_options[:new][:cb_groupby] = "tag"
+        report_edit_options[:new][:cb_groupby_tag] = "department"
+        report_edit_options[:cb_cats] = {'department' => 'Department'}
+
+        controller.instance_variable_set(:@edit, report_edit_options)
+        session[:edit] = assigns(:edit)
+
+        post :miq_report_edit, :params => { :id => chargeback_report.id, :button => 'save' }
+
+        chargeback_report.reload
+        expect(chargeback_report.db_options[:options][:groupby_tag]).to eq('department')
+      end
+
       describe '#reportable_models' do
         subject { controller.send(:reportable_models) }
         it 'does not contain duplicate items' do
