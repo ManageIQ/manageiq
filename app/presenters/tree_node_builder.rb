@@ -307,13 +307,18 @@ class TreeNodeBuilder
     case object
     when MiqAeNamespace
       if object.domain?
-        object.git_enabled? ? "ae_git_domain.png" : "ae_domain.png"
+        object.git_enabled? ? "ae_git_domain.png" : domain_png(object)
       else
         "ae_namespace.png"
       end
     else
       image
     end
+  end
+
+  def domain_png(object)
+    return 'miq.png' if object.name == MiqAeDatastore::MANAGEIQ_DOMAIN
+    object.top_level_namespace ? "vendor-#{object.top_level_namespace.downcase}.png" : "ae_domain.png"
   end
 
   def tooltip_prefix_for_node(object)
