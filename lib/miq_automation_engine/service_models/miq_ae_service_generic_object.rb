@@ -1,5 +1,7 @@
 module MiqAeMethodService
   class MiqAeServiceGenericObject < MiqAeServiceModelBase
+    require 'drb'
+
     def add_to_service(service)
       error_msg = "service must be a MiqAeServiceService"
       raise ArgumentError, error_msg unless service.kind_of?(MiqAeMethodService::MiqAeServiceService)
@@ -14,7 +16,13 @@ module MiqAeMethodService
 
     private
 
+    def ae_user_identity
+      @ae_user = DRb.front.workspace.ae_user
+      ar_method { @object.ae_user_identity(@ae_user, @ae_user.current_group, @ae_user.current_tenant) }
+    end
+
     def method_missing(method_name, *args)
+      ae_user_identity unless @ae_user
       object_send(method_name, *args)
     end
 
