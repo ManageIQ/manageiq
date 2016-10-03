@@ -45,20 +45,31 @@ ManageIQ.qe.setAngularJsValue = function (el, value) {
   angular_elem.scope().$apply(function($scope) { setter($scope, value); });
 };
 
-ManageIQ.qe.checkAll = function() {
-  return (ManageIQ.qe.autofocus == 0) && (ManageIQ.qe.debounce == 0);
+ManageIQ.qe.anythingInFlight = function() {
+  var state = ManageIQ.qe.inFlight();
+
+  return (state.autofocus != 0) ||
+    (state.debounce != 0) ||
+    (state.document != 'complete') ||
+    (state.jquery != 0) ||
+    (state.miq != 0) ||
+    (state.prototype != 0) ||
+    (state.spinner);
+};
+
+ManageIQ.qe.spinnerPresent = function() {
+  return (!ManageIQ.qe.isHidden(document.getElementById("spinner_div"))) &&
+     ManageIQ.qe.isHidden(document.getElementById("lightbox_div"));
 };
 
 ManageIQ.qe.inFlight = function() {
   return {
-    jquery:     jQuery.active,
-    prototype:  (typeof Ajax === "undefined") ? 0 : Ajax.activeRequestCount,
-    miq:        window.miqAjaxTimers,
-    spinner:    (!ManageIQ.qe.isHidden(document.getElementById("spinner_div"))) &&
-                  ManageIQ.qe.isHidden(document.getElementById("lightbox_div")),
-    document:   document.readyState,
     autofocus:  ManageIQ.qe.autofocus,
     debounce:   ManageIQ.qe.debounce,
-    checkAll:   ManageIQ.qe.checkAll(),
+    document:   document.readyState,
+    jquery:     $.active,
+    miq:        window.miqAjaxTimers,
+    prototype:  (typeof Ajax === "undefined") ? 0 : Ajax.activeRequestCount,
+    spinner:    ManageIQ.qe.spinnerPresent(),
   };
 };
