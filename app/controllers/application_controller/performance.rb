@@ -425,8 +425,7 @@ module ApplicationController::Performance
       @record = identify_tl_or_perf_record
       @perf_record = @record.kind_of?(MiqServer) ? @record.vm : @record # Use related server vm record
       @perf_options[:typ] = "Daily"
-
-      perf_set_or_fix_dates(@perf_options)  unless params[:task_id] # Set dates if first time thru
+      perf_set_or_fix_dates(@perf_options, false)  unless params[:task_id] # Set dates if first time thru
       perf_gen_data
       return unless @charts        # Return if no charts got created (first time thru async rpt gen)
 
