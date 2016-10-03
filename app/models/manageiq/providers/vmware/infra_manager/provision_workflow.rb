@@ -1,4 +1,6 @@
 class ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow < ManageIQ::Providers::InfraManager::ProvisionWorkflow
+  include_concern "DialogFieldValidation"
+
   def self.default_dialog_file
     'miq_provision_dialogs'
   end
