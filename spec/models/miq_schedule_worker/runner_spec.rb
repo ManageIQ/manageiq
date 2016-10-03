@@ -536,6 +536,32 @@ describe MiqScheduleWorker::Runner do
             end
           end
         end
+
+        context "Chargeback reports for Services" do
+          before do
+            allow(@schedule_worker).to receive(:heartbeat)
+            @schedule_worker.instance_variable_set(:@active_roles, ["scheduler"])
+            allow(@schedule_worker).to receive(:worker_settings).and_return(:ems_events_purge_interval => 1.day)
+            @schedule_worker.instance_variable_set(:@schedules, :scheduler => [])
+          end
+
+          describe "#schedule_chargeback_report_for_service_daily" do
+            it "queues daily generation of Chargeback report for each service" do
+              job = @schedule_worker.schedule_chargeback_report_for_service_daily[0]
+              expect(job).to be_kind_of(Rufus::Scheduler::EveryJob)
+              expect(job.original).to eq(1.day)
+              job.call
+              @schedule_worker.do_work
+              expect(MiqQueue.count).to eq 1
+              queue = MiqQueue.first
+              expect(queue.method_name).to eq "queue_chargeback_reports"
+              expect(queue.class_name).to eq "Service"
+              expect(queue.args[0][:report_source]).to eq "Daily scheduler"
+              MiqQueue.delete_all
+              job.unschedule
+            end
+          end
+        end
       end
 
       it "should never sync_all_user_schedules if scheduler role disabled" do

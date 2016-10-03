@@ -217,6 +217,10 @@ class MiqScheduleWorker::Jobs
     end
   end
 
+  def generate_chargeback_for_service(args = {})
+    queue_work(:class_name => "Service", :method_name => "queue_chargeback_reports", :zone => nil, :args => args)
+  end
+
   private
 
   def queue_work(options)

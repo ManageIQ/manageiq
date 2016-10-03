@@ -229,6 +229,19 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
         enqueue [:ems_refresh_timer, klass]
       end
     end
+
+    # run run chargeback generation every day at specific time
+    schedule_chargeback_report_for_service_daily
+  end
+
+  def schedule_chargeback_report_for_service_daily
+    every = worker_setting_or_default(:chargeback_generation_interval, 1.day)
+    at = worker_setting_or_default(:chargeback_generation_time_utc, "01:00:00")
+    time_at = Time.current.strftime("%Y-%m-%d #{at}").to_time(:utc)
+    time_at += 1.day if time_at < Time.current + 1.hour
+    @schedules[:scheduler] << system_schedule_every(every, :first_at => time_at) do
+      enqueue [:generate_chargeback_for_service, :report_source => "Daily scheduler"]
+    end
   end
 
   def schedules_for_database_operations_role
