@@ -101,9 +101,9 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_storage_managers
-    label            = _("Storage Managers")
-    num              = @ems.number_of(:storage_managers)
-    h                = {:label => label, :image => "storage_manager", :value => num}
+    label = _("Storage Managers")
+    num   = @ems.try(:storage_managers) ?  @ems.number_of(:storage_managers) : 0
+    h     = {:label => label, :image => "storage_manager", :value => num}
     if num > 0 && role_allows?(:feature => "ems_storage_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link] = ems_cloud_path(@ems.id, :display => 'storage_managers')
