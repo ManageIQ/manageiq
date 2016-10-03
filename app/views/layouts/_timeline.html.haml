@@ -1,7 +1,7 @@
 - tl_json ||= nil
 %script{:type => "text/javascript"}
   - if tl_json
-    var json = JSON.parse('#{tl_json}'.replace(/&quot;/g, '"')),
-    start = new Date(ManageIQ.calendar.calDateFrom),
-    end = new Date(ManageIQ.calendar.calDateTo);
+    var json = JSON.parse('#{tl_json}'.replace(/&quot;/g, '"'));
+    var start = new Date(ManageIQ.calendar.calDateFrom);
+    var end = new Date(ManageIQ.calendar.calDateTo);
     ManageIQ.Timeline.load(json, start, end);

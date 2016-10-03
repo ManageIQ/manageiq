@@ -57,19 +57,21 @@ describe('timelineOptionsController', function() {
         it('should update the miq_date correctly', function() {
             $scope.reportModel.tl_timerange = 'days';
             $scope.reportModel.tl_range_count = 10;
-            $scope.reportModel.tl_date = new Date('2016-04-01');
+            var timeLineDate = new Date('2016-04-01')
+            $scope.reportModel.tl_date = new Date(timeLineDate.getTime() + (timeLineDate.getTimezoneOffset() * 60000));
             $scope.reportModel.tl_timepivot = 'starting';
             $scope.applyButtonClicked();
-            expect($scope.reportModel.miq_date).toBe('04/10/2016');
+            expect($scope.reportModel.miq_date).toBe('04/11/2016');
         });
 
         it('should update the miq_date correctly based on centered', function() {
             $scope.reportModel.tl_timerange = 'days';
             $scope.reportModel.tl_range_count = 10;
-            $scope.reportModel.tl_date = new Date('2016-04-01');
+            var timeLineDate = new Date('2016-04-01')
+            $scope.reportModel.tl_date = new Date(timeLineDate.getTime() + (timeLineDate.getTimezoneOffset() * 60000));
             $scope.reportModel.tl_timepivot = 'centered';
             $scope.applyButtonClicked();
-            expect($scope.reportModel.miq_date).toBe('04/05/2016');
+            expect($scope.reportModel.miq_date).toBe('04/06/2016');
         });
     });
 });
