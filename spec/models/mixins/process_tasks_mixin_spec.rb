@@ -90,6 +90,8 @@ describe ProcessTasksMixin do
       end
 
       it "calls invoke_api_tasks with the api connection and options" do
+        require "manageiq-api-client"
+
         expect(MiqRegion).to receive(:api_system_auth_token_for_region)
           .with(ApplicationRecord.my_region_number, request_user).and_return(region_auth_token)
 

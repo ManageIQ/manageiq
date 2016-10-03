@@ -1,5 +1,3 @@
-require 'manageiq-api-client'
-
 module ProcessTasksMixin
   extend ActiveSupport::Concern
 
@@ -121,6 +119,8 @@ module ProcessTasksMixin
         $log.error("An error occurred while invoking remote tasks...The remote region [#{region}] does not have a web service address.")
         raise "Failed to establish API connection to region #{region}"
       end
+
+      require 'manageiq-api-client'
 
       ManageIQ::API::Client.new(
         :url      => "https://#{hostname}",
