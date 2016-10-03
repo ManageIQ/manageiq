@@ -49,6 +49,8 @@ module ApplicationController::Performance
                   "from the Most Recent Hour is being displayed"), :warning)
     end
 
+    add_flash(_('No Daily data is available'), :warning) if @perf_options[:no_daily] && @perf_options[:typ] == 'Daily'
+
     render :update do |page|
       page << javascript_prologue
       if @parent_chart_data
@@ -198,8 +200,11 @@ module ApplicationController::Performance
     edate_daily = edate.hour < 23 ? edate - 1.day : edate
     options[:edate_daily] = edate_daily
     # check if Daily report was manualy chosen in UI
-    if allow_interval_override
-      options[:typ] = "Hourly" if options[:typ] == "Daily" && edate_daily < sdate_daily
+    if options[:typ] == "Daily" && edate_daily < sdate_daily
+      options[:no_daily] = true
+      options[:typ] = "Hourly" if allow_interval_override
+    else
+      options[:no_daily] = false
     end
 
     if options[:hourly_date].present? && # Need to clear hourly date if not nil so it will be reset below if
