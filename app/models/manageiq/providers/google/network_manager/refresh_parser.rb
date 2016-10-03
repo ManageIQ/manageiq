@@ -1,3 +1,4 @@
+require 'digest'
 require 'fog/google'
 
 module ManageIQ::Providers
@@ -12,6 +13,10 @@ module ManageIQ::Providers
         @options           = options || {}
         @data              = {}
         @data_index        = {}
+
+        # Simple mapping from target pool's self_link url to the created
+        # target pool entity.
+        @target_pool_index = {}
       end
 
       def ems_inv_to_hashes
@@ -22,12 +27,95 @@ module ManageIQ::Providers
         get_security_groups
         get_network_ports
         get_floating_ips
+        get_load_balancers
+        get_load_balancer_pools
+        get_load_balancer_listeners
+
         _log.info("#{log_header}...Complete")
 
         @data
       end
 
+      # Parses a port range returned by GCP from a string to a Range. Note that
+      # GCP treats the empty port range "" to mean all ports; hence this method
+      # returns 0..65535 when the input is the empty string.
+      #
+      # @param port_range [String] the port range (e.g. "" or "80-123" or "11")
+      # @return [Range] a range representing the port range
+      def self.parse_port_range(port_range)
+        # Three forms:
+        # "80"
+        # "5000-5010"
+        # "" (all ports)
+        m = /\A(\d+)(?:-(\d+))?\Z/.match(port_range)
+        return 0..65_535 unless m
+
+        start = Integer(m[1])
+        finish = m[2] ? Integer(m[2]) : start
+        start..finish
+      end
+
+      # Parses a VM's self_link attribute to extract the project name, zone, and
+      # instance name. Used when other services refer to a VM by its link.
+      #
+      # @param vm_link [String] the full url to the vm (e.g.
+      #   "https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/instances/foobar")
+      # @return [Hash{Symbol => String}, nil] a hash containing extracted components
+      #   for `:project`, `:zone`, and `:instance`, or nil if the link did not
+      #   match.
+      def self.parse_vm_link(vm_link)
+        link_regexp = %r{\Ahttps://www\.googleapis\.com/compute/v1/projects/([^/]+)/zones/([^/]+)/instances/([^/]+)\Z}
+        m = link_regexp.match(vm_link)
+        return nil if m.nil?
+
+        {
+          :project  => m[1],
+          :zone     => m[2],
+          :instance => m[3]
+        }
+      end
+
       private
+
+      # Lookup a VM in fog via its link to get the VM id (which is equivalent to
+      # the ems_ref).
+      #
+      # @param link [String] the full url to the vm
+      # @return [String, nil] the vm id, or nil if it could not be found
+      def get_vm_id_from_link(link)
+        parts = self.class.parse_vm_link(link)
+        unless parts
+          _log.warn("Unable to parse vm link: #{link}")
+          return nil
+        end
+
+        # Ensure our connection is using the same project; if it's not we can't
+        # do much
+        return nil unless @connection.project == parts[:project]
+
+        get_vm_id_cached(parts[:zone], parts[:instance])
+      end
+
+      # Look up a VM in fog via a given zone and instance for the current
+      # project to get the VM id. Note this method caches matched values during
+      # this instance's entire lifetime.
+      #
+      # @param zone [String] the zone of the vm
+      # @param instance [String] the name of the vm
+      # @return [String, nil] the vm id, or nil if it could not be found
+      def get_vm_id_cached(zone, instance)
+        @vm_cache ||= {}
+
+        return @vm_cache.fetch_path(zone, instance) if @vm_cache.has_key_path?(zone, instance)
+
+        begin
+          @vm_cache.store_path(zone, instance, @connection.get_server(instance, zone)[:body]["id"])
+        rescue Fog::Errors::Error => err
+          m = "Error during data collection for [#{@ems.name}] id: [#{@ems.id}] when querying link for vm_id: #{err}"
+          _log.warn(m)
+          nil
+        end
+      end
 
       def parent_manager_fetch_path(collection, ems_ref)
         @parent_manager_data ||= {}
@@ -131,6 +219,107 @@ module ManageIQ::Providers
         process_collection(network_ports, :network_ports) { |n| parse_network_port(n) }
       end
 
+      def get_load_balancers
+        # GCE uses forwarding-rules rather than load-balancers
+        forwarding_rules = @connection.forwarding_rules.all
+
+        process_collection(forwarding_rules, :load_balancers) { |forwarding_rule| parse_load_balancer(forwarding_rule) }
+      end
+
+      def get_load_balancer_pools
+        # Right now we only support network-based load-balancers, instead of the
+        # more complicated HTTP/HTTPS load balancers.
+        # TODO(jsselman): Add support for http/https proxies
+        target_pools = @connection.target_pools.all
+
+        process_collection(target_pools, :load_balancer_pools) { |target_pool| parse_load_balancer_pool(target_pool) }
+        get_load_balancer_pool_members(target_pools)
+      end
+
+      def get_load_balancer_pool_members(target_pools)
+        @data[:load_balancer_pool_members] = []
+
+        target_pools.each do |tp|
+          lb_pool_members = tp.instances.collect { |m| parse_load_balancer_pool_member(m) }
+          lb_pool_members.each do |member|
+            @data_index.store_path(:load_balancer_pool_members, member[:ems_ref], member)
+            @data[:load_balancer_pool_members] << member
+          end
+          lb_pool = @data_index.fetch_path(:load_balancer_pools, tp.id)
+          lb_pool[:load_balancer_pool_member_pools] = lb_pool_members.collect do |member|
+            {:load_balancer_pool_member => member}
+          end
+        end
+      end
+
+      def get_load_balancer_listeners
+        # There's no explicit listener concept in GCE, so again we reuse the
+        # forwarding rule.
+        forwarding_rules = @connection.forwarding_rules.all
+
+        process_collection(forwarding_rules, :load_balancer_listeners) do |forwarding_rule|
+          parse_load_balancer_listener(forwarding_rule)
+        end
+      end
+
+      def parse_load_balancer(forwarding_rule)
+        uid = forwarding_rule.id
+
+        new_result = {
+          :type    => ManageIQ::Providers::Google::NetworkManager::LoadBalancer.name,
+          :ems_ref => uid,
+          :name    => forwarding_rule.name
+        }
+
+        return uid, new_result
+      end
+
+      def parse_load_balancer_pool(target_pool)
+        uid = target_pool.id
+
+        new_result = {
+          :type    => ManageIQ::Providers::Google::NetworkManager::LoadBalancerPool.name,
+          :ems_ref => uid,
+          :name    => target_pool.name
+        }
+
+        @target_pool_index[target_pool.self_link] = new_result
+
+        return uid, new_result
+      end
+
+      def parse_load_balancer_pool_member(member_link)
+        vm_id = get_vm_id_from_link(member_link)
+        {
+          :type    => "ManageIQ::Providers::Google::NetworkManager::LoadBalancerPoolMember",
+          :ems_ref => Digest::MD5.base64digest(member_link),
+          :vm      => (parent_manager_fetch_path(:vms, vm_id) if vm_id)
+        }
+      end
+
+      def parse_load_balancer_listener(forwarding_rule)
+        uid = forwarding_rule.id
+
+        # Only TCP/UDP/SCTP forwarding rules have ports
+        has_ports = %w(TCP UDP SCTP).include?(forwarding_rule.ip_protocol)
+
+        new_result = {
+          :type                         => ManageIQ::Providers::Google::NetworkManager::LoadBalancerListener.name,
+          :name                         => forwarding_rule.name,
+          :ems_ref                      => uid,
+          :load_balancer_protocol       => forwarding_rule.ip_protocol,
+          :instance_protocol            => forwarding_rule.ip_protocol,
+          :load_balancer_port_range     => (self.class.parse_port_range(forwarding_rule.port_range) if has_ports),
+          :instance_port_range          => (self.class.parse_port_range(forwarding_rule.port_range) if has_ports),
+          :load_balancer                => @data_index.fetch_path(:load_balancers, forwarding_rule.id),
+          :load_balancer_listener_pools => [
+            {:load_balancer_pool        => @target_pool_index[forwarding_rule.target]}
+          ]
+        }
+
+        return uid, new_result
+      end
+
       def parse_cloud_network(network)
         uid = network.id
 
@@ -194,11 +383,11 @@ module ManageIQ::Providers
           protocol      = fw_allowed["IPProtocol"].upcase
           allowed_ports = fw_allowed["ports"].to_a.first
 
-          unless allowed_ports.nil?
-            from_port, to_port = allowed_ports.split("-", 2)
-          else
+          if allowed_ports.nil?
             # The ICMP protocol doesn't have ports so set to -1
             from_port = to_port = -1
+          else
+            from_port, to_port = allowed_ports.split("-", 2)
           end
 
           new_result = {
