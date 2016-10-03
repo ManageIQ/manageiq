@@ -33,7 +33,7 @@
         table = table + el.details[i] + '<br>';
       }
     }
-    $('#legend').html(table);
+    $('#chart_placeholder').append(table);
   }
 
   function createTooltip() {

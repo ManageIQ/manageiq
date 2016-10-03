@@ -6,7 +6,6 @@
       = render(:partial => 'layouts/timeline',
         :locals         => {:tl_json          =>  @tl_json || {},
                             :data_action      => "timeline_data"})
-      #legend
   - else
     .timeline-empty-state
       .pficon.pficon-info.fa-5x.timeline-info
