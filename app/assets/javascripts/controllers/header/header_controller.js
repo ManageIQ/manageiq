@@ -21,7 +21,7 @@ function HeaderCtrl($scope, eventNotifications, $timeout) {
   var refresh = function() {
     $timeout(function() {
       vm.newNotifications = eventNotifications.state().unreadNotifications;
-      updateTooltip();
+      updateTooltip(eventNotifications.state().groups);
     });
   };
 
@@ -29,14 +29,19 @@ function HeaderCtrl($scope, eventNotifications, $timeout) {
     eventNotifications.unregisterObserverCallback(refresh);
   };
 
-  function updateTooltip() {
-    var unreadNotificationCount = 0;
-    if (angular.isArray(vm.notificationGroups)) {
-      angular.forEach(vm.notificationGroups, function(group) {
-        unreadNotificationCount += group.unreadCount;
+  function updateTooltip(groups) {
+    var notificationCount = {
+      text: 0
+    };
+
+    if (angular.isArray(groups)) {
+      angular.forEach(groups, function(group) {
+        notificationCount.text += group.unreadCount;
       });
     }
-    vm.notificationsIndicatorTooltip = __(unreadNotificationCount + " unread notifications");
+
+    vm.notificationsIndicatorTooltip = miqFormatNotification(__("%{count} unread notifications"),
+                                                             {count: notificationCount});
   }
 
   eventNotifications.registerObserverCallback(refresh);
