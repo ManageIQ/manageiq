@@ -257,6 +257,7 @@ module EmsRefresh::VcUpdates
     ],
 
     :ems_refresh_host_scsi   => [
+      "MOR",
       "config.storageDevice.hostBusAdapter[*].authenticationProperties.chapAuthEnabled",
       "config.storageDevice.hostBusAdapter[*].device",
       "config.storageDevice.hostBusAdapter[*].iScsiAlias",
