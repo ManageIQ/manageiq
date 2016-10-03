@@ -1,10 +1,11 @@
 describe Notification, :type => :model do
   before { NotificationType.seed }
+  let(:tenant) { FactoryGirl.create(:tenant) }
+  let!(:user) { FactoryGirl.create(:user_with_group, :tenant => tenant) }
+
   describe '.emit' do
     context 'successful' do
-      let(:tenant) { FactoryGirl.create(:tenant) }
       let(:vm) { FactoryGirl.create(:vm, :tenant => tenant) }
-      let!(:user) { FactoryGirl.create(:user_with_group, :tenant => tenant) }
       let(:notification_type) { :vm_powered_on }
 
       subject { Notification.create(:type => notification_type, :subject => vm) }
@@ -21,6 +22,21 @@ describe Notification, :type => :model do
         expect_any_instance_of(ActionCable::Server::Base).to receive(:broadcast)
         subject # force the creation of the db object
       end
+    end
+  end
+
+  describe '#to_h' do
+    let(:notification) { FactoryGirl.create(:notification, :initiator => user, :options => {:extra => 'information'}) }
+    it 'contains information consumable by UI' do
+      expect(notification.to_h).to include(
+        :level      => notification.notification_type.level,
+        :created_at => notification.created_at,
+        :text       => notification.notification_type.message,
+        :bindings   => a_hash_including(:initiator => a_hash_including(:text => user.name,
+                                                                       :link => a_hash_including(:id, :model)),
+                                        :extra     => a_hash_including(:text => 'information')
+                                       )
+      )
     end
   end
 end
