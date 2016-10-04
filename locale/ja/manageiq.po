@@ -434,6 +434,9 @@ msgstr "%{class_name}.counter_desc: counter _{counter_name} が見つかりま�
 msgid "%{class_name}.counter_unit: counter %{counter_name} not found"
 msgstr "%{class_name}.counter_unit: counter %{counter_name} が見つかりません"
 
+msgid "%{count} unread notifications"
+msgstr ""
+
 msgid "%{date_from} to %{date_to}"
 msgstr ""
 
@@ -873,6 +876,21 @@ msgstr ""
 msgid "%{object} Conditions"
 msgstr ""
 
+msgid "%{product} Appliance restart initiated successfully"
+msgstr ""
+
+msgid "%{product} Log"
+msgstr ""
+
+msgid "%{product} Region: %{region_description} [%{region}]"
+msgstr ""
+
+msgid "%{product} Server \"%{name}\" set as %{priority} for Role \"%{role_description}\""
+msgstr ""
+
+msgid "%{product} Version"
+msgstr ""
+
 msgid "%{protocol} port %{port} to pods on target port:'%{target_port}'"
 msgstr "%{protocol} 目的ポート上のポッドのポート %{port}:'%{target_port}'"
 
@@ -927,18 +945,18 @@ msgstr "%{table}: %{name}"
 msgid "%{task} does not apply to at least one of the selected %{model}"
 msgstr "1 つ以上の選択した %{model} に %{task} は適用されません"
 
-msgid "%{task} initiated for %{count} %{model} from the ManageIQ Database"
-msgid_plural "%{task} initiated for %{count} %{models} from the ManageIQ Database"
+msgid "%{task} initiated for %{count} %{model} from the %{product} Database"
+msgid_plural "%{task} initiated for %{count} %{models} from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "%{task} initiated for %{count} Host from the ManageIQ Database"
-msgid_plural "%{task} initiated for %{count} Hosts from the ManageIQ Database"
+msgid "%{task} initiated for %{count} Host from the %{product} Database"
+msgid_plural "%{task} initiated for %{count} Hosts from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "%{task} initiated for %{count} Storage Manager from the ManageIQ Database"
-msgid_plural "%{task} initiated for %{count} Storage Managers from the ManageIQ Database"
+msgid "%{task} initiated for %{count} Storage Manager from the %{product} Database"
+msgid_plural "%{task} initiated for %{count} Storage Managers from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -947,8 +965,8 @@ msgid_plural "%{task} initiated for %{count} providers (%{controller})"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "%{task} initiated for %{number} %{model} from the ManageIQ Database"
-msgid_plural "%{task} initiated for %{number} %{models} from the ManageIQ Database"
+msgid "%{task} initiated for %{number} %{model} from the %{product} Database"
+msgid_plural "%{task} initiated for %{number} %{models} from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -1200,9 +1218,6 @@ msgstr "* タグのカテゴリーから割り当てることのできる値は 
 
 msgid "* Only a single value can be assigned from these categories"
 msgstr "* これらのカテゴリーからは単一の値のみ割り当てることができます"
-
-msgid "* Passwords don't match."
-msgstr "* パスワードが一致しません。"
 
 msgid "* Performance Interval"
 msgstr "* パフォーマンス間隔"
@@ -2181,6 +2196,9 @@ msgstr ""
 msgid "Add Host Analysis Profile"
 msgstr "ホスト分析プロファイルの追加"
 
+msgid "Add JDBC Driver"
+msgstr ""
+
 msgid "Add Middleware Deployment"
 msgstr ""
 
@@ -2198,6 +2216,9 @@ msgstr "新規ホストの追加"
 
 msgid "Add New Storage Manager"
 msgstr "新規ストレージマネージャーの追加"
+
+msgid "Add New Subnet"
+msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Add Orchestration Template"
@@ -2467,6 +2488,14 @@ msgid "Add a Schedule"
 msgstr "スケジュールの追加"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Add a Storage Provider"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Add a Subnet"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Add a Tenant/Project"
 msgstr "テナント/プロジェクトの追加"
 
@@ -2507,6 +2536,9 @@ msgstr "新規ボタングループの追加"
 msgid "Add a new Chargeback Rate"
 msgstr "新規チャージバックレートの追加"
 
+msgid "Add a new Cloud Subnet"
+msgstr ""
+
 msgid "Add a new Cloud Volume"
 msgstr ""
 
@@ -2541,6 +2573,9 @@ msgid "Add a new LDAP Region"
 msgstr "新規 LDAP 領域の追加"
 
 msgid "Add a new Middleware Deployment"
+msgstr ""
+
+msgid "Add a new Middleware JDBC Driver"
 msgstr ""
 
 msgid "Add a new Provider"
@@ -2620,6 +2655,10 @@ msgstr ""
 msgid "Add middleware deployment"
 msgstr ""
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Add middleware jdbc driver"
+msgstr ""
+
 msgid "Add new Time Profile"
 msgstr "新規タイムプロファイルの追加"
 
@@ -2661,6 +2700,9 @@ msgstr "新規カタログ一式の追加はユーザーによりキャンセル
 
 msgid "Add of new Dashboard was cancelled by the user"
 msgstr "新規ダッシュボードの追加はユーザーによりキャンセルされました"
+
+msgid "Add of new Subnet was cancelled by the user"
+msgstr ""
 
 msgid "Add subfolder to selected folder"
 msgstr "サブフォルダーを選択したフォルダーに追加する"
@@ -3333,8 +3375,8 @@ msgstr "分析プロファイルが必要です"
 msgid "Analysis Profiles"
 msgstr "分析プロファイル"
 
-msgid "Analysis initiated for %{count} %{model} from the ManageIQ Database"
-msgid_plural "Analysis initiated for %{count} %{models} from the ManageIQ Database"
+msgid "Analysis initiated for %{count} %{model} from the %{product} Database"
+msgid_plural "Analysis initiated for %{count} %{models} from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -3437,7 +3479,7 @@ msgstr "適用されるタグ"
 msgid "Apply"
 msgstr "適用"
 
-msgid "Apply ManageIQ Update"
+msgid "Apply %{product} Update"
 msgstr ""
 
 msgid "Apply sections"
@@ -3908,9 +3950,6 @@ msgstr ""
 msgid "At least one domain should be enabled & unlocked"
 msgstr ""
 
-msgid "At least one filter must be selected"
-msgstr "少なくともフィルターを 1 つ選択してください"
-
 msgid "At least one hour needs to be selected"
 msgstr ""
 
@@ -4074,7 +4113,7 @@ msgstr ""
 msgid "Authentication failed"
 msgstr "認証に失敗しました"
 
-msgid "Authentication settings saved for ManageIQ Server \"%{name} [%{server_id}]\" in Zone \"%{zone}\""
+msgid "Authentication settings saved for %{product} Server \"%{name} [%{server_id}]\" in Zone \"%{zone}\""
 msgstr ""
 
 msgid "Authentication status will be saved and workers will be restarted for the selected %{controller_name}"
@@ -5553,6 +5592,9 @@ msgstr ""
 msgid "Cannot connect service with nil ID."
 msgstr "ID なしではサービスに接続できません。"
 
+msgid "Cannot connect to workflow service: %{message}"
+msgstr ""
+
 msgid "Cannot create Request Info, error: %{error_message}"
 msgstr "要求情報を作成できません、エラー: %{error_message}"
 
@@ -5570,6 +5612,9 @@ msgstr "最近動作していた %{log_message} は削除できません"
 
 msgid "Cannot display binary content"
 msgstr "バイナリーコンテンツを表示できません"
+
+msgid "Cannot parse JSON file: %{message}"
+msgstr ""
 
 msgid "Cannot parse userid %{user_id}"
 msgstr "ユーザー ID %{user_id} を解析できません"
@@ -7943,7 +7988,7 @@ msgstr ""
 msgid "Configuration settings saved"
 msgstr "設定内容が保存されました"
 
-msgid "Configuration settings saved for ManageIQ Server \"%{name} [%{server_id}]\" in Zone \"%{zone}\""
+msgid "Configuration settings saved for %{product} Server \"%{name} [%{server_id}]\" in Zone \"%{zone}\""
 msgstr ""
 
 msgid "Configuration tag"
@@ -8304,9 +8349,6 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Container Deployments"
-msgstr ""
-
-msgid "Container Groups"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ContainerImage
@@ -10469,6 +10511,9 @@ msgstr "NetApp ファイラーのマネージャーエントリーが見つか�
 msgid "Couldn't initiate deletion of %{model} \"%{name}\": %{details}"
 msgstr "%{model} \"%{name}\" の削除を実行できませんでした: %{details}"
 
+msgid "Couldn't initiate deletion of Subnet \"%{name}\": %{details}"
+msgstr ""
+
 msgid "Count"
 msgstr "カウント"
 
@@ -10544,8 +10589,16 @@ msgstr "オーケストレーションテンプレートからサービスダイ
 msgid "Create Service Dialog from this Job Template"
 msgstr ""
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Create Services"
+msgstr ""
+
 msgid "Create Snapshot for %{model} \"%{name}\" was started"
 msgstr "%{model} \"%{name}\" のスナップショット作成が開始されました"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Create a Backup"
+msgstr ""
 
 msgid "Create a Datastore based on this File Share"
 msgstr ""
@@ -10553,8 +10606,19 @@ msgstr ""
 msgid "Create a Logical Disk (NetApp Flexible Volume) on this Filer"
 msgstr ""
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Create a Volume Backup"
+msgstr ""
+
 msgid "Create a new Condition assigned to this Policy"
 msgstr "このポリシーに割り当てられる新規の条件の作成"
+
+msgid "Create a new Generic Object Definition"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Create a new picture"
+msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Create a new snapshot for Templates"
@@ -10572,6 +10636,10 @@ msgstr "この仮想マシンの新規スナップショットを作成"
 
 msgid "Create new Orchestration Template"
 msgstr "新規オーケストレーションテンプレートの作成"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Create new Picture"
+msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Create new Snapshots"
@@ -10597,6 +10665,7 @@ msgstr "作成者"
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplateAzure.yaml
@@ -10616,6 +10685,9 @@ msgstr "作成日"
 
 msgid "Creating %{model} %{name}"
 msgstr "%{model} %{name} を作成します"
+
+msgid "Creating %{subnet} \"%{subnet_name}\""
+msgstr ""
 
 msgid "Creating %{volume} \"%{volume_name}\""
 msgstr ""
@@ -11685,8 +11757,8 @@ msgstr "このテンプレートの既存スナップショットをすべて削
 msgid "Delete all of this VMs existing snapshots?"
 msgstr "この仮想マシンの既存スナップショットをすべて削除しますか?"
 
-msgid "Delete all older Tasks initiated for %{count} Task from the ManageIQ Database"
-msgid_plural "Delete all older Tasks initiated for %{count} Tasks from the ManageIQ Database"
+msgid "Delete all older Tasks initiated for %{count} Task from the %{product} Database"
+msgid_plural "Delete all older Tasks initiated for %{count} Tasks from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -11714,8 +11786,8 @@ msgstr "次より古い場合は削除する"
 msgid "Delete initiated for %{count_model} from the Database"
 msgstr ""
 
-msgid "Delete initiated for %{count} %{model} from the ManageIQ Database"
-msgid_plural "Delete initiated for %{count} %{models} from the ManageIQ Database"
+msgid "Delete initiated for %{count} %{model} from the %{product} Database"
+msgid_plural "Delete initiated for %{count} %{models} from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -11724,8 +11796,13 @@ msgid_plural "Delete initiated for %{count} Providers"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Delete initiated for %{count} Task from the ManageIQ Database"
-msgid_plural "Delete initiated for %{count} Tasks from the ManageIQ Database"
+msgid "Delete initiated for %{count} Task from the %{product} Database"
+msgid_plural "Delete initiated for %{count} Tasks from the %{product} Database"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Delete initiated for %{number} Cloud Subnet."
+msgid_plural "Delete initiated for %{number} Cloud Subnets."
 msgstr[0] ""
 msgstr[1] ""
 
@@ -11739,8 +11816,8 @@ msgid_plural "Delete initiated for %{number} Key Pairs"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Delete initiated for Datastore from the ManageIQ Database"
-msgid_plural "Delete initiated for Datastores from the ManageIQ Database"
+msgid "Delete initiated for Datastore from the %{product} Database"
+msgid_plural "Delete initiated for Datastores from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -11748,6 +11825,9 @@ msgid "Delete selected %{dialog_resource}"
 msgstr ""
 
 msgid "Delete selected Accordion and its contents"
+msgstr ""
+
+msgid "Delete selected Cloud Subnets"
 msgstr ""
 
 msgid "Delete selected Cloud Volumes"
@@ -11826,6 +11906,9 @@ msgid "Delete this Alert Profile"
 msgstr "このアラートプロファイルを削除"
 
 msgid "Delete this Analysis Profile"
+msgstr ""
+
+msgid "Delete this Cloud Subnet"
 msgstr ""
 
 msgid "Delete this Cloud Volume"
@@ -12010,6 +12093,7 @@ msgstr "降順"
 #. TRANSLATORS: file: product/views/LdapRegion.yaml
 #. TRANSLATORS: file: product/views/LoadBalancer.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/MiqAction.yaml
 #. TRANSLATORS: file: product/views/MiqActionSet.yaml
 #. TRANSLATORS: file: product/views/MiqAeClass.yaml
@@ -12127,9 +12211,6 @@ msgstr ""
 
 msgid "Detaching a %{volume} from %{instance_model} \"%{instance_name}\" was cancelled by the user"
 msgstr ""
-
-msgid "Detail"
-msgstr "詳細"
 
 #. TRANSLATORS: en.yml key: dictionary.table.compliance_details
 msgid "Details"
@@ -12507,6 +12588,10 @@ msgstr "インフラストラクチャープロバイダーの検出"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Discover Network Providers"
 msgstr "ネットワークプロバイダーの検出"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Discover Storage Providers"
+msgstr ""
 
 msgid "Discover Type"
 msgstr "タイプの検出"
@@ -12961,6 +13046,10 @@ msgid "Display Individual Storage Managers"
 msgstr "個々のストレージマネジャーの表示"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Display Individual Storage Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Display Individual Storage Systems"
 msgstr "個々のストレージシステムの表示"
 
@@ -13221,6 +13310,10 @@ msgid "Display Lists of Storage Managers"
 msgstr "ストレージマネジャーの一覧の表示"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Display Lists of Storage Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Display Lists of Storage Systems"
 msgstr "ストレージシステムの一覧の表示"
 
@@ -13365,6 +13458,10 @@ msgstr "ネットワークプロバイダーのタイムラインの表示"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Display Timelines for Pods"
 msgstr "ポッドのタイムラインの表示"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Display Timelines for Storage Providers"
+msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Display Timelines for Templates"
@@ -13646,6 +13743,7 @@ msgstr "このレポートを PDF 形式でダウンロード"
 msgid "Download this report in text format"
 msgstr "このレポートをテキスト形式でダウンロード"
 
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplateAzure.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplateCfn.yaml
@@ -13698,6 +13796,9 @@ msgstr "リソースタイプ"
 
 msgid "DriftState|Timestamp"
 msgstr "タイムスタンプ"
+
+msgid "Driver Class"
+msgstr ""
 
 msgid "Driver Name"
 msgstr ""
@@ -13849,6 +13950,7 @@ msgstr "EVM ワーカー"
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
 #. TRANSLATORS: file: product/views/MiqSchedule.yaml
 #. TRANSLATORS: file: product/views/StorageManager.yaml
 msgid "EVM Zone"
@@ -13875,6 +13977,9 @@ msgstr ""
 
 msgid "Edit %{model} assignments cancelled by user"
 msgstr "%{model} 割り当ての編集がユーザーによりキャンセルされました"
+
+msgid "Edit %{product} Server Relationship for %{vm_or_template} \"%{name}\""
+msgstr ""
 
 msgid "Edit %{table} '%{name}'"
 msgstr "%{table} '%{name}' の編集"
@@ -14088,9 +14193,6 @@ msgstr "ログデポ設定の編集がユーザーによりキャンセルされ
 msgid "Edit Logical Disks Tags"
 msgstr "論理ディスクタグの編集"
 
-msgid "Edit ManageIQ Server Relationship for %{vm_or_template} \"%{name}\""
-msgstr ""
-
 msgid "Edit Management Engine Relationship"
 msgstr "管理エンジンリレーションシップの編集"
 
@@ -14270,6 +14372,12 @@ msgstr "ストレージシステムタグの編集"
 msgid "Edit Storage Volumes Tags"
 msgstr "ストレージボリュームタグの編集"
 
+msgid "Edit Subnet"
+msgstr ""
+
+msgid "Edit Subnet \"%{name}\""
+msgstr ""
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Edit System Image Type"
 msgstr "システムイメージタグの編集"
@@ -14322,6 +14430,9 @@ msgstr ""
 msgid "Edit Tags for the selected Load Balancers"
 msgstr ""
 
+msgid "Edit Tags for the selected Network Elements"
+msgstr ""
+
 msgid "Edit Tags for the selected Network Providers"
 msgstr ""
 
@@ -14333,6 +14444,9 @@ msgstr "選択したリソースプールのタグを編集"
 
 msgid "Edit Tags for the selected Security Groups"
 msgstr "選択したセキュリティーグループのタグを編集"
+
+msgid "Edit Tags for the selected Storage Providers"
+msgstr ""
 
 msgid "Edit Tags for the selected items"
 msgstr "選択した項目のタグを編集"
@@ -14404,6 +14518,9 @@ msgid "Edit Tags for this Containers Provider"
 msgstr ""
 
 msgid "Edit Tags for this Datastore"
+msgstr ""
+
+msgid "Edit Tags for this Distributed Switch"
 msgstr ""
 
 msgid "Edit Tags for this File Share"
@@ -14492,6 +14609,9 @@ msgstr "このセキュリティーグループのタグを編集"
 
 msgid "Edit Tags for this Service"
 msgstr "このサービスのタグを編集"
+
+msgid "Edit Tags for this Storage Provider"
+msgstr ""
 
 msgid "Edit Tags for this Template"
 msgstr "このテンプレートのタグを編集"
@@ -14663,6 +14783,10 @@ msgstr "サービスのタグの編集"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Edit Tags of Snapshots"
 msgstr "スナップショットのタグの編集"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Edit Tags of Storage Providers"
+msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Edit Tags of Tenants"
@@ -14842,6 +14966,14 @@ msgid "Edit a Schedule"
 msgstr "スケジュールの編集"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Edit a Storage Provider"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Edit a Subnet"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Edit a Template"
 msgstr "テンプレートの編集"
 
@@ -14869,7 +15001,7 @@ msgstr "ウィジェットの編集"
 msgid "Edit a Zone"
 msgstr "ゾーンの編集"
 
-msgid "Edit aborted!  ManageIQ does not support the browser's back button or access from multiple tabs or windows of the same browser.  Please close any duplicate sessions before proceeding."
+msgid "Edit aborted!  %{product} does not support the browser's back button or access from multiple tabs or windows of the same browser.  Please close any duplicate sessions before proceeding."
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -14954,6 +15086,9 @@ msgstr "ロール \"%{role}\" のレポートメニューの編集がユーザ�
 msgid "Edit of Service \"%{name}\" was cancelled by the user"
 msgstr "サービス \"%{name}\" の編集がユーザーによりキャンセルされました"
 
+msgid "Edit of Subnet \"%{name}\" was cancelled by the user"
+msgstr ""
+
 msgid "Edit of credentials for selected %{models} was cancelled by the user"
 msgstr "選択した %{models} の認証情報の編集がユーザーによりキャンセルされました"
 
@@ -14962,6 +15097,9 @@ msgstr "%{model} \"%{name}\" のスキーマの編集がユーザーによりキ
 
 msgid "Edit policy assignments was cancelled by the user"
 msgstr "ポリシー割り当ての編集がユーザーによりキャンセルされました"
+
+msgid "Edit selected Cloud Subnet"
+msgstr ""
 
 msgid "Edit selected Cloud Volume"
 msgstr ""
@@ -15094,6 +15232,9 @@ msgid "Edit this Class"
 msgstr "このクラスを編集"
 
 msgid "Edit this Cloud Provider"
+msgstr ""
+
+msgid "Edit this Cloud Subnet"
 msgstr ""
 
 msgid "Edit this Cloud Volume"
@@ -15708,6 +15849,10 @@ msgstr "EmsMiddleware"
 msgid "EmsNetwork"
 msgstr "EmsNetwork"
 
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
+msgid "EmsStorage"
+msgstr ""
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Enable"
 msgstr "有効"
@@ -15838,9 +15983,24 @@ msgstr "実施済み"
 msgid "Enter Automation Simulation options on the left and press Submit."
 msgstr "左側の自動化シミュレーションオプションを入力して「送信」を押してください。"
 
+msgid "Enter JDBC Driver Class"
+msgstr ""
+
+msgid "Enter JDBC Driver name"
+msgstr ""
+
+msgid "Enter JDBC Module name"
+msgstr ""
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Enter Maintenance Mode"
 msgstr "メンテナンスモードの開始"
+
+msgid "Enter Major Version"
+msgstr ""
+
+msgid "Enter Minor Version"
+msgstr ""
 
 msgid "Enter Standby Mode"
 msgstr "スタンバイモードの開始"
@@ -16106,8 +16266,8 @@ msgstr "ユーザー %{id} 用の単独記録の削除時のエラー: %{message
 msgid "Error during Save: [%s - %s]"
 msgstr ""
 
-msgid "Error during Saved Report delete from the ManageIQ Database"
-msgid_plural "Error during Saved Reports delete from the ManageIQ Database"
+msgid "Error during Saved Report delete from the %{product} Database"
+msgid_plural "Error during Saved Reports delete from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -16119,9 +16279,6 @@ msgstr "アラームの実行中にエラーが発生しました: %{messages}"
 
 msgid "Error during export: %{error_message}"
 msgstr "エクスポートの実行中にエラーが発生しました: %{error_message}"
-
-msgid "Error during replication configuration save: "
-msgstr "複製設定の保存中にエラーが発生しました: "
 
 msgid "Error during replication configuration save: %{message}"
 msgstr "複製設定の保存中にエラーが発生しました: %{message}"
@@ -16140,6 +16297,9 @@ msgstr "アップロードの実行中にエラーが発生しました: ダイ�
 
 msgid "Error during upload: one of the DialogField types is not supported"
 msgstr "アップロードの実行中にエラーが発生しました: ダイアログフィールドタイプの 1 つがサポートされていません"
+
+msgid "Error executing register nodes workflow: %{message}"
+msgstr ""
 
 msgid "Error executing: \"%{task_description}\" %{error_message}"
 msgstr "実行中にラーが発生しました: \"%{task_description}\" %{error_message}"
@@ -16733,6 +16893,10 @@ msgid "Everything under Persistent Volumes"
 msgstr "永続ボリューム下のすべて"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Everything under Pictures"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Everything under Pods"
 msgstr "ポッド下のすべて"
 
@@ -16791,6 +16955,10 @@ msgstr "サービス下のすべて"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Everything under Storage Managers"
 msgstr "ストレージマネージャー下のすべて"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Everything under Storage Providers"
+msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Everything under System Image Types"
@@ -17168,6 +17336,9 @@ msgstr "失敗"
 msgid "Failed (%{number})"
 msgstr "失敗 (%{number})"
 
+msgid "Failed Events"
+msgstr ""
+
 msgid "Failed system services of %{name}"
 msgstr "%{name} の失敗したシステムサービス"
 
@@ -17486,9 +17657,6 @@ msgstr "最初"
 
 msgid "First %{number}"
 msgstr ""
-
-msgid "First band unit"
-msgstr "1 番目のバンドユニット"
 
 msgid "Fixed"
 msgstr "固定"
@@ -17860,6 +18028,21 @@ msgstr "使用率データを生成しています..."
 
 msgid "Generation of report [%{name}] complete"
 msgstr "レポート [%{name}] の生成が完了しました"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Generic Object"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Generic Object Definition Create"
+msgstr ""
+
+msgid "Generic Object Definition created successfully"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Generic Objects"
+msgstr ""
 
 msgid "Generic SCSI (%{location})"
 msgstr "汎用 SCSI (%{location})"
@@ -18483,6 +18666,10 @@ msgstr "ホームディレクトリー"
 msgid "Host"
 msgid_plural "Hosts"
 msgstr[0] "ホスト"
+
+#. TRANSLATORS: file: db/fixtures/notification_types.yml
+msgid "Host %{subject} has been provisioned."
+msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.Host
 #. TRANSLATORS: en.yml key: dictionary.table.host
@@ -19143,6 +19330,9 @@ msgstr "IP アドレス情報"
 msgid "IP Addresses"
 msgstr "IP アドレス"
 
+msgid "IP Version"
+msgstr ""
+
 msgid "IP address octets must be 0 to 255"
 msgstr "IP アドレスのオクテットは 0 から 255 までの値にしてください"
 
@@ -19795,7 +19985,19 @@ msgstr ""
 msgid "Items per page:"
 msgstr "ページあたりの項目"
 
+msgid "JDBC Driver \"%s\" has been installed on this server."
+msgstr ""
+
+msgid "JDBC Driver installation"
+msgstr ""
+
+msgid "JDBC Drivers"
+msgstr ""
+
 msgid "JNDI Name"
+msgstr ""
+
+msgid "JSON file format is incorrect, missing 'nodes'."
 msgstr ""
 
 msgid "JVM Accumulated GC Duration"
@@ -20917,7 +21119,7 @@ msgstr "ログラップサイズは数値で、ゼロより大きい値である
 msgid "Log collection error returned: %{error_message}"
 msgstr "ログ収集のエラーが返されました: %{error_message}"
 
-msgid "Log collection for ManageIQ %{object_type} %{name} has been initiated"
+msgid "Log collection for %{product} %{object_type} %{name} has been initiated"
 msgstr ""
 
 msgid "Log collection is already in progress for one or more %{servers} in this Zone"
@@ -21024,7 +21226,7 @@ msgstr "プラットフォーム [%{os_name}] へのログオンはサポート�
 msgid "Logout"
 msgstr "ログアウト"
 
-msgid "Logs for this ManageIQ Server are not available for viewing"
+msgid "Logs for this %{product} Server are not available for viewing"
 msgstr ""
 
 msgid "Long Description"
@@ -21085,6 +21287,9 @@ msgstr "メンテナンスモード"
 msgid "Maintenance mode is not supported for this host"
 msgstr "メンテナンスモードはこのサポートでサポートされていません"
 
+msgid "Major Version"
+msgstr ""
+
 msgid "Make %{name} the base"
 msgstr "%{name} をベースにします"
 
@@ -21131,6 +21336,9 @@ msgstr ""
 
 msgid "Manage Policies for the selected Resource Pools"
 msgstr "選択したリソースプールのポリシーの管理"
+
+msgid "Manage Policies for the selected Storage Providers"
+msgstr ""
 
 msgid "Manage Policies for the selected Templates"
 msgstr "選択したテンプレートのポリシーの管理"
@@ -21183,6 +21391,9 @@ msgstr ""
 msgid "Manage Policies for this Resource Pool"
 msgstr "このリソースプールのポリシーを管理"
 
+msgid "Manage Policies for this Storage Provider"
+msgstr ""
+
 msgid "Manage Policies for this Template"
 msgstr "このテンプレートのポリシーを管理"
 
@@ -21229,6 +21440,10 @@ msgid "Manage Policies of Resource Pools"
 msgstr "リソースプールのポリシーの管理"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Manage Policies of Storage Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Manage Policies on Clusters / Deployment Roles"
 msgstr "クラスター/デプロイメントロールのポリシーを管理"
 
@@ -21269,21 +21484,6 @@ msgid "Manage quotas for %{model} \"%{name}\" was cancelled by the user"
 msgstr "%{model} \"%{name}\" のクォータ管理はユーザーによってキャンセルされました。"
 
 msgid "ManageIQ"
-msgstr ""
-
-msgid "ManageIQ Appliance restart initiated successfully"
-msgstr ""
-
-msgid "ManageIQ Log"
-msgstr ""
-
-msgid "ManageIQ Region: %{region_description} [%{region}]"
-msgstr ""
-
-msgid "ManageIQ Server \"%{name}\" set as %{priority} for Role \"%{role_description}\""
-msgstr ""
-
-msgid "ManageIQ Version"
 msgstr ""
 
 msgid "ManageIQ-Blue"
@@ -23111,6 +23311,9 @@ msgstr "最小値"
 
 msgid "Minimum value over rollup period - %{number}"
 msgstr "ロールアップ期間の最小値 - %{number}"
+
+msgid "Minor Version"
+msgstr ""
 
 msgid "Minute"
 msgstr "分"
@@ -25399,6 +25602,14 @@ msgid "Modify Storage Managers"
 msgstr "ストレージマネージャーの変更"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Modify Storage Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Modify Subnets"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Modify System Image Types"
 msgstr "システムイメージタイプの変更"
 
@@ -25438,6 +25649,9 @@ msgstr "ウィジェットの変更"
 msgid "Modify Zones"
 msgstr "ゾーンの変更"
 
+msgid "Module Name"
+msgstr ""
+
 msgid "Monday"
 msgstr "月曜日"
 
@@ -25472,6 +25686,9 @@ msgstr "1 年の月"
 
 msgid "Monthly"
 msgstr "毎月"
+
+msgid "Months"
+msgstr ""
 
 msgid "Move Selected buttons left"
 msgstr "選択したボタンを左に移動する"
@@ -25639,9 +25856,6 @@ msgstr "NFS"
 msgid "NFS Server"
 msgstr "NFS サーバー"
 
-msgid "NONE"
-msgstr "なし"
-
 msgid "NOT"
 msgstr "NOT"
 
@@ -25703,6 +25917,8 @@ msgstr "NTP サーバー"
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Vm.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/MiqActionSet.yaml
 #. TRANSLATORS: file: product/views/MiqAeInstance.yaml
 #. TRANSLATORS: file: product/views/MiqDialog.yaml
@@ -25812,6 +26028,9 @@ msgstr "名前空間"
 
 msgid "Naming"
 msgstr "名前"
+
+msgid "NetApp"
+msgstr ""
 
 #. TRANSLATORS: file: product/views/OntapStorageSystem.yaml
 msgid "NetApp Filers"
@@ -26740,6 +26959,9 @@ msgstr "チャートデータが見つかりませんでした"
 msgid "No child VMs to move right, no action taken"
 msgstr "右側に移動する子 VM はありません。アクションは実行されません"
 
+msgid "No cloud providers support key pair import or creation."
+msgstr ""
+
 msgid "No common configuration profiles available for the selected configured system"
 msgid_plural "No common configuration profiles available for the selected configured systems"
 msgstr[0] ""
@@ -26889,6 +27111,9 @@ msgstr "このユーザーにはショートカットが承認されていませ
 msgid "No source template was found from input data:<%{data}>"
 msgstr "ソーステンプレートが入力データから見つかりませんでした:<%{data}>"
 
+msgid "No subnet were selected for deletion."
+msgstr ""
+
 msgid "No synchronize category specified"
 msgstr "同期カテゴリーが指定されていません"
 
@@ -26950,6 +27175,9 @@ msgid "Nodes"
 msgstr "ノード"
 
 msgid "Nodes Base Name:"
+msgstr ""
+
+msgid "Nodes were added successfully. Refresh queued."
 msgstr ""
 
 msgid "Non-Compliant as of %{time} Ago"
@@ -29986,6 +30214,10 @@ msgid "Perform Operations on Snapshots"
 msgstr "スナップショットで操作を実施"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Perform Operations on Storage Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Perform Operations on Storage Systems"
 msgstr "ストレージシステムで操作を実施"
 
@@ -30234,6 +30466,10 @@ msgstr "物理リソース"
 msgid "Picture"
 msgstr "ピクチャー"
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Pictures"
+msgstr ""
+
 msgid "Picture|Region description"
 msgstr ""
 
@@ -30297,6 +30533,9 @@ msgstr ""
 
 msgid "Please select a Cloud Tenant from the Environment Tab"
 msgstr "環境タブからクラウドテナントを選択してください"
+
+msgid "Please select a JSON file containing the nodes you would like to register."
+msgstr ""
 
 msgid "Please select a node from the tree to edit."
 msgstr ""
@@ -30611,7 +30850,7 @@ msgstr "インポートするには「コミット」を押してください"
 msgid "Press submit to start the Database Vacuum process"
 msgstr "「送信」を押してデータベースバキュームプロセスを開始します。"
 
-msgid "Press the Apply button to import the good records into the ManageIQ database"
+msgid "Press the Apply button to import the good records into the %{product} database"
 msgstr ""
 
 msgid "Press your browser's Back button or click a tab to continue"
@@ -31692,6 +31931,10 @@ msgid "Refresh Status for all items related of Storage Managers"
 msgstr "ストレージマネージャーに関連するすべてのアイテムのステータスを更新"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Refresh Storage Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Refresh Widgets"
 msgstr "ウィジェットを更新"
 
@@ -31704,8 +31947,8 @@ msgstr "NetApp ストレージのワーカーを更新"
 msgid "Refresh Worker for SMIS"
 msgstr "SMIS のワーカーを更新"
 
-msgid "Refresh initiated for %{count} %{model} from the ManageIQ Database"
-msgid_plural "Refresh initiated for %{count} %{models} from the ManageIQ Database"
+msgid "Refresh initiated for %{count} %{model} from the %{product} Database"
+msgid_plural "Refresh initiated for %{count} %{models} from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -31773,6 +32016,12 @@ msgstr ""
 msgid "Refresh relationships and power states for all items related to the selected Network Providers?"
 msgstr ""
 
+msgid "Refresh relationships and power states for all items related to the selected Storage Providers"
+msgstr ""
+
+msgid "Refresh relationships and power states for all items related to the selected Storage Providers?"
+msgstr ""
+
 msgid "Refresh relationships and power states for all items related to the selected Templates"
 msgstr "選択されたテンプレートに関連するすべてのアイテムの関係と電源状態を更新"
 
@@ -31813,6 +32062,12 @@ msgid "Refresh relationships and power states for all items related to this Netw
 msgstr ""
 
 msgid "Refresh relationships and power states for all items related to this Network Provider?"
+msgstr ""
+
+msgid "Refresh relationships and power states for all items related to this Storage Provider"
+msgstr ""
+
+msgid "Refresh relationships and power states for all items related to this Storage Provider?"
 msgstr ""
 
 msgid "Refresh relationships and power states for all items related to this Template"
@@ -31872,6 +32127,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Template.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Vm.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
 #. TRANSLATORS: file: product/views/MiqServer.yaml
 #. TRANSLATORS: file: product/views/OntapFileShare.yaml
@@ -31919,6 +32175,17 @@ msgstr "リージョン"
 
 msgid "Register"
 msgstr "登録"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Register Hosts / Nodes"
+msgstr ""
+
+msgid "Register Nodes"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Register new Hosts / Nodes"
+msgstr ""
 
 msgid "Register to"
 msgstr "登録先"
@@ -32338,6 +32605,17 @@ msgid "Remove Storage Managers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Remove Storage Provider"
+msgstr ""
+
+msgid "Remove Storage Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Remove Subnets"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Remove System Image Types"
 msgstr ""
 
@@ -32513,6 +32791,9 @@ msgstr "選択されたサービスを VMDB から削除"
 msgid "Remove selected Storage Managers"
 msgstr ""
 
+msgid "Remove selected Storage Providers"
+msgstr ""
+
 msgid "Remove selected System Image Types"
 msgstr ""
 
@@ -32670,6 +32951,9 @@ msgid "Remove this Shortcut"
 msgstr "このショートカットを削除"
 
 msgid "Remove this Storage Manager"
+msgstr ""
+
+msgid "Remove this Storage Provider"
 msgstr ""
 
 msgid "Remove this System Image Type"
@@ -32862,6 +33146,14 @@ msgstr "要求"
 msgid "Request \"%{name}\" was %{task}"
 msgstr "要求\"%{name}\" は %{task}"
 
+#. TRANSLATORS: file: db/fixtures/notification_types.yml
+msgid "Request %{subject} has been approved."
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/notification_types.yml
+msgid "Request %{subject} has been denied."
+msgstr ""
+
 msgid "Request Approval"
 msgstr "要求承認"
 
@@ -32993,7 +33285,7 @@ msgstr "予約"
 msgid "Reset"
 msgstr "リセット"
 
-msgid "Reset All menus to ManageIQ defaults"
+msgid "Reset All menus to %{product} defaults"
 msgstr ""
 
 msgid "Reset All menus to defaults"
@@ -33393,6 +33685,14 @@ msgid "Restart this item?"
 msgstr "このアイテムを再起動しますか?"
 
 msgid "Restart this server"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Restore from a Backup"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Restore from a Volume Backup"
 msgstr ""
 
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
@@ -34181,9 +34481,6 @@ msgstr "検索"
 msgid "Second"
 msgstr "秒"
 
-msgid "Second band unit"
-msgstr "2 番目のバンドユニット:"
-
 msgid "Secondary (Display) Filter"
 msgstr "セカンダリー (表示) フィルター"
 
@@ -34579,6 +34876,9 @@ msgstr "比較する 2 つ以上のアイテムを選択"
 msgid "Select up to 10 timestamps for Drift Analysis"
 msgstr "ドリフト分析のために最大 10 個までのタイムスタンプを選択"
 
+msgid "Select your desired settings and click the apply button to view timeline data."
+msgstr ""
+
 msgid "Selected"
 msgstr "選択"
 
@@ -34771,6 +35071,14 @@ msgstr "サービス"
 
 msgid "Service \"%{name}\" was saved"
 msgstr "サービス \"%{name}\" が保存されました"
+
+#. TRANSLATORS: file: db/fixtures/notification_types.yml
+msgid "Service %{subject} has been provisioned."
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/notification_types.yml
+msgid "Service %{subject} has been retired."
+msgstr ""
 
 #. TRANSLATORS: file: product/views/ContainerBuild.yaml
 msgid "Service Account"
@@ -35315,10 +35623,6 @@ msgstr "重大度"
 msgid "Share"
 msgstr ""
 
-#. TRANSLATORS: file: product/views/Switch.yaml
-msgid "Shared"
-msgstr ""
-
 msgid "Share|Allow tenant inheritance"
 msgstr ""
 
@@ -35630,6 +35934,9 @@ msgstr "コストの表示"
 msgid "Show Costs by must be selected"
 msgstr "コスト別表示を選択する必要があります"
 
+msgid "Show Detailed Events"
+msgstr ""
+
 msgid "Show Details of Compliance Check on %{date}"
 msgstr "%{date} のコンプライアンスチェックの詳細を表示"
 
@@ -35730,6 +36037,9 @@ msgstr "このプロジェクトのタイムラインを表示"
 
 msgid "Show Timelines for this Replicator"
 msgstr "このレプリケーターのタイムラインを表示"
+
+msgid "Show Timelines for this Storage Provider"
+msgstr ""
 
 msgid "Show Timelines for this Template"
 msgstr "このテンプレートのタイムラインを表示"
@@ -35959,9 +36269,6 @@ msgstr[1] "この VM のディスクを表示"
 msgid "Show esx logs on this VM"
 msgstr "この VM の ESX ログを表示"
 
-msgid "Show events from last"
-msgstr "前回からのイベントを表示"
-
 msgid "Show full screen Report"
 msgstr "レポートを全画面表示"
 
@@ -36178,9 +36485,6 @@ msgid "Show this Cloud Tenant's parent Cloud Provider"
 msgstr ""
 
 msgid "Show this Cloud Volume's parent %{parent}"
-msgstr ""
-
-msgid "Show this Cloud Volume's parent Cloud Volume Snapshot"
 msgstr ""
 
 msgid "Show this Datastore's %{label}"
@@ -37091,16 +37395,34 @@ msgstr ""
 msgid "Storage Clusters"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager
 #. TRANSLATORS: en.yml key: dictionary.model.StorageManager
 #. TRANSLATORS: file: product/views/StorageManager.yaml
 msgid "Storage Manager"
 msgstr "ストレージマネジャー"
 
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager::CinderManager
+msgid "Storage Manager (Cinder)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager::SwiftManager
+msgid "Storage Manager (Swift)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.StorageManager (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.storage_managers
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Storage Managers"
 msgstr "ストレージマネジャー"
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager::CinderManager (plural form)
+msgid "Storage Managers (Cinder)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager::SwiftManager (plural form)
+msgid "Storage Managers (Swift)"
+msgstr ""
 
 msgid "Storage Medium Type"
 msgstr "ストレージメディアのタイプ"
@@ -37114,6 +37436,16 @@ msgid "Storage Performance - Volumes"
 msgstr "ストレージパフォーマンス - ボリューム"
 
 msgid "Storage Profile"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.ems_storage
+msgid "Storage Provider"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.ems_storage (plural form)
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
+msgid "Storage Providers"
 msgstr ""
 
 msgid "Storage Rate Assignments"
@@ -37518,8 +37850,17 @@ msgstr "この論理ディスク作成要求を送信"
 msgid "Submit this provisioning request"
 msgstr "このプロビジョニング要求の送信"
 
+msgid "Subnet CIDR"
+msgstr ""
+
+msgid "Subnet Gateway"
+msgstr ""
+
 msgid "Subnet Mask"
 msgstr "サブネットマスク"
+
+msgid "Subnet Name"
+msgstr ""
 
 msgid "Subnet Range"
 msgstr "サブネット範囲"
@@ -37527,6 +37868,9 @@ msgstr "サブネット範囲"
 #. TRANSLATORS: file: product/views/Flavor.yaml
 msgid "Subnet Required"
 msgstr "サブネットが必要"
+
+msgid "Subnet no longer exists."
+msgstr ""
 
 msgid "Subnetpool"
 msgstr ""
@@ -37566,8 +37910,11 @@ msgstr ""
 msgid "Successful"
 msgstr "成功"
 
-msgid "Successfully deleted Saved Report from the ManageIQ Database"
-msgid_plural "Successfully deleted Saved Reports from the ManageIQ Database"
+msgid "Successful Events"
+msgstr ""
+
+msgid "Successfully deleted Saved Report from the %{product} Database"
+msgid_plural "Successfully deleted Saved Reports from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -38061,6 +38408,7 @@ msgstr ""
 msgid "Template Selection"
 msgstr "テンプレート選択"
 
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplateAzure.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplateCfn.yaml
@@ -38266,6 +38614,12 @@ msgstr "テキストボックス"
 msgid "Text String"
 msgstr "テキスト文字列"
 
+msgid "The %{product} Server is still starting, you have been redirected to the diagnostics page for problem determination"
+msgstr ""
+
+msgid "The %{product} Server is still starting. If this message persists, please contact your %{product} administrator."
+msgstr ""
+
 msgid "The Enterprise"
 msgstr "エンタープライズ"
 
@@ -38278,14 +38632,11 @@ msgstr ""
 msgid "The Keypair is not connected to an active %{table}"
 msgstr "Keypair はアクティブな %{table} に接続されません"
 
-msgid "The ManageIQ Server is still starting, you have been redirected to the diagnostics page for problem determination"
-msgstr ""
-
-msgid "The ManageIQ Server is still starting. If this message persists, please contact your ManageIQ administrator."
-msgstr ""
-
 msgid "The Remote Console is connecting"
 msgstr "リモートコンソールに接続しています"
+
+msgid "The Subnet is not connected to an active %{table}"
+msgstr ""
 
 msgid "The Subscription Management Service you register with will provide your systems with updates and allow additional management."
 msgstr ""
@@ -38386,6 +38737,9 @@ msgstr "選択されたスケジュールは無効にされました"
 msgid "The selected Schedules were enabled"
 msgstr "選択されたスケジュールは有効にされました"
 
+msgid "The selected Subnet was deleted"
+msgstr ""
+
 msgid "The selected Task was cancelled"
 msgstr "選択したタスクがキャンセルされました"
 
@@ -38451,9 +38805,6 @@ msgstr "シンプロビジョニング"
 
 msgid "Thin Provisioning Used"
 msgstr "使用済みシンプロビジョニング"
-
-msgid "Third band unit"
-msgstr "3 番目のバンドユニット"
 
 msgid "This %{instance} does not have any associated %{floating_ips}"
 msgstr ""
@@ -38557,7 +38908,7 @@ msgstr ""
 msgid "This element is disabled because it is read only"
 msgstr "この要素は読み取り専用のため無効になります"
 
-msgid "This element should be removed and recreated or you can report the error to your ManageIQ administrator."
+msgid "This element should be removed and recreated or you can report the error to your %{product} administrator."
 msgstr ""
 
 msgid "This object already exists in the database with the same name"
@@ -38684,6 +39035,9 @@ msgstr "タイムラインプレビュー (最大 50 行)"
 
 msgid "Timeline Settings"
 msgstr "タイムライン設定"
+
+msgid "Timeline View"
+msgstr ""
 
 msgid "Timeline tab is not available unless at least 1 time field has been selected"
 msgstr "タイムライン タブは、少なくとも 1 つのフィールドが選択されない限り使用できません"
@@ -39125,6 +39479,7 @@ msgstr "2 つの日付/時間の値を指定する必要があります"
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
 #. TRANSLATORS: file: product/views/MiqAction.yaml
 #. TRANSLATORS: file: product/views/MiqEvent-actions.yaml
 #. TRANSLATORS: file: product/views/MiqWidget-all.yaml
@@ -39226,6 +39581,9 @@ msgstr "US タブロイド - 11.0in x 17.0in"
 msgid "UUID"
 msgstr ""
 
+msgid "Unable to add nodes: %{error}"
+msgstr ""
+
 msgid "Unable to associate Floating IP %{address} with Instance \"%{name}\": %{details}"
 msgstr ""
 
@@ -39245,6 +39603,9 @@ msgid "Unable to auto-create user because unable to match user's group membershi
 msgstr "ユーザーのグループメンバーシップと EVM ロールが一致しないため、ユーザーを自動作成できません"
 
 msgid "Unable to create %{model} %{name}. %{error}"
+msgstr ""
+
+msgid "Unable to create %{subnet} \"%{subnet_name}\": %{details}"
 msgstr ""
 
 msgid "Unable to create %{volume} \"%{volume_name}\": %{details}"
@@ -39338,6 +39699,9 @@ msgid "Unable to relocate VM: Specified Resource Pool is not a valid object"
 msgstr "VM を再配置できません: 指定されたリソースプールは有効なオブジェクトではありません"
 
 msgid "Unable to update %{model} \"%{name}\": %{details}"
+msgstr ""
+
+msgid "Unable to update Subnet \"%{name}\": %{details}"
 msgstr ""
 
 msgid "Unable to update stack, obtaining of status failed: %{message}"
@@ -39436,12 +39800,6 @@ msgstr "不明なリソース %{name}"
 msgid "Unknown server operation: "
 msgstr ""
 
-msgid "Unknown state of: %{task_status}"
-msgstr "不明な状態: %{task_status}"
-
-msgid "Unknown status of: %{task_status}"
-msgstr "不明なステータス: %{task_status}"
-
 msgid "Unknown task, %{task}"
 msgstr "不明なタスク %{task}"
 
@@ -39527,6 +39885,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ChargebackRate.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplateAzure.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplateCfn.yaml
@@ -39538,6 +39897,9 @@ msgid "Updated On"
 msgstr "更新日"
 
 msgid "Updating %{model} \"%{name}\""
+msgstr ""
+
+msgid "Updating Subnet \"%{name}\""
 msgstr ""
 
 msgid "Upload"
@@ -41291,6 +41653,10 @@ msgstr "スナップショットの表示"
 msgid "View Storage Managers"
 msgstr "ストレージマネジャーの表示"
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "View Storage Providers"
+msgstr ""
+
 msgid "View Storage Rates"
 msgstr "ストレージ速度の表示"
 
@@ -41515,6 +41881,14 @@ msgstr "仮想ハードウェアバージョン"
 #. TRANSLATORS: en.yml key: dictionary.table.vm_or_template
 msgid "Virtual Machine"
 msgstr "仮想マシン"
+
+#. TRANSLATORS: file: db/fixtures/notification_types.yml
+msgid "Virtual Machine %{subject} has been provisioned."
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/notification_types.yml
+msgid "Virtual Machine %{subject} has been retired."
+msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Microsoft::InfraManager::Vm
 msgid "Virtual Machine (Microsoft)"
@@ -42640,6 +43014,9 @@ msgstr ""
 msgid "Warning: The selected Cloud Providers and ALL related components will be permanently removed!"
 msgstr ""
 
+msgid "Warning: The selected Cloud Subnets and ALL of their components will be removed!"
+msgstr ""
+
 msgid "Warning: The selected Cloud Volume and ALL of their components will be removed!"
 msgstr ""
 
@@ -42730,6 +43107,9 @@ msgstr ""
 msgid "Warning: The selected Storage Managers and ALL of their components will be permanently removed!"
 msgstr ""
 
+msgid "Warning: The selected Storage Providers and ALL of their components will be permanently removed!"
+msgstr ""
+
 msgid "Warning: The selected System Image Types will be permanently removed!"
 msgstr ""
 
@@ -42776,6 +43156,9 @@ msgid "Warning: This Chargeback Rate will be permanently removed!"
 msgstr ""
 
 msgid "Warning: This Cloud Provider and ALL of its components will be permanently removed!"
+msgstr ""
+
+msgid "Warning: This Cloud Subnet and ALL of its components will be removed!"
 msgstr ""
 
 msgid "Warning: This Cloud Volume and ALL of its components will be removed!"
@@ -42865,6 +43248,9 @@ msgstr ""
 msgid "Warning: This Storage Manager and ALL of its components will be permanently removed!"
 msgstr ""
 
+msgid "Warning: This Storage Provider and ALL of its components will be permanently removed!"
+msgstr ""
+
 msgid "Warning: This System Image Type will be permanently removed!"
 msgstr ""
 
@@ -42932,6 +43318,9 @@ msgstr "週番号"
 
 msgid "Weekly"
 msgstr "毎週"
+
+msgid "Weeks"
+msgstr ""
 
 msgid "West Central US"
 msgstr ""
@@ -43363,6 +43752,9 @@ msgstr "太字"
 msgid "cannot delete default zone"
 msgstr "デフォルトゾーンを削除できません"
 
+msgid "centered"
+msgstr ""
+
 msgid "check_quota called with an invalid provisioning quota method <%{type}>"
 msgstr "check_quota は無効なプロビジョニングクォータメソッド <%{type}> で呼び出されます"
 
@@ -43383,9 +43775,6 @@ msgstr "cpu_total_cores"
 
 msgid "days"
 msgstr "日"
-
-msgid "days back"
-msgstr "日前"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "deploy"
@@ -43408,6 +43797,9 @@ msgstr "下へ移動"
 
 msgid "end_time cannot be specified if start_time is nil"
 msgstr "start_time が nil の場合は、end_time を指定できません"
+
+msgid "ending"
+msgstr ""
 
 msgid "entries can only be added to classifications"
 msgstr "エントリーは分類にのみ追加できます"
@@ -43553,6 +43945,9 @@ msgstr "定義された認証情報なし"
 msgid "no credentials defined for %{type} %{name}"
 msgstr "%{type} %{name} に対して認証情報が定義されていません"
 
+msgid "no parent_manager to ems"
+msgstr ""
+
 msgid "no value"
 msgstr "値がありません"
 
@@ -43649,8 +44044,14 @@ msgstr "raw_create_volume はサブクラスに実装する必要があります
 msgid "raw_delete_key_pair must be implemented in a subclass"
 msgstr "raw_delete_key_pair はサブクラスに実装する必要があります"
 
+msgid "raw_delete_load_balancer must be implemented in a subclass"
+msgstr ""
+
 msgid "raw_delete_stack must be implemented in a subclass"
 msgstr "raw_delete_stack はサブクラスに実装する必要があります"
+
+msgid "raw_delete_subnet must be implemented in a subclass"
+msgstr ""
 
 msgid "raw_delete_volume must be implemented in a subclass"
 msgstr "raw_delete_volume はサブクラスに実装する必要があります"
@@ -43661,14 +44062,23 @@ msgstr ""
 msgid "raw_evacuate must be implemented in a subclass"
 msgstr "raw_evacuate はサブクラスに実装する必要があります"
 
+msgid "raw_exists must be implemented in a subclass"
+msgstr ""
+
 msgid "raw_live_migrate must be implemented in a subclass"
 msgstr "raw_live_migrate はサブクラスに実装する必要があります"
 
 msgid "raw_status must be implemented in a subclass"
 msgstr "raw_status はサブクラスに実装する必要があります"
 
+msgid "raw_update_load_balancer must be implemented in a subclass"
+msgstr ""
+
 msgid "raw_update_stack must be implemented in a subclass"
 msgstr "raw_update_stack はサブクラスに実装する必要があります"
+
+msgid "raw_update_subnet must be implemented in a subclass"
+msgstr ""
 
 msgid "raw_update_volume must be implemented in a subclass"
 msgstr "raw_update_volume はサブクラスに実装する必要があります"
@@ -43708,6 +44118,9 @@ msgstr "%{name} id [%{number}] のサイズが正しくありません"
 
 msgid "started? not implemented for %{server_name}"
 msgstr "起動されましたか? %{server_name} に対して実装されていません"
+
+msgid "starting"
+msgstr ""
 
 msgid "stopped"
 msgstr "停止"
@@ -43775,6 +44188,22 @@ msgstr "ユーザー入力"
 #. TRANSLATORS: file: product/views/ResourcePool.yaml
 msgid "vApp"
 msgstr "vApp"
+
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
+msgid "vApp Orchestration Template"
+msgstr ""
+
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
+msgid "vApp Orchestration Templates"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate
+msgid "vApp Template"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate (plural form)
+msgid "vApp Templates"
+msgstr ""
 
 msgid "vCPU Count"
 msgstr "vCPU 数"

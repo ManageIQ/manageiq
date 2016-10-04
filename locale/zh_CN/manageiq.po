@@ -431,6 +431,9 @@ msgstr "未找到 %{class_name}.counter_desc: counter _{counter_name}"
 msgid "%{class_name}.counter_unit: counter %{counter_name} not found"
 msgstr "未找到 %{class_name}.counter_unit: counter %{counter_name}"
 
+msgid "%{count} unread notifications"
+msgstr ""
+
 msgid "%{date_from} to %{date_to}"
 msgstr ""
 
@@ -870,6 +873,21 @@ msgstr ""
 msgid "%{object} Conditions"
 msgstr ""
 
+msgid "%{product} Appliance restart initiated successfully"
+msgstr ""
+
+msgid "%{product} Log"
+msgstr ""
+
+msgid "%{product} Region: %{region_description} [%{region}]"
+msgstr ""
+
+msgid "%{product} Server \"%{name}\" set as %{priority} for Role \"%{role_description}\""
+msgstr ""
+
+msgid "%{product} Version"
+msgstr ""
+
 msgid "%{protocol} port %{port} to pods on target port:'%{target_port}'"
 msgstr "%{protocol} 端口 %{port} 到目标端口中的 pod：'%{target_port}'"
 
@@ -924,18 +942,18 @@ msgstr "%{table}: %{name}"
 msgid "%{task} does not apply to at least one of the selected %{model}"
 msgstr "%{task} 没有应用于任何所选 %{model}"
 
-msgid "%{task} initiated for %{count} %{model} from the ManageIQ Database"
-msgid_plural "%{task} initiated for %{count} %{models} from the ManageIQ Database"
+msgid "%{task} initiated for %{count} %{model} from the %{product} Database"
+msgid_plural "%{task} initiated for %{count} %{models} from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "%{task} initiated for %{count} Host from the ManageIQ Database"
-msgid_plural "%{task} initiated for %{count} Hosts from the ManageIQ Database"
+msgid "%{task} initiated for %{count} Host from the %{product} Database"
+msgid_plural "%{task} initiated for %{count} Hosts from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "%{task} initiated for %{count} Storage Manager from the ManageIQ Database"
-msgid_plural "%{task} initiated for %{count} Storage Managers from the ManageIQ Database"
+msgid "%{task} initiated for %{count} Storage Manager from the %{product} Database"
+msgid_plural "%{task} initiated for %{count} Storage Managers from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -944,8 +962,8 @@ msgid_plural "%{task} initiated for %{count} providers (%{controller})"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "%{task} initiated for %{number} %{model} from the ManageIQ Database"
-msgid_plural "%{task} initiated for %{number} %{models} from the ManageIQ Database"
+msgid "%{task} initiated for %{number} %{model} from the %{product} Database"
+msgid_plural "%{task} initiated for %{number} %{models} from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -1197,9 +1215,6 @@ msgstr "* 从这些标签类别（Tag Categories）只能分配单个值"
 
 msgid "* Only a single value can be assigned from these categories"
 msgstr "* 从这些标签类别（Tag Categories）只能分配单个值"
-
-msgid "* Passwords don't match."
-msgstr "* 密码不匹配。"
 
 msgid "* Performance Interval"
 msgstr "* 性能间隔"
@@ -2178,6 +2193,9 @@ msgstr ""
 msgid "Add Host Analysis Profile"
 msgstr "添加 Host Analysis 配置集"
 
+msgid "Add JDBC Driver"
+msgstr ""
+
 msgid "Add Middleware Deployment"
 msgstr ""
 
@@ -2195,6 +2213,9 @@ msgstr "添加新的主机"
 
 msgid "Add New Storage Manager"
 msgstr "添加新的存储管理者"
+
+msgid "Add New Subnet"
+msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Add Orchestration Template"
@@ -2464,6 +2485,14 @@ msgid "Add a Schedule"
 msgstr "添加时间表"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Add a Storage Provider"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Add a Subnet"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Add a Tenant/Project"
 msgstr "添加租户/项目"
 
@@ -2504,6 +2533,9 @@ msgstr "添加新的按钮组"
 msgid "Add a new Chargeback Rate"
 msgstr "添加新的费率"
 
+msgid "Add a new Cloud Subnet"
+msgstr ""
+
 msgid "Add a new Cloud Volume"
 msgstr ""
 
@@ -2538,6 +2570,9 @@ msgid "Add a new LDAP Region"
 msgstr "添加新的 LDAP 区域"
 
 msgid "Add a new Middleware Deployment"
+msgstr ""
+
+msgid "Add a new Middleware JDBC Driver"
 msgstr ""
 
 msgid "Add a new Provider"
@@ -2617,6 +2652,10 @@ msgstr ""
 msgid "Add middleware deployment"
 msgstr ""
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Add middleware jdbc driver"
+msgstr ""
+
 msgid "Add new Time Profile"
 msgstr "添加新的 Time 配置集"
 
@@ -2658,6 +2697,9 @@ msgstr "用户取消了添加新的目录束"
 
 msgid "Add of new Dashboard was cancelled by the user"
 msgstr "用户取消了添加新的仪表板"
+
+msgid "Add of new Subnet was cancelled by the user"
+msgstr ""
 
 msgid "Add subfolder to selected folder"
 msgstr "添加子文件夹到所选的文件夹"
@@ -3329,8 +3371,8 @@ msgstr "Analysis 配置集是必需的"
 msgid "Analysis Profiles"
 msgstr "Analysis 配置集"
 
-msgid "Analysis initiated for %{count} %{model} from the ManageIQ Database"
-msgid_plural "Analysis initiated for %{count} %{models} from the ManageIQ Database"
+msgid "Analysis initiated for %{count} %{model} from the %{product} Database"
+msgid_plural "Analysis initiated for %{count} %{models} from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -3432,7 +3474,7 @@ msgstr "应用的标签"
 msgid "Apply"
 msgstr "应用"
 
-msgid "Apply ManageIQ Update"
+msgid "Apply %{product} Update"
 msgstr ""
 
 msgid "Apply sections"
@@ -3903,9 +3945,6 @@ msgstr ""
 msgid "At least one domain should be enabled & unlocked"
 msgstr ""
 
-msgid "At least one filter must be selected"
-msgstr "必须至少选择一个过滤器"
-
 msgid "At least one hour needs to be selected"
 msgstr ""
 
@@ -4069,7 +4108,7 @@ msgstr ""
 msgid "Authentication failed"
 msgstr "验证失败"
 
-msgid "Authentication settings saved for ManageIQ Server \"%{name} [%{server_id}]\" in Zone \"%{zone}\""
+msgid "Authentication settings saved for %{product} Server \"%{name} [%{server_id}]\" in Zone \"%{zone}\""
 msgstr ""
 
 msgid "Authentication status will be saved and workers will be restarted for the selected %{controller_name}"
@@ -5548,6 +5587,9 @@ msgstr ""
 msgid "Cannot connect service with nil ID."
 msgstr "不能使用 nil ID 连接服务。"
 
+msgid "Cannot connect to workflow service: %{message}"
+msgstr ""
+
 msgid "Cannot create Request Info, error: %{error_message}"
 msgstr "不能创建 Request Info，错误: %{error_message}"
 
@@ -5565,6 +5607,9 @@ msgstr "不能删除当前活跃的 %{log_message}"
 
 msgid "Cannot display binary content"
 msgstr "无法显示二进制内容"
+
+msgid "Cannot parse JSON file: %{message}"
+msgstr ""
 
 msgid "Cannot parse userid %{user_id}"
 msgstr "无法解析 userid %{user_id}"
@@ -7938,7 +7983,7 @@ msgstr ""
 msgid "Configuration settings saved"
 msgstr "配置设置已保存"
 
-msgid "Configuration settings saved for ManageIQ Server \"%{name} [%{server_id}]\" in Zone \"%{zone}\""
+msgid "Configuration settings saved for %{product} Server \"%{name} [%{server_id}]\" in Zone \"%{zone}\""
 msgstr ""
 
 msgid "Configuration tag"
@@ -8298,9 +8343,6 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Container Deployments"
-msgstr ""
-
-msgid "Container Groups"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ContainerImage
@@ -10463,6 +10505,9 @@ msgstr "无法找到 NetApp 过滤器的 manager 项: %{name}"
 msgid "Couldn't initiate deletion of %{model} \"%{name}\": %{details}"
 msgstr "无法初始删除 %{model} \"%{name}\": %{details}"
 
+msgid "Couldn't initiate deletion of Subnet \"%{name}\": %{details}"
+msgstr ""
+
 msgid "Count"
 msgstr "计数"
 
@@ -10538,8 +10583,16 @@ msgstr "从编配模板创建服务对话"
 msgid "Create Service Dialog from this Job Template"
 msgstr ""
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Create Services"
+msgstr ""
+
 msgid "Create Snapshot for %{model} \"%{name}\" was started"
 msgstr "为 %{model} \"%{name}\" 创建快照已开始"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Create a Backup"
+msgstr ""
 
 msgid "Create a Datastore based on this File Share"
 msgstr ""
@@ -10547,8 +10600,19 @@ msgstr ""
 msgid "Create a Logical Disk (NetApp Flexible Volume) on this Filer"
 msgstr ""
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Create a Volume Backup"
+msgstr ""
+
 msgid "Create a new Condition assigned to this Policy"
 msgstr "创建分配给这个策略的新条件"
+
+msgid "Create a new Generic Object Definition"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Create a new picture"
+msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Create a new snapshot for Templates"
@@ -10566,6 +10630,10 @@ msgstr "为这个虚拟机创建一个新快照"
 
 msgid "Create new Orchestration Template"
 msgstr "创建新的编配模板"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Create new Picture"
+msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Create new Snapshots"
@@ -10591,6 +10659,7 @@ msgstr "创建者"
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplateAzure.yaml
@@ -10610,6 +10679,9 @@ msgstr "按时创建"
 
 msgid "Creating %{model} %{name}"
 msgstr "创建 %{model} %{name}"
+
+msgid "Creating %{subnet} \"%{subnet_name}\""
+msgstr ""
 
 msgid "Creating %{volume} \"%{volume_name}\""
 msgstr ""
@@ -11679,8 +11751,8 @@ msgstr "删除这个模版现有的所有快照？"
 msgid "Delete all of this VMs existing snapshots?"
 msgstr "删除这个虚拟机现有的所有快照？"
 
-msgid "Delete all older Tasks initiated for %{count} Task from the ManageIQ Database"
-msgid_plural "Delete all older Tasks initiated for %{count} Tasks from the ManageIQ Database"
+msgid "Delete all older Tasks initiated for %{count} Task from the %{product} Database"
+msgid_plural "Delete all older Tasks initiated for %{count} Tasks from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -11708,8 +11780,8 @@ msgstr "如果旧于...则删除"
 msgid "Delete initiated for %{count_model} from the Database"
 msgstr ""
 
-msgid "Delete initiated for %{count} %{model} from the ManageIQ Database"
-msgid_plural "Delete initiated for %{count} %{models} from the ManageIQ Database"
+msgid "Delete initiated for %{count} %{model} from the %{product} Database"
+msgid_plural "Delete initiated for %{count} %{models} from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -11718,8 +11790,13 @@ msgid_plural "Delete initiated for %{count} Providers"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Delete initiated for %{count} Task from the ManageIQ Database"
-msgid_plural "Delete initiated for %{count} Tasks from the ManageIQ Database"
+msgid "Delete initiated for %{count} Task from the %{product} Database"
+msgid_plural "Delete initiated for %{count} Tasks from the %{product} Database"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Delete initiated for %{number} Cloud Subnet."
+msgid_plural "Delete initiated for %{number} Cloud Subnets."
 msgstr[0] ""
 msgstr[1] ""
 
@@ -11733,8 +11810,8 @@ msgid_plural "Delete initiated for %{number} Key Pairs"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Delete initiated for Datastore from the ManageIQ Database"
-msgid_plural "Delete initiated for Datastores from the ManageIQ Database"
+msgid "Delete initiated for Datastore from the %{product} Database"
+msgid_plural "Delete initiated for Datastores from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -11742,6 +11819,9 @@ msgid "Delete selected %{dialog_resource}"
 msgstr ""
 
 msgid "Delete selected Accordion and its contents"
+msgstr ""
+
+msgid "Delete selected Cloud Subnets"
 msgstr ""
 
 msgid "Delete selected Cloud Volumes"
@@ -11820,6 +11900,9 @@ msgid "Delete this Alert Profile"
 msgstr "删除这个 Alert 配置集"
 
 msgid "Delete this Analysis Profile"
+msgstr ""
+
+msgid "Delete this Cloud Subnet"
 msgstr ""
 
 msgid "Delete this Cloud Volume"
@@ -12004,6 +12087,7 @@ msgstr "降序的"
 #. TRANSLATORS: file: product/views/LdapRegion.yaml
 #. TRANSLATORS: file: product/views/LoadBalancer.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/MiqAction.yaml
 #. TRANSLATORS: file: product/views/MiqActionSet.yaml
 #. TRANSLATORS: file: product/views/MiqAeClass.yaml
@@ -12121,9 +12205,6 @@ msgstr ""
 
 msgid "Detaching a %{volume} from %{instance_model} \"%{instance_name}\" was cancelled by the user"
 msgstr ""
-
-msgid "Detail"
-msgstr "细节"
 
 #. TRANSLATORS: en.yml key: dictionary.table.compliance_details
 msgid "Details"
@@ -12501,6 +12582,10 @@ msgstr "发现基础结构供应商"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Discover Network Providers"
 msgstr "发现网络供应商"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Discover Storage Providers"
+msgstr ""
 
 msgid "Discover Type"
 msgstr "发现类型"
@@ -12955,6 +13040,10 @@ msgid "Display Individual Storage Managers"
 msgstr "显示单独的存储管理者"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Display Individual Storage Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Display Individual Storage Systems"
 msgstr "显示单独的存储系统"
 
@@ -13215,6 +13304,10 @@ msgid "Display Lists of Storage Managers"
 msgstr "显示存储管理者的列表"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Display Lists of Storage Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Display Lists of Storage Systems"
 msgstr "显示存储系统的列表"
 
@@ -13359,6 +13452,10 @@ msgstr "显示网络供应商的时间线"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Display Timelines for Pods"
 msgstr "显示 Pod 的时间线"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Display Timelines for Storage Providers"
+msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Display Timelines for Templates"
@@ -13640,6 +13737,7 @@ msgstr "以 PDF 格式下载这个报表"
 msgid "Download this report in text format"
 msgstr "以文本格式下载这个报表"
 
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplateAzure.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplateCfn.yaml
@@ -13691,6 +13789,9 @@ msgstr "DriftState|资源类型"
 
 msgid "DriftState|Timestamp"
 msgstr "DriftState|时间戳"
+
+msgid "Driver Class"
+msgstr ""
 
 msgid "Driver Name"
 msgstr ""
@@ -13842,6 +13943,7 @@ msgstr "EVM 工作节点"
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
 #. TRANSLATORS: file: product/views/MiqSchedule.yaml
 #. TRANSLATORS: file: product/views/StorageManager.yaml
 msgid "EVM Zone"
@@ -13868,6 +13970,9 @@ msgstr ""
 
 msgid "Edit %{model} assignments cancelled by user"
 msgstr "用户取消了对 %{model} 分配的编辑"
+
+msgid "Edit %{product} Server Relationship for %{vm_or_template} \"%{name}\""
+msgstr ""
 
 msgid "Edit %{table} '%{name}'"
 msgstr "编辑 %{table} '%{name}'"
@@ -14081,9 +14186,6 @@ msgstr "用户取消了对 Log Depot 设置的编辑"
 msgid "Edit Logical Disks Tags"
 msgstr "编辑逻辑磁盘标签"
 
-msgid "Edit ManageIQ Server Relationship for %{vm_or_template} \"%{name}\""
-msgstr ""
-
 msgid "Edit Management Engine Relationship"
 msgstr "编辑管理引擎关系"
 
@@ -14263,6 +14365,12 @@ msgstr "编辑存储系统标签"
 msgid "Edit Storage Volumes Tags"
 msgstr "编辑存储卷标签"
 
+msgid "Edit Subnet"
+msgstr ""
+
+msgid "Edit Subnet \"%{name}\""
+msgstr ""
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Edit System Image Type"
 msgstr "编辑系统映像类型"
@@ -14315,6 +14423,9 @@ msgstr ""
 msgid "Edit Tags for the selected Load Balancers"
 msgstr ""
 
+msgid "Edit Tags for the selected Network Elements"
+msgstr ""
+
 msgid "Edit Tags for the selected Network Providers"
 msgstr ""
 
@@ -14326,6 +14437,9 @@ msgstr "编辑所选资源池的标签"
 
 msgid "Edit Tags for the selected Security Groups"
 msgstr "编辑所选安全组的标签"
+
+msgid "Edit Tags for the selected Storage Providers"
+msgstr ""
 
 msgid "Edit Tags for the selected items"
 msgstr "编辑所选项的标签"
@@ -14397,6 +14511,9 @@ msgid "Edit Tags for this Containers Provider"
 msgstr ""
 
 msgid "Edit Tags for this Datastore"
+msgstr ""
+
+msgid "Edit Tags for this Distributed Switch"
 msgstr ""
 
 msgid "Edit Tags for this File Share"
@@ -14485,6 +14602,9 @@ msgstr "编辑这个安全组的标签"
 
 msgid "Edit Tags for this Service"
 msgstr "编辑这个服务的标签"
+
+msgid "Edit Tags for this Storage Provider"
+msgstr ""
 
 msgid "Edit Tags for this Template"
 msgstr "编辑这个模版的标签"
@@ -14656,6 +14776,10 @@ msgstr "编辑服务的标签"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Edit Tags of Snapshots"
 msgstr "编辑快照的标签"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Edit Tags of Storage Providers"
+msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Edit Tags of Tenants"
@@ -14835,6 +14959,14 @@ msgid "Edit a Schedule"
 msgstr "编辑时间表"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Edit a Storage Provider"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Edit a Subnet"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Edit a Template"
 msgstr "编辑模版"
 
@@ -14862,7 +14994,7 @@ msgstr "编辑 Widget"
 msgid "Edit a Zone"
 msgstr "编辑区"
 
-msgid "Edit aborted!  ManageIQ does not support the browser's back button or access from multiple tabs or windows of the same browser.  Please close any duplicate sessions before proceeding."
+msgid "Edit aborted!  %{product} does not support the browser's back button or access from multiple tabs or windows of the same browser.  Please close any duplicate sessions before proceeding."
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -14947,6 +15079,9 @@ msgstr "用户取消了对角色 \"%{role}\" 的报表菜单的编辑"
 msgid "Edit of Service \"%{name}\" was cancelled by the user"
 msgstr "用户取消了对服务 \"%{name}\" 的编辑"
 
+msgid "Edit of Subnet \"%{name}\" was cancelled by the user"
+msgstr ""
+
 msgid "Edit of credentials for selected %{models} was cancelled by the user"
 msgstr "用户取消了对所选 %{models} 的凭证的编辑"
 
@@ -14955,6 +15090,9 @@ msgstr "用户取消了对 %{model} \"%{name}\" 的 schema 的编辑"
 
 msgid "Edit policy assignments was cancelled by the user"
 msgstr "用户取消了对策略分配的编辑"
+
+msgid "Edit selected Cloud Subnet"
+msgstr ""
 
 msgid "Edit selected Cloud Volume"
 msgstr ""
@@ -15087,6 +15225,9 @@ msgid "Edit this Class"
 msgstr "编辑这个类"
 
 msgid "Edit this Cloud Provider"
+msgstr ""
+
+msgid "Edit this Cloud Subnet"
 msgstr ""
 
 msgid "Edit this Cloud Volume"
@@ -15701,6 +15842,10 @@ msgstr "EmsMiddleware"
 msgid "EmsNetwork"
 msgstr "EmsNetwork"
 
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
+msgid "EmsStorage"
+msgstr ""
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Enable"
 msgstr "启用"
@@ -15831,9 +15976,24 @@ msgstr "强制的（Enforced）"
 msgid "Enter Automation Simulation options on the left and press Submit."
 msgstr "在左侧输入 Automation Simulation 选项并按 Submit。"
 
+msgid "Enter JDBC Driver Class"
+msgstr ""
+
+msgid "Enter JDBC Driver name"
+msgstr ""
+
+msgid "Enter JDBC Module name"
+msgstr ""
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Enter Maintenance Mode"
 msgstr "进入维护模式"
+
+msgid "Enter Major Version"
+msgstr ""
+
+msgid "Enter Minor Version"
+msgstr ""
 
 msgid "Enter Standby Mode"
 msgstr "进入待机模式"
@@ -16099,8 +16259,8 @@ msgstr "用户 %{id} 的 Orphaned Records delete 出错：%{message}"
 msgid "Error during Save: [%s - %s]"
 msgstr ""
 
-msgid "Error during Saved Report delete from the ManageIQ Database"
-msgid_plural "Error during Saved Reports delete from the ManageIQ Database"
+msgid "Error during Saved Report delete from the %{product} Database"
+msgid_plural "Error during Saved Reports delete from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -16112,9 +16272,6 @@ msgstr "报警时出错：%{messages}"
 
 msgid "Error during export: %{error_message}"
 msgstr "导出时出错：%{error_message}"
-
-msgid "Error during replication configuration save: "
-msgstr "Replication configuration save 过程中出错："
 
 msgid "Error during replication configuration save: %{message}"
 msgstr "Replication configuration save 过程中出错：%{message}"
@@ -16133,6 +16290,9 @@ msgstr "上传时出错：错误的 Dialog 格式，只能导入服务对话框�
 
 msgid "Error during upload: one of the DialogField types is not supported"
 msgstr "上传时出错：其中一个 DialogField 类型是不被支持的"
+
+msgid "Error executing register nodes workflow: %{message}"
+msgstr ""
 
 msgid "Error executing: \"%{task_description}\" %{error_message}"
 msgstr "执行 \"%{task_description}\" 时出错：%{error_message}"
@@ -16725,6 +16885,10 @@ msgid "Everything under Persistent Volumes"
 msgstr "'持久卷' 下的任何内容"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Everything under Pictures"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Everything under Pods"
 msgstr "'Pod' 下的任何内容"
 
@@ -16783,6 +16947,10 @@ msgstr "'服务' 下的任何内容"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Everything under Storage Managers"
 msgstr "'存储管理者' 下的任何内容"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Everything under Storage Providers"
+msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Everything under System Image Types"
@@ -17160,6 +17328,9 @@ msgstr "失败的"
 msgid "Failed (%{number})"
 msgstr "失败的 (%{number})"
 
+msgid "Failed Events"
+msgstr ""
+
 msgid "Failed system services of %{name}"
 msgstr "失败的系统服务 %{name}"
 
@@ -17476,9 +17647,6 @@ msgstr "第一"
 
 msgid "First %{number}"
 msgstr ""
-
-msgid "First band unit"
-msgstr "第一个基带单元"
 
 msgid "Fixed"
 msgstr "固定"
@@ -17849,6 +18017,21 @@ msgstr "产生初始数据..."
 
 msgid "Generation of report [%{name}] complete"
 msgstr "产生报表 [%{name}] 完成"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Generic Object"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Generic Object Definition Create"
+msgstr ""
+
+msgid "Generic Object Definition created successfully"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Generic Objects"
+msgstr ""
 
 msgid "Generic SCSI (%{location})"
 msgstr "通用 SCSI (%{location})"
@@ -18470,6 +18653,10 @@ msgstr "主目录"
 msgid "Host"
 msgid_plural "Hosts"
 msgstr[0] "主机"
+
+#. TRANSLATORS: file: db/fixtures/notification_types.yml
+msgid "Host %{subject} has been provisioned."
+msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.Host
 #. TRANSLATORS: en.yml key: dictionary.table.host
@@ -19128,6 +19315,9 @@ msgstr "IP 地址信息"
 msgid "IP Addresses"
 msgstr "IP 地址"
 
+msgid "IP Version"
+msgstr ""
+
 msgid "IP address octets must be 0 to 255"
 msgstr "IP 地址 (十进制) 必需是 0 到 255"
 
@@ -19778,7 +19968,19 @@ msgstr ""
 msgid "Items per page:"
 msgstr "每页的项:"
 
+msgid "JDBC Driver \"%s\" has been installed on this server."
+msgstr ""
+
+msgid "JDBC Driver installation"
+msgstr ""
+
+msgid "JDBC Drivers"
+msgstr ""
+
 msgid "JNDI Name"
+msgstr ""
+
+msgid "JSON file format is incorrect, missing 'nodes'."
 msgstr ""
 
 msgid "JVM Accumulated GC Duration"
@@ -20899,7 +21101,7 @@ msgstr "日志 Wrap 大小必需是一个数字且大于 0"
 msgid "Log collection error returned: %{error_message}"
 msgstr "返回的日志收集错误: %{error_message}"
 
-msgid "Log collection for ManageIQ %{object_type} %{name} has been initiated"
+msgid "Log collection for %{product} %{object_type} %{name} has been initiated"
 msgstr ""
 
 msgid "Log collection is already in progress for one or more %{servers} in this Zone"
@@ -21006,7 +21208,7 @@ msgstr "不支持登录到平台 [%{os_name}]"
 msgid "Logout"
 msgstr "登出"
 
-msgid "Logs for this ManageIQ Server are not available for viewing"
+msgid "Logs for this %{product} Server are not available for viewing"
 msgstr ""
 
 msgid "Long Description"
@@ -21067,6 +21269,9 @@ msgstr "维护模式"
 msgid "Maintenance mode is not supported for this host"
 msgstr "这个主机不支持维护模式"
 
+msgid "Major Version"
+msgstr ""
+
 msgid "Make %{name} the base"
 msgstr "使 %{name} 作为基础"
 
@@ -21113,6 +21318,9 @@ msgstr ""
 
 msgid "Manage Policies for the selected Resource Pools"
 msgstr "为选择的资源池管理策略"
+
+msgid "Manage Policies for the selected Storage Providers"
+msgstr ""
 
 msgid "Manage Policies for the selected Templates"
 msgstr "为选择的模板管理策略"
@@ -21165,6 +21373,9 @@ msgstr ""
 msgid "Manage Policies for this Resource Pool"
 msgstr "为这个资源池管理策略"
 
+msgid "Manage Policies for this Storage Provider"
+msgstr ""
+
 msgid "Manage Policies for this Template"
 msgstr "为这个模板管理策略"
 
@@ -21211,6 +21422,10 @@ msgid "Manage Policies of Resource Pools"
 msgstr "管理资源池的策略"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Manage Policies of Storage Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Manage Policies on Clusters / Deployment Roles"
 msgstr "管理集群/部署角色上的策略"
 
@@ -21251,21 +21466,6 @@ msgid "Manage quotas for %{model} \"%{name}\" was cancelled by the user"
 msgstr "用户取消了对 %{model} \"%{name}\" 的配额管理"
 
 msgid "ManageIQ"
-msgstr ""
-
-msgid "ManageIQ Appliance restart initiated successfully"
-msgstr ""
-
-msgid "ManageIQ Log"
-msgstr ""
-
-msgid "ManageIQ Region: %{region_description} [%{region}]"
-msgstr ""
-
-msgid "ManageIQ Server \"%{name}\" set as %{priority} for Role \"%{role_description}\""
-msgstr ""
-
-msgid "ManageIQ Version"
 msgstr ""
 
 msgid "ManageIQ-Blue"
@@ -23093,6 +23293,9 @@ msgstr "最小"
 
 msgid "Minimum value over rollup period - %{number}"
 msgstr "超过 rollup 时段的最小值 - %{number}"
+
+msgid "Minor Version"
+msgstr ""
 
 msgid "Minute"
 msgstr "分钟"
@@ -25381,6 +25584,14 @@ msgid "Modify Storage Managers"
 msgstr "修改存储管理者"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Modify Storage Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Modify Subnets"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Modify System Image Types"
 msgstr "修改系统映像类型"
 
@@ -25420,6 +25631,9 @@ msgstr "修改 Widget"
 msgid "Modify Zones"
 msgstr "修改区"
 
+msgid "Module Name"
+msgstr ""
+
 msgid "Monday"
 msgstr "周一"
 
@@ -25454,6 +25668,9 @@ msgstr "一年中的月份"
 
 msgid "Monthly"
 msgstr "每月"
+
+msgid "Months"
+msgstr ""
 
 msgid "Move Selected buttons left"
 msgstr "左移所选的按钮"
@@ -25621,9 +25838,6 @@ msgstr "NFS"
 msgid "NFS Server"
 msgstr "NFS 服务器"
 
-msgid "NONE"
-msgstr "NONE"
-
 msgid "NOT"
 msgstr "NOT"
 
@@ -25685,6 +25899,8 @@ msgstr "NTP 服务器"
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Vm.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/MiqActionSet.yaml
 #. TRANSLATORS: file: product/views/MiqAeInstance.yaml
 #. TRANSLATORS: file: product/views/MiqDialog.yaml
@@ -25794,6 +26010,9 @@ msgstr "命名空间"
 
 msgid "Naming"
 msgstr "命名"
+
+msgid "NetApp"
+msgstr ""
 
 #. TRANSLATORS: file: product/views/OntapStorageSystem.yaml
 msgid "NetApp Filers"
@@ -26719,6 +26938,9 @@ msgstr "没有找到图表数据"
 msgid "No child VMs to move right, no action taken"
 msgstr "没有右移的子虚拟机，不采取任何行动。"
 
+msgid "No cloud providers support key pair import or creation."
+msgstr ""
+
 msgid "No common configuration profiles available for the selected configured system"
 msgid_plural "No common configuration profiles available for the selected configured systems"
 msgstr[0] ""
@@ -26868,6 +27090,9 @@ msgstr "没有为这个用户授权快捷键，请联系您的管理员。"
 msgid "No source template was found from input data:<%{data}>"
 msgstr "未从输入数据 <%{data}> 找到源模版"
 
+msgid "No subnet were selected for deletion."
+msgstr ""
+
 msgid "No synchronize category specified"
 msgstr "未指定同步类别"
 
@@ -26929,6 +27154,9 @@ msgid "Nodes"
 msgstr "节点"
 
 msgid "Nodes Base Name:"
+msgstr ""
+
+msgid "Nodes were added successfully. Refresh queued."
 msgstr ""
 
 msgid "Non-Compliant as of %{time} Ago"
@@ -29960,6 +30188,10 @@ msgid "Perform Operations on Snapshots"
 msgstr "快照中执行操作"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Perform Operations on Storage Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Perform Operations on Storage Systems"
 msgstr "存储系统中执行操作"
 
@@ -30208,6 +30440,10 @@ msgstr "物理资源"
 msgid "Picture"
 msgstr "Picture"
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Pictures"
+msgstr ""
+
 msgid "Picture|Region description"
 msgstr ""
 
@@ -30271,6 +30507,9 @@ msgstr ""
 
 msgid "Please select a Cloud Tenant from the Environment Tab"
 msgstr "请从 Environment 标签页里选择一个 Cloud Tenant"
+
+msgid "Please select a JSON file containing the nodes you would like to register."
+msgstr ""
 
 msgid "Please select a node from the tree to edit."
 msgstr ""
@@ -30585,7 +30824,7 @@ msgstr "按 Commit 进行导入"
 msgid "Press submit to start the Database Vacuum process"
 msgstr "按 Submit 启动数据库清理过程"
 
-msgid "Press the Apply button to import the good records into the ManageIQ database"
+msgid "Press the Apply button to import the good records into the %{product} database"
 msgstr ""
 
 msgid "Press your browser's Back button or click a tab to continue"
@@ -31666,6 +31905,10 @@ msgid "Refresh Status for all items related of Storage Managers"
 msgstr "刷新与 Storage Manager 相关的所有项的状态"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Refresh Storage Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Refresh Widgets"
 msgstr "刷新 Widget"
 
@@ -31678,8 +31921,8 @@ msgstr "为 NetApp 存储刷新工作节点"
 msgid "Refresh Worker for SMIS"
 msgstr "为 SMIS 刷新工作节点"
 
-msgid "Refresh initiated for %{count} %{model} from the ManageIQ Database"
-msgid_plural "Refresh initiated for %{count} %{models} from the ManageIQ Database"
+msgid "Refresh initiated for %{count} %{model} from the %{product} Database"
+msgid_plural "Refresh initiated for %{count} %{models} from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -31747,6 +31990,12 @@ msgstr ""
 msgid "Refresh relationships and power states for all items related to the selected Network Providers?"
 msgstr ""
 
+msgid "Refresh relationships and power states for all items related to the selected Storage Providers"
+msgstr ""
+
+msgid "Refresh relationships and power states for all items related to the selected Storage Providers?"
+msgstr ""
+
 msgid "Refresh relationships and power states for all items related to the selected Templates"
 msgstr "刷新与所选模板相关的所有项的关系和电源状态"
 
@@ -31787,6 +32036,12 @@ msgid "Refresh relationships and power states for all items related to this Netw
 msgstr ""
 
 msgid "Refresh relationships and power states for all items related to this Network Provider?"
+msgstr ""
+
+msgid "Refresh relationships and power states for all items related to this Storage Provider"
+msgstr ""
+
+msgid "Refresh relationships and power states for all items related to this Storage Provider?"
 msgstr ""
 
 msgid "Refresh relationships and power states for all items related to this Template"
@@ -31846,6 +32101,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Template.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Vm.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
 #. TRANSLATORS: file: product/views/MiqServer.yaml
 #. TRANSLATORS: file: product/views/OntapFileShare.yaml
@@ -31893,6 +32149,17 @@ msgstr "区域"
 
 msgid "Register"
 msgstr "注册"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Register Hosts / Nodes"
+msgstr ""
+
+msgid "Register Nodes"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Register new Hosts / Nodes"
+msgstr ""
 
 msgid "Register to"
 msgstr "注册"
@@ -32311,6 +32578,17 @@ msgid "Remove Storage Managers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Remove Storage Provider"
+msgstr ""
+
+msgid "Remove Storage Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Remove Subnets"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Remove System Image Types"
 msgstr ""
 
@@ -32486,6 +32764,9 @@ msgstr "从 VMDB 删除所选的服务"
 msgid "Remove selected Storage Managers"
 msgstr ""
 
+msgid "Remove selected Storage Providers"
+msgstr ""
+
 msgid "Remove selected System Image Types"
 msgstr ""
 
@@ -32643,6 +32924,9 @@ msgid "Remove this Shortcut"
 msgstr "删除这个快捷键"
 
 msgid "Remove this Storage Manager"
+msgstr ""
+
+msgid "Remove this Storage Provider"
 msgstr ""
 
 msgid "Remove this System Image Type"
@@ -32835,6 +33119,14 @@ msgstr "请求"
 msgid "Request \"%{name}\" was %{task}"
 msgstr "请求 \"%{name}\" 是 %{task}"
 
+#. TRANSLATORS: file: db/fixtures/notification_types.yml
+msgid "Request %{subject} has been approved."
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/notification_types.yml
+msgid "Request %{subject} has been denied."
+msgstr ""
+
 msgid "Request Approval"
 msgstr "请求批准"
 
@@ -32966,7 +33258,7 @@ msgstr "保留"
 msgid "Reset"
 msgstr "重置"
 
-msgid "Reset All menus to ManageIQ defaults"
+msgid "Reset All menus to %{product} defaults"
 msgstr ""
 
 msgid "Reset All menus to defaults"
@@ -33365,6 +33657,14 @@ msgid "Restart this item?"
 msgstr "重启这个项?"
 
 msgid "Restart this server"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Restore from a Backup"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Restore from a Volume Backup"
 msgstr ""
 
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
@@ -34151,9 +34451,6 @@ msgstr "搜索"
 msgid "Second"
 msgstr "第二个"
 
-msgid "Second band unit"
-msgstr "第二个基带单元"
-
 msgid "Secondary (Display) Filter"
 msgstr "二级（显示）过滤器"
 
@@ -34549,6 +34846,9 @@ msgstr "选择两个或更多的项进行比较"
 msgid "Select up to 10 timestamps for Drift Analysis"
 msgstr "选择最多 10 个时间戳进行偏差分析"
 
+msgid "Select your desired settings and click the apply button to view timeline data."
+msgstr ""
+
 msgid "Selected"
 msgstr "选择的"
 
@@ -34741,6 +35041,14 @@ msgstr "服务"
 
 msgid "Service \"%{name}\" was saved"
 msgstr "服务 \"%{name}\" 已保存"
+
+#. TRANSLATORS: file: db/fixtures/notification_types.yml
+msgid "Service %{subject} has been provisioned."
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/notification_types.yml
+msgid "Service %{subject} has been retired."
+msgstr ""
 
 #. TRANSLATORS: file: product/views/ContainerBuild.yaml
 msgid "Service Account"
@@ -35285,10 +35593,6 @@ msgstr "严重性"
 msgid "Share"
 msgstr ""
 
-#. TRANSLATORS: file: product/views/Switch.yaml
-msgid "Shared"
-msgstr ""
-
 msgid "Share|Allow tenant inheritance"
 msgstr ""
 
@@ -35600,6 +35904,9 @@ msgstr "显示成本"
 msgid "Show Costs by must be selected"
 msgstr "必须选择 'Show Costs by '"
 
+msgid "Show Detailed Events"
+msgstr ""
+
 msgid "Show Details of Compliance Check on %{date}"
 msgstr "显示 %{date} 进行的合规性检查的细节"
 
@@ -35699,6 +36006,9 @@ msgstr "显示这个项目的时间线"
 
 msgid "Show Timelines for this Replicator"
 msgstr "显示这个复制器的时间线"
+
+msgid "Show Timelines for this Storage Provider"
+msgstr ""
 
 msgid "Show Timelines for this Template"
 msgstr "显示这个模版的时间线"
@@ -35927,9 +36237,6 @@ msgstr[0] "显示这个虚拟机上的磁盘"
 msgid "Show esx logs on this VM"
 msgstr "显示这个虚拟机上的 ESX 日志"
 
-msgid "Show events from last"
-msgstr "显示最近的事件"
-
 msgid "Show full screen Report"
 msgstr "显示全屏报表"
 
@@ -36130,9 +36437,6 @@ msgid "Show this Cloud Tenant's parent Cloud Provider"
 msgstr ""
 
 msgid "Show this Cloud Volume's parent %{parent}"
-msgstr ""
-
-msgid "Show this Cloud Volume's parent Cloud Volume Snapshot"
 msgstr ""
 
 msgid "Show this Datastore's %{label}"
@@ -37042,16 +37346,34 @@ msgstr ""
 msgid "Storage Clusters"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager
 #. TRANSLATORS: en.yml key: dictionary.model.StorageManager
 #. TRANSLATORS: file: product/views/StorageManager.yaml
 msgid "Storage Manager"
 msgstr "存储管理者"
 
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager::CinderManager
+msgid "Storage Manager (Cinder)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager::SwiftManager
+msgid "Storage Manager (Swift)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.StorageManager (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.storage_managers
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Storage Managers"
 msgstr "存储管理者"
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager::CinderManager (plural form)
+msgid "Storage Managers (Cinder)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager::SwiftManager (plural form)
+msgid "Storage Managers (Swift)"
+msgstr ""
 
 msgid "Storage Medium Type"
 msgstr "存储媒介类型"
@@ -37065,6 +37387,16 @@ msgid "Storage Performance - Volumes"
 msgstr "存储性能 - 卷"
 
 msgid "Storage Profile"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.ems_storage
+msgid "Storage Provider"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.ems_storage (plural form)
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
+msgid "Storage Providers"
 msgstr ""
 
 msgid "Storage Rate Assignments"
@@ -37469,8 +37801,17 @@ msgstr "提交这个 Create Logical Disk 请求"
 msgid "Submit this provisioning request"
 msgstr "提交这个置备请求"
 
+msgid "Subnet CIDR"
+msgstr ""
+
+msgid "Subnet Gateway"
+msgstr ""
+
 msgid "Subnet Mask"
 msgstr "子网掩码"
+
+msgid "Subnet Name"
+msgstr ""
 
 msgid "Subnet Range"
 msgstr "子网范围"
@@ -37478,6 +37819,9 @@ msgstr "子网范围"
 #. TRANSLATORS: file: product/views/Flavor.yaml
 msgid "Subnet Required"
 msgstr "子网是必需的"
+
+msgid "Subnet no longer exists."
+msgstr ""
 
 msgid "Subnetpool"
 msgstr ""
@@ -37517,8 +37861,11 @@ msgstr ""
 msgid "Successful"
 msgstr "成功的"
 
-msgid "Successfully deleted Saved Report from the ManageIQ Database"
-msgid_plural "Successfully deleted Saved Reports from the ManageIQ Database"
+msgid "Successful Events"
+msgstr ""
+
+msgid "Successfully deleted Saved Report from the %{product} Database"
+msgid_plural "Successfully deleted Saved Reports from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -38012,6 +38359,7 @@ msgstr ""
 msgid "Template Selection"
 msgstr "模版选择"
 
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplateAzure.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplateCfn.yaml
@@ -38217,6 +38565,12 @@ msgstr "Text Box"
 msgid "Text String"
 msgstr "Text String"
 
+msgid "The %{product} Server is still starting, you have been redirected to the diagnostics page for problem determination"
+msgstr ""
+
+msgid "The %{product} Server is still starting. If this message persists, please contact your %{product} administrator."
+msgstr ""
+
 msgid "The Enterprise"
 msgstr "企业"
 
@@ -38229,14 +38583,11 @@ msgstr ""
 msgid "The Keypair is not connected to an active %{table}"
 msgstr "这个密钥对没有连接至活动的 %{table}"
 
-msgid "The ManageIQ Server is still starting, you have been redirected to the diagnostics page for problem determination"
-msgstr ""
-
-msgid "The ManageIQ Server is still starting. If this message persists, please contact your ManageIQ administrator."
-msgstr ""
-
 msgid "The Remote Console is connecting"
 msgstr "远程控制台正在连接"
+
+msgid "The Subnet is not connected to an active %{table}"
+msgstr ""
 
 msgid "The Subscription Management Service you register with will provide your systems with updates and allow additional management."
 msgstr ""
@@ -38337,6 +38688,9 @@ msgstr "所选的时间表已被禁用。"
 msgid "The selected Schedules were enabled"
 msgstr "所选的时间表已被启用。"
 
+msgid "The selected Subnet was deleted"
+msgstr ""
+
 msgid "The selected Task was cancelled"
 msgstr "所选的任务已被取消"
 
@@ -38402,9 +38756,6 @@ msgstr "Thin Provisioning"
 
 msgid "Thin Provisioning Used"
 msgstr "使用的 Thin Provisioning"
-
-msgid "Third band unit"
-msgstr "第三个基带单元"
 
 msgid "This %{instance} does not have any associated %{floating_ips}"
 msgstr ""
@@ -38508,7 +38859,7 @@ msgstr ""
 msgid "This element is disabled because it is read only"
 msgstr "这个元素被禁用，因为它是只读的。"
 
-msgid "This element should be removed and recreated or you can report the error to your ManageIQ administrator."
+msgid "This element should be removed and recreated or you can report the error to your %{product} administrator."
 msgstr ""
 
 msgid "This object already exists in the database with the same name"
@@ -38635,6 +38986,9 @@ msgstr "时间线预览（最多 50 行）"
 
 msgid "Timeline Settings"
 msgstr "时间线设置"
+
+msgid "Timeline View"
+msgstr ""
 
 msgid "Timeline tab is not available unless at least 1 time field has been selected"
 msgstr "时间线标签不可用，除非至少选择了一个时间字段。"
@@ -39076,6 +39430,7 @@ msgstr "必须指定两个日期/事件值"
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
 #. TRANSLATORS: file: product/views/MiqAction.yaml
 #. TRANSLATORS: file: product/views/MiqEvent-actions.yaml
 #. TRANSLATORS: file: product/views/MiqWidget-all.yaml
@@ -39177,6 +39532,9 @@ msgstr "US Tabloid - 11.0in x 17.0in"
 msgid "UUID"
 msgstr ""
 
+msgid "Unable to add nodes: %{error}"
+msgstr ""
+
 msgid "Unable to associate Floating IP %{address} with Instance \"%{name}\": %{details}"
 msgstr ""
 
@@ -39196,6 +39554,9 @@ msgid "Unable to auto-create user because unable to match user's group membershi
 msgstr "无法把用户的组成员信息匹配到一个 EVM 角色，因此不能自动创建用户"
 
 msgid "Unable to create %{model} %{name}. %{error}"
+msgstr ""
+
+msgid "Unable to create %{subnet} \"%{subnet_name}\": %{details}"
 msgstr ""
 
 msgid "Unable to create %{volume} \"%{volume_name}\": %{details}"
@@ -39289,6 +39650,9 @@ msgid "Unable to relocate VM: Specified Resource Pool is not a valid object"
 msgstr "无法改变虚拟机的位置: 指定的资源池不是一个有效的项"
 
 msgid "Unable to update %{model} \"%{name}\": %{details}"
+msgstr ""
+
+msgid "Unable to update Subnet \"%{name}\": %{details}"
 msgstr ""
 
 msgid "Unable to update stack, obtaining of status failed: %{message}"
@@ -39387,12 +39751,6 @@ msgstr "未知资源 %{name}"
 msgid "Unknown server operation: "
 msgstr ""
 
-msgid "Unknown state of: %{task_status}"
-msgstr "未知状态: %{task_status}"
-
-msgid "Unknown status of: %{task_status}"
-msgstr "未知状态: %{task_status}"
-
 msgid "Unknown task, %{task}"
 msgstr "未知状态, %{task}"
 
@@ -39478,6 +39836,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ChargebackRate.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplateAzure.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplateCfn.yaml
@@ -39489,6 +39848,9 @@ msgid "Updated On"
 msgstr "更新日期"
 
 msgid "Updating %{model} \"%{name}\""
+msgstr ""
+
+msgid "Updating Subnet \"%{name}\""
 msgstr ""
 
 msgid "Upload"
@@ -41241,6 +41603,10 @@ msgstr "查看快照"
 msgid "View Storage Managers"
 msgstr "查看 Storage Manager"
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "View Storage Providers"
+msgstr ""
+
 msgid "View Storage Rates"
 msgstr "查看存储速率"
 
@@ -41465,6 +41831,14 @@ msgstr "虚拟硬件版本"
 #. TRANSLATORS: en.yml key: dictionary.table.vm_or_template
 msgid "Virtual Machine"
 msgstr "虚拟机器"
+
+#. TRANSLATORS: file: db/fixtures/notification_types.yml
+msgid "Virtual Machine %{subject} has been provisioned."
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/notification_types.yml
+msgid "Virtual Machine %{subject} has been retired."
+msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Microsoft::InfraManager::Vm
 msgid "Virtual Machine (Microsoft)"
@@ -42590,6 +42964,9 @@ msgstr ""
 msgid "Warning: The selected Cloud Providers and ALL related components will be permanently removed!"
 msgstr ""
 
+msgid "Warning: The selected Cloud Subnets and ALL of their components will be removed!"
+msgstr ""
+
 msgid "Warning: The selected Cloud Volume and ALL of their components will be removed!"
 msgstr ""
 
@@ -42680,6 +43057,9 @@ msgstr ""
 msgid "Warning: The selected Storage Managers and ALL of their components will be permanently removed!"
 msgstr ""
 
+msgid "Warning: The selected Storage Providers and ALL of their components will be permanently removed!"
+msgstr ""
+
 msgid "Warning: The selected System Image Types will be permanently removed!"
 msgstr ""
 
@@ -42726,6 +43106,9 @@ msgid "Warning: This Chargeback Rate will be permanently removed!"
 msgstr ""
 
 msgid "Warning: This Cloud Provider and ALL of its components will be permanently removed!"
+msgstr ""
+
+msgid "Warning: This Cloud Subnet and ALL of its components will be removed!"
 msgstr ""
 
 msgid "Warning: This Cloud Volume and ALL of its components will be removed!"
@@ -42815,6 +43198,9 @@ msgstr ""
 msgid "Warning: This Storage Manager and ALL of its components will be permanently removed!"
 msgstr ""
 
+msgid "Warning: This Storage Provider and ALL of its components will be permanently removed!"
+msgstr ""
+
 msgid "Warning: This System Image Type will be permanently removed!"
 msgstr ""
 
@@ -42882,6 +43268,9 @@ msgstr "周数"
 
 msgid "Weekly"
 msgstr "每周"
+
+msgid "Weeks"
+msgstr ""
 
 msgid "West Central US"
 msgstr ""
@@ -43312,6 +43701,9 @@ msgstr "黑体的"
 msgid "cannot delete default zone"
 msgstr "无法删除默认区"
 
+msgid "centered"
+msgstr ""
+
 msgid "check_quota called with an invalid provisioning quota method <%{type}>"
 msgstr "调用 check_quota 时使用了无效的设置配额函数 <%{type}>"
 
@@ -43332,9 +43724,6 @@ msgstr "cpu_total_cores"
 
 msgid "days"
 msgstr "天"
-
-msgid "days back"
-msgstr "天之前"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "deploy"
@@ -43357,6 +43746,9 @@ msgstr "down"
 
 msgid "end_time cannot be specified if start_time is nil"
 msgstr "当 start_time 为空时不能指定 end_time"
+
+msgid "ending"
+msgstr ""
 
 msgid "entries can only be added to classifications"
 msgstr "项只能被加入到类中"
@@ -43502,6 +43894,9 @@ msgstr "没有定义凭证"
 msgid "no credentials defined for %{type} %{name}"
 msgstr "没有为 %{type} %{name} 定义凭证"
 
+msgid "no parent_manager to ems"
+msgstr ""
+
 msgid "no value"
 msgstr "没有值"
 
@@ -43598,8 +43993,14 @@ msgstr "raw_create_volume 必须在子类中实现"
 msgid "raw_delete_key_pair must be implemented in a subclass"
 msgstr "raw_delete_key_pair 必须在子类中实现"
 
+msgid "raw_delete_load_balancer must be implemented in a subclass"
+msgstr ""
+
 msgid "raw_delete_stack must be implemented in a subclass"
 msgstr "raw_delete_stack 必须在子类中实现"
+
+msgid "raw_delete_subnet must be implemented in a subclass"
+msgstr ""
 
 msgid "raw_delete_volume must be implemented in a subclass"
 msgstr "raw_delete_volume 必须在子类中实现"
@@ -43610,14 +44011,23 @@ msgstr ""
 msgid "raw_evacuate must be implemented in a subclass"
 msgstr "raw_evacuate 必须在子类中实现"
 
+msgid "raw_exists must be implemented in a subclass"
+msgstr ""
+
 msgid "raw_live_migrate must be implemented in a subclass"
 msgstr "raw_live_migrate 必须在子类中实现"
 
 msgid "raw_status must be implemented in a subclass"
 msgstr "raw_status 必须在子类中实现"
 
+msgid "raw_update_load_balancer must be implemented in a subclass"
+msgstr ""
+
 msgid "raw_update_stack must be implemented in a subclass"
 msgstr "raw_update_stack 必须在子类中实现"
+
+msgid "raw_update_subnet must be implemented in a subclass"
+msgstr ""
 
 msgid "raw_update_volume must be implemented in a subclass"
 msgstr "raw_update_volume 必须在子类中实现"
@@ -43657,6 +44067,9 @@ msgstr "%{name} id [%{number}] 的大小不正确"
 
 msgid "started? not implemented for %{server_name}"
 msgstr "已启动? 没有为 %{server_name} 实现"
+
+msgid "starting"
+msgstr ""
 
 msgid "stopped"
 msgstr "停止"
@@ -43724,6 +44137,22 @@ msgstr "用户输入"
 #. TRANSLATORS: file: product/views/ResourcePool.yaml
 msgid "vApp"
 msgstr "vApp"
+
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
+msgid "vApp Orchestration Template"
+msgstr ""
+
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
+msgid "vApp Orchestration Templates"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate
+msgid "vApp Template"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate (plural form)
+msgid "vApp Templates"
+msgstr ""
 
 msgid "vCPU Count"
 msgstr "vCPU 计数"
