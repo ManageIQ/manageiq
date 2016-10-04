@@ -11,7 +11,7 @@ class ApplicationHelper::Toolbar::NetworkPortsCenter < ApplicationHelper::Toolba
         button(
           :network_port_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for the selected Floating IPs'),
+          N_('Edit Tags for the selected Network Ports'),
           N_('Edit Tags'),
           :url_parms => "main_div",
           :enabled   => false,
