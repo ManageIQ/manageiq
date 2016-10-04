@@ -293,14 +293,14 @@ module Mixins
                        :hawkular_auth_status      => hawkular_auth_status.nil? ? true : hawkular_auth_status,
       } if controller_name == "ems_container"
 
-      render :json => {:name                      => @ems.name,
-                       :emstype                   => @ems.emstype,
-                       :zone                      => zone,
-                       :default_hostname          => @ems.connection_configurations.default.endpoint.hostname,
-                       :default_api_port          => @ems.connection_configurations.default.endpoint.port,
-                       :default_userid            => @ems.authentication_userid ? @ems.authentication_userid : "",
-                       :ems_controller            => controller_name,
-                       :default_auth_status       => default_auth_status,
+      render :json => {:name                => @ems.name,
+                       :emstype             => @ems.emstype,
+                       :zone                => zone,
+                       :default_hostname    => @ems.connection_configurations.default.endpoint.hostname,
+                       :default_api_port    => @ems.connection_configurations.default.endpoint.port,
+                       :default_userid      => @ems.authentication_userid ? @ems.authentication_userid : "",
+                       :ems_controller      => controller_name,
+                       :default_auth_status => default_auth_status,
       } if controller_name == "ems_middleware"
     end
 

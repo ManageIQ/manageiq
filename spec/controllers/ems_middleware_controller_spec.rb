@@ -47,15 +47,15 @@ describe EmsMiddlewareController do
     it 'creates on post' do
       expect do
         post :create, :params => {
-            "button"           => "add",
-            "name"             => "SeaHawks",
-            "emstype"          => "hawkular",
-            "zone"             => zone.name,
-            "cred_type"        => "default",
-            "default_hostname" => "foo.com",
-            "default_userid"   => "foo",
-            "default_password" => "[FILTERED]",
-            "default_verify"   => "[FILTERED]"
+          "button"           => "add",
+          "name"             => "SeaHawks",
+          "emstype"          => "hawkular",
+          "zone"             => zone.name,
+          "cred_type"        => "default",
+          "default_hostname" => "foo.com",
+          "default_userid"   => "foo",
+          "default_password" => "[FILTERED]",
+          "default_verify"   => "[FILTERED]"
         }
       end.to change { ManageIQ::Providers::Hawkular::MiddlewareManager.count }.by(1)
     end
@@ -63,15 +63,15 @@ describe EmsMiddlewareController do
     it 'creates and updates an authentication record on post' do
       expect do
         post :create, :params => {
-            "button"           => "add",
-            "name"             => "SeaHawks",
-            "emstype"          => "hawkular",
-            "zone"             => zone.name,
-            "cred_type"        => "default",
-            "default_hostname" => "foo.com",
-            "default_userid"   => "foo",
-            "default_password" => "[FILTERED]",
-            "default_verify"   => "[FILTERED]"
+          "button"           => "add",
+          "name"             => "SeaHawks",
+          "emstype"          => "hawkular",
+          "zone"             => zone.name,
+          "cred_type"        => "default",
+          "default_hostname" => "foo.com",
+          "default_userid"   => "foo",
+          "default_password" => "[FILTERED]",
+          "default_verify"   => "[FILTERED]"
         }
       end.to change { Authentication.count }.by(1)
 
@@ -81,14 +81,14 @@ describe EmsMiddlewareController do
 
       expect do
         post :update, :params => {
-            "id"               => hawkular.id,
-            "button"           => "save",
-            "default_hostname" => "host_hawkular_updated",
-            "name"             => "SeaHawks",
-            "emstype"          => "hawkular",
-            "default_userid"   => "bar",
-            "default_password" => "[FILTERED]",
-            "default_verify"   => "[FILTERED]"
+          "id"               => hawkular.id,
+          "button"           => "save",
+          "default_hostname" => "host_hawkular_updated",
+          "name"             => "SeaHawks",
+          "emstype"          => "hawkular",
+          "default_userid"   => "bar",
+          "default_password" => "[FILTERED]",
+          "default_verify"   => "[FILTERED]"
         }
       end.not_to change { Authentication.count }
 
