@@ -76,6 +76,7 @@ module SupportsFeatureMixin
     :provisioning                 => 'Provisioning',
     :reboot_guest                 => 'Reboot Guest Operation',
     :reconfigure                  => 'Reconfiguration',
+    :refresh_new_target           => 'Refresh non-existing record',
     :regions                      => 'Regions of a Provider',
     :resize                       => 'Resizing',
     :retire                       => 'Retirement',
