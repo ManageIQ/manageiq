@@ -43,7 +43,7 @@ module EmsRefresh::SaveInventoryHelper
     end
   end
 
-  def save_dto_inventory_multi(association, hashes, deletes, find_key, child_keys = [], extra_keys = [], disconnect = false)
+  def save_dto_inventory_multi(association, dto_collection, deletes, find_key, child_keys = [], extra_keys = [], disconnect = false)
     association.reset
 
     if deletes == :use_association
@@ -59,7 +59,7 @@ module EmsRefresh::SaveInventoryHelper
     record_index = TypedIndex.new(association, find_key)
 
     new_records = []
-    hashes.each do |h|
+    dto_collection.each do |h|
       h = h.is_a?(::Dto) ? h.attributes : h
       save_inventory_with_findkey(association, h.except(*remove_keys), deletes, new_records, record_index)
     end
@@ -72,9 +72,10 @@ module EmsRefresh::SaveInventoryHelper
     end
 
     # Add the new items
-    begin
+    association_meta_info = dto_collection.parent.class.reflect_on_association(dto_collection.association)
+    if association_meta_info.options[:through].blank?
       association.push(new_records)
-    rescue
+    else
       new_records.each &:save
     end
   end
