@@ -2,11 +2,13 @@ module DtoMixin
   extend ActiveSupport::Concern
 
   class_methods do
-    def dto_collection
+    def dto_collection(parent, association)
       ::DtoCollection.new(self,
                           :dependencies => @dto_dependencies,
                           :manager_ref  => @dto_manager_ref,
-                          :attributes   => @dto_attributes)
+                          :attributes   => @dto_attributes,
+                          :association  => association,
+                          :parent       => parent)
     end
 
     def dto_dependencies(*args)
