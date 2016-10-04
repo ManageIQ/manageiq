@@ -92,7 +92,8 @@ class Dialog < ApplicationRecord
     dialog_field_hash[name.to_s]
   end
 
-  def content(target = nil, resource_action = nil)
+  def content(target = nil, resource_action = nil, all_attributes = false)
+    return DialogSerializer.new.serialize(Array[self], true) if all_attributes
     return DialogSerializer.new.serialize(Array[self]) if target.nil? && resource_action.nil?
 
     workflow = ResourceActionWorkflow.new({}, @auth_user_obj, resource_action, :target => target)
