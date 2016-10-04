@@ -18,6 +18,7 @@ class ResourceSharer
   validate :allowed_resource_type
   validate :rbac_visibility
   validate :valid_tenants
+  validate :allowed_features
 
   ##
   # Creates shares from the user with +features+ to +tenants+ with the given +resource+
@@ -51,6 +52,22 @@ class ResourceSharer
     return unless user && resource
     unless Rbac::Filterer.search(:targets => [resource], :user => user)[0].include?(resource)
       errors.add(:user, "is not authorized to share this resource")
+    end
+  end
+
+  def allowed_features
+    return unless user && features
+
+    rejected_features = []
+
+    # TODO:  This is bad. Need feature API to fetch Set of allowed features
+    # based on parent and check if the requested features are all in the Set.
+    Array(features).each do |feature|
+      rejected_features << "#{feature.identifier}: #{feature.name}" unless user.miq_user_role.allows?(:identifier => feature.identifier)
+    end
+
+    unless rejected_features.empty?
+      errors.add(:features, "not permitted to be shared by user ##{user.id}: #{rejected_features.join(', ')}")
     end
   end
 
