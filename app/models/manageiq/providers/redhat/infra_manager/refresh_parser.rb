@@ -401,19 +401,13 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
 
       ems_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(vm_inv[:href])
 
-      new_result = {
-        :type              => template ? "ManageIQ::Providers::Redhat::InfraManager::Template" : "ManageIQ::Providers::Redhat::InfraManager::Vm",
-        :ems_ref           => ems_ref,
-        :ems_ref_obj       => ems_ref,
-        :uid_ems           => vm_inv[:id],
+      new_result = create_vm_hash(template, ems_ref, vm_inv[:id], URI.decode(vm_inv[:name]))
+
+      additional = {
         :memory_reserve    => vm_memory_reserve(vm_inv),
-        :name              => URI.decode(vm_inv[:name]),
-        :vendor            => "redhat",
         :raw_power_state   => raw_power_state,
-        :location          => "#{vm_inv[:id]}.ovf",
         :boot_time         => boot_time,
         :connection_state  => 'connected',
-        :template          => template,
         :host              => host,
         :ems_cluster       => ems_cluster,
         :storages          => storages,
@@ -423,6 +417,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
         :custom_attributes => vm_inv_to_custom_attribute_hashes(vm_inv),
         :snapshots         => vm_inv_to_snapshot_hashes(vm_inv),
       }
+      new_result.merge!(additional)
 
       # Attach to the cluster's default resource pool
       ems_cluster[:ems_children][:resource_pools].first[:ems_children][:vms] << new_result if ems_cluster && !template
@@ -431,6 +426,19 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       result_uids[mor] = new_result
     end
     return result, result_uids
+  end
+
+  def self.create_vm_hash(template, ems_ref, vm_id, name)
+    {
+      :type        => template ? "ManageIQ::Providers::Redhat::InfraManager::Template" : "ManageIQ::Providers::Redhat::InfraManager::Vm",
+      :ems_ref     => ems_ref,
+      :ems_ref_obj => ems_ref,
+      :uid_ems     => vm_id,
+      :vendor      => "redhat",
+      :name        => name,
+      :location    => "#{vm_id}.ovf",
+      :template    => template,
+    }
   end
 
   def self.vm_inv_to_hardware_hash(inv)

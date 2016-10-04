@@ -309,4 +309,32 @@ module EmsRefresh::SaveInventory
   def save_event_logs_inventory(os, hashes)
     save_inventory_multi(os.event_logs, hashes, :use_association, [:uid])
   end
+
+  def save_new_target(target_hash)
+    unless target_hash[:vm].nil?
+      vm_hash = target_hash[:vm]
+      existing_vm = VmOrTemplate.find_by(:ems_ref => vm_hash[:ems_ref], :ems_id => target_hash[:ems_id])
+      unless existing_vm.nil?
+        return existing_vm
+      end
+
+      ems = ExtManagementSystem.find_by_id(target_hash[:ems_id])
+      old_cluster = get_cluster(ems, target_hash[:cluster], target_hash[:resource_pools], target_hash[:folders])
+
+      vm_hash[:ems_cluster_id] = old_cluster[:id]
+
+      new_vm = ems.vms_and_templates.create!(vm_hash)
+
+      dc = old_cluster.parent_datacenter
+      vm_folder = dc.children.select { |folder| folder.name == "vm" }[0]
+      vm_folder.add_vm(new_vm)
+      vm_folder.save!
+
+      resource_pool = old_cluster.children.first
+      resource_pool.add_vm(new_vm)
+      resource_pool.save!
+
+      new_vm
+    end
+  end
 end

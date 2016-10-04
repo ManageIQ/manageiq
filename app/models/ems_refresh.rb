@@ -57,6 +57,19 @@ module EmsRefresh
     end
   end
 
+  def self.queue_refresh_new_target(target_hash, ems)
+    MiqQueue.put(
+      :queue_name  => MiqEmsRefreshWorker.queue_name_for_ems(ems),
+      :class_name  => name,
+      :method_name => 'refresh_new_target',
+      :role        => "ems_inventory",
+      :zone        => ems.my_zone,
+      :args        => [target_hash, ems.id],
+      :msg_timeout => queue_timeout,
+      :task_id     => nil
+    )
+  end
+
   def self.refresh(target, id = nil)
     EmsRefresh.init_console if defined?(Rails::Console)
 
@@ -77,6 +90,18 @@ module EmsRefresh
     groups.each do |refresher, group_targets|
       refresher.refresh(group_targets) if refresher
     end
+  end
+
+  def self.refresh_new_target(target_hash, ems_id)
+    ems = ExtManagementSystem.find(ems_id)
+
+    target = save_new_target(target_hash)
+    if target.nil?
+      _log.warn "Unknown target for event data: #{target_hash}."
+      return
+    end
+
+    ems.refresher.refresh(get_ar_objects(target))
   end
 
   def self.get_ar_objects(target, single_id = nil)
