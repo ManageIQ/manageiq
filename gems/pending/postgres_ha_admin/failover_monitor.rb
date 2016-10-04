@@ -51,7 +51,7 @@ module PostgresHaAdmin
       loop do
         begin
           monitor
-        rescue StandardError => err
+        rescue => err
           @logger.error("#{err.class}: #{err}")
           @logger.error(err.backtrace.join("\n"))
         end
