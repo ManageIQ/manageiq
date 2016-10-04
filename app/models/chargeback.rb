@@ -116,28 +116,35 @@ class Chargeback < ActsAsArModel
 
     rates.each do |rate|
       rate.chargeback_rate_details.each do |r|
-        cost_key         = "#{r.rate_name}_cost"
-        metric_key       = "#{r.rate_name}_metric"
-        cost_group_key   = "#{r.group}_cost"
-        metric_group_key = "#{r.group}_metric"
-
         rec    = r.metric && perf.respond_to?(r.metric) ? perf : perf.resource
         metric = r.metric.nil? ? 0 : rec.send(r.metric) || 0
         cost   = r.group == 'fixed' && !calc_fixed_compute ? 0 : r.cost(metric)
 
-        col_hash = {}
-        unless (report_col_options.keys & [metric_key, cost_key]).empty?
-          [metric_key, metric_group_key].each             { |col| col_hash[col] = metric }
-          [cost_key,   cost_group_key, 'total_cost'].each { |col| col_hash[col] = cost }
-        end
-
-        col_hash.each do |k, val|
+        reportable_metric_and_cost_fields(r.rate_name, r.group, metric, cost).each do |k, val|
           next unless attribute_names.include?(k)
           h[k] ||= 0
           h[k] += val
         end
       end
     end
+  end
+
+  def self.reportable_metric_and_cost_fields(rate_name, rate_group, metric, cost)
+    cost_key         = "#{rate_name}_cost"    # metric cost value (e.g. Storage [Used|Allocated|Fixed] Cost)
+    metric_key       = "#{rate_name}_metric"  # metric value (e.g. Storage [Used|Allocated|Fixed])
+    cost_group_key   = "#{rate_group}_cost"   # for total of metric's costs (e.g. Storage Total Cost)
+    metric_group_key = "#{rate_group}_metric" # for total of metrics (e.g. Storage Total)
+
+    col_hash = {}
+
+    defined_column_for_report = (report_col_options.keys & [metric_key, cost_key]).present?
+
+    if defined_column_for_report
+      [metric_key, metric_group_key].each             { |col| col_hash[col] = metric }
+      [cost_key,   cost_group_key, 'total_cost'].each { |col| col_hash[col] = cost }
+    end
+
+    col_hash
   end
 
   # check if at least one of these isnt empty\nil\zero
