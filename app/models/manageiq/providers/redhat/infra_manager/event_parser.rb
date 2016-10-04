@@ -59,7 +59,7 @@ module ManageIQ::Providers::Redhat::InfraManager::EventParser
     ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(data[:href])
   end
 
-  def self.parse_new_target(full_data, message, ems)
+  def self.parse_new_target(full_data, message, ems, event_type)
     cluster = full_data[:cluster]
     cluster_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(cluster[:href])
 
@@ -69,18 +69,28 @@ module ManageIQ::Providers::Redhat::InfraManager::EventParser
 
     {
       :ems_id         => ems.id,
-      :vm             => parse_new_vm(full_data[:vm], message),
+      :vm             => parse_new_vm(full_data[:vm], message, event_type),
       :cluster        => parse_new_cluster(cluster_ref, cluster[:id], cluster_name),
       :resource_pools => parse_new_rp(cluster[:id], cluster_name),
       :folders        => parse_new_dc(full_data[:data_center])
     }
   end
 
-  def self.parse_new_vm(vm, message)
+  def self.parse_new_vm(vm, message, event_type)
     ems_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(vm[:href])
 
     ManageIQ::Providers::Redhat::InfraManager::RefreshParser.create_vm_hash(
-      ems_ref.include?('/templates/'), ems_ref, vm[:id], message.split(/\s/)[1])
+      ems_ref.include?('/templates/'), ems_ref, vm[:id], parse_target_name(message, event_type))
+  end
+
+  def self.parse_target_name(message, event_type)
+    if %w(NETWORK_ADD_VM_INTERFACE NETWORK_INTERFACE_PLUGGED_INTO_VM).include?(event_type)
+      # sample message: "Network Interface nic1 (VirtIO) was plugged to VM v5. (User: admin@internal)"
+      message.split(/\s/)[8][0...-1]
+    else
+      # sample message: "VM v5 was created by admin@internal."
+      message.split(/\s/)[1]
+    end
   end
 
   def self.parse_new_cluster(cluster_ref, cluster_id, cluster_name)
