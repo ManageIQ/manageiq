@@ -54,8 +54,19 @@ describe GenericObjectDefinition do
     expect(definition.properties[:associations]).to be_kind_of(Hash)
   end
 
-  it 'has property methods in hash' do
+  it 'has property methods in array' do
     expect(definition.properties[:methods]).to be_kind_of(Array)
+  end
+
+  it 'supports attributes, associations, methods only' do
+    testdef = described_class.new(
+      :name       => 'test',
+      :properties => {
+        :some_feature => {:vms => "float", 'server' => 'localhost'}
+      }
+    )
+
+    expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
   describe '#destroy' do
@@ -75,6 +86,144 @@ describe GenericObjectDefinition do
       expect(obj).to be_a_kind_of(GenericObject)
       expect(obj.generic_object_definition).to eq(definition)
       expect(obj.max_number).to eq(100)
+    end
+  end
+
+  describe '#add_property_attribute' do
+    let(:definition) do
+      FactoryGirl.create(:generic_object_definition,
+                         :name       => 'test',
+                         :properties => { :attributes => {:status => "string"}})
+    end
+
+    it 'adds a new attribute' do
+      expect(definition.properties[:attributes].size).to eq(1)
+
+      definition.add_property_attribute(:location, "string")
+      expect(definition.properties[:attributes].size).to eq(2)
+    end
+
+    it 'does nothing for an existing attribute with same data type' do
+      definition.add_property_attribute(:status, "string")
+      expect(definition.properties[:attributes].size).to eq(1)
+      expect(definition.properties[:attributes]).to include("status" => :string)
+    end
+
+    it 'updates an existing attribute with different data type' do
+      definition.add_property_attribute(:status, "integer")
+      expect(definition.properties[:attributes].size).to eq(1)
+      expect(definition.properties[:attributes]).to include("status" => :integer)
+    end
+  end
+
+  describe '#delete_property_attribute' do
+    let(:definition) do
+      FactoryGirl.create(:generic_object_definition,
+                         :name       => 'test',
+                         :properties => { :attributes => {:status => "string"}})
+    end
+
+    it 'does nothing for non-existing attribute' do
+      definition.delete_property_attribute("not_existing_attribute")
+      expect(definition.properties[:attributes].size).to eq(1)
+    end
+
+    it 'deletes an existing attribute' do
+      definition.delete_property_attribute("status")
+      expect(definition.properties[:attributes].size).to eq(0)
+    end
+
+    it 'deletes the attribute from associated generic objects' do
+      go = definition.create_object(:name => 'test_object', :status => 'ok')
+      definition.delete_property_attribute("status")
+      expect(go.reload.property_attributes.size).to eq(0)
+    end
+  end
+
+  describe '#add_property_method' do
+    let(:definition) do
+      FactoryGirl.create(:generic_object_definition,
+                         :name       => 'test',
+                         :properties => { :methods => %w(method1) })
+    end
+
+    it 'adds a new method' do
+      definition.add_property_method("add_vms")
+      expect(definition.properties).to include(:methods => %w(method1 add_vms))
+    end
+
+    it 'does nothing for existing method' do
+      definition.add_property_method("method1")
+      expect(definition.properties).to include(:methods => %w(method1))
+    end
+  end
+
+  describe '#delete_property_method' do
+    let(:definition) do
+      FactoryGirl.create(:generic_object_definition,
+                         :name       => 'test',
+                         :properties => { :methods => %w(method1) })
+    end
+
+    it 'deletes an existing method' do
+      definition.delete_property_method(:method1)
+      expect(definition.properties).to include(:methods => [])
+    end
+
+    it 'does nothing for non-existing method' do
+      definition.delete_property_method(:method2)
+      expect(definition.properties).to include(:methods => %w(method1))
+    end
+  end
+
+  describe '#add_property_association' do
+    let(:definition) do
+      FactoryGirl.create(:generic_object_definition,
+                         :name       => 'test',
+                         :properties => { :associations => { :vms => 'Vm' } })
+    end
+
+    it 'adds a new association' do
+      definition.add_property_association(:hosts, 'host')
+      expect(definition.properties[:associations]).to include('hosts' => 'Host')
+    end
+
+    it 'does nothing for the association with the same class' do
+      definition.add_property_association(:vms, 'vm')
+      expect(definition.properties[:associations]).to include('vms' => 'Vm')
+    end
+
+    it 'updates the association with different class' do
+      definition.add_property_association(:vms, 'vm_or_template')
+      expect(definition.properties[:associations]).to include('vms' => 'VmOrTemplate')
+    end
+  end
+
+  describe '#delete_property_association' do
+    let(:definition) do
+      FactoryGirl.create(:generic_object_definition,
+                         :name       => 'test',
+                         :properties => {:associations => {:vms => 'Vm'}})
+    end
+
+    it 'deletes an existing association' do
+      definition.delete_property_association("vms")
+      expect(definition.properties).to include(:associations => {})
+    end
+
+    it 'does nothing for non-existing association' do
+      definition.delete_property_association(:host)
+      expect(definition.properties).to include(:associations => {'vms' => 'Vm'})
+    end
+
+    it 'deletes the association from associated generic objects' do
+      vm = FactoryGirl.create(:vm)
+      go = FactoryGirl.create(:generic_object, :name => 'test', :generic_object_definition => definition)
+      go.add_to_property_association('vms', vm)
+      expect(go.vms.size).to eq(1)
+
+      definition.delete_property_association(:vms)
+      expect(go.reload.send(:properties)["vms"]).to be_nil
     end
   end
 end

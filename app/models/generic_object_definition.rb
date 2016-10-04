@@ -18,7 +18,8 @@ class GenericObjectDefinition < ApplicationRecord
   validates :name, :presence => true, :uniqueness => true
   validate  :validate_property_attributes,
             :validate_property_associations,
-            :validate_property_name_unique
+            :validate_property_name_unique,
+            :validate_supported_property_features
 
   before_validation :set_default_properties
   before_validation :normalize_property_attributes,
@@ -32,14 +33,15 @@ class GenericObjectDefinition < ApplicationRecord
   end
 
   FEATURES.each do |feature|
-    define_method("defined_property_#{feature}s") do
+    define_method("property_#{feature}s") do
       return errors[:properties] if properties_changed? && !valid?
       properties["#{feature}s".to_sym]
     end
 
     define_method("property_#{feature}_defined?") do |attr|
-      return defined_property_methods.include?(attr.to_s) if feature == 'method'
-      send("defined_property_#{feature}s").try(:key?, attr.to_s)
+      attr = attr.to_s
+      return property_methods.include?(attr) if feature == 'method'
+      send("property_#{feature}s").key?(attr)
     end
   end
 
@@ -49,11 +51,11 @@ class GenericObjectDefinition < ApplicationRecord
 
   def property_getter(attr, val)
     return type_cast(attr, val) if property_attribute_defined?(attr)
-    return get_associations(attr, val) if property_association_defined?(attr)
+    return get_objects_of_association(attr, val) if property_association_defined?(attr)
   end
 
   def type_cast(attr, value)
-    TYPE_MAP.fetch(defined_property_attributes[attr]).cast(value)
+    TYPE_MAP.fetch(property_attributes[attr]).cast(value)
   end
 
   def properties=(props)
@@ -61,10 +63,48 @@ class GenericObjectDefinition < ApplicationRecord
     super
   end
 
+  def add_property_attribute(name, type)
+    properties[:attributes][name.to_s] = type.to_sym
+    save
+  end
+
+  def delete_property_attribute(name)
+    transaction do
+      properties[:attributes].delete(name.to_s)
+      save!
+
+      generic_objects.find_each { |o| o.delete_property(name) }
+    end
+  end
+
+  def add_property_association(name, type)
+    properties[:associations][name.to_s] = type.to_s.classify
+    save
+  end
+
+  def delete_property_association(name)
+    transaction do
+      properties[:associations].delete(name.to_s)
+      save!
+
+      generic_objects.find_each { |o| o.delete_property(name) }
+    end
+  end
+
+  def add_property_method(name)
+    properties[:methods] << name.to_s unless properties[:methods].include?(name.to_s)
+    save
+  end
+
+  def delete_property_method(name)
+    properties[:methods].delete(name.to_s)
+    save
+  end
+
   private
 
-  def get_associations(attr, values)
-    defined_property_associations[attr].constantize.where(:id => values).to_a
+  def get_objects_of_association(attr, values)
+    property_associations[attr].constantize.where(:id => values).to_a
   end
 
   def normalize_property_attributes
@@ -108,6 +148,12 @@ class GenericObjectDefinition < ApplicationRecord
     all = properties[:attributes].keys + properties[:associations].keys + properties[:methods]
     common = all.group_by(&:to_s).select { |_k, v| v.size > 1 }.collect(&:first)
     errors[:properties] << "property name has to be unique: [#{common.join(",")}]" unless common.blank?
+  end
+
+  def validate_supported_property_features
+    if properties.keys.any? { |f| !f.to_s.singularize.in?(FEATURES) }
+      errors[:properties] << "only these features are supported: [#{FEATURES.join(", ")}]"
+    end
   end
 
   def check_not_in_use
