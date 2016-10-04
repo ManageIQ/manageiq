@@ -40,8 +40,8 @@ class DtoCollection
     data_index[manager_uuid]
   end
 
-  def lazy_find(manager_uuid)
-    ::DtoLazy.new(self, manager_uuid)
+  def lazy_find(manager_uuid, path: nil)
+    ::DtoLazy.new(self, manager_uuid, :path => path)
   end
 
   def new_dto(hash)
