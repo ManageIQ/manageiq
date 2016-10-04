@@ -1065,6 +1065,7 @@ Vmdb::Application.routes.draw do
     :ems_middleware            => {
       :get  => %w(
         download_data
+        ems_middleware_form_fields
         show_list
         tagging_edit
         tag_edit_form_field_changed

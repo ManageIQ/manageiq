@@ -1,5 +1,6 @@
 class EmsMiddlewareController < ApplicationController
   include EmsCommon
+  include Mixins::EmsCommonAngular
 
   before_action :check_privileges
   before_action :get_session_data
@@ -37,5 +38,10 @@ class EmsMiddlewareController < ApplicationController
   def restful?
     true
   end
+
+  def ems_middleware_form_fields
+    ems_form_fields
+  end
+
   public :restful?
 end
