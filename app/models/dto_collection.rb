@@ -23,8 +23,10 @@ class DtoCollection
   end
 
   def <<(dto)
-    data_index[dto.manager_uuid] = dto
-    data << dto
+    unless data_index[dto.manager_uuid]
+      data_index[dto.manager_uuid] = dto
+      data << dto
+    end
   end
 
   def find(manager_uuid)
