@@ -6,31 +6,33 @@ module ApplianceConsole
       #
       # External Authentication Definitions
       #
-      IPA_COMMAND         = "/usr/bin/ipa"
-      IPA_INSTALL_COMMAND = "/usr/sbin/ipa-client-install"
-      IPA_GETKEYTAB       = "/usr/sbin/ipa-getkeytab"
+      IPA_COMMAND          = "/usr/bin/ipa".freeze
+      IPA_INSTALL_COMMAND  = "/usr/sbin/ipa-client-install".freeze
+      IPA_GETKEYTAB        = "/usr/sbin/ipa-getkeytab".freeze
 
-      SSSD_CONFIG         = "/etc/sssd/sssd.conf"
-      PAM_CONFIG          = "/etc/pam.d/httpd-auth"
-      HTTP_KEYTAB         = "/etc/http.keytab"
-      HTTP_REMOTE_USER    = "/etc/httpd/conf.d/manageiq-remote-user.conf"
-      HTTP_EXTERNAL_AUTH  = "/etc/httpd/conf.d/manageiq-external-auth.conf"
-      HTTP_EXTERNAL_AUTH_TEMPLATE = "#{HTTP_EXTERNAL_AUTH}.erb"
+      KERBEROS_CONFIG_FILE = "/etc/krb5.conf".freeze
 
-      GETSEBOOL_COMMAND   = "/usr/sbin/getsebool"
-      SETSEBOOL_COMMAND   = "/usr/sbin/setsebool"
-      GETENFORCE_COMMAND  = "/usr/sbin/getenforce"
+      SSSD_CONFIG          = "/etc/sssd/sssd.conf".freeze
+      PAM_CONFIG           = "/etc/pam.d/httpd-auth".freeze
+      HTTP_KEYTAB          = "/etc/http.keytab".freeze
+      HTTP_REMOTE_USER     = "/etc/httpd/conf.d/manageiq-remote-user.conf".freeze
+      HTTP_EXTERNAL_AUTH   = "/etc/httpd/conf.d/manageiq-external-auth.conf".freeze
+      HTTP_EXTERNAL_AUTH_TEMPLATE = "#{HTTP_EXTERNAL_AUTH}.erb".freeze
 
-      APACHE_USER         = "apache"
+      GETSEBOOL_COMMAND    = "/usr/sbin/getsebool".freeze
+      SETSEBOOL_COMMAND    = "/usr/sbin/setsebool".freeze
+      GETENFORCE_COMMAND   = "/usr/sbin/getenforce".freeze
 
-      TIMESTAMP_FORMAT    = "%Y%m%d_%H%M%S"
+      APACHE_USER          = "apache".freeze
 
-      LDAP_ATTRS          = {
+      TIMESTAMP_FORMAT     = "%Y%m%d_%H%M%S".freeze
+
+      LDAP_ATTRS           = {
         "mail"        => "REMOTE_USER_EMAIL",
         "givenname"   => "REMOTE_USER_FIRSTNAME",
         "sn"          => "REMOTE_USER_LASTNAME",
         "displayname" => "REMOTE_USER_FULLNAME"
-      }
+      }.freeze
 
       def template_directory
         Pathname.new(ENV.fetch("APPLIANCE_TEMPLATE_DIRECTORY"))
@@ -79,6 +81,17 @@ module ApplianceConsole
       def unconfigure_httpd_application
         rm_file(HTTP_EXTERNAL_AUTH)
         rm_file(HTTP_REMOTE_USER)
+      end
+
+      #
+      # Kerberos KRB5 File Methods
+      #
+      def enable_kerberos_dns_lookups
+        FileUtils.copy(KERBEROS_CONFIG_FILE, "#{KERBEROS_CONFIG_FILE}.miqbkp")
+        krb5config = File.read(KERBEROS_CONFIG_FILE)
+        krb5config[/(\s*)dns_lookup_kdc(\s*)=(\s*)(.*)/, 4] = 'true'
+        krb5config[/(\s*)dns_lookup_realm(\s*)=(\s*)(.*)/, 4] = 'true'
+        File.write(KERBEROS_CONFIG_FILE, krb5config)
       end
 
       #
