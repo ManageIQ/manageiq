@@ -21,14 +21,7 @@ ManageIQ.angular.app.controller('cloudTenantFormController', ['$http', '$scope',
     });
   }
 
-  $scope.addClicked = function() {
-    miqService.sparkleOn();
-    var url = 'create/new' + '?button=add';
-    miqService.miqAjaxButton(url, true);
-  };
-
   $scope.cancelClicked = function() {
-    miqService.sparkleOn();
     if (cloudTenantFormId == 'new') {
       var url = '/cloud_tenant/create/new' + '?button=cancel';
     } else {
@@ -38,9 +31,12 @@ ManageIQ.angular.app.controller('cloudTenantFormController', ['$http', '$scope',
   };
 
   $scope.saveClicked = function() {
-    miqService.sparkleOn();
+    if (cloudTenantFormId == 'new') {
+      var url = 'create/new' + '?button=add';
+    } else {
     var url = '/cloud_tenant/update/' + cloudTenantFormId + '?button=save';
-    miqService.miqAjaxButton(url, true);
+    }
+    miqService.miqAjaxButton(url, $scope.cloudTenantModel, { complete: false });
   };
 
   $scope.resetClicked = function() {

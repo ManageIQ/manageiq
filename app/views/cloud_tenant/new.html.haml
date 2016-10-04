@@ -30,26 +30,7 @@
     %tr
       %td{:align => 'right'}
         #buttons_on
-          - if @tenant.id.nil?
-            = button_tag(_("Add"),
-                         :class        => "btn btn-primary",
-                         "ng-class"    => "{ disabled: angularForm.$invalid}",
-                         "ng-disabled" => "angularForm.$invalid",
-                         "ng-click"    => "addClicked()")
-          - else
-            = button_tag(_("Save"),
-                         :class        => "btn btn-primary",
-                         "ng-click"    => "saveClicked()",
-                         "ng-disabled" => "angularForm.$pristine || angularForm.$invalid",
-                         "ng-class"    => "{ disabled: angularForm.$pristine || angularForm.$invalid}")
-            = button_tag(_("Reset"),
-                         :class        => "btn btn-primary",
-                         "ng-click"    => "resetClicked()",
-                         "ng-disabled" => "angularForm.$pristine",
-                         "ng-class"    => "{ disabled: angularForm.$pristine}")
-          = button_tag(_("Cancel"),
-                        :class     => "btn btn-default",
-                        "ng-click" => "cancelClicked()")
+          = render :partial => "layouts/angular/x_edit_buttons_angular"
 
 :javascript
   ManageIQ.angular.app.value('cloudTenantFormId', '#{@tenant.id || "new"}');

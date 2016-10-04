@@ -97,18 +97,33 @@ describe CloudTenantController do
       @tenant = FactoryGirl.create(:cloud_tenant_openstack)
     end
 
-    it "builds create screen" do
-      post :button, :params => { :pressed => "cloud_tenant_new", :format => :js }
-      expect(assigns(:flash_array)).to be_nil
-    end
+    context "#create" do
+      let(:task_options) {
+        {
+          :action => "creating Cloud Tenant for user %{user}" % {:user => controller.current_user.userid},
+          :userid => controller.current_user.userid
+        }
+      }
+      let(:queue_options) do
+        {
+          :class_name  => CloudTenant.class_by_ems(@ems),
+          :method_name => "create_cloud_tenant",
+          :priority    => MiqQueue::HIGH_PRIORITY,
+          :role        => "ems_operations",
+          :zone        => @ems.my_zone,
+          :args        => [@ems.id, {:name => "foo" }]
+        }
+      end
 
-    it "creates a cloud tenant" do
-      allow(ManageIQ::Providers::Openstack::CloudManager::CloudTenant)
-        .to receive(:raw_create_cloud_tenant).and_return(@tenant)
-      post :create, :params => { :button => "add", :format => :js, :name => 'foo', :ems_id => @ems.id }
-      expect(controller.send(:flash_errors?)).to be_falsey
-      expect(assigns(:flash_array).first[:message]).to include("Creating Cloud Tenant")
-      expect(assigns(:edit)).to be_nil
+      it "builds create screen" do
+        post :button, :params => { :pressed => "cloud_tenant_new", :format => :js }
+        expect(assigns(:flash_array)).to be_nil
+      end
+
+      it "queues the create action" do
+        expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options)
+        post :create, :params => { :button => "add", :format => :js, :name => 'foo', :ems_id => @ems.id }
+      end
     end
   end
 
@@ -116,22 +131,39 @@ describe CloudTenantController do
     before do
       stub_user(:features => :all)
       EvmSpecHelper.create_guid_miq_server_zone
-      @tenant = FactoryGirl.create(:cloud_tenant_openstack)
+      @ems = FactoryGirl.create(:ems_openstack)
+      @tenant = FactoryGirl.create(:cloud_tenant_openstack,
+                                   :ext_management_system => @ems)
     end
 
-    it "builds edit screen" do
-      post :button, :params => { :pressed => "cloud_tenant_edit", :format => :js, :id => @tenant.id }
-      expect(assigns(:flash_array)).to be_nil
-    end
+    context "#edit" do
+      let(:task_options) {
+        {
+          :action => "updating Cloud Tenant for user %{user}" % {:user => controller.current_user.userid},
+          :userid => controller.current_user.userid
+        }
+      }
+      let(:queue_options) do
+        {
+          :class_name  => @tenant.class.name,
+          :method_name => "update_cloud_tenant",
+          :instance_id => @tenant.id,
+          :priority    => MiqQueue::HIGH_PRIORITY,
+          :role        => "ems_operations",
+          :zone        => @ems.my_zone,
+          :args        => [{:name => "foo"}]
+        }
+      end
 
-    it "updates itself" do
-      allow_any_instance_of(ManageIQ::Providers::Openstack::CloudManager::CloudTenant)
-        .to receive(:raw_update_cloud_tenant)
-      session[:breadcrumbs] = [{:url => "cloud_tenant/show/#{@tenant.id}"}, 'placeholder']
-      post :update, :params => { :button => "save", :format => :js, :id => @tenant.id }
-      expect(controller.send(:flash_errors?)).to be_falsey
-      expect(assigns(:flash_array).first[:message]).to include("Updating Cloud Tenant")
-      expect(assigns(:edit)).to be_nil
+      it "builds edit screen" do
+        post :button, :params => { :pressed => "cloud_tenant_edit", :format => :js, :id => @tenant.id }
+        expect(assigns(:flash_array)).to be_nil
+      end
+
+      it "queues the update action" do
+        expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options)
+        post :update, :params => { :button => "save", :format => :js, :id => @tenant.id, :name => "foo" }
+      end
     end
   end
 
@@ -139,15 +171,34 @@ describe CloudTenantController do
     before do
       stub_user(:features => :all)
       EvmSpecHelper.create_guid_miq_server_zone
-      @tenant = FactoryGirl.create(:cloud_tenant_openstack)
+      @ems = FactoryGirl.create(:ems_openstack)
+      @tenant = FactoryGirl.create(:cloud_tenant_openstack,
+                                   :ext_management_system => @ems)
     end
 
-    it "deletes itself" do
-      allow_any_instance_of(ManageIQ::Providers::Openstack::CloudManager::CloudTenant)
-        .to receive(:raw_delete_cloud_tenant)
-      post :button, :params => { :id => @tenant.id, :pressed => "cloud_tenant_delete", :format => :js }
-      expect(controller.send(:flash_errors?)).to be_falsey
-      expect(assigns(:flash_array).first[:message]).to include("Delete initiated for 1 Cloud Tenant")
+    context "#edit" do
+      let(:task_options) {
+        {
+          :action => "deleting Cloud Tenant for user %{user}" % {:user => controller.current_user.userid},
+          :userid => controller.current_user.userid
+        }
+      }
+      let(:queue_options) do
+        {
+          :class_name  => @tenant.class.name,
+          :method_name => "delete_cloud_tenant",
+          :instance_id => @tenant.id,
+          :priority    => MiqQueue::HIGH_PRIORITY,
+          :role        => "ems_operations",
+          :zone        => @ems.my_zone,
+          :args        => []
+        }
+      end
+
+      it "queues the delete action" do
+        expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options)
+        post :button, :params => { :id => @tenant.id, :pressed => "cloud_tenant_delete", :format => :js }
+      end
     end
   end
 end

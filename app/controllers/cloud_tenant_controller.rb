@@ -95,21 +95,42 @@ class CloudTenantController < ApplicationController
       options = form_params
       ems = find_by_id_filtered(ExtManagementSystem, options[:ems_id])
       options.delete(:ems_id)
-      begin
-        CloudTenant.create_cloud_tenant(ems, options)
-        add_flash(_("Creating %{tenant} \"%{tenant_name}\"") % {
-                    :tenant      => ui_lookup(:table => 'cloud_tenant'),
-                    :tenant_name => options[:name]})
-      rescue => ex
-        add_flash(_("Unable to create %{tenant} \"%{tenant_name}\": %{details}") % {
-                    :tenant      => ui_lookup(:table => 'cloud_tenant'),
-                    :tenant_name => options[:name],
-                    :details     => ex}, :error)
+
+      task_id = CloudTenant.create_cloud_tenant_queue(session[:userid], ems, options)
+
+      add_flash(_("Cloud tenant creation failed: Task start failed: ID [%{id}]") %
+                {:id => task_id.inspect}, :error) unless task_id.kind_of?(Fixnum)
+
+      if @flash_array
+        javascript_flash(:spinner_off => true)
+      else
+        initiate_wait_for_task(:task_id => task_id, :action => "create_finished")
       end
-      @breadcrumbs.pop if @breadcrumbs
-      session[:flash_msgs] = @flash_array.dup if @flash_array
-      javascript_redirect :action => "show_list"
     end
+  end
+
+  def create_finished
+    task_id = session[:async][:params][:task_id]
+    tenant_name = session[:async][:params][:name]
+    task = MiqTask.find(task_id)
+    if MiqTask.status_ok?(task.status)
+      add_flash(_("%{model} \"%{name}\" created") % {
+                  :model => ui_lookup(:table => 'cloud_tenant'),
+                  :name  => tenant_name
+                })
+    else
+        add_flash(_("Unable to create %{model} \"%{name}\": %{details}") % {
+                    :model   => ui_lookup(:table => 'cloud_tenant'),
+                    :name    => tenant_name,
+                    :details => task.message
+                  }, :error)
+    end
+
+    @breadcrumbs.pop if @breadcrumbs
+    session[:edit] = nil
+    session[:flash_msgs] = @flash_array.dup if @flash_array
+
+    javascript_redirect :action => "show_list"
   end
 
   def edit
@@ -135,24 +156,42 @@ class CloudTenantController < ApplicationController
 
     when "save"
       options = form_params
-      begin
-        @tenant.update_cloud_tenant(options)
-        add_flash(_("Updating %{model} \"%{name}\"") % {
-                    :model => ui_lookup(:table => 'cloud_tenant'),
-                    :name  => @tenant.name
-                  })
-      rescue => ex
+      task_id = @tenant.update_cloud_tenant_queue(session[:userid], options)
+
+      add_flash(_("Cloud tenant creation failed: Task start failed: ID [%{id}]") %
+                {:id => task_id.inspect}, :error) unless task_id.kind_of?(Fixnum)
+
+      if @flash_array
+        javascript_flash(:spinner_off => true)
+      else
+        initiate_wait_for_task(:task_id => task_id, :action => "update_finished")
+      end
+    end
+  end
+
+  def update_finished
+    task_id = session[:async][:params][:task_id]
+    tenant_id = session[:async][:params][:id]
+    tenant_name = session[:async][:params][:name]
+    task = MiqTask.find(task_id)
+    if MiqTask.status_ok?(task.status)
+      add_flash(_("%{model} \"%{name}\" updated") % {
+                  :model => ui_lookup(:table => 'cloud_tenant'),
+                  :name  => tenant_name
+                })
+    else
         add_flash(_("Unable to update %{model} \"%{name}\": %{details}") % {
                     :model   => ui_lookup(:table => 'cloud_tenant'),
-                    :name    => @tenant.name,
-                    :details => ex
+                    :name    => tenant_name,
+                    :details => task.message
                   }, :error)
-      end
-      @breadcrumbs.pop if @breadcrumbs
-      session[:edit] = nil
-      session[:flash_msgs] = @flash_array.dup if @flash_array
-      javascript_redirect :action => "show", :id => @tenant.id
     end
+
+    @breadcrumbs.pop if @breadcrumbs
+    session[:edit] = nil
+    session[:flash_msgs] = @flash_array.dup if @flash_array
+
+    javascript_redirect :action => "show", :id => tenant_id
   end
 
   def cloud_tenant_form_fields
@@ -245,7 +284,7 @@ class CloudTenantController < ApplicationController
           :userid       => session[:userid]
         }
         AuditEvent.success(audit)
-        tenant.delete_cloud_tenant
+        tenant.delete_cloud_tenant_queue(session[:userid])
       end
       add_flash(n_("Delete initiated for %{number} Cloud Tenant.",
                    "Delete initiated for %{number} Cloud Tenants.",

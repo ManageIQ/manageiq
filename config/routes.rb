@@ -380,6 +380,7 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
         update
+        wait_for_task
       ) +
                compare_post + adv_search_post + exp_post + save_post
     },

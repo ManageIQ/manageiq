@@ -37,11 +37,11 @@ class CloudTenant < ApplicationRecord
     ext_management_system && ext_management_system.class::CloudTenant
   end
 
-  def self.create_cloud_tenant(ext_management_system, options = {})
+  def self.create_cloud_tenant(ems_id, options = {})
+    ext_management_system = ExtManagementSystem.find_by_id(ems_id)
     raise ArgumentError, _("ext_management_system cannot be nil") if ext_management_system.nil?
 
     klass = class_by_ems(ext_management_system)
-
     created_cloud_tenant = klass.raw_create_cloud_tenant(ext_management_system, options)
 
     klass.create(
@@ -54,6 +54,22 @@ class CloudTenant < ApplicationRecord
     raise NotImplementedError, _("raw_create_cloud_tenant must be implemented in a subclass")
   end
 
+  def self.create_cloud_tenant_queue(userid, ext_management_system, options = {})
+    task_opts = {
+      :action => "creating Cloud Tenant for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class_by_ems(ext_management_system),
+      :method_name => 'create_cloud_tenant',
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => [ext_management_system.id, options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   def update_cloud_tenant(options = {})
     raw_update_cloud_tenant(options)
   end
@@ -62,12 +78,46 @@ class CloudTenant < ApplicationRecord
     raise NotImplementedError, _("raw_update_cloud_tenant must be implemented in a subclass")
   end
 
+  def update_cloud_tenant_queue(userid, options = {})
+    task_opts = {
+      :action => "updating Cloud Tenant for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'update_cloud_tenant',
+      :instance_id => id,
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => [options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   def delete_cloud_tenant
     raw_delete_cloud_tenant
   end
 
   def raw_delete_cloud_tenant
     raise NotImplementedError, _("raw_delete_cloud_tenant must be implemented in a subclass")
+  end
+
+  def delete_cloud_tenant_queue(userid)
+    task_opts = {
+      :action => "deleting Cloud Tenant for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'delete_cloud_tenant',
+      :instance_id => id,
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => []
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
   def all_cloud_networks

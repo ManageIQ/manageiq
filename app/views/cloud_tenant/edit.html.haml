@@ -18,19 +18,7 @@
     %tr
       %td{:align => 'right'}
         #buttons_on
-          = button_tag(_("Save"),
-                       :class        => "btn btn-primary",
-                       "ng-click"    => "saveClicked()",
-                       "ng-disabled" => "angularForm.$pristine || angularForm.$invalid",
-                       "ng-class"    => "{ disabled: cloudTenantForm.$pristine || angularForm.$invalid}")
-          = button_tag(_("Reset"),
-                       :class        => "btn btn-primary",
-                       "ng-click"    => "resetClicked()",
-                       "ng-disabled" => "angularForm.$pristine",
-                       "ng-class"    => "{ disabled: cloudTenantForm.$pristine}")
-          = button_tag(_("Cancel"),
-                        :class     => "btn btn-default",
-                        "ng-click" => "cancelClicked()")
+          = render :partial => "layouts/angular/x_edit_buttons_angular"
 
 :javascript
   ManageIQ.angular.app.value('cloudTenantFormId', '#{@tenant.id}');
