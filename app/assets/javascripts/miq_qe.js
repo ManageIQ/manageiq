@@ -61,7 +61,6 @@ ManageIQ.qe.anythingInFlight = function() {
     (state.debounce) ||
     (state.document != 'complete') ||
     (state.jquery != 0) ||
-    (state.prototype != 0) ||
     (state.spinner);
 };
 
@@ -80,7 +79,6 @@ ManageIQ.qe.inFlight = function() {
     debounce:   ManageIQ.qe.debounceRunning(),
     document:   document.readyState,
     jquery:     $.active,
-    prototype:  (typeof Ajax === "undefined") ? 0 : Ajax.activeRequestCount,
     spinner:    ManageIQ.qe.spinnerPresent(),
   };
 };
