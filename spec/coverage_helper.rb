@@ -6,7 +6,7 @@ require 'active_support/core_ext/kernel/reporting'
     next if file.include?("/bin/") || file.include?("/spec/")
     begin
       silence_warnings { require file }
-    rescue LoadError, MissingSourceFile
+    rescue StandardError, LoadError, MissingSourceFile
     end
   end
 end
