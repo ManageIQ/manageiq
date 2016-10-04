@@ -61,8 +61,8 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
     yum clean all
 
 # Install NodeJS 6.x
-RUN curl --silent --location https://rpm.nodesource.com/setup_6.x | bash - \
-    yum -y install nodejs \
+RUN curl --silent --location https://rpm.nodesource.com/setup_6.x | bash - && \
+    yum -y install nodejs && \
     yum clean all
 
 # Add persistent data volume for postgres
