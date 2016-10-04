@@ -18,7 +18,7 @@ module ManageIQ::Providers::Azure::ManagerMixin
     raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - check your Azure Client ID and Client Key")
   rescue MiqException::MiqInvalidCredentialsError
     raise # Raise before falling into catch-all block below
-  rescue StandardError => err
+  rescue => err
     _log.error("Error Class=#{err.class.name}, Message=#{err.message}")
     raise MiqException::MiqInvalidCredentialsError, _("Unexpected response returned from system: #{err.message}")
   else

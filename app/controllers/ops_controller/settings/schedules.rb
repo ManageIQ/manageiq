@@ -66,7 +66,7 @@ module OpsController::Settings::Schedules
       schedule_validate?(schedule)
       begin
         schedule.save!
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("Error when adding a new schedule: %{message}") % {:message => bang.message}, :error)
         javascript_flash
       else
@@ -229,7 +229,7 @@ module OpsController::Settings::Schedules
     uri_settings = build_uri_settings(file_depot)
     begin
       MiqSchedule.new.verify_file_depot(uri_settings)
-    rescue StandardError => bang
+    rescue => bang
       add_flash(_("Error during 'Validate': %{message}") % {:message => bang.message}, :error)
     else
       add_flash(_('Depot Settings successfuly validated'))

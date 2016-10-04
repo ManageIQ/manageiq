@@ -326,7 +326,7 @@ class ChargebackController < ApplicationController
       rate_type = x_node.split('-').last
       begin
         ChargebackRate.set_assignments(rate_type, @edit[:set_assignments])
-      rescue StandardError => bang
+      rescue => bang
         render_flash(_("Error during 'Rate assignments': %{error_message}") % {:error_message => bang.message}, :error)
       else
         add_flash(_("Rate Assignments saved"))

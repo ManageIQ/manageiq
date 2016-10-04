@@ -999,7 +999,7 @@ module EmsCommon
         end
         begin
           ems.send(task.to_sym) if ems.respond_to?(task)    # Run the task
-        rescue StandardError => bang
+        rescue => bang
           add_flash(_("%{model} \"%{name}\": Error during '%{task}': %{error_message}") %
             {:model => model.to_s, :name => ems_name, :task => task, :error_message => bang.message}, :error)
           AuditEvent.failure(:userid => session[:userid], :event => "#{@table_name}_#{task}",

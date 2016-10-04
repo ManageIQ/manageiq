@@ -410,7 +410,7 @@ class ConfigurationController < ApplicationController
       @timeprofile.rollup_daily_metrics = params[:rollup_daily]
       begin
         @timeprofile.save!
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("TimeProfile \"%{name}\": Error during 'save': %{error_message}") %
                       {:name => @timeprofile.description, :error_message => bang.message}, :error)
         @in_a_form = true

@@ -113,7 +113,7 @@ class StorageManagerController < ApplicationController
       @in_a_form = true
       begin
         verify_sm.verify_credentials
-      rescue StandardError => bang
+      rescue => bang
         add_flash(bang.to_s, :error)
       else
         add_flash(_("Credential validation was successful"))
@@ -200,7 +200,7 @@ class StorageManagerController < ApplicationController
       @changed = session[:changed]
       begin
         verify_sm.verify_credentials
-      rescue StandardError => bang
+      rescue => bang
         add_flash(bang.to_s, :error)
       else
         add_flash(_("Credential validation was successful"))
@@ -421,7 +421,7 @@ class StorageManagerController < ApplicationController
     if task == "refresh_inventory"
       begin
         StorageManager.refresh_inventory(sms, true)
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("Error during '%{task}': %{message}") % {:task => task, :message => bang.message},
                   :error)
         AuditEvent.failure(:userid => session[:userid], :event => "storage_manager_#{task}",
@@ -449,7 +449,7 @@ class StorageManagerController < ApplicationController
         end
         begin
           sm.send(task.to_sym) if sm.respond_to?(task)    # Run the task
-        rescue StandardError => bang
+        rescue => bang
           add_flash(_("%{model} \"%{name}\": Error during '%{task}': %{message}") %
                       {:model   => ui_lookup(:model => "StorageManager"),
                        :name    => sm_name, :task => task,

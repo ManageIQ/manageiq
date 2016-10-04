@@ -231,7 +231,7 @@ module ApplicationController::Tags
                                       :add_ids    => @edit[:new][:assignments] - @edit[:current][:assignments],
                                       :delete_ids => @edit[:current][:assignments] - @edit[:new][:assignments]
                                     })
-  rescue StandardError => bang
+  rescue => bang
     add_flash(_("Error during 'Save Tags': %{error_message}") % {:error_message => bang.message}, :error)
   else
     add_flash(_("Tag edits were successfully saved"))

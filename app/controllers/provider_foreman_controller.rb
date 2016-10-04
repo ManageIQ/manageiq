@@ -231,7 +231,7 @@ class ProviderForemanController < ApplicationController
 
     begin
       @provider_cfgmgmt.verify_credentials(params[:type])
-    rescue StandardError => error
+    rescue => error
       render_flash(_("Credential validation was not successful: %{details}") % {:details => error}, :error)
     else
       render_flash(_("Credential validation was successful"))

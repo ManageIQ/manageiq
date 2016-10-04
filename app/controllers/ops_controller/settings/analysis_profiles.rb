@@ -261,7 +261,7 @@ module OpsController::Settings::AnalysisProfiles
               # mems.each { |c| scanitemset.remove_member(ScanItem.find(c)) if !mems.include?(c.id) }
               # scanitemset.remove_all_members
               # scanitemset.add_member()
-            rescue StandardError => bang
+            rescue => bang
               title = params[:button] == "add" ? "add" : "update"
               add_flash(_("Error during '%{title}': %{message}") % {:title => title, :message => bang.message}, :error)
             end
@@ -512,7 +512,7 @@ module OpsController::Settings::AnalysisProfiles
             scanitemset.add_member(scanitem)
             # resetting flash_array to not show a message for each memmber that is saved for a scanitemset
             @flash_array = []
-          rescue StandardError => bang
+          rescue => bang
             add_flash(_("%{model} \"%{name}\": Error during '%{task}': %{message}") %
                         {:model => ui_lookup(:model => "ScanItemSet"),
                          :name  => scanitem.name, :task => "update", :message => bang.message},

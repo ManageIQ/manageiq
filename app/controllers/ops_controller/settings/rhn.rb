@@ -132,7 +132,7 @@ module OpsController::Settings::RHN
 
     begin
       db.save!
-    rescue StandardError => bang
+    rescue => bang
       add_flash(_(bang.message), :error)
       @in_a_form = true
       javascript_flash

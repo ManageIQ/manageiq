@@ -190,7 +190,7 @@ class OrchestrationStackController < ApplicationController
     else
       begin
         template.save_as_orderable!
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("An error occured when changing orchestration template \"%{name}\" to orderable: %{err_msg}") %
           {:name => template.name, :err_msg => bang.message}, :error)
         render_flash
@@ -253,7 +253,7 @@ class OrchestrationStackController < ApplicationController
       )
       begin
         ot.save_as_orderable!
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("Error during 'Orchestration Template Copy': %{error_message}") %
           {:error_message => bang.message}, :error)
         render_flash

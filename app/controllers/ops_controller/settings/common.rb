@@ -204,7 +204,7 @@ module OpsController::Settings::Common
     else
       begin
         MiqRegion.replication_type = replication_type
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("Error during replication configuration save: %{message}") %
                     {:message => bang.message}, :error)
       else
@@ -431,7 +431,7 @@ module OpsController::Settings::Common
             begin
               server.name = @update.config[:server][:name]
               server.save!
-            rescue StandardError => bang
+            rescue => bang
               add_flash(_("Error when saving new server name: %{message}") % {:message => bang.message}, :error)
               javascript_flash
               return
@@ -626,7 +626,7 @@ module OpsController::Settings::Common
         server.vm_scan_storage_affinity = Storage.where(:id => children[:storages].to_a).to_a
       end
     end
-  rescue StandardError => bang
+  rescue => bang
     add_flash(_("Error during Analysis Affinity save: %{message}") % {:message => bang.message}, :error)
   else
     add_flash(_("Analysis Affinity was saved"))

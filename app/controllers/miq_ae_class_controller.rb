@@ -616,7 +616,7 @@ class MiqAeClassController < ApplicationController
           @ae_inst.ae_values.each { |v| v.value = nil if v.value == "" }
           @ae_inst.save!
         end   # end of transaction
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("Error during 'save': %{error_message}") % {:error_message => bang.message}, :error)
         @in_a_form = true
         render :update do |page|
@@ -674,7 +674,7 @@ class MiqAeClassController < ApplicationController
           add_aeinst.ae_values.each { |v| v.value = nil if v.value == "" }
           add_aeinst.save!
         end  # end of transaction
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("Error during 'add': %{message}") % {:message => bang.message}, :error)
         @in_a_form = true
         render :update do |page|
@@ -1022,7 +1022,7 @@ class MiqAeClassController < ApplicationController
         MiqAeClass.transaction do
           ae_class.save!
         end  # end of transaction
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("Error during 'save': %{error_message}") % {:error_message => bang.message}, :error)
         session[:changed] = @changed
         @changed = true
@@ -1069,7 +1069,7 @@ class MiqAeClassController < ApplicationController
           ae_class.ae_fields.each { |fld| fld.default_value = nil if fld.default_value == "" }
           ae_class.save!
         end  # end of transaction
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("Error during 'save': %{error_message}") % {:error_message => bang.message}, :error)
         session[:changed] = @changed = true
         render :update do |page|
@@ -1115,7 +1115,7 @@ class MiqAeClassController < ApplicationController
       ns_set_record_vars(ae_ns)                     # Set the record variables, but don't save
       begin
         ae_ns.save!
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("Error during 'save': %{message}") % {:message => bang.message}, :error)
         session[:changed] = @changed
         @changed = true
@@ -1166,7 +1166,7 @@ class MiqAeClassController < ApplicationController
           ae_method.inputs.each { |fld| fld.default_value = nil if fld.default_value == "" }
           ae_method.save!
         end  # end of transaction
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("Error during 'save': %{error_message}") % {:error_message => bang.message}, :error)
         session[:changed] = @changed
         @changed = true
@@ -1241,7 +1241,7 @@ class MiqAeClassController < ApplicationController
         MiqAeClass.transaction do
           add_aeclass.save!
         end
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("Error during 'add': %{error_message}") % {:error_message => bang.message}, :error)
         @in_a_form = true
         render :update do |page|
@@ -1279,7 +1279,7 @@ class MiqAeClassController < ApplicationController
           set_field_vars(add_aemethod)
           add_aemethod.save!
         end
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("Error during 'add': %{error_message}") % {:error_message => bang.message}, :error)
         @in_a_form = true
         render :update do |page|
@@ -1733,7 +1733,7 @@ class MiqAeClassController < ApplicationController
 
     begin
       res = @edit[:typ].copy(options)
-    rescue StandardError => bang
+    rescue => bang
       add_flash(_("Error during '%{record} copy': %{error_message}") %
         {:record => ui_lookup(:model => @edit[:typ].to_s), :error_message => bang.message}, :error)
       render :update do |page|

@@ -58,7 +58,7 @@ class MiqPolicyController < ApplicationController
           end
           session[:export_data] = MiqPolicy.export_to_yaml(@sb[:new][:choices_chosen], db)
           javascript_redirect :action => 'fetch_yaml', :fname => filename, :escape => false
-        rescue StandardError => bang
+        rescue => bang
           add_flash(_("Error during export: %{error_message}") % {:error_message => bang.message}, :error)
           render :update do |page|
             page << javascript_prologue
@@ -181,7 +181,7 @@ class MiqPolicyController < ApplicationController
     if params[:commit] == "import"
       begin
         miq_policy_import_service.import_policy(@import_file_upload_id)
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("Error during upload: %{messages}") % {:messages => bang.message}, :error)
       else
         @sb[:hide] = false

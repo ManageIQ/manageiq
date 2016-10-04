@@ -17,7 +17,7 @@ module OpsController::Settings
     if session[:imports]
       begin
         session[:imports].apply
-      rescue StandardError => bang
+      rescue => bang
         msg = _("Error during 'apply': %{error}") % {:error => bang}
         err = true
       else
@@ -153,7 +153,7 @@ module OpsController::Settings
       @edit[:region].description = @edit[:new][:description]
       begin
         @edit[:region].save!
-      rescue StandardError => bang
+      rescue => bang
         @edit[:region].errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end

@@ -206,7 +206,7 @@ module ContainersCommonMixin
       image_name = image.name
       begin
         image.scan
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("%{model} \"%{name}\": Error during 'Analysis': %{message}") %
                       {:model   => ui_lookup(:model => "ContainerImage"),
                        :name    => image_name,
@@ -222,7 +222,7 @@ module ContainersCommonMixin
     model.where(:id => ids).order("lower(name)").each do |entity|
       begin
         entity.check_compliance
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("%{model} \"%{name}\": Error during 'Check Compliance': ") %
                   {:model => ui_lookup(:model => model),
                    :name  => entity.name} << bang.message,

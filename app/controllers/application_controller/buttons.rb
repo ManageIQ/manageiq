@@ -267,7 +267,7 @@ module ApplicationController::Buttons
     else
       begin
         button.invoke(obj)    # Run the task
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("Error executing: \"%{task_description}\" %{error_message}") %
           {:task_description => params[:desc], :error_message => bang.message}, :error) # Push msg and error flag
       else

@@ -45,7 +45,7 @@ module MiqPolicyController::AlertProfiles
         begin
           alerts.each { |a| alert_profile.remove_member(MiqAlert.find(a)) unless mems.include?(a.id) }  # Remove any alerts no longer in the members list box
           mems.each_key { |m| alert_profile.add_member(MiqAlert.find(m)) unless current.include?(m) }   # Add any alerts not in the set
-        rescue StandardError => bang
+        rescue => bang
           add_flash(_("Error during 'Alert Profile %{params}': %{message}") %
             {:params => params[:button], :message => bang.message}, :error)
         end

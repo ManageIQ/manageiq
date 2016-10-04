@@ -501,7 +501,7 @@ module MiqPolicyController::Alerts
     alarms = {}
     begin
       alarms = MiqAlert.ems_alarms(@edit[:new][:db], @edit[:new][:expression][:options][:ems_id])
-    rescue StandardError => bang
+    rescue => bang
       add_flash(_("Error during alarms: %{messages}") % {:messages => bang.message}, :error)
     end
     alarms

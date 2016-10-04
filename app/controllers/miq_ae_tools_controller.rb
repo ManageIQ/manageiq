@@ -108,7 +108,7 @@ class MiqAeToolsController < ApplicationController
   def automate_json
     begin
       automate_json = automate_import_json_serializer.serialize(ImportFileUpload.find(params[:import_file_upload_id]))
-    rescue StandardError => e
+    rescue => e
       add_flash(_("Error: import processing failed: %{message}") % {:message => e.message}, :error)
     end
 
@@ -263,7 +263,7 @@ Classes updated/added: %{class_stats}
 Instances updated/added: %{instance_stats}
 Methods updated/added: %{method_stats}") % stat_options)
         redirect_to :action => 'import_export', :flash_msg => @flash_array[0][:message]         # redirect to build the retire screen
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("Error during 'upload': %{message}") % {:message => bang.message}, :error)
         redirect_to :action => 'import_export', :flash_msg => @flash_array[0][:message], :flash_error => true         # redirect to build the retire screen
       end

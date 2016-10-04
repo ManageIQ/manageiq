@@ -119,7 +119,7 @@ module ManageIQ
             cloud_ems.with_provider_connection do |connection|
               compute_hosts = connection.hosts.select { |x| x.service_name == "compute" }
             end
-          rescue StandardError => err
+          rescue => err
             _log.error "Error Class=#{err.class.name}, Message=#{err.message}"
             $log.error err.backtrace.join("\n")
             # Just log the error and continue the refresh, we don't want error in cloud side to affect infra refresh

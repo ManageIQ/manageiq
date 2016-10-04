@@ -217,7 +217,7 @@ module MiqAeCustomizationController::Dialogs
 
       begin
         dialog_set_record_vars(dialog)
-      rescue StandardError => @bang
+      rescue => @bang
         add_flash(@bang.message, :error)
         @changed = true
         render_flash

@@ -294,7 +294,7 @@ class HostController < ApplicationController
       @in_a_form = true
       begin
         verify_host.verify_credentials(params[:type])
-      rescue StandardError => bang
+      rescue => bang
         add_flash(bang.to_s, :error)
       else
         add_flash(_("Credential validation was successful"))
@@ -417,7 +417,7 @@ class HostController < ApplicationController
           page << "if (confirm('The Host SSH key has changed, do you want to accept the new key?')) miqAjax('#{new_url}');"
         end
         return
-      rescue StandardError => bang
+      rescue => bang
         add_flash(bang.to_s, :error)
       else
         add_flash(_("Credential validation was successful"))
