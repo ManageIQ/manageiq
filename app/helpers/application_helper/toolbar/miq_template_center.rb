@@ -18,7 +18,8 @@ class ApplicationHelper::Toolbar::MiqTemplateCenter < ApplicationHelper::Toolbar
           'fa fa-search fa-lg',
           N_('Perform SmartState Analysis on this Template'),
           N_('Perform SmartState Analysis'),
-          :confirm => N_("Perform SmartState Analysis on this Template?")),
+          :confirm => N_("Perform SmartState Analysis on this Template?"),
+          :klass => ApplicationHelper::Button::VmInstanceTemplateScan),
         separator,
         button(
           :miq_template_edit,

@@ -693,10 +693,6 @@ class ApplicationHelper::ToolbarBuilder
       end
     when "MiqTemplate"
       case id
-      when "miq_template_scan", "image_scan"
-        return true unless (@record.supports_smartstate_analysis? ||
-            @record.unsupported_reason(:smartstate_analysis))
-        return true unless @record.has_proxy?
       when "miq_template_reload"
         return true unless @perf_options[:typ] == "realtime"
       end

@@ -1,4 +1,4 @@
-describe ApplicationHelper::Button::VmInstanceScan do
+describe ApplicationHelper::Button::VmInstanceTemplateScan do
   describe '#visible?' do
     context "when record has proxy and is not orphaned nor archived" do
       before do

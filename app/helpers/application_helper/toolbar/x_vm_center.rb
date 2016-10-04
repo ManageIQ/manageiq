@@ -19,7 +19,7 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           N_('Perform SmartState Analysis on this VM'),
           N_('Perform SmartState Analysis'),
           :confirm => N_("Perform SmartState Analysis on this VM?"),
-          :klass   => ApplicationHelper::Button::VmInstanceScan),
+          :klass   => ApplicationHelper::Button::VmInstanceTemplateScan),
         button(
           :vm_collect_running_processes,
           'fa fa-eyedropper fa-lg',
