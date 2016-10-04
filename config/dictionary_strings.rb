@@ -1702,6 +1702,18 @@ _("Network Ports (Microsoft Azure)")
 _("Network Port (OpenStack)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::NetworkPort (plural form)
 _("Network Ports (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager
+_("Storage Manager")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager (plural form)
+_("Storage Managers")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager::CinderManager
+_("Storage Manager (Cinder)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager::CinderManager (plural form)
+_("Storage Managers (Cinder)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager::SwiftManager
+_("Storage Manager (Swift)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager::SwiftManager (plural form)
+_("Storage Managers (Swift)")
 # TRANSLATORS: en.yml key: dictionary.model.MiddlewareDatasource
 _("Middleware Datasource")
 # TRANSLATORS: en.yml key: dictionary.model.MiddlewareDatasource (plural form)
@@ -1904,6 +1916,10 @@ _("Azure Templates")
 _("VNF Template")
 # TRANSLATORS: en.yml key: dictionary.model.OrchestrationTemplateVnfd (plural form)
 _("VNF Templates")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate
+_("vApp Template")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate (plural form)
+_("vApp Templates")
 # TRANSLATORS: en.yml key: dictionary.model.PersistentVolume
 _("Persistent Volume")
 # TRANSLATORS: en.yml key: dictionary.model.PersistentVolume (plural form)
@@ -2216,6 +2232,10 @@ _("EVM Servers")
 _("Network Provider")
 # TRANSLATORS: en.yml key: dictionary.table.ems_network (plural form)
 _("Network Providers")
+# TRANSLATORS: en.yml key: dictionary.table.ems_storage
+_("Storage Provider")
+# TRANSLATORS: en.yml key: dictionary.table.ems_storage (plural form)
+_("Storage Providers")
 # TRANSLATORS: en.yml key: dictionary.table.middleware_server
 _("Middleware Server")
 # TRANSLATORS: en.yml key: dictionary.table.middleware_server (plural form)
