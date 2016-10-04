@@ -42,29 +42,14 @@ class Chargeback < ActsAsArModel
       _log.info("Found #{recs.length} records for time range #{[query_start_time, query_end_time].inspect}")
 
       unless recs.empty?
-        ts_key = get_group_key_ts(recs.first, interval, tz)
-
         recs.each do |perf|
           next if perf.resource.nil?
-          key, extra_fields = if @options[:groupby_tag].present?
-                                get_tag_keys_and_fields(perf, ts_key)
-                              else
-                                get_keys_and_extra_fields(perf, ts_key)
-                              end
-
-          if data[key].nil?
-            start_ts, end_ts, display_range = get_time_range(perf, interval, tz)
-            data[key] = {
-              "start_date"       => start_ts,
-              "end_date"         => end_ts,
-              "display_range"    => display_range,
-              "interval_name"    => interval,
-              "chargeback_rates" => ''
-            }.merge(extra_fields)
-          end
+          key, extra_fields = key_and_fields(perf, interval, tz)
+          data[key] ||= extra_fields
 
           rates_to_apply = cb.get_rates(perf)
-          data[key]["chargeback_rates"] = (data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)).uniq.join(', ')
+          chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
+          data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
           calculate_costs(perf, data[key], rates_to_apply)
         end
       end
@@ -72,6 +57,30 @@ class Chargeback < ActsAsArModel
     _log.info("Calculating chargeback costs...Complete")
 
     [data.map { |r| new(r.last) }]
+  end
+
+  def self.key_and_fields(metric_rollup_record, interval, tz)
+    ts_key = get_group_key_ts(metric_rollup_record, interval, tz)
+
+    key, extra_fields = if @options[:groupby_tag].present?
+                          get_tag_keys_and_fields(metric_rollup_record, ts_key)
+                        else
+                          get_keys_and_extra_fields(metric_rollup_record, ts_key)
+                        end
+
+    [key, date_fields(metric_rollup_record, interval, tz).merge(extra_fields)]
+  end
+
+  def self.date_fields(metric_rollup_record, interval, tz)
+    start_ts, end_ts, display_range = get_time_range(metric_rollup_record, interval, tz)
+
+    {
+      'start_date'       => start_ts,
+      'end_date'         => end_ts,
+      'display_range'    => display_range,
+      'interval_name'    => interval,
+      'chargeback_rates' => ''
+    }
   end
 
   def self.get_tag_keys_and_fields(perf, ts_key)
