@@ -15,6 +15,12 @@ FactoryGirl.define do
           :parent  => :ext_management_system do
   end
 
+  factory :ems_physical_infra,
+          :aliases => ["manageiq/providers/physical_infra_manager"],
+          :class   => "ManageIQ::Providers::PhysicalInfraManager",
+          :parent  => :ext_management_system do
+  end
+
   factory :ems_cloud,
           :aliases => ["manageiq/providers/cloud_manager"],
           :class   => "ManageIQ::Providers::CloudManager",
