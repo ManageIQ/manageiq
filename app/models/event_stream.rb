@@ -24,4 +24,12 @@ class EventStream < ApplicationRecord
   belongs_to :container_node
 
   belongs_to :middleware_server, :foreign_key => :middleware_server_id
+
+  after_commit :emit_notifications, :on => :create
+
+  def emit_notifications
+    Notification.emit_for_event(self)
+  rescue => err
+    _log.log_backtrace(err)
+  end
 end

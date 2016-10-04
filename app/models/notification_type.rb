@@ -21,6 +21,10 @@ class NotificationType < ApplicationRecord
     end
   end
 
+  def self.names
+    @names ||= Set.new(pluck(:name))
+  end
+
   def self.seed
     seed_data.each do |t|
       rec = find_by_name(t[:name])

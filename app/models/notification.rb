@@ -17,6 +17,12 @@ class Notification < ApplicationRecord
     self.notification_type = NotificationType.find_by_name!(typ)
   end
 
+  def self.emit_for_event(event)
+    return unless NotificationType.names.include?(event.event_type)
+    type = NotificationType.find_by_name(event.event_type)
+    Notification.create(:notification_type => type, :subject => event.target)
+  end
+
   def to_h
     {
       :level      => notification_type.level,
