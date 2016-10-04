@@ -58,6 +58,22 @@ class DtoCollection
     data.each(*args, &block)
   end
 
+  def to_a
+    data
+  end
+
+  def to_hash
+    data_index
+  end
+
+  def to_s
+    "DtoCollection:<#{@model_class}>"
+  end
+
+  def inspect
+    to_s
+  end
+
   private
   def actualize_dependencies(dto)
     dto.data.values.each do |value|

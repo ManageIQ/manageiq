@@ -15,6 +15,10 @@ class Dto
     dto_collection.manager_ref
   end
 
+  def id
+    data[:id]
+  end
+
   def object
     data[:_object]
   end
@@ -29,5 +33,13 @@ class Dto
         value
       end
     end
+  end
+
+  def to_s
+    "Dto:('#{id}', #{dto_collection})"
+  end
+
+  def inspect
+    to_s
   end
 end

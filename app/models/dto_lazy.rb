@@ -10,6 +10,10 @@ class DtoLazy
     ems_ref
   end
 
+  def inspect
+    "DtoLazy:('#{to_s}', #{dto_collection})"
+  end
+
   def load
     dto_collection.find(to_s).try!(:object)
   end
