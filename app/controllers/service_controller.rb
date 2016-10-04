@@ -136,7 +136,7 @@ class ServiceController < ApplicationController
 
       begin
         service.save
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("Error during 'Service Edit': %{message}") % {:message => bang.message}, :error)
       else
         add_flash(_("Service \"%{name}\" was saved") % {:name => service.name})

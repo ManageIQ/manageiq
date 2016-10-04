@@ -584,7 +584,7 @@ class CatalogController < ApplicationController
       st_catalog_set_record_vars(@stc)
       begin
         @stc.save
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("Error during 'Catalog Edit': %{error_message}") % {:error_message => bang.message}, :error)
       else
         if @stc.errors.empty?
@@ -639,7 +639,7 @@ class CatalogController < ApplicationController
       model_name = ui_lookup(:model => "ServiceTemplate")  # Lookup friendly model name in dictionary
       begin
         st.public_send(task.to_sym) if st.respond_to?(task)    # Run the task
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("%{model} \"%{name}\": Error during '%{task}': %{error_message}") %
           {:model => model_name, :name => st_name, :task => task, :error_message => bang.message}, :error)
       else
@@ -729,7 +729,7 @@ class CatalogController < ApplicationController
         begin
           ot.remote_proxy = true
           ot.destroy
-        rescue StandardError => bang
+        rescue => bang
           add_flash(_("Error during 'Orchestration Template Deletion': %{error_message}") %
             {:error_message => bang.message}, :error)
         else
@@ -1006,7 +1006,7 @@ class CatalogController < ApplicationController
       end
       begin
         ot.save_as_orderable!
-      rescue StandardError => bang
+      rescue => bang
         render_flash(_("Error during 'Orchestration Template Edit': %{error_message}") %
           {:error_message => bang.message}, :error)
       else
@@ -1059,7 +1059,7 @@ class CatalogController < ApplicationController
         :remote_proxy => true)
       begin
         ot.save_as_orderable!
-      rescue StandardError => bang
+      rescue => bang
         render_flash(_("Error during 'Orchestration Template Copy': %{error_message}") %
           {:error_message => bang.message}, :error)
       else
@@ -1105,7 +1105,7 @@ class CatalogController < ApplicationController
         :remote_proxy => true)
       begin
         ot.save_as_orderable!
-      rescue StandardError => bang
+      rescue => bang
         render_flash(_("Error during 'Orchestration Template creation': %{error_message}") %
           {:error_message => bang.message}, :error)
       else

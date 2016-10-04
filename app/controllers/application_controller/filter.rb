@@ -108,7 +108,7 @@ module ApplicationController::Filter
       @edit[:edit_exp] = copy_hash(exp)
       begin
         exp_set_fields(@edit[:edit_exp])
-      rescue StandardError => bang
+      rescue => bang
         @exp_atom_errors = [_("There is an error in the selected expression element, perhaps it was imported or edited manually."),
                             _("This element should be removed and recreated or you can report the error to your %{product} administrator.") % {:product => I18n.t('product.name')},
                             _("Error details: %{message}") % {:message => bang}]
@@ -701,7 +701,7 @@ module ApplicationController::Filter
       sname = s.description
       begin
         s.destroy                                                   # Delete the record
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("%{model} \"%{name}\": Error during 'delete': %{error_message}") %
           {:model => ui_lookup(:model => "MiqSearch"), :name => sname, :error_message => bang.message}, :error)
       else

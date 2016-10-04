@@ -47,7 +47,7 @@ class PglogicalSubscription < ActsAsArModel
     subscription_list.each do |s|
       begin
         s.save!
-      rescue StandardError => e
+      rescue => e
         errors << "Failed to save subscription to #{s.host}: #{e.message}"
       end
     end

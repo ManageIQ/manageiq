@@ -394,7 +394,7 @@ class ApplicationController < ActionController::Base
         msg = _('Depot Settings successfuly validated')
         MiqSchedule.new.verify_file_depot(settings)
       end
-    rescue StandardError => bang
+    rescue => bang
       add_flash(_("Error during 'Validate': %{error_message}") % {:error_message => bang.message}, :error)
     else
       add_flash(msg)
@@ -2346,7 +2346,7 @@ class ApplicationController < ActionController::Base
       begin
         authrec = find_by_id_filtered(model.constantize, id)
       rescue ActiveRecord::RecordNotFound
-      rescue StandardError => @bang
+      rescue => @bang
       end
     end
     if rec.nil?

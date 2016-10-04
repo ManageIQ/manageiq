@@ -28,7 +28,7 @@ class UserValidationService
     if user[:new_password].present?
       begin
         User.find_by_userid(user[:name]).change_password(user[:password], user[:new_password])
-      rescue StandardError => bang
+      rescue => bang
         return ValidateResult.new(:fail, "Error: " + bang.message)
       end
     end

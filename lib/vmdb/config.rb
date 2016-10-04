@@ -68,7 +68,7 @@ module VMDB
       begin
         config.config = Vmdb::Settings.decrypt_passwords!(YAML.load(contents))
         config.validate
-      rescue StandardError, Psych::SyntaxError => err
+      rescue Psych::SyntaxError => err
         config.errors = [[:contents, "File contents are malformed, '#{err.message}'"]]
       end
 

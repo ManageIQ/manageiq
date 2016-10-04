@@ -61,7 +61,7 @@ module OpsController::Settings::Zones
     zonename = zone.name
     begin
       zone.destroy
-    rescue StandardError => bang
+    rescue => bang
       add_flash(bang.to_s, :error)
       zone.errors.each { |field, msg| add_flash("#{field.to_s.capitalize} #{msg}", :error) }
       self.x_node = "z-#{zone.id}"

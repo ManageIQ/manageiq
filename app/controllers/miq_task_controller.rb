@@ -207,7 +207,7 @@ class MiqTaskController < ApplicationController
       end
       begin
         job.send(task.to_sym) if job.respond_to?(task)    # Run the task
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("%{model} \"%{name}\": Error during '%{task}': %{message}") %
                     {:model   => ui_lookup(:model => "MiqTask"),
                      :name    => job_name,

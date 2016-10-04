@@ -248,7 +248,7 @@ module PxeController::IsoDatastores
     begin
       @record = @isd = find_by_id_filtered(IsoDatastore, from_cid(params[:id]))
     rescue ActiveRecord::RecordNotFound
-    rescue StandardError => @bang
+    rescue => @bang
     end
   end
 

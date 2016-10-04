@@ -30,7 +30,7 @@ module ApplicationController::DialogRunner
       return unless load_edit("dialog_edit__#{params[:id]}", "replace_cell__explorer")
       begin
         result = @edit[:wf].submit_request
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("Error during 'Provisioning': %{error_message}") % {:error_message => bang.message}, :error)
         javascript_flash
       else

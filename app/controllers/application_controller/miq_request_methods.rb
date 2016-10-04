@@ -727,7 +727,7 @@ module ApplicationController::MiqRequestMethods
         end
         begin
           @edit[:wf].refresh_field_values(@edit[:new])
-        rescue StandardError => bang
+        rescue => bang
           add_flash(bang.message, :error)
           @edit[:new][f.to_sym] = val                                             # Save value
           return false                                                            # No need to refresh dialog divs

@@ -55,7 +55,7 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
       "Remote error message: #{e.message}"
     rescue GSSAPI::GssApiError
       raise MiqException::MiqHostError, "Unable to reach any KDC in realm #{realm}"
-    rescue StandardError => e
+    rescue => e
       raise MiqException::MiqHostError, "Unable to connect: #{e.message}"
     end
 

@@ -18,7 +18,7 @@ class ManageIQ::Providers::Microsoft::InfraManager::Host < ::Host
       "Remote error message: #{e.message}"
     rescue WinRM::WinRMAuthorizationError => e
       raise MiqException::MiqHostError, "Check credentials. Remote error message: #{e.message}"
-    rescue StandardError => e
+    rescue => e
       raise MiqException::MiqHostError, "Unable to connect: #{e.message}."
     end
     true

@@ -124,7 +124,7 @@ module OpsController::OpsRbac
 
       begin
         tenant.save!
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("Error when adding a new tenant: %{message}") % {:message => bang.message}, :error)
         javascript_flash
       else
@@ -199,7 +199,7 @@ module OpsController::OpsRbac
           tenant_quotas = params[:quotas].deep_symbolize_keys
           tenant.set_quotas(tenant_quotas.to_hash)
         end
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("Error when saving tenant quota: %{message}") % {:message => bang.message}, :error)
         javascript_flash
       else
@@ -543,7 +543,7 @@ module OpsController::OpsRbac
                                                                          @edit[:new][:user_id],
                                                                          @edit[:new][:user_pwd])
         end
-      rescue StandardError => bang
+      rescue => bang
         @edit[:ldap_groups_by_user] = []
         add_flash(_("Error during 'LDAP Group Look Up': %{message}") % {:message => bang.message}, :error)
         render :update do |page|

@@ -585,7 +585,7 @@ module VmCommon
                            :name        => params[:name],
                            :description => params[:description],
                            :memory      => params[:snap_memory] == "1")
-        rescue StandardError => bang
+        rescue => bang
           puts bang.backtrace.join("\n")
           flash = _("Error during 'Create Snapshot': %{message}") % {:message => bang.message}
           flash_error = true
@@ -832,7 +832,7 @@ module VmCommon
       flash = _("%{model} \"%{name}\" successfully added to Service \"%{to_name}\"") % {:model => ui_lookup(:model => "Vm"), :name => @record.name, :to_name => Service.find(chosen).name}
       begin
         @record.add_to_vsc(Service.find(chosen).name)
-      rescue StandardError => bang
+      rescue => bang
         flash = _("Error during 'Add VM to service': %{message}") % {:message => bang}
       end
       redirect_to :action => @lastaction, :id => @record.id, :flash_msg => flash
@@ -845,7 +845,7 @@ module VmCommon
     begin
       @vervice_name = Service.find_by_name(@record.location).name
       @record.remove_from_vsc(@vervice_name)
-    rescue StandardError => bang
+    rescue => bang
       add_flash(_("Error during 'Remove VM from service': %{message}") % {:message => bang.message}, :error)
     else
       add_flash(_("VM successfully removed from service \"%{name}\"") % {:name => @vervice_name})
@@ -935,7 +935,7 @@ module VmCommon
           @record.save!
           vms.each { |v| @record.remove_child(v) unless kids.include?(v.id) }                                # Remove any VMs no longer in the kids list box
           kids.each_key { |k| @record.set_child(VmOrTemplate.find(k)) }                                             # Add all VMs in kids hash, dups will not be re-added
-        rescue StandardError => bang
+        rescue => bang
           add_flash(_("Error during '%{name} update': %{message}") % {:name    => @record.class.base_model.name,
                                                                       :message => bang.message}, :error)
           AuditEvent.failure(audit.merge(:message => "[#{@record.name} -- #{@record.location}] Update returned: #{bang}"))

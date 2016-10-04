@@ -372,7 +372,7 @@ module PxeController::PxeServers
     begin
       @record = @ps = find_by_id_filtered(PxeServer, from_cid(params[:id]))
     rescue ActiveRecord::RecordNotFound
-    rescue StandardError => @bang
+    rescue => @bang
     end
   end
 

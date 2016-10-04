@@ -72,7 +72,7 @@ module OpsController::Settings::Tags
                                           :perf_by_tag  => @edit[:new][:perf_by_tag],
                                           :example_text => @edit[:new][:example_text],
                                           :show         => @edit[:new][:show])
-        rescue StandardError => bang
+        rescue => bang
           add_flash(_("Error during 'add': %{message}") % {:message => bang.message}, :error)
           javascript_flash
         else
@@ -88,7 +88,7 @@ module OpsController::Settings::Tags
         category_set_record_vars(update_category)
         begin
           update_category.save!
-        rescue StandardError => bang
+        rescue => bang
           update_category.errors.each do |field, msg|
             add_flash("#{field.to_s.capitalize} #{msg}", :error)
           end

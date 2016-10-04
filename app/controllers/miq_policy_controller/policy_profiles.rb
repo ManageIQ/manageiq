@@ -45,7 +45,7 @@ module MiqPolicyController::PolicyProfiles
         begin
           policies.each { |c| profile.remove_member(MiqPolicy.find(c)) unless mems.include?(c.id) } # Remove any policies no longer in the members list box
           mems.each_key { |m| profile.add_member(MiqPolicy.find(m)) unless current.include?(m) }    # Add any policies not in the set
-        rescue StandardError => bang
+        rescue => bang
           add_flash(_("Error during 'Policy Profile %{params}': %{messages}") %
             {:params => params[:button], :messages => bang.message}, :error)
         end

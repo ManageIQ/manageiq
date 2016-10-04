@@ -73,7 +73,7 @@ module OpsController::Settings::Upload
             imp = AssetTagImport.upload('VmOrTemplate', params[:upload][:file])
           end
         end
-      rescue StandardError => bang
+      rescue => bang
         msg = _("Error during 'upload': %{message}") % {:message => bang.message}
         err = true
       else

@@ -112,7 +112,7 @@ module ReportController::Widgets
     w = MiqWidget.find_by_id(params[:id])
     begin
       w.queue_generate_content
-    rescue StandardError => bang
+    rescue => bang
       add_flash(_("Widget content generation error: %{message}") % {:message => bang.message}, :error)
     else
       add_flash(_("Content generation for this Widget has been initiated"))

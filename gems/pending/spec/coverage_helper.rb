@@ -6,6 +6,6 @@ Dir.glob(File.join(GEMS_PENDING_ROOT, "**", "*.rb")).each do |file|
   next if EXCLUSIONS_LIST.any? { |exclusion| file.include?(exclusion) }
   begin
     silence_warnings { require file }
-  rescue StandardError, LoadError, MissingSourceFile
+  rescue LoadError, MissingSourceFile
   end
 end

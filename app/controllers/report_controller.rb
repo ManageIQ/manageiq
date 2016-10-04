@@ -71,7 +71,7 @@ class ReportController < ApplicationController
       @sb[:overwrite] = !params[:overwrite].nil?
       begin
         reps, mri = MiqReport.import(params[:upload][:file], :save => true, :overwrite => @sb[:overwrite], :userid => session[:userid])
-      rescue StandardError => bang
+      rescue => bang
         add_flash(_("Error during 'upload': %{message}") % {:message => bang.message}, :error)
         @sb[:flash_msg] = @flash_array
         redirect_to :action => 'explorer'

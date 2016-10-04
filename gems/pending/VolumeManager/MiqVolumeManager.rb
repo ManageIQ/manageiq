@@ -30,7 +30,7 @@ class MiqVolumeManager
 
       begin
         disk = MiqDisk.new(RawDisk, diskInfo, 0)
-      rescue StandardError, NoMemoryError, SignalException => err
+      rescue NoMemoryError, SignalException => err
         $log.warn "#{msg_pfx}: Could not open PV: #{bd}"
         $log.warn err.to_s
         $log.debug err.backtrace.join("\n")
