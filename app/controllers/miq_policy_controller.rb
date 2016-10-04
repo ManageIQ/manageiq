@@ -290,7 +290,7 @@ class MiqPolicyController < ApplicationController
   def log
     @breadcrumbs = []
     @log = $policy_log.contents(nil, 1000)
-    add_flash(_("Logs for this ManageIQ Server are not available for viewing"), :warning) if @log.blank?
+    add_flash(_("Logs for this %{product} Server are not available for viewing") % {:product => I18n.t('product.name')}, :warning) if @log.blank?
     @lastaction = "policy_logs"
     @layout = "miq_policy_logs"
     @msg_title = "Policy"
@@ -305,7 +305,7 @@ class MiqPolicyController < ApplicationController
   def refresh_log
     @log = $policy_log.contents(nil, 1000)
     @server = MiqServer.my_server
-    add_flash(_("Logs for this ManageIQ Server are not available for viewing"), :warning) if @log.blank?
+    add_flash(_("Logs for this %{product} Server are not available for viewing") % {:product => I18n.t('product.name')}, :warning) if @log.blank?
     replace_main_div :partial => "layouts/log_viewer"
   end
 

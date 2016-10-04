@@ -83,11 +83,11 @@ class UserValidationService
                                        :action        => 'explorer',
                                        :flash_warning => true,
                                        :no_refresh    => true,
-                                       :flash_msg     => _("The ManageIQ Server is still starting, you have been redirected to the diagnostics page for problem determination"),
+                                       :flash_msg     => _("The %{product} Server is still starting, you have been redirected to the diagnostics page for problem determination") % {:product => I18n.t('product.name')},
                                        :escape        => false)
                         )
     else
-      ValidateResult.new(:fail, _("The ManageIQ Server is still starting. If this message persists, please contact your ManageIQ administrator."))
+      ValidateResult.new(:fail, _("The %{product} Server is still starting. If this message persists, please contact your %{product} administrator.") % {:product => I18n.t('product.name')})
     end
   end
 

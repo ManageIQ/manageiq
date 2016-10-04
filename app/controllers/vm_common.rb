@@ -1667,8 +1667,8 @@ module VmCommon
       action = "edit_vm"
     when "evm_relationship"
       partial = "vm_common/evm_relationship"
-      header = _("Edit ManageIQ Server Relationship for %{vm_or_template} \"%{name}\"") %
-        {:vm_or_template => ui_lookup(:table => table), :name => name}
+      header = _("Edit %{product} Server Relationship for %{vm_or_template} \"%{name}\"") %
+        {:vm_or_template => ui_lookup(:table => table), :name => name, :product => I18n.t('product.name')}
       action = "evm_relationship_update"
     when "miq_request_new"
       partial = "miq_request/pre_prov"
