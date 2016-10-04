@@ -442,11 +442,11 @@ module OpsController::Settings::Common
         end
         AuditEvent.success(build_config_audit(@edit[:new], @edit[:current].config))
         if @sb[:active_tab] == "settings_server"
-          add_flash(_("Configuration settings saved for ManageIQ Server \"%{name} [%{server_id}]\" in Zone \"%{zone}\"") %
-                      {:name => server.name, :server_id => server.id, :zone => server.my_zone})
+          add_flash(_("Configuration settings saved for %{product} Server \"%{name} [%{server_id}]\" in Zone \"%{zone}\"") %
+                      {:name => server.name, :server_id => server.id, :zone => server.my_zone, :product => I18n.t('product.name')})
         elsif @sb[:active_tab] == "settings_authentication"
-          add_flash(_("Authentication settings saved for ManageIQ Server \"%{name} [%{server_id}]\" in Zone \"%{zone}\"") %
-                      {:name => server.name, :server_id => server.id, :zone => server.my_zone})
+          add_flash(_("Authentication settings saved for %{product} Server \"%{name} [%{server_id}]\" in Zone \"%{zone}\"") %
+                      {:name => server.name, :server_id => server.id, :zone => server.my_zone, :product => I18n.t('product.name')})
         else
           add_flash(_("Configuration settings saved"))
         end
@@ -490,8 +490,8 @@ module OpsController::Settings::Common
         server.set_config(@update)
 
         AuditEvent.success(build_config_audit(@edit[:new].config, @edit[:current].config))
-        add_flash(_("Configuration settings saved for ManageIQ Server \"%{name} [%{server_id}]\" in Zone \"%{zone}\"") %
-                    {:name => server.name, :server_id => @sb[:selected_server_id], :zone => server.my_zone})
+        add_flash(_("Configuration settings saved for %{product} Server \"%{name} [%{server_id}]\" in Zone \"%{zone}\"") %
+                    {:name => server.name, :server_id => @sb[:selected_server_id], :zone => server.my_zone, :product => I18n.t('product.name')})
 
         if @sb[:active_tab] == "settings_workers" && @sb[:selected_server_id] == MiqServer.my_server.id  # Reset session variables for names fields, if editing current server config
           session[:customer_name] = @update.config[:server][:company]
