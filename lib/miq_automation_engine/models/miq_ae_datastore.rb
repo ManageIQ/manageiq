@@ -171,6 +171,7 @@ module MiqAeDatastore
 
     restore_attrs_for_domains(saved_attrs)
     reset_default_namespace
+    MiqAeDomain.reset_priorities
   end
 
   def self.default_domain_names
