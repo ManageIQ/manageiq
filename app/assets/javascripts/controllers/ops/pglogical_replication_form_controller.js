@@ -285,26 +285,24 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
   $ctrl.ssh_params = {ssh_host: "", ssh_user: "", ssh_password: ""};
 
   $scope.enableCentralAdmin = function(idx) {
+    var data = {};
+    data["provider_region"] = $scope.pglogicalReplicationModel.subscriptions[idx].provider_region;
+    data["ssh_host"] = $ctrl.ssh_params.ssh_host;
+    data["ssh_user"] = $ctrl.ssh_params.ssh_user;
+    data["ssh_password"] = $ctrl.ssh_params.ssh_password;
+
     miqService.sparkleOn();
-    $http.post('/ops/enable_central_admin/',
-      { provider_region: $scope.pglogicalReplicationModel.subscriptions[idx].provider_region,
-        ssh_host: $ctrl.ssh_params.ssh_host,
-        ssh_user: $ctrl.ssh_params.ssh_user,
-        ssh_password: $ctrl.ssh_params.ssh_password,
-      }).success(function (data) {
-        miqService.sparkleOff();
-      });
+    var url = "/ops/enable_central_admin";
+    miqService.miqAjaxButton(url, data);
   };
 
   $scope.disableCentralAdmin = function(idx) {
     if (confirm("Are you sure you want to Disable Central Admin for this Region?")){
       miqService.sparkleOn();
-      $http.post('/ops/disable_central_admin/',
-        {
-          provider_region: $scope.pglogicalReplicationModel.subscriptions[idx].provider_region,
-        }).success(function (data) {
-          miqService.sparkleOff();
-        });
+      var url = "/ops/disable_central_admin/";
+      var data = {};
+      data["provider_region"] = $scope.pglogicalReplicationModel.subscriptions[idx].provider_region;
+      miqService.miqAjaxButton(url, data);
     }
   };
 

@@ -7,35 +7,40 @@
     = render :partial => "layouts/flash_msg"
     %script{:id => "authkeyModalForm.html", :type => "text/ng-template"}
       :cdata
-        <div class="modal-title">
-          <h2>SSH Information For An Appliance In the Region</h1>
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal-header">
+            <h4 class="modal-header">SSH Information For An Appliance In the Region</h4>
+          </div>
+            <form class="form-horizontal" name="authkeyModalForm" ng-submit="$ctrl.submitForm()" novalidate>
+              <div class="modal-body">
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Host</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="ssh_host" class="form-control" ng-model="$ctrl.ssh_params.ssh_host" required>
+                    <p ng-show="authkeyModalForm.ssh_host.$invalid && !authkeyModalForm.ssh_host.$pristine" class="help-block">SSH host is required.</p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">User</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="ssh_user" class="form-control" ng-model="$ctrl.ssh_params.ssh_user" required>
+                    <p ng-show="aauthkeyModalForm.ssh_user.$invalid && !authkeyModalForm.ssh_user.$pristine" class="help-block">SSH user is required.</p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Password</label>
+                  <div class="col-sm-10">
+                    <input type="password" name="ssh_password" class="form-control" ng-model="$ctrl.ssh_params.ssh_password" required>
+                    <p ng-show="authkeyModalForm.ssh_password.$invalid && !authkeyModalForm.ssh_password.$pristine" class="help-block">SSH password is required.</p>
+                  </div>
+                </div>
+              </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary" ng-disabled="authkeyModalForm.$invalid">Submit</button>
+              <button class="btn btn-default" ng-click="$ctrl.cancelForm()">Cancel</button>
+            </div>
+          </form>
         </div>
-        <form name="authkeyModalForm" ng-submit="$ctrl.submitForm()" novalidate>
-          <div class="modal-body">
-            <!-- Host -->
-            <div class="form-group">
-              <label>Host</label>
-              <input type="text" name="ssh_host" class="form-control" ng-model="$ctrl.ssh_params.ssh_host" required>
-              <p ng-show="authkeyModalForm.ssh_host.$invalid && !authkeyModalForm.ssh_host.$pristine" class="help-block">SSH host is required.</p>
-            </div>
-            <!-- User -->
-            <div class="form-group">
-              <label>User</label>
-              <input type="text" name="ssh_user" class="form-control" ng-model="$ctrl.ssh_params.ssh_user" required>
-              <p ng-show="aauthkeyModalForm.ssh_user.$invalid && !authkeyModalForm.ssh_user.$pristine" class="help-block">SSH user is required.</p>
-            </div>
-            <!-- Password -->
-            <div class="form-group">
-              <label>Password</label>
-              <input type="text" name="ssh_password" class="form-control" ng-model="$ctrl.ssh_params.ssh_password" required>
-              <p ng-show="authkeyModalForm.ssh_password.$invalid && !authkeyModalForm.ssh_password.$pristine" class="help-block">SSH password is required.</p>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" ng-disabled="authkeyModalForm.$invalid">Submit</button>
-            <button class="btn btn-default" ng-click="$ctrl.cancelForm()">Cancel</button>
-          </div>
-        </form>
     .form-group{"ng-class" => "{'has-error': angularForm.subscriptions.$invalid}"}
       %label.col-md-2.control-label
         = _('Type')
