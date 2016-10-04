@@ -773,31 +773,6 @@ describe ApplicationHelper do
       end
     end
 
-    context "when with ScanItemSet" do
-      before do
-        @record = ScanItemSet.new
-        stub_user(:features => :all)
-      end
-
-      ["scan_delete", "scan_edit"].each do |id|
-        context "and id = #{id}" do
-          before do
-            @id = id
-            allow(@record).to receive_messages(:read_only => false)
-          end
-
-          it "and record read only" do
-            allow(@record).to receive_messages(:read_only => true)
-            expect(subject).to be_truthy
-          end
-
-          it "and record not read only" do
-            expect(subject).to be_falsey
-          end
-        end
-      end
-    end
-
     context "when with ServerRole" do
       before do
         @record = ServerRole.new
