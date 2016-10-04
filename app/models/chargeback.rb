@@ -38,21 +38,10 @@ class Chargeback < ActsAsArModel
       _log.info("Found #{recs.length} records for time range #{[query_start_time, query_end_time].inspect}")
 
       unless recs.empty?
-        ts_key = get_group_key_ts(recs.first, interval, tz)
-
         recs.each do |perf|
           next if perf.resource.nil?
-          key, extra_fields = get_keys_and_extra_fields(perf, ts_key)
-
-          if data[key].nil?
-            start_ts, end_ts, display_range = get_time_range(perf, interval, tz)
-            data[key] = {
-              "start_date"    => start_ts,
-              "end_date"      => end_ts,
-              "display_range" => display_range,
-              "interval_name" => interval,
-            }.merge(extra_fields)
-          end
+          key, extra_fields = key_and_fields(perf, interval, tz)
+          data[key] ||= extra_fields
 
           rates_to_apply = cb.get_rates(perf)
           calculate_costs(perf, data[key], rates_to_apply)
@@ -62,6 +51,25 @@ class Chargeback < ActsAsArModel
     _log.info("Calculating chargeback costs...Complete")
 
     [data.map { |r| new(r.last) }]
+  end
+
+  def self.key_and_fields(metric_rollup_record, interval, tz)
+    ts_key = get_group_key_ts(metric_rollup_record, interval, tz)
+
+    key, extra_fields = get_keys_and_extra_fields(metric_rollup_record, ts_key)
+
+    [key, date_fields(metric_rollup_record, interval, tz).merge(extra_fields)]
+  end
+
+  def self.date_fields(metric_rollup_record, interval, tz)
+    start_ts, end_ts, display_range = get_time_range(metric_rollup_record, interval, tz)
+
+    {
+      'start_date'    => start_ts,
+      'end_date'      => end_ts,
+      'display_range' => display_range,
+      'interval_name' => interval
+    }
   end
 
   def get_rates(perf)
