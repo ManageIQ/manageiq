@@ -190,11 +190,9 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
     end
 
     context 'when create pod throws exception' do
-      CODE = 0
-      CLIENT_MESSAGE = 'error'.freeze
       before(:each) do
         allow_any_instance_of(MockKubeClient).to receive(:create_pod) do |_instance, *_args|
-          raise KubeException.new(CODE, CLIENT_MESSAGE, nil)
+          raise KubeException.new(0, 'error', nil)
         end
       end
 
@@ -207,11 +205,9 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
     end
 
     context 'when getting the service account throws exception' do
-      CODE = 0
-      CLIENT_MESSAGE = 'error'.freeze
       before(:each) do
         allow_any_instance_of(MockKubeClient).to receive(:get_service_account) do |_instance, *_args|
-          raise KubeException.new(CODE, CLIENT_MESSAGE, nil)
+          raise KubeException.new(0, 'error', nil)
         end
       end
 
