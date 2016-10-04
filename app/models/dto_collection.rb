@@ -1,29 +1,23 @@
 class DtoCollection
-  attr_accessor :saved, :data, :data_index,
-                :dependencies, :manager_ref, :attributes, :association, :parent
+  attr_accessor :saved, :data, :data_index, :dependencies,
+                :manager_ref, :attributes, :association, :parent
 
-  attr_reader :model_class, :dynamic_dependencies
+  attr_reader :model_class
 
-  def initialize(model_class, dependencies: nil, manager_ref: nil, attributes: nil, association: nil,
-                 parent: nil)
-    @model_class          = model_class
-    @dependencies         = dependencies || []
-    @dynamic_dependencies = dependencies.nil?
-    @manager_ref          = manager_ref || [:ems_ref]
-    @attributes           = attributes || []
-    @association          = association || []
-    @parent               = parent || []
-    @data                 = []
-    @data_index           = {}
-    @saved                = false
+  def initialize(model_class, manager_ref: nil, attributes: nil, association: nil, parent: nil)
+    @model_class  = model_class
+    @manager_ref  = manager_ref || [:ems_ref]
+    @attributes   = attributes || []
+    @association  = association || []
+    @parent       = parent || []
+    @dependencies = []
+    @data         = []
+    @data_index   = {}
+    @saved        = false
   end
 
   def saved?
     saved
-  end
-
-  def dynamic_dependencies?
-    dynamic_dependencies
   end
 
   def saveable?
@@ -37,7 +31,7 @@ class DtoCollection
       data_index[dto.manager_uuid] = dto
       data << dto
 
-      actualize_dependencies(dto) if dynamic_dependencies?
+      actualize_dependencies(dto)
     end
   end
 

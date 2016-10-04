@@ -6,7 +6,6 @@ module ManagerRefresh
       def save_inventory(ems, hashes)
         _log.info("#{log_header(ems)} Saving EMS Inventory...Start")
 
-        # TODO(lsmola) Check if some of the collections do not have dynamic dependencies and process the static ones
         hashes.each do |_key, dto_collection|
           save_collection(dto_collection)
         end
