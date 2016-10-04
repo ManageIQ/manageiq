@@ -35,18 +35,34 @@ module Service::Aggregation
   end
 
   module ClassMethods
+    # Sends the following `aggregation_sql` for the given `hardware_column` to
+    # `aggregate_hardware_arel`:
+    #
+    #     SUM("hardwares"."<<<hardware_column>>>")
+    #
+    # @return (see #aggregate_hardware_arel)
     def aggregate_service_hardware_arel(aggregate_alias, hardware_column, options = {})
       virtual_column_name = "aggregate_all_vm_#{aggregate_alias}"
       aggregation_sql = hardwares_tbl[hardware_column].sum
       aggregate_hardware_arel(virtual_column_name, aggregation_sql, options)
     end
 
+    # Sends the following `aggregation_sql` to `aggregate_hardware_arel`:
+    #
+    #     COUNT("disks"."id")
+    #
+    # @return (see #aggregate_hardware_arel)
     def aggregate_all_vms_disk_count_arel
       virtual_column_name = "aggregate_all_vm_disk_count"
       aggregation_sql = disks_tbl[:id].count
       aggregate_hardware_arel(virtual_column_name, aggregation_sql, :include_disks => true)
     end
 
+    # Sends the following `aggregation_sql` to `aggregate_hardware_arel`:
+    #
+    #     SUM(COALESCE("disks"."size", 0))
+    #
+    # @return (see #aggregate_hardware_arel)
     def aggregate_all_vms_disk_space_allocated_arel
       column_name     = "aggregate_all_vm_disk_space_allocated"
       coalesce_values = [disks_tbl[:size], zero]
@@ -55,6 +71,11 @@ module Service::Aggregation
       aggregate_hardware_arel(column_name, aggregation_sql, :include_disks => true)
     end
 
+    # Sends the following `aggregation_sql` to `aggregate_hardware_arel`:
+    #
+    #     SUM(COALESCE("disks"."size_on_disk", "disks"."size", 0))
+    #
+    # @return (see #aggregate_hardware_arel)
     def aggregate_all_vms_disk_space_used_arel
       column_name     = "aggregate_all_vm_disk_space_used"
       coalesce_values = [disks_tbl[:size_on_disk], disks_tbl[:size], zero]
@@ -63,6 +84,34 @@ module Service::Aggregation
       aggregate_hardware_arel(column_name, aggregation_sql, :include_disks => true)
     end
 
+    # Generates a nested select statement that builds off of the `id` of the
+    # record being queried against (or multiple records, though this will not
+    # scale well for that). The generated SQL will look something like the
+    # following when used with a query limiting by a single ID, `my_service_id`
+    # in this case:
+    #
+    #     SELECT id,
+    #           (SELECT <<<aggregation_sql>>>
+    #            FROM services aggregate_all_vm_cpus_services
+    #            JOIN service_resources ON service_resources.service_id = aggregate_all_vm_cpus_services.id
+    #                                  AND service_resources.resource_type = 'VmOrTemplate'
+    #            JOIN vms               ON vms.id = service_resources.resource_id
+    #            JOIN hardwares         ON hardwares.vm_or_template_id = vms.id
+    #            WHERE (("aggregate_all_vm_cpus_services"."id" = services.id
+    #                    OR "aggregate_all_vm_cpus_services"."ancestry" ILIKE CONCAT(services.id, '/%'))
+    #                   OR "aggregate_all_vm_cpus_services"."ancestry" = CAST(services.id AS VARCHAR))) AS <<<virtual_column_name>>>
+    #     FROM services
+    #     WHERE id = <<<some_service_id>>>;
+    #
+    # @param virtual_column_name [String] Name of the virtual_column method
+    # @param aggregation_sql [String] Arel that handles the returned SELECT
+    #
+    # @param options  [Hash] Refines the joins in the query (default: {})
+    # @option options [Boolean] :include_disks Include the disks table
+    # @option options [Boolean] :on_vms_only   Only join on powered "on" VMs
+    #
+    # @return [Proc] A proc with the sql to generate a nested SELECT for
+    #   the aggregate column, which returns an Arel statement when called
     def aggregate_hardware_arel(virtual_column_name, aggregation_sql, options = {})
       lambda do |t|
         subtree_services             = Arel::Table.new(:services)
@@ -76,6 +125,27 @@ module Service::Aggregation
       end
     end
 
+    # Generates the following WHERE clause in arel
+    #
+    #     WHERE (("aggregate_services"."id" = services.id
+    #            OR "aggregate_services"."ancestry" ILIKE CONCAT(services.id, '/%'))
+    #           OR "aggregate_services"."ancestry" = CAST(services.id AS VARCHAR))
+    #
+    # Where "aggregate_services" is the services associated with the id passed
+    # by the main query that calls `aggregate_hardware_arel`.  This generated
+    # WHERE clause finds all of the descendant services for the service in the
+    # "main query" (`services.id` in the above SQL output) by finding:
+    #
+    # * The services that with an `id` of `services.id`
+    # * The services with an `ancestry` under `services.id` (ancestory)
+    # * The services with an `ancestry` equaling `services.id` (direct child)
+    #
+    # @param arel [Arel::Table] The table for the outer query, or basically
+    #   Service.arel_table
+    # @param subtree_services [Arel::Table] The aliased table for services
+    #   inside the nested SELECT, usually named off of the virtual_column
+    # @return [Arel::Nodes::Grouping] A conditional statement  wrapped in
+    #   parthenses
     def aggregation_where_clause(arel, subtree_services)
       arel.grouping(
         subtree_services[:id].eq(arel[:id])
@@ -83,6 +153,18 @@ module Service::Aggregation
       ).or(subtree_services[:ancestry].eq(service_id_cast))
     end
 
+    # Generates the following JOIN statement in arel
+    #
+    #    JOIN service_resources ON service_resources.service_id = aggregate_all_vm_cpus_services.id
+    #                          AND service_resources.resource_type = 'VmOrTemplate'
+    #    JOIN vms               ON vms.id = service_resources.resource_id
+    #    JOIN hardwares         ON hardwares.vm_or_template_id = vms.id
+    #
+    # @param arel [Arel::Table] The aliased table for services inside the
+    #   nested SELECT, usually named off of the virtual_column
+    # @option (see #vm_join_clause)
+    # @return [Arel::SelectManager] Arel with joins statements for
+    #   service_resources, vms, and hardwares
     def base_service_aggregation_join(arel, services_tbl, options = {})
       arel.join(service_resources_tbl).on(service_resources_tbl[:service_id].eq(services_tbl[:id])
                                   .and(service_resources_tbl[:resource_type].eq(vm_or_template_type)))
@@ -90,6 +172,18 @@ module Service::Aggregation
           .join(hardwares_tbl).on(hardwares_tbl[:vm_or_template_id].eq(vms_tbl[:id]))
     end
 
+    # Generates the following SQL conditional to be used in
+    # `base_service_aggrigation_join`:
+    #
+    #     "vms"."id" = "service_resources"."resource_id"
+    #
+    # But will append an "AND" if `on_vms_only` is passed in as a option:
+    #
+    #     "vms"."id" = "service_resources"."resource_id" AND LOWER("vms"."power_state") == "on"
+    #
+    #
+    # @option options [Boolean] :on_vms_only Filter "on" VMs only in the JOIN
+    # @return [Arel::Nodes::And] The Arel conditional for JOINing the VMs table
     def vm_join_clause(options = {})
       clause = vms_tbl[:id].eq(service_resources_tbl[:resource_id])
       if options[:on_vms_only] # meaning VMs that are powered "on"
@@ -98,6 +192,12 @@ module Service::Aggregation
       clause
     end
 
+    # Generates the following JOIN statement in arel
+    #
+    #    JOIN disks ON disks.hardware_id = hardwares.id
+    #
+    # @param (see #base_service_aggrigation_join)
+    # @return (see #base_service_aggrigation_join)
     def join_on_disks(arel)
       arel.join(disks_tbl).on(disks_tbl[:hardware_id].eq(hardwares_tbl[:id]))
     end
