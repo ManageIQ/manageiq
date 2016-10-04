@@ -7,25 +7,30 @@ module ManagerRefresh
         _log.info("#{log_header(ems)} Saving EMS Inventory...Start")
 
         hashes.each do |_key, dto_collection|
-          save_collection(dto_collection)
+          save_collection(dto_collection, [])
         end
 
         _log.info("#{log_header(ems)} Saving EMS Inventory...Complete")
         ems
       end
 
-      def save_collection(dto_collection)
+      def save_collection(dto_collection, traversed_collections)
         unless dto_collection.is_a? ::DtoCollection
           raise "A ManagerRefresh::SaveInventory needs a DtoCollection object, it got: #{dto_collection.inspect}"
         end
 
         return if dto_collection.saved?
 
+        traversed_collections << dto_collection
+
         if dto_collection.saveable?
           save_dto_inventory(dto_collection)
         else
           dto_collection.dependencies.each do |dependency|
-            save_collection(dependency)
+            if traversed_collections.include? dependency
+              raise "Edge from #{dto_collection} to #{dependency} creates a cycle"
+            end
+            save_collection(dependency, traversed_collections)
           end
 
           save_dto_inventory(dto_collection)
