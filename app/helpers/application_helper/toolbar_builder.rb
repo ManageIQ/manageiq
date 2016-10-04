@@ -691,11 +691,6 @@ class ApplicationHelper::ToolbarBuilder
       when "log_download", "refresh_logs", "log_collect", "log_reload", "logdepot_edit", "processmanager_restart", "refresh_workers"
         return true
       end
-    when "MiqTemplate"
-      case id
-      when "miq_template_reload"
-        return true unless @perf_options[:typ] == "realtime"
-      end
     when "ServerRole"
       case id
       when "server_delete", "role_start", "role_suspend", "promote_server", "demote_server"
