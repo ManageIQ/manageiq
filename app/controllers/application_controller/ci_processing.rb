@@ -11,17 +11,17 @@ module ApplicationController::CiProcessing
   end
 
   # Set Ownership selected db records
-  def set_ownership(klass = "VmOrTemplate")
+  def set_ownership
     assert_privileges(params[:pressed])
 
     # check to see if coming from show_list or drilled into vms from another CI
-    if request.parameters[:controller] == "vm" || ["all_vms", "vms", "instances", "images"].include?(params[:display])
-      rec_cls = "vm"
-    elsif ["miq_templates", "images"].include?(params[:display]) || params[:pressed].starts_with?("miq_template_")
-      rec_cls = "miq_template"
-    else
-      rec_cls = request.parameters[:controller]
-    end
+    controller = if request.parameters[:controller] == "vm" || ["all_vms", "vms", "instances", "images"].include?(params[:display])
+                   "vm"
+                 elsif ["miq_templates", "images"].include?(params[:display]) || params[:pressed].starts_with?("miq_template_")
+                   "miq_template"
+                 else
+                   request.parameters[:controller]
+                 end
     recs = []
     if !session[:checked_items].nil? && @lastaction == "set_checked_items"
       recs = session[:checked_items]
@@ -46,7 +46,7 @@ module ApplicationController::CiProcessing
       ownership
     else
       if role_allows?(:feature => "vm_ownership")
-        javascript_redirect :controller => rec_cls.to_s, :action => 'ownership', :recs => @ownership_items # redirect to build the ownership screen
+        javascript_redirect :controller => controller, :action => 'ownership', :recs => @ownership_items # redirect to build the ownership screen
       else
         head :ok
       end
