@@ -9,7 +9,7 @@ class ApplicationHelper::Toolbar::CloudNetworkCenter < ApplicationHelper::Toolba
         button(
           :cloud_network_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this Floating IP'),
+          N_('Edit Tags for this Cloud Network'),
           N_('Edit Tags')),
       ]
     ),

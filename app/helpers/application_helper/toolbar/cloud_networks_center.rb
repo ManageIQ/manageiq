@@ -11,7 +11,7 @@ class ApplicationHelper::Toolbar::CloudNetworksCenter < ApplicationHelper::Toolb
         button(
           :cloud_network_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for the selected Floating IPs'),
+          N_('Edit Tags for the selected Cloud Networks'),
           N_('Edit Tags'),
           :url_parms => "main_div",
           :enabled   => false,

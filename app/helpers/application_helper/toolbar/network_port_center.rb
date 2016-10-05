@@ -9,7 +9,7 @@ class ApplicationHelper::Toolbar::NetworkPortCenter < ApplicationHelper::Toolbar
         button(
           :network_port_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this Floating IP'),
+          N_('Edit Tags for this Network Port'),
           N_('Edit Tags')),
       ]
     ),
