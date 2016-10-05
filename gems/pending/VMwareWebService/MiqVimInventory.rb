@@ -1833,7 +1833,7 @@ class MiqVimInventory < MiqVimClientBase
     ensure
       @cacheLock.sync_unlock if unlock
     end
-    $vim_log.info "MiqVimInventory.dataStores_locked: loaded Datastore cache for #{@connId}"
+    $vim_log.info "MiqVimInventory.storagePods_locked: loaded Datastore cache for #{@connId}"
 
     @storagePods
   end # def storagePods_locked
