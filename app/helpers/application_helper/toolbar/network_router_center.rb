@@ -9,7 +9,7 @@ class ApplicationHelper::Toolbar::NetworkRouterCenter < ApplicationHelper::Toolb
         button(
           :network_router_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this Floating IP'),
+          N_('Edit Tags for this Network Router'),
           N_('Edit Tags')),
       ]
     ),
