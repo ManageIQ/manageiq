@@ -144,7 +144,6 @@ module ApplicationController::Performance
                                        :action => "perf_top_chart",
                                        :bc     => params[:bc],
                                        :escape => false))
-      #     @spin_msg = "Generating chart data..."
       @ajax_action = "perf_top_chart"
       render :action => "show"
     end
