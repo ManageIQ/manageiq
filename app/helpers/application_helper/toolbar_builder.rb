@@ -706,13 +706,6 @@ class ApplicationHelper::ToolbarBuilder
       when "miq_template_refresh", "miq_template_reload"
         return true unless @perf_options[:typ] == "realtime"
       end
-    when "ScanItemSet"
-      case id
-      when "scan_delete"
-        return true if @record.read_only
-      when "scan_edit"
-        return true if @record.read_only
-      end
     when "ServerRole"
       case id
       when "server_delete", "role_start", "role_suspend", "promote_server", "demote_server"
