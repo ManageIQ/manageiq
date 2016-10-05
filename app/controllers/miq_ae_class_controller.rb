@@ -291,21 +291,18 @@ class MiqAeClassController < ApplicationController
     if @sb[:action] == "miq_ae_field_seq"
       if @flash_array
         replace_partial_div = :flash_msg_div
-        replace_partial_div_num = "_fields_seq"
       end
       update_partial_div = :class_fields_div
       update_partial = "fields_seq_form"
     elsif @sb[:action] == "miq_ae_domain_priority_edit"
       if @flash_array
         replace_partial_div = :flash_msg_div
-        replace_partial_div_num = "_domains_priority"
       end
       update_partial_div = :ns_list_div
       update_partial = "domains_priority_form"
     elsif MIQ_AE_COPY_ACTIONS.include?(@sb[:action])
       if @flash_array
         replace_partial_div = :flash_msg_div
-        replace_partial_div_num = "_copy"
       end
       update_partial_div = :main_div
       update_partial = "copy_objects_form"
