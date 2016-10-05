@@ -31,14 +31,14 @@ class TreeBuilderInstances < TreeBuilder
   def x_get_tree_ems_kids(object, count_only)
     count_only_or_objects_filtered(count_only, object.availability_zones, "name") +
       count_only_or_objects_filtered(count_only,
-                                     Settings.ui.tree.display_vms ? object.vms.where(:availability_zone_id => nil) : [],
+                                     User.current_user.settings.fetch_path(:display, :display_vms) ? object.vms.where(:availability_zone_id => nil) : [],
                                      "name")
   end
 
   # Get AvailabilityZone children count/array
   def x_get_tree_az_kids(object, count_only)
     count_only_or_objects_filtered(count_only,
-                                   Settings.ui.tree.display_vms ? object.vms.not_archived_nor_orphaned : [],
+                                   User.current_user.settings.fetch_path(:display, :display_vms) ? object.vms.not_archived_nor_orphaned : [],
                                    "name")
   end
 end

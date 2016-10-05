@@ -63,6 +63,7 @@ class TreeBuilderVmsAndTemplates < FullTreeBuilder
       allowed_folder_ids = Relationship.where(:id => vm_relations).pluck(:resource_id)
       prune_folders_via_folders(tree, allowed_folder_ids)
     end
+  end
 
   def prune_folders_via_vms(tree, allowed_vm_ids)
     tree.reject! do |object, children|

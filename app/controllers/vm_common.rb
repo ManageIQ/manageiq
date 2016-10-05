@@ -136,6 +136,10 @@ module VmCommon
   end
   private :websocket_use_ssl?
 
+  def hide_vms
+    !User.current_user.settings.fetch_path(:display, :display_vms) # default value is false
+  end
+
   def launch_html5_console
     proto = request.ssl? ? 'wss' : 'ws'
     override_content_security_policy_directives(
@@ -1051,6 +1055,18 @@ module VmCommon
     end
   end
 
+  def parent_folder_id(vm)
+    if vm.orphaned
+      "xx-orph"
+    elsif vm.archived
+      "xx-arch"
+    elsif vm.cloud
+      TreeBuilder.build_node_cid(vm.availability_zone)
+    else
+      TreeBuilder.build_node_cid(vm.parent_blue_folder)
+    end
+  end
+
   # Tree node selected in explorer
   def tree_select
     @explorer = true
@@ -1078,7 +1094,11 @@ module VmCommon
     end
 
     unless @unauthorized
-      self.x_node = params[:id]
+      self.x_node = if @vm.present? && hide_vms
+                      parent_folder_id(@vm)
+                    else
+                      params[:id]
+                    end
       replace_right_cell
     else
       add_flash(_("User is not authorized to view %{model} \"%{name}\"") %
@@ -1186,11 +1206,28 @@ module VmCommon
     add_nodes
   end
 
+  # TODO say a bit about it
+  def resolve_node_info(id)
+    nodetype, id = id.split("-")
+
+    if hide_vms && nodetype == 'v'
+      self.x_node = parent_folder_id(VmOrTemplate.find(id))
+      @vm = VmOrTemplate.find(id)
+    else
+      self.x_node = "#{nodetype}-#{to_cid(id)}"
+    end
+    get_node_info("#{nodetype}-#{to_cid(id)}")
+  end
+
   # Get all info for the node about to be displayed
   def get_node_info(treenodeid)
     # resetting action that was stored during edit to determine what is being edited
     @sb[:action] = nil
-    @nodetype, id = parse_nodetype_and_id(valid_active_node(treenodeid))
+    @nodetype, id = if @vm.present? && hide_vms
+                      parse_nodetype_and_id(treenodeid)
+                    else
+                      parse_nodetype_and_id(valid_active_node(treenodeid))
+                    end
     model, title =  case x_active_tree.to_s
                     when "images_filter_tree"
                       ["ManageIQ::Providers::CloudManager::Template", _("Images")]
@@ -1319,10 +1356,10 @@ module VmCommon
     end
 
     if !@in_a_form && !@sb[:action]
-      get_node_info(x_node)
+      @vm.present? && hide_vms ? get_node_info(TreeBuilder.build_node_cid(@vm)) : get_node_info(x_node)
       # set @delete_node since we don't rebuild vm tree
       @delete_node = params[:id] if @replace_trees  # get_node_info might set this
-      type, _id = parse_nodetype_and_id(x_node)
+      type, _id = parse_nodetype_and_id(@vm.present? && hide_vms ? TreeBuilder.build_node_cid(@vm) : x_node)
 
       record_showing = type && ["Vm", "MiqTemplate"].include?(TreeBuilder.get_model_for_prefix(type))
       c_tb = build_toolbar(center_toolbar_filename) # Use vm or template tb
