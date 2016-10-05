@@ -11,18 +11,18 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
 
   context '#remote_console_acquire_ticket' do
     it 'with :mks' do
-      expect(vm).to receive(:remote_console_mks_acquire_ticket).with(user.userid)
-      vm.remote_console_acquire_ticket(user.userid, :mks)
+      expect(vm).to receive(:remote_console_mks_acquire_ticket).with(user.userid, 1)
+      vm.remote_console_acquire_ticket(user.userid, 1, :mks)
     end
 
     it 'with :vmrc' do
-      expect(vm).to receive(:remote_console_vmrc_acquire_ticket).with(user.userid)
-      vm.remote_console_acquire_ticket(user.userid, :vmrc)
+      expect(vm).to receive(:remote_console_vmrc_acquire_ticket).with(user.userid, 1)
+      vm.remote_console_acquire_ticket(user.userid, 1, :vmrc)
     end
 
     it 'with :vnc' do
-      expect(vm).to receive(:remote_console_vnc_acquire_ticket).with(user.userid)
-      vm.remote_console_acquire_ticket(user.userid, :vnc)
+      expect(vm).to receive(:remote_console_vnc_acquire_ticket).with(user.userid, 1)
+      vm.remote_console_acquire_ticket(user.userid, 1, :vnc)
     end
   end
 
@@ -32,6 +32,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
     before(:each) do
       allow(vm).to receive_messages(:my_zone => nil)
       allow(server).to receive_messages(:my_zone => nil)
+      allow(server).to receive_messages(:id => 1)
       allow(MiqServer).to receive_messages(:my_server => server)
     end
 
@@ -41,7 +42,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
       q_all = MiqQueue.all
       expect(q_all.length).to eq(1)
       expect(q_all[0].method_name).to eq('remote_console_acquire_ticket')
-      expect(q_all[0].args).to eq([user.userid, :mks])
+      expect(q_all[0].args).to eq([user.userid, 1, :mks])
     end
 
     it 'with :vmrc' do
@@ -50,7 +51,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
       q_all = MiqQueue.all
       expect(q_all.length).to eq(1)
       expect(q_all[0].method_name).to eq('remote_console_acquire_ticket')
-      expect(q_all[0].args).to eq([user.userid, :vmrc])
+      expect(q_all[0].args).to eq([user.userid, 1, :vmrc])
     end
 
     it 'with :vnc' do
@@ -59,7 +60,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
       q_all = MiqQueue.all
       expect(q_all.length).to eq(1)
       expect(q_all[0].method_name).to eq('remote_console_acquire_ticket')
-      expect(q_all[0].args).to eq([user.userid, :vnc])
+      expect(q_all[0].args).to eq([user.userid, 1, :vnc])
     end
   end
 
@@ -124,6 +125,13 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
     end
     let(:vm) { FactoryGirl.create(:vm_with_ref, :ext_management_system => ems, :host => host) }
 
+    let(:server) { double('MiqServer') }
+
+    before(:each) do
+      allow(server).to receive_messages(:id => 1)
+      allow(MiqServer).to receive_messages(:my_server => server)
+    end
+
     it 'will set the attributes on the VC side' do
       vim_vm = double('MiqVimVm')
       expect(vim_vm).to receive(:setRemoteDisplayVncAttributes) do |args|
@@ -133,13 +141,13 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
       end
       allow(vm).to receive(:with_provider_object).and_yield(vim_vm)
 
-      vm.remote_console_vnc_acquire_ticket(user.userid)
+      vm.remote_console_vnc_acquire_ticket(user.userid, 1)
     end
 
     it 'will set the attributes on the requester side' do
       expect(vm).to receive(:with_provider_object)
 
-      config = vm.remote_console_vnc_acquire_ticket(user.userid)
+      config = vm.remote_console_vnc_acquire_ticket(user.userid, 1)
 
       expect(config[:secret]).to match(%r{^[A-Za-z0-9+/]{8}$})
       expect(config[:url]).to match(%r{^ws/console/[0-9a-f]{32}/?$})
@@ -149,7 +157,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
     it 'will save the ticket to the database' do
       expect(vm).to receive(:with_provider_object)
 
-      config = vm.remote_console_vnc_acquire_ticket(user.userid)
+      config = vm.remote_console_vnc_acquire_ticket(user.userid, 1)
       match = config[:url].match(%r{^ws/console/([0-9a-f]{32})/?$})
       expect(match).not_to be_nil
 
@@ -163,7 +171,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
       allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:with_provider_object)
       vm_old = FactoryGirl.create(:vm_with_ref, :host => host, :vnc_port => 5901)
 
-      vm.remote_console_vnc_acquire_ticket(user.userid)
+      vm.remote_console_vnc_acquire_ticket(user.userid, 1)
 
       vm_old.reload
       expect(vm_old.vnc_port).to be_nil
