@@ -128,22 +128,16 @@ module MiqAeMethodService
     private_class_method :expose
 
     def self.wrap_results(results)
-      ret = nil
       ar_method do
-        if results.nil?
-          ret = nil
-        elsif results.kind_of?(Array)
-          ret = results.collect { |r| wrap_results(r) }
-        elsif results.kind_of?(ActiveRecord::Relation)
-          ret = results.collect { |r| wrap_results(r) }
+        if results.kind_of?(Array) || results.kind_of?(ActiveRecord::Relation)
+          results.collect { |r| wrap_results(r) }
         elsif results.kind_of?(ActiveRecord::Base)
           klass = MiqAeMethodService.const_get("MiqAeService#{results.class.name.gsub(/::/, '_')}")
-          ret = klass.new(results)
+          klass.new(results)
         else
-          ret = results
+          results
         end
       end
-      ret
     end
 
     def wrap_results(results)
