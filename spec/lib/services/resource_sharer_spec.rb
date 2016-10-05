@@ -17,11 +17,22 @@ describe ResourceSharer do
     let(:tenants) { [FactoryGirl.create(:tenant)] }
     let(:features) { :all }
 
+    context "with valid arguments" do
+      before do
+        expect(user.owned_shares.count).to eq(0)
+        expect(subject).to be_valid
+        subject.share
+      end
+
+      it "creates a share from the user to the tenant" do
+        expect(user.owned_shares.count).to eq(1)
+      end
+    end
+
     context "product features" do
       context "with the :all option on initialization" do
         it "uses the user's current features" do
-          shares = subject.share
-          expect(shares.first.miq_product_features).to match_array(user.miq_user_role.miq_product_features)
+          expect(subject.features).to match_array(user.miq_user_role.miq_product_features)
         end
       end
 
