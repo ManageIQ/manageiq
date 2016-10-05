@@ -340,6 +340,18 @@ class MiqExpression
   def initialize(exp, ctype = nil)
     @exp = exp
     @context_type = ctype
+
+    load_virtual_custom_attributes
+  end
+
+  def load_virtual_custom_attributes
+    return unless @exp
+
+    custom_attributes_group_by_model = custom_attribute_columns_and_models.compact.group_by { |x| x[:model] }
+
+    custom_attributes_group_by_model.each do |model, custom_attribute|
+      model.load_custom_attributes_for(custom_attribute.map { |x| x[:column] })
+    end
   end
 
   def self.proto?
@@ -1540,6 +1552,35 @@ class MiqExpression
     end
   end
 
+  def custom_attribute_columns_and_models(expression = nil)
+    return custom_attribute_columns_and_models(exp).uniq if expression.nil?
+
+    case expression
+    when Array
+      expression.flat_map { |x| custom_attribute_columns_and_models(x) }
+    when Hash
+      expression_values = expression.values
+      return [] unless expression.keys.first
+
+      if expression.keys.first == "field"
+        begin
+          field = Field.parse(expression_values.first)
+        rescue StandardError => err
+          _log.error("Cannot parse field #{field}" + err.message)
+          _log.log_backtrace(err)
+        end
+
+        return [] unless field
+
+        field.custom_attribute_column? ? [:model => field.model, :column => field.column] : []
+      else
+        expression.keys.first.casecmp('find').try(:zero?) ? [] : custom_attribute_columns_and_models(expression_values)
+      end
+    else
+      []
+    end
+  end
+
   def custom_attribute_columns(expression = nil)
     return custom_attribute_columns(exp).uniq if expression.nil?
 
@@ -1553,7 +1594,7 @@ class MiqExpression
         field = Field.parse(expression_values.first)
         field.custom_attribute_column? ? [field.column] : []
       else
-        expression.keys.first.casecmp('find').zero? ? [] : custom_attribute_columns(expression_values)
+        expression.keys.first.casecmp('find').try(:zero?) ? [] : custom_attribute_columns(expression_values)
       end
     else
       []
