@@ -157,7 +157,8 @@ class CatalogController < ApplicationController
       set_form_vars
       @edit[:new][:st_prov_type] = params[:st_prov_type] if params[:st_prov_type]
       @edit[:new][:service_type] = "atomic"
-      default_entry_point(@edit[:new][:st_prov_type]) if params[:st_prov_type].start_with?('generic')
+      default_entry_point(@edit[:new][:st_prov_type],
+                          @edit[:new][:service_type])
       @edit[:rec_id] = @record ? @record.id : nil
       @tabactive = @edit[:new][:current_tab_key]
     end
@@ -1425,12 +1426,12 @@ class CatalogController < ApplicationController
     end
   end
 
-  def default_entry_point(prov_type)
+  def default_entry_point(prov_type, service_type)
     edit_new = @edit[:new]
     klass = class_service_template(prov_type)
-    edit_new[:fqname] = klass.default_provisioning_entry_point
-    edit_new[:retire_fqname] = klass.default_retirement_entry_point if klass.respond_to?(:default_retirement_entry_point)
-    edit_new[:reconfigure_fqname] = klass.default_reconfiguration_entry_point if klass.respond_to?(:default_reconfiguration_entry_point)
+    edit_new[:fqname] = klass.default_provisioning_entry_point(service_type)
+    edit_new[:retire_fqname] = klass.default_retirement_entry_point
+    edit_new[:reconfigure_fqname] = klass.default_reconfiguration_entry_point
   end
 
   def get_form_vars
