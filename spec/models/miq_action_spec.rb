@@ -40,6 +40,14 @@ describe MiqAction do
       expect(MiqQueue).to receive(:put).with(q_options).once
       @action.action_custom_automation(@action, @vm, :synchronous => false)
     end
+
+    it "passes source event to automate if set" do
+      ems_event = FactoryGirl.create(:ems_event, :event_type => "CloneVM_Task")
+      args = {:attrs => {:request => "test_custom_automation", "EventStream::event_stream" => ems_event.id}}
+      expect(MiqAeEngine).to receive(:deliver).with(hash_including(args)).once
+
+      @action.action_custom_automation(@action, @vm, :synchronous => true, :source_event => ems_event)
+    end
   end
 
   context "#action_evm_event" do
