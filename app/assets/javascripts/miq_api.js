@@ -5,6 +5,7 @@
  * API.post(url, data, options) - returns Promise
  * API.put - (the same)
  * API.patch - (the same)
+ * API.options - (the same)
  * API.login(login, password) - performs initial authentication, saves token on success, returns Promise
  * API.logout() - clears login info, no return
  * API.autorenew() - registers a 60second interval to query /api, returns a function to clear the interval
@@ -22,6 +23,13 @@
   API.get = function(url, options) {
     return fetch(url, _.extend({
       method: 'GET',
+    }, process_options(options)))
+    .then(process_response);
+  };
+
+  API.options = function(url, options) {
+    return fetch(url, _.extend({
+      method: 'OPTIONS',
     }, process_options(options)))
     .then(process_response);
   };
@@ -169,6 +177,7 @@ angular.module('miq.api', [])
     delete: angularify(API.delete),
     put: angularify(API.put),
     patch: angularify(API.patch),
+    options: angularify(API.options),
     login: angularify(API.login),
     logout: API.logout,
     autorenew: API.autorenew,
