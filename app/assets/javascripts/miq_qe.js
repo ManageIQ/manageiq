@@ -3,7 +3,7 @@ ManageIQ.qe.get_debounce_index = function () {
     ManageIQ.qe.debounce_counter = 0;
   }
   return ManageIQ.qe.debounce_counter++;
-}
+};
 
 if (typeof _ !== 'undefined' && typeof _.debounce !== 'undefined') {
   var orig_debounce = _.debounce;
@@ -14,21 +14,21 @@ if (typeof _ !== 'undefined' && typeof _.debounce !== 'undefined') {
     // We make sure that once this fn is actually run, it decreases the counter
     var new_func = function() {
       try {
-        return func.apply({}, arguments);
+        return func.apply(this, arguments);
       } finally {
         // this is run before the return above, always
         delete ManageIQ.qe.debounced[debounce_index];
       }
-    }
+    };
     // Override the newly-created fn (prepended wait + original fn)
     // We have to increase the counter before the waiting is initiated
     var debounced_func = orig_debounce.call(this, new_func, wait, options);
     var new_debounced_func = function() {
       ManageIQ.qe.debounced[debounce_index] = 1;
       return debounced_func.apply(this, arguments);
-    }
+    };
     return new_debounced_func;
-  }
+  };
 }
 
 ManageIQ.qe.xpath = function(root, xpath) {
