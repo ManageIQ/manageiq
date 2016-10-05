@@ -144,7 +144,6 @@ module ApplicationController::Performance
                                        :action => "perf_top_chart",
                                        :bc     => params[:bc],
                                        :escape => false))
-      #     @spin_msg = "Generating chart data..."
       @ajax_action = "perf_top_chart"
       render :action => "show"
     end
@@ -735,12 +734,6 @@ module ApplicationController::Performance
                            from_dt,
                            to_dt,
                            "realtime"]
-
-      #### To do - Uncomment to ask for long term averages
-      #       rpt.db_options ||= Hash.new
-      #       rpt.db_options[:long_term_averages] = Hash.new  # Request that averages get computed
-      ####
-
     end
     rpts = [rpt]
     if perf_parent?                               # Build the parent report, if asked for
@@ -759,18 +752,6 @@ module ApplicationController::Performance
                              to_dt]
       rpts.push(c_rpt)
     end
-
-    ### TODO: Uncomment following block for performance.  Need to fix, was causing second parent chart to have no cols.
-    # If only looking at 1 chart, trim report columns for less daily rollups
-    #     if @perf_options[:index] && @perf_options[:typ] = "Daily"
-    #       chart_layouts = perf_get_chart_layout("daily_perf_charts")
-    #       chart = chart_layouts[@perf_options[:model].to_sym][@perf_options[:index].to_i]
-    #       perf_trim_report_cols(rpt, chart)
-    #       if perf_parent?                               # Trim the parent report, if asked for
-    #         chart = chart_layouts[("Parent-" + @perf_options[:parent]).to_sym][@perf_options[:index].to_i]
-    #         perf_trim_report_cols(p_rpt, chart)
-    #       end
-    #     end
 
     initiate_wait_for_task(:task_id => MiqReport.async_generate_tables(:reports => rpts, :userid => session[:userid]))
   end
@@ -1132,8 +1113,7 @@ module ApplicationController::Performance
       chart_layouts[@sb[:util][:options][:model].to_sym].each_with_index do |chart, _idx|
         tag_class = @sb[:util][:options][:tag].split("/").first if @sb[:util][:options][:tag]
         if chart[:type] == "None" || # No chart is available for this slot
-           (@sb[:util][:options][:tag] && chart[:allowed_child_tag] && !chart[:allowed_child_tag].include?(tag_class)) # Tag not allowed - Replace following line in sprint 69
-          #           (@sb[:util][:options][:tag] && chart[:allowed_child_tag] && !@sb[:util][:options][:tag].starts_with?(chart[:allowed_child_tag]))  # Tag not allowed
+           (@sb[:util][:options][:tag] && chart[:allowed_child_tag] && !chart[:allowed_child_tag].include?(tag_class)) # Tag not allowed
           chart_data.push(nil)              # Push a placeholder onto the chart data array
         else
           perf_remove_chart_cols(chart)
