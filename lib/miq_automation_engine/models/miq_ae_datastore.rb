@@ -171,6 +171,7 @@ module MiqAeDatastore
 
     restore_attrs_for_domains(saved_attrs)
     reset_default_namespace
+    MiqAeDomain.reset_priorities
   end
 
   def self.default_domain_names
@@ -191,6 +192,8 @@ module MiqAeDatastore
         _log.info "Seeding... Complete"
       end
     end
+    _log.info "Reseting domain priorities at startup..."
+    MiqAeDomain.reset_priorities
   end
 
   def self.get_homonymic_across_domains(user, arclass, fqname, enabled = nil)
