@@ -242,12 +242,20 @@ class ServiceTemplate < ApplicationRecord
     service.save
   end
 
-  def self.default_provisioning_entry_point
-    '/Service/Provisioning/StateMachines/ServiceProvision_Template/default'
+  def self.default_provisioning_entry_point(service_type)
+    if service_type == 'atomic'
+      '/Service/Provisioning/StateMachines/ServiceProvision_Template/CatalogItemInitialization'
+    else
+      '/Service/Provisioning/StateMachines/ServiceProvision_Template/CatalogBundleInitialization'
+    end
   end
 
   def self.default_retirement_entry_point
-    '/Service/Retirement/StateMachines/ServiceRetirement/default'
+    '/Service/Retirement/StateMachines/ServiceRetirement/Default'
+  end
+
+  def self.default_reconfiguration_entry_point
+    nil
   end
 
   def template_valid?

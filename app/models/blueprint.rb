@@ -47,7 +47,7 @@ class Blueprint < ApplicationRecord
         :service_type => 'composite'
       )
       add_catalog_items(new_bundle, options[:service_templates]) if options.key?(:service_templates)
-      add_entry_points(new_bundle, options[:entry_points], options[:service_dialog])
+      add_entry_points(new_bundle, options[:entry_points], options[:service_dialog], new_bundle[:service_type])
       new_bundle.service_template_catalog = options[:service_catalog]
 
       new_bundle.save!
@@ -175,9 +175,9 @@ class Blueprint < ApplicationRecord
     remove_catalog_items(the_bundle, existing_items - catalog_items)
   end
 
-  def add_entry_points(new_bundle, entry_points, dialog)
+  def add_entry_points(new_bundle, entry_points, dialog, service_type)
     entry_points ||= {
-      'Provision'  => ServiceTemplate.default_provisioning_entry_point,
+      'Provision'  => ServiceTemplate.default_provisioning_entry_point(service_type),
       'Retirement' => ServiceTemplate.default_retirement_entry_point
     }
 
