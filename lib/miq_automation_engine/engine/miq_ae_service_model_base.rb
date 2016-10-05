@@ -121,12 +121,7 @@ module MiqAeMethodService
           method = options[:method] || method_name
           ret = object_send(method, *params)
           return options[:override_return] if options.key?(:override_return)
-          reflection = @object.class.reflection_with_virtual(method)
-          if reflection && reflection.collection?
-            wrap_results(ret.to_a)
-          else
-            wrap_results(ret)
-          end
+          wrap_results(ret)
         end
       end
     end
