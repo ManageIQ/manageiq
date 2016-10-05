@@ -734,12 +734,6 @@ module ApplicationController::Performance
                            from_dt,
                            to_dt,
                            "realtime"]
-
-      #### To do - Uncomment to ask for long term averages
-      #       rpt.db_options ||= Hash.new
-      #       rpt.db_options[:long_term_averages] = Hash.new  # Request that averages get computed
-      ####
-
     end
     rpts = [rpt]
     if perf_parent?                               # Build the parent report, if asked for
