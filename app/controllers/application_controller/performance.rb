@@ -760,18 +760,6 @@ module ApplicationController::Performance
       rpts.push(c_rpt)
     end
 
-    ### TODO: Uncomment following block for performance.  Need to fix, was causing second parent chart to have no cols.
-    # If only looking at 1 chart, trim report columns for less daily rollups
-    #     if @perf_options[:index] && @perf_options[:typ] = "Daily"
-    #       chart_layouts = perf_get_chart_layout("daily_perf_charts")
-    #       chart = chart_layouts[@perf_options[:model].to_sym][@perf_options[:index].to_i]
-    #       perf_trim_report_cols(rpt, chart)
-    #       if perf_parent?                               # Trim the parent report, if asked for
-    #         chart = chart_layouts[("Parent-" + @perf_options[:parent]).to_sym][@perf_options[:index].to_i]
-    #         perf_trim_report_cols(p_rpt, chart)
-    #       end
-    #     end
-
     initiate_wait_for_task(:task_id => MiqReport.async_generate_tables(:reports => rpts, :userid => session[:userid]))
   end
 
