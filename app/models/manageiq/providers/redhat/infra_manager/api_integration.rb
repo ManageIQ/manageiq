@@ -57,7 +57,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
   def supported_api_verions_from_sdk
     username = authentication_userid(:basic)
     password = authentication_password(:basic)
-    probe_args = { hostname: hostname, port: port, username: username, password: password }
+    probe_args = { :hostname => hostname, :port => port, :username =>  username, :password =>  password }
     probe_results = OvirtSDK4::Probe.probe(probe_args)
     probe_results.map(&:version) if probe_results
   end

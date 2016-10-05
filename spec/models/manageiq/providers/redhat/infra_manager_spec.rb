@@ -19,7 +19,7 @@ describe ManageIQ::Providers::Redhat::InfraManager do
 
     it "rhevm_metrics_connect_options fetches configuration and allows overrides" do
       expect(ems.rhevm_metrics_connect_options[:host]).to eq("some.thing.tld")
-      expect(ems.rhevm_metrics_connect_options({:hostname => "different.tld"})[:host])
+      expect(ems.rhevm_metrics_connect_options(:hostname => "different.tld")[:host])
         .to eq("different.tld")
     end
   end
@@ -99,9 +99,9 @@ describe ManageIQ::Providers::Redhat::InfraManager do
 
         it 'properly parses ProbeResults' do
           allow(OvirtSDK4::Probe).to receive(:probe)
-            .and_return([OvirtSDK4::ProbeResult.new(version: '3'),
-                         OvirtSDK4::ProbeResult.new(version: '4')])
-          expect(supported_api_versions).to match_array(['3', '4'])
+            .and_return([OvirtSDK4::ProbeResult.new(:version => '3'),
+                         OvirtSDK4::ProbeResult.new(:version => '4')])
+          expect(supported_api_versions).to match_array(%w(3 4))
         end
       end
 
@@ -155,7 +155,7 @@ describe ManageIQ::Providers::Redhat::InfraManager do
 
   context "supported features" do
     let(:ems) { FactoryGirl.create(:ems_redhat) }
-    let(:supported_api_versions) { [3, 4]  }
+    let(:supported_api_versions) { [3, 4] }
     context "#process_api_features_support" do
       before(:each) do
         allow(SupportsFeatureMixin).to receive(:guard_queryable_feature).and_return(true)
