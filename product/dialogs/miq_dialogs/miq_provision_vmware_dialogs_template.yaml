@@ -426,8 +426,8 @@
             :method: :allowed_hosts
           :auto_select_single: false
           :description: Name
-          :required_method: :validate_placement
-          :required: true
+          :validation_method: :validate_placement_host_name
+          :required: false
           :display: :edit
           :data_type: :integer
           :required_description: Host Name
