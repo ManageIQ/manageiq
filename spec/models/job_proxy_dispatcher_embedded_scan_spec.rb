@@ -2,11 +2,11 @@ describe "JobProxyDispatcherEmbeddedScanSpec" do
   describe "dispatch embedded" do
     include Spec::Support::JobProxyDispatcherHelper
 
-    NUM_VMS = 5
-    NUM_REPO_VMS = 0
-    NUM_HOSTS = 3
-    NUM_SERVERS = 3
-    NUM_STORAGES = 3
+    NUM_OF_VMS = 5
+    NUM_OF_REPO_VMS = 0
+    NUM_OF_HOSTS = 3
+    NUM_OF_SERVERS = 3
+    NUM_OF_STORAGES = 3
 
     def assert_at_most_x_scan_jobs_per_y_resource(x_scans, y_resource)
       vms_in_embedded_scanning = Job.where(["dispatch_status = ? AND state != ? AND agent_class = ? AND target_class = ?", "active", "finished", "MiqServer", "VmOrTemplate"]).select("target_id").collect(&:target_id).compact.uniq
@@ -40,7 +40,7 @@ describe "JobProxyDispatcherEmbeddedScanSpec" do
     context "With a zone, server, ems, hosts, vmware vms" do
       before(:each) do
         server = EvmSpecHelper.local_miq_server(:is_master => true, :name => "test_server_main_server")
-        (NUM_SERVERS - 1).times do |i|
+        (NUM_OF_SERVERS - 1).times do |i|
           FactoryGirl.create(:miq_server, :zone => server.zone, :name => "test_server_#{i}")
         end
 
@@ -52,10 +52,10 @@ describe "JobProxyDispatcherEmbeddedScanSpec" do
         allow_any_instance_of(Host).to receive_messages(:authentication_status_ok? => true)
 
         @hosts, @proxies, @storages, @vms, @repo_vms = build_entities(
-          :hosts    => NUM_HOSTS,
-          :storages => NUM_STORAGES,
-          :vms      => NUM_VMS,
-          :repo_vms => NUM_REPO_VMS
+          :hosts    => NUM_OF_HOSTS,
+          :storages => NUM_OF_STORAGES,
+          :vms      => NUM_OF_VMS,
+          :repo_vms => NUM_OF_REPO_VMS
         )
       end
 
