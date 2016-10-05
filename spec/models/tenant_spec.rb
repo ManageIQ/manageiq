@@ -455,6 +455,21 @@ describe Tenant do
         dom4.reload
         expect(dom4.priority).to eq(2)
       end
+
+      it "#reset_domain_priority_by_ordered_ids by subtenant" do
+        FactoryGirl.create(:miq_ae_system_domain, :name => 'ManageIQ', :priority => 0,
+                           :tenant_id => root_tenant.id)
+        FactoryGirl.create(:miq_ae_system_domain, :name => 'Redhat', :priority => 1,
+                           :tenant_id => root_tenant.id)
+        FactoryGirl.create(:miq_ae_domain, :name => 'T1_A', :tenant_id => t1.id)
+        FactoryGirl.create(:miq_ae_domain, :name => 'T1_B', :tenant_id => t1.id)
+        dom5 = FactoryGirl.create(:miq_ae_domain, :name => 'T1_1_A', :tenant_id => t1_1.id)
+        dom6 = FactoryGirl.create(:miq_ae_domain, :name => 'T1_1_B', :tenant_id => t1_1.id)
+        expect(t1_1.visible_domains.collect(&:name)).to eq(%w(T1_1_B T1_1_A T1_B T1_A Redhat ManageIQ))
+        ids = [dom6.id, dom5.id]
+        t1_1.reset_domain_priority_by_ordered_ids(ids)
+        expect(t1_1.visible_domains.collect(&:name)).to eq(%w(T1_1_A T1_1_B T1_B T1_A Redhat ManageIQ))
+      end
     end
 
     it '#sequenceable_domains' do
