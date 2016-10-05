@@ -44,6 +44,11 @@ class MiqAeDomain < MiqAeNamespace
     MiqAeDomain.where(:tenant => tenant).maximum('priority').to_i
   end
 
+  def self.reset_priorities
+    reset_priority_of_system_domains
+    reset_priority_of_non_system_domains
+  end
+
   def default_priority
     self.priority = MiqAeDomain.highest_priority(tenant) + 1 unless priority
   end
@@ -200,4 +205,21 @@ class MiqAeDomain < MiqAeNamespace
   end
 
   private_class_method :import_options
+
+  def self.reset_priority_of_system_domains
+    domains = MiqAeDomain.where('source = ? AND name <> ?',
+                                SYSTEM_SOURCE,  MiqAeDatastore::MANAGEIQ_DOMAIN).order('name DESC')
+    domains.each_with_index { |dom, index| dom.update_attributes(:priority => index + 1) }
+  end
+
+  private_class_method :reset_priority_of_system_domains
+
+  def self.reset_priority_of_non_system_domains
+    base = MiqAeDomain.where('source = ? AND name <> ?',
+                             SYSTEM_SOURCE,  MiqAeDatastore::MANAGEIQ_DOMAIN).count
+    domains = MiqAeDomain.where('source <> ?', SYSTEM_SOURCE)
+    domains.each { |dom| dom.update_attributes(:priority => base + dom.priority) }
+  end
+
+  private_class_method :reset_priority_of_non_system_domains
 end
