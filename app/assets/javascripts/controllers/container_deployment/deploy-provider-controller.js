@@ -217,8 +217,8 @@ miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 
     $scope.showDeploymentWizard = false;
     $scope.showListener = function() {
       if (!$scope.showDeploymentWizard) {
-        var url = '/api/container_deployments/container_deployment_data';
-        API.get(url).then(function (response) {
+        var url = '/api/container_deployments';
+        API.options(url).then(function (response) {
           'use strict';
           $scope.deploymentData = response.data;
           initializeDeploymentWizard();
