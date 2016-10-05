@@ -121,34 +121,23 @@ module MiqAeMethodService
           method = options[:method] || method_name
           ret = object_send(method, *params)
           return options[:override_return] if options.key?(:override_return)
-          reflection = @object.class.reflection_with_virtual(method)
-          if reflection && reflection.collection?
-            wrap_results(ret.to_a)
-          else
-            wrap_results(ret)
-          end
+          wrap_results(ret)
         end
       end
     end
     private_class_method :expose
 
     def self.wrap_results(results)
-      ret = nil
       ar_method do
-        if results.nil?
-          ret = nil
-        elsif results.kind_of?(Array)
-          ret = results.collect { |r| wrap_results(r) }
-        elsif results.kind_of?(ActiveRecord::Relation)
-          ret = results.collect { |r| wrap_results(r) }
+        if results.kind_of?(Array) || results.kind_of?(ActiveRecord::Relation)
+          results.collect { |r| wrap_results(r) }
         elsif results.kind_of?(ActiveRecord::Base)
           klass = MiqAeMethodService.const_get("MiqAeService#{results.class.name.gsub(/::/, '_')}")
-          ret = klass.new(results)
+          klass.new(results)
         else
-          ret = results
+          results
         end
       end
-      ret
     end
 
     def wrap_results(results)
