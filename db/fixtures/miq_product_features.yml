@@ -489,6 +489,43 @@
       :feature_type: control
       :identifier: availability_zone_tag
 
+# HostAggregate
+- :name: Host Aggregates
+  :description: Everything under Host Aggregates
+  :feature_type: node
+  :identifier: host_aggregate
+  :children:
+  - :name: View
+    :description: View Host Aggregates
+    :feature_type: view
+    :identifier: host_aggregate_view
+    :children:
+    - :name: List
+      :description: Display Lists of Host Aggregates
+      :feature_type: view
+      :identifier: host_aggregate_show_list
+    - :name: Show
+      :description: Display Individual Host Aggregates
+      :feature_type: view
+      :identifier: host_aggregate_show
+    - :name: Utilization
+      :description: Show Capacity & Utilization data of Host Aggregates
+      :feature_type: view
+      :identifier: host_aggregate_perf
+    - :name: Timeline
+      :description: Display Timelines for Host Aggregates
+      :feature_type: view
+      :identifier: host_aggregate_timeline
+  - :name: Operate
+    :description: Perform Operations on Host Aggregates
+    :feature_type: control
+    :identifier: host_aggregate_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Host Aggregate
+      :feature_type: control
+      :identifier: host_aggregate_tag
+
 # CloudObjectStoreContainer
 - :name: Cloud Object Stores
   :description: Everything under Cloud Object Stores
