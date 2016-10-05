@@ -466,9 +466,42 @@ describe VmOrTemplate do
     end
   end
 
+  context "#supports_terminate?" do
+    let(:ems_does_vm_destroy) { FactoryGirl.create(:ems_vmware) }
+    let(:ems_doesnot_vm_destroy) { FactoryGirl.create(:ems_vmware_cloud) }
+    let(:host) { FactoryGirl.create(:host) }
+
+    it "returns true for a VM not terminated" do
+      vm = FactoryGirl.create(:vm, :host => host, :ext_management_system => ems_does_vm_destroy)
+      allow(vm).to receive_messages(:terminated? => false)
+      expect(vm.supports_terminate?).to eq(true)
+    end
+
+    it "returns false for a terminated VM" do
+      vm = FactoryGirl.create(:vm, :host => host, :ext_management_system => ems_does_vm_destroy)
+      allow(vm).to receive_messages(:terminated? => true)
+      expect(vm.supports_terminate?).to eq(false)
+      expect(vm.unsupported_reason(:terminate)).to eq("The VM is terminated")
+    end
+
+    it "returns false for a provider doesn't support vm_destroy" do
+      vm = FactoryGirl.create(:vm, :host => host, :ext_management_system => ems_doesnot_vm_destroy)
+      allow(vm).to receive_messages(:terminated? => false)
+      expect(vm.supports_terminate?).to eq(false)
+      expect(vm.unsupported_reason(:terminate)).to eq("Provider doesn't support vm_destroy")
+    end
+
+    it "returns false for a WMware VM" do
+      vm = FactoryGirl.create(:vm, :host => host, :ext_management_system => ems_does_vm_destroy)
+      allow(vm).to receive_messages(:terminated? => false)
+      expect(vm.supports_terminate?).to eq(true)
+    end
+  end
+
   context "#self.batch_operation_supported?" do
     let(:ems)     { FactoryGirl.create(:ext_management_system) }
     let(:storage) { FactoryGirl.create(:storage) }
+    let(:host) { FactoryGirl.create(:host) }
 
     it "when the vm_or_template supports migrate,  returns false" do
       vm1 =  FactoryGirl.create(:vm_microsoft)
@@ -480,6 +513,14 @@ describe VmOrTemplate do
       vm1 =  FactoryGirl.create(:vm_vmware, :storage => storage, :ext_management_system => ems)
       vm2 =  FactoryGirl.create(:vm_vmware, :storage => storage, :ext_management_system => ems)
       expect(VmOrTemplate.batch_operation_supported?(:migrate, [vm1.id, vm2.id])).to eq(true)
+    end
+
+    it "when the vm_or_template supports terminate, returns true" do
+      ems_vmware = FactoryGirl.create(:ems_vmware)
+      ems_ms = FactoryGirl.create(:ems_microsoft)
+      vm1 =  FactoryGirl.create(:vm_microsoft, :host => host, :ext_management_system => ems_ms)
+      vm2 =  FactoryGirl.create(:vm_vmware, :host => host, :ext_management_system => ems_vmware)
+      expect(VmOrTemplate.batch_operation_supported?(:terminate, [vm1.id, vm2.id])).to eq(true)
     end
   end
 
