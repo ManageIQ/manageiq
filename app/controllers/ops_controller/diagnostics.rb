@@ -44,17 +44,6 @@ module OpsController::Diagnostics
     worker = MiqWorker.find_by_id(@sb[:selected_worker_id])
     wtype = worker.normalized_type
     case wtype
-    # when "priority","generic"
-    # begin
-    #   svr = MiqServer.find(@sb[:selected_server_id])
-    #   Object.const_get("Miq#{wtype.capitalize}Worker").restart_workers(@sb[:selected_server_id])
-    # rescue => bang
-    #   add_flash(_("Error during %s workers restart: ") % wtype << bang.message, :error)
-    # else
-    #   audit = {:event=>"restart_workers", :message=>"#{wtype} Workers on Server '#{svr.name}' restarted", :target_id=>svr.id, :target_class=>"MiqServer", :userid => session[:userid]}
-    #   AuditEvent.success(audit)
-    #   add_flash(_("%s workers restart initiated successfully") % wtype)
-    # end
     when "ems_vimbroker"
       pm_reset_broker
     else
