@@ -1113,8 +1113,7 @@ module ApplicationController::Performance
       chart_layouts[@sb[:util][:options][:model].to_sym].each_with_index do |chart, _idx|
         tag_class = @sb[:util][:options][:tag].split("/").first if @sb[:util][:options][:tag]
         if chart[:type] == "None" || # No chart is available for this slot
-           (@sb[:util][:options][:tag] && chart[:allowed_child_tag] && !chart[:allowed_child_tag].include?(tag_class)) # Tag not allowed - Replace following line in sprint 69
-          #           (@sb[:util][:options][:tag] && chart[:allowed_child_tag] && !@sb[:util][:options][:tag].starts_with?(chart[:allowed_child_tag]))  # Tag not allowed
+           (@sb[:util][:options][:tag] && chart[:allowed_child_tag] && !chart[:allowed_child_tag].include?(tag_class)) # Tag not allowed
           chart_data.push(nil)              # Push a placeholder onto the chart data array
         else
           perf_remove_chart_cols(chart)
