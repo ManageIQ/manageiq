@@ -39,6 +39,10 @@ class GitRepository < ApplicationRecord
     File.join(MiqAeDatastore::GIT_REPO_DIRECTORY, parsed.path)
   end
 
+  def self_signed_cert_cb(_valid, _host)
+    true
+  end
+
   private
 
   def refresh_branches
@@ -73,19 +77,14 @@ class GitRepository < ApplicationRecord
 
   def init_repo
     repo_block do
-      params = {:clone => true, :url => url, :path => directory_name}
-      params[:ssl_no_verify] = (verify_ssl == OpenSSL::SSL::VERIFY_NONE)
-      if authentications.any?
-        params[:username] = authentications.first.userid
-        params[:password] = authentications.first.password
-      end
+      params = {:clone => true, :url => url}.merge(repo_params)
       GitWorktree.new(params)
     end
   end
 
   def update_repo
     repo_block do
-      GitWorktree.new(:path => directory_name).tap do |repo|
+      GitWorktree.new(repo_params).tap do |repo|
         repo.send(:fetch_and_merge)
       end
     end
@@ -97,5 +96,15 @@ class GitRepository < ApplicationRecord
     raise MiqException::MiqUnreachableError, err.message
   rescue => err
     raise MiqException::Error, err.message
+  end
+
+  def repo_params
+    params = {:path => directory_name}
+    params[:certificate_check] = method(:self_signed_cert_cb) if verify_ssl == OpenSSL::SSL::VERIFY_NONE
+    if authentications.any?
+      params[:username] = authentications.first.userid
+      params[:password] = authentications.first.password
+    end
+    params
   end
 end
