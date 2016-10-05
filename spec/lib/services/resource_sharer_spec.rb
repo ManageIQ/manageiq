@@ -70,8 +70,22 @@ describe ResourceSharer do
       end
     end
 
-    context "attempting to share a resource the user doesn't have access to" do
-      pending "is invalid"
+    context "attempting to share a resource the user doesn't have access to via RBAC" do
+      let(:user) { FactoryGirl.create(:user,
+                                      :role     => "user",
+                                      :features => user_allowed_feature,
+                                      :tenant   => FactoryGirl.create(:tenant, :name => "Tenant under root")) }
+      let(:resource_to_be_shared) { FactoryGirl.create(:miq_template,
+                                                       :tenant => FactoryGirl.create(:tenant,
+                                                                                     :name => "Sibling tenant")) }
+      let(:tenants) { [user.current_tenant] } # Attempt to share a resource in Sibling tenant to one's own tenant
+
+      before { Tenant.seed }
+
+      it "is invalid" do
+        expect(subject).not_to be_valid
+        expect(subject.errors.full_messages).to include(a_string_including("is not authorized to share this resource"))
+      end
     end
 
     context "with tenants that aren't tenants" do
