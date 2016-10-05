@@ -104,6 +104,29 @@ class Dialog < ApplicationRecord
     DialogSerializer.new.serialize(Array[workflow.dialog])
   end
 
+  def update_content(content)
+    self.class.transaction do
+      update_dialog_tabs(content['dialog_tabs'])
+    end
+  end
+
+  def update_dialog_tabs(content)
+    existing_items = dialog_tabs.pluck(:id)
+    binding.pry
+    content.each do |dialog_tab|
+      if dialog_tab.key?('id')
+        existing_items.delete(dialog_tab['id'])
+        DialogTab.find(dialog_tab['id']).tap do |tab|
+          tab.update_attributes(tab)
+          tab.update_dialog_groups(dialog_tab['dialog_groups'])
+        end
+      else
+        dialog_tabs << DialogImportService.new.build_tab(dialog_tab)
+      end
+    end
+    DialogTab.where(:id => existing_items).each(&:destroy)
+  end
+
   def deep_copy(new_attributes = {})
     new_dialog = dup
     new_dialog.dialog_tabs = dialog_tabs.collect(&:deep_copy)

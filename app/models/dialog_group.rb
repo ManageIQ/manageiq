@@ -14,6 +14,19 @@ class DialogGroup < ApplicationRecord
     dialog_fields
   end
 
+  def update_dialog_fields(fields)
+    existing_items = dialog_fields.pluck(:id)
+    fields.each do |field|
+      if field.key?('id')
+        existing_items.delete(group['id'])
+        DialogField.find(field['id']).tap do |dialog_field|
+          dialog_field.update_attributes(field)
+        end
+      end
+    end
+    DialogField.where(:id => existing_items).each(&:destroy)
+  end
+
   def validate_children
     if dialog_fields.blank?
       errors.add(:base, _("Box %{box_label} must have at least one Element") % {:box_label => label})

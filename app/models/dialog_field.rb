@@ -101,6 +101,10 @@ class DialogField < ApplicationRecord
     validate_error_message(dialog_tab, dialog_group) if visible? && required? && required_value_error?
   end
 
+  def update_dialog_fields(content)
+    exi
+  end
+
   def resource
     self
   end
