@@ -28,7 +28,7 @@ class ResourceSharer
   # @param features - The product features to be associated with the share. Features must
   #   be a subset of the user's accessible miq_product_features or :all if you wish to
   #   share all the user's accessible features. Defaults to :all.
-  def initialize(args={})
+  def initialize(args = {})
     args = args.reverse_merge(:features => :all)
     if args[:user] && args[:features] == :all
       args[:features] = args[:user].miq_user_role.miq_product_features
@@ -63,7 +63,9 @@ class ResourceSharer
     # TODO:  This is bad. Need feature API to fetch Set of allowed features
     # based on parent and check if the requested features are all in the Set.
     Array(features).each do |feature|
-      rejected_features << "#{feature.identifier}: #{feature.name}" unless user.miq_user_role.allows?(:identifier => feature.identifier)
+      unless user.miq_user_role.allows?(:identifier => feature.identifier)
+        rejected_features << "#{feature.identifier}: #{feature.name}"
+      end
     end
 
     unless rejected_features.empty?
@@ -72,14 +74,14 @@ class ResourceSharer
   end
 
   def allowed_resource_type
-    unless WHITELISTED_RESOURCE_TYPES.any? { |type| resource.is_a?(type.constantize) }
+    unless WHITELISTED_RESOURCE_TYPES.any? { |type| resource.kind_of?(type.constantize) }
       errors.add(:resource, "is not sharable. Supported resource types: #{WHITELISTED_RESOURCE_TYPES.join(' ')}")
     end
   end
 
   def valid_tenants
     return unless tenants
-    unless tenants.respond_to?(:all?) && tenants.all? { |t| t.is_a?(Tenant) }
+    unless tenants.respond_to?(:all?) && tenants.all? { |t| t.kind_of?(Tenant) }
       errors.add(:tenants, "must be an array of Tenant objects")
     end
   end

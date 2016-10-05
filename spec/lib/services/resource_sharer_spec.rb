@@ -3,16 +3,18 @@ describe ResourceSharer do
 
   describe "#share" do
     subject do
-      described_class.new(:user => user,
+      described_class.new(:user     => user,
                           :resource => resource_to_be_shared,
-                          :tenants => tenants,
+                          :tenants  => tenants,
                           :features => features)
     end
 
-    let(:user) { FactoryGirl.create(:user,
-                                    :role     => "user",
-                                    :features => user_allowed_feature) }
-    let(:user_allowed_feature) { "service"}
+    let(:user) do
+      FactoryGirl.create(:user,
+                         :role     => "user",
+                         :features => user_allowed_feature)
+    end
+    let(:user_allowed_feature) { "service" }
     let(:resource_to_be_shared) { FactoryGirl.create(:miq_template) }
     let(:tenants) { [FactoryGirl.create(:tenant)] }
     let(:features) { :all }
@@ -38,7 +40,7 @@ describe ResourceSharer do
 
       context "with an unauthorized product feature (across tree)" do
         let(:features) { MiqProductFeature.find_by(:identifier => "host") }
-        let(:user_allowed_feature) { "service"}
+        let(:user_allowed_feature) { "service" }
 
         before { EvmSpecHelper.seed_specific_product_features(%w(host service)) }
 
@@ -50,7 +52,7 @@ describe ResourceSharer do
 
       context "with an unauthorized product feature (up tree)" do
         let(:features) { MiqProductFeature.find_by(:identifier => "host") }
-        let(:user_allowed_feature) { "host_edit"}
+        let(:user_allowed_feature) { "host_edit" }
 
         before { EvmSpecHelper.seed_specific_product_features(%w(host)) }
 
@@ -82,13 +84,17 @@ describe ResourceSharer do
     end
 
     context "attempting to share a resource the user doesn't have access to via RBAC" do
-      let(:user) { FactoryGirl.create(:user,
-                                      :role     => "user",
-                                      :features => user_allowed_feature,
-                                      :tenant   => FactoryGirl.create(:tenant, :name => "Tenant under root")) }
-      let(:resource_to_be_shared) { FactoryGirl.create(:miq_template,
-                                                       :tenant => FactoryGirl.create(:tenant,
-                                                                                     :name => "Sibling tenant")) }
+      let(:user) do
+        FactoryGirl.create(:user,
+                           :role     => "user",
+                           :features => user_allowed_feature,
+                           :tenant   => FactoryGirl.create(:tenant, :name => "Tenant under root"))
+      end
+      let(:resource_to_be_shared) do
+        FactoryGirl.create(:miq_template,
+                           :tenant => FactoryGirl.create(:tenant,
+                                                         :name => "Sibling tenant"))
+      end
       let(:tenants) { [user.current_tenant] } # Attempt to share a resource in Sibling tenant to one's own tenant
 
       before { Tenant.seed }
