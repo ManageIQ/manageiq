@@ -41,7 +41,12 @@ describe('miqService', function() {
   describe('#miqAjaxButton', function() {
     it('calls the global miqAjaxButton with the correct arguments', function() {
       testService.miqAjaxButton('test_url');
-      expect(window.miqAjaxButton).toHaveBeenCalledWith('test_url', undefined);
+      expect(window.miqAjaxButton).toHaveBeenCalledWith('test_url', undefined, undefined);
+    });
+
+    it('calls the global miqAjaxButton with all the arguments', function() {
+      testService.miqAjaxButton('test_url', { test: 'data' }, { complete: false });
+      expect(window.miqAjaxButton).toHaveBeenCalledWith('test_url', { test: 'data' }, { complete: false });
     });
   });
 
