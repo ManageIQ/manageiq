@@ -11,7 +11,7 @@ class ApplicationHelper::Toolbar::NetworkRoutersCenter < ApplicationHelper::Tool
         button(
           :network_router_tag,
           'pficon pficon-edit fa-lg',
-          N_('Edit Tags for the selected Floating IPs'),
+          N_('Edit Tags for the selected Network Routers'),
           N_('Edit Tags'),
           :url_parms => "main_div",
           :enabled   => false,
