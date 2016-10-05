@@ -693,7 +693,7 @@ function miqRESTAjaxButton(url, button, dataType, data) {
 
 // Handle an ajax form button press (i.e. Submit) by starting the spinning Q,
 // then waiting for .7 seconds for observers to finish
-function miqAjaxButton(url, serialize_fields) {
+function miqAjaxButton(url, serialize_fields, options) {
   if (typeof serialize_fields == "undefined") {
     serialize_fields = false;
   }
@@ -702,23 +702,23 @@ function miqAjaxButton(url, serialize_fields) {
   }
 
   setTimeout(function () {
-    miqAjaxButtonSend(url, serialize_fields);
+    miqAjaxButtonSend(url, serialize_fields, options);
   }, 700);
 }
 
 // Send ajax url after any outstanding ajax requests, wait longer if needed
-function miqAjaxButtonSend(url, serialize_fields) {
+function miqAjaxButtonSend(url, serialize_fields, options) {
   if ($.active) {
     setTimeout(function () {
-      miqAjaxButtonSend(url);
+      miqAjaxButtonSend(url, serialize_fields, options);
     }, 700);
   } else {
-    miqAjax(url, serialize_fields);
+    miqAjax(url, serialize_fields, options);
   }
 }
 
 // Function to generate an Ajax request
-function miqAjax(url, serialize_fields) {
+function miqAjax(url, serialize_fields, options) {
   var data = undefined;
 
   if (serialize_fields === true) {
@@ -727,7 +727,12 @@ function miqAjax(url, serialize_fields) {
     data = serialize_fields;
   }
 
-  miqJqueryRequest(url, {beforeSend: true, complete: true, data: data});
+  var defaultOptions = {
+    beforeSend: true,
+    complete: true,
+  };
+
+  miqJqueryRequest(url, _.extend(defaultOptions, options || {}, { data: data }));
 }
 
 // Function to generate an Ajax request for EVM async processing
