@@ -232,7 +232,7 @@ module OpsController::Diagnostics
     cu_repair_get_form_vars
     render :update do |page|
       page << javascript_prologue
-      page.replace("flash_msg_divcu_repair", :partial => "layouts/flash_msg", :locals => {:div_num => "cu_repair"})
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page.replace_html("diagnostics_cu_repair", :partial => "diagnostics_cu_repair_tab")
       page << "ManageIQ.calendar.calDateFrom = null;"
       page << "ManageIQ.calendar.calDateTo = new Date();"
@@ -268,7 +268,7 @@ module OpsController::Diagnostics
 
     render :update do |page|
       page << javascript_prologue
-      page.replace("flash_msg_divcu_repair", :partial => "layouts/flash_msg", :locals => {:div_num => "cu_repair"})
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page.replace_html("diagnostics_cu_repair", :partial => "diagnostics_cu_repair_tab")
       page << "ManageIQ.calendar.calDateFrom = null;"
       page << "ManageIQ.calendar.calDateTo = new Date();"
@@ -328,7 +328,7 @@ module OpsController::Diagnostics
     if @flash_array
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_divvalidate", :partial => "layouts/flash_msg", :locals => {:div_num => "validate"})
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page << "miqSparkle(false);"
       end
       return
@@ -342,7 +342,7 @@ module OpsController::Diagnostics
       diagnostics_set_form_vars
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_divdatabase", :partial => "layouts/flash_msg", :locals => {:div_num => "database"})
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page.replace_html("diagnostics_database", :partial => "diagnostics_database_tab")
         page << "miqSparkle(false);"
       end
@@ -352,7 +352,7 @@ module OpsController::Diagnostics
       end
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_divdatabase", :partial => "layouts/flash_msg", :locals => {:div_num => "database"})
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page << "miqSparkle(false);"
       end
     end
@@ -417,7 +417,7 @@ module OpsController::Diagnostics
     end
     render :update do |page|
       page << javascript_prologue
-      page.replace("flash_msg_divdatabase", :partial => "layouts/flash_msg", :locals => {:div_num => "database"})
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "miqSparkle(false);"
     end
   end

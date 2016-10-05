@@ -21,19 +21,9 @@ class MiqAeClassController < ApplicationController
     @record = @ae_class = MiqAeClass.find_by_id(from_cid(x_node.split('-').last))
     @sb[:active_tab] = params[:tab_id]
     c_tb = build_toolbar(center_toolbar_filename)
-    case params[:tab_id]
-    when "instances"
-      div_suffix = "_class_instances"
-    when "methods"
-      div_suffix = "_class_methods"
-    when "props"
-      div_suffix = "_class_props"
-    when "schema"
-      div_suffix = "_class_fields"
-    end
     render :update do |page|
       page << javascript_prologue
-      page.replace("flash_msg_div#{div_suffix}", :partial => "layouts/flash_msg", :locals => {:div_num => div_suffix})
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << javascript_pf_toolbar_reload('center_tb', c_tb)
       page << "miqSparkle(false);"
     end
@@ -300,22 +290,19 @@ class MiqAeClassController < ApplicationController
 
     if @sb[:action] == "miq_ae_field_seq"
       if @flash_array
-        replace_partial_div = :flash_msg_div_fields_seq
-        replace_partial_div_num = "_fields_seq"
+        replace_partial_div = :flash_msg_div
       end
       update_partial_div = :class_fields_div
       update_partial = "fields_seq_form"
     elsif @sb[:action] == "miq_ae_domain_priority_edit"
       if @flash_array
-        replace_partial_div = :flash_msg_div_domains_priority
-        replace_partial_div_num = "_domains_priority"
+        replace_partial_div = :flash_msg_div
       end
       update_partial_div = :ns_list_div
       update_partial = "domains_priority_form"
     elsif MIQ_AE_COPY_ACTIONS.include?(@sb[:action])
       if @flash_array
-        replace_partial_div = :flash_msg_div_copy
-        replace_partial_div_num = "_copy"
+        replace_partial_div = :flash_msg_div
       end
       update_partial_div = :main_div
       update_partial = "copy_objects_form"
@@ -328,10 +315,7 @@ class MiqAeClassController < ApplicationController
       update_partial_div = :main_div
       update_partial = "all_tabs"
     end
-    presenter.replace(replace_partial_div, r[
-        :partial => "layouts/flash_msg",
-        :locals  => {:div_num => replace_partial_div_num}
-    ]) if replace_partial_div
+    presenter.replace(replace_partial_div, r[:partial => "layouts/flash_msg"]) if replace_partial_div
     presenter.update(update_partial_div, r[:partial => update_partial]) if update_partial
     if @in_a_form
       action_url =  create_action_url(nodes.first)
@@ -599,11 +583,7 @@ class MiqAeClassController < ApplicationController
       if @flash_array
         render :update do |page|
           page << javascript_prologue
-          if @sb[:row_selected]
-            page.replace("flash_msg_div_class_instances", :partial => "layouts/flash_msg", :locals => {:div_num => "_class_instances"})
-          else
-            page.replace("flash_msg_div_instance_fields", :partial => "layouts/flash_msg", :locals => {:div_num => "_instance_fields"})
-          end
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
       end
@@ -621,11 +601,7 @@ class MiqAeClassController < ApplicationController
         @in_a_form = true
         render :update do |page|
           page << javascript_prologue
-          if @sb[:row_selected]
-            page.replace("flash_msg_div_class_instances", :partial => "layouts/flash_msg", :locals => {:div_num => "_class_instances"})
-          else
-            page.replace("flash_msg_div_instance_fields", :partial => "layouts/flash_msg", :locals => {:div_num => "_instance_fields"})
-          end
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
         AuditEvent.success(build_saved_audit(@ae_class, @edit))
@@ -661,7 +637,7 @@ class MiqAeClassController < ApplicationController
       if @flash_array
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div_class_instances", :partial => "layouts/flash_msg", :locals => {:div_num => "_class_instances"})
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
         return
       end
@@ -679,7 +655,7 @@ class MiqAeClassController < ApplicationController
         @in_a_form = true
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div_class_instances", :partial => "layouts/flash_msg", :locals => {:div_num => "_class_instances"})
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
         AuditEvent.success(build_created_audit(add_aeinst, @edit))
@@ -824,12 +800,11 @@ class MiqAeClassController < ApplicationController
     render :update do |page|
       page << javascript_prologue
       page << "if (miqDomElementExists('cls_method_data')){"
-      page.replace("flash_msg_div_class_methods", :partial => "layouts/flash_msg", :locals => {:div_num => "_class_methods"})
       page << "var ta = document.getElementById('cls_method_data');"
       page << "} else {"
-      page.replace("flash_msg_div_method_inputs", :partial => "layouts/flash_msg", :locals => {:div_num => "_method_inputs"})
       page << "var ta = document.getElementById('method_data');"
       page << "}"
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "var lineHeight = ta.clientHeight / ta.rows;"
       page << "ta.scrollTop = (#{line.to_i}-1) * lineHeight;"
       if line > 0
@@ -1028,7 +1003,7 @@ class MiqAeClassController < ApplicationController
         @changed = true
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div_class_props", :partial => "layouts/flash_msg", :locals => {:div_num => "_class_props"})
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
         add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "MiqAeClass"), :name => ae_class.fqname})
@@ -1074,9 +1049,7 @@ class MiqAeClassController < ApplicationController
         session[:changed] = @changed = true
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div_class_fields",
-                       :partial => "layouts/flash_msg",
-                       :locals  => {:div_num => "_class_fields"})
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
         add_flash(_("Schema for %{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "MiqAeClass"), :name => ae_class.name})
@@ -1121,9 +1094,7 @@ class MiqAeClassController < ApplicationController
         @changed = true
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div_ns_list",
-                       :partial => "layouts/flash_msg",
-                       :locals  => {:div_num => "_ns_list"})
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
         add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => @edit[:typ]), :name  => ae_ns.name})
@@ -1172,11 +1143,7 @@ class MiqAeClassController < ApplicationController
         @changed = true
         render :update do |page|
           page << javascript_prologue
-          if @sb[:row_selected]
-            page.replace("flash_msg_div_class_methods", :partial => "layouts/flash_msg", :locals => {:div_num => "_class_methods"})
-          else
-            page.replace("flash_msg_div_method_inputs", :partial => "layouts/flash_msg", :locals => {:div_num => "_method_inputs"})
-          end
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
         add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "MiqAeMethod"), :name => ae_method.name})
@@ -1246,7 +1213,7 @@ class MiqAeClassController < ApplicationController
         @in_a_form = true
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div_class_props", :partial => "layouts/flash_msg", :locals => {:div_num => "_class_props"})
+          page.replace("flash_msg", :partial => "layouts/flash_msg")
         end
       else
         add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "MiqAeClass"), :name => add_aeclass.fqname})
@@ -1284,7 +1251,7 @@ class MiqAeClassController < ApplicationController
         @in_a_form = true
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div_class_methods", :partial => "layouts/flash_msg", :locals => {:div_num => "_class_methods"})
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
         add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "MiqAeMethod"), :name => add_aemethod.name})
@@ -1325,9 +1292,7 @@ class MiqAeClassController < ApplicationController
         end
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div_ns_list",
-                       :partial => "layouts/flash_msg",
-                       :locals  => {:div_num => "_ns_list"})
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
     else
@@ -1470,9 +1435,7 @@ class MiqAeClassController < ApplicationController
     @changed = (@edit[:new] != @edit[:current])
     render :update do |page|
       page << javascript_prologue
-      page.replace("flash_msg_div_fields_seq",
-                   :partial => "layouts/flash_msg",
-                   :locals  => {:div_num => "_fields_seq"}) unless @refresh_div && @refresh_div != "column_lists"
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg") unless @refresh_div && @refresh_div != "column_lists"
       page.replace(@refresh_div, :partial => @refresh_partial) if @refresh_div
       if @changed
         page << javascript_for_miq_button_visibility(@changed)
@@ -1531,9 +1494,7 @@ class MiqAeClassController < ApplicationController
     render :update do |page|
       page << javascript_prologue
       changed = (@edit[:new] != @edit[:current])
-      page.replace("flash_msg_div_domains_priority",
-                   :partial => "layouts/flash_msg",
-                   :locals  => {:div_num => "_domains_priority"}) if @flash_array
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg") if @flash_array
       page.replace(@refresh_div,
                    :partial => @refresh_partial,
                    :locals  => {:action => "domains_priority_edit"}) if @refresh_div
@@ -1618,7 +1579,7 @@ class MiqAeClassController < ApplicationController
     @changed = @edit[:new][:override_source] if @edit[:new][:namespace].nil?
     render :update do |page|
       page << javascript_prologue
-      page.replace("flash_msg_div_copy", :partial => "layouts/flash_msg", :locals  => {:div_num => "_copy"})
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page.replace("form_div", :partial => "copy_objects_form") if params[:domain] || params[:override_source]
       page << javascript_for_miq_button_visibility(@changed)
     end
@@ -1738,7 +1699,7 @@ class MiqAeClassController < ApplicationController
         {:record => ui_lookup(:model => @edit[:typ].to_s), :error_message => bang.message}, :error)
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div_copy", :partial => "layouts/flash_msg", :locals  => {:div_num => "_copy"})
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     else
       model = @edit[:selected_items].count > 1 ? :models : :model

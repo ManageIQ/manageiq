@@ -1,6 +1,6 @@
 #class_methods_div
   - if !@in_a_form
-    = render :partial => "layouts/flash_msg", :locals => {:div_num => "_class_methods"}
+    = render :partial => "layouts/flash_msg"
     %h3= _('Methods')
     - if @record.ae_methods.present?
       %table#class_methods_grid.table.table-striped.table-bordered.table-hover.table-clickable.table-checkable
@@ -31,5 +31,5 @@
                :locals  => {:message => _("No methods found")}
   - elsif @edit[:new][:fields]
     #form_div
-      = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_class_methods"}
+      = render :partial => "layouts/flash_msg"
       = render :partial => "method_form", :locals  => {:prefix => "cls_"}

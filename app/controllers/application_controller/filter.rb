@@ -11,7 +11,6 @@ module ApplicationController::Filter
   # Handle buttons pressed in the expression editor
   def exp_button
     @edit = session[:edit]
-    div_num = @edit[:flash_div_num] ? @edit[:flash_div_num] : ""
     case params[:pressed]
     when "undo", "redo"
       @edit[@expkey][:expression] = exp_array(params[:pressed].to_sym)
@@ -54,7 +53,7 @@ module ApplicationController::Filter
     if flash_errors?
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div#{div_num}", :partial => "layouts/flash_msg", :locals => {:div_num => div_num})
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     else
       if ["commit", "not", "remove"].include?(params[:pressed])
@@ -70,7 +69,7 @@ module ApplicationController::Filter
       @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div#{div_num}", :partial => "layouts/flash_msg", :locals => {:div_num => div_num})
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         #       page.replace("form_expression_div", :partial=>"form_expression")
         if !@edit[:adv_search_open].nil?
           page.replace("adv_search_body", :partial => "layouts/adv_search_body")
@@ -95,13 +94,12 @@ module ApplicationController::Filter
   # A token was pressed on the exp editor
   def exp_token_pressed
     @edit = session[:edit]
-    div_num = @edit[:flash_div_num] ? @edit[:flash_div_num] : ""
     token = params[:token].to_i
     if token == @edit[@expkey][:exp_token] || # User selected same token as already selected
        (@edit[@expkey][:exp_token] && @edit[:edit_exp].key?("???")) # or new token in process
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div#{div_num}", :partial => "layouts/flash_msg", :locals => {:div_num => div_num})
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     else
       exp = exp_find_by_token(@edit[@expkey][:expression], token)
@@ -116,7 +114,7 @@ module ApplicationController::Filter
       @edit[@expkey][:exp_token] = token
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div#{div_num}", :partial => "layouts/flash_msg", :locals => {:div_num => div_num})
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page.replace("exp_editor_div", :partial => "layouts/exp_editor")
         page << "$('#exp_#{token}').css({'background-color': 'yellow'})"
         page << javascript_hide("exp_buttons_off")
@@ -148,7 +146,6 @@ module ApplicationController::Filter
   # Handle items changed in the expression editor
   def exp_changed
     @edit = session[:edit]
-    div_num = @edit[:flash_div_num] ? @edit[:flash_div_num] : ""
     if params[:chosen_typ] && params[:chosen_typ] != @edit[@expkey][:exp_typ] # Did the type field change?
       @edit[@expkey][:exp_typ] = params[:chosen_typ]
 
@@ -429,10 +426,10 @@ module ApplicationController::Filter
         page << javascript_prologue
         if !@refresh_partial.nil?
           if @refresh_div == "flash_msg_div"
-            page.replace(@refresh_div + div_num, :partial => @refresh_partial, :locals => {:div_num => div_num})
+            page.replace('flash_msg_div', :partial => @refresh_partial)
           end
         else
-          page.replace("flash_msg_div" + div_num, :partial => "layouts/flash_msg", :locals => {:div_num => div_num})
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           page.replace("exp_atom_editor_div", :partial => "layouts/exp_atom/editor")
 
           page << ENABLE_CALENDAR if calendar_needed?
@@ -1513,7 +1510,6 @@ module ApplicationController::Filter
       exp_array(:init, @edit[@expkey][:expression])                     # Initialize the exp array
       @edit[:adv_search_open] = false
       @edit[@expkey][:exp_model] = model.to_s
-      @edit[:flash_div_num] = "2"
     end
     @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression]) # Build the table to display the exp
     @edit[:in_explorer] = @explorer # Remember if we're in an explorer

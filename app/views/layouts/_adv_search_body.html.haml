@@ -8,8 +8,7 @@
       = " (#{h(@edit[@expkey][:selected][:description])})"
     - elsif @edit && @edit[:adv_search_report]
       = " (from report #{h(@edit[:adv_search_report])})"
-    = render(:partial => 'layouts/flash_msg',
-             :locals  => {:div_num => "2"})
+    = render :partial => 'layouts/flash_msg'
     %br
     - if @edit && @edit[@expkey][:expression]
       = render(:partial => 'layouts/exp_editor')
@@ -51,8 +50,7 @@
                 = _("Choose a %{model} report filter") % {:model => ui_lookup(:model => @edit[@expkey][:exp_model])}
   - elsif mode == "save"
     .modal-body
-      = render(:partial => "layouts/flash_msg",
-               :locals  => {:div_num => "2"})
+      = render :partial => "layouts/flash_msg"
       .form-horizontal.static
         .form-group
           %label.control-label.col-md-5

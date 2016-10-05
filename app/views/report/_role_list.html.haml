@@ -1,7 +1,7 @@
 #menu_roles_div
   - if @sb[:active_accord] == :roles
     - if @menu_roles_tree
-      = render :partial => "layouts/flash_msg", :locals => {:div_num => "_menu_list"}
+      = render :partial => "layouts/flash_msg"
       .col-sm-5
         %h3
           = _("Reports")
@@ -18,7 +18,7 @@
       = render :partial => "report/menu_form1", :locals => {:folders => @grid_folders}
       = render :partial => "report/menu_form2"
     - elsif @sb[:menu]
-      = render :partial => "layouts/flash_msg", :locals => {:div_num => "_menu_list"}
+      = render :partial => "layouts/flash_msg"
       - if @sb[:menu].empty?
         = render :partial => 'layouts/info_msg', :locals => {:message => _("No Saved Reports available.")}
       - else

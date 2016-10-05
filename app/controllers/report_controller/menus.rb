@@ -50,7 +50,7 @@ module ReportController::Menus
       add_flash(_("Double Click on 'New Folder' to edit"), :warning)
     render :update do |page|
       page << javascript_prologue
-      page.replace("flash_msg_div_menu_list", :partial => "layouts/flash_msg", :locals => {:div_num => "_menu_list"})
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
     end
   end
 
