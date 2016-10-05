@@ -161,8 +161,15 @@ module ManageIQ::Providers
         process_collection(instances, :vms) { |instance| parse_instance(instance) }
       end
 
+      # The underlying method that gathers these images is a bit brittle.
+      # Consequently, if it raises an error we just log it and move on so
+      # that it doesn't affect the rest of inventory collection.
+      #
       def get_images
         images = gather_data_for_this_region(@sas, 'list_all_private_images')
+      rescue Azure::Armrest::ApiException => err
+        _log.warn("Unable to collect Azure private images for: [#{@ems.name}] - [#{@ems.id}]: #{err.message}")
+      else
         process_collection(images, :vms) { |image| parse_image(image) }
       end
 
