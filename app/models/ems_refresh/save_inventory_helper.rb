@@ -112,6 +112,7 @@ module EmsRefresh::SaveInventoryHelper
     hashes.each do |h|
       r = records.detect { |r| keys.all? { |k| r.send(k) == r.class.type_for_attribute(k.to_s).cast(h[k]) } }
       h[:id]      = r.id
+      r.send(:clear_association_cache)
       h[:_object] = r
     end
   end
