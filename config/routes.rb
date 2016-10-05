@@ -178,6 +178,29 @@ Vmdb::Application.routes.draw do
       ) + adv_search_post + compare_post + exp_post + perf_post + save_post
     },
 
+    :host_aggregate           => {
+      :get  => %w(
+        download_data
+        index
+        perf_top_chart
+        show
+        show_list
+        tagging_edit
+      ) +
+               compare_get,
+      :post => %w(
+        button
+        quick_search
+        sections_field_changed
+        show
+        show_list
+        tagging_edit
+        tag_edit_form_field_changed
+        tl_chooser
+        wait_for_task
+      ) + adv_search_post + compare_post + exp_post + perf_post
+    },
+
     :catalog                  => {
       :get  => %w(
         download_data

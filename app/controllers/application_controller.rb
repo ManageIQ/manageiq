@@ -1948,7 +1948,7 @@ class ApplicationController < ActionController::Base
       session[:tab_url][:opt] = inbound_url if ["utilization", "planning", "bottlenecks", "waste"].include?(action_name)
     when "catalog", "vm", "vm_or_template", "miq_template", "service"
       session[:tab_url][:svc] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
-    when "availability_zone", "ems_cloud", "flavor", "vm_cloud", "orchestration_stack"
+    when "availability_zone", "host_aggregate", "ems_cloud", "flavor", "vm_cloud", "orchestration_stack"
       session[:tab_url][:compute] = session[:tab_url][:clo] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
     when "ems_cluster", "ems_infra", "host", "pxe", "resource_pool", "storage", "vm_infra"
       session[:tab_url][:compute] = session[:tab_url][:inf] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
@@ -2186,7 +2186,7 @@ class ApplicationController < ActionController::Base
 
       when "ontap_storage_system", "ontap_logical_disk", "cim_base_storage_extent", "ontap_storage_volume", "ontap_file_share", "snia_local_file_system", "storage_manager"
         session[:tab_bc][:sto] = @breadcrumbs.dup if ["show", "show_list", "index"].include?(action_name)
-      when "ems_cloud", "availability_zone", "flavor"
+      when "ems_cloud", "availability_zone", "host_aggregate", "flavor"
         session[:tab_bc][:clo] = @breadcrumbs.dup if ["show", "show_list"].include?(action_name)
       when "ems_infra", "datacenter", "ems_cluster", "resource_pool", "storage", "pxe_server"
         session[:tab_bc][:inf] = @breadcrumbs.dup if ["show", "show_list"].include?(action_name)

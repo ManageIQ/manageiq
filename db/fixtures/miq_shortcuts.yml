@@ -64,6 +64,11 @@
   :url: /availability_zone/show_list
   :rbac_feature_name: availability_zone_show_list
   :startup: true
+- :name: host_aggregates
+  :description: Clouds / Host Aggregates
+  :url: /host_aggregate/show_list
+  :rbac_feature_name: host_aggregate_show_list
+  :startup: true
 - :name: cloud_object_store_containers
   :description: Clouds / Object Store Containers
   :url: /cloud_object_store_container/show_list
