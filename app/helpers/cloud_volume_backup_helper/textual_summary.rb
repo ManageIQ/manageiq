@@ -24,7 +24,7 @@ module CloudVolumeBackupHelper::TextualSummary
   end
 
   def textual_parent_ems_cloud
-    @record.ext_management_system.try(:parent_manager)
+    textual_link(@record.ext_management_system.try(:parent_manager), :label => _("Parent Cloud Provider"))
   end
 
   def textual_ems_storage
