@@ -58,7 +58,8 @@ class ApplicationHelper::Toolbar::DiagnosticsRegionCenter < ApplicationHelper::T
                           :server_role_description => @record.server_role.description,
                           :server_name             => @record.miq_server.name,
                           :server_id               => @record.miq_server.id}
-                      end
+                      end,
+          :klass => ApplicationHelper::Button::RoleSuspend
         ),
         button(
           :demote_server,
