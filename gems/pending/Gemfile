@@ -51,7 +51,7 @@ gem "winrm-elevated",          "~>0.4.0",           :require => false
 gem "zip-zip",                 "~>0.3.0",           :require => false
 
 # Modified gems (forked on github)
-gem "handsoap", "~>0.2.5", :require => false, :git => "https://github.com/ManageIQ/handsoap.git", :tag => "v0.2.5-4"
+gem "handsoap", "~>0.2.5", :require => false, :git => "https://github.com/ManageIQ/handsoap.git", :tag => "v0.2.5-5"
 gem "rubywbem",            :require => false, :git => "https://github.com/ManageIQ/rubywbem.git", :branch => "rubywbem_0_1_0"
 
 group :appliance do
