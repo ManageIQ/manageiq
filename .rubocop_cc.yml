@@ -4,111 +4,111 @@ AllCops:
   TargetRubyVersion: 2.2
 
 Lint/AmbiguousOperator:
-  Enabled: false
+  Enabled: true
 Lint/AmbiguousRegexpLiteral:
-  Enabled: false
+  Enabled: true
 Lint/AssignmentInCondition:
-  Enabled: false
+  Enabled: true
 Lint/BlockAlignment:
-  Enabled: false
+  Enabled: true
 Lint/CircularArgumentReference:
-  Enabled: false
+  Enabled: true
 Lint/ConditionPosition:
-  Enabled: false
+  Enabled: true
 Lint/Debugger:
-  Enabled: false
+  Enabled: true
 Lint/DefEndAlignment:
-  Enabled: false
+  Enabled: true
 Lint/DeprecatedClassMethods:
-  Enabled: false
+  Enabled: true
 Lint/DuplicateMethods:
-  Enabled: false
+  Enabled: true
 Lint/DuplicatedKey:
-  Enabled: false
+  Enabled: true
 Lint/EachWithObjectArgument:
-  Enabled: false
+  Enabled: true
 Lint/ElseLayout:
-  Enabled: false
+  Enabled: true
 Lint/EmptyEnsure:
-  Enabled: false
+  Enabled: true
 Lint/EmptyInterpolation:
-  Enabled: false
+  Enabled: true
 Lint/EndAlignment:
-  Enabled: false
+  Enabled: true
 Lint/EndInMethod:
-  Enabled: false
+  Enabled: true
 Lint/EnsureReturn:
-  Enabled: false
+  Enabled: true
 Lint/Eval:
-  Enabled: false
+  Enabled: true
 Lint/FloatOutOfRange:
-  Enabled: false
+  Enabled: true
 Lint/FormatParameterMismatch:
-  Enabled: false
+  Enabled: true
 Lint/HandleExceptions:
-  Enabled: false
+  Enabled: true
 Lint/ImplicitStringConcatenation:
-  Enabled: false
+  Enabled: true
 Lint/IneffectiveAccessModifier:
-  Enabled: false
+  Enabled: true
 Lint/InheritException:
-  Enabled: false
+  Enabled: true
 Lint/InvalidCharacterLiteral:
-  Enabled: false
+  Enabled: true
 Lint/LiteralInCondition:
-  Enabled: false
+  Enabled: true
 Lint/LiteralInInterpolation:
-  Enabled: false
+  Enabled: true
 Lint/Loop:
-  Enabled: false
+  Enabled: true
 Lint/NestedMethodDefinition:
-  Enabled: false
+  Enabled: true
 Lint/NextWithoutAccumulator:
-  Enabled: false
+  Enabled: true
 Lint/NonLocalExitFromIterator:
-  Enabled: false
+  Enabled: true
 Lint/ParenthesesAsGroupedExpression:
-  Enabled: false
+  Enabled: true
 Lint/PercentStringArray:
-  Enabled: false
+  Enabled: true
 Lint/PercentSymbolArray:
-  Enabled: false
+  Enabled: true
 Lint/RandOne:
-  Enabled: false
+  Enabled: true
 Lint/RequireParentheses:
-  Enabled: false
+  Enabled: true
 Lint/RescueException:
-  Enabled: false
+  Enabled: true
 Lint/ShadowedException:
-  Enabled: false
+  Enabled: true
 Lint/ShadowingOuterLocalVariable:
-  Enabled: false
+  Enabled: true
 Lint/StringConversionInInterpolation:
-  Enabled: false
+  Enabled: true
 Lint/UnderscorePrefixedVariableName:
-  Enabled: false
+  Enabled: true
 Lint/UnneededDisable:
-  Enabled: false
+  Enabled: true
 Lint/UnreachableCode:
-  Enabled: false
+  Enabled: true
 Lint/UnusedBlockArgument:
-  Enabled: false
+  Enabled: true
 Lint/UnusedMethodArgument:
-  Enabled: false
+  Enabled: true
 Lint/UselessAccessModifier:
-  Enabled: false
+  Enabled: true
 Lint/UselessArraySplat:
-  Enabled: false
+  Enabled: true
 Lint/UselessAssignment:
-  Enabled: false
+  Enabled: true
 Lint/UselessComparison:
-  Enabled: false
+  Enabled: true
 Lint/UselessElseWithoutRescue:
-  Enabled: false
+  Enabled: true
 Lint/UselessSetterCall:
-  Enabled: false
+  Enabled: true
 Lint/Void:
-  Enabled: false
+  Enabled: true
 Metrics/AbcSize:
   Enabled: false
 Metrics/BlockNesting:
