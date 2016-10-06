@@ -115,10 +115,10 @@ module MiqException
   class MiqVolumeUpdateError < Error; end
   class MiqVolumeDeleteError < Error; end
 
-  class MiqSubnetValidationError < Error; end
-  class MiqSubnetCreateError < Error; end
-  class MiqSubnetUpdateError < Error; end
-  class MiqSubnetDeleteError < Error; end
+  class MiqCloudSubnetValidationError < Error; end
+  class MiqCloudSubnetCreateError < Error; end
+  class MiqCloudSubnetUpdateError < Error; end
+  class MiqCloudSubnetDeleteError < Error; end
 
   class MiqOpenstackRequiredServiceMissing < Error; end
   class MiqOpenstackKeystoneServiceMissing < MiqOpenstackRequiredServiceMissing; end
