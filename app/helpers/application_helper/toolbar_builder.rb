@@ -425,7 +425,7 @@ class ApplicationHelper::ToolbarBuilder
           return false
         when "delete_server", "zone_delete_server"
           return @record.class != MiqServer
-        when "role_start", "role_suspend", "zone_role_start", "zone_role_suspend"
+        when "role_suspend", "zone_role_start", "zone_role_suspend"
           return !(@record.class == AssignedServerRole && @record.miq_server.started?)
         when "demote_server", "promote_server", "zone_demote_server", "zone_promote_server"
           return !(@record.class == AssignedServerRole && @record.master_supported?)
@@ -707,12 +707,12 @@ class ApplicationHelper::ToolbarBuilder
       end
     when "MiqServer", "MiqRegion"
       case id
-      when "role_start", "role_suspend", "promote_server", "demote_server"
+      when "role_suspend", "promote_server", "demote_server"
         return true
       end
     when "ServerRole"
       case id
-      when "role_start", "role_suspend", "promote_server", "demote_server"
+      when "role_suspend", "promote_server", "demote_server"
         return true
       end
     when "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem", "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem"
@@ -754,14 +754,6 @@ class ApplicationHelper::ToolbarBuilder
     case get_record_cls(@record)
     when "AssignedServerRole"
       case id
-      when "role_start"
-        if x_node != "root" && @record.server_role.regional_role?
-          return N_("This role can only be managed at the Region level")
-        elsif @record.active
-          return N_("This Role is already active on this Server")
-        elsif !@record.miq_server.started? && !@record.active
-          return N_("Only available Roles on active Servers can be started")
-        end
       when "role_suspend"
         if x_node != "root" && @record.server_role.regional_role?
           return N_("This role can only be managed at the Region level")
