@@ -425,8 +425,6 @@ class ApplicationHelper::ToolbarBuilder
           return false
         when "delete_server", "zone_delete_server"
           return @record.class != MiqServer
-        when "demote_server"
-          return !(@record.class == AssignedServerRole && @record.master_supported?)
         end
         return true
       when "diagnostics_summary"
@@ -703,16 +701,6 @@ class ApplicationHelper::ToolbarBuilder
       else
         return true unless editable_domain?(@record)
       end
-    when "MiqServer", "MiqRegion"
-      case id
-      when "demote_server"
-        return true
-      end
-    when "ServerRole"
-      case id
-      when "demote_server"
-        return true
-      end
     when "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem", "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem"
       case id
       when "configured_system_provision"
@@ -750,16 +738,6 @@ class ApplicationHelper::ToolbarBuilder
     end
 
     case get_record_cls(@record)
-    when "AssignedServerRole"
-      case id
-      when "demote_server"
-        if @record.master_supported?
-          if @record.priority == 1 || @record.priority == 2
-            if x_node != "root" && @record.server_role.regional_role?
-              return N_("This role can only be managed at the Region level")
-            end
-          end
-        end
     when "AvailabilityZone"
       case id
       when "availability_zone_perf"
