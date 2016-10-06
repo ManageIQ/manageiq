@@ -182,7 +182,7 @@ module OpsController::Settings::Common
     if replication_type == :global
       subscriptions.each do |h|
         region = MiqRegion.where(:region => h['provider_region']).first
-        h.merge!(:auth_key_configured => region && region.auth_key_configured? ? _('Enabled') : _("Disabled"))
+        h.merge!(:auth_key_configured => region && region.auth_key_configured? ? true : false)
       end
     end
 

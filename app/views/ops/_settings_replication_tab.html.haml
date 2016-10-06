@@ -180,8 +180,14 @@
                                   "name"        => "port",
                                   "ng-model"    => "pglogicalReplicationModel.port"}
 
-            %td
-              {{subscription.auth_key_configured}}
+            %td.narrow
+              %input{"bs-switch" => "",
+                     :data         => {:on_text => 'Yes', :off_text => 'No', :size => 'mini'},
+                     "id"          => "auth_key_configured",
+                     "type"        => "checkbox",
+                     "name"        => "auth_key_configured",
+                     "ng-model"    => "subscription.auth_key_configured",
+                     "switch-readonly" => true}
 
             %td{:class => "action-cell", "ng-show" => "showCancelDelete($index)"}
               %button.btn.btn-default.btn-sm{:type => "button", "ng-click" => "cancelDelete($index)"}= _('Cancel Delete')
@@ -205,7 +211,7 @@
                       %a{"ng-click" => "launchAuthKeyModal($index)"}
                         = _('Enable Central Admin')
                     %li
-                      %a{"ng-click" => "disableCentralAdmin($index)"}
+                      %a{"ng-click" => "disableCentralAdmin($index)", "ng-show" => "isCentralAdminEnabled($index)"}
                         = _('Disable Central Admin')
 
             %td{:class => "action-cell", "ng-show" => "!showCancelDelete($index) && pglogicalReplicationModel.updateEnabled && $index === pglogicalReplicationModel.s_index"}
