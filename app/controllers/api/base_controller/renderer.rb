@@ -81,12 +81,10 @@ module Api
         if resource.respond_to?(:attributes)
           expand_virtual_attributes(json, type, resource)
           expand_subcollections(json, type, resource)
-          expand_custom_attributes(json, resource)
         end
 
         expand_actions(resource, json, type, opts) if opts[:expand_actions]
         expand_resource_custom_actions(resource, json, type)
-        expand_custom_attributes(json, resource)
         json
       end
 
@@ -213,17 +211,6 @@ module Api
                                   fetch_indirect_virtual_attribute(type, resource, attr_base, attr_name, object_hash)
                                 end
           result = result.deep_merge(value_result) unless value.nil?
-        end
-        add_hash json, result
-      end
-
-      # Expand custom attributes.
-      # attribute = method to send on the resource
-      # values = values to pass the method
-      def expand_custom_attributes(json, resource)
-        result = {}
-        custom_attribute_selection.each do |attribute, values|
-          result[attribute] = resource.send(attribute.to_sym, *values)
         end
         add_hash json, result
       end

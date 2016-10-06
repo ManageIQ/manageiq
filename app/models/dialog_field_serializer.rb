@@ -1,8 +1,8 @@
 class DialogFieldSerializer < Serializer
   EXCLUDED_ATTRIBUTES = ["created_at", "dialog_group_id", "id", "updated_at"]
 
-  def self.serialize(dialog_field)
-    new.serialize(dialog_field)
+  def self.serialize(dialog_field, all_attributes = false)
+    new.serialize(dialog_field, all_attributes)
   end
 
   def initialize(resource_action_serializer = ResourceActionSerializer.new)

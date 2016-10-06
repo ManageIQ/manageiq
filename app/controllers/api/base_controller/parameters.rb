@@ -118,14 +118,6 @@ module Api
         end.compact
       end
 
-      def custom_attribute_selection
-        if @req.attributes.empty?
-          @custom_attributes.nil? ? [] : @custom_attributes
-        else
-          []
-        end
-      end
-
       def attribute_selection
         if !@req.attributes.empty? || @additional_attributes
           @req.attributes | Array(@additional_attributes) | ID_ATTRS

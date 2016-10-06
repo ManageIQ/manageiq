@@ -1,6 +1,13 @@
 module Api
   class ServiceDialogsController < BaseController
-    before_action :set_custom_attributes, :only => [:show]
+    def show
+      if params[:c_id]
+        resource = Dialog.find(params[:c_id])
+        render :json => single_resource(resource, params).target!
+      else
+        render :json => dialog_collection(params).target!
+      end
+    end
 
     def refresh_dialog_fields_resource(type, id = nil, data = nil)
       raise BadRequestError, "Must specify an id for Reconfiguring a #{type} resource" unless id
@@ -21,10 +28,27 @@ module Api
 
     private
 
-    def set_custom_attributes
-      @custom_attributes = {
-        'content' => [nil, nil, true]
-      }
+    def single_resource(resource, params, type = :service_dialogs, reftype = :service_dialogs)
+      json = resource_to_jbuilder(type, reftype, resource)
+      expand_dialog_content(json, resource) unless params.key?(:attributes)
+      json
+    end
+
+    def dialog_collection(params = {})
+      dialogs = Dialog.all
+      Jbuilder.new do |json|
+        json.ignore_nil!
+        json.set! 'name', 'service_dialogs'
+        json.set! 'count', dialogs.count
+        json.set! 'subcount', dialogs.count
+        json.resources dialogs.collect do |resource|
+          if params['expand'] == 'resources'
+            add_hash json, single_resource(resource, params).attributes!
+          else
+            json.href normalize_href(:service_dialogs, resource['id'])
+          end
+        end
+      end
     end
 
     def refresh_dialog_fields_service_dialog(service_dialog, data)
@@ -47,6 +71,13 @@ module Api
         raise BadRequestError, "Dialog field #{key} specified does not exist in #{ident}" if dialog_field.nil?
         dialog_field.value = value
       end
+    end
+
+    def expand_dialog_content(json, resource)
+      content = {
+        'content' => resource.content(nil, nil, true)
+      }
+      add_hash json, content
     end
 
     def service_dialog_ident(service_dialog)

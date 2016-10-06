@@ -29,11 +29,22 @@ describe DialogTabSerializer do
     end
 
     before do
-      allow(dialog_group_serializer).to receive(:serialize).with(dialog_group).and_return("serialized dialog group")
+      allow(dialog_group_serializer).to receive(:serialize).with(dialog_group, boolean)
+        .and_return("serialized dialog group")
     end
 
     it "serializes the dialog tab" do
       expect(dialog_tab_serializer.serialize(dialog_tab)).to eq(expected_serialized_values)
+    end
+
+    it 'serializes the dialog tab with all attributes' do
+      expect(dialog_tab_serializer.serialize(dialog_tab, true))
+        .to eq(expected_serialized_values.merge(
+                 'created_at' => nil,
+                 'dialog_id'  => nil,
+                 'id'         => nil,
+                 'updated_at' => nil
+        ))
     end
   end
 end

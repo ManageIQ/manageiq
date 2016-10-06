@@ -54,9 +54,18 @@ describe DialogFieldSerializer do
 
       it "serializes the dialog_field with the correct values" do
         expect(dialog_field_serializer.serialize(dialog_field)).to eq(expected_serialized_values.merge(
-          "resource_action" => "serialized resource action",
-          "values"          => "dynamic values"
+                                                                        "resource_action" => "serialized resource action",
+                                                                        "values"          => "dynamic values"
         ))
+      end
+
+      it 'returns all attributes of a dialog field' do
+        expect(dialog_field_serializer.serialize(dialog_field, true))
+          .to include(expected_serialized_values.merge(
+                        'id'              => dialog_field.id,
+                        'resource_action' => 'serialized resource action',
+                        'values'          => 'dynamic values'
+          ))
       end
     end
 
@@ -65,8 +74,16 @@ describe DialogFieldSerializer do
 
       it "serializes the dialog_field" do
         expect(dialog_field_serializer.serialize(dialog_field)).to eq(expected_serialized_values.merge(
-          "resource_action" => "serialized resource action"
+                                                                        "resource_action" => "serialized resource action"
         ))
+      end
+
+      it 'returns all attributes of a dialog field' do
+        expect(dialog_field_serializer.serialize(dialog_field, true))
+          .to include(expected_serialized_values.merge(
+                        'id'              => dialog_field.id,
+                        'resource_action' => 'serialized resource action',
+          ))
       end
     end
 
@@ -87,12 +104,12 @@ describe DialogFieldSerializer do
 
       it "serializes the category name and description" do
         expect(dialog_field_serializer.serialize(dialog_field)).to eq(expected_serialized_values.merge(
-          "resource_action" => "serialized resource action",
-          "options"         => {
-            :category_id          => "123",
-            :category_name        => "best category ever",
-            :category_description => "best category ever"
-          }
+                                                                        "resource_action" => "serialized resource action",
+                                                                        "options"         => {
+                                                                          :category_id          => "123",
+                                                                          :category_name        => "best category ever",
+                                                                          :category_description => "best category ever"
+                                                                        }
         ))
       end
     end
