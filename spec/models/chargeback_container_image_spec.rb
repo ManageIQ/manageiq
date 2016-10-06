@@ -59,9 +59,10 @@ describe ChargebackContainerImage do
                                                         :tag_names                => "",
                                                         :resource_name            => @project.name,
                                                         :resource_id              => @project.id)
-        state = VimPerformanceState.capture(@container)
-        state.timestamp = t
-        state.save
+        #state = VimPerformanceState.capture(@container)
+        @container.vim_performance_states << FactoryGirl.create(:vim_performance_state,
+                                                                :timestamp => t,
+                                                                :image_tag_names => "environment/prod")
       end
       @metric_size = @container.metric_rollups.size
     end
@@ -99,7 +100,7 @@ describe ChargebackContainerImage do
 
       while time < end_time
         @container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
-                                                         :timestamp                => time.to_s,
+                                                         :timestamp                => time,
                                                          :cpu_usage_rate_average   => @cpu_usage_rate,
                                                          :derived_vm_numvcpus      => @cpu_count,
                                                          :derived_memory_available => @memory_available,
@@ -109,9 +110,9 @@ describe ChargebackContainerImage do
                                                          :tag_names                => "",
                                                          :resource_name            => @project.name,
                                                          :resource_id              => @project.id)
-        state = VimPerformanceState.capture(@container)
-        state.timestamp = time.to_s
-        state.save
+        @container.vim_performance_states << FactoryGirl.create(:vim_performance_state,
+                                                                :timestamp => time,
+                                                                :image_tag_names => "environment/prod")
         time += 12.hours
       end
       @metric_size = @container.metric_rollups.size
