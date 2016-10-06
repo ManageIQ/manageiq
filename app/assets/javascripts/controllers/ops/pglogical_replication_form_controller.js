@@ -285,7 +285,7 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
   $ctrl.ssh_params = {ssh_host: "", ssh_user: "", ssh_password: ""};
 
   $scope.isCentralAdminEnabled = function(idx) {
-    return $scope.pglogicalReplicationModel.subscriptions[idx].auth_key_configured == 'Enabled';
+    return $scope.pglogicalReplicationModel.subscriptions[idx].auth_key_configured;
   };
 
   $scope.enableCentralAdmin = function(idx) {

@@ -72,7 +72,7 @@
           %th= _('Username')
           %th= _('Password')
           %th= _('Port')
-          %th= _('Central Admin')
+          %th= _('Central Admin Enabled')
           %th{:colspan => 2}=_('Actions')
         %tbody
           %tr{"ng-if" => "pglogicalReplicationModel.addEnabled"}
@@ -208,7 +208,10 @@
                       %a{"ng-click" => "validateSubscription($index)"}
                         = _('Validate')
                     %li
-                      %a{"ng-click" => "launchAuthKeyModal($index)"}
+                      %a{"ng-click" => "launchAuthKeyModal($index)", "ng-show" => "isCentralAdminEnabled($index)"}
+                        = _('Re-Enable Central Admin')
+                    %li
+                      %a{"ng-click" => "launchAuthKeyModal($index)", "ng-show" => "!isCentralAdminEnabled($index)"}
                         = _('Enable Central Admin')
                     %li
                       %a{"ng-click" => "disableCentralAdmin($index)", "ng-show" => "isCentralAdminEnabled($index)"}
