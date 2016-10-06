@@ -712,7 +712,7 @@ class ApplicationHelper::ToolbarBuilder
       end
     when "ServerRole"
       case id
-      when "server_delete", "role_start", "role_suspend", "promote_server", "demote_server"
+      when "role_start", "role_suspend", "promote_server", "demote_server"
         return true
       end
     when "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem", "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem"
