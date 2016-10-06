@@ -102,5 +102,15 @@ class ContainerImage < ApplicationRecord
     openscap_rule_results.where(:result => "fail").group(:severity).count.symbolize_keys
   end
 
+  def disconnect_inv
+    _log.info "Disconnecting Image [#{name}] id [#{id}] from EMS [#{ext_management_system.name}]" \
+    "id [#{ext_management_system.id}] "
+    self.container_image_registry = nil
+    self.old_ems_id = ems_id
+    self.ext_management_system = nil
+    self.deleted_on = Time.now.utc
+    save
+  end
+
   alias_method :perform_metadata_sync, :sync_stashed_metadata
 end
