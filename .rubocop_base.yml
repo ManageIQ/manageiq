@@ -1,100 +1,101 @@
 #
 # Overrides
 #
-AbcSize:
+Rails:
+  Enabled: true
+
+Metrics/AbcSize:
   Max: 20
   Severity: refactor
-AlignHash:
+Style/AlignHash:
   EnforcedHashRocketStyle: table
   EnforcedColonStyle: table
-BlockNesting:
+Metrics/BlockNesting:
   Severity: refactor
-ClassLength:
+Metrics/ClassLength:
   Severity: refactor
-ClassCheck:
+Style/ClassCheck:
   EnforcedStyle: kind_of?
-CollectionMethods:
+Style/CollectionMethods:
   PreferredMethods:
     find: detect
     find_all: select
     map: collect
     reduce: inject
-CyclomaticComplexity:
+Metrics/CyclomaticComplexity:
   Severity: refactor
-FormatString:
+Style/FormatString:
   EnforcedStyle: percent
-HashSyntax:
+Style/HashSyntax:
   EnforcedStyle: hash_rockets
-LineLength:
+Metrics/LineLength:
   Max: 120
   Severity: refactor
-MethodLength:
+Metrics/MethodLength:
   Max: 25
   Severity: refactor
-ParameterLists:
+Metrics/ParameterLists:
   Severity: refactor
-PerceivedComplexity:
+Metrics/PerceivedComplexity:
   Severity: refactor
-RedundantReturn:
+Style/RedundantReturn:
   AllowMultipleReturnValues: true
-SignalException:
+Style/SignalException:
   EnforcedStyle: only_raise
-SingleLineMethods:
+Style/SingleLineMethods:
   AllowIfMethodIsEmpty: false
-TrivialAccessors:
+Style/TrivialAccessors:
   AllowPredicates: true
 Style/BracesAroundHashParameters:
   EnforcedStyle: context_dependent
 #
 # Enabled/Disabled
 #
-ClassAndModuleChildren:
+Style/ClassAndModuleChildren:
   Enabled: false
-DefEndAlignment:
+Lint/DefEndAlignment:
   AutoCorrect: true
-Documentation:
+Style/Documentation:
   Enabled: false
-Encoding:
+Style/Encoding:
   Enabled: false
-EndAlignment:
+Lint/EndAlignment:
   AutoCorrect: true
-ExtraSpacing:
+Style/ExtraSpacing:
   AutoCorrect: true
-FindEach:
+Rails/FindEach:
   Enabled: false
-GuardClause:
+Style/GuardClause:
   Enabled: false
-IfUnlessModifier:
+Style/IfUnlessModifier:
   Enabled: false
-NumericLiterals:
+Style/NumericLiterals:
   AutoCorrect: false
-ParallelAssignment:
+Style/ParallelAssignment:
   Enabled: false
-PerlBackrefs:
+Style/PerlBackrefs:
   Enabled: false
-Rails:
-  Enabled: true
-ReadWriteAttribute:
+Rails/ReadWriteAttribute:
   AutoCorrect: false
-RescueModifier:
+Style/RescueModifier:
   AutoCorrect: false
-SingleLineBlockParams:
+Style/SingleLineBlockParams:
   Enabled: false
-SpaceBeforeFirstArg:
+Style/SpaceBeforeFirstArg:
   Enabled: false
-SpaceInsideHashLiteralBraces:
+Style/SpaceInsideHashLiteralBraces:
   Enabled: false
-SpecialGlobalVars:
+Style/SpecialGlobalVars:
   AutoCorrect: false
-StringLiterals:
+Style/StringLiterals:
   Enabled: false
-StringLiteralsInInterpolation:
+Style/StringLiteralsInInterpolation:
   Enabled: false
-TrailingCommaInLiteral:
+Style/TrailingCommaInLiteral:
   Enabled: false
-TrailingCommaInArguments:
+Style/TrailingCommaInArguments:
   Enabled: false
-WhileUntilModifier:
+Style/WhileUntilModifier:
   Enabled: false
-WordArray:
+Style/WordArray:
   AutoCorrect: false
