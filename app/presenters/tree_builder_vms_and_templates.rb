@@ -6,6 +6,10 @@ class TreeBuilderVmsAndTemplates < FullTreeBuilder
     super
   end
 
+  def display_vms
+    User.current_user.settings.fetch_path(:display, :display_vms)
+  end
+
   def relationship_tree
     # TODO: Do more to pre-prune the tree.
     # - Perhaps only get the folders, then prune those based on RBAC and let
@@ -51,7 +55,7 @@ class TreeBuilderVmsAndTemplates < FullTreeBuilder
   end
 
   def prune_rbac(tree)
-    if User.current_user.settings.fetch_path(:display, :display_vms)
+    if display_vms
       allowed_vm_ids = Set.new(Rbac.filtered(@root_ems.vms).pluck(:id))
       prune_folders_via_vms(tree, allowed_vm_ids)
     else

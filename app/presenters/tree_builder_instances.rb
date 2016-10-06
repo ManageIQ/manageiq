@@ -41,4 +41,17 @@ class TreeBuilderInstances < TreeBuilder
                                    User.current_user.settings.fetch_path(:display, :display_vms) ? object.vms.not_archived_nor_orphaned : [],
                                    "name")
   end
+
+  def x_get_tree_custom_kids(object, count_only, options)
+    klass = ManageIQ::Providers::InfraManager::VmOrTemplate
+    objects = if User.current_user.settings.fetch_path(:display, :display_vms)
+                case object[:id]
+                when "orph" then  klass.all_orphaned
+                when "arch" then  klass.all_archived
+                end
+              else
+                [] # hidden all VMs
+              end
+    count_only_or_objects_filtered(count_only, objects, "name")
+  end
 end

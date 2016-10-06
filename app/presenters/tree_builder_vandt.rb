@@ -25,7 +25,7 @@ class TreeBuilderVandt < TreeBuilder
   # Handle custom tree nodes (object is a Hash)
   def x_get_tree_custom_kids(object, count_only, _options)
     klass = ManageIQ::Providers::InfraManager::VmOrTemplate
-    objects = if User.current_user.settings.fetch_path(:display, :display_vms) && User.current_user.settings[:display][:display_vms]
+    objects = if User.current_user.settings.fetch_path(:display, :display_vms)
                 case object[:id]
                 when "orph" then  klass.all_orphaned
                 when "arch" then  klass.all_archived
