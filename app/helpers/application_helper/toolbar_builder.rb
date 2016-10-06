@@ -425,7 +425,7 @@ class ApplicationHelper::ToolbarBuilder
           return false
         when "delete_server", "zone_delete_server"
           return @record.class != MiqServer
-        when "demote_server", "promote_server", "zone_demote_server", "zone_promote_server"
+        when "demote_server", "promote_server"
           return !(@record.class == AssignedServerRole && @record.master_supported?)
         end
         return true

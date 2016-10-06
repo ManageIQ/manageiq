@@ -78,7 +78,9 @@ class ApplicationHelper::Toolbar::DiagnosticsZoneCenter < ApplicationHelper::Too
             }
           end,
           N_('Demote Server'),
-          :confirm => N_("Do you want to demote this Server to secondary?  This will leave no primary Server for this Role.")),
+          :confirm => N_("Do you want to demote this Server to secondary?  This will leave no primary Server for this Role."),
+          :klass => ApplicationHelper::Button::ServerLevelOptions
+        ),
         button(
           :zone_promote_server,
           'product product-migrate fa-lg',
@@ -90,7 +92,9 @@ class ApplicationHelper::Toolbar::DiagnosticsZoneCenter < ApplicationHelper::Too
             }
           end,
           N_('Promote Server'),
-          :confirm => N_("Do you want to promote this Server to primary?  This will replace any existing primary Server for this Role.")),
+          :confirm => N_("Do you want to promote this Server to primary?  This will replace any existing primary Server for this Role."),
+          :klass => ApplicationHelper::Button::ServerLevelOptions
+        ),
       ]
     ),
     select(
