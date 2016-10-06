@@ -243,8 +243,11 @@ module OpsController::Settings::Common
 
   def enable_central_admin
     replication_type = MiqRegion.replication_type
-    provider_region = @_params[:provider_region]
-    if replication_type == :global
+
+    if replication_type != :global || !@_params[:provider_region] || !@_params[:ssh_user] || !@_params[:ssh_password]
+      add_flash(_("Invalid data for enabling Central Admin"), :error)
+    else
+      provider_region = @_params[:provider_region]
       region = MiqRegion.where(:region => provider_region).first
       if region
         region.generate_auth_key_queue(@_params[:ssh_user], @_params[:ssh_password], @_params[:ssh_host])
@@ -258,8 +261,11 @@ module OpsController::Settings::Common
 
   def disable_central_admin
     replication_type = MiqRegion.replication_type
-    provider_region = @_params[:provider_region]
-    if replication_type == :global
+
+    if replication_type != :global || !@_params[:provider_region]
+      add_flash(_("Invalid data for disabling Central Admin"), :error)
+    else
+      provider_region = @_params[:provider_region]
       region = MiqRegion.where(:region => provider_region).first
       if region
         region.remove_auth_config
@@ -268,6 +274,7 @@ module OpsController::Settings::Common
         add_flash(_("Region Not found"), :error)
       end
     end
+    javascript_flash
   end
 
   private
