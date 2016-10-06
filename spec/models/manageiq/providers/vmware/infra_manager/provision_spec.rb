@@ -194,6 +194,12 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
           expect(@vm_prov.dest_resource_pool).to eq(resource_pool)
         end
 
+        it "returns a resource_pool if one is passed in" do
+          expect(ResourcePool).to receive(:find_by).and_return(:resource_pool)
+          expect(@vm_prov).to receive(:default_resource_pool).never
+          @vm_prov.dest_resource_pool
+        end
+
         it "uses the resource pool from the cluster" do
           @vm_prov.options[:dest_host]    = [dest_host_with_cluster.id, dest_host_with_cluster.name]
           @vm_prov.options[:dest_cluster] = [cluster.id, cluster.name]
