@@ -470,4 +470,11 @@ describe Host do
       expect(h.cpu_cores_per_socket).to eq(4)
     end
   end
+
+  context "supported features" do
+    it "does not support refresh_network_interfaces" do
+      host = FactoryGirl.build(:host)
+      expect(host.supports_refresh_network_interfaces?).to be_falsey
+    end
+  end
 end

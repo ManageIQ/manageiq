@@ -10,13 +10,14 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
   has_many :network_routers, :through => :cloud_subnets
   has_many :cloud_networks, :through => :cloud_subnets
   alias_method :private_networks, :cloud_networks
-  has_many :cloud_subnets, :through    => :network_ports,
-                           :class_name => "ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet"
+  has_many :cloud_subnets, :through    => :network_ports
   has_many :public_networks, :through => :cloud_subnets
 
   has_many :floating_ips
 
   include_concern 'Operations'
+
+  supports :refresh_network_interfaces
 
   # TODO(lsmola) for some reason UI can't handle joined table cause there is hardcoded somewhere that it selects
   # DISTINCT id, with joined tables, id needs to be prefixed with table name. When this is figured out, replace
@@ -39,9 +40,6 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
   end
 
   def security_groups
-
-  def self.network_port_type
-    "ManageIQ::Providers::Openstack::InfraManager::NetworkPort"
   end
 
   def ssh_users_and_passwords
@@ -496,5 +494,48 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
 
     task.update_status("Finished", task_status, "Delete Ironic node #{log_target} finished with #{status}") if task
     _log.info("Delete Ironic node #{log_target}...Complete - Timings: #{t.inspect}")
+  end
+
+  def refresh_network_interfaces(ssu)
+    smartstate_network_ports = MiqLinux::Utils.parse_network_interface_list(ssu.shell_exec("ip a"))
+
+    neutron_network_ports = network_ports.where(:source => :refresh).each_with_object({}) do |network_port, obj|
+      obj[network_port.mac_address] = network_port
+    end
+    neutron_cloud_subnets = ext_management_system.network_manager.cloud_subnets
+    hashes = []
+
+    smartstate_network_ports.each do |network_port|
+      existing_network_port = neutron_network_ports[network_port[:mac_address]]
+      if existing_network_port.blank?
+        cloud_subnets = neutron_cloud_subnets.select do |neutron_cloud_subnet|
+          if neutron_cloud_subnet.ip_version == 4
+            IPAddr.new(neutron_cloud_subnet.cidr).include?(network_port[:fixed_ip])
+          else
+            IPAddr.new(neutron_cloud_subnet.cidr).include?(network_port[:fixed_ipv6])
+          end
+        end
+
+        hashes << {:name          => network_port[:name] || network_port[:mac_address],
+                   :type          => "ManageIQ::Providers::Openstack::NetworkManager::NetworkPort",
+                   :mac_address   => network_port[:mac_address],
+                   :cloud_subnets => cloud_subnets,
+                   :device        => self,
+                   :fixed_ips     => {:subnet_id     => nil,
+                                      :ip_address    => network_port[:fixed_ip],
+                                      :ip_address_v6 => network_port[:fixed_ipv6]}}
+
+      elsif existing_network_port.name.blank?
+        # Just updating a names of network_ports refreshed from Neutron, rest of attributes
+        # is handled in refresh section.
+        existing_network_port.update_attributes(:name => network_port[:name])
+      end
+    end
+    unless hashes.blank?
+      EmsRefresh.save_network_ports_inventory(ext_management_system, hashes, nil, :scan)
+    end
+  rescue => e
+    _log.warn("Error in refreshing network interfaces of host #{id}. Error: #{e.message}")
+    _log.warn(e.backtrace.join("\n"))
   end
 end

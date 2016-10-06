@@ -61,45 +61,46 @@ describe Host do
 
     let(:ssu) do
       double('ssu').tap do |ssu|
-        ssu.should_receive(:shell_exec).with("ip a").and_return(network_interfaces_text)
+        expect(ssu).to receive(:shell_exec).with("ip a").and_return(network_interfaces_text)
       end
     end
 
     let(:ems) { FactoryGirl.create(:ems_openstack_infra) }
 
-    let(:vlan10) { FactoryGirl.create(:cloud_network_openstack_infra, :name => "vlan10") }
-    let(:vlan20) { FactoryGirl.create(:cloud_network_openstack_infra, :name => "vlan20") }
-    let(:vlan30) { FactoryGirl.create(:cloud_network_openstack_infra, :name => "vlan30") }
-    let(:vlan40) { FactoryGirl.create(:cloud_network_openstack_infra, :name => "vlan40") }
-    let(:vlan50) { FactoryGirl.create(:cloud_network_openstack_infra, :name => "vlan50") }
+    let(:vlan10) { FactoryGirl.create(:cloud_network_openstack, :name => "vlan10") }
+    let(:vlan20) { FactoryGirl.create(:cloud_network_openstack, :name => "vlan20") }
+    let(:vlan30) { FactoryGirl.create(:cloud_network_openstack, :name => "vlan30") }
+    let(:vlan40) { FactoryGirl.create(:cloud_network_openstack, :name => "vlan40") }
+    let(:vlan50) { FactoryGirl.create(:cloud_network_openstack, :name => "vlan50") }
 
     let(:host) do
       FactoryGirl.create(:host_openstack_infra).tap do |host|
-        host.stub(:connect_ssh).and_yield(ssu)
+        allow(host).to receive(:connect_ssh).and_yield(ssu)
         # Define EMS
         host.ext_management_system = ems
+        network_ems = ems.network_manager
         # Define networks
-        host.ext_management_system.cloud_networks << vlan10
-        host.ext_management_system.cloud_networks << vlan20
-        host.ext_management_system.cloud_networks << vlan30
-        host.ext_management_system.cloud_networks << vlan40
-        host.ext_management_system.cloud_networks << vlan50
+        network_ems.cloud_networks << vlan10
+        network_ems.cloud_networks << vlan20
+        network_ems.cloud_networks << vlan30
+        network_ems.cloud_networks << vlan40
+        network_ems.cloud_networks << vlan50
         # Define subnets
         FactoryGirl.create(
-          :cloud_subnet_openstack_infra, :name => "vlan10", :cidr => "172.16.23.0/24", :cloud_network => vlan10,
-          :ip_version => 4)
+          :cloud_subnet_openstack, :name => "vlan10", :cidr => "172.16.23.0/24", :cloud_network => vlan10,
+          :ip_version => 4, :ext_management_system => network_ems)
         FactoryGirl.create(
-          :cloud_subnet_openstack_infra, :name => "vlan20", :cidr => "172.16.20.0/24", :cloud_network => vlan20,
-          :ip_version => 4)
+          :cloud_subnet_openstack, :name => "vlan20", :cidr => "172.16.20.0/24", :cloud_network => vlan20,
+          :ip_version => 4, :ext_management_system => network_ems)
         FactoryGirl.create(
-          :cloud_subnet_openstack_infra, :name => "vlan30", :cidr => "172.16.21.0/24", :cloud_network => vlan30,
-          :ip_version => 4)
+          :cloud_subnet_openstack, :name => "vlan30", :cidr => "172.16.21.0/24", :cloud_network => vlan30,
+          :ip_version => 4, :ext_management_system => network_ems)
         FactoryGirl.create(
-          :cloud_subnet_openstack_infra, :name => "vlan40", :cidr => "172.16.19.0/24", :cloud_network => vlan40,
-          :ip_version => 4)
+          :cloud_subnet_openstack, :name => "vlan40", :cidr => "172.16.19.0/24", :cloud_network => vlan40,
+          :ip_version => 4, :ext_management_system => network_ems)
         FactoryGirl.create(
-          :cloud_subnet_openstack_infra, :name => "vlan50", :cidr => "172.16.22.0/24", :cloud_network => vlan50,
-          :ip_version => 4)
+          :cloud_subnet_openstack, :name => "vlan50", :cidr => "172.16.22.0/24", :cloud_network => vlan50,
+          :ip_version => 4, :ext_management_system => network_ems)
       end
     end
 
@@ -111,17 +112,15 @@ describe Host do
       it "should collect all network interfaces" do
         expected = ["br-tun", "br-int", "vlan30", "vlan10", "vlan50", "vlan20", "vlan40", "ovs-system", "br-ex,eth0",
                     "lo"]
-        host.network_ports.map(&:name).should include(*expected)
+        expect(host.network_ports.map(&:name)).to include(*expected)
       end
 
       it "should collect br-tun" do
         network_port = host.network_ports.where(:name => "br-tun").first
-        network_port.attributes.should include({
-          "type"                           => "ManageIQ::Providers::Openstack::InfraManager::NetworkPort",
+        expect(network_port.attributes).to include(
+          "type"                           => "ManageIQ::Providers::Openstack::NetworkManager::NetworkPort",
           "name"                           => "br-tun",
           "ems_ref"                        => nil,
-          "cloud_network_id"               => nil,
-          "cloud_subnet_id"                => nil,
           "mac_address"                    => "c2:88:60:f8:76:47",
           "status"                         => nil,
           "admin_state_up"                 => nil,
@@ -133,17 +132,17 @@ describe Host do
           "extra_attributes"               => {:fixed_ips => {:subnet_id     => nil,
                                                               :ip_address    => nil,
                                                               :ip_address_v6 => nil}},
-          "source"                         => "smartstate"})
+          "source"                         => "scan")
 
         expect(network_port.device).to eq host
-        expect(network_port.ext_management_system).to eq host.ext_management_system
+        expect(network_port.ext_management_system).to eq host.ext_management_system.network_manager
       end
 
       it "should collect vlan10" do
         network_port = host.network_ports.where(:name => "vlan10").first
 
-        network_port.attributes.should include({
-          "type"                           => "ManageIQ::Providers::Openstack::InfraManager::NetworkPort",
+        expect(network_port.attributes).to include(
+          "type"                           => "ManageIQ::Providers::Openstack::NetworkManager::NetworkPort",
           "name"                           => "vlan10",
           "ems_ref"                        => nil,
           "mac_address"                    => "be:0b:0f:3d:3e:97",
@@ -157,19 +156,18 @@ describe Host do
           "extra_attributes"               => {:fixed_ips => {:subnet_id     => nil,
                                                               :ip_address    => "172.16.23.11",
                                                               :ip_address_v6 => "fe80::bc0b:fff:fe3d:3e97"}},
-          "source"                         => "smartstate"})
+          "source"                         => "scan")
 
         expect(network_port.device).to eq host
-        expect(network_port.ext_management_system).to eq host.ext_management_system
-        expect(network_port.cloud_subnet).to eq vlan10.cloud_subnets.first
-        expect(network_port.cloud_network).to eq vlan10
+        expect(network_port.ext_management_system).to eq host.ext_management_system.network_manager
+        expect(network_port.cloud_subnets).to eq [vlan10.cloud_subnets.first]
       end
 
       it "should collect br-ex and eth0 and join the according to same mac address" do
         network_port = host.network_ports.where(:name => "br-ex,eth0").first
 
-        network_port.attributes.should include({
-          "type"                           => "ManageIQ::Providers::Openstack::InfraManager::NetworkPort",
+        expect(network_port.attributes).to include(
+          "type"                           => "ManageIQ::Providers::Openstack::NetworkManager::NetworkPort",
           "name"                           => "br-ex,eth0",
           "ems_ref"                        => nil,
           "mac_address"                    => "00:f9:e4:fe:20:68",
@@ -183,32 +181,29 @@ describe Host do
           "extra_attributes"               => {:fixed_ips => {:subnet_id     => nil,
                                                               :ip_address    => "192.0.2.6",
                                                               :ip_address_v6 => "fe80::2f9:e4ff:fefe:2068"}},
-          "source"                         => "smartstate"})
+          "source"                         => "scan")
 
         expect(network_port.device).to eq host
-        expect(network_port.ext_management_system).to eq host.ext_management_system
-        expect(network_port.cloud_subnet).to be_nil
-        expect(network_port.cloud_network).to be_nil
+        expect(network_port.ext_management_system).to eq host.ext_management_system.network_manager
+        expect(network_port.cloud_subnets).to be_empty
       end
 
       it "should have network association of all vlans" do
-        associated = ["vlan30", "vlan10", "vlan50", "vlan20", "vlan40"]
-        not_associated = ["br-tun", "br-int", "ovs-system", "br-ex,eth0", "lo"]
+        associated = %w(vlan30 vlan10 vlan50 vlan20 vlan40)
+        not_associated = %w(br-tun br-int ovs-system br-ex,eth0 lo)
 
         associated.each do |network_port_name|
           network_port = host.network_ports.where(:name => network_port_name).first
           expect(network_port.device).to eq host
-          expect(network_port.ext_management_system).to eq host.ext_management_system
-          expect(network_port.cloud_subnet).to eq self.send(network_port_name).cloud_subnets.first
-          expect(network_port.cloud_network).to eq self.send(network_port_name)
+          expect(network_port.ext_management_system).to eq host.ext_management_system.network_manager
+          expect(network_port.cloud_subnets).to eq send(network_port_name).cloud_subnets
         end
 
         not_associated.each do |network_port_name|
           network_port = host.network_ports.where(:name => network_port_name).first
           expect(network_port.device).to eq host
-          expect(network_port.ext_management_system).to eq host.ext_management_system
-          expect(network_port.cloud_subnet).to be_nil
-          expect(network_port.cloud_network).to be_nil
+          expect(network_port.ext_management_system).to eq host.ext_management_system.network_manager
+          expect(network_port.cloud_subnets).to be_empty
         end
       end
     end
@@ -216,40 +211,38 @@ describe Host do
     describe "when there are existing records created by refresh" do
       it "updates existing record name when it's nil" do
         host.ext_management_system.network_ports <<
-          FactoryGirl.create(:network_port_openstack_infra, :name => "", :mac_address => "be:0b:0f:3d:3e:97",
-                             :source => :neutron, :device => host)
+          FactoryGirl.create(:network_port_openstack, :name => "", :mac_address => "be:0b:0f:3d:3e:97",
+                             :source => :refresh, :device => host)
 
         host.refresh_network_interfaces(ssu)
 
         expected = ["vlan10", "br-tun", "br-int", "vlan30", "vlan50", "vlan20", "vlan40", "ovs-system", "br-ex,eth0",
                     "lo"]
-        host.network_ports.map(&:name).should include(*expected)
+        expect(host.network_ports.map(&:name)).to include(*expected)
 
         network_port = host.network_ports.where(:name => "vlan10").first
         expect(network_port.device).to eq host
-        expect(network_port.ext_management_system).to eq host.ext_management_system
+        expect(network_port.ext_management_system).to eq host.ext_management_system.network_manager
         # Subnets associations are not updated
-        expect(network_port.cloud_subnet).to be_nil
-        expect(network_port.cloud_network).to be_nil
+        expect(network_port.cloud_subnets).to be_empty
       end
 
       it "do not change existing record name when it's not nil" do
         host.ext_management_system.network_ports <<
-          FactoryGirl.create(:network_port_openstack_infra, :name => "vlan10_new", :mac_address => "be:0b:0f:3d:3e:97",
-                             :source => :neutron, :device => host)
+          FactoryGirl.create(:network_port_openstack, :name => "vlan10_new", :mac_address => "be:0b:0f:3d:3e:97",
+                             :source => :refresh, :device => host)
 
         host.refresh_network_interfaces(ssu)
 
-        expected = ["vlan10_new", "br-tun", "br-int", "vlan30", "vlan50", "vlan20", "vlan40", "ovs-system", "br-ex,eth0",
-                    "lo"]
-        host.network_ports.map(&:name).should include(*expected)
+        expected = ["vlan10_new", "br-tun", "br-int", "vlan30", "vlan50", "vlan20", "vlan40", "ovs-system",
+                    "br-ex,eth0", "lo"]
+        expect(host.network_ports.map(&:name)).to include(*expected)
 
         network_port = host.network_ports.where(:name => "vlan10_new").first
         expect(network_port.device).to eq host
-        expect(network_port.ext_management_system).to eq host.ext_management_system
+        expect(network_port.ext_management_system).to eq host.ext_management_system.network_manager
         # Subnets associations are not updated
-        expect(network_port.cloud_subnet).to be_nil
-        expect(network_port.cloud_network).to be_nil
+        expect(network_port.cloud_subnets).to be_empty
       end
     end
   end
