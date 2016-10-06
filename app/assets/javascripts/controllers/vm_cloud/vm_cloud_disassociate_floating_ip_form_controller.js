@@ -23,6 +23,6 @@ ManageIQ.angular.app.controller('vmCloudDisassociateFloatingIpFormController', [
   $scope.submitClicked = function() {
     miqService.sparkleOn();
     var url = '/vm_cloud/disassociate_floating_ip_vm/' + vmCloudDisassociateFloatingIpFormId + '?button=submit';
-    miqService.miqAjaxButton(url, true);  // FIXME
+    miqService.miqAjaxButton(url, $scope.vmCloudModel);
   };
 }]);
