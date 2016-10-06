@@ -15,16 +15,18 @@ class DialogGroup < ApplicationRecord
   end
 
   def update_dialog_fields(fields)
-    existing_items = dialog_fields.pluck(:id)
+    updated_fields = []
     fields.each do |field|
       if field.key?('id')
-        existing_items.delete(group['id'])
         DialogField.find(field['id']).tap do |dialog_field|
           dialog_field.update_attributes(field)
+          updated_fields << dialog_field
         end
+      else
+        updated_fields << DialogImportService.new.build_fields('dialog_fields' => [field]).first
       end
     end
-    DialogField.where(:id => existing_items).each(&:destroy)
+    self.dialog_fields = updated_fields
   end
 
   def validate_children

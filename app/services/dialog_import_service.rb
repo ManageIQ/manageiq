@@ -33,15 +33,15 @@ class DialogImportService
   end
 
   def build_tab(dialog_tab)
-    build_dialog_tabs('dialog_tabs' => [dialog_tab])
+    build_dialog_tabs(dialog_tab)
   end
 
   def build_group(dialog_group)
-    build_dialog_groups('dialog_groups' => [dialog_group])
+    build_dialog_groups(dialog_group)
   end
 
   def build_fields(dialog_fields)
-    build_dialog_fields('dialog_fields' => [dialog_fields])
+    build_dialog_fields(dialog_fields)
   end
 
   def import_all_service_dialogs_from_yaml_file(filename)

@@ -286,6 +286,149 @@ describe Dialog do
     end
   end
 
+  context '#update_content' do
+    before(:each) do
+      @dialog_field = FactoryGirl.create_list(:dialog_field, 1, :label => 'field')
+      @dialog_group = FactoryGirl.create_list(:dialog_group, 1, :label => 'group', :dialog_fields => @dialog_field)
+      @dialog_tab = FactoryGirl.create_list(:dialog_tab, 1, :label => 'tab', :dialog_groups => @dialog_group)
+      @dialog = FactoryGirl.create(:dialog, :label => 'dialog', :dialog_tabs => @dialog_tab)
+
+      @dialog.dialog_tabs << FactoryGirl.create(:dialog_tab)
+      @dialog.save
+    end
+
+    # todo: make this test 'updates contents of a dialog tab'
+    it 'updates a dialog field' do
+      updated_content = {
+        'dialog_tabs' => [
+          {
+            'id' => @dialog_tab.first.id,
+            'label' => 'updated label',
+            'dialog_groups' => [
+              {
+                'id' => @dialog_group.first.id,
+                'dialog_fields' => [
+                  { 'id' => @dialog_field.first.id }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+
+      @dialog.update_content(updated_content)
+      expect(@dialog_tab.first.reload.label).to eq('updated label')
+    end
+
+    it 'adds a new dialog tab' do
+      updated_content = {
+        'dialog_tabs' => [
+          {
+            'id' => @dialog_tab.first.id,
+            'label' => 'updated label',
+            'dialog_groups' => [
+              {
+                'id' => @dialog_group.first.id,
+                'dialog_fields' => [
+                  { 'id' => @dialog_field.first.id }
+                ]
+              }
+            ]
+          },
+          {
+            'label' => 'new tab',
+            'dialog_groups' => [
+              {
+                'label' => 'a new group',
+                'dialog_fields' => [
+                  { 'name' => 'new field', 'label' => 'field' }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+
+      @dialog.update_content(updated_content)
+      expect(@dialog.reload.content.first['dialog_tabs'].count).to eq(2)
+    end
+
+    it 'adds a new dialog group to a tab' do
+      updated_content = {
+        'dialog_tabs' => [
+          {
+            'id' => @dialog_tab.first.id,
+            'label' => 'updated label',
+            'dialog_groups' => [
+              {
+                'id' => @dialog_group.first.id,
+                'dialog_fields' => [
+                  { 'id' => @dialog_field.first.id }
+                ]
+              },
+              {
+                'label' => 'new group',
+                'dialog_fields' => [
+                  { 'name' => 'new field', 'label' => 'field'}
+                ]
+              }
+            ]
+          }
+        ]
+      }
+
+      @dialog.update_content(updated_content)
+      expect(@dialog.reload.content.first['dialog_tabs'].first['dialog_groups'].count).to eq(2)
+    end
+
+    it 'adds a new dialog field to a group' do
+      updated_content = {
+        'dialog_tabs' => [
+          {
+            'id' => @dialog_tab.first.id,
+            'label' => 'updated label',
+            'dialog_groups' => [
+              {
+                'id' => @dialog_group.first.id,
+                'dialog_fields' => [
+                  { 'id' => @dialog_field.first.id },
+                  { 'name' => 'new field', 'label' => 'field' }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+
+      @dialog.update_content(updated_content)
+      expect(@dialog.reload.content.first['dialog_tabs'].first['dialog_groups'].first['dialog_fields'].count).to eq(2)
+    end
+
+    it 'removes a dialog tab from a dialog' do
+      @dialog.dialog_tabs << FactoryGirl.create(:dialog_tab)
+      @dialog.save
+
+      updated_content = {
+        'dialog_tabs' => [
+          {
+            'id' => @dialog_tab.first.id,
+            'dialog_groups' => [
+              {
+                'id' => @dialog_group.first.id,
+                'dialog_fields' => [
+                  { 'id' => @dialog_field.first.id }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+
+      @dialog.update_content(updated_content)
+      expect(@dialog.reload.content.first['dialog_tabs'].count).to eq(1)
+    end
+  end
+
   context "#dialog_fields" do
     before(:each) do
       @dialog        = FactoryGirl.create(:dialog, :label => 'dialog')

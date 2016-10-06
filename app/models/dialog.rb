@@ -104,27 +104,24 @@ class Dialog < ApplicationRecord
     DialogSerializer.new.serialize(Array[workflow.dialog])
   end
 
+  # Allows you to pass an altered content and update the dialog tabs, groups, and fields accordingly
+  # Will update any item passed with an ID,
+  # Creates a new item without an ID,
+  # Removes any items not passed in the content.
   def update_content(content)
-    self.class.transaction do
-      update_dialog_tabs(content['dialog_tabs'])
-    end
-  end
-
-  def update_dialog_tabs(content)
-    existing_items = dialog_tabs.pluck(:id)
-    binding.pry
-    content.each do |dialog_tab|
+    tabs = []
+    content['dialog_tabs'].each do |dialog_tab|
       if dialog_tab.key?('id')
-        existing_items.delete(dialog_tab['id'])
         DialogTab.find(dialog_tab['id']).tap do |tab|
-          tab.update_attributes(tab)
+          tab.update_attributes(dialog_tab.except('dialog_groups'))
           tab.update_dialog_groups(dialog_tab['dialog_groups'])
+          tabs << tab
         end
       else
-        dialog_tabs << DialogImportService.new.build_tab(dialog_tab)
+        tabs << DialogImportService.new.build_tab('dialog_tabs' => [dialog_tab]).first
       end
     end
-    DialogTab.where(:id => existing_items).each(&:destroy)
+    self.dialog_tabs = tabs
   end
 
   def deep_copy(new_attributes = {})
