@@ -20,7 +20,8 @@ module CloudVolumeHelper::TextualSummary
   end
 
   def textual_parent_ems_cloud
-    textual_link(@record.ext_management_system.try(:parent_manager), :label => _("Parent Cloud Provider"))
+    label = ui_lookup(:model => "ManageIQ::Providers::CloudManager")
+    textual_link(@record.ext_management_system.try(:parent_manager), :label => _("Parent #{label}"))
   end
 
   def textual_ems
