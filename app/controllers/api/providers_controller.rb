@@ -13,6 +13,7 @@ module Api
     include Subcollections::PolicyProfiles
     include Subcollections::Tags
     include Subcollections::CloudNetworks
+    include Subcollections::CustomAttributes
 
     def create_resource(type, _id, data = {})
       assert_id_not_specified(data, type)
@@ -50,7 +51,27 @@ module Api
       end
     end
 
+    def custom_attributes_edit_resource(object, type, id, data = nil)
+      formatted_data = format_provider_custom_attributes(data)
+      super(object, type, id, formatted_data)
+    end
+
+    def custom_attributes_add_resource(object, type, id, data = nil)
+      formatted_data = format_provider_custom_attributes(data)
+      super(object, type, id, formatted_data)
+    end
+
     private
+
+    def format_provider_custom_attributes(attribute)
+      if CustomAttribute::ALLOWED_API_VALUE_TYPES.include? attribute["field_type"]
+        attribute["value"] = attribute.delete("field_type").safe_constantize.parse(attribute["value"])
+      end
+      attribute["section"] = "metadata" unless @req.action == "edit"
+      attribute
+    rescue => err
+      raise BadRequestError, "Invalid provider custom attributes specified - #{err}"
+    end
 
     def provider_ident(provider)
       "Provider id:#{provider.id} name:'#{provider.name}'"
