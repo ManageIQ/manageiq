@@ -4049,6 +4049,24 @@
       :description: Edit Tags of Cloud Network
       :feature_type: control
       :identifier: cloud_network_tag
+  - :name: Modify
+    :description: Modify Networks
+    :feature_type: admin
+    :identifier: cloud_network_admin
+    :children:
+    - :name: Add
+      :description: Add a network
+      :feature_type: admin
+      :identifier: cloud_network_new
+    - :name: Edit
+      :description: Edit a network
+      :feature_type: admin
+      :identifier: cloud_network_edit
+    - :name: Remove
+      :description: Remove Networks
+      :feature_type: admin
+      :identifier: cloud_network_delete
+
 
 # Network Port
 - :name: Network Ports

@@ -110,6 +110,11 @@ module MiqException
   class MiqLoadBalancerDeleteError < Error; end
   class MiqLoadBalancerNotExistError < Error; end
 
+  class MiqNetworkValidationError < Error; end
+  class MiqNetworkCreateError < Error; end
+  class MiqNetworkUpdateError < Error; end
+  class MiqNetworkDeleteError < Error; end
+
   class MiqVolumeValidationError < Error; end
   class MiqVolumeCreateError < Error; end
   class MiqVolumeUpdateError < Error; end
