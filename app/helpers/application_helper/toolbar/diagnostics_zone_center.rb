@@ -44,7 +44,8 @@ class ApplicationHelper::Toolbar::DiagnosticsZoneCenter < ApplicationHelper::Too
                           :server_name             => @record.miq_server.name,
                           :server_id               => @record.miq_server.id
                         }
-                      end
+                      end,
+          :klass => ApplicationHelper::Button::RolePowerOptions
         ),
         button(
           :zone_role_suspend,
@@ -63,7 +64,8 @@ class ApplicationHelper::Toolbar::DiagnosticsZoneCenter < ApplicationHelper::Too
                           :server_name             => @record.miq_server.name,
                           :server_id               => @record.miq_server.id
                         }
-                      end
+                      end,
+          :klass => ApplicationHelper::Button::RolePowerOptions
         ),
         button(
           :zone_demote_server,
