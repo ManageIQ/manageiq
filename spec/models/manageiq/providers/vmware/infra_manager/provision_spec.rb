@@ -309,6 +309,23 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
           expect(result).to eq(task_mor)
         end
       end
+
+      describe '#get_next_vm_name' do
+        before do
+          @vm_prov.update_attributes(:options => @options.merge(:miq_force_unique_name => true))
+          allow(MiqRegion).to receive_message_chain('my_region.next_naming_sequence').and_return(123)
+        end
+
+        it 'does not add "_" in name' do
+          allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(double(:root => 'myvm'))
+          expect(@vm_prov.get_next_vm_name).to eq('myvm0123')
+        end
+
+        it 'keeps "_" in name' do
+          allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(double(:root => 'myvm_'))
+          expect(@vm_prov.get_next_vm_name).to eq('myvm_0123')
+        end
+      end
     end
   end
 end
