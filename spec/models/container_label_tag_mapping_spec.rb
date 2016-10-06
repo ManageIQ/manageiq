@@ -1,5 +1,7 @@
 describe ContainerLabelTagMapping do
-  let(:node) { FactoryGirl.create(:container_node, :name => 'node') }
+  let(:node)  { FactoryGirl.create(:container_node, :name => 'node') }
+  let(:node2) { FactoryGirl.create(:container_node, :name => 'node2') }
+  let(:node3) { FactoryGirl.create(:container_node, :name => 'node3') }
   let(:project) { FactoryGirl.create(:container_project, :name => 'project') }
 
   def label(node, name, value)
@@ -83,6 +85,42 @@ describe ContainerLabelTagMapping do
       expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(tags[0])
 
       expect(ContainerLabelTagMapping.mappable_tags).to contain_exactly(tag1, tag_under_cat, tags[0])
+    end
+
+    it "handles names that differ only by case" do
+      # Kubernetes names are case-sensitive
+      # (but the optional domain prefix must be lowercase).
+      FactoryGirl.create(:container_label_tag_mapping, :label_name => 'Name_Case', :label_value => 'value', :tag => tag2)
+      label(node, 'name_case', 'value')
+      label(node2, 'Name_Case', 'value')
+      label(node2, 'naME_caSE', 'value')
+      tags = ContainerLabelTagMapping.tags_for_entity(node)
+      tags2 = ContainerLabelTagMapping.tags_for_entity(node2)
+      expect(tags).to be_empty
+      expect(tags2).to contain_exactly(tag2)
+
+      # Note: this test doesn't cover creation of the category, eg. you can't have
+      # /managed/kubernetes:name vs /managed/kubernetes:naME.
+    end
+
+    pending "handles values that differ only by case / punctuation" do
+      label(node, 'name', 'value-case.punct')
+      label(node2, 'name', 'VaLuE-CASE.punct')
+      label(node3, 'name', 'value-case/punct')
+      tags = ContainerLabelTagMapping.tags_for_entity(node)
+      tags2 = ContainerLabelTagMapping.tags_for_entity(node2)
+      tags3 = ContainerLabelTagMapping.tags_for_entity(node3)
+      # TODO: do we want them to get same tag or 2 tags?
+      # What do we want the description to be?
+    end
+
+    pending "handles values that differ only past 50th character" do
+      label(node, 'name', 'x' * 50)
+      label(node2, 'name', 'x' * 50 + 'y')
+      label(node3, 'name', 'x' * 50 + 'z')
+      tags = ContainerLabelTagMapping.tags_for_entity(node)
+      tags2 = ContainerLabelTagMapping.tags_for_entity(node2)
+      tags3 = ContainerLabelTagMapping.tags_for_entity(node3)
     end
   end
 
