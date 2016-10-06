@@ -200,5 +200,49 @@ describe OpsController do
         expect(assigns(:edit)[:new][:authentication][:ldap_role]).to eq(true)
       end
     end
+
+    context "#enable_disable_central_admin" do
+      let(:expected_attrs) do
+        [
+          {
+            "id"                   => "region_11_subscription",
+            "status"               => "replicating",
+            "dbname"               => "vmdb's_test",
+            "host"                 => "example.com",
+            "user"                 => "root",
+            "provider_region"      => 11,
+            "provider_region_name" => "The region"
+          },
+          {
+            "id"              => "region_12_subscription",
+            "status"          => "disabled",
+            "dbname"          => "vmdb_test2",
+            "host"            => "test.example.com",
+            "user"            => "postgres",
+            "port"            => 5432,
+            "provider_region" => 12
+          }
+        ]
+      end
+
+      before do
+        FactoryGirl.create(:miq_region, :region => 11, :description => "The 11th region")
+        FactoryGirl.create(:miq_region, :region => 12, :description => "The 12th region")
+      end
+
+      it "enables central admin when selected" do
+        allow(PglogicalSubscription).to receive(:all).and_return(expected_attrs)
+        allow(MiqRegion).to receive(:replication_type).and_return(:global)
+        params = {:ssh_user => 'User1', :ssh_host => 'Host1', :ssh_password => 'pwd1', :provider_region => '11'}
+        post :enable_central_admin, :params => params
+      end
+
+      it "disables central admin when selected for a region that has it configured" do
+        allow(PglogicalSubscription).to receive(:all).and_return(expected_attrs)
+        allow(MiqRegion).to receive(:replication_type).and_return(:global)
+        params = {:ssh_user => 'User1', :ssh_host => 'Host2', :ssh_password => 'pwd2', :provider_region => '12'}
+        post :disable_central_admin, :params => params
+      end
+    end
   end
 end
