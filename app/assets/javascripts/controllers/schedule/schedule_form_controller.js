@@ -128,15 +128,10 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
     return testType(/^host/);
   };
 
-  var scheduleEditButtonClicked = function(buttonName, serializeFields) {
+  var scheduleEditButtonClicked = function(buttonName, data) {
     miqService.sparkleOn();
     var url = '/ops/schedule_edit/' + scheduleFormId + '?button=' + buttonName;
-    if (serializeFields === undefined) {
-      miqService.miqAjaxButton(url);
-    } else {
-      // FIXME
-      miqService.miqAjaxButton(url, true);
-    }
+    miqService.miqAjaxButton(url, data);
   };
 
   $scope.buildLegend = function() {
@@ -269,7 +264,7 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
   };
 
   $scope.saveClicked = function() {
-    scheduleEditButtonClicked('save', true);
+    scheduleEditButtonClicked('save', $scope.scheduleModel);
     $scope.angularForm.$setPristine(true);
   };
 
