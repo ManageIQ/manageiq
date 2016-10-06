@@ -1062,6 +1062,8 @@ module VmCommon
       "xx-arch"
     elsif vm.cloud && vm.template
       TreeBuilder.build_node_cid(vm.ext_management_system)
+    elsif vm.cloud && vm.availability_zone.nil?
+      TreeBuilder.build_node_cid(vm.ext_management_system)
     elsif vm.cloud
       TreeBuilder.build_node_cid(vm.availability_zone)
     else
