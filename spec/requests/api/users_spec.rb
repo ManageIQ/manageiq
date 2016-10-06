@@ -317,4 +317,61 @@ RSpec.describe "users API" do
       expect(User.exists?(user2_id)).to be_falsey
     end
   end
+
+  describe "tags subcollection" do
+    it "can list a user's tags" do
+      user = FactoryGirl.create(:user)
+      FactoryGirl.create(:classification_department_with_tags)
+      Classification.classify(user, "department", "finance")
+      api_basic_authorize
+
+      run_get("#{users_url(user.id)}/tags")
+
+      expect(response.parsed_body).to include("subcount" => 1)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "can assign a tag to a user" do
+      user = FactoryGirl.create(:user)
+      FactoryGirl.create(:classification_department_with_tags)
+      api_basic_authorize(subcollection_action_identifier(:users, :tags, :assign))
+
+      run_post("#{users_url(user.id)}/tags", :action => "assign", :category => "department", :name => "finance")
+
+      expected = {
+        "results" => [
+          a_hash_including(
+            "success"      => true,
+            "message"      => a_string_matching(/assigning tag/i),
+            "tag_category" => "department",
+            "tag_name"     => "finance"
+          )
+        ]
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "can unassign a tag from a user" do
+      user = FactoryGirl.create(:user)
+      FactoryGirl.create(:classification_department_with_tags)
+      Classification.classify(user, "department", "finance")
+      api_basic_authorize(subcollection_action_identifier(:users, :tags, :unassign))
+
+      run_post("#{users_url(user.id)}/tags", :action => "unassign", :category => "department", :name => "finance")
+
+      expected = {
+        "results" => [
+          a_hash_including(
+            "success"      => true,
+            "message"      => a_string_matching(/unassigning tag/i),
+            "tag_category" => "department",
+            "tag_name"     => "finance"
+          )
+        ]
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+  end
 end
