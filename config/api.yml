@@ -929,6 +929,9 @@
     - :collection
     :verbs: *gp
     :klass: MiqRequest
+    :subcollections:
+    - :request_tasks
+    - :tasks
     :collection_actions:
       :get:
       - :name: read
@@ -936,10 +939,17 @@
       :post:
       - :name: query
         :identifier: miq_request_show_list
+      - :name: create
+        :identifier: vm_miq_request_new
+      - :name: edit
+        :identifier: miq_request_edit
     :resource_actions:
       :get:
       - :name: read
         :identifier: miq_request_show
+      :post:
+      - :name: edit
+        :identifier: miq_request_edit
   :resource_actions:
     :description: Resource Actions
     :options:
