@@ -29,18 +29,11 @@ ManageIQ.angular.app.controller('keyPairCloudFormController', ['$http', '$scope'
     }
   };
 
-  var keyPairEditButtonClicked = function(buttonName, serializeFields) {
+  var keyPairEditButtonClicked = function(buttonName, data) {
     miqService.sparkleOn();
 
     var url = '/auth_key_pair_cloud/create/' + keyPairFormId + '?button=' + buttonName;
-    $scope.keyPairModel.ems_id = $scope.keyPairModel.ems.id;
-    if (serializeFields) {
-      // FIXME serializeModel should be useless here, except for maybe angular.copy?
-      miqService.miqAjaxButton(url, miqService.serializeModel($scope.keyPairModel));
-    } else {
-      miqService.miqAjaxButton(url);
-    }
-    miqService.sparkleOff();
+    miqService.miqAjaxButton(url, data);
   };
 
   $scope.cancelClicked = function() {
@@ -55,7 +48,8 @@ ManageIQ.angular.app.controller('keyPairCloudFormController', ['$http', '$scope'
   };
 
   $scope.saveClicked = function() {
-    keyPairEditButtonClicked('save', true);
+    $scope.keyPairModel.ems_id = $scope.keyPairModel.ems.id;
+    keyPairEditButtonClicked('save', $scope.keyPairModel);
     $scope.angularForm.$setPristine(true);
   };
 
