@@ -110,23 +110,23 @@ Lint/UselessSetterCall:
 Lint/Void:
   Enabled: false
 Metrics/AbcSize:
-  Enabled: true
+  Enabled: false
 Metrics/BlockNesting:
   Enabled: true
 Metrics/ClassLength:
-  Enabled: true
+  Enabled: false
 Metrics/CyclomaticComplexity:
   Enabled: true
 Metrics/LineLength:
-  Enabled: true
+  Enabled: false
 Metrics/MethodLength:
-  Enabled: true
+  Enabled: false
 Metrics/ModuleLength:
-  Enabled: true
+  Enabled: false
 Metrics/ParameterLists:
   Enabled: true
 Metrics/PerceivedComplexity:
-  Enabled: true
+  Enabled: false
 Performance/CaseWhenSplat:
   Enabled: false
 Performance/Casecmp:
