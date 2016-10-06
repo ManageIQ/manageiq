@@ -1,33 +1,19 @@
-#
-# Overrides
-#
 Rails:
   Enabled: true
 
+Lint/DefEndAlignment:
+  AutoCorrect: true
+Lint/EndAlignment:
+  AutoCorrect: true
 Metrics/AbcSize:
   Max: 20
   Severity: refactor
-Style/AlignHash:
-  EnforcedHashRocketStyle: table
-  EnforcedColonStyle: table
 Metrics/BlockNesting:
   Severity: refactor
 Metrics/ClassLength:
   Severity: refactor
-Style/ClassCheck:
-  EnforcedStyle: kind_of?
-Style/CollectionMethods:
-  PreferredMethods:
-    find: detect
-    find_all: select
-    map: collect
-    reduce: inject
 Metrics/CyclomaticComplexity:
   Severity: refactor
-Style/FormatString:
-  EnforcedStyle: percent
-Style/HashSyntax:
-  EnforcedStyle: hash_rockets
 Metrics/LineLength:
   Max: 120
   Severity: refactor
@@ -38,49 +24,55 @@ Metrics/ParameterLists:
   Severity: refactor
 Metrics/PerceivedComplexity:
   Severity: refactor
-Style/RedundantReturn:
-  AllowMultipleReturnValues: true
-Style/SignalException:
-  EnforcedStyle: only_raise
-Style/SingleLineMethods:
-  AllowIfMethodIsEmpty: false
-Style/TrivialAccessors:
-  AllowPredicates: true
+Rails/FindEach:
+  Enabled: false
+Rails/ReadWriteAttribute:
+  AutoCorrect: false
+Style/AlignHash:
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle: table
 Style/BracesAroundHashParameters:
   EnforcedStyle: context_dependent
-#
-# Enabled/Disabled
-#
 Style/ClassAndModuleChildren:
   Enabled: false
-Lint/DefEndAlignment:
-  AutoCorrect: true
+Style/ClassCheck:
+  EnforcedStyle: kind_of?
+Style/CollectionMethods:
+  PreferredMethods:
+    find: detect
+    find_all: select
+    map: collect
+    reduce: inject
 Style/Documentation:
   Enabled: false
 Style/Encoding:
   Enabled: false
-Lint/EndAlignment:
-  AutoCorrect: true
 Style/ExtraSpacing:
   AutoCorrect: true
-Rails/FindEach:
-  Enabled: false
+Style/FormatString:
+  EnforcedStyle: percent
 Style/GuardClause:
   Enabled: false
+Style/HashSyntax:
+  EnforcedStyle: hash_rockets
 Style/IfUnlessModifier:
   Enabled: false
 Style/NumericLiterals:
   AutoCorrect: false
-Style/ParallelAssignment:
-  Enabled: false
 Style/PerlBackrefs:
   Enabled: false
-Rails/ReadWriteAttribute:
-  AutoCorrect: false
+Style/ParallelAssignment:
+  Enabled: false
+Style/RedundantReturn:
+  AllowMultipleReturnValues: true
 Style/RescueModifier:
   AutoCorrect: false
+Style/SignalException:
+  EnforcedStyle: only_raise
 Style/SingleLineBlockParams:
   Enabled: false
+Style/SingleLineMethods:
+  AllowIfMethodIsEmpty: false
 Style/SpaceBeforeFirstArg:
   Enabled: false
 Style/SpaceInsideHashLiteralBraces:
@@ -91,10 +83,12 @@ Style/StringLiterals:
   Enabled: false
 Style/StringLiteralsInInterpolation:
   Enabled: false
-Style/TrailingCommaInLiteral:
-  Enabled: false
 Style/TrailingCommaInArguments:
   Enabled: false
+Style/TrailingCommaInLiteral:
+  Enabled: false
+Style/TrivialAccessors:
+  AllowPredicates: true
 Style/WhileUntilModifier:
   Enabled: false
 Style/WordArray:
