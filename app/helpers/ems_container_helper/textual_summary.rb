@@ -106,4 +106,10 @@ module EmsContainerHelper::TextualSummary
      {:label => _('Hawkular API Port'),
       :value => @ems.connection_configurations.hawkular.endpoint.port}]
   end
+
+  def textual_miq_custom_attributes
+    attrs = @record.custom_attributes
+    return nil if attrs.blank?
+    attrs.collect { |a| {:label => a.name.tr("_", " "), :value => a.value} }
+  end
 end

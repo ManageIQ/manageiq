@@ -100,6 +100,132 @@ describe "Providers API" do
     }
   end
 
+  context "Provider custom_attributes" do
+    let(:provider) { FactoryGirl.create(:ext_management_system, sample_rhevm) }
+    let(:provider_url) { providers_url(provider.id) }
+    let(:ca1) { FactoryGirl.create(:custom_attribute, :name => "name1", :value => "value1") }
+    let(:ca2) { FactoryGirl.create(:custom_attribute, :name => "name2", :value => "value2") }
+    let(:provider_ca_url) { "#{provider_url}/custom_attributes" }
+    let(:ca1_url) { "#{provider_ca_url}/#{ca1.id}" }
+    let(:ca2_url) { "#{provider_ca_url}/#{ca2.id}" }
+    let(:provider_ca_url_list) { [ca1_url, ca2_url] }
+
+    it "getting custom_attributes from a provider with no custom_attributes" do
+      api_basic_authorize
+
+      run_get(provider_ca_url)
+
+      expect_empty_query_result(:custom_attributes)
+    end
+
+    it "getting custom_attributes from a provider" do
+      api_basic_authorize
+      provider.custom_attributes = [ca1, ca2]
+
+      run_get provider_ca_url
+
+      expect_query_result(:custom_attributes, 2)
+
+      expect_result_resources_to_include_hrefs("resources", :provider_ca_url_list)
+    end
+
+    it "getting custom_attributes from a provider in expanded form" do
+      api_basic_authorize
+      provider.custom_attributes = [ca1, ca2]
+
+      run_get provider_ca_url, :expand => "resources"
+
+      expect_query_result(:custom_attributes, 2)
+
+      expect_result_resources_to_include_data("resources", "name" => %w(name1 name2))
+    end
+
+    it "getting custom_attributes from a provider using expand" do
+      api_basic_authorize action_identifier(:providers, :read, :resource_actions, :get)
+      provider.custom_attributes = [ca1, ca2]
+
+      run_get provider_url, :expand => "custom_attributes"
+
+      expect_single_resource_query("guid" => provider.guid)
+
+      expect_result_resources_to_include_data("custom_attributes", "name" => %w(name1 name2))
+    end
+
+    it "delete a custom_attribute without appropriate role" do
+      api_basic_authorize
+      provider.custom_attributes = [ca1]
+
+      run_post(provider_ca_url, gen_request(:delete, nil, provider_url))
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "delete a custom_attribute from a provider via the delete action" do
+      api_basic_authorize action_identifier(:providers, :edit)
+      provider.custom_attributes = [ca1]
+
+      run_post(provider_ca_url, gen_request(:delete, nil, ca1_url))
+
+      expect(response).to have_http_status(:ok)
+
+      expect(provider.reload.custom_attributes).to be_empty
+    end
+
+    it "add custom attribute to a provider without a name" do
+      api_basic_authorize action_identifier(:providers, :edit)
+
+      run_post(provider_ca_url, gen_request(:add, "value" => "value1"))
+
+      expect_bad_request("Must specify a name")
+    end
+
+    it "add custom attributes to a provider" do
+      api_basic_authorize action_identifier(:providers, :edit)
+
+      run_post(provider_ca_url, gen_request(:add, [{"name" => "name1", "value" => "value1"},
+                                                   {"name" => "name2", "value" => "value2"}]))
+      expected = {
+        "results" => a_collection_containing_exactly(
+          a_hash_including("name" => "name1", "value" => "value1", "section" => "metadata"),
+          a_hash_including("name" => "name2", "value" => "value2", "section" => "metadata")
+        )
+      }
+      expect(response).to have_http_status(:ok)
+
+      expect(response.parsed_body).to include(expected)
+
+      expect(provider.custom_attributes.size).to eq(2)
+    end
+
+    it "formats custom attribute of type date" do
+      api_basic_authorize action_identifier(:providers, :edit)
+      date_field = DateTime.new.in_time_zone
+
+      run_post(provider_ca_url, gen_request(:add, [{"name"       => "name1",
+                                                    "value"      => date_field,
+                                                    "field_type" => "DateTime"}]))
+
+      expect(response).to have_http_status(:ok)
+
+      expect(provider.custom_attributes.first.serialized_value).to eq(date_field)
+
+      expect(provider.custom_attributes.first.section).to eq("metadata")
+    end
+
+    it "edit a custom attribute by name" do
+      api_basic_authorize action_identifier(:providers, :edit)
+      provider.custom_attributes = [ca1]
+
+      run_post(provider_ca_url, gen_request(:edit, "name" => "name1", "value" => "value one"))
+
+      expect(response).to have_http_status(:ok)
+
+      expect_result_resources_to_include_data("results", "value" => ["value one"])
+
+      expect(provider.reload.custom_attributes.first.value).to eq("value one")
+    end
+  end
+
   describe "Providers actions on Provider class" do
     let(:foreman_type) { ManageIQ::Providers::Foreman::Provider }
     let(:sample_foreman) do
