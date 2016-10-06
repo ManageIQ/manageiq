@@ -338,10 +338,6 @@ describe Service do
     end
 
     describe "#chargeback_report" do
-      it "raises error if chargeback report not found" do
-        expect { @service.chargeback_report }.to raise_error(RuntimeError)
-      end
-
       it "returns chargeback report" do
         EvmSpecHelper.local_miq_server
         @service.generate_chargeback_report
