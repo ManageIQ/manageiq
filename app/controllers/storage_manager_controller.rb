@@ -37,18 +37,14 @@ class StorageManagerController < ApplicationController
       else
         javascript_redirect :action => @refresh_partial, :id => @redirect_id
       end
+    elsif @refresh_div == "main_div" && @lastaction == "show_list"
+      replace_gtl_main_div
+    elsif @refresh_div == "flash_msg_div"
+      javascript_flash
     else
-      if @refresh_div == "main_div" && @lastaction == "show_list"
-        replace_gtl_main_div
-      else
-        if @refresh_div == "flash_msg_div"
-          javascript_flash
-        else
-          render :update do |page|
-            page << javascript_prologue
-            page.replace_html(@refresh_div, :partial => @refresh_partial)
-          end
-        end
+      render :update do |page|
+        page << javascript_prologue
+        page.replace_html(@refresh_div, :partial => @refresh_partial)
       end
     end
   end

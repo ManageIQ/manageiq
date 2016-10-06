@@ -45,9 +45,11 @@ module ReportController::Menus
   end
 
   def menu_folder_message_display
-    text = params[:typ] == "delete" ?
-      _("Can not delete folder, one or more reports in the selected folder are not owned by your group") :
-      _("Double Click on 'New Folder' to edit")
+    text = if params[:typ] == "delete"
+             _("Can not delete folder, one or more reports in the selected folder are not owned by your group")
+           else
+             _("Double Click on 'New Folder' to edit")
+           end
     render_flash(text, :warning)
   end
 

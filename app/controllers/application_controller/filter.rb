@@ -415,26 +415,24 @@ module ApplicationController::Filter
       render :update do |page|
         page << javascript_prologue
       end
-    else # Something else changed so update the exp_editor form
-      if @refresh_partial.to_s == 'flash_msg_div'
-        javascript_flash
-      else
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-          page.replace("exp_atom_editor_div", :partial => "layouts/exp_atom/editor")
+    elsif @refresh_partial.to_s == 'flash_msg_div'
+      javascript_flash
+    else
+      render :update do |page|
+        page << javascript_prologue
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace("exp_atom_editor_div", :partial => "layouts/exp_atom/editor")
 
-          page << ENABLE_CALENDAR if calendar_needed?
-          if @edit.fetch_path(@expkey, :val1, :type)
-            page << "ManageIQ.expEditor.first.type = '#{@edit[@expkey][:val1][:type]}';"
-            page << "ManageIQ.expEditor.first.title = '#{@edit[@expkey][:val1][:title]}';"
-          end
-          if @edit.fetch_path(@expkey, :val2, :type)
-            page << "ManageIQ.expEditor.second.type = '#{@edit[@expkey][:val2][:type]}';"
-            page << "ManageIQ.expEditor.second.title = '#{@edit[@expkey][:val2][:title]}';"
-          end
-          page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
+        page << ENABLE_CALENDAR if calendar_needed?
+        if @edit.fetch_path(@expkey, :val1, :type)
+          page << "ManageIQ.expEditor.first.type = '#{@edit[@expkey][:val1][:type]}';"
+          page << "ManageIQ.expEditor.first.title = '#{@edit[@expkey][:val1][:title]}';"
         end
+        if @edit.fetch_path(@expkey, :val2, :type)
+          page << "ManageIQ.expEditor.second.type = '#{@edit[@expkey][:val2][:type]}';"
+          page << "ManageIQ.expEditor.second.title = '#{@edit[@expkey][:val2][:title]}';"
+        end
+        page << "miqSparkle(false);" # Need to turn off sparkle in case original ajax element gets replaced
       end
     end
   end
