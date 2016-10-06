@@ -1,6 +1,4 @@
-languages:
-  Ruby: true
-  JavaScript: true
+---
 exclude_paths:
 - "app/assets/javascripts/dhtmlx*/*"
 - "gems/pending/spec/*"
@@ -9,3 +7,43 @@ exclude_paths:
 - "public/javascripts/timeline/*"
 - "spec/*"
 - "test/*"
+engines:
+  brakeman:
+    # very slow :sad_panda:
+    enabled: false
+  bundler-audit:
+    # requires Gemfile.lock
+    enabled: false
+  csslint:
+    enabled: false
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - ruby
+      - javascript
+  eslint:
+    # Still failing :sad_panda:
+    enabled: false
+    channel: "eslint-2"
+  fixme:
+    # let's enable later
+    enabled: false
+  markdownlint:
+    # let's enable later
+    enabled: false
+  rubocop:
+    enabled: true
+ratings:
+  paths:
+  - Gemfile.lock
+  - "**.erb"
+  - "**.haml"
+  - "**.rb"
+  - "**.rhtml"
+  - "**.slim"
+  - "**.css"
+  - "**.inc"
+  - "**.js"
+  - "**.jsx"
+  - "**.module"
