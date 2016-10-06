@@ -315,11 +315,7 @@ module OpsController::Diagnostics
     end
     @schedule.sched_action = {:method => "db_backup"}
     if @flash_array
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        page << "miqSparkle(false);"
-      end
+      javascript_flash
       return
     end
 
@@ -339,11 +335,7 @@ module OpsController::Diagnostics
       @schedule.errors.each do |field, msg|
         add_flash("#{field.to_s.capitalize} #{msg}", :error)
       end
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        page << "miqSparkle(false);"
-      end
+      javascript_flash(:spinner_off => true)
     end
   end
 
@@ -404,11 +396,7 @@ module OpsController::Diagnostics
     else
       add_flash(_("Database Garbage Collection successfully initiated"))
     end
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page << "miqSparkle(false);"
-    end
+    javascript_flash
   end
 
   # to delete orphaned records for user that was delete from db

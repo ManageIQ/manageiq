@@ -51,10 +51,7 @@ module ApplicationController::Filter
     end
 
     if flash_errors?
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     else
       if ["commit", "not", "remove"].include?(params[:pressed])
         copy = copy_hash(@edit[@expkey][:expression])
@@ -97,10 +94,7 @@ module ApplicationController::Filter
     token = params[:token].to_i
     if token == @edit[@expkey][:exp_token] || # User selected same token as already selected
        (@edit[@expkey][:exp_token] && @edit[:edit_exp].key?("???")) # or new token in process
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      javascript_flash
     else
       exp = exp_find_by_token(@edit[@expkey][:expression], token)
       @edit[:edit_exp] = copy_hash(exp)
@@ -421,14 +415,12 @@ module ApplicationController::Filter
       render :update do |page|
         page << javascript_prologue
       end
-    else                                # Something else changed so update the exp_editor form
-      render :update do |page|
-        page << javascript_prologue
-        if !@refresh_partial.nil?
-          if @refresh_div == "flash_msg_div"
-            page.replace('flash_msg_div', :partial => @refresh_partial)
-          end
-        else
+    else # Something else changed so update the exp_editor form
+      if @refresh_partial.to_s == 'flash_msg_div'
+        javascript_flash
+      else
+        render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           page.replace("exp_atom_editor_div", :partial => "layouts/exp_atom/editor")
 
@@ -919,14 +911,16 @@ module ApplicationController::Filter
       end
     end
     build_listnav_search_list(@view.db) if @flash_array.blank?
-    render :update do |page|
-      page << javascript_prologue
-      if @flash_array.blank?
+
+    if @flash_array.blank?
+      render :update do |page|
+        page << javascript_prologue
         page.replace(:listnav_div, :partial => "layouts/listnav")
-      else
         page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
+        page << "miqSparkleOff();"
       end
-      page << "miqSparkleOff();"
+    else
+      javascript_flash
     end
   end
 
