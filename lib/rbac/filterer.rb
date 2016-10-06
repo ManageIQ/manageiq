@@ -72,6 +72,9 @@ module Rbac
     #   :descendant_ids
     #   ...
     TENANT_ACCESS_STRATEGY = {
+      'CloudSnapshot'          => :descendant_ids,
+      'CloudTenant'            => :descendant_ids,
+      'CloudVolume'            => :descendant_ids,
       'ExtManagementSystem'    => :ancestor_ids,
       'MiqAeNamespace'         => :ancestor_ids,
       'MiqGroup'               => :descendant_ids,
