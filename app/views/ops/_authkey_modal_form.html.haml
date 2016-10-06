@@ -1,22 +1,23 @@
-.modal-header
-  %h1 Generate Authorization Key For An Appliance in the Region
-%form{:name => "authkey_modal_form", "ng-submit" => "submitForm()"}
-  .modal-body
-    / Host
-    .form-group
-      %label Host
-      %input.form-control{:name => "ssh_host", "ng-model" => "ssh_host", :type => "text"}
-        %p.help-block{"ng-show" => "authkey_modal_form.ssh_host.$invalid  !authkey_modal_form.ssh_host.$pristine"} SSH host is required.
-      / User
+#myModal.modal.fade{"aria-hidden" => "true", :role => "dialog", :tabindex => "-1"}
+  .modal-header
+    %h4.modal-header SSH Information For An Appliance In the Region
+  %form.form-horizontal{:name => "authkeyModalForm", "ng-submit" => "$ctrl.submitForm()"}
+    .modal-body
       .form-group
-        %label User
-        %input.form-control{:name => "ssh_user", "ng-model" => "ssh_user", :type => "text"}
-          %p.help-block{"ng-show" => "authkey_modal_form.ssh_user.$invalid  !authkey_modal_form.ssh_user.$pristine"} SSH user is required.
-        / Password
+        %label.col-sm-2.control-label Host
+        .col-sm-10
+          %input.form-control{:name => "ssh_host", "ng-model" => "$ctrl.ssh_params.ssh_host", :type => "text"}
+            %p.help-block{"ng-show" => "authkeyModalForm.ssh_host.$invalid  !authkeyModalForm.ssh_host.$pristine"} SSH host is required.
         .form-group
-          %label Password
-          %input.form-control{:name => "ssh_password", "ng-model" => "ssh_password", :type => "text"}
-            %p.help-block{"ng-show" => "authkey_modal_form.ssh_password.$invalid  !authkey_modal_form.ssh_password.$pristine"} SSH password is required.
-        .modal-footer
-          %button.btn.btn-primary{"ng-disabled" => "authkey_modal_form.$invalid", :type => "submit"} Submit
-          %button.btn.btn-warning{"ng-click" => "cancelForm()"} Cancel
+          %label.col-sm-2.control-label User
+          .col-sm-10
+            %input.form-control{:name => "ssh_user", "ng-model" => "$ctrl.ssh_params.ssh_user", :type => "text"}
+              %p.help-block{"ng-show" => "aauthkeyModalForm.ssh_user.$invalid  !authkeyModalForm.ssh_user.$pristine"} SSH user is required.
+          .form-group
+            %label.col-sm-2.control-label Password
+            .col-sm-10
+              %input.form-control{:name => "ssh_password", "ng-model" => "$ctrl.ssh_params.ssh_password", :type => "password"}
+                %p.help-block{"ng-show" => "authkeyModalForm.ssh_password.$invalid  !authkeyModalForm.ssh_password.$pristine"} SSH password is required.
+          .modal-footer
+            %button.btn.btn-primary{"ng-disabled" => "authkeyModalForm.$invalid", :type => "submit"} Submit
+            %button.btn.btn-default{"ng-click" => "$ctrl.cancelForm()"} Cancel
