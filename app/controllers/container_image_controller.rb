@@ -6,6 +6,10 @@ class ContainerImageController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
+  def show_list
+    process_show_list(:where_clause => 'container_images.deleted_on IS NULL')
+  end
+
   def guest_applications
     show_association('guest_applications', _('Packages'), 'guest_application', :guest_applications, GuestApplication)
   end

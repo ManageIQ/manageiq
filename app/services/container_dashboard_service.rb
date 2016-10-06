@@ -67,7 +67,7 @@ class ContainerDashboardService
         :href         => get_url_to_entity(:container_service)
       },
       :images     => {
-        :count        => @ems.present? ? @ems.container_images.count : ContainerImage.count,
+        :count        => @ems.present? ? @ems.container_images.count : ContainerImage.where.not(:ext_management_system => nil).count,
         :errorCount   => 0,
         :warningCount => 0,
         :href         => get_url_to_entity(:container_image)
