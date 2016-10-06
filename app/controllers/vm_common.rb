@@ -1060,6 +1060,8 @@ module VmCommon
       "xx-orph"
     elsif vm.archived
       "xx-arch"
+    elsif vm.cloud && vm.template
+      TreeBuilder.build_node_cid(vm.ext_management_system)
     elsif vm.cloud
       TreeBuilder.build_node_cid(vm.availability_zone)
     else

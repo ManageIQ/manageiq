@@ -85,6 +85,10 @@ class TreeBuilder
     "#{prefix}-#{to_cid(record.id)}"
   end
 
+  def self.hide_vms
+    !User.current_user.settings.fetch_path(:display, :display_vms) # default value is false
+  end
+
   # return this nodes model and record id
   def self.extract_node_model_and_id(node_id)
     prefix, record_id = node_id.split("_").last.split('-')

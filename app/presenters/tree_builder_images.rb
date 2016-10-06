@@ -28,6 +28,6 @@ class TreeBuilderImages < TreeBuilder
   end
 
   def x_get_tree_ems_kids(object, count_only)
-    count_only_or_objects_filtered(count_only, object.miq_templates, "name")
+    count_only_or_objects_filtered(count_only, TreeBuilder.hide_vms ? [] : object.miq_templates, "name")
   end
 end
