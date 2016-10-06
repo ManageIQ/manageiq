@@ -121,8 +121,8 @@ class ChargebackVm < Chargeback
     end
   end
 
-  def self.report_name_field
-    "vm_name"
+  def self.report_static_cols
+    %w(vm_name)
   end
 
   def self.report_col_options
@@ -165,5 +165,10 @@ class ChargebackVm < Chargeback
 
   def tags
     Vm.includes(:tags).find_by_ems_ref(vm_uid).try(:tags).to_a
+  end
+
+  def get_rate_parents(perf)
+    @enterprise ||= MiqEnterprise.my_enterprise
+    [perf.parent_host, perf.parent_ems_cluster, perf.parent_storage, perf.parent_ems, @enterprise, perf.resource.try(:tenant)]
   end
 end # class Chargeback

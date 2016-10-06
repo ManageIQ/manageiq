@@ -1,4 +1,4 @@
-class ChargebackContainerProject < Chargeback
+class ChargebackContainerImage < Chargeback
   set_columns_hash(
     :start_date            => :datetime,
     :end_date              => :datetime,
@@ -6,6 +6,7 @@ class ChargebackContainerProject < Chargeback
     :display_range         => :string,
     :chargeback_rates      => :string,
     :project_name          => :string,
+    :image_name            => :string,
     :tag_name              => :string,
     :project_uid           => :string,
     :provider_name         => :string,
@@ -25,7 +26,7 @@ class ChargebackContainerProject < Chargeback
     :total_cost            => :float
   )
 
-  def self.build_results_for_report_ChargebackContainerProject(options)
+  def self.build_results_for_report_ChargebackContainerImage(options)
     # Options:
     #   :rpt_type => chargeback
     #   :interval => daily | weekly | monthly
@@ -38,49 +39,56 @@ class ChargebackContainerProject < Chargeback
     #   :chargeback_type => detail | summary
     #   :entity_id => 1/2/3.../all rails id of entity
 
-    # Find ContainerProjects according to any of these:
+    # Find Project by id or get all projects
     @options = options
     provider_id = options[:provider_id]
-    project_id = options[:entity_id]
-    filter_tag = options[:tag]
+    id = options[:entity_id]
+    raise "must provide option :entity_id and provider_id" if id.nil? && provider_id.nil?
 
-    @projects = if filter_tag.present?
-                  # Get all ids of tagged projects
-                  ContainerProject.find_tagged_with(:all => filter_tag, :ns => "*")
-                elsif provider_id == "all"
-                  ContainerProject.all
-                elsif provider_id.present? && project_id == "all"
-                  ContainerProject.where('ems_id = ? or old_ems_id = ?', provider_id, provider_id)
-                elsif project_id.present?
-                  ContainerProject.where(:id => project_id)
-                elsif project_id.nil? && provider_id.nil? && filter_tag.nil?
-                  raise "must provide option :entity_id, provider_id or tag"
-                end
+    @containers = if provider_id == "all"
+                    Container.all
+                  elsif id == "all"
+                    Container.where('ems_id = ? or old_ems_id = ?', provider_id, provider_id)
+                  else
+                    Container.joins(:container_group).where('container_groups.container_project_id = ? or container_groups.old_container_project_id = ?', id, id)
+                  end
 
-    return [[]] if @projects.empty?
+    @containers = @containers.includes(:container_project, :old_container_project, :container_image)
+    return [[]] if @containers.empty?
+
+    @data_index = {}
+    @containers.each do |c|
+      @data_index.store_path(:container_project, :by_container_id, c.id, c.container_project || c.old_container_project)
+      @data_index.store_path(:container_image, :by_container_id, c.id, c.container_image)
+    end
 
     build_results_for_report_chargeback(options)
   end
 
   def self.get_keys_and_extra_fields(perf, ts_key)
-    key = "#{perf.resource_id}_#{ts_key}"
+    project = @data_index.fetch_path(:container_project, :by_container_id, perf.resource_id)
+    image = @data_index.fetch_path(:container_image, :by_container_id, perf.resource_id)
+
+    key = @options[:groupby] == 'project' ? "#{project.id}_#{ts_key}" : "#{project.id}_#{image.id}_#{ts_key}"
+
     extra_fields = {
-      "project_name"  => perf.resource_name,
-      "project_uid"   => perf.resource.ems_ref,
+      "project_name"  => project.name,
+      "image_name"    => image.try(:full_name) || _("Deleted"), # until image archiving is implemented
+      "project_uid"   => project.ems_ref,
       "provider_name" => perf.parent_ems.try(:name),
-      "provider_uid"  => perf.parent_ems.try(:guid),
-      "archived"      => perf.resource.archived? ? _("Yes") : _("No")
+      "provider_uid"  => perf.parent_ems.try(:name),
+      "archived"      => project.archived? ? _("Yes") : _("No")
     }
 
     [key, extra_fields]
   end
 
   def self.where_clause(records, _options)
-    records.where(:resource_type => ContainerProject.name, :resource_id => @projects.select(:id))
+    records.where(:resource_type => Container.name, :resource_id => @containers.pluck(:id))
   end
 
   def self.report_static_cols
-    %w(project_name)
+    %w(project_name image_name)
   end
 
   def self.report_col_options
@@ -99,12 +107,8 @@ class ChargebackContainerProject < Chargeback
     }
   end
 
-  def tags
-    ContainerProject.includes(:tags).find_by_ems_ref(project_uid).try(:tags).to_a
+  def get_rate_parents(_perf)
+    # get rates from image tags only
+    []
   end
-
-  def get_rate_parents(perf)
-    # Get rate from assigned containers providers only
-    [perf.parent_ems]
-  end
-end # class Chargeback
+end # class ChargebackContainerImage
