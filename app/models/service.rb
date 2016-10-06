@@ -240,9 +240,9 @@ class Service < ApplicationRecord
   end
 
   def chargeback_report
-    miq_report = MiqReportResult.find_by(:name => chargeback_report_name)
-    raise "Chargeback report for service '#{name}' not found" if miq_report.nil?
-    {:results => miq_report.result_set}
+    report_result = MiqReportResult.find_by(:name => chargeback_report_name)
+    raise "Chargeback report for service '#{name}' not found" if report_result.nil?
+    {:results => report_result.result_set}
   end
 
   def self.queue_chargeback_reports(options = {})
