@@ -82,7 +82,8 @@ class ApplicationHelper::Toolbar::DiagnosticsRegionCenter < ApplicationHelper::T
               :server_id               => @record.miq_server.id}
           end,
           N_('Promote Server'),
-          :confirm => N_("Do you want to promote this Server to primary?  This will replace any existing primary Server for this Role.")),
+          :confirm => N_("Do you want to promote this Server to primary?  This will replace any existing primary Server for this Role."),
+          :klass => ApplicationHelper::Button::ServerPromote),
       ]
     ),
   ])
