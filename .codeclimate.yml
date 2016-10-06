@@ -51,6 +51,7 @@ engines:
     enabled: false
   rubocop:
     enabled: true
+    config: '.rubocop_cc.yml'
 ratings:
   paths:
   - Gemfile.lock
