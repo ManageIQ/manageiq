@@ -104,7 +104,7 @@ class EmsFolder < ApplicationRecord
   end
 
   def storages
-    children(:of_type => 'Storage').sort_by { |c| c.name.downcase }
+    children(:of_type => 'Storage')
   end
 
   alias add_storage set_child

@@ -136,7 +136,7 @@ module EmsInfraHelper::TextualSummary
   def textual_datastores
     return nil if @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
 
-    textual_link(@record.storages,
+    textual_link(@record.storages.sort_by { |s| s.name.downcase },
                  :as   => Storage,
                  :link => ems_infra_path(@record.id, :display => 'storages'))
   end
