@@ -10,6 +10,7 @@ class ChargebackRateDetail < ApplicationRecord
   validate :contiguous_tiers?
 
   FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric).freeze
+  PER_TIME_TYPES = {"hourly" => _("Hourly"), "weekly" => _("Weekly"), "monthly" => _("Monthly")}.freeze
 
   # Set the rates according to the tiers
   def find_rate(value)
