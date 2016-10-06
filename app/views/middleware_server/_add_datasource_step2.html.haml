@@ -7,7 +7,7 @@
       %label.col-md-4.control-label{:for => "jdbc_driver_name_input"}
         = _("Name")
       .col-md-8
-        %input.form-control#jdbc_driver_name_input{:type          => "text",
+        %input.form-control#jdbc_ds_driver_name_input{:type          => "text",
                                                    "name"         => "jdbc_driver_name_input",
                                                    "ng-required"  => "true",
                                                    "ng-maxlength" => "100",
@@ -15,9 +15,9 @@
                                                    "ng-model"     => "step2DsModel.jdbcDriverName"}
       .col-sm-2
       .col-sm-10
-        %p.ng-error-messages{"ng-show" => "step2Form.jdbc_driver_name_input.$error.required"}
+        %p.ng-error-messages{"ng-show" => "step2Form.jdbc_ds_driver_name_input.$error.required"}
           = _("Required")
-        %p.ng-error-messages{"ng-show" => "step2Form.jdbc_driver_name_input.$error.maxlength"}
+        %p.ng-error-messages{"ng-show" => "step2Form.jdbc_ds_driver_name_input.$error.maxlength"}
           = _("Maximum length is 100")
 
 
