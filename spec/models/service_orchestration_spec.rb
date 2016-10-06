@@ -243,9 +243,18 @@ describe ServiceOrchestration do
       end
     end
 
-    it 'add the provisioned stack to service resources' do
+    it 'adds the provisioned stack to service resources' do
       service.post_provision_configure
       expect(service.service_resources.find_by(:resource_type => 'OrchestrationStack').resource).to eq(@resulting_stack)
+    end
+
+    it 'reconnects cataloged stack with the orchestration template' do
+      # purposely disconnect the template
+      @resulting_stack.update_attributes!(:orchestration_template => nil)
+
+      service.post_provision_configure
+      @resulting_stack.reload
+      expect(@resulting_stack.orchestration_template).to eq(template_in_st)
     end
   end
 end
