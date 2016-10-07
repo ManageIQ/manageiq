@@ -6,7 +6,7 @@
 prov = $evm.root['service_template_provision_task']
 
 unless prov
-  $evm.log(:error, "miq_provision object not provided")
+  $evm.log(:error, "service_template_provision_task object not provided")
   exit(MIQ_STOP)
 end
 
