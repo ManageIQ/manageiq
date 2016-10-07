@@ -263,6 +263,7 @@ class ApplicationController < ActionController::Base
       options[:parent] = identify_record(params[:model_id])
     end
 
+    options[:parent] = options[:parent] || @parent
     @edit = session[:edit]
     current_view, settings = get_view(model_view, options)
     render :json => {

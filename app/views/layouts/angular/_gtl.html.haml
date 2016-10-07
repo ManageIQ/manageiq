@@ -3,7 +3,7 @@
                  "settings"         => "gtlCtrl.settings",
                  "per-page"         => "gtlCtrl.perPage",
                  "rows"             => "gtlCtrl.filteredRows",
-                 "on-row-click"     => "gtlCtrl.onItemClicked(item)",
+                 "on-row-click"     => "gtlCtrl.onItemClicked(item, event)",
                  "on-sort"          => "gtlCtrl.onSort(headerId, isAscending)",
                  "on-item-selected" => "gtlCtrl.onItemSelect(item, isSelected)",
                  "load-more-items"  => "gtlCtrl.onLoadNext(start, perPage)",
@@ -13,7 +13,7 @@
                   "settings"         => "gtlCtrl.settings",
                   "per-page"         => "gtlCtrl.perPage",
                   "rows"             => "gtlCtrl.filteredRows",
-                  "on-row-click"     => "gtlCtrl.onItemClicked(item)",
+                  "on-row-click"     => "gtlCtrl.onItemClicked(item, event)",
                   "on-sort"          => "gtlCtrl.onSort(headerId, isAscending)",
                   "load-more-items"  => "gtlCtrl.onLoadNext(start, perPage)",
                   "on-item-selected" => "gtlCtrl.onItemSelect(item, isSelected)",
@@ -28,6 +28,8 @@
       gtlType: '#{@gtl_type}',
       currId: '#{params[:id]}',
       sortColIdx: '#{@sortcol}',
-      sortDir: '#{@sortdir}'
+      sortDir: '#{@sortdir}',
+      isExplorer: '#{@explorer}' === 'true' ? true : false,
+      showUrl: '#{url_for_db(@view.db)}'
     }
   }});

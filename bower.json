@@ -55,7 +55,7 @@
     "tota11y": "~0.1.6",
     "xml_display": "~0.1.1",
     "jquery": "~2.1.4",
-    "manageiq-ui-components": "karelhala/ui-components#gtl_components"
+    "manageiq-ui-components": "karelhala/ui-components#gtl_list"
   },
   "resolutions": {
     "patternfly-bootstrap-treeview": "~2.1.1",
