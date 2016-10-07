@@ -53,27 +53,27 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :ext_management_system         => 2,
       :flavor                        => 19,
       :availability_zone             => 15,
-      :vm_or_template                => 611,
-      :vm                            => 5,
-      :miq_template                  => 606,
-      :disk                          => 5,
+      :vm_or_template                => 615,
+      :vm                            => 6,
+      :miq_template                  => 609,
+      :disk                          => 6,
       :guest_device                  => 0,
-      :hardware                      => 5,
+      :hardware                      => 6,
       :load_balancer                 => 1,
       :load_balancer_listener        => 1,
       :load_balancer_pool            => 1,
       :load_balancer_pool_member     => 2,
       :network                       => 0,
-      :operating_system              => 611,
-      :relationship                  => 10,
-      :miq_queue                     => 612,
+      :operating_system              => 615,
+      :relationship                  => 11,
+      :miq_queue                     => 616,
       :orchestration_template        => 0,
       :orchestration_stack           => 0,
       :orchestration_stack_parameter => 0,
       :orchestration_stack_output    => 0,
       :orchestration_stack_resource  => 0,
       :security_group                => 3,
-      :network_port                  => 5,
+      :network_port                  => 6,
       :cloud_network                 => 3,
       :floating_ip                   => 3,
       :network_router                => 0,
@@ -215,7 +215,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :type    => "ManageIQ::Providers::Google::NetworkManager::LoadBalancerPool",
     )
     expect(lb.load_balancer_pool_members.map { |m| m.vm.name })
-      .to include("instance-custom-machine-type").and include("wheezy")
+      .to include("instance-custom-machine-type").and include("wheezy-2")
   end
 
   def assert_specific_security_group
