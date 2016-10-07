@@ -73,7 +73,7 @@ class VimPerformanceState < ApplicationRecord
     self.vm_allocated_disk_storage = VimPerformanceState.capture_vm_disk_storage(resource, :allocated_disk)
     self.tag_names = VimPerformanceState.capture_tag_names(resource)
     self.image_tag_names = VimPerformanceState.capture_image_tag_names(resource)
-    self.host_sockets = VimPerformanceState.capture_host_sockets(resource)
+    capture_host_sockets
   end
 
   def vm_count_on
@@ -235,13 +235,13 @@ class VimPerformanceState < ApplicationRecord
     hardware.try(:cpu_total_cores)
   end
 
-  def self.capture_host_sockets(obj)
-    if obj.kind_of?(Host)
-      obj.hardware.try(:cpu_sockets)
-    else
-      if obj.respond_to?(:hosts)
-        obj.hosts.includes(:hardware).collect { |h| h.hardware.try(:cpu_sockets) }.compact.sum
-      end
-    end
+  private
+
+  def capture_host_sockets
+    self.host_sockets = if resource.kind_of?(Host)
+                          resource.hardware.try(:cpu_sockets)
+                        elsif resource.respond_to?(:hosts)
+                          resource.hosts.includes(:hardware).collect { |h| h.hardware.try(:cpu_sockets) }.compact.sum
+                        end
   end
 end
