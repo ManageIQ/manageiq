@@ -31,14 +31,15 @@ describe ManageIQ::Providers::Google::NetworkManager::RefreshParser do
     describe "#ems_inv_to_hashes" do
       it 'returns properly-structured hash' do
         expect(subject).to eql(
-          :cloud_networks             => [],
-          :floating_ips               => [],
-          :load_balancer_listeners    => [],
-          :load_balancers             => [],
-          :load_balancer_pools        => [],
-          :load_balancer_pool_members => [],
-          :network_ports              => [],
-          :security_groups            => []
+          :cloud_networks              => [],
+          :floating_ips                => [],
+          :load_balancer_listeners     => [],
+          :load_balancers              => [],
+          :load_balancer_pools         => [],
+          :load_balancer_pool_members  => [],
+          :load_balancer_health_checks => [],
+          :network_ports               => [],
+          :security_groups             => []
         )
       end
     end
@@ -75,10 +76,31 @@ describe ManageIQ::Providers::Google::NetworkManager::RefreshParser do
               :id            => "some-target-pool-id",
               :name          => "my-tp",
               :self_link     => "https://www.googleapis.com/compute/v1/projects/#{ems.project}/regions/#{az.name}/targetPools/my-tp",
-              :health_checks => nil,
+              :health_checks => ["https://www.googleapis.com/compute/v1/projects/#{ems.project}/global/httpHealthChecks/my-healthcheck"],
               :instances     => [
-                "https://www.googleapis.com/compute/v1/projects/#{ems.project}/zones/#{az.name}/instances/#{vm.name}"]
+                "https://www.googleapis.com/compute/v1/projects/#{ems.project}/zones/#{az.name}/instances/#{vm.name}"],
+              :get_health    => {
+                "https://www.googleapis.com/compute/v1/projects/#{ems.project}/zones/#{az.name}/instances/#{vm.name}" => [
+                  "instance"    => "https://www.googleapis.com/compute/v1/projects/#{ems.project}/zones/#{az.name}/instances/#{vm.name}",
+                  "healthState" => "HEALTHY"
+                ]
+              }
             )
+          ])
+      end
+      allow(connection).to receive(:http_health_checks) do
+        fog_collection(
+          [
+            instance_double(
+              "Fog::Compute::Google::HttpHealthCheck",
+              :id                  => "some-healthcheck-id",
+              :name                => "my-healthcheck",
+              :request_path        => "/foo",
+              :port                => 80,
+              :check_interval_sec  => 5,
+              :timeout_sec         => 6,
+              :unhealthy_threshold => 7,
+              :healthy_threshold   => 8)
           ])
       end
 
@@ -131,6 +153,31 @@ describe ManageIQ::Providers::Google::NetworkManager::RefreshParser do
                 :ems_ref => Digest::MD5.base64digest(
                   "https://www.googleapis.com/compute/v1/projects/#{ems.project}/zones/#{az.name}/instances/#{vm.name}"),
                 :vm      => vm
+              }
+            ]
+          ]
+        )
+      end
+      it "returns a load balancer health check" do
+        expect(subject[:load_balancer_health_checks]).to eql(
+          [
+            :name                               => "my-healthcheck",
+            :ems_ref                            => "some-id_some-target-pool-id_some-healthcheck-id",
+            :type                               => "ManageIQ::Providers::Google::NetworkManager::LoadBalancerHealthCheck",
+            :protocol                           => "HTTP",
+            :port                               => 80,
+            :url_path                           => "/foo",
+            :interval                           => 5,
+            :timeout                            => 6,
+            :unhealthy_threshold                => 7,
+            :healthy_threshold                  => 8,
+            :load_balancer                      => subject[:load_balancers][0],
+            :load_balancer_listener             => subject[:load_balancer_listeners][0],
+            :load_balancer_health_check_members => [
+              {
+                :load_balancer_pool_member => subject[:load_balancer_pools][0][:load_balancer_pool_member_pools][0][:load_balancer_pool_member],
+                :status                    => "HEALTHY",
+                :status_reason             => ""
               }
             ]
           ]
