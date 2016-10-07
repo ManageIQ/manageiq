@@ -70,7 +70,7 @@ class VimPerformanceState < ApplicationRecord
     self.reserve_mem = VimPerformanceState.capture_reserve(resource, :memory_reserve)
     capture_vm_disk_storage
     self.tag_names = VimPerformanceState.capture_tag_names(resource)
-    self.image_tag_names = VimPerformanceState.capture_image_tag_names(resource)
+    capture_image_tag_names
     capture_host_sockets
   end
 
@@ -212,12 +212,15 @@ class VimPerformanceState < ApplicationRecord
     obj.tag_list(:ns => "/managed").split.join("|")
   end
 
-  def self.capture_image_tag_names(obj)
-    return '' unless obj.respond_to?(:container_image) && obj.container_image.present?
-    obj.container_image.tag_list(:ns => "/managed").split.join("|")
-  end
-
   private
+
+  def capture_image_tag_names
+    self.image_tag_names = if resource.respond_to?(:container_image) && resource.container_image.present?
+                             resource.container_image.tag_list(:ns => "/managed").split.join("|")
+                           else
+                             ''
+                           end
+  end
 
   def capture_vm_disk_storage
     if resource.kind_of?(VmOrTemplate)
