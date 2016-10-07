@@ -61,7 +61,7 @@ class VimPerformanceState < ApplicationRecord
     self.assoc_ids = VimPerformanceState.capture_assoc_ids(resource)
     self.parent_host_id = VimPerformanceState.capture_parent_host(resource)
     self.parent_storage_id = VimPerformanceState.capture_parent_storage(resource)
-    self.parent_ems_id = VimPerformanceState.capture_parent_ems(resource)
+    capture_parent_ems
     self.parent_ems_cluster_id = VimPerformanceState.capture_parent_cluster(resource)
     capture_cpu_total_cores
     self.total_cpu = VimPerformanceState.capture_total(resource, :cpu_speed)
@@ -199,11 +199,11 @@ class VimPerformanceState < ApplicationRecord
     obj.storage_id if obj.kind_of?(VmOrTemplate)
   end
 
-  def self.capture_parent_ems(obj)
-    obj.try(:ems_id)
-  end
-
   private
+
+  def capture_parent_ems
+    self.parent_ems_id = resource.try(:ems_id)
+  end
 
   def capture_reserve
     self.reserve_cpu = resource.try(:cpu_reserve)
