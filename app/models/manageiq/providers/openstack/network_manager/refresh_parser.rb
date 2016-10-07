@@ -174,10 +174,12 @@ module ManageIQ::Providers
         :provider_physical_network => network.provider_physical_network,
         :provider_network_type     => network.provider_network_type,
         :provider_segmentation_id  => network.provider_segmentation_id,
+        :port_security_enabled     => network.attributes["port_security_enabled"],
+        :qos_policy_id             => network.attributes["qos_policy_id"],
         :vlan_transparent          => network.attributes["vlan_transparent"],
+
         # TODO(lsmola) expose attributes in FOG
         :maximum_transmission_unit => network.attributes["mtu"],
-        :port_security_enabled     => network.attributes["port_security_enabled"],
       }
       return uid, new_result
     end

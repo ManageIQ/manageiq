@@ -1468,8 +1468,11 @@ Vmdb::Application.routes.draw do
 
     :cloud_network             => {
       :get  => %w(
+        cloud_network_form_fields
         download_data
+        edit
         index
+        new
         show
         show_list
         tagging_edit
@@ -1477,12 +1480,16 @@ Vmdb::Application.routes.draw do
         compare_get,
       :post => %w(
         button
+        create
+        dynamic_checkbox_refresh
+        form_field_changed
         quick_search
         listnav_search_selected
         show
         show_list
         tag_edit_form_field_changed
         tagging_edit
+        update
       ) +
         adv_search_post +
         compare_post +
