@@ -226,7 +226,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     f = Hash.new { |h, k| h[k] = [] }
 
     if get_value(@values[:service_template_request])
-      f[:hide] = [:number_of_vms, :vm_description, :schedule_type, :schedule_time]
+      f[:hide] = [:vm_description, :schedule_type, :schedule_time]
     end
 
     auto_placement = show_flag = auto_placement_enabled? ? :hide : :edit
