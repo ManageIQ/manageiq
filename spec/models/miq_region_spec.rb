@@ -192,6 +192,26 @@ describe MiqRegion do
     end
   end
 
+  describe "#remove_auth_key" do
+    let(:remote_region) { FactoryGirl.create(:miq_region) }
+    let(:remote_key)    { "this is the encryption key!" }
+
+    before { EvmSpecHelper.create_guid_miq_server_zone }
+
+    it "removes a key if configured" do
+      FactoryGirl.create(
+        :api_auth_token,
+        :resource_id   => remote_region.id,
+        :resource_type => "MiqRegion",
+        :auth_key      => remote_key
+      )
+      expect(remote_region.auth_key_configured?).to be true
+      remote_region.remove_auth_key
+      remote_region.reload
+      expect(remote_region.auth_key_configured?).to be false
+    end
+  end
+
   describe "#api_system_auth_token" do
     let(:region) { FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number) }
 
