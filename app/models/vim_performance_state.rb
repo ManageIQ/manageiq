@@ -63,8 +63,7 @@ class VimPerformanceState < ApplicationRecord
     self.parent_storage_id = VimPerformanceState.capture_parent_storage(resource)
     self.parent_ems_id = VimPerformanceState.capture_parent_ems(resource)
     self.parent_ems_cluster_id = VimPerformanceState.capture_parent_cluster(resource)
-    # TODO: This is cpu_total_cores and needs to be renamed, but reports depend on the name :numvcpus
-    self.numvcpus = VimPerformanceState.capture_cpu_total_cores(resource)
+    capture_cpu_total_cores
     self.total_cpu = VimPerformanceState.capture_total(resource, :cpu_speed)
     self.total_mem = VimPerformanceState.capture_total(resource, :memory)
     self.reserve_cpu = VimPerformanceState.capture_reserve(resource, :cpu_reserve)
@@ -223,19 +222,17 @@ class VimPerformanceState < ApplicationRecord
     obj.send("#{field}_storage") if obj.kind_of?(VmOrTemplate)
   end
 
-  def self.capture_cpu_total_cores(obj)
-    if obj.respond_to?(:hardware)
-      hardware = obj.hardware
-    elsif obj.respond_to?(:container_node)
-      hardware = obj.container_node.hardware
-    else
-      return nil
-    end
-
-    hardware.try(:cpu_total_cores)
-  end
-
   private
+
+  def capture_cpu_total_cores
+    hardware = if resource.respond_to?(:hardware)
+                 resource.hardware
+               elsif resource.respond_to?(:container_node)
+                 resource.container_node.hardware
+               end
+    # TODO: This is cpu_total_cores and needs to be renamed, but reports depend on the name :numvcpus
+    self.numvcpus = hardware.try(:cpu_total_cores)
+  end
 
   def capture_host_sockets
     self.host_sockets = if resource.kind_of?(Host)
