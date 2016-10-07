@@ -108,6 +108,7 @@ module ApplianceConsole
       say("\nConfiguring IPA (may take a minute) ...")
       ipa_client_unconfigure if ipa_client_configured?
       ipa_client_configure(realm, @domain, @ipaserver, @principal, @password)
+      enable_kerberos_dns_lookups
     end
 
     def configure_pam
