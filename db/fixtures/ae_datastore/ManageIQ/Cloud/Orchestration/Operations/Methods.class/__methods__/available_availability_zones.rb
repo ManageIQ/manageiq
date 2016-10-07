@@ -7,22 +7,21 @@ class AvailableAvailabilityZones
   end
 
   def main
-    az_list = {}
+    fill_dialog_field(fetch_list_data)
+  end
+
+  def fetch_list_data
     service = @handle.root.attributes["service_template"] || @handle.root.attributes["service"]
-    if service.respond_to?(:orchestration_manager) && service.orchestration_manager
-      service.orchestration_manager.availability_zones.each { |t| az_list[t.ems_ref] = t.name }
-    end
+    av_zones = service.try(:orchestration_manager).try(:availability_zones)
+    az_list = av_zones.each_with_object({}) { |az, hash| hash[az.ems_ref] = az.name } if av_zones
 
-    default_value = nil
-    case az_list.length
-    when 0
-      az_list = {nil => "<none>"}
-    when 1
-      default_value = az_list.keys.first
-    else
-      az_list[nil] = "<select>"
-    end
+    return nil => "<none>" if az_list.blank?
 
+    az_list[nil] = "<select>" if az_list.length > 1
+    az_list
+  end
+
+  def fill_dialog_field(list)
     dialog_field = @handle.object
 
     # sort_by: value / description / none
@@ -37,8 +36,9 @@ class AvailableAvailabilityZones
     # required: true / false
     dialog_field["required"] = "true"
 
-    dialog_field["values"] = az_list
-    dialog_field["default_value"] = default_value
+    dialog_field["values"] = list
+
+    dialog_field["default_value"] = list.length == 1 ? list.keys.first : nil
   end
 end
 
