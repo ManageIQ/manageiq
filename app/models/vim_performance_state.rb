@@ -66,8 +66,7 @@ class VimPerformanceState < ApplicationRecord
     capture_cpu_total_cores
     self.total_cpu = VimPerformanceState.capture_total(resource, :cpu_speed)
     self.total_mem = VimPerformanceState.capture_total(resource, :memory)
-    self.reserve_cpu = VimPerformanceState.capture_reserve(resource, :cpu_reserve)
-    self.reserve_mem = VimPerformanceState.capture_reserve(resource, :memory_reserve)
+    capture_reserve
     capture_vm_disk_storage
     capture_tag_names
     capture_image_tag_names
@@ -204,11 +203,12 @@ class VimPerformanceState < ApplicationRecord
     obj.try(:ems_id)
   end
 
-  def self.capture_reserve(obj, field)
-    obj.try(field)
-  end
-
   private
+
+  def capture_reserve
+    self.reserve_cpu = resource.try(:cpu_reserve)
+    self.reserve_mem = resource.try(:memory_reserve)
+  end
 
   def capture_tag_names
     self.tag_names = resource.perf_tags
