@@ -1,4 +1,4 @@
-/* global DoNav miqDomElementExists miqJqueryRequest miqSetButtons miqUpdateButtons */
+/* global DoNav miqDomElementExists miqJqueryRequest miqUpdateButtons */
 
 // Handle row click (ajax or normal html trans)
 function miqRowClick(row_id, row_url, row_url_ajax) {
@@ -64,8 +64,6 @@ function miqGridOnCheck(elem, button_div, grid) {
 
   var crows = miqGridGetCheckedRows(grid);
   ManageIQ.gridChecks = crows;
-
-  miqSetButtons(crows.length, "center_tb");
 }
 
 // Handle sort

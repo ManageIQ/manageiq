@@ -1,6 +1,5 @@
 describe('miq_grid.js', function () {
   beforeEach(function () {
-    window.miqSetButtons = function() {}; // mock toolbar
     var html = "<table class=\"table-clickable table-checkable\"><thead><tr><th><input type=\"checkbox\" class=\"checkall\"/></th><th>Title</th></tr></thead><tbody data-click-url=\"/test/\"><tr data-click-id=\"check_1\"><td class=\"noclick\"><input type=\"checkbox\" value=\"check_1\"/></td><td>Item 1</td></tr><tr data-click-id=\"check_2\"><td class=\"noclick\"><input type=\"checkbox\" value=\"check_2\" /></td><td>Item 2</td></tr><tr data-click-id=\"check_3\"><td class=\"noclick\"><input type=\"checkbox\" value=\"check_3\" /></td><td>Item 3</td></tr></tbody></table>";
     setFixtures(html);
     $('table').miqGrid();

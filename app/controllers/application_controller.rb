@@ -1770,7 +1770,6 @@ class ApplicationController < ActionController::Base
     render :update do |page|
       page << javascript_prologue
       page.replace(:flash_msg_div, :partial => "layouts/flash_msg")           # Replace the flash message
-      page << "miqSetButtons(0, 'center_tb');" # Reset the center toolbar
       if layout_uses_listnav?
         page.replace(:listnav_div, :partial => "layouts/listnav")               # Replace accordion, if list_nav_div is there
       end
