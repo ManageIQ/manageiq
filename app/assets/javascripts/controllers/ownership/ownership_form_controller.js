@@ -33,18 +33,9 @@ ManageIQ.angular.app.controller('ownershipFormController', ['$http', '$scope', '
   };
 
 
-  var ownershipEditButtonClicked = function(buttonName, serializeFields) {
-    miqService.sparkleOn();
+  var ownershipEditButtonClicked = function(buttonName, data) {
     var url = 'ownership_update/' + '?button=' + buttonName;
-    if (serializeFields === undefined) {
-      miqService.miqAjaxButton(url);
-    } else {
-      miqService.miqAjaxButton(url, {
-        objectIds: $scope.objectIds,
-        user:  $scope.ownershipModel.user,
-        group: $scope.ownershipModel.group,
-      });
-    }
+    miqService.miqAjaxButton(url, data);
   };
 
   $scope.cancelClicked = function() {
@@ -58,8 +49,11 @@ ManageIQ.angular.app.controller('ownershipFormController', ['$http', '$scope', '
   };
 
   $scope.saveClicked = function() {
-    ownershipEditButtonClicked('save', true);
-    $scope.angularForm.$setPristine(true);
+    ownershipEditButtonClicked('save', {
+      objectIds: $scope.objectIds,
+      user: $scope.ownershipModel.user,
+      group: $scope.ownershipModel.group,
+    });
   };
 
   $scope.addClicked = $scope.saveClicked;
