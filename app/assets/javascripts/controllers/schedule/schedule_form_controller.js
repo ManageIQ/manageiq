@@ -265,9 +265,7 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
     scheduleEditButtonClicked('save', $scope.scheduleModel);
   };
 
-  $scope.addClicked = function() {
-    $scope.saveClicked();
-  };
+  $scope.addClicked = $scope.saveClicked;
 
   $scope.filterValueRequired = function(value) {
     return !$scope.filterValuesEmpty &&

@@ -62,9 +62,7 @@ ManageIQ.angular.app.controller('ownershipFormController', ['$http', '$scope', '
     $scope.angularForm.$setPristine(true);
   };
 
-  $scope.addClicked = function() {
-    $scope.saveClicked();
-  };
+  $scope.addClicked = $scope.saveClicked;
 
   init();
 }]);

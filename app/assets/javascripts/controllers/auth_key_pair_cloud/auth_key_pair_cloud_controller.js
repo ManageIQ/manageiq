@@ -49,9 +49,7 @@ ManageIQ.angular.app.controller('keyPairCloudFormController', ['$http', '$scope'
     keyPairEditButtonClicked('save', $scope.keyPairModel);
   };
 
-  $scope.addClicked = function() {
-    $scope.saveClicked();
-  };
+  $scope.addClicked = $scope.saveClicked;
 
   init();
 }]);

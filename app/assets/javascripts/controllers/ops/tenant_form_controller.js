@@ -61,9 +61,7 @@ ManageIQ.angular.app.controller('tenantFormController', ['$http', '$scope', 'ten
       tenantEditButtonClicked('save', $scope.tenantModel);
     };
 
-    $scope.addClicked = function() {
-      $scope.saveClicked();
-    };
+    $scope.addClicked = $scope.saveClicked;
 
     $scope.toggleValueForWatch =   function(watchValue, initialValue) {
       if ($scope[watchValue] == initialValue)
