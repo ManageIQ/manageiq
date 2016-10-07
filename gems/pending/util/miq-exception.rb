@@ -120,6 +120,10 @@ module MiqException
   class MiqSubnetUpdateError < Error; end
   class MiqSubnetDeleteError < Error; end
 
+  class MiqCloudTenantCreateError < Error; end
+  class MiqCloudTenantUpdateError < Error; end
+  class MiqCloudTenantDeleteError < Error; end
+
   class MiqOpenstackRequiredServiceMissing < Error; end
   class MiqOpenstackKeystoneServiceMissing < MiqOpenstackRequiredServiceMissing; end
   class MiqOpenstackNovaServiceMissing < MiqOpenstackRequiredServiceMissing; end
