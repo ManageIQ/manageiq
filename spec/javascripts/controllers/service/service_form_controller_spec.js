@@ -86,7 +86,10 @@ describe('serviceFormController', function() {
     });
 
     it('delegates to miqService.miqAjaxButton', function() {
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/service/service_edit/1000000000001?button=save', true);
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/service/service_edit/1000000000001?button=save', {
+        name: 'serviceName',
+        description: 'serviceDescription',
+      });
     });
   });
 });

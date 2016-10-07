@@ -166,14 +166,14 @@ describe('hostFormController', function() {
     });
 
     it('delegates to miqService.miqAjaxButton', function() {
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/host/update/new?button=save', true);
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/host/update/new?button=save', jasmine.any(Object));
     });
   });
 
   describe('#addClicked', function() {
     beforeEach(function() {
       $scope.angularForm = {
-        $setPristine: function (value){}
+        $setPristine: function (value) {}
       };
       $scope.addClicked();
     });
@@ -183,7 +183,7 @@ describe('hostFormController', function() {
     });
 
     it('delegates to miqService.miqAjaxButton', function() {
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('create/new?button=add', true);
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('create/new?button=add', jasmine.any(Object));
     });
   });
 
