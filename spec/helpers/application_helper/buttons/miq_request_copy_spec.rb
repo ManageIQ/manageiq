@@ -1,5 +1,5 @@
 describe ApplicationHelper::Button::MiqRequestCopy do
-  describe '#skip?' do
+  describe '#visible?' do
 
     let(:button) do
       described_class.new(
