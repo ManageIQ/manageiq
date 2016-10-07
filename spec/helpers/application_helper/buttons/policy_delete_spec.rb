@@ -1,5 +1,5 @@
 describe ApplicationHelper::Button::PolicyDelete do
-  describe '#skip?' do
+  describe '#visible?' do
 
     let(:button) do
       described_class.new(
