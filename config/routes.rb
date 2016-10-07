@@ -1040,6 +1040,7 @@ Vmdb::Application.routes.draw do
         download_data
         ems_infra_form_fields
         register_nodes
+        introspect_nodes
         protect
         show_list
         tagging_edit
@@ -1052,6 +1053,7 @@ Vmdb::Application.routes.draw do
         create
         form_field_changed
         register_nodes
+        introspect_nodes
         listnav_search_selected
         protect
         quick_search

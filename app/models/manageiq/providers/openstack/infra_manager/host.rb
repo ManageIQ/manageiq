@@ -203,4 +203,220 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
     self.availability_zone = nil if e.nil? || ext_management_system == e
     super
   end
+
+  def manageable_queue(userid = "system", _options = {})
+    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
+
+    task = MiqTask.create(:name => "Setting node '#{name}' to manageable", :userid => userid)
+
+    $log.info("Requesting manageable of #{log_target}")
+    begin
+      MiqEvent.raise_evm_job_event(self, :type => "manageable", :prefix => "request")
+    rescue => err
+      $log.warn("Error raising request manageable for #{log_target}: #{err.message}")
+      return
+    end
+
+    $log.info("Queuing provide of #{log_target}")
+    timeout = (VMDB::Config.new("vmdb").config.fetch_path(:host_manageable, :queue_timeout) || 20.minutes).to_i_with_method
+    cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
+    MiqQueue.put(
+      :class_name   => self.class.name,
+      :instance_id  => id,
+      :args         => [task.id],
+      :method_name  => "manageable",
+      :miq_callback => cb,
+      :msg_timeout  => timeout,
+      :zone         => my_zone
+    )
+  end
+
+  def manageable(taskid = nil)
+    unless taskid.nil?
+      task = MiqTask.find_by_id(taskid)
+      task.state_active if task
+    end
+
+    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
+
+    $log.info("Setting to manageable #{log_target}...")
+
+    task.update_status("Active", "Ok", "Setting to manageable") if task
+
+    status = "Fail"
+    task_status = "Ok"
+    _dummy, t = Benchmark.realtime_block(:total_time) do
+      begin
+        connection = ext_management_system.openstack_handle.detect_baremetal_service
+        response = connection.set_node_provision_state(name, "manage")
+
+        if response.status == 202
+          status = "Success"
+          EmsRefresh.queue_refresh(ext_management_system)
+        end
+      rescue => err
+        task_status = "Error"
+        status = err
+      end
+
+      begin
+        MiqEvent.raise_evm_job_event(self, :type => "manageable", :suffix => "complete")
+      rescue => err
+        $log.warn("Error raising complete manageable event for #{log_target}: #{err.message}")
+      end
+    end
+
+    task.update_status("Finished", task_status, "Setting to Manageable Complete with #{status}") if task
+    $log.info("Setting to Manageable #{log_target}...Complete - Timings: #{t.inspect}")
+  end
+
+  def introspect_queue(userid = "system", _options = {})
+    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
+
+    task = MiqTask.create(:name => "Hardware Introspection for '#{name}' ", :userid => userid)
+
+    $log.info("Requesting Hardware Introspection of #{log_target}")
+    begin
+      MiqEvent.raise_evm_job_event(self, :type => "introspect", :prefix => "request")
+    rescue => err
+      $log.warn("Error raising request introspection for #{log_target}: #{err.message}")
+      return
+    end
+
+    $log.info("Queuing introspection of #{log_target}")
+    timeout = (VMDB::Config.new("vmdb").config.fetch_path(:host_introspect, :queue_timeout) || 20.minutes).to_i_with_method
+    cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
+    MiqQueue.put(
+      :class_name   => self.class.name,
+      :instance_id  => id,
+      :args         => [task.id],
+      :method_name  => "introspect",
+      :miq_callback => cb,
+      :msg_timeout  => timeout,
+      :zone         => my_zone
+    )
+  end
+
+  def introspect(taskid = nil)
+    unless taskid.nil?
+      task = MiqTask.find_by_id(taskid)
+      task.state_active if task
+    end
+
+    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
+
+    $log.info("Introspecting #{log_target}...")
+
+    task.update_status("Active", "Ok", "Introspecting") if task
+
+    workflow_state = ""
+    task_status = "Ok"
+    _dummy, t = Benchmark.realtime_block(:total_time) do
+      begin
+        connection = ext_management_system.openstack_handle.detect_workflow_service
+        workflow = "tripleo.baremetal.v1.introspect"
+        input = { :node_uuids => [name] }
+        response = connection.create_execution(workflow, input)
+        workflow_state = response.body["state"]
+        workflow_execution_id = response.body["id"]
+
+        while workflow_state == "RUNNING"
+          sleep 5
+          response = connection.get_execution(workflow_execution_id)
+          workflow_state = response.body["state"]
+        end
+      rescue => err
+        task_status = "Error"
+        workflow_state = err
+      end
+
+      if workflow_state == "SUCCESS"
+        EmsRefresh.queue_refresh(ext_management_system)
+      end
+
+      begin
+        MiqEvent.raise_evm_job_event(self, :type => "introspect", :suffix => "complete")
+      rescue => err
+        $log.warn("Error raising complete introspect event for #{log_target}: #{err.message}")
+      end
+    end
+
+    task.update_status("Finished", task_status, "Introspecting Complete with #{workflow_state}") if task
+    $log.info("Introspecting #{log_target}...Complete - Timings: #{t.inspect}")
+  end
+
+  def provide_queue(userid = "system", _options = {})
+    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
+
+    task = MiqTask.create(:name => "Providing node '#{name}' ", :userid => userid)
+
+    $log.info("Requesting Provide of #{log_target}")
+    begin
+      MiqEvent.raise_evm_job_event(self, :type => "provide", :prefix => "request")
+    rescue => err
+      $log.warn("Error raising request provide for #{log_target}: #{err.message}")
+      return
+    end
+
+    $log.info("Queuing provide of #{log_target}")
+    timeout = (VMDB::Config.new("vmdb").config.fetch_path(:host_provide, :queue_timeout) || 20.minutes).to_i_with_method
+    cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
+    MiqQueue.put(
+      :class_name   => self.class.name,
+      :instance_id  => id,
+      :args         => [task.id],
+      :method_name  => "provide",
+      :miq_callback => cb,
+      :msg_timeout  => timeout,
+      :zone         => my_zone
+    )
+  end
+
+  def provide(taskid = nil)
+    unless taskid.nil?
+      task = MiqTask.find_by_id(taskid)
+      task.state_active if task
+    end
+
+    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
+
+    $log.info("Provide #{log_target}...")
+
+    task.update_status("Active", "Ok", "Provide") if task
+
+    workflow_state = ""
+    task_status = "Ok"
+    _dummy, t = Benchmark.realtime_block(:total_time) do
+      begin
+        connection = ext_management_system.openstack_handle.detect_workflow_service
+        workflow = "tripleo.baremetal.v1.provide"
+        input = { :node_uuids => [name] }
+        response = connection.create_execution(workflow, input)
+        workflow_state = response.body["state"]
+        workflow_execution_id = response.body["id"]
+
+        while workflow_state == "RUNNING"
+          sleep 5
+          response = connection.get_execution(workflow_execution_id)
+          workflow_state = response.body["state"]
+        end
+      rescue => err
+        task_status = "Error"
+        workflow_state = err
+      end
+
+      if workflow_state == "SUCCESS"
+        EmsRefresh.queue_refresh(ext_management_system)
+      end
+
+      begin
+        MiqEvent.raise_evm_job_event(self, :type => "provide", :suffix => "complete")
+      rescue => err
+        $log.warn("Error raising complete provide event for #{log_target}: #{err.message}")
+      end
+    end
+
+    task.update_status("Finished", task_status, "Provide Complete with #{workflow_state}") if task
+    $log.info("Provide #{log_target}...Complete - Timings: #{t.inspect}")
+  end
 end

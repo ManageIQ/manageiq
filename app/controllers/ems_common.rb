@@ -429,6 +429,9 @@ module EmsCommon
       when "host_refresh"                     then refreshhosts
       when "host_scan"                        then scanhosts
       when "host_tag"                         then tag(Host)
+      when "host_manageable"                  then sethoststomanageable
+      when "host_introspect"                  then introspecthosts
+      when "host_provide"                     then providehosts
       # Storages
       when "storage_delete"                   then deletestorages
       when "storage_refresh"                  then refreshstorage
