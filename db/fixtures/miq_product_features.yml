@@ -620,6 +620,23 @@
       :description: Edit Tags of Tenants
       :feature_type: control
       :identifier: cloud_tenant_tag
+  - :name: Modify
+    :description: Modify Tenants
+    :feature_type: admin
+    :identifier: cloud_tenant_admin
+    :children:
+    - :name: Add
+      :description: Add a Tenant
+      :feature_type: admin
+      :identifier: cloud_tenant_new
+    - :name: Edit
+      :description: Edit a Tenant
+      :feature_type: admin
+      :identifier: cloud_tenant_edit
+    - :name: Remove
+      :description: Remove Tenants
+      :feature_type: admin
+      :identifier: cloud_tenant_delete
 
 # CloudVolume
 - :name: Cloud Volumes
