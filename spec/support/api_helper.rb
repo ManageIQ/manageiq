@@ -87,8 +87,6 @@ module Spec
       end
 
       def init_api_spec_env
-        MiqDatabase.seed
-        Vmdb::Application.config.secret_token = MiqDatabase.first.session_secret_token
         @guid, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
         define_user
