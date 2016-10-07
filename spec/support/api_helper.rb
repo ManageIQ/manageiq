@@ -59,10 +59,6 @@ module Spec
         resources.any? { |r| r.key?(key) && r[key].match("#{suffix}$") }
       end
 
-      def resources_include?(resources, key, value)
-        resources.any? { |r| r[key] == value }
-      end
-
       def api_config(param)
         @api_config = {
           :user       => "api_user_id",
