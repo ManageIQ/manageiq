@@ -311,6 +311,10 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
   };
 
   $scope.launchAuthKeyModal = function (idx) {
+    $ctrl.ssh_params.ssh_host = $scope.pglogicalReplicationModel.subscriptions[idx].remote_ws_address;
+    $ctrl.ssh_params.ssh_user = "";
+    $ctrl.ssh_params.ssh_password = "";
+
     var modalInstance = $modal.open({
       animation: $ctrl.animationsEnabled,
       ariaLabelledBy: 'modal-title',

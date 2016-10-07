@@ -7,7 +7,7 @@
     = render :partial => "layouts/flash_msg"
     %script{:id => "authkeyModalForm.html", :type => "text/ng-template"}
       :cdata
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal fade" id="authkeyModalForm" tabindex="-1" role="dialog" aria-hidden="true">
           <div class="modal-header">
             <h4 class="modal-header">SSH Information For An Appliance In the Region</h4>
           </div>
@@ -16,15 +16,14 @@
                 <div class="form-group">
                   <label class="col-sm-2 control-label">Host</label>
                   <div class="col-sm-10">
-                    <input type="text" name="ssh_host" class="form-control" ng-model="$ctrl.ssh_params.ssh_host" required>
-                    <p ng-show="authkeyModalForm.ssh_host.$invalid && !authkeyModalForm.ssh_host.$pristine" class="help-block">SSH host is required.</p>
+                    <input type="text" name="ssh_host" class="form-control" ng-model="$ctrl.ssh_params.ssh_host">
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-sm-2 control-label">User</label>
                   <div class="col-sm-10">
                     <input type="text" name="ssh_user" class="form-control" ng-model="$ctrl.ssh_params.ssh_user" required>
-                    <p ng-show="aauthkeyModalForm.ssh_user.$invalid && !authkeyModalForm.ssh_user.$pristine" class="help-block">SSH user is required.</p>
+                    <p ng-show="authkeyModalForm.ssh_user.$invalid && !authkeyModalForm.ssh_user.$pristine" class="help-block">SSH user is required.</p>
                   </div>
                 </div>
                 <div class="form-group">
