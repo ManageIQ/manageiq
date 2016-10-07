@@ -237,7 +237,12 @@ module ManageIQ
           :guest_os             => nil,
           :disks                => process_host_hardware_disks(extra_attributes),
           :introspected         => !introspection_details.blank?,
-          :provision_state      => host.provision_state,
+          # fog-openstack baremetal service defaults to Ironic API v1.1.
+          # In version 1.1 "available" is shown as null in JSON. It is correctly
+          # shown as "available" starting with version 1.2.
+          # This may need to change once this issue is addressed:
+          # https://github.com/fog/fog-openstack/issues/197
+          :provision_state      => host.provision_state.nil? ? "available" : host.provision_state,
         }
       end
 

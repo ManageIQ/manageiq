@@ -635,6 +635,16 @@ class ApplicationHelper::ToolbarBuilder
       return true unless get_vmdb_config[:product][:smis]
     when "host_register_nodes"
       return true if @record.class != ManageIQ::Providers::Openstack::InfraManager
+    when "host_introspect", "host_provide"
+      return true unless @record.class == ManageIQ::Providers::Openstack::InfraManager ||
+                         @record.class == ManageIQ::Providers::Openstack::InfraManager::Host
+      return true if @record.class == ManageIQ::Providers::Openstack::InfraManager::Host &&
+                     @record.hardware.provision_state != "manageable"
+    when "host_manageable"
+      return true unless @record.class == ManageIQ::Providers::Openstack::InfraManager ||
+                         @record.class == ManageIQ::Providers::Openstack::InfraManager::Host
+      return true if @record.class == ManageIQ::Providers::Openstack::InfraManager::Host &&
+                     @record.hardware.provision_state == "manageable"
     end
 
     # Scale is only supported by OpenStack Infrastructure Provider
