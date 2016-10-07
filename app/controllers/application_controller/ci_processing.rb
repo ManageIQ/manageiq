@@ -1913,6 +1913,8 @@ module ApplicationController::CiProcessing
       klass = Vm
     end
 
+    assert_rbac(current_user, get_rec_cls, objs)
+
     return if objs.empty?
 
     options = {:ids => objs, :task => task, :userid => session[:userid]}
