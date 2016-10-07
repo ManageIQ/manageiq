@@ -268,7 +268,7 @@ module OpsController::Settings::Common
       provider_region = @_params[:provider_region]
       region = MiqRegion.where(:region => provider_region).first
       if region
-        region.remove_auth_config
+        region.remove_auth_key
         add_flash(_("Central Admin has been disabled"))
       else
         add_flash(_("Region Not found"), :error)
