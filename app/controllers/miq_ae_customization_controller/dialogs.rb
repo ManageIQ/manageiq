@@ -26,12 +26,11 @@ module MiqAeCustomizationController::Dialogs
     @_params[:typ] = ""
     get_field_types
 
-    # Use JS to update the display
-    render :update do |page|
-      page << javascript_prologue
-      if @flash_array
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      else
+    if @flash_array
+      javascript_flash(:spinner_off => true)
+    else
+      render :update do |page|
+        page << javascript_prologue
         page.replace_html(@refresh_div, :partial => @refresh_partial, :locals => {:entry => nil}) if @refresh_div
         changed = (@edit[:new] != @edit[:current])
         page.replace_html("custom_left_cell", :partial => "dialog_edit_tree")
@@ -59,8 +58,8 @@ module MiqAeCustomizationController::Dialogs
                                                                                                       params[:field_sort_by] || params[:field_sort_order] || params[:field_dynamic]
         end
         page << "miqInitDashboardCols();"
+        page << "miqSparkle(false);"
       end
-      page << "miqSparkle(false);"
     end
   end
 

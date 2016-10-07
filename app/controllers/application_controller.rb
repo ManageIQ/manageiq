@@ -398,10 +398,7 @@ class ApplicationController < ActionController::Base
     end
 
     @changed = (@edit[:new] != @edit[:current]) if pfx == "pxe"
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-    end
+    javascript_flash
   end
 
   # to reload currently displayed summary screen in explorer

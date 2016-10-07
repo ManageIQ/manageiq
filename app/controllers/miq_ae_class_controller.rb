@@ -581,10 +581,7 @@ class MiqAeClassController < ApplicationController
         add_flash(_("Name is required"), :error)
       end
       if @flash_array
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
       set_instances_record_vars(@ae_inst)    # Set the instance record variables, but don't save
@@ -599,10 +596,7 @@ class MiqAeClassController < ApplicationController
       rescue => bang
         add_flash(_("Error during 'save': %{error_message}") % {:error_message => bang.message}, :error)
         @in_a_form = true
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         AuditEvent.success(build_saved_audit(@ae_class, @edit))
         session[:edit] = nil  # clean out the saved info
@@ -635,10 +629,7 @@ class MiqAeClassController < ApplicationController
         add_flash(_("Name is required"), :error)
       end
       if @flash_array
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       end
       add_aeinst = MiqAeInstance.new
@@ -651,12 +642,8 @@ class MiqAeClassController < ApplicationController
           add_aeinst.save!
         end  # end of transaction
       rescue => bang
-        add_flash(_("Error during 'add': %{message}") % {:message => bang.message}, :error)
         @in_a_form = true
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        render_flash(_("Error during 'add': %{message}") % {:message => bang.message}, :error)
       else
         AuditEvent.success(build_created_audit(add_aeinst, @edit))
         add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "MiqAeInstance"), :name => add_aeinst.name})
@@ -1001,10 +988,7 @@ class MiqAeClassController < ApplicationController
         add_flash(_("Error during 'save': %{error_message}") % {:error_message => bang.message}, :error)
         session[:changed] = @changed
         @changed = true
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "MiqAeClass"), :name => ae_class.fqname})
         AuditEvent.success(build_saved_audit(ae_class, @edit))
@@ -1047,10 +1031,7 @@ class MiqAeClassController < ApplicationController
       rescue => bang
         add_flash(_("Error during 'save': %{error_message}") % {:error_message => bang.message}, :error)
         session[:changed] = @changed = true
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         add_flash(_("Schema for %{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "MiqAeClass"), :name => ae_class.name})
         AuditEvent.success(build_saved_audit(ae_class, @edit))
@@ -1092,10 +1073,7 @@ class MiqAeClassController < ApplicationController
         add_flash(_("Error during 'save': %{message}") % {:message => bang.message}, :error)
         session[:changed] = @changed
         @changed = true
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => @edit[:typ]), :name  => ae_ns.name})
         AuditEvent.success(build_saved_audit(ae_ns, @edit))
@@ -1141,10 +1119,7 @@ class MiqAeClassController < ApplicationController
         add_flash(_("Error during 'save': %{error_message}") % {:error_message => bang.message}, :error)
         session[:changed] = @changed
         @changed = true
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "MiqAeMethod"), :name => ae_method.name})
         AuditEvent.success(build_saved_audit(ae_method, @edit))
@@ -1249,10 +1224,7 @@ class MiqAeClassController < ApplicationController
       rescue => bang
         add_flash(_("Error during 'add': %{error_message}") % {:error_message => bang.message}, :error)
         @in_a_form = true
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       else
         add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "MiqAeMethod"), :name => add_aemethod.name})
         @sb[:form_vars_set] = false
@@ -1290,10 +1262,7 @@ class MiqAeClassController < ApplicationController
         add_ae_ns.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
       end
     else
       @changed = session[:changed] = (@edit[:new] != @edit[:current])
@@ -1695,12 +1664,8 @@ class MiqAeClassController < ApplicationController
     begin
       res = @edit[:typ].copy(options)
     rescue => bang
-      add_flash(_("Error during '%{record} copy': %{error_message}") %
+      render_flash(_("Error during '%{record} copy': %{error_message}") %
         {:record => ui_lookup(:model => @edit[:typ].to_s), :error_message => bang.message}, :error)
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
     else
       model = @edit[:selected_items].count > 1 ? :models : :model
       add_flash(_("Copy selected %{record} was saved") % {:record => ui_lookup(model => @edit[:typ].to_s)})

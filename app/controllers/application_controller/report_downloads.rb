@@ -62,11 +62,7 @@ module ApplicationController::ReportDownloads
     miq_task = MiqTask.find(params[:task_id])
     if !miq_task.results_ready?
       add_flash(_("Report generation returned: Status [%{status}] Message [%{message}]") % {:status => miq_task.status, :message => miq_task.message}, :error)
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        page << "miqSparkle(false);"
-      end
+      javascript_flash(:spinner_off => true)
     else
       @sb[:render_rr_id] = miq_task.miq_report_result.id
       render :update do |page|

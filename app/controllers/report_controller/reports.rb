@@ -84,11 +84,7 @@ module ReportController::Reports
     rpt = MiqReport.find(params[:id])
 
     if rpt.miq_widgets.exists?
-      add_flash(_("Report cannot be deleted if it's being used by one or more Widgets"), :error)
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      end
+      render_flash(_("Report cannot be deleted if it's being used by one or more Widgets"), :error)
     else
       begin
         raise StandardError, "Default %{model} \"%{name}\" cannot be deleted" % {:model => ui_lookup(:model => "MiqReport"), :name => rpt.name} if rpt.rpt_type == "Default"
@@ -98,10 +94,7 @@ module ReportController::Reports
       rescue => bang
         add_flash(_("%{model} \"%{name}\": Error during 'miq_report_delete': %{message}") %
                     {:model => ui_lookup(:model => "MiqReport"), :name => rpt_name, :message =>  bang.message}, :error)
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        javascript_flash
         return
       else
         AuditEvent.success(audit)
