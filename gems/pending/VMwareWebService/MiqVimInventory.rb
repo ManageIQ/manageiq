@@ -1819,7 +1819,7 @@ class MiqVimInventory < MiqVimClientBase
     raise "storagePods_locked: cache lock not held" unless @cacheLock.sync_locked?
     return(@storagePods) if @storagePods
 
-    $vim_log.info "MiqVimInventory.storagePods_locked: loading Datastore cache for #{@connId}"
+    $vim_log.info "MiqVimInventory.storagePods_locked: loading Datastore Cluster cache for #{@connId}"
     begin
       @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
 
@@ -1833,7 +1833,7 @@ class MiqVimInventory < MiqVimClientBase
     ensure
       @cacheLock.sync_unlock if unlock
     end
-    $vim_log.info "MiqVimInventory.dataStores_locked: loaded Datastore cache for #{@connId}"
+    $vim_log.info "MiqVimInventory.storagePods_locked: loaded Datastore Cluster cache for #{@connId}"
 
     @storagePods
   end # def storagePods_locked
