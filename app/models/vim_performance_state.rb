@@ -58,7 +58,7 @@ class VimPerformanceState < ApplicationRecord
   def capture
     self.state_data ||= {}
     self.capture_interval = 3600
-    self.assoc_ids = VimPerformanceState.capture_assoc_ids(resource)
+    capture_assoc_ids
     capture_parent_host
     capture_parent_storage
     capture_parent_ems
@@ -159,13 +159,15 @@ class VimPerformanceState < ApplicationRecord
     field == :memory ? hardware.try(:memory_mb) : hardware.try(:aggregate_cpu_speed)
   end
 
-  def self.capture_assoc_ids(obj)
+  private
+
+  def capture_assoc_ids
     result = {}
     ASSOCIATIONS.each do |assoc|
       method = assoc
-      method = (obj.kind_of?(EmsCluster) ? :all_vms_and_templates : :vms_and_templates) if assoc == :vms
-      next unless obj.respond_to?(method)
-      assoc_recs = obj.send(method)
+      method = (resource.kind_of?(EmsCluster) ? :all_vms_and_templates : :vms_and_templates) if assoc == :vms
+      next unless resource.respond_to?(method)
+      assoc_recs = resource.send(method)
       has_state = assoc_recs[0] && assoc_recs[0].respond_to?(:state)
 
       r = result[assoc] = {:on => [], :off => []}
@@ -184,10 +186,8 @@ class VimPerformanceState < ApplicationRecord
       r_off.uniq!
       r_off.sort!
     end
-    result.presence
+    self.assoc_ids = result.presence
   end
-
-  private
 
   def capture_parent_cluster
     if resource.kind_of?(Host) || resource.kind_of?(VmOrTemplate)
