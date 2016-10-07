@@ -14,8 +14,7 @@
                                           "ng-maxlength" => "100",
                                           "ng-model"     => "step1DsModel.datasourceName"}
 
-      .col-sm-2
-      .col-sm-10
+      .col-sm-8.col-sm-offset-4
         %p.ng-error-messages{"ng-show" => "step1Form.ds_name_input.$error.required"}
           = _("Required")
         %p.ng-error-messages{"ng-show" => "step1Form.ds_name_input.$error.maxlength"}
@@ -32,8 +31,7 @@
                                             "ng-required"  => "true",
                                             "ng-model"     => "step1DsModel.jndiName"}
 
-      .col-sm-2
-      .col-sm-10
+      .col-sm-8.col-sm-offset-4
         %p.ng-error-messages{"ng-show" => "step1Form.jndi_name_input.$error.required"}
           = _("Required")
         %p.ng-error-messages{"ng-show" => "step1Form.jndi_name_input.$error.maxlength"}

@@ -13,8 +13,7 @@
                                                  "ng-minlength" => "10",
                                                  "ng-model"     => "step3DsModel.connectionUrl"}
 
-      .col-sm-2
-      .col-sm-10
+      .col-sm-8.col-sm-offset-4
         %p.ng-error-messages{"ng-show" => "step3Form.connection_url_input.$error.required"}
           = _("Required")
         %p.ng-error-messages{"ng-show" => "step3Form.connection_url_input.$error.minlength"}
@@ -30,8 +29,7 @@
                                             "placeholder"  => _("Enter Username"),
                                             "ng-model"     => "step3DsModel.userName"}
 
-      .col-sm-2
-      .col-sm-10
+      .col-sm-8.col-sm-offset-4
         %p.ng-error-messages{"ng-show" => "step3Form.user_name_input.$error.required"}
           = _("Required")
 
