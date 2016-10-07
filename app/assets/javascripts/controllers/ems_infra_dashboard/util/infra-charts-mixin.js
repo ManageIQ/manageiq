@@ -9,6 +9,28 @@ angular.module('miq.util').factory('infraChartsMixin', ['pfUtils', function(pfUt
     });
   };
 
+  var lineChartTooltipPositionFactory = function(chartId) {
+    var elementQuery = '#' + chartId + 'lineChart';
+
+    return function(_data, width, height, element) {
+      try {
+        var center = parseInt(element.getAttribute('x'), 10);
+        var top = parseInt(element.getAttribute('y'), 10);
+        var chartBox = document.querySelector(elementQuery).getBoundingClientRect();
+        var graphOffsetX = document.querySelector(elementQuery + ' g.c3-axis-y').getBoundingClientRect().right;
+
+        var x = Math.max(0, center + graphOffsetX - chartBox.left - Math.floor(width / 2));
+
+        return {
+          top: top - height,
+          left: Math.min(x, chartBox.width - width),
+        };
+      } catch (_e) {
+        return null;
+      }
+    };
+  };
+
   var chartConfig = {
     cpuUsageConfig: {
       chartId: 'cpuUsageChart',
@@ -27,6 +49,32 @@ angular.module('miq.util').factory('infraChartsMixin', ['pfUtils', function(pfUt
       legendLeftText: __('Last 30 Days'),
       legendRightText: '',
       numDays: 30
+    },
+    recentHostsConfig: {
+      chartId     : 'recentHostsChart',
+      headTitle   : __('Recent Hosts'),
+      label: __('Hosts'),
+      tooltip     : {
+        contents: dailyTimeTooltip,
+        position: lineChartTooltipPositionFactory('recentHostsChart'),
+      },
+      point       : {r: 1},
+      size        : {height: 145},
+      grid        : {y: {show: false}},
+      setAreaChart: true
+    },
+    recentVmsConfig: {
+      chartId     : 'recentVmsChart',
+      headTitle   : __('Recent VMs'),
+      label: __('VMs'),
+      tooltip     : {
+        contents: dailyTimeTooltip,
+        position: lineChartTooltipPositionFactory('recentVmsChart'),
+      },
+      point       : {r: 1},
+      size        : {height: 145},
+      grid        : {y: {show: false}},
+      setAreaChart: true
     },
   };
 
@@ -58,12 +106,24 @@ angular.module('miq.util').factory('infraChartsMixin', ['pfUtils', function(pfUt
   };
 
   var processUtilizationData = function(data, xDataLabel, yDataLabel) {
+    return processData(data, xDataLabel, yDataLabel);
+  };
+
+  var processRecentHostsData = function(data, xDataLabel, yDataLabel) {
+    return processData(data, xDataLabel, yDataLabel);
+  };
+
+  var processRecentVmsData = function(data, xDataLabel, yDataLabel) {
+    return processData(data, xDataLabel, yDataLabel);
+  };
+
+  var processData = function(data, xDataLabel, yDataLabel) {
     if (!data) {
       return { dataAvailable: false }
     }
 
-    data.xData.unshift(xDataLabel)
-    data.yData.unshift(yDataLabel)
+    data.xData.unshift(xDataLabel);
+    data.yData.unshift(yDataLabel);
     return data;
   };
 
@@ -73,6 +133,8 @@ angular.module('miq.util').factory('infraChartsMixin', ['pfUtils', function(pfUt
     chartConfig: chartConfig,
     processHeatmapData: processHeatmapData,
     processUtilizationData: processUtilizationData,
+    processRecentHostsData: processRecentHostsData,
+    processRecentVmsData: processRecentVmsData,
     dailyTimeTooltip: dailyTimeTooltip
   };
 }]);

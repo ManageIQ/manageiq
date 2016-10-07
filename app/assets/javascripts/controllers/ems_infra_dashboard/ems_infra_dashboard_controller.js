@@ -117,6 +117,22 @@ miqHttpInject(angular.module('emsInfraDashboard', ['ui.bootstrap', 'patternfly',
             infraChartsMixin.processHeatmapData($scope.clusterMemoryUsage, data.heatmaps.clusterMemoryUsage);
           $scope.clusterMemoryUsage.loadingDone = true;
 
+          // Recent Hosts
+          $scope.recentHostsConfig = infraChartsMixin.chartConfig.recentHostsConfig;
+
+          // recent Hosts chart
+          $scope.recentHostsData = infraChartsMixin.processRecentHostsData(data.recentHosts,
+            "dates",
+            $scope.recentHostsConfig.label);
+
+          // Recent VMs
+          $scope.recentVmsConfig = infraChartsMixin.chartConfig.recentVmsConfig;
+
+          // recent VMS chart
+          $scope.recentVmsData = infraChartsMixin.processRecentVmsData(data.recentVms,
+            "dates",
+            $scope.recentVmsConfig.label);
+
           // Trend lines data
           $scope.loadingDone = true;
         });

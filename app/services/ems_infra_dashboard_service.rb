@@ -14,6 +14,8 @@ class EmsInfraDashboardService
       :status          => status,
       :providers       => providers,
       :heatmaps        => heatmaps,
+      :recentHosts     => recentHosts,
+      :recentVms       => recentVms,
       :ems_utilization => ems_utilization,
     }.compact
   end
@@ -121,6 +123,38 @@ class EmsInfraDashboardService
     {
       :clusterCpuUsage    => cluster_cpu_usage.presence,
       :clusterMemoryUsage => cluster_memory_usage.presence
+    }
+  end
+
+  def recentHosts
+    # Get recent hosts
+    all_hosts = Hash.new(0)
+    hosts = Host.where('created_on > ?', 30.day.ago.utc)
+    hosts = hosts.includes(:resource => [:ext_management_system]) unless @ems.present?
+    hosts.sort_by { |h| h.created_on }.uniq.each do |h|
+      date = h.created_on.strftime("%Y-%m-%d")
+      all_hosts[date] += Host.where('created_on = ?', h.created_on).count
+    end
+
+    {
+      :xData => all_hosts.keys,
+      :yData => all_hosts.values.map
+    }
+  end
+
+  def recentVms
+    # Get recent VMs
+    all_vms = Hash.new(0)
+    vms = VmOrTemplate.where('created_on > ?', 30.day.ago.utc)
+    vms = vms.includes(:resource => [:ext_management_system]) unless @ems.present?
+    vms.sort_by { |v| v.created_on }.uniq.each do |v|
+      date = v.created_on.strftime("%Y-%m-%d")
+      all_vms[date] += VmOrTemplate.where('created_on = ?', v.created_on).count
+    end
+
+    {
+      :xData => all_vms.keys,
+      :yData => all_vms.values.map
     }
   end
 

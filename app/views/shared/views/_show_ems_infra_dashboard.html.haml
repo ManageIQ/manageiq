@@ -39,7 +39,7 @@
                :url                       => "navigation"}
 
   .row.row-tile-pf
-    .col-xs-12.col-sm-6.col-md-7
+    .col-xs-12.col-sm-6.col-md-6
       %div{"head-title"   => _("Global Utilization"),
            :hidetopborder => "true",
            "pf-card"      => ""}
@@ -67,7 +67,7 @@
             %span.trend-footer-pf{"ng-class" => "{ 'chart-transparent-text': !memoryUsageData }"}
               = _("Last 30 Days")
 
-    .col-xs-12.col-sm-6.col-md-5
+    .col-xs-12.col-sm-6.col-md-6
       %div{"column-sizing-class"          => "col-xs-8 col-sm-6 col-md-6",
            "heat-map-usage-legend-labels" => "nodeHeatMapUsageLegendLabels",
            "heatmap-chart-height"         => "dashboardHeatmapChartHeight",
@@ -75,7 +75,32 @@
            "heatmaps-card"                => "",
            :hidetopborder                 => "true",
            :title                         => _("Cluster Utilization")}
+  .row.row-tile-pf.row-tile-pf-last
+    .col-xs-12.col-sm-6.col-md-6
+      %div{"head-title" => "{{recentHostsConfig.headTitle}}",
+           "pf-card"    => ""}
 
+        .spinner.spinner-lg.loading{"ng-if" => "!loadingDone"}
+        %div{"chart-data"      => "recentHostsData",
+             "chart-height"    => "chartHeight",
+             :config           => "recentHostsConfig",
+             "ng-if"           => "loadingDone",
+             "pf-line-chart" => ""}
+        %span.trend-footer-pf{"ng-class" => "{ 'chart-transparent-text': !recentHostsConfig }"}
+          = _("Last 30 Days")
+
+    .col-xs-12.col-sm-6.col-md-6
+      %div{"head-title" => "{{recentVmsConfig.headTitle}}",
+           "pf-card"    => ""}
+
+        .spinner.spinner-lg.loading{"ng-if" => "!loadingDone"}
+        %div{"chart-data"      => "recentVmsData",
+             "chart-height"    => "chartHeight",
+             :config           => "recentVmsConfig",
+             "ng-if"           => "loadingDone",
+             "pf-line-chart" => ""}
+        %span.trend-footer-pf{"ng-class" => "{ 'chart-transparent-text': !recentVmsConfig }"}
+          = _("Last 30 Days")
 
 :javascript
   miq_bootstrap('.ems-infra-dashboard', 'emsInfraDashboard');
