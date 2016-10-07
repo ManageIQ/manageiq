@@ -15,7 +15,11 @@
 
   function eventClick(el) {
     var table = '<table class="table table-striped table-bordered">';
-    console.log(el);
+    $(d3.event.target).popover('toggle');
+    $(d3.event.target).on('shown.bs.popover', function () {
+      $(document).on('click', hidePopover);
+    });
+
     if (el.hasOwnProperty("events")) {
       table = table + '<thead>This is a group of ' + el.events.length + ' events starting on ' + el.date.toLocaleString() + '</thead><tbody>';
       table = table + '<tr><th>Date</th><th>Event</th></tr>'
@@ -33,7 +37,12 @@
         table = table + el.details[i] + '<br>';
       }
     }
-    $('#chart_placeholder').append(table);
+    $('#legend').html(table);
+  }
+
+  function hidePopover() {
+    $('[data-toggle="popover"]').popover('hide');
+    $(document).off('click', hidePopover);
   }
 
   function createTooltip() {
@@ -42,6 +51,7 @@
     }
     $('[data-toggle="popover"]').popover({
       'container': '#tl_div',
+      'trigger': 'manual',
       'placement': 'top',
       'html': true
     });
@@ -73,9 +83,10 @@
           data[x].display = true;
         }
       }
+      var timeSpanMilliseconds = end.getTime() - start.getTime();
       timeline = d3.chart.timeline().end(end).start(start)
-        .minScale(one_week / one_month)
-        .maxScale(one_week / one_hour)
+        .minScale(1)
+        .maxScale(timeSpanMilliseconds / one_hour)
         .eventGrouping(360000).labelWidth(170)
         .eventPopover(handlePopover).eventClick(eventClick);
 
@@ -90,9 +101,12 @@
 
       $('[data-toggle="popover"]').popover({
         'container': '#tl_div',
+        'trigger': 'manual',
         'placement': 'top',
         'html': true
       });
+
+      $('#chart_placeholder').append('<div id="legend"></div>');
 
       $(window).on('resize', createTooltip);
     }
