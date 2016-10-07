@@ -238,11 +238,27 @@ describe DialogFieldDropDownList do
 
       context "when the raw values are not already set" do
         before do
-          dialog_field.values = %w(original values)
+          dialog_field.values = [%w(original values)]
         end
 
         it "returns the values" do
-          expect(dialog_field.trigger_automate_value_updates).to eq(%w(original values))
+          expect(dialog_field.trigger_automate_value_updates).to eq([%w(original values)])
+        end
+
+        it "sets up the default value" do
+          dialog_field.trigger_automate_value_updates
+          expect(dialog_field.default_value).to eq("original")
+        end
+      end
+
+      context "when the raw values are nil" do
+        before do
+          dialog_field.values = nil
+        end
+
+        it "sets the default value to nil without blowing up" do
+          dialog_field.trigger_automate_value_updates
+          expect(dialog_field.default_value).to eq(nil)
         end
       end
     end
