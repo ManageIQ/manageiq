@@ -3,6 +3,7 @@ module ApplicationHelper::PageLayouts
     return false if @in_a_form
     return false if %w(
       about
+      alerts_list
       all_tasks
       all_ui_tasks
       chargeback

@@ -632,6 +632,7 @@ module ApplicationHelper
            show
           ).include?(controller.action_name) ||
         %w(about
+           alerts_list
            chargeback
            cloud_topology
            container_dashboard
@@ -1183,6 +1184,7 @@ module ApplicationHelper
   GTL_VIEW_LAYOUTS = %w(action
                         auth_key_pair_cloud
                         availability_zone
+                        alerts_list
                         cim_base_storage_extent
                         cloud_network
                         cloud_object_store_container

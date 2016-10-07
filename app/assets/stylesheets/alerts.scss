@@ -1,0 +1,49 @@
+.miq-alerts-center {
+  margin-top: -30px;
+  .toolbar-pf .form-group {
+    padding-left: 20px;
+    .btn {
+      margin-left: 0;
+    }
+    .btn.btn-link {
+      margin-left: 10px;
+    }
+    .btn-group {
+      margin-left: 0;
+    }
+  }
+  .list-view-severity {
+    width: 25px;
+    height: 25px;
+    position: relative;
+    top: 3px;
+  }
+  .list-view-type-img {
+    width: 16px;
+    height: 16px;
+  }
+  .list-group-item {
+    &.alert {
+      border-width: 1px;
+      &.alert-danger {
+        background-color: $alert-danger-bg;
+        border-color: $alert-danger-border;
+      }
+      &.alert-info {
+        background-color: #fff;
+        border-color: $alert-info-border;
+      }
+      &.alert-success {
+        background-color: $alert-success-bg;
+        border-color: $alert-success-border;
+      }
+      &.alert-warning {
+        background-color: $alert-warning-bg;
+        border-color: $alert-warning-border;
+      }
+      &:hover {
+        background-color: #ededed;
+      }
+    }
+  }
+}
