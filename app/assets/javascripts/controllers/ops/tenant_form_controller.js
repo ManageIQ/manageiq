@@ -48,7 +48,6 @@ ManageIQ.angular.app.controller('tenantFormController', ['$http', '$scope', 'ten
 
     $scope.cancelClicked = function() {
       tenantEditButtonClicked('cancel', { divisible: $scope.tenantModel.divisible });
-      $scope.angularForm.$setPristine(true);
     };
 
     $scope.resetClicked = function() {
@@ -60,7 +59,6 @@ ManageIQ.angular.app.controller('tenantFormController', ['$http', '$scope', 'ten
 
     $scope.saveClicked = function() {
       tenantEditButtonClicked('save', $scope.tenantModel);
-      $scope.angularForm.$setPristine(true);
     };
 
     $scope.addClicked = function() {

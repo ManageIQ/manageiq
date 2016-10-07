@@ -79,7 +79,6 @@ ManageIQ.angular.app.controller('providerForemanFormController', ['$http', '$sco
 
     $scope.cancelClicked = function() {
       providerForemanEditButtonClicked('cancel');
-      $scope.angularForm.$setPristine(true);
     };
 
     $scope.resetClicked = function() {
@@ -91,7 +90,6 @@ ManageIQ.angular.app.controller('providerForemanFormController', ['$http', '$sco
 
     $scope.saveClicked = function() {
       providerForemanEditButtonClicked('save', $scope.providerForemanModel);
-      $scope.angularForm.$setPristine(true);
     };
 
     $scope.addClicked = $scope.saveClicked;

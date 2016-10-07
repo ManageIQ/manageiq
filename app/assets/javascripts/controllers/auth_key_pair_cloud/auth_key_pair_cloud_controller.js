@@ -36,7 +36,6 @@ ManageIQ.angular.app.controller('keyPairCloudFormController', ['$http', '$scope'
 
   $scope.cancelClicked = function() {
     keyPairEditButtonClicked('cancel');
-    $scope.angularForm.$setPristine(true);
   };
 
   $scope.resetClicked = function() {
@@ -48,7 +47,6 @@ ManageIQ.angular.app.controller('keyPairCloudFormController', ['$http', '$scope'
   $scope.saveClicked = function() {
     $scope.keyPairModel.ems_id = $scope.keyPairModel.ems.id;
     keyPairEditButtonClicked('save', $scope.keyPairModel);
-    $scope.angularForm.$setPristine(true);
   };
 
   $scope.addClicked = function() {

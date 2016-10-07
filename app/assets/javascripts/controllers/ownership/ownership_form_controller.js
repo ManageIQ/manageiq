@@ -49,7 +49,6 @@ ManageIQ.angular.app.controller('ownershipFormController', ['$http', '$scope', '
 
   $scope.cancelClicked = function() {
     ownershipEditButtonClicked('cancel');
-    $scope.angularForm.$setPristine(true);
   };
 
   $scope.resetClicked = function() {

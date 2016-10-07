@@ -188,7 +188,6 @@ ManageIQ.angular.app.controller('timeProfileFormController', ['$http', '$scope',
 
   $scope.cancelClicked = function() {
     timeProfileEditButtonClicked('cancel');
-    $scope.angularForm.$setPristine(true);
   };
 
   $scope.resetClicked = function() {
@@ -202,7 +201,6 @@ ManageIQ.angular.app.controller('timeProfileFormController', ['$http', '$scope',
     delete timeProfileModelObj.profile_tz;
 
     timeProfileEditButtonClicked('save', timeProfileModelObj);
-    $scope.angularForm.$setPristine(true);
   };
 
   $scope.addClicked = $scope.saveClicked;

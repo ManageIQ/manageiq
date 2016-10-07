@@ -51,7 +51,6 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
       replication_type: $scope.pglogicalReplicationModel.replication_type,
       subscriptions: $scope.pglogicalReplicationModel.subscriptions,
     });
-    $scope.angularForm.$setPristine(true);
   };
 
   // check if subscription values have been changed

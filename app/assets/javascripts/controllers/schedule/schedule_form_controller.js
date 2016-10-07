@@ -234,7 +234,6 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
 
   $scope.cancelClicked = function() {
     scheduleEditButtonClicked('cancel');
-    $scope.angularForm.$setPristine(true);
   };
 
   $scope.resetClicked = function() {
@@ -264,7 +263,6 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
 
   $scope.saveClicked = function() {
     scheduleEditButtonClicked('save', $scope.scheduleModel);
-    $scope.angularForm.$setPristine(true);
   };
 
   $scope.addClicked = function() {

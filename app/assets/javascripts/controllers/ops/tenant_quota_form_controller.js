@@ -45,7 +45,6 @@ ManageIQ.angular.app.controller('tenantQuotaFormController', ['$http', '$scope',
 
   $scope.cancelClicked = function() {
     tenantManageQuotasButtonClicked('cancel');
-    $scope.angularForm.$setPristine(true);
   };
 
   $scope.resetClicked = function() {
@@ -74,7 +73,6 @@ ManageIQ.angular.app.controller('tenantQuotaFormController', ['$http', '$scope',
     tenantManageQuotasButtonClicked('save', {
       quotas: data,
     });
-    $scope.angularForm.$setPristine(true);
   };
 
   $scope.toggleValueForWatch =   function(watchValue, initialValue) {
