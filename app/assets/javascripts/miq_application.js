@@ -1635,7 +1635,7 @@ function chartData(type, data, data2) {
   }
 
   // set formating function for tooltip and y tick labels
-  if (_.isObject(data.axis) && _.isObject(data.axis.y) && _.isObject(data.axis.y.tick) && _.isObject(data.axis.y.tick.format)) {
+  if (_.isObject(data.axis) && _.isObject(data.axis.y) && _.isObject(data.axis.y.tick) && _.isObject(data.axis.y.tick.format) && data.axis.y.tick.format.function) {
     var o = data.axis.y.tick.format;
     data.axis.y.tick.format = ManageIQ.charts.formatters[o.function].c3(o.options);
     data.tooltip = {format: {value: ManageIQ.charts.formatters[o.function].c3(o.options)}};

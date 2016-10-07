@@ -50,7 +50,8 @@ module ReportFormatter
         :miqChart => type,
         :data     => {:columns => [], :names => {}},
         :axis     => {:x => {:tick => {}}, :y => {:tick => {}}},
-        :tooltip  => {}
+        :tooltip  => {},
+        :miq      => {}
       }
 
       if chart_is_2d?
@@ -107,9 +108,11 @@ module ReportFormatter
 
     def no_records_found_chart(*)
       mri.chart = {
-        :data => {
-          :columns => []
-        }
+        :miqChart => 'Line',
+        :data     => {:columns => [], :names => {}},
+        :axis     => {:x => {:tick => {}}, :y => {:tick => {}}},
+        :tooltip  => {},
+        :miq      => {}
       }
     end
 
