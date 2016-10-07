@@ -58,7 +58,7 @@ class EvmTestSetupReplication
   private
 
   def released_migrations
-    unless system("git fetch --depth=1 http://github.com/ManageIQ/manageiq.git refs/heads/euwe:#{TEST_BRANCH}")
+    unless system("git fetch http://github.com/ManageIQ/manageiq.git refs/heads/euwe:#{TEST_BRANCH}")
       return []
     end
     files = `git ls-tree -r --name-only #{TEST_BRANCH} db/migrate/`
