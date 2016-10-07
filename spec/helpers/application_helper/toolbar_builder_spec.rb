@@ -730,44 +730,6 @@ describe ApplicationHelper do
       end
     end
 
-    context "when with MiqServer" do
-      before do
-        @record = MiqServer.new
-        stub_user(:features => :all)
-      end
-
-      %w(role_start role_suspend promote_server demote_server).each do |id|
-        it "and id = #{id}" do
-          @id = id
-          expect(subject).to be_truthy
-        end
-      end
-
-      it "otherwise" do
-        @id = 'xx'
-        expect(subject).to be_falsey
-      end
-    end
-
-    context "when with ServerRole" do
-      before do
-        @record = ServerRole.new
-        stub_user(:features => :all)
-      end
-
-      ["server_delete", "role_start", "role_suspend", "promote_server", "demote_server"].each do |id|
-        it "and id = #{id}" do
-          @id = id
-          expect(subject).to be_truthy
-        end
-      end
-
-      it "otherwise" do
-        @id = 'xx'
-        expect(subject).to be_falsey
-      end
-    end
-
     context "ServiceTemplate" do
       before do
         @record = ServiceTemplate.new
@@ -895,62 +857,6 @@ describe ApplicationHelper do
       @id = "iso_datastore_new"
 
       expect(subject).to match(/No.*are available/)
-    end
-
-    context "when record class = AssignedServerRole" do
-      before { @record = AssignedServerRole.new }
-
-      before do
-        @sb = {:active_tree => :diagnostics_tree,
-               :trees       => {:diagnostics_tree => {:tree => :diagnostics_tree}}}
-        @server_role = ServerRole.new(:description => "some description")
-      end
-
-      context "and id = role_start" do
-        before :each do
-          @message = "This Role is already active on this Server"
-          @id = "role_start"
-
-          allow(@record).to receive_messages(:miq_server => double(:started? => true), :active => true, :server_role => @server_role)
-        end
-
-        it "when miq server not started" do
-          allow(@record).to receive_messages(:miq_server => double(:started? => false))
-          expect(subject).to eq(@message)
-        end
-
-        it "when miq server started but not active" do
-          allow(@record).to receive_messages(:active => false)
-          allow(@record).to receive_messages(:miq_server => double(:started? => false))
-          expect(subject).to eq("Only available Roles on active Servers can be started")
-        end
-
-        it_behaves_like 'default true_case'
-      end
-
-      context "and id = role_suspend" do
-        before do
-          @id = "role_suspend"
-          @miq_server = MiqServer.new(:name => "xx miq server", :id => "xx server id")
-          allow(@miq_server).to receive_messages(:started? => true)
-          allow(@record).to receive_messages(:miq_server => @miq_server, :active => true,
-                          :server_role => @server_role)
-          @server_role.max_concurrent = 1
-        end
-
-        context "when miq server started and active" do
-          it "and server_role.max_concurrent == 1" do
-            allow(@record).to receive_messages(:miq_server => @miq_server)
-            expect(subject).to eq("Activate the #{@record.server_role.description} Role on another Server to suspend it on #{@record.miq_server.name} [#{@record.miq_server.id}]")
-          end
-          it_behaves_like 'default true_case'
-        end
-
-        it "when miq_server not started or not active" do
-          allow(@record).to receive_messages(:miq_server => double(:started? => false), :active => false)
-          expect(subject).to eq("Only active Roles on active Servers can be suspended")
-        end
-      end
     end
 
     context "when record class = OntapStorageSystem" do
