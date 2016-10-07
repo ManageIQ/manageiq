@@ -17,6 +17,10 @@ module ManageIQ::Providers
         # Simple mapping from target pool's self_link url to the created
         # target pool entity.
         @target_pool_index = {}
+
+        # Another simple mapping from target pool's self_link url to the set of
+        # lbs that point at it
+        @target_pool_link_to_load_balancers = {}
       end
 
       def ems_inv_to_hashes
@@ -30,6 +34,7 @@ module ManageIQ::Providers
         get_load_balancers
         get_load_balancer_pools
         get_load_balancer_listeners
+        get_load_balancer_health_checks
 
         _log.info("#{log_header}...Complete")
 
@@ -75,7 +80,43 @@ module ManageIQ::Providers
         }
       end
 
+      def self.parse_health_check_link(health_check_link)
+        link_regexp = %r{\Ahttps://www\.googleapis\.com/compute/v1/projects/([^/]+)/global/httpHealthChecks/([^/]+)\Z}
+
+        m = link_regexp.match(health_check_link)
+        return nil if m.nil?
+
+        {
+          :project      => m[1],
+          :health_check => m[2]
+        }
+      end
+
       private
+
+      def get_health_check_from_link(link)
+        parts = self.class.parse_health_check_link(link)
+        unless parts
+          _log.warn("Unable to parse health check link: #{link}")
+          return nil
+        end
+
+        return nil unless @connection.project == parts[:project]
+        get_health_check_cached(parts[:health_check])
+      end
+
+      def get_health_check_cached(health_check)
+        @health_check_cache ||= {}
+
+        return @health_check_cache.fetch_path(health_check) if @health_check_cache.has_key_path?(health_check)
+
+        @health_check_cache.store_path(health_check, @connection.http_health_checks.get(health_check))
+      rescue Fog::Errors::Error => err
+        m = "Error during data collection for [#{@ems.name}] id: [#{@ems.id}] when querying link for health check: #{err}"
+        _log.warn(m)
+        _log.warn(err.backtrace.join("\n"))
+        nil
+      end
 
       # Lookup a VM in fog via its link to get the VM id (which is equivalent to
       # the ems_ref).
@@ -113,6 +154,7 @@ module ManageIQ::Providers
         rescue Fog::Errors::Error => err
           m = "Error during data collection for [#{@ems.name}] id: [#{@ems.id}] when querying link for vm_id: #{err}"
           _log.warn(m)
+          _log.warn(err.backtrace.join("\n"))
           nil
         end
       end
@@ -262,6 +304,14 @@ module ManageIQ::Providers
         end
       end
 
+      def get_load_balancer_health_checks
+        target_pools = @connection.target_pools.all
+
+        process_collection(target_pools, :load_balancer_health_checks) do |health_check|
+          parse_load_balancer_health_check(health_check)
+        end
+      end
+
       def parse_load_balancer(forwarding_rule)
         uid = forwarding_rule.id
 
@@ -317,7 +367,74 @@ module ManageIQ::Providers
           ]
         }
 
+        if forwarding_rule.target
+          # Make sure we link the target link back to this instance for future
+          # back-references
+          @target_pool_link_to_load_balancers[forwarding_rule.target] ||= Set.new
+          @target_pool_link_to_load_balancers[forwarding_rule.target].add(new_result[:load_balancer])
+        end
+
         return uid, new_result
+      end
+
+      def parse_load_balancer_health_check(target_pool)
+        # Target pools aren't required to have health checks
+        return if target_pool.health_checks.nil? || target_pool.health_checks.empty?
+
+        # For some reason a target pool has a list of health checks, but the API
+        # won't accept more than one. Ignore the rest
+        _log.warn("Expected one health check on target pool but found many! Ignoring all but the first.") \
+          if target_pool.health_checks.size > 1
+
+        health_check = get_health_check_from_link(target_pool.health_checks.first)
+
+        @target_pool_link_to_load_balancers[target_pool.self_link].collect do |load_balancer|
+          load_balancer_listener = @data_index.fetch_path(:load_balancer_listeners, load_balancer[:ems_ref])
+          return nil if load_balancer_listener.nil?
+
+          uid = "#{load_balancer[:ems_ref]}_#{target_pool.id}_#{health_check.id}"
+          new_result = {
+            :name                               => health_check.name,
+            :ems_ref                            => uid,
+            :type                               => ManageIQ::Providers::Google::NetworkManager::LoadBalancerHealthCheck.name,
+            :protocol                           => "HTTP",
+            :port                               => health_check.port,
+            :url_path                           => health_check.request_path,
+            :interval                           => health_check.check_interval_sec,
+            :timeout                            => health_check.timeout_sec,
+            :unhealthy_threshold                => health_check.unhealthy_threshold,
+            :healthy_threshold                  => health_check.healthy_threshold,
+            :load_balancer                      => load_balancer,
+            :load_balancer_listener             => load_balancer_listener,
+            :load_balancer_health_check_members => parse_load_balancer_health_check_members(target_pool)
+          }
+          [uid, new_result]
+        end
+      end
+
+      def parse_load_balancer_health_check_members(target_pool)
+        # First attempt to get the health of the instance
+        # Due to a bug in fog, there's no way to get the health of an individual
+        # member. Instead we have to get the health of the entire target_pool,
+        # which if it fails means we skip.
+        # Issue here: https://github.com/fog/fog-google/issues/162
+        target_pool.get_health.collect do |instance_link, instance_health|
+          # attempt to look up the load balancer member
+          member = @data_index.fetch_path(:load_balancer_pool_members, Digest::MD5.base64digest(instance_link))
+          return nil unless member
+
+          # It's possible we didn't get an instance_health value back if the
+          # health check hasn't had a chance to run yet.
+          {
+            :load_balancer_pool_member => member,
+            :status                    => (instance_health.nil? ? "UNKNOWN" : instance_health[0]["healthState"]),
+            :status_reason             => ""
+          }
+        end
+      rescue Fog::Errors::Error => err
+        _log.warn("Caught unexpected error when probing health for target pool #{target_pool.name}: #{err}")
+        _log.warn(err.backtrace.join("\n"))
+        return []
       end
 
       def parse_cloud_network(network)
