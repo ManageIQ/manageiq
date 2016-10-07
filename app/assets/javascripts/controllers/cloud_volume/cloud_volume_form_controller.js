@@ -22,13 +22,11 @@ ManageIQ.angular.app.controller('cloudVolumeFormController', ['$http', '$scope',
   }
 
   $scope.addClicked = function() {
-    miqService.sparkleOn();
     var url = 'create/new' + '?button=add';
     miqService.miqAjaxButton(url, $scope.cloudVolumeModel);
   };
 
   $scope.cancelClicked = function() {
-    miqService.sparkleOn();
     if (cloudVolumeFormId == 'new') {
       var url = '/cloud_volume/create/new' + '?button=cancel';
     } else {
@@ -38,31 +36,26 @@ ManageIQ.angular.app.controller('cloudVolumeFormController', ['$http', '$scope',
   };
 
   $scope.saveClicked = function() {
-    miqService.sparkleOn();
     var url = '/cloud_volume/update/' + cloudVolumeFormId + '?button=save';
     miqService.miqAjaxButton(url, $scope.cloudVolumeModel);
   };
 
   $scope.attachClicked = function() {
-    miqService.sparkleOn();
     var url = '/cloud_volume/attach_volume/' + cloudVolumeFormId + '?button=attach';
     miqService.miqAjaxButton(url, $scope.cloudVolumeModel);
   };
 
   $scope.detachClicked = function() {
-    miqService.sparkleOn();
     var url = '/cloud_volume/detach_volume/' + cloudVolumeFormId + '?button=detach';
     miqService.miqAjaxButton(url, $scope.cloudVolumeModel);
   };
 
   $scope.cancelAttachClicked = function() {
-    miqService.sparkleOn();
     var url = '/cloud_volume/attach_volume/' + cloudVolumeFormId + '?button=cancel';
     miqService.miqAjaxButton(url);
   };
 
   $scope.cancelDetachClicked = function() {
-    miqService.sparkleOn();
     var url = '/cloud_volume/detach_volume/' + cloudVolumeFormId + '?button=cancel';
     miqService.miqAjaxButton(url);
   };

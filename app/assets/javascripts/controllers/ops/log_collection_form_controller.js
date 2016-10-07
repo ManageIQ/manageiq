@@ -42,7 +42,7 @@ ManageIQ.angular.app.controller('logCollectionFormController', ['$http', '$scope
         $scope.logCollectionModel.uri_prefix = data.uri_prefix;
         $scope.logCollectionModel.log_userid = data.log_userid;
 
-        if($scope.logCollectionModel.log_userid != '') {
+        if ($scope.logCollectionModel.log_userid != '') {
           $scope.logCollectionModel.log_password = $scope.logCollectionModel.log_verify = miqService.storedPasswordPlaceholder;
         }
 
@@ -81,7 +81,6 @@ ManageIQ.angular.app.controller('logCollectionFormController', ['$http', '$scope
   };
 
   $scope.saveClicked = function() {
-    miqService.sparkleOn();
     var url = $scope.saveUrl + serverId + '?button=save';
     miqService.miqAjaxButton(url, $scope.logCollectionModel);
     $scope.angularForm.$setPristine(true);
@@ -95,7 +94,6 @@ ManageIQ.angular.app.controller('logCollectionFormController', ['$http', '$scope
   };
 
   $scope.cancelClicked = function() {
-    miqService.sparkleOn();
     var url = $scope.saveUrl + serverId + '?button=cancel';
     miqService.miqAjaxButton(url);
     $scope.angularForm.$setPristine(true);

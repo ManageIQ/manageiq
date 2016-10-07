@@ -7,13 +7,11 @@ ManageIQ.angular.app.controller('vmCloudAttachFormController', ['$scope', 'vmClo
   ManageIQ.angular.scope = $scope;
 
   $scope.submitClicked = function() {
-    miqService.sparkleOn();
     var url = '/vm_cloud/attach_volume/' + vmCloudAttachFormId + '?button=attach';
     miqService.miqAjaxButton(url, $scope.vmCloudModel);
   };
 
   $scope.cancelClicked = function() {
-    miqService.sparkleOn();
     var url = '/vm_cloud/attach_volume/' + vmCloudAttachFormId + '?button=cancel';
     miqService.miqAjaxButton(url);
   };

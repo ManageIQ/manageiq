@@ -74,8 +74,6 @@ ManageIQ.angular.app.controller('providerForemanFormController', ['$http', '$sco
 
     var providerForemanEditButtonClicked = function(buttonName, data) {
       var url = '/provider_foreman/edit/' + providerForemanFormId + '?button=' + buttonName;
-
-      miqService.sparkleOn();
       miqService.miqAjaxButton(url, data);
     };
 

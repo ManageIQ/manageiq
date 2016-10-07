@@ -30,8 +30,6 @@ ManageIQ.angular.app.controller('keyPairCloudFormController', ['$http', '$scope'
   };
 
   var keyPairEditButtonClicked = function(buttonName, data) {
-    miqService.sparkleOn();
-
     var url = '/auth_key_pair_cloud/create/' + keyPairFormId + '?button=' + buttonName;
     miqService.miqAjaxButton(url, data);
   };

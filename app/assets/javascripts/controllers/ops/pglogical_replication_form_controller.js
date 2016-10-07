@@ -29,7 +29,6 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
   };
 
   var pglogicalManageSubscriptionsButtonClicked = function(buttonName, data) {
-    miqService.sparkleOn();
     var url = '/ops/pglogical_save_subscriptions/' + pglogicalReplicationFormId + '?button=' + buttonName;
     miqService.miqAjaxButton(url, data);
   };
@@ -227,7 +226,7 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
       data.port = subscription.port;
       data.id = subscription.id;
     }
-    miqService.sparkleOn();
+
     var url = '/ops/pglogical_validate_subscription';
     miqService.miqAjaxButton(url, data);
   };

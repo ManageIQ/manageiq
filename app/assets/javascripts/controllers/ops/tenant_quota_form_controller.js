@@ -39,7 +39,6 @@ ManageIQ.angular.app.controller('tenantQuotaFormController', ['$http', '$scope',
   };
 
   var tenantManageQuotasButtonClicked = function(buttonName, data) {
-    miqService.sparkleOn();
     var url = '/ops/rbac_tenant_manage_quotas/' + tenantQuotaFormId + '?button=' + buttonName + '&divisible=' + tenantType;
     miqService.miqAjaxButton(url, data);
   };

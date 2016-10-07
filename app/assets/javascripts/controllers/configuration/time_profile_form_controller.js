@@ -181,7 +181,6 @@ ManageIQ.angular.app.controller('timeProfileFormController', ['$http', '$scope',
   };
 
   var timeProfileEditButtonClicked = function(buttonName, data) {
-    miqService.sparkleOn();
     var url = '/configuration/timeprofile_update/' + timeProfileFormId + '?button=' + buttonName;
 
     miqService.miqAjaxButton(url, data);

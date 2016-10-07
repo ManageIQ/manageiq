@@ -42,7 +42,6 @@ ManageIQ.angular.app.controller('tenantFormController', ['$http', '$scope', 'ten
     };
 
     var tenantEditButtonClicked = function(buttonName, data) {
-      miqService.sparkleOn();
       var url = '/ops/rbac_tenant_edit/' + tenantFormId + '?button=' + buttonName;
       miqService.miqAjaxButton(url, data);
     };

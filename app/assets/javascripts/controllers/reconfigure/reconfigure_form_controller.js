@@ -237,7 +237,6 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
     };
 
     var reconfigureEditButtonClicked = function(buttonName) {
-      miqService.sparkleOn();
       var url = 'reconfigure_update/' + reconfigureFormId + '?button=' + buttonName;
 
       miqService.miqAjaxButton(url, {
@@ -254,7 +253,6 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
     };
 
     $scope.cancelClicked = function() {
-      miqService.sparkleOn();
       miqService.miqAjaxButton('reconfigure_update?button=cancel');
     };
 

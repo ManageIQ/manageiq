@@ -85,7 +85,6 @@ ManageIQ.angular.app.service('miqService', ['$timeout', '$document', function($t
   };
 
   this.validateWithAjax = function (url) {
-    miqSparkleOn();
     miqAjaxButton(url, true); // FIXME!
   };
 

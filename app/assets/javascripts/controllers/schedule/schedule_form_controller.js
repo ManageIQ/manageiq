@@ -129,7 +129,6 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
   };
 
   var scheduleEditButtonClicked = function(buttonName, data) {
-    miqService.sparkleOn();
     var url = '/ops/schedule_edit/' + scheduleFormId + '?button=' + buttonName;
     miqService.miqAjaxButton(url, data);
   };

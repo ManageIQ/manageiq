@@ -77,7 +77,6 @@ ManageIQ.angular.app.controller('diagnosticsDatabaseFormController', ['$http', '
 
   $scope.submitButtonClicked = function(confirm_msg) {
     if (confirm(confirm_msg)) {
-      miqService.sparkleOn();
       miqService.miqAjaxButton($scope.submitUrl, $scope.diagnosticsDatabaseModel);
     }
   };

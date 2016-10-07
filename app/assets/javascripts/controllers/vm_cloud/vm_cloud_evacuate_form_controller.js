@@ -18,13 +18,11 @@ ManageIQ.angular.app.controller('vmCloudEvacuateFormController', ['$http', '$sco
   });
 
   $scope.cancelClicked = function() {
-    miqService.sparkleOn();
     var url = '/vm_cloud/evacuate_vm/' + vmCloudEvacuateFormId + '?button=cancel';
     miqService.miqAjaxButton(url);
   };
 
   $scope.submitClicked = function() {
-    miqService.sparkleOn();
     var url = '/vm_cloud/evacuate_vm/' + vmCloudEvacuateFormId + '?button=submit';
     miqService.miqAjaxButton(url, $scope.vmCloudModel);
   };

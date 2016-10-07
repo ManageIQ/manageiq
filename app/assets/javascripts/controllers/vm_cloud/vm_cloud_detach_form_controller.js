@@ -7,13 +7,11 @@ ManageIQ.angular.app.controller('vmCloudDetachFormController', ['$scope', 'vmClo
   ManageIQ.angular.scope = $scope;
 
   $scope.submitClicked = function() {
-    miqService.sparkleOn();
     var url = '/vm_cloud/detach_volume/' + vmCloudDetachFormId + '?button=detach';
     miqService.miqAjaxButton(url, $scope.vmCloudModel);
   };
 
   $scope.cancelClicked = function() {
-    miqService.sparkleOn();
     var url = '/vm_cloud/detach_volume/' + vmCloudDetachFormId + '?button=cancel';
     miqService.miqAjaxButton(url);
   };
