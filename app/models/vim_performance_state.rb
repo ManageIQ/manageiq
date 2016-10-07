@@ -48,29 +48,32 @@ class VimPerformanceState < ApplicationRecord
     state = obj.vim_performance_states.find_by_timestamp(ts)
     return state unless state.nil?
 
-    state = obj.vim_performance_states.build
-    state.state_data ||= {}
-    state.timestamp = ts
-    state.capture_interval = 3600
-    state.assoc_ids = capture_assoc_ids(obj)
-    state.parent_host_id = capture_parent_host(obj)
-    state.parent_storage_id = capture_parent_storage(obj)
-    state.parent_ems_id = capture_parent_ems(obj)
-    state.parent_ems_cluster_id = capture_parent_cluster(obj)
-    # TODO: This is cpu_total_cores and needs to be renamed, but reports depend on the name :numvcpus
-    state.numvcpus = capture_cpu_total_cores(obj)
-    state.total_cpu = capture_total(obj, :cpu_speed)
-    state.total_mem = capture_total(obj, :memory)
-    state.reserve_cpu = capture_reserve(obj, :cpu_reserve)
-    state.reserve_mem = capture_reserve(obj, :memory_reserve)
-    state.vm_used_disk_storage = capture_vm_disk_storage(obj, :used_disk)
-    state.vm_allocated_disk_storage = capture_vm_disk_storage(obj, :allocated_disk)
-    state.tag_names = capture_tag_names(obj)
-    state.image_tag_names = capture_image_tag_names(obj)
-    state.host_sockets = capture_host_sockets(obj)
+    state = obj.vim_performance_states.build(:timestamp => ts)
+    state.capture
     state.save
 
     state
+  end
+
+  def capture
+    self.state_data ||= {}
+    self.capture_interval = 3600
+    self.assoc_ids = VimPerformanceState.capture_assoc_ids(resource)
+    self.parent_host_id = VimPerformanceState.capture_parent_host(resource)
+    self.parent_storage_id = VimPerformanceState.capture_parent_storage(resource)
+    self.parent_ems_id = VimPerformanceState.capture_parent_ems(resource)
+    self.parent_ems_cluster_id = VimPerformanceState.capture_parent_cluster(resource)
+    # TODO: This is cpu_total_cores and needs to be renamed, but reports depend on the name :numvcpus
+    self.numvcpus = VimPerformanceState.capture_cpu_total_cores(resource)
+    self.total_cpu = VimPerformanceState.capture_total(resource, :cpu_speed)
+    self.total_mem = VimPerformanceState.capture_total(resource, :memory)
+    self.reserve_cpu = VimPerformanceState.capture_reserve(resource, :cpu_reserve)
+    self.reserve_mem = VimPerformanceState.capture_reserve(resource, :memory_reserve)
+    self.vm_used_disk_storage = VimPerformanceState.capture_vm_disk_storage(resource, :used_disk)
+    self.vm_allocated_disk_storage = VimPerformanceState.capture_vm_disk_storage(resource, :allocated_disk)
+    self.tag_names = VimPerformanceState.capture_tag_names(resource)
+    self.image_tag_names = VimPerformanceState.capture_image_tag_names(resource)
+    self.host_sockets = VimPerformanceState.capture_host_sockets(resource)
   end
 
   def vm_count_on
