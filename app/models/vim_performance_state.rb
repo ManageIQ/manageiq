@@ -68,8 +68,7 @@ class VimPerformanceState < ApplicationRecord
     self.total_mem = VimPerformanceState.capture_total(resource, :memory)
     self.reserve_cpu = VimPerformanceState.capture_reserve(resource, :cpu_reserve)
     self.reserve_mem = VimPerformanceState.capture_reserve(resource, :memory_reserve)
-    self.vm_used_disk_storage = VimPerformanceState.capture_vm_disk_storage(resource, :used_disk)
-    self.vm_allocated_disk_storage = VimPerformanceState.capture_vm_disk_storage(resource, :allocated_disk)
+    capture_vm_disk_storage
     self.tag_names = VimPerformanceState.capture_tag_names(resource)
     self.image_tag_names = VimPerformanceState.capture_image_tag_names(resource)
     capture_host_sockets
@@ -218,11 +217,15 @@ class VimPerformanceState < ApplicationRecord
     obj.container_image.tag_list(:ns => "/managed").split.join("|")
   end
 
-  def self.capture_vm_disk_storage(obj, field)
-    obj.send("#{field}_storage") if obj.kind_of?(VmOrTemplate)
-  end
-
   private
+
+  def capture_vm_disk_storage
+    if resource.kind_of?(VmOrTemplate)
+      [:used_disk, :allocated_disk].each do |type|
+        send("vm_#{type}_storage=", resource.send("#{type}_storage"))
+      end
+    end
+  end
 
   def capture_cpu_total_cores
     hardware = if resource.respond_to?(:hardware)
