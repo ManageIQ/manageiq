@@ -64,8 +64,7 @@ class VimPerformanceState < ApplicationRecord
     capture_parent_ems
     capture_parent_cluster
     capture_cpu_total_cores
-    self.total_cpu = VimPerformanceState.capture_total(resource, :cpu_speed)
-    self.total_mem = VimPerformanceState.capture_total(resource, :memory)
+    capture_totals
     capture_reserve
     capture_vm_disk_storage
     capture_tag_names
@@ -145,21 +144,24 @@ class VimPerformanceState < ApplicationRecord
     ids.nil? ? [] : ids.uniq.sort
   end
 
-  def self.capture_total(obj, field)
-    return obj.send("aggregate_#{field}") if obj.respond_to?("aggregate_#{field}")
+  private
 
-    if obj.respond_to?(:hardware)
-      hardware = obj.hardware
-    elsif obj.respond_to?(:container_node)
-      hardware = obj.container_node.hardware
-    else
-      return nil
-    end
+  def capture_totals
+    self.total_cpu = capture_total(:cpu_speed)
+    self.total_mem = capture_total(:memory)
+  end
+
+  def capture_total(field)
+    return resource.send("aggregate_#{field}") if resource.respond_to?("aggregate_#{field}")
+
+    hardware = if resource.respond_to?(:hardware)
+                 resource.hardware
+               elsif resource.respond_to?(:container_node)
+                 resource.container_node.hardware
+               end
 
     field == :memory ? hardware.try(:memory_mb) : hardware.try(:aggregate_cpu_speed)
   end
-
-  private
 
   def capture_assoc_ids
     result = {}
