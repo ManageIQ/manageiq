@@ -315,7 +315,7 @@ module OpsController::Diagnostics
     end
     @schedule.sched_action = {:method => "db_backup"}
     if @flash_array
-      javascript_flash
+      javascript_flash(:spinner_off => true)
       return
     end
 

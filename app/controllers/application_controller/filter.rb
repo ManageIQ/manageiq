@@ -415,7 +415,7 @@ module ApplicationController::Filter
       render :update do |page|
         page << javascript_prologue
       end
-    elsif @refresh_partial.to_s == 'flash_msg_div'
+    elsif @refresh_div.to_s == 'flash_msg_div'
       javascript_flash
     else
       render :update do |page|
