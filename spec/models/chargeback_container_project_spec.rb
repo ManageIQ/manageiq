@@ -119,10 +119,14 @@ describe ChargebackContainerProject do
                                    :finish                    => Float::INFINITY,
                                    :fixed_rate                => 0.0,
                                    :variable_rate             => @hourly_rate.to_s) }
-    let!(:cbrd) {FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
-                                   :chargeback_rate_id => @cbr.id,
-                                   :per_time           => "hourly",
-                                   :chargeback_tiers   => [cbt]) }
+    let!(:cbrd) do
+      FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
+                         :source             => "compute_1",
+                         :chargeback_rate_id => @cbr.id,
+                         :per_time           => "hourly",
+                         :chargeback_tiers   => [cbt])
+    end
+
     it "fixed_compute" do
       expect(subject.fixed_compute_1_cost).to eq(@hourly_rate * hours_in_day)
       expect(subject.fixed_compute_metric).to eq(@metric_size)
@@ -218,10 +222,14 @@ describe ChargebackContainerProject do
                                    :finish                    => Float::INFINITY,
                                    :fixed_rate                => 0.0,
                                    :variable_rate             => @hourly_rate.to_s) }
-    let!(:cbrd) {FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
-                                    :chargeback_rate_id => @cbr.id,
-                                    :per_time           => "hourly",
-                                    :chargeback_tiers   => [cbt]) }
+    let!(:cbrd) do
+      FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
+                         :source             => "compute_1",
+                         :chargeback_rate_id => @cbr.id,
+                         :per_time           => "hourly",
+                         :chargeback_tiers   => [cbt])
+    end
+
     it "fixed_compute" do
       # .to be_within(0.01) is used since theres a float error here
       expect(subject.fixed_compute_1_cost).to be_within(0.01).of(@hourly_rate * @hours_in_month)
@@ -377,10 +385,12 @@ describe ChargebackContainerProject do
                                    :finish                    => Float::INFINITY,
                                    :fixed_rate                => 0.0,
                                    :variable_rate             => @hourly_rate.to_s) }
-    let!(:cbrd) {FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
-                                    :chargeback_rate_id => @cbr.id,
-                                    :per_time           => "hourly",
-                                    :chargeback_tiers   => [cbt]) }
+    let!(:cbrd) do
+      FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
+                         :chargeback_rate_id => @cbr.id,
+                         :per_time           => "hourly",
+                         :chargeback_tiers   => [cbt])
+    end
 
     it "fixed_compute" do
       # .to be_within(0.01) is used since theres a float error here
