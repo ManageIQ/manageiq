@@ -209,14 +209,14 @@ class VimPerformanceState < ApplicationRecord
   end
 
   def self.capture_tag_names(obj)
-    obj.tag_list(:ns => "/managed").split.join("|")
+    obj.perf_tags
   end
 
   private
 
   def capture_image_tag_names
     self.image_tag_names = if resource.respond_to?(:container_image) && resource.container_image.present?
-                             resource.container_image.tag_list(:ns => "/managed").split.join("|")
+                             resource.container_image.perf_tags
                            else
                              ''
                            end
