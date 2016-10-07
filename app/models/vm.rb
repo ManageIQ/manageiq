@@ -4,6 +4,10 @@ class Vm < VmOrTemplate
   has_one :container_deployment_node
   include_concern 'Operations'
 
+  extend InterRegionApiMethodRelay
+  api_relay_method :start
+  api_relay_method :stop
+
   def self.base_model
     Vm
   end
