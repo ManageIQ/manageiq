@@ -154,12 +154,6 @@ class VimPerformanceState < ApplicationRecord
   def capture_total(field)
     return resource.send("aggregate_#{field}") if resource.respond_to?("aggregate_#{field}")
 
-    hardware = if resource.respond_to?(:hardware)
-                 resource.hardware
-               elsif resource.respond_to?(:container_node)
-                 resource.container_node.hardware
-               end
-
     field == :memory ? hardware.try(:memory_mb) : hardware.try(:aggregate_cpu_speed)
   end
 
@@ -235,11 +229,6 @@ class VimPerformanceState < ApplicationRecord
   end
 
   def capture_cpu_total_cores
-    hardware = if resource.respond_to?(:hardware)
-                 resource.hardware
-               elsif resource.respond_to?(:container_node)
-                 resource.container_node.hardware
-               end
     # TODO: This is cpu_total_cores and needs to be renamed, but reports depend on the name :numvcpus
     self.numvcpus = hardware.try(:cpu_total_cores)
   end
@@ -250,5 +239,13 @@ class VimPerformanceState < ApplicationRecord
                         elsif resource.respond_to?(:hosts)
                           resource.hosts.includes(:hardware).collect { |h| h.hardware.try(:cpu_sockets) }.compact.sum
                         end
+  end
+
+  def hardware
+    if resource.respond_to?(:hardware)
+      resource.hardware
+    elsif resource.respond_to?(:container_node)
+      resource.container_node.hardware
+    end
   end
 end
