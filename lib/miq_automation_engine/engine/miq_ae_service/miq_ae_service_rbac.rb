@@ -21,7 +21,8 @@ module MiqAeMethodService
       end
 
       def first
-        all.first
+        objs = rbac_enabled? ? Rbac.filtered(model, :user => workspace.ae_user, :limit => 1) : model
+        wrap_results(objs.first)
       end
 
       def filter_objects(objs)
