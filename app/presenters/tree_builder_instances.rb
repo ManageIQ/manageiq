@@ -6,7 +6,8 @@ class TreeBuilderInstances < TreeBuilder
 
   def tree_init_options(_tree_name)
     {
-      :leaf => 'VmCloud'
+      :leaf => 'VmCloud',
+      :lazy => false
     }
   end
 

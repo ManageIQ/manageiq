@@ -1210,11 +1210,11 @@ module VmCommon
     add_nodes
   end
 
-  # TODO say a bit about it
+  # if node is VM or Template and hide_vms is true - select parent node in explorer tree but show info of Vm/Template
   def resolve_node_info(id)
     nodetype, id = id.split("-")
 
-    if hide_vms && nodetype == 'v'
+    if hide_vms && (nodetype == 'v' || nodetype == 't')
       self.x_node = parent_folder_id(VmOrTemplate.find(id))
       @vm = VmOrTemplate.find(id)
     else

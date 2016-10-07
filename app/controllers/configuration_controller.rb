@@ -82,8 +82,6 @@ class ConfigurationController < ApplicationController
     render :action => "show"
   end
 
-
-
   # AJAX driven routine to check for changes in ANY field on the form
   def form_field_changed
     # ui1 edit form
