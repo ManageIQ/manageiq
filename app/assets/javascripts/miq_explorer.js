@@ -250,6 +250,7 @@ ManageIQ.explorer.processReplaceRightCell = function(data) {
   }
 
   miqInitMainContent();
+  miqInitAccordions();
 
   if (data.hideModal) { $('#quicksearchbox').modal('hide'); }
   if (data.initAccords) { miqInitAccordions(); }
