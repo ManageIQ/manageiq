@@ -42,7 +42,7 @@ class MiqVm
     elsif (@rhevm = @ost.miqRhevm)
       $log.debug "MiqVm::initialize: accessing VM through RHEVM server" if $log.debug?
       $log.debug "MiqVm::initialize: vmCfg = #{vmCfg}"
-      @rhevmVm = @rhevm.get_vm(vmCfg)
+      @rhevmVm = @rhevm.get_vm(vmCfg)[0]
       $log.debug "MiqVm::initialize: setting @ost.miqRhevmVm = #{@rhevmVm.class}" if $log.debug?
       @ost.miqRhevmVm = @rhevmVm
       @vmConfig = VmConfig.new(getCfg(@ost.snapId))
