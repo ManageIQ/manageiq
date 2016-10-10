@@ -623,7 +623,13 @@ class MiqCapacityController < ApplicationController
     r = proc { |opts| render_to_string(opts) }
 
     presenter[:osf_node] = x_node
-    presenter.update(:main_div, r[:partial => 'bottlenecks_tabs'])
+    if params.keys.any? { |param| param.include?('tl_report') }
+      presenter.replace(:bottlenecks_report_div, r[:partial => 'bottlenecks_report'])
+    elsif params.keys.any? { |param| param.include?('tl_summ') }
+      presenter.replace(:bottlenecks_summary_div, r[:partial => 'bottlenecks_summary'])
+    else
+      presenter.update(:main_div, r[:partial => 'bottlenecks_tabs'])
+    end
     presenter[:build_calendar] = true
     presenter[:right_cell_text] = @right_cell_text
 
