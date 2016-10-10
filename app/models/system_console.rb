@@ -20,7 +20,7 @@ class SystemConsole < ApplicationRecord
       return
     end
     update(:proxy_status => 'websocket_closed')
-    self.cleanup_proxy_processes
+    SystemConsole.cleanup_proxy_processes
   end
 
   def self.allocate_port
