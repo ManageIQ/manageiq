@@ -1078,6 +1078,13 @@ Vmdb::Application.routes.draw do
                save_post
     },
 
+    :ems_infra_dashboard      => {
+      :get => %w(
+        show
+        data
+      )
+    },
+
     :ems_container            => {
       :get  => %w(
         download_data

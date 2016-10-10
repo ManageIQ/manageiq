@@ -1,5 +1,5 @@
 describe('containerDashboardController gets data and', function() {
-  var $scope, $controller, $httpBackend;
+  var $scope, $controller, $httpBackend, dashboardUtilsFactory;
   var mock_data = getJSONFixture('container_dashboard_response.json');
 
   beforeEach(module('containerDashboard'));
@@ -12,15 +12,18 @@ describe('containerDashboardController gets data and', function() {
     });
   });
 
-  beforeEach(inject(function(_$httpBackend_, $rootScope, _$controller_) {
+  beforeEach(inject(function(_$httpBackend_, $rootScope, _$controller_, _dashboardUtilsFactory_) {
     var dummyDocument = document.createElement('div');
     spyOn(document, 'getElementById').and.returnValue(dummyDocument);
     $scope = $rootScope.$new();
+    dashboardUtilsFactory = _dashboardUtilsFactory_;
 
     $httpBackend = _$httpBackend_;
     $httpBackend.when('GET','/container_dashboard/data').respond(mock_data);
     $controller = _$controller_('containerDashboardController',
-      {$scope: $scope});
+      {$scope: $scope,
+       dashboardUtilsFactory: dashboardUtilsFactory
+      });
     $httpBackend.flush();
   }));
 
@@ -54,7 +57,7 @@ describe('containerDashboardController gets data and', function() {
 });
 
 describe('containerDashboardController gets no data and', function() {
-  var $scope, $controller, $httpBackend;
+  var $scope, $controller, $httpBackend, dashboardUtilsFactory;
   var mock_data = getJSONFixture('container_dashboard_no_data_response.json');
 
   beforeEach(module('containerDashboard'));
@@ -67,15 +70,18 @@ describe('containerDashboardController gets no data and', function() {
     });
   });
 
-  beforeEach(inject(function(_$httpBackend_, $rootScope, _$controller_) {
+  beforeEach(inject(function(_$httpBackend_, $rootScope, _$controller_, _dashboardUtilsFactory_) {
     var dummyDocument = document.createElement('div');
     spyOn(document, 'getElementById').and.returnValue(dummyDocument);
     $scope = $rootScope.$new();
+    dashboardUtilsFactory = _dashboardUtilsFactory_;
 
     $httpBackend = _$httpBackend_;
     $httpBackend.when('GET','/container_dashboard/data').respond(mock_data);
     $controller = _$controller_('containerDashboardController',
-      {$scope: $scope});
+      {$scope: $scope,
+      dashboardUtilsFactory: dashboardUtilsFactory
+      });
     $httpBackend.flush();
   }));
 
@@ -109,7 +115,7 @@ describe('containerDashboardController gets no data and', function() {
 });
 
 describe('containerDashboardController gets data for one provider and', function() {
-  var $scope, $controller, $httpBackend;
+  var $scope, $controller, $httpBackend, dashboardUtilsFactory;
   var mock_data = getJSONFixture('container_dashboard_response.json');
 
   beforeEach(module('containerDashboard'));
@@ -122,15 +128,18 @@ describe('containerDashboardController gets data for one provider and', function
     });
   });
 
-  beforeEach(inject(function(_$httpBackend_, $rootScope, _$controller_) {
+  beforeEach(inject(function(_$httpBackend_, $rootScope, _$controller_, _dashboardUtilsFactory_) {
     var dummyDocument = document.createElement('div');
     spyOn(document, 'getElementById').and.returnValue(dummyDocument);
     $scope = $rootScope.$new();
+    dashboardUtilsFactory = _dashboardUtilsFactory_;
 
     $httpBackend = _$httpBackend_;
     $httpBackend.when('GET','/container_dashboard/data/42').respond(mock_data);
     $controller = _$controller_('containerDashboardController',
-      {$scope: $scope});
+      {$scope: $scope,
+       dashboardUtilsFactory: dashboardUtilsFactory
+      });
     $httpBackend.flush();
   }));
 
