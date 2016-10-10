@@ -2,9 +2,10 @@ RSpec.describe VimPerformanceState do
   describe ".capture_host_sockets" do
     it "returns the host sockets when given a host" do
       hardware = FactoryGirl.build(:hardware, :cpu_sockets => 2)
-      host = FactoryGirl.build(:host, :hardware => hardware)
+      host = FactoryGirl.create(:host, :hardware => hardware)
+      state = VimPerformanceState.capture(host)
 
-      expect(described_class.capture_host_sockets(host)).to eq(2)
+      expect(state.host_sockets).to eq(2)
     end
 
     it "rolls up the total sockets when given something that has hosts" do
@@ -13,8 +14,9 @@ RSpec.describe VimPerformanceState do
       host_1 = FactoryGirl.build(:host, :hardware => hardware_1)
       host_2 = FactoryGirl.build(:host, :hardware => hardware_2)
       cluster = FactoryGirl.create(:ems_cluster, :hosts => [host_1, host_2])
+      state = VimPerformanceState.capture(cluster)
 
-      expect(described_class.capture_host_sockets(cluster)).to eq(6)
+      expect(state.host_sockets).to eq(6)
     end
   end
 
