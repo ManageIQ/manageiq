@@ -43,6 +43,7 @@ module EmsRefresh::SaveInventoryHelper
     end
   end
 
+
   def save_dto_inventory_multi(association, dto_collection, deletes, find_key, child_keys = [], extra_keys = [], disconnect = false)
     association.reset
 
@@ -68,7 +69,7 @@ module EmsRefresh::SaveInventoryHelper
     unless deletes.blank?
       type = association.proxy_association.reflection.name
       _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
-      disconnect ? deletes.each(&:disconnect_inv) : association.delete(deletes)
+      disconnect ? deletes.each(&:disconnect_inv) : delete_inventory_multi(dto_collection, deletes)
     end
 
     # Add the new items
@@ -76,7 +77,20 @@ module EmsRefresh::SaveInventoryHelper
     if association_meta_info.options[:through].blank?
       association.push(new_records)
     else
-      new_records.each &:save
+      dto_collection.model_class.transaction do
+        new_records.map(&:save)
+      end
+    end
+  end
+
+  def delete_inventory_multi(dto_collection, deletes)
+    association_meta_info = dto_collection.parent.class.reflect_on_association(dto_collection.association)
+    if association_meta_info.options[:through].blank?
+      association.delete(deletes)
+    else
+      dto_collection.model_class.transaction do
+        deletes.map(&:delete)
+      end
     end
   end
 
