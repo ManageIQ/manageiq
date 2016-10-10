@@ -57,6 +57,7 @@ ratings:
   - Gemfile.lock
   - "**.erb"
   - "**.haml"
+  - "**.rake"
   - "**.rb"
   - "**.rhtml"
   - "**.slim"
