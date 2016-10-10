@@ -50,7 +50,7 @@ class ResourceSharer
 
   def rbac_visibility
     return unless user && resource
-    unless Rbac::Filterer.search(:targets => [resource], :user => user)[0].include?(resource)
+    unless Rbac::Filterer.filtered_object(resource, :user => user).present?
       errors.add(:user, "is not authorized to share this resource")
     end
   end
