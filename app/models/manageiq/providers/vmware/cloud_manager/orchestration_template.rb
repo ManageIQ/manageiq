@@ -11,19 +11,19 @@ class ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate < Orchest
       OrchestrationTemplate::OrchestrationParameter.new(
         :name          => "deploy",
         :label         => "Deploy vApp",
-        :data_type     => "string",
-        :default_value => "yes",
+        :data_type     => "boolean",
+        :default_value => true,
         :constraints   => [
-          OrchestrationTemplate::OrchestrationParameterAllowed.new(:allowed_values => %w(no yes))
+          OrchestrationTemplate::OrchestrationParameterBoolean.new
         ]
       ),
       OrchestrationTemplate::OrchestrationParameter.new(
         :name          => "powerOn",
         :label         => "Power On vApp",
-        :data_type     => "string",
-        :default_value => "no",
+        :data_type     => "boolean",
+        :default_value => false,
         :constraints   => [
-          OrchestrationTemplate::OrchestrationParameterAllowed.new(:allowed_values => %w(no yes))
+          OrchestrationTemplate::OrchestrationParameterBoolean.new
         ]
       )
     ]
