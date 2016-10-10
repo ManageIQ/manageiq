@@ -56,9 +56,8 @@ group :appliance do
   gem "highline", "~> 1.6.21", :require => false  # Needed for the appliance_console
 end
 
-gem "winrm",                   "~>2.0",             :require => false
-gem "winrm-elevated",          "~>1.0",             :require => false
-gem "winrm-fs",                "~>1.0",             :require => false
+gem "winrm",                   "~>2.1",             :require => false
+gem "winrm-elevated",          "~>1.0.1",           :require => false
 
 # Linux-only section
 if RbConfig::CONFIG["host_os"].include?("linux")

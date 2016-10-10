@@ -68,10 +68,8 @@ class MiqScvmmParsePowershell
   def stdout_stderr(output)
     stdout = ""
     stderr = ""
-    output[:data].each do |d|
-      stdout << d[:stdout] unless d[:stdout].nil?
-      stderr << d[:stderr] unless d[:stderr].nil?
-    end
+    stdout << output.stdout unless output.stdout.nil?
+    stderr << output.stderr unless output.stderr.nil?
     return stdout, stderr
   end
 end
