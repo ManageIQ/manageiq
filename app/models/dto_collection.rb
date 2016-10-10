@@ -40,7 +40,6 @@ class DtoCollection
   end
 
   def find(manager_uuid)
-    raise "Trying to find #{manager_uuid} in a non saved DtoCollection #{self}" unless saved?
     data_index[manager_uuid]
   end
 
