@@ -171,8 +171,7 @@ describe MiqReport do
         x.data
       end
 
-      expected_results = ["name" => vm_2.name, virtual_column_key_1 => nil, virtual_column_key_2 => custom_column_value,
-                          virtual_column_key_3 => custom_column_value]
+      expected_results = ["name" => vm_2.name, virtual_column_key_1 => nil, virtual_column_key_2 => custom_column_value]
 
       expect(report_result).to match_array(expected_results)
     end
