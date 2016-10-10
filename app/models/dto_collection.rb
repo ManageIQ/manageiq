@@ -35,6 +35,10 @@ class DtoCollection
     end
   end
 
+  def object_index(object)
+    manager_ref.map { |attribute| object.public_send(attribute).to_s }.join("__")
+  end
+
   def find(manager_uuid)
     raise "Trying to find #{manager_uuid} in a non saved DtoCollection #{self}" unless saved?
     data_index[manager_uuid]
