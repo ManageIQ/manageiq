@@ -199,8 +199,7 @@ RSpec.describe "Blueprints API" do
       expect(response).to have_http_status(:forbidden)
     end
 
-    it "can publish multiple blueprints" do
-      pending("update to Blueprint#publish")
+    xit "can publish multiple blueprints" do
       blueprint1, blueprint2 = FactoryGirl.create_list(:blueprint, 2)
 
       api_basic_authorize collection_action_identifier(:blueprints, :publish)
@@ -247,8 +246,7 @@ RSpec.describe "Blueprints API" do
       expect(response).to have_http_status(:forbidden)
     end
 
-    it "publishes a single blueprint" do
-      pending("update to Blueprint#publish")
+    xit "publishes a single blueprint" do
       blueprint = FactoryGirl.create(:blueprint)
       api_basic_authorize action_identifier(:blueprints, :publish)
 
