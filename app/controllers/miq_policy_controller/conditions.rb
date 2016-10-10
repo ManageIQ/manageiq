@@ -8,10 +8,11 @@ module MiqPolicyController::Conditions
       return unless load_edit("condition_edit__#{id}", "replace_cell__explorer")
       @condition = @edit[:condition_id] ? Condition.find_by_id(@edit[:condition_id]) : Condition.new
       if @condition && @condition.id
-        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => "#{ui_lookup(:model => @edit[:new][:towhat])} #{ui_lookup(:model => "Condition")}", :name => @condition.description})
+        add_flash(_("Edit of %{towhat} Condition \"%{name}\" was cancelled by the user") %
+                  {:towhat => ui_lookup(:model => @edit[:new][:towhat]), :name => @condition.description})
       else
-        add_flash(_("Add of new %{model} was cancelled by the user") %
-          {:model => "#{ui_lookup(:model => @edit[:new][:towhat])} #{ui_lookup(:model => "Condition")}"})
+        add_flash(_("Add of new %{towhat} Condition was cancelled by the user") %
+                  {:towhat => ui_lookup(:model => @edit[:new][:towhat])})
       end
       @edit = nil
       get_node_info(x_node)
@@ -57,9 +58,9 @@ module MiqPolicyController::Conditions
           policy.save
         end
         AuditEvent.success(build_saved_audit(condition, params[:button] == "add"))
-        flash_key = params[:button] == "save" ? _("%{model} \"%{name}\" was saved") :
-                                                _("%{model} \"%{name}\" was added")
-        add_flash(flash_key % {:model => ui_lookup(:model => "Condition"), :name => @edit[:new][:description]})
+        flash_key = params[:button] == "save" ? _("Condition \"%{name}\" was saved") :
+                                                _("Condition \"%{name}\" was added")
+        add_flash(flash_key % {:name => @edit[:new][:description]})
         @edit = nil
         @nodetype = "co"
         if adding # If add
@@ -124,8 +125,7 @@ module MiqPolicyController::Conditions
     # showing 1 condition, delete it
     con = Condition.find_by_id(params[:id])
     if params[:id].nil? || con.nil?
-      add_flash(_("%{models} no longer exists") % {:models => ui_lookup(:model => "Condition")},
-                :error)
+      add_flash(_("Condition no longer exists"), :error)
     else
       conditions.push(params[:id])
       @new_condition_node = "xx-#{con.towhat.camelize(:lower)}"
@@ -224,7 +224,7 @@ module MiqPolicyController::Conditions
 
   def condition_get_all_folders
     @folders = MiqPolicyController::UI_FOLDERS.collect(&:name)
-    @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "Condition")}
+    @right_cell_text = _("All Conditions")
     @right_cell_div = "condition_folders"
   end
 
@@ -232,14 +232,14 @@ module MiqPolicyController::Conditions
     @conditions = Condition.all.sort_by { |c| c.description.downcase }
     set_search_text
     @conditions = apply_search_filter(@search_text, @conditions) unless @search_text.blank?
-    @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "Condition")}
+    @right_cell_text = _("All Conditions")
     @right_cell_div = "condition_list"
   end
 
   # Get information for a condition
   def condition_get_info(condition)
     @record = @condition = condition
-    @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "Condition"), :name => condition.description}
+    @right_cell_text = _("Condition \"%{name}\"") % {:name => condition.description}
     @right_cell_div = "condition_details"
     @expression_table = @condition.expression.kind_of?(MiqExpression) ? exp_build_table(@condition.expression.exp) : nil
     @applies_to_exp_table = @condition.applies_to_exp.kind_of?(MiqExpression) ? exp_build_table(@condition.applies_to_exp.exp) : nil
