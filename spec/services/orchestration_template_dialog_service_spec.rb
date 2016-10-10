@@ -126,8 +126,8 @@ describe OrchestrationTemplateDialogService do
     fields = group.dialog_fields
     expect(fields.size).to eq(2)
 
-    assert_field(fields[0], DialogFieldDropDownList, :name => "param_deploy",  :default_value => "yes", :values => [%w(no no), %w(yes yes)])
-    assert_field(fields[1], DialogFieldDropDownList, :name => "param_powerOn", :default_value => "no", :values => [%w(no no), %w(yes yes)])
+    assert_field(fields[0], DialogFieldCheckBox, :name => "param_deploy",  :default_value => "t", :data_type => "boolean")
+    assert_field(fields[1], DialogFieldCheckBox, :name => "param_powerOn", :default_value => "f", :data_type => "boolean")
   end
 
   def assert_field(field, clss, attributes)
