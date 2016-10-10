@@ -1,6 +1,0 @@
-require 'VolumeManager/LVM/thin/constants'
-require 'VolumeManager/LVM/thin/btree'
-require 'VolumeManager/LVM/thin/data_map'
-require 'VolumeManager/LVM/thin/mapping_tree'
-require 'VolumeManager/LVM/thin/space_maps'
-require 'VolumeManager/LVM/thin/superblock'

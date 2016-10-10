@@ -1,8 +1,0 @@
-# /
-Gemfile.lock
-/bin/
-lib.stproj
-SyntaxCheck
-
-# Log files generated from running test:miq_disk
-mdfs*.log
