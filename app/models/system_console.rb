@@ -92,7 +92,7 @@ class SystemConsole < ApplicationRecord
     MiqServer.my_server.id == originating_server.to_i
   end
 
-  def self.launch_proxy_if_is_local(console_args, originating_server, host_address, host_port)
+  def self.launch_proxy_if_not_local(console_args, originating_server, host_address, host_port)
     _log.info "Originating server: #{originating_server}, local server: #{MiqServer.my_server.id}"
     if SystemConsole.is_local?(originating_server)
       console_args.update(

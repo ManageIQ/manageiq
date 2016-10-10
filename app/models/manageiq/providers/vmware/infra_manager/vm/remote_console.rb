@@ -101,6 +101,6 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
     }
     host_address = host.address
 
-    SystemConsole.launch_proxy_if_is_local(console_args, originating_server, host_address, host_port)
+    SystemConsole.launch_proxy_if_not_local(console_args, originating_server, host_address, host_port)
   end
 end
