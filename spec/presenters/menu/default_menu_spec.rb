@@ -76,6 +76,40 @@ describe Menu::DefaultMenu do
     end
   end
 
+  describe "#storage_menu_section" do
+    let(:menu) { Menu::DefaultMenu }
+    let(:configuration) { double(:config => {:product => {:storage => product_setting}}) }
+
+    before do
+      allow(VMDB::Config).to receive(:new).with("vmdb").and_return(configuration)
+    end
+
+    context "when the configuration storage product setting is set to true" do
+      let(:product_setting) { true }
+
+      it "contains the generic objects item" do
+        expect(menu.storage_menu_section.items.map(&:name)).to include(
+          "Storage Providers",
+          "Volumes",
+          "Object Stores",
+          "NetApp"
+        )
+      end
+    end
+
+    context "when the configuration storage product setting is not true" do
+      let(:product_setting) { "juliet" }
+
+      it "does not contain the NetApp item" do
+        expect(menu.storage_menu_section.items.map(&:name)).to include(
+          "Storage Providers",
+          "Volumes",
+          "Object Stores",
+        )
+      end
+    end
+  end
+
   describe "#automate_menu_section" do
     let(:menu) { Menu::DefaultMenu }
     let(:configuration) { double(:config => {:product => {:generic_object => product_setting}}) }

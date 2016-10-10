@@ -33,6 +33,24 @@ FactoryGirl.define do
           :parent  => :ext_management_system do
   end
 
+  factory :ems_storage,
+          :aliases => ["manageiq/providers/storage_manager"],
+          :class   => "ManageIQ::Providers::StorageManager",
+          :parent  => :ext_management_system do
+  end
+
+  factory :ems_cinder,
+          :aliases => ["manageiq/providers/storage_manager/cinder_manager"],
+          :class   => "ManageIQ::Providers::StorageManager::CinderManager",
+          :parent  => :ext_management_system do
+  end
+
+  factory :ems_swift,
+          :aliases => ["manageiq/providers/storage_manager/swift_manager"],
+          :class   => "ManageIQ::Providers::StorageManager::SwiftManager",
+          :parent  => :ext_management_system do
+  end
+
   factory :ems_container,
           :aliases => ["manageiq/providers/container_manager"],
           :class   => "ManageIQ::Providers::ContainerManager",
