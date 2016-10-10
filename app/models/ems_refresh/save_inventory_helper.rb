@@ -33,16 +33,14 @@ module EmsRefresh::SaveInventoryHelper
     end
   end
 
-  def store_ids_for_new_dto_records(records, hashes, keys)
-    keys = Array(keys)
-    hashes.each do |h|
-      h = h.is_a?(::Dto) ? h.attributes : h
-      r = records.detect { |r| keys.all? { |k| r.send(k) == r.class.type_for_attribute(k.to_s).cast(h[k]) } }
-      h[:id]      = r.id
-      h[:_object] = r
+  def store_ids_for_new_dto_records(records, dto_collection, keys)
+    records.each do |r|
+      dto = dto_collection.find(dto_collection.object_index(r))
+      dto[:id]      = r.id
+      r.send(:clear_association_cache)
+      dto[:_object] = r
     end
   end
-
 
   def save_dto_inventory_multi(association, dto_collection, deletes, find_key, child_keys = [], extra_keys = [], disconnect = false)
     association.reset
