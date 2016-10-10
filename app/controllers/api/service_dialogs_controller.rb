@@ -5,7 +5,7 @@ module Api
         resource = Dialog.find(params[:c_id])
         render :json => single_resource(resource, params).target!
       else
-        render :json => dialog_collection(params).target!
+        render :json => dialog_collection(params)
       end
     end
 
@@ -36,19 +36,18 @@ module Api
 
     def dialog_collection(params = {})
       dialogs = Dialog.all
-      Jbuilder.new do |json|
-        json.ignore_nil!
-        json.set! 'name', 'service_dialogs'
-        json.set! 'count', dialogs.count
-        json.set! 'subcount', dialogs.count
-        json.resources dialogs.collect do |resource|
+      {
+        'name'      => 'service_dialogs',
+        'count'     => dialogs.count,
+        'subcount'  => dialogs.count,
+        'resources' => dialogs.collect do |dialog|
           if params['expand'] == 'resources'
-            add_hash json, single_resource(resource, params).attributes!
+            single_resource(dialog, params).attributes!
           else
-            json.href normalize_href(:service_dialogs, resource['id'])
+            { 'href' => normalize_href(:service_dialogs, dialog.id) }
           end
         end
-      end
+      }
     end
 
     def refresh_dialog_fields_service_dialog(service_dialog, data)

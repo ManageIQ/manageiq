@@ -32,6 +32,7 @@ describe DialogSerializer do
 
     before do
       allow(dialog_tab_serializer).to receive(:serialize).with(dialog_tab1, boolean).and_return("serialized_dialog1")
+      allow(dialog_tab_serializer).to receive(:serialize).with(dialog_tab2, boolean).and_return("serialized_dialog2")
     end
 
     it "serializes the dialog" do
