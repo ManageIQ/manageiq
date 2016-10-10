@@ -40,7 +40,7 @@ module EmsRefresh::SaveInventoryPhysicalInfra
     target = ems if target.nil?
 
     ems.physical_servers.reset
-    deletes = if (target == ems)
+    deletes = if target == ems
                 :use_association
               else
                 []
