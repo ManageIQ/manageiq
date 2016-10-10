@@ -23,6 +23,7 @@
  *= require container_providers_dashboard
  *= require wizard
  *= require template
+ *= require timeline
  *= require topology
  *= require container_topology
  *= require middleware_topology
