@@ -91,9 +91,18 @@ class ContainerLabelTagMapping < ApplicationRecord
       entry_name = Classification.sanitize_name(value)
       description = value
     end
-    entry = category.add_entry(:name => entry_name, :description => description)
-    entry.save!
-    entry.tag
+    upsert_tag(category, entry_name, description)
   end
   private_class_method :create_tag
+
+  def upsert_tag(category, name, description)
+    entry = category.add_entry(:name => name, :description => description)
+    if entry.valid?
+      entry.save!
+    else
+      entry = category.entries.select { |ent| ent.description == description }
+    end
+    entry.tag
+  end
+  private_class_method :upsert_tag
 end
