@@ -701,21 +701,6 @@ class ApplicationHelper::ToolbarBuilder
       when "log_download", "refresh_logs", "log_collect", "log_reload", "logdepot_edit", "processmanager_restart", "refresh_workers"
         return true
       end
-    when "MiqTemplate"
-      case id
-      when "miq_template_clone"
-        return true unless @record.is_available?(:clone)
-      when "miq_template_policy_sim", "miq_template_protect"
-        return true if @record.host && @record.host.vmm_product.downcase == "workstation"
-      when "miq_template_refresh"
-        return true if @record && !@record.ext_management_system && !(@record.host && @record.host.vmm_product.downcase == "workstation")
-      when "miq_template_scan", "image_scan"
-        return true unless (@record.supports_smartstate_analysis? ||
-            @record.unsupported_reason(:smartstate_analysis))
-        return true unless @record.has_proxy?
-      when "miq_template_refresh", "miq_template_reload"
-        return true unless @perf_options[:typ] == "realtime"
-      end
     when "ServerRole"
       case id
       when "server_delete", "role_start", "role_suspend", "promote_server", "demote_server"

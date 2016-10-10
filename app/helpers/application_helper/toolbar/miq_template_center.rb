@@ -11,13 +11,15 @@ class ApplicationHelper::Toolbar::MiqTemplateCenter < ApplicationHelper::Toolbar
           'fa fa-refresh fa-lg',
           N_('Refresh relationships and power states for all items related to this Template'),
           N_('Refresh Relationships and Power States'),
-          :confirm => N_("Refresh relationships and power states for all items related to this Template?")),
+          :confirm => N_("Refresh relationships and power states for all items related to this Template?"),
+          :klass => ApplicationHelper::Button::TemplateRefresh),
         button(
           :miq_template_scan,
           'fa fa-search fa-lg',
           N_('Perform SmartState Analysis on this Template'),
           N_('Perform SmartState Analysis'),
-          :confirm => N_("Perform SmartState Analysis on this Template?")),
+          :confirm => N_("Perform SmartState Analysis on this Template?"),
+          :klass => ApplicationHelper::Button::VmInstanceTemplateScan),
         separator,
         button(
           :miq_template_edit,
@@ -51,12 +53,14 @@ class ApplicationHelper::Toolbar::MiqTemplateCenter < ApplicationHelper::Toolbar
           :miq_template_protect,
           'pficon pficon-edit fa-lg',
           N_('Manage Policies for this Template'),
-          N_('Manage Policies')),
+          N_('Manage Policies'),
+          :klass => ApplicationHelper::Button::VmTemplatePolicy),
         button(
           :miq_template_policy_sim,
           'fa fa-play-circle-o fa-lg',
           N_('View Policy Simulation for this Template'),
-          N_('Policy Simulation')),
+          N_('Policy Simulation'),
+          :klass => ApplicationHelper::Button::VmTemplatePolicy),
         button(
           :miq_template_tag,
           'pficon pficon-edit fa-lg',
@@ -82,7 +86,9 @@ class ApplicationHelper::Toolbar::MiqTemplateCenter < ApplicationHelper::Toolbar
           :miq_template_clone,
           'product product-clone fa-lg',
           t = N_('Clone this Template'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::GenericFeatureButton,
+          :options => {:feature => :clone}),
       ]
     ),
   ])

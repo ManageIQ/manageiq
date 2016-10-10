@@ -19,7 +19,7 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           N_('Perform SmartState Analysis on this VM'),
           N_('Perform SmartState Analysis'),
           :confirm => N_("Perform SmartState Analysis on this VM?"),
-          :klass   => ApplicationHelper::Button::VmInstanceScan),
+          :klass   => ApplicationHelper::Button::VmInstanceTemplateScan),
         button(
           :vm_collect_running_processes,
           'fa fa-eyedropper fa-lg',
@@ -78,13 +78,13 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           'pficon pficon-edit fa-lg',
           N_('Manage Policies for this VM'),
           N_('Manage Policies'),
-          :klass => ApplicationHelper::Button::VmPolicy),
+          :klass => ApplicationHelper::Button::VmTemplatePolicy),
         button(
           :vm_policy_sim,
           'fa fa-play-circle-o fa-lg',
           N_('View Policy Simulation for this VM'),
           N_('Policy Simulation'),
-          :klass => ApplicationHelper::Button::VmPolicy),
+          :klass => ApplicationHelper::Button::VmTemplatePolicy),
         button(
           :vm_tag,
           'pficon pficon-edit fa-lg',

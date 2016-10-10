@@ -1,4 +1,4 @@
-class ApplicationHelper::Button::VmInstanceScan < ApplicationHelper::Button::Basic
+class ApplicationHelper::Button::VmInstanceTemplateScan < ApplicationHelper::Button::Basic
   needs :@record
 
   def calculate_properties

@@ -18,7 +18,7 @@ class ApplicationHelper::Toolbar::XVmCloudCenter < ApplicationHelper::Toolbar::B
           N_('Perform SmartState Analysis on this Instance'),
           N_('Perform SmartState Analysis'),
           :confirm => N_("Perform SmartState Analysis on this Instance?"),
-          :klass   => ApplicationHelper::Button::VmInstanceScan),
+          :klass   => ApplicationHelper::Button::VmInstanceTemplateScan),
         separator,
         button(
           :instance_edit,
