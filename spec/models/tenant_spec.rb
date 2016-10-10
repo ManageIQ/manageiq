@@ -457,10 +457,10 @@ describe Tenant do
       end
 
       it "#reset_domain_priority_by_ordered_ids by subtenant" do
-        FactoryGirl.create(:miq_ae_system_domain, :name => 'ManageIQ', :priority => 0,
-                           :tenant_id => root_tenant.id)
-        FactoryGirl.create(:miq_ae_system_domain, :name => 'Redhat', :priority => 1,
-                           :tenant_id => root_tenant.id)
+        FactoryGirl.create(:miq_ae_domain, :name => 'ManageIQ', :priority => 0,
+                           :tenant_id => root_tenant.id, :system => true)
+        FactoryGirl.create(:miq_ae_domain, :name => 'Redhat', :priority => 1,
+                           :tenant_id => root_tenant.id, :system => true)
         FactoryGirl.create(:miq_ae_domain, :name => 'T1_A', :tenant_id => t1.id)
         FactoryGirl.create(:miq_ae_domain, :name => 'T1_B', :tenant_id => t1.id)
         dom5 = FactoryGirl.create(:miq_ae_domain, :name => 'T1_1_A', :tenant_id => t1_1.id)
