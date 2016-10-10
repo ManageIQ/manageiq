@@ -4809,6 +4809,17 @@
     :feature_type: view
     :identifier: container_dashboard_view
 
+# Infra Provider Dashboard
+- :name: Infra Providers Dashboard
+  :description: Infra Providers Dashboard
+  :feature_type: node
+  :identifier: ems_infra_dashboard
+  :children:
+  - :name: View
+    :description: View Infra Providers Dashboard
+    :feature_type: view
+    :identifier: ems_infra_dashboard_view
+
 # Foreman
 - :name: Configuration Management
   :description: Everything under Configuration Management
