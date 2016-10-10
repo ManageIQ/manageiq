@@ -173,23 +173,6 @@ describe MiqScheduleWorker::Runner do
           end
         end
 
-        context "#system_schedule_every" do
-          it "catches an error on nil first arg" do
-            expect($log).to receive(:error).once
-            @schedule_worker.system_schedule_every(nil) {}
-          end
-
-          it "catches an error on 0 first arg" do
-            expect($log).to receive(:error).once
-            @schedule_worker.system_schedule_every(0) {}
-          end
-
-          it "works on nil :first_in" do
-            expect($log).to receive(:error).never
-            @schedule_worker.system_schedule_every(1, :first_in => nil) {}
-          end
-        end
-
         context "calling check_roles_changed" do
           before(:each) do
             # MiqScheduleWorker::Runner.any_instance.stub(:schedules_for_scheduler_role)
