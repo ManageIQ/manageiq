@@ -46,9 +46,8 @@ engines:
       - ruby
       - javascript
   eslint:
-    # Still failing :sad_panda:
-    enabled: false
-    channel: "eslint-2"
+    enabled: true
+    channel: "eslint-3"
   fixme:
     # let's enable later
     enabled: false
