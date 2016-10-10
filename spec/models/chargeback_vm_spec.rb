@@ -135,6 +135,8 @@ describe ChargebackVm do
   end
 
   context "Daily" do
+    let(:hours_in_day) { 24 }
+
     before  do
       @options[:interval] = "daily"
 
@@ -157,7 +159,7 @@ describe ChargebackVm do
                                                   :resource_name                     => @vm1.name,
                                                  )
       end
-      @metric_size = @vm1.metric_rollups.size
+      @accountable_period = @vm1.metric_rollups.size
     end
 
     subject { ChargebackVm.build_results_for_report_ChargebackVm(@options).first.first }
@@ -189,12 +191,11 @@ describe ChargebackVm do
                               )
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
-      expect(subject.cpu_allocated_metric).to eq(@cpu_count * @metric_size)
-      expect(subject.cpu_used_metric).to eq(@cpu_usagemhz_rate * @metric_size)
-      expect(subject.cpu_metric).to eq(subject.cpu_allocated_metric + subject.cpu_used_metric)
 
-      expect(subject.cpu_allocated_cost).to eq(@cpu_count * @count_hourly_rate * @metric_size)
-      expect(subject.cpu_used_cost).to eq(@cpu_usagemhz_rate * @hourly_rate * @metric_size)
+      expect(subject.cpu_allocated_metric).to eq(@cpu_count)
+      expect(subject.cpu_used_metric).to eq(@cpu_usagemhz_rate)
+      expect(subject.cpu_allocated_cost).to eq(@cpu_count * @count_hourly_rate * @accountable_period)
+      expect(subject.cpu_used_cost).to eq(@cpu_usagemhz_rate * @hourly_rate * hours_in_day)
       expect(subject.cpu_cost).to eq(subject.cpu_allocated_cost + subject.cpu_used_cost)
     end
 
@@ -242,12 +243,11 @@ describe ChargebackVm do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      expect(subject.cpu_allocated_metric).to eq(@cpu_count * @metric_size)
-      expect(subject.cpu_used_metric).to eq(@cpu_usagemhz_rate * @metric_size)
-      expect(subject.cpu_metric).to eq(subject.cpu_allocated_metric + subject.cpu_used_metric)
+      expect(subject.cpu_allocated_metric).to eq(@cpu_count)
+      expect(subject.cpu_used_metric).to eq(@cpu_usagemhz_rate)
 
-      expect(subject.cpu_allocated_cost).to eq(@cpu_count * @count_hourly_rate * @metric_size)
-      expect(subject.cpu_used_cost).to eq(@cpu_usagemhz_rate * @hourly_rate * @metric_size)
+      expect(subject.cpu_allocated_cost).to eq(@cpu_count * @count_hourly_rate * @accountable_period)
+      expect(subject.cpu_used_cost).to eq(@cpu_usagemhz_rate * @hourly_rate * hours_in_day)
       expect(subject.cpu_cost).to eq(subject.cpu_allocated_cost + subject.cpu_used_cost)
     end
 
@@ -279,12 +279,12 @@ describe ChargebackVm do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      expect(subject.memory_allocated_metric).to eq(@memory_available * @metric_size)
-      expect(subject.memory_used_metric).to eq(@memory_used * @metric_size)
+      expect(subject.memory_allocated_metric).to eq(@memory_available)
+      expect(subject.memory_used_metric).to eq(@memory_used)
       expect(subject.memory_metric).to eq(subject.memory_allocated_metric + subject.memory_used_metric)
 
-      expect(subject.memory_allocated_cost).to eq(@memory_available * @hourly_rate * @metric_size)
-      expect(subject.memory_used_cost).to eq(@memory_used * @hourly_rate * @metric_size)
+      expect(subject.memory_allocated_cost).to eq(@memory_available * @hourly_rate * @accountable_period)
+      expect(subject.memory_used_cost).to eq(@memory_used * @hourly_rate * hours_in_day)
       expect(subject.memory_cost).to eq(subject.memory_allocated_cost + subject.memory_used_cost)
     end
 
@@ -303,10 +303,9 @@ describe ChargebackVm do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      expect(subject.disk_io_used_metric).to eq(@disk_usage_rate * @metric_size)
+      expect(subject.disk_io_used_metric).to eq(@disk_usage_rate)
       expect(subject.disk_io_metric).to eq(subject.disk_io_metric)
-
-      expect(subject.disk_io_used_cost).to eq(@disk_usage_rate * @hourly_rate * @metric_size)
+      expect(subject.disk_io_used_cost).to be_within(0.01).of(@disk_usage_rate * @hourly_rate * hours_in_day)
       expect(subject.disk_io_cost).to eq(subject.disk_io_used_cost)
     end
 
@@ -325,10 +324,8 @@ describe ChargebackVm do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      expect(subject.net_io_used_metric).to eq(@net_usage_rate * @metric_size)
-      expect(subject.net_io_metric).to eq(subject.net_io_metric)
-
-      expect(subject.net_io_used_cost).to eq(@net_usage_rate * @hourly_rate * @metric_size)
+      expect(subject.net_io_used_metric).to eq(@net_usage_rate)
+      expect(subject.net_io_used_cost).to eq(@net_usage_rate * @hourly_rate * hours_in_day)
       expect(subject.net_io_cost).to eq(subject.net_io_used_cost)
     end
 
@@ -367,12 +364,13 @@ describe ChargebackVm do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      expect(subject.storage_allocated_metric).to eq(@vm_allocated_disk_storage.gigabytes * @metric_size)
-      expect(subject.storage_used_metric).to eq(@vm_used_disk_storage.gigabytes * @metric_size)
+      expect(subject.storage_allocated_metric).to eq(@vm_allocated_disk_storage.gigabytes)
+      expect(subject.storage_used_metric).to eq(@vm_used_disk_storage.gigabytes)
       expect(subject.storage_metric).to eq(subject.storage_allocated_metric + subject.storage_used_metric)
 
-      expect(subject.storage_allocated_cost).to eq(@vm_allocated_disk_storage * @count_hourly_rate * @metric_size)
-      expect(subject.storage_used_cost).to eq(@vm_used_disk_storage * @count_hourly_rate * @metric_size)
+      storage_allocated_cost = @vm_allocated_disk_storage * @count_hourly_rate * @accountable_period
+      expect(subject.storage_allocated_cost).to eq(storage_allocated_cost)
+      expect(subject.storage_used_cost).to eq(@vm_used_disk_storage * @count_hourly_rate * hours_in_day)
       expect(subject.storage_cost).to eq(subject.storage_allocated_cost + subject.storage_used_cost)
     end
   end
@@ -431,6 +429,8 @@ describe ChargebackVm do
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
 
+      @hours_in_month = Time.days_in_month(time.month, time.year) * 24
+
       while time < end_time
         @vm1.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                   :timestamp                         => time,
@@ -451,7 +451,7 @@ describe ChargebackVm do
                                                  )
         time += 12.hour
       end
-      @metric_size = @vm1.metric_rollups.size
+      @accountable_period = @vm1.metric_rollups.size
     end
 
     subject { ChargebackVm.build_results_for_report_ChargebackVm(@options).first.first }
@@ -484,13 +484,10 @@ describe ChargebackVm do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      expect(subject.cpu_allocated_metric).to eq(@cpu_count * @metric_size)
-      expect(subject.cpu_used_metric).to eq(@cpu_usagemhz_rate * @metric_size)
-      expect(subject.cpu_metric).to eq(subject.cpu_allocated_metric + subject.cpu_used_metric)
-
-      expect(subject.cpu_allocated_cost).to eq(@cpu_count * @count_hourly_rate * @metric_size)
-      expect(subject.cpu_used_cost).to eq(@cpu_usagemhz_rate * @hourly_rate * @metric_size)
-      expect(subject.cpu_cost).to eq(subject.cpu_allocated_cost + subject.cpu_used_cost)
+      expect(subject.cpu_allocated_metric).to eq(@cpu_count)
+      expect(subject.cpu_used_metric).to eq(@cpu_usagemhz_rate)
+      expect(subject.cpu_allocated_cost).to be_within(0.01).of(@cpu_count * @count_hourly_rate * @accountable_period)
+      expect(subject.cpu_used_cost).to be_within(0.01).of(@cpu_usagemhz_rate * @hourly_rate * @hours_in_month)
     end
 
     it "memory" do
@@ -520,12 +517,13 @@ describe ChargebackVm do
                               )
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
-      expect(subject.memory_allocated_metric).to eq(@memory_available * @metric_size)
-      expect(subject.memory_used_metric).to eq(@memory_used * @metric_size)
+      expect(subject.memory_allocated_metric).to eq(@memory_available)
+      expect(subject.memory_used_metric).to eq(@memory_used)
       expect(subject.memory_metric).to eq(subject.memory_allocated_metric + subject.memory_used_metric)
 
-      expect(subject.memory_allocated_cost).to eq(@memory_available * @hourly_rate * @metric_size)
-      expect(subject.memory_used_cost).to eq(@memory_used * @hourly_rate * @metric_size)
+      memory_allocated_cost = @memory_available * @hourly_rate * @accountable_period
+      expect(subject.memory_allocated_cost).to be_within(0.01).of(memory_allocated_cost)
+      expect(subject.memory_used_cost).to be_within(0.01).of(@memory_used * @hourly_rate * @hours_in_month)
       expect(subject.memory_cost).to eq(subject.memory_allocated_cost + subject.memory_used_cost)
     end
 
@@ -544,10 +542,9 @@ describe ChargebackVm do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      expect(subject.disk_io_used_metric).to eq(@disk_usage_rate * @metric_size)
-      expect(subject.disk_io_metric).to eq(subject.disk_io_metric)
+      expect(subject.disk_io_used_metric).to eq(@disk_usage_rate)
 
-      expect(subject.disk_io_used_cost).to eq(@disk_usage_rate * @hourly_rate * @metric_size)
+      expect(subject.disk_io_used_cost).to be_within(0.01).of(@disk_usage_rate * @hourly_rate * @hours_in_month)
       expect(subject.disk_io_cost).to eq(subject.disk_io_used_cost)
     end
 
@@ -565,10 +562,9 @@ describe ChargebackVm do
                               )
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
-      expect(subject.net_io_used_metric).to eq(@net_usage_rate * @metric_size)
-      expect(subject.net_io_metric).to eq(subject.net_io_metric)
+      expect(subject.net_io_used_metric).to eq(@net_usage_rate)
 
-      expect(subject.net_io_used_cost).to eq(@net_usage_rate * @hourly_rate * @metric_size)
+      expect(subject.net_io_used_cost).to be_within(0.01).of(@net_usage_rate * @hourly_rate * @hours_in_month)
       expect(subject.net_io_cost).to eq(subject.net_io_used_cost)
     end
 
@@ -602,12 +598,14 @@ describe ChargebackVm do
                               )
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
-      expect(subject.storage_allocated_metric).to eq(@vm_allocated_disk_storage.gigabytes * @metric_size)
-      expect(subject.storage_used_metric).to eq(@vm_used_disk_storage.gigabytes * @metric_size)
+      expect(subject.storage_allocated_metric).to eq(@vm_allocated_disk_storage.gigabytes)
+      expect(subject.storage_used_metric).to eq(@vm_used_disk_storage.gigabytes)
       expect(subject.storage_metric).to eq(subject.storage_allocated_metric + subject.storage_used_metric)
 
-      expect(subject.storage_allocated_cost).to eq(@vm_allocated_disk_storage * @count_hourly_rate * @metric_size)
-      expect(subject.storage_used_cost).to eq(@vm_used_disk_storage * @count_hourly_rate * @metric_size)
+      expected_value = @vm_allocated_disk_storage * @count_hourly_rate * @accountable_period
+      expect(subject.storage_allocated_cost).to be_within(0.01).of(expected_value)
+      expected_value = @vm_used_disk_storage * @count_hourly_rate * @hours_in_month
+      expect(subject.storage_used_cost).to be_within(0.01).of(expected_value)
       expect(subject.storage_cost).to eq(subject.storage_allocated_cost + subject.storage_used_cost)
     end
 
@@ -726,7 +724,7 @@ describe ChargebackVm do
         )
         time += 12.hour
       end
-      @metric_size = @vm1.metric_rollups.size
+      @accountable_period = @vm1.metric_rollups.size
     end
 
     subject { ChargebackVm.build_results_for_report_ChargebackVm(@options).first.first }
@@ -759,9 +757,8 @@ describe ChargebackVm do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      expect(subject.cpu_allocated_metric).to eq(@cpu_count * @metric_size)
-      expect(subject.cpu_used_metric).to eq(@cpu_usagemhz_rate * @metric_size)
-      expect(subject.cpu_metric).to eq(subject.cpu_allocated_metric + subject.cpu_used_metric)
+      expect(subject.cpu_allocated_metric).to eq(@cpu_count)
+      expect(subject.cpu_used_metric).to eq(@cpu_usagemhz_rate)
       expect(subject.tag_name).to eq('Production')
     end
   end

@@ -64,7 +64,7 @@ describe ChargebackContainerImage do
                                                                 :timestamp => t,
                                                                 :image_tag_names => "environment/prod")
       end
-      @metric_size = @container.metric_rollups.size
+      @accountable_period = @container.metric_rollups.size
     end
 
     subject { ChargebackContainerImage.build_results_for_report_ChargebackContainerImage(@options).first.first }
@@ -83,7 +83,7 @@ describe ChargebackContainerImage do
                          :chargeback_tiers   => [cbt])
     }
     it "fixed_compute" do
-      expect(subject.fixed_compute_1_cost).to eq(@hourly_rate * @metric_size)
+      expect(subject.fixed_compute_1_cost).to eq(@hourly_rate * @accountable_period)
     end
   end
 
@@ -115,7 +115,7 @@ describe ChargebackContainerImage do
                                                                 :image_tag_names => "environment/prod")
         time += 12.hours
       end
-      @metric_size = @container.metric_rollups.size
+      @accountable_period = @container.metric_rollups.size
     end
 
     subject { ChargebackContainerImage.build_results_for_report_ChargebackContainerImage(@options).first.first }
@@ -135,7 +135,7 @@ describe ChargebackContainerImage do
     }
     it "fixed_compute" do
       # .to be_within(0.01) is used since theres a float error here
-      expect(subject.fixed_compute_1_cost).to be_within(0.01).of(@hourly_rate * @metric_size)
+      expect(subject.fixed_compute_1_cost).to be_within(0.01).of(@hourly_rate * @accountable_period)
     end
   end
 end
