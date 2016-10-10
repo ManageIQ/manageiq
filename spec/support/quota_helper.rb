@@ -140,6 +140,15 @@ module Spec
         @service_request = build_service_template_request("generic", @user, :dialog => {"test" => "dialog"})
       end
 
+      def build_generic_ansible_tower_service_item
+        @service_template = FactoryGirl.create(:service_template,
+                                               :name         => 'generic_ansible_tower',
+                                               :service_type => 'atomic',
+                                               :prov_type    => 'generic_ansible_tower')
+        @service_request = build_service_template_request("generic_ansible_tower", @user,
+                                                          :dialog => {"test" => "dialog"})
+      end
+
       def build_vmware_service_item
         options = {:src_vm_id => @vm_template.id, :requester => @user}.merge(vmware_requested_quota_values)
         model = {"vmware_service_item" => {:type      => 'atomic',

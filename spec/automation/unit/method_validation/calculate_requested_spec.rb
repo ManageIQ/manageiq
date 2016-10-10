@@ -30,6 +30,12 @@ describe "Quota Validation" do
       expect { run_automate_method(service_attrs) }.not_to raise_exception
     end
 
+    it "generic ansible tower calculate_requested" do
+      setup_model("generic")
+      build_generic_ansible_tower_service_item
+      expect { run_automate_method(service_attrs) }.not_to raise_exception
+    end
+
     it "vmware service item calculate_requested" do
       setup_model("vmware")
       build_small_environment
