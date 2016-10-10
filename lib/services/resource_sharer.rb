@@ -20,6 +20,14 @@ class ResourceSharer
   validate :valid_tenants
   validate :allowed_features
 
+  def self.valid_share?(share)
+    new(:user     => share.user,
+        :resource => share.resource,
+        :tenants  => [share.tenant],
+        :features => share.miq_product_features
+       ).valid?
+  end
+
   ##
   # Creates shares from the user with +features+ to +tenants+ with the given +resource+
   # @param user - The user sharing the resource

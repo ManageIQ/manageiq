@@ -15,6 +15,17 @@ module Rbac
     Filterer.accessible_tenant_ids_strategy(*args)
   end
 
+  def self.resources_shared_with(user)
+    tenant = user.current_tenant
+    valid_resources = []
+    # TODO: This is very, very likely performance hell.
+    tenant.shares.each do |share|
+      valid_resources << share.resource if ResourceSharer.valid_share?(share)
+    end
+
+    valid_resources
+  end
+
   def self.role_allows?(*args)
     Authorizer.role_allows?(*args)
   end
