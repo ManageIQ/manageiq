@@ -59,8 +59,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
   end
 
   def load_user_schedules
-    return unless @active_roles.include?("scheduler")
-    sync_all_user_schedules
+    sync_all_user_schedules if schedule_enabled?(:scheduler)
   end
 
   def worker_setting_or_default(keys, default = nil)
@@ -72,6 +71,10 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     @system_scheduler.schedule_every(*args, &block)
   rescue ArgumentError => err
     _log.error("#{err.class} for schedule_every with #{args.inspect}.  Called from: #{caller[1]}.")
+  end
+
+  def schedule_enabled?(role)
+    role == :all || @active_roles.include?(role.to_s)
   end
 
   def schedules_for_all_roles
@@ -139,7 +142,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   def schedules_for_scheduler_role
     # These schedules need to run only once in a zone per interval, so let the single scheduler role handle them
-    return unless @active_roles.include?("scheduler")
+    return unless schedule_enabled?(:scheduler)
     @schedules[:scheduler] ||= []
 
     # Schedule - Check for timed out jobs
@@ -246,7 +249,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   def schedules_for_database_operations_role
     # Schedule - Database Metrics capture run by the appliance with a database_operations role
-    return unless @active_roles.include?("database_operations")
+    return unless schedule_enabled?(:database_operations)
     @schedules[:database_operations] ||= []
 
     cfg = VMDB::Config.new("vmdb").config
@@ -280,7 +283,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   def schedules_for_ldap_synchronization_role
     # These schedules need to run with the LDAP SYnchronizartion role
-    return unless @active_roles.include?("ldap_synchronization")
+    return unless schedule_enabled?(:ldap_synchronization)
     @schedules[:ldap_synchronization] ||= []
 
     ldap_synchronization_schedule_default = "0 2 * * *"
@@ -298,7 +301,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   def schedules_for_ems_metrics_coordinator_role
     # These schedules need to run by the servers with the coordinator role
-    return unless @active_roles.include?("ems_metrics_coordinator")
+    return unless schedule_enabled?("ems_metrics_coordinator")
     @schedules[:ems_metrics_coordinator] ||= []
 
     # Schedule - Performance Collection and Performance Purging
@@ -329,7 +332,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   def schedules_for_event_role
     # These schedules need to run by the servers with the event role
-    return unless @active_roles.include?("event")
+    return unless schedule_enabled?(:event)
     @schedules[:event] ||= []
 
     # Schedule - Event Purging
@@ -351,7 +354,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   def schedules_for_storage_metrics_coordinator_role
     # These schedules need to run by the servers with the coordinator role
-    return unless @active_roles.include?("storage_metrics_coordinator")
+    return unless schedule_enabled?(:storage_metrics_coordinator)
     @schedules[:storage_metrics_coordinator] ||= []
 
     cfg = VMDB::Config.new("vmdb").config
@@ -577,7 +580,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     check_dst
 
     # If no work in queue, update users schedules which have been updated since last check
-    sync_updated_user_schedules if @active_roles.include?("scheduler")
+    sync_updated_user_schedules if schedule_enabled?(:scheduler)
   end
 
   private
