@@ -19,7 +19,7 @@ class Chargeback < ActsAsArModel
     end
 
     base_rollup = MetricRollup.includes(
-      :resource           => [:hardware, :tenant],
+      :resource           => [:hardware, :tenant, :tags, :vim_performance_states],
       :parent_host        => :tags,
       :parent_ems_cluster => :tags,
       :parent_storage     => :tags,
@@ -99,15 +99,20 @@ class Chargeback < ActsAsArModel
 
     tags = perf.tag_names.split("|").reject { |n| n.starts_with?("folder_path_") }.sort.join("|")
     keys = [tags, perf.parent_host_id, perf.parent_ems_cluster_id, perf.parent_storage_id, perf.parent_ems_id]
+    keys += [perf.resource.container_image, perf.timestamp] if perf.resource_type == Container.name
     tenant_resource = perf.resource.try(:tenant)
     keys.push(tenant_resource.id) unless tenant_resource.nil?
     key = keys.join("_")
     return @rates[key] if @rates.key?(key)
 
-    tag_list = perf.tag_names.split("|").inject([]) { |arr, t| arr << "vm/tag/managed/#{t}"; arr }
+    tag_list = perf.tag_names.split("|").inject([]) { |arr, t| arr << "#{Chargeback.report_cb_model(self.class.name).underscore}/tag/managed/#{t}" }
 
-    parents = [perf.parent_host, perf.parent_ems_cluster, perf.parent_storage, perf.parent_ems, @enterprise].compact
-    parents.push(tenant_resource) unless tenant_resource.nil?
+    if perf.resource_type == Container.name
+      state = perf.resource.vim_performance_state_for_ts(perf.timestamp.to_s)
+      tag_list += state.image_tag_names.split("|").inject([]) { |arr, t| arr << "container_image/tag/managed/#{t}" } if state.present?
+    end
+
+    parents = get_rate_parents(perf).compact
 
     @rates[key] = ChargebackRate.get_assigned_for_target(perf.resource, :tag_list => tag_list, :parents => parents)
   end
@@ -232,5 +237,50 @@ class Chargeback < ActsAsArModel
 
   def self.report_tag_field
     "tag_name"
+  end
+
+  def self.get_rate_parents
+    raise "Chargeback: get_rate_parents must be implemented in child class."
+  end
+
+  def self.set_chargeback_report_options(rpt, edit)
+    rpt.cols = %w(start_date display_range)
+
+    static_cols = report_static_cols
+    if edit[:new][:cb_groupby] == "date"
+      rpt.cols += static_cols
+      rpt.col_order = ["display_range"] + static_cols
+      rpt.sortby = ["start_date"] + static_cols
+    elsif edit[:new][:cb_groupby] == "vm"
+      rpt.cols += static_cols
+      rpt.col_order = static_cols + ["display_range"]
+      rpt.sortby = static_cols + ["start_date"]
+    elsif edit[:new][:cb_groupby] == "tag"
+      tag_col = report_tag_field
+      rpt.cols += tag_col
+      rpt.col_order = [tag_col, "display_range"]
+      rpt.sortby = [tag_col, "start_date"]
+    elsif edit[:new][:cb_groupby] == "project"
+      static_cols -= ["image_name"]
+      rpt.cols += static_cols
+      rpt.col_order = static_cols + ["display_range"]
+      rpt.sortby = static_cols + ["start_date"]
+    end
+    rpt.col_order.each do |c|
+      if c == tag_col
+        header = edit[:cb_cats][edit[:new][:cb_groupby_tag]]
+        rpt.headers.push(Dictionary.gettext(header, :type => :column, :notfound => :titleize))
+      else
+        rpt.headers.push(Dictionary.gettext(c, :type => :column, :notfound => :titleize))
+      end
+
+      rpt.col_formats.push(nil) # No formatting needed on the static cols
+    end
+
+    rpt.col_options = report_col_options
+    rpt.order = "Ascending"
+    rpt.group = "y"
+    rpt.tz = edit[:new][:tz]
+    rpt
   end
 end # class Chargeback
