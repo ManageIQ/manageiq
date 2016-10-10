@@ -19,7 +19,7 @@ class Chargeback < ActsAsArModel
     end
 
     base_rollup = MetricRollup.includes(
-      :resource           => [:hardware, :tenant, :tags, :vim_performance_states],
+      :resource           => [:hardware, :tenant, :tags, :vim_performance_states, :custom_attributes],
       :parent_host        => :tags,
       :parent_ems_cluster => :tags,
       :parent_storage     => :tags,
@@ -79,7 +79,8 @@ class Chargeback < ActsAsArModel
       'end_date'         => end_ts,
       'display_range'    => display_range,
       'interval_name'    => interval,
-      'chargeback_rates' => ''
+      'chargeback_rates' => '',
+      'entity'           => metric_rollup_record.resource
     }
   end
 
@@ -289,5 +290,27 @@ class Chargeback < ActsAsArModel
     rpt.group = "y"
     rpt.tz = edit[:new][:tz]
     rpt
+  end
+
+  def tags
+    entity.try(:tags).to_a
+  end
+
+  def self.load_custom_attributes_for(cols)
+    chargeback_klass = report_cb_model(self.to_s).safe_constantize
+    chargeback_klass.load_custom_attributes_for(cols)
+    cols.each do |x|
+      next unless x.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
+
+      load_custom_attribute(x)
+    end
+  end
+
+  def self.load_custom_attribute(custom_attribute)
+    virtual_column(custom_attribute.to_sym, :type => :string)
+
+    define_method(custom_attribute.to_sym) do
+      entity.send(custom_attribute)
+    end
   end
 end # class Chargeback
