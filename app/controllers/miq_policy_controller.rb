@@ -634,11 +634,11 @@ class MiqPolicyController < ApplicationController
                         else
                           if @right_cell_text == @edit
                             _("Editing %{model} Condition \"%{name}\"") %
-                            {:name  => @condition.description.gsub(/'/) {"\'"},
+                            {:name  => @condition.description,
                              :model => ui_lookup(:model => @edit[:new][:towhat])}
                           else
                             _("%{model} Condition \"%{name}\"") %
-                            {:name  => @condition.description.gsub(/'/) {"\'"},
+                            {:name  => @condition.description,
                              :model => ui_lookup(:model => @condition.towhat)}
                           end
                         end
