@@ -219,12 +219,6 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :hostname  => instance.public_dns_name.presence
     }.delete_nils
 
-    parent_image = @data_index.fetch_path(:vms, instance.image_id)
-    if parent_image
-      virtualization_type = parent_image.fetch_path(:hardware, :virtualization_type)
-      root_device_type    = parent_image.fetch_path(:hardware, :root_device_type)
-    end
-
     new_result = {
       :type                => ManageIQ::Providers::Amazon::CloudManager::Vm.name,
       :uid_ems             => uid,
@@ -236,8 +230,8 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
 
       :hardware            => {
         :bitness              => architecture_to_bitness(instance.architecture),
-        :virtualization_type  => virtualization_type,
-        :root_device_type     => root_device_type,
+        :virtualization_type  => instance.virtualization_type,
+        :root_device_type     => instance.root_device_type,
         :cpu_sockets          => flavor[:cpus],
         :cpu_cores_per_socket => 1,
         :cpu_total_cores      => flavor[:cpus],
@@ -259,6 +253,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     new_result[:hardware][:networks] << private_network.merge(:description => "private") unless private_network.blank?
     new_result[:hardware][:networks] << public_network.merge(:description => "public")   unless public_network.blank?
 
+    parent_image = @data_index.fetch_path(:vms, instance.image_id)
     if parent_image
       new_result[:parent_vm] = parent_image
       new_result.store_path(:hardware, :guest_os, parent_image.fetch_path(:hardware, :guest_os))
