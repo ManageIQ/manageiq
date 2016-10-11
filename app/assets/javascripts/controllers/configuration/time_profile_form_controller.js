@@ -180,20 +180,14 @@ ManageIQ.angular.app.controller('timeProfileFormController', ['$http', '$scope',
     $scope.calculateTimeProfileHourValues();
   };
 
-  var timeProfileEditButtonClicked = function(buttonName, serializeFields) {
-    miqService.sparkleOn();
+  var timeProfileEditButtonClicked = function(buttonName, data) {
     var url = '/configuration/timeprofile_update/' + timeProfileFormId + '?button=' + buttonName;
-    var timeProfileModelObj = angular.copy($scope.timeProfileModel);
-    delete timeProfileModelObj.profile_tz;
-    var moreUrlParams = $.param(miqService.serializeModel(timeProfileModelObj));
-    if(moreUrlParams)
-      url += '&' + decodeURIComponent(moreUrlParams);
-    miqService.miqAjaxButton(url, true);
+
+    miqService.miqAjaxButton(url, data);
   };
 
   $scope.cancelClicked = function() {
     timeProfileEditButtonClicked('cancel');
-    $scope.angularForm.$setPristine(true);
   };
 
   $scope.resetClicked = function() {
@@ -203,13 +197,13 @@ ManageIQ.angular.app.controller('timeProfileFormController', ['$http', '$scope',
   };
 
   $scope.saveClicked = function() {
-    timeProfileEditButtonClicked('save', true);
-    $scope.angularForm.$setPristine(true);
+    var timeProfileModelObj = angular.copy($scope.timeProfileModel);
+    delete timeProfileModelObj.profile_tz;
+
+    timeProfileEditButtonClicked('save', timeProfileModelObj);
   };
 
-  $scope.addClicked = function() {
-    $scope.saveClicked();
-  };
+  $scope.addClicked = $scope.saveClicked;
 
   init();
 }]);

@@ -15,14 +15,12 @@ ManageIQ.angular.app.controller('vmCloudDisassociateFloatingIpFormController', [
   });
 
   $scope.cancelClicked = function() {
-    miqService.sparkleOn();
     var url = '/vm_cloud/disassociate_floating_ip_vm/' + vmCloudDisassociateFloatingIpFormId + '?button=cancel';
     miqService.miqAjaxButton(url);
   };
 
   $scope.submitClicked = function() {
-    miqService.sparkleOn();
     var url = '/vm_cloud/disassociate_floating_ip_vm/' + vmCloudDisassociateFloatingIpFormId + '?button=submit';
-    miqService.miqAjaxButton(url, true);
+    miqService.miqAjaxButton(url, $scope.vmCloudModel);
   };
 }]);

@@ -293,7 +293,7 @@ describe('scheduleFormController', function() {
     });
 
     it('delegates to miqService.miqAjaxButton', function() {
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/schedule_edit/new?button=cancel');
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/schedule_edit/new?button=cancel', undefined);
     });
   });
 
@@ -317,11 +317,11 @@ describe('scheduleFormController', function() {
         }
       };
       $scope.angularForm = {
-        $setPristine: function (value){},
-        $setUntouched: function (value){},
+        $setPristine: function (value) {},
+        $setUntouched: function (value) {},
         filter_value: {
-          $name:       'filter_value',
-          $setViewValue: function (value){}
+          $name: 'filter_value',
+          $setViewValue: function (value) {}
         }
       };
       $scope.resetClicked();
@@ -335,7 +335,7 @@ describe('scheduleFormController', function() {
   describe('#saveClicked', function() {
     beforeEach(function() {
       $scope.angularForm = {
-        $setPristine: function (value){}
+        $setPristine: function (value) {}
       };
       $scope.saveClicked();
     });
@@ -349,7 +349,7 @@ describe('scheduleFormController', function() {
     });
 
     it('delegates to miqService.miqAjaxButton', function() {
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/schedule_edit/new?button=save', true);
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/schedule_edit/new?button=save', jasmine.objectContaining({ action_typ: 'vm' }));
     });
   });
 
@@ -366,7 +366,7 @@ describe('scheduleFormController', function() {
     });
 
     it('delegates to miqService.miqAjaxButton', function() {
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/schedule_edit/new?button=save', true);
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/schedule_edit/new?button=save', jasmine.objectContaining({ action_typ: 'vm' }));
     });
   });
 

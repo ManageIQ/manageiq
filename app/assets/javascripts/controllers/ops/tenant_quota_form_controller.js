@@ -27,7 +27,7 @@ ManageIQ.angular.app.controller('tenantQuotaFormController', ['$http', '$scope',
             quota['enforced'] = false;
 
           if (quota['format'] === "general_number_precision_0")
-            quota['valpattern'] = "^[1-9][0-9]*$";
+            quota['valpattern'] = /^[1-9][0-9]*$/;
           else
             quota['valpattern'] = /^\s*(?=.*[1-9])\d*(?:\.\d{1,6})?\s*$/;
         }
@@ -38,19 +38,13 @@ ManageIQ.angular.app.controller('tenantQuotaFormController', ['$http', '$scope',
     });
   };
 
-  var tenantManageQuotasButtonClicked = function(buttonName, serializeFields) {
-    miqService.sparkleOn();
+  var tenantManageQuotasButtonClicked = function(buttonName, data) {
     var url = '/ops/rbac_tenant_manage_quotas/' + tenantQuotaFormId + '?button=' + buttonName + '&divisible=' + tenantType;
-    if(serializeFields === undefined) {
-      miqService.miqAjaxButton(url);
-    } else {
-      miqService.miqAjaxButton(url, serializeFields);
-    }
+    miqService.miqAjaxButton(url, data);
   };
 
   $scope.cancelClicked = function() {
     tenantManageQuotasButtonClicked('cancel');
-    $scope.angularForm.$setPristine(true);
   };
 
   $scope.resetClicked = function() {
@@ -76,8 +70,9 @@ ManageIQ.angular.app.controller('tenantQuotaFormController', ['$http', '$scope',
         }
       }
     }
-    tenantManageQuotasButtonClicked('save', { 'quotas' : data});
-    $scope.angularForm.$setPristine(true);
+    tenantManageQuotasButtonClicked('save', {
+      quotas: data,
+    });
   };
 
   $scope.toggleValueForWatch =   function(watchValue, initialValue) {

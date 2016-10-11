@@ -33,12 +33,10 @@ ManageIQ.angular.app.controller('orchestrationTemplateCopyController', ['$http',
   });
 
   $scope.cancelClicked = function() {
-    miqService.sparkleOn();
     miqService.miqAjaxButton(submitUrl + '?button=cancel&id=' + $scope.stackId);
   };
 
   $scope.addClicked = function() {
-    miqService.sparkleOn();
     miqService.miqAjaxButton(submitUrl + '?button=add', $scope.templateInfo);
   };
 }]);

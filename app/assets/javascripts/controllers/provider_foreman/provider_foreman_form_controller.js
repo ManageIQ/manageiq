@@ -49,7 +49,7 @@ ManageIQ.angular.app.controller('providerForemanFormController', ['$http', '$sco
 
           $scope.providerForemanModel.log_userid   = data.log_userid;
 
-          if($scope.providerForemanModel.log_userid != '') {
+          if ($scope.providerForemanModel.log_userid !== '') {
             $scope.providerForemanModel.log_password = $scope.providerForemanModel.log_verify = miqService.storedPasswordPlaceholder;
           }
 
@@ -62,35 +62,23 @@ ManageIQ.angular.app.controller('providerForemanFormController', ['$http', '$sco
     };
 
     $scope.canValidateBasicInfo = function () {
-      if ($scope.isBasicInfoValid())
-        return true;
-      else
-        return false;
-    }
-
-    $scope.isBasicInfoValid = function() {
-      if($scope.angularForm.url.$valid &&
-         $scope.angularForm.log_userid.$valid &&
-         $scope.angularForm.log_password.$valid &&
-         $scope.angularForm.log_verify.$valid)
-        return true;
-      else
-        return false;
+      return $scope.isBasicInfoValid();
     };
 
-    var providerForemanEditButtonClicked = function(buttonName, serializeFields) {
-      miqService.sparkleOn();
+    $scope.isBasicInfoValid = function() {
+      return $scope.angularForm.url.$valid &&
+        $scope.angularForm.log_userid.$valid &&
+        $scope.angularForm.log_password.$valid &&
+        $scope.angularForm.log_verify.$valid;
+    };
+
+    var providerForemanEditButtonClicked = function(buttonName, data) {
       var url = '/provider_foreman/edit/' + providerForemanFormId + '?button=' + buttonName;
-      if (serializeFields === undefined) {
-        miqService.miqAjaxButton(url);
-      } else {
-        miqService.miqAjaxButton(url, serializeFields);
-      }
+      miqService.miqAjaxButton(url, data);
     };
 
     $scope.cancelClicked = function() {
       providerForemanEditButtonClicked('cancel');
-      $scope.angularForm.$setPristine(true);
     };
 
     $scope.resetClicked = function() {
@@ -101,13 +89,10 @@ ManageIQ.angular.app.controller('providerForemanFormController', ['$http', '$sco
     };
 
     $scope.saveClicked = function() {
-      providerForemanEditButtonClicked('save', true);
-      $scope.angularForm.$setPristine(true);
+      providerForemanEditButtonClicked('save', $scope.providerForemanModel);
     };
 
-    $scope.addClicked = function() {
-      $scope.saveClicked();
-    };
+    $scope.addClicked = $scope.saveClicked;
 
     init();
 }]);

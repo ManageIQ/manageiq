@@ -42,7 +42,7 @@ ManageIQ.angular.app.controller('logCollectionFormController', ['$http', '$scope
         $scope.logCollectionModel.uri_prefix = data.uri_prefix;
         $scope.logCollectionModel.log_userid = data.log_userid;
 
-        if($scope.logCollectionModel.log_userid != '') {
+        if ($scope.logCollectionModel.log_userid != '') {
           $scope.logCollectionModel.log_password = $scope.logCollectionModel.log_verify = miqService.storedPasswordPlaceholder;
         }
 
@@ -57,7 +57,7 @@ ManageIQ.angular.app.controller('logCollectionFormController', ['$http', '$scope
   $scope.logProtocolChanged = function() {
     $scope.$broadcast('setNewRecord');
 
-    if(miqDBBackupService.knownProtocolsList.indexOf($scope.logCollectionModel.log_protocol) == -1 &&
+    if (miqDBBackupService.knownProtocolsList.indexOf($scope.logCollectionModel.log_protocol) == -1 &&
        $scope.logCollectionModel.log_protocol != '') {
       var url = $scope.logProtocolChangedUrl;
       miqService.sparkleOn();
@@ -73,25 +73,16 @@ ManageIQ.angular.app.controller('logCollectionFormController', ['$http', '$scope
   };
 
   $scope.isBasicInfoValid = function() {
-    if($scope.angularForm.depot_name.$valid &&
+    return $scope.angularForm.depot_name.$valid &&
       $scope.angularForm.uri.$valid &&
       $scope.angularForm.log_userid.$valid &&
       $scope.angularForm.log_password.$valid &&
-      $scope.angularForm.log_verify.$valid)
-      return true;
-    else
-      return false;
+      $scope.angularForm.log_verify.$valid;
   };
 
   $scope.saveClicked = function() {
-    miqService.sparkleOn();
     var url = $scope.saveUrl + serverId + '?button=save';
-    var moreUrlParams = $.param(miqService.serializeModel($scope.logCollectionModel));
-    if (moreUrlParams) {
-      url += '&' + decodeURIComponent(moreUrlParams);
-    }
-    miqService.miqAjaxButton(url, false);
-    $scope.angularForm.$setPristine(true);
+    miqService.miqAjaxButton(url, $scope.logCollectionModel);
   };
 
   $scope.resetClicked = function() {
@@ -102,18 +93,13 @@ ManageIQ.angular.app.controller('logCollectionFormController', ['$http', '$scope
   };
 
   $scope.cancelClicked = function() {
-    miqService.sparkleOn();
     var url = $scope.saveUrl + serverId + '?button=cancel';
-    miqService.miqAjaxButton(url, true);
-    $scope.angularForm.$setPristine(true);
+    miqService.miqAjaxButton(url);
   };
 
   $scope.canValidateBasicInfo = function () {
-    if ($scope.isBasicInfoValid())
-      return true;
-    else
-      return false;
-  }
+    return $scope.isBasicInfoValid();
+  };
 
   init();
 }]);

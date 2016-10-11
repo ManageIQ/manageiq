@@ -16,8 +16,12 @@ ManageIQ.angular.app.service('miqService', ['$timeout', '$document', function($t
     miqBuildCalendar(true);
   };
 
-  this.miqAjaxButton = function(url, serializeFields, options) {
-    miqAjaxButton(url, serializeFields, options);
+  this.miqAjaxButton = function(url, data, options) {
+    if (data === true || data === false) {
+      console.error('miqService.miqAjaxButton with bool serializeFields is deprecated!');
+    }
+
+    miqAjaxButton(url, data, options);
   };
 
   this.miqAsyncAjaxButton = function(url, serializeFields) {
@@ -81,8 +85,7 @@ ManageIQ.angular.app.service('miqService', ['$timeout', '$document', function($t
   };
 
   this.validateWithAjax = function (url) {
-    miqSparkleOn();
-    miqAjaxButton(url, true);
+    miqAjaxButton(url, true); // FIXME!
   };
 
   this.validateWithREST = function($event, credType, url, formSubmit) {

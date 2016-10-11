@@ -22,7 +22,7 @@ ManageIQ.angular.app.controller('diagnosticsDatabaseFormController', ['$http', '
   };
 
   $scope.backupScheduleTypeChanged = function() {
-    if($scope.diagnosticsDatabaseModel.backup_schedule_type == '') {
+    if ($scope.diagnosticsDatabaseModel.backup_schedule_type === '') {
       $scope.diagnosticsDatabaseModel.depot_name = '';
       $scope.diagnosticsDatabaseModel.uri = '';
       $scope.diagnosticsDatabaseModel.uri_prefix = '';
@@ -43,14 +43,15 @@ ManageIQ.angular.app.controller('diagnosticsDatabaseFormController', ['$http', '
       $scope.diagnosticsDatabaseModel.uri_prefix = data.uri_prefix;
       $scope.diagnosticsDatabaseModel.log_userid = data.log_userid;
 
-      if($scope.diagnosticsDatabaseModel.uri_prefix == 'nfs')
+      if ($scope.diagnosticsDatabaseModel.uri_prefix == 'nfs') {
         $scope.diagnosticsDatabaseModel.log_protocol = 'Network File System';
-      else
+      } else {
         $scope.diagnosticsDatabaseModel.log_protocol = 'Samba';
+      }
 
       $scope.diagnosticsDatabaseModel.action_typ = 'db_backup';
 
-      if($scope.diagnosticsDatabaseModel.log_userid != '') {
+      if ($scope.diagnosticsDatabaseModel.log_userid !== '') {
         $scope.diagnosticsDatabaseModel.log_password = $scope.diagnosticsDatabaseModel.log_verify = miqService.storedPasswordPlaceholder;
       }
 
@@ -64,34 +65,29 @@ ManageIQ.angular.app.controller('diagnosticsDatabaseFormController', ['$http', '
 
   $scope.showSubmitButton = function() {
     return true;
-  }
+  };
 
   $scope.isBasicInfoValid = function() {
-    if($scope.angularForm.depot_name.$valid &&
+    return $scope.angularForm.depot_name.$valid &&
       $scope.angularForm.uri.$valid &&
       $scope.angularForm.log_userid.$valid &&
       $scope.angularForm.log_password.$valid &&
-      $scope.angularForm.log_verify.$valid)
-      return true;
-    else
-      return false;
+      $scope.angularForm.log_verify.$valid;
   };
 
   $scope.submitButtonClicked = function(confirm_msg) {
     if (confirm(confirm_msg)) {
-      miqService.sparkleOn();
-      var url = $scope.submitUrl;
-      miqService.miqAjaxButton(url, true);
+      miqService.miqAjaxButton($scope.submitUrl, $scope.diagnosticsDatabaseModel);
     }
   };
 
   $scope.canValidateBasicInfo = function () {
     return $scope.isBasicInfoValid();
-  }
+  };
 
   $scope.logProtocolChanged = function() {
     $scope.diagnosticsDatabaseModel.backup_schedule_type = '';
-    if($scope.logProtocolSelected()) {
+    if ($scope.logProtocolSelected()) {
       $scope.$broadcast('setNewRecord');
       $scope.$broadcast('reactiveFocus');
       miqDBBackupService.logProtocolChanged($scope.diagnosticsDatabaseModel);

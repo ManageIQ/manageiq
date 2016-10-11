@@ -28,10 +28,9 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
     });
   };
 
-  var pglogicalManageSubscriptionsButtonClicked = function(buttonName, serializeFields) {
-    miqService.sparkleOn();
+  var pglogicalManageSubscriptionsButtonClicked = function(buttonName, data) {
     var url = '/ops/pglogical_save_subscriptions/' + pglogicalReplicationFormId + '?button=' + buttonName;
-    miqService.miqAjaxButton(url, serializeFields);
+    miqService.miqAjaxButton(url, data);
   };
 
   $scope.resetClicked = function() {
@@ -49,10 +48,9 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
       }
     });
     pglogicalManageSubscriptionsButtonClicked('save', {
-      'replication_type': $scope.pglogicalReplicationModel.replication_type,
-      'subscriptions' : $scope.pglogicalReplicationModel.subscriptions
+      replication_type: $scope.pglogicalReplicationModel.replication_type,
+      subscriptions: $scope.pglogicalReplicationModel.subscriptions,
     });
-    $scope.angularForm.$setPristine(true);
   };
 
   // check if subscription values have been changed
@@ -206,32 +204,29 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
 
   // method to set flag to disable certain buttons when add of subscription in progress
   $scope.addInProgress = function() {
-    if ($scope.pglogicalReplicationModel.addEnabled === true)
-      return true;
-    else
-      return false;
+    return ($scope.pglogicalReplicationModel.addEnabled === true);
   }
 
   // validate new/existing subscription
   $scope.validateSubscription = function(idx) {
     var data = {};
     if (typeof idx == 'undefined') {
-      data["dbname"] = $scope.pglogicalReplicationModel.dbname;
-      data["host"]     = $scope.pglogicalReplicationModel.host;
-      data["user"] = $scope.pglogicalReplicationModel.user;
-      data["password"] = $scope.pglogicalReplicationModel.password;
-      data["port"]     = $scope.pglogicalReplicationModel.port;
+      data.dbname = $scope.pglogicalReplicationModel.dbname;
+      data.host = $scope.pglogicalReplicationModel.host;
+      data.user = $scope.pglogicalReplicationModel.user;
+      data.password = $scope.pglogicalReplicationModel.password;
+      data.port = $scope.pglogicalReplicationModel.port;
     } else {
       var subscription = $scope.pglogicalReplicationModel.subscriptions[idx];
-      data["dbname"] = subscription.dbname;
-      data["host"]     = subscription.host;
-      data["user"] = subscription.user;
-      data["password"] = subscription.password;
-      data["port"]     = subscription.port;
-      data["id"] = subscription.id
+      data.dbname = subscription.dbname;
+      data.host = subscription.host;
+      data.user = subscription.user;
+      data.password = subscription.password;
+      data.port = subscription.port;
+      data.id = subscription.id;
     }
-    miqService.sparkleOn();
-    var url = '/ops/pglogical_validate_subscription'
+
+    var url = '/ops/pglogical_validate_subscription';
     miqService.miqAjaxButton(url, data);
   };
 
@@ -239,16 +234,13 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
   $scope.showCancelDelete = function(idx) {
     var subscription = $scope.pglogicalReplicationModel.subscriptions[idx];
     // only show subscriptions in red if they were saved subscriptions and deleted in current edit session
-    if (subscription.remove === true)
-      return true;
-    else
-      return false;
+    return (subscription.remove === true);
   }
 
   // put back subscription that was deleted into new subscriptions array
   $scope.cancelDelete = function(idx) {
     var subscription = $scope.pglogicalReplicationModel.subscriptions[idx];
-    delete subscription["remove"];
+    delete subscription.remove;
   }
 
   $scope.showChanged = function(idx, fieldName) {
@@ -256,28 +248,23 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
     // if updating a record use form fields to compare
     if ($scope.pglogicalReplicationModel.updateEnabled) {
       var subscription = {};
-      subscription["dbname"]  = $scope.pglogicalReplicationModel.dbname;
-      subscription["host"]     = $scope.pglogicalReplicationModel.host;
-      subscription["user"]     = $scope.pglogicalReplicationModel.user;
-      subscription["password"] = $scope.pglogicalReplicationModel.password;
-      subscription["port"]     = $scope.pglogicalReplicationModel.port;
-    } else
+      subscription.dbname = $scope.pglogicalReplicationModel.dbname;
+      subscription.host = $scope.pglogicalReplicationModel.host;
+      subscription.user = $scope.pglogicalReplicationModel.user;
+      subscription.password = $scope.pglogicalReplicationModel.password;
+      subscription.port = $scope.pglogicalReplicationModel.port;
+    } else {
       var subscription = $scope.pglogicalReplicationModel.subscriptions[idx];
+    }
 
-    if (typeof original_values != 'undefined' && original_values[fieldName] != subscription[fieldName])
-      return true;
-    else
-      return false;
+    return (typeof original_values != 'undefined' && original_values[fieldName] != subscription[fieldName]);
   }
 
   $scope.subscriptionInValidMessage = function() {
-    if ($scope.pglogicalReplicationModel.replication_type == 'global' &&
+    return $scope.pglogicalReplicationModel.replication_type == 'global' &&
       ($scope.pglogicalReplicationModel.subscriptions.length === 0 ||
-      ($scope.pglogicalReplicationModel.subscriptions.length == 1 && $scope.pglogicalReplicationModel.subscriptions[0].remove === true)))
-      return true;
-    else
-      return false;
-  }
+      ($scope.pglogicalReplicationModel.subscriptions.length === 1 && $scope.pglogicalReplicationModel.subscriptions[0].remove === true));
+  };
 
   init();
 }]);

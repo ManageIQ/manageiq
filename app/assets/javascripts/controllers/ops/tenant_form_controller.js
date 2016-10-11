@@ -41,19 +41,13 @@ ManageIQ.angular.app.controller('tenantFormController', ['$http', '$scope', 'ten
       }
     };
 
-    var tenantEditButtonClicked = function(buttonName, serializeFields) {
-      miqService.sparkleOn();
-      var url = '/ops/rbac_tenant_edit/' + tenantFormId + '?button=' + buttonName + '&divisible=' + tenantType;
-      if (serializeFields === undefined) {
-        miqService.miqAjaxButton(url);
-      } else {
-        miqService.miqAjaxButton(url, serializeFields);
-      }
+    var tenantEditButtonClicked = function(buttonName, data) {
+      var url = '/ops/rbac_tenant_edit/' + tenantFormId + '?button=' + buttonName;
+      miqService.miqAjaxButton(url, data);
     };
 
     $scope.cancelClicked = function() {
-      tenantEditButtonClicked('cancel');
-      $scope.angularForm.$setPristine(true);
+      tenantEditButtonClicked('cancel', { divisible: $scope.tenantModel.divisible });
     };
 
     $scope.resetClicked = function() {
@@ -64,18 +58,15 @@ ManageIQ.angular.app.controller('tenantFormController', ['$http', '$scope', 'ten
     };
 
     $scope.saveClicked = function() {
-      tenantEditButtonClicked('save', true);
-      $scope.angularForm.$setPristine(true);
+      tenantEditButtonClicked('save', $scope.tenantModel);
     };
 
-    $scope.addClicked = function() {
-      $scope.saveClicked();
-    };
+    $scope.addClicked = $scope.saveClicked;
 
     $scope.toggleValueForWatch =   function(watchValue, initialValue) {
-      if($scope[watchValue] == initialValue)
+      if ($scope[watchValue] == initialValue)
         $scope[watchValue] = "NO-OP";
-      else if($scope[watchValue] == "NO-OP")
+      else if ($scope[watchValue] == "NO-OP")
         $scope[watchValue] = initialValue;
     };
 

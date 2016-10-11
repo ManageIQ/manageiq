@@ -1,5 +1,5 @@
 describe('tenantFormController', function() {
-  var $scope, $controller, $httpBackend, tenantType, miqService;
+  var $scope, $controller, $httpBackend, miqService;
 
   beforeEach(module('ManageIQ'));
 
@@ -17,7 +17,7 @@ describe('tenantFormController', function() {
     $controller = _$controller_('tenantFormController', {
       $scope: $scope,
       tenantFormId: 'new',
-      tenantType: tenantType,
+      tenantType: null,
       miqService: miqService,
     });
   }));
@@ -37,18 +37,12 @@ describe('tenantFormController', function() {
         expect($scope.afterGet).toBe(true);
       });
     });
-
-    describe('when the tenantFormId is an id', function() {
-      var tenantFormResponse = {
-        tenant_name: 'tenantName',
-        tenant_description: 'tenantDescription'
-      };
   });
 
   describe('#cancelClicked', function() {
     beforeEach(function() {
       $scope.angularForm = {
-        $setPristine: function (value){}
+        $setPristine: function (value) {},
       };
       $scope.cancelClicked();
     });
@@ -62,7 +56,7 @@ describe('tenantFormController', function() {
     });
 
     it('delegates to miqService.miqAjaxButton', function() {
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/rbac_tenant_edit/new?button=cancel&divisible=' + tenantType);
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/rbac_tenant_edit/new?button=cancel', { divisible: null });
     });
   });
 
@@ -86,11 +80,11 @@ describe('tenantFormController', function() {
         }
       };
       $scope.angularForm = {
-        $setPristine: function (value){},
-        $setUntouched: function (value){},
+        $setPristine: function (value) {},
+        $setUntouched: function (value) {},
         filter_value: {
-          $name:       'filter_value',
-          $setViewValue: function (value){}
+          $name: 'filter_value',
+          $setViewValue: function (value) {},
         }
       };
       $scope.resetClicked();
@@ -104,7 +98,7 @@ describe('tenantFormController', function() {
   describe('#saveClicked', function() {
     beforeEach(function() {
       $scope.angularForm = {
-        $setPristine: function (value){}
+        $setPristine: function (value) {},
       };
       $scope.saveClicked();
     });
@@ -118,14 +112,14 @@ describe('tenantFormController', function() {
     });
 
     it('delegates to miqService.miqAjaxButton', function() {
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/rbac_tenant_edit/new?button=save&divisible=' + tenantType, true);
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/rbac_tenant_edit/new?button=save', jasmine.any(Object));
     });
   });
 
   describe('#addClicked', function() {
     beforeEach(function() {
       $scope.angularForm = {
-        $setPristine: function (value){}
+        $setPristine: function (value) {},
       };
       $scope.addClicked();
     });
@@ -135,7 +129,7 @@ describe('tenantFormController', function() {
     });
 
     it('delegates to miqService.miqAjaxButton', function() {
-      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/rbac_tenant_edit/new?button=save&divisible='+ tenantType, true);
+      expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/rbac_tenant_edit/new?button=save', jasmine.any(Object));
     });
   });
-});})
+});

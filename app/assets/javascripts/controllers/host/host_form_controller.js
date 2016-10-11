@@ -102,13 +102,11 @@ ManageIQ.angular.app.controller('hostFormController', ['$http', '$scope', '$attr
   }
 
   $scope.addClicked = function() {
-    miqService.sparkleOn();
     var url = 'create/new' + '?button=add';
-    miqService.miqAjaxButton(url, true);
+    miqService.miqAjaxButton(url, $scope.hostModel);
   };
 
   $scope.cancelClicked = function() {
-    miqService.sparkleOn();
     if (hostFormId == 'new') {
       var url = $scope.createUrl + 'new?button=cancel';
     } else if (hostFormId.split(",").length == 1) {
@@ -120,13 +118,12 @@ ManageIQ.angular.app.controller('hostFormController', ['$http', '$scope', '$attr
   };
 
   $scope.saveClicked = function() {
-    miqService.sparkleOn();
     if (hostFormId.split(",").length > 1) {
       var url = $scope.updateUrl + '?button=save';
     } else {
       var url = $scope.updateUrl + hostFormId + '?button=save';
     }
-    miqService.miqAjaxButton(url, true);
+    miqService.miqAjaxButton(url, $scope.hostModel);
   };
 
   $scope.resetClicked = function() {
@@ -167,18 +164,12 @@ ManageIQ.angular.app.controller('hostFormController', ['$http', '$scope', '$attr
   };
 
   $scope.canValidate = function () {
-    if ($scope.isBasicInfoValid() && $scope.validateFieldsDirty())
-      return true;
-    else
-      return false;
-  }
+    return $scope.isBasicInfoValid() && $scope.validateFieldsDirty();
+  };
 
   $scope.canValidateBasicInfo = function () {
-    if ($scope.isBasicInfoValid())
-      return true;
-    else
-      return false;
-  }
+    return $scope.isBasicInfoValid();
+  };
 
   $scope.validateFieldsDirty = function () {
     if(($scope.currentTab == "default") &&
@@ -205,9 +196,10 @@ ManageIQ.angular.app.controller('hostFormController', ['$http', '$scope', '$attr
       $scope.angularForm.ipmi_password.$dirty &&
       $scope.angularForm.ipmi_verify.$dirty)) {
       return true;
-    } else
+    } else {
       return false;
-  }
+    }
+  };
 
   init();
 }]);
