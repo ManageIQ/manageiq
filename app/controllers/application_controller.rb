@@ -1484,7 +1484,7 @@ class ApplicationController < ActionController::Base
                "%#{stxt}%"
              end
 
-      if MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :case_sensitive_name_search)
+      if ::Settings.server.case_sensitive_name_search
         sub_filter = ["#{view.db_class.table_name}.#{view.col_order.first} like ? escape '`'", stxt]
       else
         # don't apply sub_filter when viewing sub-list view of a CI
@@ -2417,9 +2417,7 @@ class ApplicationController < ActionController::Base
                                                       user_settings.key?(:display) &&
                                                       user_settings[:display].key?(:locale)
     if user_locale == 'default' || user_locale.nil?
-      unless MiqServer.my_server.nil?
-        server_locale = MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :locale)
-      end
+      server_locale = ::Settings.server.locale
       # user settings && server settings == 'default'
       # OR not defined
       # use HTTP_ACCEPT_LANGUAGE
