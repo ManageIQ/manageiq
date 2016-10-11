@@ -13,4 +13,4 @@ object:
   - rel5:
       value: "/System/event_handlers/event_action_policy?target=src_vm&policy_event=vm_unregister&param="
   - rel6:
-      value: "/System/event_handlers/event_action_refresh?target=src_ems_cluster"
+      value: "/System/event_handlers/event_action_refresh?target=src_vm"
