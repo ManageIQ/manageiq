@@ -40,7 +40,7 @@ class DialogTab < ApplicationRecord
           updated_groups << dialog_group
         end
       else
-        updated_groups << DialogImportService.new.build_group('dialog_groups' => [group]).first
+        updated_groups << DialogImportService.new.build_dialog_groups('dialog_groups' => [group]).first
       end
     end
     self.dialog_groups = updated_groups

@@ -118,7 +118,7 @@ class Dialog < ApplicationRecord
           tabs << tab
         end
       else
-        tabs << DialogImportService.new.build_tab('dialog_tabs' => [dialog_tab]).first
+        tabs << DialogImportService.new.build_dialog_tabs('dialog_tabs' => [dialog_tab]).first
       end
     end
     self.dialog_tabs = tabs

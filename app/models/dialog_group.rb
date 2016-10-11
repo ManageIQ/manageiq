@@ -23,7 +23,7 @@ class DialogGroup < ApplicationRecord
           updated_fields << dialog_field
         end
       else
-        updated_fields << DialogImportService.new.build_fields('dialog_fields' => [field]).first
+        updated_fields << DialogImportService.new.build_dialog_fields('dialog_fields' => [field]).first
       end
     end
     self.dialog_fields = updated_fields
