@@ -1930,7 +1930,8 @@ describe ApplicationHelper do
       end
 
       it "includes the correct button items" do
-        expect(_toolbar_builder.build_toolbar(toolbar_to_build).first[:items].first).to include(
+        items = _toolbar_builder.build_toolbar(toolbar_to_build).first[:items]
+        expect(items[0]).to include(
           :id    => "generic_object_definition_choice__generic_object_definition_create",
           :type  => :button,
           :icon  => "pficon pficon-add-circle-o fa-lg",
@@ -1939,6 +1940,19 @@ describe ApplicationHelper do
           :data  => {
             'function'      => 'sendDataWithRx',
             'function-data' => '{"eventType": "showAddForm"}'
+          }
+        )
+        expect(items[1]).to include(
+          :id      => "generic_object_definition_choice__generic_object_definition_edit",
+          :type    => :button,
+          :icon    => "pficon pficon-edit fa-lg",
+          :title   => "Edit this Generic Object Definition",
+          :text    => "Edit this Generic Object Definition",
+          :onwhen  => "1",
+          :enabled => false,
+          :data    => {
+            'function'      => 'sendDataWithRx',
+            'function-data' => '{"eventType": "showEditForm"}'
           }
         )
       end

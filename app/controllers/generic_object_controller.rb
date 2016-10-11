@@ -3,12 +3,19 @@ class GenericObjectController < ApplicationController
 
   def create
     generic_object_definition = GenericObjectDefinition.new
-    generic_object_definition.name = params[:name]
-    generic_object_definition.description = params[:description]
 
+    update_model_fields(generic_object_definition)
     generic_object_definition.save!
 
     render :json => {:message => _("Generic Object Definition created successfully")}
+  end
+
+  def save
+    generic_object_definition = GenericObjectDefinition.find(params[:id])
+
+    update_model_fields(generic_object_definition)
+
+    render :json => {:message => _("Generic Object Definition saved successfully")}
   end
 
   def explorer
@@ -32,7 +39,11 @@ class GenericObjectController < ApplicationController
   def object_data
     generic_object_definition = GenericObjectDefinition.find(params[:id])
 
-    render :json => {:name => generic_object_definition.name, :description => generic_object_definition.description}
+    render :json => {
+      :id          => generic_object_definition.id,
+      :name        => generic_object_definition.name,
+      :description => generic_object_definition.description
+    }
   end
 
   def tree_data
@@ -42,6 +53,11 @@ class GenericObjectController < ApplicationController
   end
 
   private
+
+  def update_model_fields(generic_object_definition)
+    generic_object_definition.update_attribute(:name, params[:name])
+    generic_object_definition.update_attribute(:description, params[:description])
+  end
 
   def features
     [ApplicationController::Feature.new_with_hash(:role        => "generic_object_explorer",

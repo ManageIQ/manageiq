@@ -22,6 +22,16 @@ describe('genericObjectSubscriptionService', function() {
     });
   });
 
+  describe('#subscribeToShowEditForm', function() {
+    beforeEach(function() {
+      testService.subscribeToShowEditForm(callback);
+    });
+
+    it('subscribes', function() {
+      expect(subscriptionService.subscribeToEventType).toHaveBeenCalledWith('showEditForm', callback);
+    });
+  });
+
   describe('#subscribeToTreeClicks', function() {
     beforeEach(function() {
       testService.subscribeToTreeClicks(callback);

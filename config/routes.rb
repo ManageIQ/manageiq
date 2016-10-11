@@ -1784,6 +1784,7 @@ Vmdb::Application.routes.draw do
       ),
       :post => %w(
         create
+        save
       )
     },
 

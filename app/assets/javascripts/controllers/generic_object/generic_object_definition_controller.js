@@ -6,23 +6,31 @@ ManageIQ.angular.app.controller('genericObjectDefinitionFormController', ['$http
     $scope.showSingleItem = false;
 
     genericObjectSubscriptionService.subscribeToShowAddForm(showAddForm);
+    genericObjectSubscriptionService.subscribeToShowEditForm(showEditForm);
     genericObjectSubscriptionService.subscribeToTreeClicks(showSelectedItem);
     genericObjectSubscriptionService.subscribeToRootTreeclicks(showAllItems);
   };
 
   var showAddForm = function(_response) {
     $scope.clearForm();
-    $scope.showAddForm = true;
+    $scope.newRecord = true;
+    $scope.showForm = true;
     sendDataWithRx({eventType: 'deselectTreeNodes'});
+  };
+
+  var showEditForm = function(_response) {
+    $scope.backupGenericObjectDefinitionModel = angular.copy($scope.genericObjectDefinitionModel);
+    $scope.newRecord = false;
+    $scope.showForm = true;
   };
 
   var showAllItems = function(response) {
     $scope.genericObjectList = response;
     $scope.showSingleItem = false;
-    $scope.showAddForm = false;
+    $scope.showForm = false;
   };
 
-  var addedGenericObject = function(_data) {
+  var addedOrUpdatedGenericObject = function(_data) {
     var successCallback = function(response) {
       sendDataWithRx({eventType: 'treeUpdated', response: JSON.parse(response.data.tree_data)});
     };
@@ -32,13 +40,14 @@ ManageIQ.angular.app.controller('genericObjectDefinitionFormController', ['$http
 
   var hideAndClearForm = function() {
     $scope.clearForm();
-    $scope.showAddForm = false;
+    $scope.showForm = false;
   };
 
   var showSelectedItem = function(response) {
+    $scope.genericObjectDefinitionModel.id = response.id;
     $scope.genericObjectDefinitionModel.name = response.name;
     $scope.genericObjectDefinitionModel.description = response.description;
-    $scope.showAddForm = false;
+    $scope.showForm = false;
     $scope.showSingleItem = true;
     miqService.sparkleOff();
   };
@@ -52,17 +61,30 @@ ManageIQ.angular.app.controller('genericObjectDefinitionFormController', ['$http
 
   $scope.listObjectClicked = function(name) {
     sendDataWithRx({eventType: 'singleItemSelected', response: name});
+    sendDataWithRx({eventType: 'sendCountSelectedAndUpdateToolbar', countSelected: 1});
   };
 
   $scope.addClicked = function() {
     var data = $scope.genericObjectDefinitionModel;
 
-    $http.post('create', data).then(addedGenericObject);
+    $http.post('create', data).then(addedOrUpdatedGenericObject);
+  };
+
+  $scope.saveClicked = function() {
+    var data = $scope.genericObjectDefinitionModel;
+
+    $http.post('save', data).then(addedOrUpdatedGenericObject);
   };
 
   $scope.cancelClicked = function() {
     hideAndClearForm();
     sendDataWithRx({eventType: 'cancelClicked'});
+    sendDataWithRx({eventType: 'sendCountSelectedAndUpdateToolbar', countSelected: 0});
+    $scope.angularForm.$setPristine(true);
+  };
+
+  $scope.resetClicked = function() {
+    $scope.genericObjectDefinitionModel = angular.copy($scope.backupGenericObjectDefinitionModel);
     $scope.angularForm.$setPristine(true);
   };
 

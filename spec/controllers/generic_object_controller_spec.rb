@@ -22,6 +22,30 @@ describe GenericObjectController do
     end
   end
 
+  describe "#save" do
+    let(:params) { {:id => generic_object_definition.id, :name => "new name", :description => "new description"} }
+    let(:generic_object_definition) { GenericObjectDefinition.create!(:name => "name", :description => "description") }
+
+    before do
+      post :save, params
+      generic_object_definition.reload
+    end
+
+    it "adjusts the name" do
+      expect(generic_object_definition.name).to eq("new name")
+    end
+
+    it "adjusts the description" do
+      expect(generic_object_definition.description).to eq("new description")
+    end
+
+    it "renders a json message on success" do
+      expect(response.body).to eq({
+        :message => "Generic Object Definition saved successfully"
+      }.to_json)
+    end
+  end
+
   describe "#explorer" do
     let(:tree_builder_generic_object) { double("TreeBuilderGenericObject") }
 
@@ -85,6 +109,7 @@ describe GenericObjectController do
     it "returns the name and description of the selected item in a json format" do
       get :object_data, params
       expect(response.body).to eq({
+        :id          => @generic_object_definition.id,
         :name        => "name",
         :description => "description"
       }.to_json)
