@@ -11,13 +11,15 @@
 .timeline-option {
   display: inline-block;
   margin-left: 30px;
+  margin-top: 10px;
+  margin-bottom: 15px;
 }
 
 .timeline-option .radio {
   display: inline-block;
   width: 150px;
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
 .timeline-container {
@@ -65,4 +67,12 @@
 
 .timeline-info {
   padding-bottom: 10px;
+}
+
+.timeline-filterbar {
+  width: 740px;
+}
+
+.timeline-apply {
+  margin-left: 20px;
 }
