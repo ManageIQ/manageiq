@@ -420,10 +420,17 @@ module EmsRefresh::SaveInventoryContainer
                      :name          => label_hash[:name],
                      :value         => label_hash[:value])
     end
-    current_tags = labels.collect_concat { |label| ContainerLabelTagMapping.tags_for_label(label) }
-    mappable_tags = ContainerLabelTagMapping.mappable_tags
 
-    entity.tags = entity.tags - mappable_tags + current_tags
+    begin
+      current_tags = labels.collect_concat { |label| ContainerLabelTagMapping.tags_for_label(label) }
+      mappable_tags = ContainerLabelTagMapping.mappable_tags
+      entity.tags = entity.tags - mappable_tags + current_tags
+    rescue => err
+      raise if EmsRefresh.debug_failures
+      _log.error("Auto-tagging failed on #{entity.class} [#{entity.name}] with error [#{err}].")
+      _log.error("Labels: [#{labels}]")
+      _log.log_backtrace(err)
+    end
   end
 
   def save_selector_parts_inventory(entity, hashes, target = nil)
