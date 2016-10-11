@@ -69,7 +69,7 @@ module ApplicationController::Compare
         @refresh_partial = "layouts/compare"
       else
         @showtype = "compare"
-        render :action => "show"
+        render :template => 'compare'
       end
     end
   end

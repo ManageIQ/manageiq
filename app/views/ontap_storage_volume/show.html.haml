@@ -7,6 +7,7 @@
 - elsif @showtype == "download_pdf"
   = render :partial => "layouts/show_pdf"
 - elsif @showtype == "compare"
+  = raise 'compare partial called through "show"'
   = render :partial => "layouts/compare"
 - else
   = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@record.id}"}
