@@ -15,7 +15,7 @@
         .row
           .col-sm-12.toolbar-pf-actions.timeline-toolbar
             .form-group
-              %div
+              %div{'class' => 'timeline-filterbar'}
                 = select_tag("tl_show",
                   options_for_select(ApplicationController::Timelines::SELECT_EVENT_TYPE, nil),
                   'ng-model'                    => 'reportModel.tl_show',
@@ -83,9 +83,10 @@
                       'options' => 'dateOptions',
                       'date'    => 'reportModel.tl_date',
                       'class'   => 'pull-righto timeline-date-input'}
-            %div{'class' => 'pull-right'}
+            %div
               .btn.btn-default{'ng-click'    => 'applyButtonClicked()',
-                              'ng-disabled' => 'reportModel.tl_categories.length === 0'}
+                              'ng-disabled' => 'reportModel.tl_categories.length === 0',
+                              'class'       => 'timeline-apply'}
                 = _("Apply")
 
 :javascript
