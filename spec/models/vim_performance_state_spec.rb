@@ -43,4 +43,21 @@ RSpec.describe VimPerformanceState do
       expect(actual.host_sockets).to eq(2)
     end
   end
+
+  describe '#allocated_disk_types' do
+    let(:ssd_size) { 1_234 }
+    let(:hdd1_size) { 5_678 }
+    let(:hdd2_size) { 9_101 }
+    let(:ssd_volume) { FactoryGirl.create(:cloud_volume_openstack, :volume_type => 'ssd') }
+    let(:ssd_disk) { FactoryGirl.create(:disk, :size => ssd_size, :backing => ssd_volume) }
+    let(:hdd_volume) { FactoryGirl.create(:cloud_volume_openstack) }
+    let(:hdd1_disk) { FactoryGirl.create(:disk, :size => hdd1_size, :backing => hdd_volume) }
+    let(:hdd2_disk) { FactoryGirl.create(:disk, :size => hdd2_size) }
+    let(:hardware) { FactoryGirl.create(:hardware, :disks => [ssd_disk, hdd1_disk, hdd2_disk]) }
+    let(:vm) { FactoryGirl.create(:vm_openstack, :hardware => hardware) }
+
+    subject { vm.perf_capture_state.allocated_disk_types }
+
+    it { is_expected.to match('ssd' => ssd_size, 'unclassified' => hdd1_size + hdd2_size) }
+  end
 end
