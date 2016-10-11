@@ -430,11 +430,17 @@ module ManageIQ::Providers
 
           # Lookup our health state in the health status map; default to
           # "OutOfService" if we can't find a mapping.
-          status = (instance_health.nil? ? nil : GCP_HEALTH_STATUS_MAP[instance_health[0]["healthState"]])
-          status = "OutOfService" if status.nil?
+          status = "OutOfService"
+          unless instance_health.nil?
+            gcp_status = instance_health[0]["healthState"]
 
-          # It's possible we didn't get an instance_health value back if the
-          # health check hasn't had a chance to run yet.
+            if GCP_HEALTH_STATUS_MAP.include?(gcp_status)
+              status = GCP_HEALTH_STATUS_MAP[gcp_status]
+            else
+              _log.warn("Unable to find an explicit health status mapping for state: #{gcp_status} - defaulting to 'OutOfService'")
+            end
+          end
+
           {
             :load_balancer_pool_member => member,
             :status                    => status,
