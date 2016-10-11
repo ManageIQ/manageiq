@@ -787,19 +787,63 @@ module ApplicationHelper
   end
 
   def display_adv_search?
-    %w(auth_key_pair_cloud availability_zone host_aggregate cloud_object_store_container
-       cloud_tenant cloud_volume container_group container_node container_service
-       container_route container_project container_replicator container_image
-       container_image_registry persistent_volume container_build
-       ems_container vm miq_template offline retired templates
-       ems_middleware middleware_server middleware_domain middleware_messaging middleware_deployment
-       middleware_datasource host service storage ems_cloud ems_cluster flavor
-       ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
+    %w(auth_key_pair_cloud
+       availability_zone
+       cim_base_storage_extent
+       cloud_network
+       cloud_object_store_container
+       cloud_object_store_container
+       cloud_subnet
+       cloud_tenant
+       cloud_volume
+       cloud_volume
+       configuration_job
+       container_build
+       container_group
+       container_image
+       container_image_registry
+       container_node
+       container_project
+       container_replicator
+       container_route
+       container_service
+       ems_cloud
+       ems_cluster
+       ems_container
+       ems_infra
+       ems_middleware
+       ems_network
+       ems_storage
+       flavor
+       floating_ip
+       host
+       host_aggregate
        load_balancer
-       ems_storage cloud_volume cloud_object_store_container
-       resource_pool ems_infra ontap_storage_system ontap_storage_volume
-       ontap_file_share snia_local_file_system ontap_logical_disk
-       orchestration_stack cim_base_storage_extent storage_manager configuration_job).include?(@layout)
+       middleware_datasource
+       middleware_deployment
+       middleware_domain
+       middleware_messaging
+       middleware_server
+       miq_template
+       network_port
+       network_router
+       offline
+       ontap_file_share
+       ontap_logical_disk
+       ontap_storage_system
+       ontap_storage_volume
+       orchestration_stack
+       persistent_volume
+       resource_pool
+       retired
+       security_group
+       service
+       snia_local_file_system
+       storage
+       storage_manager
+       templates
+       vm
+      ).include?(@layout)
   end
 
   # Do we show or hide the clear_search link in the list view title
