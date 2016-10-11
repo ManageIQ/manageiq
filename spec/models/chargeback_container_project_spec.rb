@@ -58,7 +58,7 @@ describe ChargebackContainerProject do
                                                          :resource_name            => @project.name)
       end
 
-      @accountable_period = @project.metric_rollups.size
+      @metric_size = @project.metric_rollups.size
     end
 
     subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(@options).first.first }
@@ -124,8 +124,8 @@ describe ChargebackContainerProject do
                                    :per_time           => "hourly",
                                    :chargeback_tiers   => [cbt]) }
     it "fixed_compute" do
-      expect(subject.fixed_compute_1_cost).to eq(@hourly_rate * @accountable_period)
-      expect(subject.fixed_compute_metric).to eq(@accountable_period)
+      expect(subject.fixed_compute_1_cost).to eq(@hourly_rate * hours_in_day)
+      expect(subject.fixed_compute_metric).to eq(@metric_size)
     end
   end
 
@@ -157,7 +157,7 @@ describe ChargebackContainerProject do
         time += 12.hours
       end
 
-      @accountable_period = @project.metric_rollups.size
+      @metric_size = @project.metric_rollups.size
     end
 
     subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(@options).first.first }
@@ -224,8 +224,8 @@ describe ChargebackContainerProject do
                                     :chargeback_tiers   => [cbt]) }
     it "fixed_compute" do
       # .to be_within(0.01) is used since theres a float error here
-      expect(subject.fixed_compute_1_cost).to be_within(0.01).of(@hourly_rate * @accountable_period)
-      expect(subject.fixed_compute_metric).to eq(@accountable_period)
+      expect(subject.fixed_compute_1_cost).to be_within(0.01).of(@hourly_rate * @hours_in_month)
+      expect(subject.fixed_compute_metric).to eq(@metric_size)
     end
   end
 
@@ -255,7 +255,6 @@ describe ChargebackContainerProject do
                                                          :resource_name            => @project.name)
         time += 12.hours
       end
-      @accountable_period = @project.metric_rollups.size
     end
 
     subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(@options).first.first }
@@ -306,7 +305,6 @@ describe ChargebackContainerProject do
 
         time += 12.hours
       end
-      @accountable_period = @project.metric_rollups.size
     end
 
     subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(@options).first.first }
@@ -369,7 +367,7 @@ describe ChargebackContainerProject do
         time += 12.hours
       end
 
-      @accountable_period = @project.metric_rollups.size
+      @metric_size = @project.metric_rollups.size
     end
 
     subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(@options).first.first }
@@ -386,8 +384,8 @@ describe ChargebackContainerProject do
 
     it "fixed_compute" do
       # .to be_within(0.01) is used since theres a float error here
-      expect(subject.fixed_compute_1_cost).to be_within(0.01).of(@hourly_rate * @accountable_period / 2)
-      expect(subject.fixed_compute_metric).to eq(@accountable_period / 2)
+      expect(subject.fixed_compute_1_cost).to be_within(0.01).of(@hourly_rate * @hours_in_month)
+      expect(subject.fixed_compute_metric).to eq(@metric_size / 2)
     end
   end
 end
