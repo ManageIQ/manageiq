@@ -1387,9 +1387,22 @@ module ApplicationHelper
   end
 
   def tree_with_advanced_search?
-    %i(containers images cs_filter foreman_providers instances providers vandt
-     images_filter instances_filter templates_filter templates_images_filter containers_filter
-     vms_filter vms_instances_filter storage).include?(x_tree[:type])
+    %i(containers
+       containers_filter
+       cs_filter
+       foreman_providers
+       images
+       images_filter
+       instances
+       instances_filter
+       providers
+       storage
+       templates_filter
+       templates_images_filter
+       vandt
+       vms_filter
+       vms_instances_filter
+      ).include?(x_tree[:type])
   end
 
   def show_advanced_search?
