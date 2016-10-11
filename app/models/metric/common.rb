@@ -52,10 +52,8 @@ module Metric::Common
   def min_max_v_derived_storage_used(mode)
     cond = ["resource_type = ? and resource_id = ? and capture_interval_name = 'hourly' and timestamp >= ? and timestamp < ?",
             resource_type, resource_id, timestamp.to_date.to_s, (timestamp + 1.day).to_date.to_s]
-    meth = mode == :min ? :first : :last
     recs = MetricRollup.where(cond).where.not(:derived_storage_total => nil, :derived_storage_free => nil)
-    rec = recs.sort { |a, b| a.v_derived_storage_used <=> b.v_derived_storage_used }.send(meth)
-    rec.nil? ? nil : rec.v_derived_storage_used
+    recs.collect(&:v_derived_storage_used).sort.send(mode == :min ? :first : :last)
   end
 
   def min_v_derived_storage_used
