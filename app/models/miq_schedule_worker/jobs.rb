@@ -114,7 +114,7 @@ class MiqScheduleWorker::Jobs
   def ems_event_purge_timer
     zone = MiqServer.my_server(true).zone
     if zone.role_active?("event")
-      queue_work(:class_name => "EmsEvent", :method_name => "purge_timer")
+      queue_work(:class_name => "EventStream", :method_name => "purge_timer")
     end
   end
 
