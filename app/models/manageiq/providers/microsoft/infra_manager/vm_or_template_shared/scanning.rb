@@ -84,13 +84,13 @@ module ManageIQ::Providers::Microsoft::InfraManager::VmOrTemplateShared::Scannin
       rescue Timeout::Error => err
         msg = "#{log_text} timed out for VM:[#{vm_name}] with error [#{err}] after [#{Time.now.getlocal - st}] seconds"
         $log.error msg
-        ost.miq_scvmm.close
         raise err, msg, err.backtrace
       rescue Exception => err
         msg = "#{log_text} failed for VM:[#{vm_name}] with error [#{err}] after [#{Time.now.getlocal - st}] seconds"
         $log.error msg
-        ost.miq_scvmm.close
         raise err, msg, err.backtrace
+      ensure
+        ost.miq_scvmm.close
       end
     end
   end

@@ -9,10 +9,7 @@ class ManageIQ::Providers::Microsoft::InfraManager
 
       def run_powershell_script(connection, script)
         log_header = "MIQ(#{self.class.name}.#{__method__})"
-        script_string = ""
-        File.open(script, "r") do |file|
-          script_string << file.read
-        end
+        script_string = IO.read(script)
         begin
           results = connection.shell(:powershell).run(script_string)
           log_dos_error_results(results)
@@ -95,10 +92,7 @@ class ManageIQ::Providers::Microsoft::InfraManager
 
       _result, timings = Benchmark.realtime_block(:execution) do
         with_provider_connection do |connection|
-          script_string = ""
-          File.open(script, "r") do |file|
-            script_string << file.read
-          end
+          script_string = IO.read(script)
           results = connection.shell(:powershell).run(script_string)
           self.class.log_dos_error_results(results)
         end
