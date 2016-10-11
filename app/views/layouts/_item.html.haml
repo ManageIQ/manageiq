@@ -53,7 +53,7 @@
     - @view.col_order[j..-1].each_with_index do |item, i|
       .form-group
         %label.control-label.col-md-2
-          = @view.headers[@view.col_order.index(item)]
+          = _(@view.headers[@view.col_order.index(item)])
         .col-md-8
           - item_data = @item.send(item)
           - if %w(data name).include?(@view.headers[i].downcase)
