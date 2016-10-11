@@ -253,11 +253,11 @@ module AuthenticationMixin
   def authentication_check(*args)
     options         = args.last.kind_of?(Hash) ? args.last : {}
     save            = options.fetch(:save, true)
-    type            = args.first
-    auth            = authentication_best_fit(type)
-    status, details = authentication_check_no_validation(type || auth.authtype, options)
+    auth            = authentication_best_fit(args.first)
+    type            = args.first || auth.try(:authtype)
+    status, details = authentication_check_no_validation(type, options)
 
-    if save
+    if auth && save
       status == :valid ? auth.validation_successful : auth.validation_failed(status, details)
     end
 

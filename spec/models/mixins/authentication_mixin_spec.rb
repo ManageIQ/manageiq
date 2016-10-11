@@ -169,8 +169,9 @@ describe AuthenticationMixin do
 
     context "with a host and ems" do
       before(:each) do
-        @host = FactoryGirl.create(:host_vmware_esx_with_authentication)
-        @ems  = FactoryGirl.create(:ems_vmware_with_authentication)
+        @host         = FactoryGirl.create(:host_vmware_esx_with_authentication)
+        @host_no_auth = FactoryGirl.create(:host_vmware_esx)
+        @ems          = FactoryGirl.create(:ems_vmware_with_authentication)
         MiqQueue.destroy_all
         @auth = @ems.authentication_type(:default)
         @orig_ems_user, @orig_ems_pwd = @ems.auth_user_pwd(:default)
@@ -375,8 +376,7 @@ describe AuthenticationMixin do
         end
 
         it "missing credentials" do
-          allow(@host).to receive(:missing_credentials?).and_return(true)
-          expect(@host.authentication_check).to eq([false, "Missing credentials"])
+          expect(@host_no_auth.authentication_check).to eq([false, "Missing credentials"])
         end
 
         it "verify_credentials fails" do
