@@ -72,14 +72,14 @@ class ApplicationHelper::ToolbarChooser
   def center_toolbar_filename_explorer
     if @record && @button_group &&
        !["catalogs", "chargeback", "miq_capacity_utilization", "miq_capacity_planning", "services"].include?(@layout)
-      if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm)
+      if @button_group.eql? "snapshot"
+        return "x_vm_center_tb"
+      elsif @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm)
         return "openstack_vm_cloud_center_tb"
       elsif @record.kind_of?(ManageIQ::Providers::CloudManager::Vm)
         return "x_vm_cloud_center_tb"
       elsif @record.kind_of?(ManageIQ::Providers::CloudManager::Template)
         return "x_template_cloud_center_tb"
-      elsif @button_group.eql? "snapshot"
-        return "x_vm_center_tb"
       else
         return "x_#{@button_group}_center_tb"
       end

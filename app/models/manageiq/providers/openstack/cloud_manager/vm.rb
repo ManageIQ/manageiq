@@ -100,4 +100,8 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
   def memory_mb_available?
     true
   end
+
+  def supports_snapshots?
+    true
+  end
 end
