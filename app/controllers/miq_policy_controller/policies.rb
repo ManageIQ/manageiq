@@ -232,7 +232,7 @@ module MiqPolicyController::Policies
     @record = @policy = policy
     @right_cell_text = _("%{model} \"%{name}\"") % {
       :model => "#{@sb[:mode]} Policy",
-      :name  => @policy.description.gsub(/'/, "\\'")
+      :name  => @policy.description
     }
     @right_cell_div = "policy_details"
     @policy_conditions = @policy.conditions

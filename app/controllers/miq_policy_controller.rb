@@ -563,8 +563,8 @@ class MiqPolicyController < ApplicationController
         if @profile && @profile.id.blank?
           _("Adding a new %{record}") % {:record => ui_lookup(:model => 'MiqPolicySet')}
         else
-          @edit ? _("Editing %{model} \"%{name}\"") % {:name => @profile.description.gsub(/'/, "\\'"), :model => ui_lookup(:model => "MiqPolicySet")} :
-                  _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "MiqPolicySet"), :name => @profile.description.gsub(/'/, "\\'")}
+          @edit ? _("Editing %{model} \"%{name}\"") % {:name => @profile.description, :model => ui_lookup(:model => "MiqPolicySet")} :
+                  _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "MiqPolicySet"), :name => @profile.description}
         end
     when 'xx'
       presenter.update(:main_div,
@@ -603,7 +603,7 @@ class MiqPolicyController < ApplicationController
                           end
       else
         options = {:model => "#{model_name} #{@sb[:mode] ? @sb[:mode].capitalize : ""} Policy",
-                   :name  => @policy.description.gsub(/'/, "\\'")}
+                   :name  => @policy.description}
         right_cell_text = @edit ? _("Editing %{model} \"%{name}\"") % options : _("%{model} \"%{name}\"") % options
         if @edit && @edit[:typ] == 'conditions'
           right_cell_text += _(" %{model} Assignments") % {:model => ui_lookup(:model => 'Condition')}
@@ -660,8 +660,8 @@ class MiqPolicyController < ApplicationController
       right_cell_text = if @alert_profile.id.blank?
                           _("Adding a new %{record}") % {:record => ui_lookup(:model => 'MiqAlertSet')}
                         else
-                          @edit ? _("Editing %{model} \"%{name}\"") % {:name => @alert_profile.description.gsub(/'/, "\\'"), :model => "#{ui_lookup(:model => @edit[:new][:mode])} #{ui_lookup(:model => 'MiqAlertSet')}"} :
-                                  _("%{model} \"%{name}\"") % {:name => @alert_profile.description.gsub(/'/, "\\'"), :model => ui_lookup(:model => 'MiqAlertSet')}
+                          @edit ? _("Editing %{model} \"%{name}\"") % {:name => @alert_profile.description, :model => "#{ui_lookup(:model => @edit[:new][:mode])} #{ui_lookup(:model => 'MiqAlertSet')}"} :
+                                  _("%{model} \"%{name}\"") % {:name => @alert_profile.description, :model => ui_lookup(:model => 'MiqAlertSet')}
                         end
     when 'al'
       presenter.update(:main_div, r[:partial => 'alert_details', :locals => {:read_only => true}])

@@ -144,13 +144,13 @@ class PxeController < ApplicationController
                             if @ps.id.blank?
                               _("Adding a new %{model}") % {:model => ui_lookup(:model => "PxeServer")}
                             else
-                              temp = _("%{model} \"%{name}\"") % {:name  => @ps.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeServer")}
+                              temp = _("%{model} \"%{name}\"") % {:name  => @ps.name, :model => ui_lookup(:model => "PxeServer")}
                               @edit ? "Editing #{temp}" : temp
                             end
                           when 'pi'
-                            _("%{model} \"%{name}\"") % {:name  => @img.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeImage")}
+                            _("%{model} \"%{name}\"") % {:name  => @img.name, :model => ui_lookup(:model => "PxeImage")}
                           when 'wi'
-                            _("%{model} \"%{name}\"") % {:name  => @wimg.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "WindowsImage")}
+                            _("%{model} \"%{name}\"") % {:name  => @wimg.name, :model => ui_lookup(:model => "WindowsImage")}
                           end
       end
     when :pxe_image_types_tree
@@ -162,11 +162,11 @@ class PxeController < ApplicationController
                           if @pxe_image_type.id.blank?
                             _("Adding a new %{models}") % {:models => ui_lookup(:model => "PxeImageType")}
                           else
-                            temp = _("%{model} \"%{name}\"") % {:name  => @pxe_image_type.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeImageType")}
+                            temp = _("%{model} \"%{name}\"") % {:name  => @pxe_image_type.name, :model => ui_lookup(:model => "PxeImageType")}
                             @edit ? "Editing #{temp}" : temp
                           end
                         else
-                          _("%{model} \"%{name}\"") % {:name  => @pxe_image_type.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeImageType")}
+                          _("%{model} \"%{name}\"") % {:name  => @pxe_image_type.name, :model => ui_lookup(:model => "PxeImageType")}
                         end
     when :customization_templates_tree
       presenter.update(:main_div, r[:partial => "template_list"])
@@ -176,8 +176,8 @@ class PxeController < ApplicationController
           if @ct.id.blank?
             _("Adding a new %{model}") % {:model => ui_lookup(:model => "PxeCustomizationTemplate")}
           else
-            @edit ? _("Editing %{model} \"%{name}\"") % {:name  => @ct.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeCustomizationTemplate")} :
-                    _("%{model} \"%{name}\"") % {:name  => @ct.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeCustomizationTemplate")}
+            @edit ? _("Editing %{model} \"%{name}\"") % {:name  => @ct.name, :model => ui_lookup(:model => "PxeCustomizationTemplate")} :
+                    _("%{model} \"%{name}\"") % {:name  => @ct.name, :model => ui_lookup(:model => "PxeCustomizationTemplate")}
           end
         # resetting ManageIQ.oneTransition.oneTrans when tab loads
         presenter.reset_one_trans
@@ -189,7 +189,7 @@ class PxeController < ApplicationController
         case nodetype
         when 'root' then _("All %{models}") % {:models => ui_lookup(:models => "IsoDatastore")}
         when 'isd'  then _("Adding a new %{models}") % {:models => ui_lookup(:model => "IsoDatastore")}
-        when 'isi'  then _("%{model} \"%{name}\"") % {:name => @img.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "IsoImage")}
+        when 'isi'  then _("%{model} \"%{name}\"") % {:name => @img.name, :model => ui_lookup(:model => "IsoImage")}
         end
     end
 
