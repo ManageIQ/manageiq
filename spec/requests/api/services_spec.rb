@@ -354,4 +354,156 @@ describe "Services API" do
       expect_bad_request("Cannot expand subcollection vms by name and virtual attribute")
     end
   end
+
+  describe "Power Operations" do
+    describe "start" do
+      it "will start a service for a user with appropriate role" do
+        service = FactoryGirl.create(:service)
+        api_basic_authorize(action_identifier(:services, :start))
+
+        run_post(services_url(service.id), :action => "start")
+
+        expected = {
+          "href"    => a_string_matching(services_url(service.id)),
+          "success" => true,
+          "message" => a_string_matching("starting")
+        }
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "can start multiple services for a user with appropriate role" do
+        service_1, service_2 = FactoryGirl.create_list(:service, 2)
+        api_basic_authorize(collection_action_identifier(:services, :start))
+
+        run_post(services_url, :action => "start", :resources => [{:id => service_1.id}, {:id => service_2.id}])
+
+        expected = {
+          "results" => a_collection_containing_exactly(
+            a_hash_including("success"   => true,
+                             "message"   => a_string_matching("starting"),
+                             "task_id"   => anything,
+                             "task_href" => anything,
+                             "href"      => a_string_matching(services_url(service_1.id))),
+            a_hash_including("success"   => true,
+                             "message"   => a_string_matching("starting"),
+                             "task_id"   => anything,
+                             "task_href" => anything,
+                             "href"      => a_string_matching(services_url(service_2.id))),
+          )
+        }
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "will not start a service for a user without an appropriate role" do
+        service = FactoryGirl.create(:service)
+        api_basic_authorize
+
+        run_post(services_url(service.id), :action => "start")
+
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    describe "stop" do
+      it "will stop a service for a user with appropriate role" do
+        service = FactoryGirl.create(:service)
+        api_basic_authorize(action_identifier(:services, :stop))
+
+        run_post(services_url(service.id), :action => "stop")
+
+        expected = {
+          "href"    => a_string_matching(services_url(service.id)),
+          "success" => true,
+          "message" => a_string_matching("stopping")
+        }
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "can stop multiple services for a user with appropriate role" do
+        service_1, service_2 = FactoryGirl.create_list(:service, 2)
+        api_basic_authorize(collection_action_identifier(:services, :stop))
+
+        run_post(services_url, :action => "stop", :resources => [{:id => service_1.id}, {:id => service_2.id}])
+
+        expected = {
+          "results" => a_collection_containing_exactly(
+            a_hash_including("success"   => true,
+                             "message"   => a_string_matching("stopping"),
+                             "task_id"   => anything,
+                             "task_href" => anything,
+                             "href"      => a_string_matching(services_url(service_1.id))),
+            a_hash_including("success"   => true,
+                             "message"   => a_string_matching("stopping"),
+                             "task_id"   => anything,
+                             "task_href" => anything,
+                             "href"      => a_string_matching(services_url(service_2.id))),
+          )
+        }
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "will not stop a service for a user without an appropriate role" do
+        service = FactoryGirl.create(:service)
+        api_basic_authorize
+
+        run_post(services_url(service.id), :action => "stop")
+
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    describe "suspend" do
+      it "will suspend a service for a user with appropriate role" do
+        service = FactoryGirl.create(:service)
+        api_basic_authorize(action_identifier(:services, :suspend))
+
+        run_post(services_url(service.id), :action => "suspend")
+
+        expected = {
+          "href"    => a_string_matching(services_url(service.id)),
+          "success" => true,
+          "message" => a_string_matching("suspending")
+        }
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "can suspend multiple services for a user with appropriate role" do
+        service_1, service_2 = FactoryGirl.create_list(:service, 2)
+        api_basic_authorize(collection_action_identifier(:services, :suspend))
+
+        run_post(services_url, :action => "suspend", :resources => [{:id => service_1.id}, {:id => service_2.id}])
+
+        expected = {
+          "results" => a_collection_containing_exactly(
+            a_hash_including("success"   => true,
+                             "message"   => a_string_matching("suspending"),
+                             "task_id"   => anything,
+                             "task_href" => anything,
+                             "href"      => a_string_matching(services_url(service_1.id))),
+            a_hash_including("success"   => true,
+                             "message"   => a_string_matching("suspending"),
+                             "task_id"   => anything,
+                             "task_href" => anything,
+                             "href"      => a_string_matching(services_url(service_2.id))),
+          )
+        }
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "will not suspend a service for a user without an appropriate role" do
+        service = FactoryGirl.create(:service)
+        api_basic_authorize
+
+        run_post(services_url(service.id), :action => "suspend")
+
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
 end
