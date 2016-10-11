@@ -915,7 +915,8 @@ module ApplicationHelper
   # met.
   #
   # args
-  #     :cond         --- bool    - the condition to be met
+  #     :if           --- bool    - the condition to be met
+  #                                 if no condition is passed, it's considered true
   #     :table/tables --- string  - name of entity
   #                               - determines singular/plural case
   #     :link_text    --- string  - to override calculated link text
@@ -929,6 +930,8 @@ module ApplicationHelper
   #
   def li_link(args)
     args[:if] = (args[:count] != 0) if args[:count]
+    args[:if] = true unless args.key?(:if)
+
     link_text, title = build_link_text(args)
 
     if args[:if]
