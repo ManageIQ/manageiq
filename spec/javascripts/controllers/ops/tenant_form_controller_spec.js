@@ -68,23 +68,6 @@ describe('tenantFormController', function() {
 
   describe('#resetClicked', function() {
     beforeEach(function() {
-      $scope.form = {
-        action_typ: {
-          $name:  'action_typ',
-          $dirty: true,
-          $touched: true
-        },
-        filter_typ: {
-          $name:  'filter_typ',
-          $dirty: true,
-          $touched: true
-        },
-        timer_typ: {
-          $name:  'timer_typ',
-          $dirty: true,
-          $touched: true
-        }
-      };
       $scope.angularForm = {
         $setPristine: function (value){},
         $setUntouched: function (value){},
