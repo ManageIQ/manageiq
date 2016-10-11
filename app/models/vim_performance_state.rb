@@ -22,6 +22,7 @@ class VimPerformanceState < ApplicationRecord
     :reserve_cpu,
     :reserve_mem,
     :vm_allocated_disk_storage,
+    :allocated_disk_types,
     :vm_used_disk_storage
   ].each do |m|
     define_method(m)       { state_data[m] }
@@ -67,6 +68,7 @@ class VimPerformanceState < ApplicationRecord
     capture_totals
     capture_reserve
     capture_vm_disk_storage
+    capture_disk_types
     capture_tag_names
     capture_image_tag_names
     capture_host_sockets
@@ -145,6 +147,15 @@ class VimPerformanceState < ApplicationRecord
   end
 
   private
+
+  def capture_disk_types
+    if hardware
+      self.allocated_disk_types = hardware.disks.each_with_object({}) do |disk, res|
+        type = disk.backing.try(:volume_type) || 'unclassified'
+        res[type] = (res[type] || 0) + disk.size
+      end
+    end
+  end
 
   def capture_totals
     self.total_cpu = capture_total(:cpu_speed)
