@@ -638,7 +638,7 @@ class MiqPolicyController < ApplicationController
                         end
     when 'ev'
       presenter.update(:main_div, r[:partial => 'event_details', :locals => {:read_only => true}])
-      options = {:name => @event.description.gsub(/'/, "\\\\'"), :model => ui_lookup(:table => 'miq_event_definition')}
+      options = {:name => @event.description, :model => ui_lookup(:table => 'miq_event_definition')}
       right_cell_text = @edit ? _("Editing %{model} \"%{name}\"") % options : _("%{model} \"%{name}\"") % options
     when 'a', 'ta', 'fa'
       presenter.update(:main_div, r[:partial => 'action_details', :locals => {:read_only => true}])
@@ -647,11 +647,11 @@ class MiqPolicyController < ApplicationController
                         else
                           if @edit
                             _("Editing %{model} \"%{name}\"") %
-                            {:name  => @action.description.gsub(/'/, "\\\\'"),
+                            {:name  => @action.description,
                              :model => ui_lookup(:model => 'MiqAction')}
                           else
                             _("%{model} \"%{name}\"") %
-                            {:name  => @action.description.gsub(/'/, "\\\\'"),
+                            {:name  => @action.description,
                              :model => ui_lookup(:model => 'MiqAction')}
                           end
                         end
@@ -670,7 +670,7 @@ class MiqPolicyController < ApplicationController
                         else
                           pfx = @assign ? ' assignments for ' : ''
                           msg = @edit ? _("Editing %{model} \"%{name}\"") : _("%{model} \"%{name}\"")
-                          msg % {:name => @alert.description.gsub(/'/, "\\\\'"), :model => "#{pfx} #{ui_lookup(:model => "MiqAlert")}"}
+                          msg % {:name => @alert.description, :model => "#{pfx} #{ui_lookup(:model => "MiqAlert")}"}
                         end
     end
     presenter[:right_cell_text] = right_cell_text
