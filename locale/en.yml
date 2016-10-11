@@ -765,7 +765,7 @@ en:
       ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork:         Cloud Network (OpenStack)
       ManageIQ::Providers::Amazon::CloudManager:                            Cloud Provider (Amazon)
       ManageIQ::Providers::Azure::CloudManager:                             Cloud Provider (Microsoft Azure)
-      ManageIQ::Providers::Vmware::CloudManage:                             Cloud Provider (VMware vCloud)
+      ManageIQ::Providers::Vmware::CloudManager:                            Cloud Provider (VMware vCloud)
       ManageIQ::Providers::Azure::NetworkManager::CloudNetwork:             Cloud Network (Microsoft Azure)
       ManageIQ::Providers::Kubernetes::ContainerManager:                    Container Provider (Kubernetes)
       ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup:    Pod (Kubernetes)
