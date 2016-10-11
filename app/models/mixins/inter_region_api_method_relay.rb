@@ -17,15 +17,14 @@ module InterRegionApiMethodRelay
 
     relay.class_eval do
       define_method(method) do |*meth_args, &meth_block|
-        api_args = block_given? ? yield(*meth_args) : {}
+        api_args = yield(*meth_args) if block_given?
 
         if in_current_region?
           super(*meth_args, &meth_block)
         else
-          api_client = InterRegionApiMethodRelay.api_client_connection_for_region(region_number)
-          collection = api_client.public_send(collection_name)
-          obj = collection.find(id)
-          obj.public_send(action, api_args)
+          InterRegionApiMethodRelay.exec_api_call(region_number, collection_name, action, api_args) do
+            [{:id => id}]
+          end
         end
       end
     end
@@ -43,9 +42,7 @@ module InterRegionApiMethodRelay
         if id_in_current_region?(record_id)
           super(*meth_args, &meth_block)
         else
-          api_client = InterRegionApiMethodRelay.api_client_connection_for_region(id_to_region(record_id))
-          collection = api_client.public_send(collection_name)
-          collection.public_send(action, api_args || {})
+          InterRegionApiMethodRelay.exec_api_call(id_to_region(record_id), collection_name, action, api_args)
         end
       end
     end
@@ -65,6 +62,16 @@ module InterRegionApiMethodRelay
       :miqtoken => MiqRegion.api_system_auth_token_for_region(region, User.current_userid),
       :ssl      => {:verify => false}
     )
+  end
+
+  def self.exec_api_call(region, collection_name, action, api_args = nil, &resource_block)
+    api_args ||= {}
+    collection = api_client_connection_for_region(region).public_send(collection_name)
+    if resource_block
+      collection.public_send(action, api_args, &resource_block)
+    else
+      collection.public_send(action, api_args)
+    end
   end
 
   private

@@ -74,33 +74,38 @@ describe InterRegionApiMethodRelay do
       end
 
       context "when the instance is not in my region" do
-        let(:api_connection) { double("ManageIQ::Api::Client connection") }
-        let(:api_collection) { double("ManageIQ::Api::Client collection") }
-        let(:api_resource)   { double("ManageIQ::Api::Client resource") }
-
+        let(:id)     { 123 }
+        let(:region) { 0 }
         before do
           expect(test_instance).to receive(:in_current_region?).and_return(false)
-          expect(test_instance).to receive(:region_number).and_return(0)
-          expect(test_instance).to receive(:id).and_return(123)
+          expect(test_instance).to receive(:region_number).and_return(region)
+          expect(test_instance).to receive(:id).and_return(id)
+        end
 
-          expect(described_class).to receive(:api_client_connection_for_region).with(0).and_return(api_connection)
-          expect(api_connection).to receive(collection_name).and_return(api_collection)
-          expect(api_collection).to receive(:find).with(123).and_return(api_resource)
+        def expect_api_call(expected_action, expected_args = nil)
+          expect(described_class).to receive(:exec_api_call) do |region_num, collection, action, args, &block|
+            expect(region_num).to eq(region)
+            expect(collection).to eq(collection_name)
+            expect(action).to eq(expected_action)
+            expect(args).to eq(expected_args) if expected_args
+
+            expect(block.call).to eq([{:id => id}])
+          end
         end
 
         it "executes the method name as an action by default" do
-          expect(api_resource).to receive(:test_instance_method).with({})
+          expect_api_call(:test_instance_method)
           test_instance.test_instance_method
         end
 
         it "executes the action name if given" do
-          expect(api_resource).to receive(:test_instance_method).with({})
+          expect_api_call(:test_instance_method)
           test_instance.test_instance_method_action
         end
 
         it "passes the result of the block as post args" do
           post_args = {:my => "post args"}
-          expect(api_resource).to receive(:test_instance_method_arg).with(post_args)
+          expect_api_call(:test_instance_method_arg, post_args)
           test_instance.test_instance_method_arg(post_args)
         end
       end
@@ -126,23 +131,22 @@ describe InterRegionApiMethodRelay do
       end
 
       context "when the subject is not in my region" do
-        let(:api_connection) { double("ManageIQ::Api::Client connection") }
-        let(:api_collection) { double("ManageIQ::Api::Client collection") }
+        let(:region) { 0 }
 
         before do
           expect(test_class).to receive(:id_in_current_region?).with(id).and_return(false)
-          expect(test_class).to receive(:id_to_region).with(id).and_return(0)
-          expect(described_class).to receive(:api_client_connection_for_region).with(0).and_return(api_connection)
-          expect(api_connection).to receive(collection_name).and_return(api_collection)
+          expect(test_class).to receive(:id_to_region).with(id).and_return(region)
         end
 
         it "executes the method name action by default with the second yielded parameter" do
-          expect(api_collection).to receive(:test_class_method).with(post_args)
+          expect(described_class).to receive(:exec_api_call)
+            .with(region, collection_name, :test_class_method, post_args)
           test_class.test_class_method(method_arg)
         end
 
         it "executes the action name if given" do
-          expect(api_collection).to receive(:test_class_method).with(post_args)
+          expect(described_class).to receive(:exec_api_call)
+            .with(region, collection_name, :test_class_method, post_args)
           test_class.test_class_method_action(method_arg)
         end
       end
@@ -182,6 +186,65 @@ describe InterRegionApiMethodRelay do
         expect {
           described_class.api_client_connection_for_region(ApplicationRecord.my_region_number)
         }.to raise_error(RuntimeError)
+      end
+    end
+
+    describe ".exec_api_call" do
+      let(:region)         { 0 }
+      let(:action)         { :the_action }
+      let(:api_connection) { double("ManageIQ::API::Client Connection") }
+      let(:api_collection) { double("ManageIQ::API::Client Collection") }
+
+      before do
+        expect(described_class).to receive(:api_client_connection_for_region).with(region).and_return(api_connection)
+        expect(api_connection).to receive(collection_name).and_return(api_collection)
+      end
+
+      context "when no block is passed" do
+        it "calls the given action with the given args" do
+          args = {:my => "args", :here => 123}
+          expect(api_collection).to receive(action).with(args)
+          described_class.exec_api_call(region, collection_name, action, args)
+        end
+
+        it "defaults the args to an empty hash" do
+          expect(api_collection).to receive(action).with({})
+          described_class.exec_api_call(region, collection_name, action)
+        end
+
+        it "defaults the args to an empty hash when nil is explicitly passed as args" do
+          expect(api_collection).to receive(action).with({})
+          described_class.exec_api_call(region, collection_name, action, nil)
+        end
+      end
+
+      context "when a block is passed" do
+        let(:resource_proc) { -> { "some stuff" } }
+
+        it "calls the given action with the given args" do
+          expected_args = {:my => "args", :here => 123}
+          expect(api_collection).to receive(action) do |args, &block|
+            expect(args).to eq(expected_args)
+            expect(block.call).to eq("some stuff")
+          end
+          described_class.exec_api_call(region, collection_name, action, expected_args, &resource_proc)
+        end
+
+        it "defaults the args to an empty hash" do
+          expect(api_collection).to receive(action) do |args, &block|
+            expect(args).to eq({})
+            expect(block.call).to eq("some stuff")
+          end
+          described_class.exec_api_call(region, collection_name, action, &resource_proc)
+        end
+
+        it "defaults the args to an empty hash when nil is explicitly passed as args" do
+          expect(api_collection).to receive(action) do |args, &block|
+            expect(args).to eq({})
+            expect(block.call).to eq("some stuff")
+          end
+          described_class.exec_api_call(region, collection_name, action, nil, &resource_proc)
+        end
       end
     end
   end
