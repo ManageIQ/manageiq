@@ -1,8 +1,10 @@
 ManageIQ.angular.app.controller('mwAddDataSourceController', MwAddDataSourceCtrl);
 
-MwAddDataSourceCtrl.$inject = ['$scope', '$http', '$q', 'miqService'];
+DATASOURCE_EVENT = 'mwAddDatasourceEvent';
 
-function MwAddDataSourceCtrl($scope, $http, $q, miqService) {
+MwAddDataSourceCtrl.$inject = ['$scope', '$rootScope', '$http', '$q', 'miqService'];
+
+function MwAddDataSourceCtrl($scope, $rootScope, $http, $q, miqService) {
 
   $scope.dsModel = {};
   $scope.dsModel.step = 'CHOOSE_DS';
@@ -43,6 +45,11 @@ function MwAddDataSourceCtrl($scope, $http, $q, miqService) {
   $scope.step3DsModel.password = '';
   $scope.step3DsModel.securityDomain = '';
 
+  $scope.$on(DATASOURCE_EVENT, function(event, payload) {
+    submitJson(payload);
+    miqService.sparkleOff();
+  });
+
   $scope.addDatasourceChooseNext = function() {
     var dsSelection = $scope.chooseDsModel.selectedDatasource;
     $scope.dsModel.step = 'STEP1';
@@ -74,8 +81,8 @@ function MwAddDataSourceCtrl($scope, $http, $q, miqService) {
   };
 
   $scope.finishAddDatasource = function () {
-    submitJson();
-    miqService.sparkleOff();
+    var payload = Object.assign({},getPayload());
+    $rootScope.$broadcast(DATASOURCE_EVENT, payload);
   };
 
   $scope.finishAddDatasourceBack = function () {
@@ -129,10 +136,8 @@ function MwAddDataSourceCtrl($scope, $http, $q, miqService) {
     return driverUrl;
   };
 
-  var submitJson = function submitJson() {
-    var errorMsg = _('Error running add_datasource on this server.');
-    var deferred = $q.defer();
-    var payload = {
+  var getPayload = function () {
+    return {
       'id': angular.element('#server_id').val(),
       'xaDatasource': false,
       'datasourceName': $scope.step1DsModel.datasourceName,
@@ -144,6 +149,11 @@ function MwAddDataSourceCtrl($scope, $http, $q, miqService) {
       'password': $scope.step3DsModel.password,
       'securityDomain': $scope.step3DsModel.securityDomain
     };
+  };
+
+  var submitJson = function submitJson(payload) {
+    var errorMsg = _('Error running add_datasource on this server.');
+    var deferred = $q.defer();
 
     $http.post('/middleware_server/add_datasource', angular.toJson(payload))
       .then(
