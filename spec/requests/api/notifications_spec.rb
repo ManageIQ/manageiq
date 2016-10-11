@@ -31,7 +31,7 @@ describe 'Notifications API' do
 
         run_post(notification_url, gen_request(:delete))
         expect(response).to have_http_status(:ok)
-        expect_single_action_result(:success => true, :href => :notification_url)
+        expect_single_action_result(:success => true, :href => notification_url)
         expect { notification_recipient.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
 
@@ -104,7 +104,7 @@ describe 'Notifications API' do
 
       expect(notification_recipient.seen).to be_falsey
       run_post(notification_url, gen_request(:mark_as_seen))
-      expect_single_action_result(:success => true, :href => :notification_url)
+      expect_single_action_result(:success => true, :href => notification_url)
       expect(notification_recipient.reload.seen).to be_truthy
     end
   end

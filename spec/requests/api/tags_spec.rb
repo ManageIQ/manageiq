@@ -10,7 +10,6 @@ describe "Tags API" do
   let(:tag1)         { {:category => "department", :name => "finance", :path => "/managed/department/finance"} }
   let(:tag2)         { {:category => "cc",         :name => "001",     :path => "/managed/cc/001"} }
   let(:invalid_tag_url) { tags_url(999_999) }
-  let(:tag_count)    { Tag.count }
 
   before(:each) do
     FactoryGirl.create(:classification_department_with_tags)
@@ -23,7 +22,7 @@ describe "Tags API" do
 
       run_get tags_url
 
-      expect_query_result(:tags, :tag_count)
+      expect_query_result(:tags, Tag.count)
     end
 
     context "with an appropriate role" do
@@ -263,7 +262,7 @@ describe "Tags API" do
 
       run_get tags_url, :expand => "resources"
 
-      expect_query_result(:tags, :tag_count, :tag_count)
+      expect_query_result(:tags, Tag.count, Tag.count)
       expect_result_resources_to_include_keys("resources", %w(id name))
     end
 
@@ -307,7 +306,7 @@ describe "Tags API" do
 
       run_get tags_url, :expand => "resources", :attributes => "categorization"
 
-      expect_query_result(:tags, :tag_count, :tag_count)
+      expect_query_result(:tags, Tag.count, Tag.count)
       expect_result_resources_to_include_keys("resources", %w(id name categorization))
     end
   end

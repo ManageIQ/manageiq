@@ -51,7 +51,7 @@ describe "Policy Actions API" do
       run_get policy_actions_url, :expand => "resources"
 
       expect_query_result(:policy_actions, 4, 4)
-      expect_result_resources_to_include_data("resources", "guid" => :miq_action_guid_list)
+      expect_result_resources_to_include_data("resources", "guid" => miq_action_guid_list)
     end
   end
 
@@ -82,7 +82,7 @@ describe "Policy Actions API" do
       run_get policy_actions_url, :expand => "resources"
 
       expect_query_result(:policy_actions, 4, 4)
-      expect_result_resources_to_include_data("resources", "guid" => :miq_action_guid_list)
+      expect_result_resources_to_include_data("resources", "guid" => miq_action_guid_list)
     end
 
     it "query policy with expanded policy actions" do
@@ -93,7 +93,7 @@ describe "Policy Actions API" do
       run_get policy_url, :expand => "policy_actions"
 
       expect_single_resource_query("name" => policy.name, "description" => policy.description, "guid" => policy.guid)
-      expect_result_resources_to_include_data("policy_actions", "guid" => :miq_action_guid_list)
+      expect_result_resources_to_include_data("policy_actions", "guid" => miq_action_guid_list)
     end
   end
 end

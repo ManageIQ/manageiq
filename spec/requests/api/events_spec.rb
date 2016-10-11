@@ -49,7 +49,7 @@ describe "Events API" do
       run_get events_url, :expand => "resources"
 
       expect_query_result(:events, 3, 3)
-      expect_result_resources_to_include_data("resources", "guid" => :miq_event_guid_list)
+      expect_result_resources_to_include_data("resources", "guid" => miq_event_guid_list)
     end
   end
 
@@ -80,7 +80,7 @@ describe "Events API" do
       run_get policy_events_url, :expand => "resources"
 
       expect_query_result(:events, 3, 3)
-      expect_result_resources_to_include_data("resources", "guid" => :miq_event_guid_list)
+      expect_result_resources_to_include_data("resources", "guid" => miq_event_guid_list)
     end
 
     it "query policy with expanded events" do
@@ -91,7 +91,7 @@ describe "Events API" do
       run_get policy_url, :expand => "events"
 
       expect_single_resource_query("name" => policy.name, "description" => policy.description, "guid" => policy.guid)
-      expect_result_resources_to_include_data("events", "guid" => :miq_event_guid_list)
+      expect_result_resources_to_include_data("events", "guid" => miq_event_guid_list)
     end
   end
 end
