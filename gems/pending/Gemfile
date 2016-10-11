@@ -80,9 +80,7 @@ unless ENV['APPLIANCE']
   group :test do
     gem "camcorder",                    :require => false
     gem "coveralls",                    :require => false
-    gem "jasmine",       "~>2.4.0",     :require => false
-    gem "jasmine-core",  "~>2.4.0",     :require => false  # force the expected version, jasmine/jasmine-gem#271
-    gem "phantomjs",     "=1.9.8.0",    :require => false
+    gem "jasmine",                      :require => false
     gem "rspec",         "~>3.5.0",     :require => false
     gem "test-unit",                    :require => false
     gem "timecop",       "~>0.7.3",     :require => false
