@@ -648,7 +648,7 @@ module ApplicationHelper
         report 
         rss
         server_build
-        ).include?(@layout) ||).include?(@layout) ||
+        ).include?(@layout) ||
         (@layout == "configuration" && @tabform != "ui_4")) && !controller.action_name.end_with?("tagging_edit")
         unless @explorer
           @show_taskbar = true
