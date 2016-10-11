@@ -106,7 +106,6 @@ RUN ${APPLIANCE_ROOT}/setup && \
 WORKDIR ${APP_ROOT}
 RUN source /etc/default/evm && \
     export RAILS_USE_MEMORY_STORE="true" && \
-    npm install npm -g && \
     npm install gulp bower -g && \
     gem install bundler -v ">=1.8.4" && \
     bin/setup --no-db --no-tests && \
