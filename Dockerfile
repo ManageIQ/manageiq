@@ -34,6 +34,7 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
                    make                    \
                    memcached               \
                    net-tools               \
+                   nodejs                  \
                    openssl-devel           \
                    patch                   \
                    rh-postgresql95-postgresql-server \
@@ -52,17 +53,13 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
                    mod_intercept_form_submit \
                    mod_lookup_identity     \
                    initscripts             \
+                   npm                     \
                    chrony                  \
                    psmisc                  \
                    lvm2                    \
                    openldap-clients        \
                    gdbm-devel              \
                    &&                      \
-    yum clean all
-
-# Install NodeJS 6.x
-RUN curl --silent --location https://rpm.nodesource.com/setup_6.x | bash - && \
-    yum -y install nodejs && \
     yum clean all
 
 # Add persistent data volume for postgres
