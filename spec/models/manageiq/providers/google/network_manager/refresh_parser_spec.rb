@@ -176,7 +176,7 @@ describe ManageIQ::Providers::Google::NetworkManager::RefreshParser do
             :load_balancer_health_check_members => [
               {
                 :load_balancer_pool_member => subject[:load_balancer_pools][0][:load_balancer_pool_member_pools][0][:load_balancer_pool_member],
-                :status                    => "HEALTHY",
+                :status                    => "InService",
                 :status_reason             => ""
               }
             ]

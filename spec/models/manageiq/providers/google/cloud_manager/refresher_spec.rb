@@ -232,7 +232,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :healthy_threshold   => 2,
       :unhealthy_threshold => 3)
     expect(lb.load_balancer_health_checks.first.load_balancer_health_check_members.first).to have_attributes(
-      :status => "UNHEALTHY"
+      :status => "OutOfService"
     )
     expect(lb.load_balancer_health_checks.first.load_balancer_health_check_members.first.load_balancer_pool_member.vm.name)\
       .to eql("subnet-test")

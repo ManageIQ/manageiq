@@ -7,6 +7,11 @@ module ManageIQ::Providers
       include Vmdb::Logging
       include ManageIQ::Providers::Google::RefreshHelperMethods
 
+      GCP_HEALTH_STATUS_MAP = {
+        "HEALTHY"   => "InService",
+        "UNHEALTHY" => "OutOfService"
+      }.freeze
+
       def initialize(ems, options = nil)
         @ems               = ems
         @connection        = ems.connect
@@ -423,11 +428,22 @@ module ManageIQ::Providers
           member = @data_index.fetch_path(:load_balancer_pool_members, Digest::MD5.base64digest(instance_link))
           return nil unless member
 
-          # It's possible we didn't get an instance_health value back if the
-          # health check hasn't had a chance to run yet.
+          # Lookup our health state in the health status map; default to
+          # "OutOfService" if we can't find a mapping.
+          status = "OutOfService"
+          unless instance_health.nil?
+            gcp_status = instance_health[0]["healthState"]
+
+            if GCP_HEALTH_STATUS_MAP.include?(gcp_status)
+              status = GCP_HEALTH_STATUS_MAP[gcp_status]
+            else
+              _log.warn("Unable to find an explicit health status mapping for state: #{gcp_status} - defaulting to 'OutOfService'")
+            end
+          end
+
           {
             :load_balancer_pool_member => member,
-            :status                    => (instance_health.nil? ? "UNKNOWN" : instance_health[0]["healthState"]),
+            :status                    => status,
             :status_reason             => ""
           }
         end
