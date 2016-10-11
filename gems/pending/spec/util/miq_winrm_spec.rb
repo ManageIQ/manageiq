@@ -8,12 +8,6 @@ describe MiqWinRM do
     @winrm    = MiqWinRM.new
   end
 
-  context "New Object" do
-    it "has a nil executor" do
-      expect(@winrm.executor).to be_nil
-    end
-  end
-
   context "New Connection" do
     it "creates a network connection" do
       expect { @winrm.connect(:user => @user, :password => @password, :hostname => @host) }.to_not raise_error
@@ -27,10 +21,6 @@ describe MiqWinRM do
 
     it "is the correct WinRM class" do
       expect(@connection).to be_a(WinRM::Connection)
-    end
-
-    it "still has a nil executor" do
-      expect(@winrm.executor).to be_nil
     end
 
     it "has the correct attributes" do
