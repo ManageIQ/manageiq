@@ -39,6 +39,8 @@ module Vmdb
     private
 
     def self.create_loggers
+      # Intentionally setting false to enable logging so we can
+      # diagnose an Automate method failure
       if false && ENV.key?("CI")
         $log       = $rails_log = $audit_log = $fog_log = $policy_log = $vim_log = $rhevm_log = Vmdb.null_logger
         $aws_log   = $kube_log = $mw_log = $scvmm_log = $api_log = $miq_ae_logger = $websocket_log = Vmdb.null_logger
