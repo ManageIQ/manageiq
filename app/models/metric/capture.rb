@@ -7,10 +7,8 @@ module Metric::Capture
 
   REALTIME_PRIORITY = HOURLY_PRIORITY = DAILY_PRIORITY = MiqQueue::NORMAL_PRIORITY
   HISTORICAL_PRIORITY = MiqQueue::LOW_PRIORITY
-
-  def self.capture_cols
-    Metric.columns_hash.collect { |c, h| c.to_sym if h.type == :float && c[0, 7] != "derived" }.compact
-  end
+  CAPTURE_COLS = Metric.columns_hash.collect { |c, h| c.to_sym if h.type == :float && c[0, 7] != 'derived' }
+                       .compact.freeze
 
   def self.historical_days
     (Settings.performance.history.initial_capture_days || 7).to_i

@@ -214,7 +214,7 @@ module Metric::Rollup
     new_perf_counts = {}
 
     rt_perfs.each do |rt|
-      Metric::Capture.capture_cols.each do |col|
+      Metric::Capture::CAPTURE_COLS.each do |col|
         new_perf[col] ||= 0
         new_perf_counts[col] ||= 0
 
