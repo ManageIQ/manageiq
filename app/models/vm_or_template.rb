@@ -1617,10 +1617,6 @@ class VmOrTemplate < ApplicationRecord
     hardware.nil? ? [] : hardware.mac_addresses
   end
 
-  def hard_disk_storages
-    hardware.nil? ? [] : hardware.hard_disk_storages
-  end
-
   def processes
     operating_system.nil? ? [] : operating_system.processes
   end

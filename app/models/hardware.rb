@@ -13,8 +13,6 @@ class Hardware < ApplicationRecord
   has_many    :floppies, -> { where("device_type = 'floppy'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
   has_many    :cdroms, -> { where("device_type LIKE '%cdrom%'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
 
-  has_many    :hard_disk_storages, -> { distinct }, :through => :hard_disks, :source => :storage
-
   has_many    :partitions, :dependent => :destroy
   has_many    :volumes, :dependent => :destroy
 
