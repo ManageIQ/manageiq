@@ -59,6 +59,10 @@ class DtoCollection
     data
   end
 
+  def size
+    to_a.size
+  end
+
   def to_hash
     data_index
   end
