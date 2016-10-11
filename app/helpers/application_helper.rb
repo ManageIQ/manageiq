@@ -1189,17 +1189,64 @@ module ApplicationHelper
   end
 
   def show_adv_search?
-    show_search = %w(auth_key_pair_cloud availability_zone host_aggregate cim_base_storage_extent
-                     cloud_object_store_container cloud_tenant cloud_volume cloud_volume_backup cloud_volume_snapshot
-                     container_group container_node container_service container_route container_project container_replicator
-                     container_image container_image_registry persistent_volume container_build ems_middleware
-                     middleware_server middleware_domain middleware_messaging middleware_deployment
-                     middleware_datasource ems_cloud ems_cluster ems_container ems_infra flavor host miq_template
-                     offline ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
-                     ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
-                     ems_storage load_balancer
-                     orchestration_stack resource_pool retired service configuration_job
-                     snia_local_file_system storage_manager templates vm)
+    show_search = %w(
+      auth_key_pair_cloud
+      availability_zone
+      cim_base_storage_extent
+      cloud_network
+      cloud_object_store_container
+      cloud_subnet
+      cloud_tenant
+      cloud_volume
+      cloud_volume_backup
+      cloud_volume_snapshot
+      configuration_job
+      container_build
+      container_group
+      container_image
+      container_image_registry
+      container_node
+      container_project
+      container_replicator
+      container_route
+      container_service
+      ems_cloud
+      ems_cluster
+      ems_container
+      ems_infra
+      ems_middleware
+      ems_network
+      ems_storage
+      flavor
+      floating_ip
+      host
+      host_aggregate
+      load_balancer
+      middleware_datasource
+      middleware_deployment
+      middleware_domain
+      middleware_messaging
+      middleware_server
+      miq_template
+      network_port
+      network_router
+      offline
+      ontap_file_share
+      ontap_logical_disk
+      ontap_storage_system
+      ontap_storage_volume
+      orchestration_stack
+      persistent_volume
+      resource_pool
+      retired
+      security_group
+      service
+      snia_local_file_system
+      storage_manager
+      templates
+      vm
+    )
+
     (@lastaction == "show_list" && !session[:menu_click] && show_search.include?(@layout) && !@in_a_form) ||
       (@explorer && x_tree && tree_with_advanced_search? && !@record)
   end
