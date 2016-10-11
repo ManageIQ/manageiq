@@ -1066,8 +1066,12 @@ module VmCommon
       TreeBuilder.build_node_cid(vm.ext_management_system)
     elsif vm.cloud
       TreeBuilder.build_node_cid(vm.availability_zone)
-    else
+    elsif vm.parent_blue_folder
       TreeBuilder.build_node_cid(vm.parent_blue_folder)
+    elsif vm.ext_management_system # has no folder parent but is in the tree
+      TreeBuilder.build_node_cid(vm.ext_management_system)
+    else
+      nil # no selection if VmOrTemplate has no parent
     end
   end
 
