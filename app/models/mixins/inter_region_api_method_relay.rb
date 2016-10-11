@@ -49,8 +49,8 @@ module InterRegionApiMethodRelay
   end
 
   def self.api_client_connection_for_region(region)
-    hostname = MiqRegion.find_by_region(region).remote_ws_address
-    if hostname.nil?
+    url = MiqRegion.find_by_region(region).remote_ws_url
+    if url.nil?
       _log.error("The remote region [#{region}] does not have a web service address.")
       raise "Failed to establish API connection to region #{region}"
     end
@@ -58,7 +58,7 @@ module InterRegionApiMethodRelay
     require 'manageiq-api-client'
 
     ManageIQ::API::Client.new(
-      :url      => "https://#{hostname}",
+      :url      => url,
       :miqtoken => MiqRegion.api_system_auth_token_for_region(region, User.current_userid),
       :ssl      => {:verify => false}
     )
