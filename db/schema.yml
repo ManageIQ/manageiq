@@ -6058,6 +6058,15 @@ persistent_volume_claims:
 - capacity
 - created_at
 - updated_at
+physical_servers:
+- id
+- ems_id
+- name
+- type
+- uid_ems
+- ems_ref
+- created_at
+- updated_at
 pictures:
 - id
 - resource_id
