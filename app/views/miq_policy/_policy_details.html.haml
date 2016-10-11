@@ -178,7 +178,7 @@
                 %tr
                   %td.narrow{:title => _("View this Policy Event"),
                     :onclick => "miqTreeActivateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}');"}
-                    %img{:src => image_path("100/event-#{e.name}.png")}
+                    %i.fa-lg{:class => e.decorate.try(:fonticon)}
                   %td{:title => _("View this Policy Event"),
                     :onclick => "miqTreeActivateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}');"}
                     = h(e.description)
