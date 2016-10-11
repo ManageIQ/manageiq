@@ -1,6 +1,6 @@
 class ResourceSharer
   WHITELISTED_RESOURCE_TYPES = %w(
-    MiqTemplate
+    VmOrTemplate
     ServiceTemplate
   ).freeze
 

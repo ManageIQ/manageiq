@@ -9,7 +9,7 @@ describe Rbac do
                          :features => user_allowed_feature)
     end
     let(:user_allowed_feature) { "service" }
-    let(:resource_to_be_shared) { FactoryGirl.create(:miq_template) }
+    let(:resource_to_be_shared) { FactoryGirl.create(:vm_vmware, :tenant => user.current_tenant) }
     let(:tenants) { [sharee.current_tenant] }
     let(:features) { :all }
     let!(:share) do
@@ -26,12 +26,38 @@ describe Rbac do
 
     before { Tenant.seed }
 
-    it "works" do
-      expect(Rbac.resources_shared_with(sharee)).to be_empty
+    context "with direct tenant" do
+      it "works" do
+        expect(Rbac.resources_shared_with(sharee)).to be_empty
 
-      share.share
+        share.share
+        expect(Rbac.resources_shared_with(sharee)).to include(resource_to_be_shared)
 
-      expect(Rbac.resources_shared_with(sharee)).to include(resource_to_be_shared)
+        user.owned_shares.destroy_all
+        expect(Rbac.resources_shared_with(sharee)).to be_empty
+      end
+    end
+
+    context "with tenant inheritance" do
+      let(:sibling_tenant) { FactoryGirl.create(:tenant, :name => "Sibling tenant") }
+      let(:siblings_child) { FactoryGirl.create(:tenant, :parent => sibling_tenant, :name => "Sibling's child tenant") }
+      let(:sharee) do
+        FactoryGirl.create(:user,
+                           :miq_groups => [FactoryGirl.create(:miq_group,
+                                                              :tenant => siblings_child)])
+      end
+
+      let(:tenants) { [sibling_tenant] }
+
+      it "works" do
+        expect(Rbac.resources_shared_with(sharee)).to be_empty
+
+        share.share
+        expect(Rbac.resources_shared_with(sharee)).to include(resource_to_be_shared)
+
+        user.owned_shares.destroy_all
+        expect(Rbac.resources_shared_with(sharee)).to be_empty
+      end
     end
   end
 end

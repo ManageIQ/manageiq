@@ -16,13 +16,16 @@ module Rbac
   end
 
   def self.resources_shared_with(user)
-    tenant = user.current_tenant
     valid_resources = []
+
+    # TODO: Simplify this since we'll be adding the ability to prevent tenant
+    # inheritance very soon.
+    ids = user.current_tenant.accessible_tenant_ids(:ancestor_ids)
+
     # TODO: This is very, very likely performance hell.
-    tenant.shares.each do |share|
+    Share.where(:tenant => ids).each do |share|
       valid_resources << share.resource if ResourceSharer.valid_share?(share)
     end
-
     valid_resources
   end
 
