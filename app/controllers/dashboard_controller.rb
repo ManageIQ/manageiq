@@ -1,13 +1,12 @@
 class DashboardController < ApplicationController
   @@items_per_page = 8
 
-  before_action :check_privileges, :except => [:csp_report, :window_sizes, :authenticate, :kerberos_authenticate,
+  before_action :check_privileges, :except => [:csp_report, :authenticate, :kerberos_authenticate,
                                                :logout, :login, :login_retry, :wait_for_task,
                                                :saml_login, :initiate_saml_login]
-  before_action :get_session_data, :except => [:csp_report, :window_sizes,
-                                               :authenticate, :kerberos_authenticate, :saml_login]
+  before_action :get_session_data, :except => [:csp_report, :authenticate, :kerberos_authenticate, :saml_login]
   after_action :cleanup_action,    :except => [:csp_report]
-  after_action :set_session_data,  :except => [:csp_report, :window_sizes]
+  after_action :set_session_data,  :except => [:csp_report]
 
   def index
     redirect_to :action => 'show'
@@ -46,12 +45,6 @@ class DashboardController < ApplicationController
       sidebar = params[:sidebar].to_i
       session[:sidebar][params[:context]] = sidebar if [0, 2, 3, 4, 5].include?(sidebar)
     end
-    head :ok # No response required
-  end
-
-  # Accept window sizes from the client
-  def window_sizes
-    session[:winH] = params[:height] if params[:height]
     head :ok # No response required
   end
 
@@ -618,7 +611,7 @@ class DashboardController < ApplicationController
 
   def session_reset
     # save some fields to recover back into session hash after session is cleared
-    keys_to_restore = [:winH, :browser, :user_TZO]
+    keys_to_restore = [:browser, :user_TZO]
     data_to_restore = keys_to_restore.each_with_object({}) { |k, v| v[k] = session[k] }
 
     session.clear
@@ -750,13 +743,8 @@ class DashboardController < ApplicationController
     session[:tl_position] = format_timezone(@report.extras[:tl_position], tz, "tl")
   end
 
-  def get_layout
-    # Don't change layout when window size changes session[:layout]
-    request.parameters["action"] == "window_sizes" ? session[:layout] : "login"
-  end
-
   def get_session_data
-    @layout       = get_layout
+    @layout       = "login"
     @current_page = session[:vm_current_page] # current page number
   end
 

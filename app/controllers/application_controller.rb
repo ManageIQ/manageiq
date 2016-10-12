@@ -54,12 +54,12 @@ class ApplicationController < ActionController::Base
   include_concern 'ReportDownloads'
 
   before_action :reset_toolbar
-  before_action :set_session_tenant, :except => [:window_sizes]
-  before_action :get_global_session_data, :except => [:resize_layout, :window_sizes, :authenticate]
-  before_action :set_user_time_zone, :except => [:window_sizes]
-  before_action :set_gettext_locale, :except => [:window_sizes]
+  before_action :set_session_tenant
+  before_action :get_global_session_data, :except => [:resize_layout, :authenticate]
+  before_action :set_user_time_zone
+  before_action :set_gettext_locale
   before_action :allow_websocket
-  after_action :set_global_session_data, :except => [:resize_layout, :window_sizes]
+  after_action :set_global_session_data, :except => [:resize_layout]
 
   def local_request?
     Rails.env.development? || Rails.env.test?
@@ -1985,9 +1985,6 @@ class ApplicationController < ActionController::Base
 
     # Get performance hash, if it is in the sandbox for the running controller
     @perf_options = @sb[:perf_options] ? copy_hash(@sb[:perf_options]) : {}
-
-    # Set window height for views to use
-    @winH = session[:winH] ? session[:winH].to_i : 805
 
     # Set @edit key default for the expression editor to use
     @expkey = session[:expkey] ? session[:expkey] : :expression
