@@ -70,9 +70,7 @@ module Api
     end
 
     def name_for_klass(resource_klass)
-      @cfg.detect do |_, spec|
-        spec[:klass] && spec[:klass].constantize == resource_klass
-      end.try(:first)
+      @cfg.detect { |_, spec| spec[:klass] == resource_klass.name }.try(:first)
     end
 
     def what_refers_to_feature(product_feature_name)
