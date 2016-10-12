@@ -1110,21 +1110,77 @@ module ApplicationHelper
     "#{@options[:page_size] || "US-Legal"} #{@options[:page_layout]}"
   end
 
-  GTL_VIEW_LAYOUTS = %w(action availability_zone host_aggregate auth_key_pair_cloud
-                        cim_base_storage_extent ems_storage cloud_object_store_container
-                        cloud_object_store_object cloud_tenant cloud_volume cloud_volume_backup cloud_volume_snapshot
-                        configuration_job condition container_group container_route container_project
-                        container_replicator container_image container_image_registry
-                        container_topology container_dashboard ems_infra_dashboard middleware_topology persistent_volume
-                        container_build container_node container_service ems_cloud ems_cluster ems_container ems_infra
-                        event ems_middleware middleware_server middleware_deployment middleware_datasource
-                        middleware_domain middleware_server_group middleware_messaging
-                        ems_network security_group floating_ip cloud_subnet network_router network_topology network_port cloud_network
+  GTL_VIEW_LAYOUTS = %w(action
+                        auth_key_pair_cloud
+                        availability_zone
+                        cim_base_storage_extent
+                        cloud_network
+                        cloud_object_store_container
+                        cloud_object_store_object
+                        cloud_subnet
+                        cloud_tenant
+                        cloud_volume
+                        cloud_volume_backup
+                        cloud_volume_snapshot
+                        condition
+                        configuration_job
+                        container_build
+                        container_dashboard
+                        container_group
+                        container_image
+                        container_image_registry
+                        container_node
+                        container_project
+                        container_replicator
+                        container_route
+                        container_service
+                        container_topology
+                        ems_cloud
+                        ems_cluster
+                        ems_container
+                        ems_infra
+                        ems_infra_dashboard
+                        ems_middleware
+                        ems_network
+                        ems_storage
+                        event
+                        flavor
+                        floating_ip
+                        host
+                        host_aggregate
                         load_balancer
-                        flavor host miq_schedule miq_template offline ontap_file_share
-                        ontap_logical_disk ontap_storage_system ontap_storage_volume orchestration_stack
-                        policy policy_group policy_profile resource_pool retired scan_profile
-                        service snia_local_file_system storage storage_manager templates)
+                        middleware_datasource
+                        middleware_deployment
+                        middleware_domain
+                        middleware_messaging
+                        middleware_server
+                        middleware_server_group
+                        middleware_topology
+                        miq_schedule
+                        miq_template
+                        network_port
+                        network_router
+                        network_topology
+                        offline
+                        ontap_file_share
+                        ontap_logical_disk
+                        ontap_storage_system
+                        ontap_storage_volume
+                        orchestration_stack
+                        persistent_volume
+                        policy
+                        policy_group
+                        policy_profile
+                        resource_pool
+                        retired
+                        scan_profile
+                        security_group
+                        service
+                        snia_local_file_system
+                        storage
+                        storage_manager
+                        templates
+                      )
 
   def render_gtl_view_tb?
     GTL_VIEW_LAYOUTS.include?(@layout) && @gtl_type && !@tagitems &&
