@@ -60,10 +60,10 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet < ::CloudSubne
     connection_options[:tenant_name] = cloud_tenant.name if cloud_tenant
     connection_options
   end
-  private_class_method :connection_options
+
+  private
 
   def connection_options(cloud_tenant = nil)
     self.class.connection_options(cloud_tenant)
   end
-  private :connection_options
 end
