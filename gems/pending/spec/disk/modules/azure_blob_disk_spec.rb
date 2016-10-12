@@ -128,7 +128,7 @@ describe AzureBlobDisk do
 
       it "should return the expected number of partitions", :ex_tag => 1 do
         parts = @miq_disk.getPartitions
-        expect(parts.length).to eq(2)
+        expect(parts.length).to eq(3)
       end
 
       it "should return instances of MiqPartition", :ex_tag => 1 do
