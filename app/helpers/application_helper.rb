@@ -1158,32 +1158,126 @@ module ApplicationHelper
 
   def render_listnav_filename
     if @lastaction == "show_list" && !session[:menu_click] &&
-       %w(auth_key_pair_cloud availability_zone cloud_object_store_container cloud_object_store_object cloud_tenant
-          cloud_volume cloud_volume_backup cloud_volume_snapshot container_node container_service ems_container container_group
-          ems_cloud ems_cluster container_route container_project container_replicator container_image container_image_registry
-          container_build ems_infra flavor host miq_template offline orchestration_stack persistent_volume
-          ems_middleware middleware_server middleware_deployment middleware_datasource middleware_domain
-          middleware_server_group middleware_messaging ems_network security_group floating_ip cloud_subnet
-          network_router network_port cloud_network resource_pool retired service storage templates vm ems_storage
-          configuration_job).include?(@layout) && !@in_a_form
+       %w(auth_key_pair_cloud
+          availability_zone
+          cloud_network
+          cloud_object_store_container
+          cloud_object_store_object
+          cloud_subnet
+          cloud_tenant
+          cloud_volume
+          cloud_volume_backup
+          cloud_volume_snapshot
+          configuration_job
+          container_build
+          container_group
+          container_image
+          container_image_registry
+          container_node
+          container_project
+          container_replicator
+          container_route
+          container_service
+          ems_cloud
+          ems_cluster
+          ems_container
+          ems_infra
+          ems_middleware
+          ems_network
+          ems_storage
+          flavor
+          floating_ip
+          host
+          middleware_datasource
+          middleware_deployment
+          middleware_domain
+          middleware_messaging
+          middleware_server
+          middleware_server_group
+          miq_template
+          network_port
+          network_router
+          offline
+          orchestration_stack
+          persistent_volume
+          resource_pool
+          retired
+          security_group
+          service
+          storage
+          templates
+          vm).include?(@layout) && !@in_a_form
       "show_list"
     elsif @compare
       "compare_sections"
     elsif @explorer
       "explorer"
-    elsif %w(offline retired templates vm vm_cloud vm_or_template).include?(@layout)
+    elsif %w(offline
+             retired
+             templates
+             vm
+             vm_cloud
+             vm_or_template).include?(@layout)
       "vm"
-    elsif %w(action auth_key_pair_cloud availability_zone host_aggregate cim_base_storage_extent cloud_object_store_container
-             cloud_object_store_object cloud_tenant cloud_volume cloud_volume_backup cloud_volume_snapshot condition
-             container_group container_route container_project container_replicator container_image container_image_registry
-             container_build container_node container_service persistent_volume ems_cloud ems_container ems_cluster ems_infra
-             ems_middleware middleware_server middleware_deployment middleware_datasource middleware_domain
-             middleware_messaging middleware_server_group flavor
-             ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
-             load_balancer ems_storage
-             host miq_schedule miq_template policy ontap_file_share ontap_logical_disk
-             ontap_storage_system ontap_storage_volume orchestration_stack resource_pool configuration_job
-             scan_profile service snia_local_file_system storage_manager timeline).include?(@layout)
+    elsif %w(action
+             auth_key_pair_cloud
+             availability_zone
+             cim_base_storage_extent
+             cloud_network
+             cloud_object_store_container
+             cloud_object_store_object
+             cloud_subnet
+             cloud_tenant
+             cloud_volume
+             cloud_volume_backup
+             cloud_volume_snapshot
+             condition
+             configuration_job
+             container_build
+             container_group
+             container_image
+             container_image_registry
+             container_node
+             container_project
+             container_replicator
+             container_route
+             container_service
+             ems_cloud
+             ems_cluster
+             ems_container
+             ems_infra
+             ems_middleware
+             ems_network
+             ems_storage
+             flavor
+             floating_ip
+             host
+             host_aggregate
+             load_balancer
+             middleware_datasource
+             middleware_deployment
+             middleware_domain
+             middleware_messaging
+             middleware_server
+             middleware_server_group
+             miq_schedule
+             miq_template
+             network_port
+             network_router
+             ontap_file_share
+             ontap_logical_disk
+             ontap_storage_system
+             ontap_storage_volume
+             orchestration_stack
+             persistent_volume
+             policy
+             resource_pool
+             scan_profile
+             security_group
+             service
+             snia_local_file_system
+             storage_manager
+             timeline).include?(@layout)
       @layout
     end
   end
