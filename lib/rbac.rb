@@ -24,6 +24,7 @@ module Rbac
 
     # TODO: This is very, very likely performance hell.
     Share.where(:tenant => ids).each do |share|
+      next if !share.allow_tenant_inheritance? && share.tenant.id != user.current_tenant.id
       valid_resources << share.resource if ResourceSharer.valid_share?(share)
     end
     valid_resources

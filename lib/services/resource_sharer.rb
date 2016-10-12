@@ -6,7 +6,7 @@ class ResourceSharer
 
   include ActiveModel::Model
 
-  attr_accessor :user, :resource, :tenants, :features
+  attr_accessor :user, :resource, :tenants, :features, :allow_tenant_inheritance
 
   with_options :presence => true do
     validates :user
@@ -41,6 +41,7 @@ class ResourceSharer
     if args[:user] && args[:features] == :all
       args[:features] = args[:user].miq_user_role.miq_product_features
     end
+    args[:allow_tenant_inheritance] = !!args[:allow_tenant_inheritance]
     super
   end
 
@@ -49,7 +50,11 @@ class ResourceSharer
 
     ActiveRecord::Base.transaction do
       tenants.map do |tenant|
-        Share.create!(:user => user, :resource => resource, :tenant => tenant, :miq_product_features => features)
+        Share.create!(:user                     => user,
+                      :resource                 => resource,
+                      :tenant                   => tenant,
+                      :miq_product_features     => features,
+                      :allow_tenant_inheritance => allow_tenant_inheritance)
       end
     end
   end

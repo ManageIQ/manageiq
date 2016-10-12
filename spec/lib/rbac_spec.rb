@@ -46,17 +46,38 @@ describe Rbac do
                            :miq_groups => [FactoryGirl.create(:miq_group,
                                                               :tenant => siblings_child)])
       end
-
+      let!(:share) do
+        ResourceSharer.new(:user     => user,
+                           :resource => resource_to_be_shared,
+                           :tenants  => tenants,
+                           :features => features,
+                           :allow_tenant_inheritance => allow_tenant_inheritance)
+      end
       let(:tenants) { [sibling_tenant] }
 
-      it "works" do
-        expect(Rbac.resources_shared_with(sharee)).to be_empty
+      context "enabled" do
+        let(:allow_tenant_inheritance) { true }
 
-        share.share
-        expect(Rbac.resources_shared_with(sharee)).to include(resource_to_be_shared)
+        it "works" do
+          expect(Rbac.resources_shared_with(sharee)).to be_empty
 
-        user.owned_shares.destroy_all
-        expect(Rbac.resources_shared_with(sharee)).to be_empty
+          share.share
+          expect(Rbac.resources_shared_with(sharee)).to include(resource_to_be_shared)
+
+          user.owned_shares.destroy_all
+          expect(Rbac.resources_shared_with(sharee)).to be_empty
+        end
+      end
+
+      context "disabled" do
+        let(:allow_tenant_inheritance) { false }
+
+        it "works" do
+          expect(Rbac.resources_shared_with(sharee)).to be_empty
+
+          share.share
+          expect(Rbac.resources_shared_with(sharee)).to be_empty
+        end
       end
     end
   end
