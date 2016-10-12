@@ -423,7 +423,7 @@ class ApplicationHelper::ToolbarBuilder
         case id
         when "reload_server_tree"
           return false
-        when "delete_server", "zone_delete_server"
+        when "delete_server"
           return @record.class != MiqServer
         when "zone_collect_current_logs", "zone_collect_logs", "zone_log_depot_edit"
           return true
