@@ -305,7 +305,10 @@ describe('scheduleFormController', function() {
         filter_value: {
           $name:       'filter_value',
           $setViewValue: function (value){}
-        }
+        },
+        action_typ: {},
+        filter_typ: {},
+        timer_typ: {},
       };
       $scope.resetClicked();
     });
