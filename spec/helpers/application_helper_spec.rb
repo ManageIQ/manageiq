@@ -1322,7 +1322,8 @@ describe ApplicationHelper do
     end
 
     it "should return true for storage start pages when product flag is set" do
-      allow(helper).to receive(:get_vmdb_config).and_return(:product => { :storage => true })
+      stub_settings(:product => { :storage => true })
+
       result = helper.start_page_allowed?("cim_storage_extent_show_list")
       expect(result).to be_truthy
     end
@@ -1333,7 +1334,8 @@ describe ApplicationHelper do
     end
 
     it "should return true for containers start pages when product flag is set" do
-      allow(helper).to receive(:get_vmdb_config).and_return(:product => { :containers => true })
+      stub_settings(:product => { :containers => true })
+
       result = helper.start_page_allowed?("ems_container_show_list")
       expect(result).to be_truthy
     end
@@ -1655,7 +1657,7 @@ Datasources\" href=\"/ems_middleware/#{ems.id}?display=middleware_datasources\">
 
     modes.zip modes_pretty.each do |mode, mode_pretty|
       it "Returns #{mode_pretty} when mode is #{mode}" do
-        stub_server_configuration(:authentication => { :mode => mode })
+        stub_settings(:authentication => { :mode => mode }, :server => {})
         expect(helper.auth_mode_name).to eq(mode_pretty)
       end
     end
