@@ -688,8 +688,6 @@ class ApplicationHelper::ToolbarBuilder
       case id
       when "role_start", "role_suspend", "promote_server", "demote_server"
         return true
-      when "refresh_workers"
-        return true
       end
     when "ServerRole"
       case id
