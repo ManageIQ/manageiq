@@ -245,23 +245,26 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
   $scope.resetClicked = function() {
     $scope.$broadcast('resetClicked');
     $scope.scheduleModel = angular.copy( $scope.modelCopy );
-    if($scope.dbBackup())
-        $scope.filterValuesEmpty = true;
 
-      if(!$scope.dbBackup() && $scope.scheduleModel.filter_typ &&
-          ($scope.form.action_typ.$untouched && $scope.form.filter_typ.$untouched)) {
-        // AJAX-less Reset
-        $scope.toggleValueForWatch('filterValuesEmpty', false);
-      }
+    if ($scope.dbBackup()) {
+      $scope.filterValuesEmpty = true;
+    }
 
-    if(!$scope.dbBackup() && $scope.scheduleModel.filter_typ &&
-      ($scope.form.action_typ.$touched || $scope.form.filter_typ.$touched)) {
+    var filter_touched = $scope.angularForm.action_typ.$touched || $scope.angularForm.filter_typ.$touched;
+    if (!$scope.dbBackup() && $scope.scheduleModel.filter_typ && !filter_touched) {
+      // AJAX-less Reset
+      $scope.toggleValueForWatch('filterValuesEmpty', false);
+    }
+
+    if (!$scope.dbBackup() && $scope.scheduleModel.filter_typ && filter_touched) {
       $scope.filterTypeChanged();
     }
-    if($scope.scheduleModel.timer_typ && $scope.form.timer_typ.$touched) {
+
+    if ($scope.scheduleModel.timer_typ && $scope.angularForm.timer_typ.$touched) {
       $scope.setTimerType();
       $scope.timer_items = timerOptionService.getOptions($scope.scheduleModel.timer_typ);
     }
+
     $scope.angularForm.$setUntouched(true);
     $scope.angularForm.$setPristine(true);
     miqService.miqFlash("warn", __("All changes have been reset"));
@@ -277,74 +280,52 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
   };
 
   $scope.filterValueRequired = function(value) {
-    return !$scope.filterValuesEmpty &&
-      ($scope.isModelValueNil(value));
+    return !$scope.filterValuesEmpty && !value;
   };
 
   $scope.dbRequired = function(value) {
-    return $scope.dbBackup() &&
-      ($scope.isModelValueNil(value));
+    return $scope.dbBackup() && !value;
   };
 
   $scope.sambaRequired = function(value) {
-    return $scope.sambaBackup() &&
-      ($scope.isModelValueNil(value));
-  };
-
-  $scope.isModelValueNil = function(value) {
-    return value == null || value == '';
+    return $scope.sambaBackup() && !value;
   };
 
   $scope.isBasicInfoValid = function() {
-    if($scope.angularForm.depot_name.$valid &&
+    return ($scope.angularForm.depot_name.$valid &&
       $scope.angularForm.uri.$valid &&
       $scope.angularForm.log_userid.$valid &&
       $scope.angularForm.log_password.$valid &&
-      $scope.angularForm.log_verify.$valid)
-      return true;
-    else
-      return false;
+      $scope.angularForm.log_verify.$valid);
   };
 
   $scope.setTimerType = function() {
-    if ($scope.scheduleModel.timer_typ == "Once")
-      $scope.timerTypeOnce = true;
-    else {
-      $scope.timerTypeOnce = false;
+    $scope.timerTypeOnce = $scope.scheduleModel.timer_typ == "Once";
+  };
+
+  $scope.toggleValueForWatch = function(watchValue, initialValue) {
+    if ($scope[watchValue] == initialValue) {
+      $scope[watchValue] = "NO-OP";
+    } else if ($scope[watchValue] == "NO-OP") {
+      $scope[watchValue] = initialValue;
     }
   };
 
-  $scope.toggleValueForWatch =   function(watchValue, initialValue) {
-    if($scope[watchValue] == initialValue)
-      $scope[watchValue] = "NO-OP";
-    else if($scope[watchValue] == "NO-OP")
-      $scope[watchValue] = initialValue;
+  $scope.canValidate = function() {
+    return $scope.isBasicInfoValid() && $scope.validateFieldsDirty();
   };
 
-  $scope.canValidate = function () {
-    if ($scope.isBasicInfoValid() && $scope.validateFieldsDirty())
-      return true;
-    else
-      return false;
-  }
+  $scope.canValidateBasicInfo = function() {
+    return $scope.isBasicInfoValid();
+  };
 
-  $scope.canValidateBasicInfo = function () {
-    if ($scope.isBasicInfoValid())
-      return true;
-    else
-      return false;
-  }
-
-  $scope.validateFieldsDirty = function () {
-    if ($scope.angularForm.depot_name.$dirty ||
+  $scope.validateFieldsDirty = function() {
+    return ($scope.angularForm.depot_name.$dirty ||
         $scope.angularForm.uri.$dirty ||
         $scope.angularForm.log_userid.$dirty ||
         $scope.angularForm.log_password.$dirty ||
-        $scope.angularForm.log_verify.$dirty)
-      return true;
-    else
-      return false;
-  }
+        $scope.angularForm.log_verify.$dirty);
+  };
 
   init();
 }]);
