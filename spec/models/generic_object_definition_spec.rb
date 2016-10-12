@@ -226,4 +226,52 @@ describe GenericObjectDefinition do
       expect(go.reload.send(:properties)["vms"]).to be_nil
     end
   end
+
+  describe '#find_objects' do
+    before do
+      @g1 = definition.create_object(:name => 'test', :uid => '1', :max_number => 10, :flag => true)
+      @g2 = definition.create_object(:name => 'test2', :uid => '2', :max_number => 10, :flag => false)
+    end
+
+    subject { definition.find_objects(@options) }
+
+    it 'finds multiple objects' do
+      @options = { :max_number => 10 }
+      expect(subject.size).to eq(2)
+    end
+
+    it 'finds by AR attributes in GenericObject' do
+      @options = {:name => "test2", :uid => 2}
+      expect(subject.first).to eq(@g2)
+    end
+
+    it 'finds by property attributes' do
+      @options = {:max_number => 10, :flag => true}
+      expect(subject.first).to eq(@g1)
+    end
+
+    it 'finds by both AR attributes and property attributes' do
+      @options = {:max_number => 10, :uid => 2}
+      expect(subject.first).to eq(@g2)
+    end
+
+    it 'raises an error with undefined attributes' do
+      @options = {:max_number => 10, :attr1 => true, :attr2 => 1}
+      expect { subject }.to raise_error(RuntimeError,
+                                        "[attr1, attr2]: not searchable for Generic Object of #{definition.name}")
+    end
+
+    it 'finds by associations' do
+      vm = []
+      3.times { vm << FactoryGirl.create(:vm_vmware) }
+
+      definition.add_property_association(:vms, 'vm')
+      @g1.vms = [vm[0], vm[1], vm[2]]
+      @g1.save!
+
+      @options = {:vms => [vm[0].id, vm[1].id]}
+      expect(subject.size).to eq(1)
+      expect(subject.first).to eq(@g1)
+    end
+  end
 end
