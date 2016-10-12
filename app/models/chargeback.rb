@@ -97,12 +97,7 @@ class Chargeback < ActsAsArModel
     @rates ||= {}
     @enterprise ||= MiqEnterprise.my_enterprise
 
-    tags = perf.tag_names.split("|").reject { |n| n.starts_with?("folder_path_") }.sort.join("|")
-    keys = [tags, perf.parent_host_id, perf.parent_ems_cluster_id, perf.parent_storage_id, perf.parent_ems_id]
-    keys += [perf.resource.container_image, perf.timestamp] if perf.resource_type == Container.name
-    tenant_resource = perf.resource.try(:tenant)
-    keys.push(tenant_resource.id) unless tenant_resource.nil?
-    key = keys.join("_")
+    key = perf.hash_features_affecting_rate
     return @rates[key] if @rates.key?(key)
 
     tag_list = perf.tag_names.split("|").inject([]) { |arr, t| arr << "#{Chargeback.report_cb_model(self.class.name).underscore}/tag/managed/#{t}" }
