@@ -36,6 +36,7 @@ module EmsRefresh::SaveInventoryHelper
   def store_ids_for_new_dto_records(records, dto_collection, keys)
     records.each do |r|
       dto = dto_collection.find(dto_collection.object_index(r))
+      next unless dto
       dto[:id]      = r.id
       r.send(:clear_association_cache)
       dto[:_object] = r
