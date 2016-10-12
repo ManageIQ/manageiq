@@ -21,35 +21,35 @@ describe 'ops/_rbac_group_details.html.haml' do
     end
 
     it 'should show "Look up groups" checkbox and label for auth mode ldap' do
-      stub_server_configuration(:authentication => { :mode => 'ldap' })
+      stub_settings(:authentication => { :mode => 'ldap' }, :server => {})
       render :partial => 'ops/rbac_group_details'
       expect(rendered).to have_selector('input#lookup')
       expect(rendered).to include('Look up LDAP Groups')
     end
 
     it 'should show "Look up groups" checkbox and label for auth mode ldaps' do
-      stub_server_configuration(:authentication => { :mode => 'ldaps' })
+      stub_settings(:authentication => { :mode => 'ldaps' }, :server => {})
       render :partial => 'ops/rbac_group_details'
       expect(rendered).to have_selector('input#lookup')
       expect(rendered).to include('Look up LDAPS Groups')
     end
 
     it 'should show "Look up groups" checkbox and label for auth mode amazon' do
-      stub_server_configuration(:authentication => { :mode => 'amazon' })
+      stub_settings(:authentication => { :mode => 'amazon' }, :server => {})
       render :partial => 'ops/rbac_group_details'
       expect(rendered).to have_selector('input#lookup')
       expect(rendered).to include('Look up Amazon Groups')
     end
 
     it 'should show "Look up groups" checkbox and label for auth mode httpd' do
-      stub_server_configuration(:authentication => { :mode => 'httpd' })
+      stub_settings(:authentication => { :mode => 'httpd' }, :server => {})
       render :partial => 'ops/rbac_group_details'
       expect(rendered).to have_selector('input#lookup')
       expect(rendered).to include('Look up External Authentication Groups')
     end
 
     it 'should not show "Look up groups" checkbox and label for auth mode database' do
-      stub_server_configuration(:authentication => { :mode => 'database' })
+      stub_settings(:authentication => { :mode => 'database' }, :server => {})
       render :partial => 'ops/rbac_group_details'
       expect(rendered).not_to have_selector('input#lookup')
       expect(rendered).not_to include('Look up External Authentication Groups')
