@@ -126,7 +126,7 @@ describe "Providers API" do
 
       expect_query_result(:custom_attributes, 2)
 
-      expect_result_resources_to_include_hrefs("resources", :provider_ca_url_list)
+      expect_result_resources_to_include_hrefs("resources", provider_ca_url_list)
     end
 
     it "getting custom_attributes from a provider in expanded form" do

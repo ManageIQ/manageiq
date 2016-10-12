@@ -81,7 +81,7 @@ describe "Automation Requests API" do
       run_post(request1_url, gen_request(:approve, :reason => "approve reason"))
 
       expected_msg = "Automation request #{request1.id} approved"
-      expect_single_action_result(:success => true, :message => expected_msg, :href => :request1_url)
+      expect_single_action_result(:success => true, :message => expected_msg, :href => request1_url)
     end
 
     it "supports denying a request" do
@@ -90,7 +90,7 @@ describe "Automation Requests API" do
       run_post(request2_url, gen_request(:deny, :reason => "deny reason"))
 
       expected_msg = "Automation request #{request2.id} denied"
-      expect_single_action_result(:success => true, :message => expected_msg, :href => :request2_url)
+      expect_single_action_result(:success => true, :message => expected_msg, :href => request2_url)
     end
 
     it "supports approving multiple requests" do

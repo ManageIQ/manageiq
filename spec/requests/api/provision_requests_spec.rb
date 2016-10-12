@@ -271,7 +271,7 @@ describe "Provision Requests API" do
       run_post(provreq1_url, gen_request(:approve))
 
       expected_msg = "Provision request #{provreq1.id} approved"
-      expect_single_action_result(:success => true, :message => expected_msg, :href => :provreq1_url)
+      expect_single_action_result(:success => true, :message => expected_msg, :href => provreq1_url)
     end
 
     it "supports denying a request" do
@@ -280,7 +280,7 @@ describe "Provision Requests API" do
       run_post(provreq2_url, gen_request(:deny))
 
       expected_msg = "Provision request #{provreq2.id} denied"
-      expect_single_action_result(:success => true, :message => expected_msg, :href => :provreq2_url)
+      expect_single_action_result(:success => true, :message => expected_msg, :href => provreq2_url)
     end
 
     it "supports approving multiple requests" do

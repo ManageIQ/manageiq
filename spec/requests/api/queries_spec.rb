@@ -98,7 +98,7 @@ describe "Queries API" do
       run_get vm1_accounts_url
 
       expect_query_result(:accounts, 2)
-      expect_result_resources_to_include_hrefs("resources", :vm1_accounts_url_list)
+      expect_result_resources_to_include_hrefs("resources", vm1_accounts_url_list)
     end
 
     it "includes both id and href when getting a single resource" do
@@ -119,7 +119,7 @@ describe "Queries API" do
 
       expect_query_result(:accounts, 2)
       expect_result_resources_to_include_keys("resources", %w(id href))
-      expect_result_resources_to_include_hrefs("resources", :vm1_accounts_url_list)
+      expect_result_resources_to_include_hrefs("resources", vm1_accounts_url_list)
       expect_result_resources_to_include_data("resources", "id" => [acct1.id, acct2.id])
     end
 

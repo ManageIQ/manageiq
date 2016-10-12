@@ -155,10 +155,6 @@ module Spec
         request
       end
 
-      def fetch_value(value)
-        value.kind_of?(Symbol) && respond_to?(value) ? public_send(value) : value
-      end
-
       def declare_actions(*names)
         include("actions" => a_collection_containing_exactly(*names.map { |name| a_hash_including("name" => name) }))
       end
@@ -180,8 +176,7 @@ module Spec
 
       def expect_result_resources_to_include_data(collection, data)
         expect(response.parsed_body).to have_key(collection)
-        fetch_value(data).each do |key, value|
-          value_list = fetch_value(value)
+        data.each do |key, value_list|
           expect(response.parsed_body[collection].size).to eq(value_list.size)
           expect(response.parsed_body[collection].collect { |r| r[key] }).to match_array(value_list)
         end
@@ -189,9 +184,8 @@ module Spec
 
       def expect_result_resources_to_include_hrefs(collection, hrefs)
         expect(response.parsed_body).to have_key(collection)
-        href_list = fetch_value(hrefs)
-        expect(response.parsed_body[collection].size).to eq(href_list.size)
-        href_list.each do |href|
+        expect(response.parsed_body[collection].size).to eq(hrefs.size)
+        hrefs.each do |href|
           expect(resources_include_suffix?(response.parsed_body[collection], "href", href)).to be_truthy
         end
       end
@@ -205,13 +199,11 @@ module Spec
       end
 
       def expect_hash_to_have_only_keys(hash, keys)
-        expect(hash.keys).to match_array(fetch_value(keys))
+        expect(hash.keys).to match_array(keys)
       end
 
       def expect_result_to_match_hash(result, attr_hash)
-        attr_hash = fetch_value(attr_hash)
         attr_hash.each do |key, value|
-          value = fetch_value(value)
           attr_hash[key] = (key == "href" || key.ends_with?("_href")) ? a_string_matching(value) : value
         end
         expect(result).to include(attr_hash)
@@ -219,7 +211,7 @@ module Spec
 
       def expect_results_to_match_hash(collection, result_hash)
         expect(response.parsed_body).to have_key(collection)
-        fetch_value(result_hash).zip(response.parsed_body[collection]) do |expected, actual|
+        result_hash.zip(response.parsed_body[collection]) do |expected, actual|
           expect_result_to_match_hash(actual, expected)
         end
       end
@@ -229,7 +221,7 @@ module Spec
       end
 
       def expect_result_resources_to_include_keys(collection, keys)
-        expect(response.parsed_body).to include(collection => all(a_hash_including(*fetch_value(keys))))
+        expect(response.parsed_body).to include(collection => all(a_hash_including(*keys)))
       end
 
       # Primary result construct methods
@@ -241,14 +233,14 @@ module Spec
 
       def expect_query_result(collection, subcount, count = nil)
         expect(response).to have_http_status(:ok)
-        expect(response.parsed_body).to include("name" => collection.to_s, "subcount" => fetch_value(subcount))
-        expect(response.parsed_body["resources"].size).to eq(fetch_value(subcount))
-        expect(response.parsed_body["count"]).to eq(fetch_value(count)) if count.present?
+        expect(response.parsed_body).to include("name" => collection.to_s, "subcount" => subcount)
+        expect(response.parsed_body["resources"].size).to eq(subcount)
+        expect(response.parsed_body["count"]).to eq(count) if count.present?
       end
 
       def expect_single_resource_query(attr_hash)
         expect(response).to have_http_status(:ok)
-        expect_result_to_match_hash(response.parsed_body, fetch_value(attr_hash))
+        expect_result_to_match_hash(response.parsed_body, attr_hash)
       end
 
       def expect_single_action_result(options = {})
@@ -256,7 +248,7 @@ module Spec
         expected = {}
         expected["success"] = options[:success] if options.key?(:success)
         expected["message"] = a_string_matching(options[:message]) if options[:message]
-        expected["href"] = a_string_matching(fetch_value(options[:href])) if options[:href]
+        expected["href"] = a_string_matching(options[:href]) if options[:href]
         expected.merge!(expected_task_response) if options[:task]
         expect(response.parsed_body).to include(expected)
       end
@@ -273,9 +265,8 @@ module Spec
         {"task_id" => anything, "task_href" => anything}
       end
 
-      def expect_tagging_result(tagging_results)
+      def expect_tagging_result(tag_results)
         expect(response).to have_http_status(:ok)
-        tag_results = fetch_value(tagging_results)
         expect(response.parsed_body).to have_key("results")
         results = response.parsed_body["results"]
         expect(results.size).to eq(tag_results.size)

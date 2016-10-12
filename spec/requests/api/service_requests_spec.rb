@@ -103,7 +103,7 @@ describe "Service Requests API" do
       run_post(svcreq1_url, gen_request(:approve, :reason => "approve reason"))
 
       expected_msg = "Service request #{svcreq1.id} approved"
-      expect_single_action_result(:success => true, :message => expected_msg, :href => :svcreq1_url)
+      expect_single_action_result(:success => true, :message => expected_msg, :href => svcreq1_url)
     end
 
     it "supports denying a request" do
@@ -112,7 +112,7 @@ describe "Service Requests API" do
       run_post(svcreq2_url, gen_request(:deny, :reason => "deny reason"))
 
       expected_msg = "Service request #{svcreq2.id} denied"
-      expect_single_action_result(:success => true, :message => expected_msg, :href => :svcreq2_url)
+      expect_single_action_result(:success => true, :message => expected_msg, :href => svcreq2_url)
     end
 
     it "supports approving multiple requests" do
