@@ -1,5 +1,11 @@
 module Metric::Aggregation
-  module Aggregate
+  class Common
+    def self.supports?(meth)
+      singleton_methods(false).include?(meth.to_sym)
+    end
+  end
+
+  class Aggregate < Common
     def self.summation(col, _obj, result, counts, value)
       return if value.nil?
       result[col] += value
@@ -44,7 +50,7 @@ module Metric::Aggregation
     end
   end
 
-  module Process
+  class Process < Common
     def self.average(col, _dummy, result, counts, aggregate_only = false)
       return if aggregate_only || result[col].nil?
       result[col] = result[col] / counts[col] unless counts[col] == 0
@@ -92,12 +98,8 @@ module Metric::Aggregation
     args = args[0..3]
 
     meth = col
-    meth = col.to_s.split("_").last unless supports?(mode, meth)
-    meth = default_operation        unless supports?(mode, meth) || default_operation.nil?
-    mode.send(meth, col, *args) if supports?(mode, meth)
-  end
-
-  def self.supports?(mode, meth)
-    mode.singleton_methods(false).include?(meth.to_sym)
+    meth = col.to_s.split("_").last unless mode.supports?(meth)
+    meth = default_operation        unless mode.supports?(meth) || default_operation.nil?
+    mode.send(meth, col, *args) if mode.supports?(meth)
   end
 end
