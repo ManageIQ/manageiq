@@ -99,19 +99,10 @@ class Chargeback < ActsAsArModel
 
     @rates[perf.hash_features_affecting_rate] ||=
       begin
-        tag_list = perf.tag_names.split("|").inject([]) { |arr, t| arr << "/tag/managed/#{t}" }
-
-        if perf.resource_type == Container.name
-          state = perf.resource.vim_performance_state_for_ts(perf.timestamp.to_s)
-          tag_list += state.image_tag_names.split("|").inject([]) { |arr, t| arr << "/tag/managed/#{t}" } if state.present?
-        end
-
         prefix = Chargeback.report_cb_model(self.class.name).underscore
-        tag_list.map! { |tag| prefix + tag }
-
-        parents = get_rate_parents(perf).compact
-
-        ChargebackRate.get_assigned_for_target(perf.resource, :tag_list => tag_list, :parents => parents)
+        ChargebackRate.get_assigned_for_target(perf.resource,
+                                               :tag_list => perf.tag_list_reconstruct.map! { |t| prefix + t },
+                                               :parents  => get_rate_parents(perf).compact)
       end
   end
 
