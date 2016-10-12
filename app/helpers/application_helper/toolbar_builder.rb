@@ -709,11 +709,6 @@ class ApplicationHelper::ToolbarBuilder
                         middleware_datasource_remove middleware_datasource_add).include?(id) &&
                      (@record.try(:product) == 'Hawkular' ||
                       @record.try(:middleware_server).try(:product) == 'Hawkular')
-    when "NilClass"
-      case id
-      when "refresh_workers"
-        return true if ["download_logs", "evm_logs", "audit_logs"].include?(@lastaction)
-      end
     end
     false  # No reason to hide, allow the button to show
   end
