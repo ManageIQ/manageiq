@@ -629,7 +629,8 @@ module ApplicationHelper
            change_tab
            show
           ).include?(controller.action_name) ||
-        %w(about chargeback
+        %w(about
+           chargeback
            container_dashboard
            ems_infra_dashboard
            exception
