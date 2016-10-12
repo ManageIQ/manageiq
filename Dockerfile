@@ -1,7 +1,7 @@
 FROM centos:7
 ENV container docker
 MAINTAINER ManageIQ https://github.com/ManageIQ/manageiq-appliance-build
-ARG REF=master
+ARG REF=euwe
 
 # Set ENV, LANG only needed if building with docker-1.8
 ENV LANG en_US.UTF-8
@@ -149,7 +149,7 @@ EXPOSE 80 443
 # NAME is set via -n flag to ALL atomic commands (install,run,stop,uninstall)
 LABEL name="manageiq" \
       vendor="ManageIQ" \
-      version="Master" \
+      version="Euwe" \
       release=${REF} \
       architecture="x86_64" \
       url="http://manageiq.org/" \
