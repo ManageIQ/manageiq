@@ -3,6 +3,16 @@ module Metric::Aggregation
     def self.supports?(meth)
       singleton_methods(false).include?(meth.to_sym)
     end
+
+    def self.column(col, *args) # args => obj, result, counts, value, default_operation = nil
+      default_operation = args[4]
+      args = args[0..3]
+
+      meth = col
+      meth = col.to_s.split("_").last unless supports?(meth)
+      meth = default_operation        unless supports?(meth) || default_operation.nil?
+      send(meth, col, *args) if supports?(meth)
+    end
   end
 
   class Aggregate < Common
@@ -86,20 +96,10 @@ module Metric::Aggregation
   end
 
   def self.aggregate_for_column(*args)
-    execute_for_column(Aggregate, *args)
+    Aggregate.column(*args)
   end
 
   def self.process_for_column(*args)
-    execute_for_column(Process, *args)
-  end
-
-  def self.execute_for_column(mode, col, *args) # args => obj, result, counts, value, default_operation = nil
-    default_operation = args[4]
-    args = args[0..3]
-
-    meth = col
-    meth = col.to_s.split("_").last unless mode.supports?(meth)
-    meth = default_operation        unless mode.supports?(meth) || default_operation.nil?
-    mode.send(meth, col, *args) if mode.supports?(meth)
+    Process.column(*args)
   end
 end
