@@ -737,7 +737,7 @@ describe ApplicationHelper do
       end
 
       ["role_start", "role_suspend", "promote_server", "demote_server",
-       "log_download", "refresh_logs", "log_collect", "log_reload", "logdepot_edit", "processmanager_restart", "refresh_workers"].each do |id|
+       "refresh_workers"].each do |id|
         it "and id = #{id}" do
           @id = id
           expect(subject).to be_truthy
@@ -789,52 +789,7 @@ describe ApplicationHelper do
         stub_user(:features => :all)
       end
 
-      ["log_download", "log_reload"].each do |id|
-        context "and id = #{id}" do
-          before { @id = id }
-
-          it "and @lastaction = workers" do
-            @lastaction = "workers"
-            expect(subject).to be_truthy
-          end
-
-          it "and @lastaction = download_logs" do
-            @lastaction = "download_logs"
-            expect(subject).to be_truthy
-          end
-
-          it "otherwise" do
-            expect(subject).to be_falsey
-          end
-        end
-      end
-
-      ["log_collect", "logdepot_edit", "refresh_logs"].each do |id|
-        context "and id = #{id}" do
-          before { @id = id }
-
-          it "and @lastaction = workers" do
-            @lastaction = "workers"
-            expect(subject).to be_truthy
-          end
-
-          it "and @lastaction = evm_logs" do
-            @lastaction = "evm_logs"
-            expect(subject).to be_truthy
-          end
-
-          it "and @lastaction = audit_logs" do
-            @lastaction = "audit_logs"
-            expect(subject).to be_truthy
-          end
-
-          it "otherwise" do
-            expect(subject).to be_falsey
-          end
-        end
-      end
-
-      ["processmanager_restart", "refresh_workers"].each do |id|
+      ["refresh_workers"].each do |id|
         context "and id = #{id}" do
           before { @id = id }
 
