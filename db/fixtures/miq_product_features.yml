@@ -5003,6 +5003,22 @@
         :description: Display Instances Drift
         :feature_type: view
         :identifier: instance_drift
+        :children:
+        - :name: Download as CSV
+          :description: Download comparison report in CSV Format
+          :feature_type: admin
+          :hidden: true
+          :identifier: drift_download_csv
+        - :name: Download as PDF
+          :description: Download comparison report in PDF Format
+          :feature_type: admin
+          :hidden: true
+          :identifier: drift_download_pdf
+        - :name: Download as Text
+          :description: Download comparison report in Text Format
+          :feature_type: admin
+          :hidden: true
+          :identifier: drift_download_txt
       - :name: Utilization
         :description: Show Capacity & Utilization data of Instances
         :feature_type: view
