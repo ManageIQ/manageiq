@@ -1,12 +1,6 @@
-- click_remove = true if click_remove.nil?
-- top_pad ||= false
-- bottom_pad ||= false
-
 %div{:id => "flash_msg_div", :style => ("display: none" unless @flash_array)}
-  - if top_pad
-    %div{:style => "padding-top: #{top_pad}px;"}
   - if @flash_array
-    %div{:id      => "flash_text_div"}
+    %div{:id => "flash_text_div"}
       - @flash_array.each do |fl|
         - case fl[:level]
         - when :error
@@ -30,5 +24,3 @@
               %span.pficon.pficon-close
             %span.pficon.pficon-ok
             %strong= h(fl[:message])
-  - if bottom_pad
-    %div{:style => "padding-top: #{bottom_pad}px;"}
