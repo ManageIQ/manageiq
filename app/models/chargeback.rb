@@ -95,8 +95,6 @@ class Chargeback < ActsAsArModel
 
   def get_rates(perf)
     @rates ||= {}
-    @enterprise ||= MiqEnterprise.my_enterprise
-
     @rates[perf.hash_features_affecting_rate] ||=
       begin
         prefix = Chargeback.report_cb_model(self.class.name).underscore
