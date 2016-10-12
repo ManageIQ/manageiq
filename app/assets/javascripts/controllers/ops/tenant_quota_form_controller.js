@@ -80,13 +80,6 @@ ManageIQ.angular.app.controller('tenantQuotaFormController', ['$http', '$scope',
     $scope.angularForm.$setPristine(true);
   };
 
-  $scope.toggleValueForWatch =   function(watchValue, initialValue) {
-    if($scope[watchValue] == initialValue)
-      $scope[watchValue] = "NO-OP";
-    else if($scope[watchValue] == "NO-OP")
-      $scope[watchValue] = initialValue;
-  };
-
   $scope.check_quotas_changed = function() {
     for (var key in $scope.tenantQuotaModel.quotas) {
       if ($scope.tenantQuotaModel.quotas.hasOwnProperty(key)) {
