@@ -9,7 +9,13 @@ describe ApplicationHelper::Button::RoleStart do
         allow(@record.miq_server).to receive(:started?).and_return(true)
       end
 
-      it_behaves_like "will not be skipped for this record"
+      it "will not be skipped for this record" do
+        view_context = setup_view_context_with_sandbox({})
+        button = described_class.new(view_context, {}, {'record' => @record}, {})
+        button.instance_variable_set(:@sb, {:active_tab => "diagnostics_roles_servers"})
+        allow(button).to receive(:x_active_tree).and_return(:diagnostics_tree)
+        expect(button.visible?).to be_truthy
+      end
     end
 
     context "record is server role" do
@@ -17,7 +23,13 @@ describe ApplicationHelper::Button::RoleStart do
         @record = FactoryGirl.create(:server_role, :name => "biggus_dickus")
       end
 
-      it_behaves_like "will be skipped for this record"
+      it "will be skipped for this record" do
+        view_context = setup_view_context_with_sandbox({})
+        button = described_class.new(view_context, {}, {'record' => @record}, {})
+        button.instance_variable_set(:@sb, {:active_tab => "diagnostics_roles_servers"})
+        allow(button).to receive(:x_active_tree).and_return(:diagnostics_tree)
+        expect(button.visible?).to be_falsey
+      end
     end
 
     context "record is miq server" do
@@ -25,7 +37,13 @@ describe ApplicationHelper::Button::RoleStart do
         @record = FactoryGirl.create(:miq_server)
       end
 
-      it_behaves_like "will be skipped for this record"
+      it "will be skipped for this record" do
+        view_context = setup_view_context_with_sandbox({})
+        button = described_class.new(view_context, {}, {'record' => @record}, {})
+        button.instance_variable_set(:@sb, {:active_tab => "diagnostics_roles_servers"})
+        allow(button).to receive(:x_active_tree).and_return(:diagnostics_tree)
+        expect(button.visible?).to be_falsey
+      end
     end
   end
 

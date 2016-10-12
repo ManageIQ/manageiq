@@ -6,7 +6,13 @@ describe ApplicationHelper::Button::ServerDemote do
         allow(@record).to receive(:master_supported?).and_return(true)
       end
 
-      it_behaves_like "will not be skipped for this record"
+      it "will not be skipped for this record" do
+        view_context = setup_view_context_with_sandbox({})
+        button = described_class.new(view_context, {}, {'record' => @record}, {})
+        button.instance_variable_set(:@sb, {:active_tab => "diagnostics_roles_servers"})
+        allow(button).to receive(:x_active_tree).and_return(:diagnostics_tree)
+        expect(button.visible?).to be_truthy
+			end
     end
 
     context "record is server role" do
@@ -14,7 +20,13 @@ describe ApplicationHelper::Button::ServerDemote do
         @record = FactoryGirl.create(:server_role, :name => "pooh")
       end
 
-      it_behaves_like "will be skipped for this record"
+      it "will be skipped for this record" do
+        view_context = setup_view_context_with_sandbox({})
+        button = described_class.new(view_context, {}, {'record' => @record}, {})
+        button.instance_variable_set(:@sb, {:active_tab => "diagnostics_roles_servers"})
+        allow(button).to receive(:x_active_tree).and_return(:diagnostics_tree)
+        expect(button.visible?).to be_falsey
+      end
     end
   end
 
