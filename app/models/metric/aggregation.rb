@@ -94,8 +94,4 @@ module Metric::Aggregation
       end
     end
   end
-
-  def self.process_for_column(*args)
-    Process.column(*args)
-  end
 end

@@ -543,7 +543,7 @@ module VimPerformanceAnalysis
       ts, v = k
       cols.each do |c|
         next unless v[c].kind_of?(Float)
-        Metric::Aggregation.process_for_column(c, nil, v, counts[k], true, :average)
+        Metric::Aggregation::Process.column(c, nil, v, counts[k], true, :average)
       end
 
       recs.push(perf_klass.new(v))
