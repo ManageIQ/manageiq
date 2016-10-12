@@ -624,11 +624,34 @@ module ApplicationHelper
   def taskbar_in_header?
     if @show_taskbar.nil?
       @show_taskbar = false
-      if ! (@layout == "" && %w(auth_error change_tab show).include?(controller.action_name) ||
-        %w(about chargeback ems_infra_dashboard exception miq_ae_automate_button miq_ae_class miq_ae_export
-           miq_ae_tools miq_capacity_bottlenecks miq_capacity_planning miq_capacity_utilization
-           miq_capacity_waste miq_policy miq_policy_export miq_policy_rsop ops pxe report rss
-           server_build middleware_topology network_topology container_dashboard).include?(@layout) ||
+      if ! (@layout == "" &&
+        %w(auth_error
+           change_tab
+           show
+          ).include?(controller.action_name) ||
+        %w(about chargeback
+           container_dashboard
+           ems_infra_dashboard
+           exception
+           middleware_topology
+           miq_ae_automate_button
+           miq_ae_class
+           miq_ae_export
+           miq_ae_tools
+           miq_capacity_bottlenecks
+           miq_capacity_planning
+           miq_capacity_utilization
+           miq_capacity_waste
+           miq_policy
+           miq_policy_export
+           miq_policy_rsop
+           network_topology
+           ops
+           pxe
+           report
+           rss
+           server_build
+          ).include?(@layout) ||
         (@layout == "configuration" && @tabform != "ui_4")) && !controller.action_name.end_with?("tagging_edit")
         unless @explorer
           @show_taskbar = true
