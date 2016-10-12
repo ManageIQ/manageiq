@@ -58,6 +58,25 @@
       "note": "Temporarily skipped, found in new brakeman version"
     },
     {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "921b9f7b353a4de1033addb95d4a7c7efb090a7e60f8acb350ec8c7aea6e84ff",
+      "message": "Possible command injection",
+      "file": "app/models/system_console.rb",
+      "line": 60,
+      "link": "http://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "spawn(*[\"/usr/bin/socat\", \"TCP-LISTEN:#{local_port},fork\", \"TCP:#{remote_address}:#{remote_port}\"])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "SystemConsole",
+        "method": "SystemConsole.launch_proxy"
+      },
+      "user_input": "remote_address",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
       "warning_type": "SQL Injection",
       "warning_code": 0,
       "fingerprint": "b7c5d0a1acf9b6e1d8241cc62f61ddde1dd9f6e1b871b9bd99982135465d1f24",
@@ -77,6 +96,6 @@
       "note": "Temporarily skipped, found in new brakeman version"
     }
   ],
-  "updated": "2016-08-29 12:33:49 -0500",
-  "brakeman_version": "3.3.5"
+  "updated": "2016-10-11 14:14:13 +0200",
+  "brakeman_version": "3.4.0"
 }
