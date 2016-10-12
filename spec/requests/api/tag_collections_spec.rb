@@ -10,7 +10,6 @@ describe "Tag Collections API" do
   let(:tag1)         { {:category => "department", :name => "finance", :path => "/managed/department/finance"} }
   let(:tag2)         { {:category => "cc",         :name => "001",     :path => "/managed/cc/001"} }
   let(:tag_paths)    { [tag1[:path], tag2[:path]] }
-  let(:tag_count)    { Tag.count }
 
   def classify_resource(resource)
     Classification.classify(resource, tag1[:category], tag1[:name])
@@ -43,8 +42,8 @@ describe "Tag Collections API" do
 
       run_get provider_tags_url, :expand => "resources"
 
-      expect_query_result(:tags, 2, :tag_count)
-      expect_result_resources_to_include_data("resources", "name" => :tag_paths)
+      expect_query_result(:tags, 2, Tag.count)
+      expect_result_resources_to_include_data("resources", "name" => tag_paths)
     end
 
     it "does not assign a tag to a Provider without appropriate role" do
@@ -92,8 +91,8 @@ describe "Tag Collections API" do
 
       run_get host_tags_url, :expand => "resources"
 
-      expect_query_result(:tags, 2, :tag_count)
-      expect_result_resources_to_include_data("resources", "name" => :tag_paths)
+      expect_query_result(:tags, 2, Tag.count)
+      expect_result_resources_to_include_data("resources", "name" => tag_paths)
     end
 
     it "does not assign a tag to a Host without appropriate role" do
@@ -142,8 +141,8 @@ describe "Tag Collections API" do
 
       run_get ds_tags_url, :expand => "resources"
 
-      expect_query_result(:tags, 2, :tag_count)
-      expect_result_resources_to_include_data("resources", "name" => :tag_paths)
+      expect_query_result(:tags, 2, Tag.count)
+      expect_result_resources_to_include_data("resources", "name" => tag_paths)
     end
 
     it "does not assign a tag to a Data Store without appropriate role" do
@@ -192,8 +191,8 @@ describe "Tag Collections API" do
 
       run_get rp_tags_url, :expand => "resources"
 
-      expect_query_result(:tags, 2, :tag_count)
-      expect_result_resources_to_include_data("resources", "name" => :tag_paths)
+      expect_query_result(:tags, 2, Tag.count)
+      expect_result_resources_to_include_data("resources", "name" => tag_paths)
     end
 
     it "does not assign a tag to a Resource Pool without appropriate role" do
@@ -249,8 +248,8 @@ describe "Tag Collections API" do
 
       run_get cluster_tags_url, :expand => "resources"
 
-      expect_query_result(:tags, 2, :tag_count)
-      expect_result_resources_to_include_data("resources", "name" => :tag_paths)
+      expect_query_result(:tags, 2, Tag.count)
+      expect_result_resources_to_include_data("resources", "name" => tag_paths)
     end
 
     it "does not assign a tag to a Cluster without appropriate role" do
@@ -299,8 +298,8 @@ describe "Tag Collections API" do
 
       run_get service_tags_url, :expand => "resources"
 
-      expect_query_result(:tags, 2, :tag_count)
-      expect_result_resources_to_include_data("resources", "name" => :tag_paths)
+      expect_query_result(:tags, 2, Tag.count)
+      expect_result_resources_to_include_data("resources", "name" => tag_paths)
     end
 
     it "does not assign a tag to a Service without appropriate role" do
@@ -349,8 +348,8 @@ describe "Tag Collections API" do
 
       run_get service_template_tags_url, :expand => "resources"
 
-      expect_query_result(:tags, 2, :tag_count)
-      expect_result_resources_to_include_data("resources", "name" => :tag_paths)
+      expect_query_result(:tags, 2, Tag.count)
+      expect_result_resources_to_include_data("resources", "name" => tag_paths)
     end
 
     it "does not assign a tag to a Service Template without appropriate role" do
@@ -399,8 +398,8 @@ describe "Tag Collections API" do
 
       run_get tenant_tags_url, :expand => "resources"
 
-      expect_query_result(:tags, 2, :tag_count)
-      expect_result_resources_to_include_data("resources", "name" => :tag_paths)
+      expect_query_result(:tags, 2, Tag.count)
+      expect_result_resources_to_include_data("resources", "name" => tag_paths)
     end
 
     it "does not assign a tag to a Tenant without appropriate role" do
