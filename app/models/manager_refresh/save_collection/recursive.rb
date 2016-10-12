@@ -13,7 +13,7 @@ module ManagerRefresh::SaveCollection
       private
 
       def save_collection(dto_collection, traversed_collections)
-        unless dto_collection.is_a? ::DtoCollection
+        unless dto_collection.is_a? ::ManagerRefresh::DtoCollection
           raise "A ManagerRefresh::SaveInventory needs a DtoCollection object, it got: #{dto_collection.inspect}"
         end
 

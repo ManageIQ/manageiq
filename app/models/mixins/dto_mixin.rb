@@ -3,11 +3,11 @@ module DtoMixin
 
   class_methods do
     def dto_collection(parent, association)
-      ::DtoCollection.new(self,
-                          :manager_ref  => @dto_manager_ref,
-                          :attributes   => @dto_attributes,
-                          :association  => association,
-                          :parent       => parent)
+      ::ManagerRefresh::DtoCollection.new(self,
+                                          :manager_ref => @dto_manager_ref,
+                                          :attributes  => @dto_attributes,
+                                          :association => association,
+                                          :parent      => parent)
     end
 
     def dto_manager_ref(*args)

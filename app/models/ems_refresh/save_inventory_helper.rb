@@ -59,7 +59,7 @@ module EmsRefresh::SaveInventoryHelper
 
     new_records = []
     dto_collection.each do |h|
-      h = h.is_a?(::Dto) ? h.attributes : h
+      h = h.is_a?(::ManagerRefresh::Dto) ? h.attributes : h
       save_inventory_with_findkey(association, h.except(*remove_keys), deletes, new_records, record_index)
     end
 
