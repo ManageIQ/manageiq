@@ -526,7 +526,7 @@ module VimPerformanceAnalysis
         result[key][c] ||= 0
         counts[key][c] ||= 0
 
-        Metric::Aggregation.aggregate_for_column(c, nil, result[key], counts[key], p.send(c), :average)
+        Metric::Aggregation::Aggregate.column(c, nil, result[key], counts[key], p.send(c), :average)
       end
     end
 

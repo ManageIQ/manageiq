@@ -225,7 +225,7 @@ module Metric::Rollup
           rollup_burst(col, new_perf[:min_max], rt.timestamp, value)
         end
 
-        Metric::Aggregation.aggregate_for_column(col, nil, new_perf, new_perf_counts, value)
+        Metric::Aggregation::Aggregate.column(col, nil, new_perf, new_perf_counts, value)
       end
     end
 
@@ -268,7 +268,7 @@ module Metric::Rollup
         result[c] ||= 0
         counts[c] ||= 0
         value = perf ? perf.send(c) : 0
-        Metric::Aggregation.aggregate_for_column(c, state, result, counts, value, :average)
+        Metric::Aggregation::Aggregate.column(c, state, result, counts, value, :average)
       end
     end
 
