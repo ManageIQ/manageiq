@@ -213,12 +213,14 @@ ManageIQ.explorer.processReplaceRightCell = function(data) {
       .html(data.rightCellText);
   }
 
-
-  if (_.isArray(data.reloadToolbars)) {
+  if (_.isArray(data.reloadToolbars) && data.reloadToolbars.length) {
     ManageIQ.angular.rxSubject.onNext({
       redrawToolbar: data.reloadToolbars
-    })
-  } else if (_.isObject(data.reloadToolbars)) {
+    });
+  } else if (_.isObject(data.reloadToolbars) && !_.isArray(data.reloadToolbars)) {
+    // FIXME remove this branch completely once sure
+    console.error('Found a toolbar using the obsolete path! Please report or fix');
+
     _.forEach(data.reloadToolbars, function (content, element) {
       $('#' + element).html(content);
     });
