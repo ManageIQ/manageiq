@@ -433,8 +433,6 @@ module ApplicationHelper
 
   # Replacing calls to VMDB::Config.new in the views/controllers
   def get_vmdb_config
-    Vmdb::Deprecation.deprecation_warning("ApplicationHelper#get_vmdb_config",
-                                          "Prefer using ::Settings directly.", caller)
     @vmdb_config ||= VMDB::Config.new("vmdb").config
   end
 
