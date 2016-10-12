@@ -72,12 +72,5 @@ ManageIQ.angular.app.controller('tenantFormController', ['$http', '$scope', 'ten
       $scope.saveClicked();
     };
 
-    $scope.toggleValueForWatch =   function(watchValue, initialValue) {
-      if($scope[watchValue] == initialValue)
-        $scope[watchValue] = "NO-OP";
-      else if($scope[watchValue] == "NO-OP")
-        $scope[watchValue] = initialValue;
-    };
-
     init();
 }]);
