@@ -1553,6 +1553,22 @@
   :description: Everything under Timelines
   :feature_type: node
   :identifier: timeline
+  :children:
+  - :name: Download CSV Format
+    :description: Download Timeline Data in CSV Format
+    :feature_type: admin
+    :hidden: true
+    :identifier: timeline_csv
+  - :name: Download PDF Format
+    :description: Download Timeline Data in PDF Format
+    :feature_type: admin
+    :hidden: true
+    :identifier: timeline_pdf
+  - :name: Download Text Format
+    :description: Download Timeline Data in Text Format
+    :feature_type: admin
+    :hidden: true
+    :identifier: timeline_txt
 
 # RSS
 - :name: RSS
