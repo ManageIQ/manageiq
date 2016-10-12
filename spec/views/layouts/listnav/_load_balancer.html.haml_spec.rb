@@ -39,7 +39,7 @@ describe "layouts/listnav/_load_balancer.html.haml" do
         @record = @load_balancer
         render
         expect(response).to include("href=\"/load_balancer/show/#{@record.id}?display=main\">Summary")
-        expect(response).to include("Show this Load Balancer&#39;s parent Network Provider\" href=\"/ems_network/show/#{@record.ext_management_system.id}\">")
+        expect(response).to include("Show this Load Balancer&#39;s parent Network Provider\" href=\"/ems_network/#{@record.ext_management_system.id}\">")
         expect(response).to include("Show all Instances\" onclick=\"return miqCheckForChanges()\" href=\"/load_balancer/show/#{@record.id}?display=instances\">")
       end
     end

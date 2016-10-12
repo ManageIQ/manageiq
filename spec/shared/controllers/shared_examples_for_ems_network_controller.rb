@@ -39,7 +39,7 @@ shared_examples :shared_examples_for_ems_network_controller do |providers|
           expect(assigns(:breadcrumbs)).to eq([{:name => "Network Providers",
                                                 :url  => "/ems_network/show_list?page=&refresh=y"},
                                                {:name => "Cloud Manager Network Manager (Summary)",
-                                                :url  => "/ems_network/show/#{@ems.id}"}])
+                                                :url  => "/ems_network/#{@ems.id}"}])
 
           is_expected.to render_template(:partial => "layouts/listnav/_ems_network")
         end

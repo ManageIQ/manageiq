@@ -38,7 +38,7 @@ module Spec
         gtl_types    ||= [:list, :tile, :grid]
         child_path   ||= relation.singularize
         parent_route = controller.restful? ? controller.class.table_name : "#{controller.class.table_name}/show"
-        child_route  = controller.restful? ? child_path : "#{child_path}/show"
+        child_route  = "#{child_path}/show"
 
         controller.instance_variable_set(:@breadcrumbs, [])
         # TODO(lsmola) we should just cycle through all gtl types, to test all list views
