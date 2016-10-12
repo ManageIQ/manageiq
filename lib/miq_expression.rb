@@ -239,6 +239,7 @@ class MiqExpression
     'ManageIQ::Providers::CloudManager'           => 'ext_management_system',
     'EmsCluster'                                  => 'ems_cluster',
     'ManageIQ::Providers::InfraManager'           => 'ext_management_system',
+    'ManageIQ::Providers::ContainerManager'       => 'ext_management_system',
     'ExtManagementSystem'                         => 'ext_management_system',
     'Host'                                        => 'host',
     'MiqGroup'                                    => 'miq_group',
