@@ -4,6 +4,7 @@ class HostAggregate < ApplicationRecord
   include EventMixin
   include ProviderObjectMixin
   include VirtualTotalMixin
+  include SupportsFeatureMixin
 
   acts_as_miq_taggable
 

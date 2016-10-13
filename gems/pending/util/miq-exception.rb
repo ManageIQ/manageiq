@@ -129,6 +129,13 @@ module MiqException
   class MiqCloudTenantUpdateError < Error; end
   class MiqCloudTenantDeleteError < Error; end
 
+  class MiqHostAggregateValidationError < Error; end
+  class MiqHostAggregateCreateError < Error; end
+  class MiqHostAggregateUpdateError < Error; end
+  class MiqHostAggregateDeleteError < Error; end
+  class MiqHostAggregateAddHostError < Error; end
+  class MiqHostAggregateRemoveHostError < Error; end
+
   class MiqOpenstackRequiredServiceMissing < Error; end
   class MiqOpenstackKeystoneServiceMissing < MiqOpenstackRequiredServiceMissing; end
   class MiqOpenstackNovaServiceMissing < MiqOpenstackRequiredServiceMissing; end

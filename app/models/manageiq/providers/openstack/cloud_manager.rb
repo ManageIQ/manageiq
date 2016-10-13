@@ -44,6 +44,7 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
   end
   supports :cinder_service
   supports :swift_service
+  supports :create_host_aggregate
 
   before_validation :ensure_managers,
                     :ensure_cinder_managers,
@@ -268,6 +269,10 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
   def vm_detach_volume(vm, volume_id)
     volume = find_by_id_filtered(CloudVolume, volume_id)
     volume.raw_detach_volume(vm.ems_ref)
+  end
+
+  def create_host_aggregate(options)
+    ManageIQ::Providers::Openstack::CloudManager::HostAggregate.create_aggregate(self, options)
   end
 
   def self.event_monitor_class
