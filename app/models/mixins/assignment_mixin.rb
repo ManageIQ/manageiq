@@ -110,7 +110,6 @@ module AssignmentMixin
     # @option options :parents
     # @option options :tag_list
     def get_assigned_for_target(target, options = {})
-      alist = kind_of?(Class) ? assignments_cached : assignments
       if options[:parents]
         parents = options[:parents]
       else
@@ -124,7 +123,7 @@ module AssignmentMixin
       tlist =  parents.collect { |p| "#{p.class.base_model.name.underscore}/id/#{p.id}" } # Assigned directly to parents
       tlist += options[:tag_list] if options[:tag_list]                        # Assigned to target (passed in)
 
-      individually_assigned_resources = tlist.flat_map { |t| alist[t] }.uniq
+      individually_assigned_resources = tlist.flat_map { |t| assignments_cached[t] }.uniq
 
       # look for alert_set running off of tags (not individual tags)
       # TODO: we may need to change taggings-related code to use base_model too
@@ -135,7 +134,7 @@ module AssignmentMixin
         lower_klass = klass == "VmOrTemplate" ? "vm" : klass.underscore
         "#{lower_klass}/tag#{t.tag.name}"
       end
-      tagged_resources = tlist.flat_map { |t| alist[t] }.uniq
+      tagged_resources = tlist.flat_map { |t| assignments_cached[t] }.uniq
       (individually_assigned_resources + tagged_resources).uniq
     end
 
