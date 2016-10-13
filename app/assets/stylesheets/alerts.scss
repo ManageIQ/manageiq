@@ -46,4 +46,60 @@
       }
     }
   }
+
+  .group-toolbar-actions {
+    .bootstrap-select {
+      margin: 0 10px 0 5px !important;
+      width: 115px !important;
+    }
+    .bootstrap-select:last-of-type {
+      margin-right: 0;
+    }
+  }
+  .alerts-group-item {
+    > a {
+      color: #030303;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      padding-left: 30px;
+      padding-right: 5px;
+      text-decoration: none;
+      transition: 250ms;
+      &:before {
+        content: "\f107";
+        display: block;
+        font-family: FontAwesome;
+        font-size: 16px;
+        font-weight: 500;
+        left: 20px;
+        position: absolute;
+        top: 7px;
+      }
+      &.collapsed {
+        &:before {
+          content: "\f105";
+        }
+      }
+    }
+  }
+  .card-view-pf {
+    margin-left: 20px;
+    .card-pf {
+      height: inherit;
+      box-shadow: 0px 3px 10px -2px rgba(0, 0, 0, 0.24);
+      border: 1px solid #d1d1d1;
+      display: block;
+      float: left;
+      margin: 0 20px 20px 0;
+      padding: 10px;
+      position: relative;
+      text-align: center;
+      width: 260px;
+    }
+    .card-view-type-img {
+      width: 22px;
+      height: 22px;
+    }
+  }
 }

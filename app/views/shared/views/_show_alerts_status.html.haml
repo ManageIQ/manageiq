@@ -1,0 +1,40 @@
+.row.miq-alerts-center
+  .container-fluid{"ng-controller" => "alertsStatusController as vm"}
+    .row
+      .col-md-12
+      %div{"pf-toolbar" => "", "config" => "vm.toolbarConfig"}
+        %actions.group-toolbar-actions
+          %span
+            Group By
+          %select{"pf-select" => "true", "ng-model" => "vm.category", "ng-options" => "o as o for o in vm.categories"}
+          %span
+            Display
+          %select{"pf-select" => "true", "ng-model" => "vm.typeFilter", "ng-options" => "o as o for o in vm.typeFilters", "ng-change" => "vm.filterChange()"}
+      .col-md-12
+        .row
+          %ul.list-group{"ng-if" => "vm.loadingDone"}
+            %li.list-group-item.alerts-group-item{"ng-repeat" => "group in vm.groups track by $index"}
+              %a.miq-alert-group-title{"ng-class" => "{'collapsed': !group.open}", "ng-click" => "vm.toggleGroupOpen(group)"}
+                {{group.title}} ({{group.itemsList.length}})
+              .card-view-pf{"ng-class" => "{'collapse': !group.open}"}
+                .card-pf.card-pf-aggregate-status{"ng-repeat" => "item in group.itemsList track by item.objectName"}
+                  %span.h2.card-pf-title
+                    %img.card-view-type-img{"ng-src" => "{{item.objectTypeImg}}", "ng-if" => "item.objectTypeImg"}
+                    {{item.objectName}}
+                  .card-pf-body
+                    %p.card-pf-aggregate-status-notifications
+                      %span.card-pf-aggregate-status-notification{"ng-if" => "item.errors > 0"}
+                        %a{"href" => "#"}
+                          %span.pficon.pficon-error-circle-o
+                          {{item.errors}}
+                      %span.card-pf-aggregate-status-notification{"ng-if" => "item.warnings > 0"}
+                        %a{"href" => "#"}
+                          %span.pficon.pficon-warning-triangle-o
+                          {{item.warnings}}
+                      %span.card-pf-aggregate-status-notification{"ng-if" => "item.info > 0"}
+                        %a{"href" => "#"}
+                          %span.pficon.pficon-info
+                          {{item.info}}
+
+:javascript
+  miq_bootstrap('.miq-alerts-center', 'alertsCenter');

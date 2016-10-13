@@ -198,7 +198,8 @@ module Menu
 
       def alerts_menu_section
         Menu::Section.new(:alc, N_("Alerts Center"), 'fa fa-bullhorn fa-2x', [
-          Menu::Item.new('alerts',         N_('Alerts'),             'alert',          {:feature => 'alerts_center', :any => true}, '/alerts_list')
+          Menu::Item.new('alerts',         N_('Alerts'),             'alert',          {:feature => 'alerts_center', :any => true}, '/alerts_list'),
+          Menu::Item.new('alerts_status',  N_('Group By Status'),    'alert_status',   {:feature => 'alerts_center', :any => true}, '/alerts_status')
         ])
       end
 
