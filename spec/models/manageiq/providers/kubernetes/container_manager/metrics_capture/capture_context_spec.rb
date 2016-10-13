@@ -26,7 +26,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::Capt
                                                           :userid   => "_"}}]
     )
 
-    VCR.use_cassette("#{described_class.name.underscore}_refresh") do # , :record => :new_episodes) do
+    VCR.use_cassette("#{described_class.name.underscore}_refresh",
+                     :match_requests_on => [:path,]) do # , :record => :new_episodes) do
       EmsRefresh.refresh(@ems)
       @node = @ems.container_nodes.first
       pod = @ems.container_groups.first
