@@ -44,14 +44,12 @@ class ContainerLabelTagMapping < ApplicationRecord
     if !specific_value.empty?
       specific_value.map { |tag_id| {:tag_id => tag_id} }
     else
-      # Note: if the way we compute `entry_name` changes,
-      # consider what will happen to previously created tags.
-      any_value.map do |tag_id|
-        if value.empty?
-          {:category_tag_id   => tag_id,
-           :entry_name        => ':empty:', # ':' character won't occur in kubernetes values.
-           :entry_description => '<empty value>'}
-        else
+      if value.empty?
+        [] # Don't map empty value to any tag.
+      else
+        # Note: if the way we compute `entry_name` changes,
+        # consider what will happen to previously created tags.
+        any_value.map do |tag_id|
           {:category_tag_id   => tag_id,
            :entry_name        => Classification.sanitize_name(value),
            :entry_description => value}

@@ -178,11 +178,9 @@ describe ContainerLabelTagMapping do
   end
 
   context "given a label with empty value" do
-    it "any-value mapping generates a tag" do
+    it "any-value mapping is ignored" do
       FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag)
-      tags = map_to_tags('ContainerNode', 'name' => '')
-      expect(tags.size).to eq(1)
-      expect(tags[0].classification.description).to eq('<empty value>')
+      expect(map_to_tags('ContainerNode', 'name' => '')).to be_empty
     end
 
     it "honors specific mapping for the empty value" do
